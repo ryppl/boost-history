@@ -29,8 +29,6 @@
 #include <boost/langbinding/registry.hpp>
 #include <boost/tuple/tuple.hpp>
 
-#include <iostream>
-
 namespace boost { namespace langbinding {
 
    template<class T>

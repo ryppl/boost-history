@@ -30,10 +30,10 @@ namespace boost { namespace langbinding {
 
    inheritance_graph& inheritance_graph::instance()
    {
-      static boost::shared_ptr<inheritance_graph_base> x(
-            graph_for_extension(extension_id()));
+      static boost::shared_ptr<inheritance_graph> x(
+            new inheritance_graph);
 
-      return (inheritance_graph&)*x;
+      return *x;
    }
 
 }}

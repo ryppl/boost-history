@@ -125,16 +125,11 @@ namespace boost { namespace langbinding {
    template<class T>
    void registry_base<T>::export_converters(registry_base& to)
    {
-      std::cout << "exporting converters..\n";
-      std::cout << "  num converters: " << m_pimpl->entries.size() << "\n";
-
       for (typename detail::registry_impl<T>::registry_t::const_iterator iter
             = m_pimpl->entries.begin()
             ; iter != m_pimpl->entries.end()
             ; ++iter)
       {
-         std::cout << ".";
-
          const type_info_& type = iter->first;
 
          for (detail::lvalue_chain<T>* c = iter->second.lvalue_converters; 
@@ -149,8 +144,6 @@ namespace boost { namespace langbinding {
             to.insert(type, c2->convertible, c2->convert);
          }
       }
-
-      std::cout << "done\n";
    }
 
    template<class T>
