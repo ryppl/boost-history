@@ -12,33 +12,38 @@
  *
  */
 
-#ifndef BOOST_ASSIGN_MAKE_INSERTION_HPP
-#define BOOST_ASSIGN_MAKE_INSERTION_HPP
+#ifndef BOOST_ASSIGN_STD_MAP_HPP
+#define BOOST_ASSIGN_STD_MAP_HPP
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 # pragma once
 #endif
+
+#include <boost/assign/make_insertion.hpp>
+#include <boost/config.hpp>
+#include <map>
 
 namespace boost
 {
 namespace assignment
 {
 
-#ifdef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
-// do nothing: a default version ***** up vc6 
-
-#else 
-
-    template< typename C, typename V >
-    inline void make_insertion( C& c, const V& v )
+    template< typename K, typename V, typename C, typename A, typename P >
+    inline void make_insertion( std::map<K,V,C,A>& c, const P& p )
     {
-        c.insert( c.end(), v );
+        c.insert( p );
     }
 
-#endif
+    template< typename K, typename V, typename C, typename A, typename P >
+    inline void make_insertion( std::multimap<K,V,C,A>& c, const P& p )
+    {
+        c.insert( p );
+    }
 
 } // namespace 'assignment'
 } // namespace 'boost'
+
+#include <boost/assign/insert_assigner.hpp>
+#include <boost/assign/glist.hpp>
 
 #endif

@@ -73,7 +73,7 @@ namespace assignment
         fixed_size_tuple_assigner& operator()( const T& t, const T2& t2 )
         {
             check_bounds<2>();
-            insert_( iter_, t, t2 );
+            make_tuple_insertion( iter_, t, t2 );
             return *this;
         }
 

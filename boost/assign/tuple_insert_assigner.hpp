@@ -67,7 +67,7 @@ namespace assignment
         tuple_insert_assigner& operator()( const T& t, const T2& t2, const T3& t3,
                                            const T4& t4 )
         {
-            insert_tuple_insertion( c_, t, t2, t3, t4 );
+            make_tuple_insertion( c_, t, t2, t3, t4 );
             return *this;
         }
 

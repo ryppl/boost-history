@@ -36,14 +36,6 @@ namespace assignment
 
 
 
-        insert_assigner( C& c, const value_type& v )
-        : c_( c )
-        {
-            insert_( v );
-        }
-
-
-
         insert_assigner& operator,( const value_type& v )
         {
             insert_( v );
@@ -123,28 +115,10 @@ namespace assignment
     // default templates
     //////////////////////////////////////////////////////////////////////////
     
-    template< typename C > 
-    inline insert_assigner<C> 
-    operator+=( C& c, const typename C::value_type& v )
-    {
-        return insert_assigner<C>( c, v );
-    }
-    
-    
-    
     template< typename C >
     inline insert_assigner<C> 
     insert( C& c )
     {
-        return insert_assigner<C>( c );
-    }
-
-
-    template< typename C >
-    inline insert_assigner<C> 
-    assign( C& c )
-    {
-        c.clear();
         return insert_assigner<C>( c );
     }
 

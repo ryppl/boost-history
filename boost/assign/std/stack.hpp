@@ -12,33 +12,44 @@
  *
  */
 
-#ifndef BOOST_ASSIGN_MAKE_INSERTION_HPP
-#define BOOST_ASSIGN_MAKE_INSERTION_HPP
+#ifndef BOOST_ASSIGN_STD_STACK_HPP
+#define BOOST_ASSIGN_STD_STACK_HPP
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 # pragma once
 #endif
+
+#include <boost/assign/make_insertion.hpp>
+#include <boost/config.hpp>
+#include <stack>
 
 namespace boost
 {
 namespace assignment
 {
 
-#ifdef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
-// do nothing: a default version ***** up vc6 
-
-#else 
-
-    template< typename C, typename V >
-    inline void make_insertion( C& c, const V& v )
+    template< typename V, typename C >
+    inline void make_insertion( std::stack<V,C>& c, const V& v )
     {
-        c.insert( c.end(), v );
+        c.push( v );
     }
-
-#endif
 
 } // namespace 'assignment'
 } // namespace 'boost'
+
+#include <boost/assign/insert_assigner.hpp>
+
+namespace boost
+{
+namespace assignment
+{
+
+    template< typename V, typename A >
+    inline insert_assigner< std::stack<V,A> > operator+=( std::stack<V,A>& c, const V& v )
+    {
+        return insert_assigner< std::stack<V,A> >( c ),v;
+    }
+}
+}
 
 #endif
