@@ -63,8 +63,13 @@ class ios_all_word_saver;
 
 //  From <boost/io/iomanip.hpp>  ---------------------------------------------//
 
-class multi_newl;
-class multi_skipl;
+template < char C >
+    class multi_newer;
+template < char C >
+    class multi_skipper;
+
+typedef multi_newer<'\n'>    multi_newl;
+typedef multi_skipper<'\n'>  multi_skipl;
 
 // Also has function templates
 

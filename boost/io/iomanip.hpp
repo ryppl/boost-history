@@ -11,6 +11,7 @@
 
 #include <boost/io_fwd.hpp>  // self include
 
+#include <boost/config.hpp>  // for BOOST_STATIC_CONSTANT
 #include <boost/limits.hpp>  // for std::numeric_limits
 
 #include <ios>      // for std::streamsize, std::basic_ios, std::ios_base
@@ -38,22 +39,26 @@ template < typename Ch, class Tr >
 
 //  I/O-manipulator operator function declarations  --------------------------//
 
-template < typename Ch, class Tr >
+template < typename Ch, class Tr, char C >
     std::basic_ostream<Ch, Tr> &  operator <<( std::basic_ostream<Ch, Tr> &os,
-     multi_newl const &n );
+     multi_newer<C> const &n );
 
-template < typename Ch, class Tr >
+template < typename Ch, class Tr, char C >
     std::basic_istream<Ch, Tr> &  operator >>( std::basic_istream<Ch, Tr> &is,
-     multi_skipl const &s );
+     multi_skipper<C> const &s );
 
 
 //  I/O-manipulator object class template declarations  ----------------------//
 
-class multi_newl
+template < char C >
+class multi_newer
 {
 public:
+    // Template argument
+    BOOST_STATIC_CONSTANT( char, marked_char = C );
+
     // Lifetime management
-    explicit  multi_newl( std::streamsize count, bool final_flush = false );
+    explicit  multi_newer( std::streamsize count, bool final_flush = false );
 
     // Operators
     template < typename Ch, class Tr >
@@ -64,13 +69,17 @@ private:
     std::streamsize  count_;
     bool             flush_;
 
-};  // boost::io::multi_newl
+};  // boost::io::multi_newer
 
-class multi_skipl
+template < char C >
+class multi_skipper
 {
 public:
+    // Template argument
+    BOOST_STATIC_CONSTANT( char, marked_char = C );
+
     // Lifetime management
-    explicit  multi_skipl( std::streamsize count, bool final_sync = false );
+    explicit  multi_skipper( std::streamsize count, bool final_sync = false );
 
     // Operators
     template < typename Ch, class Tr >
@@ -81,7 +90,7 @@ private:
     std::streamsize  count_;
     bool             sync_;
 
-};  // boost::io::multi_skipl
+};  // boost::io::multi_skipper
 
 
 //  I/O-manipulator function template definitions  ---------------------------//
@@ -125,8 +134,9 @@ resetios
 
 //  I/O-manipulator object class template member function definitions  -------//
 
+template < char C >
 inline
-multi_newl::multi_newl
+multi_newer<C>::multi_newer
 (
     std::streamsize  count,
     bool             final_flush  // = false
@@ -135,19 +145,20 @@ multi_newl::multi_newl
 {
 }
 
+template < char C >
 template < typename Ch, class Tr >
 inline
 void
-multi_newl::operator ()
+multi_newer<C>::operator ()
 (
     std::basic_ostream<Ch, Tr> &  os
 ) const
 {
-    Ch const  new_line = os.widen( '\n' );
+    Ch const  written = os.widen( C );
 
     for ( std::streamsize i = this->count_ ; (i > 0) && os ; --i )
     {
-        os.put( new_line );
+        os.put( written );
     }
 
     if ( this->flush_ && os )
@@ -156,8 +167,9 @@ multi_newl::operator ()
     }
 }
 
+template < char C >
 inline
-multi_skipl::multi_skipl
+multi_skipper<C>::multi_skipper
 (
     std::streamsize  count,
     bool             final_sync  // = false
@@ -166,10 +178,11 @@ multi_skipl::multi_skipl
 {
 }
 
+template < char C >
 template < typename Ch, class Tr >
 inline
 void
-multi_skipl::operator ()
+multi_skipper<C>::operator ()
 (
     std::basic_istream<Ch, Tr> &  is
 ) const
@@ -178,11 +191,11 @@ multi_skipl::operator ()
 
     typedef typename Tr::int_type  int_type;
 
-    int_type const  new_line_int = Tr::to_int_type( is.widen('\n') );
+    int_type const  read_int = Tr::to_int_type( is.widen(C) );
 
     for ( streamsize i = this->count_ ; (i > 0) && is ; --i )
     {
-        is.ignore( std::numeric_limits<streamsize>::max(), new_line_int );
+        is.ignore( std::numeric_limits<streamsize>::max(), read_int );
     }
 
     if ( this->sync_ && is )
@@ -194,25 +207,25 @@ multi_skipl::operator ()
 
 //  I/O-manipulator operator function definitions  ---------------------------//
 
-template < typename Ch, class Tr >
+template < typename Ch, class Tr, char C >
 inline
 std::basic_ostream<Ch, Tr> &
 operator <<
 (
     std::basic_ostream<Ch, Tr> &  os,
-    multi_newl const &            n
+    multi_newer<C> const &        n
 )
 {
     return n( os ), os;
 }
 
-template < typename Ch, class Tr >
+template < typename Ch, class Tr, char C >
 inline
 std::basic_istream<Ch, Tr> &
 operator >>
 (
     std::basic_istream<Ch, Tr> &  is,
-    multi_skipl const &           s
+    multi_skipper<C> const &      s
 )
 {
     return s( is ), is;

@@ -3,7 +3,7 @@
 <head>
 <title>Boost I/O Manipulator Library</title>
 </head>
-<body text="black" bgcolor="white" link="blue" vlink="purple" alink="red">
+<body>
 <h1><img src="../../../c++boost.gif" alt="c++boost.gif (8819 bytes)"
 align="middle" width="277" height="86">I/O Manipulator Library</h1>
 
@@ -21,8 +21,8 @@ function templates and function-acting [template] classes).</p>
 	<li><a href="#newl">Non-flushing Line-break Output Manipulator</a></li>
 	<li><a href="#skipl">Line-skipping Input Manipulator</a></li>
 	<li><a href="#resetios">Stream Formatting State-reset Manipulator</a></li>
-	<li><a href="#mnewl">Multiple-line-break Output Manipulator</a></li>
-	<li><a href="#mskipl">Multiple-line-skipping Input Manipulator</a></li>
+	<li><a href="#mnewer">Repeated-character Output Manipulator</a></li>
+	<li><a href="#mskipper">Repeated-character Input Manipulator</a></li>
 	<li><a href="#refer">References</a></li>
 	<li><a href="#credits">Credits</a>
 		<ul>
@@ -56,8 +56,13 @@ template &lt; typename Ch, class Tr &gt;
 template &lt; typename Ch, class Tr &gt;
     std::basic_ios&lt;Ch, Tr&gt; &amp;  resetios( std::basic_ios&lt;Ch, Tr&gt; &amp;s );
 
-class multi_newl;
-class multi_skipl;
+template &lt; char C &gt;
+    class multi_newer;
+typedef multi_newer&lt;'\n'&gt;  multi_newl;
+
+template &lt; char C &gt;
+    class multi_skipper;
+typedef multi_skipper&lt;'\n'&gt;  multi_skipl;
 
 }
 }
@@ -121,10 +126,10 @@ std::ios_base::skipws | std::ios_base::dec ) &amp;&amp; <var>s</var>.width()
 <p><strong>Rationale:</strong> a quick method to reset all the formatting
 attributes of a stream, especially after many attribute changes</p>
 
-<h2><a name="mnewl">Multiple-line-break Output Manipulator</a></h2>
+<h2><a name="mnewer">Repeated-character Output Manipulator</a></h2>
 
-<p>Objects from the <code>boost::io::multi_newl</code> class represent
-manipulators that send multiple consecutive line-breaks to a given output
+<p>Objects from a <code>boost::io::multi_newer</code> template class represent
+manipulators that send multiple consecutive copies of a character to a given output
 stream.  Said manipulators can be temporarily created (in-line, without a
 name) or created conventionally in advance for multiple insertions or for
 use as a function object.</p>
@@ -133,11 +138,15 @@ use as a function object.</p>
 #include &lt;ios&gt;      <i>// for std::streamsize</i>
 #include &lt;ostream&gt;  <i>// for std::basic_ostream</i>
 
-class boost::io::multi_newl
+template &lt; char C &gt;
+class boost::io::multi_newer
 {
 public:
+    // Template argument
+    static  char const  marked_char = C;
+
     // Lifetime management
-    explicit  multi_newl( std::streamsize count, bool final_flush = false );
+    explicit  multi_newer( std::streamsize count, bool final_flush = false );
 
     // Operators
     template &lt; typename Ch, class Tr &gt;
@@ -146,36 +155,44 @@ public:
 };
 </pre></blockquote>
 
+<p>The template parameter, <var>C</var>, represents the character that will
+be repeatedly inserted into an output stream when desired.  The
+<code>marked_char</code> static constant object gives the value of that template
+parameter (helpful if the template parameter is hidden by a <code>typedef</code>).</p>
+
 <p>The first (or only) argument of the constructor indicates the number,
-or <var>count</var>, of line breaks that the manipulator object will insert
+or <var>count</var>, of characters that the manipulator object will insert
 in a single call.  The optional second constructor argument,
 <var>final_flush</var>, determines whether or not a request to flush the
 output stream will be done after an insertion (defaults to no flushing).</p>
 
 <p>The function-call operator takes an output stream as its only argument.
 While the stream <var>os</var> is in a good condition, an unformatted
-insertion of the new-line character (sequence) occurs <var>count</var> (from
-the constructor) times.  The new-line character (sequence) shall be appropiate
+insertion of the marked character occurs <var>count</var> (from
+the constructor) times.  The marked character shall be appropiate
 for the stream's character type and locale.  If mandated by the constructor's
 <var>final_flush</var> state, then the stream is flushed (if it's still good).</p>
 
+<p>Type-alias <code>boost::io::multi_newl</code> does the usual case of the
+repeatedly printed character being a line break.</p>
+
 <blockquote><pre>
-template &lt; typename Ch, class Tr &gt;
+template &lt; typename Ch, class Tr, char C &gt;
 std::basic_ostream&lt;Ch, Tr&gt; &amp;
-boost::io::operator &lt;&lt;( std::basic_ostream&lt;Ch, Tr&gt; &amp;os, multi_newl const &amp;n );
+boost::io::operator &lt;&lt;( std::basic_ostream&lt;Ch, Tr&gt; &amp;os, multi_newer&lt;C&gt; const &amp;n );
 </pre></blockquote>
 
 <p><strong>Effects:</strong> calls <code><var>n</var>( <var>os</var> )</code></p>
 
 <p><strong>Returns:</strong> <var>os</var></p>
 
-<p><strong>Rationale:</strong> alternative to using <a href="#newl"><code>newl</code></a> or <code>std::endl</code> multiple times consecutively</p>
+<p><strong>Rationale:</strong> alternative to using something like <a href="#newl"><code>newl</code></a> or <code>std::endl</code> multiple times consecutively</p>
 
-<h2><a name="mskipl">Multiple-line-skipping Input Manipulator</a></h2>
+<h2><a name="mskipper">Repeated-character Input Manipulator</a></h2>
 
-<p>Objects from the <code>boost::io::multi_skipl</code> class represent
-manipulators that pass over many characters until a given number of line-breaks
-are found in a given input stream.  Said manipulators can be temporarily
+<p>Objects from a <code>boost::io::multi_skipper</code> template class represent
+manipulators that pass over many characters until a given count of a certain character
+is encountered in a given input stream.  Said manipulators can be temporarily
 created (in-line, without a name) or created conventionally in advance for
 multiple extractions or for use as a function object.</p>
 
@@ -183,11 +200,15 @@ multiple extractions or for use as a function object.</p>
 #include &lt;ios&gt;      <i>// for std::streamsize</i>
 #include &lt;istream&gt;  <i>// for std::basic_istream</i>
 
-class boost::io::multi_skipl
+template &lt; char C &gt;
+class boost::io::multi_skipper
 {
 public:
+    // Template argument
+    static  char const  marked_char = C;
+
     // Lifetime management
-    explicit  multi_skipl( std::streamsize count, bool final_sync = false );
+    explicit  multi_skipper( std::streamsize count, bool final_sync = false );
 
     // Operators
     template &lt; typename Ch, class Tr &gt;
@@ -196,31 +217,39 @@ public:
 };
 </pre></blockquote>
 
+<p>The template parameter, <var>C</var>, represents the character that will
+be repeatedly watched and extracted from an input stream when desired.  The
+<code>marked_char</code> static constant object gives the value of that template
+parameter (helpful if the template parameter is hidden by a <code>typedef</code>).</p>
+
 <p>The first (or only) argument of the constructor indicates the number,
-or <var>count</var>, of line breaks that the manipulator object will watch
-in a single call.  The optional second constructor argument,
+or <var>count</var>, of marked characters that the manipulator object will
+watch for in a single call.  The optional second constructor argument,
 <var>final_sync</var>, determines whether or not a request to synchronize the
 input stream will be done after an extraction (defaults to no synchronization).</p>
 
 <p>The function-call operator takes an input stream as its only argument.
 While the stream <var>is</var> is in a good condition, characters will be
-extracted from the stream and ignored until an expanded new-line character
-(sequence) is encountered <var>count</var> (from the constructor) times.
-The new-line character (sequence) expansion shall be appropiate for the
+extracted from the stream and ignored until an expanded marked character
+is encountered <var>count</var> (from the constructor) times.
+The marked character expansion shall be appropiate for the
 stream's character type, traits type, and locale.  If mandated by the constructor's
 <var>final_sync</var> state, then the stream is synchronized (if it's still good).</p>
 
+<p>Type-alias <code>boost::io::multi_skipl</code> does the usual case of the
+repeatedly watched character being a line break.</p>
+
 <blockquote><pre>
-template &lt; typename Ch, class Tr &gt;
+template &lt; typename Ch, class Tr, char C &gt;
 std::basic_istream&lt;Ch, Tr&gt; &amp;
-boost::io::operator &gt;&gt;( std::basic_istream&lt;Ch, Tr&gt; &amp;is, multi_skipl const &amp;s );
+boost::io::operator &gt;&gt;( std::basic_istream&lt;Ch, Tr&gt; &amp;is, multi_skipper&lt;C&gt; const &amp;s );
 </pre></blockquote>
 
 <p><strong>Effects:</strong> calls <code><var>s</var>( <var>is</var> )</code></p>
 
 <p><strong>Returns:</strong> <var>is</var></p>
 
-<p><strong>Rationale:</strong> alternative to using <a href="#skipl"><code>skipl</code></a> multiple times consecutively</p>
+<p><strong>Rationale:</strong> alternative to using something like <a href="#skipl"><code>skipl</code></a> multiple times consecutively</p>
 
 <h2><a name="refer">References</a></h2>
 
@@ -251,7 +280,7 @@ boost::io::operator &gt;&gt;( std::basic_istream&lt;Ch, Tr&gt; &amp;is, multi_sk
 	<dt>Angelika Langer and Klaus Kreft
 	<dd>Section 3.2.2.1 of their <cite>Standard C++ IOStreams and Locales:
 		Advanced Programmer's Guide and Reference</cite> book is the
-                basis of <a href="#mnewl"><code>multi_newl</code></a> (called
+                basis of <a href="#mnewer"><code>multi_newl</code></a> (called
 		<code>mendl</code> in the book).
 
 	<dt><a href="../../../people/daryle_walker.html">Daryle Walker</a>
@@ -259,8 +288,8 @@ boost::io::operator &gt;&gt;( std::basic_istream&lt;Ch, Tr&gt; &amp;is, multi_sk
 		href="#skipl"><code>skipl</code></a>, <a
                 href="#newl"><code>newl</code></a>, <a
                 href="#resetios"><code>resetios</code></a>, <a
-                href="#mnewl"><code>multi_newl</code></a>, and <a
-                href="#mskipl"><code>multi_skipl</code></a>.  Contributed
+                href="#mnewer"><code>multi_newer</code></a>, and <a
+                href="#mskipper"><code>multi_skipper</code></a>.  Contributed
                 <cite><a
                 href="../test/iomanip_test.cpp">iomanip_test.cpp</a></cite>.
 </dl>
@@ -274,7 +303,7 @@ boost::io::operator &gt;&gt;( std::basic_istream&lt;Ch, Tr&gt; &amp;is, multi_sk
 
 <hr>
 
-<p>Revised: 5 December 2003</p>
+<p>Revised: 6 December 2003</p>
 
 <p>Copyright 2003 Daryle Walker.  Use, modification, and distribution
 are subject to the Boost Software License, Version 1.0.  (See accompanying
