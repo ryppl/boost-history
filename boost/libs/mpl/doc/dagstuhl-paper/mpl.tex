@@ -195,8 +195,8 @@ of instances of another type:
 
 {\small
 \begin{codesamp}\begin{verbatim}
-// permutation_holder<T>::type is an array type which can contain all
-// permutations of a given T.
+// permutation_holder<T>::type is an array type which can contain 
+// all permutations of a given T.
 
 // unspecialized template for scalars
 template <class T> struct permutation_holder
@@ -603,7 +603,7 @@ For example, suppose we are implementing a \code{pointed\_\-type}
 traits template such as \code{pointed\_\-type<T>::type} instantiated
 for a \code{T} that is either a plain pointer
 (\code{U*}), \code{std::auto\_\-ptr<U>}, or any of the \code{boost}
-smart pointers, e.g. \code{boost::scoped\_\-ptr<U>}, will give you 
+smart pointers, e.g. \code{boost::\-scoped\_\-ptr<U>}, will give you 
 the pointed type (\code{U}):
 
 {\small
@@ -757,7 +757,7 @@ The above technique is so common in template metaprograms, that it
 even make sense to facilitate the selection of nested \code{type} member
 by introducing a high level equivalent to \code{select\_\-if} - the one
 that will do \code{func\_::type} operation (that is called [nullary]
-function class application) as a part of its invocation.  The \Mpl
+function class application) as a part of its invocation.  The MPL
 provides such template - it's called \code{apply\_if}. Using it, we
 can re-write the above code as simple as:
 
@@ -778,7 +778,7 @@ struct pointed_type
 
 To make our techniques review complete, let's consider a slightly 
 different example - suppose we want to define a high-level wrapper 
-around \code{boost::remove\_\-pointer} traits template [], which will 
+around \code{boost::remove\_\-pointer} traits template, which will 
 strip the pointer qualification conditionally. We will call it 
 \code{remove\_\-pointer\_\-if}:
 
@@ -812,8 +812,8 @@ so the refactoring just doesn't seem possible. An easiest way out of
 this situation would be to pass to \code{select\_\-if} a real nullary
 function instead of \code{T}, - the one that returns \code{T} on its
 invocation. The \Mpl provides a simple way to do it - we just
-substitute \code{mpl::identity<T>} and \code{boost::apply\_\-if} for \code{T} and
-\code{boost::select\_\-if}:
+substitute \code{mpl::identity<T>} and \code{mpl::apply\_\-if} for \code{T} and
+\code{mpl::select\_\-if}:
 
 {\small
 \begin{codesamp}\begin{verbatim}
@@ -1073,7 +1073,7 @@ struct find
 };
 
 // "function class" form
-struct find
+struct find_func
 {
     template< typename Sequence, typename T >
     struct apply
@@ -1211,7 +1211,7 @@ using a predicate:
 
 {\small
 \begin{codesamp}\begin{verbatim}
-typedef mpl::find_if< types,boost::is_float >::type iter;
+typedef mpl::find_if< types,boost::is_float<_1> >::type iter;
 \end{verbatim}
 \end{codesamp}
 }
@@ -1234,7 +1234,7 @@ with. Neither is\code{mpl::find} or any other algorithm
 hard-coded to work only with \code{list} sequences. \code{list} is
 just one model of MPL's ForwardSequence concept, and \code{find} works
 with anything that satisfies this concept's requirements. The
-hierarchy of sequence concepts in \Mpl is quite simple - a Sequence is
+hierarchy of sequence concepts in MPL is quite simple - a Sequence is
 any compile-time entity for which \code{begin<>} and \code{end<>}
 produce iterators to the range of its elements; a ForwardSequence is a
 sequence whose iterators satisfy ForwardIterator requirements, a
@@ -1334,8 +1334,8 @@ define not so tiny sequence - with 5, 10, 20, etc. number
 of elements, when it would be very valuable (random access 
 is almost as important at compile-time as it is at run-time 
 - for example searching something in a sorted random-access 
-sequence using \code{lower\_\-bound} can be up to N 
-[need to measure!] time faster than doing the same operation 
+sequence using \code{lower\_\-bound} can be much faster than 
+doing the same operation 
 on forward-access only \code{list}). External code generation 
 is one option here, but there is also a solution within the 
 language, although it's not a template metaprogramming, 
@@ -1378,8 +1378,8 @@ it's \emph{obvious} that's the above code does - even although
 it's all templates - something that you cannot say about the 
 original version.
 
-\subsubsection{iter\_fold/iter\_find as two main iteration 
-algorithms}
+\subsubsection{iter\_fold as the main iteration 
+algorithm}
 
 For the purpose of examination a little bit more of the 
 library's internal structure, let's look at how the 
@@ -1433,12 +1433,10 @@ implemented in terms of another one - \code{iter\_\-fold}.
 In fact, this is probably the most important point of the 
 example, because all other generic sequence algorithms in 
 the library are implemented either in terms of \code{iter\_\-fold}
-(or it's counterpart \code{find\_if}) as well. In particular, 
-% Do you really mean to say these are counterparts? You had iter_find
-% in the section title.
+(or it's counterpart \code{iter\_\-fold\_\-if}) as well. In particular, 
 that means that if you would ever need to implement your own 
 sequence algorithm, there is a huge chance that you'll be able 
-to do it using either \code{iter\_\-fold} or \code{find\_if} - 
+to do it using either \code{iter\_\-fold} or \code{iter\_\-fold\_\-if} - 
 in other words, that means that you won't have to resort to 
 implementing hand-crafted iteration and everything that is 
 associated with it (patterns matching/special cases for 
@@ -1451,7 +1449,7 @@ automatically benefit from these optimizations as well. And of
 course it means that your algorithm will work with any 
 sequence that is a model of \code{mpl}'s 
 ForwardSequence, because it's the only requirement of 
-\code{iter\_\-fold}/\code{find\_if} pair.
+\code{iter\_\-fold}/\code{iter\_\-fold\_\-if} pair.
 
 \code{iter\_\-fold} is basically a compile-time equivalent of 
 \code{fold}/\code{reduce} functions that are one of the basic 
@@ -1493,14 +1491,12 @@ The library also provides a little bit more high-level
 \code{iter\_\-fold} to accommodate it's most common usage 
 patterns.
 
-You may wonder why \code{find\_\-if} - which seems to be much 
-more high-level - is placed on the same line with the 
-\code{iter\_\-fold}. Well, one thing about it is that 
-\code{find\_\-if} is the only sequence algorithm that is not 
-itself implemented using \code{iter\_\-fold}. The key difference 
-is that \code{find\_\-if} \emph{terminates} the iteration as 
-soon as its predicate satisfied, while \code{iter\_\-fold} 
-always iterates the whole sequence (backward and forward). 
+As the name suggests, the key difference between is that 
+\code{iter\_\-fold} and \code{iter\_\-fold\_\-if} is that the 
+latter \emph{terminates} the iteration as soon as its 
+predicate satisfied, while \code{iter\_\-fold} always 
+iterates the whole sequence (backward and forward). 
+
 An obvious generalization here would be to add yet another 
 parameter to \code{iter\_\-fold} so it become possible to 
 implement everything in terms of the single iteration 
@@ -1702,7 +1698,7 @@ typedef mpl::find_if< sequences,size_pred >::type itor;
  
   \subsubsection{A Variety of Sequences}
 
-Previous efforts to provide generalized /mping/ facilities for C++
+Previous efforts to provide generalized \mping\ facilities for C++
 have always concentrated on \code{cons}-style type lists and a few
 core algorithms like 'size' and 'at' which are tied to the specific
 sequence implementation. Such systems have an elegant simplicity
@@ -1732,10 +1728,10 @@ the code that uses them. While runtime performance is not an issue for
 \Cpp\ metaprograms, compilation speed is often a significant
 bottleneck to advanced \Cpp\ software development \cite{Abr01}.
 
-The \Mpl\ provides four built-in sequences: \code{type\_\-list},
-\code{value\_\-list} (really just a \code{type\_\-list} of value
-wrappers), \code{type\_\-vector}, a randomly--accessible sequence of
-fixed maximum size, and \code{range\_\-c}, a randomly--accessible
+The \Mpl\ provides four built-in sequences: \code{list},
+\code{list\_c} (really just a \code{list} of value
+wrappers), \code{vector}, a randomly--accessible sequence of
+fixed maximum size, and \code{range\_c}, a randomly--accessible
 sequence of consecutive integral values. More important, however, is
 its ability to adapt to arbitrary sequence types. The only core
 operations that a sequence is required to provide in order to be used
@@ -1750,7 +1746,7 @@ are specialized on sequence type to provide a more efficient
 implementation than the fully generic version.
 
 
-  \subsubsection{loop unrolling}
+  \subsubsection{Loop unrolling}
 
 Almost coincidentally, loop unrolling can be as important to
 compile-time iterative algorithms as it is to runtime algorithms. To
