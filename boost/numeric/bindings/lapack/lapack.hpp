@@ -25,6 +25,7 @@
 #include <boost/numeric/bindings/lapack/sysv.hpp>
 #include <boost/numeric/bindings/lapack/spsv.hpp>
 #include <boost/numeric/bindings/lapack/hesv.hpp>
+#include <boost/numeric/bindings/lapack/hpsv.hpp>
 
 // eigenproblems 
 
