@@ -44,7 +44,9 @@ public:
 
     // Constructors
     basic_array_streambuf();
+#if !defined(__GNUC__) || (__GNUC__ < 3) || ((__GNUC__ == 3) && (__GNUC_MINOR__ < 1))
     basic_array_streambuf( self_type const &c );
+#endif
     basic_array_streambuf( char_type const *b, char_type const *e );
 
     template < typename InIter >
@@ -125,6 +127,7 @@ basic_array_streambuf<N, Ch, Tr>::basic_array_streambuf
     this->setup_buffers();
 }
 
+#if !defined(__GNUC__) || (__GNUC__ < 3) || ((__GNUC__ == 3) && (__GNUC_MINOR__ < 1))
 template < std::size_t N, typename Ch, class Tr >
 inline
 basic_array_streambuf<N, Ch, Tr>::basic_array_streambuf
@@ -136,6 +139,7 @@ basic_array_streambuf<N, Ch, Tr>::basic_array_streambuf
     traits_type::copy( this->array_, c.array_, self_type::array_size );
     this->setup_buffers();
 }
+#endif
 
 template < std::size_t N, typename Ch, class Tr >
 inline

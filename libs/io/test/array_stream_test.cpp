@@ -6,14 +6,14 @@
 //  warranty, and with no claim as to its suitability for any purpose. 
 
 //  Revision History
-//   28 May 2003  Initial version (Daryle Walker)
+//   06 Jun 2003  Initial version (Daryle Walker)
 
+#include <boost/bind.hpp>             // for boost::bind, _1
 #include <boost/io/array_stream.hpp>  // for boost::io::basic_array_istream, etc.
 #include <boost/test/unit_test.hpp>   // for main, BOOST_CHECK, etc.
 
 #include <algorithm>   // for std::count_if, std::equal
 #include <cstddef>     // for std::size_t
-#include <functional>  // for std::bind2nd, std::ptr_fun
 #include <iosfwd>      // for std::ios
 #include <list>        // for std::list
 #include <string>      // for std::string
@@ -70,8 +70,7 @@ astreambuf_constructor_unit_test
 (
 )
 {
-    using std::ptr_fun;
-    using std::bind2nd;
+    using boost::bind;
     using std::count_if;
     using std::equal;
 
@@ -81,9 +80,9 @@ astreambuf_constructor_unit_test
     astreambuf          asb_d;
     astreambuf const &  casb_d = asb_d;
     BOOST_CHECK_EQUAL( astreambuf::array_size, count_if(asb_d.array_begin(),
-     asb_d.array_end(), bind2nd( ptr_fun(traits_type::eq), '\0' )) );
+     asb_d.array_end(), bind( traits_type::eq, '\0', _1 )) );
     BOOST_CHECK_EQUAL( astreambuf::array_size, count_if(casb_d.array_begin(),
-     casb_d.array_end(), bind2nd( ptr_fun(traits_type::eq), '\0' )) );
+     casb_d.array_end(), bind( traits_type::eq, '\0', _1 )) );
 
     // Array-subsequence-based construction
     astreambuf  asb_a( alphabet, alphabet + alphabet_length );
@@ -97,10 +96,12 @@ astreambuf_constructor_unit_test
     BOOST_CHECK( equal(asb_i.array_begin(), asb_i.array_end(), alphabet,
      traits_type::eq) );
 
+#if !defined(__GNUC__) || (__GNUC__ < 3) || ((__GNUC__ == 3) && (__GNUC_MINOR__ < 1))
     // Copy construction
     astreambuf  asb_c( asb_i );
     BOOST_CHECK( equal(asb_c.array_begin(), asb_c.array_end(), alphabet,
      traits_type::eq) );
+#endif
 }
 
 // Unit test for array output stream
