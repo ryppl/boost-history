@@ -21,6 +21,7 @@ int test_main(int, char*[])
 
     // Test operator++
     BOOST_CRITICAL_TEST(e == state1);
+    BOOST_CRITICAL_TEST(e == 0);
     BOOST_CRITICAL_TEST(++e == state2);
     BOOST_CRITICAL_TEST(++e == state3);
     BOOST_CRITICAL_TEST(e++ == state3);
