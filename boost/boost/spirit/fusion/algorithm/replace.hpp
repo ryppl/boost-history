@@ -25,7 +25,7 @@ namespace boost { namespace fusion
             typedef typename meta::begin<Sequence>::type first_type;
             typedef typename meta::end<Sequence>::type last_type;
             typedef typename meta::next<Position>::type next_type;
-#if! BOOST_WORKAROUND(BOOST_MSVC,==1200)
+#if! BOOST_WORKAROUND(BOOST_MSVC,<=1300)
             BOOST_STATIC_ASSERT((!meta::equal_to<Position, last_type>::value));
 #endif
             typedef single_view<T> insert_type;

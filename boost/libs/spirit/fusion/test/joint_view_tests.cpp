@@ -51,7 +51,6 @@ test_main(int, char*[])
         std::cout << view << std::endl;
         BOOST_TEST((view == make_tuple(3, 'x', X())));
         
-        //begin(view) here causes MSVC to ICE...
         *begin(view) = 4;
         BOOST_TEST(get<0>(t1) == 4);
     }

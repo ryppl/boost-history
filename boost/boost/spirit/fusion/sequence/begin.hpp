@@ -35,7 +35,7 @@ namespace boost { namespace fusion
         };
     }
 
-#if BOOST_WORKAROUND(BOOST_MSVC,==1200)
+#if BOOST_WORKAROUND(BOOST_MSVC,<=1300)
     namespace detail {
         template <typename Sequence>
         inline typename meta::begin<Sequence const>::type

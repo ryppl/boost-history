@@ -144,7 +144,7 @@ namespace boost { namespace fusion { namespace detail
 ///////////////////////////////////////////////////////////////////////////////
 
 // VC6 ETI (early template instantiation) bug workaround.
-#if BOOST_WORKAROUND(BOOST_MSVC, <= 1200)
+#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
 #define FUSION_MSVC_ETI_WRAPPER(name)                                           \
 namespace boost { namespace fusion { namespace detail                           \
 {                                                                               \
@@ -161,7 +161,7 @@ namespace boost { namespace fusion { namespace detail                           
     };                                                                          \
 }}}
 #endif
-
+/*
 //  is_msvc_70_ETI_arg: Detect a VC7 ETI arg
 #if BOOST_WORKAROUND(BOOST_MSVC, == 1300)
 namespace boost { namespace fusion { namespace detail
@@ -218,7 +218,7 @@ namespace boost { namespace fusion { namespace detail                           
             ::template result<T> {};                                            \
 }}}
 #endif
-
+*/
 ///////////////////////////////////////////////////////////////////////////////
 //
 //  T::tag wrapper
