@@ -45,40 +45,65 @@
 #                 endif
                }
          };
+
+         template< typename CharT, class Policy = std::char_traits< CharT > >
+         struct fixed_string_iface
+         {
+            typedef std::basic_string< CharT, Policy >               substring_type;
+            typedef Policy                                           traits_type;
+            typedef std::allocator< CharT >                          allocator_type;
+            typedef typename allocator_type::pointer                 iterator;
+            typedef typename allocator_type::const_pointer           const_iterator;
+
+            typedef typename allocator_type::size_type               size_type;
+            typedef typename allocator_type::reference               reference;
+            typedef typename allocator_type::const_reference         const_reference;
+
+            virtual iterator                     begin_() = 0;
+            virtual const_iterator               begin_() const = 0;
+            virtual iterator                     end_() = 0;
+            virtual const_iterator               end_() const = 0;
+
+            virtual       CharT *                buffer_() = 0;
+            virtual const CharT *                data_()  const = 0;
+            virtual const CharT *                c_str_() const = 0;
+            virtual reference                    at_( size_type ) = 0;
+            virtual const_reference              at_( size_type ) const = 0;
+
+            virtual size_type                    length_() const = 0;
+            virtual size_type                    capacity_() const = 0;
+            virtual size_type                    max_size_() const = 0;
+
+            virtual void                         resize_(  size_type, char ) = 0;
+            virtual void                         reserve_( size_type ) = 0;
+
+            virtual void                         assign_( const CharT *, size_type ) = 0;
+            virtual void                         append_( const CharT *, size_type ) = 0;
+            virtual int                          format_( const CharT *, va_list )   = 0;
+            virtual void                         push_back_( CharT ) = 0;
+         };
       }
 
-      // string interface for handling variable-capacity strings
-
-      template< typename CharT, class Traits = std::char_traits< CharT > >
-      struct fixed_string_base: public detail::basic_string_impl
-                                       <
-                                          fixed_string_base< CharT, Traits >, CharT, Traits,
-                                          detail::string_policy< CharT, std::basic_string< CharT, Traits > >
-                                       >
+      template< typename CharT, class Policy = std::char_traits< CharT > >
+      struct fixed_string_base: public detail::basic_string_impl< detail::fixed_string_iface< CharT, Policy > >
       {
-         virtual const CharT *                   c_str()  const = 0;
-         virtual const CharT *                   data()   const = 0;
-         virtual CharT &                         at( size_t i ) = 0;
-         virtual CharT *                         iter_offset(       ptrdiff_t ) = 0;
-         virtual const CharT *                   const_iter_offset( ptrdiff_t ) const = 0;
-
-         virtual size_t                          length()   const = 0;
-         virtual size_t                          capacity() const = 0;
-         virtual size_t                          max_size() const = 0;
-
-         virtual void                            resize(  size_t, char ) = 0;
-         virtual void                            reserve( size_t ) = 0;
-
-         virtual CharT *                         assign( const CharT * s, size_t l = size_t( -1 )) = 0;
-         virtual CharT *                         append( const CharT * s, size_t l = size_t( -1 )) = 0;
-         virtual void                            push_back( CharT ) = 0;
-         virtual int                             format( const CharT * fmt, va_list args ) = 0;
+         public: // extended interface
+            inline                operator const CharT *() const
+            {
+               return( c_str());
+            }
+            inline CharT *                       buffer()
+            {
+               return( buffer_());
+            }
+            inline int                           format( const CharT * fmt, va_list args )
+            {
+               return( format_( fmt, args ));
+            }
       };
 
       typedef fixed_string_base< char >                    char_string;
       typedef fixed_string_base< wchar_t >                 wchar_string;
-
-      // fixed capacity string implementation (std::basic_string-style interface)
 
       template< size_t n, typename CharT = char, class StringPolicy = std::char_traits< CharT > >
       class fixed_string: public fixed_string_base< CharT, StringPolicy >
@@ -86,12 +111,6 @@
          private:
             CharT                      str[ n ];
             size_t                     len;
-         public:
-            typedef fixed_string_base< CharT, StringPolicy >         base_type;
-            typedef typename base_type::size_type                    size_type;
-            typedef typename base_type::difference_type              difference_type;
-            typedef typename base_type::reference                    reference;
-            typedef typename base_type::const_reference              const_reference;
          public: // validation checks
             struct ok{ typedef char value; };
             // zero-buffer check: n != 0
@@ -104,52 +123,73 @@
             typedef typename mpl::if_< is_same< typename StringPolicy::char_type, CharT >,
                                        ok, string_policy_error
                                      >::type::value                  string_policy_check;
-         public: // access
-            inline                operator const CharT *() const
+         public:
+            typedef fixed_string_base< CharT, StringPolicy >         base_type;
+            typedef typename base_type::size_type                    size_type;
+            typedef typename base_type::iterator                     iterator;
+            typedef typename base_type::const_iterator               const_iterator;
+            typedef typename base_type::reference                    reference;
+            typedef typename base_type::const_reference              const_reference;
+         private: // iterators
+            inline iterator                      begin_()
             {
                return( str );
             }
-            inline const CharT *                 data() const
+            inline const_iterator                begin_() const
             {
                return( str );
             }
-            inline const CharT *                 c_str() const
+            inline iterator                      end_()
+            {
+               return( str + len );
+            }
+            inline const_iterator                end_() const
+            {
+               return( str + len );
+            }
+         private: // access
+            inline CharT *                       buffer_()
             {
                return( str );
             }
-            inline reference                     at( size_type i )
+            inline const CharT *                 data_() const
+            {
+               return( str );
+            }
+            inline const CharT *                 c_str_() const
+            {
+               return( str );
+            }
+            inline reference                     at_( size_type i )
             {
                if( i >= n )            throw( std::out_of_range( "" ));
                return( str[ i ]);
             }
-            inline CharT *                       iter_offset( difference_type off )
+            inline const_reference               at_( size_type i ) const
             {
-               return( str + off );
+               if( i >= n )            throw( std::out_of_range( "" ));
+               return( str[ i ]);
             }
-            inline const CharT *                 const_iter_offset( difference_type off ) const
-            {
-               return( str + off );
-            }
-         public: // size and capacity
-            inline size_type                     length() const
+         private: // size and capacity
+            inline size_type                     length_() const
             {
                return( len );
             }
-            inline size_type                     capacity() const
+            inline size_type                     capacity_() const
             {
                return( n );
             }
-            inline size_type                     max_size() const
+            inline size_type                     max_size_() const
             {
                return( capacity());
             }
-            inline void                          resize( size_t sz, CharT c )
+            inline void                          resize_( size_t sz, CharT c )
             {
                if( sz > len )          StringPolicy::assign( str + len, sz - len, c );
                len = sz;
                str[ len ] = CharT();
             }
-            inline void                          reserve( size_type sz )
+            inline void                          reserve_( size_type sz )
             {
                if( sz < len )
                {
@@ -157,38 +197,36 @@
                   str[ len ] = CharT();
                }
             }
-         public: // string operations
-            inline CharT *                       assign( const CharT * s, size_type l = npos )
+         private: // string operations
+            inline void                          assign_( const CharT * s, size_type l )
             {
-               if( l == npos )         l = StringPolicy::length( s ) + 1;
+               if( l == npos )         l = StringPolicy::length( s );
                len = ( l > n ) ? ( n - 1 ) : l;
-               CharT *                 ret = StringPolicy::copy( str, s, len );
+               StringPolicy::copy( str, s, len );
                str[ len ] = CharT();
-               return( ret );
             }
-            inline CharT *                       append( const CharT * s, size_type l = npos )
+            inline void                          append_( const CharT * s, size_type l = npos )
             {
-               if( l == npos )         l = StringPolicy::length( s ) + 1;
+               if( l == npos )         l = StringPolicy::length( s );
                l = (( l + len ) > n ) ? ( n - len ) : l;
-               CharT *                 ret = StringPolicy::copy( str + len - 1, s, l );
+               StringPolicy::copy( str + len, s, l );
                len += l - 1;
                str[ len ] = CharT();
+            }
+            inline int                           format_( const CharT * fmt, va_list args )
+            {
+               int                     ret = detail::format_policy< CharT >::format( str, n, fmt, args );
+               len = ( ret == -1 ) ? ( n - 1 ) : ret;
+               str[ len ] = CharT();
                return( ret );
             }
-            inline void                          push_back( CharT c )
+            inline void                          push_back_( CharT c )
             {
                if( len < ( n - 1 ))
                {
                   str[   len ] = c;
                   str[ ++len ] = CharT();
                }
-            }
-            inline int                           format( const CharT * fmt, va_list args )
-            {
-               int                     ret = detail::format_policy< CharT >::format( str, n, fmt, args );
-               len = ( ret == -1 ) ? ( n - 1 ) : ret;
-               str[ len ] = CharT();
-               return( ret );
             }
          public: // construction
             inline           fixed_string(): len( 0 )

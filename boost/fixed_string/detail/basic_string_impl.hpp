@@ -6,7 +6,7 @@
 // modified my Hartmut Kasier
 
 // The main changes are:
-// *  uses an iterator_adaptor-style approach instead of StoragePolicy
+// *  made a few modifications to the StoragePolicy interface
 // *  uses an ErrorPolicy class to handle out_of_range and length_error exceptions
 // *  uses the traits_type functions instead of the POD functions
 //       pod_move( const Pod * b, const Pod * e, Pod * d ) --> traits_type::move( d, b, ( e - b ))
@@ -22,20 +22,22 @@
 /*
    struct StringPolicy // interface of a StringPolicy class
    {
-      const value_type * c_str()  const;
-      const value_type * data()   const;
-      value_type &       at( size_type i );
-      iterator           iter_offset( difference_type );
-      const_iterator     const_iter_offset( difference_type ) const;
-      size_type          length()   const;
-      size_type          capacity() const;
-      size_type          max_size() const;
-      void               resize(  size_type, value_type );
-      void               reserve( size_type );
-      void               assign(  const value_type * s, size_type l );
-      void               append(  const value_type * s, size_type l );
-      void               push_back( value_type );
-      void               swap( StringPolicy & );
+      const value_type * c_str_() const;
+      const value_type * data_()  const;
+      value_type &       at_( size_type i );
+      iterator           begin_()
+      const_iterator     begin_() const
+      iterator           end_()
+      const_iterator     end_() const
+      size_type          length_()   const;
+      size_type          capacity_() const;
+      size_type          max_size_() const;
+      void               resize_(  size_type, value_type );
+      void               reserve_( size_type );
+      void               assign_(  const value_type * s, size_type l );
+      void               append_(  const value_type * s, size_type l );
+      void               push_back_( value_type );
+      void               swap_( StringPolicy & );
    };
 */
 
@@ -78,30 +80,16 @@
          }
       };
 
-      template< typename CharT, class SubstringType, typename Iterator = CharT *, typename ConstIterator = const CharT * >
-      struct string_policy
-      {
-         typedef SubstringType                                       substring_type;
-         typedef Iterator                                            iterator;
-         typedef ConstIterator                                       const_iterator;
-      };
-      
-      template
-      <
-         class Derived, class CharT,
-         class CharPolicy   = std::char_traits< CharT >,
-         class StringPolicy = string_policy< CharT, Derived >,
-         class ErrorPolicy  = noerror_string_policy
-      >
-      class basic_string_impl
+      template< class Base, class ErrorPolicy = noerror_string_policy >
+      class basic_string_impl: public Base
       {
          public: // types
-            typedef Derived                                          string_type;
-            typedef typename StringPolicy::substring_type            substring_type;
-            typedef typename CharPolicy                              traits_type;
+            typedef typename Base::substring_type                    substring_type;
+            typedef basic_string_impl< Base, ErrorPolicy >           string_type;
+            typedef typename Base::traits_type                       traits_type;
             typedef typename traits_type::char_type                  value_type;
             typedef typename traits_type::char_type                  char_type;
-            typedef std::allocator< value_type >                     allocator_type;
+            typedef typename Base::allocator_type                    allocator_type;
          public:
             typedef typename allocator_type::size_type               size_type;
             typedef typename allocator_type::difference_type         difference_type;
@@ -110,21 +98,13 @@
             typedef typename allocator_type::pointer                 pointer;
             typedef typename allocator_type::const_pointer           const_pointer;
          public:
-            typedef typename StringPolicy::iterator                  iterator;
-            typedef typename StringPolicy::const_iterator            const_iterator;
+            typedef typename Base::iterator                          iterator;
+            typedef typename Base::const_iterator                    const_iterator;
             typedef boost::reverse_iterator< iterator >              reverse_iterator;
             typedef boost::reverse_iterator< const_iterator >        const_reverse_iterator;
          public:
             BOOST_STATIC_CONSTANT( size_type, npos = -1 );
          private: // implementation helpers
-            inline string_type &                 get_impl()
-            {
-               return( *static_cast< string_type * >( this ));
-            }
-            inline const string_type &           get_impl() const
-            {
-               return( *static_cast< const string_type * >( this ));
-            }
             inline char_type *                   offset( size_type pos )
             {
                return( &*( begin() + pos ));
@@ -132,19 +112,19 @@
          public: // 21.3.2: iterators
             inline const_iterator                begin() const
             {
-               return( get_impl().const_iter_offset( 0 ));
+               return( begin_());
             }
             inline iterator                      begin()
             {
-               return( get_impl().iter_offset( 0 ));
+               return( begin_());
             }
             inline const_iterator                end() const
             {
-               return( get_impl().const_iter_offset( size()));
+               return( end_());
             }
             inline iterator                      end()
             {
-               return( get_impl().iter_offset( size()));
+               return( end_());
             }
             inline const_reverse_iterator        rbegin() const
             {
@@ -165,20 +145,20 @@
          public: // 21.3.3: capacity
             inline size_type                     size() const
             {
-               return( get_impl().length());
+               return( length_());
             }
             inline size_type                     length() const
             {
-               return( get_impl().length());
+               return( length_());
             }
             inline size_type                     max_size() const
             {
-               return( get_impl().max_size());
+               return( max_size_());
             }
             inline void                          resize( size_type n, char_type c )
             {
                if( n > max_size())     ErrorPolicy::length_error();
-               get_impl().resize( n, c );
+               resize_( n, c );
             }
             inline void                          resize( size_type n )
             {
@@ -186,49 +166,45 @@
             }
             inline size_type                     capacity() const
             {
-               return( get_impl().capacity());
+               return( capacity_());
             }
             inline void                          reserve( size_type n = 0 )
             {
                if( n > max_size())     ErrorPolicy::length_error();
-               get_impl().reserve( n );
+               reserve_( n );
             }
             inline void                          clear()
             {
-               erase();
+               resize_( 0, value_type()); // [review]
             }
             inline bool                          empty() const
             {
-               return( get_impl().length() == 0 );
+               return( length_() == 0 );
             }
          public: // 21.3.4: element access
             inline const_reference operator[]( size_type i ) const
             {
-               return( get_impl().at( i ));
+               return( at_( i ));
             }
             inline reference       operator[]( size_type i )
             {
-               return( get_impl().at( i ));
+               return( at_( i ));
             }
             inline const_reference               at( size_type i ) const
             {
                if( i > length())       ErrorPolicy::out_of_range();
-               return( get_impl().at( i ));
+               return( at_( i ));
             }
             inline reference                     at( size_type i )
             {
                if( i > length())       ErrorPolicy::out_of_range();
-               return( get_impl().at( i ));
+               return( at_( i ));
             }
          public: // 21.3.5: modifiers
             inline string_type &                 assign( const string_type & s )
             {
-#              if !defined(BOOST_MSVC) || ( BOOST_MSVC > 1200 )
-                  if( &s != this )     assign( s.data(), s.length());
-#              else
-                  assign( s.data(), s.length()); // VC6 does not identify StringPolicy as derived from basic_string_impl
-#              endif
-               return( get_impl());
+               if( &s != this )        assign( s.data(), s.length());
+               return( *this );
             }
             inline string_type &                 assign( const string_type & s, size_type pos, size_type n )
             {
@@ -237,8 +213,8 @@
             }
             inline string_type &                 assign( const char_type * s, size_type n )
             {
-               get_impl().assign( s, n );
-               return( get_impl());
+               assign_( s, n );
+               return( *this );
             }
             inline string_type &                 assign( const char_type * s )
             {
@@ -252,7 +228,7 @@
             inline size_type &                   assign( InputIterator first, InputIterator last )
             {
                clear();
-               while( first != last )  get_impl().push_back( *first++ );
+               while( first != last )  push_back_( *first++ );
             }
          public:
             inline string_type &  operator=( const string_type & s )
@@ -266,8 +242,8 @@
             inline string_type &  operator=( char_type c )
             {
                clear();
-               get_impl().push_back( c );
-               return( get_impl());
+               push_back_( c );
+               return( *this );
             }
          public:
             inline string_type &                 append( const string_type & s )
@@ -282,8 +258,8 @@
             }
             inline string_type &                 append( const char_type * s, size_type n )
             {
-               get_impl().append( s, n );
-               return( get_impl());
+               append_( s, n );
+               return( *this );
             }
             inline string_type &                 append( const char_type * s )
             {
@@ -291,17 +267,17 @@
             }
             inline string_type &                 append( size_type n, char_type c )
             {
-               get_impl().resize( size() + n, c );
-               return( get_impl());
+               resize_( size() + n, c );
+               return( *this );
             }
             template< typename InputIterator >
             inline size_type &                   append( InputIterator first, InputIterator last )
             {
-               while( first != last )  get_impl().push_back( *first++ );
+               while( first != last )  push_back_( *first++ );
             }
             inline void                          push_back( const char_type c )
             {
-               get_impl().push_back( c );
+               push_back_( c );
             }
          public:
             inline string_type &  operator+=( const string_type & s )
@@ -315,7 +291,7 @@
             inline string_type &  operator+=( char_type c )
             {
                push_back( c );
-               return( get_impl());
+               return( *this );
             }
          public:
             inline string_type &                 insert( size_type pos1, const string_type & s )
@@ -408,7 +384,7 @@
                   if( delta <= len_ )
                   {
                      value_type *      end_ = &*end();
-                     get_impl().append( end_ - delta, delta );
+                     append_( end_ - delta, delta );
                      traits_type::move( d2 + delta, d2, ( len_ - delta ));
                      if( le( d2, s1 ))
                      {
@@ -429,8 +405,8 @@
                   else
                   {
                      const size_type   sz = delta - len_;
-                     get_impl().append( s2 - sz, sz );
-                     get_impl().append( d2, len_ );
+                     append_( s2 - sz, sz );
+                     append_( d2, len_ );
                      traits_type::move( d1, s1, (( s2 - delta + len_ ) - s1 ));
                   }
                }
@@ -440,7 +416,7 @@
                   traits_type::move( offset( d + n1 + delta ), offset( d + n1 ), ( &*end() - offset( d + n1 )));
                   resize( size() + delta );
                }
-               return( get_impl());
+               return( *this );
             }
             inline string_type &                 replace( size_type d, size_type n1, const char_type * s )
             {
@@ -453,7 +429,7 @@
                if( pos + n2 > size_ )
                {
                   resize( pos + n2, c );
-                  get_impl().append( offset( pos + n1 ), size_ - pos - n1 );
+                  append_( offset( pos + n1 ), size_ - pos - n1 );
                   traits_type::assign( offset( pos ), size_ - pos, c );
                }
                else
@@ -461,7 +437,7 @@
                   if( n2 > n1 )
                   {
                      const size_type   delta = n2 - n1;
-                     get_impl().append( offset( size_ - delta ), delta );
+                     append_( offset( size_ - delta ), delta );
                      traits_type::move( offset( pos + n2 ), offset( pos + n1 ), ( size_ - delta - pos - n1 ));
                   }
                   else
@@ -471,7 +447,7 @@
                   }
                   traits_type::assign( offset( pos ), n2, c );
                }
-               return( get_impl());
+               return( *this );
             }
             inline string_type &                 replace( iterator i1, iterator i2, const string_type & s )
             {
@@ -511,20 +487,20 @@
             }
             inline void                          swap( string_type & s )
             {
-               get_impl().swap( s );
+               swap_( s );
             }
          public: // 21.3.6: string operations
-            inline const char_type *             c_str() const
-            {
-               return( get_impl().c_str());
-            }
             inline const char_type *             data() const
             {
-               return( get_impl().data());
+               return( data_());
+            }
+            inline const char_type *             c_str() const
+            {
+               return( c_str_());
             }
             inline allocator_type                get_allocator() const
             {
-               return( get_impl().get_allocator());
+               return( allocator_type());
             }
          public:
             inline size_type                     find( const string_type & s, size_type pos = 0 ) const
@@ -729,41 +705,62 @@
                const int               res = traits_type::compare( data() + pos1, s, min_( n1, n2 ));
                return(( res != 0 ) ? res : int( n1 - n2 ));
             }
-         public:
-            inline explicit  basic_string_impl()
+         public: // construction
+            inline           basic_string_impl()
             {
+            }
+            inline           basic_string_impl( const string_type & s, size_type p = 0, size_type l = npos )
+            {
+               assign( s.c_str(), p, l );
+            }
+            inline           basic_string_impl( const value_type * s, size_type l )
+            {
+               assign( s, l );
+            }
+            inline           basic_string_impl( const value_type * s )
+            {
+               assign( s );
+            }
+            inline           basic_string_impl( size_type l, value_type c )
+            {
+               assign( l, c );
+            }
+            template< typename InputIterator >
+            inline           basic_string_impl( InputIterator first, InputIterator last )
+            {
+               assign( first, last );
             }
       };
       
       // lhs + rhs
 
-      template< class D, typename C, class CP, class SP, class EP >
-      inline basic_string_impl< D, C, CP, SP, EP > 
+      template< class Base, class EP >
+      inline basic_string_impl< Base, EP > 
                                   operator+
                                   ( 
-                                     const basic_string_impl< D, C, CP, SP, EP > & lhs,
-                                     const basic_string_impl< D, C, CP, SP, EP > & rhs
+                                     const basic_string_impl< Base, EP > & lhs,
+                                     const basic_string_impl< Base, EP > & rhs
                                   )
       {
-         basic_string_impl< D, C, CP, SP, EP > res;
+         basic_string_impl< Base, EP > res;
          res.reserve( lhs.size() + rhs.size());
          res.append( lhs );
          res.append( rhs );
          return( res );
       }
 
-      template< class D, typename C, class CP, class SP, class EP >
-      inline basic_string_impl< D, C, CP, SP, EP > 
+      template< class Base, class EP >
+      inline basic_string_impl< Base, EP > 
                                   operator+
                                   ( 
-                                     const typename basic_string_impl< D, C, CP, SP, EP >::value_type * lhs,
-                                     const basic_string_impl< D, C, CP, SP, EP > & rhs
+                                     const typename basic_string_impl< Base, EP >::value_type * lhs,
+                                     const basic_string_impl< Base, EP > & rhs
                                   )
       {
-         typedef typename basic_string_impl< D, C, CP, SP, EP >::size_type    size_type;
-         typedef typename basic_string_impl< D, C, CP, SP, EP >::traits_type  traits_type;
+         typedef typename basic_string_impl< Base, EP >::size_type    size_type;
+         typedef typename basic_string_impl< Base, EP >::traits_type  traits_type;
       
-         basic_string_impl< D, C, CP, SP, EP > res;
+         basic_string_impl< Base, EP > res;
          const size_type                   len = traits_type::length( lhs );
          res.reserve( len + rhs.size());
          res.append( lhs, len );
@@ -771,18 +768,18 @@
          return( res );
       }
 
-      template< class D, typename C, class CP, class SP, class EP >
-      inline basic_string_impl< D, C, CP, SP, EP > 
+      template< class Base, class EP >
+      inline basic_string_impl< Base, EP > 
                                   operator+
                                   ( 
-                                     const basic_string_impl< D, C, CP, SP, EP > & lhs,
-                                     const typename basic_string_impl< D, C, CP, SP, EP >::value_type * rhs
+                                     const basic_string_impl< Base, EP > & lhs,
+                                     const typename basic_string_impl< Base, EP >::value_type * rhs
                                   )
       {
-         typedef typename basic_string_impl< D, C, CP, SP, EP >::size_type    size_type;
-         typedef typename basic_string_impl< D, C, CP, SP, EP >::traits_type  traits_type;
+         typedef typename basic_string_impl< Base, EP >::size_type    size_type;
+         typedef typename basic_string_impl< Base, EP >::traits_type  traits_type;
       
-         basic_string_impl< D, C, CP, SP, EP > res;
+         basic_string_impl< Base, EP > res;
          const size_type                   len = traits_type::length( lhs );
          res.reserve( lhs.size() + len );
          res.append( lhs );
@@ -790,30 +787,30 @@
          return( res );
       }
 
-      template< class D, typename C, class CP, class SP, class EP >
-      inline basic_string_impl< D, C, CP, SP, EP > 
+      template< class Base, class EP >
+      inline basic_string_impl< Base, EP > 
                                   operator+
                                   ( 
-                                     const typename basic_string_impl< D, C, CP, SP, EP >::value_type lhs,
-                                     const basic_string_impl< D, C, CP, SP, EP > & rhs
+                                     const typename basic_string_impl< Base, EP >::value_type lhs,
+                                     const basic_string_impl< Base, EP > & rhs
                                   )
       {
-         basic_string_impl< D, C, CP, SP, EP > res;
+         basic_string_impl< Base, EP > res;
          res.reserve( 1 + rhs.size());
          res.push_back( lhs );
          res.append( rhs );
          return( res );
       }
 
-      template< class D, typename C, class CP, class SP, class EP >
-      inline basic_string_impl< D, C, CP, SP, EP > 
+      template< class Base, class EP >
+      inline basic_string_impl< Base, EP > 
                                   operator+
                                   ( 
-                                     const basic_string_impl< D, C, CP, SP, EP > & lhs,
-                                     const typename basic_string_impl< D, C, CP, SP, EP >::value_type rhs
+                                     const basic_string_impl< Base, EP > & lhs,
+                                     const typename basic_string_impl< Base, EP >::value_type rhs
                                   )
       {
-         basic_string_impl< D, C, CP, SP, EP > res;
+         basic_string_impl< Base, EP > res;
          res.reserve( lhs.size() + 1 );
          res.append( lhs );
          res.push_back( rhs );
@@ -822,131 +819,131 @@
 
       // lhs == rhs
 
-      template< class D, typename C, class CP, class SP, class EP >
-      inline bool operator==( const basic_string_impl< D, C, CP, SP, EP > & lhs, const basic_string_impl< D, C, CP, SP, EP > & rhs )
+      template< class Base, class EP >
+      inline bool operator==( const basic_string_impl< Base, EP > & lhs, const basic_string_impl< Base, EP > & rhs )
       {
          return( lhs.compare( rhs ) == 0 );
       }
 
-      template< class D, typename C, class CP, class SP, class EP >
-      inline bool operator==( const typename basic_string_impl< D, C, CP, SP, EP >::value_type * lhs, const basic_string_impl< D, C, CP, SP, EP > & rhs )
+      template< class Base, class EP >
+      inline bool operator==( const typename basic_string_impl< Base, EP >::value_type * lhs, const basic_string_impl< Base, EP > & rhs )
       {
          return( rhs == lhs );
       }
 
-      template< class D, typename C, class CP, class SP, class EP >
-      inline bool operator==( const basic_string_impl< D, C, CP, SP, EP > & lhs, const typename basic_string_impl< D, C, CP, SP, EP >::value_type * rhs )
+      template< class Base, class EP >
+      inline bool operator==( const basic_string_impl< Base, EP > & lhs, const typename basic_string_impl< Base, EP >::value_type * rhs )
       {
          return( lhs.compare( rhs ) == 0 );
       }
 
       // lhs != rhs
 
-      template< class D, typename C, class CP, class SP, class EP >
-      inline bool operator!=( const basic_string_impl< D, C, CP, SP, EP > & lhs, const basic_string_impl< D, C, CP, SP, EP > & rhs )
+      template< class Base, class EP >
+      inline bool operator!=( const basic_string_impl< Base, EP > & lhs, const basic_string_impl< Base, EP > & rhs )
       {
          return( !( lhs == rhs ));
       }
 
-      template< class D, typename C, class CP, class SP, class EP >
-      inline bool operator!=( const typename basic_string_impl< D, C, CP, SP, EP >::value_type * lhs, const basic_string_impl< D, C, CP, SP, EP > & rhs )
+      template< class Base, class EP >
+      inline bool operator!=( const typename basic_string_impl< Base, EP >::value_type * lhs, const basic_string_impl< Base, EP > & rhs )
       {
          return( !( lhs == rhs ));
       }
 
-      template< class D, typename C, class CP, class SP, class EP >
-      inline bool operator!=( const basic_string_impl< D, C, CP, SP, EP > & lhs, const typename basic_string_impl< D, C, CP, SP, EP >::value_type * rhs )
+      template< class Base, class EP >
+      inline bool operator!=( const basic_string_impl< Base, EP > & lhs, const typename basic_string_impl< Base, EP >::value_type * rhs )
       {
          return( !( lhs == rhs ));
       }
       
       // lhs < rhs
 
-      template< class D, typename C, class CP, class SP, class EP >
-      inline bool operator<( const basic_string_impl< D, C, CP, SP, EP > & lhs, const basic_string_impl< D, C, CP, SP, EP > & rhs )
+      template< class Base, class EP >
+      inline bool operator<( const basic_string_impl< Base, EP > & lhs, const basic_string_impl< Base, EP > & rhs )
       {
          return( lhs.compare( rhs ) < 0 );
       }
 
-      template< class D, typename C, class CP, class SP, class EP >
-      inline bool operator<( const typename basic_string_impl< D, C, CP, SP, EP >::value_type * lhs, const basic_string_impl< D, C, CP, SP, EP > & rhs )
+      template< class Base, class EP >
+      inline bool operator<( const typename basic_string_impl< Base, EP >::value_type * lhs, const basic_string_impl< Base, EP > & rhs )
       {
          return( rhs.compare( lhs ) > 0 );
       }
 
-      template< class D, typename C, class CP, class SP, class EP >
-      inline bool operator<( const basic_string_impl< D, C, CP, SP, EP > & lhs, const typename basic_string_impl< D, C, CP, SP, EP >::value_type * rhs )
+      template< class Base, class EP >
+      inline bool operator<( const basic_string_impl< Base, EP > & lhs, const typename basic_string_impl< Base, EP >::value_type * rhs )
       {
          return( lhs.compare( rhs ) < 0 );
       }
 
       // lhs > rhs
 
-      template< class D, typename C, class CP, class SP, class EP >
-      inline bool operator>( const basic_string_impl< D, C, CP, SP, EP > & lhs, const basic_string_impl< D, C, CP, SP, EP > & rhs )
+      template< class Base, class EP >
+      inline bool operator>( const basic_string_impl< Base, EP > & lhs, const basic_string_impl< Base, EP > & rhs )
       {
          return( rhs < lhs );
       }
 
-      template< class D, typename C, class CP, class SP, class EP >
-      inline bool operator>( const typename basic_string_impl< D, C, CP, SP, EP >::value_type * lhs, const basic_string_impl< D, C, CP, SP, EP > & rhs )
+      template< class Base, class EP >
+      inline bool operator>( const typename basic_string_impl< Base, EP >::value_type * lhs, const basic_string_impl< Base, EP > & rhs )
       {
          return( rhs < lhs );
       }
 
-      template< class D, typename C, class CP, class SP, class EP >
-      inline bool operator>( const basic_string_impl< D, C, CP, SP, EP > & lhs, const typename basic_string_impl< D, C, CP, SP, EP >::value_type * rhs )
+      template< class Base, class EP >
+      inline bool operator>( const basic_string_impl< Base, EP > & lhs, const typename basic_string_impl< Base, EP >::value_type * rhs )
       {
          return( rhs < lhs );
       }
 
       // lhs <= rhs
 
-      template< class D, typename C, class CP, class SP, class EP >
-      inline bool operator<=( const basic_string_impl< D, C, CP, SP, EP > & lhs, const basic_string_impl< D, C, CP, SP, EP > & rhs )
+      template< class Base, class EP >
+      inline bool operator<=( const basic_string_impl< Base, EP > & lhs, const basic_string_impl< Base, EP > & rhs )
       {
          return( !( rhs < lhs ));
       }
 
-      template< class D, typename C, class CP, class SP, class EP >
-      inline bool operator<=( const typename basic_string_impl< D, C, CP, SP, EP >::value_type * lhs, const basic_string_impl< D, C, CP, SP, EP > & rhs )
+      template< class Base, class EP >
+      inline bool operator<=( const typename basic_string_impl< Base, EP >::value_type * lhs, const basic_string_impl< Base, EP > & rhs )
       {
          return( !( rhs < lhs ));
       }
 
-      template< class D, typename C, class CP, class SP, class EP >
-      inline bool operator<=( const basic_string_impl< D, C, CP, SP, EP > & lhs, const typename basic_string_impl< D, C, CP, SP, EP >::value_type * rhs )
+      template< class Base, class EP >
+      inline bool operator<=( const basic_string_impl< Base, EP > & lhs, const typename basic_string_impl< Base, EP >::value_type * rhs )
       {
          return( !( rhs < lhs ));
       }
 
       // lhs >= rhs
 
-      template< class D, typename C, class CP, class SP, class EP >
-      inline bool operator>=( const basic_string_impl< D, C, CP, SP, EP > & lhs, const basic_string_impl< D, C, CP, SP, EP > & rhs )
+      template< class Base, class EP >
+      inline bool operator>=( const basic_string_impl< Base, EP > & lhs, const basic_string_impl< Base, EP > & rhs )
       {
          return( !( lhs < rhs ));
       }
 
-      template< class D, typename C, class CP, class SP, class EP >
-      inline bool operator>=( const typename basic_string_impl< D, C, CP, SP, EP >::value_type * lhs, const basic_string_impl< D, C, CP, SP, EP > & rhs )
+      template< class Base, class EP >
+      inline bool operator>=( const typename basic_string_impl< Base, EP >::value_type * lhs, const basic_string_impl< Base, EP > & rhs )
       {
          return( !( lhs < rhs ));
       }
 
-      template< class D, typename C, class CP, class SP, class EP >
-      inline bool operator>=( const basic_string_impl< D, C, CP, SP, EP > & lhs, const typename basic_string_impl< D, C, CP, SP, EP >::value_type * rhs )
+      template< class Base, class EP >
+      inline bool operator>=( const basic_string_impl< Base, EP > & lhs, const typename basic_string_impl< Base, EP >::value_type * rhs )
       {
          return( !( lhs < rhs ));
       }
 
       // swap
 
-      template< typename CharT, class StreamPolicy, class StringPolicy, class ErrorPolicy >
+      template< class Base, class EP >
       inline void                                swap
                                                  (
-                                                    basic_string_impl< StringPolicy, CharT, StreamPolicy, ErrorPolicy > & lhs,
-                                                    basic_string_impl< StringPolicy, CharT, StreamPolicy, ErrorPolicy > & rhs
+                                                    basic_string_impl< Base, EP > & lhs,
+                                                    basic_string_impl< Base, EP > & rhs
                                                  )
       {
          lhs.swap( rhs );
@@ -958,39 +955,40 @@
       //    so std::cout << str; will not work as intended
       //    workaround: use the template parameters directly
 
-      template< class S, typename C, class SP, class EP >
-      inline std::basic_istream< C, SP > &
+      template< class Base, class EP, typename CharT, class Traits >
+      inline std::basic_istream< CharT, Traits > &
                                   operator>>
                                   (
-                                     std::basic_istream< C, SP > & is,
-                                     basic_string_impl< S, C, SP, EP > & str
+                                     std::basic_istream< CharT, Traits > & is,
+                                     basic_string_impl< Base, EP > & str
                                   )
       {
-         return( getline( is, str, typename basic_string_impl< S, C, SP, EP >::value_type( ' ' ) ));
+         return( getline( is, str, typename basic_string_impl< Base, EP >::value_type( ' ' )));
       }
 
-      template< class D, typename C, class CP, class SP, class EP >
-      inline std::basic_ostream< C, CP > &
+      template< class Base, class EP, typename CharT, class Traits >
+      inline std::basic_ostream< CharT, Traits > &
                                   operator<<
                                   (
-                                     std::basic_ostream< C, CP > & os,
-                                     const basic_string_impl< D, C, CP, SP, EP > & str
+                                     std::basic_ostream< CharT, Traits > & os,
+                                     const basic_string_impl< Base, EP > & str
                                   )
       {
          return( os << str.c_str());
       }
 
-      template< class S, typename C, class SP, class EP >
-      inline std::basic_istream< C, SP > &       getline
+      template< class Base, class EP, typename CharT, class Traits >
+      inline std::basic_istream< CharT, Traits > &
+                                                 getline
                                                  (
-                                                    std::basic_istream< C, SP > & is,
-                                                    basic_string_impl< S, C, SP, EP > & str,
-                                                    typename basic_string_impl< S, C, SP, EP >::value_type delim
+                                                    std::basic_istream< CharT, Traits > & is,
+                                                    basic_string_impl< Base, EP > & str,
+                                                    typename basic_string_impl< Base, EP >::value_type delim
                                                  )
       {
-         typedef typename basic_string_impl< S, C, SP, EP >::traits_type  traits_type;
+         typedef typename typename basic_string_impl< Base, EP >::traits_type  traits_type;
 
-         typename basic_string_impl< S, C, SP, EP >::value_type
+         typename basic_string_impl< Base, EP >::value_type
                                        ch;
          while( is >> ch && !traits_type::eq( ch, delim ))
          {
@@ -999,14 +997,15 @@
          return( is );
       }
 
-      template< class S, typename C, class SP, class EP >
-      inline std::basic_istream< C, SP > &       getline
+      template< class Base, class EP, typename CharT, class Traits >
+      inline std::basic_istream< CharT, Traits > &
+                                                 getline
                                                  (
-                                                    std::basic_istream< C, SP > & is,
-                                                    basic_string_impl< S, C, SP, EP > & str
+                                                    std::basic_istream< CharT, Traits > & is,
+                                                    basic_string_impl< Base, EP > & str
                                                  )
       {
-         return( getline( is, str, typename basic_string_impl< S, C, SP, EP >::value_type( '\n' )));
+         return( getline( is, str, typename basic_string_impl< Base, EP >::value_type( '\n' )));
       }
    }}
 #endif

@@ -11,12 +11,14 @@
 
    inline char *                                 strcpy( boost::char_string & d, const char * s )
    {
-      return( d.assign( s ));
+      d.assign( s );
+      return( d.buffer());
    }
 
    inline char *                                 strcat( boost::char_string & d, const char * s )
    {
-      return( d.append( s ));
+      d.append( s );
+      return( d.buffer());
    }
 
    inline int                                    strcmp( boost::char_string & d, const char * s )
