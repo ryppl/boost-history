@@ -35,6 +35,21 @@
 // setups:
 // #define BOOST_NO_CONFIG
 
+// define this to make the config "optimistic"
+// about unknown compiler versions.  Normally
+// unknown compiler versions are assumed to have
+// all the defects of the last known version, however
+// setting this flag, causes the config to assume
+// that unknown compiler versions are fully conformant
+// with the standard:
+// #define BOOST_STRICT_CONFIC
+
+// define this to cause the config to halt compilation
+// with a #error if it encounters anything unknown -
+// either an unknown compiler version or an unknown
+// compiler/platform/library:
+// #define BOOST_ASSERT_CONFIG
+
 
 // define if you want to disable threading support, even
 // when available:

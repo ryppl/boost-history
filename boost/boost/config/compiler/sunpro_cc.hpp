@@ -1,6 +1,13 @@
-// Sun C++ compiler setup:
+//  (C) Copyright Boost.org 2001. Permission to copy, use, modify, sell and
+//  distribute this software is granted provided this copyright notice appears
+//  in all copies. This software is provided "as is" without express or implied
+//  warranty, and with no claim as to its suitability for any purpose.
 
-#    if __SUNPRO_CC >= 0x510
+//  See http://www.boost.org for most recent version.
+
+//  Sun C++ compiler setup:
+
+#    if __SUNPRO_CC >= 0x520
        //
        // Sunpro 5.1 and later:
        //
@@ -22,4 +29,19 @@
 #    endif
 
 #define BOOST_COMPILER "Sun compiler version " BOOST_STRINGIZE(__SUNPRO_CC)
+
+//
+// versions check:
+// we don't support sunpro prior to version 4:
+#if __SUNPRO_CC < 0x400
+#error "Compiler not supported or configured - please reconfigure"
+#endif
+//
+// last known and checked version is 0x520:
+#if (__SUNPRO_CC > 0x520)
+#  if defined(BOOST_ASSERT_CONFIG)
+#     error "Unknown compiler version - please run the configure tests and report the results"
+#  endif
+#endif
+
 

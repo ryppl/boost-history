@@ -17,13 +17,6 @@
 #ifndef BOOST_CONFIG_SUFFIX_HPP
 #define BOOST_CONFIG_SUFFIX_HPP
 
-//  Edison Design Group front-ends,
-//  this is here since it is common to many compilers:
-# if defined(__EDG_VERSION__)
-#    include "boost/config/compiler/common_edg.hpp"
-# endif
-
-
 # ifndef BOOST_DECL
 #   define BOOST_DECL  // default for compilers not needing this decoration.
 # endif
@@ -38,7 +31,8 @@
 //
 // If cv-qualified specializations are not allowed, then neither are cv-void ones:
 //
-#  if defined(BOOST_NO_CV_SPECIALIZATIONS) && !defined(BOOST_NO_CV_VOID_SPECIALIZATIONS)
+#  if defined(BOOST_NO_CV_SPECIALIZATIONS) \
+      && !defined(BOOST_NO_CV_VOID_SPECIALIZATIONS)
 #     define BOOST_NO_CV_VOID_SPECIALIZATIONS
 #  endif
 
@@ -46,7 +40,8 @@
 // If there is no numeric_limits template, then it can't have any compile time
 // constants either!
 //
-#  if defined(BOOST_NO_LIMITS) && !defined(BOOST_NO_LIMITS_COMPILE_TIME_CONSTANTS)
+#  if defined(BOOST_NO_LIMITS) \
+      && !defined(BOOST_NO_LIMITS_COMPILE_TIME_CONSTANTS)
 #     define BOOST_NO_LIMITS_COMPILE_TIME_CONSTANTS
 #  endif
 
@@ -54,14 +49,16 @@
 // if member templates are supported then so is the
 // VC6 subset of member templates:
 //
-#  if !defined(BOOST_NO_MEMBER_TEMPLATES) && !defined(BOOST_MSVC6_MEMBER_TEMPLATES)
+#  if !defined(BOOST_NO_MEMBER_TEMPLATES) \
+       && !defined(BOOST_MSVC6_MEMBER_TEMPLATES)
 #     define BOOST_MSVC6_MEMBER_TEMPLATES
 #  endif
 
 //
 // Without partial specialization, std::iterator_traits can't work:
 //
-#  if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) && !defined(BOOST_NO_STD_ITERATOR_TRAITS)
+#  if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) \
+      && !defined(BOOST_NO_STD_ITERATOR_TRAITS)
 #     define BOOST_NO_STD_ITERATOR_TRAITS
 #  endif
 
@@ -69,7 +66,9 @@
 // Without member template support, we can't have template constructors
 // in the standard library either:
 //
-#  if defined(BOOST_NO_MEMBER_TEMPLATES) && !defined(BOOST_MSVC6_MEMBER_TEMPLATES) && !defined(BOOST_NO_TEMPLATED_ITERATOR_CONSTRUCTORS)
+#  if defined(BOOST_NO_MEMBER_TEMPLATES) \
+      && !defined(BOOST_MSVC6_MEMBER_TEMPLATES) \
+      && !defined(BOOST_NO_TEMPLATED_ITERATOR_CONSTRUCTORS)
 #     define BOOST_NO_TEMPLATED_ITERATOR_CONSTRUCTORS
 #  endif
 
@@ -113,7 +112,11 @@
 //
 // if the platform claims to be Unix, then it had better behave like Unix!
 //
-#  if defined(unix) || defined(__unix) || defined(_XOPEN_SOURCE) || defined(_POSIX_SOURCE)
+#  if defined(unix) \
+      || defined(__unix) \
+      || defined(_XOPEN_SOURCE) \
+      || defined(_POSIX_SOURCE)
+
 #     ifndef BOOST_HAS_UNISTD_H
 #        define BOOST_HAS_UNISTD_H
 #     endif
@@ -123,33 +126,16 @@
 // If we have a <unistd.h> then some optins can be deduced from it:
 //
 #  ifdef BOOST_HAS_UNISTD_H
-#     include <unistd.h>
-      // XOpen has <nl_types.h>, but is this the correct version check?
-#     if defined(_XOPEN_VERSION) && (_XOPEN_VERSION >= 3)
-#        define BOOST_HAS_NL_TYPES_H
-#     endif
-      // POSIX version 6 requires <stdint.h>
-#     if defined(_POSIX_VERSION) && (_POSIX_VERSION >= 200100)
-#        define BOOST_HAS_STDINT_H
-#     endif
-      // POSIX defines _POSIX_THREADS > 0 for pthread support,
-      // however some platforms define _POSIX_THREADS without
-      // a value, hence the (_POSIX_THREADS+0 >= 0) check.
-      // Strictly speeking this may catch platforms with a
-      // non-functioning stub <pthreads.h>, but such occurrences should
-      // occur very rarely if at all...
-#     if defined(_POSIX_THREADS) && (_POSIX_THREADS+0 >= 0)
-#        define BOOST_HAS_PTHREADS
-#     endif
+#     include <boost/config/posix_features.hpp>
 #  endif
-
 //
 // Turn on threading support if the compiler thinks that its in
 // multithreaded mode.  We put this here because there are only a
 // limited number of macros that identify this (if there's any missing
 // from here then add to the appropriate compiler section):
 //
-#if (defined(__MT__) || defined(_MT) || defined(_REENTRANT) || defined(_PTHREADS)) && !defined(BOOST_DISABLE_THREADS)
+#if (defined(__MT__) || defined(_MT) || defined(_REENTRANT) \
+    || defined(_PTHREADS)) && !defined(BOOST_DISABLE_THREADS)
 #  define BOOST_HAS_THREADS
 #endif
 //
@@ -174,12 +160,6 @@
 
 #  ifndef BOOST_HAS_HASH
 #     define BOOST_NO_HASH
-#  endif
-
-// Check for old name "BOOST_NMEMBER_TEMPLATES" for compatibility  -----------//
-// Don't use BOOST_NMEMBER_TEMPLATES. It is deprecated and will be removed soon.
-#  if defined( BOOST_NMEMBER_TEMPLATES ) && !defined( BOOST_NO_MEMBER_TEMPLATES )
-     #define BOOST_NO_MEMBER_TEMPLATES
 #  endif
 
 //  BOOST_NO_STDC_NAMESPACE workaround  --------------------------------------//
@@ -312,7 +292,8 @@ namespace std {
 #     define BOOST_STDLIB "Unknown ISO standard library"
 #  endif
 #  ifndef BOOST_PLATFORM
-#     if defined(unix) || defined(__unix) || defined(_XOPEN_SOURCE) || defined(_POSIX_SOURCE)
+#     if defined(unix) || defined(__unix) || defined(_XOPEN_SOURCE) \
+         || defined(_POSIX_SOURCE)
 #        define BOOST_PLATFORM "Generic Unix"
 #     else
 #        define BOOST_PLATFORM "Unknown"
@@ -320,10 +301,5 @@ namespace std {
 #  endif
 
 #endif
- 
-
-
-
-
 
 

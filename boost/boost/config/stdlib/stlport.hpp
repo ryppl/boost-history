@@ -1,4 +1,12 @@
-// STLPort standard library config:
+//  (C) Copyright Boost.org 2001. Permission to copy, use, modify, sell and
+//  distribute this software is granted provided this copyright notice appears
+//  in all copies. This software is provided "as is" without express or implied
+//  warranty, and with no claim as to its suitability for any purpose.
+
+//  See http://www.boost.org for most recent version.
+
+//  STLPort standard library config:
+
 #if !defined(__SGI_STL_PORT)
 #  include <utility>
 #  if !defined(__SGI_STL_PORT)
@@ -79,5 +87,6 @@
 
 
 #define BOOST_STDLIB "STLPort standard library version " BOOST_STRINGIZE(__SGI_STL_PORT)
+
 
 

@@ -5,12 +5,14 @@
 
 //  See http://www.boost.org for most recent version.
 
-//  IBM/Aix specific config options:
+//  Dec Alpha True64 C++ compiler setup:
 
-#define BOOST_PLATFORM "IBM Aix"
+#define BOOST_COMPILER "Dec Alpha True64 " BOOST_STRINGIZE(__DECCXX_VER)
 
-#define BOOST_HAS_UNISTD_H
-#define BOOST_HAS_PTHREADS
-#define BOOST_HAS_NL_TYPES_H
+#include "boost/config/compiler/common_edg.hpp"
+
+//
+// versions check:
+// Nothing to do here?
 
 

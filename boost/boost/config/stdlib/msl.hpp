@@ -1,4 +1,11 @@
-// Metrowerks standard library:
+//  (C) Copyright Boost.org 2001. Permission to copy, use, modify, sell and
+//  distribute this software is granted provided this copyright notice appears
+//  in all copies. This software is provided "as is" without express or implied
+//  warranty, and with no claim as to its suitability for any purpose.
+
+//  See http://www.boost.org for most recent version.
+
+//  Metrowerks standard library:
 
 #ifndef __MSL_CPP__
 #  include <utility>
@@ -29,6 +36,7 @@
 
 
 #define BOOST_STDLIB "Metrowerks Standard Library version " BOOST_STRINGIZE(__MSL_CPP__)
+
 
 
 

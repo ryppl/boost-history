@@ -1,4 +1,12 @@
-// generic SGI STL:
+//  (C) Copyright Boost.org 2001. Permission to copy, use, modify, sell and
+//  distribute this software is granted provided this copyright notice appears
+//  in all copies. This software is provided "as is" without express or implied
+//  warranty, and with no claim as to its suitability for any purpose.
+
+//  See http://www.boost.org for most recent version.
+
+//  generic SGI STL:
+
 #if !defined(__STL_CONFIG_H)
 #  include <utility>
 #  if !defined(__STL_CONFIG_H)
@@ -16,7 +24,7 @@
 //
 // No std::stringstream with gcc < 3
 //
-#if (defined(__GNUC__) && (__GNUC__ < 3) && (__GNUC_MINOR__ < 95) && !defined(__STL_USE_NEW_IOSTREAMS)
+#if defined(__GNUC__) && (__GNUC__ < 3) && (__GNUC_MINOR__ < 95) && !defined(__STL_USE_NEW_IOSTREAMS)
    // Note that we only set this for gnu C++ prior to 2.95 since the
    // latest patches for that release do contain a minimal <sstream>
    // If you are running a 2.95 release prior to 2.95.3 then this will need
@@ -68,5 +76,7 @@
 #endif
 
 #define BOOST_STDLIB "SGI standard library"
+
+
 
 

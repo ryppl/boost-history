@@ -1,4 +1,12 @@
-// Dinkumware standard library config:
+//  (C) Copyright Boost.org 2001. Permission to copy, use, modify, sell and
+//  distribute this software is granted provided this copyright notice appears
+//  in all copies. This software is provided "as is" without express or implied
+//  warranty, and with no claim as to its suitability for any purpose.
+
+//  See http://www.boost.org for most recent version.
+
+//  Dinkumware standard library config:
+
 #if !defined(_YVALS) && !defined(_CPPLIB_VER)
 #include <utility>
 #if !defined(_YVALS) && !defined(_CPPLIB_VER)
@@ -53,6 +61,7 @@
 #else
 #  define BOOST_STDLIB "Dinkumware standard library version 1.x"
 #endif
+
 
 
 

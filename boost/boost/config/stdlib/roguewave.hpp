@@ -1,4 +1,12 @@
-// Rogue Wave std lib:
+//  (C) Copyright Boost.org 2001. Permission to copy, use, modify, sell and
+//  distribute this software is granted provided this copyright notice appears
+//  in all copies. This software is provided "as is" without express or implied
+//  warranty, and with no claim as to its suitability for any purpose.
+
+//  See http://www.boost.org for most recent version.
+
+//  Rogue Wave std lib:
+
 #if !defined(__STD_RWCOMPILER_H__) && !defined(_RWSTD_VER)
 #  include <utility>
 #  if !defined(__STD_RWCOMPILER_H__) && !defined(_RWSTD_VER)
@@ -85,4 +93,5 @@
 #if (BOOST_RWSTD_VER < 0x020000) || defined(_RWSTD_NO_CLASS_PARTIAL_SPEC)
     #define BOOST_NO_STD_DISTANCE
 #endif
+
 

@@ -5,12 +5,12 @@
 
 //  See http://www.boost.org for most recent version.
 
-//  IBM/Aix specific config options:
+//  SGI C++ compiler setup:
 
-#define BOOST_PLATFORM "IBM Aix"
+#define BOOST_COMPILER "SGI Irix compiler version " BOOST_STRINGIZE(_COMPILER_VERSION)
 
-#define BOOST_HAS_UNISTD_H
-#define BOOST_HAS_PTHREADS
-#define BOOST_HAS_NL_TYPES_H
+#include "boost/config/compiler/common_edg.hpp"
 
-
+//
+// version check:
+// probably nothing to do here?

@@ -1,4 +1,11 @@
-// Borland C++ compiler setup:
+//  (C) Copyright Boost.org 2001. Permission to copy, use, modify, sell and
+//  distribute this software is granted provided this copyright notice appears
+//  in all copies. This software is provided "as is" without express or implied
+//  warranty, and with no claim as to its suitability for any purpose.
+
+//  See http://www.boost.org for most recent version.
+
+//  Borland C++ compiler setup:
 
 #   if __BORLANDC__ <= 0x0550
 // Borland C++ Builder 4 and 5:
@@ -16,15 +23,33 @@
 #include <float.h>
 #endif
 
-// all versions so far:
-#define BOOST_NO_CV_SPECIALIZATIONS
-#define BOOST_NO_CV_VOID_SPECIALIZATIONS
-#define BOOST_NO_INTEGRAL_INT64_T
-#define BOOST_NO_PRIVATE_IN_AGGREGATE
-#define BOOST_NO_DEPENDENT_NESTED_DERIVATIONS
-#define BOOST_NO_SWPRINTF
-#define BOOST_NO_USING_TEMPLATE
+// Version 5.51:
+#if (__BORLANDC__ <= 0x551) || !defined(BOOST_STRICT_CONFIG)
+#  define BOOST_NO_CV_SPECIALIZATIONS
+#  define BOOST_NO_CV_VOID_SPECIALIZATIONS
+#  define BOOST_NO_INTEGRAL_INT64_T
+#  define BOOST_NO_PRIVATE_IN_AGGREGATE
+#  define BOOST_NO_DEPENDENT_NESTED_DERIVATIONS
+#  define BOOST_NO_SWPRINTF
+#  define BOOST_NO_USING_TEMPLATE
+#endif
 
 #define BOOST_COMPILER "Borland C++ version " BOOST_STRINGIZE(__BORLANDC__)
+
+//
+// versions check:
+// we don't support Borland prior to version 5.4:
+#if __BORLANDC__ < 0x540
+#  error "Compiler not supported or configured - please reconfigure"
+#endif
+//
+// last known and checked version is 5.51:
+#if (__BORLANDC__ > 0x551)
+#  if defined(BOOST_ASSERT_CONFIG)
+#     error "Unknown compiler version - please run the configure tests and report the results"
+#  else
+#     pragma message( "Unknown compiler version - please run the configure tests and report the results")
+#  endif
+#endif
 
 

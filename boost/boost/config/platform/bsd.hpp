@@ -1,4 +1,12 @@
-// generic BSD config options:
+//  (C) Copyright Boost.org 2001. Permission to copy, use, modify, sell and
+//  distribute this software is granted provided this copyright notice appears
+//  in all copies. This software is provided "as is" without express or implied
+//  warranty, and with no claim as to its suitability for any purpose.
+
+//  See http://www.boost.org for most recent version.
+
+//  generic BSD config options:
+
 #if !defined(__FreeBSD__) && !defined(__NetBSD__) && !defined(__OpenBSD__)
 #error "This platform is not BSD"
 #endif
@@ -24,4 +32,5 @@
 // no wide character support:
 //
 #define BOOST_NO_CWCHAR
+
 
