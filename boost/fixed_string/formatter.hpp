@@ -9,8 +9,12 @@
 
    namespace boost
    {
-      template< size_t n, typename CharT = char, class CharStringTraits = std::char_traits< CharT > >
-      class formatterex: public fixed_string< n, CharT, CharStringTraits >
+      template
+      <
+         size_t n, typename CharT = char, class CharStringTraits = std::char_traits< CharT >
+         class FmtPolicy = detail::format_policy< CharT >
+      >
+      class formatterex: public fixed_string< n, CharT, CharStringTraits, FmtPolicy >
       {
          public:
             inline formatterex &  operator()( const char * fs ... ) throw()
