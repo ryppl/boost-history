@@ -14,14 +14,13 @@
 #include <boost/mpl/unpack_args.hpp>
 
 #include <boost/mpl/vector/vector10.hpp>
-#include <boost/mpl/lambda.hpp>
 #include <boost/mpl/aux_/test.hpp>
 #include <boost/type_traits/is_same.hpp>
 
 MPL_TEST_CASE()
 {
     MPL_ASSERT(( apply1< 
-          unpack_args< lambda< is_same<_1,_2> >::type >
+          unpack_args< is_same<_1,_2> >
         , vector2<int,int>
         > ));
 }

@@ -23,6 +23,7 @@
 #   include <boost/mpl/at.hpp>
 #   include <boost/mpl/size.hpp>
 #   include <boost/mpl/aux_/config/nttp.hpp>
+#   include <boost/mpl/aux_/lambda_spec.hpp>
 #endif
 
 #include <boost/mpl/aux_/config/use_preprocessed.hpp>
@@ -87,6 +88,8 @@ struct unpack_args
     {
     };
 };
+
+BOOST_MPL_AUX_PASS_THROUGH_LAMBDA_SPEC(1, unpack_args)
 
 #   undef AUX778076_UNPACK
 #   undef AUX778076_UNPACKED_ARGS
