@@ -1,0 +1,590 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+  <head>
+    <title>Boost Named Template Parameters</title>
+  </head>
+
+  <body bgcolor="#FFFFFF" text="#000000">
+  <img SRC="../../../c++boost.gif" ALT="C++ Boost" width="277" height="86">
+  </img>
+
+<h1>
+Named Template Parameters
+</h1>
+
+
+<h2>Introduction</h2>
+
+<p>
+The mapping between the <i>actual</i> template arguments and the <i>formal</i> 
+template parameters is defined by the ordering of the parameters.
+
+For example, consider the template definition:
+</p>
+
+
+<pre>
+template&lt;class T1, class T2, class T3&gt; class A { ... };
+</pre>
+The mapping defined, say, by the instantiation:
+<pre>
+A&lt;int, char, float&gt;
+</pre>
+
+
+<p>is</p>
+
+<p>
+<code>T1 = int, T2 = char, T3 = float</code>
+</p>
+
+
+<p>When there are a large number of template parameters, the order based
+mapping is seldom ideal.
+
+First, it is easy to get the order of the parameters wrong, which can lead to 
+hard to find errors. 
+
+Second, many of the template parameters can have default values. 
+Whether one can take advantage of the default value for a particular 
+template argument or not, is dependent on the relative position of 
+the parameter in the template parameter list.
+
+Consider the following example:
+</p>
+
+<pre>template &lt;class Model = basic, class Color = black, 
+          class Seats = no_leather, class Transmission = automatic&gt;
+class car { ... }; 
+</pre>
+
+<p>
+
+Suppose we make two instantiations of the <code>car</code> template: 
+
+In the first one, we want to change the <code>Model</code> from <code>basic</code> to <code>limited_edition</code>, but otherwise the defaults are fine.
+
+In the second one, we want <code>Transmission</code> to be <code>manual</code>
+and, again, apply the default values for other parameters.
+
+The two instantiations are:
+</p>
+
+<pre>
+car&lt;limited_edition&gt; // first 
+car&lt;basic, black, no_leather, manual&gt; // second
+</pre>
+
+<p>
+In the second example all template arguments had to be written explicitly,
+even though we only wanted to change one parameter.
+
+This is since the <i>n</i> template arguments given in a template 
+instantiation are always mapped to be the
+<i>n</i> leftmost template parameters in the template definition.
+</p>
+
+<p>
+In situations such as this, instead of defining the <i>actual argument &rarr; 
+formal parameter</i> mapping
+by the ordering of the parameter list, it would be preferrable 
+to use <i>names</i> for template parameters. 
+For example, with syntax like (pseudo code):
+</p>
+
+<pre>
+car&lt;Transmission = manual&gt;
+</pre>
+
+<p>
+There is no direct support for this in C++, 
+but one can mimic the behaviour.
+
+There are more than one way to implement <i>named template parameters</i>.
+and different implementations can lead to different syntaces.
+We have opted an implementation that provides the syntax:
+</p>
+
+<pre>
+car&lt;Transmission_is&lt;manual&gt; &gt;
+</pre>
+
+<p>
+Our implementation is a modified version of the solution presented in 
+the forthcoming (at the time of writing this) book by 
+<i>Daveed Vandevoorde</i> and <i>Nicolas Josuttis</i>.
+</p>
+
+
+<h2>Using named template parameters</h2>
+
+<p>Making your template class support named template parameters requires 
+some work.
+The feature cannot be encapsulated in a library class from which you 
+just inherit from, or something alike.
+Rather an interplay of
+templates defined in the <i>Named Template Parameter</i> (NTP in the sequel) 
+library and user defined templates is required.
+The coarce steps that need to be taken are:
+</p>
+
+<ol>
+<li><code>#include "boost/named_template_parameters.hpp"</code></li>
+<li>Defining the class that needs to support named template parameters.</li>
+<li>Define templates that give names for the parameters.</li>
+<li>Define a classes that give default values to the parameters.</li>
+</ol>
+
+<p>
+The next three sections describe the steps 2, 3 and 4 in more detail, in
+reversed order.
+Our starting point is the definition of the <code>car</code> template we gave
+in <i>Introduction</i>:
+</p>
+
+<pre>template &lt;class Model = basic, class Color = black, 
+          class Seats = no_leather, class Transmission = automatic&gt;
+class car { ... }; 
+</pre>
+
+<p>
+The goal is to make this template accept any subset of 
+the set:
+</p>
+ 
+<p>{<code>Model_is&lt;A&gt;</code>,
+<code>Color_is&lt;B&gt;</code>,
+<code>Seats_is&lt;C&gt;</code>,
+<code>Transmission_is&lt;D&gt;</code>} 
+</p>
+
+<p>
+as its arguments.
+The types <code>A</code>, <code>B</code>,
+<code>C</code> and <code>D</code> are the values for 
+<code>Model</code>, <code>Color</code>,
+<code>Seats</code> and <code>Transmission</code>.
+Furthermore, for all arguments that are not defined, default value should 
+be applied.
+</p>
+<p>
+Named template parameters and normal unnamed parameters can coexist.
+The same argument slot can be made to accept either a named or 
+unnamed template argument. 
+In our example we choose to provide this functionality for the first two 
+argument positions, that is, for <code>Model</code> and <code>Color</code>.
+Concretely, we want to allow instantiations like:
+</p>
+<pre>
+car&lt;limited_edition, black, Seats_is&lt;no_leather&gt; &gt;
+car&lt;basic, Seats_is&lt;no_leather&gt;, Color_is&lt;black&gt; &gt;
+</pre>
+
+<p>
+Finally, we want to implement some logic to the default values, namely
+we want to make the value of <code>Model</code> imply the default value 
+of <code>Seats</code>.
+That is, if <code>Model == limited_edition</code>, the default value for 
+<code>Seats</code> should be <code>leather</code>, 
+otherwise it should be <code>no_leather</code>.
+</p>
+<!--We continue to use the <code>car</code> template as our example.-->
+
+
+<h3>Default values</h3>
+
+<p>In its simplest form, just one class that contains the typedefs
+for each named template parameter is required:</p>
+
+<pre>
+struct default_car_features : 
+  virtual public boost::ntp::named_parameter_tag {
+
+  typedef basic Model;
+  typedef black Color;
+  typedef boost::ntp::unspecified Seats;
+  typedef automatic Transmission;
+};
+</pre>
+
+<p>
+This class expresses that the default values are <code>basic</code> for 
+<code>Model</code>, <code>black</code> for <code>Color</code>, etc.
+
+Note the default value for <code>Seats</code>, which is
+<code>boost:::ntp::unspecified</code>.
+We stated in our goals that the default value for <code>Seats</code> is
+dependent on the value the user gives for <code>Model</code>.
+Our simple <code>default_car_features</code> class cannot handle this
+situation as it can only provide a fixed type for each typedef.
+Instead, we need a metafunction that takes the values provided for
+other arguments as parameters and computes the default value based
+on its parameters.
+</p>
+
+<p>
+Note that in the case where some named template parameter does not have 
+a default value, 
+there is no need to specify a typedef for that feature.
+Alternatively, a typedef with a value like <code>boost::ntp::unsepcied</code> 
+can be used. This latter method may lead to more readable error messages, if
+the user fails to provide the named template argument in question.
+</p>
+
+<p>
+For the default values that depend on other parameter values, one must 
+define an additional default value class, or more precisely a class template.
+
+This template takes one template parameter and it must inherit
+from the template parameter using public inheritance.
+
+The way this template will be instantiated later, will make
+the values of the named template parameters and the 
+fixed default values (from <code>default_car_features</code>)
+accessible within the template parameter.
+
+Here is our default value template:
+</p>
+
+<pre>
+using namspace boost;
+
+template &lt;class Features&gt; struct default_car_features_2 
+  : public Features {
+    typedef typename
+      mpl::if_c&lt;is_same&lt;typename Features::Seats, ntp::unspecified&gt;::value,
+        typename mpl::if_c&lt;is_same&lt;typename Features::Model, limited_edition&gt;::value,
+          leather,
+          no_leather
+        &gt;::type,
+      typename Features::Seats  
+    &gt;::type Seats;
+};
+</pre>				    
+<p>
+The code of the metafunction is somewhat hard to read, it implements
+the logic expressed with the following pseudocode:
+
+<pre>
+if (Features::Seats is unspecified) {
+  if (Features::Model is limited_edition) Seats = leather;
+  else Seats = no_leather;
+}
+else Seats = Features::Seats;
+</pre>
+
+<p>An instance of the <code>default_car_features_2</code> will be the final 
+repository for the typedefs created as the combination of the template 
+parameters given explicitly and the default values.
+In our example, the <code>Seats</code> type is defined in 
+<code>default_car_features_2</code>, the other typedefs (<code>Model</code>, 
+<code>Color</code>, <code>Transmission</code>) are defined in its base
+class.
+
+
+<!-- car_default_values givest trivial defaults
+user defined values override some of these defaults
+this class provides defaults for the still unspecified ones -->
+</p>
+
+
+<h3>Defining the parameter names</h3>
+
+<p>
+We have used the convention <code><i>name</i>_is</code> in our named template 
+parameters.
+The named template parameters are template classes themselves and can thus be 
+named freely, but it is advisable to use consistent naming convention.
+Whatever the naming convention, here is what the named template parameter
+template needs to be like. 
+We use <code>Model</code> as an example:
+</p>
+
+<pre>
+template &lt;class T&gt struct Model_is : virtual public default_car_features
+{ 
+  typedef T Model; 
+};
+</pre>
+
+
+<p>
+The class contains one typedef <code>Model</code> which is the name of the
+feature.
+This name must be the same that is used 
+in the default value class 
+(<code>default_car_features)</code>.
+
+If the parameter has a default value, this class must inherit 
+form the default value class, which in our example is 
+<code>default_car_features</code>.
+Inheritance must be virtual.
+</p>
+
+<!--Furthermore, if we want to allow named and unnamed template parameters
+to be used interchangeably (see section ...), the class needs to inherit from 
+<code>boost::named_template_parameter_tag</code>.
+</p>
+-->
+
+
+
+<!--
+<p>
+The NTP library provides a macro 
+<code>BOOST_NAMED_TEMPLATE_PARAMETER(template_name, member_name, default_class)</code>
+for convenient definition of the parameter templates.
+We could have used this macro to define the <code>Model_is</code> template
+as:
+</p>
+
+
+
+<pre>
+BOOST_NAMED_TEMPLATE_PARAMETER(Model_is, Model, default_car_features);
+</pre>
+-->
+
+
+<!-- (cf. <code>transmission_is</code> in the example in <i>Introduction</i>).
+
+selitä, että kaikilla ei välttämättä ole oletusarvoa
+-->
+
+
+<h3>The class that needs to support NTPs</h3>
+
+
+<p>
+Our original template definition without NTP was:
+</p
+<pre>template &lt;class Model = basic, class Color = black, 
+          class Seats = no_leather, class Transmission = automatic&gt;
+class car { ... }; 
+</pre>
+
+<p>
+This changes to:
+</p>
+
+<pre>
+template &lt;class Model = default_car_features, 
+          class Color = default_car_features,
+          class Seats = default_car_features, 
+          class Transmission = default_car_features&gt;
+class car {
+  typedef boost::tuple&lt;
+    typename boost::ntp::as_named&lt;Model, Model_is&gt;::type, 
+    typename boost::ntp::as_named&lt;Color, Color_is&gt;::type, 
+    Seats, 
+    Transmission    
+  &gt; argument_tuple;
+
+  typedef boost::ntp::named_parameter_extractor&lt;
+    argument_tuple
+  &gt; intermediate_feature_list;
+
+  typedef car_default_value_2&lt;
+    intermediate_feature_list
+  &gt; features;
+  ...
+};
+</pre>
+
+
+<p>
+The first thing to notice is that our <code>default_car_features</code>
+is used as the default for all parameters.
+</p>
+
+<p>
+Second, the template parameter names <code>Model</code>, <code>Color</code> 
+etc. do not make much sense anymore, as say <code>Model</code> could be
+carrying the type <code>Color_is&lt;red&gt;</code> etc.
+We continue to use these names, however, as in our design goals we decided to 
+allow instantiations where the first argument, 
+or the first and the second arguments are unnamed template arguments.
+In such instantiations <code>Model</code> really contains information about 
+the model of the car etc.
+
+However, clearly, we cannot simply refer to the plain template parameters 
+to access the values of named template parameters.
+The introduction of the <code>features</code> typedef server for this purpose.
+
+We have divided the definition of the <code>features</code> type into three steps:
+</p>
+
+<ol>
+<li>
+Wrap the template argument types into a 
+<a href="http://www.boost.org/libs/tuple/doc/tuple_users_guide.html" target="_top"><code>tuple</code></a> type.
+<pre>
+typedef boost::tuple&lt;
+  typename boost::ntp::as_named&lt;Model, Model_is&gt;::type, 
+  typename boost::ntp::as_named&lt;Color, Color_is&gt;::type, 
+  Seats, 
+  Transmission    
+&gt; argument_tuple;
+</pre>
+<p>
+In our design goals, we wanted the allow the first two template arguments
+to function as normal unnamed template parameters too.
+To give this dual behaviour for a parameter slot, one must wrap the argument
+with the <code>as_named</code> metafunction. 
+The arguments to this metafunction are the template parameter and the
+corresponding named parameter template (<code>Mode_is</code> and 
+<code>Color_is</code>) in our example.
+<!-- The <code>as_named</code> metafunction converts normal unnamed template 
+arguments to named ones.-->
+
+</p>
+</li>
+<li>
+
+<p>Next, the <code>argument_tuple</code> type is passed to 
+<code>named_parameter_extractor</code> metafunction:
+</p>
+
+<pre>
+typedef boost::ntp::named_parameter_extractor&lt;argument_tuple&gt; intermediate_feature_list;
+</pre>
+
+<p>
+The result is a type that contains:
+</p>
+
+<ul>
+<li>a typedef for each parameter that was given
+explicitly in the instantiation of the template.</li>
+<li> a typedef with the 
+trivial default value (defined in <code>default_car_features</code>) for 
+each parameter that was not given explicitly.</li>
+</ul>
+
+<p>
+If none of the default values is dependent on other arguments, we are done.
+However, in our example we wanted the value of <code>Seats</code> to
+be dependent on <code>Model</code>, and wrote the 
+<code>default_car_features_2</code> template to specify this dependency.
+As a final step, we send the <code>intermediate_feature_list</code> to
+<code>default_car_features_2</code> metafunction:
+</p>
+<pre>
+typedef car_default_value_2&lt;
+  intermediate_feature_list
+&gt; features;
+</pre>
+<p>
+
+
+</li>
+</ol>
+<p>This completes our example, and the values of the named template parameter
+can be accessed as nested types within <code>features</code> as:
+</p>
+
+<pre>typename features::Model
+typename features::Color
+typename features::Seats
+typename features::Transmission</pre>
+
+
+<h3>Avoiding some pitfalls</h3>
+
+</h4>Name clashes</h4>
+
+<p>
+The named parameter templates must be defined in some namespace and you may
+end up wanting to use the same template name for two different classes that
+use the NTP scheme.
+For example, a <code>bicycle</code> class could very well have a 
+<code>Model</code> feature and thus <code>Model_is</code> would be a 
+natural choice for the name of the named parameter template.
+
+Also, most likely <code>car</code> and <code>bicycle</code> models do
+not share the same default value.
+</p>
+
+<p>
+The easiest way to solve this is to come up with different names for the
+parameter.
+Another possibility is to define the default classes like this:
+</p>
+
+<pre>
+struct common_features {
+  typedef boost::ntp::unspecified Model;
+};
+
+struct default_car_features : virtual public common_features { ... };
+struct default_bicycle_features : virtual public common_features { ... };
+</pre>
+
+<p>
+and make the <code>Model_is</code> class inherit from 
+<code>common_features</code>, instead of car or bicycle defaults.
+The real default values for car and bicycle are then defined in the templates
+that define the default value metafunctions 
+(cf. <code>default_car_features_2</code>).
+</p>
+
+<h4>Nontype template parameters</h4>
+
+<p>The scheme discribed here does not directly support nontype template 
+parameters.
+The simplest solution to this is to use wrappers which can be used as
+type template parameters.
+For example:
+</p>
+
+<pre>
+template&lt;int N&gt; struct int_wrapper {
+  BOOST_STATIC_CONSTANT(int, value = N);
+};
+</pre>
+
+<p>
+defines a wrapper that can carry an integral constant.
+</p>
+
+
+
+<h2>How it works</h2>
+
+Do we need this?
+
+<h2>References</h2>
+
+Vandevoorde, Josuttis: C++ Templates ???
+
+<hr>
+
+<p>
+&copy; Copyright Jaakko Järvi and Jeremy Siek 2002. 
+Permission to copy, use, modify, sell and distribute this document is 
+granted provided this copyright notice appears in all copies. 
+This document is provided "as is" without express or implied warranty, 
+and with no claim as to its suitability for any purpose. 
+
+
+
+</body>
+
+
+
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
