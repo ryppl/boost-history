@@ -10,27 +10,157 @@ PYTHON_INCLUDES = $(BOOST_ROOT) $(PYTHON_ROOT)$(SLASH)include ;
 
 lib libboost_python : ../src/$(SOURCES) : <include>$(PYTHON_INCLUDES) <shared-linkable>true ;
 
+# boost-python name : sources : requirements : default-BUILD
+#
+# Declare a boost python module. Return a list of the DLL files generated.
 rule boost-python
 {
-    dll $(<) : $(>) :
-        $(3) <include>$(PYTHON_INCLUDES)
-        <msvc><library-path>$(PYTHON_ROOT)/libs
-        <gcc><*><library-file>$(PYTHON_ROOT)/libs/python20.lib
-        : $(4) ;
+    local files =
+        [ dll $(<)
+            : <lib>libboost_python $(>) # Add the boost python library to sources
+            : $(3)                      # Add some standard requirements
+                <include>$(PYTHON_INCLUDES)
+                <msvc><*><library-path>$(PYTHON_ROOT)/libs
+                <gcc><*><library-file>$(PYTHON_ROOT)/libs/python20.lib
+        : $(4) ] ;                      # pass on the default-BUILD
+
+    # pick out just the DLL files generated
+    local f result ;
+    for f in $(files)
+    {
+        # Check suffix of $(>) in case, e.g. .pyd was explicitly specified.
+        if $(f:S) in $(SUFDLL[1]) $(>:S)
+        {
+            result += $(f) ;
+        }
+    }
+    return $(result) ;
 }
 
-boost-python boost_python_test : <lib>libboost_python ../test/comprehensive.cpp ;
+# boost-python-test1 python-file : module-target(s) : args
+#
+# Generates two targets, one named NAME.test and another named NAME.run,
+# where NAME is the base name of the given python-file, gristed with
+# the current $(SOURCE_GRIST). NAME.test will be built when python-file or
+# module-targets are out-of-date, and NAME.
+# NAME.test will be built in a location relative to
+# the current
+# 
+rule boost-python-test1
+{
+    local subvariant-path = $(gSUBVARIANT_PATH($(>[1]:S=))) ;
+    local test-grist = $(SOURCE_GRIST)$(SLASH)$(subvariant-path) ;
+    local test-base = $(<:G=$(test-grist):D=) ;
+    local tests = $(test-base:S=.test) $(test-base:S=.run) ;
+    NOTFILE $(tests[2]) ;
+    ALWAYS $(tests[2]) ;
 
-boost-python abstract : <lib>libboost_python ../example/abstract.cpp ;
-boost-python getting_started1 : <lib>libboost_python ../example/getting_started1.cpp ;
-boost-python getting_started2 : <lib>libboost_python ../example/getting_started2.cpp ;
-boost-python simple_vector : <lib>libboost_python ../example/simple_vector.cpp ;
-boost-python do_it_yourself_converters : <lib>libboost_python ../example/do_it_yourself_converters.cpp ;
-boost-python pickle1 : <lib>libboost_python ../example/pickle1.cpp ;
-boost-python pickle2 : <lib>libboost_python ../example/pickle2.cpp ; 
-boost-python pickle3 : <lib>libboost_python ../example/pickle3.cpp ;
-boost-python noncopyable_export : <lib>libboost_python ../example/noncopyable_export.cpp ; 
-boost-python noncopyable_import : <lib>libboost_python ../example/noncopyable_import.cpp ; 
-boost-python ivect : <lib>libboost_python ../example/ivect.cpp ; 
-boost-python dvect : <lib>libboost_python ../example/dvect.cpp ;
+    # We will write a test file in a location given by LOCATE_TARGET followed by
+    # the python-file name followed by the subvariant path of the first module
+    # being tested
+    MakeLocate $(tests[1])
+     : [ join-path $(LOCATE_TARGET) $(<:B:S=) $(subvariant-path) ] ;
+            
+    DEPENDS $(tests) : $(<) $(>) ;
+
+    # Remember PYTHONPATH information so the modules can be loaded.
+    PYTHONPATH on $(tests)
+        = [ join $(gLOCATE($(>)))  # location of the modules we're testing
+                    $(TOP)$(SLASH)libs$(SLASH)python$(SLASH)test # location of doctest
+                    $(PYTHONPATH)                                # existing PYTHONPATH
+                 : $(SPLITPATH) ] ;
+
+    # Remember any args we need to pass
+    ARGS on $(tests) += $(4) ;
+
+    # Some tests need an extra command-line arg if built with
+    # msvc. Checking the path to the target is a cheap way to
+    # find out. 
+    switch $(gLOCATE($(m)))
+    {
+        case *\\\\msvc\\\\* : ARGS on $(tests) += --broken-auto-ptr ;
+    }
+
+    boost-python-runtest $(tests[1]) : $(<) $(>) ;
+    boost-python-force-test $(tests[2]) : $(<) $(>) ;
+    type-DEPENDS test : $(tests[1]) ;
+    Clean $(tests[1]) ;
+
+    return $(tests) ;
+}
+
+# boost-python-simple-test python-file : module-name : sources : [ args ]
+rule boost-python-simple-test
+{
+    # Only do this if we're reading this Jamfile directly or as a result of subinclude
+    if ! $(gIN_LIB_INCLUDE)
+    {
+        local source-file = [ FGristFiles $(<) ] ;
+        
+        SEARCH on $(source-file) = $(SEARCH_SOURCE) ;
+        
+        # Make a target that will build all subvariants
+        local test-base = $(source-file:D=:S=) ;
+
+        # If invoked in this directory, we should be able to run the test
+        # without specifying grist 
+        if ( $(SUBDIR) = $(gINVOCATION_SUBDIR) )
+        {
+            test-base += $(test-base:G=) ;
+        }
+        NOTFILE $(test-base:S=.test) $(test-base:S=.run) ;
+
+        # declare all the modules
+        local modules = [ boost-python $(>) : $(3) ] ;
+
+        # For each one, prepare the test
+        local m ;
+        for m in $(modules)
+        {
+            local tests = [ boost-python-test1 $(source-file) : $(m) : $(4) ] ;
+            DEPENDS $(test-base:S=.test) : $(tests[1]) ;
+            DEPENDS $(test-base:S=.run) : $(tests[2]) ;
+        }
+    }
+}
+
+actions boost-python-runtest
+{
+    set PYTHONPATH=$(PYTHONPATH)
+    python "$(>)" $(ARGS) > "$(<)"
+}
+
+actions boost-python-force-test
+{
+    set PYTHONPATH=$(PYTHONPATH)
+    python "$(>)" $(ARGS)
+}
+
+boost-python-simple-test ..$(SLASH)test$(SLASH)comprehensive.py : boost_python_test
+    : ../test/comprehensive.cpp ;
+    
+rule boost-python-example-test
+{
+    boost-python-simple-test ..$(SLASH)example$(SLASH)test_$(<).py : $(<)
+    : ../example/$(<).cpp ;
+}
+
+boost-python-example-test abstract ;
+boost-python-example-test getting_started1 ;
+boost-python-example-test getting_started2 ;
+boost-python-example-test simple_vector ;
+boost-python-example-test do_it_yourself_converters ;
+boost-python-example-test pickle1 ;
+boost-python-example-test pickle2 ;
+boost-python-example-test pickle3 ;
+
+# No way to run multiple-module tests yet, but let's at least build them.
+PYTHON_VECT_ITERATIONS ?= 10 ;
+
+boost-python ivect : ../example/ivect.cpp ;
+boost-python dvect : ../example/dvect.cpp ;
+
+boost-python noncopyable_export : ../example/noncopyable_export.cpp ;
+boost-python noncopyable_import : ../example/noncopyable_import.cpp ;
+
 

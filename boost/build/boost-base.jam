@@ -1194,6 +1194,9 @@ rule subvariant-target
     # linking to DLLs
     gTARGET_FILES($(subvariant)) = [ reverse $(target-files) ] ;
     gTARGET_FILES($(<)) += $(gTARGET_FILES($(subvariant))) ;
+
+    # Remember the path from the build root to the subvariant directory
+    gSUBVARIANT_PATH($(subvariant)) = $(>[1]) ;
     
     declare-fake-targets $(<) : $(target-files) ;
 

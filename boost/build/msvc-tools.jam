@@ -37,7 +37,7 @@ flags msvc HDRS <include> ;
 
 flags msvc STDHDRS : $(MSVCDir)$(SLASH)include ;
 flags msvc STDLIBPATH : $(MSVCDir)$(SLASH)lib ;
-flags msvc LIBPATH <library-search> ;
+flags msvc LIBPATH <library-path> ;
 flags msvc NEEDLIBS <library-file> ;
 flags msvc NEEDLIBS <find-library> ;
 flags msvc LINKFLAGS <target-type>DLL : /DLL ;

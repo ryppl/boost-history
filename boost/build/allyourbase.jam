@@ -173,6 +173,7 @@ if $(NT)
     CP              ?= copy ;
     RM              ?= del /f/q ;
     SLASH           ?= \\ ;
+    SPLITPATH       ?= ";" ; # dwa -- added missing SPLITPATH
     SUFLIB          ?= .lib ;
     SUFOBJ          ?= .obj ;
     SUFEXE          ?= .exe ;
@@ -207,6 +208,7 @@ else if $(OS2)
     OPTIM           ?= ;
     RM              ?= del /f ;
     SLASH           ?= \\ ;
+    SPLITPATH       ?= ";" ; # dwa -- added missing SPLITPATH
     STDHDRS         ?= $(WATCOM)\\h ;
     SUFEXE          ?= .exe ;
     SUFLIB          ?= .lib ;
@@ -426,6 +428,7 @@ SED             ?= sed ;
 SHELLHEADER     ?= "#!/bin/sh" ;
 SHELLMODE       ?= 755 ;
 SLASH           ?= / ;
+SPLITPATH       ?= ":" ; # dwa -- added missing SPLITPATH
 STDHDRS         ?= /usr/include ;
 SUFEXE          ?= "" ;
 SUFDLL          ?= .so ;
@@ -874,6 +877,10 @@ rule MakeLocate
     if $(>)
     {
         LOCATE on $(<) = $(>) ;
+
+        # provide a way to get back the location from a built target name.
+        gLOCATE($(<)) = $(>) ; 
+        
         # We add directory-grist here so that implicitly-created directory
         # target names don't collide with user-specified targets.
         Depends $(<) : $(>[1]:G=directory-grist) ;
@@ -1424,14 +1431,14 @@ rule FGrist
 
 rule FGristFiles 
 {
-	if ! $(SOURCE_GRIST)
-	{
-	    return $(<) ;
-	}
-	else 
-	{
-	    return $(<:G=$(SOURCE_GRIST)) ;
-	}
+    if ! $(SOURCE_GRIST)
+    {
+        return $(<) ;
+    }
+    else 
+    {
+        return $(<:G=$(SOURCE_GRIST)) ;
+    }
 }
 
 # dwa 6/4/01 - modified for boost
