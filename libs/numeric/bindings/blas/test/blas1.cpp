@@ -2,640 +2,348 @@
 //  distribute this software is granted provided this copyright notice appears
 //  in all copies. This software is provided "as is" without express or implied
 //  warranty, and with no claim as to its suitability for any purpose.
-//  Copyright Toon Knapen
+//  Copyright Toon Knapen, Karl Meerbergen
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <stdlib.h>
-#include <iomanip>
-
-#include "blas.hpp"
 #include <boost/numeric/bindings/traits/ublas_vector.hpp>
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
+#include <boost/numeric/bindings/traits/std_vector.hpp>
 #include <boost/numeric/bindings/blas/blas1.hpp>
-#include <stdlib.h>
 
-template < typename VectorType >
-void test_scal(std::ostream& os, int runs, int runs_i, int size, int size_i, typename VectorType::value_type alpha, VectorType& vector_native, VectorType& vector_toblas)
-{
-  typedef typename VectorType::value_type value_type ;
+#include <vector>
+#include <complex>
+#include <iostream>
+#include <cstdlib>
+#include <limits>
 
-  boost::timer t ;
-  for(int i = 0 ; i < runs_i ; ++i ) vector_native *= alpha ;
-  
-  report< value_type >( os, runs, runs_i, size_i, t.elapsed() );
-  
-  t.restart() ;
-  for(int i = 0 ; i < runs_i ; ++i ) boost::numeric::bindings::blas::scal( alpha, vector_toblas );
-  
-  report< value_type >( os, runs, runs_i, size_i, t.elapsed() );
-  
-  check( vector_native.begin(), vector_native.end(), vector_toblas.begin() );
+
+template <typename T>
+T random_value() {
+   assert( false );
+   return 0;
 }
 
-struct scal_vector
-{
-  template < typename T >
-  void operator()(std::ostream& os, int size, int size_i, int runs, int runs_i)
+template <>
+float random_value<float>() {return float(std::rand()) / float(RAND_MAX) - 0.5;}
+
+template <>
+double random_value<double>() {return double(std::rand()) / double(RAND_MAX) - 0.5;}
+
+template <>
+std::complex<float> random_value< std::complex<float> >() {return std::complex<float>(random_value<float>(), random_value<float>() );}
+
+template <>
+std::complex<double> random_value< std::complex<double> >() {return std::complex<double>(random_value<double>(), random_value<double>() );}
+
+
+// Randomize a vector
+template <typename V>
+void randomize(V& v) {
+   for (typename V::size_type i=0; i<v.size(); ++i)
+      v[i] = random_value< typename V::value_type >() ;
+} // randomize()
+
+
+// Blas operations using one vector.
+template <typename T>
+struct OneVector {
+  boost::numeric::ublas::vector<T> v_ref_ ;
+
+  // Initialize : set reference vector (ublas)
+  OneVector()
+  : v_ref_( 10 )
   {
-    numerics::vector< T > vector_native( size_i ); 
-    random_initialise_vector( vector_native );
-    numerics::vector< T > vector_toblas( vector_native ) ;
-    T alpha = assign_multiplier< T >()() ; // 1.0000002 ; // otherwise the accumulated result of the range will result in 0.0 or over/under-flow
-      
-    test_scal( os, runs, runs_i, size, size_i, alpha, vector_native, vector_toblas );
+     randomize(v_ref_);
+  }
+
+  template <typename V>
+  int operator()(V& v) const {
+     using namespace boost::numeric::bindings::blas ;
+
+     typedef typename V::value_type                                                        value_type ;
+     typedef typename boost::numeric::bindings::traits::type_traits<value_type>::real_type real_type ;
+
+     // Copy vector from reference
+     for (typename V::size_type i=0; i<v_ref_.size(); ++i)
+        v[i] = v_ref_(i);
+
+     // Test blas routines and compare with reference
+     real_type nrm = nrm2( v );
+     if ( std::abs(nrm - norm_2(v_ref_)) > std::numeric_limits< real_type >::epsilon() * norm_2(v_ref_)) return 255 ;
+
+     nrm = asum( v );
+     if ( std::abs(nrm - norm_1(v_ref_)) > std::numeric_limits< real_type >::epsilon() * norm_1(v_ref_)) return 255 ;
+
+     scal( value_type(2.0), v );
+     for (typename V::size_type i=0; i<v_ref_.size(); ++i)
+        if (std::abs( v[i] - real_type(2.0)*v_ref_(i) ) > real_type(2.0)*std::abs(v_ref_(i))) return 255 ;
+
+     return 0;
+  }
+
+  // Return the size of a vector.
+  size_t size() const {return v_ref_.size();}
+};
+
+
+// Operations with two vectors.
+template <typename T, typename V>
+struct BaseTwoVectorOperations {
+  typedef T                                                                             value_type ;
+  typedef typename boost::numeric::bindings::traits::type_traits<value_type>::real_type real_type ;
+  typedef boost::numeric::ublas::vector<T>                                              ref_vector_type ;
+
+  // Initialize: select the first vector and set the reference vectors (ublas)
+  BaseTwoVectorOperations(V& v, const ref_vector_type& v1_ref, const ref_vector_type& v2_ref)
+  : v_( v )
+  , v1_ref_( v1_ref )
+  , v2_ref_( v2_ref )
+  {}
+
+  // Copy the 2nd reference vector into w.
+  template <typename W>
+  void copy_vector(W& w) const {
+     for (size_t i=0; i<size(); ++i) {
+        w[i] = v2_ref_(i);
+     }
+  } // copy_vector()
+
+  // Get the size of a vector.
+  size_t size() const {return v_.size();}
+
+  // Data members.
+  V&                     v_ ;
+  const ref_vector_type& v1_ref_, v2_ref_ ;
+};
+
+
+template <typename T, typename V>
+struct TwoVectorOperations { } ;
+
+
+template <typename V>
+struct TwoVectorOperations< float, V>
+: BaseTwoVectorOperations<float,V> {
+  typedef typename V::value_type                                                        value_type ;
+  typedef typename boost::numeric::bindings::traits::type_traits<value_type>::real_type real_type ;
+  typedef typename BaseTwoVectorOperations<float,V>::ref_vector_type                    ref_vector_type ;
+
+  TwoVectorOperations(V& v, const ref_vector_type& v1_ref, const ref_vector_type& v2_ref)
+  : BaseTwoVectorOperations<float,V>( v, v1_ref, v2_ref )
+  {}
+
+  // Perform the tests of blas functions and compare with reference
+  template <typename W>
+  int operator()(W& w) const {
+     using namespace boost::numeric::bindings::blas ;
+
+     copy_vector(w);
+
+     // Test blas routines
+     value_type prod = dot( v_, w );
+     if ( std::abs(prod - inner_prod( v1_ref_, v2_ref_ ))
+          > std::numeric_limits< real_type >::epsilon() * std::abs(prod)) return 255 ;
+
+     axpy( value_type(2.0), v_, w );
+     for (size_t i=0; i<size(); ++i)
+        if ( std::abs(w[i] - (v2_ref_(i) + value_type(2.0)*v1_ref_(i)))
+          > std::numeric_limits< real_type >::epsilon() * std::abs(w[i])) return 255 ;
+
+     return 0;
   }
 };
 
-struct scal_vector_range
-{
-  template < typename T >
-  void operator()(std::ostream& os, int size, int size_i, int runs, int runs_i)
-  {
-    numerics::vector< T > vector_native( size ); 
-    random_initialise_vector( vector_native );
-    numerics::vector< T > vector_toblas( vector_native ) ;
-    T alpha = 1.0000002 ;
 
-    int start = std::max( 0, ( size / 2 ) - size_i );
-    int stop  = start + size_i ;
-    numerics::vector_range< numerics::vector< T > > native_range( vector_native, numerics::range(start,stop) );
-    numerics::vector_range< numerics::vector< T > > toblas_range( vector_toblas, numerics::range(start,stop) );
-      
-    test_scal( os, runs, runs_i, size, size_i, alpha, native_range, toblas_range );
+template <typename V>
+struct TwoVectorOperations< double, V>
+: BaseTwoVectorOperations<double,V> {
+  typedef typename V::value_type                                                        value_type ;
+  typedef typename boost::numeric::bindings::traits::type_traits<value_type>::real_type real_type ;
+  typedef typename BaseTwoVectorOperations<double,V>::ref_vector_type                   ref_vector_type ;
+
+  TwoVectorOperations(V& v, const ref_vector_type& v1_ref, const ref_vector_type& v2_ref)
+  : BaseTwoVectorOperations<double,V>( v, v1_ref, v2_ref )
+  {}
+
+  // Perform the tests of blas functions and compare with reference
+  template <typename W>
+  int operator()(W& w) const {
+     using namespace boost::numeric::bindings::blas ;
+
+     copy_vector( w );
+
+     // Test blas routines
+     value_type prod = dot( v_, w );
+     if ( std::abs(prod - inner_prod( v1_ref_, v2_ref_ ))
+          > std::numeric_limits< real_type >::epsilon() * std::abs(prod)) return 255 ;
+
+     axpy( value_type(2.0), v_, w );
+     for (size_t i=0; i<size(); ++i)
+        if ( std::abs(w[i] - (v2_ref_(i) + value_type(2.0)*v1_ref_(i)))
+          > std::numeric_limits< real_type >::epsilon() * std::abs(w[i])) return 255 ;
+
+     return 0;
   }
 };
 
-struct scal_vector_slice
-{
-  template < typename T >
-  void operator()(std::ostream& os, int size, int size_i, int runs, int runs_i)
-  {
-    numerics::vector< T > vector_native( size ); 
-    random_initialise_vector( vector_native );
-    numerics::vector< T > vector_toblas( vector_native ) ;
-    T alpha = 1.0000002 ;
 
-    int stride = size / size_i ;
-    numerics::vector_slice< numerics::vector< T > > native_slice( vector_native, numerics::slice(0,stride,size_i) );
-    numerics::vector_slice< numerics::vector< T > > toblas_slice( vector_toblas, numerics::slice(0,stride,size_i) );
-      
-    test_scal( os, runs, runs_i, size, size_i, alpha, native_slice, toblas_slice );
+template <typename V>
+struct TwoVectorOperations< std::complex<float>, V>
+: BaseTwoVectorOperations< std::complex<float>, V>
+{
+  typedef typename V::value_type                                                        value_type ;
+  typedef typename boost::numeric::bindings::traits::type_traits<value_type>::real_type real_type ;
+  typedef typename BaseTwoVectorOperations<std::complex<float>,V>::ref_vector_type      ref_vector_type ;
+
+  TwoVectorOperations(V& v, const ref_vector_type& v1_ref, const ref_vector_type& v2_ref)
+  : BaseTwoVectorOperations< std::complex<float>, V>( v, v1_ref, v2_ref )
+  {}
+
+  // Perform the tests of blas functions and compare with reference
+  template <typename W>
+  int operator()(W& w) const {
+     using namespace boost::numeric::bindings::blas ;
+
+     copy_vector( w );
+
+     // Test blas routines
+     value_type prod = dotc( v_, w );
+     if ( std::abs(prod - inner_prod( conj(v1_ref_), v2_ref_ ))
+          > std::numeric_limits< real_type >::epsilon() * std::abs(prod)) return 255 ;
+
+     prod = dotu( v_, w );
+     if ( std::abs(prod - inner_prod( v1_ref_, v2_ref_ ))
+          > std::numeric_limits< real_type >::epsilon() * std::abs(prod)) return 255 ;
+
+     axpy( value_type(2.0), v_, w );
+     for (size_t i=0; i<size(); ++i)
+        if ( std::abs(w[i] - (v2_ref_(i) + value_type(2.0)*v1_ref_(i)))
+          > std::numeric_limits< real_type >::epsilon() * std::abs(w[i])) return 255 ;
+
+     return 0;
   }
 };
 
-struct scal_matrix_row_row_major
+
+template <typename V>
+struct TwoVectorOperations< std::complex<double>, V>
+: BaseTwoVectorOperations< std::complex<double>, V>
 {
-  template < typename T >
-  void operator()(std::ostream& os, int size, int size_i, int runs, int runs_i)
-  {
-    typedef numerics::matrix< T, numerics::row_major > matrix_type ;
+  typedef typename V::value_type                                                        value_type ;
+  typedef typename boost::numeric::bindings::traits::type_traits<value_type>::real_type real_type ;
+  typedef typename BaseTwoVectorOperations<std::complex<double>,V>::ref_vector_type     ref_vector_type ;
 
-    matrix_type matrix_native( 3, size_i);
-    random_initialise_matrix( matrix_native );
-    matrix_type matrix_toblas( matrix_native ) ;
+  TwoVectorOperations(V& v, const ref_vector_type& v1_ref, const ref_vector_type& v2_ref)
+  : BaseTwoVectorOperations< std::complex<double>, V>( v, v1_ref, v2_ref )
+  {}
 
-    numerics::matrix_row< matrix_type > native_row( matrix_native, 1 );
-    numerics::matrix_row< matrix_type > toblas_row( matrix_toblas, 1 );
-    T alpha = assign_multiplier< T >()() ; // 1.0000002 ; // otherwise the accumulated result of the range will result in 0.0 or over/under-flow
-      
-    test_scal( os, runs, runs_i, size, size_i, alpha, native_row, toblas_row );
+  // Perform the tests of blas functions and compare with reference
+  template <typename W>
+  int operator()(W& w) const {
+     using namespace boost::numeric::bindings::blas ;
+
+     copy_vector( w );
+
+     // Test blas routines
+     value_type prod = dotc( v_, w );
+     if ( std::abs(prod - inner_prod( conj(v1_ref_), v2_ref_ ))
+          > std::numeric_limits< real_type >::epsilon() * std::abs(prod)) return 255 ;
+
+     prod = dotu( v_, w );
+     if ( std::abs(prod - inner_prod( v1_ref_, v2_ref_ ))
+          > std::numeric_limits< real_type >::epsilon() * std::abs(prod)) return 255 ;
+
+     axpy( value_type(2.0), v_, w );
+     for (size_t i=0; i<size(); ++i)
+        if ( std::abs(w[i] - (v2_ref_(i) + value_type(2.0)*v1_ref_(i)))
+          > std::numeric_limits< real_type >::epsilon() * std::abs(w[i])) return 255 ;
+
+     return 0;
   }
 };
 
-struct scal_matrix_row_column_major
-{
-  template < typename T >
-  void operator()(std::ostream& os, int size, int size_i, int runs, int runs_i)
-  {
-    typedef numerics::matrix< T, numerics::column_major > matrix_type ;
 
-    matrix_type matrix_native( 3, size_i);
-    random_initialise_matrix( matrix_native );
-    matrix_type matrix_toblas( matrix_native ) ;
+// Run the tests for different types of vectors.
+template <typename T, typename F>
+int different_vectors(const F& f) {
+   // Do test for different types of vectors
+   {
+      std::cout << "  ublas::vector\n" ;
+      boost::numeric::ublas::vector< T > v(f.size());
+      if (f( v )) return 255 ;
+   }
+   { 
+      std::cout << "  std::vector\n" ;
+      std::vector<T> v_ref(f.size());
+      if (f( v_ref )) return 255 ;
+   }
+   {
+      std::cout << "  ublas::vector_range\n" ;
+      typedef boost::numeric::ublas::vector< T > vector_type ;
+      vector_type v(f.size()*2);
+      boost::numeric::ublas::vector_range< vector_type > vr(v, boost::numeric::ublas::range(1,1+f.size()));
+      if (f( vr )) return 255 ;
+   }
+   {
+      typedef boost::numeric::ublas::matrix< T, boost::numeric::ublas::column_major >  matrix_type ;
+      matrix_type  m(f.size(),f.size()) ;
 
-    numerics::matrix_row< matrix_type > native_row( matrix_native, 1 );
-    numerics::matrix_row< matrix_type > toblas_row( matrix_toblas, 1 );
-    T alpha = assign_multiplier< T >()() ; // 1.0000002 ; // otherwise the accumulated result of the range will result in 0.0 or over/under-flow
-      
-    test_scal( os, runs, runs_i, size, size_i, alpha, native_row, toblas_row );
-  }
-};
+      std::cout << "  ublas::matrix_column\n" ;
+      boost::numeric::ublas::matrix_column< matrix_type > m_c( m, 2 );
+      if (f( m_c )) return 255 ;
 
-struct scal_matrix_column_row_major
-{
-  template < typename T >
-  void operator()(std::ostream& os, int size, int size_i, int runs, int runs_i)
-  {
-    typedef numerics::matrix< T, numerics::row_major > matrix_type ;
+      std::cout << "  ublas::matrix_row\n" ;
+      boost::numeric::ublas::matrix_row< matrix_type > m_r( m, 1 );
+      if (f( m_r )) return 255 ;
+   }
+   return 0;
+} // different_vectors()
 
-    matrix_type matrix_native( size_i, 3 );
-    random_initialise_matrix( matrix_native );
-    matrix_type matrix_toblas( matrix_native ) ;
 
-    numerics::matrix_column< matrix_type > native_column( matrix_native, 1 );
-    numerics::matrix_column< matrix_type > toblas_column( matrix_toblas, 1 );
-    T alpha = assign_multiplier< T >()() ; // 1.0000002 ; // otherwise the accumulated result of the range will result in 0.0 or over/under-flow
-      
-    test_scal( os, runs, runs_i, size, size_i, alpha, native_column, toblas_column );
-  }
-};
+// This is the functor that selects the first vector of the tests that use two vectors.
+template <typename T>
+struct TwoVector {
+   TwoVector()
+   : v1_ref_( 10 )
+   , v2_ref_( 10 )
+   {}
 
-struct scal_matrix_column_column_major
-{
-  template < typename T >
-  void operator()(std::ostream& os, int size, int size_i, int runs, int runs_i)
-  {
-    typedef numerics::matrix< T, numerics::column_major > matrix_type ;
+   template <typename V>
+   int operator() (V& v) const {
+      for (size_t i=0; i<size(); ++i) v[i] = v1_ref_(i) ;
+      return different_vectors<T,TwoVectorOperations<T,V> >( TwoVectorOperations<T,V>(v, v1_ref_, v2_ref_) ) ;
+   }
 
-    matrix_type matrix_native( size_i, 3);
-    random_initialise_matrix( matrix_native );
-    matrix_type matrix_toblas( matrix_native ) ;
+   size_t size() const {
+      return v1_ref_.size() ;
+   }
 
-    numerics::matrix_column< matrix_type > native_column( matrix_native, 1 );
-    numerics::matrix_column< matrix_type > toblas_column( matrix_toblas, 1 );
-    T alpha = assign_multiplier< T >()() ; // 1.0000002 ; // otherwise the accumulated result of the range will result in 0.0 or over/under-flow
-      
-    test_scal( os, runs, runs_i, size, size_i, alpha, native_column, toblas_column );
-  }
-};
+   boost::numeric::ublas::vector<T> v1_ref_ ;
+   boost::numeric::ublas::vector<T> v2_ref_ ;
+}; // TwoVector
 
-template < typename VectorTypeX, typename VectorTypeY >
-void test_axpy(std::ostream& os, int runs, int runs_i, int size, int size_i, typename VectorTypeX::value_type alpha, const VectorTypeX& x, VectorTypeY& y_native, VectorTypeY& y_toblas)
-{
-  typedef typename VectorTypeX::value_type value_type ;
 
-  boost::timer t ;
-  for(int i = 0 ; i < runs_i ; ++i ) y_native += alpha * x;
-  
-  report< value_type >( os, runs, runs_i, size_i, t.elapsed() );
-  
-  t.restart() ;
-  for(int i = 0 ; i < runs_i ; ++i ) boost::numeric::bindings::blas::axpy( alpha, x, y_toblas );
-  
-  report< value_type >( os, runs, runs_i, size_i, t.elapsed() );
-  
-  check( y_native.begin(), y_native.end(), y_toblas.begin() ) ;
-}
+// Run the test for a specific value_type T.
+template <typename T>
+int do_value_type() {
+   // Tests for functions with one vector argument.
+   std::cout << " one argument\n";
+   if (different_vectors<T,OneVector<T> >(OneVector<T> ())) return 255 ;
 
-struct axpy_vector
-{
-  template < typename T >
-  void operator()(std::ostream& os, int size, int size_i, int runs, int runs_i)
-  {
-    numerics::vector< T > x( size_i ); 
-    random_initialise_vector( x );
-    numerics::vector< T > y_native( x ) ;
-    numerics::vector< T > y_toblas( x ) ;
-    T alpha = std::numeric_limits< T >::epsilon() ;
-      
-    test_axpy( os, runs, runs_i, size, size_i, alpha, x, y_native, y_toblas );
-  }
-};
+   // Tests for functions with two vector arguments.
+   std::cout << " two arguments\n";
+   if (different_vectors<T,TwoVector<T> >(TwoVector<T>())) return 255;
+   return 0;
+} // do_value_type()
 
-struct axpy_vector_range
-{
-  template < typename T >
-  void operator()(std::ostream& os, int size, int size_i, int runs, int runs_i)
-  {
-    numerics::vector< T > x( size ); 
-    random_initialise_vector( x );
-    numerics::vector< T > y_native( x ) ;
-    numerics::vector< T > y_toblas( x ) ;
-    T alpha = std::numeric_limits< T >::epsilon() ;
 
-    int start = std::max( 0, ( size / 2 ) - size_i );
-    int stop  = start + size_i ;
-    numerics::vector_range< numerics::vector< T > > x_range( x, numerics::range(start,stop) );
-    numerics::vector_range< numerics::vector< T > > y_native_range( y_native, numerics::range(start,stop) );
-    numerics::vector_range< numerics::vector< T > > y_toblas_range( y_toblas, numerics::range(start,stop) );
-      
-    test_axpy( os, runs, runs_i, size, size_i, alpha, x_range, y_native_range, y_toblas_range);
-  }
-};
+int main() {
+  // Run regression for Real/Complex
+  std::cout << "float\n"; if (do_value_type<float>() ) return 255 ;
+  std::cout << "double\n"; if (do_value_type<double>() ) return 255 ;
+  std::cout << "complex<float>\n"; if (do_value_type<std::complex<float> >() ) return 255 ;
+  std::cout << "complex<double>\n"; if (do_value_type<std::complex<double> >() ) return 255 ;
 
-struct axpy_vector_slice
-{
-  template < typename T >
-  void operator()(std::ostream& os, int size, int size_i, int runs, int runs_i)
-  {
-    numerics::vector< T > x( size ); 
-    random_initialise_vector( x );
-    numerics::vector< T > y_native( x ) ;
-    numerics::vector< T > y_toblas( x ) ;
-    T alpha = std::numeric_limits< T >::epsilon() ;
-
-    int stride = size / size_i ;
-    numerics::vector_slice< numerics::vector< T > > x_native_slice( x, numerics::slice(0,stride,size_i) );
-    numerics::vector_slice< numerics::vector< T > > y_native_slice( y_native, numerics::slice(0,stride,size_i) );
-    numerics::vector_slice< numerics::vector< T > > y_toblas_slice( y_toblas, numerics::slice(0,stride,size_i) );
-      
-    test_axpy( os, runs, runs_i, size, size_i, alpha, x_native_slice, y_native_slice, y_toblas_slice ) ;
-  }
-};
-
-struct axpy_vector_range_range_vector_slice_range
-{
-  template < typename T >
-  void operator()(std::ostream& os, int size, int size_i, int runs, int runs_i)
-  {
-    numerics::vector< T > x( size ); 
-    random_initialise_vector( x );
-    numerics::vector< T > y_native( x ) ;
-    numerics::vector< T > y_toblas( x ) ;
-    T alpha = std::numeric_limits< T >::epsilon() ;
-
-    int start = std::max( 0, ( size / 2 ) - size_i );
-    int stop  = start + size_i ;
-    numerics::vector_range< numerics::vector< T > > x_range( x, numerics::range(start,stop) );
-    numerics::vector_range< numerics::vector_range< numerics::vector< T > > > x_range_range( x_range, numerics::range(0,size_i) );
-    numerics::vector_range< numerics::vector< T > > y_native_range( y_native, numerics::range(start,stop) );
-    numerics::vector_range< numerics::vector< T > > y_toblas_range( y_toblas, numerics::range(start,stop) );
-    numerics::vector_slice< numerics::vector_range< numerics::vector< T > > > y_native_slice_range( y_native_range, numerics::slice(0,1,size_i) );
-    numerics::vector_slice< numerics::vector_range< numerics::vector< T > > > y_toblas_slice_range( y_toblas_range, numerics::slice(0,1,size_i) );
-      
-    test_axpy( os, runs, runs_i, size, size_i, alpha, x_range_range, y_native_slice_range, y_toblas_slice_range ) ;
-  }
-};
-
-struct dot_functor
-{
-  template < typename vector_type >
-  typename vector_type::value_type operator()(const vector_type &x, const vector_type &y) const
-  { return boost::numeric::bindings::blas::dot( x, y ) ; }
-};
-
-struct dotu_functor
-{
-  template < typename vector_type >
-  typename vector_type::value_type operator()(const vector_type &x, const vector_type &y) const
-  { return boost::numeric::bindings::blas::dotu( x, y ) ; }
-};
-
-template < typename VectorType, typename Functor >
-void test_dot(std::ostream& os, int runs, int runs_i, int size, int size_i, VectorType& x_native, VectorType& y_native, VectorType& x_toblas, VectorType& y_toblas, Functor functor)
-{
-  typedef typename VectorType::value_type value_type ;
-
-  value_type result_native = value_type(), result_toblas = value_type();
-
-  boost::timer t ;
-  for(int i = 0 ; i < runs_i ; ++i ) result_native = numerics::inner_prod( x_native, y_native );
-  
-  report< value_type >( os, runs, runs_i, size_i, t.elapsed() );
-  
-  t.restart() ;
-  for(int i = 0 ; i < runs_i ; ++i ) result_toblas = functor( x_toblas, y_toblas );
-  
-  report< value_type >( os, runs, runs_i, size_i, t.elapsed() );
-  
-  check( result_native, result_toblas );
-}
-
-struct dot_vector
-{
-  template < typename T, typename Functor >
-  void operator()(std::ostream& os, int size, int size_i, int runs, int runs_i, Functor functor)
-  {
-    numerics::vector< T > x_native( size_i ); 
-    random_initialise_vector( x_native );
-    numerics::vector< T > y_native( x_native ) ;
-    numerics::vector< T > x_toblas( x_native ) ;
-    numerics::vector< T > y_toblas( x_native ) ;
-      
-    test_dot( os, runs, runs_i, size, size_i, x_native, y_native, x_toblas, y_toblas, functor );
-  }
-};
-
-struct dot_vector_range
-{
-  template < typename T, typename Functor >
-  void operator()(std::ostream& os, int size, int size_i, int runs, int runs_i, Functor functor)
-  {
-    numerics::vector< T > x_native( size ); 
-    random_initialise_vector( x_native );
-    numerics::vector< T > y_native( x_native ) ;
-    numerics::vector< T > x_toblas( x_native ) ;
-    numerics::vector< T > y_toblas( x_native ) ;
-
-    int start = std::max( 0, ( size / 2 ) - size_i );
-    int stop  = start + size_i ;
-    numerics::vector_range< numerics::vector< T > > x_native_range( x_native, numerics::range(start,stop) );
-    numerics::vector_range< numerics::vector< T > > y_native_range( y_native, numerics::range(start,stop) );
-    numerics::vector_range< numerics::vector< T > > x_toblas_range( x_toblas, numerics::range(start,stop) );
-    numerics::vector_range< numerics::vector< T > > y_toblas_range( y_toblas, numerics::range(start,stop) );
-      
-    test_dot( os, runs, runs_i, size, size_i, x_native_range, y_native_range, x_toblas_range, y_toblas_range, functor);
-  }
-};
-
-struct dot_vector_slice
-{
-  template < typename T, typename Functor >
-  void operator()(std::ostream& os, int size, int size_i, int runs, int runs_i, Functor functor)
-  {
-    numerics::vector< T > x_native( size ); 
-    random_initialise_vector( x_native );
-    numerics::vector< T > y_native( x_native ) ;
-    numerics::vector< T > x_toblas( x_native ) ;
-    numerics::vector< T > y_toblas( x_native ) ;
-
-    int stride = size / size_i ;
-    numerics::vector_slice< numerics::vector< T > > x_native_slice( x_native, numerics::slice(0,stride,size_i) );
-    numerics::vector_slice< numerics::vector< T > > y_native_slice( y_native, numerics::slice(0,stride,size_i) );
-    numerics::vector_slice< numerics::vector< T > > x_toblas_slice( x_toblas, numerics::slice(0,stride,size_i) );
-    numerics::vector_slice< numerics::vector< T > > y_toblas_slice( y_toblas, numerics::slice(0,stride,size_i) );
-      
-    test_dot( os, runs, runs_i, size, size_i, x_native_slice, y_native_slice, x_toblas_slice, y_toblas_slice, functor ) ;
-  }
-};
-
-template < typename VectorType >
-void test_dotc(std::ostream& os, int runs, int runs_i, int size, int size_i, VectorType& x_native, VectorType& y_native, VectorType& x_toblas, VectorType& y_toblas)
-{
-  typedef typename VectorType::value_type value_type ;
-
-  value_type result_native, result_toblas ;
-
-  boost::timer t ;
-  for(int i = 0 ; i < runs_i ; ++i ) result_native = numerics::inner_prod( numerics::conj(x_native), y_native );
-  
-  report< value_type >( os, runs, runs_i, size_i, t.elapsed() );
-  
-  t.restart() ;
-  for(int i = 0 ; i < runs_i ; ++i ) result_toblas = boost::numeric::bindings::blas::dot( numerics::conj(x_toblas), y_toblas );
-  
-  report< value_type >( os, runs, runs_i, size_i, t.elapsed() );
-  
-  check( result_native, result_toblas );
-}
-
-struct dotc_vector
-{
-  template < typename T >
-  void operator()(std::ostream& os, int size, int size_i, int runs, int runs_i)
-  {
-    numerics::vector< T > x_native( size_i ); 
-    random_initialise_vector( x_native );
-    numerics::vector< T > y_native( x_native ) ;
-    numerics::vector< T > x_toblas( x_native ) ;
-    numerics::vector< T > y_toblas( x_native ) ;
-      
-    test_dotc( os, runs, runs_i, size, size_i, x_native, y_native, x_toblas, y_toblas );
-  }
-};
-
-struct dotc_vector_range
-{
-  template < typename T >
-  void operator()(std::ostream& os, int size, int size_i, int runs, int runs_i)
-  {
-    numerics::vector< T > x_native( size ); 
-    random_initialise_vector( x_native );
-    numerics::vector< T > y_native( x_native ) ;
-    numerics::vector< T > x_toblas( x_native ) ;
-    numerics::vector< T > y_toblas( x_native ) ;
-
-    int start = std::max( 0, ( size / 2 ) - size_i );
-    int stop  = start + size_i ;
-    numerics::vector_range< numerics::vector< T > > x_native_range( x_native, numerics::range(start,stop) );
-    numerics::vector_range< numerics::vector< T > > y_native_range( y_native, numerics::range(start,stop) );
-    numerics::vector_range< numerics::vector< T > > x_toblas_range( x_toblas, numerics::range(start,stop) );
-    numerics::vector_range< numerics::vector< T > > y_toblas_range( y_toblas, numerics::range(start,stop) );
-      
-    test_dotc( os, runs, runs_i, size, size_i, x_native_range, y_native_range, x_toblas_range, y_toblas_range);
-  }
-};
-
-struct dotc_vector_slice
-{
-  template < typename T >
-  void operator()(std::ostream& os, int size, int size_i, int runs, int runs_i)
-  {
-    numerics::vector< T > x_native( size ); 
-    random_initialise_vector( x_native );
-    numerics::vector< T > y_native( x_native ) ;
-    numerics::vector< T > x_toblas( x_native ) ;
-    numerics::vector< T > y_toblas( x_native ) ;
-
-    int stride = size / size_i ;
-    numerics::vector_slice< numerics::vector< T > > x_native_slice( x_native, numerics::slice(0,stride,size_i) );
-    numerics::vector_slice< numerics::vector< T > > y_native_slice( y_native, numerics::slice(0,stride,size_i) );
-    numerics::vector_slice< numerics::vector< T > > x_toblas_slice( x_toblas, numerics::slice(0,stride,size_i) );
-    numerics::vector_slice< numerics::vector< T > > y_toblas_slice( y_toblas, numerics::slice(0,stride,size_i) );
-      
-    test_dotc( os, runs, runs_i, size, size_i, x_native_slice, y_native_slice, x_toblas_slice, y_toblas_slice ) ;
-  }
-};
-
-int main (int argc, char *argv []) 
-{
-  int runs = 1 ; // 10000000 ;
-  int stop  = 10 ; // 10000 ;
-
-  switch ( argc ) {
-  case 3:
-    stop = atoi( argv[2] ) ;
-  case 2:
-    runs = atoi( argv[1] ) ;
-  case 1:
-  default: {}
-  }
-
-  int start = 1 ;
-  int step  = 50 ;
-
-  std::cerr << "\npeak float\n";
-  peak<float> () ( runs );
-
-  std::cerr << "\npeak double\n";
-  peak<double> () ( runs );
-
-  std::cerr << "\nstd:complex<float>\n";
-  peak<std::complex<float> > () ( runs );
-
-  std::cerr << "\nstd:complex<double>\n";
-  peak<std::complex<double> > () ( runs );
-
-  if (argc > 1) {
-    int scale = atoi(argv [1]);
-    runs *= scale ;
-  }
-
-  {
-    {
-      std::cerr <<         "scal_vector_double" << std::endl ;
-      std::ofstream stream("scal_vector_double");
-      loop< double, scal_vector >( stream, start, step, stop, runs, scal_vector() ) ;
-    }
-    
-    {
-      std::cerr <<         "scal_vector_double_complex" << std::endl ;
-      std::ofstream stream("scal_vector_double_complex");
-      loop< std::complex< double >, scal_vector >( stream, start, step, stop, runs, scal_vector() ) ;
-    }
-    
-    {
-      std::cerr <<         "scal_vector_range_double" << std::endl ;
-      std::ofstream stream("scal_vector_range_double");
-      loop< double, scal_vector_range >( stream, start, step, stop, runs, scal_vector_range() ) ;
-    }
-    
-    {
-      std::cerr <<         "scal_vector_range_double_complex" << std::endl ;
-      std::ofstream stream("scal_vector_range_double_complex");
-      loop< std::complex< double >, scal_vector_range >( stream, start, step, stop, runs, scal_vector_range() ) ;
-    }
-    
-    {
-      std::cerr <<         "scal_vector_slice_double" << std::endl ;
-      std::ofstream stream("scal_vector_slice_double");
-      loop< double, scal_vector_slice >( stream, start, step, stop, runs, scal_vector_slice() ) ;
-    }
-    
-    {
-      std::cerr <<         "scal_vector_slice_double_complex" << std::endl ;
-      std::ofstream stream("scal_vector_slice_double_complex");
-      loop< std::complex< double >, scal_vector_slice >( stream, start, step, stop, runs, scal_vector_slice() ) ;
-    }
-
-    {
-      std::cerr <<         "scal_matrix_row_row_major_double" << std::endl ;
-      std::ofstream stream("scal_matrix_row_row_major_double");
-      loop< double, scal_matrix_row_row_major >( stream, start, step, stop, runs, scal_matrix_row_row_major() ) ;
-    }
-    
-    {
-      std::cerr <<         "scal_matrix_row_row_major_double_complex" << std::endl ;
-      std::ofstream stream("scal_matrix_row_row_major_double_complex");
-      loop< std::complex< double >, scal_matrix_row_row_major >( stream, start, step, stop, runs, scal_matrix_row_row_major() ) ;
-    }
-
-    {
-      std::cerr <<         "scal_matrix_row_column_major_double" << std::endl ;
-      std::ofstream stream("scal_matrix_row_column_major_double");
-      loop< double, scal_matrix_row_column_major >( stream, start, step, stop, runs, scal_matrix_row_column_major() ) ;
-    }
-    
-    {
-      std::cerr <<         "scal_matrix_row_column_major_double_complex" << std::endl ;
-      std::ofstream stream("scal_matrix_row_column_major_double_complex");
-      loop< std::complex< double >, scal_matrix_row_column_major >( stream, start, step, stop, runs, scal_matrix_row_column_major() ) ;
-    }
-
-    {
-      std::cerr <<         "scal_matrix_column_row_major_double" << std::endl ;
-      std::ofstream stream("scal_matrix_column_row_major_double");
-      loop< double, scal_matrix_column_row_major >( stream, start, step, stop, runs, scal_matrix_column_row_major() ) ;
-    }
-    
-    {
-      std::cerr <<         "scal_matrix_column_row_major_double_complex" << std::endl ;
-      std::ofstream stream("scal_matrix_column_row_major_double_complex");
-      loop< std::complex< double >, scal_matrix_column_row_major >( stream, start, step, stop, runs, scal_matrix_column_row_major() ) ;
-    }
-
-    {
-      std::cerr <<         "scal_matrix_column_column_major_double" << std::endl ;
-      std::ofstream stream("scal_matrix_column_column_major_double");
-      loop< double, scal_matrix_column_column_major >( stream, start, step, stop, runs, scal_matrix_column_column_major() ) ;
-    }
-    
-    {
-      std::cerr <<         "scal_matrix_column_column_major_double_complex" << std::endl ;
-      std::ofstream stream("scal_matrix_column_column_major_double_complex");
-      loop< std::complex< double >, scal_matrix_column_column_major >( stream, start, step, stop, runs, scal_matrix_column_column_major() ) ;
-    }
-  }
-
-  {
-    {
-      std::cerr <<         "axpy_vector_double" << std::endl ;
-      std::ofstream stream("axpy_vector_double");
-      loop< double, axpy_vector >( stream, start, step, stop, runs, axpy_vector() );
-    }
-
-    {
-      std::cerr <<         "axpy_vector_double_complex" << std::endl ;
-      std::ofstream stream("axpy_vector_double_complex");
-      loop< std::complex< double >, axpy_vector >( stream, start, step, stop, runs, axpy_vector() );
-    }
-
-    {
-      std::cerr <<         "axpy_vector_range_double" << std::endl ;
-      std::ofstream stream("axpy_vector_range_double");
-      loop< double, axpy_vector_range >( stream, start, step, stop, runs, axpy_vector_range() ) ;
-    }
-    
-    {
-      std::cerr <<         "axpy_vector_range_double_complex" << std::endl ;
-      std::ofstream stream("axpy_vector_range_double_complex");
-      loop< std::complex< double >, axpy_vector_range >( stream, start, step, stop, runs, axpy_vector_range() ) ;
-    }
-
-    {
-      std::cerr <<         "axpy_vector_slice_double" << std::endl ;
-      std::ofstream stream("axpy_vector_slice_double");
-      loop< double, axpy_vector_slice >( stream, start, step, stop, runs, axpy_vector_slice() ) ;
-    }
-    
-    {
-      std::cerr <<         "axpy_vector_slice_double_complex" << std::endl ;
-      std::ofstream stream("axpy_vector_slice_double_complex");
-      loop< std::complex< double >, axpy_vector_slice >( stream, start, step, stop, runs, axpy_vector_slice() ) ;
-    }
-
-    {
-      std::cerr <<         "axpy_vector_range_range_vector_slice_range_double" << std::endl ;
-      std::ofstream stream("axpy_vector_range_range_vector_slice_range_double");
-      loop< double, axpy_vector_range_range_vector_slice_range >( stream, start, step, stop, runs, axpy_vector_range_range_vector_slice_range() ) ;
-    }
-
-    {
-      std::cerr <<         "axpy_vector_range_range_vector_slice_range_double_complex" << std::endl ;
-      std::ofstream stream("axpy_vector_range_range_vector_slice_range_double_complex");
-      loop< std::complex< double >, axpy_vector_range_range_vector_slice_range >( stream, start, step, stop, runs, axpy_vector_range_range_vector_slice_range() ) ;
-    }
-  }
-
-  {
-    {
-      std::cerr <<         "dot_vector_double" << std::endl ;
-      std::ofstream stream("dot_vector_double");
-      loop< double, dot_vector >( stream, start, step, stop, runs, dot_vector(), dot_functor() );
-    } 
-    
-    {
-      std::cerr <<         "dot_vector_range_double" << std::endl ;
-      std::ofstream stream("dot_vector_range_double");
-      loop< double, dot_vector_range >( stream, start, step, stop, runs, dot_vector_range(), dot_functor() ) ;
-    }
-    
-    {
-      std::cerr <<         "dot_vector_slice_double" << std::endl ;
-      std::ofstream stream("dot_vector_slice_double");
-      loop< double, dot_vector_slice >( stream, start, step, stop, runs, dot_vector_slice(), dot_functor() ) ;
-    }
-    
-    {
-      std::cerr <<         "dotu_vector_double_complex" << std::endl ;
-      std::ofstream stream("dotu_vector_double_complex");
-      loop< std::complex< double >, dot_vector >( stream, start, step, stop, runs, dot_vector(), dotu_functor() );
-    }
-
-    {
-      std::cerr <<         "dotu_vector_range_double_complex" << std::endl ;
-      std::ofstream stream("dotu_vector_range_double_complex");
-      loop< std::complex< double >, dot_vector_range >( stream, start, step, stop, runs, dot_vector_range(), dotu_functor() ) ;
-    }
-
-    {
-      std::cerr <<         "dotu_vector_slice_double_complex" << std::endl ;
-      std::ofstream stream("dotu_vector_slice_double_complex");
-      loop< std::complex< double >, dot_vector_slice >( stream, start, step, stop, runs, dot_vector_slice(), dotu_functor() ) ;
-    }
-  }
+  std::cout << "Regression test successful\n" ;
 
   return 0 ;
 }
