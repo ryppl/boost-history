@@ -16,11 +16,11 @@ struct fusion_arg_iterator
 {
     typedef fusion_arg_iterator tag;
 
-    fusion_arg_iterator(converter::arg_conversion* p_) : p(p_) {}
+    fusion_arg_iterator(converter::from_xxx_data* p_) : p(p_) {}
 
-    converter::arg_conversion* p;
+    converter::from_xxx_data* p;
 };
-    
+
 }}}} // namespace boost::langbinding::function::aux
 
 namespace boost { namespace fusion { namespace meta {
@@ -54,7 +54,7 @@ namespace boost { namespace fusion { namespace meta {
         template <typename Iterator>
         struct apply
         {
-            typedef langbinding::converter::arg_conversion& type;
+            typedef langbinding::converter::from_xxx_data& type;
 
             static type call(Iterator i)
             {

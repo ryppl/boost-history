@@ -12,8 +12,8 @@
 namespace boost { namespace langbinding { namespace function { namespace aux {
 
 // The extractors a responsible for the second stage of converting an
-// argument. This involves casting arg_conversion::convertible to the
-// right type, or possibly using arg_conversion::construct to construct
+// argument. This involves casting from_xxx_data::convertible to the
+// right type, or possibly using from_xxx_data::construct to construct
 // a temporary.    
 struct extractor_base
 {
@@ -25,7 +25,7 @@ struct extractor_base
 template<class T>
 struct ptr_extractor : extractor_base
 {
-    ptr_extractor(converter::arg_conversion const& x) 
+    ptr_extractor(converter::from_xxx_data const& x) 
         : extractor_base(x.convertible) {}
 
     T operator()() const
@@ -37,7 +37,7 @@ struct ptr_extractor : extractor_base
 template<class T>
 struct ref_extractor : extractor_base
 {
-    ref_extractor(converter::arg_conversion const& x) 
+    ref_extractor(converter::from_xxx_data const& x) 
         : extractor_base(x.convertible) {}
 
     T operator()() const
@@ -57,7 +57,7 @@ struct rvalue_extractor
 {
     typedef typename add_reference<T>::type result_type;
 
-    rvalue_extractor(converter::arg_conversion const& x)
+    rvalue_extractor(converter::from_xxx_data const& x)
     {
         if (x.construct)
         {
@@ -100,16 +100,16 @@ struct rvalue_extractor
 
 template<class T>
 struct arg_extractor
+    : mpl::eval_if<
+          is_pointer<T>
+        , mpl::identity<ptr_extractor<T> >
+        , mpl::if_<
+              boost::detail::is_reference_to_non_const<T>
+            , ref_extractor<T>
+            , rvalue_extractor<T>
+          >
+      >
 {
-    typedef typename mpl::eval_if<
-        is_pointer<T>
-      , mpl::identity<ptr_extractor<T> >
-      , mpl::eval_if<
-            boost::detail::is_reference_to_non_const<T>
-          , mpl::identity<ref_extractor<T> >
-          , mpl::identity<rvalue_extractor<T> >
-        >
-    >::type type;
 };
 
 }}}} // namespace boost::langbinding::function::aux

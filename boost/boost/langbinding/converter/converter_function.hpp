@@ -13,14 +13,14 @@ struct holder_installer;
 
 namespace boost { namespace langbinding { namespace converter {
 
-struct arg_conversion
+struct from_xxx_data
 {
     void* source;
     void* convertible;
     void*(*construct)(void*, void*);
 };
 
-typedef arg_conversion (*converter_function)(void* src);
+typedef from_xxx_data (*from_xxx_function)(void* src);
 typedef void* (*to_xxx_function)(void* src, function::holder_installer const& installer);
 
 }}} // namespace boost::langbinding::converter

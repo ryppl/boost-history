@@ -23,7 +23,7 @@ public:
 
     virtual void* invoke(
         backend::plugin const& backend_
-      , converter::arg_conversion* args) const = 0;
+      , converter::from_xxx_data* args) const = 0;
 
     virtual argument_type const* arguments() const = 0;
     virtual argument_type const& return_type() const = 0;
