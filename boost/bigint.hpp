@@ -254,12 +254,43 @@ class bigint : boost::operators<bigint> {
     
     return rem;
   }
-  
-  void from_string(std::string const& str) {
+
+public:
+  enum base_type {octal=8, decimal=10, hexadecimal=16};
+private:
+  void from_string(std::string const& str, base_type a_base) {
+
+    // RG: This may be better placed in a separate function.
+    // Verify the goodness of the number
+    char const* valid_octals = "-01234567";
+    char const* valid_decimals = "-0123456789";
+    char const* valid_hexadecimals = "-0123456789abcdefABCDEF";
+
+    char const* valid;
+    int factor;
+    switch(a_base) {
+    case octal:
+      valid = valid_octals;
+      factor = 8;
+      break;
+    case decimal:
+      valid = valid_decimals;
+      factor = 10;
+      break;
+    case hexadecimal:
+      valid = valid_hexadecimals;
+      factor = 16;
+      break;
+    default:
+      assert(false);
+      break;
+    }
+
+    // RG: All this could probably be stated better
     assert(!str.empty());
-    assert(str.find_first_not_of("-0123456789") == std::string::npos);
+    assert(str.find_first_not_of(valid) == std::string::npos);
     assert(str[0] != '-' ||
-	   str.find_first_not_of("0123456789",1) == std::string::npos);
+	   str.find_first_not_of(valid+1,1) == std::string::npos);
     assert(str[0] != '-' || str.size() > 1);
 
     std::string::const_iterator start = str.begin();
@@ -268,30 +299,16 @@ class bigint : boost::operators<bigint> {
     if(negative) 
       ++start;
 
-    typedef std::string::difference_type diff_t;
-    diff_t len = std::distance(start,str.end());
     buffer.clear();
-    buffer.resize( (len + chars_per_digit - 1)/chars_per_digit, 0 );
+    buffer.push_back(0);
 
-    // how many chars x go with the "first" bunch? (1 <= x <= 4)
-    diff_t trailing_digits = len % chars_per_digit;
-    diff_t first_marker = trailing_digits ? trailing_digits : chars_per_digit; 
-
-    // invariant: [i,j) refers to the next "digit" to be processed
-    // p points to the next bigit to be filled
-    buffer_t::reverse_iterator p = buffer.rbegin();
     std::string::const_iterator i = start;
-    std::string::const_iterator j = start + first_marker;
     while (i != str.end()) {
-      int digit = 0;
-      while (i != j) {
-	digit *= 10;
-	digit += *i - '0';
-	++i;
-      }
-      *p++ = digit;
-      if(i != str.end())
-	 j += chars_per_digit;
+      for(buffer_t::iterator j = buffer.begin(); j != buffer.end(); ++j)
+        *j *= factor;
+      buffer.front() += *i - '0';
+      this->normalize();
+      ++i;
     }
 
     if(negative)
@@ -401,17 +418,18 @@ class bigint : boost::operators<bigint> {
   }
 
 public:
-  
+
+    
   bigint() : buffer(1,0) { }
 
-  explicit bigint(std::string const& str) {
-    from_string(str);
+  explicit bigint(std::string const& str, base_type a_base=decimal) {
+    from_string(str,a_base);
   }
 
   bigint(long value) {
     std::ostringstream os;
     os << value;
-    from_string(os.str());
+    from_string(os.str(),decimal);
   }
 
   bool is_zero() const {
