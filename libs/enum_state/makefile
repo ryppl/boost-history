@@ -24,6 +24,9 @@ all::		test
 test:	$(OBJS)
 	$(CXX) $(LDFLAGS) $(OBJS) $(LIBS) -o $@
 
+check::		test
+	.\/test
+
 realclean distclean clean::
 	@find . -name '*.rpo' -exec rm -f {} \;
 	@find . -name '*.a'   -exec rm -f {} \;
@@ -39,4 +42,16 @@ depend::
 
 # Dependencies
 
-test.o: /home/simons/projects/boost-sandbox/boost/enum_state.hpp
+test.o: /home/simons/projects/boost-current/boost/test/test_tools.hpp
+test.o: /home/simons/projects/boost-current/boost/test/cpp_main.cpp
+test.o: /home/simons/projects/boost-current/boost/detail/catch_exceptions.hpp
+test.o: /home/simons/projects/boost-current/boost/cstdlib.hpp
+test.o: /home/simons/projects/boost-current/boost/test/test_main.cpp
+test.o: /home/simons/projects/boost-current/boost/static_assert.hpp
+test.o: /home/simons/projects/boost-current/boost/config.hpp
+test.o: /home/simons/projects/boost-current/boost/config/user.hpp
+test.o: /home/simons/projects/boost-current/boost/config/select_compiler_config.hpp
+test.o: /home/simons/projects/boost-current/boost/config/compiler/gcc.hpp
+test.o: /home/simons/projects/boost-current/boost/config/select_stdlib_config.hpp
+test.o: /home/simons/projects/boost-current/boost/config/select_platform_config.hpp
+test.o: /home/simons/projects/boost-current/boost/config/suffix.hpp
