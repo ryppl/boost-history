@@ -42,6 +42,9 @@
 // structure checks require proper traits
 #  define BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
 
+// type checks require proper traits 
+#  define BOOST_NUMERIC_BINDINGS_NO_TYPE_CHECK 
+
 #endif 
 
 #endif
