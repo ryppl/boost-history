@@ -35,7 +35,7 @@ struct find_if
           Sequence
         , void
         , arg<1> // ignore
-        , aux::find_if_pred<Predicate>
+        , protect< aux::find_if_pred<Predicate> >
         >::type result_;
 
     typedef typename second<result_>::type type;

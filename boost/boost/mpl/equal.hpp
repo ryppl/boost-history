@@ -68,13 +68,12 @@ struct equal_impl
     typedef typename begin<Sequence2>::type first2_;
     typedef typename end<Sequence1>::type last1_;
     typedef typename end<Sequence2>::type last2_;
-    typedef typename lambda<Predicate>::type pred_;
 
     typedef aux::iter_fold_if_impl<
           first1_
         , first2_
         , next<>
-        , aux::equal_pred<pred_,last1_,last2_>
+        , protect< aux::equal_pred<Predicate,last1_,last2_> >
         , void_
         , always<false_>
         > fold_;

@@ -3,7 +3,7 @@
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
-// Copyright (c) 2002
+// Copyright 2002
 // Aleksey Gurtovoy
 //
 // Use, modification and distribution are subject to the Boost Software License,

@@ -28,7 +28,7 @@ BOOST_MPL_AUX_COMMON_NAME_WKND(replace_if)
 
 namespace aux {
 
-template< typename Predicate, typename T, int not_le_ = 0 >
+template< typename Predicate, typename T >
 struct replace_if_op
 {
     template< typename U > struct apply
@@ -52,7 +52,7 @@ template<
 struct replace_if
     : transform1<
           Sequence
-        , aux::replace_if_op<Predicate,T>
+        , protect< aux::replace_if_op<Predicate,T> >
         , Inserter
         >
 {

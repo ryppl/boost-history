@@ -29,7 +29,7 @@
 namespace boost { namespace mpl {
 
 namespace aux {
-template< typename Predicate, typename Operation, int not_le_ = 0 >
+template< typename Predicate, typename Operation >
 struct unique_op
 {
     template< typename Pair, typename T > struct apply
@@ -58,7 +58,7 @@ struct unique_impl
     : first< typename fold<
           Sequence
         , pair<typename Inserter::state,void_>
-        , aux::unique_op<Predicate,typename Inserter::operation>
+        , protect< aux::unique_op<Predicate,typename Inserter::operation> >
         >::type >
 {
 };
@@ -72,7 +72,7 @@ struct reverse_unique_impl
     : first< typename reverse_fold<
           Sequence
         , pair<typename Inserter::state,void>
-        , aux::unique_op<Predicate,typename Inserter::operation>
+        , protect< aux::unique_op<Predicate,typename Inserter::operation> >
         >::type >
 {
 };

@@ -27,7 +27,7 @@ namespace boost { namespace mpl {
 
 namespace aux {
 
-template< typename Predicate, int not_le_ = 0 >
+template< typename Predicate >
 struct next_if
 {
     template<
@@ -55,7 +55,7 @@ struct count_if
     : fold<
           Sequence
         , integral_c<unsigned long,0>
-        , aux::next_if<Predicate>
+        , protect< aux::next_if<Predicate> >
         >
 {
     BOOST_MPL_AUX_LAMBDA_SUPPORT(2,count_if,(Sequence,Predicate))

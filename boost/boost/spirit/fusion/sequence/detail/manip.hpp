@@ -1,7 +1,7 @@
 /*=============================================================================
-    Copyright (c) 1999-2003 Jeremiah Willcock
-    Copyright (c) 1999-2003 Jaakko Järvi
-    Copyright (c) 2001-2003 Joel de Guzman
+    Copyright 1999-2003 Jeremiah Willcock
+    Copyright 1999-2003 Jaakko Järvi
+    Copyright 2001-2003 Joel de Guzman
 
     Use, modification and distribution is subject to the Boost Software
     License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at

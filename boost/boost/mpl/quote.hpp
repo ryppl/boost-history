@@ -30,7 +30,7 @@
 #endif
 
 #if !defined(BOOST_MPL_CFG_NO_IMPLICIT_METAFUNCTIONS) \
-    && defined(BOOST_MPL_NO_AUX_HAS_XXX)
+    && defined(BOOST_MPL_CFG_NO_HAS_XXX)
 #   define BOOST_MPL_CFG_NO_IMPLICIT_METAFUNCTIONS
 #endif
 

@@ -2,7 +2,7 @@
 // boost/type_traits/detail/bool_trait_undef.hpp header file
 //-----------------------------------------------------------------------------
 //
-// Copyright (c) 2002
+// Copyright 2002
 // Aleksey Gurtovoy
 //
 // Use, modification and distribution are subject to the Boost Software License,
