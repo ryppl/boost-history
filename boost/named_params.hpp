@@ -418,6 +418,12 @@ namespace detail
      typedef mpl::bool_<value> type;
   };
 
+  template <class T>
+  struct get_type
+  {
+      typedef typename T::type type;
+  };
+  
   // Produces the unwrapped type to hold a reference to in named<>
   // Can't use boost::unwrap_reference<> here because it
   // doesn't handle the case where T = const reference_wrapper<U>
@@ -426,7 +432,7 @@ namespace detail
   {
       typedef typename mpl::eval_if<
           is_const_reference_wrapper<T>
-        , T
+        , get_type<T>
         , mpl::identity<T>
       >::type type;
   };
