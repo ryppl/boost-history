@@ -22,13 +22,13 @@ void boost::gui::event_handler::default_event( event * ev )
 
 void boost::gui::event_handler::onevent( event * ev )
 {
-   //BOOST_GUI_LOGOB(event) << *ev << std::endl;
+   BOOST_GUI_LOGOB(event) << *ev << std::endl;
 
    /** Process events along the set of registered handlers for that event until
      * the event is signalled as being "handled".
      */
 
-   event_id et( ( *ev )());
+   event_id et(( *ev )());
    if( !process_filter_chain( et, ev ))
    {
       /** Ordinary processing has not resulted in the event being handled, so
@@ -36,7 +36,7 @@ void boost::gui::event_handler::onevent( event * ev )
         */
 
       if( et.id == WM_COMMAND ) et.code = HIWORD( ev -> param1< WPARAM >());
-      if( et.id == WM_NOTIFY )  et.code = ev -> param2< NMHDR * >() -> code;
+      if( et.id == WM_NOTIFY  ) et.code = ev -> param2< NMHDR * >() -> code;
       if( et.code != 0 ) process_filter_chain( et, ev );
    }
 
@@ -58,8 +58,9 @@ void boost::gui::event_handler::onevent( event * ev )
          gui::component * pwnd = e.get_component();
          if( pwnd )
          {
+            e.system_event = false;
             pwnd -> onevent( &e );
-            ev -> handled = e.handled;
+            if( e.handled ) ev -> handled = true;
          }
       }
    }
