@@ -208,7 +208,7 @@
             typedef fixed_string_base< CharT, CharStringPolicy, FmtPolicy >
                                                                      this_type;
          public:
-            typedef typename base_type::traits_type                  triats_type;
+            typedef typename base_type::traits_type                  traits_type;
             typedef typename base_type::value_type                   value_type;
             typedef typename base_type::char_type                    char_type;
             typedef typename base_type::allocator_type               allocator_type;
@@ -290,7 +290,7 @@
             typedef fixed_string_base< CharT, CharStringPolicy, FmtPolicy >    base_type;
             typedef fixed_string< n,   CharT, CharStringPolicy, FmtPolicy >    this_type;
          public:
-            typedef typename base_type::traits_type                  triats_type;
+            typedef typename base_type::traits_type                  traits_type;
             typedef typename base_type::value_type                   value_type;
             typedef typename base_type::char_type                    char_type;
             typedef typename base_type::allocator_type               allocator_type;
