@@ -152,19 +152,21 @@ template<> struct assert_arg_pred_impl<true> { typedef void* type; };
 template< typename P > struct assert_arg_pred
 {
 #if !BOOST_WORKAROUND(__BORLANDC__,< 0x600)
-    typedef typename assert_arg_pred_impl< P::value >::type type;
+    typedef typename P::type p_type;
+    typedef typename assert_arg_pred_impl< p_type::value >::type type;
 #else
-    typedef typename assert_arg_pred_impl<(P::value)>::type type;
+    typedef typename assert_arg_pred_impl<(P::type::value)>::type type;
 #endif
 };
 
 template< typename P > struct assert_arg_pred_not
 {
 #if !BOOST_WORKAROUND(__BORLANDC__,< 0x600)
-    enum { p = !P::value };
+    typedef typename P::type p_type;
+    enum { p = !p_type::value };
     typedef typename assert_arg_pred_impl<p>::type type;
 #else
-    typedef typename assert_arg_pred_impl<(!(P::value != 0))>::type type;
+    typedef typename assert_arg_pred_impl<(!(P::type::value != 0))>::type type;
 #endif
 };
 
@@ -192,7 +194,7 @@ template< typename Pred > struct assert_arg_type_impl<true,Pred>
 };
 
 template< typename Pred > struct assert_arg_type
-    : assert_arg_type_impl<Pred::value,Pred>
+    : assert_arg_type_impl<Pred::type::value,Pred>
 {
 };
 
