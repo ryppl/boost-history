@@ -3,7 +3,6 @@
 #ifndef BOOST__IOFM__FORMAT_OBJECTS__PAIR_OUTPUT__HPP
 #define BOOST__IOFM__FORMAT_OBJECTS__PAIR_OUTPUT__HPP
 #  include <boost/outfmt/formatter.hpp>
-#  include <boost/outfmt/detail/input_helper.hpp>
 
 #  include <utility>                             // std::pair
 #  include <complex>                             // std::complex
@@ -111,21 +110,85 @@
                                                  (
                                                     InputStream & is,
                                                     std::pair< T1, T2 > & p
-                                                 )
+                                                 ) const
             {
-               boost::io::detail::input_helper< InputStream >
-                                       in( is );
-                                       
-               T1                      t1;
-               if( in.match( open()) && out1.read( is, t1 ))
+               return( in( is, p.first, p.second ));
+            }
+            template< typename T, class InputStream >
+            inline bool                          read
+                                                 (
+                                                    InputStream & is,
+                                                    std::complex< T > & c
+                                                 ) const
+            {
+               T                       r;
+               T                       i;
+               if( in( is, r, i ))
                {
-                  T2                   t2;
-                  if( in.match( separator()) && out2.read( is, t2 ) && in.match( close()))
+                  c = std::complex< T >( r, i );
+                  return( true );
+               }
+               return( false );
+            }
+         public: // boost dual-valued types
+#           if !defined(BOOST_IOFM__NO_LIB_INTERVAL)
+               template< typename T, class Traits, class InputStream >
+               inline bool                       read
+                                                 (
+                                                    InputStream & is,
+                                                    boost::numeric::interval< T, Traits > & i
+                                                 ) const
+               {
+                  T                    a;
+                  T                    b;
+                  if( in( is, a, b ))
                   {
-                     p.first  = t1;
-                     p.second = t2;
+                     i.assign( a, b );
                      return( true );
                   }
+                  return( false );
+               }
+#           endif
+#           if !defined(BOOST_IOFM__NO_LIB_RATIONAL)
+               template< typename T, class InputStream >
+               inline bool                       read
+                                                 (
+                                                    InputStream & is,
+                                                    boost::rational< T > & r
+                                                 ) const
+               {
+                  T                    a;
+                  T                    b;
+                  if( in( is, a, b ))
+                  {
+                     r.assign( a, b );
+                     return( true );
+                  }
+                  return( false );
+               }
+#           endif
+            template< typename T1, typename T2, class InputStream >
+            inline bool                          read
+                                                 (
+                                                    InputStream & is,
+                                                    boost::compressed_pair< T1, T2 > & cp
+                                                 ) const
+            {
+               return( in( is, cp.first(), cp.second()));
+            }
+         private: // internal implementation
+            template< typename T1, typename T2, class InputStream >
+            inline bool                          in
+                                                 (
+                                                    InputStream & is,
+                                                    T1          & t1,
+                                                    T2          & t2
+                                                 ) const
+            {
+               if( is.match( open()) && out1.read( is, t1 ))
+               {
+                  if( is.match( separator()) && out2.read( is, t2 ) && is.match( close()))
+                     return( true );
                }
                return( false );
             }

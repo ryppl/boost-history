@@ -17,9 +17,10 @@
             }
          public:
             template< typename T, class InputStream >
-            inline bool                          read( InputStream & is, T & value )
+            inline bool                          read( InputStream & is, T & value ) const
             {
-               return( is >> value );
+               is >> value;
+               return( is.isgood());
             }
          public:
             inline           basic_output()

@@ -2,12 +2,14 @@
 
 #ifndef BOOST__IOFM__DETAIL__INPUT_HELPER__HPP
 #define BOOST__IOFM__DETAIL__INPUT_HELPER__HPP
+#  include <boost/noncopyable.hpp>
+
    namespace boost { namespace io { namespace detail
    {
       // helper class for handling input-related tasks
 
       template< class InputStream >
-      class input_helper
+      class input_helper: public boost::noncopyable
       {
          public:
             typedef typename InputStream::char_type                  char_type;
@@ -15,9 +17,21 @@
          private:
             InputStream              & is;
          public:
+            template< typename T >
+            inline input_helper & operator>>( T & t )
+            {
+               is >> t;
+               return( *this );
+            }
+         public:
+            inline bool                          isgood() const
+            {
+               return( !!is );
+            }
             inline bool                          getch( char_type & ch )
             {
-               return( static_cast< bool >( is.get( ch )));
+               is.get( ch );
+               return( isgood());
             }
             inline bool                          isspace( char_type ch ) const
             {
@@ -32,7 +46,7 @@
                is.putback( ch );
             }
          public: // string and character matching
-            inline bool                          match( char_type * s )
+            inline bool                          match( const char_type * s )
             {
                return( match( s, s + traits_type::length( s )));
             }
@@ -47,7 +61,7 @@
                return( false );
             }
          private:
-            bool                                 match( char_type * first, char_type * last )
+            bool                                 match( const char_type * first, const char_type * last )
             {
                skipws();
 

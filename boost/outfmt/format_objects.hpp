@@ -3,6 +3,7 @@
 #ifndef BOOST__IOFM__FORMAT_OBJECTS__HPP
 #define BOOST__IOFM__FORMAT_OBJECTS__HPP
 #  include <boost/outfmt/format_objects/forward.hpp>
+#  include <boost/outfmt/detail/input_helper.hpp>
 
 #  include <boost/outfmt/format_objects/basic_output.hpp>
 #  include <boost/outfmt/format_objects/wrapped_output.hpp>

@@ -7,12 +7,14 @@
 #include <list>     // std::list
 
 #include <boost/outfmt/formatob.hpp>
+#include <boost/outfmt/readob.hpp>
 
 int main()
 {
    // [1]: plain text
 
    // create the output object used for serialization
+
    boost::io::pair_output< char * >    textio; // default formatting
 
    // create the data to be serialized
@@ -36,7 +38,7 @@ int main()
       std::pair< char, int >           p2;
 
       std::cout << "pair before reading: " << boost::io::formatobout( p2, textio ) << '\n';
-      textio.read( is, p2 ); // is >> boost::io::readobject( p2, textio );
+      is >> boost::io::readobout( p2, textio );
       std::cout << "pair after reading:  "  << boost::io::formatobout( p2, textio ) << '\n';
 
       // [output]:
@@ -68,7 +70,7 @@ int main()
       std::pair< char, int >           p2;
 
       std::cout << "pair before reading: " << boost::io::formatobout( p2, textio ) << '\n';
-      xmlio.read( is, p2 ); // is >> boost::io::readobject( p2, xmlio );
+      is >> boost::io::readobout( p2, xmlio );
       std::cout << "pair after reading:  "  << boost::io::formatobout( p2, textio ) << '\n';
 
       // [output]:
@@ -104,6 +106,69 @@ int main()
    {
       // [todo]
       // in >> boost::io::readobject( p1, xmlio2 ); ?
+   }
+
+   // [4]: plain text -- more advanced type
+
+   // create the output object used for serialization
+
+   boost::io::pair_output
+   <
+      char *,
+      boost::io::pair_output< char * >
+   >                                   textio2;
+
+   // create the data to be serialized
+   std::pair< std::complex< float >, int >
+                                         pc1 = std::pair< std::complex< float >, int >
+                                         (
+                                            std::complex< float >( 0.5f, 1.345f ),
+                                            5
+                                         );
+
+   // writing to a plain text-based serialization stream
+   {
+      // open the file to serialize the pair to
+      std::ofstream                    out( "doc2.txt" );
+
+      // serialize to the stream
+      out << boost::io::formatobout( pc1, textio2 ) << '\n';
+   }
+
+   // reading data back from a plain text-based serialization stream
+   {
+      // [note]: the mechanism for reading data in is currently incomplete and experimental:
+      //    it is only currently supported for basic_output and pair_output/std::pair.
+
+      std::ifstream                    is( "doc2.txt" );
+      std::pair< std::complex< float >, int >
+                                       pc2;
+
+      std::cout << "pair before reading: " << boost::io::formatobout( pc2, textio2 ) << '\n';
+      is >> boost::io::readobout( pc2, textio2 );
+      std::cout << "pair after reading:  "  << boost::io::formatobout( pc2, textio2 ) << '\n';
+
+      // [output]:
+      // pair before reading: ( ( 0, 0 ), 0 )
+      // pair after reading:  ( ( 0.5, 1.345 ), 5 )
+   }
+   
+   // reading data back using a different (but compatible) data type 
+   {
+      // [note]: the mechanism for reading data in is currently incomplete and experimental:
+      //    it is only currently supported for basic_output and pair_output/std::pair.
+
+      std::ifstream                    is( "doc2.txt" );
+      std::pair< std::pair< float, double >, int >
+                                       pc2;
+
+      std::cout << "pair before reading: " << boost::io::formatobout( pc2, textio2 ) << '\n';
+      is >> boost::io::readobout( pc2, textio2 );
+      std::cout << "pair after reading:  "  << boost::io::formatobout( pc2, textio2 ) << '\n';
+
+      // [output]:
+      // pair before reading: ( ( 0, 0 ), 0 )
+      // pair after reading:  ( ( 0.5, 1.345 ), 5 )
    }
 
    return( 0 );
