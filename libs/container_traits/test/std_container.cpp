@@ -1,7 +1,8 @@
 #include <boost/container_traits.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits.hpp>
-#include <boost/test/unit_test.hpp>
+#include <boost/test/included/test_exec_monitor.hpp>
+#include <boost/test/test_tools.hpp>
 #include <vector>
 
 using namespace boost;
@@ -24,5 +25,14 @@ void check_std_container()
     BOOST_CHECK( end( vec )   == vec.end() );
     BOOST_CHECK( empty( vec ) == vec.empty() );
     BOOST_CHECK( size( vec ) == vec.size() );
+}
+
+
+
+int test_main( int, char*[] )
+{
+    check_std_container();
+
+    return 0;
 }
 

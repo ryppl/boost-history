@@ -1,10 +1,10 @@
 #include <boost/container_traits.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits.hpp>
-#include <boost/test/unit_test.hpp>
+#include <boost/test/included/test_exec_monitor.hpp>
+#include <boost/test/test_tools.hpp>
 
 using namespace boost;
-using boost::unit_test_framework::test_suite;
 
 void check_array()
 {
@@ -25,11 +25,13 @@ void check_array()
     BOOST_CHECK( size( my_array ) == sizeof( sizer( my_array ) ) );
 }
 
-test_suite* init_unit_test_suite( int, char* [] )
-{
-    test_suite* test = BOOST_TEST_SUITE( "container_traits<Array>" );
-    test->add( BOOST_TEST_CASE( &check_array ), 0 );
 
-    return test;
+
+int test_main( int, char*[] )
+{
+    check_array();
+
+    return 0;
 }
+
 

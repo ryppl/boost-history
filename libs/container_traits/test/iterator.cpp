@@ -1,9 +1,9 @@
 #include <boost/container_traits.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits.hpp>
-#include <boost/test/unit_test.hpp>
+#include <boost/test/included/test_exec_monitor.hpp>
+#include <boost/test/test_tools.hpp>
 #include <boost/config.hpp>
-#include <boost/iterator/counting_iterator.hpp>
 #include <vector>
 #include <fstream>
 #include <algorithm>
@@ -25,8 +25,6 @@ void check_iterator()
     typedef std::istream_iterator<char> iterator_t;
     typedef std::vector<std::string>    vec_t;
     
-    const char* char_s  = "a string";
-    wchar_t*    char_ws = L"a wide string";
     iterator_t iter     = iterator_t( in );
     vec_t      vec;
     
@@ -45,7 +43,17 @@ void check_iterator()
     // size not available for iterators
     
     BOOST_CHECK( !empty( iter ) );
+    BOOST_CHECK( empty( vec ) );
     copy( iter, std::back_inserter( vec ) );
     BOOST_CHECK( !empty( vec ) );
     BOOST_CHECK( empty( iter ) ); 
+}
+
+
+
+int test_main( int, char*[] )
+{
+    check_iterator();
+
+    return 0;
 }

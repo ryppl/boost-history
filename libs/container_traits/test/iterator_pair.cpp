@@ -1,7 +1,8 @@
 #include <boost/container_traits.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits.hpp>
-#include <boost/test/unit_test.hpp>
+#include <boost/test/included/test_exec_monitor.hpp>
+#include <boost/test/test_tools.hpp>
 #include <vector>
 
 using namespace boost;
@@ -32,13 +33,21 @@ void check_iterator_pair()
     BOOST_CHECK( begin( pair ) == pair.first );
     BOOST_CHECK( end( pair )   == pair.second );
     BOOST_CHECK( empty( pair ) == (pair.first == pair.second) );
-    BOOST_CHECK( size( pair )  == (std::distance( pair.first, pair.second ) == 0) );
+    BOOST_CHECK( size( pair )  == std::distance( pair.first, pair.second ) );
     
     BOOST_CHECK( begin( const_pair ) == const_pair.first );
     BOOST_CHECK( end( const_pair )   == const_pair.second );
     BOOST_CHECK( empty( const_pair ) == (const_pair.first == const_pair.second) );
-    BOOST_CHECK( size( const_pair )  == (std::distance( const_pair.first, const_pair.second ) == 0) );
+    BOOST_CHECK( size( const_pair )  == std::distance( const_pair.first, const_pair.second ) );
 
 }
 
+
+
+int test_main( int, char*[] )
+{
+    check_iterator_pair();
+
+    return 0;
+}
 
