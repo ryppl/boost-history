@@ -13,9 +13,13 @@
 <h2>Comments from the review process</h2>
 
 <ul>
-  <li>Have the return type of the comparison operators provided by the
-      Comparison policy ?  It could be boost::tribool for example, if
-      there is a clean logic defined over this type.</li>
+  <li>It would be nice to have a 100% portable Rouding policy class based on
+      LIA-1 only, with no additional requirement such as IEEE 754 or even
+      more.</li>
+  <li>Comparison policies should be removed, and replaced by a mecanism using
+      different namespaces to specify comparison operators.</li>
+  <li>For pi and other constants, we should fetch them from the Math constants
+      library when it is ready.</li>
 </ul>
 
 <h2>Various items</h2>
@@ -29,14 +33,9 @@
       and other non-built-in number types.</li>
   <li>Have a robust implementation of transcendental functions over the
       built-in floating point types (e.g. using MPFR) ?</li>
-  <li>The precision of <code>pi&lt;long double&gt;()</code> can be improved if
-      we know how many bits of precision it is able to store (which is platform
-      dependent).</li>
   <li>Safe conversions from <code>interval&lt;double&gt;</code> to
       <code>interval&lt;float&gt;</code>? Requires partial
       specialization.</li>
-  <li>Correct the file test/io.cpp, which compiles but does not run
-      properly.</li>
   <li>It would be nice to use the expression template mecanism to automatically
       use the more efficient unprotected rounding mode version for small
       subexpressions (although you can do bigger expressions by hand).</li>
@@ -44,7 +43,7 @@
 
 <hr>
 
-<p>Revised: 2002-09-01<br>
+<p>Revised: 2002-09-12<br>
 Copyright (c) Guillaume Melquiond, Sylvain Pion, Hervé Brönnimann, 2002.<br>
 Polytechnic University.</p>
 </body>
