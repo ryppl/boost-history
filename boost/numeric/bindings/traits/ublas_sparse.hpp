@@ -23,6 +23,7 @@
 #endif 
 #include <boost/numeric/bindings/traits/sparse_traits.hpp>
 #include <boost/numeric/bindings/traits/detail/ublas_ordering.hpp>
+#include <algorithm>
 
 
 namespace boost { namespace numeric { namespace bindings { namespace traits {
@@ -68,6 +69,8 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     BOOST_STATIC_CONSTANT (std::size_t, index_base = IB);
 
     static index_pointer index1_storage (matrix_type& cm) {
+      if ( cm.filled1()<=ordering_type::size1(cm.size1(), cm.size2()) )
+         std::fill( cm.index1_data().begin()+cm.filled1(), cm.index1_data().begin()+ordering_type::size1(cm.size1(), cm.size2())+1, cm.filled2() ) ;
       return vector_traits<idx_array_t>::storage (cm.index1_data()); 
     }
     static index_pointer index2_storage (matrix_type& cm) {
@@ -80,7 +83,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     static int size1 (matrix_type& cm) { return cm.size1(); } 
     static int size2 (matrix_type& cm) { return cm.size2(); }
     static int num_nonzeros (matrix_type& cm) { 
-      return cm.filled(); 
+      return cm.nnz(); 
       // Joerg, this isn't very intuitive :o(
       // return cm.non_zeros(); 
     } 
@@ -140,7 +143,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     static int size1 (matrix_type& cm) { return cm.size1(); } 
     static int size2 (matrix_type& cm) { return cm.size2(); }
     static int num_nonzeros (matrix_type& cm) { 
-      return cm.filled(); 
+      return cm.nnz(); 
       // Joerg, this isn't very intuitive :o(
       // return cm.non_zeros(); 
     } 
