@@ -13,7 +13,7 @@
 
 \begin{document}
 
-\markboth{Doc. no: N1603=04-0043}{Doc. no: N1603=04-0043}
+\markboth{Doc. no: NXXXX=04-0XXX}{Doc. no: NXXXX=04-0XXX}
 \pagestyle{myheadings}
 
 \title{Variadic Templates}
@@ -21,7 +21,7 @@
 \date{}
 \maketitle
 
-\par\noindent Document number: N1603=04-0043
+\par\noindent Document number: NXXXX=04-0XXXX
 \par\noindent Date: \today
 \par\noindent Project: Programming Language C++, Evolution Working Group
 \par\noindent Reply-to: Douglas Gregor $<${\tt gregod@cs.rpi.edu}$>$
@@ -55,15 +55,13 @@ template<typename T1 = unused, typename T2 = unused,
          /* up to */ typename TN = unused> class list;
 \end{verbatim}
 
-This technique is used by the Boost Tuples library~\cite{Tuples01},
-for the specification of class template {\tt std::tuple<>} in the
-library TR~\cite{Jarvi02}, and in the Boost metaprogramming
-library~\cite{Gurtovoy02}. Unfortunately, this method leads to very
+This technique is used by various C++ libraries~\cite{Tuples01,
+Jarvi02, Gurtovoy02}. Unfortunately, this method leads to very
 long type names in error messages (compilers tend to print the
 defaulted arguments) and very long mangled names. It is also not
 scalable to additional arguments without resorting to preprocessor
 magic~\cite{Preprocessor01}. In all of these libraries (and presumably
-many more), an implementation based on variadic template would be
+many more), an implementation based on variadic templates would be
 shorter and would not suffer the limitations of the aforementioned
 implementation. The declaration of the {\tt list<>} template above may
 be:
@@ -78,14 +76,14 @@ is rarely used in C++ code (except for compatibility with C
 libraries), because passing non-POD types through an ellipsis ({\tt
   ...}) invokes undefined behavior. However, a typesafe form of such a
 feature would be useful in many contexts, e.g., for implementing a
-typesafe C++ {\tt printf} that works for non-POD types. The lack of
-such a facility has resulted in odd syntax for formatting in the
-Boost.Format library~\cite{Krempp02}:
-\begin{verbatim}
-format("writing %1%, x=%2%: %3%-th try") % "toto" % 40.23 % 50
-\end{verbatim}
+typesafe C++ {\tt printf} that works for non-POD types.
 
 \section{Feature menu}
+Prior versions of this proposal~\cite{GJP03,GJP04a} described various
+points in the design space of variadic templates. In this version of
+the proposal, we have chosen to enumerate and discuss these design
+points, 
+
 \subsection{Basic variadics}
 Permits declaring variadic function and class templates and using the
 ellipsis to unpack arguments.
