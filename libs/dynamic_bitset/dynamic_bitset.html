@@ -2,11 +2,12 @@
 <html>
 
 <!--
-   (C) Jeremy Siek 2001. Permission to copy, use, modify, sell and
-   distribute this software is granted provided this copyright notice
-   appears in all copies. This software is provided "as is" without
-   express or implied warranty, and with no claim as to its suitability
-   for any purpose.
+                        (C) Jeremy Siek 2001.
+                     (C) Gennaro Prota 2003-2004.
+
+       Distributed under the Boost Software License, Version 1.0.
+          (See accompanying file LICENSE_1_0.txt or copy at
+                http://www.boost.org/LICENSE_1_0.txt)
  -->
 
 <!--
@@ -36,13 +37,13 @@
 <head>
 <title>dynamic_bitset&lt;Block, Allocator&gt;</title>
 </head>
-<body text="#000000" link="#006600" alink="#003300" vlink=
-"#7C7F87" bgcolor="#FFFFFF">
+<body text="#000000" link="#006600" alink="#003300"
+                  vlink="#7C7F87" bgcolor="#FFFFFF">
 <img src="../../c++boost.gif" alt="c++boost.gif (8819 bytes)"
 align="middle" width="277" height="86">
 
 <p><!--end header-->
-<br clear="">
+<br>
 </p>
 
 <!-- BEGIN TODO -->
@@ -51,6 +52,7 @@ TODO:
  <li> ask to Jeremy about reference::operator&amp; and about
    making reference itself private</li>
  <li>check the whole synopsis against code changes </li>
+ <li>document intersects() after we reach consensus</li>
 </ul>
 <br>
 Note:
@@ -83,7 +85,7 @@ Note:
 
 <dt><a href="#public-base-classes">Public base classes</a></dt>
 
-<dt><a href="#member-typedefs">Member typedefs</a></dt>
+<dt><a href="#nested-type-names">Nested type names</a></dt>
 
 <dt><a href="#public-data-members">Public data members</a></dt>
 
@@ -95,7 +97,9 @@ Note:
 
 <dt><a href="#non-member-functions">Non-member functions</a></dt>
 
-<dt><a href="#changes-from-previous-ver"><b>Changes from previous version</b></a></dt>
+<dt><a href="#exception-guarantees">Exception guarantees</a></dt>
+
+<dt><a href="#changes-from-previous-ver"><b>Changes from previous version(s)</b></a></dt>
 
 <dt><a href="#see-also">See also</a></dt>
 
@@ -245,8 +249,7 @@ public:
     size_type <a href="#size">size</a>() const;
     size_type <a href="#num_blocks">num_blocks</a>() const;
     size_type <a href="#max_size">max_size</a>() const;
-    void <a href="#reserve">reserve</a>(size_type n);
-    size_type <a href="#capacity" >capacity</a>() const;
+    bool <a href="#empty">empty</a>() const;
 
     bool <a href=
 "#is_subset_of">is_subset_of</a>(const dynamic_bitset&amp; a) const;
@@ -552,13 +555,13 @@ Comparable</a>.
 <h3><a name="type-requirements">Type requirements</a></h3>
 
 <tt>Block</tt> is an unsigned integer type. <tt>Allocator</tt>
-satisfies the Standard requirements for an Allocator.
+satisfies the Standard requirements for an allocator.
 
 <h3><a name="public-base-classes">Public base classes</a></h3>
 
 None.
 
-<h3><a name="member-typedefs">Member typedefs</a></h3>
+<h3><a name="nested-type-names">Nested type names</a></h3>
 
 <hr>
 <pre>
@@ -951,7 +954,7 @@ void <a name=
 </pre>
 
 <b>Effects:</b> This function provides the same end result as the
-following code, but is typically more efficient.
+following code, but is typically more efficient. [gps]
 
 <pre>
 for (; first != last; ++first)
@@ -1183,7 +1186,7 @@ size_type <a name="num_blocks">num_blocks</a>() const
 
 <hr>
 <pre>
-size_type <a name="max_size">max_size()</a> const;
+size_type <a name="max_size">max_size</a>() const;
 </pre>
 
 <b>Returns:</b> the maximum size of a <tt>dynamic_bitset</tt>
@@ -1195,8 +1198,19 @@ when lib issue 197 will be closed - G.P.S.]<br>
 
 <hr>
 <pre>
+bool <a name="empty">empty</a>() const;
+</pre>
+
+<b>Returns:</b> <tt>true</tt> if <tt>this->size() == 0</tt>, <tt>false</tt>
+otherwise. <i>Note</i>: not to be confused with <tt>none()</tt>, that has
+different semantics.
+
+<hr>
+ <!--  ***************** To be removed - gps *************************
+<pre>
 void <a name="reserve">reserve</a>(size_type n);
 </pre>
+
 <b>Precondition:</b> <tt>n &lt;= this-&gt;max_size()</tt>.<br>
 <b>Effects:</b> informs the <tt>dynamic_bitset</tt> of a planned
 change in size(), so that reallocations can be managed accordingly.
@@ -1215,6 +1229,7 @@ size_type <a name="capacity">capacity()</a> const;
 
 <b>Returns:</b> the total number of elements that <tt>*this</tt>
 can hold without requiring reallocation.<br>
+ *************************************************************** -->
 
 <hr>
 <pre>
@@ -1543,23 +1558,37 @@ equal to <tt>b.num_blocks()</tt>.
 template &lt;typename Char, typename Traits, typename Block, typename Alloc&gt;
 basic_ostream&lt;Char, Traits&gt;&amp;
 <a name=
-"op-out">operator&lt;&lt;</a>(basic_ostream&lt;Char, Traits&gt;&amp; os, const dynamic_bitset&lt;Block, Alloc&gt;&amp; x)
+"op-out">operator&lt;&lt;</a>(basic_ostream&lt;Char, Traits&gt;&amp; os, const dynamic_bitset&lt;Block, Alloc&gt;&amp; b)
 </pre>
 
-Output a <tt>dynamic_bitset</tt> to an output stream. This
-function behaves as if it converts the <tt>dynamic_bitset</tt> to
-a string and then writes that string to the output stream. That
-is, it is equivalent to
+<b>Effects:</b> Inserts a textual representation of b into the stream
+<tt>os</tt> (highest bit first). Informally, the output is the same as doing
 
 <pre>
 std::basic_string&lt;Char, Traits&gt; s;
-to_string(x, s):
-os &lt;&lt; s;
+boost::to_string(x, s):
+os << s;
 </pre>
 
-<b>Throws:</b> An allocation error if memory is exhausted
-(<tt>std::bad_alloc</tt> if <tt>Allocator=std::allocator</tt>).
-Also will throw <tt>std::ios_base::failure</tt> if there is a
+except that the stream inserter takes into accout the locale imbued into
+<tt>os</tt>, which <tt>boost::to_string()</tt> can't do. Here is a more
+precise specification, given in terms of "as if" rule: first, for each
+valid position i into the bitset <tt>b</tt> let's put:
+
+ <tt>character_of(b[i)]) = b[i]? os.widen('1') : os.widen('0');</tt>
+ 
+Let also <tt>s</tt> be a <tt>std::basic_string&lt;Char, Traits&gt;</tt>
+object, having length <tt>b.size()</tt> and such as, for each <tt>i</tt>
+in <tt>[0, b.size())</tt>,
+
+ <tt>s[i] is character_of(b[i])</tt> 
+
+Then, the output, the effects on <tt>os</tt> and the exception behavior
+is the same as outputting the object <tt>s</tt> to <tt>os</tt> (same
+width, same exception mask, same padding, same setstate() logic)
+<br>
+<b>Returns:</b> os <br>
+<b>Throws:</b> <tt>std::ios_base::failure</tt> if there is a
 problem writing to the stream.
 
 <hr>
@@ -1571,32 +1600,46 @@ std::basic_istream&lt;Char,Traits&gt;&amp;
 </pre>
 
 <b>Effects:</b> Extracts a <tt>dynamic_bitset</tt> from an input stream.
-It begins by constructing a <tt>sentry</tt> object <tt>k</tt> as if <tt>k</tt>
+<br><br>
+ <i>Definitions:</i><br><br>
+ Let <i>Tr</i> be the traits_type of <i>is</i>. Then:
+ <ol>
+ <li>
+ A (non-eof) character <tt>c</tt> extracted from <tt>is</tt>
+ is a <i>bitset digit</i> if and only if either Tr::eq(c, is.widen('0')) or
+ Tr::eq(c, is.widen('1')) return true.
+ </li>
+ <li>If c is a bitset digit, it's <i>corresponding bit value</i> is 0 if
+ Tr::eq(c, is.widen('0')) is true, 1 otherwise.
+ </li>
+ </ol>
+
+The function begins by constructing a <tt>sentry</tt> object <tt>k</tt> as if <tt>k</tt>
 were constructed by
 
  <tt>typename std::basic_istream&lt;Char, Traits&gt;::sentry k(is)</tt>.
 
 If <tt>bool(k)</tt> is true, it calls <tt>b.clear()</tt>
-then extracts characters from <tt>is</tt> and appends them to the less
-significant end of <tt>b</tt>. If <tt>is.width()</tt> is zero
-then the maximum number of characters  appended, <tt>n</tt>, is <tt>b.max_size</tt>;
-otherwise <tt>n</tt> is the smallest between <tt>b.max_size()</tt> and
-<tt>is.width()</tt>.
+then attempts to extract characters from <tt>is</tt>. For each character c
+that is a <i>bitset digit</i> the <i>corresponding bit value</i> is
+appended to the less significant end of <tt>b</tt> (appending may throw - gps ).
+If <tt>is.width()</tt> is greater than zero and smaller than <tt>b.max_size()</tt>
+then the maximum number <tt>n</tt> of bits appended is <tt>is.width()</tt>;
+otherwise <tt>n</tt> = <tt>b.max_size()</tt>. 
 
-Unless the extractor is exited via an exception, characters are extracted and
-appended until any of the following occurs:<br>
+Unless the extractor is exited via an exception, characters are extracted (and
+corresponding bits appended) until any of the following occurs:<br>
 
 <ul>
-<li>- <tt>n</tt> characters are stored;</li>
-<li>- end-of-file, or an error, occurs on the input sequence;</li>
-<li>- the next available input character <tt>c</tt> is, according to
-      <tt>Traits::eq</tt>, different from both <tt>is.widen('0')</tt> and
-      <tt>is.widen('1')</tt> </li>
+<li> <tt>n</tt> bits are stored into the bitset;</li>
+<li> end-of-file, or an error, occurs on the input sequence;</li>
+<li> the next available input character isn't a bitset digit</li>
 </ul>
-<br> After the last character (if any) is extracted, <tt>is.width(0)</tt> is
-     called and the sentry object k is destroyed.
+<br> If no exception caused the function to exit then <tt>is.width(0)</tt> is
+     called, regardless of how many characters were actually extracted. The
+     sentry object k is destroyed.
 <br>
-<br>If the function extracts no characters[???], it calls is.setstate(ios::failbit),
+<br>If the function extracts no characters[???], it calls is.setstate(std::ios::failbit),
      which may throw <tt>std::ios_base::failure</tt>.
 
 
@@ -1609,30 +1652,48 @@ appended until any of the following occurs:<br>
 A <tt>std::ios_base::failure</tt> if there is a problem reading
 from the stream.
 
+<hr>
+<h3><a name="exception-guarantees">Exception guarantees</a></h3>
+
+All of <tt>dynamic_bitset</tt> functions offer at least the basic
+guarantee. In addition some functions offer the strong or the nothrow
+guarantee as summarized in the table below (the destructor, as usual,
+doesn't throw):
+<table summary="" border>
+<tr><td>-</td><td><i>strong</i></td><td><i>nothrow</i></td></tr>
+<tr><td>f</td><td>         </td><td><b> x </b></td></tr>
+</table>
+
+
 
 <hr>
-<h3><a name="changes-from-previous-ver">Changes from previous version</a></h3>
+<h3><a name="changes-from-previous-ver">Changes from previous version(s)</a></h3>
+
+<!-- Changes from Boost 1.31.0 -->
+<h4><i>Changes from Boost 1.31.0</i></h4>
 <ul>
 <li>
 The stream extractor has completely different semantics: as
-expected for a dynamic structure it expands the bitset as needed
+natural for a dynamic structure, it now expands the bitset as needed
 during extraction. The new behaviour mimics that of the basic_string
 extractor but there are some differences the user should be aware
-of; so, please, look at the documentation. (One of the differences
-concerns the case where stream.width() > bitset.max_size() > 0; in
-that circumstance the extractor of dynamic_bitset never attempts to
+of; so, please, look at the <a href="#op-in">documentation</a>.
+(One of the differences concerns the case where
+  stream.width() > bitset.max_size() > 0;
+in that circumstance the extractor of dynamic_bitset never attempts to
 extract more than max_size() characters, whereas the extractor of
 basic_string goes on and, on conforming implementations, eventually
-throws a length_error. (That's what the standard mandates -see
-especially library issue 83- but not all implementations are in sync)
+throws a length_error. Note: That's what the standard mandates -see
+especially library issue 83- but not all implementations conform)
 <br><br>
 The stream extractor is now also 'exception-aware' in the sense that
 it works correctly when setting exception masks on the stream.<br><br>
 </li>
 <li>
-Several member functions (<tt>find_first</tt>, <tt>find_next</tt>, 
-<tt>get_allocator()</tt>, <tt>max_size()</tt>, <tt>reserve()</tt>, 
-<tt>capacity()</tt>) have been added.
+Several member functions (<tt>empty()</tt>, <tt>find_first()</tt>
+, <tt>find_next()</tt>, <tt>get_allocator()</tt>, <tt>intersects()</tt>
+, <tt>max_size()</tt>, <s><tt>reserve()</tt>, <tt>capacity()</tt></s>)
+have been added.
 </li>
 <li>
 The constructor from basic_string has a new parameter that was totally
@@ -1670,9 +1731,8 @@ time to review and accept this library. This library is much
 better than it ever would have been due to all the suggestions
 from Boost members. We especially thank Matt Marcus for taking on
 the task of review manager. Also, a special thanks goes to
-Gennaro Prota for work on increasing efficiency for many of
-<tt>dynamic_bitset</tt>'s functions and to James Kanze for his
-invaluable help with the internationalization issues.</p>
+James Kanze for his invaluable help with the internationalization
+issues.</p>
 
 <hr>
 <table summary="">
@@ -1689,6 +1749,11 @@ Indiana University (<a href=
 Editor, C/C++ Users Journal (<a href=
 "mailto:cda@freshsources.com">cda@freshsources.com</a>)<br>
 </td>
+</tr>
+
+<tr valign="top">
+<td nowrap>Copyright &copy; 2003-2004</td>
+<td>Gennaro Prota</td>
 </tr>
 </table>
 
