@@ -60,15 +60,38 @@ namespace detail
       Default& default_;
   };
 
+
+#if BOOST_WORKAROUND(__EDG_VERSION__, <= 300)
+  // These compilers need a little extra help with overload
+  // resolution; we have nil's operator[] accept a base class to make
+  // that overload less preferable.
+  template<class KW, class DefaultFn>
+  struct lazy_named_default_base
+  {
+      lazy_named_default_base(const DefaultFn& x)
+        : default_(x)
+      {}
+      const DefaultFn& default_;
+  };
+  
+  template<class KW, class DefaultFn>
+  struct lazy_named_default
+    : lazy_named_default_base<KW,DefaultFn>
+  {
+      lazy_named_default(const DefaultFn& x)
+        : lazy_named_default_base<KW,DefaultFn>(x)
+      {}
+  };
+#else 
   template<class KW, class DefaultFn>
   struct lazy_named_default
   {
       lazy_named_default(const DefaultFn& x)
         : default_(x)
       {}
-
       const DefaultFn& default_;
   };
+#endif 
 
   struct nil
   {
@@ -119,12 +142,22 @@ namespace detail
           return x.default_;
       }
 
+# if BOOST_WORKAROUND(__EDG_VERSION__, <= 300)
+      template<class K, class Default>
+      typename Default::result_type operator[](
+          const lazy_named_default_base<K, Default>& x) const
+      {
+          return x.default_();
+      }
+# else
       template<class K, class Default>
       typename Default::result_type operator[](
           const lazy_named_default<K, Default>& x) const
       {
           return x.default_();
       }
+# endif
+      
 #endif
       // No keyword was found if we get here, so we should only return
       // mpl::true_ if it's OK to have a default for the argument.
