@@ -1,0 +1,8 @@
+# declare the location of this subproject relative to the root
+subproject libs/langbinding/test/classes ;
+
+import testing ;
+
+DEPENDS all : test ;
+
+run inheritance.cpp <dll>../../build/langbinding : : : <include>$(BOOST_ROOT) ;
