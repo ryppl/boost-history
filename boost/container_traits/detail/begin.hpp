@@ -6,6 +6,7 @@
 
 namespace boost 
 {
+    
     namespace container_traits_detail
     {
         template< typename T >
@@ -46,17 +47,17 @@ namespace boost
         template<>
         struct container_begin<array_>
         {
-            template< typename A >
-            static BOOST_DEDUCED_TYPENAME container_result_iterator<A>::type fun( A& a )
+            template< typename T, std::size_t sz >
+            static T* fun( T BOOST_ARRAY_REF[sz] )
             {
-                return a;
+                return array;
             }
         };
 
         //////////////////////////////////////////////////////////////////////
         // string
         //////////////////////////////////////////////////////////////////////
-     /*   
+     
         template<>
         struct container_begin<char_ptr_>
         {
@@ -65,7 +66,7 @@ namespace boost
                 return s;
             }
         };
-*/
+
         template<>
         struct container_begin<const_char_ptr_>
         {
@@ -74,7 +75,7 @@ namespace boost
                 return s;
             }
         };
-/*
+        
         template<>
         struct container_begin<wchar_t_ptr_>
         {
@@ -93,7 +94,7 @@ namespace boost
                 return s;
             }
         };
-*/
+
         //////////////////////////////////////////////////////////////////////
         // iterator
         //////////////////////////////////////////////////////////////////////
@@ -111,10 +112,11 @@ namespace boost
         } // namespace 'container_traits_detail'
     
     template< typename C >
-    inline BOOST_DEDUCED_TYPENAME container_result_iterator<C>::type 
+    inline BOOST_DEDUCED_TYPENAME ::boost::container_result_iterator<C>::type 
     begin( C& c )
     {
-        return container_traits_detail::container_begin<  BOOST_DEDUCED_TYPENAME container_traits_detail::container<C>::type >::fun( c );
+		return container_traits_detail::container_begin< BOOST_DEDUCED_TYPENAME container_traits_detail::container<C>::type >::fun( c );
+		//return container_begin< const_char_ptr_ >::fun( c );
     }
 
 } // namespace 'boost'

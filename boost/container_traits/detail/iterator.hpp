@@ -53,9 +53,7 @@ namespace boost
             template< typename S >
             struct pts
             {
-                typedef BOOST_CT_DEDUCED_TYPENAME ::boost::mpl::if_c< ::boost::is_convertible<S,char*>::value,
-                                                                      char*,
-                                                                      void >::type type;
+                typedef char* type; 
             };         
         };
         
@@ -65,9 +63,7 @@ namespace boost
             template< typename S >
             struct pts
             {
-                typedef BOOST_CT_DEDUCED_TYPENAME ::boost::mpl::if_c< ::boost::is_convertible<S, const char*>::value,
-                                                                      const char*,
-                                                                      void >::type type;
+                typedef const char* type;
             };         
         };
 
@@ -77,9 +73,7 @@ namespace boost
             template< typename S >
             struct pts
             {
-                typedef BOOST_CT_DEDUCED_TYPENAME ::boost::mpl::if_c< ::boost::is_convertible<S,wchar_t*>::value,
-                                                                      wchar_t*,
-                                                                      void >::type type;
+                typedef wchar_t* type; 
             };         
         };
 
@@ -89,9 +83,7 @@ namespace boost
              template< typename S >
              struct pts
              {
-                 typedef BOOST_CT_DEDUCED_TYPENAME ::boost::mpl::if_c< ::boost::is_convertible<S, const wchar_t*>::value,
-                                                                       const wchar_t*,
-                                                                       void >::type type;
+                 typedef const wchar_t* type; 
              };         
          };
 

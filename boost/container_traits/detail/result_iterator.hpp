@@ -12,6 +12,7 @@
 #endif
 
 #include <boost/type_traits/is_const.hpp>
+#include <boost/type_traits/remove_bounds.hpp>
 #include <boost/container_traits/detail/common.hpp>
 
 //////////////////////////////////////////////////////////////////////////////
@@ -49,6 +50,13 @@ namespace boost
 
         template<>
         struct container_result_iterator_<array_>; // give up
+        /*{
+            template< typename A >
+            struct ptr
+            {
+                typedef BOOST_DEDUCED_TYPENAME ::boost::remove_bounds<A>::type type;
+            };
+        };*/
 
         template<>
         struct container_result_iterator_<char_ptr_>
@@ -56,21 +64,17 @@ namespace boost
             template< typename S >
             struct pts
             {
-                typedef char* type; //BOOST_CT_DEDUCED_TYPENAME ::boost::mpl::if_c< ::boost::is_convertible<S,char*>::value,
-                                    //                                  char*,
-                                    //                                  void >::type type;
+                typedef char* type; 
             };         
         };
-        
+        		
         template<>
         struct container_result_iterator_<const_char_ptr_>
         {
             template< typename S >
             struct pts
             {
-                typedef const char* type; //BOOST_CT_DEDUCED_TYPENAME ::boost::mpl::if_c< ::boost::is_convertible<S, const char*>::value,
-                                          //                            const char*,
-                                          //                            void >::type type;
+                typedef const char* type;
             };         
         };
 
@@ -80,9 +84,7 @@ namespace boost
             template< typename S >
             struct pts
             {
-                typedef wchar_t* type; //BOOST_CT_DEDUCED_TYPENAME ::boost::mpl::if_c< ::boost::is_convertible<S,wchar_t*>::value,
-                                      //                                wchar_t*,
-                                      //                                void >::type type;
+                typedef wchar_t* type; 
             };         
         };
 
@@ -92,9 +94,7 @@ namespace boost
              template< typename S >
              struct pts
              {
-                 typedef  const wchar_t* type; //BOOST_CT_DEDUCED_TYPENAME ::boost::mpl::if_c< ::boost::is_convertible<S, const wchar_t*>::value,
-                                               //                        const wchar_t*,
-                                               //                        void >::type type;
+                 typedef  const wchar_t* type;                                                
              };         
          };
 

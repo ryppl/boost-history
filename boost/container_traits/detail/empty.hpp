@@ -61,9 +61,9 @@ namespace boost
         template<>
         struct container_empty<char_ptr_>
         {
-            static bool fun( char* s )
+            static bool fun( const char* s )
             {
-                return true;
+                return s == 0 || s[0] == 0;
             }
         };
 
@@ -72,38 +72,28 @@ namespace boost
         {
             static bool fun( const char* s )
             {
-                return true;
+                return  s == 0 || s[0] == 0;
             }
         };
 
         template<>
         struct container_empty<wchar_t_ptr_>
         {
-            static bool fun( wchar_t* s )
+            static bool fun( const wchar_t* s )
             {
-                return true;
+                return  s == 0 || s[0] == 0;
             }
         };
-
+        
         template<>
         struct container_empty<const_wchar_t_ptr_>
         {
             static bool fun( const wchar_t* s )
             {
-                return true;
+                return  s == 0 || s[0] == 0;
             }
         };
-/*
-        template<>
-        struct container_empty<string_>
-        {
-            template< typename S >
-            static  bool fun( S& s )
-            {
-                return s == 0 || s[0] == 0;
-            }
-        };
-*/
+
         //////////////////////////////////////////////////////////////////////
         // iterator
         //////////////////////////////////////////////////////////////////////
@@ -122,7 +112,7 @@ namespace boost
     
     template< typename C >
     inline bool 
-    empty( C& c )
+    empty( const C& c )
     {
         return container_traits_detail::container_empty<  BOOST_DEDUCED_TYPENAME container_traits_detail::container<C>::type >::fun( c );
     }

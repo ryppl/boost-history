@@ -56,12 +56,13 @@ namespace boost
         struct container_helper
         {
             static C* c;
+            static C  ptr;
 
             BOOST_STATIC_CONSTANT( bool, is_pair_                = sizeof( ::boost::container_traits_detail::is_pair_impl( c ) ) == sizeof( yes_type ) );
-            BOOST_STATIC_CONSTANT( bool, is_char_ptr_            = sizeof( ::boost::container_traits_detail::is_char_ptr_impl( c ) ) == sizeof( yes_type ) );
-            BOOST_STATIC_CONSTANT( bool, is_const_char_ptr_      = sizeof( ::boost::container_traits_detail::is_const_char_ptr_impl( c ) ) == sizeof( yes_type ) );
-            BOOST_STATIC_CONSTANT( bool, is_wchar_t_ptr_         = sizeof( ::boost::container_traits_detail::is_wchar_t_ptr_impl( c ) ) == sizeof( yes_type ) );
-            BOOST_STATIC_CONSTANT( bool, is_const_wchar_t_ptr_   = sizeof( ::boost::container_traits_detail::is_const_wchar_t_ptr_impl( c ) ) == sizeof( yes_type ) );
+            BOOST_STATIC_CONSTANT( bool, is_char_ptr_            = sizeof( ::boost::container_traits_detail::is_char_ptr_impl( ptr ) ) == sizeof( yes_type ) );
+            BOOST_STATIC_CONSTANT( bool, is_const_char_ptr_      = sizeof( ::boost::container_traits_detail::is_const_char_ptr_impl( ptr ) ) == sizeof( yes_type ) );
+            BOOST_STATIC_CONSTANT( bool, is_wchar_t_ptr_         = sizeof( ::boost::container_traits_detail::is_wchar_t_ptr_impl( ptr ) ) == sizeof( yes_type ) );
+            BOOST_STATIC_CONSTANT( bool, is_const_wchar_t_ptr_   = sizeof( ::boost::container_traits_detail::is_const_wchar_t_ptr_impl( ptr ) ) == sizeof( yes_type ) );
             BOOST_STATIC_CONSTANT( bool, is_string_              = (::boost::type_traits::ice_or<is_const_char_ptr_, is_const_wchar_t_ptr_>::value ));
             BOOST_STATIC_CONSTANT( bool, is_array_               = ::boost::is_array<C>::value );
             BOOST_STATIC_CONSTANT( bool, is_iterator_            = sizeof( ::boost::container_traits_detail::is_iterator_impl( c ) ) == sizeof( yes_type ) );
@@ -69,10 +70,8 @@ namespace boost
         };
         
         template< typename C >
-        struct container
+        class container
         {
-
-        public:
             /*
             typedef BOOST_CT_DEDUCED_TYPENAME   ::boost::mpl::if_c< ::boost::container_traits_detail::container_helper<C>::is_pair_,
                                                                     ::boost::container_traits_detail::std_pair_,
@@ -126,7 +125,7 @@ namespace boost
             typedef BOOST_CT_DEDUCED_TYPENAME   ::boost::mpl::if_c< ::boost::container_traits_detail::container_helper<C>::is_iterator_,
                                                                     ::boost::container_traits_detail::iterator_,
                                                                     wchar_ptr_t >::type iterator_t;  
-            //typedef iterator_t type;
+        public:
             typedef BOOST_CT_DEDUCED_TYPENAME   ::boost::mpl::if_c< ::boost::is_void<iterator_t>::value,
                                                                     ::boost::container_traits_detail::std_container_, 
                                                                     iterator_t >::type type;

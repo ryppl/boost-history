@@ -45,44 +45,75 @@ namespace boost
         //////////////////////////////////////////////////////////////////////
         
         template<>
-        struct container_size<array_>; // give up
-        /*
+        struct container_size<array_>
         {
-            template< typename T, typename std::size_t sz >
-             BOOST_DEDUCED_TYPENAME container_size_type<T[sz]>::type fun()( T BOOST_ARRAY_REF[sz] )
+            template< typename T, std::size_t sz >
+            static std::size_t fun( T BOOST_ARRAY_REF[sz] )
             {
                 return sz;
             }
         };
-        */
+        
         //////////////////////////////////////////////////////////////////////
         // string
         //////////////////////////////////////////////////////////////////////
-        
+
         template<>
-        struct container_size<string_>
+        struct container_size<char_ptr_>
         {
-            template< typename S >
-            static BOOST_DEDUCED_TYPENAME container_size_type<S>::type fun( S& s )
+            static std::size_t fun( const char* s )
             {
                 if( s == 0 || s[0] == 0 )
                     return 0;
-                return std::char_traits<S>::length( s );
+                return std::char_traits<char>::length( s );
             }
         };
 
+        template<>
+        struct container_size<const_char_ptr_>
+        {
+            static std::size_t fun( const char* s )
+            {
+                if( s == 0 || s[0] == 0 )
+                    return 0;
+                return std::char_traits<char>::length( s );
+            }
+        };
+        
+        template<>
+        struct container_size<wchar_t_ptr_>
+        {
+            static std::size_t fun( const wchar_t* s )
+            {
+                if( s == 0 || s[0] == 0 )
+                    return 0;
+                return std::char_traits<wchar_t>::length( s );
+            }
+        };
+
+        template<>
+        struct container_size<const_wchar_t_ptr_>
+        {
+            static std::size_t fun( const wchar_t* s )
+            {
+                if( s == 0 || s[0] == 0 )
+                    return 0;
+                return std::char_traits<wchar_t>::length( s );
+            }
+        };
+  
         //////////////////////////////////////////////////////////////////////
         // iterator
         //////////////////////////////////////////////////////////////////////
         
         template<>
-        struct container_size<iterator_>;
+        struct container_size<iterator_>; // not defined
 
         } // namespace 'container_traits_detail'
     
     template< typename C >
     BOOST_DEDUCED_TYPENAME container_size_type<C>::type 
-    size( C& c )
+    size( const C& c )
     {
         return container_traits_detail::container_size<  BOOST_DEDUCED_TYPENAME container_traits_detail::container<C>::type >::fun( c );
     }

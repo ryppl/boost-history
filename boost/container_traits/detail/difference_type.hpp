@@ -31,7 +31,7 @@ namespace boost
             template< typename C >
             struct pts
             {
-                typedef BOOST_DEDUCED_TYPENAME C::difference type;
+                typedef BOOST_DEDUCED_TYPENAME C::difference_type type;
             };
         };
 
@@ -56,7 +56,37 @@ namespace boost
         };
 
         template<>
-        struct container_difference_type_<string_>
+        struct container_difference_type_<char_ptr_>
+        {
+            template< typename S >
+            struct pts
+            {
+                typedef std::ptrdiff_t type;
+            };         
+        };
+        
+        template<>
+        struct container_difference_type_<const_char_ptr_>
+        {
+            template< typename S >
+            struct pts
+            {
+                typedef std::ptrdiff_t type;
+            };         
+        };
+        
+        template<>
+        struct container_difference_type_<wchar_t_ptr_>
+        {
+            template< typename S >
+            struct pts
+            {
+                typedef std::ptrdiff_t type;
+            };         
+        };
+        
+        template<>
+        struct container_difference_type_<const_wchar_t_ptr_>
         {
             template< typename S >
             struct pts
@@ -81,7 +111,7 @@ namespace boost
     {
         typedef BOOST_DEDUCED_TYPENAME container_traits_detail::container<C>::type c_type;
     public:
-        typedef BOOST_DEDUCED_TYPENAME container_traits_detail::container_result_iterator_<c_type>::BOOST_NESTED_TEMPLATE pts<C>::type type; 
+        typedef BOOST_DEDUCED_TYPENAME container_traits_detail::container_difference_type_<c_type>::BOOST_NESTED_TEMPLATE pts<C>::type type; 
     };
 
 }
