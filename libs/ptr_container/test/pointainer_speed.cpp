@@ -24,9 +24,9 @@ struct less_than
 };
 
 
-int test_main( int, char*[] )
+int main( int, char*[] )
 {
-    enum { size = 20000 };
+    enum { size = 35 };
     vector< PolyPtr > svec;
     
     ptr_vector<Base>  pvec;
@@ -61,10 +61,32 @@ int test_main( int, char*[] )
         sort( svec.begin(), svec.end(), less_than() );
     }
     
+     vector<Base*> copy1;
+        for( ptr_vector<Base>::ptr_iter i = pvec.dbegin(); i != pvec.dend(); ++ i )
+         copy1.push_back( *i ); 
+      
     {
         progress_timer timer;
-        sort( pvec.ptr_begin(), pvec.ptr_end() );
-    }
+         sort( pvec.ptr_begin(), pvec.ptr_end() );
+
+       }
+  vector<Base*> copy2;
+        for( ptr_vector<Base>::ptr_iter i = pvec.dbegin(); i != pvec.dend(); ++ i )
+         copy2.push_back( *i ); 
+   
+    
+    for( int i =  0; i < copy1.size(); ++i )
+    {
+        bool found = false;
+        for( int j = 0; j < copy1.size(); ++ j )
+        if( copy1[i] == copy2[j] )
+            found = true;
+
+        if( !found )
+            cout << copy1[i] << endl;
+    }   
+
+    assert( pvec.size() == size );
             
     
     return 0;

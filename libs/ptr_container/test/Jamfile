@@ -12,7 +12,7 @@
 #
 #  See http://www.boost.org for updates, documentation, and revision history.
 
-subproject libs/container_traits/test ;
+subproject libs/ptr_container/test ;
 
 # bring in rules for testing
 SEARCH on testing.jam = $(BOOST_BUILD_PATH) ;
@@ -20,40 +20,40 @@ include testing.jam ;
 
 test-suite "container_traits"
     : [ run
-            array.cpp
+            ptr_list.cpp
           : :
             :
-            : array
+            : ptr_list
         ]
     : [ run 
-            iterator.cpp
+            ptr_deque.cpp
           : :
             :
-            : iterator
+            : ptr_deque
         ]
     : [ run 
-            iterator_pair.cpp
+            ptr_vector.cpp
           : :
             :
-            : iterator_pair
+            : ptr_vector
         ]
     : [ run 
-            std_container.cpp
+            ptr_set.cpp
           : :
             :
-            : std_container
+            : ptr_set
         ]
     : [ run 
-            string.cpp
+            ptr_map.cpp
           : :
             :
-            : string
+            : ptr_map
         ]
      : [ run 
-	    string_algo_compatibility.cpp
+	    iterator.cpp
 	  : : 
 	    :
-	    : string_algo_compatibility
+	    : iterator
        ]         
     ;
 

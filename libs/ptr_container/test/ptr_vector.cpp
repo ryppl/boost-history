@@ -1,9 +1,8 @@
 #include <libs/ptr_container/test/test_data.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
-#include <boost/test/included/test_exec_monitor.hpp>
-#include <boost/test/test_tools.hpp>
+//#include <boost/test/included/test_exec_monitor.hpp>
 
-int test_main( int, char*[] )
+int main( int, char*[] )
 {
  /*   
     typedef_test< ptr_vector<Base>, Derived >();
