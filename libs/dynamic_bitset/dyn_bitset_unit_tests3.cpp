@@ -26,7 +26,9 @@
 template <typename Block>
 void run_test_cases(BOOST_DUMMY_DEFAULT_ARGUMENT(Block))
 {
+  // a bunch of typedefs to have handy later on
   typedef boost::dynamic_bitset<Block> bitset_type;
+  typedef typename bitset_type::size_type size_type;
   typedef bitset_test< boost::dynamic_bitset<Block> > Tests;
 
   std::string long_string(101, '0');
@@ -190,12 +192,14 @@ void run_test_cases(BOOST_DUMMY_DEFAULT_ARGUMENT(Block))
       Tests::find_first(b);
   }
   {
+      // first bit on
       bitset_type b(1, 1ul);
       Tests::find_first(b);
   }
   {
+      // last bit on
       bitset_type b(4 * bitset_type::bits_per_block - 1, 0ul);
-      b.set(b.size()-1);
+      b.set(b.size() - 1);
       Tests::find_first(b);
   }
 
@@ -204,35 +208,58 @@ void run_test_cases(BOOST_DUMMY_DEFAULT_ARGUMENT(Block))
   {
       // empty bitset
       bitset_type b;
+
+      // check
       Tests::find_next(b, 0);
       Tests::find_next(b, 1);
       Tests::find_next(b, 200);
-      Tests::find_next(b, b.npos);
+      Tests::find_next(b, b.npos); // G.P.S.
   }
   {
-      // all-1 bitset
+      // all-1s bitset
       bitset_type b(16 * bitset_type::bits_per_block);
       b.set();
 
-      // check that find_next miss no bits
-      for(bitset_type::size_type i = 0; i < b.size(); ++i) {
+      // check
+      for(size_type i = 0; i < b.size(); ++i) {
           Tests::find_next(b, i);
       }
   }
   {
-      // bitset with 1s at block boundary
+      // bitset with 1s at block boundary only
       const int num_blocks = 32;
-      const int bb = bitset_type::bits_per_block;
-      bitset_type b(num_blocks * bb);
+      const int block_width = bitset_type::bits_per_block;
 
-      bitset_type::size_type i;
-      for(i = 0; i < b.size(); i+=bb) {
-          b.set(i);
-          if ( (i+bb-1) < b.size())
-            b.set(i+bb-1);
+      bitset_type b(num_blocks * block_width);
+      size_type i = block_width - 1;
+      for ( ; i < b.size(); i += block_width) {
+
+        b.set(i);
+        size_type first_in_block = i - (block_width - 1);
+        b.set(first_in_block);
       }
-      for(i = 0; i < b.size(); ++i)
+
+      // check
+      for (i = 0; i < b.size(); ++i) {
           Tests::find_next(b, i);
+      }
+
+  }
+  {
+      // bitset with alternate 1s and 0s
+      const size_type sz = 1000;
+      bitset_type b(sz);
+
+      size_type i = 0;
+      for ( ; i < sz; ++i) {
+        b[i] = (i%2 == 0);
+      }
+
+      // check
+      for (i = 0; i < sz; ++i) {
+          Tests::find_next(b, i);
+      }
+
   }
 
 
