@@ -26,8 +26,6 @@
 #include <boost/tuple/tuple.hpp>
 #include <map>
 
-#include <iostream>
-
 namespace boost { namespace langbinding {
 
    namespace {
@@ -70,9 +68,6 @@ namespace boost { namespace langbinding {
           , registry<T>* converters
           , inheritance_graph* graph)
    {
-      std::cout << "registering extension " << id << " with name "
-         << name << "\n";
-
       typename implementation<T>::registry_t::iterator iter;
       
       tie(iter, _) = implementation<T>::entries().insert(
@@ -111,8 +106,6 @@ namespace boost { namespace langbinding {
       , inheritance_graph*
    > extension_registry_impl<T>::extension(const char* name)
    {
-      std::cout << "requesting extension: " << name << "\n";
-
       typedef typename implementation<T>::names_t::iterator iter_t;
 
       typename implementation<T>::names_t::iterator iter
