@@ -30,7 +30,7 @@
 #include <boost/preprocessor/logical/not.hpp>
 #include <boost/preprocessor/cat.hpp>
 
-#if BOOST_WORKAROUND(__BORLANDC__, < 0x600) || (BOOST_MPL_CFG_GCC != 0)
+#if /*BOOST_WORKAROUND(__BORLANDC__, < 0x600) || */(BOOST_MPL_CFG_GCC != 0)
 #   define BOOST_MPL_CFG_ASSERT_USE_RELATION_NAMES
 #endif
 
@@ -112,16 +112,6 @@ struct assert_
 
 #if !defined(BOOST_MPL_CFG_ASSERT_USE_RELATION_NAMES)
 
-#   if !BOOST_WORKAROUND(BOOST_MSVC, <= 1300) && !BOOST_WORKAROUND(__MWERKS__, BOOST_TESTED_AT(0x3003))
-template< long x, long y > bool operator==(long_<x>, long_<y>);
-template< long x, long y > bool operator!=(long_<x>, long_<y>);
-template< long x, long y > bool operator>(long_<x>, long_<y>);
-template< long x, long y > bool operator>=(long_<x>, long_<y>);
-template< long x, long y > bool operator<(long_<x>, long_<y>);
-template< long x, long y > bool operator<=(long_<x>, long_<y>);
-
-template< long x, long y, bool (*)(long_<x>, long_<y>) > struct assert_relation {};
-#   else
 bool operator==(failed, failed);
 bool operator!=(failed, failed);
 bool operator>(failed, failed);
@@ -129,8 +119,13 @@ bool operator>=(failed, failed);
 bool operator<(failed, failed);
 bool operator<=(failed, failed);
 
+#if defined(__EDG_VERSION__)
+template< bool (*)(failed, failed), long x, long y > struct assert_relation {};
+#   define BOOST_MPL_AUX_ASSERT_RELATION(x, y, r) assert_relation<r,x,y>
+#else
 template< long x, long y, bool (*)(failed, failed) > struct assert_relation {};
-#   endif
+#   define BOOST_MPL_AUX_ASSERT_RELATION(x, y, r) assert_relation<x,y,r>
+#endif
 
 #else // BOOST_MPL_CFG_ASSERT_USE_RELATION_NAMES
 
@@ -211,7 +206,7 @@ typename assert_arg_type< boost::mpl::not_<Pred> >::type
 assert_not_arg(void (*)(Pred), int);
 
 template< long x, long y, bool (*r)(failed, failed) >
-typename assert_arg_type_impl< false,assert_relation<x,y,r> >::type
+typename assert_arg_type_impl< false,BOOST_MPL_AUX_ASSERT_RELATION(x,y,r) >::type
 assert_rel_arg( assert_relation<x,y,r> );
 
 #endif 
@@ -259,12 +254,14 @@ enum { \
         ) \
 }\
 /**/
-#elif BOOST_WORKAROUND(__MWERKS__, BOOST_TESTED_AT(0x3003))
+#elif BOOST_WORKAROUND(__MWERKS__, BOOST_TESTED_AT(0x3003)) \
+    || BOOST_WORKAROUND(__BORLANDC__, < 0x600)
 #   define MPL_ASSERT_RELATION(x, rel, y) \
 enum { \
     BOOST_PP_CAT(mpl_assertion_in_line_,__LINE__) = sizeof( \
-        boost::mpl::assertion_failed<(x rel y)>( \
-            boost::mpl::assert_rel_arg( boost::mpl::assert_relation<x,y,(&boost::mpl::operator rel)>() ) ) \
+        boost::mpl::assertion_failed<(x rel y)>( boost::mpl::assert_rel_arg( \
+              boost::mpl::BOOST_MPL_AUX_ASSERT_RELATION(x,y,(&boost::mpl::operator rel))() \
+            ) ) \
         ) \
 }\
 /**/
@@ -273,7 +270,7 @@ enum { \
 enum { \
     BOOST_PP_CAT(mpl_assertion_in_line_,__LINE__) = sizeof( \
         boost::mpl::assertion_failed<(x rel y)>( (boost::mpl::failed ************ ( \
-            boost::mpl::assert_relation<x,y,(&boost::mpl::operator rel) >::************))0 ) \
+            boost::mpl::BOOST_MPL_AUX_ASSERT_RELATION(x,y,(&boost::mpl::operator rel))::************))0 ) \
         ) \
 }\
 /**/
