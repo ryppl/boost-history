@@ -33,8 +33,6 @@
 #include "boost/limits.hpp"
 #include "boost/test/minimal.hpp"
 
-
-
 template <typename Block>
 inline bool nth_bit(Block num, std::size_t n)
 {
@@ -178,6 +176,36 @@ struct bitset_test {
 
   typedef typename Bitset::block_type Block;
   BOOST_STATIC_CONSTANT(int, bits_per_block = Bitset::bits_per_block);
+
+  static void to_block_range(const Bitset & b /*, BlockOutputIterator result*/)
+  {
+    typedef typename Bitset::size_type size_type;
+
+    Block sentinel = 0xF0;
+    int s = 8; // number of sentinels (must be *even*)
+    int offset = s/2;
+    std::vector<Block> v(b.num_blocks() + s, sentinel);
+
+    boost::to_block_range(b, v.begin() + offset);
+
+    assert(v.size() >= (size_type)s && (s >= 2) && (s % 2 == 0));
+    // check sentinels at both ends
+    for(int i = 0; i < s/2; ++i) {
+        BOOST_CHECK(v[i] == sentinel);
+        BOOST_CHECK(v[v.size()-1-i] == sentinel);
+    }
+
+    typename std::vector<Block>::const_iterator p = v.begin() + offset;
+    for(size_type n = 0; n < b.num_blocks(); ++n, ++p) {
+      typename Bitset::block_width_type i = 0;
+      for(; i < bits_per_block; ++i) {
+        size_type bit = n * bits_per_block + i;
+        BOOST_CHECK(nth_bit(*p, i) == (bit < b.size()? b[bit] : 0));
+      }
+    }
+  }
+
+  // gps - TODO from_block_range (below) should be splitted
 
   // PRE: std::equal(first1, last1, first2) == true
   static void from_block_range(const std::vector<Block>& blocks)
