@@ -110,10 +110,10 @@ being aware of the transition.
 
 \subsection{Metaprogramming in \Cpp{}}
 
-In \Cpp, it was discovered almost by accident that the template
-mechanism provides a rich facility for computation at compile-time. In
-this section, we'll explore the basic mechanisms and some common
-idioms used for metaprogramming in C++.
+In \Cpp, it was discovered almost by accident \cite{Unr, Vel95} that 
+the template mechanism provides a rich facility for computation at 
+compile-time. In this section, we'll explore the basic mechanisms and 
+some common idioms used for metaprogramming in C++.
 
 \subsubsection{Numeric Computations}
 
@@ -547,7 +547,7 @@ taking what might be considered the more obvious approach.
 \subsection{Conditional type selection}
 
 Conditional type selection is the simplest basic construct of \Cpp\
-template \mping{}. Veldhuizen \cite{Vel95} was the first to show 
+template \mping{}. Veldhuizen \cite{Vel95a} was the first to show 
 how to implement it, and Czarnecki and Eisenecker \cite{CE00} first 
 presented it as a standalone library primitive. The \Mpl\ defines the 
 corresponding facility as follows:
@@ -883,7 +883,7 @@ struct derive<void,void>
 \end{codesamp}
 }
 
-Veldhuizen \cite{Vel95} was first to talk about class templates of this
+Veldhuizen \cite{Vel95a} was first to talk about class templates of this
 form as ``compile-time functions'', and \cite{CE00} have introduced
 ``template \mfn'' as an equivalent term (they also use the simpler
 term ``\mfn'' as do we). 
@@ -1164,9 +1164,9 @@ structures like trees, lists, etc. at compile time using class
 template composition has been around for a while (for example, 
 most of the expression template libraries build such trees as 
 a part of their expression ``parsing'' process \cite{Vel95b}). 
-\cite{Ale00} used list of types and some algorithms on them to 
+\cite{Ale01} used list of types and some algorithms on them to 
 implement several design patterns; the accompanying code 
-is known as the Loki library \cite{}. 
+is known as the Loki library. 
 
 %%%\emph{OLD introduction:}
 
@@ -1426,7 +1426,7 @@ struct max_element
 \end{codesamp}
 }
 
-<<<<<<< mpl.tex The first thing to notice here is that this algorithm
+The first thing to notice here is that this algorithm
 is implemented in terms of another one: \code{iter\_\-fold}.  In fact,
 this is probably the most important point of the example, because
 nearly all other generic sequence algorithms in the library are
@@ -1983,7 +1983,7 @@ but they are much less expressive.
 
 \section{Lambda facility}
 
-I'll try to summarize it here. Lambda is supposed to allow inline
+Lambda is supposed to allow inline
 composition of class templates into ``lambda expressions" that are
 classes and therefore can be passed around as ordinary function
 classes, and transformed into \mfn\ classes before application
@@ -1996,7 +1996,8 @@ typedef lambda<expr>::type func;
 \end{codesamp}
 }
 
-expression. For example, `boost::remove\_\-const' traits is a class template
+expression. For example, \code{boost::remove\_\-const} traits is a 
+class template
 (obviously), and a \mfn{} in MPL terminology. The simplest example
 of ``inline composition" of it would be something like
 
@@ -2022,9 +2023,8 @@ typedef lambda<expr>::type func;
 \end{codesamp}
 }
 
-Now 'func' is an unary \mfn\ class and can be used as such - in
-particular, it can be pass around (obviously), and it can be invoked
-(applied):
+Now \code{func} is an unary \mfn\ class and can be used as such - in
+particular, it can be pass around, and it can be invoked (applied):
 
 {\small
 \begin{codesamp}\begin{verbatim}
@@ -2077,18 +2077,19 @@ typedef bind< make_f2<logical_or>
 \end{codesamp}
 }
 
-Or to use `compose\_\-{*}' an similar way. Here, we use `make\_\-f{*}' templates to
+Or to use \code{compose\_\-{*}} an similar way. Here, we use 
+\code{make\_\-f{*}}' templates to
 convert \mfn{} into \mfn\ classes (and yes, they do require the
-template template parameters), and then we combine them using `bind'. The
-transformation from this form to the above inline lambda expression and
-visa-versa is mechanic, and that's what essentially `typedef
-lambda<expr>::type' expression does.
+template template parameters), and then we combine them using \code{bind}.
+The transformation from this form to the above inline lambda expression and
+visa-versa is mechanic, and that's what essentially \code{typedef
+lambda<expr>::type} expression does.
 
 Now, in absence of lambda, MPL enables one to write the above in a little
-bit less cumbersome way by fully \emph{specializing} its own /mfns/
+bit less cumbersome way by fully \emph{specializing} its own \mfns\
 (algorithms, primitives, etc.) for the case when all the arguments are
 replaced by lambda placeholders in alphabetical order. For example, the original
-`mpl::less' template looks like this:
+\code{mpl::less} template looks like this:
 
 {\small
 \begin{codesamp}\begin{verbatim}
@@ -2131,11 +2132,11 @@ typedef bind< logical_or<_1,_2>
 \end{codesamp}
 }
 
-Note that you still have to wrap `is\_\-same' into `make\_\-f2', because it's a
-foreign template.
+Note that you still have to wrap \code{is\_\-same} into \code{make\_\-f2},
+ because it's a foreign template.
 
-Now, about combining ct-metufunctions and \mfn\ classes in the single
-lambda expression - it can be done like this:
+Now, about combining class template metufunctions and \mfn\ 
+classes in the single lambda expression - it can be done like this:
 
 {\small
 \begin{codesamp}\begin{verbatim}
@@ -2605,7 +2606,7 @@ are used, and the FSMs are table driven.
   \term{Higher-Order Function} is a function that can take other
   functions as arguments, and/or return functions as
   results. Higher-order functions are a distinguishing features of the
-  modern functional languages \cite{Hud79}.
+  modern functional languages \cite{Hud89}.
 
   \term{polymorphic} A function is \emph{polymorphic} if it can take
   arguments of an arbitrary type (a \Cpp\ term from the run-time world
@@ -2623,63 +2624,13 @@ compile-time lambda expressions wouldn't have been possible.
 The \Mpl\ implementation would have been much more difficult without
 Vesa Karvonen's wonderful Boost Preprocessor Metaprogramming Library.
 
-\section{References}
-
 {%\normallatexbib
 \bibliographystyle{apalike}
-%%\chapbblname{chapbib}
+%%\chapbblname{mpl}
 \chapbibliography{refs}
 }
 
 %%\begin{chapthebibliography}{1}
-
-%%\bibitem{Ale01}
-%%Andrei Alexandrescu, Modern C++ Design, Generic Programming and
-%%Design Patterns Applied, Addison-Wesley 2001, ISBN 0-201-70431-5  
-
-%% \bibitem{CE00}
-%% Krzysztof Czarnecki, Ulrich Eisenecker, Generative Programming:
-%% Methods, Tools, and Applications, Addison-Wesley 2000, ISBN
-%% 0-201-30977-7 
-
-%% \bibitem{ISO98}
-%% ISO/IEC 14882:1998(E), Programming Language C++, http://www.ansi.org
-
-%% \bibitem{Mar98}
-%% Robert C. Martin, UML Tutorial: Finite State Machines, Engineering
-%% Notebook Column, C++ Report, June 98,
-%% http://www.objectmentor.com/resources/articles/umlfsm.pdf  
-
-%% \bibitem{SMC}
-%% SMC - Finite State Machine Compiler (C++),
-%% http://www.objectmentor.com/resources/downloads/index  
-
-%% \bibitem{GHJ+95}
-%% Erich Gamma, Richard Helm, Ralph Johnson, and John Vlissides,
-%% Design Patterns, Elements of Reusable Object-Oriented Software,
-%% Addison-Wesley 1995, ISBN 0-201-63361-2  
-
-%% \bibitem{HU79}
-%% Hopcroft and Ullman, Introduction to automata theory, languages and
-%% computations, Addison-Wesley 1979, ISBN 0-201-02988-X  
-
-%% \bibitem{Vel95a}
-%% T. Veldhuizen, Using C++ template metaprograms, C++ Report Vol. 7
-%% No. 4 (May 1995), pp. 36--43. Reprinted in C++ Gems, ed. Stanley Lippman,
-%% ISBN 1-884842-37-2. Available online at
-%% http://extreme.indiana.edu/~tveldhui/papers/Template-Metaprograms/meta-art.h
-%% tml. 
-
-%% \bibitem{Vel95b}
-%% T. Veldhuizen, Expression Templates, C++ Report, Vol. 7 No. 5 June
-%% 1995, pp. 26-31. Reprinted in C++ Gems, ed. Stanley Lippman, ISBN
-%% 1-884842-37-2. Available online at
-%% http://osl.iu.edu/~tveldhui/papers/Expression-Templates/exprtmpl.html.  
-
-%% \bibitem{Hud89}
-%% Paul Hudak, Conception, Evolution, and Application of Functional
-%% Programming Languages, ACM Computing Surveys, Vol. 21, No. 3,
-%% September 1989
 %%\end{chapthebibliography}
 
 \end{document}
