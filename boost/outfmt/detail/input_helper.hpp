@@ -119,8 +119,7 @@
             inline void                          skipws()
             {
                char_type               ch;
-               while( is.get( ch ) && isspace( ch ))
-                  ;
+               do { } while( is.get( ch ) && isspace( ch )); // Suppress MW warning.
                is.putback( ch );
             }
          public: // string and character matching
