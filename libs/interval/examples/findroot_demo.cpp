@@ -45,10 +45,12 @@
 */
 
 #include <boost/interval.hpp>    // must be first for <limits> workaround
+#include <boost/interval/io.hpp>
 #include <list>
 #include <deque>
 #include <vector>
 #include <fstream>
+#include <iostream>
 
 
 template<class T>

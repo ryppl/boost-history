@@ -1,4 +1,5 @@
 #include <boost/interval.hpp>
+#include <boost/interval/io.hpp>
 #include <iostream>
 
 // I is an interval class, the polynom is a simple array

@@ -16,8 +16,8 @@
  *  2000-09-24  separated from interval.hpp
  */
 
-#ifndef BOOST_INTERVAL_MISC_HPP
-#define BOOST_INTERVAL_MISC_HPP
+#ifndef BOOST_INTERVAL_IO_HPP
+#define BOOST_INTERVAL_IO_HPP
 
 #include <iostream>
 #include <string>        // for non-explicit string constructor
@@ -107,4 +107,4 @@ std::istream& operator>>(std::istream& is, interval<T, Traits>& r)
 
 } // namespace boost
 
-#endif // BOOST_INTERVAL_MISC_HPP
+#endif // BOOST_INTERVAL_IO_HPP

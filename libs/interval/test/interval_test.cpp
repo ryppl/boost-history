@@ -14,6 +14,7 @@
  */
 
 #include <boost/interval.hpp>
+#include <boost/interval/io.hpp>
 #include <iostream>
 #include <iomanip>
 #include <functional>

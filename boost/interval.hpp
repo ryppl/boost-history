@@ -167,19 +167,6 @@ namespace boost {
 
   #undef BOOST_INTERVAL_DEFINE_COMPARISON
 
-  /*
-   * I/O operators
-   */
-
-#if 0
-  template<class Ch, class ChTr, class T, class Traits>
-  std::basic_ostream<Ch, ChTr>&
-  operator<<(std::basic_ostream<Ch, ChTr>& os, const interval<T,Traits>& r);
-  template<class Ch, class ChTr, class T, class Traits>
-  std::basic_istream<Ch, ChTr>&
-  operator>>(std::basic_istream<Ch, ChTr>& is, const interval<T,Traits>& r);
-#endif
-
 
   /*
    * Interval bounds-related functions
@@ -456,7 +443,6 @@ namespace std {
 #include <boost/interval/utility.hpp>
 
 #include <boost/interval/oper.hpp>
-#include <boost/interval/misc.hpp>
 #include <boost/interval/transc.hpp>
 
 namespace boost {

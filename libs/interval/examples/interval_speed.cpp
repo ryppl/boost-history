@@ -23,11 +23,6 @@
 #include <vector>
 #include <cmath>
 #include <boost/progress.hpp>
-
-// FIXME: nécessaire pour utiliser g++ 3.1 ou plus
-#if (__GNUC__==3 && __GNUC_MINOR__>=1)
-# define BOOST_NO_OPERATORS_IN_NAMESPACE
-#endif
 #include <boost/random.hpp>
 
 
