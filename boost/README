@@ -2,7 +2,7 @@ This directory contains the minimum subset of boost 1.32.0
 just enough to make Spirit work. Packaging instructions:
 
 1. Remove all CVS artifacts.
-2. Create a miniboost directory.
+2. Create a miniboost directory in this top level directory.
 3. Move boost directory and libs directory into the miniboost directory.
 4. Move the contents of "mini-boost-dir" directory into the "miniboost" directory.
 5. Create a boost directory in this top level directory.
