@@ -37,6 +37,7 @@ class smart_enum
     self_type& operator= (const enum_type value)
         {
         m_value = value;
+        return *this;
         }
 
     smart_enum(const int value) : m_value(enum_traits::cast(value))
@@ -45,6 +46,7 @@ class smart_enum
     self_type& operator= (const int value)
         {
         m_value = enum_traits::cast(value);
+        return *this;
         }
 
     self_type& operator += (signed int offset)
