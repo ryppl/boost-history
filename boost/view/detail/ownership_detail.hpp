@@ -183,10 +183,14 @@ private:
   { }
 
 
+// Ownership is "shared" by default
+#ifndef BOOST_VIEW_DEFAULT_OWNERSHIP
+#define BOOST_VIEW_DEFAULT_OWNERSHIP shared
+#endif
 
 template<class T> struct wrap
 {
-  typedef shared<T> type;  // Ownership is "shared" by default
+  typedef BOOST_VIEW_DEFAULT_OWNERSHIP<T> type;  
   typedef T         domain;
 };
 
