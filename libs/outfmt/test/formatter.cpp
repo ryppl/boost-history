@@ -14,9 +14,9 @@ int main()
    l.push_back( 'B' );
    l.push_back( 'C' );
 
-   boost::io::openclose_formatter< char * >
+   boost::io::openclose_formatter< const char * >
                                        ocfmt( "< ", " >" );
-   boost::io::formatter< char * >      fmt(   "< ", " >", " | " );
+   boost::io::formatter< const char * >      fmt(   "< ", " >", " | " );
 
    // boost::io::formatter_t< ... >::format
 
@@ -26,19 +26,19 @@ int main()
 
    // boost::io::openclose_formatter< ... >
 
-   test_formatter( test, boost::io::format( l ).format( boost::io::openclose_formatter< char * >()),             "[ A, B, C ]", "format( openclose_formatter())" );
-   test_formatter( test, boost::io::format( l ).format( boost::io::openclose_formatter< char * >( "{ ", " }" )), "{ A, B, C }", "format( openclose_formatter( open, close ))" );
-   test_formatter( test, boost::io::format( l ).format( boost::io::openclose_formatter< char * >( ocfmt )),      "< A, B, C >", "format( openclose_formatter( openclose_formatter ))" );
+   test_formatter( test, boost::io::format( l ).format( boost::io::openclose_formatter< const char * >()),             "[ A, B, C ]", "format( openclose_formatter())" );
+   test_formatter( test, boost::io::format( l ).format( boost::io::openclose_formatter< const char * >( "{ ", " }" )), "{ A, B, C }", "format( openclose_formatter( open, close ))" );
+   test_formatter( test, boost::io::format( l ).format( boost::io::openclose_formatter< const char * >( ocfmt )),      "< A, B, C >", "format( openclose_formatter( openclose_formatter ))" );
 
    // boost::io::formatter< ... >
 
-   test_formatter( test, boost::io::format( l ).format( boost::io::formatter< char * >()),                    "[ A, B, C ]",   "format( formatter())" );
-   test_formatter( test, boost::io::format( l ).format( boost::io::formatter< char * >( " : " )),             "[ A : B : C ]", "format( formatter( sep ))" );
-   test_formatter( test, boost::io::format( l ).format( boost::io::formatter< char * >( "{ ", " }" )),        "{ A, B, C }",   "format( formatter( open, close ))" );
-   test_formatter( test, boost::io::format( l ).format( boost::io::formatter< char * >( "{ ", " }", " : " )), "{ A : B : C }", "format( formatter( open, close, sep ))" );
-   test_formatter( test, boost::io::format( l ).format( boost::io::formatter< char * >( ocfmt )),             "< A, B, C >",   "format( formatter( openclose_formatter ))" );
-   test_formatter( test, boost::io::format( l ).format( boost::io::formatter< char * >( ocfmt, " : " )),      "< A : B : C >", "format( formatter( openclose_formatter, sep ))" );
-   test_formatter( test, boost::io::format( l ).format( boost::io::formatter< char * >( fmt )),               "< A | B | C >", "format( formatter( formatter ))" );
+   test_formatter( test, boost::io::format( l ).format( boost::io::formatter< const char * >()),                    "[ A, B, C ]",   "format( formatter())" );
+   test_formatter( test, boost::io::format( l ).format( boost::io::formatter< const char * >( " : " )),             "[ A : B : C ]", "format( formatter( sep ))" );
+   test_formatter( test, boost::io::format( l ).format( boost::io::formatter< const char * >( "{ ", " }" )),        "{ A, B, C }",   "format( formatter( open, close ))" );
+   test_formatter( test, boost::io::format( l ).format( boost::io::formatter< const char * >( "{ ", " }", " : " )), "{ A : B : C }", "format( formatter( open, close, sep ))" );
+   test_formatter( test, boost::io::format( l ).format( boost::io::formatter< const char * >( ocfmt )),             "< A, B, C >",   "format( formatter( openclose_formatter ))" );
+   test_formatter( test, boost::io::format( l ).format( boost::io::formatter< const char * >( ocfmt, " : " )),      "< A : B : C >", "format( formatter( openclose_formatter, sep ))" );
+   test_formatter( test, boost::io::format( l ).format( boost::io::formatter< const char * >( fmt )),               "< A | B | C >", "format( formatter( formatter ))" );
 
    return( 0 );
 }
