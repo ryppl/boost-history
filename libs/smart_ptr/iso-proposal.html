@@ -20,7 +20,7 @@
 		<p>Resource management, particularly of dynamically allocated memory, has been a 
 			serious concern since the days of the earliest digital computers. Many modern 
 			computer languages (Python, Perl, Java) provide built-in facilities for 
-			managing dynamically allocated memory. In both the C and C++ languages, leaving 
+			automatically managing dynamically allocated memory. In both the C and C++ languages, leaving 
 			dynamic memory management choices up to the programmer is a long-standing 
 			design decision.</p>
 		<p>Use of a pointer-like object called a <i>smart-pointer</i> to manage dynamically 
@@ -43,6 +43,7 @@
 			practice, and has many other beneficial characteristics. An implementation is 
 			available at <a href="http://www.boost.org/libs/smart_ptr">http://www.boost.org/libs/smart_ptr</a>.</p>
 		<h3>A. Motivation for a shared-ownership smart pointer</h3>
+		<p>A shared-ownership smart pointer:</p>
 		<ul>
 			<li>
 			Is a reasonable default choice for many or even most smart pointer needs, 
@@ -51,8 +52,7 @@
 			Can be used in Standard Library containers, filling a major embarrassing gap in 
 			the current Standard Library.
 			<li>
-				Has been reinvented thousands of times [<A href="#Google03">Google03</A>] 
-			(often with gratuitous mistakes and misfeatures).
+				Has been reinvented thousands of times [<A href="#Google03">Google03</A>].
 			<li>
 				Is very hard to specify and implement correctly, particularly as regards 
 				exception safety, thread safety, and weak pointers. See <A href="#Implementation-difficulty">
@@ -64,6 +64,7 @@
 				shared_ptr has an alternate constructor with a second argument supplying a 
 				destruction policy functor. This is the key to understanding both the design 
 				itself and several of the claimed advantages.]</i></p>
+		<p>The proposed shared-ownership smart pointer:</p>
 		<ul>
 			<li>
 			Has the same object type regardless of features used, greatly facilitating 
@@ -76,8 +77,7 @@
 			applications such as caches.
 			<li>
 			Delivers exceptional expressive power without additional template 
-			parameterization, easing use by novices and experts alike.
-			<li>
+			parameterization, easing use by novices and experts alike. [<a href="#Deleter">III.B.2</a>][<A href="#Dimov03">Dimov03</A>]<li>
 			Supports encapsulation and implementation hiding via the ability to safely use 
 			incomplete classes and protected nonvirtual base destructors, and the ability 
 			to hide allocation details.
@@ -85,7 +85,8 @@
 			"Just works" in numerous tricky situations, such as calling the right 
 			destructor and crossing load-unit/heap boundaries.
 			<li>
-			Requires no language support and does not prevent users or the Standard Library 
+			Requires no language support.<li>
+			Does not prevent users or the Standard Library itself 
 			from later adding other smart pointers to meet additional needs.
 			<li>
 			Allows several implementation techniques, leaving implementors room for 
@@ -179,7 +180,7 @@ void test()
 		<h4>1. "As Close to Raw Pointers as Possible, but no Closer"</h4>
 		<p>Ordinary C++ pointers have some interesting properties that make them suitable 
 			for a wide range of tasks. It is possible to copy, assign, pass and return by 
-			value, "destroy" a pointer to an incomplete type. It is possible to refer to 
+			value. It is possible to "destroy" a pointer to an incomplete type. It is possible to refer to 
 			any object's address using a pointer to <code>void</code>. Pointers to derived 
 			classes are implicitly convertible to pointers to base classes, and it is 
 			possible to use <code>static_cast</code> or <code>dynamic_cast</code> to 
@@ -189,7 +190,7 @@ void test()
 		<P>The proposed smart pointers retain the strengths of raw pointers, eliminating 
 			their weaknesses. <EM>shared_ptr</EM> and <EM>weak_ptr</EM> fully support 
 			incomplete types, cv-qualified types, and <code>void</code> as a template 
-			parameter, and implicit conversions. <EM>shared_ptr</EM> supports static and 
+			parameter. They support derived-to-base implicit conversions. <EM>shared_ptr</EM> supports static and 
 			dynamic casts, and will automatically delete (or otherwise release) the object 
 			it owns when the last <EM>shared_ptr</EM> instance is destroyed. <EM>weak_ptr</EM>
 			eliminates the possibility of accessing a dangling pointer.</P>
@@ -203,13 +204,13 @@ void test()
 		<P>The general principle followed by the proposed design is that in such 
 			situations, the implementation should "just do the right thing" and invoke the 
 			proper destructor or <code>operator delete</code>. This implies that the 
-			information necessary to properly destroy the managed object should be fully 
+			information necessary to properly destroy the managed object is fully 
 			captured at the point where the smart pointer is constructed.</P>
 		<h4>3. No Extra Parameters</h4>
 		<p>Following the "as close as possible" principle, the proposed smart pointers have 
 			a single template parameter, the type of the pointee. Avoiding additional 
-			parameters helps interoperability between libraries from different authors, 
-			although an additional benefit is that it makes <EM>shared_ptr</EM> easier to 
+			parameters ensures interoperability between libraries from different authors, 
+			and also makes <EM>shared_ptr</EM> easier to 
 			use, teach and recommend.</p>
 		<h4>4. The "Shares Ownership with" Equivalence Relation</h4>
 		<p>The proposed text uses "<STRONG>p</STRONG> <EM>shares ownership with</EM> <STRONG>q</STRONG>" 
@@ -227,11 +228,12 @@ void test()
 			The last <EM>shared_ptr</EM> instance in a given equivalence class is 
 			responsible for destroying the <EM>owned</EM> object.</p>
 		<P>In a typical counted implementation, two smart pointers <EM>share ownership</EM> 
-			when they share the same reference count.</P>
+			when they share the same reference count. <font color="#FF0000">
+        Other implementations, such as linked lists, are also possible.</font></P>
 		<h4>5. The "Empty Pointer" Concept</h4>
 		<p>Default-constructed smart pointers, and smart pointer instances that have been <code>
 				reset()</code>, are called <EM>empty</EM> in the proposed text. It is 
-			necessary to introduce this special class in order to offer the nothrow 
+			necessary to introduce this concept to offer the nothrow 
 			guarantee for <code>shared_ptr::shared_ptr()</code>, <code>shared_ptr::reset()</code>,
 			<code>weak_ptr::weak_ptr()</code>, and <code>weak_ptr::reset()</code>. <code>p.reset()</code>
 			for smart pointers is often used as an equivalent for <code>delete p</code> for 
@@ -309,25 +311,26 @@ template&lt;class T, class A1, class A2&gt; shared_ptr&lt;T&gt; shared_new(A1 co
 			<LI>
 				Forwarding an arbitrary list of arguments may be problematic [<A href="#Dimov02">Dimov02</A>];
 			<LI>
-				The existing practice strongly favors the unprotected but powerful pointer 
+				Widespread existing practice strongly favors the unprotected but powerful pointer 
 				constructor approach.</LI></UL>
 		<P>As an alternative, the Boost implementation offers an experimental debug mode [<A href="#Boost03a">Boost03a</A>] 
 			that catches many common errors at runtime, including misuse of the pointer 
 			constructor and invoking <code>delete</code> on a pointer managed by <EM>shared_ptr</EM>.</P>
-		<h4>2. Deleter Constructor</h4>
+		<h4>2. <a name="Deleter">Deleter</a> Constructor</h4>
 		<p>Custom deleters allow a factory function returning a <EM>shared_ptr</EM> to 
-			insulate the user from its memory allocation strategy. Since the deleter is not 
+			insulate the <EM>shared_ptr</EM> user from its memory allocation strategy. Since the deleter is not 
 			part of the type, changing the allocation strategy does not break source or 
 			binary compatibility, and does not require a client recompilation. For example, 
 			a "no-op" deleter is useful when returning a <EM>shared_ptr</EM> to a 
-			statically allocated object, a deleter that invokes the <code>Release()</code> member 
+			statically allocated object. A deleter that invokes the <code>Release()</code> member 
 			function enables <EM>shared_ptr</EM> to hold a pointer to a COM object, and 
 			other variations allow a <EM>shared_ptr</EM> to be used as a wrapper for 
 			another smart pointer, easing interoperability. See [<A href="#Dimov03">Dimov03</A>] 
 			for many other examples for the tremendous expressive power gained by the 
 			custom deleter support.</EM></p>
 		<P>In the Boost implementation, supporting custom deleters does not impose 
-			additional overhead. Earlier <EM>shared_ptr</EM> versions did not offer the 
+			additional memory overhead on the shared_ptr itself. See
+        <a href="#Memory-footprint">Memory Footprint</a> [E.1]. Earlier <EM>shared_ptr</EM> versions did not offer the 
 			deleter constructor, but in order to meet the "just do the right thing" 
 			requirement (III.A.2), the implementation kept a deleter under the hood anyway.</P>
 		<P>The requirement for the copy constructor of <code>D</code> to not throw comes 
@@ -371,12 +374,14 @@ template&lt;class T, class A1, class A2&gt; shared_ptr&lt;T&gt; shared_new(A1 co
 		<p><code>operator-&gt;</code> requires that <code>get() != 0</code> in order to 
 			allow conforming implementations to assert in debug mode.</p>
 		<h4>7. <code>use_count</code> and <code>unique</code></h4>
-		<p><code>use_count</code> is provided as a testing and debugging aid - only. It 
+		<p><code>use_count</code> is provided as a testing and debugging aid 
+        rather than for use in production code. It 
 			allows postconditions to be specified in a form that can be tested by client 
 			code, and it has been proven useful in practice when tracking down bugs in 
-			projects with complex ownership structures. At the same time, production code 
-			should not rely on <code>use_count</code>. While all reasonable shared 
-			ownership implementations support <code>use_count</code> queries, not all can 
+			projects with complex ownership structures. Production code 
+			should not rely on <code>use_count</code> as it may be inefficient. While all 
+        known reasonable shared 
+			ownership implementations can support <code>use_count</code>, not all can 
 			do so in an efficient manner.</p>
 		<P>The common <code>use_count() == 1</code> query has been given its own name for 
 			efficiency reasons, since some implementations can provide a constant time <code>unique()</code>
@@ -499,7 +504,7 @@ else
 </pre>
 		<h3>D. enable_shared_from_this</h3>
 		<p>Experienced smart pointer users often need the ability to obtain a <EM>shared_ptr</EM>
-			to this from within a member function. While the <A href="http://www.boost.org/libs/smart_ptr/sp_techniques.html#from_this">
+			to <i>this</i> from within a member function. While the <A href="http://www.boost.org/libs/smart_ptr/sp_techniques.html#from_this">
 				technique</A> described in [<A href="#Dimov03">Dimov03</A>] solves the 
 			problem, this proposal provides direct support for this idiom via the <code>enable_shared_from_this</code>
 			helper class template. Encapsulating the boilerplate code in a standard helper 
@@ -508,7 +513,7 @@ else
 			the <code>enable_shared_from_this</code> base class and performs the 
 			initialization automatically.</p>
 		<h3>E. Size and Performance</h3>
-		<h4>1. Memory Footprint</h4>
+		<h4>1. <a name="Memory-footprint">Memory Footprint</a></h4>
 		<p>In the Boost implementation, the size of <EM>shared_ptr</EM> (and <EM>weak_ptr</EM>) 
 			is twice the size of a raw pointer. More precisely, <code>sizeof(shared_ptr&lt;T&gt;) 
 				== sizeof(weak_ptr&lt;T&gt;) == sizeof(T*) + sizeof(C*)</code>, where <code>C</code>
@@ -538,7 +543,8 @@ else
 			deleters are) by taking advantage of the empty base optimization, for example 
 			by using a helper component such as <code><A href="http://www.boost.org/libs/utility/compressed_pair.htm">
 					boost::compressed_pair</A></code> [<A href="#Boost00">Boost00</A>]. The 
-			Boost implementation does not attempt to optimize out the deleter in order to 
+			Boost implementation does not attempt to optimize away the deleter 
+        space in order to 
 			minimize dependencies and maximize portability (<code>boost::shared_ptr</code> is 
 			a critical dependency for many Boost libraries and it is important for it to 
 			work reliably on all supported platforms.)</P>
