@@ -376,13 +376,13 @@ namespace detail
       }
 
       template <class Default>
-      T& operator[](const named_default<KW, Default>& x) const
+      T& operator[](const named_default<KW, Default>&) const
       {
           return val;
       }
 
       template <class Default>
-      T& operator[](const lazy_named_default<KW, Default>& x) const
+      T& operator[](const lazy_named_default<KW, Default>&) const
       {
           return val;
       }
