@@ -7,10 +7,10 @@
 - find iterator
 - change trim to use the replace library
 - find algoritms complexity reduction / provide optional algorithms
-- trim_end_if and find_last fix for ForwardIterator
 
 ----- DONE: ------
 
+- trim_end_if and find_last fix for ForwardIterator
 - in-place replace_all -> optimization
 - change erase to use replace and a special format
   ( requires that the result code compiles to optimal version ) 
