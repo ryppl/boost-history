@@ -51,16 +51,16 @@ namespace boost { namespace langbinding {
    }
    
    template<class T>
-   registry<T>::registry()
-      : m_pimpl(new detail::registry_impl<T>)
+   registry_base<T>::registry_base()
    {}
 
    template<class T>
-   registry<T>::~registry() {}
-
+   registry_base<T>::~registry_base() 
+   {}
+   
    template<class T>
    const detail::registration<T>*
-   registry<T>::lookup(const type_info_& x)
+   registry_base<T>::lookup(const type_info_& x)
    {
       std::cout << "lookup for \"" << x << "\"\n";
 
@@ -70,7 +70,7 @@ namespace boost { namespace langbinding {
 
    template<class T>
    const detail::registration<T>* 
-      registry<T>::query(const type_info_& x)
+      registry_base<T>::query(const type_info_& x)
    {
       std::cout << "query for \"" << x << "\"\n";
 
@@ -81,8 +81,8 @@ namespace boost { namespace langbinding {
    }
 
    template<class T>
-   void registry<T>::insert(const type_info_& x, 
-      typename registry<T>::lvalue_from_function convert)
+   void registry_base<T>::insert(const type_info_& x, 
+      typename registry_base<T>::lvalue_from_function convert)
    {
       std::cout << "lvalue insert for \"" << x << "\"\n";
 
@@ -100,9 +100,9 @@ namespace boost { namespace langbinding {
    }
 
    template<class T>
-   void registry<T>::insert(const type_info_& x,
-      typename registry<T>::rvalue_from_stage1 convertible,
-      typename registry<T>::rvalue_from_stage2 convert)
+   void registry_base<T>::insert(const type_info_& x,
+      typename registry_base<T>::rvalue_from_stage1 convertible,
+      typename registry_base<T>::rvalue_from_stage2 convert)
    {
       std::cout << "rvalue insert for \"" << x << "\"\n";
 
@@ -121,7 +121,7 @@ namespace boost { namespace langbinding {
    }
 
    template<class T>
-   void registry<T>::export_converters(registry& to)
+   void registry_base<T>::export_converters(registry_base& to)
    {
       for (typename detail::registry_impl<T>::registry_t::const_iterator iter
             = m_pimpl->entries.begin()
@@ -145,7 +145,7 @@ namespace boost { namespace langbinding {
    }
 
    template<class T>
-   void registry<T>::export_converters(const type_info_& x, registry& to)
+   void registry_base<T>::export_converters(const type_info_& x, registry_base& to)
    {
       const detail::registration<T>* r = query(x);
       if (!r) return;
@@ -161,13 +161,6 @@ namespace boost { namespace langbinding {
       {
          to.insert(x, c2->convertible, c2->convert);
       }
-   }
-
-   template<class T>
-   registry<T>* registry<T>::instance()
-   {
-      static std::auto_ptr<registry<T> > p(new registry);
-      return p.get();
    }
 
 }}

@@ -20,47 +20,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
 
-#ifndef BOOST_CENTRAL_LANGBINDING_REGISTRY
-#define BOOST_CENTRAL_LANGBINDING_REGISTRY
+#ifndef BOOST_LANGBINDING_REGISTRY_INSTANCE_IMPLEMENTATION
+#define BOOST_LANGBINDING_REGISTRY_INSTANCE_IMPLEMENTATION
 
 #include <boost/langbinding/registry.hpp>
-#include <boost/langbinding/config.hpp>
 
 namespace boost { namespace langbinding {
 
    template<class T>
-   class BOOST_LANGBINDING_DECL central_registry
+   registry<T>* registry<T>::instance()
    {
-   public:
-      typedef registry_base<T>* registry_ptr;
-    
-      static void register_module(const char* name, registry_ptr r);
+      static std::auto_ptr<registry<T> > p(new registry);
+      return p.get();
+   }
 
-      static void insert_converter(
-           registry_ptr r
-         , const typename registry<T>::type_info_&
-         , typename registry<T>::lvalue_from_function
-      );
+   template<class T>
+   registry<T>::registry()
+   {}
 
-      static void insert_converter(
-           registry_ptr r
-         , const typename registry<T>::type_info_&
-         , typename registry<T>::rvalue_from_stage1
-         , typename registry<T>::rvalue_from_stage2
-      );
-
-      static void import(
-           registry_ptr r
-         , const char* module
-      );
-
-      static void import(
-           registry_ptr r
-         , const char* module
-         , const typename registry<T>::type_info_& type
-      );
-   };
-
+   template<class T>
+   registry<T>::~registry() 
+   {}
+   
 }}
 
 #endif
