@@ -546,6 +546,8 @@ namespace detail
         { 
             if( 0 == x )
                 throw bad_pointer();
+            if( empty() )
+                throw bad_ptr_container_operation( "'replace()' on empty container" );
 
             std::auto_ptr<T> ptr( &*where ); // nothrow
             *where.base() = x;               // nothrow, commit
@@ -579,6 +581,7 @@ namespace detail
         void transfer( iterator before, typename PtrContainer::iterator first, 
                        typename PtrContainer::iterator last, PtrContainer& from )
         {
+            assert( !from.empty() );
             c_.insert( before.base(), first.base(), last.base() ); // strong 
             from.c_.erase( first.base(), last.base() );            // nothrow
         }
@@ -586,6 +589,8 @@ namespace detail
         template< typename PtrContainer >
         void transfer( iterator before, PtrContainer& from )
         {
+            if( from.empty() )
+                return;
             c_.insert( before.base(), from.c_.begin(), from.c_.end() ); // strong
             from.c_.clear();                                            // nothrow
         }

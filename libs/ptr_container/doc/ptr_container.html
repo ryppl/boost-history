@@ -55,7 +55,8 @@
      } </pre></p><hr size="1" ><h2  >Reference</h2><a name="Reference" ></a><p  >There are a few design decisions that will affect how the
                      classes are used. Besides these the classes are much like
                      normal standard containers and provides almost the same interface.
-                     The new conventions are: </p><ul  ><li  ><i  >All default iterators apply an extra layer of indirection. </i> This is done to make the containers easier and safer to use. It promotes
+                     The new conventions are: </p><ul  ><li  ><i  >Null pointers are not allowed.</i> If the user tries to insert the null pointer, the
+                                 operation will throw a <code  >bad_pointer</code> exception. </li><li  ><i  >All default iterators apply an extra layer of indirection. </i> This is done to make the containers easier and safer to use. It promotes
                                a kind of pointer-less programming and the user of a class needs not worry about
                                pointers except when allocating them. Iterators that provide access to the naked pointers
                                are also provided since they might be useful in rare cases. Whenever eg. <code  >begin()</code> returns an <code  >iterator, ptr_begin()</code> will return an iterator that allows 
@@ -65,16 +66,20 @@
                                 for a subset of the operations they are required to be Clonable.</i> This is because most polymophic objects cannot be copied directly, 
                               but they can often be so by a use of a member function. Often it does not even make
                               sense to clone an object in which case a large subset of the operations are still workable.</li><li  ><i  >Whenever objects are inserted into a container, they are cloned before insertion. 
-                                 Whenever pointers are inserted into a container, ownership is transferred to the container.</i> All containers take ownership of the stored pointers and therefore a cntainer needs to have its 
+                                 Whenever pointers are inserted into a container, ownership is transferred to the container.</i> All containers take ownership of the stored pointers and therefore a container needs to have its 
                                own copies. </li><li  ><i  >Ownership can be tranferred from a container on a per pointer basis.</i> This can of course also be convenient. Whenever it happens, an <code  >std::auto_ptr&lt;&gt;</code> is used to provide an exception-safe transfer. </li><li  ><i  >Ownership can be transferred from a container to another container on a per iterator range basis.</i> This makes it possible to exchange data safely between different pointer containers
                                without cloning the objects again. </li><li  ><i  >A container can be cheaply returned from functions either by making a clone or by giving up ownership
                                  of the container.</i> Two special member functions, <code  >clone()</code> and <code  >release(),</code> both return an <code  >auto_ptr&lt;Container&gt;</code> which can be assigned
                              to another container. This effectively reduces the cost of returning a container to one heap-allocation
-                             plus a call to <code  >swap().</code></li></ul><p  >The documentation is divided into a common section and an explanation for each container. 
+                             plus a call to <code  >swap().</code></li><li  ><i  > Certain algorithms have been implemented as member functions, because they are tricky when dealing with
+                                  pointers. </i> This is done to avoid some nasty pitfalls. Some of the functions
+                                  take predicates and the user need not apply the indirection himself. This means that
+                                  functors that work on objects can be passed to these algorithms which removes the programmer
+                                  from creating a functor that works on pointers. </li></ul><p  >The documentation is divided into a common section and an explanation for each container. 
                         The so-called "pseudo class" sections
                         show the interface that some or all of the classes have in common and the indvisual parts shows the interface
                         that is only part of some of the individual classes. Before you proceed, 
-                        please make sure you understand the Clonable concept.</p><ul  ><li  ><a href="#The Clonable concept" >The Clonable concept</a></li><li  ><a href="#Pseudo class <code  >ptr_container&lt;&gt;</code>" >Pseudo class <code  >ptr_container&lt;&gt;</code></a></li><li  ><a href="#Pseudo class <code  >ptr_sequence&lt;&gt;</code>" >Pseudo class <code  >ptr_sequence&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_deque&lt;&gt;</code>" > Class <code  >ptr_deque&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_list&lt;&gt;</code>" > Class <code  >ptr_list&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_vector&lt;&gt;</code>" > Class <code  >ptr_vector&lt;&gt;</code></a></li><li  ><a href="#Pseudo class <code  >ptr_associative_container&lt;&gt;</code>" >Pseudo class <code  >ptr_associative_container&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_set&lt;&gt;</code>" > Class <code  >ptr_set&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_multiset&lt;&gt;</code>" > Class <code  >ptr_multiset&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_map&lt;&gt;</code>" > Class <code  >ptr_map&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_multimap&lt;&gt;</code>" > Class <code  >ptr_multimap&lt;&gt;</code></a></li><li  ><a href="# Iterator operations" > Iterator operations</a></li><li  ><a href="# Map iterator operations" > Map iterator operations</a></li><li  ><a href="#Exception classes" >Exception classes</a></li></ul><p  >The recommended usage pattern of the container classes are the 
+                        please make sure you understand the Clonable concept.</p><ul  ><li  ><a href="#The Clonable concept" >The Clonable concept</a></li><li  ><a href="#Pseudo class <code  >ptr_container&lt;&gt;</code>" >Pseudo class <code  >ptr_container&lt;&gt;</code></a></li><li  ><a href="#Pseudo class <code  >ptr_sequence&lt;&gt;</code>" >Pseudo class <code  >ptr_sequence&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_deque&lt;&gt;</code>" > Class <code  >ptr_deque&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_list&lt;&gt;</code>" > Class <code  >ptr_list&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_vector&lt;&gt;</code>" > Class <code  >ptr_vector&lt;&gt;</code></a></li><li  ><a href="#Pseudo class <code  >ptr_associative_container&lt;&gt;</code>" >Pseudo class <code  >ptr_associative_container&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_set&lt;&gt;</code>" > Class <code  >ptr_set&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_multiset&lt;&gt;</code>" > Class <code  >ptr_multiset&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_map&lt;&gt;</code>" > Class <code  >ptr_map&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_multimap&lt;&gt;</code>" > Class <code  >ptr_multimap&lt;&gt;</code></a></li><li  ><a href="# Map iterator operations" > Map iterator operations</a></li><li  ><a href="#Exception classes" >Exception classes</a></li></ul><p  >The recommended usage pattern of the container classes are the 
                 same as the for normal standard containers.<code  >ptr_vector</code>, <code  >ptr_list</code> and <code  >ptr_deque</code> offer the programmer 
                 different complexity tradeoffs and should be used accordingly. <code  >ptr_vector</code> is the type of sequence that should be used by default. <code  >ptr_list</code> should be used when there 
              are frequent insertions and deletions from the middle of the sequence <i  >and</i> if the
@@ -277,7 +282,7 @@ void  transfer( iterator before, PtrContainer& from ); </pre><blockquote  ><p  >
                  and remove it from <code  >from.</code></p><p  ><b  >Postconditions: </b><code  >from.empty().</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><p  ><h3  >Semantics: <i  >pointer container algorithms</i></h3></p><code  >void sort();</code><pre  >template&lt; typename BinaryPredicate &gt;
 void sort( BinaryPredicate pred ); </pre><code  >void  unique();</code><pre  >template&lt; typename BinaryPredicate &gt;
 void unique( BinaryPredicate pred );</pre><code  >void  remove( const T& x );</code><pre  >template&lt; typename Predicate &gt;
-void remove_if( Predicate pred );</pre><hr size="1" ><h2  > Class <code  >ptr_deque&lt;&gt;</code></h2><a name=" Class <code  >ptr_deque&lt;&gt;</code>" ></a><h3  >Synopsis:</h3><pre>             
+void remove_if( Predicate pred );</pre><hr size="1" ><h2  > Class <code  >ptr_deque&lt;&gt;</code></h2><a name=" Class <code  >ptr_deque&lt;&gt;</code>" ></a><code  >#include &lt;boost/ptr_container/ptr_deque.hpp&gt;</code><h3  >Synopsis:</h3><pre>             
 namespace boost
 {
     template< typename T, typename Allocator = std::allocator< T* > >
@@ -302,7 +307,7 @@ namespace boost
     }; //  class 'ptr_deque'
     
 } // namespace 'boost'  
-    </pre> <p  ><h3  >Semantics: <i  >element access</i></h3></p><code  >T& operator[]( size_type n );</code><blockquote  ><p  >See description in ptr_vector::operator[]</p></blockquote><code  >const T& operator[]( size_type n ) const;</code><blockquote  ><p  >See description in ptr_vector::operator[]</p></blockquote><code  >T& at( size_type n );</code><blockquote  ><p  >See description in ptr_vector::at()</p></blockquote><code  >const T& at( size_type n );</code><blockquote  ><p  >See description in ptr_vector::at()</p></blockquote><p  ><h3  >Semantics: <i  >modifiers</i></h3></p><code  >void push_front( T* x );</code><blockquote  ><p  ><b  >Requirements: </b><code  >x</code> is heap-allocated and cannot be <code  >0</code></p><p  ><b  >Effects: </b>Inserts the pointer into container and takes ownership of it</p><p  ><b  >Throws: </b><code  >bad_pointer</code> if <code  >x</code> is <code  >0</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >void push_front( const T& x );</code><blockquote  ><p  ><b  >Effects: </b><code  >push_back( make_clone( x ) );</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >void pop_front()</code><blockquote  ><p  ><b  >Effects: </b>Removes the first element of the container if it exists</p><p  ><b  >Postconditions: </b><code  >not empty()</code> implies <code  >size()</code> is one less</p><p  ><b  >Exception safety: </b>Nothrow guarantee</p></blockquote><code  >std::auto_ptr&lt; T &gt; release_front();</code><blockquote  ><p  ><b  >Requirements: </b><code  >not empty()</code></p><p  ><b  >Effects: </b>Releases ownership of the first pointer in the container</p><p  ><b  >Postconditions: </b><code  >size()</code> is one less </p><p  ><b  >Throws: </b><code  >bad_ptr_container_operation</code> if the container is empty</p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><hr size="1" ><h2  > Class <code  >ptr_list&lt;&gt;</code></h2><a name=" Class <code  >ptr_list&lt;&gt;</code>" ></a><h3  >Synopsis:</h3><pre>             
+    </pre> <p  ><h3  >Semantics: <i  >element access</i></h3></p><code  >T& operator[]( size_type n );</code><blockquote  ><p  >See description in ptr_vector::operator[]</p></blockquote><code  >const T& operator[]( size_type n ) const;</code><blockquote  ><p  >See description in ptr_vector::operator[]</p></blockquote><code  >T& at( size_type n );</code><blockquote  ><p  >See description in ptr_vector::at()</p></blockquote><code  >const T& at( size_type n );</code><blockquote  ><p  >See description in ptr_vector::at()</p></blockquote><p  ><h3  >Semantics: <i  >modifiers</i></h3></p><code  >void push_front( T* x );</code><blockquote  ><p  ><b  >Requirements: </b><code  >x</code> is heap-allocated and cannot be <code  >0</code></p><p  ><b  >Effects: </b>Inserts the pointer into container and takes ownership of it</p><p  ><b  >Throws: </b><code  >bad_pointer</code> if <code  >x</code> is <code  >0</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >void push_front( const T& x );</code><blockquote  ><p  ><b  >Effects: </b><code  >push_back( make_clone( x ) );</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >void pop_front()</code><blockquote  ><p  ><b  >Effects: </b>Removes the first element of the container if it exists</p><p  ><b  >Postconditions: </b><code  >not empty()</code> implies <code  >size()</code> is one less</p><p  ><b  >Exception safety: </b>Nothrow guarantee</p></blockquote><code  >std::auto_ptr&lt; T &gt; release_front();</code><blockquote  ><p  ><b  >Requirements: </b><code  >not empty()</code></p><p  ><b  >Effects: </b>Releases ownership of the first pointer in the container</p><p  ><b  >Postconditions: </b><code  >size()</code> is one less </p><p  ><b  >Throws: </b><code  >bad_ptr_container_operation</code> if the container is empty</p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><hr size="1" ><h2  > Class <code  >ptr_list&lt;&gt;</code></h2><a name=" Class <code  >ptr_list&lt;&gt;</code>" ></a><code  >#include &lt;boost/ptr_container/ptr_list.hpp&gt;</code><h3  >Synopsis:</h3><pre>             
 namespace boost
 {
 template< typename T, typename Allocator = std::allocator< T* > >
@@ -333,7 +338,7 @@ public: // list operations
 
 } // namespace 'boost'  
 </pre> <p  ><h3  >Semantics: <i  >modifiers</i></h3></p><code  >void push_front( T* x );</code><blockquote  ><p  >See description in <code  >deque::push_front()</code></p></blockquote><code  >void push_front( const T& x );</code><blockquote  ><p  >See description in <code  >deque::push_front()</code></p></blockquote><code  >void pop_front()</code><blockquote  ><p  >See description in <code  >deque::pop_front()</code></p></blockquote><code  >std::auto_ptr&lt; T &gt; release_front();</code><blockquote  ><p  >See description in <code  >deque::release_front()</code></p></blockquote><p  ><h3  >Semantics: <i  >list operations</i></h3></p><code  >void splice( iterator before, ptr_list& x );</code><blockquote  ></blockquote><code  >void splice( iterator before, ptr_list& x, iterator i );</code><blockquote  ></blockquote><code  >void splice( iterator before, ptr_list& x, iterator first, iterator last );</code><blockquote  ></blockquote><code  >void merge( ptr_list& x );</code><blockquote  ></blockquote><pre  >template&lt; typename Compare &gt; 
-void merge( ptr_list& x, Compare comp );</pre><blockquote  ></blockquote><code  >void reverse();</code><hr size="1" ><h2  > Class <code  >ptr_vector&lt;&gt;</code></h2><a name=" Class <code  >ptr_vector&lt;&gt;</code>" ></a><h3  >Synopsis:</h3><pre>             
+void merge( ptr_list& x, Compare comp );</pre><blockquote  ></blockquote><code  >void reverse();</code><hr size="1" ><h2  > Class <code  >ptr_vector&lt;&gt;</code></h2><a name=" Class <code  >ptr_vector&lt;&gt;</code>" ></a><code  >#include &lt;boost/ptr_container/ptr_vector.hpp&gt;</code><h3  >Synopsis:</h3><pre>             
 namespace boost
 {
     template< typename T, typename Allocator = std::allocator< T* > >
@@ -388,11 +393,11 @@ namespace boost
     </pre> <p  ><h3  >Semantics: <i  >observers</i></h3></p><code  >key_compare key_comp() const;</code><blockquote  ></blockquote><code  >value_compare value_comp() const;</code><blockquote  ></blockquote><p  ><h3  >Semantics: <i  >modifiers</i></h3></p><pre  >template&lt; typename InputIterator &gt;
 void insert( InputIterator first, InputIterator last );</pre><blockquote  ><p  ><b  >Requirements: </b><code  >[first,last)</code> is a valid range</p><p  ><b  >Effects: </b>Inserts a cloned range </p><p  ><b  >Exception safety: </b>Basic guarantee</p></blockquote><code  >void erase( iterator position );</code><blockquote  ><p  ><b  >Requirements: </b><code  >position</code> is a valid iterator from the container</p><p  ><b  >Effects: </b>Removes the element defined by <code  >position.</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >size_type erase( const key_type& x );</code><blockquote  ><p  ><b  >Effects: </b>Removes all the elements in the container with a key equivalent to <code  >x</code> and return the number of erased elements.</p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >void erase( iterator first, iterator last );</code><blockquote  ><p  ><b  >Requirements: </b><code  >[first,last)</code> is a valid range</p><p  ><b  >Effects: </b>Removes the range of elements defined by <code  >[first,last).</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><p  ><h3  >Semantics: <i  >pointer container requirements</i></h3></p><pre  >template&lt; typename PtrContainer &gt;
 void transfer( typename PtrContainer::iterator object, PtrContainer& from );</pre><blockquote  ><p  ><b  >Requirements: </b><code  >not from.empty()</code></p><p  ><b  >Effects: </b>Inserts the object defined by <code  >object</code>into the container 
-                     and remove it from <code  >from.</code></p><p  ><b  >Postconditions: </b><code  >size()</code> is one more, <code  >from.size()</code> is one less.</p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><hr size="1" ><h2  > Class <code  >ptr_set&lt;&gt;</code></h2><a name=" Class <code  >ptr_set&lt;&gt;</code>" ></a><h3  >Synopsis:</h3><pre>             
+                     and remove it from <code  >from.</code></p><p  ><b  >Postconditions: </b><code  >size()</code> is one more, <code  >from.size()</code> is one less.</p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><hr size="1" ><h2  > Class <code  >ptr_set&lt;&gt;</code></h2><a name=" Class <code  >ptr_set&lt;&gt;</code>" ></a><code  >#include &lt;boost/ptr_container/ptr_set.hpp&gt;</code><h3  >Synopsis:</h3><pre>             
     namespace boost
     {
-    template< typename Key, typename Compare = ptr_less<Key>, 
-              typename Allocator = std::allocator<Key*> > >
+    template< typename Key, typename Compare = ptr_less< Key >, 
+              typename Allocator = std::allocator< Key* > > >
     class ptr_set
     {
         //
@@ -400,8 +405,8 @@ void transfer( typename PtrContainer::iterator object, PtrContainer& from );</pr
         //
         
     public: // modifiers         
-        std::pair<iterator,bool>  insert( Key* x );                         
-        std::pair<iterator,bool>  insert( const Key& x );
+        std::pair< iterator,bool >  insert( Key* x );                         
+        std::pair< iterator,bool >  insert( const Key& x );
 
     public: // set algorithms
         iterator                        find( const Key& x ) const;                                            
@@ -413,7 +418,130 @@ void transfer( typename PtrContainer::iterator object, PtrContainer& from );</pr
     }; //  class 'ptr_set'
 
 } // namespace 'boost'  
-</pre> <p  ><h3  >Semantics: <i  >modifers</i></h3></p><code  >std::pair&lt;iterator,bool&gt; insert( Key* x );</code><blockquote  ></blockquote><code  >std::pair&lt;iterator,bool&gt; insert( const Key& x );</code><blockquote  ></blockquote><p  ><h3  >Semantics: <i  >set algorithms</i></h3></p><code  >iterator find( const Key& x ) const;</code><blockquote  ></blockquote><code  >size_type count( const Key& x ) const;</code><blockquote  ></blockquote><code  >iterator lower_bound( const Key& x ) const; </code><blockquote  ></blockquote><code  >iterator upper_bound( const Key& x ) const; </code><blockquote  ></blockquote><code  >std::pair&lt;iterator,iterator&gt; xequal_range( const Key& x ) const; </code><hr size="1" ><h2  > Class <code  >ptr_multiset&lt;&gt;</code></h2><a name=" Class <code  >ptr_multiset&lt;&gt;</code>" ></a><hr size="1" ><h2  > Class <code  >ptr_map&lt;&gt;</code></h2><a name=" Class <code  >ptr_map&lt;&gt;</code>" ></a><hr size="1" ><h2  > Class <code  >ptr_multimap&lt;&gt;</code></h2><a name=" Class <code  >ptr_multimap&lt;&gt;</code>" ></a><hr size="1" ><h2  > Iterator operations</h2><a name=" Iterator operations" ></a><hr size="1" ><h2  > Map iterator operations</h2><a name=" Map iterator operations" ></a><hr size="1" ><h2  >Exception classes</h2><a name="Exception classes" ></a><hr size="1" ><h2  >Examples</h2><a name="Examples" ></a><p  >Some examples are given in the accompanying test
+</pre> <p  ><h3  >Semantics: <i  >modifers</i></h3></p><code  >std::pair&lt;iterator,bool&gt; insert( Key* x );</code><blockquote  ><p  ><b  >Requirements: </b><code  >x != 0</code></p><p  ><b  >Effects: </b>Takes ownership of <code  >x</code> and insert it if there is
+                     no equivalent of it already. The <code  >bool</code> part of
+                     the return value indicates insertion and the <code  >iterator</code> points to the element with key <code  >x.</code></p><p  ><b  >Throws: </b><code  >bad_pointer</code> if <code  >x == 0</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >std::pair&lt;iterator,bool&gt; insert( const Key& x );</code><blockquote  ><p  ><b  >Effects: </b><code  >return insert( make_clone( x ) );</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><p  ><h3  >Semantics: <i  >set algorithms</i></h3></p><code  >iterator find( const Key& x ) const;</code><blockquote  ><p  ><b  >Effects: </b>Searches for the key and returns <code  >end()</code> on failure.</p><p  ><b  >Complexity: </b>Logarithmic</p></blockquote><code  >size_type count( const Key& x ) const;</code><blockquote  ><p  ><b  >Effects: </b>Counts the elements with a key equivalent to <code  >x,</code> that is,
+                      it returns either 0 or 1.</p><p  ><b  >Complexity: </b>Logarithmic</p></blockquote><code  >iterator lower_bound( const Key& x ) const; </code><blockquote  ><p  ><b  >Effects: </b>Returns an iterator pointing to the first element with a key not less than <code  >x</code></p><p  ><b  >Complexity: </b>Logarithmic</p></blockquote><code  >iterator upper_bound( const Key& x ) const; </code><blockquote  ><p  ><b  >Effects: </b>Returns an iterator pointing to the first element with a key greater than <code  >x</code></p><p  ><b  >Complexity: </b>Logarithmic</p></blockquote><code  >std::pair&lt;iterator,iterator&gt; equal_range( const Key& x ) const; </code><blockquote  ><p  ><b  >Effects: </b><code  >return std::make_pair( lower_bound( x ), upper_bound( x ) );</code></p><p  ><b  >Complexity: </b>Logarithmic</p></blockquote><hr size="1" ><h2  > Class <code  >ptr_multiset&lt;&gt;</code></h2><a name=" Class <code  >ptr_multiset&lt;&gt;</code>" ></a><code  >#include &lt;boost/ptr_container/ptr_set.hpp&gt;</code><h3  >Synopsis:</h3><pre>             
+    namespace boost
+    {
+    template< typename Key, typename Compare = ptr_less< Key >, 
+              typename Allocator = std::allocator< Key* > > >
+    class ptr_multiset
+    {
+        //
+        // ptr_container requirements + ptr_associative_container requirements +
+        //
+        
+    public: // modifiers         
+        iterator  insert( Key* x );                         
+        iterator  insert( const Key& x );
+
+    public: // set algorithms
+        iterator                        find( const Key& x ) const;                                            
+        size_type                       count( const Key& x ) const;                                          
+        iterator                        lower_bound( const Key& x ) const;                                     
+        iterator                        upper_bound( const Key& x ) const;                                     
+        std::pair< iterator,iterator >  equal_range( const Key& x ) const;                 
+
+    }; //  class 'ptr_multiset'
+
+} // namespace 'boost'  
+</pre> <p  ><h3  >Semantics: <i  >modifers</i></h3></p><code  >iterator insert( Key* x );</code><blockquote  ><p  ><b  >Requirements: </b><code  >x != 0</code></p><p  ><b  >Effects: </b>Takes ownership of <code  >x</code> and insert it. 
+                      The return value points to the inserted element.</p><p  ><b  >Throws: </b><code  >bad_pointer</code> if <code  >x == 0</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >iterator insert( const Key& x );</code><blockquote  ><p  ><b  >Effects: </b><code  >return insert( make_clone( x ) );</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><p  ><h3  >Semantics: <i  >set algorithms</i></h3></p><code  >iterator find( const Key& x ) const;</code><blockquote  ><p  ><b  >Effects: </b>Searches for the key and returns <code  >end()</code> on failure.</p><p  ><b  >Complexity: </b>Logarithmic</p></blockquote><code  >size_type count( const Key& x ) const;</code><blockquote  ><p  ><b  >Effects: </b>Counts the elements with a key equivalent to <code  >x.</code></p><p  ><b  >Complexity: </b>Logarithmic</p></blockquote><code  >iterator lower_bound( const Key& x ) const; </code><blockquote  ><p  ><b  >Effects: </b>Returns an iterator pointing to the first element with a key not less than <code  >x</code></p><p  ><b  >Complexity: </b>Logarithmic</p></blockquote><code  >iterator upper_bound( const Key& x ) const; </code><blockquote  ><p  ><b  >Effects: </b>Returns an iterator pointing to the first element with a key greater than <code  >x</code></p><p  ><b  >Complexity: </b>Logarithmic</p></blockquote><code  >std::pair&lt;iterator,iterator&gt; equal_range( const Key& x ) const; </code><blockquote  ><p  ><b  >Effects: </b><code  >return std::make_pair( lower_bound( x ), upper_bound( x ) );</code></p><p  ><b  >Complexity: </b>Logarithmic</p></blockquote><hr size="1" ><h2  > Class <code  >ptr_map&lt;&gt;</code></h2><a name=" Class <code  >ptr_map&lt;&gt;</code>" ></a><code  >#include &lt;boost/ptr_container/ptr_map.hpp&gt;</code><h3  >Synopsis:</h3><pre>             
+    namespace boost
+    {
+    template< typename Key, typename T, typename Compare = std::less< Key >, 
+              typename Allocator = std::allocator< std::pair<const Key, T*> > >
+    class ptr_map
+    {
+        //
+        // ptr_container requirements + ptr_associative_container requirements +
+        //
+            
+    public: // typedefs
+        typedef T mapped_type;
+        
+    public: // modifiers         
+        std::pair< iterator,bool >  insert( Key& key, T* x );                         
+        std::pair< iterator,bool >  insert( Key& key, const T& x );
+     
+    public: // element access
+        T&        operator[]( const Key& key );
+        const T&  operator[]( const Key& key ) const;                
+
+    public: // map algorithms
+        iterator                                    find( const Key& x ) const;                                            
+        const_iterator                              find( const Key& x );                                            
+        size_type                                   count( const Key& x ) const;                                          
+        iterator                                    lower_bound( const Key& x );                                     
+        const_iterator                              lower_bound( const Key& x ) const;                                     
+        iterator                                    upper_bound( const Key& x );                                     
+        const_iterator                              upper_bound( const Key& x ) const;                                     
+        std::pair< iterator,iterator >              equal_range( const Key& x );                 
+        std::pair< const_iterator,const_iterator >  equal_range( const Key& x ) const;                 
+
+    }; //  class 'ptr_map'
+
+} // namespace 'boost'  
+</pre> <p  ><h3  >Semantics: <i  >modifers</i></h3></p><code  >std::pair&lt;iterator,bool&gt; insert( Key& key, T* x );</code><blockquote  ><p  ><b  >Requirements: </b><code  >x != 0</code></p><p  ><b  >Effects: </b>Takes ownership of <code  >x</code> and insert it if there is
+                     no equivalent of it already. The <code  >bool</code> part of
+                     the return value indicates insertion and the <code  >iterator</code> points to the element with key <code  >x.</code></p><p  ><b  >Throws: </b><code  >bad_pointer</code> if <code  >x == 0</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >std::pair&lt;iterator,bool&gt; insert( const Key& x );</code><blockquote  ><p  ><b  >Effects: </b><code  >return insert( make_clone( x ) );</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><p  ><h3  >Semantics: <i  >element access</i></h3></p><code  >T& operator[]( const Key& key );</code><blockquote  ><p  ><b  >Effects: </b>Returns the element with the given key if it can be found.</p><p  ><b  >Throws: </b><code  >bad_ptr_container_operation</code> if no element with the key
+                    exists. </p><p  ><b  >Complexity: </b>Logarithmic</p></blockquote><code  >const T& operator[]( const Key& key ) const;</code><blockquote  >See above</blockquote><p  ><h3  >Semantics: <i  >map algorithms</i></h3></p><code  >iterator find( const Key& x );</code><blockquote  ><p  ><b  >Effects: </b>Searches for the key and returns <code  >end()</code> on failure.</p><p  ><b  >Complexity: </b>Logarithmic</p></blockquote><code  >const_iterator find( const Key& x ) const;</code><blockquote  >See above</blockquote><code  >size_type count( const Key& x ) const;</code><blockquote  ><p  ><b  >Effects: </b>Counts the elements with a key equivalent to <code  >x,</code> that is,
+                      it returns either 0 or 1.</p><p  ><b  >Complexity: </b>Logarithmic</p></blockquote><code  >iterator lower_bound( const Key& x ); </code><blockquote  ><p  ><b  >Effects: </b>Returns an iterator pointing to the first element with a key not less than <code  >x</code></p><p  ><b  >Complexity: </b>Logarithmic</p></blockquote><code  >const_iterator lower_bound( const Key& x ) const; </code><blockquote  >See above</blockquote><code  >iterator upper_bound( const Key& x ); </code><blockquote  ><p  ><b  >Effects: </b>Returns an iterator pointing to the first element with a key greater than <code  >x</code></p><p  ><b  >Complexity: </b>Logarithmic</p></blockquote><code  >const_iterator upper_bound( const Key& x ) const; </code><blockquote  >See above</blockquote><code  >std::pair&lt;iterator,iterator&gt; equal_range( const Key& x ); </code><blockquote  ><p  ><b  >Effects: </b><code  >return std::make_pair( lower_bound( x ), upper_bound( x ) );</code></p><p  ><b  >Complexity: </b>Logarithmic</p></blockquote><code  >std::pair&lt;const_iterator,const_iterator&gt; equal_range( const Key& x ) const; </code><blockquote  >See above</blockquote><hr size="1" ><h2  > Class <code  >ptr_multimap&lt;&gt;</code></h2><a name=" Class <code  >ptr_multimap&lt;&gt;</code>" ></a><code  >#include &lt;boost/ptr_container/ptr_map.hpp&gt;</code><h3  >Synopsis:</h3><pre>             
+    namespace boost
+    {
+    template< typename Key, typename T, typename Compare = std::less< Key >, 
+              typename Allocator = std::allocator< std::pair<const Key, T*> > >
+    class ptr_multimap
+    {
+        //
+        // ptr_container requirements + ptr_associative_container requirements +
+        //
+            
+    public: // typedefs
+        typedef T mapped_type;
+        
+    public: // modifiers         
+        iterator  insert( Key& key, T* x );                         
+        iterator  insert( Key& key, const T& x );
+     
+    public: // element access
+        T&        operator[]( const Key& key );
+        const T&  operator[]( const Key& key ) const;                
+
+    public: // map algorithms
+        iterator                                    find( const Key& x ) const;                                            
+        const_iterator                              find( const Key& x );                                            
+        size_type                                   count( const Key& x ) const;                                          
+        iterator                                    lower_bound( const Key& x );                                     
+        const_iterator                              lower_bound( const Key& x ) const;                                     
+        iterator                                    upper_bound( const Key& x );                                     
+        const_iterator                              upper_bound( const Key& x ) const;                                     
+        std::pair< iterator,iterator >              equal_range( const Key& x );                 
+        std::pair< const_iterator,const_iterator >  equal_range( const Key& x ) const;                 
+
+    }; //  class 'ptr_map'
+
+} // namespace 'boost'  
+</pre> <p  ><h3  >Semantics: <i  >modifers</i></h3></p><code  >iterator insert( Key& key, T* x );</code><blockquote  ><p  ><b  >Requirements: </b><code  >x != 0</code></p><p  ><b  >Effects: </b>Takes ownership of <code  >x</code> and insert it.
+                     The return value points to the inserted element.</p><p  ><b  >Throws: </b><code  >bad_pointer</code> if <code  >x == 0</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >iterator insert( const Key& x );</code><blockquote  ><p  ><b  >Effects: </b><code  >return insert( make_clone( x ) );</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><p  ><h3  >Semantics: <i  >element access</i></h3></p><code  >T& operator[]( const Key& key );</code><blockquote  ><p  ><b  >Effects: </b>Returns an (not necessarily "the") element with the given key if it can be found.</p><p  ><b  >Throws: </b><code  >bad_ptr_container_operation</code> if no element with the key
+                    exists. </p><p  ><b  >Complexity: </b>Logarithmic</p></blockquote><code  >const T& operator[]( const Key& key ) const;</code><blockquote  >See above</blockquote><p  ><h3  >Semantics: <i  >map algorithms</i></h3></p><code  >iterator find( const Key& x );</code><blockquote  ><p  ><b  >Effects: </b>Searches for the key and returns <code  >end()</code> on failure.</p><p  ><b  >Complexity: </b>Logarithmic</p></blockquote><code  >const_iterator find( const Key& x ) const;</code><blockquote  >See above</blockquote><code  >size_type count( const Key& x ) const;</code><blockquote  ><p  ><b  >Effects: </b>Counts the elements with a key equivalent to <code  >x,</code> that is,
+                      it returns either 0 or 1.</p><p  ><b  >Complexity: </b>Logarithmic</p></blockquote><code  >iterator lower_bound( const Key& x ); </code><blockquote  ><p  ><b  >Effects: </b>Returns an iterator pointing to the first element with a key not less than <code  >x</code></p><p  ><b  >Complexity: </b>Logarithmic</p></blockquote><code  >const_iterator lower_bound( const Key& x ) const; </code><blockquote  >See above</blockquote><code  >iterator upper_bound( const Key& x ); </code><blockquote  ><p  ><b  >Effects: </b>Returns an iterator pointing to the first element with a key greater than <code  >x</code></p><p  ><b  >Complexity: </b>Logarithmic</p></blockquote><code  >const_iterator upper_bound( const Key& x ) const; </code><blockquote  >See above</blockquote><code  >std::pair&lt;iterator,iterator&gt; equal_range( const Key& x ); </code><blockquote  ><p  ><b  >Effects: </b><code  >return std::make_pair( lower_bound( x ), upper_bound( x ) );</code></p><p  ><b  >Complexity: </b>Logarithmic</p></blockquote><code  >std::pair&lt;const_iterator,const_iterator&gt; equal_range( const Key& x ) const; </code><blockquote  >See above</blockquote><hr size="1" ><h2  > Map iterator operations</h2><a name=" Map iterator operations" ></a><p  >The map iterators are a bit different compared to the normal ones. The
+                        reason is that it is a bit clumsy to access the key and the mapped object
+                        through <code  >i-&gt;first</code> and <code  >i-&gt;second,</code> and one tends to forget what is what. The new style can be illustrated 
+                        with a small example:</p><pre  >
+    typedef ptr_map&lt;string,int&gt; map_t;
+    map_t  m;
+    string name = "foo";            // we cannot pass rvalue as key             
+    m.insert( name, new int( 4 ) ); // insert pair
+    m[ name ] += 5;                 // add 5 to the objects value 
+    ...
+    for( map_t::iterator i = m.begin(); i != m.end(); ++i )
+    {
+             *i += 42; // add 42 to each value
+             cout &lt;&lt; "value=" &lt;&lt; *i &lt;&lt; ", key=" &lt;&lt; i.key() &lt;&lt; "n";
+    } </pre><p  >So the difference from the normal map iterator is that <code  >operator*()</code> returns a reference to the mapped object (normally it returns a reference to a pair) and that
+              the key can be accessed throgh the <code  >key()</code> function. </p><hr size="1" ><h2  >Exception classes</h2><a name="Exception classes" ></a><hr size="1" ><h2  >Examples</h2><a name="Examples" ></a><p  >Some examples are given in the accompanying test
                       files:</p><ul  ><li  > <a href="../test/incomplete_type_test.cpp" target="_self" ><code  >incomplete_type_test.cpp</code></a>  shows how to implement the Composite pattern.</li><li  > <a href="../test/associative_test_data.hpp" target="_self" ><code  >associative_test_data.hpp</code></a>  shows the common interface for all associative containers.</li><li  > <a href="../test/sequence_test_data.hpp" target="_self" ><code  >sequence_test_data.hpp</code></a>  shows the common interface for all sequences.</li></ul><hr size="1" ><h2  >Portability</h2><a name="Portability" ></a><p  >This library does not rely on any difficult template code, and so it should work
                         with most compilers---even the older onces.</p><p  >Most of the tests have been run successfully on these compilers:<ul  ><li  >vc7.1</li><li  >gcc3.3.1</li><li  >como4.3.3</li><li  >bcc6</li></ul></p><hr size="1" ><h2  >FAQ</h2><a name="FAQ" ></a><ol  ><p  ><i  >Since a pointer container is not Copy-Constructible and Assignable, I cannot 
                  put them into standard containers; what do I do?</i> Since they are Clonable, you simply put them in a pointer container.</p><p  ><i  >Calling <code  >assign()</code> is very costly and I do not really need to store

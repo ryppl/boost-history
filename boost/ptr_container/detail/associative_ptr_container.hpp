@@ -83,7 +83,11 @@ namespace detail
         
         size_type erase( const key_type& x )
         {
-            return this->c__().erase( x );
+            iterator i = find( x );
+            if( i == this->end() )
+                return;
+            this->remove( i );    
+            return this->c__().erase( i.base() );
         }
         
         void erase( iterator first, iterator last ) // notrow 

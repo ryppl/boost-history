@@ -145,6 +145,8 @@ function reference()
                      normal standard containers and provides almost the same interface.
                      The new conventions are: " ) .
                   ulist( 
+                         li( i( "Null pointers are not allowed." ) . " If the user tries to insert the null pointer, the
+                                 operation will throw a " . code( "bad_pointer" ) . " exception. " ) . 
                          li( i( "All default iterators apply an extra layer of indirection. " ) .
                              " This is done to make the containers easier and safer to use. It promotes
                                a kind of pointer-less programming and the user of a class needs not worry about
@@ -164,7 +166,7 @@ function reference()
                               ) .
                          li( i( "Whenever objects are inserted into a container, they are cloned before insertion. 
                                  Whenever pointers are inserted into a container, ownership is transferred to the container." ) .
-                             " All containers take ownership of the stored pointers and therefore a cntainer needs to have its 
+                             " All containers take ownership of the stored pointers and therefore a container needs to have its 
                                own copies. " ) .
                          li( i( "Ownership can be tranferred from a container on a per pointer basis." ) .
                              " This can of course also be convenient. Whenever it happens, an " . code( "std::auto_ptr<>" ) .
@@ -176,7 +178,12 @@ function reference()
                                  of the container." ) . " Two special member functions, " . code( "clone()" ) . " and " . 
                              code( "release()," ) . " both return an " . code( "auto_ptr<Container>" ) . " which can be assigned
                              to another container. This effectively reduces the cost of returning a container to one heap-allocation
-                             plus a call to " . code("swap()." ) )
+                             plus a call to " . code("swap()." ) ) .
+                         li( i( " Certain algorithms have been implemented as member functions, because they are tricky when dealing with
+                                  pointers. " ) . " This is done to avoid some nasty pitfalls. Some of the functions
+                                  take predicates and the user need not apply the indirection himself. This means that
+                                  functors that work on objects can be passed to these algorithms which removes the programmer
+                                  from creating a functor that works on pointers. " ) 
                          
                          );
 
@@ -196,7 +203,6 @@ function reference()
                            item( multisetLink() ) .
                            item( mapLink() ) . 
                            item( multimapLink() ) .
-                           item( iteratorLink() ) . 
                            item( mapIteratorLink() ) .
                            item( exceptionLink() )
                            );
@@ -226,7 +232,6 @@ function reference()
                     hr() . multisetRef() .
                     hr() . mapRef() . 
                     hr() . multimapRef() .
-                    hr() . iteratorRef() .
                     hr() . mapIteratorRef() .
                     hr() . exceptionRef();
      
@@ -442,13 +447,6 @@ function mapLink()
 function multimapLink()
 {
     return " Class " . code( "ptr_multimap<>" );
-}
-
-
-
-function iteratorLink()
-{
-    return " Iterator operations";
 }
 
 
@@ -1044,7 +1042,7 @@ return $res . $synopsis . $details;
 
 function dequeRef()
 {
-    $res = beginSection( dequeLink() );
+    $res = beginSection( dequeLink() ) . include_header( "ptr_deque.hpp" );
     $synopsis = beginSynopsis() . 
 "<pre>             
 namespace boost
@@ -1125,7 +1123,7 @@ namespace boost
 
 function listRef() 
 {
-    $res = beginSection( listLink() );
+    $res = beginSection( listLink() ) . include_header( "ptr_list.hpp" );
     $synopsis = beginSynopsis() . 
 "<pre>             
 namespace boost
@@ -1199,7 +1197,7 @@ void merge( ptr_list& x, Compare comp );" ) .
 
 function vectorRef() 
 {
-    $res = beginSection( vectorLink() );
+    $res = beginSection( vectorLink() ) . include_header( "ptr_vector.hpp" );;
     $synopsis = beginSynopsis() . 
 "<pre>             
 namespace boost
@@ -1349,14 +1347,14 @@ void transfer( typename PtrContainer::iterator object, PtrContainer& from );" ) 
 
 function setRef() 
 {
-    $res = beginSection( setLink() );
+    $res = beginSection( setLink() ) . include_header( "ptr_set.hpp" );;
     
     $synopsis = beginSynopsis() . 
 "<pre>             
     namespace boost
     {
-    template< typename Key, typename Compare = ptr_less<Key>, 
-              typename Allocator = std::allocator<Key*> > >
+    template< typename Key, typename Compare = ptr_less< Key >, 
+              typename Allocator = std::allocator< Key* > > >
     class ptr_set
     {
         //
@@ -1364,8 +1362,8 @@ function setRef()
         //
         
     public: // modifiers         
-        std::pair<iterator,bool>  insert( Key* x );                         
-        std::pair<iterator,bool>  insert( const Key& x );
+        std::pair< iterator,bool >  insert( Key* x );                         
+        std::pair< iterator,bool >  insert( const Key& x );
 
     public: // set algorithms
         iterator                        find( const Key& x ) const;                                            
@@ -1381,20 +1379,49 @@ function setRef()
 
     $details = beginDetails( "modifers" ) .
         code( "std::pair<iterator,bool> insert( Key* x );" ) .
-        blockQuote( "" ) .                         
+        blockQuote( 
+            requirements( code( "x != 0" ) ) .
+            effects( "Takes ownership of " . code("x") . " and insert it if there is
+                     no equivalent of it already. The " . code( "bool" ) . " part of
+                     the return value indicates insertion and the " . code( "iterator" ) .
+                     " points to the element with key " . code( "x." )  ) .
+            throws( code("bad_pointer") . " if " . code( "x == 0" ) ) .
+            exceptionSafety( "Strong guarantee" )  
+             ) .                         
         code( "std::pair<iterator,bool> insert( const Key& x );" ) .
-        blockQuote( "" ) .
+        blockQuote(
+            effects( code( "return insert( make_clone( x ) );" ) ) .
+            exceptionSafety( "Strong guarantee" )  
+             ) .
         /////////////////////////////////////////////////////////////////////
         beginDetails( "set algorithms" ) .
         code( "iterator find( const Key& x ) const;" ) .
-        blockQuote( "" ) .
+        blockQuote( 
+            effects( "Searches for the key and returns " . code( "end()" ) . " on failure." ) .
+            complexity( "Logarithmic" )
+             ) .
         code( "size_type count( const Key& x ) const;" ) .  
-        blockQuote( "" ) .
+        blockQuote(
+            effects( "Counts the elements with a key equivalent to " . code( "x," ) . " that is,
+                      it returns either 0 or 1." ) .
+            complexity( "Logarithmic" )  
+             ) .
         code( "iterator lower_bound( const Key& x ) const; " ) . 
-        blockQuote( "" ) .
+        blockQuote(
+            effects( "Returns an iterator pointing to the first element with a key not less than " . code( "x" ) ) .
+            complexity( "Logarithmic" )  
+             ) .
         code( "iterator upper_bound( const Key& x ) const; " ) .
-        blockQuote( "" ) .
-        code( "std::pair<iterator,iterator> xequal_range( const Key& x ) const; " ) ;               
+        blockQuote(
+            effects( "Returns an iterator pointing to the first element with a key greater than " . code( "x" ) ) .
+            complexity( "Logarithmic" ) 
+             ) .
+        code( "std::pair<iterator,iterator> equal_range( const Key& x ) const; " ) .
+        blockQuote( 
+            effects( code("return std::make_pair( lower_bound( x ), upper_bound( x ) );" ) ) .
+            complexity( "Logarithmic" ) 
+            );
+    
 
     return $res . $synopsis . $details; 
 }
@@ -1403,42 +1430,341 @@ function setRef()
 
 function multisetRef()
 {
-    return beginSection( multisetLink() );
+    $res = beginSection( multisetLink() ) . include_header( "ptr_set.hpp" );;
+    
+    $synopsis = beginSynopsis() . 
+"<pre>             
+    namespace boost
+    {
+    template< typename Key, typename Compare = ptr_less< Key >, 
+              typename Allocator = std::allocator< Key* > > >
+    class ptr_multiset
+    {
+        //
+        // ptr_container requirements + ptr_associative_container requirements +
+        //
+        
+    public: // modifiers         
+        iterator  insert( Key* x );                         
+        iterator  insert( const Key& x );
+
+    public: // set algorithms
+        iterator                        find( const Key& x ) const;                                            
+        size_type                       count( const Key& x ) const;                                          
+        iterator                        lower_bound( const Key& x ) const;                                     
+        iterator                        upper_bound( const Key& x ) const;                                     
+        std::pair< iterator,iterator >  equal_range( const Key& x ) const;                 
+
+    }; //  class 'ptr_multiset'
+
+} // namespace 'boost'  
+</pre> ";
+
+    $details = beginDetails( "modifers" ) .
+        code( "iterator insert( Key* x );" ) .
+        blockQuote( 
+            requirements( code( "x != 0" ) ) .
+            effects( "Takes ownership of " . code("x") . " and insert it. 
+                      The return value points to the inserted element." ) .
+            throws( code("bad_pointer") . " if " . code( "x == 0" ) ) .
+            exceptionSafety( "Strong guarantee" )  
+             ) .                         
+        code( "iterator insert( const Key& x );" ) .
+        blockQuote(
+            effects( code( "return insert( make_clone( x ) );" ) ) .
+            exceptionSafety( "Strong guarantee" )  
+             ) .
+        /////////////////////////////////////////////////////////////////////
+        beginDetails( "set algorithms" ) .
+        code( "iterator find( const Key& x ) const;" ) .
+        blockQuote( 
+            effects( "Searches for the key and returns " . code( "end()" ) . " on failure." ) .
+            complexity( "Logarithmic" )
+             ) .
+        code( "size_type count( const Key& x ) const;" ) .  
+        blockQuote(
+            effects( "Counts the elements with a key equivalent to " . code( "x." ) ) .
+            complexity( "Logarithmic" )  
+             ) .
+        code( "iterator lower_bound( const Key& x ) const; " ) . 
+        blockQuote(
+            effects( "Returns an iterator pointing to the first element with a key not less than " . code( "x" ) ) .
+            complexity( "Logarithmic" )  
+             ) .
+        code( "iterator upper_bound( const Key& x ) const; " ) .
+        blockQuote(
+            effects( "Returns an iterator pointing to the first element with a key greater than " . code( "x" ) ) .
+            complexity( "Logarithmic" ) 
+             ) .
+        code( "std::pair<iterator,iterator> equal_range( const Key& x ) const; " ) .
+        blockQuote( 
+            effects( code("return std::make_pair( lower_bound( x ), upper_bound( x ) );" ) ) .
+            complexity( "Logarithmic" ) 
+            );
+    
+    return $res . $synopsis . $details;
 }
 
 
 
 function mapRef()
 {
-    return beginSection( mapLink() );
+    $res = beginSection( mapLink() ) . include_header( "ptr_map.hpp" );;
+    
+        $synopsis = beginSynopsis() . 
+"<pre>             
+    namespace boost
+    {
+    template< typename Key, typename T, typename Compare = std::less< Key >, 
+              typename Allocator = std::allocator< std::pair<const Key, T*> > >
+    class ptr_map
+    {
+        //
+        // ptr_container requirements + ptr_associative_container requirements +
+        //
+            
+    public: // typedefs
+        typedef T mapped_type;
+        
+    public: // modifiers         
+        std::pair< iterator,bool >  insert( Key& key, T* x );                         
+        std::pair< iterator,bool >  insert( Key& key, const T& x );
+     
+    public: // element access
+        T&        operator[]( const Key& key );
+        const T&  operator[]( const Key& key ) const;                
+
+    public: // map algorithms
+        iterator                                    find( const Key& x ) const;                                            
+        const_iterator                              find( const Key& x );                                            
+        size_type                                   count( const Key& x ) const;                                          
+        iterator                                    lower_bound( const Key& x );                                     
+        const_iterator                              lower_bound( const Key& x ) const;                                     
+        iterator                                    upper_bound( const Key& x );                                     
+        const_iterator                              upper_bound( const Key& x ) const;                                     
+        std::pair< iterator,iterator >              equal_range( const Key& x );                 
+        std::pair< const_iterator,const_iterator >  equal_range( const Key& x ) const;                 
+
+    }; //  class 'ptr_map'
+
+} // namespace 'boost'  
+</pre> ";
+
+    $details = beginDetails( "modifers" ) .
+        code( "std::pair<iterator,bool> insert( Key& key, T* x );" ) .
+        blockQuote( 
+            requirements( code( "x != 0" ) ) .
+            effects( "Takes ownership of " . code("x") . " and insert it if there is
+                     no equivalent of it already. The " . code( "bool" ) . " part of
+                     the return value indicates insertion and the " . code( "iterator" ) .
+                     " points to the element with key " . code( "x." )  ) .
+            throws( code("bad_pointer") . " if " . code( "x == 0" ) ) .
+            exceptionSafety( "Strong guarantee" )  
+             ) .                         
+        code( "std::pair<iterator,bool> insert( const Key& x );" ) .
+        blockQuote(
+            effects( code( "return insert( make_clone( x ) );" ) ) .
+            exceptionSafety( "Strong guarantee" )  
+             ) .
+        /////////////////////////////////////////////////////////////////////
+        beginDetails( "element access" ) .
+        code( "T& operator[]( const Key& key );" ) .
+        blockQuote(
+            effects( "Returns the element with the given key if it can be found." ) .
+            throws( code("bad_ptr_container_operation") . " if no element with the key
+                    exists. " ) .
+            complexity( "Logarithmic" )
+            ) .
+        code( "const T& operator[]( const Key& key ) const;" ) .                
+        blockQuote( "See above" ) .
+        /////////////////////////////////////////////////////////////////////
+        beginDetails( "map algorithms" ) .
+        code( "iterator find( const Key& x );" ) .
+        blockQuote( 
+            effects( "Searches for the key and returns " . code( "end()" ) . " on failure." ) .
+            complexity( "Logarithmic" )
+             ) .
+        code( "const_iterator find( const Key& x ) const;" ) .
+        blockQuote( "See above" ) .
+        code( "size_type count( const Key& x ) const;" ) .  
+        blockQuote(
+            effects( "Counts the elements with a key equivalent to " . code( "x," ) . " that is,
+                      it returns either 0 or 1." ) .
+            complexity( "Logarithmic" )  
+             ) .
+        code( "iterator lower_bound( const Key& x ); " ) . 
+        blockQuote(
+            effects( "Returns an iterator pointing to the first element with a key not less than " . code( "x" ) ) .
+            complexity( "Logarithmic" )  
+             ) .
+        code( "const_iterator lower_bound( const Key& x ) const; " ) .
+        blockQuote( "See above" ) .
+        code( "iterator upper_bound( const Key& x ); " ) .
+        blockQuote(
+            effects( "Returns an iterator pointing to the first element with a key greater than " . code( "x" ) ) .
+            complexity( "Logarithmic" ) 
+             ) .
+        code( "const_iterator upper_bound( const Key& x ) const; " ) .
+        blockQuote( "See above" ) .
+        code( "std::pair<iterator,iterator> equal_range( const Key& x ); " ) .
+        blockQuote( 
+            effects( code("return std::make_pair( lower_bound( x ), upper_bound( x ) );" ) ) .
+            complexity( "Logarithmic" ) 
+            ) .
+        code( "std::pair<const_iterator,const_iterator> equal_range( const Key& x ) const; " ) .
+        blockQuote( "See above" );
+
+    return $res . $synopsis . $details; 
 }
 
 
 
 function multimapRef()
 {
-    return beginSection( multimapLink() );
+    $res = beginSection( multimapLink() ) . include_header( "ptr_map.hpp" );;
+        
+    $synopsis = beginSynopsis() . 
+"<pre>             
+    namespace boost
+    {
+    template< typename Key, typename T, typename Compare = std::less< Key >, 
+              typename Allocator = std::allocator< std::pair<const Key, T*> > >
+    class ptr_multimap
+    {
+        //
+        // ptr_container requirements + ptr_associative_container requirements +
+        //
+            
+    public: // typedefs
+        typedef T mapped_type;
+        
+    public: // modifiers         
+        iterator  insert( Key& key, T* x );                         
+        iterator  insert( Key& key, const T& x );
+     
+    public: // element access
+        T&        operator[]( const Key& key );
+        const T&  operator[]( const Key& key ) const;                
+
+    public: // map algorithms
+        iterator                                    find( const Key& x ) const;                                            
+        const_iterator                              find( const Key& x );                                            
+        size_type                                   count( const Key& x ) const;                                          
+        iterator                                    lower_bound( const Key& x );                                     
+        const_iterator                              lower_bound( const Key& x ) const;                                     
+        iterator                                    upper_bound( const Key& x );                                     
+        const_iterator                              upper_bound( const Key& x ) const;                                     
+        std::pair< iterator,iterator >              equal_range( const Key& x );                 
+        std::pair< const_iterator,const_iterator >  equal_range( const Key& x ) const;                 
+
+    }; //  class 'ptr_map'
+
+} // namespace 'boost'  
+</pre> ";
+
+    $details = beginDetails( "modifers" ) .
+        code( "iterator insert( Key& key, T* x );" ) .
+        blockQuote( 
+            requirements( code( "x != 0" ) ) .
+            effects( "Takes ownership of " . code("x") . " and insert it.
+                     The return value points to the inserted element." ) .
+            throws( code("bad_pointer") . " if " . code( "x == 0" ) ) .
+            exceptionSafety( "Strong guarantee" )  
+             ) .                         
+        code( "iterator insert( const Key& x );" ) .
+        blockQuote(
+            effects( code( "return insert( make_clone( x ) );" ) ) .
+            exceptionSafety( "Strong guarantee" )  
+             ) .
+        /////////////////////////////////////////////////////////////////////
+        beginDetails( "element access" ) .
+        code( "T& operator[]( const Key& key );" ) .
+        blockQuote(
+            effects( "Returns an (not necessarily \"the\") element with the given key if it can be found." ) .
+            throws( code("bad_ptr_container_operation") . " if no element with the key
+                    exists. " ) .
+            complexity( "Logarithmic" )
+            ) .
+        code( "const T& operator[]( const Key& key ) const;" ) .                
+        blockQuote( "See above" ) .
+        /////////////////////////////////////////////////////////////////////
+        beginDetails( "map algorithms" ) .
+        code( "iterator find( const Key& x );" ) .
+        blockQuote( 
+            effects( "Searches for the key and returns " . code( "end()" ) . " on failure." ) .
+            complexity( "Logarithmic" )
+             ) .
+        code( "const_iterator find( const Key& x ) const;" ) .
+        blockQuote( "See above" ) .
+        code( "size_type count( const Key& x ) const;" ) .  
+        blockQuote(
+            effects( "Counts the elements with a key equivalent to " . code( "x," ) . " that is,
+                      it returns either 0 or 1." ) .
+            complexity( "Logarithmic" )  
+             ) .
+        code( "iterator lower_bound( const Key& x ); " ) . 
+        blockQuote(
+            effects( "Returns an iterator pointing to the first element with a key not less than " . code( "x" ) ) .
+            complexity( "Logarithmic" )  
+             ) .
+        code( "const_iterator lower_bound( const Key& x ) const; " ) .
+        blockQuote( "See above" ) .
+        code( "iterator upper_bound( const Key& x ); " ) .
+        blockQuote(
+            effects( "Returns an iterator pointing to the first element with a key greater than " . code( "x" ) ) .
+            complexity( "Logarithmic" ) 
+             ) .
+        code( "const_iterator upper_bound( const Key& x ) const; " ) .
+        blockQuote( "See above" ) .
+        code( "std::pair<iterator,iterator> equal_range( const Key& x ); " ) .
+        blockQuote( 
+            effects( code("return std::make_pair( lower_bound( x ), upper_bound( x ) );" ) ) .
+            complexity( "Logarithmic" ) 
+            ) .
+        code( "std::pair<const_iterator,const_iterator> equal_range( const Key& x ) const; " ) .
+        blockQuote( "See above" );
+
+    return $res . $synopsis . $details; 
 }
      
-
-
-function iteratorRef()
-{
-    return beginSection( iteratorLink() );
-}
 
 
 
 function mapIteratorRef()
 {
-    return beginSection( mapIteratorLink() );
+    $res = beginSection( mapIteratorLink() );
+    
+    $explanation = p( "The map iterators are a bit different compared to the normal ones. The
+                        reason is that it is a bit clumsy to access the key and the mapped object
+                        through " . code( "i->first" ) . " and " . code( "i->second," ) 
+                       . " and one tends to forget what is what. The new style can be illustrated 
+                        with a small example:" ) .
+        pre( "
+    typedef ptr_map<string,int> map_t;
+    map_t  m;
+    string name = \"foo\";            // we cannot pass rvalue as key             
+    m.insert( name, new int( 4 ) ); // insert pair
+    m[ name ] += 5;                 // add 5 to the objects value 
+    ...
+    for( map_t::iterator i = m.begin(); i != m.end(); ++i )
+    {
+             *i += 42; // add 42 to each value
+             cout << \"value=\" << *i << \", key=\" << i.key() << \"n\";
+    } " ) .
+        p( "So the difference from the normal map iterator is that " . code( "operator*()" ) . 
+            " returns a reference to the mapped object (normally it returns a reference to a pair) and that
+              the key can be accessed throgh the " . code( "key()" ) . " function. " ); 
+                         
+    return $res . $explanation;
 }
 
 
 
 function exceptionRef()
 {
-    return beginSection( exceptionLink() );
+    $res = beginSection( exceptionLink() );
+    
+    return $res . $bad_pointer . $bad_ptr_container;
 }
 
 
@@ -1505,5 +1831,9 @@ function see( $link )
 }
 
 
+function include_header( $file )
+{
+    return code( "#include <boost/ptr_container/$file>" );
+}
 
 ?>

@@ -31,9 +31,8 @@ namespace boost
     {
         typedef detail::associative_ptr_container< detail::map_config< std::map<Key,T*,Compare,Allocator>, T > > Base;
     
-    public:
-            // mapped_type ?
-        
+    public:    
+        typedef T*                                              mapped_type;
         typedef BOOST_DEDUCED_TYPENAME Base::iterator           iterator;                 
         typedef BOOST_DEDUCED_TYPENAME Base::const_iterator     const_iterator;           
         typedef BOOST_DEDUCED_TYPENAME Base::ptr_iterator       ptr_iterator;         
@@ -80,7 +79,7 @@ namespace boost
         
         BOOST_PTR_CONTAINER_RELEASE_AND_CLONE( ptr_map );
         
-        using Base::insert;
+        //using Base::insert;
         
         template< typename InputIterator >
         void insert( InputIterator first, InputIterator last ) // basic
@@ -114,7 +113,7 @@ namespace boost
         typedef detail::associative_ptr_container< detail::map_config< std::multimap<Key,T*,Compare,Allocator>, T > > Base;
     
     public: // typedefs
-        // mapped_type
+        typedef T*                                              mapped_type;
         typedef BOOST_DEDUCED_TYPENAME Base::iterator           iterator;                 
         typedef BOOST_DEDUCED_TYPENAME Base::const_iterator     const_iterator;           
         typedef BOOST_DEDUCED_TYPENAME Base::ptr_iterator       ptr_iterator;         
@@ -157,7 +156,7 @@ namespace boost
         
         BOOST_PTR_CONTAINER_RELEASE_AND_CLONE( ptr_multimap );
         
-        using Base::insert;
+        //using Base::insert;
         
         template< typename InputIterator >
         void insert( InputIterator first, InputIterator last ) // basic

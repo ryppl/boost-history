@@ -74,6 +74,9 @@ namespace boost
 
         std::pair<iterator,bool> insert( Key* x ) // strong                      
         {       
+            if( x == 0 )
+                throw bad_pointer();
+            
             std::auto_ptr<Key> ptr( x );                                
             std::pair<ptr_iterator,bool> res = this->c__().insert( x );       
             if( res.second )                                                 
@@ -140,7 +143,10 @@ namespace boost
         }                                                                       
         
         iterator insert( Key* x ) // strong                                      
-        {                                                                       
+        {   
+            if( x == 0 )
+                throw bad_pointer();
+
             std::auto_ptr<Key> ptr( x );                                
             ptr_iterator res = this->c__().insert( x );                         
             ptr.release();                                                      
