@@ -37,8 +37,9 @@
 // respond to the move construction hacks, because they blithely bind
 // rvalues to non-const references.
 
-#if defined(BOOST_INTEL_CXX_VERSION) && defined(_MSC_VER)
-# if BOOST_INTEL_CXX_VERSION >= 800
+#if defined(BOOST_INTEL_CXX_VERSION) 
+# if !defined(_MSC_VER) /* Intel-Linux */ \
+  || BOOST_INTEL_CXX_VERSION >= 800
 
 #  define BOOST_IMPLICIT_MOVE_CTOR_FOR_COPYABLE_TYPES
 
