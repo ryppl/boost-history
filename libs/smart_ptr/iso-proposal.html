@@ -443,12 +443,60 @@ template&lt;class T, class A1, class A2&gt; shared_ptr&lt;T&gt; shared_new(A1 co
 			interface. The library needs to interoperate with an existing infrastructure 
 			that uses a different smart pointer for its resource management, and the 
 			technique described in [<A href="#Dimov03">Dimov03</A>] is used to wrap the 
-			existing smart pointers with a <EM>shared_ptr</EM> "shell". When the 
-			library receives a <EM>shared_ptr</EM> from the client, it can extract the 
-			original wrapped smart pointer (if there is one) by using <code>get_deleter</code>.</P>
+			existing smart pointers with a <EM>shared_ptr</EM> "shell". When the library 
+			receives a <EM>shared_ptr</EM> from the client, it can extract the original 
+			wrapped smart pointer (if there is one) by using <code>get_deleter</code>.</P>
 		<h3>C. weak_ptr</h3>
-		<h4>1.</h4>
-		<p>[...]</p>
+		<h4>1. Default Constructor</h4>
+		<p>Default-constructed <EM>weak_ptr</EM> instances have a use_count() of zero, and 
+			attempts to create a <EM>shared_ptr</EM> from such an instance will fail with a <EM>
+				bad_weak_ptr</EM> exception. This behavior supports some use cases where a <EM>weak_ptr</EM>
+			needs to be "two phase constructed", i.e. first default-constructed, then 
+			initialized from a <EM>shared_ptr</EM> via assignment. If a <EM>shared_ptr</EM> 
+			conversion is attempted before initialization, an exception is the appropriate 
+			response. See, for example, the "<A name="from_this" href="http://www.boost.org/libs/smart_ptr/sp_techniques.html#from_this"><EM>Obtaining 
+					a <CODE>shared_ptr</CODE> to <CODE>this</CODE></EM></A>" technique in [<A href="#Dimov03">Dimov03</A>].</p>
+		<h4>2. Converting Constructor</h4>
+		<p>A converting constructor enables <code>weak_ptr&lt;Y&gt;</code> to be converted 
+			to <code>weak_ptr&lt;T&gt;</code> when <code>Y*</code> is convertible to <code>T*</code>. 
+			This is a standard "feature" of most smart pointer designs and would not 
+			deserve mention except for the fact that in <EM>weak_ptr</EM>'s case it is easy 
+			to produce an implementation with a subtle bug. When the source <EM>weak_ptr</EM>
+			has expired, its stored pointer may refer to deallocated storage, its value may 
+			be indeterminate, and the implicit conversion from <code>Y*</code> to <code>T*</code>
+			may exhibit "observable" undefined behavior such as a core dump.</p>
+		<P>Strictly speaking, this caveat applies to the copy constructor as well, but most 
+			existing implementations allow an invalid pointer to be copied (and those that 
+			don't can use <code>std::memcpy</code> to copy the pointer storage without 
+			accessing its value). When <code>Y</code> inherits from <code>T</code> virtually, 
+			however, most existing implementations will fail to convert an invalid pointer 
+			of type <code>Y*</code> to <code>T*</code>.</P>
+		<P>
+			This constructor has been provided to support the useful idiom of using <code>std::map&lt; 
+				weak_ptr&lt;void&gt;, X &gt;</code> to non-intrusively associate arbitrary 
+			data with existing <EM>shared_ptr</EM>-managed objects.</P>
+		<h4>3. <code>lock</code></h4>
+		<p><EM>weak_ptr</EM> does not provide the usual smart pointer accessors <code>operator*</code>, 
+			<code>operator-&gt;</code>, or <code>get</code>. Any attempt to use their return values would be 
+			inherently unsafe, as <EM>weak_ptr</EM>'s stored pointer can be invalidated at 
+			any time. Instead, <EM>weak_ptr</EM> provides a member function <code>lock</code> that 
+			returns a <EM>shared_ptr</EM>. The returned <EM>shared_ptr</EM> keeps the 
+			object alive, effectively locking it against deletion.</p>
+		<P>The idiomatic way to access a <EM>weak_ptr</EM> is as shown below:</P>
+<pre>
+weak_ptr&lt;X&gt; target;
+
+// ...
+
+if(shared_ptr&lt;X&gt; px = target.lock())
+{
+  // use *px to fire at target
+}
+else
+{
+  // target lost (expired), acquire a new one
+}
+</pre>
 		<h3>D. Alternatives</h3>
 		<h4>1. Policy Based Smart Pointers</h4>
 		<p>[...]</p>
