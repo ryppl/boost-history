@@ -2,11 +2,11 @@
 #ifndef BOOST_MPL_IS_SEQUENCE_HPP_INCLUDED
 #define BOOST_MPL_IS_SEQUENCE_HPP_INCLUDED
 
-// Copyright (c) Aleksey Gurtovoy 2002
+// Copyright (c) Aleksey Gurtovoy 2002-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -27,10 +27,13 @@
 #include <boost/mpl/aux_/na_spec.hpp>
 #include <boost/mpl/aux_/lambda_support.hpp>
 #include <boost/mpl/aux_/config/eti.hpp>
+#include <boost/mpl/aux_/config/msvc.hpp>
 #include <boost/mpl/aux_/config/workaround.hpp>
 
 #include <boost/type_traits/is_same.hpp>
-#include <boost/type_traits/is_class.hpp>
+#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
+#   include <boost/type_traits/is_class.hpp>
+#endif
 
 namespace boost { namespace mpl {
 
@@ -96,8 +99,8 @@ template<> struct is_sequence<int>
 };
 #endif
 
-BOOST_MPL_AUX_NA_SPEC(1, is_sequence)
+BOOST_MPL_AUX_NA_SPEC_NO_ETI(1, is_sequence)
 
-}} // namespace boost::mpl
+}}
 
 #endif // BOOST_MPL_IS_SEQUENCE_HPP_INCLUDED
