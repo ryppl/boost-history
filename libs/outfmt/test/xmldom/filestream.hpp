@@ -49,13 +49,13 @@
 
       bool filestream::open( const std::string & fn )
       {
-         std::ifstream::open( fn.c_str());
+         static_cast< std::ifstream * >( this ) -> open( fn.c_str());
          filename = fn;
          line     = 1;
          return( getch());
       }
 
-      filestream::filestream(): std::ifstream(),
+      filestream::filestream():
          isgood( true ),
          line(   0 ),
          cch(    0 )

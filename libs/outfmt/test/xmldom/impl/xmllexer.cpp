@@ -99,7 +99,8 @@
 
             char                       ch2 = 0;
             while(( ch2 = getch()) && ( ch2 != ch ))
-               data.push_back( ch2 );
+               data += ch2;
+//             data.push_back( ch2 );
 
             if( ch2 != ch )            error();
             else                       tok = token::string;
@@ -126,7 +127,7 @@
          {
             if( cch == '>' )      break;
             if( cch == '/' )      break;
-            data.push_back( cch );
+            data += cch;
          }
 
          switch( cch )
@@ -159,7 +160,7 @@
                   break;
             }
             if( quit )                 break;
-            data.push_back( ch );
+            data += ch;
          }
 
          tok = token::characterData;

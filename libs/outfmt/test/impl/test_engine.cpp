@@ -15,9 +15,9 @@
       elem -> attr[ "reason" ] = reason;
    }
 
-   bool test_engine::save_testresults( xmldom::element_ptr node, bool read, bool write, const char * name, const char * results, const std::string & readstr, const std::string & writestr )
+   bool test_engine::save_testresults( bool read, bool write, const char * name, const char * results, const std::string & readstr, const std::string & writestr )
    {
-      xmldom::element_ptr              elem = node -> append( "test" );
+      xmldom::element_ptr              elem = testset -> append( "test" );
 
       if( name != 0 )                  elem -> attr[ "name"  ] = name;
       elem -> attr[ "read"  ] = ( read  ? "passed" : "failed" );

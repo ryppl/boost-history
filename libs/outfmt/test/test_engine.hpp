@@ -14,13 +14,8 @@
          xmldom::document              res;
          xmldom::element_ptr           testset;
       public:
-         template< class Formatter >
-         bool                                    formatter( const Formatter &, const char *, const char * = 0 );
-         template< class Object >
-         bool                                    stlio( Object &, const char *, const char * = 0 );
-         void                                    unsupported(     const char *, const char * );
-      private:
-         bool                                    save_testresults( xmldom::element_ptr, bool, bool, const char *, const char *, const std::string &, const std::string & );
+         void                                    unsupported(      const char *, const char * );
+         bool                                    save_testresults( bool, bool, const char *, const char *, const std::string &, const std::string & );
       private:
          xmldom::element_ptr                     get_testset( xmldom::element_ptr );
          xmldom::element_ptr                     get_group(   xmldom::element_ptr, const char * );
@@ -30,7 +25,7 @@
    };
 
    template< class Formatter >
-   bool test_engine::formatter( const Formatter & fmt, const char * results, const char * name )
+   bool test_formatter( test_engine & te, const Formatter & fmt, const char * results, const char * name )
    {
       // write:
 
@@ -44,14 +39,14 @@
       std::ostringstream               ssrd;
       ssrd << fmt;
 
-      return( save_testresults( testset,
+      return( te.save_testresults(
          ( !ss2.fail() && ssrd.str() == results ), ( ss.str() == results ),
          name, results, ssrd.str(), ss.str()
       ));
    }
 
    template< class Object >
-   bool test_engine::stlio( Object & o, const char * results, const char * name )
+   bool test_stlio( test_engine & te, Object & o, const char * results, const char * name )
    {
       // write:
 
@@ -66,7 +61,7 @@
       std::ostringstream               ssrd;
       ssrd << ob;
 
-      return( save_testresults( testset,
+      return( te.save_testresults( 
          ( !ss2.fail() && ssrd.str() == results ), ( ss.str() == results ),
          name, results, ssrd.str(), ss.str()
       ));
