@@ -137,9 +137,9 @@ namespace boost
             T& value_;
         };
 
-        class static_cast_tag;
-        class dynamic_cast_tag;
-        class polymorphic_cast_tag;
+        struct static_cast_tag;
+        struct dynamic_cast_tag;
+        struct polymorphic_cast_tag;
 
     }   // namespace detail
 
@@ -163,7 +163,10 @@ namespace boost
     class checking_policy_tag { };
 
     struct empty_policy
-    { typedef void policy_category; };
+    { 
+        typedef void policy_category; 
+        typedef int* pointer_type;
+    };
 
     using mpl::_;
 
@@ -206,7 +209,7 @@ namespace boost
     struct apply_lambda
     {
         typedef typename mpl::lambda<F>::type f_;
-        typedef typename mpl::apply<f_, T>::type type;
+        typedef typename mpl::apply1<f_, T>::type type;
     };
 
     template <class Policy>
@@ -228,6 +231,46 @@ namespace boost
         >::type type;
     };
 
+	template <typename T, class Policies>
+	struct storage_policy_
+	{
+        typedef typename apply_lambda<
+            typename get_policy<
+		        Policies, storage_policy_tag, scalar_storage<_>
+	        >::type, T
+        >::type type;
+    };
+
+    template <typename T, class Policies>
+    struct ownership_policy_
+    {
+        typedef typename apply_lambda<
+            typename get_policy<
+                Policies, ownership_policy_tag, ref_counted<_>
+            >::type, typename storage_policy_<T, Policies>::pointer_type
+        >::type type;
+    };
+
+    template <typename T, class Policies>
+    struct checking_policy_
+    {
+        typedef typename apply_lambda<
+            typename get_policy<
+                Policies, checking_policy_tag, assert_check<_>
+            >::type, typename storage_policy_<T, Policies>::stored_type
+        >::type type;
+    };
+
+    template <typename T, class Policies>
+    struct conversion_policy_
+    {
+        typedef typename apply_lambda<
+            typename get_policy<
+                Policies, conversion_policy_tag, disallow_conversion<_>
+            >::type, typename storage_policy_<T, Policies>::pointer_type
+        >::type type;
+    };
+
 # define BOOST_SMART_POINTER_PARAMETERS                                      \
     class OwnershipPolicy,                                                   \
     class ConversionPolicy,                                                  \
@@ -239,25 +282,13 @@ namespace boost
     class CheckingPolicy1,                                                   \
     class StoragePolicy1
 # define BOOST_STORAGE_POLICY                                                \
-    apply_lambda<                                                            \
-        get_policy<policies_, storage_policy_tag, scalar_storage<_> >::type, \
-        T                                                                    \
-    >::type
-# define BOOST_CHECKING_POLICY                                               \
-    apply_lambda<                                                            \
-        get_policy<policies_, checking_policy_tag, assert_check<_> >::type,  \
-        typename BOOST_STORAGE_POLICY::stored_type                           \
-    >::type
+    typename storage_policy_<T, policies_>::type
 # define BOOST_OWNERSHIP_POLICY                                              \
-    apply_lambda<                                                            \
-        get_policy<policies_, ownership_policy_tag, ref_counted<_> >::type,  \
-        typename BOOST_STORAGE_POLICY::pointer_type                          \
-    >::type
+    typename ownership_policy_<T, policies_>::type
+# define BOOST_CHECKING_POLICY                                               \
+    typename checking_policy_<T, policies_>::type
 # define BOOST_CONVERSION_POLICY                                             \
-    apply_lambda<                                                            \
-        get_policy<policies_, conversion_policy_tag, disallow_conversion<_> >::type, \
-        typename BOOST_STORAGE_POLICY::pointer_type                          \
-    >::type
+    typename conversion_policy_<T, policies_>::type
 
 #else // BOOST_SMART_POINTER_LEGACY_INTERFACE
 
@@ -272,8 +303,8 @@ namespace boost
     template <typename> class CheckingPolicy1,                               \
     template <typename> class StoragePolicy1
 # define BOOST_STORAGE_POLICY       StoragePolicy<T>
-# define BOOST_CHECKING_POLICY      CheckingPolicy<typename StoragePolicy<T>::stored_type>
 # define BOOST_OWNERSHIP_POLICY     OwnershipPolicy<typename StoragePolicy<T>::pointer_type>
+# define BOOST_CHECKING_POLICY      CheckingPolicy<typename StoragePolicy<T>::stored_type>
 # define BOOST_CONVERSION_POLICY    ConversionPolicy<typename StoragePolicy<T>::pointer_type>
 
 #endif // BOOST_SMART_POINTER_LEGACY_INTERFACE
@@ -286,11 +317,11 @@ namespace boost
     template <typename T, class P1, class P2, class P3, class P4, class policies_>
     class smart_ptr
         : public optimally_inherit<
-            optimally_inherit<
+            typename optimally_inherit<
                 BOOST_STORAGE_POLICY,
                 BOOST_OWNERSHIP_POLICY
             >::type,
-            optimally_inherit<
+            typename optimally_inherit<
                 BOOST_CHECKING_POLICY,
                 BOOST_CONVERSION_POLICY
             >::type
@@ -303,22 +334,23 @@ namespace boost
         typedef BOOST_CHECKING_POLICY                       checking_policy;
         typedef BOOST_CONVERSION_POLICY                     conversion_policy;
         typedef typename optimally_inherit<
-            optimally_inherit<
+            typename optimally_inherit<
                 BOOST_STORAGE_POLICY,
                 BOOST_OWNERSHIP_POLICY
             >::type,
-            optimally_inherit<
+            typename optimally_inherit<
                 BOOST_CHECKING_POLICY,
                 BOOST_CONVERSION_POLICY
             >::type
         >::type                                             base_type;
-        typedef typename base_type::base1_type::base1_type  storage_base;
-        typedef typename base_type::base1_type::base2_type  ownership_base;
-        typedef typename base_type::base2_type::base1_type  checking_base;
-        typedef typename base_type::base2_type::base2_type  conversion_base;
+//        typedef typename base_type::base1_type::base1_type  storage_base;
+//        typedef typename base_type::base1_type::base2_type  ownership_base;
+//        typedef typename base_type::base2_type::base1_type  checking_base;
+//        typedef typename base_type::base2_type::base2_type  conversion_base;
         typedef smart_ptr                                   this_type;
 
     public:     // Pointer/Reference types
+//        typedef storage_policy_<T, policies_>::type::pointer_type pointer_type;
         typedef typename storage_policy::pointer_type       pointer_type;
         typedef typename storage_policy::const_pointer_type const_pointer_type;
         typedef typename storage_policy::stored_type        stored_type;
@@ -327,16 +359,16 @@ namespace boost
         typedef typename storage_policy::const_reference_type
                                                             const_reference_type;
 
-        typedef typename mpl::if_c<
+        typedef typename mpl::if_<
             ::boost::is_same<
                 typename ownership_policy::ownership_category, move_semantics_tag
-            >::value,
+            >,
             this_type&, this_type const&
         >::type copy_arg;
-        typedef typename mpl::if_c<
+        typedef typename mpl::if_<
             ::boost::is_same<
                 typename ownership_policy::ownership_category, move_semantics_tag
-            >::value,
+            >,
             base_type&, base_type const&
         >::type copy_base;
 
