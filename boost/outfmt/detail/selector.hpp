@@ -7,6 +7,7 @@
 #  endif
 
 #  include <boost/mpl/if.hpp>
+#  include <boost/mpl/void.hpp>
 #  include <iostream>
 
    namespace boost { namespace io { namespace detail
@@ -30,9 +31,9 @@
       template
       <
          int n,
-         typename T1,        typename T2,
-         typename T3 = void, typename T4 = void, typename T5 = void,
-         typename T6 = void, typename T7 = void, typename T8 = void
+         typename T1,              typename T2,
+         typename T3 = mpl::void_, typename T4 = mpl::void_, typename T5 = mpl::void_,
+         typename T6 = mpl::void_, typename T7 = mpl::void_, typename T8 = mpl::void_
       >
       struct sequential_switch_: public boost::mpl::if_
              <

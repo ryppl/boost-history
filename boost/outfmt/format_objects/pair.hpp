@@ -132,7 +132,7 @@
                                                     const FmtObject2 & fo2
                                                  )
       {
-         return( pair_object< typename FmtObject1::format_type, FmtObject1, FmtObject2 >( fo1, fo2 ));
+         return( pair_object< BOOST_DEDUCED_TYPENAME FmtObject1::format_type, FmtObject1, FmtObject2 >( fo1, fo2 ));
       }
    }}
 #endif
