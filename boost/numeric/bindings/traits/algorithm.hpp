@@ -12,8 +12,15 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   template < typename T >
   struct is_equal
   {
+    is_equal(typename value_traits< T >::value_type tolerance) : tolerance_( tolerance ) {} 
+
+    bool operator()(const T& a, const T& b)
+    { return std::abs( a - b ) < tolerance_ ; }
+
     bool operator()(const T& a, const T& b, typename value_traits< T >::value_type tolerance) 
     { return std::abs( a - b ) < tolerance ; }
+
+    typename value_traits< T >::value_type tolerance_ ;
   } ;
 
   template < typename T >
