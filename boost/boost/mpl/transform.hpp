@@ -109,29 +109,37 @@ struct reverse_transform2_impl
 
 } // namespace aux 
 
-BOOST_MPL_AUX_INSERTER_ALGORITHM_DEF(3, transform1)
+BOOST_MPL_AUX_INSERTER_ALGORITHM_DEF(3, transform1)                    
 BOOST_MPL_AUX_INSERTER_ALGORITHM_DEF(4, transform2)
-
-template<
-      typename BOOST_MPL_AUX_NA_PARAM(Seq1)
-    , typename BOOST_MPL_AUX_NA_PARAM(Seq2OrOperation)
-    , typename BOOST_MPL_AUX_NA_PARAM(OperationOrInserter)
-    , typename BOOST_MPL_AUX_NA_PARAM(Inserter)
-    >
-struct transform
-  : if_<
-          or_<
-              is_na<OperationOrInserter>
-            , not_< is_sequence<Seq2OrOperation> >
-            >
-        , transform1<Seq1,Seq2OrOperation,OperationOrInserter>
-        , transform2<Seq1,Seq2OrOperation,OperationOrInserter,Inserter>
-        >::type
-{
-};
-
-BOOST_MPL_AUX_NA_SPEC(4, transform)
-
+    
+#define BOOST_MPL_transform_def(transform_)                                     \
+                                                                                \
+  template<                                                                     \
+        typename BOOST_MPL_AUX_NA_PARAM(Seq1)                                   \
+      , typename BOOST_MPL_AUX_NA_PARAM(Seq2OrOperation)                        \
+      , typename BOOST_MPL_AUX_NA_PARAM(OperationOrInserter)                    \
+      , typename BOOST_MPL_AUX_NA_PARAM(Inserter)                               \
+      >                                                                         \
+  struct transform_                                                             \
+    : if_<                                                                      \
+            or_<                                                                \
+                is_na<OperationOrInserter>                                      \
+              , not_< is_sequence<Seq2OrOperation> >                            \
+              >                                                                 \
+          , transform_##1<Seq1,Seq2OrOperation,OperationOrInserter>             \
+          , transform_##2<Seq1,Seq2OrOperation,OperationOrInserter,Inserter>    \
+          >::type                                                               \
+  {                                                                             \
+  };                                                                            \
+                                                                                \
+  BOOST_MPL_AUX_NA_SPEC(4, transform_)                                          \
+  /**/
+    
+BOOST_MPL_transform_def(transform)
+BOOST_MPL_transform_def(reverse_transform)
+    
+#undef BOOST_MPL_transform_def
+    
 }}
 
 #endif // BOOST_MPL_TRANSFORM_HPP_INCLUDED
