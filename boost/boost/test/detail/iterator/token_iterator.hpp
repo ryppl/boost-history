@@ -565,8 +565,8 @@ make_range_token_iterator( Iter begin, Iter end, M1 const& m1, M2 const& m2, M3 
 //  Revision History :
 //  
 //  $Log$
-//  Revision 1.8  2004/11/28 03:17:50  agurtovoy
-//  merge RC_1_32_0 fixes
+//  Revision 1.8.2.1  2004/12/01 02:44:54  djowel
+//  Removing unecessary files
 //
 //  Revision 1.7.2.1  2004/10/30 11:34:27  agurtovoy
 //  MSVC/Borland fixes
