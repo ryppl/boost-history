@@ -4,15 +4,27 @@ CXXFLAGS=-I../../../ -I../../../../boost -O2
 CXXFLAGS+= -DBOOST_INCLUDE_MAIN
 
 ifeq ($(CXX), g++)
-  CXXFLAGS+= -Wno-long-double -D_CPP_NUMERIC_LIMITS
+  CXXFLAGS+= -D_CPP_NUMERIC_LIMITS -DBOOST_NO_LIMITS
   CXXFLAGS+= -W -Wall
 else
   CXXFLAGS+= -pto
 endif
 
-TARGETS= interval_test add cmp det fmod mul overflow pi pow
+TARGETS= interval_test add cmp det fmod mul overflow pi pow io
 
 all: $(TARGETS)
+
+test:
+	./interval_test
+	./add
+	./cmp
+	./det
+	./fmod
+	./mul
+	./overflow
+	./pi
+	./pow
+	./io
 
 clean:
 	rm -f $(TARGETS)
