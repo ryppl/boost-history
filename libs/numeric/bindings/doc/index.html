@@ -31,10 +31,11 @@ The Bindings Library offers a generic thin layer API on top of the
 original API of the external library. This generic API accepts a whole range of
 data structures from different origins and usually hides or reduces the complexity of the original API. 
 
-<p>For instance, <a href="http://math-atlas.sourceforge.net/">ATLAS</a>, a C library implementing BLAS (and few LAPACK)
-routines, represents matrices by means of a pointer and the dimensions. Now boost also contains
-matrix classes (<a href="http://www.boost.org/libs/numeric/ublas/doc/index.htm">uBLAS</a>) and there are also other matrix libraries in widespread use. Therefore the bindings
-library features a generic interface for ATLAS which provides the possibility
+<p>For instance, <a
+href="http://math-atlas.sourceforge.net/">ATLAS</a>, a C library
+implementing BLAS (and few LAPACK routines), represents matrices by means of a pointer and the dimensions. Now boost also contains
+matrix classes (<a href="http://www.boost.org/libs/numeric/ublas/doc/index.htm">uBLAS</a>) and there are also other matrix libraries in widespread use. Therefore the Bindings
+library features a <a href="../atlas/doc/index.html">generic interface for ATLAS</a> which provides the possibility
 to call e.g. the matrix-multiplication routine of ATLAS using matrices defined
 in uBLAS, <a href="http://math.nist.gov/tnt/index.htm">TNT</a>, etc.: 
 
@@ -77,7 +78,9 @@ three convenient overloads:
   C &lt;- a * A * B + b * C 
   C &lt;- A * B 
 </pre>
-where <code>op (A)</code> == <code>A</code> || <code>A</code><sup>T</sup> || <code>A</code><sup>H</sup>. 
+where <code>a</code>, <code>b</code> are scalars, 
+<code>A</code>, <code>B</code>, <code>C</code> are (rectangular) matrices and 
+<code>op (A)</code> == <code>A</code> || <code>A</code><sup>T</sup> || <code>A</code><sup>H</sup>. 
 <code>gemm()</code> is BLAS level 3 routine and therefore
 <code>atlas/cblas3.hpp</code> should be included (all headers
 are in subdirectories of <code>boost/numeric/bindings</code>). 
