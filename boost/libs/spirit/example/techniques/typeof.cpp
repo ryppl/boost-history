@@ -15,10 +15,6 @@
 #define typeof __typeof__
 #endif
 
-#if !defined(__MWERKS__) && !defined(__GNUC__)
-#error "typeof not supported by your compiler"
-#endif
-
 #include <iostream>
 #include <boost/spirit/core.hpp>
 
@@ -29,6 +25,8 @@ using namespace boost::spirit;
 int
 main()
 {
+#ifdef typeof
+    
     RULE(
         skipper,
         (       space_p
@@ -42,6 +40,8 @@ main()
         *skipper).full;
     assert(success);
     std::cout << "SUCCESS!!!\n";
+
+#endif
     return 0;
 }
 
