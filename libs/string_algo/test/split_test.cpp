@@ -31,7 +31,7 @@ template< typename T1, typename T2 >
 void deep_compare( const T1& X, const T2& Y )
 {
     BOOST_REQUIRE( X.size() == Y.size() );
-    for( unsigned int nIndex=0; nIndex<X.size(); nIndex++ )
+    for( unsigned int nIndex=0; nIndex<X.size(); ++nIndex )
     {
         BOOST_CHECK( equals( X[nIndex], Y[nIndex] ) );
     }

@@ -12,13 +12,14 @@
         <title>First Example</title>
         
         <para>
-            Using the algorithms is pretty straightforward. Lets have a look at the first example:
+            Using the algorithms is straightforward. Lets have a look at the first example:
         </para>
         <programlisting>
     #include &lt;boost/string_algo.hpp&gt;
     using namespace std;
     using namespace boost;
-
+    namespace sa=boost::string_algo
+    
     // ...
 
     string str1(" hello world! ");
@@ -27,31 +28,32 @@
     string str2=ireplace_first_copy(str1,"hello","goodbye"); // str2 == "goodbye WORLD!"
         </programlisting>
         <para>
-            This example converts the str1 to upper case and trims spaces from the start and the end
-            of the string. str2 is then create as a copy of str1 with 'hello' replace with 'goodbye'.
-            This example demonstrates several important concepts used in the library.
+            This example converts str1 to upper case and trims spaces from the start and the end
+            of the string. str2 is then created as a copy of str1 with "hello" replaced with "goodbye".
+            This example demonstrates several important concepts used in the library:
         </para>
         <itemizedlist>
             <listitem>
                 <para><emphasis role="bold">Container parameters:</emphasis>
-                    Unlike the STL algorithms, container parameters are not specified in form
-                    of iterators. STL convention allows great flexibility with a little overhead,
-                    but it has several limitation. It is not possible to stack algorithms together, 
+                    Unlike the STL algorithms, parameters are not specified only in form
+                    of iterators. The STL convention allows for great flexibility,
+                    but it has several limitation. It is not possible to <emphasis>stack</emphasis> algorithms together, 
                     because a container is passed in two parameters, so it is not possible to use 
-                    a return value from other algorithm. Also it is clumsy to use. It is easier to write
+                    a return value from another algorithm. It is considerably easier to write
                     <code>to_lower(str1)</code>, then <code>to_lower(str1.begin(), str1.end())</code>.
                 </para>
                 <para>
                     The magic of <link linkend="string_algo.container_traits">container_traits</link> 
                     provides a uniform way of handling different containers. 
-                    If there is a need to pass a pair of iterators, <classname>iterator_range</classname>
+                    If there is a need to pass a pair of iterators, 
+                    <link linkend="string_algo.iterator_range"><code>iterator_range</code></link>
                     can be used to package iterators into a structure with the container interface.
                 </para>
             </listitem>
             <listitem>
                 <para><emphasis role="bold">Copy vs. Mutable:</emphasis>
                     Many algorithms in the library are performing a transformation of the input. 
-                    Transformation can be done in-place, mutating the input sequence, or a copy 
+                    The transformation can be done in-place, mutating the input sequence, or a copy 
                     of the transformed input can be created, leaving the input intact. None of 
                     these possibilities is superior to the other one and both have different 
                     advantages and disadvantages. For this reason, both are provided with the library. 
@@ -69,15 +71,16 @@
                 <para><emphasis role="bold">Naming:</emphasis>
                     Naming follows the conventions from the Standard C++ Library. If there is a 
                     copy and mutable version of the same algorithm, the mutable version has no suffix 
-                    and the copy version has suffix '_copy'. 
-                    Some Algorithms have prefix 'i' (e.g. <functionname>ifind_first</functionname>).
-                    This prefix identifies that the algorithm work in case-insensitive manner.
+                    and the copy version has suffix <emphasis>_copy</emphasis>. 
+                    Some Algorithms have prefix <emphasis>i</emphasis> (e.g. <functionname>ifind_first()</functionname>).
+                    This prefix identifies that the algorithm works in a case-insensitive manner.
                 </para>
             </listitem>
         </itemizedlist>
         <para>
-            To use the library, include <headername>boost/string_algo.hpp</headername> header. If the regex related
-            functions are needed, include <headername>boost/string_algo_regex.hpp</headername> header.
+            To use the library, include the <headername>boost/string_algo.hpp</headername> header. 
+            If the regex related functions are needed, include the 
+            <headername>boost/string_algo_regex.hpp</headername> header.
         </para>
     </section>
     <section>
@@ -85,39 +88,24 @@
         
         <para>
             STL has a nice way of converting character case. Unfortunately, if works only
-            for a single character and we want to convert a string. Here is a better way
-            to do it, then writing a cycle:
+            for a single character and we want to convert a string. 
         </para>
         <programlisting>
-    #include &lt;boost/string_algo.hpp&gt;
-
-    using namespace std;
-    using namespace boost;
-    
-    //..
     string str1("HeLlO WoRld!");
     to_upper(str1); // str1=="HELLO WORLD!"
         </programlisting>
         <para>
-            <functionname>to_upper</functionname> and <functionname>to_lower</functionname> convert the case of 
+            <functionname>to_upper()</functionname> and <functionname>to_lower()</functionname> convert the case of 
             characters in a container using a specified locale.
         </para>
     </section>
     <section>
         <title>Predicates and Classification</title>
         <para>
-            A part of the library deals with string related predicates. 
+            A part of the library deals with string related predicates. Consider this example:
         </para>
         <programlisting>
-    #include &lt;iostream&gt;
-    #include &lt;boost/string_algo.hpp&gt;
-
-    using namespace std;
-    using namespace boost;
-    
-    // ...
-
-    bool is_executable( std::string&amp; filename )
+    bool is_executable( string&amp; filename )
     {
         return 
             iends_with( filename, ".exe" ) ||
@@ -130,57 +118,52 @@
         &lt;&lt; str1
         &lt;&lt; is_executable("command.com")? "is": "is not" 
         &lt;&lt; "an executable" 
-        &lt;&lt; endl;
+        &lt;&lt; endl; // prints "command.com is an executable"
     
     //..
     char text1[]="hello world!";
     cout 
         &lt;&lt; text1 
         &lt;&lt; all( text1, is_lower&lt;char&gt;() )? "is": "is not"
-        &lt;&lt; "written in lower case" 
-        &lt;&lt; endl;
+        &lt;&lt; "written in the lower case" 
+        &lt;&lt; endl; // prints "hello world! is written in the lower case"
         </programlisting>
         <para>
             The predicates are resolving if a substring is contained in the input string
-            under various conditions. These conditions are suffix and prefix check, equality 
-            check and containment check. See the <link linkend="string_algo.reference">reference</link> 
-            for more details. In addition algorithm <functionname>all</functionname> checks
+            under various conditions. If a string starts with the substring, ends with the substring, 
+            simply contains the substring or if both strings are equal. See the reference for 
+            <headername>boost/string_algo/predicate.hpp</headername> for more details. 
+            In addition the algorithm <functionname>all()</functionname> checks
             all elements of a container to satisfy a condition specified by a predicate. 
             This predicate can be any unary predicate, but the library provide a bunch of 
-            useful string-related predicates ready to use.
-            These are located in <headername>boost/string_algo/classification.hpp</headername> header.
+            useful string-related predicates ready for use.
+            These are located in the <headername>boost/string_algo/classification.hpp</headername> header.
         </para>
     </section>
     <section>
         <title>Trimming</title>
         
         <para>
-            When parsing an user input, strings usually have unwanted leading or trailing 
-            characters. To get rid of them, we need trim functions.
+            When parsing the input of a user, strings usually have unwanted leading or trailing 
+            characters. To get rid of them, we need trim functions:
         </para>
         <programlisting>
-    #include &lt;boost/string_algo.hpp&gt;
-
-    using namespace boost;
-    namespace sa=boost::string_algo;
-
-    //..
     string str1="     hello world!     ";
     string str2=trim_left_copy(str1);   // str2 == "hello world!     "
-    string str2=trim_right_copy(str2);  // str3 == "     hello world!"
+    string str3=trim_right_copy(str2);  // str3 == "     hello world!"
     trim(str1);                         // str1 == "hello world!"
 
     string phone="00423333444";
     // remove leading 0 from the phone number
     sa::trim_left(phone,is_any_of&lt;char&gt;("0")); // phone == "423333444"
-    
         </programlisting>
         <para>
-            It is possible to trim the space on the right, on the left or on the both sides of a string.
-            And for those cases when there is a need to remove something else then space, namespace
-            <code>string_algo</code> contains generic version of trim algorithms. Using these, a user can
-            give a functor which will select the 'space' to be removed. It is possible to use classification
-            predicated mentioned in previous paragraph.
+            It is possible to trim the spaces on the right, on the left or on the both sides of a string.
+            And for those cases when there is a need to remove something else than blank space, the
+            <code>string_algo</code> namespace contains generic versions of the trim algorithms. Using these, 
+            a user can specify a functor which will select the <emphasis>space</emphasis> to be removed. It is possible to use 
+            classification predicates like <functionname>is_digit()</functionname> mentioned in the previous paragraph.
+            See the reference for the <headername>boost/string_algo/trim.hpp</headername>.
         </para>
     </section>
     <section>
@@ -190,15 +173,6 @@
             The library contains a set of find algorithms. Here is an example:
         </para>
         <programlisting>
-    #include &lt;boost/string_algo.hpp&gt;
-    #include &lt;algorithm&gt;
-    #include &lt;functional&gt;
-
-    using namespace std;
-    using namespace boost;
-
-    // ...
-
     char text[]="hello dolly!";
     iterator_range&lt;char*&gt; result=find_last(text,"ll");
 
@@ -208,15 +182,17 @@
     to_upper( result ); // text == "hello doMMy!"
         </programlisting>
         <para>
-            We have used <functionname>find_last</functionname> to search the <code>text</code> for "ll".
-            The result is given in the <classname>iterator_range</classname>. This range delimits the
+            We have used <functionname>find_last()</functionname> to search the <code>text</code> for "ll".
+            The result is given in the <link linkend="string_algo.iterator_range"><code>iterator_range</code></link>. 
+            This range delimits the
             part of the input which satisfies the find criteria. In our example it is the last occurrence of "ll".
             
-            As we can see, input of the <functionname>find_last</functionname> algorithm can be also 
+            As we can see, input of the <functionname>find_last()</functionname> algorithm can be also 
             char[] because this type is supported by 
             <link linkend="string_algo.container_traits">container_traits</link>.
 
-            Following lines transform the result. Notice, that <classname>iterator_range</classname> have familiar 
+            Following lines transform the result. Notice, that 
+            <link linkend="string_algo.iterator_range"><code>iterator_range</code></link> have familiar 
             <code>begin()</code> and <code>end()</code> methods, so it can be used like any other STL container.
         </para>
     </section>
@@ -228,80 +204,70 @@
             from an original, using some transformation. 
         </para>
         <programlisting>
-    include &lt;boost/string_algo.hpp&gt;
-
-    using namespace std;
-    using namespace boost;
-
-    // ...
-
     string str1="Hello  Dolly,   Hello World!"
     replace_first( str1, "Dolly", "Jane" );     // str1 == "Hello  Jane,   Hello World!"
     replace_last( str1, "Hello", "Goodbye");    // str1 == "Hello  Jane,   Goodbye World!"
     erase_all( str1, " " );                     // str1 == "HelloJane,GoodbyeWorld!"
     erase_head( str1, 6 );                      // str1 == "Jane,GoodbyeWorld!"
-    
         </programlisting>
         <para>
             For the complete list of replace and erase functions see the 
-            <link linend="string_algo.reference">reference</link>.
-            There is a lot of predefined function for common usage, however the library allows you to 
-            define custom replace that suits your need. There is a generic <functionname>replace</functionname> 
-            which takes two parameters.
-            The first one is a <link linkend="string_algo.finder_concept">finder</link>, the second one is 
-            <link linkend="string_algo.formatter_concept">formatter</link>. Finder is a functor which performs the 
-            searching for the replacement part. Formatter takes the result of the finder (usually a reference to the 
-            found substring) and creates a substitute sequence for it. Replace algorithm puts these two 
-            together and makes the desired substitution. 
+            <link linkend="string_algo.reference">reference</link>.
+            There is a lot of predefined function for common usage, however, the library allows you to 
+            define custom replace that suits your need. There is a generic <functionname>replace()</functionname> 
+            function which takes two parameters.
+            The first one is a <link linkend="string_algo.finder_concept">Finder</link> object, the second one is 
+            a <link linkend="string_algo.formatter_concept">Formatter</link> object. 
+            The Finder object is a functor which performs the searching for the replacement part. The Formatter object
+            takes the result of the Finder (usually a reference to the found substring) and creates a 
+            substitute for it. Replace algorithm puts these two together and makes the desired substitution. 
         </para>
     </section>
     <section>
         <title>Split</title>
 
         <para>
-            Split algorithms allow to divide a sequence into parts. Each part represents a token. Tokens are
-            separated by separators. They are two possibilities. To search for tokens, or inversely to search for
-            separators.
+            Split algorithms allow one to divide a sequence into parts. Each part represents a 
+            <emphasis>token</emphasis> and  tokens are separated by <emphasis>separators</emphasis>. 
+            One can either search for tokens or search for separators:
         </para>
 
         <programlisting>
-    include &lt;vector&gt;
-    include &lt;boost/string_algo.hpp&gt;
-
-    using namespace std;
-    using namespace boost;
-
-    //..
     string str1("hello abc-*-ABC-*-aBc goodbye");
 
-    typedef vector&lt; iterator_range&lt;string::iterator&gt; &gt; split_vector_type;
+    typedef vector&lt; iterator_range&lt;string::iterator&gt; &gt; find_vector_type;
     
-    split_vector_type FindVec;
+    find_vector_type FindVec; // #1: Search for separators
     ifind_all( FindVec, str1, "abc" ); // FindVec == { [abc],[ABC],[aBc] }
 
-    split_vector_type SplitVec;
-    split( SplitVec, str1, is_any_of&lt;char&gt;("-*") ); // SplitVec == { [hello abc],[ABC],[aBc goodbye] }
+    typdef vector&lt; string &gt; split_vector_type;
+    
+    split_vector_type SplitVec; // #2: Search for tokens
+    split( SplitVec, str1, is_any_of&lt;char&gt;("-*") ); // SplitVec == { "hello abc","ABC","aBc goodbye" }
         </programlisting>
         <para>
-            <code>[hello]</code> designates an iterator_range pointing to this substring.                       
+            <code>[hello]</code> designates an iterator_range delimiting this substring.                       
         </para>
         <para>
-            The result of a split algorithm is a 'container of containers'. There is only a restriction, that
-            the inner container type must be able to hold extracted parts of the input sequence. This example 
-            shows the special case. It is possible to specify <classname>iterator_range</classname> as 
-            the inner container. This way, a user gets a reference (in the form of iterators) pointing 
-            to the parts of the input sequence. Otherwise, a copy of each extracted part is created 
-            and added to the outer container. (in the example it is a vector).
+            The result of a split algorithm is a <emphasis>container of containers</emphasis>. There is only one restriction:
+            The inner container type must be able to hold extracted parts of the input sequence. This example 
+            shows the special case where the inner container is an 
+            <link linkend="string_algo.iterator_range"><code>iterator_range</code></link> 
+            instead of e.g. <code>std::string</code>. This way, a user gets a reference 
+            (in the form of iterators) delimiting the parts of the input sequence. Otherwise, a copy of 
+            each extracted part is created and added to the outer container.
         </para>
         <para>
-            There are two basic algorithms. <functionname>find_all</functionname> returns extracts the parts
-            matching the specification. <functionname>split</functionname>, uses the matching parts as delimiters,
-            and extracts the parts in between them. 
+            So to recap, there are two basic algorithms: <functionname>find_all()</functionname> 
+            returns extracts the parts
+            matching the specification whereas <functionname>split()</functionname> uses the matching 
+            parts as delimiters, and extracts the parts in between them. 
         </para>
         <para>
-            Generalizations of these two algorithms are <functionname>iter_find</functionname> and 
-            <functionname>iter_split</functionname>. They take a 
-            <link linkend="string_algo.finder_concept">finder</link>, as an argument to search for matching substring. 
+            Generalizations of these two algorithms are called <functionname>iter_find()</functionname> and 
+            <functionname>iter_split()</functionname>. They take a 
+            <link linkend="string_algo.finder_concept">Finder</link> object, as an argument to search for 
+            the substring. 
         </para>     
     </section>
 </section>

@@ -6,8 +6,8 @@
     <section>
         <title>Build</title>
         <para>
-            Whole library is provided in headers. Regex variants of some algorithms, 
-            however, are dependent on the Regex++ library. All such algorithms are
+            The whole library is provided in headers. Regex variants of some algorithms, 
+            however, are dependent on the <libraryname>Boost.Regex</libraryname> library. All such algorithms are
             separated in <headername>boost/string_algo/regex.hpp</headername>. 
             If this header is used, an application must be linked with the <libraryname>Boost.Regex</libraryname> 
             library. 
@@ -18,7 +18,7 @@
         <title>Examples</title>
         <para>
             Examples showing the basic usage of the library can be found in the libs/string_algo/example
-            directory. There is a separate file for the each part of the library. Follow the boost
+            directory. There is a separate file for the each part of the library. Please follow the boost
             build guidelines to build examples using the bjam. To successfully build regex examples 
             the <libraryname>Boost.Regex</libraryname> library is required. 
         </para>
@@ -36,7 +36,7 @@
     <section>
         <title>Portability</title>
         <para>
-            Library has been successfully compiled and tested with the following compilers:
+            The library has been successfully compiled and tested with the following compilers:
             
             <itemizedlist>
                 <listitem>Microsoft Visual C++ 7.0</listitem>
@@ -48,7 +48,7 @@
         <para>
             There are known limitation on platforms not supporting partial template specialization. 
             Library depends on correctly implemented std::iterator_traits class. If a standard library provided 
-            with compiler is broken, the String Algorithm Library cannot function properly. Usually it implies, 
+            with compiler is broken, the String Algorithm Library cannot function properly. Usually it implies 
             that primitive pointer iterators are not working with the library functions. 
         </para>
     </section>

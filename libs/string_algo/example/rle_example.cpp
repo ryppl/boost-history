@@ -30,7 +30,7 @@ template< typename T > T repeat_mark() { return std::numeric_limits<T>::max(); }
 // Compression  -----------------------------------------------------------------------
 
 
-// find compress-rle functor
+// compress finder -rle
 /*
     Find a sequence which can be compressed. It has to be at least 3-character long
     sequence of repetitive characters 
@@ -102,9 +102,11 @@ struct find_compressF
 template< typename SeqT >
 struct format_compressF
 {
+private:
     typedef SeqT result_type;
     typedef typename SeqT::value_type value_type;
 
+public:
     // Construction
     format_compressF() {};
 
@@ -170,9 +172,11 @@ struct find_decompressF
 template< typename SeqT >
 struct format_decompressF
 {
+private:
     typedef SeqT result_type;
     typedef typename SeqT::value_type value_type;
 
+public:
     // Construction
     format_decompressF() {};
 

@@ -60,7 +60,7 @@ test-suite "string_algo"
             regex_test.cpp
             <lib>../../regex/build/boost_regex
           : :
-			:	
+            :   
 #            <library-path>$(BOOST)/libs/regex/build/bin-stage/
 #           <gcc><debug><find-library>boost_regex_sdd
 #            <*><release><find-library>boost_regex_sd

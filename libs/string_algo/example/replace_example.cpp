@@ -25,26 +25,16 @@ using namespace boost;
 namespace sa=boost::string_algo;
 
 // uppercase formatter
-// convert an input to upper case
-template<typename ContainerT>
-struct upcase_formatter
+/*
+    Convert an input to upper case. 
+    Note, that this formatter can be used only on std::string inputs.
+*/
+inline string upcase_formatter( 
+    const iterator_range<string::const_iterator>& Replace )
 {
-    // Formatter result type
-    typedef ContainerT result_type;
-
-    // Formatter operator
-    /*
-        Finder does not have restriction
-        on its result type. To be able to use this formatter with
-        any finder, parameter must be templated.
-    */
-    template<typename ReplaceT>
-    result_type operator()( const ReplaceT& Replace ) const
-    {
-        ContainerT Temp(Replace.begin(), Replace.end());
-        return to_upper(Temp);
-    }
-};
+    string Temp(Replace.begin(), Replace.end());
+    return to_upper(Temp);
+}
 
 int main()
 {  
@@ -90,7 +80,7 @@ int main()
         sa::replace_all_copy( 
             str2,
             sa::first_finder("abc", sa::is_iequal()), 
-            upcase_formatter<string>() );
+            upcase_formatter );
     
     cout << endl;
 
