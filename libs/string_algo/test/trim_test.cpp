@@ -18,6 +18,8 @@
 using namespace std;
 using namespace boost;
 
+namespace sa=boost::string_algo;
+
 void trim_test()
 {
     string str1("     1x x x x1     ");
@@ -43,33 +45,33 @@ void trim_test()
 
     // iterator tests
     string str;
-    trim_left_copy_if( std::back_inserter(str), str1, is_space<char>() );
+	sa::trim_left_copy( std::back_inserter(str), str1, is_space<char>() );
     BOOST_CHECK( str=="1x x x x1     " );
 
     str.clear();
-    trim_right_copy_if( std::back_inserter(str), str1, is_space<char>() );
+	sa::trim_right_copy( std::back_inserter(str), str1, is_space<char>() );
     BOOST_CHECK( str=="     1x x x x1" );
 
     str.clear();
-    trim_copy_if( std::back_inserter(str), str1, is_space<char>() );
+	sa::trim_copy( std::back_inserter(str), str1, is_space<char>() );
     BOOST_CHECK( str=="1x x x x1" );
 
     str.clear();
-    trim_left_copy_if( 
+	sa::trim_left_copy( 
         std::back_inserter(str), 
         "     1x x x x1     ", 
         is_space<char>() );
     BOOST_CHECK( str=="1x x x x1     " );
 
     str.clear();
-    trim_right_copy_if( 
+	sa::trim_right_copy( 
         std::back_inserter(str), 
         "     1x x x x1     ", 
         is_space<char>() );
     BOOST_CHECK( str=="     1x x x x1" );
 
     str.clear();
-    trim_copy_if( 
+	sa::trim_copy( 
         std::back_inserter(str), 
         "     1x x x x1     ", 
         is_space<char>() );
@@ -102,10 +104,10 @@ void trim_test()
 
     // *** non-standard predicate tests *** //
     BOOST_CHECK( 
-        trim_copy_if( 
+		sa::trim_copy( 
             string("123abc456"), 
             is_classified<char>(std::ctype_base::digit) )=="abc" );
-    BOOST_CHECK( trim_copy_if( string("<>abc<>"), is_of<char>( "<<>>" ) )=="abc" );
+	BOOST_CHECK( sa::trim_copy( string("<>abc<>"), is_of<char>( "<<>>" ) )=="abc" );
 }
 
 // test main 

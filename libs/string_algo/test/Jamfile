@@ -58,12 +58,12 @@ test-suite "string_algo"
         ]
     : [ run 
             regex_test.cpp
-#           <lib>$(BOOST)/libs/regex/build/boost_regex
+            <lib>../../regex/build/boost_regex
           : :
-            :
-            <library-path>$(BOOST)/libs/regex/build/bin-stage/
-            <*><debug><find-library>boost_regex_debug
-            <*><release><find-library>boost_regex 
+			:	
+#            <library-path>$(BOOST)/libs/regex/build/bin-stage/
+#           <gcc><debug><find-library>boost_regex_sdd
+#            <*><release><find-library>boost_regex_sd
             : regex
         ]
 

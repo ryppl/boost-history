@@ -120,9 +120,6 @@ void find_test()
     ch_result=find_head( pch1, 6 );
     BOOST_CHECK( ( (ch_result.begin() - pch1 ) == 0 ) && ( (ch_result.end() - pch1 ) == 6 ) );
 
-    BOOST_CHECK( find_head_copy( string("123456"), 3 )==string("123") );
-    BOOST_CHECK( find_head_copy( string("123"), 5 )==string("123") );
-
     // find_tail
     BOOST_CHECKPOINT( "find_tail" );
 
@@ -138,9 +135,6 @@ void find_test()
 
     ch_result=find_tail( pch1, 6 );
     BOOST_CHECK( ( (ch_result.begin() - pch1 ) == 15 ) && ( (ch_result.end() - pch1 ) == 21 ) );
-
-    BOOST_CHECK( find_tail_copy( string("123456"), 3 )==string("456") );
-    BOOST_CHECK( find_tail_copy( string("123"), 5 )==string("123") );
 
     // find_token
     BOOST_CHECKPOINT( "find_token" );
