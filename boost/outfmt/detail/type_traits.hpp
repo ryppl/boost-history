@@ -103,7 +103,7 @@
       {
          struct type
          {
-            BOOST_STATIC_CONSTANT( bool, value = ( sizeof( typename FmtObject::formatter_type ) == id ));
+            BOOST_STATIC_CONSTANT( bool, value = ( sizeof( FmtObject::formatter_type ) == id ));
          };
          BOOST_STATIC_CONSTANT( bool, value = type::value  );
       };
