@@ -295,14 +295,14 @@ There are several things worth noticing about this code:
 \begin{itemize}
 
 \item It uses a few ad-hoc, esoteric techniques (``hacks''). The
-  default template argument \code{choose1} in \code{choose_larger}
+  default template argument \code{choose1} in \code{choose\_\-larger}
   (labelled ``hands off!'') is one example. Without it, we would have
   needed yet another template to provide the implementation of
-  \code{choose_larger}, or we would have had to provide the
+  \code{choose\_\-larger}, or we would have had to provide the
   computation explicitly as a parameter to the template - perhaps not
-  bad for this example, but it would make choose_larger much less
+  bad for this example, but it would make choose\_\-larger much less
   useful and more error-prone. The other hack is the derivation of a
-  specialization of \code{largest} from \code{choose_larger}. This is
+  specialization of \code{largest} from \code{choose\_\-larger}. This is
   a code-saving device which allows the programmer to avoid writing
   \code{typedef typename}...\code{::type type} in the template body.
 
@@ -515,7 +515,7 @@ a manually implemented equivalent of the selection code.
 Below we present ???.
 
 
-For example, suppose we are implementing a \code{pointed\_type}
+For example, suppose we are implementing a \code{pointed\_\-type}
 traits template such as \code{pointed\_\-type<T>::type} 
 instantiated for a \code{T} that is either a plain pointer 
 (\code{U*}), \code{std::auto\_ptr<U>}, or any of the \code{boost}
