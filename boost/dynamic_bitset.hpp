@@ -685,7 +685,7 @@ dynamic_bitset<Block, Allocator>::operator|=(const dynamic_bitset& rhs)
     assert(size() == rhs.size());
     for (size_type i = 0; i < num_blocks(); ++i)
         this->m_bits[i] |= rhs.m_bits[i];
-    m_zero_unused_bits();
+    //m_zero_unused_bits();
     return *this;
 }
 
@@ -696,7 +696,7 @@ dynamic_bitset<Block, Allocator>::operator^=(const dynamic_bitset& rhs)
     assert(size() == rhs.size());
     for (size_type i = 0; i < this->num_blocks(); ++i)
         this->m_bits[i] ^= rhs.m_bits[i];
-    m_zero_unused_bits();
+    //m_zero_unused_bits();
     return *this;
 }
 
@@ -706,8 +706,8 @@ dynamic_bitset<Block, Allocator>::operator-=(const dynamic_bitset& rhs)
 {
     assert(size() == rhs.size());
     for (size_type i = 0; i < this->num_blocks(); ++i)
-        this->m_bits[i] = this->m_bits[i] & ~rhs.m_bits[i];
-    m_zero_unused_bits();
+        this->m_bits[i] &= ~rhs.m_bits[i];
+    //m_zero_unused_bits();
     return *this;
 }
 
