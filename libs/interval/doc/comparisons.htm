@@ -1,0 +1,101 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.77C-CCK-MCD {C-UDP; EBM-APPLE} (Macintosh; U; PPC) [Netscape]">
+   <title>Interval-comparisons.htm</title>
+</head>
+<body>
+
+<h1>
+Comparison policies</h1>
+
+<h2 id="compare">
+Comparisons</h2>
+
+<h3>
+Synopsis</h3>
+As it was said before, the definition of the comparison operators induces
+a slight problem. If their return type is restricted to bool, there are
+many ways to define them. It is the reason why the class interval is influenced
+by a comparison policy. So the class interval_traits requires an argument
+describing a class providing the following functions:
+<pre>struct interval_compare {
+&nbsp; static bool lessthan(T x_low, T x_up, T y_low, T y_up);
+&nbsp; static bool equalto(T x_low, T x_up, T y_low, T y_up);
+};</pre>
+The functions less_than and equal_to compare two intervals given their
+bounds. Thanks to this comparison class, the class interval can now define
+the following operators: &lt;, >, &lt;=, >=, ==, !=. All these operators
+are defined for two interval parameters, or for one interval and a number.
+<h3>
+Provided classes</h3>
+Four classes are pre-defined for the comparison policy. compare_certainly
+implements the "certain" comparison (it is the comparison policy by default).
+compare_possibly implements the "possible" comparison. And compare_full
+allows the user to specify a behavior in case of a non-boolean result (an
+exception for example).
+<p>The last class, compare_data, does not have any mathematical fundation.
+The equality is the physical equality, and the less operator is the lexicographic
+order.
+<ul>
+<pre>namespace boost {
+&nbsp; namespace interval_lib {
+
+template&lt;class T> struct compare_certainly;
+template&lt;class T> struct compare_possibly;
+template&lt;class T, class Function> struct compare_full;
+template&lt;class T> struct compare_data;
+
+&nbsp; } // namespace interval_lib
+} // namespace boost</pre>
+</ul>
+As you have probably guessed, the Function parameter of compare_full is
+the type of a function object called in case of a non-boolean result. So
+it must have an operator of signature <tt>bool Function::operator()()</tt>.
+Here is a little example of the behavior of the comparison operators when
+compare_full is the choosen policy:
+<ul>
+<li>
+[<tt>1,2] &lt;&nbsp; [2,3]</tt> will return <tt>Function()()</tt>,</li>
+
+<li>
+<tt>[1,2] &lt;= [2,3</tt>] will return <tt>true</tt>,</li>
+
+<li>
+<tt>[1,2] >&nbsp; [2,3]</tt> will return <tt>false</tt>, and</li>
+
+<li>
+<tt>[1,2] >= [2,3]</tt> will return <tt>!Function()()</tt>.</li>
+</ul>
+As a side note, if Function is the constant function object <tt>false</tt>,
+<tt>compare_full&lt;T, Function></tt> is the same as <tt>compare_certainly</tt>.
+Similarly, if <tt>Function</tt> always returns true, <tt>compare_full&lt;T,
+Function></tt> is the same as <tt>compare_possibly</tt>. But it is better
+to use either <tt>compare_certainly</tt> or <tt>compare_possibly</tt>,
+since <tt>compare_full</tt> is twice as slow and there is nothing that
+the compiler can do about it.
+<h3>
+Explicit comparison functions</h3>
+The comparison operators are not really handy. For example, if lessthan
+is a "certain" comparison, then &lt; and > are also "certain" comparisons,
+but &lt;= and >= are only "possible" comparisons. The reason of this discordance
+is: it is impossible to have &lt; and &lt;= both "possible", and to have
+(x&lt;=y) == !(y&lt;x) at the same time (and the "certain" comparison has
+the same problem). However, if you do not consider overlapping intervals,
+these two types of comparisons are equivalent.
+<p>To avoid these problems, it is probably better to use some explicit
+comparison functions. Their names are composed by cer (for "certain") or
+pos (for "possible") followed by lt, le, gt, ge, eq or ne. Each of these
+functions takes two parameters and returns a boolean. For example:
+<blockquote>
+<pre>template&lt;class T, class Traits>
+bool cerlt(const interval&lt;T, Traits>&amp; x, const interval&lt;T, Traits>&amp; y);
+template&lt;class T, class Traits>
+bool cerlt(const interval&lt;T, Traits>&amp; x, const T&amp; y);
+template&lt;class T, class Traits>
+bool cerlt(const T&amp; x, const interval&lt;T, Traits>&amp; y);</pre>
+</blockquote>
+
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.77C-CCK-MCD {C-UDP; EBM-APPLE} (Macintosh; U; PPC) [Netscape]">
+   <title>Interval-Checking.htm</title>
+</head>
+<body>
+
+<h1>
+Checking policies</h1>
+The last customizable part of interval_traits deals with exception handling.
+For example, when two intervals are divided, if the second contains zero,
+the result of the division is undefined. In this case, the answer will
+be the biggest interval in order to respect the basic property of the interval
+arithmetic. However, this behavior is not necessarily the one the user
+expects. And here does this third parameter of interval_traits play a part.
+<p>An important fact to understand is: the behavior defined by this parameter
+is only invoked if the input intervals of a function are not fully included
+in the domain of the function. If the input intervals are inside this domain
+but the result are exceptional (for example in case of an overflow during
+the computations), the members of this checking class will not be called.
+<p>There is another important matter: The checking policy does not allow
+to say what the results should be in case of problem. It is only allowed
+to point out the problem (through an exception for example).
+<h3>
+Requirements</h3>
+
+<blockquote>The checking class should satisfy the following requirement
+(in the form of an interface):
+<pre>struct checking
+{
+&nbsp; static void inverted_bound(const T&amp; l, const T&amp; u);
+&nbsp; static void divide_by_zero(const T&amp; l, const T&amp; u);
+&nbsp; static void sqrt_nan();
+&nbsp; static void logarithmic_nan();
+&nbsp; static void logarithmic_inf();
+&nbsp; static void trigonometric_nan();
+&nbsp; static void trigonometric_inf();
+&nbsp; static void hyperbolic_nan();
+&nbsp; static void hyperbolic_inf();
+};</pre>
+The first function, inverted_bound, deals with the call to a constructor
+like interval::interval(T l, T u) or a function like void interval::assign(T
+l, T u) when l is not less or equal to u. It is generally a good idea to
+throw an exception if the function inverted_bound is called. The parameters
+of the function are the faulty bounds of the interval. If the function
+returns to the caller, the final result will be the empty interval.
+<p>The member divide_by_zero is called each time the second interval of
+a division contains zero. If the function returns to the caller, the final
+result will be the entire interval. The faulty interval is given as an
+argument in order for the user to differentiate between a loss of precision
+and a bug in the program.
+<p>Indeed if the interval is [0,0], there clearly is a problem somewhere.
+It is generally not an error when a floating-point number is divided by
+zero, because it can be caused by a loss of precision or an underflow.
+For example, the computer will compute the same thing when asked 1/(1 +
+1E-100 - 1) and when asked 1/0. However, that is not true anymore for the
+interval arithmetic when used to obtain "exact" results. Because the interval
+[0,0] means that the result is exactly zero (in the previous example, the
+two computations would be 1/[0,1E-9] and 1/[0,0]).
+<p>This is also the reason why the functions sqrt_nan, logarithmic_nan,
+trigonometric_nan and hyperbolic_nan are defined, since a function should
+not be called with an input completely outside of its definition domain.
+Like it was for inverted_bound and divide_by_zero(0,0), it usually is a
+good idea to throw an exception because the program is defective.
+<p>The purpose of the functions logarithmic_inf, trigonometric_inf, hyperbolic_inf
+is different. These functions are called when the input intervals are partially
+outside the definition and that will lead to an infinite result. For example,
+log([-1,1]) will trigger logarithmic_inf but exp([0,1e1000]) will not trigger
+anything (although the upper bound will be infinite).
+<p>sqrt_nan is called by sqrt. logarithmic_inf and logarithmic_nan are
+called by log. trigonometric_nan is called by asin and acos. trigonometric_inf
+is called by tan. hyperbolic_nan is called by acosh and atanh. hyperbolic_inf
+is called by atanh.
+<p>As a side note, because the constant &pi; usually suffers from a
+lack of precision, tan is unfortunately unable to trigger trigonometric_nan
+on an input like [&pi;/2, &pi;/2].
+<br>&nbsp;</blockquote>
+
+<h3>
+Overview of the provided classes</h3>
+
+<blockquote>Some checking policies are pre-defined: checking_nothing will
+not do anything; each function is empty. checking_lax will only throw an
+exception when inverted_bound is called. checking_strict will throw exceptions
+when inverted_bound, divide_by_zero(0,0) and each _nan functions are called.
+This last policy is the policy by default.
+<p>The exceptions thrown by the lax and strict policies are std::invalid_argument
+with an error message looking like "boost::interval: <i>something appropriate</i>".</blockquote>
+
+<h3>
+Synopsis</h3>
+
+<blockquote>
+<pre>namespace boost {
+&nbsp; namespace interval_lib {
+
+&nbsp;&nbsp;&nbsp; template &lt;class T>&nbsp; struct checking_nothing;
+&nbsp;&nbsp;&nbsp; template &lt;class T>&nbsp; struct checking_lax;
+&nbsp;&nbsp;&nbsp; template &lt;class T>&nbsp; struct checking_strict; /* default checking policy */&nbsp;
+
+&nbsp; } // namespace interval_lib
+} // namespace boost</pre>
+&nbsp;</blockquote>
+
+</body>
+</html>

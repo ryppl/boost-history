@@ -1,0 +1,351 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.77C-CCK-MCD {C-UDP; EBM-APPLE} (Macintosh; U; PPC) [Netscape]">
+   <title>Interval-Rounding</title>
+</head>
+<body>
+
+<h1>
+Rounding policies</h1>
+In order to be as general as possible, the library uses a class to compute
+all the necessary functions rounded upward or downward. This class is the
+second parameter of interval_traits.
+<p>By default, it is boost::interval_lib::rounded_math&lt;T>. The class
+boost::interval_lib::rounded_math is already specialized for float and
+double. So if the base type of your intervals is not one of these two,
+a good solution would probably be a specialization of this class. But if
+the default specialization for float and double is not what you seek, you
+will have to directly use interval_traits.
+<h3>
+Requirements</h3>
+
+<blockquote>Here comes what the class is supposed to provide. The domains
+are written next to their respective functions (as you can see, the functions
+do not have to worry about invalid values, but they have to handle infinite
+arguments).
+<pre>struct rounding {
+&nbsp; T add_down(T, T); // [-&infin;infin;;+&infin;infin;]?
+&nbsp; T add_up&nbsp; (T, T); // [-&infin;;+&infin;]?
+&nbsp; T sub_down(T, T); // [-&infin;;+&infin;]?
+&nbsp; T sub_up&nbsp; (T, T); // [-&infin;;+&infin;]?
+&nbsp; T mul_down(T, T); // [-&infin;;+&infin;]?
+&nbsp; T mul_up&nbsp; (T, T); // [-&infin;;+&infin;]?
+&nbsp; T div_down(T, T); // [-&infin;;+&infin;]?([-&infin;;+&infin;]-{0})
+&nbsp; T div_up&nbsp; (T, T); // [-&infin;;+&infin;]?([-&infin;;+&infin;]-{0})
+&nbsp; T sqrt_down(T);&nbsp;&nbsp; // ]0;+&infin;]
+&nbsp; T sqrt_up&nbsp; (T);&nbsp;&nbsp; // ]0;+&infin;]
+&nbsp; T exp_down(T);&nbsp;&nbsp;&nbsp; // [-&infin;;+&infin;]
+&nbsp; T exp_up&nbsp; (T);&nbsp;&nbsp;&nbsp; // [-&infin;;+&infin;]
+&nbsp; T log_down(T);&nbsp;&nbsp;&nbsp; // ]0;+&infin;]
+&nbsp; T log_up&nbsp; (T);&nbsp;&nbsp;&nbsp; // ]0;+&infin;]
+&nbsp; T cos_down(T);&nbsp;&nbsp;&nbsp; // [0;2&pi;]
+&nbsp; T cos_up&nbsp; (T);&nbsp;&nbsp;&nbsp; // [0;2&pi;]
+&nbsp; T tan_down(T);&nbsp;&nbsp;&nbsp; // ]-&pi;/2;&pi;/2[
+&nbsp; T tan_up&nbsp; (T);&nbsp;&nbsp;&nbsp; // ]-&pi;/2;&pi;/2[
+&nbsp; T asin_down(T);&nbsp;&nbsp; // [-1;1]
+&nbsp; T asin_up&nbsp; (T);&nbsp;&nbsp; // [-1;1]
+&nbsp; T acos_down(T);&nbsp;&nbsp; // [-1;1]
+&nbsp; T acos_up&nbsp; (T);&nbsp;&nbsp; // [-1;1]
+&nbsp; T atan_down(T);&nbsp;&nbsp; // [-&infin;;+&infin;]
+&nbsp; T atan_up&nbsp; (T);&nbsp;&nbsp; // [-&infin;;+&infin;]
+&nbsp; T sinh_down(T);&nbsp;&nbsp; // [-&infin;;+&infin;]
+&nbsp; T sinh_up&nbsp; (T);&nbsp;&nbsp; // [-&infin;;+&infin;]
+&nbsp; T cosh_down(T);&nbsp;&nbsp; // [-&infin;;+&infin;]
+&nbsp; T cosh_up&nbsp; (T);&nbsp;&nbsp; // [-&infin;;+&infin;]
+&nbsp; T tanh_down(T);&nbsp;&nbsp; // [-&infin;;+&infin;]
+&nbsp; T tanh_up&nbsp; (T);&nbsp;&nbsp; // [-&infin;;+&infin;]
+&nbsp; T asinh_down(T);&nbsp; // [-&infin;;+&infin;]
+&nbsp; T asinh_up&nbsp; (T);&nbsp; // [-&infin;;+&infin;]
+&nbsp; T acosh_down(T);&nbsp; // [1;+&infin;]
+&nbsp; T acosh_up&nbsp; (T);&nbsp; // [1;+&infin;]
+&nbsp; T atanh_down(T);&nbsp; // [-1;1]
+&nbsp; T atanh_up&nbsp; (T);&nbsp; // [-1;1]
+&nbsp; T median(T, T);
+&nbsp; T int_down(T);
+&nbsp; T int_up&nbsp; (T);
+&nbsp; static T pi_down();
+&nbsp; static T pi_up&nbsp; ();
+&nbsp; static T pi_1_2_down();
+&nbsp; static T pi_1_2_up&nbsp; ();
+&nbsp; static T pi_2_1_down();
+&nbsp; static T pi_2_1_up&nbsp; ();
+&nbsp; typedef ... unprotected_rounding;
+};</pre>
+The functions int_down and int_up compute the nearest integer smaller or
+bigger than their argument. The function median computes the average of
+its two arguments. The pi_ functions are supposed to return bounds of some
+constants. pi clearly stands for the mathematical constant &pi;. pi_1_2
+stands for &pi;/2 and pi_2_1 stands for 2&pi;.
+<p>The type unprotected_rounding is another rounding class able to work
+if nested inside rounding. For example, the three first lines should all
+produce the same result; and the last line is allowed to have an undefined
+bahavior.
+<pre>T c; { rounding rnd; c = rnd.add_down(a, b); }
+T c; { rounding rnd1; { rounding rnd2; c = rnd2.add_down(a, b); } }
+T c; { rounding rnd1; { rounding::unprotected_rounding rnd2; c = rnd2.add_down(a, b); } }
+T d; { rounding::unprotected_rounding rnd; d = rnd.add_down(a, b); }</pre>
+Naturally rounding::unprotected_rounding may simply be rounding itself.
+But it can improve performance if it is a simplified version without constructor
+nor destructor (since an object of type rounding::unprotected_rounding
+is guaranteed to be created only when an object of type rounding is already
+alive). See the <a href="#perf">performance notes</a> for some additional
+details.</blockquote>
+
+<h3>
+Overview of the provided classes</h3>
+
+<blockquote>A lot of classes are provided. When they exist in two versions
+_std and _opp, the first one does switch the rounding mode each time, and
+the second one tries to keep it oriented toward plus infinity. The main
+purpose of the _opp version is to speed up the computations through the
+use of the "opposite trick" (see the <a href="#perf">performance notes</a>).
+This version requires the rounding mode to be upward before entering any
+computation functions of the class. It guarantees the rounding mode will
+still be upward at the exit of the functions.
+<p>Please note that it is really a very bad idea to mix the _opp version
+with the _std since they do not have compatible properties.
+<p>There is a third version named _exact which computes the functions without
+changing the rounding mode. It is an "exact" version because it is intended
+for a base type that produces exact results. The last version is the _dummy
+version. It does not do any computations but still produces compatible
+results.
+<p>Please note that it is possible to use the "exact" version for an inexact
+base type, e.g. float or double. In that case, the inclusion property is
+no longer guaranteed, but this can be useful to speed up the computation
+when the inclusion property is not desired strictly. For instance, in computer
+graphics, a small error due to floating-point roundoff is acceptable as
+long as an approximate version of the inclusion property holds.
+<p>At the bottom is the class rounding_control. Then come rounded_arith_exact,
+rounded_arith_std and rounded_arith_opp. Then there are rounded_transc_dummy,
+rounded_transc_exact, rounded_transc_std and rounded_transc_opp. And finally
+are save_state and save_state_nothing. Each of these classes provide a
+set of members that are required by the classes of the next stage. For
+example, a rounded_transc_... class needs the members of a rounded_arith_...
+class.</blockquote>
+
+<blockquote>Here comes what each class defines. Later, when they will be
+described more thoroughly, these members will not be repeated. Please come
+back here in order to see them. Inheritance is also used to avoid repetitions.
+<pre>template &lt;class T>
+struct rounding_control
+{
+&nbsp; typedef ... rounding_mode;
+&nbsp; void set_rounding_mode(rounding_mode);
+&nbsp; void get_rounding_mode(rounding_mode&amp;);
+&nbsp; void downward ();
+&nbsp; void upward&nbsp;&nbsp; ();
+&nbsp; void to_nearest();
+&nbsp; T to_int(T);
+&nbsp; T force_rounding(T);
+&nbsp; static T pi_down();
+&nbsp; static T pi_up&nbsp; ();
+&nbsp; static T pi_1_2_down();
+&nbsp; static T pi_1_2_up&nbsp; ();
+&nbsp; static T pi_2_1_down();
+&nbsp; static T pi_2_1_up&nbsp; ();
+};
+
+template &lt;class T, class Rounding>
+struct rounded_arith_... : Rounding
+{
+&nbsp; void init();
+&nbsp; T add_down(T, T);
+&nbsp; T add_up&nbsp; (T, T);
+&nbsp; T sub_down(T, T);
+&nbsp; T sub_up&nbsp; (T, T);
+&nbsp; T mul_down(T, T);
+&nbsp; T mul_up&nbsp; (T, T);
+&nbsp; T div_down(T, T);
+&nbsp; T div_up&nbsp; (T, T);
+&nbsp; T sqrt_down(T);
+&nbsp; T sqrt_up&nbsp; (T);
+&nbsp; T median(T, T);
+&nbsp; T int_down(T);
+&nbsp; T int_up&nbsp; (T);
+};
+
+template &lt;class T, class Rounding>
+struct rounded_transc_... : Rounding
+{
+&nbsp; T exp_down(T);
+&nbsp; T exp_up&nbsp; (T);
+&nbsp; T log_down(T);
+&nbsp; T log_up&nbsp; (T);
+&nbsp; T cos_down(T);
+&nbsp; T cos_up&nbsp; (T);
+&nbsp; T tan_down(T);
+&nbsp; T tan_up&nbsp; (T);
+&nbsp; T asin_down(T);
+&nbsp; T asin_up&nbsp; (T);
+&nbsp; T acos_down(T);
+&nbsp; T acos_up&nbsp; (T);
+&nbsp; T atan_down(T);
+&nbsp; T atan_up&nbsp; (T);
+&nbsp; T sinh_down(T);
+&nbsp; T sinh_up&nbsp; (T);
+&nbsp; T cosh_down(T);
+&nbsp; T cosh_up&nbsp; (T);
+&nbsp; T tanh_down(T);
+&nbsp; T tanh_up&nbsp; (T);
+&nbsp; T asinh_down(T);
+&nbsp; T asinh_up&nbsp; (T);
+&nbsp; T acosh_down(T);
+&nbsp; T acosh_up&nbsp; (T);
+&nbsp; T atanh_down(T);
+&nbsp; T atanh_up&nbsp; (T);
+};
+
+template &lt;class Rounding>
+struct save_state_... : Rounding
+{
+&nbsp; typedef ... unprotected_rounding;
+};</pre>
+</blockquote>
+
+<h3>
+Synopsis</h3>
+
+<blockquote>Here comes what each class defines. Later, when they will be
+described more thoroughly, these requirements will not be repeated. Please
+come back here in order to see them. Inheritance is also used to avoid
+repetitions.
+<pre>namespace boost {
+&nbsp; namespace interval_lib {
+
+&nbsp;&nbsp;&nbsp; /* basic rounding control */
+&nbsp;&nbsp;&nbsp; template &lt;class T>&nbsp; struct rounding_control;
+
+&nbsp;&nbsp;&nbsp; /* arithmetic functions rounding */
+&nbsp;&nbsp;&nbsp; template &lt;class T, class Rounding = rounding_control&lt;T> > struct rounded_arith_exact;
+&nbsp;&nbsp;&nbsp; template &lt;class T, class Rounding = rounding_control&lt;T> > struct rounded_arith_std;
+&nbsp;&nbsp;&nbsp; template &lt;class T, class Rounding = rounding_control&lt;T> > struct rounded_arith_opp;
+
+&nbsp;&nbsp;&nbsp; /* transcendental functions rounding */
+&nbsp;&nbsp;&nbsp; template &lt;class T, class Rounding> struct rounded_transc_dummy;
+&nbsp;&nbsp;&nbsp; template &lt;class T, class Rounding = rounded_arith_exact&lt;T> > struct rounded_transc_exact;
+&nbsp;&nbsp;&nbsp; template &lt;class T, class Rounding = rounded_arith_std&lt;T> > struct rounded_transc_std;
+&nbsp;&nbsp;&nbsp; template &lt;class T, class Rounding = rounded_arith_opp&lt;T> > struct rounded_transc_opp;
+
+&nbsp;&nbsp;&nbsp; /* rounding-state-saving classes */
+&nbsp;&nbsp;&nbsp; template &lt;class Rounding> struct save_state;
+&nbsp;&nbsp;&nbsp; template &lt;class Rounding> struct save_state_nothing;
+
+&nbsp;&nbsp;&nbsp; /* default policy for type T */
+&nbsp;&nbsp;&nbsp; template &lt;class T>&nbsp; struct rounded_math;
+&nbsp;&nbsp;&nbsp; template &lt;>&nbsp; struct rounded_math&lt;float>;
+&nbsp;&nbsp;&nbsp; template &lt;>&nbsp; struct rounded_math&lt;double>;
+
+&nbsp; } // namespace interval_lib
+} // namespace boost</pre>
+</blockquote>
+
+<h3>
+Template class <tt>rounded_math</tt></h3>
+
+<blockquote>The default policy (aka <tt>rounded_math&lt;T></tt>) is simply
+defined as:
+<pre>template &lt;class T> struct rounded_math&lt;T> : save_state_nothing&lt;rounded_transc_dummy&lt;T, rounded_arith_exact&lt;T> > > {};</pre>
+and the specializations for float and double use rounded_arith_opp, as
+in:
+<pre>template &lt;>&nbsp; struct rounded_math&lt;float>&nbsp; : save_state&lt;rounded_transc_dummy&lt;float, rounded_arith_opp&lt;float> > > {};
+template &lt;>&nbsp; struct rounded_math&lt;double> : save_state&lt;rounded_transc_dummy&lt;double, rounded_arith_opp&lt;double> > > {};</pre>
+</blockquote>
+
+<h3>
+Description of the provided classes</h3>
+
+<blockquote>We now describe each class in the order they appear in the
+definition of a rounding policy (this outermost-to-innermost order is the
+reverse order from the synopsis).
+<h4>
+State saving</h4>
+First comes save_state. This class is responsible for saving the current
+rounding mode and calling init in its constructor, and for restoring the
+saved rounding mode in its destructor. This class also correctly defines
+the unprotected variation.
+<p>If the rounding mode does not require any state-saving or initialization,
+save_state_nothing can be used instead of save_state.
+<h4>
+Transcendental functions</h4>
+The classes rounded_transc_exact, rounded_transc_std and rounded_transc_opp
+expect the std namespace to provide the functions exp log cos tan acos
+asin atan cosh sinh tanh acosh asinh atanh. For the _std and _opp versions,
+all these functions should respect the current rounding mode fixed by a
+call to downward or upward.
+<p>Please note: Unfortunately, the latter is rarely the case. It is the
+reason why a class rounded_transc_dummy&nbsp; is provided which does not
+depend on the functions from the std namespace. It is also the reason why
+rounded_transc_dummy is the default class, rather than rounded_transc_opp.
+There is no magic, however. The functions of rounded_transc_dummy do not
+compute anything. They only return valid values. For example, cos_down
+always returns -1. In this way, we do verify the inclusion property for
+the default implementation, even if this has strictly no value for the
+user. In order to have useful values, another policy should be used explicitely,
+which will most likely lead to a violation of the inclusion property. In
+this way, we ensure that the violation is clearly pointed out to the user
+who then knows what he stands against.
+<h4>
+Basic functions</h4>
+The classes rounded_arith_std and rounded_arith_opp expect the operators
++ - * / and the function std::sqrt to respect the current rounding mode.
+<p>The class rounded_arith_opp also requires std::sqrt to produce a square
+root rounded upward no more than 1 ulp away from the exact value (in order
+for sqrt_down to use std::sqrt without switching the rounding mode).
+<p>The class rounded_arith_exact requires std::floor and std::ceil to be
+defined since it can not rely on to_int.
+<h4>
+Rounding control</h4>
+The functions defined by each of the previous classes did not need any
+explanation. For example, the behavior of add_down is to compute the sum
+of two numbers rounded downward. For rounding_control, the situation is
+a bit more complex.
+<p>The basic function is force_rounding which returns its argument correctly
+rounded accordingly to the current rounding mode if it was not already
+the case. This function is necessary to handle delayed rounding.On standard-compliant
+platform, it ensures that its argument is evaluated with the proper rounding
+mode because it is copied into a volatile temporary variable. <b>CAN THIS
+BE ELABORATED ON? NEED TO ELUCIDATE THE MECHANISM! THANKS. -H</b>
+<p>The function get_rounding_mode returns the current rounding mode, set_rounding_mode
+sets the rounding mode back to a previous value returned by get_rounding_mode.
+downward, upward and tonearest sets the rounding mode in one of the three
+directions. This rounding mode should be global to all the functions that
+use the type T. For example, after a call to downward, force_rounding(x+y)
+is expected to return the sum rounded downward.
+<p>The function to_int computes the nearest integer accordingly to the
+current rounding mode.
+<p>The non-specialized version of rounding_control does not do anything.
+The functions for the rounding mode are empty, and to_int and force_rounding
+are identity functions. The pi_ constant functions return suitable integers
+(for example, pi_up returns T(4)).
+<p>The class template rounding_control is specialized for float and double
+in order to best use the floating point unit of the computer.</blockquote>
+
+<h3>
+Some Examples</h3>
+
+<blockquote>Here come several cases:
+<blockquote>
+<li>
+if you need precise computations with the float or double types, use the
+default rounded_math&lt;T>;</li>
+
+<li>
+for fast wide intervals without any rounding nor precision, use save_state_nothing&lt;rounded_transc_exact&lt;T>
+>;</li>
+
+<li>
+for an exact type (like int or rational with a little help for infinite
+and NaN values) without support for transcendental functions, the solution
+could be save_state_nothing&lt;rounded_transc_dummy&lt;T, rounded_arith_exact&lt;T>
+> >;</li>
+
+<li>
+if it is a more complex case than the previous ones, the best thing is
+probably to directly define your own policy.</li>
+</blockquote>
+</blockquote>
+
+</body>
+</html>
