@@ -9,10 +9,12 @@
 # define BOOST_RESULT_OF_ARGS BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(),T)
 #endif
 
+#if !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x551))
 template<typename F BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
          BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(),typename T)>
 struct result_of<F(BOOST_RESULT_OF_ARGS)>
-  : detail::result_of<F, F(BOOST_RESULT_OF_ARGS)> {};
+    : detail::result_of<F, F(BOOST_RESULT_OF_ARGS)> {};
+#endif
 
 namespace detail {
 
@@ -25,7 +27,7 @@ struct result_of<R (*)(BOOST_RESULT_OF_ARGS), FArgs>
 
 #undef BOOST_RESULT_OF_ARGS
 
-#if BOOST_PP_ITERATION() > 1
+#if BOOST_PP_ITERATION() > 1 && !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x551))
 template<typename R, typename FArgs BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
          BOOST_PP_ENUM_PARAMS(BOOST_PP_ITERATION(),typename T)>
 struct result_of<R (T0::*)
