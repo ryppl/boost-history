@@ -21,6 +21,7 @@
 #include "boost/type_traits/config.hpp"
 #include "boost/type_traits/detail/yes_no_type.hpp"
 
+#include "boost/mpl/aux_/value_wknd.hpp"
 #include "boost/mpl/and.hpp"
 #include "boost/mpl/bool.hpp"
 #include "boost/mpl/not.hpp"
@@ -29,12 +30,14 @@ namespace boost {
 
 namespace detail {
 
-#if !BOOST_WORKAROUND(__GNUC__, BOOST_TESTED_AT(3))
+#if !BOOST_WORKAROUND(__GNUC__, BOOST_TESTED_AT(3)) \
+ && !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x0551))
 
 template <typename From, typename To1, typename To2>
 struct is_better_conversion_impl
 {
 private:
+
     // Alexander Nasonov suggested (comp.lang.c++.moderated, 4 Jul 2002)
     // the following fix for the ambiguous conversion case:
     template <typename Int>
@@ -46,19 +49,20 @@ private:
     static From from_;
 
 public:
-    typedef ::boost::mpl::bool_<
-          ( sizeof( check_(from_,0) ) == sizeof( ::boost::type_traits::yes_type ) )
-        > type;
 
-    void foo(); // avoid warning about all members being private
+    BOOST_STATIC_CONSTANT(bool, value = (
+          sizeof(check_(from_,0)) == sizeof(::boost::type_traits::yes_type )
+        ));
+
+    typedef ::boost::mpl::bool_< value > type;
+
 };
 
-#else// g++ workaround
+#else// g++, borland workaround
 
 struct is_better_conversion_any_t
 {
     template <typename T> is_better_conversion_any_t(const T&);
-    template <typename T> is_better_conversion_any_t(T&);
 };
 
 template <typename To1, typename To2> struct is_better_conversion_checker
@@ -73,15 +77,26 @@ template <typename To1, typename To2> struct is_better_conversion_checker
 template <typename From, typename To1, typename To2>
 struct is_better_conversion_impl
 {
+private:
+
+    typedef is_better_conversion_impl self_t;
+
     static From _m_from;
-    static bool const value =
-        sizeof( is_better_conversion_checker<To1,To2>::_m_check(_m_from, 0) ) 
-        == sizeof(::boost::type_traits::yes_type);
 
-    typedef ::boost::mpl::bool_<value> type;
-};
+public:
 
-#endif // g++ workaround
+    BOOST_STATIC_CONSTANT(bool, value = (
+          sizeof(is_better_conversion_checker<To1,To2>::_m_check(_m_from, 0))
+          == sizeof(::boost::type_traits::yes_type)
+        ));
+
+    typedef ::boost::mpl::bool_<
+          BOOST_MPL_AUX_VALUE_WKND(self_t)::value
+        > type;
+
+}; 
+
+#endif // g++, borland workaround
 
 } // namespace detail
 
