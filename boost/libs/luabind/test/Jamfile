@@ -1,0 +1,6 @@
+# declare the location of this subproject relative to the root
+subproject libs/luabind/test ;
+
+# bring in rules for testing
+SEARCH on testing.jam = $(BOOST_BUILD_PATH) ;
+include testing.jam ;
