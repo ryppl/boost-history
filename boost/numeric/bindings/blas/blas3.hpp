@@ -107,6 +107,24 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
      detail::herk( uplo, trans, n, k, alpha, a_ptr, lda, beta, c_ptr, ldc );
   } // herk()
 
+  // B <- alpha * op( A^-1 )
+  // B <- alpha * B op( A^-1 )
+  // op( A ) = A, A^T, A^H
+  template < class T, class A, class B >
+  void trsm( char side, char uplo, char transa, char diag, T const& alpha, A const& a, B& b ) {
+     const int m = traits::matrix_size1( b ) ;
+     const int n = traits::matrix_size2( b ) ;
+     assert( ( side=='L' && m==traits::matrix_size2( a ) && m==traits::matrix_size1( a ) ) ||
+             ( side=='R' && n==traits::matrix_size2( a ) && n==traits::matrix_size1( a ) ) ) ;
+     assert( side=='R' || side=='L' ) ;
+     assert( uplo=='U' || uplo=='L' ) ;
+     assert( ( side=='L' && m==traits::matrix_size1( a ) ) || ( side=='R' && n==traits::matrix_size1( a ) ) ) ;
+     detail::trsm( side, uplo, transa, diag, m, n, alpha,
+                   traits::matrix_storage( a ), traits::leading_dimension( a ),
+                   traits::matrix_storage( b ), traits::leading_dimension( b )
+                 ) ;
+  }
+
 }}}}
 
 #endif // BOOST_BINDINGS_BLAS_BLAS3_HPP

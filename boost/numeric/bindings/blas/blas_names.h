@@ -41,6 +41,11 @@
 #define BLAS_SCASUM FORTRAN_ID( scasum )
 #define BLAS_DZASUM FORTRAN_ID( dzasum )
 
+#define BLAS_SCOPY FORTRAN_ID( scopy )
+#define BLAS_DCOPY FORTRAN_ID( dcopy )
+#define BLAS_CCOPY FORTRAN_ID( ccopy )
+#define BLAS_ZCOPY FORTRAN_ID( zcopy )
+
 //
 // level 2
 //
@@ -72,5 +77,10 @@
 #define BLAS_ZSYRK FORTRAN_ID( zsyrk )
 #define BLAS_CHERK FORTRAN_ID( cherk )
 #define BLAS_ZHERK FORTRAN_ID( zherk )
+
+#define BLAS_STRSM FORTRAN_ID( strsm )
+#define BLAS_DTRSM FORTRAN_ID( dtrsm )
+#define BLAS_CTRSM FORTRAN_ID( ctrsm )
+#define BLAS_ZTRSM FORTRAN_ID( ztrsm )
 
 #endif // BOOST_NUMERIC_BINDINGS_BLAS_BLAS_NAMES_H

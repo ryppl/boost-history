@@ -100,6 +100,41 @@ namespace boost { namespace numeric { namespace bindings { namespace blas { name
                  &lda, &beta, complex_ptr( c_ptr ), &ldc);
   }
 
+  //
+  // trsm
+  //
+  inline
+  void trsm( char side, char uplo, char transa, char diag, int m, int n,
+             float const& alpha, float const* a_ptr, int lda,
+             float* b_ptr, int ldb )
+  {
+     BLAS_STRSM( &side, &uplo, &transa, &diag, &m, &n, &alpha, a_ptr, &lda, b_ptr, &ldb ) ;
+  }
+
+  inline
+  void trsm( char side, char uplo, char transa, char diag, int m, int n,
+             double const& alpha, double const* a_ptr, int lda,
+             double* b_ptr, int ldb )
+  {
+     BLAS_DTRSM( &side, &uplo, &transa, &diag, &m, &n, &alpha, a_ptr, &lda, b_ptr, &ldb ) ;
+  }
+
+  inline
+  void trsm( char side, char uplo, char transa, char diag, int m, int n,
+             complex_f const& alpha, complex_f const* a_ptr, int lda,
+             complex_f* b_ptr, int ldb )
+  {
+     BLAS_CTRSM( &side, &uplo, &transa, &diag, &m, &n, complex_ptr( &alpha ), complex_ptr( a_ptr ), &lda, complex_ptr( b_ptr ), &ldb ) ;
+  }
+
+  inline
+  void trsm( char side, char uplo, char transa, char diag, int m, int n,
+             complex_d const& alpha, complex_d const* a_ptr, int lda,
+             complex_d* b_ptr, int ldb )
+  {
+     BLAS_ZTRSM( &side, &uplo, &transa, &diag, &m, &n, complex_ptr( &alpha ), complex_ptr( a_ptr ), &lda, complex_ptr( b_ptr ), &ldb ) ;
+  }
+
 }}}}}
 
 #endif // BOOST_NUMERIC_BINDINGS_BLAS_BLAS3_OVERLOADS_HPP
