@@ -1,0 +1,202 @@
+
+// solving A * X = B
+// A symmetric
+// sytrf() & sytrs() 
+
+#include <cstddef>
+#include <iostream>
+#include <complex>
+#include <boost/numeric/bindings/lapack/sysv.hpp>
+#include <boost/numeric/bindings/traits/ublas_matrix.hpp>
+#include <boost/numeric/bindings/traits/ublas_symmetric.hpp>
+#include <boost/numeric/bindings/traits/ublas_hermitian.hpp>
+#include "utils.h"
+
+namespace ublas = boost::numeric::ublas;
+namespace lapack = boost::numeric::bindings::lapack;
+
+using std::size_t; 
+using std::cin;
+using std::cout;
+using std::endl; 
+
+typedef double real; 
+typedef std::complex<real> cmplx_t; 
+
+typedef ublas::matrix<real, ublas::column_major> m_t;
+typedef ublas::matrix<cmplx_t, ublas::column_major> cm_t;
+
+typedef ublas::symmetric_adaptor<m_t, ublas::lower> symml_t; 
+typedef ublas::symmetric_adaptor<m_t, ublas::upper> symmu_t; 
+
+typedef ublas::symmetric_adaptor<cm_t, ublas::lower> csymml_t; 
+typedef ublas::symmetric_adaptor<cm_t, ublas::upper> csymmu_t; 
+
+template <typename M>
+void init_symm2 (M& m) {
+  for (int i = 0; i < m.size1(); ++i) 
+    for (int j = i; j < m.size1(); ++j)
+      m (i, j) = m (j, i) = 1 + j - i; 
+}
+
+int main() {
+
+  cout << endl; 
+
+  // symmetric 
+  cout << "real symmetric\n" << endl; 
+
+  size_t n;
+  cout << "n -> ";
+  cin >> n;
+  if (n < 5) n = 5; 
+  cout << "min n = 5" << endl << endl; 
+  size_t nrhs = 2; 
+  m_t al (n, n), au (n, n);  // matrices (storage)
+  symml_t sal (al);   // symmetric adaptor
+  symmu_t sau (au);   // symmetric adaptor
+  m_t x (n, nrhs);
+  m_t bl (n, nrhs), bu (n, nrhs);  // RHS matrices
+
+  init_symm2 (al); 
+  swap (row (al, 1), row (al, 4)); 
+  swap (column (al, 1), column (al, 4)); 
+
+  print_m (al, "al"); 
+  cout << endl; 
+
+  init_symm2 (au); 
+  swap (row (au, 2), row (au, 3)); 
+  swap (column (au, 2), column (au, 3)); 
+
+  print_m (au, "au"); 
+  cout << endl; 
+
+  for (int i = 0; i < x.size1(); ++i) {
+    x (i, 0) = 1.;
+    x (i, 1) = 2.; 
+  }
+  bl = prod (sal, x); 
+  bu = prod (sau, x); 
+
+  print_m (bl, "bl"); 
+  cout << endl; 
+  print_m (bu, "bu"); 
+  cout << endl; 
+
+  m_t al1 (al), au1 (au);  // for part 2
+  m_t bl1 (bl), bu1 (bu); 
+
+  std::vector<int> ipiv (n); 
+  
+  int err = lapack::sytrf (sal, ipiv);  
+  if (err == 0) {
+    lapack::sytrs (sal, ipiv, bl); 
+    print_m (bl, "xl"); 
+  } 
+  cout << endl; 
+
+  err = lapack::sytrf (sau, ipiv);  
+  if (err == 0) {
+    lapack::sytrs (sau, ipiv, bu); 
+    print_m (bu, "xu"); 
+  } 
+  else 
+    cout << "?" << endl; 
+  cout << endl; 
+
+  // part 2 
+
+  int lw = lapack::sytrf_query ('L', al1); 
+  cout << "lw = " << lw << endl; 
+  std::vector<real> work (lw); 
+
+  err = lapack::sytrf ('L', al1, ipiv, work);  
+  if (err == 0) {
+    lapack::sytrs ('L', al1, ipiv, bl1); 
+    print_m (al1, "al1 factored"); 
+    cout << endl; 
+    print_v (ipiv, "ipiv"); 
+    cout << endl; 
+    print_m (bl1, "xl1"); 
+  }
+  else 
+    cout << "?" << endl; 
+  cout << endl; 
+
+  lw = lapack::sytrf_query ('U', au1); 
+  cout << "lw = " << lw << endl; 
+  if (lw != work.size())
+    work.resize (lw); 
+
+  err = lapack::sytrf ('U', au1, ipiv, work);  
+  if (err == 0) {
+    lapack::sytrs ('U', au1, ipiv, bu1); 
+    print_m (au1, "au1 factored"); 
+    cout << endl; 
+    print_v (ipiv, "ipiv"); 
+    cout << endl; 
+    print_m (bu1, "xu1"); 
+  }
+  else 
+    cout << "?" << endl; 
+  cout << endl; 
+  cout << endl; 
+
+  //////////////////////////////////////////////////////////
+  cout << "\n==========================================\n" << endl; 
+  cout << "complex symmetric\n" << endl; 
+
+  cm_t cal (n, n), cau (n, n);   // matrices (storage)
+  csymml_t scal (cal);   // hermitian adaptor 
+  csymmu_t scau (cau);   // hermitian adaptor 
+  cm_t cx (n, 1); 
+  cm_t cbl (n, 1), cbu (n, 1);  // RHS
+
+  init_symm2 (cal); 
+  init_symm2 (cau); 
+  cal *= cmplx_t (1, 1); 
+  cau *= cmplx_t (1, -0.5); 
+
+  print_m (cal, "cal"); 
+  cout << endl; 
+  print_m (cau, "cau"); 
+  cout << endl; 
+
+  for (int i = 0; i < cx.size1(); ++i) 
+    cx (i, 0) = cmplx_t (1, -1); 
+  print_m (cx, "cx"); 
+  cout << endl; 
+  cbl = prod (scal, cx);
+  cbu = prod (scau, cx);
+  print_m (cbl, "cbl"); 
+  cout << endl; 
+  print_m (cbu, "cbu"); 
+  cout << endl; 
+
+  int ierr = lapack::sytrf (scal, ipiv); 
+  if (ierr == 0) {
+    lapack::sytrs (scal, ipiv, cbl); 
+    print_m (cbl, "cxl"); 
+  }
+  else 
+    cout << "?" << endl;
+  cout << endl; 
+
+  lw = lapack::sytrf_query (scau); 
+  cout << "lw = " << lw << endl; 
+  std::vector<cmplx_t> cwork (lw); 
+
+  ierr = lapack::sytrf (scau, ipiv, cwork); 
+  if (ierr == 0) {
+    lapack::sytrs (scau, ipiv, cbu); 
+    print_v (ipiv, "ipiv"); 
+    cout << endl; 
+    print_m (cbu, "cxu"); 
+  }
+  else 
+    cout << "?" << endl;
+  cout << endl; 
+
+}
+
