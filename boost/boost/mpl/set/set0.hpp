@@ -2,7 +2,7 @@
 #ifndef BOOST_MPL_SET_SET0_HPP_INCLUDED
 #define BOOST_MPL_SET_SET0_HPP_INCLUDED
 
-// + file: boost/mpl/set0.hpp
+// + file: boost/mpl/set/set0.hpp
 // + last modified: 02/may/03
 
 // Copyright (c) 2002-03

@@ -1,9 +1,11 @@
-//-----------------------------------------------------------------------------
-// boost mpl/vector/aux_/vector0.hpp header file
-// See http://www.boost.org for updates, documentation, and revision history.
-//-----------------------------------------------------------------------------
-//
-// Copyright (c) 2000-02
+
+#ifndef BOOST_MPL_VECTOR_AUX_VECTOR0_HPP_INCLUDED
+#define BOOST_MPL_VECTOR_AUX_VECTOR0_HPP_INCLUDED
+
+// + file: boost/mpl/vector/aux_/vector0.hpp
+// + last modified: 12/may/03
+
+// Copyright (c) 2000-03
 // Aleksey Gurtovoy
 //
 // Permission to use, copy, modify, distribute and sell this software
@@ -13,9 +15,8 @@
 // supporting documentation. No representations are made about the 
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
-
-#ifndef BOOST_MPL_VECTOR_AUX_VECTOR0_HPP_INCLUDED
-#define BOOST_MPL_VECTOR_AUX_VECTOR0_HPP_INCLUDED
+//
+// See http://www.boost.org/libs/mpl for documentation.
 
 #include "boost/mpl/integral_c.hpp"
 #include "boost/mpl/void.hpp"

@@ -110,8 +110,10 @@ class type_with_alignment
 
     BOOST_STATIC_CONSTANT(std::size_t, found = alignment_of<align_t>::value);
 
+#if !(defined(__APPLE__) && defined(__MACH__) && defined(__GNUC__))
     BOOST_STATIC_ASSERT(found >= Align);
     BOOST_STATIC_ASSERT(found % Align == 0);
+#endif
 
  public:
     typedef align_t type;
@@ -135,6 +137,9 @@ struct a16{ long double s; };
 }
 
 namespace detail {
+
+typedef ::boost::align::a16 max_align;
+
 BOOST_TT_AUX_BOOL_TRAIT_IMPL_SPEC1(is_pod,::boost::align::a2,true)
 BOOST_TT_AUX_BOOL_TRAIT_IMPL_SPEC1(is_pod,::boost::align::a4,true)
 BOOST_TT_AUX_BOOL_TRAIT_IMPL_SPEC1(is_pod,::boost::align::a8,true)
