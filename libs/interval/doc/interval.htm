@@ -37,10 +37,8 @@ href="../../../boost/interval.hpp">boost/interval.hpp</a>&gt;</h1>
         <a href="rounding.htm">Rounding policies</a><br>
         <a href="checking.htm">Checking policies</a><br>
         <a href="comparisons.htm">Comparison policies</a><br>
-        <a href="Interval-requirements.htm">Base number type requirements
-        (TODO)</a><br>
-        <a href="Interval-guide.htm">Crafting one's own interval type
-        (TODO)</a></td>
+        <a href="numbers.htm">Base number type requirements</a><br>
+        <a href="guide.htm">Choosing your own interval type</a></td>
     </tr>
   </tbody>
 </table>
@@ -681,6 +679,13 @@ page.</p>
 <h4>Compilation flags</h4>
 
 <h4>Compilation options</h4>
+We have made many efforts to reduce the number of
+compilation options to a minimum, but depending on your platform, you
+may find that you need one or two. Some versions of gcc miss proper
+specialization of numeric_limits and using the flag
+<code>-DBOOST_NO_LIMITS</code>
+may help. Also removing the warnings about the lack of long double
+support can be done with the option <code>-Wno-long-double</code>.
 
 <h4>Performance: choosing your policies</h4>
 
@@ -736,12 +741,22 @@ rounding object as explained in the example. <b>HOW DOES THIS INTERACT WITH
 THREADING? -H</b>
 
 <h2><a name="test"></a>Test and Example Programs</h2>
-<b>SOME OVERVIEW OF THE COMPILATION OPTIONS AND PERHAPS A SHORT EXPLANATION
-OF BJAM (OR A YET-MISSING MAKEFILE) WOULD BE GREAT. MANY USERS ARE STILL
-IGNORANT OF BJAM.  ALSO, MORE EXAMPLES COULD BE PROVIDED HERE OF VARIOUS USES
-OF THE LIBRARY (ON A SEPARATE PAGE IF NEEDED). -H</b>
+Some examples are supplied with the library. They illustrate a few
+uses of intervals. For a general description and considerations on using
+this library, and some potential domains of application, please read
+this <a href="guide.htm">mini-guide</a>.
 
-<p><b>add.cpp </b>tests if the additive and substractive operators and the
+<p>Some test programs are also distributed with the library. Their
+intent is to ensure that the code is in accordance with this
+documentation, and to help you find the right compilation options for
+your platforms. See the above section <a href="#perfs">Compilation
+options</a> for some starting points. They are a good place to try and
+use the library first.</p>
+
+<p>The test programs are as follows. Please note that they require the
+use of the Boost.test library (except for interval_test.cpp).</p>
+
+<p><b>add.cpp</b> tests if the additive and substractive operators and the
 respective _std and _opp rounding functions are correctly implemented. It is
 done by using symbolic expressions as a base type.</p>
 
