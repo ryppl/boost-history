@@ -18,11 +18,11 @@
 #define BOOST_INTERVAL_DETAIL_MSVC_ROUNDING_CONTROL_HPP
 
 #ifndef BOOST_INTERVAL_HPP
-#error Internal header file: This header must be included by <boost/interval.hpp> only.
+#  error Internal header file: This header must be included by <boost/interval.hpp> only.
 #endif
 
 #ifndef _MSC_VER
-#error This header is only intended for MSVC, but might work for Borland as well
+#  error This header is only intended for MSVC, but might work for Borland as well
 #endif
 
 #include <float.h>      // MSVC rounding control
@@ -31,7 +31,9 @@ namespace boost {
   namespace interval_lib {
     namespace detail {
 
-struct msvc_rounding_control
+extern "C" { double rint(double); }
+
+struct x86_rounding_control
 {
   typedef unsigned int rounding_mode;
   static rounding_mode get_rounding_mode() { return _controlfp(0,0); }
@@ -41,21 +43,11 @@ struct msvc_rounding_control
   static void upward()         { _controlfp(_RC_UP,   _MCW_RC); }
   static void tonearest()      { _controlfp(_RC_NEAR, _MCW_RC); }
   static void towardzero()     { _controlfp(_RC_CHOP, _MCW_RC); }
+  static double to_int(const double& x) { return rint(x); }
 };
 
     } // namespace detail
-
-template<>
-struct rounding_control<float>: detail::msvc_rounding_control { };
-template<>
-struct rounding_control<double>: detail::msvc_rounding_control { };
-template<>
-struct rounding_control<long double>: detail::msvc_rounding_control { };
-
   } // namespace interval_lib
 } // namespace boost
-
-// force_rounding and to_int needed
-#error Please adapt
 
 #endif /* BOOST_INTERVAL_DETAIL_MSVC_ROUNDING_CONTROL_HPP */

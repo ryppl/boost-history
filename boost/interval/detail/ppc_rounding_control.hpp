@@ -51,6 +51,11 @@ struct ppc_rounding_control
 
     } // namespace detail
 
+extern "C" {
+  float rintf(float);
+  double rint(double);
+}
+
 template<>
 struct rounding_control<float>:
   detail::ppc_rounding_control,
@@ -62,9 +67,8 @@ struct rounding_control<float>:
     __asm__ __volatile__ ("frsp %0, %1" : "=f" (tmp) : "f" (r));
     return tmp;
   }
+  static float to_int(const float& x) { return rintf(x); }
 };
-
-extern "C" { double rint(double); }
 
 template<>
 struct rounding_control<double>:

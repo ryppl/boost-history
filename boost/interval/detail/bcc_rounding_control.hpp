@@ -18,15 +18,15 @@
 #define BOOST_INTERVAL_DETAIL_BCC_ROUNDING_CONTROL_HPP
 
 #ifndef BOOST_INTERVAL_HPP
-#error Internal header file: This header must be included by <boost/interval.hpp> only.
+#  error Internal header file: This header must be included by <boost/interval.hpp> only.
 #endif
 
 #ifndef __BORLANDC__
-#error This header is only intended for Borland C++.
+#  error This header is only intended for Borland C++.
 #endif
 
 #ifndef _M_IX86
-#error This header only works on x86 CPUs.
+#  error This header only works on x86 CPUs.
 #endif
 
 #include <float.h>      // Borland C++ rounding control
@@ -34,6 +34,8 @@
 namespace boost {
   namespace interval_lib {
     namespace detail {
+
+extern "C" { double rint(double); }
 
 /*
  * If __STDC__ is not defined, <float.h> defines some constants for
@@ -59,21 +61,11 @@ public:
   static void upward()     { _control87(rc_up,   mask_rc); }
   static void tonearest()  { _control87(rc_near, mask_rc); }
   static void towardzero() { _control87(rc_chop, mask_rc); }
+  static double to_int(const double& x) { return rint(x); }
 };
 
     } // namespace detail
-
-template<>
-struct rounding_control<float>: detail::bcc_rounding_control { };
-template<>
-struct rounding_control<double>: detail::bcc_rounding_control { };
-template<>
-struct rounding_control<long double>: detail::bcc_rounding_control { };
-
   } // namespace interval_lib
 } // namespace boost
-
-// force_rounding and to_int needed
-#error Please adapt
 
 #endif /* BOOST_INTERVAL_DETAIL_BCC_ROUNDING_CONTROL_HPP */

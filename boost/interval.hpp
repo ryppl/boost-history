@@ -11,52 +11,15 @@
  * implied warranty.
  *
  * $Id$
- *
- * Revision History
- *  2000-03-07  added overlap, intersect, combine, scale, symmetric_scale;
- *              Maarten Keijzer contributed msvc_rounding_control.hpp,
- *              adapted interval_traits for MSVC
- *  2000-03-08  added operator++, operator--, hull, bisect, dist, pred, succ,
- *              specialization of std::numeric_limits<>
- *  2000-03-09  switched to non-member functions, interval_traits_exceptions
- *  2000-03-14  added Chiriaev and Walster extensions to pow
- *  2000-03-30  further speed improvements
- *  2000-04-10  rounding mode control is not part of the interface; cleanup
- *  2000-09-24  separated implementation from interface
- */
-
-/*
- * Local configuration settings
- *
- * BOOST_INTERVAL_USE_FRIEND_OPERATORS:  Use <boost/operators.hpp>
- * (increases the struct interval size from 16 to 24 bytes and reduces
- * performance for + - * / by about 50%)
- *
- * BOOST_INTERVAL_NO_INLINE:  Don't include + - * / and I/O template
- * function definitions to avoid inlining and thus save space.
- *
- * BOOST_INTERVAL_HAVE_LIBRARY:  Assume that transcendental function
- * definitions are provided by an object code library.
  */
 
 #ifndef BOOST_INTERVAL_HPP
 #define BOOST_INTERVAL_HPP
 
 #include <boost/config.hpp>
-
-// FIXME: nécessaire pour utiliser g++ 3.*
-#if __GNUC__==3
-# define BOOST_NO_LIMITS
-# define _CPP_NUMERIC_LIMITS
-#endif
-
 #include <boost/limits.hpp>
-#include <cmath>         // for abs, exp, log, sin, cos, tan, etc.
+#include <cmath>
 #include <iosfwd>
-
-#ifdef BOOST_INTERVAL_USE_FRIEND_OPERATORS
-#include <boost/operators.hpp>
-#endif
 
 namespace boost {
 
@@ -88,27 +51,13 @@ struct interval_traits
 
 template<class T, class Traits = interval_traits<T> >
 class interval
-#ifdef BOOST_INTERVAL_USE_FRIEND_OPERATORS
-// gcc enlarges this class from 16 to 24 bytes with these base classes :-(
-// other compilers may be worse, so avoid for now
-  :
-  addable1<interval<T, Traits>,
-  addable2<interval<T, Traits>, T,
-  subtractable1<interval<T, Traits>,
-  subtractable2<interval<T, Traits>, T,
-  multipliable1<interval<T, Traits>,
-  multipliable2<interval<T, Traits>, T,
-  dividable1<interval<T, Traits>,
-  dividable2<interval<T, Traits>, T,
-  equality_comparable1<interval<T, Traits> > > > > > > > > >
-#endif  // BOOST_INTERVAL_USE_FRIEND_OPERATORS
 {
 public:
   typedef T base_type;
   typedef std::numeric_limits<base_type> base_limits;
   typedef Traits traits_type;
 
-  interval(const T& value = 0);
+  interval(const T& v = 0): low(v), up(v) {}
   interval(const T& l, const T& u);
 
   template<class Traits2>
@@ -134,6 +83,8 @@ public:
   interval& operator*= (const interval& r);
   interval& operator/= (const T& r);
   interval& operator/= (const interval& r);
+
+  static interval pi();
 
   // the following is for internal use only, it is not a published interface
   // nevertheless, it's public because friends don't always work correctly.
@@ -459,15 +410,8 @@ public:
   static vt max() throw() { return vt(bl::max(), bl::max()); }
   static vt epsilon() throw() { return vt(bl::epsilon(), bl::epsilon()); }
 
-#ifndef BOOST_NO_INCLASS_MEMBER_INITIALIZATION
-  static const float_round_style round_style = round_indeterminate;
-  static const bool is_iec559 = false;
-#else
-  enum {
-    round_style = round_indeterminate,
-    is_iec559 = false
-  };
-#endif
+  BOOST_STATIC_CONSTANT(float_round_style, round_style = round_indeterminate);
+  BOOST_STATIC_CONSTANT(bool, is_iec559 = false);
 
   static vt infinity() throw() { return vt::entire(); }
   static vt quiet_NaN() throw() { return vt::empty(); }
@@ -503,12 +447,8 @@ struct less<boost::interval<T, Traits> >
 #include <boost/interval/compare.hpp>
 #include <boost/interval/utility.hpp>
 
-#ifndef BOOST_INTERVAL_NO_INLINE
 #include <boost/interval/oper.hpp>
-#endif // BOOST_INTERVAL_NO_INLINE
-#ifndef BOOST_INTERVAL_HAVE_LIBRARY
 #include <boost/interval/misc.hpp>
 #include <boost/interval/transc.hpp>
-#endif // BOOST_INTERVAL_HAVE_LIBRARY
 
 #endif // BOOST_INTERVAL_HPP

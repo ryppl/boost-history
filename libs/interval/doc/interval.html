@@ -673,12 +673,12 @@ struct rounding {
   T atanh_up  (T);
   T int_down(T);
   T int_up  (T);
-  T pi_down();
-  T pi_up  ();
-  T pi_1_2_down();
-  T pi_1_2_up  ();
-  T pi_2_1_down();
-  T pi_2_1_up  ();
+  static T pi_down();
+  static T pi_up  ();
+  static T pi_1_2_down();
+  static T pi_1_2_up  ();
+  static T pi_2_1_down();
+  static T pi_2_1_up  ();
   typedef ... tonearest_rounding;
   typedef ... unprotected_rounding;
 };

@@ -21,11 +21,11 @@
 #define BOOST_INTERVAL_DETAIL_SPARC_ROUNDING_CONTROL_HPP
 
 #ifndef BOOST_INTERVAL_HPP
-#error Internal header file: This header must be included by <boost/interval.hpp> only.
+#  error Internal header file: This header must be included by <boost/interval.hpp> only.
 #endif
 
 #if !defined(sparc) && !defined(__sparc__)
-#error This header is only intended for SPARC CPUs.
+#  error This header is only intended for SPARC CPUs.
 #endif
 
 
@@ -39,27 +39,27 @@ struct sparc_rounding_control
 
   static void set_rounding_mode(const rounding_mode& mode)
   {
-#if defined(__GNUC__)
+#   if defined(__GNUC__)
     __asm__ __volatile__("ld %0, %%fsr" : : "m"(mode));
-#elif defined(__KCC)
+#   elif defined(__KCC)
     asm("sethi %hi(mode), %o1");
     asm("ld [%o1+%lo(mode)], %fsr");
-#else
-#error Unsupported compiler for Sun Solaris rounding control.
-#endif
+#   else
+#     error Unsupported compiler for Sparc rounding control.
+#   endif
   }
 
   static rounding_mode get_rounding_mode()
   {
     rounding_mode mode;
-#if defined(__GNUC__)
+#   if defined(__GNUC__)
     __asm__ __volatile__("st %%fsr, %0" : "=m"(mode));
-#elif defined(__KCC)
-#error KCC on Sun SPARC get_round_mode: please fix me
+#   elif defined(__KCC)
+#     error KCC on Sun SPARC get_round_mode: please fix me
     asm("st %fsr, [mode]");
-#else
-#error Unsupported compiler for Sun Solaris rounding control.
-#endif
+#   else
+#     error Unsupported compiler for Sparc rounding control.
+#   endif
     return mode;
   }
 
@@ -71,16 +71,19 @@ struct sparc_rounding_control
 
     } // namespace detail
 
+extern "C" {
+  float rintf(float);
+  double rint(double);
+}
+
 template<>
 struct rounding_control<float>:
   detail::sparc_rounding_control,
   detail::ieee_float_constants
 {
-private:
-  rounding_control() {}
+  static float force_rounding(const float& x) { return x; }
+  static float to_int(const float& x) { return rintf(x); }
 };
-
-extern "C" { double rint(double); }
 
 template<>
 struct rounding_control<double>:

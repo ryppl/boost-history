@@ -25,12 +25,6 @@ void interval<T, Traits>::set_entire()
 }
 
 template<class T, class Traits>
-interval<T, Traits>::interval(const T& x)
-{
-  *this = x;
-}
-
-template<class T, class Traits>
 interval<T, Traits>::interval(const T& l, const T& u): low(l), up(u)
 {
   if (low > up) {
@@ -122,8 +116,8 @@ template<class T, class Traits>
 interval<T, Traits> pred(const interval<T, Traits>& x)
 {
   typename Traits::rounding rnd;
-  T l = rnd.add_up(x.lower(), std::numeric_limits<T>::min());
-  T u = rnd.sub_down(x.upper(), std::numeric_limits<T>::min());
+  T l = rnd.add_up(x.lower(), detail::smallest<T>());
+  T u = rnd.sub_down(x.upper(), detail::smallest<T>());
   if (u < l)
     // We could not shrink the interval any further
     return x;
@@ -135,8 +129,8 @@ template<class T, class Traits>
 interval<T, Traits> succ(const interval<T, Traits>& x)
 {
   typename Traits::rounding rnd;
-  T l = rnd.sub_down(x.lower(), std::numeric_limits<T>::min());
-  T u = rnd.add_up(x.upper(), std::numeric_limits<T>::min());
+  T l = rnd.sub_down(x.lower(), detail::smallest<T>());
+  T u = rnd.add_up(x.upper(), detail::smallest<T>());
   return interval<T, Traits>(l, u);
 }
 
@@ -363,6 +357,13 @@ interval<T, Traits> min(const T& x, const interval<T, Traits>& y)
 {
   return interval<T, Traits>(std::min(x, y.lower()),
 			     std::min(x, y.upper()), true);
+}
+
+template<class T, class Traits>
+interval<T, Traits> interval<T, Traits>::pi()
+{
+  typedef typename Traits::rounding rounding;
+  return interval<T, Traits>(rounding::pi_down(), rounding::pi_up(), true);
 }
 
 } // namespace boost

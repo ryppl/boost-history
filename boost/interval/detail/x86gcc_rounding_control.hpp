@@ -19,15 +19,15 @@
 #define BOOST_INTERVAL_DETAIL_X86GCC_ROUNDING_CONTROL_HPP
 
 #ifndef BOOST_INTERVAL_HPP
-#error Internal header file: This header must be included by <boost/interval.hpp> only.
+#  error Internal header file: This header must be included by <boost/interval.hpp> only.
 #endif
 
 #ifndef __GNUC__
-#error This header only works with GNU CC.
+#  error This header only works with GNU CC.
 #endif
 
 #ifndef __i386__
-#error This header only works on x86 CPUs.
+#  error This header only works on x86 CPUs.
 #endif
 
 namespace boost {
@@ -58,7 +58,7 @@ namespace boost {
   extern const fpu_rounding_modes rnd_mode /*__attribute__((weak))*/;
 // }
 
-struct x86gcc_rounding_control
+struct x86_rounding_control
 {
   typedef unsigned short rounding_mode;
 
@@ -92,31 +92,6 @@ struct x86gcc_rounding_control
 const fpu_rounding_modes rnd_mode = { 0x137f, 0x177f, 0x1b7f, 0x1f7f };
 
     } // namespace detail
-
-template<>
-struct rounding_control<float>:
-  detail::x86gcc_rounding_control,
-  detail::ieee_float_constants
-{
-  static float force_rounding(const float& r) 
-  { volatile float r_ = r; return r_; }
-};
-
-template<>
-struct rounding_control<double>:
-  detail::x86gcc_rounding_control,
-  detail::ieee_double_constants
-{
-  static double force_rounding(const double& r) 
-  { volatile double r_ = r; return r_; }
-};
-
-template<>
-struct rounding_control<long double>: detail::x86gcc_rounding_control
-{
-  static long double force_rounding(const long double& r) { return r; }
-};
-
   } // namespace interval_lib
 } // namespace boost
 
