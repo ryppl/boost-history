@@ -4,9 +4,9 @@
 
 // Copyright (c) Aleksey Gurtovoy 2000-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -22,18 +22,19 @@
 namespace boost { namespace mpl {
 
 template< typename N >
-struct range_c_iterator
+struct rc_iter
 {
+    typedef aux::rc_iter_tag tag;
     typedef random_access_iterator_tag category;
     typedef N type;
 
-    typedef range_c_iterator<typename N::next> next;
-    typedef range_c_iterator<typename N::prior> prior;
+    typedef rc_iter<typename N::next> next;
+    typedef rc_iter<typename N::prior> prior;
 
     template< typename D >
     struct BOOST_MPL_AUX_ITERATOR_ADVANCE
     {
-        typedef range_c_iterator<
+        typedef rc_iter<
               typename plus<N,D>::type
             > type;
     };

@@ -23,8 +23,8 @@
 #   include <boost/mpl/bind_fwd.hpp>
 #   include <boost/mpl/placeholders.hpp>
 #   include <boost/mpl/protect.hpp>
+#   include <boost/mpl/apply_wrap.hpp>
 #   include <boost/mpl/limits/arity.hpp>
-#   include <boost/mpl/aux_/apply_wrap.hpp>
 #   include <boost/mpl/aux_/na.hpp>
 #   include <boost/mpl/aux_/arity_spec.hpp>
 #   include <boost/mpl/aux_/type_wrapper.hpp>
@@ -70,7 +70,7 @@ namespace boost { namespace mpl {
 
 // local macros, #undef-ined at the end of the header
 #   define AUX778076_APPLY \
-    aux::BOOST_PP_CAT(apply_wrap,BOOST_MPL_LIMIT_METAFUNCTION_ARITY) \
+    BOOST_PP_CAT(apply_wrap,BOOST_MPL_LIMIT_METAFUNCTION_ARITY) \
     /**/
 
 #   define AUX778076_BIND_PARAMS(param) \
@@ -364,7 +364,7 @@ struct BOOST_PP_CAT(bind,i_)
 #   endif
 
      public:
-        typedef typename aux::BOOST_PP_CAT(apply_wrap,i_)<
+        typedef typename BOOST_PP_CAT(apply_wrap,i_)<
               f_ 
             AUX778076_BIND_N_PARAMS(i_,t)
             >::type type;

@@ -8,9 +8,9 @@
 
 // Copyright (c) Aleksey Gurtovoy 2001-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -47,10 +47,10 @@
 
 #   include <boost/mpl/limits/arity.hpp>
 #   include <boost/mpl/limits/int.hpp>
-#   include <boost/mpl/aux_/config/nttp.hpp>
 #   include <boost/mpl/aux_/preprocessor/range.hpp>
 #   include <boost/mpl/aux_/preprocessor/repeat.hpp>
 #   include <boost/mpl/aux_/preprocessor/params.hpp>
+#   include <boost/mpl/aux_/config/nttp.hpp>
 
 #   include <boost/preprocessor/seq/fold_left.hpp>
 #   include <boost/preprocessor/comma_if.hpp>
@@ -102,7 +102,7 @@ struct template_arity_impl
         );
 };
 
-#define AUX_TEMPLATE_ARITY_IMPL_INVOCATION(unused, i_, F) \
+#define AUX778076_TEMPLATE_ARITY_IMPL_INVOCATION(unused, i_, F) \
     BOOST_PP_COMMA_IF(i_) template_arity_impl<F,BOOST_PP_INC(i_)>::value \
 /**/
 
@@ -112,7 +112,7 @@ struct template_arity
     BOOST_STATIC_CONSTANT(int, value = (
           max_arity< BOOST_MPL_PP_REPEAT(
               BOOST_MPL_LIMIT_METAFUNCTION_ARITY
-            , AUX_TEMPLATE_ARITY_IMPL_INVOCATION
+            , AUX778076_TEMPLATE_ARITY_IMPL_INVOCATION
             , F
             ) >::value
         ));
@@ -120,7 +120,7 @@ struct template_arity
     typedef int_<value> type;
 };
 
-#undef AUX_TEMPLATE_ARITY_IMPL_INVOCATION
+#undef AUX778076_TEMPLATE_ARITY_IMPL_INVOCATION
 
 }}}
 
@@ -129,7 +129,7 @@ struct template_arity
 
 #   include <boost/mpl/aux_/config/eti.hpp>
 #   include <boost/mpl/aux_/config/static_constant.hpp>
-#   include <boost/mpl/aux_/config/workaround.hpp>
+#   include <boost/mpl/aux_/config/bcc_integral_constants.hpp>
 
 namespace boost { namespace mpl { namespace aux {
 
@@ -147,7 +147,7 @@ struct template_arity_impl<true>
 {
     template< typename F > struct result_
     {
-#if defined(__BORLANDC__) && (__BORLANDC__ >= 0x561 && !defined(BOOST_STRICT_CONFIG))
+#if defined(BOOST_MPL_CFG_BCC_INTEGRAL_CONSTANTS)
         enum { value = F::arity };
 #else
         BOOST_STATIC_CONSTANT(int, value = F::arity);

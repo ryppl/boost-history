@@ -6,11 +6,11 @@
 #ifndef BOOST_MPL_QUOTE_HPP_INCLUDED
 #define BOOST_MPL_QUOTE_HPP_INCLUDED
 
-// Copyright (c) Aleksey Gurtovoy 2000-2003
+// Copyright (c) Aleksey Gurtovoy 2000-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -18,10 +18,19 @@
 // $Date$
 // $Revision$
 
-
 #if !defined(BOOST_MPL_PREPROCESSING_MODE)
-#   include <boost/mpl/void.hpp>
+#   include <boost/mpl/aux_/na.hpp>
 #   include <boost/mpl/aux_/has_type.hpp>
+#endif
+
+#include <boost/mpl/aux_/config/ttp.hpp>
+
+#if !defined(BOOST_MPL_CFG_NO_TEMPLATE_TEMPLATE_PARAMETERS)
+#   define BOOST_MPL_CFG_NO_QUOTE_TEMPLATE
+#endif
+
+#if defined(BOOST_MPL_NO_AUX_HAS_XXX)
+#   define BOOST_MPL_CFG_NO_IMPLICIT_METAFUNCTIONS
 #endif
 
 #include <boost/mpl/aux_/config/use_preprocessed.hpp>
@@ -36,29 +45,22 @@
 
 #   include <boost/mpl/limits/arity.hpp>
 #   include <boost/mpl/aux_/preprocessor/params.hpp>
-#   include <boost/mpl/aux_/config/ttp.hpp>
 #   include <boost/mpl/aux_/config/ctps.hpp>
 #   include <boost/mpl/aux_/config/workaround.hpp>
 
 #   include <boost/preprocessor/iterate.hpp>
 #   include <boost/preprocessor/cat.hpp>
 
-#if !defined(BOOST_MPL_CFG_NO_TEMPLATE_TEMPLATE_PARAMETERS)
+#if !defined(BOOST_MPL_CFG_NO_QUOTE_TEMPLATE)
 
-namespace boost {
-namespace mpl {
+namespace boost { namespace mpl {
 
 #if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 
-template< typename T, bool has_type_ = aux::has_type<T>::value >
+template< typename T, bool has_type_ >
 struct quote_impl
-#if !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x561))
     : T
 {
-#else
-{
-    typedef typename T::type type;
-#endif
 };
 
 template< typename T >
@@ -67,7 +69,7 @@ struct quote_impl<T,false>
     typedef T type;
 };
 
-#else
+#else // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 
 template< bool > struct quote_impl
 {
@@ -85,16 +87,15 @@ template<> struct quote_impl<false>
     };
 };
 
-#endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+#endif 
 
 #define BOOST_PP_ITERATION_PARAMS_1 \
     (3,(1, BOOST_MPL_LIMIT_METAFUNCTION_ARITY, <boost/mpl/quote.hpp>))
 #include BOOST_PP_ITERATE()
 
-} // namespace mpl
-} // namespace boost
+}}
 
-#endif // BOOST_MPL_CFG_NO_TEMPLATE_TEMPLATE_PARAMETERS
+#endif // BOOST_MPL_CFG_NO_QUOTE_TEMPLATE
 
 #endif // BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
 #endif // BOOST_MPL_QUOTE_HPP_INCLUDED
@@ -102,24 +103,27 @@ template<> struct quote_impl<false>
 ///// iteration
 
 #else
-#define i BOOST_PP_FRAME_ITERATION(1)
+#define i_ BOOST_PP_FRAME_ITERATION(1)
 
 template<
-      template< BOOST_MPL_PP_PARAMS(i, typename P) > class F
-    , typename Tag = void_
+      template< BOOST_MPL_PP_PARAMS(i_, typename P) > class F
+    , typename Tag = na
     >
-struct BOOST_PP_CAT(quote,i)
+struct BOOST_PP_CAT(quote,i_)
 {
-    template< BOOST_MPL_PP_PARAMS(i, typename U) > struct apply
+    template< BOOST_MPL_PP_PARAMS(i_, typename U) > struct apply
 #if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-        : quote_impl< F< BOOST_MPL_PP_PARAMS(i, U) > >
+        : quote_impl<
+              F< BOOST_MPL_PP_PARAMS(i_, U) >
+            , aux::has_type< F< BOOST_MPL_PP_PARAMS(i_, U) > >::value
+            >
 #else
-        : quote_impl< aux::has_type< F< BOOST_MPL_PP_PARAMS(i, U) > >::value >
-            ::template result_< F< BOOST_MPL_PP_PARAMS(i, U) > >
+        : quote_impl< aux::has_type< F< BOOST_MPL_PP_PARAMS(i_, U) > >::value >
+            ::template result_< F< BOOST_MPL_PP_PARAMS(i_, U) > >
 #endif
     {
     };
 };
 
-#undef i
+#undef i_
 #endif // BOOST_PP_IS_ITERATING

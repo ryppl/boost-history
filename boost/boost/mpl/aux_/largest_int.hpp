@@ -1,6 +1,6 @@
 
-#ifndef BOOST_MPL_AUX_RANGE_C_TAG_HPP_INCLUDED
-#define BOOST_MPL_AUX_RANGE_C_TAG_HPP_INCLUDED
+#ifndef BOOST_MPL_AUX_LARGEST_INT_HPP_INCLUDED
+#define BOOST_MPL_AUX_LARGEST_INT_HPP_INCLUDED
 
 // Copyright (c) Aleksey Gurtovoy 2000-2004
 //
@@ -16,9 +16,11 @@
 
 namespace boost { namespace mpl { namespace aux {
 
-struct half_open_range_tag;
-struct rc_iter_tag;
+template< typename T1, typename T2 > struct largest_int
+{
+    typedef T1 type;
+};
 
-}}}
+}}
 
-#endif // BOOST_MPL_AUX_RANGE_C_TAG_HPP_INCLUDED
+#endif // BOOST_MPL_AUX_LARGEST_INT_HPP_INCLUDED

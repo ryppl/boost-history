@@ -4,9 +4,9 @@
 
 // Copyright (c) Aleksey Gurtovoy 2000-2002
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -24,8 +24,7 @@
 #include <boost/mpl/aux_/range_c/iterator.hpp>
 #include <boost/mpl/aux_/range_c/tag.hpp>
 
-namespace boost {
-namespace mpl {
+namespace boost { namespace mpl {
 
 template<
       typename T
@@ -40,11 +39,10 @@ struct range_c
     typedef integral_c<T,Start> start;
     typedef integral_c<T,Finish> finish;
 
-    typedef range_c_iterator<start> begin;
-    typedef range_c_iterator<finish> end;
+    typedef rc_iter<start> begin;
+    typedef rc_iter<finish> end;
 };
 
-} // namespace mpl
-} // namespace boost
+}}
 
 #endif // BOOST_MPL_RANGE_C_HPP_INCLUDED

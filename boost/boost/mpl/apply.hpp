@@ -8,9 +8,9 @@
 
 // Copyright (c) Aleksey Gurtovoy 2000-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -20,11 +20,11 @@
 
 #if !defined(BOOST_MPL_PREPROCESSING_MODE)
 #   include <boost/mpl/apply_fwd.hpp>
+#   include <boost/mpl/apply_wrap.hpp>
+#   include <boost/mpl/bind.hpp>
+#   include <boost/mpl/placeholders.hpp>
 #   include <boost/mpl/aux_/lambda.hpp>
-#   include <boost/mpl/aux_/apply_wrap.hpp>
 #   include <boost/mpl/aux_/na.hpp>
-#   include <boost/mpl/bind.hpp>                // DWA: Why these cannot go at the top 
-#   include <boost/mpl/placeholders.hpp>        // of the #includes is a mystery to me
 #endif
 
 #include <boost/mpl/aux_/config/use_preprocessed.hpp>
@@ -144,7 +144,7 @@ template<
       typename F AUX778076_APPLY_N_COMMA_PARAMS(i_, typename T)
     >
 struct BOOST_PP_CAT(apply,i_)
-    : aux::BOOST_PP_CAT(apply_wrap,i_)< 
+    : BOOST_PP_CAT(apply_wrap,i_)< 
           typename lambda<F>::type
         AUX778076_APPLY_N_COMMA_PARAMS(i_, T)
         >

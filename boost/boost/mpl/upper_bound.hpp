@@ -30,7 +30,7 @@
 #   include <boost/mpl/begin_end.hpp>
 #   include <boost/mpl/integral_c.hpp>
 #   include <boost/mpl/int.hpp>
-#   include <boost/mpl/apply_if.hpp>
+#   include <boost/mpl/eval_if.hpp>
 #   include <boost/mpl/apply.hpp>
 #   include <boost/mpl/aux_/deref_wknd.hpp>
 #   include <boost/mpl/aux_/value_wknd.hpp>
@@ -83,7 +83,7 @@ template<
     >
 struct upper_bound_step
 {
-    typedef typename apply_if<
+    typedef typename eval_if<
           Distance
         , upper_bound_step_impl<Distance,Predicate,T,DeferredIterator>
         , apply0<DeferredIterator>
@@ -110,7 +110,7 @@ struct upper_bound_step_impl
     typedef typename minus< Distance, offset_, integral_c<long,1> >::type step_;
     typedef upper_bound_step< offset_,Predicate,T,DeferredIterator > step_forward_;
     typedef upper_bound_step< step_,Predicate,T,next<middle_> > step_backward_;
-    typedef typename apply_if<
+    typedef typename eval_if<
           cond_
         , step_forward_
         , step_backward_

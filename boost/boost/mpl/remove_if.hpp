@@ -17,7 +17,7 @@
 
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/reverse_fold.hpp>
-#include <boost/mpl/apply_if.hpp>
+#include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/protect.hpp>
 #include <boost/mpl/lambda.hpp>
@@ -32,7 +32,7 @@ template< typename Pred, typename InsertOp > struct remove_if_helper
 {
     template< typename Sequence, typename U > struct apply
     {
-        typedef typename apply_if<
+        typedef typename eval_if<
               typename apply1<Pred,U>::type
             , identity<Sequence>
             , apply2<InsertOp,Sequence,U>

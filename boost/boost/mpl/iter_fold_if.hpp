@@ -19,7 +19,7 @@
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/always.hpp>
 #include <boost/mpl/apply.hpp>
-#include <boost/mpl/apply_if.hpp>
+#include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/begin_end.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/if.hpp>
@@ -69,7 +69,7 @@ private:
     typedef typename lambda<ForwardPredicate>::type forward_pred_;
     typedef typename lambda<BackwardOp>::type backward_op_;
 
-    typedef typename apply_if<
+    typedef typename eval_if<
           is_void_<BackwardPredicate>
         , if_< is_void_<BackwardOp>, always<false_>, always<true_> >
         , lambda<BackwardPredicate>

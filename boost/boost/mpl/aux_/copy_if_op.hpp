@@ -19,7 +19,7 @@
 
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/apply.hpp>
-#include <boost/mpl/apply_if.hpp>
+#include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/aux_/lambda_spec.hpp>
 
 namespace boost {
@@ -35,7 +35,7 @@ struct copy_if_op
 {
     template< typename Sequence, typename T > struct apply
     {
-        typedef typename apply_if<
+        typedef typename eval_if<
               typename apply1<Predicate,T>::type
             , apply2<Operation,Sequence,T>
             , identity<Sequence>

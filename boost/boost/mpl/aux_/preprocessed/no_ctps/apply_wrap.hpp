@@ -1,4 +1,4 @@
-namespace boost { namespace mpl { namespace aux {
+namespace boost { namespace mpl {
 
 template<
       typename F
@@ -49,4 +49,4 @@ struct apply_wrap5
 {
 };
 
-}}}
+}}

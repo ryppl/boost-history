@@ -20,7 +20,7 @@
 #include <boost/mpl/aux_/select1st_wknd.hpp>
 #include <boost/mpl/aux_/select2nd_wknd.hpp>
 #include <boost/mpl/apply.hpp>
-#include <boost/mpl/apply_if.hpp>
+#include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/reverse_fold.hpp>
 #include <boost/mpl/empty.hpp>
 #include <boost/mpl/front.hpp>
@@ -81,7 +81,7 @@ public:
 
 template <typename Sequence, typename Predicate>
 struct quick_sort
-    : apply_if<
+    : eval_if<
           empty<Sequence>
         , identity< Sequence >
         , quick_sort_impl< Sequence,Predicate >

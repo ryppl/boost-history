@@ -25,7 +25,7 @@
 #include <boost/mpl/aux_/config/typeof.hpp>
 
 #if !defined(BOOST_MPL_CFG_TYPEOF_BASED_SEQUENCES)
-#   include <boost/mpl/apply_if.hpp>
+#   include <boost/mpl/eval_if.hpp>
 #   include <boost/mpl/pair.hpp>
 #   include <boost/mpl/void.hpp>
 #endif
@@ -105,7 +105,7 @@ struct at_impl< aux::map_tag >
             , x_order_impl<Map,Key>::value
             >::type type_;
         
-        typedef typename apply_if< 
+        typedef typename eval_if< 
               is_void_<type_>
             , void_
             , second<type_> 
@@ -122,7 +122,7 @@ template< typename Map, long order > struct item_by_order
             ) - 1
         );
     
-    typedef typename apply_if_c< 
+    typedef typename eval_if_c< 
           is_deleted_
         , void_
         , m_at<Map,order>

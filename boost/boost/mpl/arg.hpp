@@ -23,11 +23,11 @@
 
 #if !defined(BOOST_MPL_PREPROCESSING_MODE)
 #   include <boost/mpl/arg_fwd.hpp>
+#   include <boost/mpl/assert.hpp>
 #   include <boost/mpl/aux_/na.hpp>
 #   include <boost/mpl/aux_/arity_spec.hpp>
 #   include <boost/mpl/aux_/arg_typedef.hpp>
 #   include <boost/mpl/void.hpp>
-#   include <boost/static_assert.hpp>
 #endif
 
 #include <boost/mpl/aux_/config/use_preprocessed.hpp>
@@ -104,11 +104,7 @@ template<> struct arg<i_>
     struct apply
     {
         typedef BOOST_PP_CAT(U,i_) type;
-#if !BOOST_WORKAROUND(__BORLANDC__,< 0x600)
-     private:
-        BOOST_STATIC_CONSTANT(bool, nv = !is_na<type>::value);
-        BOOST_STATIC_ASSERT(nv);
-#endif
+        BOOST_MPL_ASSERT_NOT((is_na<type>));
     };
 };
 
@@ -125,11 +121,7 @@ template<> struct arg<-1>
     struct apply
     {
         typedef U1 type;
-#if !BOOST_WORKAROUND(__BORLANDC__,< 0x600)
-     private:
-        BOOST_STATIC_CONSTANT(bool, nv = !is_na<type>::value);
-        BOOST_STATIC_ASSERT(nv);
-#endif
+        BOOST_MPL_ASSERT_NOT((is_na<type>));
     };
 };
 

@@ -3,8 +3,8 @@
 
 ///// header body
 
-#ifndef BOOST_AUX_APPLY_WRAP_HPP_INCLUDED
-#define BOOST_AUX_APPLY_WRAP_HPP_INCLUDED
+#ifndef BOOST_MPL_APPLY_WRAP_HPP_INCLUDED
+#define BOOST_MPL_APPLY_WRAP_HPP_INCLUDED
 
 // Copyright (c) Aleksey Gurtovoy 2000-2004
 //
@@ -49,7 +49,7 @@
 #   include <boost/preprocessor/iterate.hpp>
 
 
-namespace boost { namespace mpl { namespace aux {
+namespace boost { namespace mpl {
 
 // local macros, #undef-ined at the end of the header
 #   define AUX778076_APPLY_WRAP_PARAMS(n, param) \
@@ -62,17 +62,17 @@ namespace boost { namespace mpl { namespace aux {
 
 
 #define BOOST_PP_ITERATION_PARAMS_1 \
-    (3,(0, BOOST_MPL_LIMIT_METAFUNCTION_ARITY, <boost/mpl/aux_/apply_wrap.hpp>))
+    (3,(0, BOOST_MPL_LIMIT_METAFUNCTION_ARITY, <boost/mpl/apply_wrap.hpp>))
 #include BOOST_PP_ITERATE()
 
 
 #   undef AUX778076_APPLY_WRAP_SPEC_PARAMS
 #   undef AUX778076_APPLY_WRAP_PARAMS
 
-}}}
+}}
 
 #endif // BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
-#endif // BOOST_AUX_APPLY_WRAP_HPP_INCLUDED
+#endif // BOOST_MPL_APPLY_WRAP_HPP_INCLUDED
 
 ///// iteration, depth == 1
 
@@ -108,7 +108,7 @@ template<
 struct BOOST_PP_CAT(apply_wrap_impl,i_);
 
 #define BOOST_PP_ITERATION_PARAMS_2 \
-    (3,(0, BOOST_MPL_LIMIT_METAFUNCTION_ARITY - i_, <boost/mpl/aux_/apply_wrap.hpp>))
+    (3,(0, BOOST_MPL_LIMIT_METAFUNCTION_ARITY - i_, <boost/mpl/apply_wrap.hpp>))
 #include BOOST_PP_ITERATE()
 
 template<

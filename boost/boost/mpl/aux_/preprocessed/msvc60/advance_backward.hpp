@@ -1,6 +1,4 @@
-namespace boost {
-namespace mpl {
-namespace aux {
+namespace boost { namespace mpl { namespace aux {
 template< nttp_long N > struct advance_backward;
 template<>
 struct advance_backward<0>
@@ -23,7 +21,7 @@ struct advance_backward<1>
     template< typename Iterator > struct apply
     {
         typedef Iterator iter0;
-        typedef typename iter0::prior iter1;
+        typedef typename prior<iter0>::type iter1;
         typedef iter1 type;
     };
     // ETI workaround
@@ -39,8 +37,8 @@ struct advance_backward<2>
     template< typename Iterator > struct apply
     {
         typedef Iterator iter0;
-        typedef typename iter0::prior iter1;
-        typedef typename iter1::prior iter2;
+        typedef typename prior<iter0>::type iter1;
+        typedef typename prior<iter1>::type iter2;
         typedef iter2 type;
     };
     // ETI workaround
@@ -56,9 +54,9 @@ struct advance_backward<3>
     template< typename Iterator > struct apply
     {
         typedef Iterator iter0;
-        typedef typename iter0::prior iter1;
-        typedef typename iter1::prior iter2;
-        typedef typename iter2::prior iter3;
+        typedef typename prior<iter0>::type iter1;
+        typedef typename prior<iter1>::type iter2;
+        typedef typename prior<iter2>::type iter3;
         typedef iter3 type;
     };
     // ETI workaround
@@ -74,10 +72,10 @@ struct advance_backward<4>
     template< typename Iterator > struct apply
     {
         typedef Iterator iter0;
-        typedef typename iter0::prior iter1;
-        typedef typename iter1::prior iter2;
-        typedef typename iter2::prior iter3;
-        typedef typename iter3::prior iter4;
+        typedef typename prior<iter0>::type iter1;
+        typedef typename prior<iter1>::type iter2;
+        typedef typename prior<iter2>::type iter3;
+        typedef typename prior<iter3>::type iter4;
         typedef iter4 type;
     };
     // ETI workaround
@@ -107,6 +105,4 @@ struct advance_backward
     };
 };
 
-} // namespace aux
-} // namespace mpl
-} // namespace boost
+}}}

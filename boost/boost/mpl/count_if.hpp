@@ -4,9 +4,9 @@
 
 // Copyright (c) Aleksey Gurtovoy 2000-2002
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License,Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -18,7 +18,7 @@
 #include <boost/mpl/next.hpp>
 #include <boost/mpl/integral_c.hpp>
 #include <boost/mpl/identity.hpp>
-#include <boost/mpl/apply_if.hpp>
+#include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/lambda.hpp>
 #include <boost/mpl/protect.hpp>
 #include <boost/mpl/apply.hpp>
@@ -39,7 +39,7 @@ struct next_if
         >
     struct apply
     {
-        typedef typename apply_if<
+        typedef typename eval_if<
               typename apply1<Predicate,T>::type
             , next<N>
             , identity<N>

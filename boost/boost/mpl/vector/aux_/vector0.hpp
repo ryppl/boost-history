@@ -4,9 +4,9 @@
 
 // Copyright (c) 2000-04 Aleksey Gurtovoy
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -25,9 +25,7 @@
 namespace boost { 
 namespace mpl {
 
-
-template< int dummy_ = 0 > struct vector0;
-template<> struct vector0<0>
+template< int dummy_ = 0 > struct vector0
 {
 #if defined(BOOST_MPL_CFG_TYPEOF_BASED_SEQUENCES)
     typedef aux::vector_tag tag;
@@ -41,8 +39,8 @@ template<> struct vector0<0>
     typedef vector0 type;
     typedef void_ item0;
     
-    typedef v_iter<vector0,0> begin;
-    typedef v_iter<vector0,0> end;
+    typedef v_iter<vector0<>,0> begin;
+    typedef v_iter<vector0<>,0> end;
 #endif
 };
 

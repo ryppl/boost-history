@@ -4,9 +4,9 @@
 
 // Copyright (c) 2000-04 Aleksey Gurtovoy
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -37,30 +37,22 @@ template<
     >
 struct v_iter
 {
+    typedef aux::v_iter_tag tag;
     typedef random_access_iterator_tag category;
     typedef typename v_at<Vector,n_>::type type;
 
+    typedef Vector vector_;
     typedef long_<n_> pos;
 
 #if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
     enum { 
           next_ = n_ + 1
         , prior_ = n_ - 1
+        , pos_ = n_
     };
     
     typedef v_iter<Vector,next_> next;
     typedef v_iter<Vector,prior_> prior;
-
-    template< typename Distance > struct BOOST_MPL_AUX_ITERATOR_ADVANCE
-    {
-        enum { pos_ = n_ + BOOST_MPL_AUX_VALUE_WKND(Distance)::value };
-        typedef v_iter<Vector,pos_> type;
-    };
-
-    template< typename U > struct BOOST_MPL_AUX_ITERATOR_DISTANCE
-        : minus<typename U::pos,pos>
-    {
-    };
 #endif
 
 };
@@ -86,8 +78,6 @@ struct prior< v_iter<Vector,n_> >
     enum { prior_ = n_ - 1 };
     typedef v_iter<Vector,prior_> type;
 };
-
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_BEGIN
 
 template<
       typename Vector
@@ -117,9 +107,21 @@ struct distance< v_iter<Vector,n_>, v_iter<Vector,m_> >
 #endif
 };
 
-BOOST_MPL_AUX_AGLORITHM_NAMESPACE_END
+#else // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 
-#endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+template<> struct advance_impl<aux::v_iter_tag>
+{
+    template< typename Iterator, typename N > struct apply
+    {
+        typedef v_iter<
+              typename Iterator::vector_
+            , plus_c<long,Iterator::pos_,N::value>::value
+            > type;
+    };
+};
+
+
+#endif
 
 } // namespace mpl
 } // namespace boost

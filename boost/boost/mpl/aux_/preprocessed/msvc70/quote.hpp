@@ -1,5 +1,4 @@
-namespace boost {
-namespace mpl {
+namespace boost { namespace mpl {
 template< bool > struct quote_impl
 {
     template< typename T > struct result_
@@ -18,7 +17,7 @@ template<> struct quote_impl<false>
 
 template<
       template< typename P1 > class F
-    , typename Tag = void_
+    , typename Tag = na
     >
 struct quote1
 {
@@ -31,7 +30,7 @@ struct quote1
 
 template<
       template< typename P1, typename P2 > class F
-    , typename Tag = void_
+    , typename Tag = na
     >
 struct quote2
 {
@@ -44,7 +43,7 @@ struct quote2
 
 template<
       template< typename P1, typename P2, typename P3 > class F
-    , typename Tag = void_
+    , typename Tag = na
     >
 struct quote3
 {
@@ -57,7 +56,7 @@ struct quote3
 
 template<
       template< typename P1, typename P2, typename P3, typename P4 > class F
-    , typename Tag = void_
+    , typename Tag = na
     >
 struct quote4
 {
@@ -77,7 +76,7 @@ template<
         , typename P5
         >
       class F
-    , typename Tag = void_
+    , typename Tag = na
     >
 struct quote5
 {
@@ -92,5 +91,4 @@ struct quote5
     };
 };
 
-} // namespace mpl
-} // namespace boost
+}}

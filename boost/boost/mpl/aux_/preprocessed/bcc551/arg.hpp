@@ -10,10 +10,7 @@ template<> struct arg<-1>
     struct apply
     {
         typedef U1 type;
-
-     private:
-        static bool const nv = !is_na<type>::value;
-        BOOST_STATIC_ASSERT(nv);
+        BOOST_MPL_ASSERT_NOT((is_na<type>));
     };
 };
 
@@ -29,10 +26,7 @@ template<> struct arg<1>
     struct apply
     {
         typedef U1 type;
-
-     private:
-        static bool const nv = !is_na<type>::value;
-        BOOST_STATIC_ASSERT(nv);
+        BOOST_MPL_ASSERT_NOT((is_na<type>));
     };
 };
 
@@ -48,10 +42,7 @@ template<> struct arg<2>
     struct apply
     {
         typedef U2 type;
-
-     private:
-        static bool const nv = !is_na<type>::value;
-        BOOST_STATIC_ASSERT(nv);
+        BOOST_MPL_ASSERT_NOT((is_na<type>));
     };
 };
 
@@ -67,10 +58,7 @@ template<> struct arg<3>
     struct apply
     {
         typedef U3 type;
-
-     private:
-        static bool const nv = !is_na<type>::value;
-        BOOST_STATIC_ASSERT(nv);
+        BOOST_MPL_ASSERT_NOT((is_na<type>));
     };
 };
 
@@ -86,10 +74,7 @@ template<> struct arg<4>
     struct apply
     {
         typedef U4 type;
-
-     private:
-        static bool const nv = !is_na<type>::value;
-        BOOST_STATIC_ASSERT(nv);
+        BOOST_MPL_ASSERT_NOT((is_na<type>));
     };
 };
 
@@ -105,10 +90,7 @@ template<> struct arg<5>
     struct apply
     {
         typedef U5 type;
-
-     private:
-        static bool const nv = !is_na<type>::value;
-        BOOST_STATIC_ASSERT(nv);
+        BOOST_MPL_ASSERT_NOT((is_na<type>));
     };
 };
 

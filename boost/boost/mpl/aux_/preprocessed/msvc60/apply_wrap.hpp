@@ -1,4 +1,4 @@
-namespace boost { namespace mpl { namespace aux {
+namespace boost { namespace mpl {
 template< typename F>
 struct msvc_apply0
 {
@@ -223,4 +223,4 @@ struct apply_wrap5< int,int,int,int,int,int >
     typedef int type;
 };
 
-}}}
+}}

@@ -18,7 +18,7 @@
 #define BOOST_MPL_AUX_PARTITION_OP_HPP_INCLUDED
 
 #include <boost/mpl/apply.hpp>
-#include <boost/mpl/apply_if.hpp>
+#include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/pair.hpp>
 #include <boost/mpl/push_front.hpp>
@@ -40,7 +40,7 @@ struct partition_op
         typedef typename Iter::type t_;
         typedef typename apply1< Predicate,t_ >::type pred_;
 
-        typedef typename apply_if<
+        typedef typename eval_if<
               pred_
             , push_front< first_, t_ >
             , push_front< second_, t_ >

@@ -19,7 +19,7 @@
 #include <boost/mpl/has_key.hpp>
 #include <boost/mpl/iterator_tag.hpp>
 #include <boost/mpl/next.hpp>
-#include <boost/mpl/apply_if.hpp>
+#include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/aux_/config/ctps.hpp>
@@ -36,7 +36,7 @@ template< typename Set, typename Tail > struct s_iter_impl
     typedef typename Tail::type     type;
 
 #if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-    typedef typename apply_if< 
+    typedef typename eval_if< 
           has_key< Set,typename Tail::next_::type >
         , identity< s_iter<Set,typename Tail::next_> >
         , next< s_iter<Set,typename Tail::next_> >
@@ -48,7 +48,7 @@ template< typename Set, typename Tail > struct s_iter_impl
 
 template< typename Set, typename Tail > 
 struct next< s_iter<Set,Tail> >
-    : apply_if< 
+    : eval_if< 
           has_key< Set,typename Tail::next_::type >
         , identity< s_iter<Set,typename Tail::next_> >
         , next< s_iter<Set,typename Tail::next_> >

@@ -4,9 +4,9 @@
 
 // Copyright (c) Aleksey Gurtovoy 2001-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -41,6 +41,11 @@ template< typename T > struct msvc_eti_base
     : msvc_eti_base_impl< is_msvc_eti_arg<T>::value >
         ::template result_<T>
 {
+};
+
+template<> struct msvc_eti_base<int>
+{
+    typedef msvc_eti_base type;
 };
 
 #else

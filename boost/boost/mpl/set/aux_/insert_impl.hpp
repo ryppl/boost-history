@@ -21,7 +21,7 @@
 #include <boost/mpl/set/aux_/tag.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/base.hpp>
-#include <boost/mpl/apply_if.hpp>
+#include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/aux_/na.hpp>
 
 #include <boost/type_traits/is_same.hpp>
@@ -30,10 +30,10 @@ namespace boost { namespace mpl {
 
 namespace aux {
 template<  typename Set, typename T > struct set_insert_impl
-    : apply_if< 
+    : eval_if< 
           has_key_impl<aux::set_tag>::apply<Set,T>
         , identity<Set>
-        , apply_if< 
+        , eval_if< 
               is_same< T,typename Set::last_masked_ > 
             , base<Set>
             , identity< s_item<T,Set> >

@@ -4,9 +4,9 @@
 
 // Copyright (c) Aleksey Gurtovoy 2000-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -15,7 +15,6 @@
 // $Revision$
 
 #include <boost/mpl/if.hpp>
-#include <boost/mpl/apply.hpp>
 #include <boost/mpl/aux_/na_spec.hpp>
 #include <boost/mpl/aux_/lambda_support.hpp>
 
@@ -27,7 +26,7 @@ template<
     , typename BOOST_MPL_AUX_NA_PARAM(F2)
     >
 struct eval_if
-    : apply0< typename if_<C,F1,F2>::type >
+    : if_<C,F1,F2>::type
 {
     BOOST_MPL_AUX_LAMBDA_SUPPORT(3,eval_if,(C,F1,F2))
 };
@@ -40,7 +39,7 @@ template<
     , typename F2
     >
 struct eval_if_c
-    : apply0< typename if_c<C,F1,F2>::type >
+    : if_c<C,F1,F2>::type
 {
 };
 

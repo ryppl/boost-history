@@ -21,7 +21,7 @@
 #include <boost/mpl/set/aux_/tag.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/base.hpp>
-#include <boost/mpl/apply_if.hpp>
+#include <boost/mpl/eval_if.hpp>
 
 #include <boost/type_traits/is_same.hpp>
 
@@ -35,9 +35,9 @@ struct erase_key_impl< aux::set_tag >
         , typename T
         > 
     struct apply
-        : apply_if< 
+        : eval_if< 
               has_key_impl<aux::set_tag>::apply<Set,T>
-            , apply_if< 
+            , eval_if< 
                   is_same< T,typename Set::item_type_ > 
                 , base<Set>
                 , identity< s_mask<T,Set> >

@@ -19,7 +19,7 @@
 #include <boost/mpl/reverse_fold.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/pair.hpp>
-#include <boost/mpl/apply_if.hpp>
+#include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/void.hpp>
 #include <boost/mpl/aux_/inserter_algorithm.hpp>
@@ -36,7 +36,7 @@ struct unique_op
     {
         typedef typename Pair::first seq_;
         typedef typename Pair::second prior_;
-        typedef typename apply_if<
+        typedef typename eval_if<
               typename apply2<Predicate,prior_,T>::type
             , identity<seq_>
             , apply2<Operation,seq_,T>

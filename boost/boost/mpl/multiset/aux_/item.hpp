@@ -25,7 +25,7 @@
 #include <boost/mpl/aux_/config/workaround.hpp>
 
 #if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
-#   include <boost/mpl/apply_if.hpp>
+#   include <boost/mpl/eval_if.hpp>
 #   include <boost/mpl/next.hpp>
 #   include <boost/type_traits/is_same.hpp>
 #endif
@@ -44,7 +44,7 @@ struct ms_item
     {
         enum { msvc70_wknd_ = sizeof(Base::key_count(BOOST_MPL_AUX_STATIC_CAST(U*,0))) };
         typedef int_< msvc70_wknd_ > count_;
-        typedef typename apply_if< is_same<T,U>, next<count_>, count_ >::type c_;
+        typedef typename eval_if< is_same<T,U>, next<count_>, count_ >::type c_;
 #if defined(BOOST_MPL_CFG_NO_DEPENDENT_ARRAY_TYPES)
         typedef typename aux::weighted_tag<BOOST_MPL_AUX_MSVC_VALUE_WKND(c_)::value>::type type;
 #else
@@ -57,7 +57,7 @@ struct ms_item
         typedef U (* u_)();
         enum { msvc70_wknd_ = sizeof(Base::ref_key_count(BOOST_MPL_AUX_STATIC_CAST(u_,0))) }; 
         typedef int_< msvc70_wknd_ > count_;
-        typedef typename apply_if< is_same<T,U>, next<count_>, count_ >::type c_;
+        typedef typename eval_if< is_same<T,U>, next<count_>, count_ >::type c_;
 #if defined(BOOST_MPL_CFG_NO_DEPENDENT_ARRAY_TYPES)
         typedef typename aux::weighted_tag<BOOST_MPL_AUX_MSVC_VALUE_WKND(c_)::value>::type type;
 #else

@@ -4,7 +4,7 @@ template<
       typename F
     >
 struct apply0
-    : aux::apply_wrap0<
+    : apply_wrap0<
           typename lambda<F>::type
         >
 {
@@ -27,7 +27,7 @@ template<
       typename F, typename T1
     >
 struct apply1
-    : aux::apply_wrap1<
+    : apply_wrap1<
           typename lambda<F>::type
         , T1
         >
@@ -52,7 +52,7 @@ template<
       typename F, typename T1, typename T2
     >
 struct apply2
-    : aux::apply_wrap2<
+    : apply_wrap2<
           typename lambda<F>::type
         , T1, T2
         >
@@ -78,7 +78,7 @@ template<
       typename F, typename T1, typename T2, typename T3
     >
 struct apply3
-    : aux::apply_wrap3<
+    : apply_wrap3<
           typename lambda<F>::type
         , T1, T2, T3
         >
@@ -105,7 +105,7 @@ template<
       typename F, typename T1, typename T2, typename T3, typename T4
     >
 struct apply4
-    : aux::apply_wrap4<
+    : apply_wrap4<
           typename lambda<F>::type
         , T1, T2, T3, T4
         >
@@ -134,7 +134,7 @@ template<
     , typename T5
     >
 struct apply5
-    : aux::apply_wrap5<
+    : apply_wrap5<
           typename lambda<F>::type
         , T1, T2, T3, T4, T5
         >

@@ -21,7 +21,7 @@
 #include <boost/mpl/map/aux_/tag.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/base.hpp>
-#include <boost/mpl/apply_if.hpp>
+#include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/aux_/config/typeof.hpp>
 
 #include <boost/type_traits/is_same.hpp>
@@ -37,9 +37,9 @@ struct erase_key_impl< aux::map_tag >
         , typename Key
         > 
     struct apply
-        : apply_if< 
+        : eval_if< 
               has_key_impl<aux::map_tag>::apply<Map,Key>
-            , apply_if< 
+            , eval_if< 
                   is_same< Key,typename Map::key_ > 
                 , base<Map>
                 , identity< m_mask<Key,Map> >
