@@ -151,7 +151,7 @@ bool in_zero(const interval<T, Traits>& b)
 }
 
 template<class T, class Traits> inline
-bool in(const T& r, const interval<T, Traits> & b)
+bool in(const T& r, const interval<T, Traits>& b)
 {
   return b.lower() <= r && r <= b.upper();
 }
@@ -167,8 +167,8 @@ bool subset(const interval<T, Traits>& a,
 }
 
 template<class T, class Traits> inline
-bool proper_subset(const interval<T, Traits> & a,
-		   const interval<T, Traits> & b)
+bool proper_subset(const interval<T, Traits>& a,
+		   const interval<T, Traits>& b)
 {
   if (empty(a) && !empty(b))
     return true;
@@ -211,7 +211,7 @@ interval<T, Traits> intersect(const interval<T, Traits>& x,
 
 template<class T, class Traits> inline
 interval<T, Traits> hull(const interval<T, Traits>& x,
-				const interval<T, Traits>& y)
+			 const interval<T, Traits>& y)
 {
   if (empty(x))
     return y;
@@ -257,6 +257,7 @@ bisect(const interval<T, Traits>& x)
   return std::pair<I,I>(I(x.lower(), m), I(m, x.upper()));
 }
 
+#if 0
 template<class T, class Traits> inline
 T dist(const interval<T, Traits>& x, const interval<T, Traits>& y)
 {
@@ -297,6 +298,7 @@ interval<T, Traits> symmetric_scale(const interval<T, Traits>& x,
 {
   return scale(x, median(x), factor);
 }
+#endif
 
 
 /*
@@ -359,27 +361,30 @@ interval<T, Traits> min(const T& x, const interval<T, Traits>& y)
 			     std::min(x, y.upper()), true);
 }
 
-template<class T, class Traits> inline
-interval<T, Traits> interval<T, Traits>::pi()
+  namespace interval_lib {
+
+template<class I> inline
+I pi()
 {
-  typedef typename Traits::rounding rounding;
-  return interval<T, Traits>(rounding::pi_down(), rounding::pi_up(), true);
+    typedef typename I::traits_type::rounding rounding;
+    return I(rounding::pi_down(), rounding::pi_up(), true);
 }
 
-template<class T, class Traits> inline
-interval<T, Traits> interval<T, Traits>::pi_1_2()
+template<class I> inline
+I pi_1_2()
 {
-  typedef typename Traits::rounding rounding;
-  return interval<T, Traits>(rounding::pi_1_2_down(), rounding::pi_1_2_up(), true);
+    typedef typename I::traits_type::rounding rounding;
+    return I(rounding::pi_1_2_down(), rounding::pi_1_2_up(), true);
 }
 
-template<class T, class Traits> inline
-interval<T, Traits> interval<T, Traits>::pi_2_1()
+template<class I> inline
+I pi_2_1()
 {
-  typedef typename Traits::rounding rounding;
-  return interval<T, Traits>(rounding::pi_2_1_down(), rounding::pi_2_1_up(), true);
+    typedef typename I::traits_type::rounding rounding;
+    return I(rounding::pi_2_1_down(), rounding::pi_2_1_up(), true);
 }
 
+  } // namespace interval_lib
 } // namespace boost
 
 #endif // BOOST_INTERVAL_UTILITY_HPP

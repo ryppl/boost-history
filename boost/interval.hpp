@@ -65,7 +65,7 @@ public:
   static interval hull(const T& x, const T& y);
 
   const T& lower() const { return low; }
-  const T& upper() const { return up; }
+  const T& upper() const { return up;  }
 
   interval& operator+= (const T& r);
   interval& operator+= (const interval& r);
@@ -75,10 +75,6 @@ public:
   interval& operator*= (const interval& r);
   interval& operator/= (const T& r);
   interval& operator/= (const interval& r);
-
-  static interval pi();
-  static interval pi_1_2();
-  static interval pi_2_1();
 
   // the following is for internal use only, it is not a published interface
   // nevertheless, it's public because friends don't always work correctly.
@@ -302,9 +298,9 @@ template<class T, class Traits>
 bool equal(const interval<T, Traits>& x, const interval<T, Traits>& y);
 
 template<class T, class Traits>
-std::pair<interval<T, Traits>, interval<T, Traits> >
-bisect(const interval<T, Traits>& x);
+std::pair<interval<T, Traits>, interval<T, Traits> > bisect(const interval<T, Traits>& x);
 
+#if 0
 template<class T, class Traits>
 T dist(const interval<T, Traits>& x, const interval<T, Traits>& y);
 template<class T, class Traits>
@@ -316,6 +312,7 @@ template<class T, class Traits>
 interval<T, Traits> scale(const interval<T, Traits>& x, const T& mirror, const T& factor);
 template<class T, class Traits>
 interval<T, Traits> symmetric_scale(const interval<T, Traits>& x, const T& factor);
+#endif
 
 template<class T, class Traits>
 interval<T, Traits> square(const interval<T, Traits>& x);
@@ -324,6 +321,8 @@ template<class T, class Traits>
 interval<T, Traits> fmod(const interval<T, Traits>& x, const interval<T, Traits>& y);
 template<class T, class Traits>
 interval<T, Traits> fmod(const interval<T, Traits>& x, const T& y);
+template<class T, class Traits>
+interval<T, Traits> fmod(const T& x, const interval<T, Traits>& y);
 
 template<class T, class Traits>
 interval<T, Traits> abs(const interval<T, Traits>& x);
@@ -387,6 +386,13 @@ interval<T, Traits> min(const interval<T, Traits>& x, const T& y);
 template<class T, class Traits>
 interval<T, Traits> min(const T& x, const interval<T, Traits>& y);
 
+  namespace interval_lib {
+
+template<class I> I pi();
+template<class I> I pi_1_2();
+template<class I> I pi_2_1();
+
+  } // namespce interval_lib
 } // namespace boost
 
 

@@ -67,7 +67,7 @@ struct variants {
 }
 
 template<class T>
-void test() {
+bool test() {
   typedef my_namespace::variants<double> types;
   types::I_op mat_op[size][size];
   types::I_sp mat_sp[size][size];
@@ -84,12 +84,14 @@ void test() {
       I d_sp = mat_sp[i][j];
       I d_ou = mat_ou[i][j];
       I d_su = mat_su[i][j];
-      BOOST_TEST(equal(d_op, d_sp) && equal(d_sp, d_ou) && equal(d_ou, d_su));
+      if (!(equal(d_op, d_sp) && equal(d_sp, d_ou) && equal(d_ou, d_su)))
+	return false;
     }
+  return true;
 }
 
 int test_main(int, char *[]) {
-  test<float>();
-  test<double>();
+  BOOST_TEST(test<float>());
+  BOOST_TEST(test<double>());
   return 0;
 }

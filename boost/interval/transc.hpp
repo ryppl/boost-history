@@ -28,6 +28,17 @@
 namespace boost {
 
 template<class T, class Traits> inline
+interval<T, Traits> fmod(const interval<T, Traits>& x,
+			 const interval<T, Traits>& y)
+{
+  typename Traits::rounding rnd;
+  typedef interval<T, typename interval_lib::unprotect<Traits>::type> I;
+  const T& yb = detail::sign(x.lower()) ? y.lower() : y.upper();
+  T n = rnd.int_down(rnd.div_down(x.lower(), yb));
+  return (I)x - n * (I)y;
+}
+
+template<class T, class Traits> inline
 interval<T, Traits> fmod(const interval<T, Traits>& x, const T& y)
 {
   typename Traits::rounding rnd;
@@ -37,14 +48,13 @@ interval<T, Traits> fmod(const interval<T, Traits>& x, const T& y)
 }
 
 template<class T, class Traits> inline
-interval<T, Traits> fmod(const interval<T, Traits>& x,
-			 const interval<T, Traits>& y)
+interval<T, Traits> fmod(const T& x, const interval<T, Traits>& y)
 {
   typename Traits::rounding rnd;
   typedef interval<T, typename interval_lib::unprotect<Traits>::type> I;
-  const T& yb = detail::sign(x.lower()) ? y.lower() : y.upper();
-  T n = rnd.int_down(rnd.div_down(x.lower(), yb));
-  return (I)x - n * (I)y;
+  const T& yb = detail::sign(x) ? y.lower() : y.upper();
+  T n = rnd.int_down(rnd.div_down(x, yb));
+  return x - n * (I)y;
 }
 
 template<class T, class Traits> inline
@@ -71,9 +81,7 @@ interval<T, Traits> log(const interval<T, Traits>& x)
   } else {
     l = rnd.log_down(x.lower());
   }
-  T u = x.upper() > 0 ? rnd.log_up(x.upper())
-                      : -std::numeric_limits<T>::max();
-  return interval<T, Traits>(l, u, true);
+  return interval<T, Traits>(l, rnd.log_up(x.upper()), true);
 }
 
 template<class T, class Traits> inline
@@ -83,20 +91,20 @@ interval<T, Traits> cos(const interval<T, Traits>& x)
   typedef interval<T, typename interval_lib::unprotect<Traits>::type> I;
 
   // get lower bound within [0, pi]
-  I tmp = fmod((I)x, I::pi_2_1());
-  T pi_2_1_d = rnd.pi_2_1_down();
-  if (width(tmp) >= pi_2_1_d)
+  const I pi2 = interval_lib::pi_2_1<I>();
+  I tmp = fmod((I)x, pi2);
+  if (width(tmp) >= pi2.lower())
     return I(-1, 1, true);     // we are covering a full period
   if (tmp.lower() >= rnd.pi_up())
-    return -cos(tmp - I::pi());
+    return -cos(tmp - interval_lib::pi<I>());
   T l = tmp.lower();
   T u = tmp.upper();
 
   // separate into monotone subintervals
   if (u <= rnd.pi_down())
     return interval<T, Traits>(rnd.cos_down(u), rnd.cos_up(l), true);
-  else if (u <= pi_2_1_d) {
-    T cu = rnd.cos_up(std::min(rnd.sub_down(pi_2_1_d, u), l));
+  else if (u <= pi2.lower()) {
+    T cu = rnd.cos_up(std::min(rnd.sub_down(pi2.lower(), u), l));
     return interval<T, Traits>(-1, cu, true);
   } else
     return interval<T, Traits>(-1, 1, true);
@@ -107,7 +115,7 @@ interval<T, Traits> sin(const interval<T, Traits>& x)
 {
   typename Traits::rounding rnd;
   typedef interval<T, typename interval_lib::unprotect<Traits>::type> I;
-  return cos((I)x - I::pi_1_2());
+  return cos((I)x - interval_lib::pi_1_2<I>());
 }
 
 template<class T, class Traits> inline
@@ -117,10 +125,11 @@ interval<T, Traits> tan(const interval<T, Traits>& x)
   typedef interval<T, typename interval_lib::unprotect<Traits>::type> I;
 
   // get lower bound within [-pi/2, pi/2]
-  I tmp = fmod((I)x, I::pi());
+  const I pi = interval_lib::pi<I>();
+  I tmp = fmod((I)x, pi);
   T pi_1_2_d = rnd.pi_1_2_down();
   if (tmp.lower() >= pi_1_2_d)
-    tmp -= I::pi();
+    tmp -= pi;
   if (tmp.lower() <= -pi_1_2_d || tmp.upper() >= pi_1_2_d) {
     typedef typename Traits::checking checking;
     checking::trigonometric_inf();

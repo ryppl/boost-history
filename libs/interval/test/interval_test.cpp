@@ -522,6 +522,7 @@ void test_hull(const R& r1, const R& r2)
 		<< f << std::endl;
 }
 
+#if 0
 void test_scale(const R& r, double factor)
 {
   for(double m = r.lower(); m <= r.upper(); m += width(r)/10) {
@@ -533,6 +534,7 @@ void test_scale(const R& r, double factor)
     }
   }
 }
+#endif
 
 int main()
 {
@@ -559,9 +561,12 @@ int main()
   // iterate_two_intervals(test_combine, "combine");
   iterate_two_intervals(test_intersect, "intersect");
   iterate_two_intervals(test_hull, "hull");
+#if 0
   iterate_one_interval_one_scalar<double>(test_scale,
 		  // Borland C++ requires this explicit conversion
 					  std::string("scale"),
 					  -5, 5, 0.17, -5, 5, 0.17);
+#endif
+
   return 0;
 }
