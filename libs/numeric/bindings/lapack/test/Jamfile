@@ -3,12 +3,35 @@ subproject libs/numeric/bindings/lapack/test ;
 LAPACK_PATH = /usr/lib ;
 LAPACK_LIB  = lapack ;
 
+BLAS_PATH = /usr/lib ;
+BLAS_LIB  = blas g2c ;
+
 exe lapack
         : lapack.cpp 
         :  <include>$(BOOST_ROOT)
 	   <include>$(B_ROOT)
 	   <library-path>$(LAPACK_PATH)
 	   <find-library>$(LAPACK_LIB)
+        ;
+
+exe ublas_gees
+        : ublas_gees.cpp 
+        :  <include>$(BOOST_ROOT)
+	   <include>$(B_ROOT)
+	   <library-path>$(LAPACK_PATH)
+	   <library-path>$(BLAS_PATH)
+	   <find-library>$(LAPACK_LIB)
+	   <find-library>$(BLAS_LIB)
+        ;
+
+exe ublas_geqrf
+        : ublas_geqrf.cpp 
+        :  <include>$(BOOST_ROOT)
+	   <include>$(B_ROOT)
+	   <library-path>$(LAPACK_PATH)
+	   <library-path>$(BLAS_PATH)
+	   <find-library>$(LAPACK_LIB)
+	   <find-library>$(BLAS_LIB)
         ;
 
 
