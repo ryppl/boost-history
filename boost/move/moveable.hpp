@@ -114,7 +114,7 @@ public: // operators
 // Derived by types seeking to support move-construction and move-assign.
 //
 template <typename Deriving>
-struct moveable
+class moveable
 {
 public: // operators
     operator detail::const_lvalue_ref<Deriving>() const

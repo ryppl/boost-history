@@ -28,9 +28,9 @@ namespace boost {
 //////////////////////////////////////////////////////////////////////////
 // forward declares
 //
-template <typename Deriving> struct moveable;
-template <typename T>        struct move_source;
-template <typename T>        struct move_return;
+template <typename Deriving> class moveable;
+template <typename T>        class move_source;
+template <typename T>        class move_return;
 
 //////////////////////////////////////////////////////////////////////////
 // function template move
