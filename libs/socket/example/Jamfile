@@ -16,6 +16,23 @@ rule socket-example ( example-name : sources + )
 	:
 	<include>$(B_ROOT)
 	<include>$(BOOST_ROOT)
+	<bcc56><*><cxxflags>-Q
+	  <runtime-link>static
+	  <threading>single
+	  <msvc><*><find-library>Ws2_32
+	  <vc7><*><find-library>Ws2_32
+	  <gcc><*><find-library>Ws2_32
+	  ;
+}
+
+rule socket-test-example ( example-name : sources + )
+{
+    exe $(example-name) :
+      $(sources)
+	<lib>../build/boost_socket
+	:
+	<include>$(B_ROOT)
+	<include>$(BOOST_ROOT)
 	<library-path>$(B_ROOT)/libs/test/build/bin/libunit_test_framework.lib/$(TOOLS)/debug/runtime-link-static/threading-single
 	<gcc><*><find-library>unit_test_framework
 	<borland><*><find-library>libunit_test_framework
@@ -32,9 +49,8 @@ rule socket-example ( example-name : sources + )
 }
 
 
-
-socket-example simple_client : client_test.cpp ;
-socket-example simple_server : server_test.cpp ;
+socket-test-example simple_client : client_test.cpp ;
+socket-test-example simple_server : server_test.cpp ;
 
 socket-example http_get : http_get.cpp ;
 
