@@ -52,13 +52,13 @@ skipl_unit_test
     BOOST_CHECK_EQUAL( scratch, "Boosters!" );
 }
 
-// Unit test for general
+// Unit test for resetios
 void
-general_unit_test
+resetios_unit_test
 (
 )
 {
-    using boost::io::general;
+    using boost::io::resetios;
     using std::ios_base;
 
     std::stringstream  ss( "Hello!\n" );
@@ -86,7 +86,7 @@ general_unit_test
      "broken stream (fill) state change" );
 
     // Test the change-back
-    ss << general;
+    ss << resetios;
     BOOST_CHECK_EQUAL( (ios_base::skipws | ios_base::dec), ss.flags() );
     BOOST_CHECK_EQUAL( 0, ss.width() );
     BOOST_CHECK_EQUAL( 6, ss.precision() );
@@ -107,7 +107,7 @@ init_unit_test_suite
 
     test->add( BOOST_TEST_CASE(newl_unit_test) );
     test->add( BOOST_TEST_CASE(skipl_unit_test) );
-    test->add( BOOST_TEST_CASE(general_unit_test) );
+    test->add( BOOST_TEST_CASE(resetios_unit_test) );
 
     return test;
 }

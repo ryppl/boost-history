@@ -20,7 +20,7 @@ function templates and function-acting [template] classes).</p>
 	<li><a href="#header">Header Synopsis</a></li>
 	<li><a href="#newl">Non-flushing Line-break Output Manipulator</a></li>
 	<li><a href="#skipl">Line-skipping Input Manipulator</a></li>
-	<li><a href="#general">Stream Formatting State-reset Manipulator</a></li>
+	<li><a href="#resetios">Stream Formatting State-reset Manipulator</a></li>
 	<li><a href="#refer">References</a></li>
 	<li><a href="#credits">Credits</a>
 		<ul>
@@ -52,7 +52,7 @@ template &lt; typename Ch, class Tr &gt;
     std::basic_istream&lt;Ch, Tr&gt; &amp;  skipl( std::basic_istream&lt;Ch, Tr&gt; &amp;is );
 
 template &lt; typename Ch, class Tr &gt;
-    std::basic_ios&lt;Ch, Tr&gt; &amp;  general( std::basic_ios&lt;Ch, Tr&gt; &amp;s );
+    std::basic_ios&lt;Ch, Tr&gt; &amp;  resetios( std::basic_ios&lt;Ch, Tr&gt; &amp;s );
 
 }
 }
@@ -95,16 +95,16 @@ is passed, or the stream's end is reached</p>
 <p><strong>Rationale:</strong> a counterpart to <a
 href="#newl"><code>newl</code></a></p>
 
-<h2><a name="general">Stream Formatting State-reset Manipulator</a></h2>
+<h2><a name="resetios">Stream Formatting State-reset Manipulator</a></h2>
 
 <blockquote><pre>
 template &lt; typename Ch, class Tr &gt;
 std::basic_ios&lt;Ch, Tr&gt; &amp;
-boost:io::general( std::basic_ios&lt;Ch, Tr&gt; &amp;s );
+boost:io::resetios( std::basic_ios&lt;Ch, Tr&gt; &amp;s );
 </pre></blockquote>
 
-<p><strong>Effects:</strong> resets the directly-contained formatting
-state of stream <var>s</var> to the conditions just after construction</p>
+<p><strong>Effects:</strong> resets the formatting attributes of stream
+<var>s</var>, except locale, to their default values</p>
 
 <p><strong>Returns:</strong> <var>s</var></p>
 
@@ -146,7 +146,7 @@ attributes of a stream, especially after many attribute changes</p>
 	<dd>Started the library.  Contributed the initial versions of <a
 		href="#skipl"><code>skipl</code></a>, <a
 		href="#newl"><code>newl</code></a>, and <a
-                href="#general"><code>general</code></a>.  Contributed
+                href="#resetios"><code>resetios</code></a>.  Contributed
 		<cite><a
 		href="../test/iomanip_test.cpp">iomanip_test.cpp</a></cite>.
 </dl>

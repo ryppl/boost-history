@@ -34,7 +34,7 @@ template < typename Ch, class Tr >
     std::basic_istream<Ch, Tr> &  skipl( std::basic_istream<Ch, Tr> &is );
 
 template < typename Ch, class Tr >
-    std::basic_ios<Ch, Tr> &  general( std::basic_ios<Ch, Tr> &s );
+    std::basic_ios<Ch, Tr> &  resetios( std::basic_ios<Ch, Tr> &s );
 
 
 //  I/O-manipulator function template definitions  ---------------------------//
@@ -62,7 +62,7 @@ skipl
 
 template < typename Ch, class Tr >
 std::basic_ios<Ch, Tr> &
-general
+resetios
 (
     std::basic_ios<Ch, Tr> &  s
 )
