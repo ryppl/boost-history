@@ -16,6 +16,7 @@ CPP_SOURCE =
   any_address
   interface
   impl/socket_init
+  impl/address_storage
   ip4/address ip4/protocol ;
 
 B_ROOT ?= c:/usr/boost ;
@@ -24,4 +25,5 @@ lib boost_socket : ../src/$(CPP_SOURCE).cpp
     :
   <include>$(BOOST_ROOT)
   <include>$(B_ROOT)
+  <bcc56><*><cxxflags>-w-stl
     ;

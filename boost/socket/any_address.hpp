@@ -29,7 +29,7 @@ namespace boost
     class any_address
     {
     public:
-      any_address(family_t family, void* addr, std::size_t size);
+      any_address(const void* addr, std::size_t size);
       family_t family() const;
       std::string to_string() const;
       std::pair<void*,size_t> representation();
@@ -39,7 +39,6 @@ namespace boost
       bool operator != (const any_address& addr) const;
 
     private:
-      family_t m_family;
       impl::address_storage m_address;
       std::size_t m_size;
     };

@@ -64,15 +64,17 @@ namespace boost
       void* linger::data()
       {
         static ::linger l;
-        l.l_onoff=(m_data.msec()!=0 ? 1 : 0);
-        l.l_linger=m_data.msec();
+        l.l_onoff=(u_short)(m_data!=time_t(0,0,0,0) ? 1 : 0);
+        l.l_linger=(u_short)
+          (m_data.ticks()/boost::posix_time::millisec(1).ticks());
         return &l;
       }
       void const* linger::data() const
       {
         static ::linger l;
-        l.l_onoff=(m_data.msec()!=0 ? 1 : 0);
-        l.l_linger=m_data.msec();
+        l.l_onoff=(u_short)(m_data!=time_t(0,0,0,0) ? 1 : 0);
+        l.l_linger=(u_short)
+          (m_data.ticks()/boost::posix_time::millisec(1).ticks());
         return &l;
       }
       std::size_t linger::size() const

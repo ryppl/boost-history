@@ -38,7 +38,7 @@ namespace boost
             completionroutine. The default_asynch_socket_impl must live
             until all queued asynch notifications is called.
 
-            @todo should this class inherit from default_socket_impl 
+            @todo should this class inherit from default_socket_impl
             since its an refinment (or should we use forwarding)?
             */
             class default_asynch_socket_impl : public default_socket_impl
@@ -47,23 +47,23 @@ namespace boost
                 default_asynch_socket_impl();
                 //         default_asynch_socket_impl(const default_asynch_socket_impl&);
                 explicit default_asynch_socket_impl(socket_t socket);
-                
+
                 //! Asynchronous accpetance of connection
-                /** 
-                    @arg socket lifetime of default_asynch_socket_impl& must be until 
+                /**
+                    @arg socket lifetime of default_asynch_socket_impl& must be until
                     completionRoutine is triggered.
-                    @arg remoteAddress lifetime of std::pair<void *,size_t>& must be until 
+                    @arg remoteAddress lifetime of std::pair<void *,size_t>& must be until
                     completionRoutine is triggered.
                     @arg completionRoutine a function to be called when accept completes.
                 */
                 socket_errno async_accept(
-                    default_asynch_socket_impl& socket, 
-                    std::pair<void *,size_t>& remoteAddress, 
+                    default_asynch_socket_impl& socket,
+                    std::pair<void *,size_t>& remoteAddress,
                     boost::function1<void, socket_errno> completionRoutine);
-                
+
                 //! Asynchronous connect
-                /** 
-                    @arg address lifetime of std::pair<void *,size_t>& must be until 
+                /**
+                    @arg address lifetime of std::pair<void *,size_t>& must be until
                     completionRoutine is triggered.
                     @arg completionRoutine a function to be called when connect completes.
                 */
@@ -72,8 +72,8 @@ namespace boost
                     boost::function1<void, socket_errno> completionRoutine);
 
                 //! Asynchronous receive
-                /** 
-                    @arg data pointer to buffer that receives data. 
+                /**
+                    @arg data pointer to buffer that receives data.
                     lifetime of buffer must be until completionRoutine is triggered.
                     @arg data length in bytes of receive buffer
                     @arg completionRoutine a function to be called when recv completes.
@@ -84,8 +84,8 @@ namespace boost
 
 
                 //! Asynchronous receive
-                /** 
-                    @arg data pointer to buffer that receives data. 
+                /**
+                    @arg data pointer to buffer that receives data.
                     lifetime of buffer must be until completionRoutine is triggered.
                     @arg data length in bytes of receive buffer
                     @arg completionRoutine a function to be called when recv completes.

@@ -190,8 +190,8 @@ namespace boost
       //! close the socket
       socket_errno close()
       {
-        BOOST_ASSERT(m_socket_impl.is_valid()
-                     && "trying to close invalid handle");
+        BOOST_ASSERT(m_socket_impl.is_open()
+                     && "trying to close handle that is not open");
         socket_errno ret=m_socket_impl.close();
         if (ret!=Success)
           m_error_policy.handle_error(function::close, ret);
@@ -199,9 +199,9 @@ namespace boost
       }
 
       //! check for a valid socket
-      bool is_valid() const
+      bool is_open() const
       {
-        return m_socket_impl.is_valid();
+        return m_socket_impl.is_open();
       }
 
       //! obtain OS socket

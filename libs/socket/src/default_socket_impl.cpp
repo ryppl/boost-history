@@ -213,7 +213,7 @@ namespace boost
       }
 
       //! check for a valid socket
-      bool default_socket_impl::is_valid() const
+      bool default_socket_impl::is_open() const
       {
         return m_socket!=invalid_socket;
       }

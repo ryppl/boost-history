@@ -18,7 +18,6 @@
 
 #include "boost/socket/socket_base.hpp"
 #include "boost/socket/data_socket.hpp"
-#include "boost/socket/time_value.hpp"
 #include "boost/socket/socket_option.hpp"
 #include "boost/socket/socket_set.hpp"
 
@@ -62,7 +61,7 @@ namespace boost
         data_connection_t& data_socket,
         const Protocol& protocol,
         const Addr& address,
-        const time_value& timeout)
+        const time_t& timeout)
       {
         socket_base_t socket_to_connect;
         socket_errno err=socket_to_connect.open(protocol);
@@ -75,9 +74,14 @@ namespace boost
         if (err==WouldBlock)
         {
           socket_set fdset;
+          ::timeval tval;
+          tval.tv_sec=timeout.ticks()/boost::posix_time::seconds(1).ticks();
+          tval.tv_usec=time_t(0,0,0,timeout.fractional_seconds()).ticks()
+            /boost::posix_time::millisec(1).ticks();
+
           fdset.insert(socket_to_connect.socket());
           socket_errno sel = ::select(fdset.width(), 0, fdset.fdset(), 0,
-                                      (::timeval*)timeout.timevalue());
+                                      &tval);
           // this needs reworking !!!
           if (sel==-1)
             throw "unexpected select problem";

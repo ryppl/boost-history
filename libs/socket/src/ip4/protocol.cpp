@@ -16,6 +16,7 @@
 
 #if defined(__BORLANDC__)
 #pragma hdrstop
+#pragma option -w-8061 -w-8060
 #endif
 
 #include "boost/socket/ip4/protocol.hpp"

@@ -16,8 +16,8 @@
 #ifndef BOOST_SOCKET_SOCKET_OPTION_HPP
 #define BOOST_SOCKET_SOCKET_OPTION_HPP 1
 
-#include "boost/socket/time_value.hpp"
 #include "boost/config.hpp"
+#include "boost/socket/config.hpp"
 
 namespace boost
 {
@@ -42,8 +42,7 @@ namespace boost
       class linger
       {
       public:
-        linger(time_value t) : m_data(t) {}
-        linger(unsigned short t) : m_data(t/1000,t%1000) {}
+        linger(time_t t) : m_data(t) {}
         static int level();
         static int optname();
         void* data();
@@ -52,7 +51,7 @@ namespace boost
         BOOST_STATIC_CONSTANT(bool, can_get = true);
         BOOST_STATIC_CONSTANT(bool, can_set = true);
       private:
-        time_value m_data;
+        time_t m_data;
       };
 
     }// namespace

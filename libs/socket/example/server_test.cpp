@@ -102,7 +102,6 @@ void server_test()
                    0)==-1)
       {
         throw "unexpected select result";
-        return;
       }
 
       const boost::socket::socket_set::iterator
@@ -159,7 +158,7 @@ void server_test()
           BOOST_CHECK(client!=clients.end());
 
           ip4::address& client_addr=client->second;
-//           BOOST_MESSAGE(client_addr.hostname());
+          std::cout << client_addr.to_string();
           boost::socket::basic_socket_stream<char> ss(*client->first);
 
           while (!ss.eof() && !ss.fail())
@@ -168,13 +167,13 @@ void server_test()
             if (!ss.fail())
               BOOST_MESSAGE(str);
           }
-          if (!client->first->is_valid())
+          if (!client->first->is_open())
             BOOST_MESSAGE("Socket closed");
 
           if (ss.eof())
           {
             // reading from socket should have forced it closed
-            BOOST_CHECK(!client->first->is_valid());
+            BOOST_CHECK(!client->first->is_open());
             master_set.erase(*i);
             clients.erase(client);
           }
@@ -182,9 +181,6 @@ void server_test()
       }
 
     }
-
-    BOOST_CHECK(listening_socket.close()==boost::socket::Success);
-
   }
   catch (const socket_exception& e)
   {

@@ -47,7 +47,7 @@ namespace boost
       // destructor
       ~data_socket()
       {
-        if (is_valid())
+        if (is_open())
           close();
       }
 
@@ -96,7 +96,7 @@ namespace boost
       //! close the socket
       socket_errno close(Direction how=Both)
       {
-        BOOST_ASSERT(is_valid());
+        BOOST_ASSERT(is_open());
         socket_errno err=m_socket.shutdown(how);
         if (err!=Success)
           return err;
@@ -104,9 +104,9 @@ namespace boost
       }
 
       //! check for a valid socket
-      bool is_valid() const
+      bool is_open() const
       {
-        return m_socket.is_valid();
+        return m_socket.is_open();
       }
 
       //! obtain OS socket

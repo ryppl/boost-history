@@ -55,10 +55,10 @@ void client_test()
 
     connector_t connector;
 
-    time_value timeout(10,0);
+    boost::socket::time_t timeout(0,0,10,0);
     data_connection_t socket;
     BOOST_CHECK(connector.connect(socket,protocol,addr)==boost::socket::Success);
-    BOOST_CHECK(socket.is_valid());
+    BOOST_CHECK(socket.is_open());
 //     BOOST_CHECK(socket.setsockopt(boost::socket::option::linger(1000))
 //                 ==boost::socket::Success);
     BOOST_MESSAGE("Connected");

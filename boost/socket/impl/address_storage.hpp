@@ -18,6 +18,7 @@
 
 #include "boost/config.hpp"
 #include <cstddef>
+#include <cstring>
 
 namespace boost
 {
@@ -25,10 +26,19 @@ namespace boost
   {
     namespace impl
     {
-
       //! reserve storage for socket addresses
-      struct address_storage
+      class address_storage
       {
+      public:
+        address_storage();
+        address_storage(void const* const addr, std::size_t l);
+        address_storage(const address_storage& address);
+        void clear();
+        void operator = (const address_storage& address);
+        void set(void const* const addr, std::size_t l);
+        void const* get() const;
+        void* get();
+      private:
         BOOST_STATIC_CONSTANT(std::size_t, len=128);
         unsigned char storage[len];
       };

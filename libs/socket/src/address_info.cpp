@@ -16,6 +16,7 @@
 
 #if defined(__BORLANDC__)
 #pragma hdrstop
+#pragma option -w-8061 -w-8060
 #endif
 
 #include "boost/socket/address_info.hpp"
@@ -32,18 +33,20 @@
 #if defined(USES_WINSOCK2)
 #define HAVE_GETADDRINFO
 #else
+
+#ifdef __CYGWIN__
+#include <cygwin/in.h>
+#else
+#include <sys/in.h>
+#endif
+
 #include <ctype.h>
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <cstring>
-#ifdef __CYGWIN__
-#include <cygwin/in.h>
-#include <cygwin/socket.h>
-#else
-#include <sys/in.h>
 #include <sys/socket.h>
-#endif
 #include "boost/lexical_cast.hpp"
+
 #endif
 
 #include <iostream>
@@ -275,8 +278,7 @@ namespace boost
 
     any_address address_info::address() const
     {
-      return any_address(cast_addrinfo(m_addrinfo)->ai_family,
-                         cast_addrinfo(m_addrinfo)->ai_addr,
+      return any_address(cast_addrinfo(m_addrinfo)->ai_addr,
                          cast_addrinfo(m_addrinfo)->ai_addrlen);
     }
 

@@ -18,10 +18,9 @@
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
  #define USES_WINSOCK2 1
-// #elif defined(__CYGWIN__)
-// #else
 #endif
 
+#include "boost/date_time/posix_time/posix_time_types.hpp"
 #include "boost/socket/impl/socket_init.hpp"
 
 namespace boost
@@ -34,6 +33,7 @@ namespace boost
     typedef unsigned short port_t;
     typedef int protocol_type_t;
     typedef int protocol_t;
+    typedef boost::posix_time::time_duration time_t;
 
     enum Direction
     {

@@ -16,6 +16,7 @@
 
 #if defined(__BORLANDC__)
 #pragma hdrstop
+#pragma option -w-8061 -w-8060
 #endif
 
 #include "boost/socket/ip4/address.hpp"
@@ -67,13 +68,13 @@ namespace
   inline sockaddr_in*
   sockaddr_ptr(boost::socket::impl::address_storage& addr)
   {
-    return reinterpret_cast<sockaddr_in*>(addr.storage);
+    return reinterpret_cast<sockaddr_in*>(addr.get());
   }
 
   inline sockaddr_in const*
   sockaddr_ptr(boost::socket::impl::address_storage const& addr)
   {
-    return reinterpret_cast<const sockaddr_in*>(addr.storage);
+    return reinterpret_cast<const sockaddr_in*>(addr.get());
   }
 }
 
@@ -87,15 +88,13 @@ namespace boost
 
       address::address()
       {
-        std::memset(m_address.storage, 0, address_size);
         sockaddr_ptr(m_address)->sin_family = AF_INET;
       }
 
       address::address(const any_address& addr)
       {
-        std::memset(m_address.storage, 0, address_size);
         std::pair<const void*,size_t> rep=addr.representation();
-        std::memcpy(m_address.storage, rep.first, rep.second);
+        m_address.set(rep.first, rep.second);
       }
 
       family_t address::family() const
@@ -166,7 +165,7 @@ namespace boost
           s+=boost::lexical_cast<std::string>(
             ntohs(sockaddr_ptr(m_address)->sin_port));
         }
-        catch (boost::bad_lexical_cast& e)
+        catch (boost::bad_lexical_cast&)
         {}
 
         return s;
@@ -190,24 +189,24 @@ namespace boost
 
       bool address::operator < (const address& addr) const
       {
-        const int cmp=std::memcmp(m_address.storage,
-                                  addr.m_address.storage,
+        const int cmp=std::memcmp(m_address.get(),
+                                  addr.m_address.get(),
                                   address_size);
         return cmp<0;
       }
 
       bool address::operator == (const address& addr) const
       {
-        const int cmp=std::memcmp(m_address.storage,
-                                  addr.m_address.storage,
+        const int cmp=std::memcmp(m_address.get(),
+                                  addr.m_address.get(),
                                   address_size);
         return cmp==0;
       }
 
       bool address::operator != (const address& addr) const
       {
-        const int cmp=std::memcmp(m_address.storage,
-                                  addr.m_address.storage,
+        const int cmp=std::memcmp(m_address.get(),
+                                  addr.m_address.get(),
                                   address_size);
         return cmp!=0;
       }

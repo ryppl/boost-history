@@ -36,6 +36,7 @@ namespace boost
         switch (error)
         {
           case WouldBlock :
+            std::cerr << "Would block " << fn << std::endl;
             return WouldBlock;
           case address_already_in_use :
             boost::throw_exception(

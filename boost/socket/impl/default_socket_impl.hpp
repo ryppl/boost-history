@@ -100,7 +100,7 @@ namespace boost
         socket_errno close();
 
         //! check for a valid socket
-        bool is_valid() const;
+        bool is_open() const;
 
         //! obtain OS socket
         socket_t socket();

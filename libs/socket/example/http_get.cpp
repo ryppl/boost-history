@@ -90,7 +90,7 @@ int main(int argc, const char** argv)
       s >> result;
     }
 
-    if (connection.is_valid())
+    if (connection.is_open())
       std::cerr << "\n\nData connection was not closed properly" << std::endl;
 
   }

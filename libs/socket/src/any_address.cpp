@@ -22,6 +22,12 @@
 #include "boost/lexical_cast.hpp"
 #include <cstring>
 
+#ifdef USES_WINSOCK2
+#include <Winsock2.h>
+#else
+#include <sys/socket.h>
+#endif
+
 #ifdef _MSC_VER
 #pragma warning (push, 4)
 #pragma warning (disable: 4786 4305)
@@ -32,55 +38,54 @@ namespace boost
   namespace socket
   {
 
-    any_address::any_address(family_t family, void* addr, std::size_t size)
-        : m_family(family), m_size(size)
-    {
-      std::memcpy(m_address.storage,addr,m_size);
-    }
+    any_address::any_address(const void* addr, std::size_t size)
+        : m_address(addr, size), m_size(size)
+    { }
 
     family_t any_address::family() const
     {
-      return m_family;
+      return ((::sockaddr const*)m_address.get())->sa_family;
     }
 
     std::string any_address::to_string() const
     {
       std::string s("Any address: family : ");
-      s+=boost::lexical_cast<std::string>(m_family);
+      s+=boost::lexical_cast<std::string>(
+        ((sockaddr const*)m_address.get())->sa_family);
       return s;
     }
 
     std::pair<void*,size_t> any_address::representation()
     {
-      return std::make_pair(m_address.storage, m_size);
+      return std::make_pair(m_address.get(), m_size);
     }
 
     std::pair<const void*,size_t> any_address::representation() const
     {
-      return std::make_pair(m_address.storage, m_size);
+      return std::make_pair(m_address.get(), m_size);
     }
 
 
     bool any_address::operator < (const any_address& addr) const
     {
-      const int cmp=std::memcmp(m_address.storage,
-                                addr.m_address.storage,
+      const int cmp=std::memcmp(m_address.get(),
+                                addr.m_address.get(),
                                 m_size);
       return cmp<0;
     }
 
     bool any_address::operator == (const any_address& addr) const
     {
-      const int cmp=std::memcmp(m_address.storage,
-                                addr.m_address.storage,
+      const int cmp=std::memcmp(m_address.get(),
+                                addr.m_address.get(),
                                 m_size);
       return cmp==0;
     }
 
     bool any_address::operator != (const any_address& addr) const
     {
-      const int cmp=std::memcmp(m_address.storage,
-                                addr.m_address.storage,
+      const int cmp=std::memcmp(m_address.get(),
+                                addr.m_address.get(),
                                 m_size);
       return cmp!=0;
     }

@@ -20,6 +20,7 @@
 #include "boost/socket/socket_errors.hpp"
 #include "boost/iterator_adaptors.hpp"
 
+#include "boost/utility.hpp"
 
 namespace boost
 {
@@ -76,7 +77,9 @@ namespace boost
 
     };
 
-    class interface_info_list
+    struct interface_info_list_impl;
+
+    class interface_info_list : boost::noncopyable
     {
     public:
       typedef boost::iterator_adaptor<const interfaceinfo*,
@@ -99,8 +102,7 @@ namespace boost
       friend class interface_info_iterator_policies;
       static interfaceinfo const* next(interfaceinfo const*);
 
-      std::auto_ptr<char> m_buffer;
-      std::size_t m_num_interfaces;
+      std::auto_ptr<interface_info_list_impl> m_impl;
     };
 
 
