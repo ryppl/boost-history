@@ -25,7 +25,7 @@ body {
   <li>Questions, comments, complaints, bug-fixes? Please send them to the Spirit mailing list: <strong>spirit-general@lists.sourceforge.net</strong></li>
 </ul>
 <h2>Running the tests</h2>
-<p>The testsuite can be executed by using the Boost.Build system as described on the Boost pages: <strong><a href="http://www.boost.org">http://www.boost.org</a></strong>.</p>
+<p>The testsuite can be executed by using the Boost.Build system as described on the Boost pages: <strong><a href="http://www.boost.org">http://www.boost.org</a></strong>. This package comes bundled with <strong>miniboost</strong>: a re-packaged minimal subset of boost; just enough to use Spirit. For Spirit to compile using miniboost,<strong> the environment variable <span class="style1">SPIRIT_BOOST_HEADER_INCLUDE</span> must be set to the location of the miniboost directory. </strong></p>
 <p>For example, using MSVC 7.1:</p>
 <ol>
   <li>Download the Spirit distrib (you've already done that) and unpack it somewhere.</li>
