@@ -866,10 +866,37 @@ template <> struct evaluator9<void>
 
 // bind_t
 
+struct void_t;
+
+template <class T>
+struct bind_return
+{
+    typedef T type;
+};
+
+template <>
+struct bind_return<void>
+{
+    typedef void_t type;
+};
+
+template <class T>
+struct actual_return
+{
+    typedef T type;
+};
+
+template <>
+struct actual_return<void_t>
+{
+    typedef void type;
+};
+
 #ifndef BOOST_NO_VOID_RETURNS
 
-template<class R, class F, class L> class bind_t
+template<class R_, class F, class L> class bind_t
 {
+    typedef typename actual_return<R_>::type R;
 public:
 
     bind_t(F f, L const & l): f_(f), l_(l) {}
@@ -885,9 +912,9 @@ private:
 
 #else
 
-template <class R> struct bind_t_generator
+template <class R_> struct bind_t_generator
 {
-
+    
 template<class F, class L> class implementation
 {
 public:
@@ -934,7 +961,10 @@ private:
 #pragma warning(disable: 4097) // typedef name 'base' used as a synonym for class
 #endif
 
-template<class R, class F, class L> class bind_t: public bind_t_generator<R>::BOOST_NESTED_TEMPLATE implementation<F, L>
+template<class R, class F, class L> class bind_t
+    : public bind_t_generator<
+        typename actual_return<R>::type
+      >::BOOST_NESTED_TEMPLATE implementation<F, L>
 {
 private:
 
@@ -1357,6 +1387,9 @@ template<class F, class A1, class A2, class A3, class A4, class A5, class A6, cl
 #undef BOOST_BIND_MF_CC
 
 #endif
+
+using _bi::void_t;
+using _bi::bind_return;
 
 } // namespace boost
 

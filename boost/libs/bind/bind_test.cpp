@@ -190,11 +190,17 @@ void function_object_test()
     BOOST_TEST( bind<int>(Y(), i, _1)(k) == 38 );
     BOOST_TEST( bind<long>(Y(), i, _1, 9)(k) == 938 );
 
+    // Test the Codewarrior Pro7 workarounds for explicit void returns
+    bind<void_t>(Y(), i, _1, 9, 4)(k);  // use this in non-generic contexts
+    BOOST_TEST( global_result == 4938 );
+    
+    bind< bind_return<void>::type >(Y(), i, _1, 9, 4)(k); // use this in generic contexts
+    BOOST_TEST( global_result == 4938 );
+    BOOST_TEST( bind<bind_return<int>::type >(Y(), i, _1)(k) == 38 );
+    BOOST_TEST( bind<bind_return<long>::type>(Y(), i, _1, 9)(k) == 938 );
 #if !defined(__MWERKS__) || (__MWERKS__ > 0x2406)     // Fails for this version of the compiler.
-
     bind<void>(Y(), i, _1, 9, 4)(k);
     BOOST_TEST( global_result == 4938 );
-
 #endif
 }
 
@@ -380,7 +386,7 @@ void member_function_void_test()
 // mem_fn void returns are temporarily disabled on MSVC 6
 // they cause internal compiler errors with debug info turned on
 
-#if !defined(BOOST_MSVC) || (BOOST_MSVC > 1200)
+#if 1 //!defined(BOOST_MSVC) || (BOOST_MSVC > 1200)
 
     using namespace boost;
 
