@@ -385,7 +385,7 @@ const string & attribute_value( const xml::element_ptr & element,
     bool pass = false;
 
     // missing jam residue
-    if ( fs::exists( target_dir / (test_name + ".run") ) ) pass = true;
+    if ( fs::exists( target_dir / (test_name + ".test") ) ) pass = true;
     else if ( !fs::exists( target_dir / "test_log.xml" ) )
     {
       target += "<td>" + missing_residue_msg + "</td>";
