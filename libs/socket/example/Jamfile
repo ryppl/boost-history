@@ -55,7 +55,7 @@ socket-test-example simple_client : client_test.cpp ;
 socket-test-example simple_server : server_test.cpp ;
 
 socket-example http_get : http_get.cpp ;
-socket-example async_server : async_server.cpp ;
+#socket-example async_server : async_server.cpp ;
 
 #socket-example named_pipe_server : named_pipe_server.cpp ;
 #socket-example named_pipe_client : named_pipe_client.cpp ;
