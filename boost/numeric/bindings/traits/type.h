@@ -16,7 +16,12 @@
  * COMPLEX and COMPLEX*16 of Fortran
  */
 
-#if defined(BOOST_NUMERIC_BINDINGS_USE_COMPLEX_STRUCT)
+#ifndef BOOST_NUMERIC_BINDINGS_USE_COMPLEX_STRUCT 
+
+typedef float  fcomplex_t ;
+typedef double dcomplex_t ;
+
+#else
 
 typedef
 union {
@@ -29,18 +34,12 @@ struct
   double cmplx[2] ;
 } dcomplex_t ;
 
-#elif defined(BOOST_NUMERIC_BINDINGS_CLAPACK)
-
-#include <boost/numeric/bindings/traits/f2c.h> 
-
-typedef complex fcomplex_t; 
-typedef doublecomplex dcomplex_t; 
-
-#else
-
-typedef float  fcomplex_t ;
-typedef double dcomplex_t ;
-
 #endif /* BOOST_NUMERIC_BINDINGS_USE_COMPLEX_STRUCT */
+
+/*
+ * Define a fortran LOGICAL as a void (for now).
+ */
+
+typedef void logical_t ;
 
 #endif /* BOOST_NUMERIC_BINDINGS_TRAITS_TYPE_H */
