@@ -1,11 +1,11 @@
 
-#ifndef BOOST_MPL_PUSH_BACK_FWD_HPP_INCLUDED
-#define BOOST_MPL_PUSH_BACK_FWD_HPP_INCLUDED
+#ifndef BOOST_MPL_BACK_INSERTER_HPP_INCLUDED
+#define BOOST_MPL_BACK_INSERTER_HPP_INCLUDED
 
-// + file: boost/mpl/push_back_fwd.hpp
+// + file: boost/mpl/back_inserter.hpp
 // + last modified: 10/jun/03
 
-// Copyright (c) 2000-03
+// Copyright (c) 2002-03
 // Aleksey Gurtovoy
 //
 // Permission to use, copy, modify, distribute and sell this software
@@ -18,13 +18,26 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
+#include "boost/mpl/push_back.hpp"
+#include "boost/mpl/pair.hpp"
+#include "boost/mpl/aux_/void_spec.hpp"
+#include "boost/mpl/aux_/lambda_support.hpp"
+
 namespace boost {
 namespace mpl {
 
-template< typename Tag > struct push_back_impl;
-template< typename Seq, typename T > struct push_back;
+template<
+      typename BOOST_MPL_AUX_VOID_SPEC_PARAM(Seq)
+    >
+struct back_inserter
+    : pair< Seq, push_back<> >
+{
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,back_inserter,(Seq))
+};
+
+BOOST_MPL_AUX_VOID_SPEC(1, back_inserter)
 
 } // namespace mpl
 } // namespace boost
 
-#endif // BOOST_MPL_PUSH_BACK_FWD_HPP_INCLUDED
+#endif // BOOST_MPL_BACK_INSERTER_HPP_INCLUDED

@@ -123,6 +123,19 @@ struct template_arity< \
 #   define BOOST_MPL_AUX_VOID_SPEC_TEMPLATE_ARITY(i, j, name) /**/
 #endif
 
+#if defined(BOOST_MPL_NO_FULL_LAMBDA_SUPPORT)
+#   define BOOST_MPL_AUX_IMPL_SPEC(i, name) \
+template<> struct name<void_> \
+{ \
+    template< BOOST_MPL_PP_PARAMS(i, typename T) > struct apply \
+    { \
+    }; \
+}; \
+/**/
+#else
+#   define BOOST_MPL_AUX_IMPL_SPEC(i, name) /**/
+#endif
+
 
 #define BOOST_MPL_AUX_VOID_SPEC_PARAM(param) param = void_
 

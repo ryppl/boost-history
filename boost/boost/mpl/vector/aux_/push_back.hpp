@@ -29,9 +29,9 @@ namespace boost {
 namespace mpl {
 
 template<>
-struct push_back_traits< aux::vector_tag >
+struct push_back_impl< aux::vector_tag >
 {
-    template< typename Vector, typename T > struct algorithm
+    template< typename Vector, typename T > struct apply
     {
         typedef vector_node<T,Vector> type;
     };

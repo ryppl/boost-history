@@ -1,9 +1,11 @@
-//-----------------------------------------------------------------------------
-// boost mpl/transform.hpp header file
-// See http://www.boost.org for updates, documentation, and revision history.
-//-----------------------------------------------------------------------------
-//
-// Copyright (c) 2000-02
+
+#ifndef BOOST_MPL_TRANSFORM_HPP_INCLUDED
+#define BOOST_MPL_TRANSFORM_HPP_INCLUDED
+
+// + file: boost/mpl/transform.hpp
+// + last modified: 10/jun/03
+
+// Copyright (c) 2000-03
 // Aleksey Gurtovoy
 //
 // Permission to use, copy, modify, distribute and sell this software
@@ -13,55 +15,91 @@
 // supporting documentation. No representations are made about the 
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
+//
+// See http://www.boost.org/libs/mpl for documentation.
 
-#ifndef BOOST_MPL_TRANSFORM_HPP_INCLUDED
-#define BOOST_MPL_TRANSFORM_HPP_INCLUDED
-
+#include "boost/mpl/fold.hpp"
 #include "boost/mpl/fold_backward.hpp"
+#include "boost/mpl/back_inserter.hpp"
+#include "boost/mpl/front_inserter.hpp"
+#include "boost/mpl/push_back.hpp"
 #include "boost/mpl/push_front.hpp"
 #include "boost/mpl/clear.hpp"
+#include "boost/mpl/if.hpp"
 #include "boost/mpl/lambda.hpp"
-#include "boost/mpl/apply.hpp"
-#include "boost/mpl/protect.hpp"
+#include "boost/mpl/bind.hpp"
 #include "boost/mpl/aux_/void_spec.hpp"
 
 namespace boost {
 namespace mpl {
 
-namespace aux {
-
-template< typename Op >
-struct transform_op
-{
-    template< typename Sequence, typename T > struct apply
-    {
-        typedef typename push_front<
-              Sequence
-            , typename apply1<Op,T>::type
-            >::type type;
-    };
-};
-
-} // namespace aux
-
 BOOST_MPL_AUX_AGLORITHM_NAMESPACE_BEGIN
 
-template<
-      typename BOOST_MPL_AUX_VOID_SPEC_PARAM(Sequence)
-    , typename BOOST_MPL_AUX_VOID_SPEC_PARAM(Operation)
+/*
+it's gonna be a little bit more complicated, eventually:
+template< 
+      typename BOOST_MPL_AUX_VOID_SPEC_PARAM(Seq1)
+    , typename BOOST_MPL_AUX_VOID_SPEC_PARAM(Seq2_or_Op)
+    , typename Op_or_Ins = void_
+    , typename Ins = void_
+    >
+
+*/
+
+template< 
+      typename BOOST_MPL_AUX_VOID_SPEC_PARAM(Seq)
+    , typename BOOST_MPL_AUX_VOID_SPEC_PARAM(Op)
+    , typename Ins = void_
     >
 struct transform
+    : fold< 
+          Seq
+        , typename Ins::first
+        , bind2< typename Ins::second, _1, bind1< typename lambda<Op>::type, _2> > 
+        >
 {
- private:
-    typedef typename lambda<Operation>::type op_;
-    typedef typename clear<Sequence>::type result_;
+};
 
- public:
-    typedef typename fold_backward<
-          Sequence
-        , result_
-        , protect< aux::transform_op<op_> >
-        >::type type;
+// fwd for 'transform' specialization below
+template< typename Seq, typename Op, typename Ins = void_ >
+struct transform_backward;
+
+template< 
+      typename Seq
+    , typename Op
+    >
+struct transform<Seq,Op,void_>
+    : if_< has_push_back<Seq>
+        , transform< Seq,Op,back_inserter< typename clear<Seq>::type > >
+        , transform_backward<Seq,Op,front_inserter< typename clear<Seq>::type > >
+        >::type
+{
+};
+
+template< 
+      typename Seq
+    , typename Op
+    , typename Ins
+    >
+struct transform_backward
+    : fold_backward< 
+          Seq
+        , typename Ins::first
+        , bind2< typename Ins::second, _1, bind1<typename lambda<Op>::type, _2> > 
+        >
+{
+};
+
+template< 
+      typename Seq
+    , typename Op
+    >
+struct transform_backward<Seq,Op,void_>
+    : if_< has_push_front<Seq>
+        , transform_backward<Seq,Op,front_inserter< typename clear<Seq>::type > >
+        , transform< Seq,Op,back_inserter< typename clear<Seq>::type > >
+        >::type
+{
 };
 
 BOOST_MPL_AUX_AGLORITHM_NAMESPACE_END

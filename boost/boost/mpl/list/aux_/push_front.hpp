@@ -26,9 +26,9 @@ namespace boost {
 namespace mpl {
 
 template<>
-struct push_front_traits< aux::list_tag >
+struct push_front_impl< aux::list_tag >
 {
-    template< typename List, typename T > struct algorithm
+    template< typename List, typename T > struct apply
     {
         typedef list_node<
               typename BOOST_MPL_AUX_NEXT(List::size)
