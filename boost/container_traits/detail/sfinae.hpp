@@ -60,13 +60,19 @@ namespace boost
 #ifdef BOOST_MSVC_STD_ITERATOR
         template< typename T1, typename T2 >
         yes_type is_iterator_impl( const std::iterator<T2,T2>* );
+        template< typename T1, typename T2 >
+        yes_type is_iterator_impl( const std::istream_iterator<T1,T2>* );
 #else        
 #if BOOST_DINKUMWARE_STDLIB == 1
         template< typename C, typename T, typename D >
         yes_type is_iterator_impl( const std::iterator<C,T,D>* );
+        template< typename C, typename T, typename D >
+        yes_type is_iterator_impl( const std::istream_iterator<C,T,D>* );
 #else
         template< typename C, typename T, typename D, typename P, typename R >
         yes_type is_iterator_impl( const std::iterator<C,T,D,P,R>* );
+        template< typename C, typename T, typename D, typename P, typename R >
+        yes_type is_iterator_impl( const std::istream_iterator<C,T,D,P>* );
 #endif
 #endif
         no_type  is_iterator_impl( ... ); 

@@ -22,10 +22,10 @@ namespace boost
     namespace container_traits_detail 
     {        
         template< typename T >
-        struct container_size_type;
+        struct container_size_type_;
 
         template<>
-        struct container_size_type<std_container_>
+        struct container_size_type_<std_container_>
         {
             template< typename C >
             struct pts
@@ -35,7 +35,7 @@ namespace boost
         };
 
         template<>
-        struct container_size_type<std_pair_>
+        struct container_size_type_<std_pair_>
         {
             template< typename P >
             struct pts
@@ -45,7 +45,7 @@ namespace boost
         };
 
         template<>
-        struct container_size_type<array_>
+        struct container_size_type_<array_>
         {
             template< typename A >
             struct pts
@@ -55,7 +55,7 @@ namespace boost
         };
 
         template<>
-        struct container_size_type<string_>
+        struct container_size_type_<string_>
         {
             template< typename S >
             struct pts
@@ -65,7 +65,7 @@ namespace boost
         };
         
         template<>
-        struct container_size_type<iterator_>
+        struct container_size_type_<iterator_>
         {
             template< typename I >
             struct pts
@@ -80,7 +80,7 @@ namespace boost
     {
         typedef BOOST_DEDUCED_TYPENAME container_traits_detail::container<C>::type c_type;
     public:
-        typedef BOOST_DEDUCED_TYPENAME container_traits_detail::container_size_type<c_type>::BOOST_NESTED_TEMPLATE pts<C>::type type; 
+        typedef BOOST_DEDUCED_TYPENAME container_traits_detail::container_size_type_<c_type>::BOOST_NESTED_TEMPLATE pts<C>::type type; 
     };
 }
 

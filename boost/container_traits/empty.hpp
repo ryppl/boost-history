@@ -11,6 +11,11 @@
 # pragma once
 #endif
 
+#include <boost/container_traits/config.hpp>
+#ifdef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+#include <boost/container_traits/detail/empty.hpp>
+#else
+
 #include <cstddef>
 #include <iterator>
 #include <utility>
@@ -92,5 +97,7 @@ namespace boost
 #endif
 
 } // namepace 'boost'
+
+#endif //  BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
 #endif

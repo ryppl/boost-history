@@ -23,10 +23,10 @@ namespace boost
     namespace container_traits_detail 
     {        
         template< typename T >
-        struct container_result_iterator;
+        struct container_result_iterator_;
 
         template<>
-        struct container_result_iterator<std_container_>
+        struct container_result_iterator_<std_container_>
         {
             template< typename C >
             struct pts
@@ -38,7 +38,7 @@ namespace boost
         };
 
         template<>
-        struct container_result_iterator<std_pair_>
+        struct container_result_iterator_<std_pair_>
         {
             template< typename P >
             struct pts
@@ -48,58 +48,58 @@ namespace boost
         };
 
         template<>
-        struct container_result_iterator<array_>; // give up
+        struct container_result_iterator_<array_>; // give up
 
         template<>
-        struct container_result_iterator<char_ptr_>
+        struct container_result_iterator_<char_ptr_>
         {
             template< typename S >
             struct pts
             {
-                typedef BOOST_CT_DEDUCED_TYPENAME ::boost::mpl::if_c< ::boost::is_convertible<S,char*>::value,
-                                                                      char*,
-                                                                      void >::type type;
+                typedef char* type; //BOOST_CT_DEDUCED_TYPENAME ::boost::mpl::if_c< ::boost::is_convertible<S,char*>::value,
+                                    //                                  char*,
+                                    //                                  void >::type type;
             };         
         };
         
         template<>
-        struct container_result_iterator<const_char_ptr_>
+        struct container_result_iterator_<const_char_ptr_>
         {
             template< typename S >
             struct pts
             {
-                typedef BOOST_CT_DEDUCED_TYPENAME ::boost::mpl::if_c< ::boost::is_convertible<S, const char*>::value,
-                                                                      const char*,
-                                                                      void >::type type;
+                typedef const char* type; //BOOST_CT_DEDUCED_TYPENAME ::boost::mpl::if_c< ::boost::is_convertible<S, const char*>::value,
+                                          //                            const char*,
+                                          //                            void >::type type;
             };         
         };
 
         template<>
-        struct container_result_iterator<wchar_t_ptr_>
+        struct container_result_iterator_<wchar_t_ptr_>
         {
             template< typename S >
             struct pts
             {
-                typedef BOOST_CT_DEDUCED_TYPENAME ::boost::mpl::if_c< ::boost::is_convertible<S,wchar_t*>::value,
-                                                                      wchar_t*,
-                                                                      void >::type type;
+                typedef wchar_t* type; //BOOST_CT_DEDUCED_TYPENAME ::boost::mpl::if_c< ::boost::is_convertible<S,wchar_t*>::value,
+                                      //                                wchar_t*,
+                                      //                                void >::type type;
             };         
         };
 
         template<>
-        struct container_result_iterator<const_wchar_t_ptr_>
+        struct container_result_iterator_<const_wchar_t_ptr_>
         {
              template< typename S >
              struct pts
              {
-                 typedef BOOST_CT_DEDUCED_TYPENAME ::boost::mpl::if_c< ::boost::is_convertible<S, const wchar_t*>::value,
-                                                                       const wchar_t*,
-                                                                       void >::type type;
+                 typedef  const wchar_t* type; //BOOST_CT_DEDUCED_TYPENAME ::boost::mpl::if_c< ::boost::is_convertible<S, const wchar_t*>::value,
+                                               //                        const wchar_t*,
+                                               //                        void >::type type;
              };         
          };
 
         template<>
-        struct container_result_iterator<iterator_>
+        struct container_result_iterator_<iterator_>
         {
             template< typename I >
             struct pts
@@ -114,7 +114,7 @@ namespace boost
     {
         typedef BOOST_DEDUCED_TYPENAME container_traits_detail::container<C>::type c_type;
     public:
-        typedef BOOST_DEDUCED_TYPENAME container_traits_detail::container_result_iterator<c_type>::BOOST_NESTED_TEMPLATE pts<C>::type type; 
+        typedef BOOST_DEDUCED_TYPENAME container_traits_detail::container_result_iterator_<c_type>::BOOST_NESTED_TEMPLATE pts<C>::type type; 
     };
 
 }

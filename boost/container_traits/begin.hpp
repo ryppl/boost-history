@@ -12,6 +12,11 @@
 #endif
 
 #include <boost/container_traits/config.hpp>
+
+#ifdef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+#include <boost/container_traits/detail/begin.hpp>
+#else
+
 #include <boost/container_traits/result_iterator.hpp>
 #include <cstddef>
 #include <iterator>
@@ -24,8 +29,6 @@ namespace boost
 // default
 //////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
 template< typename C >
 inline BOOST_DEDUCED_TYPENAME C::const_iterator
 begin( const C& c )
@@ -33,28 +36,22 @@ begin( const C& c )
     return c.begin(); 
 }
 
-#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-/*
 template< typename C >
 inline BOOST_DEDUCED_TYPENAME container_result_iterator<C>::type
 begin( C& c )
 {
     return c.begin(); 
 }
-*/
+
 //////////////////////////////////////////////////////////////////////
 // pair
 //////////////////////////////////////////////////////////////////////
-
-#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
 template< typename Iterator >
 inline Iterator begin( const std::pair<Iterator,Iterator>& p )
 {
     return p.first;
 }
-
-#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
 template< typename Iterator >
 inline Iterator begin( std::pair<Iterator,Iterator>& p )
@@ -107,16 +104,12 @@ inline wchar_t* begin( wchar_t* s )
 // iterator
 //////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
 template< typename C, typename T, typename D, typename P >
 inline std::istream_iterator<C,T,D,P>
 begin( const std::istream_iterator<C,T,D,P>& i )
 {
     return i;
 }
-
-#endif
 
 #ifdef BOOST_MSVC_STD_ITERATOR
 
@@ -140,5 +133,7 @@ begin( std::istream_iterator<C,T,D,P>& i )
 #endif // BOOST_MSVC_STD_ITERATOR
 
 } // namespace boost
+
+#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING    
 
 #endif

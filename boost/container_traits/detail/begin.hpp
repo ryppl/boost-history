@@ -2,6 +2,7 @@
 #define BOOST_CONTAINER_TRAITS_DETAIL_BEGIN_HPP
 
 #include <boost/container_traits/detail/result_iterator.hpp>
+#include <boost/container_traits/detail/common.hpp>
 
 namespace boost 
 {
@@ -10,90 +11,113 @@ namespace boost
         template< typename T >
         struct container_begin;
 
+        //////////////////////////////////////////////////////////////////////
+        // default
+        //////////////////////////////////////////////////////////////////////
+        
         template<>
         struct container_begin<std_container_>
         {
             template< typename C >
-            static BOOST_DEDUCED_TYPENAME container_result_iterator<C>::type begin( C& c )
+			static BOOST_DEDUCED_TYPENAME container_result_iterator<C>::type fun( C& c )
             {
                 return c.begin();
             };
         };
                     
-
-        template< typename P > 
-            static const_iterator begin( const P& p )
+        //////////////////////////////////////////////////////////////////////
+        // pair
+        //////////////////////////////////////////////////////////////////////
+        
+        template<>
+        struct container_begin<std_pair_>
         {
-                    return p.first;
-                }
-
-                template< typename A >
-                static iterator begin( A& a )
-                {
-                    return a;
-                }
-
-
-
-                template< typename P >
-                static iterator begin( P& p )
-                {
-                    return p;
-                }
-
-                template< typename P >
-                static const_iterator begin( const P& p )
-                {
-                    return p;
-                }
-
-                template< typename P >
-                static iterator end( P& p )
-                {
-                    if ( p==0 )
-                        return p;
-                    else
-                        return p+char_traits::length(p);
-                }
-
-                template< typename P >
-                static const_iterator end( const P& p )
-                {
-                    if ( p==0 )
-                        return p;
-                    else
-                        return p+char_traits::length(p);
-                }
-
-#else // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
-                template< typename P >
-                static result_iterator begin( P& p )
-                {
-                    return p;
-                }
-
-                template< typename P >
-                static result_iterator end( P& p )
-                {
-                    if ( p==0 )
-                        return p;
-                    else
-                        return p+char_traits::length(p);
-                }
-
-#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING    
-            }; 
-
-            template<typename T>
-            struct pointer_container_traits_selector
+            template< typename P >
+            static BOOST_DEDUCED_TYPENAME container_result_iterator<P>::type fun( const P& p )
             {
-                typedef pointer_container_traits<T> type;
-            };
+                return p.first;
+            }
+        };
+ 
+        //////////////////////////////////////////////////////////////////////
+        // array
+        //////////////////////////////////////////////////////////////////////
+        
+        template<>
+        struct container_begin<array_>
+        {
+            template< typename A >
+            static BOOST_DEDUCED_TYPENAME container_result_iterator<A>::type fun( A& a )
+            {
+                return a;
+            }
+        };
 
-        } // namespace detail
-    } // namespace string_algo
-} // namespace boost
+        //////////////////////////////////////////////////////////////////////
+        // string
+        //////////////////////////////////////////////////////////////////////
+     /*   
+        template<>
+        struct container_begin<char_ptr_>
+        {
+            static char* fun( char* s )
+            {
+                return s;
+            }
+        };
+*/
+        template<>
+        struct container_begin<const_char_ptr_>
+        {
+            static const char* fun( const char* s )
+            {
+                return s;
+            }
+        };
+/*
+        template<>
+        struct container_begin<wchar_t_ptr_>
+        {
+            
+            static wchar_t* fun( wchar_t* s )
+            {
+                return s;
+            }
+        };
+
+        template<>
+        struct container_begin<const_wchar_t_ptr_>
+        {
+            static const wchar_t* fun( const wchar_t* s )
+            {
+                return s;
+            }
+        };
+*/
+        //////////////////////////////////////////////////////////////////////
+        // iterator
+        //////////////////////////////////////////////////////////////////////
+        
+        template<>
+        struct container_begin<iterator_>
+        {
+            template< typename I >
+            static BOOST_DEDUCED_TYPENAME container_result_iterator<I>::type fun( I& i )
+            {
+                return i;
+            }
+        };
+
+        } // namespace 'container_traits_detail'
+    
+    template< typename C >
+    inline BOOST_DEDUCED_TYPENAME container_result_iterator<C>::type 
+    begin( C& c )
+    {
+        return container_traits_detail::container_begin<  BOOST_DEDUCED_TYPENAME container_traits_detail::container<C>::type >::fun( c );
+    }
+
+} // namespace 'boost'
 
 
-#endif  // BOOST_STRING_DETAIL_CONTAINER_HPP
+#endif

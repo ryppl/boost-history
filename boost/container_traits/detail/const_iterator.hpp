@@ -22,10 +22,10 @@ namespace boost
     namespace container_traits_detail 
     {      
         template< typename T >
-        struct container_const_iterator;
+        struct container_const_iterator_;
 
         template<>
-        struct container_const_iterator<std_container_>
+        struct container_const_iterator_<std_container_>
         {
             template< typename C >
             struct pts
@@ -35,7 +35,7 @@ namespace boost
         };
 
         template<>
-        struct container_const_iterator<std_pair_>
+        struct container_const_iterator_<std_pair_>
         {
             template< typename P >
             struct pts
@@ -45,10 +45,10 @@ namespace boost
         };
 
         template<>
-        struct container_const_iterator<array_>; // give up
+        struct container_const_iterator_<array_>; // give up
 
         template<>
-        struct container_const_iterator<char_ptr_>
+        struct container_const_iterator_<char_ptr_>
         {
             template< typename S >
             struct pts
@@ -60,7 +60,7 @@ namespace boost
         };
         
         template<>
-        struct container_const_iterator<const_char_ptr_>
+        struct container_const_iterator_<const_char_ptr_>
         {
             template< typename S >
             struct pts
@@ -72,7 +72,7 @@ namespace boost
         };
 
         template<>
-        struct container_const_iterator<wchar_t_ptr_>
+        struct container_const_iterator_<wchar_t_ptr_>
         {
             template< typename S >
             struct pts
@@ -84,7 +84,7 @@ namespace boost
         };
 
         template<>
-        struct container_const_iterator<const_wchar_t_ptr_>
+        struct container_const_iterator_<const_wchar_t_ptr_>
         {
              template< typename S >
              struct pts
@@ -96,7 +96,7 @@ namespace boost
          };
 
         template<>
-        struct container_const_iterator<iterator_>
+        struct container_const_iterator_<iterator_>
         {
             template< typename I >
             struct pts
@@ -111,7 +111,7 @@ namespace boost
     {
         typedef BOOST_DEDUCED_TYPENAME container_traits_detail::container<C>::type c_type;
     public:
-        typedef BOOST_DEDUCED_TYPENAME container_traits_detail::container_const_iterator<c_type>::BOOST_NESTED_TEMPLATE pts<C>::type type; 
+        typedef BOOST_DEDUCED_TYPENAME container_traits_detail::container_const_iterator_<c_type>::BOOST_NESTED_TEMPLATE pts<C>::type type; 
     };
 
 }

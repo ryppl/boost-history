@@ -30,6 +30,8 @@ void check_iterator()
     iterator_t iter     = iterator_t( in );
     vec_t      vec;
 
+#ifndef BOOST_CT_NO_STATIC_ASSERT   
+
     BOOST_STATIC_ASSERT(( is_same< container_value_type<iterator_t>::type,
                           detail::iterator_traits<iterator_t>::value_type>::value ));
     BOOST_STATIC_ASSERT(( is_same< container_iterator<iterator_t>::type, iterator_t >::value ));
@@ -47,6 +49,8 @@ void check_iterator()
                           detail::iterator_traits<const_iterator_t>::difference_type >::value ));
     BOOST_STATIC_ASSERT(( is_same< container_size_type<const_iterator_t>::type, std::size_t >::value ));
     BOOST_STATIC_ASSERT(( is_same< container_result_iterator<const_iterator_t>::type, iterator_t >::value ));
+
+#endif
 
     BOOST_CHECK( begin( iter ) == iter );
     BOOST_CHECK( end( iter )   == iterator_t() );

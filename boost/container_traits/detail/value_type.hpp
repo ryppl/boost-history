@@ -23,10 +23,10 @@ namespace boost
     namespace container_traits_detail 
     {        
         template< typename T >
-        struct container_value_type;
+        struct container_value_type_;
 
         template<>
-        struct container_value_type<std_container_>
+        struct container_value_type_<std_container_>
         {
             template< typename C >
             struct pts
@@ -36,7 +36,7 @@ namespace boost
         };
 
         template<>
-        struct container_value_type<std_pair_>
+        struct container_value_type_<std_pair_>
         {
             template< typename P >
             struct pts
@@ -46,10 +46,10 @@ namespace boost
         };
 
         template<>
-        struct container_value_type<array_>; // give up
+        struct container_value_type_<array_>; // give up
 
         template<>
-        struct container_value_type<char_ptr_>
+        struct container_value_type_<char_ptr_>
         {
             template< typename S >
             struct pts
@@ -61,7 +61,7 @@ namespace boost
         };
         
         template<>
-        struct container_value_type<const_char_ptr_>
+        struct container_value_type_<const_char_ptr_>
         {
             template< typename S >
             struct pts
@@ -73,7 +73,7 @@ namespace boost
         };
 
         template<>
-        struct container_value_type<wchar_t_ptr_>
+        struct container_value_type_<wchar_t_ptr_>
         {
             template< typename S >
             struct pts
@@ -85,7 +85,7 @@ namespace boost
         };
 
         template<>
-        struct container_value_type<const_wchar_t_ptr_>
+        struct container_value_type_<const_wchar_t_ptr_>
         {
              template< typename S >
              struct pts
@@ -97,7 +97,7 @@ namespace boost
          };
 
         template<>
-        struct container_value_type<iterator_>
+        struct container_value_type_<iterator_>
         {
             template< typename I >
             struct pts
@@ -112,7 +112,7 @@ namespace boost
     {
         typedef BOOST_DEDUCED_TYPENAME container_traits_detail::container<C>::type c_type;
     public:
-        typedef BOOST_DEDUCED_TYPENAME container_traits_detail::container_value_type<c_type>::BOOST_NESTED_TEMPLATE pts<C>::type type; 
+        typedef BOOST_DEDUCED_TYPENAME container_traits_detail::container_value_type_<c_type>::BOOST_NESTED_TEMPLATE pts<C>::type type; 
     };
 
 }

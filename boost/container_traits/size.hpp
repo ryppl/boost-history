@@ -11,6 +11,12 @@
 # pragma once
 #endif
 
+#include <boost/container_traits/config.hpp>
+
+#ifdef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+#include <boost/container_traits/detail/size.hpp>
+#else
+
 #include <cstddef>
 #include <iterator>
 #include <utility>
@@ -44,22 +50,6 @@ namespace boost
         // array
         //////////////////////////////////////////////////////////////////////
 
-#ifdef BOOST_CT_NO_ARRAY_SUPPORT
-
-        template< typename T, std::size_t sz >
-        inline std::size_t size( const T (array)[sz] )
-        {
-            return sz;
-        }
-        
-        template< typename T, std::size_t sz >
-        inline std::size_t size( T (array)[sz] )
-        {
-            return sz;
-		}
-
-#else // BOOST_CT_NO_ARRAY_SUPPORT
-		
         template< typename T, std::size_t sz >
         inline std::size_t size( const T (&array)[sz] )
         {
@@ -71,8 +61,6 @@ namespace boost
         {
             return sz;
         }
-
-#endif // BOOST_CT_NO_ARRAY_SUPPORT
 
         //////////////////////////////////////////////////////////////////////
         // string
@@ -109,5 +97,7 @@ namespace boost
 #endif
 
 } // namespace 'boost'
+
+#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
 #endif

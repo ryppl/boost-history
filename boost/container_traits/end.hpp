@@ -11,8 +11,12 @@
 # pragma once
 #endif
 
-#include <boost/container_traits/result_iterator.hpp>
 #include <boost/container_traits/config.hpp>
+#ifdef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+#include <boost/container_traits/detail/end.hpp>
+#else
+
+#include <boost/container_traits/result_iterator.hpp>
 #include <cstddef>
 #include <iterator>
 #include <utility>
@@ -25,8 +29,6 @@ namespace boost
         // default
         //////////////////////////////////////////////////////////////////////
         
-#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
         template< typename C >
         inline BOOST_DEDUCED_TYPENAME C::const_iterator
         end( const C& c )
@@ -34,8 +36,6 @@ namespace boost
             return c.end();
         }
                 
-#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
         template< typename C >
         inline BOOST_DEDUCED_TYPENAME container_result_iterator<C>::type
         end( C& c )
@@ -47,16 +47,12 @@ namespace boost
         // pair
         //////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
         template< typename Iterator >
         inline Iterator end( const std::pair<Iterator,Iterator>& p )
         {
             return p.second;
         }
         
-#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
         template< typename Iterator >
         inline Iterator end( std::pair<Iterator,Iterator>& p )
         {
@@ -91,9 +87,6 @@ namespace boost
         return s;                                  \
     return s + std::char_traits<T>::length( s ) 
 
-
-#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-      
         inline char* end( char* s )
         {
             BOOST_END_IMPL( char );
@@ -104,7 +97,6 @@ namespace boost
             BOOST_END_IMPL( wchar_t );
         }
 
-#endif
         inline const char* end( const char* s )
         {
             BOOST_END_IMPL( char );
@@ -121,17 +113,12 @@ namespace boost
         // iterator
         //////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
         template< typename C, typename T, typename D, typename P >
         inline std::istream_iterator<C,T,D,P>
         end( const std::istream_iterator<C,T,D,P>& i )
         {
             return std::istream_iterator<C,T,D,P>();
         }
-
-#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
 	
 #ifdef BOOST_MSVC_STD_ITERATOR
 
@@ -154,5 +141,7 @@ namespace boost
 #endif // BOOST_MSVC_STD_ITERATOR	
 
 } // namespace 'boost'
+
+#endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
 #endif
