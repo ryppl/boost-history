@@ -4,9 +4,9 @@
 # located in the "builds" directory
 #
 
-CC = cc
-TARGET = -o jam0
-CFLAGS =
+#CC = cc
+#TARGET = -o jam0
+#CFLAGS =
 
 # Borland C++ on Windows
 #CC = bcc32
@@ -25,12 +25,12 @@ CFLAGS =
 
 # NT (with Microsoft compiler)
 # Use FATFS if building on a DOS FAT file system
-#Lib = $(MSVCNT)/lib
-#Include = $(MSVCNT)/include
-#CC = cl /nologo
-#CFLAGS = -I $(Include) -DNT 
-#TARGET = /Fejam0
-#LINKLIBS = $(Lib)/oldnames.lib $(Lib)/kernel32.lib $(Lib)/libc.lib
+Lib = $(MSVCNT)/lib
+Include = $(MSVCNT)/include
+CC = cl /nologo
+CFLAGS = -I $(Include) -DNT 
+TARGET = /Fejam0
+LINKLIBS = $(Lib)/oldnames.lib $(Lib)/kernel32.lib $(Lib)/libc.lib
 
 # BeOS - Metroworks CodeWarrior
 #CC = mwcc
@@ -74,15 +74,15 @@ CFLAGS =
 # we need to ensure that "jambase.c" has write permissions, since it is
 # going to be re-generated from "Jambase".
 #
-all: jam0
-	chmod a+w jambase.c
-	./jam0 -sJAMBASE= -sBOOST_ROOT= -sBOOST_BUILD_PATH=
+#all: jam0
+#	chmod a+w jambase.c
+#	./jam0 -sJAMBASE= -sBOOST_ROOT= -sBOOST_BUILD_PATH=
 
 # for other systems
-#all: jam0
-#	jam0
+all: jam0
+	jam0
 
 include common.mk
 
-#jam0:
-#	$(CC) $(TARGET) $(CFLAGS) $(SOURCES) $(LINKLIBS)
+jam0:
+	$(CC) $(TARGET) $(CFLAGS) $(SOURCES) $(LINKLIBS)
