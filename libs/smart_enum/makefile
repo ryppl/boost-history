@@ -17,7 +17,6 @@ TESTS		=  test_bounded_enum.exe test_lambda_enum.exe \
 .cpp.exe:
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(LIBS) $< -o $@
 
-
 .PHONY:		clean
 
 all::		$(TESTS)
