@@ -1,0 +1,371 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>Array-based Automatic Deletion Template Class</title>
+</head>
+<body text="black" bgcolor="white" link="blue" vlink="purple"
+alink="red">
+<h1><img src="../../../c++boost.gif" alt="c++boost.gif (8819 bytes)"
+align="middle" width="277" height="86">Template Class
+<code>auto_array</code></h1>
+
+<p>The header <cite><a href = "../../../boost/memory/auto_array.hpp"
+>boost/memory/auto_array.hpp</a></cite> covers a variant of
+<code>std::auto_ptr</code> that takes pointers to allocated arrays
+instead of single objects.</p>
+
+<h2><a name="contents">Contents</a></h2>
+
+<ol>
+    <li><a href="#contents">Contents</a></li>
+    <li><a href="#rationale">Rationale</a></li>
+    <li><a href="#header">Header Synopsis</a></li>
+    <li><a href="#auto_array">Array-based Automatic Deletion Template
+        Class</a>
+        <ul>
+            <li><a href="#diff">Differences from
+                <code>std::auto_ptr</code></a></li>
+            <li><a href="#m_types">Member Types</a></li>
+            <li><a href="#m_ctr">Constructors</a></li>
+            <li><a href="#m_observe">Observer Member Functions</a></li>
+            <li><a href="#m_mutate">Mutator Member Functions</a></li>
+            <li><a href="#operators">Operators</a></li>
+        </ul></li>
+    <li><a href="#example">Example</a></li>
+    <li><a href="#refer">References</a></li>
+    <li><a href="#credits">Credits</a>
+        <ul>
+            <li><a href="#contributors">Contributors</a></li>
+            <li><a href="#history">History</a></li>
+        </ul></li>
+</ol>
+
+<h2><a name="rationale">Rationale</a></h2>
+
+<p>The <code>std::auto_ptr</code> template class provides a basic smart
+pointer; it takes a pointer to an allocated single object and
+automatically <code>delete</code>s the object in its destructor.  It has
+various member functions for ownership management and accessors to its
+owned object.  It does not provide that management for allocated object
+arrays (activated by <code>operator new[]</code> instead of
+<code>operator new</code>), since they have different deallocation
+semantics (<code>operator delete[]</code> instead of <code>operator
+delete</code>).
+
+<p>To get around the lack of automatic dynamic array management, various
+pundits suggest giving up on regular arrays entirely and use a smart
+container class (like <code>std::vector</code>) instead.  That is
+overlooking an simpler solution: just making an array-based variant of
+<code>auto_ptr</code>.  This variant provides the basic need without
+having to worry about the extra baggage of full-blown smart objects.</p>
+
+<p>Like <code>auto_ptr</code>, the array-based template class in this
+library is <em>not</em> meant to solve general smart pointer needs. 
+Those can be found elsewhere (including other parts of Boost).</p>
+
+<h2><a name="header">Header Synopsis</a></h2>
+
+<blockquote><pre>
+namespace boost
+{
+namespace memory
+{
+
+template &lt; typename T &gt;
+    class auto_array;
+
+}
+}
+</pre></blockquote>
+
+<h2><a name="auto_array">Array-based Automatic Deletion Template
+Class</a></h2>
+
+<p>[The following prose is similar to the text given by the standard for
+<code>std::auto_ptr</code> (section 20.4.5,
+&quot;lib.auto.ptr&quot;).]</p>
+
+<p>Template <code>boost::memory::auto_array</code> stores a pointer to
+an object array obtained via <code>new[]</code> and deletes that array
+when it itself is destroyed (such as when leaving block scope).</p>
+
+<p>Class <code>boost::memory::auto_array&lt;&gt;::auto_array_ref</code>
+holds a reference to an <code>auto_array</code>.  It is used by the
+<code>auto_array</code> conversions to allow <code>auto_array</code>
+objects to be passed to and returned from functions.</p>
+
+<blockquote><pre>
+#include &lt;cstddef&gt;  <i>// for std::size_t</i>
+
+template &lt; typename T &gt;
+class boost::memory::auto_array
+{
+    struct auto_array_ref;
+
+public:
+    // Template arguments
+    typedef T  element_type;
+
+    // Other types
+    typedef std::size_t  size_type;
+
+    // Constructors and destructor
+    explicit  auto_array( element_type *p = 0 ) throw();
+    explicit  auto_array( size_type s );
+
+    auto_array( auto_array &amp;c ) throw();
+    auto_array( auto_array_ref r ) throw();
+
+    ~auto_array() throw();
+
+    // Observers
+    element_type *  get() const throw();
+
+    // Mutators
+    element_type *  release() throw();
+    void            reset( element_type *p = 0 ) throw();
+
+    // Operators
+    element_type &amp;  operator []( size_type i ) const throw();
+
+    operator auto_array_ref() throw();
+
+    auto_array &amp;  operator =( auto_array &amp;c ) throw();
+    auto_array &amp;  operator =( auto_array_ref r ) throw();
+
+};
+</pre></blockquote>
+
+<p>The <code>auto_array</code> provides semantics of strict ownership. 
+An <code>auto_array</code> owns the object array it holds a pointer to. 
+Copying an <code>auto_array</code> copies the pointer and transfers
+ownership to the destination.  If more than one <code>auto_array</code>
+owns the same object array at the same time, the results are
+undefined.</p>
+
+<p>The uses of <code>auto_array</code> include providing temporary
+exception-safety for dynamically allocated memory, passing ownership of
+dynamically allocated memory to a function, and returning dynamically
+allocated memory from a function.  <code>auto_array</code> does not meet
+the <dfn>CopyConstructible</dfn> and <dfn>Assignable</dfn> requirements
+for Standard Library container elements and thus instantiating a
+Standard Library (or similar) container with an <code>auto_array</code>
+gives undefined results.</p>
+
+<p>The type-based template argument <var>T</var> represents the type of
+elements used in the object array.</p>
+
+<h3><a name="diff">Differences from <code>std::auto_ptr</code></a></h3>
+
+<p>There is a conversion defined between a pointer of one type to a
+pointer of another type if the destination base type is an (unambiguous)
+base class of the source base type.  This conversion is well defined if
+the pointers are used to point to single objects.  It is a bad idea to
+use the conversion for object arrays, since the pointer offsets will be
+wrong.  Therefore, <code>auto_array</code> bans conversions between
+different class template versions (including via different
+<code>auto_array_ref</code> versions), unlike <code>auto_ptr</code>.</p>
+
+<p>Since cross-version conversion is banned, there is no need for the
+<code>auto_array_ref</code> class to be known outside of its containing
+class template.  It is also not meant to be used directly by users. 
+Therefore, each <code>auto_array_ref</code> version is kept private to
+its corresponding <code>auto_array</code> class template.</p>
+
+<p>The ways a single object can be constructed is open-ended.  However,
+an object array can be obtained with the conventional <code>operator
+new[]</code> in only one manner.  Therefore, there is a convenience
+constructor that takes a size parameter and allocates an appropriately
+sized array.  It is the only <code>auto_array</code> operation that can
+throw.  There is a new member type specifying the type of the size
+parameter.</p>
+
+<p>The member functions for ownership management are unchanged from
+<code>auto_ptr</code>.  The access operators have changed.  The
+single-object access <code>operator *</code> and <code>operator
+-&gt;</code> have been removed and the array-element accessing
+<code>operator []</code> has been added.</p>
+
+<p>Like most container or smart-pointer types (including
+<code>auto_ptr</code>), bad behavior occurs if the destructor of
+element's type can throw.  The ban on throwing also includes the
+element's type's <code>operator delete[]</code> (and <code>operator
+delete</code> for <code>auto_ptr</code>).</p>
+
+<h3><a name="m_types">Member Types</a></h3>
+
+<dl>
+    <dt><code>element_type</code>
+    <dd>a synonym for the element type used in the object array
+
+    <dt><code>size_type</code>
+    <dd>a synonym for the type used in array sizing and array indexing
+</dl>
+
+<h3><a name="m_ctr">Constructors</a></h3>
+
+<dl>
+    <dt><code>auto_array( element_type *p = 0 ) throw();</code>
+    <dd>
+        <strong>Postconditions:</strong> <code>*this</code> holds the
+            pointer <var>p</var>.<br>
+        <strong>Note:</strong> Also acts as default constructor.
+
+    <dt><code>auto_array( size_type s );</code>
+    <dd>
+        <strong>Effects:</strong> Calls <code>new element_type[
+            <var>s</var> ]</code>.<br>
+        <strong>Postconditions:</strong> <code>*this</code> holds the
+            pointer returned from the allocation call.<br>
+        <strong>Note:</strong> This constructor may throw, but should
+            still prevent a memory leak.
+
+    <dt><code>auto_array( auto_array &amp;c ) throw();</code>
+    <dd>
+        <strong>Effects:</strong> Calls
+            <code><var>c</var>.release()</code>.<br>
+        <strong>Postconditions:</strong> <code>*this</code> holds the
+            pointer returned from <code>release()</code>.
+
+    <dt><code>auto_array( auto_array_ref r ) throw();</code>
+    <dd>
+        <strong>Effects:</strong> Calls
+            <code><var>p</var>.release()</code>, where <var>p</var> is
+            the <code>auto_array</code> to which <var>r</var>
+            refers.<br>
+        <strong>Postconditions:</strong> <code>*this</code> holds the
+            pointer returned from <code>release()</code>.
+
+    <dt><code>~auto_array() throw();</code>
+    <dd>
+        <strong>Requires:</strong> The expression <code>delete []
+            get()</code> is well formed.<br>
+        <strong>Effects:</strong> <code>delete [] get()</code>.
+</dl>
+
+<h3><a name="m_observe">Observer Member Functions</a></h3>
+
+<dl>
+    <dt><code>element_type *  get() const throw();</code>
+    <dd>
+        <strong>Returns:</strong> The pointer <code>*this</code> holds.
+</dl>
+
+<h3><a name="m_mutate">Mutator Member Functions</a></h3>
+
+<dl>
+    <dt><code>element_type *  release() throw();</code>
+    <dd>
+        <strong>Returns:</strong> <code>get()</code>.<br>
+        <strong>Postconditions:</strong> <code>*this</code> holds the
+            null pointer.
+
+    <dt><code>void  reset( element_type *p = 0 ) throw();</code>
+    <dd>
+        <strong>Effects:</strong> If <code>get() != <var>p</var></code>,
+            then <code>delete [] get()</code>.<br>
+        <strong>Postconditions:</strong> <code>*this</code> holds the
+            pointer <var>p</var>.
+</dl>
+
+<h3><a name="operators">Operators</a></h3>
+
+<dl>
+    <dt><code>element_type &amp;  operator []( size_type i ) const
+        throw();</code>
+    <dd>
+        <strong>Requires:</strong> <code>get() != 0</code>.<br>
+        <strong>Returns:</strong> <code>get()[ <var>i</var> ]</code>.
+
+    <dt><code>operator auto_array_ref() throw();</code>
+    <dd>
+        <strong>Returns:</strong> An <code>auto_array_ref</code> that
+            holds <code>*this</code>.
+
+    <dt><code>auto_array &amp;  operator =( auto_array &amp;c )
+        throw();</code>
+    <dd>
+        <strong>Requires:</strong> The expression <code>delete []
+            get()</code> is well formed.<br>
+        <strong>Effects:</strong> <code>reset( <var>c</var>.release()
+            )</code>.<br>
+        <strong>Returns:</strong> <code>*this</code>.
+
+    <dt><code>auto_array &amp;  operator =( auto_array_ref r )
+        throw();</code>
+    <dd>
+        <strong>Effects:</strong> Calls <code>reset(
+            <var>p</var>.release() )</code>, where <var>p</var> is the
+            <code>auto_array</code> to which <var>r</var> refers.<br>
+        <strong>Returns:</strong> <code>*this</code>.
+</dl>
+
+<h2><a name="example">Example</a></h2>
+
+<blockquote><pre>
+#include &lt;boost/memory/auto_array.hpp&gt;
+  <i>// for boost::memory::auto_array</i>
+
+#include &lt;algorithm&gt;  <i>// for std::generate, std::copy</i>
+#include &lt;cstdlib&gt;    <i>// for std::rand</i>
+#include &lt;iostream&gt;   <i>// for std::cout</i>
+#include &lt;iterator&gt;   <i>// for std::ostream_iterator</i>
+
+int
+main
+(
+)
+{
+    boost::memory::auto_array&lt;int&gt;  a( new int[5] );
+
+    std::generate( &amp;a[0], &amp;a[5], std::rand );
+    std::copy( &amp;a[0], &amp;a[5],
+     std::ostream_iterator&lt;int&gt;(std::cout, &quot; &quot;) );
+
+    return 0;
+}
+</pre></blockquote>
+
+<h2><a name="refer">References</a></h2>
+
+<ul>
+    <li>The array-based automatic deletion library header itself:
+        <cite><a
+        href="../../../boost/memory/auto_array.hpp">boost/memory/
+        auto_array.hpp</a></cite></li>
+    <li>Some test/example code: <cite><a
+        href="../test/auto_array_test.cpp">auto_array_test.cpp</a></cite
+        ></li>
+</ul>
+
+<h2><a name="credits">Credits</a></h2>
+
+<h3><a name="contributors">Contributors</a></h3>
+
+<dl>
+    <dt><a href="../../../people/daryle_walker.html">Daryle Walker</a>
+    <dd>Started the library.  Contributed the initial version of the
+        array-based automatic deletion template class.  Contributed the
+        test file <cite><a
+        href="../test/auto_array_test.cpp">auto_array_test.cpp</a></cite
+        >.
+</dl>
+
+<h3><a name="history">History</a></h3>
+
+<dl>
+    <dt>16 Jun 2003, Daryle Walker
+    <dd>Initial version
+</dl>
+
+<hr>
+
+<p>Revised: 16 June 2003</p>
+
+<p>Copyright &copy; Daryle Walker 2003.  Permission to copy, use,
+modify, sell and distribute this document is granted provided this
+copyright notice appears in all copies.  This document is provided
+&quot;as is&quot; without express or implied warranty, and with no claim
+as to its suitability for any purpose.</p>
+</body>
+</html>
