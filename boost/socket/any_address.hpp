@@ -21,7 +21,6 @@
 
 #include <utility>
 #include <string>
-#include <cstring>
 
 namespace boost
 {
@@ -30,56 +29,14 @@ namespace boost
     class any_address
     {
     public:
-      any_address(family_t family, void* addr, std::size_t size)
-          : m_family(family), m_size(size)
-      {
-        std::memcpy(m_address.storage,addr,m_size);
-      }
-
-      family_t family() const
-      {
-        return m_family;
-      }
-
-      std::string to_string() const
-      {
-        return "any address";
-      }
-
-      std::pair<void*,size_t> representation()
-      {
-        return std::make_pair(m_address.storage, m_size);
-      }
-
-      std::pair<const void*,size_t> representation() const
-      {
-        return std::make_pair(m_address.storage, m_size);
-      }
-
-
-      bool operator < (const any_address& addr) const
-      {
-        const int cmp=std::memcmp(m_address.storage,
-                                  addr.m_address.storage,
-                                  m_size);
-        return cmp<0;
-      }
-
-      bool operator == (const any_address& addr) const
-      {
-        const int cmp=std::memcmp(m_address.storage,
-                                  addr.m_address.storage,
-                                  m_size);
-        return cmp==0;
-      }
-
-      bool operator != (const any_address& addr) const
-      {
-        const int cmp=std::memcmp(m_address.storage,
-                                  addr.m_address.storage,
-                                  m_size);
-        return cmp!=0;
-      }
+      any_address(family_t family, void* addr, std::size_t size);
+      family_t family() const;
+      std::string to_string() const;
+      std::pair<void*,size_t> representation();
+      std::pair<const void*,size_t> representation() const;
+      bool operator < (const any_address& addr) const;
+      bool operator == (const any_address& addr) const;
+      bool operator != (const any_address& addr) const;
 
     private:
       family_t m_family;
