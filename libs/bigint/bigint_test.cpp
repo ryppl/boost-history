@@ -122,4 +122,26 @@ int main() {
     assert(y == 5);
   }
 
+  {
+    std::istringstream i("555");
+    bigint x;
+    i >> x;
+    assert(x == 555);
+  }
+
+  {
+    std::istringstream i("-555");
+    bigint x;
+    i >> x;
+    assert(x == -555);
+  }
+
+  {
+    // check for an error
+    std::istringstream i("x555");
+    bigint x;
+    i >> x;
+    assert(i.fail());
+  }
+
 }

@@ -84,7 +84,8 @@ class bigint : boost::operators<bigint> {
     // check for minus sign.
     if(!(c == '-' || std::isdigit(c))) {
       is.putback(c);
-      // RG signal error here!!
+      // signal error
+      is.clear(is.rdstate() | std::ios::failbit);
       return is;
     } else {
       str.push_back(c);
