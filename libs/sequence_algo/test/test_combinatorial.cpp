@@ -98,7 +98,7 @@ unsigned long factorial(unsigned n)
 	while(n)
 		prod *= n--;
 	return prod;
-}
+}   // factorial
 
 // factorial ------------------------------------------------------------//
 
@@ -118,7 +118,7 @@ unsigned long factorial(unsigned n, unsigned r)
 	while (n > min)
 		prod *= n--;
 	return prod;
-}
+}   // factorial
 
 
 // format_sequence -------------------------------------------------//
@@ -131,8 +131,7 @@ void format_sequence(InputIterator first, InputIterator middle,
     copy(first, middle, ostream_iterator<char>(os, "  "));  // <char> was <T>
     os << "|  ";
     copy(middle, last, ostream_iterator<char>(os, "  "));
-    //os << '\n';
-}
+}   // format_sequence
 
 
 // invalid_combination_msg ----------------------------------------------//
@@ -153,7 +152,7 @@ template<class T>
 inline string invalid_combination_msg(unsigned n, const T& seq, int r)
 {
 	return invalid_sequence_msg("combination", n, seq, r);
-}
+}   // invalid_combination_msg
 
 // invalid_permutation_msg ----------------------------------------------//
 
@@ -349,62 +348,6 @@ void test_factorial()
     BOOST_CRITICAL_TEST(factorial(7, 7) == 5040);
 }   // test_factorial
 
-// test_is_sorted -------------------------------------------------------//
-
-template<class T>
-void test_is_sorted(T& seq)
-{
-    sort(seq.begin(), seq.end());
-    BOOST_CRITICAL_TEST(is_sorted(seq.begin(), seq.end()));
-    BOOST_CRITICAL_TEST(!is_sorted(seq.rbegin(), seq.rend()));
-    random_shuffle(seq.begin(), seq.end());
-    // may very well end up sorted, but unlikely.
-    BOOST_TEST(!is_sorted(seq.begin(), seq.end()));
-
-    typedef typename T::value_type U;
-    sort(seq.begin(), seq.end(), greater<U>());
-    BOOST_CRITICAL_TEST(is_sorted(seq.begin(), seq.end(), greater<U>()));
-    BOOST_CRITICAL_TEST(!is_sorted(seq.rbegin(), seq.rend(), greater<U>()));
-    random_shuffle(seq.begin(), seq.end());
-    // may very well end up sorted, but unlikely.
-    BOOST_TEST(!is_sorted(seq.begin(), seq.end(), greater<U>()));
-}   // test_is_sorted
-
-// test_smallest_greater ------------------------------------------------//
-
-void test_smallest_greater(const vector<char>& nums)
-{
-    BOOST_CRITICAL_TEST(min_element_greater_than(nums.begin(), nums.end(), '3')
-    	== find(nums.begin(), nums.end(), '4'));
-    BOOST_CRITICAL_TEST(min_element_greater_than(nums.begin(), nums.end(), '9') == nums.end());
-    BOOST_CRITICAL_TEST(min_element_greater_than(nums.begin(), nums.end(), '6') == nums.end());
-
-    BOOST_CRITICAL_TEST(min_element_greater_than(nums.begin(), nums.end(), '3', greater<char>())
-    	== find(nums.begin(), nums.end(), '2'));
-    BOOST_CRITICAL_TEST(min_element_greater_than(nums.begin(), nums.end(), '9', greater<char>())
-    	== find(nums.begin(), nums.end(), '6'));
-    BOOST_CRITICAL_TEST(min_element_greater_than(nums.begin(), nums.end(), '6', greater<char>())
-    	==  find(nums.begin(), nums.end(), '5'));
-}   // test_smallest_greater
-
-// test_largest_less ----------------------------------------------------//
-
-void test_largest_less(const vector<char>& nums)
-{
-    BOOST_CRITICAL_TEST(max_element_less_than(nums.begin(), nums.end(), '4')
-    	== find(nums.begin(), nums.end(), '3'));
-    BOOST_CRITICAL_TEST(max_element_less_than(nums.begin(), nums.end(), '1') == nums.end());
-    BOOST_CRITICAL_TEST(max_element_less_than(nums.begin(), nums.end(), '0') == nums.end());
-
-    BOOST_CRITICAL_TEST(max_element_less_than(nums.begin(), nums.end(), '4', greater<char>())
-    	== find(nums.begin(), nums.end(), '5'));
-    BOOST_CRITICAL_TEST(max_element_less_than(nums.begin(), nums.end(), '1', greater<char>())
-    	== find(nums.begin(), nums.end(), '2'));
-    BOOST_CRITICAL_TEST(max_element_less_than(nums.begin(), nums.end(), '0', greater<char>())
-    	== find(nums.begin(), nums.end(), '1'));
-    BOOST_CRITICAL_TEST(max_element_less_than(nums.begin(), nums.end(), '7', greater<char>())
-    	== nums.end());
-}   // test_largest_less
 
 // ----------------------------------------------------------------------//
 // In the following functions, each combinatorial function is tested
@@ -422,7 +365,7 @@ void test_largest_less(const vector<char>& nums)
 template<class T>
 void test_next_r_permutation(T& seq, int r)
 {
-	sort(seq.begin(), seq.end());
+	partial_sort(seq.begin(), seq.begin() + r, seq.end());
     T checkseq = seq;
 	unsigned count = 0;
     try {
@@ -434,10 +377,8 @@ void test_next_r_permutation(T& seq, int r)
             }
         } while(next_r_permutation(seq.begin(), seq.begin() + r, seq.end()));
     }
-    catch(exception& oops)
+    catch(const combinatorial_range_error& oops)
     {
-        if (strncmp(oops.what(), "next_r_permutation", 18) != 0)
-            throw;
         BOOST_ERROR(oops.what());
         return;
     }   // catch
@@ -452,7 +393,7 @@ void test_next_r_permutation(T& seq, int r)
 	    BOOST_ERROR(msg.str().c_str());
 	}
 	                       
-	if (seq != checkseq)
+	if (!equal(seq.begin(), seq.begin() + r, checkseq.begin()))
 	{
 	    BOOST_ERROR("next_r_permutation didn't restore sequence to initial value at end of series.");
 	    format_sequence(seq.begin(), seq.begin() + r, seq.end());
@@ -468,7 +409,7 @@ template<class T>
 void test_next_r_permutation_comp(T& seq, int r)
 {
     typedef typename T::value_type U;
-	sort(seq.begin(), seq.end(), greater<U>());
+	partial_sort(seq.begin(), seq.begin() + r, seq.end(), greater<U>());
 	T checkseq = seq;
 	unsigned count = 0;
     try {
@@ -482,10 +423,8 @@ void test_next_r_permutation_comp(T& seq, int r)
         } while(next_r_permutation(seq.begin(), seq.begin() + r, seq.end(),
             greater<U>()));
     }   // try
-    catch(exception& oops)
+    catch(const combinatorial_range_error& oops)
     {
-        if (strncmp(oops.what(), "next_r_permutation", 18) != 0)
-            throw;
         BOOST_ERROR(oops.what());
         return;
     }   // catch
@@ -500,11 +439,13 @@ void test_next_r_permutation_comp(T& seq, int r)
 	    BOOST_ERROR(msg.str().c_str());
 	}
 
-	if (seq != checkseq)
+	if (!equal(seq.begin(), seq.begin() + r, checkseq.begin()))
 	{
 	    BOOST_ERROR("next_r_permutation didn't restore sequence to initial value at end of series.");
 	    format_sequence(seq.begin(), seq.begin() + r, seq.end());
+	    cout << '\n';
 	    format_sequence(checkseq.begin(), checkseq.begin() + r, checkseq.end());
+	    cout << '\n';
 	}
 }   // test_next_r_permutation_comp
 
@@ -514,7 +455,7 @@ template<class T>
 void test_prev_r_permutation(T& seq, int r)
 {
     typedef typename T::value_type U;
-	sort(seq.begin(), seq.end(), greater<U>());
+	partial_sort(seq.begin(), seq.begin() + r, seq.end(), greater<U>());
 	T checkseq = seq;
     unsigned count = 0;
     try {
@@ -526,10 +467,8 @@ void test_prev_r_permutation(T& seq, int r)
             }
         } while(prev_r_permutation(seq.begin(), seq.begin() + r, seq.end()));
     }   // try
-    catch(exception& oops)
+    catch(const combinatorial_range_error& oops)
     {
-        if (strncmp(oops.what(), "prev_r_permutation", 18) != 0)
-            throw;
         BOOST_ERROR(oops.what());
         return;
     }   // catch
@@ -544,11 +483,13 @@ void test_prev_r_permutation(T& seq, int r)
 	    BOOST_ERROR(msg.str().c_str());
 	}
 
-	if (seq != checkseq)
+	if (!equal(seq.begin(), seq.begin() + r, checkseq.begin()))
 	{
 	    BOOST_ERROR("prev_r_permutation didn't restore sequence to initial value at end of series.");
 	    format_sequence(seq.begin(), seq.begin() + r, seq.end());
+	    cout << '\n';
 	    format_sequence(checkseq.begin(), checkseq.begin() + r, checkseq.end());
+	    cout << '\n';
 	}
 }   // test_prev_r_permutation
 
@@ -558,7 +499,7 @@ template<class T>
 void test_prev_r_permutation_comp(T& seq, int r)
 {
     typedef typename T::value_type U;
-	sort(seq.begin(), seq.end());
+	partial_sort(seq.begin(), seq.begin() + r, seq.end());
 	T checkseq = seq;
 	unsigned count = 0;
     try {
@@ -572,10 +513,8 @@ void test_prev_r_permutation_comp(T& seq, int r)
         } while(prev_r_permutation(seq.begin(), seq.begin() + r, seq.end(),
             greater<U>()));
     }   // try
-    catch(exception& oops)
+    catch(const combinatorial_range_error& oops)
     {
-        if (strncmp(oops.what(), "prev_r_permutation", 18) != 0)
-            throw;
         BOOST_ERROR(oops.what());
         return;
     }   // catch
@@ -590,11 +529,13 @@ void test_prev_r_permutation_comp(T& seq, int r)
 	    BOOST_ERROR(msg.str().c_str());
 	}
 
-	if (seq != checkseq)
+	if (!equal(seq.begin(), seq.begin() + r, checkseq.begin()))
 	{
 	    BOOST_ERROR("prev_r_permutation didn't restore sequence to initial value at end of series.");
 	    format_sequence(seq.begin(), seq.begin() + r, seq.end());
+	    cout << '\n';
 	    format_sequence(checkseq.begin(), checkseq.begin() + r, checkseq.end());
+	    cout << '\n';
 	}
 }   // test_prev_r_permutation_comp
 
@@ -603,7 +544,7 @@ void test_prev_r_permutation_comp(T& seq, int r)
 template<class T>
 void test_next_r_combination(T& seq, int r)
 {
-	sort(seq.begin(), seq.end());
+	partial_sort(seq.begin(), seq.begin() + r, seq.end());
 	T checkseq = seq;
 	unsigned count = 0;
     try {
@@ -613,13 +554,17 @@ void test_next_r_combination(T& seq, int r)
                 BOOST_ERROR(invalid_combination_msg(count, seq, r).c_str());
         } while(next_r_combination(seq.begin(), seq.begin() + r, seq.end()));
     }   // try
-    catch(exception& oops)
+    catch(const combinatorial_range_error& oops)
     {
-        if (strncmp(oops.what(), "next_r_combination", 18) != 0)
-            throw;
         BOOST_ERROR(oops.what());
         return;
     }   // catch
+    catch(const combinatorial_sequence_disorder& oops)
+    {
+        BOOST_ERROR(oops.what());
+        return;
+    }   // catch
+
 
 
     const unsigned long comb_cnt = factorial(seq.size(), r) / factorial(r);
@@ -632,11 +577,13 @@ void test_next_r_combination(T& seq, int r)
 	    BOOST_ERROR(msg.str().c_str());
 	}
 
-	if (seq != checkseq)
+	if (!equal(seq.begin(), seq.begin() + r, checkseq.begin()))
 	{
 	    BOOST_ERROR("next_r_permutation didn't restore sequence to initial value at end of series.");
 	    format_sequence(seq.begin(), seq.begin() + r, seq.end());
+	    cout << '\n';
 	    format_sequence(checkseq.begin(), checkseq.begin() + r, checkseq.end());
+	    cout << '\n';
 	}
 }   // test_next_r_combination
 
@@ -646,7 +593,7 @@ template<class T>
 void test_next_r_combination_comp(T& seq, int r)
 {
     typedef typename T::value_type U;
-	sort(seq.begin(), seq.end(), greater<U>());
+	partial_sort(seq.begin(), seq.begin() + r, seq.end(), greater<U>());
 	T checkseq = seq;
 	unsigned count = 0;
     try {
@@ -658,14 +605,16 @@ void test_next_r_combination_comp(T& seq, int r)
         } while(next_r_combination(seq.begin(), seq.begin() + r, seq.end(),
             greater<U>()));
     }   // try
-    catch(exception& oops)
+    catch(const combinatorial_range_error& oops)
     {
-        if (strncmp(oops.what(), "next_r_combination", 18) != 0)
-            throw;
         BOOST_ERROR(oops.what());
         return;
     }   // catch
-
+    catch(const combinatorial_sequence_disorder& oops)
+    {
+        BOOST_ERROR(oops.what());
+        return;
+    }   // catch
 
     const unsigned long comb_cnt = factorial(seq.size(), r) / factorial(r);
 	if (count != comb_cnt)
@@ -677,11 +626,13 @@ void test_next_r_combination_comp(T& seq, int r)
 	    BOOST_ERROR(msg.str().c_str());
 	}
 
-	if (seq != checkseq)
+	if (!equal(seq.begin(), seq.begin() + r, checkseq.begin()))
 	{
 	    BOOST_ERROR("next_r_combutation didn't restore sequence to initial value at end of series.");
 	    format_sequence(seq.begin(), seq.begin() + r, seq.end());
+	    cout << '\n';
 	    format_sequence(checkseq.begin(), checkseq.begin() + r, checkseq.end());
+	    cout << '\n';
 	}
 }   // test_next_r_combination_comp
 
@@ -701,10 +652,13 @@ void test_prev_r_combination(T& seq, int r)
                 BOOST_ERROR(invalid_combination_msg(count, seq, r).c_str());
         } while(prev_r_combination(seq.begin(), seq.begin() + r, seq.end()));
     }   // try
-    catch(exception& oops)
+    catch(const combinatorial_range_error& oops)
     {
-        if (strncmp(oops.what(), "prev_r_combination", 18) != 0)
-            throw;
+        BOOST_ERROR(oops.what());
+        return;
+    }   // catch
+    catch(const combinatorial_sequence_disorder& oops)
+    {
         BOOST_ERROR(oops.what());
         return;
     }   // catch
@@ -719,11 +673,13 @@ void test_prev_r_combination(T& seq, int r)
 	    BOOST_ERROR(msg.str().c_str());
 	}
 
-	if (seq != checkseq)
+	if (!equal(seq.begin(), seq.begin() + r, checkseq.begin()))
 	{
 	    BOOST_ERROR("prev_r_combination didn't restore sequence to initial value at end of series.");
 	    format_sequence(seq.begin(), seq.begin() + r, seq.end());
+	    cout << '\n';
 	    format_sequence(checkseq.begin(), checkseq.begin() + r, checkseq.end());
+	    cout << '\n';
 	}
 }   // test_prev_r_combination
 
@@ -746,14 +702,16 @@ void test_prev_r_combination_comp(T& seq, int r)
         } while(prev_r_combination(seq.begin(), seq.begin() + r, seq.end(),
             greater<U>()));
     }   // try
-    catch(exception& oops)
+    catch(const combinatorial_range_error& oops)
     {
-        if (strncmp(oops.what(), "prev_r_combination", 18) != 0)
-            throw;
         BOOST_ERROR(oops.what());
         return;
     }   // catch
-
+    catch(const combinatorial_sequence_disorder& oops)
+    {
+        BOOST_ERROR(oops.what());
+        return;
+    }   // catch
 
     const unsigned long comb_cnt = factorial(seq.size(), r) / factorial(r);
 	if (count != comb_cnt)
@@ -765,11 +723,13 @@ void test_prev_r_combination_comp(T& seq, int r)
 	    BOOST_ERROR(msg.str().c_str());
 	}
 
-	if (seq != checkseq)
+	if (!equal(seq.begin(), seq.begin() + r, checkseq.begin()))
 	{
 	    BOOST_ERROR("prev_r_combination didn't restore sequence to initial value at end of series.");
 	    format_sequence(seq.begin(), seq.begin() + r, seq.end());
+	    cout << '\n';
 	    format_sequence(checkseq.begin(), checkseq.begin() + r, checkseq.end());
+	    cout << '\n';
 	}
 }   // test_prev_r_combination_comp
 
@@ -786,13 +746,6 @@ int test_main(int argc, char* argv[])
     test_factorial();
 
     vector<char> nums(theNumerals, theNumerals + DIM(theNumerals));
-
-    // test is_sorted function ---------------------------------------->>
-    test_is_sorted(nums);
-    
-    // test min_element_greater_than and max_element_less_than functions --------------->>
-    test_smallest_greater(nums);
-    test_largest_less(nums);
 
     // test permutation and combination functions --------------------->>
     // Repeat for various container sizes
