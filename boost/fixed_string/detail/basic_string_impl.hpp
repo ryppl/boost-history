@@ -204,10 +204,11 @@
                return( replace( begin(), end(), n, c ));
             }
             template< typename InputIterator >
-            inline size_type &                   assign( InputIterator first, InputIterator last )
+            inline string_type &                 assign( InputIterator first, InputIterator last )
             {
                clear();
                while( first != last )  push_back_( *first++ );
+               return( *this );
             }
          public:
             inline string_type &  operator=( const string_type & s )
