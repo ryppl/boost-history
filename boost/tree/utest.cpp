@@ -15,6 +15,7 @@
 
 //extern void utest_array(void); 
 //extern void utest_tree(void); 
+extern void utest_mappediterator(void);
 extern void utest_ntree(void); 
 //extern void utest_linalg(void); 
 //extern void utest_projective(void); 
@@ -29,7 +30,8 @@ int main(void)
 
   // Perform unit tests
   //utest_array(); 
-  //utest_tree(); 
+  //utest_tree();
+  utest_mappediterator();
   utest_ntree(); 
   //utest_linalg(); 
   //utest_projective(); 
