@@ -81,7 +81,7 @@ void test_storage () {
 #endif
         std::copy (ua1.begin (), ua1.end (), out); 
         std::cout << std::endl;
-        std::copy (ua2.begin (), ua2.end (), out); 
+        std::copy (ua2.begin (), ua2.end (), out);
         std::cout << std::endl;
 
         // Some bounded array storage tests
@@ -276,7 +276,7 @@ void test_matrix () {
         // Some matrix tests
         numerics::matrix<double> m1 (3, 3), m2 (3, 3);
         for (i = 0; i < 3; ++ i)
-            for (j = 0; j < 3; ++ j) 
+            for (j = 0; j < 3; ++ j)
 #ifdef NUMERICS_DEPRECATED
                 m2 [i] [j] = i * j;
 #else
@@ -284,13 +284,13 @@ void test_matrix () {
 #endif
         m1 = m2;
         {
-#if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR) 
+#if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
             numerics::matrix<double>::iterator1 it11 (m1.begin1 ());
             numerics::matrix<double>::const_iterator1 it12 (m2.begin1 ());
             while (it11 != m1.end1 () && it12 != m2.end1 ()) {
                 std::copy (it12.begin (), it12.end (), it11.begin ());
                 ++ it11, ++ it12;
-            } 
+            }
             numerics::matrix<double>::iterator2 it21 (m1.begin2 ());
             numerics::matrix<double>::const_iterator2 it22 (m2.begin2 ());
             while (it21 != m1.end2 () && it22 != m2.end2 ()) {
@@ -380,7 +380,7 @@ void test_sparse_matrix () {
             while (it11 != m1.end1 () && it12 != m2.end1 ()) {
                 std::copy (it12.begin (), it12.end (), it11.begin ());
                 ++ it11, ++ it12;
-            } 
+            }
             numerics::sparse_matrix<double>::iterator2 it21 (m1.begin2 ());
             numerics::sparse_matrix<double>::const_iterator2 it22 (m2.begin2 ());
             while (it21 != m1.end2 () && it22 != m2.end2 ()) {
@@ -435,14 +435,26 @@ void test_io () {
 }
 
 void test_conversion () {
-    numerics::vector<double> dv (1);
-    numerics::vector<float> fv (1);
-    dv = fv;
-    fv = dv;
-    numerics::matrix<double> dm (1, 1);
-    numerics::matrix<float> fm (1, 1);
-    dm = fm;
-    fm = dm;
+    {
+        numerics::vector<double> dv (1);
+        numerics::vector<float> fv (1);
+        dv = fv;
+        fv = dv;
+        numerics::matrix<double> dm (1, 1);
+        numerics::matrix<float> fm (1, 1);
+        dm = fm;
+        fm = dm;
+    }
+    {
+        numerics::vector<double> rv (1);
+        numerics::vector<std::complex<double> > cv (1);
+        cv = rv + cv;
+        cv = rv - cv;
+        numerics::matrix<double> rm (1, 1);
+        numerics::matrix<std::complex<double> > cm (1, 1);
+        cm = rm + cm;
+        cm = rm - cm;
+    }
 }
 
 void test_sparse_prod () {

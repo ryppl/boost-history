@@ -79,7 +79,7 @@ namespace numerics {
     };
 
     template<class T>
-    scalar_const_reference<T>::value_type scalar_const_reference<T>::nil_;
+    typename scalar_const_reference<T>::value_type scalar_const_reference<T>::nil_;
 
     // Base class for the Barton Nackman trick
     template<class E>
@@ -192,7 +192,7 @@ namespace numerics {
     };
 
     template<class E>
-    vector_const_reference<E>::expression_type vector_const_reference<E>::nil_;
+    typename vector_const_reference<E>::expression_type vector_const_reference<E>::nil_;
 
     template<class E>
     class vector_reference: 
@@ -332,7 +332,7 @@ namespace numerics {
     };
 
     template<class E>
-    vector_reference<E>::expression_type vector_reference<E>::nil_;
+    typename vector_reference<E>::expression_type vector_reference<E>::nil_;
 
     template<class E, class F>
     class vector_unary:

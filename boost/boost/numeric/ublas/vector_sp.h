@@ -469,7 +469,7 @@ namespace numerics {
     template<class T, class IA, class TA>
     class compressed_vector: 
         public vector_expression<compressed_vector<T, IA, TA> > {
-    public:      
+    public:
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
@@ -518,8 +518,8 @@ namespace numerics {
             return size_; 
         }
         NUMERICS_INLINE
-        size_type non_zeros () const { 
-            return non_zeros; 
+        size_type non_zeros () const {
+            return non_zeros_;
         }
         NUMERICS_INLINE
         const index_array_type &index_data () const {

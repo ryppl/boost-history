@@ -469,7 +469,7 @@ namespace numerics {
     };
 
     template<class V>
-    vector_range<V>::vector_type vector_range<V>::nil_;
+    typename vector_range<V>::vector_type vector_range<V>::nil_;
 
     // Projections
 #ifdef NUMERICS_DEPRECATED
@@ -953,7 +953,7 @@ namespace numerics {
     };
 
     template<class V>
-    vector_slice<V>::vector_type vector_slice<V>::nil_;
+    typename vector_slice<V>::vector_type vector_slice<V>::nil_;
 
     // Projections
 #ifdef NUMERICS_HAS_PARTIAL_TEMPLATE_SPECIALIZATION

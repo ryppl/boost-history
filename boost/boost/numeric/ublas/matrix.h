@@ -2742,7 +2742,7 @@ namespace numerics {
                 -- i_;
                 const vector_of_vector &m = (*this) ();
                 if (functor_type::one1 (m.size1 (), m.size2 ()) == 1)
-                    -- it;
+                    -- it_;
                 else
                     it_ = m.find1 (1, i_, j_).it_;
                 return *this;

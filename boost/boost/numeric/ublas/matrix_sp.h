@@ -995,11 +995,11 @@ namespace numerics {
             return size2_;
         }
         NUMERICS_INLINE
-        size_type non_zeros () const { 
-            non_zeros = 0;
+        size_type non_zeros () const {
+            size_type non_zeros = 0;
             for (vector_const_iterator_type itv = data_ ().begin (); itv != data_ ().end (); ++ itv)
                 non_zeros += (*itv).size ();
-            return non_zeros; 
+            return non_zeros;
         }
         NUMERICS_INLINE
         const_array_type &data () const {

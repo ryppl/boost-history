@@ -197,7 +197,7 @@ namespace numerics {
     };
 
     template<class E>
-    matrix_const_reference<E>::expression_type matrix_const_reference<E>::nil_;
+    typename matrix_const_reference<E>::expression_type matrix_const_reference<E>::nil_;
 
     template<class E>
     class matrix_reference:
@@ -448,7 +448,7 @@ namespace numerics {
     };
 
     template<class E>
-    matrix_reference<E>::expression_type matrix_reference<E>::nil_;
+    typename matrix_reference<E>::expression_type matrix_reference<E>::nil_;
 
     template<class E1, class E2, class F>
     class vector_matrix_binary:

@@ -301,23 +301,27 @@ namespace numerics {
         // Arithmetic
         NUMERICS_INLINE
         reverse_iterator &operator += (difference_type n) {
-            base () -= n;
+            // Comeau recommends...
+            this->base () -= n;
             return *this;
         }
         NUMERICS_INLINE
         reverse_iterator &operator -= (difference_type n) {
-            base () += n;
+            // Comeau recommends...
+            this->base () += n;
             return *this;
         }
 
         NUMERICS_INLINE
         const container_type &operator () () const {
-            return base () ();
+            // Comeau recommends...
+            return this->base () ();
         }
 
         NUMERICS_INLINE
         difference_type index () const {
-            return base ().index ();
+            // Comeau recommends...
+            return this->base ().index ();
         }
     };
 
@@ -359,37 +363,44 @@ namespace numerics {
         // Arithmetic
         NUMERICS_INLINE
         reverse_iterator1 &operator += (difference_type n) {
-            base () -= n;
+            // Comeau recommends...
+            this->base () -= n;
             return *this;
         }
         NUMERICS_INLINE
         reverse_iterator1 &operator -= (difference_type n) {
-            base () += n;
+            // Comeau recommends...
+            this->base () += n;
             return *this;
         }
 
         NUMERICS_INLINE
         const container_type &operator () () const {
-            return base () ();
+            // Comeau recommends...
+            return this->base () ();
         }
 
         NUMERICS_INLINE
         difference_type index1 () const {
-            return base ().index1 ();
+            // Comeau recommends...
+            return this->base ().index1 ();
         }
         NUMERICS_INLINE
         difference_type index2 () const {
-            return base ().index2 ();
+            // Comeau recommends...
+            return this->base ().index2 ();
         }
 
 #ifndef NUMERICS_USE_CANONICAL_ITERATOR
         NUMERICS_INLINE
         dual_iterator_type begin () const {
-            return base ().begin ();
+            // Comeau recommends...
+            return this->base ().begin ();
         }
         NUMERICS_INLINE
         dual_iterator_type end () const {
-            return base ().end ();
+            // Comeau recommends...
+            return this->base ().end ();
         }
         NUMERICS_INLINE
         dual_reverse_iterator_type rbegin () const {
@@ -440,37 +451,44 @@ namespace numerics {
         // Arithmetic
         NUMERICS_INLINE
         reverse_iterator2 &operator += (difference_type n) {
-            base () -= n;
+            // Comeau recommends...
+            this->base () -= n;
             return *this;
         }
         NUMERICS_INLINE
         reverse_iterator2 &operator -= (difference_type n) {
-            base () += n;
+            // Comeau recommends...
+            this->base () += n;
             return *this;
         }
 
         NUMERICS_INLINE
         const container_type &operator () () const {
-            return base () ();
+            // Comeau recommends...
+            return this->base () ();
         }
 
         NUMERICS_INLINE
         difference_type index1 () const {
-            return base ().index1 ();
+            // Comeau recommends...
+            return this->base ().index1 ();
         }
         NUMERICS_INLINE
         difference_type index2 () const {
-            return base ().index2 ();
+            // Comeau recommends...
+            return this->base ().index2 ();
         }
 
 #ifndef NUMERICS_USE_CANONICAL_ITERATOR
         NUMERICS_INLINE
         dual_iterator_type begin () const {
-            return base ().begin ();
+            // Comeau recommends...
+            return this->base ().begin ();
         }
         NUMERICS_INLINE
         dual_iterator_type end () const {
-            return base ().end ();
+            // Comeau recommends...
+            return this->base ().end ();
         }
         NUMERICS_INLINE
         dual_reverse_iterator_type rbegin () const {
@@ -516,12 +534,14 @@ namespace numerics {
         // Arithmetic
         NUMERICS_INLINE
         reverse_iterator &operator += (difference_type n) {
-            base () -= n;
+            // Comeau recommends...
+            this->base () -= n;
             return *this;
         }
         NUMERICS_INLINE
         reverse_iterator &operator -= (difference_type n) {
-            base () += n;
+            // Comeau recommends...
+            this->base () += n;
             return *this;
         }
 
@@ -540,12 +560,14 @@ namespace numerics {
 
         NUMERICS_INLINE
         const container_type &operator () () const {
-            return base () ();
+            // Comeau recommends...
+            return this->base () ();
         }
 
         NUMERICS_INLINE
         difference_type index () const {
-            return base ().index ();
+            // Comeau recommends...
+            return this->base ().index ();
         }
     };
 
@@ -572,12 +594,14 @@ namespace numerics {
         // Arithmetic
         NUMERICS_INLINE
         reverse_iterator1 &operator += (difference_type n) {
-            base () -= n;
+            // Comeau recommends...
+            this->base () -= n;
             return *this;
         }
         NUMERICS_INLINE
         reverse_iterator1 &operator -= (difference_type n) {
-            base () += n;
+            // Comeau recommends...
+            this->base () += n;
             return *this;
         }
 
@@ -596,26 +620,31 @@ namespace numerics {
 
         NUMERICS_INLINE
         const container_type &operator () () const {
-            return base () ();
+            // Comeau recommends...
+            return this->base () ();
         }
 
         NUMERICS_INLINE
         difference_type index1 () const {
-            return base ().index1 ();
+            // Comeau recommends...
+            return this->base ().index1 ();
         }
         NUMERICS_INLINE
         difference_type index2 () const {
-            return base ().index2 ();
+            // Comeau recommends...
+            return this->base ().index2 ();
         }
 
 #ifndef NUMERICS_USE_CANONICAL_ITERATOR
         NUMERICS_INLINE
         dual_iterator_type begin () const {
-            return base ().begin ();
+            // Comeau recommends...
+            return this->base ().begin ();
         }
         NUMERICS_INLINE
         dual_iterator_type end () const {
-            return base ().end ();
+            // Comeau recommends...
+            return this->base ().end ();
         }
         NUMERICS_INLINE
         dual_reverse_iterator_type rbegin () const {
@@ -651,12 +680,14 @@ namespace numerics {
         // Arithmetic
         NUMERICS_INLINE
         reverse_iterator2 &operator += (difference_type n) {
-            base () -= n;
+            // Comeau recommends...
+            this->base () -= n;
             return *this;
         }
         NUMERICS_INLINE
         reverse_iterator2 &operator -= (difference_type n) {
-            base () += n;
+            // Comeau recommends...
+            this->base () += n;
             return *this;
         }
 
@@ -675,26 +706,31 @@ namespace numerics {
 
         NUMERICS_INLINE
         const container_type &operator () () const {
-            return base () ();
+            // Comeau recommends...
+            return this->base () ();
         }
 
         NUMERICS_INLINE
         difference_type index1 () const {
-            return base ().index1 ();
+            // Comeau recommends...
+            return this->base ().index1 ();
         }
         NUMERICS_INLINE
         difference_type index2 () const {
-            return base ().index2 ();
+            // Comeau recommends...
+            return this->base ().index2 ();
         }
 
 #ifndef NUMERICS_USE_CANONICAL_ITERATOR
         NUMERICS_INLINE
         dual_iterator_type begin () const {
-            return base ().begin ();
+            // Comeau recommends...
+            return this->base ().begin ();
         }
         NUMERICS_INLINE
         dual_iterator_type end () const {
-            return base ().end ();
+            // Comeau recommends...
+            return this->base ().end ();
         }
         NUMERICS_INLINE
         dual_reverse_iterator_type rbegin () const {
@@ -709,32 +745,34 @@ namespace numerics {
 #endif
 
 #ifdef USE_GCC
-    template<class I>
-    NUMERICS_INLINE
-    I operator ++ (I &it, int) {
-        I tmp (it);
-        ++ it;
-        return tmp;
-    }
-    template<class I>
-    NUMERICS_INLINE
-    I operator -- (I &it, int) {
-        I tmp (it);
-        -- it;
-        return tmp;
-    }
-    template<class I>
-    NUMERICS_INLINE
-    I operator + (const I &it, std::ptrdiff_t n) {
-        I tmp (it);
-        return tmp += n;
-    }
-    template<class I>
-    NUMERICS_INLINE
-    I operator - (const I &it, std::ptrdiff_t n) {
-        I tmp (it);
-        return tmp -= n;
-    }
+// The following operators are underspecified and conflict with std::complex operators
+// If we really need these, they have to be specialized.
+//     template<class I>
+//     NUMERICS_INLINE
+//     I operator ++ (I &it, int) {
+//         I tmp (it);
+//         ++ it;
+//         return tmp;
+//     }
+//     template<class I>
+//     NUMERICS_INLINE
+//     I operator -- (I &it, int) {
+//         I tmp (it);
+//         -- it;
+//         return tmp;
+//     }
+//     template<class I>
+//     NUMERICS_INLINE
+//     I operator + (const I &it, std::ptrdiff_t n) {
+//         I tmp (it);
+//         return tmp += n;
+//     }
+//     template<class I>
+//     NUMERICS_INLINE
+//     I operator - (const I &it, std::ptrdiff_t n) {
+//         I tmp (it);
+//         return tmp -= n;
+//     }
 #endif
 
     template<class C, class I>

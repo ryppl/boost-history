@@ -470,7 +470,7 @@ namespace numerics {
     };
 
     template<class M>
-    matrix_row<M>::matrix_type matrix_row<M>::nil_;
+    typename matrix_row<M>::matrix_type matrix_row<M>::nil_;
 
     // Projections
     template<class M>
@@ -1160,7 +1160,7 @@ namespace numerics {
     };
 
     template<class M>
-    matrix_column<M>::matrix_type matrix_column<M>::nil_;
+    typename matrix_column<M>::matrix_type matrix_column<M>::nil_;
 
     // Projections
     template<class M>
@@ -1820,7 +1820,7 @@ namespace numerics {
     };
 
     template<class M>
-    matrix_vector_range<M>::matrix_type matrix_vector_range<M>::nil_;
+    typename matrix_vector_range<M>::matrix_type matrix_vector_range<M>::nil_;
 
     // Matrix based vector slice class
     template<class M>
@@ -2237,7 +2237,7 @@ namespace numerics {
     };
 
     template<class M>
-    matrix_vector_slice<M>::matrix_type matrix_vector_slice<M>::nil_;
+    typename matrix_vector_slice<M>::matrix_type matrix_vector_slice<M>::nil_;
 
     // Matrix based range class
     template<class M>
@@ -3091,7 +3091,7 @@ namespace numerics {
     };
 
     template<class M>
-    matrix_range<M>::matrix_type matrix_range<M>::nil_;
+    typename matrix_range<M>::matrix_type matrix_range<M>::nil_;
 
     // Projections
 #ifdef NUMERICS_DEPRECATED
@@ -3966,7 +3966,7 @@ namespace numerics {
     };
 
     template<class M>
-    matrix_slice<M>::matrix_type matrix_slice<M>::nil_;
+    typename matrix_slice<M>::matrix_type matrix_slice<M>::nil_;
 
     // Projections
 #ifdef NUMERICS_HAS_PARTIAL_TEMPLATE_SPECIALIZATION
