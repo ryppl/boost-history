@@ -372,13 +372,7 @@ namespace numerics {
             vector_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae);
         }
 
-        // Resizing
-        NUMERICS_INLINE
-        void resize (size_type size) {
-            size_ = size;
-            data_.resize (size);
-        }
-
+        // Accessors
         NUMERICS_INLINE
         size_type size () const { 
             return size_; 
@@ -392,14 +386,21 @@ namespace numerics {
             return data_;
         }
 
+        // Resizing
+        NUMERICS_INLINE
+        void resize (size_type size) {
+            size_ = size;
+            data ().resize (size);
+        }
+
         // Element access
         NUMERICS_INLINE
         const_reference operator () (size_type i) const {
-            return data_ [i]; 
+            return data () [i]; 
         }
         NUMERICS_INLINE
         reference operator () (size_type i) {
-            return data_ [i]; 
+            return data () [i]; 
         }
 
         NUMERICS_INLINE
@@ -415,7 +416,8 @@ namespace numerics {
         NUMERICS_INLINE
         vector &operator = (const vector &v) { 
             check (size_ == v.size_, bad_size ());
-            data_ = v.data_;
+            size_ = v.size_;
+            data () = v.data ();
             return *this;
         }
         NUMERICS_INLINE
@@ -426,6 +428,16 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         vector &operator = (const vector_expression<AE> &ae) {
+#ifndef USE_GCC
+            return assign_temporary (self_type (ae));
+#else
+            return assign (self_type (ae));
+#endif
+        }
+        template<class AE>
+        NUMERICS_INLINE
+        vector &reset (const vector_expression<AE> &ae) {
+            resize (ae ().size ());
 #ifndef USE_GCC
             return assign_temporary (self_type (ae));
 #else
@@ -487,7 +499,7 @@ namespace numerics {
             check (this != &v, external_logic ());
             check (size_ == v.size_, bad_size ());
             std::swap (size_, v.size_);
-            data_.swap (v.data_);
+            data ().swap (v.data ());
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
@@ -499,19 +511,19 @@ namespace numerics {
         // Element insertion and erasure
         NUMERICS_INLINE
         void insert (size_type i, const_reference t) {
-            check (data_ [i] == value_type (), bad_index ());
-            data_.insert (data_.begin () + i, t);
+            check (data () [i] == value_type (), bad_index ());
+            data ().insert (data ().begin () + i, t);
         }
         NUMERICS_INLINE
         void erase (size_type i) {
-            data_.erase (data_.begin () + i);
+            data ().erase (data ().begin () + i);
         }
         NUMERICS_INLINE
         void clear () {
             // clear won't work for std::vector.
             // Thanks to Kresimir Fresl for spotting this.
-            // data_.clear ();
-            std::fill (data_.begin (), data_.end (), value_type ());
+            // data ().clear ();
+            std::fill (data ().begin (), data ().end (), value_type ());
         }
 
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
@@ -526,7 +538,7 @@ namespace numerics {
         NUMERICS_INLINE
         const_iterator find (size_type i) const {
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
-            return const_iterator (*this, data_.begin () + i);
+            return const_iterator (*this, data ().begin () + i);
 #else
             return const_iterator (*this, i);
 #endif
@@ -534,7 +546,7 @@ namespace numerics {
         NUMERICS_INLINE
         iterator find (size_type i) {
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
-            return iterator (*this, data_.begin () + i);
+            return iterator (*this, data ().begin () + i);
 #else
             return iterator (*this, i);
 #endif
@@ -816,12 +828,7 @@ namespace numerics {
         unit_vector (const unit_vector &v): 
             size_ (v.size_), index_ (v.index_) {}
 
-        // Resizing
-        NUMERICS_INLINE
-        void resize (size_type size) {
-            size_ = size;
-        }
-
+        // Accessors
         NUMERICS_INLINE
         size_type size () const { 
             return size_; 
@@ -829,6 +836,12 @@ namespace numerics {
         NUMERICS_INLINE
         size_type index () const { 
             return index_; 
+        }
+
+        // Resizing
+        NUMERICS_INLINE
+        void resize (size_type size) {
+            size_ = size;
         }
 
         // Element access
@@ -846,6 +859,7 @@ namespace numerics {
         NUMERICS_INLINE
         unit_vector &operator = (const unit_vector &v) { 
             check (size_ == v.size_, bad_size ());
+            size_ = v.size_;
             index_ = v.index_;
             return *this;
         }
@@ -1034,15 +1048,16 @@ namespace numerics {
         scalar_vector (const scalar_vector &v): 
             size_ (v.size_), value_ (v.value_) {}
 
+        // Accessors
+        NUMERICS_INLINE
+        size_type size () const { 
+            return size_; 
+        }
+
         // Resizing
         NUMERICS_INLINE
         void resize (size_type size) {
             size_ = size;
-        }
-
-        NUMERICS_INLINE
-        size_type size () const { 
-            return size_; 
         }
 
         // Element access
@@ -1060,6 +1075,7 @@ namespace numerics {
         NUMERICS_INLINE
         scalar_vector &operator = (const scalar_vector &v) { 
             check (size_ == v.size_, bad_size ());
+            size_ = v.size_;
             value_ = v.value_;
             return *this;
         }
@@ -1270,6 +1286,12 @@ namespace numerics {
             vector_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae);
         }
 
+        // Accessors
+        NUMERICS_INLINE
+        size_type size () const { 
+            return size_; 
+        }
+
         // Resizing
         NUMERICS_INLINE
         void resize (size_type size) {
@@ -1277,11 +1299,6 @@ namespace numerics {
                 throw std::bad_alloc ();
             // The content of the array is intentionally not copied.
             size_ = size;
-        }
-
-        NUMERICS_INLINE
-        size_type size () const { 
-            return size_; 
         }
 
         // Element access
@@ -1309,8 +1326,19 @@ namespace numerics {
         NUMERICS_INLINE
         c_vector &operator = (const c_vector &v) { 
             check (size_ == v.size_, bad_size ());
+            size_ = v.size_;
             std::copy (v.data_, v.data_ + v.size_, data_);
             return *this;
+        }
+        template<class AE>
+        NUMERICS_INLINE
+        c_vector &reset (const vector_expression<AE> &ae) {
+            resize (ae ().size ());
+#ifndef USE_GCC
+            return assign_temporary (self_type (ae));
+#else
+            return assign (self_type (ae));
+#endif
         }
         NUMERICS_INLINE
         c_vector &assign_temporary (c_vector &v) { 

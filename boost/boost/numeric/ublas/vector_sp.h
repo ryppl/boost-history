@@ -68,17 +68,14 @@ namespace numerics {
             vector_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae);
         }
 
-        // Resizing
-        NUMERICS_INLINE
-        void resize (size_type size, size_type non_zeros = 0) {
-            size_ = size;
-            non_zeros_ = non_zeros;
-            data_.clear ();
-        }
-
+        // Accessors
         NUMERICS_INLINE
         size_type size () const { 
             return size_; 
+        }
+        NUMERICS_INLINE
+        size_type non_zeros () const { 
+            return data_.size (); 
         }
         NUMERICS_INLINE
         const_array_type &data () const {
@@ -89,17 +86,25 @@ namespace numerics {
             return data_;
         }
 
+        // Resizing
+        NUMERICS_INLINE
+        void resize (size_type size, size_type non_zeros = 0) {
+            size_ = size;
+            non_zeros_ = non_zeros;
+            data ().clear ();
+        }
+
         // Element access
         NUMERICS_INLINE
         value_type operator () (size_type i) const {
-            const_iterator_type it (data_.find (i));
-            if (it == data_.end () || (*it).first != i)
+            const_iterator_type it (data ().find (i));
+            if (it == data ().end () || (*it).first != i)
                 return value_type ();
             return (*it).second;
         }
         NUMERICS_INLINE
         reference operator () (size_type i) {
-            return data_ [i]; 
+            return data () [i]; 
         }
 
         NUMERICS_INLINE
@@ -116,7 +121,9 @@ namespace numerics {
         sparse_vector &operator = (const sparse_vector &v) { 
             check (size_ == v.size_, bad_size ());
             check (non_zeros_ == v.non_zeros_, bad_size ());
-            data_ = v.data_;
+            size_ = v.size_;
+            non_zeros_ = v.non_zeros_;
+            data () = v.data ();
             return *this;
         }
         NUMERICS_INLINE
@@ -127,6 +134,16 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         sparse_vector &operator = (const vector_expression<AE> &ae) {
+#ifndef USE_GCC
+            return assign_temporary (self_type (ae, non_zeros_));
+#else
+            return assign (self_type (ae, non_zeros_));
+#endif
+        }
+        template<class AE>
+        NUMERICS_INLINE
+        sparse_vector &reset (const vector_expression<AE> &ae) {
+            resize (ae ().size (), non_zeros_);
 #ifndef USE_GCC
             return assign_temporary (self_type (ae, non_zeros_));
 #else
@@ -190,7 +207,7 @@ namespace numerics {
             check (non_zeros_ == v.non_zeros_, bad_size ());
             std::swap (size_, v.size_);
             std::swap (non_zeros_, v.non_zeros_);
-            data_.swap (v.data_);
+            data ().swap (v.data ());
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
@@ -206,19 +223,19 @@ namespace numerics {
             if (t == value_type ()) 
                 return;
 #endif
-            check (data_.find (i) == data_.end (), bad_index ());
-            data_.insert (data_.end (), std::pair<size_type, value_type> (i, t));
+            check (data ().find (i) == data ().end (), bad_index ());
+            data ().insert (data ().end (), std::pair<size_type, value_type> (i, t));
         }
         NUMERICS_INLINE
         void erase (size_type i) {
-            iterator_type it = data_.find (i);
-            if (it == data_.end ())
+            iterator_type it = data ().find (i);
+            if (it == data ().end ())
                 return;
-            data_.erase (it);
+            data ().erase (it);
         }
         NUMERICS_INLINE
         void clear () {
-            data_.clear ();
+            data ().clear ();
         }
 
         class const_iterator;
@@ -228,12 +245,12 @@ namespace numerics {
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
         const_iterator find (size_type i) const {
-            return const_iterator (*this, data_.lower_bound (i));
+            return const_iterator (*this, data ().lower_bound (i));
         }
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
         iterator find (size_type i) {
-            return iterator (*this, data_.lower_bound (i));
+            return iterator (*this, data ().lower_bound (i));
         }
         NUMERICS_INLINE
         const_iterator find_first (size_type i) const {
@@ -495,19 +512,14 @@ namespace numerics {
             vector_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae);
         }
 
-        // Resizing
-        NUMERICS_INLINE
-        void resize (size_type size, size_type non_zeros = 0) {
-            size_ = size;
-            non_zeros_ = non_zeros;
-            filled_ = 0;
-            index_data_.resize (non_zeros);
-            value_data_.resize (non_zeros);
-        }
-
+        // Accessors
         NUMERICS_INLINE
         size_type size () const { 
             return size_; 
+        }
+        NUMERICS_INLINE
+        size_type non_zeros () const { 
+            return non_zeros; 
         }
         NUMERICS_INLINE
         const index_array_type &index_data () const {
@@ -526,20 +538,30 @@ namespace numerics {
             return value_data_;
         }
 
+        // Resizing
+        NUMERICS_INLINE
+        void resize (size_type size, size_type non_zeros = 0) {
+            size_ = size;
+            non_zeros_ = non_zeros;
+            filled_ = 0;
+            index_data ().resize (non_zeros);
+            value_data ().resize (non_zeros);
+        }
+
         // Element access
         NUMERICS_INLINE
         value_type operator () (size_type i) const {
-            const_iterator_type it (std::lower_bound (index_data_.begin (), index_data_.begin () + filled_, i + 1, std::less<size_type> ()));
-            if (it == index_data_.begin () + filled_ || *it != i + 1)
+            const_iterator_type it (std::lower_bound (index_data ().begin (), index_data ().begin () + filled_, i + 1, std::less<size_type> ()));
+            if (it == index_data ().begin () + filled_ || *it != i + 1)
                 return value_type ();
-            return value_data_ [it - index_data_.begin ()];
+            return value_data () [it - index_data ().begin ()];
         }
         NUMERICS_INLINE
         reference operator () (size_type i) {
-            iterator_type it (std::lower_bound (index_data_.begin (), index_data_.begin () + filled_, i + 1, std::less<size_type> ()));
-            if (it == index_data_.begin () + filled_ || *it != i + 1) 
+            iterator_type it (std::lower_bound (index_data ().begin (), index_data ().begin () + filled_, i + 1, std::less<size_type> ()));
+            if (it == index_data ().begin () + filled_ || *it != i + 1) 
                 insert (i, value_type ());
-            return value_data_ [it - index_data_.begin ()];
+            return value_data () [it - index_data ().begin ()];
         }
 
         NUMERICS_INLINE
@@ -556,9 +578,11 @@ namespace numerics {
         compressed_vector &operator = (const compressed_vector &v) { 
             check (size_ == v.size_, bad_size ());
             check (non_zeros_ == v.non_zeros_, bad_size ());
+            size_ = v.size_;
+            non_zeros_ = v.non_zeros_;
             filled_ = v.filled_;
-            index_data_ = v.index_data_;
-            value_data_ = v.value_data_;
+            index_data () = v.index_data ();
+            value_data () = v.value_data ();
             return *this;
         }
         NUMERICS_INLINE
@@ -569,6 +593,16 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         compressed_vector &operator = (const vector_expression<AE> &ae) {
+#ifndef USE_GCC
+            return assign_temporary (self_type (ae, non_zeros_));
+#else
+            return assign (self_type (ae, non_zeros_));
+#endif
+        }
+        template<class AE>
+        NUMERICS_INLINE
+        compressed_vector &reset (const vector_expression<AE> &ae) {
+            resize (ae ().size (), non_zeros_);
 #ifndef USE_GCC
             return assign_temporary (self_type (ae, non_zeros_));
 #else
@@ -633,8 +667,8 @@ namespace numerics {
             std::swap (size_, v.size_);
             std::swap (non_zeros_, v.non_zeros_);
             std::swap (filled_, v.filled_);
-            index_data_.swap (v.index_data_);
-            value_data_.swap (v.value_data_);
+            index_data ().swap (v.index_data ());
+            value_data ().swap (v.value_data ());
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
@@ -650,14 +684,14 @@ namespace numerics {
             if (t == value_type ()) 
                 return;
 #endif
-            check (filled_ == 0 || index_data_ [filled_ - 1] < i + 1, external_logic ()); 
-            index_data_ [filled_] = i + 1;
-            value_data_ [filled_] = t;
+            check (filled_ == 0 || index_data () [filled_ - 1] < i + 1, external_logic ()); 
+            index_data () [filled_] = i + 1;
+            value_data () [filled_] = t;
             ++ filled_;
         }
         NUMERICS_INLINE
         void erase (size_type i) {
-            check (filled_ > 0 && index_data_ [filled_ - 1] == i + 1, external_logic ());
+            check (filled_ > 0 && index_data () [filled_ - 1] == i + 1, external_logic ());
             -- filled_;
         }
         NUMERICS_INLINE
@@ -672,12 +706,12 @@ namespace numerics {
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
         const_iterator find (size_type i) const {            
-            return const_iterator (*this, std::lower_bound (index_data_.begin (), index_data_.begin () + filled_, i + 1, std::less<size_type> ()));
+            return const_iterator (*this, std::lower_bound (index_data ().begin (), index_data ().begin () + filled_, i + 1, std::less<size_type> ()));
         }
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
         iterator find (size_type i) {
-            return iterator (*this, std::lower_bound (index_data_.begin (), index_data_.begin () + filled_, i + 1, std::less<size_type> ()));
+            return iterator (*this, std::lower_bound (index_data ().begin (), index_data ().begin () + filled_, i + 1, std::less<size_type> ()));
         }
         NUMERICS_INLINE
         const_iterator find_first (size_type i) const {

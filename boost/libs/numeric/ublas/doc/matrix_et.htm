@@ -219,6 +219,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         matrix_const_reference ();
         matrix_const_reference (const expression_type &amp;e);
 
+        // Accessors
         size_type size1 () const;
         size_type size2 () const;
 
@@ -441,11 +442,12 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         matrix_reference ();
         matrix_reference (expression_type &amp;e);
 
-        // Resizing
-        void resize (size_type size1, size_type size2);
-
+        // Accessors
         size_type size1 () const;
         size_type size2 () const;
+
+        // Resizing
+        void resize (size_type size1, size_type size2);
 
         // Element access
         value_type operator () (size_type i, size_type j) const;
@@ -649,12 +651,12 @@ matrix_expression&lt;matrix_unary2&lt;E, F&gt; &gt; </code>resp.</p>
         matrix_unary1 ();
         matrix_unary1 (const expression_type &amp;e);
 
+        // Accessors
         size_type size1 () const;
         size_type size2 () const;
 
         // Element access
         value_type operator () (size_type i, size_type j) const;
-
 
         class const_iterator1;
         typedef const_iterator1 iterator1;
@@ -794,6 +796,7 @@ matrix_expression&lt;matrix_unary2&lt;E, F&gt; &gt; </code>resp.</p>
         matrix_unary2 ();
         matrix_unary2 (const expression_type &amp;e);
 
+        // Accessors
         size_type size1 () const;
         size_type size2 () const;
 
@@ -1152,12 +1155,12 @@ href="expression.htm#matrix_expression">Matrix Expression</a>. </p>
         matrix_binary ();
         matrix_binary (const E1 &amp;e1, const E2 &amp;e2);
 
+        // Accessors
         size_type size1 () const;
         size_type size2 () const;
 
         // Element access
         value_type operator () (size_type i, size_type j) const;
-
 
         class const_iterator1;
         typedef const_iterator1 iterator1;
@@ -1528,6 +1531,7 @@ matrix_expression&lt;matrix_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
         matrix_binary_scalar1 ();
         matrix_binary_scalar1 (const expression1_type &amp;e1, const expression2_type &amp;e2);
 
+        // Accessors
         size_type size1 () const;
         size_type size2 () const;
 
@@ -1674,6 +1678,7 @@ matrix_expression&lt;matrix_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
         matrix_binary_scalar2 ();
         matrix_binary_scalar2 (const expression1_type &amp;e1, const expression2_type &amp;e2);
 
+        // Accessors
         size_type size1 () const;
         size_type size2 () const;
 
@@ -2053,10 +2058,10 @@ E2, F&gt; &gt;</code> resp.</p>
         matrix_vector_binary1 ();
         matrix_vector_binary1 (const expression1_type &amp;e1, const expression2_type &amp;e2);
 
+        // Accessors
+        size_type size () const;
         const expression1_type &amp;expression1 () const;
         const expression2_type &amp;expression2 () const;
-
-        size_type size () const;
 
         // Element access
         value_type operator () (size_type i) const;
@@ -2148,10 +2153,10 @@ E2, F&gt; &gt;</code> resp.</p>
         matrix_vector_binary2 ();
         matrix_vector_binary2 (const expression1_type &amp;e1, const expression2_type &amp;e2);
 
+        // Accessors
+        size_type size () const;
         const expression1_type &amp;expression1 () const;
         const expression2_type &amp;expression2 () const;
-
-        size_type size () const;
 
         // Element access
         value_type operator () (size_type j) const;
@@ -2611,11 +2616,11 @@ F&gt; &gt;</code>.</p>
         matrix_matrix_binary ();
         matrix_matrix_binary (const expression1_type &amp;e1, const expression2_type &amp;e2);
 
-        const expression1_type &amp;expression1 () const;
-        const expression2_type &amp;expression2 () const;
-
+        // Accessors
         size_type size1 () const;
         size_type size2 () const;
+        const expression1_type &amp;expression1 () const;
+        const expression2_type &amp;expression2 () const;
 
         // Element access
         value_type operator () (size_type i, size_type j) const;

@@ -333,13 +333,15 @@ href="container.htm#matrix">Matrix</a>.</p>
         template&lt;class AE&gt;
         sparse_matrix (const matrix_expression&lt;AE&gt; &amp;ae, size_type non_zeros = 0);
 
-        // Resizing
-        void resize (size_type size1, size_type size2, size_type non_zeros = 0);
-
+        // Accessors
         size_type size1 () const;
         size_type size2 () const;
+        size_type non_zeros () const;
         const_array_type &amp;data () const;
         array_type &amp;data ();
+
+        // Resizing
+        void resize (size_type size1, size_type size2, size_type non_zeros = 0);
 
         // Element access
         value_type operator () (size_type i, size_type j) const;
@@ -350,6 +352,8 @@ href="container.htm#matrix">Matrix</a>.</p>
         sparse_matrix &amp;assign_temporary (sparse_matrix &amp;m);
         template&lt;class AE&gt;
         sparse_matrix &amp;operator = (const matrix_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        sparse_matrix &amp;reset (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AE&gt;
         sparse_matrix &amp;assign (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AE&gt;

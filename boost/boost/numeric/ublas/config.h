@@ -403,6 +403,24 @@ namespace numerics {
 
     template<class T, class F = row_major, class IA = unbounded_array<std::size_t>, class TA = unbounded_array<T> >
     class compressed_matrix;
+
+
+    template<class V>
+    typename V::size_type num_elements (const V &v) {
+        return v.size ();
+    }
+    template<class M>
+    typename M::size_type num_rows (const M &m) {
+        return m.size1 ();
+    }
+    template<class M>
+    typename M::size_type num_columns (const M &m) {
+        return m.size2 ();
+    }
+    template<class MV>
+    typename MV::size_type num_non_zeros (const MV &mv) {
+        return mv.non_zeros ();
+    }
 }
 
 #endif 

@@ -226,9 +226,13 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         matrix_row ();
         matrix_row (matrix_type &amp;data, size_type i);
 
+        // Accessors
         size_type size () const;
         const_matrix_type &amp;data () const;
         matrix_type &amp;data ();
+
+        // Resetting
+        void reset (matrix_type &amp;data, size_type i);
 
         // Element access
         value_type operator () (size_type j) const;
@@ -577,9 +581,13 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         matrix_column ();
         matrix_column (matrix_type &amp;data, size_type j);
 
+        // Accessors
         size_type size () const;
         const_matrix_type &amp;data () const;
         matrix_type &amp;data ();
+
+        // Resetting
+        void reset (matrix_type &amp;data, size_type j);
 
         // Element access
         value_type operator () (size_type i) const;
@@ -932,9 +940,13 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         matrix_vector_range ();
         matrix_vector_range (matrix_type &amp;data, const range &amp;r1, const range &amp;r2);
 
+        // Accessors
         size_type size () const;
         const_matrix_type &amp;data () const;
         matrix_type &amp;data ();
+
+        // Resetting
+        void reset (matrix_type &amp;data, const range &amp;r1, const range &amp;r2);
 
         // Element access
         value_type operator () (size_type i) const;
@@ -1289,9 +1301,13 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         matrix_vector_slice ();
         matrix_vector_slice (matrix_type &amp;data, const slice &amp;s1, const slice &amp;s2);
 
+        // Accessors
         size_type size () const;
         const_matrix_type &amp;data () const;
         matrix_type &amp;data ();
+
+        // Resetting
+        void reset (matrix_type &amp;data, const slice &amp;s1, const slice &amp;s2);
 
         // Element access
         value_type operator () (size_type i) const;
@@ -1700,12 +1716,16 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         matrix_range ();
         matrix_range (matrix_type &amp;data, const range &amp;r1, const range &amp;r2);
 
+        // Accessors
         size_type start1 () const;
         size_type size1 () const;
         size_type start2() const;
         size_type size2 () const;
         const_matrix_type &amp;data () const;
         matrix_type &amp;data ();
+
+        // Resetting
+        void reset (matrix_type &amp;data, const range &amp;r1, const range &amp;r2);
 
         // Element access
         value_type operator () (size_type i, size_type j) const;
@@ -2222,10 +2242,14 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         matrix_slice ();
         matrix_slice (matrix_type &amp;data, const slice &amp;s1, const slice &amp;s2);
 
+        // Accessors
         size_type size1 () const;
         size_type size2 () const;
         const_matrix_type &amp;data () const;
         matrix_type &amp;data ();
+
+        // Resetting
+        void reset (matrix_type &amp;data, const slice &amp;s1, const slice &amp;s2);
 
         // Element access
         value_type operator () (size_type i, size_type j) const;

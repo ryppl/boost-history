@@ -1533,14 +1533,7 @@ namespace numerics {
             matrix_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
         }
 
-        // Resizing
-        NUMERICS_INLINE
-        void resize (size_type size1, size_type size2) {
-            size1_ = size1;
-            size2_ = size2;
-            data_.resize (size1 * size2);
-        }
-
+        // Accessors
         NUMERICS_INLINE
         size_type size1 () const { 
             return size1_;
@@ -1558,14 +1551,22 @@ namespace numerics {
             return data_;
         }
 
+        // Resizing
+        NUMERICS_INLINE
+        void resize (size_type size1, size_type size2) {
+            size1_ = size1;
+            size2_ = size2;
+            data ().resize (size1 * size2);
+        }
+
         // Element access
         NUMERICS_INLINE
         const_reference operator () (size_type i, size_type j) const {
-            return data_ [functor_type::element (i, size1_, j, size2_)]; 
+            return data () [functor_type::element (i, size1_, j, size2_)]; 
         }
         NUMERICS_INLINE
         reference operator () (size_type i, size_type j) {
-            return data_ [functor_type::element (i, size1_, j, size2_)]; 
+            return data () [functor_type::element (i, size1_, j, size2_)]; 
         }
 
 #ifdef NUMERICS_DEPRECATED
@@ -1584,7 +1585,9 @@ namespace numerics {
         matrix &operator = (const matrix &m) { 
             check (size1_ == m.size1_, bad_size ());
             check (size2_ == m.size2_, bad_size ());
-            data_ = m.data_;
+            size1_ = m.size1_;
+            size2_ = m.size2_;
+            data () = m.data ();
             return *this;
         }
         NUMERICS_INLINE
@@ -1595,6 +1598,16 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         matrix &operator = (const matrix_expression<AE> &ae) { 
+#ifndef USE_GCC
+            return assign_temporary (self_type (ae));
+#else
+            return assign (self_type (ae));
+#endif
+        }
+        template<class AE>
+        NUMERICS_INLINE
+        matrix &reset (const matrix_expression<AE> &ae) { 
+            resize (ae ().size1 (), ae ().size2 ());
 #ifndef USE_GCC
             return assign_temporary (self_type (ae));
 #else
@@ -1658,7 +1671,7 @@ namespace numerics {
             check (size2_ == m.size2_, bad_size ());
             std::swap (size1_, m.size1_);
             std::swap (size2_, m.size2_);
-            data_.swap (m.data_);
+            data ().swap (m.data ());
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
@@ -1670,19 +1683,19 @@ namespace numerics {
         // Element insertion and erasure
         NUMERICS_INLINE
         void insert (size_type i, size_type j, const_reference t) {
-            check (data_ [functor_type::element (i, size1_, j, size2_)] == value_type (), bad_index ());
-            data_.insert (data_.begin () + functor_type::element (i, size1_, j, size2_), t);
+            check (data () [functor_type::element (i, size1_, j, size2_)] == value_type (), bad_index ());
+            data ().insert (data ().begin () + functor_type::element (i, size1_, j, size2_), t);
         }
         NUMERICS_INLINE
         void erase (size_type i, size_type j) {
-            data_.erase (data_.begin () + functor_type::element (i, size1_, j, size2_));
+            data ().erase (data ().begin () + functor_type::element (i, size1_, j, size2_));
         }
         NUMERICS_INLINE
         void clear () {
             // clear won't work for std::vector.
             // Thanks to Kresimir Fresl for spotting this.
-            // data_.clear ();
-            std::fill (data_.begin (), data_.end (), value_type ());
+            // data ().clear ();
+            std::fill (data ().begin (), data ().end (), value_type ());
         }
 
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
@@ -1735,7 +1748,7 @@ namespace numerics {
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return const_iterator1 (*this, functor_type::element1 (i, size1_, j, size2_), functor_type::element2 (i, size1_, j, size2_));
 #else
-            return const_iterator1 (*this, data_.begin () + functor_type::element (i, size1_, j, size2_));
+            return const_iterator1 (*this, data ().begin () + functor_type::element (i, size1_, j, size2_));
 #endif
 #endif
         }
@@ -1747,7 +1760,7 @@ namespace numerics {
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return iterator1 (*this, functor_type::element1 (i, size1_, j, size2_), functor_type::element2 (i, size1_, j, size2_));
 #else
-            return iterator1 (*this, data_.begin () + functor_type::element (i, size1_, j, size2_));
+            return iterator1 (*this, data ().begin () + functor_type::element (i, size1_, j, size2_));
 #endif
 #endif
         }
@@ -1759,7 +1772,7 @@ namespace numerics {
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return const_iterator2 (*this, functor_type::element1 (i, size1_, j, size2_), functor_type::element2 (i, size1_, j, size2_));
 #else
-            return const_iterator2 (*this, data_.begin () + functor_type::element (i, size1_, j, size2_));
+            return const_iterator2 (*this, data ().begin () + functor_type::element (i, size1_, j, size2_));
 #endif
 #endif
         }
@@ -1771,7 +1784,7 @@ namespace numerics {
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return iterator2 (*this, functor_type::element1 (i, size1_, j, size2_), functor_type::element2 (i, size1_, j, size2_));
 #else
-            return iterator2 (*this, data_.begin () + functor_type::element (i, size1_, j, size2_));
+            return iterator2 (*this, data ().begin () + functor_type::element (i, size1_, j, size2_));
 #endif
 #endif
         }
@@ -2350,6 +2363,7 @@ namespace numerics {
         typedef T *pointer;
         typedef F functor_type;
         typedef A array_type;
+        typedef const A const_array_type;
         typedef const vector_of_vector<T, F, A> const_self_type;
         typedef vector_of_vector<T, F, A> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
@@ -2393,16 +2407,7 @@ namespace numerics {
             matrix_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
         }
 
-        // Resizing
-        NUMERICS_INLINE
-        void resize (size_type size1, size_type size2) {
-            size1_ = size1;
-            size2_ = size2;
-            data_.resize (functor_type::size1 (size1, size2) + 1);
-            for (size_type k = 0; k < functor_type::size1 (size1, size2); ++ k) 
-                data_ [k].resize (functor_type::size2 (size1, size2));
-        }
-
+        // Accessors
         NUMERICS_INLINE
         size_type size1 () const { 
             return size1_;
@@ -2411,15 +2416,33 @@ namespace numerics {
         size_type size2 () const { 
             return size2_;
         }
+        NUMERICS_INLINE
+        const_array_type &data () const {
+            return data_;
+        }
+        NUMERICS_INLINE
+        array_type &data () {
+            return data_;
+        }
+
+        // Resizing
+        NUMERICS_INLINE
+        void resize (size_type size1, size_type size2) {
+            size1_ = size1;
+            size2_ = size2;
+            data ().resize (functor_type::size1 (size1, size2) + 1);
+            for (size_type k = 0; k < functor_type::size1 (size1, size2); ++ k) 
+                data () [k].resize (functor_type::size2 (size1, size2));
+        }
 
         // Element access
         NUMERICS_INLINE
         const_reference operator () (size_type i, size_type j) const {
-            return data_ [functor_type::element1 (i, size1_, j, size2_)] [functor_type::element2 (i, size1_, j, size2_)]; 
+            return data () [functor_type::element1 (i, size1_, j, size2_)] [functor_type::element2 (i, size1_, j, size2_)]; 
         }
         NUMERICS_INLINE
         reference operator () (size_type i, size_type j) {
-            return data_ [functor_type::element1 (i, size1_, j, size2_)] [functor_type::element2 (i, size1_, j, size2_)]; 
+            return data () [functor_type::element1 (i, size1_, j, size2_)] [functor_type::element2 (i, size1_, j, size2_)]; 
         }
 
 #ifdef NUMERICS_DEPRECATED
@@ -2438,7 +2461,9 @@ namespace numerics {
         vector_of_vector &operator = (const vector_of_vector &m) { 
             check (size1_ == m.size1_, bad_size ());
             check (size2_ == m.size2_, bad_size ());
-            data_ = m.data_;
+            size1_ = m.size1_;
+            size2_ = m.size2_;
+            data () = m.data ();
             return *this;
         }
         NUMERICS_INLINE
@@ -2449,6 +2474,16 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         vector_of_vector &operator = (const matrix_expression<AE> &ae) { 
+#ifndef USE_GCC
+            return assign_temporary (self_type (ae));
+#else
+            return assign (self_type (ae));
+#endif
+        }
+        template<class AE>
+        NUMERICS_INLINE
+        vector_of_vector &reset (const matrix_expression<AE> &ae) { 
+            resize (ae ().size1 (), ae ().size2 ());
 #ifndef USE_GCC
             return assign_temporary (self_type (ae));
 #else
@@ -2512,7 +2547,7 @@ namespace numerics {
             check (size2_ == m.size2_, bad_size ());
             std::swap (size1_, m.size1_);
             std::swap (size2_, m.size2_);
-            data_.swap (m.data_);
+            data ().swap (m.data ());
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
@@ -2524,20 +2559,20 @@ namespace numerics {
         // Element insertion and erasure
         NUMERICS_INLINE
         void insert (size_type i, size_type j, const_reference t) {
-            check (data_ [functor_type::element1 (i, size1_, j, size2_)] [functor_type::element2 (i, size1_, j, size2_)] == value_type (), bad_index ());
-            data_ [functor_type::element1 (i, size1_, j, size2_)] [functor_type::element2 (i, size1_, j, size2_)] = t; 
+            check (data () [functor_type::element1 (i, size1_, j, size2_)] [functor_type::element2 (i, size1_, j, size2_)] == value_type (), bad_index ());
+            data () [functor_type::element1 (i, size1_, j, size2_)] [functor_type::element2 (i, size1_, j, size2_)] = t; 
         }
         NUMERICS_INLINE
         void erase (size_type i, size_type j) {
-            data_ [functor_type::element1 (i, size1_, j, size2_)] [functor_type::element2 (i, size1_, j, size2_)] = value_type (); 
+            data () [functor_type::element1 (i, size1_, j, size2_)] [functor_type::element2 (i, size1_, j, size2_)] = value_type (); 
         }
         NUMERICS_INLINE
         void clear () {
             for (size_type k = 0; k < functor_type::size1 (size1_, size2_); ++ k)
                 // clear won't work for std::vector.
                 // Thanks to Kresimir Fresl for spotting this.
-                // data_ [k].clear ();
-                std::fill (data_ [k].begin (), data_ [k].end (), value_type ());
+                // data () [k].clear ();
+                std::fill (data () [k].begin (), data () [k].end (), value_type ());
         }
 
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
@@ -2590,7 +2625,7 @@ namespace numerics {
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return const_iterator1 (*this, i, j);
 #else
-            return const_iterator1 (*this, i, j, data_ [functor_type::element1 (i, size1_, j, size2_)].begin ()  + functor_type::element2 (i, size1_, j, size2_));
+            return const_iterator1 (*this, i, j, data () [functor_type::element1 (i, size1_, j, size2_)].begin ()  + functor_type::element2 (i, size1_, j, size2_));
 #endif
 #endif
         }
@@ -2602,7 +2637,7 @@ namespace numerics {
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return iterator1 (*this, i, j);
 #else
-            return iterator1 (*this, i, j, data_ [functor_type::element1 (i, size1_, j, size2_)].begin ()  + functor_type::element2 (i, size1_, j, size2_));
+            return iterator1 (*this, i, j, data () [functor_type::element1 (i, size1_, j, size2_)].begin ()  + functor_type::element2 (i, size1_, j, size2_));
 #endif
 #endif
         }
@@ -2614,7 +2649,7 @@ namespace numerics {
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return const_iterator2 (*this, i, j);
 #else
-            return const_iterator2 (*this, i, j, data_ [functor_type::element1 (i, size1_, j, size2_)].begin ()  + functor_type::element2 (i, size1_, j, size2_));
+            return const_iterator2 (*this, i, j, data () [functor_type::element1 (i, size1_, j, size2_)].begin ()  + functor_type::element2 (i, size1_, j, size2_));
 #endif
 #endif
         }
@@ -2626,7 +2661,7 @@ namespace numerics {
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return iterator2 (*this, i, j);
 #else
-            return iterator2 (*this, i, j, data_ [functor_type::element1 (i, size1_, j, size2_)].begin () + functor_type::element2 (i, size1_, j, size2_));
+            return iterator2 (*this, i, j, data () [functor_type::element1 (i, size1_, j, size2_)].begin () + functor_type::element2 (i, size1_, j, size2_));
 #endif
 #endif
         }
@@ -3289,6 +3324,17 @@ namespace numerics {
         identity_matrix (const identity_matrix &m): 
             size1_ (m.size1_), size2_ (m.size2_) {}
 
+
+        // Accessors
+        NUMERICS_INLINE
+        size_type size1 () const { 
+            return size1_;
+        }
+        NUMERICS_INLINE
+        size_type size2 () const { 
+            return size2_;
+        }
+
         // Resizing
         NUMERICS_INLINE
         void resize (size_type size) {
@@ -3299,15 +3345,6 @@ namespace numerics {
         void resize (size_type size1, size_type size2) {
             size1_ = size1;
             size2_ = size2;
-        }
-
-        NUMERICS_INLINE
-        size_type size1 () const { 
-            return size1_;
-        }
-        NUMERICS_INLINE
-        size_type size2 () const { 
-            return size2_;
         }
 
         // Element access
@@ -3328,6 +3365,8 @@ namespace numerics {
         identity_matrix &operator = (const identity_matrix &m) { 
             check (size1_ == m.size1_, bad_size ());
             check (size2_ == m.size2_, bad_size ());
+            size1_ = m.size1_;
+            size2_ = m.size2_;
             return *this;
         }
         NUMERICS_INLINE
@@ -3725,13 +3764,7 @@ namespace numerics {
         scalar_matrix (const scalar_matrix &m): 
             size1_ (m.size1_), size2_ (m.size2_), value_ (m.value_) {}
 
-        // Resizing
-        NUMERICS_INLINE
-        void resize (size_type size1, size_type size2) {
-            size1_ = size1;
-            size2_ = size2;
-        }
-
+        // Accessors
         NUMERICS_INLINE
         size_type size1 () const { 
             return size1_;
@@ -3739,6 +3772,13 @@ namespace numerics {
         NUMERICS_INLINE
         size_type size2 () const { 
             return size2_;
+        }
+
+        // Resizing
+        NUMERICS_INLINE
+        void resize (size_type size1, size_type size2) {
+            size1_ = size1;
+            size2_ = size2;
         }
 
         // Element access
@@ -3759,6 +3799,8 @@ namespace numerics {
         scalar_matrix &operator = (const scalar_matrix &m) { 
             check (size1_ == m.size1_, bad_size ());
             check (size2_ == m.size2_, bad_size ());
+            size1_ = m.size1_;
+            size2_ = m.size2_;
             value_ = m.value_;
             return *this;
         }
@@ -4172,6 +4214,16 @@ namespace numerics {
             matrix_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
         }
 
+        // Accessors
+        NUMERICS_INLINE
+        size_type size1 () const { 
+            return size1_;
+        }
+        NUMERICS_INLINE
+        size_type size2 () const { 
+            return size2_;
+        }
+
         // Resizing
         NUMERICS_INLINE
         void resize (size_type size1, size_type size2) {
@@ -4180,15 +4232,6 @@ namespace numerics {
             // The content of the array is intentionally not copied.
             size1_ = size1;
             size2_ = size2;
-        }
-
-        NUMERICS_INLINE
-        size_type size1 () const { 
-            return size1_;
-        }
-        NUMERICS_INLINE
-        size_type size2 () const { 
-            return size2_;
         }
 
         // Element access
@@ -4221,6 +4264,8 @@ namespace numerics {
         c_matrix &operator = (const c_matrix &m) { 
             check (size1_ == m.size1_, bad_size ());
             check (size2_ == m.size2_, bad_size ());
+            size1_ = m.size1_;
+            size2_ = m.size2_;
             for (size_type i = 0; i < m.size1_; ++ i)
                 std::copy (m.data_ [i], m.data_ [i] + m.size2_, data_ [i]);
             return *this;
@@ -4233,6 +4278,16 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         c_matrix &operator = (const matrix_expression<AE> &ae) { 
+#ifndef USE_GCC
+            return assign_temporary (self_type (ae));
+#else
+            return assign (self_type (ae));
+#endif
+        }
+        template<class AE>
+        NUMERICS_INLINE
+        c_matrix &reset (const matrix_expression<AE> &ae) { 
+            resize (ae ().size1 (), ae ().size2 ());
 #ifndef USE_GCC
             return assign_temporary (self_type (ae));
 #else

@@ -238,10 +238,14 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         vector_range (); 
         vector_range (vector_type &amp;data, const range &amp;r); 
 
+        // Accessors
         size_type start () const; 
         size_type size () const; 
         const_vector_type &amp;data () const;
         vector_type &amp;data ();
+
+        // Resetting
+        void reset (vector_type &amp;data, const range &amp;r);
 
         // Element access
         value_type operator () (size_type i) const;
@@ -599,11 +603,15 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         vector_slice ();
         vector_slice (vector_type &amp;data, const slice &amp;s);
 
+        // Accessors
         size_type start () const;
         size_type stride () const;
         size_type size () const;
         const_vector_type &amp;data () const;
         vector_type &amp;data ();
+
+        // Resetting
+        void reset (vector_type &amp;data, const slice &amp;s);
 
         // Element access
         value_type operator () (size_type i) const;

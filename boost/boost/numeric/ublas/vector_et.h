@@ -128,6 +128,7 @@ namespace numerics {
         vector_const_reference (const expression_type &e):
             e_ (e) {}
 
+        // Accessors
         NUMERICS_INLINE
         size_type size () const { 
             return e_.size (); 
@@ -221,15 +222,16 @@ namespace numerics {
         vector_reference (expression_type &e):
             e_ (e) {}
 
+        // Accessors
+        NUMERICS_INLINE
+        size_type size () const { 
+            return e_.size (); 
+        }
+
         // Resizing
         NUMERICS_INLINE
         void resize (size_type size) {
             e_.resize (size);
-        }
-
-        NUMERICS_INLINE
-        size_type size () const { 
-            return e_.size (); 
         }
 
         // Element access
@@ -360,6 +362,7 @@ namespace numerics {
         vector_unary (const expression_type &e): 
             e_ (e) {}
 
+        // Accessors
         NUMERICS_INLINE
         size_type size () const { 
             return e_.size (); 
@@ -615,6 +618,7 @@ namespace numerics {
         vector_binary (const expression1_type &e1, const expression2_type &e2):
             e1_ (e1), e2_ (e2) {}
 
+        // Accessors
         NUMERICS_INLINE
         size_type size () const { 
             return common (e1_.size (), e2_.size ()); 
@@ -927,6 +931,7 @@ namespace numerics {
         vector_binary_scalar1 (const expression1_type &e1, const expression2_type &e2):
             e1_ (e1), e2_ (e2) {}
 
+        // Accessors
         NUMERICS_INLINE
         size_type size () const { 
             return e2_.size (); 
@@ -1145,6 +1150,7 @@ namespace numerics {
         vector_binary_scalar2 (const expression1_type &e1, const expression2_type &e2):
             e1_ (e1), e2_ (e2) {}
 
+        // Accessors
         NUMERICS_INLINE
         size_type size () const { 
             return e1_.size (); 
@@ -1327,7 +1333,7 @@ namespace numerics {
     template<class E1, class T2>
     NUMERICS_INLINE
     typename vector_binary_scalar2_traits<E1, T2, scalar_multiplies<typename E1::value_type, T2> >::result_type
-    operator * (const vector_expression<E1> &e1, 
+    operator * (const vector_expression<E1> &e1,
                 const T2 &e2) {
         typedef NUMERICS_TYPENAME vector_binary_scalar2_traits<E1, T2, scalar_multiplies<NUMERICS_TYPENAME E1::value_type, T2> >::expression_type expression_type;
         return expression_type (e1 (), e2);
@@ -1337,7 +1343,7 @@ namespace numerics {
     template<class E1, class T2>
     NUMERICS_INLINE
     typename vector_binary_scalar2_traits<E1, T2, scalar_divides<typename E1::value_type, T2> >::result_type
-    operator / (const vector_expression<E1> &e1, 
+    operator / (const vector_expression<E1> &e1,
                 const T2 &e2) {
         typedef NUMERICS_TYPENAME vector_binary_scalar2_traits<E1, T2, scalar_divides<NUMERICS_TYPENAME E1::value_type, T2> >::expression_type expression_type;
         return expression_type (e1 (), e2);
@@ -1357,10 +1363,10 @@ namespace numerics {
 
         // Construction and destruction
         NUMERICS_INLINE
-        vector_scalar_unary (): 
+        vector_scalar_unary ():
             e_ () {}
         NUMERICS_INLINE
-        vector_scalar_unary (const expression_type &e): 
+        vector_scalar_unary (const expression_type &e):
             e_ (e) {}
 
         // Dense random access specialization
@@ -1368,25 +1374,25 @@ namespace numerics {
         value_type evaluate (dense_random_access_iterator_tag) const {
             difference_type size = e_.size ();
             if (size >= NUMERICS_ITERATOR_THRESHOLD)
-                return functor_type () (size, e_.begin ()); 
-            else 
-                return functor_type () (e_); 
+                return functor_type () (size, e_.begin ());
+            else
+                return functor_type () (e_);
         }
 
         // Packed bidirectional specialization
         NUMERICS_INLINE
         value_type evaluate (packed_random_access_iterator_tag) const {
-            return functor_type () (e_.begin (), e_.end ()); 
+            return functor_type () (e_.begin (), e_.end ());
         }
 
         // Sparse bidirectional specialization
         NUMERICS_INLINE
         value_type evaluate (sparse_bidirectional_iterator_tag) const {
-            return functor_type () (e_.begin (), e_.end ()); 
+            return functor_type () (e_.begin (), e_.end ());
         }
 
         NUMERICS_INLINE
-        operator value_type () const { 
+        operator value_type () const {
             return evaluate (iterator_category ());
         }
 

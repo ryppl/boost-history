@@ -85,16 +85,7 @@ namespace numerics {
             matrix_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
         }
 
-        // Resizing
-        NUMERICS_INLINE
-        void resize (size_type size1, size_type size2, size_type lower = 0, size_type upper = 0) {
-            size1_ = size1;
-            size2_ = size2;
-            lower_ = lower;
-            upper_ = upper;
-            data_.resize (std::max (size1, size2) * (lower + 1 + upper));
-        }
-
+        // Accessors
         NUMERICS_INLINE
         size_type size1 () const { 
             return size1_;
@@ -120,6 +111,16 @@ namespace numerics {
             return data_;
         }
 
+        // Resizing
+        NUMERICS_INLINE
+        void resize (size_type size1, size_type size2, size_type lower = 0, size_type upper = 0) {
+            size1_ = size1;
+            size2_ = size2;
+            lower_ = lower;
+            upper_ = upper;
+            data ().resize (std::max (size1, size2) * (lower + 1 + upper));
+        }
+
         // Element access
         NUMERICS_INLINE
         value_type operator () (size_type i, size_type j) const {
@@ -130,15 +131,15 @@ namespace numerics {
             size_type l = lower_ + j - i;
             if (k < std::max (size1_, size2_) &&
                 l < lower_ + 1 + upper_) 
-                return data_ [functor_type::element (k, std::max (size1_, size2_),
-                                                     l, lower_ + 1 + upper_)]; 
+                return data () [functor_type::element (k, std::max (size1_, size2_),
+                                                       l, lower_ + 1 + upper_)]; 
 #else
             size_type k = j;
             size_type l = upper_ + i - j;
             if (k < size2_ &&
                 l < lower_ + 1 + upper_) 
-                return data_ [functor_type::element (k, size2_,
-                                                     l, lower_ + 1 + upper_)]; 
+                return data () [functor_type::element (k, size2_,
+                                                       l, lower_ + 1 + upper_)]; 
 #endif
             return value_type ();
         }
@@ -151,15 +152,15 @@ namespace numerics {
             size_type l = lower_ + j - i;
             if (k < std::max (size1_, size2_) &&
                 l < lower_ + 1 + upper_) 
-                return data_ [functor_type::element (k, std::max (size1_, size2_),
-                                                     l, lower_ + 1 + upper_)]; 
+                return data () [functor_type::element (k, std::max (size1_, size2_),
+                                                       l, lower_ + 1 + upper_)]; 
 #else
             size_type k = j;
             size_type l = upper_ + i - j;
             if (k < size2_ &&
                 l < lower_ + 1 + upper_) 
-                return data_ [functor_type::element (k, size2_,
-                                                     l, lower_ + 1 + upper_)]; 
+                return data () [functor_type::element (k, size2_,
+                                                       l, lower_ + 1 + upper_)]; 
 #endif
             throw external_logic ();
         }
@@ -182,7 +183,11 @@ namespace numerics {
             check (size2_ == m.size2_, bad_size ());
             check (lower_ == m.lower_, bad_size ());
             check (upper_ == m.upper_, bad_size ());
-            data_ = m.data_;
+            size1_ = m.size1_;
+            size2_ = m.size2_;
+            lower_ = m.lower_;
+            upper_ = m.upper_;
+            data () = m.data ();
             return *this;
         }
         NUMERICS_INLINE
@@ -193,6 +198,16 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         banded_matrix &operator = (const matrix_expression<AE> &ae) { 
+#ifndef USE_GCC
+            return assign_temporary (self_type (ae, lower_, upper_));
+#else
+            return assign (self_type (ae, lower_, upper_));
+#endif
+        }
+        template<class AE>
+        NUMERICS_INLINE
+        banded_matrix &reset (const matrix_expression<AE> &ae) { 
+            resize (ae ().size1 (), ae ().size2 (), lower_, upper_);
 #ifndef USE_GCC
             return assign_temporary (self_type (ae, lower_, upper_));
 #else
@@ -260,7 +275,7 @@ namespace numerics {
             std::swap (size2_, m.size2_);
             std::swap (lower_, m.lower_);
             std::swap (upper_, m.upper_);
-            data_.swap (m.data_);
+            data ().swap (m.data ());
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
@@ -281,17 +296,17 @@ namespace numerics {
 #ifdef NUMERICS_OWN_BANDED
             size_type k = std::max (i, j);
             size_type l = lower_ + j - i;
-            check (data_ [functor_type::element (k, std::max (size1_, size2_), 
-                                                 l, lower_ + 1 + upper_)] == value_type (), bad_index ());
-            data_.insert (data_.begin () + functor_type::element (k, std::max (size1_, size2_), 
-                                                                  l, lower_ + 1 + upper_), t);
+            check (data () [functor_type::element (k, std::max (size1_, size2_), 
+                                                   l, lower_ + 1 + upper_)] == value_type (), bad_index ());
+            data ().insert (data ().begin () + functor_type::element (k, std::max (size1_, size2_), 
+                                                                      l, lower_ + 1 + upper_), t);
 #else
             size_type k = j;
             size_type l = upper_ + i - j;
-            check (data_ [functor_type::element (k, size2_, 
-                                                 l, lower_ + 1 + upper_)] == value_type (), bad_index ());
-            data_.insert (data_.begin () + functor_type::element (k, size2_, 
-                                                                  l, lower_ + 1 + upper_), t);
+            check (data () [functor_type::element (k, size2_, 
+                                                   l, lower_ + 1 + upper_)] == value_type (), bad_index ());
+            data ().insert (data ().begin () + functor_type::element (k, size2_, 
+                                                                      l, lower_ + 1 + upper_), t);
 #endif
         }
         NUMERICS_INLINE
@@ -301,18 +316,18 @@ namespace numerics {
 #ifdef NUMERICS_OWN_BANDED
             size_type k = std::max (i, j);
             size_type l = lower_ + j - i;
-            data_.erase (data_.begin () + functor_type::element (k, std::max (size1_, size2_), 
-                                                                 l, lower_ + 1 + upper_));
+            data ().erase (data ().begin () + functor_type::element (k, std::max (size1_, size2_), 
+                                                                     l, lower_ + 1 + upper_));
 #else
             size_type k = j;
             size_type l = upper_ + i - j;
-            data_.erase (data_.begin () + functor_type::element (k, size2_, 
-                                                                 l, lower_ + 1 + upper_));
+            data ().erase (data ().begin () + functor_type::element (k, size2_, 
+                                                                     l, lower_ + 1 + upper_));
 #endif
         }
         NUMERICS_INLINE
         void clear () {
-            data_.clear ();
+            data ().clear ();
         }
 
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
@@ -1004,6 +1019,7 @@ namespace numerics {
         banded_adaptor (const banded_adaptor &m): 
             data_ (m.data_), lower_ (m.lower_), upper_ (m.upper_) {}
 
+        // Accessors
         NUMERICS_INLINE
         size_type size1 () const { 
             return data_.size1 ();
@@ -1029,25 +1045,31 @@ namespace numerics {
             return data_;
         }
 
+        // Resetting
+        NUMERICS_INLINE
+        void reset (matrix_type &data, size_type lower = 0, size_type upper = 0) {
+            data () = data;
+            lower_ = lower;
+            upper_ = upper;
+        }
+
         // Element access
         NUMERICS_INLINE
         value_type operator () (size_type i, size_type j) const {
             check (i < size1 (), bad_index ());
             check (j < size2 (), bad_index ());
-            // Need the const member dispatched.
-            const matrix_type &data = data_;
 #ifdef NUMERICS_OWN_BANDED
             size_type k = std::max (i, j);
             size_type l = lower_ + j - i;
             if (k < std::max (size1 (), size2 ()) &&
                 l < lower_ + 1 + upper_)
-                return data (i, j);
+                return data () (i, j);
 #else
             size_type k = j;
             size_type l = upper_ + i - j;
             if (k < size2 () &&
                 l < lower_ + 1 + upper_)
-                return data (i, j);
+                return data () (i, j);
 #endif
             return value_type ();
         }
@@ -1060,13 +1082,13 @@ namespace numerics {
             size_type l = lower_ + j - i;
             if (k < std::max (size1 (), size2 ()) &&
                 l < lower_ + 1 + upper_) 
-                return data_ (i, j); 
+                return data () (i, j); 
 #else
             size_type k = j;
             size_type l = upper_ + i - j;
             if (k < size2 () &&
                 l < lower_ + 1 + upper_) 
-                return data_ (i, j); 
+                return data () (i, j); 
 #endif
             throw external_logic ();
         }

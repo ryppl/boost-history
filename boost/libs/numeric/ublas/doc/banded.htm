@@ -343,15 +343,16 @@ href="container.htm#matrix">Matrix</a>.</p>
         template&lt;class AE&gt;
         banded_matrix (const matrix_expression&lt;AE&gt; &amp;ae, size_type lower = 0, size_type upper = 0);
 
-        // Resizing
-        void resize (size_type size1, size_type size2, size_type lower = 0, size_type upper = 0);
-
+        // Accessors
         size_type size1 () const;
         size_type size2 () const;
         size_type lower () const;
         size_type upper () const;
         const_array_type &amp;data () const;
         array_type &amp;data ();
+
+        // Resizing
+        void resize (size_type size1, size_type size2, size_type lower = 0, size_type upper = 0);
 
         // Element access
         value_type operator () (size_type i, size_type j) const;
@@ -362,6 +363,8 @@ href="container.htm#matrix">Matrix</a>.</p>
         banded_matrix &amp;assign_temporary (banded_matrix &amp;m);
         template&lt;class AE&gt;
         banded_matrix &amp;operator = (const matrix_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        banded_matrix &amp;reset (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AE&gt;
         banded_matrix &amp;assign (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AE&gt;
@@ -901,12 +904,16 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         banded_adaptor (matrix_type &amp;data, size_type lower = 0, size_type upper = 0);
         banded_adaptor (const banded_adaptor &amp;m);
 
+        // Accessors
         size_type size1 () const;
         size_type size2 () const;
         size_type lower () const;
         size_type upper () const;
         const_matrix_type &amp;data () const;
         matrix_type &amp;data ();
+
+        // Resetting
+        void reset (matrix_type &amp;data, size_type lower = 0, size_type upper = 0);
 
         // Element access
         value_type operator () (size_type i, size_type j) const;

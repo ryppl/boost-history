@@ -264,12 +264,13 @@ href="container.htm#vector">Vector</a>.</p>
         template&lt;class AE&gt;
         vector (const vector_expression&lt;AE&gt; &amp;ae);
 
-        // Resizing
-        void resize (size_type size);
-
+        // Accessors
         size_type size () const;
         const_array_type &amp;data () const;
         array_type &amp;data ();
+
+        // Resizing
+        void resize (size_type size);
 
         // Element access
         const_reference operator () (size_type i) const;
@@ -283,6 +284,8 @@ href="container.htm#vector">Vector</a>.</p>
         vector &amp;assign_temporary (vector &amp;v);
         template&lt;class AE&gt;
         vector &amp;operator = (const vector_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        vector &amp;reset (const vector_expression&lt;AE&gt; &amp;ae);
         template&lt;class AE&gt;
         vector &amp;assign (const vector_expression&lt;AE&gt; &amp;ae);
         template&lt;class AE&gt;
@@ -558,11 +561,12 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         unit_vector (size_type size, size_type index);
         unit_vector (const unit_vector &amp;v);
 
-        // Resizing
-        void resize (size_type size);
-
+        // Accessors
         size_type size () const;
         size_type index () const;
+
+        // Resizing
+        void resize (size_type size);
 
         // Element access
         value_type operator () (size_type i) const;

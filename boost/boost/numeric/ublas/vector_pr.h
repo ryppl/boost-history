@@ -63,6 +63,7 @@ namespace numerics {
             data_ (data), r_ (start, stop) {}
 #endif
 
+        // Accessors
         NUMERICS_INLINE
         size_type start () const { 
             return r_.start (); 
@@ -80,16 +81,21 @@ namespace numerics {
             return data_;
         }
 
+        // Resetting
+        NUMERICS_INLINE
+        void reset (vector_type &data, const range &r) {
+            data () = data;
+            r_ = r;
+        }
+
         // Element access
         NUMERICS_INLINE
         value_type operator () (size_type i) const {
-            // One has do to this, to get the const member dispatched?!
-            const vector_type &data = data_;
-            return data (r_ (i));
+            return data () (r_ (i));
         }
         NUMERICS_INLINE
         reference operator () (size_type i) {
-            return data_ (r_ (i)); 
+            return data () (r_ (i)); 
         }
 
         NUMERICS_INLINE
@@ -104,11 +110,11 @@ namespace numerics {
 #ifdef NUMERICS_HAS_PARTIAL_TEMPLATE_SPECIALIZATION
         NUMERICS_INLINE
         vector_range<vector_type> project (const range &r) const {
-            return vector_range<vector_type> (data_, r_.composite (r));
+            return vector_range<vector_type> (data (), r_.composite (r));
         }
         NUMERICS_INLINE
         vector_range<vector_type> project (const range &r) {
-            return vector_range<vector_type> (data_, r_.composite (r));
+            return vector_range<vector_type> (data (), r_.composite (r));
         }
 #endif
 
@@ -198,9 +204,7 @@ namespace numerics {
         // Element lookup
         NUMERICS_INLINE
         const_iterator find_first (size_type i) const {
-            // One has do to this, to get the const member dispatched?!
-            const vector_type &data = data_;
-            const_iterator_type it (data.find_first (start () + i));
+            const_iterator_type it (data ().find_first (start () + i));
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return const_iterator (*this, it.index ());
 #else
@@ -209,7 +213,7 @@ namespace numerics {
         }
         NUMERICS_INLINE
         iterator find_first (size_type i) {
-            iterator_type it (data_.find_first (start () + i));
+            iterator_type it (data ().find_first (start () + i));
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return iterator (*this, it.index ());
 #else
@@ -218,9 +222,7 @@ namespace numerics {
         }
         NUMERICS_INLINE
         const_iterator find_last (size_type i) const {
-            // One has do to this, to get the const member dispatched?!
-            const vector_type &data = data_;
-            const_iterator_type it (data.find_last (start () + i));
+            const_iterator_type it (data ().find_last (start () + i));
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return const_iterator (*this, it.index ());
 #else
@@ -229,7 +231,7 @@ namespace numerics {
         }
         NUMERICS_INLINE
         iterator find_last (size_type i) {
-            iterator_type it (data_.find_last (start () + i));
+            iterator_type it (data ().find_last (start () + i));
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return iterator (*this, it.index ());
 #else
@@ -537,6 +539,7 @@ namespace numerics {
             data_ (data), s_ (start, stride, size) {}
 #endif
 
+        // Accessors
         NUMERICS_INLINE
         size_type start () const { 
             return s_.start (); 
@@ -558,16 +561,21 @@ namespace numerics {
             return data_;
         }
 
+        // Resetting
+        NUMERICS_INLINE
+        void reset (vector_type &data, const slice &s) {
+            data () = data;
+            s_ = s;
+        }
+
         // Element access
         NUMERICS_INLINE
         value_type operator () (size_type i) const {
-            // One has do to this, to get the const member dispatched?!
-            const vector_type &data = data_;
-            return data (s_ (i)); 
+            return data () (s_ (i)); 
         }
         NUMERICS_INLINE
         reference operator () (size_type i) {
-            return data_ (s_ (i)); 
+            return data () (s_ (i)); 
         }
 
         NUMERICS_INLINE
@@ -582,19 +590,19 @@ namespace numerics {
 #ifdef NUMERICS_HAS_PARTIAL_TEMPLATE_SPECIALIZATION
         NUMERICS_INLINE
         vector_slice<vector_type> project (const range &r) const {
-            return vector_slice<vector_type>  (data_, s_.composite (r));
+            return vector_slice<vector_type>  (data (), s_.composite (r));
         }
         NUMERICS_INLINE
         vector_slice<vector_type> project (const range &r) {
-            return vector_slice<vector_type>  (data_, s_.composite (r));
+            return vector_slice<vector_type>  (data (), s_.composite (r));
         }
         NUMERICS_INLINE
         vector_slice<vector_type> project (const slice &s) const {
-            return vector_slice<vector_type>  (data_, s_.composite (s));
+            return vector_slice<vector_type>  (data (), s_.composite (s));
         }
         NUMERICS_INLINE
         vector_slice<vector_type> project (const slice &s) {
-            return vector_slice<vector_type> (data_, s_.composite (s));
+            return vector_slice<vector_type> (data (), s_.composite (s));
         }
 #endif
 
@@ -687,7 +695,7 @@ namespace numerics {
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return const_iterator (*this, i);
 #else
-            return const_iterator (data_, s_.begin () + i);
+            return const_iterator (data (), s_.begin () + i);
 #endif
         }
         NUMERICS_INLINE
@@ -695,7 +703,7 @@ namespace numerics {
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return iterator (*this, i);
 #else
-            return iterator (data_, s_.begin () + i);
+            return iterator (data (), s_.begin () + i);
 #endif
         }
         NUMERICS_INLINE
@@ -703,7 +711,7 @@ namespace numerics {
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return const_iterator (*this, i);
 #else
-            return const_iterator (data_, s_.begin () + i);
+            return const_iterator (data (), s_.begin () + i);
 #endif
         }
         NUMERICS_INLINE
@@ -711,7 +719,7 @@ namespace numerics {
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return iterator (*this, i);
 #else
-            return iterator (data_, s_.begin () + i);
+            return iterator (data (), s_.begin () + i);
 #endif
         }
 

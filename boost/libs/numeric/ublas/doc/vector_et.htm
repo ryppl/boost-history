@@ -190,6 +190,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         vector_const_reference ();
         vector_const_reference (const expression_type &amp;e);
 
+        // Accessors
         size_type size () const;
 
         // Element access
@@ -349,10 +350,11 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         vector_reference ();
         vector_reference (expression_type &amp;e);
 
+        // Accessors
+        size_type size () const;
+
         // Resizing
         void resize (size_type size);
-
-        size_type size () const;
 
         // Element access
         value_type operator () (size_type i) const;
@@ -501,6 +503,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         vector_unary ();
         vector_unary (const expression_type &amp;e);
 
+        // Accessors
         size_type size () const;
 
         // Element access
@@ -763,6 +766,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         vector_binary ();
         vector_binary (const expression1_type &amp;e1, const expression2_type &amp;e2);
 
+        // Accessors
         size_type size () const;
 
         // Element access
@@ -899,12 +903,331 @@ two vector expressions.</p>
 <h4>Examples</h4>
 
 <pre>int main () {
-    numerics::vector&lt;double &gt; v1 (3), v2 (3);
+    numerics::vector&lt;double&gt; v1 (3), v2 (3);
     for (int i = 0; i &lt; std::min (v1.size (), v2.size ()); ++ i) 
-        v1 (i) = v2 (i) = std::complex (i, i);
+        v1 (i) = v2 (i) = i;
 
     std::cout &lt;&lt; v1 + v2 &lt;&lt; std::endl;
     std::cout &lt;&lt; v1 - v2 &lt;&lt; std::endl;
+}</pre>
+
+<h3>Binary Outer Operation Description</h3>
+
+<h4>Description</h4>
+
+<p>The templated class <code>vector_matrix_binary&lt;E1, E2,
+F&gt; </code>describes a binary outer vector operation.</p>
+
+<h4>Definition</h4>
+
+<p>Defined in the header matrix_et.h.</p>
+
+<h4>Template parameters</h4>
+
+<table border="1">
+    <tr>
+        <th>Parameter </th>
+        <th>Description </th>
+        <th>Default </th>
+    </tr>
+    <tr>
+        <td><code>E1</code> </td>
+        <td>The type of the first vector expression. </td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td><code>E2</code></td>
+        <td>The type of the second vector expression. </td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td><code>F</code></td>
+        <td>The type of the operation.</td>
+        <td>&nbsp;</td>
+    </tr>
+</table>
+
+<h4>Model of</h4>
+
+<p><a href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
+
+<h4>Type requirements</h4>
+
+<p>None, except for those imposed by the requirements of <a
+href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
+
+<h4>Public base classes</h4>
+
+<p><code>matrix_expression&lt;vector_matrix_binary&lt;E1, E2,
+F&gt; &gt;</code></p>
+
+<h4>Members</h4>
+
+<table border="1">
+    <tr>
+        <th>Member </th>
+        <th>Description </th>
+    </tr>
+    <tr>
+        <td><code>vector_matrix_binary (const expression1_type
+        &amp;e1, const expression2_type &amp;e2)</code> </td>
+        <td>Constructs a description of the expression.</td>
+    </tr>
+    <tr>
+        <td><code>size_type size1 () const</code></td>
+        <td>Returns the number of rows. </td>
+    </tr>
+    <tr>
+        <td><code>size_type size2 () const</code></td>
+        <td>Returns the number of columns. </td>
+    </tr>
+    <tr>
+        <td><code>value_type operator () (size_type i, size_type
+        j) const</code></td>
+        <td>Returns the value of the <code>j</code>-th element in
+        the<code> i</code>-th row. </td>
+    </tr>
+    <tr>
+        <td><code>const_iterator1 begin1 () const</code></td>
+        <td>Returns a <code>const_iterator1</code> pointing to
+        the beginning of the expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_iterator1 end1 () const</code></td>
+        <td>Returns a <code>const_iterator1</code> pointing to
+        the end of the expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_iterator2 begin2 () const</code></td>
+        <td>Returns a <code>const_iterator2</code> pointing to
+        the beginning of the expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_iterator2 end2 () const</code></td>
+        <td>Returns a <code>const_iterator2</code> pointing to
+        the end of the expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator1 rbegin1 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator1</code>
+        pointing to the beginning of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator1 rend1 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator1</code>
+        pointing to the end of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator2 rbegin2 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator2</code>
+        pointing to the beginning of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator2 rend2 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator2</code>
+        pointing to the end of the reversed expression. </td>
+    </tr>
+</table>
+
+<h4>Interface</h4>
+
+<pre><code>    template&lt;class E1, class E2, class F&gt;
+    class vector_matrix_binary:
+        public matrix_expression&lt;vector_matrix_binary&lt;E1, E2, F&gt; &gt; {
+    public:
+        typedef E1 expression1_type;
+        typedef E2 expression2_type;
+        typedef F functor_type;
+        typedef typename promote_traits&lt;typename E1::size_type, typename E2::size_type&gt;::promote_type size_type;
+        typedef typename promote_traits&lt;typename E1::difference_type, typename E2::difference_type&gt;::promote_type difference_type;
+        typedef typename F::result_type value_type;
+        typedef const value_type &amp;const_reference;
+        typedef const_reference reference;
+        typedef const value_type *const_pointer;
+        typedef const_pointer pointer;
+        typedef const vector_matrix_binary&lt;E1, E2, F&gt; const_closure_type;
+        typedef unknown_orientation_tag orientation_category;
+        typedef typename E1::const_iterator const_iterator1_type;
+        typedef typename E2::const_iterator const_iterator2_type;
+        typedef unknown_storage_tag storage_category;
+
+        // Construction and destruction 
+        vector_matrix_binary ();
+        vector_matrix_binary (const expression1_type &amp;e1, const expression2_type &amp;e2);
+
+        // Accessors
+        size_type size1 () const;
+        size_type size2 () const;
+
+        // Element access
+        value_type operator () (size_type i, size_type j) const;
+
+        class const_iterator1;
+        typedef const_iterator1 iterator1;
+        class const_iterator2;
+        typedef const_iterator2 iterator2;
+
+        // Element lookup
+        const_iterator1 find_first1 (int rank, size_type i, size_type j) const;
+        const_iterator1 find_last1 (int rank, size_type i, size_type j) const;
+        const_iterator2 find_first2 (int rank, size_type i, size_type j) const;
+        const_iterator2 find_last2 (int rank, size_type i, size_type j) const;
+
+        // Iterators enhance the iterators of the referenced expressions
+        // with the binary functor.
+
+        class const_iterator1:
+            public container_const_reference&lt;vector_matrix_binary&gt;,
+            public random_access_iterator_base&lt;const_iterator1, value_type&gt; {
+        public:
+            typedef typename restrict_traits&lt;typename E1::const_iterator::iterator_category, 
+                                             typename E2::const_iterator::iterator_category&gt;::iterator_category iterator_category;
+            typedef typename vector_matrix_binary::difference_type difference_type;
+            typedef typename vector_matrix_binary::value_type value_type;
+            typedef typename vector_matrix_binary::value_type reference;
+            typedef typename vector_matrix_binary::const_pointer pointer;
+            typedef const_iterator2 dual_iterator_type;
+            typedef const_reverse_iterator2 dual_reverse_iterator_type;
+
+            // Construction and destruction
+            const_iterator1 ();
+            const_iterator1 (const vector_matrix_binary &amp;vmb, const const_iterator1_type &amp;it1, const const_iterator2_type &amp;it2);
+
+            // Arithmetic
+            const_iterator1 &amp;operator ++ ();
+            const_iterator1 &amp;operator -- ();
+            const_iterator1 &amp;operator += (difference_type n);
+            const_iterator1 &amp;operator -= (difference_type n);
+            difference_type operator - (const const_iterator1 &amp;it) const;
+
+            // Dereference
+            value_type operator * () const;
+
+            const_iterator2 begin () const;
+            const_iterator2 end () const;
+            const_reverse_iterator2 rbegin () const;
+            const_reverse_iterator2 rend () const;
+
+            // Indices
+            size_type index1 () const;
+            size_type  index2 () const;
+
+            // Assignment 
+            const_iterator1 &amp;operator = (const const_iterator1 &amp;it);
+
+            // Comparison
+            bool operator == (const const_iterator1 &amp;it) const;
+        };
+
+        const_iterator1 begin1 () const;
+        const_iterator1 end1 () const;
+
+        class const_iterator2:
+            public container_const_reference&lt;vector_matrix_binary&gt;,
+            public random_access_iterator_base&lt;const_iterator2, value_type&gt; {
+        public:
+            typedef typename restrict_traits&lt;typename E1::const_iterator::iterator_category, 
+                                             typename E2::const_iterator::iterator_category&gt;::iterator_category iterator_category;
+            typedef typename vector_matrix_binary::difference_type difference_type;
+            typedef typename vector_matrix_binary::value_type value_type;
+            typedef typename vector_matrix_binary::value_type reference;
+            typedef typename vector_matrix_binary::const_pointer pointer;
+            typedef const_iterator1 dual_iterator_type;
+            typedef const_reverse_iterator1 dual_reverse_iterator_type;
+
+            // Construction and destruction
+            const_iterator2 ();
+            const_iterator2 (const vector_matrix_binary &amp;vmb, const const_iterator1_type &amp;it1, const const_iterator2_type &amp;it2);
+
+            // Arithmetic
+            const_iterator2 &amp;operator ++ ();
+            const_iterator2 &amp;operator -- ();
+            const_iterator2 &amp;operator += (difference_type n);
+            const_iterator2 &amp;operator -= (difference_type n);
+            difference_type operator - (const const_iterator2 &amp;it) const;
+
+            // Dereference
+            value_type operator * () const;
+
+            const_iterator1 begin () const;
+            const_iterator1 end () const;
+            const_reverse_iterator1 rbegin () const;
+            const_reverse_iterator1 rend () const;
+
+            // Indices
+            size_type index1 () const;
+            size_type  index2 () const;
+
+            // Assignment 
+            const_iterator2 &amp;operator = (const const_iterator2 &amp;it);
+
+            // Comparison
+            bool operator == (const const_iterator2 &amp;it) const;
+        };
+
+        const_iterator2 begin2 () const;
+        const_iterator2 end2 () const;
+
+        // Reverse iterators
+
+        const_reverse_iterator1 rbegin1 () const;
+        const_reverse_iterator1 rend1 () const;
+
+        const_reverse_iterator2 rbegin2 () const;
+        const_reverse_iterator2 rend2 () const;
+    };</code></pre>
+
+<h3>Binary Outer Operations</h3>
+
+<h4>Prototypes</h4>
+
+<pre><code>    template&lt;class E1, class E2, class F&gt;
+    struct vector_matrix_binary_traits {
+        typedef vector_matrix_binary&lt;typename E1::const_closure_type, 
+                                     typename E2::const_closure_type, F&gt; expression_type;
+        typedef expression_type result_type; 
+    };
+
+    // (outer_prod (v1, v2)) [i] [j] = v1 [i] * v2 [j]
+    template&lt;class E1, class E2&gt;
+    typename vector_matrix_binary_traits&lt;E1, E2, scalar_multiplies&lt;typename E1::value_type, typename E2::value_type&gt; &gt;::result_type
+    outer_prod (const vector_expression&lt;E1&gt; &amp;e1, 
+                const vector_expression&lt;E2&gt; &amp;e2);</code></pre>
+
+<h4>Description</h4>
+
+<p><code>outer_prod </code>computes the outer product of two
+vector expressions.</p>
+
+<h4>Definition</h4>
+
+<p>Defined in the header matrix_et.h.</p>
+
+<h4>Type requirements</h4>
+
+<dir>
+    <li><code>E1</code> is a model of <a
+        href="expression.htm#vector_expression">Vector Expression</a>.</li>
+    <li><code>E2</code> is a model of <a
+        href="expression.htm#vector_expression">Vector Expression</a>.</li>
+</dir>
+
+<h4>Preconditions</h4>
+
+<p>None.</p>
+
+<h4>Complexity</h4>
+
+<p>Quadratic depending from the size of the vector expressions.</p>
+
+<h4>Examples</h4>
+
+<pre>int main () {
+    numerics::vector&lt;double&gt; v1 (3), v2 (3);
+    for (int i = 0; i &lt; std::min (v1.size (), v2.size ()); ++ i) 
+        v1 (i) = v2 (i) = i;
+
+    std::cout &lt;&lt; outer_prod (v1, v2) &lt;&lt; std::endl;
 }</pre>
 
 <h3>Scalar Vector Operation Description</h3>
@@ -1031,6 +1354,7 @@ vector_expression&lt;vector_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
         vector_binary_scalar1 ();
         vector_binary_scalar1 (const expression1_type &amp;e1, const expression2_type &amp;e2);
 
+        // Accessors
         size_type size () const;
 
         // Element access
@@ -1116,6 +1440,7 @@ vector_expression&lt;vector_binary_scalar2&lt;E1, E2, F&gt; &gt; </code>resp.</p
         vector_binary_scalar2 ();
         vector_binary_scalar2 (const expression1_type &amp;e1, const expression2_type &amp;e2);
 
+        // Accessors
         size_type size () const;
 
         // Element access
@@ -1244,7 +1569,7 @@ with the reciprocal of the scalar. </p>
 <h4>Examples</h4>
 
 <pre>int main () {
-    numerics::vector&lt;double &gt; v (3);
+    numerics::vector&lt;double&gt; v (3);
     for (int i = 0; i &lt; v.size (); ++ i) 
         v (i) = i;
 
@@ -1319,7 +1644,7 @@ first element having maximal absolute value.</p>
 <h4>Examples</h4>
 
 <pre>int main () {
-    numerics::vector&lt;double &gt; v (3);
+    numerics::vector&lt;double&gt; v (3);
     for (int i = 0; i &lt; v.size (); ++ i) 
         v (i) = i;
 
@@ -1388,7 +1713,7 @@ double precision inner product of the vector expressions<code>.</code></p>
 <h4>Examples</h4>
 
 <pre>int main () {
-    numerics::vector&lt;double &gt; v1 (3), v2 (3);
+    numerics::vector&lt;double&gt; v1 (3), v2 (3);
     for (int i = 0; i &lt; std::min (v1.size (), v2.size ()); ++ i) 
         v1 (i) = v2 (i) = i;
 

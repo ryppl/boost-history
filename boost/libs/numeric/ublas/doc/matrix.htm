@@ -321,13 +321,14 @@ href="container.htm#matrix">Matrix</a>.</p>
         template&lt;class AE&gt;
         matrix (const matrix_expression&lt;AE&gt; &amp;ae);
 
-        // Resizing
-        void resize (size_type size1, size_type size2);
-
+        // Accessors
         size_type size1 () const;
         size_type size2 () const;
         const_array_type &amp;data () const;
         array_type &amp;data ();
+
+        // Resizing
+        void resize (size_type size1, size_type size2);
 
         // Element access
         const_reference operator () (size_type i, size_type j) const;
@@ -338,6 +339,8 @@ href="container.htm#matrix">Matrix</a>.</p>
         matrix &amp;assign_temporary (matrix &amp;m);
         template&lt;class AE&gt;
         matrix &amp;operator = (const matrix_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        matrix &amp;reset (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AE&gt;
         matrix &amp;assign (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AE&gt;
@@ -759,12 +762,13 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         identity_matrix (size_type size1, size_type size2);
         identity_matrix (const identity_matrix &amp;m);
 
+        // Accessors
+        size_type size1 () const;
+        size_type size2 () const;
+
         // Resizing
         void resize (size_type size);
         void resize (size_type size1, size_type size2);
-
-        size_type size1 () const;
-        size_type size2 () const;
 
         // Element access
         value_type operator () (size_type i, size_type j) const;

@@ -74,15 +74,7 @@ namespace numerics {
             matrix_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
         }
 
-        // Resizing
-        NUMERICS_INLINE
-        void resize (size_type size1, size_type size2, size_type non_zeros = 0) {
-            size1_ = size1;
-            size2_ = size2;
-            non_zeros_ = non_zeros;
-            data_.clear ();
-        }
-
+        // Accessors
         NUMERICS_INLINE
         size_type size1 () const { 
             return size1_;
@@ -90,6 +82,10 @@ namespace numerics {
         NUMERICS_INLINE
         size_type size2 () const { 
             return size2_;
+        }
+        NUMERICS_INLINE
+        size_type non_zeros () const { 
+            return data_.size (); 
         }
         NUMERICS_INLINE
         const_array_type &data () const {
@@ -100,17 +96,26 @@ namespace numerics {
             return data_;
         }
 
+        // Resizing
+        NUMERICS_INLINE
+        void resize (size_type size1, size_type size2, size_type non_zeros = 0) {
+            size1_ = size1;
+            size2_ = size2;
+            non_zeros_ = non_zeros;
+            data ().clear ();
+        }
+
         // Element access
         NUMERICS_INLINE
         value_type operator () (size_type i, size_type j) const {
-            const_iterator_type it (data_.find (functor_type::element (i, size1_, j, size2_)));
-            if (it == data_.end () || (*it).first != functor_type::element (i, size1_, j, size2_))
+            const_iterator_type it (data ().find (functor_type::element (i, size1_, j, size2_)));
+            if (it == data ().end () || (*it).first != functor_type::element (i, size1_, j, size2_))
                 return value_type ();
             return (*it).second;
         }
         NUMERICS_INLINE
         reference operator () (size_type i, size_type j) {
-            return data_ [functor_type::element (i, size1_, j, size2_)]; 
+            return data () [functor_type::element (i, size1_, j, size2_)]; 
         }
 
 #ifdef NUMERICS_DEPRECATED
@@ -130,7 +135,10 @@ namespace numerics {
             check (size1_ == m.size1_, bad_size ());
             check (size2_ == m.size2_, bad_size ());
             check (non_zeros_ == m.non_zeros_, bad_size ());
-            data_ = m.data_;
+            size1_ = m.size1_;
+            size2_ = m.size2_;
+            non_zeros_ = m.non_zeros_;
+            data () = m.data ();
             return *this;
         }
         NUMERICS_INLINE
@@ -141,6 +149,16 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         sparse_matrix &operator = (const matrix_expression<AE> &ae) { 
+#ifndef USE_GCC
+            return assign_temporary (self_type (ae, non_zeros_));
+#else
+            return assign (self_type (ae, non_zeros_));
+#endif
+        }
+        template<class AE>
+        NUMERICS_INLINE
+        sparse_matrix &reset (const matrix_expression<AE> &ae) { 
+            resize (ae ().size1 (), ae ().size2 (), non_zeros_);
 #ifndef USE_GCC
             return assign_temporary (self_type (ae, non_zeros_));
 #else
@@ -206,7 +224,7 @@ namespace numerics {
             std::swap (size1_, m.size1_);
             std::swap (size2_, m.size2_);
             std::swap (non_zeros_, m.non_zeros_);
-            data_.swap (m.data_);
+            data ().swap (m.data ());
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
@@ -222,19 +240,19 @@ namespace numerics {
             if (t == value_type ())
                 return;
 #endif
-            check (data_.find (functor_type::element (i, size1_, j, size2_)) == data_.end (), bad_index ());
-            data_.insert (data_.end (), std::pair<size_type, value_type> (functor_type::element (i, size1_, j, size2_), t));
+            check (data ().find (functor_type::element (i, size1_, j, size2_)) == data ().end (), bad_index ());
+            data ().insert (data ().end (), std::pair<size_type, value_type> (functor_type::element (i, size1_, j, size2_), t));
         }
         NUMERICS_INLINE
         void erase (size_type i, size_type j) {
-            iterator_type it = data_.find (functor_type::element (i, size1_, j, size2_));
-            if (it == data_.end ())
+            iterator_type it = data ().find (functor_type::element (i, size1_, j, size2_));
+            if (it == data ().end ())
                 return;
-            data_.erase (it);
+            data ().erase (it);
         }
         NUMERICS_INLINE
         void clear () {
-            data_.clear ();
+            data ().clear ();
         }
 
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
@@ -264,8 +282,8 @@ namespace numerics {
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
         const_iterator1 find1 (int rank, size_type i, size_type j) const {
-            const_iterator_type it (data_.lower_bound (functor_type::element (i, size1_, j, size2_)));
-            const_iterator_type it_end (data_.end ());
+            const_iterator_type it (data ().lower_bound (functor_type::element (i, size1_, j, size2_)));
+            const_iterator_type it_end (data ().end ());
             while (it != it_end) {
                 if (i >= size1_)
                     break;
@@ -278,7 +296,7 @@ namespace numerics {
                     (rank == 1 && index2 == j))
                     break;
                 ++ i;
-                it = data_.lower_bound (functor_type::element (i, size1_, j, size2_));
+                it = data ().lower_bound (functor_type::element (i, size1_, j, size2_));
             }
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             return const_iterator1 (*this, i);
@@ -289,8 +307,8 @@ namespace numerics {
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
         iterator1 find1 (int rank, size_type i, size_type j) {
-            iterator_type it (data_.lower_bound (functor_type::element (i, size1_, j, size2_)));
-            iterator_type it_end (data_.end ());
+            iterator_type it (data ().lower_bound (functor_type::element (i, size1_, j, size2_)));
+            iterator_type it_end (data ().end ());
             while (it != it_end) {
                 if (i >= size1_)
                     break;
@@ -303,7 +321,7 @@ namespace numerics {
                     (rank == 1 && index2 == j))
                     break;
                 ++ i;
-                it = data_.lower_bound (functor_type::element (i, size1_, j, size2_));
+                it = data ().lower_bound (functor_type::element (i, size1_, j, size2_));
             }
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             return iterator1 (*this, i);
@@ -314,8 +332,8 @@ namespace numerics {
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
         const_iterator2 find2 (int rank, size_type i, size_type j) const {
-            const_iterator_type it (data_.lower_bound (functor_type::element (i, size1_, j, size2_)));
-            const_iterator_type it_end (data_.end ());
+            const_iterator_type it (data ().lower_bound (functor_type::element (i, size1_, j, size2_)));
+            const_iterator_type it_end (data ().end ());
             while (it != it_end) {
                 if (j >= size2_)
                     break;
@@ -328,7 +346,7 @@ namespace numerics {
                     (rank == 1 && index1 == i))
                     break;
                 ++ j;
-                it = data_.lower_bound (functor_type::element (i, size1_, j, size2_));
+                it = data ().lower_bound (functor_type::element (i, size1_, j, size2_));
             }
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             return const_iterator2 (*this, j);
@@ -339,8 +357,8 @@ namespace numerics {
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
         iterator2 find2 (int rank, size_type i, size_type j) {
-            iterator_type it (data_.lower_bound (functor_type::element (i, size1_, j, size2_)));
-            iterator_type it_end (data_.end ());
+            iterator_type it (data ().lower_bound (functor_type::element (i, size1_, j, size2_)));
+            iterator_type it_end (data ().end ());
             while (it != it_end) {
                 if (j >= size2_)
                     break;
@@ -353,7 +371,7 @@ namespace numerics {
                     (rank == 1 && index1 == i))
                     break;
                 ++ j;
-                it = data_.lower_bound (functor_type::element (i, size1_, j, size2_));
+                it = data ().lower_bound (functor_type::element (i, size1_, j, size2_));
             }
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             return iterator2 (*this, j);
@@ -924,6 +942,7 @@ namespace numerics {
         typedef const T *const_pointer;
         typedef T *pointer;
         typedef A array_type;
+        typedef const A const_array_type;
         typedef F functor_type;
         typedef const sparse_vector_of_sparse_vector<T, F, A> const_self_type;
         typedef sparse_vector_of_sparse_vector<T, F, A> self_type;
@@ -966,16 +985,7 @@ namespace numerics {
             matrix_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae);
         }
 
-        // Resizing
-        NUMERICS_INLINE
-        void resize (size_type size1, size_type size2, size_type non_zeros = 0) {
-            size1_ = size1;
-            size2_ = size2;
-            non_zeros_ = non_zeros;
-            data_.clear ();
-            data_ [functor_type::size1 (size1_, size2_)] = vector_data_value_type ();
-        }
-
+        // Accessors
         NUMERICS_INLINE
         size_type size1 () const { 
             return size1_;
@@ -984,12 +994,37 @@ namespace numerics {
         size_type size2 () const { 
             return size2_;
         }
+        NUMERICS_INLINE
+        size_type non_zeros () const { 
+            non_zeros = 0;
+            for (vector_const_iterator_type itv = data_ ().begin (); itv != data_ ().end (); ++ itv)
+                non_zeros += (*itv).size ();
+            return non_zeros; 
+        }
+        NUMERICS_INLINE
+        const_array_type &data () const {
+            return data_;
+        }
+        NUMERICS_INLINE
+        array_type &data () {
+            return data_;
+        }
+
+        // Resizing
+        NUMERICS_INLINE
+        void resize (size_type size1, size_type size2, size_type non_zeros = 0) {
+            size1_ = size1;
+            size2_ = size2;
+            non_zeros_ = non_zeros;
+            data ().clear ();
+            data () [functor_type::size1 (size1_, size2_)] = vector_data_value_type ();
+        }
 
         // Element access
         NUMERICS_INLINE
         value_type operator () (size_type i, size_type j) const {
-            vector_const_iterator_type itv (data_.find (functor_type::element1 (i, size1_, j, size2_)));
-            if (itv == data_.end () || (*itv).first != functor_type::element1 (i, size1_, j, size2_))
+            vector_const_iterator_type itv (data ().find (functor_type::element1 (i, size1_, j, size2_)));
+            if (itv == data ().end () || (*itv).first != functor_type::element1 (i, size1_, j, size2_))
                 return value_type ();
             const_iterator_type it ((*itv).second.find (functor_type::element2 (i, size1_, j, size2_)));
             if (it == (*itv).second.end () || (*it).first != functor_type::element2 (i, size1_, j, size2_))
@@ -998,7 +1033,7 @@ namespace numerics {
         }
         NUMERICS_INLINE
         reference operator () (size_type i, size_type j) {
-            return data_ [functor_type::element1 (i, size1_, j, size2_)] [functor_type::element2 (i, size1_, j, size2_)]; 
+            return data () [functor_type::element1 (i, size1_, j, size2_)] [functor_type::element2 (i, size1_, j, size2_)]; 
         }
 
 #ifdef NUMERICS_DEPRECATED
@@ -1018,7 +1053,10 @@ namespace numerics {
             check (size1_ == m.size1_, bad_size ());
             check (size2_ == m.size2_, bad_size ());
             check (non_zeros_ == m.non_zeros_, bad_size ());
-            data_ = m.data_;
+            size1_ = m.size1_;
+            size2_ = m.size2_;
+            non_zeros_ = m.non_zeros_;
+            data () = m.data ();
             return *this;
         }
         NUMERICS_INLINE
@@ -1029,6 +1067,16 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         sparse_vector_of_sparse_vector &operator = (const matrix_expression<AE> &ae) { 
+#ifndef USE_GCC
+            return assign_temporary (self_type (ae, non_zeros_));
+#else
+            return assign (self_type (ae, non_zeros_));
+#endif
+        }
+        template<class AE>
+        NUMERICS_INLINE
+        sparse_vector_of_sparse_vector &reset (const matrix_expression<AE> &ae) { 
+            resize (ae ().size1 (), ae ().size2 (), non_zeros_);
 #ifndef USE_GCC
             return assign_temporary (self_type (ae, non_zeros_));
 #else
@@ -1094,7 +1142,7 @@ namespace numerics {
             std::swap (size1_, m.size1_);
             std::swap (size2_, m.size2_);
             std::swap (non_zeros_, m.non_zeros_);
-            data_.swap (m.data_);
+            data ().swap (m.data ());
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
@@ -1110,16 +1158,16 @@ namespace numerics {
             if (t == value_type ()) 
                 return;
 #endif
-            vector_iterator_type itv (data_.find (functor_type::element1 (i, size1_, j, size2_)));
-            if (itv == data_.end ()) 
-                itv = data_.insert (data_.end (), std::pair<size_type, vector_data_value_type> (functor_type::element1 (i, size1_, j, size2_), vector_data_value_type ()));
+            vector_iterator_type itv (data ().find (functor_type::element1 (i, size1_, j, size2_)));
+            if (itv == data ().end ()) 
+                itv = data ().insert (data ().end (), std::pair<size_type, vector_data_value_type> (functor_type::element1 (i, size1_, j, size2_), vector_data_value_type ()));
             check ((*itv).second.find (functor_type::element2 (i, size1_, j, size2_)) == (*itv).second.end (), bad_index ());
             (*itv).second.insert ((*itv).second.end (), std::pair<size_type, value_type> (functor_type::element2 (i, size1_, j, size2_), t));
         }
         NUMERICS_INLINE
         void erase (size_type i, size_type j) {
-            vector_iterator_type itv (data_.find (functor_type::element1 (i, size1_, j, size2_)));
-            if (itv == data_.end ()) 
+            vector_iterator_type itv (data ().find (functor_type::element1 (i, size1_, j, size2_)));
+            if (itv == data ().end ()) 
                 return;
             iterator_type it ((*itv).second.find (functor_type::element2 (i, size1_, j, size2_)));
             if (it == (*itv).second.end ()) 
@@ -1128,7 +1176,7 @@ namespace numerics {
         }
         NUMERICS_INLINE
         void clear () {
-            data_.clear ();
+            data ().clear ();
         }
 
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
@@ -1158,10 +1206,10 @@ namespace numerics {
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
         const_iterator1 find1 (int rank, size_type i, size_type j) const {
-            check (data_.begin () != data_.end (), internal_logic ());
+            check (data ().begin () != data ().end (), internal_logic ());
             for (;;) {
-                vector_const_iterator_type itv (data_.lower_bound (functor_type::element1 (i, size1_, j, size2_)));
-                vector_const_iterator_type itv_end (data_.end ());
+                vector_const_iterator_type itv (data ().lower_bound (functor_type::element1 (i, size1_, j, size2_)));
+                vector_const_iterator_type itv_end (data ().end ());
                 if (itv == itv_end)
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
                     return const_iterator1 (*this, i);
@@ -1199,10 +1247,10 @@ namespace numerics {
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
         iterator1 find1 (int rank, size_type i, size_type j) {
-            check (data_.begin () != data_.end (), internal_logic ());
+            check (data ().begin () != data ().end (), internal_logic ());
             for (;;) {
-                vector_iterator_type itv (data_.lower_bound (functor_type::element1 (i, size1_, j, size2_)));
-                vector_iterator_type itv_end (data_.end ());
+                vector_iterator_type itv (data ().lower_bound (functor_type::element1 (i, size1_, j, size2_)));
+                vector_iterator_type itv_end (data ().end ());
                 if (itv == itv_end)
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
                     return iterator1 (*this, i);
@@ -1240,10 +1288,10 @@ namespace numerics {
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
         const_iterator2 find2 (int rank, size_type i, size_type j) const {
-            check (data_.begin () != data_.end (), internal_logic ());
+            check (data ().begin () != data ().end (), internal_logic ());
             for (;;) {
-                vector_const_iterator_type itv (data_.lower_bound (functor_type::element1 (i, size1_, j, size2_)));
-                vector_const_iterator_type itv_end (data_.end ());
+                vector_const_iterator_type itv (data ().lower_bound (functor_type::element1 (i, size1_, j, size2_)));
+                vector_const_iterator_type itv_end (data ().end ());
                 if (itv == itv_end)
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
                     return const_iterator2 (*this, i);
@@ -1281,10 +1329,10 @@ namespace numerics {
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
         iterator2 find2 (int rank, size_type i, size_type j) {
-            check (data_.begin () != data_.end (), internal_logic ());
+            check (data ().begin () != data ().end (), internal_logic ());
             for (;;) {
-                vector_iterator_type itv (data_.lower_bound (functor_type::element1 (i, size1_, j, size2_)));
-                vector_iterator_type itv_end (data_.end ());
+                vector_iterator_type itv (data ().lower_bound (functor_type::element1 (i, size1_, j, size2_)));
+                vector_iterator_type itv_end (data ().end ());
                 if (itv == itv_end)
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
                     return iterator2 (*this, i);
@@ -2011,20 +2059,7 @@ namespace numerics {
             matrix_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
         }
 
-        // Resizing
-        NUMERICS_INLINE
-        void resize (size_type size1, size_type size2, size_type non_zeros = 0) {
-            size1_ = size1;
-            size2_ = size2;
-            non_zeros_ = non_zeros;
-            filled1_ = 0;
-            filled2_ = 0;
-            index1_data_.resize (functor_type::size1 (size1, size2));
-            index2_data_.resize (non_zeros);
-            value_data_.resize (non_zeros);
-            index1_data_.clear ();
-        }
-
+        // Accessors
         NUMERICS_INLINE
         size_type size1 () const { 
             return size1_;
@@ -2032,6 +2067,10 @@ namespace numerics {
         NUMERICS_INLINE
         size_type size2 () const { 
             return size2_;
+        }
+        NUMERICS_INLINE
+        size_type non_zeros () const { 
+            return non_zeros_;
         }
         NUMERICS_INLINE
         const index_array_type &index1_data () const {
@@ -2058,38 +2097,52 @@ namespace numerics {
             return value_data_;
         }
 
+        // Resizing
+        NUMERICS_INLINE
+        void resize (size_type size1, size_type size2, size_type non_zeros = 0) {
+            size1_ = size1;
+            size2_ = size2;
+            non_zeros_ = non_zeros;
+            filled1_ = 0;
+            filled2_ = 0;
+            index1_data ().resize (functor_type::size1 (size1, size2));
+            index2_data ().resize (non_zeros);
+            value_data ().resize (non_zeros);
+            index1_data ().clear ();
+        }
+
         // Element access
         NUMERICS_INLINE
         value_type operator () (size_type i, size_type j) const {
             size_type element1 (functor_type::element1 (i, size1_, j, size2_));
             size_type element2 (functor_type::element2 (i, size1_, j, size2_));
-            vector_const_iterator_type itv (index1_data_.begin () + element1);
+            vector_const_iterator_type itv (index1_data ().begin () + element1);
             if (filled1_ <= element1)
                 return value_type ();
-            const_iterator_type it_begin (index2_data_.begin () + *itv - 1);
-            const_iterator_type it_end (index2_data_.begin () + filled2_);
+            const_iterator_type it_begin (index2_data ().begin () + *itv - 1);
+            const_iterator_type it_end (index2_data ().begin () + filled2_);
             if (filled1_ > element1 + 1)
-                it_end = index2_data_.begin () + *(itv + 1) - 1;
+                it_end = index2_data ().begin () + *(itv + 1) - 1;
             const_iterator_type it (std::lower_bound (it_begin, it_end, element2 + 1, std::less<size_type> ()));
             if (it == it_end || *it != element2 + 1)
                 return value_type ();
-            return value_data_ [it - index2_data_.begin ()];
+            return value_data () [it - index2_data ().begin ()];
         }
         NUMERICS_INLINE
         reference operator () (size_type i, size_type j) {
             size_type element1 (functor_type::element1 (i, size1_, j, size2_));
             size_type element2 (functor_type::element2 (i, size1_, j, size2_));
-            vector_const_iterator_type itv (index1_data_.begin () + element1);
+            vector_const_iterator_type itv (index1_data ().begin () + element1);
             if (filled1_ <= element1)
                 insert (i, j, value_type ());
-            const_iterator_type it_begin (index2_data_.begin () + *itv - 1);
-            const_iterator_type it_end (index2_data_.begin () + filled2_);
+            const_iterator_type it_begin (index2_data ().begin () + *itv - 1);
+            const_iterator_type it_end (index2_data ().begin () + filled2_);
             if (filled1_ > element1 + 1)
-                it_end = index2_data_.begin () + *(itv + 1) - 1;
+                it_end = index2_data ().begin () + *(itv + 1) - 1;
             const_iterator_type it (std::lower_bound (it_begin, it_end, element2 + 1, std::less<size_type> ()));
             if (it == it_end || *it != element2 + 1)
                 insert (i, j, value_type ());
-            return value_data_ [it - index2_data_.begin ()];
+            return value_data () [it - index2_data ().begin ()];
         }
 
 #ifdef NUMERICS_DEPRECATED
@@ -2109,11 +2162,14 @@ namespace numerics {
             check (size1_ == m.size1_, bad_size ());
             check (size2_ == m.size2_, bad_size ());
             check (non_zeros_ == m.non_zeros_, bad_size ());
+            size1_ = m.size1_;
+            size2_ = m.size2_;
+            non_zeros_ = m.non_zeros_;
             filled1_ = m.filled1_;
             filled2_ = m.filled2_;
-            index1_data_ = m.index1_data_;
-            index2_data_ = m.index2_data_;
-            value_data_ = m.value_data_;
+            index1_data () = m.index1_data ();
+            index2_data () = m.index2_data ();
+            value_data () = m.value_data ();
             return *this;
         }
         NUMERICS_INLINE
@@ -2124,6 +2180,16 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         compressed_matrix &operator = (const matrix_expression<AE> &ae) { 
+#ifndef USE_GCC
+            return assign_temporary (self_type (ae, non_zeros_));
+#else
+            return assign (self_type (ae, non_zeros_));
+#endif
+        }
+        template<class AE>
+        NUMERICS_INLINE
+        compressed_matrix &reset(const matrix_expression<AE> &ae) { 
+            resize (ae ().size1 (), ae ().size2 (), non_zeros_);
 #ifndef USE_GCC
             return assign_temporary (self_type (ae, non_zeros_));
 #else
@@ -2191,9 +2257,9 @@ namespace numerics {
             std::swap (non_zeros_, m.non_zeros_);
             std::swap (filled1_, m.filled1_);
             std::swap (filled2_, m.filled2_);
-            index1_data_.swap (m.index1_data_);
-            index2_data_.swap (m.index2_data_);
-            value_data_.swap (m.value_data_);
+            index1_data ().swap (m.index1_data ());
+            index2_data ().swap (m.index2_data ());
+            value_data ().swap (m.value_data ());
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
@@ -2213,14 +2279,14 @@ namespace numerics {
             size_type element2 = functor_type::element2 (i, size1_, j, size2_);
             if (filled1_ < element1 + 1) {
                 do {
-                    index1_data_ [filled1_] = filled2_ + 1;
+                    index1_data () [filled1_] = filled2_ + 1;
                 } while (++ filled1_ < element1 + 1);
             } else {
                 check (filled1_ - 1 == element1, external_logic ()); 
-                check (index2_data_ [filled2_ - 1] < element2 + 1, external_logic ()); 
+                check (index2_data () [filled2_ - 1] < element2 + 1, external_logic ()); 
             }
-            index2_data_ [filled2_] = element2 + 1;
-            value_data_ [filled2_] = t;
+            index2_data () [filled2_] = element2 + 1;
+            value_data () [filled2_] = t;
             ++ filled2_;
         }
         NUMERICS_INLINE
@@ -2229,11 +2295,11 @@ namespace numerics {
             size_type element1 = functor_type::element1 (i, size1_, j, size2_);
             check (filled1_ == element1 + 1, external_logic ());
             size_type element2 = functor_type::element2 (i, size1_, j, size2_);
-            check (filled2_ > 0 && index2_data_ [filled2_ - 1] == element2 + 1, external_logic ());
+            check (filled2_ > 0 && index2_data () [filled2_ - 1] == element2 + 1, external_logic ());
 #endif
             -- filled2_;
-            if (index1_data_ [filled1_ - 1] > filled2_ + 1) {
-                index1_data_ [filled1_ - 1] = 0;
+            if (index1_data () [filled1_ - 1] > filled2_ + 1) {
+                index1_data () [filled1_ - 1] = 0;
                 -- filled1_;
             }
         }
@@ -2241,7 +2307,7 @@ namespace numerics {
         void clear () {
             filled1_ = 0;
             filled2_ = 0;
-            index1_data_.clear ();
+            index1_data ().clear ();
         }
 
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
@@ -2274,18 +2340,18 @@ namespace numerics {
             for (;;) {
                 size_type element1 (functor_type::element1 (i, size1_, j, size2_));
                 size_type element2 (functor_type::element2 (i, size1_, j, size2_));
-                vector_const_iterator_type itv (index1_data_.begin () + element1);
+                vector_const_iterator_type itv (index1_data ().begin () + element1);
                 if (filled1_ <= element1)
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
                     return const_iterator1 (*this, i);
 #else
-                    return const_iterator1 (*this, i, j, itv, index2_data_.begin () + filled2_); 
+                    return const_iterator1 (*this, i, j, itv, index2_data ().begin () + filled2_); 
 #endif
 
-                const_iterator_type it_begin (index2_data_.begin () + *itv - 1);
-                const_iterator_type it_end (index2_data_.begin () + filled2_);
+                const_iterator_type it_begin (index2_data ().begin () + *itv - 1);
+                const_iterator_type it_end (index2_data ().begin () + filled2_);
                 if (filled1_ > element1 + 1)
-                    it_end = index2_data_.begin () + *(itv + 1) - 1;
+                    it_end = index2_data ().begin () + *(itv + 1) - 1;
                 if (i == size1_) 
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
                     return const_iterator1 (*this, i);
@@ -2296,10 +2362,10 @@ namespace numerics {
                 const_iterator_type it (std::lower_bound (it_begin, it_end, element2 + 1, std::less<size_type> ()));
                 if (it != it_end) {
 #ifdef NUMERICS_BOUNDS_CHECK
-                    size_type index1 (functor_type::index1 (itv - index1_data_.begin (), (*it) - 1));
+                    size_type index1 (functor_type::index1 (itv - index1_data ().begin (), (*it) - 1));
                     check (index1 == i, internal_logic ());
 #endif
-                    size_type index2 (functor_type::index2 (itv - index1_data_.begin (), (*it) - 1));
+                    size_type index2 (functor_type::index2 (itv - index1_data ().begin (), (*it) - 1));
                     check (index2 >= j, internal_logic ());
                     if ((rank == 0 && index2 >= j) ||
                         (rank == 1 && index2 == j))
@@ -2318,18 +2384,18 @@ namespace numerics {
             for (;;) {
                 size_type element1 (functor_type::element1 (i, size1_, j, size2_));
                 size_type element2 (functor_type::element2 (i, size1_, j, size2_));
-                vector_iterator_type itv (index1_data_.begin () + element1);
+                vector_iterator_type itv (index1_data ().begin () + element1);
                 if (filled1_ <= element1)
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
                     return iterator1 (*this, i);
 #else
-                    return iterator1 (*this, i, j, itv, index2_data_.begin () + filled2_); 
+                    return iterator1 (*this, i, j, itv, index2_data ().begin () + filled2_); 
 #endif
 
-                iterator_type it_begin (index2_data_.begin () + *itv - 1);
-                iterator_type it_end (index2_data_.begin () + filled2_);
+                iterator_type it_begin (index2_data ().begin () + *itv - 1);
+                iterator_type it_end (index2_data ().begin () + filled2_);
                 if (filled1_ > element1 + 1)
-                    it_end = index2_data_.begin () + *(itv + 1) - 1;
+                    it_end = index2_data ().begin () + *(itv + 1) - 1;
                 if (i == size1_) 
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
                     return iterator1 (*this, i);
@@ -2340,10 +2406,10 @@ namespace numerics {
                 iterator_type it (std::lower_bound (it_begin, it_end, element2 + 1, std::less<size_type> ()));
                 if (it != it_end) {
 #ifdef NUMERICS_BOUNDS_CHECK
-                    size_type index1 (functor_type::index1 (itv - index1_data_.begin (), (*it) - 1));
+                    size_type index1 (functor_type::index1 (itv - index1_data ().begin (), (*it) - 1));
                     check (index1 == i, internal_logic ());
 #endif
-                    size_type index2 (functor_type::index2 (itv - index1_data_.begin (), (*it) - 1));
+                    size_type index2 (functor_type::index2 (itv - index1_data ().begin (), (*it) - 1));
                     check (index2 >= j, internal_logic ());
                     if ((rank == 0 && index2 >= j) ||
                         (rank == 1 && index2 == j))
@@ -2362,18 +2428,18 @@ namespace numerics {
             for (;;) {
                 size_type element1 (functor_type::element1 (i, size1_, j, size2_));
                 size_type element2 (functor_type::element2 (i, size1_, j, size2_));
-                vector_const_iterator_type itv (index1_data_.begin () + element1);
+                vector_const_iterator_type itv (index1_data ().begin () + element1);
                 if (filled1_ <= element1)
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
                     return const_iterator2 (*this, j);
 #else
-                    return const_iterator2 (*this, i, j, itv, index2_data_.begin () + filled2_); 
+                    return const_iterator2 (*this, i, j, itv, index2_data ().begin () + filled2_); 
 #endif
 
-                const_iterator_type it_begin (index2_data_.begin () + *itv - 1);
-                const_iterator_type it_end (index2_data_.begin () + filled2_);
+                const_iterator_type it_begin (index2_data ().begin () + *itv - 1);
+                const_iterator_type it_end (index2_data ().begin () + filled2_);
                 if (filled1_ > element1 + 1)
-                    it_end = index2_data_.begin () + *(itv + 1) - 1;
+                    it_end = index2_data ().begin () + *(itv + 1) - 1;
                 if (j == size2_) 
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
                     return const_iterator2 (*this, j);
@@ -2383,10 +2449,10 @@ namespace numerics {
 
                 const_iterator_type it (std::lower_bound (it_begin, it_end, element2 + 1, std::less<size_type> ()));
                 if (it != it_end) {
-                    size_type index1 (functor_type::index1 (itv - index1_data_.begin (), (*it) - 1));
+                    size_type index1 (functor_type::index1 (itv - index1_data ().begin (), (*it) - 1));
                     check (index1 >= i, internal_logic ());
 #ifdef NUMERICS_BOUNDS_CHECK
-                    size_type index2 (functor_type::index2 (itv - index1_data_.begin (), (*it) - 1));
+                    size_type index2 (functor_type::index2 (itv - index1_data ().begin (), (*it) - 1));
                     check (index2 == j, internal_logic ());
 #endif
                     if ((rank == 0 && index1 >= i) ||
@@ -2406,18 +2472,18 @@ namespace numerics {
             for (;;) {
                 size_type element1 (functor_type::element1 (i, size1_, j, size2_));
                 size_type element2 (functor_type::element2 (i, size1_, j, size2_));
-                vector_iterator_type itv (index1_data_.begin () + element1);
+                vector_iterator_type itv (index1_data ().begin () + element1);
                 if (filled1_ <= element1)
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
                     return iterator2 (*this, j);
 #else
-                    return iterator2 (*this, i, j, itv, index2_data_.begin () + filled2_);
+                    return iterator2 (*this, i, j, itv, index2_data ().begin () + filled2_);
 #endif
 
-                iterator_type it_begin (index2_data_.begin () + *itv - 1);
-                iterator_type it_end (index2_data_.begin () + filled2_);
+                iterator_type it_begin (index2_data ().begin () + *itv - 1);
+                iterator_type it_end (index2_data ().begin () + filled2_);
                 if (filled1_ > element1 + 1)
-                    it_end = index2_data_.begin () + *(itv + 1) - 1;
+                    it_end = index2_data ().begin () + *(itv + 1) - 1;
                 if (j == size2_)
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
                     return iterator2 (*this, j);
@@ -2427,10 +2493,10 @@ namespace numerics {
 
                 iterator_type it (std::lower_bound (it_begin, it_end, element2 + 1, std::less<size_type> ()));
                 if (it != it_end) {
-                    size_type index1 (functor_type::index1 (itv - index1_data_.begin (), (*it) - 1));
+                    size_type index1 (functor_type::index1 (itv - index1_data ().begin (), (*it) - 1));
                     check (index1 >= i, internal_logic ());
 #ifdef NUMERICS_BOUNDS_CHECK
-                    size_type index2 (functor_type::index2 (itv - index1_data_.begin (), (*it) - 1));
+                    size_type index2 (functor_type::index2 (itv - index1_data ().begin (), (*it) - 1));
                     check (index2 == j, internal_logic ());
 #endif
                     if ((rank == 0 && index1 >= i) ||

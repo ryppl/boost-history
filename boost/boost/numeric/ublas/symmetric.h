@@ -99,13 +99,7 @@ namespace numerics {
             matrix_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
         }
 
-        // Resizing
-        NUMERICS_INLINE
-        void resize (size_type size1, size_type size2 = size1) {
-            size_ = common (size1, size2);
-            data_.resize (functor1_type::packed_size (size1, size2));
-        }
-
+        // Accessors
         NUMERICS_INLINE
         size_type size1 () const { 
             return size_;
@@ -123,24 +117,31 @@ namespace numerics {
             return data_;
         }
 
+        // Resizing
+        NUMERICS_INLINE
+        void resize (size_type size1, size_type size2 = size1) {
+            size_ = common (size1, size2);
+            data ().resize (functor1_type::packed_size (size1, size2));
+        }
+
         // Element access
         NUMERICS_INLINE
         value_type operator () (size_type i, size_type j) const {
             check (i < size_, bad_index ());
             check (j < size_, bad_index ());
             if (functor1_type::other (i, j))
-                return data_ [functor1_type::element (functor2_type (), i, size_, j, size_)];
+                return data () [functor1_type::element (functor2_type (), i, size_, j, size_)];
             else
-                return data_ [functor1_type::element (functor2_type (), j, size_, i, size_)];
+                return data () [functor1_type::element (functor2_type (), j, size_, i, size_)];
         }
         NUMERICS_INLINE
         reference operator () (size_type i, size_type j) {
             check (i < size_, bad_index ());
             check (j < size_, bad_index ());
             if (functor1_type::other (i, j))
-                return data_ [functor1_type::element (functor2_type (), i, size_, j, size_)];
+                return data () [functor1_type::element (functor2_type (), i, size_, j, size_)];
             else
-                return data_ [functor1_type::element (functor2_type (), j, size_, i, size_)];
+                return data () [functor1_type::element (functor2_type (), j, size_, i, size_)];
         }
 
 #ifdef NUMERICS_DEPRECATED
@@ -158,7 +159,8 @@ namespace numerics {
         NUMERICS_INLINE
         symmetric_matrix &operator = (const symmetric_matrix &m) { 
             check (size_ == m.size_, bad_size ());
-            data_ = m.data_;
+            size_ = m.size_;
+            data () = m.data ();
             return *this;
         }
         NUMERICS_INLINE
@@ -169,6 +171,16 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         symmetric_matrix &operator = (const matrix_expression<AE> &ae) { 
+#ifndef USE_GCC
+            return assign_temporary (self_type (ae));
+#else
+            return assign (self_type (ae));
+#endif
+        }
+        template<class AE>
+        NUMERICS_INLINE
+        symmetric_matrix &reset (const matrix_expression<AE> &ae) { 
+            resize (ae ().size1 (), ae ().size2 ());
 #ifndef USE_GCC
             return assign_temporary (self_type (ae));
 #else
@@ -230,7 +242,7 @@ namespace numerics {
             check (this != &m, external_logic ());
             check (size_ == m.size_, bad_size ());
             std::swap (size_, m.size_);
-            data_.swap (m.data_);
+            data ().swap (m.data ());
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
@@ -249,11 +261,11 @@ namespace numerics {
                 return;
 #endif
             if (functor1_type::other (i, j)) {
-                check (data_ [functor1_type::element (functor2_type (), i, size_, j, size_)] == value_type (), bad_index ());
-                data_.insert (data_.begin () + functor1_type::element (functor2_type (), i, size_, j, size_), t);
+                check (data () [functor1_type::element (functor2_type (), i, size_, j, size_)] == value_type (), bad_index ());
+                data ().insert (data ().begin () + functor1_type::element (functor2_type (), i, size_, j, size_), t);
             } else {
-                check (data_ [functor1_type::element (functor2_type (), j, size_, i, size_)] == value_type (), bad_index ());
-                data_.insert (data_.begin () + functor1_type::element (functor2_type (), j, size_, i, size_), t);
+                check (data () [functor1_type::element (functor2_type (), j, size_, i, size_)] == value_type (), bad_index ());
+                data ().insert (data ().begin () + functor1_type::element (functor2_type (), j, size_, i, size_), t);
             }
         }
         NUMERICS_INLINE
@@ -261,16 +273,16 @@ namespace numerics {
             check (i < size_, bad_index ());
             check (j < size_, bad_index ());
             if (functor1_type::other (i, j)) {
-                check (data_ [functor1_type::element (functor2_type (), i, size_, j, size_)] == value_type (), bad_index ());
-                data_.erase (data_.begin () + functor1_type::element (functor2_type (), i, size_, j, size_));
+                check (data () [functor1_type::element (functor2_type (), i, size_, j, size_)] == value_type (), bad_index ());
+                data ().erase (data ().begin () + functor1_type::element (functor2_type (), i, size_, j, size_));
             } else {
-                check (data_ [functor1_type::element (functor2_type (), j, size_, i, size_)] == value_type (), bad_index ());
-                data_.erase (data_.begin () + functor1_type::element (functor2_type (), j, size_, i, size_));
+                check (data () [functor1_type::element (functor2_type (), j, size_, i, size_)] == value_type (), bad_index ());
+                data ().erase (data ().begin () + functor1_type::element (functor2_type (), j, size_, i, size_));
             }
         }
         NUMERICS_INLINE
         void clear () {
-            data_.clear ();
+            data ().clear ();
         }
 
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
@@ -943,6 +955,7 @@ namespace numerics {
             check (data_.size1 () == data_.size2 (), bad_size ());
         }
 
+        // Accessors
         NUMERICS_INLINE
         size_type size1 () const { 
             return data_.size1 ();
@@ -960,26 +973,31 @@ namespace numerics {
             return data_;
         }
 
+        // Resetting
+        NUMERICS_INLINE
+        void reset (matrix_type &data) {
+            check (data.size1 () == data.size2 (), bad_size ());
+            data () = data;
+        }
+
         // Element access
         NUMERICS_INLINE
         value_type operator () (size_type i, size_type j) const {
             check (i < size1 (), bad_index ());
             check (j < size2 (), bad_index ());
-            // Need the const member dispatched.
-            const matrix_type &data = data_;
             if (functor_type::other (i, j))
-                return data (i, j);
+                return data () (i, j);
             else
-                return data (j, i);
+                return data () (j, i);
         }
         NUMERICS_INLINE
         reference operator () (size_type i, size_type j) {
             check (i < size1 (), bad_index ());
             check (j < size2 (), bad_index ());
             if (functor_type::other (i, j))
-                return data_ (i, j);
+                return data () (i, j);
             else
-                return data_ (j, i);
+                return data () (j, i);
         }
 
 #ifdef NUMERICS_DEPRECATED

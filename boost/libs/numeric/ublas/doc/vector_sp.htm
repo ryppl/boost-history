@@ -287,12 +287,14 @@ href="container.htm#vector">Vector</a>.</p>
         template&lt;class AE&gt;
         sparse_vector (const vector_expression&lt;AE&gt; &amp;ae, size_type non_zeros = 0);
 
-        // Resizing
-        void resize (size_type size, size_type non_zeros = 0);
-
+        // Accessors
         size_type size () const;
+        size_type non_zeros () const;
         const_array_type &amp;data () const;
         array_type &amp;data ();
+
+        // Resizing
+        void resize (size_type size, size_type non_zeros = 0);
 
         // Element access
         value_type operator () (size_type i) const;
@@ -306,6 +308,8 @@ href="container.htm#vector">Vector</a>.</p>
         sparse_vector &amp;assign_temporary (sparse_vector &amp;v);
         template&lt;class AE&gt;
         sparse_vector &amp;operator = (const vector_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        sparse_vector &amp;reset (const vector_expression&lt;AE&gt; &amp;ae);
         template&lt;class AE&gt;
         sparse_vector &amp;assign (const vector_expression&lt;AE&gt; &amp;ae);
         template&lt;class AE&gt;

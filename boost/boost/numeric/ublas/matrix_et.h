@@ -77,9 +77,10 @@ namespace numerics {
         matrix_const_reference (const expression_type &e):
             e_ (e) {}
 
+        // Accessors
         NUMERICS_INLINE
         size_type size1 () const { 
-            return e_.size1 (); 
+            return e_.size1 ();
         }
         NUMERICS_INLINE
         size_type size2 () const {
@@ -233,12 +234,7 @@ namespace numerics {
         matrix_reference (expression_type &e):
               e_ (e) {}
 
-        // Resizing
-        NUMERICS_INLINE
-        void resize (size_type size1, size_type size2) {
-            e_.resize (size1, size2);
-        }
-
+        // Accessors
         NUMERICS_INLINE
         size_type size1 () const { 
             return e_.size1 ();
@@ -246,6 +242,12 @@ namespace numerics {
         NUMERICS_INLINE
         size_type size2 () const {
             return e_.size2 ();
+        }
+
+        // Resizing
+        NUMERICS_INLINE
+        void resize (size_type size1, size_type size2) {
+            e_.resize (size1, size2);
         }
 
         // Element access
@@ -481,15 +483,7 @@ namespace numerics {
         vector_matrix_binary (const expression1_type &e1, const expression2_type &e2): 
             e1_ (e1), e2_ (e2) {}
 
-        NUMERICS_INLINE
-        const expression1_type &expression1 () const {
-            return e1_;
-        }
-        NUMERICS_INLINE
-        const expression2_type &expression2 () const {
-            return e2_;
-        }
-
+        // Accessors
         NUMERICS_INLINE
         size_type size1 () const { 
             return e1_.size (); 
@@ -501,7 +495,7 @@ namespace numerics {
 
         // Element access
         NUMERICS_INLINE
-        value_type operator () (size_type i, size_type j) const { 
+        value_type operator () (size_type i, size_type j) const {
             return functor_type () (e1_ (i), e2_ (j)); 
         }
 
@@ -520,7 +514,7 @@ namespace numerics {
         typedef matrix_column_const_iterator<vector_matrix_binary<E1, E2, F>, iterator_category> const_iterator2;
         typedef const_iterator2 iterator2;
 #ifdef USE_MSVC
-        typedef reverse_iterator<const_iterator1, matrix_row<vector_matrix_binary<E1, E2, F> >, matrix_row<vector_matrix_binary<E1, E2, F> > > const_reverse_iterator1;
+        typedef reverse_iterator<const_iterator1, matrix_row<vector_matrix_binary<E1, E2, F> >, matrix_row<vector_matrix_binary<E1, E2, F> > >const_reverse_iterator1;
         typedef reverse_iterator<const_iterator2, matrix_column<vector_matrix_binary<E1, E2, F> >, matrix_column<vector_matrix_binary<E1, E2, F> > > const_reverse_iterator2;
 #else
         typedef reverse_iterator<const_iterator1> const_reverse_iterator1;
@@ -624,7 +618,7 @@ namespace numerics {
         }
 
         // Iterators enhance the iterators of the referenced expressions
-        // with the unary functor.
+        // with the binary functor.
 
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator1:
@@ -643,15 +637,18 @@ namespace numerics {
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
 
             // Construction and destruction
-            NUMERICS_INLINE
 #ifdef NUMERICS_USE_INVARIANT_HOISTING
+            NUMERICS_INLINE
             const_iterator1 ():
                 container_const_reference<vector_matrix_binary> (), it1_ (), it2_ (), t2_ () {}
+            NUMERICS_INLINE
             const_iterator1 (const vector_matrix_binary &vmb, const const_iterator1_type &it1, const const_iterator2_type &it2, value_type t2):
                 container_const_reference<vector_matrix_binary> (vmb), it1_ (it1), it2_ (it2), t2_ (t2) {}
 #else
+            NUMERICS_INLINE
             const_iterator1 ():
                 container_const_reference<vector_matrix_binary> (), it1_ (), it2_ () {}
+            NUMERICS_INLINE
             const_iterator1 (const vector_matrix_binary &vmb, const const_iterator1_type &it1, const const_iterator2_type &it2):
                 container_const_reference<vector_matrix_binary> (vmb), it1_ (it1), it2_ (it2) {}
 #endif
@@ -777,15 +774,18 @@ namespace numerics {
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
 
             // Construction and destruction
-            NUMERICS_INLINE
 #ifdef NUMERICS_USE_INVARIANT_HOISTING
+            NUMERICS_INLINE
             const_iterator2 ():
                 container_const_reference<vector_matrix_binary> (), it1_ (), it2_ (), t1_ () {}
+            NUMERICS_INLINE
             const_iterator2 (const vector_matrix_binary &vmb, const const_iterator1_type &it1, const const_iterator2_type &it2, value_type t1):
                 container_const_reference<vector_matrix_binary> (vmb), it1_ (it1), it2_ (it2), t1_ (t1) {}
 #else
+            NUMERICS_INLINE
             const_iterator2 ():
                 container_const_reference<vector_matrix_binary> (), it1_ (), it2_ () {}
+            NUMERICS_INLINE
             const_iterator2 (const vector_matrix_binary &vmb, const const_iterator1_type &it1, const const_iterator2_type &it2):
                 container_const_reference<vector_matrix_binary> (vmb), it1_ (it1), it2_ (it2) {}
 #endif
@@ -936,10 +936,11 @@ namespace numerics {
 #endif
     };
 
+    // (outer_prod (v1, v2)) [i] [j] = v1 [i] * v2 [j]
     template<class E1, class E2>
     NUMERICS_INLINE
     typename vector_matrix_binary_traits<E1, E2, scalar_multiplies<typename E1::value_type, typename E2::value_type> >::result_type
-    outer_prod (const vector_expression<E1> &e1, 
+    outer_prod (const vector_expression<E1> &e1,
                 const vector_expression<E2> &e2) {
         typedef NUMERICS_TYPENAME vector_matrix_binary_traits<E1, E2, scalar_multiplies<NUMERICS_TYPENAME E1::value_type, NUMERICS_TYPENAME E2::value_type> >::expression_type expression_type;
         return expression_type (e1 (), e2 ());
@@ -971,14 +972,15 @@ namespace numerics {
 
         // Construction and destruction
         NUMERICS_INLINE
-        matrix_unary1 (): 
+        matrix_unary1 ():
             e_ () {}
         NUMERICS_INLINE
-        matrix_unary1 (const expression_type &e): 
+        matrix_unary1 (const expression_type &e):
             e_ (e) {}
 
+        // Accessors
         NUMERICS_INLINE
-        size_type size1 () const { 
+        size_type size1 () const {
             return e_.size1 ();
         }
         NUMERICS_INLINE
@@ -988,14 +990,14 @@ namespace numerics {
 
         // Element access
         NUMERICS_INLINE
-        value_type operator () (size_type i, size_type j) const { 
-            return functor_type () (e_ (i, j)); 
+        value_type operator () (size_type i, size_type j) const {
+            return functor_type () (e_ (i, j));
         }
 
 #ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
         const_matrix_row_type operator [] (size_type i) const {
-            return const_matrix_row_type (*this, i); 
+            return const_matrix_row_type (*this, i);
         }
 #endif
 
@@ -1418,6 +1420,7 @@ namespace numerics {
         matrix_unary2 (const expression_type &e): 
             e_ (e) {}
 
+        // Accessors
         NUMERICS_INLINE
         size_type size1 () const { 
             return e_.size2 ();
@@ -1477,7 +1480,8 @@ namespace numerics {
         NUMERICS_INLINE
         const_iterator1 find_first1 (int rank, size_type i, size_type j) const {
             // FIXME: LAPACK tests fail for m x n banded matrices, if we only use rank.
-            const_iterator1_type it1 (e_.find_first2 (size1 () == size2 () ? rank : 0, j, i));
+            const_iterator1_type it1 (e_.find_last2 (rank, j, i));
+            // const_iterator1_type it1 (e_.find_first2 (size1 () == size2 () ? rank : 0, j, i));
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             return const_iterator1 (*this, it1.index ());
 #else
@@ -1491,7 +1495,8 @@ namespace numerics {
         NUMERICS_INLINE
         const_iterator1 find_last1 (int rank, size_type i, size_type j) const {
             // FIXME: LAPACK tests fail for m x n banded matrices, if we only use rank.
-            const_iterator1_type it1 (e_.find_last2 (size1 () == size2 () ? rank : 0, j, i));
+            const_iterator1_type it1 (e_.find_first2 (rank, j, i));
+            // const_iterator1_type it1 (e_.find_last2 (size1 () == size2 () ? rank : 0, j, i));
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             return const_iterator1 (*this, it1.index ());
 #else
@@ -1505,7 +1510,8 @@ namespace numerics {
         NUMERICS_INLINE
         const_iterator2 find_first2 (int rank, size_type i, size_type j) const {
             // FIXME: LAPACK tests fail for m x n banded matrices, if we only use rank.
-            const_iterator2_type it2 (e_.find_first1 (size1 () == size2 () ? rank : 0, j, i));
+            const_iterator2_type it2 (e_.find_last1 (rank, j, i));
+            // const_iterator2_type it2 (e_.find_first1 (size1 () == size2 () ? rank : 0, j, i));
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             return const_iterator2 (*this, it2.index ());
 #else
@@ -1519,7 +1525,8 @@ namespace numerics {
         NUMERICS_INLINE
         const_iterator2 find_last2 (int rank, size_type i, size_type j) const {
             // FIXME: LAPACK tests fail for m x n banded matrices, if we only use rank.
-            const_iterator2_type it2 (e_.find_last1 (size1 () == size2 () ? rank : 0, j, i));
+            const_iterator2_type it2 (e_.find_first1 (rank, j, i));
+            // const_iterator2_type it2 (e_.find_last1 (size1 () == size2 () ? rank : 0, j, i));
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             return const_iterator2 (*this, it2.index ());
 #else
@@ -1848,6 +1855,7 @@ namespace numerics {
         matrix_binary (const E1 &e1, const E2 &e2): 
             e1_ (e1), e2_ (e2) {}
 
+        // Accessors
         NUMERICS_INLINE
         size_type size1 () const { 
             return common (e1_.size1 (), e2_.size1 ());
@@ -2404,7 +2412,8 @@ namespace numerics {
     operator + (const matrix_expression<E1> &e1, 
                 const matrix_expression<E2> &e2) {
         typedef NUMERICS_TYPENAME matrix_binary_traits<E1, E2, scalar_plus<NUMERICS_TYPENAME E1::value_type, 
-                                                                           NUMERICS_TYPENAME E2::value_type> >::expression_type expression_type;
+                                                                           NUMERICS_TYPENAME E2::value_type> >::expression_type 
+expression_type;
         return expression_type (e1 (), e2 ());
     }
 
@@ -2416,7 +2425,8 @@ namespace numerics {
     operator - (const matrix_expression<E1> &e1, 
                 const matrix_expression<E2> &e2) {
         typedef NUMERICS_TYPENAME matrix_binary_traits<E1, E2, scalar_minus<NUMERICS_TYPENAME E1::value_type, 
-                                                                            NUMERICS_TYPENAME E2::value_type> >::expression_type expression_type;
+                                                                            NUMERICS_TYPENAME E2::value_type> >::expression_type 
+expression_type;
         return expression_type (e1 (), e2 ());
     }
 
@@ -2454,6 +2464,7 @@ namespace numerics {
         matrix_binary_scalar1 (const expression1_type &e1, const expression2_type &e2): 
             e1_ (e1), e2_ (e2) {}
 
+        // Accessors
         NUMERICS_INLINE
         size_type size1 () const { 
             return e2_.size1 ();
@@ -2829,10 +2840,10 @@ namespace numerics {
 
     template<class T1, class E2, class F>
     struct matrix_binary_scalar1_traits {
-        typedef matrix_binary_scalar1<scalar_const_reference<T1>, 
+        typedef matrix_binary_scalar1<scalar_const_reference<T1>,
                                       typename E2::const_closure_type, F> expression_type;
 #ifdef NUMERICS_USE_ET
-        typedef expression_type result_type; 
+        typedef expression_type result_type;
 #else
         typedef matrix<typename F::result_type> result_type;
 #endif
@@ -2842,7 +2853,7 @@ namespace numerics {
     template<class T1, class E2>
     NUMERICS_INLINE
     typename matrix_binary_scalar1_traits<T1, E2, scalar_multiplies<T1, typename E2::value_type> >::result_type
-    operator * (const T1 &e1, 
+    operator * (const T1 &e1,
                 const matrix_expression<E2> &e2) {
         typedef NUMERICS_TYPENAME matrix_binary_scalar1_traits<T1, E2, scalar_multiplies<T1, NUMERICS_TYPENAME E2::value_type> >::expression_type expression_type;
         return expression_type (e1, e2 ());
@@ -2882,6 +2893,7 @@ namespace numerics {
         matrix_binary_scalar2 (const expression1_type &e1, const expression2_type &e2): 
             e1_ (e1), e2_ (e2) {}
 
+        // Accessors
         NUMERICS_INLINE
         size_type size1 () const { 
             return e1_.size1 ();
@@ -3270,7 +3282,7 @@ namespace numerics {
     template<class E1, class T2>
     NUMERICS_INLINE
     typename matrix_binary_scalar2_traits<E1, T2, scalar_multiplies<typename E1::value_type, T2> >::result_type
-    operator * (const matrix_expression<E1> &e1, 
+    operator * (const matrix_expression<E1> &e1,
                 const T2 &e2) {
         typedef NUMERICS_TYPENAME matrix_binary_scalar2_traits<E1, T2, scalar_multiplies<NUMERICS_TYPENAME E1::value_type, T2> >::expression_type expression_type;
         return expression_type (e1 (), e2);
@@ -3280,7 +3292,7 @@ namespace numerics {
     template<class E1, class T2>
     NUMERICS_INLINE
     typename matrix_binary_scalar2_traits<E1, T2, scalar_divides<typename E1::value_type, T2> >::result_type
-    operator / (const matrix_expression<E1> &e1, 
+    operator / (const matrix_expression<E1> &e1,
                 const T2 &e2) {
         typedef NUMERICS_TYPENAME matrix_binary_scalar2_traits<E1, T2, scalar_divides<NUMERICS_TYPENAME E1::value_type, T2> >::expression_type expression_type;
         return expression_type (e1 (), e2);
@@ -3316,6 +3328,11 @@ namespace numerics {
         matrix_vector_binary1 (const expression1_type &e1, const expression2_type &e2): 
             e1_ (e1), e2_ (e2) {}
 
+        // Accessors
+        NUMERICS_INLINE
+        size_type size () const { 
+            return e1_.size1 (); 
+        }
         NUMERICS_INLINE
         const expression1_type &expression1 () const {
             return e1_;
@@ -3323,11 +3340,6 @@ namespace numerics {
         NUMERICS_INLINE
         const expression2_type &expression2 () const {
             return e2_;
-        }
-
-        NUMERICS_INLINE
-        size_type size () const { 
-            return e1_.size1 (); 
         }
 
         // Element access
@@ -3392,15 +3404,19 @@ namespace numerics {
 #endif
 
             // Construction and destruction
-            NUMERICS_INLINE
 #ifdef NUMERICS_USE_INVARIANT_HOISTING
+            NUMERICS_INLINE
             const_iterator ():
                 container_const_reference<matrix_vector_binary1> (), it1_ (), e2_begin_ (), e2_end_ () {}
+            NUMERICS_INLINE
             const_iterator (const matrix_vector_binary1 &mvb, const const_iterator1_type &it1):
-                container_const_reference<matrix_vector_binary1> (mvb), it1_ (it1), e2_begin_ (mvb.expression2 ().begin ()), e2_end_ (mvb.expression2 ().end ()) {}
+                container_const_reference<matrix_vector_binary1> (mvb), it1_ (it1), e2_begin_ (mvb.expression2 ().begin ()), e2_end_ 
+(mvb.expression2 ().end ()) {}
 #else
+            NUMERICS_INLINE
             const_iterator ():
                 container_const_reference<matrix_vector_binary1> (), it1_ () {}
+            NUMERICS_INLINE
             const_iterator (const matrix_vector_binary1 &mvb, const const_iterator1_type &it1):
                 container_const_reference<matrix_vector_binary1> (mvb), it1_ (it1) {}
 #endif
@@ -3456,14 +3472,16 @@ namespace numerics {
                 return functor_type () ((*it1_).begin (), (*it1_).end (), e2_begin_, e2_end_, sparse_bidirectional_iterator_tag ());
 #else
                 const matrix_vector_binary1 &mvb = (*this) ();
-                return functor_type () ((*it1_).begin (), (*it1_).end (), mvb.expression2 ().begin (), mvb.expression2 ().end (), sparse_bidirectional_iterator_tag ());
+                return functor_type () ((*it1_).begin (), (*it1_).end (), mvb.expression2 ().begin (), mvb.expression2 ().end (), 
+sparse_bidirectional_iterator_tag ());
 #endif
 #else
 #ifdef NUMERICS_USE_INVARIANT_HOISTING
                 return functor_type () (it1_.begin (), it1_.end (), e2_begin_, e2_end_, sparse_bidirectional_iterator_tag ());
 #else
                 const matrix_vector_binary1 &mvb = (*this) ();
-                return functor_type () (it1_.begin (), it1_.end (), mvb.expression2 ().begin (), mvb.expression2 ().end (), sparse_bidirectional_iterator_tag ());
+                return functor_type () (it1_.begin (), it1_.end (), mvb.expression2 ().begin (), mvb.expression2 ().end (), 
+sparse_bidirectional_iterator_tag ());
 #endif
 #endif
             }
@@ -3541,7 +3559,7 @@ namespace numerics {
 
         NUMERICS_INLINE
         const_iterator begin () const {
-            return find_first (0); 
+            return find_first (0);
         }
         NUMERICS_INLINE
         const_iterator end () const {
@@ -3581,7 +3599,7 @@ namespace numerics {
         typedef row_major_tag dispatch_category;
         typedef typename promote_traits<T1, T2>::promote_type promote_type;
         typedef matrix_vector_binary1<typename E1::const_closure_type, 
-                                      typename E2::const_closure_type, 
+                                      typename E2::const_closure_type,
                                       matrix_vector_prod1<T1, T2, promote_type> > expression_type;
 #ifdef NUMERICS_USE_ET
         typedef expression_type result_type; 
@@ -3621,7 +3639,7 @@ namespace numerics {
     prec_prod (const matrix_expression<E1> &e1, 
                const vector_expression<E2> &e2,
                row_major_tag) {
-        typedef NUMERICS_TYPENAME matrix_vector_binary1_traits<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E1::value_type>::precision_type, E1, 
+        typedef NUMERICS_TYPENAME matrix_vector_binary1_traits<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E1::value_type>::precision_type, E1,
                                                                NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E2::value_type>::precision_type, E2>::expression_type expression_type;
         return expression_type (e1 (), e2 ());
     }
@@ -3629,11 +3647,11 @@ namespace numerics {
     // Dispatcher
     template<class E1, class E2>
     NUMERICS_INLINE
-    typename matrix_vector_binary1_traits<typename type_traits<typename E1::value_type>::precision_type, E1, 
+    typename matrix_vector_binary1_traits<typename type_traits<typename E1::value_type>::precision_type, E1,
                                           typename type_traits<typename E2::value_type>::precision_type, E2>::result_type
-    prec_prod (const matrix_expression<E1> &e1, 
+    prec_prod (const matrix_expression<E1> &e1,
                const vector_expression<E2> &e2) {
-        typedef NUMERICS_TYPENAME matrix_vector_binary1_traits<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E1::value_type>::precision_type, E1, 
+        typedef NUMERICS_TYPENAME matrix_vector_binary1_traits<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E1::value_type>::precision_type, E1,
                                                                NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E2::value_type>::precision_type, E2>::dispatch_category dispatch_category;
         return prec_prod (e1, e2, dispatch_category ());
     }
@@ -3668,6 +3686,11 @@ namespace numerics {
         matrix_vector_binary2 (const expression1_type &e1, const expression2_type &e2): 
             e1_ (e1), e2_ (e2) {}
 
+        // Accessors
+        NUMERICS_INLINE
+        size_type size () const { 
+            return e2_.size2 (); 
+        }
         NUMERICS_INLINE
         const expression1_type &expression1 () const {
             return e1_;
@@ -3677,10 +3700,6 @@ namespace numerics {
             return e2_;
         }
 
-        NUMERICS_INLINE
-        size_type size () const { 
-            return e2_.size2 (); 
-        }
 
         // Element access
         NUMERICS_INLINE
@@ -3744,15 +3763,19 @@ namespace numerics {
 #endif
 
             // Construction and destruction
-            NUMERICS_INLINE
 #ifdef NUMERICS_USE_INVARIANT_HOISTING
+            NUMERICS_INLINE
             const_iterator ():
                 container_const_reference<matrix_vector_binary2> (), it2_ (), e1_begin_ (), e1_end_ () {}
+            NUMERICS_INLINE
             const_iterator (const matrix_vector_binary2 &mvb, const const_iterator2_type &it2):
-                container_const_reference<matrix_vector_binary2> (mvb), it2_ (it2), e1_begin_ (mvb.expression1 ().begin ()), e1_end_ (mvb.expression1 ().end ()) {}
+                container_const_reference<matrix_vector_binary2> (mvb), it2_ (it2), e1_begin_ (mvb.expression1 ().begin ()), e1_end_ 
+(mvb.expression1 ().end ()) {}
 #else
+            NUMERICS_INLINE
             const_iterator ():
                 container_const_reference<matrix_vector_binary2> (), it2_ () {}
+            NUMERICS_INLINE
             const_iterator (const matrix_vector_binary2 &mvb, const const_iterator2_type &it2):
                 container_const_reference<matrix_vector_binary2> (mvb), it2_ (it2) {}
 #endif
@@ -3808,14 +3831,16 @@ namespace numerics {
                 return functor_type () (e1_begin_, e1_end_, (*it2_).begin (), (*it2_).end (), sparse_bidirectional_iterator_tag ());
 #else
                 const matrix_vector_binary2 &mvb = (*this) ();
-                return functor_type () (mvb.expression1 ().begin (), mvb.expression1 ().end (), (*it2_).begin (), (*it2_).end (), sparse_bidirectional_iterator_tag ());
+                return functor_type () (mvb.expression1 ().begin (), mvb.expression1 ().end (), (*it2_).begin (), (*it2_).end (), 
+sparse_bidirectional_iterator_tag ());
 #endif
 #else
 #ifdef NUMERICS_USE_INVARIANT_HOISTING
                 return functor_type () (e1_begin_, e1_end_, it2_.begin (), it2_.end (), sparse_bidirectional_iterator_tag ());
 #else
                 const matrix_vector_binary2 &mvb = (*this) ();
-                return functor_type () (mvb.expression1 ().begin (), mvb.expression1 ().end (), it2_.begin (), it2_.end (), sparse_bidirectional_iterator_tag ());
+                return functor_type () (mvb.expression1 ().begin (), mvb.expression1 ().end (), it2_.begin (), it2_.end (), 
+sparse_bidirectional_iterator_tag ());
 #endif
 #endif
             }
@@ -3973,7 +3998,7 @@ namespace numerics {
     prec_prod (const vector_expression<E1> &e1, 
                const matrix_expression<E2> &e2,
                column_major_tag) {
-        typedef NUMERICS_TYPENAME matrix_vector_binary2_traits<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E1::value_type>::precision_type, E1, 
+        typedef NUMERICS_TYPENAME matrix_vector_binary2_traits<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E1::value_type>::precision_type, E1,
                                                                NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E2::value_type>::precision_type, E2>::expression_type expression_type;
         return expression_type (e1 (), e2 ());
     }
@@ -3981,11 +4006,11 @@ namespace numerics {
     // Dispatcher
     template<class E1, class E2>
     NUMERICS_INLINE
-    typename matrix_vector_binary2_traits<typename type_traits<typename E1::value_type>::precision_type, E1, 
+    typename matrix_vector_binary2_traits<typename type_traits<typename E1::value_type>::precision_type, E1,
                                           typename type_traits<typename E2::value_type>::precision_type, E2>::result_type
-    prec_prod (const vector_expression<E1> &e1, 
+    prec_prod (const vector_expression<E1> &e1,
                const matrix_expression<E2> &e2) {
-        typedef NUMERICS_TYPENAME matrix_vector_binary2_traits<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E1::value_type>::precision_type, E1, 
+        typedef NUMERICS_TYPENAME matrix_vector_binary2_traits<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E1::value_type>::precision_type, E1,
                                                                NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E2::value_type>::precision_type, E2>::dispatch_category dispatch_category;
         return prod (e1, e2, dispatch_category ());
     }
@@ -4019,12 +4044,21 @@ namespace numerics {
 
         // Construction and destruction
         NUMERICS_INLINE
-        matrix_matrix_binary (): 
+        matrix_matrix_binary ():
             e1_ (), e2_ () {}
         NUMERICS_INLINE
         matrix_matrix_binary (const expression1_type &e1, const expression2_type &e2): 
             e1_ (e1), e2_ (e2) {}
 
+        // Accessors
+        NUMERICS_INLINE
+        size_type size1 () const { 
+            return e1_.size1 ();
+        }
+        NUMERICS_INLINE
+        size_type size2 () const { 
+            return e2_.size2 ();
+        }
         NUMERICS_INLINE
         const expression1_type &expression1 () const {
             return e1_;
@@ -4034,25 +4068,17 @@ namespace numerics {
             return e2_;
         }
 
-        NUMERICS_INLINE
-        size_type size1 () const { 
-            return e1_.size1 ();
-        }
-        NUMERICS_INLINE
-        size_type size2 () const { 
-            return e2_.size2 ();
-        }
 
         // Element access
         NUMERICS_INLINE
         value_type operator () (size_type i, size_type j) const { 
-            return functor_type () (e1_, e2_, i, j); 
+            return functor_type () (e1_, e2_, i, j);
         }
 
 #ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
         const_matrix_row_type operator [] (size_type i) const {
-            return const_matrix_row_type (*this, i); 
+            return const_matrix_row_type (*this, i);
         }
 #endif
 
@@ -4186,15 +4212,19 @@ namespace numerics {
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
 
             // Construction and destruction
-            NUMERICS_INLINE
 #ifdef NUMERICS_USE_INVARIANT_HOISTING
+            NUMERICS_INLINE
             const_iterator1 ():
                 container_const_reference<matrix_matrix_binary> (), it1_ (), it2_ (), it2_begin_ (), it2_end_ () {}
+            NUMERICS_INLINE
             const_iterator1 (const matrix_matrix_binary &mmb, const const_iterator11_type &it1, const const_iterator22_type &it2):
-                container_const_reference<matrix_matrix_binary> (mmb), it1_ (it1), it2_ (it2), it2_begin_ (it2.begin ()), it2_end_ (it2.end ()) {}
+                container_const_reference<matrix_matrix_binary> (mmb), it1_ (it1), it2_ (it2), it2_begin_ (it2.begin ()), it2_end_ (it2.end 
+()) {}
 #else
+            NUMERICS_INLINE
             const_iterator1 ():
                 container_const_reference<matrix_matrix_binary> (mmb), it1_ (), it2_ () {}
+            NUMERICS_INLINE
             const_iterator1 (const matrix_matrix_binary &mmb, const const_iterator11_type &it1, const const_iterator22_type &it2):
                 container_const_reference<matrix_matrix_binary> (mmb), it1_ (it1), it2_ (it2) {}
 #endif
@@ -4350,15 +4380,19 @@ namespace numerics {
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
 
             // Construction and destruction
-            NUMERICS_INLINE
 #ifdef NUMERICS_USE_INVARIANT_HOISTING
+            NUMERICS_INLINE
             const_iterator2 ():
                 container_const_reference<matrix_matrix_binary> (), it1_ (), it2_ (), it1_begin_ (), it1_end_ () {}
+            NUMERICS_INLINE
             const_iterator2 (const matrix_matrix_binary &mmb, const const_iterator11_type &it1, const const_iterator22_type &it2):
-                container_const_reference<matrix_matrix_binary> (mmb), it1_ (it1), it2_ (it2), it1_begin_ (it1.begin ()), it1_end_ (it1.end ()) {}
+                container_const_reference<matrix_matrix_binary> (mmb), it1_ (it1), it2_ (it2), it1_begin_ (it1.begin ()), it1_end_ (it1.end 
+()) {}
 #else
+            NUMERICS_INLINE
             const_iterator2 ():
                 container_const_reference<matrix_matrix_binary> (), it1_ (), it2_ () {}
+            NUMERICS_INLINE
             const_iterator2 (const matrix_matrix_binary &mmb, const const_iterator11_type &it1, const const_iterator22_type &it2):
                 container_const_reference<matrix_matrix_binary> (mmb), it1_ (it1), it2_ (it2) {}
 #endif
@@ -4372,7 +4406,7 @@ namespace numerics {
 #ifdef NUMERICS_USE_INVARIANT_HOISTING
                     return functor_type () (size, it1_begin_, it2_.begin ()); 
 #else
-                    return functor_type () (size, it1_.begin (), it2_.begin ()); 
+                    return functor_type () (size, it1_.begin (), it2_.begin ());
 #endif
                 else 
                     return mmb (index1 (), index2 ()); 
@@ -4536,7 +4570,7 @@ namespace numerics {
                                      typename E2::const_closure_type, 
                                      matrix_matrix_prod<T1, T2, promote_type> > expression_type;
 #ifdef NUMERICS_USE_ET
-        typedef expression_type result_type; 
+        typedef expression_type result_type;
 #else
         typedef matrix<promote_type> result_type;
 #endif
@@ -4544,7 +4578,7 @@ namespace numerics {
 
     template<class E1, class E2>
     NUMERICS_INLINE
-    typename matrix_matrix_binary_traits<typename E1::value_type, E1, 
+    typename matrix_matrix_binary_traits<typename E1::value_type, E1,
                                          typename E2::value_type, E2>::result_type
     prod (const matrix_expression<E1> &e1, 
           const matrix_expression<E2> &e2,
@@ -4557,23 +4591,23 @@ namespace numerics {
     // Dispatcher
     template<class E1, class E2>
     NUMERICS_INLINE
-    typename matrix_matrix_binary_traits<typename E1::value_type, E1, 
+    typename matrix_matrix_binary_traits<typename E1::value_type, E1,
                                          typename E2::value_type, E2>::result_type
-    prod (const matrix_expression<E1> &e1, 
+    prod (const matrix_expression<E1> &e1,
           const matrix_expression<E2> &e2) {
-        typedef NUMERICS_TYPENAME matrix_matrix_binary_traits<NUMERICS_TYPENAME E1::value_type, E1, 
+        typedef NUMERICS_TYPENAME matrix_matrix_binary_traits<NUMERICS_TYPENAME E1::value_type, E1,
                                                               NUMERICS_TYPENAME E2::value_type, E2>::dispatch_category dispatch_category;
         return prod (e1, e2, dispatch_category ());
     }
 
     template<class E1, class E2>
     NUMERICS_INLINE
-    typename matrix_matrix_binary_traits<typename type_traits<typename E1::value_type>::precision_type, E1, 
+    typename matrix_matrix_binary_traits<typename type_traits<typename E1::value_type>::precision_type, E1,
                                          typename type_traits<typename E2::value_type>::precision_type, E2>::result_type
-    prec_prod (const matrix_expression<E1> &e1, 
+    prec_prod (const matrix_expression<E1> &e1,
                const matrix_expression<E2> &e2,
                unknown_orientation_tag) {
-        typedef NUMERICS_TYPENAME matrix_matrix_binary_traits<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E1::value_type>::precision_type, E1, 
+        typedef NUMERICS_TYPENAME matrix_matrix_binary_traits<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E1::value_type>::precision_type, E1,
                                                               NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E2::value_type>::precision_type, E2>::expression_type expression_type;
         return expression_type (e1 (), e2 ());
     }
@@ -4581,11 +4615,11 @@ namespace numerics {
     // Dispatcher
     template<class E1, class E2>
     NUMERICS_INLINE
-    typename matrix_matrix_binary_traits<typename type_traits<typename E1::value_type>::precision_type, E1, 
+    typename matrix_matrix_binary_traits<typename type_traits<typename E1::value_type>::precision_type, E1,
                                          typename type_traits<typename E2::value_type>::precision_type, E2>::result_type
-    prec_prod (const matrix_expression<E1> &e1, 
+    prec_prod (const matrix_expression<E1> &e1,
                const matrix_expression<E2> &e2) {
-        typedef NUMERICS_TYPENAME matrix_matrix_binary_traits<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E1::value_type>::precision_type, E1, 
+        typedef NUMERICS_TYPENAME matrix_matrix_binary_traits<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E1::value_type>::precision_type, E1,
                                                               NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E2::value_type>::precision_type, E2>::dispatch_category dispatch_category;
         return prec_prod (e1, e2, dispatch_category ());
     }
@@ -4603,7 +4637,7 @@ namespace numerics {
         matrix_scalar_unary (): 
             e_ () {}
         NUMERICS_INLINE
-        matrix_scalar_unary (const expression_type &e): 
+        matrix_scalar_unary (const expression_type &e):
             e_ (e) {}
 
         NUMERICS_INLINE
@@ -4656,7 +4690,11 @@ namespace numerics {
 
 }
 
-#endif 
+#endif
+
+
+
+
 
 
 

@@ -345,13 +345,14 @@ A&gt; &gt;</code> </p>
         template&lt;class AE&gt;
         triangular_matrix (const matrix_expression&lt;AE&gt; &amp;ae);
 
-        // Resizing
-        void resize (size_type size1, size_type size2);
-
+        // Accessors
         size_type size1 () const;
         size_type size2 () const;
         const_array_type &amp;data () const;
         array_type &amp;data ();
+
+        // Resizing
+        void resize (size_type size1, size_type size2);
 
         // Element access
         value_type operator () (size_type i, size_type j) const;
@@ -362,6 +363,8 @@ A&gt; &gt;</code> </p>
         triangular_matrix &amp;assign_temporary (triangular_matrix &amp;m);
         template&lt;class AE&gt;
         triangular_matrix &amp;operator = (const matrix_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        triangular_matrix &amp;reset (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AE&gt;
         triangular_matrix &amp;assign (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AE&gt;
@@ -904,10 +907,14 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         triangular_adaptor (matrix_type &amp;data);
         triangular_adaptor (const triangular_adaptor &amp;m);
 
+        // Accessors
         size_type size1 () const;
         size_type size2 () const;
         const_matrix_type &amp;data () const;
         matrix_type &amp;data ();
+
+        // Resetting
+        void reset (matrix_type &amp;data);
 
         // Element access
         value_type operator () (size_type i, size_type j) const;

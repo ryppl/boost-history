@@ -344,13 +344,14 @@ A&gt; &gt;</code> </p>
         template&lt;class AE&gt;
         hermitean_matrix (const matrix_expression&lt;AE&gt; &amp;ae);
 
-        // Resizing
-        void resize (size_type size1, size_type size2 = size1);
-
+        // Accessors
         size_type size1 () const;
         size_type size2 () const;
         const_array_type &amp;data () const;
         array_type &amp;data ();
+
+        // Resizing
+        void resize (size_type size1, size_type size2 = size1);
 
         // Element access
         value_type operator () (size_type i, size_type j) const;
@@ -361,6 +362,8 @@ A&gt; &gt;</code> </p>
         hermitean_matrix &amp;assign_temporary (hermitean_matrix &amp;m);
         template&lt;class AE&gt;
         hermitean_matrix &amp;operator = (const matrix_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        hermitean_matrix &amp;reset (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AE&gt;
         hermitean_matrix &amp;assign (const matrix_expression&lt;AE&gt; &amp;ae);
         template&lt;class AE&gt;
@@ -902,10 +905,14 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         hermitean_adaptor (matrix_type &amp;data);
         hermitean_adaptor (const hermitean_adaptor &amp;m);
 
+        // Accessors
         size_type size1 () const;
         size_type size2 () const;
         const_matrix_type &amp;data () const;
         matrix_type &amp;data ();
+
+        // Resetting
+        void reset (matrix_type &amp;data);
 
         // Element access
         value_type operator () (size_type i, size_type j) const;
