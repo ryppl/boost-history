@@ -20,65 +20,39 @@
       template<>
       struct pair_traits_base< char >
       {
-         static const char             open_default;
-         static const char             close_default;
-         static const char             separator_default;
+         static char open_default() { return '('; }
+         static char close_default() { return ')'; }
+         static char separator_default() { return ','; }
       };
-
-      const char pair_traits_base< char >::open_default      = '(';
-      const char pair_traits_base< char >::close_default     = ')';
-      const char pair_traits_base< char >::separator_default = ',';
 
       // formatting for wide characters:
 
       template<>
       struct pair_traits_base< wchar_t >
       {
-         static const wchar_t          open_default;
-         static const wchar_t          close_default;
-         static const wchar_t          separator_default;
+         static wchar_t open_default() { return L'('; }
+         static wchar_t close_default() { return L')'; }
+         static wchar_t separator_default() { return L','; }
       };
-
-      const wchar_t pair_traits_base< wchar_t >::open_default      = L'(';
-      const wchar_t pair_traits_base< wchar_t >::close_default     = L')';
-      const wchar_t pair_traits_base< wchar_t >::separator_default = L',';
 
       // formatting for strings:
 
       template<>
-      struct pair_traits_base< char * >
+      struct pair_traits_base< const char * >
       {
-         static char *                 open_default;
-         static char *                 close_default;
-         static char *                 separator_default;
-      };
-
-      char * pair_traits_base< char * >::open_default      = "( ";
-      char * pair_traits_base< char * >::close_default     = " )";
-      char * pair_traits_base< char * >::separator_default = ", ";
-
-      template<>
-      struct pair_traits_base< const char * >: public pair_traits_base< char * >
-      {
+         static const char* open_default() { return "( "; }
+         static const char* close_default() { return " )"; }
+         static const char* separator_default() { return ", "; }
       };
 
       // formatting for wide strings:
 
       template<>
-      struct pair_traits_base< wchar_t * >
+      struct pair_traits_base< const wchar_t * >
       {
-         static wchar_t *              open_default;
-         static wchar_t *              close_default;
-         static wchar_t *              separator_default;
-      };
-
-      wchar_t * pair_traits_base< wchar_t * >::open_default      = L"( ";
-      wchar_t * pair_traits_base< wchar_t * >::close_default     = L" )";
-      wchar_t * pair_traits_base< wchar_t * >::separator_default = L", ";
-
-      template<>
-      struct pair_traits_base< const wchar_t * >: public pair_traits_base< wchar_t * >
-      {
+         static const wchar_t* open_default() { return L"( "; }
+         static const wchar_t* close_default() { return L" )"; }
+         static const wchar_t* separator_default() { return L", "; }
       };
 
       // JDT: string_string_traits
@@ -89,22 +63,22 @@
          typedef typename String::char_type                          char_type;
          typedef typename String::traits_type                        traits_type;
 
-         static String                 open_default;
-         static String                 close_default;
-         static String                 separator_default;
+         static String                 open_default();
+         static String                 close_default();
+         static String                 separator_default();
       };
 
       template< typename String >
-      String string_pair_traits< String >::open_default =
-         String( pair_traits_base< typename String::char_type * >::open_default );
+      String string_pair_traits< String >::open_default()
+      { return pair_traits_base< typename String::char_type * >::open_default(); }
 
       template< typename String >
-      String string_pair_traits< String >::close_default =
-         String( pair_traits_base< typename String::char_type * >::close_default );
+      String string_pair_traits< String >::close_default()
+      { return pair_traits_base< typename String::char_type * >::close_default(); }
 
       template<typename String>
-      String string_pair_traits< String >::separator_default =
-         String( pair_traits_base< typename String::char_type * >::separator_default );
+      String string_pair_traits< String >::separator_default()
+      { return pair_traits_base< typename String::char_type * >::separator_default(); }
 
       // JDT: pair_traits
 
