@@ -403,7 +403,7 @@ struct index_node:Super,index_node_trampoline<Super>
 
   static index_node* end(index_node* header)
   {
-    return from_impl(impl_type::begin(header->impl()));
+    return from_impl(impl_type::end(header->impl()));
   }
 
 private:
