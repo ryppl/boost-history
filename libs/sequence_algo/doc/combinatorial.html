@@ -61,11 +61,11 @@ format and semantics commonly found among functions in the STL. They are
     and user-supplied binary comparison predicate versions of each.
 </UL>
 <P>
-They're defined in the header file <STRONG>rcombo.hpp</STRONG> in the directory
-boost/sequence_algo. They are members of the boost namespace. The file itself
-uses a function from the boost library, so make sure that the Boost directory
-is in your header include path. See the example programs listed in the section
-below.
+They're defined in the header file <STRONG>conbinatorial.hpp</STRONG> in
+the directory boost/sequence_algo. They are members of the boost namespace.
+The file itself uses a function from the boost library, so make sure that
+the Boost directory is in your header include path. See the example programs
+listed in the section below.
 <P>
 Items in input sequences must either work with the built-in less than (&lt;)
 operator, have a less than operator defined, or have a user-defined binary
@@ -177,32 +177,33 @@ bool
 is_sorted(ForwardIterator first, ForwardIterator last, Compare comp)
 </PRE>
 <P>
-<STRONG>smallest_greater</STRONG> - returns an iterator pointing to the smallest
-value in [first, last) greater than x. last is returned if value is not found.
-Time complexity is linear, O((last-first)/2) assignments in average case.
+<STRONG>min_element_greater_than</STRONG> - returns an iterator pointing
+to the smallest value in [first, last) greater than x. last is returned if
+value is not found. Time complexity is linear, O((last-first)/2) assignments
+in average case.
 <PRE>
 template&lt;class ForwardIterator, class T&gt;
 ForwardIterator
-smallest_greater(ForwardIterator first, ForwardIterator last,
+min_element_greater_than(ForwardIterator first, ForwardIterator last,
     const T&amp; x)
 
 template&lt;class ForwardIterator, class T, class Compare&gt;
 ForwardIterator
-smallest_greater(ForwardIterator first, ForwardIterator last,
+min_element_greater_than(ForwardIterator first, ForwardIterator last,
     const T&amp; x, Compare comp)
 </PRE>
 <P>
-<STRONG>largest_less</STRONG> - returns an iterator pointing to the largest
-object in [first, last) less than x. last is returned if the value doesn't
-exist.
+<STRONG>max_element_less_than</STRONG> - returns an iterator pointing to
+the largest object in [first, last) less than x. last is returned if the
+object doesn't exist.
 <PRE>
 template&lt;class ForwardIterator, class T&gt;
 ForwardIterator
-largest_less(ForwardIterator first, ForwardIterator last, const T&amp; x)
+max_element_less_than(ForwardIterator first, ForwardIterator last, const T&amp; x)
 
 template&lt;class ForwardIterator, class T, class Compare&gt;
 ForwardIterator
-largest_less(ForwardIterator first, ForwardIterator last,
+max_element_less_than(ForwardIterator first, ForwardIterator last,
     const T&amp; x, Compare comp)
 </PRE>
 <H3>
@@ -215,35 +216,35 @@ average. (To be verified.)
   <A name="Examples">Examples and Test Programs</A>
 </H3>
 <P>
-The following programs include boost/sequence_algo/rcombo.hpp, headers from
-the C++ standard library, and Boost. Make sure these files are in your compiler
-include paths.
+The following programs include boost/sequence_algo/conbinatorial.hpp, headers
+from the C++ standard library, and Boost. Make sure these files are in your
+compiler include paths.
 <P>
 <DL>
   <DT>
-    <STRONG>rcombo.cpp</STRONG>
+    <STRONG>combinatorial_ex1.cpp</STRONG>
   <DD>
     This is interactive console I/O program presents a menu that lets you run
     each function individually. It is in the libs/sequence_algo/example subdirectory.
   <DT>
-    <STRONG>rcomboex.cpp</STRONG>
+    <STRONG>combinatorial_ex2.cpp</STRONG>
   <DD>
     This console I/O program solves a puzzle from a recent "Ask Marilyn" column
     in <CITE>Parade</CITE> magazine using next_r_permutation. It reads in the
     dictionary file lexicon.txt. You'll the files in the libs/sequence_algo/example
     subdirectory.
   <DT>
-    <STRONG>test_rcombo.cpp</STRONG>
+    <STRONG>test_combinatorial.cpp</STRONG>
   <DD>
     This program uses the Boost Unit Test framework for error reporting and is
     compatible with the Boost regression test program. It is a modification and
-    elaboration of rcombo.cpp. The interactive functionality has been removed
-    so that the program may be run in the "batch" mode required by
+    elaboration of combinatorial_ex1.cpp. The interactive functionality has been
+    removed so that the program may be run in the "batch" mode required by
     regression.cpp.Individual tests have been added for each of the subordinate
-    functions in rcombo.h. Data and test cases were chosen to implement basis
-    path, boundary, and condition testing. Test_rcombo.cpp sits in the
-    libs/sequence_algo/test subdirectory. To build this program, it is necessary
-    to link to cpp_main.cpp and test_main.cpp in boost/test.
+    functions in conbinatorial.h. Data and test cases were chosen to implement
+    basis path, boundary, and condition testing. Test_combinatorial.cpp sits
+    in the libs/sequence_algo/test subdirectory. To build this program, it is
+    necessary to link to cpp_main.cpp and test_main.cpp in boost/test.
   <DT>
 </DL>
 <H3>
