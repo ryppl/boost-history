@@ -17,9 +17,9 @@
 #ifndef BOOST_MOVE_MOVE_HPP
 #define BOOST_MOVE_MOVE_HPP
 
-#include <algorithm> // for std::swap
 #include <iterator> // for iterator_traits
 
+#include "boost/config.hpp"
 #include "boost/mpl/if.hpp"
 #include "boost/type_traits/is_base_and_derived.hpp"
 
