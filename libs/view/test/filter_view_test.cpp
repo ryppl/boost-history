@@ -93,7 +93,7 @@ void test2()
 
 #ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
   boost::view::filter_view< boost::view::ownership::external< std::vector<int> >,
-  													 is_negative_number > v( b );
+                             is_negative_number > v( b );
   std::fill( v.begin(), v.end(), 0 );
 
   BOOST_TEST( is_equal( a, b ) );
