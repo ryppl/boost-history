@@ -128,27 +128,11 @@
 #endif
 
 
-#if defined (_STLP_OWN_IOSTREAMS) && !defined(__SGI_STL_OWN_IOSTREAMS) && \
-    defined(__STL_USE_NAMESPACES) &&  defined(BOOST_NO_USING_TEMPLATE) && !defined(__BORLANDC__)
-  //  This is a local workaround for what I think is a bug
-  //  in boost/config/stdlib/stlport.hpp: with MSVC+STLport
-  //  the macro BOOST_NO_STD_LOCALE gets erroneusly defined
-  //  (due to a spurious check of __SGI_STL_OWN_IOSTREAMS);
-  //  this causes the subsequent code in suffix.hpp to fail
-  //  to provide a definition for BOOST_USE_FACET.
-  //
-# define LOCAL_FACET_CONFIG_BUG
-#include <locale>
-# define LOCAL_BOOST_USE_FACET(Type, loc) std::use_facet< Type >(loc)
-#else
-# define LOCAL_BOOST_USE_FACET(Type, loc) BOOST_USE_FACET(Type, loc)
-#endif
-
 // Helps getting a '0' or '1' character.
 //
 #if defined (BOOST_USE_FACET)
 # define BOOST_BITSET_CHAR(type, c) \
-           LOCAL_BOOST_USE_FACET(std::ctype<type>, std::locale()).widen(c)
+           BOOST_USE_FACET(std::ctype<type>, std::locale()).widen(c)
 #else
 # define BOOST_BITSET_CHAR(type, c)  c
 #endif
@@ -1004,15 +988,8 @@ void to_string_helper (const dynamic_bitset<B, A> & b, stringT & s, std::size_t 
     typedef typename stringT::traits_type Tr;
     typedef typename stringT::value_type  Ch;
 
-    // G.P.S. qui non possiamo usare il locale per i vecchi g++ - temp
-#if defined (BOOST_USE_FACET) || defined (LOCAL_FACET_CONFIG_BUG)
-    std::locale loc; // global locale (copy of)
-    Ch const zero = LOCAL_BOOST_USE_FACET(std::ctype<Ch>, loc).widen('0');
-    Ch const one  = LOCAL_BOOST_USE_FACET(std::ctype<Ch>, loc).widen('1');
-#else
-    Ch const zero = '0';
-    Ch const one  = '1'; //
-#endif
+    const Ch zero = BOOST_BITSET_CHAR(Ch, '0');
+    const Ch one  = BOOST_BITSET_CHAR(Ch, '1');
 
     // Note that this function is implemented through operator[] and
     // uses only the public interface. Anyhow, this is a deceit because
@@ -1713,8 +1690,6 @@ inline void dynamic_bitset<Block, Allocator>::m_zero_unused_bits()
 
 
 #undef BOOST_WORKAROUND_REPEAT_DEFAULT_TEMPLATE_ARGUMENTS
-#undef LOCAL_BOOST_USE_FACET  // [gps]
-#undef LOCAL_FACET_CONFIG_BUG  // [gps]
 
 #endif // BOOST_DYNAMIC_BITSET_HPP
 
