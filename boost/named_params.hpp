@@ -713,5 +713,28 @@ struct keywords
 
 #undef BOOST_NAMED_PARAMS_GCC2
 
+#define BOOST_NAMED_PARAMS_FUN_TEMPLATE_HEAD1(n) \
+    template<BOOST_PP_ENUM_PARAMS(n, class T)>
+#define BOOST_NAMED_PARAMS_FUN_TEMPLATE_HEAD0(n)
+
+#define BOOST_NAMED_PARAMS_FUN_DECL(z, n, params) \
+    BOOST_PP_CAT(BOOST_NAMED_PARAMS_FUN_TEMPLATE_HEAD, BOOST_PP_BOOL(n))(n) \
+    BOOST_PP_TUPLE_ELEM(3, 0, params) \
+        BOOST_PP_TUPLE_ELEM(3, 1, params)( \
+            BOOST_PP_ENUM_BINARY_PARAMS(n, const T, &p) \
+        ) \
+    { \
+        BOOST_PP_TUPLE_ELEM(3, 2, params) kw; \
+        return BOOST_PP_CAT(BOOST_PP_TUPLE_ELEM(3, 1, params), _with_named_params)( \
+            kw(BOOST_PP_ENUM_PARAMS(n, p)) \
+        ); \
+    }
+
+#define BOOST_NAMED_PARAMS_FUN(ret, name, lo, hi, keywords) \
+    template<class Params> \
+    ret BOOST_PP_CAT(name, _with_named_params)(const Params&);\
+    BOOST_PP_REPEAT_FROM_TO(lo, BOOST_PP_INC(hi), BOOST_NAMED_PARAMS_FUN_DECL, (ret, name, keywords)) \
+    ret BOOST_PP_CAT(name, _with_named_params)(const Params& p)
+
 #endif // BOOST_NAMED_PARAMS_031014_HPP
 
