@@ -42,17 +42,7 @@ struct index_node_impl
   index_node_impl*&       right(){return right_;}
   index_node_impl*const & right()const{return right_;}
 
-  static index_node_impl* minimum(index_node_impl* x)
-  {
-    while(x->left())x=x->left();
-    return x;
-  }
-
-  static index_node_impl* maximum(index_node_impl* x)
-  {
-    while(x->right())x=x->right();
-    return x;
-  }
+  /* interoperability with index_iterator */
 
   static void increment(index_node_impl*& x)
   {
@@ -89,6 +79,13 @@ struct index_node_impl
     }
   }
 
+  /* interoperability with index_proxy */
+
+  static index_node_impl* begin(index_node_impl* header){return header->left();}
+  static index_node_impl* end(index_node_impl* header){return header;}
+
+  /* algorithmic stuff */
+
   static void rotate_left(index_node_impl* x,index_node_impl*& root)
   {
     index_node_impl* y=x->right();
@@ -101,6 +98,18 @@ struct index_node_impl
     else                           x->parent()->right()=y;
     y->left()=x;
     x->parent()=y;
+  }
+
+  static index_node_impl* minimum(index_node_impl* x)
+  {
+    while(x->left())x=x->left();
+    return x;
+  }
+
+  static index_node_impl* maximum(index_node_impl* x)
+  {
+    while(x->right())x=x->right();
+    return x;
   }
 
   static void rotate_right(index_node_impl* x,index_node_impl*& root)
@@ -369,6 +378,8 @@ struct index_node:Super,index_node_trampoline<Super>
   static const index_node* from_impl(const index_node_impl* x)
     {return static_cast<const index_node*>(static_cast<const impl_type*>(x));}
 
+  /* interoperability with index_iterator */
+
   static void increment(index_node*& x)
   {
     index_node_impl* xi=x->impl();
@@ -381,6 +392,18 @@ struct index_node:Super,index_node_trampoline<Super>
     index_node_impl* xi=x->impl();
     impl_type::decrement(xi);
     x=from_impl(xi);
+  }
+
+  /* interoperability with index_proxy */
+
+  static index_node* begin(index_node* header)
+  {
+    return from_impl(impl_type::begin(header->impl()));
+  }
+
+  static index_node* end(index_node* header)
+  {
+    return from_impl(impl_type::begin(header->impl()));
   }
 
 private:

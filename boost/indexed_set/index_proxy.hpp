@@ -47,13 +47,12 @@ protected:
 public:
   index_iterator<Node> begin()const
   {
-    return index_iterator<Node>(
-      Node::from_impl(header->left()),const_cast<index_proxy*>(this));
+    return index_iterator<Node>(Node::begin(header),const_cast<index_proxy*>(this));
   }
 
   index_iterator<Node> end()const
   {
-    return index_iterator<Node>(header,const_cast<index_proxy*>(this));
+    return index_iterator<Node>(Node::end(header),const_cast<index_proxy*>(this));
   }
 
 private:
