@@ -11,29 +11,30 @@ digraph vt_deps {
   NthElement [label="Get Nth element for parameter packs"];
 
   ArbitraryMatching [label="Arbitrary matching patterns"];
-
+  PairwiseMatching [label="Pairwise matching patterns"];
   ArbitraryExpansion [label="Arbitrary expansion"];
   NestedExpansion [label="Nested expansion"];
   PairwiseExpansion [label="Pairwise expansion"]; 
+  FoldingExpansion [label="Folding expansion"];
 
   EllipsisForClasses [label="Ellipsis operator for classes"];
   OverloadingEllipsis [label="Overloading the expansion operator ..."];
 
   BasicVariadics -> FirstClassPP;
-
-  BasicVariadics -> LengthOfPP;
-
-  LengthOfPP -> NthElement;
-
   FirstClassPP -> Initializers;
 
+  BasicVariadics -> LengthOfPP;
+  LengthOfPP -> NthElement;
+
   BasicVariadics -> ArbitraryMatching;
+  ArbitraryMatching -> PairwiseMatching;
 
   BasicVariadics -> EllipsisForClasses;
   EllipsisForClasses -> OverloadingEllipsis;
 
   BasicVariadics -> ArbitraryExpansion;
-
   ArbitraryExpansion -> NestedExpansion;
   ArbitraryExpansion -> PairwiseExpansion;
+  ArbitraryExpansion -> FoldingExpansion;
+  FirstClassPP -> FoldingExpansion;
 }

@@ -532,6 +532,7 @@ feature negatively affects both compile-time performance and usability.
 implement.
 
 \subsection{Arbitrary expansion}
+\label{sec:arb-expansion}
 With basic variadic templates, the ellipsis operator may only be
 applied to a parameter pack. A more powerful form of the ellipsis
 operator allows the parameter pack to occur within an expression of
@@ -692,16 +693,6 @@ auto apply(F&& f, Args&& args...) -> decltype(f(static_cast<Args&&>(args)...))
 { return f(static_cast<Args&&>(args)...); }
 \end{verbatim}
 
-
-%Finally, pairwise expansion gives a much more literal meaning to the
-%declaration of the parameter packs in typesafe variadic functions, e.g.,
-%
-%\begin{verbatim}
-%template<... Args> void foo(const Args& args...);
-%\end{verbatim}
-%
-%Here, the 
-
 \paragraph{User impact}: This feature is extremely important in
 conjunction with the move semantics proposal~\cite{Hinnant02},
 providing perfect argument forwarding. 
@@ -710,8 +701,198 @@ providing perfect argument forwarding.
 expected to be easy, requiring only that the compiler
 be able to substitute for several parameter packs at once.
 
+\subsection{Folding expansion}
+Arbitrary and pairwise expansions permit transformations on parameter
+packs, but require that all transformations accept parameter packs of
+length $N$ and produce $N$ arguments. The folding expansion allows the
+transformed arguments to be ``folded'' (or combined) into a single
+argument. Folding expansions occur when the ellipsis operator is
+applied within square brackets [], and operates by applying the comma
+operator. For instance, given a parameter pack \texttt{args}
+containing values \texttt{a1, a2, /* up to */, aN} and some
+object \texttt{foo} with a suitable \texttt{operator[]}, the
+expression
+\begin{verbatim}
+foo[sum, args...]
+\end{verbatim}
+
+expands (syntactically) to 
+
+\begin{verbatim}
+foo[sum, a1, a2, /* up to */, aN]
+\end{verbatim}
+
+The comma separators invoke the comma operator, which may be
+overloaded to perform arbitrary sequence folding operations, such as
+reversing the sequence or, in this case, ``summing'' the elements of
+the sequence. 
+
+\paragraph{User impact}: This feature allows users to apply template
+metaprogramming in a very succinct way, using the compiler to generate
+multiple copies of the same code for each vale in a parameter pack
+without resorting to recursion in template metaprograms. This feature
+opens up a variety of code-generation possibilities for metaprograms.
+
+\paragraph{Compiler impact}: Implementation of this feature is not
+expected to require much effort beyond support for arbitrary
+expansions, because it differs only in the way that multiple arguments
+are evaluated: instead of creating an argument list for a function
+call or template instantiation, the compiler must create a chain of
+comma-operator invocations.
+
 \subsection{Arbitrary matching patterns}
-last...feature...here...
+With basic variadic templates, variadic class template partial specializations
+cannot restrict the arguments placed into their template parameter
+pack and typesafe variadic functions can only decide the
+\textit{cv}-qualifiers of their parameters or whether the parameters are
+accepted by reference or by value. Supporting arbitrary matching
+patterns involves allowing compound types within the patterns, e.g.,
+
+\begin{verbatim}
+template<... PointeeTypes>
+void accept_pointers(PointeeTypes>* args...);
+
+template<... PointeeTypes>
+void accept_auto_ptrs(std::auto_ptr<PointeeTypes> ptrs...);
+\end{verbatim}
+
+This feature may also be useful to constrain the kinds of template
+arguments a partial specialization will accept. For instance, we may
+define a compile-time vector of integers as such:
+
+\begin{verbatim}
+template<...> class int_vector;
+
+template<... Ints> class int_vector<int Ints...> {};
+\end{verbatim}
+
+\paragraph{User impact}: Users will benefit from the ability to more
+precisely specify the form of function parameters and variadic class
+template partial specialization parameters.
+
+\paragraph{Compiler impact}: Implementing this feature is expected to
+require a moderate amount of effort, because compilers will need to
+transform the patterns provided into parameter types (in a manner
+similar to arbitrary expansion from Sec.~\ref{sec:arb-expansion}).
+
+\subsection{Pairwise matching patterns}
+Pairwise matching patterns allow multiple parameter packs to occur
+within a partial specialization or function overload, so that they
+will be matched pairwise. For instance, we might take key-value pairs
+as arguments and separate the key types from the value
+types\footnote{One can imagine implementing named parameters via a
+  similar mechanism}:
+
+\begin{verbatim}
+template<... Keys, ... Values>
+void foo(const std::pair<Keys, Values>& args...);
+\end{verbatim}
+
+Pairwise matching patterns give a much more literal meaning to the
+declaration of the parameter packs in typesafe variadic functions, e.g.,
+
+\begin{verbatim}
+template<... Args> void foo(const Args& args...);
+\end{verbatim}
+
+Here, the pattern is merely expanded pairwise for the appropriate
+number of parameters.
+
+\paragraph{User impact}: Pairwise matching patterns allow users to
+decompose arguments into several parameter packs while enforcing a
+strict structure on the incoming arguments.
+
+\paragraph{Compiler impact}: This feature is not expected to require
+much effort to implement beyond arbitrary matching patterns, because
+one need only be able to perform substitutions for multiple parameter
+packs at the same time.
+
+\section{Specials}
+\label{sec:specials}
+This section describes three prepackaged sets of features that the
+committee might consider, briefly describing the interactions among
+the features and characteristics of the sets.
+
+\subsection{Common cases}
+Features:
+\begin{itemize}
+\item Basic variadic templates
+\item Length of parameter packs
+\item Get Nth element for parameter pack
+\end{itemize}
+
+The ``common cases'' special provides the most basic building blocks on
+which variadic templates can be build, plus two easy-to-implement
+primitive operations that are expected to be very common. From these
+building blocks, we can construct a tuple type that implements nearly
+every one of the other features can be emulated via template
+metaprogramming.\footnote{Initializer lists cannot become parameter
+  packs as far as we know}. This option eliminates much of the
+preprocessor metaprogramming required to build a library such a
+\texttt{function}~\cite[\S 3.4]{Austern04b} or \texttt{bind}[\S
+  3.3]{Austern04b}, but instead requires a large degree of template
+metaprogramming that will negatively impact compiler
+performance. However, basic variadic templates with a size query and
+access to the $N^{\text{th}}$ element should only be moderately
+difficult to implement.
+
+\subsection{Library improvements}
+\begin{itemize}
+\item Basic variadic templates
+\item First-class parameter packs
+\item Initializer lists are parameter packs
+\item Length of parameter packs
+\item Get Nth element for parameter pack
+\item Arbitrary expansion
+\item Nested expansion
+\item Pairwise expansion
+\item Arbitrary matching patterns
+\end{itemize}
+
+The ``library improvements'' special provides features that can
+improve the usability, clarity of implementation, and compile-time
+performance of libraries in the C++ standard and upcoming Library TR,
+along with any third-party libraries. In particular, it permits
+succinct, efficient implementations of
+\texttt{reference\_wrapper}~\cite[\S 2.1]{Austern04b},
+\texttt{result\_of}~\cite[\S 3.1]{Austern04b},
+\texttt{mem\_fn}~\cite[\S 3.1]{Austern04b}, \texttt{bind}~\cite[\S
+  3.3]{Austern04b}, \texttt{function}~\cite[\S 3.4]{Austern04b}, and
+\texttt{tuple}~\cite[\S 6.1]{Austern04b}, along with third-party
+libraries such as MPL~\cite{Gurtovoy02} or Lamba~\cite{Lambda02} and
+improvements to the standard containers. These primitives can
+eliminate much of the need for template metaprogramming and
+preprocessor metaprogramming for these libraries, reducing the burden
+on compilers. However, the implementation effort required to support
+variadic templates will be considerably increased due to the need to
+support arbitrary expansion and matching patterns.
+
+\subsection{Metaprogrammer's dream}
+\begin{itemize}
+\item Basic variadic templates
+\item First-class parameter packs
+\item Initializer lists are parameter packs
+\item Ellipsis operator for classes
+\item Length of parameter packs
+\item Get Nth element for parameter pack
+\item Arbitrary expansion
+\item Nested expansion
+\item Pairwise expansion
+\item Folding expansion
+\item Arbitrary matching patterns
+\item Pairwise matching patterns
+\end{itemize}
+
+The ``metaprogrammer's dream'' special builds on the ``library
+improvements'' special by introducing the ellipsis operator for
+classes and pairwise matching patterns. With these extra features,
+particularly compile-time reflection, it will become possible to build
+increasingly powerful libraries and applications. Many metaprogramming
+tasks involving transformation on heterogeneous or compile-time
+sequences and folding those sequences into alternative results will
+no longer require extensive template metaprogramming, allowing more
+rapid development of metaprogramming libraries and further reducing
+the burden that metaprogramming typically places on compilers.
 
 \section{Revision history}
 \begin{itemize}
