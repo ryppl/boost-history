@@ -5,6 +5,9 @@
 // copyright notice appears in all copies. This software is provided
 // "as is" without express or implied warranty, and with no claim as
 // to its suitability for any purpose.
+
+// Copyright (c) 2003 Daniel Wallin
+
 #include <boost/langbinding/inheritance.hpp>
 #include <boost/graph/breadth_first_search.hpp>
 #if _MSC_FULL_VER >= 13102171 && _MSC_FULL_VER <= 13102179
