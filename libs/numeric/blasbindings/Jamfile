@@ -1,0 +1,8 @@
+subproject libs/numeric/blasbindings ;
+# subinclude libs/numeric/blasbindings/tst ;
+
+lib blasbindings 
+        : blaspp.cpp valuetraits.cpp
+        :  <include>$(BOOST_ROOT)
+	   <include>$B_ROOT
+        ;
