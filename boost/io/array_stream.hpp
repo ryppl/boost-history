@@ -16,6 +16,7 @@
 #include <boost/io/streambuf_wrapping.hpp>  // for basic_wrapping_istream, etc.
 
 #include <cstddef>    // for std::size_t
+#include <ios>        // for std::streamsize
 #include <streambuf>  // for std::basic_streambuf
 #include <string>     // for std::char_traits
 
@@ -71,6 +72,9 @@ public:
 
     char_type const *  array_begin() const;
     char_type const *  array_end() const;
+
+    std::streamsize  characters_written() const;
+    std::streamsize  characters_read() const;
 
 private:
     // Helpers
@@ -199,6 +203,26 @@ basic_array_streambuf<N, Ch, Tr>::array_end
 ) const
 {
     return this->array_ + self_type::array_size;
+}
+
+template < std::size_t N, typename Ch, class Tr >
+inline
+std::streamsize
+basic_array_streambuf<N, Ch, Tr>::characters_written
+(
+) const
+{
+    return this->pptr() ? ( this->pptr() - this->pbase() ) : 0;
+}
+
+template < std::size_t N, typename Ch, class Tr >
+inline
+std::streamsize
+basic_array_streambuf<N, Ch, Tr>::characters_read
+(
+) const
+{
+    return this->gptr() ? ( this->gptr() - this->eback() ) : 0;
 }
 
 template < std::size_t N, typename Ch, class Tr >

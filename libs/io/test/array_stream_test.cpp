@@ -6,7 +6,7 @@
 //  warranty, and with no claim as to its suitability for any purpose. 
 
 //  Revision History
-//   06 Jun 2003  Initial version (Daryle Walker)
+//   07 Jun 2003  Initial version (Daryle Walker)
 
 #include <boost/bind.hpp>             // for boost::bind, _1
 #include <boost/io/array_stream.hpp>  // for boost::io::basic_array_istream, etc.
@@ -104,6 +104,44 @@ astreambuf_constructor_unit_test
 #endif
 }
 
+// Unit test for read and write counts
+void
+astreambuf_read_write_count_unit_test
+(
+)
+{
+    using std::string;
+
+    aostream           aos;
+    char const         my_string[] = "cde";
+    std::size_t const  my_string_length = sizeof(my_string) / sizeof(my_string[0]) - 1;
+
+    aos << 'a';
+    aos.put( 'b' );
+    aos.write( my_string, my_string_length );
+    BOOST_CHECK_EQUAL( 2 + my_string_length, aos.rdbuf()->characters_written() );
+    BOOST_CHECK_EQUAL( 0, aos.rdbuf()->characters_read() );
+    BOOST_CHECK( string(aos.array_begin()) == "abcde" );
+
+    aistream  ais( alphabet, alphabet + alphabet_length );
+    char      temp1 = '\0', temp2 = '\0';
+    char      temp3[ my_string_length + 1 ] = { '\0' };
+
+    ais >> temp1;
+    ais.get( temp2 );
+    ais.read( temp3, my_string_length );
+    BOOST_CHECK_EQUAL( 2 + my_string_length, ais.rdbuf()->characters_read() );
+    BOOST_CHECK_EQUAL( 0, ais.rdbuf()->characters_written() );
+    BOOST_CHECK( (temp1 == 'a') && (temp2 == 'b') && (string( temp3 ) == "cde") );
+
+    ais.unget();
+    BOOST_CHECK_EQUAL( 2 + my_string_length - 1, ais.rdbuf()->characters_read() );
+
+    aiostream  aios;
+    BOOST_CHECK_EQUAL( 0, aios.rdbuf()->characters_written() );
+    BOOST_CHECK_EQUAL( 0, aios.rdbuf()->characters_read() );
+}
+
 // Unit test for array output stream
 void
 aostream_unit_test
@@ -164,6 +202,7 @@ init_unit_test_suite
 
     test->add( BOOST_TEST_CASE(streambuf_wrapping_unit_test) );
     test->add( BOOST_TEST_CASE(astreambuf_constructor_unit_test) );
+    test->add( BOOST_TEST_CASE(astreambuf_read_write_count_unit_test) );
     test->add( BOOST_TEST_CASE(aostream_unit_test) );
     test->add( BOOST_TEST_CASE(aistream_unit_test) );
     test->add( BOOST_TEST_CASE(aiostream_unit_test) );

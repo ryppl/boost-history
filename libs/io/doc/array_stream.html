@@ -81,6 +81,7 @@ stream buffer.</p>
 
 <blockquote><pre>
 #include &lt;cstddef&gt;    <i>// for std::size_t</i>
+#include &lt;ios&gt;        <i>// for std::streamsize</i>
 #include &lt;streambuf&gt;  <i>// for std::basic_streambuf</i>
 
 template &lt; std::size_t N, typename Ch, class Tr &gt;
@@ -113,6 +114,9 @@ public:
 
     char_type const *  array_begin() const;
     char_type const *  array_end() const;
+
+    std::streamsize  characters_written() const;
+    std::streamsize  characters_read() const;
 
 };
 </pre></blockquote>
@@ -206,6 +210,20 @@ for the get and put areas are set to the beginning of the internal array.</p>
 			element of the internal array<br>
 		<strong>Rationale:</strong> similar to the
 			non-<code>const</code> version
+
+    <dt><code>std::streamsize  characters_written() const;</code>
+	<dd>
+		<strong>Returns:</strong> the current number of characters
+			valid in the put area<br>
+		<strong>Rationale:</strong> required to analyze just the
+			written-to portion of the internal array
+
+    <dt><code>std::streamsize  characters_read() const;</code>
+	<dd>
+		<strong>Returns:</strong> the current number of characters
+			valid in the get area<br>
+		<strong>Rationale:</strong> required to analyze just the
+			read-from portion of the internal array
 </dl>
 
 <h3><a name="m_obj">Member Objects</a></h3>
