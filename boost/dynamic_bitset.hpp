@@ -77,11 +77,12 @@ class dynamic_bitset
 
   BOOST_STATIC_ASSERT(detail::dynamic_bitset_allowed_block_type<Block>::value);
 
+  typedef int block_width_type;
 public:
     typedef Block block_type;
     typedef Allocator allocator_type;
     typedef std::size_t size_type;
-    BOOST_STATIC_CONSTANT(int, bits_per_block = (std::numeric_limits<Block>::digits));
+    BOOST_STATIC_CONSTANT(block_width_type, bits_per_block = (std::numeric_limits<Block>::digits));
     BOOST_STATIC_CONSTANT(size_type, npos = static_cast<size_type>(-1));
 
 
@@ -226,7 +227,7 @@ public:
     void m_append(BlockInputIterator first, BlockInputIterator last, std::forward_iterator_tag)
     {
         assert(first != last);
-        int r = count_extra_bits();
+        block_width_type r = count_extra_bits();
         std::size_t d = std::distance(first, last);
         m_bits.reserve(num_blocks() + d);
         if (r == 0) {
@@ -340,9 +341,9 @@ private:
 
     size_type m_do_find_from(size_type first_block) const;
 
-    int count_extra_bits() const { return bit_index(size()); }
+    block_width_type count_extra_bits() const { return bit_index(size()); }
     static size_type block_index(size_type pos) { return pos / bits_per_block; }
-    static int bit_index(size_type pos) { return static_cast<int>(pos % bits_per_block); }
+    static block_width_type bit_index(size_type pos) { return static_cast<int>(pos % bits_per_block); }
     static Block bit_mask(size_type pos) { return Block(1) << bit_index(pos); }
 
 
@@ -381,7 +382,7 @@ BOOST_DYNAMIC_BITSET_PRIVATE:
             // if needed, and then resize
             //
             std::reverse(bs.m_bits.begin(), bs.m_bits.end());
-            const int offs = bit_index(n);
+            const block_width_type offs = bit_index(n);
             if (offs)
                 bs >>= (bits_per_block - offs);
             bs.resize(n); // doesn't enlarge, so can't throw
@@ -649,7 +650,7 @@ append(Block value) // strong guarantee
 {
     // G.P.S. to be reviewed...
 
-    const int r = count_extra_bits();
+    const block_width_type r = count_extra_bits();
 
     if (r == 0) {
         // the buffer is empty, or all blocks are filled
@@ -728,12 +729,12 @@ dynamic_bitset<Block, Allocator>::operator<<=(size_type n)
 
         size_type    const last = num_blocks() - 1;  // num_blocks() is >= 1
         size_type    const div  = n / bits_per_block; // div is <= last
-        size_type    const r    = n % bits_per_block;
+        block_width_type const r = bit_index(n);
         block_type * const b    = &m_bits[0];
 
         if (r != 0) {
 
-            block_type const rs = bits_per_block - r;
+            block_width_type const rs = bits_per_block - r;
 
             for (size_type i = last-div; i>0; --i) {
                 b[i+div] = (b[i] << r) | (b[i-1] >> rs);
@@ -778,13 +779,13 @@ dynamic_bitset<B, A> & dynamic_bitset<B, A>::operator>>=(size_type n) {
 
         size_type  const last  = num_blocks() - 1; // num_blocks() is >= 1
         size_type  const div   = n / bits_per_block;   // div is <= last
-        size_type  const r     = n % bits_per_block;
+        block_width_type const r     = bit_index(n);
         block_type * const b   = &m_bits[0];
 
 
         if (r != 0) {
 
-            block_type const ls = bits_per_block - r;
+            block_width_type const ls = bits_per_block - r;
 
             for (size_type i = div; i < last; ++i) {
                 b[i-div] = (b[i] >> r) | (b[i+1]  << ls);
@@ -1223,7 +1224,7 @@ dynamic_bitset<Block, Allocator>::find_next(size_type pos) const
     ++pos;
 
     const size_type blk = block_index(pos);
-    const int       ind = bit_index(pos);
+    const block_width_type ind = bit_index(pos);
 
     // mask out bits before pos
     const Block fore = m_bits[blk] & ( ~Block(0) << ind );
@@ -1605,7 +1606,7 @@ inline void dynamic_bitset<Block, Allocator>::m_zero_unused_bits()
     assert (num_blocks() == calc_num_blocks(m_num_bits));
 
     // if != 0 this is the number of bits used in the last block
-    const int extra_bits = count_extra_bits();
+    const block_width_type extra_bits = count_extra_bits();
 
     if (extra_bits != 0)
         m_highest_block() &= ~(~static_cast<Block>(0) << extra_bits);
@@ -1616,7 +1617,7 @@ inline void dynamic_bitset<Block, Allocator>::m_zero_unused_bits()
 template <typename Block, typename Allocator>
 bool dynamic_bitset<Block, Allocator>::m_check_invariants() const
 {
-    const int extra_bits = count_extra_bits();
+    const block_width_type extra_bits = count_extra_bits();
     if (extra_bits > 0) {
         block_type const mask = (~static_cast<Block>(0) << extra_bits);
         if ((m_highest_block() & mask) != 0)
