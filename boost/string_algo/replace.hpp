@@ -20,7 +20,7 @@
 
 /*! \file
     This header defines various replace algorithms. Each algorithm replaces
-    a part(s) of the input according to searching and replace criteria.
+    a part(s) of the input according to a searching and a replace criterium.
 */
 
 namespace boost {

@@ -17,17 +17,17 @@
 /*! \file
     Traits defined in this header are used by various algorithms to achieve
     better performance for specific containers.
-    Traits provide fail-safe defaults. If a container supports some this
+    Traits provide fail-safe defaults. If a container supports some of these
     features, it is possible to specialize the specific trait for this container.
-    For lacking compilers, it is possible of define override for a specific tester
+    For lacking compilers, it is possible of define an override for a specific tester
     function.
 
-    Due to language restriction, it is not currently possible to specialize
-    stl containers without including the stl header. To decrease overhead,
+    Due to language restriction, it is not currently possible to define specialization for
+    stl containers without including the coresponding header. To decrease the overhead
     needed by this inclusion, user can selectively include specialization 
     header for a specific container. They are located in boost/string_algo/stl
     directory. Alternatively she can include boost/string_algo/std_container_traits.hpp
-    header which container specialization for all stl containers.
+    header which contains specialization for all stl containers.
 */
 
 namespace boost {

@@ -200,7 +200,7 @@ namespace boost {
             string_algo::container_const_iterator<InputContainerT>::type Iterator1T;
 
         Iterator1T InputEnd=string_algo::end(Input);
-        for( Iterator1T It=string_algo::begin(Input); It!=InputEnd; It++ )
+        for( Iterator1T It=string_algo::begin(Input); It!=InputEnd; ++It )
         {
             if ( !Pred(*It) )
                 return false;

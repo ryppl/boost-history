@@ -38,7 +38,7 @@ namespace boost {
             void constraints()
             {
                 // Operation
-                r=(*pF).operator()(i,i);
+                r=(*pF)(i,i);
             }
         private:
             range r;
@@ -53,25 +53,21 @@ namespace boost {
             takes a result from a finder operation and transforms it
             in a specific way.
 
-            Formatter must define result_type typedef. This must match
-            with the result type of the operation.
-            Result must be a container, or a reference to it.
+            Result must be a container supported by container_traits, 
+            or a reference to it.
         */
         template<typename FormatterT, typename FinderT, typename IteratorT>
         struct FormatterConcept
         {
-        private:
-            // Result type
-            typedef typename FormatterT::result_type result_type;
         public:
             void constraints()
             {
                 // Operation
-                res=(*pFo).operator()( (*pF).operator()(i,i) );
+                begin((*pFo)( (*pF)(i,i) ));
+                end((*pFo)( (*pF)(i,i) ));
             }
         private:
             IteratorT i;
-            result_type res;
             FinderT* pF;
             FormatterT *pFo;
         }; // FormatterConcept;

@@ -16,10 +16,10 @@
 #include <boost/string_algo/compare.hpp>
 
 /*! \file
-    Defines finder generators. Finder is a functor which is able to 
-    find a subsequence matching a specific criteria in an input
+    Defines Finder generators. Finder object is a functor which is able to 
+    find a subsequence matching a specific criterium in an input
     sequence. 
-    Finders are used by as a plugable components for replace, find 
+    Finders are used as a plugable components for replace, find 
     and split facilities. This header contains generator functions 
     for finders provided in this library.
 */
@@ -34,21 +34,21 @@ namespace boost {
         Search the input using the given finder.
 
         \param Input A container which will be searched.
-        \param FindF Finder used for searching.
+        \param Finder Finder object used for searching.
         \return 
             An iterator_range containing iterators delimiting the match. 
             Returned iterator is either InputContainerT::iterator or 
             InputContainerT::const_iterator, depending on the constness of 
             the input parameter.
     */
-    template< typename InputContainerT, typename FindFT >
+    template< typename InputContainerT, typename FinderT >
     inline iterator_range< 
         BOOST_STRING_TYPENAME string_algo::container_result_iterator<InputContainerT>::type >
     find( 
         InputContainerT& Input, 
-        FindFT FindF )
+        FinderT Finder )
     {
-        return FindF(begin(Input),end(Input));
+        return Finder(begin(Input),end(Input));
     }
 
 //  Finder generators ------------------------------------------//

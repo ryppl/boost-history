@@ -18,8 +18,8 @@
 
 /*! \file
     Defines a set of find algorithms. The algoritms are searching
-    for a subsequence of the input. Result is given as a pair of
-    itereators delimiting the range.
+    for a subsequence of the input. The result is given as an \c iterator_range
+    delimiting the substring.
 */
 
 namespace boost {

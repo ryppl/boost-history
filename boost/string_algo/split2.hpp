@@ -52,7 +52,7 @@ namespace boost {
                 ( each element of such a vector will container a range delimiting 
                 a match )
             \param Input A container which will be searched.
-            \param FindF A finder functor used for searching
+            \param Finder A Finder object used for searching
             \return A reference the result
 
             \note Prior content of the result will be overriden.
@@ -60,22 +60,22 @@ namespace boost {
         template< 
             typename ResultT,
             typename InputT,
-            typename FindFT >
+            typename FinderT >
         inline ResultT&
         iter_find(
             ResultT& Result,
             InputT& Input,
-            FindFT FindF )
+            FinderT Finder )
         {
             function_requires< 
-                FinderConcept<FindFT,
+                FinderConcept<FinderT,
                 BOOST_STRING_TYPENAME container_result_iterator<InputT>::type> >();
 
             typedef BOOST_STRING_TYPENAME 
                 container_result_iterator<InputT>::type input_iterator_type;
             typedef detail::find_iterator<
                 input_iterator_type,
-                FindFT > find_iterator_type;
+                FinderT > find_iterator_type;
             typedef detail::copy_rangeF<
                 BOOST_STRING_TYPENAME 
                     container_value_type<ResultT>::type,
@@ -85,10 +85,10 @@ namespace boost {
 
             ResultT Tmp(
                 make_transform_iterator( 
-                    find_iterator_type( begin(Input), InputEnd, FindF ),
+                    find_iterator_type( begin(Input), InputEnd, Finder ),
                     copy_range_type() ),
                 make_transform_iterator( 
-                    find_iterator_type( InputEnd, InputEnd, FindF ),
+                    find_iterator_type( InputEnd, InputEnd, Finder ),
                     copy_range_type() ) );
 
             Result.swap(Tmp);
@@ -114,7 +114,7 @@ namespace boost {
                 ( each element of such a vector will container a range delimiting 
                 a match )
             \param Input A container which will be searched.
-            \param FindF A finder functor used for searching
+            \param Finder A finder object used for searching
             \return A reference the result
 
             \note Prior content of the result will be overriden.
@@ -122,22 +122,22 @@ namespace boost {
         template< 
             typename ResultT,
             typename InputT,
-            typename FindFT >
+            typename FinderT >
         inline ResultT&
         iter_split(
             ResultT& Result,
             InputT& Input,
-            FindFT FindF )
+            FinderT Finder )
         {
             function_requires< 
-                FinderConcept<FindFT,
+                FinderConcept<FinderT,
                 BOOST_STRING_TYPENAME container_result_iterator<InputT>::type> >();
 
             typedef BOOST_STRING_TYPENAME 
                 container_result_iterator<InputT>::type input_iterator_type;
             typedef detail::find_iterator<
                 input_iterator_type,
-                FindFT,
+                FinderT,
                 detail::split_find_policy > find_iterator_type;
             typedef detail::copy_rangeF<
                 BOOST_STRING_TYPENAME 
@@ -148,10 +148,10 @@ namespace boost {
 
             ResultT Tmp(
                 make_transform_iterator( 
-                    find_iterator_type( begin(Input), InputEnd, FindF ),
+                    find_iterator_type( begin(Input), InputEnd, Finder ),
                     copy_range_type() ),
                 make_transform_iterator( 
-                    find_iterator_type( InputEnd, InputEnd, FindF ),
+                    find_iterator_type( InputEnd, InputEnd, Finder ),
                     copy_range_type() ) );
             
             Result.swap(Tmp);

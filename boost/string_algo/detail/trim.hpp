@@ -27,7 +27,7 @@ namespace boost {
                 PredicateT IsSpace )
             {
                 ForwardIteratorT It=InBegin;
-                for(; It!=InEnd; It++ )
+                for(; It!=InEnd; ++It )
                 {
                     if (!IsSpace(*It))
                         return It;
@@ -58,12 +58,12 @@ namespace boost {
             {
                 ForwardIteratorT TrimIt=InBegin;
 
-                for( ForwardIteratorT It=InBegin; It!=InEnd; It++ )
+                for( ForwardIteratorT It=InBegin; It!=InEnd; ++It )
                 {
                     if ( !IsSpace(*It) ) 
                     {
                         TrimIt=It;
-                        TrimIt++;
+                        ++TrimIt;
                     }
                 }
 

@@ -26,10 +26,12 @@ namespace boost {
             template< typename FormatT >
             struct const_formatF
             {
+            private:
                 typedef BOOST_STRING_TYPENAME
                     container_const_iterator<FormatT>::type format_iterator;
                 typedef iterator_range<format_iterator> result_type;
-
+            
+            public:
                 // Construction
                 const_formatF( const FormatT& Format ) :
                     m_Format( begin(Format), end(Format) ) {}
@@ -51,11 +53,9 @@ namespace boost {
             template< typename FormatT >
             struct identity_formatF
             {
-                typedef FormatT result_type;
-
                 // Operation
                 template< typename ReplaceT >
-                const result_type& operator()( const ReplaceT& Replace ) const
+                const FormatT& operator()( const ReplaceT& Replace ) const
                 {
                     return FormatT( begin(Replace), end(Replace) );
                 }
@@ -67,12 +67,10 @@ namespace boost {
             template< typename CharT >
             struct empty_formatF
             {
-                typedef empty_container<CharT> result_type;
-
                 template< typename ReplaceT >
-                result_type operator()( const ReplaceT& ) const
+                empty_container<CharT> operator()( const ReplaceT& ) const
                 {
-                    return result_type();
+                    return empty_container<CharT>();
                 }
             };
 

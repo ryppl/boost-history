@@ -36,7 +36,7 @@
     Defines container_traits class and related free-standing fuctions.
     This facility is used to unify the access to different type of containers.
     It allows the algoritms in the library to work with std containers, c-style
-    array, null-terminated c-strings ( end more ) using the same interface.
+    array, null-terminated c-strings (and more) using the same interface.
 */
 
 namespace boost {

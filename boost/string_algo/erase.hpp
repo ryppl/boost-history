@@ -19,7 +19,7 @@
 
 /*! \file
     This header defines various erase algorithms. Each algorithm removes
-    a part(s) of the input according to searching criteria.
+    a part(s) of the input according to a searching criterium.
 */
 
 namespace boost {

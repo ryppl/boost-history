@@ -25,9 +25,11 @@ namespace boost {
             template<typename StringT>
             struct regex_formatF
             {
+            private:
                 typedef StringT result_type;
                 typedef BOOST_STRING_TYPENAME StringT::value_type char_type;
 
+            public:
                 // Construction
                 regex_formatF( const StringT& Fmt, match_flag_type Flags=format_default ) :
                     m_Fmt(Fmt), m_Flags( Flags ) {}

@@ -54,7 +54,7 @@ namespace boost {
                     // Outer loop
                     for(input_iterator_type OuterIt=Begin;
                         OuterIt!=End;
-                        OuterIt++)
+                        ++OuterIt)
                     {
                         // Sanity check 
                         if( m_Search.empty() )  
@@ -64,7 +64,7 @@ namespace boost {
                         search_iterator_type SubstrIt=m_Search.begin();
                         for(;
                             InnerIt!=End && SubstrIt!=m_Search.end();
-                            InnerIt++,SubstrIt++)
+                            ++InnerIt,++SubstrIt)
                         {
                             if( !( m_Comp(*InnerIt,*SubstrIt) ) ) 
                                 break;
@@ -171,7 +171,7 @@ namespace boost {
                         search_iterator_type SubstrIt=m_Search.begin();
                         for(;
                             InnerIt!=End && SubstrIt!=m_Search.end();
-                            InnerIt++,SubstrIt++)
+                            ++InnerIt,++SubstrIt)
                         {
                             if( !( m_Comp(*InnerIt,*SubstrIt) ) ) 
                                 break;
@@ -243,7 +243,7 @@ namespace boost {
 
                     result_type M( Begin, Begin );
 
-                    for( unsigned int n=0; n<=m_Nth; n++ )
+                    for( unsigned int n=0; n<=m_Nth; ++n )
                     {
                         // find next match        
                         M=first_finder( end(M), End );
@@ -305,7 +305,7 @@ namespace boost {
                     input_iterator_type It=Begin;
                     for(
                         unsigned int Index=0; 
-                        Index<m_N && It!=End; Index++,It++ );
+                        Index<m_N && It!=End; ++Index,++It );
     
                     return result_type( Begin, It );
                 }
@@ -373,10 +373,10 @@ namespace boost {
                     input_iterator_type It2=Begin;
                     
                     // Advance It2 by N incremets
-                    for( Index=0; Index<m_N && It2!=End; Index++,It2++ );
+                    for( Index=0; Index<m_N && It2!=End; ++Index,++It2 );
 
                     // Advance It, It2 to the end
-                    for(; It2!=End; It++,It2++ );
+                    for(; It2!=End; ++It,++It2 );
 
                     return result_type( It, It2 );
                 }
@@ -394,7 +394,7 @@ namespace boost {
                     input_iterator_type It=End;
                     for(
                         unsigned int Index=0; 
-                        Index<m_N && It!=Begin; Index++,It-- );
+                        Index<m_N && It!=Begin; ++Index,--It );
     
                     return result_type( It, End );
                 }
@@ -460,12 +460,12 @@ namespace boost {
                         if ( m_bCompress )
                         {
                             // Find first non-matching character
-                            while( m_Pred(*It2) && It2!=End ) It2++;
+                            while( m_Pred(*It2) && It2!=End ) ++It2;
                         }
                         else
                         {
                             // Advance by one possition                         
-                            It2++;
+                            ++It2;
                         }
 
                         return make_range( It, It2 );
@@ -499,21 +499,12 @@ namespace boost {
                     m_Range(Range) {}
 
                 // Operation
-                result_type operator()( 
-                    input_iterator_type, 
-                    input_iterator_type ) const
+                template< typename ForwardIteratorT >
+                iterator_range<ForwardIteratorT> 
+                operator()( 
+                    ForwardIteratorT, 
+                    ForwardIteratorT ) const
                 {
-                    return m_Range;
-                }
-
-                template< typename InputT> 
-                result_type operator() ( InputT& Input )
-                {
-                    // Concept check
-                    {
-                        input_iterator_type It=begin(Input);
-                    }
-
                     return m_Range;
                 }
 

@@ -16,11 +16,12 @@
 
 /*! \file
     Classification predicates are included in the library to give 
-    some more convinience when using algorithms like trim and all. 
-    In general they wrap funcionality of std::isXXXX methods into generic functors. 
+    some more convinience when using algorithms like \c trim() and \c all(). 
+    In general they wrap funcionality of STL classification functions (e.g. \c std::isspace() )
+    into generic functors. 
     
-    All predicates support unary_function interface, so they can be used together 
-    with stl logic predicates.
+    All predicates support unary_function concept interface, so they can be used together 
+    with stl logical predicates.
 */
 
 namespace boost {

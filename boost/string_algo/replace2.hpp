@@ -16,12 +16,12 @@
 #include <boost/string_algo/iterator_range.hpp>
 #include <boost/string_algo/concept.hpp>
 #include <boost/string_algo/detail/replace.hpp>
-#include <boost/string_algo/detail/sequence.hpp>
+#include <boost/string_algo/detail/replace_all.hpp>
 
 /*! \file
     This header defines generic replace algorithms. Each algorithm replaces
-    a part(s) of the input. The part to be replaced is found using a finder.
-    Result of finding is then used by formatter to generate replacement.
+    a part(s) of the input. The part to be replaced is found using a Finder object.
+    Result of finding is then used by a Formatter object to generate the replacement.
 */
 
 namespace boost {
@@ -38,56 +38,36 @@ namespace boost {
 
             \param Output A output iterarot to which the result will be copied
             \param Input An input sequence
-            \param FindF A find functor used to search for a match to be replaced
-            \param FormatF A format functor used to format a match
+            \param Finder A Finder object used to search for a match to be replaced
+            \param Formatter A Formatter object used to format a match
             \return An output iterator pointing just after last inserted character
         */
         template< 
             typename OutputIteratorT,
             typename InputT,
-            typename FindFT,
-            typename FormatFT >
+            typename FinderT,
+            typename FormatterT >
         inline OutputIteratorT replace_copy(
             OutputIteratorT Output,
             const InputT& Input,
-            FindFT FindF,
-            FormatFT FormatF )
+            FinderT Finder,
+            FormatterT Formatter )
         {
             // Concept check
             function_requires< 
-                FinderConcept<FindFT,
+                FinderConcept<FinderT,
                 BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
             function_requires< 
                 FormatterConcept<
-                    FormatFT,
-                    FindFT,BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
+                    FormatterT,
+                    FinderT,BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
 
-            typedef detail::find_format_store<
-                BOOST_STRING_TYPENAME 
-                    container_const_iterator<InputT>::type, FormatFT> store_type;
-
-            // Create store for the find result
-            store_type M( FormatF );
-
-            // Find first match
-            M=FindF( begin(Input), end(Input) );
-
-            if ( M.empty() )
-            {
-                // Match not found - return original sequence
-                std::copy( begin(Input), end(Input), Output );
-                return Output;
-            }
-
-            // Copy the beginning of the sequence
-            std::copy( begin(Input), begin(M), Output );
-            // Format find result
-            // Copy formated result
-            std::copy( begin(M.format_result()), end(M.format_result()), Output );
-            // Copy the rest of the sequence
-            std::copy( M.end(), end(Input), Output );
-
-            return Output;
+            return detail::replace_copy_impl(
+                Output,
+                Input,
+                Finder,
+                Formatter,
+                Finder( begin(Input), end(Input) ) );
         }
 
         //! Generic replace algorithm
@@ -98,53 +78,33 @@ namespace boost {
             format functor.
 
             \param Input An input sequence
-            \param FindF A find functor used to search for a match to be replaced
-            \param FormatF A format functor used to format a match
+            \param Finder A Finder object used to search for a match to be replaced
+            \param Formatter A Formatter object used to format a match
             \return An output iterator pointing just after last inserted character
         */
         template< 
             typename InputT, 
-            typename FindFT,
-            typename FormatFT >
+            typename FinderT,
+            typename FormatterT >
         inline InputT replace_copy(
             const InputT& Input,
-            FindFT FindF,
-            FormatFT FormatF )
+            FinderT Finder,
+            FormatterT Formatter )
         {
             // Concept check
             function_requires< 
-                FinderConcept<FindFT,
+                FinderConcept<FinderT,
                 BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
             function_requires< 
                 FormatterConcept<
-                    FormatFT,
-                    FindFT,BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
+                    FormatterT,
+                    FinderT,BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
 
-            typedef detail::find_format_store<
-                BOOST_STRING_TYPENAME 
-                    container_const_iterator<InputT>::type, FormatFT> store_type;
-
-            // Create store for the find result
-            store_type M( FormatF );
-
-            // Find first match
-            M=FindF( begin(Input), end(Input) );
-
-            if ( M.empty() )
-            {
-                // Match not found - return original sequence
-                return InputT( Input );
-            }
-
-            InputT Output;
-            // Copy the beginning of the sequence
-            detail::insert( Output, end(Output), begin(Input), M.begin() );
-            // Copy formated result
-            detail::insert( Output, end(Output), M.format_result() );
-            // Copy the rest of the sequence
-            detail::insert( Output, end(Output), M.end(), end(Input) );
-
-            return Output;
+            return detail::replace_copy_impl(
+                Input,
+                Finder,
+                Formatter,
+                Finder( begin(Input), end(Input) ) );
         }
 
         //! Generic replace algorithm
@@ -154,48 +114,33 @@ namespace boost {
             format functor.
 
             \param Input An input sequence
-            \param FindF A find functor used to search for a match to be replaced
-            \param FormatF A format functor used to format a match
+            \param Finder A Finder object used to search for a match to be replaced
+            \param Formatter A Formatter object used to format a match
             \return An output iterator pointing just after last inserted character
         */
         template<
             typename InputT,
-            typename FindFT,
-            typename FormatFT >
+            typename FinderT,
+            typename FormatterT >
         inline InputT& replace( 
             InputT& Input,
-            FindFT FindF,
-            FormatFT FormatF )
+            FinderT Finder,
+            FormatterT Formatter )
         {
             // Concept check
             function_requires< 
-                FinderConcept<FindFT,
-                BOOST_STRING_TYPENAME container_iterator<InputT>::type> >();
+                FinderConcept<FinderT,
+                BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
             function_requires< 
                 FormatterConcept<
-                    FormatFT,
-                    FindFT,BOOST_STRING_TYPENAME container_iterator<InputT>::type> >();
+                    FormatterT,
+                    FinderT,BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
 
-            typedef detail::find_format_store<
-                BOOST_STRING_TYPENAME 
-                    container_iterator<InputT>::type, FormatFT> store_type;
-
-            // Create store for the find result
-            store_type M( FormatF );
-            
-            // Find range for the match
-            M=FindF( begin(Input), end(Input) );
-
-            if ( M.empty() )
-            {
-                // Search not found - return original sequence
-                return Input;
-            }
-
-            // Replace match
-            detail::replace( Input, M.begin(), M.end(), M.format_result() );
-            
-            return Input;
+            return detail::replace_impl(
+                Input,
+                Finder,
+                Formatter,
+                Finder( begin(Input), end(Input) ) );
         }
 
 
@@ -210,60 +155,36 @@ namespace boost {
 
             \param Output A output iterarot to which the result will be copied
             \param Input An input sequence
-            \param FindF A find functor used to search for a match to be replaced
-            \param FormatF A format functor used to format a match
+            \param Finder A Finder object used to search for a match to be replaced
+            \param Formatter A Formatter object used to format a match
             \return An output iterator pointing just after last inserted character
         */
         template< 
             typename OutputIteratorT,
             typename InputT,
-            typename FindFT,
-            typename FormatFT >
+            typename FinderT,
+            typename FormatterT >
         inline OutputIteratorT replace_all_copy(
             OutputIteratorT Output,
             const InputT& Input,
-            FindFT FindF,
-            FormatFT FormatF )
+            FinderT Finder,
+            FormatterT Formatter )
         {
             // Concept check
             function_requires< 
-                FinderConcept<FindFT,
+                FinderConcept<FinderT,
                 BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
             function_requires< 
                 FormatterConcept<
-                    FormatFT,
-                    FindFT,BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
+                    FormatterT,
+                    FinderT,BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
 
-            typedef BOOST_STRING_TYPENAME 
-                container_const_iterator<InputT>::type input_iterator_type; 
-            typedef detail::find_format_store<
-                input_iterator_type, FormatFT> store_type;
-        
-            // Create store for the find result
-            store_type M( FormatF );
-
-            input_iterator_type LastMatch=begin(Input);
-
-            // Find first match
-            M=FindF( begin(Input), end(Input) );
-
-            // Iterate throug all matches
-            while( !M.empty() )
-            {
-                // Copy the beginning of the sequence
-                std::copy( LastMatch, M.begin(), Output );
-                // Copy formated result
-                std::copy( begin(M.format_result()), end(M.format_result()), Output );
-
-                // Proceed to the next match
-                LastMatch=M.end();
-                M=FindF( LastMatch, end(Input) );
-            }
-
-            // Copy the rest of the sequence
-            std::copy( LastMatch, end(Input), Output );
-
-            return Output;
+            return detail::replace_all_copy_impl(
+                Output,
+                Input,
+                Finder,
+                Formatter,
+                Finder( begin(Input), end(Input) ) );
         }
 
         //! Generic replace all algorithm
@@ -274,61 +195,33 @@ namespace boost {
             format functor.
 
             \param Input An input sequence
-            \param FindF A find functor used to search for a match to be replaced
-            \param FormatF A format functor used to format a match
+            \param Finder A Finder object used to search for a match to be replaced
+            \param Formatter A Formatter object used to format a match
             \return An output iterator pointing just after last inserted character
         */
         template< 
             typename InputT, 
-            typename FindFT,
-            typename FormatFT >
+            typename FinderT,
+            typename FormatterT >
         inline InputT replace_all_copy(
             const InputT& Input,
-            FindFT FindF,
-            FormatFT FormatF )
+            FinderT Finder,
+            FormatterT Formatter )
         {
             // Concept check
             function_requires< 
-                FinderConcept<FindFT,
+                FinderConcept<FinderT,
                 BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
             function_requires< 
                 FormatterConcept<
-                    FormatFT,
-                    FindFT,BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
+                    FormatterT,
+                    FinderT,BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
 
-            typedef BOOST_STRING_TYPENAME 
-                container_const_iterator<InputT>::type input_iterator_type; 
-            typedef detail::find_format_store<
-                input_iterator_type, FormatFT> store_type;
-        
-            // Create store for the find result
-            store_type M( FormatF );
-
-            // Initialize last match
-            input_iterator_type LastMatch=begin(Input);
-            // Find first match
-            M=FindF( begin(Input), end(Input) );
-
-            // Output temporary
-            InputT Output;
-
-            // Iterate throug all matches
-            while( !M.empty() )
-            {
-                // Copy the beginning of the sequence
-                detail::insert( Output, end(Output), LastMatch, M.begin() );
-                // Copy formated result
-                detail::insert( Output, end(Output), M.format_result() );
-
-                // Proceed to the next match
-                LastMatch=M.end();
-                M=FindF( LastMatch, end(Input) );
-            }
-
-            // Copy the rest of the sequence
-            detail::insert( Output, end(Output), LastMatch, end(Input) );
-
-            return Output;
+            return detail::replace_all_copy_impl(
+                Input,
+                Finder,
+                Formatter,
+                Finder( begin(Input), end(Input) ) );
         }
 
         //! Generic replace all algorithm
@@ -338,86 +231,34 @@ namespace boost {
             format functor.
 
             \param Input An input sequence
-            \param FindF A find functor used to search for a match to be replaced
-            \param FormatF A format functor used to format a match
+            \param Finder A Finder object used to search for a match to be replaced
+            \param Formatter A Formatter object used to format a match
             \return An output iterator pointing just after last inserted character
         */
         template<
             typename InputT,
-            typename FindFT,
-            typename FormatFT >
+            typename FinderT,
+            typename FormatterT >
         inline InputT& replace_all( 
             InputT& Input,
-            FindFT FindF,
-            FormatFT FormatF )
+            FinderT Finder,
+            FormatterT Formatter )
         {
             // Concept check
             function_requires< 
-                FinderConcept<FindFT,
-                BOOST_STRING_TYPENAME container_iterator<InputT>::type> >();
+                FinderConcept<FinderT,
+                BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
             function_requires< 
                 FormatterConcept<
-                    FormatFT,
-                    FindFT,BOOST_STRING_TYPENAME container_iterator<InputT>::type> >();
+                    FormatterT,
+                    FinderT,BOOST_STRING_TYPENAME container_const_iterator<InputT>::type> >();
 
-            typedef BOOST_STRING_TYPENAME 
-                container_iterator<InputT>::type input_iterator_type; 
-            typedef detail::find_format_store<
-                input_iterator_type, FormatFT> store_type;
-        
-            // Create store for the find result
-            store_type M( FormatF );
-            
-            // Instantiate replacement storage
-            std::deque<BOOST_STRING_TYPENAME InputT::value_type> Storage;
-
-            // Initialize replacement iterators
-            input_iterator_type InsertIt=begin(Input);
-            input_iterator_type SearchIt=begin(Input);
-            
-            // Find range for a first match
-            M=FindF( begin(Input), end(Input) );
-
-            while ( !M.empty() )
-            {
-                // process the segment
-                InsertIt=detail::process_segment( 
-                    Storage,
-                    Input,
-                    InsertIt,
-                    SearchIt,
-                    M.begin() );
-                
-                // Adjust search iterator
-                SearchIt=M.end();
-
-                // Copy formated replace to the storage
-                detail::copy_to_storage( Storage, M.format_result() );
-
-                // Find range for a next match
-                M=FindF( SearchIt, end(Input) );
-            }
-
-            // process the last segment
-            InsertIt=detail::process_segment( 
-                Storage,
+            return detail::replace_all_impl(
                 Input,
-                InsertIt,
-                SearchIt,
-                end(Input) );
-            
-            if ( Storage.empty() )
-            {
-                // Truncate input
-                detail::erase( Input, InsertIt, end(Input) );
-            }
-            else
-            {
-                // Copy remaining data to the end of input
-                detail::insert( Input, end(Input), Storage.begin(), Storage.end() );
-            }
+                Finder,
+                Formatter,
+                Finder( begin(Input), end(Input) ) );
 
-            return Input;
         }
 
     } // namespace string_algo

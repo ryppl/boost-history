@@ -57,7 +57,7 @@ namespace boost {
             Iterator2T pit=string_algo::begin(Test);
             for(;
                 it!=InputEnd && pit!=TestEnd;
-                it++,pit++)
+                ++it,++pit)
             {
                 if( !( Comp(*it,*pit) ) )
                     return false;
@@ -156,7 +156,7 @@ namespace boost {
             Iterator2T pit=string_algo::begin(Test);
             for(;
                 it!=InputEnd && pit!=TestEnd;
-                it++,pit++)
+                ++it,++pit)
             {
                 if( !( Comp(*it,*pit) ) )
                     return false;

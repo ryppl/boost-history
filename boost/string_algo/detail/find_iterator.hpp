@@ -27,7 +27,7 @@ namespace boost {
             {
                 template<
                     typename InputIteratorT,
-                    typename FindFT >
+                    typename FinderT >
                 struct policy
                 {
                     typedef InputIteratorT input_iterator_type;
@@ -37,8 +37,8 @@ namespace boost {
                     policy(
                             input_iterator_type Begin,
                             input_iterator_type End, 
-                            const FindFT& FindF ) :
-                        m_FindF(FindF), 
+                            const FinderT& Finder ) :
+                        m_Finder(Finder), 
                         m_Match(Begin,Begin),
                         m_End(End)
                     {
@@ -54,7 +54,7 @@ namespace boost {
                     // Operations
                     void advance()
                     {
-                        m_Match=m_FindF(m_Match.end(),m_End);
+                        m_Match=m_Finder(m_Match.end(),m_End);
                     }
 
                     // Comparison
@@ -66,7 +66,7 @@ namespace boost {
                     }
 
                 private:
-                    FindFT m_FindF;
+                    FinderT m_Finder;
                     match_type m_Match;
                     input_iterator_type m_End;
                 };
@@ -77,7 +77,7 @@ namespace boost {
             {
                 template<
                     typename InputIteratorT,
-                    typename FindFT >
+                    typename FinderT >
                 struct policy
                 {
                     typedef InputIteratorT input_iterator_type;
@@ -87,8 +87,8 @@ namespace boost {
                     policy(
                             input_iterator_type Begin,
                             input_iterator_type End, 
-                            const FindFT& FindF ) :
-                        m_FindF(FindF), 
+                            const FinderT& Finder ) :
+                        m_Finder(Finder), 
                         m_Match(Begin,Begin),
                         m_Next(Begin),
                         m_End(End)
@@ -105,7 +105,7 @@ namespace boost {
                     // Operations
                     void advance()
                     {
-                        match_type FindMatch=m_FindF( m_Next, m_End );
+                        match_type FindMatch=m_Finder( m_Next, m_End );
                         m_Match=make_range( m_Next, FindMatch.begin() );
                         m_Next=FindMatch.end();
                     }
@@ -120,7 +120,7 @@ namespace boost {
                     }
 
                 private:
-                    FindFT m_FindF;
+                    FinderT m_Finder;
                     match_type m_Match;
                     input_iterator_type m_Next;
                     input_iterator_type m_End;
@@ -132,7 +132,7 @@ namespace boost {
             // find iterator
             template< 
                 typename InputIteratorT,
-                typename FindFT,
+                typename FinderT,
                 typename FindIterPolicyT=match_find_policy >
             class find_iterator : 
                 public  boost::iterator<
@@ -140,7 +140,7 @@ namespace boost {
                     iterator_range<InputIteratorT> >
             {
                 typedef BOOST_STRING_TYPENAME
-                    FindIterPolicyT::policy<InputIteratorT,FindFT> policy_type;
+                    FindIterPolicyT::policy<InputIteratorT,FinderT> policy_type;
                 typedef BOOST_STRING_TYPENAME
                     policy_type::input_iterator_type input_iterator_type;
                 typedef BOOST_STRING_TYPENAME
@@ -151,8 +151,8 @@ namespace boost {
                 find_iterator( 
                         input_iterator_type Begin,
                         input_iterator_type End, 
-                        const FindFT& FindF ) :
-                    m_Policy( Begin, End, FindF ) {}
+                        const FinderT& Finder ) :
+                    m_Policy( Begin, End, Finder ) {}
 
                 bool operator==( const find_iterator& Other ) const
                 {
@@ -179,7 +179,7 @@ namespace boost {
                 {
                     find_iterator<
                         InputIteratorT,
-                        FindFT,
+                        FinderT,
                         FindIterPolicyT> tmp=*this;
 
                     m_Policy.advance();
