@@ -1,0 +1,830 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Boost.IndexedSet Documentation - Tutorial</title>
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+
+<body>
+<h1><img src="../../../c++boost.gif" alt="c++boost.gif (8819 bytes)" align=
+"middle" width="277" height="86">Boost.IndexedSet Tutorial</h1>
+
+<h2><a name="contents">Contents</a></h2>
+
+<ul>
+  <li><a href="#rationale">Rationale</a></li>
+  <li><a href="#namespace">Namespace</a></li>
+  <li><a href="#intro">Introduction</a></li>
+  <li><a href="#index_specification">Index specification</a>
+    <ul>
+      <li><a href="#indices">Unique and non-unique indices</a></li>
+      <li><a href="#tagged_indices">Tagged indices</a></li>
+      <li><a href="#key_extraction">Key extraction</a></li>
+      <li><a href="#comparison_predicates">Comparison predicates</a></li>
+    </ul>
+  </li>
+  <li><a href="#special_lookup">Special lookup operations</a></li>
+  <li><a href="#range">Retrieval of ranges</a></li>
+  <li><a href="#updating">Updating</a></li>
+  <li><a href="#projection">Projection of iterators</a></li>
+  <li><a href="#complexity">Complexity and exception safety</a></li>
+  <!-- <li><a href="#samples">Tutorial samples</a></li> -->
+</ul>
+
+<h2><a name="rationale">Rationale</a></h2>
+
+<p>
+STL associative containers allow for retrieval of elements by a key sorted according to
+one and <i>only one</i> comparison predicate. Boost.IndexedSet provides a natural extension
+to this approach by means of <code>indexed_set</code>, which accepts a typelist of sorting
+criteria or <i>indices</i>. This container proves useful in situations
+where programmers typically resort to manual compositions of different containers, reducing
+the programming effort and the probability of errors. <code>indexed_set</code> takes
+inspiration from basic concepts arising in the theory of relational databases, though it
+is not intended to provide a full-fledged relational database framework.
+<code>indexed_set</code> integrates seamlessly into the STL container/algorithm design,
+and features some extra capabilities regarding lookup operations and element updating
+which are useful extensions even for single-keyed containers.
+</p>
+
+<p align="center">
+<img src="indexed_set_example.png" alt="diagram of an indexed_set with three indices"
+width="600" height="304"><br>
+<b>Fig. 1: Diagram of an <code>indexed_set</code> with three indices.</b>
+</p>
+
+<p>
+The figure above depicts an <code>indexed_set</code> composed of three indices sorting
+the elements contained by shape, number id and color, respectively. Thus, these
+indices act as "views" to the internal collection of elements. Indices do not only
+provide read access to the set, they also feature insertion methods much as regular
+<code>std::set</code>s do. Insertion of an element through one given index will
+only succeed if the uniqueness constraints of all indices are met.
+</p>
+
+<h2>
+<a name="namespace">Namespace</a>
+</h2>
+
+<p>
+All the types of Boost.IndexedSet reside in namespace <code>::boost::indexed_sets</code>.
+Additionaly, the main class template <code>indexed_set</code> and global functions
+<code>get</code> and <code>project</code> are lifted to namespace <code>::boost</code>
+by means of <code>using</code> declarations. For brevity of exposition, the fragments
+of code in the documentation are written as if the following declarations were in effect:
+</p>
+ 
+<blockquote><pre>
+<span class=keyword>using</span> <span class=keyword>namespace</span> <span class=special>::</span><span class=identifier>boost</span><span class=special>;</span>
+<span class=keyword>using</span> <span class=keyword>namespace</span> <span class=special>::</span><span class=identifier>boost</span><span class=special>::</span><span class=identifier>indexed_sets</span><span class=special>;</span>
+</pre></blockquote>
+
+<h2>
+<a name="intro">Introduction</a>
+</h2>
+
+<p>
+STL sets and multisets are varying-length containers where elements are efficiently
+sorted according to a given comparison predicate. These container classes fall short
+of functionality when the programmer wishes to efficiently sort and lookup the elements
+following a different sorting criterium. Consider for instance:
+</p>
+
+<blockquote><pre>
+<span class=keyword>struct</span> <span class=identifier>employee</span>
+<span class=special>{</span>
+  <span class=keyword>int</span>         <span class=identifier>id</span><span class=special>;</span>
+  <span class=identifier>std</span><span class=special>::</span><span class=identifier>string</span> <span class=identifier>name</span><span class=special>;</span>
+
+  <span class=identifier>employee</span><span class=special>(</span><span class=keyword>int</span> <span class=identifier>id</span><span class=special>,</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>string</span> <span class=identifier>name</span><span class=special>):</span><span class=identifier>id</span><span class=special>(</span><span class=identifier>id</span><span class=special>),</span><span class=identifier>name</span><span class=special>(</span><span class=identifier>name</span><span class=special>){}</span>
+
+  <span class=keyword>bool</span> <span class=keyword>operator</span><span class=special>&lt;(</span><span class=keyword>const</span> <span class=identifier>employee</span><span class=special>&amp;</span> <span class=identifier>e</span><span class=special>)</span><span class=keyword>const</span><span class=special>{</span><span class=keyword>return</span> <span class=identifier>id</span><span class=special>&lt;</span><span class=identifier>e</span><span class=special>.</span><span class=identifier>id</span><span class=special>;}</span>
+<span class=special>};</span>
+</pre></blockquote>
+
+<p>The fact that IDs are unique to each employee is reflected by the way
+<code>operator&lt;</code> is defined, so a natural data structure for storing of
+<code>employee</code>s is just a <code>std::set&lt;employee></code>. Now,
+if one wishes to print out a listing of all employees in alphabetical order, available
+solutions may have disadvantages either in terms of storage space, complexity or ease
+of maintenance:
+<ul>
+<li>Copy the employee set into a vector or similar and sort this by a comparison
+functor dependent upon <code>employee::name</code>.
+<li>Keep a secondary data structure of pointers to the elements of the set, appropriately
+sorted by name.
+</ul>
+Of these, probably the second solution will be the one adopted by most programmers
+concerned about efficiency, but it imposes the annoying burden of keeping the two
+structures in sync. If the code is additionally required to be exception-safe, this
+construct easily becomes unmaintainable.
+</p>
+
+<p>
+Boost.IndexedSet is designed to help programmers in need of sequences of elements for
+which <i>more than one</i> sorting criteria are relevant. Following relational database
+terminology, an <code>indexed_set</code> is composed of several <i>indices</i>
+associated to given comparison policies: each index, viewed in isolation, behaves much
+as a regular <code>std::set</code> (or <code>std::multiset</code>), whilst the overall
+integrity of the entire data structure is preserved. Our example problem can be
+solved resorting to Boost.IndexedSet as follows:
+</p>
+
+<blockquote><pre>
+<span class=comment>// define a multiply indexed set with indices by id and name</span>
+<span class=keyword>typedef</span> <span class=identifier>indexed_set</span><span class=special>&lt;</span>
+  <span class=identifier>employee</span><span class=special>,</span>
+  <span class=identifier>index_list</span><span class=special>&lt;</span>
+    <span class=identifier>unique</span><span class=special>&lt;</span><span class=identifier>identity</span><span class=special>&lt;</span><span class=identifier>employee</span><span class=special>&gt;</span> <span class=special>&gt;,</span>                              <span class=comment>// sort by employee::operator&lt;</span>
+    <span class=identifier>non_unique</span><span class=special>&lt;</span><span class=identifier>member</span><span class=special>&lt;</span><span class=identifier>employee</span><span class=special>,</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>string</span><span class=special>,&amp;</span><span class=identifier>employee</span><span class=special>::</span><span class=identifier>name</span><span class=special>&gt;</span> <span class=special>&gt;</span> <span class=comment>// sort by less&lt;string&gt; on name</span>
+  <span class=special>&gt;</span> 
+<span class=special>&gt;</span> <span class=identifier>employee_set</span><span class=special>;</span>
+
+<span class=keyword>void</span> <span class=identifier>print_out_by_name</span><span class=special>(</span><span class=keyword>const</span> <span class=identifier>employee_set</span><span class=special>&amp;</span> <span class=identifier>es</span><span class=special>)</span>
+<span class=special>{</span>
+  <span class=comment>// get a view to index #1(name)</span>
+  <span class=keyword>const</span> <span class=identifier>employee_set</span><span class=special>::</span><span class=identifier>nth_index_type</span><span class=special>&lt;</span><span class=number>1</span><span class=special>&gt;::</span><span class=identifier>type</span><span class=special>&amp;</span> <span class=identifier>name_index</span><span class=special>=</span><span class=identifier>es</span><span class=special>.</span><span class=identifier>get</span><span class=special>&lt;</span><span class=number>1</span><span class=special>&gt;();</span>
+  <span class=comment>// use i as a regular std::set</span>
+  <span class=identifier>std</span><span class=special>::</span><span class=identifier>copy</span><span class=special>(</span><span class=identifier>name_index</span><span class=special>.</span><span class=identifier>begin</span><span class=special>(),</span><span class=identifier>name_index</span><span class=special>.</span><span class=identifier>end</span><span class=special>(),</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>ostream_iterator</span><span class=special>&lt;</span><span class=identifier>employee</span><span class=special>&gt;(</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>cout</span><span class=special>));</span>
+<span class=special>}</span>
+</pre></blockquote>
+
+<p>
+Instead of a single comparison predicate type, as it happens for STL associative
+containers, <code>indexed_set</code> is passed a <i>typelist</i> of index
+specifications (<code>index_list</code>), each one inducing the corresponding index.
+Indices are accessed via
+<a href="reference.html#indexed_set_index_retrieval"><code>get</code></a><code>&lt;N>()</code>
+where <i>N</i> ranges between 0 and the number of comparison
+predicates minus one. The functionality of index #0 can be accessed directly from an
+<code>indexed_set</code> object without using <code>get&lt;0>()</code>: for instance,
+<code>es.begin()</code> is equivalent to <code>es.get&lt;0>().begin()</code>.
+</p>
+
+<h2>
+<a name="index_specification">Index specification</a>
+</h2>
+
+<p>
+Each index specifier inside <code>index_list</code> must conform to one of the 
+following syntaxes:
+</p>
+
+<blockquote><pre>
+<i>(type of index)</i><span class=special>&lt;[</span><i>(tag)</i><span class=special>[,</span><i>(key extractor)</i><span class=special>[,</span><i>(comparison predicate)</i><span class=special>]]]&gt;</span>
+<i>(type of index)</i><span class=special>&lt;[</span><i>(key extractor)</i><span class=special>[,</span><i>(comparison predicate)</i><span class=special>]]&gt;</span>
+</pre></blockquote>
+
+<p>
+An <code>indexed_set</code> instantiation can be declared without supplying
+the <code>index_list</code> part: in this case, default index values are taken
+so that the resulting type is equivalent to a regular <code>std::set</code>.
+Concretely, the instantiation
+</p>
+
+<blockquote><pre>
+<span class=identifier>indexed_set</span><span class=special>&lt;</span><i>(element)</i><span class=special>&gt;</span>
+</pre></blockquote>
+
+<p>
+is equivalent to
+</p>
+
+<blockquote><pre>
+<span class=identifier>indexed_set</span><span class=special>&lt;</span><i>(element)</i><span class=special>,</span><span class=identifier>index_list</span><span class=special>&lt;</span><span class=identifier>unique</span><span class=special>&lt;</span><span class=identifier>identity</span><span class=special>&lt;</span><i>(element)</i><span class=special>&gt;</span> <span class=special>&gt;</span> <span class=special>&gt;</span> <span class=special>&gt;</span>
+</pre></blockquote>
+
+<p>
+We now proceed to briely discuss the various parts of an index specifier.
+</p>
+
+<h3>
+<a name="indices">Unique and non-unique indices</a>
+</h3>
+
+<p>
+Boost.IndexedSet indices are classified into <i>unique</i>, which prohibit two
+elements to have the same index value, and <i>non-unique</i> indices,
+which allow for duplicates. In the preceding example, the first index is to be
+treated as unique (since IDs are exclusive to each employee) and thus is declared using
+<code>unique</code>, whereas the second index is non-unique (as the possibility exists
+that say two John Smiths are hired in the same company), which is specified by the use
+of <code>non_unique</code>.
+</p>
+
+<p>
+The classification of indices in unique and non-unique has an impact on which elements
+are allowed to be inserted into a given <code>indexed_set</code>; briefly put, unique
+indices mimic the behavior of <code>std::set</code>s while non-unique indices are
+similar to <code>std::multiset</code>s. For instance, an <code>employee_set</code> can
+hold the objects <code>employee(0,"George Brown")</code> and
+<code>employee(1,"George Brown")</code>, but won't accept the insertion of an
+<code>employee</code> object whose ID concides with that of some previously inserted
+employee.
+</p>
+
+<p>
+More than one unique index can be specified. For instance, if we augment
+<code>employee</code> to include an additional member for the Social Security number,
+which is reasonably enough to be treated as unique, the following captures this design:
+</p>
+
+<blockquote><pre>
+<span class=keyword>struct</span> <span class=identifier>employee</span>
+<span class=special>{</span>
+  <span class=keyword>int</span>         <span class=identifier>id</span><span class=special>;</span>
+  <span class=identifier>std</span><span class=special>::</span><span class=identifier>string</span> <span class=identifier>name</span><span class=special>;</span>
+  <span class=keyword>int</span>         <span class=identifier>ssnumber</span><span class=special>;</span>
+
+  <span class=identifier>employee</span><span class=special>(</span><span class=keyword>int</span> <span class=identifier>id</span><span class=special>,</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>string</span> <span class=identifier>name</span><span class=special>,</span><span class=keyword>int</span> <span class=identifier>ssnumber</span><span class=special>):</span><span class=identifier>id</span><span class=special>(</span><span class=identifier>id</span><span class=special>),</span><span class=identifier>name</span><span class=special>(</span><span class=identifier>name</span><span class=special>),</span><span class=identifier>ssnumber</span><span class=special>(</span><span class=identifier>ssnumber</span><span class=special>){}</span>
+
+  <span class=keyword>bool</span> <span class=keyword>operator</span><span class=special>&lt;(</span><span class=keyword>const</span> <span class=identifier>employee</span><span class=special>&amp;</span> <span class=identifier>e</span><span class=special>)</span><span class=keyword>const</span><span class=special>{</span><span class=keyword>return</span> <span class=identifier>id</span><span class=special>&lt;</span><span class=identifier>e</span><span class=special>.</span><span class=identifier>id</span><span class=special>;}</span>
+<span class=special>};</span>
+
+<span class=keyword>typedef</span> <span class=identifier>indexed_set</span><span class=special>&lt;</span>
+  <span class=identifier>employee</span><span class=special>,</span>
+  <span class=identifier>index_list</span><span class=special>&lt;</span>
+    <span class=identifier>unique</span><span class=special>&lt;</span><span class=identifier>identity</span><span class=special>&lt;</span><span class=identifier>employee</span><span class=special>&gt;</span> <span class=special>&gt;,</span>                                <span class=comment>// sort by employee::operator&lt;</span>
+    <span class=identifier>non_unique</span><span class=special>&lt;</span><span class=identifier>member</span><span class=special>&lt;</span><span class=identifier>employee</span><span class=special>,</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>string</span><span class=special>,&amp;</span><span class=identifier>employee</span><span class=special>::</span><span class=identifier>name</span><span class=special>&gt;</span> <span class=special>&gt;,</span>  <span class=comment>// sort by less&lt;string&gt; on name</span>
+    <span class=identifier>unique</span><span class=special>&lt;</span><span class=identifier>member</span><span class=special>&lt;</span><span class=identifier>employee</span><span class=special>,</span><span class=keyword>int</span><span class=special>,&amp;</span><span class=identifier>employee</span><span class=special>::</span><span class=identifier>ssnumber</span><span class=special>&gt;</span> <span class=special>&gt;</span>           <span class=comment>// sort by less&lt;int&gt; on ssnumber</span>
+  <span class=special>&gt;</span>
+<span class=special>&gt;</span> <span class=identifier>employee_set</span><span class=special>;</span>
+</pre></blockquote>
+
+<h3><a name="tagged_indices">Tagged indices</a></h3>
+
+<p>
+In order to retrieve (a reference to) an index of a given <code>indexed_set</code>,
+the programmer must provide its order number, which is cumbersome and little
+self-descriptive. Optionally, indices can be assigned <i>tags</i> (C++ types) that
+act as more convenient mnemonics. The following is a revised version of
+<code>employee_set</code> with inclusion of tags:
+</p>
+
+<blockquote><pre>
+<span class=comment>// tags</span> 
+<span class=keyword>struct</span> <span class=identifier>name</span><span class=special>{};</span>
+
+<span class=keyword>typedef</span> <span class=identifier>indexed_set</span><span class=special>&lt;</span>
+  <span class=identifier>employee</span><span class=special>,</span>
+  <span class=identifier>index_list</span><span class=special>&lt;</span>
+    <span class=identifier>unique</span><span class=special>&lt;</span><span class=identifier>identity</span><span class=special>&lt;</span><span class=identifier>employee</span><span class=special>&gt;</span> <span class=special>&gt;,</span>
+    <span class=identifier>non_unique</span><span class=special>&lt;</span><span class=identifier>tag</span><span class=special>&lt;</span><span class=identifier>name</span><span class=special>&gt;,</span><span class=identifier>member</span><span class=special>&lt;</span><span class=identifier>employee</span><span class=special>,</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>string</span><span class=special>,&amp;</span><span class=identifier>employee</span><span class=special>::</span><span class=identifier>name</span><span class=special>&gt;</span> <span class=special>&gt;</span>
+  <span class=special>&gt;</span>
+<span class=special>&gt;</span> <span class=identifier>employee_set</span><span class=special>;</span>
+</pre></blockquote>
+
+<p>
+Any type can be used as a tag for an index, although in general one will choose names
+that are descriptive of the index they are associated with. The tagging mechanism allows
+us to write expressions like</p>
+
+<blockquote><pre>
+<span class=keyword>typedef</span> <span class=identifier>employee_set</span><span class=special>::</span><span class=identifier>index_type</span><span class=special>&lt;</span><span class=identifier>name</span><span class=special>&gt;::</span><span class=identifier>type</span> <span class=identifier>employee_set_by_name</span><span class=special>;</span>
+<span class=identifier>employee_set_by_name</span><span class=special>::</span><span class=identifier>iterator</span> <span class=identifier>it</span><span class=special>=</span><span class=identifier>es</span><span class=special>.</span><span class=identifier>get</span><span class=special>&lt;</span><span class=identifier>name</span><span class=special>&gt;().</span><span class=identifier>begin</span><span class=special>();</span>
+</pre></blockquote>
+
+<p>
+If no tag is provided for an index (as it is the case for index #0 of the previous
+example), accessing to that index can only be performed by number. Note the existence
+of two different <code>typedef</code>s <code>nth_index_type</code> and
+<code>index_type</code> for referring to an index by number and by tag, respectively;
+for instance,
+<ul>
+  <li><code>employee_set::nth_indexed_type&lt;1>::type</code> is the type of
+    index #1,</li>
+  <li><code>employee_set::indexed_type&lt;name>::type</code> is the type of the index
+    tagged with <code>name</code> (the same index #1 in this case.)</li>
+</ul>
+<code>get()</code>, on the other hand, is overloaded to serve both styles of access:
+</p>
+
+<blockquote><pre>
+<span class=identifier>employee_set</span><span class=special>::</span><span class=identifier>index_type</span><span class=special>&lt;</span><span class=identifier>name</span><span class=special>&gt;::</span><span class=identifier>type</span><span class=special>&amp;</span> <span class=identifier>name_index</span><span class=special>=</span><span class=identifier>es</span><span class=special>.</span><span class=identifier>get</span><span class=special>&lt;</span><span class=identifier>name</span><span class=special>&gt;();</span>
+<span class=identifier>employee_set</span><span class=special>::</span><span class=identifier>nth_index_type</span><span class=special>&lt;</span><span class=number>1</span><span class=special>&gt;::</span><span class=identifier>type</span><span class=special>&amp;</span> <span class=identifier>name_index2</span><span class=special>=</span><span class=identifier>es</span><span class=special>.</span><span class=identifier>get</span><span class=special>&lt;</span><span class=number>1</span><span class=special>&gt;();</span> <span class=comment>// same index</span>
+</pre></blockquote>
+
+<p>
+Additionally, the <code>tag</code> class template accepts several tags for one
+index, that we can use interchangeably: for instance, the specification of index #1
+in the previous example can be rewritten to hold two different tags
+<code>name</code> and <code>by_name</code>:
+</p>
+
+<blockquote><pre>
+<span class=comment>// tags</span>
+<span class=keyword>struct</span> <span class=identifier>name</span><span class=special>{};</span>
+<span class=keyword>struct</span> <span class=identifier>by_name</span><span class=special>{};</span>
+
+<span class=keyword>typedef</span> <span class=identifier>indexed_set</span><span class=special>&lt;</span>
+  <span class=special>...</span>
+    <span class=identifier>non_unique</span><span class=special>&lt;</span><span class=identifier>tag</span><span class=special>&lt;</span><span class=identifier>name</span><span class=special>,</span><span class=identifier>by_name</span><span class=special>&gt;,</span><span class=identifier>member</span><span class=special>&lt;</span><span class=identifier>employee</span><span class=special>,</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>string</span><span class=special>,&amp;</span><span class=identifier>employee</span><span class=special>::</span><span class=identifier>name</span><span class=special>&gt;</span> <span class=special>&gt;</span>
+  <span class=special>...</span>
+<span class=special>&gt;</span> <span class=identifier>employee_set</span><span class=special>;</span>
+</pre></blockquote>
+
+<h3>
+<a name="key_extraction">Key extraction</a>
+</h3>
+
+<p>
+The first template parameter (or the second, if tags are supplied)
+in the specification of an index provides a <i>key extraction</i> predicate.
+This predicate takes a whole element (in our example, a reference to an
+<code>employee</code> object) and returns the piece of information by which
+the sorting is performed. In most cases, one of the following two situations arises:
+<ul>
+<li>The whole element serves as the key, as it is the case of the first index
+in <code>employee_set</code>. The predefined
+<a href="reference.html#identity"><code>identity</code></a> predicate can be used
+here as a key extractor; <code>identity</code> returns as the key the same object
+passed as argument.</li>
+<li>The comparison is performed on a particular data member of the element; this
+closely follows the specification of indices on a column of a table in relational
+databases. Boost.IndexedSet provides
+<a href="reference.html#member"><code>member</code></a>, which returns as the key
+a member of the element specified by a given pointer.</li>
+</ul>
+As an example, consider again the definition of <code>employee_set</code>. The
+definition of the first index:
+</p>
+
+<blockquote><pre>
+<span class=identifier>unique</span><span class=special>&lt;</span><span class=identifier>identity</span><span class=special>&lt;</span><span class=identifier>employee</span><span class=special>&gt;</span> <span class=special>&gt;</span>
+</pre></blockquote>
+
+<p>
+specifies by means of <code>identity</code> that the whole <code>element</code>
+objects serve as key for this index. On the other hand, in the second index:
+</p>
+
+<blockquote><pre>
+<span class=identifier>non_unique</span><span class=special>&lt;</span><span class=identifier>member</span><span class=special>&lt;</span><span class=identifier>employee</span><span class=special>,</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>string</span><span class=special>,&amp;</span><span class=identifier>employee</span><span class=special>::</span><span class=identifier>name</span><span class=special>&gt;</span> <span class=special>&gt;</span>
+</pre></blockquote>
+
+<p>
+we use <code>member</code> to extract the <code>name</code> part of the
+<code>employee</code> object. The key type of this index is then
+<code>std::string</code>.
+</p>
+
+<p>
+Another common situation arises when the sorting is performed on the result
+of a particular member function. This resembles the notion of
+<i>calculated indices</i> supported by some relational databases.
+In these cases, the key is not a data member of the element, but rather it is
+a value returned by a particular member function. Boost.IndexedSet supports this
+kind of key extraction through
+<a href="reference.html#const_mem_fun"><code>const_mem_fun</code></a>. Consider the
+following extension of our example where sorting on the third index is based
+upon the lenght of the name field:
+</p>
+
+<blockquote><pre>
+<span class=keyword>struct</span> <span class=identifier>employee</span>
+<span class=special>{</span>
+  <span class=keyword>int</span>         <span class=identifier>id</span><span class=special>;</span>
+  <span class=identifier>std</span><span class=special>::</span><span class=identifier>string</span> <span class=identifier>name</span><span class=special>;</span>
+
+  <span class=identifier>employee</span><span class=special>(</span><span class=keyword>int</span> <span class=identifier>id</span><span class=special>,</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>string</span> <span class=identifier>name</span><span class=special>,</span><span class=keyword>int</span> <span class=identifier>ssnumber</span><span class=special>):</span><span class=identifier>id</span><span class=special>(</span><span class=identifier>id</span><span class=special>),</span><span class=identifier>name</span><span class=special>(</span><span class=identifier>name</span><span class=special>){}</span>
+
+  <span class=keyword>bool</span> <span class=keyword>operator</span><span class=special>&lt;(</span><span class=keyword>const</span> <span class=identifier>employee</span><span class=special>&amp;</span> <span class=identifier>e</span><span class=special>)</span><span class=keyword>const</span><span class=special>{</span><span class=keyword>return</span> <span class=identifier>id</span><span class=special>&lt;</span><span class=identifier>e</span><span class=special>.</span><span class=identifier>id</span><span class=special>;}</span>
+
+  <span class=comment>// returns the length of the name field</span>
+  <span class=identifier>std</span><span class=special>::</span><span class=identifier>size_t</span> <span class=identifier>name_length</span><span class=special>()</span><span class=keyword>const</span><span class=special>{</span><span class=keyword>return</span> <span class=identifier>name</span><span class=special>.</span><span class=identifier>size</span><span class=special>();}</span>
+<span class=special>};</span>
+
+<span class=keyword>typedef</span> <span class=identifier>indexed_set</span><span class=special>&lt;</span>
+  <span class=identifier>employee</span><span class=special>,</span>
+  <span class=identifier>index_list</span><span class=special>&lt;</span>
+    <span class=identifier>unique</span><span class=special>&lt;</span><span class=identifier>identity</span><span class=special>&lt;</span><span class=identifier>employee</span><span class=special>&gt;</span> <span class=special>&gt;,</span>                                            <span class=comment>// sort by employee::operator&lt;</span>
+    <span class=identifier>non_unique</span><span class=special>&lt;</span><span class=identifier>member</span><span class=special>&lt;</span><span class=identifier>employee</span><span class=special>,</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>string</span><span class=special>,&amp;</span><span class=identifier>employee</span><span class=special>::</span><span class=identifier>name</span><span class=special>&gt;</span> <span class=special>&gt;,</span>              <span class=comment>// sort by less&lt;string&gt; on name</span>
+    <span class=identifier>non_unique</span><span class=special>&lt;</span><span class=identifier>const_mem_fun</span><span class=special>&lt;</span><span class=identifier>employee</span><span class=special>,</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>size_t</span><span class=special>,&amp;</span><span class=identifier>employee</span><span class=special>::</span><span class=identifier>name_length</span><span class=special>&gt;</span> <span class=special>&gt;</span> <span class=comment>// sort by less&lt;int&gt; on name_length()</span>
+  <span class=special>&gt;</span>
+<span class=special>&gt;</span> <span class=identifier>employee_set</span><span class=special>;</span>
+</pre></blockquote>
+
+<p><a href="examples.html#example2">Example 2</a> in the examples section
+provides a complete program showing how to use <code>const_mem_fun</code>.
+Almost always you will want to use a <code>const</code> member function,
+since elements in an <code>indexed_set</code> are treated as constant, much
+as elements of an <code>std::set</code>. However, a
+<a href="reference.html#mem_fun"><code>mem_fun</code></a> counterpart is
+provided for use with non-constant member functions, whose applicability is
+discussed on the paragraph on
+<a href="advanced_topics.html#advanced_key_extractors">advanced features
+of Boost.IndexedSet key extractors</a> in the advanced topics section.
+<p>
+
+<p>
+<code>identity</code>, <code>member</code> and <code>const_mem_fun</code> serve
+most common situations in the design of an <code>indexed_set</code>. However, the
+user is free to provide her own key extractors in more exotic situations, as long as
+these conform to the <a href="reference.html#key_extractors"><code>Key
+Extractor</code></a> concept. For instance,
+<a href="examples.html#example5">example 5</a> implements several key
+extraction techniques called for when elements and/or keys are accessed via
+pointers.
+</p>
+
+<h3><a name="comparison_predicates">Comparison predicates</a></h3>
+
+<p>
+The last part of the specification of an index is the associated <i>comparison
+predicate</i>, which must order the keys in a less-than fashion. These comparison
+predicates are not different to those used by STL containers like
+<code>std::set</code>. By default (i.e. if no comparison predicate is provided),
+an index with keys of type <code>key_type</code> sorts the elements by
+<code>std::less&lt;key_type></code>. Should other comparison criteria be needed,
+they can be specified as an additional parameter in the index declaration:
+</p>
+
+<blockquote><pre>
+<span class=comment>// define a multiply indexed set with indices by id and by name
+// in reverse alphabetical order</span>
+<span class=keyword>typedef</span> <span class=identifier>indexed_set</span><span class=special>&lt;</span>
+  <span class=identifier>employee</span><span class=special>,</span>
+  <span class=identifier>index_list</span><span class=special>&lt;</span>
+    <span class=identifier>unique</span><span class=special>&lt;</span><span class=identifier>identity</span><span class=special>&lt;</span><span class=identifier>employee</span><span class=special>&gt;</span> <span class=special>&gt;,</span> <span class=comment>// as usual</span>
+    <span class=identifier>non_unique</span><span class=special>&lt;</span>
+      <span class=identifier>member</span><span class=special>&lt;</span><span class=identifier>employee</span><span class=special>,</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>string</span><span class=special>,&amp;</span><span class=identifier>employee</span><span class=special>::</span><span class=identifier>name</span><span class=special>&gt;,</span>
+      <span class=identifier>std</span><span class=special>::</span><span class=identifier>greater</span><span class=special>&lt;</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>string</span><span class=special>&gt;</span>  <span class=comment>// default would be std::less&lt;std::string&gt;</span>
+    <span class=special>&gt;</span>
+  <span class=special>&gt;</span>
+<span class=special>&gt;</span> <span class=identifier>employee_set</span><span class=special>;</span>
+</pre></blockquote>
+
+<p>See also <a href="examples.html#example6">example 6</a> in the examples section
+for another application of user-defined comparison predicates.
+</p>
+
+<h2><a name="special_lookup">Special lookup operations</a></h2>
+
+<p>
+A given index allows for lookup based on its key type, rather than the whole element. For
+instance, to find Veronica Cruz in an <code>employee_set</code> one would write:
+</p>
+
+<blockquote><pre>
+<span class=identifier>employee_set</span> <span class=identifier>es</span><span class=special>;</span>
+<span class=special>...</span>
+<span class=keyword>typedef</span> <span class=identifier>employee_set</span><span class=special>::</span><span class=identifier>index_type</span><span class=special>&lt;</span><span class=identifier>name</span><span class=special>&gt;::</span><span class=identifier>type</span> <span class=identifier>employee_set_by_name</span><span class=special>;</span>
+<span class=identifier>employee_set_by_name</span><span class=special>::</span><span class=identifier>iterator</span> <span class=identifier>it</span><span class=special>=</span><span class=identifier>es</span><span class=special>.</span><span class=identifier>get</span><span class=special>&lt;</span><span class=identifier>name</span><span class=special>&gt;().</span><span class=identifier>find</span><span class=special>(</span><span class=string>&quot;Veronica Cruz&quot;</span><span class=special>);</span>
+</pre></blockquote>
+
+<p>As a plus, Boost.IndexedSet provides lookup operations accepting search keys
+different from the <code>key_type</code> of the index, which is a specially useful
+facility when <code>key_type</code> objects  are expensive to create. Regular STL containers
+fail to provide this functionality, which often leads to inelegant workarounds: consider for
+instance the problem of determining the employees whose IDs fall on the range [0,100]. Given
+that the key of <code>employee_set</code> index #0
+is <code>employee</code> itself, on a first approach one would write the following:
+</p>
+
+<blockquote><pre>
+<span class=identifier>employee_set</span><span class=special>::</span><span class=identifier>iterator</span> <span class=identifier>p0</span><span class=special>=</span><span class=identifier>es</span><span class=special>.</span><span class=identifier>lower_bound</span><span class=special>(</span><span class=identifier>employee</span><span class=special>(</span><span class=number>0</span><span class=special>,</span><span class=string>&quot;&quot;</span><span class=special>));</span>
+<span class=identifier>employee_set</span><span class=special>::</span><span class=identifier>iterator</span> <span class=identifier>p1</span><span class=special>=</span><span class=identifier>es</span><span class=special>.</span><span class=identifier>upper_bound</span><span class=special>(</span><span class=identifier>employee</span><span class=special>(</span><span class=number>100</span><span class=special>,</span><span class=string>&quot;&quot;</span><span class=special>));</span>
+</pre></blockquote>
+
+<p>
+Note however that <code>std::less&lt;employee></code> actually only depends
+on the IDs of the employees, so it would be more convenient to avoid
+the creation of entire <code>employee</code> objects just for the sake of
+their IDs. Boost.IndexedSet allows for this: define an appropriate
+comparison predicate:
+</p>
+
+<blockquote><pre>
+<span class=keyword>struct</span> <span class=identifier>comp_id</span>
+<span class=special>{</span>
+  <span class=comment>// compare an ID and an employee</span>
+  <span class=keyword>bool</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>int</span> <span class=identifier>x</span><span class=special>,</span><span class=keyword>const</span> <span class=identifier>employee</span><span class=special>&amp;</span> <span class=identifier>e2</span><span class=special>)</span><span class=keyword>const</span><span class=special>{</span><span class=keyword>return</span> <span class=identifier>x</span><span class=special>&lt;</span><span class=identifier>e2</span><span class=special>.</span><span class=identifier>id</span><span class=special>;}</span>
+
+  <span class=comment>// compare an employee and an ID</span>
+  <span class=keyword>bool</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>employee</span><span class=special>&amp;</span> <span class=identifier>e1</span><span class=special>,</span><span class=keyword>int</span> <span class=identifier>x</span><span class=special>)</span><span class=keyword>const</span><span class=special>{</span><span class=keyword>return</span> <span class=identifier>e1</span><span class=special>.</span><span class=identifier>id</span><span class=special>&lt;</span><span class=identifier>x</span><span class=special>;}</span>
+<span class=special>};</span>
+</pre></blockquote>
+
+<p>and write now the search as</p>
+
+<blockquote><pre>
+<span class=identifier>employee_set</span><span class=special>::</span><span class=identifier>iterator</span> <span class=identifier>p0</span><span class=special>=</span><span class=identifier>es</span><span class=special>.</span><span class=identifier>lower_bound</span><span class=special>(</span><span class=number>0</span><span class=special>,</span><span class=identifier>comp_id</span><span class=special>());</span>
+<span class=identifier>employee_set</span><span class=special>::</span><span class=identifier>iterator</span> <span class=identifier>p1</span><span class=special>=</span><span class=identifier>es</span><span class=special>.</span><span class=identifier>upper_bound</span><span class=special>(</span><span class=number>100</span><span class=special>,</span><span class=identifier>comp_id</span><span class=special>());</span>
+</pre></blockquote>
+
+<p>
+Here were are not only passing IDs instead of <code>employee</code> objects:
+an alternative comparison predicate is passed as well. In general, lookup operations
+of <code>indexed_set</code> are overloaded to accept
+<a href="reference.html#index_set_operations"><i>compatible sorting criteria</i></a>.
+The somewhat cumbersone definition of compatibility in this context is given in
+the reference, but roughly speaking we say that a comparison predicate
+<code>C1</code> is compatible with <code>C2</code> if any sequence sorted by
+<code>C2</code> is also sorted with respect to <code>C1</code>.
+The following shows a more interesting use of compatible predicates:
+</p>
+
+<blockquote><pre>
+<span class=comment>// sorting by name's initial</span>
+<span class=keyword>struct</span> <span class=identifier>comp_initial</span>
+<span class=special>{</span>
+  <span class=keyword>bool</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>char</span> <span class=identifier>ch</span><span class=special>,</span><span class=keyword>const</span> <span class=identifier>std</span><span class=special>::</span><span class=identifier>string</span><span class=special>&amp;</span> <span class=identifier>s</span><span class=special>)</span><span class=keyword>const</span><span class=special>{</span>
+    <span class=keyword>if</span><span class=special>(</span><span class=identifier>s</span><span class=special>.</span><span class=identifier>empty</span><span class=special>())</span><span class=keyword>return</span> <span class=keyword>false</span><span class=special>;</span>
+    <span class=keyword>return</span> <span class=identifier>ch</span><span class=special>&lt;</span><span class=identifier>s</span><span class=special>[</span><span class=number>0</span><span class=special>];</span>
+  <span class=special>}</span>
+
+  <span class=keyword>bool</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>const</span> <span class=identifier>std</span><span class=special>::</span><span class=identifier>string</span><span class=special>&amp;</span> <span class=identifier>s</span><span class=special>,</span><span class=keyword>char</span> <span class=identifier>ch</span><span class=special>)</span><span class=keyword>const</span><span class=special>{</span>
+    <span class=keyword>if</span><span class=special>(</span><span class=identifier>s</span><span class=special>.</span><span class=identifier>empty</span><span class=special>())</span><span class=keyword>return</span> <span class=keyword>true</span><span class=special>;</span>
+    <span class=keyword>return</span> <span class=identifier>s</span><span class=special>[</span><span class=number>0</span><span class=special>]&lt;</span><span class=identifier>ch</span><span class=special>;</span>
+  <span class=special>}</span>
+<span class=special>};</span>
+
+<span class=comment>// obtain first employee whose name begins with 'J' (ordered by name)</span>
+<span class=keyword>typedef</span> <span class=identifier>employee_set</span><span class=special>::</span><span class=identifier>index_type</span><span class=special>&lt;</span><span class=identifier>name</span><span class=special>&gt;::</span><span class=identifier>type</span> <span class=identifier>employee_set_by_name</span><span class=special>;</span>
+<span class=identifier>employee_set_by_name</span><span class=special>&amp;</span> <span class=identifier>name_index</span><span class=special>=</span><span class=identifier>es</span><span class=special>.</span><span class=identifier>get</span><span class=special>&lt;</span><span class=identifier>name</span><span class=special>&gt;();</span> 
+<span class=identifier>employee_set_by_name</span><span class=special>::</span><span class=identifier>const_iterator</span> <span class=identifier>it</span><span class=special>=</span><span class=identifier>name_index</span><span class=special>.</span><span class=identifier>lower_bound</span><span class=special>(</span><span class=literal>'J'</span><span class=special>,</span><span class=identifier>comp_initial</span><span class=special>());</span>
+</pre></blockquote>
+
+<h2><a name="range">Retrieval of ranges</a></h2>
+
+<p>
+Range searching, i.e. the lookup of all elements in a given interval, is a very
+frequent operation for which standard <code>lower_bound</code> and
+<code>upper_bound</code> can be resorted to, though in a cumbersome manner.
+For instance, the following code retrieves the elements of an
+<code>indexed_set&lt;double></code> in the interval [100,200]:
+</p>
+
+<blockquote><pre>
+<span class=keyword>typedef</span> <span class=identifier>indexed_set</span><span class=special>&lt;</span><span class=keyword>double</span><span class=special>&gt;</span> <span class=identifier>double_set</span><span class=special>;</span>
+<span class=comment>// note: default template parameters resolve to
+// indexed_set&lt;double,index_list&lt;unique&lt;identity&lt;double&gt; &gt; &gt; &gt;.</span>
+
+<span class=keyword>typedef</span> <span class=identifier>double_set</span> <span class=identifier>s</span><span class=special>;</span>
+<span class=special>...</span>
+<span class=identifier>double_set</span><span class=special>::</span><span class=identifier>iterator</span> <span class=identifier>it0</span><span class=special>=</span><span class=identifier>s</span><span class=special>.</span><span class=identifier>lower_bound</span><span class=special>(</span><span class=number>100.0</span><span class=special>);</span>
+<span class=identifier>double_set</span><span class=special>::</span><span class=identifier>iterator</span> <span class=identifier>it1</span><span class=special>=</span><span class=identifier>s</span><span class=special>.</span><span class=identifier>upper_bound</span><span class=special>(</span><span class=number>200.0</span><span class=special>);</span>
+<span class=comment>// elements are in the range [it0,it1)</span>
+</pre></blockquote>
+
+<p>
+Subtle changes to the code are required when strict inequalities are considered.
+To retrieve the elements <i>greater</i> than 100 and <i>less</i> than 200, the
+code has to be rewritten as
+</p>
+
+<blockquote><pre>
+<span class=identifier>double_set</span><span class=special>::</span><span class=identifier>iterator</span> <span class=identifier>it0</span><span class=special>=</span><span class=identifier>s</span><span class=special>.</span><span class=identifier>upper_bound</span><span class=special>(</span><span class=number>100.0</span><span class=special>);</span>
+<span class=identifier>double_set</span><span class=special>::</span><span class=identifier>iterator</span> <span class=identifier>it1</span><span class=special>=</span><span class=identifier>s</span><span class=special>.</span><span class=identifier>lower_bound</span><span class=special>(</span><span class=number>200.0</span><span class=special>);</span>
+<span class=comment>// elements are in the range [it0,it1)</span>
+</pre></blockquote>
+
+<p>
+To add to this complexity, the careful programmer has to take into account
+that the lower and upper bounds of the interval searched be compatible: for
+instance, if the lower bound is 200 and the upper bound is 100, the iterators
+<code>it0</code> and <code>it1</code> produced by the code above will be in reverse
+order, with possibly catastrophic results if a traversal from <code>it0</code>
+to <code>it1</code> is tried. All these details make range searching a tedious
+and error prone task.
+</p>
+
+<p>
+The <a href="reference.html#index_range_operations"><code>range</code></a> member
+function, oftenly in combination with
+<a href="../../../libs/lambda/doc/index.html">Boost.Lambda</a> expressions, can
+greatly help alleviate this situation:
+</p>
+
+<blockquote><pre>
+<span class=keyword>typedef</span> <span class=identifier>indexed_set</span><span class=special>&lt;</span><span class=keyword>double</span><span class=special>&gt;</span> <span class=identifier>double_set</span><span class=special>;</span>
+<span class=keyword>typedef</span> <span class=identifier>double_set</span> <span class=identifier>s</span><span class=special>;</span>
+<span class=special>...</span>
+<span class=identifier>std</span><span class=special>::</span><span class=identifier>pair</span><span class=special>&lt;</span><span class=identifier>double_set</span><span class=special>::</span><span class=identifier>iterator</span><span class=special>,</span><span class=identifier>double_set</span><span class=special>::</span><span class=identifier>iterator</span><span class=special>&gt;</span> <span class=identifier>p</span><span class=special>=</span>
+  <span class=identifier>s</span><span class=special>.</span><span class=identifier>range</span><span class=special>(</span><span class=number>100.0</span><span class=special>&lt;=</span><span class=identifier>lambda</span><span class=special>::</span><span class=identifier>_1</span><span class=special>,</span><span class=identifier>lambda</span><span class=special>::</span><span class=identifier>_1</span><span class=special>&lt;=</span><span class=number>200</span><span class=special>);</span> <span class=comment>// 100&lt;= x &lt;=200</span>
+<span class=special>...</span>
+<span class=identifier>p</span><span class=special>=</span><span class=identifier>s</span><span class=special>.</span><span class=identifier>range</span><span class=special>(</span><span class=number>100.0</span><span class=special>&lt;</span><span class=identifier>lambda</span><span class=special>::</span><span class=identifier>_1</span><span class=special>,</span><span class=identifier>lambda</span><span class=special>::</span><span class=identifier>_1</span><span class=special>&lt;</span><span class=number>200</span><span class=special>);</span>   <span class=comment>// 100&lt;  x &lt; 200</span>
+<span class=special>...</span>
+<span class=identifier>p</span><span class=special>=</span><span class=identifier>s</span><span class=special>.</span><span class=identifier>range</span><span class=special>(</span><span class=number>100.0</span><span class=special>&lt;=</span><span class=identifier>lambda</span><span class=special>::</span><span class=identifier>_1</span><span class=special>,</span><span class=identifier>lambda</span><span class=special>::</span><span class=identifier>_1</span><span class=special>&lt;</span><span class=number>200</span><span class=special>);</span>  <span class=comment>// 100&lt;= x &lt; 200</span>
+</pre></blockquote>
+
+<p>
+<code>range</code> simply accepts predicates specifying the lower and upper bounds
+of the interval searched. Please consult the reference for a detailed explanation
+of the permissible predicates passed to <code>range</code>.</p>
+
+<p>
+One or both bounds can be omitted with the special <code>unbounded</code> marker:
+</p>
+
+<blockquote><pre>
+<span class=identifier>p</span><span class=special>=</span><span class=identifier>s</span><span class=special>.</span><span class=identifier>range</span><span class=special>(</span><span class=number>100.0</span><span class=special>&lt;=</span><span class=identifier>lambda</span><span class=special>::</span><span class=identifier>_1</span><span class=special>,</span><span class=identifier>unbounded</span><span class=special>);</span> <span class=comment>// 100 &lt;= x</span>
+<span class=identifier>p</span><span class=special>=</span><span class=identifier>s</span><span class=special>.</span><span class=identifier>range</span><span class=special>(</span><span class=identifier>unbounded</span><span class=special>,</span><span class=identifier>lambda</span><span class=special>::</span><span class=identifier>_1</span><span class=special>&lt;</span><span class=number>200.0</span><span class=special>);</span>  <span class=comment>//   x &lt;  200</span>
+<span class=identifier>p</span><span class=special>=</span><span class=identifier>s</span><span class=special>.</span><span class=identifier>range</span><span class=special>(</span><span class=identifier>unbounded</span><span class=special>,</span><span class=identifier>unbounded</span><span class=special>);</span>         <span class=comment>// equivalent to std::make_pair(s.begin(),s.end())</span>
+</pre></blockquote>
+
+<h2><a name="updating">Updating</a></h2>
+
+<p>
+The <a href="reference.html#update"><code>update</code></a> member function performs
+in-place replacement of a given element as the following example shows:
+</p>
+
+<blockquote><pre>
+<span class=keyword>typedef</span> <span class=identifier>index_type</span><span class=special>&lt;</span><span class=identifier>employee_set</span><span class=special>,</span><span class=identifier>name</span><span class=special>&gt;::</span><span class=identifier>type</span> <span class=identifier>employee_set_by_name</span><span class=special>;</span>
+<span class=identifier>employee_set_by_name</span><span class=special>&amp;</span> <span class=identifier>name_index</span><span class=special>=</span><span class=identifier>es</span><span class=special>.</span><span class=identifier>get</span><span class=special>&lt;</span><span class=identifier>name</span><span class=special>&gt;();</span>
+
+<span class=identifier>employee_set_by_name</span><span class=special>::</span><span class=identifier>iterator</span> <span class=identifier>it</span><span class=special>=</span><span class=identifier>name_index</span><span class=special>.</span><span class=identifier>find</span><span class=special>(</span><span class=string>&quot;Anna Jones&quot;</span><span class=special>);</span>
+<span class=identifier>employee</span> <span class=identifier>anna</span><span class=special>=*</span><span class=identifier>it</span><span class=special>;</span>
+<span class=identifier>anna</span><span class=special>.</span><span class=identifier>name</span><span class=special>=</span><span class=string>&quot;Anna Smith&quot;</span><span class=special>;</span> <span class=comment>// she just got married to Calvin Smith</span>
+<span class=identifier>name_index</span><span class=special>.</span><span class=identifier>update</span><span class=special>(</span><span class=identifier>it</span><span class=special>,</span><span class=identifier>anna</span><span class=special>);</span>      <span class=comment>// update her record</span>
+</pre></blockquote>
+
+<p>
+<code>indexed_set::update</code> performs this substitution in such a
+manner that:
+<ul>
+<li>The complexity is constant time if the changed element retains its original
+order with respect to all indices; it is logarithmic otherwise.
+<li>Iterator and reference validity are preserved.
+<li>The operation is strongly exception-safe, i.e. the <code>indexed_set</code>
+remains unchanged if some exception (originated by the system or the user's data
+types) is thrown.
+</ul>
+Updating is a powerful capability not provided by standard STL containers, and
+one that comes specially handy when strong exception-safety is required.
+</p>
+
+<p>
+The observant reader might have noticed that the convenience of <code>update</code>
+comes at a cost: namely the whole element has to be copied <i>twice</i> to do
+the updating (when retrieving it and inside <code>update</code>). If elements
+are expensive to copy, this may be quite a computational cost for the modification
+of just a tiny part of the object. To cope with this situation, Boost.IndexedSet
+provides an alternative updating mechanism called
+<a href="reference.html#modify"><code>modify</code></a>:
+</p>
+
+<blockquote><pre>
+<span class=keyword>struct</span> <span class=identifier>change_name</span>
+<span class=special>{</span>
+  <span class=identifier>change_name</span><span class=special>(</span><span class=keyword>const</span> <span class=identifier>std</span><span class=special>::</span><span class=identifier>string</span><span class=special>&amp;</span> <span class=identifier>new_name</span><span class=special>):</span><span class=identifier>new_name</span><span class=special>(</span><span class=identifier>new_name</span><span class=special>){}</span>
+
+  <span class=keyword>void</span> <span class=keyword>operator</span><span class=special>()(</span><span class=identifier>employee</span><span class=special>&amp;</span> <span class=identifier>e</span><span class=special>)</span>
+  <span class=special>{</span>
+    <span class=identifier>e</span><span class=special>.</span><span class=identifier>name</span><span class=special>=</span><span class=identifier>new_name</span><span class=special>;</span>
+  <span class=special>}</span>
+
+<span class=keyword>private</span><span class=special>:</span>
+  <span class=identifier>std</span><span class=special>::</span><span class=identifier>string</span> <span class=identifier>new_name</span><span class=special>;</span>
+<span class=special>};</span>
+<span class=special>...</span>
+<span class=keyword>typedef</span> <span class=identifier>employee_set</span><span class=special>::</span><span class=identifier>index_type</span><span class=special>&lt;</span><span class=identifier>name</span><span class=special>&gt;::</span><span class=identifier>type</span> <span class=identifier>employee_set_by_name</span><span class=special>;</span>
+<span class=identifier>employee_set_by_name</span><span class=special>&amp;</span> <span class=identifier>name_index</span><span class=special>=</span><span class=identifier>es</span><span class=special>.</span><span class=identifier>get</span><span class=special>&lt;</span><span class=identifier>name</span><span class=special>&gt;();</span>
+
+<span class=identifier>employee_set_by_name</span><span class=special>::</span><span class=identifier>iterator</span> <span class=identifier>it</span><span class=special>=</span><span class=identifier>name_index</span><span class=special>.</span><span class=identifier>find</span><span class=special>(</span><span class=string>&quot;Anna Jones&quot;</span><span class=special>);</span>
+<span class=identifier>name_index</span><span class=special>.</span><span class=identifier>modify</span><span class=special>(</span><span class=identifier>it</span><span class=special>,</span><span class=identifier>change_name</span><span class=special>(</span><span class=string>&quot;Anna Smith&quot;</span><span class=special>));</span>
+</pre></blockquote>
+
+<p><code>modify</code> accepts a functor (or pointer to function) that is
+passed a reference to the element to be changed, thus eliminating the need
+for spurious copies.
+However, the semantics of <code>modify</code> is not equivalent to <code>update</code>.
+Consider what happens if a collision occurs as a result of modifying the element,
+i.e. the modified element clashes with another with respect to some unique
+index. In the case of <code>update</code>, the original value is kept and
+the method returns without altering the container, but <code>modify</code> cannot
+afford such approach, since the modifying functor leaves no trace of the
+previous value of the element. Integrity constraints considerations thus lead to the
+following policy: when a collision happens in the process of calling <code>modify</code>,
+the element is erased and the method returns <code>false</code>. This difference
+in behavior between <code>update</code> and <code>modify</code> has to be considered
+by the programmer on a case-per-case basis.
+</p>
+
+<p>
+A key-based version of <code>modify</code>, named <a href="reference.html#modify_key">
+<code>modify_key</code></a>, is provided as well. In this case, the modifying functor is
+passed a reference to the <code>key_value</code> part of the element instead of the
+whole object. Note that <code>modify_key</code> cannot be used for key extractors
+which return calculated values instead of references to data members of the elements, such
+as <code>const_mem_fun</code>.
+</p>
+
+<blockquote><pre>
+<span class=keyword>struct</span> <span class=identifier>change_str</span>
+<span class=special>{</span>
+  <span class=identifier>change_str</span><span class=special>(</span><span class=keyword>const</span> <span class=identifier>std</span><span class=special>::</span><span class=identifier>string</span><span class=special>&amp;</span> <span class=identifier>new_str</span><span class=special>):</span><span class=identifier>new_str</span><span class=special>(</span><span class=identifier>new_str</span><span class=special>){}</span>
+
+  <span class=keyword>void</span> <span class=keyword>operator</span><span class=special>()(</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>string</span><span class=special>&amp;</span> <span class=identifier>str</span><span class=special>)</span> <span class=comment>// note this is passed a string, not an employee</span>
+  <span class=special>{</span>
+    <span class=identifier>str</span><span class=special>=</span><span class=identifier>new_str</span><span class=special>;</span>
+  <span class=special>}</span>
+
+<span class=keyword>private</span><span class=special>:</span>
+  <span class=identifier>std</span><span class=special>::</span><span class=identifier>string</span> <span class=identifier>new_str</span><span class=special>;</span>
+<span class=special>};</span>
+<span class=special>...</span>
+<span class=keyword>typedef</span> <span class=identifier>employee_set</span><span class=special>::</span><span class=identifier>index_type</span><span class=special>&lt;</span><span class=identifier>name</span><span class=special>&gt;::</span><span class=identifier>type</span> <span class=identifier>employee_set_by_name</span><span class=special>;</span>
+<span class=identifier>employee_set_by_name</span><span class=special>&amp;</span> <span class=identifier>name_index</span><span class=special>=</span><span class=identifier>es</span><span class=special>.</span><span class=identifier>get</span><span class=special>&lt;</span><span class=identifier>name</span><span class=special>&gt;();</span>
+
+<span class=identifier>employee_set_by_name</span><span class=special>::</span><span class=identifier>iterator</span> <span class=identifier>it</span><span class=special>=</span><span class=identifier>name_index</span><span class=special>.</span><span class=identifier>find</span><span class=special>(</span><span class=string>&quot;Anna Jones&quot;</span><span class=special>);</span>
+<span class=identifier>name_index</span><span class=special>.</span><span class=identifier>modify_key</span><span class=special>(</span><span class=identifier>it</span><span class=special>,</span><span class=identifier>change_str</span><span class=special>(</span><span class=string>&quot;Anna Smith&quot;</span><span class=special>));</span>
+</pre></blockquote>
+
+<p>
+<code>modify</code> and <code>modify_key</code> are particularly well suited to use
+in conjunction to <a href="../../../libs/lambda/doc/index.html">Boost.Lambda</a>
+for defining the modifying functors:
+</p>
+
+<blockquote><pre>
+<span class=keyword>typedef</span> <span class=identifier>employee_set</span><span class=special>::</span><span class=identifier>index_type</span><span class=special>&lt;</span><span class=identifier>name</span><span class=special>&gt;::</span><span class=identifier>type</span> <span class=identifier>employee_set_by_name</span><span class=special>;</span>
+<span class=identifier>employee_set_by_name</span><span class=special>&amp;</span> <span class=identifier>name_index</span><span class=special>=</span><span class=identifier>es</span><span class=special>.</span><span class=identifier>get</span><span class=special>&lt;</span><span class=identifier>name</span><span class=special>&gt;();</span>
+
+<span class=identifier>employee_set_by_name</span><span class=special>::</span><span class=identifier>iterator</span> <span class=identifier>it</span><span class=special>=</span><span class=identifier>name_index</span><span class=special>.</span><span class=identifier>find</span><span class=special>(</span><span class=string>&quot;Anna Jones&quot;</span><span class=special>);</span>
+<span class=identifier>name_index</span><span class=special>.</span><span class=identifier>modify_key</span><span class=special>(</span><span class=identifier>it</span><span class=special>,</span><span class=identifier>lambda</span><span class=special>::</span><span class=identifier>_1</span><span class=special>=</span><span class=string>&quot;Anna Smith&quot;</span><span class=special>);</span>
+</pre></blockquote>
+
+<h2><a name="projection">Projection of iterators</a></h2>
+
+<p>
+Given indices <code>i1</code> and <code>i2</code> on the same <code>indexed_set</code>,
+<a href="reference.html#indexed_set_projection"><code>project</code></a> can be used to
+retrieve an <code>i2</code>-iterator from an <code>i1</code>-iterator, both of them
+pointing to the same element of the set. This functionality allows the programmer to
+move between different indices of the same <code>indexed_set</code> when performing
+elaborate searches:
+</p>
+
+<blockquote><pre>
+<span class=keyword>typedef</span> <span class=identifier>employee_set</span><span class=special>::</span><span class=identifier>index_type</span><span class=special>&lt;</span><span class=identifier>name</span><span class=special>&gt;::</span><span class=identifier>type</span> <span class=identifier>employee_set_by_name</span><span class=special>;</span>
+<span class=identifier>employee_set_by_name</span><span class=special>&amp;</span> <span class=identifier>name_index</span><span class=special>=</span><span class=identifier>es</span><span class=special>.</span><span class=identifier>get</span><span class=special>&lt;</span><span class=identifier>name</span><span class=special>&gt;();</span>
+
+<span class=comment>// list employees by ID starting from Robert Brown</span>
+<span class=identifier>employee_set_by_name</span><span class=special>::</span><span class=identifier>iterator</span> <span class=identifier>it1</span><span class=special>=</span><span class=identifier>name_index</span><span class=special>.</span><span class=identifier>find</span><span class=special>(</span><span class=string>&quot;Robert Brown&quot;</span><span class=special>);</span>
+<span class=identifier>employee_set</span><span class=special>::</span><span class=identifier>iterator</span> <span class=identifier>it2</span><span class=special>=</span><span class=identifier>es</span><span class=special>.</span><span class=identifier>project</span><span class=special>&lt;</span><span class=number>0</span><span class=special>&gt;(</span><span class=identifier>it1</span><span class=special>);</span>
+<span class=identifier>std</span><span class=special>::</span><span class=identifier>copy</span><span class=special>(</span><span class=identifier>it2</span><span class=special>,</span><span class=identifier>es</span><span class=special>.</span><span class=identifier>end</span><span class=special>(),</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>ostream_iterator</span><span class=special>&lt;</span><span class=identifier>employee</span><span class=special>&gt;(</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>cout</span><span class=special>));</span>
+</pre></blockquote>
+
+<p>
+When provided, <code>project</code> can also be used with
+<a href="#tagged_indices">tags</a>.
+</p>
+
+<h2><a name="complexity">Complexity and exception safety</a></h2>
+
+<p>
+<code>indexed_set</code> provides the same complexity and exception safety guarantees
+as STL sets do. In particular, insertion and lookup have logarithmic complexity,
+while deletion is performed in constant time. Iterator and reference validity is preserved
+in the face of insertions, even for <a href="#updating"><code>update</code> operations</a>.
+</p>
+
+<p>
+Appropriate instantiations of <code>indexed_set</code> can in fact simulate
+<code>std::set</code> and <code>std::multiset</code>, as shown in the
+<a href="advanced_topics.html#simulate_std_containers">advanced topics</a>
+section. These simulations are as efficient as the original STL containers; please
+consult the reference for further information on complexity guarantees.
+</p>
+
+<!--
+<h2><a name="samples">Tutorial samples</a></h2>
+
+<p>
+The following are complete sample programs from which the snippets of
+code shown in the tutorial have been extracted. They are given in two
+forms:
+<ul>
+  <li><i>preferred syntax</i>, suitable for modern compilers,</li>
+  <li><i>portable syntax</i>, in which workarounds have been applied
+    so as to cope with some deficiencies by several compilers. These
+    deficiencies are related to poor support for non-type template
+    parameters (see paragraphs on <a href="advanced_topics.html#member_offset">use
+    of <code>member_offset</code></a> and
+    <a href="advanced_topics.html#mem_fun_explicit">use of
+    <code>const_mem_fun_explicit</code> and <code>mem_fun_explicit</code></a> in
+    the advanced topics section) and the use of global <code>get</code> in favor
+	of the equivalent member functions when poor or no support for template
+	member functions is available.
+  </li>
+</ul>
+</p>
+-->
+
+<hr>
+
+<p>Revised December 15th 2003</p>
+
+<p>Copyright &copy; 2003 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
+Use, modification, and distribution are subject to the Boost Software 
+License, Version 1.0. (See accompanying file <a href="../../../LICENSE_1_0.txt">
+LICENSE_1_0.txt</a> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt">
+www.boost.org/LICENSE_1_0.txt</a>)
+</p>
+
+</body>
+</html>
