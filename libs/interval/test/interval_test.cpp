@@ -21,7 +21,18 @@
 
 static const int output_prec = 16;
 
-typedef boost::interval<double> R;
+using namespace boost;
+using namespace interval_lib;
+
+struct my_rounded_arith:
+    rounded_transc_opposite_trick
+      <double, rounded_arithmetic_opposite_trick
+	<double, save_state<rounding_control<double> > > >
+{};
+
+typedef boost::interval<double, interval_traits<double,
+						compare_certainly<double>,
+						my_rounded_arith> > R;
 
 template<class UnaryFunction>
 void iterate_one_interval(UnaryFunction func, const std::string & msg,
@@ -99,10 +110,10 @@ struct test_binary_function : std::binary_function<R, R, void>
   void operator()(const R& r1, const R& r2)
   {
     R result = funcr(r1,r2);
-    for(double f = r1.lower(); f <= r1.upper(); f+=width(r1)/10.0)
-      for(double g = lower(r2); g <= upper(r2); g+=width(r2)/10.0) {
+    for(double f = r1.lower(); f <= r1.upper(); f += width(r1) / 10.0)
+      for(double g = r2.lower(); g <= r2.upper(); g += width(r2) / 10.0) {
 	double presult = funcd(f,g);
-	if(presult == presult /* NaN check */ && !in(presult, result))
+	if (presult == presult /* NaN check */ && !in(presult, result))
 	  std::cout << f << " " << name << " " << g
 		    << " = " << std::setprecision(output_prec) << funcd(f,g)
 		    << " not in " 
@@ -131,8 +142,8 @@ struct test_binary_scalar_function
   void operator()(const R& r, typename FuncI::second_argument_type x)
   {
     R result = funcr(r, x);
-    for(double f = r.lower(); f <= r.upper(); f+=width(r)/10.0)
-      if(!empty(result) && !in(funcd(f,x), result))
+    for(double f = r.lower(); f <= r.upper(); f += width(r) / 10.0)
+      if (!empty(result) && !in(funcd(f,x), result))
 	std::cout << f << " " << name << " " << x
 		  << " = " << std::setprecision(output_prec) << funcd(f,x)
 		  << " not in " 
@@ -171,7 +182,7 @@ struct test_scalar_binary_function
   void operator()(const R& r, typename FuncI::first_argument_type x)
   {
     R result = funcr(x, r);
-    for(double f = r.lower(); f <= r.upper(); f+=width(r)/10.0)
+    for(double f = r.lower(); f <= r.upper(); f += width(r) / 10.0)
       if(!empty(result) && !in(funcd(x, f), result))
 	std::cout << x << " " << name << " " << f
 		  << " = " << std::setprecision(output_prec) << funcd(x,f)
@@ -275,9 +286,9 @@ struct test_unary_function : std::unary_function<R, void>
   void operator()(const R& r)
   {
     R result = funcr(r);
-    for(double f = r.lower(); f <= r.upper(); f+=width(r)/10.0) {
+    for(double f = r.lower(); f <= r.upper(); f += width(r) / 10.0) {
       double presult = funcd(f);
-      if(presult == presult /* NaN check */ && !in(presult, result))
+      if (presult == presult /* NaN check */ && !in(presult, result))
 	std::cout << name << "(" << f << ") = "
 		  << std::setprecision(output_prec) << funcd(f) << " not in " 
 		  << name << "(" << r << ") = " << result 

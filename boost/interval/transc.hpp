@@ -1,4 +1,4 @@
-/* boost detail/interval_transc.hpp template implementation file
+/* boost interval/transc.hpp template implementation file
  *
  * Copyright Jens Maurer 2000
  * Permission to use, copy, modify, sell, and distribute this software
@@ -28,7 +28,8 @@ inline interval<T, Traits> fmod(const interval<T, Traits>& x,
 				const interval<T, Traits>& y)
 {
   typename Traits::rounding rnd;
-  T n = rnd.int_down(rnd.div_down(x.lower(), y.upper()));
+  const T& yb = detail::sign(x.lower()) ? y.lower() : y.upper();
+  T n = rnd.int_down(rnd.div_down(x.lower(), yb));
   return x - n * y;
 }
 
@@ -65,7 +66,8 @@ interval<T, Traits> log(const interval<T, Traits>& x)
   } else {
     l = rnd.log_down(x.lower());
   }
-  T u = x.upper() == 0 ? -std::numeric_limits<T>::max() : rnd.log_up(x.upper());
+  T u = x.upper() > 0 ? rnd.log_up(x.upper())
+                      : -std::numeric_limits<T>::max();
   return interval<T, Traits>(l, u, true);
 }
 
@@ -79,7 +81,7 @@ interval<T, Traits> cos(const interval<T, Traits>& x)
 
   // get us within [0, pi]
   I tmp = fmod(x, pi2);
-  if (width(tmp) >= pi2.upper())
+  if (width(tmp) >= pi2.lower())
     return I(-1, 1, true);     // we are covering a full period
   if (tmp.lower() >= pi.upper())
     return -cos(tmp - pi);
@@ -87,7 +89,7 @@ interval<T, Traits> cos(const interval<T, Traits>& x)
   T u = tmp.upper();
 
   // separate into monotone subintervals
-  if (u <= pi.upper())
+  if (u <= pi.lower())
     return I(rnd.cos_down(u), rnd.cos_up(l), true);
   else if (u <= pi2.lower())
     return I(-1, rnd.cos_up(std::min(rnd.sub_down(pi2.lower(), u), l)),
@@ -100,29 +102,23 @@ template<class T, class Traits>
 inline interval<T, Traits> sin(const interval<T, Traits>& x)
 {
   typedef typename Traits::rounding rnd;
-  interval<T, Traits> pi(rnd::pi_1_2_down(), rnd::pi_1_2_up(), true);
-  return cos(x - pi);
+  interval<T, Traits> pi_2(rnd::pi_1_2_down(), rnd::pi_1_2_up(), true);
+  return cos(x - pi_2);
 }
 
-template<class T, class Traits> // FIXME: marche pas...
+template<class T, class Traits>
 interval<T, Traits> tan(const interval<T, Traits>& x)
 {
   typedef interval<T, Traits> I;
   typename Traits::rounding rnd;
-  typedef typename Traits::checking checking;
 
   I pi(rnd.pi_down(), rnd.pi_up(), true);
   // get us within [-pi/2, pi/2]
   I tmp = fmod(x, pi);
-  if (width(tmp) >= rnd.pi_up()) {
-     // we are covering a full period
-    checking::trigonometric_inf();
-    return I::entire();
-  }
-  if (tmp.lower() >= rnd.pi_1_2_up())
+  if (tmp.lower() >= rnd.pi_1_2_down())
     tmp -= pi;
-
-  if (tmp.upper() >= rnd.pi_1_2_down()) {
+  if (tmp.lower() <= -rnd.pi_1_2_down() || tmp.upper() >= rnd.pi_1_2_down()) {
+    typedef typename Traits::checking checking;
     checking::trigonometric_inf();
     return I::entire();
   }

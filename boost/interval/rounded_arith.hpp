@@ -60,38 +60,6 @@ struct rounded_arithmetic_opposite_trick: Rounding {
   T int_up(const T& x) { return to_int(x); }
 };
 
-template<class T, class Rounding>
-struct rounded_transc_dummy: Rounding {
-  T exp_down(const T& x) { return 0; }
-  T exp_up  (const T& x) { return std::numeric_limits<T>::infinity(); }
-  T log_down(const T& x) { return -std::numeric_limits<T>::infinity(); }
-  T log_up  (const T& x) { return std::numeric_limits<T>::infinity(); }
-  T sin_down(const T& x) { return -1; }
-  T sin_up  (const T& x) { return 1; }
-  T cos_down(const T& x) { return -1; }
-  T cos_up  (const T& x) { return 1; }
-  T tan_down(const T& x) { return -std::numeric_limits<T>::infinity(); }
-  T tan_up  (const T& x) { return std::numeric_limits<T>::infinity(); }
-  T asin_down(const T& x) { return -pi_1_2_up(); }
-  T asin_up  (const T& x) { return pi_1_2_up(); }
-  T acos_down(const T& x) { return 0; }
-  T acos_up  (const T& x) { return pi_up(); }
-  T atan_down(const T& x) { return -pi_1_2_up(); }
-  T atan_up  (const T& x) { return pi_1_2_up(); }
-  T sinh_down(const T& x) { return -std::numeric_limits<T>::infinity(); }
-  T sinh_up  (const T& x) { return std::numeric_limits<T>::infinity(); }
-  T cosh_down(const T& x) { return 1; }
-  T cosh_up  (const T& x) { return std::numeric_limits<T>::infinity(); }
-  T tanh_down(const T& x) { return -1; }
-  T tanh_up  (const T& x) { return 1; }
-  T asinh_down(const T& x) { return -std::numeric_limits<T>::infinity(); }
-  T asinh_up  (const T& x) { return std::numeric_limits<T>::infinity(); }
-  T acosh_down(const T& x) { return 0; }
-  T acosh_up  (const T& x) { return std::numeric_limits<T>::infinity(); }
-  T atanh_down(const T& x) { return -std::numeric_limits<T>::infinity(); }
-  T atanh_up  (const T& x) { return std::numeric_limits<T>::infinity(); }
-};
-
 template<class Rounding>
 struct save_state: Rounding
 {
@@ -149,7 +117,7 @@ struct rounded_arithmetic<float>:
 template<>
 struct rounded_arithmetic<double>:
     rounded_transc_dummy
-      <float, rounded_arithmetic_opposite_trick
+      <double, rounded_arithmetic_opposite_trick
 	<double, save_state<rounding_control<double> > > >
 {};
 

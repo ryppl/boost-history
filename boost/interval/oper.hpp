@@ -1,4 +1,4 @@
-/* boost detail/interval_oper.hpp template implementation file
+/* boost interval/oper.hpp template implementation file
  *
  * Copyright Jens Maurer 2000
  * Permission to use, copy, modify, sell, and distribute this software
@@ -61,7 +61,7 @@ inline interval<T, Traits>&
 interval<T, Traits>::operator-=(const interval<T, Traits>& r)
 {
   typename Traits::rounding rnd;
-  set(rnd.sub_down(low, r.low), rnd.sub_up(up, r.up));
+  set(rnd.sub_down(low, r.up), rnd.sub_up(up, r.low));
   return *this;
 }
 

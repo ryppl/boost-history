@@ -58,6 +58,7 @@
 #include <boost/operators.hpp>
 #endif
 
+#include <boost/interval/rounded_transc.hpp>
 #include <boost/interval/rounded_arith.hpp>
 #include <boost/interval/checking.hpp>
 
@@ -794,7 +795,6 @@ inline interval<T, Traits> abs(const interval<T, Traits>& x)
   else if (detail::sign(x.upper()))
     return -x;
   else {
-    typename Traits::rounding rnd;
     return interval<T, Traits>(T(0), std::max(-x.lower(), x.upper()), true);
   }
 }

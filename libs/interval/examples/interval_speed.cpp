@@ -353,8 +353,7 @@ template<class T>
 static void misc_arith_test(unsigned int vsize, const std::string & s)
 {
   mops1(std::negate<T>(), vsize, "unary -");
-  // mops1(math_unary_func<T>(abs), vsize, "abs");
-#undef HAVE_FMOD
+  mops1(math_unary_func<T>(abs), vsize, "abs");
 #ifdef HAVE_FMOD
   mops2(math_binary_func<T>(fmod), 100, "fmod");
 #else
@@ -371,9 +370,8 @@ template<class T>
 static void transc_test(unsigned int vsize, const std::string & s)
 {
   mops1(math_unary_func<T>(sqrt), vsize, "sqrt");
-#undef HAVE_TRANSCENDENTAL
-
 #ifdef HAVE_TRANSCENDENTAL
+#undef HAVE_ATAN2 // FIXME
 #ifdef HAVE_ATAN2
   mops2(math_binary_func<T>(atan2), 100, "atan2");
 #endif
@@ -445,9 +443,9 @@ static void test_vector_size_effects()
 int main(int argc, char *argv[])
 {
   //test_vector_size_effects();
-  run_test(8);
+  //run_test(8);
   run_test(96);
-  run_test(1000);
+  //run_test(1000);
 
   misc_arith_test<interval_type>(100, interval_name);
   transc_test<interval_type>(100, interval_name);
