@@ -11,17 +11,27 @@
 #define BOOST_STRING_CONTAINER_TRAITS_HPP
 
 #include <boost/string_algo/config.hpp>
-#include <list>
-#include <string>
-#include <vector>
-#include <deque>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/bool_c.hpp>
+#include <boost/mpl/find_if.hpp>
+#include <boost/mpl/list.hpp>
+#include <boost/string_algo/detail/yes_no_type.hpp>
+
+// Forward definitions for std containers
+namespace std {
+    template<typename T, typename TraitsT, typename AllocT> class basic_string;
+    template<typename T, typename AllocT> class list;
+}
 
 namespace boost {
 
     namespace string_algo{
 
 //  contatiner traits  -----------------------------------------------//
+
+#ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+
+//  contatiner traits definition -------------------------------------//
 
         // Generic container traits
         template< typename ContainerT >
@@ -37,7 +47,7 @@ namespace boost {
             // Container features
 
             // Container has basic_string like replace function
-            typedef boost::mpl::false_c has_replace;
+            typedef boost::mpl::false_c native_replace;
             // insert/erase methods preserve iterators
             typedef boost::mpl::false_c stable_iterators;
             // const-time insert method
@@ -46,7 +56,65 @@ namespace boost {
             typedef boost::mpl::false_c const_time_erase;
         };      
 
-#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+
+        // List container traits
+        template< typename T, typename AllocT >
+        struct container_traits< std::list<T,AllocT> >
+        {
+            // Input types
+            typedef std::list<T,AllocT> type;
+            typedef typename type::iterator iterator_type;
+            typedef typename type::const_iterator const_iterator_type;
+            typedef type& reference_type;
+            typedef const type& const_reference_type;
+
+            // Container features
+            typedef boost::mpl::false_c native_replace;
+            typedef boost::mpl::true_c stable_iterators;
+            typedef boost::mpl::true_c const_time_insert;
+            typedef boost::mpl::true_c const_time_erase;
+        };
+
+        // basic_string container traits
+        template< typename CharT, typename TraitsT, typename AllocT >
+        struct container_traits< std::basic_string<CharT, TraitsT, AllocT> >
+        {
+            // Input types
+            typedef std::basic_string<CharT, TraitsT, AllocT> type;
+            typedef typename type::iterator iterator_type;
+            typedef typename type::const_iterator const_iterator_type;
+            typedef type& reference_type;
+            typedef const type& const_reference_type;
+
+            // Container features
+            typedef boost::mpl::true_c native_replace;
+            typedef boost::mpl::false_c stable_iterators;
+            typedef boost::mpl::false_c const_time_insert;
+            typedef boost::mpl::false_c const_time_erase;
+        };
+
+#else // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION       
+
+//  contatiner traits definition -------------------------------------//
+
+        // Generic container traits
+        template< typename ContainerT >
+        struct default_container_traits
+        {
+            // Input types
+            typedef ContainerT type;
+            typedef typename type::iterator iterator_type;
+            typedef typename type::const_iterator const_iterator_type;
+            typedef type& reference_type;
+            typedef const type& const_reference_type;
+
+            // Container features
+            typedef boost::mpl::false_c native_replace;
+            typedef boost::mpl::false_c stable_iterators;
+            typedef boost::mpl::false_c const_time_insert;
+            typedef boost::mpl::false_c const_time_erase;
+        };      
+
 
         // List container traits
         /*
@@ -63,7 +131,7 @@ namespace boost {
             typedef const type& const_reference_type;
 
             // Container features
-            typedef boost::mpl::false_c has_replace;
+            typedef boost::mpl::false_c native_replace;
             typedef boost::mpl::true_c stable_iterators;
             typedef boost::mpl::true_c const_time_insert;
             typedef boost::mpl::true_c const_time_erase;
@@ -84,115 +152,138 @@ namespace boost {
             typedef const type& const_reference_type;
 
             // Container features
-            typedef boost::mpl::true_c has_replace;
+            typedef boost::mpl::true_c native_replace;
             typedef boost::mpl::false_c stable_iterators;
             typedef boost::mpl::false_c const_time_insert;
             typedef boost::mpl::false_c const_time_erase;
         };
 
-#else // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION       
 
-        // List container traits
-        template< typename T, typename AllocT >
-        struct container_traits< std::list<T,AllocT> >
-        {
-            // Input types
-            typedef std::list<T,AllocT> type;
-            typedef typename type::iterator iterator_type;
-            typedef typename type::const_iterator const_iterator_type;
-            typedef type& reference_type;
-            typedef const type& const_reference_type;
+//  contatiner traits selection implemetaion ------------------------------//
 
-            // Container features
-            typedef boost::mpl::false_c has_replace;
-            typedef boost::mpl::true_c stable_iterators;
-            typedef boost::mpl::true_c const_time_insert;
-            typedef boost::mpl::true_c const_time_erase;
-        };
-
-        // basic_string container traits
-        template< typename CharT, typename TraitsT, typename AllocT >
-        struct container_traits< std::basic_string<CharT, TraitsT, AllocT> >
-        {
-            // Input types
-            typedef std::basic_string<CharT, TraitsT, AllocT> type;
-            typedef typename type::iterator iterator_type;
-            typedef typename type::const_iterator const_iterator_type;
-            typedef type& reference_type;
-            typedef const type& const_reference_type;
-
-            // Container features
-            typedef boost::mpl::true_c has_replace;
-            typedef boost::mpl::false_c stable_iterators;
-            typedef boost::mpl::false_c const_time_insert;
-            typedef boost::mpl::false_c const_time_erase;
-        };
-
-#endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
-
-//  contatiner categorization function  --------------------------------//
-
-        namespace detail {
-
-#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
-
+        namespace detail {          
+            
+            // list selection --------------------------------------------//
             template< typename T, typename AllocT >
-            list_container_traits< std::list<T,AllocT> > 
-            container_traits_select( const std::list<T,AllocT>& )
+            yes_type is_list_tester( const std::list<T,AllocT>& );
+            no_type is_list_tester(...);
+
+            struct list_traits_selector
             {
-                return list_container_traits< std::list<T,AllocT> >();
-            }
+                template< typename T >
+                struct selector
+                {
+                    static T& t;
+                    BOOST_STATIC_CONSTANT(bool, 
+                        value=( sizeof(is_list_tester(t))==sizeof(yes_type) ) );
 
-            template< typename CharT, typename TraitsT, typename AllocT >
-            string_container_traits< std::basic_string<CharT, TraitsT, AllocT> > 
-            container_traits_select( const std::basic_string<CharT, TraitsT, AllocT>& )
+                    // Container traits
+                    typedef list_container_traits<T> traits; 
+                };
+            };
+
+            // basic_string selection ------------------------------------//
+            template< typename T, typename TraitsT, typename AllocT >
+            yes_type is_string_tester( const std::basic_string<T,TraitsT,AllocT>& );
+            no_type is_string_tester(...);
+            
+            struct string_traits_selector
             {
-                return string_container_traits< std::basic_string<CharT, TraitsT, AllocT> >();
-            }
+                template< typename T >
+                struct selector
+                {
+                    static T& t;
+                    BOOST_STATIC_CONSTANT(bool, 
+                        value=( sizeof(is_string_tester(t))==sizeof(yes_type) ) );
+                
+                    // Container traits
+                    typedef string_container_traits<T> traits; 
+                };
+            };
 
-            template< typename T, typename AllocT >
-            container_traits< std::vector<T,AllocT> > 
-            container_traits_select( const std::vector<T,AllocT>& )
+            // default selector ----------------------------------------//
+            // this selector should be last in the selector list
+            struct default_traits_selector
             {
-                return container_traits< std::vector<T,AllocT> >();
-            }
+                template< typename T >
+                struct selector
+                {
+                    BOOST_STATIC_CONSTANT(bool, value=true );
 
-            template< typename T, typename AllocT >
-            container_traits< std::deque<T,AllocT> > 
-                container_traits_select( const std::deque<T,AllocT>& )
+                    // Default container traits
+                    typedef default_container_traits<T> traits; 
+                };
+            };
+            
+            // Selector predicate metaclass  ----------------------------------//
+            template< typename T>
+            struct is_selected
             {
-                return container_traits< std::deque<T,AllocT> >();
-            }
+				template< typename SelectorT >
+				struct apply
+				{
+					typedef SelectorT::template selector<T> selector;
 
-#else // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION       
+					BOOST_STATIC_CONSTANT(bool, value=( selector::value ) );
+	                typedef boost::mpl::bool_c<value> type;
+				};
+			};
 
-            template< typename ContainerT >
-            container_traits<ContainerT> 
-            container_traits_select( ContainerT& )
+            // Container traits selection implementation -----------------------//    
+            
+            // Traits selector
+            template< typename T, typename SelectorList >
+            struct container_traits_selector
             {
-                return container_traits<ContainerT>();
-            }
+			private:
+                typedef SelectorList selectors;
 
-#endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION      
+                typedef typename boost::mpl::find_if< 
+                    selectors,
+					is_selected<T> >::type iter;
+                
+                typedef typename iter::type selector;
+                typedef selector::template selector<T> selector_type;
 
-//  contatiner traits selectors  --------------------------------//
-
-#define BOOST_STRING_CONTAINER_TRAIT_SELECT( T0 ) \
-            template< typename TraitsT > \
-            inline typename TraitsT::T0 T0##_select( const TraitsT& ) \
-            { \
-                typedef typename TraitsT::T0 trait_type; \
-                return trait_type(); \
-            }
-
-            BOOST_STRING_CONTAINER_TRAIT_SELECT(has_replace)
-            BOOST_STRING_CONTAINER_TRAIT_SELECT(stable_iterators)
-            BOOST_STRING_CONTAINER_TRAIT_SELECT(const_time_insert)
-            BOOST_STRING_CONTAINER_TRAIT_SELECT(const_time_erase)
-
-#undef BOOST_STRING_CONTAINER_TRAIT_SELECT
+			public:
+                typedef typename selector_type::traits type;
+            };                  
         
+            // Traits selectors list
+            typedef boost::mpl::list3< 
+                string_traits_selector,
+                list_traits_selector,
+                default_traits_selector >::type container_traits_selectors;
+
         } // namespace detail
+
+        // Generic container traits
+        template< typename ContainerT >
+        struct container_traits
+        {
+		private:
+            // Container traits resolving
+            typedef typename detail::container_traits_selector<
+                ContainerT,
+                detail::container_traits_selectors >::type traits_type;
+
+		public:
+            // Input types
+            typedef typename traits_type::type type;
+            typedef typename traits_type::iterator_type iterator_type;
+            typedef typename traits_type::const_iterator_type const_iterator_type;
+            typedef typename traits_type::reference_type reference_type;
+            typedef typename traits_type::const_reference_type const_reference_type;
+
+            // Container features
+
+            typedef typename traits_type::native_replace native_replace;
+            typedef typename traits_type::stable_iterators stable_iterators;
+            typedef typename traits_type::const_time_insert const_time_insert;
+            typedef typename traits_type::const_time_erase const_time_erase;                
+        };      
+
+#endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION       
 
     } // namespace string_algo
 

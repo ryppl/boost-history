@@ -20,34 +20,22 @@ namespace boost {
 //  Generic find functions -------------------------------------//
 
         // find iterator version
-        template< 
-            typename InputIteratorT, 
-            typename FindF >
+        template< typename FindF >
         inline typename FindF::result_type 
         find( 
-            InputIteratorT Begin, 
-            InputIteratorT End, 
+            typename FindF::input_iterator_type Begin, 
+            typename FindF::input_iterator_type End, 
             const FindF& Find )
         {
             // Forward the call to the functor
             return Find( make_range( Begin, End ) );
         }
 
-        // find sequence const version
-        template< typename InputT, typename FindF >
+        // find sequence version
+        template< typename FindF >
         inline typename FindF::result_type 
         find( 
-            const InputT& Input, 
-            const FindF& Find )
-        {
-            return Find( Input );
-        }
-
-        // find sequence non-const version
-        template< typename InputT, typename FindF >
-        inline typename FindF::result_type 
-        BOOST_STRING_NON_CONST_FUNCTION(find)( 
-            InputT& Input, 
+            typename FindF::input_reference_type Input, 
             const FindF& Find )
         {
             return Find( Input );

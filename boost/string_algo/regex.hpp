@@ -69,12 +69,12 @@ namespace boost {
         typename RegexTraitsT, typename RegexAllocatorT>
     inline string_algo::detail::
         regex_search_result< typename InputT::iterator >
-    BOOST_STRING_NON_CONST_FUNCTION(find_regex)( 
+    BOOST_STRING_MUTABLE_FUN(find_regex)( 
         InputT& Input, 
         const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
         unsigned int MatchFlags=match_default )
     {
-        return BOOST_STRING_NON_CONST_FUNCTION(string_algo::find)( 
+        return string_algo::find( 
             Input, 
             string_algo::detail::
                 create_find_regexF<InputT>::create( Rx, MatchFlags ) );

@@ -11,6 +11,7 @@
 #define BOOST_STRING_DETAIL_CONTAINER_HPP
 
 #include <boost/mpl/bool_c.hpp>
+#include <boost/mpl/logical.hpp>
 #include <boost/string_algo/container_traits.hpp>
 
 namespace boost {
@@ -55,6 +56,101 @@ namespace boost {
                 return Input.erase( From, To );
             }
 
+//  replace helper implementation  ----------------------------------//
+
+            // Optimized version of replace for generic sequence containers
+            // Assumption: insert and erase are expensive
+            template< typename HasConstTimeOperations >
+            struct replace_const_time_helper
+            {
+                template< typename InputT, typename InsertIteratorT >
+                void operator()(
+                    InputT& Input,
+                    typename InputT::iterator From,
+                    typename InputT::iterator To,
+                    InsertIteratorT Begin,
+                    InsertIteratorT End )
+                {
+                    // Copy data to the container ( as much as possible )
+                    InsertIteratorT InsertIt=Begin;
+                    typename InputT::iterator InputIt=From;
+                    for(; InsertIt!=End && InputIt!=To; InsertIt++, InputIt++ )
+                    {
+                        *InputIt=*InsertIt;
+                    }
+
+                    if ( InsertIt!=End )
+                    {
+                        // Replace sequence is longer, insert it
+                        Input.insert( InputIt, InsertIt, End );
+                    }
+                    else
+                    {
+                        if ( InputIt!=To )
+                        {
+                            // Replace sequence is shorter, erase the rest
+                            Input.erase( InputIt, To );
+                        }
+                    }
+                }
+            };
+
+            template<>
+            struct replace_const_time_helper< boost::mpl::true_c >
+            {
+                // Const-time erase and insert methods -> use them
+                template< typename InputT, typename InsertIteratorT >
+                void operator()(
+                    InputT& Input,
+                    typename InputT::iterator From,
+                    typename InputT::iterator To,
+                    InsertIteratorT Begin,
+                    InsertIteratorT End ) 
+                {
+                    typename InputT::iterator At=Input.erase( From, To );
+                    if ( Begin!=End )
+                    {
+                        Input.insert( At, Begin, End );
+                    }
+                }
+            };
+
+            // No native replace method
+            template< typename HasNative >
+            struct replace_native_helper
+            {
+                template< typename InputT, typename InsertIteratorT >
+                void operator()(
+                    InputT& Input,
+                    typename InputT::iterator From,
+                    typename InputT::iterator To,
+                    InsertIteratorT Begin,
+                    InsertIteratorT End ) 
+                {
+                    replace_const_time_helper< 
+                        boost::mpl::logical_and<
+                            container_traits<InputT>::const_time_insert,
+                            container_traits<InputT>::const_time_erase >::type >()(
+                        Input, From, To, Begin, End );
+                }
+            };
+
+            // Container has native replace method
+            template<>
+            struct replace_native_helper< boost::mpl::true_c >
+            {
+                template< typename InputT, typename InsertIteratorT >
+                void operator()(
+                    InputT& Input,
+                    typename InputT::iterator From,
+                    typename InputT::iterator To,
+                    InsertIteratorT Begin,
+                    InsertIteratorT End )
+                {
+                    Input.replace( From, To, Begin, End );
+                }
+            };
+
 //  replace helper  -------------------------------------------------//
         
             template< typename InputT, typename InsertT >
@@ -75,93 +171,10 @@ namespace boost {
                 InsertIteratorT Begin,
                 InsertIteratorT End )
             {
-                replace_nat( 
-                    Input, From, To, Begin, End, 
-                    has_replace_select(container_traits_select(Input)) );
-            }
-
-//  replace helper implementation  ----------------------------------//
-
-            // Container has native replace method
-            template< typename InputT, typename InsertIteratorT >
-            inline void replace_nat(
-                InputT& Input,
-                typename InputT::iterator From,
-                typename InputT::iterator To,
-                InsertIteratorT Begin,
-                InsertIteratorT End,
-                boost::mpl::true_c  )
-            {
-                Input.replace( From, To, Begin, End );
-            }
-
-            // No native replace method
-            template< typename InputT, typename InsertIteratorT >
-            inline void replace_nat(
-                InputT& Input,
-                typename InputT::iterator From,
-                typename InputT::iterator To,
-                InsertIteratorT Begin,
-                InsertIteratorT End,
-                boost::mpl::false_c ) 
-            {
-                replace_opt(
-                    Input, From, To, Begin, End,
-                    const_time_insert_select( container_traits_select(Input) ),
-                    const_time_erase_select( container_traits_select(Input) ) );
-            }
-            
-            // Const-time erase and insert methods -> use them
-            template< typename InputT, typename InsertIteratorT >
-            inline void replace_opt(
-                InputT& Input,
-                typename InputT::iterator From,
-                typename InputT::iterator To,
-                InsertIteratorT Begin,
-                InsertIteratorT End,
-                boost::mpl::true_c,
-                boost::mpl::true_c ) 
-            {
-                typename InputT::iterator At=Input.erase( From, To );
-                if ( Begin!=End )
-                {
-                    Input.insert( At, Begin, End );
-                }
-            }
-
-            // Optimized version of replace for generic sequence containers
-            // Assumption: insert and erase are expensive
-            template< typename InputT, typename InsertIteratorT >
-            inline void replace_opt(
-                InputT& Input,
-                typename InputT::iterator From,
-                typename InputT::iterator To,
-                InsertIteratorT Begin,
-                InsertIteratorT End,
-                ... )
-            {
-                // Copy data to the container ( as much as possible )
-                InsertIteratorT InsertIt=Begin;
-                typename InputT::iterator InputIt=From;
-                for(; InsertIt!=End && InputIt!=To; InsertIt++, InputIt++ )
-                {
-                    *InputIt=*InsertIt;
-                }
-                
-                if ( InsertIt!=End )
-                {
-                    // Replace sequence is longer, insert it
-                    Input.insert( InputIt, InsertIt, End );
-                }
-                else
-                {
-                    if ( InputIt!=To )
-                    {
-                        // Replace sequence is shorter, erase the rest
-                        Input.erase( InputIt, To );
-                    }
-                }
-            }
+                replace_native_helper< 
+                    container_traits<InputT>::native_replace >()(
+                    Input, From, To, Begin, End );
+            };
 
         } // namespace detail
 

@@ -4,8 +4,9 @@
 #include <set>
 #include <list>
 #include <vector>
-#include <boost/string_algo/replace.hpp>
-#include <boost/string_algo/detail/util.hpp>
+#include <boost/string_algo/find.hpp>
+//#include <boost/string_algo/replace.hpp>
+//#include <boost/string_algo/detail/util.hpp>
 //#include <boost/regex.hpp>
 //#include <boost/string_algo/regex.hpp>
 
@@ -94,7 +95,7 @@ void algo()
     cout << (contains( str1, string("abc") )?"true":"false") << endl; 
 }
 
-*/
+
 
 void replace()
 {
@@ -105,7 +106,7 @@ void replace()
     list<char> list1( str1.begin(), str1.end() );
 
     cout << str1 << endl;
-/*
+
     cout << endl;
 
     ostream_iterator<char> ost(cout);
@@ -136,7 +137,7 @@ void replace()
 
     cout << endl;
 
-*/
+
     replace_first( vec1, string("xx"), string("yy") );
     cout << "vector: " << string( vec1.begin(), vec1.end() ) << endl;
     replace_first( vec1, string("yy"), string("zzz") );
@@ -163,7 +164,7 @@ void replace()
     cout << endl;
 }
 
-/*
+*/
 
 void substr()
 {
@@ -187,7 +188,7 @@ void substr()
     cout << endl;
 
     iterator_range<string::iterator> nc_result=
-        BOOST_STRING_NON_CONST_FUNCTION(find_first)( str1, str2 );
+        BOOST_STRING_MUTABLE_FUN(find_first)( str1, str2 );
     cout << string( nc_result.begin(), str1.end() ) << endl;
     cout << string( str1.begin(), nc_result.end() ) << endl;
 
@@ -213,7 +214,7 @@ void substr()
 
     cout << endl;
 
-    nc_result=BOOST_STRING_NON_CONST_FUNCTION(find_last)( str1, str2 );
+    nc_result=BOOST_STRING_MUTABLE_FUN(find_last)( str1, str2 );
     cout << string( nc_result.begin(), str1.end() ) << endl;
     cout << string( str1.begin(), nc_result.end() ) << endl;
 
@@ -239,7 +240,7 @@ void substr()
 
     cout << endl;
 
-    nc_result=BOOST_STRING_NON_CONST_FUNCTION(find_nth)( str1, str2, 1 );
+    nc_result=BOOST_STRING_MUTABLE_FUN(find_nth)( str1, str2, 1 );
     cout << string( nc_result.begin(), str1.end() ) << endl;
     cout << string( str1.begin(), nc_result.end() ) << endl;
 
@@ -252,7 +253,7 @@ void substr()
     cout << endl;
 }
 
-
+/*
 
 void equals_test()
 {
@@ -329,8 +330,8 @@ int main()
 //  convtest();
 //  algo();
 //  equals_test();
-//  substr();
-    replace();
+    substr();
+//  replace();
 //  contatiner();
 //  regextest();
 

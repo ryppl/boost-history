@@ -79,8 +79,8 @@ void trim_test()
 
     // *** non-standard predicate tests *** //
     BOOST_CHECK( 
-		trim_copy_if( 
-			string("123abc456"), 
-			create_isclassified<char>(std::ctype_base::digit) )=="abc" );
+        trim_copy_if( 
+            string("123abc456"), 
+            create_isclassified<char>(std::ctype_base::digit) )=="abc" );
     BOOST_CHECK( trim_copy_if( string("<>abc<>"), create_isfrom( string("<<>>") ) )=="abc" );
 }

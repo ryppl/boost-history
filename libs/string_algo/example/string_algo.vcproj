@@ -167,9 +167,6 @@
 					RelativePath="..\..\..\boost\string_algo\detail\container.hpp">
 				</File>
 				<File
-					RelativePath="..\..\..\boost\string_algo\detail\container_basic_string.hpp">
-				</File>
-				<File
 					RelativePath="..\..\..\boost\string_algo\detail\find.hpp">
 				</File>
 				<File
@@ -193,6 +190,9 @@
 				<File
 					RelativePath="..\..\..\boost\string_algo\detail\util.hpp">
 				</File>
+				<File
+					RelativePath="..\..\..\boost\string_algo\detail\yes_no_type.hpp">
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -202,9 +202,6 @@
 		<Filter
 			Name="Doc"
 			Filter="">
-			<File
-				RelativePath="..\doc\index.html">
-			</File>
 			<File
 				RelativePath="..\doc\todo.txt">
 			</File>

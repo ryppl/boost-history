@@ -53,11 +53,11 @@ namespace boost {
     // find_first sequence non-const version
     template< typename InputT, typename SearchT >
     inline iterator_range< typename InputT::iterator >
-    BOOST_STRING_NON_CONST_FUNCTION(find_first)( 
+    BOOST_STRING_MUTABLE_FUN(find_first)( 
         InputT& Input, 
         const SearchT& Search )
     {
-        return BOOST_STRING_NON_CONST_FUNCTION(string_algo::find)( 
+        return string_algo::find( 
             Input, 
             string_algo::detail::
                 create_find_firstF<InputT>::create( Search ) );
@@ -98,11 +98,11 @@ namespace boost {
     // find_last sequence non-const version
     template< typename InputT, typename SearchT >
     inline iterator_range< typename InputT::iterator >
-    BOOST_STRING_NON_CONST_FUNCTION(find_last)( 
+    BOOST_STRING_MUTABLE_FUN(find_last)( 
         InputT& Input, 
         const SearchT& Search )
     {
-        return BOOST_STRING_NON_CONST_FUNCTION(string_algo::find)( 
+        return string_algo::find( 
             Input, 
             string_algo::detail::
                 create_find_lastF<InputT>::create( Search ) );
@@ -146,12 +146,12 @@ namespace boost {
     // find_nth sequence non-const version
     template< typename InputT, typename SearchT >
     inline iterator_range< typename InputT::iterator >
-    BOOST_STRING_NON_CONST_FUNCTION(find_nth)( 
+    BOOST_STRING_MUTABLE_FUN(find_nth)( 
         InputT& Input, 
         const SearchT& Search,
         unsigned int Nth )
     {
-        return BOOST_STRING_NON_CONST_FUNCTION(string_algo::find)( 
+        return string_algo::find( 
             Input, 
             string_algo::detail::
                 create_find_nthF<InputT>::create( Search, Nth ) );

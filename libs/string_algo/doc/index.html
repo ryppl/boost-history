@@ -5,7 +5,7 @@
 		<meta content="Pavol Droba, mailto:droba@topmail.sk" name="author">
 	</head>
 	<body text="#000000" bgcolor="#ffffff">
-		<h1><img id="IMG1" height="86" src="../../../c++boost.gif" width="277" align="center" border="0">
+		<h1><img id="IMG1" height="86" src="../../../c++boost.gif" width="277" align="middle" border="0">
 			String Algorithm Library
 		</h1>
 		<ul>
@@ -15,9 +15,11 @@
 				Using The String Algorithm Library
 				<ul>
 					<li>
+						<a href="#trim">Trim</a></A>
+					<li>
 						<a href="#case_conv">Case conversion</a>
 					<li>
-						<a href="#trim">Trim</a></A>
+						<a href="#predicate">Predicates</a>
 					<li>
 						<a href="#find">Find</a>
 					<li>
@@ -38,7 +40,7 @@
 					<li>
 					Replace traits
 					<li>
-						Replace format
+					Replace format
 					</li>
 				</ul>
 			</li>
@@ -46,17 +48,51 @@
 		<hr>
 		<h2><a name="#intro">Introduction</a></h2>
 		<p>The String Algorithm Library provide a generic implementation of various 
-			string-related algorithms.
+			string-related algorithms which are missing in STL. It&nbsp;can be seen as an 
+			extension to algorithms library of STL. Algorithm in this library includes 
+			trimming, case conversion, predicates and find/replace routines. All of them 
+			come in different variants so it is easier to choose the best fit for a current 
+			need.
 		</p>
-		<h2><a name="#using">Using the String Algorithm Library</a></h2>
+		<p>Implementation is not restricted to a particular container ( like a 
+			std::basic_string ), rather it is as generic as possible. Generalising is not 
+			compromising the performance, algorithms are specialized&nbsp;for 
+			specific&nbsp;containers, when there is a possibility for optimization.</p>
+		<comment>
+		<p>Many algorithms in this library are implemented using 2 layer structure. There 
+			is a generic algorithm in the bottom layer, which is highly paramertic and so 
+			not very well suited for general usage. The second layer consist of various 
+			specializations for a given algorithm. An example is <code>replace()</code> algorithm. 
+			The generic version of <code>replace()</code> accepts a <em>find</em> and <em>format</em>
+			functors as a parameters. The library contains an implementaion of several 
+			functors which can be used in this place. <code>raplace_firs()</code> as a 
+			second layer algorithm is a simple wrapper around <code>replace</code> that 
+			instantiates <code>find_firstF</code> functor and calls a generic version of 
+			the <code>replace()</code> to do the job.
+		</p>
+		</comment>
+		<h2>U<a name="#using">sing the String Algorithm Library</a></h2>
+		<h3>General&nbsp;Conventions</h3>
+		<p>&nbsp;</p>
 		<p></p>
 		<h3><a name="#trim">Trim</a></h3>
+		<p>Trimming algorithms are included in <a href="../../../boost/string_algo/trim.hpp">&lt;boost/string_algo/trim.hpp&gt;</a></p>
 		<p></p>
 		<h3><a name="#case_conv">Case Conversion</a></h3>
+		<p>Case conversion&nbsp;algorithms are included in <a href="../../../boost/string_algo/conv.hpp">
+				&lt;boost/string_algo/case_conv.hpp&gt;</a></p>
+		<p></p>
+		<h3><a name="#predicate">Predicates</a></h3>
+		<p>Predicate algorithms are included in <a href="../../../boost/string_algo/predicate.hpp">
+				&lt;boost/string_algo/predicate.hpp&gt;</a></p>
 		<p></p>
 		<h3><a name="#find"></a>Find</h3>
+		<p>Find&nbsp;algorithms are included in <a href="../../../boost/string_algo/find.hpp">&lt;boost/string_algo/find.hpp&gt;</a></p>
 		<p></p>
 		<h3><a name="#replace"></a>Replace/Erase</h3>
+		<p>Replace/Erase&nbsp;algorithms are included in <a href="../../../boost/string_algo/replace.hpp">
+				&lt;boost/string_algo/replace.hpp&gt;</a>&nbsp;and <a href="../../../boost/string_algo/erase.hpp">
+				&lt;boost/string_algo/erase.hpp&gt;</a></p>
 		<p></p>
 		<h2><a name="#extend">Extending and Customization</a></h2>
 		<hr>

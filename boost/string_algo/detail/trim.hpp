@@ -37,28 +37,28 @@ namespace boost {
             template< typename IteratorT, typename PredicateT >
             inline IteratorT trim_end_if( IteratorT InBegin, IteratorT InEnd, PredicateT IsSpace )
             {
-				typedef typename boost::detail::
-					iterator_traits<IteratorT>::iterator_category category;
+                typedef typename boost::detail::
+                    iterator_traits<IteratorT>::iterator_category category;
 
-				return trim_end_if_iter_select( InBegin, InEnd, IsSpace, category() );
-			}
+                return trim_end_if_iter_select( InBegin, InEnd, IsSpace, category() );
+            }
 
             template< typename IteratorT, typename PredicateT >
             inline IteratorT trim_end_if_iter_select( 
-				IteratorT InBegin, 
-				IteratorT InEnd, 
-				PredicateT IsSpace,
-				std::forward_iterator_tag )
+                IteratorT InBegin, 
+                IteratorT InEnd, 
+                PredicateT IsSpace,
+                std::forward_iterator_tag )
             {
-				IteratorT TrimIt=InBegin;
+                IteratorT TrimIt=InBegin;
 
                 for( IteratorT It=InBegin; It!=InEnd; It++ )
                 {
                     if ( !IsSpace(*It) ) 
-					{
-						TrimIt=It;
-						TrimIt++;
-					}
+                    {
+                        TrimIt=It;
+                        TrimIt++;
+                    }
                 }
 
                 return TrimIt;
@@ -66,10 +66,10 @@ namespace boost {
 
             template< typename IteratorT, typename PredicateT >
             inline IteratorT trim_end_if_iter_select( 
-				IteratorT InBegin, 
-				IteratorT InEnd, 
-				PredicateT IsSpace,
-				std::bidirectional_iterator_tag )
+                IteratorT InBegin, 
+                IteratorT InEnd, 
+                PredicateT IsSpace,
+                std::bidirectional_iterator_tag )
             {
                 for( IteratorT It=InEnd; It!=InBegin;  )
                 {

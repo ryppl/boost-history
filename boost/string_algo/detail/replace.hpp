@@ -52,6 +52,86 @@ namespace boost {
 
 //  process segment routine -----------------------------------------------//
 
+            template< typename HasStableIterators >
+            struct process_segment_helper
+            {
+                // Optimized version of process_segment for generic sequence
+                template< 
+                    typename StorageT,
+                    typename InputT,
+                    typename InputIteratorT >
+                InputIteratorT operator()(
+                    StorageT& Storage,
+                    InputT& Input,
+                    InputIteratorT InsertIt,
+                    InputIteratorT SegmentBegin,
+                    InputIteratorT SegmentEnd )
+                {
+                    // Copy data from the storage until the beginning of the segment
+                    InputIteratorT It=move_from_storage( Storage, InsertIt, SegmentBegin );
+
+                    // 3 cases are possible :
+                    //   a) Storage is empty, It==SegmentBegin
+                    //   b) Storage is empty, It!=SegmentBegin
+                    //   c) Storage is not empty
+
+                    if( Storage.empty() )
+                    {
+                        if( It==SegmentBegin )
+                        {
+                            // Case a) everything is grand, just return end of segment
+                            return SegmentEnd;
+                        }
+                        else
+                        {
+                            // Case b) move the segment backwards
+                            return std::copy( SegmentBegin, SegmentEnd, It );
+                        }
+                    }
+                    else
+                    {
+                        // Case c) -> shift the segment to the left and keep the overlap in the storage
+                        while( It!=SegmentEnd )
+                        {
+                            // Store value into storage
+                            Storage.push_back( *It );
+                            // Get the top from the storage and put it here
+                            *It=Storage.front();
+                            Storage.pop_front();
+
+                            // Advance
+                            It++;
+                        }
+
+                        return It;
+                    }
+                }
+            };
+
+            template<>
+            struct process_segment_helper< boost::mpl::true_c >
+            {
+                // Optimized version of process_segment for list-like sequence
+                template< 
+                    typename StorageT,
+                    typename InputT,
+                    typename InputIteratorT >
+                InputIteratorT operator()(
+                    StorageT& Storage,
+                    InputT& Input,
+                    InputIteratorT InsertIt,
+                    InputIteratorT SegmentBegin,
+                    InputIteratorT SegmentEnd )
+                {
+                    // Call replace to do the job
+                    replace( Input, InsertIt, SegmentBegin, Storage );
+                    // Empty the storage
+                    Storage.clear();
+                    // Iterators were not changed, simply return the end of segment
+                    return SegmentEnd;
+                }
+            };
+
             // Process one segment in the replace_all algorithm
             template< 
                 typename StorageT,
@@ -64,83 +144,10 @@ namespace boost {
                 InputIteratorT SegmentBegin,
                 InputIteratorT SegmentEnd )
             {
-                return process_segment_opt( 
-                    Storage, Input, InsertIt, SegmentBegin, SegmentEnd,
-                    stable_iterators_select( container_traits_select(Input) ) );
-            }
-
-            // Optimized version of process_segment for list-like sequence
-            template< 
-                typename StorageT,
-                typename InputT,
-                typename InputIteratorT >
-            inline InputIteratorT process_segment_opt(
-                StorageT& Storage,
-                InputT& Input,
-                InputIteratorT InsertIt,
-                InputIteratorT SegmentBegin,
-                InputIteratorT SegmentEnd,
-                boost::mpl::true_c )
-            {
-                // Call replace to do the job
-                replace( Input, InsertIt, SegmentBegin, Storage );
-                // Empty the storage
-                Storage.clear();
-                // Iterators were not changed, simply return the end of segment
-                return SegmentEnd;
-            }
-
-            // Optimized version of process_segment for generic sequence
-            template< 
-                typename StorageT,
-                typename InputT,
-                typename InputIteratorT >
-            inline InputIteratorT process_segment_opt(
-                StorageT& Storage,
-                InputT& Input,
-                InputIteratorT InsertIt,
-                InputIteratorT SegmentBegin,
-                InputIteratorT SegmentEnd,
-                boost::mpl::false_c )
-            {
-                // Copy data from the storage until the beginning of the segment
-                InputIteratorT It=move_from_storage( Storage, InsertIt, SegmentBegin );
-
-                // 3 cases are possible :
-                //   a) Storage is empty, It==SegmentBegin
-                //   b) Storage is empty, It!=SegmentBegin
-                //   c) Storage is not empty
-
-                if( Storage.empty() )
-                {
-                    if( It==SegmentBegin )
-                    {
-                        // Case a) everything is grand, just return end of segment
-                        return SegmentEnd;
-                    }
-                    else
-                    {
-                        // Case b) move the segment backwards
-                        return std::copy( SegmentBegin, SegmentEnd, It );
-                    }
-                }
-                else
-                {
-                    // Case c) -> shift the segment to the left and keep the overlap in the storage
-                    while( It!=SegmentEnd )
-                    {
-                        // Store value into storage
-                        Storage.push_back( *It );
-                        // Get the top from the storage and put it here
-                        *It=Storage.front();
-                        Storage.pop_front();
-
-                        // Advance
-                        It++;
-                    }
-
-                    return It;
-                }
+                return 
+                    process_segment_helper< 
+                        container_traits<InputT>::stable_iterators >()(
+                    Storage, Input, InsertIt, SegmentBegin, SegmentEnd );
             }
             
 

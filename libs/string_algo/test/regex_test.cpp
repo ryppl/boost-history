@@ -32,20 +32,35 @@ static void find_test()
 
     // basic tests
     nc_result=find_regex( str1.begin(), str1.end(), rx );
-    BOOST_CHECK( string( nc_result.begin(), nc_result.end() )==string("a1c") );
-    cv_result=find_regex( str1.begin(), str1.end(), rx );
-    BOOST_CHECK( string( cv_result.begin(), cv_result.end() )==string("a1c") );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 3) &&
+        (distance<string::const_iterator>( str1.begin(),nc_result.end()) == 6) );
 
-    nc_result=BOOST_STRING_NON_CONST_FUNCTION(find_regex)( str1, rx );
-    BOOST_CHECK( string( nc_result.begin(), nc_result.end() )==string("a1c") );
+    cv_result=find_regex( str1.begin(), str1.end(), rx );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 3) &&
+        (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 6) );
+
+    nc_result=BOOST_STRING_MUTABLE_FUN(find_regex)( str1, rx );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 3) &&
+        (distance<string::const_iterator>( str1.begin(),nc_result.end()) == 6) );
+
     cv_result=find_regex( str1, rx );
-    BOOST_CHECK( string( cv_result.begin(), cv_result.end() )==string("a1c") );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 3) &&
+        (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 6) );
 
     // multi-type comparison test
-    nc_vresult=BOOST_STRING_NON_CONST_FUNCTION(find_regex)( vec1, rx );
-    BOOST_CHECK( string( nc_vresult.begin(), nc_vresult.end() )==string("a1c") );
+    nc_vresult=BOOST_STRING_MUTABLE_FUN(find_regex)( vec1, rx );
+    BOOST_CHECK( 
+        (distance<vector<int>::const_iterator>( vec1.begin(),nc_vresult.begin()) == 3) &&
+        (distance<vector<int>::const_iterator>( vec1.begin(),nc_vresult.end()) == 6) );
+
     cv_vresult=find_regex( vec1, rx );
-    BOOST_CHECK( string( cv_vresult.begin(), cv_vresult.end() )==string("a1c") );
+    BOOST_CHECK( 
+        (distance<vector<int>::const_iterator>( vec1.begin(),cv_vresult.begin()) == 3) &&
+        (distance<vector<int>::const_iterator>( vec1.begin(),cv_vresult.end()) == 6) );
 }
 
 static void replace_test()

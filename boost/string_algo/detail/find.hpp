@@ -134,37 +134,37 @@ namespace boost {
                 // Operation
                 result_type operator()( input_reference_type Input ) const
                 {
-					typedef typename boost::detail::
-						iterator_traits<input_iterator_type>::iterator_category category;
+                    typedef typename boost::detail::
+                        iterator_traits<input_iterator_type>::iterator_category category;
 
-					return findit( Input, category() );
-				}   
+                    return findit( Input, category() );
+                }   
 
-			private:
-				// forward iterator
-				result_type findit( 
-					input_reference_type Input,
-					std::forward_iterator_tag ) const
-				{
-					find_firstF find_first( m_Search );
+            private:
+                // forward iterator
+                result_type findit( 
+                    input_reference_type Input,
+                    std::forward_iterator_tag ) const
+                {
+                    find_firstF find_first( m_Search );
 
-					result_type M=find_first( Input );
-					result_type Last=M;
+                    result_type M=find_first( Input );
+                    result_type Last=M;
 
-					while( !M.empty() )
-					{
-						Last=M;
-						M=find_first( Input, M.end() );
-					}
+                    while( !M.empty() )
+                    {
+                        Last=M;
+                        M=find_first( Input, M.end() );
+                    }
 
-					return Last;
-				}
+                    return Last;
+                }
 
-				// bidirectional iterator
-				result_type findit( 
-					input_reference_type Input,
-					std::bidirectional_iterator_tag ) const
-				{
+                // bidirectional iterator
+                result_type findit( 
+                    input_reference_type Input,
+                    std::bidirectional_iterator_tag ) const
+                {
                     // Outer loop
                     for(input_iterator_type OuterIt=Input.end();
                         OuterIt!=Input.begin(); )
@@ -187,7 +187,7 @@ namespace boost {
                     }
 
                     return result_type( Input.end(), Input.end() );
-				}
+                }
 
             private:
                 search_reference_type m_Search;

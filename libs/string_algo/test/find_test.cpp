@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <iterator>
 #include <boost/string_algo/find.hpp>
 #include <boost/test/test_tools.hpp>
 
@@ -32,51 +33,86 @@ void find_test()
 
     // basic tests
     nc_result=find_first( str1.begin(), str1.end(), str2.begin(), str2.end() );
-    BOOST_CHECK( string( nc_result.begin(), nc_result.end() )==str2 );
-    cv_result=find_first( str1.begin(), str1.end(), str2.begin(), str2.end() );
-    BOOST_CHECK( string( cv_result.begin(), cv_result.end() )==str2 );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 3) &&
+        (distance<string::const_iterator>( str1.begin(),nc_result.end()) == 6) );
 
-    nc_result=BOOST_STRING_NON_CONST_FUNCTION(find_first)( str1, string("abc") );
-    BOOST_CHECK( string( nc_result.begin(), nc_result.end() )==string("abc") );
+    cv_result=find_first( str1.begin(), str1.end(), str2.begin(), str2.end() );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 3) &&
+        (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 6) );
+
+    nc_result=BOOST_STRING_MUTABLE_FUN(find_first)( str1, string("abc") );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 3) &&
+        (distance<string::const_iterator>( str1.begin(),nc_result.end()) == 6) );
+
     cv_result=find_first( str1, str2 );
-    BOOST_CHECK( string( cv_result.begin(), cv_result.end() )==string("abc") );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 3) &&
+        (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 6) );
 
     nc_result=find_last( str1.begin(), str1.end(), str2.begin(), str2.end() );
-    BOOST_CHECK( string( nc_result.begin(), nc_result.end() )==str2 );
-    cv_result=find_last( str1.begin(), str1.end(), str2.begin(), str2.end() );
-    BOOST_CHECK( string( cv_result.begin(), cv_result.end() )==str2 );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 15) &&
+        (distance<string::const_iterator>( str1.begin(),nc_result.end()) == 18) );
 
-    nc_result=BOOST_STRING_NON_CONST_FUNCTION(find_last)( str1, string("abc") );
-    BOOST_CHECK( string( nc_result.begin(), nc_result.end() )==string("abc") );
+    cv_result=find_last( str1.begin(), str1.end(), str2.begin(), str2.end() );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 15) &&
+        (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 18) );
+
+    nc_result=BOOST_STRING_MUTABLE_FUN(find_last)( str1, string("abc") );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 15) &&
+        (distance<string::const_iterator>( str1.begin(),nc_result.end()) == 18) );
+
     cv_result=find_last( str1, str2 );
-    BOOST_CHECK( string( cv_result.begin(), cv_result.end() )==string("abc") );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 15) &&
+        (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 18) );
 
     nc_result=find_nth( str1.begin(), str1.end(), str2.begin(), str2.end(), 1 );
-    BOOST_CHECK( string( nc_result.begin(), nc_result.end() )==str2 );
-    cv_result=find_nth( str1.begin(), str1.end(), str2.begin(), str2.end(), 1 );
-    BOOST_CHECK( string( cv_result.begin(), cv_result.end() )==str2 );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 9) &&
+        (distance<string::const_iterator>( str1.begin(),nc_result.end()) == 12) );
 
-    nc_result=BOOST_STRING_NON_CONST_FUNCTION(find_nth)( str1, string("abc"), 1 );
-    BOOST_CHECK( string( nc_result.begin(), nc_result.end() )==string("abc") );
+    cv_result=find_nth( str1.begin(), str1.end(), str2.begin(), str2.end(), 1 );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 9) &&
+        (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 12) );
+
+    nc_result=BOOST_STRING_MUTABLE_FUN(find_nth)( str1, string("abc"), 1 );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 9) &&
+        (distance<string::const_iterator>( str1.begin(),nc_result.end()) == 12) );
+
     cv_result=find_nth( str1, str2, 1 );
-    BOOST_CHECK( string( cv_result.begin(), cv_result.end() )==string("abc") );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 9) &&
+        (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 12) );
         
     // multi-type comparison test
-    nc_vresult=BOOST_STRING_NON_CONST_FUNCTION(find_first)( vec1, string("abc") );
-    BOOST_CHECK( string( nc_vresult.begin(), nc_vresult.end() )==string("abc") );
+    nc_vresult=BOOST_STRING_MUTABLE_FUN(find_first)( vec1, string("abc") );
+    BOOST_CHECK( 
+        (distance<vector<int>::const_iterator>( vec1.begin(),nc_vresult.begin()) == 3) &&
+        (distance<vector<int>::const_iterator>( vec1.begin(),nc_vresult.end()) == 6) );
+
     cv_vresult=find_first( vec1, str2 );
-    BOOST_CHECK( string( cv_vresult.begin(), cv_vresult.end() )==string("abc") );
+    BOOST_CHECK( 
+        (distance<vector<int>::const_iterator>( vec1.begin(),cv_vresult.begin()) == 3) &&
+        (distance<vector<int>::const_iterator>( vec1.begin(),cv_vresult.end()) == 6) );
 
     // overflow test
-    nc_result=BOOST_STRING_NON_CONST_FUNCTION(find_first)( str2, string("abcd") );
+    nc_result=BOOST_STRING_MUTABLE_FUN(find_first)( str2, string("abcd") );
     BOOST_CHECK( nc_result.begin()==nc_result.end() );
     cv_result=find_first( str2, string("abcd") );
     BOOST_CHECK( cv_result.begin()==cv_result.end() );
 
     //! Empty string test
-    nc_result=BOOST_STRING_NON_CONST_FUNCTION(find_first)( str3, string("abcd") );
+    nc_result=BOOST_STRING_MUTABLE_FUN(find_first)( str3, string("abcd") );
     BOOST_CHECK( nc_result.begin()==nc_result.end() );
-    nc_result=BOOST_STRING_NON_CONST_FUNCTION(find_first)( str1, string("") );
+    nc_result=BOOST_STRING_MUTABLE_FUN(find_first)( str1, string("") );
     BOOST_CHECK( nc_result.begin()==nc_result.end() );
 
     cv_result=find_first( str3, string("abcd") );

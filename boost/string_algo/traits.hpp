@@ -10,8 +10,6 @@
 #ifndef BOOST_STRING_TRAITS_HPP
 #define BOOST_STRING_TRAITS_HPP
 
-#include <boost/string_algo/iterator_range.hpp>
-
 namespace boost {
 
     namespace string_algo {
