@@ -53,62 +53,84 @@ class bigint : boost::operators<bigint> {
     std::ostream::sentry opfx(os);
     
     if(opfx) {
-
+      // Build the string representation, then stream it out.
+      std::string stringrep;
       std::ios_base::fmtflags flags = os.flags();
 
       if(this->negative()) {
-        os << '-';
-        if (flags & std::ios_base::showpos) os << std::noshowpos;
-        return (-(*this)).to_ostream(os) << std::setiosflags(flags);
-      } else if(flags & std::ios_base::showpos) {
-        os << '+';
-      }
-
-      if (flags & std::ios_base::showbase) {
-        if (flags & std::ios_base::hex) 
-          os << ((flags & std::ios_base::uppercase) ? "0X" : "0x");
-        else if (flags & std::ios_base::oct)
-          os << '0';
-      }
-
-      static char const decimals[] = {'0','1','2','3','4','5','6','7','8','9'};
-      static char const lowerhex[] = {'0','1','2','3','4','5','6','7','8',
+        std::ostringstream ostr;
+        ostr.flags(flags);
+        ostr << '-' << std::noshowpos;
+        (-(*this)).to_ostream(ostr);
+        stringrep += ostr.str();
+      } else {
+        if(flags & std::ios_base::showpos) 
+          stringrep.push_back('+');
+        
+        // Add base representation if needed
+        if (flags & std::ios_base::showbase) {
+          if (flags & std::ios_base::hex) 
+            stringrep += ((flags & std::ios_base::uppercase) ? "0X" : "0x");
+          else if (flags & std::ios_base::oct)
+            stringrep.push_back('0');
+        }
+        
+        // Valid digits for each base
+        static char const decimals[] = {'0','1','2','3','4','5',
+                                          '6','7','8','9'};
+        static char const lowerhex[] = {'0','1','2','3','4','5','6','7','8',
                                           '9','a','b','c','d','e','f'};
-      static char const upperhex[] = {'0','1','2','3','4','5','6','7','8',
+        static char const upperhex[] = {'0','1','2','3','4','5','6','7','8',
                                           '9','A','B','C','D','E','F'};
-      static char const octals[] = {'0','1','2','3','4','5','6','7'};
-
-      int outbase;
-      char const* outchars;
-      if (flags & std::ios_base::dec) {
-        outbase = 10;
-        outchars = decimals;
-      } else if (flags & std::ios_base::hex) {
-        outbase = 16;
-        outchars = (flags & std::ios_base::uppercase) ? upperhex : lowerhex;
-      } else { // if (flags & std::ios_base::oct)
-        outbase = 8;
-        outchars = octals;
+        static char const octals[] = {'0','1','2','3','4','5','6','7'};
+        
+        int base;
+        char const* digits;
+        if (flags & std::ios_base::dec) {
+          base = 10;
+          digits = decimals;
+        } else if (flags & std::ios_base::hex) {
+          base = 16;
+          digits = (flags & std::ios_base::uppercase) ? upperhex : lowerhex;
+        } else { // if (flags & std::ios_base::oct)
+          base = 8;
+          digits = octals;
+        }
+#if 1    
+        std::vector<char> text;
+        bigint quotient = *this;
+        bigint remainder;
+        quotient.quotient_remainder(bigint(base),quotient,remainder);
+        // Then 'remainder.buffer.back()' is the remainder. 
+        // invariant: assert(radix > 16).
+        // invariant: remainder < length of digits.
+        text.push_back(digits[remainder.buffer.back()]);
+        while (!quotient.is_zero()) {
+          quotient.quotient_remainder(bigint(base),quotient,remainder);
+          text.push_back(digits[remainder.buffer.back()]);
+        }
+        // spit it out!
+        stringrep.append(text.rbegin(),text.rend());
+#else
+        std::string::iterator spot = stringrep.end();
+        bigint quotient = *this;
+        bigint remainder;
+        quotient.quotient_remainder(bigint(base),quotient,remainder);
+        // Then 'remainder.buffer.back()' is the remainder. 
+        // invariant: assert(radix > 16).
+        // invariant: remainder < length of digits.
+        spot = stringrep.insert(spot,digits[remainder.buffer.back()]);
+        while (!quotient.is_zero()) {
+          quotient.quotient_remainder(bigint(base),quotient,remainder);
+          spot = stringrep.insert(spot,digits[remainder.buffer.back()]);
+        }
+#endif
       }
-    
-      std::vector<char> text;
-      bigint quotient = *this;
-      bigint remainder;
-      quotient.quotient_remainder(bigint(outbase),quotient,remainder);
-      // invariant: remainder < length of outchars.
-      text.push_back(outchars[remainder.buffer.back()]);
-      while (!quotient.is_zero()) {
-        quotient.quotient_remainder(bigint(outbase),quotient,remainder);
-        text.push_back(outchars[remainder.buffer.back()]);
-      }
-
-      // spit it out!
-      std::copy(text.rbegin(),text.rend(),
-                std::ostream_iterator<char>(os,""));
+      os << stringrep;
     }
-    return os;
+    return os; 
   }
-      
+
 public:
   enum base_type {octal=8, decimal=10, hexadecimal=16};
 private:
