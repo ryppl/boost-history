@@ -72,7 +72,8 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     static int leading_dimension (matrix_type& m) {
       // g++ 2.95.4 and 3.0.4 (with -pedantic) dislike 
       //   identifier_type::functor_type::size2()
-      typedef typename identifier_type::functor_type functor_t; 
+      typedef typename identifier_type::orientation_category orientation_category; 
+      typedef typename detail::ublas_ordering<orientation_category>::functor_type functor_t ;
       return functor_t::size2 (m.size1(), m.size2());
     }
 
