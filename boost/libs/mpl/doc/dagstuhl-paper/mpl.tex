@@ -290,8 +290,8 @@ int main()
 }
 
 There are several things worth noticing about this code:
-\begin{itemize}
 
+\begin{itemize}
 \item It uses a few ad-hoc, esoteric techniques, or ``hacks''. The
   default template argument \code{choose1} (labelled ``hands off!'')
   is one example. Without it, we would have needed yet another
@@ -315,6 +315,13 @@ There are several things worth noticing about this code:
   they make the code unusable for a large community of \Cpp\
   programmers whose compilers don't support that feature.
 \end{itemize}
+
+While these techniques are of course a valuable part of the arsenal of
+any good \Cpp\ \mpgmer, their use tends to make programs written in
+what is already an unusual style harder-to-read and
+harder-to-write. By encapsulating commonly-used structures and dealing
+with loop terminations internally, the \Mpl\ reduces the need for both
+tricky hacks and for template specializations.
 
 \subsection{Why Metaprogramming?}
 
@@ -472,6 +479,30 @@ the lingua franca of every day programmers.
 %probably this paragraph would be better in the conclusions
 
 \subsection{What about portability? }
+
+Although the MPL aims to reduce the user's need to be concerned with
+issues of nonstandard \Cpp\ implementations, some concessions are
+inevitable. For example, the current implementation of the
+\code{lambda} facility does not work on compilers which lack either
+support for template partial specialization or for template template
+parameters.\footnote{We believe that a workaround is possible, but
+that it would impose some additional restrictions on the way users
+must represent metafunctions. The fact remains that without both
+features, \mping\ expressivity is somewhat reduced.} Another
+concession which may not be apparent at first is the need for the
+\code{apply1}...\code{applyN} templates. On most compilers,
+\code{applyN<F,T1,T2...TN>} (for example) is derived from
+\code{F::template apply<T1,T2...TN>}: it is nearly a synonym, and one
+might well wonder whether it is even worth providing \code{apply} as a
+library facility since the language construct only costs one
+additional keyword. On one compiler, however, this construct causes an
+internal compiler error and must be replaced with a workaround so
+odious that it would be unreasonable to expect even an expert to find
+it.\footnote{In fact, the workaround isn't even legal \Cpp\, but it is
+accepted by the compiler in question.} The library hides all this
+nastiness within its implementation of \code{applyN}, but anyone
+writing portable \mpgms\ is required to use the library instead of
+taking what might be considered the more obvious approach.
 
 \subsection{Relation to other work.}
 
