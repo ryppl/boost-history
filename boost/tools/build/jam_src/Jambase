@@ -13,17 +13,29 @@
 # "as is" without express or implied warranty, and with no claim as
 # to its suitability for any purpose.
 
+if $(NT)
+{
+    SLASH ?= \\ ;
+}
+SLASH ?= / ;
+
+# A fix for the broken behavior of built-in glob
+rule glob ( dirs * : patterns * )
+{
+    return [ GLOB $(dirs:T) : $(dirs:T)\\$(SLASH)$(>) ] ;
+}
+
 # Glob for patterns in the directories starting from the given
 # start directory, up to and including the root of the file-system.
 # We stop globing as soon as we find at least one match.
 #
 rule find-to-root ( dir : patterns )
 {
-    local globs = [ GLOB $(<) : $(>:R=$(<)) ] ;
+    local globs = [ glob $(<) : $(>) ] ;
     while ! $(globs) && $(dir:P) != $(dir)
     {
         dir = $(dir:P) ;
-        globs = [ GLOB $(dir) : $(>:R=$(dir)) ] ;
+        globs = [ glob $(dir) : $(>) ] ;
     }
     return $(globs) ;
 }
@@ -47,7 +59,7 @@ rule boost-build ( dir )
     #
     bootstrap-filename = boost-build.jam ;
     local bootstrap-file =
-        [ GLOB $(BOOST_BUILD_PATH) : $(bootstrap-filename:R=$(BOOST_BUILD_PATH)) ] ;
+        [ glob $(BOOST_BUILD_PATH) : $(bootstrap-filename) ] ;
     
     # There is no boost-build.jam we can find, exit with an error, and information.
     #
@@ -88,7 +100,7 @@ if [ SUBST $(ARGV[1]:B:L) (.*)(bjam)(.*) $2 ]
     local boost-build-filename = boost-build.jam ;
     local boost-build-file =
         [ find-to-root [ PWD ] : $(boost-build-filename) ]
-        [ GLOB $(BOOST_BUILD_PATH) : $(boost-build-filename:R=$(BOOST_BUILD_PATH)) ] ;
+        [ glob $(BOOST_BUILD_PATH) : $(boost-build-filename) ] ;
     
     # There is no boost-build.jam we can find, exit with an error, and information.
     #
