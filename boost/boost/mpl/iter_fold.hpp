@@ -76,16 +76,16 @@ struct iter_fold_more : apply2<ForwardOp,State,Iterator>
 template <class Iterator, class LastIterator, class ForwardOp, class State>
 struct iter_fold_next
     : select_type<is_same<Iterator,LastIterator>::value
-                  , iter_fold_more<Iterator,ForwardOp,State>
                   , iter_fold_done<Iterator,State>
+                  , iter_fold_more<Iterator,ForwardOp,State>
       >::type
 {};
 
 template <class Iterator, class LastIterator, class State, class BackwardOp>
 struct iter_fold_prev
     : select_type<is_same<Iterator,LastIterator>::value
-                  , apply2<BackwardOp,Iterator,State>
                   , iter_fold_done<Iterator,State>
+                  , apply2<BackwardOp,Iterator,State>
       >::type
 {};
 #endif
@@ -105,13 +105,16 @@ struct iter_fold_impl
     typedef iter_fold_next<typename next2::iterator,LastIterator,ForwardOp,typename next2::type> next3;
     typedef iter_fold_next<typename next3::iterator,LastIterator,ForwardOp,typename next3::type> next4;
     
-    typedef iter_fold_impl<
-        typename next4::iterator
-        , LastIterator
-        , typename next4::type
-        , ForwardOp
-        , BackwardOp
-        > recursion;
+    typedef typename select_type<
+        is_same<typename next3::iterator,LastIterator>::value
+        , iter_fold_done<Iterator,typename next4::type>
+        , iter_fold_impl<
+          typename next4::iterator
+            , LastIterator
+            , typename next4::type
+            , ForwardOp
+            , BackwardOp>
+        >::type recursion;
 
     typedef typename recursion::type inner_t;
     

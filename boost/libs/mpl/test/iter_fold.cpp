@@ -55,7 +55,7 @@ struct choose2
     {
         typedef typename XIter::type X;
         typedef typename mpl::select_type<
-            (sizeof(X) == 2*sizeof(Y))
+            (sizeof(X) == 2*sizeof(Y)+2)
             , X
             , Y>::type type;
 
@@ -70,45 +70,51 @@ struct choose2
 
 int main()
 {
-    typedef mpl::type_list<char[2], char[4], char[8], char[10]> types;
+    typedef mpl::type_list<char[2], char[4], char[6], char[8], char[10], char[11]>::type types;
 
-    std::size_t sizes1[9] = {0};
-    std::size_t const sizes1_expected[9] = {
-        1, 2
+    std::size_t sizes1[13] = {0};
+    std::size_t const sizes1_expected[13] = {
+          1, 2
         , 1, 4
+        , 4, 6
         , 4, 8
         , 4, 10
+        , 4, 11
         , 0
     };
 
     
-    std::size_t sizes2[17] = {0};
-    std::size_t const sizes2_expected[17] = {
-        1, 2
+    std::size_t sizes2[25] = {0};
+    std::size_t const sizes2_expected[25] = {
+          1, 2
         , 1, 4
+        , 4, 6
         , 4, 8
         , 4, 10
+        , 4, 11
         
+        , 11, 4
         , 10, 4
-        , 8, 4
-        , 4, 8
-        , 2, 8
+        , 8, 10
+        , 6, 10
+        , 4, 10
+        , 2, 10
         , 0
     };
     
     typedef mpl::iter_fold<types, char, choose1> loop1;
     std::size_t* out = sizes1;
     loop1::execute(&out);
-    assert(std::equal(sizes1, sizes1 + 9, sizes1_expected));
+    assert(std::equal(sizes1, sizes1 + 13, sizes1_expected));
     
     typedef mpl::iter_fold<types, char, choose1, choose2> loop2;
 
     std::size_t* out2 = sizes2;
     loop2::execute(&out2);
-    assert(std::equal(sizes2, sizes2 + 17, sizes2_expected));
+    assert(std::equal(sizes2, sizes2 + 25, sizes2_expected));
     
     BOOST_STATIC_ASSERT((boost::is_same<loop1::type,char[4]>::value));
-    BOOST_STATIC_ASSERT((boost::is_same<loop2::type,char[8]>::value));
+    BOOST_STATIC_ASSERT((boost::is_same<loop2::type,char[10]>::value));
     
     return 0;
 }
