@@ -17,10 +17,9 @@
 #ifndef BOOST_NUMERIC_BINDINGS_LAPACK_SYSV_HPP
 #define BOOST_NUMERIC_BINDINGS_LAPACK_SYSV_HPP
 
-#include <complex>
+#include <boost/numeric/bindings/traits/type_traits.hpp>
 #include <boost/numeric/bindings/traits/traits.hpp>
-#include <boost/numeric/bindings/lapack/lapack.h>
-//#include <boost/numeric/bindings/traits/std_vector.hpp>
+#include <boost/numeric/bindings/lapack/lapack_impl.hpp>
 #include <boost/numeric/bindings/traits/detail/array.hpp>
 #include <boost/numeric/bindings/traits/detail/utils.hpp>
 
@@ -58,58 +57,62 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
 
       inline 
-      void sysv (char const uplo, int const n, int const nrhs,
-                 float* a, int const lda, int* ipiv, 
-                 float* b, int const ldb, 
-                 float* w, int const lw, int* info) 
+      void sysv (char const uplo, int_t const n, int_t const nrhs,
+                 float* a, int_t const lda, int_t* ipiv, 
+                 float* b, int_t const ldb, 
+                 float* w, int_t const lw, int_t* info) 
       {
-        LAPACK_SSYSV (&uplo, &n, &nrhs, a, &lda, ipiv, b, &ldb, w, &lw, info);
+        LAPACK_SSYSV (mrc (&uplo), mrc (&n), mrc (&nrhs), 
+                      a, mrc (&lda), ipiv, 
+                      b, mrc (&ldb), w, mrc (&lw), info);
       }
 
       inline 
-      void sysv (char const uplo, int const n, int const nrhs,
-                 double* a, int const lda, int* ipiv, 
-                 double* b, int const ldb, 
-                 double* w, int const lw, int* info) 
+      void sysv (char const uplo, int_t const n, int_t const nrhs,
+                 double* a, int_t const lda, int_t* ipiv, 
+                 double* b, int_t const ldb, 
+                 double* w, int_t const lw, int_t* info) 
       {
-        LAPACK_DSYSV (&uplo, &n, &nrhs, a, &lda, ipiv, b, &ldb, w, &lw, info);
+        LAPACK_DSYSV (mrc (&uplo), mrc (&n), mrc (&nrhs), 
+                      a, mrc (&lda), ipiv, 
+                      b, mrc (&ldb), w, mrc (&lw), info);
       }
 
       inline 
-      void sysv (char const uplo, int const n, int const nrhs,
-                 std::complex<float>* a, int const lda, int* ipiv,  
-                 std::complex<float>* b, int const ldb, 
-                 std::complex<float>* w, int const lw, int* info) 
+      void sysv (char const uplo, int_t const n, int_t const nrhs,
+                 traits::complex_f* a, int_t const lda, int_t* ipiv,  
+                 traits::complex_f* b, int_t const ldb, 
+                 traits::complex_f* w, int_t const lw, int_t* info) 
       {
-        LAPACK_CSYSV (&uplo, &n, &nrhs, 
-                      reinterpret_cast<fcomplex_t*> (a), &lda, ipiv, 
-                      reinterpret_cast<fcomplex_t*> (b), &ldb, 
-                      reinterpret_cast<fcomplex_t*> (w), &lw, info);
+        LAPACK_CSYSV (mrc (&uplo), mrc (&n), mrc (&nrhs), 
+                      traits::complex_ptr (a), mrc (&lda), ipiv, 
+                      traits::complex_ptr (b), mrc (&ldb), 
+                      traits::complex_ptr (w), mrc (&lw), info);
       }
 
       inline 
-      void sysv (char const uplo, int const n, int const nrhs,
-                 std::complex<double>* a, int const lda, int* ipiv, 
-                 std::complex<double>* b, int const ldb, 
-                 std::complex<double>* w, int const lw, int* info) 
+      void sysv (char const uplo, int_t const n, int_t const nrhs,
+                 traits::complex_d* a, int_t const lda, int_t* ipiv, 
+                 traits::complex_d* b, int_t const ldb, 
+                 traits::complex_d* w, int_t const lw, int_t* info) 
       {
-        LAPACK_ZSYSV (&uplo, &n, &nrhs, 
-                      reinterpret_cast<dcomplex_t*> (a), &lda, ipiv, 
-                      reinterpret_cast<dcomplex_t*> (b), &ldb, 
-                      reinterpret_cast<dcomplex_t*> (w), &lw, info);
+        LAPACK_ZSYSV (mrc (&uplo), mrc (&n), mrc (&nrhs), 
+                      traits::complex_ptr (a), mrc (&lda), ipiv, 
+                      traits::complex_ptr (b), mrc (&ldb), 
+                      traits::complex_ptr (w), mrc (&lw), info);
       }
 
       template <typename SymmA, typename MatrB, typename IVec, typename Work>
       inline
-      int sysv (char const ul, SymmA& a, IVec& i, MatrB& b, 
-                Work& w, int lw) {
+      int_t sysv (char const ul, SymmA& a, IVec& i, MatrB& b, 
+                Work& w, int const lw) {
 
         int const n = traits::matrix_size1 (a);
         assert (n == traits::matrix_size2 (a)); 
         assert (n == traits::matrix_size1 (b)); 
         assert (n == traits::vector_size (i)); 
 
-        int info; 
+        int_t info; 
         sysv (ul, n, traits::matrix_size2 (b), 
               traits::matrix_storage (a), 
               traits::leading_dimension (a),
@@ -124,7 +127,7 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename SymmA, typename MatrB, typename IVec, typename Work>
     inline
-    int sysv (char const ul, SymmA& a, IVec& i, MatrB& b, Work& w) {
+    int_t sysv (char const ul, SymmA& a, IVec& i, MatrB& b, Work& w) {
 
       assert (ul == 'U' || ul == 'L'); 
 
@@ -146,7 +149,7 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename SymmA, typename MatrB, typename IVec, typename Work>
     inline
-    int sysv (SymmA& a, IVec& i, MatrB& b, Work& w) {
+    int_t sysv (SymmA& a, IVec& i, MatrB& b, Work& w) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
       BOOST_STATIC_ASSERT((boost::is_same<
@@ -167,7 +170,7 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename SymmA, typename MatrB>
     inline
-    int sysv (char const ul, SymmA& a, MatrB& b) {
+    int_t sysv (char const ul, SymmA& a, MatrB& b) {
       // with `internal' pivot and work vectors 
 
       assert (ul == 'U' || ul == 'L'); 
@@ -183,9 +186,8 @@ namespace boost { namespace numeric { namespace bindings {
       >::value));
 #endif
 
-      // std::vector<int> i (traits::matrix_size1 (a)); 
-      int info = -101; 
-      traits::detail::array<int> i (traits::matrix_size1 (a)); 
+      int_t info = -101; 
+      traits::detail::array<int_t> i (traits::matrix_size1 (a)); 
 
       if (i.valid()) {
         info = -102; 
@@ -194,7 +196,6 @@ namespace boost { namespace numeric { namespace bindings {
 #else 
         typedef typename SymmA::value_type val_t; 
 #endif 
-        // std::vector<val_t> w (1); 
         traits::detail::array<val_t> w (1); 
         int lw = -1; 
         detail::sysv (ul, a, i, b, w, lw); 
@@ -208,7 +209,7 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename SymmA, typename MatrB>
     inline
-    int sysv (SymmA& a, MatrB& b) {
+    int_t sysv (SymmA& a, MatrB& b) {
       // with `internal' pivot and work vectors 
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
@@ -223,9 +224,8 @@ namespace boost { namespace numeric { namespace bindings {
 #endif
 
       char uplo = traits::matrix_uplo_tag (a);
-      // std::vector<int> i (traits::matrix_size1 (a)); 
-      int info = -101; 
-      traits::detail::array<int> i (traits::matrix_size1 (a)); 
+      int_t info = -101; 
+      traits::detail::array<int_t> i (traits::matrix_size1 (a)); 
 
       if (i.valid()) {
         info = -102; 
@@ -234,7 +234,6 @@ namespace boost { namespace numeric { namespace bindings {
 #else 
         typedef typename SymmA::value_type val_t; 
 #endif 
-        // std::vector<val_t> w (1); 
         traits::detail::array<val_t> w (1); 
         int lw = -1; 
         detail::sysv (uplo, a, i, b, w, lw); 
@@ -260,51 +259,53 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
 
       inline 
-      void sytrf (char const uplo, int const n, 
-                  float* a, int const lda, int* ipiv, 
-                  float* w, int const lw, int* info) 
+      void sytrf (char const uplo, int_t const n, 
+                  float* a, int_t const lda, int_t* ipiv, 
+                  float* w, int_t const lw, int_t* info) 
       {
-        LAPACK_SSYTRF (&uplo, &n, a, &lda, ipiv, w, &lw, info);
+        LAPACK_SSYTRF (mrc (&uplo), mrc (&n), 
+                       a, mrc (&lda), ipiv, w, mrc (&lw), info);
       }
 
       inline 
-      void sytrf (char const uplo, int const n, 
-                  double* a, int const lda, int* ipiv, 
-                  double* w, int const lw, int* info) 
+      void sytrf (char const uplo, int_t const n, 
+                  double* a, int_t const lda, int_t* ipiv, 
+                  double* w, int_t const lw, int_t* info) 
       {
-        LAPACK_DSYTRF (&uplo, &n, a, &lda, ipiv, w, &lw, info);
+        LAPACK_DSYTRF (mrc (&uplo), mrc (&n), 
+                       a, mrc (&lda), ipiv, w, mrc (&lw), info);
       }
 
       inline 
-      void sytrf (char const uplo, int const n, 
-                  std::complex<float>* a, int const lda, int* ipiv,  
-                  std::complex<float>* b, int const ldb, 
-                  std::complex<float>* w, int const lw, int* info) 
+      void sytrf (char const uplo, int_t const n, 
+                  traits::complex_f* a, int_t const lda, int_t* ipiv,  
+                  traits::complex_f* b, int_t const ldb, 
+                  traits::complex_f* w, int_t const lw, int_t* info) 
       {
-        LAPACK_CSYTRF (&uplo, &n, 
-                       reinterpret_cast<fcomplex_t*> (a), &lda, ipiv, 
-                       reinterpret_cast<fcomplex_t*> (w), &lw, info);
+        LAPACK_CSYTRF (mrc (&uplo), mrc (&n), 
+                       traits::complex_ptr (a), mrc (&lda), ipiv, 
+                       traits::complex_ptr (w), mrc (&lw), info);
       }
 
       inline 
-      void sytrf (char const uplo, int const n, 
-                  std::complex<double>* a, int const lda, int* ipiv, 
-                  std::complex<double>* w, int const lw, int* info) 
+      void sytrf (char const uplo, int_t const n, 
+                  traits::complex_d* a, int_t const lda, int_t* ipiv, 
+                  traits::complex_d* w, int_t const lw, int_t* info) 
       {
-        LAPACK_ZSYTRF (&uplo, &n, 
-                       reinterpret_cast<dcomplex_t*> (a), &lda, ipiv, 
-                       reinterpret_cast<dcomplex_t*> (w), &lw, info);
+        LAPACK_ZSYTRF (mrc (&uplo), mrc (&n), 
+                       traits::complex_ptr (a), mrc (&lda), ipiv, 
+                       traits::complex_ptr (w), mrc (&lw), info);
       }
 
       template <typename SymmA, typename IVec, typename Work>
       inline
-      int sytrf (char const ul, SymmA& a, IVec& i, Work& w, int lw) {
+      int_t sytrf (char const ul, SymmA& a, IVec& i, Work& w, int const lw) {
 
         int const n = traits::matrix_size1 (a);
         assert (n == traits::matrix_size2 (a)); 
         assert (n == traits::vector_size (i)); 
 
-        int info; 
+        int_t info; 
         sytrf (ul, n, traits::matrix_storage (a), 
                traits::leading_dimension (a),
                traits::vector_storage (i),  
@@ -316,7 +317,7 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename SymmA, typename IVec, typename Work>
     inline
-    int sytrf (char const ul, SymmA& a, IVec& i, Work& w) {
+    int_t sytrf (char const ul, SymmA& a, IVec& i, Work& w) {
 
       assert (ul == 'U' || ul == 'L'); 
 
@@ -334,7 +335,7 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename SymmA, typename IVec, typename Work>
     inline
-    int sytrf (SymmA& a, IVec& i, Work& w) {
+    int_t sytrf (SymmA& a, IVec& i, Work& w) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
       BOOST_STATIC_ASSERT((boost::is_same<
@@ -351,7 +352,7 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename SymmA, typename Ivec>
     inline
-    int sytrf (char const ul, SymmA& a, Ivec& i) {
+    int_t sytrf (char const ul, SymmA& a, Ivec& i) {
       // with `internal' work vector
 
       assert (ul == 'U' || ul == 'L'); 
@@ -363,7 +364,7 @@ namespace boost { namespace numeric { namespace bindings {
       >::value));
 #endif
 
-      int info = -101; 
+      int_t info = -101; 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
       typedef typename traits::matrix_traits<SymmA>::value_type val_t; 
 #else 
@@ -382,7 +383,7 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename SymmA, typename Ivec>
     inline
-    int sytrf (SymmA& a, Ivec& i) {
+    int_t sytrf (SymmA& a, Ivec& i) {
       // with `internal' work vector 
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
@@ -394,7 +395,7 @@ namespace boost { namespace numeric { namespace bindings {
 
       char uplo = traits::matrix_uplo_tag (a);
 
-      int info = -101; 
+      int_t info = -101; 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
       typedef typename traits::matrix_traits<SymmA>::value_type val_t; 
 #else 
@@ -425,7 +426,7 @@ namespace boost { namespace numeric { namespace bindings {
 #endif
 
       // std::vector<int> i (1); 
-      traits::detail::array<int> i (1); 
+      traits::detail::array<int_t> i (1); 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
       typedef typename traits::matrix_traits<SymmA>::value_type val_t; 
 #else 
@@ -450,7 +451,7 @@ namespace boost { namespace numeric { namespace bindings {
 
       char uplo = traits::matrix_uplo_tag (a);
       // std::vector<int> i (1); 
-      traits::detail::array<int> i (1); 
+      traits::detail::array<int_t> i (1); 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
       typedef typename traits::matrix_traits<SymmA>::value_type val_t; 
 #else 
@@ -473,53 +474,55 @@ namespace boost { namespace numeric { namespace bindings {
     namespace detail {
 
       inline 
-      void sytrs (char const uplo, int const n, int const nrhs,
-                  float const* a, int const lda, int const* ipiv, 
-                  float* b, int const ldb, int* info) 
+      void sytrs (char const uplo, int_t const n, int_t const nrhs,
+                  float const* a, int_t const lda, int_t const* ipiv, 
+                  float* b, int_t const ldb, int_t* info) 
       {
-        LAPACK_SSYTRS (&uplo, &n, &nrhs, a, &lda, ipiv, b, &ldb, info);
+        LAPACK_SSYTRS (mrc (&uplo), mrc (&n), mrc (&nrhs), 
+                       mrc (a), mrc (&lda), mrc (ipiv), b, mrc (&ldb), info);
       }
 
       inline 
-      void sytrs (char const uplo, int const n, int const nrhs,
-                  double const* a, int const lda, int const* ipiv, 
-                  double* b, int const ldb, int* info) 
+      void sytrs (char const uplo, int_t const n, int_t const nrhs,
+                  double const* a, int_t const lda, int_t const* ipiv, 
+                  double* b, int_t const ldb, int_t* info) 
       {
-        LAPACK_DSYTRS (&uplo, &n, &nrhs, a, &lda, ipiv, b, &ldb, info);
+        LAPACK_DSYTRS (mrc (&uplo), mrc (&n), mrc (&nrhs), 
+                       mrc (a), mrc (&lda), mrc (ipiv), b, mrc (&ldb), info);
       }
 
       inline 
-      void sytrs (char const uplo, int const n, int const nrhs,
-                  std::complex<float> const* a, int const lda, 
-                  int const* ipiv,  
-                  std::complex<float>* b, int const ldb, int* info) 
+      void sytrs (char const uplo, int_t const n, int_t const nrhs,
+                  traits::complex_f const* a, int_t const lda, 
+                  int_t const* ipiv,  
+                  traits::complex_f* b, int_t const ldb, int_t* info) 
       {
-        LAPACK_CSYTRS (&uplo, &n, &nrhs, 
-                      reinterpret_cast<fcomplex_t const*> (a), &lda, ipiv, 
-                      reinterpret_cast<fcomplex_t*> (b), &ldb, info);
+        LAPACK_CSYTRS (mrc (&uplo), mrc (&n), mrc (&nrhs), 
+                      traits::complex_ptr (mrc (a)), mrc (&lda), mrc (ipiv), 
+                      traits::complex_ptr (b), mrc (&ldb), info);
       }
 
       inline 
-      void sytrs (char const uplo, int const n, int const nrhs,
-                  std::complex<double> const* a, int const lda, 
-                  int const* ipiv, 
-                  std::complex<double>* b, int const ldb, int* info) 
+      void sytrs (char const uplo, int_t const n, int_t const nrhs,
+                  traits::complex_d const* a, int_t const lda, 
+                  int_t const* ipiv, 
+                  traits::complex_d* b, int_t const ldb, int_t* info) 
       {
-        LAPACK_ZSYTRS (&uplo, &n, &nrhs, 
-                       reinterpret_cast<dcomplex_t const*> (a), &lda, ipiv, 
-                       reinterpret_cast<dcomplex_t*> (b), &ldb, info);
+        LAPACK_ZSYTRS (mrc (&uplo), mrc (&n), mrc (&nrhs), 
+                       traits::complex_ptr (mrc (a)), mrc (&lda), mrc (ipiv), 
+                       traits::complex_ptr (b), mrc (&ldb), info);
       }
 
       template <typename SymmA, typename MatrB, typename IVec>
       inline
-      int sytrs (char const ul, SymmA const& a, IVec const& i, MatrB& b) {
+      int_t sytrs (char const ul, SymmA const& a, IVec const& i, MatrB& b) {
 
         int const n = traits::matrix_size1 (a);
         assert (n == traits::matrix_size2 (a)); 
         assert (n == traits::matrix_size1 (b)); 
         assert (n == traits::vector_size (i)); 
 
-        int info; 
+        int_t info; 
         sytrs (ul, n, traits::matrix_size2 (b), 
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
                traits::matrix_storage (a), 
@@ -541,7 +544,7 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename SymmA, typename MatrB, typename IVec>
     inline
-    int sytrs (char const ul, SymmA const& a, IVec const& i, MatrB& b) {
+    int_t sytrs (char const ul, SymmA const& a, IVec const& i, MatrB& b) {
 
       assert (ul == 'U' || ul == 'L'); 
 
@@ -561,7 +564,7 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename SymmA, typename MatrB, typename IVec>
     inline
-    int sytrs (SymmA const& a, IVec const& i, MatrB& b) {
+    int_t sytrs (SymmA const& a, IVec const& i, MatrB& b) {
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
       BOOST_STATIC_ASSERT((boost::is_same<
