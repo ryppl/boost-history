@@ -5,7 +5,7 @@
 # define PLUGIN_DWA2004922_HPP
 
 # include <boost/langbinding/backend/id.hpp>
-# include <boost/langbinding/backend/cpp_call_to_xxx.hpp>
+# include <boost/langbinding/backend/call_xxx_data.hpp>
 
 namespace boost { namespace langbinding { namespace backend { 
 
