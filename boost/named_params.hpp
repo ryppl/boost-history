@@ -664,7 +664,7 @@ namespace aux
           BOOST_NAMED_PARAMS_MAX_ARITY, class T, = empty BOOST_PP_INTERCEPT
       )
   >
-  struct make_named_list
+  struct make_arg_list
   {
       template<
           BOOST_PP_ENUM_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, class K)
@@ -674,7 +674,7 @@ namespace aux
           typedef arg_list<
               typename as_arg_holder<K0, T0>::type
             , typename BOOST_PP_CAT(mpl::apply, BOOST_NAMED_PARAMS_MAX_ARITY)<
-                  make_named_list<
+                  make_arg_list<
                       BOOST_PP_ENUM_SHIFTED_PARAMS(
                           BOOST_NAMED_PARAMS_MAX_ARITY, T
                       )
@@ -688,7 +688,7 @@ namespace aux
   };
 
   template <>
-  struct make_named_list<
+  struct make_arg_list<
       BOOST_PP_ENUM_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, empty BOOST_PP_INTERCEPT)
   >
   {
@@ -752,7 +752,7 @@ struct keywords
       : restrict_base<
             // Build a list of named_arg_holder<K,T> items for each keyword and actual 
             BOOST_DEDUCED_TYPENAME BOOST_PP_CAT(mpl::apply, BOOST_NAMED_PARAMS_MAX_ARITY)<
-                aux::make_named_list<
+                aux::make_arg_list<
                     BOOST_PP_ENUM_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, T)
                 >
               , BOOST_PP_ENUM_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, K)
