@@ -11,13 +11,21 @@
 
 namespace boost { namespace langbinding { namespace backend { 
 
+// The constant data associated with any given call signature from C++
+// to XXX.
 struct BOOST_LANGBINDING_DECL call_xxx_data
 {
-    call_xxx_data(unsigned arity, util::type_info const* types);
+    call_xxx_data(
+        unsigned arity                  // The number of arguments
+      , util::type_info const* types    // Return type and types of arguments
+    );
     ~call_xxx_data();
     
     unsigned const arity;
     util::type_info const* const types;
+    
+    // Private data associated by each backend with the call, indexed
+    // by backend plugin ID.
     std::vector<boost::shared_ptr<void> > cache;
 };
 
