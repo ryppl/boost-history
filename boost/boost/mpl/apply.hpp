@@ -105,8 +105,8 @@ struct BOOST_PREPROCESSOR_CAT(apply, n) \
               ) > applied; \
  public: \
     typedef typename applied::type type; \
-    void execute() { return applied::execute(); } \
-    template <class X> void execute(X x) { return applied::execute(x); } \
+    static void execute() { applied::execute(); } \
+    template <class X> static void execute(X x) { applied::execute(x); } \
 }; \
 /**/
 
