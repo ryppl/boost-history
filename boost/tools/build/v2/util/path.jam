@@ -190,14 +190,9 @@ rule pwd ( )
 #
 #    Returns the list of files matching the given pattern in the specified directory.
 #
-rule glob ( dirs * : patterns + )
+rule glob ( dir : patterns + )
 {
-    local result ;
-    for dir in $(dirs)
-    {
-        result += [ sequence.transform make : [ GLOB [ native $(dir) ] : $(patterns) ] ] ;
-    }
-    return $(result) ;
+    return [ sequence.transform make : [ GLOB [ native $(dir) ] : $(patterns) ] ] ;
 }
 
 #

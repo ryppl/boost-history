@@ -13,11 +13,7 @@
 
      -->
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-  xmlns:func="http://exslt.org/functions"
-  xmlns:meta="http://www.meta-comm.com"
-  extension-element-prefixes="func"
-  version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 
   <xsl:import href="common.xsl"/>
 
@@ -71,37 +67,20 @@
           </table>
         </div>
         <div>
-          <xsl:apply-templates select="//test-log[@test-name != '' and @result = 'fail']"/>
+          <xsl:apply-templates select="//test-log[@result = 'fail']"/>
         </div>
-        <div>
-          <xsl:apply-templates select="//test-log[@test-name = '' and @result = 'fail']" />
-        </div>
-
       </body>
     </html>
   </xsl:template>
 
-
   <xsl:template match="test-log">
     <div>
-      <xsl:choose>
-        <xsl:when test="@test-name != ''">
-          <xsl:variable name="test-anchor">
-            <xsl:value-of select="concat( @library, '-', @test-name, '-', @toolset )"/>
-          </xsl:variable>
-          <div class="log-test-title">
-            <a name="{$test-anchor}"><xsl:value-of select="concat( @library, ' - ', @test-name, ' / ', @toolset )"/></a>
-          </div>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:variable name="test-anchor">
-            <xsl:value-of select="meta:path-to-anchor( @target-directory )"/>
-          </xsl:variable>
-          <div class="log-test-title">
-            <a name="{$test-anchor}"><xsl:value-of select="@target-directory"/></a>
-          </div>
-        </xsl:otherwise>
-      </xsl:choose>
+      <xsl:variable name="test-anchor">
+        <xsl:value-of select="concat( @test-name, '-', @toolset )"/>
+      </xsl:variable>
+      <div class="log-test-title">
+        <a name="{$test-anchor}"><xsl:value-of select="concat( @test-name, ' / ', @toolset )"/></a>
+      </div>
 
     <xsl:if test="notes/note">
       <p>
@@ -134,11 +113,9 @@
     <xsl:if test="lib">
       <p>
         <div class="log-linker-output-title">Lib &#160;output:</div>
-        <p>
-          See <a href="#{meta:path-to-anchor( lib/node() )}">
-            <xsl:copy-of select="lib/node()"/>
-          </a>
-        </p>
+        <pre>
+          <xsl:copy-of select="lib/node()"/>
+        </pre>
       </p>
     </xsl:if>
 
@@ -155,10 +132,5 @@
 
   </xsl:template>
 
-  <func:function name="meta:path-to-anchor">
-      <xsl:param name="path"/>
-      <func:result select="translate( $path, '/', '-' )"/>
-  </func:function>
-  
 
 </xsl:stylesheet>

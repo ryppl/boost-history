@@ -171,9 +171,7 @@ namespace boost {
   };
   template <typename K, typename V>
   const typename readable_property_map_archetype<K,V>::reference&
-  get(const readable_property_map_archetype<K,V>&, 
-      const typename readable_property_map_archetype<K,V>::key_type&)
-  {
+  get(const readable_property_map_archetype<K,V>&, const K&) {
     typedef typename readable_property_map_archetype<K,V>::reference R;
     return static_object<R>::get();
   }
@@ -201,9 +199,7 @@ namespace boost {
     typedef writable_property_map_tag category;
   };
   template <typename K, typename V>
-  void put(const writable_property_map_archetype<K,V>&, 
-           const typename writable_property_map_archetype<K,V>::key_type&, 
-           const typename writable_property_map_archetype<K,V>::value_type&) { }
+  void put(const writable_property_map_archetype<K,V>&, const K&, const V&) { }
 
 
   template <class PMap, class Key>

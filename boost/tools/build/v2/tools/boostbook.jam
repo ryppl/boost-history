@@ -40,6 +40,13 @@ type.register HTMLDIR ;
 type.register MANPAGES ;
 type.register TESTS : tests ;
 
+generators.register-standard boostbook.dtdxml-to-boostbook : DTDXML : XML ;
+generators.register-standard boostbook.boostbook-to-docbook : XML : DOCBOOK ;
+generators.register-standard boostbook.boostbook-to-tests : XML : TESTS ;
+generators.register-standard boostbook.docbook-to-onehtml : DOCBOOK : HTML ;
+generators.register-standard boostbook.docbook-to-htmldir : DOCBOOK : HTMLDIR ;
+generators.register-standard boostbook.docbook-to-manpages : DOCBOOK : MANPAGES ;
+generators.register-standard boostbook.docbook-to-fo : DOCBOOK : FO ;
 
 # Initialize BoostBook support. The parameters are:
 #   docbook-xsl-dir: The DocBook XSL stylesheet directory. If not provided,
@@ -51,7 +58,6 @@ type.register TESTS : tests ;
 #     the XML processor load the DTD remotely.
 rule init ( docbook-xsl-dir ? : docbook-dtd-dir ? )
 {
-
   if ! $(docbook-xsl-dir)
   {
     docbook-xsl-dir = [ modules.peek : DOCBOOK_XSL_DIR ] ;
@@ -73,34 +79,21 @@ rule init ( docbook-xsl-dir ? : docbook-dtd-dir ? )
     {
       .docbook-dtd-dir = [ path.make $(docbook-dtd-dir) ] ;
     }
-    
-    local boost-root =  [ modules.peek : BOOST_ROOT ] ;
-    if $(boost-root)
-    {
-        boost-root = [ path.make $(boost-root) ] ;
-    }    
+   
+    local boost-root = [ path.make [ modules.peek : BOOST_ROOT ] ] ;
     local boost-build-root = [
         sequence.transform path.make : [ modules.peek : BOOST_BUILD_PATH ]
     ] ; 
     local search-dirs = [ path.join $(boost-root) tools boostbook ] 
-                        $(boost-build-root)/../../boostbook ;
-    
-    if --debug-configuration in [ modules.peek : ARGV ] 
-    {
-        ECHO "notice: Boost.Book: searching XSLS/DTD in" ;
-        ECHO "notice:" [ sequence.transform path.native : $(search-dirs) ] ;
-    }    
-    local boostbook-xsl-dir ;
-    for local dir in $(search-dirs) {
-        boostbook-xsl-dir += [ path.glob $(dir) : xsl ] ;
-    }
-    local boostbook-dtd-dir ; 
-    for local dir in $(search-dirs) {
-        boostbook-dtd-dir += [ path.glob $(dir) : dtd ] ;
-    }
+                        $(boost-build-root)/../boostbook ;
+    local native-search-dirs = [
+        sequence.transform path.native : $(search-dirs)
+    ] ;
+    local boostbook-xsl-dir = [ GLOB $(native-search-dirs) : xsl ] ;
+    local boostbook-dtd-dir = [ GLOB $(native-search-dirs) : dtd ] ;
+
     .boostbook-xsl-dir = [ path.make $(boostbook-xsl-dir[1]) ] ;
     .boostbook-dtd-dir = [ path.make $(boostbook-dtd-dir[1]) ] ;
-    
     if ! $(.boostbook-xsl-dir) || ! $(.boostbook-dtd-dir)
     {
         errors.error
@@ -116,18 +109,6 @@ rule init ( docbook-xsl-dir ? : docbook-dtd-dir ? )
     # but not now.
     .boostbook-xsl-dir = $(.boostbook-xsl-dir)/ ;
     .boostbook-dtd-dir = $(.boostbook-dtd-dir)/ ;   
-    
-    # Register generators only if we've were called via "using boostbook ; "
-    generators.register-standard boostbook.dtdxml-to-boostbook : DTDXML : XML ;
-    generators.register-standard boostbook.boostbook-to-docbook : XML : DOCBOOK ;
-    generators.register-standard boostbook.boostbook-to-tests : XML : TESTS ;
-    generators.register-standard boostbook.docbook-to-onehtml : DOCBOOK : HTML ;
-    generators.register-standard boostbook.docbook-to-htmldir : DOCBOOK : HTMLDIR ;
-    generators.register-standard boostbook.docbook-to-manpages : DOCBOOK : MANPAGES ;
-    generators.register-standard boostbook.docbook-to-fo : DOCBOOK : FO ;
-    
-    # The same about Jamfile main target rules.
-    IMPORT $(__name__) : boostbook : : boostbook ;
   }    
 }
 
@@ -356,6 +337,8 @@ rule boostbook ( target-name : sources * : requirements * : default-build * )
         : [ targets.main-target-default-build $(default-build) : $(project) ] 
     ] ;
 }
+
+IMPORT $(__name__) : boostbook : : boostbook ;
 
 #############################################################################
 # Dependency scanners

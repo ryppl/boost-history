@@ -31,9 +31,6 @@ def prepare_suffix_map(toolset):
         if toolset in ["gcc"]:
             suffixes['.lib'] = '.a' # static libs have '.a' suffix with mingw...
             suffixes['.obj'] = '.o'
-    if os.uname()[0] == 'Darwin':
-        suffixes['.dll'] = '.dylib'
-
         
     
     
@@ -89,16 +86,10 @@ class Tester(TestCmd.TestCmd):
                 if 'TMP' in os.environ and os.environ['TMP'].find('~') != -1:
                     print 'Setting $TMP to /tmp to get around problem with short path names'
                     os.environ['TMP'] = '/tmp'
-            elif os.uname()[0] == 'Linux':
-                jam_build_dir = "bin.linuxx86"
-            elif os.uname()[0] == 'SunOS':
-                jam_build_dir = "bin.solaris"
-            elif os.uname()[0] == 'Darwin':
-                jam_build_dir = "bin.macosxppc"
             else:
-                raise "Don't know directory where jam is build for this system: " + os.name + "/" + os.uname()[0]
+                jam_build_dir = "bin.linuxx86"
         else:
-            raise "Don't know directory where jam is build for this system: " + os.name
+            raise "Don't know directory where jam is build for this system"
 
         if boost_build_path is None:
             boost_build_path = self.original_workdir

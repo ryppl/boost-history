@@ -54,6 +54,7 @@ rule init ( ) { }
 # The feature which controls the name of program used to
 # lanch test programs. 
 feature.feature testing.launcher : : optional free ;
+feature.feature location-prefix : : free ;
 feature.feature test-info : : free incidental ;
 feature.feature testing.arg : : free incidental ;
 feature.feature testing.input-file : : free dependency ;
@@ -255,12 +256,10 @@ actions (failed-as-expected)
     echo failed as expected > $(<)
 }
 
-MAKE_FILE = [ common.file-creation-command ] ;
-
 toolset.flags testing.unit-test LAUNCHER <testing.launcher> ;
 actions unit-test 
 {
-    $(LAUNCHER) $(>) && $(MAKE_FILE) $(<)
+    $(LAUNCHER) $(>) && touch $(<)
 }
 
 toolset.flags testing.capture-output ARG <testing.arg> ;

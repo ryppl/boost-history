@@ -106,7 +106,7 @@ namespace
       string bookmark( line.substr( pos+1 ) );
 
 //      std::cout << "inserting \"" << key << "\",\"" << bookmark << "\"\n";
-      notes.insert( notes_map::value_type( key, bookmark ) );
+      notes.insert( std::make_pair( key, bookmark ) );
     }
   }
 

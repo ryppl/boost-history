@@ -1,14 +1,13 @@
-// ------------------------------------------------------------------------------
-// libs/format/test/format_test1.cpp :  test constructing objects and basic parsing
-// ------------------------------------------------------------------------------
+// -*- C++ -*-
+//  Boost general library 'format'   ---------------------------
+//  See http://www.boost.org for updates, documentation, and revision history.
 
-//  Copyright Samuel Krempp 2003. Use, modification, and distribution are
-//  subject to the Boost Software License, Version 1.0. (See accompanying
-//  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-
-//  See http://www.boost.org/libs/format for library home page
-
-// ------------------------------------------------------------------------------
+//  (C) Samuel Krempp 2001
+//                  krempp@crans.ens-cachan.fr
+//  Permission to copy, use, modify, sell and
+//  distribute this software is granted provided this copyright notice appears
+//  in all copies. This software is provided "as is" without express or implied
+//  warranty, and with no claim as to its suitability for any purpose.
 
 #include "boost/format.hpp"
 
@@ -20,7 +19,7 @@ int test_main(int, char* [])
 {
 
   using boost::format;
-  using boost::str;
+  using boost::io::str;
 
   if(str( format("  %%  ") ) != "  %  ")
       BOOST_ERROR("Basic parsing without arguments Failed");

@@ -22,6 +22,8 @@ int main(){
     using namespace std;
     using boost::format;
     using boost::io::group;
+    using boost::io::str;
+    stringstream oss;
 
     // ------------------------------------------------------------------------
     // Simple style of reordering :

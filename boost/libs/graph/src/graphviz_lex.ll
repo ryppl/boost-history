@@ -44,7 +44,7 @@
         #include "graphviz_digraph_parser.hpp"
     #endif
 #else
-    #error Need to define the GRAPHVIZ_DIRECTED macro to either 0 or 1
+    #include "graphviz_parser.h"
 #endif
 
 

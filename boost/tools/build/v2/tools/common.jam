@@ -19,7 +19,7 @@ if [ os.name ] = NT
 }
 else
 {
-    RM = rm -f ;
+    RM = rm ;
     CP = cp ;
 }
 

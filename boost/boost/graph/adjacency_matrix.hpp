@@ -158,7 +158,7 @@ namespace boost {
         { }
 
         void increment() {
-            ++this->base_reference();
+            ++this->base();
             ++m_targ;
         }
         
@@ -205,19 +205,19 @@ namespace boost {
           , const VertexDescriptor& src
           , const VerticesSizeType& n
         )
-          : super_t(i), m_src(src), m_inc(src), m_targ(0), m_n(n)
+          : super_t(i), m_src(src), m_targ(0), m_n(n)
         {}
 
         void increment()
         {
             if (m_targ < m_src)     // first half
             {
-                ++this->base_reference();
+                ++this->base();
             }
             else
             {                  // second half
                 ++m_inc;
-                this->base_reference() += m_inc;
+                this->base() += m_inc;
             }
             ++m_targ;
         }
@@ -519,7 +519,7 @@ namespace boost {
     typename Graph::vertices_size_type offset = u * (u + 1) / 2;
     typename Graph::MatrixIter f = g.m_matrix.begin() + offset;
     typename Graph::MatrixIter l = g.m_matrix.end() + u;
-
+    
     typename Graph::unfiltered_out_edge_iter
         first(f, u, g.m_vertex_set.size())
       , last(l, u, g.m_vertex_set.size());

@@ -1,13 +1,8 @@
-# Copyright (C) 2001-2003
-# William E. Kempf
-#
-# Permission to use, copy, modify, distribute and sell this software
-# and its documentation for any purpose is hereby granted without fee,
-# provided that the above copyright notice appear in all copies and
-# that both that copyright notice and this permission notice appear
-# in supporting documentation.  William E. Kempf makes no representations
-# about the suitability of this software for any purpose.
-# It is provided "as is" without express or implied warranty.
+#  (C) Copyright William E. Kempf 2001. Permission to copy, use, modify,
+#  sell and distribute this software is granted provided this copyright
+#  notice appears in all copies. This software is provided "as is" without
+#  express or implied warranty, and with no claim as to its suitability for
+#  any purpose.
 #
 # Boost.Threads build Jamfile
 #
@@ -36,7 +31,7 @@ import ./threads ;
         ## requirements ##
         : <sysinclude>$(BOOST_ROOT)
         ## default build ##
-        :
+        : debug release
     ;
 
     # Base names of the source files for libboost_thread.
@@ -47,10 +42,6 @@ import ./threads ;
         : <template>thread_libs ../src/$(CPP_SOURCES).cpp
         : <define>BOOST_THREAD_BUILD_DLL=1
           <runtime-link>dynamic
-         # the common names rule ensures that the library will
-         # be named according to the rules used by the install
-         # and auto-link features:
-         common-variant-tag 
     ;
 
     stage bin-stage

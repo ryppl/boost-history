@@ -15,23 +15,6 @@
 <hr>
 <a href="index.html">Overall Index</a>
 <p>
-<h3>Changes from Boost 1.31 to 1.3? (date_time 1.02 to 1.03--prerelease)</h3>
-    <p class="bold">
-    <table>
-        <tr class="row_title"><td>Type</td><td>Description</td></tr>
-	<tr class="content">
-           <td class="nowrap">Feature</td>
-           <td>Output streaming now supports wide stream output on compiler /
-               standard library combinations that support wide streams. 
-               This allows code like:<br>
-                &nbsp;&nbsp;std::wstringstream wss;<br>
-                &nbsp;&nbsp;date d(2003,Aug,21);<br>
-                &nbsp;&nbsp;wss &lt;&lt; d;<br>
-               Thanks to Bart Garst for this change.
-          </td>
-        </tr>
-    </table>
-
 <h3>Changes from Boost 1.30 to 1.31 (date_time 1.01 to 1.02)</h3>
     <p class="bold">
     <table>
@@ -50,12 +33,6 @@
           </td>
         </tr>
 	<tr class="content">
-           <td class="nowrap">Bug Fix</td>
-           <td>Fixed many GCC compiler warnings when compiled with 
-	       -Wshadow.
-          </td>
-        </tr>
-	<tr class="content">
            <td class="nowrap">Feature</td>
            <td>Added prefix decrement operator (--) for date and time iterators.
                See <a href="time_iterators.html">Time Iterators</a>
@@ -66,16 +43,15 @@
         </tr>
 	<tr class="content">
            <td class="nowrap">Feature</td>
-           <td>Special values functionality (eg: infinities, not_a_date_time) 
-                added for date_duration, time_duration and time classes.  
-                Code provided by Bart Garst.
+           <td>Special_values functionality added for date_duration,
+	       time_duration and time classes.  Code provided by Bart Garst.
           </td>
         </tr>
         <tr class="content">
            <td class="nowrap">Bug Fix</td>
            <td>Fixed time_duration_traits calculation bug which was
                causing time duration to be limited to 32bit range even
-               when 64 bits were available.  Thanks to Joel de Guzman
+               when 64 bits were available.  Thanks to Joe de Guzman
                for tracking this down.
           </td>
         </tr>
@@ -97,9 +73,7 @@
         </tr>
         <tr class="content">
            <td class="nowrap">Feature</td>
-           <td>Added from_time_t function to convert time_t to a ptime. See
-               <a href="class_ptime.html#constructfromtimet">from_time_t</a>
-                from more.
+           <td>Added from_time_t function to convert time_t to a ptime.
           </td>
         </tr>
         <tr class="content">
@@ -120,8 +94,6 @@
                seconds(1).total_microseconds() == 1000000<br>
                hours(1).total_milliseconds() == 3600*1000 //3600 sec/hour<br>
                seconds(1).total_nanoseconds() == 1000000000<br>
-               See <a href="class_time_duration.html">time duration</a> for more.
-
           </td>
         </tr>
         <tr class="content">
@@ -146,14 +118,11 @@
                multiple formats ("2003-10-31","2003-Oct-31", and 
                "2003-October-31").
                Thus, date d = from_simple_string("2003-Feb-27") is now
-               allowed.  A bad month name string 
-               (from_simple_string("2003-SomeBogusMonthName-27")) will 
-               cause a bad_month exception.  In addition, there are 
- 	       new convenience functions that handle different orderings of the
-               year, month, and day.  The from_us_date and from_uk_date
-               <a href="class_date.html#constructfromstring">(reference)</a> 
-               provide parsing for the order month-day-year and day-month-year respectively.  
-               On most compilers the month string compare is case insensitive.
+               allowed.  A bad month name string (
+               from_simple_string("2003-SomeBogusMonthName-27")) will 
+               cause a bad_month exception.
+               On most compilers the string compare is case
+               insensitive.
                Thanks to Bart Garst for this work.
           </td>
         </tr>
@@ -252,9 +221,9 @@
 <hr>
 <address><small>
 <!-- hhmts start -->
-Last modified: Sun Feb  1 11:32:09 MST 2004
+Last modified: Sun Nov  2 20:31:55 MST 2003
 <!-- hhmts end -->
- by <a href="mailto:jeff&#64;crystalclearsoftware.com">Jeff Garland</a> &copy; 2000-2004
+ by <a href="mailto:jeff&#64;crystalclearsoftware.com">Jeff Garland</a> &copy; 2000-2002
 </small></address>
 </body>
 </html>

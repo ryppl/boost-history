@@ -11,11 +11,7 @@
 // See http://www.boost.org/libs/tokenizer for documentation.
 
 // Revision History:
-// 28 Nov 2003   Robert Zeh and John Bandela
-//      Converted into "fast" functions that avoid using += when
-//      the supplied iterator isn't an input_iterator; based on
-//      some work done at Archelon and a version that was checked into
-//      the boost CVS for a short period of time.
+
 // 20 Feb 2002   John Maddock
 //      Removed using namespace std declarations and added
 //      workaround for BOOST_NO_STDC_NAMESPACE (the library
@@ -26,8 +22,8 @@
 //      Removed tabs and a little cleanup.
 
 
-#ifndef BOOST_TOKEN_FUNCTIONS_JRB120303_HPP_
-#define BOOST_TOKEN_FUNCTIONS_JRB120303_HPP_
+#ifndef BOOST_TOKEN_FUNCTIONS_JRB051801_HPP_
+#define BOOST_TOKEN_FUNCTIONS_JRB051801_HPP_
 
 #include <vector>
 #include <stdexcept>
@@ -35,8 +31,6 @@
 #include <string>
 #include <cctype>
 #include <algorithm> // for find_if
-#include <boost/config.hpp>
-#include <boost/mpl/if.hpp>
 
 //
 // the following must not be macros if we are to prefix them
@@ -187,88 +181,6 @@ namespace boost{
     }
   };
 
-  //===========================================================================
-  // The classes here are used by offset_separator and char_separator to implement
-  // faster assigning of tokens using assign instead of +=
-  
-  namespace tokenizer_detail {
-
-  // The assign_or_plus_equal struct contains functions that implement
-  // assign, +=, and clearing based on the iterator type.  The
-  // generic case does nothing for plus_equal and clearing, while
-  // passing through the call for assign.
-  //
-  // When an input iterator is being used, the situation is reversed.
-  // The assign method does nothing, plus_equal invokes operator +=,
-  // and the clearing method sets the supplied token to the default
-  // token constructor's result.
-  //
-
-  template<class IteratorTag>
-  struct assign_or_plus_equal {
-    template<class Iterator, class Token>
-    static void assign(Iterator b, Iterator e, Token &t) {
-      t.assign(b, e);
-    }
-
-    template<class Token, class Value> 
-    static void plus_equal(Token &t, const Value &v) {
-    
-  }
-
-    // If we are doing an assign, there is no need for the
-    // the clear. 
-    //
-    template<class Token>
-    static void clear(Token &t) {
-
-    }
-  };
-
-  template <>
-  struct assign_or_plus_equal<std::input_iterator_tag> {
-    template<class Iterator, class Token>
-    static void assign(Iterator b, Iterator e, Token &t) {
-
-    }
-    template<class Token, class Value> 
-    static void plus_equal(Token &t, const Value &v) {
-      t += v;
-    }
-    template<class Token>
-    static void clear(Token &t) {
-      t = Token();
-    }
-  };
-
-
-  template<class Iterator>
-  struct pointer_iterator_category{
-    typedef std::random_access_iterator_tag type;
-  };
-
-
-  template<class Iterator>
-  struct class_iterator_category{
-    typedef typename Iterator::iterator_category type;
-  };
-
-
-
-  // This portably gets the iterator_tag without partial template specialization
-  template<class Iterator>
-    struct get_iterator_category{
-    typedef typename mpl::if_<is_pointer<Iterator>,
-      pointer_iterator_category<Iterator>,
-      class_iterator_category<Iterator>
-    > cat;
-
-    typedef typename cat::type iterator_category;
-  };
-
-  
-}
-
    
   //===========================================================================
   // The offset_separator class, which is a model of TokenizerFunction.
@@ -301,18 +213,9 @@ namespace boost{
     template <typename InputIterator, typename Token>
     bool operator()(InputIterator& next, InputIterator end, Token& tok)
     {
-			typedef tokenizer_detail::assign_or_plus_equal<
-#if     !defined(BOOST_MSVC) || BOOST_MSVC > 1300
-        typename
-#endif
-				tokenizer_detail::get_iterator_category<
-				InputIterator>::iterator_category> assigner;
-
-
       assert(!offsets_.empty());
     
-      assigner::clear(tok);
-      InputIterator start(next);
+      tok = Token();
       
       if (next == end)
         return false;
@@ -327,9 +230,8 @@ namespace boost{
       int i = 0;
       for (; i < c; ++i) {
         if (next == end)break;
-				assigner::plus_equal(tok,*next++);
+        tok+=*next++;
       }
-			assigner::assign(start,next,tok);
     
       if (!return_partial_last_)
         if (i < (c-1) )
@@ -396,36 +298,26 @@ namespace boost{
     template <typename InputIterator, typename Token>
     bool operator()(InputIterator& next, InputIterator end, Token& tok)
     {
-			typedef tokenizer_detail::assign_or_plus_equal<
-#if     !defined(BOOST_MSVC) || BOOST_MSVC > 1300
-        typename
-#endif
-				tokenizer_detail::get_iterator_category<
-				InputIterator>::iterator_category> assigner;
-
-      assigner::clear(tok);
+      tok = Token();
 
       // skip past all dropped_delims
       if (m_empty_tokens == drop_empty_tokens)
         for (; next != end  && is_dropped(*next); ++next)
           { }
       
-      InputIterator start(next);
-
       if (m_empty_tokens == drop_empty_tokens) {
 
         if (next == end)
           return false;
 
-
         // if we are on a kept_delims move past it and stop
         if (is_kept(*next)) {
-					assigner::plus_equal(tok,*next);
+          tok += *next;
           ++next;
         } else
           // append all the non delim characters
           for (; next != end && !is_dropped(*next) && !is_kept(*next); ++next)
-						assigner::plus_equal(tok,*next);
+            tok += *next;
       } 
       else { // m_empty_tokens == keep_empty_tokens
         
@@ -433,16 +325,15 @@ namespace boost{
         if (next == end)
           if (m_output_done == false) {
             m_output_done = true;
-            assigner::assign(start,next,tok);
             return true;
           } else
             return false;
-        
+
         if (is_kept(*next)) {
           if (m_output_done == false)
             m_output_done = true;
           else {
-            assigner::plus_equal(tok,*next);
+            tok += *next;
             ++next;
             m_output_done = false;
           }
@@ -452,13 +343,12 @@ namespace boost{
         } 
         else {
           if (is_dropped(*next))
-            start=++next;
+            ++next;
           for (; next != end && !is_dropped(*next) && !is_kept(*next); ++next)
-            assigner::plus_equal(tok,*next);
+            tok += *next;
           m_output_done = true;
         }
       }
-			assigner::assign(start,next,tok);
       return true;
     }
 

@@ -79,31 +79,11 @@ struct rounding_control<double>: detail::x86_rounding_control
   { volatile double r_ = r; return r_; }
 };
 
-namespace detail {
-
-template<bool>
-struct x86_rounding_control_long_double;
-
 template<>
-struct x86_rounding_control_long_double<false>: x86_rounding_control
+struct rounding_control<long double>: detail::x86_rounding_control
 {
-  static long double force_rounding(long double const &r)
-  { volatile long double r_ = r; return r_; }
+  static const long double& force_rounding(const long double& r) { return r; }
 };
-
-template<>
-struct x86_rounding_control_long_double<true>: x86_rounding_control
-{
-  static long double const &force_rounding(long double const &r)
-  { return r; }
-};
-
-} // namespace detail
-
-template<>
-struct rounding_control<long double>:
-  detail::x86_rounding_control_long_double< (sizeof(long double) >= 10) >
-{};
 
 } // namespace interval_lib
 } // namespace numeric

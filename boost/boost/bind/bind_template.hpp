@@ -151,11 +151,6 @@
         l_.accept(v);
     }
 
-    bool compare(this_type const & rhs) const
-    {
-        return ref_compare(f_, rhs.f_, 0) && l_ == rhs.l_;
-    }
-
 private:
 
     F f_;

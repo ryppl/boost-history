@@ -1,5 +1,5 @@
 //  (C) Copyright Dave Abrahams, Steve Cleary, Beman Dawes, Howard
-//  Hinnant & John Maddock 2000-2003.
+//  Hinnant & John Maddock 2000-2003.  
 //  Use, modification and distribution are subject to the Boost Software License,
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt).
@@ -17,16 +17,16 @@
 
 #ifdef BOOST_TT_HAS_CONFORMING_IS_CLASS_IMPLEMENTATION
 #   include "boost/type_traits/detail/yes_no_type.hpp"
+#   ifdef __EDG_VERSION__
+#       include "boost/type_traits/is_const.hpp"
+#       include "boost/type_traits/is_volatile.hpp"
+#   endif 
 #else
 #   include "boost/type_traits/is_scalar.hpp"
 #   include "boost/type_traits/is_array.hpp"
 #   include "boost/type_traits/is_reference.hpp"
 #   include "boost/type_traits/is_void.hpp"
 #   include "boost/type_traits/is_function.hpp"
-#endif
-
-#ifdef __EDG_VERSION__
-#   include "boost/type_traits/remove_cv.hpp"
 #endif
 
 // should be the last #include
@@ -48,24 +48,6 @@ namespace detail {
 // is_class<> metafunction due to Paul Mensonides
 // (leavings@attbi.com). For more details:
 // http://groups.google.com/groups?hl=en&selm=000001c1cc83%24e154d5e0%247772e50c%40c161550a&rnum=1
-#if defined(__GNUC__)  && !defined(__EDG_VERSION__)
-
-template <class U> ::boost::type_traits::yes_type is_class_tester(void(U::*)(void));
-template <class U> ::boost::type_traits::no_type is_class_tester(...);
-
-template <typename T>
-struct is_class_impl
-{
-
-    BOOST_STATIC_CONSTANT(bool, value =
-        (::boost::type_traits::ice_and<
-            sizeof(is_class_tester<T>(0)) == sizeof(::boost::type_traits::yes_type),
-            ::boost::type_traits::ice_not< ::boost::is_union<T>::value >::value
-        >::value)
-        );
-};
-
-#else
 
 template <typename T>
 struct is_class_impl
@@ -73,7 +55,7 @@ struct is_class_impl
     template <class U> static ::boost::type_traits::yes_type is_class_tester(void(U::*)(void));
     template <class U> static ::boost::type_traits::no_type is_class_tester(...);
 
-    BOOST_STATIC_CONSTANT(bool, value =
+    BOOST_STATIC_CONSTANT(bool, value = 
         (::boost::type_traits::ice_and<
             sizeof(is_class_tester<T>(0)) == sizeof(::boost::type_traits::yes_type),
             ::boost::type_traits::ice_not< ::boost::is_union<T>::value >::value
@@ -81,7 +63,25 @@ struct is_class_impl
         );
 };
 
-#endif
+# ifdef __EDG_VERSION__
+template <typename T>
+struct is_class_impl<T const>
+  : is_class_impl<T>
+{
+};
+
+template <typename T>
+struct is_class_impl<T volatile>
+  : is_class_impl<T>
+{
+};
+
+template <typename T>
+struct is_class_impl<T const volatile>
+  : is_class_impl<T>
+{
+};
+# endif
 
 #else
 
@@ -114,13 +114,8 @@ struct is_class_impl
 
 } // namespace detail
 
-# ifdef __EDG_VERSION__
-BOOST_TT_AUX_BOOL_TRAIT_DEF1(
-    is_class,T, detail::is_class_impl<typename remove_cv<T>::type>::value)
-# else 
 BOOST_TT_AUX_BOOL_TRAIT_DEF1(is_class,T,::boost::detail::is_class_impl<T>::value)
-# endif
-    
+
 } // namespace boost
 
 #include "boost/type_traits/detail/bool_trait_undef.hpp"

@@ -1,23 +1,23 @@
-// ----------------------------------------------------------------------------
-// workarounds_stlport.hpp : workaround STLport issues
-// ----------------------------------------------------------------------------
+// -*- C++ -*-
+//  Boost general library 'format'   ---------------------------
+//  See http://www.boost.org for updates, documentation, and revision history.
 
-//  Copyright Samuel Krempp 2003. Use, modification, and distribution are
-//  subject to the Boost Software License, Version 1.0. (See accompanying
-//  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//  (C) Samuel Krempp 2001
+//  Permission to copy, use, modify, sell and
+//  distribute this software is granted provided this copyright notice appears
+//  in all copies. This software is provided "as is" without express or implied
+//  warranty, and with no claim as to its suitability for any purpose.
 
-// see http://www.boost.org/libs/format for library home page
+// ideas taken from Rüdiger Loos's format class
+// and Karl Nelson's ofstream (also took its parsing code as basis for printf parsing)
 
-// ----------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
+// workarounds_stlport.hpp : configuration for the format library
+// The contents of this file should be integrated into the boost config system.
+// ------------------------------------------------------------------------------
 
 #ifndef BOOST_MACROS_STLPORT_HPP
 #define BOOST_MACROS_STLPORT_HPP
-
-#if defined(_STLPORT_VERSION) && BOOST_WORKAROUND( BOOST_MSVC, <= 1300)
-// msvc-6-stlport fails to find basic_string::append( iterator, iterator) when linking
-// might affect other MSwindows compilers 
-#define BOOST_NO_STRING_APPEND
-#endif
 
 // *** This should go to "boost/config/stdlib/stlport.hpp".
 
@@ -37,6 +37,6 @@
 #endif
 
 
-// ----------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
 
 #endif // BOOST_MACROS_STLPORT_HPP

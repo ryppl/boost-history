@@ -33,7 +33,7 @@ int test()
    std::isalpha(c);
    std::ispunct(c);
 #endif
-   (void)std::strlen(&c);
+   std::strlen(&c);
    std::clock();
 
    return 0;

@@ -25,7 +25,7 @@ namespace MyNS_ForOutput {
   using std::string;
   using std::endl; using std::flush;
 
-  using boost::format;
+  using boost::format; using boost::io::str;
   using boost::io::group;
 }
 
@@ -34,11 +34,10 @@ namespace MyNS_Manips {
   using std::setw;
   using std::hex ;
   using std::dec ;
-// gcc-2.95 doesnt define the next ones
-//  using std::showbase ;
-//  using std::left ;
-//  using std::right ;
-//  using std::internal ;
+  using std::showbase ;
+  using std::left ;
+  using std::right ;
+  using std::internal ;
 }
 
 int main(){
