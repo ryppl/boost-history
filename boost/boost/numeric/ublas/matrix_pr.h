@@ -47,8 +47,10 @@ namespace numerics {
         typedef const matrix_row<matrix_type> const_closure_type;
         typedef matrix_row<matrix_type> closure_type;
 #endif
+#ifdef NUMERICS_DEPRECATED
         typedef const vector_range<const matrix_row<const_matrix_type> > const_vector_range_type;
         typedef vector_range<matrix_row<matrix_type> > vector_range_type;
+#endif
         typedef typename M::const_iterator2 const_iterator_type;
         typedef typename M::iterator2 iterator_type;
         typedef typename proxy_traits<typename M::storage_category>::storage_category storage_category;
@@ -87,6 +89,7 @@ namespace numerics {
             return (*this) (j); 
         }
 
+#ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
         const_vector_range_type project (size_type start, size_type stop) const {
             return const_vector_range_type (*this, start, stop);
@@ -103,6 +106,7 @@ namespace numerics {
         vector_range_type project (const range &r) {
             return vector_range_type (*this, r);
         }
+#endif
 
         // Assignment
         NUMERICS_INLINE
@@ -423,6 +427,13 @@ namespace numerics {
     template<class M>
     matrix_row<M>::matrix_type matrix_row<M>::nil_;
 
+    // Projections
+    template<class M>
+    NUMERICS_INLINE
+    matrix_row<M> row (M &data, std::size_t i) {
+        return matrix_row<M> (data, i);
+    }
+
     // Matrix based column vector class
     template<class M>
     class matrix_column:
@@ -445,8 +456,10 @@ namespace numerics {
         typedef const matrix_column<matrix_type> const_closure_type;
         typedef matrix_column<matrix_type> closure_type;
 #endif
+#ifdef NUMERICS_DEPRECATED
         typedef const vector_range<const matrix_column<const_matrix_type> > const_vector_range_type;
         typedef vector_range<matrix_column<matrix_type> > vector_range_type;
+#endif
         typedef typename M::const_iterator1 const_iterator_type;
         typedef typename M::iterator1 iterator_type;
         typedef typename proxy_traits<typename M::storage_category>::storage_category storage_category;
@@ -485,6 +498,7 @@ namespace numerics {
             return (*this) (i); 
         }
 
+#ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
         const_vector_range_type project (size_type start, size_type stop) const {
             return const_vector_range_type (*this, start, stop);
@@ -501,6 +515,7 @@ namespace numerics {
         vector_range_type project (const range &r) {
             return vector_range_type (*this, r);
         }
+#endif
 
         // Assignment
         NUMERICS_INLINE
@@ -821,6 +836,13 @@ namespace numerics {
     template<class M>
     matrix_column<M>::matrix_type matrix_column<M>::nil_;
 
+    // Projections
+    template<class M>
+    NUMERICS_INLINE
+    matrix_column<M> column (M &data, std::size_t j) {
+        return matrix_column<M> (data, j);
+    }
+
     // Matrix based vector range class
     template<class M>
     class matrix_vector_range:
@@ -886,9 +908,10 @@ namespace numerics {
             return (*this) (i); 
         }
 
+#ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
         matrix_vector_range project (size_type start, size_type stop) const {
-            return matrix_vector_range (data_, r1_.composite (range (start, stop)), r2_.composite (range (start, stop)));
+            return matrix_vector_range (data_, r1_.composite (start, stop), r2_.composite (start, stop));
         }
         NUMERICS_INLINE
         matrix_vector_range project (const range &r) const {
@@ -896,12 +919,13 @@ namespace numerics {
         }
         NUMERICS_INLINE
         matrix_vector_range project (size_type start, size_type stop) {
-            return matrix_vector_range (data_, r1_.composite (range (start, stop)), r2_.composite (range (start, stop)));
+            return matrix_vector_range (data_, r1_.composite (start, stop), r2_.composite (start, stop));
         }
         NUMERICS_INLINE
         matrix_vector_range project (const range &r) {
             return matrix_vector_range (data_, r1_.composite (r), r2_.composite (r));
         }
+#endif
 
         // Assignment
         NUMERICS_INLINE
@@ -1283,6 +1307,7 @@ namespace numerics {
             return (*this) (i); 
         }
 
+#ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
         matrix_vector_slice project (const range &r) const {
             return matrix_vector_slice (data_, s1_.composite (r), s2_.composite (r));
@@ -1299,6 +1324,7 @@ namespace numerics {
         matrix_vector_slice project (const slice &s) {
             return matrix_vector_slice (data_, s1_.composite (s), s2_.composite (s));
         }
+#endif
 
         // Assignment
         NUMERICS_INLINE
@@ -1688,6 +1714,7 @@ namespace numerics {
             return data_ (r1_ (i), r2_ (j)); 
         }
 
+#ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
         const_matrix_row_type operator [] (size_type i) const {
             return const_matrix_row_type (*this, i);
@@ -1715,7 +1742,7 @@ namespace numerics {
 
         NUMERICS_INLINE
         matrix_range project (size_type start1, size_type stop1, size_type start2, size_type stop2) const {
-            return matrix_range (data_, r1_.composite (range (start1, stop1)), r2_.composite (range (start2, stop2)));
+            return matrix_range (data_, r1_.composite (start1, stop1), r2_.composite (start2, stop2));
         }
         NUMERICS_INLINE
         matrix_range project (const range &r1, const range &r2) const {
@@ -1723,12 +1750,13 @@ namespace numerics {
         }
         NUMERICS_INLINE
         matrix_range project (size_type start1, size_type stop1, size_type start2, size_type stop2) {
-            return matrix_range (data_, r1_.composite (range (start1, stop1)), r2_.composite (range (start2, stop2)));
+            return matrix_range (data_, r1_.composite (start1, stop1), r2_.composite (start2, stop2));
         }
         NUMERICS_INLINE
         matrix_range project (const range &r1, const range &r2) {
             return matrix_range (data_, r1_.composite (r1), r2_.composite (r2));
         }
+#endif
 
         // Assignment
         NUMERICS_INLINE
@@ -2371,6 +2399,19 @@ namespace numerics {
     template<class M>
     matrix_range<M>::matrix_type matrix_range<M>::nil_;
 
+    // Projections
+    // FIXME: partial specialization for matrix_range for example
+    template<class M>
+    NUMERICS_INLINE
+    matrix_range<M> project (M &data, std::size_t start1, std::size_t stop1, std::size_t start2, std::size_t stop2) {
+        return matrix_range<M> (data, start1, stop1, start2, stop2);
+    }
+    template<class M>
+    NUMERICS_INLINE
+    matrix_range<M> project (M &data, const range &r1, const range &r2) {
+        return matrix_range<M> (data, r1, r2);
+    }
+
     // Matrix based slice class
     template<class M>
     class matrix_slice:
@@ -2436,6 +2477,7 @@ namespace numerics {
             return data_ (s1_ (i), s2_ (j)); 
         }
 
+#ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
         const_matrix_row_type operator [] (size_type i) const {
             return const_matrix_row_type (*this, i);
@@ -2477,6 +2519,7 @@ namespace numerics {
         matrix_slice project (const slice &s1, const slice &s2) {
             return matrix_slice (data_, s1_.composite (s1), s2_.composite (s2));
         }
+#endif
 
         // Assignment
         NUMERICS_INLINE

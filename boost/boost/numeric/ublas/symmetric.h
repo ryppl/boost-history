@@ -45,13 +45,15 @@ namespace numerics {
         typedef symmetric_matrix<T, F1, F2, A> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
         typedef matrix_reference<self_type> closure_type;
+#ifdef NUMERICS_DEPRECATED
         typedef const matrix_row<const_self_type> const_matrix_row_type;
         typedef matrix_row<self_type> matrix_row_type;
         typedef const matrix_column<const_self_type> const_matrix_column_type;
         typedef matrix_column<self_type> matrix_column_type;
         typedef const matrix_range<const_self_type> const_matrix_range_type;
         typedef matrix_range<self_type> matrix_range_type;
-        typedef struct packed_tag storage_category;
+#endif
+        typedef packed_tag storage_category;
         typedef typename F1::packed_category packed_category;
         typedef typename F2::orientation_category orientation_category;
 
@@ -113,6 +115,7 @@ namespace numerics {
                 return data_ [functor1_type::element (functor2_type (), j, size2_, i, size1_)];
         }
 
+#ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
         const_matrix_row_type operator [] (size_type i) const {
             return const_matrix_row_type (*this, i);
@@ -154,6 +157,7 @@ namespace numerics {
         matrix_range_type project (const range &r1, const range &r2) {
             return matrix_range_type (*this, r1, r2);
         }
+#endif
 
         // Assignment
         NUMERICS_INLINE
@@ -323,7 +327,7 @@ namespace numerics {
             public container_const_reference<symmetric_matrix>,
             public random_access_iterator_base<const_iterator1, value_type> {
         public:
-            typedef std::bidirectional_iterator_tag iterator_category;
+            typedef packed_bidirectional_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename symmetric_matrix::difference_type difference_type;
             typedef typename symmetric_matrix::value_type value_type;
@@ -439,7 +443,7 @@ namespace numerics {
             public container_reference<symmetric_matrix>,
             public random_access_iterator_base<iterator1, value_type> {
         public:
-            typedef std::bidirectional_iterator_tag iterator_category;
+            typedef packed_bidirectional_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename symmetric_matrix::difference_type difference_type;
             typedef typename symmetric_matrix::value_type value_type;
@@ -554,7 +558,7 @@ namespace numerics {
             public container_const_reference<symmetric_matrix>,
             public random_access_iterator_base<const_iterator2, value_type> {
         public:
-            typedef std::bidirectional_iterator_tag iterator_category;
+            typedef packed_bidirectional_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename symmetric_matrix::difference_type difference_type;
             typedef typename symmetric_matrix::value_type value_type;
@@ -670,7 +674,7 @@ namespace numerics {
             public container_reference<symmetric_matrix>,
             public random_access_iterator_base<iterator2, value_type> {
         public:
-            typedef std::bidirectional_iterator_tag iterator_category;
+            typedef packed_bidirectional_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename symmetric_matrix::difference_type difference_type;
             typedef typename symmetric_matrix::value_type value_type;
@@ -843,13 +847,15 @@ namespace numerics {
         typedef symmetric_adaptor<M, F> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
         typedef matrix_reference<self_type> closure_type;
+#ifdef NUMERICS_DEPRECATED
         typedef const matrix_row<const_self_type> const_matrix_row_type;
         typedef matrix_row<self_type> matrix_row_type;
         typedef const matrix_column<const_self_type> const_matrix_column_type;
         typedef matrix_column<self_type> matrix_column_type;
         typedef const matrix_range<const_self_type> const_matrix_range_type;
         typedef matrix_range<self_type> matrix_range_type;
-        typedef struct packed_tag storage_category;
+#endif
+        typedef packed_tag storage_category;
         typedef typename F::packed_category packed_category;
         typedef typename M::orientation_category orientation_category;
 
@@ -893,6 +899,7 @@ namespace numerics {
                 return data_ (j, i);
         }
 
+#ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
         const_matrix_row_type operator [] (size_type i) const {
             return const_matrix_row_type (*this, i);
@@ -934,6 +941,7 @@ namespace numerics {
         matrix_range_type project (const range &r1, const range &r2) {
             return matrix_range_type (*this, r1, r2);
         }
+#endif
 
         // Assignment
         NUMERICS_INLINE
@@ -1054,7 +1062,7 @@ namespace numerics {
             public container_const_reference<symmetric_adaptor>,
             public random_access_iterator_base<const_iterator1, value_type> {
         public:
-            typedef std::bidirectional_iterator_tag iterator_category;
+            typedef packed_bidirectional_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename symmetric_adaptor::difference_type difference_type;
             typedef typename symmetric_adaptor::value_type value_type;
@@ -1170,7 +1178,7 @@ namespace numerics {
             public container_reference<symmetric_adaptor>,
             public random_access_iterator_base<iterator1, value_type> {
         public:
-            typedef std::bidirectional_iterator_tag iterator_category;
+            typedef packed_bidirectional_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename symmetric_adaptor::difference_type difference_type;
             typedef typename symmetric_adaptor::value_type value_type;
@@ -1285,7 +1293,7 @@ namespace numerics {
             public container_const_reference<symmetric_adaptor>,
             public random_access_iterator_base<const_iterator2, value_type> {
         public:
-            typedef std::bidirectional_iterator_tag iterator_category;
+            typedef packed_bidirectional_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename symmetric_adaptor::difference_type difference_type;
             typedef typename symmetric_adaptor::value_type value_type;
@@ -1401,7 +1409,7 @@ namespace numerics {
             public container_reference<symmetric_adaptor>,
             public random_access_iterator_base<iterator2, value_type> {
         public:
-            typedef std::bidirectional_iterator_tag iterator_category;
+            typedef packed_bidirectional_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename symmetric_adaptor::difference_type difference_type;
             typedef typename symmetric_adaptor::value_type value_type;

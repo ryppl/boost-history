@@ -337,17 +337,14 @@ namespace numerics {
         typedef F functor_type;
         typedef typename F::assign_category assign_category;
 
-        // Dense case
+        // Iterating case
         template<class M, class T>
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        void operator () (M &m, const T &t, dense_tag) {
-            // FIXME: switch to indexing version, if possible.
-            typedef typename M::size_type size_type;
+        void iterating_assign (M &m, const T &t) {
             typedef typename M::difference_type difference_type;
-#ifdef NUMERICS_USE_ITERATOR
-            typename M::iterator1 it1 (m.begin1 ());
             difference_type size1 (m.size1 ());
+            typename M::iterator1 it1 (m.begin1 ());
             while (-- size1 >= 0) {
                 typename M::iterator2 it2 (it1.begin ());
                 difference_type size2 (m.size2 ()); 
@@ -355,14 +352,35 @@ namespace numerics {
                     functor_type () (*it2, t), ++ it2;
                 ++ it1;
             }
-#else
-            size_type size1 (m.size1 ());
-            for (size_type i = 0; i < size1; ++ i) {
-                size_type size2 (m.size2 ()); 
-                for (size_type j = 0; j < size2; ++ j)
+        }
+        // Indexing case
+        template<class M, class T>
+        // This function seems to be big. So we do not let the compiler inline it.
+        // NUMERICS_INLINE
+        void indexing_assign (M &m, const T &t) {
+            typedef typename M::difference_type difference_type;
+            difference_type size1 (m.size1 ());
+            difference_type size2 (m.size2 ()); 
+            for (difference_type i = 0; i < size1; ++ i) {
+                for (difference_type j = 0; j < size2; ++ j)
                     functor_type () (m (i, j), t); 
             }
-#endif
+        }
+
+        // Dense case
+        template<class M, class T>
+        // This function seems to be big. So we do not let the compiler inline it.
+        // NUMERICS_INLINE
+        void operator () (M &m, const T &t, dense_tag) {
+            typedef typename M::size_type size_type;
+            typedef typename M::difference_type difference_type;
+            difference_type size1 (m.size1 ());
+            difference_type size2 (m.size2 ()); 
+            if (size1 >= NUMERICS_ITERATOR_THRESHOLD &&
+                size2 >= NUMERICS_ITERATOR_THRESHOLD) 
+                iterating_assign (m, t);
+            else 
+                indexing_assign (m, t);
         }
         // Packed case
         template<class M, class T>
@@ -429,27 +447,76 @@ namespace numerics {
     };
 
     template<>         
-    struct matrix_assign_traits<dense_tag, assign_tag, major_tag, std::bidirectional_iterator_tag, std::bidirectional_iterator_tag> {
+    struct matrix_assign_traits<dense_tag, assign_tag, unknown_orientation_tag, packed_bidirectional_iterator_tag, packed_bidirectional_iterator_tag> {
+        typedef packed_tag dispatch_category;
+    };
+    template<>         
+    struct matrix_assign_traits<dense_tag, computed_assign_tag, unknown_orientation_tag, packed_bidirectional_iterator_tag, packed_bidirectional_iterator_tag> {
+        typedef packed_tag dispatch_category;
+    };
+    template<>         
+    struct matrix_assign_traits<dense_tag, assign_tag, row_major_tag, packed_bidirectional_iterator_tag, packed_bidirectional_iterator_tag> {
+        typedef packed_tag dispatch_category;
+    };
+    template<>         
+    struct matrix_assign_traits<dense_tag, computed_assign_tag, row_major_tag, packed_bidirectional_iterator_tag, packed_bidirectional_iterator_tag> {
+        typedef packed_tag dispatch_category;
+    };
+    template<>         
+    struct matrix_assign_traits<dense_tag, assign_tag, column_major_tag, packed_bidirectional_iterator_tag, packed_bidirectional_iterator_tag> {
+        typedef packed_tag dispatch_category;
+    };
+    template<>         
+    struct matrix_assign_traits<dense_tag, computed_assign_tag, column_major_tag, packed_bidirectional_iterator_tag, packed_bidirectional_iterator_tag> {
+        typedef packed_tag dispatch_category;
+    };
+    template<>         
+    struct matrix_assign_traits<dense_tag, assign_tag, unknown_orientation_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
         typedef sparse_row_major_tag dispatch_category;
     };
     template<>         
-    struct matrix_assign_traits<dense_tag, computed_assign_tag, major_tag, std::bidirectional_iterator_tag, std::bidirectional_iterator_tag> {
+    struct matrix_assign_traits<dense_tag, computed_assign_tag, unknown_orientation_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
         typedef sparse_row_major_tag dispatch_category;
     };
     template<>         
-    struct matrix_assign_traits<dense_tag, assign_tag, row_major_tag, std::bidirectional_iterator_tag, std::bidirectional_iterator_tag> {
+    struct matrix_assign_traits<dense_tag, assign_tag, row_major_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
         typedef sparse_row_major_tag dispatch_category;
     };
     template<>         
-    struct matrix_assign_traits<dense_tag, computed_assign_tag, row_major_tag, std::bidirectional_iterator_tag, std::bidirectional_iterator_tag> {
+    struct matrix_assign_traits<dense_tag, computed_assign_tag, row_major_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
         typedef sparse_row_major_tag dispatch_category;
     };
     template<>         
-    struct matrix_assign_traits<dense_tag, assign_tag, column_major_tag, std::bidirectional_iterator_tag, std::bidirectional_iterator_tag> {
+    struct matrix_assign_traits<dense_tag, assign_tag, column_major_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
         typedef sparse_column_major_tag dispatch_category;
     };
     template<>         
-    struct matrix_assign_traits<dense_tag, computed_assign_tag, column_major_tag, std::bidirectional_iterator_tag, std::bidirectional_iterator_tag> {
+    struct matrix_assign_traits<dense_tag, computed_assign_tag, column_major_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_column_major_tag dispatch_category;
+    };
+
+    template<>         
+    struct matrix_assign_traits<packed_tag, assign_tag, unknown_orientation_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_row_major_tag dispatch_category;
+    };
+    template<>         
+    struct matrix_assign_traits<packed_tag, computed_assign_tag, unknown_orientation_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_row_major_tag dispatch_category;
+    };
+    template<>         
+    struct matrix_assign_traits<packed_tag, assign_tag, row_major_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_row_major_tag dispatch_category;
+    };
+    template<>         
+    struct matrix_assign_traits<packed_tag, computed_assign_tag, row_major_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_row_major_tag dispatch_category;
+    };
+    template<>         
+    struct matrix_assign_traits<packed_tag, assign_tag, column_major_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_column_major_tag dispatch_category;
+    };
+    template<>         
+    struct matrix_assign_traits<packed_tag, computed_assign_tag, column_major_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
         typedef sparse_column_major_tag dispatch_category;
     };
 
@@ -459,34 +526,52 @@ namespace numerics {
         typedef F functor_type;
         typedef typename F::assign_category assign_category;
 
+        // Iterating case
+        template<class M, class E>
+        // This function seems to be big. So we do not let the compiler inline it.
+        // NUMERICS_INLINE
+        void iterating_assign (M &m, const matrix_expression<E> &e) {
+            typedef typename M::difference_type difference_type;
+            difference_type size1 (common (m.size1 (), e ().size1 ()));
+            typename M::iterator1 it1 (m.begin1 ());
+            typename E::const_iterator1 it1e (e ().begin1 ());
+            while (-- size1 >= 0) {
+                typename M::iterator2 it2 (it1.begin ());
+                typename E::const_iterator2 it2e (it1e.begin ());
+                difference_type size2 (common (m.size2 (), e ().size2 ())); 
+                while (-- size2 >= 0) 
+                    functor_type () (*it2, *it2e), ++ it2, ++ it2e;
+                ++ it1, ++ it1e;
+            }
+        }
+        // Indexing case
+        template<class M, class E>
+        // This function seems to be big. So we do not let the compiler inline it.
+        // NUMERICS_INLINE
+        void indexing_assign (M &m, const matrix_expression<E> &e) {
+            typedef typename M::difference_type difference_type;
+            difference_type size1 (common (m.size1 (), e ().size1 ()));
+            difference_type size2 (common (m.size2 (), e ().size2 ())); 
+            for (difference_type i = 0; i < size1; ++ i) {
+                for (difference_type j = 0; j < size2; ++ j) 
+                    functor_type () (m (i, j), e () (i, j)); 
+            }
+        }
+
         // Dense case
         template<class M, class E>
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
         void operator () (M &m, const matrix_expression<E> &e, dense_tag) {
-            // FIXME: switch to indexing version, if possible.
             typedef typename M::size_type size_type;
             typedef typename M::difference_type difference_type;
-#ifdef NUMERICS_USE_ITERATOR
-            typename M::iterator1 it1 (m.begin1 ());
-            typename E::const_iterator1 it1e (e ().begin1 ());
-            difference_type size1 (common (m.size1 (), size_type (e ().end1 () - it1e)));
-            while (-- size1 >= 0) {
-                typename M::iterator2 it2 (it1.begin ());
-                typename E::const_iterator2 it2e (it1e.begin ());
-                difference_type size2 (common (m.size2 (), size_type (it1e.end () - it2e)));
-                while (-- size2 >= 0) 
-                    functor_type () (*it2, *it2e), ++ it2, ++ it2e;
-                ++ it1, ++ it1e;
-            }
-#else
-            size_type size1 (common (m.size1 (), e ().size1 ()));
-            for (size_type i = 0; i < size1; ++ i) {
-                size_type size2 (common (m.size2 (), e ().size2 ())); 
-                for (size_type j = 0; j < size2; ++ j) 
-                    functor_type () (m (i, j), e () (i, j)); 
-            }
-#endif
+            difference_type size1 (common (m.size1 (), e ().size1 ()));
+            difference_type size2 (common (m.size2 (), e ().size2 ())); 
+            if (size1 >= NUMERICS_ITERATOR_THRESHOLD &&
+                size2 >= NUMERICS_ITERATOR_THRESHOLD) 
+                iterating_assign (m, e);
+            else 
+                indexing_assign (m, e);
         }
         // Packed case
         template<class M, class E>
@@ -792,7 +877,7 @@ namespace numerics {
     };
 
     template<>         
-    struct matrix_swap_traits<dense_tag, major_tag, std::bidirectional_iterator_tag, std::bidirectional_iterator_tag> {
+    struct matrix_swap_traits<dense_tag, unknown_orientation_tag, std::bidirectional_iterator_tag, std::bidirectional_iterator_tag> {
         typedef sparse_row_major_tag dispatch_category;
     };
     template<>         
@@ -801,6 +886,19 @@ namespace numerics {
     };
     template<>         
     struct matrix_swap_traits<dense_tag, column_major_tag, std::bidirectional_iterator_tag, std::bidirectional_iterator_tag> {
+        typedef sparse_column_major_tag dispatch_category;
+    };
+
+    template<>         
+    struct matrix_swap_traits<packed_tag, unknown_orientation_tag, std::bidirectional_iterator_tag, std::bidirectional_iterator_tag> {
+        typedef sparse_row_major_tag dispatch_category;
+    };
+    template<>         
+    struct matrix_swap_traits<packed_tag, row_major_tag, std::bidirectional_iterator_tag, std::bidirectional_iterator_tag> {
+        typedef sparse_row_major_tag dispatch_category;
+    };
+    template<>         
+    struct matrix_swap_traits<packed_tag, column_major_tag, std::bidirectional_iterator_tag, std::bidirectional_iterator_tag> {
         typedef sparse_column_major_tag dispatch_category;
     };
 
@@ -937,16 +1035,18 @@ namespace numerics {
         typedef matrix<T, F, A> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
         typedef matrix_reference<self_type> closure_type;
+#ifdef NUMERICS_DEPRECATED
         typedef const matrix_row<const_self_type> const_matrix_row_type;
         typedef matrix_row<self_type> matrix_row_type;
         typedef const matrix_column<const_self_type> const_matrix_column_type;
         typedef matrix_column<self_type> matrix_column_type;
         typedef const matrix_range<const_self_type> const_matrix_range_type;
         typedef matrix_range<self_type> matrix_range_type;
+#endif
         typedef typename A::const_iterator const_iterator_type;
         typedef typename A::iterator iterator_type;
-        typedef struct dense_tag storage_category;
-        typedef struct major_tag orientation_category;
+        typedef dense_tag storage_category;
+        typedef unknown_orientation_tag orientation_category;
 
         // Construction and destruction
         NUMERICS_INLINE
@@ -992,6 +1092,7 @@ namespace numerics {
             return data_ [functor_type::element (i, size1_, j, size2_)]; 
         }
 
+#ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
         const_matrix_row_type operator [] (size_type i) const {
             return const_matrix_row_type (*this, i);
@@ -1033,6 +1134,7 @@ namespace numerics {
         matrix_range_type project (const range &r1, const range &r2) {
             return matrix_range_type (*this, r1, r2);
         }
+#endif
 
         // Assignment
         NUMERICS_INLINE
@@ -1195,7 +1297,7 @@ namespace numerics {
             public container_const_reference<matrix>,
             public random_access_iterator_base<const_iterator1, value_type> {
         public:
-            typedef std::random_access_iterator_tag iterator_category;
+            typedef dense_random_access_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename matrix::difference_type difference_type;
             typedef typename matrix::value_type value_type;
@@ -1317,7 +1419,7 @@ namespace numerics {
             public container_reference<matrix>,
             public random_access_iterator_base<iterator1, value_type> {
         public:
-            typedef std::random_access_iterator_tag iterator_category;
+            typedef dense_random_access_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename matrix::difference_type difference_type;
             typedef typename matrix::value_type value_type;
@@ -1436,7 +1538,7 @@ namespace numerics {
             public container_const_reference<matrix>,
             public random_access_iterator_base<const_iterator2, value_type> {
         public:
-            typedef std::random_access_iterator_tag iterator_category;
+            typedef dense_random_access_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename matrix::difference_type difference_type;
             typedef typename matrix::value_type value_type;
@@ -1558,7 +1660,7 @@ namespace numerics {
             public container_reference<matrix>,
             public random_access_iterator_base<iterator2, value_type> {
         public:
-            typedef std::random_access_iterator_tag iterator_category;
+            typedef dense_random_access_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename matrix::difference_type difference_type;
             typedef typename matrix::value_type value_type;
@@ -1734,18 +1836,20 @@ namespace numerics {
         typedef vector_of_vector<T, F, A> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
         typedef matrix_reference<self_type> closure_type;
+#ifdef NUMERICS_DEPRECATED
         typedef const matrix_row<const_self_type> const_matrix_row_type;
         typedef matrix_row<self_type> matrix_row_type;
         typedef const matrix_column<const_self_type> const_matrix_column_type;
         typedef matrix_column<self_type> matrix_column_type;
         typedef const matrix_range<const_self_type> const_matrix_range_type;
         typedef matrix_range<self_type> matrix_range_type;
+#endif
         typedef typename A::const_iterator vector_const_iterator_type;
         typedef typename A::iterator vector_iterator_type;
         typedef typename A::value_type::const_iterator const_iterator_type;
         typedef typename A::value_type::iterator iterator_type;
-        typedef struct dense_tag storage_category;
-        typedef struct major_tag orientation_category;
+        typedef dense_tag storage_category;
+        typedef unknown_orientation_tag orientation_category;
 
         // Construction and destruction
         NUMERICS_INLINE
@@ -1800,6 +1904,7 @@ namespace numerics {
             return data_ [functor_type::element1 (i, size1_, j, size2_)] [functor_type::element2 (i, size1_, j, size2_)]; 
         }
 
+#ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
         const_matrix_row_type operator [] (size_type i) const {
             return const_matrix_row_type (*this, i);
@@ -1841,6 +1946,7 @@ namespace numerics {
         matrix_range_type project (const range &r1, const range &r2) {
             return matrix_range_type (*this, r1, r2);
         }
+#endif
 
         // Assignment
         NUMERICS_INLINE
@@ -2004,7 +2110,7 @@ namespace numerics {
             public container_const_reference<vector_of_vector>,
             public random_access_iterator_base<const_iterator1, value_type> {
         public:
-            typedef std::random_access_iterator_tag iterator_category;
+            typedef dense_random_access_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename vector_of_vector::difference_type difference_type;
             typedef typename vector_of_vector::value_type value_type;
@@ -2152,7 +2258,7 @@ namespace numerics {
             public container_reference<vector_of_vector>,
             public random_access_iterator_base<iterator1, value_type> {
         public:
-            typedef std::random_access_iterator_tag iterator_category;
+            typedef dense_random_access_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename vector_of_vector::difference_type difference_type;
             typedef typename vector_of_vector::value_type value_type;
@@ -2297,7 +2403,7 @@ namespace numerics {
             public container_const_reference<vector_of_vector>,
             public random_access_iterator_base<const_iterator2, value_type> {
         public:
-            typedef std::random_access_iterator_tag iterator_category;
+            typedef dense_random_access_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename vector_of_vector::difference_type difference_type;
             typedef typename vector_of_vector::value_type value_type;
@@ -2445,7 +2551,7 @@ namespace numerics {
             public container_reference<vector_of_vector>,
             public random_access_iterator_base<iterator2, value_type> {
         public:
-            typedef std::random_access_iterator_tag iterator_category;
+            typedef dense_random_access_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename vector_of_vector::difference_type difference_type;
             typedef typename vector_of_vector::value_type value_type;
@@ -2644,12 +2750,14 @@ namespace numerics {
         typedef const identity_matrix<T> const_self_type;
         typedef identity_matrix<T> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
+#ifdef NUMERICS_DEPRECATED
         typedef const matrix_row<const_self_type> const_matrix_row_type;
         typedef const matrix_column<const_self_type> const_matrix_column_type;
         typedef const matrix_range<const_self_type> const_matrix_range_type;
+#endif
         typedef size_type const_iterator_type;
-        typedef struct dense_tag storage_category;
-        typedef struct major_tag orientation_category;
+        typedef dense_tag storage_category;
+        typedef unknown_orientation_tag orientation_category;
 
         // Construction and destruction
         NUMERICS_INLINE
@@ -2687,6 +2795,7 @@ namespace numerics {
             return i == j; 
         }
 
+#ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
         const_matrix_row_type operator [] (size_type i) const {
             return const_matrix_row_type (*this, i);
@@ -2708,6 +2817,7 @@ namespace numerics {
         const_matrix_range_type project (const range &r1, const range &r2) const {
             return const_matrix_range_type (*this, r1, r2);
         }
+#endif
 
         // Assignment
         NUMERICS_INLINE
@@ -2823,7 +2933,7 @@ namespace numerics {
             public container_const_reference<identity_matrix>,
             public random_access_iterator_base<const_iterator1, value_type> {
         public:
-            typedef std::random_access_iterator_tag iterator_category;
+            typedef dense_random_access_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename identity_matrix::difference_type difference_type;
             typedef typename identity_matrix::value_type value_type;
@@ -2942,7 +3052,7 @@ namespace numerics {
             public container_const_reference<identity_matrix>,
             public random_access_iterator_base<const_iterator2, value_type> {
         public:
-            typedef std::random_access_iterator_tag iterator_category;
+            typedef dense_random_access_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename identity_matrix::difference_type difference_type;
             typedef typename identity_matrix::value_type value_type;
@@ -3097,16 +3207,18 @@ namespace numerics {
         typedef c_matrix<T, N, M> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
         typedef matrix_reference<self_type> closure_type;
+#ifdef NUMERICS_DEPRECATED
         typedef const matrix_row<const_self_type> const_matrix_row_type;
         typedef matrix_row<self_type> matrix_row_type;
         typedef const matrix_column<const_self_type> const_matrix_column_type;
         typedef matrix_column<self_type> matrix_column_type;
         typedef const matrix_range<const_self_type> const_matrix_range_type;
         typedef matrix_range<self_type> matrix_range_type;
+#endif
         typedef const T *const_iterator_type;
         typedef T *iterator_type;
-        typedef struct dense_tag storage_category;
-        typedef struct major_tag orientation_category;
+        typedef dense_tag storage_category;
+        typedef unknown_orientation_tag orientation_category;
 
         // Construction and destruction
         NUMERICS_INLINE
@@ -3168,6 +3280,7 @@ namespace numerics {
             return data_ [i] [j]; 
         }
 
+#ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
         const_matrix_row_type operator [] (size_type i) const {
             return const_matrix_row_type (*this, i);
@@ -3209,6 +3322,7 @@ namespace numerics {
         matrix_range_type project (const range &r1, const range &r2) {
             return matrix_range_type (*this, r1, r2);
         }
+#endif
 
         // Assignment
         NUMERICS_INLINE
@@ -3378,7 +3492,7 @@ namespace numerics {
             public container_const_reference<c_matrix>,
             public random_access_iterator_base<const_iterator1, value_type> {
         public:
-            typedef std::random_access_iterator_tag iterator_category;
+            typedef dense_random_access_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename c_matrix::difference_type difference_type;
             typedef typename c_matrix::value_type value_type;
@@ -3500,7 +3614,7 @@ namespace numerics {
             public container_reference<c_matrix>,
             public random_access_iterator_base<iterator1, value_type> {
         public:
-            typedef std::random_access_iterator_tag iterator_category;
+            typedef dense_random_access_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename c_matrix::difference_type difference_type;
             typedef typename c_matrix::value_type value_type;
@@ -3619,7 +3733,7 @@ namespace numerics {
             public container_const_reference<c_matrix>,
             public random_access_iterator_base<const_iterator2, value_type> {
         public:
-            typedef std::random_access_iterator_tag iterator_category;
+            typedef dense_random_access_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename c_matrix::difference_type difference_type;
             typedef typename c_matrix::value_type value_type;
@@ -3741,7 +3855,7 @@ namespace numerics {
             public container_reference<c_matrix>,
             public random_access_iterator_base<iterator2, value_type> {
         public:
-            typedef std::random_access_iterator_tag iterator_category;
+            typedef dense_random_access_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename c_matrix::difference_type difference_type;
             typedef typename c_matrix::value_type value_type;

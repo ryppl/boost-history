@@ -80,6 +80,10 @@ namespace numerics {
             throw e;
     }
 #else
+//    template<class E>
+//    NUMERICS_INLINE
+//    void check (bool expression, const E &e) {}
+// FIXME: this one is too agressive for MSVC?!
 #define check(expression, e)
 #endif
     

@@ -113,24 +113,39 @@ namespace numerics {
         typedef F functor_type;
         typedef typename F::assign_category assign_category;
 
+        // Iterating case
+        template<class V, class T>
+        // This function seems to be big. So we do not let the compiler inline it.
+        // NUMERICS_INLINE
+        void iterating_assign (V &v, const T &t) {
+            typedef typename V::difference_type difference_type;
+            difference_type size (v.size ());
+            typename V::iterator it (v.begin ());
+            while (-- size >= 0)
+                functor_type () (*it, t), ++ it;
+        }
+        // Indexing case
+        template<class V, class T>
+        // This function seems to be big. So we do not let the compiler inline it.
+        // NUMERICS_INLINE
+        void indexing_assign (V &v, const T &t) {
+            typedef typename V::difference_type difference_type;
+            difference_type size (v.size ());
+            for (difference_type i = 0; i < size; ++ i)
+                functor_type () (v (i), t); 
+        }
+
         // Dense case
         template<class V, class T>
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
         void operator () (V &v, const T &t, dense_tag) {
-            // FIXME: switch to indexing version, if possible.
-            typedef typename V::size_type size_type;
             typedef typename V::difference_type difference_type;
-#ifdef NUMERICS_USE_ITERATOR
-            typename V::iterator it (v.begin ());
             difference_type size (v.size ());
-            while (-- size >= 0)
-                functor_type () (*it, t), ++ it;
-#else
-            size_type size (v.size ());
-            for (size_type i = 0; i < size; ++ i)
-                functor_type () (v (i), t); 
-#endif
+            if (size >= NUMERICS_ITERATOR_THRESHOLD) 
+                iterating_assign (v, t);
+            else 
+                indexing_assign (v, t);
         }
         // Packed case
         template<class V, class T>
@@ -170,20 +185,41 @@ namespace numerics {
     };
 
     template<> 
-    struct vector_assign_traits<dense_tag, assign_tag, std::bidirectional_iterator_tag> {
+    struct vector_assign_traits<dense_tag, assign_tag, packed_bidirectional_iterator_tag> {
+        typedef packed_tag dispatch_category;
+    };
+    template<> 
+    struct vector_assign_traits<dense_tag, computed_assign_tag, packed_bidirectional_iterator_tag> {
+        typedef packed_tag dispatch_category;
+    };
+    template<> 
+    struct vector_assign_traits<dense_tag, assign_tag, sparse_bidirectional_iterator_tag> {
         typedef sparse_tag dispatch_category;
     };
     template<> 
-    struct vector_assign_traits<dense_tag, computed_assign_tag, std::bidirectional_iterator_tag> {
+    struct vector_assign_traits<dense_tag, computed_assign_tag, sparse_bidirectional_iterator_tag> {
         typedef sparse_tag dispatch_category;
     };
 
     template<> 
-    struct vector_assign_traits<sparse_tag, computed_assign_tag, std::random_access_iterator_tag> {
+    struct vector_assign_traits<packed_tag, assign_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_tag dispatch_category;
+    };
+    template<> 
+    struct vector_assign_traits<packed_tag, computed_assign_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_tag dispatch_category;
+    };
+
+    template<> 
+    struct vector_assign_traits<sparse_tag, computed_assign_tag, dense_random_access_iterator_tag> {
         typedef sparse_proxy_tag dispatch_category;
     };
     template<> 
-    struct vector_assign_traits<sparse_tag, computed_assign_tag, std::bidirectional_iterator_tag> {
+    struct vector_assign_traits<sparse_tag, computed_assign_tag, packed_bidirectional_iterator_tag> {
+        typedef sparse_proxy_tag dispatch_category;
+    };
+    template<> 
+    struct vector_assign_traits<sparse_tag, computed_assign_tag, sparse_bidirectional_iterator_tag> {
         typedef sparse_proxy_tag dispatch_category;
     };
 
@@ -193,25 +229,41 @@ namespace numerics {
         typedef F functor_type;
         typedef typename F::assign_category assign_category;
 
+        // Iterating case
+        template<class V, class E>
+        // This function seems to be big. So we do not let the compiler inline it.
+        // NUMERICS_INLINE
+        void iterating_assign (V &v, const vector_expression<E> &e) {
+            typedef typename V::difference_type difference_type;
+            difference_type size (common (v.size (), e ().size ()));
+            typename V::iterator it (v.begin ());
+            typename E::const_iterator ite (e ().begin ());
+            while (-- size >= 0) 
+                functor_type () (*it, *ite), ++ it, ++ ite;
+        }
+        // Indexing scase
+        template<class V, class E>
+        // This function seems to be big. So we do not let the compiler inline it.
+        // NUMERICS_INLINE
+        void indexing_assign (V &v, const vector_expression<E> &e) {
+            typedef typename V::difference_type difference_type;
+            difference_type size (common (v.size (), e ().size ()));
+            for (difference_type i = 0; i < size; ++ i)
+                functor_type () (v (i), e () (i)); 
+        }
+
         // Dense case
         template<class V, class E>
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
         void operator () (V &v, const vector_expression<E> &e, dense_tag) {
-            // FIXME: switch to indexing version, if possible.
             typedef typename V::size_type size_type;
             typedef typename V::difference_type difference_type;
-#ifdef NUMERICS_USE_ITERATOR
-            typename V::iterator it (v.begin ());
-            typename E::const_iterator ite (e ().begin ());
             difference_type size (common (v.size (), e ().size ()));
-            while (-- size >= 0) 
-                functor_type () (*it, *ite), ++ it, ++ ite;
-#else
-            size_type size (common (v.size (), e ().size ()));
-            for (size_type i = 0; i < size; ++ i)
-                functor_type () (v (i), e () (i)); 
-#endif
+            if (size >= NUMERICS_ITERATOR_THRESHOLD) 
+                iterating_assign (v, e);
+            else
+                indexing_assign (v, e);
         }
         // Packed case
         template<class V, class E>
@@ -335,11 +387,13 @@ namespace numerics {
         typedef vector<T, F, A> self_type;
         typedef const vector_const_reference<const_self_type> const_closure_type;
         typedef vector_reference<self_type> closure_type;
+#ifdef NUMERICS_DEPRECATED
         typedef const vector_range<const_self_type> const_vector_range_type;
         typedef vector_range<self_type> vector_range_type;
+#endif
         typedef typename A::const_iterator const_iterator_type;
         typedef typename A::iterator iterator_type;
-        typedef struct dense_tag storage_category;
+        typedef dense_tag storage_category;
 
         // Construction and destruction
         NUMERICS_INLINE
@@ -389,6 +443,7 @@ namespace numerics {
             return (*this) (i); 
         }
 
+#ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
         const_vector_range_type project (size_type start, size_type stop) const {
             return const_vector_range_type (*this, start, stop);
@@ -405,6 +460,7 @@ namespace numerics {
         vector_range_type project (const range &r) {
             return vector_range_type (*this, r);
         }
+#endif
 
         // Assignment
         NUMERICS_INLINE
@@ -533,7 +589,7 @@ namespace numerics {
             public container_const_reference<vector>,
             public random_access_iterator_base<const_iterator, value_type> {
         public:
-            typedef std::random_access_iterator_tag iterator_category;
+            typedef dense_random_access_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename vector::difference_type difference_type;
             typedef typename vector::value_type value_type;
@@ -628,7 +684,7 @@ namespace numerics {
             public container_reference<vector>,
             public random_access_iterator_base<iterator, value_type> {
         public:
-            typedef std::random_access_iterator_tag iterator_category;
+            typedef dense_random_access_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename vector::difference_type difference_type;
             typedef typename vector::value_type value_type;
@@ -680,11 +736,11 @@ namespace numerics {
             // Index
             NUMERICS_INLINE
             size_type index () const {
-                const vector &v = (*this) ();
+                vector &v = (*this) ();
                 return functor_type::index (it_ - v.begin ().it_, v.size ());
             }
 
-            // Assignment 
+            // Assignment
             NUMERICS_INLINE
             iterator &operator = (const iterator &it) {
                 container_reference<vector>::assign (&it ());
@@ -752,10 +808,10 @@ namespace numerics {
         array_type data_;
     };
 
-    // Canonical vector class 
+    // Unit vector class 
     template<class T>
-    class canonical_vector: 
-        public vector_expression<canonical_vector<T> > {
+    class unit_vector: 
+        public vector_expression<unit_vector<T> > {
     public:      
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
@@ -764,22 +820,24 @@ namespace numerics {
         typedef T &reference_type;
         typedef const T *const_pointer_type;
         typedef T *pointer_type;
-        typedef const canonical_vector<T> const_self_type;
-        typedef canonical_vector<T> self_type;
+        typedef const unit_vector<T> const_self_type;
+        typedef unit_vector<T> self_type;
         typedef const vector_const_reference<const_self_type> const_closure_type;
+#ifdef NUMERICS_DEPRECATED
         typedef const vector_range<const_self_type> const_vector_range_type;
+#endif
         typedef size_type const_iterator_type;
-        typedef struct dense_tag storage_category;
+        typedef dense_tag storage_category;
 
         // Construction and destruction
         NUMERICS_INLINE
-        canonical_vector (): 
+        unit_vector (): 
             size_ (0), index_ (0) {}
         NUMERICS_EXPLICIT NUMERICS_INLINE
-        canonical_vector (size_type size, size_type index): 
+        unit_vector (size_type size, size_type index): 
             size_ (size), index_ (index) {}
         NUMERICS_INLINE
-        canonical_vector (const canonical_vector &v): 
+        unit_vector (const unit_vector &v): 
             size_ (v.size_), index_ (v.index_) {}
 
         // Resizing
@@ -808,6 +866,7 @@ namespace numerics {
             return (*this) (i); 
         }
 
+#ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
         const_vector_range_type project (size_type start, size_type stop) const {
             return const_vector_range_type (*this, start, stop);
@@ -816,23 +875,24 @@ namespace numerics {
         const_vector_range_type project (const range &r) const {
             return const_vector_range_type (*this, r);
         }
+#endif
 
         // Assignment
         NUMERICS_INLINE
-        canonical_vector &operator = (const canonical_vector &v) { 
+        unit_vector &operator = (const unit_vector &v) { 
             check (size_ == v.size_, bad_size ());
             index_ = v.index_;
             return *this;
         }
         NUMERICS_INLINE
-        canonical_vector &assign_temporary (canonical_vector &v) { 
+        unit_vector &assign_temporary (unit_vector &v) { 
             swap (v);
             return *this;
         }
 
         // Swapping
         NUMERICS_INLINE
-	    void swap (canonical_vector &v) {
+	    void swap (unit_vector &v) {
             check (this != &v, external_logic ());
             check (size_ == v.size_, bad_size ());
             std::swap (size_, v.size_);
@@ -840,7 +900,7 @@ namespace numerics {
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
-	    friend void swap (canonical_vector &v1, canonical_vector &v2) {
+	    friend void swap (unit_vector &v1, unit_vector &v2) {
             v1.swap (v2);
         }
 #endif
@@ -862,24 +922,24 @@ namespace numerics {
 
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
         class const_iterator:
-            public container_const_reference<canonical_vector>,
+            public container_const_reference<unit_vector>,
             public random_access_iterator_base<const_iterator, value_type> {
         public:
-            typedef std::random_access_iterator_tag iterator_category;
+            typedef dense_random_access_iterator_tag iterator_category;
 #ifndef USE_MSVC
-            typedef typename canonical_vector::difference_type difference_type;
-            typedef typename canonical_vector::value_type value_type;
-            typedef typename canonical_vector::value_type reference;
-            typedef typename canonical_vector::const_pointer_type pointer;
+            typedef typename unit_vector::difference_type difference_type;
+            typedef typename unit_vector::value_type value_type;
+            typedef typename unit_vector::value_type reference;
+            typedef typename unit_vector::const_pointer_type pointer;
 #endif
 
             // Construction and destruction
             NUMERICS_INLINE
             const_iterator ():
-                container_const_reference<canonical_vector> (), it_ () {}
+                container_const_reference<unit_vector> (), it_ () {}
             NUMERICS_INLINE
-            const_iterator (const canonical_vector &v, const const_iterator_type &it):
-                container_const_reference<canonical_vector> (v), it_ (it) {}
+            const_iterator (const unit_vector &v, const const_iterator_type &it):
+                container_const_reference<unit_vector> (v), it_ (it) {}
 
             // Arithmetic
             NUMERICS_INLINE
@@ -923,7 +983,7 @@ namespace numerics {
             // Assignment 
             NUMERICS_INLINE
             const_iterator &operator = (const const_iterator &it) {
-                container_const_reference<canonical_vector>::assign (&it ());
+                container_const_reference<unit_vector>::assign (&it ());
                 it_ = it.it_;
                 return *this;
             }
@@ -989,11 +1049,13 @@ namespace numerics {
         typedef c_vector<T, N> self_type;
         typedef const vector_const_reference<const_self_type> const_closure_type;
         typedef vector_reference<self_type> closure_type;
+#ifdef NUMERICS_DEPRECATED
         typedef const vector_range<const_self_type> const_vector_range_type;
         typedef vector_range<self_type> vector_range_type;
+#endif
         typedef const T *const_iterator_type;
         typedef T *iterator_type;
-        typedef struct dense_tag storage_category;
+        typedef dense_tag storage_category;
 
         // Construction and destruction
         NUMERICS_INLINE
@@ -1056,6 +1118,7 @@ namespace numerics {
             return (*this) (i); 
         }
 
+#ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
         const_vector_range_type project (size_type start, size_type stop) const {
             return const_vector_range_type (*this, start, stop);
@@ -1072,6 +1135,7 @@ namespace numerics {
         vector_range_type project (const range &r) {
             return vector_range_type (*this, r);
         }
+#endif
 
         // Assignment
         NUMERICS_INLINE
@@ -1202,7 +1266,7 @@ namespace numerics {
             public container_const_reference<c_vector>,
             public random_access_iterator_base<const_iterator, value_type> {
         public:
-            typedef std::random_access_iterator_tag iterator_category;
+            typedef dense_random_access_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename c_vector::difference_type difference_type;
             typedef typename c_vector::value_type value_type;
@@ -1297,7 +1361,7 @@ namespace numerics {
             public container_reference<c_vector>,
             public random_access_iterator_base<iterator, value_type> {
         public:
-            typedef std::random_access_iterator_tag iterator_category;
+            typedef dense_random_access_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename c_vector::difference_type difference_type;
             typedef typename c_vector::value_type value_type;
@@ -1424,5 +1488,7 @@ namespace numerics {
 }
 
 #endif 
+
+
 
 

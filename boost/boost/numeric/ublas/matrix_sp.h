@@ -43,15 +43,17 @@ namespace numerics {
         typedef sparse_matrix<T, F, A> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
         typedef matrix_reference<self_type> closure_type;
+#ifdef NUMERICS_DEPRECATED
         typedef const matrix_row<const_self_type> const_matrix_row_type;
         typedef matrix_row<self_type> matrix_row_type;
         typedef const matrix_column<const_self_type> const_matrix_column_type;
         typedef matrix_column<self_type> matrix_column_type;
         typedef const matrix_range<const_self_type> const_matrix_range_type;
         typedef matrix_range<self_type> matrix_range_type;
+#endif
         typedef typename A::const_iterator const_iterator_type;
         typedef typename A::iterator iterator_type;
-        typedef struct sparse_tag storage_category;
+        typedef sparse_tag storage_category;
         typedef typename F::orientation_category orientation_category;
 
         // Construction and destruction
@@ -101,6 +103,7 @@ namespace numerics {
             return data_ [functor_type::element (i, size1_, j, size2_)]; 
         }
 
+#ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
         const_matrix_row_type operator [] (size_type i) const {
             return const_matrix_row_type (*this, i);
@@ -142,6 +145,7 @@ namespace numerics {
         matrix_range_type project (const range &r1, const range &r2) {
             return matrix_range_type (*this, r1, r2);
         }
+#endif
 
         // Assignment
         NUMERICS_INLINE
@@ -367,7 +371,7 @@ namespace numerics {
             public container_const_reference<sparse_matrix>,
             public bidirectional_iterator_base<const_iterator1, value_type> {
         public:
-            typedef std::bidirectional_iterator_tag iterator_category;
+            typedef sparse_bidirectional_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename sparse_matrix::difference_type difference_type;
             typedef typename sparse_matrix::value_type value_type;
@@ -455,7 +459,7 @@ namespace numerics {
                 return functor_type::index1 ((*it_).first, m.size1 (), m.size2 ());
             }
             NUMERICS_INLINE
-            size_type  index2 () const {
+            size_type index2 () const {
                 const sparse_matrix &m = (*this) ();
                 return functor_type::index2 ((*it_).first, m.size1 (), m.size2 ());
             }
@@ -496,7 +500,7 @@ namespace numerics {
             public container_reference<sparse_matrix>,
             public bidirectional_iterator_base<iterator1, value_type> {
         public:
-            typedef std::bidirectional_iterator_tag iterator_category;
+            typedef sparse_bidirectional_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename sparse_matrix::difference_type difference_type;
             typedef typename sparse_matrix::value_type value_type;
@@ -581,7 +585,7 @@ namespace numerics {
                 return functor_type::index1 ((*it_).first, m.size1 (), m.size2 ());
             }
             NUMERICS_INLINE
-            size_type  index2 () const {
+            size_type index2 () const {
                 const sparse_matrix &m = (*this) ();
                 return functor_type::index2 ((*it_).first, m.size1 (), m.size2 ());
             }
@@ -624,7 +628,7 @@ namespace numerics {
             public container_const_reference<sparse_matrix>,
             public bidirectional_iterator_base<const_iterator2, value_type> {
         public:
-            typedef std::bidirectional_iterator_tag iterator_category;
+            typedef sparse_bidirectional_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename sparse_matrix::difference_type difference_type;
             typedef typename sparse_matrix::value_type value_type;
@@ -712,7 +716,7 @@ namespace numerics {
                 return functor_type::index1 ((*it_).first, m.size1 (), m.size2 ());
             }
             NUMERICS_INLINE
-            size_type  index2 () const {
+            size_type index2 () const {
                 const sparse_matrix &m = (*this) ();
                 return functor_type::index2 ((*it_).first, m.size1 (), m.size2 ());
             }
@@ -753,7 +757,7 @@ namespace numerics {
             public container_reference<sparse_matrix>,
             public bidirectional_iterator_base<iterator2, value_type> {
         public:
-            typedef std::bidirectional_iterator_tag iterator_category;
+            typedef sparse_bidirectional_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename sparse_matrix::difference_type difference_type;
             typedef typename sparse_matrix::value_type value_type;
@@ -838,7 +842,7 @@ namespace numerics {
                 return functor_type::index1 ((*it_).first, m.size1 (), m.size2 ());
             }
             NUMERICS_INLINE
-            size_type  index2 () const {
+            size_type index2 () const {
                 const sparse_matrix &m = (*this) ();
                 return functor_type::index2 ((*it_).first, m.size1 (), m.size2 ());
             }
@@ -940,18 +944,20 @@ namespace numerics {
         typedef sparse_vector_of_sparse_vector<T, F, A> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
         typedef matrix_reference<self_type> closure_type;
+#ifdef NUMERICS_DEPRECATED
         typedef const matrix_row<const_self_type> const_matrix_row_type;
         typedef matrix_row<self_type> matrix_row_type;
         typedef const matrix_column<const_self_type> const_matrix_column_type;
         typedef matrix_column<self_type> matrix_column_type;
         typedef const matrix_range<const_self_type> const_matrix_range_type;
         typedef matrix_range<self_type> matrix_range_type;
+#endif
         typedef typename A::value_type::second_type vector_data_value_type;
         typedef typename A::const_iterator vector_const_iterator_type;
         typedef typename A::iterator vector_iterator_type;
         typedef typename A::value_type::second_type::const_iterator const_iterator_type;
         typedef typename A::value_type::second_type::iterator iterator_type;
-        typedef struct sparse_tag storage_category;
+        typedef sparse_tag storage_category;
         typedef typename F::orientation_category orientation_category;
 
         // Construction and destruction
@@ -1010,6 +1016,7 @@ namespace numerics {
             return data_ [functor_type::element1 (i, size1_, j, size2_)] [functor_type::element2 (i, size1_, j, size2_)]; 
         }
 
+#ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
         const_matrix_row_type operator [] (size_type i) const {
             return const_matrix_row_type (*this, i);
@@ -1051,6 +1058,7 @@ namespace numerics {
         matrix_range_type project (const range &r1, const range &r2) {
             return matrix_range_type (*this, r1, r2);
         }
+#endif
 
         // Assignment
         NUMERICS_INLINE
@@ -1354,7 +1362,7 @@ namespace numerics {
             public container_const_reference<sparse_vector_of_sparse_vector>,
             public bidirectional_iterator_base<const_iterator1, value_type> {
         public:
-            typedef std::bidirectional_iterator_tag iterator_category;
+            typedef sparse_bidirectional_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename sparse_vector_of_sparse_vector::difference_type difference_type;
             typedef typename sparse_vector_of_sparse_vector::value_type value_type;
@@ -1455,12 +1463,10 @@ namespace numerics {
             // Indices
             NUMERICS_INLINE
             size_type index1 () const {
-                const sparse_vector_of_sparse_vector &m = (*this) ();
                 return functor_type::index1 ((*itv_).first, (*it_).first);
             }
             NUMERICS_INLINE
-            size_type  index2 () const {
-                const sparse_vector_of_sparse_vector &m = (*this) ();
+            size_type index2 () const {
                 return functor_type::index2 ((*itv_).first, (*it_).first);
             }
 
@@ -1502,7 +1508,7 @@ namespace numerics {
             public container_reference<sparse_vector_of_sparse_vector>,
             public bidirectional_iterator_base<iterator1, value_type> {
         public:
-            typedef std::bidirectional_iterator_tag iterator_category;
+            typedef sparse_bidirectional_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename sparse_vector_of_sparse_vector::difference_type difference_type;
             typedef typename sparse_vector_of_sparse_vector::value_type value_type;
@@ -1600,12 +1606,10 @@ namespace numerics {
             // Indices
             NUMERICS_INLINE
             size_type index1 () const {
-                const sparse_vector_of_sparse_vector &m = (*this) ();
                 return functor_type::index1 ((*itv_).first, (*it_).first);
             }
             NUMERICS_INLINE
-            size_type  index2 () const {
-                const sparse_vector_of_sparse_vector &m = (*this) ();
+            size_type index2 () const {
                 return functor_type::index2 ((*itv_).first, (*it_).first);
             }
 
@@ -1649,7 +1653,7 @@ namespace numerics {
             public container_const_reference<sparse_vector_of_sparse_vector>,
             public bidirectional_iterator_base<const_iterator2, value_type> {
         public:
-            typedef std::bidirectional_iterator_tag iterator_category;
+            typedef sparse_bidirectional_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename sparse_vector_of_sparse_vector::difference_type difference_type;
             typedef typename sparse_vector_of_sparse_vector::value_type value_type;
@@ -1750,12 +1754,10 @@ namespace numerics {
             // Indices
             NUMERICS_INLINE
             size_type index1 () const {
-                const sparse_vector_of_sparse_vector &m = (*this) ();
                 return functor_type::index1 ((*itv_).first, (*it_).first);
             }
             NUMERICS_INLINE
-            size_type  index2 () const {
-                const sparse_vector_of_sparse_vector &m = (*this) ();
+            size_type index2 () const {
                 return functor_type::index2 ((*itv_).first, (*it_).first);
             }
 
@@ -1797,7 +1799,7 @@ namespace numerics {
             public container_reference<sparse_vector_of_sparse_vector>,
             public bidirectional_iterator_base<iterator2, value_type> {
         public:
-            typedef std::bidirectional_iterator_tag iterator_category;
+            typedef sparse_bidirectional_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename sparse_vector_of_sparse_vector::difference_type difference_type;
             typedef typename sparse_vector_of_sparse_vector::value_type value_type;
@@ -1895,12 +1897,10 @@ namespace numerics {
             // Indices
             NUMERICS_INLINE
             size_type index1 () const {
-                const sparse_vector_of_sparse_vector &m = (*this) ();
                 return functor_type::index1 ((*itv_).first, (*it_).first);
             }
             NUMERICS_INLINE
-            size_type  index2 () const {
-                const sparse_vector_of_sparse_vector &m = (*this) ();
+            size_type index2 () const {
                 return functor_type::index2 ((*itv_).first, (*it_).first);
             }
 

@@ -22,7 +22,7 @@
 #include "config.h"
 
 #ifdef USE_GCC
-// FIXME: could we use BOOST_NO_STD_ITERATOR and <boost/iterator.h> here?
+// FIXME: couldn't we use BOOST_NO_STD_ITERATOR and <boost/iterator.h> here?
 #if __GNUC__ <= 2
 
 namespace std {
@@ -707,20 +707,6 @@ namespace numerics {
         return tmp -= n;
     }
 #endif
-
-    template<class I1, class I2>
-    struct restrict_traits {
-        typedef I1 iterator_category;
-    };
-
-    template<>
-    struct restrict_traits<std::bidirectional_iterator_tag, std::random_access_iterator_tag> {
-        typedef std::bidirectional_iterator_tag iterator_category;
-    };
-    template<>
-    struct restrict_traits<std::random_access_iterator_tag, std::bidirectional_iterator_tag> {
-        typedef std::bidirectional_iterator_tag iterator_category;
-    };
 
     template<class C>
     class indexed_iterator:
@@ -1556,5 +1542,7 @@ namespace numerics {
 }
 
 #endif
+
+
 
 

@@ -85,6 +85,51 @@ namespace numerics {
     struct promote_traits<std::complex<double>, std::complex<float> > {
 	    typedef std::complex<double> promote_type;
     };
+
+    struct unknown_storage_tag {};
+    struct sparse_proxy_tag {};
+    struct sparse_tag: public sparse_proxy_tag {};
+    struct packed_tag: public sparse_tag {};
+    struct dense_tag: public packed_tag {};
+
+    template<class S>
+    struct proxy_traits {
+        typedef S storage_category;
+    };
+
+    template<>
+    struct proxy_traits<sparse_tag> {
+        typedef sparse_proxy_tag storage_category;
+    };
+
+    struct sparse_bidirectional_iterator_tag : public std::bidirectional_iterator_tag {};
+    struct packed_bidirectional_iterator_tag : public sparse_bidirectional_iterator_tag {};
+    struct dense_random_access_iterator_tag : public std::random_access_iterator_tag {};
+
+    template<class I1, class I2>
+    struct restrict_traits {
+        typedef I1 iterator_category;
+    };
+
+    // FIXME: eliminate this.
+    template<>
+    struct restrict_traits<std::random_access_iterator_tag, std::bidirectional_iterator_tag> {
+        typedef std::bidirectional_iterator_tag iterator_category;
+    };
+
+    template<>
+    struct restrict_traits<packed_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_bidirectional_iterator_tag iterator_category;
+    };
+    template<>
+    struct restrict_traits<dense_random_access_iterator_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_bidirectional_iterator_tag iterator_category;
+    };
+    template<>
+    struct restrict_traits<dense_random_access_iterator_tag, packed_bidirectional_iterator_tag> {
+        typedef packed_bidirectional_iterator_tag iterator_category;
+    };
+
 }
 
 #endif 

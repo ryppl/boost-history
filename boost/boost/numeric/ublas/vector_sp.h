@@ -43,11 +43,13 @@ namespace numerics {
         typedef sparse_vector<T, F, A> self_type;
         typedef const vector_const_reference<const_self_type> const_closure_type;
         typedef vector_reference<self_type> closure_type;
+#ifdef NUMERICS_DEPRECATED
         typedef const vector_range<const_self_type> const_vector_range_type;
         typedef vector_range<self_type> vector_range_type;
+#endif
         typedef typename A::const_iterator const_iterator_type;
         typedef typename A::iterator iterator_type;
-        typedef struct sparse_tag storage_category;
+        typedef sparse_tag storage_category;
 
         // Construction and destruction
         NUMERICS_INLINE
@@ -100,6 +102,7 @@ namespace numerics {
             return (*this) (i); 
         }
 
+#ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
         const_vector_range_type project (size_type start, size_type stop) const {
             return const_vector_range_type (*this, start, stop);
@@ -116,6 +119,7 @@ namespace numerics {
         vector_range_type project (const range &r) {
             return vector_range_type (*this, r);
         }
+#endif
 
         // Assignment
         NUMERICS_INLINE
@@ -256,7 +260,7 @@ namespace numerics {
             public container_const_reference<sparse_vector>,
             public bidirectional_iterator_base<const_iterator, value_type> {
         public:
-            typedef std::bidirectional_iterator_tag iterator_category;
+            typedef sparse_bidirectional_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename sparse_vector::difference_type difference_type;
             typedef typename sparse_vector::value_type value_type;
@@ -332,7 +336,7 @@ namespace numerics {
             public container_reference<sparse_vector>,
             public bidirectional_iterator_base<iterator, value_type> {
         public:
-            typedef std::bidirectional_iterator_tag iterator_category;
+            typedef sparse_bidirectional_iterator_tag iterator_category;
 #ifndef USE_MSVC
             typedef typename sparse_vector::difference_type difference_type;
             typedef typename sparse_vector::value_type value_type;

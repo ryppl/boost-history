@@ -90,9 +90,10 @@ namespace numerics {
             return (*this) (i); 
         }
 
+#ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
         vector_range project (size_type start, size_type stop) const {
-            return vector_range (data_, r_.composite (range (start, stop)));
+            return vector_range (data_, r_.composite (start, stop));
         }
         NUMERICS_INLINE
         vector_range project (const range &r) const {
@@ -100,12 +101,13 @@ namespace numerics {
         }
         NUMERICS_INLINE
         vector_range project (size_type start, size_type stop) {
-            return vector_range (data_, r_.composite (range (start, stop)));
+            return vector_range (data_, r_.composite (start, stop));
         }
         NUMERICS_INLINE
         vector_range project (const range &r) {
             return vector_range (data_, r_.composite (r));
         }
+#endif
 
         // Assignment
         NUMERICS_INLINE
@@ -428,6 +430,19 @@ namespace numerics {
     template<class V>
     vector_range<V>::vector_type vector_range<V>::nil_;
 
+    // Projections
+    // FIXME: partial specialization for vector_range for example
+    template<class V>
+    NUMERICS_INLINE
+    vector_range<V> project (V &data, std::size_t start, std::size_t stop) {
+        return vector_range<V> (data, start, stop);
+    }
+    template<class V>
+    NUMERICS_INLINE
+    vector_range<V> project (V &data, const range &r) {
+        return vector_range<V> (data, r);
+    }
+
     // Vector based slice class
     template<class V>
     class vector_slice:
@@ -498,6 +513,7 @@ namespace numerics {
             return (*this) (i); 
         }
 
+#ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
         vector_slice project (const range &r) const {
             return vector_slice (data_, s_.composite (r));
@@ -514,6 +530,7 @@ namespace numerics {
         vector_slice project (const slice &s) {
             return vector_slice (data_, s_.composite (s));
         }
+#endif
 
         // Assignment
         NUMERICS_INLINE

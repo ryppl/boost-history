@@ -17,11 +17,11 @@
 #ifndef NUMERICS_CONCEPTS_H
 #define NUMERICS_CONCEPTS_H
 
-#define INTERNAL_BASE
-// #define INTERNAL_EXPRESSION
+// #define INTERNAL_BASE
+#define INTERNAL_EXPRESSION
 // #define INTERNAL_ITERATOR
 
-// #define EXTERNAL
+#define EXTERNAL
 
 namespace numerics {
 
@@ -613,11 +613,13 @@ namespace numerics {
             VectorExpression<vector_type>::constraints ();    
             vector_type v = vector_type ();
             size_type i (0);
+#ifdef NUMERICS_DEPRECATED
 #ifndef USE_BCC
             // Projections
             v.project (range (i, v.size ()));
 #endif
-            // Find (internal) 
+#endif
+            // Find (internal?) 
             const_iterator_type it (v.find (i));
         }
     };
@@ -636,7 +638,7 @@ namespace numerics {
             vector_type v = vector_type (), v1 = vector_type (), v2 = vector_type ();
             size_type i (0);
             value_type t = value_type ();
-            // Find (internal) 
+            // Find (internal?) 
             iterator_type it (v.find (i));
             // Beginning of range
             iterator_type it_begin (v.begin ());
@@ -670,13 +672,15 @@ namespace numerics {
             MatrixExpression<matrix_type>::constraints ();    
             matrix_type m = matrix_type ();
             size_type i (0), j (0);
+#ifdef NUMERICS_DEPRECATED
 #ifndef USE_BCC
             // Projections
             m.row (i);
             m.column (j);
             m.project (range (i, m.size1 ()), range (j, m.size2 ()));
 #endif
-            // Find (internal) 
+#endif
+            // Find (internal?) 
             const_iterator1_type it1 (m.find1 (0, i, j));
             const_iterator2_type it2 (m.find2 (0, i, j));
         }
@@ -698,7 +702,7 @@ namespace numerics {
             matrix_type m = matrix_type (), m1 = matrix_type (), m2 = matrix_type ();
             size_type i (0), j (0);
             value_type t = value_type ();
-            // Find (internal) 
+            // Find (internal?) 
             iterator1_type it1 (m.find1 (0, i, j));
             iterator2_type it2 (m.find2 (0, i, j));
             // Beginning of range
@@ -1023,10 +1027,10 @@ namespace numerics {
         MutableIndexedRandomAccess1DIterator<vector<double>::reverse_iterator>::constraints ();
 #endif
 
-        Vector<canonical_vector<double> >::constraints ();
+        Vector<unit_vector<double> >::constraints ();
 #ifdef INTERNAL_ITERATOR
-        IndexedRandomAccess1DIterator<canonical_vector<double>::const_iterator>::constraints ();
-        IndexedRandomAccess1DIterator<canonical_vector<double>::const_reverse_iterator>::constraints ();
+        IndexedRandomAccess1DIterator<unit_vector<double>::const_iterator>::constraints ();
+        IndexedRandomAccess1DIterator<unit_vector<double>::const_reverse_iterator>::constraints ();
 #endif
 
         Vector<const c_vector<double, 1> >::constraints ();
@@ -1266,13 +1270,16 @@ namespace numerics {
         ScalarExpression<scalar_const_reference<double > >::constraints ();
 
         // Vector Expressions
-        VectorExpression<vector_const_reference<vector<double> > >::constraints ();
+        // VectorExpression<vector_const_reference<vector<double> > >::constraints ();
+        VectorProxy<vector_const_reference<vector<double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedRandomAccess1DIterator<vector_const_reference<vector<double> >::const_iterator>::constraints ();
         IndexedRandomAccess1DIterator<vector_const_reference<vector<double> >::const_reverse_iterator>::constraints ();
 #endif
 
-        VectorExpression<vector_reference<vector<double> > >::constraints ();
+        // VectorExpression<vector_reference<vector<double> > >::constraints ();
+        VectorProxy<vector_reference<vector<double> > >::constraints ();
+        // MutableVectorProxy<vector_reference<vector<double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedRandomAccess1DIterator<vector_reference<vector<double> >::const_iterator>::constraints ();
         MutableIndexedRandomAccess1DIterator<vector_reference<vector<double> >::iterator>::constraints ();
@@ -1280,19 +1287,22 @@ namespace numerics {
         MutableIndexedRandomAccess1DIterator<vector_reference<vector<double> >::reverse_iterator>::constraints ();
 #endif
 
-        VectorExpression<vector_unary<vector<double>, scalar_identity<double> > >::constraints ();
+        // VectorExpression<vector_unary<vector<double>, scalar_identity<double> > >::constraints ();
+        VectorProxy<vector_unary<vector<double>, scalar_identity<double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedRandomAccess1DIterator<vector_unary<vector<double>, scalar_identity<double>  >::const_iterator>::constraints ();
         IndexedRandomAccess1DIterator<vector_unary<vector<double>, scalar_identity<double>  >::const_reverse_iterator>::constraints ();
 #endif
 
-        VectorExpression<vector_binary<vector<double>, vector<double>, scalar_plus<double, double> > >::constraints ();
+        // VectorExpression<vector_binary<vector<double>, vector<double>, scalar_plus<double, double> > >::constraints ();
+        VectorProxy<vector_binary<vector<double>, vector<double>, scalar_plus<double, double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedRandomAccess1DIterator<vector_binary<vector<double>, vector<double>, scalar_plus<double, double> >::const_iterator>::constraints ();
         IndexedRandomAccess1DIterator<vector_binary<vector<double>, vector<double>, scalar_plus<double, double> >::const_reverse_iterator>::constraints ();
 #endif
 
-        VectorExpression<vector_binary_scalar<scalar_value<double>, vector<double>, scalar_multiplies<double, double> > >::constraints ();
+        // VectorExpression<vector_binary_scalar<scalar_value<double>, vector<double>, scalar_multiplies<double, double> > >::constraints ();
+        VectorProxy<vector_binary_scalar<scalar_value<double>, vector<double>, scalar_multiplies<double, double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedRandomAccess1DIterator<vector_binary_scalar<scalar_value<double>, vector<double>, scalar_multiplies<double, double> >::const_iterator>::constraints ();
         IndexedRandomAccess1DIterator<vector_binary_scalar<scalar_value<double>, vector<double>, scalar_multiplies<double, double> >::const_reverse_iterator>::constraints ();
@@ -1305,26 +1315,37 @@ namespace numerics {
 
         ScalarExpression<vector_scalar_binary<vector<double>, vector<double>, vector_inner_prod<double, double, double> > >::constraints ();
 
-        VectorExpression<vector_expression_range<vector<double> > >::constraints ();
+#ifdef NUMERICS_DEPRECATED
+
+        // VectorExpression<vector_expression_range<vector<double> > >::constraints ();
+        VectorProxy<vector_expression_range<vector<double> > >::constraints ();
+        // MutableVectorProxy<vector_expression_range<vector<double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedRandomAccess1DIterator<vector_expression_range<vector<double> >::const_iterator>::constraints ();
         IndexedRandomAccess1DIterator<vector_expression_range<vector<double> >::const_reverse_iterator>::constraints ();
 #endif
         
-        VectorExpression<vector_expression_slice<vector<double> > >::constraints ();
+        // VectorExpression<vector_expression_slice<vector<double> > >::constraints ();
+        VectorProxy<vector_expression_slice<vector<double> > >::constraints ();
+        // MutableVectorProxy<vector_expression_slice<vector<double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedRandomAccess1DIterator<vector_expression_slice<vector<double> >::const_iterator>::constraints ();
         IndexedRandomAccess1DIterator<vector_expression_slice<vector<double> >::const_reverse_iterator>::constraints ();
 #endif
 
+#endif
+
         // Matrix Expressions
-        MatrixExpression<matrix_const_reference<matrix<double> > >::constraints ();
+        // MatrixExpression<matrix_const_reference<matrix<double> > >::constraints ();
+        MatrixProxy<matrix_const_reference<matrix<double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<matrix_const_reference<matrix<double> >::const_iterator1, matrix_const_reference<matrix<double> >::const_iterator2>::constraints ();
         IndexedBidirectional2DIterator<matrix_const_reference<matrix<double> >::const_reverse_iterator1, matrix_const_reference<matrix<double> >::const_reverse_iterator2>::constraints ();
 #endif
 
-        MatrixExpression<matrix_reference<matrix<double> > >::constraints ();
+        // MatrixExpression<matrix_reference<matrix<double> > >::constraints ();
+        MatrixProxy<matrix_reference<matrix<double> > >::constraints ();
+        // MutableMatrixProxy<matrix_reference<matrix<double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<matrix_reference<matrix<double> >::const_iterator1, matrix_reference<matrix<double> >::const_iterator2>::constraints ();
         MutableIndexedBidirectional2DIterator<matrix_reference<matrix<double> >::iterator1, matrix_reference<matrix<double> >::iterator2>::constraints ();
@@ -1332,76 +1353,98 @@ namespace numerics {
         MutableIndexedBidirectional2DIterator<matrix_reference<matrix<double> >::reverse_iterator1, matrix_reference<matrix<double> >::reverse_iterator2>::constraints ();
 #endif
 
-        MatrixExpression<vector_matrix_binary<vector<double>, vector<double>, scalar_multiplies<double, double> > >::constraints ();
+        // MatrixExpression<vector_matrix_binary<vector<double>, vector<double>, scalar_multiplies<double, double> > >::constraints ();
+        MatrixProxy<vector_matrix_binary<vector<double>, vector<double>, scalar_multiplies<double, double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<vector_matrix_binary<vector<double>, vector<double>, scalar_multiplies<double, double> >::const_iterator1, vector_matrix_binary<vector<double>, vector<double>, scalar_multiplies<double, double> >::const_iterator2>::constraints ();
         IndexedBidirectional2DIterator<vector_matrix_binary<vector<double>, vector<double>, scalar_multiplies<double, double> >::const_reverse_iterator1, vector_matrix_binary<vector<double>, vector<double>, scalar_multiplies<double, double> >::const_reverse_iterator2>::constraints ();
 #endif
 
-        MatrixExpression<matrix_unary1<matrix<double>, scalar_identity<double> > >::constraints ();
+        // MatrixExpression<matrix_unary1<matrix<double>, scalar_identity<double> > >::constraints ();
+        MatrixProxy<matrix_unary1<matrix<double>, scalar_identity<double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<matrix_unary1<matrix<double>, scalar_identity<double> >::const_iterator1, matrix_unary1<matrix<double>, scalar_identity<double> >::const_iterator2>::constraints ();
         IndexedBidirectional2DIterator<matrix_unary1<matrix<double>, scalar_identity<double> >::const_reverse_iterator1, matrix_unary1<matrix<double>, scalar_identity<double> >::const_reverse_iterator2>::constraints ();
 #endif
 
-        MatrixExpression<matrix_unary2<matrix<double>, scalar_identity<double> > >::constraints ();
+        // MatrixExpression<matrix_unary2<matrix<double>, scalar_identity<double> > >::constraints ();
+        MatrixProxy<matrix_unary2<matrix<double>, scalar_identity<double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<matrix_unary2<matrix<double>, scalar_identity<double> >::const_iterator1, matrix_unary2<matrix<double>, scalar_identity<double> >::const_iterator2>::constraints ();
         IndexedBidirectional2DIterator<matrix_unary2<matrix<double>, scalar_identity<double> >::const_reverse_iterator1, matrix_unary2<matrix<double>, scalar_identity<double> >::const_reverse_iterator2>::constraints ();
 #endif
 
-        MatrixExpression<matrix_binary<matrix<double>, matrix<double>, scalar_plus<double, double> > >::constraints ();
+        // MatrixExpression<matrix_binary<matrix<double>, matrix<double>, scalar_plus<double, double> > >::constraints ();
+        MatrixProxy<matrix_binary<matrix<double>, matrix<double>, scalar_plus<double, double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<matrix_binary<matrix<double>, matrix<double>, scalar_plus<double, double> >::const_iterator1, matrix_binary<matrix<double>, matrix<double>, scalar_plus<double, double> >::const_iterator2>::constraints ();        
         IndexedBidirectional2DIterator<matrix_binary<matrix<double>, matrix<double>, scalar_plus<double, double> >::const_reverse_iterator1, matrix_binary<matrix<double>, matrix<double>, scalar_plus<double, double> >::const_reverse_iterator2>::constraints ();        
 #endif
 
-        MatrixExpression<matrix_binary_scalar<scalar_value<double>, matrix<double>, scalar_multiplies<double, double> > >::constraints ();
+        // MatrixExpression<matrix_binary_scalar<scalar_value<double>, matrix<double>, scalar_multiplies<double, double> > >::constraints ();
+        MatrixProxy<matrix_binary_scalar<scalar_value<double>, matrix<double>, scalar_multiplies<double, double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<matrix_binary_scalar<scalar_value<double>, matrix<double>, scalar_multiplies<double, double> >::const_iterator1, matrix_binary_scalar<scalar_value<double>, matrix<double>, scalar_multiplies<double, double> >::const_iterator2>::constraints ();
         IndexedBidirectional2DIterator<matrix_binary_scalar<scalar_value<double>, matrix<double>, scalar_multiplies<double, double> >::const_reverse_iterator1, matrix_binary_scalar<scalar_value<double>, matrix<double>, scalar_multiplies<double, double> >::const_reverse_iterator2>::constraints ();
 #endif
 
-        VectorExpression<matrix_vector_unary1<matrix<double> > >::constraints ();
+#ifdef NUMERICS_DEPRECATED
+
+        // VectorExpression<matrix_expression_row<matrix<double> > >::constraints ();
+        VectorProxy<matrix_expression_row<matrix<double> > >::constraints ();
+        // MutableVectorProxy<matrix_expression_row<matrix<double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
-        IndexedBidirectional1DIterator<matrix_vector_unary1<matrix<double> >::const_iterator>::constraints ();
-        IndexedBidirectional1DIterator<matrix_vector_unary1<matrix<double> >::const_reverse_iterator>::constraints ();
+        IndexedBidirectional1DIterator<matrix_expression_row<matrix<double> >::const_iterator>::constraints ();
+        IndexedBidirectional1DIterator<matrix_expression_row<matrix<double> >::const_reverse_iterator>::constraints ();
 #endif
 
-        VectorExpression<matrix_vector_unary2<matrix<double> > >::constraints ();
+        // VectorExpression<matrix_expression_column<matrix<double> > >::constraints ();
+        VectorProxy<matrix_expression_column<matrix<double> > >::constraints ();
+        // MutableVectorProxy<matrix_expression_column<matrix<double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
-        IndexedBidirectional1DIterator<matrix_vector_unary2<matrix<double> >::const_iterator>::constraints ();
-        IndexedBidirectional1DIterator<matrix_vector_unary2<matrix<double> >::const_reverse_iterator>::constraints ();
+        IndexedBidirectional1DIterator<matrix_expression_column<matrix<double> >::const_iterator>::constraints ();
+        IndexedBidirectional1DIterator<matrix_expression_column<matrix<double> >::const_reverse_iterator>::constraints ();
 #endif
 
-        VectorExpression<matrix_vector_binary1<matrix<double>, vector<double>, matrix_vector_prod1<double, double, double> > >::constraints ();
+#endif
+
+        // VectorExpression<matrix_vector_binary1<matrix<double>, vector<double>, matrix_vector_prod1<double, double, double> > >::constraints ();
+        VectorProxy<matrix_vector_binary1<matrix<double>, vector<double>, matrix_vector_prod1<double, double, double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional1DIterator<matrix_vector_binary1<matrix<double>, vector<double>, matrix_vector_prod1<double, double, double> >::const_iterator>::constraints ();
         IndexedBidirectional1DIterator<matrix_vector_binary1<matrix<double>, vector<double>, matrix_vector_prod1<double, double, double> >::const_reverse_iterator>::constraints ();
 #endif
 
-        VectorExpression<matrix_vector_binary2<vector<double>, matrix<double>, matrix_vector_prod2<double, double, double> > >::constraints ();
+        // VectorExpression<matrix_vector_binary2<vector<double>, matrix<double>, matrix_vector_prod2<double, double, double> > >::constraints ();
+        VectorProxy<matrix_vector_binary2<vector<double>, matrix<double>, matrix_vector_prod2<double, double, double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional1DIterator<matrix_vector_binary2<vector<double>, matrix<double>, matrix_vector_prod2<double, double, double> >::const_iterator>::constraints ();
         IndexedBidirectional1DIterator<matrix_vector_binary2<vector<double>, matrix<double>, matrix_vector_prod2<double, double, double> >::const_reverse_iterator>::constraints ();
 #endif
 
-        MatrixExpression<matrix_matrix_binary<matrix<double>, matrix<double>, matrix_matrix_prod<double, double, double> > >::constraints ();
+        // MatrixExpression<matrix_matrix_binary<matrix<double>, matrix<double>, matrix_matrix_prod<double, double, double> > >::constraints ();
+        MatrixProxy<matrix_matrix_binary<matrix<double>, matrix<double>, matrix_matrix_prod<double, double, double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<matrix_matrix_binary<matrix<double>, matrix<double>, matrix_matrix_prod<double, double, double> >::const_iterator1, matrix_matrix_binary<matrix<double>, matrix<double>, matrix_matrix_prod<double, double, double> >::const_iterator2>::constraints ();
         IndexedBidirectional2DIterator<matrix_matrix_binary<matrix<double>, matrix<double>, matrix_matrix_prod<double, double, double> >::const_reverse_iterator1, matrix_matrix_binary<matrix<double>, matrix<double>, matrix_matrix_prod<double, double, double> >::const_reverse_iterator2>::constraints ();
 #endif
 
-        MatrixExpression<matrix_expression_range<matrix<double> > >::constraints ();
+#ifdef NUMERICS_DEPRECATED
+
+        // MatrixExpression<matrix_expression_range<matrix<double> > >::constraints ();
+        MatrixProxy<matrix_expression_range<matrix<double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<matrix_expression_range<matrix<double> >::const_iterator1, matrix_expression_range<matrix<double> >::const_iterator2>::constraints ();
         IndexedBidirectional2DIterator<matrix_expression_range<matrix<double> >::const_reverse_iterator1, matrix_expression_range<matrix<double> >::const_reverse_iterator2>::constraints ();
 #endif
 
-        MatrixExpression<matrix_expression_slice<matrix<double> > >::constraints ();
+        // MatrixExpression<matrix_expression_slice<matrix<double> > >::constraints ();
+        MatrixProxy<matrix_expression_slice<matrix<double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<matrix_expression_slice<matrix<double> >::const_iterator1, matrix_expression_slice<matrix<double> >::const_iterator2>::constraints ();
         IndexedBidirectional2DIterator<matrix_expression_slice<matrix<double> >::const_reverse_iterator1, matrix_expression_slice<matrix<double> >::const_reverse_iterator2>::constraints ();
+#endif
+
 #endif
 
         ScalarExpression<matrix_scalar_unary<matrix<double>, matrix_norm_1<double> > >::constraints ();

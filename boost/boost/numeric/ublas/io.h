@@ -230,7 +230,7 @@ namespace numerics {
 
 #endif 
 
-#if defined (USE_GCC) || defined (USE_BCC)
+#if defined (USE_GCC) || defined (USE_BCC) || defined (USE_ICC)
 
     template<class VE> 
     // This function seems to be big. So we do not let the compiler inline it.
@@ -426,5 +426,6 @@ namespace numerics {
 }
 
 #endif 
+
 
 

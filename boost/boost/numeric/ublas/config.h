@@ -1,4 +1,4 @@
-//  
+//
 //  Copyright (c) 2000-2001
 //  Joerg Walter, Mathias Koch
 //  
@@ -19,6 +19,8 @@
 
 #include <cstddef>
 
+#define NUMERICS_DEPRECATED
+
 #ifdef USE_MSVC
 
 #pragma warning (disable: 4355)
@@ -38,7 +40,7 @@
 #define NUMERICS_BOUNDS_CHECK
 
 // Use expression templates.
-// #define NUMERICS_USE_ET
+#define NUMERICS_USE_ET
 #define NUMERICS_ET_VALUE
 // #define NUMERICS_ET_REFERENCE
 // #define NUMERICS_ET_CLOSURE_VALUE
@@ -46,8 +48,12 @@
 
 // Use iterators.
 #define NUMERICS_USE_ITERATOR
+#define NUMERICS_ITERATOR_THRESHOLD 32
 
-#else 
+// Use invariant hoisting.
+#define NUMERICS_USE_INVARIANT_HOISTING
+
+#else
 
 // #pragma inline_recursion (off)
 #pragma inline_recursion (on)
@@ -55,8 +61,8 @@
 #pragma inline_depth (255)
 // #pragma auto_inline (off)
 #pragma auto_inline (on)
-#define NUMERICS_INLINE inline
-// #define NUMERICS_INLINE __forceinline
+// #define NUMERICS_INLINE inline
+#define NUMERICS_INLINE __forceinline
 
 // Do not check sizes!
 #define NUMERICS_USE_FAST_COMMON
@@ -70,6 +76,8 @@
 
 // Use iterators.
 #define NUMERICS_USE_ITERATOR
+// #define NUMERICS_ITERATOR_THRESHOLD 0
+#define NUMERICS_ITERATOR_THRESHOLD 32
 
 // Use indexed iterators.
 // #define NUMERICS_USE_INDEXED_ITERATOR
@@ -78,7 +86,7 @@
 // Use invariant hoisting.
 #define NUMERICS_USE_INVARIANT_HOISTING
 
-#endif 
+#endif
 
 namespace std {
 
@@ -122,6 +130,7 @@ namespace std {
 
 // Use iterators.
 #define NUMERICS_USE_ITERATOR
+#define NUMERICS_ITERATOR_THRESHOLD 32
 
 // Use indexed iterators.
 // #define NUMERICS_USE_INDEXED_ITERATOR
@@ -154,6 +163,7 @@ namespace std {
 
 // Use iterators.
 #define NUMERICS_USE_ITERATOR
+#define NUMERICS_ITERATOR_THRESHOLD 32
 
 // Use indexed iterators.
 // #define NUMERICS_USE_INDEXED_ITERATOR
@@ -162,27 +172,51 @@ namespace std {
 // Use invariant hoisting.
 #define NUMERICS_USE_INVARIANT_HOISTING
 
-#endif 
+#endif
+
+
+
+#ifdef USE_ICC
+
+#define NUMERICS_TYPENAME typename
+
+#define NUMERICS_EXPLICIT explicit
+
+// #pragma inline_recursion (off)
+#pragma inline_recursion (on)
+// #pragma inline_depth ()
+#pragma inline_depth (255)
+// #pragma auto_inline (off)
+#pragma auto_inline (on)
+#define NUMERICS_INLINE inline
+
+// Do not check sizes!
+#define NUMERICS_USE_FAST_COMMON
+
+// Use expression templates.
+#define NUMERICS_USE_ET
+#define NUMERICS_ET_VALUE
+// #define NUMERICS_ET_REFERENCE
+// #define NUMERICS_ET_CLOSURE_VALUE
+#define NUMERICS_ET_CLOSURE_REFERENCE
+
+// Use iterators.
+#define NUMERICS_USE_ITERATOR
+#define NUMERICS_ITERATOR_THRESHOLD 32
+
+// Use indexed iterators.
+// #define NUMERICS_USE_INDEXED_ITERATOR
+// #define NUMERICS_INDEXED_ITERATOR_PROXIES
+
+// Use invariant hoisting.
+#define NUMERICS_USE_INVARIANT_HOISTING
+
+#endif
 
 
 
 // Forward declarations
 namespace numerics {
-
-    struct sparse_proxy_tag {};
-    struct sparse_tag: public sparse_proxy_tag {};
-    struct packed_tag: public sparse_tag {};
-    struct dense_tag: public packed_tag {};
-
-    template<class S>
-    struct proxy_traits {
-        typedef S storage_category;
-    };
-
-    template<>
-    struct proxy_traits<sparse_tag> {
-        typedef sparse_proxy_tag storage_category;
-    };
 
     template<class T>
     class unbounded_array;
@@ -195,10 +229,34 @@ namespace numerics {
     template<class E>
     struct vector_expression;
 
+#ifdef NUMERICS_DEPRECATED
+    template<class E>
+    class vector_expression_range;
+#endif
+
     struct matrix_tag {};
 
     template<class E>
     struct matrix_expression;
+
+#ifdef NUMERICS_DEPRECATED
+    template<class E>
+    class matrix_expression_row;
+    template<class E>
+    class matrix_expression_column;
+    template<class E>
+    class matrix_expression_range;
+#endif
+
+    template<class E>
+    class vector_range;
+
+    template<class E>
+    class matrix_row;
+    template<class E>
+    class matrix_column;
+    template<class E>
+    class matrix_range;
 
     struct forward;
     struct backward;
@@ -214,13 +272,13 @@ namespace numerics {
     template<class T, class F = forward, class A = compressed_array<std::size_t, T> >
     class sparse_vector;
 
-    struct major_tag {};
+    struct unknown_orientation_tag {};
 
-    struct row_major_tag /* : public major_tag */ {};
+    struct row_major_tag {};
     template<class F1 = forward, class F2 = forward>
     struct row_major;
 
-    struct column_major_tag /* : public major_tag */ {};
+    struct column_major_tag {};
     template<class F1 = forward, class F2 = forward>
     struct column_major;
 
@@ -275,8 +333,16 @@ namespace numerics {
 
     template<class T, class F = row_major<>, class A = compressed_array<std::size_t, compressed_array<std::size_t, T> > >
     class sparse_vector_of_sparse_vector;
+
 }
 
 #endif 
+
+
+
+
+
+
+
 
 

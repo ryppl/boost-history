@@ -35,6 +35,12 @@ namespace numerics {
         return std::min (size1, size2);
     }
 #else 
+//    template<class T>
+//    NUMERICS_INLINE
+//    const T &common (const T &size1, const T &size2) {
+//        return size1;
+//    }
+// FIXME: this one is too agressive for MSVC?!
 #define common(size1,size2) (size1)
 #endif 
 
