@@ -24,7 +24,7 @@ template<
       typename BOOST_MPL_AUX_NA_PARAM(T)
     >
 struct sizeof_
-    : size_t< sizeof(T) >
+    : mpl::size_t< sizeof(T) >
 {
     BOOST_MPL_AUX_LAMBDA_SUPPORT(1,sizeof_,(T))
 };
