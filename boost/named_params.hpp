@@ -13,7 +13,7 @@
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/identity.hpp>
-#include <boost/mpl/apply_if.hpp>
+#include <boost/mpl/eval_if.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/iterator/detail/config_def.hpp>
@@ -48,7 +48,7 @@ class reference_wrapper;
 template<class T>
 struct keyword;
 
-template <class Tag, typename has_default_ = mpl::true_, class Predicate = mpl::always<mpl::true_> >
+template <class Tag, class HasDefault = mpl::true_, class Predicate = mpl::always<mpl::true_> >
 struct named_param;
 
 namespace detail
@@ -64,8 +64,7 @@ namespace detail
   yes_t to_yesno(mpl::true_);
   no_t to_yesno(mpl::false_);
 
-  
-  template<class KW, class Default>
+  template <class KW, class Default>
   struct named_default
   {
       named_default(Default& x)
@@ -80,7 +79,7 @@ namespace detail
   // These compilers need a little extra help with overload
   // resolution; we have nil's operator[] accept a base class to make
   // that overload less preferable.
-  template<class KW, class DefaultFn>
+  template <class KW, class DefaultFn>
   struct lazy_named_default_base
   {
       lazy_named_default_base(const DefaultFn& x)
@@ -89,7 +88,7 @@ namespace detail
       const DefaultFn& default_;
   };
   
-  template<class KW, class DefaultFn>
+  template <class KW, class DefaultFn>
   struct lazy_named_default
     : lazy_named_default_base<KW,DefaultFn>
   {
@@ -98,7 +97,7 @@ namespace detail
       {}
   };
 #else 
-  template<class KW, class DefaultFn>
+  template <class KW, class DefaultFn>
   struct lazy_named_default
   {
       lazy_named_default(const DefaultFn& x)
@@ -143,47 +142,47 @@ namespace detail
           };
       };
 
-      template<class K, class Default>
+      template <class K, class Default>
       Default& get(const named_default<K, Default>& x) const
       {
           return x.default_;
       }
 
-      template<class K, class Default>
+      template <class K, class Default>
       typename Default::result_type get(
           const lazy_named_default<K, Default>& x) const
       {
           return x.default_();
       }     
 
-      template<class K, class Default>
+      template <class K, class Default>
       Default& operator[](const named_default<K, Default>& x) const
       {
           return x.default_;
       }
 
-      template<class K, class Default>
+      template <class K, class Default>
       typename Default::result_type operator[](
           const lazy_named_default<K, Default>& x) const
       {
           return x.default_();
       }
 #else
-      template<class K, class Default>
+      template <class K, class Default>
       Default& operator[](const named_default<K, Default>& x) const
       {
           return x.default_;
       }
 
 # if BOOST_WORKAROUND(__EDG_VERSION__, <= 300)
-      template<class K, class Default>
+      template <class K, class Default>
       typename Default::result_type operator[](
           const lazy_named_default_base<K, Default>& x) const
       {
           return x.default_();
       }
 # else
-      template<class K, class Default>
+      template <class K, class Default>
       typename Default::result_type operator[](
           const lazy_named_default<K, Default>& x) const
       {
@@ -227,7 +226,7 @@ namespace detail
       {
           template<class KW>
           struct apply
-            : mpl::apply_if<
+            : mpl::eval_if<
                   boost::is_same<KW, typename H::key_type>
                 , mpl::identity<self_t>
                 , mpl::apply1<typename T::key_owner,KW>
@@ -240,9 +239,9 @@ namespace detail
       // lookup given that default
       struct key_value_type
       {
-          template<class KW, class Default>
+          template <class KW, class Default>
           struct apply
-            : mpl::apply_if<
+            : mpl::eval_if<
                   boost::is_same<KW, typename H::key_type>
                 , mpl::identity<typename H::value_type>
                 , mpl::apply2<typename T::key_value_type,KW, Default>
@@ -273,7 +272,7 @@ namespace detail
       }
 
 #if BOOST_WORKAROUND(BOOST_MSVC, <= 1300) || BOOST_NAMED_PARAMS_GCC2
-      template<class KW>
+      template <class KW>
       typename mpl::apply2<key_value_type,KW, nil>::type&
       operator[](const keyword<KW>& x) const
       {
@@ -281,7 +280,7 @@ namespace detail
           return sublist.get(x);
       }
 
-      template<class KW, class Default>
+      template <class KW, class Default>
       typename mpl::apply2<key_value_type,KW, Default>::type&
       operator[](const named_default<KW, Default>& x) const
       {
@@ -289,7 +288,7 @@ namespace detail
           return sublist.get(x);
       }
 
-      template<class KW, class Default>
+      template <class KW, class Default>
       typename mpl::apply2<
           key_value_type,KW
         , typename Default::result_type
@@ -305,14 +304,14 @@ namespace detail
           return head[x];
       }
 
-      template<class Default>
+      template <class Default>
       typename H::value_type& get(
           const named_default<typename H::key_type, Default>& x) const
       {
           return head[x];
       }
 
-      template<class Default>
+      template <class Default>
       typename H::value_type& get(
           const lazy_named_default<typename H::key_type, Default>& x) const
       {
@@ -325,14 +324,14 @@ namespace detail
           return head[x];
       }
 
-      template<class Default>
+      template <class Default>
       typename H::value_type&
       operator[](const named_default<typename H::key_type, Default>& x) const
       {
           return head[x];
       }
 
-      template<class Default>
+      template <class Default>
       typename H::value_type&
       operator[](const lazy_named_default<typename H::key_type, Default>& x) const
       {
@@ -351,7 +350,7 @@ namespace detail
       using T::keyword_passes_predicate;
 #endif
 
-      template<class KW, class T2>
+      template <class KW, class T2>
       list<named<KW, T2>, self_t>
       operator,(named<KW, T2> const& x) const
       {
@@ -376,19 +375,19 @@ namespace detail
           return val;
       }
 
-      template<class Default>
+      template <class Default>
       T& operator[](const named_default<KW, Default>& x) const
       {
           return val;
       }
 
-      template<class Default>
+      template <class Default>
       T& operator[](const lazy_named_default<KW, Default>& x) const
       {
           return val;
       }
 
-      template<class KW2, class T2>
+      template <class KW2, class T2>
       list<named<KW, T>, list<named<KW2, T2> > >
       operator,(named<KW2, T2> const& x) const
       {
@@ -402,12 +401,12 @@ namespace detail
 
   BOOST_PYTHON_IS_XXX_DEF(named,named,2)
 
-  template<class U>
+  template <class U>
   yes_t is_const_reference_wrapper_check(const reference_wrapper<U>*);
   no_t is_const_reference_wrapper_check(...);
 
   // Returns mpl::true_ if T is of type const reference_wrapper<U>
-  template<class T>
+  template <class T>
   struct is_const_reference_wrapper
   {
      BOOST_STATIC_CONSTANT(
@@ -422,10 +421,10 @@ namespace detail
   // Produces the unwrapped type to hold a reference to in named<>
   // Can't use boost::unwrap_reference<> here because it
   // doesn't handle the case where T = const reference_wrapper<U>
-  template<class T>
+  template <class T>
   struct unwrap_cv_reference
   {
-      typedef typename mpl::apply_if<
+      typedef typename mpl::eval_if<
           is_const_reference_wrapper<T>
         , T
         , mpl::identity<T>
@@ -466,7 +465,7 @@ struct keyword
    }
 #endif
 
-   template<class Default>
+   template <class Default>
    detail::named_default<Tag, Default>
    operator|(Default& default_) const
    {
@@ -474,7 +473,7 @@ struct keyword
    }
 
 #if !BOOST_WORKAROUND(BOOST_MSVC, == 1200)  // partial ordering bug
-   template<class Default>
+   template <class Default>
    detail::named_default<Tag, const Default>
    operator|(const Default& default_) const
    {
@@ -482,7 +481,7 @@ struct keyword
    }
 #endif 
  
-   template<class Default>
+   template <class Default>
    detail::lazy_named_default<Tag, Default>
    operator||(const Default& default_) const
    {
@@ -490,11 +489,11 @@ struct keyword
    }
 };
 
-template <class Tag, typename has_default_, class Predicate>
+template <class Tag, class HasDefault, class Predicate>
 struct named_param
 {
     typedef Tag key_type;
-    typedef has_default_ has_default;
+    typedef HasDefault has_default;
     typedef Predicate predicate;
 };
 
@@ -506,7 +505,7 @@ namespace detail
   
   template <class T>
   struct key_type
-    : mpl::apply_if<
+    : mpl::eval_if<
           is_named_param<T>
         , get_key_type<T>
         , mpl::identity<T>
@@ -518,7 +517,7 @@ namespace detail
   
   template <class T>
   struct has_default
-    : mpl::apply_if<
+    : mpl::eval_if<
           is_named_param<T>
         , get_has_default<T>
         , mpl::true_
@@ -530,7 +529,7 @@ namespace detail
   
   template <class T>
   struct predicate
-    : mpl::apply_if<
+    : mpl::eval_if<
           is_named_param<T>
         , get_predicate<T>
         , mpl::identity<mpl::always<mpl::true_> >
@@ -549,7 +548,7 @@ namespace detail
   };
 
   // labels T with keyword KW if it is not already named
-  template<class KW, class T>
+  template <class KW, class T>
   struct as_named
   {
       typedef typename mpl::if_<
@@ -560,7 +559,7 @@ namespace detail
   };
 
 #if BOOST_WORKAROUND(BOOST_MSVC, == 1200)
-  template<>
+  template <>
   struct as_named<int,int>
   {
       typedef int type;
@@ -574,7 +573,7 @@ namespace detail
   //        return Arg::predicate<U>::type
   //    else
   //        return Arg::has_default
-  template<class Seq, class Arg>
+  template <class Seq, class Arg>
   struct keyword_passes_predicate_aux
   {
       BOOST_STATIC_CONSTANT(
@@ -590,12 +589,12 @@ namespace detail
       typedef mpl::bool_<value> type;
   };
   
-  template<class Seq, class K>
+  template <class Seq, class K>
   struct keyword_passes_predicate
     : keyword_passes_predicate_aux<Seq, typename as_arg<K>::type>
   {};
 
-  template<class B /* = mpl::true_ */>
+  template <class B /* = mpl::true_ */>
   struct restrict_keywords
   {
       template<class Keywords>
@@ -622,7 +621,7 @@ namespace detail
   };
 #endif
   
-  template<>
+  template <>
   struct restrict_keywords<mpl::false_>
   {
       template<class>
@@ -667,7 +666,7 @@ namespace detail
       };
   };
 
-  template<>
+  template <>
   struct make_named_list<
       BOOST_PP_ENUM_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, nil BOOST_PP_INTERCEPT)
   >
@@ -706,7 +705,7 @@ struct keywords
 # define BOOST_PASSES_PREDICATE(z, n, text) \
     detail::keyword_passes_predicate<NamedList, BOOST_PP_CAT(K, n)>
 
-    template<class NamedList>
+    template <class NamedList>
     struct restrict_base
     {
         // metafunction forwarding here would confuse vc6
