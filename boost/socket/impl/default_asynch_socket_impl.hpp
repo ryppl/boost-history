@@ -44,6 +44,12 @@ namespace boost
             class default_asynch_socket_impl : public default_socket_impl
             {
             public:
+                /// callback function used for asynchrounous completion notification
+                /// @param socket_errno error for operation
+                /// @param unsigned int bytes transferred in either direction for operation 
+                /// (only relevant for send and receive otherwise 0)
+                typedef boost::function2<void, socket_errno, unsigned  int> completion_callback_t;
+
                 default_asynch_socket_impl();
                 //         default_asynch_socket_impl(const default_asynch_socket_impl&);
                 explicit default_asynch_socket_impl(socket_t socket);
@@ -59,7 +65,7 @@ namespace boost
                 socket_errno async_accept(
                     default_asynch_socket_impl& socket,
                     std::pair<void *,size_t>& remoteAddress,
-                    boost::function1<void, socket_errno> completionRoutine);
+                    completion_callback_t completionRoutine);
 
                 //! Asynchronous connect
                 /**
@@ -69,7 +75,7 @@ namespace boost
                 */
                 socket_errno async_connect(
                     std::pair<void *,size_t>& address,
-                    boost::function1<void, socket_errno> completionRoutine);
+                    completion_callback_t completionRoutine);
 
                 //! Asynchronous receive
                 /**
@@ -78,9 +84,7 @@ namespace boost
                     @arg data length in bytes of receive buffer
                     @arg completionRoutine a function to be called when recv completes.
                 */
-                socket_errno async_recv(
-                    void* data, int len,
-                    boost::function2<void, socket_errno, unsigned  int> completionRoutine);
+                socket_errno async_recv(void* data, int len, completion_callback_t completionRoutine);
 
 
                 //! Asynchronous receive
@@ -90,12 +94,9 @@ namespace boost
                     @arg data length in bytes of receive buffer
                     @arg completionRoutine a function to be called when recv completes.
                 */
-                socket_errno async_send(
-                    const void* data, int len,
-                    boost::function2<void, socket_errno, unsigned int> completionRoutine);
+                socket_errno async_send(const void* data, int len, completion_callback_t completionRoutine);
 
-                socket_errno async_close(
-                    boost::function1<void, socket_errno> completionRoutine);
+                socket_errno async_close(completion_callback_t completionRoutine);
             };
         }// namespace impl
     }// namespace socket
