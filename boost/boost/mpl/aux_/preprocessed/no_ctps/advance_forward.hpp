@@ -1,10 +1,6 @@
-// preprocessed version of 'boost/mpl/aux_/advance_forward.hpp' header
-// see the original for copyright information
-
 namespace boost {
 namespace mpl {
 namespace aux {
-
 template< long N > struct advance_forward;
 template<>
 struct advance_forward<0>
@@ -71,12 +67,21 @@ struct advance_forward
 {
     template< typename Iterator > struct apply
     {
-        typedef typename advance_forward<4>::template apply<Iterator>::type chunk_result_;
-        typedef typename advance_forward<( (N - 4) < 0 ? 0 : N - 4 )>::template apply<chunk_result_>::type type;
+        typedef typename apply_wrap1<
+              advance_forward<4>
+            , Iterator
+            >::type chunk_result_;
+        typedef typename apply_wrap1<
+              advance_forward<(
+                (N - 4) < 0
+                    ? 0
+                    : N - 4
+                    )>
+            , chunk_result_
+            >::type type;
     };
 };
 
 } // namespace aux
 } // namespace mpl
 } // namespace boost
-

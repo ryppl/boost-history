@@ -1,11 +1,14 @@
-// preprocessed version of '/boost/mpl/aux_/Attic/apply_wrap.hpp' header
-// see the original for copyright information
-
 namespace boost { namespace mpl { namespace aux {
-
 template< typename F >
 struct apply_wrap0 : F
 {
+};
+
+// workaround for the ETI bug
+template<>
+struct apply_wrap0<int>
+{
+    typedef int type;
 };
 
 template< typename F>
@@ -18,7 +21,6 @@ struct msvc_apply1
         {
         };
     };
-
     template< typename T1 > struct result_
         : f_< aux::msvc_never_true<F>::value >
             ::template apply<T1>
@@ -36,6 +38,13 @@ struct apply_wrap1
         >::type type;
 };
 
+// workaround for ETI bug
+template<>
+struct apply_wrap1< int,int >
+{
+    typedef int type;
+};
+
 template< typename F>
 struct msvc_apply2
 {
@@ -46,7 +55,6 @@ struct msvc_apply2
         {
         };
     };
-
     template< typename T1, typename T2 > struct result_
         : f_< aux::msvc_never_true<F>::value >
             ::template apply< T1,T2 >
@@ -64,6 +72,13 @@ struct apply_wrap2
         >::type type;
 };
 
+// workaround for ETI bug
+template<>
+struct apply_wrap2< int,int,int >
+{
+    typedef int type;
+};
+
 template< typename F>
 struct msvc_apply3
 {
@@ -74,7 +89,6 @@ struct msvc_apply3
         {
         };
     };
-
     template< typename T1, typename T2, typename T3 > struct result_
         : f_< aux::msvc_never_true<F>::value >
             ::template apply< T1,T2,T3 >
@@ -92,6 +106,13 @@ struct apply_wrap3
         >::type type;
 };
 
+// workaround for ETI bug
+template<>
+struct apply_wrap3< int,int,int,int >
+{
+    typedef int type;
+};
+
 template< typename F>
 struct msvc_apply4
 {
@@ -105,7 +126,6 @@ struct msvc_apply4
         {
         };
     };
-
     template<
           typename T1, typename T2, typename T3, typename T4
         >
@@ -126,6 +146,13 @@ struct apply_wrap4
         >::type type;
 };
 
+// workaround for ETI bug
+template<>
+struct apply_wrap4< int,int,int,int,int >
+{
+    typedef int type;
+};
+
 template< typename F>
 struct msvc_apply5
 {
@@ -140,7 +167,6 @@ struct msvc_apply5
         {
         };
     };
-
     template<
           typename T1, typename T2, typename T3, typename T4
         , typename T5
@@ -163,5 +189,11 @@ struct apply_wrap5
         >::type type;
 };
 
-}}}
+// workaround for ETI bug
+template<>
+struct apply_wrap5< int,int,int,int,int,int >
+{
+    typedef int type;
+};
 
+}}}

@@ -469,16 +469,16 @@ template<
 struct list_c_count_args
 {
     enum { value =
-          is_list_c_arg<T1>::value + is_list_c_arg<T2>::value 
-        + is_list_c_arg<T3>::value + is_list_c_arg<T4>::value 
-        + is_list_c_arg<T5>::value + is_list_c_arg<T6>::value 
-        + is_list_c_arg<T7>::value + is_list_c_arg<T8>::value 
-        + is_list_c_arg<T9>::value + is_list_c_arg<T10>::value 
-        + is_list_c_arg<T11>::value + is_list_c_arg<T12>::value 
-        + is_list_c_arg<T13>::value + is_list_c_arg<T14>::value 
-        + is_list_c_arg<T15>::value + is_list_c_arg<T16>::value 
-        + is_list_c_arg<T17>::value + is_list_c_arg<T18>::value 
-        + is_list_c_arg<T19>::value + is_list_c_arg<T20>::value
+          is_list_c_arg<C1>::value + is_list_c_arg<C2>::value 
+        + is_list_c_arg<C3>::value + is_list_c_arg<C4>::value 
+        + is_list_c_arg<C5>::value + is_list_c_arg<C6>::value 
+        + is_list_c_arg<C7>::value + is_list_c_arg<C8>::value 
+        + is_list_c_arg<C9>::value + is_list_c_arg<C10>::value 
+        + is_list_c_arg<C11>::value + is_list_c_arg<C12>::value 
+        + is_list_c_arg<C13>::value + is_list_c_arg<C14>::value 
+        + is_list_c_arg<C15>::value + is_list_c_arg<C16>::value 
+        + is_list_c_arg<C17>::value + is_list_c_arg<C18>::value 
+        + is_list_c_arg<C19>::value + is_list_c_arg<C20>::value
         };
 };
 
@@ -492,7 +492,7 @@ template<
 struct list_c_impl
 {
     typedef aux::list_c_count_args<
-          T, C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, C16, C17, C18, C19
+          C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, C16, C17, C18, C19
         > arg_num_;
     typedef typename aux::list_c_chooser< arg_num_::value >
         ::template result_< T,C0,C1,C2,C3,C4,C5,C6,C7,C8,C9,C10,C11,C12,C13,C14,C15,C16,C17,C18,C19 >::type type;

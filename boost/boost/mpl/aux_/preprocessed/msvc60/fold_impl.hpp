@@ -28,6 +28,12 @@ template<> struct fold_chunk<0>
         typedef state0 state;
         typedef iter0 iterator;
     };
+    // ETI workaround
+    template<> struct result_<int, int, int, int>
+    {
+        typedef int state;
+        typedef int iterator;
+    };
 };
 
 template<> struct fold_chunk<1>
@@ -47,6 +53,12 @@ template<> struct fold_chunk<1>
         
         typedef state1 state;
         typedef iter1 iterator;
+    };
+    // ETI workaround
+    template<> struct result_<int, int, int, int>
+    {
+        typedef int state;
+        typedef int iterator;
     };
 };
 
@@ -69,6 +81,12 @@ template<> struct fold_chunk<2>
         
         typedef state2 state;
         typedef iter2 iterator;
+    };
+    // ETI workaround
+    template<> struct result_<int, int, int, int>
+    {
+        typedef int state;
+        typedef int iterator;
     };
 };
 
@@ -93,6 +111,12 @@ template<> struct fold_chunk<3>
         
         typedef state3 state;
         typedef iter3 iterator;
+    };
+    // ETI workaround
+    template<> struct result_<int, int, int, int>
+    {
+        typedef int state;
+        typedef int iterator;
     };
 };
 
@@ -119,6 +143,12 @@ template<> struct fold_chunk<4>
         
         typedef state4 state;
         typedef iter4 iterator;
+    };
+    // ETI workaround
+    template<> struct result_<int, int, int, int>
+    {
+        typedef int state;
+        typedef int iterator;
     };
 };
 
@@ -188,6 +218,12 @@ struct fold_chunk< -1 >
             >::type res_;
         typedef typename res_::state state;
         typedef typename res_::iterator iterator;
+    };
+    // ETI workaround
+    template<> struct result_<int, int, int, int>
+    {
+        typedef int state;
+        typedef int iterator;
     };
 };
 

@@ -33,8 +33,16 @@ template< typename Tag >
 struct has_push_back_impl
 {
     template< typename Seq > struct apply
+#if !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x561))
         : aux::has_type< push_back<Seq,int> >
     {
+#else
+    {
+        typedef aux::has_type< push_back<Seq,int> > type;
+        BOOST_STATIC_CONSTANT(bool, value = 
+              (aux::has_type< push_back<Seq,int> >::value)
+            );
+#endif
     };
 };
 

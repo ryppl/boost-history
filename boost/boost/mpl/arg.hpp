@@ -26,6 +26,7 @@
 #   include <boost/mpl/aux_/na.hpp>
 #   include <boost/mpl/aux_/arity_spec.hpp>
 #   include <boost/mpl/aux_/arg_typedef.hpp>
+#   include <boost/mpl/void.hpp>
 #   include <boost/static_assert.hpp>
 #endif
 

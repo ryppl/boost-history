@@ -1,8 +1,4 @@
-// preprocessed version of '/boost/mpl/aux_/Attic/apply_wrap.hpp' header
-// see the original for copyright information
-
 namespace boost { namespace mpl { namespace aux {
-
 template< typename F >
 struct apply_wrap0 : F
 {
@@ -60,4 +56,3 @@ struct apply_wrap5
 };
 
 }}}
-

@@ -1,11 +1,6 @@
-// preprocessed version of 'boost/mpl/aux_/lambda_no_ctps.hpp' header
-// see the original for copyright information
-
 namespace boost {
 namespace mpl {
-
 namespace aux {
-
 template< nttp_int arity_, bool Protect > struct lambda_impl
 {
     template< typename T, typename Tag > struct result_
@@ -48,7 +43,6 @@ template<> struct lambda_impl<2, false>
         typedef typename lambda< typename F::arg1, Tag, false >::type arg1;
         typedef typename lambda< typename F::arg2, Tag, false >::type arg2;
         
-
         typedef bind2<
               f_
             , arg1, arg2
@@ -64,7 +58,6 @@ template<> struct lambda_impl<2, true>
         typedef typename lambda< typename F::arg1, Tag, false >::type arg1;
         typedef typename lambda< typename F::arg2, Tag, false >::type arg2;
         
-
         typedef mpl::protect< bind2<
               f_
             , arg1, arg2
@@ -81,7 +74,6 @@ template<> struct lambda_impl<3, false>
         typedef typename lambda< typename F::arg2, Tag, false >::type arg2;
         typedef typename lambda< typename F::arg3, Tag, false >::type arg3;
         
-
         typedef bind3<
               f_
             , arg1, arg2, arg3
@@ -98,7 +90,6 @@ template<> struct lambda_impl<3, true>
         typedef typename lambda< typename F::arg2, Tag, false >::type arg2;
         typedef typename lambda< typename F::arg3, Tag, false >::type arg3;
         
-
         typedef mpl::protect< bind3<
               f_
             , arg1, arg2, arg3
@@ -116,7 +107,6 @@ template<> struct lambda_impl<4, false>
         typedef typename lambda< typename F::arg3, Tag, false >::type arg3;
         typedef typename lambda< typename F::arg4, Tag, false >::type arg4;
         
-
         typedef bind4<
               f_
             , arg1, arg2, arg3, arg4
@@ -134,7 +124,6 @@ template<> struct lambda_impl<4, true>
         typedef typename lambda< typename F::arg3, Tag, false >::type arg3;
         typedef typename lambda< typename F::arg4, Tag, false >::type arg4;
         
-
         typedef mpl::protect< bind4<
               f_
             , arg1, arg2, arg3, arg4
@@ -153,7 +142,6 @@ template<> struct lambda_impl<5, false>
         typedef typename lambda< typename F::arg4, Tag, false >::type arg4;
         typedef typename lambda< typename F::arg5, Tag, false >::type arg5;
         
-
         typedef bind5<
               f_
             , arg1, arg2, arg3, arg4, arg5
@@ -172,7 +160,6 @@ template<> struct lambda_impl<5, true>
         typedef typename lambda< typename F::arg4, Tag, false >::type arg4;
         typedef typename lambda< typename F::arg5, Tag, false >::type arg5;
         
-
         typedef mpl::protect< bind5<
               f_
             , arg1, arg2, arg3, arg4, arg5
@@ -189,12 +176,11 @@ template<
     >
 struct lambda
 {
-    typedef aux::lambda_impl<
-        ::boost::mpl::aux::template_arity<T>::value
-      , bool_<Protect>::value
+    typedef typename aux::lambda_impl<
+          ::boost::mpl::aux::template_arity<T>::value
+        , bool_<Protect>::value
     >::template result_< T,Tag >::type type;
 };
 
 } // namespace mpl
 } // namespace boost
-

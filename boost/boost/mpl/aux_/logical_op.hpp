@@ -30,6 +30,7 @@
 #include <boost/mpl/aux_/preprocessor/def_params_tail.hpp>
 #include <boost/mpl/aux_/preprocessor/enum.hpp>
 #include <boost/mpl/aux_/preprocessor/sub.hpp>
+#include <boost/mpl/aux_/config/ctps.hpp>
 #include <boost/mpl/aux_/config/workaround.hpp>
 
 #include <boost/preprocessor/dec.hpp>
@@ -132,7 +133,7 @@ struct BOOST_PP_CAT(AUX_LOGICAL_OP_NAME,impl)<AUX_LOGICAL_OP_VALUE2>
 template<
       typename BOOST_MPL_AUX_NA_PARAM(T1)
     , typename BOOST_MPL_AUX_NA_PARAM(T2)
-    BOOST_MPL_PP_DEF_PARAMS_TAIL(2, typename T, BOOST_PP_CAT(AUX_LOGICAL_OP_VALUE2,_))
+    , BOOST_MPL_PP_DEF_PARAMS_TAIL(2, typename T, BOOST_PP_CAT(AUX_LOGICAL_OP_VALUE2,_))
     >
 struct AUX_LOGICAL_OP_NAME
 #if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)

@@ -17,8 +17,12 @@
 #include <boost/preprocessor/inc.hpp>
 #include <boost/preprocessor/cat.hpp>
 
+#if !defined(AUX778076_COUNT_ARGS_PARAM_NAME)
+#   define AUX778076_COUNT_ARGS_PARAM_NAME T
+#endif
+
 #if !defined(AUX778076_COUNT_ARGS_TEMPLATE_PARAM)
-#   define AUX778076_COUNT_ARGS_TEMPLATE_PARAM typename T
+#   define AUX778076_COUNT_ARGS_TEMPLATE_PARAM typename AUX778076_COUNT_ARGS_PARAM_NAME
 #endif
 
 // local macros, #undef-ined at the end of the header
@@ -84,7 +88,7 @@ struct BOOST_PP_CAT(AUX778076_COUNT_ARGS_PREFIX,_count_args)
     BOOST_STATIC_CONSTANT(int, value = AUX778076_COUNT_ARGS_REPEAT(
           AUX778076_COUNT_ARGS_ARITY
         , AUX778076_COUNT_ARGS_FUNC
-        , T
+        , AUX778076_COUNT_ARGS_PARAM_NAME
         ));
 };
 
@@ -98,3 +102,4 @@ struct BOOST_PP_CAT(AUX778076_COUNT_ARGS_PREFIX,_count_args)
 #undef AUX778076_COUNT_ARGS_PREFIX
 #undef AUX778076_COUNT_ARGS_USE_STANDARD_PP_PRIMITIVES
 #undef AUX778076_COUNT_ARGS_TEMPLATE_PARAM
+#undef AUX778076_COUNT_ARGS_PARAM_NAME

@@ -29,7 +29,7 @@
 #   include <boost/mpl/aux_/arity_spec.hpp>
 #   include <boost/mpl/aux_/type_wrapper.hpp>
 #   include <boost/mpl/aux_/yes_no.hpp>
-#   if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+#   if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 #       include <boost/type_traits/is_reference.hpp>
 #   endif 
 #endif

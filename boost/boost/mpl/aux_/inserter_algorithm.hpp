@@ -29,8 +29,11 @@
 #include <boost/mpl/aux_/common_name_wknd.hpp>
 #include <boost/mpl/aux_/algorithm_namespace.hpp>
 #include <boost/mpl/aux_/na_spec.hpp>
+#include <boost/mpl/aux_/config/ctps.hpp>
 
 #include <boost/preprocessor/arithmetic/dec.hpp>
+
+#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 
 #   define BOOST_MPL_AUX_INSERTER_ALGORITHM_DEF(arity, name) \
 BOOST_MPL_AUX_COMMON_NAME_WKND(name) \
@@ -88,5 +91,74 @@ BOOST_MPL_AUX_AGLORITHM_NAMESPACE_END \
 BOOST_MPL_AUX_NA_ALGORITHM_SPEC(arity, name) \
 BOOST_MPL_AUX_NA_ALGORITHM_SPEC(arity, reverse_##name) \
 /**/
+
+#else
+
+#   define BOOST_MPL_AUX_INSERTER_ALGORITHM_DEF(arity, name) \
+BOOST_MPL_AUX_COMMON_NAME_WKND(name) \
+BOOST_MPL_AUX_AGLORITHM_NAMESPACE_BEGIN \
+template< \
+      BOOST_MPL_PP_PARAMS(BOOST_PP_DEC(arity), typename P) \
+    > \
+struct def_##name##_impl \
+    : if_< has_push_back<P1> \
+        , aux::name##_impl< \
+              BOOST_MPL_PP_PARAMS(BOOST_PP_DEC(arity), P) \
+            , back_inserter< typename clear<P1>::type > \
+            > \
+        , aux::reverse_##name##_impl< \
+              BOOST_MPL_PP_PARAMS(BOOST_PP_DEC(arity), P) \
+            , front_inserter< typename clear<P1>::type > \
+            > \
+        >::type \
+{ \
+}; \
+\
+template< \
+      BOOST_MPL_PP_DEFAULT_PARAMS(arity, typename P, na) \
+    > \
+struct name \
+    : if_< \
+          is_na<BOOST_PP_CAT(P, arity)> \
+        , def_##name##_impl<BOOST_MPL_PP_PARAMS(BOOST_PP_DEC(arity), P)> \
+        , aux::name##_impl<BOOST_MPL_PP_PARAMS(arity, P)> \
+        >::type \
+{ \
+}; \
+\
+template< \
+      BOOST_MPL_PP_PARAMS(BOOST_PP_DEC(arity), typename P) \
+    > \
+struct def_reverse_##name##_impl \
+    : if_< has_push_front<P1> \
+        , aux::name##_impl< \
+              BOOST_MPL_PP_PARAMS(BOOST_PP_DEC(arity), P) \
+            , front_inserter< typename clear<P1>::type > \
+            > \
+        , aux::reverse_##name##_impl< \
+              BOOST_MPL_PP_PARAMS(BOOST_PP_DEC(arity), P) \
+            , back_inserter< typename clear<P1>::type > \
+            > \
+        >::type \
+{ \
+}; \
+template< \
+      BOOST_MPL_PP_DEFAULT_PARAMS(arity, typename P, na) \
+    > \
+struct reverse_##name \
+    : if_< \
+          is_na<BOOST_PP_CAT(P, arity)> \
+        , def_reverse_##name##_impl<BOOST_MPL_PP_PARAMS(BOOST_PP_DEC(arity), P)> \
+        , aux::reverse_##name##_impl<BOOST_MPL_PP_PARAMS(arity, P)> \
+        >::type \
+{ \
+}; \
+BOOST_MPL_AUX_AGLORITHM_NAMESPACE_END \
+BOOST_MPL_AUX_NA_ALGORITHM_SPEC(arity, name) \
+BOOST_MPL_AUX_NA_ALGORITHM_SPEC(arity, reverse_##name) \
+/**/
+
+#endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+
 
 #endif // BOOST_MPL_AUX_INSERTER_ALGORITHM_HPP_INCLUDED

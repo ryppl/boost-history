@@ -16,23 +16,12 @@ struct apply0
  
 };
 
-namespace aux {
+// workaround for ETI bug
 template<>
-struct apply_chooser<0>
+struct apply0<int>
 {
-    template<
-          typename F, typename T1, typename T2, typename T3, typename T4
-        , typename T5
-        >
-    struct result_
-    {
-        typedef apply0<
-              F
-            > type;
-    };
+    typedef int type;
 };
-
-} // namespace aux
 
 template<
       typename F, typename T1
@@ -52,23 +41,12 @@ struct apply1
  
 };
 
-namespace aux {
+// workaround for ETI bug
 template<>
-struct apply_chooser<1>
+struct apply1< int,int >
 {
-    template<
-          typename F, typename T1, typename T2, typename T3, typename T4
-        , typename T5
-        >
-    struct result_
-    {
-        typedef apply1<
-              F, T1
-            > type;
-    };
+    typedef int type;
 };
-
-} // namespace aux
 
 template<
       typename F, typename T1, typename T2
@@ -89,23 +67,12 @@ struct apply2
  
 };
 
-namespace aux {
+// workaround for ETI bug
 template<>
-struct apply_chooser<2>
+struct apply2< int,int,int >
 {
-    template<
-          typename F, typename T1, typename T2, typename T3, typename T4
-        , typename T5
-        >
-    struct result_
-    {
-        typedef apply2<
-              F, T1, T2
-            > type;
-    };
+    typedef int type;
 };
-
-} // namespace aux
 
 template<
       typename F, typename T1, typename T2, typename T3
@@ -127,23 +94,12 @@ struct apply3
  
 };
 
-namespace aux {
+// workaround for ETI bug
 template<>
-struct apply_chooser<3>
+struct apply3< int,int,int,int >
 {
-    template<
-          typename F, typename T1, typename T2, typename T3, typename T4
-        , typename T5
-        >
-    struct result_
-    {
-        typedef apply3<
-              F, T1, T2, T3
-            > type;
-    };
+    typedef int type;
 };
-
-} // namespace aux
 
 template<
       typename F, typename T1, typename T2, typename T3, typename T4
@@ -166,23 +122,12 @@ struct apply4
  
 };
 
-namespace aux {
+// workaround for ETI bug
 template<>
-struct apply_chooser<4>
+struct apply4< int,int,int,int,int >
 {
-    template<
-          typename F, typename T1, typename T2, typename T3, typename T4
-        , typename T5
-        >
-    struct result_
-    {
-        typedef apply4<
-              F, T1, T2, T3, T4
-            > type;
-    };
+    typedef int type;
 };
-
-} // namespace aux
 
 template<
       typename F, typename T1, typename T2, typename T3, typename T4
@@ -207,60 +152,11 @@ struct apply5
  
 };
 
-namespace aux {
+// workaround for ETI bug
 template<>
-struct apply_chooser<5>
+struct apply5< int,int,int,int,int,int >
 {
-    template<
-          typename F, typename T1, typename T2, typename T3, typename T4
-        , typename T5
-        >
-    struct result_
-    {
-        typedef apply5<
-              F, T1, T2, T3, T4, T5
-            > type;
-    };
-};
-
-} // namespace aux
-
-namespace aux {
-template< typename T >
-struct is_apply_arg
-{
-    enum { value = true };
-};
-
-template<>
-struct is_apply_arg<na>
-{
-    enum { value = false };
-};
-
-template<
-      typename T1, typename T2, typename T3, typename T4, typename T5
-    >
-struct apply_count_args
-{
-    enum { value =
-          is_apply_arg<T1>::value + is_apply_arg<T2>::value 
-        + is_apply_arg<T3>::value + is_apply_arg<T4>::value 
-        + is_apply_arg<T5>::value
-        };
-};
-
-}
-
-template<
-      typename F, typename T1 = na, typename T2 = na, typename T3 = na
-    , typename T4 = na, typename T5 = na
-    >
-struct apply
-    : aux::apply_chooser<
-          aux::apply_count_args< T1,T2,T3,T4,T5 >::value
-        >::template result_< F,T1,T2,T3,T4,T5 >::type
-{
+    typedef int type;
 };
 
 }}

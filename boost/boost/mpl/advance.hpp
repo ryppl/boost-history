@@ -105,7 +105,7 @@ struct advance_impl
             , aux::advance_forward<n>
             >::type algo_;
 
-        typedef typename BOOST_MPL_AUX_APPLY1(algo_,Iterator)::type type;
+        typedef typename apply_wrap1<algo_,Iterator>::type type;
     };
 };
 
@@ -114,9 +114,9 @@ struct advance_impl
 #if defined(BOOST_MSVC) && BOOST_MSVC < 1300
 
 // msvc_advance
-#define BOOST_MPL_AUX_MSVC_DTW_NAME msvc_advance
-#define BOOST_MPL_AUX_MSVC_DTW_ORIGINAL_NAME BOOST_MPL_AUX_ITERATOR_ADVANCE
-#define BOOST_MPL_AUX_MSVC_DTW_ARITY 1
+#define AUX778076_MSVC_DTW_NAME msvc_advance
+#define AUX778076_MSVC_DTW_ORIGINAL_NAME BOOST_MPL_AUX_ITERATOR_ADVANCE
+#define AUX778076_MSVC_DTW_ARITY 1
 #include <boost/mpl/aux_/msvc_dtw.hpp>
 
 template<>

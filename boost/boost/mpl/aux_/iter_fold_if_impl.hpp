@@ -65,7 +65,7 @@ struct iter_fold_if_step_impl
         >
     struct result_
     {
-        typedef typename BOOST_MPL_AUX_APPLY2(StateOp,State,Iterator)::type state;
+        typedef typename apply2<StateOp,State,Iterator>::type state;
         typedef typename IteratorOp::type iterator;
     };
 };
@@ -97,7 +97,7 @@ template<
     >
 struct iter_fold_if_forward_step
 {
-    typedef typename BOOST_MPL_AUX_APPLY2(Predicate,State,Iterator)::type not_last;
+    typedef typename apply2<Predicate,State,Iterator>::type not_last;
     typedef typename iter_fold_if_step_impl<
           BOOST_MPL_AUX_MSVC_VALUE_WKND(not_last)::value
         >::template result_< Iterator,State,ForwardOp,mpl::next<Iterator> > impl_;
@@ -114,7 +114,7 @@ template<
     >
 struct iter_fold_if_backward_step
 {
-    typedef typename BOOST_MPL_AUX_APPLY2(Predicate,State,Iterator)::type not_last;
+    typedef typename apply2<Predicate,State,Iterator>::type not_last;
     typedef typename iter_fold_if_step_impl<
           BOOST_MPL_AUX_MSVC_VALUE_WKND(not_last)::value
         >::template result_< Iterator,State,BackwardOp,identity<Iterator> > impl_;

@@ -1,8 +1,4 @@
-// preprocessed version of '/boost/mpl/aux_/Attic/apply_wrap.hpp' header
-// see the original for copyright information
-
 namespace boost { namespace mpl { namespace aux {
-
 template< typename F >
 struct apply_wrap0 : F
 {
@@ -38,7 +34,7 @@ struct apply_wrap_impl1<
 {
     typedef typename F::template apply<
           T1
-        , void_
+        , na
         > type;
 };
 
@@ -53,7 +49,7 @@ struct apply_wrap_impl1<
 {
     typedef typename F::template apply<
           T1
-        , void_, void_
+        , na, na
         > type;
 };
 
@@ -68,7 +64,7 @@ struct apply_wrap_impl1<
 {
     typedef typename F::template apply<
           T1
-        , void_, void_, void_
+        , na, na, na
         > type;
 };
 
@@ -83,7 +79,7 @@ struct apply_wrap_impl1<
 {
     typedef typename F::template apply<
           T1
-        , void_, void_, void_, void_
+        , na, na, na, na
         > type;
 };
 
@@ -115,7 +111,6 @@ struct apply_wrap_impl2<
 {
     typedef typename F::template apply<
           T1, T2
-       
         > type;
 };
 
@@ -130,7 +125,7 @@ struct apply_wrap_impl2<
 {
     typedef typename F::template apply<
           T1, T2
-        , void_
+        , na
         > type;
 };
 
@@ -145,7 +140,7 @@ struct apply_wrap_impl2<
 {
     typedef typename F::template apply<
           T1, T2
-        , void_, void_
+        , na, na
         > type;
 };
 
@@ -160,7 +155,7 @@ struct apply_wrap_impl2<
 {
     typedef typename F::template apply<
           T1, T2
-        , void_, void_, void_
+        , na, na, na
         > type;
 };
 
@@ -192,7 +187,6 @@ struct apply_wrap_impl3<
 {
     typedef typename F::template apply<
           T1, T2, T3
-       
         > type;
 };
 
@@ -207,7 +201,7 @@ struct apply_wrap_impl3<
 {
     typedef typename F::template apply<
           T1, T2, T3
-        , void_
+        , na
         > type;
 };
 
@@ -222,7 +216,7 @@ struct apply_wrap_impl3<
 {
     typedef typename F::template apply<
           T1, T2, T3
-        , void_, void_
+        , na, na
         > type;
 };
 
@@ -254,7 +248,6 @@ struct apply_wrap_impl4<
 {
     typedef typename F::template apply<
           T1, T2, T3, T4
-       
         > type;
 };
 
@@ -269,7 +262,7 @@ struct apply_wrap_impl4<
 {
     typedef typename F::template apply<
           T1, T2, T3, T4
-        , void_
+        , na
         > type;
 };
 
@@ -303,7 +296,6 @@ struct apply_wrap_impl5<
 {
     typedef typename F::template apply<
           T1, T2, T3, T4, T5
-       
         > type;
 };
 
@@ -321,4 +313,3 @@ struct apply_wrap5
 };
 
 }}}
-

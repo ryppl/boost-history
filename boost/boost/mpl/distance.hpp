@@ -90,12 +90,12 @@ template< typename Category >
 struct distance_impl
 {
     template< typename First, typename Last > struct result_
-        : iter_fold<
+    {
+        typedef typename iter_fold<
               iterator_range<First,Last>
             , integral_c<long, 0>
             , next<>
-            >::type
-    {
+            >::type type;
     };
 };
 
@@ -103,8 +103,8 @@ template<>
 struct distance_impl<random_access_iterator_tag>
 {
     template< typename First, typename Last > struct result_
-        : aux::iter_distance<First,Last>::type
     {
+        typedef typename aux::iter_distance<First,Last>::type type;
     };
 };
 

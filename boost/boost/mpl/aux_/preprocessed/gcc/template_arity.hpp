@@ -74,4 +74,4 @@ struct template_arity
     typedef int_<value> type;
 };
 
-}}} // namespace boost::mpl::aux
+}}}

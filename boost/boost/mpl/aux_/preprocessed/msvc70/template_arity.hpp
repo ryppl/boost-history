@@ -1,8 +1,4 @@
-// preprocessed version of 'boost/mpl/aux_/template_arity.hpp' header
-// see the original for copyright information
-
 namespace boost { namespace mpl { namespace aux {
-
 template< bool >
 struct template_arity_impl
 {
@@ -18,7 +14,6 @@ struct template_arity_impl<true>
     template< typename F > struct result_
     {
         enum { value = F::arity };
-
     };
 };
 
@@ -35,5 +30,4 @@ struct template_arity<int>
     enum { value = -1 };
 };
 
-}}} // namespace boost::mpl::aux
-
+}}}

@@ -1,15 +1,10 @@
-// preprocessed version of 'boost/mpl/aux_/config/use_preprocessed.hpp' header
-// see the original for copyright information
-
 namespace boost {
 namespace mpl {
-
 typedef arg< -1 > _;
 
 namespace placeholders {
 using boost::mpl::_;
 }
-
 // agurt, 17/mar/02: one more placeholder for the last 'apply#' 
 // specialization
 typedef arg<1> _1;
@@ -44,4 +39,3 @@ using boost::mpl::_6;
 }
 } // namespace mpl
 } // namespace boost 
-

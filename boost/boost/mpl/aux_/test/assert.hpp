@@ -111,8 +111,9 @@ template<> struct assert_msg<false>
 #if !BOOST_WORKAROUND(__EDG_VERSION__, BOOST_TESTED_AT(303))
 #   define MPL_ASSERT_MSG( c, msg, types ) \
     enum { \
-        BOOST_PP_CAT(MplAssertion,__LINE__) = sizeof(boost::mpl::assert_msg<(c)> \
-              ::arguments( (MPL_ASSERTION_ARGUMENTS (*) types)0 ) \
+        BOOST_PP_CAT(MplAssertion,__LINE__) = sizeof( \
+            boost::mpl::assert_msg<(c)> \
+              ::arguments( (MPL_ASSERTION_ARGUMENTS (************(MPL_ASSERTION_ARGUMENTS (***************)())) types)0 ) \
                   .MESSAGE( (struct msg*)0 ) \
             ) \
     }\

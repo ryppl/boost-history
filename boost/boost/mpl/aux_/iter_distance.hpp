@@ -28,9 +28,9 @@ namespace aux {
 #if defined(BOOST_MSVC) && BOOST_MSVC < 1300
 
 // msvc_distance
-#define BOOST_MPL_AUX_MSVC_DTW_NAME msvc_distance
-#define BOOST_MPL_AUX_MSVC_DTW_ORIGINAL_NAME BOOST_MPL_AUX_ITERATOR_DISTANCE
-#define BOOST_MPL_AUX_MSVC_DTW_ARITY 1
+#define AUX778076_MSVC_DTW_NAME msvc_distance
+#define AUX778076_MSVC_DTW_ORIGINAL_NAME BOOST_MPL_AUX_ITERATOR_DISTANCE
+#define AUX778076_MSVC_DTW_ARITY 1
 #include <boost/mpl/aux_/msvc_dtw.hpp>
 
 template<

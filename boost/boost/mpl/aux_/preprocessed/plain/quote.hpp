@@ -1,12 +1,7 @@
-// preprocessed version of 'boost/mpl/quote.hpp' header
-// see the original for copyright information
-
 namespace boost {
 namespace mpl {
-
 template< typename T, bool has_type_ = aux::has_type<T>::value >
 struct quote_impl
-
     : T
 {
 };
@@ -24,9 +19,7 @@ template<
 struct quote1
 {
     template< typename U1 > struct apply
-
         : quote_impl< F<U1> >
-
     {
     };
 };
@@ -38,9 +31,7 @@ template<
 struct quote2
 {
     template< typename U1, typename U2 > struct apply
-
         : quote_impl< F<U1,U2> >
-
     {
     };
 };
@@ -52,9 +43,7 @@ template<
 struct quote3
 {
     template< typename U1, typename U2, typename U3 > struct apply
-
         : quote_impl< F<U1,U2,U3> >
-
     {
     };
 };
@@ -69,9 +58,7 @@ struct quote4
           typename U1, typename U2, typename U3, typename U4
         >
     struct apply
-
         : quote_impl< F<U1,U2,U3,U4> >
-
     {
     };
 };
@@ -91,13 +78,10 @@ struct quote5
         , typename U5
         >
     struct apply
-
         : quote_impl< F<U1,U2,U3,U4,U5> >
-
     {
     };
 };
 
 } // namespace mpl
 } // namespace boost
-

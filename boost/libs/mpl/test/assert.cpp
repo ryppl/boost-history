@@ -24,7 +24,7 @@ BOOST_MPL_ASSERT_MSG( true, ANOTHER_NAMESPACE_SCOPE_ERROR, () );
 struct her
 {
     BOOST_MPL_ASSERT_MSG( true, CLASS_SCOPE_ERROR, () );
-    BOOST_MPL_ASSERT_MSG( true, ANOTHER_CLASS_SCOPE_ERROR, (int, long) );
+    BOOST_MPL_ASSERT_MSG( false, ANOTHER_CLASS_SCOPE_ERROR, (int, long) );
 };
 
 int main()

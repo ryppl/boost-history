@@ -1,9 +1,5 @@
 namespace boost { namespace mpl {
 
-namespace aux {
-template< BOOST_AUX_NTTP_DECL(int, arity_) > struct apply_chooser;
-}
-
 template<
       typename F
     >

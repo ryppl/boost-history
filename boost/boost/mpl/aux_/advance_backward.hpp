@@ -25,6 +25,10 @@
 #include <boost/mpl/aux_/prior.hpp>
 #include <boost/mpl/aux_/config/eti.hpp>
 
+#if !defined(BOOST_MPL_PREPROCESSING_MODE)
+#   include <boost/mpl/aux_/apply_wrap.hpp>
+#endif
+
 #include <boost/mpl/aux_/config/use_preprocessed.hpp>
 
 #if    !defined(BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS) \
@@ -59,19 +63,19 @@ struct advance_backward
 {
     template< typename Iterator > struct apply
     {
-        typedef typename BOOST_MPL_AUX_APPLY1(
+        typedef typename apply_wrap1<
               advance_backward<BOOST_MPL_LIMIT_UNROLLING>
             , Iterator
-            )::type chunk_result_;
+            >::type chunk_result_;
 
-        typedef typename BOOST_MPL_AUX_APPLY1(
+        typedef typename apply_wrap1<
               advance_backward<(
                 (N - BOOST_MPL_LIMIT_UNROLLING) < 0
                     ? 0
                     : N - BOOST_MPL_LIMIT_UNROLLING
                     )>
             , chunk_result_
-            )::type type;
+            >::type type;
     };
 };
 

@@ -20,7 +20,7 @@
 
 #if !defined(BOOST_MPL_PREPROCESSING_MODE)
 #   include <boost/mpl/apply_fwd.hpp>
-#   include <boost/mpl/lambda.hpp>
+#   include <boost/mpl/aux_/lambda.hpp>
 #   include <boost/mpl/aux_/apply_wrap.hpp>
 #   include <boost/mpl/aux_/na.hpp>
 #endif
@@ -188,6 +188,7 @@ struct apply< F AUX778076_APPLY_N_PARTIAL_SPEC_PARAMS(i_, T, na) >
 
 #   else // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 
+#if !defined(BOOST_MPL_CFG_NO_APPLY_TEMPLATE)
 namespace aux {
 
 template<>
@@ -205,6 +206,7 @@ struct apply_chooser<i_>
 };
 
 } // namespace aux
+#endif
 
 #   endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 #   endif // BOOST_MPL_CFG_NO_APPLY_TEMPLATE

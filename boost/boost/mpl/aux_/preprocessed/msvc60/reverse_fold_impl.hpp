@@ -31,6 +31,12 @@ template<> struct reverse_fold_chunk<0>
         typedef bkwd_state0 state;
         typedef iter0 iterator;
     };
+    // ETI workaround
+    template<> struct result_<int, int, int, int, int>
+    {
+        typedef int state;
+        typedef int iterator;
+    };
 };
 
 template<> struct reverse_fold_chunk<1>
@@ -53,6 +59,12 @@ template<> struct reverse_fold_chunk<1>
         typedef typename apply2< BackwardOp, bkwd_state1, typename iter0::type >::type bkwd_state0;
         typedef bkwd_state0 state;
         typedef iter1 iterator;
+    };
+    // ETI workaround
+    template<> struct result_<int, int, int, int, int>
+    {
+        typedef int state;
+        typedef int iterator;
     };
 };
 
@@ -80,6 +92,12 @@ template<> struct reverse_fold_chunk<2>
         
         typedef bkwd_state0 state;
         typedef iter2 iterator;
+    };
+    // ETI workaround
+    template<> struct result_<int, int, int, int, int>
+    {
+        typedef int state;
+        typedef int iterator;
     };
 };
 
@@ -110,6 +128,12 @@ template<> struct reverse_fold_chunk<3>
         
         typedef bkwd_state0 state;
         typedef iter3 iterator;
+    };
+    // ETI workaround
+    template<> struct result_<int, int, int, int, int>
+    {
+        typedef int state;
+        typedef int iterator;
     };
 };
 
@@ -143,6 +167,12 @@ template<> struct reverse_fold_chunk<4>
         
         typedef bkwd_state0 state;
         typedef iter4 iterator;
+    };
+    // ETI workaround
+    template<> struct result_<int, int, int, int, int>
+    {
+        typedef int state;
+        typedef int iterator;
     };
 };
 
@@ -226,6 +256,12 @@ struct reverse_fold_chunk< -1 >
             >::type res_;
         typedef typename res_::state state;
         typedef typename res_::iterator iterator;
+    };
+    // ETI workaround
+    template<> struct result_<int, int, int, int, int>
+    {
+        typedef int state;
+        typedef int iterator;
     };
 };
 
