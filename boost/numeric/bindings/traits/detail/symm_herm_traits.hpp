@@ -19,6 +19,7 @@
 
 #include <boost/numeric/bindings/traits/type.hpp> 
 #include <boost/numeric/bindings/traits/traits.hpp>
+#include <boost/static_assert.hpp>
 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
 
@@ -65,6 +66,27 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     struct symm_herm_pack_t<complex_d> {
       typedef hermitian_packed_t type;
     }; 
+
+
+    template <class T, class S>
+    struct symm_herm_compatible {
+      BOOST_STATIC_CONSTANT( bool, value=false ) ;
+    };
+
+    template <class T>
+    struct symm_herm_compatible< T, hermitian_t > {
+      BOOST_STATIC_CONSTANT( bool, value=true ) ;
+    };
+
+    template <class T>
+    struct symm_herm_compatible< T, symmetric_t > {
+      BOOST_STATIC_CONSTANT( bool, value=true ) ;
+    };
+
+    template <class T>
+    struct symm_herm_compatible< std::complex<T>, symmetric_t > {
+      BOOST_STATIC_CONSTANT( bool, value=false ) ;
+    };
 
   }
 

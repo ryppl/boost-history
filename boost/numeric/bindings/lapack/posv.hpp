@@ -142,10 +142,7 @@ namespace boost { namespace numeric { namespace bindings {
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
       typedef traits::matrix_traits<SymmMatrA> matraits;
       typedef typename matraits::value_type val_t;
-      BOOST_STATIC_ASSERT((boost::is_same<
-        typename matraits::matrix_structure,
-        typename traits::detail::symm_herm_t<val_t>::type
-      >::value));
+      BOOST_STATIC_ASSERT( (traits::detail::symm_herm_compatible< val_t, typename matraits::matrix_structure >::value ) ) ;
       BOOST_STATIC_ASSERT((boost::is_same<
         typename traits::matrix_traits<MatrB>::matrix_structure, 
         traits::general_t
