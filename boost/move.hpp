@@ -218,10 +218,10 @@ T& move_or_copy_impl(
     )
 {
     // Attempt copy...
-	T* p = new(dest) T(src);
+    T* p = new(dest) T(src);
 
-	// ...and return result upon success:
-	return *p;
+    // ...and return result upon success:
+    return *p;
 }
 
 } // namespace detail
