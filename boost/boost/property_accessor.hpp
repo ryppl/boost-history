@@ -55,7 +55,7 @@ namespace boost {
   struct lvalue_op_bracket_tag
     : public boost::lvalue_property_accessor_tag
   { enum { id = detail::OP_BRACKET_PA }; };
-#if 0 // forget why I used this...
+#if 1 // forget why I used this... // dwa 09/23/00 - you need it for the specialization below
   struct random_access_iterator_pa_tag
     : public boost::lvalue_property_accessor_tag
   { enum { id = detail::RAND_ACCESS_ITER_PA }; };    
@@ -72,7 +72,7 @@ namespace boost {
   struct property_traits<int*> {
     typedef int value_type;
     typedef ptrdiff_t key_type;
-    typedef random_access_iterator_pa_tag   category;
+      typedef random_access_iterator_pa_tag   category;  // dwa 09/23/00 - THIS ONE!!
   };
   template <>
   struct property_traits<std::size_t*> {
