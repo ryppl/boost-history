@@ -150,7 +150,6 @@ apply_visitor_impl(Visitor& visitor, Visitable& visitable)
 
 }} // namespace detail::visitor
 
-#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 
 // [These two instances may take dynamic visitors:]
 
@@ -168,7 +167,7 @@ apply_visitor(Visitor& visitor, const Visitable& visitable)
     return detail::visitor::apply_visitor_impl(visitor, visitable);
 }
 
-// [These two take only static visitors, b/c dynamic is never const:]
+// [These two take only static visitors, b/c dynamic are never const:]
 
 template <typename Visitor, typename Visitable>
     typename Visitor::result_type
@@ -185,50 +184,6 @@ apply_visitor(const Visitor& visitor, const Visitable& visitable)
     return static_visitable_traits<Visitable>
         ::apply_visitor(visitor, visitable);
 }
-
-#else// defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-
-// TODO : Test following under MSVC 7
-
-namespace detail { namespace visitor {
-
-template <typename Visitor, typename Visitable>
-    typename Visitor::result_type
-apply_visitor_aux(
-      Visitor& visitor
-    , Visitable& visitable
-    , mpl::false_c// is_variant
-    )
-{
-    return apply_visitor_traits<Visitable>
-        ::execute(visitor, visitable);
-}
-
-template <typename Visitor, typename Visitable>
-    typename Visitor::result_type
-apply_visitor_aux(
-      Visitor& visitor
-    , Visitable& visitable
-    , mpl::true_c// is_variant
-    )
-{
-    return variant_apply_visitor(visitor, visitable);
-}
-
-}} // namespace detail::visitor
-
-template <typename Visitor, typename Visitable>
-    typename Visitor::result_type
-apply_visitor(Visitor& visitor, Visitable& visitable)
-{
-    return detail::visitor::apply_visitor_aux(
-          visitor
-        , visitable
-        , mpl::bool_c< is_variant<Visitable>::value >()
-        );
-}
-
-#endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION workaround
 
 } // namespace boost
 
