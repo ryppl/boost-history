@@ -175,6 +175,17 @@ make0(
 	    printf( "warning: %s depends on itself\n", t->name );
 	    return;
 
+        /* Deal with TEMPORARY targets with multiple parents. When a missing
+         * TEMPORARY target is determined to be stable, it inherits the
+         * timestamp of the parent being checked, and is given a binding of
+         * T_BIND_PARENTS. To avoid outdating parents with earlier modification
+         * times, we set the target's time to the minimum time of all parents.
+         */
+        case T_FATE_STABLE:
+            if ( t->binding == T_BIND_PARENTS && t->time > ptime && t->flags & T_FLAG_TEMP )
+                t->time = ptime;
+            return;
+            
 	default:
 	    return;
 
@@ -197,7 +208,7 @@ make0(
 
 	if( t->binding == T_BIND_UNBOUND && !( t->flags & T_FLAG_NOTFILE ) )
 	{
-	    t->boundname = search( t->name, &t->time );
+            t->boundname = search( t->name, &t->time );
 	    t->binding = t->time ? T_BIND_EXISTS : T_BIND_MISSING;
 	}
 
