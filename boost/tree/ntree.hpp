@@ -1,9 +1,10 @@
-//  Boost general library ntree.hpp header file  ---------------------------//
+//  Boost-sandbox general library ntree.hpp header file  ----------------------
 
-//  (C) Copyright Marc Cromme 2002. Permission to copy, use, modify, sell and
-//  distribute this software is granted provided this copyright notice appears
-//  in all copies. This software is provided "as is" without express or implied
-//  warranty, and with no claim as to its suitability for any purpose.
+//  (C) Copyright Marc Cromme 2002, marc@cromme.dk. Permission to
+//  copy, use, modify, sell and distribute this software is granted
+//  provided this copyright notice appears in all copies. This
+//  software is provided "as is" without express or implied warranty,
+//  and with no claim as to its suitability for any purpose.
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
@@ -14,7 +15,7 @@
 #include <iterator>
 #include <map>
  
-// compiled using 
+// compiled on a debian linux box "testing" using 
 // g++-3.1 -g -p -ansi -pedantic -W -Wall -Wshadow -Weffc++ -Wfloat-equal
 // you might get tired of the -Weffc++ -Wfloat-equal options since they
 // flag warnings in the g++-3.1 implementation of the STL
@@ -39,7 +40,8 @@ namespace boost
     *  (= ntree.begin()) to last leave (= ntree.end() -1). Most STL
     *  container algorithms can be applied to ntree's.  Note though
     *  that the concept of reversible container does not apply to
-    *  un-ordered trees.
+    *  un-ordered trees - on the other hand: how to represent unordered trees
+    *  in the first place ?
     *
     *  In addition to the reversible container concept interface, the ntree 
     *  template adheres to the (yet not well-defined) tree concept interface,
@@ -52,50 +54,45 @@ namespace boost
     *  and post-order tree parsing, path parsing from a given node to
     *  the root node, parsing of leaf nodes in level-order, pre-order,
     *  in-order and post-order. These apply certainly only for ordered
-    *  trees.
+    *  trees. Also algorithms testing the staus of a node as child, parent
+    *  root or leaf will be added.
     */
    template < size_t N, class Type, class Alloc = std::allocator<Type > >
-   class ntree : private std::map<size_t, Type, Alloc>
+   class ntree 
    {
       public:
 	 // typedefs ----------------------------------------------------------
-	 typedef Type                             value_type;
-	 typedef Alloc                            allocator_type;
-	 typedef typename std::map<size_t, Type, Alloc>::pointer
-	 pointer;
-	 typedef typename std::map<size_t, Type, Alloc>::const_pointer
-	 const_pointer;
-	 typedef typename std::map<size_t, Type, Alloc>::reference
-	 reference;
-	 typedef typename std::map<size_t, Type, Alloc>::const_reference
-	 const_reference;
-	 typedef typename std::map<size_t, Type, Alloc>::iterator
-	 iterator;
-	 typedef typename std::map<size_t, Type, Alloc>::const_iterator
-	 const_iterator;
-	 typedef typename std::map<size_t, Type, Alloc>::reverse_iterator
-	 reverse_iterator;
-	 typedef typename std::map<size_t, Type, Alloc>::const_reverse_iterator
+	 typedef typename std::map<size_t, Type, std::less<Type>, 
+				   Alloc>::value_type value_type;
+	 typedef typename std::map<size_t, Type, std::less<Type>, 
+				   Alloc>::pointer pointer;
+	 typedef typename std::map<size_t, Type, std::less<Type>, 
+				   Alloc>::const_pointer const_pointer;
+	 typedef typename std::map<size_t, Type, std::less<Type>,
+				   Alloc>::reference reference;
+	 typedef typename std::map<size_t, Type, std::less<Type>,
+				   Alloc>::const_reference const_reference;
+	 typedef typename std::map<size_t, Type, std::less<Type>, 
+				   Alloc>::size_type size_type;
+	 typedef typename std::map<size_t, Type, std::less<Type>,
+				   Alloc>::difference_type difference_type;
+	 typedef typename std::map<size_t, Type, std::less<Type>, 
+				   Alloc>::iterator iterator;
+	 typedef typename std::map<size_t, Type, std::less<Type>,
+				   Alloc>::const_iterator const_iterator;
+	 typedef typename std::map<size_t, Type, std::less<Type>,
+				   Alloc>::reverse_iterator reverse_iterator;
+	 typedef typename std::map<size_t, Type, std::less<Type>,
+				   Alloc>::const_reverse_iterator
 	 const_reverse_iterator;
-	 typedef typename std::map<size_t, Type, Alloc>::size_type
-	 size_type;
-	 typedef typename std::map<size_t, Type, Alloc>::difference_type
-	 difference_type;
+	 
 
 	 // allocation/deallocation -------------------------------------------
 	 /**
 	  *  Constructs an empty ntree with the specified Allocator class
 	  */
 	 explicit ntree(const Alloc& a = Alloc()) 
-	 {
-	 }
-      
-	 /**
-	  *  Constructs a dense filled ntree with n nodes, all containing
-	  *  x as data.
-	  */
-	 explicit ntree(size_type n, const Type& x = Type(),
-			const Alloc& a = Alloc()) 
+	    : rep(rep.key_comp(), a) 
 	 {
 	 }
       
@@ -103,6 +100,7 @@ namespace boost
 	  *  Standard copy constructor
 	  */
 	 ntree(const ntree<N,Type,Alloc>& x) 
+	    : rep(x.rep) 
 	 {
 	 }
 
@@ -115,8 +113,16 @@ namespace boost
 	  */
 	 template <class InputIterator>
 	 ntree(InputIterator first, InputIterator last,
-	       const Alloc& a = Alloc()) 
+	       const Alloc& a = Alloc())
+	    : rep(rep.key_comp(), a)
 	 {
+	    difference_type n = std::distance(first, last);
+	    for (size_type id = 0; n > 0; id++ , n--, first++)
+	    {
+ 	       std::pair<const size_type, Type> valuepair =
+ 		  std::make_pair<const size_type, Type>(id, *first);
+ 	       rep.insert(valuepair);
+	    }
 	 }
 
 	 /**
@@ -142,7 +148,7 @@ namespace boost
 	  */
 	 iterator begin() 
 	 { 
-	    return std::map.begin(); 
+	    return rep.begin(); 
 	 }
 
 	 /**
@@ -152,7 +158,7 @@ namespace boost
 	  */
 	 const_iterator begin() const 
 	 { 
-	    return std::map.begin(); 
+	    return rep.begin(); 
 	 }
 
 	 /**
@@ -162,7 +168,7 @@ namespace boost
 	  */
 	 iterator end() 
 	 { 
-	    return std::map.end(); 
+	    return rep.end(); 
 	 }
 
 	 /**
@@ -172,7 +178,7 @@ namespace boost
 	  */
 	 const_iterator end() const 
 	 { 
-	    return std::map.end(); 
+	    return rep.end(); 
 	 }
 
 	 /**
@@ -182,7 +188,7 @@ namespace boost
 	  */
 	 reverse_iterator rbegin() 
 	 { 
-	    return std::map.rbegin(); 
+	    return rep.rbegin(); 
 	 }
 
 	 /**
@@ -192,7 +198,7 @@ namespace boost
 	  */
 	 const_reverse_iterator rbegin() const 
 	 { 
-	    return std::map.rbegin(); 
+	    return rep.rbegin(); 
 	 }
 
 	 /**
@@ -202,7 +208,7 @@ namespace boost
 	  */
 	 reverse_iterator rend() 
 	 { 
-	    return std::map.rend(); 
+	    return rep.rend(); 
 	 }
 
 	 /**
@@ -212,26 +218,26 @@ namespace boost
 	  */
 	 const_reverse_iterator rend() const 
 	 { 
-	    return std::map.rend(); 
+	    return rep.rend(); 
 	 }
 
 	 // container member functions ----------------------------------------
 	 /** Returns true if the ntree is empty. */
 	 bool empty() const 
 	 { 
-	    return std::map.empty(); 
+	    return rep.empty(); 
 	 }
 
 	 /** Returns the size of the ntree.  */
 	 size_type size() const 
 	 { 
-	    return std::map.size(); 
+	    return rep.size(); 
 	 }
 
 	 /** Returns the maximum size of the ntree.  */
 	 size_type max_size() const 
 	 { 
-	    return std::map.max_size(); 
+	    return rep.max_size(); 
 	 }
 
 	 /** 
@@ -241,7 +247,7 @@ namespace boost
 	  */
 	 void clear() 
 	 { 
-	    std::map.clear(); 
+	    rep.clear(); 
 	 }
 
 	 /** 
@@ -249,6 +255,8 @@ namespace boost
 	  */
 	 void swap(ntree<N,Type,Alloc>& x) 
 	 {
+	    this->rep.swap(x.rep);
+	    
 	 }
       
 
@@ -276,7 +284,7 @@ namespace boost
 	  */
 	 iterator root() 
 	 { 
-	    return std::map.begin(); 
+	    return rep.begin(); 
 	 }
 
 	 /**
@@ -286,7 +294,7 @@ namespace boost
 	  */
 	 const_iterator root() const 
 	 { 
-	    return std::map.begin(); 
+	    return rep.begin(); 
 	 }
 
 	 /**
@@ -296,6 +304,7 @@ namespace boost
 	  */
 	 iterator level(size_type n) 
 	 { 
+	    return rep.end(); 
 	 }
 
 	 /**
@@ -306,6 +315,7 @@ namespace boost
 	  */
 	 const_iterator level(size_type n) const 
 	 { 
+	    return rep.end(); 
 	 }
 
 	 /**
@@ -314,6 +324,7 @@ namespace boost
 	  */
 	 iterator parent(iterator ichild) 
 	 { 
+	    return rep.end(); 
 	 }
 
 	 /**
@@ -323,6 +334,7 @@ namespace boost
 	  */
 	 const_iterator parent(const_iterator ichild) const 
 	 { 
+	    return rep.end(); 
 	 }
 
 	 /**
@@ -332,6 +344,7 @@ namespace boost
 	  */
 	 iterator child(iterator iparent, size_type n) 
 	 { 
+	    return rep.end(); 
 	 }
 
 	 /**
@@ -341,6 +354,7 @@ namespace boost
 	  */
 	 const_iterator child(const_iterator iparent, size_type n) const 
 	 { 
+	    return rep.end(); 
 	 }
 
 	 /**
@@ -350,6 +364,7 @@ namespace boost
 	  */
 	 std::pair<iterator, iterator> children(iterator iparent) 
 	 { 
+	    return std::make_pair(rep.end(), rep.end()); 
 	 }
 
 	 /**
@@ -360,6 +375,7 @@ namespace boost
 	 std::pair<const_iterator, const_iterator> 
 	 children(const_iterator iparent) const 
 	 { 
+	    return std::make_pair(rep.end(), rep.end()); 
 	 }
 
 	 /**
@@ -369,6 +385,7 @@ namespace boost
 	  */
 	 std::pair<iterator, iterator> siblings(iterator isib) 
 	 { 
+	    return std::make_pair(rep.end(), rep.end()); 
 	 }
 
 	 /**
@@ -379,6 +396,7 @@ namespace boost
 	 std::pair<const_iterator, const_iterator> 
 	 siblings(const_iterator isib) const 
 	 { 
+	    return std::make_pair(rep.end(), rep.end()); 
 	 }
 
 
@@ -391,6 +409,13 @@ namespace boost
 	  */
 	 iterator insert_root(const Type& x = Type())
 	 {
+	    if (!rep.empty())
+	       return rep.end();
+
+	    std::pair<const size_type, Type> valuepair =
+	       std::make_pair<const size_type, Type>(0,x);
+	    std::pair<iterator, bool> result = rep.insert(valuepair);
+	    return result.first;
 	 }
       
 	 /**
@@ -403,6 +428,13 @@ namespace boost
 	 iterator insert_child(iterator iparent, size_type n,
 					       const Type& x = Type())
 	 {
+// 	    std::pair<const size_type, Type> valuepair =
+// 	       std::make_pair<const size_type, Type>(0,x);
+// 	    std::pair<iterator, bool> result = rep.insert(valuepair);
+//  	   if (result.second)
+//  	      return result.first;
+//  	   else
+ 	      return rep.end();
 	 }
       
 	 /**
@@ -416,6 +448,7 @@ namespace boost
 	 std::pair<iterator,iterator> insert_children(iterator iparent, 
 						  const Type& x = Type())
 	 {
+	    return std::make_pair(rep.end(), rep.end()); 
 	 }
       
 	 /**
@@ -434,6 +467,7 @@ namespace boost
 						  InputIterator first, 
 						  InputIterator last) 
 	 {
+	    return std::make_pair(rep.end(), rep.end()); 
 	 }
 
 	 /**
@@ -445,6 +479,7 @@ namespace boost
 	  */
 	 bool erase_root() 
 	 { 
+	    return false;
 	 }
 
 	 /**
@@ -457,6 +492,7 @@ namespace boost
 	  */
 	 bool erase_leaf(iterator iposition) 
 	 { 
+	    return false;
 	 }
 
 	 /**
@@ -467,6 +503,7 @@ namespace boost
 	  */
 	 bool erase_leaf(iterator first, iterator last)
 	 { 
+	    return false;
 	 }
 
 	 /**
@@ -477,6 +514,7 @@ namespace boost
 	  */
 	 bool erase_subtree(iterator iposition) 
 	 { 
+	    return false;
 	 }
 
 	 /**
@@ -487,6 +525,7 @@ namespace boost
 	  */
 	 bool erase_subtree(iterator first, iterator last)
 	 { 
+	    return false;
 	 }
 
 
@@ -494,72 +533,78 @@ namespace boost
 	 /** Returns the number of levels of the ntree.  */
 	 size_type no_levels() const 
 	 { 
+	    return 0;
 	 }
 
 	 /** Returns the maximum number of levels of the ntree.  */
 	 size_type max_no_levels() const 
-	 { 
+	 {
+	    return 0;
 	 }
 
 
-	 /**
-          *  Returns true if node is root node, false otherwise
-	  */
-	 bool is_root(iterator iposition) 
-	 { 
-	 }
+// 	 /**
+//           *  Returns true if node is root node, false otherwise
+// 	  */
+// 	 bool is_root(iterator iposition) 
+// 	 { 
+// 	 }
 
 
-	 /**
-          *  Returns true if node is parent node, false otherwise
-	  */
-	 bool is_parent(iterator iposition) 
-	 { 
-	 }
+// 	 /**
+//           *  Returns true if node is parent node, false otherwise
+// 	  */
+// 	 bool is_parent(iterator iposition) 
+// 	 { 
+// 	 }
 
 
-	 /**
-          *  Returns true if node is child node, false otherwise
-	  */
-	 bool is_child(iterator iposition) 
-	 { 
-	 }
+// 	 /**
+//           *  Returns true if node is child node, false otherwise
+// 	  */
+// 	 bool is_child(iterator iposition) 
+// 	 { 
+// 	 }
 
 
-	 /**
-          *  Returns true if node is leaf node, false otherwise
-	  */
-	 bool is_leaf(iterator iposition) 
-	 { 
-	 }
+// 	 /**
+//           *  Returns true if node is leaf node, false otherwise
+// 	  */
+// 	 bool is_leaf(iterator iposition) 
+// 	 { 
+// 	 }
 
 
+
+//       private:
+// 	 // Private ntree operations:------------------------------------------
+// 	 /**
+// 	  *  This function takes a key and tries to locate the node
+// 	  *  with which the key matches.  If successful the function
+// 	  *  returns an iterator pointing to the sought after pair. If
+// 	  *  unsuccessful it returns the one past the end ( end() )
+// 	  *  iterator.
+// 	  */
+// 	 iterator find(const size_type& k) 
+// 	 { 
+// 	    return std::map<size_t,Type,std::less<Type>,Alloc>::find(k); 
+// 	 }
+
+// 	 /**
+// 	  *  This function takes a key and tries to locate the node with which
+// 	  *  the key matches.  If successful the function returns a constant 
+// 	  *  iterator pointing to the sought after pair. If unsuccessful it 
+// 	  *  returns the one past the end ( end() ) iterator.
+// 	  */
+// 	 const_iterator find(const size_type& k) const 
+// 	 { 
+// 	    return std::map<size_t,Type,std::less<Type>,Alloc>::find(k); 
+// 	 }
 
       private:
-	 // Private ntree operations:------------------------------------------
-	 /**
-	  *  This function takes a key and tries to locate the node
-	  *  with which the key matches.  If successful the function
-	  *  returns an iterator pointing to the sought after pair. If
-	  *  unsuccessful it returns the one past the end ( end() )
-	  *  iterator.
-	  */
-	 iterator find(const size_type& k) 
-	 { 
-	    return std::map<size_t,Type,Alloc>::find(k); 
-	 }
-
-	 /**
-	  *  This function takes a key and tries to locate the node with which
-	  *  the key matches.  If successful the function returns a constant 
-	  *  iterator pointing to the sought after pair. If unsuccessful it 
-	  *  returns the one past the end ( end() ) iterator.
-	  */
-	 const_iterator find(const size_type& k) const 
-	 { 
-	    return std::map<size_t,Type,Alloc>::find(k); 
-	 }
-
+	 // Private ntree representation:--------------------------------------
+	 std::map<size_t, Type, std::less<Type>, Alloc>  rep;
+	 
 
    }; // class ntree ----------------------------------------------------------
 
@@ -569,14 +614,14 @@ namespace boost
    template <size_t N, class Type, class Alloc>
    inline bool operator==(const ntree<N,Type,Alloc>& x,
 			  const ntree<N,Type,Alloc>& y) {
-      return std::map<size_t,Type,Alloc>::operator==(x,y);
+      return (x.rep == y.rep);
    }
 
    template <size_t N, class Type, class Alloc>
    inline bool operator<(const ntree<N,Type,Alloc>& x,
 			 const ntree<N,Type,Alloc>& y) 
    {
-      return std::map<size_t,Type,Alloc>::operator<(x,y);
+      return (x.rep < y.rep);
    }
 
    template <size_t N, class Type, class Alloc>
@@ -611,7 +656,7 @@ namespace boost
    inline void swap(ntree<N,Type,Alloc>& x,
 		    ntree<N,Type,Alloc>& y) 
    {
-      x.std::map<size_t,Type,Alloc>::swap(y);
+      x.swap(y);
    }
 
 
