@@ -12,7 +12,7 @@
 
 #include <boost/mpl/bool_c.hpp>
 #include <boost/mpl/logical.hpp>
-#include <boost/string_algo/container_traits.hpp>
+#include <boost/string_algo/sequence_traits.hpp>
 
 namespace boost {
 
@@ -129,8 +129,8 @@ namespace boost {
                 {
                     replace_const_time_helper< 
                         typename boost::mpl::logical_and<
-                            typename container_traits<InputT>::const_time_insert,
-                            typename container_traits<InputT>::const_time_erase >::type >()(
+                            typename sequence_traits<InputT>::const_time_insert,
+                            typename sequence_traits<InputT>::const_time_erase >::type >()(
                         Input, From, To, Begin, End );
                 }
             };
@@ -172,7 +172,7 @@ namespace boost {
                 ForwardIteratorT End )
             {
                 replace_native_helper< 
-                    typename container_traits<InputT>::native_replace >()(
+                    typename sequence_traits<InputT>::native_replace >()(
                     Input, From, To, Begin, End );
             };
 

@@ -12,7 +12,7 @@
 
 #include <algorithm>
 #include <boost/mpl/bool_c.hpp>
-#include <boost/string_algo/container_traits.hpp>
+#include <boost/string_algo/sequence_traits.hpp>
 #include <boost/string_algo/detail/container.hpp>
 
 namespace boost {
@@ -146,7 +146,7 @@ namespace boost {
             {
                 return 
                     process_segment_helper< 
-                        typename container_traits<InputT>::stable_iterators >()(
+                        typename sequence_traits<InputT>::stable_iterators >()(
                     Storage, Input, InsertIt, SegmentBegin, SegmentEnd );
             }
             
