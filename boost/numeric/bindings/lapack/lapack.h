@@ -17,7 +17,7 @@
 #ifndef BOOST_NUMERIC_BINDINGS_LAPACK_LAPACK_H
 #define BOOST_NUMERIC_BINDINGS_LAPACK_LAPACK_H
 
-#include <boost/numeric/bindings/traits/detail/cmplx.h>
+#include <boost/numeric/bindings/traits/type.h>
 #include <boost/numeric/bindings/lapack/lapack_names.h>
 
 
