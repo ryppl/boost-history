@@ -10,9 +10,15 @@
 // operators (in a separate file, because they are enabled via a macro).  See
 // libs/policy_ptr/doc/index.html
 //----------------------------------------------------------------------------
+// Change log:
+// - 29 Oct 2004: Jonathan Turkanis modified move_copy_test to reflect cases
+//   which should fail.
+//----------------------------------------------------------------------------
 #define BOOST_SP_DEBUG_MODE
 #include <string>
-#include <boost/test/unit_test.hpp>
+//#include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test_framework.hpp>
+
 #include "../../../boost/policy_ptr/smart_ptr.hpp"
 #include "../../../boost/policy_ptr/policy/array_storage.hpp"
 #include "../../../boost/policy_ptr/policy/com_ref_counted.hpp"
@@ -20,6 +26,7 @@
 #include "../../../boost/policy_ptr/policy/deep_copy.hpp"
 #include "../../../boost/policy_ptr/policy/no_copy.hpp"
 #include "../../../boost/policy_ptr/policy/move_copy.hpp"
+#include "../../../boost/policy_ptr/policy/auto_copy.hpp"
 #include "../../../boost/policy_ptr/policy/reject_null.hpp"
 //----------------------------------------------------------------------------
 // Hack for VC's lack of ADL
@@ -439,7 +446,8 @@ void no_copy_test(void)
     BOOST_CHECK(destroyed2);
 }
 //----------------------------------------------------------------------------
-smart_ptr<move_copy>::to<rc_employee> source(void)
+
+smart_ptr<move_copy>::to<rc_employee> move_ptr_source(void)
 {
     return smart_ptr<move_copy>::to<rc_employee>();
 }
@@ -451,12 +459,33 @@ void move_copy_test(void)
         smart_ptr<move_copy>::to<rc_employee> p(new rc_employee(destroyed));
         BOOST_CHECK_EQUAL(sizeof(p), sizeof(rc_employee*));
         BOOST_CHECK_EQUAL(p->age(), 42U );
-        smart_ptr<move_copy>::to<rc_employee> q(source());
+        smart_ptr<move_copy>::to<rc_employee> q(move_ptr_source());
         BOOST_CHECK(!q);
         BOOST_CHECK(!!p);
-        smart_ptr<move_copy>::to<rc_employee> r(p);
-        smart_ptr<move_copy>::to<rc_employee> const w;
-        smart_ptr<move_copy>::to<rc_employee> s(w);
+        //smart_ptr<move_copy>::to<rc_employee> r(p); // Shouldn't compile.
+        //smart_ptr<move_copy>::to<rc_employee> const w;
+        //smart_ptr<move_copy>::to<rc_employee> s(w); // Shouldn't compile.
+    }
+    BOOST_CHECK(destroyed);
+}
+//----------------------------------------------------------------------------
+
+smart_ptr<auto_copy>::to<rc_employee> auto_ptr_source(void)
+{
+    return smart_ptr<auto_copy>::to<rc_employee>();
+}
+//----------------------------------------------------------------------------
+void auto_copy_test(void)
+{
+    bool destroyed(false);
+    {
+        smart_ptr<auto_copy>::to<rc_employee> p(new rc_employee(destroyed));
+        BOOST_CHECK_EQUAL(sizeof(p), sizeof(rc_employee*));
+        BOOST_CHECK_EQUAL(p->age(), 42U );
+        smart_ptr<auto_copy>::to<rc_employee> q(auto_ptr_source());
+        BOOST_CHECK(!q);
+        BOOST_CHECK(!!p);
+        smart_ptr<auto_copy>::to<rc_employee> r(p); // Shouldn't compile.
     }
     BOOST_CHECK(destroyed);
 }
