@@ -40,27 +40,27 @@ namespace boost {
   template <typename Iterator, typename Function>
   Function for_each(Iterator first, Iterator last, Function f)
   {
-    function_requires< InputIteratorConcept<Iterator1> >();
-    typedef typename std::iterator_traits<Iterator1>::value_type T;
+    function_requires< InputIteratorConcept<Iterator> >();
+    typedef typename std::iterator_traits<Iterator>::value_type T;
     function_requires< UnaryFunctionConcept<Function, void, T> >();
     for ( ; first != last; ++first)
       f(*first);
     return f;
   }
 
-  template <typename Iterator1, typename T>
-  Iterator1 find(Iterator1 first, Iterator1 last, const T& val)
+  template <typename Iterator, typename T>
+  Iterator find(Iterator first, Iterator last, const T& val)
   {
-    function_requires< InputIteratorConcept<Iterator1> >();
-    typedef typename std::iterator_traits<Iterator1>::value_type VT;
+    function_requires< InputIteratorConcept<Iterator> >();
+    typedef typename std::iterator_traits<Iterator>::value_type VT;
     function_requires< EqualOpConcept<VT,T> >();
-    typename traversal_category<Iterator1>::type traversal;
+    typename traversal_category<Iterator>::type traversal;
     return detail::find(first, last, val, traversal);
   }
   
-  template <typename Iterator, typename _Predicate>
+  template <typename Iterator, typename Predicate>
   Iterator find_if(Iterator first, Iterator last, Predicate pred) {
-    typename traversal_category<Iterator1>::type traversal;
+    typename traversal_category<Iterator>::type traversal;
     return detail::find_if(first, last, pred, traversal);
   }
   

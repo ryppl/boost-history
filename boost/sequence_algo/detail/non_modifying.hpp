@@ -10,7 +10,7 @@ namespace boost {
 
     template <typename Iterator, typename T>
     Iterator find(Iterator first, Iterator last, const T& val,
-                  const random_traversal_iterator_tag&)
+                  const random_access_traversal_tag&)
     {
       typename std::iterator_traits<Iterator>::difference_type
         trip_count = (last - first) >> 2;
@@ -185,8 +185,8 @@ namespace boost {
              const bidirectional_traversal_tag&, 
              BinaryPredicate comp)
     {
-      typedef reverse_iterator_generator<Iterator1>::type RevIter1;
-      typedef reverse_iterator_generator<Iterator2>::type RevIter2;
+      typedef typename reverse_iterator_generator<Iterator1>::type RevIter1;
+      typedef typename reverse_iterator_generator<Iterator2>::type RevIter2;
 
       RevIter1 rlast1(first1);
       RevIter2 rlast2(first2);
