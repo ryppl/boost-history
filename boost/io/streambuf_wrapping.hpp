@@ -110,6 +110,7 @@ namespace detail
         typedef typename StreamBuf::pos_type           pos_type; \
         typedef typename StreamBuf::off_type           off_type; \
         typedef typename StreamBuf::traits_type     traits_type; \
+        using pbase_type::rdbuf; \
     protected: \
         explicit  basic_wrapping_##Stream ( streambuf_type const &s ) \
             : pbase_type( s ), base_type( this->pbase_type::rdbuf() ) \
