@@ -38,6 +38,12 @@ function templates and function-acting [template] classes).</p>
 			<li><a href="#gnh_synopsis">Synopsis</a></li>
 			<li><a href="#resetios">Stream Formatting State-reset Manipulator</a></li>
 		</ul></li>
+	<li><a href="#r_header">Repeated-character Manipulator Header</a>
+		<ul>
+			<li><a href="#rh_synopsis">Synopsis</a></li>
+			<li><a href="#repeatch">Repeated-character Manipulator</a></li>
+			<li><a href="#repeatchar">Repeated-narrow-character Manipulator</a></li>
+		</ul></li>
 	<li><a href="#i_header">Input-oriented Manipulator Header</a>
 		<ul>
 			<li><a href="#ih_synopsis">Synopsis</a></li>
@@ -79,6 +85,7 @@ supplies some of them.</p>
 #include &lt;boost/io/iomanip_general.hpp&gt;
 #include &lt;boost/io/iomanip_in.hpp&gt;
 #include &lt;boost/io/iomanip_out.hpp&gt;
+#include &lt;boost/io/iomanip_repeat.hpp&gt;
 </pre></blockquote>
 
 <h2><a name="f_header">Form-based Manipulator Header</a></h2>
@@ -444,6 +451,152 @@ std::ios_base::skipws | std::ios_base::dec ) &amp;&amp; <var>s</var>.width()
 <p><strong>Rationale:</strong> a quick method to reset all the formatting
 attributes of a stream, especially after many attribute changes</p>
 
+<h2><a name="r_header">Repeated-character Manipulator Header</a></h2>
+
+<p>The header <cite><a href="../../../boost/io/iomanip_repeat.hpp">boost/io/iomanip_repeat.hpp</a></cite> contains manipulators that insert or extract a specific character value to/from a stream repeatedly.</p>
+
+<h3><a name="rh_synopsis">Synopsis</a></h3>
+
+<blockquote><pre>
+#include &lt;iosfwd&gt;  <i>// for std::basic_istream and std::basic_ostream (declarations)</i>
+
+namespace boost
+{
+namespace io
+{
+
+template &lt; typename Ch &gt;
+    class repeat_ch;
+
+template &lt; typename Ch, class Tr &gt;
+    std::basic_istream&lt;Ch, Tr&gt; &amp;  operator &gt;&gt;( std::basic_istream&lt;Ch, Tr&gt; &amp;s, repeat_ch&lt;Ch> const &amp;r );
+
+template &lt; typename Ch, class Tr &gt;
+    std::basic_ostream&lt;Ch, Tr&gt; &amp;  operator &lt;&lt;( std::basic_ostream&lt;Ch, Tr&gt; &amp;s, repeat_ch&lt;Ch> const &amp;r );
+
+class repeat_char;
+
+template &lt; typename Ch, class Tr &gt;
+    std::basic_istream&lt;Ch, Tr&gt; &amp;  operator &gt;&gt;( std::basic_istream&lt;Ch, Tr&gt; &amp;s, repeat_char const &amp;r );
+
+template &lt; typename Ch, class Tr &gt;
+    std::basic_ostream&lt;Ch, Tr&gt; &amp;  operator &lt;&lt;( std::basic_ostream&lt;Ch, Tr&gt; &amp;s, repeat_char const &amp;r );
+
+}
+}
+</pre></blockquote>
+
+<h3><a name="repeatch">Repeated-character Manipulator</a></h3>
+
+<p>Objects from a <code>boost::io::repeat_ch</code> template class represent manipulators that have a given stream repeatedly process several copies of a particular character value.  Said manipulators can be temporarily created, in-line without a name, or created on the stack in advance for several uses.  Such uses can be through the conventional extraction or insertion operators, or through a function-call interface.</p>
+
+<blockquote><pre>
+#include &lt;ios&gt;      <i>// for std::streamsize</i>
+#include &lt;istream&gt;  <i>// for std::basic_istream</i>
+#include &lt;ostream&gt;  <i>// for std::basic_ostream</i>
+
+template &lt; typename Ch &gt;
+class boost::io::repeat_ch
+{
+public:
+    // Template argument
+    typedef Ch  char_type;
+
+    // Lifetime management
+    repeat_ch( char_type c, std::streamsize count, bool synchronize_afterwards = false );
+
+    // Accessors
+    char_type        repeated_char() const;
+    std::streamsize  repeat_count() const;
+    bool             will_synchronize_afterwards() const;
+
+    // Operators
+    template &lt; class Tr &gt;
+    void  operator ()( std::basic_istream&lt;Ch, Tr&gt; &amp;is ) const;
+
+    template &lt; class Tr &gt;
+    void  operator ()( std::basic_ostream&lt;Ch, Tr&gt; &amp;os ) const;
+
+};
+</pre></blockquote>
+
+<p>The template parameter <var>Ch</var> represents the type of the repeatedly extracted or inserted character value.  The <code>char_type</code> alias reveals that type in the interface (helpful if the template parameter is hidden by a <code>typedef</code>).</p>
+
+<p>The first constructor argument is the character value <var>c</var> to be repeatedly processed.  The second constructor argument is the repeat <var>count</var> that will be performed per call.  The third constructor argument, <var>synchronize_afterwards</var>, flags whether or not a synchronization (a.k.a. &quot;flushing&quot;) will occur at the end of a call.  The third argument is optional and defaults to FALSE, meaning that the synchronization step is skipped.  The values of the three constructor arguments can be inspected with the <code>repeated_char</code>, <code>repeat_count</code>, and <code>will_synchronize_afterwards</code> member functions, respectively.</p>
+
+<p>There are two function-call operator templates defined.  Each operator takes a single argument, a stream which must use the same character type as the manipulator but can have any character-traits type.  One operator takes only input streams, the other only output streams.  (A combined stream must first be cast to a reference to its input-stream base type or its output-stream base type, as appropiate.)</p>
+
+<p>When an input stream <var>is</var> is applied to the manipulator, <code>this-&gt;repeat_count()</code> copies of the <code>this-&gt;repeated_char()</code> value will be read for and extracted from <var>is</var>.  Any intervening characters of other values are extracted and ignored.  If <code>this-&gt;will_synchronize_afterwards()</code> is TRUE, then <code><var>is</var>.sync()</code> is called.  The process shall stop at any point if <var>is</var> is in a bad state immediately before that point.</p>
+
+<p>When an output stream <var>os</var> is applied to the manipulator, <code>this-&gt;repeat_count()</code> copies of the <code>this-&gt;repeated_char()</code> value will be inserted to <var>os</var>.  If <code>this-&gt;will_synchronize_afterwards()</code> is TRUE, then <code><var>os</var>.flush()</code> is called.  The process shall stop at any point if <var>os</var> is in a bad state immediately before that point.</p>
+
+<blockquote><pre>
+template &lt; typename Ch, class Tr &gt;
+std::basic_istream&lt;Ch, Tr&gt; &amp;
+boost::io::operator &gt;&gt;( std::basic_istream&lt;Ch, Tr&gt; &amp;s, boost::io::repeat_ch&lt;Ch&gt; const &amp;r );
+
+template &lt; typename Ch, class Tr &gt;
+std::basic_ostream&lt;Ch, Tr&gt; &amp;
+boost::io::operator &lt;&lt;( std::basic_ostream&lt;Ch, Tr&gt; &amp;s, boost::io::repeat_ch&lt;Ch&gt; const &amp;r );
+</pre></blockquote>
+
+<p><strong>Effects:</strong> call <code><var>r</var>( <var>s</var> )</code></p>
+
+<p><strong>Returns:</strong> <var>s</var></p>
+
+<p><strong>Rationale:</strong> enable <code>repeat_ch&lt;&gt;</code> objects to be activated by streaming</p>
+
+<h3><a name="repeatchar">Repeated-narrow-character Manipulator</a></h3>
+
+<p>Objects from the <code>boost::io::repeat_char</code> class represent manipulators that have a given stream repeatedly process several copies of a particular value of type <code>char</code>.  Said manipulators can be temporarily created, in-line without a name, or created on the stack in advance for several uses.  Such uses can be through the conventional extraction or insertion operators, or through a function-call interface.</p>
+
+<blockquote><pre>
+#include &lt;ios&gt;      <i>// for std::streamsize</i>
+#include &lt;istream&gt;  <i>// for std::basic_istream</i>
+#include &lt;ostream&gt;  <i>// for std::basic_ostream</i>
+
+class boost::io::repeat_char
+{
+public:
+    // Type
+    typedef char  char_type;
+
+    // Lifetime management
+    repeat_char( char c, std::streamsize count, bool synchronize_afterwards = false );
+
+    // Accessors
+    char             repeated_char() const;
+    std::streamsize  repeat_count() const;
+    bool             will_synchronize_afterwards() const;
+
+    // Operators
+    template &lt; typename Ch, class Tr &gt;
+    void  operator ()( std::basic_istream&lt;Ch, Tr&gt; &amp;is ) const;
+
+    template &lt; typename Ch, class Tr &gt;
+    void  operator ()( std::basic_ostream&lt;Ch, Tr&gt; &amp;os ) const;
+
+};
+</pre></blockquote>
+
+<p>This class has an interface nearly identical to <code>repeat_ch&lt;char&gt;</code>.  Please see <a href="#repeatch">that class template</a> for more information.  The main difference is that the function-call operators can accept streams that vary on their character type in addition to varying on their character-traits type.  When a stream <var>s</var> is applied to a manipulator, first a widened character value is synthesized via <code><var>s</var>.widen( this-&gt;repeated_char() )</code>, then the semantics of the equivalent operator in <code>repeat_ch&lt;&gt;</code> take over.</p>
+
+<blockquote><pre>
+template &lt; typename Ch, class Tr &gt;
+std::basic_istream&lt;Ch, Tr&gt; &amp;
+boost::io::operator &gt;&gt;( std::basic_istream&lt;Ch, Tr&gt; &amp;s, boost::io::repeat_char const &amp;r );
+
+template &lt; typename Ch, class Tr &gt;
+std::basic_ostream&lt;Ch, Tr&gt; &amp;
+boost::io::operator &lt;&lt;( std::basic_ostream&lt;Ch, Tr&gt; &amp;s, boost::io::repeat_char const &amp;r );
+</pre></blockquote>
+
+<p><strong>Effects:</strong> call <code><var>r</var>( <var>s</var> )</code></p>
+
+<p><strong>Returns:</strong> <var>s</var></p>
+
+<p><strong>Rationale:</strong> enable <code>repeat_char</code> objects to be activated by streaming</p>
+
 <h2><a name="i_header">Input-oriented Manipulator Header</a></h2>
 
 <p>The header <cite><a href="../../../boost/io/iomanip_in.hpp">boost/io/iomanip_in.hpp</a></cite> contains the simple manipulators that can affect input-oriented streams.</p>
@@ -758,6 +911,8 @@ using <code>'\n'</code> (or <code>&quot;\n&quot;</code>) directly with
 		href="../../../boost/io/iomanip_form.hpp">boost/io/iomanip_form.hpp</a></cite></li>
 	<li>The header for general manipulators: <cite><a
 		href="../../../boost/io/iomanip_general.hpp">boost/io/iomanip_general.hpp</a></cite></li>
+	<li>The header for repeated-character manipulators: <cite><a
+		href="../../../boost/io/iomanip_repeat.hpp">boost/io/iomanip_repeat.hpp</a></cite></li>
 	<li>The header for input-oriented manipulators: <cite><a
 		href="../../../boost/io/iomanip_in.hpp">boost/io/iomanip_in.hpp</a></cite></li>
 	<li>The header for output-oriented manipulators: <cite><a
@@ -802,6 +957,8 @@ using <code>'\n'</code> (or <code>&quot;\n&quot;</code>) directly with
 		href="#skipl"><code>skipl</code></a>, <a
 		href="#newl"><code>newl</code></a>, <a
 		href="#resetios"><code>resetios</code></a>, <a
+		href="#repeatch"><code>repeat_ch</code></a>, <a
+		href="#repeatchar"><code>repeat_char</code></a>, <a
 		href="#mnewl"><code>multi_newl</code></a>, <a
 		href="#mskipl"><code>multi_skipl</code></a>, <a
 		href="#mbnewer"><code>multi_basic_newer</code></a>, <a
@@ -821,7 +978,7 @@ using <code>'\n'</code> (or <code>&quot;\n&quot;</code>) directly with
 
 <hr>
 
-<p>Revised: 5 May 2004</p>
+<p>Revised: 29 August 2004</p>
 
 <p>Copyright 2003-2004 Daryle Walker.  Use, modification, and distribution
 are subject to the Boost Software License, Version 1.0.  (See accompanying

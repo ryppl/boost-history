@@ -10,3 +10,4 @@
 #include <boost/io/iomanip_general.hpp>
 #include <boost/io/iomanip_in.hpp>
 #include <boost/io/iomanip_out.hpp>
+#include <boost/io/iomanip_repeat.hpp>

@@ -11,7 +11,7 @@
 
 #include <boost/io_fwd.hpp>  // self include
 
-#include <boost/detail/repeat_char_base.hpp>
+#include <boost/io/iomanip_repeat.hpp>  // for boost:io:repeat_ch, repeat_char
 
 #include <ios>      // for std::streamsize
 #include <ostream>  // for std::basic_ostream
@@ -51,9 +51,9 @@ template < typename Ch, class Tr >
 
 template < typename Ch >
 class multi_basic_newer
-    : public detail::repeated_character_streamer_base<Ch>
+    : private repeat_ch<Ch>
 {
-    typedef detail::repeated_character_streamer_base<Ch>  base_type;
+    typedef repeat_ch<Ch>  base_type;
 
 public:
     // Template argument
@@ -63,6 +63,11 @@ public:
     multi_basic_newer( char_type c, std::streamsize count,
      bool final_flush = false );
 
+    // Accessors
+    using base_type::repeated_char;
+    using base_type::repeat_count;
+    using base_type::will_synchronize_afterwards;
+
     // Operator
     template < class Tr >
     void  operator ()( ::std::basic_ostream<Ch, Tr> &os ) const;
@@ -70,13 +75,18 @@ public:
 };  // boost::io::multi_basic_newer
 
 class multi_newer
-    : public detail::repeated_character_streamer_base<>
+    : private repeat_char
 {
-    typedef detail::repeated_character_streamer_base<>  base_type;
+    typedef repeat_char  base_type;
 
 public:
     // Lifetime management
     multi_newer( char c, ::std::streamsize count, bool final_flush = false );
+
+    // Accessors
+    using base_type::repeated_char;
+    using base_type::repeat_count;
+    using base_type::will_synchronize_afterwards;
 
     // Operator
     template < typename Ch, class Tr >
@@ -133,17 +143,7 @@ multi_basic_newer<Ch>::operator ()
     std::basic_ostream<Ch, Tr> &  os
 ) const
 {
-    char_type const  cc = this->repeated_char();
-
-    for ( std::streamsize i = this->repeat_count() ; (i > 0) && os ; --i )
-    {
-        os.put( cc );
-    }
-
-    if ( this->will_synchronize_afterwards() && os )
-    {
-        os.flush();
-    }
+    this->base_type::operator ()( os );
 }
 
 inline
@@ -165,8 +165,7 @@ multi_newer::operator ()
     std::basic_ostream<Ch, Tr> &  os
 ) const
 {
-    os << multi_basic_newer<Ch>( os.widen(this->repeated_char()),
-     this->repeat_count(), this->will_synchronize_afterwards() );
+    this->base_type::operator ()( os );
 }
 
 

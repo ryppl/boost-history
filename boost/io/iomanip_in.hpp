@@ -11,9 +11,7 @@
 
 #include <boost/io_fwd.hpp>  // self include
 
-#include <boost/detail/repeat_char_base.hpp>
-
-#include <boost/limits.hpp>  // for std::numeric_limits
+#include <boost/io/iomanip_repeat.hpp>  // for boost:io:repeat_ch, repeat_char
 
 #include <ios>      // for std::streamsize
 #include <istream>  // for std::basic_istream
@@ -53,9 +51,9 @@ template < typename Ch, class Tr >
 
 template < typename Ch >
 class multi_basic_skipper
-    : public detail::repeated_character_streamer_base<Ch>
+    : private repeat_ch<Ch>
 {
-    typedef detail::repeated_character_streamer_base<Ch>  base_type;
+    typedef repeat_ch<Ch>  base_type;
 
 public:
     // Template argument
@@ -65,6 +63,11 @@ public:
     multi_basic_skipper( char_type c, std::streamsize count,
      bool final_sync = false );
 
+    // Accessors
+    using base_type::repeated_char;
+    using base_type::repeat_count;
+    using base_type::will_synchronize_afterwards;
+
     // Operator
     template < class Tr >
     void  operator ()( ::std::basic_istream<Ch, Tr> &is ) const;
@@ -72,13 +75,18 @@ public:
 };  // boost::io::multi_basic_skipper
 
 class multi_skipper
-    : public detail::repeated_character_streamer_base<>
+    : private repeat_char
 {
-    typedef detail::repeated_character_streamer_base<>  base_type;
+    typedef repeat_char  base_type;
 
 public:
     // Lifetime management
     multi_skipper( char c, ::std::streamsize count, bool final_sync = false );
+
+    // Accessors
+    using base_type::repeated_char;
+    using base_type::repeat_count;
+    using base_type::will_synchronize_afterwards;
 
     // Operator
     template < typename Ch, class Tr >
@@ -135,17 +143,7 @@ multi_basic_skipper<Ch>::operator ()
     std::basic_istream<Ch, Tr> &  is
 ) const
 {
-    typename Tr::int_type const  ci = Tr::to_int_type( this->repeated_char() );
-
-    for ( std::streamsize i = this->repeat_count() ; (i > 0) && is ; --i )
-    {
-        is.ignore( std::numeric_limits<std::streamsize>::max(), ci );
-    }
-
-    if ( this->will_synchronize_afterwards() && is )
-    {
-        is.sync();
-    }
+    this->base_type::operator ()( is );
 }
 
 inline
@@ -167,8 +165,7 @@ multi_skipper::operator ()
     std::basic_istream<Ch, Tr> &  is
 ) const
 {
-    is >> multi_basic_skipper<Ch>( is.widen(this->repeated_char()),
-     this->repeat_count(), this->will_synchronize_afterwards() );
+    this->base_type::operator ()( is );
 }
 
 
