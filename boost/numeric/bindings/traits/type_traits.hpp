@@ -31,13 +31,11 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     typedef Real real_type; 
   };
 
-  template < typename Real >
-  const Real* real_cast< std::complex< Real > >(const std::complex< Real >* c)
-  { return static_cast< const Real* >( c ) ; }
+  const float*  real_cast(const std::complex< float  >* c) { return (const float* )( c ) ; }
+  const double* real_cast(const std::complex< double >* c) { return (const double*)( c ) ; }
 
-  template < typename Real >
-  Real* real_cast< std::complex< Real > >(std::complex< Real >* c)
-  { return static_cast< Real* >( c ) ; }
+  float*  real_cast(std::complex< float  >* c) { return (float* )( c ) ; }
+  double* real_cast(std::complex< double >* c) { return (double*)( c ) ; }
 
 }}}}
 
