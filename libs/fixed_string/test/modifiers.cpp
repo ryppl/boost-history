@@ -79,25 +79,36 @@ int test_main( int, char *[] )
    BOOST_TEST( s2 == "12345554321" );
    BOOST_TEST( s5 == "abcdefgh34abc" );
 
-   // insert
-
    // erase
 
    s2.erase();
+   s1.erase( 8 );
+   s5.erase( 6, 4 );
+
    BOOST_TEST( s2.empty());
    BOOST_TEST( s2 == "" );
+   BOOST_TEST( s1 == "ABC12345" );
+   BOOST_TEST( s5 == "abcdefabc" );
 
-   // replace
+   s1.erase( s1.begin() + 3 );
+   s5.erase( s5.begin() + 3, s5.end() - 3 );
+
+   BOOST_TEST( s1 == "ABC2345" );
+   BOOST_TEST( s5 == "abcabc" );
 
    // copy
 
    char                                s[ 20 ];
 
    s1.copy( s, 5 );
-   BOOST_TEST( strcmp( s, "ABC12" ) == 0 );
+   BOOST_TEST( strcmp( s, "ABC23" ) == 0 );
 
-   s1.copy( s, 5, 3 );
-   BOOST_TEST( strcmp( s, "12345" ) == 0 );
+   s1.copy( s, 5, 2 );
+   BOOST_TEST( strcmp( s, "C2345" ) == 0 );
+
+   // insert
+
+   // replace
 
    // swap
 

@@ -14,12 +14,17 @@ int test_main( int, char *[] )
 
    // lhs + rhs
 
-   string15                            s1 = string15( "Hello " ) + string15( "World" );
+#  if defined(BOOST_MSVC) && ( BOOST_MSVC <= 1200 )
+      string15                         s1; // VC6: error C2666: '+' : 2 overloads have similar conversions
+#  else
+      string15                         s1 = string15( "Hello " ) + string15( "World" );
+#  endif
    string15                            s2 = string15( "Hello " ) + "World";
    string15                            s3 = "Hello " + string15( "World" );
 
-   BOOST_TEST( s1 == s2 && s2 == s3 );
    BOOST_TEST( s1 == "Hello World" );
+   BOOST_TEST( s2 == "Hello World" );
+   BOOST_TEST( s3 == "Hello World" );
 
    BOOST_TEST( string15( "ABC" ) + 'D' == "ABCD" );
    BOOST_TEST( 'A' + string15( "BC" ) == "ABC" );
