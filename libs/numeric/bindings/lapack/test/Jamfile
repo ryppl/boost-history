@@ -1,0 +1,14 @@
+subproject libs/numeric/bindings/lapack/test ;
+
+LAPACK_PATH = /usr/lib ;
+LAPACK_LIB  = lapack g2c ;
+
+exe lapack
+        : lapack.cpp 
+	  <lib>../bindings_lapack
+        :  <include>$(BOOST_ROOT)
+	   <include>$(B_ROOT)
+	   <library-path>$(LAPACK_PATH)
+	   <find-library>$(LAPACK_LIB)
+        ;
+

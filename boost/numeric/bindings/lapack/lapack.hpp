@@ -2,6 +2,7 @@
 #define boost_numeric_bindings_lapack_lapack_hpp
 
 #include <boost/numeric/bindings/traits/traits.hpp>
+#include <boost/numeric/bindings/traits/value_traits.hpp>
 #include <boost/numeric/bindings/traits/transpose.hpp>
 #include <boost/numeric/bindings/lapack/traits.hpp>
 
@@ -10,8 +11,8 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
   template < typename matrix_type, typename IpivIterator >
   int getrf(matrix_type& a, IpivIterator begin_ipiv, IpivIterator end_ipiv)
   {
-    typedef matrix_traits< matrix_type >                   mtraits ; 
-    typedef typename mtraits::value_type                    value_type ;
+    typedef typename matrix_type::value_type                value_type ;
+    typedef matrix_traits< matrix_type >                    mtraits ; 
     typedef typename value_traits< value_type >::value_type bind_type ;
 
     int m = mtraits::size1( a ) ;
@@ -21,15 +22,15 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
     assert( std::distance( begin_ipiv, end_ipiv ) >= std::min( m,  n ) );
     int info = 0;
     int& ipiv_ptr = *begin_ipiv ;
-    lapack< value_type >::getrf( &m, &n, (bind_type*)a_ptr, &lda, &ipiv, &info );
+    traits< value_type >::getrf( &m, &n, (bind_type*)a_ptr, &lda, &ipiv_ptr, &info );
     return info;
   }
 
   template <typename matrix_type, typename IntIterator >
   int getrs(char trans, matrix_type& a, IntIterator begin_ipiv, IntIterator end_ipiv, matrix_type& b)
   {
-    typedef traits< matrix_type >                           mtraits ; 
-    typedef typename mtraits::value_type                    value_type ;
+    typedef typename matrix_type::value_type                value_type ;
+    typedef matrix_traits< matrix_type >                    mtraits ; 
     typedef typename value_traits< value_type >::value_type bind_type ;
 
     assert( trans == 'N' || trans == 'T' );
@@ -43,7 +44,7 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
     int info = 0;
     assert( n == static_cast<int>(a.size2()) && n == static_cast<int>(b.size1()) );
     assert( std::distance( begin_ipiv, end_ipiv ) >= n );
-    lapack< value_type >::getrs( &trans, &n, &nrhs, a_ptr, &lda, &ipiv, b_ptr, &ldb, &info );
+    traits< value_type >::getrs( &trans, &n, &nrhs, (bind_type*)a_ptr, &lda, &ipiv, (bind_type*)b_ptr, &ldb, &info );
     return info ;
   }
 
