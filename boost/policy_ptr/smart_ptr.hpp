@@ -181,11 +181,10 @@ namespace boost
 
 #ifndef BOOST_SMART_POINTER_LEGACY_INTERFACE
 
-        class OwnershipPolicy = empty_policy, // = ref_counted<_>,
-        class ConversionPolicy = empty_policy, // = disallow_conversion<_>,
-        class CheckingPolicy = empty_policy, // = assert_check<_>,
-        class StoragePolicy = empty_policy, // = scalar_storage<_>
-        class policies_ = mpl::list<OwnershipPolicy, ConversionPolicy, CheckingPolicy, StoragePolicy>
+        class P1 = empty_policy,
+        class P2 = empty_policy,
+        class P3 = empty_policy,
+        class P4 = empty_policy
 
 #else // BOOST_SMART_POINTER_LEGACY_INTERFACE
 
@@ -282,13 +281,13 @@ namespace boost
     class CheckingPolicy1,                                                   \
     class StoragePolicy1
 # define BOOST_STORAGE_POLICY                                                \
-    typename storage_policy_<T, policies_>::type
+    typename storage_policy_<T, mpl::list<P1, P2, P3, P4> >::type
 # define BOOST_OWNERSHIP_POLICY                                              \
-    typename ownership_policy_<T, policies_>::type
+    typename ownership_policy_<T, mpl::list<P1, P2, P3, P4> >::type
 # define BOOST_CHECKING_POLICY                                               \
-    typename checking_policy_<T, policies_>::type
+    typename checking_policy_<T, mpl::list<P1, P2, P3, P4> >::type
 # define BOOST_CONVERSION_POLICY                                             \
-    typename conversion_policy_<T, policies_>::type
+    typename conversion_policy_<T, mpl::list<P1, P2, P3, P4> >::type
 
 #else // BOOST_SMART_POINTER_LEGACY_INTERFACE
 
@@ -314,7 +313,7 @@ namespace boost
 #define BOOST_CONVERSION_POLICIES                                            \
     OwnershipPolicy1, ConversionPolicy1, CheckingPolicy1, StoragePolicy1
 
-    template <typename T, class P1, class P2, class P3, class P4, class policies_>
+    template <typename T, class P1, class P2, class P3, class P4>
     class smart_ptr
         : public optimally_inherit<
             typename optimally_inherit<
@@ -350,7 +349,6 @@ namespace boost
         typedef smart_ptr                                   this_type;
 
     public:     // Pointer/Reference types
-//        typedef storage_policy_<T, policies_>::type::pointer_type pointer_type;
         typedef typename storage_policy::pointer_type       pointer_type;
         typedef typename storage_policy::const_pointer_type const_pointer_type;
         typedef typename storage_policy::stored_type        stored_type;
@@ -568,9 +566,12 @@ namespace boost
     private:
         typedef typename conversion_policy::result_type automatic_conversion_result;
 
+// VC6 gets horribly confused by the conversion operator
+#ifndef BOOST_MSVC
     public:     // Implicit conversion
         operator automatic_conversion_result() const
         { return get_impl(*this); }
+#endif
     };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -594,9 +595,8 @@ namespace boost
     class scalar_storage : public storage_policy_base< scalar_storage<T> >
     {
     public:
-#ifdef BOOST_MPL_NO_FULL_LAMBDA_SUPPORT
         BOOST_MPL_AUX_LAMBDA_SUPPORT(1, scalar_storage, (T))
-#endif
+
         typedef T*          stored_type;        // the type of the pointee_
         typedef T const*    const_stored_type;  //   object
         typedef T*          pointer_type;       // type returned by operator->
@@ -609,11 +609,11 @@ namespace boost
     protected:
         scalar_storage() : pointee_(default_value())
         { }
-
+/*
         scalar_storage(scalar_storage const&)
         : pointee_(default_value())
         { }
-
+*/
         // The storage policy doesn't initialize the stored pointer
         //     which will be initialized by the OwnershipPolicy's Clone fn
         template <typename U>
@@ -657,9 +657,9 @@ namespace boost
         stored_type pointee_;
     };
 
-#ifdef BOOST_MPL_NO_FULL_LAMBDA_SUPPORT
-    namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, scalar_storage) }
-#endif
+//    namespace mpl { 
+//        BOOST_MPL_AUX_VOID_SPEC(1, scalar_storage) 
+//    }
 
 //////////////////////////////////////////////////////////////////////////////
 // class template array_storage
@@ -736,9 +736,9 @@ namespace boost
         stored_type pointee_;
     };
 
-#ifdef BOOST_MPL_NO_FULL_LAMBDA_SUPPORT
-    namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, array_storage) }
-#endif
+//    namespace mpl { 
+//        BOOST_MPL_AUX_VOID_SPEC(1, array_storage)
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Ownership Policies
@@ -833,9 +833,9 @@ namespace boost
         unsigned* pCount_;
     };
 
-#ifdef BOOST_MPL_NO_FULL_LAMBDA_SUPPORT
-    namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, ref_counted) }
-#endif
+//    namespace mpl { 
+//        BOOST_MPL_AUX_VOID_SPEC(1, ref_counted) 
+//    }
 
 //////////////////////////////////////////////////////////////////////////////
 // class template ref_counted_mt
@@ -844,6 +844,12 @@ namespace boost
 //////////////////////////////////////////////////////////////////////////////
 
 #ifndef BOOST_SMART_POINTER_LEGACY_INTERFACE
+
+    template <class ThreadingModel>
+    class ref_counted_mt
+    : public ThreadingModel
+
+#else // BOOST_SMART_POINTER_LEGACY_INTERFACE
 
     template <template <class> class ThreadingModel>
     class ref_counted_mt
@@ -854,12 +860,6 @@ namespace boost
     //     as a template argument.  Supplying one pacifies it.
     : public ThreadingModel< ref_counted_mt<ThreadingModel> >
 #endif // __GNUC__
-
-#else // BOOST_SMART_POINTER_LEGACY_INTERFACE
-
-    template <class ThreadingModel>
-    class ref_counted_mt
-    : public ThreadingModel
 
 #endif // BOOST_SMART_POINTER_LEGACY_INTERFACE
 
@@ -874,9 +874,9 @@ namespace boost
 
         protected:
 #ifndef BOOST_SMART_POINTER_LEGACY_INTERFACE
-            typedef ThreadingModel<ref_counted_mt> threading_model;
-#else // BOOST_SMART_POINTER_LEGACY_INTERFACE
             typedef ThreadingModel threading_model;
+#else // BOOST_SMART_POINTER_LEGACY_INTERFACE
+            typedef ThreadingModel<ref_counted_mt> threading_model;
 #endif // BOOST_SMART_POINTER_LEGACY_INTERFACE
             typedef typename threading_model::int_type int_type;
 
@@ -1263,9 +1263,7 @@ namespace boost
         { }
     };
 
-#ifdef BOOST_MPL_NO_FULL_LAMBDA_SUPPORT
-    namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, disallow_conversion) }
-#endif
+//    namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, disallow_conversion) }
 
 ////////////////////////////////////////////////////////////////////////////////
 // class null_pointer_error
@@ -1354,9 +1352,7 @@ namespace boost
         { }
     };
 
-#ifdef BOOST_MPL_NO_FULL_LAMBDA_SUPPORT
-    namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, assert_check) }
-#endif
+//    namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, assert_check) }
 
 ////////////////////////////////////////////////////////////////////////////////
 // class template assert_check_strict
