@@ -36,11 +36,43 @@
 // optimally_inherit<> helps avoid EBO pessimization with multiple inheritance
 // by only inheriting from non-empty base classes.  See
 // libs/optimally_inherit/doc/index.html
+//
+// 02-02-2004: Jonathan Turkanis added disambiguation machinery for broken
+//             compilers. Needed for Intel 7.1, Comeau 4.3.3 and Borland 5.x.
 //----------------------------------------------------------------------------
 #ifndef BOOST_OPTIMALLY_INHERIT_20020703_HPP
 #define BOOST_OPTIMALLY_INHERIT_20020703_HPP
 //----------------------------------------------------------------------------
 #include <boost/type_traits/object_traits.hpp>
+
+//----------------------------------------------------------------------------
+// Machinery to help broken compilers resolve smart_ptr and optimal_parents 
+// constructor invocations. Currently, compilers requiring this workaround 
+// include Intel 7.1 for Windows, Comeau 4.3.3, Borland 5.6.4 and MSVC 6.0.
+//----------------------------------------------------------------------------
+
+// Coniditionally placed at the end of argument lists in base class
+// constructor invocations.
+namespace boost { namespace detail { struct disambiguator_tag { }; } }
+
+// Usage: add BOOST_SMART_PTR_DISAMBIGUATOR_TAG at the end of constructor 
+// argument lists which end with init_first_tag, static_cast_tag, 
+// dynamic_cast_tag or polymorphic_cast_tag; add BOOST_SMART_PTR_DISAMBIGUATOR
+// to the end of the argument lists of invocations of such constructors.
+#if defined(__INTEL_COMPILER) && (__INTEL_COMPILER < 800) || \
+    defined(__COMO__) ||                                     \
+    defined(__BORLANDC__) && (__BORLANDC__ < 0x600)          \
+    defined(BOOST_MSVC) && (BOOST_MSVC < 1310)               \
+    /**/
+# define BOOST_SMART_PTR_DISAMBIGUATOR_TAG , detail::disambiguator_tag const&
+# define BOOST_SMART_PTR_DISAMBIGUATOR     , detail::disambiguator_tag()
+#else
+# define BOOST_SMART_PTR_DISAMBIGUATOR_TAG
+# define BOOST_SMART_PTR_DISAMBIGUATOR
+#endif
+
+//----------------------------------------------------------------------------
+// Definition of optimally_inherit
 //----------------------------------------------------------------------------
 #ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 //----------------------------------------------------------------------------
@@ -82,7 +114,8 @@ namespace boost
                         : T1(x), T2(x)              { }
 
                     template <typename U>
-                    optimal_parents(U const& x, detail::init_first_tag const&)
+                    optimal_parents( U const& x, detail::init_first_tag const&
+                                     BOOST_SMART_PTR_DISAMBIGUATOR_TAG )
                         : T1(x)                     { }
 
                     template <typename U, typename V>
@@ -94,7 +127,8 @@ namespace boost
                         : T1(x, y), T2(x, y)        { }
 
                     template <typename U, typename V>
-                    optimal_parents(U const& x, V& y, detail::init_first_tag const&)
+                    optimal_parents( U const& x, V& y, detail::init_first_tag const&
+                                     BOOST_SMART_PTR_DISAMBIGUATOR_TAG )
                         : T1(x, y)                  { }
 
             void    swap(optimal_parents& rhs)
@@ -125,7 +159,8 @@ namespace boost
                         : T1(x)                     { T2 t2(x); (void) t2; }
 
                     template <typename U>
-                    optimal_parents(U const& x, detail::init_first_tag const&)
+                    optimal_parents( U const& x, detail::init_first_tag const&
+                                     BOOST_SMART_PTR_DISAMBIGUATOR_TAG )
                         : T1(x)                     { }
 
                     template <typename U, typename V>
@@ -137,7 +172,8 @@ namespace boost
                         : T1(x, y)                  { T2 t2(x, y); (void) t2; }
 
                     template <typename U, typename V>
-                    optimal_parents(U const& x, V& y, detail::init_first_tag const&)
+                    optimal_parents( U const& x, V& y, detail::init_first_tag const&
+                                     BOOST_SMART_PTR_DISAMBIGUATOR_TAG )
                         : T1(x, y)                  { }
 
             void    swap(optimal_parents& rhs)
@@ -167,7 +203,8 @@ namespace boost
                         : T2(x)                     { T1 t1(x); (void) t1; }
 
                     template <typename U>
-                    optimal_parents(U const& x, detail::init_first_tag const&)
+                    optimal_parents( U const& x, detail::init_first_tag const&
+                                     BOOST_SMART_PTR_DISAMBIGUATOR_TAG )
                                                     { T1 t1(x); (void) t1; }
 
                     template <typename U, typename V>
@@ -179,7 +216,8 @@ namespace boost
                         : T2(x, y)                  { T1 t1(x, y); (void) t1; }
 
                     template <typename U, typename V>
-                    optimal_parents(U const& x, V& y, detail::init_first_tag const&)
+                    optimal_parents( U const& x, V& y, detail::init_first_tag const& 
+                                     BOOST_SMART_PTR_DISAMBIGUATOR_TAG )
                                                     { T1 t1(x, y); (void) t1; }
 
             void    swap(optimal_parents& rhs)
@@ -206,7 +244,8 @@ namespace boost
                     optimal_parents(U const& x)     { T1 t1(x); T2 t2(x); (void) t1; (void) t2; }
 
                     template <typename U>
-                    optimal_parents(U const& x, detail::init_first_tag const&)
+                    optimal_parents( U const& x, detail::init_first_tag const&
+                                     BOOST_SMART_PTR_DISAMBIGUATOR_TAG )
                                                     { T1 t1(x); (void) t1; }
 
                     template <typename U, typename V>
@@ -218,7 +257,8 @@ namespace boost
                                                     { T1 t1(x, y); T2 t2(x, y); (void) t1; (void) t2; }
 
                     template <typename U, typename V>
-                    optimal_parents(U const& x, V& y, detail::init_first_tag const&)
+                    optimal_parents( U const& x, V& y, detail::init_first_tag const&
+                                     BOOST_SMART_PTR_DISAMBIGUATOR_TAG )
                                                     { T1 t1(x, y); (void) t1; }
 
             void    swap(optimal_parents& rhs)      { }
