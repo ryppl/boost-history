@@ -1,3 +1,5 @@
+// Three-state boolean logic library
+//
 // Copyright (C) 2002 Doug Gregor (gregod@cs.rpi.edu)
 //
 // Permission to copy, use, sell and distribute this software is granted
@@ -27,24 +29,15 @@ namespace detail {
 // Forward declaration of tribool class
 class tribool;
 
-/**
- * Function/keyword to determinate if a 3-state boolean is indeterminate. This
- * function serves a dual purpose. First, it can be called given a 3-state
- * boolean value and will return whether or not the value is indeterminate. The
- * second purpose is as a keyword so that 3-state boolean values can be 
- * compared against 'indeterminate', e.g., "if (x == indeterminate) { ... }" is
- * equivalent to "if (indeterminate(f)) { ... }".
- *
- * \param x the 3-state boolean
- * \param dummy parameter that is unusable by the user, but is required by
- *   the implementation of tribool.
- */
+// Declaration for the indeterminate function
 inline bool 
 indeterminate(tribool x, 
               detail::indeterminate_t dummy = detail::indeterminate_t());
 
 /**
- * The type of the 'indeterminate' keyword.
+ * The type of the 'indeterminate' keyword. This has the same type as the
+ * function 'indeterminate' so that we can recognize when the keyword is
+ * used.
  */
 typedef bool (*indeterminate_keyword_t)(tribool, detail::indeterminate_t);
 
@@ -112,60 +105,69 @@ public:
   friend bool indeterminate(tribool x, detail::indeterminate_t);
 
 private:
+  /**
+   * The actual stored value in this 3-state boolean, which may be false, true,
+   * or indeterminate.
+   */
   enum { false_value, true_value, indeterminate_value } value;
 };
 
+// Check if the given tribool has an indeterminate value. Also doubles as a
+// keyword for the 'indeterminate' value
 inline bool indeterminate(tribool x, detail::indeterminate_t)
 {
   return x.value == tribool::indeterminate_value;
 }
 
+// Equality comparisons among tribools and bools ----------------------
 inline tribool operator==(tribool x, bool y)
 {
   return x && y || !x && !y;
-}
-                 
-inline tribool operator!=(tribool x, bool y)
-{
-  return x && !y || !x && y;
 }
 
 inline tribool operator==(bool x, tribool y)
 {
   return x && y || !x && !y;
 }
-                  
-inline tribool operator!=(bool x, tribool y)
-{
-  return x && !y || !x && y;
-}
-                 
+   
 inline tribool operator==(indeterminate_keyword_t, tribool x)
 {
   return indeterminate(x);
 }
-
-inline tribool operator!=(indeterminate_keyword_t, tribool x)
-{
-  return !indeterminate(x);
-}
-
+        
 inline tribool operator==(tribool x, indeterminate_keyword_t)
 {
   return indeterminate(x);
 }
-
-inline tribool operator!=(tribool x, indeterminate_keyword_t)
-{
-  return !indeterminate(x);
-}
-
+    
 inline tribool operator==(tribool x, tribool y)
 {
   if (x == indeterminate || y == indeterminate)
     return indeterminate;
   else
     return x && y || !x && !y;
+}
+// End Equality comparisons among tribools and bools ------------------
+
+// Inequality comparisons among tribools and bools --------------------
+inline tribool operator!=(tribool x, bool y)
+{
+  return x && !y || !x && y;
+}
+               
+inline tribool operator!=(bool x, tribool y)
+{
+  return x && !y || !x && y;
+}
+ 
+inline tribool operator!=(indeterminate_keyword_t, tribool x)
+{
+  return !indeterminate(x);
+}
+
+inline tribool operator!=(tribool x, indeterminate_keyword_t)
+{
+  return !indeterminate(x);
 }
 
 inline tribool operator!=(tribool x, tribool y)
@@ -174,6 +176,28 @@ inline tribool operator!=(tribool x, tribool y)
     return indeterminate;
   else
     return !(x && y || !x && !y);
+}
+// End Inequality comparisons among tribools and bools ----------------
+
+// Logical AND operations among tribools and bools --------------------
+inline tribool operator&&(tribool x, bool y)
+{
+  return y? x : tribool(false);
+}
+
+inline tribool operator&&(bool x, tribool y)
+{
+  return x? y : tribool(false);
+}
+
+inline tribool operator&&(indeterminate_keyword_t, tribool x)
+{
+  return !x? tribool(false) : indeterminate;
+}
+
+inline tribool operator&&(tribool x, indeterminate_keyword_t)
+{
+  return !x? tribool(false) : indeterminate;
 }
 
 inline tribool operator&&(tribool x, tribool y)
@@ -186,15 +210,28 @@ inline tribool operator&&(tribool x, tribool y)
   else
     return indeterminate;
 }
+// End Logical AND operations among tribools and bools ----------------
 
-inline tribool operator&&(tribool x, bool y)
+
+// Logical OR operations among tribools and bools ---------------------
+inline tribool operator||(tribool x, bool y)
 {
-  return y? x : tribool(false);
+  return y? tribool(true) : x;
 }
 
-inline tribool operator&&(bool x, tribool y)
+inline tribool operator||(bool x, tribool y)
 {
-  return x? y : tribool(false);
+  return x? tribool(true) : y;
+}
+
+inline tribool operator||(indeterminate_keyword_t, tribool x)
+{
+  return x? tribool(true) : indeterminate;
+}
+
+inline tribool operator||(tribool x, indeterminate_keyword_t)
+{
+  return x? tribool(true) : indeterminate;
 }
 
 inline tribool operator||(tribool x, tribool y)
@@ -206,16 +243,7 @@ inline tribool operator||(tribool x, tribool y)
   else
     return indeterminate;
 }
-
-inline tribool operator||(tribool x, bool y)
-{
-  return y? tribool(true) : x;
-}
-
-inline tribool operator||(bool x, tribool y)
-{
-  return x? tribool(true) : y;
-}
+// End Logical OR operations among tribools and bools ------------------
 
 } // end namespace boost
 
