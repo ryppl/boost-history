@@ -18,6 +18,7 @@
 #define BOOST_MPL_AUX_TRANSFORM_ITER_HPP_INCLUDED
 
 #include <boost/mpl/apply.hpp>
+#include <boost/mpl/next.hpp>
 #include <boost/mpl/aux_/lambda_spec.hpp>
 #include <boost/mpl/aux_/config/ctps.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -37,7 +38,7 @@ struct transform_iter
 {
     typedef Iterator base;
     typedef typename base::category category;
-    typedef transform_iter< typename base::next,LastIterator,F > next;
+    typedef transform_iter< typename next<base>::type,LastIterator,F > next;
     
     typedef typename apply1<
           F
@@ -78,7 +79,7 @@ struct transform_iter_impl
         // agurt, 14/oct/02: have to use |Iterator| instead of |base| below
         // to prevent |base| and |mpl::base| conflict on MSVC 6.0
         typedef typename Iterator::category category;
-        typedef transform_iter< typename Iterator::next,LastIterator,F > next;
+        typedef transform_iter< typename next<Iterator>::type,LastIterator,F > next;
         
         typedef typename apply1<
               F
