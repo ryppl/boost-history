@@ -11,6 +11,10 @@
 
 int main()
 {
+   // [note]: the mechanism for reading data in is currently incomplete and experimental:
+   //    it is only currently supported for basic_output, pair_output and static_nary_output
+   //    formatter types.
+
    // [1]: plain text
 
    // create the output object used for serialization
@@ -31,9 +35,6 @@ int main()
 
    // reading data back from a plain text-based serialization stream
    {
-      // [note]: the mechanism for reading data in is currently incomplete and experimental:
-      //    it is only currently supported for basic_output and pair_output/std::pair.
-
       std::ifstream                    is( "doc.txt" );
       std::pair< char, int >           p2;
 
@@ -55,7 +56,7 @@ int main()
    {
       // open the file to serialize the pair to
       std::ofstream                    out( "doc1.xml" );
-//    out << "<?xml version = \"1.0\" encoding = \"UTF-8\"?>\n\n"; // XML signature
+      // out << "<?xml version = \"1.0\" encoding = \"UTF-8\"?>\n\n"; // XML signature
 
       // serialize to the stream
       out << boost::io::formatob( p1, xmlio ) << '\n';
@@ -63,9 +64,6 @@ int main()
 
    // reading data back from a plain text-based serialization stream
    {
-      // [note]: the mechanism for reading data in is currently incomplete and experimental:
-      //    it is only currently supported for basic_output and pair_output/std::pair.
-
       std::ifstream                    is( "doc1.xml" );
       std::pair< char, int >           p2;
 
@@ -108,7 +106,7 @@ int main()
       // in >> boost::io::readobject( p1, xmlio2 ); ?
    }
 
-   // [4]: plain text -- more advanced type
+   // [4]: plain text -- more advanced types
 
    // create the output object used for serialization
 
@@ -120,11 +118,11 @@ int main()
 
    // create the data to be serialized
    std::pair< std::complex< double >, int >
-                                         pc1 = std::pair< std::complex< double >, int >
-                                         (
-                                            std::complex< double >( 0.5, 1.345 ),
-                                            5
-                                         );
+                                       pc1 = std::pair< std::complex< double >, int >
+                                       (
+                                          std::complex< double >( 0.5, 1.345 ),
+                                          5
+                                       );
 
    // writing to a plain text-based serialization stream
    {
@@ -137,9 +135,6 @@ int main()
 
    // reading data back from a plain text-based serialization stream
    {
-      // [note]: the mechanism for reading data in is currently incomplete and experimental:
-      //    it is only currently supported for basic_output and pair_output/std::pair.
-
       std::ifstream                    is( "doc2.txt" );
       std::pair< std::complex< double >, int >
                                        pc2;
@@ -152,12 +147,9 @@ int main()
       // pair before reading: ( ( 0, 0 ), 0 )
       // pair after reading:  ( ( 0.5, 1.345 ), 5 )
    }
-   
-   // reading data back using a different (but compatible) data type 
-   {
-      // [note]: the mechanism for reading data in is currently incomplete and experimental:
-      //    it is only currently supported for basic_output and pair_output/std::pair.
 
+   // reading data back using a different (but compatible) data type
+   {
       std::ifstream                    is( "doc2.txt" );
       std::pair< std::pair< float, double >, int >
                                        pc2;
@@ -170,6 +162,59 @@ int main()
       // pair before reading: ( ( 0, 0 ), 0 )
       // pair after reading:  ( ( 0.5, 1.345 ), 5 )
    }
+
+#  if !defined(BOOST_IOFM_NO_LIB_QUATERNION) && !defined(BOOST_IOFM_NO_LIB_OCTONION)
+      // [5]: plain text -- 4-ary and 8-ary types
+
+      // create the output object used for serialization
+
+      boost::io::static_nary_output< char * >
+                                       naryio;
+
+      // create the data to be serialized
+
+      boost::math::quaternion< float > q( 0.12f, 2.75f, 3.3345f, 70.2f );
+      boost::math::octonion< double >  o( 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8 );
+
+      // writing to a plain text-based serialization stream
+      {
+         // open the file to serialize the pair to
+         std::ofstream                 out( "doc3.txt" );
+
+         // serialize to the stream
+         out << boost::io::formatob( q, naryio ) << '\n';
+         out << boost::io::formatob( o, naryio ) << '\n';
+      }
+
+      // reading data back from a plain text-based serialization stream
+      {
+         std::ifstream                 is( "doc3.txt" );
+         boost::math::quaternion< float >
+                                       q2;
+         boost::math::octonion< double >
+                                       o2;
+
+         std::cout << "before reading:\n"
+                   << "   quaternion = " << boost::io::formatob( q2, naryio ) << '\n'
+                   << "   octonion   = " << boost::io::formatob( o2, naryio ) << '\n';
+
+         is >> boost::io::readobout( q2, naryio )
+            >> boost::io::readobout( o2, naryio );
+
+         std::cout << "after reading:\n"
+                   << "   quaternion = " << boost::io::formatob( q2, naryio ) << '\n'
+                   << "   octonion   = " << boost::io::formatob( o2, naryio ) << '\n';
+
+         /* [output]:
+            before reading:
+               quaternion = ( 0, 0, 0, 0 )
+               octonion   = ( 0, 0, 0, 0, 0, 0, 0, 0 )
+            after reading:
+               quaternion = ( 0.12, 2.75, 3.3345, 70.2 )
+               octonion   = ( 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8 )
+         */
+      }
+#  endif
 
    return( 0 );
 }
