@@ -1181,10 +1181,6 @@ rule subvariant-target
   {
     gDECLARED_TARGETS += $(TARGET_GRIST) ;
 
-    # headers should be identified specific to the target, since search paths
-    # may differ for different subvariants. The same header name or relative
-    # path may refer to different files.
-    local HDRGRIST = $(TARGET_GRIST) ;
     local target-type = $(gTARGET_TYPE($(<))) ;
     
     # LOCATE_TARGET affects where built targets are generated. We move it
@@ -1209,6 +1205,11 @@ rule subvariant-target
     
     include-tools $(3[1]) ;
 
+    # headers should be identified specific to the target, since search paths
+    # may differ for different subvariants. The same header name or relative
+    # path may refer to different files.
+    local HDRGRIST = [ join $(SOURCE_GRIST) $(HDRS) $(STDHDRS) : "#" ] ;
+    
     # transfer target variables to the target file.
     set-target-variables $(target-files) ;
 
