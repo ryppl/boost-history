@@ -31,7 +31,7 @@ namespace boost { namespace numerics {
     bool is_symmetric (const M &m) {
         typedef typename M::size_type size_type;
 
-        if (m.size1 () != m.size2 ()) 
+        if (m.size1 () != m.size2 ())
             return false;
         size_type size = common (m.size1 (), m.size2 ());
         for (size_type i = 0; i < size; ++ i) {
@@ -40,6 +40,7 @@ namespace boost { namespace numerics {
                     return false;
             }
         }
+        return true;
     }
 
     // Array based symmetric matrix class 
@@ -80,7 +81,11 @@ namespace boost { namespace numerics {
             size_ (0), 
             data_ (0) {}
         NUMERICS_INLINE
-        symmetric_matrix (size_type size1, size_type size2 = size1):
+        symmetric_matrix (size_type size):
+            size_ (common (size, size)),
+            data_ (functor1_type::packed_size (size, size)) {}
+        NUMERICS_INLINE
+        symmetric_matrix (size_type size1, size_type size2):
             size_ (common (size1, size2)),
             data_ (functor1_type::packed_size (size1, size2)) {}
         NUMERICS_INLINE
@@ -119,7 +124,12 @@ namespace boost { namespace numerics {
 
         // Resizing
         NUMERICS_INLINE
-        void resize (size_type size1, size_type size2 = size1) {
+        void resize (size_type size) {
+            size_ = common (size, size);
+            data ().resize (functor1_type::packed_size (size, size));
+        }
+        NUMERICS_INLINE
+        void resize (size_type size1, size_type size2) {
             size_ = common (size1, size2);
             data ().resize (functor1_type::packed_size (size1, size2));
         }
@@ -948,7 +958,7 @@ namespace boost { namespace numerics {
         typedef const matrix_range<const_self_type> const_matrix_range_type;
         typedef matrix_range<self_type> matrix_range_type;
 #endif
-        typedef packed_tag storage_category;
+        typedef typename proxy_traits<typename M::storage_category>::storage_category storage_category;
         typedef typename F::packed_category packed_category;
         typedef typename M::orientation_category orientation_category;
 

@@ -94,10 +94,9 @@ A&gt; &gt;</code> </p>
         that holds zero rows of zero elements.</td>
     </tr>
     <tr>
-        <td><code>hermitean_matrix (size_type size1, size_type
-        size2 = size1)</code></td>
+        <td><code>hermitean_matrix (size_type size)</code></td>
         <td>Allocates an uninitialized <code>hermitean_matrix</code>
-        that holds <code>size1</code> rows of <code>size2</code>
+        that holds <code>size</code> rows of <code>size</code>
         elements.</td>
     </tr>
     <tr>
@@ -112,10 +111,9 @@ A&gt; &gt;</code> </p>
         <td>The extended copy constructor.</td>
     </tr>
     <tr>
-        <td><code>void resize (size_type size1, size_type size2 =
-        size1)</code></td>
-        <td>Reallocates a <code>hermitean_matrix </code>to hold <code>size1</code>
-        rows of <code>size2</code> elements. The content of the <code>hermitean_matrix</code>
+        <td><code>void resize (size_type size)</code></td>
+        <td>Reallocates a <code>hermitean_matrix </code>to hold <code>size</code>
+        rows of <code>size</code> elements. The content of the <code>hermitean_matrix</code>
         is not preserved.</td>
     </tr>
     <tr>
@@ -339,7 +337,8 @@ A&gt; &gt;</code> </p>
 
         // Construction and destruction
         hermitean_matrix ();
-        hermitean_matrix (size_type size1, size_type size2 = size1);
+        hermitean_matrix (size_type size);
+        hermitean_matrix (size_type size1, size_type size2);
         hermitean_matrix (const hermitean_matrix &amp;m);
         template&lt;class AE&gt;
         hermitean_matrix (const matrix_expression&lt;AE&gt; &amp;ae);
@@ -351,7 +350,8 @@ A&gt; &gt;</code> </p>
         array_type &amp;data ();
 
         // Resizing
-        void resize (size_type size1, size_type size2 = size1);
+        void resize (size_type size);
+        void resize (size_type size1, size_type size2);
 
         // Element access
         value_type operator () (size_type i, size_type j) const;
@@ -896,7 +896,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         typedef hermitean_adaptor&lt;M, F&gt; self_type;
         typedef const matrix_const_reference&lt;const_self_type&gt; const_closure_type;
         typedef matrix_reference&lt;self_type&gt; closure_type;
-        typedef packed_tag storage_category;
+        typedef typename proxy_traits&lt;typename M::storage_category&gt;::storage_category storage_category;
         typedef typename F::packed_category packed_category;
         typedef typename M::orientation_category orientation_category;
 

@@ -993,7 +993,7 @@ namespace boost { namespace numerics {
     template<class M>
     class banded_adaptor:
         public matrix_expression<banded_adaptor<M> > {
-    public:      
+    public:
         typedef const M const_matrix_type;
         typedef M matrix_type;
         typedef typename M::size_type size_type;
@@ -1015,7 +1015,7 @@ namespace boost { namespace numerics {
         typedef const matrix_range<const_self_type> const_matrix_range_type;
         typedef matrix_range<self_type> matrix_range_type;
 #endif
-        typedef packed_tag storage_category;
+        typedef typename proxy_traits<typename M::storage_category>::storage_category storage_category;
         typedef typename M::orientation_category orientation_category;
 
         // Construction and destruction

@@ -271,7 +271,7 @@ namespace boost { namespace numerics {
         typedef const matrix_range<const_self_type> const_matrix_range_type;
         typedef matrix_range<self_type> matrix_range_type;
 #endif
-        typedef packed_tag storage_category;
+        typedef packed_proxy_tag storage_category;
         typedef typename F1::packed_category packed_category;
         typedef typename F2::orientation_category orientation_category;
 
@@ -1131,9 +1131,9 @@ namespace boost { namespace numerics {
 
     // Triangular matrix adaptor class
     template<class M, class F>
-    class triangular_adaptor: 
+    class triangular_adaptor:
         public matrix_expression<triangular_adaptor<M, F> > {
-    public:      
+    public:
         typedef const M const_matrix_type;
         typedef M matrix_type;
         typedef F functor_type;
@@ -1156,7 +1156,7 @@ namespace boost { namespace numerics {
         typedef const matrix_range<const_self_type> const_matrix_range_type;
         typedef matrix_range<self_type> matrix_range_type;
 #endif
-        typedef packed_tag storage_category;
+        typedef typename proxy_traits<typename M::storage_category>::storage_category storage_category;
         typedef typename F::packed_category packed_category;
         typedef typename M::orientation_category orientation_category;
 

@@ -900,7 +900,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         typedef banded_adaptor&lt;M&gt; self_type;
         typedef const matrix_const_reference&lt;const_self_type&gt; const_closure_type;
         typedef matrix_reference&lt;self_type&gt; closure_type;
-        typedef packed_tag storage_category;
+        typedef typename proxy_traits&lt;typename M::storage_category&gt;::storage_category storage_category;
         typedef typename M::orientation_category orientation_category;
 
         // Construction and destruction
