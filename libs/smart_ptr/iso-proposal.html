@@ -1,6 +1,7 @@
 <html>
 	<head>
 		<title>A Proposal to Add General Purpose Smart Pointers to the Standard Library</title>
+		<meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5">
 		<meta http-equiv="Content-Language" content="en-us">
 		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 	</head>
@@ -115,6 +116,54 @@
 				Reflects existing practice with a decade of refinement and use. [<A href="#Ellis94">Ellis94</A>]
 			</li>
 		</ul>
+		<h3><a name="Implementation-difficulty">D. Implementation difficulty</a></h3>
+		<p>The Boost developers found a shared-ownership smart pointer exceedingly 
+			difficult to implement correctly. Others have made the same observation. For 
+			example, Scott Meyers [<A href="#Meyers01">Meyers01</A>] says:</p>
+		<blockquote>
+			<p>The STL itself contains no reference-counting smart pointer, and writing a good 
+				one - one that works correctly all the time - is tricky enough that you don't 
+				want to do it unless you have to. I published the code for a reference-counting 
+				smart pointer in More Effective C++ in 1996, and despite basing it on 
+				established smart pointer implementations and submitting it to extensive 
+				pre-publication reviewing by experienced developers, a small parade of valid 
+				bug reports has trickled in for years. The number of subtle ways in which 
+				reference-counting smart pointers can fail is remarkable.</p>
+		</blockquote>
+		<h4>Example 1</h4>
+		<blockquote><pre>shared_ptr&lt;X&gt; p(new X);</pre>
+		</blockquote>
+		<p>It is very common for even expert implementations to leak the X object when the 
+			constructor throws an exception.</p>
+		<h4>Example 2</h4>
+		<blockquote><pre>p.reset(new X);</pre>
+		</blockquote>
+		<p>A variation of the above example. The behavior when reset throws should be to 
+			delete the X object, and have no other effects, i.e. p must be left unchanged.</p>
+		<h4>Example 3</h4>
+		<p>Taken from Boost's shared_ptr_test.cpp:</p>
+		<blockquote><pre>struct X
+{
+    boost::shared_ptr&lt;X&gt; next;
+};
+
+void test()
+{
+    boost::shared_ptr&lt;X&gt; p(new X);
+    p-&gt;next = boost::shared_ptr&lt;X&gt;(new X);
+    p = p-&gt;next;
+    BOOST_TEST(!p-&gt;next);
+}</pre>
+		</blockquote>
+		<p>Again, it is surprising how many experts get this wrong.</p>
+		<P><EM>weak_ptr</EM> represents an additional source of difficulty. Its stored 
+			pointer can be invalidated literally at any time; even in strictly single 
+			threaded and synchronous programs it is possible for the code to call a library 
+			that calls back a routine invalidating&nbsp;a <EM>weak_ptr</EM>. As the value 
+			of a pointer referring to deallocated storage is indeterminate (5.3.5/4), the <EM>weak_ptr</EM>
+			implementation must take care not to access the stored pointer value after the <EM>weak_ptr</EM>
+			has <EM>expired</EM>. Furthermore, the <EM>weak_ptr</EM> interface should 
+			protect users from accidentally accessing a pointer to deallocated storage.</P>
 		<h2>II. Impact On the Standard</h2>
 		<p>This proposal is almost a pure library extension. It proposes changes to an 
 			existing header, <code>&lt;memory&gt;</code>, but it does not require changes 
@@ -165,7 +214,7 @@
 			to indicate that <STRONG>p</STRONG> and <STRONG>q</STRONG> have both originated 
 			from the same smart pointer, and <EM>own</EM> the same object. "<EM>Shares 
 				ownerwhip with</EM>" is an equivalence relation. It is reflexive (<STRONG>p</STRONG>
-			<EM>shares ownership with</EM> <STRONG>p</STRONG>), comutative (if <STRONG>p</STRONG>
+			<EM>shares ownership with</EM> <STRONG>p</STRONG>), commutative (if <STRONG>p</STRONG>
 			<EM>shares ownership with</EM> <STRONG>q</STRONG>, <STRONG>q</STRONG> also <EM>shares 
 				ownership with</EM> <STRONG>p</STRONG>), and transitive (if <STRONG>p</STRONG>
 			<EM>shares ownership with</EM> <STRONG>q</STRONG> and <STRONG>q</STRONG> <EM>shares 
@@ -175,6 +224,8 @@
 			in <STRONG>p</STRONG>'s equivalence class can be obtained using <code>p.use_count()</code>. 
 			The last <EM>shared_ptr</EM> instance in a given equivalence class is 
 			responsible for destroying the <EM>owned</EM> object.</p>
+		<P>In a typical counted implementation, two smart pointers <EM>share ownership</EM> 
+			when they share the same reference count.</P>
 		<h4>5. The "Empty Pointer" Concept</h4>
 		<p>Default-constructed smart pointers, and smart pointer instances that have been <code>
 				reset()</code>, are called <EM>empty</EM> in the proposed text. It is 
@@ -188,6 +239,20 @@
 			not throw, these operations are allowed to skip this allocation, and produce <EM>empty</EM>
 			smart pointers that do not track ownership, and do not fully support 
 			ownership-related queries such as <code>use_count()</code>.</P>
+		<P>One reasonable implementation of the <EM>empty</EM> pointer concept is to reuse 
+			one or more statically allocated reference counts for default-constructed 
+			pointer instances. Under this model, <EM>empty</EM> pointers do represent one 
+			or more equivalence classes under the ownership equivalence relation described 
+			in the previous section, and <code>use_count()</code> returns "realistic" 
+			values that increase and decrease as additional <EM>empty</EM> pointers are 
+			created or destroyed.</P>
+		<P>Another approach, used in the Boost implementation, is to not allocate a 
+			reference count at all for <EM>empty</EM> pointers, using a <code>NULL</code> pointer 
+			to count as an "<EM>empty</EM> mark". Under this scheme <EM>empty</EM> pointers 
+			have a constant <code>use_count()</code> (zero in the Boost implementation.)</P>
+		<P>The specification has been carefully balanced to not disallow either 
+			implementation, while at the same time offering as useful postconditions and 
+			behavior as possible under those constraints.</P>
 		<h3>B. shared_ptr</h3>
 		<h4>1. Pointer Constructor</h4>
 		<p>The <EM>shared_ptr</EM> constructor that takes a raw pointer is templated on the 
@@ -209,6 +274,7 @@
 		<p>Implementations are allowed to throw exceptions other than <code>std::bad_alloc</code>
 			since on some platforms they might need to create a mutex to synchronize the 
 			access to the ownership infrastructure.</p>
+		<P>[unprotected... [Colvin94]... debug hooks...]</P>
 		<h4>2. Deleter Constructor</h4>
 		<p>...</p>
 		<h4>3. weak_ptr Constructor</h4>
@@ -232,7 +298,7 @@
 			achieve this, the constructor takes the source by a non-const reference; pass 
 			by value would be equivalent to using <code>release()</code>.</p>
 		<P>
-			If the "rvalue reference" proposed in [<A href="#Hinnant02">Hinnant02</A> ] is 
+			If the "rvalue reference" proposed in [<A href="#Hinnant02">Hinnant02</A>] is 
 			accepted, the constructor can take advantage of it in order to be able to take 
 			an <EM>auto_ptr</EM> rvalue as an argument.</P>
 		<h4>5. Assignment and <code>reset</code></h4>
@@ -320,7 +386,11 @@
 		<p><b>Postconditions:</b> <code>what()</code> returns <code>"std::bad_weak_ptr"</code>.</p>
 		<p><b>Throws:</b> nothing.</p>
 		<h3>C. Class template <code>shared_ptr</code></h3>
-		<p>The class template <code>shared_ptr</code>...</p>
+		<p>The <code>shared_ptr</code> class template stores a pointer, usually obtained 
+			via <code>new</code>. <code>shared_ptr</code> implements semantics of shared 
+			ownership; the last remaining owner of the pointer is responsible for 
+			destroying the object, or otherwise releasing the resources associated with the 
+			stored pointer.</p>
 		<pre>    namespace std {
       template&lt;class T&gt; class shared_ptr {
       public:
@@ -387,9 +457,18 @@
         D * get_deleter(shared_ptr&lt;T&gt; const &amp; p);
     }
 </pre>
-		<p><code>shared_ptr</code> is <code>CopyConstructible</code> and <code>Assignable</code>, 
-			allowing its use in standard containers, and convertible to <code>bool</code>, 
-			allowing its use in boolean expressions and declarations in conditions.</p>
+		<p><code>shared_ptr</code> is <code>CopyConstructible</code>, <code>Assignable</code>, 
+			and <code>LessThanComparable</code>, allowing its use in standard containers. <code>
+				shared_ptr</code> is convertible to <code>bool</code>, allowing its use in 
+			boolean expressions and declarations in conditions.</p>
+		<p>[<em>Example:</em></p>
+		<pre>
+    if(shared_ptr&lt;X&gt; px = dynamic_pointer_cast&lt;X&gt;(py))
+    {
+      // do something with px
+    }
+</pre>
+		<p><em>—end example.</em>]</p>
 		<h4><code>shared_ptr</code> constructors</h4>
 		<pre>    shared_ptr();
 </pre>
@@ -768,49 +847,7 @@
 		</p>
 		<p><b>Postconditions:</b> <code>r.get() == this</code>.
 		</p>
-		<h2>V. Code Examples</h2>
-		<h3><a name="Implementation-difficulty">Implementation difficulty</a></h3>
-		<p>The Boost developers found a shared-ownership smart pointer exceedingly 
-			difficult to implement correctly. Others have made the same observation. For 
-			example, Scott Meyers [<A href="#Meyers01">Meyers01</A>] says:</p>
-		<blockquote>
-			<p>The STL itself contains no reference-counting smart pointer, and writing a good 
-				one - one that works correctly all the time - is tricky enough that you don't 
-				want to do it unless you have to. I published the code for a reference-counting 
-				smart pointer in More Effective C++ in 1996, and despite basing it on 
-				established smart pointer implementations and submitting it to extensive 
-				pre-publication reviewing by experienced developers, a small parade of valid 
-				bug reports has trickled in for years. The number of subtle ways in which 
-				reference-counting smart pointers can fail is remarkable.</p>
-		</blockquote>
-		<h4>Example 1</h4>
-		<blockquote><pre>shared_ptr&lt;X&gt; p(new X);</pre>
-		</blockquote>
-		<p>It is very common for even expert implementations to leak the X object when the 
-			constructor throws an exception.</p>
-		<h4>Example 2</h4>
-		<blockquote><pre>p.reset(new X);</pre>
-		</blockquote>
-		<p>A variation of the above example. The behavior when reset throws should be to 
-			delete the X object, and have no other effects, i.e. p must be left unchanged.</p>
-		<h4>Example 3</h4>
-		<p>Taken from Boost's shared_ptr_test.cpp:</p>
-		<blockquote><pre>struct X
-{
-    boost::shared_ptr&lt;X&gt; next;
-};
-
-void test()
-{
-    boost::shared_ptr&lt;X&gt; p(new X);
-    p-&gt;next = boost::shared_ptr&lt;X&gt;(new X);
-    p = p-&gt;next;
-    BOOST_TEST(!p-&gt;next);
-}</pre>
-		</blockquote>
-		<p>Again, it is surprising how many experts get this wrong.</p>
-		<h2>VI. Acknowledgements</h2>
-		<h2>VII. References</h2>
+		<h2>V. References</h2>
 		<p>[<a name="Boehm02">Boehm02</a>] Hans-J. Boehm, <i>Destructors, Finalizers, and 
 				Synchronization</i>, HP Labs Technical Report HPL-2002-335, December, 2002. 
 			Available online at <a href="http://www.hpl.hp.com/techreports/2002/HPL-2002-335.html">
@@ -834,5 +871,6 @@ void test()
 		<p>[<a name="Meyers01">Meyers01</a>] Scott Meyers, <i><a href="http://www.awl.com/cseng/titles/0-201-74962-9/">
 					Effective STL</a></i>, page 39, Addison-Wesley, 2001, ISBN 
 			0-201-74962-9.</p>
+		<P>&nbsp;</P>
 	</body>
 </html>
