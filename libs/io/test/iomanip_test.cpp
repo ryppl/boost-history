@@ -1,13 +1,13 @@
 //  Boost iomanip_test.cpp test file  ----------------------------------------//
 
-//  Copyright 2003 Daryle Walker.  Use, modification, and distribution are
+//  Copyright 2003-2004 Daryle Walker.  Use, modification, and distribution are
 //  subject to the Boost Software License, Version 1.0.  (See accompanying file
 //  LICENSE_1_0.txt or a copy at <http://www.boost.org/LICENSE_1_0.txt>.)
 
 //  See <http://www.boost.org/libs/io/> for the library's home page.
 
 //  Revision History
-//   05 Dec 2003  Initial version (Daryle Walker)
+//   22 Jan 2004  Initial version (Daryle Walker)
 
 #include <boost/io/iomanip.hpp>      // for boost::io::newl, etc.
 #include <boost/test/unit_test.hpp>  // for main, BOOST_CHECK_EQUAL, etc.
@@ -211,6 +211,72 @@ multi_skipl_unit_test
     BOOST_CHECK_EQUAL( 1ul, scsb.sync_count() );
 }
 
+// Unit test for basic_ios_form
+void
+ios_form_unit_test
+(
+)
+{
+    using boost::io::ios_form;
+
+    std::ostringstream  oss;
+    int const           v1 = 5;
+
+    // Quick test
+    oss << v1;
+    BOOST_CHECK_EQUAL( "5", oss.str() );
+    oss.str( "" );
+
+    // One non-flag aspect
+    ios_form  f1;
+
+    BOOST_CHECK( !f1.override_width() );
+    f1.width( 4 );
+    BOOST_CHECK( f1.override_width() );
+    BOOST_CHECK_EQUAL( 4, f1.width() );
+    oss << f1( v1 );
+    BOOST_CHECK_EQUAL( "   5", oss.str() );
+    oss.str( "" );
+
+    // Continued new non-flag aspect
+    BOOST_CHECK( !f1.override_fill() );
+    f1.fill( '*' );
+    BOOST_CHECK( f1.override_width() );
+    BOOST_CHECK( f1.override_fill() );
+    BOOST_CHECK_EQUAL( 4, f1.width() );
+    BOOST_CHECK_EQUAL( '*', f1.fill() );
+    oss << f1( v1 );
+    BOOST_CHECK_EQUAL( "***5", oss.str() );
+    oss.str( "" );
+
+    // Continued with flag aspect
+    BOOST_CHECK( !f1.override_flags() );
+    BOOST_CHECK( !f1.override_showpos() );
+    f1.showpos();
+    BOOST_CHECK( f1.override_fill() );
+    BOOST_CHECK( f1.override_flags() );
+    BOOST_CHECK( f1.override_showpos() );
+    BOOST_CHECK_EQUAL( '*', f1.fill() );
+    BOOST_CHECK_EQUAL( std::ios_base::showpos, f1.overridden_flags() );
+    BOOST_CHECK_EQUAL( std::ios_base::showpos, f1.flags() & f1.overridden_flags() );
+    oss << f1( v1 );
+    BOOST_CHECK_EQUAL( "**+5", oss.str() );
+    oss.str( "" );
+
+    // Continued with a ranged-flag aspect
+    BOOST_CHECK( f1.override_flags() );
+    BOOST_CHECK( !f1.override_adjustfield() );
+    f1.internal();
+    BOOST_CHECK( f1.override_flags() );
+    BOOST_CHECK( f1.override_showpos() );
+    BOOST_CHECK( f1.override_adjustfield() );
+    BOOST_CHECK_EQUAL( std::ios_base::showpos | std::ios_base::adjustfield, f1.overridden_flags() );
+    BOOST_CHECK_EQUAL( std::ios_base::showpos | std::ios_base::internal, f1.flags() & f1.overridden_flags() );
+    oss << f1( v1 );
+    BOOST_CHECK_EQUAL( "+**5", oss.str() );
+    oss.str( "" );
+}
+
 
 // Unit test program
 boost::unit_test_framework::test_suite *
@@ -228,6 +294,7 @@ init_unit_test_suite
     test->add( BOOST_TEST_CASE(resetios_unit_test) );
     test->add( BOOST_TEST_CASE(multi_newl_unit_test) );
     test->add( BOOST_TEST_CASE(multi_skipl_unit_test) );
+    test->add( BOOST_TEST_CASE(ios_form_unit_test) );
 
     return test;
 }

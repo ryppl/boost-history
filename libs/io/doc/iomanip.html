@@ -27,6 +27,14 @@ function templates and function-acting [template] classes).</p>
 	<li><a href="#newl">Non-flushing Line-break Output Manipulator</a></li>
 	<li><a href="#skipl">Line-skipping Input Manipulator</a></li>
 	<li><a href="#resetios">Stream Formatting State-reset Manipulator</a></li>
+	<li><a href="#ios_form">Form-based Manipulator</a>
+		<ul>
+			<li><a href="#ios_form_types">Member Types &amp; Templates</a></li>
+			<li><a href="#ios_form_ctr">Constructors</a></li>
+			<li><a href="#ios_form_observe">Observer Member Functions</a></li>
+			<li><a href="#ios_form_mutate">Mutating Member Functions</a></li>
+			<li><a href="#ios_form_ops">Operators</a></li>
+		</ul></li>
 	<li><a href="#refer">References</a></li>
 	<li><a href="#credits">Credits</a>
 		<ul>
@@ -44,7 +52,7 @@ supplies some of them.</p>
 <h2><a name="header">Header Synopsis</a></h2>
 
 <blockquote><pre>
-#include &lt;iosfwd&gt;  <i>// for std::basic_ostream, std::basic_istream (declarations)</i>
+#include &lt;iosfwd&gt;  <i>// for std::basic_ostream, std::basic_istream, and std::char_traits (declarations)</i>
 #include &lt;ios&gt;     <i>// for std::streamsize and std::basic_ios</i>
 
 namespace boost
@@ -59,6 +67,12 @@ template &lt; typename Ch = char &gt;
 
 class multi_newer;
 class multi_skipper;
+
+template &lt; typename Ch, class Tr = std::char_traits&lt;Ch&gt; &gt;
+    class basic_ios_form;
+
+typedef basic_ios_form&lt;char&gt;      ios_form;
+typedef basic_ios_form&lt;wchar_t&gt;  wios_form;
 
 multi_newer  multi_newl( std::streamsize count, bool final_flush = false );
 
@@ -345,6 +359,303 @@ std::ios_base::skipws | std::ios_base::dec ) &amp;&amp; <var>s</var>.width()
 <p><strong>Rationale:</strong> a quick method to reset all the formatting
 attributes of a stream, especially after many attribute changes</p>
 
+<h2><a name="ios_form">Form-based Manipulator</a></h2>
+
+<p>Objects from a <code>boost::io::basic_ios_form</code> template class represent manipulators that determine what and how to affect the standard I/O attributes via repeated calls to its member functions, then can change how a single insertion or extraction call happens for an streamable object.  Said manipulators can be temporarily created (in-line, without a name) or created conventionally in advance for multiple insertions/extractions.</p>
+
+<blockquote><pre>
+#include &lt;ios&gt;  <i>// for std::streamsize, std::ios_base, and std::basic_ios</i>
+
+template &lt; typename Ch, class Tr &gt;
+class boost::io::basic_ios_form
+{
+    template &lt; typename Obj &gt;  struct binder_out;
+    template &lt; typename Obj &gt;  struct binder_inout;
+
+public:
+    // Template arguments
+    typedef Ch  char_type;
+    typedef Tr  traits_type;
+
+    // Lifetime management (use automatic destructor and copy constructor)
+              basic_ios_form();
+    explicit  basic_ios_form( std::basic_ios&lt;Ch, Tr&gt; const &amp;i );
+
+    // Accessors
+    bool  override_fill() const;
+    bool  override_precision() const;
+    bool  override_width() const;
+
+    std::ios_base::fmtflags  overridden_flags() const;
+    bool                     override_flags() const;
+
+    bool  override_adjustfield() const;
+    bool  override_basefield() const;
+    bool  override_floatfield() const;
+
+    bool  override_boolalpha() const;
+    bool  override_showbase() const;
+    bool  override_showpoint() const;
+    bool  override_showpos() const;
+    bool  override_skipws() const;
+    bool  override_unitbuf() const;
+    bool  override_uppercase() const;
+
+    char_type                fill() const;
+    std::streamsize          precision() const;
+    std::streamsize          width() const;
+    std::ios_base::fmtflags  flags() const;
+
+    // Mutators
+    basic_ios_form &amp;  fill( char_type const &amp;c );
+
+    basic_ios_form &amp;  precision( std::streamsize s );
+    basic_ios_form &amp;  width( std::streamsize s );
+
+    basic_ios_form &amp;    flag( std::ios_base::fmtflags f );
+    basic_ios_form &amp;  unflag( std::ios_base::fmtflags f );
+    basic_ios_form &amp;    flags( std::ios_base::fmtflags f, std::ios_base::fmtflags mask );
+
+    basic_ios_form &amp;  boolalpha();
+    basic_ios_form &amp;  noboolalpha();
+
+    basic_ios_form &amp;  showbase();
+    basic_ios_form &amp;  noshowbase();
+
+    basic_ios_form &amp;  showpoint();
+    basic_ios_form &amp;  noshowpoint();
+
+    basic_ios_form &amp;  showpos();
+    basic_ios_form &amp;  noshowpos();
+
+    basic_ios_form &amp;  skipws();
+    basic_ios_form &amp;  noskipws();
+
+    basic_ios_form &amp;  unitbuf();
+    basic_ios_form &amp;  nounitbuf();
+
+    basic_ios_form &amp;  uppercase();
+    basic_ios_form &amp;  nouppercase();
+
+    basic_ios_form &amp;  internal();
+    basic_ios_form &amp;  left();
+    basic_ios_form &amp;  right();
+
+    basic_ios_form &amp;  dec();
+    basic_ios_form &amp;  hex();
+    basic_ios_form &amp;  oct();
+
+    basic_ios_form &amp;  fixed();
+    basic_ios_form &amp;  scientific();
+
+    // Operators
+    template &lt; typename Obj &gt;
+    binder_out&lt;Obj&gt;  operator ()( Obj const &amp;o ) const;
+
+    template &lt; typename Obj &gt;
+    binder_inout&lt;Obj&gt;  operator ()( Obj &amp;o ) const;
+
+};
+</pre></blockquote>
+
+<p>The template parameters <var>Ch</var> and <var>Tr</var> represent the character and character traits types for the streams that can use this manipulator type.  The <code>char_type</code> and <code>traits_type</code> aliases reveals those types when the parameters of the manipulator type are hidden by a <code>typedef</code>.</p>
+
+<h3><a name="ios_form_types">Member Types &amp; Templates</a></h3>
+
+<dl>
+	<dt><code>char_type</code>
+	<dd>a synonym for the manipulator's character type
+
+	<dt><code>traits_type</code>
+	<dd>a synonym for the manipulator's character-traits type
+
+	<dt><code>template &lt; typename Obj &gt;  struct binder_out;</code>
+	<dd>type of temporary objects returned when using this manipulator type with a constant object; (output) streaming this object results in streaming the constant object with the attributes given by this manipulator type
+
+	<dt><code>template &lt; typename Obj &gt;  struct binder_inout;</code>
+	<dd>type of temporary objects returned when using this manipulator type with a mutable object; streaming this object results in streaming the mutable object with the attributes given by this manipulator type
+</dl>
+
+<h3><a name="ios_form_ctr">Constructors</a></h3>
+
+<p><strong>Note:</strong> the automatically-defined destructor and copy constructor are used.</p>
+
+<dl>
+	<dt><code>basic_ios_form();</code>
+	<dd>
+		<strong>Effects:</strong> initializes all the usage flags to FALSE (<i>i.e.</i> no attributes will be overridden); sets the saved attributes to arbitrary values
+
+	<dt><code>explicit  basic_ios_form( std::basic_ios&lt;Ch, Tr&gt; const &amp;i );</code>
+	<dd>
+		<strong>Effects:</strong> initializes all the usage flags to TRUE (<i>i.e.</i> all attributes will be overridden); sets the saved attributes to copies of the attributes in stream <var>i</var>
+</dl>
+
+<h3><a name="ios_form_observe">Observer Member Functions</a></h3>
+
+<dl>
+	<dt><code>bool  override_fill() const;</code><br>
+	    <code>bool  override_precision() const;</code><br>
+	    <code>bool  override_width() const;</code><br>
+	    <code>bool  override_flags() const;</code>
+	<dd>
+		<strong>Returns:</strong> whether or not attribute <var>XX</var> of <code>override_<var>XX</var></code> has been overridden in this manipulator object<br>
+		<strong>Rationale:</strong> status indicator of which attribute changes will be applied
+
+	<dt><code>std::ios_base::fmtflags  overridden_flags() const;</code>
+	<dd>
+		<strong>Returns:</strong> which format flags have been overridden; returns the equivalent of zero if <code>this-&gt;override_flags()</code> returns FALSE<br>
+		<strong>Rationale:</strong> status indicator of which specific format-flag attribute changes will be applied
+
+	<dt><code>bool  override_adjustfield() const;</code><br>
+	    <code>bool  override_basefield() const;</code><br>
+	    <code>bool  override_floatfield() const;</code><br>
+	    <code>bool  override_boolalpha() const;</code><br>
+	    <code>bool  override_showbase() const;</code><br>
+	    <code>bool  override_showpoint() const;</code><br>
+	    <code>bool  override_showpos() const;</code><br>
+	    <code>bool  override_skipws() const;</code><br>
+	    <code>bool  override_unitbuf() const;</code><br>
+	    <code>bool  override_uppercase() const;</code>
+	<dd>
+		<strong>Returns:</strong> for attribute <var>XX</var> of member function <code>override_<var>XX</var></code>, <code>0 != ( std::ios_base::<var>XX</var> &amp; this-&gt;overridden_flags() )</code><br>
+		<strong>Rationale:</strong> status indicator of which subset of format-flag attribute changes will be applied
+
+	<dt><code>char_type                fill() const;</code><br>
+	    <code>std::streamsize          precision() const;</code><br>
+	    <code>std::streamsize          width() const;</code><br>
+	    <code>std::ios_base::fmtflags  flags() const;</code>
+	<dd>
+		<strong>Preconditions:</strong> for attribute <var>XX</var> of member function <code><var>XX</var></code>, <code>this-&gt;override_<var>XX</var>()</code> must return TRUE<br>
+		<strong>Returns:</strong> the attribute value that will be applied to any streams using this manipulator object (for <code>flags</code>, only the flags masked by <code>this-&gt;overridden_flags()</code> will be changed in any applied stream)<br>
+		<strong>Rationale:</strong> values of the actual changes to be applied
+</dl>
+
+<h3><a name="ios_form_mutate">Mutating Member Functions</a></h3>
+
+<dl>
+	<dt><code>basic_ios_form &amp;  fill( char_type const &amp;c );</code><br>
+	    <code>basic_ios_form &amp;  precision( std::streamsize s );</code><br>
+	    <code>basic_ios_form &amp;  width( std::streamsize s );</code>
+	<dd>
+		<strong>Effects:</strong> for attribute <var>XX</var> of member function <code><var>XX</var></code>, changes that attribute to the value of the given argument <var>c</var> or <var>s</var> (for <code>fill</code>, the copying routine from the character-traits type is used)<br>
+		<strong>Returns:</strong> <code>*this</code><br>
+		<strong>Postconditions:</strong> <code>this-&gt;override_<var>XX</var>()</code> becomes TRUE<br>
+		<strong>Rationale:</strong> setting the changes to be applied
+
+	<dt><code>basic_ios_form &amp;  flag( std::ios_base::fmtflags f );</code>
+	<dd>
+		<strong>Effects:</strong> adds the flags selected in <var>f</var> to the replacement flag list in the active state and to the mask of overridden flags<br>
+		<strong>Returns:</strong> <code>*this</code><br>
+		<strong>Postconditions:</strong> <code>this-&gt;override_flags()</code> becomes TRUE; <code>( <var>f</var> &amp; this-&gt;overridden_flags() )</code> and <code>( <var>f</var> &amp; this-&gt;flags() )</code> become <var>f</var><br>
+		<strong>Rationale:</strong> setting the changes of specific active format flags to be applied
+
+	<dt><code>basic_ios_form &amp;  unflag( std::ios_base::fmtflags f );</code>
+	<dd>
+		<strong>Effects:</strong> adds the flags selected in <var>f</var> to the replacement flag list in the inactive state and to the mask of overridden flags<br>
+		<strong>Returns:</strong> <code>*this</code><br>
+		<strong>Postconditions:</strong> <code>this-&gt;override_flags()</code> becomes TRUE; <code>( <var>f</var> &amp; this-&gt;overridden_flags() )</code> becomes <var>f</var>; <code>( <var>f</var> &amp; this-&gt;flags() )</code> becomes zero<br>
+		<strong>Rationale:</strong> setting the changes of specific inactive format flags to be applied
+
+	<dt><code>basic_ios_form &amp;  flags( std::ios_base::fmtflags f, std::ios_base::fmtflags mask );</code>
+	<dd>
+		<strong>Effects:</strong> adds the flags selected in <var>mask</var> to the replacement flag list in the state given in <var>f</var> (restricted by <var>mask</var>);  adds the flags selected in <var>mask</var> to the mask of overridden flags<br>
+		<strong>Returns:</strong> <code>*this</code><br>
+		<strong>Postconditions:</strong> <code>this-&gt;override_flags()</code> becomes TRUE; <code>( <var>mask</var> &amp; this-&gt;overridden_flags() )</code> becomes <var>mask</var>; <code>( <var>mask</var> &amp; this-&gt;flags() )</code> becomes <code>( <var>f</var> &amp; <var>mask</var> )</code><br>
+		<strong>Rationale:</strong> setting the changes to be applied for a specific set of format flags and values
+
+	<dt><code>basic_ios_form &amp;  boolalpha();</code><br>
+	    <code>basic_ios_form &amp;  showbase();</code><br>
+	    <code>basic_ios_form &amp;  showpoint();</code><br>
+	    <code>basic_ios_form &amp;  showpos();</code><br>
+	    <code>basic_ios_form &amp;  skipws();</code><br>
+	    <code>basic_ios_form &amp;  unitbuf();</code><br>
+	    <code>basic_ios_form &amp;  uppercase();</code>
+	<dd>
+		<strong>Effects:</strong> for attribute <var>XX</var> of member function <code><var>XX</var></code>, adds that format flag to the replacement flag list in the active state and to the mask of overriden flags<br>
+		<strong>Returns:</strong> <code>*this</code><br>
+		<strong>Postconditions:</strong> <code>this-&gt;override_flags()</code> becomes TRUE; <code>( std::ios_base::<var>XX</var> &amp; this-&gt;overridden_flags() )</code> and <code>( std::ios_base::<var>XX</var> &amp; this-&gt;flags() )</code> become <code>std::ios_base::<var>XX</var></code><br>
+		<strong>Rationale:</strong> setting the changes to be applied for a single active format flag
+
+	<dt><code>basic_ios_form &amp;  noboolalpha();</code><br>
+	    <code>basic_ios_form &amp;  noshowbase();</code><br>
+	    <code>basic_ios_form &amp;  noshowpoint();</code><br>
+	    <code>basic_ios_form &amp;  noshowpos();</code><br>
+	    <code>basic_ios_form &amp;  noskipws();</code><br>
+	    <code>basic_ios_form &amp;  nounitbuf();</code><br>
+	    <code>basic_ios_form &amp;  nouppercase();</code>
+	<dd>
+		<strong>Effects:</strong> for attribute <var>XX</var> of member function <code>no<var>XX</var></code>, adds that format flag to the replacement flag list in the inactive state and to the mask of overriden flags<br>
+		<strong>Returns:</strong> <code>*this</code><br>
+		<strong>Postconditions:</strong> <code>this-&gt;override_flags()</code> becomes TRUE; <code>( std::ios_base::<var>XX</var> &amp; this-&gt;overridden_flags() )</code> becomes <code>std::ios_base::<var>XX</var></code>; <code>( std::ios_base::<var>XX</var> &amp; this-&gt;flags() )</code> becomes zero<br>
+		<strong>Rationale:</strong> setting the changes to be applied for a single inactive format flag
+
+	<dt><code>basic_ios_form &amp;  internal();</code><br>
+	    <code>basic_ios_form &amp;  left();</code><br>
+	    <code>basic_ios_form &amp;  right();</code><br>
+	    <code>basic_ios_form &amp;  dec();</code><br>
+	    <code>basic_ios_form &amp;  hex();</code><br>
+	    <code>basic_ios_form &amp;  oct();</code><br>
+	    <code>basic_ios_form &amp;  fixed();</code><br>
+	    <code>basic_ios_form &amp;  scientific();</code>
+	<dd>
+		<strong>Effects:</strong> for attribute <var>XX</var> of member function <code><var>XX</var></code> and matching mask attribute <var>YY</var>, adds the flags selected in <var>YY</var> to the replacement flags list in the state given by <var>XX</var>; adds the flags selected in <var>YY</var> to the mask of overridden flags (for <code>internal</code>, <code>left</code>, and <code>right</code>, <var>YY</var> is <code>adjustfield</code>; for <code>dec</code>, <code>hex</code>, and <code>oct</code>, <var>YY</var> is <code>basefield</code>; and for <code>fixed</code> and <code>scientific</code>, <var>YY</var> is <code>floatfield</code>)<br>
+		<strong>Returns:</strong> <code>*this</code><br>
+		<strong>Postconditions:</strong> <code>this-&gt;override_flags()</code> becomes TRUE; <code>( std::ios_base::<var>YY</var> &amp; this-&gt;overridden_flags() )</code> and <code>( std::ios_base::<var>YY</var> &amp; this-&gt;flags() )</code> become <code>std::ios_base::<var>XX</var></code><br>
+		<strong>Rationale:</strong> setting the changes to be applied for a single state within a group of format flag values
+</dl>
+
+<h3><a name="ios_form_ops">Operators</a></h3>
+
+<p><strong>Note:</strong> the automatically-defined assignment operator is used.</p>
+
+<dl>
+	<dt><code>template &lt; typename Obj &gt;  binder_out&lt;Obj&gt;  operator ()( Obj const &amp;o ) const;</code>
+	<dd>
+		<strong>Returns:</strong> an object <var>x</var>, that contains constant references to <code>*this</code> and <var>o</var>; when <code><var>s</var> &lt;&lt; <var>x</var></code> is applied, such that <var>s</var> is an output stream object, <code><var>s</var> &lt;&lt; <var>o</var></code> will occur, with <var>s</var>'s attributes temporarily set to the ones in <code>*this</code>, in effect only during this streaming call; specifically, if <code>this-&gt;override_flags()</code>, then <code><var>s</var>.flags() == ( (this-&gt;flags() &amp; this-&gt;overridden_flags()) | (<var>old_s_flags</var> &amp; ~this-&gt;overridden_flags()) )</code>, if <code>this-&gt;override_precision()</code>, then <code><var>s</var>.precision() == this-&gt;precision()</code>, if <code>this-&gt;override_width()</code>, then <code><var>s</var>.width() == this-&gt;width()</code>, and if <code>this-&gt;override_fill()</code>, then <code>traits_type::eq( <var>s</var>.fill(), this-&gt;fill() )</code><br>
+		<strong>Rationale:</strong> lets this manipulator actually do its work for output
+
+	<dt><code>template &lt; typename Obj &gt;  binder_inout&lt;Obj&gt;  operator ()( Obj &amp;o ) const;</code>
+	<dd>
+		<strong>Returns:</strong> an object <var>x</var>, that contains a constant reference to <code>*this</code> and a non-constant reference to <var>o</var>; when <code><var>s</var> &lt;&lt; <var>x</var></code> or <code><var>s</var> &gt;&gt; <var>x</var></code> is applied, such that <var>s</var> is a stream object, <code><var>s</var> &lt;&lt; <var>o</var></code> or <code><var>s</var> &gt;&gt; <var>o</var></code> will occur, with <var>s</var>'s attributes temporarily set to the ones in <code>*this</code>, in effect only during this streaming call; specifically, if <code>this-&gt;override_flags()</code>, then <code><var>s</var>.flags() == ( (this-&gt;flags() &amp; this-&gt;overridden_flags()) | (<var>old_s_flags</var> &amp; ~this-&gt;overridden_flags()) )</code>, if <code>this-&gt;override_precision()</code>, then <code><var>s</var>.precision() == this-&gt;precision()</code>, if <code>this-&gt;override_width()</code>, then <code><var>s</var>.width() == this-&gt;width()</code>, and if <code>this-&gt;override_fill()</code>, then <code>traits_type::eq( <var>s</var>.fill(), this-&gt;fill() )</code><br>
+		<strong>Rationale:</strong> lets this manipulator actually do its work with non-constant objects (for input or output)
+</dl>
+
+<blockquote><pre>
+template &lt; typename Ch, class Tr, typename Obj &gt;
+std::basic_ostream&lt;Ch, Tr&gt; &amp;
+boost::io::operator &lt;&lt;( std::basic_ostream&lt;Ch, Tr&gt; &amp;os, boost::io::basic_ios_form&lt;Ch, Tr&gt;::binder_out&lt;Obj&gt; const &amp;b );
+</pre></blockquote>
+
+<p><strong>Effects:</strong> calls <code><var>os</var> &lt;&lt; <var>X</var></code>, where <var>X</var> is the streamable object held in reference by <var>b</var>; the stream <var>os</var> temporarily uses the stream attributes selected by the manipulator object held in reference by <var>b</var></p>
+
+<p><strong>Returns:</strong> <var>os</var></p>
+
+<p><strong>Rationale:</strong> enables <code>basic_ios_form&lt;&gt;</code> objects to be activated by output streaming for constant streamable objects</p>
+
+<blockquote><pre>
+template &lt; typename Ch, class Tr, typename Obj &gt;
+std::basic_ostream&lt;Ch, Tr&gt; &amp;
+boost::io::operator &lt;&lt;( std::basic_ostream&lt;Ch, Tr&gt; &amp;os, boost::io::basic_ios_form&lt;Ch, Tr&gt;::binder_inout&lt;Obj&gt; const &amp;b );
+</pre></blockquote>
+
+<p><strong>Effects:</strong> calls <code><var>os</var> &lt;&lt; <var>X</var></code>, where <var>X</var> is the streamable object held in reference by <var>b</var>; the stream <var>os</var> temporarily uses the stream attributes selected by the manipulator object held in reference by <var>b</var></p>
+
+<p><strong>Returns:</strong> <var>os</var></p>
+
+<p><strong>Rationale:</strong> enables <code>basic_ios_form&lt;&gt;</code> objects to be activated by output streaming for mutable streamable objects</p>
+
+<blockquote><pre>
+template &lt; typename Ch, class Tr, typename Obj &gt;
+std::basic_istream&lt;Ch, Tr&gt; &amp;
+boost::io::operator &gt;&gt;( std::basic_istream&lt;Ch, Tr&gt; &amp;is, boost::io::basic_ios_form&lt;Ch, Tr&gt;::binder_inout&lt;Obj&gt; const &amp;b );
+</pre></blockquote>
+
+<p><strong>Effects:</strong> calls <code><var>is</var> &gt;&gt; <var>X</var></code>, where <var>X</var> is the streamable object held in reference by <var>b</var>; the stream <var>is</var> temporarily uses the stream attributes selected by the manipulator object held in reference by <var>b</var></p>
+
+<p><strong>Returns:</strong> <var>is</var></p>
+
+<p><strong>Rationale:</strong> enables <code>basic_ios_form&lt;&gt;</code> objects to be activated by input streaming for mutable streamable objects</p>
+
 <h2><a name="refer">References</a></h2>
 
 <ul>
@@ -381,7 +692,9 @@ attributes of a stream, especially after many attribute changes</p>
 	<dd>Exercise 27 of Section 21.10 of his <cite>The C++ Programming Language,
 		3<sup>rd</sup> edition</cite> book is the basis of <a
 		href="#resetios"><code>resetios</code></a> (called
-		<code>general</code> in the book).
+		<code>general</code> in the book).  Exercise 20 of the same section
+		of the same book is the inspiration for <a
+		href="#ios_form"><code>basic_ios_form</code></a>
 
 	<dt><a href="../../../people/daryle_walker.html">Daryle Walker</a>
 	<dd>Started the library.  Contributed the initial versions of <a
@@ -392,8 +705,9 @@ attributes of a stream, especially after many attribute changes</p>
 		href="#mskipl"><code>multi_skipl</code></a>, <a
 		href="#mbnewer"><code>multi_basic_newer</code></a>, <a
 		href="#mbskipper"><code>multi_basic_skipper</code></a>, <a
-		href="#mnewer"><code>multi_newer</code></a>, and <a
-		href="#mskipper"><code>multi_skipper</code></a>.  Contributed
+		href="#mnewer"><code>multi_newer</code></a>, <a
+		href="#mskipper"><code>multi_skipper</code></a>, and <a
+		href="#ios_form"><code>basic_ios_form</code></a>.  Contributed
 		<cite><a href="../test/iomanip_test.cpp">iomanip_test.cpp</a></cite>.
 </dl>
 
@@ -406,7 +720,7 @@ attributes of a stream, especially after many attribute changes</p>
 
 <hr>
 
-<p>Revised: 22 January 2004</p>
+<p>Revised: 23 January 2004</p>
 
 <p>Copyright 2003-2004 Daryle Walker.  Use, modification, and distribution
 are subject to the Boost Software License, Version 1.0.  (See accompanying

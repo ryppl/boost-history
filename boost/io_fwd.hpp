@@ -71,6 +71,12 @@ template < typename Ch = char >
 class multi_newer;
 class multi_skipper;
 
+template < typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_ios_form;
+
+typedef basic_ios_form<char>      ios_form;
+typedef basic_ios_form<wchar_t>  wios_form;
+
 // Also has functions and function templates
 
 
