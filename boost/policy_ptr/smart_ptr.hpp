@@ -514,9 +514,9 @@ namespace boost
 
         ~smart_ptr()
         {
-            if (ownership_policy::release(get_impl(*this)))
+            if (!ownership_policy::release(get_impl(*this)))
             {
-                storage_policy::destroy();
+                storage_policy::release();
             }
         }
 
@@ -546,11 +546,10 @@ namespace boost
 
         friend inline void release(this_type& sp, stored_type& p)
         {
-            checking_policy::on_release(storage_policy::storage());
-            p = get_impl_ref(sp);
+            checking_policy::on_release(get_impl(sp));
+            p = get_impl(sp);
             get_impl_ref(sp) = storage_policy::default_value();
-            ownership_policy& op = sp;
-            op = ownership_policy();
+            sp.reset();
         }
 
         friend inline void reset(this_type& sp, stored_type p)
@@ -681,6 +680,9 @@ namespace boost
         scalar_storage(stored_type const& p) : pointee_(p)
         { }
 
+		~scalar_storage()
+		{ boost::checked_delete(pointee_); }
+
         void swap(scalar_storage& rhs)
         { std::swap(pointee_, rhs.pointee_); }
 
@@ -701,10 +703,8 @@ namespace boost
         { return sp.pointee_; }
 
     protected:
-        // Destroys the data stored
-        // (Destruction might be taken over by the OwnershipPolicy)
-        void destroy()
-        { boost::checked_delete(pointee_); }
+		void release()
+		{ pointee_ = 0; }
 
         static stored_type default_value()
         { return 0; }
@@ -752,6 +752,9 @@ namespace boost
         array_storage(stored_type const& p) : pointee_(p)
         { }
 
+        ~array_storage()
+        { boost::checked_array_delete(pointee_); }
+
         void swap(array_storage& rhs)
         { std::swap(pointee_, rhs.pointee_); }
 
@@ -780,10 +783,8 @@ namespace boost
         }
 
     protected:
-        // Destroys the data stored
-        // (Destruction might be taken over by the OwnershipPolicy)
-        void destroy()
-        { boost::checked_array_delete(pointee_); }
+		void release()
+		{ pointee_ = 0; }
 
         static stored_type default_value()
         { return 0; }
@@ -854,6 +855,10 @@ namespace boost
             pCount_ = new unsigned(1);
         }
 
+		~ref_counted()
+		{ delete pCount_; }
+		//SmallObject<>::operator delete(pCount_, sizeof(unsigned int));
+
         P clone(P const& val)
         {
             ++*pCount_;
@@ -862,14 +867,17 @@ namespace boost
 
         bool release(P const&)
         {
-            if (!--*pCount_)
-            {
-                //SmallObject<>::operator delete(pCount_, sizeof(unsigned int));
-                delete pCount_;
-                return true;
-            }
+            if (!--*pCount_) return true;
+			pCount_ = 0;
             return false;
         }
+
+		bool reset()
+		{
+			if (*pCount_ == 1) return true;
+			pCount_ = new unsigned(1);
+			return false;
+		}
 
         void swap(ref_counted& rhs)
         {
@@ -1721,7 +1729,7 @@ namespace boost
     void swap(smart_ptr<T, BOOST_SMART_POINTER_POLICIES>& lhs,
               smart_ptr<T, BOOST_SMART_POINTER_POLICIES>& rhs)
     {
-        return lhs.swap(rhs);
+        lhs.swap(rhs);
     }
 
 }   // namespace boost
