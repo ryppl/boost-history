@@ -132,7 +132,8 @@ pass the arguments on to another function.
 \par The template parameter list to a function or class template can
 be declared to accept an arbitrary number of extra template arguments
 by terminating it with ``...'' optionally followed by an identifier
-that will hold a tuple of the extra arguments. Any number of template
+through which these extra arguments can be accessed.
+Any number of template
 parameters may precede the ``...''. Thus we can define, for instance,
 a class {\tt Foo} accepting a template type parameter followed by an
 arbitrary number of template arguments as:
@@ -180,7 +181,8 @@ argument.\footnote{Note that, unlike C varargs, we do not require but
   do allow arguments prior to the argument bundle.} Like template
 parameter packs, value parameter packs are not first-class entities:
 their type is that of the associated template parameter pack, which is
-itself not a type in the type system. Both template and value
+itself not a user-accessible type of the C++ type system. 
+Hence, both template and value
 parameter packs may be thought of as naming a set of arguments, not as
 having any intrinsic type or value themselves.
 
