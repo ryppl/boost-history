@@ -22,6 +22,7 @@
 
 #if !defined(BOOST_MPL_PREPROCESSING_MODE)
 #   include <boost/mpl/arg.hpp>
+#   include <boost/mpl/aux_/adl_barrier.hpp>
 #endif
 
 #include <boost/mpl/aux_/config/use_preprocessed.hpp>
@@ -46,17 +47,18 @@ BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
 typedef arg<-1> _;
 
 namespace placeholders {
-using boost::mpl::_;
+using BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE::_;
 }
 #endif
+
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
+BOOST_MPL_AUX_ADL_BARRIER_DECL(_)
 
 //: agurt, 17/mar/02: one more placeholder for the last 'apply#' 
 //: specialization
 #define BOOST_PP_ITERATION_PARAMS_1 \
     (3,(1, BOOST_MPL_LIMIT_METAFUNCTION_ARITY + 1, <boost/mpl/placeholders.hpp>))
 #include BOOST_PP_ITERATE()
-
-BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
 
 #endif // BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
 #endif // BOOST_MPL_PLACEHOLDERS_HPP_INCLUDED
@@ -66,11 +68,16 @@ BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
 #else
 #define i BOOST_PP_FRAME_ITERATION(1)
 
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
+
 typedef arg<i> BOOST_PP_CAT(_,i);
 
-namespace placeholders {
-using boost::mpl::BOOST_PP_CAT(_,i);
-}
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
+BOOST_MPL_AUX_ADL_BARRIER_DECL(BOOST_PP_CAT(_,i))
+
+namespace boost { namespace mpl { namespace placeholders {
+using BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE::BOOST_PP_CAT(_,i);
+}}}
 
 #undef i
 #endif // BOOST_PP_IS_ITERATING

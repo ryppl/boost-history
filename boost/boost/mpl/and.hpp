@@ -2,11 +2,11 @@
 #ifndef BOOST_MPL_AND_HPP_INCLUDED
 #define BOOST_MPL_AND_HPP_INCLUDED
 
-// Copyright (c) Aleksey Gurtovoy 2000-2003
+// Copyright (c) Aleksey Gurtovoy 2000-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -17,7 +17,7 @@
 #include <boost/mpl/aux_/config/use_preprocessed.hpp>
 
 #if !defined(BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS) \
- && !defined(BOOST_MPL_PREPROCESSING_MODE)
+    && !defined(BOOST_MPL_PREPROCESSING_MODE)
 
 #   include <boost/mpl/bool.hpp>
 #   include <boost/mpl/aux_/nested_type_wknd.hpp>

@@ -1,47 +1,41 @@
-//-----------------------------------------------------------------------------
-// boost mpl/test/logical.cpp source file
-// See http://www.boost.org for updates,documentation,and revision history.
-//-----------------------------------------------------------------------------
+
+// Copyright (c) Aleksey Gurtovoy 2000-2004
 //
-// Copyright (c) 2000-02
-// Aleksey Gurtovoy
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
-// Permission to use,copy,modify,distribute and sell this software
-// and its documentation for any purpose is hereby granted without fee,
-// provided that the above copyright notice appears in all copies and 
-// that both the copyright notice and this permission notice appear in 
-// supporting documentation. No representations are made about the 
-// suitability of this software for any purpose. It is provided "as is" 
-// without express or implied warranty.
+// See http://www.boost.org/libs/mpl for documentation.
+
+// $Source$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/logical.hpp>
 #include <boost/mpl/bool.hpp>
-#include <boost/static_assert.hpp>
+#include <boost/mpl/aux_/test.hpp>
 
-namespace mpl = boost::mpl;
+struct unknown;
 
-struct my;
-struct true_ : mpl::true_ {};
-struct false_ : mpl::false_ {};
+using mpl::true_;
+using mpl::false_;
 
-int main()
+MPL_TEST_CASE()
 {
-    BOOST_STATIC_ASSERT((mpl::and_< true_,true_ >::value == true));
-    BOOST_STATIC_ASSERT((mpl::and_< false_,true_ >::value == false));
-    BOOST_STATIC_ASSERT((mpl::and_< true_,false_ >::value == false));
-    BOOST_STATIC_ASSERT((mpl::and_< false_,false_ >::value == false));
-    BOOST_STATIC_ASSERT((mpl::and_< false_,my >::value == false));
-    BOOST_STATIC_ASSERT((mpl::and_< false_,my,my >::value == false));
+    MPL_ASSERT(( mpl::and_< true_,true_ > ));
+    MPL_ASSERT_NOT(( mpl::and_< false_,true_ > ));
+    MPL_ASSERT_NOT(( mpl::and_< true_,false_ > ));
+    MPL_ASSERT_NOT(( mpl::and_< false_,false_ > ));
+    MPL_ASSERT_NOT(( mpl::and_< false_,unknown > ));
+    MPL_ASSERT_NOT(( mpl::and_< false_,unknown,unknown > ));
 
-    BOOST_STATIC_ASSERT((mpl::or_< true_,true_ >::value == true));
-    BOOST_STATIC_ASSERT((mpl::or_< false_,true_ >::value == true));
-    BOOST_STATIC_ASSERT((mpl::or_< true_,false_ >::value == true));
-    BOOST_STATIC_ASSERT((mpl::or_< false_,false_ >::value == false));
-    BOOST_STATIC_ASSERT((mpl::or_< true_,my >::value == true));
-    BOOST_STATIC_ASSERT((mpl::or_< true_,my,my >::value == true));
+    MPL_ASSERT(( mpl::or_< true_,true_ > ));
+    MPL_ASSERT(( mpl::or_< false_,true_ > ));
+    MPL_ASSERT(( mpl::or_< true_,false_ > ));
+    MPL_ASSERT_NOT(( mpl::or_< false_,false_ > ));
+    MPL_ASSERT(( mpl::or_< true_,unknown > ));
+    MPL_ASSERT(( mpl::or_< true_,unknown,unknown > ));
 
-    BOOST_STATIC_ASSERT((mpl::not_< true_ >::value == false));
-    BOOST_STATIC_ASSERT((mpl::not_< false_ >::value == true));
-  
-    return 0;
+    MPL_ASSERT_NOT(( mpl::not_< true_ > ));
+    MPL_ASSERT(( mpl::not_< false_ > ));
 }

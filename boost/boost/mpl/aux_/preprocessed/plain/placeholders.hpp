@@ -2,38 +2,51 @@ BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
 typedef arg< -1 > _;
 
 namespace placeholders {
-using boost::mpl::_;
-}
-// agurt, 17/mar/02: one more placeholder for the last 'apply#' 
-// specialization
-typedef arg<1> _1;
-
-namespace placeholders {
-using boost::mpl::_1;
-}
-typedef arg<2> _2;
-
-namespace placeholders {
-using boost::mpl::_2;
-}
-typedef arg<3> _3;
-
-namespace placeholders {
-using boost::mpl::_3;
-}
-typedef arg<4> _4;
-
-namespace placeholders {
-using boost::mpl::_4;
-}
-typedef arg<5> _5;
-
-namespace placeholders {
-using boost::mpl::_5;
-}
-typedef arg<6> _6;
-
-namespace placeholders {
-using boost::mpl::_6;
+using BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE::_;
 }
 BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
+BOOST_MPL_AUX_ADL_BARRIER_DECL(_)
+// agurt, 17/mar/02: one more placeholder for the last 'apply#' 
+// specialization
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
+typedef arg<1> _1;
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
+BOOST_MPL_AUX_ADL_BARRIER_DECL(_1)
+namespace boost { namespace mpl { namespace placeholders {
+using BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE::_1;
+}}}
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
+typedef arg<2> _2;
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
+BOOST_MPL_AUX_ADL_BARRIER_DECL(_2)
+namespace boost { namespace mpl { namespace placeholders {
+using BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE::_2;
+}}}
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
+typedef arg<3> _3;
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
+BOOST_MPL_AUX_ADL_BARRIER_DECL(_3)
+namespace boost { namespace mpl { namespace placeholders {
+using BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE::_3;
+}}}
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
+typedef arg<4> _4;
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
+BOOST_MPL_AUX_ADL_BARRIER_DECL(_4)
+namespace boost { namespace mpl { namespace placeholders {
+using BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE::_4;
+}}}
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
+typedef arg<5> _5;
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
+BOOST_MPL_AUX_ADL_BARRIER_DECL(_5)
+namespace boost { namespace mpl { namespace placeholders {
+using BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE::_5;
+}}}
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
+typedef arg<6> _6;
+BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
+BOOST_MPL_AUX_ADL_BARRIER_DECL(_6)
+namespace boost { namespace mpl { namespace placeholders {
+using BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE::_6;
+}}}

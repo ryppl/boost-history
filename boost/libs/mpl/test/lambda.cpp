@@ -1,42 +1,39 @@
-//-----------------------------------------------------------------------------
-// boost mpl/test/lambda.cpp source file
-// See http://www.boost.org for updates, documentation, and revision history.
-//-----------------------------------------------------------------------------
+
+// Copyright (c) Aleksey Gurtovoy 2001-2004
 //
-// Copyright (c) 2001-02
-// Aleksey Gurtovoy
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
-// Permission to use, copy, modify, distribute and sell this software
-// and its documentation for any purpose is hereby granted without fee, 
-// provided that the above copyright notice appears in all copies and 
-// that both the copyright notice and this permission notice appear in 
-// supporting documentation. No representations are made about the 
-// suitability of this software for any purpose. It is provided "as is" 
-// without express or implied warranty.
+// See http://www.boost.org/libs/mpl for documentation.
+
+// $Source$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/logical.hpp>
 #include <boost/mpl/comparison.hpp>
 #include <boost/mpl/lambda.hpp>
+#include <boost/mpl/size_t.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/sizeof.hpp>
 #include <boost/mpl/apply.hpp>
 
+#include <boost/mpl/aux_/test.hpp>
+
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_float.hpp>
-#include <boost/static_assert.hpp>
 
-namespace mpl = boost::mpl;
+using namespace mpl::placeholders;
 
 struct my
 {
     char a[100];
 };
 
-int main()
+MPL_TEST_CASE()
 {
-    using namespace mpl::placeholders;
-
     // !(x == char) && !(x == double) && x convertible to int || sizeof(x) > 8
     typedef mpl::lambda<
         mpl::or_<
@@ -44,15 +41,18 @@ int main()
                     mpl::not_< boost::is_same<_1, char> >
                   , mpl::not_< boost::is_float<_1> >
                   >
-            , mpl::greater< mpl::sizeof_<_1>, mpl::int_<8> >
+            , mpl::greater< mpl::sizeof_<_1>, mpl::size_t<8> >
             >
-        >::type f1;
+        >::type f;
 
-    BOOST_STATIC_ASSERT((!mpl::apply1<f1,char>::type::value));
-    BOOST_STATIC_ASSERT((!mpl::apply1<f1,double>::type::value));
-    BOOST_STATIC_ASSERT((mpl::apply1<f1,long>::type::value));
-    BOOST_STATIC_ASSERT((mpl::apply1<f1,my>::type::value));
+    MPL_ASSERT_NOT(( mpl::aux::apply_wrap1<f,char> ));
+    MPL_ASSERT_NOT(( mpl::aux::apply_wrap1<f,double> ));
+    MPL_ASSERT(( mpl::aux::apply_wrap1<f,long> ));
+    MPL_ASSERT(( mpl::aux::apply_wrap1<f,my> ));
+}
 
+MPL_TEST_CASE()
+{
     // x == y || x == my || sizeof(x) == sizeof(y)
     typedef mpl::lambda<
         mpl::or_< 
@@ -60,20 +60,21 @@ int main()
             , boost::is_same<_2, my>
             , mpl::equal_to< mpl::sizeof_<_1>, mpl::sizeof_<_2> >
             >
-        >::type f2;
+        >::type f;
 
-    BOOST_STATIC_ASSERT((!mpl::apply2<f2,double,char>::type::value));
-    BOOST_STATIC_ASSERT((!mpl::apply2<f2,my,int>::type::value));
-    BOOST_STATIC_ASSERT((!mpl::apply2<f2,my,char[99]>::type::value));
-    BOOST_STATIC_ASSERT((mpl::apply2<f2,int,int>::type::value));
-    BOOST_STATIC_ASSERT((mpl::apply2<f2,my,my>::type::value));
-    BOOST_STATIC_ASSERT((mpl::apply2<f2,signed long, unsigned long>::type::value));
+    MPL_ASSERT_NOT(( mpl::aux::apply_wrap2<f,double,char> ));
+    MPL_ASSERT_NOT(( mpl::aux::apply_wrap2<f,my,int> ));
+    MPL_ASSERT_NOT(( mpl::aux::apply_wrap2<f,my,char[99]> ));
+    MPL_ASSERT(( mpl::aux::apply_wrap2<f,int,int> ));
+    MPL_ASSERT(( mpl::aux::apply_wrap2<f,my,my> ));
+    MPL_ASSERT(( mpl::aux::apply_wrap2<f,signed long, unsigned long> ));
+}
 
+MPL_TEST_CASE()
+{
     // bind <-> lambda interaction
     typedef mpl::lambda< mpl::less<_1,_2> >::type pred;
-    typedef mpl::bind2< pred, _1, mpl::int_<4> > f3;
+    typedef mpl::bind2< pred, _1, mpl::int_<4> > f;
     
-    BOOST_STATIC_ASSERT((mpl::apply1< f3,mpl::int_<3> >::type::value));
-          
-    return 0;
+    MPL_ASSERT(( mpl::aux::apply_wrap1< f,mpl::int_<3> > ));
 }

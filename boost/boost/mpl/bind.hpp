@@ -9,9 +9,9 @@
 // Copyright (c) Peter Dimov 2001
 // Copyright (c) Aleksey Gurtovoy 2001-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -21,10 +21,10 @@
 
 #if !defined(BOOST_MPL_PREPROCESSING_MODE)
 #   include <boost/mpl/bind_fwd.hpp>
-#   include <boost/mpl/apply.hpp>
 #   include <boost/mpl/placeholders.hpp>
 #   include <boost/mpl/protect.hpp>
 #   include <boost/mpl/limits/arity.hpp>
+#   include <boost/mpl/aux_/apply_wrap.hpp>
 #   include <boost/mpl/aux_/na.hpp>
 #   include <boost/mpl/aux_/arity_spec.hpp>
 #   include <boost/mpl/aux_/type_wrapper.hpp>
@@ -70,7 +70,7 @@ namespace boost { namespace mpl {
 
 // local macros, #undef-ined at the end of the header
 #   define AUX778076_APPLY \
-    BOOST_PP_CAT(apply,BOOST_MPL_LIMIT_METAFUNCTION_ARITY) \
+    aux::BOOST_PP_CAT(apply_wrap,BOOST_MPL_LIMIT_METAFUNCTION_ARITY) \
     /**/
 
 #   define AUX778076_BIND_PARAMS(param) \
@@ -364,7 +364,7 @@ struct BOOST_PP_CAT(bind,i_)
 #   endif
 
      public:
-        typedef typename BOOST_PP_CAT(apply,i_)<
+        typedef typename aux::BOOST_PP_CAT(apply_wrap,i_)<
               f_ 
             AUX778076_BIND_N_PARAMS(i_,t)
             >::type type;
