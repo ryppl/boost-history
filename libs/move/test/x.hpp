@@ -45,6 +45,7 @@ class X : public boost::movable<X>
     X(boost::move_from<X> rhs)
       : resource(rhs->resource)
     {
+        BOOST_ASSERT(rhs->resource <= cnt); // check for garbage
         SAY("MOVE #" << resource);
         BOOST_ASSERT(move_expected);
         rhs->resource = 0;
@@ -52,8 +53,9 @@ class X : public boost::movable<X>
     }
 
     // non-const rvalue - move assignment
-    X& operator=(boost::move_from<X> const& rhs)
+    X& operator=(boost::move_from<X> rhs)
     {
+        BOOST_ASSERT(rhs->resource <= cnt); // check for garbage
         release();
         resource = rhs->resource;
         SAY("MOVE #" << resource);
@@ -72,6 +74,7 @@ class X : public boost::movable<X>
  private: // helper functions
     void release()
     {
+        BOOST_ASSERT(resource <= cnt); // check for garbage
         if (!resource)
             SAY("destroy empty");
         else
@@ -81,6 +84,7 @@ class X : public boost::movable<X>
 
     void copy(X const& rhs)
     {
+        BOOST_ASSERT(rhs.resource <= cnt); // check for garbage
         SAY("copy #" << this->resource << " <- #" << rhs.resource);
         if (!copy_expected)
         {
