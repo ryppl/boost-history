@@ -823,11 +823,7 @@ inclusion property of interval arithmetic by computing some functions
 and operations for both <code>double</code> and
 <cod>interval&lt;double&gt;</code>.</p>
 
-<h2><a name="rationale">Rationale</a></h2>
-
-<p><b>NEEDS TO BE HEAVILY STRENGTHENED BY LOOKING AT MAILINGS AND
-GATHERING RATIONALE IN ALL THE DOCUMENTATION (REPLACING THE
-EXPLANATIONS THERE BY A LINK ``SEE RATIONALE''). -H</b></p>
+<h2 id="rationale">Rationale</h2>
 
 <p>The purpose of this library is to provide an efficient and
 generalized way to deal with interval arithmetic through the use of a
@@ -839,14 +835,15 @@ functions on the interval type. The last one sets the way exceptional
 cases encoutered during computations are handled.</p>
 
 <p>The library provides specialized implementations of the second
-policy for the primitive types float and double. In order for these
-implementations to be correct and fast, the library needs to work a
-lot with rounding modes.  Some processors are directly dealt with and
-some mecanisms are provided in order to speed up the computations. It
-seems to be heavy and hazardous optimizations for a gain of only a few
-computer cycles; but in reality, the speed-up factor can easily go
-past 2 or 3 depending on the computer.  Moreover, these optimizations
-do not impact the interface.</p>
+policy for the primitive types <code>float</code>, <code>double</code>
+and <code>long double</code>. In order for these implementations to be
+correct and fast, the library needs to work a lot with rounding modes.
+Some processors are directly dealt with and some mecanisms are
+provided in order to speed up the computations. It seems to be heavy
+and hazardous optimizations for a gain of only a few computer cycles;
+but in reality, the speed-up factor can easily go past 2 or 3
+depending on the computer.  Moreover, these optimizations do not
+impact the interface.</p>
 
 <h2 id="acks">History and Acknowledgments</h2>
 
