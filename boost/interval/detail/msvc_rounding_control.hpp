@@ -14,8 +14,8 @@
  *
  */
 
-#ifndef BOOST_DETAIL_MSVC_ROUNDING_CONTROL_HPP
-#define BOOST_DETAIL_MSVC_ROUNDING_CONTROL_HPP
+#ifndef BOOST_INTERVAL_DETAIL_MSVC_ROUNDING_CONTROL_HPP
+#define BOOST_INTERVAL_DETAIL_MSVC_ROUNDING_CONTROL_HPP
 
 #ifndef BOOST_INTERVAL_HPP
 #error Internal header file: This header must be included by <boost/interval.hpp> only.
@@ -28,28 +28,34 @@
 #include <float.h>      // MSVC rounding control
 
 namespace boost {
-namespace detail {
+  namespace interval_lib {
+    namespace detail {
 
-class msvc_rounding_control
+struct msvc_rounding_control
 {
-public:
-  msvc_rounding_control() { old_rm = _controlfp(0,0); }
-  ~msvc_rounding_control() { _controlfp(old_rm, _MCW_RC); } 
-  void downward()       { _controlfp(_RC_DOWN, _MCW_RC); }
-  void upward()         { _controlfp(_RC_UP, _MCW_RC); }
-  void tonearest()      { _controlfp(_RC_NEAR, _MCW_RC); }
-  void towardzero()     { _controlfp(_RC_CHOP, _MCW_RC); }
-private:
-  unsigned int old_rm;
+  typedef unsigned int rounding_mode;
+  static rounding_mode get_rounding_mode() { return _controlfp(0,0); }
+  static void set_rounding_mode(const rounding_mode mode)
+  { _controlfp(mode, _MCW_RC); } 
+  static void downward()       { _controlfp(_RC_DOWN, _MCW_RC); }
+  static void upward()         { _controlfp(_RC_UP,   _MCW_RC); }
+  static void tonearest()      { _controlfp(_RC_NEAR, _MCW_RC); }
+  static void towardzero()     { _controlfp(_RC_CHOP, _MCW_RC); }
 };
 
-template<> struct rounding_control<float> : msvc_rounding_control { };
-template<> struct rounding_control<double> : msvc_rounding_control { };
-template<> struct rounding_control<long double> : msvc_rounding_control { };
+    } // namespace detail
 
-inline bool is_nan(double x) { return _isnan(x); }
+template<>
+struct rounding_control<float>: detail::msvc_rounding_control { };
+template<>
+struct rounding_control<double>: detail::msvc_rounding_control { };
+template<>
+struct rounding_control<long double>: detail::msvc_rounding_control { };
 
-} // namespace detail
+  } // namespace interval_lib
 } // namespace boost
 
-#endif /* BOOST_DETAIL_MSVC_ROUNDING_CONTROL_HPP */
+// force_rounding and to_int needed
+#error Please adapt
+
+#endif /* BOOST_INTERVAL_DETAIL_MSVC_ROUNDING_CONTROL_HPP */

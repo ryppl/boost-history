@@ -54,7 +54,7 @@ struct test {
 		    double l, double h, double s2) {
     init(n);
     std::cout << "Testing " << n << " on " << r << " step " << s
-	      << " x scalar(" << l << " .. " << h << ") step " << s2
+	      << " x scalar(" << l << ".." << h << ") step " << s2
 	      << std::endl;
   }
 
@@ -306,8 +306,6 @@ void runtest_binary_functions()
 		   std::ptr_fun( (double(*)(double,double))std::pow), "pow_int");
   check_binary(std::ptr_fun( (R (*)(const R&, const R&)) boost::atan2),
 		  std::ptr_fun((double(*)(double,double))std::atan2), "atan2");
-#else
-  std::cout << "Skipping binary functions from interval/transc.hpp\n";
 #endif
   // Note: fmod is not here, because it does not fulfill the operator
   // definition, neither are the relational operators
@@ -599,6 +597,6 @@ int main()
   iterate_one_interval_one_scalar<double>(test_scale,
 		  // Borland C++ requires this explicit conversion
 					  std::string("scale"),
-					  -5, 5, 0.17, -5, -5, 0.17);
+					  -5, 5, 0.17, -5, 5, 0.17);
   return 0;
 }

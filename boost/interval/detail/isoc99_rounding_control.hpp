@@ -15,8 +15,8 @@
  * $Id$
  */
 
-#ifndef BOOST_DETAIL_ISOC99_ROUNDING_CONTROL_HPP
-#define BOOST_DETAIL_ISOC99_ROUNDING_CONTROL_HPP
+#ifndef BOOST_INTERVAL_DETAIL_ISOC99_ROUNDING_CONTROL_HPP
+#define BOOST_INTERVAL_DETAIL_ISOC99_ROUNDING_CONTROL_HPP
 
 #ifndef BOOST_INTERVAL_HPP
 #error Internal header file: This header must be included by <boost/interval.hpp> only.
@@ -26,39 +26,36 @@
 #include <fenv.h>      // ISO C 99 rounding mode control
 
 namespace boost {
-namespace detail {
+  namespace interval_lib {
+    namespace detail {
 
-class isoc99_rounding_control
+struct isoc99_rounding_control
 {
-  void set_round_mode(int mode) const
+  typedef int rounding_mode;
+
+  static void set_rounding_mode(const rounding_mode mode)
   {
     int ret = fesetround(mode);
     assert(ret == 0);   // do not fold this with the fesetround()
     (void) &ret;        // avoid "unused variable" warning if NDEBUG
   }
-public:
-  isoc99_rounding_control() : old_rm(fegetround()) { }
-  ~isoc99_rounding_control() { fesetround(old_rm); }
-#ifdef FE_DOWNWARD
-  void downward() { set_round_mode(FE_DOWNWARD); }
-#endif
-#ifdef FE_UPWARD
-  void upward() { set_round_mode(FE_UPWARD); }
-#endif
-#ifdef FE_TONEAREST
-  void tonearest() { set_round_mode(FE_TONEAREST); }
-#endif
-#ifdef FE_TOWARDZERO
-  void towardzero() { set_round_mode(FE_TOWARDZERO); }
-#endif
-private:
-  int old_rm;
+  static rounding_mode get_rounding_mode() { return fegetround(); }
+  void downward()   { set_rounding_mode(FE_DOWNWARD); }
+  void upward()     { set_rounding_mode(FE_UPWARD); }
+  void tonearest()  { set_rounding_mode(FE_TONEAREST); }
+  void towardzero() { set_rounding_mode(FE_TOWARDZERO); }
 };
 
-template<> struct rounding_control<float> : isoc99_rounding_control { };
-template<> struct rounding_control<double> : isoc99_rounding_control { };
-template<> struct rounding_control<long double> : isoc99_rounding_control { };
+    } // namespace detail
 
+template<>
+struct rounding_control<float>: detail::isoc99_rounding_control { };
+template<>
+struct rounding_control<double>: detail::isoc99_rounding_control { };
+template<>
+struct rounding_control<long double>: detail::isoc99_rounding_control { };
+
+#if 0
 // signbit() and isnan() are macros in ISO C99.  However, at least the
 // GNU C++ library has these as functions in namespace std.
 #ifdef signbit
@@ -73,9 +70,12 @@ inline bool sign(long double x) { return std::signbit(x); }
 inline bool is_nan(float x) { return isnan(x); }
 inline bool is_nan(double x) { return isnan(x); }
 inline bool is_nan(long double x) { return isnan(x); }
+#endif
 
-} // namespace detail
+  } // namespace interval_lib
 } // namespace boost
 
-#endif /* BOOST_DETAIL_ISOC99_ROUBDING_CONTROL_HPP */
+#error Please adapt
+
+#endif /* BOOST_INTERVAL_DETAIL_ISOC99_ROUBDING_CONTROL_HPP */
 

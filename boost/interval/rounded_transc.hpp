@@ -41,36 +41,69 @@ struct rounded_transc_dummy: Rounding {
 };
 
 template<class T, class Rounding>
+struct rounded_transc_exact: Rounding
+{
+  T exp_down(const T& x) { return std::exp(x); }
+  T exp_up  (const T& x) { return std::exp(x); }
+  T log_down(const T& x) { return std::log(x); }
+  T log_up  (const T& x) { return std::log(x); }
+  T sin_down(const T& x) { return std::sin(x); }
+  T sin_up  (const T& x) { return std::sin(x); }
+  T cos_down(const T& x) { return std::cos(x); }
+  T cos_up  (const T& x) { return std::cos(x); }
+  T tan_down(const T& x) { return std::tan(x); }
+  T tan_up  (const T& x) { return std::tan(x); }
+  T asin_down(const T& x) { return std::asin(x); }
+  T asin_up  (const T& x) { return std::asin(x); }
+  T acos_down(const T& x) { return std::acos(x); }
+  T acos_up  (const T& x) { return std::acos(x); }
+  T atan_down(const T& x) { return std::atan(x); }
+  T atan_up  (const T& x) { return std::atan(x); }
+  T sinh_down(const T& x) { return std::sinh(x); }
+  T sinh_up  (const T& x) { return std::sinh(x); }
+  T cosh_down(const T& x) { return std::cosh(x); }
+  T cosh_up  (const T& x) { return std::cosh(x); }
+  T tanh_down(const T& x) { return std::tanh(x); }
+  T tanh_up  (const T& x) { return std::tanh(x); }
+  T asinh_down(const T& x) { return std::asinh(x); }
+  T asinh_up  (const T& x) { return std::asinh(x); }
+  T acosh_down(const T& x) { return std::acosh(x); }
+  T acosh_up  (const T& x) { return std::acosh(x); }
+  T atanh_down(const T& x) { return std::atanh(x); }
+  T atanh_up  (const T& x) { return std::atanh(x); }
+};
+
+template<class T, class Rounding>
 struct rounded_transc_standard: Rounding
 {
-  T exp_down(const T& x) { return (downward(), force_rounding(exp(x))); }
-  T exp_up  (const T& x) { return (upward()  , force_rounding(exp(x))); }
-  T log_down(const T& x) { return (downward(), force_rounding(log(x))); }
-  T log_up  (const T& x) { return (upward()  , force_rounding(log(x))); }
-  T sin_down(const T& x) { return (downward(), force_rounding(sin(x))); }
-  T sin_up  (const T& x) { return (upward()  , force_rounding(sin(x))); }
-  T cos_down(const T& x) { return (downward(), force_rounding(cos(x))); }
-  T cos_up  (const T& x) { return (upward()  , force_rounding(cos(x))); }
-  T tan_down(const T& x) { return (downward(), force_rounding(tan(x))); }
-  T tan_up  (const T& x) { return (upward()  , force_rounding(tan(x))); }
-  T asin_down(const T& x) { return (downward(), force_rounding(asin(x))); }
-  T asin_up  (const T& x) { return (upward()  , force_rounding(asin(x))); }
-  T acos_down(const T& x) { return (downward(), force_rounding(acos(x))); }
-  T acos_up  (const T& x) { return (upward()  , force_rounding(acos(x))); }
-  T atan_down(const T& x) { return (downward(), force_rounding(atan(x))); }
-  T atan_up  (const T& x) { return (upward()  , force_rounding(atan(x))); }
-  T sinh_down(const T& x) { return (downward(), force_rounding(sinh(x))); }
-  T sinh_up  (const T& x) { return (upward()  , force_rounding(sinh(x))); }
-  T cosh_down(const T& x) { return (downward(), force_rounding(cosh(x))); }
-  T cosh_up  (const T& x) { return (upward()  , force_rounding(cosh(x))); }
-  T tanh_down(const T& x) { return (downward(), force_rounding(tanh(x))); }
-  T tanh_up  (const T& x) { return (upward()  , force_rounding(tanh(x))); }
-  T asinh_down(const T& x) { return (downward(), force_rounding(asinh(x))); }
-  T asinh_up  (const T& x) { return (upward()  , force_rounding(asinh(x))); }
-  T acosh_down(const T& x) { return (downward(), force_rounding(acosh(x))); }
-  T acosh_up  (const T& x) { return (upward()  , force_rounding(acosh(x))); }
-  T atanh_down(const T& x) { return (downward(), force_rounding(atanh(x))); }
-  T atanh_up  (const T& x) { return (upward()  , force_rounding(atanh(x))); }
+  T exp_down(const T& x) { return (downward(), force_rounding(std::exp(x))); }
+  T exp_up  (const T& x) { return (upward()  , force_rounding(std::exp(x))); }
+  T log_down(const T& x) { return (downward(), force_rounding(std::log(x))); }
+  T log_up  (const T& x) { return (upward()  , force_rounding(std::log(x))); }
+  T sin_down(const T& x) { return (downward(), force_rounding(std::sin(x))); }
+  T sin_up  (const T& x) { return (upward()  , force_rounding(std::sin(x))); }
+  T cos_down(const T& x) { return (downward(), force_rounding(std::cos(x))); }
+  T cos_up  (const T& x) { return (upward()  , force_rounding(std::cos(x))); }
+  T tan_down(const T& x) { return (downward(), force_rounding(std::tan(x))); }
+  T tan_up  (const T& x) { return (upward()  , force_rounding(std::tan(x))); }
+  T asin_down(const T& x) { return (downward(), force_rounding(std::asin(x))); }
+  T asin_up  (const T& x) { return (upward()  , force_rounding(std::asin(x))); }
+  T acos_down(const T& x) { return (downward(), force_rounding(std::acos(x))); }
+  T acos_up  (const T& x) { return (upward()  , force_rounding(std::acos(x))); }
+  T atan_down(const T& x) { return (downward(), force_rounding(std::atan(x))); }
+  T atan_up  (const T& x) { return (upward()  , force_rounding(std::atan(x))); }
+  T sinh_down(const T& x) { return (downward(), force_rounding(std::sinh(x))); }
+  T sinh_up  (const T& x) { return (upward()  , force_rounding(std::sinh(x))); }
+  T cosh_down(const T& x) { return (downward(), force_rounding(std::cosh(x))); }
+  T cosh_up  (const T& x) { return (upward()  , force_rounding(std::cosh(x))); }
+  T tanh_down(const T& x) { return (downward(), force_rounding(std::tanh(x))); }
+  T tanh_up  (const T& x) { return (upward()  , force_rounding(std::tanh(x))); }
+  T asinh_down(const T& x) { return (downward(), force_rounding(std::asinh(x))); }
+  T asinh_up  (const T& x) { return (upward()  , force_rounding(std::asinh(x))); }
+  T acosh_down(const T& x) { return (downward(), force_rounding(std::acosh(x))); }
+  T acosh_up  (const T& x) { return (upward()  , force_rounding(std::acosh(x))); }
+  T atanh_down(const T& x) { return (downward(), force_rounding(std::atanh(x))); }
+  T atanh_up  (const T& x) { return (upward()  , force_rounding(std::atanh(x))); }
 };
 
 template<class T, class Rounding>

@@ -1,13 +1,15 @@
 #ifndef BOOST_INTERVAL_DETAIL_CONSTANTS_HPP
 #define BOOST_INTERVAL_DETAIL_CONSTANTS_HPP
 
+#include <boost/cstdint.hpp>
+
 namespace boost {
   namespace interval_lib {
     namespace detail {
 
 typedef union {
-  long long int b;
-  double f;
+  int b;
+  float f;
 } binary_float;
 
 static const binary_float cf_pi_1_2_d = { 0x3FC90FDA };

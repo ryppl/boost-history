@@ -8,11 +8,30 @@
 namespace boost {
 
   namespace detail {
-template<class T> inline bool sign(const T& x) { return x < 0; }
-template<class T> inline bool is_nan(const T& x) { return x != x; }
-  }
+
+template<class T> bool sign(const T& x) { return x < 0; }
+template<class T> bool is_nan(const T& x) { return x != x; }
+
+  } // namespace detail
 
   namespace interval_lib {
+
+template<class T, class Rounding>
+struct rounded_arithmetic_exact: Rounding {
+  void init() { }
+  T add_down(const T& x, const T& y) { return x + y; }
+  T add_up  (const T& x, const T& y) { return x + y; }
+  T sub_down(const T& x, const T& y) { return x - y; }
+  T sub_up  (const T& x, const T& y) { return x - y; }
+  T mul_down(const T& x, const T& y) { return x * y; }
+  T mul_up  (const T& x, const T& y) { return x * y; }
+  T div_down(const T& x, const T& y) { return x / y; }
+  T div_up  (const T& x, const T& y) { return x / y; }
+  T sqrt_down(const T& x) { return std::sqrt(x); }
+  T sqrt_up  (const T& x) { return std::sqrt(x); }
+  T int_down(const T& x) { return std::floor(x); }
+  T int_up  (const T& x) { return std::ceil(x); }
+};
 
 template<class T, class Rounding>
 struct rounded_arithmetic_standard: Rounding {
@@ -61,43 +80,11 @@ struct rounded_arithmetic_opposite_trick: Rounding {
   T int_up(const T& x) { return to_int(x); }
 };
 
-template<class Rounding>
-struct save_state: Rounding
-{
-  typename Rounding::rounding_mode mode;
-  save_state() {
-    mode = get_rounding_mode();
-    init();
-  }
-  ~save_state() { set_rounding_mode(mode); }
-};
-
-template<class T>
-struct unprotect {
-  typedef T type;
-};
-
-template<class Rounding>
-struct unprotect<save_state<Rounding> > {
-  typedef Rounding type;
-};
-
-template<class T, class Compare, class Rounding, class Checking>
-struct unprotect<interval_traits<T, Compare, Rounding, Checking> > {
-  typedef
-    interval_traits<T, Compare, typename unprotect<Rounding>::type, Checking>
-    type;
-};
-
-template<class T, class Traits>
-struct unprotect<interval<T, Traits> > {
-  typedef interval<T, typename unprotect<Traits>::type> type;
-};
-
     namespace detail {
 
 template<class Rounding>
-struct save_state_tonearest: Rounding {
+struct save_state_tonearest: Rounding
+{
   typename Rounding::rounding_mode mode;
   save_state_tonearest() {
     mode = get_rounding_mode();
@@ -107,23 +94,77 @@ struct save_state_tonearest: Rounding {
 };
 
 template<class Rounding>
-struct tonearest {
-  typedef save_state_tonearest<Rounding> type;
+struct save_state_unprotected: Rounding
+{
+  typedef save_state_unprotected<Rounding> unprotected_rounding;
+  typedef save_state_tonearest<Rounding> tonearest_rounding;
 };
 
 template<class Rounding>
-struct tonearest<save_state<Rounding> > {
-  typedef save_state_tonearest<Rounding> type;
+struct tonearest
+{
+  typedef typename Rounding::tonearest_rounding type;
 };
 
     } // namespace detail
 
+template<class Rounding>
+struct save_state: Rounding
+{
+  typename Rounding::rounding_mode mode;
+  save_state() {
+    mode = get_rounding_mode();
+    init();
+  }
+  ~save_state() { set_rounding_mode(mode); }
+  typedef detail::save_state_unprotected<Rounding> unprotected_rounding;
+  typedef detail::save_state_tonearest<Rounding> tonearest_rounding;
+};
+
+template<class Rounding>
+struct save_state_nothing: Rounding
+{
+  typedef save_state_nothing<Rounding> unprotected_rounding;
+  typedef save_state_nothing<Rounding> tonearest_rounding;
+};
+
+template<class Rounding>
+struct unprotect
+{
+  typedef typename Rounding::unprotected_rounding type;
+};
+
+template<class T, class Compare, class Rounding, class Checking>
+struct unprotect<interval_traits<T, Compare, Rounding, Checking> >
+{
+  typedef
+    interval_traits<T, Compare, typename unprotect<Rounding>::type, Checking>
+    type;
+};
+
+template<class T, class Traits>
+struct unprotect<interval<T, Traits> > 
+{
+  typedef interval<T, typename unprotect<Traits>::type> type;
+};
+
 template<class T>
 struct rounding_control
 {
-  void upward() {}
-  void downward() {}
-  static T force_rounding(const T& x) { return x; }
+  typedef void rounding_mode;
+  void upward() { }
+  void downward() { }
+  void tonearest() { }
+  rounding_mode get_rounding_mode() { }
+  void set_rounding_mode(rounding_mode) { }
+  T pi_down() { return 3; }
+  T pi_up()   { return 4; }
+  T pi_2_1_down() { return 6; }
+  T pi_2_1_up()   { return 7; }
+  T pi_1_2_down() { return 1; }
+  T pi_1_2_up()   { return 2; }
+  T to_int(const T& x) { return x; }
+  T force_rounding(const T& x) { return x; }
 };
 
   } // namespace interval
@@ -132,11 +173,7 @@ struct rounding_control
 #include <boost/interval/detail/constants.hpp>
 
 // define appropriate specialization of rounding_control for built-in types
-#if defined(__STDC__) && __STDC_VERSION__ >= 199901L || \
-    defined(__linux__) && defined(__USE_ISOC99)
-//#include <boost/detail/isoc99_rounding_control.hpp>
-#include <boost/interval/detail/linux_rounding_control.hpp>
-#elif defined(__linux__)
+#if defined(__linux__)
 #include <boost/interval/detail/linux_rounding_control.hpp>
 #elif defined(powerpc)
 #include <boost/interval/detail/ppc_rounding_control.hpp>
@@ -146,6 +183,8 @@ struct rounding_control
 #include <boost/interval/detail/bcc_rounding_control.hpp>
 #elif defined(BOOST_MSVC)
 #include <boost/interval/detail/msvc_rounding_control.hpp>
+#elif defined(__USE_ISOC99)
+#include <boost/interval/detail/isoc99_rounding_control.hpp>
 #else
 #error Please specify rounding control mechanism.
 #endif
