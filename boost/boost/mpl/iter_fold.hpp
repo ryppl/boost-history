@@ -19,7 +19,12 @@
 
 #include "boost/mpl/apply.hpp"
 #include "boost/mpl/begin_end.hpp"
-#include <boost/mpl/select_type.hpp>
+#include "boost/mpl/select_type.hpp"
+
+#include "boost/preprocessor/repeat.hpp"
+#include "boost/preprocessor/inc.hpp"
+#include "boost/preprocessor/dec.hpp"
+#include "boost/preprocessor/cat.hpp"
 
 namespace boost {
 namespace mpl {
@@ -43,14 +48,14 @@ struct iter_fold_done
 };
 
 #ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
-template <class Iterator, class LastIterator, class ForwardOp, class State>
+template <class Iterator, class LastIterator, class State, class ForwardOp>
 struct iter_fold_next : apply2<ForwardOp,State,Iterator>
 {
     typedef typename Iterator::next iterator;
 };
 
-template <class LastIterator, class ForwardOp, class State>
-struct iter_fold_next<LastIterator, LastIterator, ForwardOp, State>
+template <class LastIterator, class State, class ForwardOp>
+struct iter_fold_next<LastIterator, LastIterator, State, ForwardOp>
     : iter_fold_done<LastIterator,State>
 {
 };
@@ -92,6 +97,47 @@ struct iter_fold_prev
 
 template<
       typename Iterator
+    , typename State
+    >
+struct iter_fold_first
+{
+    typedef Iterator iterator;
+    typedef State type;
+};
+
+#define BOOST_MPL_LIMIT_UNROLLING 4
+
+#define BOOST_MPL_AUX_ITER_FOLD_NEXT(i, unused) \
+    typedef iter_fold_next< \
+          typename BOOST_PP_CAT(next,i)::iterator \
+        , LastIterator \
+        , typename BOOST_PP_CAT(next,i)::type \
+        , ForwardOp \
+        > BOOST_PP_CAT(next, BOOST_PP_INC(i)); \
+/**/
+
+#define BOOST_MPL_AUX_ITER_FOLD_PREV_FUNC(i) \
+    typedef iter_fold_prev< \
+          typename BOOST_PP_CAT(next,BOOST_PP_DEC(i))::iterator \
+        , LastIterator \
+        , typename BOOST_PP_CAT(prev,i)::type \
+        , BackwardOp \
+        > BOOST_PP_CAT(prev,BOOST_PP_DEC(i)); \
+/**/
+
+#define BOOST_MPL_AUX_ITER_FOLD_PREV(i, unused) \
+    BOOST_MPL_AUX_ITER_FOLD_PREV_FUNC( \
+        BOOST_PP_SUB(BOOST_MPL_LIMIT_UNROLLING,i) \
+        ) \
+/**/
+
+#define BOOST_MPL_AUX_ITER_FOLD_EXECUTE(i, tf) \
+    BOOST_PP_CAT(BOOST_PP_TUPLE_ELEM(2, 0, tf), BOOST_PP_INC(i)) \
+        ::BOOST_PP_TUPLE_ELEM(2, 1, tf); \
+/**/
+
+template<
+      typename Iterator
     , typename LastIterator
     , typename State
     , typename ForwardOp
@@ -100,62 +146,49 @@ template<
 struct iter_fold_impl
 {
  private:
-    typedef iter_fold_next<Iterator,LastIterator,ForwardOp,State> next1;
-    typedef iter_fold_next<typename next1::iterator,LastIterator,ForwardOp,typename next1::type> next2;
-    typedef iter_fold_next<typename next2::iterator,LastIterator,ForwardOp,typename next2::type> next3;
-    typedef iter_fold_next<typename next3::iterator,LastIterator,ForwardOp,typename next3::type> next4;
-    
-    typedef typename select_type<
-        is_same<typename next4::iterator,LastIterator>::value
-        , iter_fold_done<Iterator,typename next4::type>
-        , iter_fold_impl<
-          typename next4::iterator
-            , LastIterator
-            , typename next4::type
-            , ForwardOp
-            , BackwardOp>
-        >::type recursion;
+    typedef iter_fold_first<Iterator,State> next0;
+    BOOST_PP_REPEAT(BOOST_MPL_LIMIT_UNROLLING, BOOST_MPL_AUX_ITER_FOLD_NEXT, unused);
 
-    typedef typename recursion::type inner_t;
+    #define BOOST_MPL_AUX_ITER_FOLD_LAST BOOST_PP_CAT(next, BOOST_MPL_LIMIT_UNROLLING)
+    #define BOOST_MPL_AUX_ITER_FOLD_LAST_PREV BOOST_PP_CAT(prev, BOOST_MPL_LIMIT_UNROLLING)
     
-    typedef iter_fold_prev<typename next3::iterator,LastIterator,inner_t,BackwardOp> prev4;
-    typedef iter_fold_prev<typename next2::iterator,LastIterator,typename prev4::type,BackwardOp> prev3;
-    typedef iter_fold_prev<typename next1::iterator,LastIterator,typename prev3::type,BackwardOp> prev2;
-    typedef iter_fold_prev<Iterator,LastIterator,typename prev2::type,BackwardOp> prev1;
+    typedef typename select_type_t<
+          is_same<typename BOOST_MPL_AUX_ITER_FOLD_LAST::iterator, LastIterator>
+        , iter_fold_done<LastIterator,typename BOOST_MPL_AUX_ITER_FOLD_LAST::type>
+        , iter_fold_impl<
+              typename BOOST_MPL_AUX_ITER_FOLD_LAST::iterator
+            , LastIterator
+            , typename BOOST_MPL_AUX_ITER_FOLD_LAST::type
+            , ForwardOp
+            , BackwardOp
+            >
+        >::type BOOST_MPL_AUX_ITER_FOLD_LAST_PREV;
+
+    BOOST_PP_REPEAT(BOOST_MPL_LIMIT_UNROLLING, BOOST_MPL_AUX_ITER_FOLD_PREV, unused);
+
  public:
-    typedef typename prev1::type type;
+    typedef typename prev0::type type;
 
     static void execute()
     {
-        next1::execute();
-        next2::execute();
-        next3::execute();
-        next4::execute();
-        
-        recursion::execute();
-        
-        prev4::execute();
-        prev3::execute();
-        prev2::execute();
-        prev1::execute();
+        BOOST_PP_REPEAT(BOOST_MPL_LIMIT_UNROLLING, BOOST_MPL_AUX_ITER_FOLD_EXECUTE, (next, execute()));
+        BOOST_MPL_AUX_ITER_FOLD_LAST_PREV::execute();
+        BOOST_PP_REPEAT(BOOST_MPL_LIMIT_UNROLLING, BOOST_MPL_AUX_ITER_FOLD_EXECUTE, (prev, execute()));
     }
 
     template <class T>
     static void execute(T x)
     {
-        next1::execute(x);
-        next2::execute(x);
-        next3::execute(x);
-        next4::execute(x);
-        
-        recursion::execute(x);
-        
-        prev4::execute(x);
-        prev3::execute(x);
-        prev2::execute(x);
-        prev1::execute(x);
+        BOOST_PP_REPEAT(BOOST_MPL_LIMIT_UNROLLING, BOOST_MPL_AUX_ITER_FOLD_EXECUTE, (next, execute(x)));
+        BOOST_MPL_AUX_ITER_FOLD_LAST_PREV::execute(x);
+        BOOST_PP_REPEAT(BOOST_MPL_LIMIT_UNROLLING, BOOST_MPL_AUX_ITER_FOLD_EXECUTE, (prev, execute(x)));
     }
 };
+
+#undef BOOST_MPL_AUX_ITER_FOLD_EXECUTE
+#undef BOOST_MPL_AUX_ITER_FOLD_PREV
+#undef BOOST_MPL_AUX_ITER_FOLD_PREV_FUNC
+#undef BOOST_MPL_AUX_ITER_FOLD_NEXT
 
 struct select2nd
 {
