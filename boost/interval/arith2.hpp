@@ -53,15 +53,6 @@ interval<T, Policies> fmod(const T& x, const interval<T, Policies>& y)
 template<class T, class Rounding> inline
 T pow_aux(const T& x_, int pwr, Rounding& rnd) // x and pwr are positive
 {
-  /*
-  T x = x_;
-  T y = 1;
-  while (pwr > 0) {
-    if (pwr & 1) y = rnd.mul_up(x, y);
-    pwr >>= 1;
-    if (pwr > 0) x = rnd.mul_up(x, x);
-  }
-  */
   T x = x_;
   T y = (pwr & 1) ? x_ : 1;
   pwr >>= 1;
@@ -91,9 +82,6 @@ interval<T, Policies> pow(const interval<T, Policies>& x, int pwr)
   }
 
   typename Policies::rounding rnd;
-  bool sgnl = detail::is_neg(x.lower());
-  bool sgnu = detail::is_neg(x.upper());
-  bool odd_pwr = pwr & 1;
   
   if (detail::is_neg(x.upper())) {        // [-2,-1]
     T yl = pow_aux(-x.upper(), pwr, rnd);
