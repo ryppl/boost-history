@@ -7,7 +7,6 @@
 
 //  Bigint Library
 //  Authors: Ronald Garcia
-//           Jeremy Siek
 //           Andrew Lumsdaine
 
 //
