@@ -308,7 +308,6 @@ int cpp_main( int argc, char ** argv )
 
   while ( std::getline( std::cin, line ) )
   {
-//    if ( line.find( "jgrep") != string::npos )
 //      std::cout << line << "\n";
 
     if ( line.find( "(boost-test " ) == 0 )
@@ -322,7 +321,7 @@ int cpp_main( int argc, char ** argv )
           line.find( "\"", colon+3 )-colon-3 );
         convert_path_separators( test_file_path );
         test2prog.insert( std::make_pair( test_name, test_file_path ) );
-        std::cout << test_name << ", " << test_file_path << "\n";
+//        std::cout << test_name << ", " << test_file_path << "\n";
         continue;
       }
     }
