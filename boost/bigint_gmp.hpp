@@ -15,6 +15,7 @@
 #include <string>
 #include <cctype>
 #include <stdexcept>
+#include <vector>
 
 namespace boost {
 
@@ -24,18 +25,43 @@ class bigint : boost::operators<bigint> {
   friend std::ostream& operator<<(std::ostream& os, bigint const& rhs);
   friend std::istream& operator>>(std::istream& is, bigint& rhs);
   
-  std::ostream& print(std::ostream& os) const {
+  std::ostream& to_ostream(std::ostream& os) const {
     
     if(!os.good()) return os;
+
+    std::ostream::sentry opfx(os);
+
+    if(opfx) {
     
-    // RG - Add code to set up a buffer rather than allowing gmp to allocate
-    std::ios_base::fmtflags flags = os.flags();
-    if (flags & std::ios_base::dec) 
-      return os << mpz_get_str(NULL, 10, gmp_value_);
-    else if (flags & std::ios_base::hex)
-      return os << mpz_get_str(NULL, 16, gmp_value_);
-    else // if (flags & std::ios_base::oct)
-      return os << mpz_get_str(NULL, 8, gmp_value_);
+      std::ios_base::fmtflags flags = os.flags();
+
+      std::string format("%");
+      if(flags & std::ios_base::showbase) format.push_back('#');
+      if(flags & std::ios_base::showpos) format.push_back('+');
+
+      format.push_back('Z');
+
+      if (flags & std::ios_base::dec) {
+        format.push_back('d');
+      } else if (flags & std::ios_base::hex) {
+        if(flags & std::ios_base::uppercase)
+          format.push_back('X');
+        else
+          format.push_back('x');
+      } else {// if (flags & std::ios_base::oct)
+        format.push_back('o');
+      }
+
+      // Copy the string representation and stream it.
+      std::vector<char> buffer;
+      int length = gmp_snprintf(&buffer[0],0,format.c_str(),gmp_value_);
+      buffer.resize(length+1);
+      int length2 =
+        gmp_snprintf(&buffer[0],length+1,format.c_str(),gmp_value_);
+      assert(length == length2);
+      os << &buffer[0];
+    }
+    return os;
   }
   
   std::istream& from_istream(std::istream& is) {
@@ -46,21 +72,31 @@ class bigint : boost::operators<bigint> {
     std::istream::sentry ipfx(is);
     
     if(ipfx) {
+      std::ios_base::fmtflags flags = is.flags();
+      base_type base;
+      if (flags & std::ios_base::dec) {
+        base = decimal;
+      } else if (flags & std::ios_base::hex) {
+        base = hexadecimal;
+      } else { // if (flags & std::ios_base::oct)
+        base = octal;
+      }
+
       // Read the number into a string, then initialize from that.
       std::string str;
       char c;
 
       // check for minus sign.
       is.get(c);
-      if(!(c == '-' || std::isdigit(c))) {
+      if(!(c == '-' || std::isxdigit(c))) {
         is.putback(c);
         // signal error
         is.clear(is.rdstate() | std::ios::failbit);
       } else {
         str.push_back(c);
 
-        // read in ASCII digits till it stops.
-        while(is.get(c) && isdigit(c))
+        // read in ASCII (hexadecimal) digits till it stops.
+        while(is.get(c) && isxdigit(c))
           str.push_back(c);
         if(is.fail())
           // clear error state
@@ -68,11 +104,12 @@ class bigint : boost::operators<bigint> {
         else
           // put back the last character retrieved
           is.putback(c);
-        *this = bigint(str);
+        *this = bigint(str,base);
       }
     }
     return is;
   }
+
 
   friend bigint operator-(bigint const& rhs);
   bigint& negate() {
@@ -82,13 +119,14 @@ class bigint : boost::operators<bigint> {
   
   
 public:
+  enum base_type {octal=8, decimal=10, hexadecimal=16};
   
   bigint() {
     mpz_init(gmp_value_);
   }
   
-  explicit bigint(std::string const& str) {
-    if(mpz_init_set_str(gmp_value_, str.c_str(),10) < 0) {
+  explicit bigint(std::string const& str, base_type base = decimal) {
+    if(mpz_init_set_str(gmp_value_, str.c_str(),base) < 0) {
       mpz_clear(gmp_value_);
       throw std::runtime_error("Bad value");
     }
@@ -185,7 +223,7 @@ void swap(bigint& lhs, bigint& rhs) {
 
 inline
 std::ostream& operator<<(std::ostream& os, bigint const& rhs) {
-  return rhs.print(os);
+  return rhs.to_ostream(os);
 }
 
 inline

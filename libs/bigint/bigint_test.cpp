@@ -15,6 +15,7 @@
 
 #include "boost/lexical_cast.hpp"
 #include <cassert>
+#include <iomanip>
 #include <sstream>
 
 int main() {
