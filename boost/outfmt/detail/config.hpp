@@ -37,6 +37,10 @@
 #     define BOOST_IOFM_NO_BASIC_STREAM  // use old I/O streams
 #  endif
 
+#  if defined(BOOST_STD_EXTENSION_NAMESPACE)
+      namespace _stdext = BOOST_STD_EXTENSION_NAMESPACE;
+#  endif
+
    // Compiler/Library specific information
 
 #  if defined(__BORLANDC__)
@@ -45,16 +49,6 @@
 
 #     define BOOST_IOFM_NO_LIB_QUATERNION
 #     define BOOST_IOFM_NO_LIB_OCTONION
-#  elif defined(__INTEL_COMPILER) || defined(__ICL) || defined(__ICC) || defined(__ECC)
-      // JDT: Intel 7.1 apparently has trouble with quaternion and octonian;
-      // it also has trouble with the VC7.1 Dinkumware __declspec(deprecated)
-      // on hashed containers. Apparently, the interval library is not configured
-      // for intel.
-
-#     define BOOST_IO_NO_DEPRECATED_MODIFIER
-#     define BOOST_IOFM_NO_LIB_QUATERNION
-#     define BOOST_IOFM_NO_LIB_OCTONION
-#     define BOOST_IOFM_NO_LIB_INTERVAL
 #  elif defined(__COMO__)
 #     define BOOST_IOFM_NO_LIB_INTERVAL
 #  elif defined(__GNUC__)
@@ -72,6 +66,17 @@
 #        define BOOST_IOFM_NO_LIB_RATIONAL     // RHD: template instantiation depth exceeds maximum of 17:
 #        define BOOST_IOFM_NO_OUTPUT_DEDUCTION // RHD: too many errors!
 #     endif
+#  elif defined(__INTEL_COMPILER) || defined(__ICL) || defined(__ICC) || defined(__ECC)
+      // JDT: Intel 7.1 apparently has trouble with quaternion and octonian;
+      // it also has trouble with the VC7.1 Dinkumware __declspec(deprecated)
+      // on hashed containers. Apparently, the interval library is not configured
+      // for intel.
+
+#     define BOOST_IO_NO_DEPRECATED_MODIFIER
+#     define BOOST_IOFM_NO_LIB_QUATERNION
+#     define BOOST_IOFM_NO_LIB_OCTONION
+#     define BOOST_IOFM_NO_LIB_INTERVAL
+#  elif defined(__MWERKS__)
 #  elif defined(_MSC_VER)
 #     if( _MSC_VER < 1300 )
 #        define BOOST_IOFM_NO_LIB_INTERVAL // JDT: trouble with interval/detail/bugs.hpp

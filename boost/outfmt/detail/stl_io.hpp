@@ -211,13 +211,13 @@
    }
 
 #  if defined(BOOST_IOFM_HASH_CONTAINERS)
-      // std::hash_map
+      // _stdext::hash_map
 
       template< BOOST_IOFM_HASH_MAP_T >
       inline std::ostream & operator<<
       (
          std::ostream & os,
-         const std::hash_map< BOOST_IOFM_HASH_MAP_ARG > & m
+         const _stdext::hash_map< BOOST_IOFM_HASH_MAP_ARG > & m
       )
       {
          return
@@ -234,7 +234,7 @@
       inline std::istream & operator>>
       (
          std::istream & is,
-         std::hash_map< BOOST_IOFM_HASH_MAP_ARG > & m
+         _stdext::hash_map< BOOST_IOFM_HASH_MAP_ARG > & m
       )
       {
          return
@@ -247,13 +247,13 @@
          );
       }
 
-      // std::hash_multimap 
+      // _stdext::hash_multimap 
 
       template< BOOST_IOFM_HASH_MAP_T >
       inline std::ostream & operator<<
       (
          std::ostream & os,
-         const std::hash_multimap< BOOST_IOFM_HASH_MAP_ARG > & mm
+         const _stdext::hash_multimap< BOOST_IOFM_HASH_MAP_ARG > & mm
       )
       {
          return
@@ -270,7 +270,7 @@
       inline std::istream & operator>>
       (
          std::istream & is,
-         std::hash_multimap< BOOST_IOFM_HASH_MAP_ARG > & mm
+         _stdext::hash_multimap< BOOST_IOFM_HASH_MAP_ARG > & mm
       )
       {
          return
@@ -283,13 +283,13 @@
          );
       }
 
-      // std::hash_set
+      // _stdext::hash_set
 
       template< BOOST_IOFM_HASH_SET_T >
       inline std::ostream & operator<<
       (
          std::ostream & os,
-         const std::hash_set< BOOST_IOFM_HASH_SET_ARG > & s
+         const _stdext::hash_set< BOOST_IOFM_HASH_SET_ARG > & s
       )
       {
          return( os << boost::io::formatob( s, boost::io::containerfmt()));
@@ -299,19 +299,19 @@
       inline std::istream & operator>>
       (
          std::istream & is,
-         std::hash_set< BOOST_IOFM_HASH_SET_ARG > & s
+         _stdext::hash_set< BOOST_IOFM_HASH_SET_ARG > & s
       )
       {
          return( is >> boost::io::formatob( s, boost::io::containerfmt()));
       }
 
-      // std::hash_multiset
+      // _stdext::hash_multiset
 
       template< BOOST_IOFM_HASH_SET_T >
       inline std::ostream & operator<<
       (
          std::ostream & os,
-         const std::hash_multiset< BOOST_IOFM_HASH_SET_ARG > & ms
+         const _stdext::hash_multiset< BOOST_IOFM_HASH_SET_ARG > & ms
       )
       {
          return( os << boost::io::formatob( ms, boost::io::containerfmt()));
@@ -321,19 +321,19 @@
       inline std::istream & operator>>
       (
          std::istream & os,
-         std::hash_multiset< BOOST_IOFM_HASH_SET_ARG > & ms
+         _stdext::hash_multiset< BOOST_IOFM_HASH_SET_ARG > & ms
       )
       {
          return( is >> boost::io::formatob( ms, boost::io::containerfmt()));
       }
 #  endif
 
-#  if defined(BOOST_HAS_SLIST) // std::slist
+#  if defined(BOOST_HAS_SLIST) // _stdext::slist
       template< typename T, class Allocator >
       inline std::ostream & operator<<
       (
          std::ostream & os,
-         const std::slist< T, Allocator > & sl
+         const _stdext::slist< T, Allocator > & sl
       )
       {
          return( os << boost::io::formatob( sl, boost::io::containerfmt()));
@@ -343,7 +343,7 @@
       inline std::istream & operator>>
       (
          std::istream & is,
-         std::slist< T, Allocator > & sl
+         _stdext::slist< T, Allocator > & sl
       )
       {
          return( is >> boost::io::formatob( sl, boost::io::containerfmt()));

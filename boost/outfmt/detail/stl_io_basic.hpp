@@ -251,13 +251,13 @@
    }
 
 #  if defined(BOOST_IOFM_HASH_CONTAINERS)
-      // std::hash_map
+      // _stdext::hash_map
 
       template< typename CharT, class TraitsT, BOOST_IOFM_HASH_MAP_T >
       inline std::basic_ostream< CharT, TraitsT > & operator<<
       (
-         std::basic_ostream< CharT, TraitsT >           & os,
-         const std::hash_map< BOOST_IOFM_HASH_MAP_ARG > & m
+         std::basic_ostream< CharT, TraitsT > & os,
+         const _stdext::hash_map< BOOST_IOFM_HASH_MAP_ARG > & m
       )
       {
          return
@@ -273,8 +273,8 @@
       template< typename CharT, class TraitsT, BOOST_IOFM_HASH_MAP_T >
       inline std::basic_istream< CharT, TraitsT > & operator>>
       (
-         std::basic_istream< CharT, TraitsT >     & is,
-         std::hash_map< BOOST_IOFM_HASH_MAP_ARG > & m
+         std::basic_istream< CharT, TraitsT > & is,
+         _stdext::hash_map< BOOST_IOFM_HASH_MAP_ARG > & m
       )
       {
          return
@@ -292,8 +292,8 @@
       template< typename CharT, class TraitsT, BOOST_IOFM_HASH_MAP_T >
       inline std::basic_ostream< CharT, TraitsT > & operator<<
       (
-         std::basic_ostream< CharT, TraitsT >                & os,
-         const std::hash_multimap< BOOST_IOFM_HASH_MAP_ARG > & mm
+         std::basic_ostream< CharT, TraitsT > & os,
+         const _stdext::hash_multimap< BOOST_IOFM_HASH_MAP_ARG > & mm
       )
       {
          return
@@ -309,8 +309,8 @@
       template< typename CharT, class TraitsT, BOOST_IOFM_HASH_MAP_T >
       inline std::basic_istream< CharT, TraitsT > & operator>>
       (
-         std::basic_istream< CharT, TraitsT >          & is,
-         std::hash_multimap< BOOST_IOFM_HASH_MAP_ARG > & mm
+         std::basic_istream< CharT, TraitsT > & is,
+         _stdext::hash_multimap< BOOST_IOFM_HASH_MAP_ARG > & mm
       )
       {
          return
@@ -323,13 +323,13 @@
          );
       }
 
-      // std::hash_set
+      // _stdext::hash_set
 
       template< typename CharT, class TraitsT, BOOST_IOFM_HASH_SET_T >
       inline std::basic_ostream< CharT, TraitsT > & operator<<
       (
-         std::basic_ostream< CharT, TraitsT >           & os,
-         const std::hash_set< BOOST_IOFM_HASH_SET_ARG > & s
+         std::basic_ostream< CharT, TraitsT > & os,
+         const _stdext::hash_set< BOOST_IOFM_HASH_SET_ARG > & s
       )
       {
          return( os << boost::io::formatob( s, boost::io::containerfmt()));
@@ -338,8 +338,8 @@
       template< typename CharT, class TraitsT, BOOST_IOFM_HASH_SET_T >
       inline std::basic_istream< CharT, TraitsT > & operator>>
       (
-         std::basic_istream< CharT, TraitsT >     & is,
-         std::hash_set< BOOST_IOFM_HASH_SET_ARG > & s
+         std::basic_istream< CharT, TraitsT >        & is,
+         _stdext::hash_set< BOOST_IOFM_HASH_SET_ARG > & s
       )
       {
          return( is >> boost::io::formatob( s, boost::io::containerfmt()));
@@ -350,8 +350,8 @@
       template< typename CharT, class TraitsT, BOOST_IOFM_HASH_SET_T >
       inline std::basic_ostream< CharT, TraitsT > & operator<<
       (
-         std::basic_ostream< CharT, TraitsT >                & os,
-         const std::hash_multiset< BOOST_IOFM_HASH_SET_ARG > & ms
+         std::basic_ostream< CharT, TraitsT > & os,
+         const _stdext::hash_multiset< BOOST_IOFM_HASH_SET_ARG > & ms
       )
       {
          return( os << boost::io::formatob( ms, boost::io::containerfmt()));
@@ -360,20 +360,20 @@
       template< typename CharT, class TraitsT, BOOST_IOFM_HASH_SET_T >
       inline std::basic_istream< CharT, TraitsT > & operator>>
       (
-         std::basic_istream< CharT, TraitsT >          & is,
-         std::hash_multiset< BOOST_IOFM_HASH_SET_ARG > & ms
+         std::basic_istream< CharT, TraitsT > & is,
+         _stdext::hash_multiset< BOOST_IOFM_HASH_SET_ARG > & ms
       )
       {
          return( is >> boost::io::formatob( ms, boost::io::containerfmt()));
       }
 #  endif
 
-#  if defined(BOOST_HAS_SLIST) // std::slist
+#  if defined(BOOST_HAS_SLIST) // _stdext::slist
       template< typename CharT, class TraitsT, typename T, class Allocator >
       inline std::basic_ostream< CharT, TraitsT > & operator<<
       (
          std::basic_ostream< CharT, TraitsT > & os,
-         const std::slist< T, Allocator >     & sl
+         const _stdext::slist< T, Allocator >  & sl
       )
       {
          return( os << boost::io::formatob( sl, boost::io::containerfmt()));
@@ -383,7 +383,7 @@
       inline std::basic_istream< CharT, TraitsT > & operator>>
       (
          std::basic_istream< CharT, TraitsT > & is,
-         std::slist< T, Allocator >           & sl
+         _stdext::slist< T, Allocator >        & sl
       )
       {
          return( is >> boost::io::formatob( sl, boost::io::containerfmt()));

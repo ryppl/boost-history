@@ -13,14 +13,16 @@
       template< typename RangeT >
       class range_t: public std::pair< RangeT, RangeT >
       {
+         private:
+            typedef std::pair< RangeT, RangeT >                      base_type;
          public:
             inline RangeT                        begin() const
             {
-               return( first );
+               return( base_type::first );
             }
             inline RangeT                        end() const
             {
-               return( second );
+               return( base_type::second );
             }
          private:
             inline           range_t();

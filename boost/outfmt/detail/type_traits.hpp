@@ -110,7 +110,7 @@
       {
          struct type
          {
-            BOOST_STATIC_CONSTANT( bool, value = ( sizeof( FmtObject::formatter_type ) == id ));
+            BOOST_STATIC_CONSTANT( bool, value = ( sizeof( BOOST_DEDUCED_TYPENAME FmtObject::formatter_type ) == id ));
          };
          BOOST_STATIC_CONSTANT( bool, value = type::value  );
       };
@@ -219,20 +219,20 @@
 
 #     if defined(BOOST_IOFM_HASH_CONTAINERS)
 #        if defined(BOOST_DINKUMWARE_STDLIB)
-            BOOST_IO_CLASSIFY_TYPE_3( std::hash_set,      boost::io::seq_container_type );
-            BOOST_IO_CLASSIFY_TYPE_3( std::hash_multiset, boost::io::seq_container_type );
-            BOOST_IO_CLASSIFY_TYPE_4( std::hash_map,      boost::io::assoc_container_type );
-            BOOST_IO_CLASSIFY_TYPE_4( std::hash_multimap, boost::io::assoc_container_type );
+            BOOST_IO_CLASSIFY_TYPE_3( _stdext::hash_set,      boost::io::seq_container_type );
+            BOOST_IO_CLASSIFY_TYPE_3( _stdext::hash_multiset, boost::io::seq_container_type );
+            BOOST_IO_CLASSIFY_TYPE_4( _stdext::hash_map,      boost::io::assoc_container_type );
+            BOOST_IO_CLASSIFY_TYPE_4( _stdext::hash_multimap, boost::io::assoc_container_type );
 #        else // SGI containers
-            BOOST_IO_CLASSIFY_TYPE_4( std::hash_set,      boost::io::seq_container_type );
-            BOOST_IO_CLASSIFY_TYPE_4( std::hash_multiset, boost::io::seq_container_type );
-            BOOST_IO_CLASSIFY_TYPE_5( std::hash_map,      boost::io::assoc_container_type );
-            BOOST_IO_CLASSIFY_TYPE_5( std::hash_multimap, boost::io::assoc_container_type );
+            BOOST_IO_CLASSIFY_TYPE_4( _stdext::hash_set,      boost::io::seq_container_type );
+            BOOST_IO_CLASSIFY_TYPE_4( _stdext::hash_multiset, boost::io::seq_container_type );
+            BOOST_IO_CLASSIFY_TYPE_5( _stdext::hash_map,      boost::io::assoc_container_type );
+            BOOST_IO_CLASSIFY_TYPE_5( _stdext::hash_multimap, boost::io::assoc_container_type );
 #        endif
 #     endif
 
 #     if defined(BOOST_HAS_SLIST)
-         BOOST_IO_CLASSIFY_TYPE_2( std::slist, boost::io::seq_container_type );
+         BOOST_IO_CLASSIFY_TYPE_2( _stdext::slist, boost::io::seq_container_type );
 #     endif
 
       // Boost types
