@@ -8,15 +8,42 @@
 #ifndef BOOST_NUMERIC_BINDINGS_BLAS_BLAS1_OVERLOADS_HPP
 #define BOOST_NUMERIC_BINDINGS_BLAS_BLAS1_OVERLOADS_HPP
 
+#include <boost/numeric/bindings/blas/blas.h>
 #include <boost/numeric/bindings/traits/type.hpp>
 
 namespace boost { namespace numeric { namespace bindings { namespace blas { namespace detail {
 
-  void scal(const int& n, const float&     alpha, float*     x, const int& incx) { BLAS_SSCAL( &n,            &alpha,              x  , &incx ) ; } 
-  void scal(const int& n, const double&    alpha, double*    x, const int& incx) { BLAS_DSCAL( &n,            &alpha,              x  , &incx ) ; }
-  void scal(const int& n, const complex_f& alpha, complex_f* x, const int& incx) { BLAS_CSCAL( &n, real_cast( &alpha ), real_cast( x ), &incx ) ; }
-  void scal(const int& n, const complex_d& alpha, complex_d* x, const int& incx) { BLAS_ZSCAL( &n, real_cast( &alpha ), real_cast( x ), &incx ) ; }
+  using namespace boost::numeric::bindings::traits ;
 
+  // x *= alpha 
+  inline void scal(const int& n, const float&     alpha, float*     x, const int& incx) { BLAS_SSCAL( &n,            &alpha,              x  , &incx ) ; } 
+  inline void scal(const int& n, const double&    alpha, double*    x, const int& incx) { BLAS_DSCAL( &n,            &alpha,              x  , &incx ) ; }
+  inline void scal(const int& n, const complex_f& alpha, complex_f* x, const int& incx) { BLAS_CSCAL( &n, real_cast( &alpha ), real_cast( x ), &incx ) ; }
+  inline void scal(const int& n, const complex_d& alpha, complex_d* x, const int& incx) { BLAS_ZSCAL( &n, real_cast( &alpha ), real_cast( x ), &incx ) ; }
+
+  // y += alpha * x 
+  inline void axpy(const int& n, const float    & alpha, const float    * x, const int& incx, float    * y, const int& incy) { BLAS_SAXPY( &n,            &alpha  ,            x  , &incx,            y  , &incy ) ; }
+  inline void axpy(const int& n, const double   & alpha, const double   * x, const int& incx, double   * y, const int& incy) { BLAS_DAXPY( &n,            &alpha  ,            x  , &incx,            y  , &incy ) ; }
+  inline void axpy(const int& n, const complex_f& alpha, const complex_f* x, const int& incx, complex_f* y, const int& incy) { BLAS_CAXPY( &n, real_cast( &alpha ), real_cast( x ), &incx, real_cast( y ), &incy ) ; }
+  inline void axpy(const int& n, const complex_d& alpha, const complex_d* x, const int& incx, complex_d* y, const int& incy) { BLAS_ZAXPY( &n, real_cast( &alpha ), real_cast( x ), &incx, real_cast( y ), &incy ) ; }
+
+  // x^T . y 
+  inline float  dot(const int& n, const float * x, const int& incx, const float * y, const int& incy) { return BLAS_SDOT( &n, x, &incx, y, &incy ) ; }
+  inline double dot(const int& n, const double* x, const int& incx, const double* y, const int& incy) { return BLAS_DDOT( &n, x, &incx, y, &incy ) ; }
+
+  // x^T . y
+  inline void dotu(complex_f& ret, const int& n, const complex_f* x, const int& incx, const complex_f* y, const int& incy) { BLAS_CDOTU( real_cast( &ret ), &n, real_cast( x ), &incx, real_cast( y ), &incy ) ; }
+  inline void dotu(complex_d& ret, const int& n, const complex_d* x, const int& incx, const complex_d* y, const int& incy) { BLAS_ZDOTU( real_cast( &ret ), &n, real_cast( x ), &incx, real_cast( y ), &incy ) ; }
+
+  // x^H . y
+  inline void dotc(complex_f& ret, const int& n, const complex_f* x, const int& incx, const complex_f* y, const int& incy) { BLAS_CDOTC( real_cast( &ret ), &n, real_cast( x ), &incx, real_cast( y ), &incy ) ; }
+  inline void dotc(complex_d& ret, const int& n, const complex_d* x, const int& incx, const complex_d* y, const int& incy) { BLAS_ZDOTC( real_cast( &ret ), &n, real_cast( x ), &incx, real_cast( y ), &incy ) ; }
+
+  // euclidean norm
+  inline float  nrm2(const int& n, const float*   x, const int& incx) { return BLAS_SNRM2( &n, x, &incx ) ; }
+  inline double nrm2(const int& n, const double*  x, const int& incx) { return BLAS_DNRM2( &n, x, &incx ) ; }
+  
 }}}}}
+
 #endif // BOOST_NUMERIC_BINDINGS_BLAS_BLAS1_OVERLOADS_HPP
 
