@@ -1292,31 +1292,37 @@ for dealing with sequences of 3 types as follows:
 {\footnotesize
 \begin{verbatim}
 template< typename TinyList, long Pos >
+struct tiny_list_item;
+
+template< typename TinyList, long Pos >
 struct tiny_list_iterator
 {
-    typedef typename TinyList::template item<Pos>::type type;
+    typedef typename tiny_list_item<TinyList,Pos>::type type;
     typedef tiny_list_iterator<TinyList, Pos-1> prior;
     typedef tiny_list_iterator<TinyList, Pos+1> next;
-    temtiny_list_iterator<TinyList, Pos+1> next;
-
 };
 
-template< typename T1, typename T2, typename T3 >
+template< typename T0, typename T1, typename T2 >
 struct tiny_list
 {
     typedef tiny_list_iterator<tiny_list, 0> begin;
     typedef tiny_list_iterator<tiny_list, 3> end;
-    template< long > struct item;
+    typedef T0 type0;
+    typedef T1 type1;
+    typedef T2 type2;
 };
 
-template< typename T1, typename T2, typename T3 >
-template<> tiny_list::item<1> { typedef T1 type; };
+template< typename TinyList >
+struct tiny_list_item<TinyList,0>
+{ typedef typename TinyList::type0 type; };
 
-template< typename T1, typename T2, typename T3 >
-template<> tiny_list::item<2> { typedef T2 type; };
+template< typename TinyList >
+struct tiny_list_item<TinyList,1>
+{ typedef typename TinyList::type1 type; };
 
-template< typename T1, typename T2, typename T3 >
-template<> tiny_list::item<3> { typedef T3 type; };
+template< typename TinyList >
+struct tiny_list_item<TinyList,2>
+{ typedef typename TinyList::type2 type; };
 \end{verbatim}
 }
 
@@ -1342,7 +1348,7 @@ we added \code{advance} memeber to \code{tiny\_\-list\_\-iterator}:
 template< typename TinyList, long Pos >
 struct tiny_list_iterator
 {
-    typedef typename TinyList::template item<Pos>::type type;
+    typedef typename tiny_list_item<TinyList,Pos>::type type;
     typedef tiny_list_iterator<TinyList, Pos-1> prior;
     typedef tiny_list_iterator<TinyList, Pos+1> next;
     template< typename N > struct advance
