@@ -774,7 +774,8 @@ LINK ``SEE RATIONALE''). -H</b></p>
 
 <p>The purpose of this library is to provide an efficient and generalized way
 to deal with interval arithmetic through the use of a templatized class
-boost::interval. The behavior of this class can be fixed by three policies.
+<code>boost::interval</code>.
+The behavior of this class can be fixed by three policies.
 The first one specifies the way comparison operators are defined. The second
 one provides all the mathematical functions on the base type needed to define
 the functions on the interval type. The last one sets the way exceptional
@@ -782,31 +783,36 @@ cases encoutered during computations are handled.</p>
 
 <p>The library provides specialized implementations of the second policy for
 the primitive types float and double. In order for these implementations to
-be correct and fast, the library need to work a lot with rounding modes. Some
+be correct and fast, the library needs to work a lot with rounding modes. Some
 processors are directly dealt with and some mecanisms are provided in order
 to speed up the computations. It seems to be heavy and hazardous
 optimizations for a gain of only a few computer cycles; but in reality, the
 speed-up factor can easily go past 2 or 3 depending on the computer.
-Moreover, these optimizations do not impact the interface in some ugly
-way.</p>
+Moreover, these optimizations do not impact the interface.</p>
 
 <h2><a name="acks">History and Acknowledgments</a></h2>
 
 <p>This library was mostly inspired by previous work from Jens Maurer. Some
-discussions about his work were reproduced <a
+discussions about his work are reproduced <a
 href="http://www.mscs.mu.edu/%7Egeorgec/IFAQ/maurer1.html">here</a> and the
 work itself can be found <a
-href="http://www.rhein-main.de/people/jmaurer/interval.tar.gz">here</a>.</p>
+href="http://www.rhein-main.de/people/jmaurer/interval.tar.gz">here</a>.
+Jeremy Siek and Maarten Keijzer provided some rounding control for MSVC
+and Sparc platforms.</p>
 
-<p>Guillaume Melquiond started from the library left by Jens and added the
-policy design. Hervé Brönnimann and Sylvain Pion have provided some useful
-comments in order for this library to be written. Hervé Brönnimann
+<p>Guillaume Melquiond, Hervé Brönnimann and Sylvain Pion started from
+the library left by Jens and added the policy design. Guillaume and
+Sylvain worked hard on the code, especially the porting and mostly
+tuning of the rounding modes to the different architectures. Guillaume
+mostly did most of the coding, while Sylvain and Hervé have provided
+some useful comments in order for this library to be written. Hervé
 reorganized and wrote chapters of the documentation based on Guillaume's
 great starting point.</p>
+
 <hr>
 
-<p>Revised: 2002-08-21<br>
-Guillaume Melquiond, Sylvain Pion, Hervé Brönnimann.<br>
-Polytechnic University.</p>
+<p>Revised: 2002-08-30<br>
+Copyright (c) Guillaume Melquiond, Sylvain Pion, Hervé Brönnimann, 2002.<br>
+Work done at Polytechnic University.</p>
 </body>
 </html>
