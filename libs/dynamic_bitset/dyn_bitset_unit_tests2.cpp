@@ -1,18 +1,20 @@
-// (C) Copyright Jeremy Siek 2001. 
+// (C) Copyright Jeremy Siek 2001.
 // Permission to copy, use, modify, sell and distribute this software
 // is granted provided this copyright notice appears in all
 // copies. This software is provided "as is" without express or
 // implied warranty, and with no claim as to its suitability for any
 // purpose.
- 
+
 #include <iostream>
 #include <fstream>
 #include <cmath> // for pow
-#include <boost/dynamic_bitset.hpp>
+#include "boost/dynamic_bitset.hpp"
 
-#include <boost/test/test_tools.hpp>
+#include "boost/test/test_tools.hpp"
 
 #include "bitset_test.hpp"
+
+#include "boost/config.hpp" // for BOOST_HAS_LONG_LONG
 
 template <typename Block>
 void run_test_cases()
@@ -172,7 +174,7 @@ void run_test_cases()
     Tests::reset_all(b);
   }
   //=====================================================================
-  // Test b.reset(pos)  
+  // Test b.reset(pos)
   { // case pos >= b.size()
     boost::dynamic_bitset<Block> b;
     Tests::reset_one(b, 0);
@@ -214,7 +216,7 @@ void run_test_cases()
     Tests::flip_all(b);
   }
   //=====================================================================
-  // Test b.flip(pos)  
+  // Test b.flip(pos)
   { // case pos >= b.size()
     boost::dynamic_bitset<Block> b;
     Tests::flip_one(b, 0);
@@ -231,10 +233,15 @@ void run_test_cases()
 
 int
 test_main(int argc, char*[])
-{ 
+{
   run_test_cases<unsigned char>();
   run_test_cases<unsigned short>();
+  run_test_cases<unsigned int>();
   run_test_cases<unsigned long>();
+# ifdef BOOST_HAS_LONG_LONG
+  run_test_cases<unsigned long long>();
+# endif
+
   return EXIT_SUCCESS;
 }
- 
+

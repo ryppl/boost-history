@@ -14,6 +14,9 @@
 
 #include "bitset_test.hpp"
 
+#include "boost/config.hpp" // for BOOST_HAS_LONG_LONG
+
+
 template <typename Block>
 void run_test_cases()
 {
@@ -530,6 +533,11 @@ test_main(int, char*[])
 { 
   run_test_cases<unsigned char>();
   run_test_cases<unsigned short>();
+  run_test_cases<unsigned int>();
   run_test_cases<unsigned long>();
+# ifdef BOOST_HAS_LONG_LONG
+  run_test_cases<unsigned long long>();
+# endif
+
   return EXIT_SUCCESS;
 }

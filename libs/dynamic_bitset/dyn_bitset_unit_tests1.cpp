@@ -1,4 +1,4 @@
-// (C) Copyright Jeremy Siek 2001. 
+// (C) Copyright Jeremy Siek 2001.
 // Permission to copy, use, modify, sell and distribute this software
 // is granted provided this copyright notice appears in all
 // copies. This software is provided "as is" without express or
@@ -8,12 +8,14 @@
 #include <iostream>
 #include <fstream>
 #include <cmath> // for pow
-#include <boost/limits.hpp>
-#include <boost/dynamic_bitset.hpp>
 
-#include <boost/test/test_tools.hpp>
+#include "boost/limits.hpp"
+#include "boost/dynamic_bitset.hpp"
 
+#include "boost/test/test_tools.hpp"
 #include "bitset_test.hpp"
+
+#include "boost/config.hpp" // for BOOST_HAS_LONG_LONG
 
 
 template <typename Block>
@@ -33,7 +35,7 @@ void run_test_cases()
   for (std::size_t j = 0; j < long_string.size(); ++j)
     long_string[j] = '0' + (j % 2);
 
-  std::size_t N, ul_size = CHAR_BIT * sizeof(unsigned long), 
+  std::size_t N, ul_size = CHAR_BIT * sizeof(unsigned long),
     block_size = CHAR_BIT * sizeof(Block);
   unsigned long numbers[] = { 0, 40247,
                               std::numeric_limits<unsigned long>::max() };
@@ -44,31 +46,31 @@ void run_test_cases()
     unsigned long number = numbers[i];
     N = 0;
     test_from_ulong<Block>(N, number);
-    
+
     N = std::size_t(0.7 * double(ul_size));
     test_from_ulong<Block>(N, number);
-    
+
     N = 1 * ul_size;
     test_from_ulong<Block>(N, number);
-    
+
     N = std::size_t(1.3 * double(ul_size));
     test_from_ulong<Block>(N, number);
-    
+
     N = std::size_t(0.7 * double(block_size));
     test_from_ulong<Block>(N, number);
-    
+
     N = block_size;
     test_from_ulong<Block>(N, number);
-    
+
     N = std::size_t(1.3 * double(block_size));
     test_from_ulong<Block>(N, number);
-    
+
     N = 3 * block_size;
     test_from_ulong<Block>(N, number);
   }
   //=====================================================================
   // Test construction from a string
-  { 
+  {
     // case pos > str.size()
     Tests::from_string(std::string(""), 1, 1);
 
@@ -98,7 +100,7 @@ void run_test_cases()
   }
   {
     std::vector<Block> blocks(101);
-    for (typename std::vector<Block>::size_type i = 0; 
+    for (typename std::vector<Block>::size_type i = 0;
          i < blocks.size(); ++i)
       blocks[i] = i;
     Tests::from_block_range(blocks);
@@ -213,7 +215,7 @@ void run_test_cases()
   {
     boost::dynamic_bitset<Block> a(std::string("1"));
     std::vector<Block> blocks(101);
-    for (typename std::vector<Block>::size_type i = 0; 
+    for (typename std::vector<Block>::size_type i = 0;
          i < blocks.size(); ++i)
       blocks[i] = i;
     Tests::append_block_range(a, blocks);
@@ -250,9 +252,14 @@ void run_test_cases()
 
 int
 test_main(int, char*[])
-{ 
+{
   run_test_cases<unsigned char>();
   run_test_cases<unsigned short>();
+  run_test_cases<unsigned int>();
   run_test_cases<unsigned long>();
+# ifdef BOOST_HAS_LONG_LONG
+  run_test_cases<unsigned long long>();
+# endif
+
   return EXIT_SUCCESS;
 }
