@@ -17,6 +17,8 @@ class component;
 namespace win
 {
 
+std::string get_message_string( UINT message );
+
 class event: public MSG
 {
    public:
@@ -39,6 +41,8 @@ class event: public MSG
    public:
       inline event( id_type id, handle_type wh );
 };
+
+inline std::ostream & operator<<( std::ostream & os, const event & ev );
 
 unsigned int event::operator()() const
 {
@@ -101,6 +105,15 @@ event::event( id_type id, handle_type wh )
 {
    message = id;
    hwnd    = wh;
+}
+
+std::ostream & operator<<( std::ostream & os, const event & ev )
+{
+   return
+   (
+      os << '[' << ev.hwnd << '|' << get_message_string( ev.message ) << ']'
+         << '(' << ev.wParam << ", " << ev.lParam << ')'
+   );
 }
 
 }}}
