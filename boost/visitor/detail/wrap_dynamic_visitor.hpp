@@ -102,7 +102,7 @@ public: // metafunction result
 
     typedef typename mpl::apply_if<
           is_static_visitor<DynamicVisitor>   // in case visitor is both dynamic and static
-        , mpl::identity<DynamicVisitor>
+        , mpl::identity<DynamicVisitor&>
         , mpl::if_<
               is_void< typename DynamicVisitor::result_type >
             , wrap_dynamic_visitor_base_t
