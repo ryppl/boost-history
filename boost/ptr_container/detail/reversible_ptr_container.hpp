@@ -433,23 +433,11 @@ namespace detail
                                                                    auto_type ptr( c_.front() ); c_.pop_front(); return ptr; }
         auto_type        release_back()                          { if( empty() ) throw bad_ptr_container_operation( "'release_back()' on empty container" );
                                                                    auto_type ptr( c_.back() ); c_.pop_back(); return ptr; }
-        auto_type        release( iterator before )              { if( empty() ) throw bad_ptr_container_operation( "'release()' on empty container" ); 
-                                                                   auto_type ptr( &*before ); c_.erase( before.base() ); return ptr; }
-//        
-//        template< typename PtrContainer >
-//        std::auto_ptr<PtrContainer> release_impl()
-//        {
-//            std::auto_ptr<PtrContainer> ptr( new PtrContainer ); // strong guarantee
-//            swap( *ptr );                                        // nothrow
-//            return ptr;                                          // nothrow
-//        }
-//        
-//        template< typename PtrContainer >
-//        std::auto_ptr<PtrContainer> clone_impl() const                           
-//        { 
-//            return std::auto_ptr<PtrContainer>( new PtrContainer( begin(), end() ) ); // strong 
-//        }
-//        
+        auto_type        release( iterator where )               { if( empty() ) throw bad_ptr_container_operation( "'release()' on empty container" ); 
+                                                                   auto_type ptr( &*where ); c_.erase( where.base() ); return ptr; }
+
+        void             replace( iterator where, T* x )         { auto_type ptr( &*where ); *where = x; } // nothrow
+                                  
         template< typename PtrContainer, typename ReleaseIterator >
         void transfer( iterator before, ReleaseIterator object, PtrContainer& from )
         {

@@ -54,6 +54,12 @@ test-suite "container_traits"
 	  : : 
 	    :
 	    : iterator
+       ]
+     : [ run 
+	    ptr_array.cpp
+	  : : 
+	    :
+	    : ptr_array
        ]         
     ;
 

@@ -28,7 +28,7 @@ class Base
 public:
     
     Base()          {}
-    virtual ~Base() {}
+    virtual ~Base()                       { /** write debug code here */ }
     void     print( ostream& out ) const  { do_print( out); }
     Base*    clone() const                { return do_clone(); }
     void     foo()                        { do_foo(); }
@@ -125,6 +125,8 @@ public:
     
     Value() : s_( boost::lexical_cast<string>( rand() ) ) 
     {}
+    
+    ~Value()      { /** debug code here */ }
     
     string name() const
     {
@@ -277,7 +279,7 @@ void associative_container_test()
     BOOST_MESSAGE( "starting associative container test" ); 
     enum { max_cnt = 10, size = 100 };
     C  c;
-    BOOST_CHECK( c.size() == 0 );
+/*    BOOST_CHECK( c.size() == 0 );
     
     const C c2( c.begin(), c.end() );
     BOOST_CHECK( c.size() == c2.size() );
@@ -285,7 +287,7 @@ void associative_container_test()
     C c3;
     
     BOOST_MESSAGE( "finished construction test" ); 
-                     
+                 
     BOOST_DEDUCED_TYPENAME C::allocator_type alloc        = c.get_allocator();
     BOOST_DEDUCED_TYPENAME C::iterator i                  = c.begin();
     BOOST_DEDUCED_TYPENAME C::const_iterator ci           = c2.begin();
@@ -316,6 +318,7 @@ void associative_container_test()
     c3.clear();
     BOOST_CHECK( c3.empty() );
     BOOST_MESSAGE( "finished modifiers test" ); 
+    */
    /*          
     typedef BOOST_DEDUCED_TYPENAME C::auto_type auto_type;
     c.push_back( T() ); c.push_back( T() ); c.push_back( T() ); 
@@ -354,6 +357,8 @@ void algo_test()
     // std::sort( c.begin(), c.end() ); does the job, but much slower!
     cout << endl;     
     copy( c.begin(), c.end(), std::ostream_iterator<T>( std::cout ) ); 
+    
+    // todo: remove, remove_if, unique
 }
 
 

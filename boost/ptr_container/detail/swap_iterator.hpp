@@ -24,6 +24,8 @@
 #include <boost/operators.hpp>
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/detail/iterator.hpp>
+#include <boost/concept_check.hpp>
+
 #include <iosfwd>
 #include <cassert>
 #include <iterator>
@@ -39,48 +41,73 @@ namespace boost
             class swapper
             {
                 typedef typename std::iterator_traits<I>::value_type T;
-                //T* i_;
-                I& i_;
+                typedef typename boost::remove_pointer<T>::type               Obj_t;
+                    I i_;
                 
                 void swap( swapper& r ) // swap pointers
                 {
+                    // swap 
+                    
                     T t   = *i_;
+                    assert( t != 0 );
                     *i_   = *r.i_;
-                    *r.i_ = t;
+                    assert( *i_ != 0 );
+                    *r.i_ = t; //*/
+                    // copy -> crash?
+                    //*i_ = *r.i_;
                 }
                 
-                public:
+                swapper();
+                
+            public:
              
                 swapper( I& i ) : i_( i )
-                { }
+                {
+                    //assert( *i_ != 0 ); 
+                }
                 
                 swapper( const swapper& r ) : i_( r.i_ ) 
-                {}
-                
-                void operator=( swapper& r )
-                { swap( r ); }
-                
-                void operator=( T t ) // T is a pointer
                 {
-                    *i_ = t;
+                    //assert( *i_ != 0 ); 
                 }
                 
-                friend inline bool operator<( const swapper& l, const swapper& r )
+                void operator=( const swapper& r )
                 {
-                    return *l.i_ < *r.i_;
+                    *i_ = *r.i_; 
                 }
                 
-                I iter() const
+                void operator=( Obj_t& o )
                 {
-                    return i_;
+                    *i_ = &o;
+                }
+ 
+                operator const Obj_t&() const
+                {
+                    assert( *i_ != 0 );
+                    return **i_;
+                }
+                /*
+                operator T()
+                {
+                    assert( *i_ != 0 );
+                    return *i_;
+                }
+                */
+                friend inline bool operator==( const swapper& l, const swapper& r )
+                {
+                    assert( *l.i_ != 0 );
+                    assert( *r.i_ != 0 );
+                    return *l.i_ == *r.i_; 
                 }
                 
-                operator T() const // T is a pointer
+                T address() const
                 {
+                    assert( *i_ != 0 );
                     return *i_;
                 }
             };
             
+
             
             template< typename I >
             class swap_iterator 
@@ -88,158 +115,200 @@ namespace boost
                 I          iter_;
                 swapper<I> si_;
                 
+                swap_iterator();
+                
             public:
                 typedef std::random_access_iterator_tag               iterator_category;
-                typedef typename std::iterator_traits<I>::value_type  value_type;
+                typedef typename std::iterator_traits<I>::value_type  orig_value_type;
+                typedef typename boost::remove_pointer< orig_value_type >::type  value_type;
+                //typedef swapper<I>                                    value_type;
                 typedef std::ptrdiff_t                                difference_type;
-                typedef swapper<I>                                    reference;
+                typedef swapper<I>&                                   reference;
                 typedef value_type*                                   pointer;
                      
-                swap_iterator() : iter_( I() ), si_( iter_ )                              {}
-                explicit swap_iterator( const I& i ) : iter_( i ), si_( iter_ )           {}
-//                explicit swap_iterator( swapper<I>& s ) : iter_( s.iter() ), si_( iter_ ) {}
+                explicit swap_iterator( const I& i ) : iter_( i ), si_( iter_ )           
+                {
+                    //assert( *iter_ != 0 );
+                }
                 
-                swap_iterator( const swap_iterator& r ) : iter_( r.iter_ ), si_( iter_ ) {}
+                swap_iterator( const swap_iterator& r ) : iter_( r.iter_ ), si_( iter_ ) 
+                {
+                    //assert( *iter_ != 0 );
+                }
                 
                 swap_iterator& operator=( const swap_iterator& r ) 
                 {
                     iter_ = r.iter_;
+                    si_   = iter_;
+                    assert( *iter_ != 0 );
                     return *this;
                 }
                 
                 swapper<I>& operator*()
                 {
+                    assert( *iter_ != 0 );
                     return si_;
                 }
-                
                 
                 const swapper<I>& operator*() const
                 {
+                    assert( *iter_ != 0 );
                     return si_;
                 }
                 
+                orig_value_type operator->()
+                {
+                    assert( *iter_ != 0 );
+                    return *iter_;
+                }
+                
+                
+                const orig_value_type operator->() const
+                {
+                    assert( *iter_ != 0 );
+                    return *iter_;
+                }
                 
                 swap_iterator& operator++()
                 {
+                    assert( *iter_ != 0 );
                     ++iter_;
+                    si_ = iter_;
+                    // no assert here...could be end();
                     return *this;
                 }
                 
                 swap_iterator& operator--()
                 {
+                    assert( *iter_ != 0 );
                     --iter_;
+                    si_ = iter_;
+                    assert( *iter_ != 0 );
                     return *this;
                 }
                 
                 swap_iterator operator++( int )
                 {
                     swap_iterator tmp( iter_ );
-                    ++tmp;
+                    ++*this;
+                    // ++tmp; doh!
+                    assert( *iter_ != 0 );
                     return tmp;
                 }
                 
                 swap_iterator operator--( int )
                 {
                     swap_iterator tmp( iter_ );
-                    --tmp;
+                    --*this;
+                    //--tmp; doh!
+                    assert( *iter_ != 0 );
                     return tmp;
                 }
 
                 swap_iterator& operator+=( std::ptrdiff_t n )
                 {
                     iter_ += n;
+                    si_ = iter_;
+                    assert( *iter_ != 0 );
                     return *this;
                 }
                 
                 swap_iterator& operator-=( std::ptrdiff_t n )
                 {
                     iter_ -= n;
+                    si_   = iter_;
+                    assert( *iter_ != 0 );
                     return *this;
                 }
-
 
                 friend inline swap_iterator operator+( std::ptrdiff_t n, const swap_iterator& r )
                 {
                     swap_iterator res( r );
                     res += n;
+                    assert( *res.iter_ != 0 );
                     return res;
                 }
-                
                 
                 friend inline swap_iterator operator+( const swap_iterator& r, std::ptrdiff_t n )
                 {
                     swap_iterator res( r );
                     res += n;
+                    assert( *res.iter_ != 0 );
                     return res;
                 }
 
-                
-                friend inline swap_iterator operator-( std::ptrdiff_t n, const swap_iterator& r )
-                {
-                    swap_iterator res( r );
-                    res -= n;
-                    return res;
-                }
-                
-                
                 friend inline swap_iterator operator-( const swap_iterator& r, std::ptrdiff_t n )
                 {
                     swap_iterator res( r );
                     res -= n;
+                    assert( *res.iter_ != 0 );
                     return res;
                 }
-                
+
+                friend inline std::ptrdiff_t operator-( const swap_iterator& x, const swap_iterator& y )
+                {
+                    assert( x.iter_ - y.iter_ >= 0 );
+                    //assert( *x.iter_ != 0 ); could be end()
+                    assert( *y.iter_ != 0 );
+                    return x.iter_ - y.iter_;
+                }
+                               
+                swapper<I> operator[]( std::ptrdiff_t n )
+                {
+                    swap_iterator s = *this + n;
+                    assert( *s.iter_ != 0 );
+                    return s.si_;
+                }
 
                 friend inline bool operator==( const swap_iterator& l, const swap_iterator& r ) 
                 {
+                    assert( *l.iter_ != 0 );
+                    // assert( *r.iter_ != 0 ); could be end()
                     return l.iter_ == r.iter_;
                 }
                 
                 friend inline bool operator!=( const swap_iterator& l, const swap_iterator& r ) 
                 {
+                    //assert( *l.iter_ != 0 );
+                    //assert( *r.iter_ != 0 ); // could be end() 
                     return l.iter_ != r.iter_;
                 }
 
                 friend inline bool operator<( const swap_iterator& l, const swap_iterator& r ) 
                 {
+                    assert( *l.iter_ != 0 );
+                    assert( *r.iter_ != 0 );
                     return l.iter_ < r.iter_;
                 }
                 
                 friend inline bool operator>( const swap_iterator& l, const swap_iterator& r ) 
                 {
+                    assert( *l.iter_ != 0 );
+                    assert( *r.iter_ != 0 );
                     return l.iter_ > r.iter_;
                 }
                 
                 friend inline bool operator<=( const swap_iterator& l, const swap_iterator& r ) 
                 {
+                    assert( *l.iter_ != 0 );
+                    assert( *r.iter_ != 0 );
                     return l.iter_ <= r.iter_;
                 }
                 
                 friend inline bool operator>=( const swap_iterator& l, const swap_iterator& r ) 
                 {
+                    assert( *l.iter_ != 0 );
+                    assert( *r.iter_ != 0 );
                     return l.iter_ >= r.iter_;
                 }
                 
                 
-                swapper<I> operator[]( unsigned n )
-                {
-                    swap_iterator tmp( *this );
-                    tmp += n; 
-                    return tmp.operator*();
-                }
-                
-                friend inline std::ptrdiff_t operator-( const swap_iterator& x, const swap_iterator& y )
-                {
-                    std::ptrdiff_t n = std::distance( y, x );
-                    assert( n > 0 );
-                    return n;
-                }
-                
+                /*
                 I base() const
                 {
                     return iter_;
                 }
-                
+                */
             }; // class 'swap_iterator'
         } // namespace 'detail'
     } // nameespace 'ptr_container'
@@ -250,23 +319,24 @@ namespace boost
 //        return ptr_container::detail::swap_iterator<I,R>( i );
 //    }
     
+    template< typename T >
     class my_ptr_vector
     {
-        std::vector<int*> v_;
+        std::vector<T*> v_;
         
     public:
         ~my_ptr_vector()
         {
-            for( unsigned i = 0; i < v_.size(); ++ i )
+            for( unsigned i = 0; i < v_.size(); ++i )
                 delete v_[i]; 
         }
         
-        void push_back( int* p )
+        void push_back( T* p )
         {
             v_.push_back( p );
         }
         
-        typedef ptr_container::detail::swap_iterator< std::vector<int*>::iterator > swap_iterator;
+        typedef ptr_container::detail::swap_iterator< typename std::vector<T*>::iterator > swap_iterator;
         
         swap_iterator begin() { return swap_iterator( v_.begin() ); }
         swap_iterator end()   { return swap_iterator( v_.end() ); }
