@@ -4,14 +4,14 @@
 
 \newcommand{\Cpp}{C\kern-0.05em\texttt{+\kern-0.03em+}%
 }
-\newcommand{\Mpl}{Boost Meta\-program\-ming Library}
-\newcommand{\mping}{meta\-program\-ming}
-\newcommand{\mpgm}{meta\-program}
-\newcommand{\mpgms}{meta\-programs}
-\newcommand{\mpgmer}{meta\-program\-mer}
-\newcommand{\mpgmers}{meta\-program\-mer}
-\newcommand{\mfn}{meta\-function}
-\newcommand{\mfns}{meta\-functions}
+\newcommand{\Mpl}{Boost Meta\-pro\-gram\-ming Library}
+\newcommand{\mping}{meta\-pro\-gram\-ming}
+\newcommand{\mpgm}{meta\-pro\-gram}
+\newcommand{\mpgms}{meta\-pro\-grams}
+\newcommand{\mpgmer}{meta\-pro\-gram\-mer}
+\newcommand{\mpgmers}{meta\-pro\-gram\-mer}
+\newcommand{\mfn}{meta\-func\-tion}
+\newcommand{\mfns}{meta\-func\-tions}
 \newcommand{\mdat}{meta\-data}
 
 \input{defs}
@@ -893,21 +893,16 @@ struct derive<void,void>
 Veldhuizen [Vel95] was first to talk about class templates of this
 form as ``compile-time functions'', and [CE00] have introduced
 ``template \mfn'' as an equivalent term (they also use the simpler
-term ``\mfn'' as do we). While syntactically simple, however, this
+term ``\mfn'' as do we). 
+
+
+While syntactically simple, however, this
 form of \mfn\ does not always interact optimally with the rest of
-\Cpp. In particular, the use of simple \mfns\ makes the use of
-higher--order functions difficult.
-
-\begin{glossary}
-  \term{Higher-Order Function} is a function that can take other
-  functions as arguments, and/or return functions as
-  results. Higher-order functions are a distinguishing features of the
-  modern functional languages [Hud89].
-\end{glossary}
-
-
-In order to pass such a \mfn\ to another template, we need to
-use \emph{template template parameters}:
+\Cpp. In particular, the simple \mfn\ form makes it unneccesarily
+awkward and tedious to define and work with higher-order \mfns\
+(\mfns\ that operate on other \mfns). In order to pass a simple \mfn\
+to another template, we need to use \emph{template template
+parameters}:
 
 {\small
 \begin{codesamp}\begin{verbatim}
@@ -930,9 +925,39 @@ struct derive3
 \end{codesamp}
 }
 
+This looks different, but it seems to work.\footnote{In fact it's
+  already broken: \code{apply\_twice} doesn't even fit the \mfn\
+  concept: it requires a template (rather than a type) as its first
+  parameter, which breaks the \mfn\ protocol!} However, things begin
+  to break down noticeably when we want to ``return'' a \mfn\ from our
+  \mfn:
+
+{\small
+\begin{codesamp}\begin{verbatim}
+// Returns G s.t. G(T1,T2,T3) == F(T1,F(T2,T3))
+template<template<typename>class F>
+struct compose_self
+{
+  template <class T1, class T2, class T3> 
+  struct type : apply_twice<F,T1,T2,T3> {};
+};
+\end{verbatim}
+\end{codesamp}
+}
+
+The first and most obvious problem is that the result of applying
+\code{compose\_\-self} is not itself a type, but a template, so it
+can't be passed in the usual ways to other \mfns. A more subtle issue,
+however, is that the \mfn\ ``returned'' is not exactly what we
+intended. Although it acts just like \code{apply\_\-twice}, it differs
+in one important respect: its identity. In the \Cpp\ type system,
+\code{compose\_\-self<F>::template type<T,U,V>} is not a synonym for
+\code{apply\_\-twice<F,T,U,V>}, and any \mpgm\ which compared \mfns\
+would discover that fact.
+
 Because \Cpp\ makes a strict distinction between type and class
-template template parameters, this approach creates an artificial
-``wall'' between \mfns\ and other \mdat, relegating \mfns\ to the
+template template parameters, reliance on simple \mfns\ creates a
+``wall'' between \mfns\ and \mdat, relegating \mfns\ to the
 status of second-class citizens. For example, recalling our
 introduction to type sequences, there's no way to make a \code{cons}
 list of \mfns:
@@ -957,11 +982,21 @@ template <
 \end{codesamp}
 }
 
-However, now we have another problem: \Cpp\ strictly enforces the
-\emph{arity} (number of parameters) of any template template
-parameter, so we \emph{still} can't embed \code{derive3} in a
-\code{cons} list. Fortunately, the truism that ``there is no problem
-in software which can't be solved by adding yet another level of
+However, now we have another problem: \Cpp\ templates are
+\emph{polymorphic} with respect to their type arguments, but not with
+respect to template template parameters. The \emph{arity} (number of
+parameters) of any template template parameter is strictly enforced,
+so we \emph{still} can't embed \code{derive3} in a \code{cons}
+list. Moreover, polymorphism \emph{between} types and \mfns\ is not
+supported (the compiler expects one or the other), and the syntax of
+``returning'' \mfns\ is different from syntax of returning a type. All
+this seriously limits the applicability of higher-order \mfns, leads
+to unnecessary code duplication, and has an overall negative effect on
+the both conceptual and implementation clarity, simplicity and size of
+the library.
+
+Fortunately, the truism that ``there is no problem in software
+which can't be solved by adding yet another level of
 indirection''\footnote{Andrew Koening calls this ``The Fundamental
 Theorem of Software Engineering''} applies here. To elevate \mfns\ to
 the status of first-class objects, the MPL introduces the concept of a
@@ -1003,159 +1038,13 @@ struct add
 \end{codesamp}
 }
 
-These two forms exist because of some idiosyncrasy in 
-how templates are defined in C++, - in particular, because 
-of the lack of so called template typedefs [Sut01]. The 
-latter makes it unnecessary awkward and tedious to define 
-and work with higher-order ct-\mfns\ (i.e. class 
-template \mfns\ that returns another class template 
-\mfns):
-
-%%% Should make the link between template typedefs and closures
-
-{\small
-\begin{codesamp}\begin{verbatim}
-// a compile-time equivalent of std::bind1st
-template<
-      template< typename P1, typename P2 > class F
-    , typename T1
-    >
-struct bind1st
-{
-    // template< typename U > typedef F<T1, U> type;
-    template< typename U > struct type
-        : F<T1, U>
-    {
-    };
-};
-
-// a compile-time equivalent of boost::compose_f_gx
-template<
-      template< typename > class F
-    , template< typename > class G
-    >
-struct compose_f_gx
-{
-    // template< typename X > 
-    // typedef F< typename G<X>::type > type;
-    template< typename X > struct type
-        : F< typename G<X>::type >
-    {
-    };
-};
-
-template< typename T >
-struct some_type_computation
-{
-    // ...
-
-    // define composite predicate, clumsy!
-    template< typename U > struct is_T_or_const_T
-        : compose_f_gx<
-              bind1st< boost::is_same,T >::template type
-            , boost::remove_const
-            >::template type<U>
-    {
-    };
-
-    // do something with it
-    typedef find_if< types,is_T_or_const_T >::type itor;
-    // ...
-};
-\end{verbatim}
-\end{codesamp}
-}
-
-%%% Can you make your case here with just bind1st? compose_f_gx is
-%%% probably not too familiar to most people, and the code here is
-%%% pretty complicated.
-
-In this example, passing the body of 
-\code{is\_T\_or\_const\_T} predicate directly to 
-\code{find\_if} would make things a little bit prettier, 
-
-%%% What point are you trying to make here? Consider cutting this.
-
-{\small
-\begin{codesamp}\begin{verbatim}
-template< typename T >
-struct complex_type_computation
-{
-    // ...
-    // define composite predicate and do something with it
-    typedef find_if<
-          types
-        , compose_f_gx<
-              bind1st< boost::is_same,T >::template type
-            , boost::remove_const
-            >::template type
-        >::type itor;
-    // ...
-};
-\end{verbatim}
-\end{codesamp}
-}
-
-but in general this doesn't scale. 
-
-There are some problems with correctness of the above 
-approach as well - deriving the \code{type} members of 
-\code{bind1st} and \code{compose\_f\_gx} templates from 
-the ct-\mfns\ they are composing (\code{F} and 
-\code{G}) \emph{changes the type of the result}. 
-For instance:
-
-{\small
-\begin{codesamp}\begin{verbatim}
-template< typename T1, typename T2 >
-struct my
-{
-    // ...
-};
-
-typedef bind1st<my, int>::type<long> result;
-typedef my< int,long > expected_result;
-
-BOOST_MPL_ASSERT_IS_SAME(result, expected_result); // fails!
-BOOST_STATIC_ASSERT((boost::is_convertible<result,expected_result>::value));
-\end{verbatim}
-\end{codesamp}
-}
-
-This may or may be not a problem, depending on how you 
-want to use the result of a type computation algorithm 
-that applies higher-order \mfns\ internally. 
-Unfortunately, within the current language inheritance 
-is the only way to ``return'' a class template.
-
-%%% A marginal issue. We don't have true closures either but it
-%%% doesn't seem to cause problems... or maybe it does (we can't declare
-%%% a variable to hold the result of bind)
-
-%%\emph{MORE IMPORTANTLY - why representing metafunctions as plain class
-%% templates (ct-metafunctions) is not a option.}
-
-
-\begin{glossary}
-  \term{polymorphic} A function is \emph{polymorphic} if it can take
-  arguments of an arbitrary type (a \Cpp\ term from run-time world
-  would be ``generic'')
-\end{glossary}
-
-\Cpp\ templates are \emph{polymorphic} regarding the type 
-arguments (type template parameters) they take. However they 
-are not polymorphic regarding ct-\mfns\ (class 
-template template parameters). In particular, the language 
-rules dictate the compiler to enforce \emph{strict arity} of 
-the class templates being passed as template template 
-parameters. Moreover, polymorphism \emph{between} types and 
-ct-\mfns\ is not supported, and the syntax of 
-``returning'' ct-\mfns\ is different from syntax of 
-returning a type. All this seriously limits the 
-applicability of higher-order functions, leads to 
-unnecessary code duplication, and has an overall negative 
-effect on the both conceptual and implementation clarity, 
-simplicity and size of the library.
+%% Based on the above, I don't see how to justify the statement
+%% below. For example, how would a template typedef help me to put a
+%% metafunction into a cons list?
+%%
+%% two forms exist because of some idiosyncrasy in 
+%% how templates are defined in C++, - in particular, because 
+%% of the lack of so called template typedefs [Sut01]. 
 
 %%% I think we should have a separate section to discuss
 %%% limitations/complaints about C++ and possible suggestions for ways
@@ -1163,77 +1052,6 @@ simplicity and size of the library.
 %%% concentrate focus on ``here's what the lib does, here's how''
 %%% where appropriate.
 
-For example, that means that you cannot write a single 
-generic metafunction that passes the result of one 
-function's execution as the argument to another function:
-
-%%% FWIW, when you start using template template parameters, using
-%%% ``typename'' (instead of ``class'') for type template parameters
-%%% really hurts readability IMO. We have 3 keywords that look quite
-%%% similar: template typedef typename. I understand the theoretical
-%%% reasons for doing it this way.
-
-{\small
-\begin{codesamp}\begin{verbatim}
-// won't work if either F or G (or both) a higher-level functions
-template<
-      template< typename > class F
-    , template< typename > class G
-    , typename X
-    >
-struct f_gx
-{
-    typedef typename F< typename G<X>::type >::type type;
-};
-
-// how we have to write it if G returns F takes an unary ct-metafunction
-template<
-      template< template< typename > class > class F
-    , template< typename > class G
-    , typename X
-    >
-struct f_gx2
-{
-    typedef typename F< G<X>::template type >::type type;
-};
-
-// and another one for a binary ct-metafunction, etc.
-template<
-      template< template< typename, typename > class > class F
-    , template< typename > class G
-    , typename X
-    >
-struct f_gx3
-{
-    typedef typename F< G<X>::template type >::type type;
-};
-\end{verbatim}
-\end{codesamp}
-}
-
-Or, for example, that means that you cannot have a list of 
-ct-\mfns:
-
-{\small
-\begin{codesamp}\begin{verbatim}
-template< typename T1, typename T2 >
-struct my_func
-{
-    typedef /* ... */ type;
-};
-
-typedef mpl::list< 
-      my_func
-    , boost::is_same
-    , boost::is_convertible
-    > func_list; // error!
-\end{verbatim}
-\end{codesamp}
-}
-
-You would need to have a special kind of list to do the above, 
-and then yet another special kind of list for \emph{unary} 
-ct-metafunction, etc.
 
 So, basically, representing \mfns\ as plain class 
 template would lead to duplication of almost every library 
@@ -1302,7 +1120,7 @@ algorithms/functions.
 
 The library's answer to this dilemma is lambda expressions. 
 Lambda is the mechanism that enables currying of 
-ct-\mfns\ and converting them into function classes, 
+\mfns\ and converting them into function classes, 
 so when you want to pass \code{find} algorithm as an argument 
 to a higher-order function, you just write:
 
@@ -2571,6 +2389,19 @@ are used, and the FSMs are table driven.
 \section{Lessons learned}
 
 \section{Conclusions}
+
+\begin{glossary}
+  \term{Higher-Order Function} is a function that can take other
+  functions as arguments, and/or return functions as
+  results. Higher-order functions are a distinguishing features of the
+  modern functional languages [Hud89].
+
+  \term{polymorphic} A function is \emph{polymorphic} if it can take
+  arguments of an arbitrary type (a \Cpp\ term from run-time world
+  would be ``generic'')
+\end{glossary}
+
+
 \section{Acknowledgements}
 \section{References}
 
