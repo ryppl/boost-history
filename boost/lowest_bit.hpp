@@ -23,7 +23,7 @@ namespace boost {
     template <typename T>
     int lowest_bit(T x) {
 
-        assert( x >= 1); // PRE
+        assert(x >= 1); // PRE
 
         // clear all bits on except the rightmost one,
         // then calculate the logarithm base 2

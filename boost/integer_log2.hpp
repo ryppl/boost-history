@@ -77,7 +77,7 @@ namespace boost {
  template <typename T>
  int integer_log2(T x) {
 
-     assert (x > 0);
+     assert(x > 0);
 
      const int n = detail::max_pow2_less<
                     std::numeric_limits<T> :: digits, 4
