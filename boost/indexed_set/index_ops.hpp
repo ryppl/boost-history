@@ -15,7 +15,7 @@ namespace indexed_sets{
 namespace detail{
 
 /* Common code for index memfuns having templatized and
- * non-templatized code.
+ * non-templatized versions.
  */
 
 template<

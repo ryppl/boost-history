@@ -453,7 +453,7 @@ BOOST_INDEXED_SET_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
     key(x.key),
     comp(x.comp)
   {
-    /* Copy ctor just takes the compare objects from x. The rest is done in
+    /* Copy ctor just takes the key and compare objects from x. The rest is done in
      * subsequent call to copy_().
      */
   }
