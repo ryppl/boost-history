@@ -10,7 +10,7 @@
 // to its suitability for any purpose.
 
 
-#include "../container_algo.hpp"
+#include "boost/sequence_algo/container_algo.hpp"
 
 #include <functional>
 #include <cassert>
@@ -84,10 +84,10 @@ namespace
     using namespace boost;
 
     #define TEST_DATA                                                        \
-        pair<int, int>      p( 1, 2 );                                       \
-        const pair<int,int> cp( 2, 3);                                       \
         int                 a[] = { 1, 2, 4, 2, 6, 7, 9, 3, 2, 5, 5, 3, 3 }; \
         const int           ca[] = { 1, 2, 3, 5, 7, 9, 11 };                 \
+        pair<int*, int*>    p( a, a + sizeof( a ) / sizeof( a[0] ) );        \
+        const pair<const int*, const int*> cp( ca, ca + sizeof( ca ) / sizeof( ca[0] ) ); \
         vector<int>         v( a, a + sizeof( a ) / sizeof( a[0] ) );        \
         const vector<int>   cv( v );                                         \
         int*                                 aiter;                          \
@@ -131,8 +131,8 @@ namespace
     void test_for_each()
     {
         TEST_DATA;
-        //for_each( p, unary_fun() );  
-        //for_each( cp, unary_fun() ) );  
+        for_each( p, unary_fun() );  
+        for_each( cp, unary_fun() );  
         for_each( a, unary_fun() );
         for_each( ca, unary_fun() );
         for_each( v, unary_fun() );
@@ -144,6 +144,8 @@ namespace
     void test_find()
     {
         TEST_DATA;
+        aiter  = find( p, 5 );
+        caiter = find( cp, 5 );
         aiter  = find( a, 5 );
         caiter = find( ca, 5 );
         iter   = find( v, 3 );
@@ -155,6 +157,8 @@ namespace
     void test_find_if()
     {
         TEST_DATA;
+        aiter  = find_if( p, predicate() );
+        caiter = find_if( cp, predicate() );
         aiter  = find_if( a, predicate() );
         caiter = find_if( ca, predicate() );
         iter   = find_if( v, predicate() );
@@ -166,11 +170,15 @@ namespace
     void test_adjacent_find()
     {
         TEST_DATA;
+        aiter  = adjacent_find( p );
+        caiter = adjacent_find( cp );
         aiter  = adjacent_find( a );
         caiter = adjacent_find( ca );
         iter   = adjacent_find( v );
         citer  = adjacent_find( cv );
 
+        aiter  = adjacent_find( p, bin_predicate() );
+        caiter = adjacent_find( cp, bin_predicate() );
         aiter  = adjacent_find( a, bin_predicate() );
         caiter = adjacent_find( ca, bin_predicate() );
         iter   = adjacent_find( v, bin_predicate() );
@@ -184,11 +192,15 @@ namespace
         TEST_DATA;
         int seeking[] = { 6, 5};
 
+        aiter  = find_first_of( p, seeking );
+        caiter = find_first_of( cp, seeking );
         aiter  = find_first_of( a, seeking );
         caiter = find_first_of( ca, seeking );
         iter   = find_first_of( v, seeking  );
         citer  = find_first_of( cv, seeking );
 
+        aiter  = find_first_of( p, seeking, bin_predicate() );
+        caiter = find_first_of( cp, seeking, bin_predicate() );
         aiter  = find_first_of( a, seeking, bin_predicate() );
         caiter = find_first_of( ca, seeking, bin_predicate() );
         iter   = find_first_of( v, seeking, bin_predicate() );
@@ -203,6 +215,8 @@ namespace
         TEST_DATA;
         const int val = 5;
         size_t ac;
+        ac = count( p, val );
+        ac = count( cp, val );
         ac = count( a, val );
         ac = count( ca, val );
         vector<int>::difference_type cc;
@@ -216,6 +230,8 @@ namespace
     {
         TEST_DATA;
         size_t ac;
+        ac = count_if( p, predicate() );
+        ac = count_if( cp, predicate() );
         ac = count_if( a, predicate() );
         ac = count_if( ca, predicate() );
         vector<int>::difference_type cc;
@@ -232,11 +248,15 @@ namespace
         //
         TEST_DATA;
         int seeking[] = { 1, 2, 3};
+        pair<int*, int*>            pp  = mismatch( p, seeking );
+        pair<const int*, int*>      pcp = mismatch( cp, seeking );
         pair<int*, int*>            pa  = mismatch( a, seeking );
         pair<const int*, int*>      pca = mismatch( ca, seeking );
         pair<iterator, int*>        pv  = mismatch( v, seeking );
         pair<const_iterator, int*>  pcv = mismatch( cv, seeking );
 
+        pp  = mismatch_( p, seeking, bin_predicate() ); 
+        pcp = mismatch_( cp, seeking, bin_predicate() );
         pa  = mismatch_( a, seeking, bin_predicate() ); 
         pca = mismatch_( ca, seeking, bin_predicate() );
         pv  = mismatch_( v, seeking, bin_predicate() );
@@ -249,12 +269,16 @@ namespace
         TEST_DATA;
         equal( a, a );
         equal( ca, ca );
+        equal( p, p );
+        equal( cp, cp );
         equal( v, v );
         equal( cv, cv );
 
         //
         // @note: clash with std::equal
         //
+        equal_( p, p, bin_predicate() );
+        equal_( cp, cp, bin_predicate() );
         equal_( a, a, bin_predicate() );
         equal_( ca, ca, bin_predicate() );
         equal_( v, v, bin_predicate() );
@@ -268,11 +292,15 @@ namespace
         TEST_DATA;
         int seeking[] = { 3,6};
 
+        aiter  = search( p, seeking );
+        caiter = search( cp, seeking );
         aiter  = search( a, seeking );
         caiter = search( ca, seeking );
         iter   = search( v, seeking );
         citer  = search( cv, seeking );
 
+        aiter  = search( p, seeking, bin_predicate() );
+        caiter = search( cp, seeking, bin_predicate() );
         aiter  = search( a, seeking, bin_predicate() );
         caiter = search( ca, seeking, bin_predicate() );
         iter   = search( v, seeking, bin_predicate() );
@@ -286,11 +314,15 @@ namespace
         TEST_DATA;
         const int val = 6;
         const int cnt = 1;
+        aiter  = search_n( p, cnt, val ); 
+        caiter = search_n( cp, cnt, val );
         aiter  = search_n( a, cnt, val ); 
         caiter = search_n( ca, cnt, val );
         iter   = search_n( v, cnt, val );
         citer  = search_n( cv, cnt, val );
 
+        aiter  = search_n( p, cnt, val, bin_predicate() ); 
+        caiter = search_n( cp, cnt, val, bin_predicate()  );
         aiter  = search_n( a, cnt, val, bin_predicate() ); 
         caiter = search_n( ca, cnt, val, bin_predicate()  );
         iter   = search_n( v, cnt, val, bin_predicate()  );
@@ -304,11 +336,15 @@ namespace
         TEST_DATA;
         int seeking[] = { 3,5};
 
+        aiter  = find_end( p, seeking );
+        caiter = find_end( cp, seeking );
         aiter  = find_end( a, seeking );
         caiter = find_end( ca, seeking );
         iter   = find_end( v, seeking );
         citer  = find_end( cv, seeking );
 
+        aiter  = find_end( p, seeking, bin_predicate() );
+        caiter = find_end( cp, seeking, bin_predicate() );
         aiter  = find_end( a, seeking, bin_predicate() );
         caiter = find_end( ca, seeking, bin_predicate() );
         iter   = find_end( v, seeking, bin_predicate() );
