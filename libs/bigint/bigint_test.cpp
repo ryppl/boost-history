@@ -7,8 +7,12 @@
 // bigint_test.cpp - test cases for bigint.
 //
 
-
+#ifdef USE_GMP
+#include "boost/bigint_gmp.hpp"
+#else
 #include "boost/bigint.hpp"
+#endif
+
 #include "boost/lexical_cast.hpp"
 #include <cassert>
 #include <sstream>
@@ -161,6 +165,23 @@ int main() {
   } catch (boost::bad_lexical_cast&) {
     throw;
   }
+
+  // division tests: 
+  // y / x = q,
+  // y % x = r,
+  // where y = qx + r,
+  // q = float(y)/float(x) rounded towards 0
+  // 0 <= |r| < |q|
+  // (this is called truncation division)
+  assert(bigint(11) / bigint(3) == bigint(3));
+  assert(bigint(11) / bigint(-3) == bigint(-3));
+  assert(bigint(-11) / bigint(3) == bigint(-3));
+  assert(bigint(-11) / bigint(-3) == bigint(3));
+
+  assert(bigint(11) % bigint(3) == bigint(2));
+  assert(bigint(11) % bigint(-3) == bigint(2));
+  assert(bigint(-11) % bigint(3) == bigint(-2));
+  assert(bigint(-11) % bigint(-3) == bigint(-2));
 
 
 }

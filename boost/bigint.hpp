@@ -125,8 +125,8 @@ class bigint : boost::operators<bigint> {
     for(buffer_t::iterator i = buffer.begin();
 	i != buffer.end(); ++i) {
 
-      int new_carry = integral_div((carry + *i),radix);
-      *i = integral_mod((carry + *i),radix);
+      int new_carry = floor_div((carry + *i),radix);
+      *i = floor_mod((carry + *i),radix);
       carry = new_carry;
     }
     if(carry)
@@ -168,16 +168,16 @@ class bigint : boost::operators<bigint> {
 
   // Any integer x can be represented as: x = qy + r, 0 <= |r| < |d|. 
   // Then:
-  //   - integral_div(x,y) = q
-  //   - integral_mod(x,y) = r.
+  //   - floor_div(x,y) = q
+  //   - floor_mod(x,y) = r.
   // Specifically, this is "floor" division:
   // the quotient q is equal to the "x/y" rounded towards negative infinity
   // (the floor function). The remainder r always has the same sign as y.
-  int integral_div(int lhs, int rhs) {
-    return (lhs - integral_mod(lhs,rhs)) / rhs;
+  int floor_div(int lhs, int rhs) {
+    return (lhs - floor_mod(lhs,rhs)) / rhs;
   }
 
-  int integral_mod(int lhs, int rhs) {
+  int floor_mod(int lhs, int rhs) {
     
     bool negative = false;
     if (rhs < 0) {
@@ -246,10 +246,23 @@ class bigint : boost::operators<bigint> {
 			  bigint& quotient,
 			  bigint& remainder) {
 
+    // WARNING: either "other" or "this" may alias with "quotient" or "remainder"
     bigint xs(*this);
     bigint ys(other);
-    
-    int d = integral_div(radix,ys.buffer.back()+1);
+
+
+    // This algorithm works specifically for non-negative numbers. 
+    // Quotient and remainder signs are fixed at the end.
+    bool const negative_dividend = this->negative();
+    bool const negative_divisor = other.negative();
+
+    if (negative_dividend)
+      xs.negate();
+
+    if(negative_divisor)
+      ys.negate();
+
+    int d = floor_div(radix,ys.buffer.back()+1);
     xs *= bigint(d);
     ys *= bigint(d);
 
@@ -286,7 +299,7 @@ class bigint : boost::operators<bigint> {
 	if(xxs.buffer.back() >= ys.buffer.back()) 
 	  q = radix-1;
 	else
-	  q = integral_div(xxs.buffer.back() *
+	  q = floor_div(xxs.buffer.back() *
 			     radix + *(++xxs.buffer.rbegin()),
 			   ys.buffer.back());
 
@@ -303,6 +316,13 @@ class bigint : boost::operators<bigint> {
 
     if(remainder != bigint(0))
       remainder.bdiv(d);
+
+    // Fix the quotient and remainder signs
+    if(negative_dividend) remainder.negate();
+
+    if((negative_dividend && !negative_divisor) ||
+       (!negative_dividend && negative_divisor))
+      quotient.negate();
   }
 
   bigint& bdiv(int const& other) {
@@ -311,12 +331,12 @@ class bigint : boost::operators<bigint> {
     int r = 0;
     for(buffer_t::reverse_iterator i = buffer.rbegin();
 	i != buffer.rend(); ++i) {
-      r = radix * integral_mod(r,other) + *i;
+      r = radix * floor_mod(r,other) + *i;
       *i = r;
     }
     for(buffer_t::reverse_iterator i = buffer.rbegin();
 	i != buffer.rend(); ++i) {
-      *i = integral_div(*i,other);
+      *i = floor_div(*i,other);
     }    
     normalize();
     return *this;
