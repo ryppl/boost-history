@@ -52,8 +52,8 @@
             }
          public: // constructors
             inline           openclose_formatter_t():
-               fmt_open(  traits_type::open_default  ),
-               fmt_close( traits_type::close_default )
+               fmt_open(  traits_type::open_default()  ),
+               fmt_close( traits_type::close_default() )
             {
             }
             inline           openclose_formatter_t( format_type o, format_type c ):

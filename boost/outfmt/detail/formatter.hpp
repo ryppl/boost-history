@@ -76,7 +76,7 @@
          public: // constructors
             inline           formatter_t():
                openclose_formatter_t< FormatType, ReferenceType, FormatTraits >(),
-               fmt_separator( traits_type::separator_default )
+               fmt_separator( traits_type::separator_default() )
             {
             }
             inline           formatter_t
@@ -169,7 +169,7 @@
                                 format_type o,
                                 format_type c
                              ):
-               formatter_t< FormatType, formatter, FormatTraits >( o, c, traits_type::separator_default )
+               formatter_t< FormatType, formatter, FormatTraits >( o, c, traits_type::separator_default() )
             {
             }
             inline           formatter( format_type s ):
@@ -190,7 +190,7 @@
                              (
                                 const openclose_formatter_t< FormatType, RT2, FormatTraits2 > & fmt
                              ):
-               formatter_t< FormatType, formatter, FormatTraits >( fmt, traits_type::separator_default )
+               formatter_t< FormatType, formatter, FormatTraits >( fmt, traits_type::separator_default() )
             {
             }
 #           if !defined(BOOST_MSVC) || _MSC_VER > 1200
