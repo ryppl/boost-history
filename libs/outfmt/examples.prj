@@ -19,6 +19,8 @@
       <move src = "$@" dest = "../$@"/>
    </build><build file = "john-torjo.exe" dir = "example" objs = "john-torjo.obj">
       <move src = "$@" dest = "../$@"/>
+   </build><build file = "serialize.exe" dir = "example" objs = "serialize.obj">
+      <move src = "$@" dest = "../$@"/>
    </build>
 
    <run file = "basic-facilities" out = "output/basic-facilities.txt"/>
@@ -30,8 +32,10 @@
    <run file = "output2D"         out = "output/output2D.txt"/>
    <run file = "output3D"         out = "output/output3D.txt"/>
    <run file = "john-torjo"       out = "output/john-torjo.txt"/>
+   <run file = "serialize"        out = "output/serialize.txt"/>
 
    <clean>
       <del files = "*.exe"/>
+      <del files = "doc*.*"/>
    </clean>
 </project>
