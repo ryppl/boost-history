@@ -7,11 +7,11 @@
   <title>Checking policies</title>
 </head>
 
-<body lang="en">
+<body>
 <h1>Checking policies</h1>
 
 <p>A checking policy controls how the <code>interval</code> class will deal
-with special cases like : empty intervals, infinite numbers, invalid
+with special cases like: empty intervals, infinite numbers, invalid
 values.</p>
 
 <p>For example, let's consider <code>operator+(interval, T)</code>. The
@@ -22,7 +22,7 @@ situation can arise but is forbidden. Third, we could allow such values and
 generate an empty interval when encountered. And there is many other
 possibilities.</p>
 
-<p>It is the reason why such a policy is used : there is a lot of interesting
+<p>It is the reason why such a policy is used: there is a lot of interesting
 behaviors and it would be sad to arbitrarily select one of these.</p>
 
 <h2>Requirements</h2>
@@ -62,7 +62,7 @@ call to <code>checking::nan</code> (but will return the same value than
 the lower and upper bound of the empty interval. There is no requirements for
 <code>empty_lower</code> and <code>empty_upper</code> to return the same
 value than <code>checking::nan</code>. For example, if the type
-<code>T</code> does not have any invalid value, the <code>empty</code>_
+<code>T</code> does not have any invalid value, the <code>empty_</code>
 functions can return the [1;0] interval.</p>
 
 <p><code>is_nan</code> is used to test if a value of type <code>T</code> is
@@ -135,8 +135,8 @@ they will correctly deal with them.</p>
 <p><code>exception_create_empty</code> throws <code>std::runtime_error</code>
 with the message <code>"boost::interval: empty interval created"</code> and
 <code>exception_invalid_number</code> throws
-<code>std::invalid_argument</code> with the message <code>"boost::interval:
-invalid number"</code>.</p>
+<code>std::invalid_argument</code> with the message
+<code>"boost::interval: invalid number"</code>.</p>
 
 <h2>Customizing your own checking policy</h2>
 
