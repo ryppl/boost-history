@@ -5,7 +5,7 @@ import testing ;
 
 DEPENDS all : test ;
 
-run dispatch.cpp <lib>../../build/langbinding : : : : <include>$(BOOST_ROOT) ;
+run dispatch.cpp <lib>../../build/langbinding : : : <include>$(BOOST_ROOT) ;
 run make_function.cpp <lib>../../build/langbinding : : : <include>$(BOOST_ROOT) ;
-run rvalue_conversion.cpp <lib>../../build/langbinding : : : : <include>$(BOOST_ROOT) ;
+run rvalue_conversion.cpp <lib>../../build/langbinding : : : <include>$(BOOST_ROOT) ;
 
