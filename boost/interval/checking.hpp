@@ -12,10 +12,12 @@ struct checking_nothing
   static void inverted_bound(const T&, const T&) {}
   static void divide_by_zero(const T&, const T&) {}
   static void negative_sqrt(const T&, const T&) {}
-  // static void logarithmic_nan() {}
-  // static void logarithmic_inf() {}
-  // static void trigonometric_nan() {}
-  // static void trigonometric_inf() {}
+  static void logarithmic_nan() {}
+  static void logarithmic_inf() {}
+  static void trigonometric_nan() {}
+  static void trigonometric_inf() {}
+  static void hyperbolic_nan() {}
+  static void hyperbolic_inf() {}
 };
 
 template<class T>
@@ -26,6 +28,12 @@ struct checking_lax
   }
   static void divide_by_zero(const T&, const T&) {}
   static void negative_sqrt(const T&, const T&) {}
+  static void logarithmic_nan() {}
+  static void logarithmic_inf() {}
+  static void trigonometric_nan() {}
+  static void trigonometric_inf() {}
+  static void hyperbolic_nan() {}
+  static void hyperbolic_inf() {}
 };
 
   } // namespace interval

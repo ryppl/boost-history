@@ -852,9 +852,7 @@ interval<T, Traits> min(const T& x, const interval<T, Traits>& y)
 #endif // BOOST_INTERVAL_NO_INLINE
 #ifndef BOOST_INTERVAL_HAVE_LIBRARY
 #include <boost/interval/misc.hpp>
-#if 0
 #include <boost/interval/transc.hpp>
-#endif
 #endif // BOOST_INTERVAL_HAVE_LIBRARY
 
 #endif // BOOST_INTERVAL_HPP

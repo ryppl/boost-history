@@ -119,8 +119,7 @@ private:
 template<class FuncR, class FuncD>
 void check_binary(FuncR funcr, FuncD funcd, const std::string & s)
 {
-  iterate_two_intervals(test_binary_function<FuncR, FuncD>(funcr, funcd, s), 
-			s);
+  iterate_two_intervals(test_binary_function<FuncR, FuncD>(funcr, funcd, s), s);
 }
 
 template<class FuncI, class FuncD>
@@ -248,7 +247,7 @@ void runtest_binary_functions()
   check_binary(std::ptr_fun( (R (*)(const R&, const R&)) boost::atan2),
 		  std::ptr_fun((double(*)(double,double))std::atan2), "atan2");
 #else
-  std::cout << "Skipping binary functions from interval_transc.hpp\n";
+  std::cout << "Skipping binary functions from interval/transc.hpp\n";
 #endif
   // Note: fmod is not here, because it does not fulfill the operator
   // definition, neither are the relational operators
@@ -314,13 +313,14 @@ void runtest_unary_functions()
 	      std::ptr_fun( (double (*)(double)) my_square), "square");
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::sqrt),
 	      std::ptr_fun( (double(*)(double)) std::sqrt), "sqrt", -1, 10);
-#if 0
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::exp),
 	      std::ptr_fun( (double(*)(double)) std::exp), "exp");
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::log),
 	      std::ptr_fun( (double(*)(double)) std::log), "log", -1, 10);
+#if 0
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::log10),
 	      std::ptr_fun( (double(*)(double)) std::log10), "log10", -1, 10);
+#endif
 
   // trigonometric functions
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::sin),
@@ -351,9 +351,7 @@ void runtest_unary_functions()
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::atanh),
 	      std::ptr_fun((double(*)(double))std::atanh), "atanh", -3, 3, 0.17);
 #endif // BOOST_HAVE_INV_HYPERBOLIC
-#else
-  std::cout << "Skipping unary functions from interval_transc.hpp\n";
-#endif
+  std::cout << "Skipping some unary functions from interval/transc.hpp\n";
 }
 
 template<class FuncR, class FuncD>

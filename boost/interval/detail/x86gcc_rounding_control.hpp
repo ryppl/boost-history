@@ -50,7 +50,7 @@ namespace boost {
 // namespace {
   struct fpu_rounding_modes
   {
-    unsigned short default_ieee;
+    unsigned short mode_tonearest;
     unsigned short mode_downward;
     unsigned short mode_upward;
     unsigned short mode_towardzero;
@@ -60,26 +60,32 @@ namespace boost {
 
 struct x86gcc_rounding_control
 {
-  // gcc requires the definition of set_round_mode before it is called
-  // for proper optimization
-  void set_rounding_mode(const unsigned short& mode) const
+  typedef unsigned short rounding_mode;
+
+  void set_rounding_mode(const rounding_mode& mode) const
   {
-    __asm__ __volatile__
-      ("fldcw %0" : : "m" (*&mode) :
-       "st","st(1)","st(2)","st(3)", "st(4)","st(5)","st(6)","st(7)");
+    __asm__ __volatile__ ("fldcw %0" : : "m" (*&mode));
   }
-  unsigned short get_rounding_mode() const
+
+  rounding_mode get_rounding_mode() const
   {
-    unsigned short cw;
+    rounding_mode cw;
     __asm__ __volatile__ ("fnstcw %0" : "=m" (*&cw));
     return cw;
   }
-  void downward() { set_rounding_mode(rounding_mode_data.mode_downward); }
-  void upward() { set_rounding_mode(rounding_mode_data.mode_upward); }
-  void tonearest() { set_rounding_mode(rounding_mode_data.default_ieee); }
+
+  void downward()   { set_rounding_mode(rounding_mode_data.mode_downward); }
+  void upward()     { set_rounding_mode(rounding_mode_data.mode_upward); }
+  void tonearest()  { set_rounding_mode(rounding_mode_data.mode_tonearest); }
   void towardzero() { set_rounding_mode(rounding_mode_data.mode_towardzero); }
 
-  typedef unsigned short rounding_mode;
+  template<class T>
+  static T to_int(T r)
+  {
+    T r_;
+    __asm__ ("frndint" : "=&t"(r_) : "0"(r));
+    return r_;
+  }
 };
 
 // namespace {
@@ -102,6 +108,12 @@ struct rounding_control<double>: detail::x86gcc_rounding_control
 {
   static double force_rounding(const double& r) 
   { volatile double r_ = r; return r_; }
+  static double pi_down()     { return 3.14159; }
+  static double pi_up()       { return 3.14160; }
+  static double pi_1_2_down() { return 1.57079; }
+  static double pi_1_2_up()   { return 1.57080; }
+  static double pi_2_1_down() { return 6.28318; }
+  static double pi_2_1_up()   { return 6.28319; }
 };
 
 template<>

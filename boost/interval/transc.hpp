@@ -20,6 +20,236 @@
 #define BOOST_INTERVAL_TRANSC_HPP
 
 #include <cmath>
+
+namespace boost {
+
+template<class T, class Traits>
+inline interval<T, Traits> fmod(const interval<T, Traits>& x,
+				const interval<T, Traits>& y)
+{
+  typename Traits::rounding rnd;
+  T n = rnd.int_down(rnd.div_down(x.lower(), y.upper()));
+  return x - n * y;
+}
+
+template<class T, class Traits>
+interval<T, Traits> fmod(const interval<T, Traits>& x, const T& y)
+{
+  typename Traits::rounding rnd;
+  T n = rnd.int_down(rnd.div_down(x.lower(), y));
+  return x - n * y;
+}
+
+template<class T, class Traits>
+interval<T, Traits> exp(const interval<T, Traits>& x)
+{
+  typename Traits::rounding rnd;
+  return interval<T, Traits>(rnd.exp_down(x.lower()),
+			     rnd.exp_up(x.upper()), true);
+}
+
+template<class T, class Traits>
+interval<T, Traits> log(const interval<T, Traits>& x)
+{
+  typedef typename Traits::checking checking;
+  if (detail::sign(x.lower())) {
+    checking::logarithmic_nan();
+    if (detail::sign(x.upper()))
+      return interval<T, Traits>::empty();
+  }
+  typename Traits::rounding rnd;
+  T l;
+  if (x.lower() <= T(0)) {
+    checking::logarithmic_inf();
+    l = -std::numeric_limits<T>::infinity();
+  } else {
+    l = rnd.log_down(x.lower());
+  }
+  T u = x.upper() == 0 ? -std::numeric_limits<T>::max() : rnd.log_up(x.upper());
+  return interval<T, Traits>(l, u, true);
+}
+
+template<class T, class Traits>
+interval<T, Traits> cos(const interval<T, Traits>& x)
+{
+  typedef interval<T, Traits> I;
+  typename Traits::rounding rnd;
+  I pi(rnd.pi_down(), rnd.pi_up(), true);
+  I pi2(rnd.pi_2_1_down(), rnd.pi_2_1_up(), true);
+
+  // get us within [0, pi]
+  I tmp = fmod(x, pi2);
+  if (width(tmp) >= pi2.upper())
+    return I(-1, 1, true);     // we are covering a full period
+  if (tmp.lower() >= pi.upper())
+    return -cos(tmp - pi);
+  T l = tmp.lower();
+  T u = tmp.upper();
+
+  // separate into monotone subintervals
+  if (u <= pi.upper())
+    return I(rnd.cos_down(u), rnd.cos_up(l), true);
+  else if (u <= pi2.lower())
+    return I(-1, rnd.cos_up(std::min(rnd.sub_down(pi2.lower(), u), l)),
+	     true);
+  else
+    return I(-1, 1, true);
+}
+
+template<class T, class Traits>
+inline interval<T, Traits> sin(const interval<T, Traits>& x)
+{
+  typedef typename Traits::rounding rnd;
+  interval<T, Traits> pi(rnd::pi_1_2_down(), rnd::pi_1_2_up(), true);
+  return cos(x - pi);
+}
+
+template<class T, class Traits> // FIXME: marche pas...
+interval<T, Traits> tan(const interval<T, Traits>& x)
+{
+  typedef interval<T, Traits> I;
+  typename Traits::rounding rnd;
+  typedef typename Traits::checking checking;
+
+  I pi(rnd.pi_down(), rnd.pi_up(), true);
+  // get us within [-pi/2, pi/2]
+  I tmp = fmod(x, pi);
+  if (width(tmp) >= rnd.pi_up()) {
+     // we are covering a full period
+    checking::trigonometric_inf();
+    return I::entire();
+  }
+  if (tmp.lower() >= rnd.pi_1_2_up())
+    tmp -= pi;
+
+  if (tmp.upper() >= rnd.pi_1_2_down()) {
+    checking::trigonometric_inf();
+    return I::entire();
+  }
+  return I(rnd.tan_down(tmp.lower()), rnd.tan_up(tmp.upper()), true);
+}
+
+template<class T, class Traits>
+interval<T, Traits> asin(const interval<T, Traits>& x)
+{
+  if (x.lower() < T(-1) || x.upper() > T(1)) {
+    typedef typename Traits::checking checking;
+    checking::trigonometric_nan();
+    if (x.upper() < T(-1) || x.lower() > T(1))
+      return interval<T, Traits>::empty();
+  }
+  typename Traits::rounding rnd;
+  T l = x.lower() <= T(-1) ? -rnd.pi_1_2_up() : rnd.asin_down(x.lower());
+  T u = x.upper() >= T(1) ? rnd.pi_1_2_up() : rnd.asin_up(x.upper());
+  return interval<T, Traits>(l, u, true);
+}
+
+template<class T, class Traits>
+interval<T, Traits> acos(const interval<T, Traits>& x)
+{
+  if (x.lower() < T(-1) || x.upper() > T(1)) {
+    typedef typename Traits::checking checking;
+    checking::trigonometric_nan();
+    if (x.upper() < T(-1) || x.lower() > T(1))
+      return interval<T, Traits>::empty();
+  }
+  typename Traits::rounding rnd;
+  T l = x.upper() >= T(1) ? 0 : rnd.acos_down(x.upper());
+  T u = x.lower() <= T(-1) ? rnd.pi_up() : rnd.acos_up(x.lower());
+  return interval<T, Traits>(l, u, true);
+}
+
+template<class T, class Traits>
+interval<T, Traits> atan(const interval<T, Traits>& x)
+{
+  typename Traits::rounding rnd;
+  return interval<T, Traits>(rnd.atan_down(x.lower()),
+			     rnd.atan_up(x.upper()), true);
+}
+
+template<class T, class Traits>
+interval<T, Traits> sinh(const interval<T, Traits>& x)
+{
+  typename Traits::rounding rnd;
+  return interval<T, Traits>(rnd.sinh_down(x.lower()),
+			     rnd.sinh_up(x.upper()), true);
+}
+
+template<class T, class Traits>
+interval<T, Traits> cosh(const interval<T, Traits>& x)
+{
+  typedef interval<T, Traits> I;
+  typename Traits::rounding rnd;
+  if (detail::sign(x.upper()))
+    return I(rnd.cosh_down(x.upper()), rnd.cosh_up(x.lower()), true);
+  else if (!detail::sign(x.lower()))
+    return I(rnd.cosh_down(x.lower()), rnd.cosh_up(x.upper()), true);
+  else
+    return I(0, rnd.cosh_up(-x.lower() > x.upper() ? x.lower() : x.upper()),
+	     true);
+}
+
+template<class T, class Traits>
+interval<T, Traits> tanh(const interval<T, Traits>& x)
+{
+  typename Traits::rounding rnd;
+  return interval<T, Traits>(rnd.tanh_down(x.lower()),
+			     rnd.tanh_up(x.upper()), true);
+}
+
+template<class T, class Traits>
+interval<T, Traits> asinh(const interval<T, Traits>& x)
+{
+  typename Traits::rounding rnd;
+  return interval<T, Traits>(rnd.asinh_down(x.lower()),
+			     rnd.asinh_up(x.upper()), true);
+}
+
+template<class T, class Traits>
+interval<T, Traits> acosh(const interval<T, Traits>& x)
+{
+  if (x.lower() < T(1)) {
+    typedef typename Traits::checking checking;
+    checking::hyperbolic_nan();
+    if (x.upper() < T(1))
+      return interval<T, Traits>::empty();
+  }
+  typename Traits::rounding rnd;
+  T l = x.lower() <= T(1) ? 0 : rnd.acosh_down(x.lower());
+  return interval<T, Traits>(l, rnd.acosh_up(x.upper()), true);
+}
+
+template<class T, class Traits>
+interval<T, Traits> atanh(const interval<T, Traits>& x)
+{
+  typedef typename Traits::checking checking;
+  if(x.upper() < T(-1) || x.lower() > T(1)) {
+    checking::hyperbolic_nan();
+    return interval<T, Traits>::empty();
+  }
+  typename Traits::rounding rnd;
+  T l, u;
+  if (x.lower() <= T(-1)) {
+    if (x.lower() < T(-1)) checking::hyperbolic_nan();
+    checking::hyperbolic_inf();
+    l = -std::numeric_limits<T>::infinity();
+  } else {
+    l = rnd.atanh_down(x.lower());
+  }
+  if (x.upper() >= T(1)) {
+    if (x.upper() > T(1)) checking::hyperbolic_nan();
+    checking::hyperbolic_inf();
+    u = std::numeric_limits<T>::infinity();
+  } else {
+    u = rnd.atanh_up(x.upper());
+  }
+  return interval<T, Traits>(l, u, true);
+}
+
+} // boost
+
+
+#if 0
 #include <boost/cast.hpp>         // boost::numeric_cast<>
 
 #if defined(__GLIBC__) && !defined(__GLIBCPP__) && (defined(__USE_MISC) || defined(__USE_XOPEN_EXTENDED) || defined(__USE_ISOC99))
@@ -111,50 +341,6 @@ interval<T, Traits> fmod(const interval<T, Traits>& x, T y)
   else if(!detail::sign(q.lower()))
     n = floor(q.lower());
   return x - interval<T,Traits>(n) * y;
-  //return x - n * y;
-}
-
-template<class T, class Traits>
-interval<T, Traits> exp(const interval<T, Traits>& x)
-{
-  using std::exp;
-  typename Traits::rounding rnd;
-  rnd.downward();
-  T l = exp(x.lower());
-  rnd.upward();
-  return interval<T, Traits>(l,exp(x.upper()), true);
-}
-
-// Borland C++ requires this work-around (but only for log!)
-namespace detail {
-  template<class T>
-  inline T compute_log(const T & x)
-  {
-    using std::log;
-    return log(x);
-  }
-} // namespace detail
-
-template<class T, class Traits>
-interval<T, Traits> log(const interval<T, Traits>& x)
-{
-  typedef typename Traits::checking checking;
-  if (x.lower() < T(0)) checking::logarithmic_nan();
-  if (x.lower() == T(0)) checking::logarithmic_inf();
-  if(x.upper() < T(0))
-    return interval<T, Traits>::empty();
-
-  using std::log;
-  typename Traits::rounding rnd;
-  T l;
-  if(x.lower() <= T(0)) {
-      l = -std::numeric_limits<T>::infinity();
-  } else {
-    rnd.downward();
-    l = detail::compute_log(x.lower());
-  }
-  rnd.upward();
-  return interval<T, Traits>(l,detail::compute_log(x.upper()), true);
 }
 
 template<class T, class Traits>
@@ -365,49 +551,6 @@ interval<T, Traits> tan(const interval<T, Traits>& x)
 }
 
 template<class T, class Traits>
-interval<T, Traits> asin(const interval<T, Traits>& x)
-{
-  if (x.lower() < T(-1) || x.upper() > T(1)) {
-    typedef typename Traits::checking checking;
-    checking::trigonometric_nan();
-  }
-  using std::asin;
-  typename Traits::rounding rnd;
-  rnd.downward();
-  T asl = x.lower() <= T(-1) ? -math::pi/2 : asin(x.lower());
-  rnd.upward();
-  T asu = x.upper() >= T(1) ? math::pi/2 : asin(x.upper());
-  return interval<T, Traits>(asl, asu, true);
-}
-
-template<class T, class Traits>
-interval<T, Traits> acos(const interval<T, Traits>& x)
-{
-  if (x.lower() < T(-1) || x.upper() > T(1)) {
-    typedef typename Traits::checking checking;
-    checking::trigonometric_nan();
-  }
-  using std::acos;
-  typename Traits::rounding rnd;
-  rnd.downward();
-  T acu = x.upper() >= T(1) ? T(0) : acos(x.upper());
-  rnd.upward();
-  T acl = x.lower() <= T(-1) ? math::pi : acos(x.lower());
-  return interval<T, Traits>(acu, acl, true);
-}
-
-template<class T, class Traits>
-interval<T, Traits> atan(const interval<T, Traits>& x)
-{
-  using std::atan;
-  typename Traits::rounding rnd;
-  rnd.downward();
-  T atl = atan(x.lower());
-  rnd.upward();
-  return interval<T, Traits>(atl, atan(x.upper()), true); 
-}
-
-template<class T, class Traits>
 interval<T, Traits> atan2(const interval<T, Traits>& y,
 			  const interval<T, Traits>& x)
 {
@@ -424,110 +567,7 @@ interval<T, Traits> atan2(const interval<T, Traits>& y,
   return interval<T, Traits>(atl, atu, true);
 }
 
-
-// hyperbolic functions
-
-template<class T, class Traits>
-interval<T, Traits> sinh(const interval<T, Traits>& x)
-{
-  using std::sinh;
-  typename Traits::rounding rnd;
-  rnd.downward();
-  T shl = sinh(x.lower());
-  rnd.upward();
-  return interval<T, Traits>(shl, sinh(x.upper()), true);
-}
-
-template<class T, class Traits>
-interval<T, Traits> cosh(const interval<T, Traits>& x)
-{
-  typedef interval<T, Traits> I;
-  using std::cosh;
-  typename Traits::rounding rnd;
-  if(detail::sign(x.upper())) {
-    rnd.downward();
-    T l = cosh(x.upper());
-    rnd.upward();
-    return I(l, cosh(x.lower()), true);
-  } else if(!detail::sign(x.lower())) {
-    rnd.downward();
-    T l = cosh(x.lower());
-    rnd.upward();
-    return I(l, cosh(x.upper()), true);
-  } else {
-    rnd.upward();
-    if(-x.lower() > x.upper())
-      return I(0, cosh(x.lower()), true);
-    else
-      return I(0, cosh(x.upper()), true);
-  }
-}
-
-template<class T, class Traits>
-interval<T, Traits> tanh(const interval<T, Traits>& x)
-{
-  using std::tanh;
-  typename Traits::rounding rnd;
-  rnd.downward();
-  T tl = tanh(x.lower());
-  rnd.upward();
-  return interval<T, Traits>(tl, tanh(x.upper()), true);
-}
-
-#ifdef BOOST_HAVE_INV_HYPERBOLIC
-template<class T, class Traits>
-interval<T, Traits> asinh(const interval<T, Traits>& x)
-{
-  using std::asinh;
-  typename Traits::rounding rnd;
-  rnd.downward();
-  T asl = asinh(x.lower());
-  rnd.upward();
-  return interval<T, Traits>(asl, asinh(x.upper()), true);
-}
-
-template<class T, class Traits>
-interval<T, Traits> acosh(const interval<T, Traits>& x)
-{
-  using std::acosh;
-  typename Traits::rounding rnd;
-  rnd.downward();
-  T acl = x.lower() <= T(1) ? 0 :  acosh(x.lower());
-  rnd.upward();
-  return interval<T, Traits>(acl, acosh(x.upper()), true);
-}
-
-template<class T, class Traits>
-interval<T, Traits> atanh(const interval<T, Traits>& x)
-{
-  typedef interval<T, Traits> I;
-  if(x.upper() < T(-1) || x.lower() > T(1))
-    return I::empty();
-  using std::atanh;
-  typename Traits::rounding rnd;
-  typedef typename Traits::checking checking;
-  T acl;
-  if (x.lower() <= T(-1)) {
-    if (x.lower() < T(-1)) checking::trigonometric_nan();
-    checking_trigonometric_inf();
-    acl = -std::numeric_limits<T>::infinity();
-  } else {
-    rnd.downward();
-    acl = atanh(x.lower());
-  }
-  T acu;
-  if (x.upper() >= T(1)) {
-    if (x.upper() > T(1)) checking::trigonometric_nan();
-    checking_trigonometric_inf();
-    acu = std::numeric_limits<T>::infinity();
-  } else {
-    rnd.upward();
-    acu = atanh(x.upper());
-  }
-  return I(acl, acu, true);
-}
-#endif // BOOST_HAVE_INV_HYPERBOLIC
-
 } // namespace boost
 
+#endif // 0
 #endif // BOOST_INTERVAL_TRANSC_HPP
