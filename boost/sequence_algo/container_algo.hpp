@@ -1388,6 +1388,19 @@ namespace boost
         container.resize(max(container.size(), to_what_size));
     }
 
+    template<class Container, class T>
+    void
+    remove_and_erase(Container& container, const T& value)
+    {
+        container.erase(remove(container, value), container.end());
+    }
+
+    template<class Container, class Predicate>
+    void
+    remove_and_erase_if(Container& container, Predicate p)
+    {
+        container.erase(remove_if(container, p), container.end());
+    }
 
 }
 
