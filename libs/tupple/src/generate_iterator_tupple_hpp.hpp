@@ -242,6 +242,8 @@ TRAITSTEMPLATE( k,T,TRAITSDEFAULT ) struct ITERTUPLE(k) TEMPLATESPEC(k,r,T)     
   typedef typename traits::pointer           pointer;                     \
   typedef typename traits::difference_type   difference_type;             \
                                                                           \
+  ITERTUPLE(k)() {}                                                       \
+                                                                          \
   ITERTUPLE(k)(BOOST_PP_ENUM(k,CTORARG,_))                                \
   : parent_type( BOOST_PP_ENUM(k,THEELEMS,A) ) {}                         \
                                                                           \

@@ -78,6 +78,8 @@ namespace boost
       typedef typename traits::const_reference const_reference;
       typedef typename traits::pointer pointer;
       typedef typename traits::difference_type difference_type;
+      iterator_tuple( )
+      {}
       iterator_tuple( arg_type0 theM0 ) : parent_type( theM0 )
       {}
       template < class S0 >
@@ -189,6 +191,8 @@ namespace boost
       typedef typename traits::const_reference const_reference;
       typedef typename traits::pointer pointer;
       typedef typename traits::difference_type difference_type;
+      iterator_tuple( )
+      {}
       iterator_tuple( arg_type0 theM0, arg_type1 theM1 ) : parent_type( theM0,
               theM1 )
       {}
@@ -312,6 +316,8 @@ namespace boost
       typedef typename traits::const_reference const_reference;
       typedef typename traits::pointer pointer;
       typedef typename traits::difference_type difference_type;
+      iterator_tuple( )
+      {}
       iterator_tuple( arg_type0 theM0, arg_type1 theM1,
                       arg_type2 theM2 ) : parent_type( theM0, theM1, theM2 )
       {}
@@ -445,6 +451,8 @@ namespace boost
       typedef typename traits::const_reference const_reference;
       typedef typename traits::pointer pointer;
       typedef typename traits::difference_type difference_type;
+      iterator_tuple( )
+      {}
       iterator_tuple( arg_type0 theM0, arg_type1 theM1, arg_type2 theM2,
                       arg_type3 theM3 ) : parent_type( theM0, theM1, theM2,
                                                            theM3 )
@@ -590,6 +598,8 @@ namespace boost
       typedef typename traits::const_reference const_reference;
       typedef typename traits::pointer pointer;
       typedef typename traits::difference_type difference_type;
+      iterator_tuple( )
+      {}
       iterator_tuple( arg_type0 theM0, arg_type1 theM1, arg_type2 theM2,
                       arg_type3 theM3, arg_type4 theM4 ) : parent_type( theM0,
                               theM1,
@@ -746,6 +756,8 @@ namespace boost
       typedef typename traits::const_reference const_reference;
       typedef typename traits::pointer pointer;
       typedef typename traits::difference_type difference_type;
+      iterator_tuple( )
+      {}
       iterator_tuple( arg_type0 theM0, arg_type1 theM1, arg_type2 theM2,
                       arg_type3 theM3, arg_type4 theM4,
                       arg_type5 theM5 ) : parent_type( theM0, theM1, theM2,
@@ -911,6 +923,8 @@ namespace boost
       typedef typename traits::const_reference const_reference;
       typedef typename traits::pointer pointer;
       typedef typename traits::difference_type difference_type;
+      iterator_tuple( )
+      {}
       iterator_tuple( arg_type0 theM0, arg_type1 theM1, arg_type2 theM2,
                       arg_type3 theM3, arg_type4 theM4, arg_type5 theM5,
                       arg_type6 theM6 ) : parent_type( theM0, theM1, theM2,
@@ -1084,6 +1098,8 @@ namespace boost
       typedef typename traits::const_reference const_reference;
       typedef typename traits::pointer pointer;
       typedef typename traits::difference_type difference_type;
+      iterator_tuple( )
+      {}
       iterator_tuple( arg_type0 theM0, arg_type1 theM1, arg_type2 theM2,
                       arg_type3 theM3, arg_type4 theM4, arg_type5 theM5,
                       arg_type6 theM6, arg_type7 theM7 ) : parent_type( theM0,
@@ -1273,6 +1289,8 @@ namespace boost
       typedef typename traits::const_reference const_reference;
       typedef typename traits::pointer pointer;
       typedef typename traits::difference_type difference_type;
+      iterator_tuple( )
+      {}
       iterator_tuple( arg_type0 theM0, arg_type1 theM1, arg_type2 theM2,
                       arg_type3 theM3, arg_type4 theM4, arg_type5 theM5,
                       arg_type6 theM6, arg_type7 theM7,
