@@ -88,4 +88,16 @@
 #        define BOOST_IOFM_NO_LIB_INTERVAL // JDT: trouble with interval/detail/bugs.hpp
 #     endif
 #  endif
+
+// Include <istream>, <ostream> and <locale> if Dinkumware is in use but
+// __declspec(deprecated) is not understood.
+#  if defined(BOOST_IO_NO_DEPRECATED_MODIFIER) && defined(BOOST_DINKUMWARE_STDLIB)
+#     define _DEPRECATED_TEMP _DEPRECATED
+#     define _DEPRECATED
+#     include <istream>
+#     include <ostream>
+#     include <locale>
+#     define _DEPRECATED _DEPRECATED_TEMP
+#  endif
+
 #endif
