@@ -1,5 +1,5 @@
 
-// Copyright (C) 2001 Roland Richter (roland@flll.jku.at)
+// Copyright (C) 2001-2003 Roland Richter <roland@flll.jku.at>
 // Permission to copy, use, modify, sell and distribute this software
 // is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
@@ -18,7 +18,7 @@ namespace boost {
   namespace view {
 
 /**
- * A view which provides access to a window (i.e. a subrange) of the container.
+ * A view which provides access to a window (that is, a subrange) of the container.
  *
  * <h2>Template paramters</h2>
  * @param ContainerT The type of the underlying container.
@@ -162,7 +162,6 @@ public:
     std::advance(b,n);
     std::advance(e,n);
   }
-
 
 private:
   ownership::wrap<ContainerT>::type data;
