@@ -15,7 +15,7 @@
 
 namespace boost{
 
-template<class Type> class reference_wrapper; /* fdw decl. */
+template<class Type> class reference_wrapper; /* fwd decl. */
 
 namespace indexed_sets{
 
@@ -33,7 +33,7 @@ namespace detail{
 
 /* NB. Some overloads of operator() have an extra dummy parameter int=0.
  * This is so because MSVC++ 6.0 otherwise *incorrectly* regards these
- * overloads as speciailizations of a previous member function template.
+ * overloads as specializations of a previous member function template.
  * Left for all compilers as it does no harm.
  */
 
@@ -43,8 +43,8 @@ struct const_identity_base
   typedef Type result_type;
 
 #if !defined(BOOST_NO_MEMBER_TEMPLATES)||defined(BOOST_MSVC6_MEMBER_TEMPLATES)
-  template<typename PtrType>
-  Type& operator()(const PtrType& x)const
+  template<typename FarPtr>
+  Type& operator()(const FarPtr& x)const
   {
     return operator()(*x);
   }
@@ -74,8 +74,8 @@ struct non_const_identity_base
   /* templatized for pointer-like types */
   
 #if !defined(BOOST_NO_MEMBER_TEMPLATES)||defined(BOOST_MSVC6_MEMBER_TEMPLATES)
-  template<typename PtrType>
-  Type& operator()(const PtrType& x)const
+  template<typename FarPtr>
+  Type& operator()(const FarPtr& x)const
   {
     return operator()(*x);
   }

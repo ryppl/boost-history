@@ -14,7 +14,7 @@
 
 namespace boost{
 
-template<class T> class reference_wrapper; /* fdw decl. */
+template<class T> class reference_wrapper; /* fwd decl. */
 
 namespace indexed_sets{
 
@@ -35,8 +35,8 @@ struct const_mem_fun
   typedef typename remove_reference<Type>::type result_type;
 
 #if !defined(BOOST_NO_MEMBER_TEMPLATES)||defined(BOOST_MSVC6_MEMBER_TEMPLATES)
-  template<typename PtrType>
-  Type operator()(const PtrType& x)const
+  template<typename FarPtr>
+  Type operator()(const FarPtr& x)const
   {
     return operator()(*x);
   }
@@ -64,8 +64,8 @@ struct mem_fun
   typedef typename remove_reference<Type>::type result_type;
 
 #if !defined(BOOST_NO_MEMBER_TEMPLATES)||defined(BOOST_MSVC6_MEMBER_TEMPLATES)
-  template<typename PtrType>
-  Type operator()(const PtrType& x)const
+  template<typename FarPtr>
+  Type operator()(const FarPtr& x)const
   {
     return operator()(*x);
   }
@@ -99,8 +99,8 @@ struct const_mem_fun_explicit
   typedef typename remove_reference<Type>::type result_type;
 
 #if !defined(BOOST_NO_MEMBER_TEMPLATES)||defined(BOOST_MSVC6_MEMBER_TEMPLATES)
-  template<typename PtrType>
-  Type operator()(const PtrType& x)const
+  template<typename FarPtr>
+  Type operator()(const FarPtr& x)const
   {
     return operator()(*x);
   }
@@ -130,8 +130,8 @@ struct mem_fun_explicit
   typedef typename remove_reference<Type>::type result_type;
 
 #if !defined(BOOST_NO_MEMBER_TEMPLATES)||defined(BOOST_MSVC6_MEMBER_TEMPLATES)
-  template<typename PtrType>
-  Type operator()(const PtrType& x)const
+  template<typename FarPtr>
+  Type operator()(const FarPtr& x)const
   {
     return operator()(*x);
   }
