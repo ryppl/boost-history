@@ -184,11 +184,13 @@ namespace boost {
   template<class T, class Traits>
     T median(const interval<T,Traits>& x);
 
+#if 0
   template<class T, class Traits>
     interval<T,Traits> pred(const interval<T,Traits>& x);
 
   template<class T, class Traits>
     interval<T,Traits> succ(const interval<T,Traits>& x);
+#endif
 
 
   /*

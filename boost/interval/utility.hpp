@@ -112,6 +112,7 @@ T median(const interval<T, Traits>& x)
   return rnd.median(x.lower(), x.upper());
 }
 
+#if 0
 template<class T, class Traits> inline
 interval<T, Traits> pred(const interval<T, Traits>& x)
 {
@@ -132,6 +133,15 @@ interval<T, Traits> succ(const interval<T, Traits>& x)
   T l = rnd.sub_down(x.lower(), interval_lib::detail::smallest<T>());
   T u = rnd.add_up(x.upper(), interval_lib::detail::smallest<T>());
   return interval<T, Traits>(l, u);
+}
+#endif
+
+template<class T, class Traits> inline
+interval<T, Traits> widen(const interval<T, Traits>& x, const T& v)
+{
+  typename Traits::rounding rnd;
+  return interval<T, Traits>(rnd.sub_down(x.lower(), v),
+			     rnd.add_up  (x.upper(), v), true);
 }
 
 /*

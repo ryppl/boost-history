@@ -13,8 +13,8 @@ int test_main(int, char *[]) {
   BOOST_TEST(in((int)   PI, pi<I_i>()));
   BOOST_TEST(in((float) PI, pi<I_f>()));
   BOOST_TEST(in((double)PI, pi<I_d>()));
-  BOOST_TEST(subset(pi<I_i>(), succ(I_i((int)   PI))));
-  BOOST_TEST(subset(pi<I_f>(), succ(I_f((float) PI))));
-  BOOST_TEST(subset(pi<I_d>(), succ(I_d((double)PI))));
+  BOOST_TEST(subset(pi<I_i>(), widen(I_i((int)   PI), 1)));
+  BOOST_TEST(subset(pi<I_f>(), widen(I_f((float) PI), std::numeric_limits<float> ::min())));
+  BOOST_TEST(subset(pi<I_d>(), widen(I_d((double)PI), std::numeric_limits<double>::min())));
   return 0;
 }
