@@ -13,8 +13,8 @@
 \markboth{Doc. no: DRAFT}{Doc. no: DRAFT}
 \pagestyle{myheadings}
 
-\title{Typesafe Variable-length Function and Template Argument Lists}
-\author{Douglas Gregor \and Gary Powell \and Jaakko J\"arvi}
+\title{Variadic Templates}
+\author{Douglas Gregor \and Jaakko J\"arvi \and Gary Powell}
 \date{}
 \maketitle
 
@@ -172,10 +172,6 @@ template<... Args> void f();
 // ... 
 f<int, double>(); // Args will be contain <int, double>
 \end{verbatim}
-%
-\jaakko{Is f() a valid call, giving Args = $<>$, or should it be f$<>$()?} 
-\doug{Because Args cannot be deduced, I think it should be f$<>$()}
-%
 The next section describes when the types of the elements in 
 a value parameter pack can be deduced from the argument types
 of the call. 
@@ -233,24 +229,36 @@ template<typename T, ... Args>
   }
 \end{verbatim}
 
-\subsection{Argument type deduction}
-The type of each element in the template parameter pack is deduced to
-achieve perfect argument forwarding. For an argument {\tt xi}, the
-type {\tt Ti} of the corresponding parameter pack element is the parameter type
-of the {\tt forward} function determined by overload resolution using
-the following two candidates:
+\subsection{Deducing parameter packs from a function call}
+Template and value parameter packs can be deduced from a function call
+by first deducing the argument type (to be included in the template
+parameter pack) and then including the argument in the value parameter
+pack. The type of each element in the template parameter pack is
+deduced to achieve perfect argument forwarding. For an argument {\tt
+  xi}, the type {\tt Ti} of the corresponding parameter pack element
+is the parameter type of the {\tt forward} function determined by
+overload resolution using the following two candidates\footnote{This
+  formulation is expected to change if some variant of the move
+  proposal~\cite{Hinnant02} is accepted}:
 \begin{verbatim}
 template<typename T> void forward(T&);
 template<typename T> void forward(const T &);
 \end{verbatim}
 
-Note that this formulation is expected to change if some variant of
-the move proposal~\cite{Hinnant02} is accepted;
+Example:
+\begin{verbatim}
+template<... Args> void f(Args args);
+
+int x;
+float y;
+
+f(x, y, 3.14159); // Args is <int&, float&, const double&>
+\end{verbatim}
 
 \subsection{Deducing template parameter packs from types}
 Template parameter packs can be deduced from template argument lists
 and function parameter lists, by packing the list of integral constant
-expressions and types into the template parameter pack.
+expressions, templates, and types into the template parameter pack.
 
 Example: we can define a template {\tt function\_traits} that extracts
 the result type and argument types of a function:
@@ -284,6 +292,24 @@ template<typename T> struct split_template_class;
 
 template<template<... Args> class T> 
   struct split_template_class<T<Args> >;
+\end{verbatim}
+
+\subsection{Explicit template argument specification}
+If template arguments are explicitly specified when naming a function
+template, the function template header is terminated with a template
+parameter pack, and there are at least as many template arguments as
+there are template parameters to the function (not including the
+template parameter pack), all template arguments beyond the last one
+required for the function's template parameters will comprise the
+template parameter pack.
+
+Example:
+\begin{verbatim}
+template<... Args> void f();
+
+f<int, double>(); // OK: Args is <int, double>
+f<>();            // OK: Args is empty
+f();              // error: Args cannot be deduced
 \end{verbatim}
 
 \subsection{Partial ordering of variadic class template partial specializations}
@@ -345,9 +371,8 @@ conversion sequences are otherwise equal.
 Since parameter packs do not have a type, we specify the
 type of an instantiation of a typesafe variadic function to be equivalent
 to the type of a nontemplate function with all template parameters
-substituted and both the template and value parameter packs unpacked
-at the end of the template and function parameter lists,
-respectively. Revisiting the {\tt printf} definition
+substituted and both template and value parameter packs unpacked
+in place. Revisiting the {\tt printf} definition
 
 \begin{verbatim}
 template<typename T, ... Args>
@@ -960,6 +985,36 @@ template<typename Class, typename T, ... BoundArgs>
   { return make_binder(mem_fn(f), make_tuple(bound_args)); }
 \end{verbatim}
 \normalsize
+
+\section{Potential extension: More parameter pack deduction}
+One potential extension to this proposal we have considered is to
+allow parameter packs to occur before the end of the template header
+(so that multiple template parameter packs may be declared in a single
+template header). This extension would then allow one to deduce
+multiple parameter packs for, e.g., a function call:
+
+\begin{verbatim}
+struct PivotType {};
+
+template<... Head, ... Tail>
+void split(Head h, PivotType p, Tail t);
+\end{verbatim}
+
+Another example of this would be a ``pop\_back'' operation on a
+parameter pack (here we place the result in a tuple):
+
+\begin{verbatim}
+template<... Elements, typename T>
+  tuple<Elements> pop_back(Elements elements, const T&)
+  { return tuple<Elements>(elements); }
+\end{verbatim}
+
+While we acknowledge that there may be some benefit to introducing
+these extensions, we feel that the benefits are not sufficient to
+outweight the cost of introducing yet more overloading rules to
+account for this cases. We feel that the few operations that would
+benefit may better be accomplished by working with a true
+heterogeneous data structure such as a tuple.
 
 \section{Revision history}
 \begin{itemize}
