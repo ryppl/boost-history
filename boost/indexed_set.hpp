@@ -404,12 +404,14 @@ BOOST_INDEXED_SET_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
   bool modify_(Modifier mod,node_type* x)
   {
     mod(const_cast<value_type&>(x->value));
-    if(!super::modify_(x)){
-      deallocate_node(x);
-      --node_count;
-      return false;
+
+    detail::scope_guard local_eraser=detail::make_obj_guard(
+      *this,&indexed_set::deallocate_and_decrease_count,x);
+    if(super::modify_(x)){
+      local_eraser.dismiss();
+      return true;
     }
-    return true;
+    return false;
   }
 #endif
 
@@ -432,6 +434,14 @@ private:
   {
     erase(begin(),end());
   }
+
+#if !defined(BOOST_NO_MEMBER_TEMPLATES)||defined(BOOST_MSVC6_MEMBER_TEMPLATES)
+  void deallocate_and_decrease_count(node_type* x)
+  {
+    deallocate_node(x);
+    --node_count;
+  }
+#endif
 
   std::size_t node_count;
 };

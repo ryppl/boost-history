@@ -256,11 +256,13 @@ protected:
 #if !defined(BOOST_NO_MEMBER_TEMPLATES)||defined(BOOST_MSVC6_MEMBER_TEMPLATES)
   bool modify_(node_type* x)
   {
-    if(!Super::modify_(x)){
-      unlink(x);
-      return false;
+    detail::scope_guard local_eraser=detail::make_obj_guard(
+      *this,&sequenced_index::unlink,x);
+    if(Super::modify_(x)){
+      local_eraser.dismiss();
+      return true;
     }
-    return true;
+    return false;
   }
 #endif
 
