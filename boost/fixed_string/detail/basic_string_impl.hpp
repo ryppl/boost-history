@@ -534,7 +534,11 @@
                const size_type         sz = size();
                for( ; pos <= sz; ++pos )
                {
-                  if( traits_type::compare( offset( pos ), s, n ) == 0 )
+                  if
+                  (
+                     traits_type::eq( *offset( pos ), *s ) &&
+                     traits_type::compare( offset( pos ), s, n ) == 0
+                  )
                      return( pos );
                }
                return( npos );
