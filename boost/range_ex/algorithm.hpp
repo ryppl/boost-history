@@ -959,6 +959,7 @@ namespace boost
     ///
     /// range-based version of the stable_partition std algorithm
     ///
+    /// \pre Rng meets the requirements for a Bidirectional range
     template<typename Rng,typename Pred>
     inline BOOST_DEDUCED_TYPENAME boost::range_iterator<Rng>::type
     stable_partition(Rng & rng,Pred pred)
