@@ -17,6 +17,26 @@
 // *  uses basic_string as the substring type (currently via a typedef: will make this a template policy at some point)
 // *  uses optimized versions of find and rfind for searching for single characters
 
+/*
+   struct StringPolicy // interface of a StringPolicy class
+   {
+      const value_type * c_str()  const;
+      const value_type * data()   const;
+      value_type &       at( size_type i );
+      iterator           iter_offset(       difference_type );
+      const_iterator     const_iter_offset( difference_type ) const;
+      size_type          length()   const;
+      size_type          capacity() const;
+      size_type          max_size() const;
+      void               resize(  size_type, value_type );
+      void               reserve( size_type );
+      void               assign(  const value_type * s, size_type l );
+      void               append(  const value_type * s, size_type l );
+      void               push_back( value_type );
+      void               swap( StringPolicy & );
+   };
+*/
+
 #ifndef BOOST_BASIC_STRING_IMPL_HPP
 #define BOOST_BASIC_STRING_IMPL_HPP
 #  include <boost/config.hpp>
@@ -24,6 +44,7 @@
 #  include <boost/mpl/bool.hpp>
 #  include <algorithm>
 #  include <iostream>
+#  include <typeinfo>
 
    namespace boost{ namespace detail
    {
@@ -54,19 +75,6 @@
          }
       };
       
-      /*
-         begin() | end() :: rbegin() | rend()
-         length() | capacity() | max_size()
-         data() | c_str() | at( size_t i )
-
-         resize(  size_type n, value_type c )
-         reserve( size_type n )
-
-         assign( const char_type * s, size_type n )
-         append( const char_type * s, size_type n )
-         push_back( char_type c )
-      */
-
       template
       <
          class StringPolicy, typename CharT = char,
@@ -118,35 +126,35 @@
          public: // 21.3.2: iterators
             inline const_iterator                begin() const
             {
-               return( get_impl().begin());
+               return( get_impl().const_iter_offset( 0 ));
             }
             inline iterator                      begin()
             {
-               return( get_impl().begin());
+               return( get_impl().iter_offset( 0 ));
             }
             inline const_iterator                end() const
             {
-               return( get_impl().end()); 
+               return( get_impl().const_iter_offset( size()));
             }
             inline iterator                      end()
             {
-               return( get_impl().end());
+               return( get_impl().iter_offset( size()));
             }
             inline const_reverse_iterator        rbegin() const
             {
-               return( get_impl().rbegin());
+               return( const_reverse_iterator( get_impl().const_iter_offset( size())));
             }
             inline reverse_iterator              rbegin()
             {
-               return( get_impl().rbegin());
+               return( reverse_iterator( get_impl().iter_offset( size() )));
             }
             inline const_reverse_iterator        rend() const
             {
-               return( get_impl().rend());
+               return( const_reverse_iterator( get_impl().const_iter_offset( -1 )));
             }
             inline reverse_iterator              rend()
             {
-               return( get_impl().rend());
+               return( reverse_iterator( get_impl().iter_offset( -1 )));
             }
          public: // 21.3.3: capacity
             inline size_type                     size() const
@@ -209,7 +217,11 @@
          public: // 21.3.5: modifiers
             inline string_type &                 assign( const string_type & s )
             {
-               if( &s != this )        assign( s.data(), s.length());
+#              if !defined(BOOST_MSVC) || ( BOOST_MSVC > 1200 )
+                  if( &s != this )     assign( s.data(), s.length());
+#              else
+                  assign( s.data(), s.length()); // VC6 does not identify StringPolicy as derived from basic_string_impl
+#              endif
                return( get_impl());
             }
             inline string_type &                 assign( const string_type & s, size_type pos, size_type n )
@@ -219,7 +231,8 @@
             }
             inline string_type &                 assign( const char_type * s, size_type n )
             {
-               return( get_impl().assign( s, n ));
+               get_impl().assign( s, n );
+               return( get_impl());
             }
             inline string_type &                 assign( const char_type * s )
             {
@@ -263,7 +276,8 @@
             }
             inline string_type &                 append( const char_type * s, size_type n )
             {
-               return( get_impl().append( s, n ));
+               get_impl().append( s, n );
+               return( get_impl());
             }
             inline string_type &                 append( const char_type * s )
             {
@@ -714,16 +728,279 @@
             {
             }
       };
+      
+      // lhs + rhs
+
+      template< class S, typename C, class CP, class EP >
+      inline basic_string_impl< S, C, CP, EP > 
+                                  operator+
+                                  ( 
+                                     const basic_string_impl< S, C, CP, EP > & lhs,
+                                     const basic_string_impl< S, C, CP, EP > & rhs
+                                  )
+      {
+         basic_string_impl< S, C, CP, EP > res;
+         res.reserve( lhs.size() + rhs.size());
+         res.append( lhs );
+         res.append( rhs );
+         return( res );
+      }
+
+      template< class S, typename C, class CP, class EP >
+      inline basic_string_impl< S, C, CP, EP > 
+                                  operator+
+                                  ( 
+                                     const typename basic_string_impl< S, C, CP, EP >::value_type * lhs,
+                                     const basic_string_impl< S, C, CP, EP > & rhs
+                                  )
+      {
+         typedef typename basic_string_impl< S, C, CP, EP >::size_type    size_type;
+         typedef typename basic_string_impl< S, C, CP, EP >::traits_type  traits_type;
+      
+         basic_string_impl< S, C, CP, EP > res;
+         const size_type                   len = traits_type::length( lhs );
+         res.reserve( len + rhs.size());
+         res.append( lhs, len );
+         res.append( rhs );
+         return( res );
+      }
+
+      template< class S, typename C, class CP, class EP >
+      inline basic_string_impl< S, C, CP, EP > 
+                                  operator+
+                                  ( 
+                                     const basic_string_impl< S, C, CP, EP > & lhs,
+                                     const typename basic_string_impl< S, C, CP, EP >::value_type * rhs
+                                  )
+      {
+         typedef typename basic_string_impl< S, C, CP, EP >::size_type    size_type;
+         typedef typename basic_string_impl< S, C, CP, EP >::traits_type  traits_type;
+      
+         basic_string_impl< S, C, CP, EP > res;
+         const size_type                   len = traits_type::length( lhs );
+         res.reserve( lhs.size() + len );
+         res.append( lhs );
+         res.append( rhs, len );
+         return( res );
+      }
+
+      template< class S, typename C, class CP, class EP >
+      inline basic_string_impl< S, C, CP, EP > 
+                                  operator+
+                                  ( 
+                                     const typename basic_string_impl< S, C, CP, EP >::value_type lhs,
+                                     const basic_string_impl< S, C, CP, EP > & rhs
+                                  )
+      {
+         basic_string_impl< S, C, CP, EP > res;
+         res.reserve( 1 + rhs.size());
+         res.push_back( lhs );
+         res.append( rhs );
+         return( res );
+      }
+
+      template< class S, typename C, class CP, class EP >
+      inline basic_string_impl< S, C, CP, EP > 
+                                  operator+
+                                  ( 
+                                     const basic_string_impl< S, C, CP, EP > & lhs,
+                                     const typename basic_string_impl< S, C, CP, EP >::value_type rhs
+                                  )
+      {
+         basic_string_impl< S, C, CP, EP > res;
+         res.reserve( lhs.size() + 1 );
+         res.append( lhs );
+         res.push_back( rhs );
+         return( res );
+      }
+
+      // lhs == rhs
+
+      template< class S, typename C, class CP, class EP >
+      inline bool operator==( const basic_string_impl< S, C, CP, EP > & lhs, const basic_string_impl< S, C, CP, EP > & rhs )
+      {
+         return( lhs.compare( rhs ) == 0 );
+      }
+
+      template< class S, typename C, class CP, class EP >
+      inline bool operator==( const typename basic_string_impl< S, C, CP, EP >::value_type * lhs, const basic_string_impl< S, C, CP, EP > & rhs )
+      {
+         return( rhs == lhs );
+      }
+
+      template< class S, typename C, class CP, class EP >
+      inline bool operator==( const basic_string_impl< S, C, CP, EP > & lhs, const typename basic_string_impl< S, C, CP, EP >::value_type * rhs )
+      {
+         return( lhs.compare( rhs ) == 0 );
+      }
+
+      // lhs != rhs
+
+      template< class S, typename C, class CP, class EP >
+      inline bool operator!=( const basic_string_impl< S, C, CP, EP > & lhs, const basic_string_impl< S, C, CP, EP > & rhs )
+      {
+         return( !( lhs == rhs ));
+      }
+
+      template< class S, typename C, class CP, class EP >
+      inline bool operator!=( const typename basic_string_impl< S, C, CP, EP >::value_type * lhs, const basic_string_impl< S, C, CP, EP > & rhs )
+      {
+         return( !( lhs == rhs ));
+      }
+
+      template< class S, typename C, class CP, class EP >
+      inline bool operator!=( const basic_string_impl< S, C, CP, EP > & lhs, const typename basic_string_impl< S, C, CP, EP >::value_type * rhs )
+      {
+         return( !( lhs == rhs ));
+      }
+      
+      // lhs < rhs
+
+      template< class S, typename C, class CP, class EP >
+      inline bool operator<( const basic_string_impl< S, C, CP, EP > & lhs, const basic_string_impl< S, C, CP, EP > & rhs )
+      {
+         return( lhs.compare( rhs ) < 0 );
+      }
+
+      template< class S, typename C, class CP, class EP >
+      inline bool operator<( const typename basic_string_impl< S, C, CP, EP >::value_type * lhs, const basic_string_impl< S, C, CP, EP > & rhs )
+      {
+         return( rhs.compare( lhs ) > 0 );
+      }
+
+      template< class S, typename C, class CP, class EP >
+      inline bool operator<( const basic_string_impl< S, C, CP, EP > & lhs, const typename basic_string_impl< S, C, CP, EP >::value_type * rhs )
+      {
+         return( lhs.compare( rhs ) < 0 );
+      }
+
+      // lhs > rhs
+
+      template< class S, typename C, class CP, class EP >
+      inline bool operator>( const basic_string_impl< S, C, CP, EP > & lhs, const basic_string_impl< S, C, CP, EP > & rhs )
+      {
+         return( rhs < lhs );
+      }
+
+      template< class S, typename C, class CP, class EP >
+      inline bool operator>( const typename basic_string_impl< S, C, CP, EP >::value_type * lhs, const basic_string_impl< S, C, CP, EP > & rhs )
+      {
+         return( rhs < lhs );
+      }
+
+      template< class S, typename C, class CP, class EP >
+      inline bool operator>( const basic_string_impl< S, C, CP, EP > & lhs, const typename basic_string_impl< S, C, CP, EP >::value_type * rhs )
+      {
+         return( rhs < lhs );
+      }
+
+      // lhs <= rhs
+
+      template< class S, typename C, class CP, class EP >
+      inline bool operator<=( const basic_string_impl< S, C, CP, EP > & lhs, const basic_string_impl< S, C, CP, EP > & rhs )
+      {
+         return( !( rhs < lhs ));
+      }
+
+      template< class S, typename C, class CP, class EP >
+      inline bool operator<=( const typename basic_string_impl< S, C, CP, EP >::value_type * lhs, const basic_string_impl< S, C, CP, EP > & rhs )
+      {
+         return( !( rhs < lhs ));
+      }
+
+      template< class S, typename C, class CP, class EP >
+      inline bool operator<=( const basic_string_impl< S, C, CP, EP > & lhs, const typename basic_string_impl< S, C, CP, EP >::value_type * rhs )
+      {
+         return( !( rhs < lhs ));
+      }
+
+      // lhs >= rhs
+
+      template< class S, typename C, class CP, class EP >
+      inline bool operator>=( const basic_string_impl< S, C, CP, EP > & lhs, const basic_string_impl< S, C, CP, EP > & rhs )
+      {
+         return( !( lhs < rhs ));
+      }
+
+      template< class S, typename C, class CP, class EP >
+      inline bool operator>=( const typename basic_string_impl< S, C, CP, EP >::value_type * lhs, const basic_string_impl< S, C, CP, EP > & rhs )
+      {
+         return( !( lhs < rhs ));
+      }
+
+      template< class S, typename C, class CP, class EP >
+      inline bool operator>=( const basic_string_impl< S, C, CP, EP > & lhs, const typename basic_string_impl< S, C, CP, EP >::value_type * rhs )
+      {
+         return( !( lhs < rhs ));
+      }
+
+      // swap
 
       template< typename CharT, class StreamPolicy, class StringPolicy, class ErrorPolicy >
-      inline std::basic_ostream< CharT, StreamPolicy > & 
+      inline void                                swap
+                                                 (
+                                                    basic_string_impl< StringPolicy, CharT, StreamPolicy, ErrorPolicy > & lhs,
+                                                    basic_string_impl< StringPolicy, CharT, StreamPolicy, ErrorPolicy > & rhs
+                                                 )
+      {
+         lhs.swap( rhs );
+      }
+
+      // stream operations
+
+      // VC6 bug: VC6 has problems matching std::basic_*stream< typename basic_string_impl< S, C, SP, EP >::value_type, ... >
+      //    so std::cout << str; will not work as intended
+      //    workaround: use the template parameters directly
+
+      template< class S, typename C, class SP, class EP >
+      inline std::basic_istream< C, SP > &
+                                  operator>>
+                                  (
+                                     std::basic_istream< C, SP > & is,
+                                     basic_string_impl< S, C, SP, EP > & str
+                                  )
+      {
+         return( getline( is, str, typename basic_string_impl< S, C, SP, EP >::value_type( ' ' ) ));
+      }
+
+      template< class S, typename C, class SP, class EP >
+      inline std::basic_ostream< C, SP > &
                                   operator<<
                                   (
-                                     std::basic_ostream< CharT, StreamPolicy > & os,
-                                     const basic_string_impl< StringPolicy, CharT, StreamPolicy, ErrorPolicy > & str
+                                     std::basic_ostream< C, SP > & os,
+                                     const basic_string_impl< S, C, SP, EP > & str
                                   )
       {
          return( os << str.c_str());
+      }
+
+      template< class S, typename C, class SP, class EP >
+      inline std::basic_istream< C, SP > &       getline
+                                                 (
+                                                    std::basic_istream< C, SP > & is,
+                                                    basic_string_impl< S, C, SP, EP > & str,
+                                                    typename basic_string_impl< S, C, SP, EP >::value_type delim
+                                                 )
+      {
+         typedef typename basic_string_impl< S, C, SP, EP >::traits_type  traits_type;
+
+         typename basic_string_impl< S, C, SP, EP >::value_type
+                                       ch;
+         while( is >> ch && !traits_type::eq( ch, delim ))
+         {
+            str.push_back( ch );
+         }
+         return( is );
+      }
+
+      template< class S, typename C, class SP, class EP >
+      inline std::basic_istream< C, SP > &       getline
+                                                 (
+                                                    std::basic_istream< C, SP > & is,
+                                                    basic_string_impl< S, C, SP, EP > & str
+                                                 )
+      {
+         return( getline( is, str, typename basic_string_impl< S, C, SP, EP >::value_type( '\n' )));
       }
    }}
 #endif
