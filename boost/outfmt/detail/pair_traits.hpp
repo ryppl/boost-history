@@ -81,7 +81,7 @@
       {
       };
 
-      // JDT: string_format_traits
+      // JDT: string_string_traits
 
       template< typename String >
       struct string_pair_traits
