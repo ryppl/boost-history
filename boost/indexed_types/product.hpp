@@ -1,22 +1,34 @@
+//cartesian product of values in TypeMap<Indices> accessed by Index in Indices.
 #ifndef BOOST_INDEXED_TYPES_PRODUCT_HPP_LJE20041205
 #define BOOST_INDEXED_TYPES_PRODUCT_HPP_LJE20041205
-#include <boost/mpl/size.hpp>
-#include <boost/mpl/at.hpp>
+//  (C) Copyright Larry Evans 2004.
+//
+//  Permission to copy, use, modify, sell and distribute this software
+//  is granted provided this copyright notice appears in all copies.
+//  This software is provided "as is" without express or implied
+//  warranty, and with no claim as to its suitability for any purpose.
+//
+#include "boost/indexed_types/enum_size.hpp"
 namespace boost
 {
 namespace indexed_types
 {
 
 template
-  < typename SeqOfTypes
-  , long Index
+  < typename Indices
+  , template <Indices> class TypeMap
+  , unsigned Index
   >
   struct
 factor
-  : public factor<SeqOfTypes,Index-1>
+  : public factor
+  < Indices
+  , TypeMap
+  , Index-1
+  >
 {
         typedef
-      typename mpl::at_c<SeqOfTypes,Index-1>::type
+      typename TypeMap<Indices(Index-1)>::type
     type
     ;
       type  
@@ -25,47 +37,61 @@ factor
 };
 
 template
-  < typename SeqOfTypes
+  < typename Indices
+  , template <Indices> class TypeMap
   >
   struct
 factor
-  < SeqOfTypes
+  < Indices
+  , TypeMap
   , 0
   >
 {
 };
 
 template
-  < typename SeqOfTypes
+  < typename Indices
+  , template <Indices> class TypeMap
   >
   struct
 product
 /**@begin
- *  A product of types in SeqTypes
+ *  A product of types, (TypeMap<0>::type, TypeMap<1>::type, ..., TypeMap<n-1>)
+ *  where n is number of enumerators in enumeration, Indices.
  *
  * @pre
- *  SeqTypes is an mpl sequence.
+ *  - Indices is an enumeration with initial enumerator value=0 and
+ *    subsequent enumerator's increasing by 1.
+ *  - n == enum_size<Indices>::value
+ *  - TypeMap<I>::type is a default constructable type.
  *
  * @post
  *  product's sequence of supertypes are:
- *    factor<SeqOfTypes, {SeqSize, SeqSize-1, ..., 0}>
+ *    factor<Indices,TypeMap, n-0>
+ *    factor<Indices,TypeMap, n-1>
+ *    ...
+ *    factor<Indices,TypeMap, n-n>
  *  and: 
- *    for Index in SeqSize-1...0
+ *    for Index in n-1...0
  *    {
- *        at_c<SeqOfTypes,Index  >::type
- *      factor<SeqOfTypes,Index+1>::my_field
+ *        TypeMap<Indices(Index) >::type
+ *      factor<Indices,TypeMap,Index+1>::my_field
  *      ;
  *    }
  */
-  : public factor<SeqOfTypes, mpl::size<SeqOfTypes>::value >
+  : public factor
+  < Indices
+  , TypeMap
+  , enum_size<Indices>::value
+  >
 {
     template
-      < long Index
+      < Indices Index
       >
-      typename mpl::at_c<SeqOfTypes,Index>::type&
+      typename TypeMap<Index>::type&
     project(void)
     {
-        return this->factor<SeqOfTypes, Index+1>::my_field;
+        return this->factor<Indices, TypeMap, Index+1>::my_field;
     }
 };
 
