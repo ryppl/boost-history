@@ -7,6 +7,9 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
+// Include unit test framework
+#include <boost/test/included/test_exec_monitor.hpp>
+
 #include <string>
 #include <iostream>
 #include <boost/string_algo/case_conv.hpp>
@@ -49,4 +52,12 @@ void conv_test()
     BOOST_CHECK( str3=="" );
     toupper( str3 );
     BOOST_CHECK( str3=="" );
+}
+
+// test main 
+int test_main( int, char*[] )
+{
+    conv_test();
+    
+    return 0;
 }

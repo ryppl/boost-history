@@ -7,6 +7,9 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
+// Include unit test framework
+#include <boost/test/included/test_exec_monitor.hpp>
+
 #include <string>
 #include <iostream>
 #include <boost/string_algo/trim.hpp>
@@ -83,4 +86,12 @@ void trim_test()
             string("123abc456"), 
             is_classified<char>(std::ctype_base::digit) )=="abc" );
     BOOST_CHECK( trim_copy_if( string("<>abc<>"), is_from( string("<<>>") ) )=="abc" );
+}
+
+// test main 
+int test_main( int, char*[] )
+{
+    trim_test();
+    
+    return 0;
 }

@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.00"
-	Name="test"
-	ProjectGUID="{AB22BE2C-7ADA-4AAF-A932-1B7BBE6032A4}"
+	Name="test_replace"
+	ProjectGUID="{ABB995F8-C485-4F0F-9D21-CDDF78DAC26D}"
 	SccProjectName="string_algo"
 	SccAuxPath=""
 	SccLocalPath="..\..\.."
@@ -28,23 +28,20 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="TRUE"
 				ExceptionHandling="FALSE"
-				BasicRuntimeChecks="0"
-				RuntimeLibrary="1"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="5"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="FALSE"
-				DebugInformationFormat="3"
-				CompileAsManaged="0"/>
+				Detect64BitPortabilityProblems="TRUE"
+				DebugInformationFormat="4"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/test.exe"
+				OutputFile="$(OutDir)/test_replace.exe"
 				LinkIncremental="2"
-				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/test.pdb"
+				ProgramDatabaseFile="$(OutDir)/test_replace.pdb"
 				SubSystem="1"
 				TargetMachine="1"/>
 			<Tool
@@ -82,15 +79,14 @@
 				EnableFunctionLevelLinking="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="FALSE"
+				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/test.exe"
+				OutputFile="$(OutDir)/test_replace.exe"
 				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
 				GenerateDebugInformation="TRUE"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -117,25 +113,7 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm">
 			<File
-				RelativePath="conv_test.cpp">
-			</File>
-			<File
-				RelativePath="find_test.cpp">
-			</File>
-			<File
-				RelativePath="predicate_test.cpp">
-			</File>
-			<File
-				RelativePath="regex_test.cpp">
-			</File>
-			<File
 				RelativePath="replace_test.cpp">
-			</File>
-			<File
-				RelativePath="test_main.cpp">
-			</File>
-			<File
-				RelativePath="trim_test.cpp">
 			</File>
 		</Filter>
 		<Filter

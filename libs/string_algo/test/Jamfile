@@ -15,20 +15,50 @@ include testing.jam ;
 
 test-suite "string_algo"
     : [ run 
-            predicate_test.cpp
-            conv_test.cpp
-            find_test.cpp
-            replace_test.cpp
             trim_test.cpp
+          : :
+            :
+#           <include>$(BOOST_ROOT)     # this automatically points to the boost-sandbox root
+            : trim
+        ]
+    : [ run 
+            conv_test.cpp
+          : :
+            :
+#           <include>$(BOOST_ROOT)     # this automatically points to the boost-sandbox root
+            : conv
+        ]
+    : [ run 
+            predicate_test.cpp
+          : :
+            :
+#           <include>$(BOOST_ROOT)     # this automatically points to the boost-sandbox root
+            : predicate
+        ]
+    : [ run 
+            find_test.cpp
+          : :
+            :
+#           <include>$(BOOST_ROOT)     # this automatically points to the boost-sandbox root
+            : find
+        ]
+    : [ run 
+            replace_test.cpp
+          : :
+            :
+#           <include>$(BOOST_ROOT)     # this automatically points to the boost-sandbox root
+            : replace
+        ]
+    : [ run 
             regex_test.cpp
-            test_main.cpp
           : :
             :
 #           <include>$(BOOST_ROOT)     # this automatically points to the boost-sandbox root
             <library-path>$(BOOST)/libs/regex/build/bin-stage/
             <*><debug><find-library>boost_regex_debug
             <*><release><find-library>boost_regex 
-            : string_algo
+            : regex
         ]
+
     ;
 

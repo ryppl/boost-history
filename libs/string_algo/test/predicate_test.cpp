@@ -7,6 +7,9 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
+// Include unit test framework
+#include <boost/test/included/test_exec_monitor.hpp>
+
 #include <string>
 #include <vector>
 #include <iostream>
@@ -81,4 +84,12 @@ void predicate_test()
     BOOST_CHECK( ends_with( str2, string("") ) );
     BOOST_CHECK( contains( str2, string("") ) );
     BOOST_CHECK( equals( str3, string("") ) );
+}
+
+// test main 
+int test_main( int, char*[] )
+{
+    predicate_test();
+    
+    return 0;
 }

@@ -7,6 +7,9 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
+// Include unit test framework
+#include <boost/test/included/test_exec_monitor.hpp>
+
 #include <string>
 #include <vector>
 #include <iostream>
@@ -121,3 +124,10 @@ void find_test()
     BOOST_CHECK( cv_result.begin()==cv_result.end() ); 
 }
 
+// test main 
+int test_main( int, char*[] )
+{
+    find_test();
+    
+    return 0;
+}

@@ -7,6 +7,9 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
+// Include unit test framework
+#include <boost/test/included/test_exec_monitor.hpp>
+
 #include <string>
 #include <vector>
 #include <list>
@@ -158,4 +161,12 @@ void replace_test()
     BOOST_CHECK( string(list1.begin(), list1.end())==string("123456x456ZZZ321") );
     erase_all( list1, string("Z") );
     BOOST_CHECK( string(list1.begin(), list1.end())==string("123456x456321") );
+}
+
+// test main 
+int test_main( int, char*[] )
+{
+    replace_test();
+    
+    return 0;
 }
