@@ -61,7 +61,7 @@ protected:
     return x;
   }
 
-  node_type* insert_(value_param_type v,node_type* position,node_type* x)
+  node_type* insert_(value_param_type v,node_type*,node_type* x)
   {
     detail::allocator::construct(&x->value,v);
     return x;
@@ -81,7 +81,7 @@ protected:
   }
 
 #if !defined(BOOST_NO_MEMBER_TEMPLATES)||defined(BOOST_MSVC6_MEMBER_TEMPLATES)
-  bool modify_(node_type* x){return true;}
+  bool modify_(node_type*){return true;}
 #endif
 
 #if defined(BOOST_INDEXED_SET_ENABLE_INVARIANT_CHECKING)
@@ -99,7 +99,7 @@ protected:
 
   bool        final_empty_()const{return final().empty_();}
   std::size_t final_size_()const{return final().size_();}
-  std::size_t final_max_size_()const{final.max_size_();}
+  std::size_t final_max_size_()const{return final.max_size_();}
 
   std::pair<final_node_type*,bool> final_insert_(value_param_type x)
     {return final().insert_(x);}
