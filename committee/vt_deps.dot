@@ -1,0 +1,42 @@
+digraph vt_deps {
+  node [shape="rectangle"];
+  edge [dir="back"];  
+
+  BasicVariadics [label="Basic variadic templates"];
+  FirstClassTPP [label="First-class template parameter packs"];
+  FirstClassPP [label="First-class parameter packs"];
+  Initializers [label="Initializer lists are parameter packs"];
+  DefinedType [label="Parameter packs have a defined type"];
+
+  LengthOfPP [label="Length of parameter packs"];
+  NthElement [label="Get Nth element for parameter packs"];
+  NthElementTemplate [label="Get Nth element for template parameter packs"];
+
+  CVRefPatterns [label="const/volatile/reference patterns"];
+  ArbitraryExpansion [label="Arbitrary expansion patterns"];
+  ArbitraryMatching [label="Arbitrary matching patterns"];
+  NestedExpansion [label="Nested expansion"];
+  PairwiseExpansion [label="Pairwise expansion"]; 
+
+  OverloadingEllipsis [label="Overloading the expansion operator ..."];
+
+  BasicVariadics -> FirstClassTPP;
+
+  BasicVariadics -> LengthOfPP;
+
+  FirstClassTPP -> FirstClassPP;
+  FirstClassTPP -> NthElementTemplate;
+
+  FirstClassPP -> Initializers;
+  FirstClassPP -> DefinedType;
+  FirstClassPP -> NthElement;
+
+  BasicVariadics -> CVRefPatterns;
+
+  BasicVariadics -> OverloadingEllipsis;
+
+  BasicVariadics -> ArbitraryExpansion;
+  CVRefPatterns -> ArbitraryMatching;
+  ArbitraryExpansion -> NestedExpansion;
+  ArbitraryExpansion -> PairwiseExpansion;
+}

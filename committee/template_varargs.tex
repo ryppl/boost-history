@@ -85,6 +85,234 @@ Boost.Format library~\cite{Krempp02}:
 format("writing %1%, x=%2%: %3%-th try") % "toto" % 40.23 % 50
 \end{verbatim}
 
+\section{Feature menu}
+\subsection{Basic variadics}
+Permits declaring variadic function and class templates and using the
+ellipsis to unpack arguments.
+
+\subsection{First-class template parameter packs}
+Template parameter packs are normal C++ types, and are therefore
+``first class'' in the type system. For instance, one can do the
+following:
+
+\begin{verbatim}
+template<...> class tuple {};
+assert(is_same<tuple<int, double>, tuple<int, double> >::value);
+\end{verbatim}
+
+\subsection{First-class parameter packs}
+Parameter packs have actual storage and are CopyConstructible
+types. They can therefore be stored, copied, etc. This can be useful
+for building \texttt{tuple}~\cite{Jarvi02} facilities, e.g.,
+\begin{verbatim}
+template<... Elements> 
+  class tuple
+  {
+  public:
+    tuple(Elements... elements) : elements(elements) { }
+
+  private:
+    Elements elements;
+  };
+\end{verbatim}
+
+Without first-class parameter packs, one typically needs to build
+tuple types recursively, unwrapping the (template) parameter pack at
+each step:
+
+\begin{verbatim}
+template<typename T, ... Rest>
+  class tuple : private tuple<Rest...>
+  {
+  public:
+    tuple(T head, Rest... rest) : tuple<Rest...>(rest...), head(head) { }
+
+  private:
+    T head;
+  };
+
+template<> class tuple {};
+\end{verbatim}
+
+A smart compiler should theoretically be able to optimize this
+recursive version as well as the first-class, nonrecursive version
+above, the but in practice this does not occur. In any case, the
+recursive version places more burden on the compiler.
+\doug{Do we have this data around?}
+
+\section{Initializer lists are parameter packs}
+Initializer lists are typeless entities stored in the compiler that
+can only be used in very restrictive ways for initializing
+aggregates. We could lift some of the restrictions on initializer
+lists by making them parameter packs. This would permit writing
+constructors and assignment operators that accept initializer lists,
+e.g.,
+
+\begin{verbatim}
+template<... Elements>
+  class tuple
+  {
+  public:
+    // #1: Build from an initializer list
+    tuple(Elements elements) : elements(elements) { }
+
+    // #2: Build from an initializer list, converting as necessary
+    template<... Args> tuple(Args args) : elements(args...) { }
+
+  private:
+    Elements elements;
+  };
+
+// Passes initializer list as parameter pack to constructor #1
+tuple<int, double, float> t1 = { 17, 3.14159, 2.718f };
+  
+// Passes initializer list as parameter pack to constructor #2
+tuple<int, double, std::string> t2 = { 17, 3.14f, "foo" };
+\end{verbatim}
+
+Additionally, this change permits emulation of sequence
+constructors~\cite{DoReStr03} via parameter packs, e.g.,
+\begin{verbatim}
+template<typename T>
+  class vector
+  {
+  public:
+    template<... Elements> vector(Elements elements)
+    {
+      tr1::array<T, (pp_length<Elements>::value)> a = elements;
+      assign(a.begin(), a.end());
+    }
+  };
+\end{verbatim}
+
+The construction of \texttt{a} actually performs aggregate
+initialization from the incoming parameter pack, which unfortunately
+requires one extra copy. This copy can be elided by implementing the
+constructor as a metaprogram:
+
+\begin{verbatim}
+template<typename T>
+  class vector
+  {
+  public:
+    template<... Elements> vector(Elements elements)
+    {
+      reserve(pp_length<Elements>::value);
+      do_push_back(elements...);
+    }
+
+    void push_back(const T&);
+
+  private:
+    template<... Rest>
+    void do_push_back(const T& x, Rest... rest) {
+      push_back(x);
+      do_push_back(rest...);
+    }
+
+    void do_push_back() {}
+  };
+\end{verbatim}
+
+\subsection{Parameter packs have a defined type}
+The type of parameter packs has been intentionally left unspecified,
+because they are true language entities. However, this need not always
+be the case. We could define the type of parameter packs and permit
+users to name this type directly as
+\texttt{std::parameter\_pack<Elements...>}. This gives us an
+alternative syntax for accepting parameter packs as function or
+template arguments: 
+\begin{verbatim}
+template<... Elements>
+  void f(parameter_pack<Elements...> p);
+\end{verbatim}
+
+\subsection{Length of parameter packs}
+\label{sec:length-of-parameter-packs}
+Unpacking a template or value parameter pack in a \texttt{sizeof}
+expression will return its length, e.g.,
+
+\begin{verbatim}
+template<... Args>
+  void f(Args... args)
+  {
+    const int num_args = sizeof(args...);
+    // equivalent to...
+    const int num_args = sizeof(Args...);
+  }
+\end{verbatim}
+
+\subsection{Get Nth element for parameter pack}
+Parameter packs are only accessible linearly, by peeling off arguments
+at the front of the parameter pack. A general tuple, however, requires
+the ability to access the Nth element. For parameter packs, we would
+like to be able to access the Nth element. For this we propose to use
+the \texttt{[]} operator, but restrict the argument to integral
+constant expressions because the result type differs depending on the
+value of the argument. For instance,
+
+\begin{verbatim}
+template<... Args>
+  void f(Args... args)
+  {
+    // Make copy of 2nd argument
+    auto second = args[1];
+  }
+\end{verbatim}
+
+We rely on \texttt{auto}~\cite{JarviStroustrup04} to deduce the type
+of the argument for us. See Sec.~\ref{sec:nth-element-template} for an
+alternative that introduces more syntax to enable access to the types
+in a template parameter pack.
+
+\subsection{Get Nth element for template parameter packs}
+\label{sec:nth-element-template}
+Given the \texttt{decltype}~\cite{JarviStroustrup04} extension, one
+can build a metafunction that extracts the $N^{\text{th}}$ type in a
+template parameter pack using ${\cal O}(1)$ instantiations:
+
+\begin{verbatim}
+template<... Args, std::size_t N>
+  struct nth_type
+  {
+    static Args args;
+    typedef decltype(args[N]) type;
+  };
+\end{verbatim}
+
+Without \texttt{decltype}, we end up with an ${\cal
+O}(N)$-instantiation metafunction.
+
+\begin{verbatim}
+template<std::size_t N, ...> struct nth_type_impl;
+
+template<std::size_t N, typename T, ... Rest>
+  struct nth_type_impl<N, T, Rest...>
+    : nth_type_impl<N-1, Rest...> { };
+
+template<typename T, ... Rest>
+  struct nth_type_impl<0, T, Rest...>
+  {
+    typedef T type;
+  };
+  
+template<... Args, std::size_t N>
+  struct nth_type : nth_type_impl<N, Args...> { };
+\end{verbatim}
+
+This option involves introducing additional syntax for accessing the
+$N^{\text{th}}$ type of a template parameter pack, using the new
+\texttt{::[]} operator, e.g.,
+
+\begin{verbatim}
+template<... Args, typename R>
+  struct function_traits<R (*)(Args...)>
+  {
+    typedef typename Args::[0] first_argument_type;
+    typedef typename Args::[1] second_argument_type;
+  };
+\end{verbatim}
+
 \section{Syntax and Semantics}
 \subsection{Variadic templates}
 \par The template parameter list to a function or class template can
