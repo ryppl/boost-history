@@ -3,11 +3,11 @@ subproject libs/numeric/bindings/traits/test ;
 exe ublas_vector 
         : ublas_vector.cpp 
         :  <include>$(BOOST_ROOT)
-	   <include>$(B_ROOT)
+	   <include>$(BOOST)
         ;
 
 exe ublas_vector_proxy 
         : ublas_vector_proxy.cpp 
         :  <include>$(BOOST_ROOT)
-	   <include>$(B_ROOT)
+	   <include>$(BOOST)
         ;

@@ -46,12 +46,14 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   public: 
     typedef general_t matrix_structure; 
     typedef T value_type; 
+#ifndef BOOST_NO_CV_TEMPLATE_TEMPLATES
     typedef T* pointer; 
     typedef boost::numeric::ublas::matrix<T, F, ArrT> matrix_type;
     static pointer storage (matrix_type& m) {
       typedef typename matrix_type::array_type array_type; 
       return vector_traits<array_type>::storage (m.data()); 
     }
+#endif
     static int size1 (matrix_type& m) { return m.size1(); } 
     static int size2 (matrix_type& m) { return m.size2(); }
     static int storage_size (matrix_type& m) { 
@@ -73,6 +75,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     >::type ordering_type; 
   }; 
 
+#ifndef BOOST_NO_CV_TEMPLATE_TEMPLATES
   template <typename T, typename F, typename ArrT>
   struct matrix_traits<boost::numeric::ublas::matrix<T, F, ArrT> const> 
   {
@@ -110,6 +113,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       typename F::orientation_category
     >::type ordering_type; 
   }; 
+#endif // BOOST_NO_CV_TEMPLATE_TEMPLATES
 
 
   // ublas::matrix_range<> 
@@ -163,6 +167,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     >::type ordering_type; 
   }; 
 
+#ifndef BOOST_NO_CV_TEMPLATE_TEMPLATES
   template <typename M>
   struct matrix_traits<boost::numeric::ublas::matrix_range<M> const> 
   {
@@ -214,7 +219,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       typename M::orientation_category
     >::type ordering_type; 
   }; 
-
+#endif // BOOST_NO_CV_TEMPLATE_TEMPLATES
 
   // ublas::matrix_slice<> 
   template <typename M>
@@ -266,6 +271,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     >::type ordering_type; 
   }; 
 
+#ifndef BOOST_NO_CV_TEMPLATE_TEMPLATES
   template <typename M>
   struct matrix_traits<boost::numeric::ublas::matrix_slice<M> const> 
   {
@@ -315,16 +321,17 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       typename M::orientation_category
     >::type ordering_type; 
   }; 
-
+#endif // BOOST_NO_CV_TEMPLATE_TEMPLATES
 
   // matrix_row<> and matrix_column<> are vectors:
   // ublas::matrix_row<>
   template <typename M>
   struct vector_traits<boost::numeric::ublas::matrix_row<M> > 
-  : default_vector_traits<boost::numeric::ublas::matrix_row<M> > 
+  : default_vector_traits<boost::numeric::ublas::matrix_row<M>, typename M::value_type > 
   {
+    typedef typename M::value_type value_type ;
     typedef boost::numeric::ublas::matrix_row<M> vector_type; 
-    typedef typename default_vector_traits<vector_type>::pointer pointer; 
+    typedef typename default_vector_traits<vector_type,value_type>::pointer pointer; 
 
   private:
     typedef typename vector_type::matrix_closure_type closure_t; 
@@ -342,13 +349,14 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     } 
   }; 
 
+#ifndef BOOST_NO_CV_TEMPLATE_TEMPLATES
   template <typename M>
   struct vector_traits<boost::numeric::ublas::matrix_row<M> const> 
-  : default_vector_traits<boost::numeric::ublas::matrix_row<M> const> 
+  : default_vector_traits<boost::numeric::ublas::matrix_row<M> const, typename M::value_type> 
   {
+    typedef typename M::value_type value_type ;
     typedef boost::numeric::ublas::matrix_row<M> vector_type; 
-    typedef 
-      typename default_vector_traits<vector_type const>::pointer pointer; 
+    typedef typename default_vector_traits<vector_type const, value_type>::pointer pointer; 
 
   private:
     typedef vector_type const c_vector_type; 
@@ -366,15 +374,16 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       return matrix_traits<M const>::stride2 (cl_traits::get (mr.data()));
     } 
   }; 
-
+#endif // BOOST_NO_CV_TEMPLATE_TEMPLATES
 
   // ublas::matrix_column<>
   template <typename M>
   struct vector_traits<boost::numeric::ublas::matrix_column<M> > 
-  : default_vector_traits<boost::numeric::ublas::matrix_column<M> > 
+  : default_vector_traits<boost::numeric::ublas::matrix_column<M>, typename M::value_type > 
   {
+    typedef typename M::value_type value_type ;
     typedef boost::numeric::ublas::matrix_column<M> vector_type; 
-    typedef typename default_vector_traits<vector_type>::pointer pointer; 
+    typedef typename default_vector_traits<vector_type,value_type>::pointer pointer; 
 
   private:
     typedef typename vector_type::matrix_closure_type closure_t; 
@@ -392,13 +401,14 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     } 
   }; 
 
+#ifndef BOOST_NO_CV_TEMPLATE_TEMPLATES
   template <typename M>
   struct vector_traits<boost::numeric::ublas::matrix_column<M> const> 
-  : default_vector_traits<boost::numeric::ublas::matrix_column<M> const> 
+  : default_vector_traits<boost::numeric::ublas::matrix_column<M> const,typename M::value_type> 
   {
+    typedef typename M::value_type value_type ;
     typedef boost::numeric::ublas::matrix_column<M> vector_type; 
-    typedef 
-      typename default_vector_traits<vector_type const>::pointer pointer; 
+    typedef typename default_vector_traits<vector_type const, value_type>::pointer pointer; 
 
   private:
     typedef vector_type const c_vector_type; 
@@ -416,7 +426,77 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       return matrix_traits<M const>::stride1 (cl_traits::get (mc.data()));
     } 
   }; 
+#endif // BOOST_NO_CV_TEMPLATE_TEMPLATES
 
+  //
+  // free functions
+  //
+
+  template < typename T, typename F, typename V >
+  inline
+  T* matrix_storage(boost::numeric::ublas::matrix< T, F, V >& m) {
+    return vector_storage( m.data() ) ;
+  }
+
+  template < typename T, typename F, typename V >
+  inline
+  const T* matrix_storage(const boost::numeric::ublas::matrix< T, F, V >& m) {
+    return vector_storage( m.data() ) ;
+  }
+
+  // VisualAge can't handle return type V::value_type if only container is taken as template argument
+  // template < typename V > const typename V::value_type* vector_storage(const boost::numeric::ublas::matrix_row< V >& v) ;
+  //
+  template < typename T, typename F, typename V >
+  inline
+  T* vector_storage(boost::numeric::ublas::matrix_row< boost::numeric::ublas::matrix< T, F, V > >& m) {
+    return matrix_storage( m.data().expression() ) + m.index() * stride2( m.data() ) ;
+  }
+
+  template < typename T, typename F, typename V >
+  inline 
+  const T* vector_storage(const boost::numeric::ublas::matrix_row< const boost::numeric::ublas::matrix< T, F, V > >& m) {
+    return matrix_storage( m.data().expression() ) + m.index() * stride2( m.data() ) ;
+  }
+
+  // VisualAge can't handle return type V::value_type if only container is taken as template argument
+  // template < typename V > const typename V::value_type* vector_storage(const boost::numeric::ublas::matrix_column< V >& v) ;
+  //
+  template < typename T, typename F, typename V >
+  inline
+  T* vector_storage(boost::numeric::ublas::matrix_column< boost::numeric::ublas::matrix< T, F, V > >& m) {
+    return matrix_storage( m.data().expression() ) + m.index() * stride1( m.data() ) ;
+  }
+
+  template < typename T, typename F, typename V >
+  inline 
+  const T* vector_storage(const boost::numeric::ublas::matrix_column< const boost::numeric::ublas::matrix< T, F, V > >& m) {
+    return matrix_storage( m.data().expression() ) + m.index() * stride1( m.data() ) ;
+  }
+
+  template < typename C >
+  inline
+  int vector_size(boost::numeric::ublas::matrix_row< C >& v) {
+    return v.size() ;
+  }
+
+  template < typename C >
+  inline
+  int vector_size(boost::numeric::ublas::matrix_column< C >& v) {
+    return v.size() ;
+  }
+
+  template < typename C >
+  inline
+  int vector_stride(boost::numeric::ublas::matrix_row< C >& v) {
+    return stride1( v.data() ) ;
+  }
+
+  template < typename C >
+  inline
+  int vector_stride(boost::numeric::ublas::matrix_column< C >& v) {
+    return stride2( v.data() ) ;
+  }
 
   // TO DO: matrix_vector_range<>, matrix_vector_slice<> 
 

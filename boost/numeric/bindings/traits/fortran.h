@@ -11,7 +11,7 @@
 // C with Fortran is on this platform/toolset
 #if defined(__GNUC__) || defined(__ICC) || defined(__sgi) || defined(__COMO__)
 #define BIND_FORTRAN_LOWERCASE_UNDERSCORE
-#elif defined(__IBMCPP__)
+#elif defined(__IBMCPP__) || defined(_MSC_VER)
 #define BIND_FORTRAN_LOWERCASE
 #else
 #error do not know how to link with fortran for the given platform
