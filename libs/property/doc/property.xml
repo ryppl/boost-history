@@ -260,7 +260,7 @@
          more cleanly as an aliased property. For example:
       </para>
 <programlisting>
-   class object
+   class object: public boost::noncopyable
    {
       int val;
       public:
@@ -281,7 +281,7 @@
          example:
       </para>
 <programlisting>
-   class object
+   class object: public boost::noncopyable
    {
       int val;
       public:
@@ -299,6 +299,58 @@
          Note how the decleration of the set method differs from the C++/CLI
          version requiring the value to be defined as a const reference.
       </para>
+   </section>
+</section><section id = "prop.issues"><title>Known Issues</title>
+   <section id = "prop.assign"><title>Assignment</title>
+      <para>
+         Because properties prevent access to copy constructor and assignment
+         operations, the following example produces an error:
+      </para>
+<programlisting>
+   object o1, o2;
+   o1.Val = 2; // ok
+   o2.Val = o1.Val; // error
+   o2.Val = o1.Val(); // ok
+   o2.Val = o1.Val.get(); // ok
+</programlisting>
+   </section><section id = "prop.using"><title>Using Inside A Class</title>
+      <para>
+         If you are using properties in a class (like object in the examples)
+         then you need to suppress the compiler-generated copy constructors
+         and assignment operations. You can either make them private in your
+         class or provide your own implementations of them.
+      </para><para>
+         Note that this is only needed for classes that have properties as
+         members. Other classes derived from them do not need to do this
+         unless they contain properties themselves.
+      </para><para>
+         For example:
+      </para>
+<programlisting>
+   class Integer
+   {
+      int val;
+      public:
+         int get_Val() const{ return val; }
+         void set_Val( const int &amp; v ){ val = v; }
+         scalar_property&lt; object_property
+         &lt;
+            int, object,
+            &amp;object::get_Val, &amp;object::set_Val
+         &gt; &gt; Val;
+
+         const Integer &amp; operator=( const Integer &amp; i )
+         {
+            val = i.val;
+            return *this;
+         }
+         Integer( const Integer &amp; i ):
+            val( i.val ), Val( this )
+         {
+         }
+         Integer( int i ): val( i ), Val( this ){}
+   };
+</programlisting>
    </section>
 </section>
 
