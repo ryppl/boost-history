@@ -43,6 +43,7 @@ namespace boost
     // const_iterator
     // result_iterator (will follow the constness of the argument)
     // difference_type
+    // container_category (tag)
     //
     // Valid free standing functions:
     //------------------------------------------
@@ -56,14 +57,127 @@ namespace boost
     /////////////////////////////////////////////////////////////////////////
     // Implementation
     /////////////////////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////////////
+    //
+    // Container tags:
+    //    - is_container
+    //    - is_sequence
+    //    - is_contiguous_sequence  (arrays and vector)
+    //    - is_associative
+    //    - is_pair
+    //    - is_iterator_range  ( perhaps only this one and away with pair )
+    //
+    // 
+    //
+    // implemented by SFINAE helper functions
+    //
+    ///////////////////////////////////////////////////////////////////////
+
+    struct container_tag {};
+    struct sequence_container_tag : public container_tag {};
+    struct contiguous_sequence_container_tag : public sequence_container_tag{};
+    struct associative_sequence_container_tag : public container_tag {};
+    struct iterator_range_container_tag : public container_tag {};
     
-    //
-    // Implemented using "poor man's partial template specialization".
-    //
+    namespace detail
+    {
 
-    namespace detail 
-    {   
+	namespace container
+	{
+	    template< int sz >
+	    struct has_size
+	    {
+		char size[sz];
+	    };
 
+	    typedef has_size<1> false_t;
+	    typedef has_size<2> true_t;
+
+	    template< typename T, typename U >
+	    true_t  is_pair( const std::pair<T,U>& );
+	    false_t is_pair( ... );
+ 
+	    template< typename C, typename T, typename D,
+		      typename P, typename R >
+ 	    true_t  is_iterator( const std::iterator<C,T,D,P,R>& );	
+	    template< typename C >
+	    true_t  is_iterator( const std::back_insert_iterator<C>& );
+	    template< typename C >
+	    true_t  is_iterator( const std::front_insert_iterator<C>& );
+	    template< typename C >
+	    true_t  is_iterator( const std::insert_iterator<C>& );
+	    template< typename T, typename C, typename Tr >
+	    true_t  is_iterator( const std::istream_iterator<T,C,Tr>& );
+	    template< typename T, typename C, typename Tr >
+	    true_t  is_iterator( const std::ostream_iterator<T,C,Tr>& );
+	    template< typename C, typename Tr >
+	    true_t  is_iterator( const std::istreambuf_iterator<C,Tr>& );
+	    template< typename C, typename Tr >
+	    true_t  is_iterator( const std::ostreambuf_iterator<C,Tr>& );
+	    false_t is_iterator( ... );
+
+// 	    template< typename C >
+// 	    true_t  is_container( const C&, const typename C::iterator& = 
+// 				  typename C::iterator() );
+// 	    template< typename T, std::size_t sz >
+// 	    trut_t  is_container( const T (&)[sz] );
+// 	    template< typename T, typename U >
+// 	    true_t  is_container( const std::pair<T,U>& );
+// 	    false_t is_container( ... );
+
+// 	    template< typename C >
+// 	    true_t  is_associative_container( const C&, 
+// 					      const typename C::key_type =
+// 					      typename C::key_type() );
+// 	    false_t is_associative_container( ... );
+
+// 	    template< typename T, typename U >
+// 	    true_t  is_iterator_range( const std::pair<T,U>& );
+// 	    template< typename C >
+// 	    true_t  is_iterator_range( const C&, 
+// 				       const typename C::iterator_range_tag& =
+// 				       typename C::iterator_range_tag() );
+// 	    false_t is_iterator_range( ... );
+				       
+	    template< typename C >
+	    struct tag_generator
+	    {
+// 		BOOST_STATIC_CONSTANT( bool, is_container_ );
+// 		BOOST_STATIC_CONSTANT( bool, is_sequence_ );
+// 		BOOST_STATIC_CONSTANT( bool, is_contiguous_sequence_ );
+// 		BOOST_STATIC_CONSTANT( bool, is_associative_ );
+// 		BOOST_STATIC_CONSTANT( bool, is_iterator_range_ );
+
+			       		    
+// 	typedef typename mpl::if_c< is_pair_, 
+// 			 typename detail::pair_container_helper<C>,
+// 	        typename mpl::if_c< is_array_, 
+// 			 typename detail::array_container_helper<C>,
+// 		typename mpl::if_c< is_iterator, 
+//                          typename detail::iterator_container_helper<C>,
+// 			 typename detail::default_container_helper<C>
+// 	                          >::type 
+// 		                  >::type 
+		
+		
+	    }; // struct 'tag_generator'
+
+// 	    template
+// 	    true_t  is_sequence_container()
+//
+// hm...how to destinguish sequence and maps? is_container && not_is_map
+//                                            && not_is_iterator_range
+//
+	    
+		} // namespace 'container'
+
+
+    
+	//
+	// Implemented using "poor man's partial template specialization".
+	//
+	
 	///////////////////////////////////////////////////////////////////////
 	// partial specializations
 	///////////////////////////////////////////////////////////////////////
@@ -286,51 +400,10 @@ namespace boost
 
 	}; // 'array_container_helper'
 
-
-	///////////////////////////////////////////////////////////////////////
-	// SFINAE helper functions
-	///////////////////////////////////////////////////////////////////////
-
-	namespace container
-	{
-	    template< int sz >
-	    struct has_size
-	    {
-		char size[sz];
-	    };
-
-	    typedef has_size<1> false_t;
-	    typedef has_size<2> true_t;
-
-	    template< typename T, typename T2 >
-	    true_t  is_pair( const std::pair<T,T2>& );
-	    false_t is_pair( ... );
- 
-	    template< typename C, typename T, typename D,
-		      typename P, typename R >
- 	    true_t  is_iterator( const std::iterator<C,T,D,P,R>& );	
-	    template< typename C >
-	    true_t  is_iterator( const std::back_insert_iterator<C>& );
-	    template< typename C >
-	    true_t  is_iterator( const std::front_insert_iterator<C>& );
-	    template< typename C >
-	    true_t  is_iterator( const std::insert_iterator<C>& );
-	    template< typename T, typename C, typename Tr >
-	    true_t  is_iterator( const std::istream_iterator<T,C,Tr>& );
-	    template< typename T, typename C, typename Tr >
-	    true_t  is_iterator( const std::ostream_iterator<T,C,Tr>& );
-	    template< typename C, typename Tr >
-	    true_t  is_iterator( const std::istreambuf_iterator<C,Tr>& );
-	    template< typename C, typename Tr >
-	    true_t  is_iterator( const std::ostreambuf_iterator<C,Tr>& );
-	    false_t is_iterator( ... );
-
-	}
-
     } // namespace 'detail'
     
     ///////////////////////////////////////////////////////////////////////////
-    // 'algo_traits'
+    // 'container_traits'
     ///////////////////////////////////////////////////////////////////////////
 
 
@@ -367,7 +440,8 @@ namespace boost
 	typedef typename container_helper_t::const_iterator    const_iterator;
 	typedef typename container_helper_t::result_iterator   result_iterator;
 	typedef typename container_helper_t::difference_type   difference_type;
-	    
+	//typedef typename container::tag_generator<C>::tag   container_category;
+
     }; // 'container_traits'
 
     ///////////////////////////////////////////////////////////////////////////
