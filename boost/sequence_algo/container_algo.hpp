@@ -367,7 +367,7 @@ namespace boost
 #define BOOST_FWD_ALGO_BEBEX( A, X ) return std::A( begin( c1 ), end( c1 ), \
                                                     begin( c2 ), end( c2 ), X );
 #define BOOST_FWD_ALGO_BEB( A )      return std::A( begin( c1 ), end( c1 ), \
-	                                                begin( c2 ) );
+                                                    begin( c2 ) );
 #define BOOST_FWD_ALGO_BEBX( A, X )  return  std::A( begin( c1 ), end( c1 ), \
                                                      begin( c2 ), X );  
 	//
@@ -375,13 +375,13 @@ namespace boost
 	//  fun   = Unary_function,
 	//  pred  = Predicate
 	//  value = T (equality compareable)
-	//	
+	//  
 
 #define BOOST_FWD_ALGO_FUN( A )                                              \
     /* @note: don't work with functors :(                                    \
-	function_requires< UnaryFunctionConcept<Unary_function, void,            \
+    function_requires< UnaryFunctionConcept<Unary_function, void,            \
                   typename function_traits<Unary_function>::arg1_type > >(); \
-    */				                                                         \
+    */                                                                       \
     BOOST_FWD_ALGO_BEX( A, fun )
 
 #define BOOST_FWD_ALGO_EQ( A ) /*CHECL_EQ*/      BOOST_FWD_ALGO_BEX( A, value )
@@ -445,13 +445,13 @@ namespace boost
 	{
 		typedef typename std::pair< typename mutable_return<T1>::iterator,
 		typename mutable_return<T2>::iterator > mutable_pair;
-		
+
 		typedef typename std::pair< typename mutable_return<T1>::iterator,
 		typename const_return<T2>::iterator > mutable_const_pair;
-		
+
 		typedef typename std::pair< typename const_return<T1>::iterator,
 		typename mutable_return<T2>::iterator > const_mutable_pair;
-		
+
 		typedef typename std::pair< typename const_return<T1>::iterator,
 		typename const_return<T2>::iterator > const_pair;
 	};
@@ -1346,7 +1346,36 @@ sort_heap
 	*/
 
 
-} // namespace boost
+#define BOOST_FWD_ALGO_BE
+#undef BOOST_FWD_ALGO_BEX
+#undef BOOST_FWD_ALGO_BEXY
+#undef BOOST_FWD_ALGO_BEXYZ
+
+#undef BOOST_FWD_ALGO_BEBE
+
+#undef BOOST_FWD_ALGO_BEBEX
+
+#undef BOOST_FWD_ALGO_BEB
+
+#undef BOOST_FWD_ALGO_BEBX
+#undef BOOST_FWD_ALGO_FUN
+#undef BOOST_FWD_ALGO_EQ
+#undef BOOST_FWD_ALGO_PRED
+#undef BOOST_FWD_ALGO_BPRED
+#undef BOOST_FWD_ALGO_INT_EQ
+#undef BOOST_FWD_ALGO_INT_EQ_BPRED
+#undef BOOST_FWD_ALGO3_BPRED
+#undef BOOST_FWD_ALGO4_BPRED
+
+#undef BOOST_ALGO_START1
+
+#undef CHECK_UNARY_FUNCTION
+#undef CHECK_BINARY_PREDICATE
+#undef CHECK_EQAULITY_COMPARABLE
+
+}
+
+// namespace boost
 
 #endif // BOOST_CONTAINER_ALGORITHM_HPP
 
