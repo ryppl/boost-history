@@ -1,4 +1,4 @@
-/* Boost interval/oper.hpp template implementation file
+/* Boost interval/arith.hpp template implementation file
  *
  * Copyright Jens Maurer 2000
  * Copyright Hervé Brönnimann, Guillaume Melquiond, Sylvain Pion 2002
@@ -18,11 +18,20 @@
  *   2000-09-24	 Separated from interval.hpp
  */
 
-#ifndef BOOST_INTERVAL_OPER_HPP
-#define BOOST_INTERVAL_OPER_HPP
+#ifndef BOOST_INTERVAL_ARITH_HPP
+#define BOOST_INTERVAL_ARITH_HPP
 
+#include <boost/interval/interval.hpp>
+#include <boost/interval/detail/test_input.hpp>
 
 namespace boost {
+
+  namespace detail {
+
+template<class T>
+bool is_neg(const T& x) { return x < T(0); }
+
+  } // namespace detail
 
 /*
  * Basic arithmetic operators
@@ -199,25 +208,25 @@ interval<T, Traits> operator*(const interval<T, Traits>& x,
   const T& xu = x.upper();
   const T& yl = y.lower();
   const T& yu = y.upper();
-  if (detail::sign(xu))
-    if (detail::sign(yu))
+  if (detail::is_neg(xu))
+    if (detail::is_neg(yu))
       return I(rnd.mul_down(xu, yu), rnd.mul_up(xl, yl), true);
-    else if (detail::sign(yl))
+    else if (detail::is_neg(yl))
       return I(rnd.mul_down(xl, yu), rnd.mul_up(xl, yl), true);
     else
       return I(rnd.mul_down(xl, yu), rnd.mul_up(xu, yl), true);
-  else if (detail::sign(xl))
-    if (detail::sign(yu))
+  else if (detail::is_neg(xl))
+    if (detail::is_neg(yu))
       return I(rnd.mul_down(xu, yl), rnd.mul_up(xl, yl), true);
-    else if (detail::sign(yl))
+    else if (detail::is_neg(yl))
       return I(min(rnd.mul_down(xl, yu), rnd.mul_down(xu, yl)),
 	       max(rnd.mul_up  (xl, yl), rnd.mul_up  (xu, yu)), true);
     else
       return I(rnd.mul_down(xl, yu), rnd.mul_up(xu, yu), true);
   else
-    if (detail::sign(yu))
+    if (detail::is_neg(yu))
       return I(rnd.mul_down(xu, yl), rnd.mul_up(xl, yu), true);
-    else if (detail::sign(yl))
+    else if (detail::is_neg(yl))
       return I(rnd.mul_down(xu, yl), rnd.mul_up(xu, yu), true);
     else
       return I(rnd.mul_down(xl, yl), rnd.mul_up(xu, yu), true);
@@ -231,7 +240,7 @@ interval<T, Traits> operator*(const T& x, const interval<T, Traits>& y)
   typename Traits::rounding rnd;
   const T& yl = y.lower();
   const T& yu = y.upper();
-  if (detail::sign(x))
+  if (detail::is_neg(x))
     return interval<T, Traits>(rnd.mul_down(x, yu), rnd.mul_up(x, yl), true);
   else
     return interval<T, Traits>(rnd.mul_down(x, yl), rnd.mul_up(x, yu), true);
@@ -257,18 +266,18 @@ interval<T, Traits> operator/(const interval<T, Traits>& x,
   const T& xu = x.upper();
   const T& yl = y.lower();
   const T& yu = y.upper();
-  if (detail::sign(xu))
-    if (detail::sign(yu))
+  if (detail::is_neg(xu))
+    if (detail::is_neg(yu))
       return I(rnd.div_down(xu, yl), rnd.div_up(xl, yu), true);
     else
       return I(rnd.div_down(xl, yl), rnd.div_up(xu, yu), true);
-  else if (detail::sign(xl))
-    if (detail::sign(yu))
+  else if (detail::is_neg(xl))
+    if (detail::is_neg(yu))
       return I(rnd.div_down(xu, yu), rnd.div_up(xl, yu), true);
     else
       return I(rnd.div_down(xl, yl), rnd.div_up(xu, yl), true);
   else
-    if (detail::sign(yu))
+    if (detail::is_neg(yu))
       return I(rnd.div_down(xu, yu), rnd.div_up(xl, yl), true);
     else
       return I(rnd.div_down(xl, yu), rnd.div_up(xu, yl), true);
@@ -286,7 +295,7 @@ interval<T, Traits> operator/(const T& x, const interval<T, Traits>& y)
   typename Traits::rounding rnd;
   const T& yl = y.lower();
   const T& yu = y.upper();
-  if (detail::sign(x))
+  if (detail::is_neg(x))
     return interval<T, Traits>(rnd.div_down(x, yl), rnd.div_up(x, yu), true);
   else
     return interval<T, Traits>(rnd.div_down(x, yu), rnd.div_up(x, yl), true);
@@ -300,7 +309,7 @@ interval<T, Traits> operator/(const interval<T, Traits>& x, const T& y)
   typename Traits::rounding rnd;
   const T& xl = x.lower();
   const T& xu = x.upper();
-  if (detail::sign(y))
+  if (detail::is_neg(y))
     return interval<T, Traits>(rnd.div_down(xu, y), rnd.div_up(xl, y), true);
   else
     return interval<T, Traits>(rnd.div_down(xl, y), rnd.div_up(xu, y), true);
@@ -309,7 +318,7 @@ interval<T, Traits> operator/(const interval<T, Traits>& x, const T& y)
 template<class T, class Traits> inline
 interval<T, Traits> sqrt(const interval<T, Traits>& x)
 {
-  if (interval_lib::detail::test_input(x) || detail::sign(x.upper()))
+  if (interval_lib::detail::test_input(x) || detail::is_neg(x.upper()))
     return interval<T, Traits>::empty();
   typename Traits::rounding rnd;
   T l = (x.lower() <= T(0)) ? 0 : rnd.sqrt_down(x.lower());
@@ -322,10 +331,10 @@ interval<T, Traits> square(const interval<T, Traits>& x)
   if (interval_lib::detail::test_input(x))
     return interval<T, Traits>::empty();
   typename Traits::rounding rnd;
-  if (detail::sign(x.upper())) {
+  if (detail::is_neg(x.upper())) {
     return interval<T, Traits>(rnd.mul_down(x.upper(), x.upper()),
 			       rnd.mul_up(x.lower(), x.lower()), true);
-  } else if (!detail::sign(x.lower())) {
+  } else if (!detail::is_neg(x.lower())) {
     return interval<T, Traits>(rnd.mul_down(x.lower(), x.lower()),
 			       rnd.mul_up(x.upper(), x.upper()), true);
   } else {
@@ -337,4 +346,4 @@ interval<T, Traits> square(const interval<T, Traits>& x)
 
 } // namespace boost
 
-#endif // BOOST_INTERVAL_OPER_HPP
+#endif // BOOST_INTERVAL_ARITH_HPP

@@ -21,11 +21,8 @@
 #ifndef BOOST_INTERVAL_ROUNDED_TRANSC_HPP
 #define BOOST_INTERVAL_ROUNDED_TRANSC_HPP
 
-#ifndef BOOST_INTERVAL_HPP
-#error Internal header file: This header must be included by <boost/interval.hpp> only.
-#endif
-
 #include <cmath>
+#include <boost/interval/rounding.hpp>
 
 namespace boost {
 

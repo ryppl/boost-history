@@ -59,8 +59,7 @@ struct my_math:
 {};
 
 typedef
-  interval<double, interval_traits<double, compare_certainly<double>,
-				   my_math, my_checking> > interval_type_aux;
+  interval<double, interval_policies<my_math, my_checking> > interval_type_aux;
 
 #ifdef USE_BOOST_UNPROTECTED
 typedef unprotect<interval_type_aux>::type interval_type;

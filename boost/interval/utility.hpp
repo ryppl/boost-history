@@ -21,111 +21,14 @@
 #ifndef BOOST_INTERVAL_UTILITY_HPP
 #define BOOST_INTERVAL_UTILITY_HPP
 
-#ifndef BOOST_INTERVAL_HPP
-#error Internal header file: \
-This header must be included by <boost/interval.hpp> only.
-#endif
+#include <boost/interval/interval.hpp>
+#include <boost/interval/detail/test_input.hpp>
 
 /*
  * Implementation of simple functions
  */
 
 namespace boost {
-
-template<class T, class Traits> inline
-void interval<T, Traits>::set_empty()
-{
-  low = checking::empty_lower();
-  up  = checking::empty_upper();
-}
-
-template<class T, class Traits> inline
-void interval<T, Traits>::set_whole()
-{
-  const T& inf = checking::inf();
-  low = -inf;
-  up  =  inf;
-}
-
-template<class T, class Traits> inline
-interval<T, Traits>::interval(const T& v): low(v), up(v)
-{
-  if (interval_lib::detail::test_input<T, Traits>(v)) set_empty();
-}
-
-template<class T, class Traits> inline
-interval<T, Traits>::interval(const T& l, const T& u): low(l), up(u)
-{
-  if (interval_lib::detail::test_input<T, Traits>(l, u) || !(l <= u))
-    set_empty();
-}
-
-template<class T, class Traits> inline
-interval<T, Traits>& interval<T, Traits>::operator=(const T& x)
-{
-  if (interval_lib::detail::test_input<T, Traits>(x)) set_empty();
-  else low = up = x;
-  return *this;
-}
-
-template<class T, class Traits> inline
-void interval<T, Traits>::assign(const T& l, const T& u)
-{
-  if (interval_lib::detail::test_input<T, Traits>(l, u) || !(l <= u))
-    set_empty();
-  else set(l, u);
-}
-
-template<class T, class Traits> inline
-void interval<T, Traits>::set(const T& l, const T& u)
-{
-  low = l;
-  up = u;
-}
-
-template<class T, class Traits> inline
-interval<T, Traits> interval<T, Traits>::hull(const T& x, const T& y)
-{
-  bool bad_x = interval_lib::detail::test_input<T, Traits>(x);
-  bool bad_y = interval_lib::detail::test_input<T, Traits>(y);
-  if (bad_x)
-    if (bad_y) return interval<T, Traits>::empty();
-    else       return interval<T, Traits>(y, y, true);
-  else
-    if (bad_y) return interval<T, Traits>(x, x, true);
-  if (x < y) return interval<T, Traits>(x, y, true);
-  else       return interval<T, Traits>(y, x, true);
-}
-
-template<class T, class Traits> inline
-interval<T, Traits> interval<T, Traits>::empty()
-{
-  return interval<T, Traits>(checking::empty_lower(),
-			     checking::empty_upper(), true);
-}
-
-template<class T, class Traits> inline
-interval<T, Traits> interval<T, Traits>::whole()
-{
-  const T& inf = checking::inf();
-  return interval<T, Traits>(-inf, inf, true);
-}
-
-template<class T, class Traits> inline
-const T& interval<T, Traits>::lower() const
-{
-  /*if (checking::is_empty(low, up))
-  return checking::nan();*/
-  return low;
-}
-
-template<class T, class Traits> inline
-const T& interval<T, Traits>::upper() const
-{
-  /*if (checking::is_empty(low, up))
-  return checking::nan();*/
-  return up;
-}
 
 /*
  * Utility Functions
@@ -141,6 +44,26 @@ template<class T, class Traits> inline
 const T& upper(const interval<T, Traits>& x)
 {
   return x.upper();
+}
+
+template<class T, class Traits> inline
+T checked_lower(const interval<T, Traits>& x)
+{
+  if (empty(x)) {
+    typedef typename Traits::checking checking;
+    return checking::nan();
+  }
+  return low;
+}
+
+template<class T, class Traits> inline
+T checked_upper(const interval<T, Traits>& x)
+{
+  if (empty(x)) {
+    typedef typename Traits::checking checking;
+    return checking::nan();
+  }
+  return up;
 }
 
 template<class T, class Traits> inline
@@ -397,33 +320,6 @@ interval<T, Traits> min(const T& x, const interval<T, Traits>& y)
 			     min(x, y.upper()), true);
 }
 
-  namespace interval_lib {
-
-template<class I> inline
-I pi()
-{
-  typedef typename I::base_type T;
-  return I(constants::pi_lower<T>(),
-	   constants::pi_upper<T>(), true);
-}
-
-template<class I> inline
-I pi_half()
-{
-  typedef typename I::base_type T;
-  return I(constants::pi_half_lower<T>(),
-	   constants::pi_half_upper<T>(), true);
-}
-
-template<class I> inline
-I pi_twice()
-{
-  typedef typename I::base_type T;
-  return I(constants::pi_twice_lower<T>(),
-	   constants::pi_twice_upper<T>(), true);
-}
-
-  } // namespace interval_lib
 } // namespace boost
 
 #endif // BOOST_INTERVAL_UTILITY_HPP

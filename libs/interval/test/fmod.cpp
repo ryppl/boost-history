@@ -17,9 +17,10 @@ using namespace boost;
 using namespace interval_lib;
 
 typedef interval<int,
-		 interval_traits<int,
-				 compare_certainly<int>,
-				 save_state_nothing<my_rounded_arith> > > I;
+		 interval_policies<
+                   save_state_nothing<my_rounded_arith>,
+                   checking_strict<int>
+                 > > I;
 
 int test_main(int, char *[]) {
 

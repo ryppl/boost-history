@@ -18,18 +18,20 @@
  *   2000-09-24	 Separated from interval.hpp
  */
 
-#ifndef BOOST_INTERVAL_DETAIL_CONSTANTS_HPP
-#define BOOST_INTERVAL_DETAIL_CONSTANTS_HPP
+#ifndef BOOST_INTERVAL_CONSTANTS_HPP
+#define BOOST_INTERVAL_CONSTANTS_HPP
 
 namespace boost {
   namespace interval_lib {
     namespace constants {
 
+/*
 template<class T>
 struct interval_constant
 {
   T lower, upper;
 };
+*/
 
 // These constants should be exactly computed.
 // Decimal representations wouldn't do it since the standard doesn't
@@ -69,7 +71,32 @@ template<> inline long double pi_twice_lower<long double>() { return pi_d_l * 2;
 template<> inline long double pi_twice_upper<long double>() { return pi_d_u * 2; }
 
     } // namespace constants
+
+template<class I> inline
+I pi()
+{
+  typedef typename I::base_type T;
+  return I(constants::pi_lower<T>(),
+	   constants::pi_upper<T>(), true);
+}
+
+template<class I> inline
+I pi_half()
+{
+  typedef typename I::base_type T;
+  return I(constants::pi_half_lower<T>(),
+	   constants::pi_half_upper<T>(), true);
+}
+
+template<class I> inline
+I pi_twice()
+{
+  typedef typename I::base_type T;
+  return I(constants::pi_twice_lower<T>(),
+	   constants::pi_twice_upper<T>(), true);
+}
+
   } // namespace interval_lib
 } // namespace boost
 
-#endif // BOOST_INTERVAL_DETAIL_CONSTANTS_HPP
+#endif // BOOST_INTERVAL_CONSTANTS_HPP

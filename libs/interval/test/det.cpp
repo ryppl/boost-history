@@ -51,11 +51,10 @@ struct variants {
 
   typedef
     interval
-      <T, interval_traits
-            <double, compare_certainly<double>,
-	     save_state
-	       <rounded_transc_dummy
-                  <double, rounded_arith_std<double> > > > >
+      <T, interval_policies<
+            save_state<rounded_arith_std<double> >,
+            checking_no_nan<double, checking_no_empty<double> >
+          > >
     I_sp;
 
   typedef typename unprotect<I_op>::type I_ou;

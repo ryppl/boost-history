@@ -1,4 +1,8 @@
-#include <boost/interval.hpp>
+#include <boost/interval/interval.hpp>
+#include <boost/interval/arith.hpp>
+#include <boost/interval/rounding.hpp>
+#include <boost/interval/rounded_arith.hpp>
+#include <boost/interval/utility.hpp>
 #include <boost/test/test_tools.hpp>
 
 typedef enum { EXPR_VAR, EXPR_NEG, EXPR_UP, EXPR_DOWN, EXPR_ADD, EXPR_SUB } e_type;
@@ -191,11 +195,10 @@ struct my_checking
 
 template<class Rounding>
 struct my_interval {
-  typedef interval<pexpr,
-		   interval_traits<pexpr,
-				   compare_certainly<pexpr>,
-				   save_state<Rounding>,
-				   my_checking > > type;
+  typedef interval<
+            pexpr,
+	    interval_policies<save_state<Rounding>, my_checking >
+          > type;
 };
 
 int test_main(int, char *[]) {

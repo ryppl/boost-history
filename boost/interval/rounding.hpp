@@ -21,11 +21,6 @@
 #ifndef BOOST_INTERVAL_ROUNDING_HPP
 #define BOOST_INTERVAL_ROUNDING_HPP
 
-#ifndef BOOST_INTERVAL_HPP
-#error Internal header file: \
-This header must be included by <boost/interval.hpp> only.
-#endif
-
 namespace boost {
 
   namespace interval_lib {
@@ -108,7 +103,7 @@ namespace boost {
   
   template<class T>
   struct rounded_math
-    : save_state_nothing<rounded_transc_dummy<T, rounded_arith_exact<T> > >
+    : save_state_nothing<rounded_arith_exact<T> >
   {};
 
   /*
@@ -123,37 +118,26 @@ namespace boost {
   };
   
   template<class Traits>
-  struct unprotect_traits
+  struct unprotect_policies
   {
-    typedef interval_traits<typename Traits::base_type,
-	      typename Traits::compare,
+    typedef interval_policies<
               typename unprotect_rounding<typename Traits::rounding>::type,
-              typename Traits::checking> type;
+              typename Traits::checking
+            > type;
   };
   
   template<class I>
   struct unprotect
   {
-    typedef interval<typename I::base_type,
-              typename unprotect_traits<typename I::traits_type>::type> type;
+    typedef interval<
+              typename I::base_type,
+              typename unprotect_policies<typename I::traits_type>::type
+            > type;
   };
 
   } // namespace interval_lib
 
 } // namespace boost
-
-// define appropriate specialization of rounding_control for built-in types
-#if defined(__i386__) || defined(__BORLANDC__) || defined(BOOST_MSVC)
-#  include <boost/interval/detail/x86_rounding_control.hpp>
-#elif defined(powerpc) || defined(__powerpc__) || defined(__ppc__)
-#  include <boost/interval/detail/ppc_rounding_control.hpp>
-#elif defined(sparc) || defined(__sparc__)
-#  include <boost/interval/detail/sparc_rounding_control.hpp>
-#elif defined(__USE_ISOC99)
-#  include <boost/interval/detail/isoc99_rounding_control.hpp>
-#else
-#  error Boost::interval: Please specify rounding control mechanism.
-#endif
 
 
 #endif // BOOST_INTERVAL_ROUNDING_HPP

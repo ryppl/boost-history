@@ -23,6 +23,7 @@
 
 #include <stdexcept>
 #include <cassert>
+#include <boost/limits.hpp>
 
 namespace boost {
   namespace interval_lib {
@@ -74,8 +75,7 @@ struct checking_base
   }
   static bool is_empty(const T& l, const T& u)
   {
-    return !(l <= u);
-    // note: equivalent to (u < l), except if u==nan() or l==nan()
+    return !(l <= u); // safety for partial orders
   }
 };
 
@@ -98,7 +98,7 @@ struct checking_no_empty: Checking
     Exception()();
     return Checking::empty_upper();
   }
-  static T is_empty(const T&, const T&)
+  static bool is_empty(const T&, const T&)
   {
     return false;
   }
@@ -132,43 +132,6 @@ struct checking_strict:
     namespace detail {
 
 template <class T> inline bool is_nan(const T& x) { return x != x; }
-
-template<class T, class Traits> inline
-bool test_input(const interval<T, Traits>& x) {
-  typedef typename Traits::checking checking;
-  return checking::is_empty(x.lower(), x.upper());
-}
-
-template<class T, class Traits> inline
-bool test_input(const interval<T, Traits>& x, const interval<T, Traits>& y) {
-  typedef typename Traits::checking checking;
-  return checking::is_empty(x.lower(), x.upper()) ||
-	 checking::is_empty(y.lower(), y.upper());
-}
-
-template<class T, class Traits> inline
-bool test_input(const T& x, const interval<T, Traits>& y) {
-  typedef typename Traits::checking checking;
-  return checking::is_nan(x) || checking::is_empty(y.lower(), y.upper());
-}
-
-template<class T, class Traits> inline
-bool test_input(const interval<T, Traits>& x, const T& y) {
-  typedef typename Traits::checking checking;
-  return checking::is_empty(x.lower(), x.upper()) || checking::is_nan(y);
-}
-
-template<class T, class Traits> inline
-bool test_input(const T& x) {
-  typedef typename Traits::checking checking;
-  return checking::is_nan(x);
-}
-
-template<class T, class Traits> inline
-bool test_input(const T& x, const T& y) {
-  typedef typename Traits::checking checking;
-  return checking::is_nan(x) || checking::is_nan(y);
-}
 
     } // namespace detail
 

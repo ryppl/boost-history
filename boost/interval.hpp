@@ -23,91 +23,35 @@
 #include <algorithm>
 #include <boost/interval/detail/bugs.hpp>
 
-
+/*
 namespace boost {
 
   namespace interval_lib {
 
-    template<class T> struct compare_certainly;
     template<class T> struct rounded_math;
     template<class T> struct checking_strict;
 
   } // namespace interval_lib
 
-  /*
-   * default traits class
-   */
-
   template<class T,
-           class Compare  = interval_lib::compare_certainly<T>,
            class Rounding = interval_lib::rounded_math<T>,
            class Checking = interval_lib::checking_strict<T> >
   struct interval_traits
   {
     typedef T base_type;
-    typedef Compare compare;
     typedef Rounding rounding;
     typedef Checking checking;
   };
 
-  /*
-   * interval class
-   */
-
   template<class T, class Traits = interval_traits<T> >
-  class interval
-  {
-  public:
-    typedef T base_type;
-    typedef Traits traits_type;
+  class interval;  
 
-    interval(const T& v = T());
-    interval(const T& l, const T& u);
+} // namespace boost
+*/
 
-    // The following needs to be defined in the class body for VC++.
-    template<class Traits2>
-      interval(const interval<T, Traits2>& r)
-        : low(r.lower()), up(r.upper())
-      {
-        if (boost::empty(r)) set_empty();
-      }
+#include <boost/interval/interval.hpp>
 
-    // compiler-generated copy constructor and assignment operator are fine
-
-    interval& operator=(const T& x);
-    void assign(const T& l, const T& u);
-
-    static interval empty();
-    static interval whole();
-    static interval hull(const T& x, const T& y);
-
-    const T& lower() const;
-    const T& upper() const;
-
-    interval& operator+= (const T& r);
-    interval& operator+= (const interval& r);
-    interval& operator-= (const T& r);
-    interval& operator-= (const interval& r);
-    interval& operator*= (const T& r);
-    interval& operator*= (const interval& r);
-    interval& operator/= (const T& r);
-    interval& operator/= (const interval& r);
-
-    // the following is for internal use only, it is not a published interface
-    // nevertheless, it's public because friends don't always work correctly.
-    interval(const T& l, const T& u, bool): low(l), up(u) {}
-    void set_empty();
-    void set_whole();
-    void set(const T& l, const T& u);
-
-  private:
-    typedef typename Traits::compare  compare;
-    typedef typename Traits::checking checking;
-    typedef typename Traits::rounding rounding;
-    T low;
-    T up;
-  };
-
+namespace boost {
 
   /*
    * Non-Member Function Declarations
@@ -171,12 +115,14 @@ namespace boost {
   
   } // namespace interval_lib
 
+  /*
   BOOST_INTERVAL_DEFINE_COMPARISON( operator<  )
   BOOST_INTERVAL_DEFINE_COMPARISON( operator<= )
   BOOST_INTERVAL_DEFINE_COMPARISON( operator>  )
   BOOST_INTERVAL_DEFINE_COMPARISON( operator>= )
   BOOST_INTERVAL_DEFINE_COMPARISON( operator== )
   BOOST_INTERVAL_DEFINE_COMPARISON( operator!= )
+  */
 
   #undef BOOST_INTERVAL_DEFINE_COMPARISON
 
@@ -443,7 +389,7 @@ namespace std {
 
 #endif
 
-#include <boost/interval/rounding.hpp>
+#include <boost/interval/hw_rounding.hpp>
 #include <boost/interval/rounded_arith.hpp>
 #include <boost/interval/rounded_transc.hpp>
 #include <boost/interval/constants.hpp>
@@ -452,34 +398,7 @@ namespace std {
 #include <boost/interval/compare.hpp>
 #include <boost/interval/utility.hpp>
 
-#include <boost/interval/oper.hpp>
+#include <boost/interval/arith.hpp>
 #include <boost/interval/transc.hpp>
-
-namespace boost {
-
-  namespace interval_lib {
-
-  /*
-   * Three specializations of rounded_math<T>
-   */
-
-  template<>
-  struct rounded_math<float>
-    : save_state<rounded_transc_dummy<float, rounded_arith_opp<float> > >
-  {};
-
-  template<>
-  struct rounded_math<double>
-    : save_state<rounded_transc_dummy<double, rounded_arith_opp<double> > >
-  {};
-
-  template<>
-  struct rounded_math<long double>
-    : save_state<rounded_transc_dummy<long double, rounded_arith_opp<long double> > >
-  {};
-
-  } // namespace interval_lib
-
-} // namespace boost
 
 #endif // BOOST_INTERVAL_HPP
