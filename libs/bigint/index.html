@@ -1,0 +1,315 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Boost Bigint Library</title>
+</head>
+<body>
+<img src="../../c++boost.gif" alt="c++boost.gif (8819 bytes)"
+     align="center" WIDTH="277" HEIGHT="86">
+<h1>Boost Bigint Library</h1>
+
+Defined in <a href="../../boost/bigint.hpp">boost/bigint.hpp</a>.
+
+<h2><a name="Contents">Contents</h2>
+
+<ol><li><a href="#rationale">Rationale</a></li>
+    <li><a href="#example">Example</a></li>
+    <li><a href="#synopsis">Synopsis</a></li>
+    <li><a href="#interface">Interface</a></li>
+    <ul>
+	<li><a href="#constructors">Constructors and Assignment</a></li>
+	<li><a href="#operations">Arithmetic Operations</a></li>
+	<li><a href="#input_output">Input and Output</a></li>
+	<li><a href="#conversions">Conversions</a></li>
+    </ul>
+    <li><a href="#exceptions">Exceptions</a></li>
+    <li><a href="#internal_representation">Internal Representation</a></li>
+    <li><a href="#design_notes">Design Notes</a></li>
+    <ul>
+	<li><a href="#reference_implementation">Reference Implementation</a></li>
+      <li><a href="#performance">Performance</a></li>
+    </ul>
+</ol>
+
+<h2><a name="rationale">Rationale</h2>
+
+C++ contains a wealth of built-in types, such as <tt>int</tt>,
+<tt>unsigned int</tt>, and <tt>long</tt>, that approximate 
+integers. While these types enable high performance
+numerics, each can only represent a limited range of integers. 
+
+<tt>bigint</tt> can represent integer values of
+arbitrary magnitude.  It supports all the standard 
+arithmetic operations including addition, subtraction, multiplication,
+and division as well as the modulo operator.  In addition, integers can
+be extracted from <tt>std::istream</tt> and inserted to 
+<tt>std::ostreams</tt>.  A <tt>bigint</tt> object can be implicitly
+    constructed from and safely converted to C++ built-in 
+integral types as well.
+
+
+<h2><a name="example">Example</h2>
+The following is a simple example of the use of <tt>bigint</tt>
+(<a href="./bigint_example1.cpp">bigint_example1.cpp</a>):
+
+<PRE><font color="#008040">#include "boost/bigint.hpp"</font>
+<font color="#008040">#include &lt;cassert&gt;</font>
+<font color="#008040">#include &lt;iostream&gt;</font>
+
+<B>int</B> main() {
+
+
+  <I><font color="#000080">// 40 factorial = 40!</font></I>
+
+  boost::bigint value(<font color="#0000A0">1</font>);
+  <B>for</B>(<B>int</B> i = <font color="#0000A0">1</font>; i &lt;= <font color="#0000A0">40</font>; ++i)
+    value *= i;
+
+  std::cout &lt;&lt; <font color="#0000FF">"40! = "</font> &lt;&lt; value &lt;&lt; <font color="#0000FF">"\n"</font>;
+
+
+}
+</PRE>
+
+The resulting output is:
+<pre>
+40! = 815915283247897734345611269596115894272000000000 
+</pre>
+
+<h2><a name="synopsis">Synopsis</h2>
+
+<pre>
+#include &lt;boost/bigint.hpp&gt;
+
+namespace boost {
+
+
+class bigint {
+public:
+    // Constructors
+    bigint();          // 0
+    bigint(long n);
+    bigint(std::string const&amp; n);
+
+    // Copy constructor and assignment operator
+    bigint(bigint const&amp; n);
+    bigint&amp; operator=(bigint const&amp; n);
+
+    // Arithmetic operators
+    bigint&amp; operator+= (bigint const&amp; n);
+    bigint operator+ (bigint const&amp; n) const;
+    bigint&amp; operator-= (bigint const&amp; n);
+    bigint operator- (bigint const&amp; n) const;
+    bigint&amp; operator*= (bigint const&amp; n);
+    bigint operator* (bigint const&amp; n) const;
+    bigint&amp; operator/= (bigint const&amp; n);
+    bigint operator/ (bigint const&amp; n) const;
+    bigint&amp; operator%= (bigint const&amp; n);
+    bigint operator% (bigint const&amp; n) const;
+
+    // Increment and decrement
+    bigint const&amp; operator++();
+    bigint const operator++(int);
+    bigint const&amp; operator--();
+    bigint const operator--(int);
+
+    // Operator not
+    bool operator!() const;
+
+    // Comparison operators
+    bool operator&lt; (bigint const&amp; n) const;
+    bool operator== (bigint const&amp; n) const;
+    bool operator!= (bigint const&amp; n) const;
+    bool operator&gt; (bigint const&amp; n) const;
+    bool operator&lt;= (bigint const&amp; n) const;
+    bool operator&gt;= (bigint const&amp; n) const;
+
+    void swap(bigint&amp; n);
+};
+
+// Unary operators
+bigint operator+ (bigint const&amp; n);
+bigint operator- (bigint const&amp; n);
+
+void swap(bigint&amp; lhs, bigint&amp; rhs);
+} 
+</pre>
+
+<h2><a name="interface">Interface</h2>
+
+<h3><a name="constructors">Constructors and Assignment</h3>
+<tt>bigint</tt> can be constructed, both explicitly and
+implicitly, from any built-in integral type. Thus <tt>bigint</tt> can 
+interact conveniently with <tt>int</tt> and similar types.
+<p>
+<tt>bigint</tt> can also be constructed explicitly from a string 
+representation of an integral value. 
+The string must contain only contiguous ASCII decimal
+digits, prefixed by <tt>'-'</tt> if the desired value is negative.
+<p>
+
+<tt>bigint</tt> also provides a copy constructor and assignment operator.
+Thus, it models the 
+<a href="http://www.sgi.com/tech/stl/Assignable.html">Assignable</a>
+concept.
+<p>
+
+Finally, <tt>bigint</tt> provides a default constructor, which
+initializes it to zero.
+
+<p>The above implies that the following statements are valid:
+
+<pre>
+    bigint zero;
+    bigint one1(1);
+    bigint one2("1");
+    bigint one3(one2);
+</pre>
+
+
+<!---
+<blockquote><pre>
+bigint();          // 0
+</pre></blockquote>
+
+
+<blockquote><pre>
+bigint(long n);
+</pre></blockquote>
+
+
+<blockquote><pre>
+bigint(std::string const&amp; n);
+</pre></blockquote>
+-->
+
+
+
+<h3><a name="operations">Arithmetic operations</h3>
+All of the standard numeric operators are defined for the <tt>bigint</tt>
+class. These include:
+<br>
+
+<pre>
+    +    +=
+    -    -=
+    *    *=
+    /    /=
+    ++   --    (both prefix and postfix)
+    ==   !=
+    &lt;    &gt;
+    &lt;=   &gt;=
+</pre>
+
+These operations have the semantics expected of a numeric type. Divide 
+by zero results in undefined behavior.
+
+<h3><a name="input_output">Input and Output</h3>
+<tt>bigint</tt> provides an IOstream inserter (<tt>operator&lt;&lt;</tt>)
+and extractor (<tt>operator&gt;&gt;</tt>).  <tt>bigint</tt> is represented
+externally as a string of decimal digits, prefixed with <tt>'-'</tt>
+if the number is negative. <tt>bigint</tt> in string form has no
+leading zeros. The extractor expects a <tt>bigint</tt> to be in the
+same form as accepted by the <tt>std::string</tt>-based
+constructor, which is the same syntax inserted by <tt>operator&lt;&lt;</tt>.
+
+<h3><a name="conversions">Conversions</h3>
+Though <tt>bigint</tt> supports implicit conversion from built-in integral
+types to integers, it does not support implicit conversion to the same 
+built in integral types. Nonetheless, <tt>bigint</tt> can be safely
+converted to built-in integers using 
+<a href="http://www.boost.org/libs/conversion/lexical_cast.htm">lexical_cast</a>.
+If the value of the <tt>bigint</tt> cannot be represented by the
+target type, the operation will throw <tt>bad_lexical_cast</tt>,
+as in the following example
+(<a href="./bigint_example2.cpp">bigint_example2.cpp</a>):
+
+<PRE><font color="#008040">#include "boost/bigint.hpp"</font>
+<font color="#008040">#include "boost/lexical_cast.hpp"</font>
+<font color="#008040">#include &lt;iostream&gt;</font>
+
+<B>int</B> main() {
+  
+  <B>int</B> x = boost::lexical_cast&lt;<B>int</B>&gt;(boost::bigint(<font color="#0000A0">5</font>));
+  std::cout &lt;&lt; <font color="#0000FF">"x = "</font> &lt;&lt; x &lt;&lt; <font color="#0000FF">'\n'</font>;
+
+  <B>try</B> {
+    <B>int</B> y = boost::lexical_cast&lt;<B>int</B>&gt;(boost::bigint(<font color="#0000FF">"1524155677490"</font>));
+    std::cout &lt;&lt; <font color="#0000FF">"y = "</font> &lt;&lt; y &lt;&lt; <font color="#0000FF">'\n'</font>;
+  } <B>catch</B> (boost::bad_lexical_cast&) {
+    std::cout &lt;&lt; <font color="#0000FF">"Uh oh! y overflowed!\n"</font>;
+  }
+
+  <B>return</B> <font color="#0000A0">0</font>;
+}
+</PRE>
+
+The resulting output is:
+<pre>
+x = 5
+Uh oh! y overflowed!
+</pre>
+
+
+<h2><a name="exceptions">Exceptions</h2>
+<tt>bigint</tt> provides the 
+<a href="http://www.boost.org/more/generic_exception_safety.html">
+basic exception guarantee</a>.  Except for <tt>swap</tt>, all
+operations on <tt>bigint</tt> might 
+throw some type derived from <tt>std::exception</tt>.
+If a <tt>bigint</tt> operation throws an exception and that
+exception is 
+caught, the object may be safely destructed or assigned to, but its 
+state is otherwise undefined.
+
+<h2><a name="internal_representation">Internal representation</h2>
+<em>Note:</em> This section is meant only to inform. Programs should not
+be written in such a way as to rely on these implementation details.
+
+<p>Internally, bigints are stored as an
+<tt>std::vector&lt;int&gt;</tt>. The numbers are stored
+using a radix of 10,000 and kept in 10's complement form. Values are
+stored from least significant "digit" to most significant "digit."
+
+<h2><a name="design_notes">Design notes</h2>
+<h3><a name="reference_implementation">Reference Implementation</h3>
+<tt>bigint</tt> is a reference implementation of the
+interface. It defines an interface for
+arbitrary magnitude integers and provides a portable
+implementation. The library thus defines basic arithmetic
+functionality as well as IOStreams inserters and extractors.
+<p>
+The current implementation is based somewhat on material found in:
+<ul>
+<li>Bird, Richard and Wadler, Philip. Introduction to Functional
+	Programming. Chapter 4.
+<li>Knuth, Donald. The Art of Computer Programming, Volume
+      2. Seminumerical Algorithms. Chapter 4.
+</ul>
+
+<h3><a name="performance">Performance</h3>
+The author is aware of several high-performance
+implementations of other integer libraries more focused upon
+performance.  In the future, this library may allow for
+swapping the underlying implementation and thus using the
+<tt>bigint</tt> interface with a faster (and possibly less
+portable) underlying implementation. Contributions that improve the
+current implementation are welcome.
+
+
+<br>
+<hr>
+    <p>&copy; Copyright 2002 Ronald Garcia and Andrew Lumsdaine. 
+    Permission to copy,
+    use, modify, sell and distribute this document is granted provided this
+    copyright notice appears in all copies. This document is provided "as is"
+    without express or implied warranty, and with no claim as to its
+    suitability for any purpose. 
+
+<p>
+<!-- hhmts start -->
+Last modified: Thu Sep  5 11:13:57 EST 2002
+<!-- hhmts end -->
+
+</body>
+</html>
