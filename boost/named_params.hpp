@@ -24,6 +24,9 @@ namespace detail
   // dangerous.
   struct non_int_eti_type { private: non_int_eti_type(); };
   
+   typedef char yes_t;
+   struct no_t { char x[128]; };
+  
    template<class KW, class Default>
    struct get_keyword
    {
@@ -36,25 +39,48 @@ namespace detail
 
    struct nil
    {
-//      typedef nil value_type;
-  //    typedef void key_type;
-
       template<class K, class Default>
       Default& operator[](const get_keyword<K, Default>& x) const
       {
          return x.default_;
       }
 
+      template<class KW>
+      static typename KW::has_default has_named_of(KW*);
+
       typedef mpl::true_ has_default;
       typedef mpl::always<mpl::true_> predicate_type;
    };
 
    // A tuple of labeled argument holders
+   // Restructured this so that head isn't inherited
    template <class H, class T>
-   struct list : H, T
+   struct list : T
    {
-      list(H h, T t) : H(h), T(t) {}
+      H head;
+      
+      list(H h, T t) : T(t), head(h) {}
 
+      typename H::value_type& operator[](const keyword<typename H::key_type>& x) const
+      {
+         return head[x];
+      }
+
+      template<class Default>
+      typename H::value_type& operator[](const get_keyword<typename H::key_type, Default>& x) const
+      {
+         return head[x];
+      }
+
+      using T::operator[];
+
+      static typename mpl::apply1<
+           typename mpl::lambda<typename H::key_type::predicate_type>::type
+         , typename H::value_type
+      >::type has_named_of(typename H::key_type*);
+
+      using T::has_named_of;
+/*
 #ifdef BOOST_MSVC // yes, even 7.1 has this bug
       typename H::value_type& operator[](const keyword<typename H::key_type>& x) const
       {
@@ -71,7 +97,7 @@ namespace detail
 #else
       using T::operator[];
       using H::operator[];
-#endif 
+#endif */
    };
 
    struct named_base {};
@@ -148,10 +174,6 @@ struct keyword
 
 namespace detail
 {
-
-   typedef char yes_t;
-   struct no_t { char x[128]; };
-
    yes_t is_named(detail::named_base*);
    no_t is_named(...);
 
@@ -215,7 +237,8 @@ namespace detail
       static typename KW::has_default check(void*);
 
       BOOST_STATIC_CONSTANT(bool,
-            value = (sizeof(to_yesno(check((Seq*)0))) == sizeof(yes_t)));
+         value = (sizeof(to_yesno(
+            Seq::has_named_of((KW*)0))) == sizeof(yes_t)));
 
       typedef mpl::bool_<value> type;
    };
@@ -369,9 +392,12 @@ struct keywords
    >
    operator()(const A0& a0) const
    {
+      // for cwpro8
+      BOOST_DEDUCED_TYPENAME detail::as_named<K0, A0>::type n0(a0);
+
       return detail::list<
            BOOST_DEDUCED_TYPENAME detail::as_named<K0, A0>::type
-         , detail::nil>(a0, detail::nil());
+         , detail::nil>(n0, detail::nil());
    }
 
    template<class A0, class A1>
@@ -384,16 +410,20 @@ struct keywords
    >
    operator()(const A0& a0, const A1& a1) const
    {
+      // for cwpro8
+      BOOST_DEDUCED_TYPENAME detail::as_named<K0, A0>::type n0(a0);
+      BOOST_DEDUCED_TYPENAME detail::as_named<K1, A1>::type n1(a1);
+      
       return detail::list<
            BOOST_DEDUCED_TYPENAME detail::as_named<K0, A0>::type
          , detail::list<
                 BOOST_DEDUCED_TYPENAME detail::as_named<K1, A1>::type
               , detail::nil
            >
-      >(a0, detail::list<
+      >(n0, detail::list<
                 BOOST_DEDUCED_TYPENAME detail::as_named<K1, A1>::type
               , detail::nil
-           >(a1, detail::nil()));
+           >(n1, detail::nil()));
    }
 
    template<class A0, class A1, class A2>
@@ -409,6 +439,11 @@ struct keywords
    >
    operator()(const A0& a0, const A1& a1, const A2& a2) const
    {
+      // for cwpro8
+      BOOST_DEDUCED_TYPENAME detail::as_named<K0, A0>::type n0(a0);
+      BOOST_DEDUCED_TYPENAME detail::as_named<K1, A1>::type n1(a1);
+      BOOST_DEDUCED_TYPENAME detail::as_named<K2, A2>::type n2(a2);
+      
       return detail::list<
               BOOST_DEDUCED_TYPENAME detail::as_named<K0, A0>::type
             , detail::list<
@@ -418,16 +453,16 @@ struct keywords
                   , detail::nil
                >
             >
-      >(a0, detail::list<
+      >(n0, detail::list<
                 BOOST_DEDUCED_TYPENAME detail::as_named<K1, A1>::type
               , detail::list<
                     BOOST_DEDUCED_TYPENAME detail::as_named<K2, A2>::type
                   , detail::nil
                >
-          >(a1, detail::list<
+          >(n1, detail::list<
                     BOOST_DEDUCED_TYPENAME detail::as_named<K2, A2>::type
                   , detail::nil
-               >(a2, detail::nil())));
+               >(n2, detail::nil())));
    }
 };
 
