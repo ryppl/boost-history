@@ -2,8 +2,9 @@
 #include <boost/interval/io.hpp>
 #include <boost/test/test_tools.hpp>
 
-#include <strstream>
+#include <string>
 #include <iostream>
+#include <sstream>
 #include <iomanip>
 
 using namespace boost;
@@ -16,21 +17,21 @@ template<class T>
 bool test(int precision) {
   interval<T> pi_i( 3.1415926, 3.1415927 );
   // write pi_i to a string
-  char pi_buffer[128] = {0};
-  std::ostrstream oss(pi_buffer, 128);
-  oss << std::setprecision(precision);
+  std::string pi_string;
+  std::ostringstream oss(&pi_string);
+  oss.precision(precision);
   oss << pi_i;
-#ifdef BOOST_INTERVAL_VERBOSE
+#ifdef BOOST_INTERVAL_IO_VERBOSE
   std::cerr << "FYI: printing [3.1415926,3.1415927] with precision "
             << precision << " as "
             << std::setprecision(precision) << pi_i << std::endl;
 #endif
   // read pi_o from same string
   interval<T> pi_o;
-  std::istrstream iss(pi_buffer);
+  std::istringstream iss(pi_string);
   iss >> pi_o;
   // the result should be at least as imprecise 
-#ifdef BOOST_INTERVAL_VERBOSE
+#ifdef BOOST_INTERVAL_IO_VERBOSE
   if (!subset(pi_i, pi_o))
     std::cerr << "Error: getting [3.1415926,3.1415927] with precision "
               << precision << " as " << std::setprecision(precision)
