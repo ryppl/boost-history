@@ -1,0 +1,8 @@
+# declare the location of this subproject relative to the root
+subproject libs/langbinding/test/function ;
+
+import testing ;
+
+DEPENDS all : test ;
+
+run make_function.cpp : <include>$(BOOST_ROOT) ;

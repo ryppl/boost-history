@@ -2,5 +2,4 @@
 subproject libs/langbinding/test ;
 
 # bring in rules for testing
-SEARCH on testing.jam = $(BOOST_BUILD_PATH) ;
-include testing.jam ;
+subinclude function ;
