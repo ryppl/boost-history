@@ -437,7 +437,7 @@ report_ms_se_error( unsigned int id )
 
 static void report_error( execution_exception::error_code ec, char const* msg1, char const* msg2 )
 {
-    static char buf[256];
+    static char buf[512];
     buf[0] = '\0';
     std::strncat( buf, msg1, sizeof(buf)-1 );
     std::strncat( buf, msg2, sizeof(buf)-1-std::strlen(buf) );
