@@ -49,14 +49,16 @@ namespace boost {
 
 		\param Input An input container
 		\param Test A test container
+		\param Loc a locale used for case insensitive comparison
 		\return A result of the test
 	*/
     template< typename InputContainerT, typename TestContainerT >
     inline bool istarts_with( 
         const InputContainerT& Input, 
-        const TestContainerT& Test )
+        const TestContainerT& Test,
+		const std::locale& Loc=std::locale() )
     {
-        return string_algo::starts_with( Input, Test, string_algo::is_iequal() );
+        return string_algo::starts_with( Input, Test, string_algo::is_iequal(Loc) );
     }
 
 //  ends_with predicate  -----------------------------------------------//
@@ -86,14 +88,16 @@ namespace boost {
 
 		\param Input An input container
 		\param Test A test container
+		\param Loc a locale used for case insensitive comparison
 		\return A result of the test
 	*/
     template< typename InputContainerT, typename TestContainerT >
     inline bool iends_with( 
         const InputContainerT& Input, 
-        const TestContainerT& Test )
+        const TestContainerT& Test,
+		const std::locale& Loc=std::locale() )
     {
-        return string_algo::ends_with( Input, Test, string_algo::is_iequal() );
+        return string_algo::ends_with( Input, Test, string_algo::is_iequal(Loc) );
     }
 
 //  contains predicate  -----------------------------------------------//
@@ -121,14 +125,16 @@ namespace boost {
 
 		\param Input An input container
 		\param Test A test container
+		\param Loc a locale used for case insensitive comparison
 		\return A result of the test
 	*/
     template< typename InputContainerT, typename TestContainerT >
     inline bool icontains( 
         const InputContainerT& Input, 
-        const TestContainerT& Test )
+        const TestContainerT& Test, 
+		const std::locale& Loc=std::locale() )
     {
-        return string_algo::contains( Input, Test, string_algo::is_iequal() );
+        return string_algo::contains( Input, Test, string_algo::is_iequal(Loc) );
     }
 
 //  equals predicate  -----------------------------------------------//
@@ -160,6 +166,7 @@ namespace boost {
 
 		\param Input An input container
 		\param Test A test container
+		\param Loc a locale used for case insensitive comparison
 		\return A result of the test
 
 		\note This is two-way version of std::equal algorithm
@@ -167,9 +174,10 @@ namespace boost {
     template< typename InputContainerT, typename TestContainerT >
     inline bool iequals( 
         const InputContainerT& Input, 
-        const TestContainerT& Test )
+        const TestContainerT& Test,
+		const std::locale& Loc=std::locale() )
     {
-        return string_algo::equals( Input, Test, string_algo::is_iequal() );
+        return string_algo::equals( Input, Test, string_algo::is_iequal(Loc) );
     }
 
 //  all predicate  -----------------------------------------------//

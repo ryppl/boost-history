@@ -14,7 +14,10 @@
 #include <locale>
 
 /*! \file
-	Defines element comparison predicates.	
+	Defines element comparison predicates. Many algoritms in this lib can 
+	take an addtion argument with a predicate used to compare elements.
+	This maked possible, for instance, to have case insensitive versions
+	of the algorithms.
 */
 
 namespace boost {

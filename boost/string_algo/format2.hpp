@@ -15,6 +15,17 @@
 #include <boost/string_algo/iterator_range.hpp>
 #include <boost/string_algo/detail/format.hpp>
 
+/*! \file
+	Defines formatter generators. Formatter is a functor which formats
+	a string according to give paramters. Formatter should can work
+	in conjuntion with finders. A finder can provide addtional information
+	for a specific formatter. An example of such a cooperation is reger_finder
+	and regex_formatter.
+
+	Formatter are used by as a plugable components for replace facilities. 
+	This header contains generator functions for formatters provided in this library.
+*/
+
 namespace boost {
     namespace string_algo {
 

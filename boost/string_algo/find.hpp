@@ -16,6 +16,12 @@
 #include <boost/string_algo/find2.hpp>
 #include <boost/string_algo/compare.hpp>
 
+/*! \file
+	Defines a set of find algorithms. The algoritms are searching
+	for a subsequence of the input. Result is given as a pair of
+	itereators delimiting the range.
+*/
+
 namespace boost {
 
 //  find_first  -----------------------------------------------//
@@ -50,6 +56,7 @@ namespace boost {
 		
 		\param Input A container which will be searched.
 		\param Search A string to be searched for.
+		\param Loc a locale used for case insensitive comparison
 		\return 
 			An iterator_range containing iterators delimiting the match. 
 			Returned iterator is either InputContainerT::iterator or 
@@ -60,9 +67,10 @@ namespace boost {
         BOOST_STRING_TYPENAME string_algo::container_traits<InputContainerT>::result_iterator >
     ifind_first( 
         InputContainerT& Input, 
-        const SearchContainerT& Search )
+        const SearchContainerT& Search,
+		const std::locale& Loc=std::locale() )
     {
-        return string_algo::first_finder(Search,string_algo::is_iequal())(Input);
+        return string_algo::first_finder(Search,string_algo::is_iequal(Loc))(Input);
     }
 
 //  find_last  -----------------------------------------------//
@@ -96,6 +104,7 @@ namespace boost {
 		
 		\param Input A container which will be searched.
 		\param Search A string to be searched for.
+		\param Loc a locale used for case insensitive comparison
 		\return 
 			An iterator_range containing iterators delimiting the match. 
 			Returned iterator is either InputContainerT::iterator or 
@@ -107,9 +116,10 @@ namespace boost {
         BOOST_STRING_TYPENAME string_algo::container_traits<InputContainerT>::result_iterator >
     ifind_last( 
         InputContainerT& Input, 
-        const SearchContainerT& Search )
+        const SearchContainerT& Search,
+		const std::locale& Loc=std::locale() )
     {
-        return string_algo::last_finder(Search, string_algo::is_iequal())(Input);
+        return string_algo::last_finder(Search, string_algo::is_iequal(Loc))(Input);
     }
 
 //  find_nth ----------------------------------------------------------------------//
@@ -147,6 +157,7 @@ namespace boost {
 		\param Input A container which will be searched.
 		\param Search A string to be searched for.
 		\param Nth An index of the match to be found.
+		\param Loc a locale used for case insensitive comparison
 		\return 
 			An iterator_range containing iterators delimiting the match. 
 			Returned iterator is either InputContainerT::iterator or 
@@ -159,9 +170,10 @@ namespace boost {
     ifind_nth( 
         InputContainerT& Input, 
         const SearchContainerT& Search,
-        unsigned int Nth )
+        unsigned int Nth,
+		const std::locale& Loc=std::locale() )
     {
-        return string_algo::nth_finder(Search,Nth,string_algo::is_iequal())(Input);
+        return string_algo::nth_finder(Search,Nth,string_algo::is_iequal(Loc))(Input);
     }
 
 //  find_head ----------------------------------------------------------------------//

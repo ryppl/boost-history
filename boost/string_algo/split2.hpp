@@ -19,6 +19,17 @@
 #include <boost/string_algo/detail/find_iterator.hpp>
 #include <boost/string_algo/detail/util.hpp>
 
+/*! \file
+	Defines generic split algorithms. Split algorithms can be 
+	used to divide a sequence into several part accorfing 
+	to a given criteria. Result is given as a 'container 
+	of containers' where elements are copies or references 
+	to extracted parts.
+
+	There are two algorithms provided. One iterated through matching
+	substring, the other one through gasps between theese matches.
+*/
+
 namespace boost {
     namespace string_algo {
 

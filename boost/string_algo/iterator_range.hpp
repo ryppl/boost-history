@@ -16,6 +16,12 @@
 #include <algorithm>
 #include <boost/detail/iterator.hpp>
 
+/*! \file
+	Defines the iterator_class and related functions. 
+	iterator_range is a simple wrapper of iterator pair idiom. It provides
+	a rich subset of Container interface.
+*/
+
 namespace boost {
 
 //  iterator range template class -----------------------------------------//
@@ -26,8 +32,10 @@ namespace boost {
 		An iterator_range can be passed to an algorithm which requires a sequence as an input. 
 		For example, the toupper() function may be used most frequently on strings, 
 		but can also be used on iterator_ranges: 
-				
+		
+		\code
 				boost::tolower( find( s, "UPPERCASE STRING" ) );
+		\endcode
 
 		Many algorithms working with sequences take a pair of iterators, 
 		delimiting a working range, as an arguments. iterator_range class is an 

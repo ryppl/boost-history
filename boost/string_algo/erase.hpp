@@ -173,6 +173,7 @@ namespace boost {
 		\param Output A output iterarot to which the result will be copied
 		\param Input An input sequence
 		\param Search A string to be searched for. 
+		\param Loc a locale used for case insensitive comparison
 		\return An output iterator pointing just after last inserted character
 	*/
 	template< 
@@ -182,12 +183,13 @@ namespace boost {
     inline OutputIteratorT ierase_first_copy(
         OutputIteratorT Output,
         const InputT& Input,
-        const SearchT& Search )
+        const SearchT& Search,
+		const std::locale& Loc=std::locale() )
     {
         return string_algo::replace_copy(
             Output,
             Input,
-            string_algo::first_finder(Search, string_algo::is_iequal()),
+            string_algo::first_finder(Search, string_algo::is_iequal(Loc)),
             string_algo::empty_formatter(Input) );
     }
 
@@ -197,17 +199,19 @@ namespace boost {
 		Result is a modified copy of the input.	Searching is case insensitive.
 
 		\param Input An input sequence
-		\param Search A string to be searched for. 
+		\param Search A string to be searched for.
+		\param Loc a locale used for case insensitive comparison
 		\return A modified copy of the input
 	*/
     template< typename InputT, typename SearchT >
     inline InputT ierase_first_copy( 
         const InputT& Input,
-        const SearchT& Search )
+        const SearchT& Search,
+		const std::locale& Loc=std::locale() )
     {
         return string_algo::replace_copy( 
             Input, 
-            string_algo::first_finder(Search, string_algo::is_iequal()),
+            string_algo::first_finder(Search, string_algo::is_iequal(Loc)),
             string_algo::empty_formatter(Input) );
     }
 
@@ -217,17 +221,19 @@ namespace boost {
 		Input sequence is modified in-place. Searching is case insensitive.
 
 		\param Input An input sequence
-		\param Search A string to be searched for. 
+		\param Search A string to be searched for.
+		\param Loc a locale used for case insensitive comparison
 		\return A reference to the modified input
 	*/
     template< typename InputT, typename SearchT >
     inline InputT& ierase_first( 
         InputT& Input,
-        const SearchT& Search )
+        const SearchT& Search,
+		const std::locale& Loc=std::locale() )
     {
         return string_algo::replace( 
             Input, 
-            string_algo::first_finder(Search, string_algo::is_iequal()),
+            string_algo::first_finder(Search, string_algo::is_iequal(Loc)),
             string_algo::empty_formatter(Input) );
     }
 
@@ -309,6 +315,7 @@ namespace boost {
 		\param Output A output iterarot to which the result will be copied
 		\param Input An input sequence
 		\param Search A string to be searched for. 
+		\param Loc a locale used for case insensitive comparison
 		\return An output iterator pointing just after last inserted character
 	*/
     template< 
@@ -318,12 +325,13 @@ namespace boost {
     inline OutputIteratorT ierase_last_copy(
         OutputIteratorT Output,
         const InputT& Input,
-        const SearchT& Search )
+        const SearchT& Search,
+		const std::locale& Loc=std::locale() )
     {
         return string_algo::replace_copy(
             Output,
             Input,
-            string_algo::last_finder(Search, string_algo::is_iequal()),
+            string_algo::last_finder(Search, string_algo::is_iequal(Loc)),
             string_algo::empty_formatter(Input) );
     }
 
@@ -333,17 +341,19 @@ namespace boost {
 		Result is a modified copy of the input. Searching is case insensitive.
 
 		\param Input An input sequence
-		\param Search A string to be searched for. 
+		\param Search A string to be searched for.
+		\param Loc a locale used for case insensitive comparison
 		\return A modified copy of the input
 	*/
     template< typename InputT, typename SearchT >
     inline InputT ierase_last_copy( 
         const InputT& Input,
-        const SearchT& Search )
+        const SearchT& Search,
+		const std::locale& Loc=std::locale() )
     {
         return string_algo::replace_copy( 
             Input, 
-            string_algo::last_finder(Search, string_algo::is_iequal()),
+            string_algo::last_finder(Search, string_algo::is_iequal(Loc)),
             string_algo::empty_formatter(Input) );
     }
 
@@ -353,17 +363,19 @@ namespace boost {
 		Input sequence is modified in-place. Searching is case insensitive.
 
 		\param Input An input sequence
-		\param Search A string to be searched for. 
+		\param Search A string to be searched for.
+		\param Loc a locale used for case insensitive comparison
 		\return A reference to the modified input
 	*/
     template< typename InputT, typename SearchT >
     inline InputT& ierase_last( 
         InputT& Input,
-        const SearchT& Search )
+        const SearchT& Search,
+		const std::locale& Loc=std::locale() )
     {
         return string_algo::replace( 
             Input, 
-            string_algo::last_finder(Search, string_algo::is_iequal()),
+            string_algo::last_finder(Search, string_algo::is_iequal(Loc)),
             string_algo::empty_formatter(Input) );
     }
 
@@ -452,6 +464,7 @@ namespace boost {
 		\param Input An input sequence
 		\param Search A string to be searched for. 
 		\param Nth An index of the match to be replaced
+		\param Loc a locale used for case insensitive comparison
 		\return An output iterator pointing just after last inserted character
 	*/
     template< 
@@ -462,12 +475,13 @@ namespace boost {
         OutputIteratorT Output,
         const InputT& Input,
         const SearchT& Search,
-        unsigned int Nth )
+        unsigned int Nth,
+		const std::locale& Loc=std::locale() )
     {
         return string_algo::replace_copy(
             Output,
             Input,
-            string_algo::nth_finder(Search, Nth, string_algo::is_iequal()),
+            string_algo::nth_finder(Search, Nth, string_algo::is_iequal(Loc)),
             string_algo::empty_formatter(Input) );
     }
 
@@ -479,17 +493,19 @@ namespace boost {
 		\param Input An input sequence
 		\param Search A string to be searched for. 
 		\param Nth An index of the match to be replaced
+		\param Loc a locale used for case insensitive comparison
 		\return A modified copy of the input
 	*/
     template< typename InputT, typename SearchT >
     inline InputT ierase_nth_copy( 
         const InputT& Input,
         const SearchT& Search,
-        unsigned int Nth )
+        unsigned int Nth,
+		const std::locale& Loc=std::locale() )
     {
         return string_algo::replace_copy( 
             Input, 
-            string_algo::nth_finder(Search, Nth, string_algo::is_iequal()),
+            string_algo::nth_finder(Search, Nth, string_algo::is_iequal(Loc)),
             string_algo::empty_formatter(Input) );
     }
 
@@ -501,17 +517,19 @@ namespace boost {
 		\param Input An input sequence
 		\param Search A string to be searched for. 
 		\param Nth An index of the match to be replaced
+		\param Loc a locale used for case insensitive comparison
 		\return A reference to the modified input
 	*/
     template< typename InputT, typename SearchT >
     inline InputT& ierase_nth( 
         InputT& Input,
         const SearchT& Search,
-        unsigned int Nth )
+        unsigned int Nth,
+		const std::locale& Loc=std::locale() )
     {
         return string_algo::replace( 
             Input, 
-            string_algo::nth_finder(Search, Nth, string_algo::is_iequal()),
+            string_algo::nth_finder(Search, Nth, string_algo::is_iequal(Loc)),
             string_algo::empty_formatter(Input) );
     }
 
@@ -594,6 +612,7 @@ namespace boost {
 		\param Output A output iterarot to which the result will be copied
 		\param Input An input sequence
 		\param Search A string to be searched for. 
+		\param Loc a locale used for case insensitive comparison
 		\return An output iterator pointing just after last inserted character
 	*/
     template< 
@@ -603,12 +622,13 @@ namespace boost {
     inline OutputIteratorT ierase_all_copy(
         OutputIteratorT Output,
         const InputT& Input,
-        const SearchT& Search )
+        const SearchT& Search,
+		const std::locale& Loc=std::locale() )
     {
         return string_algo::replace_all_copy(
             Output,
             Input,
-            string_algo::first_finder(Search, string_algo::is_iequal()),
+            string_algo::first_finder(Search, string_algo::is_iequal(Loc)),
             string_algo::empty_formatter(Input) );
     }
 
@@ -619,16 +639,18 @@ namespace boost {
 
 		\param Input An input sequence
 		\param Search A string to be searched for. 
+		\param Loc a locale used for case insensitive comparison
 		\return A modified copy of the input
 	*/
     template< typename InputT, typename SearchT >
     inline InputT ierase_all_copy( 
         const InputT& Input,
-        const SearchT& Search )
+        const SearchT& Search,
+		const std::locale& Loc=std::locale() )
     {
         return string_algo::replace_all_copy( 
             Input, 
-            string_algo::first_finder(Search, string_algo::is_iequal()),
+            string_algo::first_finder(Search, string_algo::is_iequal(Loc)),
             string_algo::empty_formatter(Input) );
     }
 
@@ -639,16 +661,18 @@ namespace boost {
 
 		\param Input An input sequence
 		\param Search A string to be searched for. 
+		\param Loc a locale used for case insensitive comparison
 		\return A reference to the modified input
 	*/
     template< typename InputT, typename SearchT >
     inline InputT& ierase_all( 
         InputT& Input,
-        const SearchT& Search )
+        const SearchT& Search,
+		const std::locale& Loc=std::locale() )
     {
         return string_algo::replace_all( 
             Input, 
-            string_algo::first_finder(Search, string_algo::is_iequal()),
+            string_algo::first_finder(Search, string_algo::is_iequal(Loc)),
             string_algo::empty_formatter(Input) );
     }
 

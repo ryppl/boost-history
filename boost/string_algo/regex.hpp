@@ -19,6 +19,14 @@
 #include <boost/string_algo/format2.hpp>
 #include <boost/string_algo/split2.hpp>
 
+/*! \file
+	This header defines regex variant of the algorithms. They mostly only
+	wrap regex++ functionality to provide uniform interface with
+	other algorithms in this library.
+	Another reason to include them here is have a proof of concept for
+	the library extensibility and customization.
+*/
+
 namespace boost {
 
 //  find_regex  -----------------------------------------------//

@@ -15,6 +15,12 @@
 #include <boost/string_algo/detail/find_regex.hpp>
 #include <boost/string_algo/detail/format_regex.hpp>
 
+/*! \file
+	Defines refex_finder and regex_formatter generators. These two functors
+	are designed to work together. regex_formatter uses addtional information
+	about a match contained in the reger_finder search result.
+*/
+
 namespace boost {
     namespace string_algo {
 

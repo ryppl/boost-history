@@ -17,6 +17,12 @@
 #include <boost/string_algo/detail/replace.hpp>
 #include <boost/string_algo/detail/sequence.hpp>
 
+/*! \file
+	This header defines generic replace algorithms. Each algorithm replaces
+	a part(s) of the input. The part to be replaced is found using a finder.
+	Result of finding is then used by formatter to generate replacement.
+*/
+
 namespace boost {
     namespace string_algo {
 

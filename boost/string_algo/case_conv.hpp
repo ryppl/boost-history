@@ -18,7 +18,7 @@
 
 /*! \file
 	Sequence case conversion algorithms are located in this header file.
-	Algorithm convert each element in the input sequence to the
+	Algorithms convert each element in the input sequence to the
 	desired case using provided locales.
 */
 

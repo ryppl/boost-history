@@ -79,6 +79,7 @@ namespace boost {
 			a match )
 		\param Input A container which will be searched.
 		\param Search A string to be searched for.
+		\param Loc a locale used for case insensitive comparison
 		\return A reference the result
 
 		\note Prior content of the result will be overriden.
@@ -87,12 +88,13 @@ namespace boost {
     inline ResultT& ifind_all(
         ResultT& Result,
         const InputContainerT& Input,
-        const SearchContainerT& Search)
+        const SearchContainerT& Search,
+		const std::locale& Loc=std::locale() )
     {
         return string_algo::iter_find(
             Result,
             Input,
-            string_algo::first_finder(Search, string_algo::is_iequal() ) );        
+            string_algo::first_finder(Search, string_algo::is_iequal(Loc) ) );        
     }
 
 

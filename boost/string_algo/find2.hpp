@@ -15,6 +15,15 @@
 #include <boost/string_algo/detail/find.hpp>
 #include <boost/string_algo/compare.hpp>
 
+/*! \file
+	Defines finder generators. Finder is a functor which is able to 
+	find a subsequence matching a specific criteria in an input
+	sequence. 
+	Finders are used by as a plugable components for replace, find 
+	and split facilities. This header contains generator functions 
+	for finders provided in this library.
+*/
+
 namespace boost {
     namespace string_algo {
 
