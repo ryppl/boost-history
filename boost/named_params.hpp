@@ -18,6 +18,7 @@
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/iterator/detail/config_def.hpp>
 #include <boost/python/detail/is_xxx.hpp>
+#include <boost/ref.hpp>
 
 namespace boost {
 
@@ -116,7 +117,7 @@ namespace detail
 
       typedef H head_type;
       typedef T tail_type;
-      
+
       // A metafunction class which, given a keyword, returns the base
       // sublist whose get() function can produce the value for that
       // key.
@@ -181,17 +182,19 @@ namespace detail
           return head[x];
       }
 #else
-      typename H::value_type& operator[](const keyword<typename H::key_type>& x) const
+      typename H::value_type&
+      operator[](const keyword<typename H::key_type>& x) const
       {
           return head[x];
       }
 
       template<class Default>
-      typename H::value_type& operator[](const named_default<typename H::key_type, Default>& x) const
+      typename H::value_type&
+      operator[](const named_default<typename H::key_type, Default>& x) const
       {
           return head[x];
       }
-		
+
       using T::operator[];
 
       template <class HasDefault, class Predicate>
@@ -206,7 +209,7 @@ namespace detail
   };
 
   template <> struct list<int,int> {};
-  
+
   template <class KW, class T>
   struct named
   {
@@ -214,7 +217,7 @@ namespace detail
       typedef T value_type;
 
       named(T& x) : val(x) {}
-      
+
       T& operator[](const keyword<KW>&) const
       {
           return val;
@@ -230,6 +233,37 @@ namespace detail
   };
 
   BOOST_PYTHON_IS_XXX_DEF(named,named,2)
+
+  // Returns mpl::true_ if T is of type const reference_wrapper<U>
+  template<class T>
+  struct is_const_reference_wrapper
+  {
+     template<class U>
+     static yes_t check(const reference_wrapper<U>*);
+     static no_t check(...);
+
+     BOOST_STATIC_CONSTANT(bool,
+           value = (
+              sizeof(check((T*)0)) == sizeof(yes_t)
+           )
+     );
+
+     typedef mpl::bool_<value> type;
+  };
+
+  // Produces the unwrapped type to hold a reference to in named<>
+  // Can't use boost::unwrap_reference<> here because it
+  // doesn't handle the case where T = const reference_wrapper<U>
+  template<class T>
+  struct unwrap_cv_reference
+  {
+      typedef typename mpl::apply_if<
+           is_const_reference_wrapper<T>
+         , T
+         , mpl::identity<T>
+      >::type type;
+  };
+
 } // namespace detail
 
 template <class Tag>
@@ -237,16 +271,18 @@ struct keyword
 {
 #if !BOOST_WORKAROUND(BOOST_MSVC, == 1200)  // partial ordering bug
    template <class T>
-   detail::named<Tag,T const> operator=(T const& x) const
+   detail::named<Tag, typename detail::unwrap_cv_reference<const T>::type> 
+   operator=(T const& x) const
    {
-      return detail::named<Tag,T const>(x);
+      return detail::named<Tag, BOOST_DEDUCED_TYPENAME detail::unwrap_cv_reference<const T>::type>(x);
    }
 #endif
-	
-	template <class T>
-   detail::named<Tag,T> operator=(T& x) const
+
+   template <class T>
+   detail::named<Tag, typename detail::unwrap_cv_reference<T>::type> 
+   operator=(T& x) const
    {
-      return detail::named<Tag,T>(x);
+      return detail::named<Tag, BOOST_DEDUCED_TYPENAME detail::unwrap_cv_reference<T>::type>(x);
    }
 
    template <class T>
@@ -261,14 +297,14 @@ struct keyword
       return detail::named<Tag,T const>(x);
    }
 #endif
-    
+
    template<class Default>
    detail::named_default<Tag, Default>
    operator|(Default& default_) const
    {
       return detail::named_default<Tag, Default>(default_);
    }
-   
+
 #if !BOOST_WORKAROUND(BOOST_MSVC, == 1200)  // partial ordering bug
    template<class Default>
    detail::named_default<Tag, const Default>
@@ -343,9 +379,8 @@ namespace detail
   {
       typedef typename mpl::if_<
           is_named<T>
-//          is_convertible<T*,named_base*>
         , T
-        , named<typename key_type<KW>::type,T const>
+        , named<typename key_type<KW>::type, typename unwrap_cv_reference<T const>::type>
       >::type type;
   };
 
@@ -355,7 +390,7 @@ namespace detail
   {
       typedef int type;
   };
-#endif 
+#endif
 
   // Seq ::= a list of named<K,T> objects
   // Arg ::= an arg<...> instantiation
@@ -367,9 +402,6 @@ namespace detail
   template<class Seq, class Arg>
   struct keyword_passes_predicate_aux
   {
-      typedef typename mpl::lambda<typename Arg::predicate>::type
-      pred_expr;
-
       BOOST_STATIC_CONSTANT(
           bool, value = (
               sizeof(
