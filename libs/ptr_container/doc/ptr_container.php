@@ -12,6 +12,7 @@ echo reference(); echo hr();
 echo examples(); echo hr();
 echo portability(); echo hr();
 echo Faq(); echo hr();
+echo literature(); echo hr();
 echo copyRightMessage(); 
 
 echo htmlFooter();
@@ -45,7 +46,8 @@ function overviewLinks()
         item( referenceLink() ) . 
         item( examplesLink() ) .
         item( portLink() ) . 
-        item( faqLink() );
+        item( faqLink() ) .
+        item( literatureLink() );
 
     return ulist( $list );
 }
@@ -62,23 +64,25 @@ function introduction()
                      equivalent that takes ownership of the stored pointers in an exception 
                      safe manner. In this respect it is intended to solve 
                      the so-called " .  i( "polymorphic class problem." ) ) .
-                 P( "The main advantages are " . 
+                 P( "The advantages are " . 
                     ulist( li( "Exception-safe and fool proof pointer storage and manipulation." ) .
-                           li( "Exception-guarantees are generally much better than with standard containers (at least the strong guarantee)" ) .
+                           li( "Exception-guarantees are generally much better than with standard containers (very often the strong guarantee)" ) .
                            li( "Notational convinience compared to the use of containers of smart pointers." ) .
                            li( "Iterators are automatically indirected so the comparison operations can be kept
                                 on object basis instead of making/adding pointer based variants." ) .
                            li( "No memory-overhead as containers of smart_pointers can have." ) .
-                           li( "Faster than using containers of smart pointers." ) . 
-                           li( "Provides an elegant solution to " . code( "vector< vector<T> >" ) . " performance
+                           li( "Usually faster than using containers of smart pointers." ) . 
+                           li( "Provides an elegant solution to potential " . code( "vector< vector<T> >" ) . " performance
                                 problems; simply use " . code( "ptr_vector< vector<T> >." ) .
-                           li( "Offers more explicit control of lifetime issues." ) ) )     
-                            
-                           );
+                           li( "Offers more explicit control of lifetime issues." ) .
+                           li( "Can be used for types that are neither Assignable nor CopyConstructible. " ) ) )         
+                           ) . 
+                  p( "The disadvantages are: " .
+                     ulist( li( "Some standard algorithms like " . code( "unique()" ) .
+                                 " need special care when using them with raw pointers" ) ) );
   
-
                      
-   $examples = p( "Below is given some examples that show how the usage compares to a container of smart pointers:" . 
+   $examples = p( "Below is given a small example that show how the usage compares to a container of smart pointers:" . 
                   pre( "
                        
     using namespace boost;
@@ -126,63 +130,8 @@ function introduction()
         for_each( svec.begin(), svec.end(), PolyPtrOps() );
 
         for_each( pvec.begin(), pvec.end(), mem_fun_ref( &Poly::foo ) );
-     } ") .
-     pre( " 
-          //
-          // Example: Composite implementation
-          //
-          
-          class Composite
-          {
-             typedef ptr_list< Composite >  composite_t;
-             composite_t                    elements_;
-          
-          public:
-             
-             void add( Composite* c )
-             {
-                 elements_.push_back( c );
-             }
-          
-             void add( Composite& c )
-             {
-                 elements_.push_back( c );
-             }
-          
-             void remove( composite_t::iterator c )
-             {
-                 elements_.erase( c );
-             }
-              
-             void foo()
-             {
-                std::for_each( elements_.begin(), elements_.end(), mem_fun_ref( &Composite::foo ) ); 
-             }
-          
-          private:
-             virtual void do_foo() {}
-          };
-          
-          class ConcreteComposite1 : public Composite
-          {
-              virtual void do_foo() 
-              { ... }
-          };
-          
-          class ConcreteComposite2 : public Composite
-          {
-              virtual void do_foo() 
-              { ... }
-          };
-          
-          ...
-          
-          Composite c;
-          c.add( new ConcreteComposite1 );
-          c.add( new ConcreteComposite2 );
-          c.add( c ); // inserts clone 
-          " ) );
-
+     } " ) ); 
+   
    return $res . $motivation . $examples ;
 }
 
@@ -191,7 +140,7 @@ function introduction()
 function reference()
 {
     $overview   = beginSection( referenceLink() );
-    $overview  .= p( "There is a few design decisions that will affect how the
+    $overview  .= p( "There are a few design decisions that will affect how the
                      classes are used. Besides these the classes are much like
                      normal standard containers and provides almost the same interface.
                      The new conventions are: " ) .
@@ -201,24 +150,25 @@ function reference()
                               deep-copy is needed anyway, every container has " . code( "clone()" ) . " member function." ) . 
                          li( i( "Stored elements need not be CopyConstructible or Assignable, but 
                                 for a subset of the operations they are required to be Clonable." ) . 
-                             " This is because most pylumophic objects cannot be copied directly, 
+                             " This is because most polymophic objects cannot be copied directly, 
                               but they can often be so by a use of a member function. Often it does not even make
                               sense to clone an object in which case a large subset of the operations are still workable." 
                               ) .
                          li( i( "Whenever objects are inserted into a container, they are cloned before insertion. 
                                  Whenever pointers are inserted into a container, ownership is transferred to the container." ) .
-                             " All containers take ownership of the stored pointers and therefor it need to have its
+                             " All containers take ownership of the stored pointers and therefore a cntainer needs to have its 
                                own copies. " ) .
                          li( i( "Ownership can be tranferred from a container on a per pointer basis." ) .
-                             " This can of course also be convinient. Whenever it happens, an " . code( "std::auto_ptr<>" ) .
+                             " This can of course also be convenient. Whenever it happens, an " . code( "std::auto_ptr<>" ) .
                                " is used to provide an exception-safe transfer. " ) .              
                          li( i( "Ownership can be transferred from a container to another container on a per iterator range basis." ) . 
                              " This makes it possible to exchange data safely between different pointer containers
                                without cloning the objects again. " )
                          );
 
-     $overview   .= p( "The documentation is divided into a common section and an explanation for each container. The common section
-                        shows the interface that all of the classes have in common and the indvisual parts shows the interface
+     $overview   .= p( "The documentation is divided into a common section and an explanation for each container. 
+                        The so-called \"pseudo class\" sections
+                        shows the interface that some or all of the classes have in common and the indvisual parts shows the interface
                         that is only part of some of the individual classes:" ) .
                     ulist( item( ptrContainerLink() ) .
                            item( dequeLink() ) .
@@ -233,7 +183,8 @@ function reference()
               code("ptr_list")  .  " and " .  code("ptr_deque") .  " offer the programmer 
                 different complexity tradeoffs and should be used accordingly. " . code( "ptr_vector" ) . 
                 " is the type of sequence that should be used by default. " . code("ptr_list") . " should be used when there 
-             are frequent insertions and deletions from the middle of the sequence. " . code("ptr_deque" ) ." is 
+             are frequent insertions and deletions from the middle of the sequence " . i( "and" ) . " if the
+                 container is fairly large (eg. more than 100 elements). " . code("ptr_deque" ) ." is 
               the data structure of choice when most insertions and deletions take place at 
             the beginning or at the end of the sequence.  An associative container supports  
             unique keys if it may contain at most one element for each key.  Otherwise, it 
@@ -258,14 +209,15 @@ function reference()
 function examples()
 {
     $header = beginSection( examplesLink() );
-    $exampleList = p( "Some good examples are given in the accompanying test
+    $exampleList = p( "Some examples are given in the accompanying test
                       files:" ) .
-                   ulist( li( a( "../test/iterator.cpp", code( "iterator.cpp" ) ) ) .
-                          " shows how to implement a container version of " . 
-                          code( "std::copy()" ) . " that works with " . code( "std::ifstream_iterator<>." ) .
-                          li( a( "../test/iterator.cpp", code( "string.cpp" ) ) ) .
-                          " shows how to implement a container version of " . 
-                          code( "std::find()" ) . " that works with " . code( "char[],wchar_t[],char*,wchar_t*." ) );
+                   ulist( li( a( "../test/incomplete_type_test.cpp", code( "incomplete_type_test.cpp" ) ) .
+                          " shows how to implement the Composite pattern." ) .
+                          li( a( "../test/associative_test_data.hpp", code( "associative_test_data.hpp" ) ) .
+                          " shows the common interface for all associative containers." ) .
+                          li( a( "../test/sequence_test_data.hpp", code( "sequence_test_data.hpp" ) ) .
+                          " shows the common interface for all sequences." ) );
+
      
     return $header . $exampleList;
 }
@@ -275,19 +227,12 @@ function examples()
 function portability()
 {
     $header       = beginSection( portLink() );
-    $compilerList = p( "Full support for built-in arrays require that the
-                        compiler supports class template partial specialization, however,
-                        a work-around for built-in types have been made." ) .
-                    p( "Notice that some compilers cannot do function template ordering
-                        properly. In that case one cannot rely of " . code( "result_iterator" )
-                        . " and a single function definition; instead one needs to supply
-                        a function overloaded for const and non-const arguments if it is required." ) .
-                    p( "Full support for iterators like " . code( "std::istream_iterator<>" ) . " depends very
-                        much on a conforming standard library." ) .
-                    p( "Most of the tests have been run successfully on these compilers" . 
+    $compilerList = p( "This library does not rely on any difficult template code, and so it should work
+                        with most compilers---even the older onces." ) .
+                    p( "Most of the tests have been run successfully on these compilers:" . 
                        ulist( li( "vc7.1" ) . 
-                              li( "gcc3.2" ) . 
-                              li( "como4.3.0.1" ) .
+                              li( "gcc3.3.1" ) . 
+                              li( "como4.3.3" ) .
                               li( "bcc6" ) ) );
 
     return $header . $compilerList;
@@ -298,14 +243,46 @@ function portability()
 function Faq()
 {
     $res  = beginSection( faqLink() );
-    $faq1 = p( i("Since a pointer container is not Copy-Constructible and Assignable I cannot 
+    $faq1 = p( i("Since a pointer container is not Copy-Constructible and Assignable, I cannot 
                  put them into standard containers; what do I do?" ) .
                " Since they are Clonable, you simply put them in a pointer container." );
     $faq2 = p( i( "Calling " . code( "assign()" ) . " is very costly and I do not really need to store
                   cloned objects; I merely need to overwrite the existing ones; what do I do?;" ) .
                " Call " . code( "std::copy( first, last, c.begin() );." ) ); 
-    $faq3 = "";
-    return $res . olist( $faq1 . $faq2 . $faq3 );
+    $faq3 = p( i( "Why is there no equivalent of " . code( "boost::array<T,size>" ) . " for storing pointers?" ) .
+               " For heap-allocated pointers there would be little performance benefit of having such a class." );
+    $faq4 = p( i( "Why does the classes have some mutating algorithms as member functions?" ) . 
+               " Some mutating algorithms are inherently unsafe and error-prone to use with pointers. These few
+                 often-used algorithms are implemented so the user does not need to care about those pitfalls." ); 
+    $faq5 = p( i( "Which mutating algorithms are safe to use with pointers?" ) . 
+               " Any mutating algorithm that moves elements around by swapping them. An important example is " . 
+               code( "std::sort()" ) . "; examples of unsafe algorithms are " . code( "std::unique()" ) . " and " .
+               code( "std::remove(). That is why these algorithms are provided as member functions. " ) );
+    $faq6 = p( i( "Why does " . code( "ptr_map<T>::insert()/replace() " ) . " take two arguments (the key and the pointer) 
+                   instead of one " . code( "std::pair<>" ) . "? And why is the key passed by non-const reference? " ) .
+                " This is the only way the function can be implemented in an exception-safe manner; since 
+                  the copy-constructor of the key might throw, and since function arguments are not guaranteed to
+                  be evaluated from left to right, we need to ensure that evaluating the first argument does not throw.
+                  Passing the key as a reference achieves just that." );
+    $faq7 = p( i( "When instantiating a ptr_container with a type " . code( "T," ) . " is " . code( " T " ) . " then
+                  allowed to be incomplete at that point? " ) . 
+               " Yes." );
+    $faq8 = p( i( "Why are inserting member functions overloaded for both pointers and references?" ) .
+               " Assuming only pointer arguments were allowed, the inexperienced programmer might forget
+                 to call " . code( "make_clone()" ) . " on an object. So the code would not compile. To fix it he
+                 just takes the address of the object and now he is happy because the code compiles. So to avoid
+                  that from hapening, we add the overloaded version. Notice that containers of smart pointers does
+                  not have this problem. " );
+                  
+    return $res . olist( $faq1 . $faq2 . $faq3 . $faq4 . $faq5 . $faq6 . $faq7 . $faq8 );
+}
+
+
+
+function literature()
+{   
+    $header       = beginSection( literatureLink() );
+    return $header;
 }
 
 
@@ -320,6 +297,13 @@ function examplesLink()
 function faqLink()
 {
     return "FAQ";
+}
+
+
+
+function literatureLink()
+{
+    return "References";
 }
 
 
