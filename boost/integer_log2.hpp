@@ -1,15 +1,18 @@
+// -------------------------------------
 // integer_log2.hpp
 //
-// Gives the integer part of the logarithm, base 2, of a given number.
-// Behavior is undefined if the argument is <= 0.
+//   Gives the integer part of the logarithm, in base 2, of a
+// given number. Behavior is undefined if the argument is <= 0.
 //
 //
-//  (C) Copyright Gennaro Prota 2003
-//  Permission to copy, use, modify, sell and distribute this software
-//  is granted provided this copyright notice appears in all copies.
-//  This software is provided "as is" without express or implied
-//  warranty, and with no claim as to its suitability for any purpose.
+//       (C) Copyright Gennaro Prota 2003 - 2004.
 //
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+//
+// ------------------------------------------------------
+
 
 
 #ifndef BOOST_INTEGER_LOG2_HPP_GP_20030301
