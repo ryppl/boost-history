@@ -12,10 +12,11 @@
  *
  */
 
-#ifndef BOOST_ASSIGN_HPP
-#define BOOST_ASSIGN_HPP
+#ifndef BOOST_ASSIGN_STL_HPP
+#define BOOST_ASSIGN_STL_HPP
 
 #include "fixed_size_assigner.hpp"
+#include "insert_assigner.hpp"
 #include <boost/config.hpp>
 
 #include <stack>
@@ -34,6 +35,8 @@
 namespace boost
 {
 namespace assignment
+{
+namespace detail
 {
 
 #if defined( _MSC_VER ) && !defined( __COMO__ )
@@ -147,107 +150,24 @@ namespace assignment
 
 #endif // defined( _MSC_VER )
 
-    namespace detail
-    {
-
-	template< typename C, typename V = typename C::value_type > 
-	class assigner
-	{
-	public:
-	    typedef V  value_type;
-
-	    explicit assigner( C& c ) : c_( c )
-	    {}
-
-
-
-	    assigner( C& c, const value_type& v )
-		: c_( c )
-	    {
-            insert( c_, v );
-	    }
-
-
-
-	    assigner& operator,( const value_type& v )
-	    {
-	    	insert( c_, v );
-	    	return *this;
-	    }
-
-
-	    
-	    template< typename T, typename T2 >
-	    assigner& operator()( const T& t, const T2& t2 )
-	    {
-            insert( c_, value_type( t, t2 ) );
-            return *this;
-	    }
-
-
-
-	    template< typename T, typename T2, typename T3 >
-	    assigner& operator()( const T& t, const T2& t2, const T3& t3 )
-	    {
-            insert( c_, value_type( t, t2, t3 ) );
-            return *this;
-	    }
-
-
-
-	    template< typename T, typename T2, typename T3, typename T4 >
-	    assigner& operator()( const T& t, const T2& t2, const T3& t3,
-				  const T4& t4 )
-	    {
-            insert( c_, value_type( t, t2, t3, t4 ) );
-            return *this;
-	    }
-
-
-
-	    template< typename T, typename T2, typename T3, typename T4,
-		      typename T5 >
-	    assigner& operator()( const T& t, const T2& t2, const T3& t3,
-				  const T4& t4, const T5& t5 )
-	    {
-            insert( c_, value_type( t, t2, t3, t4, t5 ) );
-            return *this;
-	    }
-
-
-
-	    template< typename T, typename T2, typename T3, typename T4,
-		      typename T5, typename T6 >
-	    assigner& operator()( const T& t, const T2& t2, const T3& t3,
-				  const T4& t4, const T5& t5, const T6& t6 )
-	    {
-            insert( c_, value_type( t, t2, t3, t4, t5, t6 ) );
-            return *this;
-	    }
-
-	private:
-	    
-	    assigner& operator=( const assigner& );
-	    C& c_;
-	};
-
+ 
     } // namespace 'detail'
 
 
 
     template< typename C > 
-    inline detail::assigner<C> 
+    inline detail::insert_assigner<C> 
     operator+=( C& c, const typename C::value_type& v )
     {
-        return detail::assigner<C>( c, v );
+        return detail::insert_assigner<C>( c, v );
     }
     
 
 
     template< typename C >
-    inline detail::assigner<C> assign( C& c )
+    inline detail::insert_assigner<C> assign( C& c )
     {
-        return detail::assigner<C>( c );
+        return detail::insert_assigner<C>( c );
     }
 
     
@@ -258,6 +178,8 @@ namespace assignment
         return detail::fixed_size_assigner<typename C::value_type, 
             typename C::iterator>( c.begin(), c.end() );
     }
+    
+    // safe_assign( C )() boundschecked
         
     } // namespace 'assignment'
 } // namespace 'boost'

@@ -1,0 +1,136 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+
+<head>
+  <title>Assignment Library</title>
+  <meta content="Thorsten, mailto:nesotto@cs.auc.dk" name="author">
+</head>
+
+<body text="#000000" bgcolor="#ffffff">
+
+  <table border="0" width="799" height="134">
+    <tr>
+      <td width="288" height="134"><img id="IMG1" src="cboost.gif"
+        align="middle" border="0" width="277" height="86"></td>
+      <td width="1152" height="134">
+        <h1 align="center">Assignment Library</h1>
+      </td>
+    </tr>
+  </table>
+  <ul>
+    <li><a href="#intro">Introduction</a>
+    <li>
+      <p align="left">
+        <a href="#reference">Reference</a>
+      <ul>
+        <li><a href="trim.html">Standard containers</a></li>
+        <li><a href="conv.html"><code>boost::array</code></a></li>
+        <li><a href="predicate.html"><code>boost::graph</code></a></li>
+        <li><a href="find.html"><code>boost::ublas</code></a></li>
+        <li><a href="replace.html"><code>boost::multi_array</code></a></li>
+        <li><a href="classification.html">Classification predicates</a></li>
+      </ul>
+    </li>
+    <li><a href="#extensions">Extensions</a></li>   
+    <ul>
+        <li><a href="trim.html">class <code>insert_assigner</code></a></li>
+        <li><a href="conv.html">class <code>fixed_sized_assigner</code></a></li>
+    </ul>       
+    <li><a href="#portability">Portability</a></li>
+    <li><a href="#rationale">Rationale</a>
+      <ul>
+        <li><a href="#regex">Regular expressions</a></li>
+      </ul>
+    </li>
+    <li><a href="#ack">Acknowledgements</a></li>
+  </ul>
+  <hr>
+  <h2><a name="intro">Introduction</a></h2>
+  <p>
+    Intro here.
+  </p>
+  <p>
+  </p>
+  <p>
+  </p>
+  <h2><a name="reference">Reference</a></h2>
+  <p>
+    The library is organized into several parts and each part deals with a
+    different set of problems:
+  </p>
+  <ul>
+    <li><a href="trim.html">Trim</a> facility provides algorithms for removing
+      trailing and leading spaces from sequences.</li>
+    <li><a href="conv.html">Case conversion</a> facility contains sequence
+      variants for <code>std::toupper</code> and <code>std::tolower</code>
+      algorithms.</li>
+    <li>
+      <p align="left">
+        <a href="predicate.html">Predicates</a> facility includes some popular
+        string related predicates like <code>starts_with</code>, <code>contains</code>
+        and etc.</li>
+    <li>
+      <p align="left">
+        <a href="find.html">Find</a> facility provides a set of algorithms for
+        searching for a substring within a sequence.</li>
+    <li>
+      <p align="left">
+        <a href="replace.html">Replace/Erase</a> facility contains various
+        search and replace algorithms for sequences.</li>
+    <li>
+      <p align="left">
+        <a href="classification.html">Classification</a> header contains a set
+        of useful classification predicates which can be used with other
+        algorithms in this library.</li>
+  </ul>
+  <p>
+    Every component is provided in separate header. The library contains two
+    cumulative headers for convenience. <a href="../../../boost/string_algo.hpp">&lt;boost/string_algo.hpp&gt;</a>
+    contain all components except regex related ones. <a
+    href="../../../boost/string_algo_regex.hpp">&lt;boost/string_algo_regex.hpp&gt;</a>
+    includes also regex algorithms.
+  </p>
+  <h3><a name="examples">Examples</a></h3>
+  <p>
+    Examples showing the basic usage of the library can be found in the <code>libs/string_algo/example</code>
+    directory. There is a separate file for the each part of the library. Follow
+    the <a href="http://www.boost.org/tools/build/index.html">boost build
+    guidelines</a> to build examples using the bjam. To succesfully build
+    examples the Regex++ library is required.
+  </p>
+  <h2><a name="portability">Portability</a></h2>
+  <p>
+    Library has been successfully compiled and tested with Microsoft Visual C++
+    7.0 and GCC 3.2.
+  </p>
+  <p>
+    There are known limitation on platforms not supporting partial template
+    specialization. Library depends on correctly implemented <code>std::iterator_traits</code>
+    class. If a standard library provided with compiler is broken, the String
+    Algorithm Library cannot function properly. Usually it implies, that
+    primitive pointer iterators are not working with the library functions.
+  </p>
+  <h2><a name="rationale">Rationale</a></h2>
+  <h3><a name="regex">Regular expressions</a></h3>
+  <p>
+    Regular expressions are essential part of text processing. For this reason,
+    the library provides also regex variants of algorithms. In some places they
+    copy a functionality from the Regex++ library. The goal was to provide
+    complete unified interface for all relevant algorithms in the library.
+  </p>
+  <h2><a name="ack">Acknowledgements</a></h2>
+  <p>
+  </p>
+  <hr>
+  <p>
+    (C) Copyright Thorsten Ottosen 2003. Permission to copy, use, modify, sell 
+     and distribute this software is granted provided this copyright notice 
+    appears
+    in all copies. This software is provided &quot;as is&quot; without express
+    or implied warranty, and with no claim as to its suitability for any
+    purpose.
+  </p>
+
+</body>
+
+</html>
