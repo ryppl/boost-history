@@ -118,7 +118,7 @@ namespace aux
       }
 
       template <class T>
-      operator T*() 
+      operator T*()
       {
           return static_cast<T*>(
               back_end.call(
@@ -134,7 +134,7 @@ namespace aux
       template <class T>
       operator T&() const volatile
       {
-          return *static_cast<T*>(*this);
+          return *static_cast<T*>(*const_cast<proxy*>(this));
       }
 #  endif
       

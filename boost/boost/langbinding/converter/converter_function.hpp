@@ -5,6 +5,12 @@
 #ifndef CONVERTER_FUNCTION_040923_HPP
 #define CONVERTER_FUNCTION_040923_HPP
 
+namespace boost { namespace langbinding { namespace function {
+
+struct holder_installer;
+
+}}} // namespace boost::langbinding::function
+
 namespace boost { namespace langbinding { namespace converter {
 
 struct arg_conversion
@@ -15,6 +21,7 @@ struct arg_conversion
 };
 
 typedef arg_conversion (*converter_function)(void* src);
+typedef void* (*to_xxx_function)(void* src, function::holder_installer const& installer);
 
 }}} // namespace boost::langbinding::converter
 

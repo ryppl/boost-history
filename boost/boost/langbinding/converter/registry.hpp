@@ -8,6 +8,10 @@
 #include <boost/langbinding/function/config.hpp>
 #include <boost/langbinding/converter/converter_function.hpp>
 #include <boost/langbinding/util/type_id.hpp>
+#include <boost/langbinding/backend/id.hpp>
+#include <boost/langbinding/backend/class.hpp>
+
+#include <vector>
 
 namespace boost { namespace langbinding { namespace converter { namespace registry {
 
@@ -25,22 +29,49 @@ inline converter_chain::converter_chain(converter_function x)
 {
 }
 
-struct registration
+struct backend_registration
 {
-    registration();
+    backend_registration();
 
+    backend::class_* class_;
+    to_xxx_function to_xxx;
     converter_chain* lvalue_converters;
     converter_chain* rvalue_converters;
 };
 
-inline registration::registration()
-    : lvalue_converters(0)
+inline backend_registration::backend_registration()
+    : class_(0)
+    , to_xxx(0)
+    , lvalue_converters(0)
     , rvalue_converters(0)
 {
 }
 
-BOOST_LANGBINDING_DECL void insert(bool rvalue, util::type_info, converter_function);
-BOOST_LANGBINDING_DECL registration* get(util::type_info);
+// The registration is specific to a typeid. For every back end
+// and typeid there is a backend_registration instance.
+struct registration
+{
+    inline backend_registration& get(backend::id);
+
+private:
+    std::vector<backend_registration> backends;
+};
+
+inline backend_registration& registration::get(backend::id id)
+{
+    if (backends.size() <= id)
+    {
+        backends.resize(id + 1);
+    }
+
+    return backends[id];
+}
+
+BOOST_LANGBINDING_DECL void insert(
+    backend::id, bool rvalue, util::type_info, converter_function);
+
+BOOST_LANGBINDING_DECL registration& acquire(util::type_info);
+BOOST_LANGBINDING_DECL registration* lookup(util::type_info);
 BOOST_LANGBINDING_DECL arg_conversion convert(void* src, converter_chain* chain);
 
 }}}} // namespace boost::langbinding::converter::registry

@@ -36,7 +36,7 @@ class BOOST_LANGBINDING_DECL plugin
     virtual override
     find_override(char const* function_name, class_instance const&) const = 0;
 
-    langbinding::backend::id id()
+    langbinding::backend::id id() const
     { return id_; }
 
  private:

@@ -11,6 +11,10 @@
 
 namespace boost { namespace langbinding { namespace function { namespace aux {
 
+// The extractors a responsible for the second stage of converting an
+// argument. This involves casting arg_conversion::convertible to the
+// right type, or possibly using arg_conversion::construct to construct
+// a temporary.    
 struct extractor_base
 {
     extractor_base(void* p) : data(p) {}
