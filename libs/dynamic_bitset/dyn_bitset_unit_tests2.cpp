@@ -111,7 +111,6 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
       boost::dynamic_bitset<Block> b(long_string);
       Tests::shift_left_assignment(b, pos);
     }
-
   }
   {
     // test with both multiple and
