@@ -71,9 +71,9 @@
          return( ob );
       }
 
-      inline range_object< char * >              rangefmt()
+      inline range_object< const char * >              rangefmt()
       {
-         return( rangefmtex< char * >());
+         return( rangefmtex< const char * >());
       }
 
       template< class FmtObject >

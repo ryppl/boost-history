@@ -81,10 +81,10 @@
       }
 
       template< class StateObject, bool pre >
-      inline state_object< char *, StateObject, pre >
+      inline state_object< const char *, StateObject, pre >
                                                  statefmt()
       {
-         return( statefmtex< char *, StateObject, pre >());
+         return( statefmtex< const char *, StateObject, pre >());
       }
 
       template< class StateObject, bool pre, class FmtObject >

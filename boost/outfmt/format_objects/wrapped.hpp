@@ -102,9 +102,9 @@
          return( ob );
       }
 
-      inline wrapped_object< char * >            wrappedfmt()
+      inline wrapped_object< const char * >            wrappedfmt()
       {
-         return( wrappedfmtex< char * >());
+         return( wrappedfmtex< const char * >());
       }
 
       template< class FmtObject >

@@ -165,9 +165,9 @@
          return( ob );
       }
 
-      inline static_nary_object< char * >        naryfmt()
+      inline static_nary_object< const char * >        naryfmt()
       {
-         return( naryfmtex< char * >());
+         return( naryfmtex< const char * >());
       }
 
       template< class FmtObject >

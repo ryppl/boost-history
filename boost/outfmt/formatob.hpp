@@ -19,7 +19,7 @@
 
    namespace boost { namespace io
    {
-      template< typename T, typename FormatType = char *, class FmtObject = boost::io::basic_object >
+      template< typename T, typename FormatType = const char *, class FmtObject = boost::io::basic_object >
       class formatob_t: public FmtObject, public boost::noncopyable
       {
          public:
@@ -154,13 +154,13 @@
 
 #     if !defined(BOOST_IOFM_NO_OUTPUT_DEDUCTION) // automatic type deduction
          template< typename T >
-         inline formatob_t< T, char *, typename deducer< T, char * >::type::outputter >
+         inline formatob_t< T, const char *, typename deducer< T, const char * >::type::outputter >
                                                  formatob( const T & t )
          {
-            return( formatob_t< T, char *, BOOST_DEDUCED_TYPENAME deducer< T, char * >::type::outputter >
+            return( formatob_t< T, const char *, BOOST_DEDUCED_TYPENAME deducer< T, const char * >::type::outputter >
             (
                t,
-               deducer< T, char * >::type::generate()
+               deducer< T, const char * >::type::generate()
             ));
          }
 

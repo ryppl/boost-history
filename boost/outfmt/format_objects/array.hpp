@@ -100,13 +100,13 @@
          return( arrayfmtex< FormatType >( 0, len ));
       }
 
-      inline array_object< char * >              arrayfmt( long off, long len )
+      inline array_object< const char * >              arrayfmt( long off, long len )
       {
-         return( arrayfmtex< char * >( off, len ));
+         return( arrayfmtex< const char * >( off, len ));
       }
-      inline array_object< char * >              arrayfmt( long len = 0 )
+      inline array_object< const char * >              arrayfmt( long len = 0 )
       {
-         return( arrayfmtex< char * >( 0, len ));
+         return( arrayfmtex< const char * >( 0, len ));
       }
 
       // temporary hack until sequences are in place

@@ -17,8 +17,8 @@
 
       template< typename ForwardIterator >
       inline formatob_t< range_t< ForwardIterator >,
-                         char *,
-                         range_object< char * >
+                         const char *,
+                         range_object< const char * >
                        >                         formatlist
                                                  (
                                                     ForwardIterator first,
@@ -59,8 +59,8 @@
 
       template< class Container >
       inline formatob_t< Container,
-                         char *,
-                         container_object< char * >
+                         const char *,
+                         container_object< const char * >
                        >                         format
                                                  (
                                                     Container & c
@@ -98,8 +98,8 @@
 
       template< typename ForwardIterator >
       inline formatob_t< std::pair< ForwardIterator, ForwardIterator >,
-                         char *,
-                         range_object< char * >
+                         const char *,
+                         range_object< const char * >
                        >                         formatrange
                                                  (
                                                     std::pair< ForwardIterator, ForwardIterator > & ip

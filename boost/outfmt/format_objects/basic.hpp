@@ -83,7 +83,7 @@
       {
          public:
             typedef void                                             traits_type;
-            typedef char *                                           format_type;
+            typedef const char *                                           format_type;
             typedef seq_type< basic_type >                           formatter_type;
          public:
             template< typename T, class InputStream >

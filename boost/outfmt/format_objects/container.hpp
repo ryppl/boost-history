@@ -139,9 +139,9 @@
          return( ob );
       }
 
-      inline container_object< char * >          containerfmt()
+      inline container_object< const char * >          containerfmt()
       {
-         return( containerfmtex< char * >());
+         return( containerfmtex< const char * >());
       }
 
       template< class FmtObject >

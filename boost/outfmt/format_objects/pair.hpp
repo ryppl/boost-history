@@ -109,9 +109,9 @@
          return( ob );
       }
 
-      inline pair_object< char * >               pairfmt()
+      inline pair_object< const char * >               pairfmt()
       {
-         return( pairfmtex< char * >());
+         return( pairfmtex< const char * >());
       }
 
       template< class FmtObject1 >
