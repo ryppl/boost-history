@@ -616,7 +616,35 @@ else
 			implementation.</P>
 		<h3>F. Alternatives</h3>
 		<h4>1. Policy Based Smart Pointers</h4>
-		<p>...</p>
+		<p>A policy-based smart pointer (PBSP) design, popularized by Andrei 
+        Alexandrescu [<a href="#Alexandrescu01">Alexandrescu01</a>] , could 
+        provide all of the features in the current proposal plus could be 
+        user-customizable to offer many other variations on the general smart 
+        pointer theme.</p>
+		<p>As attractive as PBSP might be, the authors of the current proposal 
+        believe:</p>
+		<ul>
+          <li>There is no currently available smart pointer design suitable for 
+          standardization. Several Boost developers, with guidance from Andrei Alexandrescu, 
+          are working on a possible Boost PBSP library, but it will be several 
+          years at best before it can be considered mature.</li>
+          <li>Because parameterization discourages users and some PBSP designs 
+          require an uncomfortably large number of template parameters, the best 
+          choice for parameterization would benefit greatly from features not 
+          currently a part of C++, particularly named template parameters and/or 
+          typedef templates.</li>
+        </ul>
+		<p>If and when a 
+        policy-based smart pointer design matures to the point where it is 
+        suitable for standardization, a <i>std::shared_ptr</i> typedef template 
+        or equivalent could be provided which delivers the same interface and 
+        semantics as the current proposal. The interface and semantics of <i>
+        std::shared_ptr</i> have been refined over the years as the best choice 
+        for general shared-ownership smart pointer use, including interlibrary 
+        communication. Thus any future PBSP would almost certainly supply these common needs 
+        as the default policies. That means that implementing a future 
+        version of <i>std::shared_ptr</i> as some form of wrapper around a PBSP 
+        would always be an option should a PBSP become part of some future standard.</p>
 		<h4>2. Garbage Collection</h4>
 		<p>The detailed rationale for not providing automatic garbage collection as the 
 			default memory management technique for C++ is given by [<a href="#Stroustrup94a">Stroustrup94a</a>], 
@@ -1155,6 +1183,9 @@ else
 		<p>[<a name="Abrahams02">Abrahams02</a>] Dave Abrahams et al, <i>Boost.Python library 
 				documentation</i>, October 2002. Available online at <A href="http://www.boost.org/libs/python/">
 				http://www.boost.org/libs/python/</A></p>
+		<p>[<a name="Alexandrescu01">Alexandrescu01</a>] Andrei Alexandrescu, <i>
+        <a href="http://www.awl.com/cseng/titles/0-201-70431-5">Modern C++ 
+        Design</a></i>, Addison Wesley, ISBN 0-201-70431-5.</p>
 		<p>[<a name="Berger02">Berger02</a>] Emery D. Berger, Benjamin G. Zorn, Kathryn S. 
 			McKinley, <i>Reconsidering Custom Memory Allocation</i>, ACM SIGPLAN Notices, 
 			Vol. 37, Issue 11, November 2002. Available online at <A href="ftp://ftp.cs.utexas.edu/pub/emery/papers/reconsidering-custom.pdf">
