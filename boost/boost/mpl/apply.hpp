@@ -63,9 +63,8 @@ namespace mpl {
 
 #define BOOST_MPL_AUX_APPLY_0_TEMPLATE_DEF(unused) \
 template<typename F> \
-struct apply0 \
+struct apply0 : F \
 { \
-    typedef typename F::type type; \
 }; \
 /**/
 
@@ -88,8 +87,8 @@ template< \
 struct BOOST_PREPROCESSOR_CAT(apply, n) \
 { \
  private: \
-    template<bool> struct BOOST_PREPROCESSOR_CAT(F,_wrapper) : F {}; \
-    template<> struct BOOST_PREPROCESSOR_CAT(F,_wrapper)<true> \
+    template<bool> struct F_wrapper : F {}; \
+    template<> struct F_wrapper<true> \
     { \
         template< BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS( \
               BOOST_PREPROCESSOR_EMPTY \
@@ -98,13 +97,35 @@ struct BOOST_PREPROCESSOR_CAT(apply, n) \
             ) > struct apply; \
     }; \
  public: \
-    typedef typename BOOST_PREPROCESSOR_CAT(F,_wrapper)< \
+    typedef typename F_wrapper< \
           aux::msvc_never_true<F>::value \
         >::template apply< BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS( \
                 BOOST_PREPROCESSOR_EMPTY \
               , n \
               , T \
               ) >::type type; \
+              \
+    static void execute() \
+    { \
+        F_wrapper< \
+          aux::msvc_never_true<F>::value \
+        >::template apply< BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS( \
+                BOOST_PREPROCESSOR_EMPTY \
+              , n \
+              , T \
+              ) >::execute() \
+    } \
+    template <class T> \
+    static void execute(T x) \
+    { \
+        F_wrapper< \
+          aux::msvc_never_true<F>::value \
+        >::template apply< BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS( \
+                BOOST_PREPROCESSOR_EMPTY \
+              , n \
+              , T \
+              ) >::execute(x) \
+    } \
 }; \
 /**/
 
@@ -116,13 +137,12 @@ template< \
       BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS(BOOST_PREPROCESSOR_COMMA, n, typename T) \
     > \
 struct BOOST_PREPROCESSOR_CAT(apply,n) \
-{ \
-    typedef typename F \
-        ::template apply< BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS( \
+        : F::template apply< BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS( \
                 BOOST_PREPROCESSOR_EMPTY \
               , n \
               , T \
-              ) >::type type; \
+              ) > \
+{ \
 }; \
 /**/
 
