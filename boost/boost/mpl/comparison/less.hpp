@@ -33,7 +33,8 @@ template<
     >
 struct less_impl
 {
-    BOOST_STATIC_CONSTANT(bool, value = (T1::value < T2::value));
+    // MSVC6.5 workaround: '<' here correlates badly with boost::bind
+    BOOST_STATIC_CONSTANT(bool, value = !(T1::value >= T2::value));
 };
 
 } // namespace detail
