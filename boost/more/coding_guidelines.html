@@ -18,7 +18,9 @@ All rights Reserved.
  wherever possible, choices are made with careful attention to engineering merit and
  the underlying rationale is presented.
 
- <p>Because C++ is a markedly different language from C, good C++ code looks markedly different from good C code. Differences from good C style follow from these differences:
+ <p>Because C++ is a markedly different language from C, good C++ code looks
+ markedly different from good C code. Differences from good C style follow from
+ these differences:
 
   <ul>
     <li>Names -- particularly, qualified names, and expressions and declarations
@@ -579,7 +581,7 @@ void database::template_function(
  
 namespace {
   int f(
-     int x)
+     int const x)
   {
       return x+1;
   }
