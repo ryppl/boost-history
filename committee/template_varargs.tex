@@ -22,7 +22,7 @@ This proposal addresses three problems under a unified framework:
 \begin{itemize}
 \item The inability to instantiate class and function templates with an arbitrarily-long list of template parameters.
 \item The inability to pass an arbitrary number of arguments to a function in a type-safe manner.
-\item The argument forwarding problem.
+\item The argument forwarding problem for an arbitrary number of argumnets.
 \end{itemize}
 
 The proposed resolution is to introduce a syntax and semantics for
@@ -34,7 +34,7 @@ typesafe manner.
 
 \section{Motivation}
 \subsection{Variable-length template parameter lists}
-Variable-length template parameter lists (varargs) allow a class or
+Variable-length template parameter lists (variadic templates) allow a class or
 function template to accept some number (possibly zero) of template
 arguments beyond the number of template parameters specified. This
 behavior can be simulated in C++ via a long list of defaulted template
@@ -55,7 +55,7 @@ long type names in error messages (compilers tend to print the
 defaulted arguments) and very long mangled names. It is also not
 scalable to additional arguments without resorting to preprocessor
 magic~\cite{Preprocessor01}. In all of these libraries (and presumably
-many more), an implementation based on template varargs would be
+many more), an implementation based on variadic template would be
 shorter and would not suffer the limitations of the aforementioned
 implementation. The declaration of the {\tt list<>} template above may
 be:
@@ -151,10 +151,10 @@ type system as are integral constants, types, and templates).
 
 Function templates may also be declared to accept variable-length
 template parameter lists in the same manner as class templates. In
-this case (and barring reuse of the vararg type as the final function
-parameter, as described in the next section) arguments may only be
-specified explicitly when calling the function template; they are not
-deduced, e.g.,:
+this case (and barring reuse of the template parameter pack as the
+``type'' of the final function parameter, as described in the next
+section) arguments may only be specified explicitly when calling the
+function template; they are not deduced, e.g.,:
 
 \begin{verbatim}
 template<... Args> void f();
@@ -177,7 +177,7 @@ template<... Args>
 {\tt Args} is deduced as a template parameter pack containing the types of
 the arguments, then {\tt args} is a value parameter pack containing
 the function call arguments passed after the {\tt format}
-argument.\footnote{Note that, unlike C varargs, we do not require but
+argument.\footnote{Note that, unlike C, we do not require but
   do allow arguments prior to the argument bundle.} Like template
 parameter packs, value parameter packs are not first-class entities:
 their type is that of the associated template parameter pack, which is
@@ -229,9 +229,51 @@ template<typename T> void forward(T&);
 template<typename T> void forward(const T &);
 \end{verbatim}
 
+Note that this formulation is expected to change if some variant of
+the move proposal~\cite{Hinnant02} is accepted;
+
+\subsection{Deducing template parameter packs from types}
+Template parameter packs can be deduced from template argument lists
+and function parameter lists, by packing the list of integral constant
+expressions and types into the template parameter pack.
+
+Example: we can define a template {\tt function\_traits} that extracts
+the result type and argument types of a function:
+\begin{verbatim}
+template<...> class tuple;
+
+template<...> struct function_traits;
+
+template<typename R, ... Args> 
+  struct function_traits<R(Args...)>
+  { 
+    typedef R result_type; 
+    typedef tuple<Args...> argument_types;
+  };
+\end{verbatim}
+
+Example: we can write a function accepting a tuple with an arbitrary
+number of elements in it:
+\begin{verbatim}
+template<...> class tuple;
+
+template<... Elements>
+  void eat_tuple(tuple<Elements...>);
+\end{verbatim}
+
+Example: We can also split a template class into its template name and
+template arguments, a task that could drastically reduce the amount of code required to implement the meta-lambda facility of the Boost Metaprogramming Library~\cite{Gurtovoy02}. For instance:
+
+\begin{verbatim}
+template<typename T> struct split_template_class;
+
+template<template<... Args> class T> 
+  struct split_template_class<T<Args...> >;
+\end{verbatim}
+
 \subsection{Partial ordering of variadic class template partial specializations}
 The class template partial specialization partial ordering rules will
-need to be augmented to include partial ordering with vararg
+need to be augmented to include partial ordering with variadic
 templates. Intuitively, a binding to a parameter that falls into a
 template's variable-length argument list is weaker than a binding to a
 specified template parameter. For instance, given:
@@ -256,7 +298,7 @@ parameter.
 
 Paragraph 3 of 14.5.5.2 [temp.func.order] describes the rules for
 transforming a template for the purpose of partial ordering. To
-support partial ordering with template varargs, introduce two
+support partial ordering with variadic templates, introduce two
 additional bullets:
 \begin{itemize}
 \item If after removing the variable-length template parameter list
@@ -270,14 +312,13 @@ additional bullets:
 
 \subsection{Overloading}
 \label{overloading}
-The overloading rules need two minor changes to accomodate template
-varargs:
+The overloading rules need two minor changes to accomodate variadic template:
 \begin{itemize}
-\item Template vararg functions follow the same overloading rules as
-  non-template vararg functions.
-\item If two overloads differ only in that one is a template vararg
-  function and the other is a non-template vararg function, the
-  template vararg function is more specialized.
+\item Template variadic functions follow the same overloading rules as
+  non-template variadic functions.
+\item If two overloads differ only in that one is a variadic template
+  function and the other is a non-template variadic function, the
+  template variadic function is more specialized.
 \end{itemize}
 
 Thus we prefer the typesafe variadic functions to unsafe variadic
@@ -313,7 +354,7 @@ HERE HERE HERE
 
 \section{Examples}
 To demonstrate the use of variadic templates, this section gives
-skeletal implementations of four library components using vararg
+skeletal implementations of four library components using variadic
 templates,. All of these proposals were accepted by the library
 working group into the first library TR, and are implementable to some
 degree in C++03. However, all of them would benefit from variadic
@@ -329,7 +370,7 @@ libraries are implemented:
 \end{itemize}
 
 The implementations are not generally complete, but omit only features
-that are irrelevant to the discussion of template varargs. The
+that are irrelevant to the discussion of variadic template. The
 implementations use several class templates (metafunctions) from the
 type traits proposal~\cite{Maddock03}.
 
@@ -344,20 +385,6 @@ shouldn't be. It is defined as:
 template<bool Cond, typename T> struct enable_if;
 template<typename T> struct enable_if<true, T> { typedef T type; };
 template<typename T> struct enable_if<false, T> {};
-\end{verbatim}
-
-\subsection{Function traits}
-We define a template {\tt function\_traits} that extracts the result
-type of a function:
-\begin{verbatim}
-template<...> struct function_traits;
-
-template<typename R, ... Args> 
-  struct function_traits<R(Args)>
-  { 
-    typedef R result_type; 
-    typedef tuple<Args...> argument_types;
-  };
 \end{verbatim}
 
 \subsection{Member pointer adaptor implementation}
@@ -437,7 +464,10 @@ mem_fn(T Class::*pm)
 \subsection{Tuple implementation}
 \label{tupleimpl}
 The following code implements the interesting portions of the Tuple
-proposal~\cite{Jarvi02} using variadic as proposed here. 
+proposal~\cite{Jarvi02} using variadic as proposed here. Note that
+{\tt integral\_constant} comes from the type traits
+proposal~\cite{Maddock03} and is a part of the first library technical
+report~\cite{Austern03}.
 
 \small
 \begin{verbatim}
@@ -516,8 +546,8 @@ class tuple : public tuple_base
   typedef T1 head_type;
   typedef tuple<T2> tail_type;
 
-  typedef typename add_cv<T1>::type param1_type;
-  typedef typename add_cv<T2>::type param2_type;
+  typename add_reference<typename add_const<T1>::type>::type param1_type;
+  typename add_reference<typename add_const<T2>::type>::type param2_type;
 
 public:
   static const size_t size = 2;
