@@ -107,7 +107,7 @@ struct iter_fold_first
 
 #define BOOST_MPL_LIMIT_UNROLLING 4
 
-#define BOOST_MPL_AUX_ITER_FOLD_NEXT(i, unused) \
+#define BOOST_MPL_AUX_ITER_FOLD_NEXT(z, i, unused) \
     typedef iter_fold_next< \
           typename BOOST_PP_CAT(next,i)::iterator \
         , LastIterator \
@@ -125,13 +125,13 @@ struct iter_fold_first
         > BOOST_PP_CAT(prev,BOOST_PP_DEC(i)); \
 /**/
 
-#define BOOST_MPL_AUX_ITER_FOLD_PREV(i, unused) \
+#define BOOST_MPL_AUX_ITER_FOLD_PREV(z, i, unused) \
     BOOST_MPL_AUX_ITER_FOLD_PREV_FUNC( \
         BOOST_PP_SUB(BOOST_MPL_LIMIT_UNROLLING,i) \
         ) \
 /**/
 
-#define BOOST_MPL_AUX_ITER_FOLD_EXECUTE(i, tf) \
+#define BOOST_MPL_AUX_ITER_FOLD_EXECUTE(z, i, tf) \
     BOOST_PP_CAT(BOOST_PP_TUPLE_ELEM(2, 0, tf), BOOST_PP_INC(i)) \
         ::BOOST_PP_TUPLE_ELEM(2, 1, tf); \
 /**/

@@ -52,7 +52,7 @@ struct vector_element
 };
 
 // "real" vector_element
-#define BOOST_MPL_TYPE_VECTOR_ELEMENT(i, unused1)                             \
+#define BOOST_MPL_TYPE_VECTOR_ELEMENT(z, i, unused1)                             \
     template<typename Vector>                                                 \
     struct vector_element<Vector, i>                                          \
     {                                                                         \

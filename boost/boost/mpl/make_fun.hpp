@@ -51,7 +51,7 @@ struct BOOST_PP_CAT(make_f,n) \
 }; \
 /**/
 
-#define BOOST_MPL_AUX_MAKE_FN_DEF(n, unused) \
+#define BOOST_MPL_AUX_MAKE_FN_DEF(z, n, unused) \
     BOOST_PP_IF( \
         n \
       , BOOST_MPL_AUX_MAKE_FN_TEMPLATE_DEF \

@@ -38,11 +38,11 @@ namespace mpl {
     BOOST_MPL_TEMPLATE_PARAMETERS(0, BOOST_MPL_VECTOR_MAX_SIZE, param) \
 /**/
 
-#define BOOST_MPL_AUX_VECTOR_ELEMENT_TYPEDEF(i, T) \
+#define BOOST_MPL_AUX_VECTOR_ELEMENT_TYPEDEF(z, i, T) \
     typedef T##i value_type_##i; \
 /**/
 
-#define BOOST_MPL_AUX_IS_VECTOR_ARGUMENT(i, T) \
+#define BOOST_MPL_AUX_IS_VECTOR_ARGUMENT(z, i, T) \
     BOOST_PP_IF(i \
         , BOOST_MPL_PREPROCESSOR_PLUS_TOKEN \
         , BOOST_PP_EMPTY)() \

@@ -151,7 +151,7 @@ struct apply_impl_chooser<n> \
 } \
 /**/
 
-#define BOOST_MPL_AUX_APPLY_TEMPLATE_DEF(n, unused) \
+#define BOOST_MPL_AUX_APPLY_TEMPLATE_DEF(z, n, unused) \
     BOOST_PP_IF( \
           n \
         , BOOST_MPL_AUX_APPLY_N_TEMPLATE_DEF \

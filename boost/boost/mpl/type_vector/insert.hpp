@@ -38,7 +38,7 @@ struct type_vector_insert_algorithm;
     BOOST_PP_DEC(BOOST_MPL_VECTOR_MAX_SIZE) \
 /**/
 
-#define BOOST_MPL_AUX_VECTOR_INSERT_ALGORITHM(i, unused) \
+#define BOOST_MPL_AUX_VECTOR_INSERT_ALGORITHM(z, i, unused) \
     template<typename Vector, typename T> \
     struct type_vector_insert_algorithm<i, Vector, T> \
     { \

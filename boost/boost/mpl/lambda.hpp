@@ -49,7 +49,7 @@ struct lambda
     BOOST_MPL_TEMPLATE_PARAMETERS(1, BOOST_PP_INC(n), param) \
 /**/
 
-#define BOOST_MPL_AUX_LAMBDA_INVOCATION(n, T) \
+#define BOOST_MPL_AUX_LAMBDA_INVOCATION(z, n, T) \
     BOOST_PP_COMMA_IF(n) \
     typename lambda< \
         BOOST_PP_CAT(T, BOOST_PP_INC(n)) \
@@ -71,7 +71,7 @@ struct lambda< Function<BOOST_MPL_AUX_LAMBDA_PARAMS(n, T)> > \
 }; \
 /**/
 
-#define BOOST_MPL_AUX_LAMBDA_SPEC(n, unused) \
+#define BOOST_MPL_AUX_LAMBDA_SPEC(z, n, unused) \
     BOOST_PP_IF( \
           n \
         , BOOST_MPL_AUX_LAMBDA_N_SPEC \

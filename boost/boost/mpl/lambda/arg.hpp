@@ -39,7 +39,7 @@ using boost::mpl::BOOST_PP_CAT(_,n); \
 } \
 /**/
 
-#define BOOST_MPL_AUX_ARG_N_DEF(n, unused) \
+#define BOOST_MPL_AUX_ARG_N_DEF(z, n, unused) \
     BOOST_MPL_AUX_ARG_N_DEF_BODY(BOOST_PP_INC(n)) \
 /**/
 

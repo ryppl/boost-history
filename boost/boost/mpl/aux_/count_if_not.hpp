@@ -34,7 +34,7 @@ namespace boost {
 namespace mpl {
 namespace aux {
 
-#define BOOST_MPL_AUX_PARAMETER_COUNT(i, param) \
+#define BOOST_MPL_AUX_PARAMETER_COUNT(z, i, param) \
     BOOST_PP_IF(i \
         , BOOST_MPL_PREPROCESSOR_PLUS_TOKEN \
         , BOOST_PP_EMPTY \

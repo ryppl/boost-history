@@ -34,7 +34,7 @@
 namespace boost {
 namespace mpl {
 
-#define BOOST_MPL_AUX_REPEAT_BODY(n, expr) expr
+#define BOOST_MPL_AUX_REPEAT_BODY(z, n, expr) expr
 #define BOOST_MPL_AUX_REPEAT(n, expr) \
     BOOST_PP_REPEAT(n, BOOST_MPL_AUX_REPEAT_BODY, expr) \
 /**/
@@ -66,7 +66,7 @@ struct list_factory_part1<N> \
 }; \
 /**/
 
-#define BOOST_MPL_AUX_LIST_FACTORY_SPEC(i, unused) \
+#define BOOST_MPL_AUX_LIST_FACTORY_SPEC(z, i, unused) \
 	  BOOST_MPL_AUX_LIST_FACTORY_SPECIALIZATION(BOOST_PP_INC(i)) \
 /**/
 

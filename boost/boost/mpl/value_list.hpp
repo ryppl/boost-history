@@ -46,7 +46,7 @@ struct list_traits<value_list_tag>
     };
 };
 
-#define BOOST_MPL_INT_VALUE_TEMPLATE_PARAMETER(i, param) \
+#define BOOST_MPL_INT_VALUE_TEMPLATE_PARAMETER(z, i, param) \
     BOOST_PP_COMMA_IF(i) mpl::int_t<param##i> \
 /**/
 

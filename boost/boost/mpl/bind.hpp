@@ -136,7 +136,7 @@ struct resolve_bind_argument< mpl::arg<n> > \
         )(n) \
 /**/
 
-#define BOOST_MPL_AUX_RESOLVE_ARGUMENT_INVOCATION(n, unused) \
+#define BOOST_MPL_AUX_RESOLVE_ARGUMENT_INVOCATION(z, n, unused) \
 typedef typename aux::resolve_bind_argument< \
       BOOST_PP_CAT(T, BOOST_PP_INC(n)) \
     >::template result_< BOOST_MPL_AUX_BIND_PARAMS(U) >::type \
@@ -236,7 +236,7 @@ struct bind_impl_chooser<n> \
 } \
 /**/
 
-#define BOOST_MPL_AUX_BIND_TEMPLATE_DEF(n, unused) \
+#define BOOST_MPL_AUX_BIND_TEMPLATE_DEF(z, n, unused) \
     BOOST_MPL_AUX_RESOLVE_BIND_ARGUMENT_SPEC(n) \
     BOOST_MPL_AUX_BIND_N_TEMPLATE_DEF(n) \
     BOOST_MPL_AUX_IS_NESTED_BIND_DEF(n) \
