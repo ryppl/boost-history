@@ -32,7 +32,7 @@ struct dispatcher
         argument_type const* args = p->arguments();
         for (int i = 0; i < p->arity(); ++i)
         {
-            o.converters[i] = registry::get(args->type);
+            o.converters[i] = registry::get(args[i].type);
         }
 
         o.invoke = p.release();
@@ -88,22 +88,23 @@ void f(int x, int y)
 {
 }
 
-void g(int x)
+void g(int x, float y)
 {
 }
 
-struct int_ : converter<int_, std::string, int>
+template<class T>
+struct from_str : converter<from_str<T>, std::string, T>
 {
     static void construct(std::string const& src, void* storage)
     {
-        new (storage) int(boost::lexical_cast<int>(src));
+        new (storage) T(boost::lexical_cast<T>(src));
     }
 
     static void* convertible(std::string const& src)
     {
         try
         {
-            boost::lexical_cast<int>(src);
+            boost::lexical_cast<T>(src);
         }
         catch (boost::bad_lexical_cast&)
         {
@@ -116,13 +117,16 @@ struct int_ : converter<int_, std::string, int>
 
 int main()
 {
-    int_();
+    from_str<int>();
+    from_str<float>();
     dispatcher d;
 
     d.add(make_function(&f));
     d.add(make_function(&g));
 
     std::string args[2] = { "6", "42" };
-
+    d.execute(2, args);
+    args[1] = "3.14";
     d.execute(2, args);
 }
+
