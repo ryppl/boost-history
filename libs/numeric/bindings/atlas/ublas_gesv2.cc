@@ -2,6 +2,9 @@
 // solving A * X = B
 // using driver function gesv()
 
+//#define BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+//#define BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
 #include <cstddef>
 #include <iostream>
 #include <boost/numeric/bindings/atlas/cblas.hpp>
@@ -56,7 +59,7 @@ int main() {
 #ifndef F_ROW_MAJOR
   m_t b (bb); 
 #else 
-  m_t b (trans (bb)); 
+  m_t b (ublas::trans (bb)); 
 #endif 
   print_m (b, "B for gesv()"); 
   cout << endl; 

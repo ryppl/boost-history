@@ -10,6 +10,7 @@
 ///////////////////////////////
 // vectors
 
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
 // element access:
 template <typename V>
 struct vct_access_traits {
@@ -32,6 +33,7 @@ inline
 typename vct_access_traits<V>::ref_t elem_v (V& v, size_t i) {
   return vct_access_traits<V>::elem (v, i); 
 }
+#endif 
 
 // initialization:
 struct ident {
@@ -75,10 +77,14 @@ struct times_plus {
 
 template <typename F, typename V>
 void init_v (V& v, F f = F()) {
-  size_t sz 
-    = boost::numeric::bindings::traits::vector_traits<V>::size (v);
-  for (std::size_t i = 0; i < sz; ++i) 
+  size_t sz = boost::numeric::bindings::traits::vector_size (v);
+  for (std::size_t i = 0; i < sz; ++i) {
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
     elem_v (v, i) = f (i); 
+#else 
+    v[i] = f (i); 
+#endif 
+  }
 }
 
 // printing: 
@@ -86,10 +92,14 @@ template <typename V>
 void print_v (V const& v, char const* ch = 0) {
   if (ch)
     std::cout << ch << ": "; 
-  size_t sz 
-    = boost::numeric::bindings::traits::vector_traits<V const>::size (v);
-  for (std::size_t i = 0; i < sz; ++i)
+  size_t sz = boost::numeric::bindings::traits::vector_size (v);
+  for (std::size_t i = 0; i < sz; ++i) {
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
     std::cout << elem_v (v, i) << " ";
+#else
+    std::cout << v[i] << " ";
+#endif
+  }
   std::cout << std::endl; 
 }
 
@@ -97,6 +107,7 @@ void print_v (V const& v, char const* ch = 0) {
 /////////////////////////////////////
 // matrices 
 
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
 // element access: 
 template <typename M>
 struct matr_access_traits {
@@ -119,6 +130,7 @@ inline
 typename matr_access_traits<M>::ref_t elem_m (M& m, size_t i, size_t j) {
   return matr_access_traits<M>::elem (m, i, j); 
 }
+#endif 
 
 // initialization: 
 struct rws {
@@ -136,28 +148,47 @@ struct cls1 {
 
 template <typename F, typename M>
 void init_m (M& m, F f = F()) {
-  size_t sz1 
-    = boost::numeric::bindings::traits::matrix_traits<M>::size1 (m);
-  size_t sz2
-    = boost::numeric::bindings::traits::matrix_traits<M>::size2 (m);
+  size_t sz1 = boost::numeric::bindings::traits::matrix_size1 (m);
+  size_t sz2 = boost::numeric::bindings::traits::matrix_size2 (m);
   for (std::size_t i = 0; i < sz1; ++i) 
-    for (std::size_t j = 0; j < sz2; ++j) 
+    for (std::size_t j = 0; j < sz2; ++j) {
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
       elem_m (m, i, j) = f (i, j); 
+#else
+      m(i,j) = f (i, j); 
+#endif
+    }
 }
 
 template <typename M>
 void init_symm (M& m, char uplo = 'f') {
-  size_t n 
-    = boost::numeric::bindings::traits::matrix_traits<M>::size1 (m);
+  size_t n = boost::numeric::bindings::traits::matrix_size1 (m);
   for (size_t i = 0; i < n; ++i) {
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
     elem_m (m, i, i) = n;
+#else
+    m(i,i) = n;
+#endif
     for (size_t j = i + 1; j < n; ++j) {
-      if (uplo == 'u' || uplo == 'U')
+      if (uplo == 'u' || uplo == 'U') {
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
         elem_m (m, i, j) = n - (j - i);
-      else if (uplo == 'l' || uplo == 'L')
+#else
+        m(i,j) = n - (j - i);
+#endif
+      } else if (uplo == 'l' || uplo == 'L') {
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
         elem_m (m, j, i) = n - (j - i);
-      else 
+#else
+        m(j,i) = n - (j - i);
+#endif 
+      } else {
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
         elem_m (m, i, j) = elem_m (m, j, i) = n - (j - i);
+#else
+        m(i,j) = m(j,i) = n - (j - i);
+#endif
+      }
     }
   }
 }
@@ -167,13 +198,16 @@ template <typename M>
 void print_m (M const& m, char const* ch = 0) {
   if (ch)
     std::cout << ch << ":\n"; 
-  size_t sz1 
-    = boost::numeric::bindings::traits::matrix_traits<M const>::size1 (m);
-  size_t sz2
-    = boost::numeric::bindings::traits::matrix_traits<M const>::size2 (m);
+  size_t sz1 = boost::numeric::bindings::traits::matrix_size1 (m);
+  size_t sz2 = boost::numeric::bindings::traits::matrix_size2 (m);
   for (std::size_t i = 0 ; i < sz1 ; ++i) {
-    for (std::size_t j = 0 ; j < sz2 ; ++j) 
+    for (std::size_t j = 0 ; j < sz2 ; ++j) {
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
       std::cout << elem_m (m, i, j) << " ";
+#else
+      std::cout << m(i,j) << " ";
+#endif
+    }
     std::cout << std::endl; 
   }
   //  std::cout << std::endl; 
@@ -183,6 +217,7 @@ template <typename M>
 void print_m_data (M const& m, char const* ch = 0) {
   if (ch)
     std::cout << ch << " data:\n"; 
+//#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
   size_t sz = 
     boost::numeric::bindings::traits::matrix_traits<M const>
     ::storage_size (m); 
@@ -192,6 +227,9 @@ void print_m_data (M const& m, char const* ch = 0) {
   for (std::size_t i = 0 ; i < sz ; ++i, ++st) 
       std::cout << *st << " ";
   std::cout << std::endl; 
+//#else
+//  std::cout << ".. poor man\'s traits :o(" << std::endl; 
+//#endif 
 }
 
 #endif

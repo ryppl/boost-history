@@ -28,6 +28,8 @@ typedef ublas::symmetric_adaptor<rm_t, ublas::upper> ursymm_t;
 typedef ublas::symmetric_adaptor<rm_t, ublas::lower> lrsymm_t; 
 
 int main() {
+
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
   
   cout << endl; 
 
@@ -45,95 +47,95 @@ int main() {
   rm_t lr (n, n); 
   lrsymm_t lrs (lr); 
 
-  init_symm (ucs, 'l'); 
+  init_symm (ucs, 'u'); 
   init_symm (lcs, 'l'); 
-  init_symm (urs, 'l'); 
+  init_symm (urs, 'u'); 
   init_symm (lrs, 'l'); 
 
-  print_m (ucs, "ucs");
+  print_m (ucs, "a == ucs");
   cout << endl; 
   print_m_data (ucs, "ucs");
   cout << endl; 
 
-  print_m (lcs, "lcs");
+  print_m (lcs, "a == lcs");
   cout << endl; 
   print_m_data (lcs, "lcs");
   cout << endl; 
 
-  print_m (urs, "urs");
+  print_m (urs, "a == urs");
   cout << endl; 
   print_m_data (urs, "urs");
   cout << endl; 
 
-  print_m (lrs, "lrs");
+  print_m (lrs, "a == lrs");
   cout << endl; 
   print_m_data (lrs, "lrs");
   cout << endl; 
 
-#ifndef F_RUNTIME_FAILURE
-  cm_t cb (n, n); 
-  rm_t rb (n, n); 
-  cm_t cc (n, n); 
-  rm_t rc (n, n); 
-#else
-  cm_t cb (n, n+1); 
-  rm_t rb (n, n+1); 
-  cm_t cc (n, n+1); 
-  rm_t rc (n, n+1); 
-#endif 
+  cm_t cbl (n, n+1); 
+  rm_t rbl (n, n+1); 
+  cm_t ccl (n, n+1); 
+  rm_t rcl (n, n+1); 
 
-  init_m (cb, rws1());
-  init_m (rb, rws1());
+  init_m (cbl, rws1());
+  init_m (rbl, rws1());
 
-  print_m (cb, "cb");
+  print_m (cbl, "b == cb");
   cout << endl; 
-  print_m (rb, "rb");
+  print_m (rbl, "b == rb");
   cout << endl; 
 
-  atlas::symm (ucs, cb, cc); 
-  print_m (cc, "c = a b");
+  atlas::symm (ucs, cbl, ccl); 
+  print_m (ccl, "c = a b");
   cout << endl; 
 
-  atlas::symm (lcs, cb, cc);  
-  print_m (cc, "c = a b");
+  atlas::symm (lcs, cbl, ccl);  
+  print_m (ccl, "c = a b");
   cout << endl; 
 
-  atlas::symm (urs, rb, rc); 
-  print_m (rc, "c = a b");
+  atlas::symm (urs, rbl, rcl); 
+  print_m (rcl, "c = a b");
   cout << endl; 
 
-  atlas::symm (lrs, rb, rc); 
-  print_m (rc, "c = a b");
+  atlas::symm (lrs, rbl, rcl); 
+  print_m (rcl, "c = a b");
+  cout << endl; 
+  
+  cm_t cbr (n+1, n); 
+  rm_t rbr (n+1, n); 
+  cm_t ccr (n+1, n); 
+  rm_t rcr (n+1, n); 
+
+  init_m (cbr, cls1());
+  init_m (rbr, cls1());
+  
+  print_m (cbr, "b == cb");
+  cout << endl; 
+  print_m (rbr, "b == rb");
   cout << endl; 
 
-  atlas::symm (cb, ucs, cc); 
-  print_m (cc, "c = b a");
+  atlas::symm (cbr, ucs, ccr); 
+  print_m (ccr, "c = b a");
   cout << endl; 
 
-  atlas::symm (cb, lcs, cc);  
-  print_m (cc, "c = b a");
+  atlas::symm (cbr, lcs, ccr);  
+  print_m (ccr, "c = b a");
   cout << endl; 
 
-  atlas::symm (rb, urs, rc); 
-  print_m (rc, "c = b a");
+  atlas::symm (rbr, urs, rcr); 
+  print_m (rcr, "c = b a");
   cout << endl; 
 
-  atlas::symm (rb, lrs, rc); 
-  print_m (rc, "c = b a");
+  atlas::symm (rbr, lrs, rcr); 
+  print_m (rcr, "c = b a");
   cout << endl; 
-
-#ifdef F_COMPILATION_FAILURE
-
-  atlas::symm (ucs, ucs, cc); 
-  print_m (cc, "c = a b");
-  cout << endl; 
-
-  atlas::symm (urs, cb, cc); 
-  print_m (cc, "c = a b");
-  cout << endl; 
-
-#endif 
 
   cout << endl; 
 
+#else // BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
+  
+  cout << "requires proper traits classes :o(" << endl; 
+  
+#endif // BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+  
 }

@@ -2,6 +2,9 @@
 // solving A * X = B
 // using driver function gesv()
 
+//#define BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+//#define BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
 #include <cstddef>
 #include <iostream>
 #include <complex>
@@ -28,10 +31,6 @@ typedef ublas::matrix<double, ublas::row_major> m_t;
 typedef ublas::matrix<cmpx, ublas::row_major> cm_t;
 #endif
 
-// see leading comments for `gesv()' in clapack.hpp
-typedef ublas::matrix<double, ublas::column_major> rhs_t;
-typedef ublas::matrix<cmpx, ublas::column_major> crhs_t;
-
 int main() {
 
   cout << endl; 
@@ -41,7 +40,14 @@ int main() {
   m_t a (n, n);   // system matrix 
 
   size_t nrhs = 2; 
-  rhs_t x (n, nrhs), b (n, nrhs);  // b -- right-hand side matrix
+  m_t x (n, nrhs); 
+  // b -- right-hand side matrix:
+  // .. see leading comments for `gesv()' in clapack.hpp
+#ifndef F_ROW_MAJOR
+  m_t b (n, nrhs);
+#else
+  m_t b (nrhs, n);
+#endif
 
   std::vector<int> ipiv (n);  // pivot vector
 
@@ -54,16 +60,16 @@ int main() {
 
   m_t aa (a);  // copy of a, because a is `lost' after gesv()
 
-  ublas::matrix_column<rhs_t> xc0 (x, 0), xc1 (x, 1); 
+  ublas::matrix_column<m_t> xc0 (x, 0), xc1 (x, 1); 
   atlas::set (1., xc0);  // x[.,0] = 1
   atlas::set (2., xc1);  // x[.,1] = 2
 #ifndef F_ROW_MAJOR
   atlas::gemm (a, x, b);  // b = a x, so we know the result ;o) 
 #else
-  // a is row major, b & x are column major and we can't use gemm()
-  ublas::matrix_column<rhs_t> bc0 (b, 0), bc1 (b, 1); 
-  atlas::gemv (a, xc0, bc0);  // b[.,0] = a x[.,0]
-  atlas::gemv (a, xc1, bc1);  // b[.,1] = a x[.,1]  =>  b = a x
+  // see leading comments for `gesv()' in clapack.hpp
+  ublas::matrix_row<m_t> br0 (b, 0), br1 (b, 1); 
+  atlas::gemv (a, xc0, br0);  // b[0,.] = a x[.,0]
+  atlas::gemv (a, xc1, br1);  // b[1,.] = a x[.,1]  =>  b^T = a x
 #endif 
 
   print_m (a, "A"); 
@@ -78,8 +84,8 @@ int main() {
 #ifndef F_ROW_MAJOR
   atlas::gemm (aa, b, x);     // check the solution 
 #else
-  atlas::gemv (aa, bc0, xc0);
-  atlas::gemv (aa, bc1, xc1);
+  atlas::gemv (aa, br0, xc0);
+  atlas::gemv (aa, br1, xc1);
 #endif 
   print_m (x, "B = A X"); 
   cout << endl; 
@@ -88,8 +94,13 @@ int main() {
 
   cout << endl; 
   cout << "complex system:" << endl << endl; 
-  cm_t ca (3, 3); 
-  crhs_t cb (3, 1), cx (3, 1);
+  cm_t ca (3, 3);
+  cm_t cx (3, 1);
+#ifndef F_ROW_MAJOR
+  cm_t cb (3, 1);
+#else
+  cm_t cb (1, 3); 
+#endif  
 
   ca (0, 0) = cmpx (3, 0);
   ca (0, 1) = cmpx (4, 2);
@@ -102,20 +113,29 @@ int main() {
   ca (2, 2) = cmpx (2, 0);
   print_m (ca, "CA"); 
   cout << endl; 
-
-  ublas::matrix_column<crhs_t> cxc0 (cx, 0),  cbc0 (cb, 0); 
-  atlas::set (cmpx (1, -1), cxc0);
-  atlas::gemv (ca, cxc0, cbc0); 
+  cm_t caa (ca); 
+  
+  ublas::matrix_column<cm_t> cx0 (cx, 0);
+  atlas::set (cmpx (1, -1), cx0);
+#ifndef F_ROW_MAJOR
+  ublas::matrix_column<cm_t> cb0 (cb, 0); 
+#else
+  ublas::matrix_row<cm_t> cb0 (cb, 0); 
+#endif
+  atlas::gemv (ca, cx0, cb0); 
   print_m (cb, "CB"); 
   cout << endl; 
   
   int ierr = atlas::gesv (ca, cb); // with `internal' pivot vector
-  if (ierr == 0) 
+  if (ierr == 0) {
     print_m (cb, "CX");
+    cout << endl; 
+    atlas::gemv (caa, cb0, cx0);
+    print_m (cx, "CB");
+  }
   else
     cout << "matrix is singular" << endl; 
 
   cout << endl; 
-
 }
 

@@ -6,6 +6,9 @@
 // #define BOOST_UBLAS_STRICT_HERMITIAN
 // .. doesn't work (yet?)  
 
+//#define BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+//#define BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
 #include <cstddef>
 #include <iostream>
 #include <complex>
@@ -43,10 +46,6 @@ typedef ublas::symmetric_adaptor<m_t, ublas::upper> symm_t;
 typedef ublas::hermitian_adaptor<cm_t, ublas::upper> herm_t; 
 #endif 
 
-// see leading comments for `gesv()' in clapack.hpp
-typedef ublas::matrix<double, ublas::column_major> rhs_t;
-typedef ublas::matrix<cmplx_t, ublas::column_major> crhs_t;
-
 int main() {
 
   cout << endl; 
@@ -55,12 +54,13 @@ int main() {
   cout << "real symmetric\n" << endl; 
 
   size_t n = 5; 
-  size_t nrhs = 2; 
   m_t a (n, n);    // matrix (storage)
   symm_t sa (a);   // symmetric adaptor 
-  rhs_t x (n, nrhs), b (n, nrhs);  // b -- RHS matrix 
-
-  init_symm (sa, 'l'); 
+#ifdef F_UPPER 
+  init_symm (sa, 'u');
+#else
+  init_symm (sa, 'l');
+#endif 
   // ifdef F_UPPER 
   //        [5 4 3 2 1]
   //        [0 5 4 3 2]
@@ -80,18 +80,30 @@ int main() {
   print_m_data (sa, "sa"); 
   cout << endl; 
 
-  ublas::matrix_column<rhs_t> xc0 (x, 0), xc1 (x, 1); 
+  size_t nrhs = 2; 
+  m_t x (n, nrhs); 
+  // b -- right-hand side matrix:
+  // .. see leading comments for `gesv()' in clapack.hpp
+#ifndef F_ROW_MAJOR
+  m_t b (n, nrhs);
+#else
+  m_t b (nrhs, n);
+#endif
+  ublas::matrix_column<m_t> xc0 (x, 0), xc1 (x, 1); 
   atlas::set (1., xc0);  // x[.,0] = 1
   atlas::set (2., xc1);  // x[.,1] = 2
 #ifndef F_ROW_MAJOR
-  atlas::symm (sa, x, b);  // b = a x, so we know the result ;o) 
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+  atlas::symm (sa, x, b);  // b = a x, so we know the result ;o)
 #else
-  // a is row major, b & x are column major and we can't use symm()
-  ublas::matrix_column<rhs_t> bc0 (b, 0), bc1 (b, 1); 
-  atlas::symv (sa, xc0, bc0);  // b[.,0] = a x[.,0]
-  atlas::symv (sa, xc1, bc1);  // b[.,1] = a x[.,1]  =>  b = a x
+  atlas::symm (CblasLeft, 1.0, sa, x, 0.0, b); 
 #endif 
-
+#else
+  // see leading comments for `gesv()' in clapack.hpp
+  ublas::matrix_row<m_t> br0 (b, 0), br1 (b, 1); 
+  atlas::symv (sa, xc0, br0);  // b[0,.] = a x[.,0]
+  atlas::symv (sa, xc1, br1);  // b[1,.] = a x[.,1]  =>  b^T = a x
+#endif 
   print_m (b, "b"); 
   cout << endl; 
 
@@ -106,7 +118,12 @@ int main() {
 
   cm_t ca (3, 3);   // matrix (storage)
   herm_t ha (ca);   // hermitian adaptor 
-  crhs_t cb (3, 1), cx (3, 1);
+  cm_t cx (3, 1);
+#ifndef F_ROW_MAJOR
+  cm_t cb (3, 1);
+#else
+  cm_t cb (1, 3); 
+#endif  
 
 #ifdef F_UPPER
   init_symm (ha, 'u'); 
@@ -120,12 +137,16 @@ int main() {
   print_m_data (ha, "ha"); 
   cout << endl; 
 
-  ublas::matrix_column<crhs_t> cxc0 (cx, 0), cbc0 (cb, 0);
-  atlas::set (cmplx_t (1, -1), cxc0);
+  ublas::matrix_column<cm_t> cx0 (cx, 0);
+  atlas::set (cmplx_t (1, -1), cx0);
   print_m (cx, "cx"); 
   cout << endl; 
-  
-  atlas::hemv (ha, cxc0, cbc0); 
+#ifndef F_ROW_MAJOR
+  ublas::matrix_column<cm_t> cb0 (cb, 0); 
+#else
+  ublas::matrix_row<cm_t> cb0 (cb, 0); 
+#endif
+  atlas::hemv (ha, cx0, cb0); 
   print_m (cb, "cb"); 
   cout << endl; 
   
@@ -163,11 +184,10 @@ int main() {
   print_m_data (ha, "ha"); 
   cout << endl; 
 
-  atlas::set (cmplx_t (1, 1), cxc0);
+  atlas::set (cmplx_t (1, 1), cx0);
   print_m (cx, "cx"); 
   cout << endl; 
-  
-  atlas::hemv (ha, cxc0, cbc0); 
+  atlas::hemv (ha, cx0, cb0); 
   print_m (cb, "cb"); 
   cout << endl; 
   
@@ -201,13 +221,23 @@ int main() {
   print_m (ha, "ha"); 
   cout << endl; 
 
-  crhs_t cb32 (3, 2); 
+#ifndef F_ROW_MAJOR
+  cm_t cb32 (3, 2); 
   cb32 (0, 0) = cmplx_t (60, -55);
   cb32 (1, 0) = cmplx_t (34, 58);
   cb32 (2, 0) = cmplx_t (13, -152);
   cb32 (0, 1) = cmplx_t (70, 10);
   cb32 (1, 1) = cmplx_t (-51, 110);
   cb32 (2, 1) = cmplx_t (75, 63);
+#else
+  cm_t cb32 (2, 3); 
+  cb32 (0, 0) = cmplx_t (60, -55);
+  cb32 (0, 1) = cmplx_t (34, 58);
+  cb32 (0, 2) = cmplx_t (13, -152);
+  cb32 (1, 0) = cmplx_t (70, 10);
+  cb32 (1, 1) = cmplx_t (-51, 110);
+  cb32 (1, 2) = cmplx_t (75, 63);
+#endif 
   print_m (cb32, "cb"); 
   cout << endl; 
   

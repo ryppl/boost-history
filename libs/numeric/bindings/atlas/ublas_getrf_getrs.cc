@@ -2,6 +2,9 @@
 // solving A * X = B
 // in two steps -- factor (getrf()) and solve (getrs())
 
+//#define BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+//#define BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
 #include <cstddef>
 #include <iostream>
 #include <boost/numeric/bindings/atlas/cblas.hpp>
@@ -23,9 +26,6 @@ typedef ublas::matrix<double, ublas::column_major> m_t;
 typedef ublas::matrix<double, ublas::row_major> m_t;
 #endif
 
-// see leading comments for `gesv()' in clapack.hpp: 
-typedef ublas::matrix<double, ublas::column_major> rhs_t;
-
 int main() {
 
   cout << endl; 
@@ -34,7 +34,14 @@ int main() {
   m_t a (n, n);   // system matrix 
 
   size_t nrhs = 2; 
-  rhs_t x (n, nrhs), b (n, nrhs);  // b -- right-hand side matrix
+  m_t x (n, nrhs); 
+  // b -- right-hand side matrix:
+  // .. see leading comments for `gesv()' in clapack.hpp
+#ifndef F_ROW_MAJOR
+  m_t b (n, nrhs);
+#else
+  m_t b (nrhs, n);
+#endif
 
   init_symm (a); 
   //     [n   n-1 n-2  ... 1]
@@ -42,17 +49,19 @@ int main() {
   // a = [n-2 n-1 n    ... 3]
   //     [        ...       ]
   //     [1   2   ...  n-1 n]
+  ublas::matrix_row<m_t> ar1 (a, 0), ar3 (a, 3);
+  ublas::swap (ar1, ar3);   // swap rows to force pivoting 
 
-  ublas::matrix_column<rhs_t> xc0 (x, 0), xc1 (x, 1); 
+  ublas::matrix_column<m_t> xc0 (x, 0), xc1 (x, 1); 
   atlas::set (1., xc0);  // x[.,0] = 1
   atlas::set (2., xc1);  // x[.,1] = 2
 #ifndef F_ROW_MAJOR
   atlas::gemm (a, x, b);  // b = a x, so we know the result ;o) 
 #else
-  // a is row major, b & x are column major and we can't use gemm()
-  ublas::matrix_column<rhs_t> bc0 (b, 0), bc1 (b, 1); 
-  atlas::gemv (a, xc0, bc0);  // b[.,0] = a x[.,0]
-  atlas::gemv (a, xc1, bc1);  // b[.,1] = a x[.,1]  =>  b = a x
+  // see leading comments for `gesv()' in clapack.hpp
+  ublas::matrix_row<m_t> br0 (b, 0), br1 (b, 1); 
+  atlas::gemv (a, xc0, br0);  // b[0,.] = a x[.,0]
+  atlas::gemv (a, xc1, br1);  // b[1,.] = a x[.,1]  =>  b^T = a x
 #endif 
 
   print_m (a, "A"); 
@@ -60,15 +69,6 @@ int main() {
   print_m (b, "B"); 
   cout << endl; 
 
-  ublas::matrix_row<m_t> ar1 (a, 1), ar3 (a, 3);
-  ublas::matrix_row<rhs_t> br1 (b, 1), br3 (b, 3);
-  swap (ar1, ar3);   // swap rows to force pivoting 
-  swap (br1, br3);
-  print_m (a, "A");  // print `new' system  
-  cout << endl; 
-  print_m (b, "B"); 
-  cout << endl; 
-  
   std::vector<int> ipiv (n);  // pivot vector
 
   atlas::getrf (a, ipiv);      // factor a

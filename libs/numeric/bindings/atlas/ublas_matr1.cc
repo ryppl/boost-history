@@ -1,6 +1,9 @@
 
 // BLAS level 1 (matrix rows and columns) 
 
+//#define BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+//#define BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
 #include <iostream>
 #include <boost/numeric/bindings/traits/ublas_vector.hpp>
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>

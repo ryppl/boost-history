@@ -5,6 +5,9 @@
 // #define BOOST_UBLAS_STRICT_HERMITIAN
 // .. doesn't work (yet?)  
 
+//#define BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+//#define BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
 #include <cstddef>
 #include <iostream>
 #include <complex>
@@ -22,15 +25,15 @@ using std::size_t;
 using std::cout;
 using std::endl; 
 
-typedef double real; 
+typedef double real_t; 
 
-typedef std::complex<real> cmplx_t; 
+typedef std::complex<real_t> cmplx_t; 
 
 #ifndef F_ROW_MAJOR
-typedef ublas::matrix<real, ublas::column_major> m_t;
+typedef ublas::matrix<real_t, ublas::column_major> m_t;
 typedef ublas::matrix<cmplx_t, ublas::column_major> cm_t;
 #else
-typedef ublas::matrix<real, ublas::row_major> m_t;
+typedef ublas::matrix<real_t, ublas::row_major> m_t;
 typedef ublas::matrix<cmplx_t, ublas::row_major> cm_t;
 #endif
 
@@ -48,11 +51,15 @@ int main() {
 
   cout << "real symmetric\n" << endl; 
 
-  size_t n = 5; 
+  size_t n = 3; 
   m_t a (n, n);    // matrix (storage)
   symm_t sa (a);   // symmetric adaptor 
 
+#ifdef F_UPPER
+  init_symm (sa, 'u'); 
+#else
   init_symm (sa, 'l'); 
+#endif
   // ifdef F_UPPER 
   //        [5 4 3 2 1]
   //        [0 5 4 3 2]
@@ -77,10 +84,18 @@ int main() {
     atlas::potri (sa); 
     // ri should be (almost) identity matrix: 
     m_t ri (n, n); 
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
     atlas::symm (a2, sa, ri); 
+#else
+    atlas::symm (CblasRight, 1.0, sa, a2, 0.0, ri); 
+#endif 
     print_m (ri, "I = A * A^(-1)"); 
     cout << endl; 
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
     atlas::symm (sa, a2, ri); 
+#else
+    atlas::symm (CblasLeft, 1.0, sa, a2, 0.0, ri); 
+#endif 
     print_m (ri, "I = A^(-1) * A"); 
     cout << endl; 
   }
@@ -117,7 +132,11 @@ int main() {
   if (ierr == 0) {
     atlas::cholesky_invert (ha);        // potri()
     cm_t ic (3, 3); 
-    atlas::hemm (1, ca2, ha, 0, ic); 
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+    atlas::hemm (ca2, ha, ic); 
+#else
+    atlas::hemm (CblasRight, 1.0, ha, ca2, 0.0, ic); 
+#endif 
     print_m (ic, "I = A * A^(-1)"); 
     cout << endl; 
   }
@@ -153,10 +172,18 @@ int main() {
   if (ierr == 0) {
     atlas::potri (ha); 
     cm_t ic (3, 3); 
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
     atlas::hemm (ca2, ha, ic); 
+#else
+    atlas::hemm (CblasRight, 1.0, ha, ca2, 0.0, ic); 
+#endif 
     print_m (ic, "I = A * A^(-1)"); 
     cout << endl; 
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
     atlas::hemm (ha, ca2, ic); 
+#else
+    atlas::hemm (CblasLeft, 1.0, ha, ca2, 0.0, ic); 
+#endif 
     print_m (ic, "I = A^(-1) * A"); 
     cout << endl; 
   }

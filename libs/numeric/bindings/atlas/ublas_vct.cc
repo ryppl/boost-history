@@ -1,6 +1,9 @@
 
 // BLAS level 1 (vectors) 
 
+//#define BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+//#define BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
 #include <iostream>
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/bindings/traits/ublas_vector.hpp>
@@ -67,11 +70,12 @@ int main() {
   ublas::vector_range<vct_t> vry (vy, ublas::range (4, 8)); 
   print_v (vry, "vy[4..8]"); 
 
-  // v[2..6] <- 10 v[2..6]
+  // v[2..6] <- 0.1 v[2..6]
   atlas::scal (0.1, vr); 
-  print_v (v, "v[2..6] <- 10 v[2..6]"); 
+  print_v (v, "v[2..6] <- 0.1 v[2..6]"); 
 
   // vr^T vr 
+  // ublas::vector_range<vct_t const> cvr (v, ublas::range (2, 6)); 
   cout << "v[2..6] v[2..6] = " << atlas::dot (vr, vr) << endl;
 
   // vy[4..8] <- v[2..6] + vy[4..8]
@@ -116,7 +120,7 @@ int main() {
   print_v (v, "v"); 
   // vy <- 1.0
   atlas::set (1., vy);
-  print_v (vy, "vy <- 0.1"); 
+  print_v (vy, "vy <- 1.0"); 
 
   // vy[2:2:4] <- 0.01 v[2..6] + vy[2:2:4] 
   atlas::axpy (0.01, vr, vsy); 
@@ -124,7 +128,7 @@ int main() {
 
   // vy <- 1.0
   atlas::set (1., vy); 
-  print_v (vy, "vy <- 0.1"); 
+  print_v (vy, "vy <- 1.0"); 
 
   // vy[4..8] <- 0.01 v[1:2:4] + vy[4..8] 
   atlas::axpy (0.01, vs, vry); 
@@ -170,17 +174,17 @@ int main() {
   init_v (vy, kpp (1)); 
   print_v (vy, "vy"); 
 
-  // v[1:2:4][1:4] 
+  // v[0:2:5][1:4] 
   ublas::vector_slice<vct_t> vsy1 (vy, ublas::slice (0, 2, 5));
   ublas::vector_range<
     ublas::vector_slice<vct_t> 
   > vrs (vsy1, ublas::range (1, 4)); 
-  print_v (vsy1, "v[1:2:4]");
-  print_v (vrs, "v[1:2:4][1:4]");
+  print_v (vsy1, "v[0:2:5]");
+  print_v (vrs, "v[0:2:5][1:4]");
 
-  // v[1:2:4][1:4] <- 0.01 v[1..9][1:2:3] + v[1:2:4][1:4]
+  // v[0:2:5][1:4] <- 0.01 v[1..9][1:2:3] + v[0:2:5][1:4]
   atlas::axpy (0.01, vsr, vrs); 
-  print_v (vy, "0.01 v[1..9][1:2:3] + v[1:2:4][1:4]"); 
+  print_v (vy, "0.01 v[1..9][1:2:3] + v[0:2:5][1:4]"); 
 
   cout << endl; 
 

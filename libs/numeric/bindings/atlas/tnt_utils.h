@@ -22,7 +22,13 @@ template <typename T>
 struct matr_access_traits<TNT::Array2D<T> > {
   typedef T& ref_t; 
   typedef TNT::Array2D<T> m_t;
-  static ref_t elem (m_t& m, size_t i, size_t j) { return m[i][j]; }
+  static ref_t elem (m_t& m, size_t i, size_t j) { 
+#ifndef BOOST_MSVC
+    return m[i][j];
+#else
+    return static_cast<T**> (m)[i][j];
+#endif 
+  }
 };
 template <typename T>
 struct matr_access_traits<TNT::Array2D<T> const> {

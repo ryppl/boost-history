@@ -1,6 +1,9 @@
 
 // BLAS level 2
 
+//#define BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
+//#define BOOST_NO_FUNCTION_TEMPLATE_ORDERING
+
 #include <iostream>
 #include <boost/numeric/bindings/atlas/cblas1.hpp>
 #include <boost/numeric/bindings/atlas/cblas2.hpp>

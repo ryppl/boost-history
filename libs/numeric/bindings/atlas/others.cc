@@ -81,7 +81,8 @@ int main() {
   atlas::set (0.1, ba);
   print_v (ba, "ba");
   cout << "C array" << endl; 
-  double ca[10]; 
+  typedef double double_array[10]; 
+  double_array ca; 
   atlas::set (1., ca); 
   print_v (ca, "ca");
   cout << endl; 
