@@ -121,7 +121,7 @@ namespace boost { namespace langbinding {
             ; iter != m_pimpl->entries.end()
             ; ++iter)
       {
-         const type_info_& type = iter->second.type;
+         const type_info_& type = iter->first;
 
          for (lvalue_chain* c = iter->second.lvalue_converters; 
                c != 0; c = c->next)
