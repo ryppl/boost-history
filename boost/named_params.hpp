@@ -67,22 +67,7 @@ namespace detail
         : default_(x)
       {}
 
-      DefaultFn default_;
-  };
-
-  template<class R>
-  struct nullary_fn_ptr
-  {
-      typedef R result_type;
-
-      nullary_fn_ptr(R(*fn_)()) : fn(fn_) {}
-
-      result_type operator()() const
-      {
-          return fn();
-      }
-
-      R(*fn)();
+      const DefaultFn& default_;
   };
 
   struct nil
@@ -414,18 +399,11 @@ struct keyword
    }
 #endif 
  
-   template<class R>
-   detail::lazy_named_default<Tag, detail::nullary_fn_ptr<R> >
-   operator||(R(*fn)()) const
-   {
-       return detail::lazy_named_default<Tag, detail::nullary_fn_ptr<R> >(fn);
-   }
-
    template<class Default>
-   detail::lazy_named_default<Tag, const Default&>
+   detail::lazy_named_default<Tag, Default>
    operator||(const Default& default_) const
    {
-       return detail::lazy_named_default<Tag, const Default&>(default_);
+       return detail::lazy_named_default<Tag, Default>(default_);
    }
 };
 
