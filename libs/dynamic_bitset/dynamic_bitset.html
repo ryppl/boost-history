@@ -95,6 +95,8 @@ Note:
 
 <dt><a href="#non-member-functions">Non-member functions</a></dt>
 
+<dt><a href="#changes-from-previous-ver"><b>Changes from previous version</b></a></dt>
+
 <dt><a href="#see-also">See also</a></dt>
 
 <dt><a href="#acknowledgements">Acknowledgements</a></dt>
@@ -1606,6 +1608,52 @@ appended until any of the following occurs:<br>
 (<tt>std::bad_alloc</tt> if <tt>Allocator=std::allocator</tt>).
 A <tt>std::ios_base::failure</tt> if there is a problem reading
 from the stream.
+
+
+<hr>
+<h3><a name="changes-from-previous-ver">Changes from previous version</a></h3>
+<ul>
+<li>
+The stream extractor has completely different semantics: as
+expected for a dynamic structure it expands the bitset as needed
+during extraction. The new behaviour mimics that of the basic_string
+extractor but there are some differences the user should be aware
+of; so, please, look at the documentation. (One of the differences
+concerns the case where stream.width() > bitset.max_size() > 0; in
+that circumstance the extractor of dynamic_bitset never attempts to
+extract more than max_size() characters, whereas the extractor of
+basic_string goes on and, on conforming implementations, eventually
+throws a length_error. (That's what the standard mandates -see
+especially library issue 83- but not all implementations are in sync)
+<br><br>
+The stream extractor is now also 'exception-aware' in the sense that
+it works correctly when setting exception masks on the stream.<br><br>
+</li>
+<li>
+Several member functions (<tt>find_first</tt>, <tt>find_next</tt>, 
+<tt>get_allocator()</tt>, <tt>max_size()</tt>, <tt>reserve()</tt>, 
+<tt>capacity()</tt>) have been added.
+</li>
+<li>
+The constructor from basic_string has a new parameter that was totally
+forgotten before.
+</li>
+
+</ul>
+<i>Technicalities and minor changes</i>
+<ul>
+<li>
+The class <tt>reference</tt> has been reimplemented so that
+dynamic_bitset's references behave more like references to standard
+container elements. In particular it is now guaranteed that they
+cannot be invalidated from a standard library swap() function
+applied to their corresponding <tt>dynamic_bitset</tt>s.
+</li>
+</ul>
+<i>General improvements</i>
+<br><br>
+Several optimizations to member and non-member functions and to the
+nested class <tt>reference</tt>. 
 
 <hr>
 <h3><a name="see-also">See also</a></h3>
