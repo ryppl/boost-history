@@ -23,8 +23,8 @@ int main()
     return 0;
 }
 
-namespace mpl = boost::mpl;
-//using namespace boost;
-//using namespace mpl;
+//namespace mpl = boost::mpl;
+using namespace boost;
+using namespace mpl;
 
 #endif // BOOST_MPL_AUX_TEST_HPP_INCLUDED

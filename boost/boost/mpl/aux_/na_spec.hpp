@@ -138,12 +138,16 @@ struct name< BOOST_MPL_PP_ENUM(i, int) > \
 
 #define BOOST_MPL_AUX_NA_PARAM(param) param = na
 
-#define BOOST_MPL_AUX_NA_SPEC(i, name) \
+#define BOOST_MPL_AUX_NA_SPEC_NO_ETI(i, name) \
 BOOST_MPL_AUX_NA_SPEC_MAIN(i, name) \
-BOOST_MPL_AUX_NA_SPEC_ETI(i, name) \
 BOOST_MPL_AUX_NA_SPEC_LAMBDA(i, name) \
 BOOST_MPL_AUX_NA_SPEC_ARITY(i, name) \
 BOOST_MPL_AUX_NA_SPEC_TEMPLATE_ARITY(i, i, name) \
+/**/
+
+#define BOOST_MPL_AUX_NA_SPEC(i, name) \
+BOOST_MPL_AUX_NA_SPEC_NO_ETI(i, name) \
+BOOST_MPL_AUX_NA_SPEC_ETI(i, name) \
 /**/
 
 #define BOOST_MPL_AUX_NA_SPEC2(i, j, name) \
