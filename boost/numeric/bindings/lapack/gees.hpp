@@ -315,7 +315,7 @@ namespace boost { namespace numeric { namespace bindings {
     template <typename MatrA, typename SchVec, typename EigVal, typename Workspace>
     inline
     int gees (MatrA& a, EigVal& e, SchVec& vs, Workspace workspace ) {
-       return detail::Gees< n_workspace_args<typename MatrA::value_type>::n_>()
+       return detail::Gees< n_workspace_args<typename MatrA::value_type>::value>()
                ( 'V', a, e, vs, workspace );
     } // gees()
 
@@ -334,7 +334,7 @@ namespace boost { namespace numeric { namespace bindings {
     template <typename MatrA, typename EigVal, typename Workspace>
     inline
     int gees (MatrA& a, EigVal& e, Workspace workspace) {
-      return detail::Gees< n_workspace_args<typename MatrA::value_type>::n_>()
+      return detail::Gees< n_workspace_args<typename MatrA::value_type>::value>()
               ('N', a, e, a, workspace );
     }
 

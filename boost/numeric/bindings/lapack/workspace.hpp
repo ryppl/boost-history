@@ -87,22 +87,22 @@ namespace boost { namespace numeric { namespace bindings {
 
      template <>
      struct n_workspace_args< float > {
-        static const int n_ = 1 ;
+        static const int value = 1 ;
      };
 
      template <>
      struct n_workspace_args< double > {
-        static const int n_ = 1 ;
+        static const int value = 1 ;
      };
 
      template <>
      struct n_workspace_args< traits::complex_f > {
-        static const int n_ = 2 ;
+        static const int value = 2 ;
      };
 
      template <>
      struct n_workspace_args< traits::complex_d > {
-        static const int n_ = 2 ;
+        static const int value = 2 ;
      };
 
   }
