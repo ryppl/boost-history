@@ -20,9 +20,11 @@
             typedef typename InputStream::char_type                  char_type;
             typedef typename InputStream::traits_type                traits_type;
             typedef std::basic_string< char_type, traits_type >      string_type;
+            typedef std::ios_base                                    iosbase_type;
 #        else
             typedef char                                             char_type;
             typedef std::string                                      string_type;
+            typedef std::ios                                         iosbase_type;
 #        endif
          private:
             InputStream              & is;
@@ -59,6 +61,19 @@
 #              endif
             }
          public:
+            inline iosbase_type::iostate         rdstate() const
+            {
+               return( is.rdstate());
+            }
+            inline void                          clear( iosbase_type::iostate s = 0 )
+            {
+               is.clear( s );
+            }
+            inline void                          setstate( iosbase_type::iostate s )
+            {
+               is.setstate( s );
+            }
+         public:
             inline bool                          getch( char_type & ch )
             {
                is.get( ch );
@@ -75,6 +90,10 @@
                is >> ch;
                is.putback( ch );
                return( isgood());
+            }
+            inline void                          putback( char_type ch )
+            {
+               is.putback( ch );
             }
          public:
             inline char_type                     firstch( char_type ch ) const
@@ -96,16 +115,16 @@
                is.putback( ch );
             }
          public: // string and character matching
-            inline bool                          match( const string_type & s )
+            inline bool                          match( const string_type & s, bool restore = false )
             {
-               return( match( s.begin(), s.end()));
+               return( match( s.begin(), s.end(), restore ));
             }
-            inline bool                          match( const char_type * s )
+            inline bool                          match( const char_type * s, bool restore = false )
             {
 #              if !defined(BOOST_IOFM_NO_BASIC_STREAM)
-                  return( match( s, s + traits_type::length( s )));
+                  return( match( s, s + traits_type::length( s ), restore ));
 #              else
-                  return( match( s, s + ::strlen( s )));
+                  return( match( s, s + ::strlen( s ), restore ));
 #              endif
             }
             bool                                 match( char_type c )
@@ -115,16 +134,12 @@
                   return( true );
 
                is.putback( ch );
-#              if !defined(BOOST_IOFM_NO_BASIC_STREAM)
-                  is.setstate( std::ios_base::failbit );
-#              else
-                  is.setstate( std::ios::failbit );
-#              endif
+               setstate( iosbase_type::failbit );
                return( false );
             }
          private:
             template< typename ForwardIterator >
-            bool                                 match( ForwardIterator first, ForwardIterator last )
+            bool                                 match( ForwardIterator first, ForwardIterator last, bool restore = false )
             {
                skipws();
 
@@ -137,10 +152,20 @@
                   --last;
 
                // compare
+               ForwardIterator         rlast = first;
+               --rlast; // [review]: check logic
+               
                while(( first != last ) && match( *first ))
                   ++first;
 
-               return( first == last ); // did we get a match?
+               if( restore && ( rdstate() & iosbase_type::failbit ))
+               {
+                  while( --last != rlast ) // [review]: check logic
+                     is.putback( *last );
+                     
+                  return( false );
+               }                  
+               return( true );
             }
          public: // constructors
             inline           input_helper( InputStream & in ): is( in )
