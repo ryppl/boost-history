@@ -24,7 +24,7 @@ void check_iterator()
     const char*                         this_file = "iterator.cpp";
     std::ifstream                       in( this_file );
     typedef std::istream_iterator<char> iterator_t;
-    typedef std::vector<std::string>    vec_t;
+    typedef std::vector<char>           vec_t;
 
     iterator_t iter     = iterator_t( in );
     vec_t      vec;
