@@ -37,19 +37,20 @@ namespace boost {
                 Returns a pair <begin,end> marking the subsequence in the sequence. 
                 If the find fails, functor returns <End,End>
             */
-            template<typename SearchIteratorT>
+            template<typename SearchIteratorT,typename PredicateT>
             struct first_finderF
             {
                 typedef SearchIteratorT search_iterator_type;
 
                 // Construction
                 template< typename SearchT >
-                first_finderF( const SearchT& Search ) : 
-                    m_Search( begin(Search), end(Search) ) {}
+                first_finderF( const SearchT& Search, PredicateT Comp ) : 
+                    m_Search(begin(Search), end(Search)), m_Comp(Comp) {}
                 first_finderF( 
-                    search_iterator_type SearchBegin,
-                    search_iterator_type SearchEnd ) :
-                    m_Search( SearchBegin, SearchEnd ) {}
+                        search_iterator_type SearchBegin,
+                        search_iterator_type SearchEnd,
+                        PredicateT Comp ) :
+                    m_Search(SearchBegin, SearchEnd), m_Comp(Comp) {}
 
                 // Operation
                 template< typename ForwardIteratorT >
@@ -75,7 +76,7 @@ namespace boost {
                             InnerIt!=End && SubstrIt!=m_Search.end();
                             InnerIt++,SubstrIt++)
                         {
-                            if( !( (*InnerIt)==(*SubstrIt) ) ) 
+                            if( !( m_Comp(*InnerIt,*SubstrIt) ) ) 
                                 break;
                         }
 
@@ -92,6 +93,7 @@ namespace boost {
 
             private:
                 iterator_range<search_iterator_type> m_Search;
+                PredicateT m_Comp;
             };
 
 //  find last functor -----------------------------------------------//
@@ -101,20 +103,23 @@ namespace boost {
                 Returns a pair <begin,end> marking the subsequence in the sequence. 
                 If the find fails, returns <End,End>
             */
-            template<typename SearchIteratorT>
+            template<typename SearchIteratorT, typename PredicateT>
             struct last_finderF
             {
                 typedef SearchIteratorT search_iterator_type;
-                typedef first_finderF<search_iterator_type> first_finder_type;
+                typedef first_finderF<
+                    search_iterator_type,
+                    PredicateT> first_finder_type;
 
                 // Construction
                 template< typename SearchT >
-                last_finderF( const SearchT& Search ) : 
-                    m_Search( begin(Search), end(Search) ) {}
+                last_finderF( const SearchT& Search, PredicateT Comp ) : 
+                    m_Search(begin(Search), end(Search)), m_Comp(Comp) {}
                 last_finderF( 
                         search_iterator_type SearchBegin,
-                        search_iterator_type SearchEnd ) :
-                    m_Search( SearchBegin, SearchEnd ) {}
+                        search_iterator_type SearchEnd,
+                        PredicateT Comp ) :
+                    m_Search(SearchBegin, SearchEnd), m_Comp(Comp) {}
 
                 // Operation
                 template< typename ForwardIteratorT >
@@ -147,7 +152,8 @@ namespace boost {
                     typedef ForwardIteratorT input_iterator_type;
                     typedef iterator_range<ForwardIteratorT> result_type;
 
-                    first_finder_type first_finder( m_Search.begin(), m_Search.end() );
+                    first_finder_type first_finder( 
+                        m_Search.begin(), m_Search.end(), m_Comp );
 
                     result_type M=first_finder( Begin, End );
                     result_type Last=M;
@@ -183,7 +189,7 @@ namespace boost {
                             InnerIt!=End && SubstrIt!=m_Search.end();
                             InnerIt++,SubstrIt++)
                         {
-                            if( !( (*InnerIt)==(*SubstrIt) ) ) 
+                            if( !( m_Comp(*InnerIt,*SubstrIt) ) ) 
                                 break;
                         }
 
@@ -197,6 +203,7 @@ namespace boost {
 
             private:
                 iterator_range<search_iterator_type> m_Search;
+                PredicateT m_Comp;
             };
     
 //  find n-th functor -----------------------------------------------//
@@ -206,21 +213,31 @@ namespace boost {
                 Returns a pair <begin,end> marking the subsequence in the sequence. 
                 If the find fails, returns <End,End>
             */
-            template< typename SearchIteratorT >
+            template<typename SearchIteratorT, typename PredicateT>
             struct nth_finderF
             {
                 typedef SearchIteratorT search_iterator_type;
-                typedef first_finderF<search_iterator_type> first_finder_type;
+                typedef first_finderF<
+                    search_iterator_type,
+                    PredicateT> first_finder_type;
 
                 // Construction
                 template< typename SearchT >
-                nth_finderF( const SearchT& Search, unsigned int Nth ) : 
-                    m_Search(begin(Search), end(Search)), m_Nth(Nth) {}
+                nth_finderF( 
+                        const SearchT& Search, 
+                        unsigned int Nth,
+                        PredicateT Comp) : 
+                    m_Search(begin(Search), end(Search)), 
+                    m_Nth(Nth),
+                    m_Comp(Comp) {}
                 nth_finderF( 
                         search_iterator_type SearchBegin,
                         search_iterator_type SearchEnd,
-                        unsigned int Nth) :
-                m_Search( SearchBegin, SearchEnd ), m_Nth(Nth) {}
+                        unsigned int Nth,
+                        PredicateT Comp) :
+                    m_Search(SearchBegin, SearchEnd), 
+                    m_Nth(Nth),
+                    m_Comp(Comp) {}
 
                 // Operation
                 template< typename ForwardIteratorT >
@@ -237,7 +254,8 @@ namespace boost {
                     typedef iterator_range<ForwardIteratorT> result_type;
 
                     // Instantiate find funtor 
-                    first_finder_type first_finder( m_Search.begin(), m_Search.end() );
+                    first_finder_type first_finder( 
+                        m_Search.begin(), m_Search.end(), m_Comp );
 
                     result_type M( Begin, Begin );
 
@@ -262,6 +280,7 @@ namespace boost {
             private:
                 iterator_range<search_iterator_type> m_Search;
                 unsigned int m_Nth;
+                PredicateT m_Comp;
             };
 
 //  find head functor -----------------------------------------------//

@@ -14,7 +14,7 @@
 #include <boost/string_algo/config.hpp>
 #include <boost/string_algo/iterator_range.hpp>
 #include <boost/string_algo/detail/find.hpp>
-#include <boost/operators.hpp>
+#include <boost/iterator.hpp>
 
 namespace boost {
     namespace string_algo { 
@@ -135,8 +135,8 @@ namespace boost {
                 typename FindFT,
                 typename FindIterPolicyT=match_find_policy >
             class find_iterator : 
-                public  boost::forward_iterator_helper<
-                    find_iterator<InputIteratorT,FindFT,FindIterPolicyT>,
+                public  boost::iterator<
+                    std::forward_iterator_tag,
                     iterator_range<InputIteratorT> >
             {
                 typedef BOOST_STRING_TYPENAME
@@ -158,7 +158,15 @@ namespace boost {
                 {
                     return m_Policy==Other.m_Policy;
                 }
+                bool operator!=( const find_iterator& Other ) const
+                {
+                    return !(m_Policy==Other.m_Policy);
+                }
                 const match_type& operator*() const
+                {
+                    return m_Policy.match();
+                }
+                const match_type& operator->() const
                 {
                     return m_Policy.match();
                 }
@@ -166,6 +174,16 @@ namespace boost {
                 {
                     m_Policy.advance();
                     return *this;
+                }
+                find_iterator& operator++(int)
+                {
+                    find_iterator<
+                        InputIteratorT,
+                        FindFT,
+                        FindIterPolicyT> tmp=*this;
+
+                    m_Policy.advance();
+                    return tmp;
                 }
 
             private:

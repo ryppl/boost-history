@@ -21,31 +21,39 @@ namespace boost {
 
 //  ends_with predicate implementation ----------------------------------//
 
-            template< typename ForwardIterator1T, typename ForwardIterator2T >
+            template< 
+                typename ForwardIterator1T, 
+                typename ForwardIterator2T,
+                typename PredicateT>
             inline bool ends_with_iter_select( 
                 ForwardIterator1T Begin, 
                 ForwardIterator1T End, 
                 ForwardIterator2T SubBegin,
                 ForwardIterator2T SubEnd,
+                PredicateT Comp,
                 std::bidirectional_iterator_tag )
             {
                 ForwardIterator1T it=End;
                 ForwardIterator2T pit=SubEnd;
                 for(;it!=Begin && pit!=SubBegin;)
                 {
-                    if( !( (*(--it))==(*(--pit)) ) )
+                    if( !( Comp(*(--it),*(--pit)) ) )
                         return false;
                 }
 
                 return pit==SubBegin;
             }
 
-            template< typename ForwardIterator1T, typename ForwardIterator2T >
+            template< 
+                typename ForwardIterator1T, 
+                typename ForwardIterator2T,
+                typename PredicateT>
             inline bool ends_with_iter_select( 
                 ForwardIterator1T Begin, 
                 ForwardIterator1T End, 
                 ForwardIterator2T SubBegin,
                 ForwardIterator2T SubEnd,
+                PredicateT Comp,
                 std::forward_iterator_tag )
             {
                 if ( SubBegin==SubEnd )
@@ -55,7 +63,9 @@ namespace boost {
                 }
 
                 iterator_range<ForwardIterator1T> Result
-                    =find_last( Begin, End, SubBegin, SubEnd );
+                    =last_finder( 
+                        make_range(SubBegin, SubEnd),
+                        Comp )(Begin, End);
 
                 return !Result.empty() && Result.end()==End;
             }

@@ -11,10 +11,6 @@
 #define BOOST_STRING_TRIM_DETAIL_HPP
 
 #include <boost/string_algo/config.hpp>
-#include <algorithm>
-#include <functional>
-#include <locale>
-#include <set>
 #include <boost/detail/iterator.hpp>
 
 namespace boost {

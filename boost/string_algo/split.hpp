@@ -13,43 +13,40 @@
 #include <boost/string_algo/config.hpp>
 #include <boost/string_algo/container_traits.hpp>
 #include <boost/string_algo/iterator_range.hpp>
-#include <boost/string_algo/find_iterator.hpp>
-#include <boost/string_algo/find_impl.hpp>
-
+#include <boost/string_algo/split2.hpp>
+#include <boost/string_algo/find2.hpp>
+#include <boost/string_algo/compare.hpp>
 
 namespace boost {
 
 //  find_all  ------------------------------------------------------------//
 
     // find all the matches of a subsequnce in a sequence
-    template< typename InputT, typename SearchT >
-    inline iterator_range< 
-    string_algo::detail::find_iterator<
-        BOOST_STRING_TYPENAME string_algo::container_traits<InputT>::result_iterator,
-        string_algo::detail::first_finderF<
-            BOOST_STRING_TYPENAME 
-                string_algo::container_traits<SearchT>::const_iterator> > >
-    find_all( 
-        InputT& Input, 
-        const SearchT& Search )
-    {
-        return string_algo::iter_find( 
-            Input,
-            string_algo::first_finder(Search) );        
-    }
-
-    // copy version of find_all
     template< typename ResultT, typename InputT, typename SearchT >
-    inline ResultT& find_all_copy(
+    inline ResultT& find_all(
         ResultT& Result,
         const InputT& Input,
         const SearchT& Search)
     {
-        return string_algo::iter_find_copy(
+        return string_algo::iter_find(
             Result,
             Input,
             string_algo::first_finder(Search) );        
     }
+
+    // find all ( case insensitive version )
+    template< typename ResultT, typename InputT, typename SearchT >
+    inline ResultT& ifind_all(
+        ResultT& Result,
+        const InputT& Input,
+        const SearchT& Search)
+    {
+        return string_algo::iter_find(
+            Result,
+            Input,
+            string_algo::first_finder(Search, string_algo::is_iequal() ) );        
+    }
+
 
 //  tokenize  -------------------------------------------------------------//
 
@@ -60,31 +57,14 @@ namespace boost {
         If bCompress argument is set to true, adjancent separators
         are merged together.
     */
-    template< typename InputT, typename PredicateT >
-    inline iterator_range< 
-    string_algo::detail::find_iterator<
-        BOOST_STRING_TYPENAME string_algo::container_traits<InputT>::result_iterator,
-        string_algo::detail::token_finderF<PredicateT>,
-        string_algo::detail::split_find_policy> >
-    split( 
-        InputT& Input, 
-        PredicateT Pred,
-        bool bCompress=true )
-    {
-        return string_algo::iter_split( 
-            Input,
-            string_algo::token_finder( Pred, bCompress ) );         
-    }
-
-    // copy version of split
     template< typename ResultT, typename InputT, typename PredicateT >
-    inline ResultT& split_copy(
+    inline ResultT& split(
         ResultT& Result,
         const InputT& Input,
         PredicateT Pred,
         bool bCompress=true )
     {
-        return string_algo::iter_split_copy(
+        return string_algo::iter_split(
             Result,
             Input,
             string_algo::token_finder( Pred, bCompress ) );         

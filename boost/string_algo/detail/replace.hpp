@@ -15,7 +15,7 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/string_algo/container_traits.hpp>
 #include <boost/string_algo/sequence_traits.hpp>
-#include <boost/string_algo/detail/container.hpp>
+#include <boost/string_algo/detail/sequence.hpp>
 #include <boost/string_algo/iterator_range.hpp>
 
 namespace boost {

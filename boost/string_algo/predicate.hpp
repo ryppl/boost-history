@@ -11,129 +11,89 @@
 #define BOOST_STRING_PREDICATE_HPP
 
 #include <boost/string_algo/config.hpp>
-#include <boost/string_algo/container_traits.hpp>
-#include <boost/string_algo/find.hpp>
-#include <boost/string_algo/detail/predicate.hpp>
+#include <boost/string_algo/compare.hpp>
+#include <boost/string_algo/predicate2.hpp>
 
 namespace boost {
 
 //  starts_with predicate  -----------------------------------------------//
 
-    // start_with predicate
+    // starts_with
     template< typename SeqT1, typename SeqT2 >
     inline bool starts_with( 
         const SeqT1& Input, 
-        const SeqT2& Substr )
+        const SeqT2& Test )
     {
-        typedef BOOST_STRING_TYPENAME 
-            string_algo::container_traits<SeqT1>::const_iterator Iterator1T;
-        typedef BOOST_STRING_TYPENAME 
-            string_algo::container_traits<SeqT2>::const_iterator Iterator2T;
-            
-        Iterator1T InputEnd=string_algo::end(Input);
-        Iterator2T SubstrEnd=string_algo::end(Substr);
+        return string_algo::starts_with( Input, Test, string_algo::is_equal() );
+    }
 
-        Iterator1T it=string_algo::begin(Input);
-        Iterator2T pit=string_algo::begin(Substr);
-        for(;
-            it!=InputEnd && pit!=SubstrEnd;
-            it++,pit++)
-        {
-            if( !( (*it)==(*pit) ) )
-                return false;
-        }
-
-        return pit==SubstrEnd;
+    // starts_with ( case insensitive )
+    template< typename SeqT1, typename SeqT2 >
+    inline bool istarts_with( 
+        const SeqT1& Input, 
+        const SeqT2& Test )
+    {
+        return string_algo::starts_with( Input, Test, string_algo::is_iequal() );
     }
 
 //  ends_with predicate  -----------------------------------------------//
 
-    // end_with predicate
+    // ends_with
     template< typename SeqT1, typename SeqT2 >
     inline bool ends_with( 
         const SeqT1& Input, 
-        const SeqT2& Substr )
+        const SeqT2& Test )
     {
-        typedef BOOST_STRING_TYPENAME 
-            string_algo::container_traits<SeqT1>::const_iterator Iterator1T;
-        typedef BOOST_STRING_TYPENAME boost::detail::
-            iterator_traits<Iterator1T>::iterator_category category;
+        return string_algo::ends_with( Input, Test, string_algo::is_equal() );
+    }
 
-        return string_algo::detail::
-            ends_with_iter_select( 
-                string_algo::begin(Input), 
-                string_algo::end(Input), 
-                string_algo::begin(Substr), 
-                string_algo::end(Substr), 
-                category() );
+    // ends_with ( case insensitive )
+    template< typename SeqT1, typename SeqT2 >
+    inline bool iends_with( 
+        const SeqT1& Input, 
+        const SeqT2& Test )
+    {
+        return string_algo::ends_with( Input, Test, string_algo::is_iequal() );
     }
 
 //  contains predicate  -----------------------------------------------//
 
-    // contains iterator version
-    template< typename ForwardIterator1T, typename ForwardIterator2T >
-    inline bool contains( 
-        ForwardIterator1T Begin, 
-        ForwardIterator1T End, 
-        ForwardIterator2T SubBegin,
-        ForwardIterator2T SubEnd )
-    {
-        if ( SubBegin==SubEnd )
-        {
-            // Empty range is contained always
-            return true;
-        }
-        
-        return (
-            !find_first( 
-                make_range(Begin, End), 
-                make_range(SubBegin, SubEnd) ).empty() );
-    }
-
-    // contains sequence version
+    // contains
     template< typename SeqT1, typename SeqT2 >
     inline bool contains( 
         const SeqT1& Input, 
-        const SeqT2& Substr )
+        const SeqT2& Test )
     {
-        if ( string_algo::empty(Substr) )
-        {
-            // Empty range is contained always
-            return true;
-        }
-        
-        return (
-            !find_first( Input, Substr ).empty() );
+        return string_algo::contains( Input, Test, string_algo::is_equal() );
     }
 
+    // contains ( case insensitive )
+    template< typename SeqT1, typename SeqT2 >
+    inline bool icontains( 
+        const SeqT1& Input, 
+        const SeqT2& Test )
+    {
+        return string_algo::contains( Input, Test, string_algo::is_iequal() );
+    }
 
 //  equal predicate  -----------------------------------------------//
 
-    // equals predicate
+    // equals 
     template< typename SeqT1, typename SeqT2 >
     inline bool equals( 
         const SeqT1& Input, 
-        const SeqT2& Substr )
+        const SeqT2& Test )
     {
-        typedef BOOST_STRING_TYPENAME 
-            string_algo::container_traits<SeqT1>::const_iterator Iterator1T;
-        typedef BOOST_STRING_TYPENAME 
-            string_algo::container_traits<SeqT2>::const_iterator Iterator2T;
-            
-        Iterator1T InputEnd=string_algo::end(Input);
-        Iterator2T SubstrEnd=string_algo::end(Substr);
+        return string_algo::equals( Input, Test, string_algo::is_equal() );
+    }
 
-        Iterator1T it=string_algo::begin(Input);
-        Iterator2T pit=string_algo::begin(Substr);
-        for(;
-            it!=InputEnd && pit!=SubstrEnd;
-            it++,pit++)
-        {
-            if( !( (*it)==(*pit) ) )
-                return false;
-        }
-
-        return ( pit==SubstrEnd ) && ( it==InputEnd );
+    // equals ( case insensitive )
+    template< typename SeqT1, typename SeqT2 >
+    inline bool iequals( 
+        const SeqT1& Input, 
+        const SeqT2& Test )
+    {
+        return string_algo::equals( Input, Test, string_algo::is_iequal() );
     }
 
 //  all predicate  -----------------------------------------------//
@@ -156,7 +116,6 @@ namespace boost {
         
         return true;
     }
-
 
 } // namespace boost
 

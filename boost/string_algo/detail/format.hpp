@@ -20,18 +20,18 @@ namespace boost {
     namespace string_algo {
         namespace detail {
 
-//  replace identity format functor -----------------------------------------//
+//  const format functor ----------------------------------------------------//
 
-            // identity format functor
+            // constant format functor
             template< typename FormatT >
-            struct identity_formatF
+            struct const_formatF
             {
                 typedef BOOST_STRING_TYPENAME
                     container_traits<FormatT>::const_iterator format_iterator;
                 typedef iterator_range<format_iterator> result_type;
 
                 // Construction
-                identity_formatF( const FormatT& Format ) :
+                const_formatF( const FormatT& Format ) :
                     m_Format( begin(Format), end(Format) ) {}
 
                 // Operation
@@ -45,6 +45,22 @@ namespace boost {
                 result_type m_Format;
             };
 
+//  identity format functor ----------------------------------------------------//
+
+            // indentity format functor
+            template< typename FormatT >
+            struct identity_formatF
+            {
+                typedef FormatT result_type;
+
+                // Operation
+                template< typename ReplaceT >
+                const result_type& operator()( const ReplaceT& Replace ) const
+                {
+                    return FormatT( begin(Replace), end(Replace) );
+                }
+            };
+
 //  empty format functor ( used by erase ) ------------------------------------//
         
             // empty format functor
@@ -52,7 +68,6 @@ namespace boost {
             struct empty_formatF
             {
                 typedef empty_container<CharT> result_type;
-                typedef const result_type& result_reference_type;
 
                 template< typename ReplaceT >
                 result_type operator()( const ReplaceT& ) const

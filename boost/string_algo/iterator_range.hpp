@@ -105,7 +105,12 @@ namespace boost {
             return std::distance( m_Begin, m_End ); 
         }
 
-    private:
+        void swap( iterator_range& Other )
+        {
+            std::swap( m_Begin, Other.begin() );
+            std::swap( m_End, Other.end() );
+        }
+
         // begin and end iterators
         IteratorT m_Begin;
         IteratorT m_End;

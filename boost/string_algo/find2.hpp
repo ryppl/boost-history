@@ -1,4 +1,4 @@
-//  Boost string_algo library find_impl.hpp header file  ---------------------------//
+//  Boost string_algo library find2.hpp header file  ---------------------------//
 
 //  (C) Copyright Pavol Droba 2002-2003. Permission to copy, use, modify, sell and
 //  distribute this software is granted provided this copyright notice appears
@@ -7,12 +7,13 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
-#ifndef BOOST_STRING_FIND_IMPL_HPP
-#define BOOST_STRING_FIND_IMPL_HPP
+#ifndef BOOST_STRING_FIND2_HPP
+#define BOOST_STRING_FIND2_HPP
 
 #include <boost/string_algo/config.hpp>
 #include <boost/string_algo/iterator_range.hpp>
 #include <boost/string_algo/detail/find.hpp>
+#include <boost/string_algo/compare.hpp>
 
 namespace boost {
     namespace string_algo {
@@ -25,46 +26,39 @@ namespace boost {
             occurence of the search sequence in a given input.
             Result is given as a range of iterator delimiting the match.
         */
-        template<typename ForwardIteratorT>
-        inline detail::first_finderF<ForwardIteratorT>
-        first_finder( 
-            ForwardIteratorT SearchBegin, 
-            ForwardIteratorT SearchEnd )
+        template<typename ContainerT>
+        inline detail::first_finderF<
+            BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator,
+            is_equal>
+        first_finder( const ContainerT& Search )
         {
-            return detail::first_finderF<ForwardIteratorT>( SearchBegin, SearchEnd );
+            return detail::first_finderF<
+                BOOST_STRING_TYPENAME 
+                    container_traits<ContainerT>::const_iterator,
+                is_equal>( Search, is_equal() );
         }
-        
+
         // first_finder
         /*
             Construct first_finder. The finders searches for the first
             occurence of the search sequence in a given input.
             Result is given as a range of iterator delimiting the match.
+
+            Elements are compared using given predicate.
         */
-        template<typename ContainerT>
+        template<typename ContainerT,typename PredicateT>
         inline detail::first_finderF<
-            BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator >
-        first_finder( const ContainerT& Search )
+            BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator,
+            PredicateT>
+        first_finder( 
+            const ContainerT& Search, PredicateT Comp )
         {
             return detail::first_finderF<
                 BOOST_STRING_TYPENAME 
-                    container_traits<ContainerT>::const_iterator>( Search );
+                    container_traits<ContainerT>::const_iterator,
+                PredicateT>( Search, Comp );
         }
 
-        // last_finder
-        /*
-            Construct last_finder. The finders searches for the last
-            occurence of the search sequence in a given input.
-            Result is given as a range of iterator delimiting the match.
-        */
-        template<typename ForwardIteratorT>
-        inline detail::last_finderF<ForwardIteratorT>
-        last_finder( 
-            ForwardIteratorT SearchBegin, 
-            ForwardIteratorT SearchEnd )
-        {
-            return detail::last_finderF<ForwardIteratorT>( SearchBegin, SearchEnd );
-        }
-        
         // last_finder
         /*
             Construct last_finder. The finders searches for the last
@@ -73,12 +67,33 @@ namespace boost {
         */
         template<typename ContainerT>
         inline detail::last_finderF<
-            BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator >
+            BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator,
+            is_equal>
         last_finder( const ContainerT& Search )
         {
             return detail::last_finderF<
                 BOOST_STRING_TYPENAME 
-                    container_traits<ContainerT>::const_iterator>( Search );
+                    container_traits<ContainerT>::const_iterator,
+                is_equal>( Search, is_equal() );
+        }
+        // last_finder
+        /*
+            Construct last_finder. The finders searches for the last
+            occurence of the search sequence in a given input.
+            Result is given as a range of iterator delimiting the match.
+
+            Elements are compared using given predicate.
+        */
+        template<typename ContainerT, typename PredicateT>
+        inline detail::last_finderF<
+            BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator,
+            PredicateT>
+        last_finder( const ContainerT& Search, PredicateT Comp )
+        {
+            return detail::last_finderF<
+                BOOST_STRING_TYPENAME 
+                    container_traits<ContainerT>::const_iterator,
+                PredicateT>( Search, Comp );
         }
 
         // nth_finder
@@ -86,31 +101,43 @@ namespace boost {
             Construct nth_finder. The finders searches for the n-th
             occurence of the search sequence in a given input.
             Result is given as a range of iterator delimiting the match.
+
+            Elements are compared using given predicate.
         */
-        template<typename ForwardIteratorT>
-        inline detail::nth_finderF<ForwardIteratorT>
+        template<typename ContainerT>
+        inline detail::nth_finderF<
+            BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator,
+            is_equal>
         nth_finder( 
-            ForwardIteratorT SearchBegin, 
-            ForwardIteratorT SearchEnd,
-            unsigned int Nth )
+            const ContainerT& Search, 
+            unsigned int Nth)
         {
-            return detail::nth_finderF<ForwardIteratorT>( SearchBegin, SearchEnd, Nth );
+            return detail::nth_finderF<
+                BOOST_STRING_TYPENAME 
+                    container_traits<ContainerT>::const_iterator,
+                is_equal>( Search, Nth, is_equal() );
         }
-        
         // nth_finder
         /*
             Construct nth_finder. The finders searches for the n-th
             occurence of the search sequence in a given input.
             Result is given as a range of iterator delimiting the match.
+
+            Elements are compared using given predicate.
         */
-        template<typename ContainerT>
+        template<typename ContainerT, typename PredicateT>
         inline detail::nth_finderF<
-            BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator >
-        nth_finder( const ContainerT& Search, unsigned int Nth )
+            BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator,
+            PredicateT>
+        nth_finder( 
+            const ContainerT& Search, 
+            unsigned int Nth, 
+            PredicateT Comp )
         {
             return detail::nth_finderF<
                 BOOST_STRING_TYPENAME 
-                    container_traits<ContainerT>::const_iterator>( Search, Nth );
+                    container_traits<ContainerT>::const_iterator,
+                PredicateT>( Search, Nth, Comp );
         }
 
         // head_finder
@@ -190,4 +217,4 @@ namespace boost {
 } // namespace boost
 
 
-#endif  // BOOST_STRING_FIND_IMPL_HPP
+#endif  // BOOST_STRING_FIND2_HPP

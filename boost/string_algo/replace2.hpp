@@ -1,4 +1,4 @@
-//  Boost string_algo library replace_impl.hpp header file  ---------------------------//
+//  Boost string_algo library replace2.hpp header file  ---------------------------//
 
 //  (C) Copyright Pavol Droba 2002-2003. Permission to copy, use, modify, sell and
 //  distribute this software is granted provided this copyright notice appears
@@ -7,63 +7,18 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
-#ifndef BOOST_STRING_REPLACE_IMPL_HPP
-#define BOOST_STRING_REPLACE_IMPL_HPP
+#ifndef BOOST_STRING_REPLACE2_HPP
+#define BOOST_STRING_REPLACE2_HPP
 
 #include <deque>
 #include <boost/detail/iterator.hpp>
 #include <boost/string_algo/container_traits.hpp>
 #include <boost/string_algo/iterator_range.hpp>
 #include <boost/string_algo/detail/replace.hpp>
-#include <boost/string_algo/detail/container.hpp>
-#include <boost/string_algo/detail/format.hpp>
+#include <boost/string_algo/detail/sequence.hpp>
 
 namespace boost {
     namespace string_algo {
-
-// generic formaters  ---------------------------------------------------------------//
-
-        // identity formater
-        template< typename ForwardIteratorT >
-        inline detail::identity_formatF<
-            iterator_range<ForwardIteratorT> >
-        identity_formater( 
-            ForwardIteratorT FormatBegin,
-            ForwardIteratorT FormatEnd )
-        {
-            return detail::identity_formatF<
-                iterator_range<ForwardIteratorT> >( make_range( FormatBegin, FormatEnd ) );
-        }
-
-        // identity formater
-        template< typename ContainerT >
-        inline detail::identity_formatF<ContainerT>
-        identity_formater( const ContainerT& Format )
-        {
-            return detail::identity_formatF<ContainerT>( Format );
-        }
-
-        // empty formater
-        template< typename IteratorT >
-        inline detail::empty_formatF<
-            BOOST_STRING_TYPENAME boost::detail::iterator_traits<IteratorT>::value_type >
-        empty_formater( 
-            IteratorT Begin,
-            IteratorT End )
-        {
-            return detail::empty_formatF<
-                BOOST_STRING_TYPENAME 
-                    boost::detail::iterator_traits<IteratorT>::value_type >();
-        }
-
-        template< typename ContainerT >
-        inline detail::empty_formatF< 
-            BOOST_STRING_TYPENAME container_traits<ContainerT>::value_type >
-        empty_formater( const ContainerT& Input )
-        {
-            return detail::empty_formatF<
-                BOOST_STRING_TYPENAME container_traits<ContainerT>::value_type >();
-        }
 
 // generic replace  -----------------------------------------------------------------//
 
@@ -352,4 +307,4 @@ namespace boost {
 } // namespace boost
 
 
-#endif  // BOOST_REPLACE_IMPL_HPP
+#endif  // BOOST_REPLACE2_HPP

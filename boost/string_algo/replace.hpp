@@ -13,8 +13,10 @@
 #include <boost/string_algo/config.hpp>
 #include <boost/string_algo/container_traits.hpp>
 #include <boost/string_algo/iterator_range.hpp>
-#include <boost/string_algo/replace_impl.hpp>
-#include <boost/string_algo/find_impl.hpp>
+#include <boost/string_algo/replace2.hpp>
+#include <boost/string_algo/find2.hpp>
+#include <boost/string_algo/format2.hpp>
+#include <boost/string_algo/compare.hpp>
 
 namespace boost {
 
@@ -36,8 +38,8 @@ namespace boost {
         return string_algo::replace_copy(
             Output,
             Input,
-            string_algo::range_finder( SearchRange ),
-            string_algo::identity_formater( Format ) );
+            string_algo::range_finder(SearchRange),
+            string_algo::const_formatter(Format) );
     }
 
     // replace_range sequence version
@@ -51,8 +53,8 @@ namespace boost {
     {
         return string_algo::replace_copy(
             Input,
-            string_algo::range_finder( SearchRange ),
-            string_algo::identity_formater( Format ) );
+            string_algo::range_finder(SearchRange),
+            string_algo::const_formatter(Format) );
     }
 
     // replace_range in-place sequence version
@@ -66,8 +68,8 @@ namespace boost {
     {
         return string_algo::replace(
             Input,
-            string_algo::range_finder( SearchRange ),
-            string_algo::identity_formater( Format ) );
+            string_algo::range_finder(SearchRange),
+            string_algo::const_formatter(Format) );
     }
 
 //  replace_first --------------------------------------------------------------------//
@@ -87,8 +89,8 @@ namespace boost {
         return string_algo::replace_copy(
             Output,
             Input,
-            string_algo::first_finder( Search ),
-            string_algo::identity_formater( Format ) );
+            string_algo::first_finder(Search),
+            string_algo::const_formatter(Format) );
     }
 
     // replace_first sequence version
@@ -100,8 +102,8 @@ namespace boost {
     {
         return string_algo::replace_copy( 
             Input,
-            string_algo::first_finder( Search ),
-            string_algo::identity_formater( Format ) );
+            string_algo::first_finder(Search),
+            string_algo::const_formatter(Format) );
     }
 
     // replace_first in-place sequence version
@@ -113,8 +115,55 @@ namespace boost {
     {
         return string_algo::replace( 
             Input, 
-            string_algo::first_finder( Search ),
-            string_algo::identity_formater( Format ) );
+            string_algo::first_finder(Search),
+            string_algo::const_formatter(Format) );
+    }
+
+//  replace_first ( case insensitive ) ---------------------------------------------//
+
+    // replace_first sequence version ( case insensitive )
+    template< typename InputT, typename SearchT, typename FormatT >
+    inline InputT ireplace_first_copy( 
+        const InputT& Input,
+        const SearchT& Search,
+        const FormatT& Format )
+    {
+        return string_algo::replace_copy( 
+            Input,
+            string_algo::first_finder(Search, string_algo::is_iequal()),
+            string_algo::const_formatter(Format) );
+    }
+
+    // replace_first output iterator version ( case insensitive )
+    template< 
+        typename OutputIteratorT,
+        typename InputT, 
+        typename SearchT,
+        typename FormatT >
+    inline OutputIteratorT ireplace_first_copy(
+        OutputIteratorT Output,
+        const InputT& Input,
+        const SearchT& Search,
+        const FormatT& Format )
+    {
+        return string_algo::replace_copy(
+            Output,
+            Input,
+            string_algo::first_finder(Search, string_algo::is_iequal() ),
+            string_algo::const_formatter(Format) );
+    }
+
+    // replace_first in-place sequence version ( case insensitive )
+    template< typename InputT, typename SearchT, typename FormatT >
+    inline InputT& ireplace_first( 
+        InputT& Input,
+        const SearchT& Search,
+        const FormatT& Format )
+    {
+        return string_algo::replace( 
+            Input, 
+            string_algo::first_finder(Search, string_algo::is_iequal()),
+            string_algo::const_formatter(Format) );
     }
 
 //  replace_last --------------------------------------------------------------------//
@@ -134,8 +183,8 @@ namespace boost {
         return string_algo::replace_copy(
             Output,
             Input,
-            string_algo::last_finder( Search ),
-            string_algo::identity_formater( Format ) );
+            string_algo::last_finder(Search),
+            string_algo::const_formatter(Format) );
     }
 
     // replace_last sequence version
@@ -147,8 +196,8 @@ namespace boost {
     {
         return string_algo::replace_copy( 
             Input,
-            string_algo::last_finder( Search ),
-            string_algo::identity_formater( Format ) );
+            string_algo::last_finder(Search),
+            string_algo::const_formatter(Format) );
     }
 
     // replace_last in-place sequence version
@@ -160,8 +209,55 @@ namespace boost {
     {
         return string_algo::replace( 
             Input, 
-            string_algo::last_finder( Search ),
-            string_algo::identity_formater( Format ) );
+            string_algo::last_finder(Search),
+            string_algo::const_formatter(Format) );
+    }
+
+//  replace_last ( case insensitive ) -----------------------------------------------//
+
+    // replace_last output iterator version ( case insensitive )
+    template< 
+        typename OutputIteratorT,
+        typename InputT, 
+        typename SearchT,
+        typename FormatT >
+    inline OutputIteratorT ireplace_last_copy(
+        OutputIteratorT Output,
+        const InputT& Input,
+        const SearchT& Search,
+        const FormatT& Format )
+    {
+        return string_algo::replace_copy(
+            Output,
+            Input,
+            string_algo::last_finder(Search, string_algo::is_iequal()),
+            string_algo::const_formatter(Format) );
+    }
+
+    // replace_last sequence version ( case insensitive )
+    template< typename InputT, typename SearchT, typename FormatT >
+    inline InputT ireplace_last_copy( 
+        const InputT& Input,
+        const SearchT& Search,
+        const FormatT& Format )
+    {
+        return string_algo::replace_copy( 
+            Input,
+            string_algo::last_finder(Search, string_algo::is_iequal()),
+            string_algo::const_formatter(Format) );
+    }
+
+    // replace_last in-place sequence version ( case insensitive )
+    template< typename InputT, typename SearchT, typename FormatT >
+    inline InputT& ireplace_last( 
+        InputT& Input,
+        const SearchT& Search,
+        const FormatT& Format )
+    {
+        return string_algo::replace( 
+            Input, 
+            string_algo::last_finder(Search, string_algo::is_iequal() ),
+            string_algo::const_formatter(Format) );
     }
 
 //  replace_nth --------------------------------------------------------------------//
@@ -182,8 +278,8 @@ namespace boost {
         return string_algo::replace_copy(
             Output,
             Input,
-            string_algo::nth_finder( Search, Nth ),
-            string_algo::identity_formater( Format ) );
+            string_algo::nth_finder(Search, Nth),
+            string_algo::const_formatter(Format) );
     }
 
     // replace_nth sequence version
@@ -196,8 +292,8 @@ namespace boost {
     {
         return string_algo::replace_copy( 
             Input,
-            string_algo::nth_finder( Search, Nth ),
-            string_algo::identity_formater( Format ) );
+            string_algo::nth_finder(Search, Nth),
+            string_algo::const_formatter(Format) );
     }
 
     // replace_nth in-place sequence version
@@ -210,8 +306,58 @@ namespace boost {
     {
         return string_algo::replace( 
             Input, 
-            string_algo::nth_finder( Search, Nth ),
-            string_algo::identity_formater( Format ) );
+            string_algo::nth_finder(Search, Nth),
+            string_algo::const_formatter(Format) );
+    }
+
+//  replace_nth ( case insensitive ) -----------------------------------------------//
+    
+    // replace_nth output iterator version ( case insensitive )
+    template< 
+        typename OutputIteratorT,
+        typename InputT, 
+        typename SearchT,
+        typename FormatT >
+    inline OutputIteratorT ireplace_nth_copy(
+        OutputIteratorT Output,
+        const InputT& Input,
+        const SearchT& Search,
+        unsigned int Nth,
+        const FormatT& Format )
+    {
+        return string_algo::replace_copy(
+            Output,
+            Input,
+            string_algo::nth_finder(Search, Nth, string_algo::is_iequal() ),
+            string_algo::const_formatter(Format) );
+    }
+
+    // replace_nth sequence version ( case insensitive )
+    template< typename InputT, typename SearchT, typename FormatT >
+    inline InputT ireplace_nth_copy( 
+        const InputT& Input,
+        const SearchT& Search,
+        unsigned int Nth,
+        const FormatT& Format )
+    {
+        return string_algo::replace_copy( 
+            Input,
+            string_algo::nth_finder(Search, Nth, string_algo::is_iequal()),
+            string_algo::const_formatter(Format) );
+    }
+
+    // replace_nth in-place sequence version ( case insensitive )
+    template< typename InputT, typename SearchT, typename FormatT >
+    inline InputT& ireplace_nth( 
+        InputT& Input,
+        const SearchT& Search,
+        unsigned int Nth,
+        const FormatT& Format )
+    {
+        return string_algo::replace( 
+            Input, 
+            string_algo::nth_finder(Search, Nth, string_algo::is_iequal()),
+            string_algo::const_formatter(Format) );
     }
 
 //  replace_all --------------------------------------------------------------------//
@@ -231,8 +377,8 @@ namespace boost {
         return string_algo::replace_all_copy(
             Output,
             Input,
-            string_algo::first_finder( Search ),
-            string_algo::identity_formater( Format ) );
+            string_algo::first_finder(Search),
+            string_algo::const_formatter(Format) );
     }
 
     // replace_all sequence version
@@ -244,8 +390,8 @@ namespace boost {
     {
         return string_algo::replace_all_copy( 
             Input,
-            string_algo::first_finder( Search ),
-            string_algo::identity_formater( Format ) );
+            string_algo::first_finder(Search),
+            string_algo::const_formatter(Format) );
     }
 
     // replace_all in-place sequence version
@@ -257,11 +403,57 @@ namespace boost {
     {
         return string_algo::replace_all( 
             Input, 
-            string_algo::first_finder( Search ),
-            string_algo::identity_formater( Format ) );
+            string_algo::first_finder(Search),
+            string_algo::const_formatter(Format) );
     }
     
+//  replace_all ( case insensitive ) -----------------------------------------------//
 
+    // replace_all output iterator version ( case insensitive ) 
+    template< 
+        typename OutputIteratorT,
+        typename InputT, 
+        typename SearchT,
+        typename FormatT >
+    inline OutputIteratorT ireplace_all_copy(
+        OutputIteratorT Output,
+        const InputT& Input,
+        const SearchT& Search,
+        const FormatT& Format )
+    {
+        return string_algo::replace_all_copy(
+            Output,
+            Input,
+            string_algo::first_finder(Search, string_algo::is_iequal()),
+            string_algo::const_formatter(Format) );
+    }
+
+    // replace_all sequence version ( case insensitive )
+    template< typename InputT, typename SearchT, typename FormatT >
+    inline InputT ireplace_all_copy( 
+        const InputT& Input,
+        const SearchT& Search,
+        const FormatT& Format )
+    {
+        return string_algo::replace_all_copy( 
+            Input,
+            string_algo::first_finder(Search, string_algo::is_iequal()),
+            string_algo::const_formatter(Format) );
+    }
+
+    // replace_all in-place sequence version ( case insensitive )
+    template< typename InputT, typename SearchT, typename FormatT >
+    inline InputT& ireplace_all( 
+        InputT& Input,
+        const SearchT& Search,
+        const FormatT& Format )
+    {
+        return string_algo::replace_all( 
+            Input, 
+            string_algo::first_finder(Search, string_algo::is_iequal()),
+            string_algo::const_formatter(Format) );
+    }
+    
 //  replace_head --------------------------------------------------------------------//
 
     // replace_head output iterator version
@@ -279,7 +471,7 @@ namespace boost {
             Output,
             Input,
             string_algo::head_finder(N),
-            string_algo::identity_formater( Format ) );
+            string_algo::const_formatter(Format) );
     }
 
     // replace_head sequence version
@@ -292,7 +484,7 @@ namespace boost {
         return string_algo::replace_copy( 
             Input,
             string_algo::head_finder(N),
-            string_algo::identity_formater( Format ) );
+            string_algo::const_formatter(Format) );
     }
 
     // replace_head in-place sequence version
@@ -305,7 +497,7 @@ namespace boost {
         return string_algo::replace( 
             Input, 
             string_algo::head_finder(N),
-            string_algo::identity_formater( Format ) );
+            string_algo::const_formatter(Format) );
     }
 
 //  replace_tail --------------------------------------------------------------------//
@@ -325,7 +517,7 @@ namespace boost {
             Output,
             Input,
             string_algo::tail_finder(N),
-            string_algo::identity_formater( Format ) );
+            string_algo::const_formatter(Format) );
     }
 
     // replace_tail sequence version
@@ -338,7 +530,7 @@ namespace boost {
         return string_algo::replace_copy( 
             Input,
             string_algo::tail_finder(N),
-            string_algo::identity_formater( Format ) );
+            string_algo::const_formatter(Format) );
     }
 
     // replace_tail in-place sequence version
@@ -351,10 +543,9 @@ namespace boost {
         return string_algo::replace( 
             Input, 
             string_algo::tail_finder(N),
-            string_algo::identity_formater( Format ) );
+            string_algo::const_formatter(Format) );
     }
 
 } // namespace boost
-
 
 #endif  // BOOST_REPLACE_HPP

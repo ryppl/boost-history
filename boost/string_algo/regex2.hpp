@@ -1,4 +1,4 @@
-//  Boost string_algo library regex_impl.hpp header file  ---------------------------//
+//  Boost string_algo library regex2.hpp header file  ---------------------------//
 
 //  (C) Copyright Pavol Droba 2002-2003. Permission to copy, use, modify, sell and
 //  distribute this software is granted provided this copyright notice appears
@@ -7,8 +7,8 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
-#ifndef BOOST_STRING_REGEX_IMPL_HPP
-#define BOOST_STRING_REGEX_IMPL_HPP
+#ifndef BOOST_STRING_REGEX2_HPP
+#define BOOST_STRING_REGEX2_HPP
 
 #include <boost/string_algo/config.hpp>
 #include <boost/regex.hpp>
@@ -41,7 +41,7 @@ namespace boost {
             typename CharT, 
             typename TraitsT, typename AllocT >
         inline detail::regex_formatF< std::basic_string< CharT, TraitsT, AllocT > >
-        regex_formater( 
+        regex_formatter( 
             const std::basic_string<CharT, TraitsT, AllocT>& Format,
             unsigned int Flags=0 )
         {
@@ -55,4 +55,4 @@ namespace boost {
 } // namespace boost
 
 
-#endif  // BOOST_STRING_REGEX_HPP
+#endif  // BOOST_STRING_REGEX2_HPP

@@ -7,57 +7,32 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
-#ifndef BOOST_STRING_FIND_ITERATOR_HPP
-#define BOOST_STRING_FIND_ITERATOR_HPP
+#ifndef BOOST_STRING_SPLIT2_HPP
+#define BOOST_STRING_SPLIT2_HPP
 
 #include <boost/string_algo/config.hpp>
+#include <algorithm>
+#include <iterator>
+#include <boost/iterator_adaptors.hpp>
 #include <boost/string_algo/container_traits.hpp>
 #include <boost/string_algo/iterator_range.hpp>
 #include <boost/string_algo/detail/find_iterator.hpp>
-#include <boost/iterator_adaptors.hpp>
-
 
 namespace boost {
     namespace string_algo {
 
 //  iterate find ---------------------------------------------------//
 
-        // iterate find
-        template< 
-            typename InputT,
-            typename FindFT >
-        inline iterator_range< 
-            detail::find_iterator<
-                BOOST_STRING_TYPENAME container_traits<InputT>::result_iterator,
-                FindFT > >
-        iter_find(
-            InputT& Input,
-            FindFT FindF )
-        {
-            typedef BOOST_STRING_TYPENAME 
-                container_traits<InputT>::result_iterator input_iterator_type;
-            typedef detail::find_iterator<
-                input_iterator_type,
-                FindFT> find_iterator_type;
-
-            input_iterator_type InputEnd=end(Input);
-
-            return
-                make_range(
-                    find_iterator_type( begin(Input), InputEnd, FindF ),
-                    find_iterator_type( InputEnd, InputEnd, FindF ) );
-        };
-
-        // iter find with copy
+        // iter find
         /*
-            In addition to the iter_find, transforms each element to a Input like sequence
+            
         */
         template< 
             typename ResultT,
             typename InputT,
             typename FindFT >
         inline ResultT&
-        iter_find_copy(
+        iter_find(
             ResultT& Result,
             const InputT& Input,
             FindFT FindF )
@@ -81,51 +56,23 @@ namespace boost {
                 make_transform_iterator( 
                     find_iterator_type( InputEnd, InputEnd, FindF ),
                     copy_range_type() ) );
-            
+
             Result.swap(Tmp);
             return Result;
         };
 
 //  iterate split ---------------------------------------------------//
 
-        // iterate split
-        template< 
-            typename InputT,
-            typename FindFT >
-        inline iterator_range< 
-        detail::find_iterator<
-            BOOST_STRING_TYPENAME container_traits<InputT>::result_iterator,
-            FindFT,
-            detail::split_find_policy > >
-        iter_split( 
-            InputT& Input,
-            FindFT FindF )
-        {
-            typedef BOOST_STRING_TYPENAME 
-                container_traits<InputT>::result_iterator input_iterator_type;
-            typedef detail::find_iterator<
-                input_iterator_type,
-                FindFT,
-                detail::split_find_policy> find_iterator_type;
-            
-            input_iterator_type InputEnd=end(Input);
-
-            return
-                make_range(
-                    find_iterator_type( begin(Input), InputEnd, FindF ),
-                    find_iterator_type( InputEnd, InputEnd, FindF ) );
-        };
-
-        // split find with copy
+        // split find
         /*
-            In addition to the iter_find, transforms each element to a Input like sequence
+            
         */
         template< 
             typename ResultT,
             typename InputT,
             typename FindFT >
         inline ResultT&
-        iter_split_copy(
+        iter_split(
             ResultT& Result,
             const InputT& Input,
             FindFT FindF )
@@ -159,4 +106,4 @@ namespace boost {
 } // namespace boost
 
 
-#endif  // BOOST_STRING_FIND_ITERATOR_HPP
+#endif  // BOOST_STRING_SPLIT2_HPP

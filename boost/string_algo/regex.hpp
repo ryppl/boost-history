@@ -14,8 +14,10 @@
 #include <boost/regex.hpp>
 #include <boost/string_algo/container_traits.hpp>
 #include <boost/string_algo/iterator_range.hpp>
-#include <boost/string_algo/replace_impl.hpp>
-#include <boost/string_algo/regex_impl.hpp>
+#include <boost/string_algo/replace2.hpp>
+#include <boost/string_algo/regex2.hpp>
+#include <boost/string_algo/format2.hpp>
+#include <boost/string_algo/split2.hpp>
 
 namespace boost {
 
@@ -70,7 +72,7 @@ namespace boost {
             Output,
             Input,
             string_algo::regex_finder( Rx, MatchFlags ),
-            string_algo::regex_formater( Format, FormatFlags ) );
+            string_algo::regex_formatter( Format, FormatFlags ) );
     }
 
     // replace_regex sequence version
@@ -89,7 +91,7 @@ namespace boost {
         return string_algo::replace_copy( 
             Input,
             string_algo::regex_finder( Rx, MatchFlags ),
-            string_algo::regex_formater( Format, FormatFlags ) );
+            string_algo::regex_formatter( Format, FormatFlags ) );
     }
 
     // replace_regex in-place sequence version
@@ -108,7 +110,7 @@ namespace boost {
         return string_algo::replace( 
             Input,
             string_algo::regex_finder( Rx, MatchFlags ),
-            string_algo::regex_formater( Format, FormatFlags ) );
+            string_algo::regex_formatter( Format, FormatFlags ) );
     }
 
 //  replace_all_regex --------------------------------------------------------------------//
@@ -132,7 +134,7 @@ namespace boost {
             Output,
             Input,
             string_algo::regex_finder( Rx, MatchFlags ),
-            string_algo::regex_formater( Format, FormatFlags ) );
+            string_algo::regex_formatter( Format, FormatFlags ) );
     }
 
     // replace_all_regex sequence version
@@ -151,7 +153,7 @@ namespace boost {
         return string_algo::replace_all_copy( 
             Input,
             string_algo::regex_finder( Rx, MatchFlags ),
-            string_algo::regex_formater( Format, FormatFlags ) );
+            string_algo::regex_formatter( Format, FormatFlags ) );
     }
 
     // replace_all_regex in-place sequence version
@@ -170,7 +172,7 @@ namespace boost {
         return string_algo::replace_all( 
             Input,
             string_algo::regex_finder( Rx, MatchFlags ),
-            string_algo::regex_formater( Format, FormatFlags ) );
+            string_algo::regex_formatter( Format, FormatFlags ) );
     }
 
 //  erase_regex --------------------------------------------------------------------//
@@ -191,7 +193,7 @@ namespace boost {
             Output,
             Input,
             string_algo::regex_finder( Rx, MatchFlags ),
-            string_algo::empty_formater( Input ) );
+            string_algo::empty_formatter( Input ) );
     }
 
     // erase_regex sequence version
@@ -207,7 +209,7 @@ namespace boost {
         return string_algo::replace_copy( 
             Input, 
             string_algo::regex_finder( Rx, MatchFlags ),
-            string_algo::empty_formater( Input ) );
+            string_algo::empty_formatter( Input ) );
     }
 
     // erase_regex in-place sequence version
@@ -223,7 +225,7 @@ namespace boost {
         return string_algo::replace( 
             Input, 
             string_algo::regex_finder( Rx, MatchFlags ),
-            string_algo::empty_formater( Input ) );
+            string_algo::empty_formatter( Input ) );
     }
 
 //  erase_all_regex --------------------------------------------------------------------//
@@ -244,7 +246,7 @@ namespace boost {
             Output,
             Input,
             string_algo::regex_finder( Rx, MatchFlags ),
-            string_algo::empty_formater( Input ) );
+            string_algo::empty_formatter( Input ) );
     }
 
     // erase_all_regex sequence version
@@ -260,7 +262,7 @@ namespace boost {
         return string_algo::replace_all_copy( 
             Input, 
             string_algo::regex_finder( Rx, MatchFlags ),
-            string_algo::empty_formater( Input ) );
+            string_algo::empty_formatter( Input ) );
     }
 
     // erase_all_regex in-place sequence version
@@ -276,7 +278,45 @@ namespace boost {
         return string_algo::replace_all( 
             Input, 
             string_algo::regex_finder( Rx, MatchFlags ),
-            string_algo::empty_formater( Input ) );
+            string_algo::empty_formatter( Input ) );
+    }
+
+//  find_all_regex ------------------------------------------------------------------//
+
+    template< 
+        typename ResultT, 
+        typename InputT,         
+        typename CharT, 
+        typename RegexTraitsT, typename RegexAllocatorT >
+    inline ResultT& find_all_regex(
+        ResultT& Result,
+        const InputT& Input,
+        const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
+        unsigned int MatchFlags=match_default )
+    {
+        return string_algo::iter_find(
+            Result,
+            Input,
+            string_algo::regex_finder(Rx,MatchFlags) );         
+    }
+
+//  split_regex ------------------------------------------------------------------//
+
+    template< 
+        typename ResultT, 
+        typename InputT,         
+        typename CharT, 
+        typename RegexTraitsT, typename RegexAllocatorT >
+    inline ResultT& split_regex(
+        ResultT& Result,
+        const InputT& Input,
+        const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
+        unsigned int MatchFlags=match_default )
+    {
+        return string_algo::iter_split(
+            Result,
+            Input,
+            string_algo::regex_finder(Rx,MatchFlags) );         
     }
 
 } // namespace boost

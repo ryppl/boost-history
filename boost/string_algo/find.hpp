@@ -13,7 +13,8 @@
 #include <boost/string_algo/config.hpp>
 #include <boost/string_algo/container_traits.hpp>
 #include <boost/string_algo/iterator_range.hpp>
-#include <boost/string_algo/find_impl.hpp>
+#include <boost/string_algo/find2.hpp>
+#include <boost/string_algo/compare.hpp>
 
 namespace boost {
 
@@ -35,6 +36,17 @@ namespace boost {
         return string_algo::first_finder(Search)(Input);
     }
 
+    // find first ( case insensitive version )
+    template< typename InputT, typename SearchT >
+    inline iterator_range< 
+        BOOST_STRING_TYPENAME string_algo::container_traits<InputT>::result_iterator >
+    ifind_first( 
+        InputT& Input, 
+        const SearchT& Search )
+    {
+        return string_algo::first_finder(Search,string_algo::is_iequal())(Input);
+    }
+
 //  find_last  -----------------------------------------------//
 
     // find last
@@ -53,6 +65,17 @@ namespace boost {
         return string_algo::last_finder(Search)(Input);
     }
 
+    // find last ( case insensitive version ) 
+    template< typename InputT, typename SearchT >
+    inline iterator_range< 
+        BOOST_STRING_TYPENAME string_algo::container_traits<InputT>::result_iterator >
+    ifind_last( 
+        InputT& Input, 
+        const SearchT& Search )
+    {
+        return string_algo::last_finder(Search, string_algo::is_iequal())(Input);
+    }
+
 //  find_nth ----------------------------------------------------------------------//
 
     // find n-th
@@ -61,7 +84,6 @@ namespace boost {
         input sequence. Result is given as a pair of iterators,
         delimiting the match.
     */
-
     template< typename InputT, typename SearchT >
     inline iterator_range< 
         BOOST_STRING_TYPENAME string_algo::container_traits<InputT>::result_iterator >
@@ -71,6 +93,18 @@ namespace boost {
         unsigned int Nth )
     {
         return string_algo::nth_finder(Search,Nth)(Input);
+    }
+
+    // find n-th ( case insensitive version )
+    template< typename InputT, typename SearchT >
+    inline iterator_range< 
+        BOOST_STRING_TYPENAME string_algo::container_traits<InputT>::result_iterator >
+    ifind_nth( 
+        InputT& Input, 
+        const SearchT& Search,
+        unsigned int Nth )
+    {
+        return string_algo::nth_finder(Search,Nth,string_algo::is_iequal())(Input);
     }
 
 //  find_head ----------------------------------------------------------------------//
