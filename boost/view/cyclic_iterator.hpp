@@ -34,11 +34,11 @@ class cyclic_iterator
              cyclic_iterator<BaseIterator, ValueT, CategoryT, ReferenceT, DifferenceT>, 
              BaseIterator, ValueT, CategoryT, ReferenceT, DifferenceT > super_t;
 
-  typedef typename super_t::difference_type difference_type;
-
   friend class iterator_core_access;
 
 public:
+
+    typedef typename super_t::difference_type difference_type;
 
     cyclic_iterator()
       : pastTheEnd( 0 ), isReverse( false )
