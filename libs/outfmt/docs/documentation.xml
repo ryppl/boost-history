@@ -1,7 +1,7 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 <?xml-stylesheet href = "http://mscl/xslt/docs/document.xsl" type = "text/xsl"?>
 
-<d:document para-format = "none" hastoc = "display" title  = "Output Formatters"
+<d:document para-format = "none" hastoc = "display" title  = "Input/Output Formatters"
    xmlns:d = "http://www.softwave.net/XML/Document"
    xmlns   = "http://www.softwave.net/XML/HyperText"
    xmlns:c = "http://www.softwave.net/XML/CodeListing"
@@ -12,7 +12,7 @@
       <d:author name = "Reece H. Dunn" email = "msclrhd@hotmail.com"/>
    </d:copyright>
 
-   <d:section title = "Introduction" id = "intro">
+   <d:section title = "Introduction" id = "intro.intro">
       <d:section title = "The Problem" id = "intro.problem">
          <paragraph>
             The C++ Input/Output library provides a mechanism for customizing the way a class is represented
@@ -25,7 +25,7 @@
             need to output a sub-list? Or have the same format across different container types? Or have
             different formatting for different objects that have the same container type?
          </paragraph>
-      </d:section><d:section title = "The Solution" id = "intro.soln">
+      </d:section><d:section title = "The Solution" id = "intro.solution">
          <paragraph>
             Designing a library that can cope with these problems, as well as others not considered here,
             while remaining efficient is no easy task. There are other attempts to solve these sorts of
@@ -51,14 +51,29 @@
                A container type that has the following:
                <table border = "1">
                   <tr>
+                     <th valign = "top">read or write?</th>
+                     <th valign = "top">type or method</th>
+                     <th valign = "top">effects</th>
+                  </tr><tr>
+                     <td valign = "top">output</td>
                      <td valign = "top"><code>typename Container::iterator</code></td>
                      <td valign = "top">an iterator that is a ForwardIterator type</td>
                   </tr><tr>
+                     <td valign = "top">output</td>
                      <td valign = "top"><code>typename Container::iterator Container::begin()</code></td>
                      <td valign = "top">returns the first element in the container</td>
                   </tr><tr>
+                     <td valign = "top">output</td>
                      <td valign = "top"><code>typename Container::iterator Container::end()</code></td>
                      <td valign = "top">returns "one-past-the-end" for the container type</td>
+                  </tr><tr>
+                     <td valign = "top">input</td>
+                     <td valign = "top"><code>void Container::clear()</code></td>
+                     <td valign = "top">remove all data in the container</td>
+                  </tr><tr>
+                     <td valign = "top">input</td>
+                     <td valign = "top"><code>void Container::push_back( const T &amp; value )</code></td>
+                     <td valign = "top">adds value to the end of the container</td>
                   </tr>
                </table>
             </paragraph>
@@ -89,6 +104,13 @@
                A sequence of characters used between data items. There are three markers
                currently used by this library: open sequence; close sequence; and separator. 
             </paragraph>
+         </d:section><d:section title = "FormatType" id = "def.fmttype">
+            <paragraph>
+               This is the type that the markers take. They can be: <code>char</code>,
+               <code>wchar_t</code>, <code>char *</code>, <code>wchar_t *</code> or
+               one of the <code>std::basic_string</code> variants. It is possible to
+               add support for other format types.
+            </paragraph>
          </d:section>
       </d:section><d:section title = "Portability" id = "intro.portability">
          <paragraph>
@@ -111,19 +133,19 @@
                <li>Intel 7.1</li>
             </list>
          </paragraph><paragraph>
-            Most of the code will now work on MSVC 6.0. Thanks to Jonathan Turkanis for his
+            Most of the code will now work on MSVC 6.0: thanks to Jonathan Turkanis for his
             help porting the code.
          </paragraph>
       </d:section>
-   </d:section><d:section title = "Standard Container Output" id = "output.stdcontainer">
+   </d:section><d:section title = "Standard Container Input/Output" id = "io.stdcontainer">
       <paragraph><table cellpadding = "0">
          <tr><td>include:  </td><td><link href = "../../../boost/outfmt/stl_io.hpp">boost/outfmt/stl_io.hpp</link></td></tr>
          <tr><td>examples: </td><td><link href = "../examples/stl_io.cpp">libs/outfmt/examples/stl_io.cpp</link></td></tr>
       </table></paragraph>
       
       <paragraph>
-         This is a helper file that provides output semantics for the standard library
-         containers.
+         This is a helper file that provides input and output semantics for the
+         standard library containers.
       </paragraph><example>
          <c:code indent = "true">
             <c:line>std::list&lt; char &gt; l;</c:line>
@@ -131,6 +153,13 @@
             <c:line>std::cout &lt;&lt; l;
                <c:comment>output: [ A, B, C ]</c:comment>
             </c:line>
+         </c:code>
+      </example><example>
+         <c:code indent = "true">
+            <c:line>std::list&lt; char &gt; l;</c:line>
+            <c:line>std::ifstream file( "data.txt" );</c:line>
+            <c:comment>read in data of the form: [ a1, a2, ..., aN ]</c:comment>
+            <c:line>file &gt;&gt; l;</c:line>
          </c:code>
       </example><paragraph>
          supported standard containers and types:
@@ -157,13 +186,13 @@
          </table>
       </paragraph>
    </d:section><d:section title = "Output Manipulators" id = "iomanip.iomanip">
-      <d:section title = "boost::io::formatlist" id = "iomanip.formatlist">
+      <d:section title = "Sequence Formatters" id = "iomanip.seqfmt">
          <paragraph><table cellpadding = "0">
             <tr><td>include:  </td><td><link href = "../../../boost/outfmt/formatlist.hpp">boost/outfmt/formatlist.hpp</link></td></tr>
             <tr><td>examples: </td><td><link href = "../examples/basic-facilities.cpp">libs/outfmt/examples/basic-facilities.cpp</link></td></tr>
          </table></paragraph>
 
-         <d:section title = "Range Output" id = "formatlist.range">
+         <d:section title = "boost::io::formatlist" id = "iomanip.formatlist">
             <c:code indent = "true">
                <c:line>boost::io::formatlist</c:line>
                <c:block open = "(" close = ");">
@@ -176,19 +205,18 @@
                sequence have <d:ref section = "def.output">Output Facilities</d:ref>.
             </paragraph><example>
                <c:code indent = "true">
-                  <c:line>std::vector&lt; int &gt; v;</c:line>
-                  <c:comment>...</c:comment>
-                  <c:line>std::cout &lt;&lt; boost::io::formatlist( v );
-                     <c:comment>output: [ 3, 6, 9, 12 ]</c:comment>
+                  <c:line>int i[ 4 ] = { 1, 2, 3, 4 };</c:line>
+                  <c:line>std::cout &lt;&lt; boost::io::formatlist( i, i + 4 );
+                     <c:comment>output: [ 1, 2, 3, 4 ]</c:comment>
                   </c:line>
                </c:code>
             </example><paragraph>
                The manipulator conforms to the format object generator guidelines in
                section <d:ref section = "fo.generator"/>.
             </paragraph>
-         </d:section><d:section title = "Container Output" id = "formatlist.container">
+         </d:section><d:section title = "boost::io::format" id = "iomanip.format">
             <c:code indent = "true">
-               <c:line>boost::io::formatlist</c:line>
+               <c:line>boost::io::format</c:line>
                <c:block open = "(" close = ");">
                   <c:line>Container &amp; c</c:line>
                </c:block>
@@ -196,21 +224,22 @@
                This is a variant of the boost::io::formatlist manipulator that
                takes a sequential container as its argument. It outputs the range
                [begin(), end()), and requires that the elements in the sequence
-               have output facilities.
+               have <d:ref section = "def.output">Output Facilities</d:ref>.
             </paragraph><example>
                <c:code indent = "true">
-                  <c:line>int i[ 4 ] = { 1, 2, 3, 4 };</c:line>
-                  <c:line>std::cout &lt;&lt; boost::io::formatlist( i, i + 4 );
-                     <c:comment>output: [ 1, 2, 3, 4 ]</c:comment>
+                  <c:line>std::vector&lt; int &gt; v;</c:line>
+                  <c:comment>...</c:comment>
+                  <c:line>std::cout &lt;&lt; boost::io::format( v );
+                     <c:comment>output: [ 3, 6, 9, 12 ]</c:comment>
                   </c:line>
                </c:code>
             </example><paragraph>
                The manipulator conforms to the format object generator guidelines
                in section <d:ref section = "fo.generator"/>.
             </paragraph>
-         </d:section><d:section title = "Iterator Range Output" id = "formatlist.iterator">
+         </d:section><d:section title = "boost::io::formatrange" id = "iomanip.formatrange">
             <c:code indent = "true">
-               <c:line>boost::io::formatlist</c:line>
+               <c:line>boost::io::formatrange</c:line>
                <c:block open = "(" close = ");">
                   <c:line>std::pair&lt; ForwardIterator, ForwardIterator &gt; &amp; ip</c:line>
                </c:block>
@@ -218,13 +247,14 @@
                This is a variant of the boost::io::formatlist manipulator that
                takes an iterator range as its argument in the form of a pair of
                iterators. It outputs the range [ip.first, ip.second), and requires
-               that the elements in the sequence have output facilities.
+               that the elements in the sequence have
+               <d:ref section = "def.output">Output Facilities</d:ref>.
             </paragraph><example>
                <c:code indent = "true">
                   <c:line>int i[ 4 ] = { 1, 2, 3, 4 };</c:line>
                   <c:comment>construct an iterator range in a std::pair object</c:comment>
                   <c:line>std::pair&lt; int *, int * &gt; ip = std::make_pair( i, i + 2 );</c:line>
-                  <c:line>std::cout &lt;&lt; boost::io::formatlist( ip );
+                  <c:line>std::cout &lt;&lt; boost::io::formatrange( ip );
                      <c:comment>output: [ 1, 2 ]</c:comment>
                   </c:line>
                </c:code>
@@ -263,8 +293,9 @@
                complex nested types. The library uses this type information to
                produce an outputter that can format that type.
             </paragraph><note>
-               Type deduction is not present on <code>boost::io::formatobout</code>,
-               since the format structure is provided by the user.
+               Type deduction is not present on <code>boost::io::formatob</code> when
+               an outputter is specified, since the format structure is provided by
+               the user.
             </note>
          </d:section>
       </d:section>
