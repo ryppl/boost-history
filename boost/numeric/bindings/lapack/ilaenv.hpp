@@ -33,7 +33,7 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
               int const n1 = -1, int const n2 = -1, 
               int const n3 = -1, int const n4 = -1)
   {
-    return LAPACK_ILAENV (&ispec, name, opts, &n1, &n2, &n3, &n4,
+    return ::LAPACK_ILAENV (&ispec, name, opts, &n1, &n2, &n3, &n4,
                           std::strlen (name), std::strlen (opts));
   }
 
