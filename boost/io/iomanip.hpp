@@ -44,6 +44,14 @@ template < typename Ch, class Tr >
 
 template < typename Ch, class Tr >
     std::basic_ostream<Ch, Tr> &  operator <<( std::basic_ostream<Ch, Tr> &os,
+     multi_delimitator<Ch> const &d );
+
+template < typename Ch, class Tr >
+    std::basic_istream<Ch, Tr> &  operator >>( std::basic_istream<Ch, Tr> &is,
+     multi_delimitator<Ch> const &d );
+
+template < typename Ch, class Tr >
+    std::basic_ostream<Ch, Tr> &  operator <<( std::basic_ostream<Ch, Tr> &os,
      multi_newer const &n );
 
 template < typename Ch, class Tr >
@@ -60,36 +68,57 @@ namespace detail
     template < typename Ch = char >
     class repeated_character_streamer_base
     {
-    protected:
-        typedef ::std::streamsize  size_type;
-
     public:
         // Template argument
         typedef Ch  char_type;
 
         // Lifetime management
-        repeated_character_streamer_base( char_type c, size_type count,
+        repeated_character_streamer_base( char_type c, ::std::streamsize count,
          bool synchronize_afterwards )
             : c_( c ), count_( count ), sync_( synchronize_afterwards )
             {}
 
         // Accessors
-        char_type  repeated_char() const { return this->c_; }
-        size_type  repeat_count() const { return this->count_; }
-        bool       will_synchronize_afterwards() const { return this->sync_; }
+        char_type          repeated_char() const { return this->c_; }
+        ::std::streamsize  repeat_count() const { return this->count_; }
+
+        bool  will_synchronize_afterwards() const { return this->sync_; }
 
     private:
          // Member data
-        char_type  c_;
-        size_type  count_;
-        bool       sync_;
+        char_type          c_;
+        ::std::streamsize  count_;
+        bool               sync_;
 
     };  // boost::io::detail::repeated_character_streamer_base
 
 }  // namespace detail
 
 
-//  I/O-manipulator object class template declarations  ----------------------//
+//  I/O-manipulator object class (template) declarations  --------------------//
+
+template < typename Ch >
+class multi_delimitator
+    : public detail::repeated_character_streamer_base<Ch>
+{
+    typedef detail::repeated_character_streamer_base<Ch>  base_type;
+
+public:
+    // Template argument
+    typedef Ch  char_type;
+
+    // Lifetime management
+    multi_delimitator( char_type c, std::streamsize count,
+     bool final_sync = false );
+
+    // Operators
+    template < class Tr >
+    void  operator ()( ::std::basic_ostream<Ch, Tr> &os ) const;
+
+    template < class Tr >
+    void  operator ()( ::std::basic_istream<Ch, Tr> &is ) const;
+
+};  // boost::io::multi_delimitator
 
 class multi_newer
     : public detail::repeated_character_streamer_base<>
@@ -98,7 +127,7 @@ class multi_newer
 
 public:
     // Lifetime management
-    multi_newer( char_type c, size_type count, bool final_flush = false );
+    multi_newer( char c, ::std::streamsize count, bool final_flush = false );
 
     // Operators
     template < typename Ch, class Tr >
@@ -113,7 +142,7 @@ class multi_skipper
 
 public:
     // Lifetime management
-    multi_skipper( char_type c, size_type count, bool final_sync = false );
+    multi_skipper( char c, ::std::streamsize count, bool final_sync = false );
 
     // Operators
     template < typename Ch, class Tr >
@@ -185,14 +214,70 @@ resetios
 }
 
 
-//  I/O-manipulator object class template member function definitions  -------//
+//  I/O-manipulator object class (template) member function definitions  -----//
+
+template < typename Ch >
+inline
+multi_delimitator<Ch>::multi_delimitator
+(
+    char_type        c,
+    std::streamsize  count,
+    bool             final_sync  // = false
+)
+    : base_type( c, count, final_sync )
+{
+}
+
+template < typename Ch >
+template < class Tr >
+inline
+void
+multi_delimitator<Ch>::operator ()
+(
+    std::basic_ostream<Ch, Tr> &  os
+) const
+{
+    char_type const  cc = this->repeated_char();
+
+    for ( std::streamsize i = this->repeat_count() ; (i > 0) && os ; --i )
+    {
+        os.put( cc );
+    }
+
+    if ( this->will_synchronize_afterwards() && os )
+    {
+        os.flush();
+    }
+}
+
+template < typename Ch >
+template < class Tr >
+inline
+void
+multi_delimitator<Ch>::operator ()
+(
+    std::basic_istream<Ch, Tr> &  is
+) const
+{
+    typename Tr::int_type const  ci = Tr::to_int_type( this->repeated_char() );
+
+    for ( std::streamsize i = this->repeat_count() ; (i > 0) && is ; --i )
+    {
+        is.ignore( std::numeric_limits<std::streamsize>::max(), ci );
+    }
+
+    if ( this->will_synchronize_afterwards() && is )
+    {
+        is.sync();
+    }
+}
 
 inline
 multi_newer::multi_newer
 (
-    char_type  c,
-    size_type  count,
-    bool       final_flush  // = false
+    char             c,
+    std::streamsize  count,
+    bool             final_flush  // = false
 )
     : base_type( c, count, final_flush )
 {
@@ -206,25 +291,16 @@ multi_newer::operator ()
     std::basic_ostream<Ch, Tr> &  os
 ) const
 {
-    Ch const  cc = os.widen( this->repeated_char() );
-
-    for ( size_type i = this->repeat_count() ; (i > 0) && os ; --i )
-    {
-        os.put( cc );
-    }
-
-    if ( this->will_synchronize_afterwards() && os )
-    {
-        os.flush();
-    }
+    os << multi_delimitator<Ch>( os.widen(this->repeated_char()),
+     this->repeat_count(), this->will_synchronize_afterwards() );
 }
 
 inline
 multi_skipper::multi_skipper
 (
-    char_type  c,
-    size_type  count,
-    bool       final_sync  // = false
+    char             c,
+    std::streamsize  count,
+    bool             final_sync  // = false
 )
     : base_type( c, count, final_sync )
 {
@@ -238,22 +314,36 @@ multi_skipper::operator ()
     std::basic_istream<Ch, Tr> &  is
 ) const
 {
-    Ch const                     cc = is.widen( this->repeated_char() );
-    typename Tr::int_type const  ci = Tr::to_int_type( cc );
-
-    for ( size_type i = this->repeat_count() ; (i > 0) && is ; --i )
-    {
-        is.ignore( std::numeric_limits<size_type>::max(), ci );
-    }
-
-    if ( this->will_synchronize_afterwards() && is )
-    {
-        is.sync();
-    }
+    is >> multi_delimitator<Ch>( is.widen(this->repeated_char()),
+     this->repeat_count(), this->will_synchronize_afterwards() );
 }
 
 
 //  I/O-manipulator operator function definitions  ---------------------------//
+
+template < typename Ch, class Tr >
+inline
+std::basic_ostream<Ch, Tr> &
+operator <<
+(
+    std::basic_ostream<Ch, Tr> &   os,
+    multi_delimitator<Ch> const &  d
+)
+{
+    return d( os ), os;
+}
+
+template < typename Ch, class Tr >
+inline
+std::basic_istream<Ch, Tr> &
+operator >>
+(
+    std::basic_istream<Ch, Tr> &   is,
+    multi_delimitator<Ch> const &  d
+)
+{
+    return d( is ), is;
+}
 
 template < typename Ch, class Tr >
 inline

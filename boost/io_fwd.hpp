@@ -63,6 +63,9 @@ class ios_all_word_saver;
 
 //  From <boost/io/iomanip.hpp>  ---------------------------------------------//
 
+template < typename Ch = char >
+    class multi_delimitator;
+
 class multi_newer;
 class multi_skipper;
 
