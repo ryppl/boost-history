@@ -10,7 +10,8 @@
 #ifndef BOOST_IO_FWD_HPP
 #define BOOST_IO_FWD_HPP
 
-#include <iosfwd>  // for std::char_traits (declaration)
+#include <cstddef>  // for std::size_t
+#include <iosfwd>   // for std::char_traits (declaration)
 
 
 namespace boost
@@ -64,6 +65,31 @@ class ios_all_word_saver;
 //  From <boost/io/iomanip.hpp>  ---------------------------------------------//
 
 // Only has function templates
+
+
+//  From <boost/io/streambuf_wrapping.hpp>  ----------------------------------//
+
+template < class StreamBuf >
+    class basic_wrapping_istream;
+
+template < class StreamBuf >
+    class basic_wrapping_ostream;
+
+template < class StreamBuf >
+    class basic_wrapping_iostream;
+
+
+//  From <boost/io/array_stream.hpp>  ----------------------------------------//
+
+template < std::size_t N, typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_array_streambuf;
+
+template < std::size_t N, typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_array_istream;
+template < std::size_t N, typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_array_ostream;
+template < std::size_t N, typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_array_stream;
 
 
 }  // namespace io
