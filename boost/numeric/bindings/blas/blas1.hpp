@@ -170,23 +170,26 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
 
   // asum <- ||x||_1
   // .. for now works only with real vectors
-#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
   template < typename vector_type >
-  typename traits::vector_traits< vector_type >::value_type 
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
+  typename traits::type_traits< typename traits::vector_traits< vector_type >::value_type >::real_type 
+#else
+  typename traits::type_traits< typename vector_type::value_type >::real_type
+#endif
   asum(const vector_type &x) 
   {
-    typedef traits::vector_traits< const vector_type > vtraits ; 
-    typedef typename vtraits::value_type  value_type ;
-    typedef typename traits::value_traits< value_type >::value_type bind_type ;
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
+    typedef typename traits::vector_traits< vector_type >::value_type value_type;
+#else
+    typedef vector_type::value_type value_type ;
+#endif
 
-    const int n = vtraits::size( x ) ;
-    const int stride_x = vtraits::stride( x ) ;
-    const value_type *x_ptr = vtraits::storage( x ) ;
+    const int n = traits::vector_size( x ) ;
+    const int stride_x = traits::vector_stride( x ) ;
+    const value_type *x_ptr = traits::vector_storage( x ) ;
 
-    return 
-      blas< value_type >::asum( &n, (const bind_type*)x_ptr, &stride_x ) ;
+    return detail::asum( n, x_ptr, stride_x ) ;
   }
-#endif // BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
 
 }}}}
 
