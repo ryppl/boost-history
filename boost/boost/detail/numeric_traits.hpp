@@ -49,6 +49,11 @@
 // See http://www.boost.org for most recent version including documentation.
 
 // Revision History
+// 11 Feb 2001 - Use BOOST_STATIC_CONSTANT (David Abrahams)
+// 11 Feb 2001 - Rolled back ineffective Borland-specific code
+//               (David Abrahams)
+// 10 Feb 2001 - Rolled in supposed Borland fixes from John Maddock, but
+//               not seeing any improvement yet (David Abrahams)
 // 06 Feb 2001 - Factored if_true out into boost/detail/select_type.hpp
 //               (David Abrahams)
 // 23 Jan 2001 - Fixed logic of difference_type selection, which was
@@ -79,9 +84,9 @@ namespace boost { namespace detail {
   struct is_signed
   {
 #if defined(BOOST_NO_LIMITS_COMPILE_TIME_CONSTANTS) || defined(BOOST_MSVC)
-    enum { value = (Number(-1) < Number(0)) };
+    BOOST_STATIC_CONSTANT(bool, value = (Number(-1) < Number(0)));
 #else
-    enum { value = std::numeric_limits<Number>::is_signed };
+    BOOST_STATIC_CONSTANT(bool, value = std::numeric_limits<Number>::is_signed);
 #endif
   };
 
@@ -96,7 +101,7 @@ namespace boost { namespace detail {
   {
       template <class T> struct traits
       {
-          enum { digits = std::numeric_limits<T>::digits };
+          BOOST_STATIC_CONSTANT(int, digits = std::numeric_limits<T>::digits);
       };
   };
 
@@ -105,26 +110,26 @@ namespace boost { namespace detail {
   {
       template <class T> struct traits
       {
-          enum { digits = sizeof(T) * std::numeric_limits<unsigned char>::digits
-                         - (is_signed<T>::value ? 1 : 0)
-          };
+          BOOST_STATIC_CONSTANT(int, digits = (
+              sizeof(T) * std::numeric_limits<unsigned char>::digits
+              - (is_signed<T>::value ? 1 : 0))
+              );
       };
   };
 
   // here's the "usable" template
   template <class T> struct digit_traits
   {
-      enum {
-          digits = digit_traits_select<
-                std::numeric_limits<T>::is_specialized
-          >::template traits<T>::digits
-      };
+      typedef digit_traits_select<
+                ::std::numeric_limits<T>::is_specialized> selector;
+      typedef typename selector::template traits<T> traits;
+      BOOST_STATIC_CONSTANT(int, digits = traits::digits);
   };
-#endif  
+#endif
 
   // Template class integer_traits<Integer> -- traits of various integer types
   // This should probably be rolled into boost::integer_traits one day, but I
-// need it to work without <limits>
+  // need it to work without <limits>
   template <class Integer>
   struct integer_traits
   {
@@ -135,10 +140,9 @@ namespace boost { namespace detail {
 #   ifdef BOOST_MSVC
       // for some reason, MSVC asserts when it shouldn't unless we make these
       // local definitions
-      enum {
-          is_integer = x::is_integer,
-          is_specialized = x::is_specialized
-      };
+      BOOST_STATIC_CONSTANT(bool, is_integer = x::is_integer);
+      BOOST_STATIC_CONSTANT(bool, is_specialized = x::is_specialized);
+      
       BOOST_STATIC_ASSERT(is_integer);
       BOOST_STATIC_ASSERT(is_specialized);
 #   endif
@@ -159,13 +163,13 @@ namespace boost { namespace detail {
    // else
         intmax_t
       >::type>::type>::type difference_type;
-# else
+#else
       BOOST_STATIC_ASSERT(boost::is_integral<Integer>::value);
-      
+
       typedef typename
       if_true<(sizeof(Integer) >= sizeof(intmax_t))>::template then<
                
-        typename if_true<is_signed<Integer>::value>::template then<
+        typename if_true<(is_signed<Integer>::value)>::template then<
           Integer,
           intmax_t
         >::type,
