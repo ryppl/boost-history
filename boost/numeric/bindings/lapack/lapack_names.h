@@ -163,6 +163,22 @@
 
 
 /********************************************/
+/* QR factorization */
+
+#define LAPACK_SGEQRF FORTRAN_ID( sgeqrf )
+#define LAPACK_DGEQRF FORTRAN_ID( dgeqrf )
+#define LAPACK_CGEQRF FORTRAN_ID( cgeqrf )
+#define LAPACK_ZGEQRF FORTRAN_ID( zgeqrf )
+
+// Apply orthogonal transformation
+
+#define LAPACK_SORMQR FORTRAN_ID( sormqr )
+#define LAPACK_DORMQR FORTRAN_ID( dormqr )
+#define LAPACK_CUNMQR FORTRAN_ID( cunmqr )
+#define LAPACK_ZUNMQR FORTRAN_ID( zunmqr )
+
+
+/********************************************/
 /* SVD */
 
 #define LAPACK_SGESVD FORTRAN_ID( sgesvd )

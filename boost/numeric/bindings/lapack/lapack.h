@@ -380,6 +380,44 @@ extern "C" {
                       double* rwork, int* iwork, int* info); 
 
 
+  /*********************************************************************/
+  /*                    QR factorization                               */
+  /*********************************************************************/
+
+  void LAPACK_SGEQRF( const int* m, const int* n, float* a, const int* lda,
+                      float* tau, float* work, const int* lwork, int* info );
+  void LAPACK_DGEQRF( const int* m, const int* n, double* a, const int* lda,
+                      double* tau, double* work, const int* lwork, int* info );
+  void LAPACK_CGEQRF( const int* m, const int* n, fcomplex_t* a, const int* lda,
+                      fcomplex_t* tau, fcomplex_t* work, const int* lwork, int* info );
+  void LAPACK_ZGEQRF( const int* m, const int* n, dcomplex_t* a, const int* lda,
+                      dcomplex_t* tau, dcomplex_t* work, const int* lwork, int* info );
+
+
+
+  void LAPACK_SORMQR( const char* side, const char* trans, const int* m,
+                      const int* n, const int* k, const float* a,
+                      const int* lda, const float* tau,
+                      float* c, const int* ldc, float* work,
+                      const int* lwork, int* info );
+  void LAPACK_DORMQR( const char* side, const char* trans, const int* m,
+                      const int* n, const int* k, const double* a,
+                      const int* lda, const double* tau,
+                      double* c, const int* ldc, double* work,
+                      const int* lwork, int* info );
+  void LAPACK_CUNMQR( const char* side, const char* trans, const int* m,
+                      const int* n, const int* k, const fcomplex_t* a,
+                      const int* lda, const fcomplex_t* tau,
+                      fcomplex_t* c, const int* ldc, fcomplex_t* work,
+                      const int* lwork, int* info );
+  void LAPACK_ZUNMQR( const char* side, const char* trans, const int* m,
+                      const int* n, const int* k, const dcomplex_t* a,
+                      const int* lda, const dcomplex_t* tau,
+                      dcomplex_t* c, const int* ldc, dcomplex_t* work,
+                      const int* lwork, int* info );
+
+
+
   /********************************************************************/
   /*                          auxiliary                               */
   /********************************************************************/
