@@ -73,6 +73,7 @@ visitor_ptr_t<T,R> visitor_ptr(R (*visitor)(T))
 #if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 
 namespace detail {
+namespace apply_visitor {
 
 template <typename Visitor>
 struct visitor_traits
@@ -114,28 +115,30 @@ public:
     }
 };
 
+} // namespace apply_visitor
 } // namespace detail
 
 template <typename Visitor, typename Visitable>
-    typename detail::visitor_traits<Visitor>::result_type
+	typename detail::apply_visitor::visitor_traits<Visitor>::result_type
 apply_visitor(Visitor visitor, Visitable& visitable)
 {
-    return detail::visitor_traits<Visitor>::execute(visitor, visitable);
+    return detail::apply_visitor::visitor_traits<Visitor>::execute(visitor, visitable);
 }
 
 template <typename Visitor, typename Visitable>
-    typename detail::visitor_traits<Visitor>::result_type
+    typename detail::apply_visitor::visitor_traits<Visitor>::result_type
 apply_visitor(Visitor visitor, const Visitable& visitable)
 {
-    return detail::visitor_traits<Visitor>::execute(visitor, visitable);
+    return detail::apply_visitor::visitor_traits<Visitor>::execute(visitor, visitable);
 }
 
 #else// defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 
 namespace detail {
+namespace apply_visitor {
 
 template <typename Visitor>
-struct visitor_traits
+struct visitor_obj_traits
 {
     typedef typename Visitor::result_type result_type;
 
@@ -207,27 +210,37 @@ struct visitor_ptr_traits
 };
 
 template <typename Visitor>
-struct select_visitor_traits
+struct visitor_traits
 {
+private:
 	typedef mpl::if_<
 		  is_pointer<Visitor>
 		, visitor_ptr_traits<Visitor>
-		, visitor_traits<Visitor>
-		>::type type;
+		, visitor_obj_traits<Visitor>
+		>::type traits;
 
-	// convienence typedef
-	typedef typename type::result_type result_type;
+public:
+	typedef typename traits::result_type result_type;
+
+	template <typename Visitable, typename IsVariant>
+    static result_type execute(
+		  Visitor visitor
+		, Visitable& visitable
+		, IsVariant is_variant
+		)
+    {
+        return traits::execute(visitor, visitable, is_variant);
+    }
 };
 
+} // namespace apply_visitor
 } // namespace detail
 
 template <typename Visitor, typename Visitable>
-	typename detail::select_visitor_traits<Visitor>::result_type
+	typename detail::apply_visitor::visitor_traits<Visitor>::result_type
 apply_visitor(Visitor visitor, Visitable& visitable)
 {
-	typedef detail::select_visitor_traits<Visitor>::type traits;
-
-	return traits::execute(
+	return detail::apply_visitor::visitor_traits<Visitor>::execute(
           visitor
         , visitable
         , mpl::bool_c< is_variant<Visitable>::value >()
@@ -237,17 +250,102 @@ apply_visitor(Visitor visitor, Visitable& visitable)
 #endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION workaround
 
 //////////////////////////////////////////////////////////////////////////
+// function template apply_visitor(visitor, visitable1, visitable2)
+//
+// Visits visitable1 and visitable2 such that their values (which we
+// shall call x and y, respectively) are used as arguments in the
+// expression visitor(x, y).
+//
+
+namespace detail {
+namespace apply_visitor {
+
+template <typename Visitor, typename Value1>
+class binary_delay0
+{
+public:
+    typedef typename visitor_traits<Visitor>::result_type
+        result_type;
+
+private:
+    Visitor& visitor_;
+    Value1& value1_;
+
+public:
+    binary_delay0(Visitor& visitor, Value1& value1)
+        : visitor_(visitor)
+        , value1_(value1)
+    {
+    }
+
+    template <typename Value0>
+    result_type operator()(Value0& value0)
+    {
+        return visitor_(value0, value1_);
+    }
+};
+
+template <typename Visitor, typename Visitable1>
+class binary_delay1
+{
+public:
+    typedef typename visitor_traits<Visitor>::result_type
+        result_type;
+
+private:
+    Visitor& visitor_;
+    Visitable1& visitable1_;
+
+public:
+    binary_delay1(Visitor& visitor, Visitable1& visitable1)
+        : visitor_(visitor)
+        , visitable1_(visitable1)
+    {
+    }
+
+    template <typename Visitable2>
+    result_type operator()(Visitable2& visitable2)
+    {
+        binary_delay0<
+              Visitor
+            , Visitable2
+            > delayer(visitor_, visitable2);
+
+        return boost::apply_visitor(delayer, visitable1_);
+    }
+};
+
+} // namespace apply_visitor
+} // namespace detail
+
+template <typename Visitor, typename Visitable1, typename Visitable2>
+    typename detail::apply_visitor::visitor_traits<Visitor>::result_type
+apply_visitor(Visitor visitor, Visitable1& visitable1, Visitable2& visitable2)
+{
+	detail::apply_visitor::binary_delay1<
+          Visitor
+        , Visitable1
+        > delayer(visitor, visitable1);
+
+    return boost::apply_visitor(delayer, visitable2);
+}
+
+//////////////////////////////////////////////////////////////////////////
 // function template apply_visitor(visitor)
 //
-// Returns an unary function object that visits its arguments using
-// visitor (or a copy) via apply_visitor( visitor, [argument] ).
+// Returns a function object, overloaded for unary and binary usage, that
+// visits its arguments using visitor (or a copy of visitor) via
+//  * apply_visitor( visitor, [argument] )
+// under unary invocation, or
+//  * apply_visitor( visitor, [argument1], [argument2] )
+// under binary invocation.
 //
 
 template <typename Visitor>
 class apply_visitor_t
 {
 public:
-    typedef typename Visitor::result_type
+	typedef typename detail::apply_visitor::visitor_traits<Visitor>::result_type
         result_type;
 
 private:
@@ -260,15 +358,15 @@ public:
     }
 
     template <typename Visitable>
-    result_type operator()(Visitable& operand)
+    result_type operator()(Visitable& visitable)
     {
-        apply_visitor(visitor_, operand);
+        apply_visitor(visitor_, visitable);
     }
 
-    template <typename Visitable>
-    result_type operator()(Visitable& operand) const
+	template <typename Visitable1, typename Visitable2>
+    result_type operator()(Visitable1& visitable1, Visitable2& visitable2)
     {
-        apply_visitor(visitor_, operand);
+        apply_visitor(visitor_, visitable1, visitable2);
     }
 };
 
