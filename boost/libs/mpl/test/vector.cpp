@@ -1,9 +1,9 @@
 
 // Copyright Aleksey Gurtovoy 2000-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -48,6 +48,20 @@ MPL_TEST_CASE()
     MPL_ASSERT(( is_same< back<v2>::type,long > ));
     MPL_ASSERT(( is_same< front<v9>::type,char > ));
     MPL_ASSERT(( is_same< back<v9>::type,int > ));
+}
+
+
+MPL_TEST_CASE()
+{
+    typedef vector2<char,long> v2;
+    
+    typedef begin<v2>::type i1;
+    typedef next<i1>::type  i2;
+    typedef next<i2>::type  i3;
+    
+    MPL_ASSERT(( is_same<deref<i1>::type,char> ));
+    MPL_ASSERT(( is_same<deref<i2>::type,long> ));
+    MPL_ASSERT(( is_same< i3, end<v2>::type > ));
 }
 
 MPL_TEST_CASE()

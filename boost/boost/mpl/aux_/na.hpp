@@ -45,6 +45,24 @@ struct is_na<na>
 #endif
 };
 
+template< typename T >
+struct is_not_na
+    : true_
+{
+#if BOOST_WORKAROUND(BOOST_MSVC, < 1300)
+    using true_::value;
+#endif
+};
+
+template<>
+struct is_not_na<na>
+    : false_
+{
+#if BOOST_WORKAROUND(BOOST_MSVC, < 1300)
+    using false_::value;
+#endif
+};
+
 #if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 template< typename T, typename U > struct if_na
 {
