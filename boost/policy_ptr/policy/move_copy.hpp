@@ -9,7 +9,6 @@
 #define BOOST_MOVE_COPY_HPP
 //----------------------------------------------------------------------------
 #include <boost/static_assert.hpp>
-#include "../always_false.hpp"
 //----------------------------------------------------------------------------
 namespace boost
 {
@@ -91,12 +90,6 @@ namespace boost
                        ~move_copy_(void)
         {
             BOOST_SP_DESTRUCTOR_HOOK(*this, "~move_copy(void)");
-        }
-
-        static
-        stored_type     clone(stored_type& p)
-        {
-            BOOST_STATIC_ASSERT(always_false<storage_policy>::value);
         }
 
         static
