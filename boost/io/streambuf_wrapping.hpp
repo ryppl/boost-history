@@ -33,20 +33,20 @@ namespace detail
 template < class StreamBuf >
 class basic_wrapping_ios
     : private ::boost::base_from_member< StreamBuf >
-    , virtual public ::std::basic_ios< StreamBuf::char_type,
-       StreamBuf::traits_type >
+    , virtual public ::std::basic_ios< typename StreamBuf::char_type,
+       typename StreamBuf::traits_type >
 {
     typedef ::boost::base_from_member< StreamBuf >  pbase_type;
 
-    typedef ::std::basic_ios< StreamBuf::char_type, StreamBuf::traits_type >
+    typedef ::std::basic_ios< typename StreamBuf::char_type, typename StreamBuf::traits_type >
       base_type;
 
 public:
     // Types
     typedef StreamBuf  streambuf_type;
 
-    typedef StreamBuf::char_type    char_type;
-    typedef StreamBuf::traits_type  traits_type;
+    typedef typename StreamBuf::char_type    char_type;
+    typedef typename StreamBuf::traits_type  traits_type;
 
     // Accessors
     streambuf_type *
@@ -106,19 +106,19 @@ protected:
 template < class StreamBuf >
 class basic_wrapping_istream
     : public detail::basic_wrapping_ios< StreamBuf >
-    , public ::std::basic_istream< StreamBuf::char_type, StreamBuf::traits_type >
+    , public ::std::basic_istream< typename StreamBuf::char_type, typename StreamBuf::traits_type >
 {
     typedef detail::basic_wrapping_ios< StreamBuf >  base1_type;
 
-    typedef ::std::basic_istream< StreamBuf::char_type, StreamBuf::traits_type >
+    typedef ::std::basic_istream< typename StreamBuf::char_type, typename StreamBuf::traits_type >
       base2_type;
 
 public:
     // Types
     typedef StreamBuf  streambuf_type;
 
-    typedef StreamBuf::char_type    char_type;
-    typedef StreamBuf::traits_type  traits_type;
+    typedef typename StreamBuf::char_type    char_type;
+    typedef typename StreamBuf::traits_type  traits_type;
 
 protected:
     // Constructors
@@ -152,19 +152,19 @@ protected:
 template < class StreamBuf >
 class basic_wrapping_ostream
     : public detail::basic_wrapping_ios< StreamBuf >
-    , public ::std::basic_ostream< StreamBuf::char_type, StreamBuf::traits_type >
+    , public ::std::basic_ostream< typename StreamBuf::char_type, typename StreamBuf::traits_type >
 {
     typedef detail::basic_wrapping_ios< StreamBuf >  base1_type;
 
-    typedef ::std::basic_ostream< StreamBuf::char_type, StreamBuf::traits_type >
+    typedef ::std::basic_ostream< typename StreamBuf::char_type, typename StreamBuf::traits_type >
       base2_type;
 
 public:
     // Types
     typedef StreamBuf  streambuf_type;
 
-    typedef StreamBuf::char_type    char_type;
-    typedef StreamBuf::traits_type  traits_type;
+    typedef typename StreamBuf::char_type    char_type;
+    typedef typename StreamBuf::traits_type  traits_type;
 
 protected:
     // Constructors
@@ -198,19 +198,19 @@ protected:
 template < class StreamBuf >
 class basic_wrapping_iostream
     : public detail::basic_wrapping_ios< StreamBuf >
-    , public ::std::basic_iostream< StreamBuf::char_type, StreamBuf::traits_type >
+    , public ::std::basic_iostream< typename StreamBuf::char_type, typename StreamBuf::traits_type >
 {
     typedef detail::basic_wrapping_ios< StreamBuf >  base1_type;
 
-    typedef ::std::basic_iostream< StreamBuf::char_type, StreamBuf::traits_type >
+    typedef ::std::basic_iostream< typename StreamBuf::char_type, typename StreamBuf::traits_type >
       base2_type;
 
 public:
     // Types
     typedef StreamBuf  streambuf_type;
 
-    typedef StreamBuf::char_type    char_type;
-    typedef StreamBuf::traits_type  traits_type;
+    typedef typename StreamBuf::char_type    char_type;
+    typedef typename StreamBuf::traits_type  traits_type;
 
 protected:
     // Constructors
