@@ -434,7 +434,18 @@ template&lt;class T, class A1, class A2&gt; shared_ptr&lt;T&gt; shared_new(A1 co
 			to emulate a <code>reinterpret_pointer_cast</code> by using an intermediate <code>shared_ptr&lt;void&gt;</code>
 			and a <code>static_pointer_cast</code>).</P>
 		<h4>12. <code>get_deleter</code></h4>
-		<p>...</p>
+		<p><code>get_deleter</code> is useful for libraries that create <EM>shared_ptr</EM> 
+			instances for client code, and when the client passes a <EM>shared_ptr</EM> back, 
+			need to determine whether that particular <EM>shared_ptr</EM> originated from 
+			the library, and if so, need to access private data associated with the 
+			instance that was stored in the deleter at creation.</p>
+		<P>One example is a library that implements a predefined <EM>shared_ptr</EM>-based 
+			interface. The library needs to interoperate with an existing infrastructure 
+			that uses a different smart pointer for its resource management, and the 
+			technique described in [<A href="#Dimov03">Dimov03</A>] is used to wrap the 
+			existing smart pointers with a <EM>shared_ptr</EM> "shell". When the 
+			library receives a <EM>shared_ptr</EM> from the client, it can extract the 
+			original wrapped smart pointer (if there is one) by using <code>get_deleter</code>.</P>
 		<h3>C. weak_ptr</h3>
 		<h4>1.</h4>
 		<p>[...]</p>
@@ -810,7 +821,7 @@ template&lt;class T, class A1, class A2&gt; shared_ptr&lt;T&gt; shared_new(A1 co
       D * get_deleter(shared_ptr&lt;T&gt; const &amp; p);
 </pre>
 		<P><B>Returns:</B> If <code>*this</code> <EM>owns</EM> a deleter <code>d</code> of 
-			type (cv-unqualified) <code>D</code>, returns <code>&amp;d</code>; otherwise 
+			type cv-unqualified <code>D</code>, returns <code>&amp;d</code>; otherwise 
 			returns 0.</P>
 		<P><B>Throws:</B> nothing.</P>
 		<h3>D. Class template <code>weak_ptr</code></h3>
