@@ -7,7 +7,6 @@
 #include <list>     // std::list
 
 #include <boost/outfmt/formatob.hpp>
-#include <boost/outfmt/readob.hpp>
 
 int main()
 {
@@ -39,7 +38,7 @@ int main()
       std::pair< char, int >           p2;
 
       std::cout << "pair before reading: " << boost::io::formatob( p2, textio ) << '\n';
-      is >> boost::io::readobout( p2, textio );
+      is >> boost::io::formatob( p2, textio );
       std::cout << "pair after reading:  "  << boost::io::formatob( p2, textio ) << '\n';
 
       // [output]:
@@ -68,7 +67,7 @@ int main()
       std::pair< char, int >           p2;
 
       std::cout << "pair before reading: " << boost::io::formatob( p2, textio ) << '\n';
-      is >> boost::io::readobout( p2, xmlio );
+      is >> boost::io::formatob( p2, xmlio );
       std::cout << "pair after reading:  "  << boost::io::formatob( p2, textio ) << '\n';
 
       // [output]:
@@ -140,7 +139,7 @@ int main()
                                        pc2;
 
       std::cout << "pair before reading: " << boost::io::formatob( pc2, textio2 ) << '\n';
-      is >> boost::io::readobout( pc2, textio2 );
+      is >> boost::io::formatob( pc2, textio2 );
       std::cout << "pair after reading:  "  << boost::io::formatob( pc2, textio2 ) << '\n';
 
       // [output]:
@@ -155,7 +154,7 @@ int main()
                                        pc2;
 
       std::cout << "pair before reading: " << boost::io::formatob( pc2, textio2 ) << '\n';
-      is >> boost::io::readobout( pc2, textio2 );
+      is >> boost::io::formatob( pc2, textio2 );
       std::cout << "pair after reading:  "  << boost::io::formatob( pc2, textio2 ) << '\n';
 
       // [output]:
@@ -173,7 +172,7 @@ int main()
 
       // create the data to be serialized
 
-      boost::math::quaternion< float > q( 0.12f, 2.75f, 3.3345f, 70.2f );
+      boost::math::quaternion< float > q( 0.12f, 2.75f, -3.3345f, 70.2f );
       boost::math::octonion< double >  o( 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8 );
 
       // writing to a plain text-based serialization stream
@@ -198,8 +197,8 @@ int main()
                    << "   quaternion = " << boost::io::formatob( q2, naryio ) << '\n'
                    << "   octonion   = " << boost::io::formatob( o2, naryio ) << '\n';
 
-         is >> boost::io::readobout( q2, naryio )
-            >> boost::io::readobout( o2, naryio );
+         is >> boost::io::formatob( q2, naryio )
+            >> boost::io::formatob( o2, naryio );
 
          std::cout << "after reading:\n"
                    << "   quaternion = " << boost::io::formatob( q2, naryio ) << '\n'
