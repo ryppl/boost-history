@@ -106,10 +106,10 @@ interval<T, Traits> cos(const interval<T, Traits>& x)
 template<class T, class Traits>
 inline interval<T, Traits> sin(const interval<T, Traits>& x)
 {
-  typedef typename Traits::rounding rnd;
+  typename Traits::rounding rnd;
   typedef interval_lib::detail::unprotect<Traits> unprotected;
   typedef interval<T, typename unprotected::type> I;
-  I pi_2(rnd::pi_1_2_down(), rnd::pi_1_2_up(), true);
+  I pi_2(rnd.pi_1_2_down(), rnd.pi_1_2_up(), true);
   return cos((I)x - pi_2);
 }
 

@@ -96,6 +96,26 @@ struct unprotect<interval<T, Traits> > {
   typedef interval<T, typename unprotect<Traits>::type> type;
 };
 
+template<class Rounding>
+struct save_state_tonearest: Rounding {
+  typename Rounding::rounding_mode mode;
+  save_state_tonearest() {
+    mode = get_rounding_mode();
+    tonearest();
+  }
+  ~save_state_tonearest() { set_rounding_mode(mode); }
+};
+
+template<class Rounding>
+struct tonearest {
+  typedef save_state_tonearest<Rounding> type;
+};
+
+template<class Rounding>
+struct tonearest<save_state<Rounding> > {
+  typedef Rounding type;
+};
+
     } // namespace detail
 
 template<class T>

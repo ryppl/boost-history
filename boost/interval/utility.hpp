@@ -93,13 +93,13 @@ interval<T, Traits> interval<T, Traits>::entire()
  */
 
 template<class T, class Traits>
-T lower(const interval<T, Traits>& x)
+const T& lower(const interval<T, Traits>& x)
 {
   return x.lower();
 }
 
 template<class T, class Traits>
-T upper(const interval<T, Traits>& x)
+const T& upper(const interval<T, Traits>& x)
 {
   return x.upper();
 }
@@ -114,8 +114,7 @@ T width(const interval<T, Traits>& x)
 template<class T, class Traits>
 T median(const interval<T, Traits>& x)
 {
-  typename Traits::rounding rnd;
-  rnd.tonearest();
+  typename interval_lib::detail::tonearest<typename Traits::rounding>::type rnd;
   return (x.lower() + x.upper())/2;
 }
 
@@ -276,8 +275,7 @@ T dist(const interval<T, Traits>& x, const interval<T, Traits>& y)
 template<class T, class Traits>
 T dist(const interval<T, Traits>& x, const T& y)
 {
-  typename Traits::rounding rnd;
-  rnd.tonearest();
+  typename interval_lib::detail::tonearest<typename Traits::rounding>::type rnd;
   if (y < x.lower())
     return y - x.lower();
   else if (y > x.upper())

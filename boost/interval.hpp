@@ -123,8 +123,8 @@ public:
   static interval entire();
   static interval hull(const T& x, const T& y);
 
-  T lower() const { return low; }
-  T upper() const { return up; }
+  const T& lower() const { return low; }
+  const T& upper() const { return up; }
 
   interval& operator+= (const T& r);
   interval& operator+= (const interval& r);
@@ -320,8 +320,8 @@ std::basic_istream<Ch, ChTr>&
 operator>>(std::basic_istream<Ch, ChTr>& is, const interval<T, Traits>& r);
 #endif
 
-template<class T, class Traits> T lower(const interval<T, Traits>& x);
-template<class T, class Traits> T upper(const interval<T, Traits>& x);
+template<class T, class Traits> const T& lower(const interval<T, Traits>& x);
+template<class T, class Traits> const T& upper(const interval<T, Traits>& x);
 template<class T, class Traits> T width(const interval<T, Traits>& x);
 template<class T, class Traits> T median(const interval<T, Traits>& x);
 template<class T, class Traits>

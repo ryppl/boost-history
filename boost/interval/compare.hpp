@@ -46,37 +46,37 @@ bool cerle(const T& x, const interval<T, Traits>& y)
 template<class T, class Traits>
 bool cergt(const interval<T, Traits>& x, const interval<T, Traits>& y)
 {
-  return y.upper() < x.lower();
+  return x.lower() > y.upper();
 }
 
 template<class T, class Traits>
 bool cergt(const interval<T, Traits>& x, const T& y)
 {
-  return y < x.lower();
+  return x.lower() > y;
 }
 
 template<class T, class Traits>
 bool cergt(const T& x, const interval<T, Traits>& y)
 {
-  return y.upper() < x;
+  return x > y.upper();
 }
 
 template<class T, class Traits>
 bool cerge(const interval<T, Traits>& x, const interval<T, Traits>& y)
 {
-  return y.upper() <= x.lower();
+  return x.lower() >= y.upper();
 }
 
 template<class T, class Traits>
 bool cerge(const interval<T, Traits>& x, const T& y)
 {
-  return y <= x.lower();
+  return x.lower() >= y;
 }
 
 template<class T, class Traits>
 bool cerge(const T& x, const interval<T, Traits>& y)
 {
-  return y.upper() <= x;
+  return x >= y.upper();
 }
 
 template<class T, class Traits>
@@ -164,13 +164,13 @@ bool posgt(const interval<T, Traits>& x, const interval<T, Traits>& y)
 template<class T, class Traits>
 bool posgt(const interval<T, Traits>& x, const T& y)
 {
-  return x.lower() > y;
+  return x.upper() > y;
 }
 
 template<class T, class Traits>
 bool posgt(const T& x, const interval<T, Traits> & y)
 {
-  return x > y.upper();
+  return x > y.lower();
 }
 
 template<class T, class Traits>
