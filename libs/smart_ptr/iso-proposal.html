@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<title>A Proposal to Add General Purpose Smart Pointers to the Standard Library</title>
-		<meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5">
+		<meta content="http://schemas.microsoft.com/intellisense/ie5" name="vs_targetSchema">
 		<meta http-equiv="Content-Language" content="en-us">
 		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 	</head>
@@ -281,8 +281,7 @@ void test()
 			instances, but using the pointer constructor correctly is still up to the user.</P>
 		<P>One possible alternative is to eliminate this unsafe constructor, and instead 
 			provide a family of factory functions of the form:</P>
-		<pre>
-template&lt;class T&gt; shared_ptr&lt;T&gt; shared_new()
+		<pre>template&lt;class T&gt; shared_ptr&lt;T&gt; shared_new()
 {
     return shared_ptr&lt;T&gt;(new T());
 }
@@ -314,7 +313,32 @@ template&lt;class T, class A1, class A2&gt; shared_ptr&lt;T&gt; shared_new(A1 co
 			that catches many common errors at runtime, including misuse of the pointer 
 			constructor and invoking <code>delete</code> on a pointer managed by <EM>shared_ptr</EM>.</P>
 		<h4>2. Deleter Constructor</h4>
-		<p>...</p>
+		<p>Custom deleters allow a factory function returning a <EM>shared_ptr</EM> to 
+			insulate the user from its memory allocation strategy. Since the deleter is not 
+			part of the type, changing the allocation strategy does not break source or 
+			binary compatibility, and does not require a client recompilation. For example, 
+			a "no-op" deleter is useful when returning a <EM>shared_ptr</EM> to a 
+			statically allocated object, a deleter that invokes the Release() member 
+			function enables <EM>shared_ptr</EM> to hold a pointer to a COM object, and 
+			other variations allow a <EM>shared_ptr</EM> to be used as a wrapper for 
+			another smart pointer, easing interoperability. See [<A href="#Dimov03">Dimov03</A>] 
+			for many other examples for the tremendous expressive power gained by the 
+			custom deleter support.</EM></p>
+		<P>In the Boost implementation, supporting custom deleters does not impose 
+			additional overhead. Earlier <EM>shared_ptr</EM> versions did not offer the 
+			deleter constructor, but in order to meet the "just do the right 
+			thing" requirement (III.A.2), the implementation kept a deleter under the 
+			hood anyway.</P>
+		<P>The requirement for the copy constructor of <code>D</code> to not throw comes from the 
+			pass by value. If the copy constructor throws, the pointer is leaked. Removing 
+			the requirement requires a pass by (const) reference.</P>
+		<P>The main problem with pass by reference lies in its interaction with rvalues. A 
+			const reference may still cause a copy, and will require a const <code>D::operator()</code>. A 
+			non-const reference won't bind to an rvalue at all. A good solution to this 
+			problem is the rvalue reference proposed in [<A href="#Hinnant02">Hinnant02</A>].</P>
+		<P>For the Boost implementation, an additional reason to avoid pass by 
+			reference has been portability; pass by value handles functions and 
+			function references well on a wide range of compilers.</P>
 		<h4>3. weak_ptr Constructor</h4>
 		<p><EM>shared_ptr</EM> provides a converting constructor from <EM>weak_ptr</EM>, 
 			with the postcondition that the newly constructed <EM>shared_ptr</EM> shares 
@@ -335,8 +359,7 @@ template&lt;class T, class A1, class A2&gt; shared_ptr&lt;T&gt; shared_new(A1 co
 			exception is thrown, it will leave the source <EM>auto_ptr</EM> unchanged. To 
 			achieve this, the constructor takes the source by a non-const reference; pass 
 			by value would be equivalent to using <code>release()</code>.</p>
-		<P>
-			If the "rvalue reference" proposed in [<A href="#Hinnant02">Hinnant02</A>] is 
+		<P>If the "rvalue reference" proposed in [<A href="#Hinnant02">Hinnant02</A>] is 
 			accepted, the constructor can take advantage of it in order to be able to take 
 			an <EM>auto_ptr</EM> rvalue as an argument.</P>
 		<h4>5. Assignment and <code>reset</code></h4>
@@ -358,7 +381,16 @@ template&lt;class T, class A1, class A2&gt; shared_ptr&lt;T&gt; shared_new(A1 co
 			efficiency reasons, since some implementations can provide a constant time <code>unique()</code>
 			but not a constant time <code>use_count()</code>.</P>
 		<h4>8. Conversion Operator</h4>
-		<p>...</p>
+		<p>To meet the "convertible to <code>bool</code>" requirement, <EM>shared_ptr</EM> has 
+			a conversion operator to an unspecified type (the Boost implementation uses a 
+			pointer to member).</p>
+		<P><code>std::basic_ios</code>'s approach of having a conversion to <code>void*</code>
+			has been deemed unsuitable for a smart pointer. Such a conversion enables far 
+			too many undesirable constructs to compile (one striking example is invoking <code>delete</code>
+			with a <EM>shared_ptr</EM> operand.) When migrating code that uses raw pointers 
+			to <EM>shared_ptr</EM>, it is important for constructs that were valid for the 
+			original raw pointer based code, but are errors under the new design, to be 
+			caught at compile time.</P>
 		<h4>9. <code>operator&lt;</code></h4>
 		<p>...</p>
 		<h4>10. <code>operator&lt;&lt;</code></h4>
@@ -509,8 +541,7 @@ template&lt;class T, class A1, class A2&gt; shared_ptr&lt;T&gt; shared_new(A1 co
 				shared_ptr</code> is convertible to <code>bool</code>, allowing its use in 
 			boolean expressions and declarations in conditions.</p>
 		<p>[<em>Example:</em></p>
-		<pre>
-    if(shared_ptr&lt;X&gt; px = dynamic_pointer_cast&lt;X&gt;(py))
+		<pre>    if(shared_ptr&lt;X&gt; px = dynamic_pointer_cast&lt;X&gt;(py))
     {
       // do something with px
     }
@@ -906,8 +937,8 @@ template&lt;class T, class A1, class A2&gt; shared_ptr&lt;T&gt; shared_new(A1 co
 			Available online at <a href="http://www.boost.org/libs/smart_ptr/src/sp_collector.cpp">
 				http://www.boost.org/libs/smart_ptr/src/sp_collector.cpp</a></p>
 		<p>[<a name="Christopher84">Christopher84</a>] Thomas W. Christopher, <i>Reference 
-				Count Garbage Collection</i>, Software - Practice and Experience, Vol. 14(6), 
-			pp. 503-507, June 1984.</p>
+				Count Garbage Collection</i>, Software - Practice and Experience, Vol. 
+			14(6), pp. 503-507, June 1984.</p>
 		<p>[<a name="Colvin94">Colvin94</a>] Gregory Colvin, <i>Exception Safe Smart Pointers</i>, 
 			C++ committee document N0555=94-168, July 1994. Available online at <a href="http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/1994/N0555.pdf">
 				http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/1994/N0555.pdf</a></p>
@@ -915,6 +946,9 @@ template&lt;class T, class A1, class A2&gt; shared_ptr&lt;T&gt; shared_new(A1 co
 				Forwarding Problem: Arguments</i>, C++ committee document N1385=02-0043, 
 			September 2002. Available online at <a href="http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/2002/n1385.htm">
 				http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/2002/n1385.htm</a></p>
+		<p>[<a name="Dimov03">Dimov03</a>] Peter Dimov, <i>Smart Pointer Programming Techniques</i>, 
+			March 2003. Available online at <a href="http://www.boost.org/libs/smart_ptr/sp_techniques.html">
+				http://www.boost.org/libs/smart_ptr/sp_techniques.html</a></p>
 		<p>[<a name="Ellis94">Ellis94</a>] John R. Ellis and David L. Detlefs, <i>Safe, 
 				Efficient Garbage Collection for C++</i>, Usenix Proceedings, February 
 			1994. This paper includes an extensive discussion of weak pointers and an 
