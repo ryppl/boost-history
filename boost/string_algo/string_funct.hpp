@@ -18,14 +18,11 @@ namespace boost {
 // -----------------------------------------------------------------------------
 //  various utility functors used by string_algo functions
 
-    namespace detail {
+    namespace string_algo {
 
-        namespace string_algo {
+        namespace detail {
 
             // isclassified functor
-            /*
-                This functor was suggested by Gennaro Prota
-            */
             template< typename CharT >
             struct isclassifiedF : public std::unary_function< CharT, bool >
             {
@@ -131,34 +128,34 @@ namespace boost {
                 }
             };
 
-        } // namespace string_algo
+        } // namespace detail
 
-    } // namespace detail
+    } // namespace string_algo
 
     //  trim specific predicates -------------------------------------//
 
     // Construct isclassified functor
     template< typename CharT >
-    detail::string_algo::isclassifiedF<CharT> 
+	string_algo::detail::isclassifiedF<CharT> 
     if_isclassified( std::ctype_base::mask Type, const std::locale& Loc=std::locale() )
     {
-        return detail::string_algo::isclassifiedF<CharT>( Type, Loc );
+		return string_algo::detail::isclassifiedF<CharT>( Type, Loc );
     }
 
     // Construct isspace functor to use with trim
     template< typename CharT >
-    detail::string_algo::isclassifiedF<CharT> 
+    string_algo::detail::isclassifiedF<CharT> 
     if_isspace( const std::locale& Loc=std::locale() )
     {
-        return detail::string_algo::isclassifiedF<CharT>( std::ctype_base::space, Loc );
+		return string_algo::detail::isclassifiedF<CharT>( std::ctype_base::space, Loc );
     }
 
     // Construct isfrom functor 
     template< typename SeqT >
-    detail::string_algo::isfromF<SeqT> 
+    string_algo::detail::isfromF<SeqT> 
     if_isfrom( const SeqT& Seq )
     {
-        return detail::string_algo::isfromF<SeqT>(Seq); 
+		return string_algo::detail::isfromF<SeqT>(Seq); 
     }
 
 

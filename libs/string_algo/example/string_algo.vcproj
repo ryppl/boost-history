@@ -118,13 +118,22 @@
 				RelativePath="..\..\..\boost\string_algo\string_conv.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\boost\string_algo\string_erase.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\boost\string_algo\string_find.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\boost\string_algo\string_funct.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\boost\string_algo\string_predicate.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\boost\string_algo\string_substr.hpp">
+				RelativePath="..\..\..\boost\string_algo\string_replace.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\boost\string_algo\string_traits.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\boost\string_algo\string_trim.hpp">

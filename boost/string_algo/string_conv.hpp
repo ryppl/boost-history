@@ -29,7 +29,7 @@ namespace boost {
             Input.begin(), 
             Input.end(), 
             std::back_inserter<SeqT>( Output ),
-            detail::string_algo::tolowerF<typename SeqT::value_type>(Loc) );
+            string_algo::detail::tolowerF<typename SeqT::value_type>(Loc) );
 
         return Output;
     }
@@ -42,7 +42,7 @@ namespace boost {
             Input.begin(), 
             Input.end(), 
             Input.begin(),
-            detail::string_algo::tolowerF<typename SeqT::value_type>(Loc) );
+            string_algo::detail::tolowerF<typename SeqT::value_type>(Loc) );
         
         return Input;
     }
@@ -58,7 +58,7 @@ namespace boost {
             Input.begin(), 
             Input.end(), 
             std::back_inserter<SeqT>( Output ),
-            detail::string_algo::toupperF<typename SeqT::value_type>(Loc) );
+            string_algo::detail::toupperF<typename SeqT::value_type>(Loc) );
 
         return Output;
     }
@@ -71,7 +71,7 @@ namespace boost {
             Input.begin(), 
             Input.end(), 
             Input.begin(),
-            detail::string_algo::toupperF<typename SeqT::value_type>(Loc) );
+            string_algo::detail::toupperF<typename SeqT::value_type>(Loc) );
         
         return Input;
     }

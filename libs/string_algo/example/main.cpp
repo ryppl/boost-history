@@ -89,12 +89,33 @@ void algo()
 
 void substr()
 {
-    string str1("123abcxxxabc321");
+    string str1("123abcxxxabcXXXabc321");
     const string str2("abc");
 
     pair<string::iterator, string::iterator> fresult=
-        find( str1.begin(), str1.end(), str2.begin(), str2.end() );
+        find_last( str1.begin(), str1.end(), str2.begin(), str2.end() );
 
+    cout << string( fresult.first, str1.end() ) << endl;
+    cout << string( str1.begin(), fresult.second ) << endl;
+
+    cout << endl;
+
+	cout << " --------------------- " << endl;
+
+	for ( unsigned int n=0; n<5; n++ )
+	{
+	    pair<string::iterator, string::iterator> fresult=
+			find_nth( str1.begin(), str1.end(), str2.begin(), str2.end(), n );
+
+		cout << string( fresult.first, str1.end() ) << endl;
+		cout << string( str1.begin(), fresult.second ) << endl;
+	
+		cout << endl;
+	}
+
+	cout << " --------------------- " << endl;
+
+	fresult=BOOST_STRING_NON_CONST_FUNCTION(find_first)( str1, str2 );
     cout << string( fresult.first, str1.end() ) << endl;
     cout << string( str1.begin(), fresult.second ) << endl;
 
@@ -106,11 +127,7 @@ void substr()
 
     cout << endl;
 
-    fresult=BOOST_STRING_NON_CONST_FUNCTION(find_first)( str1, str2 );
-    cout << string( fresult.first, str1.end() ) << endl;
-    cout << string( str1.begin(), fresult.second ) << endl;
 
-    cout << endl;
 }
 
 void replace()
@@ -149,10 +166,10 @@ void replace()
 
 int main()
 {
-    trimtest();
+//  trimtest();
 //  convtest();
 //  algo();
-//  substr();
+  substr();
 //  replace();
 
     cout << "Done." << endl;

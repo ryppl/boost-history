@@ -8,7 +8,10 @@ main.exe: \
 	../../../boost/string_algo/string_conv.hpp \
 	../../../boost/string_algo/string_predicate.hpp \
 	../../../boost/string_algo/string_funct.hpp \
-	../../../boost/string_algo/string_substr.hpp \
+	../../../boost/string_algo/string_find.hpp \
+	../../../boost/string_algo/string_traits.hpp \
+	../../../boost/string_algo/string_replace.hpp \
+	../../../boost/string_algo/string_erase.hpp \
 	../../../boost/string_algo.hpp
 
 	g++ -I $(BOOST_INCLUDE) -I ../../.. main.cpp -o main.exe

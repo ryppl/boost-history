@@ -21,39 +21,64 @@
 
 namespace boost {
 
-//  trim iterator  -----------------------------------------------//
 
-    // Search for first non space character from the beginning of the sequence
-    /*
-        Spaces are recognized accoding to 
-    */
-    template< typename Iterator, typename Predicate >
-    inline Iterator trim_begin_if( Iterator InBegin, Iterator InEnd, Predicate IsSpace )
-    {
-        return std::find_if( 
-            InBegin, 
-            InEnd, 
-            std::not1(IsSpace));
-    }
+	namespace string_algo {
 
-    // Search for first non space character from the beginning of the sequence
-    template< typename Iterator >
-    inline Iterator trim_begin( Iterator InBegin, Iterator InEnd, const std::locale& Loc=std::locale() )
-    {
-        return trim_begin_if(
-            InBegin, 
-            InEnd, 
-            if_isspace<typename Iterator::value_type>( Loc ) );
-    }
+		namespace detail {
+
+			//  trim iterator helper -----------------------------------------------//
+
+			// Search for first non matching character from the beginning of the sequence
+			template< typename Iterator, typename Predicate >
+			inline Iterator trim_begin_if( Iterator InBegin, Iterator InEnd, Predicate IsSpace )
+			{
+				return std::find_if( 
+					InBegin, 
+					InEnd, 
+					std::not1(IsSpace));
+			}
+
+			// Search for first non matching character from the end of the sequence
+			template< typename Iterator, typename Predicate >
+			inline Iterator trim_end_if( Iterator InBegin, Iterator InEnd, Predicate IsSpace )
+			{
+				for( Iterator It=InEnd; It!=InBegin;  )
+				{
+					if ( !IsSpace(*(--It)) )
+						return ++It;
+				}
+
+				return InBegin;
+			}
+
+		} // detail
+
+	} // string_algo
 
 //  left trim  -----------------------------------------------//
+
+	// iterator version of left trim
+	template< typename Iterator, typename OutputIterator, typename Predicate >
+	inline OutputIterator trim_left_copy_if( 
+		Iterator InBegin,
+		Iterator InEnd,
+		OutputIterator Output,
+		Predicate IsSpace )
+	{
+		std::copy( 
+			string_algo::detail::trim_begin_if( InBegin, InEnd, IsSpace ),
+			InEnd,
+			Output );
+
+		return Output;
+	}
 
     // const version of left trim
     template< typename SeqT, typename Predicate >
     inline SeqT trim_left_copy_if( const SeqT& Input, Predicate IsSpace )
     {
         return SeqT( 
-                trim_begin_if( Input.begin(), Input.end(), IsSpace ),
+                string_algo::detail::trim_begin_if( Input.begin(), Input.end(), IsSpace ),
                 Input.end() );
     }
 
@@ -63,20 +88,36 @@ namespace boost {
     {
         Input.erase( 
             Input.begin(),
-            trim_begin_if( Input.begin(), Input.end(), IsSpace ));
+            string_algo::detail::trim_begin_if( Input.begin(), Input.end(), IsSpace ));
 
         return Input;
     }
 
 //  right trim  -----------------------------------------------//
 
-    // const version of right trim
+	// iterator version of left trim
+	template< typename Iterator, typename OutputIterator, typename Predicate >
+	inline OutputIterator trim_right_copy_if( 
+		Iterator InBegin,
+		Iterator InEnd,
+		OutputIterator Output,
+		Predicate IsSpace )
+	{
+		std::copy( 
+			InBegin,
+			string_algo::detail::trim_end_if( InBegin, InEnd, IsSpace ),
+			Output );
+
+		return Output;
+	}
+
+	// const version of right trim
     template< typename SeqT, typename Predicate >
     inline SeqT trim_right_copy_if( const SeqT& Input, Predicate IsSpace )
     {
         return SeqT( 
             Input.begin(),
-            trim_begin_if( Input.rbegin(), Input.rend(), IsSpace ).base()
+            string_algo::detail::trim_end_if( Input.begin(), Input.end(), IsSpace )
             );
     }
     
@@ -85,7 +126,7 @@ namespace boost {
     inline SeqT& trim_right_if( SeqT& Input, Predicate IsSpace )
     {
         Input.erase(
-            trim_begin_if( Input.rbegin(), Input.rend(), IsSpace ).base(),
+            string_algo::detail::trim_end_if( Input.begin(), Input.end(), IsSpace ),
             Input.end()
             );
 
@@ -94,14 +135,35 @@ namespace boost {
 
 //  both side trim  -----------------------------------------------//
 
-    // const version of trim
+	// iterator version of left trim
+	template< typename Iterator, typename OutputIterator, typename Predicate >
+	inline OutputIterator trim_copy_if( 
+		Iterator InBegin,
+		Iterator InEnd,
+		OutputIterator Output,
+		Predicate IsSpace )
+	{
+        Iterator TrimEnd=
+			string_algo::detail::trim_end_if( InBegin, InEnd, IsSpace);
+
+		std::copy( 
+            string_algo::detail::trim_begin_if( InBegin, TrimEnd, IsSpace ),
+            TrimEnd,
+			Output
+            );
+
+		return Output;
+	}
+
+	// const version of trim
     template< typename SeqT, typename Predicate >
     inline SeqT trim_copy_if( const SeqT& Input, Predicate IsSpace )
     {
-        typename SeqT::const_iterator TrimEnd=trim_begin_if( Input.rbegin(), Input.rend(), IsSpace).base();
+        typename SeqT::const_iterator TrimEnd=
+			string_algo::detail::trim_end_if( Input.begin(), Input.end(), IsSpace);
 
         return SeqT( 
-            trim_begin_if( Input.begin(), TrimEnd, IsSpace ),
+            string_algo::detail::trim_begin_if( Input.begin(), TrimEnd, IsSpace ),
             TrimEnd
             );
     }

@@ -22,9 +22,12 @@
 #endif
 
 #include <boost/string_algo/string_funct.hpp>
+#include <boost/string_algo/string_traits.hpp>
 #include <boost/string_algo/string_trim.hpp>
 #include <boost/string_algo/string_conv.hpp>
 #include <boost/string_algo/string_predicate.hpp>
-#include <boost/string_algo/string_substr.hpp>
+#include <boost/string_algo/string_find.hpp>
+#include <boost/string_algo/string_replace.hpp>
+#include <boost/string_algo/string_erase.hpp>
 
 #endif  // BOOST_STRING_ALGO_HPP
