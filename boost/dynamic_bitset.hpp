@@ -1183,13 +1183,13 @@ dynamic_bitset<Block, Allocator>::find_next(size_type pos) const
 {
 
     const size_type sz = size();
-    if (sz == 0 || pos >= (sz-1))
+    if (pos >= (sz-1) || sz == 0)
         return npos;
 
     ++pos;
 
     const size_type blk = this->block_index(pos);
-    const size_type ind = this->bit_index(pos);
+    const int       ind = this->bit_index(pos);
 
     // mask out bits before pos
     const Block fore = this->m_bits[blk] & ( ~Block(0) << ind );
