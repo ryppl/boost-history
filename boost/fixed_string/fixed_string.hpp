@@ -16,6 +16,9 @@
 
    namespace boost
    {
+      template< typename CharT, class CharStringPolicy >
+      struct fixed_string_base;
+
       namespace detail
       {
          template< typename CharT > class format_policy{};
@@ -49,7 +52,7 @@
          template< typename CharT, class Policy = std::char_traits< CharT > >
          struct fixed_string_iface
          {
-            typedef std::basic_string< CharT, Policy >               substring_type;
+            typedef void                                             substring_type;
             typedef Policy                                           traits_type;
             typedef std::allocator< CharT >                          allocator_type;
             typedef typename allocator_type::pointer                 iterator;
@@ -144,6 +147,7 @@
             typedef typename base_type::const_iterator               const_iterator;
             typedef typename base_type::reverse_iterator             reverse_iterator;
             typedef typename base_type::const_reverse_iterator       const_reverse_iterator;
+            typedef typename base_type::substring_type               substring_type;
          private: // iterators
             inline iterator                      begin_()
             {
@@ -250,6 +254,11 @@
                this_type               a( b.data_(), b.length_());
                b.assign_( data(), length());
                *this = a;
+            }
+         public:
+            inline this_type                     substr( size_type pos, size_type n ) const
+            {
+               return( this_type( *this, pos, n ));
             }
          public:
             inline this_type &    operator=( const this_type & s )
