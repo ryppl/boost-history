@@ -13,6 +13,7 @@
 #include <boost/numeric/bindings/traits/ublas_hermitian.hpp>
 #include <boost/numeric/bindings/blas/blas3.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
+#include <boost/numeric/ublas/matrix_proxy.hpp>
 #include <boost/numeric/ublas/symmetric.hpp>
 #include <boost/numeric/ublas/hermitian.hpp>
 #include <boost/numeric/ublas/triangular.hpp>
@@ -58,8 +59,18 @@ struct RealDiagonal< std::complex<T> > {
 
 
 template <typename M>
+boost::numeric::ublas::triangular_adaptor<const M, boost::numeric::ublas::unit_upper> unit_upper_part(const M& m) {
+   return boost::numeric::ublas::triangular_adaptor<const M, boost::numeric::ublas::unit_upper> (m);
+}
+
+template <typename M>
 boost::numeric::ublas::triangular_adaptor<const M, boost::numeric::ublas::upper> upper_part(const M& m) {
    return boost::numeric::ublas::triangular_adaptor<const M, boost::numeric::ublas::upper> (m);
+}
+
+template <typename M>
+boost::numeric::ublas::triangular_adaptor<const M, boost::numeric::ublas::lower> lower_part(const M& m) {
+   return boost::numeric::ublas::triangular_adaptor<const M, boost::numeric::ublas::lower> (m);
 }
 
 
@@ -268,6 +279,98 @@ struct Gemm1 {
 }; // Gemm1
 
 
+// Functor to select syrk/herk calls given the two matrix_types
+template <typename M1>
+struct Trsm2 {
+   typedef typename M1::value_type                                                         value_type ;
+   typedef boost::numeric::ublas::matrix<value_type, boost::numeric::ublas::column_major>  ref_matrix_type ;
+   typedef typename boost::numeric::bindings::traits::type_traits< value_type >::real_type real_type ;
+   typedef typename ref_matrix_type::size_type                                             size_type ;
+
+   Trsm2(M1& c,
+        const ref_matrix_type& b_ref, const ref_matrix_type& c_ref )
+   : c_( c ), c_ref_( c_ref ), b_ref_( b_ref )
+   , a_ref_( b_ref_.size1(), c_ref_.size2() )
+   {
+      randomize( a_ref_ ) ;
+   }
+
+   template <typename M>
+   int operator() (M& a) const {
+      using namespace boost::numeric::ublas ;
+
+      real_type alpha = 2.0 ;
+
+      a.assign( a_ref_ );
+      boost::numeric::bindings::blas::trsm( 'L', 'U', 'N', 'N', value_type(alpha), b_ref_, a ) ;
+      if ( norm_frobenius( alpha * a_ref_ - prod( upper_part(b_ref_), a ) )
+          > std::numeric_limits< real_type >::epsilon() * norm_frobenius( upper_part(b_ref_) ) * norm_frobenius( a) ) return 255;
+
+      a.assign( a_ref_ );
+      boost::numeric::bindings::blas::trsm( 'R', 'U', 'N', 'N', value_type(alpha), c_, a ) ;
+      if ( norm_frobenius( alpha * a_ref_ - prod( a, upper_part(c_) ) )
+          > std::numeric_limits< real_type >::epsilon() * norm_frobenius( upper_part(c_) ) * norm_frobenius( a ) ) return 255;
+
+      a.assign( a_ref_ );
+      boost::numeric::bindings::blas::trsm( 'R', 'L', 'N', 'N', value_type(alpha), c_, a ) ;
+      if ( norm_frobenius( alpha * a_ref_ - prod( a, lower_part(c_) ) )
+          > std::numeric_limits< real_type >::epsilon() * norm_frobenius( lower_part(c_) ) * norm_frobenius( a ) ) return 255;
+
+      a.assign( a_ref_ );
+      boost::numeric::bindings::blas::trsm( 'L', 'U', 'T', 'N', value_type(alpha), b_ref_, a ) ;
+      if ( norm_frobenius( alpha * a_ref_ - prod( trans(upper_part(b_ref_)), a ) )
+          > std::numeric_limits< real_type >::epsilon() * norm_frobenius( upper_part(b_ref_) ) * norm_frobenius( a) ) return 255;
+
+      a.assign( a_ref_ );
+      boost::numeric::bindings::blas::trsm( 'L', 'U', 'N', 'U', value_type(alpha), b_ref_, a ) ;
+      if ( norm_frobenius( alpha * a_ref_ - prod( unit_upper_part(b_ref_), a ) )
+          > std::numeric_limits< real_type >::epsilon() * norm_frobenius( unit_upper_part(b_ref_) ) * norm_frobenius( a) ) return 255;
+
+      return 0;
+   }
+
+   size_type size1() const {return a_ref_.size1() ;}
+   size_type size2() const {return a_ref_.size2() ;}
+
+   const M1& c_ ;
+   const ref_matrix_type& c_ref_;
+   const ref_matrix_type& b_ref_;
+   ref_matrix_type        a_ref_;
+} ; // Trsm2
+
+
+template <typename T>
+struct Trsm1 {
+   typedef T                                                                               value_type ;
+   typedef boost::numeric::ublas::matrix<value_type, boost::numeric::ublas::column_major>  ref_matrix_type ;
+   typedef typename boost::numeric::bindings::traits::type_traits< value_type >::real_type real_type ;
+   typedef typename ref_matrix_type::size_type                                             size_type ;
+
+   Trsm1()
+   : b_( 4, 4 )
+   , c_( 7, 7 )
+   {
+      randomize( b_ );
+      randomize( c_ );
+      for ( std::size_t i=0; i<b_.size1(); ++i ) if ( b_(i,i)==value_type(0.0) ) b_(i,i) = value_type(1.0) ;
+      for ( std::size_t i=0; i<c_.size1(); ++i ) if ( c_(i,i)==value_type(0.0) ) c_(i,i) = value_type(1.0) ;
+   }
+
+   template <typename M>
+   int operator() (M& c) const {
+      typedef Trsm2<M> functor_type ;
+      return do_matrix_types( functor_type(c, b_, c_) );
+   }
+
+   size_type size1() const {return c_.size1();}
+   size_type size2() const {return c_.size2();}
+
+   ref_matrix_type b_;
+   ref_matrix_type c_;
+} ; // Trsm1
+
+
+
 template <typename T>
 int do_value_type() {
    // Gemm test
@@ -275,6 +378,9 @@ int do_value_type() {
 
    // Syrk and herk test
    if (do_matrix_types( Syrk1<T>() )) return 255 ;
+
+   // Trsm test
+   if (do_matrix_types( Trsm1<T>() )) return 255 ;
 
    return 0 ;
 } // do_value_type()
