@@ -505,10 +505,12 @@ namespace boost
         : base_type(p, detail::init_first_tag())
         { checking_policy::on_init(get_impl(*this)); }
 
+#ifndef BOOST_MSVC
         template <typename U, typename V>
         smart_ptr(U const& p, V const& v)
         : base_type(p, v, detail::init_first_tag())
         { checking_policy::on_init(get_impl(*this)); }
+#endif
 
         ~smart_ptr()
         {
@@ -665,14 +667,14 @@ namespace boost
         scalar_storage() : pointee_(default_value())
         { }
 
-        scalar_storage(scalar_storage const&)
-        : pointee_(default_value())
-        { }
-
         // The storage policy doesn't initialize the stored pointer
         //     which will be initialized by the OwnershipPolicy's Clone fn
         template <typename U>
         scalar_storage(scalar_storage<U> const& rhs)
+        : pointee_(default_value())
+        { }
+
+        scalar_storage(scalar_storage const&)
         : pointee_(default_value())
         { }
 
@@ -711,6 +713,7 @@ namespace boost
         // Data
         stored_type pointee_;
 
+	public:
         BOOST_MPL_AUX_LAMBDA_SUPPORT(1, scalar_storage, (T))
     };
 
@@ -789,6 +792,7 @@ namespace boost
         // Data
         stored_type pointee_;
 
+	public:
         BOOST_MPL_AUX_LAMBDA_SUPPORT(1, array_storage, (T))
     };
 
@@ -836,11 +840,11 @@ namespace boost
         // GCC incorrectly chooses the greedy c'tor below, instead of the
         // conversion c'tor above.  So this weaker pointer c'tor must be
         // used instead.
-#ifdef __GCC__
-        ref_counted(P const&)
-#else
+#if !defined(BOOST_MSVC) && !defined(__GNUC__)
         template <typename U>
         ref_counted(U const&)
+#else
+        ref_counted(P const&)
 #endif
         {
 //            pCount_ = static_cast<unsigned int*>(
@@ -885,6 +889,7 @@ namespace boost
         // Data
         unsigned* pCount_;
 
+	public:
         BOOST_MPL_AUX_LAMBDA_SUPPORT(1, ref_counted, (P))
     };
 
