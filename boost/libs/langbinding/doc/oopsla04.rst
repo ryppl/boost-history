@@ -4,12 +4,20 @@
 
 :Author: David Abrahams, Daniel Wallin
 :Contact: dave@boost-consulting.com, dalwan01@student.umu.se
+<<<<<<< oopsla04.rst
+:Organization: `Boost Consulting`_
+:Date: $Date$
+:Copyright: Copyright David Abrahams and Daniel Wallin 2004.
+=======
 :organization: `Boost Consulting`_
 :date: $Date$
 :copyright: Copyright David Abrahams and Daniel Wallin 2004.
+>>>>>>> 1.1.2.6
   Distributed under the Boost Software License, Version 1.0. (See
   accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt)
+
+:Abstract: We describe a library for binding C++ to dynamic languages.
 
 .. _`Boost Consulting`: http://www.boost-consulting.com
 
@@ -20,7 +28,6 @@
 .. role:: concept
    :class: interpreted
 
-:abstract: We describe a library for binding C++ to dynamic languages.
 
 =========================
  Introduction
@@ -410,7 +417,6 @@ will be established.
 Expressions described in the following sections are required to be
 valid for :concept:`Module Builder` type ``B`` and instance ``b``,
 with the access rights of ``backend::module_builder_access``.
-``std::string``
 
 Module Creation
 ===============
@@ -425,18 +431,18 @@ Function Creation
 
 ::
 
-  b.visit(backend::function const& f);                     
-  b.leave(backend::function const& f);
+  b.visit(backend::function<B> const& f);
+  b.leave(backend::function<B> const& f);
 
 This interface is used both for functions bound at module scope and
 for member functions bound within classes.  Functions visited while
 a class is being visited should be treated as member functions.
 
 Typically, upon visiting a function the :concept:`Module Builder`
-will want to create a new object that is callable in its target
-language and that, when called, invokes ``f`` by passing an object
-of type ``B::argument_package``, yielding an object of type
-``B::function_result``.
+will want to create a new callable object (in its target language)
+that, when called, invokes ``f`` by passing an object of type
+``B::argument_package``, yielding an object of type
+``B::function_result``.  
 
 .. Likewise, no need for this either.
 
@@ -447,6 +453,65 @@ of type ``B::argument_package``, yielding an object of type
 
    __ basics_
 
+Argument Package
+----------------
+
+::
+
+  typedef B::argument_package A;
+
+This type represents the package of function arguments passed from
+the target language.  For a Python binding it might be as simple
+as ``Python* [2]``, representing a positional argument tuple and
+keyword argument dictionary.  Argument packages need not be
+copyable types.  This type will also be used by target language to
+C++ data converters.
+
+Function Result
+---------------
+
+::
+
+  typedef B::function_result R;
+
+A function result is a copyable type representing the result of
+calling a function in the target language.  In a Python binding
+``R`` might be as simple as ``PyObject*``.  This type is also used
+by C++ to target language data converters.
+
+Class Creation
+==============
+
+::
+
+  b.visit(backend::class_ const& c);
+  b.leave(backend::class_ const& c);
+
+A unique integer id has been allocated to each class wrapped by the
+front-end from the sequence of numbers starting with zero.  The id
+can be accessed via::
+
+  c.id()
+
+The backend will typically want to create an appropriately-named
+class object in the target module.  The integer id will be 
+It should store a reference to
+this class in an object of type ``B::class_weak_reference``. ::
+
+  typedef B::class_reference C;
+
+Instances of this type should maintain the lifetime of the created
+class object, or if that's not possible, should be automatically
+notified when the created class object is destroyed so that the
+backend code can throw an appropriate exception if an attempt is
+made to use the destroyed class.  If target language interpreters
+can be destroyed and reconstituted (e.g. with ``PyFinalize``), it
+may be neccessary for all ``C`` instances associated with a given
+interpreter to explicitly release their reference to the created
+class
+
+can be destroyed ``C`` exhibit typical "weak
+reference behavior;" that is, 
 
 Responsibilities of the backend:
 
