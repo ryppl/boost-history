@@ -45,6 +45,8 @@ from the final version of this document.</p>
         BOOST_HAS_HASH and BOOST_HAS_SLIST - these are optional
         features and no macros should be required to be defined
         for a fully conforming compiler. </li>
+    <li>BOOST_SYSTEM_HAS_STDINT_H changed to BOOST_HAS_STDINT_H
+        throughout for consistency.</li>
     <li>Quite a number of regex options have been added, so that
         boost/regex/detail/regex_config.hpp can be finally
         deprecated. The options added are: BOOST_NO_CWCHAR,
@@ -57,8 +59,10 @@ from the final version of this document.</p>
         library will need to be updated to use these new versions
         once the new config goes live. </li>
     <li>BOOST_HAS_UNISTD_H added for POSIX feature tests (regex,
-        thread, and pool libraries for now, probably more later).
-    </li>
+        thread, and pool libraries for now, probably more later),
+        currently this is only used internally within the config
+        system, but may be used elsewhere as well in future (for
+        example the pool lib currently includes &lt;unistd.h&gt;).</li>
     <li>BOOST_NO_MEMBER_TEMPLATE_KEYWORD added for compilers that
         support member templates, but not the use of the template
         keyword when accessing member template classes (Codewarrior
@@ -79,6 +83,23 @@ from the final version of this document.</p>
         BOOST_DISABLE_THREADS, BOOST_HAS_BETHREADS,
         BOOST_HAS_PTHREADS, BOOST_HAS_WINTHREADS. The regex and
         pool libraries can also use these.</li>
+    <li>It's not clear how to handle compilers/libraries/platforms
+        that are not auto-detected. There are really two options:
+        do nothing, or stop with a #error. The latter seems to be
+        overkill - there is a good change that most of boost will
+        build OK even if the compiler/platform/library is not
+        detected, provided it is reasonably standard complient.</li>
+    <li>It's not clear how to handle as yet unreleased versions
+        of compilers/standard libraries. There are three options:
+        (a) assume all future versions will be fully standard
+        conformant, and contain all the extentions that the
+        current version has (current practice), (b) Assume that
+        all future versions will have all of the defects of the
+        current version (may involve less maintenance in practice),
+        or (c) stop with a #error.</li>
+    <li>The master version of this submission is on a cvs branch
+        called &quot;split-config&quot;, changes should be made
+        to that branch.</li>
 </ul>
 
 <h2>Contents</h2>
@@ -900,7 +921,7 @@ present.</p>
         the features required by the standard.</td>
     </tr>
     <tr>
-        <td valign="top" width="48%">BOOST_SYSTEM_HAS_STDINT_H</td>
+        <td valign="top" width="48%">BOOST_HAS_STDINT_H</td>
         <td valign="top" width="15%">Platform</td>
         <td valign="top" width="37%">There are no 1998 C++
         Standard headers &lt;stdint.h&gt; or &lt;cstdint&gt;,

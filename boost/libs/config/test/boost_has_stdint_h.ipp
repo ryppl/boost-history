@@ -3,7 +3,7 @@
 //  in all copies. This software is provided "as is" without express or implied
 //  warranty, and with no claim as to its suitability for any purpose.
 
-//  MACRO:         BOOST_SYSTEM_HAS_STDINT_H
+//  MACRO:         BOOST_HAS_STDINT_H
 //  TITLE:         stdint.h
 //  DESCRIPTION:   There are no 1998 C++ Standard headers <stdint.h> 
 //                 or <cstdint>, although the 1999 C Standard does
@@ -15,7 +15,7 @@
 
 #include <stdint.h>
 
-namespace boost_system_has_stdint_h{
+namespace boost_has_stdint_h{
 
 int test()
 {
