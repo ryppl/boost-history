@@ -144,7 +144,15 @@ function reference()
                      classes are used. Besides these the classes are much like
                      normal standard containers and provides almost the same interface.
                      The new conventions are: " ) .
-                  ulist( li( i( "The containers are neither Copy-Constructible nor Assignable." )  .
+                  ulist( 
+                         li( i( "All default iterators apply an extra layer of indirection. " ) .
+                             " This is done to make the containers easier and safer to use. It promotes
+                               a kind of pointer-less programming and the user of a class needs not worry about
+                               pointers except when allocating them. Iterators that provide access to the naked pointers
+                               are also provided since they might be useful in rare cases. Whenever eg. " . code( "begin()" ) .
+                               " returns an " . code( "iterator, ptr_begin()" ) . " will return an iterator that allows 
+                               one to iterate over the stored pointers." ) .  
+                         li( i( "The containers are neither Copy-Constructible nor Assignable." )  .
                              " This is because cloning a lot of pointers can be a very expensive operation; instead functions are
                                provided to transfer ownership. If a 
                               deep-copy is needed anyway, every container has " . code( "clone()" ) . " member function." ) . 
@@ -163,19 +171,33 @@ function reference()
                                " is used to provide an exception-safe transfer. " ) .              
                          li( i( "Ownership can be transferred from a container to another container on a per iterator range basis." ) . 
                              " This makes it possible to exchange data safely between different pointer containers
-                               without cloning the objects again. " )
+                               without cloning the objects again. " ) .
+                         li( i( "A container can be cheaply returned from functions either by making a clone or by giving up ownership
+                                 of the container." ) . " Two special member functions, " . code( "clone()" ) . " and " . 
+                             code( "release()," ) . " both return an " . code( "auto_ptr<Container>" ) . " which can be assigned
+                             to another container. This effectively reduces the cost of returning a container to one heap-allocation
+                             plus a call to " . code("swap()." ) )
+                         
                          );
 
      $overview   .= p( "The documentation is divided into a common section and an explanation for each container. 
                         The so-called \"pseudo class\" sections
                         shows the interface that some or all of the classes have in common and the indvisual parts shows the interface
-                        that is only part of some of the individual classes:" ) .
-                    ulist( item( ptrContainerLink() ) .
+                        that is only part of some of the individual classes. Before you proceed, 
+                        please make sure you understand the Clonable concept." ) .
+                    ulist( item( clonableLink() ) .
+                           item( ptrContainerLink() ) .
+                           item( ptrSequenceLink() ) .
                            item( dequeLink() ) .
                            item( listLink() ) .
                            item( vectorLink() ) .
+                           item( ptrAssociativeContainerLink() ) .
                            item( setLink() ) .
+                           item( multisetLink() ) .
                            item( mapLink() ) . 
+                           item( multimapLink() ) .
+                           item( iteratorLink() ) . 
+                           item( mapIteratorLink() ) .
                            item( exceptionLink() )
                            );
      $usage = p( "The recommended usage pattern of the container classes are the 
@@ -193,12 +215,19 @@ function reference()
                 " support equivalent keys." );
 
      $overview   .= $usage . vSpace( 1 ) . 
-                    hr() . ptrContainerRef() . 
+                    hr() . clonableRef() .
+                    hr() . ptrContainerRef() .
+                    hr() . ptrSequenceRef() . 
                     hr() . dequeRef() .
                     hr() . listRef() .
                     hr() . vectorRef() .
+                    hr() . ptrAssociativeContainerRef() .
                     hr() . setRef() . 
+                    hr() . multisetRef() .
                     hr() . mapRef() . 
+                    hr() . multimapRef() .
+                    hr() . iteratorRef() .
+                    hr() . mapIteratorRef() .
                     hr() . exceptionRef();
      
      return $overview;
@@ -273,6 +302,10 @@ function Faq()
                  just takes the address of the object and now he is happy because the code compiles. So to avoid
                   that from hapening, we add the overloaded version. Notice that containers of smart pointers does
                   not have this problem. " );
+    $faq9 = p( i( "Why do iterator-range inserts give the strong exception-safety guarantee? Is this not very inefficient?" ) .
+               " It is because it is actually affordable to do so; the overhead is one heap-allocation which 
+                 is relatively small compared to cloning N objects. " ); 
+               
                   
     return $res . olist( $faq1 . $faq2 . $faq3 . $faq4 . $faq5 . $faq6 . $faq7 . $faq8 );
 }
@@ -336,6 +369,13 @@ function cIs( $type )
 
 
 
+function clonableLink()
+{
+    return "The Clonable concept";
+}
+
+
+
 function ptrContainerLink()
 {
     return "Pseudo class " . code( "ptr_container<>" ); 
@@ -343,9 +383,9 @@ function ptrContainerLink()
 
 
 
-function arrayLink()
+function ptrSequenceLink()
 {
-    return " Class " . code( "ptr_array<>" );
+    return "Pseudo class " . code( "ptr_sequence<>" );
 }
 
 
@@ -371,9 +411,23 @@ function vectorLink()
 
 
 
+function ptrAssociativeContainerLink()
+{
+    return "Pseudo class " . code( "ptr_associative_container<>" );
+}
+
+
+
 function setLink()
 {
     return " Class " . code( "ptr_set<>" );
+}
+
+
+
+function multisetLink()
+{
+    return " Class " . code( "ptr_multiset<>" );
 }
 
 
@@ -385,9 +439,60 @@ function mapLink()
 
 
 
+function multimapLink()
+{
+    return " Class " . code( "ptr_multimap<>" );
+}
+
+
+
+function iteratorLink()
+{
+    return " Iterator operations";
+}
+
+
+
+function mapIteratorLink()
+{
+    return " Map iterator operations";
+}
+
+
+
 function exceptionLink()
 {
     return "Exception classes";
+}
+
+
+
+function clonableRef()
+{
+    $res = beginSection( clonableLink() );
+    
+    $res .= p( "The Clonable concept is introduced to formalize the requirements for copying heap-allocated 
+             objects. A type " . code( "T" ) ." might be Clonable even though it is not Assignable or 
+             CopyConstructible. Notice that many operations on the containers does not even require the stored
+             type to be Clonable." ) . 
+            p( "Let " . code( t ) . " be an object of type " . code( "T" ) . ", then T is " . 
+             i( "Clonable" ) ." if " . code( "new T( t )" ) . " is a valid expression or if there 
+             exist a free-standing function called " . 
+             code( "make_clone()" ) . " that given an object of type " . code( "T" ) . " returns a 
+             heap-allocated object of type " . code( "T" ) . ", that is, the function must have the following prototype: " ) .
+             p( code( "T* make_clone( const T& );" ) ) .
+            p( "Notice that normal CopyConstructible classes are automatically Clonable unless " . code("operator new" ) ." is
+                hidden." ) . 
+            p( "This layer of indirection provided by " . code( "make_clone()" ) . " is necessary to support 
+               classes that are not copyable by default. Notice that the implementation relies on argument-dependent lookup
+               to find the right version of " . code( "make_clone()." ) . "This means that one does not need to overload
+               or specialize the function is the " . code( "boost" ) . " namespace, but it can be placed together with
+               the rest of the interface of the class. If you are implementing a class inline in headers, remember 
+               to forward declare " . code( "make_clone()." ) );
+        
+  
+    
+    return $res;
 }
 
 
@@ -419,6 +524,10 @@ namespace boost
         typedef  typename Allocator::const_pointer            const_pointer; 
         typedef  std::reverse_iterator< iterator >            reverse_iterator;
         typedef  std::reverse_iterator< const_iterator >      const_reverse_iterator;
+        typedef  <b>implementation defined</b>                       ptr_iterator;
+        typedef  <b>implementation defined</b>                       ptr_const_iterator;
+        typedef  std::reverse_iterator< ptr_iterator >        ptr_reverse_iterator;
+        typedef  std::reverse_iterator< ptr_const_iterator >  ptr_const_reverse_iterator;        
     
     public: // construct/copy/destroy
         explicit ptr_container( const allocator_type& = allocator_type() );
@@ -428,9 +537,6 @@ namespace boost
         ptr_container( InputIterator first, InputIterator last, const allocator_type& = allocator_type() );
         ~ptr_container();
         void operator=( std::auto_ptr< ptr_container > r )  
-        template< typename InputIterator >
-        assign( InputIterator first, InputIterator last );
-        assign( size_type n, const_reference u );
         allocator_type get_allocator() const;                                      
     
     public: // iterators
@@ -439,30 +545,26 @@ namespace boost
         iterator                end();
         const_iterator          end() const;
         reverse_iterator        rbegin();
-        const_reverse_iterator  rbegin();
+        const_reverse_iterator  rbegin() const;
         reverse_iterator        rend();
-        const_reverse_iterator  rend();
+        const_reverse_iterator  rend() const;
+        
+        ptr_iterator                ptr_begin();
+        ptr_const_iterator          ptr_begin() const;
+        ptr_iterator                ptr_end();
+        ptr_const_iterator          ptr_end() const;
+        ptr_reverse_iterator        ptr_rbegin();
+        ptr_const_reverse_iterator  ptr_rbegin() const;
+        ptr_reverse_iterator        ptr_rend();
+        ptr_const_reverse_iterator  ptr_rend() const;
+
     
     public: // capacity
         size_type  size() const;
         size_type  max_size() const;
-        void       resize( size_type sz, ptr_type = new value_type() );
         bool       empty() const;	
     
-    public: // element access
-        reference        front();
-        const_reference  front() const;
-        reference        back();
-        const_reference  back() const;
-    
     public: // modifiers
-        void      push_back( T* x );
-        void      push_back( const_reference x );
-        void      pop_back();
-        iterator  insert( iterator position, const_reference x );
-        void      insert( iterator position, size_type n, ptr_type x );
-        template< typename InputIterator >
-        void      insert( iterator position, InputIterator first, InputIterator last ); 
         iterator  erase( iterator position );
         iterator  erase( iterator first, iterator last );
         void      swap( ptr_container& r );
@@ -470,9 +572,9 @@ namespace boost
     
     public: // pointer container requirements
     
+        void                            replace( iterator, T* x );    
         std::auto_ptr< ptr_container >  clone() const;    
         std::auto_ptr< ptr_container >  release();
-        std::auto_ptr< T >              release_back();
         std::auto_ptr< T >              release( iterator position );
     
     }; //  class 'ptr_container'
@@ -501,7 +603,7 @@ namespace boost
     bool operator<=( const ptr_container< T,Allocator >& x,
                  const ptr_container< T,Allocator >& y);
     
-    template< typename T, typaname Allocator  >
+    template< typename T, typename Allocator  >
     void swap( ptr_container< T,Allocator >& x, 
                ptr_container< T,Allocator >& y );
     
@@ -543,20 +645,6 @@ namespace boost
             effects( "Deletes the stored pointers and then takes ownership of the supplied pointers" ) .
             throws( "Nothing" ) 
             ) .
-        pre( "template< typename InputIterator >
-    assign( InputIterator first, InputIterator last );" ) .
-        blockQuote(
-            requirements( code("(first,last]") . " is a valid range"  ) .
-            effects( code( "clear(); insert( first, last );" ) ) .
-            postconditions( code( "size() == std::distance( first, last )" ) ) .
-            exceptionSafety( "strong guarantee" )
-            ) .
-        code( "assign( size_type n, const_reference u )" ) .
-        blockQuote( 
-            effects( code( "clear(); insert( begin(), n, u );" ) ) .
-            postconditions( code( "size() == n" ) ) .
-            exceptionSafety( "Strong guarantee" ) 
-            ) .
         code( "allocator_type get_allocator() const" ) .
         blockQuote( 
             effects( "Returns a copy of the allocator of the container object" )
@@ -583,22 +671,62 @@ namespace boost
             effects( "Returns a non-mutable iterator with " . code( "value_type T" ) ) .
             throws( "Nothing" )
             ) .
-        code( "iterator rbegin();" ) .
+        code( "reverse_iterator rbegin();" ) .
         blockQuote(
             effects( "Returns a mutable iterator with " . code( "value_type T" ) ) .
             throws( "Nothing" )
             ) .
-        code( "const_iterator rbegin() const;" ) .
+        code( "const_reverse_iterator rbegin() const;" ) .
         blockQuote(
             effects( "Returns a non-mutable iterator with " . code( "value_type T" ) ) .
             throws( "Nothing" )
             ) .
-        code( "iterator rend();" ) .
+        code( "reverse_iterator rend();" ) .
         blockQuote(
             effects( "Returns a mutable iterator with " . code( "value_type T" ) ) .
             throws( "Nothing" )
             ) .
-        code( "const_iterator rend() const;" ) .
+        code( "const_reverse_iterator rend() const;" ) .
+        blockQuote(
+            effects( "Returns a non-mutable iterator with " . code( "value_type T" ) ) .
+            throws( "Nothing" )
+            )  .
+        code( "ptr_iterator ptr_begin();" ) .
+        blockQuote(
+            effects( "Returns a mutable iterator with " . code( "value_type T" ) ) .
+            throws( "Nothing" )
+            ) .
+        code( "ptr_const_iterator ptr_begin() const;" ) .
+        blockQuote(
+            effects( "Returns a non-mutable iterator with " . code( "value_type T" ) ) .
+            throws( "Nothing" )
+            ) .
+        code( "ptr_iterator ptr_end();" ) .
+        blockQuote(
+            effects( "Returns a mutable iterator with " . code( "value_type T" ) ) .
+            throws( "Nothing" )
+            ) .
+        code( "ptr_const_iterator ptr_end() const;" ) .
+        blockQuote(
+            effects( "Returns a non-mutable iterator with " . code( "value_type T" ) ) .
+            throws( "Nothing" )
+            ) .
+        code( "ptr_reverse_iterator ptr_rbegin();" ) .
+        blockQuote(
+            effects( "Returns a mutable iterator with " . code( "value_type T" ) ) .
+            throws( "Nothing" )
+            ) .
+        code( "ptr_const_reverse_iterator ptr_rbegin() const;" ) .
+        blockQuote(
+            effects( "Returns a non-mutable iterator with " . code( "value_type T" ) ) .
+            throws( "Nothing" )
+            ) .
+        code( "ptr_reverse_iterator ptr_rend();" ) .
+        blockQuote(
+            effects( "Returns a mutable iterator with " . code( "value_type T" ) ) .
+            throws( "Nothing" )
+            ) .
+        code( "ptr_const_reverse_iterator ptr_rend() const;" ) .
         blockQuote(
             effects( "Returns a non-mutable iterator with " . code( "value_type T" ) ) .
             throws( "Nothing" )
@@ -620,76 +748,8 @@ namespace boost
             effects( "Returns whether the container is empty or not" ) .
             throws( "Nothing" ) 
             ) .
-        beginDetails( "element access" ) .
-        code( "reference front();" ) .
-        blockQuote( 
-            effects( code( "return *begin()" ) ) .
-            throws( "Nothing" ) 
-            ) .
-        code( "const_reference front() const;" ) .
-        blockQuote( 
-            effects( code( "return *begin()" ) ) .
-            throws( "Nothing" ) 
-        ) .
-        code( "reference back();" ) .
-        blockQuote( 
-            effects( code( "return *end()" ) ) .
-            throws( "Nothing" ) 
-            ) .
-        code( "const_reference back() const;" ) .
-        blockQuote( 
-            effects( code( "return *end()" ) ) .
-            throws( "Nothing" ) 
-            ) .    
-        /////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////
     beginDetails( "modifiers" ) .
-        code( "void push_back( T* x );" ) .
-        blockQuote(
-            requirements( code("x") . " is heap-allocated and cannot be " . code("0") ) .
-            effects( "Inserts the pointer into container and takes ownership of it" ) .
-            throws( code("bad_pointer") . " if " . code( "x" ) . " is " . code( "0" ) ) .
-            exceptionSafety( "Strong guarantee" ) 
-            ) .
-        code( "void push_back( const_reference x );" ) .
-        blockQuote(
-            effects( code( "push_back( make_clone( x ) );" ) ) .
-            exceptionSafety( "Strong guarantee" ) 
-            ) .
-        code( "void pop_back();" ) .
-        blockQuote( 
-            effects( "Removes the last element in the container if it exists" ) .
-            postconditions( code( "not empty()" ) .  " implies " . code("size()") . " is one less" ) .
-            exceptionSafety( "Nothrow guaarantee" ) 
-            ) .
-        code( "iterator insert( iterator position, const_reference x );" ) .
-        blockQuote( 
-            requirements( code("position") . " is a valid iterator from the container" ) .
-            effects( code( "return insert( position, make_clone( x ) );" ) ) .
-            exceptionSafety( "Strong guarantee" ) 
-            ) .
-        code( "iterator insert( iterator position, ptr_type x );" ) .
-        blockQuote( 
-            requirements( code("position") . " is a valid iterator from the container and " . 
-                          code( "x" ) ." is heap-allocated and cannot be " .code( "0" ) ) .
-            effects( "Inserts " . code("x") . " before " . code( "position" ) .
-                     " and returns an iterator pointing to it" ) .
-            throws( code("bad_pointer") . " if " . code( "x" ) . " is " . code( "0" ) ) .
-            exceptionSafety( "Strong guarantee" ) 
-            ) .
-        code( "void insert( iterator position, size_type n, const_reference x );" ) .
-        blockQuote( 
-            requirements( code("position") . " is a valid iterator from the container" ) .
-            effects( "Inserts " . code( "n" ). " clones of " . code("x") . " before " . 
-                     code( "position" ) ." into the container " ) .
-            exceptionSafety( "Strong guarantee" ) 
-            ) .
-        pre( "template< typename InputIterator >
-    void insert( iterator position, InputIterator first, InputIterator last );" ) .
-        blockQuote( 
-            requirements( code("position") . " is a valid iterator from the container" ) .
-            effects( "Inserts a cloned range before " . code("position") ) .
-            exceptionSafety( "Strong guarantee" ) 
-            ) .
         code( "iterator erase( iterator position );" ) .
         blockQuote( 
             requirements( code("position") . " is a valid iterator from the container" ) .
@@ -731,14 +791,6 @@ namespace boost
         exceptionSafety( "Strong guarantee" ) .
         throws( code("std::bad_alloc")  . " if the return value cannot be allocated" ) 
         ) .
-        code( "std::auto_ptr< T > release_back();" ) .
-        blockQuote( 
-            requirements( code("not empty()" ) ) .
-            effects( "Releases ownership of the last pointer in the container" ) .
-            postconditions( code("size()") . " is one less " ) .
-            throws( code("bad_ptr_container_operation") . " if the container is empty" ) .
-            exceptionSafety( "Strong guarantee" ) 
-            ) .
         code( "std::auto_ptr< T > release( iterator position );" ) .
         blockQuote( 
             requirements( code( "not empty()" ) ) . 
@@ -747,8 +799,7 @@ namespace boost
             throws( code("bad_ptr_container_operation") . " if the container is empty" ) .
             exceptionSafety( "Strong guarantee" ) 
             )
-                  ;
-    
+                  ; 
 
     return $res . $synopsis . $details;
 
@@ -756,9 +807,159 @@ namespace boost
 
 
 
-function arrayRef()
-{ 
-    return beginSection( arrayLink() );
+function ptrSequenceRef()
+{
+    $res = beginSection( ptrSequenceLink() );
+    
+    $res     .= "This section describe all the common operations for all the pointer sequences, that is, " . 
+                code( "ptr_vector, ptr_list " ) . " and " . code( "ptr_deque." );  
+
+$synopsis = beginSynopsis() . 
+"<pre>             
+namespace boost
+{      
+
+    template< typename T, typename Allocator = std::allocator< T* > >
+    class ptr_sequence 
+    {
+    public: // construct/copy/destroy
+        assign( InputIterator first, InputIterator last );
+        assign( size_type n, const_reference u );
+    
+    public: // capacity
+        void             resize( size_type sz, ptr_type = new value_type() );
+    
+    public: // element access
+        reference        front();
+        const_reference  front() const;
+        reference        back();
+        const_reference  back() const;
+    
+    public: // modifiers
+        void      push_back( T* x );
+        void      push_back( const_reference x );
+        void      pop_back();
+        iterator  insert( iterator position, const_reference x );
+        void      insert( iterator position, size_type n, ptr_type x );
+        template< typename InputIterator >
+        void      insert( iterator position, InputIterator first, InputIterator last ); 
+    
+    public: // pointer container requirements
+        std::auto_ptr< T >  release_back();
+    
+    }; //  class 'ptr_container'
+
+} // namespace 'boost'  
+</pre> ";
+
+$details  = beginDetails( "construct/copy/destroy" ) .        
+    pre( "template< typename InputIterator >
+assign( InputIterator first, InputIterator last );" ) .
+    blockQuote(
+        requirements( code("(first,last]") . " is a valid range"  ) .
+        effects( code( "clear(); insert( first, last );" ) ) .
+        postconditions( code( "size() == std::distance( first, last )" ) ) .
+        exceptionSafety( "strong guarantee" )
+        ) .
+    code( "assign( size_type n, const_reference u )" ) .
+    blockQuote( 
+        effects( code( "clear(); insert( begin(), n, u );" ) ) .
+        postconditions( code( "size() == n" ) ) .
+        exceptionSafety( "Strong guarantee" ) 
+        ) .
+    //////////////////////////////////////////////////////////////////////
+    beginDetails( "capacity" ) .
+    code( "void resize( size_type n );" ) .
+    blockQuote( 
+        effects( "XX" ) .
+        throws( "XX" ) 
+        ) .
+    //////////////////////////////////////////////////////////////////////
+    beginDetails( "element access" ) .
+    code( "reference front();" ) .
+    blockQuote( 
+        effects( code( "return *begin()" ) ) .
+        throws( "Nothing" ) 
+        ) .
+    code( "const_reference front() const;" ) .
+    blockQuote( 
+        effects( code( "return *begin()" ) ) .
+        throws( "Nothing" ) 
+    ) .
+    code( "reference back();" ) .
+    blockQuote( 
+        effects( code( "return *end()" ) ) .
+        throws( "Nothing" ) 
+        ) .
+    code( "const_reference back() const;" ) .
+    blockQuote( 
+        effects( code( "return *end()" ) ) .
+        throws( "Nothing" ) 
+        ) .    
+    /////////////////////////////////////////////////////////////////////
+beginDetails( "modifiers" ) .
+    code( "void push_back( T* x );" ) .
+    blockQuote(
+        requirements( code("x") . " is heap-allocated and cannot be " . code("0") ) .
+        effects( "Inserts the pointer into container and takes ownership of it" ) .
+        throws( code("bad_pointer") . " if " . code( "x" ) . " is " . code( "0" ) ) .
+        exceptionSafety( "Strong guarantee" ) 
+        ) .
+    code( "void push_back( const_reference x );" ) .
+    blockQuote(
+        effects( code( "push_back( make_clone( x ) );" ) ) .
+        exceptionSafety( "Strong guarantee" ) 
+        ) .
+    code( "void pop_back();" ) .
+    blockQuote( 
+        effects( "Removes the last element in the container if it exists" ) .
+        postconditions( code( "not empty()" ) .  " implies " . code("size()") . " is one less" ) .
+        exceptionSafety( "Nothrow guaarantee" ) 
+        ) .
+    code( "iterator insert( iterator position, const_reference x );" ) .
+    blockQuote( 
+        requirements( code("position") . " is a valid iterator from the container" ) .
+        effects( code( "return insert( position, make_clone( x ) );" ) ) .
+        exceptionSafety( "Strong guarantee" ) 
+        ) .
+    code( "iterator insert( iterator position, ptr_type x );" ) .
+    blockQuote( 
+        requirements( code("position") . " is a valid iterator from the container and " . 
+                      code( "x" ) ." is heap-allocated and cannot be " .code( "0" ) ) .
+        effects( "Inserts " . code("x") . " before " . code( "position" ) .
+                 " and returns an iterator pointing to it" ) .
+        throws( code("bad_pointer") . " if " . code( "x" ) . " is " . code( "0" ) ) .
+        exceptionSafety( "Strong guarantee" ) 
+        ) .
+    code( "void insert( iterator position, size_type n, const_reference x );" ) .
+    blockQuote( 
+        requirements( code("position") . " is a valid iterator from the container" ) .
+        effects( "Inserts " . code( "n" ). " clones of " . code("x") . " before " . 
+                 code( "position" ) ." into the container " ) .
+        exceptionSafety( "Strong guarantee" ) 
+        ) .
+    pre( "template< typename InputIterator >
+void insert( iterator position, InputIterator first, InputIterator last );" ) .
+    blockQuote( 
+        requirements( code("position") . " is a valid iterator from the container" ) .
+        effects( "Inserts a cloned range before " . code("position") ) .
+        exceptionSafety( "Strong guarantee" ) 
+        ) .
+/////////////////////////////////////////////////////////////////////////
+beginDetails( "pointer container requirements" ) .
+    code( "std::auto_ptr< T > release_back();" ) .
+    blockQuote( 
+        requirements( code("not empty()" ) ) .
+        effects( "Releases ownership of the last pointer in the container" ) .
+        postconditions( code("size()") . " is one less " ) .
+        throws( code("bad_ptr_container_operation") . " if the container is empty" ) .
+        exceptionSafety( "Strong guarantee" ) 
+        ) 
+              ;
+
+return $res . $synopsis . $details;
+
+
 }
 
 
@@ -986,9 +1187,26 @@ namespace boost
 
 
 
+function ptrAssociativeContainerRef()
+{
+    $res = beginSection( ptrAssociativeContainerLink() );
+    
+    
+    return $res;
+}
+
+
+
 function setRef() 
 {
     return beginSection( setLink() );
+}
+
+
+
+function multisetRef()
+{
+    return beginSection( multisetLink() );
 }
 
 
@@ -997,7 +1215,28 @@ function mapRef()
 {
     return beginSection( mapLink() );
 }
+
+
+
+function multimapRef()
+{
+    return beginSection( multimapLink() );
+}
      
+
+
+function iteratorRef()
+{
+    return beginSection( iteratorLink() );
+}
+
+
+
+function mapIteratorRef()
+{
+    return beginSection( mapIteratorLink() );
+}
+
 
 
 function exceptionRef()
