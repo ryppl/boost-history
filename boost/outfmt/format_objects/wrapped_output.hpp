@@ -31,6 +31,12 @@
                return( out( os, value ) << close());
             }
          public:
+            template< typename T, class InputStream >
+            inline bool                          read( InputStream & is, T & v ) const
+            {
+               return( is.match( open()) && out.read( is, v ) && is.match( close()));
+            }
+         public:
             inline           wrapped_output()
             {
             }

@@ -20,19 +20,27 @@
          private:
             long                       length;
             long                       offset;
+         private:
+            typedef detail::list_output< FormatType, array_output< FormatType, Outputter >, Outputter >
+                                                                     base_type;
          public:
             template< typename T, class OutputStream >
             inline OutputStream & operator()
                                   (
                                      OutputStream & os,
                                      const T      * array
-                                  ) const 
+                                  ) const
             {
-               typedef detail::list_output< FormatType, array_output< FormatType, Outputter >, Outputter >
-                                                                     base_type;
 
                const base_type *       self = static_cast< const base_type * >( this );
                return(( *self )( os, array + offset, array + offset + length ));
+            }
+         public:
+            template< typename T, class InputStream >
+            inline bool                          read( InputStream & is, const T * array ) const
+            {
+               const base_type *       self = static_cast< const base_type * >( this );
+               return(( *self ).read( is, array + offset, array + offset + length ));
             }
          public:
             inline array_output & operator()( long len )

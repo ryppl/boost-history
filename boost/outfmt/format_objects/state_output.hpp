@@ -24,18 +24,32 @@
             template< typename T, class OutputStream >
             inline OutputStream & operator()( OutputStream & os, const T & value ) const
             {
-#              if defined(_MSC_VER)
+#              if defined(BOOST_MSVC)
 #                 pragma warning( push )
 #                 pragma warning( disable : 4127 ) // conditional expression is constant
 #              endif
                if( pre )               const_cast< StateObject & >( state )( os );
                out( os, value );
                if( !pre )              const_cast< StateObject & >( state )( os );
-#              if defined(_MSC_VER)
+#              if defined(BOOST_MSVC)
 #                 pragma warning( pop )
 #              endif
 
                return( os );
+            }
+         public:
+            template< typename T, class InputStream >
+            inline bool                          read( InputStream & is, T & v ) const
+            {
+               if( pre && !const_cast< StateObject & >( state ).read( is ))
+                  return( false );
+
+               if( !out.read( is, v )) return( false );
+
+               if( !pre && !const_cast< StateObject & >( state ).read( is ))
+                  return( false );
+
+               return( true );
             }
          public:
             inline           state_output()

@@ -41,7 +41,7 @@
                typename Container::value_type
                                        value;
 
-               return(( *self ).read( is, std::back_inserter( c ), value ));
+               return(( *self ).readc( is, std::back_inserter( c ), value ));
             }
          public:
             inline           container_output()

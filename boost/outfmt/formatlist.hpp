@@ -66,6 +66,22 @@
          {
             return( fl( os, fl.begin(), fl.end()));
          }
+
+         template< typename CharT, class TraitsT, typename ForwardIterator, typename FormatType, typename Outputter >
+         inline std::basic_istream< CharT, TraitsT > & operator>>
+         (
+            std::basic_istream< CharT, TraitsT > & is,
+            const formatlist_t< ForwardIterator, FormatType, Outputter > & fl
+         )
+         {
+            boost::io::detail::input_helper< std::istream >
+                                                 in( is );
+            fl.read( in,
+               const_cast< formatlist_t< ForwardIterator, FormatType, Outputter > & >( fl ).begin(),
+               const_cast< formatlist_t< ForwardIterator, FormatType, Outputter > & >( fl ).end()
+            );
+            return( is );
+         }
 #     else
          template< typename ForwardIterator, typename FormatType, typename Outputter >
          inline std::ostream & operator<<
@@ -77,7 +93,21 @@
             return( fl( os, fl.begin(), fl.end()));
          }
 
-         // [todo]: check and add support for std::wstream
+         template< typename ForwardIterator, typename FormatType, typename Outputter >
+         inline std::istream & operator>>
+         (
+            std::istream & is,
+            const formatlist_t< ForwardIterator, FormatType, Outputter > & fl
+         )
+         {
+            boost::io::detail::input_helper< std::istream >
+                                                 in( is );
+            fl.read( in,
+               const_cast< formatlist_t< ForwardIterator, FormatType, Outputter > & >( fl ).begin(),
+               const_cast< formatlist_t< ForwardIterator, FormatType, Outputter > & >( fl ).end()
+            );
+            return( is );
+         }
 #     endif
 
       // list format manipulators -- iterator range variants

@@ -19,19 +19,30 @@
                                                                      Outputter
                                                                   >, Outputter >
       {
+         private:
+            typedef detail::list_output< FormatType, range_output< FormatType, Outputter >, Outputter >
+                                                                     base_type;
          public:
             template< typename ForwardIterator, class OutputStream >
             inline OutputStream & operator()
                                   (
                                      OutputStream & os,
                                      const std::pair< ForwardIterator, ForwardIterator > & ip
-                                  ) const 
+                                  ) const
             {
-               typedef detail::list_output< FormatType, range_output< FormatType, Outputter >, Outputter >
-                                                                     base_type;
-
                const base_type *       self = static_cast< const base_type * >( this );
                return(( *self )( os, ip.first, ip.second ));
+            }
+         public:
+            template< typename ForwardIterator, class InputStream >
+            inline bool                          read
+                                                 (
+                                                    InputStream & is,
+                                                    std::pair< ForwardIterator, ForwardIterator > & ip
+                                                 ) const
+            {
+               const base_type *       self = static_cast< const base_type * >( this );
+               return(( *self ).read( is, ip.first, ip.second ));
             }
          public:
             inline           range_output()

@@ -7,6 +7,7 @@
 #ifndef BOOST_IOFM_FormatObjects_DETAIL_ListOutput_HPP
 #define BOOST_IOFM_FormatObjects_DETAIL_ListOutput_HPP
 #  include <boost/outfmt/formatter.hpp>
+#  include <boost/detail/iterator.hpp>  // boost::detail::iterator_traits
 
    namespace boost { namespace io { namespace detail
    {
@@ -42,7 +43,12 @@
             }
          public:
             template< class InputStream, class OutputIterator, typename T >
-            inline bool                          read( InputStream & is, OutputIterator i, T & value ) const
+            inline bool                          readc
+                                                 (
+                                                    InputStream  & is,
+                                                    OutputIterator i,
+                                                    T            & value
+                                                 ) const
             {
                if( !is.match( open()))           return( false );
 
@@ -57,6 +63,40 @@
                      return( false );
 
                   *i++ = value;
+
+                  if( is.readfirstch( ch ) && !is.eq( ch, cch ))
+                  {
+                     if( !is.match( separator()))
+                        return( false );
+                  }
+               }
+
+               return( is.match( close()));
+            }
+         public:
+            template< class InputStream, class Iterator >
+            inline bool                          read
+                                                 (
+                                                    InputStream & is,
+                                                    Iterator      first,
+                                                    Iterator      last
+                                                 ) const
+            {
+               if( !is.match( open()))           return( false );
+
+               typename InputStream::char_type
+                                       cch = is.firstch( close());
+               typename InputStream::char_type
+                                       ch  = '\0';
+               typename boost::detail::iterator_traits< Iterator >::value_type
+                                       value;
+
+               while(( first != last ) && is.readfirstch( ch ) && !is.eq( ch, cch ))
+               {
+                  if( !outputter.read( is, value ))
+                     return( false );
+
+                  *first++ = value;
 
                   if( is.readfirstch( ch ) && !is.eq( ch, cch ))
                   {
