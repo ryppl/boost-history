@@ -55,7 +55,12 @@ void test_copy_assignment()
   l.push_back(employee(1,"Rachel",27));
   l.push_back(employee(2,"Agatha",40));
 
+#if BOOST_WORKAROUND(BOOST_MSVC,<1300)
+  employee_set es5;
+  es5.insert(l.begin(),l.end());
+#else
   employee_set es5(l.begin(),l.end());
+#endif
 
   l.sort();
 
