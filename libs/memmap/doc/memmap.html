@@ -18,20 +18,19 @@
 		<font face="Times" size="3">
 			<h1>Boost Memory Mapped File</h1>
 			<h2>Rationale</h2>
-			<p>A memory mapped file associates the contents of a file with a block of virtual
-			address space of a process. The Win32 platform and POSIX standard provide means
-			of creating and managing memory mapped files, however, the methods for this is
-			different between the two. The intention of the Boost Memory Mapped File is to
-			bridge the compatibility gap here, so that users can write portable code that
-			uses memory mapped files.</p>
+			<p>A memory mapped file associates the contents of a file with a block of virtual 
+				address space of a process. The Win32 platform and POSIX standard provide means 
+				of creating and managing memory mapped files, however, the methods for this is 
+				different between the two. The intention of the Boost Memory Mapped File is to 
+				bridge the compatibility gap here, so that users can write portable code that 
+				uses memory mapped files.</p>
 			<h2>Synopsis</h2>
-			<p>There are two classes and one helper function.
-			The <code>file</code> helper class is used to open and manage the scope of a file.
-			The <code>memory_mapped_file</code> class manages the memory mapping of a file.
-			The helper function <code>get_file_size()</code> returns the size of the file in
-			bytes. It is declared in the <code>boost</code> namespace rather than
-			<code>boost::detail</code> as it is a generally helpful function for the user of
-			the library to call.</p>
+			<p>There are two classes and one helper function. The <code>file</code> helper 
+				class is used to open and manage the scope of a file. The <code>memory_mapped_file</code>
+				class manages the memory mapping of a file. The helper function <code>get_file_size()</code>
+				returns the size of the file in bytes. It is declared in the <code>boost</code> 
+				namespace rather than <code>boost::detail</code> as it is a generally helpful 
+				function for the user of the library to call.</p>
 			<pre>
 filesize_t <b>get_file_size</b>(file_handle_t handle);
 
@@ -131,7 +130,7 @@ int main(int, char **)
 				</tr>
 				<tr>
 					<td bgcolor="#cc9966"><font color="#ffffff"><b>&nbsp;Microsoft Visual C++.Net (VC7)</b></font></td>
-					<td bgcolor="#ffcc66">Dinkumware (with compiler)</td>
+					<td bgcolor="#ffcc66">Dinkumware<br>(with&nbsp;compiler)</td>
 					<td bgcolor="#ffcc66">Using the project file <code>mapmem.vcproj</code></td>
 					<td bgcolor="#ffcc66">Success.</td>
 				</tr>
@@ -143,9 +142,12 @@ int main(int, char **)
 				</tr>
 				<tr>
 					<td bgcolor="#cc9966"><font color="#ffffff"><b>&nbsp;Microsoft Visual C++ v6</b></font></td>
-					<td bgcolor="#ffcc66">Dinkumware (with compiler)</td>
+					<td bgcolor="#ffcc66">Dinkumware<br>(with&nbsp;compiler)</td>
 					<td bgcolor="#ffcc66"><code>cl mapmem.cpp -GX</code></td>
-					<td bgcolor="#ffcc66">Success.</td>
+					<td bgcolor="#ffcc66">Fail.<br>
+						boost/memmap.hpp(227) : error C2955: 'file' : use of class template requires 
+						template argument list<br>
+						memmap.hpp(136) : see declaration of 'file'</td>
 				</tr>
 				<tr>
 					<td bgcolor="#cc9966"><font color="#ffffff"><b>&nbsp;g++ 3.1.1 20020718 (prerelease) 
@@ -175,8 +177,8 @@ int main(int, char **)
 					notice and this permission notice appear in supporting documentation. The 
 					author makes no representations about the suitability of this software for any 
 					purpose. It is provided "as is" without express or implied warranty.</i></p>
-			<p><i>Thanks to Malte Starostik suggesting the <code>file</code> helper class and 64-bit
-					POSIX support.</i></p>
+			<p><i>Thanks to Malte Starostik suggesting the <code>file</code> helper class and 
+					64-bit POSIX support.</i></p>
 			<hr>
 			<i>Last Revised: 13th October, 2002</i> </font>
 	</body>
