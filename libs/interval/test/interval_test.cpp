@@ -299,6 +299,11 @@ void check_unary(FuncR rfunc, FuncD dfunc, const std::string& func,
 		       func, low, high, step);
 }
 
+template<class T> T my_square(T x)
+{
+  return x * x;
+}
+
 
 void runtest_unary_functions()
 {
@@ -306,7 +311,7 @@ void runtest_unary_functions()
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::abs),
 	      std::ptr_fun( (double(*)(double)) std::fabs), "abs");
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::square),
-	      std::ptr_fun( (double (*)(double)) boost::square), "square");
+	      std::ptr_fun( (double (*)(double)) my_square), "square");
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::sqrt),
 	      std::ptr_fun( (double(*)(double)) std::sqrt), "sqrt", -1, 10);
 #if 0

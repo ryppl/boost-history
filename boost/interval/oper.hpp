@@ -301,12 +301,6 @@ interval<T, Traits> sqrt(const interval<T, Traits>& x)
   return interval<T, Traits>(l, rnd.sqrt_up(x.upper()), true);
 }
 
-template<class T>
-inline T square(T x)
-{
-  return x * x;
-}
-
 template<class T, class Traits>
 interval<T, Traits> square(const interval<T, Traits>& x)
 {

@@ -200,9 +200,10 @@ struct rounding {
 </pre>
 
 <p>The last function ensures that the current rounding mode is
-effectively applied; it can be used as a workaround for FPUs with
-extended precision. In order to use the <code>save_state</code>
-described below, the class must be extended with:</p>
+effectively applied; it can be used as a workaround for FPUs which
+compute with an extended precision. In order to use the
+<code>save_state</code> described below, the class must be extended
+with:</p>
 
 <pre>
 struct rounding {
@@ -224,9 +225,10 @@ restore the rounding mode at the end of their computations.</p>
 <h3>Some Examples</h3>
 
 <p>The default behavior uses <code>rounded_arithmetic_standard</code>.
-There is a specialization in order to use the primitive type
-<code>double</code> with <code>rounded_arithmetic_opposite_trick</code>
-and <code>save_state</code>.</p>
+There is a specialization in order to use the primitive types
+<code>float</code> and <code>double</code> with
+<code>rounded_arithmetic_opposite_trick</code> and
+<code>save_state</code>.</p>
 
 <pre>
 template&lt;class T&gt;
@@ -242,7 +244,7 @@ struct rounded_arithmetic&lt;double&gt;:
 </pre>
 
 <p>If the default behavior is not what you seek, there are many
-possibilities:
+possibilities:</p>
 
 <ul>
 <li>For fast wide intervals without any rounding nor precision, use
@@ -266,7 +268,6 @@ rounding_control&lt;T&gt; &gt;.</code>
 <li>etc
 
 </ul>
-</p>
 
 <h2><code>interval</code> Class</h2>
 
@@ -313,8 +314,6 @@ public:
 } // namespace boost
 </pre>
 
-
-
 <p>There is also a bunch of functions defined outside the class:</p>
 
 <pre>
@@ -332,35 +331,33 @@ an argument describing a class providing the following functions:</p>
 <pre>
 struct interval_compare {
   static bool lessthan(const T&amp; x_low, const T&amp; x_up, const T&amp; y_low, const T&amp; y_up);
-  static bool lessthan_TI(const T&amp; x, const T&amp; y_low, const T&amp; y_up);
-  static bool lessthan_IT(const T&amp; x_low, const T&amp; x_up, const T&amp; y);
+  static bool equalto(const T&amp; x_low, const T&amp; x_up, const T&amp; y_low, const T&amp; y_up);
 };
 </pre>
 
-<p>The function <code>lessthan</code> compares two intervals given
-their bounds. The functions <code>lessthan_TI</code> and
-<code>lessthan_IT</code> compare an interval and an element of base
-type. Thanks to this parameter, the class <code>interval</code> can
-now define the following operators: <code>&lt;</code>,
-<code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>. For
-example, <code>x &lt;= y</code> is calculated by <code>!lessthan(y,
-x)</code>.</p>
+<p>The functions <code>lessthan</code> and <code>equalto</code>
+compares two intervals given their bounds. Thanks to this comparison
+class, the class <code>interval</code> can now define the following
+operators: <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>,
+<code>&gt;=</code>, <code>==</code>, <code>!=</code>. All these
+functions are defined for two interval parameters, or for one interval
+and a number.</p>
 
 <p>However, these operators are not really handy. For example, if
-<code>lessthan</code> is a comparison "certain", then
-<code>&lt;</code> et <code>&gt;</code> are also "certain", but
-<code>&lt;=</code> and <code>&gt;=</code> are only "possible". The
-reason of this discordance is: it is impossible to have
-<code>&lt;</code> and <code>&lt;=</code> both "possible" or "certain",
-and to have <code>(x&lt;=y) == !(y&lt;x)</code>. However, if you do
-not consider overlapping intervals, these two comparisons are
-equivalent.</p>
+<code>lessthan</code> is a "certain" comparison, then
+<code>&lt;</code> et <code>&gt;</code> are also "certain" comparison,
+but <code>&lt;=</code> and <code>&gt;=</code> are only "possible"
+comparison. The reason of this discordance is: it is impossible to
+have <code>&lt;</code> and <code>&lt;=</code> both "possible" or
+"certain", and to have <code>(x&lt;=y) == !(y&lt;x)</code>. However,
+if you do not consider overlapping intervals, these two types of
+comparisons are equivalent.</p>
 
 <p>To avoid these problems, it is probably better to use some explicit
 comparison functions. Their names are composed by <code>cer</code>
 (for "certain") or <code>pos</code> (for "possible") followed by
 <code>lt</code>, <code>le</code>, <code>gt</code>, <code>ge</code>,
-<code>eq</code>, <code>ne</code>. Each of these functions takes two
+<code>eq</code> or <code>ne</code>. Each of these functions takes two
 parameters and returns a boolean. For example:</p>
 
 <pre>
