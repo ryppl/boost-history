@@ -78,16 +78,18 @@ namespace boost { namespace langbinding {
       typedef H head_type;
       typedef T tail_type;
 
-      template<class H2>
-      cons<H2, self_type> operator,(const cons<H2, nil_type>& rhs) const
-      {
-         return cons<H2, self_type>();
-      }
-
       H head;
       T tail;
    };
 
+   template<class H, class T, class H2>
+   cons<H2, cons<H, T> > operator+(
+         const cons<H, T>& lhs
+       , const cons<H2, nil_type) const
+   {
+      return cons<H2, cons<H, T> >();
+   }
+   
    struct default_converter_generator;
 
    template<class T, int N>
