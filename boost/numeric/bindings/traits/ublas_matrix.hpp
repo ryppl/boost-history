@@ -148,11 +148,12 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     typedef typename matrix_traits<M>::matrix_structure matrix_structure;
     typedef typename matrix_traits<M>::ordering_type    ordering_type; 
 
-    typedef typename M::value_type                                value_type;
-    typedef typename detail::generate_const<MR,value_type>::type* pointer; 
-
   private:
     typedef typename detail::generate_const<MR, typename MR::matrix_closure_type>::type m_type; 
+
+  public:
+    typedef typename matrix_traits<m_type>::value_type            value_type;
+    typedef typename matrix_traits<m_type>::pointer               pointer ;
 
   public:
     static pointer storage (matrix_type& mr) {
