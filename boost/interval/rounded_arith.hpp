@@ -21,11 +21,11 @@
 #ifndef BOOST_INTERVAL_ROUNDED_ARITH_HPP
 #define BOOST_INTERVAL_ROUNDED_ARITH_HPP
 
-#include <cmath>
 #include <boost/interval/rounding.hpp>
+#include <boost/interval/detail/bugs.hpp>
+#include <cmath>
 
 namespace boost {
-
   namespace interval_lib {
 
   /*
@@ -45,10 +45,14 @@ namespace boost {
     T div_down (const T& x, const T& y) { return x / y; }
     T div_up   (const T& x, const T& y) { return x / y; }
     T median   (const T& x, const T& y) { return (x + y) / 2; }
-    T sqrt_down(const T& x)             { using std::sqrt;  return sqrt(x); }
-    T sqrt_up  (const T& x)             { using std::sqrt;  return sqrt(x); }
-    T int_down (const T& x)             { using std::floor; return floor(x); }
-    T int_up   (const T& x)             { using std::ceil;  return ceil(x); }
+    T sqrt_down(const T& x)
+    { BOOST_INTERVAL_using_math(sqrt); return sqrt(x); }
+    T sqrt_up  (const T& x)
+    { BOOST_INTERVAL_using_math(sqrt); return sqrt(x); }
+    T int_down (const T& x)
+    { BOOST_INTERVAL_using_math(floor); return floor(x); }
+    T int_up   (const T& x)
+    { BOOST_INTERVAL_using_math(ceil); return ceil(x); }
   };
 
   template<class T, class Rounding>
@@ -66,9 +70,9 @@ namespace boost {
     T div_down (const T& x, const T& y) { return BOOST_DN( x / y        ); }
     T div_up   (const T& x, const T& y) { return BOOST_UP( x / y        ); }
     T median   (const T& x, const T& y) { return BOOST_NR( (x+y)/2      ); }
-    T sqrt_down(const T& x)             { using std::sqrt;
+    T sqrt_down(const T& x)             { BOOST_INTERVAL_using_math(sqrt);
 	    				  return BOOST_DN( sqrt(x) ); }
-    T sqrt_up  (const T& x)             { using std::sqrt;
+    T sqrt_up  (const T& x)             { BOOST_INTERVAL_using_math(sqrt);
 	    				  return BOOST_UP( sqrt(x) ); }
     T int_down (const T& x)             { return BOOST_DN( to_int(x)    ); }
     T int_up   (const T& x)             { return BOOST_UP( to_int(x)    ); }
@@ -82,7 +86,7 @@ namespace boost {
     void init() { upward(); }
     #define BOOST_DN(EXPR) (downward(),   force_rounding( EXPR ))
     #define BOOST_NR(EXPR) (to_nearest(), force_rounding( EXPR ))
-    #define BOOST_UP(EXPR)                  force_rounding( EXPR )
+    #define BOOST_UP(EXPR)                force_rounding( EXPR )
     T add_down (const T& x, const T& y) { return -BOOST_UP( (-x) - y ); }
     T add_up   (const T& x, const T& y) { return  BOOST_UP( x + y    ); }
     T sub_down (const T& x, const T& y) { return -BOOST_UP( y - x    ); }
@@ -95,12 +99,12 @@ namespace boost {
                                           upward();
                                           return r;
 					}
-    T sqrt_down(const T& x)             { using std::sqrt;
+    T sqrt_down(const T& x)             { BOOST_INTERVAL_using_math(sqrt);
 	    				  T r = BOOST_DN ( sqrt(x) );
                                           upward();
                                           return r;
 					}
-    T sqrt_up  (const T& x)             { using std::sqrt;
+    T sqrt_up  (const T& x)             { BOOST_INTERVAL_using_math(sqrt);
 	    				  return  BOOST_UP( sqrt(x) ); }
     T int_down (const T& x)             { return -to_int(-x); }
     T int_up   (const T& x)             { return to_int(x); }
@@ -110,7 +114,6 @@ namespace boost {
   };
 
   } // namespace interval_lib
-
 } // namespace boost
 
 #endif // BOOST_INTERVAL_ROUNDED_ARITH_HPP

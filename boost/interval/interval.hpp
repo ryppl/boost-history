@@ -186,15 +186,15 @@ interval<T, Traits> interval<T, Traits>::hull(const T& x, const T& y)
 template<class T, class Traits> inline
 interval<T, Traits> interval<T, Traits>::empty()
 {
-  return interval(checking::empty_lower(),
-		  checking::empty_upper(), true);
+  return interval<T, Traits>(checking::empty_lower(),
+			     checking::empty_upper(), true);
 }
 
 template<class T, class Traits> inline
 interval<T, Traits> interval<T, Traits>::whole()
 {
   const T& inf = checking::inf();
-  return interval(-inf, inf, true);
+  return interval<T, Traits>(-inf, inf, true);
 }
 
 template<class T, class Traits> inline

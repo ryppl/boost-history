@@ -21,17 +21,12 @@
 #ifndef BOOST_INTERVAL_ARITH_HPP
 #define BOOST_INTERVAL_ARITH_HPP
 
-#include <boost/interval/interval.hpp>
+#include <boost/interval/detail/interval_prototype.hpp>
+#include <boost/interval/detail/bugs.hpp>
 #include <boost/interval/detail/test_input.hpp>
+#include <algorithm>
 
 namespace boost {
-
-  namespace detail {
-
-template<class T>
-bool is_neg(const T& x) { return x < T(0); }
-
-  } // namespace detail
 
 /*
  * Basic arithmetic operators
@@ -198,8 +193,10 @@ template<class T, class Traits> inline
 interval<T, Traits> operator*(const interval<T, Traits>& x,
 			      const interval<T, Traits>& y)
 {
-  using std::min;
-  using std::max;
+  // using std::min;
+  // using std::max;
+  BOOST_INTERVAL_using_max(min);
+  BOOST_INTERVAL_using_max(max);
   if (interval_lib::detail::test_input(x, y))
     return interval<T, Traits>::empty();
   typename Traits::rounding rnd;
@@ -313,35 +310,6 @@ interval<T, Traits> operator/(const interval<T, Traits>& x, const T& y)
     return interval<T, Traits>(rnd.div_down(xu, y), rnd.div_up(xl, y), true);
   else
     return interval<T, Traits>(rnd.div_down(xl, y), rnd.div_up(xu, y), true);
-}
-
-template<class T, class Traits> inline
-interval<T, Traits> sqrt(const interval<T, Traits>& x)
-{
-  if (interval_lib::detail::test_input(x) || detail::is_neg(x.upper()))
-    return interval<T, Traits>::empty();
-  typename Traits::rounding rnd;
-  T l = (x.lower() <= T(0)) ? 0 : rnd.sqrt_down(x.lower());
-  return interval<T, Traits>(l, rnd.sqrt_up(x.upper()), true);
-}
-
-template<class T, class Traits> inline
-interval<T, Traits> square(const interval<T, Traits>& x)
-{
-  if (interval_lib::detail::test_input(x))
-    return interval<T, Traits>::empty();
-  typename Traits::rounding rnd;
-  if (detail::is_neg(x.upper())) {
-    return interval<T, Traits>(rnd.mul_down(x.upper(), x.upper()),
-			       rnd.mul_up(x.lower(), x.lower()), true);
-  } else if (!detail::is_neg(x.lower())) {
-    return interval<T, Traits>(rnd.mul_down(x.lower(), x.lower()),
-			       rnd.mul_up(x.upper(), x.upper()), true);
-  } else {
-    return interval<T, Traits>(0, (-x.lower() > x.upper() ? 
-				   rnd.mul_up(x.lower(), x.lower()) :
-				   rnd.mul_up(x.upper(), x.upper())), true);
-  }
 }
 
 } // namespace boost

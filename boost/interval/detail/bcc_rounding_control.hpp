@@ -35,7 +35,18 @@ namespace boost {
   namespace interval_lib {
     namespace detail {
 
-extern "C" { double rint(double); }
+#ifndef BOOST_INTERVAL_KEEP_EXCEPTIONS_FOR_BCC
+extern "C" { unsigned int _RTLENTRY _fm_init(void); }
+
+struct borland_workaround {
+  borland_workaround() { _fm_init(); }
+};
+
+static borland_workaround borland_workaround_exec;
+#endif // BOOST_INTERVAL_KEEP_EXCEPTIONS_FOR_BCC
+
+__inline double rint(double)
+{ __emit__(0xD9); __emit__(0xFC); /* asm FRNDINT */ }
 
 struct x86_rounding
 {

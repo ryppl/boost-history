@@ -21,180 +21,117 @@
 #ifndef BOOST_INTERVAL_ROUNDED_TRANSC_HPP
 #define BOOST_INTERVAL_ROUNDED_TRANSC_HPP
 
-#include <cmath>
 #include <boost/interval/rounding.hpp>
+#include <boost/interval/detail/bugs.hpp>
+#include <cmath>
 
 namespace boost {
-
   namespace interval_lib {
 
-  template<class T, class Rounding>
-  struct rounded_transc_dummy: Rounding {
-    T exp_down  (const T& x) { return 0; }
-    T exp_up    (const T& x) { return std::numeric_limits<T>::infinity(); }
-    T log_down  (const T& x) { return -std::numeric_limits<T>::infinity(); }
-    T log_up    (const T& x) { return std::numeric_limits<T>::infinity(); }
-    T sin_down  (const T& x) { return -1; }
-    T sin_up    (const T& x) { return 1; }
-    T cos_down  (const T& x) { return -1; }
-    T cos_up    (const T& x) { return 1; }
-    T tan_down  (const T& x) { return -std::numeric_limits<T>::infinity(); }
-    T tan_up    (const T& x) { return std::numeric_limits<T>::infinity(); }
-    T asin_down (const T& x) { return -pi_half_up(); }
-    T asin_up   (const T& x) { return pi_half_up(); }
-    T acos_down (const T& x) { return 0; }
-    T acos_up   (const T& x) { return pi_up(); }
-    T atan_down (const T& x) { return -pi_half_up(); }
-    T atan_up   (const T& x) { return pi_half_up(); }
-    T sinh_down (const T& x) { return -std::numeric_limits<T>::infinity(); }
-    T sinh_up   (const T& x) { return std::numeric_limits<T>::infinity(); }
-    T cosh_down (const T& x) { return 1; }
-    T cosh_up   (const T& x) { return std::numeric_limits<T>::infinity(); }
-    T tanh_down (const T& x) { return -1; }
-    T tanh_up   (const T& x) { return 1; }
-    T asinh_down(const T& x) { return -std::numeric_limits<T>::infinity(); }
-    T asinh_up  (const T& x) { return std::numeric_limits<T>::infinity(); }
-    T acosh_down(const T& x) { return 0; }
-    T acosh_up  (const T& x) { return std::numeric_limits<T>::infinity(); }
-    T atanh_down(const T& x) { return -std::numeric_limits<T>::infinity(); }
-    T atanh_up  (const T& x) { return std::numeric_limits<T>::infinity(); }
-  };
-
-  template<class T, class Rounding>
-  struct rounded_transc_exact: Rounding
-  {
-    T exp_down  (const T& x) { using std::exp; return exp(x); }
-    T exp_up    (const T& x) { using std::exp; return exp(x); }
-    T log_down  (const T& x) { using std::log; return log(x); }
-    T log_up    (const T& x) { using std::log; return log(x); }
-    T sin_down  (const T& x) { using std::sin; return sin(x); }
-    T sin_up    (const T& x) { using std::sin; return sin(x); }
-    T cos_down  (const T& x) { using std::cos; return cos(x); }
-    T cos_up    (const T& x) { using std::cos; return cos(x); }
-    T tan_down  (const T& x) { using std::tan; return tan(x); }
-    T tan_up    (const T& x) { using std::tan; return tan(x); }
-    T asin_down (const T& x) { using std::asin; return asin(x); }
-    T asin_up   (const T& x) { using std::asin; return asin(x); }
-    T acos_down (const T& x) { using std::acos; return acos(x); }
-    T acos_up   (const T& x) { using std::acos; return acos(x); }
-    T atan_down (const T& x) { using std::atan; return atan(x); }
-    T atan_up   (const T& x) { using std::atan; return atan(x); }
-    T sinh_down (const T& x) { using std::sinh; return sinh(x); }
-    T sinh_up   (const T& x) { using std::sinh; return sinh(x); }
-    T cosh_down (const T& x) { using std::cosh; return cosh(x); }
-    T cosh_up   (const T& x) { using std::cosh; return cosh(x); }
-    T tanh_down (const T& x) { using std::tanh; return tanh(x); }
-    T tanh_up   (const T& x) { using std::tanh; return tanh(x); }
-#ifdef BOOST_HAVE_INV_HYPERBOLIC
-    T asinh_down(const T& x) { return ::asinh(x); }
-    T asinh_up  (const T& x) { return ::asinh(x); }
-    T acosh_down(const T& x) { return ::acosh(x); }
-    T acosh_up  (const T& x) { return ::acosh(x); }
-    T atanh_down(const T& x) { return ::atanh(x); }
-    T atanh_up  (const T& x) { return ::atanh(x); }
-#endif
-  };
+template<class T, class Rounding>
+struct rounded_transc_exact: Rounding
+{
+# define BOOST_INTERVAL_new_func(f) \
+    T f##_down(const T& x) { BOOST_INTERVAL_using_math(f); return f(x); } \
+    T f##_up  (const T& x) { BOOST_INTERVAL_using_math(f); return f(x); }
+  BOOST_INTERVAL_new_func(exp)
+  BOOST_INTERVAL_new_func(log)
+  BOOST_INTERVAL_new_func(sin)
+  BOOST_INTERVAL_new_func(cos)
+  BOOST_INTERVAL_new_func(tan)
+  BOOST_INTERVAL_new_func(asin)
+  BOOST_INTERVAL_new_func(acos)
+  BOOST_INTERVAL_new_func(atan)
+  BOOST_INTERVAL_new_func(sinh)
+  BOOST_INTERVAL_new_func(cosh)
+  BOOST_INTERVAL_new_func(tanh)
+# undef BOOST_INTERVAL_new_func
+# define BOOST_INTERVAL_new_func(f) \
+    T f##_down(const T& x) { BOOST_INTERVAL_using_ahyp(f); return f(x); } \
+    T f##_up  (const T& x) { BOOST_INTERVAL_using_ahyp(f); return f(x); }
+  BOOST_INTERVAL_new_func(asinh)
+  BOOST_INTERVAL_new_func(acosh)
+  BOOST_INTERVAL_new_func(atanh)
+# undef BOOST_INTERVAL_new_func
+};
   
-  template<class T, class Rounding>
-  struct rounded_transc_std: Rounding
-  {
-    #define BOOST_DN(EXPR) (downward(),   force_rounding( EXPR ))
-    #define BOOST_UP(EXPR) (upward(),     force_rounding( EXPR ))
-    T exp_down  (const T& x) { using std::exp;  return BOOST_DN( exp(x)  ); }
-    T exp_up    (const T& x) { using std::exp;  return BOOST_UP( exp(x)  ); }
-    T log_down  (const T& x) { using std::log;  return BOOST_DN( log(x)  ); }
-    T log_up    (const T& x) { using std::log;  return BOOST_UP( log(x)  ); }
-    T sin_down  (const T& x) { using std::sin;  return BOOST_DN( sin(x)  ); }
-    T sin_up    (const T& x) { using std::sin;  return BOOST_UP( sin(x)  ); }
-    T cos_down  (const T& x) { using std::cos;  return BOOST_DN( cos(x)  ); }
-    T cos_up    (const T& x) { using std::cos;  return BOOST_UP( cos(x)  ); }
-    T tan_down  (const T& x) { using std::tan;  return BOOST_DN( tan(x)  ); }
-    T tan_up    (const T& x) { using std::tan;  return BOOST_UP( tan(x)  ); }
-    T asin_down (const T& x) { using std::asin; return BOOST_DN( asin(x) ); }
-    T asin_up   (const T& x) { using std::asin; return BOOST_UP( asin(x) ); }
-    T acos_down (const T& x) { using std::acos; return BOOST_DN( acos(x) ); }
-    T acos_up   (const T& x) { using std::acos; return BOOST_UP( acos(x) ); }
-    T atan_down (const T& x) { using std::atan; return BOOST_DN( atan(x) ); }
-    T atan_up   (const T& x) { using std::atan; return BOOST_UP( atan(x) ); }
-    T sinh_down (const T& x) { using std::sinh; return BOOST_DN( sinh(x) ); }
-    T sinh_up   (const T& x) { using std::sinh; return BOOST_UP( sinh(x) ); }
-    T cosh_down (const T& x) { using std::cosh; return BOOST_DN( cosh(x) ); }
-    T cosh_up   (const T& x) { using std::cosh; return BOOST_UP( cosh(x) ); }
-    T tanh_down (const T& x) { using std::tanh; return BOOST_DN( tanh(x) ); }
-    T tanh_up   (const T& x) { using std::tanh; return BOOST_UP( tanh(x) ); }
-#ifdef BOOST_HAVE_INV_HYPERBOLIC
-    T asinh_down(const T& x) { return BOOST_DN( ::asinh(x) );}
-    T asinh_up  (const T& x) { return BOOST_UP( ::asinh(x) );}
-    T acosh_down(const T& x) { return BOOST_DN( ::acosh(x) );}
-    T acosh_up  (const T& x) { return BOOST_UP( ::acosh(x) );}
-    T atanh_down(const T& x) { return BOOST_DN( ::atanh(x) );}
-    T atanh_up  (const T& x) { return BOOST_UP( ::atanh(x) );}
-#endif
-    #undef BOOST_DOWN
-    #undef BOOST_UP
-  };
+template<class T, class Rounding>
+struct rounded_transc_std: Rounding
+{
+# define BOOST_INTERVAL_new_func(f) \
+    T f##_down(const T& x) \
+    { BOOST_INTERVAL_using_math(f); downward(); return force_rounding(f(x)); } \
+    T f##_up  (const T& x) \
+    { BOOST_INTERVAL_using_math(f); upward();   return force_rounding(f(x)); }
+  BOOST_INTERVAL_new_func(exp)
+  BOOST_INTERVAL_new_func(log)
+  BOOST_INTERVAL_new_func(sin)
+  BOOST_INTERVAL_new_func(cos)
+  BOOST_INTERVAL_new_func(tan)
+  BOOST_INTERVAL_new_func(asin)
+  BOOST_INTERVAL_new_func(acos)
+  BOOST_INTERVAL_new_func(atan)
+  BOOST_INTERVAL_new_func(sinh)
+  BOOST_INTERVAL_new_func(cosh)
+  BOOST_INTERVAL_new_func(tanh)
+# undef BOOST_INTERVAL_new_func
+# define BOOST_INTERVAL_new_func(f) \
+    T f##_down(const T& x) \
+    { BOOST_INTERVAL_using_ahyp(f); downward(); return force_rounding(f(x)); } \
+    T f##_up  (const T& x) \
+    { BOOST_INTERVAL_using_ahyp(f); upward();   return force_rounding(f(x)); }
+  BOOST_INTERVAL_new_func(asinh)
+  BOOST_INTERVAL_new_func(acosh)
+  BOOST_INTERVAL_new_func(atanh)
+# undef BOOST_INTERVAL_new_func
+};
 
-  template<class T, class Rounding>
-  struct rounded_transc_opp: Rounding
-  {
-    #define BOOST_DN(EXPR) (downward(),  force_rounding( EXPR ))
-    #define BOOST_NR(EXPR) (tonearest(), force_rounding( EXPR ))
-    #define BOOST_UP(EXPR) force_rounding( EXPR )
-    T exp_down  (const T& x) { using std::exp;  T y =   BOOST_DN( exp(x)   );
-                               upward();
-                               return y;
-                             }
-    T exp_up    (const T& x) { using std::exp;  return  BOOST_UP( exp(x)   ); }
-    T log_down  (const T& x) { using std::log;  T y =   BOOST_DN( log(x)   );
-                               upward();
-                               return y;
-                             }
-    T log_up    (const T& x) { using std::log;  return  BOOST_UP( log(x)   ); }
-    T sin_down  (const T& x) { using std::sin;  return -BOOST_UP( sin(-x)  ); }
-    T sin_up    (const T& x) { using std::sin;  return  BOOST_UP( sin(x)   ); }
-    T cos_down  (const T& x) { using std::cos;  T y =   BOOST_DN( cos(x)   );
-			       upward();
-                               return y;
-			     }
-    T cos_up    (const T& x) { using std::cos;  return  BOOST_UP( cos(x)   ); }
-    T tan_down  (const T& x) { using std::tan;  return -BOOST_UP( tan(-x)  ); }
-    T tan_up    (const T& x) { using std::tan;  return  BOOST_UP( tan(x)   ); }
-    T asin_down (const T& x) { using std::asin; return -BOOST_UP( asin(-x) ); }
-    T asin_up   (const T& x) { using std::asin; return  BOOST_UP( asin(x)  ); }
-    T acos_down (const T& x) { using std::acos; T y =   BOOST_DN( acos(x)  );
-                               upward();
-                               return y;
-			     }
-    T acos_up   (const T& x) { using std::acos; return  BOOST_UP( acos(x)  ); }
-    T atan_down (const T& x) { using std::atan; return -BOOST_UP( atan(-x) ); }
-    T atan_up   (const T& x) { using std::atan; return  BOOST_UP( atan(x)  ); }
-    T sinh_down (const T& x) { using std::sinh; return -BOOST_UP( sinh(-x) ); }
-    T sinh_up   (const T& x) { using std::sinh; return  BOOST_UP( sinh(x)  ); }
-    T cosh_down (const T& x) { using std::cosh; T y =   BOOST_DN( cosh(x)  );
-                               upward();
-                               return y;
-                             }
-    T cosh_up   (const T& x) { using std::cosh; return  BOOST_UP( cosh(x)  ); }
-    T tanh_down (const T& x) { using std::tanh; return -BOOST_UP( tanh(-x) ); }
-    T tanh_up   (const T& x) { using std::tanh; return  BOOST_UP( tanh(x)  ); }
-#ifdef BOOST_HAVE_INV_HYPERBOLIC
-    T asinh_down(const T& x) { return -BOOST_UP( ::asinh(-x));}
-    T asinh_up  (const T& x) { return  BOOST_UP( ::asinh(x) );}
-    T acosh_down(const T& x) { T y =   BOOST_DN( ::acosh(x) );
-                               upward();
-                               return y;
-			     }
-    T acosh_up  (const T& x) { return  BOOST_UP( ::acosh(x) );}
-    T atanh_down(const T& x) { return -BOOST_UP( ::atanh(-x));}
-    T atanh_up  (const T& x) { return  BOOST_UP( ::atanh(x) );}
-#endif
-    #undef BOOST_DN
-    #undef BOOST_NR
-    #undef BOOST_UP
-  };
+template<class T, class Rounding>
+struct rounded_transc_opp: Rounding
+{
+# define BOOST_INTERVAL_new_func(f) \
+    T f##_down(const T& x) \
+    { BOOST_INTERVAL_using_math(f); \
+      downward(); T y = force_rounding(f(x)); upward(); return y; } \
+    T f##_up  (const T& x) \
+    { BOOST_INTERVAL_using_math(f); return force_rounding(f(x)); }
+  BOOST_INTERVAL_new_func(exp)
+  BOOST_INTERVAL_new_func(log)
+  BOOST_INTERVAL_new_func(cos)
+  BOOST_INTERVAL_new_func(acos)
+  BOOST_INTERVAL_new_func(cosh)
+# undef BOOST_INTERVAL_new_func
+# define BOOST_INTERVAL_new_func(f) \
+    T f##_down(const T& x) \
+    { BOOST_INTERVAL_using_math(f); return -force_rounding(-f(x)); } \
+    T f##_up  (const T& x) \
+    { BOOST_INTERVAL_using_math(f); return force_rounding(f(x)); }
+  BOOST_INTERVAL_new_func(sin)
+  BOOST_INTERVAL_new_func(tan)
+  BOOST_INTERVAL_new_func(asin)
+  BOOST_INTERVAL_new_func(atan)
+  BOOST_INTERVAL_new_func(sinh)
+  BOOST_INTERVAL_new_func(tanh)
+# undef BOOST_INTERVAL_new_func
+# define BOOST_INTERVAL_new_func(f) \
+    T f##_down(const T& x) \
+    { BOOST_INTERVAL_using_ahyp(f); \
+      downward(); T y = force_rounding(f(x)); upward(); return y; } \
+    T f##_up  (const T& x) \
+    { BOOST_INTERVAL_using_ahyp(f); return force_rounding(f(x)); }
+  BOOST_INTERVAL_new_func(asinh)
+  BOOST_INTERVAL_new_func(atanh)
+# undef BOOST_INTERVAL_new_func
+# define BOOST_INTERVAL_new_func(f) \
+    T f##_down(const T& x) \
+    { BOOST_INTERVAL_using_ahyp(f); return -force_rounding(-f(x)); } \
+    T f##_up  (const T& x) \
+    { BOOST_INTERVAL_using_ahyp(f); return force_rounding(f(x)); }
+  BOOST_INTERVAL_new_func(acosh)
+# undef BOOST_INTERVAL_new_func
+};
   
   } // namespace interval_lib
-
 } // namespace boost
 
 #endif // BOOST_INTERVAL_ROUNDED_TRANSC_HPP

@@ -11,8 +11,10 @@ typedef boost::interval_policies<empty_class,
 
 typedef boost::interval<int, policies> I;
 
+using namespace boost::interval_lib;
+
 #define BOOST_C_EXN(e) \
-  BOOST_CHECK_THROW(e, boost::interval_lib::comparison_error)
+  BOOST_CHECK_THROW(e, comparison_error)
 
 // comparisons between [1,2] and [3,4]
 
@@ -34,7 +36,6 @@ static void test_i_12_34() {
 }
 
 static void test_e_12_34() {
-  using namespace boost::interval_lib;
   const I a(1,2), b(3,4);
 
   BOOST_CHECK(cerlt(a, b));
@@ -93,7 +94,6 @@ static void test_i_13_24() {
 }
 
 static void test_e_13_24() {
-  using namespace boost::interval_lib;
   const I a(1,3), b(2,4);
 
   BOOST_CHECK(!cerlt(a, b));
@@ -152,7 +152,6 @@ static void test_i_12_23() {
 }
 
 static void test_e_12_23() {
-  using namespace boost::interval_lib;
   const I a(1,2), b(2,3);
 
   BOOST_CHECK(!cerlt(a, b));
@@ -224,7 +223,6 @@ static void test_i_12_0() {
 }
 
 static void test_e_12_0() {
-  using namespace boost::interval_lib;
   const I a(1,2);
   const int b = 0;
 
@@ -272,7 +270,7 @@ static void test_i_12_1() {
 
   BOOST_CHECK(!(a < b));
   BOOST_C_EXN(a <= b);
-  BOOST_C_EXN(!(a > b));
+  BOOST_C_EXN(a > b);
   BOOST_CHECK(a >= b);
 
   BOOST_C_EXN(a == b);
@@ -280,7 +278,6 @@ static void test_i_12_1() {
 }
 
 static void test_e_12_1() {
-  using namespace boost::interval_lib;
   const I a(1,2);
   const int b = 1;
 
@@ -336,7 +333,6 @@ static void test_i_12_2() {
 }
 
 static void test_e_12_2() {
-  using namespace boost::interval_lib;
   const I a(1,2);
   const int b = 2;
 
@@ -392,7 +388,6 @@ static void test_i_12_3() {
 }
 
 static void test_e_12_3() {
-  using namespace boost::interval_lib;
   const I a(1,2);
   const int b = 3;
 

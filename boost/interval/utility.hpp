@@ -21,7 +21,7 @@
 #ifndef BOOST_INTERVAL_UTILITY_HPP
 #define BOOST_INTERVAL_UTILITY_HPP
 
-#include <boost/interval/interval.hpp>
+#include <boost/interval/detail/interval_prototype.hpp>
 #include <boost/interval/detail/test_input.hpp>
 
 /*
@@ -253,8 +253,8 @@ interval<T, Traits> abs(const interval<T, Traits>& x)
   using std::max;
   if (interval_lib::detail::test_input(x))
     return interval<T, Traits>::empty();
-  if (!detail::sign(x.lower())) return x;
-  if (detail::sign(x.upper())) return -x;
+  if (!detail::is_neg(x.lower())) return x;
+  if (detail::is_neg(x.upper())) return -x;
   return interval<T, Traits>(0, max(-x.lower(), x.upper()), true);
 }
 

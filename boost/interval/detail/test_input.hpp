@@ -1,9 +1,14 @@
 #ifndef BOOST_INTERVAL_DETAIL_TEST_INPUT_HPP
 #define BOOST_INTERVAL_DETAIL_TEST_INPUT_HPP
 
+#include <boost/interval/detail/interval_prototype.hpp>
+
 namespace boost {
 
-template<class T, class Traits> class interval;
+  namespace detail {
+template<class T> inline
+bool is_neg(const T& x) { return x < T(0); }
+  } // namespace detail
 
   namespace interval_lib {
     namespace detail {
@@ -47,7 +52,6 @@ bool test_input(const T& x, const T& y) {
 
     } // namespace detail
   } // namespace interval_lib
-
 } // namespace boost
 
 #endif // BOOST_INTERVAL_DETAIL_TEST_INPUT_HPP

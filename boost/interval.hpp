@@ -372,6 +372,7 @@ namespace std {
 #include <boost/interval/utility.hpp>
 
 #include <boost/interval/arith.hpp>
+#include <boost/interval/arith2.hpp>
 #include <boost/interval/transc.hpp>
 
 #endif // BOOST_INTERVAL_HPP

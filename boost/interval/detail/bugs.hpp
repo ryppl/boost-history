@@ -15,43 +15,39 @@
  *
  * Revision history:
  *   2002-08-31	 Prepared for boost formal review
- *   2000-09-24	 Separated from interval.hpp
  */
 
 #ifndef BOOST_INTERVAL_DETAIL_BUGS
 #define BOOST_INTERVAL_DETAIL_BUGS
 
+#include <boost/config.hpp>
+
 #if defined(__GLIBC__) && !defined(__GLIBCPP__) && (defined(__USE_MISC) || defined(__USE_XOPEN_EXTENDED) || defined(__USE_ISOC99)) && !defined(__ICC)
-#define BOOST_HAVE_INV_HYPERBOLIC
+#  define BOOST_HAVE_INV_HYPERBOLIC
 #endif
 
-#if defined(BOOST_NO_STDC_NAMESPACE) && !defined(__ICC)
-namespace std {
-  using ::min;
-  using ::max;
-  using ::sqrt;
-  using ::exp;
-  using ::log;
-  using ::cos;
-  using ::tan;
-  using ::asin;
-  using ::acos;
-  using ::atan;
-  using ::ceil;
-  using ::floor;
-  using ::sinh;
-  using ::cosh;
-  using ::tanh;
-#ifdef BOOST_HAVE_INV_HYPERBOLIC
-  using ::asinh;
-  using ::acosh;
-  using ::atanh;
+#ifndef BOOST_HAVE_INV_HYPERBOLIC
+#  define BOOST_INTERVAL_using_ahyp(a)
 #endif
-} // namespace std
+
+#if defined(BOOST_NO_STDC_NAMESPACE)
+#  define BOOST_INTERVAL_using_max(a) ::a
+#  define BOOST_INTERVAL_using_math(a) ::a
+#  ifndef BOOST_INTERVAL_using_ahyp
+#    define BOOST_INTERVAL_using_ahyp(a) ::a
+#  endif
+#else
+#  define BOOST_INTERVAL_using_max(a) using std::a
+#  define BOOST_INTERVAL_using_math(a) using std::a
+#  ifndef BOOST_INTERVAL_using_ahyp
+#    define BOOST_INTERVAL_using_ahyp(a) using std::a
+#  endif
 #endif
 
 #if __GNUC__ <= 2
 // cf PR c++/1981 for a description of the bug
+#include <algorithm>
+#include <cmath>
 namespace boost {
   using std::min;
   using std::max;
@@ -68,11 +64,17 @@ namespace boost {
   using std::sinh;
   using std::cosh;
   using std::tanh;
-#if defined(BOOST_HAVE_INV_HYPERBOLIC)
+# undef BOOST_INTERVAL_using_max
+# undef BOOST_INTERVAL_using_math
+# define BOOST_INTERVAL_using_max(a)
+# define BOOST_INTERVAL_using_math(a)
+# if defined(BOOST_HAVE_INV_HYPERBOLIC)
   using std::asinh;
   using std::acosh;
   using std::atanh;
-#endif
+# undef BOOST_INTERVAL_using_ahyp
+# define BOOST_INTERVAL_using_ahyp(a)
+# endif
 } // namespace boost
 #endif
 

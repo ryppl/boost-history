@@ -1,6 +1,6 @@
 #include <boost/interval/interval.hpp>
 #include <boost/interval/arith.hpp>
-#include <boost/interval/transc.hpp>
+#include <boost/interval/arith2.hpp>
 #include <boost/interval/utility.hpp>
 #include <boost/interval/checking.hpp>
 #include <boost/interval/rounding.hpp>
@@ -29,17 +29,17 @@ typedef interval<int,
 
 int test_main(int, char *[]) {
 
-  BOOST_TEST(equal(fmod(I(6,9), 7), I(6,9)));
-  BOOST_TEST(equal(fmod(6, I(7,8)), I(6,6)));
-  BOOST_TEST(equal(fmod(I(6,9), I(7,8)), I(6,9)));
+  BOOST_CHECK(equal(fmod(I(6,9), 7), I(6,9)));
+  BOOST_CHECK(equal(fmod(6, I(7,8)), I(6,6)));
+  BOOST_CHECK(equal(fmod(I(6,9), I(7,8)), I(6,9)));
 
-  BOOST_TEST(equal(fmod(I(13,17), 7), I(6,10)));
-  BOOST_TEST(equal(fmod(13, I(7,8)), I(5,6)));
-  BOOST_TEST(equal(fmod(I(13,17), I(7,8)), I(5,10)));
+  BOOST_CHECK(equal(fmod(I(13,17), 7), I(6,10)));
+  BOOST_CHECK(equal(fmod(13, I(7,8)), I(5,6)));
+  BOOST_CHECK(equal(fmod(I(13,17), I(7,8)), I(5,10)));
 
-  BOOST_TEST(equal(fmod(I(-17,-13), 7), I(4,8)));
-  BOOST_TEST(equal(fmod(-17, I(7,8)), I(4,7)));
-  BOOST_TEST(equal(fmod(I(-17,-13), I(7,8)), I(4,11)));
+  BOOST_CHECK(equal(fmod(I(-17,-13), 7), I(4,8)));
+  BOOST_CHECK(equal(fmod(-17, I(7,8)), I(4,7)));
+  BOOST_CHECK(equal(fmod(I(-17,-13), I(7,8)), I(4,11)));
 
   return 0;
 }
