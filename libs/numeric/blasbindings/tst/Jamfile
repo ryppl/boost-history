@@ -5,7 +5,7 @@ exe blas1
         : blas1.cpp 
 	  <lib>../blasbindings
         :  <include>$(BOOST_ROOT)
-	   <include>$B_ROOT
+	   <include>$(B_ROOT)
 	   <library-path>/home/tk/cvstop/blaslapack/lib
 	   <find-library>$(BLAS_LIB)
         ;

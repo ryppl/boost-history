@@ -4,5 +4,5 @@ subproject libs/numeric/blasbindings ;
 lib blasbindings 
         : blaspp.cpp valuetraits.cpp
         :  <include>$(BOOST_ROOT)
-	   <include>$B_ROOT
+	   <include>$(B_ROOT)
         ;
