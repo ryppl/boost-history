@@ -1469,6 +1469,8 @@ In fact, this is probably the most important point of the
 example, because all other generic sequence algorithms in 
 the library are implemented either in terms of \code{iter\_fold}
 (or it's counterpart \code{find\_if}) as well. In particular, 
+% Do you really mean to say these are counterparts? You had iter_find
+% in the section title.
 that means that if you would ever need to implement your own 
 sequence algorithm, there is a huge chance that you'll be able 
 to do it using either \code{iter\_fold} or \code{find\_if} - 
@@ -1720,8 +1722,6 @@ typedef mpl::find_if< sequences,size_pred >::type itor;
 \end{enumerate}
 
  
-  \subsubsection{sequences of types, but there are shorcuts for numbers}
-
   \subsubsection{A Variety of Sequences}
 
 Previous efforts to provide generalized /mping/ facilities for C++
