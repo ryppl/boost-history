@@ -3,7 +3,7 @@
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
-// Copyright (c) 2002
+// Copyright (c) 2002-2003
 // Eric Friedman
 //
 // Permission to use, copy, modify, distribute and sell this software
@@ -16,20 +16,18 @@
 
 #include "boost/mpl/sort.hpp"
 
-#include "boost/mpl/begin_end.hpp"
-#include "boost/mpl/list_c.hpp"
-#include "boost/mpl/comparison/less.hpp"
-#include "boost/mpl/equal.hpp"
 #include "boost/static_assert.hpp"
+#include "boost/mpl/list_c.hpp"
+#include "boost/mpl/equal.hpp"
 
 namespace mpl = boost::mpl;
 
 int main()
 {
-    using namespace mpl::placeholder;
     typedef mpl::list_c<int, 3, 4, 0, -5, 8, -1, 7>::type numbers;
+    typedef mpl::list_c<int, -5, -1, 0, 3, 4, 7, 8>::type manual_result;
 
     typedef mpl::sort< numbers >::type result;
-    typedef mpl::list_c<int, -5, -1, 0, 3, 4, 7, 8>::type manual_result;
-    BOOST_STATIC_ASSERT((mpl::equal<result, manual_result>::type::value));
+
+    BOOST_STATIC_ASSERT((mpl::equal< result,manual_result >::type::value));
 }
