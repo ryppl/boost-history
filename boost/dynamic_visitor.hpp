@@ -24,7 +24,7 @@
 
 #include "boost/type_traits/is_void.hpp"
 
-#include "boost/mpl/bool_c.hpp"
+#include "boost/mpl/bool.hpp"
 #include "boost/mpl/if.hpp"
 #include "boost/mpl/fold.hpp"
 #include "boost/mpl/protect.hpp"
@@ -58,7 +58,7 @@ struct make_dynamic_visitor_impl
 
             void visit_impl(
                   T& operand
-                , mpl::true_c// void_return
+                , mpl::true_// void_return
                 )
             {
                 visit_invoke(operand);
@@ -66,7 +66,7 @@ struct make_dynamic_visitor_impl
 
             void visit_impl(
                   T& operand
-                , mpl::false_c// void_return
+                , mpl::false_// void_return
                 )
             {
                 result_value.reset(visit_invoke(operand));
@@ -76,7 +76,7 @@ struct make_dynamic_visitor_impl
             {
                 visit_impl(
                       operand
-                    , mpl::bool_c< is_void<ResultType>::type::value >()
+                    , mpl::bool_< is_void<ResultType>::type::value >()
                     );
             }
 

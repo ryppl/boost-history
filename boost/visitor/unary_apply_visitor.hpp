@@ -26,7 +26,7 @@
 
 #include "boost/preprocessor/define_forwarding_func.hpp"
 #include "boost/type_traits/is_const.hpp"
-#include "boost/mpl/bool_c.hpp"
+#include "boost/mpl/bool.hpp"
 
 namespace boost {
 
@@ -46,8 +46,8 @@ namespace detail { namespace visitor {
 void apply_visitor_impl(
       dynamic_visitor_base& visitor
     , dynamic_visitable_base& visitable
-    , mpl::true_c// dynamic_visitor
-    , mpl::true_c// dynamic_visitable
+    , mpl::true_// dynamic_visitor
+    , mpl::true_// dynamic_visitable
     )
 {
     // Visit:
@@ -60,8 +60,8 @@ template <typename R>
 R apply_visitor_impl(
       dynamic_visitor_return_base<R>& visitor
     , dynamic_visitable_base& visitable
-    , mpl::true_c// dynamic_visitor
-    , mpl::true_c// dynamic_visitable
+    , mpl::true_// dynamic_visitor
+    , mpl::true_// dynamic_visitable
     )
 {
     // Before visiting, clear the result value...
@@ -91,7 +91,7 @@ template <typename Visitor, typename Visitable>
 apply_static_visitor_impl(
       Visitor& visitor
     , Visitable& visitable
-    , mpl::false_c// is_const_visitable
+    , mpl::false_// is_const_visitable
     )
 {
     return static_visitable_traits<Visitable>
@@ -103,7 +103,7 @@ template <typename Visitor, typename Visitable>
 apply_static_visitor_impl(
       Visitor& visitor
     , const Visitable& visitable
-    , mpl::true_c// is_const_visitable
+    , mpl::true_// is_const_visitable
     )
 {
     return static_visitable_traits<Visitable>
@@ -115,11 +115,11 @@ template <typename Visitor, typename Visitable>
 apply_visitor_impl(
       Visitor& visitor
     , Visitable& visitable
-    , mpl::false_c// dynamic_visitor
-    , mpl::false_c// dynamic_visitable
+    , mpl::false_// dynamic_visitor
+    , mpl::false_// dynamic_visitable
     )
 {
-    typedef mpl::bool_c<
+    typedef mpl::bool_<
           is_const<Visitable>::value
         > is_const_visitable;
 
@@ -140,8 +140,8 @@ template <
 apply_visitor_impl(
       DynamicVisitor& visitor
     , StaticVisitable& visitable
-    , mpl::true_c// dynamic_visitor
-    , mpl::false_c// dynamic_visitable
+    , mpl::true_// dynamic_visitor
+    , mpl::false_// dynamic_visitable
     )
 {
     typename wrap_dynamic_visitor<DynamicVisitor>::type
@@ -150,8 +150,8 @@ apply_visitor_impl(
     return apply_visitor_impl(
           wrapped
         , visitable
-        , mpl::false_c()// dynamic_visitor
-        , mpl::false_c()// dynamic_visitable
+        , mpl::false_()// dynamic_visitor
+        , mpl::false_()// dynamic_visitable
         );
 }       
 
@@ -169,14 +169,14 @@ apply_visitor_impl(
         )                                           \
     {                                               \
         /* [Determine if visitor is dynamic:] */    \
-        typedef mpl::bool_c<                        \
+        typedef mpl::bool_<                        \
               is_dynamic_visitor<                   \
                   CV1__ Visitor                     \
                 >::type::value                      \
             > dynamic_visitor_flag;                 \
                                                     \
         /* [Determine if visitable is dynamic:] */  \
-        typedef mpl::bool_c<                        \
+        typedef mpl::bool_<                        \
               is_dynamic_visitable<                 \
                   CV2__ Visitable                   \
                 >::type::value                      \

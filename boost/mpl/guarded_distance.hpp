@@ -25,10 +25,10 @@
 #include "boost/mpl/distance.hpp"
 #include "boost/mpl/identity.hpp"
 #include "boost/mpl/if.hpp"
-#include "boost/mpl/integral_c.hpp"
 #include "boost/mpl/next.hpp"
-#include "boost/mpl/arithmetic/plus.hpp"
+#include "boost/mpl/plus.hpp"
 #include "boost/mpl/iterator_category.hpp"
+#include "boost/mpl/size_t.hpp"
 #include "boost/mpl/aux_/void_spec.hpp"
 #include "boost/mpl/aux_/lambda_support.hpp"
 
@@ -54,7 +54,7 @@ struct guarded_distance_impl
 
         typedef typename apply_if<
               is_last
-            , identity< integral_c<unsigned long, 0> >
+            , identity< size_t<0> >
             , apply2<
                   guarded_distance_impl<N-1>
                 , next_iterator
@@ -67,8 +67,8 @@ struct guarded_distance_impl
               remaining_distance
             , typename if_<
                   is_last
-                , integral_c<unsigned long, 0>
-                , integral_c<unsigned long, 1>
+                , size_t<0>
+                , size_t<1>
                 >::type
             >::type type;
     };
@@ -80,7 +80,7 @@ struct guarded_distance_impl<0>
     template <typename Iterator, typename LastIterator>
     struct apply
     {
-        typedef integral_c<unsigned long, 0>
+        typedef size_t<0>
             type;
     };
 };
@@ -105,7 +105,7 @@ struct guarded_distance_c
 {
 private:
     typedef typename iterator_category<First>::type category_;
-    typedef integral_c<unsigned long, Distance> distance_;
+    typedef size_t<Distance> distance_;
 
 public:
     typedef typename guarded_distance_algorithm_traits<category_>

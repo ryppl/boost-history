@@ -14,8 +14,8 @@
 #include "boost/type_traits/has_nothrow_copy.hpp"
 #include "boost/type_traits/has_nothrow_assign.hpp"
 
-#include "boost/mpl/logical/and.hpp"
-#include "boost/mpl/logical/or.hpp"
+#include "boost/mpl/and.hpp"
+#include "boost/mpl/or.hpp"
 
 // should be the last #include
 #include "boost/type_traits/detail/bool_trait_def.hpp"
@@ -31,9 +31,9 @@ struct has_nothrow_move_impl
 {
     BOOST_STATIC_CONSTANT(
         bool, value = (
-            mpl::logical_or<
+            mpl::or_<
                 has_trivial_move<T>
-              , mpl::logical_and<
+              , mpl::and_<
                   has_nothrow_copy<T>
                 , has_nothrow_assign<T>
                 >
@@ -60,7 +60,7 @@ struct has_nothrow_move_constructor_impl
 {
     BOOST_STATIC_CONSTANT(
         bool, value = (
-            mpl::logical_or<
+            mpl::or_<
               has_nothrow_move<T>
             , has_trivial_move_constructor<T>
             , has_nothrow_copy<T>
@@ -87,7 +87,7 @@ struct has_nothrow_move_assign_impl
 {
     BOOST_STATIC_CONSTANT(
         bool, value = (
-            mpl::logical_or<
+            mpl::or_<
               has_nothrow_move<T>
             , has_trivial_move_assign<T>
             , has_nothrow_assign<T>

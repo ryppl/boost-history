@@ -24,9 +24,9 @@
 
 #include "boost/type_traits/is_base_and_derived.hpp"
 #include "boost/type_traits/is_const.hpp"
-#include "boost/mpl/logical/not.hpp"
-#include "boost/mpl/logical/or.hpp"
-#include "boost/mpl/bool_c.hpp"
+#include "boost/mpl/not.hpp"
+#include "boost/mpl/or.hpp"
+#include "boost/mpl/bool.hpp"
 
 #include "boost/visitor/unary_apply_visitor.hpp"
 #include "boost/static_visitor.hpp"
@@ -72,12 +72,12 @@ struct is_directly_extractable
 {
 public: // metafunction result
 
-    typedef typename mpl::logical_or< // directly-extractable || NOT default-traits
+    typedef typename mpl::or_< // directly-extractable || NOT default-traits
           is_base_and_derived<
               detail::extractable::directly_extractable_tag
             , T
             >
-        , mpl::logical_not<
+        , mpl::not_<
               is_base_and_derived<
                   detail::extractable::default_traits_tag
                 , extractable_traits<T>
@@ -150,7 +150,7 @@ private: // helpers (extract by visitation)
     static T* extract_impl(
           Extractable& operand
         , B// is_const
-        , mpl::false_c// directly_extractable
+        , mpl::false_// directly_extractable
         )
     {
         visitor visiting;
@@ -163,8 +163,8 @@ private: // helpers (extract by extractable_traits)
     template <typename Extractable>
     static T* extract_impl(
           Extractable& operand
-        , mpl::false_c// is_const
-        , mpl::true_c// directly_extractable
+        , mpl::false_// is_const
+        , mpl::true_// directly_extractable
         )
     {
         // Instantiate traits as MSVC workaround:
@@ -175,8 +175,8 @@ private: // helpers (extract by extractable_traits)
     template <typename Extractable>
     static T* extract_impl(
           const Extractable& operand
-        , mpl::true_c// is_const
-        , mpl::true_c// directly_extractable
+        , mpl::true_// is_const
+        , mpl::true_// directly_extractable
         )
     {
         // Instantiate traits as MSVC workaround:
@@ -189,7 +189,7 @@ private: // workaround for structors (below)
     template <typename Extractable>
     static T* extract_impl(
           Extractable& operand
-        , mpl::false_c is_const
+        , mpl::false_ is_const
         )
     {
         typedef detail::is_directly_extractable<Extractable>
@@ -198,14 +198,14 @@ private: // workaround for structors (below)
         return extract_impl(
               operand
             , is_const
-            , mpl::bool_c<directly_extractable::value>()
+            , mpl::bool_<directly_extractable::value>()
             );
     }
 
     template <typename Extractable>
     static T* extract_impl(
           const Extractable& operand
-        , mpl::true_c is_const
+        , mpl::true_ is_const
         )
     {
         typedef detail::is_directly_extractable<Extractable>
@@ -214,7 +214,7 @@ private: // workaround for structors (below)
         return extract_impl(
               operand
             , is_const
-            , mpl::bool_c<directly_extractable::value>()
+            , mpl::bool_<directly_extractable::value>()
             );
     }
 
@@ -225,7 +225,7 @@ public: // structors
     {
         p_ = extract_impl(
               operand
-            , mpl::bool_c<
+            , mpl::bool_<
                   is_const<Extractable>::value
                 >()
             );
@@ -250,11 +250,13 @@ public: // operators
         return *p_;
     }
 
-#ifdef BOOST_MSVC
+#if !defined(BOOST_MSVC)
+
     operator T&() const
     {
         return (*this)();
     }
+
 #endif
 
 };

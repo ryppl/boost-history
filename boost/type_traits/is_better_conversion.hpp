@@ -20,7 +20,7 @@
 #include "boost/type_traits/config.hpp"
 #include "boost/type_traits/detail/yes_no_type.hpp"
 
-#include "boost/mpl/bool_c.hpp"
+#include "boost/mpl/bool.hpp"
 #include "boost/mpl/logical.hpp"
 #include "boost/type_traits/is_same.hpp"
 
@@ -38,11 +38,11 @@ struct is_better_conversion_any_t
 
 template <typename To1, typename To2> struct is_better_conversion_checker
 {
-	template <typename Int>
-	static boost::type_traits::no_type _m_check(To2, Int);
-	static boost::type_traits::no_type _m_check(is_better_conversion_any_t, ...);
+    template <typename Int>
+    static boost::type_traits::no_type _m_check(To2, Int);
+    static boost::type_traits::no_type _m_check(is_better_conversion_any_t, ...);
 
-	static boost::type_traits::yes_type _m_check(To1, int);
+    static boost::type_traits::yes_type _m_check(To1, int);
 };
 
 template <typename From, typename To1, typename To2>
@@ -50,10 +50,10 @@ struct is_better_conversion_impl
 {
     static From _m_from;
     static bool const value =
-		sizeof( is_better_conversion_checker<To1,To2>::_m_check(_m_from, 0) ) 
+        sizeof( is_better_conversion_checker<To1,To2>::_m_check(_m_from, 0) ) 
         == sizeof(::boost::type_traits::yes_type);
 
-	typedef ::boost::mpl::bool_c<value> type;
+    typedef ::boost::mpl::bool_<value> type;
 };
 
 #else// !defined(__GNUC__)
@@ -73,7 +73,7 @@ private:
     static From from_;
 
 public:
-	typedef ::boost::mpl::bool_c<
+    typedef ::boost::mpl::bool_<
           ( sizeof( check_(from_,0) ) == sizeof( ::boost::type_traits::yes_type ) )
         > type;
 
@@ -87,10 +87,10 @@ public:
 template <typename From, typename To1, typename To2>
 struct is_better_conversion
 {
-    typedef typename mpl::logical_and< // !is_same< 1,2 > && is_better< 1,2 > && !is_better< 2,1 >
-		  mpl::logical_not< is_same<To1, To2> >
+    typedef typename mpl::and_< // !is_same< 1,2 > && is_better< 1,2 > && !is_better< 2,1 >
+          mpl::not_< is_same<To1, To2> >
         , detail::is_better_conversion_impl<From, To1, To2>
-        , mpl::logical_not<
+        , mpl::not_<
               detail::is_better_conversion_impl<From, To2, To1>
             >
         >::type type;

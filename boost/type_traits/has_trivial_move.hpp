@@ -13,8 +13,8 @@
 #include "boost/type_traits/has_trivial_copy.hpp"
 #include "boost/type_traits/has_trivial_assign.hpp"
 
-#include "boost/mpl/logical/and.hpp"
-#include "boost/mpl/logical/or.hpp"
+#include "boost/mpl/and.hpp"
+#include "boost/mpl/or.hpp"
 
 // should be the last #include
 #include "boost/type_traits/detail/bool_trait_def.hpp"
@@ -30,7 +30,7 @@ struct has_trivial_move_impl
 {
     BOOST_STATIC_CONSTANT(
         bool, value = (
-            mpl::logical_and<
+            mpl::and_<
               has_trivial_copy<T>
             , has_trivial_assign<T>
             >::type::value
@@ -56,7 +56,7 @@ struct has_trivial_move_constructor_impl
 {
     BOOST_STATIC_CONSTANT(
         bool, value = (
-            mpl::logical_or<
+            mpl::or_<
               has_trivial_move<T>
             , has_trivial_copy<T>
             >::type::value
@@ -82,7 +82,7 @@ struct has_trivial_move_assign_impl
 {
     BOOST_STATIC_CONSTANT(
         bool, value = (
-            mpl::logical_or<
+            mpl::or_<
               has_trivial_move<T>
             , has_trivial_assign<T>
             >::type::value

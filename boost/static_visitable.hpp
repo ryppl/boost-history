@@ -19,8 +19,8 @@
 
 #include "boost/config.hpp"
 #include "boost/type_traits/is_base_and_derived.hpp"
-#include "boost/mpl/logical/not.hpp"
-#include "boost/mpl/logical/or.hpp"
+#include "boost/mpl/not.hpp"
+#include "boost/mpl/or.hpp"
 
 #include "boost/mpl/aux_/lambda_support.hpp" // used by is_static_visitable
 
@@ -133,12 +133,12 @@ public: // static functions
 template <typename T>
 struct is_static_visitable
 {
-    typedef typename mpl::logical_or< // directly-visitable || NOT default-traits
+    typedef typename mpl::or_< // directly-visitable || NOT default-traits
           is_base_and_derived<
               detail::static_visitable::directly_visitable_tag
             , T
             >
-        , mpl::logical_not<
+        , mpl::not_<
               is_base_and_derived<
                   detail::static_visitable::default_traits_tag
                 , static_visitable_traits<T>
