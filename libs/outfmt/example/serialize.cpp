@@ -25,7 +25,7 @@ int main()
 
    // create the output object used for serialization
 
-   boost::io::pair_object< char * >    textio; // default formatting
+   boost::io::pair_object< const char * >    textio; // default formatting
 
    // create the data to be serialized
    std::pair< char, int >              p1 = std::pair< char, int >( 'a', 5 );
@@ -57,7 +57,7 @@ int main()
 
    // [2]: XML -- [note]: XML is a text-based system, and can thus be serialized to
 
-   boost::io::pair_object< char * >    xmlio;
+   boost::io::pair_object< const char * >    xmlio;
    xmlio.format( "<pairob><item>", "</item></pairob>", "</item><item>" );
 
    // writing to an XML-based serialization stream
@@ -84,9 +84,9 @@ int main()
 
    boost::io::pair_object
    <
-      char *,
-      boost::io::wrapped_object< char * >,
-      boost::io::wrapped_object< char * >
+      const char *,
+      boost::io::wrapped_object< const char * >,
+      boost::io::wrapped_object< const char * >
    >                                   xmlio2 =
       boost::io::pairfmt
       (
@@ -113,8 +113,8 @@ int main()
 
    boost::io::pair_object
    <
-      char *,
-      boost::io::pair_object< char * >
+      const char *,
+      boost::io::pair_object< const char * >
    >                                   textio2;
 
    // create the data to be serialized
@@ -166,7 +166,7 @@ int main()
 
       // create the output object used for serialization
 
-      boost::io::static_nary_object< char * >
+      boost::io::static_nary_object< const char * >
                                        naryio;
       naryio.format( "[ ", " ]" ); // container-compatible formatting
 
@@ -236,19 +236,19 @@ int main()
    // [note]: Borland has a problem with outputting strings in basic_output, so use
    //    the wrapped forms instead
 
-   boost::io::wrapped_object< char * > stringio = boost::io::wrappedfmt().format( "\"", "\"" );
+   boost::io::wrapped_object< const char * > stringio = boost::io::wrappedfmt().format( "\"", "\"" );
 
-   boost::io::container_object< char *, boost::io::wrapped_object< char * > >
+   boost::io::container_object< const char *, boost::io::wrapped_object< const char * > >
                                        stlio = boost::io::containerfmt( stringio );
 
    boost::io::container_object
    <
-      char *,
+      const char *,
       boost::io::pair_object
       <
-         char *,
-         boost::io::wrapped_object< char * >,
-         boost::io::wrapped_object< char * >
+         const char *,
+         boost::io::wrapped_object< const char * >,
+         boost::io::wrapped_object< const char * >
       >
    >                                   mapio = boost::io::containerfmt
                                        (

@@ -37,10 +37,10 @@ int main()
 
    // formatter configurations
 
-   boost::io::array_object< char * >   arrayfmt;
+   boost::io::array_object< const char * >   arrayfmt;
    arrayfmt.format( "( ", " )" );
 
-   boost::io::container_object< char * > containerfmt;
+   boost::io::container_object< const char * > containerfmt;
    containerfmt.format( "| ", " |", " | " );
 
    // examples

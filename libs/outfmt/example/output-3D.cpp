@@ -28,10 +28,10 @@ int main()
 
    // formatter configurations
 
-   boost::io::array_object< char * >   arrayfmt;
+   boost::io::array_object< const char * >   arrayfmt;
    arrayfmt.format( "( ", " )" );
 
-   boost::io::array_object< char *, boost::io::array_object< char * > >
+   boost::io::array_object< const char *, boost::io::array_object< const char * > >
                                        array3Dfmt( arrayfmt( 3 ));
    array3Dfmt.format( "{ ", " }", " | " );
 
@@ -106,8 +106,8 @@ int main()
                    a3D, a3D + 3, // outermost index
                    boost::io::arrayfmtout // [review]: out signature
                    (
-                      boost::io::arrayfmtex< char * >( 3 ) // innermost index
-                      .format( "( ", " )" ), // [note]: cannot use characters here; must be char *.
+                      boost::io::arrayfmtex< const char * >( 3 ) // innermost index
+                      .format( "( ", " )" ), // [note]: cannot use characters here; must be const char *.
                       3 // middle index
                    )
                    .format( "{\n   ", "\n}", "\n   " )

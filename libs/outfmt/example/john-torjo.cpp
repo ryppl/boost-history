@@ -85,7 +85,7 @@ int main()
                    boost::io::wrappedfmt
                    (
                       // create an instance of a position Format Object:
-                      position_output< char * >()
+                      position_output< const char * >()
                    ).format( "{", "}" )
                 )
                 .format( "", "" )
@@ -107,7 +107,7 @@ int main()
    // [4]: [0] John, [1] James, [2] Corina
 
    std::cout << "[4]: "
-             << boost::io::formatout( names, position_output< char * >()) // [review]: out signature
+             << boost::io::formatout( names, position_output< const char * >()) // [review]: out signature
                 .format( "", "" )
              << '\n' << '\n';
 
@@ -131,7 +131,7 @@ int main()
    */
 
    std::cout << "[6]:"
-             << boost::io::formatout( names, position_output< char * >()) // [review]: out signature
+             << boost::io::formatout( names, position_output< const char * >()) // [review]: out signature
                 .format( "\n", "", "\n" )
              << '\n' << '\n';
 
@@ -143,7 +143,7 @@ int main()
    */
 
    std::cout << "[7]:"
-             << boost::io::formatout( names, position_output< char * >()) // [review]: out signature
+             << boost::io::formatout( names, position_output< const char * >()) // [review]: out signature
                 .format( "\n'", "'", "'\n'" )
              << '\n' << '\n';
 
