@@ -17,11 +17,17 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
     typedef void (*sytrf_type)(const char* m, const int* n, bind_type* a, const int* lda, int* ipiv, bind_type* work, const int* lwork, int* info) ;
     typedef void (*sytrs_type)(const char* trans, const int *n, const int* nrhs, const bind_type* a, const int* lda, const int* ipiv, bind_type* b, const int* ldb, int* info);
 
+    typedef void (*potrf_type)(const char* uplo, const int* n, bind_type* a, const int* lda, int* info) ;
+    typedef void (*potrs_type)(const char* uplo, const int* n, const int* nrhs, const bind_type* a, const int* lda, bind_type* b, const int* ldb, int* info) ;
+
     static getrf_type getrf ;
     static getrs_type getrs ;
 
     static sytrf_type sytrf ;
     static sytrs_type sytrs ;
+
+    static potrf_type potrf ;
+    static potrs_type potrs ;
   };
 
   extern double* work_buffer ;
