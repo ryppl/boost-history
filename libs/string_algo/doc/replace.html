@@ -152,27 +152,27 @@
       </tr>
     </table>
     <h2><a name="rationale">Rationale</a></h2>
-    <h3><a name="implementation">Design and Implementaion</a></h3>
+    <h3><a name="implementation">Design and </a><a name="implementation">Implementation</a></h3>
     <p>
-      Replace algoritms are implemented using layered structure. Lower layer
+      Replace algorithms are implemented using layered structure. Lower layer
       implements generic substitution of a range in an input sequence with
       another sequence. This layer take an input in form of <b>find</b> and <b>format</b>
       functor. These two functors define what is to be replaced and what will be
       the replacement. Upper layer functions are just wrapping calls to lower
       layer provided with specific functors. Find functors are shared with the <a href="find.html">find
-      facility</a>. 
+      facility</a>.
     </p>
     <p>
       Implementation of lower layer is designed to work with a generic sequence,
       but taking an advantage of specific features if possible. <code>std::vector&lt;T&gt;
       </code>is considered as a model for a generic sequence<code>.</code>&nbsp;
-      <code>container_traits&lt;C&gt;</code> class templace ( defined in <a href="../../../boost/string_algo/container_traits.hpp">&lt;boost/string_algo/container_traits.hpp&gt;</a>
-      ) is used to determine specific sequence features. Current implementaition
+      <code>container_traits&lt;C&gt;</code> class template ( defined in <a href="../../../boost/string_algo/container_traits.hpp">&lt;boost/string_algo/container_traits.hpp&gt;</a>
+      ) is used to determine specific sequence features. Current implementation
       contains specializations for standard library's <code>std::list&lt;T&gt;</code>
       , <code>std::basic_string&lt;T&gt;</code> and SGI's&nbsp; <code>std::rope&lt;T&gt;</code>
       and <code>std::slist&lt;T&gt;.</code> For compilers supporting partial
       specialization it is possible to add specialization for a new container by
-      specializing the <code>container_traits&lt;C&gt;</code> class templace.
+      specializing the <code>container_traits&lt;C&gt;</code> class template.
       For compilers without this feature it is not possible, and default
       parameter set is used.
     </p>
