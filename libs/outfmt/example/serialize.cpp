@@ -220,7 +220,6 @@ int main()
       {
          std::ifstream                 is( "doc3.txt" );
          std::list< double >           l;
-         char                          ch;
 
          std::cout << "before:      " << l << '\n';
 
