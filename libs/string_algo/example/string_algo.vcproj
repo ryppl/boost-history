@@ -145,9 +145,6 @@
 				RelativePath="..\..\..\boost\string_algo\config.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\boost\string_algo\container_traits.hpp">
-			</File>
-			<File
 				RelativePath="..\..\..\boost\string_algo\erase.hpp">
 			</File>
 			<File
@@ -179,9 +176,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\boost\string_algo_regex.hpp">
-			</File>
-			<File
-				RelativePath="..\..\..\boost\string_algo\traits.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\boost\string_algo\trim.hpp">

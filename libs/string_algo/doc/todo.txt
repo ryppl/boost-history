@@ -1,6 +1,16 @@
 ------- string_algo TODO list ----------
 
-- !!!! Write documentation !!! -
+- docs update
+	- add replace_head, replace_tail documentation
+	- move classification from trim to the separate doc file
+	- document all predicate
+
+	- iterator_range documentation - add make_range
+
+- cleanup tests 
+
+
+----- FUTURES: ------
 
 - functor concept checks
 - add case-insensitive versions, allow parametric comparison

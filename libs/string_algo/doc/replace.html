@@ -14,7 +14,7 @@
   <p>
     <!--webbot bot="Navigation" s-type="arrows" s-orientation="horizontal"
     s-rendering="text" b-include-home="TRUE" b-include-up="TRUE" u-page s-target startspan
-    --><nobr>[&nbsp;<a href="find.html">Back</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="index.html">Home</a>&nbsp;]</nobr><!--webbot bot="Navigation" endspan i-checksum="9254"
+    --><nobr>[&nbsp;<a href="find.html">Back</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="classification.html">Next</a>&nbsp;]</nobr><!--webbot bot="Navigation" endspan i-checksum="8154"
     -->
   </p>
   <hr>
@@ -104,6 +104,22 @@
         Position is 0-based.</td>
     </tr>
     <tr>
+      <td height="30" valign="top" align="left" width="176"><a
+        href="replace_head.html"><code>replace_head<br>
+        erase_head</code></a></td>
+      <td height="28" valign="top" align="left" width="531">Replace the head of
+        the specified range with the format string/<br>
+        Remove the head of the specified sequence</td>
+    </tr>
+    <tr>
+      <td height="30" valign="top" align="left" width="176"><a
+        href="replace_tail.html"><code>replace_tail<br>
+        erase_tail</code></a></td>
+      <td height="28" valign="top" align="left" width="531">Replace the tail of
+        the specified range with the format string/<br>
+        Remove the tail of the specified sequence</td>
+    </tr>
+    <tr>
       <td height="30" valign="top" align="left" width="176"><code><a
         href="replace_all.html">replace_all<br>
         erase_all</a></code></td>
@@ -143,17 +159,15 @@
   <p>
     Implementation of lower layer is designed to work with a generic sequence,
     but taking an advantage of specific features if possible. <code>std::vector&lt;T&gt;
-    </code>is considered as a model for a generic sequence<code>.</code>&nbsp; <code>container_traits&lt;C&gt;</code>
+    </code>is considered as a model for a generic sequence<code>.</code>&nbsp; <code>sequence_traits&lt;C&gt;</code>
     class template ( defined in <a
-    href="../../../boost/string_algo/container_traits.hpp">&lt;boost/string_algo/container_traits.hpp&gt;</a>
+    href="../../../boost/string_algo/container_traits.hpp">&lt;boost/string_algo/sequence_traits.hpp&gt;</a>
     ) is used to determine specific sequence features. Current implementation
     contains specializations for standard library's <code>std::list&lt;T&gt;</code>
     , <code>std::basic_string&lt;T&gt;</code> and SGI's&nbsp; <code>std::rope&lt;T&gt;</code>
     and <code>std::slist&lt;T&gt;.</code> For compilers supporting partial
     specialization it is possible to add specialization for a new container by
-    specializing the <code>container_traits&lt;C&gt;</code> class template. For
-    compilers without this feature it is not possible, and default parameter set
-    is used.
+    specializing the <code>sequence_traits&lt;C&gt;</code> class template.
   </p>
   <hr>
   <p>

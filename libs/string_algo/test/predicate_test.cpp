@@ -13,7 +13,9 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <functional>
 #include <boost/string_algo/predicate.hpp>
+#include <boost/string_algo/classification.hpp>
 #include <boost/test/test_tools.hpp>
 
 using namespace std;
@@ -54,7 +56,7 @@ void predicate_test()
     BOOST_CHECK( equals( str2, string("abc") ) );
     BOOST_CHECK( !equals( str1, string("yyy") ) );
     BOOST_CHECK( 
-        boost::equals( 
+        equals( 
             str2.begin(), 
             str2.end(), 
             str4.begin(), 
@@ -86,10 +88,37 @@ void predicate_test()
     BOOST_CHECK( equals( str3, string("") ) );
 }
 
+#define TEST_CLASS( Pred, YesInput, NoInput )\
+{\
+	BOOST_CHECK( all( string(YesInput), Pred ) );\
+	BOOST_CHECK( !all( string(NoInput), Pred ) );\
+}
+
+void classification_test()
+{
+	TEST_CLASS( is_space<char>(), "\n\r\t ", "..." );
+	TEST_CLASS( is_alnum<char>(), "ab129ABc", "_ab129ABc" );
+	TEST_CLASS( is_alpha<char>(), "abc", "abc1" );
+	TEST_CLASS( is_cntrl<char>(), "\n\t\r", "..." );
+	TEST_CLASS( is_digit<char>(), "1234567890", "abc" );
+	TEST_CLASS( is_graph<char>(), "123abc.,", "  \t" );
+	TEST_CLASS( is_lower<char>(), "abc", "Aasdf" );
+	TEST_CLASS( is_print<char>(), "abs", "\nasdf" );
+	TEST_CLASS( is_punct<char>(), ".,;", "abc" );
+	TEST_CLASS( is_upper<char>(), "ABC", "aBc" );
+	TEST_CLASS( is_xdigit<char>(), "ABC123", "XFD" );
+	TEST_CLASS( is_from<char>( string("abc") ), "aaabbcc", "aaxb" );
+
+	TEST_CLASS( std::not1(is_classified<char>(std::ctype_base::space)), "...", "..\n\r\t " );
+}
+
+#undef TEST_CLASS
+
 // test main 
 int test_main( int, char*[] )
 {
     predicate_test();
+    classification_test();
     
     return 0;
 }

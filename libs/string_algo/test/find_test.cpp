@@ -27,14 +27,16 @@ void find_test()
     string str3("");
     vector<int> vec1( str1.begin(), str1.end() );
 
-    // find results
+    // find results ------------------------------------------------------------//
     iterator_range<string::iterator> nc_result;
     iterator_range<string::const_iterator> cv_result;
     
     iterator_range<vector<int>::iterator> nc_vresult;
     iterator_range<vector<int>::const_iterator> cv_vresult;
 
-    // basic tests
+    // basic tests ------------------------------------------------------------//
+
+    // find_first
     nc_result=find_first( str1.begin(), str1.end(), str2.begin(), str2.end() );
     BOOST_CHECK( 
         (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 3) &&
@@ -55,6 +57,7 @@ void find_test()
         (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 3) &&
         (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 6) );
 
+    // find_last
     nc_result=find_last( str1.begin(), str1.end(), str2.begin(), str2.end() );
     BOOST_CHECK( 
         (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 15) &&
@@ -75,6 +78,7 @@ void find_test()
         (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 15) &&
         (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 18) );
 
+    // find_nth
     nc_result=find_nth( str1.begin(), str1.end(), str2.begin(), str2.end(), 1 );
     BOOST_CHECK( 
         (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 9) &&
@@ -95,7 +99,55 @@ void find_test()
         (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 9) &&
         (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 12) );
         
-    // multi-type comparison test
+    // find_head
+    nc_result=find_head( str1.begin(), str1.end(), 6 );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 0) &&
+        (distance<string::const_iterator>( str1.begin(),nc_result.end()) == 6) );
+
+    cv_result=find_head( str1.begin(), str1.end(), 6 );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 0) &&
+        (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 6) );
+
+    nc_result=find_head( str1, 6 );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 0) &&
+        (distance<string::const_iterator>( str1.begin(),nc_result.end()) == 6) );
+
+    cv_result=find_head( str1, 6 );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 0) &&
+        (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 6) );
+
+    BOOST_CHECK( find_head_copy( string("123456"), 3 )==string("123") );
+    BOOST_CHECK( find_head_copy( string("123"), 5 )==string("123") );
+
+    // find_tail
+    nc_result=find_tail( str1.begin(), str1.end(), 6 );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 15) &&
+        (distance<string::const_iterator>( str1.begin(),nc_result.end()) == 21) );
+
+    cv_result=find_tail( str1.begin(), str1.end(), 6 );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 15) &&
+        (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 21) );
+
+    nc_result=find_tail( str1, 6 );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 15) &&
+        (distance<string::const_iterator>( str1.begin(),nc_result.end()) == 21) );
+
+    cv_result=find_tail( str1, 6 );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 15) &&
+        (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 21) );
+
+    BOOST_CHECK( find_tail_copy( string("123456"), 3 )==string("456") );
+    BOOST_CHECK( find_tail_copy( string("123"), 5 )==string("123") );
+
+    // multi-type comparison test --------------------------------------------------//
     nc_vresult=find_first( vec1, string("abc") );
     BOOST_CHECK( 
         (distance<vector<int>::const_iterator>( vec1.begin(),nc_vresult.begin()) == 3) &&
@@ -111,6 +163,11 @@ void find_test()
     BOOST_CHECK( nc_result.begin()==nc_result.end() );
     cv_result=find_first( str2, string("abcd") );
     BOOST_CHECK( cv_result.begin()==cv_result.end() );
+
+    cv_result=find_head( str2, 4 );
+    BOOST_CHECK( string( cv_result.begin(), cv_result.end() )== string("abc") );
+    cv_result=find_tail( str2, 4 );
+    BOOST_CHECK( string( cv_result.begin(), cv_result.end() )== string("abc") );
 
     //! Empty string test
     nc_result=find_first( str3, string("abcd") );

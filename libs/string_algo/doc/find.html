@@ -80,7 +80,11 @@
     the result of the find algorithm. For const input, a <code>const_iterator</code>
     and for non-const input an <code>iterator</code> is used. Choice is
     implemented by <code>input_policy</code> class (defined in&nbsp; <a
-    href="../../../boost/string_algo/traits.hpp">&lt;boost/string_algo/traits.hpp&gt;</a>).
+    href="../../../boost/string_algo/traits.hpp">&lt;boost/string_algo/traits.hpp&gt;</a>).<br>
+    <br>
+    In addtion, some of algorithms have also <code>_copy</code> variant. This
+    variant creates a sequence of the same type as the input with a copy of&nbsp;
+    the result range.
   </p>
   <table border="1" height="28" width="566">
     <tr>
@@ -105,6 +109,16 @@
       <td height="28" valign="top" align="left" width="407">Find the n-th
         occurrence of a substring.<br>
         Position is 0-based.</td>
+    </tr>
+    <tr>
+      <td height="30" valign="top" align="left" width="143"><a name="find_head">find_head</a></td>
+      <td height="30" valign="top" align="left" width="407">Find (Get) the head
+        of the input range. First n elements of the input range.</td>
+    </tr>
+    <tr>
+      <td height="30" valign="top" align="left" width="143"><a name="find_tail">find_tail</a></td>
+      <td height="30" valign="top" align="left" width="407">Find (Get) the tail
+        of the input range. Last n elements of the input range.</td>
     </tr>
     <tr>
       <td height="30" valign="top" align="left" width="143"><code><a
@@ -142,9 +156,20 @@
         ForwardIterator1T End, 
         ForwardIterator2T SearchBegin,
         ForwardIterator2T SearchEnd,
-        <b>unsigned</b> <b>int</b> Nth );
-
-    <b>template</b>&lt; 
+        <b>unsigned</b> <b>int</b> Nth );</pre>
+  <pre>    <b>template</b>&lt; <b>typename</b> ForwardIterator1T &gt;
+    <b>inline</b> iterator_range&lt;ForwardIterator1T&gt;
+    <a href="#find_head">find_head</a>( 
+        ForwardIterator1T Begin, 
+        ForwardIterator1T End, 
+        <b>unsigned</b> <b>int</b> N );</pre>
+  <pre>    <b>template</b>&lt; <b>typename</b> ForwardIterator1T &gt;
+    <b>inline</b> iterator_range&lt;ForwardIterator1T&gt;
+    <a href="#find_tail">find_tail</a>( 
+        ForwardIterator1T Begin, 
+        ForwardIterator1T End, 
+        <b>unsigned</b> <b>int</b> N );</pre>
+  <pre>    <b>template</b>&lt; 
         <b>typename</b> ForwardIterator1T, 
         <b>typename</b> CharT, 
         <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT&gt;
@@ -158,7 +183,7 @@
   <p>
     Sequence based variants:
   </p>
-  <pre> <b>namespace</b> boost {
+  <pre><b>namespace</b> boost {
 
     <b>template</b>&lt;<b>typename</b> InputT, <b>typename</b> SearchT&gt;
     <b>inline</b> iterator_range&lt;<b>typename</b> string_algo::input_policy&lt;InputT&gt;::iterator_type&gt;
@@ -178,6 +203,12 @@
 	InputT&amp; Input, 
         <b>const</b> SearchT&amp; Search,
 	<b>unsigned</b> <b>int</b> Nth );</pre>
+  <pre>    <b>template</b>&lt;<b>typename</b> InputT, <b>typename</b> SearchT&gt;
+    <b>inline</b> iterator_range&lt;<b>typename</b> string_algo::input_policy&lt;InputT&gt;::iterator_type&gt;
+    <a href="#find_head">find_head</a>( InputT&amp; Input, <b>unsigned</b> <b>int</b> N );</pre>
+  <pre>    <b>template</b>&lt;<b>typename</b> InputT, <b>typename</b> SearchT&gt;
+    <b>inline</b> iterator_range&lt;<b>typename</b> string_algo::input_policy&lt;InputT&gt;::iterator_type&gt;
+    <a href="#find_tail">find_tail</a>( InputT&amp; Input, <b>unsigned</b> <b>int</b> N );</pre>
   <pre>    <b>template</b>&lt; 
         <b>typename</b> InputT, 
         <b>typename</b> CharT, 
@@ -185,6 +216,25 @@
     <b>inline</b> iterator_range&lt;<b>typename</b> string_algo::input_policy&lt;InputT&gt;::iterator_type&gt;
     <a href="#find_regex">find_regex</a>( 
         InputT&amp; Input, 
+        <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
+        <b>unsigned</b> <b>int</b> MatchFlags=match_default );
+}</pre>
+  <p>
+    Copy variants:
+  </p>
+  <pre><b>namespace</b> boost {
+
+    <b>template</b>&lt; <b>typename</b> InputT &gt;
+    <b>inline</b> InputT <a href="#find_head">find_head_copy</a>( <b>const</b> InputT&amp; Input, <b>unsigned</b> <b>int</b> N );</pre>
+  <pre>    <b>template</b>&lt; <b>typename</b> InputT &gt;
+    <b>inline</b> InputT <a href="#find_tail">find_tail_copy</a>( <b>const</b> InputT&amp; Input, <b>unsigned</b> <b>int</b> N );
+
+    <b>template</b>&lt; 
+        <b>typename</b> InputT, 
+        <b>typename</b> CharT, 
+        <b>typename</b> RegexTraitsT, <b>typename</b> RegexAllocatorT&gt;
+    <b>inline</b> InputT <a href="#find_regex">find_regex_copy</a>( 
+        <b>const</b> InputT&amp; Input, 
         <b>const</b> reg_expression&lt;CharT, RegexTraitsT, RegexAllocatorT&gt;&amp; Rx,
         <b>unsigned</b> <b>int</b> MatchFlags=match_default );
 }</pre>
@@ -304,13 +354,23 @@ void find_example()
     <code>iterator_range</code> class is declared in <a
     href="../../../boost/string_algo/trim.hpp">&lt;boost/string_algo/iterator_range.hpp&gt;</a>
     header.<br>
+    An iterator_range specifies a range in a sequence by beginning and ending
+    iterators. An iterator_range can be passed to an algorithm which requires a
+    sequence as an input. For example, the toupper() function may be used most
+    frequently on strings, but can also be used on iterator_ranges:
+  </p>
+  <pre>boost::tolower( find( s, &quot;UPPERCASE STRING&quot; ) );</pre>
+  <p>
     Many algorithms working with sequences take a pair of iterators, delimiting
     a working range, as an arguments. <code>iterator_range</code> class is an
     encapsulation of a range identified by a pair of iterators. It provides a
     subset of container ( see <a
     href="http://www.boost.org/libs/concept_check/reference.htm#container-concepts">ContainerConcept</a>
     )&nbsp; interface, so it is possible to pass an instance to an algorithm
-    requiring a sequence as an input.&nbsp;
+    requiring a sequence as an input.&nbsp;<br>
+    <br>
+    The library also contains the <code>make_range</code> function, a helper to
+    simplify the instantiation of the iterator_range class.
   </p>
   <h3><a name="iter_synopsis">Synopsis</a></h3>
   <pre><b>namespace</b> boost {
@@ -352,7 +412,9 @@ void find_example()
         IteratorT end() <b>const</b>;
         <b>bool</b> empty() <b>const</b>;
         difference_type size() <b>const</b>;
-    };
+    };</pre>
+  <pre>    <b>template</b>&lt; <b>typename</b> IteratorT &gt;
+    <b>inline</b> iterator_range&lt; IteratorT &gt; make_range( IteratorT Begin, IteratorT End );
 }</pre>
   <p>
     Class members:
@@ -462,11 +524,12 @@ void find_example()
   </p>
   <p>
     Instead of returning just the start of matching subsequence they return a
-    range, which is more convinient. This feature also allows a partitioning of&nbsp;
-    the input sequence into three parts: prefix, substring and suffix.&nbsp;<br>
+    range, which is necessary when searching for a regular expression, and often
+    more convenient. This feature also allows a partitioning of&nbsp; the input
+    sequence into three parts: prefix, substring and suffix.&nbsp;<br>
     <br>
-    Besides of the iterator-based variant, there are also variants which accept
-    a container as an input. It is more convinient to write&nbsp; <code>find_first(
+    Besides the iterator-based variant, there are also variants which accept a
+    container as an input. It is more convenient to write&nbsp; <code>find_first(
     str1, str2 )</code> then <code>find_first( str1.begin(), str1.end(),
     str2.begin(), str2.end() )</code>
   </p>
@@ -484,7 +547,7 @@ void find_example()
     standard defines a required complexity for search algorithm only O(n * m).
   </p>
   <p>
-    It is possible that feature version of library will contain also algoritms
+    It is possible that a future version of library will contain also algoritms
     with linear complexity as an option.
   </p>
   <hr>

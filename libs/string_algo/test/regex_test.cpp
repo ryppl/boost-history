@@ -64,6 +64,8 @@ static void find_test()
     BOOST_CHECK( 
         (distance<vector<int>::const_iterator>( vec1.begin(),cv_vresult.begin()) == 3) &&
         (distance<vector<int>::const_iterator>( vec1.begin(),cv_vresult.end()) == 6) );
+
+    BOOST_CHECK( find_regex_copy( str1, rx )==string("a1c") );
 }
 
 static void replace_test()

@@ -13,7 +13,7 @@
   <p>
     <!--webbot bot="Navigation" s-type="arrows" s-orientation="horizontal"
     s-rendering="text" b-include-home="TRUE" b-include-up="TRUE" u-page s-target startspan
-    --><nobr>[&nbsp;<a href="conv.html">Back</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="find.html">Next</a>&nbsp;]</nobr><!--webbot bot="Navigation" endspan i-checksum="29613"
+    --><nobr>[&nbsp;<a href="replace.html">Back</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="index.html">Home</a>&nbsp;]</nobr><!--webbot bot="Navigation" endspan i-checksum="60979"
     -->
   </p>
   <hr>
@@ -24,7 +24,7 @@
           align="middle" border="0" width="277" height="86"></td>
         <td width="1152" height="134">
           <h1 align="center">&nbsp;String Algorithm Library&nbsp;</h1>
-          <h2 align="center">Predicates</h2>
+          <h2 align="center">Classification</h2>
         </td>
       </tr>
     </table>
@@ -47,12 +47,13 @@
   <h2><a name="predicates">Predicates</a></h2>
   <h3><a name="overview">Overview</a></h3>
   <p>
-    Predicates are included in <a
-    href="../../../boost/string_algo/predicate.hpp">&lt;boost/string_algo/predicate.hpp&gt;</a>
+    Classification predicates are included in <a
+    href="../../../boost/string_algo/predicate.hpp">&lt;boost/string_algo/classification.hpp&gt;</a>
     header.<br>
-    The algorithms are resolving if a substring is contained in the input string
-    under various conditions. These conditions are suffix and prefix check,
-    equality check and containment check.
+    Classification predicates are included in the library to give some more
+    convinience when using algorithms like <code><a href="trim.html">trim</a></code>
+    and <code><a href="predicate.html#all">all</a></code>. In general they wrap
+    funcionality of <code>std::isXXXX </code>methods into generic functors. 
   </p>
   <h3><a name="description">Description</a></h3>
   <p>
@@ -65,35 +66,24 @@
       <th height="30" width="435" valign="top" align="left">Description</th>
     </tr>
     <tr>
-      <td height="28" valign="top" align="left" width="146"><code><a
-        name="starts_with">starts_with</a></code></td>
-      <td height="28" valign="top" align="left" width="435">Checks if the
-        substring is a prefix of the input.</td>
+      <td height="28" valign="top" align="left" width="146"></td>
+      <td height="28" valign="top" align="left" width="435"></td>
     </tr>
     <tr>
-      <td height="30" valign="top" align="left" width="146"><code><a
-        name="ends_with">ends_with</a></code></td>
-      <td height="30" valign="top" align="left" width="435">Checks if the
-        substring is a suffix of the input.</td>
+      <td height="30" valign="top" align="left" width="146"></td>
+      <td height="30" valign="top" align="left" width="435"></td>
     </tr>
     <tr>
-      <td height="30" valign="top" align="left" width="146"><code><a
-        name="contains">contains</a></code></td>
-      <td height="28" valign="top" align="left" width="435">Checks if the input
-        contains an instance of substring.</td>
+      <td height="30" valign="top" align="left" width="146"></td>
+      <td height="28" valign="top" align="left" width="435"></td>
     </tr>
     <tr>
-      <td height="30" valign="top" align="left" width="146"><code><a
-        name="equals">equals</a></code></td>
-      <td height="30" valign="top" align="left" width="435">Checks if both
-        operands are equal.<br>
-        ( Note: this is two-directional equivalent of <code>std::equal</code>
-        algorithm)</td>
+      <td height="30" valign="top" align="left" width="146"></td>
+      <td height="30" valign="top" align="left" width="435"></td>
     </tr>
     <tr>
-      <td height="30" valign="top" align="left" width="146"><a name="all">all</a></td>
-      <td height="30" valign="top" align="left" width="435">Check if all
-        elements of the sequence satisfy the given predicate</td>
+      <td height="30" valign="top" align="left" width="146"></td>
+      <td height="30" valign="top" align="left" width="435"></td>
     </tr>
   </table>
   <h3><a name="synopsis">Synopsis</a></h3>

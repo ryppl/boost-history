@@ -85,7 +85,7 @@ void trim_test()
         trim_copy_if( 
             string("123abc456"), 
             is_classified<char>(std::ctype_base::digit) )=="abc" );
-    BOOST_CHECK( trim_copy_if( string("<>abc<>"), is_from( string("<<>>") ) )=="abc" );
+    BOOST_CHECK( trim_copy_if( string("<>abc<>"), is_from<char>( string("<<>>") ) )=="abc" );
 }
 
 // test main 

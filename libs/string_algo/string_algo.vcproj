@@ -29,7 +29,7 @@
 				RuntimeLibrary="5"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
+				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="4"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -66,7 +66,7 @@
 				EnableFunctionLevelLinking="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
+				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="3"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -97,6 +97,9 @@
 			Filter="h;hpp;hxx;hm;inl;inc">
 			<File
 				RelativePath="..\..\boost\string_algo\case_conv.hpp">
+			</File>
+			<File
+				RelativePath="..\..\boost\string_algo\classification.hpp">
 			</File>
 			<File
 				RelativePath="..\..\boost\string_algo\config.hpp">
@@ -150,6 +153,9 @@
 					RelativePath="..\..\boost\string_algo\detail\case_conv.hpp">
 				</File>
 				<File
+					RelativePath="..\..\boost\string_algo\detail\classification.hpp">
+				</File>
+				<File
 					RelativePath="..\..\boost\string_algo\detail\container.hpp">
 				</File>
 				<File
@@ -185,6 +191,12 @@
 				Filter="">
 				<File
 					RelativePath="..\..\boost\string_algo\std\list_traits.hpp">
+				</File>
+				<File
+					RelativePath="..\..\boost\string_algo\std\rope_traits.hpp">
+				</File>
+				<File
+					RelativePath="..\..\boost\string_algo\std\slist_traits.hpp">
 				</File>
 				<File
 					RelativePath="..\..\boost\string_algo\std\string_traits.hpp">
