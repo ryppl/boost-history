@@ -103,7 +103,7 @@ namespace boost { namespace numeric { namespace ublas {
     const int lda = m;
     const int ldb = k;
     const int ldc = m;
-    blas_traits< T >::gemm( &TRANS_N, &TRANS_N, &m, &n, &k, &alpha, &(a.data()[0]), &lda, &(b.data()[0]), &ldb, &beta, &(c.data()[0]), &ldc );
+    blas_traits< T >::gemm( &TRANS_N, &TRANS_N, &m, &n, &k, &alpha, a.data().begin(), &lda, b.data().begin(), &ldb, &beta, c.data().begin(), &ldc );
   }
 
   template < typename T >
@@ -124,7 +124,7 @@ namespace boost { namespace numeric { namespace ublas {
     const int lda = m;
     const int ldb = n;
     const int ldc = m;
-    blas_traits< T >::gemm( &TRANS_N, &TRANS_T, &m, &n, &k, &alpha, &(a.data()[0]), &lda, &(b.data()[0]), &ldb, &beta, &(c.data()[0]), &ldc );
+    blas_traits< T >::gemm( &TRANS_N, &TRANS_T, &m, &n, &k, &alpha, a.data().begin(), &lda, b.data().begin(), &ldb, &beta, c.data().begin(), &ldc );
   }
 }}}
 
