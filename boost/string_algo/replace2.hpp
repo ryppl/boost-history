@@ -14,6 +14,7 @@
 #include <boost/detail/iterator.hpp>
 #include <boost/string_algo/container_traits.hpp>
 #include <boost/string_algo/iterator_range.hpp>
+#include <boost/string_algo/concept.hpp>
 #include <boost/string_algo/detail/replace.hpp>
 #include <boost/string_algo/detail/sequence.hpp>
 
@@ -52,6 +53,15 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
+			// Concept check
+			function_requires< 
+				FinderConcept<FindFT,
+				BOOST_STRING_TYPENAME container_traits<InputT>::const_iterator> >();
+			function_requires< 
+				FormatterConcept<
+					FormatFT,
+					FindFT,BOOST_STRING_TYPENAME container_traits<InputT>::const_iterator> >();
+
             typedef detail::find_format_store<
                 BOOST_STRING_TYPENAME 
                     container_traits<InputT>::const_iterator, FormatFT> store_type;
@@ -101,7 +111,16 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
-            typedef detail::find_format_store<
+			// Concept check
+			function_requires< 
+				FinderConcept<FindFT,
+				BOOST_STRING_TYPENAME container_traits<InputT>::const_iterator> >();
+			function_requires< 
+				FormatterConcept<
+					FormatFT,
+					FindFT,BOOST_STRING_TYPENAME container_traits<InputT>::const_iterator> >();
+
+			typedef detail::find_format_store<
                 BOOST_STRING_TYPENAME 
                     container_traits<InputT>::const_iterator, FormatFT> store_type;
 
@@ -148,7 +167,16 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
-            typedef detail::find_format_store<
+			// Concept check
+			function_requires< 
+				FinderConcept<FindFT,
+				BOOST_STRING_TYPENAME container_traits<InputT>::iterator> >();
+			function_requires< 
+				FormatterConcept<
+					FormatFT,
+					FindFT,BOOST_STRING_TYPENAME container_traits<InputT>::iterator> >();
+
+			typedef detail::find_format_store<
                 BOOST_STRING_TYPENAME 
                     container_traits<InputT>::iterator, FormatFT> store_type;
 
@@ -197,7 +225,16 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
-            typedef BOOST_STRING_TYPENAME 
+			// Concept check
+			function_requires< 
+				FinderConcept<FindFT,
+				BOOST_STRING_TYPENAME container_traits<InputT>::const_iterator> >();
+			function_requires< 
+				FormatterConcept<
+					FormatFT,
+					FindFT,BOOST_STRING_TYPENAME container_traits<InputT>::const_iterator> >();
+
+			typedef BOOST_STRING_TYPENAME 
                 container_traits<InputT>::const_iterator input_iterator_type; 
             typedef detail::find_format_store<
                 input_iterator_type, FormatFT> store_type;
@@ -250,7 +287,16 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
-            typedef BOOST_STRING_TYPENAME 
+			// Concept check
+			function_requires< 
+				FinderConcept<FindFT,
+				BOOST_STRING_TYPENAME container_traits<InputT>::const_iterator> >();
+			function_requires< 
+				FormatterConcept<
+					FormatFT,
+					FindFT,BOOST_STRING_TYPENAME container_traits<InputT>::const_iterator> >();
+
+			typedef BOOST_STRING_TYPENAME 
                 container_traits<InputT>::const_iterator input_iterator_type; 
             typedef detail::find_format_store<
                 input_iterator_type, FormatFT> store_type;
@@ -305,7 +351,16 @@ namespace boost {
             FindFT FindF,
             FormatFT FormatF )
         {
-            typedef BOOST_STRING_TYPENAME 
+			// Concept check
+			function_requires< 
+				FinderConcept<FindFT,
+				BOOST_STRING_TYPENAME container_traits<InputT>::iterator> >();
+			function_requires< 
+				FormatterConcept<
+					FormatFT,
+					FindFT,BOOST_STRING_TYPENAME container_traits<InputT>::iterator> >();
+
+			typedef BOOST_STRING_TYPENAME 
                 container_traits<InputT>::iterator input_iterator_type; 
             typedef detail::find_format_store<
                 input_iterator_type, FormatFT> store_type;

@@ -21,15 +21,15 @@ namespace boost {
 
         // stable iterators tester
         template<typename T, typename AllocT>
-        yes_type sequence_has_stable_iterators( const std::slist<T,AllocT>* );
+        yes_type sequence_has_stable_iterators_tester( const std::slist<T,AllocT>* );
 
         // const time insert tester
         template<typename T, typename AllocT>
-        yes_type sequence_has_const_time_insert( const std::slist<T,AllocT>* );
+        yes_type sequence_has_const_time_insert_tester( const std::slist<T,AllocT>* );
 
         // const time erase tester
         template<typename T, typename AllocT>
-        yes_type sequence_has_const_time_erase( const std::slist<T,AllocT>* );
+        yes_type sequence_has_const_time_erase_tester( const std::slist<T,AllocT>* );
 
     } // namespace string_algo
 

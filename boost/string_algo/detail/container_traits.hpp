@@ -521,9 +521,7 @@ namespace boost {
             struct pointer_container_traits
             {
                 typedef BOOST_STRING_TYPENAME
-                    ::boost::remove_pointer<
-                        BOOST_STRING_TYPENAME 
-                            ::boost::remove_cv<T>::type>::type value_type;
+                    ::boost::remove_pointer<T>::type value_type;
 
                 typedef BOOST_STRING_TYPENAME
                     ::boost::remove_cv<value_type>::type char_type;

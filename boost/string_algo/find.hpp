@@ -46,7 +46,8 @@ namespace boost {
         InputContainerT& Input, 
         const SearchContainerT& Search )
     {
-        return string_algo::first_finder(Search)(Input);
+		return string_algo::first_finder(Search)(
+			string_algo::begin(Input),string_algo::end(Input));
     }
 
     //! Find first algorithm ( case insensitive )
@@ -70,7 +71,8 @@ namespace boost {
         const SearchContainerT& Search,
 		const std::locale& Loc=std::locale() )
     {
-        return string_algo::first_finder(Search,string_algo::is_iequal(Loc))(Input);
+        return string_algo::first_finder(Search,string_algo::is_iequal(Loc))(
+			string_algo::begin(Input),string_algo::end(Input));
     }
 
 //  find_last  -----------------------------------------------//
@@ -94,7 +96,8 @@ namespace boost {
         InputContainerT& Input, 
         const SearchContainerT& Search )
     {
-        return string_algo::last_finder(Search)(Input);
+        return string_algo::last_finder(Search)(
+			string_algo::begin(Input),string_algo::end(Input));
     }
 
     //! Find last algorithm ( case insensitive )
@@ -119,7 +122,8 @@ namespace boost {
         const SearchContainerT& Search,
 		const std::locale& Loc=std::locale() )
     {
-        return string_algo::last_finder(Search, string_algo::is_iequal(Loc))(Input);
+        return string_algo::last_finder(Search, string_algo::is_iequal(Loc))(
+			string_algo::begin(Input),string_algo::end(Input));
     }
 
 //  find_nth ----------------------------------------------------------------------//
@@ -146,7 +150,8 @@ namespace boost {
         const SearchContainerT& Search,
         unsigned int Nth )
     {
-        return string_algo::nth_finder(Search,Nth)(Input);
+        return string_algo::nth_finder(Search,Nth)(
+			string_algo::begin(Input),string_algo::end(Input));
     }
 
     //! Find n-th algorithm ( case insensitive ).
@@ -173,7 +178,8 @@ namespace boost {
         unsigned int Nth,
 		const std::locale& Loc=std::locale() )
     {
-        return string_algo::nth_finder(Search,Nth,string_algo::is_iequal(Loc))(Input);
+        return string_algo::nth_finder(Search,Nth,string_algo::is_iequal(Loc))(
+			string_algo::begin(Input),string_algo::end(Input));
     }
 
 //  find_head ----------------------------------------------------------------------//
@@ -199,7 +205,8 @@ namespace boost {
         InputContainerT& Input, 
         unsigned int N )
     {
-        return string_algo::head_finder( N )( Input );      
+        return string_algo::head_finder(N)(
+			string_algo::begin(Input),string_algo::end(Input));      
     }
 
 //  find_tail ----------------------------------------------------------------------//
@@ -225,7 +232,8 @@ namespace boost {
         InputContainerT& Input, 
         unsigned int N )
     {
-        return string_algo::tail_finder( N )( Input );      
+        return string_algo::tail_finder(N)(
+			string_algo::begin(Input),string_algo::end(Input));      
     }
 
 //  find_token --------------------------------------------------------------------//
@@ -252,7 +260,8 @@ namespace boost {
         PredicateT Pred,
         bool bCompress=true )
     {
-        return string_algo::token_finder( Pred, bCompress )( Input );       
+        return string_algo::token_finder(Pred, bCompress)(
+			string_algo::begin(Input),string_algo::end(Input));       
     }
 
 

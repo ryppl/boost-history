@@ -21,7 +21,7 @@ namespace boost {
 
         // native replace tester
         template<typename T, typename TraitsT, typename AllocT>
-        yes_type sequence_has_native_replace( const std::basic_string<T, TraitsT, AllocT>* );
+        yes_type sequence_has_native_replace_tester( const std::basic_string<T, TraitsT, AllocT>* );
 
     } // namespace string_algo
 

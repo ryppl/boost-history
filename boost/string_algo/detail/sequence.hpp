@@ -60,7 +60,7 @@ namespace boost {
 
             // Optimized version of replace for generic sequence containers
             // Assumption: insert and erase are expensive
-            template< typename HasConstTimeOperations >
+            template< bool HasConstTimeOperations >
             struct replace_const_time_helper
             {
                 template< typename InputT, typename ForwardIteratorT >
@@ -96,7 +96,7 @@ namespace boost {
             };
 
             template<>
-            struct replace_const_time_helper< boost::mpl::true_ >
+            struct replace_const_time_helper< true >
             {
                 // Const-time erase and insert methods -> use them
                 template< typename InputT, typename ForwardIteratorT >
@@ -116,7 +116,7 @@ namespace boost {
             };
 
             // No native replace method
-            template< typename HasNative >
+            template< bool HasNative >
             struct replace_native_helper
             {
                 template< typename InputT, typename ForwardIteratorT >
@@ -128,18 +128,16 @@ namespace boost {
                     ForwardIteratorT End ) 
                 {
                     replace_const_time_helper< 
-                        BOOST_STRING_TYPENAME boost::mpl::and_<
-                            BOOST_STRING_TYPENAME 
-                                sequence_traits<InputT>::const_time_insert,
-                            BOOST_STRING_TYPENAME 
-                                sequence_traits<InputT>::const_time_erase >::type >()(
+                        boost::mpl::and_<
+							sequence_has_const_time_insert<InputT>,
+                            sequence_has_const_time_erase<InputT> >::value >()(
                         Input, From, To, Begin, End );
                 }
             };
 
             // Container has native replace method
             template<>
-            struct replace_native_helper< boost::mpl::true_ >
+            struct replace_native_helper< true >
             {
                 template< typename InputT, typename ForwardIteratorT >
                 void operator()(
@@ -173,9 +171,8 @@ namespace boost {
                 ForwardIteratorT Begin,
                 ForwardIteratorT End )
             {
-                replace_native_helper< 
-                    BOOST_STRING_TYPENAME sequence_traits<InputT>::native_replace >()(
-                    Input, From, To, Begin, End );
+                replace_native_helper< sequence_has_native_replace<InputT>::value >()(
+					Input, From, To, Begin, End );
             };
 
         } // namespace detail

@@ -115,7 +115,7 @@ namespace boost {
 			a match )
 
 		\param Input A container which will be searched.
-		\param Pred A predcicate to indentify separators. This predicate is 
+		\param Pred A predicate to indentify separators. This predicate is 
 			supposed to return true if a given element is a separator.
 		\param bCompress If bCompress argument is set to true, adjancent 
 			separators are merged together. Otherwise, every two separators

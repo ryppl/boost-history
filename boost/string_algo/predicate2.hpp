@@ -122,7 +122,7 @@ namespace boost {
                 return true;
             }
             
-            return ( ! (first_finder(Test,Comp)(Input)).empty() );
+            return ( ! (first_finder(Test,Comp)(begin(Input), end(Input))).empty() );
         }
 
 

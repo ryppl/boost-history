@@ -89,7 +89,7 @@ namespace boost {
 
 //  process segment routine -----------------------------------------------//
 
-            template< typename HasStableIterators >
+            template< bool HasStableIterators >
             struct process_segment_helper
             {
                 // Optimized version of process_segment for generic sequence
@@ -146,7 +146,7 @@ namespace boost {
             };
 
             template<>
-            struct process_segment_helper< boost::mpl::true_ >
+            struct process_segment_helper< true >
             {
                 // Optimized version of process_segment for list-like sequence
                 template< 
@@ -183,8 +183,7 @@ namespace boost {
             {
                 return 
                     process_segment_helper< 
-                        BOOST_STRING_TYPENAME 
-                            sequence_traits<InputT>::stable_iterators >()(
+                        sequence_has_stable_iterators<InputT>::value>()(
                                 Storage, Input, InsertIt, SegmentBegin, SegmentEnd );
             }
             

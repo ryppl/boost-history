@@ -108,14 +108,6 @@ namespace boost {
                     }
                 }
 
-                template<typename InputT>
-                regex_search_result< 
-                    BOOST_STRING_TYPENAME container_traits<InputT>::result_iterator >
-                operator()( InputT& Input ) const
-                {
-                    return operator()( begin(Input), end(Input) );
-                }
-
             private:
                 regex_reference_type m_Rx; // Regexp
                 match_flag_type m_MatchFlags;     // match flags

@@ -16,6 +16,7 @@
 #include <boost/iterator/transform_iterator.hpp>
 #include <boost/string_algo/container_traits.hpp>
 #include <boost/string_algo/iterator_range.hpp>
+#include <boost/string_algo/concept.hpp>
 #include <boost/string_algo/detail/find_iterator.hpp>
 #include <boost/string_algo/detail/util.hpp>
 
@@ -66,7 +67,11 @@ namespace boost {
             InputT& Input,
             FindFT FindF )
         {
-            typedef BOOST_STRING_TYPENAME 
+			function_requires< 
+				FinderConcept<FindFT,
+				BOOST_STRING_TYPENAME container_traits<InputT>::result_iterator> >();
+
+			typedef BOOST_STRING_TYPENAME 
                 container_traits<InputT>::result_iterator input_iterator_type;
             typedef detail::find_iterator<
                 input_iterator_type,
@@ -124,7 +129,11 @@ namespace boost {
             InputT& Input,
             FindFT FindF )
         {
-            typedef BOOST_STRING_TYPENAME 
+			function_requires< 
+				FinderConcept<FindFT,
+				BOOST_STRING_TYPENAME container_traits<InputT>::result_iterator> >();
+
+			typedef BOOST_STRING_TYPENAME 
                 container_traits<InputT>::result_iterator input_iterator_type;
             typedef detail::find_iterator<
                 input_iterator_type,

@@ -141,7 +141,6 @@ namespace boost {
 		//! Free-standing begin() function
 		/*!
 			Get the begin iterator of the container. Uses container_traits.
-			Variant for non-const input.
 		*/
         template< typename C >
         inline BOOST_STRING_TYPENAME container_traits<C>::iterator
@@ -152,8 +151,7 @@ namespace boost {
 
 		//! Free-standing begin() function
 		/*!
-			Get the begin iterator of the container. Uses container_traits.
-			Variant for const input.
+			\overload
 		*/
         template< typename C >
         inline BOOST_STRING_TYPENAME container_traits<C>::const_iterator
@@ -165,7 +163,6 @@ namespace boost {
 		//! Free-standing end() function
 		/*!
 			Get the begin iterator of the container. Uses container_traits.
-			Variant for non-const input.
 		*/
         template< typename C >
         inline BOOST_STRING_TYPENAME container_traits<C>::iterator
@@ -176,8 +173,7 @@ namespace boost {
 
 		//! Free-standing end() function
 		/*!
-			Get the begin iterator of the container. Uses container_traits.
-			Variant for const input.
+			\overload			
 		*/
         template< typename C >
         inline BOOST_STRING_TYPENAME container_traits<C>::const_iterator

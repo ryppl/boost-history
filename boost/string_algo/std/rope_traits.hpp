@@ -21,19 +21,19 @@ namespace boost {
 
         // native replace tester
         template<typename T, typename TraitsT, typename AllocT>
-        yes_type sequence_has_native_replace( const std::rope<T, TraitsT, AllocT>* );
+        yes_type sequence_has_native_replace_tester( const std::rope<T, TraitsT, AllocT>* );
 
         // stable iterators tester
         template<typename T, typename TraitsT, typename AllocT>
-        yes_type sequence_has_stable_iterators( const std::rope<T, TraitsT, AllocT>* );
+        yes_type sequence_has_stable_iterators_tester( const std::rope<T, TraitsT, AllocT>* );
 
         // const time insert tester
         template<typename T, typename TraitsT, typename AllocT>
-        yes_type sequence_has_const_time_insert( const std::rope<T, TraitsT, AllocT>* );
+        yes_type sequence_has_const_time_insert_tester( const std::rope<T, TraitsT, AllocT>* );
 
         // const time erase tester
         template<typename T, typename TraitsT, typename AllocT>
-        yes_type sequence_has_const_time_erase( const std::rope<T, TraitsT, AllocT>* );
+        yes_type sequence_has_const_time_erase_tester( const std::rope<T, TraitsT, AllocT>* );
 
     } // namespace string_algo
 

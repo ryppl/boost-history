@@ -56,7 +56,8 @@ namespace boost {
         const reg_expression<CharT, RegexTraitsT, RegexAllocatorT>& Rx,
         match_flag_type MatchFlags=match_default )
     {
-        return string_algo::regex_finder(Rx,MatchFlags)( Input );
+        return string_algo::regex_finder(Rx,MatchFlags)(
+			string_algo::begin(Input), string_algo::end(Input) );
     }
 
 //  replace_regex --------------------------------------------------------------------//
