@@ -17,7 +17,7 @@ flags gcc-stlport STLPORT_LIB <runtime-link>static/<runtime-build>debug    : stl
 flags gcc-stlport STLPORT_LIB <runtime-link>static/<runtime-build>release  : stlport_cygwin ;
 flags gcc-stlport STLPORT_LIB <runtime-link>dynamic/<runtime-build>debug    : stlport_cygwin_stldebug.dll.4.5.b8 ;
 flags gcc-stlport STLPORT_LIB <runtime-link>dynamic/<runtime-build>release  : stlport_cygwin.dll.4.5.b8 ;
-flags gcc-stlport CFLAGS <runtime-link>dynamic    : -D_REENTRANT ;
+flags gcc-stlport CFLAGS <runtime-link>dynamic    : -D_STLP_USE_DYNAMIC_LIB ;
 
 
 
