@@ -318,7 +318,7 @@ template&lt;class T, class A1, class A2&gt; shared_ptr&lt;T&gt; shared_new(A1 co
 			part of the type, changing the allocation strategy does not break source or 
 			binary compatibility, and does not require a client recompilation. For example, 
 			a "no-op" deleter is useful when returning a <EM>shared_ptr</EM> to a 
-			statically allocated object, a deleter that invokes the Release() member 
+			statically allocated object, a deleter that invokes the <code>Release()</code> member 
 			function enables <EM>shared_ptr</EM> to hold a pointer to a COM object, and 
 			other variations allow a <EM>shared_ptr</EM> to be used as a wrapper for 
 			another smart pointer, easing interoperability. See [<A href="#Dimov03">Dimov03</A>] 
@@ -326,19 +326,18 @@ template&lt;class T, class A1, class A2&gt; shared_ptr&lt;T&gt; shared_new(A1 co
 			custom deleter support.</EM></p>
 		<P>In the Boost implementation, supporting custom deleters does not impose 
 			additional overhead. Earlier <EM>shared_ptr</EM> versions did not offer the 
-			deleter constructor, but in order to meet the "just do the right 
-			thing" requirement (III.A.2), the implementation kept a deleter under the 
-			hood anyway.</P>
-		<P>The requirement for the copy constructor of <code>D</code> to not throw comes from the 
-			pass by value. If the copy constructor throws, the pointer is leaked. Removing 
-			the requirement requires a pass by (const) reference.</P>
+			deleter constructor, but in order to meet the "just do the right thing" 
+			requirement (III.A.2), the implementation kept a deleter under the hood anyway.</P>
+		<P>The requirement for the copy constructor of <code>D</code> to not throw comes 
+			from the pass by value. If the copy constructor throws, the pointer is leaked. 
+			Removing the requirement requires a pass by (const) reference.</P>
 		<P>The main problem with pass by reference lies in its interaction with rvalues. A 
-			const reference may still cause a copy, and will require a const <code>D::operator()</code>. A 
-			non-const reference won't bind to an rvalue at all. A good solution to this 
+			const reference may still cause a copy, and will require a const <code>D::operator()</code>. 
+			A non-const reference won't bind to an rvalue at all. A good solution to this 
 			problem is the rvalue reference proposed in [<A href="#Hinnant02">Hinnant02</A>].</P>
-		<P>For the Boost implementation, an additional reason to avoid pass by 
-			reference has been portability; pass by value handles functions and 
-			function references well on a wide range of compilers.</P>
+		<P>For the Boost implementation, an additional reason to avoid pass by reference 
+			has been portability; pass by value handles functions and function references 
+			well on a wide range of compilers.</P>
 		<h4>3. weak_ptr Constructor</h4>
 		<p><EM>shared_ptr</EM> provides a converting constructor from <EM>weak_ptr</EM>, 
 			with the postcondition that the newly constructed <EM>shared_ptr</EM> shares 
@@ -392,7 +391,27 @@ template&lt;class T, class A1, class A2&gt; shared_ptr&lt;T&gt; shared_new(A1 co
 			original raw pointer based code, but are errors under the new design, to be 
 			caught at compile time.</P>
 		<h4>9. <code>operator&lt;</code></h4>
-		<p>...</p>
+		<p><code>operator&lt;</code> does not compare the stored pointers. It is 
+			implemented in terms of the ownership infrastructure. A typical counted 
+			implementation would compare the count pointers (using <code>std::less</code> if 
+			appropriate.)</p>
+		<P>One reason to avoid stored pointer comparisons is consistency with <EM>weak_ptr</EM>, 
+			where the value of the stored pointer may be (or become) indeterminate without 
+			affecting the ordering provided by <code>operator&lt;</code>. Another 
+			motivation for this <code>operator&lt;</code> behavior is support for the <code>std::map&lt;&nbsp;shared_ptr&lt;X&gt;, 
+				V&nbsp;&gt;</code> idiom that associates data with objects managed by <EM>shared_ptr</EM>
+			(with an important special case being <code>X=void</code>.) [<A href="#Dimov03">Dimov03</A>]</P>
+		<P>In most typical scenarios, a <code>std::map</code> with <EM>shared_ptr</EM> as 
+			key would behave as if the stored pointers have been used. The exception is 
+			that in some situations involving multiple or virtual inheritance, it is 
+			possible for two pointers of the same type to point to different subobjects 
+			within the same object. Therefore, two <EM>shared_ptr</EM> instances storing 
+			such pointers but sharing ownership will be considered equivalent by <code>operator&lt;</code>, 
+			but may not compare equal when using <code>operator==</code> (defined as a 
+			stored pointer comparison.)</P>
+		<P>One additional benefit of this <code>operator&lt;</code> specification is that 
+			it enables "does p share ownership with q" queries to be expressed as <code>!(p 
+				&lt; q) &amp;&amp; !(q &lt; p)</code>.</P>
 		<h4>10. <code>operator&lt;&lt;</code></h4>
 		<p>A stream insertion operator is explicitly provided for <EM>shared_ptr</EM> since 
 			the conversion operator may cause <EM>shared_ptr</EM> to be treated in stream 
