@@ -1,6 +1,6 @@
 //  Boost io/iomanip.hpp header file  ----------------------------------------//
 
-//  (C) Copyright Daryle Walker 2002.  Permission to copy, use, modify, sell and
+//  (C) Copyright Daryle Walker 2003.  Permission to copy, use, modify, sell and
 //  distribute this software is granted provided this copyright notice appears 
 //  in all copies.  This software is provided "as is" without express or implied 
 //  warranty, and with no claim as to its suitability for any purpose. 
@@ -52,7 +52,7 @@ skipl
     std::basic_istream<Ch, Tr> &  is
 )
 {
-    return is.ignore( std::numeric_limits<int>::max(),
+    return is.ignore( std::numeric_limits<std::streamsize>::max(),
      Tr::to_int_type(is.widen( '\n' )) );
 }
 
