@@ -126,6 +126,18 @@ bool test_sub() {
   return equal(a - b, I(down(var(0) - var(3)), up(var(1) - var(2))));
 }
 
+template<class I>
+bool test_addeq() {
+  I a(var(0), var(1)), b(var(2), var(3));
+  return equal(a += b, I(down(var(0) + var(2)), up(var(1) + var(3))));
+}
+
+template<class I>
+bool test_subeq() {
+  I a(var(0), var(1)), b(var(2), var(3));
+  return equal(a -= b, I(down(var(0) - var(3)), up(var(1) - var(2))));
+}
+
 int test_main(int, char *[]) {
   BOOST_TEST((test_neg<interval<pexpr, traits1> >()));
   BOOST_TEST((test_neg<interval<pexpr, traits2> >()));
@@ -133,5 +145,9 @@ int test_main(int, char *[]) {
   BOOST_TEST((test_add<interval<pexpr, traits2> >()));
   BOOST_TEST((test_sub<interval<pexpr, traits1> >()));
   BOOST_TEST((test_sub<interval<pexpr, traits2> >()));
+  BOOST_TEST((test_addeq<interval<pexpr, traits1> >()));
+  BOOST_TEST((test_addeq<interval<pexpr, traits2> >()));
+  BOOST_TEST((test_subeq<interval<pexpr, traits1> >()));
+  BOOST_TEST((test_subeq<interval<pexpr, traits2> >()));
   return 0;
 }
