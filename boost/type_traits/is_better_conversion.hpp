@@ -31,8 +31,7 @@ namespace boost {
 namespace detail {
 
 #if !BOOST_WORKAROUND(__GNUC__, BOOST_TESTED_AT(3)) \
- && !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x0551)) \
- && 1 //!BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
+ && !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x0551))
 
 template <typename From, typename To1, typename To2>
 struct is_better_conversion_impl
