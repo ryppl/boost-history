@@ -18,7 +18,7 @@
 
 #include <algorithm>  // for std::swap, etc.
 #include <bitset>     // for std::bitset
-#include <cstddef>    // for std::size_t
+#include <cstddef>    // for std::size_t, NULL
 #include <iterator>   // for std::reverse_iterator, etc.
 #include <memory>     // for std::allocator
 #include <stdexcept>  // for std::out_of_range
@@ -107,9 +107,9 @@ public:
     static  self_type  from_ulong( unsigned long val );
 
     // Structors (use automatic copy ctr. and dtr.)
-    explicit  bit_vector( allocator_type const &a = Allocator() );//not implemented
+    explicit  bit_vector( allocator_type const &a = allocator_type() );
     explicit  bit_vector( size_type n, bool value = false,
-     allocator_type const &a = allocator_type() );//not implemented
+     allocator_type const &a = allocator_type() );
 
     #ifndef BOOST_NO_TEMPLATED_ITERATOR_CONSTRUCTORS
     template < typename InputIterator >
@@ -128,8 +128,8 @@ public:
     #endif
 
     // Size operations
-    size_type  size() const;//not implemented
-    bool       empty() const;//not implemented
+    size_type  size() const;
+    bool       empty() const;
     size_type  max_size() const;
 
     // Capacity operations
@@ -171,8 +171,8 @@ public:
     reference        at( size_type i );
     const_reference  at( size_type i ) const;
 
-    reference        operator []( size_type i );//not implemented
-    const_reference  operator []( size_type i ) const;//not implemented
+    reference        operator []( size_type i );
+    const_reference  operator []( size_type i ) const;
 
     reference        front();
     const_reference  front() const;
@@ -193,11 +193,11 @@ public:
     self_type &  flip( size_type i );
 
     // Iterator generation
-    iterator        begin();//not implemented
-    const_iterator  begin() const;//not implemented
+    iterator        begin();
+    const_iterator  begin() const;
 
-    iterator        end();//not implemented
-    const_iterator  end() const;//not implemented
+    iterator        end();
+    const_iterator  end() const;
 
     reverse_iterator        rbegin();
     const_reverse_iterator  rbegin() const;
@@ -214,8 +214,8 @@ public:
     void  insert( iterator p, InputIterator beg, InputIterator end );//not implemented
     #endif
 
-    void  push_back( bool value );//not implemented
-    void  pop_back();//not implemented
+    void  push_back( bool value );
+    void  pop_back();
 
     iterator  erase( iterator p );//not implemented
     iterator  erase( iterator beg, iterator end );//not implemented
@@ -241,12 +241,19 @@ public:
 
 private:
     // Helper functions
+    static  size_type  whole_blocks_for_bit_count( size_type c );
+    static  size_type  extra_bits_for_bit_count( size_type c );
     static  size_type  blocks_for_bit_count( size_type c );
     static  size_type  max_bits_for_block_count( size_type c );
 
+    static  block_type  empty_block();
+    static  block_type  full_block();
+
+    void  cleanup();
+
     // Data members
     vector_type  v_;
-    int          last_pos_;
+    int          next_pos_;
 
 };  // boost::bit_vector
 
@@ -372,6 +379,55 @@ bit_vector<BlockType, Allocator>::from_ulong
 
 template < typename BlockType, class Allocator >
 inline
+bit_vector<BlockType, Allocator>::bit_vector
+(
+    allocator_type const &  a  // = allocator_type()
+)
+    : v_( a )
+    , next_pos_( 0 )
+{
+    this->cleanup();
+}
+
+template < typename BlockType, class Allocator >
+inline
+bit_vector<BlockType, Allocator>::bit_vector
+(
+    size_type               n,
+    bool                    value,  // = false
+    allocator_type const &  a       // = allocator_type()
+)
+    : v_( self_type::blocks_for_bit_count(n), value ? self_type::full_block()
+     : self_type::empty_block(), a )
+    , next_pos_( self_type::extra_bits_for_bit_count(n) )
+
+{
+    this->cleanup();
+}
+
+template < typename BlockType, class Allocator >
+inline
+typename bit_vector<BlockType, Allocator>::size_type
+bit_vector<BlockType, Allocator>::size
+(
+) const
+{
+    return this->v_.size() * self_type::block_size
+     - ( self_type::block_size - this->next_pos_ ) % self_type::block_size;
+}
+
+template < typename BlockType, class Allocator >
+inline
+bool
+bit_vector<BlockType, Allocator>::empty
+(
+) const
+{
+    return this->v_.empty();  // this->next_pos_ had better be zero!
+}
+
+template < typename BlockType, class Allocator >
+inline
 typename bit_vector<BlockType, Allocator>::size_type
 bit_vector<BlockType, Allocator>::max_size
 (
@@ -487,6 +543,34 @@ bit_vector<BlockType, Allocator>::at
 template < typename BlockType, class Allocator >
 inline
 typename bit_vector<BlockType, Allocator>::reference
+bit_vector<BlockType, Allocator>::operator []
+(
+    size_type  i
+)
+{
+    size_type const  block_i = i / self_type::block_size;
+    size_type const  mask_i = i % self_type::block_size;
+
+    return self_type::reference( this->v_[block_i], mask_i );
+}
+
+template < typename BlockType, class Allocator >
+inline
+typename bit_vector<BlockType, Allocator>::const_reference
+bit_vector<BlockType, Allocator>::operator []
+(
+    size_type  i
+) const
+{
+    size_type const  block_i = i / self_type::block_size;
+    size_type const  mask_i = i % self_type::block_size;
+
+    return self_type::const_reference( this->v_[block_i], mask_i );
+}
+
+template < typename BlockType, class Allocator >
+inline
+typename bit_vector<BlockType, Allocator>::reference
 bit_vector<BlockType, Allocator>::front
 (
 )
@@ -595,6 +679,48 @@ bit_vector<BlockType, Allocator>::flip
 
 template < typename BlockType, class Allocator >
 inline
+typename bit_vector<BlockType, Allocator>::iterator
+bit_vector<BlockType, Allocator>::begin
+(
+)
+{
+    return iterator( this->v_.begin(), 0u );
+}
+
+template < typename BlockType, class Allocator >
+inline
+typename bit_vector<BlockType, Allocator>::const_iterator
+bit_vector<BlockType, Allocator>::begin
+(
+) const
+{
+    return const_iterator( this->v_.begin(), 0u );
+}
+
+template < typename BlockType, class Allocator >
+inline
+typename bit_vector<BlockType, Allocator>::iterator
+bit_vector<BlockType, Allocator>::end
+(
+)
+{
+    return iterator( this->v_.end() - static_cast<size_type>(this->next_pos_ != 0),
+     this->next_pos_ );
+}
+
+template < typename BlockType, class Allocator >
+inline
+typename bit_vector<BlockType, Allocator>::const_iterator
+bit_vector<BlockType, Allocator>::end
+(
+) const
+{
+    return const_iterator( this->v_.end() - static_cast<size_type>(this->next_pos_
+     != 0), this->next_pos_ );
+}
+
+template < typename BlockType, class Allocator >
+inline
 typename bit_vector<BlockType, Allocator>::reverse_iterator
 bit_vector<BlockType, Allocator>::rbegin
 (
@@ -631,6 +757,35 @@ bit_vector<BlockType, Allocator>::rend
 ) const
 {
     return const_reverse_iterator( this->begin() );
+}
+
+template < typename BlockType, class Allocator >
+inline
+void
+bit_vector<BlockType, Allocator>::push_back
+(
+    bool  value
+)
+{
+    if ( this->next_pos_++ == 0 )
+        this->v_.push_back( static_cast<block_type>(value) );
+    this->next_pos_ %= self_type::block_size;
+    this->back() = value;
+    this->cleanup();
+}
+
+template < typename BlockType, class Allocator >
+inline
+void
+bit_vector<BlockType, Allocator>::pop_back
+(
+)
+{
+    if ( this->next_pos_-- == 0 )
+        this->v_.pop_back();
+    while ( this->next_pos < 0 )
+        this->next_pos_ += self_type::block_size;
+    this->cleanup();
 }
 
 template < typename BlockType, class Allocator >
@@ -687,13 +842,35 @@ bit_vector<BlockType, Allocator>::get_allocator
 template < typename BlockType, class Allocator >
 inline
 typename bit_vector<BlockType, Allocator>::size_type
+bit_vector<BlockType, Allocator>::whole_blocks_for_bit_count
+(
+    size_type  c
+)
+{
+    return c / self_type::block_size;
+}
+
+template < typename BlockType, class Allocator >
+inline
+typename bit_vector<BlockType, Allocator>::size_type
+bit_vector<BlockType, Allocator>::extra_bits_for_bit_count
+(
+    size_type  c
+)
+{
+    return c % self_type::block_size;
+}
+
+template < typename BlockType, class Allocator >
+inline
+typename bit_vector<BlockType, Allocator>::size_type
 bit_vector<BlockType, Allocator>::blocks_for_bit_count
 (
     size_type  c
 )
 {
-    return ( c / self_type::block_size )
-     + static_cast<size_type>( (c % self_type::block_size) != 0 );
+    return self_type::whole_blocks_for_bit_count( c )
+     + static_cast<size_type>( self_type::extra_bits_for_bit_count(c) != 0 );
 }
 
 template < typename BlockType, class Allocator >
@@ -705,6 +882,41 @@ bit_vector<BlockType, Allocator>::max_bits_for_block_count
 )
 {
     return c * self_type::block_size;
+}
+
+template < typename BlockType, class Allocator >
+inline
+typename bit_vector<BlockType, Allocator>::block_type
+bit_vector<BlockType, Allocator>::empty_block
+(
+)
+{
+    return static_cast<Block>( 0u );
+}
+
+template < typename BlockType, class Allocator >
+inline
+typename bit_vector<BlockType, Allocator>::block_type
+bit_vector<BlockType, Allocator>::full_block
+(
+)
+{
+    return ~self_type::empty_block();
+}
+
+template < typename BlockType, class Allocator >
+void
+bit_vector<BlockType, Allocator>::cleanup
+(
+)
+{
+    if ( this->next_pos_ != 0 )
+    {
+        self_type::block_type const  mask = self_type::full_block()
+         << this->next_pos_;
+
+        this->v_.back() &= ~mask;
+    }
 }
 
 
