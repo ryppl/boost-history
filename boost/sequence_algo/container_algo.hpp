@@ -10,8 +10,8 @@
 // "as is" without express or implied warranty, and with no claim as
 // to its suitability for any purpose.
 
-// Mutating algorithms taken from Vladimir Prus <ghost@cs.msu.su>
-// code from Boost Wiki
+// Mutating algorithms originally written by Vladimir Prus' 
+// <ghost@cs.msu.su> code from Boost Wiki
 
 // Problem: should member functions be called automatically? Or should the user 
 // know that it is better to call map::find() than find( map )?
@@ -35,6 +35,8 @@
 #include <boost/type_traits/function_traits.hpp>
 #include <boost/detail/iterator.hpp>
 
+#include "detail/container_algo.hpp"
+
 //#include <boost/sequence_algo/algorithm.hpp>
 /**
 *   make_pair( first, last );
@@ -44,321 +46,344 @@
 
 namespace boost 
 {
-	///////////////////////////////////////////////////////////////////////////
-	// Interface
-	///////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////
+    // Interface
+    /////////////////////////////////////////////////////////////////////////
 
-	///////////////////////////////////////////////////////////////////////////
-	// Nonmodifying Sequence Operations
-	///////////////////////////////////////////////////////////////////////////
-	/*
-	
-	Unary_function    for_each( const Container&, Unary_function ); 
-	iterator          find( const Container&, const T& ); 
-	iterator          find_if( const Container&, Predicate );
-	iterator          adjacent_find( const Container& );
-	iterator          adjacent_find( const Container&, Binary_predicate );  
-	iterator          find_first_of( const Container1&, const Container2& ); *
-	iterator          find_first_of( const Container1&, const Container2&, 
-									 Binary_predicate ); *
-	difference_type   count( const Container&, const T& );
-	difference_type   count_if( const Container&, Predicate );    
-	pair              mismatch( const Container1&, const Container2& ); *
-	pair              mismatch( const Container1&, const Container2&
-								Binary_predicate ); *
-	bool              equal( const Container1&, const Container2& ); * 
-	bool              equal( const Container1&, const Container2&,
-							 Binary_predicate ); * 
-	iterator          search( const Container1&, const Container2& ); *
-	iterator          search( const Container1&, const Container2&.
-							  Binary_predicate ); *
-	iterator          search_n( const Container&, Integer, const T& );
-	iterator          search_n( const Container&, Integer, const T&, 
-								Binary_predicate );          
-	iterator          find_end( const Container1&, const Container3& ); *
-	iterator          find_end( const Container1&, const Container3&, 
-								Binary_predicate ); *
-		
-	*/
+    /////////////////////////////////////////////////////////////////////////
+    // Nonmodifying Sequence Operations
+    /////////////////////////////////////////////////////////////////////////
 
-	///////////////////////////////////////////////////////////////////////////
-	// Implementation
-	///////////////////////////////////////////////////////////////////////////
-#if 1
-	//#ifdef  BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-	// We need the tags because the compiler will not know how to
-	// choose between begin( pair<T1,T2>& ) and begin( Container& )...
-	// Instead we rely on full class specialization which is
-	// supported by most compilers
+    /*
+    
+    Unary_function    for_each( const Container&, Unary_function ); 
+    
+    iterator          find( Container&, const T& );   
+    iterator          find( const Container&, const T& ); 
+    
+    iterator          find_if( Container&, Predicate );  
+    iterator          find_if( const Container&, Predicate );
+    
+    iterator          adjacent_find( Container& );
+    iterator          adjacent_find( Container&, Binary_predicate ); 
+    iterator          adjacent_find( const Container& );
+    iterator          adjacent_find( const Container&, Binary_predicate );  
+    
+    iterator          find_first_of( Container1&, const Container2& ); 
+    iterator          find_first_of( const Container1&, const Container2& ); 
+    iterator          find_first_of( Container1&, const Container2&, 
+                                     Binary_predicate );   
+    iterator          find_first_of( const Container1&, const Container2&, 
+                                     Binary_predicate ); 
+    
+    difference_type   count( const Container&, const T& );
+    
+    difference_type   count_if( const Container&, Predicate );    
+    
+    pair              mismatch( Container1&, Container2& );
+    pair              mismatch( const Container1&, Container2& );
+    pair              mismatch( Container1&, const Container2& ); 
+    pair              mismatch( const Container1&, const Container2& ); 
+    pair              mismatch_( Container1&, Container2&
+                                Binary_predicate );                      
+    pair              mismatch_( const Container1&, Container2&
+                                Binary_predicate );                                    
+    pair              mismatch_( Container1&, const Container2&
+                                Binary_predicate );                   
+    pair              mismatch_( const Container1&, const Container2&
+                                Binary_predicate ); 
+                                
+    bool              equal( const Container1&, const Container2& );  
+    bool              equal_( const Container1&, const Container2&,
+                             Binary_predicate );  
+                             
+    iterator          search( Container1&, const Container2& ); 
+    iterator          search( const Container1&, const Container2& ); 
+    iterator          search( Container1&, const Container2&.
+                              Binary_predicate );                              
+    iterator          search( Container1&, const Container2&.
+                              Binary_predicate );
+                               
+    iterator          search_n( Container&, Integer, const T& );
+    iterator          search_n( const Container&, Integer, const T& );
+    iterator          search_n( Container&, Integer, const T&, 
+                                Binary_predicate );        
+    iterator          search_n( const Container&, Integer, const T&, 
+                                Binary_predicate );        
+                                  
+    iterator          find_end( Container1&, const Container3& ); 
+    iterator          find_end( const Container1&, const Container3& ); 
+    iterator          find_end( Container1&, const Container3&, 
+                                Binary_predicate ); 
+    iterator          find_end( const Container1&, const Container3&, 
+                                Binary_predicate ); 
+        
+    */
 
-	namespace detail 
-	{
+    /////////////////////////////////////////////////////////////////////////
+    // Modifying Sequance Operations
+    /////////////////////////////////////////////////////////////////////////
 
-		// tag classes for dispatch 
-		class container_algo_pair_tag
-		{
-		};
-		class container_algo_container_tag
-		{
-		};
-		class container_algo_array_tag
-		{
-		};
-		class container_algo_iter_tag
-		{
-		};
+    /*
+    
+    iterator          copy( const Container1&, Container2& ); 
+    
+    iterator          copy_backward( const Container1&, Container2& );
+    
+    iterator          swap_ranges( Container1&, Container2& );
+    
+    iterator          transform( const Container1&, Container2&, 
+                                 Unary_function );
+    iterator          transform( const Container1&, const Container2&,
+                                 Container3&, Binary_function );
+    
+    void              replace( Container&, const T&, const T& ); 
+    
+    void              replace_if( Container&, Predicate, const T& );
+    
+    iterator          replace_copy( const Container1&, Container2&, 
+                                    const T&, const T& ); 
+    
+    iterator          replace_copy_if( const Container1&, Container2&,
+                                       Predicate, const T& );
+                                        
+    void              fill( Container&, const T& );
+     
+    iterator          fill_n( Container&, Integer, const T& );
+    
+    void              generate( Container&, Generator );           
+    
+    iterator          generare_n( Container&, Integer, Generator );
 
-		template <typename Container>
-		struct container_algo_make_tag
-		{
-			typedef container_algo_container_tag       tag;
-			typedef typename Container::size_type      size_type;
-			typedef typename Container::iterator       result_type;
-			typedef typename Container::const_iterator const_result_type;
-		};
+    iterator          remove( Container&, const T );
+     
+    iterator          remove_if( Container&, Predicate ); 
 
-		template <typename T>
-		struct container_algo_make_tag< std::pair<T,T> >
-		{
-			typedef container_algo_pair_tag            tag;
-			typedef typename iterator_traits<T>::difference_type size_type;
-			typedef T                                  result_type;
-			typedef T                                  const_result_type;
-		};
-                template <typename T>
-                struct container_algo_make_tag< const std::pair<T,T> >
-                  : public container_algo_make_tag< std::pair<T,T> >
-                { };
+    iterator          remove_copy( const Container1&, Container2&, const T& ); 
+    
+    iterator          remove_copy_if( const Container1&, Container2&, 
+                                      Predicate );
+    iterator          unique( Container& );
+    iterator          unique( Container&, Binary_predicate );
+     
+    iterator          unique_copy( const Container1&, Container2& );
+    iterator          unique_copy( const Container1&, Container2&, 
+                                   Binary_predicate );
+    
+    void              reverse( Container& );
+    
+    iterator          reverse_copy( const Container1&, Container2 );
+     
+    iterator          rotate( Container&, iterator );
+    
+    iterator          rotate_copy( const Container1&, iterator, Container& ) 
 
-		template< typename T, size_t sz >
-		struct container_algo_make_tag< T[sz] >
-		{
-			typedef container_algo_array_tag                  tag;
-			typedef typename array_traits<T[sz]>::size_type   size_type;
-			typedef typename array_traits<T[sz]>::iterator    result_type;
-			typedef const result_type                         const_result_type; 
-		};
+    void              random_shuffle( Container& );
+    void              random_shuffle( Container&, Random_number_generator ); 
+    
+    */    
 
-		template< typename Iterator >
-		struct container_algo_make_tag;
+    /////////////////////////////////////////////////////////////////////////
+    // Sorted Sequences
+    /////////////////////////////////////////////////////////////////////////
 
-		// for container_tag
-		template <typename Container>
-		inline typename
-		container_algo_make_tag<Container>::result_type
-		begin(Container& c, container_algo_container_tag const&)
-		{
-			return c.begin();
-		}
+    /*
+    
+    void              sort( Container& );
+    void              sort( Container&, Compare );
+     
+    void              stable_sort( Container& );
+    void              stable_sort( Container&, Compare );
+    
+    void              partial_sort( Container&, Random_access_iterator );
+    void              partial_sort( Container&, Random_access_iterator,     
+                                    Compare );
+                                    
+    iterator          partial_sort_copy( const Container1&, Container2& );
+    iteratot          partial_sort_copy( const Container1&, Container2&,
+                                         Compare );
+                                      
+    void              nth_element( Container1&, Random_access_iterator );
+    void              nth_element( Container1&, Random_access_iterator, 
+                                   Compare );
+    
+    iterator          lower_bound( Container&, const T& );
+    iterator          lower_bound( const Container&, const T& );
+    iterator          lower_bound( Container&, const T&, Compare );  
+    iterator          lower_bound( const Container&, const T&, Compare );
+    
+    iterator          upper_bound( Container&, const T& );
+    iterator          upper_bound( const Container&, const T& );
+    iterator          upper_bound( Container&, const T&, Compare );
+    iterator          upper_bound( const Container&, const T&, Compare );
+    
+    pair              equal_range( Container&, const T& );
+    pair              equal_range( const Container&, const T& );
+    pair              equal_range( Container&, const T&, Compare );
+    pair              equal_range( const Container&, const T&, Compare );
+     
+    bool              binary_search( const Container&, const T& );
+    bool              binary_search( const Container&, const T&, Compare );  
+    
+    iterator          merge( const Container1&, const Container2&, 
+                             Container3& );
+    iterator          merge( const Container1&, const Container2&, 
+                             Container3&, Compare );
+                            
+    void              inplace_merge( Container&, 
+                                     Bidirectional_iterator middle ); 
+    void              inplace_merge( Container&, Bidirectional_iterator middle,
+                                     Compare );                                  
+                                     
+    iterator          partition( Container&, Predicate );
+    
+    iterator          stable_partition( Container&, Predicate ); 
+   
+    */
 
-		template <typename Container>
-		inline typename
-		container_algo_make_tag<Container>::const_result_type
-		begin(const Container& c, container_algo_container_tag const&)
-		{
-			return c.begin();
-		}
+    /////////////////////////////////////////////////////////////////////////
+    // Set Algorithms
+    /////////////////////////////////////////////////////////////////////////
 
-		template <typename Container>
-		inline typename
-		container_algo_make_tag<Container>::result_type
-		end(Container& c, container_algo_container_tag const&)
-		{
-			return c.end();
-		}
+    /*
+    
+    bool              includes( const Container1&, const Container2& );
+    bool              includes( const Container1&, const Container2&, 
+                                Compare );
+                                
+    iterator          set_union( const Container1&, const Container2&, 
+                                 Container3& c3 );
+    iterator          set_union( const Container1&, const Container2&, 
+                                 Container3& c3, Compare );
+                                 
+    iterator          set_intersection( const Container1&, const Container2&, 
+                                        Container3& c3 );
+    iterator          set_intersection( const Container1&, const Container2&, 
+                                        Container3& c3, Compare );
+                                        
+    iterator          set_difference( const Container1&, const Container2&, 
+                                      Container3& c3 );
+    iterator          set_difference( const Container1&, const Container2&, 
+                                      Container3& c3, Compare );
+                                 
+    iterator          set_symmetric_difference( const Container1&,             
+                                                const Container2&, 
+                                                Container3& c3 );
+    iterator          set_symmetric_difference( const Container1&, 
+                                                const Container2&, 
+                                                Container3& c3, Compare );
+    */ 
 
-		template <typename Container>
-		inline typename        
-		container_algo_make_tag<Container>::const_result_type
-		end(const Container& c, container_algo_container_tag const&)
-		{
-			return c.end();
-		}
+    /////////////////////////////////////////////////////////////////////////
+    // Heap Operations
+    /////////////////////////////////////////////////////////////////////////
 
-		template <typename Container>
-		inline typename
-		container_algo_make_tag<Container>::size_type
-		size(const Container& c, container_algo_container_tag const&)
-		{
-			return c.size();
-		}
+    /*
+    
+    void              push_heap( Container& );
+    void              push_heap( Container&, Compare );
+    
+    void              pop_heap( Container& );
+    void              pop_heap( Container&, Compare );
 
-		// for pair_tag
-		template <typename Iter1, typename Iter2>
-		inline typename
-		container_algo_make_tag< std::pair<Iter1,Iter2> >::result_type
-		begin(const std::pair<Iter1, Iter2>& p, container_algo_pair_tag const&)
-		{
-			return p.first;
-		}
+    void              make_heap( Container& );
+    void              make_heap( Container&, Compare );
+    
+    void              sort_heap( Container& ); 
+    void              sort_heap( Container&, Compare );  
+    
+    */ 
 
-		template <typename Iter1, typename Iter2>
-		inline typename
-		container_algo_make_tag< std::pair<Iter1, Iter2> >::const_result_type
-		end(const std::pair<Iter1, Iter2>& p, container_algo_pair_tag const&)
-		{
-			return p.second;
-		}
+    /////////////////////////////////////////////////////////////////////////
+    // Minimum and Maximum
+    /////////////////////////////////////////////////////////////////////////
 
-		template <typename Iter1, typename Iter2>
-		inline typename
-		container_algo_make_tag< std::pair<Iter1,Iter2> >::size_type
-		size(const std::pair<Iter1, Iter2>& p, container_algo_pair_tag const&)
-		{
-			return std::distance(p.first, p.second);
-		}
+    /*
+    
+    iterator          min_element( Container& );
+    iterator          min_element( const Container& );
+    iterator          min_element( Container&, Binary_predicate );
+    iterator          min_element( const Container&, Binary_predicate );
+    
+    iterator          max_element( Container& );
+    iterator          max_element( const Container& );
+    iterator          min_element( Container&, Binary_predicate ); 
+    iterator          min_element( const Container&, Binary_predicate ); 
+    
+    bool              lexicographical_compare( const Container1&, 
+                                               const Container2& );
+    bool              lexicographical_compare( const Container1&, 
+                                               const Container2&, 
+                                               Binary_predicate );
+    
+    */
 
-		// for array_tag
-		template< typename T, size_t sz >
-		inline typename 
-		container_algo_make_tag<T[sz]>::result_type
-		begin( T t[sz] )
-		{
-			return begin( t );
-		}
+    /////////////////////////////////////////////////////////////////////////
+    // Permutations
+    /////////////////////////////////////////////////////////////////////////
 
-		template< typename T, size_t sz >
-		inline typename
-		container_algo_make_tag<T[sz]>::result_type 
-		begin( const T t[sz] )
-		{
-			return begin( t );
-		}
+    /*
+        
+    bool              next_permutation( Container& );
+    bool              next_premutation( Container&, Compare );
+    
+    bool              prev_permutation( Container& );
+    bool              prev_premutation( Container&, Compare );
+    
+    */
 
-		template< typename T, size_t sz >
-		inline typename
-		container_algo_make_tag<T[sz]>::result_type 
-		end( T t[sz] )
-		{
-			return end( t );
-		}
+    /////////////////////////////////////////////////////////////////////////
+    // Generalized Numeric Algorithms
+    /////////////////////////////////////////////////////////////////////////
 
-		template< typename T, size_t sz >
-		inline typename
-		container_algo_make_tag<T[sz]>::result_type 
-		end( const T t[sz] )
-		{
-			return end( t );
-		}
+    /* 
+    
+    T                 accumulate( const Container&, T );
+    T                 accumulate( const Container&, T, Binary_function );
+     
+    T                 inner_product( const Container1&, const Container2&,
+                                      T );
+    T                 inner_product( const Container1&, const Container2&, 
+                                     T, Binary_function1, Binary_function2 );
+    
+    iterator          partial_sum( const Container1&, Container2& );
+    iterator          partial_sum( const Container1&, Container2&, 
+                                   Binary_function );
+                                   
+    iterator          adjacent_difference( const Container1&, Container2& );
+    iterator          adjacent_difference( const Container1&, Container2&,
+                                           Binary_function );                                           
+    */
 
-		template< typename T, size_t sz >
-		inline typename
-		container_algo_make_tag<T[sz]>::size_type
-		size( const T t[sz] )
-		{
-			return size( t );
-		}
+    /////////////////////////////////////////////////////////////////////////
+    // Boost algorithm extensions
+    /////////////////////////////////////////////////////////////////////////
 
-	} // namespace detail
+    /*
+    
+    void              iota( Container, const T& );
+    
+    bool              contains( const Container&, const T& );
+    
+    bool              all( const Container&, Predicate );
+    
+    bool              none( const Container&, Predicate );
+    
+    bool              any_if( const Container&, Predicate );
+    
+    bool              is_sorted( const Container& );
+    
+    */
 
-	template <typename T>
-	inline typename
-	detail::container_algo_make_tag<T>::result_type
-	begin(T& t)
-	{
-		return detail::begin(t, typename detail::container_algo_make_tag<T>::tag()); 
-	}
-
-	template <typename T>
-	inline typename
-	detail::container_algo_make_tag<T>::const_result_type
-	begin(const T& t)
-	{
-		return detail::begin(t, typename 
-							 detail::container_algo_make_tag<T>::tag()); 
-	}
-
-	template <typename T>
-	inline typename
-	detail::container_algo_make_tag<T>::result_type
-	end(T& t)
-	{
-		return detail::end(t, typename 
-						   detail::container_algo_make_tag<T>::tag()); 
-	}
-
-	template <typename T>
-	inline typename
-	detail::container_algo_make_tag<T>::const_result_type
-	end(const T& t)
-	{
-		return detail::end(t, typename 
-						   detail::container_algo_make_tag<T>::tag());
-	}
-
-	template <typename T>
-	inline typename
-	detail::container_algo_make_tag<T>::size_type
-	size(const T& t)
-	{
-		return detail::size(t, typename 
-							detail::container_algo_make_tag<T>::tag()); 
-	}
-
-
-
-#else
-	// The compiler will handle it fine like this
-
-	template <typename Container>
-	typename Container::iterator
-	begin(Container& c)
-	{
-		return c.begin();
-	}
-
-	template <typename Container>
-	typename Container::const_iterator
-	begin(const Container& c)
-	{
-		return c.begin();
-	}
-
-	template <typename Container>
-	typename Container::iterator
-	end(Container& c)
-	{
-		return c.end();
-	}
-
-	template <typename Container>
-	typename Container::const_iterator
-	end(const Container& c)
-	{
-		return c.end();
-	}
-
-	template <typename Container>
-	typename Container::size_type
-	size(const Container& c)
-	{
-		return c.size();
-	}
-
-	template <typename Iter1, typename Iter2>
-	Iter1 begin(const std::pair<Iter1, Iter2>& p)
-	{
-		return p.first;
-	}
-
-	template <typename Iter1, typename Iter2>
-	Iter2 end(const std::pair<Iter1, Iter2>& p)
-	{
-		return p.second;
-	}
-
-	template <typename Iter1, typename Iter2>
-	typename boost::detail::iterator_traits<Iter1>::difference_type
-	size(const std::pair<Iter1, Iter2>& p)
-	{
-		return std::distance(p.first, p.second);
-	}
-#endif
+    /////////////////////////////////////////////////////////////////////////
+    // Implementation
+    /////////////////////////////////////////////////////////////////////////
 
 
-	///////////////////////////////////////////////////////////////////////////
-	// Macros
-	///////////////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////////////
+    // Macros
+    /////////////////////////////////////////////////////////////////////////
 
 #define BOOST_FWD_ALGO_BE( A )       return std::A( begin( c ), end( c ) );
 #define BOOST_FWD_ALGO_BEX( A, X )   return std::A( begin( c ), end( c ), X );
@@ -373,12 +398,12 @@ namespace boost
                                                     begin( c2 ) );
 #define BOOST_FWD_ALGO_BEBX( A, X )  return  std::A( begin( c1 ), end( c1 ), \
                                                      begin( c2 ), X );  
-	//
-	// naming convention: 
-	//  fun   = Unary_function,
-	//  pred  = Predicate
-	//  value = T (equality compareable)
-	//  
+    //
+    // naming convention: 
+    //  fun   = Unary_function,
+    //  pred  = Predicate
+    //  value = T (equality compareable)
+    //  
 
 #define BOOST_FWD_ALGO_FUN( A )                                              \
     /* @note: don't work with functors :(                                    \
@@ -400,969 +425,1271 @@ namespace boost
 #define BOOST_ALGO_START1( A, R, C, Arg1 )     R A( C c, Arg1 arg1 )                                                            
 #define XXXXXXXX return std::A( begin( c ), end( c ), arg1 );         
 
-	#define CHECK_UNARY_FUNCTION( Fun, Container )               
-	#define CHECK_BINARY_PREDICATE( Pred, Container1, Container2 )
-	#define CHECK_EQAULITY_COMPARABLE( T )
-
-	///////////////////////////////////////////////////////////////////////////
-	// Return type deduction
-	///////////////////////////////////////////////////////////////////////////
-
-	template< typename T >
-	struct mutable_return
-	{
-		typedef typename T::iterator  iterator;
-		typedef typename std::iterator_traits<iterator>::difference_type
-		diff_type; 
-	};
-
-        template< typename T >
-        struct mutable_return< std::pair<T,T> >
-        {
-                typedef T iterator;
-                typedef typename std::iterator_traits<iterator>::difference_type
-                diff_type; 
-        };
-        template< typename T >
-        struct mutable_return< const std::pair<T,T> >
-          : public mutable_return< std::pair<T,T> > { };
-
-	template< typename T, size_t sz >
-	struct mutable_return< T[sz] >
-	{
-		typedef typename array_traits<T[sz]>::iterator  iterator;
-		typedef size_t                                  diff_type;
-	};
-
-
-
-	template< typename T >
-	struct const_return
-	{
-		typedef typename T::const_iterator  iterator;
-	};
-
-        template< typename T >
-        struct const_return< std::pair<T,T> >
-        {
-                typedef T iterator;
-        };
-        template< typename T >
-        struct const_return< const std::pair<T,T> >
-          : public const_return< std::pair<T,T> > { };
-
-	template< typename T, size_t sz >
-	struct const_return< T[sz] >
-	{
-		typedef typename array_traits<const T[sz]>::iterator  iterator;
-	};
-
-
-
-	template< typename T1, typename T2 >
-	struct pair_return
-	{
-		typedef typename std::pair< typename mutable_return<T1>::iterator,
-		typename mutable_return<T2>::iterator > mutable_pair;
-
-		typedef typename std::pair< typename mutable_return<T1>::iterator,
-		typename const_return<T2>::iterator > mutable_const_pair;
-
-		typedef typename std::pair< typename const_return<T1>::iterator,
-		typename mutable_return<T2>::iterator > const_mutable_pair;
-
-		typedef typename std::pair< typename const_return<T1>::iterator,
-		typename const_return<T2>::iterator > const_pair;
-	};
-
-
-	///////////////////////////////////////////////////////////////////////////
-	// Nonmodifying Sequence Operations
-	///////////////////////////////////////////////////////////////////////////
-
-	template< typename Container, typename Unary_function >
-	inline Unary_function 
-	for_each( const Container& c, Unary_function fun )
-	{
-		BOOST_FWD_ALGO_FUN( for_each );
-	}
-
-
-
-	template< typename Container, typename T >
-	inline typename mutable_return<Container>::iterator 
-	find( Container& c, const T& value )
-	{
-		BOOST_FWD_ALGO_EQ( find );
-	}
-
-	template< typename Container, typename T >
-	inline typename const_return<Container>::iterator 
-	find( const Container& c, const T& value )
-	{
-		BOOST_FWD_ALGO_EQ( find );
-	}
-
-
-
-	template< typename Container, typename Predicate >
-	inline typename mutable_return<Container>::iterator 
-	find_if( Container& c, Predicate pred )
-	{
-		BOOST_FWD_ALGO_PRED( find_if );
-	}
-
-	template< typename Container, typename Predicate >
-	inline typename const_return<Container>::iterator
-	find_if( const Container& c, Predicate pred )
-	{
-		BOOST_FWD_ALGO_PRED( find_if );
-	}   
-
-
-
-	template< typename Container >
-	inline typename mutable_return<Container>::iterator
-	adjacent_find( Container& c )
-	{
-		BOOST_FWD_ALGO_BE( adjacent_find );
-	}
-
-	template< typename Container >
-	inline typename const_return<Container>::iterator
-	adjacent_find( const Container& c )
-	{
-		BOOST_FWD_ALGO_BE( adjacent_find );
-	}
-
-	template< typename Container, typename Binary_predicate >
-	inline typename mutable_return<Container>::iterator 
-	adjacent_find( Container& c, Binary_predicate pred )
-	{
-		BOOST_FWD_ALGO_BPRED( adjacent_find );
-	}
-
-	template< typename Container, typename Binary_predicate >
-	inline typename const_return<Container>::iterator 
-	adjacent_find( const Container& c, Binary_predicate pred )
-	{
-		BOOST_FWD_ALGO_BPRED( adjacent_find );
-	}
-
-
-
-	template< typename Container1, typename Container2 >
-	inline typename mutable_return<Container1>::iterator 
-	find_first_of( Container1& c1, const Container2& c2 )
-	{
-		BOOST_FWD_ALGO_BEBE( find_first_of );
-	}
-
-	template< typename Container1, typename Container2 >
-	inline typename const_return<Container1>::iterator 
-	find_first_of( const Container1& c1, const Container2& c2 )
-	{
-		BOOST_FWD_ALGO_BEBE( find_first_of );
-	}
-
-	template< typename Container1, typename Container2, 
-	typename Binary_predicate >
-	inline typename mutable_return<Container1>::iterator 
-	find_first_of( Container1& c1, const Container2& c2, 
-				   Binary_predicate pred )
-	{
-		BOOST_FWD_ALGO4_BPRED( find_first_of );
-	}
-
-	template< typename Container1, typename Container2, 
-	typename Binary_predicate >
-	inline typename const_return<Container1>::iterator 
-	find_first_of( const Container1& c1, const Container2& c2, 
-				   Binary_predicate pred )
-	{
-		BOOST_FWD_ALGO4_BPRED( find_first_of );
-	}
-
-
-
-	template< typename Container, typename T >
-	inline typename mutable_return<Container>::diff_type
-	count( const Container& c, const T& value )
-	{
-		BOOST_FWD_ALGO_EQ( count );
-	}
-
-
-
-	template< typename Container, typename Predicate >
-	inline typename mutable_return<Container>::diff_type
-	count_if( const Container& c, Predicate pred )
-	{
-		BOOST_FWD_ALGO_PRED( count_if );
-	}
-
-
-
-	template< typename Container1, typename Container2 >
-	inline typename pair_return<Container1,Container2>::mutable_pair
-	mismatch( Container1& c1, Container2& c2 )
-	{
-		BOOST_FWD_ALGO_BEB( mismatch );
-	}
-
-	template< typename Container1, typename Container2 >
-	inline typename pair_return<Container1,Container2>::const_mutable_pair
-	mismatch( const Container1& c1, Container2& c2 )
-	{
-		BOOST_FWD_ALGO_BEB( mismatch );
-	}
-
-	template< typename Container1, typename Container2 >
-	inline typename pair_return<Container1,Container2>::mutable_const_pair 
-	mismatch( Container1& c1, const Container2& c2 )
-	{
-		BOOST_FWD_ALGO_BEB( mismatch );
-	}
-
-	template< typename Container1, typename Container2 >
-	inline typename pair_return<Container1,Container2>::const_pair
-	mismatch( const Container1& c1, const Container2& c2 )
-	{
-		BOOST_FWD_ALGO_BEB( mismatch );
-	}
-
-	template< typename Container1, typename Container2, 
-	typename Binary_predicate >
-	inline typename pair_return<Container1, Container2>::mutable_pair
-	mismatch_( Container1& c1, Container2& c2, Binary_predicate pred )
-	{
-		BOOST_FWD_ALGO3_BPRED( mismatch );
-	}
-
-	template< typename Container1, typename Container2, 
-	typename Binary_predicate >
-	inline typename pair_return<Container1,Container2>::const_mutable_pair
-	mismatch_( const Container1& c1, Container2& c2, Binary_predicate pred )
-	{
-		BOOST_FWD_ALGO3_BPRED( mismatch );
-	}
-
-	template< typename Container1, typename Container2, 
-	typename Binary_predicate >
-	inline typename pair_return<Container1,Container2>::mutable_const_pair
-	mismatch_( Container1& c1, const Container2& c2, Binary_predicate pred )
-	{
-		BOOST_FWD_ALGO3_BPRED( mismatch );
-	}
-
-	template< typename Container1, typename Container2, 
-	typename Binary_predicate >
-	inline typename pair_return<Container1,Container2>::const_pair
-	mismatch_( const Container1& c1, const Container2& c2, Binary_predicate pred )
-	{
-		BOOST_FWD_ALGO3_BPRED( mismatch );
-	}
-
-
-
-	template< typename Container1, typename Container2 >
-	inline bool 
-	equal( const Container1& c1, const Container2& c2 )
-	{
-		BOOST_FWD_ALGO_BEB( equal );
-	}
-
-	template< typename Container1, typename Container2, 
-	typename Binary_predicate > 
-	inline bool 
-	equal_( const Container1& c1, const Container2& c2, Binary_predicate pred )
-	{
-		BOOST_FWD_ALGO3_BPRED( equal );
-	}
-
-
-
-	template< typename Container1, typename Container2 >
-	inline typename mutable_return<Container1>::iterator 
-	search( Container1& c1, const Container2& c2 )
-	{
-		BOOST_FWD_ALGO_BEBE( search );
-	}
-
-	template< typename Container1, typename Container2 >
-	inline typename const_return<Container1>::iterator 
-	search( const Container1& c1, const Container2& c2 )
-	{
-		BOOST_FWD_ALGO_BEBE( search );
-	}
-
-	template< typename Container1, typename Container2,
-	typename Binary_predicate >
-	inline typename mutable_return<Container1>::iterator
-	search( Container1& c1, const Container2& c2, Binary_predicate pred )
-	{
-		BOOST_FWD_ALGO4_BPRED( search );
-	}
-
-	template< typename Container1, typename Container2,
-	typename Binary_predicate >
-	inline typename const_return<Container1>::iterator
-	search( const Container1& c1, const Container2& c2, Binary_predicate pred )
-	{
-		BOOST_FWD_ALGO4_BPRED( search );
-	}
-
-
-
-	template< typename Container, typename Integer, typename T >
-	inline typename mutable_return<Container>::iterator 
-	search_n( Container& c, Integer count, const T& value )
-	{
-		BOOST_FWD_ALGO_INT_EQ( search_n );
-	}
-
-	template< typename Container, typename Integer, typename T >
-	inline typename const_return<Container>::iterator 
-	search_n( const Container& c, Integer count, const T& value )
-	{
-		BOOST_FWD_ALGO_INT_EQ( search_n );
-	}
-
-	template< typename Container, typename Integer, 
-	typename T, typename Binary_predicate >
-	inline typename mutable_return<Container>::iterator
-	search_n( Container& c, Integer count, const T& value,
-			  Binary_predicate pred )
-	{
-		BOOST_FWD_ALGO_INT_EQ_BPRED( search_n );
-	}
-
-	template< typename Container, typename Integer, 
-	typename T, typename Binary_predicate >
-	inline typename const_return<Container>::iterator
-	search_n( const Container& c, Integer count, const T& value,
-			  Binary_predicate pred )
-	{
-		BOOST_FWD_ALGO_INT_EQ_BPRED( search_n );
-	}
-
-
-
-	template< typename Container1, typename Container2 >
-	typename mutable_return<Container1>::iterator 
-	find_end( Container1& c1, const Container2& c2 )
-	{
-		BOOST_FWD_ALGO_BEBE( find_end ); 
-	}
-
-	template< typename Container1, typename Container2 >
-	typename const_return<Container1>::iterator 
-	find_end( const Container1& c1, const Container2& c2 )
-	{
-		BOOST_FWD_ALGO_BEBE( find_end ); 
-	}
-
-	template< typename Container1, typename Container2,
-	typename Binary_predicate >
-	typename mutable_return<Container1>::iterator 
-	find_end( Container1& c1, const Container2& c2, Binary_predicate pred )
-	{
-		BOOST_FWD_ALGO4_BPRED( find_end );
-	}
-
-	template< typename Container1, typename Container2,
-	typename Binary_predicate >
-	typename const_return<Container1>::iterator 
-	find_end( const Container1& c1, const Container2& c2, 
-			  Binary_predicate pred )
-	{
-		BOOST_FWD_ALGO4_BPRED( find_end );
-	}
-
-	///////////////////////////////////////////////////////////////////////////
-	// Modifying Sequance Operations
-	///////////////////////////////////////////////////////////////////////////
-	/*
-copy 
-copy_backward  
-swap_ranges 
-transform 
-replace 
-replace_if 
-replace_copy 
-replace_copy_if 
-fill 
-fill_n 
-generate 
-generate_n 
-remove 
-remove_if 
-remove_copy 
-remove_copy_if 
-unique 
-unique_copy 
-reverse 
-reverse_copy 
-rotate 
-rotate_copy 
-random_shuffle 
-
-*/
-	template<class Container, class OutputIterator>
-	inline OutputIterator
-	copy(const Container& container, OutputIterator output);
-
-	template<class Container, class BidirectionalIterator>
-	inline BidirectionalIterator
-	copy_backward(const Container& container, BidirectionalIterator out);
-
-	template<class Container, class ForwardIterator>
-	inline typename Container::iterator 
-	swap_ranges(Container &container, ForwardIterator out);
-
-	template<class Container, class OutputIterator, class UnaryFunction>
-	inline OutputIterator
-	transform(const Container& container, OutputIterator result,
-			  UnaryFunction f);
-
-
-	template<class Container, class UnaryFunction>
-	inline typename Container::iterator
-	transform (Container &container, UnaryFunction f);
-
-	template<class Container, class T>
-	inline void
-	replace(Container& container, const T& what, const T& with_what);
-
-
-	template<class Container, class Predicate, class T>
-	inline void
-	replace_if(Container& container, Predicate pred, const T& value);
-
-
-	template<class Container, class OutputIterator, class T>
-	inline OutputIterator
-	replace_copy(const Container& container, OutputIterator out,
-				 const T& what, const T& value);
-
-	template<class Container, class OutputIterator, class Predicate, class T>
-	inline OutputIterator
-	replace_copy_if(const Container& container, OutputIterator out,
-					Predicate pred, const T& value);
-
-	template<class Container, class T>
-	inline void
-	fill(Container& container, const T& value);
-
-
-	template<class Container, class Size, class T>
-	inline void
-	fill_n(Container& container, Size size, const T &value);
-
-
-	template<class Container, class Generator>
-	inline void
-	generate(Container &container, Generator gen);
-
-
-	template<class Container, class Size, class Generator>
-	inline void
-	generate_n(Container &container, Size size, Generator gen);
-
-	template<class Container, class T>
-	inline typename Container::iterator
-	remove(Container& container, const T& what); 
-
-	template<class Container, class Predicate>
-	inline typename Container::iterator
-	remove_if(Container& container, Predicate pred);
-
-	template<class Container, class OutputIterator, class T>
-	inline OutputIterator 
-	remove_copy(const Container& container, OutputIterator out,
-				const T& value);
-
-	template<class Container, class OutputIterator, class Predicate>
-	inline OutputIterator 
-	remove_copy_if(const Container& container, OutputIterator out,
-				   Predicate pred);
-
-	template<class Container>
-	inline typename Container::iterator
-	unique(Container& container); 
-
-
-	template<class Container, class OutputIterator>
-	inline OutputIterator
-	unique_copy(const Container& container, OutputIterator out);
-
-	template<class Container>
-	inline void
-	reverse(Container &container);
-
-	template<class Container>
-	inline void
-	reverse_copy(Container &container);
-
-	template<class Container, class ForwardIterator>
-	inline void
-	rotate(Container& container, ForwardIterator middle);
-
-	template<class Container, class ForwardIterator>
-	inline void
-	rotate_copy(Container& container, ForwardIterator middle);
-
-	template<class Container>
-	inline void
-	random_shuffle(Container& container);
-
-	template<class Container, class Predicate>
-	inline typename Container::iterator
-	partition(Container& container, Predicate pred);
-
-	template<class Container, class Predicate>
-	inline typename Container::iterator
-	stable_partition(Container& container, Predicate pred);
-
-	///////////////////////////////////////////////////////////////////////////
-	// Sorted Sequences
-	///////////////////////////////////////////////////////////////////////////
-	/*
-	sort 
-	stable_sort 
-	partial_sort 
-	partial_sort_copy 
-	nth_element 
-	Binary search 
-	lower_bound 
-	upper_bound 
-	equal_range 
-	binary_search 
-	merge 
-	inplace_merge 
-	partition 
-	stable_partition 
-	*/
-	template<class Container>
-	inline void
-	sort(Container& container);
-
-
-	//stable_sort
-	template<class Container>
-	inline void
-	stable_sort(Container &container);
-
-
-	//partial_sort
-	template<class Container>
-	inline void
-	partial_sort(Container& container, typename Container::iterator middle);
-
-	template<class Container1, class Container2>
-	inline void
-	partial_sort_copy(Container1& container1, Container2& container2);
-
-	template<class Container>
-	inline void
-	nth_element(Container& container, typename Container::iterator nth);
-
-	template<class Container, class T>
-	inline bool
-	binary_search(const Container& container, const T& value);
-
-	template<class Container, class T>
-	inline typename Container::const_iterator
-	lower_bound(const Container& container, const T& value);
-
-	template<class Container, class T>
-	inline typename Container::iterator
-	upper_bound(Container& container, const T& value);
-
-	template<class Container, class T>
-	inline std::pair<typename Container::iterator, typename Container::iterator>
-	equal_range(Container& container, const T& value);
-
-
-	template<class Container, class T>
-	inline std::pair<typename Container::const_iterator, typename Container::const_iterator>
-	equal_range(const Container& container, const T& value);
-
-	template<class Container>
-	inline void
-	inplace_merge(Container& container, typename Container::iterator 
-				  middle);
-
-	template<class Container1, class Container2, class OutputIterator>
-	inline OutputIterator
-	merge(const Container1& container1, const Container2& container2,
-		  OutputIterator i);
-
-
-	template<class Container1, class Container2, class OutputIterator,
-	class Compare>
-	inline OutputIterator
-	merge(const Container1& container1, const Container2& container2,
-		  OutputIterator i, Compare comp);
-
-	template<class Container, class Predicate>
-	inline typename Container::iterator
-	partition(Container& container, Predicate pred);
-
-
-	template<class Container, class Predicate>
-	inline typename Container::iterator
-	stable_partition(Container& container, Predicate pred);
-
-	///////////////////////////////////////////////////////////////////////////
-	// Set Algorithms
-	///////////////////////////////////////////////////////////////////////////
-	/*
-	includes 
-set_union 
-set_intersection 
-set_difference 
-set_symmetric_difference 
-*/
-
-	template<class Container1, class Container2>
-	inline bool 
-	includes(const Container1& container1, const Container2& container2);
-
-	template<class Container1, class Container2, class Compare>
-	inline bool 
-	includes(const Container1& container1, const Container2& container2,
-			 Compare comp);
-
-
-	template<class Container1, class Container2, class OutputIterator>
-	inline OutputIterator
-	set_union(const Container1& container1, const Container2& container2,
-			  OutputIterator i);
-
-
-	template<class Container1, class Container2, class OutputIterator,
-	class Compare>
-	inline OutputIterator
-	set_union(const Container1& container1, const Container2& container2,
-			  OutputIterator i, Compare comp);
-
-	template<class Container1, class Container2, class OutputIterator,
-	class Compare>
-	inline OutputIterator
-	set_intersection(const Container1& container1,
-					 const Container2& container2, OutputIterator i,
-					 Compare comp);
-
-
-	template<class Container1, class Container2, class OutputIterator>
-	inline OutputIterator
-	set_difference(const Container1& container1,
-				   const Container2& container2,  OutputIterator i);
-
-
-	template<class Container1, class Container2, class OutputIterator,
-	class Compare>
-	inline OutputIterator
-	set_difference(const Container1& container1,
-				   const Container2& container2, OutputIterator i, Compare 
-				   comp);
-
-	template<class Container1, class Container2, class OutputIterator>
-	inline OutputIterator
-	set_symmetric_difference(const Container1& container1,
-							 const Container2& container2,
-							 OutputIterator i);
-
-	template<class Container1, class Container2, class OutputIterator,
-	class Compare>
-	inline OutputIterator
-	set_symmetric_difference(const Container1& container1,
-							 const Container2& container2,
-							 OutputIterator i, Compare comp);
-	///////////////////////////////////////////////////////////////////////////
-	// Heap Operations
-	///////////////////////////////////////////////////////////////////////////
-	/*
-  push_heap 
-pop_heap 
-make_heap 
-sort_heap 
-*/
-	template<class Container>
-	inline void 
-	make_heap(Container& container);
-
-
-	template<class Container, class Compare>
-	inline void
-	make_heap(Container& container, Compare comp);
-
-
-	template<class Container>
-	inline void 
-	push_heap(Container& container);
-
-
-	template<class Container, class Compare>
-	inline void
-	push_heap(Container& container, Compare comp);
-
-
-	template<class Container>
-	inline void 
-	pop_heap(Container& container);
-
-
-	template<class Container, class Compare>
-	inline void
-	pop_heap(Container& container, Compare comp);
-
-	template<class Container>
-	inline void 
-	sort_heap(Container& container);
-
-
-	template<class Container, class Compare>
-	inline void
-	sort_heap(Container& container, Compare comp);
-
-	///////////////////////////////////////////////////////////////////////////
-	// Minimum and Maximum
-	///////////////////////////////////////////////////////////////////////////
-	/*
-	min_element 
-	max_element 
-	lexicographical_compare 
-	*/
-
-	template<class Container>
-	inline typename Container::const_iterator
-	min_element(const Container &container);
-
-	template<class Container>
-	inline typename Container::const_iterator
-	max_element(const Container &container);
-
-	template<class Container1, class Container2>
-	inline bool
-	lexicographical_compare
-	(const Container1& c1, const Container2& c2);
-
-	///////////////////////////////////////////////////////////////////////////
-	// Permutations
-	///////////////////////////////////////////////////////////////////////////
-	/*
-		next_permutation 
-			prev_permutation
-		*/
-	template<class Container>
-	inline bool
-	next_permutation(Container& container); 
-
-
-	template<class Container>
-	inline bool
-	prev_permutation(Container& container);
-
-	///////////////////////////////////////////////////////////////////////////
-	// Generalized Numeric Algorithms
-	///////////////////////////////////////////////////////////////////////////
-	/*  accumulate 
-	inner_product 
-	partial_sum 
-	adjacent_difference 
-	*/
-
-	template<class Container, class ContainerType>
-	inline ContainerType
-	accumulate(const Container& container, ContainerType initial);
-
-
-	template<class Container, class ContainerType, class BinaryOperation>
-	inline ContainerType
-	accumulate(const Container& container, const ContainerType& initial,
-			   BinaryOperation op);
-
-	template<class Container1, class Container2, class ContainerType>
-	inline ContainerType                             
-	inner_product(const Container1& c1, const Container2& c2,
-				  const ContainerType initial);
-
-	template<class Container, class OutputIterator>
-	inline OutputIterator
-	partial_sum(const Container& container, OutputIterator out);
-
-
-	template<class Container, class OutputIterator>
-	inline OutputIterator
-	adjacent_difference(const Container& container, OutputIterator out);
-
-
-	template<class Container, class OutputIterator, class Predicate>
-	inline OutputIterator
-	adjacent_difference(const Container& container, OutputIterator out,
-						Predicate pred);
-
-	///////////////////////////////////////////////////////////////////////////
-	// Boost algorithm extensions
-	///////////////////////////////////////////////////////////////////////////
-
-	template <typename Container, typename T>
-	void iota(Container& c, const T& value);
-
-	template <typename Container, typename T>
-	bool contains(const Container& c, const T& value);
-
-
-	// container all
-	template <typename Container, typename Predicate>
-	bool all(const Container& c, Predicate p);
-
-
-	// container none
-	template <typename Container, typename Predicate>
-	bool none(const Container& c, Predicate p);
-
-
-	// container any_if
-	template <typename Container, typename Predicate>
-	bool any_if(const Container& c, Predicate p);
-
-
-	template <typename Container>  
-	bool is_sorted(const Container& c);
-
-
-	template <typename Container, typename StrictWeakOrdering>
-	bool is_sorted(const Container& c, StrictWeakOrdering comp);
-
-
-	///////////////////////////////////////////////////////////////////////////
-	// Implementation
-	///////////////////////////////////////////////////////////////////////////
-
-
-	///////////////////////////////////////////////////////////////////////////
-	// Non-mutating algorithms
-	///////////////////////////////////////////////////////////////////////////
-
-	///////////////////////////////////////////////////////////////////////////
-	// Mutating algorithms
-	///////////////////////////////////////////////////////////////////////////
-
-	///////////////////////////////////////////////////////////////////////////
-	// Sorting algorithms
-	///////////////////////////////////////////////////////////////////////////
-
-	///////////////////////////////////////////////////////////////////////////
-	// Boost algorithm extensions
-	///////////////////////////////////////////////////////////////////////////
-	/*
-		// container iota
-		template <typename Container, typename T>
-		void iota(Container& c, const T& value)
-		{
-			iota(begin(c), end(c), value);
-		}
-	
-		// container copy
-		template <typename Container, typename OutIter>
-		OutIter copy(const Container& c, OutIter result)
-		{
-			return std::copy(begin(c), end(c), result);
-		}
-	
-		// container equal
-		template <typename Container1, typename Container2>
-		bool equal(const Container1& c1, const Container2& c2)
-		{
-			if( size(c1) != size(c2) )
-				return false;
-			return std::equal(begin(c1), end(c1), begin(c2));
-		}
-	
-		// container sort
-		template <typename Container>
-		void sort(Container& c)
-		{
-			std::sort(begin(c), end(c));
-		}
-	
-		template <typename Container, typename Predicate>
-		void sort(Container& c, const Predicate& p)
-		{
-			std::sort(begin(c), end(c), p);
-		}
-	
-		// container stable_sort
-		template <typename Container>
-		void stable_sort(Container& c)
-		{
-			std::stable_sort(begin(c), end(c));
-		}
-	
-		template <typename Container, typename Predicate>
-		void stable_sort(Container& c, const Predicate& p)
-		{
-			std::stable_sort(begin(c), end(c), p);
-		}
-	
-		// container contains
-		template <typename Container, typename T>
-		bool contains(const Container& c, const T& value)
-		{
-			return contains(begin(c), end(c), value);
-		}
-	
-		// container all
-		template <typename Container, typename Predicate>
-		bool all(const Container& c, Predicate p)
-		{
-			return all(begin(c), end(c), p);
-		}
-	
-		// container none
-		template <typename Container, typename Predicate>
-		bool none(const Container& c, Predicate p)
-		{
-			return none(begin(c), end(c), p);
-		}
-	
-		// container any_if
-		template <typename Container, typename Predicate>
-		bool any_if(const Container& c, Predicate p)
-		{
-			return any_if(begin(c), end(c), p);
-		}
-	
-		// container count
-		template <typename Container, typename T>
-		std::size_t count(const Container& c, const T& value)
-		{
-			return std::count(begin(c), end(c), value);
-		}
-	
-		// container count_if
-		template <typename Container, typename Predicate>
-		std::size_t count_if(const Container& c, Predicate p)
-		{
-			return std::count_if(begin(c), end(c), p);
-		}
-	
-		// container is_sorted
-		template <typename Container>
-		bool is_sorted(const Container& c)
-		{
-			return is_sorted(begin(c), end(c));
-		}
-	
-		template <typename Container, typename StrictWeakOrdering>
-		bool is_sorted(const Container& c, StrictWeakOrdering comp)
-		{
-			return is_sorted(begin(c), end(c), comp);
-		}
-	*/
+    #define CHECK_UNARY_FUNCTION( Fun, Container )               
+    #define CHECK_BINARY_PREDICATE( Pred, Container1, Container2 )
+    #define CHECK_EQAULITY_COMPARABLE( T )
+
+    /////////////////////////////////////////////////////////////////////////
+    // Return type deduction
+    /////////////////////////////////////////////////////////////////////////
+
+    template< typename T >
+    struct mutable_return
+    {
+        typedef typename T::iterator  iterator;
+        typedef typename std::iterator_traits<iterator>::difference_type
+        diff_type; 
+    };
+
+    template< typename T >
+    struct mutable_return< std::pair<T,T> >
+    {
+        typedef T iterator;
+        typedef typename std::iterator_traits<iterator>::difference_type
+        diff_type; 
+    };
+
+    template< typename T >
+    struct mutable_return< const std::pair<T,T> >
+    : public mutable_return< std::pair<T,T> >
+    {
+    };
+
+    template< typename T, size_t sz >
+    struct mutable_return< T[sz] >
+    {
+        typedef typename array_traits<T[sz]>::iterator  iterator;
+        typedef size_t                                  diff_type;
+    };
+
+
+
+    template< typename T >
+    struct const_return
+    {
+        typedef typename T::const_iterator  iterator;
+    };
+
+    template< typename T >
+    struct const_return< std::pair<T,T> >
+    {
+        typedef T iterator;
+    };
+
+    template< typename T >
+    struct const_return< const std::pair<T,T> >
+    : public const_return< std::pair<T,T> >
+    {
+    };
+
+    template< typename T, size_t sz >
+    struct const_return< T[sz] >
+    {
+        typedef typename array_traits<const T[sz]>::iterator  iterator;
+    };
+
+
+
+    template< typename T1, typename T2 >
+    struct pair_return
+    {
+        typedef typename std::pair< typename mutable_return<T1>::iterator,
+        typename mutable_return<T2>::iterator > mutable_pair;
+
+        typedef typename std::pair< typename mutable_return<T1>::iterator,
+        typename const_return<T2>::iterator > mutable_const_pair;
+
+        typedef typename std::pair< typename const_return<T1>::iterator,
+        typename mutable_return<T2>::iterator > const_mutable_pair;
+
+        typedef typename std::pair< typename const_return<T1>::iterator,
+        typename const_return<T2>::iterator > const_pair;
+    };
+
+    /////////////////////////////////////////////////////////////////////////
+    // Nonmodifying Sequence Operations
+    /////////////////////////////////////////////////////////////////////////
+
+    template< typename Container, typename Unary_function >
+    inline Unary_function 
+    for_each( const Container& c, Unary_function fun )
+    {
+        BOOST_FWD_ALGO_FUN( for_each );
+    }
+
+
+
+    template< typename Container, typename T >
+    inline typename mutable_return<Container>::iterator 
+    find( Container& c, const T& value )
+    {
+        BOOST_FWD_ALGO_EQ( find );
+    }
+
+    template< typename Container, typename T >
+    inline typename const_return<Container>::iterator 
+    find( const Container& c, const T& value )
+    {
+        BOOST_FWD_ALGO_EQ( find );
+    }
+
+
+
+    template< typename Container, typename Predicate >
+    inline typename mutable_return<Container>::iterator 
+    find_if( Container& c, Predicate pred )
+    {
+        BOOST_FWD_ALGO_PRED( find_if );
+    }
+
+    template< typename Container, typename Predicate >
+    inline typename const_return<Container>::iterator
+    find_if( const Container& c, Predicate pred )
+    {
+        BOOST_FWD_ALGO_PRED( find_if );
+    }   
+
+
+
+    template< typename Container >
+    inline typename mutable_return<Container>::iterator
+    adjacent_find( Container& c )
+    {
+        BOOST_FWD_ALGO_BE( adjacent_find );
+    }
+
+    template< typename Container >
+    inline typename const_return<Container>::iterator
+    adjacent_find( const Container& c )
+    {
+        BOOST_FWD_ALGO_BE( adjacent_find );
+    }
+
+    template< typename Container, typename Binary_predicate >
+    inline typename mutable_return<Container>::iterator 
+    adjacent_find( Container& c, Binary_predicate pred )
+    {
+        BOOST_FWD_ALGO_BPRED( adjacent_find );
+    }
+
+    template< typename Container, typename Binary_predicate >
+    inline typename const_return<Container>::iterator 
+    adjacent_find( const Container& c, Binary_predicate pred )
+    {
+        BOOST_FWD_ALGO_BPRED( adjacent_find );
+    }
+
+
+
+    template< typename Container1, typename Container2 >
+    inline typename mutable_return<Container1>::iterator 
+    find_first_of( Container1& c1, const Container2& c2 )
+    {
+        BOOST_FWD_ALGO_BEBE( find_first_of );
+    }
+
+    template< typename Container1, typename Container2 >
+    inline typename const_return<Container1>::iterator 
+    find_first_of( const Container1& c1, const Container2& c2 )
+    {
+        BOOST_FWD_ALGO_BEBE( find_first_of );
+    }
+
+    template< typename Container1, typename Container2, 
+    typename Binary_predicate >
+    inline typename mutable_return<Container1>::iterator 
+    find_first_of( Container1& c1, const Container2& c2, 
+                   Binary_predicate pred )
+    {
+        BOOST_FWD_ALGO4_BPRED( find_first_of );
+    }
+
+    template< typename Container1, typename Container2, 
+    typename Binary_predicate >
+    inline typename const_return<Container1>::iterator 
+    find_first_of( const Container1& c1, const Container2& c2, 
+                   Binary_predicate pred )
+    {
+        BOOST_FWD_ALGO4_BPRED( find_first_of );
+    }
+
+
+
+    template< typename Container, typename T >
+    inline typename mutable_return<Container>::diff_type
+    count( const Container& c, const T& value )
+    {
+        BOOST_FWD_ALGO_EQ( count );
+    }
+
+
+
+    template< typename Container, typename Predicate >
+    inline typename mutable_return<Container>::diff_type
+    count_if( const Container& c, Predicate pred )
+    {
+        BOOST_FWD_ALGO_PRED( count_if );
+    }
+
+
+
+    template< typename Container1, typename Container2 >
+    inline typename pair_return<Container1,Container2>::mutable_pair
+    mismatch( Container1& c1, Container2& c2 )
+    {
+        BOOST_FWD_ALGO_BEB( mismatch );
+    }
+
+    template< typename Container1, typename Container2 >
+    inline typename pair_return<Container1,Container2>::const_mutable_pair
+    mismatch( const Container1& c1, Container2& c2 )
+    {
+        BOOST_FWD_ALGO_BEB( mismatch );
+    }
+
+    template< typename Container1, typename Container2 >
+    inline typename pair_return<Container1,Container2>::mutable_const_pair 
+    mismatch( Container1& c1, const Container2& c2 )
+    {
+        BOOST_FWD_ALGO_BEB( mismatch );
+    }
+
+    template< typename Container1, typename Container2 >
+    inline typename pair_return<Container1,Container2>::const_pair
+    mismatch( const Container1& c1, const Container2& c2 )
+    {
+        BOOST_FWD_ALGO_BEB( mismatch );
+    }
+
+    template< typename Container1, typename Container2, 
+    typename Binary_predicate >
+    inline typename pair_return<Container1, Container2>::mutable_pair
+    mismatch_( Container1& c1, Container2& c2, Binary_predicate pred )
+    {
+        BOOST_FWD_ALGO3_BPRED( mismatch );
+    }
+
+    template< typename Container1, typename Container2, 
+    typename Binary_predicate >
+    inline typename pair_return<Container1,Container2>::const_mutable_pair
+    mismatch_( const Container1& c1, Container2& c2, Binary_predicate pred )
+    {
+        BOOST_FWD_ALGO3_BPRED( mismatch );
+    }
+
+    template< typename Container1, typename Container2, 
+    typename Binary_predicate >
+    inline typename pair_return<Container1,Container2>::mutable_const_pair
+    mismatch_( Container1& c1, const Container2& c2, Binary_predicate pred )
+    {
+        BOOST_FWD_ALGO3_BPRED( mismatch );
+    }
+
+    template< typename Container1, typename Container2, 
+    typename Binary_predicate >
+    inline typename pair_return<Container1,Container2>::const_pair
+    mismatch_( const Container1& c1, const Container2& c2, Binary_predicate pred )
+    {
+        BOOST_FWD_ALGO3_BPRED( mismatch );
+    }
+
+
+
+    template< typename Container1, typename Container2 >
+    inline bool 
+    equal( const Container1& c1, const Container2& c2 )
+    {
+        BOOST_FWD_ALGO_BEB( equal );
+    }
+
+    template< typename Container1, typename Container2, 
+    typename Binary_predicate > 
+    inline bool 
+    equal_( const Container1& c1, const Container2& c2, Binary_predicate pred )
+    {
+        BOOST_FWD_ALGO3_BPRED( equal );
+    }
+
+
+
+    template< typename Container1, typename Container2 >
+    inline typename mutable_return<Container1>::iterator 
+    search( Container1& c1, const Container2& c2 )
+    {
+        BOOST_FWD_ALGO_BEBE( search );
+    }
+
+    template< typename Container1, typename Container2 >
+    inline typename const_return<Container1>::iterator 
+    search( const Container1& c1, const Container2& c2 )
+    {
+        BOOST_FWD_ALGO_BEBE( search );
+    }
+
+    template< typename Container1, typename Container2,
+    typename Binary_predicate >
+    inline typename mutable_return<Container1>::iterator
+    search( Container1& c1, const Container2& c2, Binary_predicate pred )
+    {
+        BOOST_FWD_ALGO4_BPRED( search );
+    }
+
+    template< typename Container1, typename Container2,
+    typename Binary_predicate >
+    inline typename const_return<Container1>::iterator
+    search( const Container1& c1, const Container2& c2, Binary_predicate pred )
+    {
+        BOOST_FWD_ALGO4_BPRED( search );
+    }
+
+
+
+    template< typename Container, typename Integer, typename T >
+    inline typename mutable_return<Container>::iterator 
+    search_n( Container& c, Integer count, const T& value )
+    {
+        BOOST_FWD_ALGO_INT_EQ( search_n );
+    }
+
+    template< typename Container, typename Integer, typename T >
+    inline typename const_return<Container>::iterator 
+    search_n( const Container& c, Integer count, const T& value )
+    {
+        BOOST_FWD_ALGO_INT_EQ( search_n );
+    }
+
+    template< typename Container, typename Integer, 
+    typename T, typename Binary_predicate >
+    inline typename mutable_return<Container>::iterator
+    search_n( Container& c, Integer count, const T& value,
+              Binary_predicate pred )
+    {
+        BOOST_FWD_ALGO_INT_EQ_BPRED( search_n );
+    }
+
+    template< typename Container, typename Integer, 
+    typename T, typename Binary_predicate >
+    inline typename const_return<Container>::iterator
+    search_n( const Container& c, Integer count, const T& value,
+              Binary_predicate pred )
+    {
+        BOOST_FWD_ALGO_INT_EQ_BPRED( search_n );
+    }
+
+
+
+    template< typename Container1, typename Container2 >
+    typename mutable_return<Container1>::iterator 
+    find_end( Container1& c1, const Container2& c2 )
+    {
+        BOOST_FWD_ALGO_BEBE( find_end ); 
+    }
+
+    template< typename Container1, typename Container2 >
+    typename const_return<Container1>::iterator 
+    find_end( const Container1& c1, const Container2& c2 )
+    {
+        BOOST_FWD_ALGO_BEBE( find_end ); 
+    }
+
+    template< typename Container1, typename Container2,
+    typename Binary_predicate >
+    typename mutable_return<Container1>::iterator 
+    find_end( Container1& c1, const Container2& c2, Binary_predicate pred )
+    {
+        BOOST_FWD_ALGO4_BPRED( find_end );
+    }
+
+    template< typename Container1, typename Container2,
+    typename Binary_predicate >
+    typename const_return<Container1>::iterator 
+    find_end( const Container1& c1, const Container2& c2, 
+              Binary_predicate pred )
+    {
+        BOOST_FWD_ALGO4_BPRED( find_end );
+    }
+
+    /////////////////////////////////////////////////////////////////////////
+    // Modifying Sequance Operations
+    /////////////////////////////////////////////////////////////////////////
+
+    template< typename Container1, typename Container2 >
+    inline typename mutable_return<Container2>::iterator
+    copy( const Container1& c1, Container2& c2 )
+    {
+        BOOST_FWD_ALGO_BEB( copy );
+    }
+
+
+
+    template< typename Container1, typename Container2 > 
+    //BidirectionalIterator> inline BidirectionalIterator
+    inline typename mutable_return<Container2>::iterator
+    copy_backward( const Container1& c1, Container2& c2 ) 
+    {
+        BOOST_FWD_ALGO_BEB( copy_backward );
+    }
+
+
+
+    template< typename Container1, typename Container2 >
+    inline typename mutable_return<Container2>::iterator 
+    swap_ranges( Container1& c1, Container2& c2 ) //ForwardIterator out);
+    {
+        BOOST_FWD_ALGO_BEB( swap_ranges );
+    }
+
+
+
+    template< typename Container1, typename Container2, 
+    typename Unary_function > 
+    inline typename mutable_return<Container2>::iterator
+    transform( const Container1& c1, Container2& c2, Unary_function fun )
+    {
+        return std::transform( begin( c1 ), end( c1 ), begin( c2 ), fun );
+    }
+
+    template< typename Container1, typename Container2,
+    typename Container3, typename Binary_function >
+    inline typename mutable_return<Container3>::iterator
+    transform( const Container1& c1, const Container2& c2, Container3& c3,   
+               Binary_function fun )
+    {
+        return std::transform( begin( c1 ), end( c1 ), begin( c2 ), 
+                               begin( c3 ), fun ); 
+    }
+
+
+
+    template< typename Container, typename T >
+    inline void
+    replace( Container& c, const T& what, const T& with_what )
+    {
+        return std::replace( begin( c ), end( c ), what, with_what );
+    }
+
+
+
+    template< typename Container, typename Predicate , typename T >
+    inline void
+    replace_if( Container& c, Predicate pred, const T& value )
+    {
+        return std::replace_if( begin( c ), end( c ), pred, value );
+    }
+
+
+
+    template< typename Container1, typename Container2, // OutputIterator, 
+    typename T > 
+    inline typename mutable_return<Container2>::iterator
+    replace_copy( const Container1& c1, Container2 c2, 
+                  const T& what, const T& with_what )
+    {
+        return std::replace_copy( begin( c1 ), end( c1 ), begin( c2 ),
+                                  what, with_what );
+    }
+
+
+
+    template< typename Container1, typename Container2, //OutputIterator, 
+    typename Predicate, typename T >
+    inline typename mutable_return<Container2>::iterator
+    replace_copy_if( const Container1& c1, Container2& c2,
+                     Predicate pred, const T& value)
+    {
+        return std::replace_copy_if( begin( c1 ), begin( c2 ), pred, value );
+    }
+
+
+
+    template< typename Container, typename T >
+    inline void
+    fill( Container& c, const T& value )
+    {
+        std::fill( begin( c ), end( c ), value );
+    }
+
+
+
+    template< typename Container, typename Integer, typename T >
+    inline typename mutable_return<Container>::iterator
+    fill_n( Container& c, Integer size, const T& value )
+    {
+        return std::fill_n( begin( c ), end( c ), size, value );
+    }
+
+
+
+    template< typename Container, typename Generator >
+    inline void
+    generate( Container& c, Generator gen )
+    {
+        std::generate( begin( c ), end( c ), gen );
+    }
+
+
+
+    template< typename Container, typename Integer, typename Generator >
+    inline typename mutable_return<Container>::iterator
+    generate_n( Container& c, Integer size, Generator gen )
+    {
+        return std::generate_n( begin( c ), end( c ), size, gen );
+    }
+
+
+
+    template< typename Container, typename T >
+    inline typename mutable_return<Container>::iterator
+    remove( Container& c, const T& what )
+    {
+        return std::remove( begin( c ), end( c ), what );
+    }
+
+
+
+    template< typename Container, typename Predicate >
+    inline typename mutable_return<Container>::iterator
+    remove_if( Container& c, Predicate pred )
+    {
+        return std::remove_if( begin( c ), end( c ), pred );
+    }
+
+
+
+    template< typename Container1, typename Container2, typename T >
+    inline typename mutable_return<Container2>::iterator
+    remove_copy( const Container1& c1, Container2& c2, const T& value )
+    {
+        return std::remove_copy( begin( c1 ), end( c1 ), begin( c2 ), value );
+    }
+
+
+
+    template< typename Container1, typename Container2, typename Predicate >
+    inline typename mutable_return<Container2>::iterator
+    remove_copy_if( const Container1& c1, Container2& c2, Predicate pred )
+    {
+        return std::remove_copy_if( begin( c1 ), begin( c1 ), 
+                                    begin( c2 ), pred );
+    }
+
+
+
+    template< typename Container >
+    inline typename mutable_return<Container>::iterator
+    unique( Container& c )
+    {
+        return std::unique( begin( c ), end( c ) );
+    }
+
+    template< typename Container, typename Binary_predicate >
+    inline typename mutable_return<Container>::iterator
+    unique( Container& c, Binary_predicate pred )
+    {
+        return std::unique( begin( c ), end( c ), pred );
+    }
+
+
+
+    template< typename Container1, typename Container2 >
+    inline typename mutable_return<Container2>::iterator
+    unique_copy( const Container1& c1, Container2& c2 )
+    {
+        return std::unique_copy( begin( c1 ), end( c1 ), begin( c2 ) );
+    }
+
+    template< typename Container1, typename Container2, 
+    typename Binary_predicate >
+    inline typename mutable_return<Container2>::iterator
+    unique_copy( const Container1& c1, Container2& c2, Binary_predicate pred )
+    {
+        return std::unique_copy( begin( c1 ), end( c1 ), begin( c2 ), pred );
+    }
+
+
+
+    template< typename Container >
+    inline void
+    reverse( Container& c )
+    {
+        std::reverse( begin( c ), end( c ) );
+    }
+
+
+
+    template< typename Container1, typename Container2 >
+    inline typename mutable_return<Container2>::iterator
+    reverse_copy( const Container1& c1, Container2& c2 )
+    {
+        return std::reverse_copy( begin( c1 ), end( c2 ), begin( c1 ) );
+    }
+
+
+
+    // should middle be predifed as (last-first)/2??
+    template< typename Container, typename Forward_iterator > 
+    inline Forward_iterator
+    rotate( Container& c, Forward_iterator middle )
+    {
+        return std::rotate( begin( c ), middle, end( c ) );
+    }
+
+
+
+    template< typename Container1, typename Forward_iterator, 
+    typename Container2 >
+    inline Forward_iterator
+    rotate_copy( const Container1& c1, Forward_iterator middle, 
+                 Container2& c2 )
+    {
+        return std::rotate_copy( begin( c1 ), middle, end( c1 ), begin( c2 ) );
+    }
+
+
+
+    template< typename Container >
+    inline void
+    random_shuffle( Container& c )
+    {
+        std::random_shuffle( begin( c ), end( c ) );
+    }
+
+    template< typename Container, typename Generator >
+    inline void
+    random_shuffle( Container& c, Generator gen )
+    {
+        std::random_shuffle( begin( c ), end( c ), gen );
+    }
+
+    /////////////////////////////////////////////////////////////////////////
+    // Sorted Sequences
+    /////////////////////////////////////////////////////////////////////////
+
+    template< typename Container >
+    inline void
+    sort( Container& c )
+    {
+        std::sort( begin( c ), end( c ) );
+    }
+
+    template< typename Container, typename Compare >
+    inline void
+    sort( Container& c, Compare comp )
+    {
+        std::sort( begin( c ), end( c ), comp );
+    }
+
+
+
+    template< typename Container >
+    inline void
+    stable_sort( Container& c )
+    {
+        std::stable_sort( begin( c ), end( c) );
+    }
+
+    template< typename Container, typename Compare >
+    inline void
+    stable_sort( Container& c, Compare comp )
+    {
+        std::stable_sort( begin( c ), end( c ), end );
+    }
+
+
+
+    template< typename Container >
+    inline void
+    partial_sort( Container& c, 
+                  typename mutable_return<Container>::iterator middle )
+    {
+        std::partial_sort( begin( c ), middle, end( c ) );
+    }
+
+    template< typename Container, typename Compare >
+    inline void
+    partial_sort( Container& c, 
+                  typename mutable_return<Container>::iterator middle,
+                  Compare comp )
+    {
+        std::partial_sort( begin( c ), middle, end( c ), comp );
+    }
+
+
+
+    template< typename Container1, typename Container2 >
+    inline typename mutable_return<Container2>::iterator
+    partial_sort_copy( const Container1& c1, Container2& c2 )
+    {
+        return std::partial_sort_copy( begin( c1 ), end( c1 ), begin( c2 ) );
+    }
+
+    template< typename Container1, typename Container2, typename Compare >
+    inline typename mutable_return<Container2>::iterator
+    partial_sort_copy( const Container1& c1, Container2& c2, Compare comp )
+    {
+        return std::partial_sort_copy( begin( c1 ), end( c1 ), 
+                                       begin( c2 ), comp ); 
+    }
+
+
+
+    template< typename Container >
+    inline void
+    nth_element( Container& c, typename const_return<Container>::iterator nth )
+    {
+        std::nth_element( begin( c ), nth, end( c ) );
+    }
+
+    template< typename Container, typename Compare >
+    inline void
+    nth_element( Container& c, typename const_return<Container>::iterator nth,
+                 Compare comp )
+    {
+        std::nth_element( begin( c ), nth, end( c ), comp );
+    }
+
+
+
+    template< typename Container, typename T >
+    inline typename mutable_return<Container>::iterator
+    lower_bound( Container& c, const T& value )
+    {
+        return std::lower_bound( begin( c ), end( c ), value );
+    }
+
+    template< typename Container, typename T >
+    inline typename const_return<Container>::iterator
+    lower_bound( const Container& c, const T& value )
+    {
+        return std::lower_bound( begin( c ), end( c ), value );
+    }
+
+    template< typename Container, typename T, typename Compare >
+    inline typename mutable_return<Container>::iterator
+    lower_bound( Container& c, const T& value, Compare comp )
+    {
+        return std::lower_bound( begin( c ), end( c ), value, comp );
+    }
+
+    template< typename Container, typename T, typename Compare >
+    inline typename const_return<Container>::iterator
+    lower_bound( const Container& c, const T& value, Compare comp )
+    {
+        return std::lower_bound( begin( c ), end( c ), value, comp );
+    }
+
+
+
+    template< typename Container, typename T >
+    inline typename mutable_return<Container>::iterator
+    upper_bound( Container& c, const T& value )
+    {
+        return std::upper_bound( begin( c ), ednd( c ), value );
+    }
+
+    template< typename Container, typename T >
+    inline typename const_return<Container>::iterator
+    upper_bound( const Container& c, const T& value )
+    {
+        return std::upper_bound( begin( c ), ednd( c ), value );
+    }
+
+    template< typename Container, typename T, typename Compare >
+    inline typename mutable_return<Container>::iterator
+    upper_bound( Container& c, const T& value, Compare comp )
+    {
+        return std::upper_bound( begin( c ), ednd( c ), value, comp );
+    }
+
+    template< typename Container, typename T, typename Compare >
+    inline typename const_return<Container>::iterator
+    upper_bound( const Container& c, const T& value, Compare comp )
+    {
+        return std::upper_bound( begin( c ), ednd( c ), value, comp );
+    }
+
+
+
+    template< typename Container, typename T >
+    inline typename pair_return<Container,Container>::mutable_pair 
+    equal_range( Container& c, const T& value )
+    {
+        return std::equal_range( begin( c ), end( c ), value );
+    }
+
+    template< typename Container, typename T >
+    inline typename pair_return<Container,Container>::const_pair 
+    equal_range( const Container& c, const T& value )
+    {
+        return std::equal_range( begin( c ), end( c ), value );
+    }
+
+    template< typename Container, typename T, typename Compare >
+    inline typename pair_return<Container,Container>::mutable_pair
+    equal_range( Container& c, const T& value, Compare comp )
+    {
+        return std::equal_range( begin( c ), end( c ), value, comp );
+    }
+
+    template< typename Container, typename T, typename Compare >
+    inline typename pair_return<Container,Container>::const_pair
+    equal_range( const Container& c, const T& value, Compare comp )
+    {
+        return std::equal_range( begin( c ), end( c ), value, comp );
+    }
+
+
+
+    template< typename Container, typename T >
+    inline bool
+    binary_search( const Container& c, const T& value )
+    {
+        return std::binary_search( begin( c ), end( c ), value );
+    }
+
+    template< typename Container, typename T, typename Compare >
+    inline bool
+    binary_search( const Container& c, const T& value, Compare comp )
+    {
+        return std::binary_search( begin( c ), end( c ), value, comp );
+    }
+
+
+
+    template< typename Container1, typename Container2, typename Container3 > 
+    inline typename mutable_return<Container3>::iterator
+    merge( const Container1& c1, const Container2& c2, Container3& c3 )
+    {
+        return std::merge( begin( c1 ), end( c1 ), begin( c2 ), 
+                           end( c2 ), begin( c3 ) );  
+    }
+
+    template< typename Container1, typename Container2, typename Container3, 
+    typename Compare >
+    inline typename mutable_return<Container3>::iterator
+    merge( const Container1& c1, const Container2& c2, Container3& c3,
+           Compare comp )
+    {
+        return std::merge( begin( c1 ), end( c1 ), begin( c2 ), 
+                           end( c2 ), begin( c3 ), comp ); 
+    }
+
+
+
+    template< typename Container >
+    inline void
+    inplace_merge( Container& c, 
+                   typename mutable_return<Container>::iterator middle )
+    {
+        std::inplace_merge( begin( c ), middle, end( c ) );
+    }
+
+    template< typename Container, typename Compare >
+    inline void
+    inplace_merge( Container& c,
+                   typename mutable_return<Container>::iterator middle, 
+                   Compare comp )
+    {
+        std::inplace_merge( begin( c ), middle, end( c ), comp );
+    }
+
+
+
+    template< typename Container, typename Predicate >
+    inline typename mutable_return<Container>::iterator
+    partition( Container& c, Predicate pred )
+    {
+        return std::partition( begin( c ), end( c ), pred );
+    }
+
+
+
+    template< typename Container, typename Predicate >
+    inline typename mutable_return<Container>::iterator
+    stable_partition( Container& c, Predicate pred )
+    {
+        return std::stable_partition( begin( c ), end( c ), pred );
+    }
+
+    /////////////////////////////////////////////////////////////////////////
+    // Set Algorithms
+    /////////////////////////////////////////////////////////////////////////
+
+    template<typename Container1, typename Container2>
+    inline bool 
+    includes(const Container1& container1, const Container2& container2);
+
+    template<typename Container1, typename Container2, typename Compare>
+    inline bool 
+    includes(const Container1& container1, const Container2& container2,
+             Compare comp);
+
+
+    template<typename Container1, typename Container2, typename OutputIterator>
+    inline OutputIterator
+    set_union(const Container1& container1, const Container2& container2,
+              OutputIterator i);
+
+
+    template<typename Container1, typename Container2, typename OutputIterator,
+    typename Compare>
+    inline OutputIterator
+    set_union(const Container1& container1, const Container2& container2,
+              OutputIterator i, Compare comp);
+
+    template<typename Container1, typename Container2, typename OutputIterator,
+    typename Compare>
+    inline OutputIterator
+    set_intersection(const Container1& container1,
+                     const Container2& container2, OutputIterator i,
+                     Compare comp);
+
+
+    template<typename Container1, typename Container2, typename OutputIterator>
+    inline OutputIterator
+    set_difference(const Container1& container1,
+                   const Container2& container2,  OutputIterator i);
+
+
+    template<typename Container1, typename Container2, typename OutputIterator,
+    typename Compare>
+    inline OutputIterator
+    set_difference(const Container1& container1,
+                   const Container2& container2, OutputIterator i, Compare 
+                   comp);
+
+    template<typename Container1, typename Container2, typename OutputIterator>
+    inline OutputIterator
+    set_symmetric_difference(const Container1& container1,
+                             const Container2& container2,
+                             OutputIterator i);
+
+    template<typename Container1, typename Container2, typename OutputIterator,
+    typename Compare>
+    inline OutputIterator
+    set_symmetric_difference(const Container1& container1,
+                             const Container2& container2,
+                             OutputIterator i, Compare comp);
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Heap Operations
+    ///////////////////////////////////////////////////////////////////////////
+
+    template< typename Container >
+    inline void 
+    push_heap( Container& c )
+    {
+        std::push_heap( begin( c ), end( c ) );
+    }
+
+    template< typename Container, typename Compare >
+    inline void
+    push_heap( Container& c, Compare comp )
+    {
+        std::push_heap( begin( c ), end( c ) );
+    }
+
+
+
+    template< typename Container >
+    inline void 
+    pop_heap( Container& c )
+    {
+        std::pop_heap( begin( c ), end( c ) );
+    }
+
+    template< typename Container, typename Compare >
+    inline void
+    pop_heap( Container& c, Compare comp )
+    {
+        std::pop_heap( begin( c ), end( c ), comp );
+    }
+
+
+
+    template< typename Container >
+    inline void 
+    make_heap( Container& c )
+    {
+        std::make_heap( begin( c ), end( c ) );
+    }
+
+    template< typename Container, typename Compare >
+    inline void
+    make_heap( Container& c, Compare comp )
+    {
+        std::make_heap( begin( c ), end( c ), comp );
+    }
+
+
+
+    template< typename Container >
+    inline void 
+    sort_heap( Container& c )
+    {
+        std::sort_heap( begin( c ), end( c ) );
+    }
+
+    template< typename Container, typename Compare >
+    inline void
+    sort_heap( Container& c, Compare comp )
+    {
+        std::sort_heap( begin( c ), end( c ), comp );
+    }
+
+    /////////////////////////////////////////////////////////////////////////
+    // Minimum and Maximum
+    /////////////////////////////////////////////////////////////////////////
+
+    template< typename Container >
+    inline typename mutable_return<Container>::iterator
+    min_element( Container& c )
+    {
+        return std::min_element( begin( c ), begin( c ) );
+    }
+
+    template< typename Container >
+    inline typename const_return<Container>::iterator
+    min_element( const Container& c )
+    {
+        return std::min_element( begin( c ), begin( c ) );
+    }
+
+    template< typename Container, typename Binary_predicate >
+    inline typename mutable_return<Container>::iterator
+    min_element( Container& c, Binary_predicate pred )
+    {
+        return std::min_element( begin( c ), begin( c ), pred );
+    }
+
+    template< typename Container, typename Binary_predicate >
+    inline typename const_return<Container>::iterator
+    min_element( const Container& c, Binary_predicate pred )
+    {
+        return std::min_element( begin( c ), begin( c ), pred );
+    }
+
+
+
+    template< typename Container >
+    inline typename mutable_return<Container>::iterator
+    man_element( Container& c )
+    {
+        return std::max_element( begin( c ), begin( c ) );
+    }
+
+    template< typename Container >
+    inline typename const_return<Container>::iterator
+    max_element( const Container& c )
+    {
+        return std::max_element( begin( c ), begin( c ) );
+    }
+
+    template< typename Container, typename Binary_predicate >
+    inline typename mutable_return<Container>::iterator
+    max_element( Container& c, Binary_predicate pred )
+    {
+        return std::max_element( begin( c ), begin( c ), pred );
+    }
+
+    template< typename Container, typename Binary_predicate >
+    inline typename const_return<Container>::iterator
+    max_element( const Container& c, Binary_predicate pred )
+    {
+        return std::max_element( begin( c ), begin( c ), pred );
+    }
+
+
+
+    template< typename Container1, typename Container2 >
+    inline bool
+    lexicographical_compare( const Container1& c1, const Container2& c2 )
+    {
+        return std::lexicographical_compare( begin( c1 ), end( c1 ), 
+                                             begin( c2 ), end( c2 ) );
+    }
+
+    template< typename Container1, typename Container2, 
+        typename Binary_predicate > 
+        inline bool
+    lexicographical_compare( const Container1& c1, const Container2& c2, 
+                             Binary_predicate pred )
+    {
+        return std::lexicographical_compare( begin( c1 ), end( c1 ), 
+                                             begin( c2 ), end( c2 ), pred );
+    }
+
+    /////////////////////////////////////////////////////////////////////////
+    // Permutations
+    /////////////////////////////////////////////////////////////////////////
+
+    template< typename Container >
+    inline bool
+    next_permutation( Container& c )
+    {
+        return std::next_permutation( begin( c ), end( c ) );
+    }
+
+    template< typename Container, typename Compare >
+    inline bool
+    next_permutation( Container& c, Compare comp )
+    {
+        return std::next_permutation( begin( c ), end( c ), comp );
+    }
+
+
+
+    template< typename Container >
+    inline bool
+    prev_permutation( Container& c )
+    {
+        return std::prev_permutation( begin( c ), end( c ) );
+    }
+
+    template< typename Container, typename Compare >
+    inline bool
+    prev_permutation( Container& c, Compare comp )
+    {
+        return std::prev_permutation( begin( c ), end( c ), comp );
+    }
+
+    /////////////////////////////////////////////////////////////////////////
+    // Generalized Numeric Algorithms
+    /////////////////////////////////////////////////////////////////////////
+
+    template< typename Container, typename T >
+    inline T
+    accumulate( const Container& c, T initial )
+    {
+        return std::accumulate( begin( c ), end( c ), initial ); 
+    }
+
+    template< typename Container, typename T, typename Binary_function >
+    inline T
+    accumulate( const Container& c, const T initial, Binary_function fun )
+    {
+        return std::accumulate( begin( c ), end( c ), initial, fun );
+    }
+
+
+
+    template< typename Container1, typename Container2, typename T >
+    inline T                            
+    inner_product( const Container1& c1, const Container2& c2,
+                   const T initial )
+    {
+        return std::inner_product( begin( c1 ), end( c1 ), 
+                                   begin( c2 ), initial );
+    }
+
+    template< typename Container1, typename Container2, typename T,
+    typename Binary_function1, typename Binary_function2 >
+    inline T                            
+    inner_product( const Container1& c1, const Container2& c2,
+                   const T initial, Binary_function1 fun1, 
+                   Binary_function2 fun2 )
+    {
+        return std::inner_product( begin( c1 ), end( c1 ), 
+                                   begin( c2 ), initial, fun1, fun2 );
+    }
+
+
+
+    template< typename Container1, typename Container2 >
+    inline typename mutable_return<Container2>::iterator
+    partial_sum( const Container1& c, Container2& out )
+    {
+        return std::partial_sum( begin( c ), end( c ), begin( out ) );
+    }
+
+    template< typename Container1, typename Container2, 
+    typename Binary_function > 
+    inline typename mutable_return<Container2>::iterator
+    partial_sum( const Container1& c, Container2& out, Binary_function fun )
+    {
+        return std::partial_sum( begin( c ), end( c ), begin( out ), fun );
+    }
+
+
+
+    template< typename Container1, typename Container2 >
+    inline typename mutable_return<Container2>::iterator
+    adjacent_difference( const Container1& c, Container2& out )
+    {
+        return std::adjacent_difference( begin( c ), end( c ), begin( out ) );
+    }
+
+
+    template<typename Container1, typename Container2, typename Predicate >
+    inline typename mutable_return<Container2>::iterator
+    adjacent_difference( const Container1& c, Container2 out, 
+                         Predicate pred )
+    {
+        return std::adjacent_difference( begin( c ), end( c ), 
+                                         begin( out ), pred ); 
+    }
+
+    /////////////////////////////////////////////////////////////////////////
+    // Boost algorithm extensions
+    /////////////////////////////////////////////////////////////////////////
+
+    template< typename Container, typename T >
+    void 
+    iota( Container& c, const T& value )
+    {
+        iota(begin(c), end(c), value);
+    }
+
+
+
+    template< typename Container, typename T >
+    bool 
+    contains( const Container& c, const T& value )
+    {
+        return contains( begin( c ), end( c ), value );
+    }
+
+
+
+    template< typename Container, typename Predicate >
+    bool all( const Container& c, Predicate pred )
+    {
+        return all( begin( c ), end( c ), pred );
+    }
+
+
+
+    template< typename Container, typename Predicate >
+    bool 
+    none( const Container& c, Predicate pred )
+    {
+        return none( begin( c ), end( c ), p );
+    }
+
+
+
+    template< typename Container, typename Predicate >
+    bool 
+    any_if( const Container& c, Predicate p )
+    {
+        return any_if( begin( c ), end( c ), p );
+    }
+
+
+
+    template< typename Container >
+    bool 
+    is_sorted( const Container& c )
+    {
+        return is_sorted( begin( c ), end( c ) );
+    }
+
+    template< typename Container, typename Compare >
+    bool
+    is_sorted( const Container& c, Compare comp )
+    {
+        return is_sorted( begin( c ), end( c ), comp );
+    }
 
 
 #undef BOOST_FWD_ALGO_BE
