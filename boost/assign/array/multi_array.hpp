@@ -15,7 +15,11 @@
 #ifndef BOOST_ASSIGN_ARRAY_MULTI_ARRAY_HPP
 #define BOOST_ASSIGN_ARRAY_MULTI_ARRAY_HPP
 
-#include "../fixed_size_assigner.hpp"
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+# pragma once
+#endif
+
+#include <boost/assign/fixed_size_assigner.hpp>
 //#include <boost/multi_array.hpp>
 //#include <boost/multi_array_ref.hpp>
 

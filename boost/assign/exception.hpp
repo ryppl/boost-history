@@ -15,6 +15,10 @@
 #ifndef BOOST_ASSIGN_EXCEPTIOM_HPP
 #define BOOST_ASSIGN_EXCEPTIOM_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+# pragma once
+#endif
+
 #include <exception>
 
 namespace boost

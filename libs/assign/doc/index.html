@@ -1,4 +1,4 @@
-<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 
 <head>
@@ -8,7 +8,7 @@
 
 <body text="#000000" bgcolor="#ffffff">
 
-  <table border="0" width="799" height="134">
+  <table border="0" width="799">
     <tr>
       <td width="288" height="134"><img id="IMG1" src="cboost.gif"
         align="middle" border="0" width="277" height="86"></td>
@@ -51,39 +51,40 @@
   <br><b>Bjarne Stroustrup</b>, The Design and Evolution of C++
   </p>
   <p>
-    The purpose of this library is to make easy to fill containers with 
-    constant data by overloading <code>operator,()</code> and 
-<code>operator()()</code>. This is particularly useful in
-learning, testing, and prototyping situations, but can also be handy otherwise. 
-  The library comes with predefined operators for the standard library
-  and some of the libraries from boost. It also gives access to a 
-  few classes that makes it simple to extend the functionality to
-  new handle new container types. Below are given some examples.
+        The purpose of this library is to make easy to fill containers with 
+        data by overloading <code>operator,()</code> and 
+    <code>operator()()</code>. This is particularly useful in
+    learning, testing, and prototyping situations, but can also be handy otherwise. 
+      The library comes with predefined operators for the standard library
+      and some of the libraries from boost. It also gives access to a 
+      few classes that makes it simple to extend the functionality to
+      new handle new container types. Below are given some examples.
   </p>
   <p>
     To fill a vector with values you write   
     <pre>
-    #include &ltboost/assign/stl.hpp&gt
-    #include &ltvector&gt
+    #include &lt;boost/assign/stl.hpp&gt; // for 'operator+=()'
+    #include &lt;vector&gt;
     using namespace std;
-    using namespace boost::assignment;
+    using namespace boost::assignment; // bring 'operator+=()' into scope
     ...
     {
-        vector&ltint&gt values;  
-        values += 1,2,3,4,5,6,7,8,9;
+        vector&lt;int&gt; values;  
+        values += 1,2,3,4,5,6,7,8,9; // insert values at the end of the container
+        values += foo1(), foo2(), foo3(); // further insert the function values                                    
     }
     </pre>
    </p> 
    <p>
    To fill a map with pairs of values you write
    <pre>
-    #include &ltboost/assign/stl.hpp&gt
-    #include &ltvector&gt
+    #include &lt;boost/assign/stl.hpp&gt; // for 'assign()'
+    #include &lt;map&gt;
     using namespace std;
-    using namespace boost::assignment;
+    using namespace boost::assignment; // bring 'assign()' into scope
     ...
     {
-        map&ltconst char*,int&gt months;  
+        map&lt;const char*,int&gt; months;  
         assign( months )
     	    ( "january",   31 )( "february", 28 )
     	    ( "march",     31 )( "april",    30 )
@@ -99,8 +100,8 @@ learning, testing, and prototyping situations, but can also be handy otherwise.
   and want to fill a vector with objects of that type. This can be done
   like this:
   <pre>
-    #include &ltboost/assign/stl.hpp&gt
-    #include &ltvector&gt
+    #include &lt;boost/assign/stl.hpp&gt;
+    #include &lt;vector&gt;
     using namespace std;
     using namespace boost::assignment;
     ...
@@ -112,7 +113,7 @@ learning, testing, and prototyping situations, but can also be handy otherwise.
     };
     ...
     {
-        vector&ltfive&gt my_vector;   
+        vector&lt;five&gt; my_vector;   
         assign( my_vector )(1,2,3,4,5)("1","2","3","4","5")(6,7,8,9,10);
     }
   </pre>
@@ -120,9 +121,10 @@ learning, testing, and prototyping situations, but can also be handy otherwise.
    three lists of arguments, respectively.
   </p>
    
+  <hr> 
   <h2><a name="reference">Reference</a></h2>
   <p>
-  #include <code>&ltboost/assign.hpp&gt</code>
+  #include <code>&lt;boost/assign.hpp&gt;</code>
   </p>
   <p>
     This section will describe how to use the library. At the end of this 
@@ -146,22 +148,27 @@ learning, testing, and prototyping situations, but can also be handy otherwise.
   <p>
   Most of the code in this document use <code>int</code> in the examples, 
   but of course it works for arbitrary types as they constructible, copy 
-  constructible and assignable. Each section shows you which header to
+  constructible and assignable. The inserted data need not be constant data,
+  but can be variables or data return from functions; the only requirement 
+  is that the data is convertible to the type stored in the container.
+   </p>
+   <p>
+   Each section shows you which header to
   include to use the library. Everything is put in namespace 
   <code>boost::assigment</code>. </p>
   <h3><a name="stl">Standard containers </a></h3>
   <p>
-  <code>#include &ltboost/assign/stl.hpp&gt</code>
+  <code>#include &lt;boost/assign/stl.hpp&gt;</code>
   </p>
   <p>
   For each of the standard containers (including container adapters)
   one can do the following:
   <pre>
   {
-      container<int> c;
-      c += 1,2,3,4,5,6;
-      insert( c )(7)(8)(9);
-      assign( c )(1)(2)(3)(4);
+      container&lt;int> c;    
+      c += 1,2,3,4,5,6;        // 'c' holdss the values in the list 
+      insert( c )(7)(8)(9);    // 7,8,9 is inserted at the end
+      assign( c )(1)(2)(3)(4); // 'c' is reset, then the values are added
   }
   </pre>
   Both <code>operator+=()</code> and <code>insert()</code> returns an object 
@@ -173,13 +180,14 @@ learning, testing, and prototyping situations, but can also be handy otherwise.
 
   <h3><a name="array"><code>boost::array</code></a></h3>
   <p>
-  <code>#include &ltboost/assign/fixed_size_assigner.hpp&gt</code>
+  <code>#include &lt;boost/assign/fixed_size_assigner.hpp&gt;</code>
   </p>
   The <code>array</code> template in boost can be filled with values like this:
   <pre>
-      boost::array&ltint,6&gt my_array;
-      my_array << 1,2,3,4,5,6;    
-      assign_all( my_array )(1)(2)(3)(4)(5)(6);
+      boost::array&lt;int,6&gt; my_array;
+      my_array << 1,2,3,4,5,6;        // 'my_array' holds {1,2,3,4,5,6}   
+                                      // regardless of their prior valiues
+      assign_all( my_array )(7)(8)(9)(10)(11)(12); // also overwrites
   </pre>
   This is easier when the <code>array</code> template is used inside a class, or 
   when your compiler does not support initilization for the <code>array</code> 
@@ -191,113 +199,105 @@ learning, testing, and prototyping situations, but can also be handy otherwise.
 
   <h3><a name="ublas"><code>boost::ublas</code></a></h3>   
   <p>
-  <code>#include &ltboost/assign/ublas.hpp&gt</code>
+  <code>#include &lt;boost/assign/ublas.hpp&gt;</code>
   </p>
   <p>
   It is possible to use <code>assign_all()</code> or <code>operator<<()</code> 
-  with both vectors and matrices from <code>boost::ublas</code>. This
-  example shows how it is done:
+  with both vectors and matrices from <code>boost::ublas</code>. The
+  following example shows how it is done. For all of the examples, the
+  samantics are the same, that is, the contained elements are overwritten by
+  the elements in the list.
   </p>
   <pre>
     using namespace std;
     namespace bnu = boost::numeric::ublas;
     using namespace boost::assignment;
-	
-    try
-    {
-        bnu::vector<double>  v( 3 );
-        v << 1,2,3; 
+
+    bnu::vector&lt;double>  v( 3 );
+    v << 1,2,3; 
+    
+    bnu::matrix&lt;int>     m( 3, 3 );
+    m << 1,2,3,
+         4,5,6,
+         7,8,9;
+    
+    bnu::matrix&lt;double, bnu::column_major> m2( 3, 3 );
+    m2 << 1,2,3,
+          4,5,6,
+          7,8,9;
+    
+    bnu::triangular_matrix&lt;double, bnu::lower> ml (3, 3);
+    ml << 1,
+          2,3,
+          4,5,6;
         
-        bnu::matrix<int>     m( 3, 3 );
-        m << 1,2,3,
-             4,5,6,
-             7,8,9;
-        
-        //
-        // This needs to be remedied or documented.
-        //    
-        bnu::matrix<double, bnu::column_major> m2( 3, 3 );
-        m2 << 1,2,3,
-              4,5,6,
-              7,8,9;
-        
-        cout << v << endl <<  m << endl << m2 << endl;
-        
-        bnu::triangular_matrix<double, bnu::lower> ml (3, 3);
-        ml << 1,
-              2,3,
-              4,5,6;
-        	
-        bnu::triangular_matrix<double, bnu::upper> mu (3, 3);
-        mu << 1,2,3,
-              4,5,
+    bnu::triangular_matrix&lt;double, bnu::upper> mu (3, 3);
+    mu << 1,2,3,
+            4,5,
               6;
-        	
-        cout << ml << endl << mu << endl;
         
-        bnu::symmetric_matrix<double, bnu::lower> msl (3, 3);
-        msl << 0, 
-               2, 0,
-               3, 4, 0; 
-        
-        bnu::symmetric_matrix<double, bnu::upper> msu (3, 3);
-        msu << 0, 2, 3,
-               0, 4,
-               0; 
-        
-        cout << msl << endl << msu << endl;
-   }
+    bnu::symmetric_matrix&lt;double, bnu::lower> msl (3, 3);
+    msl << 0, 
+           2, 0,
+           3, 4, 0; 
+    
+    bnu::symmetric_matrix&lt;double, bnu::upper> msu (3, 3);
+    msu << 0, 2, 3,
+              0, 4,
+                 0; 
+
   </pre>
      
   <h3><a name="semantics">Semantics of functions and overloaded operators</a></h3>
+  <p>
   The functions <code>insert(),</code> and <code>assign()</code> and 
   <code>operator+=()</code> all return a instance of class 
   <a href="#insert_assigner"><code>insert_assigner</code></a>. The function
   <code>assign_all()</code> and <code>operator<<()</code> both return an 
    instance of class 
    <a href="#fixed_size_assigner"><code>fixed_size_assigner</code></a>.
-   
+  </p>  
    <ul>
     <li><code>operator+=()</code></li> The default version from  
-      <code>&ltboost/assign/insert_assigner.hpp&gt</code> is:
+      <code>&lt;boost/assign/insert_assigner.hpp&gt;</code> is:
     <pre>
-    template&lt typename C &gt 
-    inline insert_assigner&ltC&gt 
+    template&lt; typename C &gt; 
+    inline insert_assigner&lt;C&gt; 
     operator+=( C& c, const typename C::value_type& v )
     {
-        return insert_assigner&ltC&gt( c, v );
+        return insert_assigner&lt;C&gt;( c, v );
     }
     </pre>
       
     <li>function <code>insert()</code></a></li> 
     The default version from  
-      <code>&ltboost/assign/insert_assigner.hpp&gt</code> is:
+      <code>&lt;boost/assign/insert_assigner.hpp&gt;</code> is:
     <pre> 
     template< typename C >
-    inline insert_assigner&ltC&gt 
+    inline insert_assigner&lt;C&gt; 
     insert( C& c )
     {
-        return insert_assigner&ltC&gt( c );
+        return insert_assigner&lt;C&gt;( c );
     }
     </pre>
       
     <li>function <code>assign()</code></a></li>
            The default version from  
-      <code>&ltboost/assign/insert_assigner.hpp&gt</code> is:
+      <code>&lt;boost/assign/insert_assigner.hpp&gt;</code> is:
 
     <pre>
     template< typename C >
-    inline insert_assigner&ltC&gt 
+    inline insert_assigner&lt;C&gt; 
     assign( C& c )
     {
         c.clear();
-        return insert_assigner&ltC&gt( c );
+        return insert_assigner&lt;C&gt;( c );
     }   
     </pre>   
        
     <li><code>operator<<()</code></li>  
            The default version from  
-      <code>&ltboost/assign/fixed_size_assigner.hpp&gt</code> is:
+      <code>&lt;boost/assign/fixed_size_assigner.hpp&gt;</code> is:
     <pre>
     template< typename C >
     inline fixed_size_assigner< typename C::value_type, typename C::iterator>
@@ -309,7 +309,7 @@ learning, testing, and prototyping situations, but can also be handy otherwise.
        
     <li>function <code>assign_all()</code></a></li>     
            The default version from  
-      <code>&ltboost/assign/fixed_size_assigner.hpp&gt</code> is:
+      <code>&lt;boost/assign/fixed_size_assigner.hpp&gt;</code> is:
     <pre>
     template< typename C >
     inline fixed_size_assigner< typename C::value_type, typename C::iterator>
@@ -327,7 +327,7 @@ learning, testing, and prototyping situations, but can also be handy otherwise.
   to <code>operator()()</code> will be passed to the constructor of 
   <code>Container::value_type</code>. 
   <p>
-  <b>Synopsis:</b> (header <code>&ltboost/assign/insert_assigner.hpp&gt</code>)
+  <b>Synopsis:</b> (header <code>&lt;boost/assign/insert_assigner.hpp&gt;</code>)
   <pre>
   namespace boost
   {
@@ -356,17 +356,28 @@ learning, testing, and prototyping situations, but can also be handy otherwise.
   </p>
     
   <h3><a name="fixed_assigner">Class <code>fixed_sized_assigner</code></a></h3> 
-  This class is responsible for inserting elements into fixed size containers, 
-  that is, typically containers that use an array underneith. It does so by 
-  using an input iterator from within <code>operator,()</code> and 
-  <code>operator()()</code>. The arguments to <code>operator()()</code> will be 
-passed to the constructor of <code>Container::value_type</code>. The destructor
- throws an <code>assignment_exception</code> if some elements in the range have 
- not
-been assigned to wheres <code>operator,()</code> and <code>operator()()</code>
- throws if one tries to write past the end of the range.
+  <p>
+      This class is responsible for inserting elements into fixed size containers, 
+      that is, typically containers that use an array underneith. It does so by 
+      using an input iterator from within <code>operator,()</code> and 
+      <code>operator()()</code>. The arguments to <code>operator()()</code> will be 
+      passed to the constructor of <code>Container::value_type</code>. 
+  </p>
+  <p>
+     The destructor throws an <code>assignment_exception</code> if some elements in 
+     the range have not been assigned to wheres <code>operator,()</code> and 
+     <code>operator()()</code>
+     throws if one tries to write past the end of the range. <i>Of course, 
+     the destructor only throws if <code>std::uncaught_exception()<code> 
+     returns false. </i> 
+  </p>
+  <p>
+    If <code>BOOST_NO_EXCEPTIONS</code> is true, <code>assert()</code>
+    will be called instead of throwing an exception.
+  </p>
+     
 <p>
-<b>Synopsis:</b> (header <code>&ltboost/assign/fixed_size_assigner.hpp&gt</code>) 
+<b>Synopsis:</b> (header <code>&lt;boost/assign/fixed_size_assigner.hpp&gt;</code>) 
   <pre>
   namespace boost
   {
@@ -395,6 +406,7 @@ been assigned to wheres <code>operator,()</code> and <code>operator()()</code>
      }   
   }
   </pre>
+  <hr>
   <h2><a name="extensions">Extensions</a></h2> 
   It is very simple to make the library work with new classes. If you
   have a standard compliant container, you do not have to do anything.
@@ -412,7 +424,7 @@ been assigned to wheres <code>operator,()</code> and <code>operator()()</code>
   </ul>
 
   <h3><a name="iterator_insert">Function <code>make_insertion()</code></a></h3>
-  The default version from   <code>&ltboost/assign/make_insertion.hpp&gt</code> is: <pre>
+  The default version from   <code>&lt;boost/assign/make_insertion.hpp&gt;</code> is: <pre>
       template< typename Container, typename Value >
       inline void make_insertion( Container& c, const Value& v )
       {
@@ -420,6 +432,7 @@ been assigned to wheres <code>operator,()</code> and <code>operator()()</code>
       }
   </pre>
       
+  <hr>    
   <h2><a name="exceptions">Exceptions</a></h2>
   The exception guarantees by the library is the same as guarantee as the 
   underlying container. For standard containers this means that the strong 
@@ -445,15 +458,14 @@ been assigned to wheres <code>operator,()</code> and <code>operator()()</code>
     }   
   }
   </pre> 
+  <p>
    The exception is thrown by
   the <code>fixed_size_assigner</code> object returned from 
   <code>assign_all()</code> or <code>operator<<()</code> when the user
   is trying to write past the end of the data or when some elements have been
   left unassigned.
-  
-  <p>
-
   </p>
+  <hr>
   <h2><a name="portability">Portability</a></h2>
   <p>
     Library has been successfully compiled and tested with MVC++ 6.0,
@@ -463,6 +475,7 @@ been assigned to wheres <code>operator,()</code> and <code>operator()()</code>
     There are known limitation on platforms not supporting partial template
     specialization. 
   </p>
+  <hr>
   <h2><a name="rationale">History and Rationale</a></h2>
   <p>
   The idea for an initialization library is not new . The functionality of this 
@@ -481,9 +494,10 @@ Initialization Library overloads
  return an object that is responsible for the initialization. Therefore it takes 
 explicit
       action from the programmer to begin using the overloaded <code>operator,()</CODE>.
-      
-    
+     
   </p>
+  
+  <hr>
   <h2><a name="ref">References</a></h2>
   <p>
   <ol>

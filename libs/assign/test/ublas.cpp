@@ -51,8 +51,8 @@ int main()
         	
         bnu::triangular_matrix<double, bnu::upper> mu (3, 3);
         mu << 1,2,3,
-              4,5,
-              6;
+                4,5,
+                  6;
         	
         cout << ml << endl << mu << endl;
         
@@ -63,8 +63,8 @@ int main()
         
         bnu::symmetric_matrix<double, bnu::upper> msu (3, 3);
         msu << 0, 2, 3,
-               0, 4,
-               0; 
+                  0, 4,
+                     0; 
         
         cout << msl << endl << msu << endl;
         

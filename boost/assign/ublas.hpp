@@ -15,9 +15,13 @@
 #ifndef BOOST_ASSIGN_UBLAS_HPP
 #define BOOST_ASSIGN_UBLAS_HPP
 
-#include "ublas/vector.hpp"
-#include "ublas/matrix.hpp"
-#include "ublas/triangular.hpp"
-#include "ublas/symmetric.hpp"
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+# pragma once
+#endif
+
+#include <boost/assign/ublas/vector.hpp>
+#include <boost/assign/ublas/matrix.hpp>
+#include <boost/assign/ublas/triangular.hpp>
+#include <boost/assign/ublas/symmetric.hpp>
 
 #endif

@@ -15,7 +15,11 @@
 #ifndef BOOST_ASSIGN_HPP
 #define BOOST_ASSIGN_HPP
 
-#include "assign/stl.hpp"
-#include "assign/ublas.hpp"
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+# pragma once
+#endif
+
+#include <boost/assign/stl.hpp>
+#include <boost/assign/ublas.hpp>
 
 #endif

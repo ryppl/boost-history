@@ -15,8 +15,12 @@
 #ifndef BOOST_ASSIGN_GRAPH_HPP
 #define BOOST_ASSIGN_GRAPH_HPP
 
-#include "graph/adjacency_list.hpp"
-#include "graph/adjacency_matrix.hpp"
-#include "graph/property_map.hpp"
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+# pragma once
+#endif
+
+#include <boost/assign/graph/adjacency_list.hpp>
+#include <boost/assign/graph/adjacency_matrix.hpp>
+#include <boost/assign/graph/property_map.hpp>
 
 #endif

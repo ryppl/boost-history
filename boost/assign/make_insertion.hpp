@@ -15,6 +15,10 @@
 #ifndef BOOST_MAKE_ITERATOR_INSERTION_HPP
 #define BOOST_MAKE_ITERATOR_INSERTION_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+# pragma once
+#endif
+
 namespace boost
 {
 namespace assignment

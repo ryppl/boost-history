@@ -15,7 +15,11 @@
 #ifndef BOOST_ASSIGN_UBLAS_MATRIX_HPP
 #define BOOST_ASSIGN_UBLAS_MATRIX_HPP
 
-#include "../fixed_size_assigner.hpp"
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+# pragma once
+#endif
+
+#include <boost/assign/fixed_size_assigner.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 
 namespace boost

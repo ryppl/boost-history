@@ -15,7 +15,17 @@
 #ifndef BOOST_ASSIGN_FIXED_SIZE_ASSIGNER_HPP
 #define BOOST_ASSIGN_FIXED_SIZE_ASSIGNER_HPP
 
-#include "exception.hpp"
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+# pragma once
+#endif
+
+#include <boost/config.hpp>
+
+#ifdef BOOST_NO_EXCEPTIONS
+#include <cassert>
+#else
+#include <boost/assign/exception.hpp>
+#endif
 
 namespace boost
 {
@@ -52,10 +62,15 @@ namespace assignment
         ~fixed_size_assigner()
         {
             if( has_assignment_commenced() )
-                if( iter_ != end_ && !std::uncaught_exception() )
+                #ifdef BOOST_NO_EXCEPTIONS
+                if( iter_ != end_ )
+                    assert( false && "Container assigned with too few elements" );
+                #else
+                 if( iter_ != end_ && !std::uncaught_exception() )
                     throw assignment_exception( " Exception: container"
-                                                " initialized with too"
+                                                " assigned with too"
                                                 " few elements! " );
+                #endif
         }
 
 
@@ -132,8 +147,12 @@ namespace assignment
         void insert_( const value_type& v )
         {
             if( iter_ == end_ )
+                #ifdef BOOST_NO_EXCEPTIONS
+                assert( false && "Trying to write past the end of the container" );
+                #else
                 throw assignment_exception( " Exception: trying to write"
                                             " past the end of the container! " );
+                #endif
             *iter_ = v;
             ++iter_;        
         }

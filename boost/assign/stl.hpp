@@ -15,7 +15,11 @@
 #ifndef BOOST_ASSIGN_STL_HPP
 #define BOOST_ASSIGN_STL_HPP
 
-#include "make_insertion.hpp"
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+# pragma once
+#endif
+
+#include <boost/assign/make_insertion.hpp>
 #include <boost/config.hpp>
 
 #include <stack>
