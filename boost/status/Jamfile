@@ -8,6 +8,15 @@ subproject status ;
 
 # ----------- Jam rules for testing; test invocations at bottom ----------------#
 
+# Tests generate a number of files reflecting their status in the subvariant-directory
+#
+# <test-name>.test    - a marker so that Jam knows when it needs to be rebuilt.
+# <test-name>.success - present only if the test last succeeded. 
+#                       Contains the string "succeeded"
+# <test-name>.failure - present only if the test last failed. Contains the string
+#                       "failed".
+# <test-name>.output -  contains the output of the test if it was a run test.
+
 # boost-test sources : type : requirements [ : name ]
 #
 # Declares a test target. If name is not supplied, it is taken from the name of
