@@ -29,9 +29,8 @@ namespace boost {
 //
 template <typename T>
 class auto_mover
+    : public moveable< auto_mover<T> >
 {
-    BOOST_STATIC_ASSERT((is_moveable<T>::value));
-
     typedef aligned_storage<
           sizeof(T)
         , alignment_of<T>::value
@@ -45,12 +44,13 @@ public:
 public: // structors
     explicit auto_mover(T& operand)
     {
-        move(storage_.address(), operand);
+        new(storage_.address()) T( move(operand) );
     }
 
-    auto_mover(auto_mover& operand)
+    auto_mover(move_source<auto_mover> source)
     {
-        move(storage_.address(), operand.get());
+        auto_mover& operand = source.get();
+        new(storage_.address()) T( move(operand.get()) );
     }
 
     ~auto_mover()
@@ -59,27 +59,29 @@ public: // structors
     }
 
 public: // modifiers
-    auto_mover& operator=(auto_mover& operand)
+    auto_mover& operator=(move_source<auto_mover> source)
     {
+        auto_mover& operand = source.get();
         reset(operand.get());
+
+        return *this;
     }
 
-    auto_mover& swap(auto_mover& operand)
+    void swap(auto_mover& operand)
     {
         // Move operand off to the side...
         auto_mover temp(operand);
 
         // ...in order to move *this into its place...
-        operand = *this;
+        operand = move(*this);
 
         // ...and finish by moving operand's _old_ value to *this:
-        return (*this = temp);
+        *this = move(temp);
     }
 
     void reset(T& operand)
     {
-        get().~T();
-        move(storage_.address(), operand);
+        get() = move(operand);
     }
 
 public: // queries
@@ -111,33 +113,6 @@ public: // queries
     const T& get() const
     {
         return *reinterpret_cast<const T*>(storage_.address());
-    }
-
-private: // conversions (see below)
-    // struct auto_mover_ref
-    //
-    // Similar in function to std::auto_ptr_ref.
-    //
-    struct auto_mover_ref
-    {
-        T& ref_;
-
-    public:
-        auto_mover_ref(T& ref)
-            : ref_(ref)
-        {
-        }
-    };
-
-public: // conversions
-    auto_mover(auto_mover_ref operand)
-    {
-        move(storage_.address(), operand.ref_);
-    }
-
-    operator auto_mover_ref()
-    {
-        return auto_mover_ref(get());
     }
 };
 

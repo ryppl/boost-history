@@ -17,225 +17,235 @@
 #ifndef BOOST_MOVE_HPP
 #define BOOST_MOVE_HPP
 
-#include "boost/move_fwd.hpp"
+#include <iterator> // for iterator_traits
 
-#include <cstring> // for std::memcpy
-#include <new> // for placement new
-
-#include "boost/type_traits/has_nothrow_assign.hpp"
-#include "boost/type_traits/has_nothrow_constructor.hpp"
-#include "boost/type_traits/has_nothrow_copy.hpp"
-#include "boost/type_traits/has_nothrow_swap.hpp"
-#include "boost/type_traits/has_trivial_copy.hpp"
-#include "boost/type_traits/is_convertible.hpp"
-#include "boost/utility/addressof.hpp"
-
-#include "boost/mpl/apply_if.hpp"
-#include "boost/mpl/identity.hpp"
-#include "boost/mpl/logical/not.hpp"
-#include "boost/mpl/logical/and.hpp"
-
-#include "boost/detail/boost_swap.hpp"
-#include "boost/mpl/aux_/lambda_support.hpp" // used by is_moveable
+#include "boost/config.hpp"
+#include "boost/type_traits/is_base_and_derived.hpp"
+#include "boost/mpl/if.hpp"
 
 namespace boost {
+
 namespace detail {
 
-//////////////////////////////////////////////////////////////////////////
-// class not_moveable_tag
-//
-struct not_moveable_tag { };
-
-//////////////////////////////////////////////////////////////////////////
-// class memcpy_move_traits
-//
-// Implements move for objects of 'memcpy-able' types.
-//
-template <typename T>
-struct memcpy_move_traits
+template <class T>
+class const_lvalue_ref
 {
-    static void move(void* dest, T& src)
+private: // representation
+    const T* data_;
+
+public: // structors
+    explicit const_lvalue_ref(const T& obj)
+        : data_(&obj)
     {
-        std::memcpy(dest, boost::addressof(src), sizeof(T));
     }
-};
 
-//////////////////////////////////////////////////////////////////////////
-// class nothrow_copy_move_traits
-//
-// Implements move for objects of types with nothrow copy.
-//
-template <typename T>
-struct nothrow_copy_move_traits
-{
-    static void move(void* dest, T& src)
+public: // queries
+    const T& get() const
     {
-        new(dest) T(src);
-    }
-};
-
-//////////////////////////////////////////////////////////////////////////
-// class nothrow_swap_move_traits
-//
-// Implements move for objects of types with both nothrow
-// default-construct and nothrow swap.
-//
-template <typename T>
-struct nothrow_swap_move_traits
-{
-    static void move(void* dest, T& src)
-    {
-        // Default construct the type in the destination...
-        T* p = new(dest) T;
-
-        // ...and swap it with the source:
-        detail::boost_swap(*p, src);
-    }
-};
-
-//////////////////////////////////////////////////////////////////////////
-// class nothrow_assign_move_traits
-//
-// Implements move for objects of types with both nothrow
-// default-construct and nothrow assign.
-//
-template <typename T>
-struct nothrow_assign_move_traits
-{
-    static void move(void* dest, T& src)
-    {
-        // Default construct the type in the destination...
-        T* p = new(dest) T;
-
-        // ...and assign the source to it:
-        *p = src;
+        return *data_;
     }
 };
 
 } // namespace detail
 
 //////////////////////////////////////////////////////////////////////////
-// class template move_traits
+// class template move_source
 //
-// Traits template to facilitate *nothrow* move of objects of the
-// specified type.
+// Passed to object constructors and assignment operators indicating to
+// perform a move operation (i.e. instead of a copy operation).
 //
-template <typename T>
-struct move_traits
-    : mpl::apply_if<
-          // [If trivially copyable (i.e., memcpy-able):]
-          has_trivial_copy<T>
-        , mpl::identity< detail::memcpy_move_traits<T> >
-
-        , mpl::apply_if<
-              // [...else if nothrow copyable:]
-              has_nothrow_copy<T>
-            , mpl::identity< detail::nothrow_copy_move_traits<T> >
-
-              // [...else if nothrow default-constructible *and* nothrow assignable...]
-            , mpl::apply_if<
-                  mpl::logical_and<
-                      has_nothrow_constructor<T>
-                    , has_nothrow_assign<T>
-                    >
-                , mpl::identity< detail::nothrow_assign_move_traits<T> >
-
-                  // [...else if nothrow default-constructible *and* nothrow swappable...]
-                , mpl::apply_if<
-                      mpl::logical_and<
-                          has_nothrow_constructor<T>
-                        , has_nothrow_swap<T>
-                        >
-                    , mpl::identity< detail::nothrow_swap_move_traits<T> >
-
-                      // [...else T not moveable (without specialization):]
-                    , mpl::identity<detail::not_moveable_tag>
-                    >
-                >
-            >
-        >::type
+template <class T>
+class move_source
+    : private detail::const_lvalue_ref<T>
 {
+public: // structors
+    explicit move_source(T& obj)
+        : detail::const_lvalue_ref<T>(obj)
+    {
+    }
+
+public: // queries
+    T& get() const
+    {
+        return const_cast<T&>(detail::const_lvalue_ref<T>::get());
+    }
 };
 
 //////////////////////////////////////////////////////////////////////////
-// metafunction is_moveable
+// class template move_return
 //
-// Value metafunction indicates whether specified type is moveable.
-// 
-// NOTE: This template never needs to be specialized!
+// Facilitates return-by-move for function return values.
 //
-template <
-    typename T
->
-struct is_moveable
+// Example usage for function f and moveable type X:
+//   move_return< X > f( ... );
+//
+template <class T> 
+class move_return
 {
-    typedef typename mpl::logical_not<
-          is_convertible<move_traits<T>, detail::not_moveable_tag>
-        >::type type;
+private: // representation
+    T returned_;
 
-    BOOST_STATIC_CONSTANT(bool, value = type::value);
+public: // structors
+    explicit move_return(T& returned)
+        : returned_(move_source<T>(returned))
+    {
+    }
 
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(1,is_moveable,(T))
+    // "The cast below is valid given that nobody ever really creates a 
+    //  const move_return object..."
+
+    move_return(const move_return& operand)
+        : returned_(const_cast<move_return&>(operand))
+    {
+    }
+
+public: // operators
+    operator move_source<T>()
+    {
+        return move_source<T>(returned_);
+    }
+};
+
+template <class Deriving>
+struct moveable
+{
+public: // operators
+    operator detail::const_lvalue_ref<Deriving>() const
+    {
+        return detail::const_lvalue_ref<Deriving>(
+              static_cast<const Deriving&>(*this)
+            );
+    }
+
+    operator move_source<Deriving>()
+    {
+        return move_source<Deriving>(
+              static_cast<Deriving&>(*this)
+            );
+    }
+
+    operator move_return<Deriving>()
+    {
+        return move_return<Deriving>(
+              static_cast<Deriving&>(*this)
+            );
+    }
+
+protected: // noninstantiable
+    moveable() { }
+    ~moveable() { }
 };
 
 //////////////////////////////////////////////////////////////////////////
 // function template move
 //
-// Moves the source object to the given storage, leaving the source
-// object in a consistent, yet unpredictable, state.
-//
-template <typename T>
-T& move(void* dest, T& src)
-{
-    move_traits<T>::move(dest, src);
-    return *static_cast<T*>(dest);
-}
-
-//////////////////////////////////////////////////////////////////////////
-// function template move_or_copy
-//
-// Moves the source to the given storage if its type is moveable;
-// otherwise, copies the source to the given storage using placement-new.
+// Takes a T& and returns, if T derives moveable<T>, a move_source<T> for
+// the object; else, returns the T&.
 //
 
 namespace detail {
 
 template <typename T>
-T& move_or_copy_impl(
-      void* dest
-    , T& src
-    , mpl::true_c// is_moveable
-    )
+struct move_type
 {
-    return move(dest, src);
-}
-
-template <typename T>
-T& move_or_copy_impl(
-      void* dest
-    , const T& src
-    , mpl::false_c// is_moveable
-    )
-{
-    // Attempt copy...
-    T* p = new(dest) T(src);
-
-    // ...and return result upon success:
-    return *p;
-}
+    typedef typename mpl::if_<
+          is_base_and_derived<moveable<T>, T>
+        , move_source<T>
+        , T&
+        >::type type;
+};
 
 } // namespace detail
 
 template <typename T>
-T& move_or_copy(void* dest, T& src)
+inline
+    typename detail::move_type<T>::type
+move(T& source)
 {
-    return detail::move_or_copy_impl(
-          dest
-        , src
-        , mpl::bool_c< is_moveable<T>::value >()
-        );
+    typedef typename detail::move_type<T>::type
+        move_t;
+
+    return move_t(source);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// function template move
+//
+// Moves-assigns each element in the range [first, last) to the range
+// that begins with iterator result.
+//
+template <typename InputIterator, typename OutputIterator>
+    OutputIterator
+move(InputIterator first, InputIterator last, OutputIterator result)
+{
+    for (; first != last; ++first, ++result)
+        *result = move(*first);
+
+    return result;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// function template move_backward
+//
+// Move-assigns each element in the reverse range (last, first] to the
+// range that begins with iterator result.
+//
+template <typename BidirectionalIterator1, typename BidirectionalIterator2>
+    BidirectionalIterator2
+move_backward(
+      BidirectionalIterator1 first, BidirectionalIterator1 last
+    , BidirectionalIterator2 result
+    )
+{
+    while (last != first)
+        *--result = move(*--last);
+
+    return result;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// function template uninitialized_move
+//
+// Move-constructs each element in the reverse range (last, first] to the
+// range that begins with iterator result.
+//
+template <typename InputIterator, typename OutputIterator>
+    OutputIterator
+uninitialized_move(
+      InputIterator first, InputIterator last
+    , OutputIterator result
+    )
+{
+    typedef typename std::iterator_traits<
+          OutputIterator
+        >::value_type T;
+
+    for (; first != last; ++first, ++result)
+        new(*result) T(move(*first));
+
+    return result;
 }
 
 } // namespace boost
 
 #endif // BOOST_MOVE_HPP
+
+
+/* Original copyright -- on mojo.h -- follows:
+
+////////////////////////////////////////////////////////////////////////////////
+// MOJO: MOving Joint Objects
+// Copyright (c) 2002 by Andrei Alexandrescu
+//
+// Created by Andrei Alexandrescu
+//
+// Permission to use, copy, modify, distribute and sell this software for any 
+//     purpose is hereby granted without fee, provided that the above copyright 
+//     notice appear in all copies and that both that copyright notice and this 
+//     permission notice appear in supporting documentation.
+// The author makes no representations about the suitability of this software 
+//     for any purpose. It is provided "as is" 
+//     without express or implied warranty.
+////////////////////////////////////////////////////////////////////////////////
+
+*/
