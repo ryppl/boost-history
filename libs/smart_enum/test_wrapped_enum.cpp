@@ -28,6 +28,7 @@ int test_main(int, char*[])
     BOOST_CRITICAL_TEST(++e == state1);
     BOOST_CRITICAL_TEST((e += state4-state1+1) == state1);
     BOOST_CRITICAL_TEST((e = state3 + (state4-state1+1)*2) == state3);
+    BOOST_CRITICAL_TEST((e += -10) == state1);
 
     // Done
     return 0;
