@@ -2,36 +2,36 @@
 <!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
 "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
 <section id="string_algo.intro" last-revision="$Date$">
-	<title>Introduction</title>
+    <title>Introduction</title>
 
-	<para>
-		The String Algorithm Library provides a generic implementation of various
-		string-related algorithms which are missing in STL. It is an extension
-		to the algorithms library of STL. Algorithms in this library include
-		trimming, case conversion, predicates and find/replace functions. All of
-		them come in different variants so it is easier to choose the best fit for a
-		particular need.
-	</para>
-	<para>
-		The implementation is not restricted to work with a particular container 
-		(like a <code>std::basic_string</code>), rather it is as generic as
-		possible. This generalization is not compromising the performance since
-		algorithms are using container specific features when it means a performance
-		gain.
-	</para>
-	<para>		
-		The library has layered structure to simplify the usage without sacrificing the
-		generalization. 
+    <para>
+        The String Algorithm Library provides a generic implementation of various
+        string-related algorithms which are missing in STL. It is an extension
+        to the algorithms library of STL. Algorithms in this library include
+        trimming, case conversion, predicates and find/replace functions. All of
+        them come in different variants so it is easier to choose the best fit for a
+        particular need.
+    </para>
+    <para>
+        The implementation is not restricted to work with a particular container 
+        (like a <code>std::basic_string</code>), rather it is as generic as
+        possible. This generalization is not compromising the performance since
+        algorithms are using container specific features when it means a performance
+        gain.
+    </para>
+    <para>      
+        The library has layered structure to simplify the usage without sacrificing the
+        generalization. 
 
-		Common interface, defined in the namespace <code>boost</code>, represents the first layer. 
-		Algorithms and classes defined here, do not offer a lot of customization opportunities, 
-		rather they are provided in more different variants, so an user can chose the 
-		one that suites her needs.
+        Common interface, defined in the namespace <code>boost</code>, represents the first layer. 
+        Algorithms and classes defined here, do not offer a lot of customization opportunities, 
+        rather they are provided in more different variants, so an user can chose the 
+        one that suites her needs.
 
-		The second layer, defined in the namespace <code>boost::string_algo</code>, on the 
-		other hand, is generic. Basicaly it contains the same set of algorithms as the first layer,
-		but the interface is more flexible, allows more customization, but it is harder to use.
+        The second layer, defined in the namespace <code>boost::string_algo</code>, on the 
+        other hand, is generic. Basicaly it contains the same set of algorithms as the first layer,
+        but the interface is more flexible, allows more customization, but it is harder to use.
 
-		The first layer is basicaly a set of wrappers around the second layer for the most common use cases.
-	</para>
+        The first layer is basicaly a set of wrappers around the second layer for the most common use cases.
+    </para>
 </section>

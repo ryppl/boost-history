@@ -30,8 +30,8 @@
             This example converts the str1 to upper case and trims spaces from the start and the end
             of the string. str2 is then create as a copy of str1 with 'hello' replace with 'goodbye'.
             This example demonstrates several important concepts used in the library.
-			To use the library, include <headername>boost/string_algo.hpp</headername> header. If the regex related
-			functions are needed, include <headername>boost/string_algo_regex.hpp</headername> header.
+            To use the library, include <headername>boost/string_algo.hpp</headername> header. If the regex related
+            functions are needed, include <headername>boost/string_algo_regex.hpp</headername> header.
         </para>
         <itemizedlist>
             <listitem>
@@ -98,7 +98,7 @@
         </programlisting>
         <para>
             <functionname>to_upper</functionname> and <functionname>to_lower</functionname> convert the case of 
-			characters in a container using a specified locale.
+            characters in a container using a specified locale.
         </para>
     </section>
     <section>
@@ -141,9 +141,9 @@
         <para>
             The predicates are resolving if a substring is contained in the input string
             under various conditions. These conditions are suffix and prefix check, equality 
-			check and containment check. See the <link linkend="string_algo.reference">reference</link> 
-			for more details. In addtion predicate <functionname>all</functionname> checks 
-			all elements of a container to satisfy a predicate. This predicate can be any unary predice, but
+            check and containment check. See the <link linkend="string_algo.reference">reference</link> 
+            for more details. In addtion predicate <functionname>all</functionname> checks 
+            all elements of a container to satisfy a predicate. This predicate can be any unary predice, but
             the library provide a bunch of useful string-related predicates ready to use.
             These are located in &lt;boost/string_algo/classification.hpp&gt; header.
         </para>
@@ -209,7 +209,7 @@
             The result it given in the <classname>iterator_range</classname>. This range delimits the
             part of the input which matches find criteria. In our example it is the last occurence of "ll".
             
-            s we can see, input of the <functionname>find_last</functionname> algorithm can be also 
+            As we can see, input of the <functionname>find_last</functionname> algorithm can be also 
             char[] because it is supported by <link linkend="string_algo.container_traits">container_traits</link>.
 
             Following lines transform the result. Notice, that <classname>iterator_range</classname> have familiar 
@@ -230,7 +230,7 @@
 
     // ...
 
-	string str1="Hello  Dolly,   Hello World!"
+    string str1="Hello  Dolly,   Hello World!"
     replace_first( str1, "Dolly", "Jane" );     // str1="Hello  Jane,   Hello World!"
     replace_last( str1, "Hello", "Goodbye");    // str1="Hello  Jane,   Goodbye World!"
     erase_all( str1, " " );                     // str1="HelloJane,GoodbyeWorld!"
@@ -238,12 +238,12 @@
     
         </programlisting>
         <para>
-			For the complete list of replace and erase functions see the 
-			<link linend="string_algo.reference">reference</link>.
+            For the complete list of replace and erase functions see the 
+            <link linend="string_algo.reference">reference</link>.
             There is a lot of predefined function for common usage, however the library allows you to 
             define custom replace that suits your need. There is a generic <functionname>replace</functionname> 
             which takes two parameters.
-			The first one is a <link linkend="string_algo.finder_concept">finder</link>, the second one is 
+            The first one is a <link linkend="string_algo.finder_concept">finder</link>, the second one is 
             <link linkend="string_algo.formatter_concept">formatter</link>. Finder is a functor which performs the 
             searching for the replacement part. Functor takes the result of the finder (usualy a reference to the 
             found part) and creates a substitute sequence for this part. Replace algorithm puts these two 
@@ -254,46 +254,46 @@
         <title>Split</title>
 
         <para>
-			Split algoritms allow to divide a sequence into parts. Each part represents a token. Tokens are
-			separated by separators. They are two possibilities. To search for tokens, or inversely to search for
-			separators.
+            Split algoritms allow to divide a sequence into parts. Each part represents a token. Tokens are
+            separated by separators. They are two possibilities. To search for tokens, or inversely to search for
+            separators.
         </para>
 
-		<programlisting>
-	include &lt;vector&gt;
+        <programlisting>
+    include &lt;vector&gt;
     include &lt;boost/string_algo.hpp&gt;
 
     using namespace std;
     using namespace boost;
 
-	//..
-	string str1("hello abc-*-ABC-*-aBc goodbye");
+    //..
+    string str1("hello abc-*-ABC-*-aBc goodbye");
 
-	typedef vector&lt; iterator_range&lt;string::iterator&gt; &gt; split_vector_type;
-	
-   	split_vector_type FindVec;
-	ifind_all( FindVec, str1, "abc" ); 					// FindVec = { [abc),[ABC),[aBc) }
+    typedef vector&lt; iterator_range&lt;string::iterator&gt; &gt; split_vector_type;
+    
+    split_vector_type FindVec;
+    ifind_all( FindVec, str1, "abc" ); // FindVec = { [abc),[ABC),[aBc) }
 
-	split_vector_type SplitVec;
-	split( SplitVec, str1, is_of&lt;char&gt;("-*") ); 	// SplitVec = { [hello abc),[ABC),[aBc goodbye) }
-		</programlisting>
-		<para>
-			The result of a split algorithm is a 'container of containers'. There is only a restriction, that
-			the inner container type must be able to hold extracted parts of the input sequence. This example 
-			shows the special case. It is possible to specify <classname>iterator_range</classname> as 
-			the inner container. This way, a user gets a reference (in the form of iterators) pointing 
-			to the parts of the input sequence. Otherwise, a copy of each extracted part is created 
-			and added to the outter container. (in the example it is a vector).
-		</para>
-		<para>
-			There are two basic algorithms. <functionname>find_all</functionname> returns extracts the parts
-			matching the specification. <functionname>split</functionname>, uses the matching parts as delimiters,
-			and extracts the parts in between them. 
-		</para>
-		<para>
-			Generalizations of these two algorithms are <functionname>iter_find</functionname> and 
-			<functionname>iter_split</functionname>. They take a 
-			<link linkend="string_algo.finder_concept">finder</link>, as an argument to search for matching substring. 
-		</para>		
+    split_vector_type SplitVec;
+	split( SplitVec, str1, is_of&lt;char&gt;("-*") ); // SplitVec = { [hello abc),[ABC),[aBc goodbye) }
+        </programlisting>
+        <para>
+            The result of a split algorithm is a 'container of containers'. There is only a restriction, that
+            the inner container type must be able to hold extracted parts of the input sequence. This example 
+            shows the special case. It is possible to specify <classname>iterator_range</classname> as 
+            the inner container. This way, a user gets a reference (in the form of iterators) pointing 
+            to the parts of the input sequence. Otherwise, a copy of each extracted part is created 
+            and added to the outter container. (in the example it is a vector).
+        </para>
+        <para>
+            There are two basic algorithms. <functionname>find_all</functionname> returns extracts the parts
+            matching the specification. <functionname>split</functionname>, uses the matching parts as delimiters,
+            and extracts the parts in between them. 
+        </para>
+        <para>
+            Generalizations of these two algorithms are <functionname>iter_find</functionname> and 
+            <functionname>iter_split</functionname>. They take a 
+            <link linkend="string_algo.finder_concept">finder</link>, as an argument to search for matching substring. 
+        </para>     
     </section>
 </section>

@@ -2,89 +2,239 @@
 <!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
 "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
 <section id="string_algo.design" last-revision="$Date$">
-	<title>Design</title>
+    <title>Design Topics</title>
 
     <using-namespace name="boost"/>
     <using-namespace name="boost::string_algo"/>
-	
-	<section id="string_algo.container_traits">
-		<title>Container Traits</title>
+    
+    <section id="string_algo.container_traits">
+        <title>Container Traits</title>
 
+        <para>
+            Container traits provide uniform access to different types of containers. 
+            This functionality allows to write generic algorithms wich work with several 
+            different kinds of containers. For this library is means, that many algorithms
+            work with <code>std::string</code> as well as with <code>char[]</code>.
+        </para>
+        <para>
+            Following container types are supported:
+            <itemizedlist>
+                <listitem>
+                    Standard containers
+                </listitem>
+                <listitem>
+                    Built-in arrays (like int[])
+                </listitem>
+                <listitem>
+                    Null terminated strings (this includes char[],wchar_t[],char*, and wchar_t*)
+                </listitem>
+                <listitem>
+                    std::pair&lt;iterator,iterator&gt;
+                </listitem>
+            </itemizedlist>
+        </para>
+        <para>
+            Container traits support a subset of container concept (Std &sect;23.1). This subset 
+			can be qualified as an input container concept. Definition can be found in the header
+			<headername>boost/string_algo/container_traits.hpp</headername>.Maeterlinck
+        </para>
+        <para>
+            In the table C denotes a container, c an object of C. 
+		</para>
+        <table>
+            <title>Container Traits</title>
+            <tgroup cols="3" align="left">
+                <thead>
+                    <row>   
+                        <entry>Name</entry>
+                        <entry>Standard container equivalent</entry>
+                        <entry>Description</entry>
+                    </row>Maeterlinck
+                </thead>
+                <tbody>
+                    <row>
+                        <entry><classname>container_value_type&lt;C&gt;</classname>::type</entry>
+                        <entry><code>C::value_type</code></entry>
+                        <entry>Type of contained values</entry>
+                    </row>
+                    <row>
+                        <entry><classname>container_difference_type&lt;C&gt;</classname>::type</entry>
+                        <entry><code>C::difference_type</code></entry>
+                        <entry>Container's difference type</entry>
+                    </row>
+                    <row>
+                        <entry><classname>container_iterator&lt;C&gt;</classname>::type</entry>
+                        <entry><code>C::iterator</code></entry>
+                        <entry>Container's iterator type</entry>
+                    </row>
+                    <row>
+                        <entry><classname>container_const_iterator&lt;C&gt;</classname>::type</entry>
+                        <entry><code>C::const_iterator</code></entry>
+                        <entry>Container's const_iterator type</entry>
+                    </row>
+                    <row>
+                        <entry><classname>container_result_iterator&lt;C&gt;</classname>::type</entry>
+                        <entry></entry>
+                        <entry>
+                            Container's result_iterator type. This type maps to C::iterator
+                            for mutable container and C::const_iterator for const containers.
+                        </entry>
+                    </row>
+                    <row>
+                        <entry><functionname>begin(c)</functionname></entry>
+                        <entry><code>c.begin()</code></entry>
+                        <entry>
+                            Get the iterator pointing to the start of the container.
+                        </entry>
+                    </row>
+                    <row>
+                        <entry><functionname>end(c)</functionname></entry>
+                        <entry><code>c.end()</code></entry>
+                        <entry>
+                            Get the iterator pointing to the end of the container.
+                        </entry>
+                    </row>
+                    <row>
+                        <entry><functionname>size(c)</functionname></entry>
+                        <entry><code>c.size()</code></entry>
+                        <entry>
+                            Get the size of the container.
+                        </entry>
+                    </row>
+                    <row>
+                        <entry><functionname>empty(c)</functionname></entry>
+                        <entry><code>c.empty()</code></entry>
+                        <entry>
+                            Check if the container is empty.
+                        </entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    
+    </section>
+	<section id="string_algo.sequence_traits">
+        <title>Sequence Traits</title>
+
+        <para>
+            Major difference between <code>std::list</code> and <code>std::vector</code> is not in the interface
+            and functions they provide, rather in the inner details of the class and the way how it performs 
+            various operation. Problem is that it is not possible to infere this difference from the 
+            definitions of classes.
+			However some algorithms can make a significant improvement in the performance with the knowledge 
+			of particular container properties.
+        </para>
+        <para>
+            Sequence traits allow to specify additional properties of a sequence container.
+            These properties are then used by algorithms to select optimized handling for some operations.
+            Sequence traits are declared in the header <headername>boost/string_algo/sequence_traits.hpp</headername>.
+        </para>
+
+        <para>
+            In the table C denotes a container, c an object of C.
+        </para>
+        <table>
+            <title>Sequence Traits</title>
+            <tgroup cols="2" align="left">
+                <thead>
+                    <row>   
+                        <entry>Trait</entry>
+                        <entry>Description</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry><classname>sequence_has_native_replace&lt;C&gt;</classname>::value</entry>
+                        <entry>Specifies that the sequence has std::string like replace method</entry>
+                    </row>
+                    <row>
+                        <entry><classname>sequence_has_stable_iterators&lt;C&gt;</classname>::value</entry>
+                        <entry>
+                            Specifies that the sequence has stable iterators. It means,
+                            that operations like insert/erase/replace do not invalidate iterators.
+                        </entry>
+                    </row>
+                    <row>
+                        <entry><classname>sequence_has_const_time_insert&lt;C&gt;</classname>::value</entry>
+                        <entry>
+                            Specifies that the sequence's insert method is has 
+                            constant time complexity.
+                        </entry>
+                    </row>
+                    <row>
+                        <entry><classname>sequence_has_const_time_erase&lt;C&gt;</classname>::value</entry>
+                        <entry>
+                            Specifies that the sequence's erase method is has constant time complexity
+                        </entry>
+                    </row>
+                    </tbody>
+            </tgroup>
+		</table>
+		
 		<para>
-			Container Traits explanation
+			Current implementation contains specializations for standard library's std::list&lt;T&gt;, 
+			std::basic_string&lt;T&gt; and SGI's std::rope&lt;T&gt; and std::slist&lt;T&gt;.
+		</para>
+    </section>
+	<section id="string_algo.find">
+        <title>Find Algorithms</title>
+
+        <para>
+			Find algorithms have similar functionality to of <code>std::search</code> algorithm. They provide different 
+			interface which is more suitable for common string operations. 
+			Instead of returning just the start of matching subsequence they return a range, which is necessary 
+			when searching for a regular expression, and often more convenient. This feature also allows a 
+			partitioning of  the input sequence into three parts: prefix, substring and suffix. 
+		</para>
+		<para>
+			Another difference is an addition of various searching methods besides find_first, including find_regex. 
+		</para>
+		<para>
+			It the library, find algorithms are represented by a set of 
+			<link linkend="string_algo.finder_concept">finders</link>. Finders are used also by other facilities.
+			For convinience, there are also function wrappers for these finders to simplify find operations.
+		</para>
+		<para>
+			Currently the library contains only naive implementation of find algoritms with complexity 
+			O(n * m) where n is the size of the input sequence and m is the size of the seach sequence. 
+			There are algorithms with complexity O(n), but for smaller sequence a contant overhead is 
+			rather big. For small m &lt;&lt; n current implementation provides acceptable efficiency. 
+			Even C++ standard defines a required complexity for search algorithm only O(n * m). 
+			It is possible that a future version of library will contain also algoritms with linear 
+			complexity as an option
 		</para>
 	</section>
 	<section id="string_algo.replace">
 		<title>Replace Algorithms</title>
 
 		<para>
-			Replace algorithms explanation
+			The implementation of replace algorithms follows a layered structure of the library. The 
+			lower layer implements generic substitution of a range in an input sequence with an 
+			another sequence. This layer takes a <link linkend="string_algo.finder_concept">finder</link> and a 
+			<link linkend="string_algo.formatter_concept">formatter</link> as an input. These two functors define 
+			what is to be replaced and what will be the replacement. The upper layer functions are just wrapping 
+			calls to lower layer provided with specific functors. Finders are shared with the 
+			find and split facility. 
 		</para>
+		<para>
+			Implementation of lower layer is designed to work with a generic sequence, but taking an 
+			advantage of specific features if possible. std::vector&lt;T&gt; is considered as a model for a 
+			generic sequence. <link linkend="string_algo.sequence_traits">Sequence traits</link> are
+			used to determine when a more efficient processing is possible.
+		</para>			
 	</section>
-	<section id="sequence traits">
-		<title>Sequence Traits</title>
+	<section id="string_algo.split">
+		<title>Split Algorithms</title>
 
 		<para>
-			Major difference between <code>std::list</code> and <code>std::vector</code> is not in the interface
-			and functions they provide, rather in the inner details of the class and the way how it performs 
-			various operation. Problem is that it is not possible to infere this difference from the 
-			definitions of this classes.
-			Some algorithms can make a significant improvement in the performance with the knowledge of particular
-			container properties.
+			Split algorithms are a logical extension of <link linkend="string_algo.find">find facility</link>.
+			Instead of searching for a one match, whole input is searched. Result of the search is then used 
+			to partition the input. It depends on the algorithms which parts are returned as the result of
+			split operations. It can be the matching parts (<functionname>find_all</functionname>) of the parts in
+			between (<functionname>split</functionname>). 
 		</para>
-		<para>
-			Sequence traits allow to specify additional properties of a sequence container.
-			These properties are then used by algorithms to select optimized handling for some operations.
-			Sequence traits are declared in the header <headername>boost/string_algo/sequence_traits.hpp</headername>.
-		</para>
-
-		<table>
-			<title>Sequence Traits</title>
-			<tgroup cols="2" align="left">
-				<thead>
-					<row>	
-						<entry>Trait</entry>
-						<entry>Description</entry>
-					</row>
-				</thead>
-				<tbody>
-					<row>
-						<entry><classname>sequence_has_native_replace</classname></entry>
-						<entry>Specifies that the sequence has std::string like replace method</entry>
-					</row>
-					<row>
-						<entry><classname>sequence_has_stable_iterators</classname></entry>
-						<entry>
-							Specifies that the sequence has stable iterators. It means,
-							that operations like insert/erase/replace do not invalidate iterators.
-						</entry>
-					</row>
-					<row>
-						<entry><classname>sequence_has_const_time_insert</classname></entry>
-						<entry>
-							Specifies that the sequence's insert method is has 
-							constant time complexity.
-						</entry>
-					</row>
-					<row>
-						<entry><classname>sequence_has_const_time_erase</classname></entry>
-						<entry>
-							Specifies that the sequence's erase method is has constant time complexity
-						</entry>
-					</row>
-					</tbody>
-			</tgroup>
-		</table>
-	</section>
-	<section>
-		<title>Regular Expressions</title>
-
-		<para>
-			Regular expressions are essential part of text processing. For this reason, the library 
-			provides also regex variants of some algorithms. The library does not try to replace
-			<libraryname>Boost.Regex</libraryname>. It merely wraps its functionality in a new interface.
-			As a part of this library regex algorithms integrate smoothly with other components, thus 
-			bringing additional value.
-		</para>
+		<!--		<para>	
+			Implementation is using finders to perform the operation.
+		</para>-->
 	</section>
 </section>

@@ -2,44 +2,45 @@
 <!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
 "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
 <library name="string_algo" dirname="string_algo" xmlns:xi="http://www.w3.org/2001/XInclude" 
-	id="string_algo" last-revision="$Date$">
-	<libraryinfo>
-		<author>
-			<firstname>Pavol</firstname>
-			<surname>Droba</surname>
-		</author>
+    id="string_algo" last-revision="$Date$">
+    <libraryinfo>
+        <author>
+            <firstname>Pavol</firstname>
+            <surname>Droba</surname>
+        </author>
 
-		<copyright>
-			<year>2003</year>
-			<holder>Pavol Droba</holder>
-		</copyright>
+        <copyright>
+            <year>2003</year>
+            <holder>Pavol Droba</holder>
+        </copyright>
 
-		<legalnotice>
-			<para>Permission to copy, use, sell and distribute this software
-				is granted provided this copyright notice appears in all copies.
-				Permission to modify the code and to distribute modified code is
-				granted provided this copyright notice appears in all copies, and
-				a notice that the code was modified is included with the copyright
-				notice. </para>
+        <legalnotice>
+            <para>Permission to copy, use, sell and distribute this software
+                is granted provided this copyright notice appears in all copies.
+                Permission to modify the code and to distribute modified code is
+                granted provided this copyright notice appears in all copies, and
+                a notice that the code was modified is included with the copyright
+                notice. </para>
 
-			<para> This software is provided "as is" without express or
-				implied warranty, and with no claim as to its suitability for any
-				purpose. </para>
-		</legalnotice>
+            <para> This software is provided "as is" without express or
+                implied warranty, and with no claim as to its suitability for any
+                purpose. </para>
+        </legalnotice>
 
-		<librarypurpose>
-			A set of generic string-related algorithms and utilities.
-		</librarypurpose> 
-		<librarycategory name="category:algoritms"/>
-	</libraryinfo>
+        <librarypurpose>
+            A set of generic string-related algorithms and utilities.
+        </librarypurpose> 
+        <librarycategory name="category:algoritms"/>
+    </libraryinfo>
 
-	<title>Boost String Algorithms Library</title>	
-	<xi:include href="intro.xml"/>
-	<xi:include href="usage.xml"/>
-	<xi:include href="design.xml"/>
-	<xi:include href="concept.xml"/>
-	<xi:include href="reference.boostbook"/>
-	<xi:include href="environment.xml"/>
-	<xi:include href="credits.xml"/>
+    <title>Boost String Algorithms Library</title>  
+    <xi:include href="intro.xml"/>
+    <xi:include href="usage.xml"/>
+    <xi:include href="design.xml"/>
+    <xi:include href="concept.xml"/>
+	<xi:include href="rationale.xml"/>
+    <xi:include href="reference.boostbook"/>
+    <xi:include href="environment.xml"/>
+    <xi:include href="credits.xml"/>
 </library>
 
