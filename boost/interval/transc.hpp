@@ -21,10 +21,6 @@
 
 #include <cmath>
 
-#if defined(__GLIBC__) && !defined(__GLIBCPP__) && (defined(__USE_MISC) || defined(__USE_XOPEN_EXTENDED) || defined(__USE_ISOC99))
-#define BOOST_HAVE_INV_HYPERBOLIC
-#endif
-
 namespace boost {
 
 template<class T, class Traits> inline

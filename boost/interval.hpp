@@ -19,6 +19,10 @@
 
 #include <boost/config.hpp>
 #include <boost/limits.hpp>
+#include <cmath>
+#include <algorithm>
+#include <boost/interval/detail/bugs.hpp>
+
 
 namespace boost {
 
