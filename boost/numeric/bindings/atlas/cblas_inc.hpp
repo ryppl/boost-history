@@ -1,5 +1,3 @@
-// (-*- C++ -*- header)  
-
 /*
  * 
  * Copyright (c) Kresimir Fresl 2002 
@@ -20,7 +18,7 @@
 //
 // ATLAS (Automatically Tuned Linear Algebra Software)
 //
-// ``At present, it provides C and Fortran77 interfaces to a portably 
+// ''At present, it provides C and Fortran77 interfaces to a portably 
 // efficient BLAS implementation, as well as a few routines from LAPACK.''
 //
 // see: http://math-atlas.sourceforge.net/
