@@ -47,15 +47,20 @@
          };
       }
 
-      // char and wchar_t string interfaces
+      // string interface for handling variable-capacity strings
 
-      struct char_string: public detail::basic_string_impl< char_string, char >
+      template< typename CharT, class Traits = std::char_traits< CharT > >
+      struct fixed_string_base: public detail::basic_string_impl
+                                       <
+                                          fixed_string_base< CharT, Traits >, CharT, Traits,
+                                          detail::string_policy< CharT, std::basic_string< CharT, Traits > >
+                                       >
       {
-         virtual const char *                    c_str()  const = 0;
-         virtual const char *                    data()   const = 0;
-         virtual char &                          at( size_t i ) = 0;
-         virtual char *                          iter_offset(       ptrdiff_t ) = 0;
-         virtual const char *                    const_iter_offset( ptrdiff_t ) const = 0;
+         virtual const CharT *                   c_str()  const = 0;
+         virtual const CharT *                   data()   const = 0;
+         virtual CharT &                         at( size_t i ) = 0;
+         virtual CharT *                         iter_offset(       ptrdiff_t ) = 0;
+         virtual const CharT *                   const_iter_offset( ptrdiff_t ) const = 0;
 
          virtual size_t                          length()   const = 0;
          virtual size_t                          capacity() const = 0;
@@ -64,44 +69,25 @@
          virtual void                            resize(  size_t, char ) = 0;
          virtual void                            reserve( size_t ) = 0;
 
-         virtual char *                          assign(  const char * s, size_t l = size_t( -1 )) = 0;
-         virtual char *                          append(  const char * s, size_t l = size_t( -1 )) = 0;
-         virtual void                            push_back( char ) = 0;
-         virtual int                             format(  const char * fmt, va_list args ) = 0;
+         virtual CharT *                         assign( const CharT * s, size_t l = size_t( -1 )) = 0;
+         virtual CharT *                         append( const CharT * s, size_t l = size_t( -1 )) = 0;
+         virtual void                            push_back( CharT ) = 0;
+         virtual int                             format( const CharT * fmt, va_list args ) = 0;
       };
 
-      struct wchar_string: public detail::basic_string_impl< char_string, wchar_t >
-      {
-         virtual const wchar_t *                 c_str()  const = 0;
-         virtual const wchar_t *                 data()   const = 0;
-         virtual wchar_t &                       at( size_t i ) = 0;
-         virtual wchar_t *                       iter_offset(       ptrdiff_t ) = 0;
-         virtual const wchar_t *                 const_iter_offset( ptrdiff_t ) const = 0;
-
-         virtual size_t                          length()   const = 0;
-         virtual size_t                          capacity() const = 0;
-         virtual size_t                          max_size() const = 0;
-
-         virtual void                            resize(  size_t, wchar_t ) = 0;
-         virtual void                            reserve( size_t ) = 0;
-
-         virtual wchar_t *                       assign(  const wchar_t * s, size_t l = size_t( -1 )) = 0;
-         virtual wchar_t *                       append(  const wchar_t * s, size_t l = size_t( -1 )) = 0;
-         virtual void                            push_back( wchar_t ) = 0;
-         virtual int                             format(  const wchar_t * fmt, va_list args ) = 0;
-      };
+      typedef fixed_string_base< char >                    char_string;
+      typedef fixed_string_base< wchar_t >                 wchar_string;
 
       // fixed capacity string implementation (std::basic_string-style interface)
 
       template< size_t n, typename CharT = char, class StringPolicy = std::char_traits< CharT > >
-      class fixed_string: public mpl::if_< is_same< CharT, char >, char_string, wchar_string >::type
+      class fixed_string: public fixed_string_base< CharT, StringPolicy >
       {
          private:
             CharT                      str[ n ];
             size_t                     len;
          public:
-            typedef typename mpl::if_< is_same< CharT, char >, char_string, wchar_string >::type
-                                                                     base_type;
+            typedef fixed_string_base< CharT, StringPolicy >         base_type;
             typedef typename base_type::size_type                    size_type;
             typedef typename base_type::difference_type              difference_type;
             typedef typename base_type::reference                    reference;
@@ -113,11 +99,6 @@
             typedef typename mpl::if_< mpl::equal_to< mpl::int_< n >, mpl::int_< 0 > >, 
                                        zero_buffer_error, ok
                                      >::type::value                  zero_buffer_check;
-            // character type check: CharT == char || CharT == wchar_t
-            struct char_type_error{};
-            typedef typename mpl::if_< mpl::or_< is_same< CharT, char >, is_same< CharT, wchar_t > >,
-                                       ok, char_type_error
-                                     >::type::value                  char_type_check;
             // string policy check: StringPolicy::char_type == CharT
             struct string_policy_error{};
             typedef typename mpl::if_< is_same< typename StringPolicy::char_type, CharT >,
@@ -166,14 +147,14 @@
             {
                if( sz > len )          StringPolicy::assign( str + len, sz - len, c );
                len = sz;
-               str[ len ] = CharT( '\0' );
+               str[ len ] = CharT();
             }
             inline void                          reserve( size_type sz )
             {
                if( sz < len )
                {
                   len = sz;
-                  str[ len ] = CharT( '\0' );
+                  str[ len ] = CharT();
                }
             }
          public: // string operations
@@ -182,7 +163,7 @@
                if( l == npos )         l = StringPolicy::length( s ) + 1;
                len = ( l > n ) ? ( n - 1 ) : l;
                CharT *                 ret = StringPolicy::copy( str, s, len );
-               str[ len ] = CharT( '\0' );
+               str[ len ] = CharT();
                return( ret );
             }
             inline CharT *                       append( const CharT * s, size_type l = npos )
@@ -191,7 +172,7 @@
                l = (( l + len ) > n ) ? ( n - len ) : l;
                CharT *                 ret = StringPolicy::copy( str + len - 1, s, l );
                len += l - 1;
-               str[ len ] = CharT( '\0' );
+               str[ len ] = CharT();
                return( ret );
             }
             inline void                          push_back( CharT c )
@@ -199,20 +180,20 @@
                if( len < ( n - 1 ))
                {
                   str[   len ] = c;
-                  str[ ++len ] = CharT( '\0' );
+                  str[ ++len ] = CharT();
                }
             }
             inline int                           format( const CharT * fmt, va_list args )
             {
                int                     ret = detail::format_policy< CharT >::format( str, n, fmt, args );
                len = ( ret == -1 ) ? ( n - 1 ) : ret;
-               str[ len ] = CharT( '\0' );
+               str[ len ] = CharT();
                return( ret );
             }
          public: // construction
             inline           fixed_string(): len( 0 )
             {
-               str[ 0 ] = CharT( '\0' );
+               str[ 0 ] = CharT();
             }
             inline           fixed_string( const fixed_string & s, size_type p = 0, size_type l = npos ): len( 0 )
             {
