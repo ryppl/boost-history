@@ -277,7 +277,7 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename MatrA, typename MatrB, typename IVec>
     inline
-    int lu_triang_solve (MatrA const& a, IVec const& ipiv, MatrB& b) {
+    int lu_substitute (MatrA const& a, IVec const& ipiv, MatrB& b) {
       return getrs (CblasNoTrans, a, ipiv, b); 
     }
 
@@ -496,7 +496,7 @@ namespace boost { namespace numeric { namespace bindings {
 
     template <typename SymmMatrA, typename MatrB>
     inline 
-    int cholesky_triang_solve (SymmMatrA const& a, MatrB& b) {
+    int cholesky_substitute (SymmMatrA const& a, MatrB& b) {
       return potrs (a, b);
     }
 
