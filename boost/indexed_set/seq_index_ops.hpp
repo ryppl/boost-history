@@ -9,7 +9,7 @@
 #define BOOST_INDEXED_SET_SEQ_INDEX_OPS_HPP
 
 #include <boost/config.hpp> /* keep it first to prevent some nasty warnings in MSVC */
-#include <boost/indexed_set/auto_space.hpp>
+#include <boost/aligned_storage.hpp>
 #include <boost/indexed_set/seq_index_node.hpp>
 #include <boost/indexed_set/try_catch.hpp>
 #include <boost/limits.hpp>
@@ -22,7 +22,7 @@ namespace indexed_sets{
 namespace detail{
 
 /* Common code for sequenced_index memfuns having templatized and
- * non-templatized code.
+ * non-templatized versions.
  */
 
 template <typename SequencedIndex,typename Predicate>
@@ -70,10 +70,27 @@ void sequenced_index_merge(SequencedIndex& x,SequencedIndex& y,Compare comp)
 /* auxiliary stuff */
 
 template<typename Node,typename Compare>
-void sequenced_index_collate(Node* x,Node* y,Compare comp);
+void sequenced_index_collate(
+  sequenced_index_node_impl* x,sequenced_index_node_impl* y,Compare comp
+  BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(Node))
+{
+  sequenced_index_node_impl* first0=x->next();
+  sequenced_index_node_impl* last0=x;
+  sequenced_index_node_impl* first1=y->next();
+  sequenced_index_node_impl* last1=y;
+  while(first0!=last0&&first1!=last1){
+    if(comp(Node::from_impl(first1)->value,Node::from_impl(first0)->value)){
+      sequenced_index_node_impl* tmp=first1->next();
+      sequenced_index_node_impl::relink(first0,first1);
+      first1=tmp;
+    }
+    else first0=first0->next();
+  }
+  sequenced_index_node_impl::relink(last0,first1,last1);
+}
 
-template<typename Node,typename Compare,typename Allocator>
-void sequenced_index_sort(Node* header,Compare comp,const Allocator& al)
+template<typename Node,typename Compare>
+void sequenced_index_sort(Node* header,Compare comp)
 {
   /* Musser's mergesort, see http://www.cs.rpi.edu/~musser/gp/List/lists1.html.
    * The implementation is a little convoluted: in the original code
@@ -81,7 +98,8 @@ void sequenced_index_sort(Node* header,Compare comp,const Allocator& al)
    * to use indexed_sets instead, so we do things at a lower level, managing
    * directly the internal node representation.
    * Incidentally, the implementations I've seen of this algorithm (SGI,
-   * Dinkumware, STLPort) are not exception-safe: this is.
+   * Dinkumware, STLPort) are not exception-safe: this is. Moreover, we do not
+   * use any dynamic storage.
    */
 
   if(header->next()==header->impl()||
@@ -90,62 +108,48 @@ void sequenced_index_sort(Node* header,Compare comp,const Allocator& al)
   BOOST_STATIC_CONSTANT(
     std::size_t,max_fill=(std::size_t)std::numeric_limits<std::size_t>::digits+1);
 
-  auto_space<Node,Allocator> carry_spc(al);
-  Node&                      carry=*carry_spc.data();
-  auto_space<Node,Allocator> counter_spc(al,max_fill);
-  Node*                      counter=counter_spc.data();
-  std::size_t                fill=0;
+  aligned_storage<
+    sizeof(sequenced_index_node_impl)>      carry_spc;
+  sequenced_index_node_impl&                carry=
+    *static_cast<sequenced_index_node_impl*>(carry_spc.address());
+  aligned_storage<
+    sizeof(
+      sequenced_index_node_impl[max_fill])> counter_spc;
+  sequenced_index_node_impl*                counter=
+    static_cast<sequenced_index_node_impl*>(counter_spc.address());
+  std::size_t                               fill=0;
 
-  carry.prior()=carry.next()=carry.impl();
-  counter[0].prior()=counter[0].next()=counter[0].impl();
+  carry.prior()=carry.next()=&carry;
+  counter[0].prior()=counter[0].next()=&counter[0];
 
   BOOST_INDEXED_SET_TRY{
     while(header->next()!=header->impl()){
       sequenced_index_node_impl::relink(carry.next(),header->next());
       std::size_t i=0;
-      while(i<fill&&counter[i].next()!=counter[i].impl()){
-        sequenced_index_collate(&counter[i],&carry,comp);
-        sequenced_index_node_impl::swap(carry.impl(),counter[i++].impl());
+      while(i<fill&&counter[i].next()!=&counter[i]){
+        sequenced_index_collate<Node>(&carry,&counter[i++],comp);
       }
-      sequenced_index_node_impl::swap(carry.impl(),counter[i].impl());
+      sequenced_index_node_impl::swap(&carry,&counter[i]);
       if(i==fill){
         ++fill;
-        counter[fill].prior()=counter[fill].next()=counter[fill].impl();
+        counter[fill].prior()=counter[fill].next()=&counter[fill];
       }
     }
 
     for(std::size_t i=1;i<fill;++i){
-      sequenced_index_collate(&counter[i],&counter[i-1],comp);
+      sequenced_index_collate<Node>(&counter[i],&counter[i-1],comp);
     }
-    sequenced_index_node_impl::swap(header->impl(),counter[fill-1].impl());
+    sequenced_index_node_impl::swap(header->impl(),&counter[fill-1]);
   }
   BOOST_INDEXED_SET_CATCH(...)
   {
-    sequenced_index_node_impl::relink(header->impl(),carry.next(),carry.impl());
+    sequenced_index_node_impl::relink(header->impl(),carry.next(),&carry);
     for(std::size_t i=0;i<=fill;++i){
       sequenced_index_node_impl::relink(
-        header->impl(),counter[i].next(),counter[i].impl());
+        header->impl(),counter[i].next(),&counter[i]);
     }
     BOOST_INDEXED_SET_RETHROW;
   }
-}
-
-template<typename Node,typename Compare>
-void sequenced_index_collate(Node* x,Node* y,Compare comp)
-{
-  Node* first0=Node::from_impl(x->next());
-  Node* last0=x;
-  Node* first1=Node::from_impl(y->next());
-  Node* last1=y;
-  while(first0!=last0&&first1!=last1){
-    if(comp(first1->value,first0->value)){
-      Node* tmp=Node::from_impl(first1->next());
-      sequenced_index_node_impl::relink(first0->impl(),first1->impl());
-      first1=tmp;
-    }
-    else first0=Node::from_impl(first0->next());
-  }
-  sequenced_index_node_impl::relink(last0->impl(),first1->impl(),last1->impl());
 }
 
 } /* namespace indexed_sets::detail */
