@@ -1,5 +1,5 @@
 
-// Copyright (C) 2001-2003 Roland Richter <roland@flll.jku.at>
+// Copyright (C) 2001-2004 Roland Richter <roland@flll.jku.at>
 // Permission to copy, use, modify, sell and distribute this software
 // is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
@@ -15,6 +15,7 @@
 #include "detail/ownership_detail.hpp"
 
 #include <iterator>
+
 
 namespace boost {
   namespace view {
@@ -38,16 +39,10 @@ public:
            boost::filter_iterator<
              PredicateT,
              typename ownership::wrap<ContainerT>::domain::iterator
-#ifdef BOOST_MSVC
-           , typename ownership::wrap<ContainerT>::domain::reference
-#endif
            >,
            boost::filter_iterator<
              PredicateT,
              typename ownership::wrap<ContainerT>::domain::const_iterator
-#ifdef BOOST_MSVC
-           , typename ownership::wrap<ContainerT>::domain::const_reference
-#endif
            >
          > iter_traits;
 
@@ -70,7 +65,6 @@ public:
   typedef typename cont_traits::size_type        size_type;
   typedef typename cont_traits::index_type       index_type;
   typedef typename cont_traits::data_type        data_type;
-
   //@}
 
   /// The type of the underlying container.
@@ -89,6 +83,10 @@ public:
   /// The destructor.
   ~filter_view()
   { }
+
+  /// Returns a (copy of) the underlying container to allow write access.
+  domain_type& domain()
+    { return ownership::writeAccessTo( data ); }
 
   /// Returns true iff the view's size is 0.
   bool      empty() const

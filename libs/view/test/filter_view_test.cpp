@@ -68,6 +68,40 @@ void test1()
 }
 
 
+void write_test()
+{
+  int numbers[] = { 0, -1, 4, -3, 5, 8, -2 };
+  const int N = 7;
+
+  std::vector<int> v( numbers, numbers + N );
+
+  typedef boost::view::filter_view< std::vector<int>, is_big_number > BigView;
+
+  BigView bigview( v );
+
+  BOOST_CHECK( bigview.empty() );
+  BOOST_CHECK( bigview.size() == 0 );
+
+  bigview.domain().push_back( 42 );
+
+  BOOST_CHECK( bigview.size() == 1 );
+  BOOST_CHECK( bigview.front() == 42 );
+
+  BigView another( bigview );
+
+  BOOST_CHECK( another.size() == 1 );
+  BOOST_CHECK( another.front() == 42 );  
+
+  bigview.domain().push_back( 77 );
+
+  BOOST_CHECK( another.size() == 1 );
+  BOOST_CHECK( another.front() == 42 );  
+
+  BOOST_CHECK( bigview.size() == 2 );
+  BOOST_CHECK( bigview.front() == 42 );
+}
+
+
 void test2()
 {
   int numbers[] = { 0, -1, 4, -3, 5, 8, -2 };
@@ -92,6 +126,8 @@ int test_main(int, char *[])
 {
   test1();
   test2();
+
+  write_test();
 
   bool error_on_purpose = false;
   //BOOST_CHECK( error_on_purpose );
