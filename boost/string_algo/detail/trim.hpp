@@ -12,6 +12,7 @@
 
 #include <functional>
 #include <locale>
+#include <set>
 
 namespace boost {
 
@@ -46,7 +47,7 @@ namespace boost {
 
 //  trim functors -----------------------------------------------//
 
-			// isclassified functor
+            // isclassified functor
             template< typename CharT >
             struct isclassifiedF : public std::unary_function< CharT, bool >
             {
@@ -84,16 +85,16 @@ namespace boost {
                 typedef typename std::unary_function< CharT, bool >::argument_type argument_type;
 
                 // Constructor 
-                isfromF( const SeqT& Seq ) : m_Seq( Seq ) {}
+                isfromF( const SeqT& Seq ) : m_Set( Seq.begin(), Seq.end() ) {}
                 
                 // Operation
                 result_type operator ()( argument_type Ch ) const
                 {
-                    return std::find( m_Seq.begin(), m_Seq.end(), Ch )!=m_Seq.end();
+					return m_Set.find( Ch )!=m_Set.end();
                 }
             
             private:
-                const SeqT& m_Seq;
+				std::set<CharT> m_Set;                
             };
 
         } // namespace detail

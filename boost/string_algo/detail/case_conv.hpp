@@ -21,7 +21,7 @@ namespace boost {
 
 //  case conversion functors -----------------------------------------------//
 
-			// a tolower functor 
+            // a tolower functor 
             template< typename CharT >
             struct tolowerF : public std::unary_function< CharT, CharT > 
             {

@@ -1,20 +1,25 @@
 ------- string_algo TODO list ----------
 
+- !!!! Write documentation !!! -
+
 - fix tests
+- in-place replace_all -> optimization
 
-- replace substring -> optimization
-- replace traits tunning
-
-- change erase to use replace and a special format
-  ( requires that the result code compiles to optimal 
-    version ) 
-
-- specializations for basic_string where necessary
-- trim_end_if and find_last fix for ForwardIterator
 - regex variants for search, replace 
+- trim_end_if and find_last fix for ForwardIterator
+- find iterator
 
 - change trim to use the replace library
 
 - find algoritms complexity reduction / provide optional algorithms
+- add case-insensitive versions
+- specializations for basic_string where necessary
 
-- !!!! Write documentation !!! -
+----- DONE: ------
+
+- change erase to use replace and a special format
+	( requires that the result code compiles to optimal 
+	    version ) 
+
+- add parametric predicate versions for predicate algorithms
+- specializations for container_caps<basic_string> added

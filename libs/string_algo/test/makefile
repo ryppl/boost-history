@@ -1,16 +1,15 @@
 BOOST_INCLUDE=D:/boost
 
 HEADERS= \
-	../../../boost/string_algo/string_trim.hpp \
-	../../../boost/string_algo/string_conv.hpp \
-	../../../boost/string_algo/string_predicate.hpp \
-	../../../boost/string_algo/string_find.hpp \
-	../../../boost/string_algo/string_find_impl.hpp \
-	../../../boost/string_algo/string_traits.hpp \
-	../../../boost/string_algo/string_replace.hpp \
-	../../../boost/string_algo/string_replace_impl.hpp \
-	../../../boost/string_algo/string_erase.hpp \
-	../../../boost/string_algo/string_erase_impl.hpp \
+	../../../boost/string_algo/trim.hpp \
+	../../../boost/string_algo/conv.hpp \
+	../../../boost/string_algo/predicate.hpp \
+	../../../boost/string_algo/find.hpp \
+	../../../boost/string_algo/find_impl.hpp \
+	../../../boost/string_algo/traits.hpp \
+	../../../boost/string_algo/replace.hpp \
+	../../../boost/string_algo/replace_impl.hpp \
+	../../../boost/string_algo/erase.hpp \
 	../../../boost/string_algo/detail/case_conv.hpp \
 	../../../boost/string_algo/detail/find.hpp \
 	../../../boost/string_algo/detail/replace.hpp \

@@ -18,7 +18,7 @@ using namespace boost;
 
 void find_test()
 {
-    string str1("123abcxxxabc321");
+    string str1("123abcxxxabcXXXabc321");
     string str2("abc");
     string str3("");
     vector<int> vec1( str1.begin(), str1.end() );
@@ -32,25 +32,40 @@ void find_test()
 
     // basic tests
     nc_result=find_first( str1.begin(), str1.end(), str2.begin(), str2.end() );
-    BOOST_CHECK( string( nc_result.begin(), nc_result.end())==str2 );
+    BOOST_CHECK( string( nc_result.begin(), nc_result.end() )==str2 );
     cv_result=find_first( str1.begin(), str1.end(), str2.begin(), str2.end() );
-    BOOST_CHECK( string( cv_result.begin(), cv_result.end())==str2 );
-
-    nc_result=find_last( str1.begin(), str1.end(), str2.begin(), str2.end() );
-    BOOST_CHECK( string( nc_result.begin(), nc_result.end())==str2 );
-    cv_result=find_last( str1.begin(), str1.end(), str2.begin(), str2.end() );
-    BOOST_CHECK( string( cv_result.begin(), cv_result.end())==str2 );
+    BOOST_CHECK( string( cv_result.begin(), cv_result.end() )==str2 );
 
     nc_result=BOOST_STRING_NON_CONST_FUNCTION(find_first)( str1, string("abc") );
-    BOOST_CHECK( string( nc_result.begin(), nc_result.end())==string("abc") );
+    BOOST_CHECK( string( nc_result.begin(), nc_result.end() )==string("abc") );
     cv_result=find_first( str1, str2 );
-    BOOST_CHECK( string( cv_result.begin(), cv_result.end())==string("abc") );
+    BOOST_CHECK( string( cv_result.begin(), cv_result.end() )==string("abc") );
 
-    // multi-type comparison test
+    nc_result=find_last( str1.begin(), str1.end(), str2.begin(), str2.end() );
+    BOOST_CHECK( string( nc_result.begin(), nc_result.end() )==str2 );
+    cv_result=find_last( str1.begin(), str1.end(), str2.begin(), str2.end() );
+    BOOST_CHECK( string( cv_result.begin(), cv_result.end() )==str2 );
+
+    nc_result=BOOST_STRING_NON_CONST_FUNCTION(find_last)( str1, string("abc") );
+    BOOST_CHECK( string( nc_result.begin(), nc_result.end() )==string("abc") );
+    cv_result=find_last( str1, str2 );
+    BOOST_CHECK( string( cv_result.begin(), cv_result.end() )==string("abc") );
+
+    nc_result=find_nth( str1.begin(), str1.end(), str2.begin(), str2.end(), 1 );
+    BOOST_CHECK( string( nc_result.begin(), nc_result.end() )==str2 );
+    cv_result=find_nth( str1.begin(), str1.end(), str2.begin(), str2.end(), 1 );
+    BOOST_CHECK( string( cv_result.begin(), cv_result.end() )==str2 );
+
+    nc_result=BOOST_STRING_NON_CONST_FUNCTION(find_nth)( str1, string("abc"), 1 );
+    BOOST_CHECK( string( nc_result.begin(), nc_result.end() )==string("abc") );
+    cv_result=find_nth( str1, str2, 1 );
+    BOOST_CHECK( string( cv_result.begin(), cv_result.end() )==string("abc") );
+		
+	// multi-type comparison test
     nc_vresult=BOOST_STRING_NON_CONST_FUNCTION(find_first)( vec1, string("abc") );
-    BOOST_CHECK( string( nc_vresult.begin(), nc_vresult.end())==string("abc") );
+    BOOST_CHECK( string( nc_vresult.begin(), nc_vresult.end() )==string("abc") );
     cv_vresult=find_first( vec1, str2 );
-    BOOST_CHECK( string( cv_vresult.begin(), cv_vresult.end())==string("abc") );
+    BOOST_CHECK( string( cv_vresult.begin(), cv_vresult.end() )==string("abc") );
 
     // overflow test
     nc_result=BOOST_STRING_NON_CONST_FUNCTION(find_first)( str2, string("abcd") );

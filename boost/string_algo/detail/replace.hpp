@@ -12,38 +12,70 @@
 
 #include <functional>
 
-#include "../string_traits.hpp"
+#include "../traits.hpp"
 
 namespace boost {
 
 //  generic replace functors -----------------------------------------------//
 
     namespace string_algo {
-		
-		namespace detail {
+        
+        namespace detail {
 
-//  replace identity format functor-----------------------------------------//
+//  replace identity format functor -----------------------------------------//
 
-			template< typename FormatT >
-			struct identity_formatF
+            template< typename FormatT >
+            struct identity_formatF
+            {
+                typedef FormatT format_type;
+                typedef const format_type& format_reference_type;
+
+                typedef FormatT result_type;
+                typedef const result_type& result_reference_type;
+
+                template< typename ReplaceT >
+                result_reference_type operator()( format_reference_type Format, ReplaceT )
+                {
+                    return Format;
+                }
+
+				template< typename ReplaceIteratorT >
+				result_reference_type operator()( 
+					format_reference_type Format, 
+					ReplaceIteratorT,
+					ReplaceIteratorT )
+                {
+                    return Format;
+                }
+            };
+
+//  null format functor ( used by erase )--------------------------------------//
+
+			template< typename ReplaceT >
+			struct null_formatF
 			{
-				typedef FormatT format_type;
-				typedef const format_type& format_reference_type;
+                typedef unsigned int format_type;
 
-				typedef FormatT result_type;
-				typedef const result_type& result_reference_type;
+                typedef ReplaceT result_type;
+                typedef const result_type& result_reference_type;
 
-				template< typename ReplaceT >
-				result_reference_type operator()( format_reference_type Format, ReplaceT )
-				{
-					return Format;
-				}
+                result_type operator()( format_type, ReplaceT )
+                {
+                    return ReplaceT();
+                }
+
+                result_type operator()( 
+					format_type, 
+					typename ReplaceT::const_iterator,
+					typename ReplaceT::const_iterator )
+                {
+                    return ReplaceT();
+                }
 			};
 
+        } // namespace detail
 
-		} // namespace detail
-
-	} // namespace string_algo
+    } // namespace string_algo
 
 } // namespace boost
 

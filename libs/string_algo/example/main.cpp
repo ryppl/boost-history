@@ -1,7 +1,11 @@
 #include <string>
 #include <iostream>
 #include <iterator>
+#include <set>
+#include <vector>
 #include <boost/string_algo.hpp>
+#include <boost/string_algo/container_traits.hpp>
+#include <boost/string_algo/detail/util.hpp>
 
 using namespace std;
 using namespace boost;
@@ -133,7 +137,6 @@ void replace()
     cout << endl;
 }
 
-
 void substr()
 {
     string str1("123abcxxxabcXXXabc321");
@@ -223,22 +226,47 @@ void substr()
 
 void range_test()
 {
-    using namespace boost::string_algo;
-
     string str1("123");
-    const string str2( "456" );
+    const string str2( "12345" );
+	const string str3( "123" );
 
-    cout << str1 << endl;
+	if ( !boost::equal( str1.begin(), str1.end(), str2.begin(), str2.end(), 
+		boost::string_algo::detail::equal_toF<char, char>() ) )
+		cout << "1:false" << endl;
+	if ( !boost::equal( str2.begin(), str2.end(), str1.begin(), str1.end() ) )
+		cout << "2:false" << endl;
+	if ( boost::equal( str1, str3 ) )
+		cout << "3:true" << endl;
 }
 
+void contatiner()
+{
+	string str1("123xxx123yyy123");
+	string str2("456");
+
+	const char cstr[]="123";
+
+    ostream_iterator<char> ost(cout);
+
+    erase_first_copy( 
+        str1.begin(), str1.end(), 
+        cstr, cstr+3,
+        ost );
+
+    cout << endl;
+
+}
+
+      
 int main()
 {
 //  trimtest();
 //  convtest();
 //  algo();
 //  substr();
-  replace();
-//  range_test();
+//  replace();
+  range_test();
+//contatiner();
 
     cout << "Done." << endl;
     cin.get();

@@ -10,23 +10,13 @@
 #ifndef BOOST_STRING_ALGO_HPP
 #define BOOST_STRING_ALGO_HPP
 
-#include <boost/config.hpp>
 
-// Compatibility issues
-
-// Workaround for function call ambiguities
-#ifdef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-#   define BOOST_STRING_NON_CONST_FUNCTION(x) x##_nc
-#else
-#   define BOOST_STRING_NON_CONST_FUNCTION(x) x
-#endif
-
-#include <boost/string_algo/string_traits.hpp>
-#include <boost/string_algo/string_trim.hpp>
-#include <boost/string_algo/string_conv.hpp>
-#include <boost/string_algo/string_predicate.hpp>
-#include <boost/string_algo/string_find.hpp>
-#include <boost/string_algo/string_replace.hpp>
-#include <boost/string_algo/string_erase.hpp>
+#include <boost/string_algo/traits.hpp>
+#include <boost/string_algo/trim.hpp>
+#include <boost/string_algo/conv.hpp>
+#include <boost/string_algo/predicate.hpp>
+#include <boost/string_algo/find.hpp>
+#include <boost/string_algo/replace.hpp>
+#include <boost/string_algo/erase.hpp>
 
 #endif  // BOOST_STRING_ALGO_HPP
