@@ -36,6 +36,39 @@
             {
                return( is.match( open()) && out.read( is, v ) && is.match( close()));
             }
+         public: // special treatment for string types:
+            template< class InputStream >
+            inline bool                          read
+                                                 (
+                                                    InputStream & is,
+                                                    typename InputStream::string_type & s
+                                                 ) const
+            {
+               s.clear();
+               if( !is.match( open())) return( false );
+
+               typename InputStream::char_type
+                                       ch  = '\0';
+               typename InputStream::char_type
+                                       sch = is.firstch( close());
+
+               is.skipws();
+               
+               for( ;; )
+               {
+                  while( is.getch( ch ) && !is.eq( ch, sch ))
+                     s.push_back( ch );
+
+                  is.putback( sch );
+
+                  if( is.match( close(), true ))
+                     return( true );
+                  else if( is.rdstate() & InputStream::iosbase_type::failbit ) // failed?
+                     is.clear(); // lets continue...
+                  else
+                     return( false );
+               }
+            }
          public:
             inline           wrapped_output()
             {
