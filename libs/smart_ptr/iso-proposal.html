@@ -10,8 +10,9 @@
 		<ADDRESS>Document number: N????=??-????</ADDRESS>
 		<ADDRESS>Programming Language C++, Library Subgroup</ADDRESS>
 		<ADDRESS>&nbsp;</ADDRESS>
-		<ADDRESS>Beman Dawes &lt;<A href="mailto:bdawes@acm.org">bdawes@acm.org</A>&gt;</ADDRESS>
 		<ADDRESS>Peter Dimov &lt;<A href="mailto:pdimov@mmltd.net">pdimov@mmltd.net</A>&gt;</ADDRESS>
+		<ADDRESS>Beman Dawes &lt;<A href="mailto:bdawes@acm.org">bdawes@acm.org</A>&gt;</ADDRESS>
+		<ADDRESS>Greg Colvin &lt;<A href="mailto:greg@colvin.org">greg@colvin.org</A>&gt;</ADDRESS>
 		<ADDRESS>&nbsp;</ADDRESS>
 		<ADDRESS>March ??, 2003</ADDRESS>
 		<h1>A Proposal to Add General Purpose Smart Pointers to the Library Technical 
@@ -228,8 +229,8 @@ void test()
 			The last <EM>shared_ptr</EM> instance in a given equivalence class is 
 			responsible for destroying the <EM>owned</EM> object.</p>
 		<P>In a typical counted implementation, two smart pointers <EM>share ownership</EM> 
-			when they share the same reference count. In a linked list implementation, 
-			two smart pointers share ownership when they are part of the same list.</P>
+			when they share the same reference count. In a linked list implementation, two 
+			smart pointers share ownership when they are part of the same list.</P>
 		<h4>5. The "Empty Pointer" Concept</h4>
 		<p>Default-constructed smart pointers, and smart pointer instances that have been <code>
 				reset()</code>, are called <EM>empty</EM> in the proposed text. It is 
@@ -595,7 +596,7 @@ else
 			performance concerns since in some cases users can guarantee that two <EM>shared_ptr</EM>
 			instances that share ownership will never be accessed simultaneously from 
 			different threads.</p>
-		<P>The configuration described above is able to execute 8388608 (2<SUP>23</SUP> ) <code>
+		<P>The configuration described above is able to execute 8388608 (2<SUP>23</SUP>) <code>
 				push_back</code> operations into a <code>std::vector&lt; shared_ptr&lt;int&gt; 
 				&gt;</code> (without calling <code>reserve</code> first) in about 2.63 
 			seconds in a single threaded build, 5.44 seconds in a multi-threaded build. A 
