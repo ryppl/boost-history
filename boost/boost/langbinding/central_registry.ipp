@@ -37,7 +37,7 @@
 
 namespace boost { namespace langbinding {
 
-   namespace 
+   namespace
    {
       template<class T>
       struct implementation
@@ -62,10 +62,17 @@ namespace boost { namespace langbinding {
          };
 
          typedef std::vector<entry_ptr> registry_t;
+         typedef std::map<std::string, entry_ptr> name_to_entry_t;
 
          static registry_t& entries()
          {
             static registry_t x;
+            return x;
+         }
+
+         static name_to_entry_t& name_to_entry()
+         {
+            static name_to_entry_t x;
             return x;
          }
       };
@@ -84,6 +91,7 @@ namespace boost { namespace langbinding {
                 << name << "\"..\n";
 
       typename implementation<T>::entry tmp;
+      tmp.registry_ = r;
       typename implementation<T>::entry_ptr ptr(&tmp, null_deleter());
 
       typedef typename implementation<T>::registry_t::iterator iter_type;
@@ -107,6 +115,9 @@ namespace boost { namespace langbinding {
       }
       else
          ptr = *iter;
+
+      std::string id(name);
+      implementation<T>::name_to_entry()[id] = ptr;
    }
 
    template<class T>
@@ -117,6 +128,33 @@ namespace boost { namespace langbinding {
          , typename registry<T>::lvalue_from_function convert
       )
    {
+      typename implementation<T>::entry tmp;
+      tmp.registry_ = r;
+      typename implementation<T>::entry_ptr ptr(&tmp, null_deleter());
+
+      typedef typename implementation<T>::registry_t::iterator iter_type;
+
+      iter_type iter = std::lower_bound(
+           implementation<T>::entries().begin()
+         , implementation<T>::entries().end()
+         , ptr
+         , typename implementation<T>::cmp_entry()
+      );
+
+      if (iter == implementation<T>::entries().end() ||
+          (*iter)->registry_ != ptr->registry_)
+      {
+         ptr = typename implementation<T>::entry_ptr(
+            new typename implementation<T>::entry);
+         ptr->registry_ = r;
+
+         implementation<T>::entries().insert(
+            iter, ptr);
+      }
+      else
+         ptr = *iter;
+
+      // .. add converter
    }
 
    template<class T>
@@ -128,6 +166,64 @@ namespace boost { namespace langbinding {
          , typename registry<T>::rvalue_from_stage2 convert
       )
    {
+      typename implementation<T>::entry tmp;
+      tmp.registry_ = r;
+      typename implementation<T>::entry_ptr ptr(&tmp, null_deleter());
+
+      typedef typename implementation<T>::registry_t::iterator iter_type;
+
+      iter_type iter = std::lower_bound(
+           implementation<T>::entries().begin()
+         , implementation<T>::entries().end()
+         , ptr
+         , typename implementation<T>::cmp_entry()
+      );
+
+      if (iter == implementation<T>::entries().end() ||
+          (*iter)->registry_ != ptr->registry_)
+      {
+         ptr = typename implementation<T>::entry_ptr(
+            new typename implementation<T>::entry);
+         ptr->registry_ = r;
+
+         implementation<T>::entries().insert(
+            iter, ptr);
+      }
+      else
+         ptr = *iter;
+
+      // .. add converter
+   }
+
+   template<class T>
+   BOOST_LANGBINDING_DECL
+   void central_registry<T>::import(
+           registry_ptr r
+         , const char* module)
+   {
+      typename implementation<T>::name_to_entry_t::const_iterator iter
+         = implementation<T>::name_to_entry().find(module);
+
+      assert(iter != implementation<T>::name_to_entry().end());
+      typename implementation<T>::entry_ptr e = iter->second;
+
+      e->registry_->export_converters(*r);
+   }
+
+   template<class T>
+   BOOST_LANGBINDING_DECL
+   void central_registry<T>::import(
+           registry_ptr r
+         , const char* module
+         , const typename registry<T>::type_info_& type)
+   {
+      typename implementation<T>::name_to_entry_t::const_iterator iter
+         = implementation<T>::name_to_entry().find(module);
+
+      assert(iter != implementation<T>::name_to_entry().end());
+      typename implementation<T>::entry_ptr e = iter->second;
+
+      e->registry_->export_converters(type, *r);
    }
 
 }}
