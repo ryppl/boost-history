@@ -608,7 +608,14 @@ else
 		<h4>1. Policy Based Smart Pointers</h4>
 		<p>...</p>
 		<h4>2. Garbage Collection</h4>
-		<p>...</p>
+		<p>The detailed rationale for not providing automatic garbage collection 
+        as the default memory management technique for C++ is given by [<a href="#Stroustrup94a">Stroustrup94a</a>], 
+        who states that &quot;Optional garbage collection is, I think, the right 
+        approach for C++&quot;.</p>
+		<p>Because the current proposal is for a purely library solution, it is 
+        complementary rather than competitive with any future proposal to add 
+        optional garbage collection as a built-in feature of the language 
+        itself.</p>
 		<h2>IV. Proposed Text</h2>
 		<h3>A. Additions to header &lt;memory&gt; synopsis (20.4)</h3>
 		<pre>  class bad_weak_ptr;
@@ -1184,6 +1191,12 @@ else
 		<p>[<a name="Stroustrup94">Stroustrup94</a>] Bjarne Stroustrup, <i><A href="http://www.research.att.com/~bs/dne.html">
 					The Design and Evolution of C++</A></i>, section 14.2.1, page 307, 
 			Addison Wesley, ISBN 0-201-54330-3, March 1994.</p>
+		<p>[<a name="Stroustrup94a">Stroustrup94a</a>] Bjarne Stroustrup, <i><A href="http://www.research.att.com/~bs/dne.html">
+					The Design and Evolution of C++</A></i>, section 10.7.1, page 
+        220, 
+			Addison Wesley, ISBN 0-201-54330-3, March 1994, with quote confirmed 
+        via private email, February, 2003.</p>
+		<p>&nbsp;</p>
 		<P>&nbsp;</P>
 	</body>
 </html>
