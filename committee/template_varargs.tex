@@ -9,6 +9,7 @@
 
 \title{Typesafe Variable-length Function and Template Argument Lists}
 \author{Douglas Gregor \and Gary Powell \and Jaakko J\"arvi}
+\date{}
 \maketitle
 
 \par\noindent Document number: N1483=03-0066
@@ -226,12 +227,12 @@ the-return-type apply(F Class::*pm cv, const Class& obj, tuple<T1, T2, ..., TN>&
 \end{verbatim}
 A call expression {\tt std::apply(f, t)} where {\tt f} is a function
 object and {\tt t} is of type {\tt std::tuple<T1, T2, ..., TN>}
-returns {\tt f(get<1>(t), get<2>(t), ..., get<N>(t))}. Similarly, a
+returns {\tt f(get<0>(t), get<1>(t), ..., get<N-1>(t))}. Similarly, a
 call expression {\tt std::apply(pmf, obj, t)}, where {\tt pmf} is a
 pointer-to-member function, {\tt obj} is an object whose type is equal
 to or derived from the type of the member function pointer's class
 type, and {\tt t} is of type {\tt std::tuple<T1, T2, ..., TN>} returns
-{\tt (obj.*pmf)(get<1>(t), get<2>(t), ..., get<N>(t))}.
+{\tt (obj.*pmf)(get<0>(t), get<1>(t), ..., get<N-1>(t))}.
 
 With these definitions, we can define a function {\tt g} that forwards
 perfectly to its function object parameter {\tt f}:
@@ -307,6 +308,32 @@ varargs, even though these rules conflict with 13.3.3p1,
 which prefers non-template functions to template functions when the
 conversion sequences are otherwise equal. 
 
+\subsection{Tuple cons operation}
+Tuples can be split into some number of head elements and a ``tail''
+element using the {\tt std::apply} function, but arguments cannot be
+spliced with tuples to generate larger tuples.\footnote{We are not
+  certain that this is the case. The problem reduces to being able to
+  name the resulting tuple type, but we have not solved it without
+  further extension.} We introduce a {\tt cons} operation for tuples,
+e.g., an operation that accepts a value {\tt a1} of type {\tt T1} and
+a tuple {\tt t} of type {\tt tuple<T2, T3, ..., TN>} and returns the
+tuple {\tt tuple<T1, T2, ..., TN>(a1, get<0>(t), get<1>(t), ...,
+  get<N-2>(t))}. The {\tt tuple\_cons} function has the following
+pseudo-signature:
+\begin{verbatim}
+template<typename T1, typename T2, ..., typename TN>
+tuple<T1, T2, ..., TN> tuple_cons(T1 a1, const tuple<T2, T3, ..., TN>& t)
+  { return tuple<T1, T2, ..., TN>(a1, get<0>(t), get<1>(t), ..., get<N-2>(t)); }
+\end{verbatim}
+
+With {\tt tuple\_cons}, we have both the ability to break apart tuples
+and to rebuild them, allowing the construction of tuple
+algorithms~\cite{TupleAlgo} that are crucial in the use of vararg
+templates; see the implementation of the tuple {\tt transform} in
+Section~\ref{building_blocks} and its use in the implementations of a
+function object binder (Section~\ref{bindimpl}) and the tuples library
+itself (Section~\ref{tupleimpl}).
+
 \subsection{Function traits}
 The Type Traits library proposal~\cite{Maddock03} defines a set of
 class templates that report information about types. We propose to add
@@ -343,25 +370,82 @@ counterparts. The following libraries are implemented:
 
 \begin{itemize}
 \item Member pointer adaptors~\cite{Dimov03a}
-\item Tuples (as used in this proposla)~\cite{Jarvi02}
+\item Tuples~\cite{Jarvi02}
 \item Function object wrappers~\cite{Gregor02}
+\item Function object binder~\cite{Dimov03b}
 \end{itemize}
 
-The implementations are not complete, but omit only features that are
-irrelevant to the discussion of template varargs. The implementations
-use several class templates (metafunctions) from the type traits
-proposal~\cite{Maddock03} along with the class template {\tt
-  enable\_if}, defined as:
+The implementations are not generally complete, but omit only features
+that are irrelevant to the discussion of template varargs. The
+implementations use several class templates (metafunctions) from the
+type traits proposal~\cite{Maddock03}.
+
+\subsection{Building Blocks}
+\label{building_blocks}
+The class template {\tt enable\_if} is used liberally to help guide
+the overload process by eliminating candidates from the overload set
+that would otherwise cause ambiguities or be selected when they
+shouldn't be. It is defined as:
+
 \begin{verbatim}
 template<bool Cond, typename T> struct enable_if;
 template<typename T> struct enable_if<true, T> { typedef T type; };
 template<typename T> struct enable_if<false, T> {};
 \end{verbatim}
 
-The practical significance of {\tt enable\_if} is that a {\tt true}
-condition merely passes on the given type whereas a {\tt false}
-condition can be used to remove a function template from consideration
-in the overload set.
+We also rely on a tuple-specific version of the {\tt transform}
+function found in the standard library. The tuple transform transforms
+a tuple of length $N$ into another tuple of length $N$ by applying a
+function object to each element in the source tuple and initializing
+the corresponding element in the result tuple. Note that the types in
+the result tuple ({\tt U1}, {\tt U2}, ..., {\tt UN}) are the types
+returned from the transforming function object, as we assume these
+will be available (e.g., via a {\tt typeof} extension or using the
+library-defined {\tt result\_of}~\cite{Gregor03}). The following
+pseudo-definition defines {\tt transform}:
+\begin{verbatim}
+// Type Ui is the type of f(std::get<i-1>(t))
+template<typename T1, typename T2, ..., typename TN, typename F>
+tuple<U1, U2, ..., UN> transform(const tuple<T1, T2, ..., TN>& t, F f)
+{ 
+  return tuple<U1, U2, ..., UN>(f(std::get<0>(t)), 
+                                f(std::get<1>(t)),
+                                      ...
+                                f(std::get<N-1>(t)));
+}
+\end{verbatim}
+
+Transform can be implemented as follows using template varargs:
+
+\begin{verbatim}
+template<typename F>
+struct transformer
+{
+  transformer(F& f) : f(f) {}
+
+  // U1 is the type of f(a1)
+  template<typename T1, ... Args>
+  the-return-type operator()(T1& a1, Args args) const
+    { return tuple_cons<U1>(f(a1), std::apply(*this, args)); }
+
+  // U1 is the type of f(a1)
+  template<typename T1, ... Args>
+  the-return-type operator()(const T1& a1, Args args) const
+    { return tuple_cons<U1>(f(a1), std::apply(*this, args)); }
+
+  // basis case
+  tuple<> operator()() const { return tuple<>(); }
+
+private:
+  F& f;
+};
+
+template<typename Tuple, typename F>
+the-return-type transform(const Tuple& t, F f)
+{
+  return std::apply(transformer<F>(f), t);
+}
+\end{verbatim}
 
 \subsection{Member pointer adaptor implementation}
 \label{mem_fnimpl}
@@ -556,23 +640,14 @@ private:
   tail_type tail;
 };
 
-// Tuple is tuple<T1, T2, ..., TN>
-template<typename Tuple>
-struct make_tuple_result
+struct convert_make_tuple_arg
 {
-  // tuple<U1, U2, ..., UN>, where:
-  //  V1 = T1 with top-level lvalue(/rvalue) removed
-  //  U1 = T& if V1 is reference_wrapper<T>, V1 otherwise
-  typedef /* some lengthy metaprogramming */ type;
+  template<typename T> T operator()(T& t) { return t; }
+  template<typename T> T& operator()(reference_wrapper<T>& t) { return t.get(); }
 };
 
-template<... Args>
-typename make_tuple_result<Args>::type
-make_tuple(Args args)
-{
-  typedef typename make_tuple_result<Args>::type result_type;
-  return result_type(args);
-}
+template<... Args> the-return-type make_tuple(Args args)
+  { return transform(args, convert_make_tuple_arg()); }
 
 template<... Args> Args tie(Args args) { return args; }
 \end{verbatim}
@@ -684,6 +759,7 @@ private:
 \normalsize
 
 \subsection{Bind implementation}
+\label{bindimpl}
 The following code implements the enhanced binder
 proposal~\cite{Dimov03b} using vararg templates, and building on the
 existing tuple and member pointer adaptor code. This implementation is
@@ -699,7 +775,7 @@ nontrivial code, expressible in C++03):
 // Placeholders
 template<int N> struct placeholder {};
 
-namespace ph {
+namespace placeholders {
   typedef placeholder<1> _1;
   typedef placeholder<2> _2;
   typedef placeholder<3> _3;
