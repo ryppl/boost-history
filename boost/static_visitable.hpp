@@ -17,6 +17,7 @@
 #ifndef BOOST_STATIC_VISITABLE_HPP
 #define BOOST_STATIC_VISITABLE_HPP
 
+#include "boost/config.hpp"
 #include "boost/type_traits/is_base_and_derived.hpp"
 #include "boost/mpl/logical/not.hpp"
 #include "boost/mpl/logical/or.hpp"
