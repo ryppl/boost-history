@@ -20,7 +20,6 @@
 #include <boost/mpl/iterator_range.hpp>
 #include <boost/mpl/next.hpp>
 #include <boost/mpl/aux_/na.hpp>
-#include <boost/mpl/placeholders.hpp>
 
 namespace boost {
 namespace mpl {

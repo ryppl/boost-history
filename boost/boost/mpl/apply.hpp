@@ -23,6 +23,8 @@
 #   include <boost/mpl/aux_/lambda.hpp>
 #   include <boost/mpl/aux_/apply_wrap.hpp>
 #   include <boost/mpl/aux_/na.hpp>
+#   include <boost/mpl/bind.hpp>                // DWA: Why these cannot go at the top 
+#   include <boost/mpl/placeholders.hpp>        // of the #includes is a mystery to me
 #endif
 
 #include <boost/mpl/aux_/config/use_preprocessed.hpp>
