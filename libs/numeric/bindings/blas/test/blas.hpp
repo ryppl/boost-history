@@ -10,7 +10,6 @@
 #include <boost/numeric/ublas/matrix_proxy.hpp>
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/timer.hpp>
-#include <boost/numeric/bindings/traits/value_traits.hpp>
 #include <boost/numeric/bindings/traits/algorithm.hpp>
 
 namespace numerics = boost::numeric::ublas ;
