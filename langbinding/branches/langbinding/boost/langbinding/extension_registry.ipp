@@ -21,30 +21,38 @@
 // ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 // DEALINGS IN THE SOFTWARE.
 
-#ifndef BOOST_LANGBINDING_REGISTRY_INSTANCE_IMPLEMENTATION
-#define BOOST_LANGBINDING_REGISTRY_INSTANCE_IMPLEMENTATION
-
+#include <boost/langbinding/config.hpp>
+#include <boost/langbinding/extension_registry.hpp>
+#include <boost/langbinding/extension_registry_impl.hpp>
+#include <boost/langbinding/extension_id.hpp>
+#include <boost/langbinding/inheritance.hpp>
 #include <boost/langbinding/registry.hpp>
-#include <boost/shared_ptr.hpp>
+#include <boost/tuple/tuple.hpp>
+
+#include <iostream>
 
 namespace boost { namespace langbinding {
 
    template<class T>
-   registry<T>& registry<T>::instance()
+   void extension_registry<T>::register_(const char* name)
    {
-      static boost::shared_ptr<registry<T> > p(new registry);
-      return *p.get();
+     extension_registry_impl<T>::register_(
+            extension_id()
+          , name
+          , &registry<T>::instance()
+          , &inheritance_graph::instance());
    }
 
    template<class T>
-   registry<T>::registry()
-   {}
+   void extension_registry<T>::import(const char* name)
+   {
+      registry<T>* r;
+      inheritance_graph* g;
 
-   template<class T>
-   registry<T>::~registry() 
-   {}
+      tuples::tie(r, g) = extension_registry_impl<T>::extension(name);
+      inheritance_graph::instance().link_with(*g);
+      r->export_converters(registry<T>::instance());
+   }
    
 }}
-
-#endif
 

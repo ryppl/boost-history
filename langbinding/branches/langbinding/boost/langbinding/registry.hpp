@@ -26,6 +26,7 @@
 
 #include <memory>
 #include <boost/langbinding/config.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
 // language descriptor concept
 //
@@ -78,12 +79,12 @@ namespace boost { namespace langbinding {
       void export_converters(const type_info_&, registry_base&);
 
       void export_converters(registry_base&);
- 
+
       registry_base(const registry_base&);
       registry_base& operator=(const registry_base&);
 
       virtual ~registry_base();
-      
+
    protected:
       registry_base();
 
@@ -92,10 +93,12 @@ namespace boost { namespace langbinding {
    };
 
    template<class T>
-   class registry : public registry_base<T>
+   class registry 
+      : public registry_base<T>
+      , public enable_shared_from_this<registry<T> >
    {
    public:
-      static registry* instance();
+      static registry& instance();
       ~registry();
 
    private:
