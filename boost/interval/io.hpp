@@ -55,7 +55,7 @@ std::ostream& operator<<(std::ostream& os, const interval<T, Policies>& r)
   p = (p>15) ? 15 : p-1;
   double eps = 1.0; while (p>0) { eps /= 10.0; --p; }
   // widen the interval so output is correct
-  interval<T, Policies> r_wide = widen(r, eps / 2.0);
+  interval<T, Policies> r_wide = widen(r, static_cast<T>(eps / 2.0));
   os << "[" << r_wide.lower() << "," << r_wide.upper() << "]";
   return os;
 }
