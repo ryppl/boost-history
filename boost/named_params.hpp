@@ -713,6 +713,16 @@ struct keywords
 
 #undef BOOST_NAMED_PARAMS_GCC2
 
+#include <boost/preprocessor/repetition/enum_params.hpp>
+#include <boost/preprocessor/repetition/enum_binary_params.hpp>
+#include <boost/preprocessor/tuple/elem.hpp>
+#include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/repetition/repeat_from_to.hpp>
+#include <boost/preprocessor/arithmetic/inc.hpp>
+#include <boost/preprocessor/logical/bool.hpp>
+#include <boost/preprocessor/punctuation/comma_if.hpp>
+#include <boost/preprocessor/control/expr_if.hpp>
+
 #define BOOST_NAMED_PARAMS_FUN_TEMPLATE_HEAD1(n) \
     template<BOOST_PP_ENUM_PARAMS(n, class T)>
 #define BOOST_NAMED_PARAMS_FUN_TEMPLATE_HEAD0(n)
@@ -722,9 +732,13 @@ struct keywords
     BOOST_PP_TUPLE_ELEM(3, 0, params) \
         BOOST_PP_TUPLE_ELEM(3, 1, params)( \
             BOOST_PP_ENUM_BINARY_PARAMS(n, const T, &p) \
+            BOOST_PP_COMMA_IF(n) \
+            BOOST_PP_EXPR_IF(n, typename) BOOST_PP_TUPLE_ELEM(3, 2, params)::restrict \
+            <\
+                BOOST_PP_ENUM_PARAMS(n, T)\
+            >::type kw = BOOST_PP_TUPLE_ELEM(3, 2, params)()\
         ) \
     { \
-        BOOST_PP_TUPLE_ELEM(3, 2, params) kw; \
         return BOOST_PP_CAT(BOOST_PP_TUPLE_ELEM(3, 1, params), _with_named_params)( \
             kw(BOOST_PP_ENUM_PARAMS(n, p)) \
         ); \
