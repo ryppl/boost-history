@@ -6,8 +6,9 @@ exe test1
 	: $(SOURCES).cpp
 	: <include>$(BOOST_ROOT)
 	  <gcc><*><define>USE_GCC
-	  <intel><*><define>USE_ICC
+	  <intel-linux><*><define>USE_ICC
 	;
+
 
 
 

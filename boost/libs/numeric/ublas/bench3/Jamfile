@@ -6,7 +6,8 @@ exe bench3
 	: $(SOURCES).cpp $(BOOST_ROOT)/boost/numeric/ublas/instant.cpp
 	: <include>$(BOOST_ROOT)
 	  <gcc><*><define>USE_GCC
-	  <intel><*><define>USE_ICC
+	  <intel-linux><*><define>USE_ICC
 	;
+
 
 
