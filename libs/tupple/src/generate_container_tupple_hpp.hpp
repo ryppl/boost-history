@@ -1,5 +1,5 @@
 
-// Copyright (C) 2001,2002 Roland Richter <roland@flll.jku.at>
+// Copyright (C) 2001-2003 Roland Richter <roland@flll.jku.at>
 // Permission to copy, use, modify, sell and distribute this software
 // is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
@@ -29,20 +29,17 @@ PREPROCESS_LATER(#define BOOST_TUPPLE_DETAIL_CONTAINER_TUPPLE_NO_PART_SPEC_HPP)
 #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
 #include <boost/preprocessor/repetition/enum_shifted_params.hpp>
 #include <boost/preprocessor/repetition/repeat.hpp>
+#include <boost/preprocessor/repetition/repeat_from_to.hpp>
 
 
-PREPROCESS_LATER(#include "boost/tupple/tupple.hpp")
-PREPROCESS_LATER(#include "boost/tupple/detail/container_tupple_traits_detail.hpp")
+PREPROCESS_LATER(#include <boost/tupple/tupple.hpp>)
+PREPROCESS_LATER(#include <boost/tupple/detail/ref_workaround.hpp>)
+PREPROCESS_LATER(#include <boost/tupple/detail/iterator_tupple_traits_detail.hpp>)
+PREPROCESS_LATER(#include <boost/tupple/iterator_tupple.hpp>)
 
 
 namespace boost {
 namespace tupple {
-
-#if 0
-//===== Begin of tupple code
-
-// We need `IF' for ints, is there a more elegant possibility?
-#endif
 
 #define IF_INT0(T,E) E
 #define IF_INT1(T,E) T
@@ -84,18 +81,17 @@ namespace tupple {
 #define THEMYELEM8 theI
 #define THEMYELEM9 theJ
 
+#define _DELAY_(fct,arg)  __DELAY__(fct,arg)
+#define __DELAY__(fct,arg)  fct##arg
+
 #ifdef TUPPLE_PARTIAL_SPEC
 #  define TUPLE(k) tuple
 #  define ITERTUPLE(k) iterator_tuple
 #  define CONTTUPLE(k) container_tuple
-#  define N_FOLD_ITER(a,k) n_fold_iterator<a,k>
-#  define N_FOLD_CONT(a,k) n_fold_container<a,k>
 #else
 #  define TUPLE(k) tuple##k
 #  define ITERTUPLE(k) iterator_tuple##k
 #  define CONTTUPLE(k) container_tuple##k
-#  define N_FOLD_ITER(a,k) n_fold_iterator##k
-#  define N_FOLD_CONT(a,k) n_fold_container##k
 #endif
 
 
@@ -149,45 +145,14 @@ namespace tupple {
 
 #define TYPE2(name,k,a,b) name<BOOST_PP_ENUM_PARAMS(k,a),BOOST_PP_ENUM_PARAMS(k,b)>
 
-#define INC(z,k,_) ++ELEM(k,A);
-#define DEC(z,k,_) --ELEM(k,A);
-
-#define PLUS1(k,arg) ELEM(k,A) += arg;
-#define MINUS1(k,A) ELEM(k,A) -= rhs;
-
-
-#define ITERTRAITS_CATEGORY(z,k,arg)  typename arg##k::iterator_category
-#define ITERTRAITS_VALUE(z,k,arg)     typename arg##k::value_type
-
-#if 0
-// Dereferencing would require passing tuple<A&,B&>
-// --> use assign_to_pointee
-#endif
 
 #ifdef TUPPLE_PARTIAL_SPEC
-#  define ITERTRAITS_REFERENCE(z,k,arg)  typename arg##k::reference
-#  define ITERTRAITS_CONSTREFERENCE(z,k,arg) const typename arg##k::reference
+#  define ARRAYACCESS(z,k,arg) ELEM(k,_)[arg.ELEM(k,_)]
+#  define CONSTARRAYACCESS(z,k,arg) ELEM(k,_)[arg.ELEM(k,_)]
 #else
-#  define ITERTRAITS_REFERENCE(z,k,arg)  detail::assign_to_pointee<typename arg##k::value_type>
-#  define ITERTRAITS_CONSTREFERENCE(z,k,arg) typename arg##k::value_type
+#  define ARRAYACCESS(z,k,arg) detail::ref( ELEM(k,_)[arg.ELEM(k,_)] )
+#  define CONSTARRAYACCESS(z,k,arg) detail::cref( ELEM(k,_)[arg.ELEM(k,_)] )
 #endif
-
-#define ITERTRAITS_POINTER(z,k,arg)    typename arg##k::pointer
-#define ITERTRAITS_DIFFERENCE(z,k,arg)  typename arg##k::difference_type
-
-
-#ifdef TUPPLE_PARTIAL_SPEC
-#  define DEREF(z,k,_) *ELEM(k,A)
-#  define ARRAYACCESS(z,k,arg) ELEM(k,A)[arg.ELEM(k,A)]
-#  define CONSTARRAYACCESS(z,k,arg) ELEM(k,A)[arg.ELEM(k,A)]
-#else
-#  define DEREF(z,k,_) ELEM(k,A)
-#  define ARRAYACCESS(z,k,arg) &(ELEM(k,A)[arg.ELEM(k,A)])
-#  define CONSTARRAYACCESS(z,k,arg) ELEM(k,A)[arg.ELEM(k,A)]
-#endif
-
-#define CONSTDEREF(z,k,_) *ELEM(k,A)
-#define POINTTO(z,k,A) ELEM(k,A)
 
 #define TYPENAME_VALUE(z,k,arg)          typename arg##k::value_type
 #define TYPENAME_ITERATOR(z,k,arg)       typename arg##k::iterator
@@ -197,7 +162,7 @@ namespace tupple {
 #  define TYPENAME_REFERENCE(z,k,arg)      typename arg##k::reference
 #  define TYPENAME_CONSTREFERENCE(z,k,arg) typename arg##k::const_reference
 #else
-#  define TYPENAME_REFERENCE(z,k,arg)      detail::assign_to_pointee<typename arg##k::value_type>
+#  define TYPENAME_REFERENCE(z,k,arg)      detail::reference_wrapper<typename arg##k::value_type>
 #  define TYPENAME_CONSTREFERENCE(z,k,arg) typename arg##k::value_type
 #endif
 
@@ -211,157 +176,23 @@ namespace tupple {
 //
 #endif
 
-#define MINMAX(k) \
-template<class T> T minimal( const TUPLE(k)<BOOST_PP_ENUM(k,NTIMES,T)>& t ) {  \
-  return std::min( t.head(), minimal( t.tail() ) );    \
-}                                                       \
-template<class T> T maximal( const TUPLE(k)<BOOST_PP_ENUM(k,NTIMES,T)>& t ) {  \
-  return std::max( t.head(), maximal( t.tail() ) );    \
-}
-
-#if 0
-template<class T> T minimal( const TUPLE(1)<T>& t ) { return t.head(); }
-template<class T> T maximal( const TUPLE(1)<T>& t ) { return t.head(); }
-
-MINMAX(2)
-MINMAX(3)
-MINMAX(4)
-MINMAX(5)
-MINMAX(6)
-MINMAX(7)
-MINMAX(8)
-MINMAX(9)
-#endif
-
-#undef MINMAX
-
-
-#define PLUS2(z,k,_) ELEM(k,A) += rhs.ELEM(k,A);
-#define MINUS2(z,k,_) ELEM(k,A) -= rhs.ELEM(k,A);
 
 #ifdef TUPPLE_PARTIAL_SPEC
-#  define ITERTRAITS(k) iterator_traits_tuple
-#  define DETAILTRAITS(z,k,_) detail::iterator_traits<T##k>
-#  define ITERTRAITSTYPE(k) ITERTRAITS(k)<BOOST_PP_ENUM(k,DETAILTRAITS,_)>
-#  define ITERSELFTYPE(k) TYPE(ITERTUPLE(k),k,T)
-
 #  define CONTTRAITS(k) container_traits_tuple
-#  define DETAILTRAITS2(z,k,_) detail::iterator_traits<typename T##k::iterator>
+#  define DETAILTRAITS2(z,k,_) T##k
 #  define CONTTRAITSTYPE(k) CONTTRAITS(k)<BOOST_PP_ENUM(k,DETAILTRAITS2,_)>
 
 #  define TRAITSTEMPLATE(k,a,b) template<BOOST_PP_ENUM_PARAMS(k,class a)>
 #  define TRAITSDEFAULT(k,A)
 #else
-#  define ITERTRAITS(k) iterator_traits_tuple##k
-#  define ITERSELFTYPE(k) TYPE2(ITERTUPLE(k),k,T,R)
-#  define ITERTRAITSTYPE(k) TYPE( ITERTRAITS(k),k,R )
-
 #  define CONTTRAITS(k) container_traits_tuple##k
-#  define CONTTRAITSTYPE(k) TYPE( CONTTRAITS(k),k,R )
-
-#  define TRAITSTEMPLATE(k,a,b) template<BOOST_PP_ENUM_PARAMS(k,class a),BOOST_PP_ENUM(k,b,_)>
-#  define TRAITSDEFAULT(z,k,_) class R##k = detail::iterator_traits<T##k>
+#  define DETAILTRAITS2(z,k,_) T##k
+#  define CONTTRAITSTYPE(k) CONTTRAITS(k)<BOOST_PP_ENUM(k,DETAILTRAITS2,_)>
+//#  define CONTTRAITSTYPE(k) TYPE( CONTTRAITS(k),k,R )
+//#  define TRAITSTEMPLATE(k,a,b) template<BOOST_PP_ENUM_PARAMS(k,class a),BOOST_PP_ENUM(k,b,_)>
+#  define TRAITSTEMPLATE(k,a,b) template<BOOST_PP_ENUM_PARAMS(k,class a)>
+#  define TRAITSDEFAULT(z,k,_) 
 #endif
-
-
-
-#if 0
-// Add sometimes:
-
-  pointer operator->() {                                                  \
-    return pointer( BOOST_PP_ENUM(k,POINTTO,A) );                       \
-  }
-
-#endif
-
-#define ITERATOR_TUPLE(k,r)                                               \
-TEMPLATE(k,R) struct ITERTRAITS(k) TEMPLATESPEC(k,r,R) {                 \
-  typedef TUPLE(k)<BOOST_PP_ENUM(k,ITERTRAITS_CATEGORY,R)>   iterator_category;   \
-  typedef TUPLE(k)<BOOST_PP_ENUM(k,ITERTRAITS_VALUE,R)>      value_type;          \
-  typedef TUPLE(k)<BOOST_PP_ENUM(k,ITERTRAITS_REFERENCE,R)>  reference;           \
-  typedef TUPLE(k)<BOOST_PP_ENUM(k,ITERTRAITS_CONSTREFERENCE,R)> const_reference; \
-  typedef TUPLE(k)<BOOST_PP_ENUM(k,ITERTRAITS_POINTER,R)>    pointer;             \
-  typedef TUPLE(k)<BOOST_PP_ENUM(k,ITERTRAITS_DIFFERENCE,R)> difference_type;     \
-};                                                                                  \
-                                                                                    \
-TRAITSTEMPLATE( k,T,TRAITSDEFAULT ) struct ITERTUPLE(k) TEMPLATESPEC(k,r,T)        \
-  : public TYPE(TUPLE(k),k,T)                                             \
-{                                                                         \
-  typedef ITERSELFTYPE(k) self_type;                                      \
-  typedef ITERTRAITSTYPE(k) traits;                                       \
-                                                                          \
-  typedef typename traits::iterator_category iterator_category;           \
-  typedef typename traits::value_type        value_type;                  \
-  typedef typename traits::reference         reference;                   \
-  typedef typename traits::const_reference   const_reference;             \
-  typedef typename traits::pointer           pointer;                     \
-  typedef typename traits::difference_type   difference_type;             \
-                                                                          \
-  ITERTUPLE(k)(BOOST_PP_ENUM(k,CTORARG,_))                                \
-  : TYPE(TUPLE(k),k,T)( BOOST_PP_ENUM(k,THEELEMS,A) ) {}                  \
-                                                                          \
-  TEMPLATE(k,S) ITERTUPLE(k)( const TYPE(ITERTUPLE(k),k,S)& rhs )         \
-  : TYPE(TUPLE(k),k,T)( rhs ) {}                                          \
-                                                                          \
-  ITERTUPLE(k)( CTORARG(z,0,_), const tail_type& tail )                   \
-  : TYPE(TUPLE(k),k,T)( THEELEM(0,A), tail ) {}                           \
-                                                                          \
-  self_type& operator++() {                                               \
-    BOOST_PP_REPEAT(k,INC,_) return *this;                                \
-  }                                                                       \
-                                                                          \
-  const self_type operator++(int) {                                       \
-    self_type old = *this; ++(*this); return old;                         \
-  }                                                                       \
-                                                                          \
-  self_type& operator+=( const difference_type& rhs ) {                   \
-    BOOST_PP_REPEAT(k,PLUS2,_) return *this;                              \
-  }                                                                       \
-                                                                          \
-  self_type& operator--() {                                               \
-    BOOST_PP_REPEAT(k,DEC,_) return *this;                                \
-  }                                                                       \
-                                                                          \
-  const self_type operator--(int) {                                       \
-    self_type old = *this; --(*this); return old;                         \
-  }                                                                       \
-                                                                          \
-  self_type& operator-=( const difference_type& rhs ) {                   \
-    BOOST_PP_REPEAT(k,MINUS2,_) return *this;                             \
-  }                                                                       \
-                                                                          \
-  reference operator*() {                                                 \
-    return reference( BOOST_PP_ENUM(k,DEREF,_) );                         \
-  }                                                                       \
-                                                                          \
-  const_reference operator*() const {                                     \
-    return const_reference( BOOST_PP_ENUM(k,CONSTDEREF,_) );              \
-  }                                                                       \
-                                                                          \
-  reference operator[]( const difference_type& i ) {                      \
-    return reference( BOOST_PP_ENUM(k,ARRAYACCESS,i) );                   \
-  }                                                                       \
-                                                                          \
-  const_reference operator[]( const difference_type& i ) const {          \
-    return const_reference( BOOST_PP_ENUM(k,CONSTARRAYACCESS, i) );       \
-  }                                                                       \
-};                                                                        \
-                                                                          \
-template<BOOST_PP_ENUM_PARAMS(k,class T)>                                 \
-TYPE(ITERTUPLE(k),k,T) operator+(                                         \
-  const TYPE(ITERTUPLE(k),k,T)& lhs,                                      \
-  const TYPE(ITERTUPLE(k),k,T)::difference_type& rhs )                    \
-{ return TYPE(ITERTUPLE(k),k,T)(lhs) += rhs; }                            \
-                                                                          \
-template<BOOST_PP_ENUM_PARAMS(k,class T)>                                 \
-TYPE(ITERTUPLE(k),k,T) operator-(                                         \
-  const TYPE(ITERTUPLE(k),k,T)& lhs,                                      \
-  const TYPE(ITERTUPLE(k),k,T)::difference_type& rhs )                    \
-{ return TYPE(ITERTUPLE(k),k,T)(lhs) -= rhs; }                            \
-                                                                          \
-template<class T> struct N_FOLD_ITER(T,k) {                               \
-  typedef ITERTUPLE(k)<BOOST_PP_ENUM(k,NTIMES,T)> type;                 \
-};
 
 
 #define EMPTY(z,k,_) ELEM(k,_).empty()
@@ -376,8 +207,8 @@ template<class T> struct N_FOLD_ITER(T,k) {                               \
 #define ITERTUPLEDEF(k) ITERTUPLE(k)<BOOST_PP_ENUM(k,TYPENAME_ITERATOR,R)>
 #define CONSTITERTUPLEDEF(k) ITERTUPLE(k)<BOOST_PP_ENUM(k,TYPENAME_CONSTITERATOR,R)>
 #else
-#define ITERTUPLEDEF(k) ITERTUPLE(k)<BOOST_PP_ENUM(k,TYPENAME_ITERATOR,R),BOOST_PP_ENUM_PARAMS(k,R)>
-#define CONSTITERTUPLEDEF(k) ITERTUPLE(k)<BOOST_PP_ENUM(k,TYPENAME_CONSTITERATOR,R),BOOST_PP_ENUM_PARAMS(k,R)>
+#define ITERTUPLEDEF(k) ITERTUPLE(k)<BOOST_PP_ENUM(k,TYPENAME_ITERATOR,R)>
+#define CONSTITERTUPLEDEF(k) ITERTUPLE(k)<BOOST_PP_ENUM(k,TYPENAME_CONSTITERATOR,R)>
 #endif
 
 
@@ -392,7 +223,7 @@ TEMPLATE(k,R) struct CONTTRAITS(k) TEMPLATESPEC(k,r,R) {                  \
   typedef TUPLE(k)<BOOST_PP_ENUM(k,TYPENAME_DIFFERENCE,R)>        difference_type;  \
 };                                                                        \
                                                                           \
-TRAITSTEMPLATE( k,T,TRAITSDEFAULT2 )  struct CONTTUPLE(k) TEMPLATESPEC(k,r,T)   \
+TRAITSTEMPLATE( k,T,TRAITSDEFAULT )  struct CONTTUPLE(k) TEMPLATESPEC(k,r,T)   \
   : public TYPE(TUPLE(k),k,T)                                             \
 {                                                                         \
   typedef TYPE(CONTTUPLE(k),k,T) self_type;                               \
@@ -410,7 +241,7 @@ TRAITSTEMPLATE( k,T,TRAITSDEFAULT2 )  struct CONTTUPLE(k) TEMPLATESPEC(k,r,T)   
   CONTTUPLE(k)(BOOST_PP_ENUM(k,CTORARG,_))                                \
   : TYPE(TUPLE(k),k,T)( BOOST_PP_ENUM(k,THEELEMS,A) ) {}                  \
                                                                           \
-  TEMPLATE(k,S) CONTTUPLE(k)( const TYPE(ITERTUPLE(k),k,S)& rhs )         \
+  TEMPLATE(k,S) CONTTUPLE(k)( const TYPE(CONTTUPLE(k),k,S)& rhs )         \
   : TYPE(TUPLE(k),k,T)( rhs ) {}                                          \
                                                                           \
   CONTTUPLE(k)( CTORARG(z,0,_), const tail_type& tail )                   \
@@ -448,47 +279,24 @@ TRAITSTEMPLATE( k,T,TRAITSDEFAULT2 )  struct CONTTUPLE(k) TEMPLATESPEC(k,r,T)   
   const_reference operator[]( const size_type& i ) const {                \
     return const_reference( BOOST_PP_ENUM(k,CONSTARRAYACCESS,i) );        \
   }                                                                       \
-};                                                                        \
-                                                                          \
-template<class T> struct N_FOLD_CONT(T,k) {                               \
-  typedef CONTTUPLE(k)<BOOST_PP_ENUM(k,NTIMES,T)> type;                   \
 };
 
-#if 0
-// The add function belongs to a 'mathematical' vector_tuple type.
-
-#define ADD(z,k,arg) lhs + arg.ELEM(k,A)
-
-template<class IterT,class DiffT>                                         \
-tuple<BOOST_PP_ENUM(k,NTIMES,IterT)> add(                             \
-  const IterT& lhs,                                                       \
-  const tuple<BOOST_PP_ENUM(k,NTIMES,DiffT)>& rhs )                   \
-{ return tuple<BOOST_PP_ENUM(k,NTIMES,IterT)>( BOOST_PP_ENUM(k,ADD,rhs) ); }
-
-#endif
-
 #ifdef TUPPLE_PARTIAL_SPEC
-TEMPLATENULL(10,T) struct ITERTUPLE(10) { };
-template<class T, int N> struct n_fold_iterator { };
-TEMPLATENULL(10,R) struct ITERTRAITS(10) { };
-#endif
-
-
-ITERATOR_TUPLE(1,9)
-ITERATOR_TUPLE(2,8)
-ITERATOR_TUPLE(3,7)
-ITERATOR_TUPLE(4,6)
-ITERATOR_TUPLE(5,5)
-ITERATOR_TUPLE(6,4)
-ITERATOR_TUPLE(7,3)
-ITERATOR_TUPLE(8,2)
-ITERATOR_TUPLE(9,1)
-
-#ifdef TUPPLE_PARTIAL_SPEC
-TEMPLATENULL(10,T) struct CONTTUPLE(k) { };
-template<class T, int N> struct n_fold_container { };
+TEMPLATENULL(10,T) struct CONTTUPLE(10) { };
 TEMPLATENULL(10,R) struct CONTTRAITS(10) { };
 #endif
+
+#ifdef TUPPLE_PARTIAL_SPEC
+template<> struct CONTTUPLE(0) TEMPLATESPEC(0,10,T) : public tuple<null_type>
+{
+};
+#else
+template<class T> struct CONTTUPLE(0)
+{
+  typedef CONTTUPLE(0)<T> self_type;
+};
+#endif
+
 
 CONTAINER_TUPLE(1,9)
 CONTAINER_TUPLE(2,8)
@@ -501,116 +309,134 @@ CONTAINER_TUPLE(8,2)
 CONTAINER_TUPLE(9,1)
 
 
-#if 0
-// Should the return type be tuple<T0,T1,...>,  tuple<S0,S1,...>, or something different?
+#ifdef TUPPLE_PARTIAL_SPEC
+
+template<class T, int N> struct n_fold_container_tuple { };
+
+#define N_FOLD_CONTTUPLE(z,k,t)                                     \
+template<class t> struct n_fold_container_tuple<t,k> {               \
+  typedef CONTTUPLE(k)<BOOST_PP_ENUM(k,NTIMES,t)> type;             \
+                                                                    \
+  static type make( const t& arg )                                  \
+  { return type(BOOST_PP_ENUM(k,NTIMES,arg)); }                     \  
+};
+
+BOOST_PP_REPEAT( 10, N_FOLD_CONTTUPLE, T )
+
+#else
+
+namespace detail
+{
+  #define N_FOLD_CONT_SELECT(z,k,t)                                   \
+  template<> struct cont_select<k>                                    \
+  {                                                              \
+     typedef CONTTUPLE(k)<BOOST_PP_ENUM(k,NTIMES,t)> type;       \
+                                                                 \
+     static type make( const t& arg )                            \
+     { return type(BOOST_PP_ENUM(k,NTIMES,arg)); }               \
+  };
+
+
+  template<class T> struct n_fold_container_helper
+  {
+    template<int N> struct cont_select {};
+    template<> struct cont_select<0> { typedef CONTTUPLE(0)<null_type> type; };
+    BOOST_PP_REPEAT_FROM_TO( 1, 10, N_FOLD_CONT_SELECT, T )
+  };
+} // namespace detail
+
+template<class T, int N> struct n_fold_container_tuple
+{
+  typedef detail::n_fold_container_helper<T>::cont_select<N>::type type;
+  
+  static type make( const T& arg ) 
+  { return detail::n_fold_container_helper<T>::cont_select<N>::make( arg ); }
+};
+
 #endif
 
-#define BINOP(op,k) \
-template<BOOST_PP_ENUM_PARAMS(k,class T),class S>   \
-TYPE(ITERTUPLE(k),k,T) operator##op( const TYPE(ITERTUPLE(k),k,T)& lhs, const S& rhs ) \
-{ return TYPE(ITERTUPLE(k),k,T)(lhs) op##= rhs; }
-
-#undef BINOP
-
-#undef PLUS2
-#undef MINUS2
-
-#undef ADD
-
-#undef ITERATOR_TUPLE
-#undef CONTAINER_TUPLE
 
 
+#ifndef TUPPLE_PARTIAL_SPEC
 
-#undef INC
-#undef DEC
+  namespace detail {
 
-#undef PLUS1
-#undef MINUS1
+    #define BASE_TYPE_SELECTOR(k) _DELAY_(container_tuple_base_type_selector,k)
+    #define TEE(k) _DELAY_(T,k)
 
-#undef DEREF
-#undef CONSTDEREF
-#undef ARRAYACCESS
-#undef CONSTARRAYACCESS
+    #define BASE_TYPE_SELECT(k)                                               \
+    TEMPLATE(k,T) struct BASE_TYPE_SELECTOR(k)                                \
+    {                                                                         \
+      typedef ::boost::mpl::if_c<                                             \
+        ::boost::is_same< TEE(BOOST_PP_DEC(k)), null_type >::value,           \
+          BASE_TYPE_SELECTOR(BOOST_PP_DEC(k))                                 \
+           < BOOST_PP_ENUM_PARAMS( BOOST_PP_DEC(k), T ) > ::type,             \
+          CONTTUPLE(k)< BOOST_PP_ENUM_PARAMS( k, T ) >                        \
+      >::type type;                                                           \
+    };
 
-#undef EMPTY
-#undef SIZE
-#undef BEGIN
-#undef END
+    // The initial case.
+    template< class T0 >
+    struct BASE_TYPE_SELECTOR(1)
+    {
+      typedef ::boost::mpl::if_c<
+        ::boost::is_same< T0, null_type >::value,
+          CONTTUPLE(0)< null_type >,
+          CONTTUPLE(1)< T0 >
+      >::type type;
+    };
+
+    BASE_TYPE_SELECT(2)
+    BASE_TYPE_SELECT(3)
+    BASE_TYPE_SELECT(4)
+    BASE_TYPE_SELECT(5)
+    BASE_TYPE_SELECT(6)
+    BASE_TYPE_SELECT(7)
+    BASE_TYPE_SELECT(8)
+    BASE_TYPE_SELECT(9)
+
+  } // namespace detail
 
 
-#undef ITERTRAITS_CATEGORY
-#undef ITERTRAITS_VALUE
-#undef ITERTRAITS_REFERENCE
-#undef ITERTRAITS_POINTER
-#undef ITERTRAITS_DIFFERENCE
-#undef ITERTRAITS_CONSTREFERENCE
+  #define VEEVEE(z,k,_) V##k v##k
+  #define VEE(z,k,_) v##k
 
-#undef TYPENAME_VALUE
-#undef TYPENAME_ITERATOR
-#undef TYPENAME_CONSTITERATOR
-#undef TYPENAME_REFERENCE
-#undef TYPENAME_CONSTREFERENCE
-#undef TYPENAME_POINTER
-#undef TYPENAME_DIFFERENCE
-#undef TYPENAME_SIZETYPE
+  #define REFLECT_CTOR(k)                                               \
+    TEMPLATE(k,V) container_tuple( BOOST_PP_ENUM( k, VEEVEE, _ ) ):      \
+      self_type( BOOST_PP_ENUM( k, VEE, _ )  )                          \
+    {}
 
-#if 0
-// === undef globals ===
+  TEMPLATENULL(9,T) struct container_tuple:
+    public detail::container_tuple_base_type_selector9< BOOST_PP_ENUM_PARAMS( 9, T ) >::type
+  {
+    typedef detail::container_tuple_base_type_selector9< BOOST_PP_ENUM_PARAMS( 9, T ) >::type base_type;
+
+    container_tuple()
+      : self_type()
+    {}
+
+    REFLECT_CTOR(1)
+    REFLECT_CTOR(2)
+    REFLECT_CTOR(3)
+    REFLECT_CTOR(4)
+    REFLECT_CTOR(5)
+    REFLECT_CTOR(6)
+    REFLECT_CTOR(7)
+    REFLECT_CTOR(8)
+    REFLECT_CTOR(9)
+
+    TEMPLATE(9,S) base_type&
+      operator=( const container_tuple< BOOST_PP_ENUM_PARAMS( 9, S ) >& rhs )
+    {
+      //BOOST_STATIC_ASSERT(  );
+      return( base_type::operator=( rhs ) );
+    }
+  };
+
 #endif
-
-#undef IF_INT0
-#undef IF_INT1
-
-#undef MYELEM0
-#undef MYELEM1
-#undef MYELEM2
-#undef MYELEM3
-#undef MYELEM4
-#undef MYELEM5
-#undef MYELEM6
-#undef MYELEM7
-#undef MYELEM8
-#undef MYELEM9
-
-#undef THEMYELEM0
-#undef THEMYELEM1
-#undef THEMYELEM2
-#undef THEMYELEM3
-#undef THEMYELEM4
-#undef THEMYELEM5
-#undef THEMYELEM6
-#undef THEMYELEM7
-#undef THEMYELEM8
-#undef THEMYELEM9
-
-#undef NULLTYPE
-
-#undef ELEM
-#undef THEELEM
-
-#undef THEELEMS
-
-#undef TYPE
-#undef TEMPLATE
-#undef TEMPLATENULL
-
-#undef NULLTYPES
-
-#undef TEMPLATESPEC
-
-#undef CTORARG
-
-#undef NTIMES
-
-#undef ARGTYPE
-
-#undef OP_IF
 
 } // namespace tupple
 } // namespace boost
 
 
 PREPROCESS_LATER(#endif)
-
-#undef PREPROCESS_LATER

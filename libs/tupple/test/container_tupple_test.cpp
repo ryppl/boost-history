@@ -1,7 +1,5 @@
 
-// tupple_test.cpp
-
-// Additional tests that are not covered in tupple_test_bench.cpp
+// container_tupple_test.cpp
 
 #include <boost/config.hpp>
 #include <boost/test/minimal.hpp>
@@ -12,80 +10,21 @@
 #  endif
 #endif
 
-#include <boost/tupple/tupple.hpp>
-
+#include <boost/tupple/container_tupple.hpp>
 using namespace boost::tupple;
 
 #include <vector>
-
 #include <string>
 
 #include <algorithm>
 #include <numeric>
 #include <functional>
 
-
-
-
-struct convolve
+template<class T>
+bool operator==( const ::boost::tupple::detail::reference_wrapper<T>& lhs,
+                 const T& rhs )
 {
-  typedef int result_type;
-
-  int operator()( int a, int b, int c ) const
-  {
-    return( -a + b - c );
-  }
-};
-
-
-void iterator_test()
-{
-  char str[10]   = "Yukon ho!";
-  int  prime[10] = {2,3,5,7,11,13,17,19,23,29};
-
-  iterator_tuple<char*,int*> t1( str, prime );
-  typedef iterator_tuple<char*,int*>::difference_type diff_type;
-
-  BOOST_CHECK( get0(*t1) == 'Y' );
-  BOOST_CHECK( get1(*t1) == 2 );
-  BOOST_CHECK( *(get0(t1)) == 'Y' );
-  BOOST_CHECK( *(get1(t1)) == 2 );
-
-  BOOST_CHECK( get0(t1[diff_type(2,3)]) == 'k' );
-  BOOST_CHECK( get1(t1[diff_type(2,3)]) == 7 );
-
-  ++t1;
-
-  BOOST_CHECK( get0(t1) == str+1 );
-  BOOST_CHECK( get1(t1) == prime+1 );
-
-  BOOST_CHECK( get0(*t1) == 'u' );
-  BOOST_CHECK( get1(*t1) == 3 );
-
-  t1 += diff_type(2,3);
-
-  BOOST_CHECK( get0(t1) == str+3 );
-  BOOST_CHECK( get1(t1) == prime+4 );
-
-  BOOST_CHECK( get0(*t1) == 'o' );
-  BOOST_CHECK( get1(*t1) == 11 );
-
-
-  t1[diff_type(0,0)] = tuple<char,int>('a',31);
-
-  BOOST_CHECK( str[3] == 'a' );
-  BOOST_CHECK( prime[4] == 31 );
-
-  typedef n_fold_iterator<int*,3>::type triple_iter;
-  typedef n_fold_tuple<int,3>::type triple_int;
-
-//  triple_int  t  = add( 1, triple_int(0,2,3) );
-  triple_int t(0,2,3); ++get0(t); ++get1(t); ++get2(t);
-  triple_iter it( prime,prime,prime ); it += t;
-
-  BOOST_CHECK( get0(it) == prime + 1 );
-  BOOST_CHECK( get1(it) == prime + 3 );
-  BOOST_CHECK( get2(it) == prime + 4 );
+  return( lhs.get() == rhs );
 }
 
 
@@ -111,13 +50,18 @@ void container_test()
   BOOST_CHECK( get1( t[one] ) == '-' );
   BOOST_CHECK( get2( t[one] ) == 3.14 );
 
-  std::vector< std::string > d( 5, "foo" );
+  std::vector< std::string > d(5);
+  std::fill( d.begin(), d.end(), std::string( "foo" ) );
 
-  container_tuple< std::vector<char>, std::vector<double>, std::vector< std::string > > u( b,c,d );
+  typedef container_tuple< std::vector<char>, 
+                           std::vector<double>, 
+                           std::vector<std::string> > ContainerType;
+
+  ContainerType u( b,c,d );
 
   BOOST_CHECK( get0( u[one] ) == '-' );
   BOOST_CHECK( get1( u[one] ) == 3.14 );
-  BOOST_CHECK( get2( u[one] ) == "foo" );
+  BOOST_CHECK( get2( u[one] ) == std::string("foo") );
 
   get0( u[one] ) = '+';
   get1( u[one] ) = 2.78;
@@ -125,28 +69,28 @@ void container_test()
 
   BOOST_CHECK( get0( u[one] ) == '+' );
   BOOST_CHECK( get1( u[one] ) == 2.78 );
-  BOOST_CHECK( get2( u[one] ) == "yo" );
+  BOOST_CHECK( get2( u[one] ) == std::string( "yo" ) );
 
-  iterator_tuple< std::vector<char>::iterator,
-                  std::vector<double>::iterator,
-                  std::vector< std::string >::iterator > it = u.begin();
+  ContainerType::iterator it = u.begin();
 
   BOOST_CHECK( get0( *it ) == '-' );
   BOOST_CHECK( get1( *it ) == 3.14 );
-  BOOST_CHECK( get2( *it ) == "foo" );
+
+  //###### THIS DOES NOT COMPILE UNDER MSVC:
+  BOOST_CHECK( (*it).get2() == std::string( "foo" ) );
+  BOOST_CHECK( get2( *it ) == std::string( "foo" ) );
 
   ++it;
 
   BOOST_CHECK( get0( *it ) == '+' );
   BOOST_CHECK( get1( *it ) == 2.78 );
-  BOOST_CHECK( get2( *it ) == "yo" );
+  BOOST_CHECK( get2( *it ) == std::string( "yo" ) );
 
-  *it = tuple< char, double, std::string >( '*', 1.33, "gasp" );
+  *it = tuple< char, double, std::string >( '*', 1.33, std::string("gasp") );
 
   BOOST_CHECK( get0( u[one] ) == '*' );
   BOOST_CHECK( get1( u[one] ) == 1.33 );
-  BOOST_CHECK( get2( u[one] ) == "gasp" );
-
+  BOOST_CHECK( get2( u[one] ) == std::string( "gasp" ) );
 }
 
 
@@ -186,10 +130,7 @@ void zip_test()
 
 int test_main(int, char *[])
 {
-
-  iterator_test();
   container_test();
-
 
   return 0;
 }
