@@ -18,6 +18,12 @@ namespace boost { namespace gui { namespace win
 
 typedef TCHAR         char_type;
 typedef const TCHAR * string;
+typedef HWND          component_handle;
+typedef WNDPROC       component_callback;
+typedef MSG           message_type;
+typedef LONG_PTR      id_type;
+
+#define GUIPROP_COMPONENT TEXT("gui::component")
 
 /** windows-specific entry point data. */
 

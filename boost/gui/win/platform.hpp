@@ -13,5 +13,9 @@
 #include <boost/gui/win/size.hpp>
 #include <boost/gui/win/position.hpp>
 #include <boost/gui/win/area.hpp>
+#include <boost/gui/win/color.hpp>
+#include <boost/gui/win/event.hpp>
+#include <boost/gui/win/frame_style.hpp>
+#include <boost/gui/win/window_type.hpp>
 
 #endif

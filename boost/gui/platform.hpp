@@ -131,6 +131,9 @@ namespace boost { namespace gui
    using platf::char_type;
    using platf::string;
    using platf::entry_data;
+   using platf::color;
+   using platf::frame_style;
+   using platf::id_type;
 }}
 
 #undef PLATF_NS
