@@ -142,8 +142,9 @@ basic_array_streambuf<N, Ch, Tr>::basic_array_streambuf
 (
     basic_array_streambuf<N, Ch, Tr> const &  c
 )
-    : array_( c.array_ )
 {
+    traits_type::copy( this->array_, c.array_, self_type::array_size );
+
     this->setg( this->array_, this->array_, this->array_
      + self_type::array_size );
     this->setp( this->array_, this->array_ + self_type::array_size );
