@@ -149,6 +149,11 @@
 // }
 // But boost provides it for us.
 
+// This seems to be a problem in boost.config, should be fixed in CVS already.
+#ifdef __SGI_STL_PORT
+#define BOOST_MSVC_STD_ITERATOR
+#endif
+
 #endif
 
 
@@ -157,7 +162,13 @@
 
 // Open problems:
 // GCC 2.95.3 is known not to accept NUMERICS_FRIEND_FUNCTION (this seems to be arguable).
+// GCC 3.x.x allows to implement free function as friends.
+#if !(__GNUC__ <= 2 && __GNUC_MINOR__ <= 95)
+#define NUMERICS_FRIEND_FUNCTION
+#endif
 // GCC 2.95.3 is known not to accept NUMERICS_MUTABLE_TEMPORARY (this seems to be correct).
+// GCC 2.95.3 allows to use iterator_base_traits.
+#define NUMERICS_USE_ITERATOR_BASE_TRAITS
 
 #endif
 
@@ -182,6 +193,18 @@
 #define NUMERICS_FRIEND_FUNCTION
 // ICC sometimes needs qualified type names.
 #define NUMERICS_QUALIFIED_TYPENAME
+
+#endif
+
+
+
+// Thanks to Kresimir Fresl for porting to Comeau.
+#ifdef __COMO__
+
+// Comeau allows to implement free function as friends.
+#define NUMERICS_FRIEND_FUNCTION
+// Comeau allows to use iterator_base_traits.
+#define NUMERICS_USE_ITERATOR_BASE_TRAITS
 
 #endif
 

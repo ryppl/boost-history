@@ -387,100 +387,92 @@ namespace boost { namespace numerics {
 
         // Element lookup
         NUMERICS_INLINE
-        const_iterator1 find_first1 (int rank, size_type i, size_type j) const {
+        const_iterator1 find1 (int rank, size_type i, size_type j) const {
             if (rank == 1) {
                 size_type lower_i = std::max (difference_type (j - lower_), difference_type (0));
                 i = std::max (i, lower_i);
+                size_type upper_i = std::min (j + 1 + upper_, size1_);
+                i = std::min (i, upper_i);
             }
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             return const_iterator1 (*this, i);
 #else
             return const_iterator1 (*this, i, j);
 #endif
+        }
+        NUMERICS_INLINE
+        iterator1 find1 (int rank, size_type i, size_type j) {
+            if (rank == 1) {
+                size_type lower_i = std::max (difference_type (j - lower_), difference_type (0));
+                i = std::max (i, lower_i);
+                size_type upper_i = std::min (j + 1 + upper_, size1_);
+                i = std::min (i, upper_i);
+            }
+#ifdef NUMERICS_USE_CANONICAL_ITERATOR
+            return iterator1 (*this, i);
+#else
+            return iterator1 (*this, i, j);
+#endif
+        }
+        NUMERICS_INLINE
+        const_iterator2 find2 (int rank, size_type i, size_type j) const {
+            if (rank == 1) {
+                size_type lower_j = std::max (difference_type (i - lower_), difference_type (0));
+                j = std::max (j, lower_j);
+                size_type upper_j = std::min (i + 1 + upper_, size2_);
+                j = std::min (j, upper_j);
+            }
+#ifdef NUMERICS_USE_CANONICAL_ITERATOR
+            return const_iterator2 (*this, j);
+#else
+            return const_iterator2 (*this, i, j);
+#endif
+        }
+        NUMERICS_INLINE
+        iterator2 find2 (int rank, size_type i, size_type j) {
+            if (rank == 1) {
+                size_type lower_j = std::max (difference_type (i - lower_), difference_type (0));
+                j = std::max (j, lower_j);
+                size_type upper_j = std::min (i + 1 + upper_, size2_);
+                j = std::min (j, upper_j);
+            }
+#ifdef NUMERICS_USE_CANONICAL_ITERATOR
+            return iterator2 (*this, j);
+#else
+            return iterator2 (*this, i, j);
+#endif
+        }
+        NUMERICS_INLINE
+        const_iterator1 find_first1 (int rank, size_type i, size_type j) const {
+            return find1 (rank, i, j);
         }
         NUMERICS_INLINE
         iterator1 find_first1 (int rank, size_type i, size_type j) {
-            if (rank == 1) {
-                size_type lower_i = std::max (difference_type (j - lower_), difference_type (0));
-                i = std::max (i, lower_i);
-            }
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
-            return iterator1 (*this, i);
-#else
-            return iterator1 (*this, i, j);
-#endif
+            return find1 (rank, i, j);
         }
         NUMERICS_INLINE
         const_iterator1 find_last1 (int rank, size_type i, size_type j) const {
-            if (rank == 1) {
-                size_type upper_i = std::min (j + 1 + upper_, size1_);
-                i = std::min (i, upper_i);
-            }
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
-            return const_iterator1 (*this, i);
-#else
-            return const_iterator1 (*this, i, j);
-#endif
+            return find1 (rank, i, j);
         }
         NUMERICS_INLINE
         iterator1 find_last1 (int rank, size_type i, size_type j) {
-            if (rank == 1) {
-                size_type upper_i = std::min (j + 1 + upper_, size1_);
-                i = std::min (i, upper_i);
-            }
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
-            return iterator1 (*this, i);
-#else
-            return iterator1 (*this, i, j);
-#endif
+            return find1 (rank, i, j);
         }
         NUMERICS_INLINE
         const_iterator2 find_first2 (int rank, size_type i, size_type j) const {
-            if (rank == 1) {
-                size_type lower_j = std::max (difference_type (i - lower_), difference_type (0));
-                j = std::max (j, lower_j);
-            }
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
-            return const_iterator2 (*this, j);
-#else
-            return const_iterator2 (*this, i, j);
-#endif
+            return find2 (rank, i, j);
         }
         NUMERICS_INLINE
         iterator2 find_first2 (int rank, size_type i, size_type j) {
-            if (rank == 1) {
-                size_type lower_j = std::max (difference_type (i - lower_), difference_type (0));
-                j = std::max (j, lower_j);
-            }
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
-            return iterator2 (*this, j);
-#else
-            return iterator2 (*this, i, j);
-#endif
+            return find2 (rank, i, j);
         }
         NUMERICS_INLINE
         const_iterator2 find_last2 (int rank, size_type i, size_type j) const {
-            if (rank == 1) {
-                size_type upper_j = std::min (i + 1 + upper_, size2_);
-                j = std::min (j, upper_j);
-            }
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
-            return const_iterator2 (*this, j);
-#else
-            return const_iterator2 (*this, i, j);
-#endif
+            return find2 (rank, i, j);
         }
         NUMERICS_INLINE
         iterator2 find_last2 (int rank, size_type i, size_type j) {
-            if (rank == 1) {
-                size_type upper_j = std::min (i + 1 + upper_, size2_);
-                j = std::min (j, upper_j);
-            }
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
-            return iterator2 (*this, j);
-#else
-            return iterator2 (*this, i, j);
-#endif
+            return find2 (rank, i, j);
         }
 
         // Iterators simply are indices.
@@ -488,7 +480,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator1:
             public container_const_reference<banded_matrix>,
-            public random_access_iterator_base<const_iterator1, value_type> {
+            public random_access_iterator_base<packed_random_access_iterator_tag,
+                                               const_iterator1, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -604,7 +597,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class iterator1:
             public container_reference<banded_matrix>,
-            public random_access_iterator_base<iterator1, value_type> {
+            public random_access_iterator_base<packed_random_access_iterator_tag,
+                                               iterator1, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -719,7 +713,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator2:
             public container_const_reference<banded_matrix>,
-            public random_access_iterator_base<const_iterator2, value_type> {
+            public random_access_iterator_base<packed_random_access_iterator_tag,
+                                               const_iterator2, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -835,7 +830,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class iterator2:
             public container_reference<banded_matrix>,
-            public random_access_iterator_base<iterator2, value_type> {
+            public random_access_iterator_base<packed_random_access_iterator_tag,
+                                               iterator2, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -1236,100 +1232,92 @@ namespace boost { namespace numerics {
 
         // Element lookup
         NUMERICS_INLINE
-        const_iterator1 find_first1 (int rank, size_type i, size_type j) const {
+        const_iterator1 find1 (int rank, size_type i, size_type j) const {
             if (rank == 1) {
                 size_type lower_i = std::max (difference_type (j - lower_), difference_type (0));
                 i = std::max (i, lower_i);
+                size_type upper_i = std::min (j + 1 + upper_, size1 ());
+                i = std::min (i, upper_i);
             }
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             return const_iterator1 (*this, i);
 #else
             return const_iterator1 (*this, i, j);
 #endif
+        }
+        NUMERICS_INLINE
+        iterator1 find1 (int rank, size_type i, size_type j) {
+            if (rank == 1) {
+                size_type lower_i = std::max (difference_type (j - lower_), difference_type (0));
+                i = std::max (i, lower_i);
+                size_type upper_i = std::min (j + 1 + upper_, size1 ());
+                i = std::min (i, upper_i);
+            }
+#ifdef NUMERICS_USE_CANONICAL_ITERATOR
+            return iterator1 (*this, i);
+#else
+            return iterator1 (*this, i, j);
+#endif
+        }
+        NUMERICS_INLINE
+        const_iterator2 find2 (int rank, size_type i, size_type j) const {
+            if (rank == 1) {
+                size_type lower_j = std::max (difference_type (i - lower_), difference_type (0));
+                j = std::max (j, lower_j);
+                size_type upper_j = std::min (i + 1 + upper_, size2 ());
+                j = std::min (j, upper_j);
+            }
+#ifdef NUMERICS_USE_CANONICAL_ITERATOR
+            return const_iterator2 (*this, j);
+#else
+            return const_iterator2 (*this, i, j);
+#endif
+        }
+        NUMERICS_INLINE
+        iterator2 find2 (int rank, size_type i, size_type j) {
+            if (rank == 1) {
+                size_type lower_j = std::max (difference_type (i - lower_), difference_type (0));
+                j = std::max (j, lower_j);
+                size_type upper_j = std::min (i + 1 + upper_, size2 ());
+                j = std::min (j, upper_j);
+            }
+#ifdef NUMERICS_USE_CANONICAL_ITERATOR
+            return iterator2 (*this, j);
+#else
+            return iterator2 (*this, i, j);
+#endif
+        }
+        NUMERICS_INLINE
+        const_iterator1 find_first1 (int rank, size_type i, size_type j) const {
+            return find1 (rank, i, j);
         }
         NUMERICS_INLINE
         iterator1 find_first1 (int rank, size_type i, size_type j) {
-            if (rank == 1) {
-                size_type lower_i = std::max (difference_type (j - lower_), difference_type (0));
-                i = std::max (i, lower_i);
-            }
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
-            return iterator1 (*this, i);
-#else
-            return iterator1 (*this, i, j);
-#endif
+            return find1 (rank, i, j);
         }
         NUMERICS_INLINE
         const_iterator1 find_last1 (int rank, size_type i, size_type j) const {
-            if (rank == 1) {
-                size_type upper_i = std::min (j + 1 + upper_, size1 ());
-                i = std::min (i, upper_i);
-            }
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
-            return const_iterator1 (*this, i);
-#else
-            return const_iterator1 (*this, i, j);
-#endif
+            return find1 (rank, i, j);
         }
         NUMERICS_INLINE
         iterator1 find_last1 (int rank, size_type i, size_type j) {
-            if (rank == 1) {
-                size_type upper_i = std::min (j + 1 + upper_, size1 ());
-                i = std::min (i, upper_i);
-            }
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
-            return iterator1 (*this, i);
-#else
-            return iterator1 (*this, i, j);
-#endif
+            return find1 (rank, i, j);
         }
         NUMERICS_INLINE
         const_iterator2 find_first2 (int rank, size_type i, size_type j) const {
-            if (rank == 1) {
-                size_type lower_j = std::max (difference_type (i - lower_), difference_type (0));
-                j = std::max (j, lower_j);
-            }
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
-            return const_iterator2 (*this, j);
-#else
-            return const_iterator2 (*this, i, j);
-#endif
+            return find2 (rank, i, j);
         }
         NUMERICS_INLINE
         iterator2 find_first2 (int rank, size_type i, size_type j) {
-            if (rank == 1) {
-                size_type lower_j = std::max (difference_type (i - lower_), difference_type (0));
-                j = std::max (j, lower_j);
-            }
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
-            return iterator2 (*this, j);
-#else
-            return iterator2 (*this, i, j);
-#endif
+            return find2 (rank, i, j);
         }
         NUMERICS_INLINE
         const_iterator2 find_last2 (int rank, size_type i, size_type j) const {
-            if (rank == 1) {
-                size_type upper_j = std::min (i + 1 + upper_, size2 ());
-                j = std::min (j, upper_j);
-            }
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
-            return const_iterator2 (*this, j);
-#else
-            return const_iterator2 (*this, i, j);
-#endif
+            return find2 (rank, i, j);
         }
         NUMERICS_INLINE
         iterator2 find_last2 (int rank, size_type i, size_type j) {
-            if (rank == 1) {
-                size_type upper_j = std::min (i + 1 + upper_, size2 ());
-                j = std::min (j, upper_j);
-            }
-#ifdef NUMERICS_USE_CANONICAL_ITERATOR
-            return iterator2 (*this, j);
-#else
-            return iterator2 (*this, i, j);
-#endif
+            return find2 (rank, i, j);
         }
 
         // Iterators simply are indices.
@@ -1337,7 +1325,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator1:
             public container_const_reference<banded_adaptor>,
-            public random_access_iterator_base<const_iterator1, value_type> {
+            public random_access_iterator_base<packed_random_access_iterator_tag,
+                                               const_iterator1, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -1453,7 +1442,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class iterator1:
             public container_reference<banded_adaptor>,
-            public random_access_iterator_base<iterator1, value_type> {
+            public random_access_iterator_base<packed_random_access_iterator_tag,
+                                               iterator1, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -1568,7 +1558,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator2:
             public container_const_reference<banded_adaptor>,
-            public random_access_iterator_base<const_iterator2, value_type> {
+            public random_access_iterator_base<packed_random_access_iterator_tag,
+                                               const_iterator2, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -1684,7 +1675,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class iterator2:
             public container_reference<banded_adaptor>,
-            public random_access_iterator_base<iterator2, value_type> {
+            public random_access_iterator_base<packed_random_access_iterator_tag,
+                                               iterator2, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -1842,7 +1834,7 @@ namespace boost { namespace numerics {
     };
 
     template<class M>
-    banded_adaptor<M>::matrix_type banded_adaptor<M>::nil_;
+    typename banded_adaptor<M>::matrix_type banded_adaptor<M>::nil_;
 
 }}
 

@@ -45,6 +45,7 @@ namespace boost { namespace numerics {
             typedef typename V::difference_type difference_type;
             difference_type size (v.size ());
             typename V::iterator it (v.begin ());
+            check (v.end () - it == size, bad_size ());
 #ifndef NUMERICS_USE_DUFF_DEVICE
             while (-- size >= 0)
                 functor_type () (*it, t), ++ it;
@@ -68,11 +69,11 @@ namespace boost { namespace numerics {
 #endif
         }
 
-        // Dense case
+        // Dense (proxy) case
         template<class V, class T>
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        void operator () (V &v, const T &t, dense_tag) {
+        void operator () (V &v, const T &t, dense_proxy_tag) {
             typedef typename V::difference_type difference_type;
             difference_type size (v.size ());
             if (size >= NUMERICS_ITERATOR_THRESHOLD) 
@@ -80,11 +81,11 @@ namespace boost { namespace numerics {
             else 
                 indexing_assign (v, t);
         }
-        // Packed case
+        // Packed (proxy) case
         template<class V, class T>
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        void operator () (V &v, const T &t, packed_tag) {
+        void operator () (V &v, const T &t, packed_proxy_tag) {
             typedef typename V::difference_type difference_type;
             typename V::iterator it (v.begin ());
             difference_type size (v.end () - it);
@@ -112,46 +113,72 @@ namespace boost { namespace numerics {
         }
     };
 
-    template<class LS, class A, class RI> 
+    template<class LS, class A, class RI>
     struct vector_assign_traits {
         typedef LS dispatch_category;
     };
 
-    template<> 
+    template<>
     struct vector_assign_traits<dense_tag, assign_tag, packed_random_access_iterator_tag> {
         typedef packed_tag dispatch_category;
     };
-    template<> 
+    template<>
     struct vector_assign_traits<dense_tag, computed_assign_tag, packed_random_access_iterator_tag> {
         typedef packed_tag dispatch_category;
     };
-    template<> 
+    template<>
     struct vector_assign_traits<dense_tag, assign_tag, sparse_bidirectional_iterator_tag> {
         typedef sparse_tag dispatch_category;
     };
-    template<> 
+    template<>
     struct vector_assign_traits<dense_tag, computed_assign_tag, sparse_bidirectional_iterator_tag> {
         typedef sparse_tag dispatch_category;
     };
 
-    template<> 
+    template<>
+    struct vector_assign_traits<dense_proxy_tag, assign_tag, packed_random_access_iterator_tag> {
+        typedef packed_proxy_tag dispatch_category;
+    };
+    template<>
+    struct vector_assign_traits<dense_proxy_tag, computed_assign_tag, packed_random_access_iterator_tag> {
+        typedef packed_proxy_tag dispatch_category;
+    };
+    template<>
+    struct vector_assign_traits<dense_proxy_tag, assign_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_proxy_tag dispatch_category;
+    };
+    template<>
+    struct vector_assign_traits<dense_proxy_tag, computed_assign_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_proxy_tag dispatch_category;
+    };
+
+    template<>
     struct vector_assign_traits<packed_tag, assign_tag, sparse_bidirectional_iterator_tag> {
         typedef sparse_tag dispatch_category;
     };
-    template<> 
+    template<>
     struct vector_assign_traits<packed_tag, computed_assign_tag, sparse_bidirectional_iterator_tag> {
         typedef sparse_tag dispatch_category;
     };
 
-    template<> 
+    template<>
+    struct vector_assign_traits<packed_proxy_tag, assign_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_proxy_tag dispatch_category;
+    };
+    template<>
+    struct vector_assign_traits<packed_proxy_tag, computed_assign_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_proxy_tag dispatch_category;
+    };
+
+    template<>
     struct vector_assign_traits<sparse_tag, computed_assign_tag, dense_random_access_iterator_tag> {
         typedef sparse_proxy_tag dispatch_category;
     };
-    template<> 
+    template<>
     struct vector_assign_traits<sparse_tag, computed_assign_tag, packed_random_access_iterator_tag> {
         typedef sparse_proxy_tag dispatch_category;
     };
-    template<> 
+    template<>
     struct vector_assign_traits<sparse_tag, computed_assign_tag, sparse_bidirectional_iterator_tag> {
         typedef sparse_proxy_tag dispatch_category;
     };
@@ -170,9 +197,11 @@ namespace boost { namespace numerics {
             typedef typename V::difference_type difference_type;
             difference_type size (common (v.size (), e ().size ()));
             typename V::iterator it (v.begin ());
+            check (v.end () - it == size, bad_size ());
             typename E::const_iterator ite (e ().begin ());
+            check (e ().end () - ite == size, bad_size ());
 #ifndef NUMERICS_USE_DUFF_DEVICE
-            while (-- size >= 0) 
+            while (-- size >= 0)
                 functor_type () (*it, *ite), ++ it, ++ ite;
 #else
             DD (size, 2, r, (functor_type () (*it, *ite), ++ it, ++ ite));
@@ -187,31 +216,31 @@ namespace boost { namespace numerics {
             difference_type size (common (v.size (), e ().size ()));
 #ifndef NUMERICS_USE_DUFF_DEVICE
             for (difference_type i = 0; i < size; ++ i)
-                functor_type () (v (i), e () (i)); 
+                functor_type () (v (i), e () (i));
 #else
             difference_type i (0);
-            DD (size, 2, r, (functor_type () (v (i), e () (i)), ++ i)); 
+            DD (size, 2, r, (functor_type () (v (i), e () (i)), ++ i));
 #endif
         }
 
-        // Dense case
+        // Dense (proxy) case
         template<class V, class E>
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        void operator () (V &v, const vector_expression<E> &e, dense_tag) {
+        void operator () (V &v, const vector_expression<E> &e, dense_proxy_tag) {
             typedef typename V::size_type size_type;
             typedef typename V::difference_type difference_type;
             difference_type size (common (v.size (), e ().size ()));
-            if (size >= NUMERICS_ITERATOR_THRESHOLD) 
+            if (size >= NUMERICS_ITERATOR_THRESHOLD)
                 iterating_assign (v, e);
             else
                 indexing_assign (v, e);
         }
-        // Packed case
+        // Packed (proxy) case
         template<class V, class E>
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        void operator () (V &v, const vector_expression<E> &e, packed_tag) {
+        void operator () (V &v, const vector_expression<E> &e, packed_proxy_tag) {
             check (v.size () == e ().size (), bad_size ());
             typedef typename V::size_type size_type;
             typedef typename V::value_type value_type;
@@ -219,7 +248,7 @@ namespace boost { namespace numerics {
             typename V::iterator it_end (v.end ());
             typename E::const_iterator ite (e ().begin ());
             typename E::const_iterator ite_end (e ().end ());
-            if (ite != ite_end && ite.index () < it.index ()) 
+            if (ite != ite_end && ite.index () < it.index ())
                 ite += std::min (it.index () - ite.index (), size_type (ite_end - ite));
             while (it != it_end && ite != ite_end && it.index () < ite.index ()) {
                 functor_type () (*it, value_type ());
@@ -245,7 +274,7 @@ namespace boost { namespace numerics {
                     ++ ite;
                 }
             }
-#endif        
+#endif
         }
         // Sparse case
         template<class V, class E>
@@ -256,7 +285,7 @@ namespace boost { namespace numerics {
             v.clear ();
             typename E::const_iterator ite (e ().begin ());
             typename E::const_iterator ite_end (e ().end ());
-            while (ite != ite_end) 
+            while (ite != ite_end)
                 v.insert (ite.index (), *ite), ++ ite;
         }
         // Sparse proxy case
@@ -578,7 +607,8 @@ namespace boost { namespace numerics {
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
         class const_iterator:
             public container_const_reference<vector>,
-            public random_access_iterator_base<const_iterator, value_type> {
+            public random_access_iterator_base<dense_random_access_iterator_tag,
+                                               const_iterator, value_type> {
         public:
             typedef dense_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -676,7 +706,8 @@ namespace boost { namespace numerics {
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
         class iterator:
             public container_reference<vector>,
-            public random_access_iterator_base<iterator, value_type> {
+            public random_access_iterator_base<dense_random_access_iterator_tag,
+                                               iterator, value_type> {
         public:
             typedef dense_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -911,7 +942,8 @@ namespace boost { namespace numerics {
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
         class const_iterator:
             public container_const_reference<unit_vector>,
-            public random_access_iterator_base<const_iterator, value_type> {
+            public random_access_iterator_base<packed_random_access_iterator_tag,
+                                               const_iterator, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -1131,7 +1163,8 @@ namespace boost { namespace numerics {
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
         class const_iterator:
             public container_const_reference<scalar_vector>,
-            public random_access_iterator_base<const_iterator, value_type> {
+            public random_access_iterator_base<dense_random_access_iterator_tag,
+                                               const_iterator, value_type> {
         public:
             typedef dense_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -1490,7 +1523,8 @@ namespace boost { namespace numerics {
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
         class const_iterator:
             public container_const_reference<c_vector>,
-            public random_access_iterator_base<const_iterator, value_type> {
+            public random_access_iterator_base<dense_random_access_iterator_tag,
+                                               const_iterator, value_type> {
         public:
             typedef dense_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -1589,7 +1623,8 @@ namespace boost { namespace numerics {
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
         class iterator:
             public container_reference<c_vector>,
-            public random_access_iterator_base<iterator, value_type> {
+            public random_access_iterator_base<dense_random_access_iterator_tag,
+                                               iterator, value_type> {
         public:
             typedef dense_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR

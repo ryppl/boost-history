@@ -7,7 +7,7 @@ template<class V>
 void initialize_vector (V &v) {
     int size = v.size ();
     for (int i = 0; i < size; ++ i) 
-        v [i] = i + 1;
+        v [i] = i + 1.f;
 }
 
 template<class M>
@@ -17,9 +17,9 @@ void initialize_matrix (M &m, numerics::lower_tag) {
     for (int i = 0; i < size1; ++ i) {
         int j = 0;
         for (; j <= i; ++ j) 
-            m (i, j) = i * size1 + j + 1;
+            m (i, j) = i * size1 + j + 1.f;
 //        for (; j < size2; ++ j) 
-//            m (i, j) = 0;
+//            m (i, j) = 0.f;
     }
 }
 template<class M>
@@ -29,9 +29,9 @@ void initialize_matrix (M &m, numerics::upper_tag) {
     for (int i = 0; i < size1; ++ i) {
         int j = 0;
 //        for (; j < i; ++ j) 
-//            m (i, j) = 0;
+//            m (i, j) = 0.f;
         for (; j < size2; ++ j) 
-            m (i, j) = i * size1 + j + 1;
+            m (i, j) = i * size1 + j + 1.f;
     }
 }
 template<class M>

@@ -292,8 +292,10 @@ namespace boost { namespace numerics {
     struct unknown_storage_tag {};
     struct sparse_proxy_tag {};
     struct sparse_tag: public sparse_proxy_tag {};
-    struct packed_tag: public sparse_tag {};
-    struct dense_tag: public packed_tag {};
+    struct packed_proxy_tag: public sparse_proxy_tag {};
+    struct packed_tag: public packed_proxy_tag {};
+    struct dense_proxy_tag: public packed_proxy_tag {};
+    struct dense_tag: public dense_proxy_tag {};
 
     template<class S>
     struct proxy_traits {
@@ -304,32 +306,103 @@ namespace boost { namespace numerics {
     struct proxy_traits<sparse_tag> {
         typedef sparse_proxy_tag storage_category;
     };
+    template<>
+    struct proxy_traits<packed_tag> {
+        typedef packed_proxy_tag storage_category;
+    };
+    template<>
+    struct proxy_traits<dense_tag> {
+        typedef dense_proxy_tag storage_category;
+    };
 
     struct sparse_bidirectional_iterator_tag : public std::bidirectional_iterator_tag {};
     struct packed_random_access_iterator_tag : public std::random_access_iterator_tag {};
     struct dense_random_access_iterator_tag : public packed_random_access_iterator_tag {};
 
+    // Thanks to Kresimir Fresl for convincing Comeau with iterator_base_traits ;-)
+    template<class IC>
+    struct iterator_base_traits {};
+
+    template<>
+    struct iterator_base_traits<std::forward_iterator_tag> {
+        template<class I, class T>
+        struct iterator_base {
+            typedef forward_iterator_base<std::forward_iterator_tag, I, T> type;
+        };
+    };
+
+    template<>
+    struct iterator_base_traits<std::bidirectional_iterator_tag> {
+        template<class I, class T>
+        struct iterator_base {
+            typedef bidirectional_iterator_base<std::bidirectional_iterator_tag, I, T> type;
+        };
+    };
+    template<>
+    struct iterator_base_traits<sparse_bidirectional_iterator_tag> {
+        template<class I, class T>
+        struct iterator_base {
+            typedef bidirectional_iterator_base<sparse_bidirectional_iterator_tag, I, T> type;
+        };
+    };
+
+    template<>
+    struct iterator_base_traits<std::random_access_iterator_tag> {
+        template<class I, class T>
+        struct iterator_base {
+            typedef random_access_iterator_base<std::bidirectional_iterator_tag, I, T> type;
+        };
+    };
+    template<>
+    struct iterator_base_traits<packed_random_access_iterator_tag> {
+        template<class I, class T>
+        struct iterator_base {
+            typedef random_access_iterator_base<packed_random_access_iterator_tag, I, T> type;
+        };
+    };
+    template<>
+    struct iterator_base_traits<dense_random_access_iterator_tag> {
+        template<class I, class T>
+        struct iterator_base {
+            typedef random_access_iterator_base<dense_random_access_iterator_tag, I, T> type;
+        };
+    };
+
     template<class I1, class I2>
-    struct restrict_traits {
+    struct iterator_restrict_traits {
         typedef I1 iterator_category;
     };
 
     // FIXME: eliminate this.
+    // template<>
+    // struct iterator_restrict_traits<std::random_access_iterator_tag, std::bidirectional_iterator_tag> {
+    //     typedef std::bidirectional_iterator_tag iterator_category;
+    // };
+
     template<>
-    struct restrict_traits<std::random_access_iterator_tag, std::bidirectional_iterator_tag> {
-        typedef std::bidirectional_iterator_tag iterator_category;
+    struct iterator_restrict_traits<packed_random_access_iterator_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_bidirectional_iterator_tag iterator_category;
+    };
+    template<>
+    struct iterator_restrict_traits<sparse_bidirectional_iterator_tag, packed_random_access_iterator_tag> {
+        typedef sparse_bidirectional_iterator_tag iterator_category;
     };
 
     template<>
-    struct restrict_traits<packed_random_access_iterator_tag, sparse_bidirectional_iterator_tag> {
+    struct iterator_restrict_traits<dense_random_access_iterator_tag, sparse_bidirectional_iterator_tag> {
         typedef sparse_bidirectional_iterator_tag iterator_category;
     };
     template<>
-    struct restrict_traits<dense_random_access_iterator_tag, sparse_bidirectional_iterator_tag> {
+    struct iterator_restrict_traits<sparse_bidirectional_iterator_tag, dense_random_access_iterator_tag> {
         typedef sparse_bidirectional_iterator_tag iterator_category;
     };
+
     template<>
-    struct restrict_traits<dense_random_access_iterator_tag, packed_random_access_iterator_tag> {
+    struct iterator_restrict_traits<dense_random_access_iterator_tag, packed_random_access_iterator_tag> {
+        typedef packed_random_access_iterator_tag iterator_category;
+    };
+    template<>
+    struct iterator_restrict_traits<packed_random_access_iterator_tag, dense_random_access_iterator_tag> {
         typedef packed_random_access_iterator_tag iterator_category;
     };
 

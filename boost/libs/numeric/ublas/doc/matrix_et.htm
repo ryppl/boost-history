@@ -1182,7 +1182,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>. </p>
             public container_const_reference&lt;matrix_binary&gt;,
             public random_access_iterator_base&lt;const_iterator1, value_type&gt; {
         public:
-            typedef typename restrict_traits&lt;typename E1::const_iterator1::iterator_category, 
+            typedef typename restrict_traits&lt;typename E1::const_iterator1::iterator_category,
                                              typename E2::const_iterator1::iterator_category&gt;::iterator_category iterator_category;
             typedef typename matrix_binary::difference_type difference_type;
             typedef typename matrix_binary::value_type value_type;
@@ -1193,7 +1193,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>. </p>
 
             // Construction and destruction
             const_iterator1 ();
-            const_iterator1 (const matrix_binary &amp;mb, size_type i, const const_iterator11_type &amp;it1, const const_iterator21_type &amp;it2);
+            const_iterator1 (const matrix_binary &amp;mb, size_type i, size_type j, const const_iterator11_type &amp;it1, const const_iterator21_type &amp;it2);
 
             // Dense specializations
             void increment (dense_random_access_iterator_tag);
@@ -1254,7 +1254,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>. </p>
 
             // Construction and destruction
             const_iterator2 ();
-            const_iterator2 (const matrix_binary &amp;mb, size_type j, const const_iterator12_type &amp;it1, const const_iterator22_type &amp;it2);
+            const_iterator2 (const matrix_binary &amp;mb, size_type i, size_type j, const const_iterator12_type &amp;it1, const const_iterator22_type &amp;it2);
 
             // Dense specializations
             void increment (dense_random_access_iterator_tag);

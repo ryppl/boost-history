@@ -426,7 +426,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator1:
             public container_const_reference<hermitean_matrix>,
-            public random_access_iterator_base<const_iterator1, value_type> {
+            public random_access_iterator_base<packed_random_access_iterator_tag,
+                                               const_iterator1, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -542,7 +543,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class iterator1:
             public container_reference<hermitean_matrix>,
-            public random_access_iterator_base<iterator1, value_type> {
+            public random_access_iterator_base<packed_random_access_iterator_tag,
+                                               iterator1, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -657,7 +659,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator2:
             public container_const_reference<hermitean_matrix>,
-            public random_access_iterator_base<const_iterator2, value_type> {
+            public random_access_iterator_base<packed_random_access_iterator_tag,
+                                               const_iterator2, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -773,7 +776,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class iterator2:
             public container_reference<hermitean_matrix>,
-            public random_access_iterator_base<iterator2, value_type> {
+            public random_access_iterator_base<packed_random_access_iterator_tag,
+                                               iterator2, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -1236,7 +1240,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator1:
             public container_const_reference<hermitean_adaptor>,
-            public random_access_iterator_base<const_iterator1, value_type> {
+            public random_access_iterator_base<packed_random_access_iterator_tag,
+                                               const_iterator1, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -1352,7 +1357,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class iterator1:
             public container_reference<hermitean_adaptor>,
-            public random_access_iterator_base<iterator1, value_type> {
+            public random_access_iterator_base<packed_random_access_iterator_tag,
+                                               iterator1, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -1467,7 +1473,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator2:
             public container_const_reference<hermitean_adaptor>,
-            public random_access_iterator_base<const_iterator2, value_type> {
+            public random_access_iterator_base<packed_random_access_iterator_tag,
+                                               const_iterator2, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -1583,7 +1590,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class iterator2:
             public container_reference<hermitean_adaptor>,
-            public random_access_iterator_base<iterator2, value_type> {
+            public random_access_iterator_base<packed_random_access_iterator_tag,
+                                               iterator2, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -1739,7 +1747,7 @@ namespace boost { namespace numerics {
     };
 
     template<class M, class F>
-    hermitean_adaptor<M, F>::matrix_type hermitean_adaptor<M, F>::nil_;
+    typename hermitean_adaptor<M, F>::matrix_type hermitean_adaptor<M, F>::nil_;
 
 }}
 

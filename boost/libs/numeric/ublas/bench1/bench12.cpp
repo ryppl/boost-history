@@ -74,8 +74,8 @@ struct bench_my_outer_prod {
         try {
             static M m (N, N);
             static V v1 (N), v2 (N);
-            initialize_matrix (m);
             initialize_vector (v1);
+            initialize_vector (v2);
             boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 m.assign (- numerics::outer_prod (v1, v2));

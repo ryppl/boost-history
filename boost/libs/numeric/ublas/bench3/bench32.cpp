@@ -55,7 +55,7 @@ struct bench_my_outer_prod {
             static M m (N, N);
             numerics::matrix_range<M> mr (m, numerics::range (0, N), numerics::range (0, N));
             static V v1 (N), v2 (N);
-            numerics::vector_range<V> vr1 (v1, numerics::range (0, N)), 
+            numerics::vector_range<V> vr1 (v1, numerics::range (0, N)),
                                       vr2 (v2, numerics::range (0, N));
             initialize_vector (vr1);
             initialize_vector (vr2);
@@ -78,10 +78,10 @@ struct bench_my_outer_prod {
             static M m (N, N);
             numerics::matrix_range<M> mr (m, numerics::range (0, N), numerics::range (0, N));
             static V v1 (N), v2 (N);
-            numerics::vector_range<V> vr1 (v1, numerics::range (0, N)), 
+            numerics::vector_range<V> vr1 (v1, numerics::range (0, N)),
                                       vr2 (v2, numerics::range (0, N));
-            initialize_matrix (mr);
             initialize_vector (vr1);
+            initialize_vector (vr2);
             boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 mr.assign (- numerics::outer_prod (vr1, vr2));
@@ -166,7 +166,7 @@ struct bench_my_matrix_vector_prod {
             static M m (N, N);
             numerics::matrix_range<M> mr (m, numerics::range (0, N), numerics::range (0, N));
             static V v1 (N), v2 (N);
-            numerics::vector_range<V> vr1 (v1, numerics::range (0, N)), 
+            numerics::vector_range<V> vr1 (v1, numerics::range (0, N)),
                                       vr2 (v2, numerics::range (0, N));
             initialize_matrix (mr);
             initialize_vector (vr1);

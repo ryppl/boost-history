@@ -17,7 +17,7 @@
 
 #include "test3.h"
 
-// Test matrix expression templates 
+// Test matrix expression templates
 template<class M, int N>
 struct test_my_matrix {
     typedef typename M::value_type value_type;

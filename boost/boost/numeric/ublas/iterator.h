@@ -25,9 +25,9 @@
 //
 // namespace std {
 //
-//    template <class I, class T, class D = std::ptrdiff_t, class P = T *, class R = T &>
+//    template <class C, class T, class D = std::ptrdiff_t, class P = T *, class R = T &>
 //    struct iterator {
-//        typedef I iterator_category;
+//        typedef C iterator_category;
 //        typedef T value_type;
 //        typedef D difference_type;
 //        typedef P pointer;
@@ -117,9 +117,9 @@ namespace boost { namespace numerics {
         }
     };
 
-    template<class I, class T>
+    template<class IC, class I, class T>
     struct forward_iterator_base:
-        public boost::iterator<std::forward_iterator_tag, T> {
+        public boost::iterator<IC, T> {
         typedef I derived_iterator_type;
         typedef T derived_value_type;
         typedef const T &derived_const_reference;
@@ -150,9 +150,9 @@ namespace boost { namespace numerics {
         }
     };
 
-    template<class I, class T>
+    template<class IC, class I, class T>
     struct bidirectional_iterator_base: 
-        public boost::iterator<std::bidirectional_iterator_tag, T> {
+        public boost::iterator<IC, T> {
         typedef I derived_iterator_type;
         typedef T derived_value_type;
         typedef const T &derived_const_reference;
@@ -198,9 +198,9 @@ namespace boost { namespace numerics {
         }
     };
 
-    template<class I, class T, class D = std::ptrdiff_t>
+    template<class IC, class I, class T, class D = std::ptrdiff_t>
     struct random_access_iterator_base:
-        public boost::iterator<std::random_access_iterator_tag, T> {
+        public boost::iterator<IC, T> {
         typedef I derived_iterator_type;
         typedef T derived_value_type;
         typedef const T &derived_const_reference;
@@ -275,6 +275,7 @@ namespace boost { namespace numerics {
     };
 
 #ifdef BOOST_MSVC_STD_ITERATOR
+
     template <class I, class T, class R>
     class reverse_iterator:
         public std::reverse_iterator<I, T, R> {
@@ -508,6 +509,7 @@ namespace boost { namespace numerics {
         reverse_iterator2<I, T, R> tmp (it);
         return tmp -= n;
     }
+
 #else
 
     template <class I>
@@ -737,6 +739,7 @@ namespace boost { namespace numerics {
         }
 #endif
     };
+
 #endif
 
 #ifndef NUMERICS_FRIEND_FUNCTION
@@ -770,15 +773,16 @@ namespace boost { namespace numerics {
 //     }
 #endif
 
-    template<class C, class I>
+    template<class C, class IC>
     class indexed_iterator:
         public container_reference<C>, 
-        public random_access_iterator_base<indexed_iterator<C, I>, 
+        public random_access_iterator_base<IC,
+                                           indexed_iterator<C, IC>, 
                                            typename C::value_type,
                                            typename C::difference_type> {
     public:
         typedef C container_type;
-        typedef I iterator_category;
+        typedef IC iterator_category;
         typedef typename container_type::size_type size_type;
         typedef typename container_type::difference_type difference_type;
         typedef typename container_type::value_type value_type;
@@ -886,15 +890,16 @@ namespace boost { namespace numerics {
     }
 #endif
 
-    template<class C, class I>
+    template<class C, class IC>
     class indexed_const_iterator:
-        public container_const_reference<C>, 
-        public random_access_iterator_base<indexed_const_iterator<C, I>, 
+        public container_const_reference<C>,
+        public random_access_iterator_base<IC,
+                                           indexed_const_iterator<C, IC>, 
                                            typename C::value_type,
                                            typename C::difference_type> {
     public:
         typedef C container_type;
-        typedef I iterator_category;
+        typedef IC iterator_category;
         typedef typename container_type::size_type size_type;
         typedef typename container_type::difference_type difference_type;
         typedef typename container_type::value_type value_type;
@@ -1009,18 +1014,19 @@ namespace boost { namespace numerics {
     }
 #endif
 
-    template<class C, class I>
+    template<class C, class IC>
     class indexed_iterator2;
 
-    template<class C, class I>
+    template<class C, class IC>
     class indexed_iterator1:
         public container_reference<C>, 
-        public random_access_iterator_base<indexed_iterator1<C, I>, 
+        public random_access_iterator_base<IC,
+                                           indexed_iterator1<C, IC>, 
                                            typename C::value_type,
                                            typename C::reference> {
     public:
         typedef C container_type;
-        typedef I iterator_category;
+        typedef IC iterator_category;
         typedef typename container_type::size_type size_type;
         typedef typename container_type::difference_type difference_type;
         typedef typename container_type::value_type value_type;
@@ -1156,18 +1162,19 @@ namespace boost { namespace numerics {
     }
 #endif
 
-    template<class C, class I>
+    template<class C, class IC>
     class indexed_const_iterator2;
 
-    template<class C, class I>
+    template<class C, class IC>
     class indexed_const_iterator1:
         public container_const_reference<C>, 
-        public random_access_iterator_base<indexed_const_iterator1<C, I>, 
+        public random_access_iterator_base<IC,
+                                           indexed_const_iterator1<C, IC>, 
                                            typename C::value_type,
                                            typename C::const_reference> {
     public:
         typedef C container_type;
-        typedef I iterator_category;
+        typedef IC iterator_category;
         typedef typename container_type::size_type size_type;
         typedef typename container_type::difference_type difference_type;
         typedef typename container_type::value_type value_type;
@@ -1310,15 +1317,16 @@ namespace boost { namespace numerics {
     }
 #endif
 
-    template<class C, class I>
+    template<class C, class IC>
     class indexed_iterator2:
         public container_reference<C>, 
-        public random_access_iterator_base<indexed_iterator2<C, I>, 
+        public random_access_iterator_base<IC,
+                                           indexed_iterator2<C, IC>, 
                                            typename C::value_type,
                                            typename C::reference> {
     public:
         typedef C container_type;
-        typedef I iterator_category;
+        typedef IC iterator_category;
         typedef typename container_type::size_type size_type;
         typedef typename container_type::difference_type difference_type;
         typedef typename container_type::value_type value_type;
@@ -1454,15 +1462,16 @@ namespace boost { namespace numerics {
     }
 #endif
 
-    template<class C, class I>
+    template<class C, class IC>
     class indexed_const_iterator2:
         public container_const_reference<C>, 
-        public random_access_iterator_base<indexed_const_iterator2<C, I>, 
+        public random_access_iterator_base<IC,
+                                           indexed_const_iterator2<C, IC>, 
                                            typename C::value_type,
                                            typename C::const_reference> {
     public:
         typedef C container_type;
-        typedef I iterator_category;
+        typedef IC iterator_category;
         typedef typename container_type::size_type size_type;
         typedef typename container_type::difference_type difference_type;
         typedef typename container_type::value_type value_type;

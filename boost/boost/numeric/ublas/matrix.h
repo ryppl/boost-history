@@ -47,7 +47,7 @@ namespace boost { namespace numerics {
         difference_type distance1 (difference_type k, size_type size1, size_type size2) {
             return size2 != 0 ? k / size2 : 0;
         }
-        static 
+        static
         NUMERICS_INLINE
         difference_type distance2 (difference_type k, size_type size1, size_type size2) {
             return k;
@@ -194,7 +194,7 @@ namespace boost { namespace numerics {
         size_type one1 (size_type size1, size_type size2) {
             return 1;
         }
-        static 
+        static
         NUMERICS_INLINE
         size_type one2 (size_type size1, size_type size2) {
             return size1;
@@ -243,12 +243,12 @@ namespace boost { namespace numerics {
         size_type index2 (size_type index1, size_type index2) {
             return index1;
         }
-        static 
+        static
         NUMERICS_INLINE
         size_type size1 (size_type size1, size_type size2) {
             return size2;
         }
-        static 
+        static
         NUMERICS_INLINE
         size_type size2 (size_type size1, size_type size2) {
             return size1;
@@ -286,16 +286,16 @@ namespace boost { namespace numerics {
     struct sparse_row_major_tag: public sparse_proxy_row_major_tag {};
     struct sparse_column_major_tag: public sparse_proxy_column_major_tag {};
 
-    template<class S, class O> 
+    template<class S, class O>
     struct storage_orientation_traits {
         typedef S storage_orientation_category;
     };
 
-    template<> 
+    template<>
     struct storage_orientation_traits<sparse_tag, row_major_tag> {
         typedef sparse_row_major_tag storage_orientation_category;
     };
-    template<> 
+    template<>
     struct storage_orientation_traits<sparse_tag, column_major_tag> {
         typedef sparse_column_major_tag storage_orientation_category;
     };
@@ -328,11 +328,13 @@ namespace boost { namespace numerics {
             typedef typename M::difference_type difference_type;
             difference_type size1 (m.size1 ());
             typename M::iterator1 it1 (m.begin1 ());
+            check (m.end1 () - it1 == size1, bad_size ());
             while (-- size1 >= 0) {
+                difference_type size2 (m.size2 ());
                 typename matrix_row<M>::iterator it2 ((*it1).begin ());
-                difference_type size2 (m.size2 ()); 
+                check ((*it1).end () - it2 == size2, bad_size ());
 #ifndef NUMERICS_USE_DUFF_DEVICE
-                while (-- size2 >= 0) 
+                while (-- size2 >= 0)
                     functor_type () (*it2, t), ++ it2;
 #else
                 DD (size2, 4, r, (functor_type () (*it2, t), ++ it2));
@@ -343,11 +345,13 @@ namespace boost { namespace numerics {
             typedef typename M::difference_type difference_type;
             difference_type size1 (m.size1 ());
             typename M::iterator1 it1 (m.begin1 ());
+            check (m.end1 () - it1 == size1, bad_size ());
             while (-- size1 >= 0) {
+                difference_type size2 (m.size2 ());
                 typename M::iterator2 it2 (it1.begin ());
-                difference_type size2 (m.size2 ()); 
+                check (it1.end () - it2 == size2, bad_size ());
 #ifndef NUMERICS_USE_DUFF_DEVICE
-                while (-- size2 >= 0) 
+                while (-- size2 >= 0)
                     functor_type () (*it2, t), ++ it2;
 #else
                 DD (size2, 4, r, (functor_type () (*it2, t), ++ it2));
@@ -371,38 +375,38 @@ namespace boost { namespace numerics {
 #else
                 difference_type j (0);
                 DD (size2, 4, r, (functor_type () (m (i, j), t), ++ j));
-#endif 
+#endif
             }
         }
 
-        // Dense case
+        // Dense (proxy) case
         template<class M, class T>
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        void operator () (M &m, const T &t, dense_tag) {
+        void operator () (M &m, const T &t, dense_proxy_tag) {
             typedef typename M::size_type size_type;
             typedef typename M::difference_type difference_type;
             difference_type size1 (m.size1 ());
-            difference_type size2 (m.size2 ()); 
+            difference_type size2 (m.size2 ());
             if (size1 >= NUMERICS_ITERATOR_THRESHOLD &&
-                size2 >= NUMERICS_ITERATOR_THRESHOLD) 
+                size2 >= NUMERICS_ITERATOR_THRESHOLD)
                 iterating_assign (m, t);
-            else 
+            else
                 indexing_assign (m, t);
         }
-        // Packed case
+        // Packed (proxy) case
         template<class M, class T>
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        void operator () (M &m, const T &t, packed_tag) {
+        void operator () (M &m, const T &t, packed_proxy_tag) {
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             typedef typename M::difference_type difference_type;
             typename M::iterator1 it1 (m.begin1 ());
             difference_type size1 (m.end1 () - it1);
             while (-- size1 >= 0) {
                 typename matrix_row<M>::iterator it2 ((*it1).begin ());
-                difference_type size2 ((*it1).end () - it2); 
-                while (-- size2 >= 0) 
+                difference_type size2 ((*it1).end () - it2);
+                while (-- size2 >= 0)
                     functor_type () (*it2, t), ++ it2;
                 ++ it1;
             }
@@ -412,8 +416,8 @@ namespace boost { namespace numerics {
             difference_type size1 (m.end1 () - it1);
             while (-- size1 >= 0) {
                 typename M::iterator2 it2 (it1.begin ());
-                difference_type size2 (it1.end () - it2); 
-                while (-- size2 >= 0) 
+                difference_type size2 (it1.end () - it2);
+                while (-- size2 >= 0)
                     functor_type () (*it2, t), ++ it2;
                 ++ it1;
             }
@@ -430,7 +434,7 @@ namespace boost { namespace numerics {
             while (it1 != it1_end) {
                 typename matrix_row<M>::iterator it2 ((*it1).begin ());
                 typename matrix_row<M>::iterator it2_end ((*it1).end ());
-                while (it2 != it2_end) 
+                while (it2 != it2_end)
                     functor_type () (*it2, t), ++ it2;
                 ++ it1;
             }
@@ -440,7 +444,7 @@ namespace boost { namespace numerics {
             while (it1 != it1_end) {
                 typename M::iterator2 it2 (it1.begin ());
                 typename M::iterator2 it2_end (it1.end ());
-                while (it2 != it2_end) 
+                while (it2 != it2_end)
                     functor_type () (*it2, t), ++ it2;
                 ++ it1;
             }
@@ -457,7 +461,7 @@ namespace boost { namespace numerics {
             while (it2 != it2_end) {
                 typename matrix_column<M>::iterator1 it1 ((*it2).begin ());
                 typename matrix_column<M>::iterator1 it1_end ((*it2).end ());
-                while (it1 != it1_end) 
+                while (it1 != it1_end)
                     functor_type () (*it1, t), ++ it1;
                 ++ it2;
             }
@@ -467,7 +471,7 @@ namespace boost { namespace numerics {
             while (it2 != it2_end) {
                 typename M::iterator1 it1 (it2.begin ());
                 typename M::iterator1 it1_end (it2.end ());
-                while (it1 != it1_end) 
+                while (it1 != it1_end)
                     functor_type () (*it1, t), ++ it1;
                 ++ it2;
             }
@@ -478,7 +482,7 @@ namespace boost { namespace numerics {
         template<class M, class T>
         NUMERICS_INLINE
         void operator () (M &m, const T &t) {
-            typedef typename storage_orientation_traits<NUMERICS_TYPENAME M::storage_category, 
+            typedef typename storage_orientation_traits<NUMERICS_TYPENAME M::storage_category,
                                                         NUMERICS_TYPENAME M::orientation_category>::storage_orientation_category storage_orientation_category;
             typedef typename matrix_assign_scalar_traits<storage_orientation_category,
                                                          assign_category>::dispatch_category dispatch_category;
@@ -486,83 +490,157 @@ namespace boost { namespace numerics {
         }
     };
 
-    template<class LSO, class A, class RO, class RI1, class RI2> 
+    template<class LSO, class A, class RO, class RI1, class RI2>
     struct matrix_assign_traits {
         typedef LSO dispatch_category;
     };
 
-    template<>         
+    template<>
     struct matrix_assign_traits<dense_tag, assign_tag, unknown_orientation_tag, packed_random_access_iterator_tag, packed_random_access_iterator_tag> {
         typedef packed_tag dispatch_category;
     };
-    template<>         
+    template<>
     struct matrix_assign_traits<dense_tag, computed_assign_tag, unknown_orientation_tag, packed_random_access_iterator_tag, packed_random_access_iterator_tag> {
         typedef packed_tag dispatch_category;
     };
-    template<>         
+    template<>
     struct matrix_assign_traits<dense_tag, assign_tag, row_major_tag, packed_random_access_iterator_tag, packed_random_access_iterator_tag> {
         typedef packed_tag dispatch_category;
     };
-    template<>         
+    template<>
     struct matrix_assign_traits<dense_tag, computed_assign_tag, row_major_tag, packed_random_access_iterator_tag, packed_random_access_iterator_tag> {
         typedef packed_tag dispatch_category;
     };
-    template<>         
+    template<>
     struct matrix_assign_traits<dense_tag, assign_tag, column_major_tag, packed_random_access_iterator_tag, packed_random_access_iterator_tag> {
         typedef packed_tag dispatch_category;
     };
-    template<>         
+    template<>
     struct matrix_assign_traits<dense_tag, computed_assign_tag, column_major_tag, packed_random_access_iterator_tag, packed_random_access_iterator_tag> {
         typedef packed_tag dispatch_category;
     };
-    template<>         
+    template<>
     struct matrix_assign_traits<dense_tag, assign_tag, unknown_orientation_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
         typedef sparse_row_major_tag dispatch_category;
     };
-    template<>         
+    template<>
     struct matrix_assign_traits<dense_tag, computed_assign_tag, unknown_orientation_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
-        typedef sparse_row_major_tag dispatch_category;
+        typedef sparse_proxy_row_major_tag dispatch_category;
     };
-    template<>         
+    template<>
     struct matrix_assign_traits<dense_tag, assign_tag, row_major_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
         typedef sparse_row_major_tag dispatch_category;
     };
-    template<>         
+    template<>
     struct matrix_assign_traits<dense_tag, computed_assign_tag, row_major_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
-        typedef sparse_row_major_tag dispatch_category;
+        typedef sparse_proxy_row_major_tag dispatch_category;
     };
-    template<>         
+    template<>
     struct matrix_assign_traits<dense_tag, assign_tag, column_major_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
         typedef sparse_column_major_tag dispatch_category;
     };
-    template<>         
+    template<>
     struct matrix_assign_traits<dense_tag, computed_assign_tag, column_major_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
-        typedef sparse_column_major_tag dispatch_category;
+        typedef sparse_proxy_column_major_tag dispatch_category;
     };
 
-    template<>         
+    template<>
+    struct matrix_assign_traits<dense_proxy_tag, assign_tag, unknown_orientation_tag, packed_random_access_iterator_tag, packed_random_access_iterator_tag> {
+        typedef packed_proxy_tag dispatch_category;
+    };
+    template<>
+    struct matrix_assign_traits<dense_proxy_tag, computed_assign_tag, unknown_orientation_tag, packed_random_access_iterator_tag, packed_random_access_iterator_tag> {
+        typedef packed_proxy_tag dispatch_category;
+    };
+    template<>
+    struct matrix_assign_traits<dense_proxy_tag, assign_tag, row_major_tag, packed_random_access_iterator_tag, packed_random_access_iterator_tag> {
+        typedef packed_proxy_tag dispatch_category;
+    };
+    template<>
+    struct matrix_assign_traits<dense_proxy_tag, computed_assign_tag, row_major_tag, packed_random_access_iterator_tag, packed_random_access_iterator_tag> {
+        typedef packed_proxy_tag dispatch_category;
+    };
+    template<>
+    struct matrix_assign_traits<dense_proxy_tag, assign_tag, column_major_tag, packed_random_access_iterator_tag, packed_random_access_iterator_tag> {
+        typedef packed_proxy_tag dispatch_category;
+    };
+    template<>
+    struct matrix_assign_traits<dense_proxy_tag, computed_assign_tag, column_major_tag, packed_random_access_iterator_tag, packed_random_access_iterator_tag> {
+        typedef packed_proxy_tag dispatch_category;
+    };
+    template<>
+    struct matrix_assign_traits<dense_proxy_tag, assign_tag, unknown_orientation_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_proxy_row_major_tag dispatch_category;
+    };
+    template<>
+    struct matrix_assign_traits<dense_proxy_tag, computed_assign_tag, unknown_orientation_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_proxy_row_major_tag dispatch_category;
+    };
+    template<>
+    struct matrix_assign_traits<dense_proxy_tag, assign_tag, row_major_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_proxy_row_major_tag dispatch_category;
+    };
+    template<>
+    struct matrix_assign_traits<dense_proxy_tag, computed_assign_tag, row_major_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_proxy_row_major_tag dispatch_category;
+    };
+    template<>
+    struct matrix_assign_traits<dense_proxy_tag, assign_tag, column_major_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_proxy_column_major_tag dispatch_category;
+    };
+    template<>
+    struct matrix_assign_traits<dense_proxy_tag, computed_assign_tag, column_major_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_proxy_column_major_tag dispatch_category;
+    };
+
+    template<>
     struct matrix_assign_traits<packed_tag, assign_tag, unknown_orientation_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
         typedef sparse_row_major_tag dispatch_category;
     };
-    template<>         
+    template<>
     struct matrix_assign_traits<packed_tag, computed_assign_tag, unknown_orientation_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
-        typedef sparse_row_major_tag dispatch_category;
+        typedef sparse_proxy_row_major_tag dispatch_category;
     };
-    template<>         
+    template<>
     struct matrix_assign_traits<packed_tag, assign_tag, row_major_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
         typedef sparse_row_major_tag dispatch_category;
     };
-    template<>         
+    template<>
     struct matrix_assign_traits<packed_tag, computed_assign_tag, row_major_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
-        typedef sparse_row_major_tag dispatch_category;
+        typedef sparse_proxy_row_major_tag dispatch_category;
     };
-    template<>         
+    template<>
     struct matrix_assign_traits<packed_tag, assign_tag, column_major_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
         typedef sparse_column_major_tag dispatch_category;
     };
-    template<>         
+    template<>
     struct matrix_assign_traits<packed_tag, computed_assign_tag, column_major_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
-        typedef sparse_column_major_tag dispatch_category;
+        typedef sparse_proxy_column_major_tag dispatch_category;
+    };
+
+    template<>
+    struct matrix_assign_traits<packed_proxy_tag, assign_tag, unknown_orientation_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_proxy_row_major_tag dispatch_category;
+    };
+    template<>
+    struct matrix_assign_traits<packed_proxy_tag, computed_assign_tag, unknown_orientation_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_proxy_row_major_tag dispatch_category;
+    };
+    template<>
+    struct matrix_assign_traits<packed_proxy_tag, assign_tag, row_major_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_proxy_row_major_tag dispatch_category;
+    };
+    template<>
+    struct matrix_assign_traits<packed_proxy_tag, computed_assign_tag, row_major_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_proxy_row_major_tag dispatch_category;
+    };
+    template<>
+    struct matrix_assign_traits<packed_proxy_tag, assign_tag, column_major_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_proxy_column_major_tag dispatch_category;
+    };
+    template<>
+    struct matrix_assign_traits<packed_proxy_tag, computed_assign_tag, column_major_tag, sparse_bidirectional_iterator_tag, sparse_bidirectional_iterator_tag> {
+        typedef sparse_proxy_column_major_tag dispatch_category;
     };
 
     // matrix assignment_operation matrix_expression
@@ -580,13 +658,17 @@ namespace boost { namespace numerics {
             typedef typename M::difference_type difference_type;
             difference_type size1 (common (m.size1 (), e ().size1 ()));
             typename M::iterator1 it1 (m.begin1 ());
+            check (m.end1 () - it1 == size1, bad_size ());
             typename E::const_iterator1 it1e (e ().begin1 ());
+            check (e ().end1 () - it1e == size1, bad_size ());
             while (-- size1 >= 0) {
+                difference_type size2 (common (m.size2 (), e ().size2 ()));
                 typename matrix_row<M>::iterator it2 ((*it1).begin ());
+                check ((*it1).end () - it2 == size2, bad_size ());
                 typename matrix_row<const E>::const_iterator it2e ((*it1e).begin ());
-                difference_type size2 (common (m.size2 (), e ().size2 ())); 
+                check ((*it1e).end () - it2e == size2, bad_size ());
 #ifndef NUMERICS_USE_DUFF_DEVICE
-                while (-- size2 >= 0) 
+                while (-- size2 >= 0)
                     functor_type () (*it2, *it2e), ++ it2, ++ it2e;
 #else
                 DD (size2, 2, r, (functor_type () (*it2, *it2e), ++ it2, ++ it2e));
@@ -597,13 +679,17 @@ namespace boost { namespace numerics {
             typedef typename M::difference_type difference_type;
             difference_type size1 (common (m.size1 (), e ().size1 ()));
             typename M::iterator1 it1 (m.begin1 ());
+            check (m.end1 () - it1 == size1, bad_size ());
             typename E::const_iterator1 it1e (e ().begin1 ());
+            check (e ().end1 () - it1e == size1, bad_size ());
             while (-- size1 >= 0) {
+                difference_type size2 (common (m.size2 (), e ().size2 ()));
                 typename M::iterator2 it2 (it1.begin ());
+                check (it1.end () - it2 == size2, bad_size ());
                 typename E::const_iterator2 it2e (it1e.begin ());
-                difference_type size2 (common (m.size2 (), e ().size2 ())); 
+                check (it1e.end () - it2e == size2, bad_size ());
 #ifndef NUMERICS_USE_DUFF_DEVICE
-                while (-- size2 >= 0) 
+                while (-- size2 >= 0)
                     functor_type () (*it2, *it2e), ++ it2, ++ it2e;
 #else
                 DD (size2, 2, r, (functor_type () (*it2, *it2e), ++ it2, ++ it2e));
@@ -631,26 +717,26 @@ namespace boost { namespace numerics {
             }
         }
 
-        // Dense case
+        // Dense (proxy) case
         template<class M, class E>
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        void operator () (M &m, const matrix_expression<E> &e, dense_tag) {
+        void operator () (M &m, const matrix_expression<E> &e, dense_proxy_tag) {
             typedef typename M::size_type size_type;
             typedef typename M::difference_type difference_type;
             difference_type size1 (common (m.size1 (), e ().size1 ()));
-            difference_type size2 (common (m.size2 (), e ().size2 ())); 
+            difference_type size2 (common (m.size2 (), e ().size2 ()));
             if (size1 >= NUMERICS_ITERATOR_THRESHOLD &&
-                size2 >= NUMERICS_ITERATOR_THRESHOLD) 
+                size2 >= NUMERICS_ITERATOR_THRESHOLD)
                 iterating_assign (m, e);
-            else 
+            else
                 indexing_assign (m, e);
         }
-        // Packed case
+        // Packed (proxy) case
         template<class M, class E>
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        void operator () (M &m, const matrix_expression<E> &e, packed_tag) {
+        void operator () (M &m, const matrix_expression<E> &e, packed_proxy_tag) {
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             check (m.size1 () == e ().size1 (), bad_size ());
             check (m.size2 () == e ().size2 (), bad_size ());
@@ -660,7 +746,7 @@ namespace boost { namespace numerics {
             typename M::iterator1 it1_end (m.end1 ());
             typename E::const_iterator1 it1e (e ().begin1 ());
             typename E::const_iterator1 it1e_end (e ().end1 ());
-            if (it1e != it1e_end && it1e.index1 () < it1.index1 ()) 
+            if (it1e != it1e_end && it1e.index1 () < it1.index1 ())
                 it1e += std::min (it1.index1 () - it1e.index1 (), size_type (it1e_end - it1e));
             while (it1 != it1_end && it1e != it1e_end && it1.index () < it1e.index ()) {
                 typename matrix_row<M>::iterator it2 ((*it1).begin ());
@@ -728,7 +814,7 @@ namespace boost { namespace numerics {
             typename M::iterator1 it1_end (m.end1 ());
             typename E::const_iterator1 it1e (e ().begin1 ());
             typename E::const_iterator1 it1e_end (e ().end1 ());
-            if (it1e != it1e_end && it1e.index1 () < it1.index1 ()) 
+            if (it1e != it1e_end && it1e.index1 () < it1.index1 ())
                 it1e += std::min (it1.index1 () - it1e.index1 (), size_type (it1e_end - it1e));
             while (it1 != it1_end && it1e != it1e_end && it1.index1 () < it1e.index1 ()) {
                 typename M::iterator2 it2 (it1.begin ());
@@ -803,7 +889,7 @@ namespace boost { namespace numerics {
             while (it1e != it1e_end) {
                 typename matrix_row<const E>::const_iterator it2e ((*it1e).begin ());
                 typename matrix_row<const E>::const_iterator it2e_end ((*it1e).end ());
-                while (it2e != it2e_end) 
+                while (it2e != it2e_end)
                     m.insert (it1e.index (), it2e.index (), *it2e), ++ it2e;
                 ++ it1e;
             }
@@ -834,8 +920,8 @@ namespace boost { namespace numerics {
             typename E::const_iterator2 it2e (e ().begin2 ());
             typename E::const_iterator2 it2e_end (e ().end2 ());
             while (it2e != it2e_end) {
-                typename matrix_column<const E>::const_iterator1 it1e ((*it2e).begin ());
-                typename matrix_column<const E>::const_iterator1 it1e_end ((*it2e).end ());
+                typename matrix_column<const E>::const_iterator it1e ((*it2e).begin ());
+                typename matrix_column<const E>::const_iterator it1e_end ((*it2e).end ());
                 while (it1e != it1e_end)
                     m.insert (it1e.index (), it2e.index (), *it1e), ++ it1e;
                 ++ it2e;
@@ -849,7 +935,7 @@ namespace boost { namespace numerics {
             while (it2e != it2e_end) {
                 typename E::const_iterator1 it1e (it2e.begin ());
                 typename E::const_iterator1 it1e_end (it2e.end ());
-                while (it1e != it1e_end)
+                while (it1e != it1e_end) 
                     m.insert (it1e.index1 (), it1e.index2 (), *it1e), ++ it1e;
                 ++ it2e;
             }
@@ -1263,29 +1349,29 @@ namespace boost { namespace numerics {
     };
 
     template<>         
-    struct matrix_swap_traits<dense_tag, unknown_orientation_tag, std::bidirectional_iterator_tag, std::bidirectional_iterator_tag> {
-        typedef sparse_row_major_tag dispatch_category;
+    struct matrix_swap_traits<dense_proxy_tag, unknown_orientation_tag, std::bidirectional_iterator_tag, std::bidirectional_iterator_tag> {
+        typedef sparse_proxy_row_major_tag dispatch_category;
     };
-    template<>         
-    struct matrix_swap_traits<dense_tag, row_major_tag, std::bidirectional_iterator_tag, std::bidirectional_iterator_tag> {
-        typedef sparse_row_major_tag dispatch_category;
+    template<>
+    struct matrix_swap_traits<dense_proxy_tag, row_major_tag, std::bidirectional_iterator_tag, std::bidirectional_iterator_tag> {
+        typedef sparse_proxy_row_major_tag dispatch_category;
     };
-    template<>         
-    struct matrix_swap_traits<dense_tag, column_major_tag, std::bidirectional_iterator_tag, std::bidirectional_iterator_tag> {
-        typedef sparse_column_major_tag dispatch_category;
+    template<>
+    struct matrix_swap_traits<dense_proxy_tag, column_major_tag, std::bidirectional_iterator_tag, std::bidirectional_iterator_tag> {
+        typedef sparse_proxy_column_major_tag dispatch_category;
     };
 
-    template<>         
-    struct matrix_swap_traits<packed_tag, unknown_orientation_tag, std::bidirectional_iterator_tag, std::bidirectional_iterator_tag> {
-        typedef sparse_row_major_tag dispatch_category;
+    template<>
+    struct matrix_swap_traits<packed_proxy_tag, unknown_orientation_tag, std::bidirectional_iterator_tag, std::bidirectional_iterator_tag> {
+        typedef sparse_proxy_row_major_tag dispatch_category;
     };
-    template<>         
-    struct matrix_swap_traits<packed_tag, row_major_tag, std::bidirectional_iterator_tag, std::bidirectional_iterator_tag> {
-        typedef sparse_row_major_tag dispatch_category;
+    template<>
+    struct matrix_swap_traits<packed_proxy_tag, row_major_tag, std::bidirectional_iterator_tag, std::bidirectional_iterator_tag> {
+        typedef sparse_proxy_row_major_tag dispatch_category;
     };
-    template<>         
-    struct matrix_swap_traits<packed_tag, column_major_tag, std::bidirectional_iterator_tag, std::bidirectional_iterator_tag> {
-        typedef sparse_column_major_tag dispatch_category;
+    template<>
+    struct matrix_swap_traits<packed_proxy_tag, column_major_tag, std::bidirectional_iterator_tag, std::bidirectional_iterator_tag> {
+        typedef sparse_proxy_column_major_tag dispatch_category;
     };
 
     // matrix swap_operation matrix_expression
@@ -1293,11 +1379,11 @@ namespace boost { namespace numerics {
     struct matrix_swap {
         typedef F functor_type;
 
-        // Dense case
+        // Dense (proxy) case
         template<class M, class E>
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        void operator () (M &m, matrix_expression<E> &e, dense_tag) {
+        void operator () (M &m, matrix_expression<E> &e, dense_proxy_tag) {
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             typedef typename M::size_type size_type;
             typedef typename M::difference_type difference_type;
@@ -1308,7 +1394,7 @@ namespace boost { namespace numerics {
                 typename matrix_row<M>::iterator it2 ((*it1).begin ());
                 typename matrix_row<E>::iterator it2e ((*it1e).begin ());
                 difference_type size2 (common (m.size2 (), size_type ((*it1e).end () - it2e)));
-                while (-- size2 >= 0) 
+                while (-- size2 >= 0)
                     functor_type () (*it2, *it2e), ++ it2, ++ it2e;
                 ++ it1, ++ it1e;
             }
@@ -1328,11 +1414,11 @@ namespace boost { namespace numerics {
             }
 #endif
         }
-        // Packed case
+        // Packed (proxy) case
         template<class M, class E>
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        void operator () (M &m, matrix_expression<E> &e, packed_tag) {
+        void operator () (M &m, matrix_expression<E> &e, packed_proxy_tag) {
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             typedef typename M::size_type size_type;
             typedef typename M::difference_type difference_type;
@@ -1343,7 +1429,7 @@ namespace boost { namespace numerics {
                 typename matrix_row<M>::iterator it2 ((*it1).begin ());
                 typename matrix_row<E>::iterator it2e ((*it1e).begin ());
                 difference_type size2 (common ((*it1).end () - it2, (*it1e).end () - it2e));
-                while (-- size2 >= 0) 
+                while (-- size2 >= 0)
                     functor_type () (*it2, *it2e), ++ it2, ++ it2e;
                 ++ it1, ++ it1e;
             }
@@ -1357,7 +1443,7 @@ namespace boost { namespace numerics {
                 typename M::iterator2 it2 (it1.begin ());
                 typename E::iterator2 it2e (it1e.begin ());
                 difference_type size2 (common (it1.end () - it2, it1e.end () - it2e));
-                while (-- size2 >= 0) 
+                while (-- size2 >= 0)
                     functor_type () (*it2, *it2e), ++ it2, ++ it2e;
                 ++ it1, ++ it1e;
             }
@@ -1371,45 +1457,181 @@ namespace boost { namespace numerics {
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             check (m.size1 () == e ().size1 (), bad_size ());
             check (m.size2 () == e ().size2 (), bad_size ());
+            typedef typename M::value_type value_type;
             typename M::iterator1 it1 (m.begin1 ());
             typename M::iterator1 it1_end (m.end1 ());
             typename E::iterator1 it1e (e ().begin1 ());
             typename E::iterator1 it1e_end (e ().end1 ());
             while (it1 != it1_end && it1e != it1e_end) {
-                check (it1.index () == it1e.index (), bad_index ());
+                int compare = it1.index () - it1e.index ();
+                if (compare == 0) {
+                    typename matrix_row<M>::iterator it2 ((*it1).begin ());
+                    typename matrix_row<M>::iterator it2_end ((*it1).end ());
+                    typename matrix_row<const E>::iterator it2e ((*it1e).begin ());
+                    typename matrix_row<const E>::iterator it2e_end ((*it1e).end ());
+                    while (it2 != it2_end && it2e != it2e_end) {
+                        int compare = it2.index () - it2e.index ();
+                        if (compare == 0) {
+                            functor_type () (*it2, *it2e);
+                            ++ it2, ++ it2e;
+                        } else if (compare < 0) {
+                            throw external_logic ();
+                        } else if (compare > 0) {
+#ifdef NUMERICS_BOUNDS_CHECK_EX
+                            // Need the const member dispatched.
+                            const M &cm = m;
+                            // FIXME: we need a better floating point comparison...
+                            check (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
+#endif
+                            ++ it2e;
+                        }
+                    }
+                    if (it2 != it2_end) {
+                        throw external_logic ();
+                    }
+#ifdef NUMERICS_BOUNDS_CHECK_EX
+                    while (it2e != it2e_end) {
+                        // Need the const member dispatched.
+                        const M &cm = m;
+                        // FIXME: we need a better floating point comparison...
+                        check (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
+                        ++ it2e;
+                    }
+#endif
+                    ++ it1, ++ it1e;
+                } else if (compare < 0) {
+                    typename matrix_row<M>::iterator it2 ((*it1).begin ());
+                    typename matrix_row<M>::iterator it2_end ((*it1).end ());
+                    if (it2 != it2_end) {
+                        throw external_logic ();
+                    }
+                    ++ it1;
+                } else if (compare > 0) {
+#ifdef NUMERICS_BOUNDS_CHECK_EX
+                    typename matrix_row<const E>::const_iterator it2e ((*it1e).begin ());
+                    typename matrix_row<const E>::const_iterator it2e_end ((*it1e).end ());
+                    while (it2e != it2e_end) {
+                        // Need the const member dispatched.
+                        const M &cm = m;
+                        // FIXME: we need a better floating point comparison...
+                        check (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
+                        ++ it2e;
+                    }
+#endif
+                    ++ it1e;
+                }
+            }
+            while (it1 != it1_end) {
                 typename matrix_row<M>::iterator it2 ((*it1).begin ());
                 typename matrix_row<M>::iterator it2_end ((*it1).end ());
-                typename matrix_row<E>::iterator it2e ((*it1e).begin ());
-                typename matrix_row<E>::iterator it2e_end ((*it1e).end ());
-                while (it2 != it2_end && it2e != it2e_end) {
-                    check (it2.index () == it2e.index (), bad_index ());
-                    functor_type () (*it2, *it2e), ++ it2, ++ it2e;
+                if (it2 != it2_end) {
+                    throw external_logic ();
                 }
-                check (it2 == it2_end && it2e == it2e_end, bad_size ());
-                ++ it1, ++ it1e;
+                ++ it1;
             }
-            check (it1 == it1_end && it1e == it1e_end, bad_size ());
+#ifdef NUMERICS_BOUNDS_CHECK_EX
+            while (it1e != it1e_end) {
+                typename matrix_row<const E>::const_iterator it2e ((*it1e).begin ());
+                typename matrix_row<const E>::const_iterator it2e_end ((*it1e).end ());
+                while (it2e != it2e_end) {
+                    // Need the const member dispatched.
+                    const M &cm = m;
+                    // FIXME: we need a better floating point comparison...
+                    check (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
+                    ++ it2e;
+                }
+                ++ it1e;
+            }
+#endif
 #else
             check (m.size1 () == e ().size1 (), bad_size ());
             check (m.size2 () == e ().size2 (), bad_size ());
+            typedef typename M::value_type value_type;
             typename M::iterator1 it1 (m.begin1 ());
             typename M::iterator1 it1_end (m.end1 ());
             typename E::iterator1 it1e (e ().begin1 ());
             typename E::iterator1 it1e_end (e ().end1 ());
             while (it1 != it1_end && it1e != it1e_end) {
-                check (it1.index1 () == it1e.index1 (), bad_index ());
+                int compare = it1.index1 () - it1e.index1 ();
+                if (compare == 0) {
+                    typename M::iterator2 it2 (it1.begin ());
+                    typename M::iterator2 it2_end (it1.end ());
+                    typename E::iterator2 it2e (it1e.begin ());
+                    typename E::iterator2 it2e_end (it1e.end ());
+                    while (it2 != it2_end && it2e != it2e_end) {
+                        int compare = it2.index2 () - it2e.index2 ();
+                        if (compare == 0) {
+                            functor_type () (*it2, *it2e);
+                            ++ it2, ++ it2e;
+                        } else if (compare < 0) {
+                            throw external_logic ();
+                        } else if (compare > 0) {
+#ifdef NUMERICS_BOUNDS_CHECK_EX
+                            // Need the const member dispatched.
+                            const M &cm = m;
+                            // FIXME: we need a better floating point comparison...
+                            check (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
+#endif
+                            ++ it2e;
+                        }
+                    }
+                    if (it2 != it2_end) {
+                        throw external_logic ();
+                    }
+#ifdef NUMERICS_BOUNDS_CHECK_EX
+                    while (it2e != it2e_end) {
+                        // Need the const member dispatched.
+                        const M &cm = m;
+                        // FIXME: we need a better floating point comparison...
+                        check (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
+                        ++ it2e;
+                    }
+#endif
+                    ++ it1, ++ it1e;
+                } else if (compare < 0) {
+                    typename M::iterator2 it2 (it1.begin ());
+                    typename M::iterator2 it2_end (it1.end ());
+                    if (it2 != it2_end) {
+                        throw external_logic ();
+                    }
+                    ++ it1;
+                } else if (compare > 0) {
+#ifdef NUMERICS_BOUNDS_CHECK_EX
+                    typename E::const_iterator2 it2e (it1e.begin ());
+                    typename E::const_iterator2 it2e_end (it1e.end ());
+                    while (it2e != it2e_end) {
+                        // Need the const member dispatched.
+                        const M &cm = m;
+                        // FIXME: we need a better floating point comparison...
+                        check (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
+                        ++ it2e;
+                    }
+#endif
+                    ++ it1e;
+                }
+            }
+            while (it1 != it1_end) {
                 typename M::iterator2 it2 (it1.begin ());
                 typename M::iterator2 it2_end (it1.end ());
-                typename E::iterator2 it2e (it1e.begin ());
-                typename E::iterator2 it2e_end (it1e.end ());
-                while (it2 != it2_end && it2e != it2e_end) {
-                    check (it2.index2 () == it2e.index2 (), bad_index ());
-                    functor_type () (*it2, *it2e), ++ it2, ++ it2e;
+                if (it2 != it2_end) {
+                    throw external_logic ();
                 }
-                check (it2 == it2_end && it2e == it2e_end, bad_size ());
-                ++ it1, ++ it1e;
+                ++ it1;
             }
-            check (it1 == it1_end && it1e == it1e_end, bad_size ());
+#ifdef NUMERICS_BOUNDS_CHECK_EX
+            while (it1e != it1e_end) {
+                typename E::const_iterator2 it2e (it1e.begin ());
+                typename E::const_iterator2 it2e_end (it1e.end ());
+                while (it2e != it2e_end) {
+                    // Need the const member dispatched.
+                    const M &cm = m;
+                    // FIXME: we need a better floating point comparison...
+                    check (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
+                    ++ it2e;
+                }
+                ++ it1e;
+            }
+#endif
 #endif
         }
         // Sparse (proxy) column major case
@@ -1420,45 +1642,181 @@ namespace boost { namespace numerics {
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             check (m.size1 () == e ().size1 (), bad_size ());
             check (m.size2 () == e ().size2 (), bad_size ());
+            typedef typename M::value_type value_type;
             typename M::iterator2 it2 (m.begin2 ());
             typename M::iterator2 it2_end (m.end2 ());
             typename E::iterator2 it2e (e ().begin2 ());
             typename E::iterator2 it2e_end (e ().end2 ());
             while (it2 != it2_end && it2e != it2e_end) {
-                check (it2.index () == it2e.index (), bad_index ());
+                int compare = it2.index () - it2e.index ();
+                if (compare == 0) {
+                    typename matrix_column<M>::iterator it1 ((*it2).begin ());
+                    typename matrix_column<M>::iterator it1_end ((*it2).end ());
+                    typename matrix_column<const E>::iterator it1e ((*it2e).begin ());
+                    typename matrix_column<const E>::iterator it1e_end ((*it2e).end ());
+                    while (it1 != it1_end && it1e != it1e_end) {
+                        int compare = it1.index () - it1e.index ();
+                        if (compare == 0) {
+                            functor_type () (*it1, *it1e);
+                            ++ it1, ++ it1e;
+                        } else if (compare < 0) {
+                            throw external_logic ();
+                        } else if (compare > 0) {
+#ifdef NUMERICS_BOUNDS_CHECK_EX
+                            // Need the const member dispatched.
+                            const M &cm = m;
+                            // FIXME: we need a better floating point comparison...
+                            check (*it1e == cm (it1e.index (), it2e.index ()), bad_index ());
+#endif
+                            ++ it1e;
+                        }
+                    }
+                    if (it1 != it1_end) {
+                        throw external_logic ();
+                    }
+#ifdef NUMERICS_BOUNDS_CHECK_EX
+                    while (it1e != it1e_end) {
+                        // Need the const member dispatched.
+                        const M &cm = m;
+                        // FIXME: we need a better floating point comparison...
+                        check (*it1e == cm (it1e.index (), it2e.index ()), bad_index ());
+                        ++ it1e;
+                    }
+#endif
+                    ++ it2, ++ it2e;
+                } else if (compare < 0) {
+                    typename matrix_column<M>::iterator it1 ((*it2).begin ());
+                    typename matrix_column<M>::iterator it1_end ((*it2).end ());
+                    if (it1 != it1_end) {
+                        throw external_logic ();
+                    }
+                    ++ it2;
+                } else if (compare > 0) {
+#ifdef NUMERICS_BOUNDS_CHECK_EX
+                    typename matrix_column<const E>::const_iterator it1e ((*it2e).begin ());
+                    typename matrix_column<const E>::const_iterator it1e_end ((*it2e).end ());
+                    while (it1e != it1e_end) {
+                        // Need the const member dispatched.
+                        const M &cm = m;
+                        // FIXME: we need a better floating point comparison...
+                        check (*it1e == cm (it1e.index (), it2e.index ()), bad_index ());
+                        ++ it1e;
+                    }
+#endif
+                    ++ it2e;
+                }
+            }
+            while (it2 != it2_end) {
                 typename matrix_column<M>::iterator it1 ((*it2).begin ());
                 typename matrix_column<M>::iterator it1_end ((*it2).end ());
-                typename matrix_column<E>::iterator it1e ((*it2e).begin ());
-                typename matrix_column<E>::iterator it1e_end ((*it2e).end ());
-                while (it1 != it1_end && it1e != it1e_end) {
-                    check (it1.index () == it1e.index (), bad_index ());
-                    functor_type () (*it1, *it1e), ++ it1, ++ it1e;
+                if (it1 != it1_end) {
+                    throw external_logic ();
                 }
-                check (it1 == it1_end && it1e == it1e_end, bad_size ());
-                ++ it2, ++ it2e;
+                ++ it2;
             }
-            check (it2 == it2_end && it2e == it2e_end, bad_size ());
+#ifdef NUMERICS_BOUNDS_CHECK_EX
+            while (it2e != it2e_end) {
+                typename matrix_column<const E>::const_iterator it1e ((*it2e).begin ());
+                typename matrix_column<const E>::const_iterator it1e_end ((*it2e).end ());
+                while (it1e != it1e_end) {
+                    // Need the const member dispatched.
+                    const M &cm = m;
+                    // FIXME: we need a better floating point comparison...
+                    check (*it1e == cm (it1e.index (), it2e.index ()), bad_index ());
+                    ++ it1e;
+                }
+                ++ it2e;
+            }
+#endif
 #else
             check (m.size1 () == e ().size1 (), bad_size ());
             check (m.size2 () == e ().size2 (), bad_size ());
+            typedef typename M::value_type value_type;
             typename M::iterator2 it2 (m.begin2 ());
             typename M::iterator2 it2_end (m.end2 ());
             typename E::iterator2 it2e (e ().begin2 ());
             typename E::iterator2 it2e_end (e ().end2 ());
             while (it2 != it2_end && it2e != it2e_end) {
-                check (it2.index2 () == it2e.index2 (), bad_index ());
+                int compare = it2.index2 () - it2e.index2 ();
+                if (compare == 0) {
+                    typename M::iterator1 it1 (it2.begin ());
+                    typename M::iterator1 it1_end (it2.end ());
+                    typename E::iterator1 it1e (it2e.begin ());
+                    typename E::iterator1 it1e_end (it2e.end ());
+                    while (it1 != it1_end && it1e != it1e_end) {
+                        int compare = it1.index1 () - it1e.index1 ();
+                        if (compare == 0) {
+                            functor_type () (*it1, *it1e);
+                            ++ it1, ++ it1e;
+                        } else if (compare < 0) {
+                            throw external_logic ();
+                        } else if (compare > 0) {
+#ifdef NUMERICS_BOUNDS_CHECK_EX
+                            // Need the const member dispatched.
+                            const M &cm = m;
+                            // FIXME: we need a better floating point comparison...
+                            check (*it1e == cm (it1e.index1 (), it1e.index2 ()), bad_index ());
+#endif
+                            ++ it1e;
+                        }
+                    }
+                    if (it1 != it1_end) {
+                        throw external_logic ();
+                    }
+#ifdef NUMERICS_BOUNDS_CHECK_EX
+                    while (it1e != it1e_end) {
+                        // Need the const member dispatched.
+                        const M &cm = m;
+                        // FIXME: we need a better floating point comparison...
+                        check (*it1e == cm (it1e.index1 (), it1e.index2 ()), bad_index ());
+                        ++ it1e;
+                    }
+#endif
+                    ++ it2, ++ it2e;
+                } else if (compare < 0) {
+                    typename M::iterator1 it1 (it2.begin ());
+                    typename M::iterator1 it1_end (it2.end ());
+                    if (it1 != it1_end) {
+                        throw external_logic ();
+                    }
+                    ++ it2;
+                } else if (compare > 0) {
+#ifdef NUMERICS_BOUNDS_CHECK_EX
+                    typename E::const_iterator1 it1e (it2e.begin ());
+                    typename E::const_iterator1 it1e_end (it2e.end ());
+                    while (it1e != it1e_end) {
+                        // Need the const member dispatched.
+                        const M &cm = m;
+                        // FIXME: we need a better floating point comparison...
+                        check (*it1e == cm (it1e.index1 (), it1e.index2 ()), bad_index ());
+                        ++ it1e;
+                    }
+#endif
+                    ++ it2e;
+                }
+            }
+            while (it2 != it2_end) {
                 typename M::iterator1 it1 (it2.begin ());
                 typename M::iterator1 it1_end (it2.end ());
-                typename E::iterator1 it1e (it2e.begin ());
-                typename E::iterator1 it1e_end (it2e.end ());
-                while (it1 != it1_end && it1e != it1e_end) {
-                    check (it1.index1 () == it1e.index1 (), bad_index ());
-                    functor_type () (*it1, *it1e), ++ it1, ++ it1e;
+                if (it1 != it1_end) {
+                    throw external_logic ();
                 }
-                check (it1 == it1_end && it1e == it1e_end, bad_size ());
-                ++ it2, ++ it2e;
+                ++ it2;
             }
-            check (it2 == it2_end && it2e == it2e_end, bad_size ());
+#ifdef NUMERICS_BOUNDS_CHECK_EX
+            while (it2e != it2e_end) {
+                typename E::const_iterator1 it1e (it2e.begin ());
+                typename E::const_iterator1 it1e_end (it2e.end ());
+                while (it1e != it1e_end) {
+                    // Need the const member dispatched.
+                    const M &cm = m;
+                    // FIXME: we need a better floating point comparison...
+                    check (*it1e == cm (it1e.index1 (), it1e.index2 ()), bad_index ());
+                    ++ it1e;
+                }
+                ++ it2e;
+            }
+#endif
 #endif
         }
 
@@ -1466,7 +1824,7 @@ namespace boost { namespace numerics {
         template<class M, class E>
         NUMERICS_INLINE
         void operator () (M &m, matrix_expression<E> &e) {
-            typedef typename storage_orientation_traits<NUMERICS_TYPENAME M::storage_category, 
+            typedef typename storage_orientation_traits<NUMERICS_TYPENAME M::storage_category,
                                                         NUMERICS_TYPENAME M::orientation_category>::storage_orientation_category storage_orientation_category;
             typedef typename matrix_swap_traits<storage_orientation_category, 
                                                 NUMERICS_TYPENAME E::orientation_category, 
@@ -1528,9 +1886,9 @@ namespace boost { namespace numerics {
             size1_ (m.size1_), size2_ (m.size2_), data_ (m.data_) {}
         template<class AE>
         NUMERICS_INLINE
-        matrix (const matrix_expression<AE> &ae): 
+        matrix (const matrix_expression<AE> &ae):
             size1_ (ae ().size1 ()), size2_ (ae ().size2 ()), data_ (ae ().size1 () * ae ().size2 ()) { 
-            matrix_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
+            matrix_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae);
         }
 
         // Accessors
@@ -1562,11 +1920,11 @@ namespace boost { namespace numerics {
         // Element access
         NUMERICS_INLINE
         const_reference operator () (size_type i, size_type j) const {
-            return data () [functor_type::element (i, size1_, j, size2_)]; 
+            return data () [functor_type::element (i, size1_, j, size2_)];
         }
         NUMERICS_INLINE
         reference operator () (size_type i, size_type j) {
-            return data () [functor_type::element (i, size1_, j, size2_)]; 
+            return data () [functor_type::element (i, size1_, j, size2_)];
         }
 
 #ifdef NUMERICS_DEPRECATED
@@ -1748,10 +2106,10 @@ namespace boost { namespace numerics {
         NUMERICS_INLINE
         const_iterator1 find1 (int rank, size_type i, size_type j) const {
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
-            return const_iterator1 (*this, functor_type::element1 (i, size1_, j, size2_));
+            return const_iterator1 (*this, i);
 #else
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
-            return const_iterator1 (*this, functor_type::element1 (i, size1_, j, size2_), functor_type::element2 (i, size1_, j, size2_));
+            return const_iterator1 (*this, i, j);
 #else
             return const_iterator1 (*this, data ().begin () + functor_type::element (i, size1_, j, size2_));
 #endif
@@ -1760,10 +2118,10 @@ namespace boost { namespace numerics {
         NUMERICS_INLINE
         iterator1 find1 (int rank, size_type i, size_type j) {
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
-            return iterator1 (*this, functor_type::element1 (i, size1_, j, size2_));
+            return iterator1 (*this, i);
 #else
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
-            return iterator1 (*this, functor_type::element1 (i, size1_, j, size2_), functor_type::element2 (i, size1_, j, size2_));
+            return iterator1 (*this, i, j);
 #else
             return iterator1 (*this, data ().begin () + functor_type::element (i, size1_, j, size2_));
 #endif
@@ -1772,10 +2130,10 @@ namespace boost { namespace numerics {
         NUMERICS_INLINE
         const_iterator2 find2 (int rank, size_type i, size_type j) const {
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
-            return const_iterator2 (*this, functor_type::element2 (i, size1_, j, size2_));
+            return const_iterator2 (*this, j);
 #else
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
-            return const_iterator2 (*this, functor_type::element1 (i, size1_, j, size2_), functor_type::element2 (i, size1_, j, size2_));
+            return const_iterator2 (*this, i, j);
 #else
             return const_iterator2 (*this, data ().begin () + functor_type::element (i, size1_, j, size2_));
 #endif
@@ -1784,10 +2142,10 @@ namespace boost { namespace numerics {
         NUMERICS_INLINE
         iterator2 find2 (int rank, size_type i, size_type j) {
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
-            return iterator2 (*this, functor_type::element2 (i, size1_, j, size2_));
+            return iterator2 (*this, j);
 #else
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
-            return iterator2 (*this, functor_type::element1 (i, size1_, j, size2_), functor_type::element2 (i, size1_, j, size2_));
+            return iterator2 (*this, i, j);
 #else
             return iterator2 (*this, data ().begin () + functor_type::element (i, size1_, j, size2_));
 #endif
@@ -1831,7 +2189,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator1:
             public container_const_reference<matrix>,
-            public random_access_iterator_base<const_iterator1, value_type> {
+            public random_access_iterator_base<dense_random_access_iterator_tag,
+                                               const_iterator1, value_type> {
         public:
             typedef dense_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -1953,7 +2312,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class iterator1:
             public container_reference<matrix>,
-            public random_access_iterator_base<iterator1, value_type> {
+            public random_access_iterator_base<dense_random_access_iterator_tag,
+                                               iterator1, value_type> {
         public:
             typedef dense_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -2072,7 +2432,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator2:
             public container_const_reference<matrix>,
-            public random_access_iterator_base<const_iterator2, value_type> {
+            public random_access_iterator_base<dense_random_access_iterator_tag,
+                                               const_iterator2, value_type> {
         public:
             typedef dense_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -2194,7 +2555,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class iterator2:
             public container_reference<matrix>,
-            public random_access_iterator_base<iterator2, value_type> {
+            public random_access_iterator_base<dense_random_access_iterator_tag,
+                                               iterator2, value_type> {
         public:
             typedef dense_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -2711,7 +3073,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator1:
             public container_const_reference<vector_of_vector>,
-            public random_access_iterator_base<const_iterator1, value_type> {
+            public random_access_iterator_base<dense_random_access_iterator_tag,
+                                               const_iterator1, value_type> {
         public:
             typedef dense_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -2848,7 +3211,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class iterator1:
             public container_reference<vector_of_vector>,
-            public random_access_iterator_base<iterator1, value_type> {
+            public random_access_iterator_base<dense_random_access_iterator_tag,
+                                               iterator1, value_type> {
         public:
             typedef dense_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -2982,7 +3346,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator2:
             public container_const_reference<vector_of_vector>,
-            public random_access_iterator_base<const_iterator2, value_type> {
+            public random_access_iterator_base<dense_random_access_iterator_tag,
+                                               const_iterator2, value_type> {
         public:
             typedef dense_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -3119,7 +3484,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class iterator2:
             public container_reference<vector_of_vector>,
-            public random_access_iterator_base<iterator2, value_type> {
+            public random_access_iterator_base<dense_random_access_iterator_tag,
+                                               iterator2, value_type> {
         public:
             typedef dense_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -3477,7 +3843,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator1:
             public container_const_reference<identity_matrix>,
-            public random_access_iterator_base<const_iterator1, value_type> {
+            public random_access_iterator_base<packed_random_access_iterator_tag,
+                                               const_iterator1, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -3596,7 +3963,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator2:
             public container_const_reference<identity_matrix>,
-            public random_access_iterator_base<const_iterator2, value_type> {
+            public random_access_iterator_base<packed_random_access_iterator_tag,
+                                               const_iterator2, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -3905,7 +4273,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator1:
             public container_const_reference<scalar_matrix>,
-            public random_access_iterator_base<const_iterator1, value_type> {
+            public random_access_iterator_base<dense_random_access_iterator_tag,
+                                               const_iterator1, value_type> {
         public:
             typedef dense_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -4024,7 +4393,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator2:
             public container_const_reference<scalar_matrix>,
-            public random_access_iterator_base<const_iterator2, value_type> {
+            public random_access_iterator_base<dense_random_access_iterator_tag,
+                                               const_iterator2, value_type> {
         public:
             typedef dense_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -4520,7 +4890,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator1:
             public container_const_reference<c_matrix>,
-            public random_access_iterator_base<const_iterator1, value_type> {
+            public random_access_iterator_base<dense_random_access_iterator_tag,
+                                               const_iterator1, value_type> {
         public:
             typedef dense_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -4642,7 +5013,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class iterator1:
             public container_reference<c_matrix>,
-            public random_access_iterator_base<iterator1, value_type> {
+            public random_access_iterator_base<dense_random_access_iterator_tag,
+                                               iterator1, value_type> {
         public:
             typedef dense_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -4761,7 +5133,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator2:
             public container_const_reference<c_matrix>,
-            public random_access_iterator_base<const_iterator2, value_type> {
+            public random_access_iterator_base<dense_random_access_iterator_tag,
+                                               const_iterator2, value_type> {
         public:
             typedef dense_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -4883,7 +5256,8 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class iterator2:
             public container_reference<c_matrix>,
-            public random_access_iterator_base<iterator2, value_type> {
+            public random_access_iterator_base<dense_random_access_iterator_tag,
+                                               iterator2, value_type> {
         public:
             typedef dense_random_access_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR

@@ -107,9 +107,17 @@ namespace boost { namespace numerics {
     }
 #else
 #define check(expression, e) \
-    assert (expression);
+    if (! (expression)) { \
+        std::cerr << "Assertion failed in file " << __FILE__ << " at line " << __LINE__ << ":" << std::endl; \
+        std::cerr << #expression << std::endl; \
+        abort(); \
+    }
 #define check_ex(expression, file, line, e) \
-    assert (expression);
+    if (! (expression)) { \
+        std::cerr << "Assertion failed in file " << (file) << " at line " << (line) << ":" << std::endl; \
+        std::cerr << #expression << std::endl; \
+        abort(); \
+    }
 #endif
 #else
 //    template<class E>

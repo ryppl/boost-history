@@ -17,7 +17,7 @@
 
 #include "test3.h"
 
-// Test vector expression templates 
+// Test vector expression templates
 template<class V, int N>
 struct test_my_vector {
     typedef typename V::value_type value_type;
@@ -26,7 +26,7 @@ struct test_my_vector {
 
     template<class VP>
     void operator () (VP &v1, VP &v2, VP &v3) const {
-        try {            
+        try {
             value_type t;
             size_type i;
             real_type n;

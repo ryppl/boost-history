@@ -1037,7 +1037,14 @@ namespace boost { namespace numerics {
         MutableRandomAccessIterator<unbounded_array<double>::iterator, std::ptrdiff_t, double>::constraints ();
 #endif
 
-        IndexSet<range>::constraints ();    
+        StorageContainer<const array_adaptor<double> >::constraints ();
+        MutableStorageContainer<array_adaptor<double> >::constraints ();
+#ifdef INTERNAL_ITERATOR
+        RandomAccessIterator<array_adaptor<double>::const_iterator, std::ptrdiff_t, double>::constraints ();
+        MutableRandomAccessIterator<array_adaptor<double>::iterator, std::ptrdiff_t, double>::constraints ();
+#endif
+
+        IndexSet<range>::constraints ();
 #ifdef INTERNAL_ITERATOR
         RandomAccessIterator<range::const_iterator, std::ptrdiff_t, std::size_t>::constraints ();    
 #endif

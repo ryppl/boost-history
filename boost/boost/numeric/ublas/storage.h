@@ -21,6 +21,11 @@
 #include <valarray>
 #include <vector>
 
+#define NUMERICS_SIMPLE_ARRAY_ADAPTOR
+#ifndef NUMERICS_SIMPLE_ARRAY_ADAPTOR
+#include <boost/shared_array.hpp>
+#endif
+
 #include "config.h"
 #include "exception.h"
 #include "iterator.h"
@@ -296,7 +301,7 @@ namespace boost { namespace numerics {
         }
 
         NUMERICS_INLINE
-        size_type size () const { 
+        size_type size () const {
             return size_; 
         }
 
@@ -438,14 +443,16 @@ namespace boost { namespace numerics {
 
     template<class T, std::size_t N>
     NUMERICS_INLINE
-    bounded_array<T, N> &assign_temporary (bounded_array<T, N> &a1, bounded_array<T, N> &a2) { 
+    bounded_array<T, N> &assign_temporary (bounded_array<T, N> &a1, bounded_array<T, N> &a2) {
         return a1.assign_temporary (a2);
     }
 
-    // Array adaptor 
+#ifdef NUMERICS_SIMPLE_ARRAY_ADAPTOR
+
+    // Array adaptor
     template<class T>
     class array_adaptor {
-    public:      
+    public:
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
@@ -456,36 +463,39 @@ namespace boost { namespace numerics {
 
         // Construction and destruction
         NUMERICS_INLINE
-        array_adaptor (): 
+        array_adaptor ():
             size_ (0), own_ (true), data_ (new value_type [0]) {}
         NUMERICS_EXPLICIT NUMERICS_INLINE
-        array_adaptor (size_type size): 
+        array_adaptor (size_type size):
             size_ (size), own_ (true), data_ (new value_type [size]) {
             if (! data_)
                 throw std::bad_alloc ();
         }
         NUMERICS_INLINE
-        array_adaptor (size_type size, pointer data): 
+        array_adaptor (size_type size, pointer data):
             size_ (size), own_ (false), data_ (data) {}
+#ifdef NUMERICS_DEEP_COPY
         NUMERICS_INLINE
-        array_adaptor (const array_adaptor &a): 
+        array_adaptor (const array_adaptor &a):
+            size_ (a.size_), own_ (true), data_ (new value_type [a.size_]) {
+            if (! data_)
+                throw std::bad_alloc ();
+            *this = a;
+        }
+#else
+        NUMERICS_INLINE
+        array_adaptor (const array_adaptor &a):
             size_ (a.size_), own_ (a.own_), data_ (a.data_) {
             if (own_)
                 throw std::bad_alloc ();
         }
-//      NUMERICS_INLINE
-//      array_adaptor (const array_adaptor &a): 
-//          size_ (a.size_), own_ (true), data_ (new value_type [a.size_]) {
-//          if (! data_)
-//              throw std::bad_alloc ();
-//          *this = a;
-//      }
+#endif
         NUMERICS_INLINE
-        ~array_adaptor () { 
+        ~array_adaptor () {
             if (own_) {
                 if (! data_)
                     throw std::bad_alloc ();
-                delete [] data_; 
+                delete [] data_;
             }
         }
 
@@ -495,7 +505,7 @@ namespace boost { namespace numerics {
             if (own_) {
                 if (! data_)
                     throw std::bad_alloc ();
-                delete [] data_; 
+                delete [] data_;
             }
             size_ = size;
             own_ = true;
@@ -508,7 +518,7 @@ namespace boost { namespace numerics {
             if (own_) {
                 if (! data_)
                     throw std::bad_alloc ();
-                delete [] data_; 
+                delete [] data_;
             }
             size_ = size;
             own_ = false;
@@ -516,8 +526,8 @@ namespace boost { namespace numerics {
         }
 
         NUMERICS_INLINE
-        size_type size () const { 
-            return size_; 
+        size_type size () const {
+            return size_;
         }
 
         // Element access
@@ -534,15 +544,18 @@ namespace boost { namespace numerics {
 
         // Assignment
         NUMERICS_INLINE
-        array_adaptor &operator = (const array_adaptor &a) { 
+        array_adaptor &operator = (const array_adaptor &a) {
             check (this != &a, external_logic ());
             check (size_ == a.size_, bad_size ());
             std::copy (a.data_, a.data_ + a.size_, data_);
             return *this;
         }
         NUMERICS_INLINE
-        array_adaptor &assign_temporary (array_adaptor &a) { 
-            swap (a);
+        array_adaptor &assign_temporary (array_adaptor &a) {
+            if (own_ && a.own_)
+                swap (a);
+            else
+                *this = a;
             return *this;
         }
 
@@ -659,9 +672,231 @@ namespace boost { namespace numerics {
         pointer data_;
     };
 
+#else
+
+    template<class T>
+    struct leaker {
+        typedef void result_type;
+        typedef T *argument_type;
+
+        NUMERICS_INLINE
+        result_type operator () (argument_type x) {}
+    };
+
+    // Array adaptor
+    template<class T>
+    class array_adaptor {
+    public:
+        typedef std::size_t size_type;
+        typedef std::ptrdiff_t difference_type;
+        typedef T value_type;
+        typedef const T &const_reference;
+        typedef T &reference;
+        typedef const T *const_pointer;
+        typedef T *pointer;
+
+        // Construction and destruction
+        NUMERICS_INLINE
+        array_adaptor ():
+            size_ (0), own_ (true), data_ (new value_type [0]) {}
+        NUMERICS_EXPLICIT NUMERICS_INLINE
+        array_adaptor (size_type size):
+            size_ (size), own_ (true), data_ (new value_type [size]) {
+            if (! data_.get ())
+                throw std::bad_alloc ();
+        }
+        NUMERICS_INLINE
+        array_adaptor (size_type size, pointer data):
+            size_ (size), own_ (false), data_ (data, leaker<value_type> ()) {}
+#ifdef NUMERICS_DEEP_COPY
+        NUMERICS_INLINE
+        array_adaptor (const array_adaptor &a):
+            size_ (a.size_), own_ (true), data_ (new value_type [a.size_]) {
+            if (! data_.get ())
+                throw std::bad_alloc ();
+            *this = a;
+        }
+#else
+        NUMERICS_INLINE
+        array_adaptor (const array_adaptor &a):
+            size_ (a.size_), own_ (a.own_), data_ (a.data_) {}
+#endif
+        NUMERICS_INLINE
+        ~array_adaptor () {
+            if (! data_.get ())
+                throw std::bad_alloc ();
+        }
+
+        // Resizing
+        NUMERICS_INLINE
+        void resize (size_type size) {
+            if (! data_.get ())
+                throw std::bad_alloc ();
+            size_ = size;
+            data_ = shared_array<value_type> (new value_type [size]);
+            if (! data_.get ())
+                throw std::bad_alloc ();
+        }
+        NUMERICS_INLINE
+        void resize (size_type size, pointer data) {
+            if (! data_.get ())
+                throw std::bad_alloc ();
+            size_ = size;
+            data_ = data;
+        }
+
+        NUMERICS_INLINE
+        size_type size () const {
+            return size_;
+        }
+
+        // Element access
+        NUMERICS_INLINE
+        const_reference operator [] (size_type i) const {
+            check (i < size_, bad_index ());
+            return data_ [i];
+        }
+        NUMERICS_INLINE
+        reference operator [] (size_type i) {
+            check (i < size_, bad_index ());
+            return data_ [i];
+        }
+
+        // Assignment
+        NUMERICS_INLINE
+        array_adaptor &operator = (const array_adaptor &a) {
+            check (this != &a, external_logic ());
+            check (size_ == a.size_, bad_size ());
+            std::copy (a.data_.get (), a.data_.get () + a.size_, data_.get ());
+            return *this;
+        }
+        NUMERICS_INLINE
+        array_adaptor &assign_temporary (array_adaptor &a) {
+            if (own_ && a.own_)
+                swap (a);
+            else
+                *this = a;
+            return *this;
+        }
+
+        // Swapping
+        NUMERICS_INLINE
+        void swap (array_adaptor &a) {
+            check (this != &a, external_logic ());
+            check (size_ == a.size_, bad_size ());
+            std::swap (size_, a.size_);
+            std::swap (own_, a.own_);
+            std::swap (data_, a.data_);
+        }
+#ifdef NUMERICS_FRIEND_FUNCTION
+        NUMERICS_INLINE
+        friend void swap (array_adaptor &a1, array_adaptor &a2) {
+            a1.swap (a2);
+        }
+#endif
+
+        // Element insertion and deletion
+        NUMERICS_INLINE
+        pointer insert (pointer it, const value_type &t) {
+            check (begin () <= it && it < end (), bad_index ());
+            check (*it == value_type (), external_logic ());
+            *it = t;
+            return it;
+        }
+        NUMERICS_INLINE
+        void insert (pointer it, pointer it1, pointer it2) {
+            while (it1 != it2) {
+                check (begin () <= it && it < end (), bad_index ());
+                check (*it == value_type (), external_logic ());
+                *it = *it1;
+                ++ it, ++ it1;
+            }
+        }
+        NUMERICS_INLINE
+        void erase (pointer it) {
+            check (begin () <= it && it < end (), bad_index ());
+            *it = value_type ();
+        }
+        NUMERICS_INLINE
+        void erase (pointer it1, pointer it2) {
+            while (it1 != it2) {
+                check (begin () <= it1 && it1 < end (), bad_index ());
+                *it1 = value_type ();
+                ++ it1;
+            }
+        }
+        NUMERICS_INLINE
+        void clear () {
+            erase (begin (), end ());
+        }
+
+        // Iterators simply are pointers.
+
+        typedef const_pointer const_iterator;
+
+        NUMERICS_INLINE
+        const_iterator begin () const {
+            return data_.get ();
+        }
+        NUMERICS_INLINE
+        const_iterator end () const {
+            return data_.get () + size_;
+        }
+
+        typedef pointer iterator;
+
+        NUMERICS_INLINE
+        iterator begin () {
+            return data_.get ();
+        }
+        NUMERICS_INLINE
+        iterator end () {
+            return data_.get () + size_;
+        }
+
+        // Reverse iterators
+
+#ifdef BOOST_MSVC_STD_ITERATOR
+        typedef std::reverse_iterator<const_iterator, value_type, const_reference> const_reverse_iterator;
+#else
+        typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+#endif
+
+        NUMERICS_INLINE
+        const_reverse_iterator rbegin () const {
+            return const_reverse_iterator (end ());
+        }
+        NUMERICS_INLINE
+        const_reverse_iterator rend () const {
+            return const_reverse_iterator (begin ());
+        }
+
+#ifdef BOOST_MSVC_STD_ITERATOR
+        typedef std::reverse_iterator<iterator, value_type, reference> reverse_iterator;
+#else
+        typedef std::reverse_iterator<iterator> reverse_iterator;
+#endif
+
+        NUMERICS_INLINE
+        reverse_iterator rbegin () {
+            return reverse_iterator (end ());
+        }
+        NUMERICS_INLINE
+        reverse_iterator rend () {
+            return reverse_iterator (begin ());
+        }
+
+    private:
+        size_type size_;
+        bool own_;
+        shared_array<value_type> data_;
+    };
+
+#endif
+
     template<class T>
     NUMERICS_INLINE
-    std::valarray<T> &assign_temporary (std::valarray<T> &a1, std::valarray<T> &a2) { 
+    std::valarray<T> &assign_temporary (std::valarray<T> &a1, std::valarray<T> &a2) {
         check (&a1 != &a2, external_logic ());
         check (a1.size () == a2.size (), bad_size ());
         return a1 = a2;
@@ -669,7 +904,7 @@ namespace boost { namespace numerics {
 
     template<class T>
     NUMERICS_INLINE
-    std::vector<T> &assign_temporary (std::vector<T> &a1, std::vector<T> &a2) { 
+    std::vector<T> &assign_temporary (std::vector<T> &a1, std::vector<T> &a2) {
         check (&a1 != &a2, external_logic ());
         check (a1.size () == a2.size (), bad_size ());
         a1.swap (a2);
@@ -738,7 +973,8 @@ namespace boost { namespace numerics {
 #else
         class const_iterator:
             public container_const_reference<range>,
-            public random_access_iterator_base<const_iterator, value_type> {
+            public random_access_iterator_base<std::random_access_iterator_tag,
+                                               const_iterator, value_type> {
         public:
 
             // Construction and destruction
@@ -815,7 +1051,7 @@ namespace boost { namespace numerics {
         }
         NUMERICS_INLINE
         const_iterator end () const {
-            return const_iterator (*this, start_ + size_); 
+            return const_iterator (*this, start_ + size_);
         }
 
         // Reverse iterator
@@ -857,7 +1093,7 @@ namespace boost { namespace numerics {
         slice (): 
             start_ (), stride_ (), size_ () {}
         NUMERICS_INLINE
-        slice (size_type start, difference_type stride, size_type size): 
+        slice (size_type start, difference_type stride, size_type size):
             start_ (start), stride_ (stride), size_ (size) {}
 
         NUMERICS_INLINE
@@ -866,7 +1102,7 @@ namespace boost { namespace numerics {
         }
         NUMERICS_INLINE
         difference_type stride () const { 
-            return stride_; 
+            return stride_;
         }
         NUMERICS_INLINE
         size_type size () const { 
@@ -909,7 +1145,8 @@ namespace boost { namespace numerics {
 #else
         class const_iterator:
             public container_const_reference<slice>,
-            public random_access_iterator_base<const_iterator, value_type> {
+            public random_access_iterator_base<std::random_access_iterator_tag,
+                                               const_iterator, value_type> {
         public:
 
             // Construction and destruction
@@ -917,7 +1154,7 @@ namespace boost { namespace numerics {
             const_iterator (): 
                 container_const_reference<slice> (), it_ () {}
             NUMERICS_INLINE
-            const_iterator (const slice &s, const const_iterator_type &it): 
+            const_iterator (const slice &s, const const_iterator_type &it):
                 container_const_reference<slice> (s), it_ (it) {}
 
             // Arithmetic

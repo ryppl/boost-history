@@ -17,7 +17,7 @@
 
 #include "test3.h"
 
-// Test matrix & vector expression templates 
+// Test matrix & vector expression templates
 template<class V, class M, int N>
 struct test_my_matrix_vector {
     typedef typename V::value_type value_type;
@@ -40,7 +40,7 @@ struct test_my_matrix_vector {
             m1 = numerics::outer_prod (v1, v2);
             std::cout << "outer_prod (v1, v2) = " << m1 << std::endl;
 
-            // Matrix vector product 
+            // Matrix vector product
             initialize_matrix (m1);
             initialize_vector (v1);
             v2 = numerics::prod (m1, v1);

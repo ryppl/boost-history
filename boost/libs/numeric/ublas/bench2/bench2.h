@@ -1,5 +1,5 @@
-#ifndef BENCH1_H
-#define BENCH1_H
+#ifndef BENCH2_H
+#define BENCH2_H
 
 namespace numerics = boost::numerics;
 
@@ -8,22 +8,22 @@ void header (std::string text);
 template<class T>
 struct footer {
     void operator () (int multiplies, int plus, int runs, double elapsed) {
-        std::cout << "elapsed: " << elapsed << " s, " 
-                  << (multiplies * numerics::type_traits<T>::multiplies_complexity + 
-                      plus * numerics::type_traits<T>::plus_complexity) * runs / 
-                     (1024 * 1024 * elapsed) << " mflops" << std::endl;
-        std::cerr << "elapsed: " << elapsed << " s, " 
-                  << (multiplies * numerics::type_traits<T>::multiplies_complexity + 
-                      plus * numerics::type_traits<T>::plus_complexity) * runs / 
-                     (1024 * 1024 * elapsed) << " mflops" << std::endl;
+        std::cout << "elapsed: " << elapsed << " s, "
+                  << (multiplies * numerics::type_traits<T>::multiplies_complexity +
+                      plus * numerics::type_traits<T>::plus_complexity) * runs /
+                     (1024 * 1024 * elapsed) << " Mflops" << std::endl;
+        std::cerr << "elapsed: " << elapsed << " s, "
+                  << (multiplies * numerics::type_traits<T>::multiplies_complexity +
+                      plus * numerics::type_traits<T>::plus_complexity) * runs /
+                     (1024 * 1024 * elapsed) << " Mflops" << std::endl;
     }
 };
 
-template<class T, int N> 
+template<class T, int N>
 struct c_vector_traits {
     typedef T type [N];
 };
-template<class T, int N, int M> 
+template<class T, int N, int M>
 struct c_matrix_traits {
     typedef T type [N] [M];
 };
@@ -37,8 +37,8 @@ struct initialize_c_vector  {
     void operator () (c_vector_traits<T, N>::type &v) {
 #endif 
         for (int i = 0; i < N; ++ i) 
-//              v [i] = rand ();
-            v [i] = 0;
+            v [i] = rand () * 1.f;
+//            v [i] = 0.f;
         }
 };
 template<class V>
@@ -46,8 +46,8 @@ NUMERICS_INLINE
 void initialize_vector (V &v) {
     int size = v.size ();
     for (int i = 0; i < size; ++ i) 
-//        v [i] = rand ();
-        v [i] = 0;
+        v [i] = rand () * 1.f;
+//        v [i] = 0.f;
 }
 
 template<class T, int N, int M> 
@@ -60,8 +60,8 @@ struct initialize_c_matrix  {
 #endif 
         for (int i = 0; i < N; ++ i) 
             for (int j = 0; j < M; ++ j) 
-//                  m [i] [j] = rand ();
-                m [i] [j] = 0;
+                m [i] [j] = rand () * 1.f;
+//                m [i] [j] = 0.f;
     }
 };
 template<class M>
@@ -71,8 +71,8 @@ void initialize_matrix (M &m, numerics::row_major_tag) {
     int size2 = m.size2 ();
     for (int i = 0; i < size1; ++ i) 
         for (int j = 0; j < size2; ++ j) 
-//            m (i, j) = rand ();
-            m (i, j) = 0;
+            m (i, j) = rand () * 1.f;
+//            m (i, j) = 0.f;
 }
 template<class M>
 NUMERICS_INLINE
@@ -81,8 +81,8 @@ void initialize_matrix (M &m, numerics::column_major_tag) {
     int size2 = m.size2 ();
     for (int j = 0; j < size2; ++ j) 
         for (int i = 0; i < size1; ++ i) 
-//            m (i, j) = rand ();
-            m (i, j) = 0;
+            m (i, j) = rand () * 1.f;
+//            m (i, j) = 0.f;
 }
 template<class M>
 NUMERICS_INLINE

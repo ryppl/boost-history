@@ -96,7 +96,7 @@ namespace boost { namespace numerics {
 #ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
         const_matrix_row_type operator [] (size_type i) const {
-            return e_ [i]; 
+            return e_ [i];
         }
 #endif
 
@@ -507,8 +507,8 @@ namespace boost { namespace numerics {
 #endif
 
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
-        typedef typename restrict_traits<typename const_iterator1_type::iterator_category, 
-                                         typename const_iterator2_type::iterator_category>::iterator_category iterator_category;
+        typedef typename iterator_restrict_traits<typename const_iterator1_type::iterator_category, 
+                                                  typename const_iterator2_type::iterator_category>::iterator_category iterator_category;
         typedef matrix_row_const_iterator<vector_matrix_binary<E1, E2, F>, iterator_category> const_iterator1;
         typedef const_iterator1 iterator1;
         typedef matrix_column_const_iterator<vector_matrix_binary<E1, E2, F>, iterator_category> const_iterator2;
@@ -522,8 +522,8 @@ namespace boost { namespace numerics {
 #endif
 #else
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
-        typedef typename restrict_traits<typename const_iterator1_type::iterator_category, 
-                                         typename const_iterator2_type::iterator_category>::iterator_category iterator_category;
+        typedef typename iterator_restrict_traits<typename const_iterator1_type::iterator_category, 
+                                                  typename const_iterator2_type::iterator_category>::iterator_category iterator_category;
         typedef indexed_const_iterator1<const_closure_type, iterator_category> const_iterator1;
         typedef const_iterator1 iterator1;
         typedef indexed_const_iterator2<const_closure_type, iterator_category> const_iterator2;
@@ -555,7 +555,8 @@ namespace boost { namespace numerics {
             return const_iterator1 (*this, it1.index (), it2.index ());
 #else
 #ifdef NUMERICS_USE_INVARIANT_HOISTING
-            return const_iterator1 (*this, it1, it2, *it2);
+            const_iterator2_type it2_end (e2_.end ());
+            return const_iterator1 (*this, it1, it2, it2 != it2_end ? *it2 : 0);
 #else
             return const_iterator1 (*this, it1, it2);
 #endif
@@ -573,7 +574,8 @@ namespace boost { namespace numerics {
             return const_iterator1 (*this, it1.index (), it2.index ());
 #else
 #ifdef NUMERICS_USE_INVARIANT_HOISTING
-            return const_iterator1 (*this, it1, it2, *it2);
+            const_iterator2_type it2_end (e2_.end ());
+            return const_iterator1 (*this, it1, it2, it2 != it2_end ? *it2 : 0);
 #else
             return const_iterator1 (*this, it1, it2);
 #endif
@@ -591,7 +593,8 @@ namespace boost { namespace numerics {
             return const_iterator2 (*this, it1.index (), it2.index ());
 #else
 #ifdef NUMERICS_USE_INVARIANT_HOISTING
-            return const_iterator2 (*this, it1, it2, *it1);
+            const_iterator1_type it1_end (e1_.end ());
+            return const_iterator2 (*this, it1, it2, it1 != it1_end ? *it1 : 0);
 #else
             return const_iterator2 (*this, it1, it2);
 #endif
@@ -609,7 +612,8 @@ namespace boost { namespace numerics {
             return const_iterator2 (*this, it1.index (), it2.index ());
 #else
 #ifdef NUMERICS_USE_INVARIANT_HOISTING
-            return const_iterator2 (*this, it1, it2, *it1);
+            const_iterator1_type it1_end (e1_.end ());
+            return const_iterator2 (*this, it1, it2, it1 != it1_end ? *it1 : 0);
 #else
             return const_iterator2 (*this, it1, it2);
 #endif
@@ -623,10 +627,18 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator1:
             public container_const_reference<vector_matrix_binary>,
-            public random_access_iterator_base<const_iterator1, value_type> {
+#ifdef NUMERICS_USE_ITERATOR_BASE_TRAITS
+            public iterator_base_traits<typename iterator_restrict_traits<typename E1::const_iterator::iterator_category,
+                                                                          typename E2::const_iterator::iterator_category>::iterator_category>::template
+                iterator_base<const_iterator1, value_type>::type {
+#else
+            public random_access_iterator_base<typename iterator_restrict_traits<typename E1::const_iterator::iterator_category,
+                                                                                 typename E2::const_iterator::iterator_category>::iterator_category,
+                                               const_iterator1, value_type> {
+#endif
         public:
-            typedef typename restrict_traits<typename E1::const_iterator::iterator_category, 
-                                             typename E2::const_iterator::iterator_category>::iterator_category iterator_category;
+            typedef typename iterator_restrict_traits<typename E1::const_iterator::iterator_category,
+                                                      typename E2::const_iterator::iterator_category>::iterator_category iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename vector_matrix_binary::difference_type difference_type;
             typedef typename vector_matrix_binary::value_type value_type;
@@ -683,9 +695,9 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             value_type operator * () const {
 #ifdef NUMERICS_USE_INVARIANT_HOISTING
-                return functor_type () (*it1_, t2_); 
+                return functor_type () (*it1_, t2_);
 #else
-                return functor_type () (*it1_, *it2_); 
+                return functor_type () (*it1_, *it2_);
 #endif
             }
 
@@ -716,7 +728,7 @@ namespace boost { namespace numerics {
                 return it2_.index ();
             }
 
-            // Assignment 
+            // Assignment
             NUMERICS_INLINE
             const_iterator1 &operator = (const const_iterator1 &it) {
                 container_const_reference<vector_matrix_binary>::assign (&it ());
@@ -738,8 +750,8 @@ namespace boost { namespace numerics {
         private:
 #ifdef NUMERICS_USE_INVARIANT_HOISTING
             const_iterator1_type it1_;
-            // Mutable due to assignment 
-            /* const */ const_iterator2_type it2_; 
+            // Mutable due to assignment
+            /* const */ const_iterator2_type it2_;
             value_type t2_;
 #else
             const_iterator1_type it1_;
@@ -760,10 +772,18 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator2:
             public container_const_reference<vector_matrix_binary>,
-            public random_access_iterator_base<const_iterator2, value_type> {
+#ifdef NUMERICS_USE_ITERATOR_BASE_TRAITS
+            public iterator_base_traits<typename iterator_restrict_traits<typename E1::const_iterator::iterator_category,
+                                                                          typename E2::const_iterator::iterator_category>::iterator_category>::template
+                iterator_base<const_iterator2, value_type>::type {
+#else
+            public random_access_iterator_base<typename iterator_restrict_traits<typename E1::const_iterator::iterator_category,
+                                                                                 typename E2::const_iterator::iterator_category>::iterator_category,
+                                               const_iterator2, value_type> {
+#endif 
         public:
-            typedef typename restrict_traits<typename E1::const_iterator::iterator_category, 
-                                             typename E2::const_iterator::iterator_category>::iterator_category iterator_category;
+            typedef typename iterator_restrict_traits<typename E1::const_iterator::iterator_category, 
+                                                      typename E2::const_iterator::iterator_category>::iterator_category iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename vector_matrix_binary::difference_type difference_type;
             typedef typename vector_matrix_binary::value_type value_type;
@@ -820,9 +840,9 @@ namespace boost { namespace numerics {
             NUMERICS_INLINE
             value_type operator * () const {
 #ifdef NUMERICS_USE_INVARIANT_HOISTING
-                return functor_type () (t1_, *it2_); 
+                return functor_type () (t1_, *it2_);
 #else
-                return functor_type () (*it1_, *it2_); 
+                return functor_type () (*it1_, *it2_);
 #endif
             }
 
@@ -853,7 +873,7 @@ namespace boost { namespace numerics {
                 return it2_.index ();
             }
 
-            // Assignment 
+            // Assignment
             NUMERICS_INLINE
             const_iterator2 &operator = (const const_iterator2 &it) {
                 container_const_reference<vector_matrix_binary>::assign (&it ());
@@ -1094,7 +1114,13 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator1:
             public container_const_reference<matrix_unary1>,
-            public random_access_iterator_base<const_iterator1, value_type> {
+#ifdef NUMERICS_USE_ITERATOR_BASE_TRAITS
+            public iterator_base_traits<typename E::const_iterator1::iterator_category>::template
+                iterator_base<const_iterator1, value_type>::type {
+#else
+            public random_access_iterator_base<typename E::const_iterator1::iterator_category,
+                                               const_iterator1, value_type> {
+#endif
         public:
             typedef typename E::const_iterator1::iterator_category iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -1205,7 +1231,13 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator2:
             public container_const_reference<matrix_unary1>,
-            public random_access_iterator_base<const_iterator2, value_type> {
+#ifdef NUMERICS_USE_ITERATOR_BASE_TRAITS
+            public iterator_base_traits<typename E::const_iterator2::iterator_category>::template
+                iterator_base<const_iterator2, value_type>::type {
+#else
+            public random_access_iterator_base<typename E::const_iterator2::iterator_category,
+                                               const_iterator2, value_type> {
+#endif                                               
         public:
             typedef typename E::const_iterator2::iterator_category iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -1480,8 +1512,8 @@ namespace boost { namespace numerics {
         NUMERICS_INLINE
         const_iterator1 find_first1 (int rank, size_type i, size_type j) const {
             // FIXME: LAPACK tests fail for m x n banded matrices, if we only use rank.
-            const_iterator1_type it1 (e_.find_last2 (rank, j, i));
-            // const_iterator1_type it1 (e_.find_first2 (size1 () == size2 () ? rank : 0, j, i));
+            // const_iterator1_type it1 (e_.find_first2 (rank, j, i));
+            const_iterator1_type it1 (e_.find_first2 (size1 () == size2 () ? rank : 0, j, i));
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             return const_iterator1 (*this, it1.index ());
 #else
@@ -1495,8 +1527,8 @@ namespace boost { namespace numerics {
         NUMERICS_INLINE
         const_iterator1 find_last1 (int rank, size_type i, size_type j) const {
             // FIXME: LAPACK tests fail for m x n banded matrices, if we only use rank.
-            const_iterator1_type it1 (e_.find_first2 (rank, j, i));
-            // const_iterator1_type it1 (e_.find_last2 (size1 () == size2 () ? rank : 0, j, i));
+            // const_iterator1_type it1 (e_.find_last2 (rank, j, i));
+            const_iterator1_type it1 (e_.find_last2 (size1 () == size2 () ? rank : 0, j, i));
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             return const_iterator1 (*this, it1.index ());
 #else
@@ -1510,8 +1542,8 @@ namespace boost { namespace numerics {
         NUMERICS_INLINE
         const_iterator2 find_first2 (int rank, size_type i, size_type j) const {
             // FIXME: LAPACK tests fail for m x n banded matrices, if we only use rank.
-            const_iterator2_type it2 (e_.find_last1 (rank, j, i));
-            // const_iterator2_type it2 (e_.find_first1 (size1 () == size2 () ? rank : 0, j, i));
+            // const_iterator2_type it2 (e_.find_first1 (rank, j, i));
+            const_iterator2_type it2 (e_.find_first1 (size1 () == size2 () ? rank : 0, j, i));
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             return const_iterator2 (*this, it2.index ());
 #else
@@ -1525,8 +1557,8 @@ namespace boost { namespace numerics {
         NUMERICS_INLINE
         const_iterator2 find_last2 (int rank, size_type i, size_type j) const {
             // FIXME: LAPACK tests fail for m x n banded matrices, if we only use rank.
-            const_iterator2_type it2 (e_.find_first1 (rank, j, i));
-            // const_iterator2_type it2 (e_.find_last1 (size1 () == size2 () ? rank : 0, j, i));
+            // const_iterator2_type it2 (e_.find_last1 (rank, j, i));
+            const_iterator2_type it2 (e_.find_last1 (size1 () == size2 () ? rank : 0, j, i));
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
             return const_iterator2 (*this, it2.index ());
 #else
@@ -1544,7 +1576,13 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator1:
             public container_const_reference<matrix_unary2>,
-            public random_access_iterator_base<const_iterator1, value_type> {
+#ifdef NUMERICS_USE_ITERATOR_BASE_TRAITS
+            public iterator_base_traits<typename E::const_iterator2::iterator_category>::template
+                iterator_base<const_iterator1, value_type>::type {
+#else
+            public random_access_iterator_base<typename E::const_iterator2::iterator_category,
+                                               const_iterator1, value_type> {
+#endif                                               
         public:
             typedef typename E::const_iterator2::iterator_category iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -1655,7 +1693,13 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator2:
             public container_const_reference<matrix_unary2>,
-            public random_access_iterator_base<const_iterator2, value_type> {
+#ifdef NUMERICS_USE_ITERATOR_BASE_TRAITS
+            public iterator_base_traits<typename E::const_iterator1::iterator_category>::template
+                iterator_base<const_iterator2, value_type>::type {
+#else
+            public random_access_iterator_base<typename E::const_iterator1::iterator_category,
+                                               const_iterator2, value_type> {
+#endif
         public:
             typedef typename E::const_iterator1::iterator_category iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -1803,7 +1847,7 @@ namespace boost { namespace numerics {
     };
 
     // (trans m) [i] [j] = m [j] [i]
-    template<class E> 
+    template<class E>
     NUMERICS_INLINE
     typename matrix_unary2_traits<E, scalar_identity<typename E::value_type> >::result_type
     trans (const matrix_expression<E> &e) {
@@ -1879,12 +1923,12 @@ namespace boost { namespace numerics {
 #endif
 
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
-        typedef typename restrict_traits<typename const_iterator11_type::iterator_category, 
-                                         typename const_iterator21_type::iterator_category>::iterator_category iterator_category1;
+        typedef typename iterator_restrict_traits<typename const_iterator11_type::iterator_category, 
+                                                  typename const_iterator21_type::iterator_category>::iterator_category iterator_category1;
         typedef matrix_row_const_iterator<matrix_binary<E1, E2, F>, iterator_category1> const_iterator1;
         typedef const_iterator1 iterator1;
-        typedef typename restrict_traits<typename const_iterator12_type::iterator_category, 
-                                         typename const_iterator22_type::iterator_category>::iterator_category iterator_category2;
+        typedef typename iterator_restrict_traits<typename const_iterator12_type::iterator_category, 
+                                                  typename const_iterator22_type::iterator_category>::iterator_category iterator_category2;
         typedef matrix_column_const_iterator<matrix_binary<E1, E2, F>, iterator_category2> const_iterator2;
         typedef const_iterator2 iterator2;
 #ifdef BOOST_MSVC_STD_ITERATOR
@@ -1896,12 +1940,12 @@ namespace boost { namespace numerics {
 #endif
 #else
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
-        typedef typename restrict_traits<typename const_iterator11_type::iterator_category, 
-                                         typename const_iterator21_type::iterator_category>::iterator_category iterator_category1;
+        typedef typename iterator_restrict_traits<typename const_iterator11_type::iterator_category, 
+                                                  typename const_iterator21_type::iterator_category>::iterator_category iterator_category1;
         typedef indexed_const_iterator1<const_closure_type, iterator_category1> const_iterator1;
         typedef const_iterator1 iterator1;
-        typedef typename restrict_traits<typename const_iterator12_type::iterator_category, 
-                                         typename const_iterator22_type::iterator_category>::iterator_category iterator_category2;
+        typedef typename iterator_restrict_traits<typename const_iterator12_type::iterator_category, 
+                                                  typename const_iterator22_type::iterator_category>::iterator_category iterator_category2;
         typedef indexed_const_iterator2<const_closure_type, iterator_category2> const_iterator2;
         typedef const_iterator2 iterator2;
 #else
@@ -1931,7 +1975,7 @@ namespace boost { namespace numerics {
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return const_iterator1 (*this, i, j);
 #else
-            return const_iterator1 (*this, i, it11, it21);
+            return const_iterator1 (*this, i, j, it11, it21);
 #endif
 #endif
         }
@@ -1946,7 +1990,7 @@ namespace boost { namespace numerics {
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return const_iterator1 (*this, i, j);
 #else
-            return const_iterator1 (*this, i, it11, it21);
+            return const_iterator1 (*this, i, j, it11, it21);
 #endif
 #endif
         }
@@ -1961,7 +2005,7 @@ namespace boost { namespace numerics {
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return const_iterator2 (*this, i, j);
 #else
-            return const_iterator2 (*this, j, it12, it22);
+            return const_iterator2 (*this, i, j, it12, it22);
 #endif
 #endif
         }
@@ -1976,7 +2020,7 @@ namespace boost { namespace numerics {
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
             return const_iterator2 (*this, i, j);
 #else
-            return const_iterator2 (*this, j, it12, it22);
+            return const_iterator2 (*this, i, j, it12, it22);
 #endif
 #endif
         }
@@ -1987,10 +2031,18 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator1:
             public container_const_reference<matrix_binary>,
-            public random_access_iterator_base<const_iterator1, value_type> {
+#ifdef NUMERICS_USE_ITERATOR_BASE_TRAITS
+            public iterator_base_traits<typename iterator_restrict_traits<typename E1::const_iterator1::iterator_category,
+                                                                          typename E2::const_iterator1::iterator_category>::iterator_category>::template
+                iterator_base<const_iterator1, value_type>::type {
+#else
+            public random_access_iterator_base<typename iterator_restrict_traits<typename E1::const_iterator1::iterator_category,
+                                                                                 typename E2::const_iterator1::iterator_category>::iterator_category,
+                                               const_iterator1, value_type> {
+#endif                                               
         public:
-            typedef typename restrict_traits<typename E1::const_iterator1::iterator_category, 
-                                             typename E2::const_iterator1::iterator_category>::iterator_category iterator_category;
+            typedef typename iterator_restrict_traits<typename E1::const_iterator1::iterator_category,
+                                                      typename E2::const_iterator1::iterator_category>::iterator_category iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename matrix_binary::difference_type difference_type;
             typedef typename matrix_binary::value_type value_type;
@@ -2003,10 +2055,10 @@ namespace boost { namespace numerics {
             // Construction and destruction
             NUMERICS_INLINE
             const_iterator1 ():
-                container_const_reference<matrix_binary> (), i_ (), it1_ (), it2_ () {}
+                container_const_reference<matrix_binary> (), i_ (), j_ (), it1_ (), it2_ () {}
             NUMERICS_INLINE
-            const_iterator1 (const matrix_binary &mb, size_type i, const const_iterator11_type &it1, const const_iterator21_type &it2):
-                container_const_reference<matrix_binary> (mb), i_ (i), it1_ (it1), it2_ (it2) {}
+            const_iterator1 (const matrix_binary &mb, size_type i, size_type j, const const_iterator11_type &it1, const const_iterator21_type &it2):
+                container_const_reference<matrix_binary> (mb), i_ (i), j_ (j), it1_ (it1), it2_ (it2) {}
 
             // Dense specializations
             NUMERICS_INLINE
@@ -2055,30 +2107,54 @@ namespace boost { namespace numerics {
             // Sparse specializations
             NUMERICS_INLINE
             void increment (sparse_bidirectional_iterator_tag) {
-                if (it1_.index1 () <= i_) 
-                    ++ it1_;
-                if (it2_.index1 () <= i_) 
-                    ++ it2_;
-                i_ = std::min (it1_.index1 (), it2_.index1 ());
+                size_type index1 = (*this) ().size1 ();
+                if (it1_ != it1_ ().find_last1 (0, (*this) ().size1 (), (*this) ().size2 ())) {
+                    if (it1_.index2 () == j_ && it1_.index1 () <= i_)
+                        ++ it1_;
+                    if (it1_ != it1_ ().find_last1 (0, (*this) ().size1 (), (*this) ().size2 ()))
+                        if (it1_.index2 () == j_)
+                            index1 = it1_.index1 ();
+                }
+                size_type index2 = (*this) ().size1 ();
+                if (it2_ != it2_ ().find_last1 (0, (*this) ().size1 (), (*this) ().size2 ())) {
+                    if (it2_.index2 () == j_ && it2_.index1 () <= i_)
+                        ++ it2_;
+                    if (it2_ != it2_ ().find_last1 (0, (*this) ().size1 (), (*this) ().size2 ()))
+                        if (it2_.index2 () == j_)
+                            index2 = it2_.index1 ();
+                }
+                i_ = std::min (index1, index2);
             }
             NUMERICS_INLINE
             void decrement (sparse_bidirectional_iterator_tag) {
-                if (i_ <= it1_.index1 ()) 
-                    -- it1_;
-                if (i_ <= it2_.index1 ()) 
-                    -- it2_;
-                i_ = std::max (it1_.index1 (), it2_.index1 ());
+                size_type index1 = (*this) ().size1 ();
+                if (it1_ != it1_ ().find_last1 (0, (*this) ().size1 (), (*this) ().size2 ())) {
+                    if (it1_.index2 () == j_ && i_ <= it1_.index1 ())
+                        -- it1_;
+                    if (it1_ != it1_ ().find_last1 (0, (*this) ().size1 (), (*this) ().size2 ()))
+                        if (it1_.index2 () == j_)
+                            index1 = it1_.index1 ();
+                }
+                size_type index2 = (*this) ().size1 ();
+                if (it2_ != it2_ ().find_last1 (0, (*this) ().size1 (), (*this) ().size2 ())) {
+                    if (it2_.index2 () == j_ && i_ <= it2_.index1 ())
+                        -- it2_;
+                    if (it2_ != it2_ ().find_last1 (0, (*this) ().size1 (), (*this) ().size2 ()))
+                        if (it2_.index2 () == j_)
+                            index2 = it2_.index1 ();
+                }
+                i_ = std::max (index1, index2);
             }
             NUMERICS_INLINE
             value_type dereference (sparse_bidirectional_iterator_tag) const {
-#ifndef NUMERICS_CONDITIONAL_DEFECT
-                value_type t1 = i_ - it1_.index1 () ? value_type () : *it1_;
-                value_type t2 = i_ - it2_.index1 () ? value_type () : *it2_;
-#else
-                value_type t1, t2;
-                if (i_ - it1_.index1 ()) t1 = value_type (); else t1 = *it1_;
-                if (i_ - it2_.index1 ()) t2 = value_type (); else t2 = *it2_;
-#endif
+                value_type t1 = value_type ();
+                if (it1_ != it1_ ().find_last1 (0, (*this) ().size1 (), (*this) ().size2 ()))
+                    if (it1_.index1 () == i_ && it1_.index2 () == j_)
+                        t1 = *it1_;
+                value_type t2 = value_type ();
+                if (it2_ != it2_ ().find_last1 (0, (*this) ().size1 (), (*this) ().size2 ()))
+                    if (it2_.index1 () == i_ && it2_.index2 () == j_)
+                        t2 = *it2_;
                 return functor_type () (t1, t2);
             }
 
@@ -2141,7 +2217,7 @@ namespace boost { namespace numerics {
                 return common (it1_.index2 (), it2_.index2 ());
             }
 
-            // Assignment 
+            // Assignment
             NUMERICS_INLINE
             const_iterator1 &operator = (const const_iterator1 &it) {
                 container_const_reference<matrix_binary>::assign (&it ());
@@ -2159,6 +2235,7 @@ namespace boost { namespace numerics {
 
         private:
             size_type i_;
+            size_type j_;
             const_iterator11_type it1_;
             const_iterator21_type it2_;
         };
@@ -2176,10 +2253,18 @@ namespace boost { namespace numerics {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator2:
             public container_const_reference<matrix_binary>,
-            public random_access_iterator_base<const_iterator2, value_type> {
+#ifdef NUMERICS_USE_ITERATOR_BASE_TRAITS
+            public iterator_base_traits<typename iterator_restrict_traits<typename E1::const_iterator2::iterator_category,
+                                                                          typename E2::const_iterator2::iterator_category>::iterator_category>::template
+                iterator_base<const_iterator2, value_type>::type {
+#else
+            public random_access_iterator_base<typename iterator_restrict_traits<typename E1::const_iterator2::iterator_category,
+                                                                                 typename E2::const_iterator2::iterator_category>::iterator_category,
+                                               const_iterator2, value_type> {
+#endif                                               
         public:
-            typedef typename restrict_traits<typename E1::const_iterator2::iterator_category, 
-                                             typename E2::const_iterator2::iterator_category>::iterator_category iterator_category;
+            typedef typename iterator_restrict_traits<typename E1::const_iterator2::iterator_category,
+                                                      typename E2::const_iterator2::iterator_category>::iterator_category iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename matrix_binary::difference_type difference_type;
             typedef typename matrix_binary::value_type value_type;
@@ -2192,10 +2277,10 @@ namespace boost { namespace numerics {
             // Construction and destruction
             NUMERICS_INLINE
             const_iterator2 ():
-                container_const_reference<matrix_binary> (), j_ (), it1_ (), it2_ () {}
+                container_const_reference<matrix_binary> (), i_ (), j_ (), it1_ (), it2_ () {}
             NUMERICS_INLINE
-            const_iterator2 (const matrix_binary &mb, size_type j, const const_iterator12_type &it1, const const_iterator22_type &it2):
-                container_const_reference<matrix_binary> (mb), j_ (j), it1_ (it1), it2_ (it2) {}
+            const_iterator2 (const matrix_binary &mb, size_type i, size_type j, const const_iterator12_type &it1, const const_iterator22_type &it2):
+                container_const_reference<matrix_binary> (mb), i_ (i), j_ (j), it1_ (it1), it2_ (it2) {}
 
             // Dense access specializations
             NUMERICS_INLINE
@@ -2216,15 +2301,15 @@ namespace boost { namespace numerics {
             void increment (packed_random_access_iterator_tag) {
                 if (it1_.index2 () <= j_) 
                     ++ it1_;
-                if (it2_.index2 () <= j_) 
+                if (it2_.index2 () <= j_)
                     ++ it2_;
                 ++ j_;
             }
             NUMERICS_INLINE
             void decrement (packed_random_access_iterator_tag) {
-                if (j_ <= it1_.index2 ()) 
+                if (j_ <= it1_.index2 ())
                     -- it1_;
-                if (j_ <= it2_.index2 ()) 
+                if (j_ <= it2_.index2 ())
                     -- it2_;
                 -- j_;
             }
@@ -2244,30 +2329,54 @@ namespace boost { namespace numerics {
             // Sparse specializations
             NUMERICS_INLINE
             void increment (sparse_bidirectional_iterator_tag) {
-                if (it1_.index2 () <= j_) 
-                    ++ it1_;
-                if (it2_.index2 () <= j_) 
-                    ++ it2_;
-                j_ = std::min (it1_.index2 (), it2_.index2 ());
+                size_type index1 = (*this) ().size2 ();
+                if (it1_ != it1_ ().find_last2 (0, (*this) ().size1 (), (*this) ().size2 ())) {
+                    if (it1_.index1 () == i_ && it1_.index2 () <= j_)
+                        ++ it1_;
+                    if (it1_ != it1_ ().find_last2 (0, (*this) ().size1 (), (*this) ().size2 ()))
+                        if (it1_.index1 () == i_)
+                            index1 = it1_.index2 ();
+                }
+                size_type index2 = (*this) ().size2 ();
+                if (it2_ != it2_ ().find_last2 (0, (*this) ().size1 (), (*this) ().size2 ())) {
+                    if (it2_.index1 () == i_ && it2_.index2 () <= j_)
+                        ++ it2_;
+                    if (it2_ != it2_ ().find_last2 (0, (*this) ().size1 (), (*this) ().size2 ()))
+                        if (it2_.index1 () == i_)
+                            index2 = it2_.index2 ();
+                }
+                j_ = std::min (index1, index2);
             }
             NUMERICS_INLINE
             void decrement (sparse_bidirectional_iterator_tag) {
-                if (j_ <= it1_.index2 ()) 
-                    -- it1_;
-                if (j_ <= it2_.index2 ()) 
-                    -- it2_;
-                j_ = std::max (it1_.index2 (), it2_.index2 ());
+                size_type index1 = (*this) ().size2 ();
+                if (it1_ != it1_ ().find_last2 (0, (*this) ().size1 (), (*this) ().size2 ())) {
+                    if (it1_.index1 () == i_ && j_ <= it1_.index2 ())
+                        -- it1_;
+                    if (it1_ != it1_ ().find_last2 (0, (*this) ().size1 (), (*this) ().size2 ()))
+                        if (it1_.index1 () == i_)
+                            index1 = it1_.index2 ();
+                }
+                size_type index2 = (*this) ().size2 ();
+                if (it2_ != it2_ ().find_last2 (0, (*this) ().size1 (), (*this) ().size2 ())) {
+                    if (it2_.index1 () == i_ && j_ <= it2_.index2 ())
+                        -- it2_;
+                    if (it2_ != it2_ ().find_last2 (0, (*this) ().size1 (), (*this) ().size2 ()))
+                        if (it2_.index1 () == i_)
+                            index2 = it2_.index2 ();
+                }
+                j_ = std::max (index1, index2);
             }
             NUMERICS_INLINE
             value_type dereference (sparse_bidirectional_iterator_tag) const {
-#ifndef NUMERICS_CONDITIONAL_DEFECT
-                value_type t1 = j_ - it1_.index2 () ? value_type () : *it1_;
-                value_type t2 = j_ - it2_.index2 () ? value_type () : *it2_;
-#else
-                value_type t1, t2;
-                if (j_ - it1_.index2 ()) t1 = value_type (); else t1 = *it1_;
-                if (j_ - it2_.index2 ()) t2 = value_type (); else t2 = *it2_;
-#endif
+                value_type t1 = value_type ();
+                if (it1_ != it1_ ().find_last2 (0, (*this) ().size1 (), (*this) ().size2 ()))
+                    if (it1_.index1 () == i_ && it1_.index2 () == j_)
+                        t1 = *it1_;
+                value_type t2 = value_type ();
+                if (it2_ != it2_ ().find_last2 (0, (*this) ().size1 (), (*this) ().size2 ()))
+                    if (it2_.index1 () == i_ && it2_.index2 () == j_)
+                        t2 = *it2_;
                 return functor_type () (t1, t2);
             }
 
@@ -2347,6 +2456,7 @@ namespace boost { namespace numerics {
             }
 
         private:
+            size_type i_;
             size_type j_;
             const_iterator12_type it1_;
             const_iterator22_type it2_;
@@ -2580,7 +2690,13 @@ expression_type;
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator1:
             public container_const_reference<matrix_binary_scalar1>,
-            public random_access_iterator_base<const_iterator1, value_type> {
+#ifdef NUMERICS_USE_ITERATOR_BASE_TRAITS
+            public iterator_base_traits<typename E2::const_iterator1::iterator_category>::template
+                iterator_base<const_iterator1, value_type>::type {
+#else
+            public random_access_iterator_base<typename E2::const_iterator1::iterator_category,
+                                               const_iterator1, value_type> {
+#endif                                               
         public:
             typedef typename E2::const_iterator1::iterator_category iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -2695,7 +2811,13 @@ expression_type;
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator2:
             public container_const_reference<matrix_binary_scalar1>,
-            public random_access_iterator_base<const_iterator2, value_type> {
+#ifdef NUMERICS_USE_ITERATOR_BASE_TRAITS
+            public iterator_base_traits<typename E2::const_iterator2::iterator_category>::template
+                iterator_base<const_iterator2, value_type>::type {
+#else
+            public random_access_iterator_base<typename E2::const_iterator2::iterator_category,
+                                               const_iterator2, value_type> {
+#endif                                               
         public:
             typedef typename E2::const_iterator2::iterator_category iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -2917,9 +3039,9 @@ expression_type;
 #endif
 
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
-        typedef matrix_row_const_iterator<matrix_binary_scalar2<E1, E2, F>, typename const_iterator21_type::iterator_category> const_iterator1;
+        typedef matrix_row_const_iterator<matrix_binary_scalar2<E1, E2, F>, typename const_iterator11_type::iterator_category> const_iterator1;
         typedef const_iterator1 iterator1;
-        typedef matrix_column_const_iterator<matrix_binary_scalar2<E1, E2, F>, typename const_iterator22_type::iterator_category> const_iterator2;
+        typedef matrix_column_const_iterator<matrix_binary_scalar2<E1, E2, F>, typename const_iterator12_type::iterator_category> const_iterator2;
         typedef const_iterator2 iterator2;
 #ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator1, matrix_binary_scalar2<E1, E2, F>, matrix_binary_scalar2<E1, E2, F> > const_reverse_iterator1;
@@ -2930,9 +3052,9 @@ expression_type;
 #endif
 #else
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
-        typedef indexed_const_iterator1<const_closure_type, typename const_iterator21_type::iterator_category> const_iterator1;
+        typedef indexed_const_iterator1<const_closure_type, typename const_iterator11_type::iterator_category> const_iterator1;
         typedef const_iterator1 iterator1;
-        typedef indexed_const_iterator2<const_closure_type, typename const_iterator22_type::iterator_category> const_iterator2;
+        typedef indexed_const_iterator2<const_closure_type, typename const_iterator12_type::iterator_category> const_iterator2;
         typedef const_iterator2 iterator2;
 #else
         class const_iterator1;
@@ -3009,7 +3131,13 @@ expression_type;
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator1:
             public container_const_reference<matrix_binary_scalar2>,
-            public random_access_iterator_base<const_iterator1, value_type> {
+#ifdef NUMERICS_USE_ITERATOR_BASE_TRAITS
+            public iterator_base_traits<typename E1::const_iterator1::iterator_category>::template
+                iterator_base<const_iterator1, value_type>::type {
+#else
+            public random_access_iterator_base<typename E1::const_iterator1::iterator_category,
+                                               const_iterator1, value_type> {
+#endif                                               
         public:
             typedef typename E1::const_iterator1::iterator_category iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -3124,7 +3252,13 @@ expression_type;
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator2:
             public container_const_reference<matrix_binary_scalar2>,
-            public random_access_iterator_base<const_iterator2, value_type> {
+#ifdef NUMERICS_USE_ITERATOR_BASE_TRAITS
+            public iterator_base_traits<typename E1::const_iterator2::iterator_category>::template
+                iterator_base<const_iterator2, value_type>::type {
+#else
+            public random_access_iterator_base<typename E1::const_iterator2::iterator_category,
+                                               const_iterator2, value_type> {
+#endif                                               
         public:
             typedef typename E1::const_iterator2::iterator_category iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -3392,10 +3526,18 @@ expression_type;
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
         class const_iterator:
             public container_const_reference<matrix_vector_binary1>,
-            public random_access_iterator_base<const_iterator, value_type> {
+#ifdef NUMERICS_USE_ITERATOR_BASE_TRAITS
+            public iterator_base_traits<typename iterator_restrict_traits<typename E1::const_iterator1::iterator_category,
+                                                                          typename E2::const_iterator::iterator_category>::iterator_category>::template
+                iterator_base<const_iterator, value_type>::type {
+#else
+            public random_access_iterator_base<typename iterator_restrict_traits<typename E1::const_iterator1::iterator_category,
+                                                                                 typename E2::const_iterator::iterator_category>::iterator_category,
+                                               const_iterator, value_type> {
+#endif                                               
         public:
-            typedef typename restrict_traits<typename E1::const_iterator1::iterator_category, 
-                                             typename E2::const_iterator::iterator_category>::iterator_category iterator_category;
+            typedef typename iterator_restrict_traits<typename E1::const_iterator1::iterator_category, 
+                                                      typename E2::const_iterator::iterator_category>::iterator_category iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename matrix_vector_binary1::difference_type difference_type;
             typedef typename matrix_vector_binary1::value_type value_type;
@@ -3751,10 +3893,18 @@ sparse_bidirectional_iterator_tag ());
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
         class const_iterator:
             public container_const_reference<matrix_vector_binary2>,
-            public random_access_iterator_base<const_iterator, value_type> {
+#ifdef NUMERICS_USE_ITERATOR_BASE_TRAITS
+            public iterator_base_traits<typename iterator_restrict_traits<typename E1::const_iterator::iterator_category,
+                                                                          typename E2::const_iterator2::iterator_category>::iterator_category>::template
+                iterator_base<const_iterator, value_type>::type {
+#else
+            public random_access_iterator_base<typename iterator_restrict_traits<typename E1::const_iterator::iterator_category,
+                                                                                 typename E2::const_iterator2::iterator_category>::iterator_category,
+                                               const_iterator, value_type> {
+#endif
         public:
-            typedef typename restrict_traits<typename E1::const_iterator::iterator_category, 
-                                             typename E2::const_iterator2::iterator_category>::iterator_category iterator_category;
+            typedef typename iterator_restrict_traits<typename E1::const_iterator::iterator_category,
+                                                      typename E2::const_iterator2::iterator_category>::iterator_category iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename matrix_vector_binary2::difference_type difference_type;
             typedef typename matrix_vector_binary2::value_type value_type;
@@ -4083,8 +4233,8 @@ sparse_bidirectional_iterator_tag ());
 #endif
 
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
-        typedef typename restrict_traits<typename const_iterator11_type::iterator_category,
-                                         typename const_iterator22_type::iterator_category>::iterator_category iterator_category;
+        typedef typename iterator_restrict_traits<typename const_iterator11_type::iterator_category,
+                                                  typename const_iterator22_type::iterator_category>::iterator_category iterator_category;
         typedef matrix_row_const_iterator<matrix_matrix_binary<E1, E2, F>, iterator_category> const_iterator1;
         typedef const_iterator1 iterator1;
         typedef matrix_column_const_iterator<matrix_matrix_binary<E1, E2, F>, iterator_category> const_iterator2;
@@ -4098,8 +4248,8 @@ sparse_bidirectional_iterator_tag ());
 #endif
 #else
 #ifdef NUMERICS_USE_INDEXED_ITERATOR
-        typedef typename restrict_traits<typename const_iterator11_type::iterator_category, 
-                                         typename const_iterator22_type::iterator_category>::iterator_category iterator_category;
+        typedef typename iterator_restrict_traits<typename const_iterator11_type::iterator_category, 
+                                                  typename const_iterator22_type::iterator_category>::iterator_category iterator_category;
         typedef indexed_const_iterator1<const_closure_type, iterator_category> const_iterator1;
         typedef const_iterator1 iterator1;
         typedef indexed_const_iterator2<const_closure_type, iterator_category> const_iterator2;
@@ -4198,10 +4348,18 @@ sparse_bidirectional_iterator_tag ());
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator1:
             public container_const_reference<matrix_matrix_binary>,
-            public random_access_iterator_base<const_iterator1, value_type> {
+#ifdef NUMERICS_USE_ITERATOR_BASE_TRAITS
+            public iterator_base_traits<typename iterator_restrict_traits<typename E1::const_iterator1::iterator_category,
+                                                                          typename E2::const_iterator2::iterator_category>::iterator_category>::template
+                iterator_base<const_iterator1, value_type>::type {
+#else
+            public random_access_iterator_base<typename iterator_restrict_traits<typename E1::const_iterator1::iterator_category,
+                                                                                 typename E2::const_iterator2::iterator_category>::iterator_category,
+                                               const_iterator1, value_type> {
+#endif                                               
         public:
-            typedef typename restrict_traits<typename E1::const_iterator1::iterator_category,
-                                             typename E2::const_iterator2::iterator_category>::iterator_category iterator_category;
+            typedef typename iterator_restrict_traits<typename E1::const_iterator1::iterator_category,
+                                                      typename E2::const_iterator2::iterator_category>::iterator_category iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename matrix_matrix_binary::difference_type difference_type;
             typedef typename matrix_matrix_binary::value_type value_type;
@@ -4366,10 +4524,18 @@ sparse_bidirectional_iterator_tag ());
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR)
         class const_iterator2:
             public container_const_reference<matrix_matrix_binary>,
-            public random_access_iterator_base<const_iterator2, value_type> {
+#ifdef NUMERICS_USE_ITERATOR_BASE_TRAITS
+            public iterator_base_traits<typename iterator_restrict_traits<typename E1::const_iterator1::iterator_category,
+                                                                          typename E2::const_iterator2::iterator_category>::iterator_category>::template
+                iterator_base<const_iterator2, value_type>::type {
+#else
+            public random_access_iterator_base<typename iterator_restrict_traits<typename E1::const_iterator1::iterator_category,
+                                                                                 typename E2::const_iterator2::iterator_category>::iterator_category,
+                                               const_iterator2, value_type> {
+#endif                                               
         public:
-            typedef typename restrict_traits<typename E1::const_iterator1::iterator_category, 
-                                             typename E2::const_iterator2::iterator_category>::iterator_category iterator_category;
+            typedef typename iterator_restrict_traits<typename E1::const_iterator1::iterator_category, 
+                                                      typename E2::const_iterator2::iterator_category>::iterator_category iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename matrix_matrix_binary::difference_type difference_type;
             typedef typename matrix_matrix_binary::value_type value_type;

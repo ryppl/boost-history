@@ -76,8 +76,8 @@ struct bench_my_outer_prod {
         try {
             static M m (N, N, N * N);
             static V v1 (N, N), v2 (N, N);
-            initialize_matrix (m);
             initialize_vector (v1);
+            initialize_vector (v2);
             boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 m.assign (- numerics::outer_prod (v1, v2));
@@ -334,21 +334,21 @@ void bench_2<T, N>::operator () (int runs) {
     bench_c_outer_prod<T, N> () (runs);
 
 #ifdef USE_MAP_ARRAY
-    header ("matrix<bounded_array>, vector<bounded_array> safe");
+    header ("sparse_matrix<map_array>, sparse_vector<map_array> safe");
     bench_my_outer_prod<numerics::sparse_matrix<T, numerics::row_major, numerics::map_array<std::size_t, T> >,
                         numerics::sparse_vector<T, numerics::map_array<std::size_t, T> >, N> () (runs, safe_tag ());
 
-    header ("matrix<bounded_array>, vector<bounded_array> fast");
-    bench_my_outer_prod<numerics::sparse_matrix<T, numerics::row_major, numerics::map_array<std::size_t, T> >, 
+    header ("sparse_matrix<map_array>, sparse_vector<map_array> fast");
+    bench_my_outer_prod<numerics::sparse_matrix<T, numerics::row_major, numerics::map_array<std::size_t, T> >,
                         numerics::sparse_vector<T, numerics::map_array<std::size_t, T> >, N> () (runs, fast_tag ());
 #endif
 
 #ifdef USE_STD_MAP
-    header ("matrix<unbounded_array>, vector<unbounded_array> safe");
-    bench_my_outer_prod<numerics::sparse_matrix<T, numerics::row_major, std::map<std::size_t, T> >, 
+    header ("sparse_matrix<std::map>, sparse_vector<std::map> safe");
+    bench_my_outer_prod<numerics::sparse_matrix<T, numerics::row_major, std::map<std::size_t, T> >,
                         numerics::sparse_vector<T, std::map<std::size_t, T> >, N> () (runs, safe_tag ());
 
-    header ("matrix<unbounded_array>, vector<unbounded_array> fast");
+    header ("sparse_matrix<std::map>, sparse_vector<std::map> fast");
     bench_my_outer_prod<numerics::sparse_matrix<T, numerics::row_major, std::map<std::size_t, T> >,
                         numerics::sparse_vector<T, std::map<std::size_t, T> >, N> () (runs, fast_tag ());
 #endif

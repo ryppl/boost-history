@@ -222,7 +222,7 @@ namespace boost { namespace numerics {
         // Element insertion and erasure
         NUMERICS_INLINE
         void insert (size_type i, const_reference t) {
-#ifndef NUMERICS_USE_ET
+#ifdef NUMERICS_CHECK_FOR_ZERO
             if (t == value_type ())
                 return;
 #endif
@@ -276,7 +276,8 @@ namespace boost { namespace numerics {
 
         class const_iterator:
             public container_const_reference<sparse_vector>,
-            public bidirectional_iterator_base<const_iterator, value_type> {
+            public bidirectional_iterator_base<sparse_bidirectional_iterator_tag,
+                                               const_iterator, value_type> {
         public:
             typedef sparse_bidirectional_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -357,7 +358,8 @@ namespace boost { namespace numerics {
 
         class iterator:
             public container_reference<sparse_vector>,
-            public bidirectional_iterator_base<iterator, value_type> {
+            public bidirectional_iterator_base<sparse_bidirectional_iterator_tag,
+                                               iterator, value_type> {
         public:
             typedef sparse_bidirectional_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -470,7 +472,7 @@ namespace boost { namespace numerics {
 
     // Array based sparse vector class 
     template<class T, class IA, class TA>
-    class compressed_vector: 
+    class compressed_vector:
         public vector_expression<compressed_vector<T, IA, TA> > {
     public:
         typedef std::size_t size_type;
@@ -686,10 +688,11 @@ namespace boost { namespace numerics {
         // Element insertion and erasure
         NUMERICS_INLINE
         void insert (size_type i, const_reference t) {
-#ifndef NUMERICS_USE_ET
-            if (t == value_type ()) 
-                return;
-#endif
+// FIXME: Doesn't work if the first element is zero.
+// #ifdef NUMERICS_CHECK_FOR_ZERO
+//             if (t == value_type ())
+//                 return;
+// #endif
             check (filled_ == 0 || index_data () [filled_ - 1] < i + 1, external_logic ()); 
             index_data () [filled_] = i + 1;
             value_data () [filled_] = t;
@@ -740,7 +743,8 @@ namespace boost { namespace numerics {
 
         class const_iterator:
             public container_const_reference<compressed_vector>,
-            public bidirectional_iterator_base<const_iterator, value_type> {
+            public bidirectional_iterator_base<sparse_bidirectional_iterator_tag,
+                                               const_iterator, value_type> {
         public:
             typedef sparse_bidirectional_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -821,7 +825,8 @@ namespace boost { namespace numerics {
 
         class iterator:
             public container_reference<compressed_vector>,
-            public bidirectional_iterator_base<iterator, value_type> {
+            public bidirectional_iterator_base<sparse_bidirectional_iterator_tag,
+                                               iterator, value_type> {
         public:
             typedef sparse_bidirectional_iterator_tag iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR

@@ -418,7 +418,7 @@ href="container.htm#matrix">Matrix</a>.</p>
 
             // Construction and destruction
             const_iterator1 ();
-            const_iterator1 (const sparse_matrix &amp;m, size_type i, size_type j, const const_iterator_type &amp;it);
+            const_iterator1 (const sparse_matrix &amp;m, int rank, size_type i, size_type j, const const_iterator_type &amp;it);
             const_iterator1 (const iterator1 &amp;it);
 
             // Arithmetic
@@ -462,7 +462,7 @@ href="container.htm#matrix">Matrix</a>.</p>
 
             // Construction and destruction
             iterator1 ();
-            iterator1 (sparse_matrix &amp;m, size_type i, size_type j, const iterator_type &amp;it);
+            iterator1 (sparse_matrix &amp;m, int rank, size_type i, size_type j, const iterator_type &amp;it);
 
             // Arithmetic
             iterator1 &amp;operator ++ ();
@@ -505,7 +505,7 @@ href="container.htm#matrix">Matrix</a>.</p>
 
             // Construction and destruction
             const_iterator2 ();
-            const_iterator2 (const sparse_matrix &amp;m, size_type i, size_type j, const const_iterator_type &amp;it);
+            const_iterator2 (const sparse_matrix &amp;m, int rank, size_type i, size_type j, const const_iterator_type &amp;it);
             const_iterator2 (const iterator2 &amp;it);
 
             // Arithmetic
@@ -549,7 +549,7 @@ href="container.htm#matrix">Matrix</a>.</p>
 
             // Construction and destruction
             iterator2 ();
-            iterator2 (sparse_matrix &amp;m, size_type i, size_type j, const iterator_type &amp;it);
+            iterator2 (sparse_matrix &amp;m, int rank, size_type i, size_type j, const iterator_type &amp;it);
 
             // Arithmetic
             iterator2 &amp;operator ++ ();

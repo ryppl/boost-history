@@ -118,17 +118,22 @@ namespace boost { namespace numerics {
 
         // Assignment
         NUMERICS_INLINE
-        vector_range &operator = (const vector_range &vr) { 
-            std::copy (vr.begin (), vr.end (), begin ());
+        vector_range &operator = (const vector_range &vr) {
+            // FIXME: the ranges could be differently sized.
+            // std::copy (vr.begin (), vr.end (), begin ());
+            vector_assign<scalar_assign<value_type, value_type> > () (*this, vector<value_type> (vr));
             return *this;
         }
         NUMERICS_INLINE
-        vector_range &assign_temporary (vector_range &vr) { 
-            return *this = vr;
+        vector_range &assign_temporary (vector_range &vr) {
+            // FIXME: this is suboptimal.
+            // return *this = vr;
+            vector_assign<scalar_assign<value_type, value_type> > () (*this, vr);
+            return *this;
         }
         template<class AE>
         NUMERICS_INLINE
-        vector_range &operator = (const vector_expression<AE> &ae) {        
+        vector_range &operator = (const vector_expression<AE> &ae) {
             vector_assign<scalar_assign<value_type, value_type> > () (*this, vector<value_type> (ae));
             return *this;
         }
@@ -242,7 +247,13 @@ namespace boost { namespace numerics {
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
         class const_iterator:
             public container_const_reference<vector_range>,
-            public random_access_iterator_base<const_iterator, value_type> {
+#ifdef NUMERICS_USE_ITERATOR_BASE_TRAITS
+            public iterator_base_traits<typename V::const_iterator::iterator_category>::template
+                        iterator_base<const_iterator, value_type>::type {
+#else
+            public random_access_iterator_base<typename V::const_iterator::iterator_category,
+                                               const_iterator, value_type> {
+#endif
         public:
             typedef typename V::const_iterator::iterator_category iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -340,7 +351,13 @@ namespace boost { namespace numerics {
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
         class iterator:
             public container_reference<vector_range>,
-            public random_access_iterator_base<iterator, value_type> {
+#ifdef NUMERICS_USE_ITERATOR_BASE_TRAITS
+            public iterator_base_traits<typename V::iterator::iterator_category>::template
+                        iterator_base<iterator, value_type>::type {
+#else
+            public random_access_iterator_base<typename V::iterator::iterator_category,
+                                               iterator, value_type> {
+#endif
         public:
             typedef typename V::iterator::iterator_category iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -485,7 +502,7 @@ namespace boost { namespace numerics {
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
     template<class V>
     NUMERICS_INLINE
-    vector_range<const V> project (const V &data, const range &r) {
+    const vector_range<const V> project (const V &data, const range &r) {
         return vector_range<const V> (data, r);
     }
     template<class V>
@@ -495,7 +512,7 @@ namespace boost { namespace numerics {
     }
     template<class V>
     NUMERICS_INLINE
-    vector_range<const V> project (const vector_range<const V> &data, const range &r) {
+    const vector_range<const V> project (const vector_range<const V> &data, const range &r) {
         return data.project (r);
     }
 #endif
@@ -607,16 +624,21 @@ namespace boost { namespace numerics {
         // Assignment
         NUMERICS_INLINE
         vector_slice &operator = (const vector_slice &vs) { 
-            std::copy (vs.begin (), vs.end (), begin ());
+            // FIXME: the slices could be differently sized.
+            // std::copy (vs.begin (), vs.end (), begin ());
+            vector_assign<scalar_assign<value_type, value_type> > () (*this, vector<value_type> (vs));
             return *this;
         }
         NUMERICS_INLINE
-        vector_slice &assign_temporary (vector_slice &vs) { 
-            return *this = vs;
+        vector_slice &assign_temporary (vector_slice &vs) {
+            // FIXME: this is suboptimal.
+            // return *this = vs;
+            vector_assign<scalar_assign<value_type, value_type> > () (*this, vs);
+            return *this;
         }
         template<class AE>
         NUMERICS_INLINE
-        vector_slice &operator = (const vector_expression<AE> &ae) {        
+        vector_slice &operator = (const vector_expression<AE> &ae) {
             vector_assign<scalar_assign<value_type, value_type> > () (*this, vector<value_type> (ae));
             return *this;
         }
@@ -726,7 +748,13 @@ namespace boost { namespace numerics {
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
         class const_iterator:
             public container_const_reference<vector_type>,
-            public random_access_iterator_base<const_iterator, value_type> {
+#ifdef NUMERICS_USE_ITERATOR_BASE_TRAITS
+            public iterator_base_traits<typename V::const_iterator::iterator_category>::template
+                        iterator_base<const_iterator, value_type>::type {
+#else
+            public random_access_iterator_base<typename V::const_iterator::iterator_category,
+                                               const_iterator, value_type> {
+#endif                                               
         public:
             typedef typename V::const_iterator::iterator_category iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -824,7 +852,13 @@ namespace boost { namespace numerics {
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
         class iterator:
             public container_reference<vector_type>,
-            public random_access_iterator_base<iterator, value_type> {
+#ifdef NUMERICS_USE_ITERATOR_BASE_TRAITS
+            public iterator_base_traits<typename V::iterator::iterator_category>::template
+                        iterator_base<iterator, value_type>::type {
+#else
+            public random_access_iterator_base<typename V::iterator::iterator_category,
+                                               iterator, value_type> {
+#endif
         public:
             typedef typename V::iterator::iterator_category iterator_category;
 #ifndef BOOST_MSVC_STD_ITERATOR
@@ -962,7 +996,7 @@ namespace boost { namespace numerics {
     }
     template<class V>
     NUMERICS_INLINE
-    vector_slice<const V> project (const vector_slice<const V> &data, const range &r) {
+    const vector_slice<const V> project (const vector_slice<const V> &data, const range &r) {
         return data.project (r);
     }
 #endif
@@ -974,7 +1008,7 @@ namespace boost { namespace numerics {
 #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
     template<class V>
     NUMERICS_INLINE
-    vector_slice<const V> project (const V &data, const slice &s) {
+    const vector_slice<const V> project (const V &data, const slice &s) {
         return vector_slice<const V> (data, s);
     }
     template<class V>
@@ -984,7 +1018,7 @@ namespace boost { namespace numerics {
     }
     template<class V>
     NUMERICS_INLINE
-    vector_slice<const V> project (const vector_slice<const V> &data, const slice &s) {
+    const vector_slice<const V> project (const vector_slice<const V> &data, const slice &s) {
         return data.project (s);
     }
 #endif
