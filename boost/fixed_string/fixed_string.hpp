@@ -4,10 +4,6 @@
 
 #ifndef BOOST_FIXED_STRING_HPP
 #define BOOST_FIXED_STRING_HPP
-#  if defined(BOOST_CHAR_STRING_HPP)
-#     error cannot use both fixed_string.hpp and char_string.hpp
-#  endif
-
 #  include <boost/fixed_string/detail/basic_string_impl.hpp>
 #  include <boost/mpl/or.hpp>
 #  include <boost/mpl/equal_to.hpp>
@@ -58,6 +54,8 @@
          virtual const char *                    c_str()  const = 0;
          virtual const char *                    data()   const = 0;
          virtual char &                          at( size_t i ) = 0;
+         virtual char *                          iter_offset(       ptrdiff_t ) = 0;
+         virtual const char *                    const_iter_offset( ptrdiff_t ) const = 0;
 
          virtual size_t                          length()   const = 0;
          virtual size_t                          capacity() const = 0;
@@ -77,6 +75,8 @@
          virtual const wchar_t *                 c_str()  const = 0;
          virtual const wchar_t *                 data()   const = 0;
          virtual wchar_t &                       at( size_t i ) = 0;
+         virtual wchar_t *                       iter_offset(       ptrdiff_t ) = 0;
+         virtual const wchar_t *                 const_iter_offset( ptrdiff_t ) const = 0;
 
          virtual size_t                          length()   const = 0;
          virtual size_t                          capacity() const = 0;
@@ -103,6 +103,7 @@
             typedef typename mpl::if_< is_same< CharT, char >, char_string, wchar_string >::type
                                                                      base_type;
             typedef typename base_type::size_type                    size_type;
+            typedef typename base_type::difference_type              difference_type;
             typedef typename base_type::reference                    reference;
             typedef typename base_type::const_reference              const_reference;
          public: // validation checks
@@ -140,6 +141,14 @@
                if( i >= n )            throw( std::out_of_range( "" ));
                return( str[ i ]);
             }
+            inline CharT *                       iter_offset( difference_type off )
+            {
+               return( str + off );
+            }
+            inline const CharT *                 const_iter_offset( difference_type off ) const
+            {
+               return( str + off );
+            }
          public: // size and capacity
             inline size_type                     length() const
             {
@@ -176,7 +185,7 @@
                if( l == size_type( -1 )) l = StringPolicy::length( s ) + 1;
                l = (( l + len ) > n ) ? ( n - len ) : l;
                CharT *                 ret = StringPolicy::copy( str + len - 1, s, l );
-               len += l;
+               len += l - 1;
                str[ len ] = CharT( '\0' );
                return( ret );
             }

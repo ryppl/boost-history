@@ -4,7 +4,7 @@
 
 #ifndef BOOST_FORMATTER_HPP
 #define BOOST_FORMATTER_HPP
-#  include <boost/fixed_string/char_string.hpp>
+#  include <boost/fixed_string/fixed_string.hpp>
 #  include <cstdarg>
 
    namespace boost

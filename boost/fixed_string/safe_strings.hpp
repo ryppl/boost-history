@@ -4,7 +4,7 @@
 
 #ifndef BOOST_SAFE_STRINGS_HPP
 #define BOOST_SAFE_STRINGS_HPP
-#  include <boost/fixed_string/char_string.hpp>
+#  include <boost/fixed_string/fixed_string.hpp>
 #  include <cstdarg>
 
    // C-string functions
