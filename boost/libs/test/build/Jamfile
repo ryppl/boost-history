@@ -28,17 +28,17 @@ UTF_SOURCES =
   ;
 
 lib prg_exec_monitor : ../src/$(PRG_EXEC_MON_SOURCES).cpp
-     : <include>$(BOOST_ROOT)
+     : <sysinclude>$(BOOST_ROOT)
      : <threading>single/multi <runtime-link>static/dynamic
      ;
 
 lib test_exec_monitor : ../src/$(TEST_EXEC_MON_SOURCES).cpp
-     : <include>$(BOOST_ROOT)
+     : <sysinclude>$(BOOST_ROOT)
      : <threading>single/multi <runtime-link>static/dynamic
      ;
 
 lib unit_test_framework : ../src/$(UTF_SOURCES).cpp
-     : <include>$(BOOST_ROOT)
+     : <sysinclude>$(BOOST_ROOT)
      : <threading>single/multi <runtime-link>static/dynamic
      ;
 
