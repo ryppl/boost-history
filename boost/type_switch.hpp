@@ -3,7 +3,7 @@
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
-// Copyright (c) 2002-2003
+// Copyright (c) 2003
 // Eric Friedman
 //
 // Permission to use, copy, modify, distribute and sell this software
@@ -17,26 +17,28 @@
 #ifndef BOOST_TYPE_SWITCH_HPP
 #define BOOST_TYPE_SWITCH_HPP
 
-#include "boost/config.hpp"
-#include "boost/call_traits.hpp"
-
-// The following are new/in-progress headers or fixes to existing headers:
-#include "boost/config/no_using_declaration_overloads.hpp"
-#include "boost/visitor/apply_visitor.hpp"
+#include "boost/mpl/lambda_match.hpp"
+#include "boost/ref.hpp"
+#include "boost/variant/apply_visitor.hpp"
 
 namespace boost {
 namespace type_switch {
 
 //////////////////////////////////////////////////////////////////////////
 // class ignore
+//
 // Implements a no-op. That is, ignore(), ignore()(), and
 // ignore()(t1, ..., tN) have no effect.
 //
 // NOTE: N is an implementation defined value.
 //
-struct ignore
+class ignore
 {
+public: // typedefs
+
     typedef void result_type;
+
+public: // function object interface
 
     void operator()() const
     {
@@ -46,377 +48,251 @@ struct ignore
     void operator()(const T&) const
     {
     }
+
 };
 
 //////////////////////////////////////////////////////////////////////////
-// function template case_<T>// 
-// Creates a function object that may be chained to other case_-generated
-// function objects using operator| and when invoked, forwards its input
-// (of the specified type T) to the given functionable object.
+// function template default_
 //
 
 namespace detail {
 
-// error_Case_Is_Missing : Unusual name is alerts user in compiler error messages.
-struct error_Case_Is_Missing
+template <typename F>
+class default_t
 {
-    typedef error_Case_Is_Missing
-        end_case;
+private: // representation
 
-    template <typename TemplateCase>
-    struct rebind_with_template_case
-    {
-        typedef TemplateCase type;
-    };
+    mutable F f_;
 
-#if !defined(BOOST_NO_USING_DECLARATION_OVERLOADS_FROM_TYPENAME_BASE)
+public: // typedefs
 
-    // | Must provide operator(), but it should never be invoked. Accepts |
-    // | an argument of an implementation-defined type, which should at   |
-    // | least keep the user from invoking the method.                    |
-    void operator()(const error_Case_Is_Missing&) const
-    {
-    }
-
-#endif // !defined(BOOST_NO_USING_DECLARATION_OVERLOADS_FROM_TYPENAME_BASE)
-
-protected:
-    ~error_Case_Is_Missing()
-    {
-    }
-};
-
-template <typename TypeCase, typename TemplateCase>
-struct push_template_case
-{
-    typedef typename TypeCase::template rebind_with_template_case<TemplateCase>::type
-        type;
-};
-
-template <typename T, typename Func, typename NextCase = error_Case_Is_Missing>
-class type_case
-    : public NextCase
-{
-#if !defined(BOOST_NO_MEMBER_TEMPLATE_FRIENDS)
-
-    // [Make the class friendly to its own variants:]
-    template <typename OtherT, typename OtherF, typename OtherNextCase>
-    friend class type_case;
-
-    template <typename TypeCase, typename TemplateCase>
-    friend struct push_template_case;
-
-private:
-
-#else// defined(BOOST_NO_MEMBER_TEMPLATE_FRIENDS)
-
-public:
-
-#endif// !defined(BOOST_NO_MEMBER_TEMPLATE_FRIENDS)
-
-    Func f_;
-
-    const NextCase& as_NextCase() const
-    {
-        return *this;
-    }
-
-    template <typename TemplateCase>
-    struct rebind_with_template_case
-    {
-        typedef type_case<
-              T, Func
-            , typename push_template_case<NextCase, TemplateCase>::type
-            > type;
-    };
-
-protected:
-    typedef typename NextCase::end_case
-        end_case;
-
-public:
     typedef void result_type;
 
-public:
-    explicit type_case(typename call_traits<Func>::param_type f)
+public: // structors
+
+    explicit default_t(const F& f)
+        : f_(f)
+    {
+    }
+
+private: // nonassignable
+
+    default_t& operator=(const default_t&);
+
+public: // function call interface
+
+    template <typename U>
+    void operator()(U& operand) const
+    {
+        f_(operand);
+    }
+
+};
+
+} // namespace detail
+
+template <typename F>
+inline
+    detail::default_t<F>
+default_(F f)
+{
+    return detail::default_t<F>( f );
+}
+
+inline
+    detail::default_t<ignore>
+default_()
+{
+    return detail::default_t<ignore>( ignore() );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// function template case_<T>
+//
+// Creates a function object that may be chained to other case_-generated
+// function objects using operator|= and when invoked, forwards its input (of
+// the specified type T) to the given functionable object.
+//
+
+namespace detail {
+
+// (detail) class ERROR_case_is_missing
+// 
+// Unusual name alerts user in compiler error messages, which appear when
+// cases are not provided to cover all possible types.
+//
+struct ERROR_case_is_missing
+{
+};
+
+struct base_case_t
+{
+    template <typename U>
+    void operator()(const U&) const
+    {
+        ERROR_case_is_missing::undefined();
+    }
+};
+
+// (detail) class template case_t
+//
+// Implementation class for chained switch-cases.
+//
+template <typename T, typename F, typename NextCase = base_case_t>
+class case_t
+    : private NextCase
+{
+private: // representation
+
+    mutable F f_;
+
+public: // typedefs
+
+    typedef void result_type;
+
+public: // structors
+
+    explicit case_t(const F& f)
         : NextCase()
         , f_(f)
     {
     }
 
-    type_case(const type_case<T, Func>& this_case, const NextCase& next)
-        : NextCase(next)
-        , f_(this_case.f_)
+    explicit case_t(const F& f, const NextCase& next_case)
+        : NextCase(next_case)
+        , f_(f)
     {
     }
 
-    template <typename OldNextCase>
-    type_case(const type_case<T, Func, OldNextCase>& this_case, const end_case& end)
-        : NextCase(this_case.as_NextCase(), end)
-        , f_(this_case.f_)
+private: // nonassignable
+
+    case_t& operator=(const case_t&);
+
+public: // switch-case chaining support
+
+    template <typename NextT, typename NextF, typename NextNextCase>
+        case_t<
+              T, F
+            , case_t<NextT, NextF, NextNextCase>
+            >
+    operator|=(const case_t<NextT, NextF, NextNextCase>& next_case)
     {
+        return case_t<
+              T, F
+            , case_t<NextT, NextF, NextNextCase>
+            >(f_, next_case);
     }
 
-    void operator()(T& operand)
+    template <typename DefaultF>
+        case_t<
+              T, F
+            , default_t<DefaultF>
+            >
+    operator|=(const default_t<DefaultF>& default_case)
     {
-        f_(operand);
+        return case_t<
+              T, F
+            , default_t<DefaultF>
+            >(f_, default_case);
     }
 
-    void operator()(T& operand) const
-    {
-        f_(operand);
-    }
-
-#if !defined(BOOST_NO_USING_DECLARATION_OVERLOADS_FROM_TYPENAME_BASE)
-
-    using NextCase::operator();
-
-#else// defined(BOOST_NO_USING_DECLARATION_OVERLOADS_FROM_TYPENAME_BASE)
+private: // helpers, for function call interface (below)
 
     template <typename U>
-    void operator()(U& operand)
+    void execute(U& operand, mpl::true_) const
+    {
+        f_(operand);
+    }
+
+    template <typename U>
+    void execute(U& operand, mpl::false_) const
     {
         NextCase::operator()(operand);
     }
+
+public: // function call interface
+
+    // pattern match:
 
     template <typename U>
     void operator()(U& operand) const
     {
-        NextCase::operator()(operand);
+        typedef typename mpl::lambda_match<T,U>::type pattern_match;
+        execute(operand, pattern_match());
     }
 
-#endif // BOOST_NO_USING_DECLARATION_OVERLOADS_FROM_TYPENAME_BASE workaround
+    // exact match:
 
-    };
-
-template <typename NextT, typename NextF, typename NextNextCase, typename PriorT, typename PriorF>
-type_case<
-      PriorT, PriorF
-    , type_case<NextT, NextF, NextNextCase>
-    >
-operator|(
-      const type_case<NextT, NextF, NextNextCase>& next_case
-    , const type_case<PriorT, PriorF>& prior_case
-    )
-{
-    return type_case<
-            PriorT, PriorF
-        , type_case<NextT, NextF, NextNextCase>
-        >(prior_case, next_case);
-}
-
-} // namespace detail
-
-template <typename T, typename Func>
-detail::type_case<T, Func> case_(Func f)
-{
-    return detail::type_case<T, Func>(f);
-}
-
-template <typename T>
-detail::type_case<T, ignore> case_()
-{
-    return case_<T>(ignore());
-}
-
-//////////////////////////////////////////////////////////////////////////
-// template_//
-// Creates a function object that may be chained to case_-generated
-// function objects using operator| and when invoked, forwards its input
-// to the given functionable object.
-//
-
-namespace detail {
-
-template <typename Func>
-class template_case
-{
-    Func f_;
-
-protected:
-    typedef template_case
-        end_case;
-
-public:
-    typedef void result_type;
-
-public:
-    explicit template_case(typename call_traits<Func>::param_type f)
-        : f_(f)
-    {
-    }
-
-    template <typename OldEndCase>
-    template_case(const OldEndCase&, const template_case& operand)
-        : f_(operand.f_)
-    {
-    }
-
-    template <typename T>
-    void operator()(T& operand)
-    {
-        f_(operand);
-    }
-
-    template <typename T>
     void operator()(T& operand) const
     {
         f_(operand);
     }
-};
 
-template <typename T, typename F, typename NextCase, typename TemplateF>
-    typename push_template_case<
-          type_case<T, F, NextCase>
-        , template_case<TemplateF>
-        >::type
-operator|(
-      const type_case<T, F, NextCase>& reg_case
-    , const template_case<TemplateF>& templ_case
-    )
-{
-    typedef typename push_template_case<
-          type_case<T, F, NextCase>
-        , template_case<TemplateF>
-        >::type return_type;
-
-    return return_type(reg_case, templ_case);
-}
-
-} // namespace detail
-
-template <typename Func>
-detail::template_case<Func> template_(Func f)
-{
-    return detail::template_case<Func>(f);
-}
-
-//////////////////////////////////////////////////////////////////////////
-// function template default_// Creates a function object that may be chained to case_-generated
-// function objects using operator| and, when invoked, invokes the given
-// functionable object without arguments.
-//
-
-namespace detail {
-
-template <typename Func>
-class default_func
-{
-    Func f_;
-
-public:
-    typedef void result_type;
-
-public:
-    explicit default_func(Func f)
-        : f_(f)
-    {
-    }
-
-    template <typename T>
-    void operator()(const T&)
-    {
-        f_();
-    }
-
-    template <typename T>
-    void operator()(const T&) const
-    {
-        f_();
-    }
 };
 
 } // namespace detail
 
-template <typename Func>
-detail::template_case< detail::default_func<Func> > default_(Func f)
+template <typename T, typename F>
+inline
+    detail::case_t<T,F>
+case_(F f)
 {
-    return template_(detail::default_func<Func>(f));
+    return detail::case_t<T,F>( f );
 }
-
-detail::template_case< detail::default_func<ignore> > default_()
-{
-    return default_(ignore());
-}
-
-//////////////////////////////////////////////////////////////////////////
-// function template switch_//
-// Returns an implementation-defined type whose indexer (i.e.,
-// operator[]), given an operand and a functionable object F, invokes the
-// traits template member switch_traits::execute(operand, F).
-//
 
 template <typename T>
-struct switch_traits
+inline
+    detail::case_t<T,ignore>
+case_()
 {
-    template <typename Cases>
-    static void execute(T& operand, Cases cases)
-    {
-        boost::apply_visitor(cases, operand);
-    }
+    return detail::case_t<T,ignore>( ignore() );
+}
 
-    template <typename Cases>
-    static void execute(const T& operand, Cases cases)
-    {
-        boost::apply_visitor(cases, operand);
-    }
-};
+//////////////////////////////////////////////////////////////////////////
+// function template switch_
+//
 
 namespace detail {
 
-template <typename Operand, typename Traits>
-class switch_impl
+template <typename Visitable>
+struct switch_t
 {
-    Operand* operand_;
+private: // representation
 
-public:
-    explicit switch_impl(Operand& operand)
-        : operand_(&operand)
+    boost::reference_wrapper< Visitable > visitable_;
+
+public: // structors
+
+    explicit switch_t(Visitable& visitable)
+        : visitable_(visitable)
     {
     }
+
+private: // nonassignable
+
+    switch_t& operator=(const switch_t&);
+
+public: // switch-case chaining support
 
     template <typename T, typename F, typename NC>
-    void operator[](const type_case<T, F, NC>& cases)
+    void operator|=(const detail::case_t<T,F,NC>& cases)
     {
-        Traits::execute(*operand_, cases);
+        boost::apply_visitor(cases, visitable_.get());
     }
+
 };
 
 } // namespace detail
 
-template <typename Operand>
-    detail::switch_impl<
-          Operand
-        , switch_traits<Operand>
-        >
-switch_(Operand& operand)
+template <typename Visitable>
+inline
+    detail::switch_t<Visitable>
+switch_(Visitable& visitable)
 {
-    return detail::switch_impl<
-          Operand
-        , switch_traits<Operand>
-        >(operand);
-}
-
-template <typename Operand>
-    detail::switch_impl<
-          const Operand
-        , switch_traits<Operand>
-        >
-switch_(const Operand& operand)
-{
-    return detail::switch_impl<
-          const Operand
-        , switch_traits<Operand>
-        >(operand);
+    return detail::switch_t<Visitable>( visitable );
 }
 
 } // namespace type_switch
-
-using type_switch::switch_;
-using type_switch::case_;
-using type_switch::template_;
-using type_switch::default_;
-
 } // namespace boost
 
 #endif // BOOST_TYPE_SWITCH_HPP
