@@ -4,103 +4,138 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <link rel="stylesheet" type="text/css" href="../../../boost.css">
-  <title>Interval-comparisons.htm</title>
+  <title>Comparisons</title>
 </head>
 
 <body>
-<h1>Comparison policies</h1>
-
-<h2 id="compare">Comparisons</h2>
+<h1>Comparisons</h1>
 
 <p>As was said before, the definition of the comparison operators induces a
-slight problem. If their return type is restricted to bool, there are many
-ways to define them. It is the reason why the class interval is influenced by
-a comparison policy. So the class <code>interval_traits</code> requires an
-argument describing a class that provides the following functions:</p>
+slight problem. There are many ways to define them, depending of the return
+type or the expected order. It is the reason why the meaning of the operators
+is not fixed once and for all.</p>
 
-<pre>struct interval_compare {
-  static bool less_than(T x_low, T x_up, T y_low, T y_up);
-  static bool equal_to(T x_low, T x_up, T y_low, T y_up);
-};</pre>
+<p>The way the operators are defined could have been influenced by a policy,
+as it is already the case for the rounding and the checking. However,
+comparisons are more an external property of the the class rather than an
+internal one. They are meant to be locally modified, independantly of the
+type of the intervals.</p>
 
-<p>The functions <code>less_than</code> and <code>equal_to</code>
-compare two intervals given their bounds. Thanks to this comparison
-class, the class interval can now define the following operators:
-<code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>,
-<code>&gt;=</code>, <code>==</code>, <code>!=</code>. All these
-operators are defined for two interval parameters, or for one interval
-and a number.</p>
+<p>The operators <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>,
+<code>&gt;=</code>, <code>==</code>, <code>!=</code> are defined each time;
+and like the arithmetic operators they can take an argument of the base type.
+However, due to technical limitations, this base type can only be the second
+argument; so the operators are unfortunately not fully symmetric. The return
+type is not always <code>bool</code>, since some interesting results can be
+achieved by using a tri-state return type. So here is the common signatures
+of the operators:</p>
+<pre>template&lt;class T, class Policies&gt; return_type operator== (const interval&lt;T, Policies&gt;&amp;, const interval&lt;T, Policies&gt;&amp;);
+template&lt;class T, class Policies&gt; return_type operator== (const interval&lt;T, Policies&gt;&amp;, const T&amp;);</pre>
 
-<h2>Synopsis</h2>
+<h2>Provided comparisons</h2>
 
+<h3>Default comparison</h3>
+
+<p>If nothing is specified, the meaning of the comparison operators are an
+extension of the operator on the base type. More precisely, if one of the
+argument is invalid or empty, an exception is thrown. If the arguments are
+valid, the following rules are applied to determine the result of
+[<i>a</i>,<i>b</i>] <code>op</code>  [<i>c</i>,<i>d</i>] (just consider
+<i>c</i> <code>==</code> <i>d</i> if the second argument is of type
+<code>T</code>):</p>
+<ul>
+  <li>if &#x2200; <i>x</i> &#x2208; [<i>a</i>,<i>b</i>] &#x2200; <i>y</i>
+    &#x2208; [<i>c</i>,<i>d</i>] <code>(</code><i>x</i> <code>op</code>
+    y<code>)</code>, then <code>true</code></li>
+  <li>if &#x2200; <i>x</i> &#x2208; [<i>a</i>,<i>b</i>] &#x2200; <i>y</i>
+    &#x2208; [<i>c</i>,<i>d</i>] <code>!(</code><i>x</i> <code>op</code>
+    y<code>)</code>, then <code>false</code></li>
+  <li>otherwise throw an exception.</li>
+</ul>
+
+<p>This comparison allows to replace base types by interval types without
+changing the meaning of a program. Indeed, if no exception is thrown, the
+result is the same as before; and if an exception is thrown, the previous
+comparison was unsure and should have been rewritten.</p>
+
+<h3>Other comparisons</h3>
+
+<p>The other comparisons are selected by using a namespace. These namespaces
+are located under <code>boost::interval_lib::compare</code> and are invoked
+by:</p>
+<pre>using namespace boost::interval_lib::compare::the_comparison_to_select;</pre>
+
+<p>After this line, the default meaning of the operators will have been
+replaced by the meaning located in the namespace. Please note that because of
+C++ lookup rules, it is not possible to use two namespaces one after another
+and they must be used in different block hierarchies. Otherwise the compiler
+will complain about ambiguous operators. To summarize:</p>
+<pre>// example 1: BAD
+using namespace compare1;
+...
+using namespace compare2;
+...
+
+// example 2: GOOD
+{ using namespace compare1;
+  ...                       }
+{ using namespace compare2;
+  ...                       }
+
+// example 3: BAD
+using namespace compare1;
+...
+{ using namespace compare2;
+  ...                       }</pre>
+
+<p>Now comes the list of the provided comparisons. They all are located in
+their respective header files under
+<code>&lt;boost/interval/compare/&gt;</code>. And as for the default
+comparison, the operators will generally complain by throwing an exception if
+feed by invalid values.</p>
+<ul>
+  <li><code>lexicographic</code>: the lexicographic order (the lower bounds
+    are first compared, and if it is not enough to know the result, the upper
+    bounds are then compared). This order does not have a meaning in interval
+    arithmetic. However, since it is the natural total order on pair of
+    (totally ordered) numbers, it may be handy in some cases.</li>
+  <li><code>set</code>: the set inclusion partial order. This time, an empty
+    interval is not considered to be invalid (but an invalid number is still
+    invalid). <code>&lt;=</code> and <code>&lt;</code> are the subset and
+    proper subset relations; and <code>&gt;=</code> and <code>&gt;</code> are
+    the superset and proper superset relations.</li>
+  <li><code>tribool</code>: this comparison relies on the Boost Tri-state
+    boolean Library and changes the default operators so that an
+    indeterminate value is returned in the third case instead of throwing an
+    exception.</li>
+</ul>
+
+<h3>Exception</h3>
+
+<p></p>
 <pre>namespace boost {
   namespace interval_lib {
 
-template&lt;class T&gt; struct compare_certainly;
-template&lt;class T&gt; struct compare_possibly;
-template&lt;class T, class Function&gt; struct compare_full;
-template&lt;class T&gt; struct compare_data;
+class comparison_error: std::runtime_error; // "boost::interval: uncertain comparison"
 
-  } // namespace interval_lib
-} // namespace boost</pre>
-
-<h2>Provided classes</h2>
-
-<p>Four classes are pre-defined for the comparison policy.
-<code>compare_certainly</code> implements the "certain" comparison (it
-is the comparison policy by default). <code>compare_possibly</code>
-implements the "possible" comparison. And <code>compare_full</code>
-allows the user to specify a behavior in case of a non-boolean result
-(an exception for example).</p>
-
-<p>The last class, <code>compare_data</code>, does not have any mathematical
-fundation. The equality is the physical equality, and the less operator is
-the lexicographic order.</p>
-
-<p>As you have probably guessed, the <code>Function</code> parameter
-of <code>compare_full</code> is the type of a function object called
-in case of a non-boolean result. So it must have an operator of
-signature <code>bool Function::operator()()</code>. Here is a little
-example of the behavior of the comparison operators when
-<code>compare_full</code> is the chosen policy:</p>
-
-<ul>
-  <li><code>[1,2] &lt;  [2,3]</code> will return <code>Function()()</code>,</li>
-  <li><code>[1,2] &lt;= [2,3]</code> will return <code>true</code>,</li>
-  <li><code>[1,2] &gt;  [2,3]</code> will return <code>false</code>, and</li>
-  <li><code>[1,2] &gt;= [2,3]</code> will return <code>!Function()()</code>.</li>
-</ul>
-
-<p>As a side note, if Function is the constant function object
-<code>false</code>, <code>compare_full&lt;T, Function&gt;</code> is
-the same as <code>compare_certainly</code>. Similarly, if
-<code>Function</code> always returns true, <code>compare_full&lt;T,
-Function&gt;</code> is the same as <code>compare_possibly</code>. But
-it is better to use either <code>compare_certainly</code> or
-<code>compare_possibly</code>, since <code>compare_full</code> is
-twice as slow and there is nothing that the compiler can do about it.</p>
+  }
+}</pre>
 
 <h2>Explicit comparison functions</h2>
 
-<p>The comparison operators are not really handy. For example, if
-less_than is a "certain" comparison, then <code>&lt;</code> and
-<code>&gt;</code> are also "certain" comparisons, but
-<code>&lt;=</code> and <code>&gt;=</code> are only "possible"
-comparisons. The reason of this discordance is: it is impossible to
-have <code>&lt;</code> and <code>&lt;=</code> both "possible", and to
-have <code>(x&lt;=y) == !(y&lt;x)</code> at the same time (and the
-"certain" comparison has the same problem). However, if you do not
-consider overlapping intervals, these two types of comparisons are
-equivalent.</p>
-
-<p>To avoid these problems, it is probably better to use some explicit
-comparison functions. Their names are composed by <code>cer</code>
-(for "certain") or <code>pos</code> (for "possible") followed by
-<code>lt</code>, <code>le</code>, <code>gt</code>, <code>ge</code>,
-<code>eq</code> or <code>ne</code>. Each of these functions takes two
-parameters and returns a boolean. For example, to use the "certainly
-less than" comparison :</p>
-
+<p>In some situation, you may want to perform direct comparisons on the
+bounds and avoid the indeterminate case that appears with default operators.
+Some functions are provided for this purpose. They expect their arguments to
+be valid and return a result after only one comparison. Their names are
+composed by <code>cer</code> (for "certain", if the default comparison is
+true, the result is true) or <code>pos</code> (for "possible", if the default
+comparison is false, the result is false) followed by <code>lt</code>,
+<code>le</code>, <code>gt</code>, <code>ge</code>, <code>eq</code> or
+<code>ne</code>. They are located in
+<code>&lt;boost/interval/compare/explicit.hpp&gt;</code>. Each of these
+functions takes two parameters and returns a boolean; the parameters are
+expected to be valid, undefined behavior may result otherwise. For example,
+to use the "certainly less than" comparison :</p>
 <pre>namespace boost {
   namespace interval_lib {
 
@@ -115,10 +150,9 @@ bool cerlt(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
 
   } // namespace interval_lib
 } // namespace boost</pre>
-
 <hr>
 
-<p>Revised: 2002-08-30<br>
+<p>Revised: 2002-10-13<br>
 Copyright (c) Guillaume Melquiond, Sylvain Pion, Hervé Brönnimann, 2002.<br>
 Polytechnic University.</p>
 </body>
