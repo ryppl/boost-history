@@ -128,11 +128,23 @@ void test2(void)
 }
 
 
+void test3(void)
+{
+    boost::file<> newfile;
+    if (!newfile.open_readonly("Hello World.txt"))
+        if (newfile.create("Hello World.txt"))
+            std::cout << newfile.filepath().c_str() << " Created" << std::endl;
+
+    newfile.open_readonly("Hello World.txt");
+}
+
+
 
 int main(int, char **)
 {
     test1();
     test2();
+    test3();
 
     boost::file<> newfile;
     if (newfile.create("Hello.txt"))

@@ -22,8 +22,9 @@ bool memory_mapped_file<T, F>::release(void)
     if (detail_.file_mapping_handle_ != INVALID_HANDLE_VALUE
     &&  detail_.file_mapping_handle_ != NULL)
     {
-        if (::CloseHandle(detail_.file_mapping_handle_))
+        if (::UnmapViewOfFile(ptr_))
         {
+            ::CloseHandle(detail_.file_mapping_handle_);
             detail_.file_mapping_handle_ = NULL;
             ptr_ = 0;
         }

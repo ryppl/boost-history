@@ -13,10 +13,12 @@
 #error POSIX header file has been included without BOOST_MMAP_POSIX defined
 #endif
 
+#include <sys/fcntl.h>
+
 namespace boost {
 
 template<typename T>
-inline bool file<T>::close(void)
+bool file<T>::close(void) throw()
 {
     if (handle_ == BOOST_FS_INVALID_HANDLE)
         return true;
@@ -37,8 +39,11 @@ inline bool file<T>::close(void)
 
 
 template<typename T>
-inline bool file<T>::create(const std::basic_string<T> &filepath)
+bool file<T>::create(const std::basic_string<T> &filepath) throw(file_already_attached)
 {
+    if (handle_ != BOOST_FS_INVALID_HANDLE)
+        throw file_already_attached();
+
     handle_ = ::open(filepath.c_str(), O_CREAT | O_RDWR | O_BINARY);
     err_ = errno;
     if (this->is_open())
@@ -48,8 +53,11 @@ inline bool file<T>::create(const std::basic_string<T> &filepath)
 
 
 template<typename T>
-inline bool file<T>::open_readonly(const std::basic_string<T> &filepath)
+bool file<T>::open_readonly(const std::basic_string<T> &filepath) throw(file_already_attached)
 {
+    if (handle_ != BOOST_FS_INVALID_HANDLE)
+        throw file_already_attached();
+
     handle_ = ::open(filepath.c_str(), O_RDONLY);
     err_ = errno;
     if (this->is_open())
@@ -60,8 +68,11 @@ inline bool file<T>::open_readonly(const std::basic_string<T> &filepath)
 
 
 template<typename T>
-inline bool file<T>::open_readwrite(const std::basic_string<T> &filepath)
+bool file<T>::open_readwrite(const std::basic_string<T> &filepath) throw(file_already_attached)
 {
+    if (handle_ != BOOST_FS_INVALID_HANDLE)
+        throw file_already_attached();
+
     handle_ = ::open(filepath.c_str(), O_RDWR);
     err_ = errno;
     if (this->is_open())

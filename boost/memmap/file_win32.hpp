@@ -16,7 +16,7 @@
 namespace boost {
 
 template<typename T>
-inline bool file<T>::close(void)
+bool file<T>::close(void) throw()
 {
     if (handle_ == BOOST_FS_INVALID_HANDLE)
         return true;
@@ -40,8 +40,11 @@ inline bool file<T>::close(void)
 
 
 template<typename T>
-inline bool file<T>::create(const std::basic_string<T> &filepath)
+bool file<T>::create(const std::basic_string<T> &filepath) THROWS_ALREADY_ATTACHED
 {
+    if (handle_ != BOOST_FS_INVALID_HANDLE)
+        throw file_already_attached();
+
     handle_ = ::CreateFile(filepath.c_str(),
                            GENERIC_ALL, FILE_SHARE_READ, NULL, CREATE_ALWAYS,
                            0, NULL);
@@ -53,8 +56,11 @@ inline bool file<T>::create(const std::basic_string<T> &filepath)
 
 
 template<typename T>
-inline bool file<T>::open_readonly(const std::basic_string<T> &filepath)
+bool file<T>::open_readonly(const std::basic_string<T> &filepath) THROWS_ALREADY_ATTACHED
 {
+    if (handle_ != BOOST_FS_INVALID_HANDLE)
+        throw file_already_attached();
+
     handle_ = ::CreateFile(filepath.c_str(),
                            GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING,
                            0, NULL);
@@ -67,8 +73,11 @@ inline bool file<T>::open_readonly(const std::basic_string<T> &filepath)
 
 
 template<typename T>
-inline bool file<T>::open_readwrite(const std::basic_string<T> &filepath)
+bool file<T>::open_readwrite(const std::basic_string<T> &filepath) THROWS_ALREADY_ATTACHED
 {
+    if (handle_ != BOOST_FS_INVALID_HANDLE)
+        throw file_already_attached();
+
     handle_ = ::CreateFile(filepath.c_str(),
                            GENERIC_ALL, FILE_SHARE_READ, NULL, OPEN_EXISTING,
                            0, NULL);

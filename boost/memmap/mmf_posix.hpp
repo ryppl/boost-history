@@ -15,12 +15,14 @@
 #error Posix header file has been included without BOOST_MMAP_POSIX defined
 #endif
 
+#include <sys/mman.h>
+
 namespace boost {
 
 template <typename T, typename F>
 bool memory_mapped_file<T, F>::release(void)
 {
-    return ::munmap(ptr_, detail_.len);
+    return ::munmap(reinterpret_cast<char *>(ptr_), detail_.len);
 }
 
 

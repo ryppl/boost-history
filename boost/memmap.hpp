@@ -24,9 +24,7 @@
 #error No memory map configuration defined: BOOST_MMAP_POSIX or BOOST_MMAP_WINDOWS
 #endif
 
-#if defined(BOOST_MMAP_POSIX)
-#   include "sys/stat.h"
-#endif
+#include <sys/stat.h>
 #include "boost/config.hpp"
 #include "boost/utility.hpp"
 
@@ -88,8 +86,8 @@ namespace boost {
     {
 #if defined(BOOST_MMAP_POSIX)
         struct stat info;
-        if (::_fstat(handle, &info) == -1)
-            return -1;
+        if (::fstat(handle, &info) == -1)
+            return 0;
         return info.st_size;
 #elif defined(BOOST_MMAP_WINDOWS)
         union
@@ -110,6 +108,22 @@ namespace boost {
     typedef enum file_access_ { readonly, readwrite } file_access;
 
 
+    class file_already_attached : public std::exception
+    {
+      public:
+        virtual char const * what() const throw()
+        {
+            return "boost::file_already_attached";
+        }
+    };
+
+    #if defined(BOOST_MSVC)
+    #   define THROWS_ALREADY_ATTACHED
+    #else
+    #   define THROWS_ALREADY_ATTACHED throw(file_already_attached)
+    #endif
+
+
     template<typename T=char>
     class file : noncopyable
     {
@@ -119,32 +133,32 @@ namespace boost {
         std::basic_string<T> filepath_;
 
       public:
-        file();
-        file(const std::basic_string<T> &filepath, file_access access);
-        ~file();
+        file() throw();
+        file(const std::basic_string<T> &filepath, file_access access) throw();
+        ~file() throw();
 
-        bool close(void);
-        bool create(const std::basic_string<T> &filepath);
+        bool close(void) throw();
+        bool create(const std::basic_string<T> &filepath) THROWS_ALREADY_ATTACHED;
 
-        err_t                error(void)    const { return err_;                                }
-        std::basic_string<T> filepath(void) const { return filepath_;                           }
-        file_handle_t        handle(void)   const { return handle_;                             }
-        filesize_t           size(void)     const { return get_file_size(handle_);              }
-        bool                 is_open(void)  const { return handle_ != BOOST_FS_INVALID_HANDLE;  }
+        err_t                error(void)    const throw() { return err_;                                }
+        std::basic_string<T> filepath(void) const throw() { return filepath_;                           }
+        file_handle_t        handle(void)   const throw() { return handle_;                             }
+        filesize_t           size(void)     const throw() { return get_file_size(handle_);              }
+        bool                 is_open(void)  const throw() { return handle_ != BOOST_FS_INVALID_HANDLE;  }
 
-        bool open_readonly(const std::basic_string<T> &filepath);
-        bool open_readwrite(const std::basic_string<T> &filepath);
+        bool open_readonly(const std::basic_string<T> &filepath)  THROWS_ALREADY_ATTACHED;
+        bool open_readwrite(const std::basic_string<T> &filepath) THROWS_ALREADY_ATTACHED;
     };
 
     template<typename T>
-    file<T>::file()
+    inline file<T>::file() throw()
       : err_(0),
         handle_(BOOST_FS_INVALID_HANDLE)
     {
     }
 
     template<typename T>
-    file<T>::file(const std::basic_string<T> &filepath, file_access access)
+    inline file<T>::file(const std::basic_string<T> &filepath, file_access access) throw()
       : err_(0),
         handle_(BOOST_FS_INVALID_HANDLE)
     {
@@ -155,7 +169,7 @@ namespace boost {
     }
 
     template<typename T>
-    file<T>::~file()
+    inline file<T>::~file() throw()
     {
         this->close();
     }
@@ -204,7 +218,7 @@ namespace boost {
 
     // cross platform default ctor
     template <typename T, typename F>
-    memory_mapped_file<T, F>::memory_mapped_file()
+    inline memory_mapped_file<T, F>::memory_mapped_file()
     : err_(0),
         ptr_(0)
     {
@@ -212,9 +226,9 @@ namespace boost {
     }
 
     template <typename T, typename F>
-    memory_mapped_file<T, F>::memory_mapped_file(file_handle_t &handle,
+    inline memory_mapped_file<T, F>::memory_mapped_file(file_handle_t &handle,
                                                  file_access    access)
-    : err_(0),
+      : err_(0),
         ptr_(0)
     {
         memset(&detail_, 0, sizeof(detail_));
@@ -225,8 +239,8 @@ namespace boost {
     }
 
     template <typename T, typename F>
-    memory_mapped_file<T, F>::memory_mapped_file(F &file, file_access access)
-    : err_(0),
+    inline memory_mapped_file<T, F>::memory_mapped_file(F &file, file_access access)
+      : err_(0),
         ptr_(0)
     {
         memset(&detail_, 0, sizeof(detail_));
@@ -237,7 +251,7 @@ namespace boost {
     }
 
     template <typename T, typename F>
-    memory_mapped_file<T, F>::~memory_mapped_file()
+    inline memory_mapped_file<T, F>::~memory_mapped_file()
     {
         this->release();
     }
