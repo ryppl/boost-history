@@ -13,6 +13,7 @@
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/identity.hpp>
+#include <boost/mpl/not.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_convertible.hpp>
@@ -42,118 +43,110 @@
 
 namespace boost {
 
-template<class T>
-class reference_wrapper;
+template<class T> class reference_wrapper;
 
 namespace named_params {
 
-template<class T>
-struct keyword;
-
-// These types are used to describe the keywords structure.
-template <class Tag, class Predicate = mpl::always<mpl::true_> >
-struct required
-{
-    typedef Tag key_type;
-    typedef Predicate predicate;
-};
-
-template <class Tag, class Predicate = mpl::always<mpl::true_> >
-struct optional
-{
-    typedef Tag key_type;
-    typedef Predicate predicate;
-};
-
-//
-// Usage:
-//
-//     keywords<
-//         optional<name_>
-//       , required<value_, boost::is_convertible<mpl::_, int> >
-//     >
-//
-// If a tag is supplied without optional/required, optional is
-// considered the default.
-//
+// Forward declaration for aux::arg_list, below.
+template<class T> struct keyword;
 
 namespace aux
 {
-  // Used to pass arguments to arg_list<>::keyword_passes_predicate.
-  template <class Tag, class Predicate, class HasDefault>
-  struct sfinae_checker
-  {
-      typedef Tag tag;
-      typedef Predicate predicate;
-      typedef HasDefault has_default;
-  };
-
-  // We have to build a conversion operator to get around ETI with
-  // default function arguments; int seemed a little too easily
-  // confused, so we'll use this special type instead.
-  struct non_int_eti_type { private: non_int_eti_type(); };
-
+  // types used with the "sizeof trick" to capture the results of
+  // overload resolution at compile-time.
   typedef char yes_t;
-  struct no_t { char x[128]; };
+  typedef char (&no_t)[2];
 
+  // mpl::true_ and mpl::false_ are not distinguishable by sizeof(),
+  // so we pass them through these functions to get a type that is.
   yes_t to_yesno(mpl::true_);
   no_t to_yesno(mpl::false_);
 
-  template <class KW, class Default>
+
+  // A wrapper for the default value passed by the user when resolving
+  // the value of the parameter with the given Keyword
+  template <class Keyword, class Value>
   struct default_
   {
-      default_(Default& x)
+      default_(Value& x)
         : value(x)
       {}
 
-      Default& value;
+      Value& value;
   };
 
+  //
+  // lazy_default -- 
+  //
+  //    A wrapper for the default value computation function passed by
+  //    the user when resolving the value of the parameter with the
+  //    given keyword
+  //
 #if BOOST_WORKAROUND(__EDG_VERSION__, <= 300)
   // These compilers need a little extra help with overload
-  // resolution; we have empty_arg_list's operator[] accept a base class to make
-  // that overload less preferable.
-  template <class KW, class DefaultFn>
+  // resolution; we have empty_arg_list's operator[] accept a base
+  // class to make that overload less preferable.
+  template <class KW, class DefaultComputer>
   struct lazy_default_base
   {
-      lazy_default_base(DefaultFn const& x)
+      lazy_default_base(DefaultComputer const& x)
         : default_(x)
       {}
-      DefaultFn const& default_;
+      DefaultComputer const& compute_default;
   };
 
-  template <class KW, class DefaultFn>
+  template <class KW, class DefaultComputer>
   struct lazy_default
-    : lazy_default_base<KW,DefaultFn>
+    : lazy_default_base<KW,DefaultComputer>
   {
-      lazy_default(DefaultFnconst & x)
-        : lazy_default_base<KW,DefaultFn>(x)
+      lazy_default(DefaultComputer const & x)
+        : lazy_default_base<KW,DefaultComputer>(x)
       {}
   };
+# define BOOST_NAMED_PARAMS_lazy_default_fallback lazy_default_base
 #else 
-  template <class KW, class DefaultFn>
+  template <class KW, class DefaultComputer>
   struct lazy_default
   {
-      lazy_default(const DefaultFn& x)
-        : default_(x)
+      lazy_default(const DefaultComputer& x)
+        : compute_default(x)
       {}
-      DefaultFn const& default_;
+      DefaultComputer const& compute_default;
   };
+# define BOOST_NAMED_PARAMS_lazy_default_fallback lazy_default
 #endif 
 
-  template <class KW, class T>
-  struct arg_holder;
-
-  // Terminates arg_list<> and represents an empty list.
-  struct empty
+  //
+  // Structures used to build the tuple of actual arguments.  The
+  // tuple is a nested cons-style list of arg_list specializations
+  // terminated by an empty_arg_list.
+  //
+  // Each specialization of arg_list is derived from its successor in
+  // the list type.  This feature is used along with using
+  // declarations to build member function overload sets that can
+  // match against keywords.
+  //
+  
+  // Terminates arg_list<> and represents an empty list.  Since this
+  // is just the terminating case you might want to look at arg_list
+  // first, to get a feel for what's really happening here.
+  struct empty_arg_list
   {
-      empty() {}
-      empty(BOOST_PP_ENUM_PARAMS(
-              BOOST_NAMED_PARAMS_MAX_ARITY, empty BOOST_PP_INTERCEPT
-      )) {}
+      empty_arg_list() {}
+
+      // Constructor taking BOOST_NAMED_PARAMS_MAX_ARITY empty_arg_list
+      // arguments; this makes initialization
+      empty_arg_list(
+          BOOST_PP_ENUM_PARAMS(
+              BOOST_NAMED_PARAMS_MAX_ARITY, empty_arg_list BOOST_PP_INTERCEPT
+      ))
+      {}
 
 #if BOOST_WORKAROUND(BOOST_MSVC, <= 1300) || BOOST_NAMED_PARAMS_GCC2
-      // A metafunction class which, given a keyword, returns the base
+      // The overload set technique doesn't work with these older
+      // compilers, so they need some explicit handholding.
+      
+      // A metafunction class that, given a keyword, returns the base
       // sublist whose get() function can produce the value for that
       // key.
       struct key_owner
@@ -161,11 +154,11 @@ namespace aux
           template<class KW>
           struct apply
           {
-              typedef empty type;
+              typedef empty_arg_list type;
           };
       };
 
-      // A metafunction class which, given a keyword and a default
+      // A metafunction class that, given a keyword and a default
       // type, returns the appropriate result type for a keyword
       // lookup given that default
       struct key_value_type
@@ -177,16 +170,16 @@ namespace aux
           };
       };
 
-      template <class K, class Default>
-      Default& get(default_<K, Default> x) const
+      template <class K, class T>
+      T& get(default_<K,T> x) const
       {
           return x.value;
       }
 
-      template <class K, class Default>
-      typename Default::result_type get(lazy_default<K, Default> x) const
+      template <class K, class F>
+      typename F::result_type get(lazy_default<K,F> x) const
       {
-          return x.default_();
+          return x.compute_default();
       }
 #endif
 
@@ -199,27 +192,16 @@ namespace aux
           return x.value;
       }
 
-#if BOOST_WORKAROUND(__EDG_VERSION__, <= 300)
-      // These compilers need a little extra help with overload
-      // resolution; we have operator[] accept a base class to make
-      // that overload less preferable.
-      template <class K, class Default>
-      typename Default::result_type operator[](
-          lazy_default_base<K, Default> x) const
-      {
-          return x.default_();
-      }
-#else
       // If this function is called, it means there is no argument
       // in the list that matches the supplied keyword. Just evaluate
       // and return the default value.
-      template <class K, class Default>
-      typename Default::result_type operator[](
-          lazy_default<K, Default> x) const
+      template <class K, class F>
+      typename F::result_type operator[](
+          BOOST_NAMED_PARAMS_lazy_default_fallback<K,F> x) const
       {
-          return x.default_();
+          return x.compute_default();
       }
-#endif
+#undef BOOST_NAMED_PARAMS_lazy_default_fallback
 
       // No keyword was found if we get here, so we should only return
       // mpl::true_ if it's OK to have a default for the argument.
@@ -227,9 +209,22 @@ namespace aux
       static typename Arg::has_default keyword_passes_predicate(Arg*);
   };
 
-  // A tuple of labeled argument holders, terminated with empty.
+  // Used to pass static information about parameter requirements
+  // through the keyword_passes_predicate() overload set (below).  The
+  // matched function is never invoked, but its type indicates whether
+  // a parameter matches at compile-time
+  template <class Keyword, class Predicate, class HasDefault>
+  struct parameter_requirements
+  {
+      typedef HasDefault has_default;
+  };
+
+  template <class KW, class T>
+  struct arg_holder;
+
+  // A tuple of labeled argument holders, terminated with empty_arg_list.
   // Every ArgHolder is an instance of arg_holder<>.
-  template <class ArgHolder, class Next = empty>
+  template <class ArgHolder, class Next = empty_arg_list>
   struct arg_list : Next
   {
 #if BOOST_WORKAROUND(BOOST_MSVC, <= 1300) || BOOST_NAMED_PARAMS_GCC2
@@ -242,8 +237,8 @@ namespace aux
           struct apply
             : mpl::eval_if<
                   boost::is_same<KW, typename ArgHolder::key_type>
-                , mpl::identity<arg_list>
-                , mpl::apply1<typename Next::key_owner,KW>
+                , mpl::identity<arg_list<ArgHolder,Next> >
+                , mpl::apply_wrap1<typename Next::key_owner,KW>
               >
           {};
       };
@@ -258,7 +253,7 @@ namespace aux
             : mpl::eval_if<
                   boost::is_same<KW, typename ArgHolder::key_type>
                 , mpl::identity<typename ArgHolder::value_type>
-                , mpl::apply2<typename Next::key_value_type, KW, Default>
+                , mpl::apply_wrap2<typename Next::key_value_type, KW, Default>
               >
           {
           };
@@ -275,7 +270,7 @@ namespace aux
       )
         : Next(
               BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, a)
-            , empty()
+            , empty_arg_list()
           )
         , holder(a0)
       {}
@@ -287,46 +282,46 @@ namespace aux
 
 #if BOOST_WORKAROUND(BOOST_MSVC, <= 1300) || BOOST_NAMED_PARAMS_GCC2
       template <class KW>
-      typename mpl::apply2<key_value_type, KW, empty_arg_list>::type&
+      typename mpl::apply_wrap2<key_value_type, KW, empty_arg_list>::type&
       operator[](keyword<KW> x) const
       {
-          typename mpl::apply1<key_owner, KW>::type const& sublist = *this;
+          typename mpl::apply_wrap1<key_owner, KW>::type const& sublist = *this;
           return sublist.get(x);
       }
 
       template <class KW, class Default>
-      typename mpl::apply2<key_value_type, KW, Default>::type&
+      typename mpl::apply_wrap2<key_value_type, KW, Default>::type&
       operator[](default_<KW, Default> x) const
       {
-          typename mpl::apply1<key_owner, KW>::type const& sublist = *this;
+          typename mpl::apply_wrap1<key_owner, KW>::type const& sublist = *this;
           return sublist.get(x);
       }
 
-      template <class KW, class Default>
-      typename mpl::apply2<
+      template <class KW, class F>
+      typename mpl::apply_wrap2<
           key_value_type,KW
-        , typename Default::result_type
+        , typename F::result_type
       >::type
-      operator[](lazy_default<KW, Default> x) const
+      operator[](lazy_default<KW,F> x) const
       {
-          typename mpl::apply1<key_owner, KW>::type const& sublist = *this;
+          typename mpl::apply_wrap1<key_owner, KW>::type const& sublist = *this;
           return sublist.get(x);
       }
 
-      typename H::value_type& get(keyword<typename ArgHolder::key_type> x) const
+      typename ArgHolder::value_type& get(keyword<typename ArgHolder::key_type> x) const
       {
           return holder[x];
       }
 
       template <class Default>
-      typename H::value_type& 
+      typename ArgHolder::value_type& 
       get(default_<typename ArgHolder::key_type, Default> x) const
       {
           return holder[x];
       }
 
       template <class Default>
-      typename H::value_type& 
+      typename ArgHolder::value_type& 
       get(lazy_default<typename ArgHolder::key_type, Default> x) const
       {
           return holder[x];
@@ -356,11 +351,11 @@ namespace aux
 
       template <class HasDefault, class Predicate>
       static typename mpl::apply1<
-          typename mpl::lambda<Predicate>::type
+          Predicate
         , typename ArgHolder::value_type
       >::type
       keyword_passes_predicate(
-          sfinae_checker<typename ArgHolder::key_type,Predicate,HasDefault>*
+          parameter_requirements<typename ArgHolder::key_type,Predicate,HasDefault>*
       );
 
       using Next::keyword_passes_predicate;
@@ -418,7 +413,7 @@ namespace aux
             , arg_list<arg_holder<KW2, T2> > 
           >(
               *this
-            , arg_list<arg_holder<KW2, T2> >(x, empty())
+            , arg_list<arg_holder<KW2, T2> >(x, empty_arg_list())
           );
       }
 
@@ -514,6 +509,35 @@ struct keyword
     }
 };
 
+// These templates can be used to describe the treatment of particular
+// named parameters for the purposes of overload elimination with
+// SFINAE, by placing specializations in the keywords<...> list.  In
+// order for a treated function to participate in overload resolution:
+//
+//   - all keyword tags wrapped in required<...> must have a matching
+//     actual argument
+//
+//   - The actual argument type matched by every keyword tag
+//     associated with a predicate must satisfy that predicate
+//
+// If a keyword k is specified without an optional<...> or
+// required<...>, wrapper, it is treated as though optional<k> were
+// specified.
+//
+template <class Tag, class Predicate = mpl::always<mpl::true_> >
+struct required
+{
+    typedef Tag key_type;
+    typedef Predicate predicate;
+};
+
+template <class Tag, class Predicate = mpl::always<mpl::true_> >
+struct optional
+{
+    typedef Tag key_type;
+    typedef Predicate predicate;
+};
+
 namespace aux
 {
   BOOST_PYTHON_IS_XXX_DEF(required, required, 2)
@@ -556,9 +580,9 @@ namespace aux
   };
 
   template <class T>
-  struct as_sfinae_checker
+  struct as_parameter_requirements
   {
-      typedef sfinae_checker<
+      typedef parameter_requirements<
           typename key_type<T>::type
         , typename predicate<T>::type
         , typename has_default<T>::type
@@ -600,7 +624,7 @@ namespace aux
       BOOST_STATIC_CONSTANT(
           bool, value = (
               sizeof(
-                  to_yesno(
+                  aux::to_yesno(
                       Seq::keyword_passes_predicate((Arg*)0)
                   )
               ) == sizeof(yes_t)
@@ -612,7 +636,12 @@ namespace aux
 
   template <class Seq, class K>
   struct keyword_passes_predicate
-    : keyword_passes_predicate_aux<Seq, typename as_sfinae_checker<K>::type>
+    : keyword_passes_predicate_aux<Seq, typename as_parameter_requirements<K>::type>
+  {};
+
+  template <class Seq>
+  struct keyword_passes_predicate<Seq,void>
+    : mpl::true_
   {};
 
   template <class B /* = mpl::true_ */>
@@ -653,7 +682,7 @@ namespace aux
   // Given actual argument types T0...Tn, return a list of
   // arg_holder<U0...Um> types where:
   //
-  //   T0...Tm != empty
+  //   T0...Tm != empty_arg_list
   //
   // and
   //
@@ -661,7 +690,7 @@ namespace aux
   //
   template<
       BOOST_PP_ENUM_BINARY_PARAMS(
-          BOOST_NAMED_PARAMS_MAX_ARITY, class T, = empty BOOST_PP_INTERCEPT
+          BOOST_NAMED_PARAMS_MAX_ARITY, class T, = empty_arg_list BOOST_PP_INTERCEPT
       )
   >
   struct make_arg_list
@@ -673,15 +702,15 @@ namespace aux
       {
           typedef arg_list<
               typename as_arg_holder<K0, T0>::type
-            , typename BOOST_PP_CAT(mpl::apply, BOOST_NAMED_PARAMS_MAX_ARITY)<
+            , typename BOOST_PP_CAT(mpl::apply_wrap, BOOST_NAMED_PARAMS_MAX_ARITY)<
                   make_arg_list<
                       BOOST_PP_ENUM_SHIFTED_PARAMS(
                           BOOST_NAMED_PARAMS_MAX_ARITY, T
                       )
-                    , empty
+                    , empty_arg_list
                   >
                 , BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, K)
-                , empty
+                , empty_arg_list
               >::type
           > type;
       };
@@ -689,7 +718,7 @@ namespace aux
 
   template <>
   struct make_arg_list<
-      BOOST_PP_ENUM_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, empty BOOST_PP_INTERCEPT)
+      BOOST_PP_ENUM_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, empty_arg_list BOOST_PP_INTERCEPT)
   >
   {
       template<
@@ -697,13 +726,13 @@ namespace aux
       >
       struct apply
       {
-          typedef empty type;
+          typedef empty_arg_list type;
       };
   };
 
 } // namespace aux
 
-#define BOOST_KEYWORDS_TEMPLATE_ARGS(z, n, text) class BOOST_PP_CAT(K, n) = aux::empty
+#define BOOST_KEYWORDS_TEMPLATE_ARGS(z, n, text) class BOOST_PP_CAT(K, n) = void
 
 template<
      class K0
@@ -734,6 +763,7 @@ struct keywords
                 >::type
             >
           , keywords
+
         > type;
     };
 
@@ -744,7 +774,7 @@ struct keywords
     // Instantiations are to be used as an optional argument to control SFINAE
     template<
         BOOST_PP_ENUM_BINARY_PARAMS(
-            BOOST_NAMED_PARAMS_MAX_ARITY, class T, = aux::empty BOOST_PP_INTERCEPT
+            BOOST_NAMED_PARAMS_MAX_ARITY, class T, = aux::empty_arg_list BOOST_PP_INTERCEPT
         )       
     >
     struct restrict
@@ -765,9 +795,9 @@ struct keywords
 #endif 
     };
 
-    aux::empty operator()() const
+    aux::empty_arg_list operator()() const
     {
-       return aux::empty();
+       return aux::empty_arg_list();
     }
 
 #define BOOST_PP_ITERATION_PARAMS_1 (3,( \
