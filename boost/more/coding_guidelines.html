@@ -215,7 +215,7 @@ class rectangle : boost::addable&lt;rectangle&gt;
       <tt>InMixedCase</tt>, with capitalized sub-words, e.g.
 <blockquote>
 <pre>
-template &lt;class <b>InputIterator</b>&gt;
+template&lt;class <b>InputIterator</b>&gt;
 struct adaptor { typedef <b>InputIterator</b> base_iterator; };
 </pre>
 </blockquote>
@@ -554,7 +554,9 @@ class catalog
 {
  public:
     explicit catalog();
-    template &lt;class T&gt; void f(T);
+
+    template&lt;class T&gt;
+    void f(T);
 
     template&lt;typename T&gt;
     void template_function(T* target,
@@ -833,10 +835,9 @@ double f(double const x, double const y)   // definition
       lieu of  ``<tt>/*</tt>...<tt>*/</tt>''
 
       <p>
-      7.2.   <b>Long comments</b>
-      begin on a separate line from active code. Comments of more than one line
-      are separated from other code by a blank line above. Comments refer to
-      code below them.
+      7.2.   <b>Long comments</b> begin on a separate line from active code, and
+      refer to the code below them. Comments of more than one line are separated
+      from other code by a blank line above. 
 
       <p>
       7.3.   <b>All function interfaces must be commented</b> (except for copy
@@ -923,7 +924,9 @@ double f(double const x, double const y)   // definition
       <p>
       7.15.        <b>Comment out code using ``</b>
       <tt>#if&nbsp;0</tt>...<tt>#endif</tt>'', or ``<tt>//</tt>'', not
-      ``<tt>/*</tt>...<tt>*/</tt>'' comment notation.
+      ``<tt>/*</tt>...<tt>*/</tt>'' comment notation. Avoid checking in code
+      that's been commented out. Since it doesn't get tested, it will likely not
+      make any sense tomorrow even if it makes some sense today.
 
       <h3><a name="AEN222">Discussion:</a></h3>
 
@@ -1051,7 +1054,7 @@ class outer
 <a name="functor">// a simple function object may define operator() in the class.</a>
 struct outer::compare
 {
-    bool operator()(outer const&amp; x, outer const &amp; y) const
+    bool operator()(outer const&amp; x, outer const&amp; y) const
     {
         x.m_count &lt; y.m_count;
     }
