@@ -1,3 +1,11 @@
+#ifdef USE_MSVC
+
+#pragma warning (disable: 4355)
+#pragma warning (disable: 4503)
+#pragma warning (disable: 4786)
+
+#endif
+
 #include <iostream>
 
 #include "../config.h"
@@ -9,7 +17,7 @@
 
 #include "test2.h"
 
-template<class V, numerics::size_type N>
+template<class V, int N>
 void test_blas_1<V, N>::operator () () {
 	try {
 		value_type t;
@@ -43,18 +51,14 @@ void test_blas_1<V, N>::operator () () {
 
 		// _copy
 		initialize_vector (v2);
-		numerics::blas_1::safe_copy (v1, v2);
-		std::cout << "safe_copy (v1, v2) = " << v1 << std::endl;
-		numerics::blas_1::fast_copy (v1, v2);
-		std::cout << "fast_copy (v1, v2) = " << v1 << std::endl;
+		numerics::blas_1::copy (v1, v2);
+		std::cout << "copy (v1, v2) = " << v1 << std::endl;
 
 		// _swap 
 		initialize_vector (v1);
 		initialize_vector (v2);
-		numerics::blas_1::safe_swap (v1, v2);
-		std::cout << "safe_swap (v1, v2) = " << v1 << " " << v2 << std::endl;
-		numerics::blas_1::fast_swap (v1, v2);
-		std::cout << "fast_swap (v1, v2) = " << v1 << " " << v2 << std::endl;
+		numerics::blas_1::swap (v1, v2);
+		std::cout << "swap (v1, v2) = " << v1 << " " << v2 << std::endl;
 
 		// _scal
 		// csscal

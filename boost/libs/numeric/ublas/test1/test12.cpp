@@ -1,3 +1,11 @@
+#ifdef USE_MSVC
+
+#pragma warning (disable: 4355)
+#pragma warning (disable: 4503)
+#pragma warning (disable: 4786)
+
+#endif
+
 #include <iostream>
 
 #include "../config.h"
@@ -8,19 +16,16 @@
 #include "test1.h"
 
 // Test matrix & vector expression templates 
-template<class V, class M, numerics::size_type N>
+template<class V, class M, int N>
 struct test_my_matrix_vector {
     typedef typename V::value_type value_type;
 
-    void operator () () const {
+    template<class VP, class MP>
+    void operator () (VP &v1, VP &v2, MP &m1) const {
 		try {
-            value_type t;
-			V v1 (N), v2 (N), v3 (N);
-			M m1 (N, N), m2 (N, N), m3 (N, N);
-
 			// Rows and columns
 			initialize_matrix (m1);
-			for (numerics::size_type i = 0; i < N; ++ i) {
+			for (int i = 0; i < N; ++ i) {
 				v1 = numerics::row (m1, i);
 				std::cout << "row (m, " << i << ") = " << v1 << std::endl;
 				v1 = numerics::column (m1, i);
@@ -38,17 +43,33 @@ struct test_my_matrix_vector {
 			initialize_vector (v1);
             v2 = numerics::prod (m1, v1);
 			std::cout << "prod (m1, v1) = " << v2 << std::endl;
+		}
+        catch (std::exception &e) {
+			std::cout << e.what () << std::endl;
+		}
+		catch (...) {
+			std::cout << "unknown exception" << std::endl;
+		}
+	}
+    void operator () () const {
+		try {
+			V v1 (N), v2 (N);
+			M m1 (N, N);
+            (*this) (v1, v2, m1);
 
-			// Slicing
-			t = N;
-			initialize_matrix (m1);
-			numerics::slice s1 (1, 0, 1), s2 (1, 0, 1);
-			numerics::matrix_vector_slice<M> mvs (m1, s1, s2);
-			std::cout << "matrix_vector_slice (m1, slice (1, 0, 1), slice (1, 0, 1)) = " << mvs << std::endl;
-			mvs *= value_type (1.);
-			std::cout << "mvs *= 1. = " << mvs << std::endl;
-			mvs *= t;
-			std::cout << "mvs *= N = " << mvs << std::endl;
+            numerics::matrix_row<M> mr1 (m1, 0), mr2 (m1, 1);
+            (*this) (mr1, mr2, m1);
+
+            numerics::matrix_column<M> mc1 (m1, 0), mc2 (m1, 1);
+            (*this) (mc1, mc2, m1);
+
+#ifdef USE_RANGE_AND_SLICE
+            numerics::matrix_vector_range<M> mvr1 (m1, 0, N, 0, N), mvr2 (m1, 0, N, 0, N);
+            (*this) (mvr1, mvr2, m1);
+
+            numerics::matrix_vector_slice<M> mvs1 (m1, 0, 1, N, 0, 1, N), mvs2 (m1, 0, 1, N, 0, 1, N);
+            (*this) (mvs1, mvs2, m1);
+#endif
 		}
         catch (std::exception &e) {
 			std::cout << e.what () << std::endl;

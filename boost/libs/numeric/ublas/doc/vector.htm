@@ -1,0 +1,422 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>Vector Related</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<h1>Vector Related</h1>
+
+<h2><a name="vector"></a>Vector</h2>
+
+<p>The templated class <code>vector </code>is the base container
+adaptor for dense vectors.</p>
+
+<pre><code>    // Array based vector class 
+    template&lt;class T, class A, class F&gt;
+    class vector: 
+        public vector_expression&lt;vector&lt;T, A, F&gt; &gt; {
+    public:      
+        typedef std::size_t size_type;
+        typedef std::ptrdiff_t difference_type;
+        typedef T value_type;
+        typedef const T &amp;const_reference_type;
+        typedef T &amp;reference_type;
+        typedef A array_type;
+        typedef F functor_type;
+        typedef vector&lt;T, A, F&gt; self_type;
+        typedef vector_const_reference&lt;self_type&gt; const_closure_type;
+        typedef vector_reference&lt;self_type&gt; closure_type;
+        typedef vector_range&lt;self_type&gt; vector_range_type;
+        typedef typename A::const_iterator const_iterator_type;
+        typedef typename A::iterator iterator_type;
+        typedef struct dense_tag storage_category;
+
+        // Construction and destruction
+        vector ();
+        vector (size_type size);
+        vector (const vector &amp;v);
+        template&lt;class AE&gt;
+        vector (const vector_expression&lt;AE&gt; &amp;ae);
+
+        // Resizing
+        void resize (size_type size);
+
+        size_type size () const;
+
+        // Element access
+        value_type operator () (size_type i) const;
+        reference_type operator () (size_type i);
+
+        value_type operator [] (size_type i) const;
+        reference_type operator [] (size_type i);
+
+        vector_range_type project (size_type start, size_type stop);
+        vector_range_type project (const range &amp;r);
+
+        // Assignment
+        vector &amp;operator = (const vector &amp;v);
+        vector &amp;assign_temporary (vector &amp;v);
+        template&lt;class AE&gt;
+        vector &amp;operator = (const vector_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        vector &amp;assign (const vector_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        vector &amp;operator += (const vector_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        vector &amp;plus_assign (const vector_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        vector &amp;operator -= (const vector_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        vector &amp;minus_assign (const vector_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AT&gt;
+        vector &amp;operator *= (const AT &amp;at);
+
+        // Swapping
+	void swap (vector &amp;v);
+	friend void swap (vector &amp;v1, vector &amp;v2);
+
+        // Element insertion
+        void clear ();
+        void insert (size_type i, const T &amp;t);
+
+	class const_iterator;
+        class iterator;
+
+        // Element lookup
+        const_iterator find (size_type i) const;
+        iterator find (size_type i);
+
+        // Iterators simply are pointers.
+
+        class const_iterator:
+            public container_const_reference&lt;vector&gt;,
+            public random_access_iterator_base&lt;const_iterator, value_type&gt; {
+        public:
+            typedef std::random_access_iterator_tag iterator_category;
+
+            // Construction and destruction
+            const_iterator (const vector &amp;v, const const_iterator_type &amp;it);
+            const_iterator (const iterator &amp;it);
+
+            // Arithmetic
+            const_iterator &amp;operator ++ ();
+            const_iterator &amp;operator -- ();
+            const_iterator &amp;operator += (difference_type n);
+            const_iterator &amp;operator -= (difference_type n);
+            difference_type operator - (const const_iterator &amp;it) const;
+
+            // Dereference
+            value_type operator * () const;
+
+            // Index
+            size_type index () const;
+
+            // Comparison
+            bool operator == (const const_iterator &amp;it) const;
+        };
+
+        const_iterator begin () const;
+        const_iterator end () const;
+
+        class iterator:
+            public container_reference&lt;vector&gt;,
+            public random_access_iterator_base&lt;iterator, value_type&gt; {
+        public:
+            typedef std::random_access_iterator_tag iterator_category;
+
+            // Construction and destruction
+            iterator (vector &amp;v, const iterator_type &amp;it);
+
+            // Arithmetic
+            iterator &amp;operator ++ ();
+            iterator &amp;operator -- ();
+            iterator &amp;operator += (difference_type n);
+            iterator &amp;operator -= (difference_type n);
+            difference_type operator - (const iterator &amp;it) const;
+
+            // Dereference
+            reference_type operator * ();
+
+            // Index
+            size_type index () const;
+
+            // Comparison
+            bool operator == (const iterator &amp;it) const;
+        };
+
+        iterator begin ();
+        iterator end ();
+
+        // Reverse iterator
+
+        typedef std::reverse_iterator&lt;const_iterator, value_type, const_reference_type&gt; const_reverse_iterator;
+
+        const_reverse_iterator rbegin () const;
+        const_reverse_iterator rend () const;
+
+        typedef std::reverse_iterator&lt;iterator, value_type, reference_type&gt; reverse_iterator;
+
+        reverse_iterator rbegin ();
+        reverse_iterator rend ();
+    };</code></pre>
+
+<h2><a name="vector_range"></a>Vector Range</h2>
+
+<p>The templated class <code>vector_range </code>allows to
+address a range of a vector.</p>
+
+<pre><code>    // Vector based range class
+    template&lt;class V&gt;
+    class vector_range:
+	public vector_expression&lt;vector_range&lt;V&gt; &gt; {
+    public:      
+        typedef V vector_type;
+        typedef typename V::size_type size_type;
+        typedef typename V::difference_type difference_type;
+        typedef typename V::value_type value_type;
+        typedef typename V::const_reference_type const_reference_type;
+        typedef typename V::reference_type reference_type;
+        typedef vector_range&lt;V&gt; const_closure_type;
+        typedef vector_range&lt;V&gt; closure_type;
+        typedef typename V::const_iterator const_iterator_type;
+        typedef typename V::iterator iterator_type;
+        typedef typename proxy_traits&lt;typename V::storage_category&gt;::storage_category storage_category;
+
+        // Construction and destruction
+        vector_range (vector_type &amp;data, const range &amp;r);
+        vector_range (vector_type &amp;data, size_type start, size_type stop);
+
+        size_type start () const;
+        size_type size () const;
+
+        // Element access
+        value_type operator () (size_type i) const;
+        reference_type operator () (size_type i);
+
+        value_type operator [] (size_type i) const;
+        reference_type operator [] (size_type i);
+
+        vector_range project (size_type start, size_type stop);
+        vector_range project (const range &amp;r);
+
+        // Assignment
+        vector_range &amp;operator = (const vector_range &amp;vr);
+        vector_range &amp;assign_temporary (vector_range &amp;vr);
+        template&lt;class AE&gt;
+        vector_range &amp;operator = (const vector_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        vector_range &amp;assign (const vector_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        vector_range &amp;operator += (const vector_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        vector_range &amp;plus_assign (const vector_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        vector_range &amp;operator -= (const vector_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        vector_range &amp;minus_assign (const vector_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AT&gt;
+        vector_range &amp;operator *= (const AT &amp;at);
+
+        // Swapping
+	void swap (vector_range &amp;vr);
+	friend void swap (vector_range &amp;vr1, vector_range &amp;vr2);
+
+        class const_iterator;
+        class iterator;
+
+        // Element lookup
+        const_iterator find (size_type i) const;
+        iterator find (size_type i);
+
+        // Iterators simply are pointers.
+
+        class const_iterator:
+            public container_const_reference&lt;vector_range&gt;,
+            public random_access_iterator_base&lt;const_iterator, value_type&gt; {
+        public:
+            typedef typename V::const_iterator::iterator_category iterator_category;
+
+            // Construction and destruction
+            const_iterator (const vector_range &amp;vr, const const_iterator_type &amp;it);
+            const_iterator (const iterator &amp;it);
+
+            // Arithmetic
+            const_iterator &amp;operator ++ ();
+            const_iterator &amp;operator -- ();
+            const_iterator &amp;operator += (difference_type n);
+            const_iterator &amp;operator -= (difference_type n);
+            difference_type operator - (const const_iterator &amp;it) const;
+
+            // Dereference
+            value_type operator * () const;
+
+            // Index
+            size_type index () const;
+
+            // Comparison
+            bool operator == (const const_iterator &amp;it) const;
+        };
+
+        const_iterator begin () const;
+        const_iterator end () const;
+
+        class iterator:
+            public container_reference&lt;vector_range&gt;,
+            public random_access_iterator_base&lt;iterator, value_type&gt; {
+        public:
+            typedef typename V::iterator::iterator_category iterator_category;
+
+            // Construction and destruction
+            iterator (vector_range &amp;vr, const iterator_type &amp;it);
+
+            // Arithmetic
+            iterator &amp;operator ++ ();
+            iterator &amp;operator -- ();
+            iterator &amp;operator += (difference_type n);
+            iterator &amp;operator -= (difference_type n);
+            difference_type operator - (const iterator &amp;it) const;
+
+            // Dereference
+            reference_type operator * ();
+
+            // Index
+            size_type index () const;
+
+            // Comparison
+            bool operator == (const iterator &amp;it) const;
+        };
+
+        iterator begin ();
+        iterator end ();
+    };</code></pre>
+
+<h2><a name="vector_slice"></a>Vector Slice</h2>
+
+<p>The templated class <code>vector_slice </code>allows to
+address a slice of a vector.</p>
+
+<pre><code>    // Vector based slice class
+    template&lt;class V&gt;
+    class vector_slice:
+	public vector_expression&lt;vector_slice&lt;V&gt; &gt; {
+    public:      
+        typedef V vector_type;
+        typedef typename V::size_type size_type;
+        typedef typename V::difference_type difference_type;
+        typedef typename V::value_type value_type;
+        typedef typename V::const_reference_type const_reference_type;
+        typedef typename V::reference_type reference_type;
+        typedef vector_slice&lt;V&gt; const_closure_type;
+        typedef vector_slice&lt;V&gt; closure_type;
+        typedef slice::const_iterator const_iterator_type;
+        typedef slice::const_iterator iterator_type;
+        typedef typename proxy_traits&lt;typename V::storage_category&gt;::storage_category storage_category;
+
+        // Construction and destruction
+        vector_slice (vector_type &amp;data, const slice &amp;s);
+        vector_slice (vector_type &amp;data, size_type start, size_type stride, size_type size);
+
+        size_type size () const;
+
+        // Element access
+        value_type operator () (size_type i) const;
+        reference_type operator () (size_type i);
+
+        value_type operator [] (size_type i) const;
+        reference_type operator [] (size_type i);
+
+        vector_slice project (const range &amp;r);
+        vector_slice project (const slice &amp;s);
+
+        // Assignment
+        vector_slice &amp;operator = (const vector_slice &amp;vs);
+        vector_slice &amp;assign_temporary (vector_slice &amp;vs);
+        template&lt;class AE&gt;
+        vector_slice &amp;operator = (const vector_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        vector_slice &amp;assign (const vector_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        vector_slice &amp;operator += (const vector_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        vector_slice &amp;plus_assign (const vector_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        vector_slice &amp;operator -= (const vector_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        vector_slice &amp;minus_assign (const vector_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AT&gt;
+        vector_slice &amp;operator *= (const AT &amp;at);
+
+        // Swapping
+	void swap (vector_slice &amp;vs);
+	friend void swap (vector_slice &amp;vs1, vector_slice &amp;vs2);
+
+        // Iterators simply are indexes.
+
+        class iterator;
+
+        class const_iterator:
+            public container_const_reference&lt;vector_type&gt;,
+            public random_access_iterator_base&lt;const_iterator, value_type&gt; {
+        public:
+            typedef std::random_access_iterator_tag iterator_category;
+
+            // Construction and destruction
+            const_iterator (const vector_type &amp;v, const const_iterator_type &amp;it);
+            const_iterator (const iterator &amp;it);
+
+            // Arithmetic
+            const_iterator &amp;operator ++ ();
+            const_iterator &amp;operator -- ();
+            const_iterator &amp;operator += (difference_type n);
+            const_iterator &amp;operator -= (difference_type n);
+            difference_type operator - (const const_iterator &amp;it) const;
+
+            // Dereference
+            value_type operator * () const;
+
+            // Index
+            size_type index () const;
+
+            // Comparison
+            bool operator == (const const_iterator &amp;it) const;
+        };
+
+        const_iterator begin () const;
+        const_iterator end () const;
+
+        class iterator:
+            public container_reference&lt;vector_type&gt;,
+            public random_access_iterator_base&lt;iterator, value_type&gt; {
+        public:
+            typedef std::random_access_iterator_tag iterator_category;
+
+            // Construction and destruction
+            iterator (vector_type &amp;v, const iterator_type &amp;it);
+
+            // Arithmetic
+            iterator &amp;operator ++ ();
+            iterator &amp;operator -- ();
+            iterator &amp;operator += (difference_type n);
+            iterator &amp;operator -= (difference_type n);
+            difference_type operator - (const iterator &amp;it) const;
+
+            // Dereference
+            reference_type operator * ();
+
+            // Index
+            size_type index () const;
+
+            // Comparison
+            bool operator == (const iterator &amp;it) const;
+        };
+
+        iterator begin ();
+        iterator end ();
+    };</code></pre>
+</body>
+</html>

@@ -9,11 +9,11 @@
 #include <iostream>
 
 #include "../config.h"
-#include "../vector.h"
+#include "../vector_sp.h"
 #include "../matrix.h"
 #include "../io.h"
 
-#include "test1.h"
+#include "test3.h"
 
 int main () {
     test_vector ();

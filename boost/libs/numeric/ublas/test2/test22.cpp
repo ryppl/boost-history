@@ -1,3 +1,11 @@
+#ifdef USE_MSVC
+
+#pragma warning (disable: 4355)
+#pragma warning (disable: 4503)
+#pragma warning (disable: 4786)
+
+#endif
+
 #include <iostream>
 
 #include "../config.h"
@@ -9,7 +17,7 @@
 
 #include "test2.h"
 
-template<class V, class M, numerics::size_type N>
+template<class V, class M, int N>
 void test_blas_2<V, M, N>::operator () () {
 	try {
 		V v1 (N), v2 (N);
@@ -35,33 +43,35 @@ void test_blas_2<V, M, N>::operator () () {
 		initialize_vector (v1);
 		initialize_vector (v2);
 		initialize_lower_triangular (m);
-		numerics::blas_2::tsv (v1, m, numerics::lower_triangular);
+		numerics::blas_2::tsv (v1, m, numerics::lower_triangular_tag ());
         std::cout << "tsv (v1, m) = " << v1 << " " << numerics::prod (m, v1) - v2 << std::endl;
 		initialize_vector (v1);
 		initialize_vector (v2);
 		initialize_upper_triangular (m);
-		numerics::blas_2::tsv (v1, numerics::trans (m), numerics::lower_triangular);
+		numerics::blas_2::tsv (v1, numerics::trans (m), numerics::lower_triangular_tag ());
         std::cout << "tsv (v1, trans (m)) = " << v1 << " " << numerics::prod (numerics::trans (m), v1) - v2 << std::endl;
 #ifdef USE_COMPLEX
 		initialize_vector (v1);
 		initialize_vector (v2);
 		initialize_upper_triangular (m);
-		numerics::blas_2::tsv (v1, numerics::herm (m), numerics::lower_triangular);
+		numerics::blas_2::tsv (v1, numerics::herm (m), numerics::lower_triangular_tag ());
         std::cout << "tsv (v1, herm (m)) = " << v1 << " " << numerics::prod (numerics::herm (m), v1) - v2 << std::endl;
+#endif
 		initialize_vector (v1);
 		initialize_vector (v2);
 		initialize_upper_triangular (m);
-		numerics::blas_2::tsv (v1, m, numerics::upper_triangular);
+		numerics::blas_2::tsv (v1, m, numerics::upper_triangular_tag ());
         std::cout << "tsv (v1, m) = " << v1 << " " << numerics::prod (m, v1) - v2 << std::endl;
 		initialize_vector (v1);
 		initialize_vector (v2);
 		initialize_lower_triangular (m);
-		numerics::blas_2::tsv (v1, numerics::trans (m), numerics::upper_triangular);
+		numerics::blas_2::tsv (v1, numerics::trans (m), numerics::upper_triangular_tag ());
         std::cout << "tsv (v1, trans (m)) = " << v1 << " " << numerics::prod (numerics::trans (m), v1) - v2 << std::endl;
+#ifdef USE_COMPLEX
 		initialize_vector (v1);
 		initialize_vector (v2);
 		initialize_lower_triangular (m);
-		numerics::blas_2::tsv (v1, numerics::herm (m), numerics::upper_triangular);
+		numerics::blas_2::tsv (v1, numerics::herm (m), numerics::upper_triangular_tag ());
         std::cout << "tsv (v1, herm (m)) = " << v1 << " " << numerics::prod (numerics::herm (m), v1) - v2 << std::endl;
 #endif
 
@@ -97,11 +107,13 @@ void test_blas_2<V, M, N>::operator () () {
 		numerics::blas_2::sr (m, value_type (1), v1);
 		std::cout << "sr (m, 1, v1) = " << m << std::endl;
 
+#ifdef USE_COMPLEX
 		// _h_r
 		initialize_vector (v1);
 		initialize_matrix (m);
 		numerics::blas_2::hr (m, value_type (1), v1);
 		std::cout << "hr (m, 1, v1) = " << m << std::endl;
+#endif
 
 		// _s_r2
 		initialize_vector (v1);
@@ -110,12 +122,14 @@ void test_blas_2<V, M, N>::operator () () {
 		numerics::blas_2::sr2 (m, value_type (1), v1, v2);
 		std::cout << "sr2 (m, 1, v1, v2) = " << m << std::endl;
 
+#ifdef USE_COMPLEX
 		// _h_r2
 		initialize_vector (v1);
 		initialize_vector (v2);
 		initialize_matrix (m);
 		numerics::blas_2::hr2 (m, value_type (1), v1, v2);
 		std::cout << "hr2 (m, 1, v1, v2) = " << m << std::endl;
+#endif
 	}
 	catch (std::exception &e) {
 		std::cout << e.what () << std::endl;

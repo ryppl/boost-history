@@ -1,10 +1,10 @@
-#ifndef TEST1_H
-#define TEST1_H
+#ifndef TEST3_H
+#define TEST3_H
 
 template<class V>
 void initialize_vector (V &v) {
     int size = v.size ();
-    for (int i = 0; i < size; ++ i) 
+    for (int i = 0; i < size; i += 2) 
         v [i] = i + 1;
 }
 
@@ -12,8 +12,8 @@ template<class M>
 void initialize_matrix (M &m) {
     int size1 = m.size1 ();
     int size2 = m.size2 ();
-    for (int i = 0; i < size1; ++ i) 
-        for (int j = 0; j < size2; ++ j) 
+    for (int i = 0; i < size1; i += 2) 
+        for (int j = 0; j < size2; j += 2) 
             m (i, j) = i * size1 + j + 1;
 }
 

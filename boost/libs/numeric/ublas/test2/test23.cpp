@@ -1,3 +1,11 @@
+#ifdef USE_MSVC
+
+#pragma warning (disable: 4355)
+#pragma warning (disable: 4503)
+#pragma warning (disable: 4786)
+
+#endif
+
 #include <iostream>
 
 #include "../config.h"
@@ -9,7 +17,7 @@
 
 #include "test2.h"
 
-template<class M, numerics::size_type N>
+template<class M, int N>
 void test_blas_3<M, N>::operator () () {
 	try {
 		M m1 (N, N), m2 (N, N), m3 (N, N);
@@ -58,28 +66,30 @@ void test_blas_3<M, N>::operator () () {
 		initialize_matrix (m1);
 		initialize_lower_triangular (m2);
 		initialize_matrix (m3);
-		numerics::blas_3::tsm (m1, value_type (1), m2, numerics::lower_triangular);
+		numerics::blas_3::tsm (m1, value_type (1), m2, numerics::lower_triangular_tag ());
         std::cout << "tsm (m1, 1, m2) = " << m1 << " " << numerics::prod (m2, m1) - value_type (1) * m3 << std::endl;			
 		initialize_matrix (m1);
 		initialize_upper_triangular (m2);
-		numerics::blas_3::tsm (m1, value_type (1), numerics::trans (m2), numerics::lower_triangular);
+		numerics::blas_3::tsm (m1, value_type (1), numerics::trans (m2), numerics::lower_triangular_tag ());
 		std::cout << "tsm (m1, 1, trans (m2)) = " << m1 << " " << numerics::prod (numerics::trans (m2), m1) - value_type (1) * m3 << std::endl;			
 #ifdef USE_COMPLEX
 		initialize_matrix (m1);
 		initialize_upper_triangular (m2);
-		numerics::blas_3::tsm (m1, value_type (1), numerics::herm (m2), numerics::lower_triangular);
+		numerics::blas_3::tsm (m1, value_type (1), numerics::herm (m2), numerics::lower_triangular_tag ());
 		std::cout << "tsm (m1, 1, herm (m2)) = " << m1 << " " << numerics::prod (numerics::herm (m2), m1) - value_type (1) * m3 << std::endl;			
+#endif
 		initialize_matrix (m1);
 		initialize_upper_triangular (m2);
-		numerics::blas_3::tsm (m1, value_type (1), m2, numerics::upper_triangular);
+		numerics::blas_3::tsm (m1, value_type (1), m2, numerics::upper_triangular_tag ());
 		std::cout << "tsm (m1, 1, m2) = " << m1 << " " << numerics::prod (m2, m1) - value_type (1) * m3 << std::endl;			
 		initialize_matrix (m1);
 		initialize_lower_triangular (m2);
-		numerics::blas_3::tsm (m1, value_type (1), numerics::trans (m2), numerics::upper_triangular);
+		numerics::blas_3::tsm (m1, value_type (1), numerics::trans (m2), numerics::upper_triangular_tag ());
 		std::cout << "tsm (m1, 1, trans (m2)) = " << m1 << " " << numerics::prod (numerics::trans (m2), m1) - value_type (1) * m3 << std::endl;			
+#ifdef USE_COMPLEX
 		initialize_matrix (m1);
 		initialize_lower_triangular (m2);
-		numerics::blas_3::tsm (m1, value_type (1), numerics::herm (m2), numerics::upper_triangular);
+		numerics::blas_3::tsm (m1, value_type (1), numerics::herm (m2), numerics::upper_triangular_tag ());
 		std::cout << "tsm (m1, 1, herm (m2)) = " << m1 << " " << numerics::prod (numerics::herm (m2), m1) - value_type (1) * m3 << std::endl;
 #endif
 

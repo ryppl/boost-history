@@ -11,11 +11,13 @@
 
 #include "../config.h"
 #include "../vector.h"
+#include "../vector_sp.h"
 #include "../matrix.h"
+#include "../matrix_sp.h"
 
 #include "../timer.h"
 
-#include "bench1.h"
+#include "bench2.h"
 
 template<class T, int N>
 struct bench_c_outer_prod {
@@ -52,8 +54,8 @@ struct bench_my_outer_prod {
 
     void operator () (int runs, safe_tag) const {
 		try {
-			static M m (N, N);
-			static V v1 (N), v2 (N);
+			static M m (N, N, N * N);
+			static V v1 (N, N), v2 (N, N);
 			initialize_vector (v1);
 			initialize_vector (v2);
 			numerics::timer t;
@@ -72,8 +74,8 @@ struct bench_my_outer_prod {
     }
     void operator () (int runs, fast_tag) const {
 		try {
-			static M m (N, N);
-			static V v1 (N), v2 (N);
+			static M m (N, N, N * N);
+			static V v1 (N, N), v2 (N, N);
 			initialize_matrix (m);
 			initialize_vector (v1);
 			numerics::timer t;
@@ -157,8 +159,8 @@ struct bench_my_matrix_vector_prod {
 
     void operator () (int runs, safe_tag) const {
 		try {
-			static M m (N, N);
-			static V v1 (N), v2 (N);
+			static M m (N, N, N * N);
+			static V v1 (N, N), v2 (N, N);
 			initialize_matrix (m);
 			initialize_vector (v1);
 			numerics::timer t;
@@ -177,8 +179,8 @@ struct bench_my_matrix_vector_prod {
     }
     void operator () (int runs, fast_tag) const {
 		try {
-			static M m (N, N);
-			static V v1 (N), v2 (N);
+			static M m (N, N, N * N);
+			static V v1 (N, N), v2 (N, N);
 			initialize_matrix (m);
 			initialize_vector (v1);
 			numerics::timer t;
@@ -259,7 +261,7 @@ struct bench_my_matrix_add {
 
     void operator () (int runs, safe_tag) const {
 		try {
-			static M m1 (N, N), m2 (N, N), m3 (N, N);
+			static M m1 (N, N, N * N), m2 (N, N, N * N), m3 (N, N, N * N);
 			initialize_matrix (m1);
 			initialize_matrix (m2);
 			numerics::timer t;
@@ -278,7 +280,7 @@ struct bench_my_matrix_add {
     }
     void operator () (int runs, fast_tag) const {
 		try {
-			static M m1 (N, N), m2 (N, N), m3 (N, N);
+			static M m1 (N, N, N * N), m2 (N, N, N * N), m3 (N, N, N * N);
 			initialize_matrix (m1);
 			initialize_matrix (m2);
 			numerics::timer t;
@@ -332,124 +334,69 @@ void bench_2<T, N>::operator () (int runs) {
 	bench_c_outer_prod<T, N> () (runs);
 
     header ("matrix<bounded_array>, vector<bounded_array> safe");
-	bench_my_outer_prod<numerics::matrix<T, numerics::bounded_array<T, N * N> >,
-						numerics::vector<T, numerics::bounded_array<T, N> >, N> () (runs, safe_tag ());
+    bench_my_outer_prod<numerics::sparse_matrix<T, numerics::compressed_array<std::size_t, T> >,
+						numerics::sparse_vector<T, numerics::compressed_array<std::size_t, T> >, N> () (runs, safe_tag ());
 
     header ("matrix<bounded_array>, vector<bounded_array> fast");
-	bench_my_outer_prod<numerics::matrix<T, numerics::bounded_array<T, N * N> >, 
-						numerics::vector<T, numerics::bounded_array<T, N> >, N> () (runs, fast_tag ());
+	bench_my_outer_prod<numerics::sparse_matrix<T, numerics::compressed_array<std::size_t, T> >, 
+						numerics::sparse_vector<T, numerics::compressed_array<std::size_t, T> >, N> () (runs, fast_tag ());
 
     header ("matrix<unbounded_array>, vector<unbounded_array> safe");
-	bench_my_outer_prod<numerics::matrix<T, numerics::unbounded_array<T> >, 
-						numerics::vector<T, numerics::unbounded_array<T> >, N> () (runs, safe_tag ());
+    bench_my_outer_prod<numerics::sparse_matrix<T, std::map<std::size_t, T> >, 
+						numerics::sparse_vector<T, std::map<std::size_t, T> >, N> () (runs, safe_tag ());
 
     header ("matrix<unbounded_array>, vector<unbounded_array> fast");
-	bench_my_outer_prod<numerics::matrix<T, numerics::unbounded_array<T> >,
-						numerics::vector<T, numerics::unbounded_array<T> >, N> () (runs, fast_tag ());
+	bench_my_outer_prod<numerics::sparse_matrix<T, std::map<std::size_t, T> >,
+						numerics::sparse_vector<T, std::map<std::size_t, T> >, N> () (runs, fast_tag ());
 
-#ifdef USE_STD_VALARRAY
-    header ("matrix<std::valarray>, vector<std::valarray> safe");
-	bench_my_outer_prod<numerics::matrix<T, std::valarray<T> >, 
-						numerics::vector<T, std::valarray<T> >, N> () (runs, safe_tag ());
-
-    header ("matrix<std::valarray>, vector<std::valarray> fast");
-	bench_my_outer_prod<numerics::matrix<T, std::valarray<T> >,
-						numerics::vector<T, std::valarray<T> >, N> () (runs, fast_tag ());
-#endif
-
-#ifdef USE_STD_VECTOR
-    header ("matrix<std::vector>, vector<std::vector> safe");
-	bench_my_outer_prod<numerics::matrix<T, std::vector<T> >,
-						numerics::vector<T, std::vector<T> >, N> () (runs, safe_tag ());
-
-    header ("matrix<std::vector>, vector<std::vector> fast");
-	bench_my_outer_prod<numerics::matrix<T, std::vector<T> >,
-			            numerics::vector<T, std::vector<T> >, N> () (runs, fast_tag ());
-#endif
 
 #ifdef USE_STD_VALARRAY
     header ("std::valarray");
 	bench_cpp_outer_prod<std::valarray<T>, std::valarray<T>, N> () (runs);
 #endif
 
-    header ("prod (matrix, vector)");
+    header ("prod (sparse_matrix, sparse_vector)");
 
 	header ("C array");
 	bench_c_matrix_vector_prod<T, N> () (runs);
 
-    header ("matrix<bounded_array>, vector<bounded_array> safe");
-	bench_my_matrix_vector_prod<numerics::matrix<T, numerics::bounded_array<T, N * N> >,
-								numerics::vector<T, numerics::bounded_array<T, N> >, N> () (runs, safe_tag ());
+    header ("sparse_matrix<compressed_array>, sparse_vector<compressed_array> safe");
+    bench_my_matrix_vector_prod<numerics::sparse_matrix<T, numerics::compressed_array<std::size_t, T> >,
+								numerics::sparse_vector<T, numerics::compressed_array<std::size_t, T> >, N> () (runs, safe_tag ());
 
-    header ("matrix<bounded_array>, vector<bounded_array> fast");
-	bench_my_matrix_vector_prod<numerics::matrix<T, numerics::bounded_array<T, N * N> >, 
-								numerics::vector<T, numerics::bounded_array<T, N> >, N> () (runs, fast_tag ());
+    header ("sparse_matrix<compressed_array>, sparse_vector<compressed_array> fast");
+	bench_my_matrix_vector_prod<numerics::sparse_matrix<T, numerics::compressed_array<std::size_t, T> >, 
+								numerics::sparse_vector<T, numerics::compressed_array<std::size_t, T> >, N> () (runs, fast_tag ());
 
-    header ("matrix<unbounded_array>, vector<unbounded_array> safe");
-	bench_my_matrix_vector_prod<numerics::matrix<T, numerics::unbounded_array<T> >, 
-								numerics::vector<T, numerics::unbounded_array<T> >, N> () (runs, safe_tag ());
+    header ("sparse_matrix<std::map>, sparse_vector<std::map> safe");
+    bench_my_matrix_vector_prod<numerics::sparse_matrix<T, std::map<std::size_t, T> >,
+								numerics::sparse_vector<T, std::map<std::size_t, T> >, N> () (runs, safe_tag ());
 
-    header ("matrix<unbounded_array>, vector<unbounded_array> fast");
-	bench_my_matrix_vector_prod<numerics::matrix<T, numerics::unbounded_array<T> >,
-								numerics::vector<T, numerics::unbounded_array<T> >, N> () (runs, fast_tag ());
-
-#ifdef USE_STD_VALARRAY
-    header ("matrix<std::valarray>, vector<std::valarray> safe");
-	bench_my_matrix_vector_prod<numerics::matrix<T, std::valarray<T> >, 
-								numerics::vector<T, std::valarray<T> >, N> () (runs, safe_tag ());
-
-    header ("matrix<std::valarray>, vector<std::valarray> fast");
-	bench_my_matrix_vector_prod<numerics::matrix<T, std::valarray<T> >,
-								numerics::vector<T, std::valarray<T> >, N> () (runs, fast_tag ());
-#endif
-
-#ifdef USE_STD_VECTOR
-    header ("matrix<std::vector>, vector<std::vector> safe");
-	bench_my_matrix_vector_prod<numerics::matrix<T, std::vector<T> >,
-								numerics::vector<T, std::vector<T> >, N> () (runs, safe_tag ());
-
-    header ("matrix<std::vector>, vector<std::vector> fast");
-	bench_my_matrix_vector_prod<numerics::matrix<T, std::vector<T> >,
-								numerics::vector<T, std::vector<T> >, N> () (runs, fast_tag ());
-#endif
+    header ("sparse_matrix<std::map>, sparse_vector<std::map> fast");
+	bench_my_matrix_vector_prod<numerics::sparse_matrix<T, std::map<std::size_t, T> >, 
+								numerics::sparse_vector<T, std::map<std::size_t, T> >, N> () (runs, fast_tag ());
 
 #ifdef USE_STD_VALARRAY
     header ("std::valarray");
 	bench_cpp_matrix_vector_prod<std::valarray<T>, std::valarray<T>, N> () (runs);
 #endif
 
-    header ("matrix + matrix");
+    header ("sparse_matrix + sparse_matrix");
 
 	header ("C array");
 	bench_c_matrix_add<T, N> () (runs);
 
-	header ("matrix<bounded_array> safe");
-	bench_my_matrix_add<numerics::matrix<T, numerics::bounded_array<T, N * N> >, N> () (runs, safe_tag ());
+	header ("sparse_matrix<compressed_array> safe");
+    bench_my_matrix_add<numerics::sparse_matrix<T, numerics::compressed_array<std::size_t, T> >, N> () (runs, safe_tag ());
 
-	header ("matrix<bounded_array> fast");
-	bench_my_matrix_add<numerics::matrix<T, numerics::bounded_array<T, N * N> >, N> () (runs, fast_tag ());
+	header ("sparse_matrix<compressed_array> fast");
+	bench_my_matrix_add<numerics::sparse_matrix<T, numerics::compressed_array<std::size_t, T> >, N> () (runs, fast_tag ());
 
-	header ("matrix<unbounded_array> safe");
-	bench_my_matrix_add<numerics::matrix<T, numerics::unbounded_array<T> >, N> () (runs, safe_tag ());
+	header ("sparse_matrix<std::map> safe");
+    bench_my_matrix_add<numerics::sparse_matrix<T, std::map<std::size_t, T> >, N> () (runs, safe_tag ());
 
-	header ("matrix<unbounded_array> fast");
-	bench_my_matrix_add<numerics::matrix<T, numerics::unbounded_array<T> >, N> () (runs, fast_tag ());
-
-#ifdef USE_STD_VALARRAY
-	header ("matrix<std::valarray> safe");
-	bench_my_matrix_add<numerics::matrix<T, std::valarray<T> >, N> () (runs, safe_tag ());
-
-	header ("matrix<std::valarray> fast");
-	bench_my_matrix_add<numerics::matrix<T, std::valarray<T> >, N> () (runs, fast_tag ());
-#endif
-
-#ifdef USE_STD_VECTOR
-	header ("matrix<std::vector> safe");
-	bench_my_matrix_add<numerics::matrix<T, std::vector<T> >, N> () (runs, safe_tag ());
-
-	header ("matrix<std::vector> fast");
-	bench_my_matrix_add<numerics::matrix<T, std::vector<T> >, N> () (runs, fast_tag ());
-#endif
+	header ("sparse_matrix<std::map> fast");
+	bench_my_matrix_add<numerics::sparse_matrix<T, std::map<std::size_t, T> >, N> () (runs, fast_tag ());
 
 #ifdef USE_STD_VALARRAY
 	header ("std::valarray");

@@ -1,0 +1,1109 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>Matrix Expression Related</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<h1>Matrix Expression Related</h1>
+
+<h2><a name="matrix_expression"></a>Matrix Expression</h2>
+
+<p>The templated class <code>matrix_expression </code>forms the
+base for all static derived matrix expression classes including
+class <code>matrix</code> itself.</p>
+
+<pre><code>    // Base class for the Barton Nackman trick
+    template&lt;class E&gt;
+    struct matrix_expression {
+        typedef E expression_type;
+
+        // This class could define an common interface for all 
+        // statically derived expression type classes.
+        // Due to a compiler deficiency - one can not reference class typedefs of E 
+        // on MSVC 6.0 (error C2027) - we only implement the casts.
+
+        const expression_type &amp;operator () () const;
+        expression_type &amp;operator () ();
+    };</code></pre>
+
+<h2><a name="matrix_references"></a>Matrix References</h2>
+
+<p>The templated class <code>matrix_const_reference </code>
+contains a constant reference to a matrix expression.</p>
+
+<pre><code>    template&lt;class E&gt;
+    class matrix_const_reference:
+        public matrix_expression&lt;matrix_const_reference&lt;E&gt; &gt; {
+    public:
+        typedef E expression_type;
+        typedef typename E::size_type size_type;
+        typedef typename E::difference_type difference_type;
+        typedef typename E::value_type value_type;
+        typedef typename E::orientation_category orientation_category;
+        typedef typename E::const_iterator1 const_iterator1_type;
+        typedef typename E::const_iterator2 const_iterator2_type;
+
+        // Construction and destruction
+        matrix_const_reference (const expression_type &amp;e);
+
+        size_type size1 () const;
+        size_type size2 () const;
+
+        // Element access
+        value_type operator () (size_type i, size_type j) const;
+
+        // Iterators are the iterators of the referenced expression.
+
+        typedef const_iterator1_type const_iterator1;
+
+        const_iterator1 begin1 () const;
+        const_iterator1 end1 () const;
+
+        typedef const_iterator2_type const_iterator2;
+
+        const_iterator2 begin2 () const;
+        const_iterator2 end2 () const;
+    };</code></pre>
+
+<p>The templated class <code>matrix_reference </code>contains
+a reference to a matrix expression.</p>
+
+<pre><code>    template&lt;class E&gt;
+    class matrix_reference:
+        public matrix_expression&lt;matrix_reference&lt;E&gt; &gt; {
+    public:
+        typedef E expression_type;
+        typedef typename E::size_type size_type;
+        typedef typename E::difference_type difference_type;
+        typedef typename E::value_type value_type;
+        typedef typename E::reference_type reference_type;
+        typedef typename E::orientation_category orientation_category;
+        typedef typename E::const_iterator1 const_iterator1_type;
+        typedef typename E::iterator1 iterator1_type;
+        typedef typename E::const_iterator2 const_iterator2_type;
+        typedef typename E::iterator2 iterator2_type;
+
+        // Construction and destruction
+        matrix_reference (expression_type &amp;e);
+
+        // Resizing
+        void resize (size_type size1, size_type size2);
+
+        size_type size1 () const;
+        size_type size2 () const;
+
+        // Element access
+        value_type operator () (size_type i, size_type j) const;
+        reference_type operator () (size_type i, size_type j);
+
+        // Iterators are the iterators of the referenced expression.
+
+        typedef const_iterator1_type const_iterator1;
+
+        const_iterator1 begin1 () const;
+        const_iterator1 end1 () const;
+
+        typedef iterator1_type iterator1;
+
+        iterator1 begin1 ();
+        iterator1 end1 ();
+
+        typedef const_iterator2_type const_iterator2;
+
+        const_iterator2 begin2 () const;
+        const_iterator2 end2 () const;
+
+        typedef iterator2_type iterator2;
+
+        iterator2 begin2 ();
+        iterator2 end2 ();
+    };</code></pre>
+
+<h2><a name="matrix_operations"></a>Matrix Operations</h2>
+
+<p>The templated classes <code>matrix_unary1 </code>and <code>matrix_unary2
+</code>describe unary matrix operations.</p>
+
+<pre><code>    template&lt;class E, class F&gt;
+    class matrix_unary1:
+        public matrix_expression&lt;matrix_unary1&lt;E, F&gt; &gt; {
+    public:
+        typedef E expression_type;
+        typedef F functor_type;
+        typedef typename E::size_type size_type;
+        typedef typename E::difference_type difference_type;
+        typedef typename F::value_type value_type;
+        typedef matrix_unary1&lt;E, F&gt; const_closure_type;
+        typedef typename E::orientation_category orientation_category;
+        typedef typename E::const_iterator1 const_iterator1_type;
+        typedef typename E::const_iterator2 const_iterator2_type;
+
+        // Construction and destruction
+        matrix_unary1 (const expression_type &amp;e);
+
+        size_type size1 () const;
+        size_type size2 () const;
+
+        // Element access
+        value_type operator () (size_type i, size_type j) const;
+
+        // Iterators enhance the iterators of the referenced expression
+        // with the unary functor.
+
+        class const_iterator2;
+
+        class const_iterator1:
+            public container_const_reference&lt;matrix_unary1&gt;,
+            public random_access_iterator_base&lt;const_iterator1, value_type&gt; {
+        public:
+            typedef typename E::const_iterator1::iterator_category iterator_category;
+
+            // Construction and destruction
+            const_iterator1 (const matrix_unary1 &amp;mu, const const_iterator1_type &amp;it);
+
+            // Arithmetic
+            const_iterator1 &amp;operator ++ ();
+            const_iterator1 &amp;operator -- ();
+            const_iterator1 &amp;operator += (difference_type n);
+            const_iterator1 &amp;operator -= (difference_type n);
+            difference_type operator - (const const_iterator1 &amp;it) const;
+
+            // Dereference
+            value_type operator * () const;
+
+            const_iterator2 begin () const;
+            const_iterator2 end () const;
+
+            // Indices
+            size_type index1 () const;
+            size_type index2 () const;
+
+            // Comparison
+            bool operator == (const const_iterator1 &amp;it) const;
+        };
+
+        const_iterator1 begin1 () const;
+        const_iterator1 end1 () const;
+
+        class const_iterator2:
+            public container_const_reference&lt;matrix_unary1&gt;,
+            public random_access_iterator_base&lt;const_iterator2, value_type&gt; {
+        public:
+            typedef typename E::const_iterator2::iterator_category iterator_category;
+
+            // Construction and destruction
+            const_iterator2 (const matrix_unary1 &amp;mu, const const_iterator2_type &amp;it);
+
+            // Arithmetic
+            const_iterator2 &amp;operator ++ ();
+            const_iterator2 &amp;operator -- ();
+            const_iterator2 &amp;operator += (difference_type n);
+            const_iterator2 &amp;operator -= (difference_type n);
+            difference_type operator - (const const_iterator2 &amp;it) const;
+
+            // Dereference
+            value_type operator * () const;
+
+            const_iterator1 begin () const;
+            const_iterator1 end () const;
+
+            // Indices
+            size_type index1 () const;
+            size_type index2 () const;
+
+            // Comparison
+            bool operator == (const const_iterator2 &amp;it) const;
+        };
+
+        const_iterator2 begin2 () const;
+        const_iterator2 end2 () const;
+    };
+
+    template&lt;class E, class F&gt;
+    class matrix_unary2:
+        public matrix_expression&lt;matrix_unary2&lt;E, F&gt; &gt; {
+    public:
+        typedef E expression_type;
+        typedef F functor_type;
+        typedef typename E::size_type size_type;
+        typedef typename E::difference_type difference_type;
+        typedef typename F::value_type value_type;
+        typedef matrix_unary2&lt;E, F&gt; const_closure_type;
+        typedef typename E::orientation_category orientation_category;
+        typedef typename E::const_iterator1 const_iterator2_type;
+        typedef typename E::const_iterator2 const_iterator1_type;
+
+        // Construction and destruction
+        matrix_unary2 (const expression_type &amp;e);
+
+        size_type size1 () const;
+        size_type size2 () const;
+
+        // Element access
+        value_type operator () (size_type i, size_type j) const;
+
+        // Iterators enhance the iterators of the referenced expression
+        // with the unary functor.
+
+        class const_iterator2;
+
+        class const_iterator1:
+            public container_const_reference&lt;matrix_unary2&gt;,
+            public random_access_iterator_base&lt;const_iterator1, value_type&gt; {
+        public:
+            typedef typename E::const_iterator1::iterator_category iterator_category;
+
+            // Construction and destruction
+            const_iterator1 (const matrix_unary2 &amp;mu, const const_iterator1_type &amp;it);
+
+            // Arithmetic
+            const_iterator1 &amp;operator ++ ();
+            const_iterator1 &amp;operator -- ();
+            const_iterator1 &amp;operator += (difference_type n);
+            const_iterator1 &amp;operator -= (difference_type n);
+            difference_type operator - (const const_iterator1 &amp;it) const;
+
+            // Dereference
+            value_type operator * () const;
+
+            const_iterator2 begin () const;
+            const_iterator2 end () const;
+
+            // Indices
+            size_type index1 () const;
+            size_type index2 () const;
+
+            // Comparison
+            bool operator == (const const_iterator1 &amp;it) const;
+        };
+
+        const_iterator1 begin1 () const;
+        const_iterator1 end1 () const;
+
+        class const_iterator2:
+            public container_const_reference&lt;matrix_unary2&gt;,
+            public random_access_iterator_base&lt;const_iterator2, value_type&gt; {
+        public:
+            typedef typename E::const_iterator2::iterator_category iterator_category;
+
+            // Construction and destruction
+            const_iterator2 (const matrix_unary2 &amp;mu, const const_iterator2_type &amp;it);
+
+            // Arithmetic
+            const_iterator2 &amp;operator ++ ();
+            const_iterator2 &amp;operator -- ();
+            const_iterator2 &amp;operator += (difference_type n);
+            const_iterator2 &amp;operator -= (difference_type n);
+            difference_type operator - (const const_iterator2 &amp;it) const;
+
+            // Dereference
+            value_type operator * () const;
+
+            const_iterator1 begin () const;
+            const_iterator1 end () const;
+
+            // Indices
+            size_type index1 () const;
+            size_type index2 () const;
+
+            // Comparison
+            bool operator == (const const_iterator2 &amp;it) const;
+        };
+
+        const_iterator2 begin2 () const;
+        const_iterator2 end2 () const;
+    };</code></pre>
+
+<p>The supported unary operations are:</p>
+
+<pre><code>    // (- m) [i] [j] = - m [i] [j]
+    template&lt;class E&gt; 
+    matrix_unary1&lt;typename E::const_closure_type, 
+                  scalar_negate&lt;typename E::value_type&gt; &gt; 
+    operator - (const matrix_expression&lt;E&gt; &amp;e);
+
+    // (conj m) [i] [j] = conj (m [i] [j])
+    template&lt;class E&gt; 
+    matrix_unary1&lt;typename E::const_closure_type, 
+                  scalar_conj&lt;typename E::value_type&gt; &gt; 
+    conj (const matrix_expression&lt;E&gt; &amp;e);
+
+    // (trans m) [i] [j] = m [j] [i]
+    template&lt;class E&gt; 
+    matrix_unary2&lt;typename E::const_closure_type, 
+                  scalar_identity&lt;typename E::value_type&gt; &gt; 
+    trans (const matrix_expression&lt;E&gt; &amp;e);
+
+    // (herm m) [i] [j] = conj (m [j] [i])
+    template&lt;class E&gt; 
+    matrix_unary2&lt;typename E::const_closure_type, 
+                  scalar_conj&lt;typename E::value_type&gt; &gt; 
+    herm (const matrix_expression&lt;E&gt; &amp;e);
+    }</code></pre>
+
+<p>The templated class <code>matrix_binary </code>describes a
+binary matrix operation.</p>
+
+<pre><code>    template&lt;class E1, class E2, class F&gt;
+    class matrix_binary:
+        public matrix_expression&lt;matrix_binary&lt;E1, E2, F&gt; &gt; {
+    public:
+        typedef E1 expression1_type;
+        typedef E2 expression2_type;
+        typedef F functor_type;
+        typedef typename promote_traits&lt;typename E1::size_type, typename E2::size_type&gt;::promote_type size_type;
+        typedef typename promote_traits&lt;typename E1::difference_type, typename E2::difference_type&gt;::promote_type difference_type;
+        typedef typename F::value_type value_type;
+        typedef matrix_binary&lt;E1, E2, F&gt; const_closure_type;
+        typedef struct major_tag orientation_category;
+        typedef typename E1::const_iterator1 const_iterator11_type;
+        typedef typename E1::const_iterator2 const_iterator12_type;
+        typedef typename E2::const_iterator1 const_iterator21_type;
+        typedef typename E2::const_iterator2 const_iterator22_type;
+
+        // Construction and destruction
+        matrix_binary (const E1 &amp;e1, const E2 &amp;e2);
+
+        size_type size1 () const;
+        size_type size2 () const;
+
+        // Element access
+        value_type operator () (size_type i, size_type j) const;
+
+        // Iterators enhance the iterators of the referenced expression
+        // with the binary functor.
+
+        class const_iterator2;
+
+        class const_iterator1:
+            public container_const_reference&lt;matrix_binary&gt;,
+            public random_access_iterator_base&lt;const_iterator1, value_type&gt; {
+        public:
+            typedef typename restrict_traits&lt;typename E1::const_iterator1::iterator_category, 
+                                    	     typename E2::const_iterator1::iterator_category&gt;::iterator_category iterator_category;
+
+            // Construction and destruction
+            const_iterator1 (const matrix_binary &amp;mb, size_type i, const const_iterator11_type &amp;it1, const const_iterator21_type &amp;it2);
+
+            // Random access specializations
+            void increment (std::random_access_iterator_tag);
+            void decrement (std::random_access_iterator_tag);
+            value_type dereference (std::random_access_iterator_tag) const;
+
+            // Bidirectional specializations
+            void increment (std::bidirectional_iterator_tag);
+            void decrement (std::bidirectional_iterator_tag);
+            value_type dereference (std::bidirectional_iterator_tag) const;
+
+            // Arithmetic
+            const_iterator1 &amp;operator ++ ();
+            const_iterator1 &amp;operator -- ();
+            const_iterator1 &amp;operator += (difference_type n);
+            const_iterator1 &amp;operator -= (difference_type n);
+            difference_type operator - (const const_iterator1 &amp;it) const;
+
+            // Dereference
+            value_type operator * () const;
+
+            const_iterator2 begin () const;
+            const_iterator2 end () const;
+
+            // Indices
+            size_type index1 () const;
+            size_type index2 () const;
+
+            // Comparison
+            bool operator == (const const_iterator1 &amp;it) const;
+        };
+
+        const_iterator1 begin1 () const;
+        const_iterator1 end1 () const;
+
+        class const_iterator2:
+            public container_const_reference&lt;matrix_binary&gt;,
+            public random_access_iterator_base&lt;const_iterator2, value_type&gt; {
+        public:
+            typedef typename restrict_traits&lt;typename E1::const_iterator2::iterator_category, 
+                                    	     typename E2::const_iterator2::iterator_category&gt;::iterator_category iterator_category;
+
+            // Construction and destruction
+            const_iterator2 (const matrix_binary &amp;mb, size_type j, const const_iterator12_type &amp;it1, const const_iterator22_type &amp;it2);
+
+            // Random access specializations
+            void increment (std::random_access_iterator_tag);
+            void decrement (std::random_access_iterator_tag);
+            value_type dereference (std::random_access_iterator_tag) const;
+
+            // Bidirectional specializations
+            void increment (std::bidirectional_iterator_tag);
+            void decrement (std::bidirectional_iterator_tag);
+            value_type dereference (std::bidirectional_iterator_tag) const;
+
+            // Arithmetic
+            const_iterator2 &amp;operator ++ ();
+            const_iterator2 &amp;operator -- ();
+            const_iterator2 &amp;operator += (difference_type n);
+            const_iterator2 &amp;operator -= (difference_type n);
+            difference_type operator - (const const_iterator2 &amp;it) const;
+
+            // Dereference
+            value_type operator * () const;
+
+            const_iterator1 begin () const;
+            const_iterator1 end () const;
+
+            // Indices
+            size_type index1 () const;
+            size_type index2 () const;
+
+            // Comparison
+            bool operator == (const const_iterator2 &amp;it) const;
+        };
+
+        const_iterator2 begin2 () const;
+        const_iterator2 end2 () const;
+    };</code></pre>
+
+<p>The supported binary operations are:</p>
+
+<pre><code>    // (m1 + m2) [i] [j] = m1 [i] [j] + m2 [i] [j]
+    template&lt;class E1, class E2&gt;
+    matrix_binary&lt;typename E1::const_closure_type, 
+                  typename E2::const_closure_type, 
+                  scalar_plus&lt;typename E1::value_type, typename E2::value_type&gt; &gt; 
+    operator + (const matrix_expression&lt;E1&gt; &amp;e1, 
+                const matrix_expression&lt;E2&gt; &amp;e2);
+
+    // (m1 - m2) [i] [j] = m1 [i] [j] - m2 [i] [j]
+    template&lt;class E1, class E2&gt;
+    matrix_binary&lt;typename E1::const_closure_type, 
+                  typename E2::const_closure_type, 
+                  scalar_minus&lt;typename E1::value_type, typename E2::value_type&gt; &gt; 
+    operator - (const matrix_expression&lt;E1&gt; &amp;e1, 
+                const matrix_expression&lt;E2&gt; &amp;e2);</code></pre>
+
+<p>The templated class <code>matrix_binary_scalar </code>describes
+a binary operation between a scalar and a matrix.</p>
+
+<pre><code>    template&lt;class E1, class E2, class F&gt;
+    class matrix_binary_scalar:
+        public matrix_expression&lt;matrix_binary_scalar&lt;E1, E2, F&gt; &gt; {
+    public:
+        typedef E1 expression1_type;
+        typedef E2 expression2_type;
+        typedef F functor_type;
+        typedef typename E2::size_type size_type;
+        typedef typename E2::difference_type difference_type;
+        typedef typename F::value_type value_type;
+        typedef matrix_binary_scalar&lt;E1, E2, F&gt; const_closure_type;
+        typedef typename E2::orientation_category orientation_category;
+        typedef typename E1::value_type const_iterator1_type;
+        typedef typename E2::const_iterator1 const_iterator21_type;
+        typedef typename E2::const_iterator2 const_iterator22_type;
+
+        // Construction and destruction
+        matrix_binary_scalar (const expression1_type &amp;e1, const expression2_type &amp;e2);
+
+        size_type size1 () const;
+        size_type size2 () const;
+
+        // Element access
+        value_type operator () (size_type i, size_type j) const;
+
+        // Iterators enhance the iterators of the referenced expression
+        // with the binary functor.
+
+        class const_iterator2;
+
+        class const_iterator1:
+            public random_access_iterator_base&lt;const_iterator1, value_type&gt; {
+        public:
+            typedef typename E2::const_iterator1::iterator_category iterator_category;
+
+            // Construction and destruction
+            const_iterator1 (const const_iterator1_type &amp;it1, const const_iterator21_type &amp;it2);
+
+            // Arithmetic
+            const_iterator1 &amp;operator ++ ();
+            const_iterator1 &amp;operator -- ();
+            const_iterator1 &amp;operator += (difference_type n);
+            const_iterator1 &amp;operator -= (difference_type n);
+            difference_type operator - (const const_iterator1 &amp;it) const;
+
+            // Dereference
+            value_type operator * () const;
+
+            const_iterator2 begin () const;
+            const_iterator2 end () const;
+
+            // Indices
+            size_type index1 () const;
+            size_type index2 () const;
+
+            // Comparison
+            bool operator == (const const_iterator1 &amp;it) const;
+        };
+
+        const_iterator1 begin1 () const;
+        const_iterator1 end1 () const;
+
+        class const_iterator2:
+            public random_access_iterator_base&lt;const_iterator2, value_type&gt; {
+        public:
+            typedef typename E2::const_iterator2::iterator_category iterator_category;
+
+            // Construction and destruction
+            const_iterator2 (const const_iterator1_type &amp;it1, const const_iterator22_type &amp;it2);
+
+            // Arithmetic
+            const_iterator2 &amp;operator ++ ();
+            const_iterator2 &amp;operator -- ();
+            const_iterator2 &amp;operator += (difference_type n);
+            const_iterator2 &amp;operator -= (difference_type n);
+            difference_type operator - (const const_iterator2 &amp;it) const;
+
+            // Dereference
+            value_type operator * () const;
+
+            const_iterator1 begin () const;
+            const_iterator1 end () const;
+
+            // Indices
+            size_type index1 () const;
+            size_type index2 () const;
+
+            // Comparison
+            bool operator == (const const_iterator2 &amp;it) const;
+        };
+
+        const_iterator2 begin2 () const;
+        const_iterator2 end2 () const;
+    };</code></pre>
+
+<p>The supported binary operations between a scalar and a vector
+are:</p>
+
+<pre><code>    // (t * m) [i] [j] = t * m [i] [j]
+    template&lt;class T1, class E2&gt;
+    matrix_binary_scalar&lt;scalar_const_reference&lt;T1&gt;, 
+                         typename E2::const_closure_type, 
+                         scalar_multiplies&lt;T1, typename E2::value_type&gt; &gt; 
+    operator * (const T1 &amp;e1, 
+                const matrix_expression&lt;E2&gt; &amp;e2);</code></pre>
+
+<h2><a name="matrix_reductions"></a>Matrix Reductions</h2>
+
+<p>The templated classes <code>matrix_vector_unary1 </code>and <code>matrix_vector_unary2
+</code>describe unary matrix reducing operations.</p>
+
+<pre><code>    template&lt;class E&gt;
+    class matrix_vector_unary1:
+        public vector_expression&lt;matrix_vector_unary1&lt;E&gt; &gt; {
+    public:
+        typedef E expression_type;
+        typedef typename E::size_type size_type;
+        typedef typename E::difference_type difference_type;
+        typedef typename E::value_type value_type;
+        typedef matrix_vector_unary1&lt;E&gt; const_closure_type;
+        typedef typename E::size_type const_iterator_type;
+
+        // Construction and destruction
+        matrix_vector_unary1 (const expression_type &amp;e, size_type i);
+
+        size_type size () const;
+
+        // Element access
+        value_type operator () (size_type j) const;
+
+        // Iterator simply is a index.
+
+        class const_iterator:
+            public container_const_reference&lt;matrix_vector_unary1&gt;,
+            public random_access_iterator_base&lt;const_iterator, value_type&gt; {
+        public:
+            typedef typename E::const_iterator2::iterator_category iterator_category;
+
+            // Construction and destruction
+            const_iterator (const matrix_vector_unary1 &amp;mvu, const const_iterator_type &amp;it);
+
+            // Arithmetic
+            const_iterator &amp;operator ++ ();
+            const_iterator &amp;operator -- ();
+            const_iterator &amp;operator += (difference_type n);
+            const_iterator &amp;operator -= (difference_type n);
+            difference_type operator - (const const_iterator &amp;it) const;
+
+            // Dereference
+            value_type operator * () const;
+
+            // Index
+            size_type index () const;
+
+            // Comparison
+            bool operator == (const const_iterator &amp;it) const;
+        };
+
+        const_iterator begin () const;
+        const_iterator end () const;
+    };
+
+    template&lt;class E&gt;
+    class matrix_vector_unary2:
+        public vector_expression&lt;matrix_vector_unary2&lt;E&gt; &gt; {
+    public:
+        typedef E expression_type;
+        typedef typename E::size_type size_type;
+        typedef typename E::difference_type difference_type;
+        typedef typename E::value_type value_type;
+        typedef matrix_vector_unary2&lt;E&gt; const_closure_type;
+        typedef typename E::size_type const_iterator_type;
+
+        // Construction and destruction
+        matrix_vector_unary2 (const expression_type &amp;e, size_type j);
+
+        size_type size () const;
+
+        // Element access
+        value_type operator () (size_type i) const;
+
+        // Iterator simply is a index.
+
+        class const_iterator:
+            public container_const_reference&lt;matrix_vector_unary2&gt;,
+            public random_access_iterator_base&lt;const_iterator, value_type&gt; {
+        public:
+            typedef typename E::const_iterator1::iterator_category iterator_category;
+
+            // Construction and destruction
+            const_iterator (const matrix_vector_unary2 &amp;mvu, const const_iterator_type &amp;it);
+
+            // Arithmetic
+            const_iterator &amp;operator ++ ();
+            const_iterator &amp;operator -- ();
+            const_iterator &amp;operator += (difference_type n);
+            const_iterator &amp;operator -= (difference_type n);
+            difference_type operator - (const const_iterator &amp;it) const;
+
+            // Dereference
+            value_type operator * () const;
+
+            // Index
+            size_type index () const;
+
+            // Comparison
+            bool operator == (const const_iterator &amp;it) const;
+        };
+
+        const_iterator begin () const;
+        const_iterator end () const;
+    };</code></pre>
+
+<p>The supported unary matrix reducing operations are:</p>
+
+<pre><code>    template&lt;class E&gt;
+    matrix_vector_unary1&lt;typename E::const_closure_type&gt; 
+    row (const matrix_expression&lt;E&gt; &amp;e, 
+         std::size_t i);
+    }
+
+    template&lt;class E&gt;
+    matrix_vector_unary2&lt;typename E::const_closure_type&gt; 
+    column (const matrix_expression&lt;E&gt; &amp;e, 
+            std::size_t j);</code></pre>
+
+<h2><a name="matrix_vector_operations"></a>Matrix Vector
+Operations</h2>
+
+<p>The templated class <code>matrix_vector_binary </code>describes
+a binary matrix reducing operation.</p>
+
+<pre><code>    template&lt;class E1, class E2, class F&gt;
+    class matrix_vector_binary:
+        public vector_expression&lt;matrix_vector_binary&lt;E1, E2, F&gt; &gt; {
+    public:
+        typedef E1 expression1_type;
+        typedef E2 expression2_type;
+        typedef F functor_type;
+        typedef typename promote_traits&lt;typename E1::size_type, typename E2::size_type&gt;::promote_type size_type;
+        typedef typename promote_traits&lt;typename E1::difference_type, typename E2::difference_type&gt;::promote_type difference_type;
+        typedef typename F::value_type value_type;
+        typedef matrix_vector_binary&lt;E1, E2, F&gt; const_closure_type;
+        typedef typename E1::const_iterator1 const_iterator1_type;
+        typedef typename E2::const_iterator const_iterator2_type;
+
+        // Construction and destruction
+        matrix_vector_binary (const expression1_type &amp;e1, const expression2_type &amp;e2);
+
+        size_type size () const;
+
+        // Element access
+        value_type operator () (size_type i) const;
+
+        // Iterator simply is a pointer.
+
+        class const_iterator:
+            public container_const_reference&lt;expression2_type&gt;,
+            public random_access_iterator_base&lt;const_iterator, value_type&gt; {
+        public:
+            typedef typename restrict_traits&lt;typename E1::const_iterator1::iterator_category, 
+                                    	     typename E2::const_iterator::iterator_category&gt;::iterator_category iterator_category;
+
+            // Construction and destruction
+            const_iterator (const expression2_type &amp;e2, const const_iterator1_type &amp;it1);
+
+            // Arithmetic
+            const_iterator &amp;operator ++ ();
+            const_iterator &amp;operator -- ();
+            const_iterator &amp;operator += (difference_type n);
+            const_iterator &amp;operator -= (difference_type n);
+            difference_type operator - (const const_iterator &amp;it) const;
+
+            // Dereference
+            value_type operator * () const;
+
+            // Index
+            size_type index () const;
+
+            // Comparison
+            bool operator == (const const_iterator &amp;it) const;
+        };
+
+        const_iterator begin () const;
+        const_iterator end () const;
+    };</code></pre>
+
+<p>The supported binary matrix reducing operations are:</p>
+
+<pre><code>    template&lt;class E1, class E2&gt;
+    matrix_vector_binary&lt;typename E1::const_closure_type, 
+                         typename E2::const_closure_type, 
+                         matrix_vector_prod&lt;typename E1::value_type, 
+                                            typename E2::value_type,
+                                            typename promote_traits&lt;typename E1::value_type, 
+                                                           	    typename E2::value_type&gt;::promote_type&gt; &gt; 
+    prod (const matrix_expression&lt;E1&gt; &amp;e1, 
+          const vector_expression&lt;E2&gt; &amp;e2);
+
+    template&lt;class E1, class E2&gt;
+    matrix_vector_binary&lt;typename E1::const_closure_type, 
+                         typename E2::const_closure_type, 
+                         matrix_vector_prod&lt;typename E1::value_type, 
+                                            typename E2::value_type,
+                                            typename type_traits&lt;typename promote_traits&lt;typename E1::value_type, 
+                                                                       			 typename E2::value_type&gt;::promote_type&gt;::precision_type&gt; &gt;
+    prec_prod (const matrix_expression&lt;E1&gt; &amp;e1, 
+               const vector_expression&lt;E2&gt; &amp;e2);</code></pre>
+
+<p>The templated class <code>matrix_vector_ternary </code>describes
+a ternary matrix reducing operation.</p>
+
+<pre><code>    template&lt;class E1, class E2, class E3, class F&gt;
+    class matrix_vector_ternary:
+        public vector_expression&lt;matrix_vector_ternary&lt;E1, E2, E3, F&gt; &gt; {
+    public:
+        typedef E1 expression1_type;
+        typedef E2 expression2_type;
+        typedef E3 expression3_type;
+        typedef F functor_type;
+        typedef typename E2::size_type size_type;
+        typedef typename E2::difference_type difference_type;
+        typedef typename F::value_type value_type;
+        typedef matrix_vector_ternary&lt;E1, E2, E3, F&gt; const_closure_type;
+
+        // Construction and destruction
+        matrix_vector_ternary (const expression1_type &amp;e1, const expression2_type &amp;e2, const expression3_type &amp;e3);
+
+        size_type size () const;
+
+        // Element access
+        value_type operator () (size_type i) const;
+
+        // Iterator simply is a index.
+
+        class const_iterator:
+            public container_const_reference&lt;matrix_vector_ternary&gt;,
+            public random_access_iterator_base&lt;const_iterator, value_type&gt; {
+        public:
+            typedef typename E2::const_iterator::iterator_category iterator_category;
+
+            // Construction and destruction
+            const_iterator (const matrix_vector_ternary &amp;mvt, size_type it);
+
+            // Arithmetic
+            const_iterator &amp;operator ++ ();
+            const_iterator &amp;operator -- ();
+            const_iterator &amp;operator += (difference_type n);
+            const_iterator &amp;operator -= (difference_type n);
+            difference_type operator - (const const_iterator &amp;it) const;
+
+            // Dereference
+            value_type operator * () const;
+
+            // Index
+            size_type index () const;
+
+            // Comparison
+            bool operator == (const const_iterator &amp;it) const;
+        };
+
+        const_iterator begin () const;
+        const_iterator end () const;
+    };</code></pre>
+
+<p>The supported ternary matrix reducing operations are:</p>
+
+<pre><code>    template&lt;class E1, class T2, class A2, class F2, class E3, class C&gt;
+    matrix_vector_ternary&lt;typename E1::const_closure_type, 
+                          vector_reference&lt;vector&lt;T2, A2, F2&gt; &gt;, 
+                          typename E3::const_closure_type, 
+                          matrix_vector_solve&lt;typename E1::value_type, T2, typename E3::value_type, C&gt; &gt; 
+    solve (const matrix_expression&lt;E1&gt; &amp;e1, 
+           vector&lt;T2, A2, F2&gt; &amp;e2,
+           const vector_expression&lt;E3&gt; &amp;e3,
+           C);</code></pre>
+
+<h2><a name="matrix_matrix_operations"></a>Matrix Matrix
+Operations</h2>
+
+<p>The templated class <code>matrix_matrix_binary </code>describes
+a binary matrix operation.</p>
+
+<pre><code>    template&lt;class E1, class E2, class F&gt;
+    class matrix_matrix_binary:
+        public matrix_expression&lt;matrix_matrix_binary&lt;E1, E2, F&gt; &gt; {
+    public:
+        typedef E1 expression1_type;
+        typedef E2 expression2_type;
+        typedef F functor_type;
+        typedef typename promote_traits&lt;typename E1::size_type, typename E2::size_type&gt;::promote_type size_type;
+        typedef typename promote_traits&lt;typename E1::difference_type, typename E2::difference_type&gt;::promote_type difference_type;
+        typedef typename F::value_type value_type;
+        typedef matrix_matrix_binary&lt;E1, E2, F&gt; const_closure_type;
+        typedef struct major_tag orientation_category;
+        typedef typename E1::const_iterator1 const_iterator11_type;
+        typedef typename E1::const_iterator2 const_iterator12_type;
+        typedef typename E2::const_iterator1 const_iterator21_type;
+        typedef typename E2::const_iterator2 const_iterator22_type;
+
+        // Construction and destruction
+        matrix_matrix_binary (const expression1_type &amp;e1, const expression2_type &amp;e2);
+
+        const expression1_type &amp;expression1 () const;
+        const expression2_type &amp;expression2 () const;
+
+        size_type size1 () const;
+        size_type size2 () const;
+
+        // Element access
+        value_type operator () (size_type i, size_type j) const;
+
+        // Iterators simply are pointers.
+
+        class const_iterator2;
+
+        class const_iterator1:
+            public container_const_reference&lt;matrix_matrix_binary&gt;,
+            public random_access_iterator_base&lt;const_iterator1, value_type&gt; {
+        public:
+            typedef typename restrict_traits&lt;typename E1::const_iterator1::iterator_category, 
+	                                     typename E2::const_iterator2::iterator_category&gt;::iterator_category iterator_category;
+
+            // Construction and destruction
+            const_iterator1 (const matrix_matrix_binary &amp;mmb, const const_iterator11_type &amp;it1, const const_iterator22_type &amp;it2);
+
+            // Arithmetic
+            const_iterator1 &amp;operator ++ ();
+            const_iterator1 &amp;operator -- ();
+            const_iterator1 &amp;operator += (difference_type n);
+            const_iterator1 &amp;operator -= (difference_type n);
+            difference_type operator - (const const_iterator1 &amp;it) const;
+
+            // Dereference
+            value_type operator * () const;
+
+            const_iterator2 begin () const;
+            const_iterator2 end () const;
+
+            // Indices
+            size_type index1 () const;
+            size_type index2 () const;
+
+            // Comparison
+            bool operator == (const const_iterator1 &amp;it) const;
+        };
+
+        const_iterator1 begin1 () const;
+        const_iterator1 end1 () const;
+
+        class const_iterator2:
+            public container_const_reference&lt;matrix_matrix_binary&gt;,
+            public random_access_iterator_base&lt;const_iterator2, value_type&gt; {
+        public:
+            typedef typename restrict_traits&lt;typename E1::const_iterator1::iterator_category, 
+		                             typename E2::const_iterator2::iterator_category&gt;::iterator_category iterator_category;
+
+            // Construction and destruction
+            const_iterator2 (const matrix_matrix_binary &amp;mmb, const const_iterator11_type &amp;it1, const const_iterator22_type &amp;it2);
+
+            // Arithmetic
+            const_iterator2 &amp;operator ++ ();
+            const_iterator2 &amp;operator -- ();
+            const_iterator2 &amp;operator += (difference_type n);
+            const_iterator2 &amp;operator -= (difference_type n);
+            difference_type operator - (const const_iterator2 &amp;it) const;
+
+            // Dereference
+            value_type operator * () const;
+
+            const_iterator1 begin () const;
+            const_iterator1 end () const;
+
+            // Indices
+            size_type index1 () const;
+            size_type index2 () const;
+
+            // Comparison
+            bool operator == (const const_iterator2 &amp;it) const;
+        };
+
+        const_iterator2 begin2 () const;
+        const_iterator2 end2 () const;
+    };</code></pre>
+
+<p>The supported binary matrix operations are:</p>
+
+<pre><code>    template&lt;class E1, class E2&gt;
+    matrix_matrix_binary&lt;typename E1::const_closure_type, 
+                         typename E2::const_closure_type, 
+                         matrix_matrix_prod&lt;typename E1::value_type, 
+                                            typename E2::value_type, 
+                                            typename promote_traits&lt;typename E1::value_type, 
+                                                           	    typename E2::value_type&gt;::promote_type&gt; &gt; 
+    prod (const matrix_expression&lt;E1&gt; &amp;e1, 
+          const matrix_expression&lt;E2&gt; &amp;e2);
+
+    template&lt;class E1, class E2&gt;
+    matrix_matrix_binary&lt;typename E1::const_closure_type, 
+                         typename E2::const_closure_type, 
+                         matrix_matrix_prod&lt;typename E1::value_type, 
+                                            typename E2::value_type, 
+                                            typename type_traits&lt;typename promote_traits&lt;typename E1::value_type, 
+                                                                       		         typename E2::value_type&gt;::promote_type&gt;::precision_type&gt; &gt; 
+    prec_prod (const matrix_expression&lt;E1&gt; &amp;e1, 
+               const matrix_expression&lt;E2&gt; &amp;e2);</code></pre>
+
+<p>The templated class <code>matrix_matrix_ternary </code>describes
+a ternary matrix operation.</p>
+
+<pre><code>    template&lt;class E1, class E2, class E3, class F&gt;
+    class matrix_matrix_ternary:
+        public matrix_expression&lt;matrix_matrix_ternary&lt;E1, E2, E3, F&gt; &gt; {
+    public:
+        typedef E1 expression1_type;
+        typedef E2 expression2_type;
+        typedef E3 expression3_type;
+        typedef F functor_type;
+        typedef matrix_matrix_ternary&lt;E1, E2, E3, F&gt; const_closure_type;
+        typedef typename E2::size_type size_type;
+        typedef typename E2::difference_type difference_type;
+        typedef typename F::value_type value_type;
+        typedef typename E2::orientation_category orientation_category;
+
+        // Construction and destruction
+        matrix_matrix_ternary (const expression1_type &amp;e1, const expression2_type &amp;e2, const expression3_type &amp;e3);
+
+        size_type size1 () const;
+        size_type size2 () const;
+
+        // Element access
+        value_type operator () (size_type i, size_type j) const;
+
+        // Iterators simply are indices.
+
+        class const_iterator2;
+
+        class const_iterator1:
+            public container_const_reference&lt;matrix_matrix_ternary&gt;,
+            public random_access_iterator_base&lt;const_iterator1, value_type&gt; {
+        public:
+            typedef typename E2::const_iterator1::iterator_category iterator_category;
+
+            // Construction and destruction
+            const_iterator1 (const matrix_matrix_ternary &amp;mmt, size_type it1, size_type it2);
+
+            // Arithmetic
+            const_iterator1 &amp;operator ++ ();
+            const_iterator1 &amp;operator -- ();
+            const_iterator1 &amp;operator += (difference_type n);
+            const_iterator1 &amp;operator -= (difference_type n);
+            difference_type operator - (const const_iterator1 &amp;it) const;
+
+            // Dereference
+            value_type operator * () const;
+
+            const_iterator2 begin () const;
+            const_iterator2 end () const;
+
+            // Indices
+            size_type index1 () const;
+            size_type index2 () const;
+
+            // Comparison
+            bool operator == (const const_iterator1 &amp;it) const;
+        };
+
+        const_iterator1 begin1 () const;
+        const_iterator1 end1 () const;
+
+        class const_iterator2:
+            public container_const_reference&lt;matrix_matrix_ternary&gt;,
+            public random_access_iterator_base&lt;const_iterator2, value_type&gt; {
+        public:
+            typedef typename E2::const_iterator2::iterator_category iterator_category;
+
+            // Construction and destruction
+            const_iterator2 (const matrix_matrix_ternary &amp;mmt, size_type it1, size_type it2);
+
+            // Arithmetic
+            const_iterator2 &amp;operator ++ ();
+            const_iterator2 &amp;operator -- ();
+            const_iterator2 &amp;operator += (difference_type n);
+            const_iterator2 &amp;operator -= (difference_type n);
+            difference_type operator - (const const_iterator2 &amp;it) const;
+
+            // Dereference
+            value_type operator * () const;
+
+            const_iterator1 begin () const;
+            const_iterator1 end () const;
+
+            // Indices
+            size_type index1 () const;
+            size_type index2 () const;
+
+            // Comparison
+            bool operator == (const const_iterator2 &amp;it2) const;
+        };
+
+        const_iterator2 begin2 () const;
+        const_iterator2 end2 () const;
+    };</code></pre>
+
+<p>The supported ternary matrix operations are:</p>
+
+<pre><code>    template&lt;class E1, class T2, class A2, class F2, class E3, class C&gt;
+    matrix_matrix_ternary&lt;typename E1::const_closure_type, 
+                          matrix_reference&lt;matrix&lt;T2, A2, F2&gt; &gt;, 
+                          typename E3::const_closure_type, 
+                          matrix_matrix_solve&lt;typename E1::value_type, T2, typename E3::value_type, C&gt; &gt; 
+    solve (const matrix_expression&lt;E1&gt; &amp;e1, 
+           matrix&lt;T2, A2, F2&gt; &amp;e2,
+           const matrix_expression&lt;E3&gt; &amp;e3,
+           C);</code></pre>
+</body>
+</html>

@@ -42,26 +42,28 @@ void initialize_upper_triangular (M &m) {
 	}
 }
 
-template<class V, numerics::size_type N>
+template<class V, int N>
 struct test_blas_1 {
     typedef typename V::value_type value_type;
-    typedef numerics::type_traits<value_type>::norm_type norm_type;
+    typedef typename numerics::type_traits<value_type>::norm_type norm_type;
 
 	void operator () ();
 };
 
-template<class V, class M, numerics::size_type N>
+template<class V, class M, int N>
 struct test_blas_2 {
     typedef typename V::value_type value_type;
 
 	void operator () ();
 };
 
-template<class M, numerics::size_type N>
+template<class M, int N>
 struct test_blas_3 {
     typedef typename M::value_type value_type;
 
 	void operator () ();
 };
 
-#endif // TEST2_H
+#endif 
+
+

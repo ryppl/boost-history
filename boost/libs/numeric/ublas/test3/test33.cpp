@@ -10,10 +10,12 @@
 
 #include "../config.h"
 #include "../vector.h"
+#include "../vector_sp.h"
 #include "../matrix.h"
+#include "../matrix_sp.h"
 #include "../io.h"
 
-#include "test1.h"
+#include "test3.h"
 
 // Test matrix expression templates 
 template<class M, int N>
@@ -102,11 +104,13 @@ struct test_my_matrix {
 	}
     void operator () () const {
 		try {
-			M m1 (N, N), m2 (N, N), m3 (N, N);
+			M m1 (N, N, N * N), m2 (N, N, N * N), m3 (N, N, N * N);
             (*this) (m1, m2, m3);
 
+#ifndef USE_GCC
             numerics::matrix_range<M> mr1 (m1, 0, N, 0, N), mr2 (m2, 0, N, 0, N), mr3 (m3, 0, N, 0, N);
             (*this) (mr1, mr2, mr3);
+#endif
 
 #ifdef USE_SLICE
             numerics::matrix_slice<M> ms1 (m1, 0, 1, N, 0, 1, N), ms2 (m2, 0, 1, N, 0, 1, N), ms3 (m3, 0, 1, N, 0, 1, N);
@@ -126,29 +130,29 @@ struct test_my_matrix {
 void test_matrix () {
     std::cout << "test_matrix" << std::endl;
 
-    std::cout << "float, bounded_array" << std::endl;
-    test_my_matrix<numerics::matrix<float, numerics::bounded_array<float, 3 * 3> >, 3 > () ();
+    std::cout << "float, compressed_array" << std::endl;
+    test_my_matrix<numerics::sparse_matrix<float, numerics::compressed_array<std::size_t, float> >, 3 > () ();
 
-    std::cout << "double, bounded_array" << std::endl;
-    test_my_matrix<numerics::matrix<double, numerics::bounded_array<double, 3 * 3> >, 3 > () ();
+    std::cout << "float, std::map" << std::endl;
+    test_my_matrix<numerics::sparse_matrix<float, std::map<std::size_t, float> >, 3 > () ();
 
-    std::cout << "std::complex<float>, bounded_array" << std::endl;
-    test_my_matrix<numerics::matrix<std::complex<float>, numerics::bounded_array<std::complex<float>, 3 * 3> >, 3 > () ();
+    std::cout << "double, compressed_array" << std::endl;
+    test_my_matrix<numerics::sparse_matrix<double, numerics::compressed_array<std::size_t, double> >, 3 > () ();
 
-    std::cout << "std::complex<float>, bounded_array" << std::endl;
-    test_my_matrix<numerics::matrix<std::complex<double>, numerics::bounded_array<std::complex<double>, 3 * 3> >, 3 > () ();
+    std::cout << "double, std::map" << std::endl;
+    test_my_matrix<numerics::sparse_matrix<double, std::map<std::size_t, double> >, 3 > () ();
 
-    std::cout << "float, unbounded_array" << std::endl;
-    test_my_matrix<numerics::matrix<float, numerics::unbounded_array<float> >, 3 > () ();
+    std::cout << "std::complex<float>, compressed_array" << std::endl;
+    test_my_matrix<numerics::sparse_matrix<std::complex<float>, numerics::compressed_array<std::size_t, std::complex<float> > >, 3 > () ();
 
-    std::cout << "double, unbounded_array" << std::endl;
-    test_my_matrix<numerics::matrix<double, numerics::unbounded_array<double> >, 3 > () ();
+    std::cout << "std::complex<float>, std::map" << std::endl;
+    test_my_matrix<numerics::sparse_matrix<std::complex<float>, std::map<std::size_t, std::complex<float> > >, 3 > () ();
 
-    std::cout << "std::complex<float>, unbounded_array" << std::endl;
-    test_my_matrix<numerics::matrix<std::complex<float>, numerics::unbounded_array<std::complex<float> > >, 3 > () ();
+    std::cout << "std::complex<double>, compressed_array" << std::endl;
+    test_my_matrix<numerics::sparse_matrix<std::complex<double>, numerics::compressed_array<std::size_t, std::complex<double> > >, 3 > () ();
 
-    std::cout << "std::complex<float>, unbounded_array" << std::endl;
-    test_my_matrix<numerics::matrix<std::complex<double>, numerics::unbounded_array<std::complex<double> > >, 3 > () ();
+    std::cout << "std::complex<double>, std::map" << std::endl;
+    test_my_matrix<numerics::sparse_matrix<std::complex<double>, std::map<std::size_t, std::complex<double> > >, 3 > () ();
 }
 
 

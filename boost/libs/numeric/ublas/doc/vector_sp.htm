@@ -1,0 +1,150 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>Sparse Vector Related</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<h1>Sparse Vector Related</h1>
+
+<h2><a name="sparse_vector"></a>Sparse Vector</h2>
+
+<p>The templated class <code>sparse_vector </code>is the base
+container adaptor for sparse vectors.</p>
+
+<pre><code>    // Array based sparse vector class 
+    template&lt;class T, class A, class F&gt;
+    class sparse_vector: 
+        public vector_expression&lt;sparse_vector&lt;T, A, F&gt; &gt; {
+    public:      
+        typedef std::size_t size_type;
+        typedef std::ptrdiff_t difference_type;
+        typedef T value_type;
+        typedef const T &amp;const_reference_type;
+        typedef T &amp;reference_type;
+        typedef A array_type;
+        typedef F functor_type;
+        typedef sparse_vector&lt;T, A, F&gt; self_type;
+        typedef vector_const_reference&lt;self_type&gt; const_closure_type;
+        typedef vector_reference&lt;self_type&gt; closure_type;
+        typedef vector_range&lt;self_type&gt; vector_range_type;
+        typedef typename A::const_iterator const_iterator_type;
+        typedef typename A::iterator iterator_type;
+        typedef sparse_tag storage_category;
+
+        // Construction and destruction
+        sparse_vector ();
+        sparse_vector (size_type size, size_type non_zeroes);
+        sparse_vector (const sparse_vector &amp;v);
+        template&lt;class AE&gt;
+        sparse_vector (size_type non_zeroes, const vector_expression&lt;AE&gt; &amp;ae);
+
+        // Resizing
+        void resize (size_type size, size_type non_zeroes);
+
+        size_type size () const;
+
+        // Element access
+        value_type operator () (size_type i) const;
+        reference_type operator () (size_type i);
+
+        value_type operator [] (size_type i) const;
+        reference_type operator [] (size_type i);
+
+        vector_range_type project (size_type start, size_type stop);
+        vector_range_type project (const range &amp;r);
+
+        // Assignment
+        sparse_vector &amp;operator = (const sparse_vector &amp;v);
+        sparse_vector &amp;assign_temporary (sparse_vector &amp;v);
+        template&lt;class AE&gt;
+        sparse_vector &amp;operator = (const vector_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        sparse_vector &amp;assign (const vector_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        sparse_vector &amp;operator += (const vector_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        sparse_vector &amp;plus_assign (const vector_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        sparse_vector &amp;operator -= (const vector_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AE&gt;
+        sparse_vector &amp;minus_assign (const vector_expression&lt;AE&gt; &amp;ae);
+        template&lt;class AT&gt;
+        sparse_vector &amp;operator *= (const AT &amp;at);
+
+        // Swapping
+	void swap (sparse_vector &amp;v);
+	friend void swap (sparse_vector &amp;v1, sparse_vector &amp;v2);
+
+        // Element insertion
+        void clear ();
+        void insert (size_type i, const T &amp;t);
+
+        class const_iterator;
+        class iterator;
+
+        // Element lookup
+        const_iterator_type find (size_type i) const;
+        iterator_type find (size_type i);
+
+        // Iterators simply are pointers.
+
+        class const_iterator:
+            public container_const_reference&lt;sparse_vector&gt;,
+            public bidirectional_iterator_base&lt;const_iterator, value_type&gt; {
+        public:
+            typedef std::bidirectional_iterator_tag iterator_category;
+
+            // Construction and destruction
+            const_iterator (const sparse_vector &amp;v, const const_iterator_type &amp;it);
+            const_iterator (const iterator &amp;it);
+
+            // Arithmetic
+            const_iterator &amp;operator ++ ();
+            const_iterator &amp;operator -- ();
+
+            // Dereference
+            value_type operator * () const;
+
+            // Index
+            size_type index () const;
+
+            // Comparison
+            bool operator == (const const_iterator &amp;it) const;
+        };
+
+        const_iterator begin () const;
+        const_iterator end () const;
+
+        class iterator:
+            public container_reference&lt;sparse_vector&gt;,
+            public bidirectional_iterator_base&lt;iterator, value_type&gt; {
+        public:
+            typedef std::bidirectional_iterator_tag iterator_category;
+
+            // Construction and destruction
+            iterator (sparse_vector &amp;v, const iterator_type &amp;it);
+
+            // Arithmetic
+            iterator &amp;operator ++ ();
+            iterator &amp;operator -- ();
+
+            // Dereference
+            reference_type operator * ();
+
+            // Index
+            size_type index () const;
+
+            // Comparison
+            bool operator == (const iterator &amp;it) const;
+        };
+
+        iterator begin ();
+        iterator end ();
+    };</code></pre>
+</body>
+</html>

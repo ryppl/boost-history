@@ -11,11 +11,13 @@
 
 #include "../config.h"
 #include "../vector.h"
+#include "../vector_sp.h"
 #include "../matrix.h"
+#include "../matrix_sp.h"
 
 #include "../timer.h"
 
-#include "bench1.h"
+#include "bench2.h"
 
 template<class T, int N>
 struct bench_c_inner_prod {
@@ -50,7 +52,7 @@ struct bench_my_inner_prod {
 
     void operator () (int runs) const {
 		try {
-			static V v1 (N), v2 (N);
+			static V v1 (N, N), v2 (N, N);
 			initialize_vector (v1);
 			initialize_vector (v2);
 			numerics::timer t;
@@ -127,7 +129,7 @@ struct bench_my_vector_add {
 
     void operator () (int runs, safe_tag) const {
 		try {
-			static V v1 (N), v2 (N), v3 (N);
+			static V v1 (N, N), v2 (N, N), v3 (N, N);
 			initialize_vector (v1);
 			initialize_vector (v2);
 			numerics::timer t;
@@ -146,7 +148,7 @@ struct bench_my_vector_add {
     }
     void operator () (int runs, fast_tag) const {
 		try {
-			static V v1 (N), v2 (N), v3 (N);
+			static V v1 (N, N), v2 (N, N), v3 (N, N);
 			initialize_vector (v1);
 			initialize_vector (v2);
 			numerics::timer t;
@@ -199,59 +201,33 @@ void bench_1<T, N>::operator () (int runs) {
 	header ("C array");
 	bench_c_inner_prod<T, N> () (runs);
 
-	header ("vector<bounded_array>");
-	bench_my_inner_prod<numerics::vector<T, numerics::bounded_array<T, N> >, N> () (runs);
+	header ("sparse_vector<compressed_array>");
+    bench_my_inner_prod<numerics::sparse_vector<T, numerics::compressed_array<std::size_t, T> >, N> () (runs);
 
-	header ("vector<unbounded_array>");
-	bench_my_inner_prod<numerics::vector<T, numerics::unbounded_array<T> >, N> () (runs);
-
-#ifdef USE_STD_VALARRAY
-	header ("vector<std::valarray>");
-	bench_my_inner_prod<numerics::vector<T, std::valarray<T> >, N> () ();
-#endif
-
-#ifdef USE_STD_VECTOR
-	header ("vector<std::vector>");
-	bench_my_inner_prod<numerics::vector<T, std::vector<T> >, N> () (runs);
-#endif
+	header ("sparse_vector<std::map>");
+    bench_my_inner_prod<numerics::sparse_vector<T, std::map<std::size_t, T> >, N> () (runs);
 
 #ifdef USE_STD_VALARRAY
 	header ("std::valarray");
 	bench_cpp_inner_prod<std::valarray<T>, N> () (runs);
 #endif
 
-    header ("vector + vector");
+    header ("sparse_vector + sparse_vector");
 
 	header ("C array");
 	bench_c_vector_add<T, N> () (runs);
 
-	header ("vector<bounded_array> safe");
-	bench_my_vector_add<numerics::vector<T, numerics::bounded_array<T, N> >, N> () (runs, safe_tag ());
+	header ("sparse_vector<compressed_array> safe");
+	bench_my_vector_add<numerics::sparse_vector<T, numerics::compressed_array<std::size_t, T> >, N> () (runs, safe_tag ());
 
-	header ("vector<bounded_array> fast");
-	bench_my_vector_add<numerics::vector<T, numerics::bounded_array<T, N> >, N> () (runs, fast_tag ());
+	header ("sparse_vector<compressed_array> fast");
+	bench_my_vector_add<numerics::sparse_vector<T, numerics::compressed_array<std::size_t, T> >, N> () (runs, fast_tag ());
 
-	header ("vector<unbounded_array> safe");
-	bench_my_vector_add<numerics::vector<T, numerics::unbounded_array<T> >, N> () (runs, safe_tag ());
+	header ("sparse_vector<std::map> safe");
+	bench_my_vector_add<numerics::sparse_vector<T, std::map<std::size_t, T> >, N> () (runs, safe_tag ());
 
-	header ("vector<unbounded_array> fast");
-	bench_my_vector_add<numerics::vector<T, numerics::unbounded_array<T> >, N> () (runs, fast_tag ());
-
-#ifdef USE_STD_VALARRAY
-	header ("vector<std::valarray> safe");
-	bench_my_vector_add<numerics::vector<T, std::valarray<T> >, N> () (runs, safe_tag ());
-
-	header ("vector<std::valarray> fast");
-	bench_my_vector_add<numerics::vector<T, std::valarray<T> >, N> () (runs, fast_tag ());
-#endif
-
-#ifdef USE_STD_VECTOR
-	header ("vector<std::vector> safe");
-	bench_my_vector_add<numerics::vector<T, std::vector<T> >, N> () (runs, safe_tag ());
-
-	header ("vector<std::vector> fast");
-	bench_my_vector_add<numerics::vector<T, std::vector<T> >, N> () (runs, fast_tag ());
-#endif
+	header ("sparse_vector<std::map> fast");
+	bench_my_vector_add<numerics::sparse_vector<T, std::map<std::size_t, T> >, N> () (runs, fast_tag ());
 
 #ifdef USE_STD_VALARRAY
 	header ("std::valarray");

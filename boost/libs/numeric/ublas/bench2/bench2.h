@@ -37,8 +37,8 @@ struct initialize_c_vector  {
 	void operator () (c_vector_traits<T, N>::type &v) {
 #endif 
 		for (int i = 0; i < N; ++ i) 
-            v [i] = rand ();
-//			v [i] = 0;
+//			  v [i] = rand ();
+			v [i] = 0;
 		}
 };
 template<class V>
@@ -46,8 +46,8 @@ NUMERICS_INLINE
 void initialize_vector (V &v) {
     int size = v.size ();
     for (int i = 0; i < size; ++ i) 
-        v [i] = rand ();
-//      v [i] = 0;
+//        v [i] = rand ();
+        v [i] = 0;
 }
 
 template<class T, int N, int M> 
@@ -60,19 +60,34 @@ struct initialize_c_matrix  {
 #endif 
 		for (int i = 0; i < N; ++ i) 
 			for (int j = 0; j < M; ++ j) 
-		        m [i] [j] = rand ();
-//				m [i] [j] = 0;
+//				  m [i] [j] = rand ();
+				m [i] [j] = 0;
 	}
 };
 template<class M>
 NUMERICS_INLINE
-void initialize_matrix (M &m) {
+void initialize_matrix (M &m, numerics::row_major_tag) {
     int size1 = m.size1 ();
     int size2 = m.size2 ();
     for (int i = 0; i < size1; ++ i) 
         for (int j = 0; j < size2; ++ j) 
-            m (i, j) = rand ();
-//          m (i, j) = 0;
+//            m (i, j) = rand ();
+            m (i, j) = 0;
+}
+template<class M>
+NUMERICS_INLINE
+void initialize_matrix (M &m, numerics::column_major_tag) {
+    int size1 = m.size1 ();
+    int size2 = m.size2 ();
+    for (int j = 0; j < size2; ++ j) 
+        for (int i = 0; i < size1; ++ i) 
+//            m (i, j) = rand ();
+            m (i, j) = 0;
+}
+template<class M>
+NUMERICS_INLINE
+void initialize_matrix (M &m) {
+    initialize_matrix (m, NUMERICS_TYPENAME M::orientation_category ());
 }
 
 template<class T>

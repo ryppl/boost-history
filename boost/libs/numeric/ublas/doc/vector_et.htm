@@ -1,0 +1,378 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>Vector Expression Related</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<h1>Vector Expression Related</h1>
+
+<h2><a name="vector_expression"></a>Vector Expression</h2>
+
+<p>The templated class <code>vector_expression </code>forms the
+base for all static derived vector expression classes including
+class <code>vector</code> itself.</p>
+
+<pre><code>    // Base class for the Barton Nackman trick
+    template&lt;class E&gt;
+    struct vector_expression {
+        typedef E expression_type;
+
+        // This class could define an common interface for all 
+        // statically derived expression type classes.
+        // Due to a compiler deficiency - one can not reference class typedefs of E 
+        // on MSVC 6.0 (error C2027) - we only implement the casts.
+
+        const expression_type &amp;operator () () const;
+        expression_type &amp;operator () ();
+    };</code></pre>
+
+<h2><a name="vector_references"></a>Vector References</h2>
+
+<p>The templated class <code>vector_const_reference </code>
+contains a constant reference to a vector expression.</p>
+
+<pre><code>    template&lt;class E&gt;
+    class vector_const_reference:
+        public vector_expression&lt;vector_const_reference&lt;E&gt; &gt; {
+    public:
+        typedef E expression_type;
+        typedef typename E::size_type size_type;
+        typedef typename E::difference_type difference_type;
+        typedef typename E::value_type value_type;
+        typedef typename E::const_iterator const_iterator_type;
+
+        // Construction and destruction
+        vector_const_reference (const expression_type &amp;e);
+
+        size_type size () const;
+
+        // Element access
+        value_type operator () (size_type i) const;
+
+        // Iterator is the iterator of the referenced expression.
+
+        typedef const_iterator_type const_iterator;
+
+        const_iterator begin () const;
+        const_iterator end () const;
+    };</code></pre>
+
+<p>The templated class <code>vector_reference </code>contains
+a reference to a vector expression.</p>
+
+<pre><code>    template&lt;class E&gt;
+    class vector_reference: 
+        public vector_expression&lt;vector_reference&lt;E&gt; &gt; {
+    public:
+        typedef E expression_type;
+        typedef typename E::size_type size_type;
+        typedef typename E::difference_type difference_type;
+        typedef typename E::value_type value_type;
+        typedef typename E::reference_type reference_type;
+        typedef typename E::const_iterator const_iterator_type;
+        typedef typename E::iterator iterator_type;
+
+        // Construction and destruction
+        vector_reference (expression_type &amp;e);
+
+        // Resizing
+        void resize (size_type size);
+
+        size_type size () const;
+
+        // Element access
+        value_type operator () (size_type i) const;
+        reference_type operator () (size_type i);
+
+        // Iterator is the iterator of the referenced expression.
+
+        typedef const_iterator_type const_iterator;
+
+        const_iterator begin () const;
+        const_iterator end () const;
+
+        typedef iterator_type iterator;
+
+        iterator begin ();
+        iterator end ();
+    };</code></pre>
+
+<h2><a name="vector_operations"></a>Vector Operations</h2>
+
+<p>The templated class <code>vector_unary </code>describes a
+unary vector operation.</p>
+
+<pre><code>    template&lt;class E, class F&gt;
+    class vector_unary: 
+        public vector_expression&lt;vector_unary&lt;E, F&gt; &gt; {
+    public:
+        typedef E expression_type;
+        typedef F functor_type;
+        typedef typename E::size_type size_type;
+        typedef typename E::difference_type difference_type;
+        typedef typename F::value_type value_type;
+        typedef vector_unary&lt;E, F&gt; const_closure_type;
+        typedef typename E::const_iterator const_iterator_type;
+
+        // Construction and destruction
+        vector_unary (const expression_type &amp;e);
+
+        size_type size () const;
+
+        // Element access
+        value_type operator () (size_type i) const;
+
+        // Iterator enhances the iterator of the referenced expression 
+        // with the unary functor.
+
+        class const_iterator:
+            public random_access_iterator_base&lt;const_iterator, value_type&gt; {
+        public:
+            typedef typename E::const_iterator::iterator_category iterator_category;
+
+            // Construction and destruction
+            const_iterator (const const_iterator_type &amp;it);
+
+            // Arithmetic
+            const_iterator &amp;operator ++ ();
+            const_iterator &amp;operator -- ();
+            const_iterator &amp;operator += (difference_type n);
+            const_iterator &amp;operator -= (difference_type n);
+            difference_type operator - (const const_iterator &amp;it) const;
+
+            // Dereference
+            value_type operator * () const;
+
+            // Index
+            size_type index () const;
+
+            // Comparison
+            bool operator == (const const_iterator &amp;it) const;
+        };
+
+        const_iterator begin () const;
+        const_iterator end () const;
+    };</code></pre>
+
+<p>The supported unary operations are:</p>
+
+<pre><code>    // (- v) [i] = - v [i]
+    template&lt;class E&gt; 
+    vector_unary&lt;typename E::const_closure_type, 
+                 scalar_negate&lt;typename E::value_type&gt; &gt; 
+    operator - (const vector_expression&lt;E&gt; &amp;e);
+
+    // (conj v) [i] = conj (v [i])
+    template&lt;class E&gt; 
+    vector_unary&lt;typename E::const_closure_type, 
+                 scalar_conj&lt;typename E::value_type&gt; &gt; 
+    conj (const vector_expression&lt;E&gt; &amp;e);
+
+    // (trans v) [i] = v [i]
+    template&lt;class E&gt; 
+    vector_unary&lt;typename E::const_closure_type, 
+                 scalar_identity&lt;typename E::value_type&gt; &gt; 
+    trans (const vector_expression&lt;E&gt; &amp;e);
+
+    // (herm v) [i] = conj (v [i])
+    template&lt;class E&gt; 
+    vector_unary&lt;typename E::const_closure_type, 
+                 scalar_conj&lt;typename E::value_type&gt; &gt; 
+    herm (const vector_expression&lt;E&gt; &amp;e);</code></pre>
+
+<p>The templated class <code>vector_binary </code>describes a
+binary vector operation.</p>
+
+<pre><code>    template&lt;class E1, class E2, class F&gt;
+    class vector_binary:
+        public vector_expression&lt;vector_binary&lt;E1, E2, F&gt; &gt; {
+    public:
+        typedef E1 expression1_type;
+        typedef E2 expression2_type;
+        typedef F functor_type;
+        typedef typename promote_traits&lt;typename E1::size_type, typename E2::size_type&gt;::promote_type size_type;
+        typedef typename promote_traits&lt;typename E1::difference_type, typename E2::difference_type&gt;::promote_type difference_type;
+        typedef typename F::value_type value_type;
+        typedef vector_binary&lt;E1, E2, F&gt; const_closure_type;
+        typedef typename E1::const_iterator const_iterator1_type;
+        typedef typename E2::const_iterator const_iterator2_type;
+
+        // Construction and destruction
+        vector_binary (const expression1_type &amp;e1, const expression2_type &amp;e2);
+
+        size_type size () const;
+
+        // Element access
+        value_type operator () (size_type i) const;
+
+        // Iterator merges the iterators of the referenced expressions and  
+        // enhances them with the binary functor.
+
+        class const_iterator:
+            public random_access_iterator_base&lt;const_iterator, value_type&gt; {
+        public:
+            typedef </code>typename <code>restrict_traits&lt;typename E1::const_iterator::iterator_category, 
+                                    	     typename E2::const_iterator::iterator_category&gt;::iterator_category iterator_category;
+
+            // Construction and destruction
+            const_iterator (size_type i, const const_iterator1_type &amp;it1, const const_iterator2_type &amp;it2);
+            
+            // Random access specializations
+            void increment (std::random_access_iterator_tag);
+            void decrement (std::random_access_iterator_tag);
+            value_type dereference (std::random_access_iterator_tag) const;
+
+            // Bidirectional specializations
+            void increment (std::bidirectional_iterator_tag);
+            void decrement (std::bidirectional_iterator_tag);
+            value_type dereference (std::bidirectional_iterator_tag) const;
+
+            // Arithmetic
+            const_iterator &amp;operator ++ ();
+            const_iterator &amp;operator -- ();
+            const_iterator &amp;operator += (difference_type n);
+            const_iterator &amp;operator -= (difference_type n);
+            difference_type operator - (const const_iterator &amp;it) const;
+
+            // Dereference
+            value_type operator * () const;
+
+            // Index
+            size_type index () const;
+
+            // Comparison
+            bool operator == (const const_iterator &amp;it) const;
+        };
+
+        const_iterator begin () const;
+        const_iterator end () const;
+    };</code></pre>
+
+<p>The supported binary operations are:</p>
+
+<pre><code>    // (v1 + v2) [i] = v1 [i] + v2 [i]
+    template&lt;class E1, class E2&gt;
+    vector_binary&lt;typename E1::const_closure_type, 
+                  typename E2::const_closure_type, 
+                  scalar_plus&lt;typename E1::value_type, typename E2::value_type&gt; &gt; 
+    operator + (const vector_expression&lt;E1&gt; &amp;e1, 
+                const vector_expression&lt;E2&gt; &amp;e2);
+
+    // (v1 - v2) [i] = v1 [i] - v2 [i]
+    template&lt;class E1, class E2&gt;
+    vector_binary&lt;typename E1::const_closure_type, 
+                  typename E2::const_closure_type, 
+                  scalar_minus&lt;typename E1::value_type, typename E2::value_type&gt; &gt; 
+    operator - (const vector_expression&lt;E1&gt; &amp;e1, 
+                const vector_expression&lt;E2&gt; &amp;e2);</code></pre>
+
+<p>The templated class <code>vector_binary_scalar </code>describes
+a binary operation between a scalar and a vector.</p>
+
+<pre><code>    template&lt;class E1, class E2, class F&gt;
+    class vector_binary_scalar:
+        public vector_expression&lt;vector_binary_scalar&lt;E1, E2, F&gt; &gt; {
+    public:
+        typedef E1 expression1_type;
+        typedef E2 expression2_type;
+        typedef F functor_type;
+        typedef typename E2::size_type size_type;
+        typedef typename E2::difference_type difference_type;
+        typedef typename F::value_type value_type;
+        typedef vector_binary_scalar&lt;E1, E2, F&gt; const_closure_type;
+        typedef typename E1::value_type const_iterator1_type;
+        typedef typename E2::const_iterator const_iterator2_type;
+
+        // Construction and destruction
+        vector_binary_scalar (const expression1_type &amp;e1, const expression2_type &amp;e2);
+
+        size_type size () const;
+
+        // Element access
+        value_type operator () (size_type i) const;
+
+        // Iterator enhances the iterator of the referenced vector expression
+        // with the binary functor.
+
+        class const_iterator:
+            public random_access_iterator_base&lt;const_iterator, value_type&gt; {
+        public:
+            typedef typename E2::const_iterator::iterator_category iterator_category;
+
+            // Construction and destruction
+            const_iterator (const const_iterator1_type &amp;it1, const const_iterator2_type &amp;it2);
+
+            // Arithmetic
+            const_iterator &amp;operator ++ ();
+            const_iterator &amp;operator -- ();
+            const_iterator &amp;operator += (difference_type n);
+            const_iterator &amp;operator -= (difference_type n);
+            difference_type operator - (const const_iterator &amp;it) const;
+
+            // Dereference
+            value_type operator * () const;
+
+            // Index
+            size_type index () const;
+
+            // Comparison
+            bool operator == (const const_iterator &amp;it) const;
+        };
+
+        const_iterator begin () const;
+        const_iterator end () const;
+    };</code></pre>
+
+<p>The supported binary operations between a scalar and a vector
+are:</p>
+
+<pre><code>    // (t * v) [i] = t * v [i]
+    template&lt;class T1, class E2&gt;
+    vector_binary_scalar&lt;scalar_const_reference&lt;T1&gt;, 
+                         typename E2::const_closure_type, 
+                         scalar_multiplies&lt;T1, typename E2::value_type&gt; &gt; 
+    operator * (const T1 &amp;e1, 
+                const vector_expression&lt;E2&gt; &amp;e2);</code></pre>
+
+<h2><a name="vector_reductions"></a>Vector Reductions</h2>
+
+<p>The supported unary vector reducing operations are:</p>
+
+<pre><code>    template&lt;class E&gt;
+    typename E::value_type
+    sum (const vector_expression&lt;E&gt; &amp;e);
+
+    template&lt;class E&gt;
+    typename type_traits&lt;typename E::value_type&gt;::norm_type
+    norm_1 (const vector_expression&lt;E&gt; &amp;e);
+
+    template&lt;class E&gt;
+    typename type_traits&lt;typename E::value_type&gt;::norm_type
+    norm_2 (const vector_expression&lt;E&gt; &amp;e);
+
+    template&lt;class E&gt;
+    typename type_traits&lt;typename E::value_type&gt;::norm_type
+    norm_inf (const vector_expression&lt;E&gt; &amp;e);
+
+    template&lt;class E&gt;
+    typename E::size_type
+    index_norm_inf (const vector_expression&lt;E&gt; &amp;e);</code></pre>
+
+<p>The supported binary vector reducing operations are:</p>
+
+<pre><code>    template&lt;class E1, class E2&gt;
+    typename promote_traits&lt;typename E1::value_type, typename E2::value_type&gt;::promote_type
+    inner_prod (const vector_expression&lt;E1&gt; &amp;e1, 
+                const vector_expression&lt;E2&gt; &amp;e2);
+
+    template&lt;class E1, class E2&gt;
+    typename type_traits&lt;typename promote_traits&lt;typename E1::value_type, typename E2::value_type&gt;::promote_type&gt;::precision_type
+    prec_inner_prod (const vector_expression&lt;E1&gt; &amp;e1, 
+                     const vector_expression&lt;E2&gt; &amp;e2);</code></pre>
+</body>
+</html>

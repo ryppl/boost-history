@@ -11,11 +11,13 @@
 
 #include "../config.h"
 #include "../vector.h"
+#include "../vector_sp.h"
 #include "../matrix.h"
+#include "../matrix_sp.h"
 
 #include "../timer.h"
 
-#include "bench1.h"
+#include "bench2.h"
 
 void header (std::string text) {
     std::cout << text << std::endl;

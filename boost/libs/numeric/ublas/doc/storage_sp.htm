@@ -1,0 +1,95 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>Sparse Storage</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<h1>Sparse Storage</h1>
+
+<h2><a name="compressed_array"></a>Compressed Array</h2>
+
+<p>The templated class <code>compressed_array</code> implements a
+simple std::map-like associative array using allocation via <code>new/delete</code>.</p>
+
+<pre><code>    // Compressed array 
+    template&lt;class I, class T&gt;
+    class compressed_array {
+    public:      
+        typedef std::size_t size_type;
+        typedef std::ptrdiff_t difference_type;
+        typedef I index_type;
+        typedef T data_value_type;
+        typedef const T &amp;data_const_reference_type;
+        typedef T &amp;data_reference_type;
+        typedef std::pair&lt;I, T&gt; value_type;
+        typedef const std::pair&lt;I, T&gt; &amp;const_reference_type;
+        typedef std::pair&lt;I, T&gt; &amp;reference_type;
+        typedef const std::pair&lt;I, T&gt; *const_pointer_type;
+        typedef std::pair&lt;I, T&gt; *pointer_type;
+
+        // Construction and destruction
+        compressed_array ();
+        compressed_array (size_type size);
+        compressed_array (const compressed_array &amp;a);
+        ~compressed_array ();
+
+        // Resizing
+        void resize (size_type size);
+
+        size_type size () const;
+
+        // Element access
+        data_reference_type operator [] (index_type i);
+
+        // Assignment
+        compressed_array &amp;operator = (const compressed_array &amp;a);
+        compressed_array &amp;assign_temporary (compressed_array &amp;a);
+
+        // Swapping
+	void swap (compressed_array &amp;a);
+	friend void swap (compressed_array &amp;a1, compressed_array &amp;a2);
+
+        // Element lookup
+        const_pointer_type find (index_type i) const;
+        pointer_type find (index_type i);
+        const_pointer_type lower_bound (index_type i) const;
+        pointer_type lower_bound (index_type i);
+        const_pointer_type upper_bound (index_type i) const;
+        pointer_type upper_bound (index_type i);
+
+        // Element insertion
+        void clear ();
+        pointer_type insert (pointer_type it, value_type &amp;p);
+        void sort ();
+
+        // Iterators simply are pointers.
+
+        typedef const_pointer_type const_iterator;
+
+        const_iterator begin () const;
+        const_iterator end () const;
+
+        typedef pointer_type iterator;
+
+        iterator begin ();
+        iterator end ();
+
+        // Reverse iterators
+
+        typedef std::reverse_iterator&lt;const_iterator, value_type, const_reference_type&gt; const_reverse_iterator;
+
+        const_reverse_iterator rbegin () const;
+        const_reverse_iterator rend () const;
+
+        typedef std::reverse_iterator&lt;iterator, value_type, reference_type&gt; reverse_iterator;
+
+        reverse_iterator rbegin ();
+        reverse_iterator rend ();
+    };</code></pre>
+</body>
+</html>

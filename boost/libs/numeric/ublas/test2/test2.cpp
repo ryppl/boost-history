@@ -1,3 +1,11 @@
+#ifdef USE_MSVC
+
+#pragma warning (disable: 4355)
+#pragma warning (disable: 4503)
+#pragma warning (disable: 4786)
+
+#endif
+
 #include <iostream>
 
 #include "../config.h"
