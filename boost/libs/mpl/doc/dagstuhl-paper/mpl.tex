@@ -2,6 +2,26 @@
 %\usepackage{semantic}
 %\usepackage{math}
 
+%% uncomment to make footnote appear at bottom of page:
+\let\footnote\savefootnote
+%% uncomment if you want footnotetext to appear at the bottom of the page:
+\let\footnotetext\savefootnotetext 
+
+%% uncomment if you want a ruled line above the footnote:
+\let\footnoterule\savefootnoterule 
+%% How many levels of section head would you like numbered?
+%% 0= no section numbers, 1= section, 2= subsection, 3= subsubsection
+%%==>>
+\setcounter{secnumdepth}{4}
+
+%% How many levels of section head would you like to appear in the
+%% Table of Contents?
+%% 0= chapter titles, 1= section titles, 2= subsection titles, 
+%% 3= subsubsection titles.
+%%==>>
+\setcounter{tocdepth}{4}
+\kluwerbib
+
 \newcommand{\Cpp}{C\kern-0.05em\texttt{+\kern-0.03em+}%
 }
 \newcommand{\Mpl}{Boost Meta\-pro\-gram\-ming Library}
@@ -895,14 +915,14 @@ form as ``compile-time functions'', and [CE00] have introduced
 ``template \mfn'' as an equivalent term (they also use the simpler
 term ``\mfn'' as do we). 
 
+\subsubsection{Higher-Order Metafunctions}
 
-While syntactically simple, however, this
-form of \mfn\ does not always interact optimally with the rest of
-\Cpp. In particular, the simple \mfn\ form makes it unneccesarily
-awkward and tedious to define and work with higher-order \mfns\
-(\mfns\ that operate on other \mfns). In order to pass a simple \mfn\
-to another template, we need to use \emph{template template
-parameters}:
+While syntactically simple, the simple template \mfn\ form does not
+always interact optimally with the rest of \Cpp. In particular, the
+simple \mfn\ form makes it unneccesarily awkward and tedious to define
+and work with higher-order \mfns\ (\mfns\ that operate on other
+\mfns). In order to pass a simple \mfn\ to another template, we need
+to use \emph{template template parameters}:
 
 {\small
 \begin{codesamp}\begin{verbatim}
@@ -927,7 +947,7 @@ struct derive3
 
 This looks different, but it seems to work.\footnote{In fact it's
   already broken: \code{apply\_twice} doesn't even fit the \mfn\
-  concept: it requires a template (rather than a type) as its first
+  concept since it requires a template (rather than a type) as its first
   parameter, which breaks the \mfn\ protocol!} However, things begin
   to break down noticeably when we want to ``return'' a \mfn\ from our
   \mfn:
@@ -982,18 +1002,20 @@ template <
 \end{codesamp}
 }
 
-However, now we have another problem: \Cpp\ templates are
-\emph{polymorphic} with respect to their type arguments, but not with
-respect to template template parameters. The \emph{arity} (number of
-parameters) of any template template parameter is strictly enforced,
-so we \emph{still} can't embed \code{derive3} in a \code{cons}
-list. Moreover, polymorphism \emph{between} types and \mfns\ is not
-supported (the compiler expects one or the other), and the syntax of
-``returning'' \mfns\ is different from syntax of returning a type. All
-this seriously limits the applicability of higher-order \mfns, leads
-to unnecessary code duplication, and has an overall negative effect on
-the both conceptual and implementation clarity, simplicity and size of
-the library.
+However, now we have another problem: \Cpp\ templates are polymorphic
+with respect to their type arguments, but not with respect to template
+template parameters. The arity (number of parameters) of any template
+template parameter is strictly enforced, so we \emph{still} can't
+embed \code{derive3} in a \code{cons} list. Moreover, polymorphism
+\emph{between} types and \mfns\ is not supported (the compiler expects
+one or the other), and as we've seen, the syntax and semantics of
+``returned'' \mfns\ is different from that of returned types. Trying
+to accomplish everything with the simple template \mfn\ form would
+seriously limit the applicability of higher-order \mfns and would have
+an overall negative effect on the both conceptual and implementation
+clarity, simplicity and size of the library.
+
+\subsubsection{Metafunction Classes}
 
 Fortunately, the truism that ``there is no problem in software
 which can't be solved by adding yet another level of
@@ -1046,24 +1068,23 @@ struct add
 %% how templates are defined in C++, - in particular, because 
 %% of the lack of so called template typedefs [Sut01]. 
 
-%%% I think we should have a separate section to discuss
-%%% limitations/complaints about C++ and possible suggestions for ways
-%%% to make metaprogramming better. That would allow you to
-%%% concentrate focus on ``here's what the lib does, here's how''
-%%% where appropriate.
+\subsubsection{One Size Fits All?}
 
+The \mfn\ class form solves all the problems with ordinary template
+\mfns\ mentioned earlier: since it is a regular class, it can be
+placed in compile-time \mdat\ sequences, and manipulated by other
+\mfns\ using the same protocols as for any other \mdat. We thereby
+avoid the code-duplication needed to provide versions of each library
+component to operate on ordinary \mdat\ and on \mfns\ with each
+distinct supported arity.
 
-So, basically, representing \mfns\ as plain class 
-template would lead to duplication of almost every library 
-facility. ``function class'' metafunction form solves all these 
-problems. On the other hand, it seems that accepting function 
-classes as \emph{the} form of representation of compile-time 
-function entities imposes code duplication danger in as well: 
-if the library's own primitives, algorithms, etc. are 
-represented as class templates, that means that you either 
-cannot reuse these algorithms in context of higher-order 
-functions, or you have to duplicate all algorithms in second 
-form, so, for instance, there would be two versions of 
+On the other hand, it seems that accepting \mfn\ classes as \emph{the}
+representation for compile-time function entities imposes code
+duplication danger as well: if the library's own primitives,
+algorithms, etc. are represented as class templates, that means that
+you either cannot reuse these algorithms in the context of
+higher-order functions, or you have to duplicate all algorithms in the
+second form, so, for instance, there would be two versions of
 \code{find}:
 
 {\small
@@ -1091,9 +1112,8 @@ struct find
 \end{codesamp}
 }
 
-Of course, the third option is to eliminate 
-``user-friendly form'' completely so one would always 
-have to write
+Of course, the third option is to eliminate ``user-friendly form''
+completely so one would always have to write:
 
 {\small
 \begin{codesamp}\begin{verbatim}
@@ -1113,26 +1133,27 @@ typedef mpl::find<list,long>::type iter;
 \end{codesamp}
 }
 
-but that's would hurt usability, considering that the direct 
-invocations of library's algorithms are more often-used than 
-passing algorithms as arguments to another 
-algorithms/functions. 
+That too would hurt usability, considering that the direct 
+invocations of library's algorithms are far more often-used than 
+passing algorithms as arguments to another algorithms/functions. 
 
-The library's answer to this dilemma is lambda expressions. 
-Lambda is the mechanism that enables currying of 
-\mfns\ and converting them into function classes, 
-so when you want to pass \code{find} algorithm as an argument 
-to a higher-order function, you just write:
+\subsubsection{From Metafunction to Metafunction Class}
+
+The MPL's answer to this dilemma is lambda expressions.  Lambda is the
+mechanism that enables the library to curry \mfns\ and convert them
+into function classes, so when you want to pass the \code{find}
+algorithm as an argument to a higher-order function, you just write:
 
 {\small
-\begin{codesamp}\begin{verbatim}
-typedef mpl::apply< my_f, mpl::find<_1,_2> >::type result;
-\end{verbatim}
+\begin{codesamp}
+typedef mpl::apply< my\_f, \underline{mpl::find<\_1,\_2>} >::type result;
 \end{codesamp}
 }
 
-and then you want just use \code{find} directly in your code, 
-you still have the intuitive
+Where \code{\_1} and \code{\_2} are placeholders for the first and
+second arguments to the resulting \mfn\ class. This preserves the
+untuitive syntax below for when the user wants to use \code{find}
+directly in her code:
 
 {\small
 \begin{codesamp}\begin{verbatim}
@@ -1140,9 +1161,6 @@ typedef mpl::find<list,long>::type iter;
 \end{verbatim}
 \end{codesamp}
 }
-
-
-[to be continued]
 
 %%% Should say ``metafunction classes'' below?
 
