@@ -21,11 +21,15 @@
 <li><a href="#introduction">Introduction</a></li>
 <li><a href="#using_atlas">Using the ATLAS bindings</a></li>
 <ol>
+<li><a href="#path">ATLAS path</a></li>
 <li><a href="#level1blas">Level 1 BLAS</a></li>
 <li><a href="#level2blas">Level 2 BLAS</a></li>
 <li><a href="#level3blas">Level 3 BLAS</a></li>
-<li><a href="#lapack">LAPACK functions</a></li>
-
+<li><a href="#lapack">LAPACK routines</a></li>
+<ol>
+<li>General system of linear equations</li>
+<li>Positive definite system of linear equations</li>
+</ol>
 </ol>
 </ol>
 
@@ -127,9 +131,24 @@ operations.'' [quote from <a href="http://www.netlib.org/blas/faq.html">BLAS FAQ
 <p>
 ATLAS also contains some LAPACK routines for solving systems of simultaneous linear equations. 
 
-<h3><a name="level1blas">2.1 Level 1 BLAS</a></h3>
+<h3><a name="path">2.1 ATLAS path</a></h3>
+
+The location of ATLAS header files may depend on your installation.
+Files <code>atlas/cblas_inc.hpp</code> and <code>atlas/clapack_inc.hpp</code>, 
+which only include ATLAS headers <code>cblas.h</code> and
+<code>clapack.h</code><sup>[<a name="bnd.atl.2"
+href="#ftn.bnd.atl.2">2</a>]</sup> respectively, are therefore introduced. 
+You should edit these two files providing your paths. 
+All other files then include these two files, so there is no need to
+edit other files. 
+
+
+<h3><a name="level1blas">2.2 Level 1 BLAS</a></h3>
 
 Defined in <code>atlas/cblas1.hpp</code>. 
+
+<p>
+Level 1 BLAS do vector-vector operations.
 
 <p>
 In the following table <code>x</code>, <code>y</code> are vectors,
@@ -179,33 +198,492 @@ only, complex vectors ATLAS bindings extension
 [5] complex types only
 
 
-<h3><a name="level2blas">2.2 Level 2 BLAS</a></h3>
+<h3><a name="level2blas">2.3 Level 2 BLAS</a></h3>
 
 Defined in <code>atlas/cblas2.hpp</code>. 
 
+<p>
+Level 2 BLAS do matrix-vector operations. 
+
+<p>
+In the following table <code>a</code>, <code>b</code> are scalars,
+<code>x</code>, <code>y</code> are vectors and <code>A</code> is a
+matrix. <code>Trans</code> can be <code>CblasNoTrans</code>,
+<code>CblasTrans</code> or <code>CblasConjTrans</code>, denoting
+<code>A</code>, <code>A<sup>T</sup></code> or <code>A<sup>H</sup></code>, 
+respectively. 
+
+<p>
+<table border=1>
+<tr><th>Expression<th>Semantics
+<tr><td><code>gemv(Trans,a,A,x,b,y)<td>
+<code>y &lt;- a op(A) x + b y &nbsp;
+where  &nbsp; <code>op (A) == A || A<sup>T</sup> || A<sup>H</sup></code>
+<tr><td><code>gemv(a,A,x,b,y)<td><code>y &lt;- a A x + b y</code> 
+<tr><td><code>gemv(A,x,y)<td><code>y &lt;- A x </code> 
+<tr><td><code>symv(a,A,x,b,y)<td><code>y &lt;- a A x + b y</code>, 
+&nbsp;<code>A</code> symmetric real matrix 
+<tr><td><code>symv(A,x,y)<td><code>y &lt;- A x </code>, 
+&nbsp;<code>A</code> symmetric real matrix 
+<tr><td><code>spmv(a,A,x,b,y)<td><code>y &lt;- a A x + b y</code>, 
+&nbsp;<code>A</code> symmetric real matrix in packed format 
+<tr><td><code>spmv(A,x,y)<td><code>y &lt;- A x </code>, 
+&nbsp;<code>A</code> symmetric real matrix in packed format 
+<tr><td><code>hemv(a,A,x,b,y)<td><code>y &lt;- a A x + b y</code>, 
+&nbsp;<code>A</code> Hermitian matrix 
+<tr><td><code>hemv(A,x,y)<td><code>y &lt;- A x </code>, 
+&nbsp;<code>A</code> Hermitian matrix 
+<tr><td><code>hpmv(a,A,x,b,y)<td><code>y &lt;- a A x + b y</code>, 
+&nbsp;<code>A</code> Hermitian matrix in packed format 
+<tr><td><code>hpmv(A,x,y)<td><code>y &lt;- A x </code>, 
+&nbsp;<code>A</code> Hermitian matrix in packed format 
+</table>
 
 
-<h3><a name="level3blas">2.3 Level 3 BLAS</a></h3>
+<h3><a name="level3blas">2.4 Level 3 BLAS</a></h3>
 
 Defined in <code>atlas/cblas3.hpp</code>. 
 
+<p>
+Level 3 BLAS do matrix-matrix operations.
 
+<p> 
+In the following table <code>a</code>, <code>b</code> are scalars
+and <code>A</code>, <code>B</code>, <code>C</code> are matrices. For
+<code>TransA</code>, <code>TransB</code> see 
+<code>Trans</code> in <a href="#level2blas">2.3</a>.
+
+<p>
+<table border=1>
+<tr><th>Expression<th>Semantics
+<tr><td><code>gemm(TransA,TransB,a,A,B,b,C)<td>
+<code>C &lt;- a op(A) op(B) + b C &nbsp;
+where  &nbsp; <code>op (A) == A || A<sup>T</sup> || A<sup>H</sup></code>
+<tr><td><code>gemm(a,A,B,b,C)<td><code>C &lt;- a A B + b C &nbsp;
+<tr><td><code>gemm(A,B,C)<td><code>C &lt;- A B &nbsp;
+<tr><td><code>symm(a,A,B,b,C)<td><code>C &lt;- a A B + b C, &nbsp;
+<code>A</code> symmetric matrix 
+<tr><td><code>symm(a,B,A,b,C)<td><code>C &lt;- a B A + b C, &nbsp;
+<code>A</code> symmetric matrix 
+<tr><td><code>symm(A,B,C)<td><code>C &lt;- A B, &nbsp;
+<code>A</code> symmetric matrix 
+<tr><td><code>symm(B,A,C)<td><code>C &lt;- B A, &nbsp;
+<code>A</code> symmetric matrix 
+<tr><td><code>hemm(a,A,B,b,C)<td><code>C &lt;- a A B + b C, &nbsp;
+<code>A</code> Hermitian matrix 
+<tr><td><code>hemm(a,B,A,b,C)<td><code>C &lt;- a B A + b C, &nbsp;
+<code>A</code> Hermitian matrix 
+<tr><td><code>hemm(A,B,C)<td><code>C &lt;- A B, &nbsp;
+<code>A</code> Hermitian matrix 
+<tr><td><code>hemm(B,A,C)<td><code>C &lt;- B A, &nbsp;
+<code>A</code> Hermitian matrix 
+</table>
  
-<h3><a name="lapack">2.4 LAPACK functions</a></h3>
+<h3><a name="lapack">2.5 LAPACK routines</a></h3>
 
 Defined in <code>atlas/clapack.hpp</code>. 
 
+<p>
+ATLAS contains only few LAPACK routines: for the solutions of systems
+of simultaneous linear equations with general and with symmetric or
+Hermitian positive definite coefficient matrices<sup>[<a name="bnd.atl.3"
+href="#ftn.bnd.atl.3">3</a>]</sup>.
+
+<p>
+In general, LAPACK routines can be divided in
+<ul>
+<li><b>driver routines</b>, each of which solves complete problem (e.g. solving a system of linear equations); 
+<li><b>computational routines</b>, each of which performs a distinct computational task (e.g. <i>LU</i> factorization).
+</ul>
+For more informations about LAPACK routines see
+<a href="http://www.netlib.org/lapack/lug/">LAPACK Users' Guide</a>. 
+
+<p>
+<h4>2.5.1 General system of linear equations</h4>
+
+<dl>
+<dt><b><code>gesv</code></b> 
+<dd>driver routine -- computes the solution to a system of linear equations 
+<code>A X = B</code>, where <code>A</code> is general <i>n</i>-by-<i>n</i>
+matrix and <code>X</code> and <code>B</code> are
+<i>n</i>-by-<i>nrhs</i> matrices (<i>nrhs</i> denotes the number of
+right-hand side vectors)<sup>[<a name="bnd.atl.4"
+href="#ftn.bnd.atl.4">4</a>]</sup>. <code>A</code> is overwritten with
+the appropriate <i>LU</i> factorization and <code>B</code> is
+overwritten with the solution <code>X</code>. 
+
+<dt><b><code>getrf</code></b> 
+<dd>computational routine -- computes an <i>LU</i> factorisation of a
+general <i>m</i>-by-<i>n</i> matrix <code>A</code> using partial
+pivoting. Factorisation is <code>A = PLU</code>, where: 
+<ul>
+<li>if <code>A</code> is column major, <code>P</code> is a row-permutation
+matrix, <code>L</code> is lower triangular with unit diagonal elements
+(lower trapezoidal if <i>m&gt;n</i>), and <code>U</code> is upper
+triangular (upper trapezoidal if <i>m&lt;n</i>); 
+<li>if <code>A</code> is row major, <code>P</code> is a
+column-permutation matrix, <code>L</code> is lower triangular (lower
+trapezoidal if <i>m&gt;n</i>), and <code>U</code> is upper triangular
+with unit diagonals (upper trapezoidal if <i>m&lt;n</i>). 
+</ul>
+<code>A</code> is overwritten with the <i>LU</i> factorization. 
+
+<dt><b><code>getrs</code></b> 
+<dd>computational routine -- solves a system of linear equations 
+<code>AX = B</code> (or <code>A<sup>T</sup>X = B</code> or <code>A<sup>H</sup>X = B</code>)
+with a general <i>n</i>-by-<i>n</i> matrix <code>A</code> using the
+<i>LU</i>  factorization previously computed  by <code>getrf()</code>.
+<code>B</code> is overwritten with the solution <code>X</code>.
+
+<dt><b><code>getri</code></b> 
+<dd>computational routine -- computes the inverse of a general matrix <code>A</code>
+using the <i>LU</i> factorization previously computed by <code>getrf()</code>.
+Factors <code>LU</code> are overwritten with <code>A<sup>-1</sup></code>. 
+</dl>
+
+<p>
+In the following table <code>A</code>, <code>B</code>, <code>L</code>, <code>U</code> are matrices,
+<code>ipiv</code> is a vector of pivot indices (representing
+premutation matrix <code>P</code>), 
+<code>Trans</code> can be <code>CblasNoTrans</code>,
+<code>CblasTrans</code> or <code>CblasConjTrans</code>, denoting
+<code>A</code>, <code>A<sup>T</sup></code> or <code>A<sup>H</sup></code>, 
+respectively, and <code>ierr</code> is `diagnostic argument'
+<code>INFO</code> (as described in  
+<a href="http://www.netlib.org/lapack/lug/node119.html">LAPACK Users' Guide</a>). 
+
+<p>
+<table border=1>
+<tr><th>Expression<th>Semantics
+<tr><td><code>gesv(A,ipiv,B)</code><td>using <code>AP=LU</code>, 
+<code>B <- A<sup>-1</sup>B</code>, <code>A <- LU</code>,
+<code>ipiv <- P</code>; &nbsp; returns <code>ierr</code> 
+<tr><td><code>gesv(A,B)</code><td>as above, with <code>ipiv</code>
+allocated and deallocated internally
+<tr><td><code>lu_solve(A,B)</code><td>same as <code>gesv(A,B)</code>
+<tr><td><code>getrf(A,ipiv)</code><td>using <code>AP=LU</code>, 
+<code>A <- LU</code>, <code>ipiv <- P</code>; &nbsp; returns <code>ierr</code>
+<tr><td><code>lu_factor(A,ipiv)</code><td>same as <code>getrf(A,ipiv)</code>
+<tr><td><code>getrs(Trans,A,ipiv,B)</code><td>
+<code>B <- op(A)<sup>-1</sup>B</code> assuming  
+<code>A <- LU</code> and <code>ipiv <- P</code>, 
+&nbsp; <code>op (A) == A || A<sup>T</sup> || A<sup>H</sup></code>; 
+&nbsp; returns <code>ierr</code> 
+<tr><td><code>getrs(A,ipiv,B)</code><td><code>B <- A<sup>-1</sup>B</code> assuming <code>A <- LU</code> and <code>ipiv <- P</code>;
+&nbsp; returns <code>ierr</code> 
+<tr><td><code>lu_substitute(A,ipiv,B)</code><td>same as <code>getrs(A,ipiv,B)</code>
+<tr><td><code>getri(A,ipiv)</code><td><code>A <- A<sup>-1</sup></code> assuming <code>A <- LU</code> and <code>ipiv <- P</code>;
+&nbsp; returns <code>ierr</code> 
+<tr><td><code>lu_invert(A,ipiv)</code><td>same as <code>getri(A,ipiv)</code>
+</table>
+
+<p>
+<b>Example.</b> Solution to <code>A X = B</code> using driver function
+<code>gesv()</code>; <code>A</code> and <code>B</code> are column major:
+<pre class="programlisting">
+  #include &lt;iostream&gt;
+  #include &lt;boost/numeric/bindings/atlas/clapack.hpp&gt;
+  #include &lt;boost/numeric/bindings/traits/ublas_matrix.hpp&gt;
+  #include &lt;boost/numeric/ublas/io.hpp&gt;
+
+  namespace ublas = boost::numeric::ublas;
+  namespace atlas = boost::numeric::bindings::atlas;
+
+  int main() {
+    // system matrix: 
+    ublas::matrix&lt;double, ublas::column_major&gt; a(3,3);  
+    a(0,0) = 1.; a(0,1) = 1.; a(0,2) = 1.;
+    a(1,0) = 2.; a(1,1) = 3.; a(1,2) = 1.;
+    a(2,0) = 1.; a(2,1) = -1.; a(2,2) = -1.;
+    std::cout &lt;&lt; "A: " &lt;&lt; a &lt;&lt; std::endl;
+
+    // right-hand side matrix:
+    ublas::matrix&lt;double, ublas::column_major&gt; b(3,1);  
+    b(0,0) = 4.; b(1,0) = 9.; b(2,0) = -2.;
+    std::cout &lt;&lt; "B: " &lt;&lt; b &lt;&lt; std::endl;
+
+    // solve system: 
+    atlas::gesv (a, b);
+    // b contains solution: 
+    std::cout &lt;&lt; "X: " &lt;&lt; b &lt;&lt; std::endl;
+  }
+</pre> 
+Output is: 
+<pre>
+  A: [3,3]((1,1,1),(2,3,1),(1,-1,-1))
+  B: [3,1]((4),(9),(-2))
+  X: [3,1]((1),(2),(1))
+</pre>
+
+Same system, but with <code>A</code> and <code>B</code> row major
+(see <sup>[<a href="#ftn.bnd.atl.4">4</a>]</sup>):
+<pre class="programlisting">
+  #include &lt;iostream&gt;
+  #include &lt;boost/numeric/bindings/atlas/clapack.hpp&gt;
+  #include &lt;boost/numeric/bindings/traits/ublas_matrix.hpp&gt;
+  #include &lt;boost/numeric/ublas/io.hpp&gt;
+
+  namespace ublas = boost::numeric::ublas;
+  namespace atlas = boost::numeric::bindings::atlas;
+
+  int main() {
+    // system matrix: 
+    ublas::matrix&lt;double, ublas::row_major&gt; a(3,3);  
+    a(0,0) = 1.; a(0,1) = 1.; a(0,2) = 1.;
+    a(1,0) = 2.; a(1,1) = 3.; a(1,2) = 1.;
+    a(2,0) = 1.; a(2,1) = -1.; a(2,2) = -1.;
+    std::cout &lt;&lt; "A: " &lt;&lt; a &lt;&lt; std::endl;
+
+    // right-hand side matrix:
+    ublas::matrix&lt;double, ublas::row_major&gt; b(1,3);  
+    b(0,0) = 4.; b(0,1) = 9.; b(0,2) = -2.;
+    std::cout &lt;&lt; "B: " &lt;&lt; b &lt;&lt; std::endl;
+
+    // solve system: 
+    atlas::gesv (a, b);
+    std::cout &lt;&lt; "X: " &lt;&lt; b &lt;&lt; std::endl;
+  }
+</pre> 
+Output is: 
+<pre>
+  A: [3,3]((1,1,1),(2,3,1),(1,-1,-1))
+  B: [1,3]((4,9,-2))
+  X: [1,3]((1,2,1))
+</pre> 
+
+<p>
+<b>Example.</b> Solution to <code>A X = B</code> using computational functions
+<code>getrf()</code> and <code>getrs()</code>:
+<pre class="programlisting">
+  #include &lt;iostream&gt;
+  #include &lt;boost/numeric/bindings/atlas/clapack.hpp&gt;
+  #include &lt;boost/numeric/bindings/traits/std_vector.hpp&gt;
+  #include &lt;boost/numeric/bindings/traits/ublas_matrix.hpp&gt;
+  #include &lt;boost/numeric/ublas/io.hpp&gt;
+
+  namespace ublas = boost::numeric::ublas;
+  namespace atlas = boost::numeric::bindings::atlas;
+
+  int main() {
+    // n -- no. of equations; nrhs -- no. of right-hand side vectors
+    ublas::matrix&lt;double, ublas::column_major&gt; a(n,n);  // system matrix
+    ublas::matrix&lt;double, ublas::column_major&gt; b(n,nrhs);  // right-hand side matrix
+    // fill a &amp; b
+    std::vector&lt;int&gt; ipiv(n);  // pivot vector
+
+    int ierr = atlas::getrf (a, ipiv);  // factorise a
+    if (ierr == 0) {
+      atlas::getrs (a, ipiv, b);  // solve from factorization 
+      std::cout << "X: " << b << std::endl;
+    }
+    else 
+      std::cout << "matrix is singular: ierr = " << ierr << std::endl;
+  }
+</pre>
+
+<h4>2.5.2 Positive definite system of linear equations</h4>
+
+Symmetric/Hermitian matrix <code>A</code> should be represented by 
+<i>n</i>-by-<i>n</i> array; there are two possibilities:
+<ul>
+<li>the leading <i>n</i>-by-<i>n</i> upper
+triangular part of the array contains the upper triangular part of
+<code>A</code>, and the strictly lower triangular part is not referenced;  
+<li>the leading <i>n</i>-by-<i>n</i> 
+lower triangular part of the array contains the lower triangular part
+of <code>A</code>, and the strictly upper triangular part is not referenced.
+</ul>
+In the case of <a href="http://www.boost.org/libs/numeric/ublas/doc/symmetric.htm#symmetric_adaptor"><code>ublas::symmetric_adaptor&lt;&gt;</code></a>
+and <a href="http://www.boost.org/libs/numeric/ublas/doc/hermitian.htm#hermitian_adaptor"><code>ublas::hermitian_adaptor&lt;&gt;</code></a>, 
+<a href="../../traits/doc/index.html">traits mechanism</a> can
+automagickly determine which part of the matrix <code>A</code> is
+stored.  
+
+<dl>
+<dt><b><code>posv</code></b> 
+<dd>driver routine -- computes the solution to a system of linear equations 
+<code>A X = B</code>, where <code>A</code> is <i>n</i>-by-<i>n</i>
+symmetric/Hermitian positive definite matrix and <code>X</code> and <code>B</code> are
+<i>n</i>-by-<i>nrhs</i> matrices (<i>nrhs</i> denotes the number of
+right-hand side vectors)<sup>[<a href="#ftn.bnd.atl.4">4</a>]</sup>. Stored part of 
+<code>A</code> is overwritten with the factor <code>U</code> or
+<code>L</code> from the Cholesky factorization 
+<code>A = U<sup>T</sup>U</code> or <code>A = LL<sup>T</sup></code> 
+(or <code>A = U<sup>H</sup>U</code> or <code>A = LL<sup>H</sup></code>)
+and <code>B</code> is overwritten with the solution <code>X</code>. 
+
+<dt><b><code>potrf</code></b> 
+<dd>computational routine -- computes the Cholesky factorisation of a
+symmetric or Hermitian positive definite <i>n</i>-by-<i>n</i> matrix
+<code>A</code>:
+<code>A = U<sup>T</sup>U<code> or <code>A = LL<sup>T</sup><code> 
+(or <code>A = U<sup>H</sup>U<code> or <code>A =
+LL<sup>H</sup><code>). Factors <code>U</code> or <code>L</code>
+overwrite stored part of <code>A</code>.
+
+<dt><b><code>potrs</code></b> 
+<dd>computational routine -- solves a system of linear equations 
+<code>AX = B</code> with a symmetric or Hermitian positive definite <i>n</i>-by-<i>n</i> matrix <code>A</code> using the
+Cholesky factorization previously computed by <code>potrf()</code>.
+<code>B</code> is overwritten with the solution <code>X</code>.
+
+<dt><b><code>potri</code></b> 
+<dd>computational routine -- computes the inverse of symmetric or Hermitian positive definite matrix <code>A</code>
+using the Cholesky factorization previously computed by <code>potrf()</code>.
+Factors <code>U</code> or <code>L</code> are overwritten with
+appropriate part of <code>A<sup>-1</sup></code>. 
+</dl>
+
+<p>
+In the following table <code>A</code>, <code>B</code>, <code>L</code>,
+<code>U</code> are matrices and <code>ierr</code> is LAPACK's `diagnostic argument'
+<code>INFO</code>. 
+
+<p>
+<table border=1>
+<tr><th>Expression<th>Semantics
+<tr><td><code>posv(A,B)</code><td>
+<code>B <- A<sup>-1</sup>B</code>, using 
+<code>A = U<sup>T</sup>U</code> or <code>A = LL<sup>T</sup></code> 
+or <code>A = U<sup>H</sup>U</code> or <code>A = LL<sup>H</sup></code>; 
+&nbsp; returns <code>ierr</code> 
+<tr><td><code>cholesky_solve(A,B)</code><td>same as <code>posv(A,B)</code>
+<tr><td><code>potrf(A)</code><td>
+<code>A = U<sup>T</sup>U</code> or <code>A = LL<sup>T</sup></code> 
+or <code>A = U<sup>H</sup>U</code> or <code>A = LL<sup>H</sup></code>; 
+&nbsp; returns <code>ierr</code>
+<tr><td><code>cholesky_factor(A)</code><td>same as <code>potrf(A)</code>
+<tr><td><code>potrs(A,B)</code><td>
+<code>B <- A<sup>-1</sup>B</code> assuming  
+<code>A = U<sup>T</sup>U</code> or <code>A = LL<sup>T</sup></code> 
+or <code>A = U<sup>H</sup>U</code> or <code>A = LL<sup>H</sup></code>; 
+&nbsp; returns <code>ierr</code> 
+<tr><td><code>cholesky_substitute(A,B)</code><td>same as <code>potrs(A,B)</code>
+<tr><td><code>potri(A)</code><td><code>A <- A<sup>-1</sup></code> assuming 
+<code>A = U<sup>T</sup>U</code> or <code>A = LL<sup>T</sup></code> 
+or <code>A = U<sup>H</sup>U</code> or <code>A = LL<sup>H</sup></code>; 
+&nbsp; returns <code>ierr</code> 
+<tr><td><code>cholesky_invert(A)</code><td>same as <code>getri(A)</code>
+</table>
+
+<p>
+<b>Example.</b> Solution to <code>A X = B</code>, with <code>A</code>
+Hermitian positive definite matrix (lower triangular part is stored): 
+<pre class="programlisting">
+  #include &lt;iostream&gt;
+  #include &lt;complex&gt;
+  #include &lt;boost/numeric/bindings/atlas/clapack.hpp&gt;
+  #include &lt;boost/numeric/bindings/traits/ublas_matrix.hpp&gt;
+  #include &lt;boost/numeric/bindings/traits/ublas_hermitian.hpp&gt;
+  #include &lt;boost/numeric/ublas/io.hpp&gt;
+
+  namespace ublas = boost::numeric::ublas;
+  namespace atlas = boost::numeric::bindings::atlas;
+
+  typedef std::complex&lt;double&gt; cmplx_t;
+  typedef ublas::matrix&lt;cmplx_t, ublas::column_major&gt; cm_t;
+  typedef ublas::hermitian_adaptor&lt;cm_t, ublas::lower&gt; herm_t;
+
+  int main() {
+    cm_t ca(3,3);  // matrix (storage)
+    herm_t ha(ca);  // hermitian adaptor 
+    ha(0,0) = cmplx_t (25,0);
+    ha(1,0) = cmplx_t (-5,5);  
+    ha(1,1) = cmplx_t (51,0);
+    ha(2,0) = cmplx_t (10,-5);
+    ha(2,1) = cmplx_t (4,6);
+    ha(2,2) = cmplx_t (71,0);
+
+    cm_t cb(3,2);  // right-hand side 
+    cb(0,0) = cmplx_t (60,-55);
+    cb(1,0) = cmplx_t (34,58);
+    cb(2,0) = cmplx_t (13,-152);
+    cb(0,1) = cmplx_t (70,10);
+    cb(1,1) = cmplx_t (-51,110);
+    cb(2,1) = cmplx_t (75,63);
+  
+    atlas::posv (ha, cb);  // solve system
+    std::cout &lt;&lt; "X: " &lt;&lt; cb &lt;&lt; std::endl; 
+  }
+</pre>
+
+<p>
+<b>Example.</b> Inverse of the symmetric positive definite matrix
+<code>A</code> (upper triangular part is stored):
+<pre class="programlisting">
+  #include &lt;iostream&gt;
+  #include &lt;boost/numeric/bindings/atlas/cblas3.hpp&gt;
+  #include &lt;boost/numeric/bindings/atlas/clapack.hpp&gt;
+  #include &lt;boost/numeric/bindings/traits/ublas_matrix.hpp&gt;
+  #include &lt;boost/numeric/bindings/traits/ublas_hermitian.hpp&gt;
+  #include &lt;boost/numeric/ublas/io.hpp&gt;
+
+  namespace ublas = boost::numeric::ublas;
+  namespace atlas = boost::numeric::bindings::atlas;
+
+  typedef ublas::matrix&lt;double&gt; m_t;
+  typedef ublas::symmetric_adaptor&lt;m_t, ublas::upper&gt; symm_t;
+
+  int main() {
+    m_t a(5,5);  // matrix (storage)
+    // a = 
+    //   [5 4 3 2 1]
+    //   [0 5 4 3 2]
+    //   [0 0 5 4 3]
+    //   [0 0 0 5 4]
+    //   [0 0 0 0 5]
+    symm_t sa(a);  // symmetric adaptor 
+    m_t a2(sa);  // copy of sa (full symmetric) 
+
+    atlas::potrf (sa);  // factorise sa
+    atlas::potri (sa);  // compute inverse 
+
+    // ri is (almost) identity matrix: 
+    m_t ri(5,5);
+    atlas::symm (a2, sa, ri);  
+    std::cout << "I = A * A^(-1): " << ri << std::endl;
+    atlas::symm (sa, a2, ri);  
+    std::cout << "I = A^(-1) * A: " << ri << std::endl;
+  }
+</pre>
+(<a href="#level3blas">BLAS level 3</a> function <code>symm()</code>
+computes <code>AB</code> or <code>BA</code>, where <code>A</code> is
+symmetric (only upper or lower triangular part is referenced) and
+<code>B</code> is general matrix -- in our example, therefore, <code>a2</code> is `full' matrix.) 
 
 
+<br>
+<div class="footnotes"><br><hr width="100" align="left"><div
+class="footnote">
 
-
-<div class="footnotes"><br><hr width="100" align="left"><div class="footnote"><p><sup>[<a name="ftn.bnd.atl.1" href="#bnd.atl.1">1</a>] </sup>
-Note that C prior to C99 didn't have complex data type. Parameters 
+<p><sup>[<a name="ftn.bnd.atl.1" href="#bnd.atl.1">1</a>]</sup>
+C, prior to C99, didn't have complex data type. Parameters 
 of complex versions are therefore <code>void*</code> or <code>const void*</code>, and 
 it is assumed that ``a complex element consists of two consecutive
 memory locations of the underlying data type (i.e., <code>float</code>
 or <code>double</code>), where the first location contains the real
 component, and the second contains the imaginary component''. 
+
+<p><sup>[<a name="ftn.bnd.atl.2" href="#bnd.atl.2">2</a>]</sup>
+In fact, <code>clapack_inc.hpp</code> must include both <code>atlas_enum.h</code>
+and <code>clapack.h</code> because of a small bug in ATLAS
+-- besides CBLAS enumerations ATLAS defines its own enumerations in <code>atlas_enum.h</code> which are used in <code>clapack.h</code>, but <code>clapack.h</code>
+doesn't include <code>atlas_enum.h</code>.
+(It should be noted that <a
+href="http://math-atlas.sourceforge.net/errata.html#lp_h">ATLAS errata</a> proposes another, intrusive solution.) 
+
+<p><sup>[<a name="ftn.bnd.atl.3" href="#bnd.atl.3">3</a>]</sup>
+There are two more functions: <code>xlauum()</code> and <code>xtrtri()</code>. 
+
+<p><sup>[<a name="ftn.bnd.atl.4" href="#bnd.atl.4">4</a>]</sup>
+ATLAS functions can be applied to matrices with both column major and
+row major storage orders. But there is a `catch' with row major
+solves and factorisations. To quote from 
+<a href="http://math-atlas.sourceforge.net/faq.html#RowSolve">ATLAS FAQ</a>:
+``Most users are confused by the row major factorization and related solves. The right-hand side vectors are probably the biggest source of confusion. The RHS array does not represent a matrix in the mathematical sense, it is instead a pasting together of the various RHS into one array for calling convenience. As such, RHS vectors are always stored contiguously, regardless of the row/col major that is chosen.''
+That is, if <code>B</code> is row-major, it should be <i>nrhs</i>-by-<i>n</i>, 
+and RHS vectors should be its rows, not columns. 
+
 
 
 </body>
