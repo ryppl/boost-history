@@ -378,10 +378,6 @@ public:
     template <typename B, typename A, typename stringT>
     friend void to_string_helper (const dynamic_bitset<B, A> & b, stringT & s, std::size_t len);
 
-    // stream extractor helper
-    template <typename B, typename A>
-    friend void from_vect_of_blocks(std::vector<B> const & vect,
-                                    typename dynamic_bitset<B, A>::size_type nbits, dynamic_bitset<B, A>& b);
 
 #endif
 
@@ -401,6 +397,7 @@ private:
 
 BOOST_DYN_BITSET_PRIVATE:
 
+    void m_rearrange_extracted_bits(size_type num_bits);
     static size_type calc_num_blocks(size_type num_bits)
     { return (num_bits + (bits_per_block - 1)) / bits_per_block; }
 
@@ -1369,129 +1366,6 @@ operator<<(std::basic_ostream<CharT, Traits>& os,
 #endif
 
 
-// ---------------------------------------------------------------------
-// manipulators
-
-
-// boost::bs_limit
-//
-// semantics (informal)
-// ~~~~~~~~~~~~~~~~~~~~
-//  Given a dynamic_bitset object bs:
-//
-//  a) cin >> boost::bs_limit(boost::bsinf) >> bs;
-//     Extracts as many characters as possible,
-//     eventually resizing bs as needed.
-//
-//  b) cin >> boost::bs_limit(20) >> bs
-//     Extracts at most 20 characters (regardless
-//     of bs.size())
-//
-//  c) cin >> boost::bs_limit(0)
-//     Restores the default behavior (which is the
-//     same behavior of std::bitset)
-
-// Implementation note:
-//       when type_ == inf, the value of m_n has no meaning
-//       (it's 0 or the value previously set); thus you must
-//       always check for that value before using m_n
-//
-enum bsinf_type { bsinf };
-class bs_limit {
-
-public:
-    enum type { unset, set, inf };
-    explicit bs_limit(std::size_t n) : type_(set), m_n(n) {}
-    explicit bs_limit(bsinf_type) : type_(inf) {}
-
-    template <typename Stream>
-        friend Stream& operator>>(Stream&, const bs_limit&); // G.P.S.
-
-//private: // made public for simplicity
-    type type_;
-    std::size_t m_n;
-
-    static int const bsTypeIdx;
-    static int const bsLimitIdx;
-};
-
-
-namespace detail {
-# ifdef BOOST_OLD_IOSTREAMS
-    typedef std::ios      io_hierarchy_base;
-# else
-    typedef std::ios_base io_hierarchy_base;
-# endif
-}
-int const bs_limit::bsTypeIdx = detail::io_hierarchy_base::xalloc();
-int const bs_limit::bsLimitIdx = detail::io_hierarchy_base::xalloc();
-
-
-
-// parametrized on the whole stream to
-// make it work with both new and old iostreams
-//
-template <typename Stream>
-Stream & operator>>( Stream& is, const bs_limit& m)
-{
-    is.iword(bs_limit::bsTypeIdx) = static_cast<long> (m.type_);
-
-    if (m.type_ != bs_limit::inf)
-        is.iword(bs_limit::bsLimitIdx) = m.m_n;
-
-    return is;
-}
-
-template <typename Stream>
-inline bool can_extract_infinite_bitsets(Stream & is)
-{
-    return is.iword(bs_limit::bsTypeIdx) == bs_limit::inf;
-}
-
-template <typename Stream>
-inline std::size_t bitset_max_bits(Stream & is)
-{
- return is.iword(bs_limit::bsLimitIdx);
-}
-// ----------------------------------------------------------------------
-
-// helper for stream extraction
-// copies bits from a vector of blocks, where they
-// are temporarily stored during extraction
-//
-template <typename B, typename A>
-void from_vect_of_blocks(std::vector<B> const & vect,
-                                typename dynamic_bitset<B, A>::size_type nbits, dynamic_bitset<B, A>& b)
-{
-
-    typedef typename dynamic_bitset<B, A>::size_type size_type;
-    size_type const bits_per_block = dynamic_bitset<B, A>::bits_per_block;
-
-    // G.P.S.
-    //
-    b.resize(nbits);
-
-    if (!nbits)
-        return; // G.P.S.
-
-    size_type const r = nbits % bits_per_block;
-    size_type const lasti = b.num_blocks() - 1; // G.P.S.
-    size_type const rs = bits_per_block - r;
-
-    if (r) {
-        for (size_type i = lasti; i>0; --i) // G.P.S.
-            b.m_bits[lasti-i] = (vect[i] >> rs) | (vect[i-1] << r);
-
-        b.m_bits[lasti] = vect[0] >> rs;
-    }
-    else {
-        for (size_type i = lasti; i>0; --i)
-            b.m_bits[lasti-i] = vect[i];
-        b.m_bits[lasti] = vect[0];
-    }
-}
-
-
 #ifdef BOOST_OLD_IOSTREAMS
 template <typename Block, typename Allocator>
 std::istream&
@@ -1540,85 +1414,116 @@ operator>>(std::istream& is, dynamic_bitset<Block, Allocator>& b)
 }
 #else // BOOST_OLD_IOSTREAMS
 
-// Dynamic resizing is supported here, in a way similar to extraction
-// of std::string-s. The strategy is to store the extracted bits in
-// a vector<> of Blocks.
+
+// Helper for stream extraction: since dynamic_bitset offers no
+// efficient way to append to the less significant end we store blocks
+// backward during extraction and then reverse them at the end.
 //
-// [gps]
-//
-template <typename CharT, typename Traits, typename Block, typename Allocator>
-std::basic_istream<CharT, Traits>&
-operator>>(std::basic_istream<CharT, Traits>& is,
-           dynamic_bitset<Block, Allocator>& b)
+template <typename Block, typename Allocator>
+void
+dynamic_bitset<Block, Allocator>::m_rearrange_extracted_bits(size_type
+                                                             bits_read)
+{
+    // Reverse the order of the blocks and, if needed, shift to the right
+    std::reverse(m_bits.begin(), m_bits.end());
+    
+    const int offset = bit_index(bits_read);
+    if (offset)
+        (*this) >>= (bits_per_block - offset);
+    resize(bits_read); // this is never a grow
+    
+}
+
+
+template <typename Ch, typename Tr, typename Block, typename Alloc>
+std::basic_istream<Ch, Tr>&
+operator>>(std::basic_istream<Ch, Tr>& is, dynamic_bitset<Block, Alloc>& b)
 {
     // G.P.S. size_t vs size_type to be inspected
 
     using namespace std;
 
-    // Check user-defined fmt variables
+    const streamsize w = is.width();
+    const size_t limit = w > 0 ? w : static_cast<size_t>(-1); // G.P.S. stream_size?
+
+    const ios_base::iostate ok = ios_base::goodbit;
+    ios_base::iostate err = ok; // G.P.S.
+
+    // in accordance with prop. resol. of lib dr 303.
     //
-    vector<Block> vect;
-    size_t limit;
-    if (can_extract_infinite_bitsets(is))
-        limit = (static_cast<size_t>(-1)) - 1; // avoid using numeric_limits [gps]
-    else {
-        limit = bitset_max_bits(is);
-        if (0 == limit) limit = b.size();
-        vect.reserve(b.calc_num_blocks(limit)); // may throw std::bad_alloc
-    }
+    const Ch zero = is.widen('0');
+    const Ch one  = is.widen('1');
 
-
-    ios_base::iostate err = ios_base::goodbit; // G.P.S.
-    CharT const zero = is.widen('0'); // in accordance with prop. resol. of lib dr 303.
-    CharT const one  = is.widen('1');
-
-    typename std::basic_istream<CharT, Traits>::sentry iprefix(is); // skips whitespaces
+    typename basic_istream<Ch, Tr>::sentry iprefix(is); // skips whitespaces
+    size_t bits_stored = 0;
     try {
 
         if (iprefix) {
-            size_t const bits_per_block = dynamic_bitset<Block, Allocator>::bits_per_block;
+            
+            b.clear();
+            
+            basic_streambuf <Ch, Tr> * buf = is.rdbuf();
+            typename vector<Block, Alloc>::iterator it;
 
-            basic_streambuf <CharT, Traits> * buf = is.rdbuf();// basic_streambuf è giusto?
-            typename vector<Block>::iterator it;
+            const Block max_mask
+               = Block(1) << (dynamic_bitset<Block, Alloc>::bits_per_block - 1);
+            Block mask = 0;
 
-            Block  mask      = 0;
-            size_t bits_read = 0;
-            typename Traits::int_type c = buf->sgetc(); // G.P.S.
-            for (; err == ios_base::goodbit && bits_read < limit; c = buf->snextc()) {
-
-                if (mask == 0) {
-                    mask = Block(1) << (bits_per_block-1);
-                    vect.push_back(0);
-                    it = vect.end() - 1;
-                }
-
-                if (Traits::eq_int_type(Traits::eof(), c))
-                    err |= ios_base::eofbit;   // G.P.S.
+            typename Tr::int_type c = buf->sgetc(); // G.P.S.
+            for( ; err == ok && bits_stored < limit; c = buf->snextc() ) {
+                
+                if (Tr::eq_int_type(Tr::eof(), c))
+                    err |= ios_base::eofbit; // G.P.S.
                 else {
-                    CharT to_c = Traits::to_char_type(c);
-
-                    if (Traits::eq(to_c, one))
-                        *it |= mask;
-                    else if (!Traits::eq(to_c, zero)) // G.P.S.
+                    const Ch to_c = Tr::to_char_type(c);
+                    const bool is_one = Tr::eq(to_c, one);
+                    
+                    if (!is_one && !Tr::eq(to_c, zero))
                         break; // non digit character
-
+                    
+                    // need a new block; put it at the most
+                    // significant end, for now
+                    //
+                    if (mask == 0) {
+                        b.append(0);
+                        it = b.m_bits.end() - 1; // G.P.S. last_block()?
+                        mask = max_mask;
+                    }
+                    
+                    if(is_one)
+                        *it |= mask;
+                    
                     mask >>= 1;
-                    ++bits_read;
+                    ++bits_stored;
                 }
+                
             } // for
 
-            if (bits_read)
-                from_vect_of_blocks(vect, bits_read, b);
+
+            if (bits_stored) {
+                b.m_rearrange_extracted_bits(bits_stored);
+            }
+            else {
+                err |= ios_base::failbit;
+            }
 
         }
 
-    }
+    } catch (...) {
+        // catches from stream buf, or from vector:
+        //
+        // bits_stored bits have been extracted and stored, and
+        // either no further character is extractable or we can't
+        // append to the underlying vector (out of memory)
 
-    catch (...) {
-        // catches from stream buf, or from vector, except
-        // bad_alloc originating from the initial vector<>::reserve()
+        b.m_rearrange_extracted_bits(bits_stored);
+
         bool rethrow_original = false;
-        try { is.setstate(ios_base::failbit); } catch(...) { rethrow_original = true; }
+        try {
+          is.setstate(ios_base::failbit);
+        } catch(...) {
+            rethrow_original = true;
+        }
 
         if (rethrow_original)
             throw;
