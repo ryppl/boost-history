@@ -191,6 +191,8 @@ public:
     dynamic_bitset&amp; <a href=
 "#assign">operator=</a>(const dynamic_bitset&amp; b);
 
+    allocator_type <a href="#get_allocator">get_allocator()</a> const;
+
     void <a href=
 "#resize">resize</a>(size_type num_bits, bool value = false);
     void <a href="#clear">clear</a>();
@@ -239,6 +241,9 @@ public:
 
     size_type <a href="#size">size</a>() const;
     size_type <a href="#num_blocks">num_blocks</a>() const;
+    size_type <a href="#max_size">max_size()</a> const;
+    void <a href="#reserve">reserve</a>(size_type n);
+    size_type <a href="#capacity" >capacity()</a> const;
 
     bool <a href=
 "#is_subset_of">is_subset_of</a>(const dynamic_bitset&amp; a) const;
@@ -863,6 +868,12 @@ dynamic_bitset&amp; <a name=
 
 <hr>
 <pre>
+allocator_type <a name="get_allocator">get_allocator()</a> const;
+</pre>
+ <b>Returns:</b> A copy of the allocator object used to construct <tt>*this</tt>.
+
+<hr>
+<pre>
 void <a name=
 "resize">resize</a>(size_type num_bits, bool value = false);
 </pre>
@@ -1153,6 +1164,41 @@ size_type <a name="num_blocks">num_blocks</a>() const
 
 <b>Returns:</b> the number of blocks in this bitset.<br>
 <b>Throws:</b> nothing.
+
+<hr>
+<pre>
+size_type <a name="max_size">max_size()</a> const;
+</pre>
+
+<b>Returns:</b> the maximum size of a <tt>dynamic_bitset</tt>
+object having the same type as <tt>*this</tt>. Note that if
+any <tt>dynamic_bitset</tt> operation causes <tt>size()</tt> to
+exceed <tt>max_size()</tt> then the <i>behavior is undefined</i>.
+<br><br>[The semantics of this function could change slightly
+when lib issue 197 will be closed - G.P.S.]<br>
+
+<hr>
+<pre>
+void <a name="reserve">reserve</a>(size_type n);
+</pre>
+<b>Precondition:</b> <tt>n &lt;= this-&gt;max_size()</tt>.<br>
+<b>Effects:</b> informs the <tt>dynamic_bitset</tt> of a planned
+change in size(), so that reallocations can be managed accordingly.
+If before the call the dynamic_bitset's capacity is >= n then no
+reallocation happens and capacity remains unchanged. Otherwise
+storage is allocated and capacity becomes greater or equal to n.
+In any case, size() does not change.<br>
+<b>Throws:</b> An allocation error if <tt>n &gt; capacity()</tt>
+and memory is exhausted (<tt>std::bad_alloc</tt> if <tt>
+Allocator=std::allocator</tt>). 
+
+<hr>
+<pre>
+size_type <a name="capacity">capacity()</a> const;
+</pre>
+
+<b>Returns:</b> the total number of elements that <tt>*this</tt>
+can hold without requiring reallocation.<br>
 
 <hr>
 <pre>
