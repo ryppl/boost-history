@@ -166,6 +166,19 @@ namespace boost {
                     container_max;
     }
 
+    // for static_asserts
+    template <typename T>
+    struct dynamic_bitset_allowed_block_type {
+        enum { value = T(-1) > 0 }; // ensure T has no sign
+    };
+
+    template <>
+    struct dynamic_bitset_allowed_block_type<bool> {
+        enum { value = false };
+    };
+
+
+
   } // namespace detail
 
 } // namespace boost
