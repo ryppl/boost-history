@@ -908,10 +908,10 @@ double f(double const x, double const y)   // definition
       variable</i>.
 
       <p>
-      7.13.        <b>Write names as they appear in code.</b> Function and
-      variable names are lower-case even at the beginning of a sentence Names of
-      classes are capitalized, wherever they appear. Function names have
-      ``<tt>()</tt>''appended.
+      7.13. <b>Write names as they appear in code.</b> Function,
+      variable and type names are lower-case even at the beginning of
+      a sentence. Names of Concepts are capitalized, wherever they
+      appear. Function names have ``<tt>()</tt>'' appended.
 
       <p>
       7.14.        <b>Class
@@ -927,16 +927,14 @@ double f(double const x, double const y)   // definition
 
       <h3><a name="AEN222">Discussion:</a></h3>
 
-      <p>The problem with <tt>/*</tt>...<tt>*/</tt> is that it doesn't nest
-      properly.  People sometimes try to comment out a long section by enclosing
-      it in <tt>/*</tt>...<tt>*/</tt>, but if it already contains
-      <tt>/*</tt>...<tt>*/</tt> somewhere, then the first <tt>*/</tt> ends the
-      comment. This is especially dangerous if the section is long enough that
-      you can't see the inner <tt>/*</tt>...<tt>*/</tt>: your syntax highlighter
-      won't show you the problem. It is often suggested that
-      <tt>/*</tt>...<tt>*/</tt> should be allowed for <i>text</i> comments, but
-      you can embed code examples in text, which causes the same nesting
-      problem.
+      <p>The problem with <tt>/*</tt>...<tt>*/</tt> is that it doesn't
+      nest properly.  People sometimes try to comment out a long
+      section by enclosing it in <tt>/*</tt>...<tt>*/</tt>, but if it
+      already contains <tt>/*</tt>...<tt>*/</tt> somewhere, then the
+      first <tt>*/</tt> ends the comment. It is often suggested that
+      <tt>/*</tt>...<tt>*/</tt> should be allowed for <i>text</i>
+      comments, but you can embed code examples in text, which causes
+      the same nesting problem.
 
 
 
@@ -1023,22 +1021,15 @@ double f(double const x, double const y)   // definition
       types, member functions, and data members.
 
       <p>
-      8.7.   <b>Do not repeat the
-      `virtual' keyword</b> where derived classes declare overrides
-      for base class virtual functions. Writing `virtual' on the
-      declaration of a virtual function override is neither neccessary nor
-      sufficient to document where it comes from and which code it interacts
-      with. Leaving the keyword off in derived classes reduces clutter and
-      thwarts the temptation to treat it as sufficient documentation.
+      8.7.   <b>Do not repeat the `virtual' keyword</b> where derived
+      classes declare overrides for base class virtual
+      functions. Instead, group and label virtual function overrides
+      as shown in <a href="#override_group">this example</a>. 
 
       <p>
       8.8.   <b>Do not write the
       `<tt>inline</tt>' keyword on member function declarations</b>. It is
       sufficient to use `inline' on the function definition.
-      Writing `<tt>inline</tt>' on the declaration of a member function
-      documents an implementation detail in an inappropriate place. A class
-      declaration should clearly document interface. Implementation details
-      should be documented where they are implemented.
 
       <h3><a name="AEN263">Example:</a></h3>
 
@@ -1067,7 +1058,7 @@ struct outer::compare
 };
 </pre><hr><pre>
 // foo.hpp
-class foo
+class foo : public abstract_base1, public base2
 {
  public:
     // base_name specifies the common prefix for results of
@@ -1107,8 +1098,17 @@ class foo
     // Schnix is expected to blah and is called when blah.
     virtual void schnix() = 0;
 
+ <a name="override_group">private</a>: // abstract_base1 required implementation
+    void base1_f1();         <i><font color="#0000FF">interface comments for these live in abstract_base1</font></i>
+    void base1_f2();
+    int base1_f3();
+ 
+ private: // base2 overrides
+    void base2_f1();         <i><font color="#0000FF">interface comments for these live in base2</font></i>
+    void base2_f2();
+
  private: // helper functions
-    int invocations() const;        <i>comments for these live with their implementations</i>
+    int invocations() const; <i><font color="#0000FF">comments for these live with their implementations</font></i>
     void g(int);           
  
  private: // data members
@@ -1160,11 +1160,23 @@ class foobar : public foo, public foobaz
       interface is still hard to take in at a glance, consider refactoring it
       into smaller parts.
 
+      <p>Writing `virtual' on the
+      declaration of a virtual function override is neither neccessary nor
+      sufficient to document where it comes from and which code it interacts
+      with. Leaving the keyword off in derived classes reduces clutter and
+      thwarts the temptation to treat it as sufficient documentation.
+
       <p>Inlines are the third most-misused C++ feature (after inheritance and
       overloading), used far more often than any practical criterion could
       justify, just because it is more covenient to write them in place.
       Anything that encourages their use beyond strict engineering merit is
       detrimental.
+
+      <p>  Writing `<tt>inline</tt>' on the declaration of a member function
+      documents an implementation detail in an inappropriate place. A class
+      declaration should clearly document interface. Implementation details
+      should be documented where they are implemented.
+
 
       <p>Function objects are often just wrappers over a simple function or
       function template. Separating interface from implementation in that case
