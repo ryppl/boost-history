@@ -4,15 +4,20 @@
 #ifndef OVERRIDE_DWA2004922_HPP
 # define OVERRIDE_DWA2004922_HPP
 
+# include <boost/langbinding/classes/aux_/arg_ptr.hpp>
 # include <boost/langbinding/util/type_id.hpp>
 # include <boost/langbinding/backend/call_xxx_data.hpp>
 # include <boost/langbinding/backend/plugin.hpp>
 # include <boost/implicit_cast.hpp>
 # include <boost/aligned_storage.hpp>
 # include <boost/type_traits/alignment_of.hpp>
+# include <boost/type_traits/remove_cv.hpp>
+# include <boost/type_traits/add_pointer.hpp>
+# include <boost/type_traits/remove_reference.hpp>
 # include <boost/mpl/vector/vector10.hpp>
 # include <boost/mpl/for_each.hpp>
 # include <boost/mpl/size.hpp>
+# include <boost/mpl/if.hpp>
 # include <boost/mpl/int.hpp>
 # include <boost/mpl/min_max.hpp>
 # include <algorithm>
@@ -27,7 +32,7 @@ namespace aux
         : types(types) {}
       
       template <class T>
-      void operator()(mpl::identity<T>)
+      void operator()(T*)
       {
           *++types = util::type_id<T>();
       }
@@ -44,11 +49,20 @@ namespace aux
 
    private:
       call_xxx_data()
-        : backend::call_xxx_data(arity, this->types)
+        : backend::call_xxx_data(arity, types)
       {
           types[0] = util::type_id<Result>();
           write_id processor(types);
-          mpl::for_each<Args, mpl::identity<mpl::_> >(processor);
+
+          using mpl::_;
+          mpl::for_each<
+              Args
+            , mpl::if_<
+                  is_pointer<_>
+                , mpl::identity<_>
+                , add_pointer<remove_reference<_> >
+              >
+          >(processor);
       }
 
       util::type_info types[mpl::size<Args>::value + 1];
@@ -57,6 +71,15 @@ namespace aux
   template <class Result, class Args>
   call_xxx_data<Result,Args> call_xxx_data<Result,Args>::instance;
 
+  template <class T>
+  struct destructor
+  {
+      destructor(T& x) : object(x) {}
+      ~destructor() { object.~T(); }
+   private:
+      T& object;
+  };
+      
   template <class Args>
   struct proxy
   {
@@ -75,24 +98,29 @@ namespace aux
       operator T() const
       {
           boost::aligned_storage<sizeof(T), boost::alignment_of<T>::value> storage;
-          
-          return back_end.call(
+          T* const address = static_cast<T*>(storage.address());
+              
+          void* result = back_end.call(
               impl
             , call_xxx_data<T,Args>::instance
-            , storage.address()
+            , address
             , this->args);
+
+          if (result != address)
+          {
+              return *static_cast<T*>(result);
+          }
+          else
+          {
+              destructor<T> cleanup(*address);
+              return *address;
+          }
       }
 
       template <class T>
       operator T*() 
       {
-          return &implicit_cast<T&>(*this); // dispatch to the T& case below.
-      }
-
-      template <class T>
-      operator T&() const volatile
-      {
-          return *static_cast<T*>(
+          return static_cast<T*>(
               back_end.call(
                   impl
                 , call_xxx_data<typename remove_cv<T>::type,Args>::instance
@@ -101,6 +129,15 @@ namespace aux
           );
       }
 
+#  if !defined(BOOST_MSVC) || BOOST_WORKAROUND(_MSC_FULL_VER, > 140040607)
+      // vc7.1 users should explicitly convert to T* and dereference
+      template <class T>
+      operator T&() const volatile
+      {
+          return *static_cast<T*>(*this);
+      }
+#  endif
+      
    private:
       backend::plugin const& back_end;
       void* impl;
@@ -142,14 +179,14 @@ struct override
     template <class T0>
     aux::proxy<mpl::vector1<T0> > operator()(T0 const& a0) const
     {
-        void* const addresses[] = { &a0 };
+        void* const addresses[] = { aux::arg_ptr(a0) };
         return aux::proxy<mpl::vector1<T0> >(back_end, impl, addresses);
     }
     
     template <class T0, class T1>
     aux::proxy<mpl::vector2<T0,T1> > operator()(T0 const& a0, T1 const& a1) const
     {
-        void* const addresses[] = { &a0, &a1 };
+        void* const addresses[] = { aux::arg_ptr(a0), aux::arg_ptr(&a1) };
         return aux::proxy<mpl::vector2<T0,T1> >(back_end, impl, addresses);
     }
 

@@ -14,18 +14,18 @@ class plugin;
 struct class_instance
 {
     class_instance()
-      : wrapper(0)
+      : class_(0)
       , instance(0)
     {}
     
     class_instance(class_* wrapper, void* instance)
-      : wrapper(wrapper)
+      : class_(wrapper)
       , instance(instance)
     {}
     
     // The xxx class that corresponds directly to a
     // held C++ class (not a derived class)        
-    class_* wrapper;
+    backend::class_* class_;
 
     // A reference to the xxx instance.
     void* instance;
