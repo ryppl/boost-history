@@ -74,7 +74,7 @@
             virtual size_type                    capacity_() const = 0;
             virtual size_type                    max_size_() const = 0;
 
-            virtual void                         resize_(  size_type, char ) = 0;
+            virtual void                         resize_(  size_type, CharT ) = 0;
             virtual void                         reserve_( size_type ) = 0;
 
             virtual void                         assign_( const CharT *, size_type ) = 0;
