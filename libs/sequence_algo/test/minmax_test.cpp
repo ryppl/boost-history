@@ -9,8 +9,53 @@
 
 #include <iostream>
 
-#include <boost/test/test_tools.hpp>
+#include <boost/test/included/test_exec_monitor.hpp>
 #include <boost/sequence_algo/minmax.hpp>
+#include <boost/iterator/reverse_iterator.hpp>
+
+class custom {
+  int _M_x;
+  friend bool operator<(custom const& x, custom const& y);
+  friend std::ostream& operator<<(std::ostream& str, custom const& x);
+public:
+  explicit custom(int x = 0) : _M_x(x) {}
+  custom(custom const& y) : _M_x(y._M_x) {}
+  custom operator+(custom const& y) const { return custom(_M_x+y._M_x); }
+  custom& operator+=(custom const& y) { _M_x += y._M_x; return *this; }
+};
+
+bool operator< (custom const& x, custom const& y)
+{
+  return x._M_x < y._M_x;
+}
+
+std::ostream& operator<<(std::ostream& str, custom const& x)
+{ 
+    str << x._M_x;
+    return str;
+}
+
+namespace std {
+
+template <>
+struct iterator_traits<int*> {
+  typedef random_access_iterator_tag  iterator_category;
+  typedef int                          value_type;
+  typedef ptrdiff_t                    difference_type;
+  typedef value_type*                  pointer;
+  typedef value_type&                  reference;
+};
+
+template <>
+struct iterator_traits<custom*> {
+  typedef random_access_iterator_tag  iterator_category;
+  typedef custom                       value_type;
+  typedef ptrdiff_t                    difference_type;
+  typedef value_type*                  pointer;
+  typedef value_type&                  reference;
+};
+
+}
 
 template <class T1, class T2, class T3, class T4>
 void tie(std::pair<T1, T2> p, T3& first, T4& second)
@@ -20,11 +65,12 @@ void tie(std::pair<T1, T2> p, T3& first, T4& second)
 
 template <class Value>
 struct less_count : std::less<Value> {
+    typedef std::less<Value> Base;
   less_count(less_count<Value> const& lc) : _M_counter(lc._M_counter) {}
   less_count(int& counter) : _M_counter(counter) {}
   bool operator()(Value const& a, Value const& b) const {
     ++_M_counter;
-    return std::less<Value>::operator()(a,b);
+    return Base::operator()(a,b);
   }
   void reset() {
     _M_counter = 0;
@@ -47,89 +93,92 @@ inline int opt_boost_minmax_count(int n) {
   return (n%2 == 0) ? 3*(n/2)-2 : 3*(n/2);
 }
 
+#define CHECK_EQUAL_ITERATORS( left, right, first ) \
+BOOST_CHECK_EQUAL( std::distance( first, left ), std::distance( first, right ) )
+
 template <class CIterator>
 void test_minmax(CIterator first, CIterator last, int n)
 {
   using namespace boost;
 
-  typedef std::reverse_iterator<CIterator> RCIterator;
+  typedef typename std::iterator_traits<CIterator>::value_type Value;
+  typedef boost::reverse_iterator<CIterator> RCIterator;
   // assume that CIterator is BidirectionalIter
   CIterator min, max;
   RCIterator rfirst(last), rlast(first), rmin(min), rmax(max);
   int counter = 0;
-  less_count<typename std::iterator_traits<CIterator>::value_type> lc(counter);
+  less_count<Value> lc(counter);
 
   // standard extensions
   // first version, operator<
   tie( boost::minmax_element(first, last), min, max );
-  BOOST_TEST( min == std::min_element(first, last) );
-  BOOST_TEST( max == std::max_element(first, last) );
+
+  CHECK_EQUAL_ITERATORS( min, std::min_element(first, last), first );
+  CHECK_EQUAL_ITERATORS( max, std::max_element(first, last), first );
   // second version, comp function object (keeps a counter!)
   lc.reset();
   tie( boost::minmax_element(first, last, lc), min, max );
-  BOOST_TEST( counter <= opt_minmax_count(n) );
-  BOOST_TEST( min == std::min_element(first, last, lc) );
-  BOOST_TEST( max == std::max_element(first, last, lc) );
+  BOOST_CHECK( counter <= opt_minmax_count(n) );
+  CHECK_EQUAL_ITERATORS( min, std::min_element(first, last, lc), first );
+  CHECK_EQUAL_ITERATORS( max, std::max_element(first, last, lc), first );
 
   // boost extensions
   // first version, operator<
-  BOOST_TEST( boost::first_min_element(first, last)
-       == std::min_element(first, last) );
+  CHECK_EQUAL_ITERATORS( boost::first_min_element(first, last), std::min_element(first, last), first );
   rmin = RCIterator(boost::last_min_element(first, last));
   rmin = (rmin == rfirst) ? rlast : --rmin;
-  BOOST_TEST( rmin == std::min_element(rfirst, rlast) );
-  BOOST_TEST( boost::first_max_element(first, last)
-       == std::max_element(first, last) );
+  CHECK_EQUAL_ITERATORS( rmin, std::min_element(rfirst, rlast), rfirst );
+  CHECK_EQUAL_ITERATORS( boost::first_max_element(first, last), std::max_element(first, last), first );
   rmax = RCIterator(boost::last_max_element(first, last));
   rmax = (rmax == rfirst) ? rlast : --rmax;
-  BOOST_TEST( rmax == std::max_element(rfirst, rlast) );
+  CHECK_EQUAL_ITERATORS( rmax, std::max_element(rfirst, rlast), rfirst );
   tie( boost::first_min_last_max_element(first, last), min, max );
-  BOOST_TEST( min == boost::first_min_element(first, last) );
-  BOOST_TEST( max == boost::last_max_element(first, last) );
+  CHECK_EQUAL_ITERATORS( min, boost::first_min_element(first, last), first );
+  CHECK_EQUAL_ITERATORS( max, boost::last_max_element(first, last), first );
   tie( boost::last_min_first_max_element(first, last), min, max );
-  BOOST_TEST( min == boost::last_min_element(first, last) );
-  BOOST_TEST( max == boost::first_max_element(first, last) );
+  CHECK_EQUAL_ITERATORS( min, boost::last_min_element(first, last), first );
+  CHECK_EQUAL_ITERATORS( max, boost::first_max_element(first, last), first );
   tie( boost::last_min_last_max_element(first, last), min, max );
-  BOOST_TEST( min == boost::last_min_element(first, last) );
-  BOOST_TEST( max == boost::last_max_element(first, last) );
+  CHECK_EQUAL_ITERATORS( min, boost::last_min_element(first, last), first );
+  CHECK_EQUAL_ITERATORS( max, boost::last_max_element(first, last), first );
   // second version, comp function object (keeps a counter!)
   lc.reset();
   min = boost::first_min_element(first, last, lc);
-  BOOST_TEST( counter <= opt_min_count(n) );
-  BOOST_TEST( min == std::min_element(first, last, lc) );
+  BOOST_CHECK( counter <= opt_min_count(n) );
+  CHECK_EQUAL_ITERATORS( min, std::min_element(first, last, lc), first );
   lc.reset();
   rmin = RCIterator(boost::last_min_element(first, last, lc));
   rmin = (rmin == rfirst) ? rlast : --rmin;
-  BOOST_TEST( counter <= opt_min_count(n) );
-  BOOST_TEST( rmin == std::min_element(rfirst, rlast, lc) );
+  BOOST_CHECK( counter <= opt_min_count(n) );
+  CHECK_EQUAL_ITERATORS( rmin, std::min_element(rfirst, rlast, lc), rfirst );
   lc.reset();
   max =  boost::first_max_element(first, last, lc);
-  BOOST_TEST( counter <= opt_min_count(n) );
-  BOOST_TEST( max == std::max_element(first, last, lc) );
+  BOOST_CHECK( counter <= opt_min_count(n) );
+  CHECK_EQUAL_ITERATORS( max, std::max_element(first, last, lc), first );
   lc.reset();
   rmax = RCIterator(boost::last_max_element(first, last, lc));
   rmax = (rmax == rfirst) ? rlast : --rmax;
-  BOOST_TEST( counter <= opt_min_count(n) );
-  BOOST_TEST( rmax == std::max_element(rfirst, rlast, lc) );
+  BOOST_CHECK( counter <= opt_min_count(n) );
+  CHECK_EQUAL_ITERATORS( rmax, std::max_element(rfirst, rlast, lc), rfirst );
   lc.reset();
   tie( boost::first_min_last_max_element(first, last, lc), min, max );
-  BOOST_TEST( counter <= opt_boost_minmax_count(n) );
-  BOOST_TEST( min == boost::first_min_element(first, last, lc) );
-  BOOST_TEST( max == boost::last_max_element(first, last, lc) );
+  BOOST_CHECK( counter <= opt_boost_minmax_count(n) );
+  CHECK_EQUAL_ITERATORS( min, boost::first_min_element(first, last, lc), first );
+  CHECK_EQUAL_ITERATORS( max, boost::last_max_element(first, last, lc), first );
   lc.reset();
   tie( boost::last_min_first_max_element(first, last, lc), min, max );
-  BOOST_TEST( counter <= opt_boost_minmax_count(n) );
-  BOOST_TEST( min == boost::last_min_element(first, last, lc) );
-  BOOST_TEST( max == boost::first_max_element(first, last, lc) );
+  BOOST_CHECK( counter <= opt_boost_minmax_count(n) );
+  BOOST_CHECK( min == boost::last_min_element(first, last, lc) );
+  CHECK_EQUAL_ITERATORS( max, boost::first_max_element(first, last, lc), first );
   lc.reset();
   tie( boost::last_min_last_max_element(first, last, lc), min, max );
-  BOOST_TEST( counter <= opt_minmax_count(n) );
-  BOOST_TEST( min == boost::last_min_element(first, last, lc) );
-  BOOST_TEST( max == boost::last_max_element(first, last, lc) );
+  BOOST_CHECK( counter <= opt_minmax_count(n) );
+  CHECK_EQUAL_ITERATORS( min, boost::last_min_element(first, last, lc), first );
+  CHECK_EQUAL_ITERATORS( max, boost::last_max_element(first, last, lc), first );
 }
 
 template <class Container, class Iterator, class Value>
-void test_container(Iterator first, Iterator last, int n)
+void test_container(Iterator first, Iterator last, int n, Container* dummy = 0 )
 {
   Container c(first, last);
   test_minmax(c.begin(), c.end(), n);
@@ -181,20 +230,7 @@ void test(int n, char* name)
   test_range(first, last, n, name);
 }
 
-class custom {
-  int _M_x;
-  friend bool operator<(custom const& x, custom const& y);
-public:
-  explicit custom(int x = 0) : _M_x(x) {}
-  custom(custom const& y) : _M_x(y._M_x) {}
-  custom operator+(custom const& y) const { return custom(_M_x+y._M_x); }
-  custom& operator+=(custom const& y) { _M_x += y._M_x; return *this; }
-};
-
-bool operator< (custom const& x, custom const& y)
-{ return x._M_x < y._M_x; }
-
-int test_main(char argc, char** argv)
+int test_main( int argc, char* argv[] )
 {
   int n = 100;
   if (argc > 1) n = atoi(argv[1]);
