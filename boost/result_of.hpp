@@ -11,6 +11,8 @@
 
 namespace boost {
 
+template<typename F> struct result_of;
+
 namespace detail {
 
 template<typename T>
@@ -44,8 +46,6 @@ template<typename F, typename FArgs>
 struct result_of : get_result_of<F, FArgs, (has_result_type<F>::value)> {};
 
 }
-
-template<typename F> struct result_of;
 
 #define BOOST_PP_ITERATION_PARAMS_1 (3,(0,BOOST_RESULT_OF_NUM_ARGS,<boost/detail/result_of_iterate.hpp>))
 #include BOOST_PP_ITERATE()
