@@ -19,66 +19,47 @@
 <h2>Content</h2>
 <ol>
 <li><a href="#introduction">Introduction</a></li>
-<li><a href="#mapping">Mapping</a></li>
+<li><a href="#mapping">Mapping onto standard BLAS functions</a></li>
 <ol>
+<li>Fortran symbols</li>
 <li>C signatures</li>
-<li>Calling conventions</li>
+<li>Overloads</li>
+<li>High level API</li>
 </ol>
-<li><a href="#high_level_api">High level API</a></li>
 </ol>
 
 <h2><a name="introduction">1. Introduction</a></h2>
-<p>The BLAS bindings library provides:
-<ul>
-<li>C-to-Fortran mapping i.e. definitions in C for all standard (fortran) BLAS functions</li>
-<li>high-level BLAS API that accepts vectors and matrices defined in many different libraries </li>
-</ul>
-<p>For example: one wants to perform <code> y += a * x </code> where <code>y</code> 
-and <code>x</code> are double vectors and <code>a</code> a scalar. So now we want to call
-BLAS's DAXPY. Therefore the BLAS bindings will provide on the first level 
-the signature in C for calling DAXPY which looks like 
-<code>void daxpy(int* n, double* alpha, double* x, int* incx, double* y, int* incy);</code>
-(Remark that the int's are passed by reference because of the C to fortran calling conventions).
-Although daxpy if very flexible to use (allowing different increments for both vectors), information
-about the length of the vectors and the increments is generally known by all vector classes. 
-Therefor it would be mush easier and less error prone that the vector class itself passes
-this kind of information on to the library instead of the user. Therefore the bindings library
-provides a higher level API for daxpy. When x and y are now std::vector's for instance, it suffices
-to call <code>daxpy( alpha, x, y )</code> to perform the same operation.
+<p>For calculating <code> y += a * x </code> where <code>y</code> 
+and <code>x</code> are vectors of doubles and <code>a</code> a scalar, the BLAS daxpy function can be used. On many systems optimised BLAS libraries are available which provide optimal performance. The BLAS bindings can be used to call these functions on uBLAS vectors, std::vector's and many other C++ classes modelling vectors.
 
-<h2><a name="#mapping">2. Mapping</a></h2>
-<h3>2.1. C signatures</h3>
-<p>On the first level, a direct mapping of C signatures to the standard Fortran
-functions is performed. These functions are defined in 
-<code>boost/numeric/bindings/blas/blas.h</code>.
-These mappings can thus be used by both C and C++.
-<p>These signatures are also const-correct. Although the Fortran standard does
-not mention const-ness, is would be hard to use the C definitions in ANSI C without
-the const-correctness and would ask for frequent const cast away's.
-<p>The mapping of the types of the argumenst is as follows:
+
+<h2><a name="#mapping">2. Mapping onto standard BLAS functions</a></h2>
+The bindings consist of a number of different layers to provide maximal flexibility. For instance, the bindings can be used from within C. From within C++ overloaded functions are available and on a next level, increments, leading-dimensions etc will be extracted from the matrix and vector classes.
+
+<h3>2.1. Fortran symbols</h3>
+<p>Many BLAS implementations are written in Fortran. Therefor, when calling these functions from C or C++, the way these symbols are written in the object file (by the Fortran compiler) need to be matched. Many compilers for instance add an extra understore to the function name or store function names always in capitals.
+<p>To match the function names as stored in the BLAS library, a macro <code>FORTRAN_ID</code> can be used on the function name. This macro will, dependent on the toolset, change the function-name to match the corresponding function in the BLAS library.
+<p>See blas_names.h
+
+<h3>2.2. C signatures</h3>
+<p>At the second level, C signatures are provided which map directly onto the BLAS functions. The mapping from Fortran to C types is as follows:
 <table border=1>
 <tr><td>Fortran type<td>Mapped to C type
 <tr><td>REAL<td>float
 <tr><td>DOUBLE<td>double
-<tr><td>COMPLEX<td>fcomplex
-<tr><td>COMPLEX*16<td>dcomplex
+<tr><td>COMPLEX<td>fcomplex_t
+<tr><td>COMPLEX*16<td>dcomplex_t
 </table>
-<p>fcomplex and dcomplex are defined in <code>traits/type.h</code> due to a lack of
-complex types in C89. fcomplex and dcomplex are therefor just typedef's to 
-existing real types. However a Fortran COMPLEX corresponds to 2 consecutive float's.
-It is however up to the user to guarantee that the real and imaginary part are
-consecutive in memory. Note also that pointer arithmetic using the fcomplex and
-dcomplex type will probably result in errornous calculations as the sizeof is only
-half of what's expected.
+Due to the lack of a complex datatype in C, fcomplex_t and dcomplex_t are defined in <code>traits/type.h</code>. These are respectively typedefs to float and double but pointers to fcomplex_ or dcomplex_t are supposed to point to two consecutive floating points in memory that represent the real and imaginary value.
+<p>Note that all arguments are passed by reference to match the calling conventions used by Fortran compilers. Note also that these signatures are const-correct although const-ness is not mentioned in the BLAS standard. If not const-correct however, using the bindings would require to cast many consts away.
+<p>See blas.h
 
+<h3>2.3. Overloads</h3>
+<p>The C layer of bindings provide different functions for every operation with different datatypes. To provide generics, at this level overloaded functions are available that can be called for all supported datatypes.
+<p>See blas_overloads.hpp
 
-<h3>2.2. Calling conventions</h3>
-<p>But before specifying the signatures in C, the calling conventions of Fortran
-need to be matched. Therefore <code>boost/numeric/bindings/blas/blas_names.h</code> will
-provide the name of all functions using the correct calling convention. (Currently this
-file is generated manually with the aid of traits/fortran.h but could be generated
-automatically in the future (using the preprocessor library for instance)).
-
-<h2><a name="#high_level_api">High level API</a></h2>
+<h3>2.4. High level API</h3>
+<p>The flexibility of the BLAS functions also have a price. BLAS functions allow vectors to have increments different from one or only manipulate parts of matrices (taking into account the leading dimension of the matrix). This requires however all functions to have many arguments. But many of the information that needs to be passes on to BLAS is already contained in C++ matrix libraries. Therefor high level bindings are provided which require you to only specify the containers and the operation you want to perform on them. 
+<p>See blas1.hpp, blas2.hpp and blas3.hpp
 
 </body>
