@@ -386,9 +386,9 @@ template<class T, class F>
 struct compare_full
 {
   static bool lessthan(const T& xl, const T& xu, const T& yl, const T& yu)
-  { return xu < yl || (!(xl < yu) && F()()); }
+  { return xu < yl || (xl < yu && F()()); }
   static bool equalto(const T& xl, const T& xu, const T& yl, const T& yu)
-  { return (xu == yl && yu == xl) || ((xu < yl || yu < xl) && F()()); }
+  { return (xu == yl && yu == xl) || (!(xu < yl || yu < xl) && F()()); }
 };
 
   } // namespace interval

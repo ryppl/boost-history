@@ -85,6 +85,8 @@ public:
   interval& operator/= (const interval& r);
 
   static interval pi();
+  static interval pi_1_2();
+  static interval pi_2_1();
 
   // the following is for internal use only, it is not a published interface
   // nevertheless, it's public because friends don't always work correctly.

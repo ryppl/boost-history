@@ -81,23 +81,22 @@ interval<T, Traits> cos(const interval<T, Traits>& x)
 {
   typename Traits::rounding rnd;
   typedef interval<T, typename interval_lib::unprotect<Traits>::type> I;
-  I pi(rnd.pi_down(), rnd.pi_up(), true);
-  I pi2(rnd.pi_2_1_down(), rnd.pi_2_1_up(), true);
 
   // get lower bound within [0, pi]
-  I tmp = fmod((I)x, pi2);
-  if (width(tmp) >= pi2.lower())
+  I tmp = fmod((I)x, I::pi_2_1());
+  T pi_2_1_d = rnd.pi_2_1_down();
+  if (width(tmp) >= pi_2_1_d)
     return I(-1, 1, true);     // we are covering a full period
-  if (tmp.lower() >= pi.upper())
-    return -cos(tmp - pi);
+  if (tmp.lower() >= rnd.pi_up())
+    return -cos(tmp - I::pi());
   T l = tmp.lower();
   T u = tmp.upper();
 
   // separate into monotone subintervals
-  if (u <= pi.lower())
+  if (u <= rnd.pi_down())
     return interval<T, Traits>(rnd.cos_down(u), rnd.cos_up(l), true);
-  else if (u <= pi2.lower()) {
-    T cu = rnd.cos_up(std::min(rnd.sub_down(pi2.lower(), u), l));
+  else if (u <= pi_2_1_d) {
+    T cu = rnd.cos_up(std::min(rnd.sub_down(pi_2_1_d, u), l));
     return interval<T, Traits>(-1, cu, true);
   } else
     return interval<T, Traits>(-1, 1, true);
@@ -108,8 +107,7 @@ inline interval<T, Traits> sin(const interval<T, Traits>& x)
 {
   typename Traits::rounding rnd;
   typedef interval<T, typename interval_lib::unprotect<Traits>::type> I;
-  I pi_2(rnd.pi_1_2_down(), rnd.pi_1_2_up(), true);
-  return cos((I)x - pi_2);
+  return cos((I)x - I::pi_1_2());
 }
 
 template<class T, class Traits>
@@ -118,12 +116,12 @@ interval<T, Traits> tan(const interval<T, Traits>& x)
   typename Traits::rounding rnd;
   typedef interval<T, typename interval_lib::unprotect<Traits>::type> I;
 
-  I pi(rnd.pi_down(), rnd.pi_up(), true);
   // get lower bound within [-pi/2, pi/2]
-  I tmp = fmod((I)x, pi);
-  if (tmp.lower() >= rnd.pi_1_2_down())
-    tmp -= pi;
-  if (tmp.lower() <= -rnd.pi_1_2_down() || tmp.upper() >= rnd.pi_1_2_down()) {
+  I tmp = fmod((I)x, I::pi());
+  T pi_1_2_d = rnd.pi_1_2_down();
+  if (tmp.lower() >= pi_1_2_d)
+    tmp -= I::pi();
+  if (tmp.lower() <= -pi_1_2_d || tmp.upper() >= pi_1_2_d) {
     typedef typename Traits::checking checking;
     checking::trigonometric_inf();
     return interval<T, Traits>::entire();
@@ -223,21 +221,19 @@ template<class T, class Traits>
 interval<T, Traits> atanh(const interval<T, Traits>& x)
 {
   typedef typename Traits::checking checking;
-  if(x.upper() < T(-1) || x.lower() > T(1)) {
+  if (x.upper() < T(-1) || x.lower() > T(1)) {
     checking::hyperbolic_nan();
     return interval<T, Traits>::empty();
   }
   typename Traits::rounding rnd;
   T l, u;
   if (x.lower() <= T(-1)) {
-    if (x.lower() < T(-1)) checking::hyperbolic_nan();
     checking::hyperbolic_inf();
     l = -std::numeric_limits<T>::infinity();
   } else {
     l = rnd.atanh_down(x.lower());
   }
   if (x.upper() >= T(1)) {
-    if (x.upper() > T(1)) checking::hyperbolic_nan();
     checking::hyperbolic_inf();
     u = std::numeric_limits<T>::infinity();
   } else {

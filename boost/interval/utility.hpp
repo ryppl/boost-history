@@ -366,6 +366,20 @@ interval<T, Traits> interval<T, Traits>::pi()
   return interval<T, Traits>(rounding::pi_down(), rounding::pi_up(), true);
 }
 
+template<class T, class Traits>
+interval<T, Traits> interval<T, Traits>::pi_1_2()
+{
+  typedef typename Traits::rounding rounding;
+  return interval<T, Traits>(rounding::pi_1_2_down(), rounding::pi_1_2_up(), true);
+}
+
+template<class T, class Traits>
+interval<T, Traits> interval<T, Traits>::pi_2_1()
+{
+  typedef typename Traits::rounding rounding;
+  return interval<T, Traits>(rounding::pi_2_1_down(), rounding::pi_2_1_up(), true);
+}
+
 } // namespace boost
 
 #endif // BOOST_INTERVAL_UTILITY_HPP
