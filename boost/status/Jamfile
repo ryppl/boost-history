@@ -74,6 +74,7 @@ rule failed-test-file ( test-file : dependency + )
     catenate-output-on-failure $(test-file) : $(dependency[1]) ;
     DEPENDS $(test-file) : $(dependency) ;
     NOCARE $(dependency) ;
+    TEMPORARY $(dependency) ;
 }
 
 # a utility rule which causes test-file to be built successfully, only if
@@ -83,6 +84,7 @@ rule succeeded-test-file ( test-file : dependency + )
     catenate-output-on-failure $(test-file) : $(dependency[1]) ;
     DEPENDS $(test-file) : $(dependency) ;
     NOCARE $(dependency) ;
+    TEMPORARY $(dependency) ;
 }
 
 rule catenate-output-on-failure ( test-file : dependency )
@@ -114,7 +116,7 @@ ECHO ****************************************************** )" ;
         ) ELSE (
           if EXIST "$(<:S=.failure)". del /f/q "$(<:S=.failure)".
           echo succeeded > "$(<:S=.success)"
-          echo succeeded > $(>)
+          rem echo succeeded > $(>)
         )
     }
 
@@ -127,7 +129,7 @@ ECHO ****************************************************** )" ;
         ) ELSE (
           if EXIST "$(<:S=.success)". del /f/q "$(<:S=.success)".
           echo failed > "$(<:S=.failure)"
-          echo failed > $(>)
+          rem echo failed > $(>)
             
           echo *
           echo ***************** failed above test: $(<:B:S=) ********************
@@ -251,11 +253,13 @@ rule run-test # target : sources : requirements
 rule capture-run-output ( target : executable + )
 {
     gTEST_OUTPUT_FILE($(target)) = $(target:S=.output) ;
+    INCLUDES $(<) : $(<:S=.output) ;
+    capture-run-output1 $(<) $(<:S=.output) : $(executable) ;
 }
 
 if $(UNIX)  
 {
-    actions capture-run-output bind INPUT_FILES
+    actions capture-run-output1 bind INPUT_FILES
     {
         $(SHELL_SET)PATH=$(RUN_PATH) 
     	$(SHELL_EXPORT)PATH
@@ -268,11 +272,11 @@ if $(UNIX)
 }
 else
 {
-    actions capture-run-output bind INPUT_FILES
+    actions capture-run-output1 bind INPUT_FILES
     {
         $(SHELL_SET)PATH=$(RUN_PATH) 
         $(SHELL_EXPORT)PATH
-        $(>) $(ARGS) $(INPUT_FILES) > $(<:S=.output) 2>&1 && $(CP) $(<:S=.output) $(<)
+        $(>) $(ARGS) $(INPUT_FILES) > $(<[2]) 2>&1 && $(CP) $(<[2]) $(<[1])
     }
 }
 
