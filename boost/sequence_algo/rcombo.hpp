@@ -9,48 +9,55 @@
 // See http://www.boost.org for updates, documentation, and revision
 // history.
 
+// Jun 20 2002  Removed TABs and put in std:: when needed [Herve Bronnimann]
+//              Also replaced all iter_swap(i,j) by swap(*i,*j)
+//              
+//              Heck, while I'm at it, I corrected is_sorted, which was
+//              using --last (not part of ForwardIterator)
+//              I hope I gave an even better implementation that Jeremy
+//              and the SGI STL :)                        [Herve Bronnimann]
 
 
 #ifndef BOOST_RCOMBO_HPP
 #define BOOST_RCOMBO_HPP
 
-#include <algorithm>			// sort(), rotate(), etc.
-#include <functional>			// greater<>(), not2()
-#include <boost/utility.hpp>	// next()
+#include <algorithm>            // std::sort(), std::rotate(), etc.
+#include <functional>           // greater<>(), not2()
+#include <boost/utility.hpp>    // next()
 
 namespace boost {
 
     // is_sorted -------------------------------------------------------//
 
-    // Returns true if [first, last) is in sorted order, based on the
+    // Returns true if [first, last) is in std::sorted order, based on the
     // less than operator.
  
     template<class ForwardIterator>
     inline bool
     is_sorted(ForwardIterator first, ForwardIterator last)
     {
-    	if (first == last)
-    		return true;
-        for(--last; first != last; first++)
-            if (*next(first) < *first)
-                return false;
+        if (first != last)
+	    for (ForwardIterator old = first; ++first != last; old = first)
+	        if (*first < *old)
+	            return false;
+
         return true;
     }
 
     // is_sorted -------------------------------------------------------//
 
-    // Returns true if [first, last) is in sorted order, based on
+    // Returns true if [first, last) is in std::sorted order, based on
     // a user-supplied binary comparison operator.
  
     template<class ForwardIterator, class Compare>
     inline bool
     is_sorted(ForwardIterator first, ForwardIterator last, Compare comp)
     {
-    	if (first == last)
-    		return true;
-        for(--last; first != last; first++)
-            if (comp(*next(first), *first))
-                return false;
+        if (first != last)
+	    for (ForwardIterator old = first; ++first != last; old = first)
+	        if (comp(*first, *old))
+	            return false;
+
         return true;
     }
 
@@ -155,7 +162,7 @@ namespace boost {
     // be in ascending lexicographical order. Typically, when the function
     // is called it arranges the next r-permutation in [first, r) and returns
     // true. When the last permutation in lexicographical order is passed in,
-    // the function sorts the entire range, [first, last) into ascending order,
+    // the function std::sorts the entire range, [first, last) into ascending order,
     // restarting the sequence, and returns false.
 
     template<class RandomAccessIterator>
@@ -175,15 +182,15 @@ namespace boost {
             if (k == last)            // Didn't find it.
                 if (i == first)
                 {
-                    sort(first, last);    // O(n lg n)
+                    std::sort(first, last);    // O(n lg n)
                     return false;    // we're done--end of permutations
                 }
                 else
                     --i;
             else
             {
-                iter_swap(i, k);
-                partial_sort(i + 1, r, last);    // O(n lg n), heapsort
+                std::swap(*i,* k);
+                std::partial_sort(i + 1, r, last);    // O(n lg n), heapsort
                 return true;
             }    // else
         }    // while
@@ -211,15 +218,15 @@ namespace boost {
             if (k == last)            // Didn't find it.
                 if (i == first)
                 {
-                    sort(first, last, comp);
+                    std::sort(first, last, comp);
                     return false;    // we're done--end of permutations
                 }
                 else
                     --i;
             else
             {
-                iter_swap(i, k);
-                partial_sort(i + 1, r, last, comp);    // O(n lg n), heapsort
+                std::swap(*i,* k);
+                std::partial_sort(i + 1, r, last, comp);    // O(n lg n), heapsort
                 return true;
             }    // else
         }    // while
@@ -234,7 +241,7 @@ namespace boost {
     // be in descending lexicographical order. Typically, when the function
     // is called it arranges the previous r-permutation in [first, r)
     // and returns true. When the first permutation in lexicographical,
-    // order is passed in the function sorts the entire range, [first, last)
+    // order is passed in the function std::sorts the entire range, [first, last)
     // into descending order, restarting the sequence at the end, and
     // returns false.
 
@@ -257,15 +264,15 @@ namespace boost {
             if (k == last)            // Didn't find it.
                 if (i == first)
                 {
-                    sort(first, last, greater<T>());
+		    std::sort(first, last, greater<T>());
                     return false;    // we're done--end of permutations
                 }
                 else
                     --i;
             else
             {
-                iter_swap(i, k);
-                partial_sort(i + 1, r, last, greater<T>());    // O(n lg n), heapsort
+                std::swap(*i,* k);
+                std::partial_sort(i+1, r, last, greater<T>());    // O(n lg n), heapsort
                 return true;
             }    // else
         }    // while
@@ -293,15 +300,15 @@ namespace boost {
             if (k == last)            // Didn't find it.
                 if (i == first)
                 {
-                    sort(first, last, not2(comp));
+                    std::sort(first, last, not2(comp));
                     return false;    // we're done--end of permutations
                 }
                 else
                     --i;
             else
             {
-                iter_swap(i, k);
-                partial_sort(i + 1, r, last, not2(comp));    // O(n lg n), heapsort 
+                std::swap(*i,* k);
+                std::partial_sort(i + 1, r, last, not2(comp));    // O(n lg n), heapsort 
                 return true;
             }    // else
         }    // while
@@ -316,7 +323,7 @@ namespace boost {
     // in [first, last) must be in ascending lexicographical order.
     // When the function is called and a next combination exists,
     // it arranges the next r-combination in [first, r) and returns true. 
-    // If the next combination does not exist, the function sorts the entire 
+    // If the next combination does not exist, the function std::sorts the entire 
     // range, [first, last) into ascending order, restarting the sequence,
     // and returns false.
 
@@ -335,19 +342,19 @@ namespace boost {
             if (j == last)
                 if (i == first)
                 {
-                    sort(first, last);
+		    std::sort(first, last);
                     return false;
                 }
                 else
                     --i;
             else
             {
-                iter_swap(i, j);
+                std::swap(*i,* j);
                 for(++i; i < r; i++)
                 {
                     j = smallest_greater(r, last, *(i - 1));
                     if (j != last)
-                        iter_swap(i, j);
+                        std::swap(*i,* j);
                 }    // for
                 return true;
             }    // else
@@ -374,19 +381,19 @@ namespace boost {
             if (j == last)
                 if (i == first)
                 {
-                    sort(first, last, comp);
+                    std::sort(first, last, comp);
                     return false;
                 }
                 else
                     --i;
             else
             {
-                iter_swap(i, j);
-                for(++i; i < r; i++)
+                std::swap(*i, *j);
+                for(++i; i < r; ++i)
                 {
                     j = smallest_greater(r, last, *(i - 1), comp);
                     if (j != last)
-                        iter_swap(i, j);
+                        std::swap(*i, *j);
                 }    // for
                 return true;
             }    // else
@@ -414,17 +421,17 @@ namespace boost {
         if (!(first < r && r <= last && is_sorted(first, r)))
             return false;
 
-        sort(r, last);
-        for (RandomAccessIterator i = last - 1; i >= r; i--)
-            for (RandomAccessIterator j = first; j < r; j++)
+	std::sort(r, last);
+        for (RandomAccessIterator i = last - 1; i >= r; --i)
+            for (RandomAccessIterator j = first; j < r; ++j)
                 if (*i < *j)
                 {
-                    iter_swap(j, i);
-                    sort(++j, last);    // O(n lg n)
-                    rotate(j, j + (last - r), last); // 2*[n/2]+[m/2]+[(n-m)/2] exchanges
+		    std::swap(*j, *i);
+		    std::sort(++j, last);    // O(n lg n)
+		    std::rotate(j, j + (last - r), last); // 2*[n/2]+[m/2]+[(n-m)/2] exchanges
                     return true;
                 }    // if
-        rotate(first, first + (last - r), last);
+	std::rotate(first, first + (last - r), last);
         return false;
     }    // prev_r_combination
 
@@ -441,17 +448,17 @@ namespace boost {
         if (!(first < r && r <= last && is_sorted(first, r, comp)))
             return false;
 
-        sort(r, last, comp);
+        std::sort(r, last, comp);
         for (RandomAccessIterator i = last - 1; i >= r; i--)
             for (RandomAccessIterator j = first; j < r; j++)
                 if (comp(*i, *j))
                 {
-                    iter_swap(j, i);
-                    sort(++j, last, comp);    // O(n lg n)
-                    rotate(j, last - (r - j), last); // 2*[n/2]+[m/2]+[(n-m)/2] exchanges
+                    std::swap(*j,* i);
+                    std::sort(++j, last, comp);    // O(n lg n)
+                    std::rotate(j, last - (r - j), last); // 2*[n/2]+[m/2]+[(n-m)/2] exchanges
                     return true;
                 }    // if
-        rotate(first, first + (last - r), last);
+        std::rotate(first, first + (last - r), last);
         return false;
     }    // prev_r_combination
 
