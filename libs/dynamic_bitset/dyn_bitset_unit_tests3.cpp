@@ -219,14 +219,14 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
       b.set();
 
       // check
-      for(size_type i = 0; i < b.size(); ++i) {
+      const size_type larger_than_size = 5 + b.size();
+      for(size_type i = 0; i <= larger_than_size; ++i) {
           Tests::find_next(b, i);
       }
-
       Tests::find_next(b, b.npos);
   }
   {
-      // bitset with 1s at block boundary only
+      // a bitset with 1s at block boundary only
       const int num_blocks = 32;
       const int block_width = bitset_type::bits_per_block;
 
@@ -240,9 +240,11 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
       }
 
       // check
-      for (i = 0; i < b.size(); ++i) {
+      const size_type larger_than_size = 5 + b.size();
+      for (i = 0; i <= larger_than_size; ++i) {
           Tests::find_next(b, i);
       }
+      Tests::find_next(b, b.npos);
 
   }
   {
@@ -256,9 +258,11 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
       }
 
       // check
-      for (i = 0; i < sz; ++i) {
+      const size_type larger_than_size = 5 + b.size();
+      for (i = 0; i <= larger_than_size; ++i) {
           Tests::find_next(b, i);
       }
+      Tests::find_next(b, b.npos);
 
   }
 
