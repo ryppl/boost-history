@@ -1,7 +1,7 @@
 subproject libs/numeric/bindings/blas/test ;
 
-BLAS_PATH = /usr/lib ;
-BLAS_LIB = blas g2c ;
+BLAS_PATH ?= /usr/lib ;
+BLAS_LIB  ?= blas g2c ;
 
 exe blas1
         : blas1.cpp 
