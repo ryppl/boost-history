@@ -80,10 +80,10 @@ AUX_ASSERT_DEF(typename, not_same, 0)
 
 template< typename T > struct MPL_ASSERTION_FAILED
 { 
-#if BOOST_WORKAROUND(BOOST_INTEL_CXX_VERSION, BOOST_TESTED_AT(800))
-    int MESSAGE(MPL_ASSERTION_FAILED<T>); 
+#if !BOOST_WORKAROUND(BOOST_INTEL_CXX_VERSION, BOOST_TESTED_AT(800))
+    int MESSAGE(T);
 #else
-    int MESSAGE(T); 
+    int MESSAGE(MPL_ASSERTION_FAILED<T>); 
 #endif
 };
 
@@ -99,11 +99,16 @@ template< bool C > struct assert_msg
 template<> struct assert_msg<false>
 {
     template< typename Types > 
+// agurt 13/may/04: 'Types*' breaks template argument deducation on MSVC < 7.1
+#if !BOOST_WORKAROUND(BOOST_MSVC, < 1301)
     static MPL_ASSERTION_FAILED<Types>& arguments(Types*);
+#else
+    static MPL_ASSERTION_FAILED<Types>& arguments(Types);
+#endif
 };
 }}
 
-#if BOOST_WORKAROUND(__EDG_VERSION__, BOOST_TESTED_AT(303))
+#if !BOOST_WORKAROUND(__EDG_VERSION__, BOOST_TESTED_AT(303))
 #   define MPL_ASSERT_MSG( c, msg, types ) \
     enum { \
         BOOST_PP_CAT(MplAssertion,__LINE__) = sizeof(boost::mpl::assert_msg<(c)> \
