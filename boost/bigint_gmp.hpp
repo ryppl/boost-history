@@ -41,24 +41,27 @@ class bigint : boost::operators<bigint> {
 
       format.push_back('Z');
 
+      int base;
       if (flags & std::ios_base::dec) {
+        base = 10;
         format.push_back('d');
       } else if (flags & std::ios_base::hex) {
+        base = 16;
         if(flags & std::ios_base::uppercase)
           format.push_back('X');
         else
           format.push_back('x');
       } else {// if (flags & std::ios_base::oct)
+        base = 8;
         format.push_back('o');
       }
 
       // Copy the string representation and stream it.
       std::vector<char> buffer;
-      int length = gmp_snprintf(&buffer[0],0,format.c_str(),gmp_value_);
-      buffer.resize(length+1);
-      int length2 =
-        gmp_snprintf(&buffer[0],length+1,format.c_str(),gmp_value_);
-      assert(length == length2);
+      int const extra_chars = 4; // 4 -> "-0x"
+      int length = mpz_sizeinbase(gmp_value_,base) + extra_chars; 
+      buffer.resize(length); 
+      (void)gmp_snprintf(&buffer[0],length,format.c_str(),gmp_value_);
       os << &buffer[0];
     }
     return os;
