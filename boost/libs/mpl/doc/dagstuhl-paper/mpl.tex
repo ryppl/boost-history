@@ -1497,12 +1497,14 @@ template<
     >
 struct iter_fold
 {
-    typedef implementation-defined type;
+    typedef ... type;
 };
 \end{verbatim}
 }
 
-The algorithm returns the result of two-way successive 
+% it's not really ``implementation-defined'', but unspecified.
+
+The algorithm ``returns'' the result of two-way successive 
 applications of binary \code{ForwardOp} and \code{BackwardOp}
 operations to iterators in range 
 [\code{begin<Sequence>::type}, \code{end<Sequence>::type}) 
@@ -1766,7 +1768,133 @@ implementation than the fully generic version.
   \subsubsection{loop unrolling}
 
 Almost coincidentally, loop unrolling can be as important to
-compile-time iterative algorithms as it is to runtime algorithms.
+compile-time iterative algorithms as it is to runtime algorithms. To
+see why, one must first remember that all ``loops'' in \Cpp\
+metaprograms are in fact implemented with recursion, and that the
+depth of template instantiations can be a valuable resource in a
+compiler implementation. In fact, Annex B of the \Cpp\ standard
+\emph{recommends} a minimum depth of 17 recursively nested template
+instantiations, but this is far too low for many serious \mpgms\ some
+of which easily exceed the hard-coded instantiation limits of some
+otherwise excellent compilers. To see how this works in action, let's
+examine a straightforward implementation of the \code{fold} \mfn,
+which combines some algorithm state with each element of a sequence:
+
+{\footnotesize
+\begin{verbatim}
+// Unspecialized version combines the initial state and first element
+// and recurses to process the rest
+template<class Start, class Finish, class State, class BinaryFunction>
+struct fold
+  : fold<typename Start::next, Finish
+      , apply<BinaryFunction,State,typename Start::type>::type
+      , BinaryFunction>
+{
+};
+
+// Specialization for loop termination
+template<class Finish, class State, class BinaryFunction>
+struct fold<Finish,Finish,State,BinaryFunction>
+{
+    typedef State type;
+};
+\end{verbatim}
+}
+
+Although simple and elegant, this implementation will always incur at
+least as many levels of recursive template instantiation as there are
+elements in the input sequence.\footnote{It could be much more,
+depending on the complexity of the \code{apply<...>} expression, whose
+depth is added to the overall recursion depth.} The library addresses
+this problem by explicitly ``unrolling'' the recursion. To apply the
+technique to our \code{fold} example, we begin by factoring out a
+single step of the algorithm. Our \code{fold\_\-step} \mfn\ has two
+results: \code{type} (the next state), and \code{iterator} (the next sequence position).
+
+{\footnotesize
+\begin{verbatim}
+template <class BinaryFunction, class State, class Start, class Finish>
+struct fold_step
+{
+    typedef typename
+         apply<BinaryFunction,State,typename Start::type>::type
+    type;
+    typedef typename Start::next iterator;
+};
+\end{verbatim}
+}
+
+As with our main algorithm implementation, we specialize for the loop
+termination condition so that the step becomes a no-op:
+
+{\footnotesize
+\begin{verbatim}
+template <class BinaryFunction, class State, class Finish>
+struct fold_step<BinaryFunction,State,Finish,Finish>
+{
+    typedef State type;
+    typedef Finish iterator;
+};
+\end{verbatim}
+}
+
+Now we can now reduce \code{fold}'s instantiation depth by any
+constant factor N simply by inserting N invocations of
+\code{fold\_\-step}. Here we've chosen a factor of 4:
+
+{\footnotesize
+\begin{verbatim}
+template<
+      typename Start
+    , typename Finish
+    , typename State
+    , typename BinaryFunction
+    >
+struct fold
+{
+ private:
+    typedef fold_step<
+        BinaryFunction,State,Start,Finish> next1;
+    
+    typedef fold_step<
+        BinaryFunction,typename next1::type
+      , typename next1::iterator,Finish> next2;
+    
+    typedef fold_step<
+        BinaryFunction,typename next2::type
+      , typename next2::iterator,Finish> next3;
+    
+    typedef fold_step<
+        BinaryFunction,typename next3::type
+      , typename next3::iterator,Finish> next4;
+    
+    typedef fold<
+        typename next4::iterator
+        , Finish
+        , typename next4::type
+        , BinaryFunction
+     > recursion;
+ public:
+    typedef typename recursion::type type;
+};
+\end{verbatim}
+}
+
+The \Mpl\ applies this unrolling technique across all algorithms with
+an unrolling factor tuned according to the demands of the \Cpp\
+implementation in use, and with an option for the user to override the
+value.\footnote{This implementation detail is made relatively painless
+through heavy reliance on the Boost Preprocessor Library, so only one
+copy of the code needs to be maintained.} This fact enables users to
+push beyond the \mping\ limits they would usually encounter with more
+naive algorithm implementations. Experiments also show a small
+increase in \mpgm\ instantiation speed on some compilers when loop
+unrolling is used.
+
+{\footnotesize
+\begin{verbatim}
+\end{verbatim}
+}
 
   \subsubsection{numbered forms of \code{list}}
   \subsubsection{algorithm support lambda}
