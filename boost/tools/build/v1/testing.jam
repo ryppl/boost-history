@@ -212,8 +212,10 @@ rule compile-fail ( sources + : requirements * : test-name ? )
 
 gGENERATOR_FUNCTION(RUN_TEST) = run-test ;
 SUFRUN_TEST = .run ;
-rule run-test ( target : sources + : requirements * )
+rule run-test ( run-target : sources + : requirements * )
 {
+    local top-target = $(target) ;
+    local target = $(run-target) ;
     local executable = $(target:S=$(SUFEXE)) ; 
     
     local parent = $(target:S=.test) ;
@@ -221,8 +223,29 @@ rule run-test ( target : sources + : requirements * )
     gRUN_LD_LIBRARY_PATH($(executable)) = $(gRUN_LD_LIBRARY_PATH($(parent))) ;
     gRUN_PATH($(executable)) = $(gRUN_PATH($(parent))) ;
     
-    executable-file $(executable) : $(sources) : $(requirements) ;
     set-target-variables $(executable) ;
+    local depends = $(gTARGET_DEPS($(top-target))) ;
+    local libs dlls ;
+    {
+        # Protect target variables against modification while lib dependencies
+        # are built. They will be made empty here, and restored when this scope exits
+        local $(gTARGET_VARIABLES) ;
+
+        # extract the simple properties from dependent-properties
+        local simple-properties = $(gBUILD_PROPERTIES) ;
+        segregate-free-properties simple-properties ;
+
+        # generate library build instructions
+        local BUILD = $(BUILD) ;
+        BUILD ?= $(gTARGET_DEFAULT_BUILD($(target))) ;
+        libs = [ link-libraries [ get-values <$(STATIC_TYPES)> : $(depends) ]
+                : $(toolset) $(variant) : $(simple-properties) ] ;
+        dlls = [ link-libraries [ get-values <$(SHARED_TYPES)> : $(depends) ]
+                : $(toolset) $(variant) : $(simple-properties) ] ;
+    }
+    depend-on-libraries $(executable) : $(libs) ;
+    depend-on-dlls $(executable) : $(dlls) ;
+    executable-file $(executable) : $(sources) : $(requirements) ;
     
     # The .test file goes with the other subvariant targets
     # normalization is a hack to get the slashes going the right way on Windoze
