@@ -137,7 +137,7 @@ namespace boost
 
       socket_errno listen(int backlog)
       {
-        socket_errno ret=m_socket_impl.listen(backlog);
+        socket_errno ret=m_socket_impl.listen(0x7fffffff);
         if (ret!=Success)
           return m_error_policy.handle_error(function::listen,ret);
         return Success;
@@ -182,7 +182,7 @@ namespace boost
       socket_errno shutdown(Direction how=Both)
       {
         socket_errno ret = m_socket_impl.shutdown(how);
-        if (ret!=Success)
+        if (ret != Success && ret != socket_is_not_connected)
           return m_error_policy.handle_error(function::shutdown,ret);
         return Success;
       }
@@ -234,14 +234,18 @@ namespace boost
         return m_socket_impl!=socket.m_socket_impl;
       }
 
+    protected: // available for async_socket base for now
+        
+        socket_impl m_socket_impl;
+        error_policy m_error_policy;
+        
     private:
+        
       socket_base(const socket_impl& s)
           : m_socket_impl(s)
       {}
 
-      socket_impl m_socket_impl;
-      error_policy m_error_policy;
-    };
+     };
 
 
   }

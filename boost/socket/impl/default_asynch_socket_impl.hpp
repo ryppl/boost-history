@@ -50,53 +50,62 @@ namespace boost
                 /// (only relevant for send and receive otherwise 0)
                 typedef boost::function2<void, socket_errno, unsigned  int> completion_callback_t;
 
+
                 default_asynch_socket_impl();
-                //         default_asynch_socket_impl(const default_asynch_socket_impl&);
                 explicit default_asynch_socket_impl(socket_t socket);
 
                 //! Asynchronous accpetance of connection
                 /**
-                    @arg socket lifetime of default_asynch_socket_impl& must be until
-                    completionRoutine is triggered.
-                    @arg remoteAddress lifetime of std::pair<void *,size_t>& must be until
-                    completionRoutine is triggered.
-                    @arg completionRoutine a function to be called when accept completes.
+                @arg socket lifetime of default_asynch_socket_impl& must be until
+                completionRoutine is triggered.
+                @arg remoteAddress lifetime of std::pair<void *,size_t>& must be until
+                completionRoutine is triggered.
+                @arg completionRoutine a function to be called when accept completes.
                 */
                 socket_errno async_accept(
                     default_asynch_socket_impl& newSocket,
                     std::pair<void *,size_t>& remoteAddress,
-                    completion_callback_t completionRoutine);
+                    completion_callback_t completionRoutine
+                    );
 
                 //! Asynchronous connect
                 /**
-                    @arg address lifetime of std::pair<void *,size_t>& must be until
-                    completionRoutine is triggered.
-                    @arg completionRoutine a function to be called when connect completes.
+                @arg address lifetime of std::pair<void *,size_t>& must be until
+                completionRoutine is triggered.
+                @arg completionRoutine a function to be called when connect completes.
                 */
                 socket_errno async_connect(
                     std::pair<void *,size_t>& address,
-                    completion_callback_t completionRoutine);
+                    completion_callback_t completionRoutine
+                    );
 
                 //! Asynchronous receive
                 /**
-                    @arg data pointer to buffer that receives data.
-                    lifetime of buffer must be until completionRoutine is triggered.
-                    @arg data length in bytes of receive buffer
-                    @arg completionRoutine a function to be called when recv completes.
+                @arg data pointer to buffer that receives data.
+                lifetime of buffer must be until completionRoutine is triggered.
+                @arg data length in bytes of receive buffer
+                @arg completionRoutine a function to be called when recv completes.
                 */
-                socket_errno async_recv(void* data, int len, completion_callback_t completionRoutine);
+                socket_errno async_recv(
+                    void* data,
+                    int len,
+                    completion_callback_t completionRoutine
+                    );
 
 
                 //! Asynchronous receive
                 /**
-                    @arg data pointer to buffer that receives data.
-                    lifetime of buffer must be until completionRoutine is triggered.
-                    @arg data length in bytes of receive buffer
-                    @arg completionRoutine a function to be called when recv completes.
+                @arg data pointer to buffer that receives data.
+                lifetime of buffer must be until completionRoutine is triggered.
+                @arg data length in bytes of receive buffer
+                @arg completionRoutine a function to be called when recv completes.
                 */
-                socket_errno async_send(const void* data, int len, completion_callback_t completionRoutine);
-
-                socket_errno async_close(completion_callback_t completionRoutine);
+                socket_errno async_send(
+                    const void* data,
+                    int len,
+                    completion_callback_t completionRoutine
+                    );
+                
             };
         }// namespace impl
     }// namespace socket

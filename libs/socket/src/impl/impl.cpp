@@ -19,7 +19,6 @@
 
 
 #include "libs/socket/src/impl/win32/default_asynch_socket_impl.cpp"
-
 #include "libs/socket/src/impl/win32/default_socket_proactor.cpp"
 
 #endif

@@ -22,7 +22,7 @@
 #include "boost/config.hpp"
 #include "boost/utility.hpp"
 #include "boost/function.hpp"
-#include "boost/date_time/posix_time/posix_time_types.hpp" 
+#include "boost/thread/xtime.hpp" 
 
 namespace boost
 {
@@ -30,17 +30,17 @@ namespace boost
     {
         namespace impl
         {
-            class default_asynch_socket_impl;
             //! Provides an implementation of	SocketProactor concept
             /** This provides	a platform neutral set of calls,
             with no attempt at error handling.
             */
-            class default_socket_proactor	: boost::noncopyable
+            class default_socket_proactor
+                : boost::noncopyable
             {
             public:
 
-                typedef	boost::posix_time::ptime ptime;
-                typedef boost::function0<ptime> timer_callback_t;
+                typedef	boost::xtime time;
+                typedef boost::function0<time> timer_callback_t;
                 
                 default_socket_proactor();
                 ~default_socket_proactor();
@@ -48,21 +48,21 @@ namespace boost
                 ///	attach AsynchSocket	to this	(socket	will not be	removed	from the proactor 
                 ///	until close	of socket or queue).
                 /// @return true if successfully added, false if proactor is 'full'
-                bool attach(default_asynch_socket_impl&	socket);
+                bool attach(socket_t socket);
 
                 /// add a timer callback	(returning a new duration when to fire again or	ptime(0) 
                 /// if not to fire again)
                 /// @arg fireTime ptime given in UTC
-                bool set_timer(ptime fireTime, timer_callback_t callback);
+                bool set_timer(time fireTime, timer_callback_t callback);
 
                 /// dispatch an event from "queue" returns true if event	is dispatched and false
                 /// on timeout.
                 /// @arg timeout ptime given in UTC
-                bool dispatch(ptime timeout);
+                bool dispatch(time timeout);
 
             private:
-                class impl;
-                impl* m_impl;
+                class pimpl;
+                pimpl* m_impl;
             };
         }//	namespace
     }// namespace

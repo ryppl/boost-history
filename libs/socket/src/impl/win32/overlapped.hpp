@@ -24,7 +24,7 @@ namespace boost
         namespace impl
         {
             /// Specialization of Win32 overlapped structure.
-            struct overlapped : private OVERLAPPED
+            struct overlapped
             {
                 typedef default_asynch_socket_impl::completion_callback_t completion_callback_t;
 
@@ -38,13 +38,13 @@ namespace boost
                 /// Convert LPOVERLAPPED to overlapped
                 static overlapped* from_overlapped(LPOVERLAPPED lpOverlapped)
                 {
-                    return static_cast<overlapped*>(lpOverlapped);
+                    return reinterpret_cast<overlapped*>(lpOverlapped);
                 }
 
                 /// Convert overlapped to LPOVERLAPPED
                 LPOVERLAPPED os_overlapped() 
                 { 
-                    return this;
+                    return &m_overlapped;
                 }
 
                 LPWSABUF buffer() 

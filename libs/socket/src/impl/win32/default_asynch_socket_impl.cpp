@@ -61,7 +61,6 @@ namespace boost
                     {
                         if (err == Success)
                         {
-                            BOOST_ASSERT(bytestransferred == m_addressbufferSize);
                             ::SOCKADDR* local = NULL;
                             ::SOCKADDR* remote = NULL;
                             INT localLen = 0;
@@ -118,14 +117,8 @@ namespace boost
                               completer.address_buffer_length(),
                               &bytesReceived,
                               overlapped->os_overlapped()); 
-                if (ret == TRUE) // immediate success
-                {
-                    // Should we call this in this thread or
-                    // post it to a completion port and get completion
-                    // asynchrounously even in this case.
-                    completer(Success, 0);
-                }   
-                else if (::GetLastError() == ERROR_IO_PENDING)
+                
+                if (ret || ::GetLastError() == ERROR_IO_PENDING)
                 {
                     overlapped.release(); // release the overlapped structure to the os
                     return Success;
@@ -151,22 +144,17 @@ namespace boost
                 std::auto_ptr<overlapped> overlapped(
                     new overlapped(completionRoutine, const_cast<void*>(data), len));
                 DWORD bytesReceived = 0;
+                DWORD flags = 0;
                 int ret = ::WSARecv(
                     socket(),
                     overlapped->buffer(),
                     1,
                     &bytesReceived,
-                    0,
+                    &flags,
                     overlapped->os_overlapped(),
                     NULL); 
-                if (ret == 0) // immediate success
-                {
-                    // Should we call this in this thread or
-                    // post it to a completion port and get completion
-                    // asynchrounously even in this case.
-                    completionRoutine(Success, bytesReceived);
-                }   
-                else if (::GetLastError() == WSA_IO_PENDING)
+               
+                if (ret == 0 || ::GetLastError() == WSA_IO_PENDING)
                 {
                     overlapped.release(); // release the overlapped structure to the os
                     return Success;
@@ -191,14 +179,8 @@ namespace boost
                     0,
                     overlapped->os_overlapped(),
                     NULL); 
-                if (ret == 0) // immediate success
-                {
-                    // Should we call this in this thread or
-                    // post it to a completion port and get completion
-                    // asynchrounously even in this case.
-                    completionRoutine(Success, bytesSent);
-                }   
-                else if (::GetLastError() == WSA_IO_PENDING)
+   
+                if (ret == 0 || ::GetLastError() == WSA_IO_PENDING)
                 {
                     overlapped.release(); // release the overlapped structure to the os
                     return Success;
@@ -206,15 +188,6 @@ namespace boost
 
                 return translate_error(ret);
             }
-
-            socket_errno default_asynch_socket_impl::async_close(
-                completion_callback_t completionRoutine)
-            {
-                BOOST_ASSERT(!completionRoutine.empty());
-                BOOST_ASSERT(false); // not implemented
-                return Success;
-            }
-
         }// namespace
     }// namespace
 }// namespace

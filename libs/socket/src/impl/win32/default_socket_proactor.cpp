@@ -10,11 +10,11 @@
 
 #ifdef _MSC_VER
 #pragma warning (push, 4)
-#pragma warning (disable: 4786 4305 4244)
+#pragma warning (disable: 4786 4305 4244 4275)
 // 4786 truncated debug symbolic name
 // 4305 truncation from const double to float
 // 4244: 'argument' : conversion from 'boost::gregorian::months_of_year' to 'boost::CV::constrained_value<value_policies>::value_type', possible loss of data
-#pragma warning (disable: 4275) // non dll-interface class
+// 4275 non dll-interface class 'std::logic_error' used as base for dll-interface class 'boost::lock_error'
 #endif
 
 #if defined(__BORLANDC__)
@@ -42,89 +42,115 @@ namespace boost
         {
             namespace
             {
+                const int NANOSECONDS_PER_SECOND = 1000000000;
+                const int MILLISECONDS_PER_SECOND = 1000;
+                const int NANOSECONDS_PER_MILLISECOND = 1000000;
 
-                DWORD msecs_from_now(boost::posix_time::ptime time)
+                inline DWORD to_duration(boost::xtime xt)
+                {
+                    DWORD milliseconds = 0;
+                    boost::xtime cur;
+                    int res = boost::xtime_get(&cur, boost::TIME_UTC);
+                    assert(res == boost::TIME_UTC);
+                    if (boost::xtime_cmp(xt, cur) > 0)
+                    {
+                        if (cur.nsec > xt.nsec)
+                        {
+                            xt.nsec += NANOSECONDS_PER_SECOND;
+                            --xt.sec;
+                        }
+                        milliseconds = ((xt.sec - cur.sec) * MILLISECONDS_PER_SECOND) +
+                            (((xt.nsec - cur.nsec) + (NANOSECONDS_PER_MILLISECOND/2)) /
+                             NANOSECONDS_PER_MILLISECOND);
+                    }
+                    return milliseconds;
+                }
+
+                /*
+                DWORD msecs_from_now(boost::xtime time)
                 {
                     boost::posix_time::time_duration duration = time - boost::posix_time::second_clock::universal_time();
-                    static const __int64 nanosPerMsec = 100;
                     if (duration.ticks() > 0)
                         return duration.ticks() / nanosPerMsec;
                     else
                         return 0;
                 }
+                */
 
                 struct timer
                 {
 
-                    timer(default_socket_proactor::ptime fireTime, 
+                    timer(default_socket_proactor::time fireTime, 
                           default_socket_proactor::timer_callback_t callback) :
                         m_fireTime(fireTime),
                         m_callback(callback)
                     {}
 
-                    bool operator<(const timer& rhs) const { return m_fireTime < rhs.m_fireTime; }
+                    bool operator<(const timer& rhs) const { return boost::xtime_cmp(m_fireTime,rhs.m_fireTime) < 0; }
 
-                    default_socket_proactor::ptime time() const 
+                    default_socket_proactor::time time() const 
                     {
                         return m_fireTime;
                     }
 
 
-                    default_socket_proactor::ptime fire() 
+                    default_socket_proactor::time fire() 
                     {
                         m_fireTime = m_callback();
                         return m_fireTime;
                     }
                     
                 private:
-                    default_socket_proactor::ptime             m_fireTime;
+                    default_socket_proactor::time              m_fireTime;
                     default_socket_proactor::timer_callback_t  m_callback;
 
                 };
             }
-
-            class default_socket_proactor::impl : boost::noncopyable
+            
+            class default_socket_proactor::pimpl
+                : boost::noncopyable
             {
             public:
 
-                impl()
+                pimpl()
                 {
                     m_completionPort = ::CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, NULL, 0);
                     BOOST_ASSERT(m_completionPort != NULL);
                 }
 
-                ~impl()
+                ~pimpl()
                 {
                     ::CloseHandle(m_completionPort);
                 }
 
-                bool attach(default_asynch_socket_impl::socket_t socket)
+                bool attach(socket_t socket)
                 {
                     HANDLE port = ::CreateIoCompletionPort((HANDLE)socket, m_completionPort, (ULONG_PTR)(socket), 0);
                     return port == m_completionPort;
                 }
 
-                bool dispatch(default_socket_proactor::ptime expire)
+                bool dispatch(default_socket_proactor::time expire)
                 {
                     DWORD bytesTransferred = 0;
                     ULONG_PTR completionKey = 0;
                     LPOVERLAPPED osOverlapped = NULL;
-                    DWORD millisecs = msecs_from_now(expire);
+                    DWORD millisecs = to_duration(expire);
                     {
                         boost::mutex::scoped_lock lk(m_mutex);
                         if(!m_timerQueue.empty())
-                            millisecs = std::min(millisecs, msecs_from_now(m_timerQueue.top().time()));
+                            millisecs = std::min(millisecs, to_duration(m_timerQueue.top().time()));
                     }
 
-                    ::GetQueuedCompletionStatus(
-                            m_completionPort,
-                            &bytesTransferred,
-                            &completionKey,
-                            &osOverlapped,
-                            millisecs);
+                    ::SetLastError(0);
+                    bool dequedCompletion = ::GetQueuedCompletionStatus(
+                                                                m_completionPort,
+                                                                &bytesTransferred,
+                                                                &completionKey,
+                                                                &osOverlapped,
+                                                                millisecs) ? true : false;
 
-                    bool timeout = ::GetLastError() != WAIT_TIMEOUT;
-                    if (!timeout)
+                    bool timeout = ::GetLastError() == WAIT_TIMEOUT;
+                    if (dequedCompletion || !timeout)
                     {
                         std::auto_ptr<overlapped> ol = std::auto_ptr<overlapped>(overlapped::from_overlapped(osOverlapped));
                         ol->complete(default_socket_impl::translate_error(-1), bytesTransferred);
@@ -135,19 +161,21 @@ namespace boost
                     }
                     return timeout;
                 }
+
                 
                 unsigned int dispatch_timers()
                 {
                     unsigned int expired = 0;
                     boost::mutex::scoped_lock lk(m_mutex);
-                    while(!m_timerQueue.empty() && msecs_from_now(m_timerQueue.top().time()) == 0)
+                    while(!m_timerQueue.empty() && to_duration(m_timerQueue.top().time()) == 0)
                     {
                         timer expiredTimer = m_timerQueue.top();
                         m_timerQueue.pop();
                         lk.unlock();
-                        default_socket_proactor::ptime next = expiredTimer.fire();
+                        default_socket_proactor::time next = expiredTimer.fire();
                         ++expired;
-                        if (next != default_socket_proactor::ptime(0))
+                        static boost::xtime zero_time; // init all zeros
+                        if (boost::xtime_cmp(next, zero_time) != 0)
                         {
                            boost::mutex::scoped_lock lk(m_mutex);
                            m_timerQueue.push(expiredTimer);
@@ -163,7 +191,7 @@ namespace boost
                 std::priority_queue<timer>  m_timerQueue;
             };
             
-            default_socket_proactor::default_socket_proactor() : m_impl(new impl)
+            default_socket_proactor::default_socket_proactor() : m_impl(new pimpl)
             {
             }
             
@@ -172,26 +200,26 @@ namespace boost
                 delete m_impl;
             }
             
-            bool default_socket_proactor::attach(default_asynch_socket_impl& socket)
+            bool default_socket_proactor::attach(socket_t socket)
             {
-                return m_impl->attach(socket.socket());
+                return m_impl->attach(socket);
             }
             
-            bool default_socket_proactor::set_timer(ptime fireTime, timer_callback_t callback)
+            bool default_socket_proactor::set_timer(time fireTime, timer_callback_t callback)
             {
                 boost::mutex::scoped_lock lk(m_impl->m_mutex);
                 m_impl->m_timerQueue.push(timer(fireTime, callback));
                 return true;
             }
             
-            bool default_socket_proactor::dispatch(ptime timeout)
+            bool default_socket_proactor::dispatch(time timeout)
             {
                 return m_impl->dispatch(timeout);
             }
             
-        }// namespace
-    }// namespaces
-}// namespace
+        }// namespace impl
+    }// namespaces socket
+}// namespace boost
 
 #ifdef _MSC_VER
 #pragma warning (pop)
