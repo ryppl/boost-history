@@ -3,6 +3,10 @@
 \usepackage{fullpage}
 
 \begin{document}
+
+\markboth{Doc. no: N1483=03-0066}{Doc. no: N1483=03-0066}
+\pagestyle{myheadings}
+
 \title{Typesafe Variable-length Function and Template Argument Lists}
 \author{Douglas Gregor \and Gary Powell \and Jaakko J\"arvi}
 \maketitle
@@ -671,6 +675,116 @@ public:
 private:
   invoker_type* invoker;
 };
+\end{verbatim}
+\normalsize
+
+\subsection{Bind implementation}
+The following code implements the enhanced binder
+proposal~\cite{Dimov03b} using vararg templates, and building on the
+existing tuple and member pointer adaptor code. This implementation is
+complete, with two exceptions (both of which require uninteresting but
+nontrivial code, expressible in C++03):
+\begin{itemize}
+  \item {\tt result\_type} is not specified in {\tt binder}
+  \item arity checking is not performed at bind time
+\end{itemize}
+
+ \small
+\begin{verbatim}
+// Placeholders
+template<int N> struct placeholder {};
+
+namespace ph {
+  typedef placeholder<1> _1;
+  typedef placeholder<2> _2;
+  typedef placeholder<3> _3;
+}
+
+template<typename T> struct is_placeholder : integral_constant<size_t, 0> {};
+
+template<int N> 
+struct is_placeholder<placeholder<N> > : integral_constant<size_t, N> {};
+
+// Lambda
+template<typename X> X& lambda(const reference_wrapper<X>& x)
+  { return x.get(); }
+template<typename X> X& lambda(X& x)
+  { return x; }
+
+// Mu
+template<typename X, typename Args> X& mu(reference_wrapper<X>& x, Args&)
+  { return x.get(); }
+
+template<typename X, typename Args>
+typename enable_if<(is_placeholder<X>::value),
+                   typename tuple_element<X, is_placeholder<X>::value-1>::type
+                   >::type
+mu(X&, Args& args)
+  { return std::get<is_placeholder<X>::value-1>(args); }
+
+template<typename X, typename Args>
+typename enable_if<(is_bind_expression<X>::value), the-return-type>::type
+mu(X& x, Args& args)
+  { return std::apply(x, args); }
+
+template<typename X, typename Args> X& mu(X& x, Args&)
+  { return x; }
+
+// Unary function object that calls mu with the object 'x' it receives
+// and the bound arguments from binder_t.
+template<typename BoundArgs>
+struct apply_mu_t
+{
+  explicit apply_mu_t(BoundArgs& bound_args) : bound_args(bound_args) {}
+
+  template<typename X> the-return-type operator()(X& x) const
+    { return mu(x, bound_args); }
+
+private:
+  BoundArgs bound_args;
+};
+
+// Return type of bind(...)
+template<typename F, typename BoundArgs>
+struct binder
+{
+  binder(const F& f, const BoundArgs& bound_args)
+    : f(f), bound_args(bound_args) {}
+
+  template<... Args> the-return-type operator()(Args args)
+    { return std::apply(lambda(f), transform(args, apply_mu(bound_args))); }
+
+  template<... Args> the-return-type operator()(Args args) const
+    { return std::apply(lambda(f), transform(args, apply_mu(bound_args))); }
+
+private:
+  F f;
+  BoundArgs bound_args;
+};
+
+// Helper to construct binder objects
+template<typename F, typename BoundArgs>
+binder<F, BoundArgs> make_binder(F f, const BoundArgs& bound_args)
+  { return binder<F, BoundArgs>(f, bound_args); }
+
+// Determine if a type T is a binder type
+template<typename T> struct is_bind_expression : integral_constant<bool, false> {};
+
+template<typename F, typename BoundArgs>
+struct is_bind_expression<binder<F, BoundArgs> > : integral_constant<bool, true> {};
+
+// Remove the reference from a value
+struct remove_ref { template<typename T> T operator()(T& x) const { return x; } };
+
+// Bind overload for function objects and function pointers
+template<typename F, ... BoundArgs>
+the-return-type bind(F f, BoundArgs bound_args)
+  { return make_binder(f, transform(bound_args, remove_ref())); }
+
+// Bind overload for member pointers (both function and data)
+template<typename Class, typename T, ... BoundArgs>
+the-return-type bind(T Class::*pm, BoundArgs bound_args)
+  { return make_binder(mem_fn(f), transform(bound_args, remove_ref())); }
 \end{verbatim}
 \normalsize
 
