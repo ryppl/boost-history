@@ -22,7 +22,7 @@ principle driving the current internal design of <code>indexed_set</code>.
 
 <ul>
   <li><a href="#hashed_indices">Hashed indices</a></li>
-  <li><a href="#sentries">Sentries</a></li>
+  <li><a href="#notifying">Notifying indices</a></li>
   <li><a href="#user_defined_indices">User-defined indices</a></li>
   <li><a href="#indexed_maps">Indexed maps</a></li>
   <li><a href="#serialization">Serialization support</a></li>
@@ -43,21 +43,61 @@ has been submitted for acceptance into the next revision of the
 C++ standard.
 </p>
 
-<h2><a name="sentries">Sentries</a></h2>
+<h2><a name="notifying">Notifying indices</a></h2>
 
 <p>
-A <i>sentry index</i> can be thought of as a void index whose only
-purpose is to receive events from the enclosing <code>indexed_set</code>
-(insertion, erasing, modifying of elements) and signal them to an
-external entity --for instance, by means of the
+<i>Notifying indices</i> can be implemented as decorators over
+preexistent index types, with the added functionality that internal
+events of the index (insertion, erasing, modifying of elements) are
+signalled to an external entity --for instance, by means of the
 <a href="../../../doc/html/signals.html">Boost.Signals</a>
-library. This special type of index can have applications for:
+library. This functionality can have applications for:
 <ol>
   <li>Logging,</li>
   <li>interfacing to GUI-based applications,</lu>
   <li>synchronization between separate data structures.</li>
 </ol>
 </p>
+
+<p>
+The following is a sketch of a possible realization of notifying
+indices:
+</p>
+
+<blockquote><pre>
+<span class=keyword>struct</span> <span class=identifier>insert_log</span>
+<span class=special>{</span>
+  <span class=keyword>void</span> <span class=keyword>operator</span><span class=special>()(</span><span class=keyword>int</span> <span class=identifier>x</span><span class=special>)</span>
+  <span class=special>{</span>
+    <span class=identifier>std</span><span class=special>::</span><span class=identifier>clog</span><span class=special>&lt;&lt;</span><span class=string>&quot;insert: &quot;</span><span class=special>&lt;&lt;</span><span class=identifier>x</span><span class=special>&lt;&lt;</span><span class=identifier>std</span><span class=special>::</span><span class=identifier>endl</span><span class=special>;</span>
+  <span class=special>}</span>
+<span class=special>};</span>
+
+<span class=keyword>int</span> <span class=identifier>main</span><span class=special>()</span>
+<span class=special>{</span>
+  <span class=keyword>typedef</span> <span class=identifier>indexed_set</span><span class=special>&lt;</span>
+    <span class=keyword>int</span><span class=special>,</span>
+    <span class=identifier>index_list</span><span class=special>&lt;</span>
+      <span class=identifier>notifying</span><span class=special>&lt;</span><span class=identifier>unique</span><span class=special>&lt;</span><span class=identifier>identity</span><span class=special>&lt;</span><span class=keyword>int</span><span class=special>&gt;</span> <span class=special>&gt;</span> <span class=special>&gt;,</span> <span class=comment>// notifying index</span>
+      <span class=identifier>non_unique</span><span class=special>&lt;</span><span class=identifier>identity</span><span class=special>&lt;</span><span class=keyword>int</span><span class=special>&gt;</span> <span class=special>&gt;</span>
+    <span class=special>&gt;</span>
+  <span class=special>&gt;</span> <span class=identifier>indexed_t</span><span class=special>;</span>
+
+  <span class=identifier>indexed_t</span> <span class=identifier>t</span><span class=special>;</span>
+
+  <span class=comment>// on_insert is the signal associated to insertions</span>
+  <span class=identifier>t</span><span class=special>.</span><span class=identifier>on_insert</span><span class=special>.</span><span class=identifier>connect</span><span class=special>(</span><span class=identifier>insert_log</span><span class=special>());</span>
+
+  <span class=identifier>t</span><span class=special>.</span><span class=identifier>insert</span><span class=special>(</span><span class=number>0</span><span class=special>);</span>
+  <span class=identifier>t</span><span class=special>.</span><span class=identifier>insert</span><span class=special>(</span><span class=number>1</span><span class=special>);</span>
+
+  <span class=keyword>return</span> <span class=number>0</span><span class=special>;</span>
+<span class=special>}</span>
+
+<span class=comment>// output:
+//   insert: 0
+//   insert: 1</span>
+</pre></blockquote>
 
 <h2><a name="user_defined_indices">User-defined indices</a></h2>
 
@@ -135,7 +175,7 @@ is impractical and less elegant syntaxes should be resorted to.
 
 <hr>
 
-<p>Revised February 12th 2004</p>
+<p>Revised March 17th 2004</p>
 
 <p>Copyright &copy; 2003-2004 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
 Use, modification, and distribution are subject to the Boost Software 

@@ -372,11 +372,7 @@ element. Otherwise, an iterator to an element that caused the insertion to be
 banned. Note that more than one element can be causing insertion not to be
 allowed.<br>
 <b>Complexity:</b> <code>O(I(n))</code>.<br>
-<b>Exception safety:</b> Strong.<br>
-<b>Note:</b> The semantics and complexity of this member function do not conform to
-the requirements of a
-<a href="http://www.sgi.com/tech/stl/UniqueAssociativeContainer.html">
-<code>Unique Associative Container</code></a>.
+<b>Exception safety:</b> Strong.
 </blockquote>
 
 <code>void insert(iterator position,size_type n,const value_type& x);</code>
@@ -407,11 +403,7 @@ index of the <code>indexed_set</code> to which this index belongs.
 </pre></blockquote>
 <b>Complexity:</b> <code>O(m*I(n+m))</code>, where <code>m</code> is the
 number of elements in [<code>first</code>,<code>last</code>).<br>
-<b>Exception safety:</b> Basic.<br>
-<b>Note:</b> The semantics and complexity of this member function do not conform to
-the requirements of a
-<a href="http://www.sgi.com/tech/stl/UniqueAssociativeContainer.html">
-<code>Unique Associative Container</code></a>.
+<b>Exception safety:</b> Basic.
 </blockquote>
 
 <code>void erase(iterator position);</code>
@@ -671,7 +663,7 @@ not throw; otherwise, basic.
 
 <hr>
 
-<p>Revised February 12th 2004</p>
+<p>Revised March 17th 2004</p>
 
 <p>Copyright &copy; 2003-2004 Joaqu&iacute;n M L&oacute;pez Mu&ntilde;oz.
 Use, modification, and distribution are subject to the Boost Software 
