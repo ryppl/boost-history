@@ -96,10 +96,8 @@ namespace boost
       hint.ai_protocol = protocol;
 
       result = ::getaddrinfo(name, service, &hint, &m_addrinfo);
-      if (result != 0)
-      {
-        throw socket_exception("getaddrinfo",result);
-      }
+//       if (result != 0)
+//          throw socket_exception("getaddrinfo",result);
     }
 
   }// namespace
