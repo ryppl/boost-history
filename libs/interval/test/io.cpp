@@ -17,10 +17,10 @@ template<class T>
 bool test(int precision) {
   interval<T> pi_i( 3.1415926, 3.1415927 );
   // write pi_i to a string
-  std::string pi_string;
-  std::ostringstream oss(&pi_string);
+  std::ostringstream oss;
   oss.precision(precision);
   oss << pi_i;
+  std::string pi_string = oss.str();
 #ifdef BOOST_INTERVAL_IO_VERBOSE
   std::cerr << "FYI: printing [3.1415926,3.1415927] with precision "
             << precision << " as "
