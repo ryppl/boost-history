@@ -33,14 +33,20 @@ template<typename Node>
 class index_iterator:
   public boost::bidirectional_iterator_helper<
     index_iterator<Node>,
-    const typename Node::value_type>,
+    typename Node::value_type,
+    std::ptrdiff_t,
+    const typename Node::value_type*,
+    const typename Node::value_type&>,
   public safe_iterator<index_proxy<Node> >
 #else
 template<typename Node,typename Container>
 class index_iterator:
   public boost::bidirectional_iterator_helper<
     index_iterator<Node,Container>,
-    const typename Node::value_type>,
+    typename Node::value_type,
+    std::ptrdiff_t,
+    const typename Node::value_type*,
+    const typename Node::value_type&>,
   public safe_iterator<Container>
 #endif
 #else
@@ -48,7 +54,10 @@ template<typename Node>
 class index_iterator:
   public boost::bidirectional_iterator_helper<
     index_iterator<Node>,
-    const typename Node::value_type>
+    typename Node::value_type,
+    std::ptrdiff_t,
+    const typename Node::value_type*,
+    const typename Node::value_type&>
 #endif
 
 {
