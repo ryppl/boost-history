@@ -24,7 +24,7 @@
 #define BOOST_LANGBINDING_REGISTRY_IMPLEMENTATION
 
 #include <boost/langbinding/registry.hpp>
-#include <boost/langbinding/registration.ipp>
+#include <boost/langbinding/registration.hpp>
 #include <boost/langbinding/central_registry.hpp>
 
 #include <boost/langbinding/rvalue_data.hpp>
