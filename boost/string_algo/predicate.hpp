@@ -14,6 +14,12 @@
 #include <boost/string_algo/compare.hpp>
 #include <boost/string_algo/predicate2.hpp>
 
+/*! \file boost/string_algo/predicate.hpp
+	The algorithms are resolving if a substring is contained in 
+	the input string under various conditions. These conditions are 
+	suffix and prefix check, equality check and containment check. 
+*/
+
 namespace boost {
 
 //  starts_with predicate  -----------------------------------------------//

@@ -16,6 +16,16 @@
 #include <boost/string_algo/classification.hpp>
 #include <locale>
 
+/*!	\file
+	Trim algorithms are used to remove trailing and leading spaces from a 
+	sequence (string). Space is recognized using given locales.
+	
+	
+	Space characters are selected using a predicate (functor). 
+	Functions take a selection predicate as a parameter, which is used to determine 
+	if a charater is a space. Common predicates are provided in classification.hpp header
+*/
+
 namespace boost {
 
 	//! Left trim

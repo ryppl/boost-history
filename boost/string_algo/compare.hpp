@@ -13,7 +13,9 @@
 #include <boost/string_algo/config.hpp>
 #include <locale>
 
-// Element comparison predicates
+/*! \file
+	Defines element comparison predicates.	
+*/
 
 namespace boost {
     namespace string_algo {
@@ -28,6 +30,9 @@ namespace boost {
         struct is_equal
         {
 			//! Function operator
+			/*!
+				Compare two operands for equality
+			*/
             template< typename T1, typename T2 >
                 bool operator ()( const T1& Arg1, const T2& Arg2 ) const
             {
@@ -50,6 +55,9 @@ namespace boost {
                 m_Loc( Loc ) {}
 
 			//! Function operator 
+			/*!
+				Compare two operands. Case is ignored.
+			*/
             template< typename T1, typename T2 >
                 bool operator ()( const T1& Arg1, const T2& Arg2 ) const
             {

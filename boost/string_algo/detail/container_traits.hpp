@@ -23,7 +23,7 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/detail/iterator.hpp>
-#include <boost/string_algo/detail/yes_no_type.hpp>
+#include <boost/string_algo/yes_no_type.hpp>
 
 // Container traits implementation ---------------------------------------------------------
 

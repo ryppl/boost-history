@@ -10,7 +10,7 @@
 #ifndef BOOST_STRING_ALGO_HPP
 #define BOOST_STRING_ALGO_HPP
 
-/*! \file boost/string_algo.hpp
+/*! \file
 	Cummulative include for string_algo library
 */
 

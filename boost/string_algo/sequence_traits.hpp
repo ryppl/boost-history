@@ -12,7 +12,12 @@
 
 #include <boost/config.hpp>
 #include <boost/mpl/bool.hpp>
-#include <boost/string_algo/detail/yes_no_type.hpp>
+#include <boost/string_algo/yes_no_type.hpp>
+
+/*! \file
+	Defines sequence_traits class. This class it used to determine semantic properties
+	of containers. Algoritms can take advantage of this information.
+*/
 
 namespace boost {
 
@@ -20,29 +25,41 @@ namespace boost {
 
 //  sequence traits  -----------------------------------------------//
 
-        // native replace tester
-        /*
+        //! native replace tester
+        /*!
+			Declare an override of this tester function with return 
+			type boost::string_algo::yes_type for a container with this property.
+
             \return yes_type if the container has basic_string like native replace
             method.
         */
         no_type sequence_has_native_replace(...);
 
-        // stable iterators tester
-        /*
-            \return yes_type if the container's insert/replace/erase methods do not invalidate
+        //! stable iterators tester
+        /*!
+			Declare an override of this tester function with return 
+			type boost::string_algo::yes_type for a container with this property.
+
+			\return yes_type if the container's insert/replace/erase methods do not invalidate
             existing iterators.
         */
         no_type sequence_has_stable_iterators(...);                     
 
-        // const time insert tester
-        /*
-            \return yes_type if the container's insert method is working in constant time
+        //! const time insert tester
+        /*!
+			Declare an override of this tester function with return 
+			type boost::string_algo::yes_type for a container with this property.
+
+			\return yes_type if the container's insert method is working in constant time
         */
         no_type sequence_has_const_time_insert(...);                        
 
-        // const time erase tester
-        /*
-            \return yes_type if the container's erase method is working in constant time
+        //! const time erase tester
+        /*!
+			Declare an override of this tester function with return 
+			type boost::string_algo::yes_type for a container with this property.
+
+			\return yes_type if the container's erase method is working in constant time
         */
         no_type sequence_has_const_time_erase(...);                     
 	
@@ -53,7 +70,14 @@ namespace boost {
             better performance for specific containers.
             This class template provides a default selection of sequence properties. 
             New containers can supported eihter by specializing the whole class,
-            or by providing a specific overrides for tester functinons.
+            or by providing a specific overrides for tester functions.
+
+			Due to language restriction, it is not currently possible to specialize
+			stl containers without including the stl header. To decrease overhead,
+			needed by this inclusion, user can selectively include specialization 
+			header for a specific container. They are located in boost/string_algo/stl
+			directory. Alternatively she can include boost/string_algo/std_container_traits.hpp
+			header which container specialization for all stl containers.
         */
         template< typename SequenceT >
         struct sequence_traits

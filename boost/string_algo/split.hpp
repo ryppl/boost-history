@@ -17,7 +17,7 @@
 #include <boost/string_algo/find2.hpp>
 #include <boost/string_algo/compare.hpp>
 
-/*! \file boost/string_algo/split.hpp
+/*! \file
 	This file contains a set of basic split algorithms. 
 	Split algorithms can be used to divide a sequence
 	into several part accorfing to a given criterium.

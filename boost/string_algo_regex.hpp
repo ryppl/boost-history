@@ -10,9 +10,9 @@
 #ifndef BOOST_STRING_ALGO_REGEX_HPP
 #define BOOST_STRING_ALGO_REGEX_HPP
 
-/*! \file boost/string_algo_regex.hpp
+/*! \file
 	Cummulative include for string_algo library.
-	Container also regex-related stuff
+	In addtion to string_algo.hpp, it contains also regex-related stuff.
 */
 
 #include <boost/regex.hpp>

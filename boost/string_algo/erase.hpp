@@ -17,6 +17,11 @@
 #include <boost/string_algo/find2.hpp>
 #include <boost/string_algo/format2.hpp>
 
+/*! \file
+	This header defines various erase algorithms. Each algorithm removes
+	a part(s) of the input according to searching criteria.
+*/
+
 namespace boost {
 
 //  erase_range -------------------------------------------------------//

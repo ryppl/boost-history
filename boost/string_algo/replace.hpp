@@ -18,6 +18,11 @@
 #include <boost/string_algo/format2.hpp>
 #include <boost/string_algo/compare.hpp>
 
+/*! \file
+	This header defines various erase algorithms. Each algorithm replaces
+	a part(s) of the input according to searching and replace criteria.
+*/
+
 namespace boost {
 
 //  replace_range --------------------------------------------------------------------//

@@ -14,7 +14,7 @@
 #include <locale>
 #include <boost/string_algo/detail/classification.hpp>
 
-/*! \file boost/string_algo/classification.hpp
+/*! \file
 	Classification predicates are included in the library to give 
 	some more convinience when using algorithms like trim and all. 
 	In general they wrap funcionality of std::isXXXX methods into generic functors. 

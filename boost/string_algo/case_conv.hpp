@@ -16,7 +16,7 @@
 #include <boost/string_algo/container_traits.hpp>
 #include <boost/string_algo/detail/case_conv.hpp>
 
-/*! \file boost/string_algo/case_conv.hpp
+/*! \file
 	Sequence case conversion algorithms are located in this header file.
 	Algorithm convert each element in the input sequence to the
 	desired case using provided locales.
