@@ -20,9 +20,9 @@ void* construct(void* src, void* storage)
 
 int main()
 {
-    arg_conversion args[2] = { 
-        0, 0, &construct
-      , 0, &y, 0
+    boost::langbinding::converter::arg_conversion args[2] = { 
+        { 0, 0, &construct }
+      , { 0, &y, 0 }
     };
 
     struct rc_ : result_converter<void>
