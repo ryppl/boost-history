@@ -5,14 +5,22 @@
 // Distributed under the Boost Software License, Version 1.0. (See accompany-
 // ing file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //----------------------------------------------------------------------------
+// Change log:
+// - 29 Oct 2004: Jonathan Turkanis added VC7.1 workarounds and move_ptr 
+//   emulation
+//----------------------------------------------------------------------------
 #ifndef BOOST_SMART_PTR_HPP
 #define BOOST_SMART_PTR_HPP
 //----------------------------------------------------------------------------
 // Headers
+#include <functional>
 #include <stdexcept>
 #include <boost/config.hpp>
+#include <boost/detail/workaround.hpp>
 #include <boost/type_traits/is_class.hpp>
 #include <boost/type_traits/same_traits.hpp>
+#include <boost/type_traits/is_const.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/apply.hpp>
@@ -20,14 +28,44 @@
 #include <boost/mpl/list.hpp>
 #include <boost/mpl/find_if.hpp>
 #include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/has_xxx.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/mpl/not.hpp>
+#include <boost/mpl/empty_base.hpp>
+#include <boost/preprocessor/repetition/enum_params.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/type_traits/is_convertible.hpp>
+#include <boost/utility/enable_if.hpp>
+
+#if defined(BOOST_MSVC) && \
+    BOOST_WORKAROUND(_MSC_FULL_VER, BOOST_TESTED_AT(140040607)) \
+    /**/
+# pragma warning(push)
+# pragma warning(disable:4521) // Multiple copy constructors
+#endif
+
 //----------------------------------------------------------------------------
 // Policies
 namespace boost
 {
     //------------------------------------------------------------------------
     // Policy Tags
-    struct copy_semantics_tag { };
-    struct move_semantics_tag { };
+    struct copy_rvalue_tag { }; // Included for clarity.
+    struct copy_mutable_lvalue_tag { };
+    struct copy_const_lvalue_tag { };
+    struct copy_lvalue_tag 
+        : copy_mutable_lvalue_tag, 
+          copy_const_lvalue_tag
+        { };
+    struct copy_semantics_tag 
+        : copy_rvalue_tag, 
+          copy_lvalue_tag 
+        { };
+    struct move_semantics_tag : copy_rvalue_tag { };
+    struct auto_semantics_tag 
+        : copy_rvalue_tag, 
+          copy_mutable_lvalue_tag 
+        { };
     struct no_copy_semantics_tag { };
 
     struct storage_policy_tag { };
@@ -59,12 +97,15 @@ namespace boost
 #ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
 # define BOOST_SP_CONVERT_ARGUMENT(Policy, obj, field)                       \
     ((obj).field)
-# define BOOST_SP_DECLARE_TEMPLATE_FRIEND(Param, type)                       \
-    template <typename Param> friend class type;
+# define BOOST_SP_DECLARE_TEMPLATE_FRIEND(Param, type, arity)                \
+    template <BOOST_PP_ENUM_PARAMS(arity, class Param)>                      \
+    friend class type;                   
+# define BOOST_SP_PRIVATE private
 #else // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
 # define BOOST_SP_CONVERT_ARGUMENT(policy, obj, field)                       \
     (reinterpret_cast<policy const&>(obj).field)
-# define BOOST_SP_DECLARE_TEMPLATE_FRIEND(Param, type)
+# define BOOST_SP_DECLARE_TEMPLATE_FRIEND(Param, type, arity)
+# define BOOST_SP_PRIVATE public
 #endif // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
 //----------------------------------------------------------------------------
 // Configuration Macros
@@ -106,18 +147,33 @@ namespace boost
     //------------------------------------------------------------------------
     namespace detail
     {
+    namespace policy_ptr 
+    {
+
         //--------------------------------------------------------------------
         // Cast Tags
-#ifndef BOOST_SHARED_PTR_HPP_INCLUDED
         struct const_cast_tag { };
         struct static_cast_tag { };
         struct dynamic_cast_tag { };
-#endif
+
+        //--------------------------------------------------------------------
+        // Explicit move helper
+        template<typename Ptr>
+        class move_source {
+        public:
+            explicit move_source(Ptr& ptr) : ptr_(ptr) {}
+            Ptr& ptr() const { return ptr_; }
+        private:
+            Ptr& ptr_;
+            move_source(const Ptr&);
+        };
+
         //--------------------------------------------------------------------
         struct empty_policy
         {
             typedef mpl::void_ policy_category;
         };
+
         //--------------------------------------------------------------------
         // Policy Adaptor
         using mpl::_;
@@ -188,71 +244,144 @@ namespace boost
             >
         { };
         //--------------------------------------------------------------------
+    }   // namespace policy_ptr
     }   // namespace detail
+
     //------------------------------------------------------------------------
     // Type generator smart_ptr
     template <
-        class P1 = detail::empty_policy,
-        class P2 = detail::empty_policy,
-        class P3 = detail::empty_policy,
-        class P4 = detail::empty_policy
+        class P1 = detail::policy_ptr::empty_policy,
+        class P2 = detail::policy_ptr::empty_policy,
+        class P3 = detail::policy_ptr::empty_policy,
+        class P4 = detail::policy_ptr::empty_policy
     >
     struct smart_ptr
     {
         template <typename T>
-        struct to;
+        class to;
+        BOOST_SP_DECLARE_TEMPLATE_FRIEND(to, T, 1)
+        BOOST_SP_DECLARE_TEMPLATE_FRIEND(smart_ptr, Q, 4)
+    BOOST_SP_PRIVATE:
+        template <typename SmartPtr>
+        static typename SmartPtr::stored_type 
+        clone(const SmartPtr& ptr, const typename SmartPtr::stored_type& p)
+        {
+            return ptr.do_clone(p);
+        }
+
+        template <typename SmartPtr>
+        static typename SmartPtr::stored_type 
+        clone(const SmartPtr& ptr, typename SmartPtr::stored_type& p)
+        {
+            return ptr.do_clone(p);
+        }
     };
     //------------------------------------------------------------------------
     namespace detail
     {
+    namespace policy_ptr 
+    {
+        //BOOST_MPL_HAS_XXX_TRAIT_NAMED_DEF(has_enclosing_class, enclosing_class, true)
+        BOOST_MPL_HAS_XXX_TRAIT_NAMED_DEF(has_first_policy, first_policy, true)
+        BOOST_MPL_HAS_XXX_TRAIT_NAMED_DEF(has_second_policy, second_policy, true)
+        BOOST_MPL_HAS_XXX_TRAIT_NAMED_DEF(has_third_policy, third_policy, true)
+        BOOST_MPL_HAS_XXX_TRAIT_NAMED_DEF(has_fourth_policy, fourth_policy, true)
+        BOOST_MPL_HAS_XXX_TRAIT_NAMED_DEF(has_element_type, element_type, true)
+
+        template<class SmartPtr>
+        struct is_smart_ptr_impl 
+            : is_same<
+                  SmartPtr,
+                  typename 
+                  smart_ptr<
+                      typename SmartPtr::first_policy,
+                      typename SmartPtr::second_policy,
+                      typename SmartPtr::third_policy,
+                      typename SmartPtr::fourth_policy
+                  >::template to<typename SmartPtr::element_type>
+              >
+            { };
+
+        template<class SmartPtr>
+        struct is_smart_ptr
+            : mpl::and_< // Default arity of and_ is 5.
+                  mpl::and_<
+                      has_first_policy<SmartPtr>,
+                      has_second_policy<SmartPtr>,
+                      has_third_policy<SmartPtr>,
+                      has_fourth_policy<SmartPtr>,
+                      has_element_type<SmartPtr>
+                  >,
+                  is_smart_ptr_impl<typename remove_cv<SmartPtr>::type>
+              >
+            { };
+
+        template<class P1, class P2, class P3, class P4, class SmartPtr>
+        struct is_const_smart_ptr_impl 
+            : is_same<
+                  SmartPtr,
+                  const typename smart_ptr<P1, P2, P3, P4>::template 
+                      to<typename SmartPtr::element_type>
+              >
+            { };
+
+        template<class P1, class P2, class P3, class P4, class SmartPtr>
+        struct is_const_smart_ptr
+            : mpl::and_< 
+                  has_element_type<SmartPtr>,
+                  is_const_smart_ptr_impl<P1, P2, P3, P4, SmartPtr>
+              >
+            { };
+
         //--------------------------------------------------------------------
         // Move semantics logic
-        template <class Category, typename T>
-        struct cant_move_from_const_base
+        template <class SmartPtr, class Tag>
+        struct is_ownership_category_convertible
+            : is_convertible<
+                  typename SmartPtr::ownership_policy::ownership_category,
+                  Tag
+              >
         { };
 
-        template <typename T>
-        struct cant_move_from_const_base<move_semantics_tag, T>
-        {
-            typedef typename T::error type;
+        template <class SmartPtr>
+        struct cant_move_from_const_lvalue
+        {   // Indicates improper use of move semantics. 
+            typedef typename SmartPtr::error type;
         };
 
-        template <class SmartPtr>
-        struct cant_move_from_const_base_f
-        {
-            typedef cant_move_from_const_base<
-                typename SmartPtr::ownership_policy::ownership_category,
-                typename SmartPtr::element_type
-            > type;
-        };
-            
-        template <class SmartPtr>
-        struct cant_move_from_const;
+        template <class P1, class P2, class P3, class P4, class SmartPtr>
+        struct enforce_move_semantics
+            : mpl::if_<
+                  mpl::and_<
+                      is_const_smart_ptr<P1, P2, P3, P4, SmartPtr>,
+                      mpl::not_<
+                          is_ownership_category_convertible<
+                              SmartPtr, copy_const_lvalue_tag
+                          >
+                      >
+                  >,
+                  cant_move_from_const_lvalue<SmartPtr>,
+                  mpl::empty_base
+              >::type
+            { };
 
-        template <class P1, class P2, class P3, class P4, typename T>
-        struct cant_move_from_const<typename smart_ptr<P1, P2, P3, P4>::template to<T> const>
-            : mpl::apply<
-                cant_move_from_const_base_f<
-                    typename smart_ptr<P1, P2, P3, P4>::template to<T>
-                >
-            >
-        { };
         //--------------------------------------------------------------------
     }   // namespace detail
+    }   // namespace policy_ptr
     //------------------------------------------------------------------------
     // Nested smart_ptr
     template <class P1, class P2, class P3, class P4>
     template <typename T>
     class smart_ptr<P1, P2, P3, P4>::to
-        : public detail::conversion_policy_<                                     \
-            T, mpl::list<P1, P2, P3, P4>, BOOST_SP_DEFAULT_CONVERSION_POLICY     \
+        : public detail::policy_ptr::conversion_policy_<                       \
+            T, mpl::list<P1, P2, P3, P4>, BOOST_SP_DEFAULT_CONVERSION_POLICY   \
         >::type
     {
     public:             // Public Types
         typedef T                               element_type;
         typedef T                               value_type;
-        typedef typename detail::conversion_policy_<                                     \
-            T, mpl::list<P1, P2, P3, P4>, BOOST_SP_DEFAULT_CONVERSION_POLICY     \
+        typedef typename detail::policy_ptr::conversion_policy_<               \
+            T, mpl::list<P1, P2, P3, P4>, BOOST_SP_DEFAULT_CONVERSION_POLICY   \
         >::type                                 conversion_policy;
         typedef typename conversion_policy::checking_policy
                                                 checking_policy;
@@ -279,6 +408,12 @@ namespace boost
                                                 stored_param;
         typedef typename storage_policy::pointer_param
                                                 pointer_param;
+
+        typedef P1 first_policy;
+        typedef P2 second_policy;
+        typedef P3 third_policy;
+        typedef P4 fourth_policy;
+        typedef smart_ptr<P1, P2, P3, P4> enclosing_class;
 
         template <typename U>
         struct rebind
@@ -308,7 +443,8 @@ namespace boost
         to(this_type const& rhs)
             : base_type(static_cast<base_type const&>(rhs))
         {
-            get_impl_ref(*this) = ownership_policy::clone(get_impl_ref(rhs));
+            get_impl_ref(*this) = 
+                enclosing_class::clone(rhs, get_impl_ref(rhs));
             BOOST_SP_CONSTRUCTOR_HOOK(*this, "smart_ptr(smart_ptr const&)");
         }
 
@@ -316,19 +452,21 @@ namespace boost
         to(SmartPtr const& rhs, typename SmartPtr::pointer_type = 0)
             : base_type(static_cast<typename SmartPtr::base_type const&>(rhs))
         {
-            get_impl_ref(*this) = ownership_policy::clone(get_impl_ref(rhs));
+            get_impl_ref(*this) = 
+                enclosing_class::clone(rhs, get_impl_ref(rhs));
             BOOST_SP_CONSTRUCTOR_HOOK(
                 *this, "smart_ptr(smart_ptr<U, Q1, Q2, Q3, Q4> const&)"
             );
         }
 
         template <class SmartPtr>
-        to(SmartPtr const& rhs, detail::const_cast_tag)
+        to(SmartPtr const& rhs, detail::policy_ptr::const_cast_tag)
             : base_type(static_cast<typename SmartPtr::base_type const&>(rhs))
         {
-            get_impl_ref(*this) = ownership_policy::clone(
-                const_cast<stored_type>(get_impl_ref(rhs))
-            );
+            get_impl_ref(*this) = 
+                const_cast<stored_type>(
+                    enclosing_class::clone(rhs, get_impl_ref(rhs))
+                );
             BOOST_SP_CONSTRUCTOR_HOOK(
                 *this,
                 "smart_ptr(smart_ptr<U, Q1, Q2, Q3, Q4> const&, const_cast_tag)"
@@ -336,12 +474,13 @@ namespace boost
         }
 
         template <class SmartPtr>
-        to(SmartPtr const& rhs, detail::static_cast_tag)
+        to(SmartPtr const& rhs, detail::policy_ptr::static_cast_tag)
             : base_type(static_cast<typename SmartPtr::base_type const&>(rhs))
         {
-            get_impl_ref(*this) = ownership_policy::clone(
-                static_cast<stored_type>(get_impl_ref(rhs))
-            );
+            get_impl_ref(*this) = 
+                static_cast<stored_type>(
+                    enclosing_class::clone(rhs, get_impl_ref(rhs))
+                );
             BOOST_SP_CONSTRUCTOR_HOOK(
                 *this,
                 "smart_ptr(smart_ptr<U, Q1, Q2, Q3, Q4> const&, "
@@ -350,12 +489,13 @@ namespace boost
         }
 
         template <class SmartPtr>
-        to(SmartPtr const& rhs, detail::dynamic_cast_tag)
+        to(SmartPtr const& rhs, detail::policy_ptr::dynamic_cast_tag)
             : base_type(static_cast<typename SmartPtr::base_type const&>(rhs))
         {
-            get_impl_ref(*this) = ownership_policy::clone(
-                dynamic_cast<stored_type>(get_impl_ref(rhs))
-            );
+            get_impl_ref(*this) = 
+                dynamic_cast<stored_type>(
+                    enclosing_class::clone(rhs, get_impl_ref(rhs))
+                );
             if (!*this)
             {
                 // dynamic_cast<> failed; reset count
@@ -365,6 +505,23 @@ namespace boost
                 *this,
                 "smart_ptr(smart_ptr<U, Q1, Q2, Q3, Q4> const&, "
                     "dynamic_cast_tag)"
+            );
+        }
+
+        template <class SmartPtr>
+        to(detail::policy_ptr::move_source<SmartPtr> const& rhs)
+            : base_type(static_cast<typename SmartPtr::base_type const&>(rhs.ptr()))
+        {
+            BOOST_STATIC_ASSERT((
+                !is_convertible<
+                    typename ownership_policy::ownership_category,
+                    copy_lvalue_tag
+                >::value
+            ));
+            get_impl_ref(*this) = 
+                enclosing_class::clone(rhs.ptr(), get_impl_ref(rhs.ptr()));
+            BOOST_SP_CONSTRUCTOR_HOOK(
+                *this, "smart_ptr(smart_ptr<U, Q1, Q2, Q3, Q4> const&)"
             );
         }
 
@@ -411,10 +568,52 @@ namespace boost
         {
             BOOST_SP_DESTRUCTOR_HOOK(*this, "~smart_ptr(void)");
         }
+    BOOST_SP_PRIVATE: // Cloning machinery
+        BOOST_SP_DECLARE_TEMPLATE_FRIEND(Q, smart_ptr, 4)
+        stored_type do_clone(const stored_type& p) const
+        {
+            return ownership_policy::clone(p);
+        }
+
+        stored_type do_clone(stored_type& p) const
+        {
+            return ownership_policy::clone(p);
+        }
+    public: // Move semantics machinery
+        to(this_type& rhs)
+            : base_type(static_cast<base_type const&>(rhs))
+        {
+            BOOST_STATIC_ASSERT((
+                is_convertible<
+                    typename ownership_policy::ownership_category,
+                    copy_mutable_lvalue_tag
+                >::value
+            ));
+            get_impl_ref(*this) = 
+                enclosing_class::clone(rhs, get_impl_ref(rhs));
+            BOOST_SP_CONSTRUCTOR_HOOK(*this, "smart_ptr(smart_ptr const&)");
+        }
+    private: // More move semantics machinery
+        template <class SmartPtr>
+        to( SmartPtr&,
+            typename 
+            enable_if< 
+                mpl::and_<
+                    detail::policy_ptr::is_smart_ptr<SmartPtr>,
+                    mpl::not_<
+                        is_convertible<
+                            typename ownership_policy::ownership_category,
+                            copy_mutable_lvalue_tag
+                        >
+                    >
+                >
+            >::type* = 0 );
 
         template <class U>
-        to(U&, typename detail::cant_move_from_const<U>::type = 0);
-
+        to( U&, 
+            typename detail::policy_ptr::enforce_move_semantics<
+                P1, P2, P3, P4, U
+            >::type = 0 );
     public:             // Ownership modifiers
         to&             operator=(this_type rhs)
         {
@@ -584,27 +783,6 @@ namespace boost
         }
 
     public:             // Concept Interface
-        template <typename U>
-        friend inline
-        to<U>           const_pointer_cast(to const& p)
-        {
-            return to<U>(p, detail::const_cast_tag());
-        }
-
-        template <typename U>
-        friend inline
-        to<U>           static_pointer_cast(to const& p)
-        {
-            return to<U>(p, detail::static_cast_tag());
-        }
-
-        template <typename U>
-        friend inline
-        to<U>           dynamic_pointer_cast(to const& p)
-        {
-            return to<U>(p, detail::dynamic_cast_tag());
-        }
-
         friend inline
         pointer_type    get_pointer(to const& p)
         {
@@ -617,6 +795,51 @@ namespace boost
             lhs.swap(rhs);
         }
     };
+
+    template <typename U, typename Ptr>
+    inline 
+    typename enable_if<
+        detail::policy_ptr::is_smart_ptr<Ptr>,
+        typename Ptr::enclosing_class::template to<U>
+    >::type
+    const_pointer_cast(Ptr const& p)
+    {
+        typedef typename Ptr::enclosing_class::template to<U> result_type;
+        return result_type(p, detail::policy_ptr::const_cast_tag());
+    }
+
+    template <typename U, typename Ptr>
+    typename enable_if<
+        detail::policy_ptr::is_smart_ptr<Ptr>,
+        typename Ptr::enclosing_class::template to<U>
+    >::type
+    static_pointer_cast(Ptr const& p)
+    {
+        typedef typename Ptr::enclosing_class::template to<U> result_type;
+        return result_type(p, detail::policy_ptr::static_cast_tag());
+    }
+
+    template <typename U, typename Ptr>
+    typename enable_if<
+        detail::policy_ptr::is_smart_ptr<Ptr>,
+        typename Ptr::enclosing_class::template to<U>
+    >::type
+    dynamic_pointer_cast(Ptr const& p)
+    {
+        typedef typename Ptr::enclosing_class::template to<U> result_type;
+        return result_type(p, detail::policy_ptr::dynamic_cast_tag());
+    }
+
+    template <typename Ptr>
+    typename enable_if<
+        detail::policy_ptr::is_smart_ptr<Ptr>,
+        detail::policy_ptr::move_source<Ptr>
+    >::type
+    move(Ptr& p)
+    {
+        return detail::policy_ptr::move_source<Ptr>(p);
+    }
+
     //------------------------------------------------------------------------
     template <typename T>
     struct less;
@@ -643,4 +866,11 @@ namespace boost
     //------------------------------------------------------------------------
 }   // namespace boost
 //----------------------------------------------------------------------------
+
+#if defined(BOOST_MSVC) && \
+    BOOST_WORKAROUND(_MSC_FULL_VER, BOOST_TESTED_AT(140040607)) \
+    /**/
+# pragma warning(pop)
+#endif
+
 #endif // BOOST_SMART_PTR_HPP
