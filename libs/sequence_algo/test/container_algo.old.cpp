@@ -486,24 +486,26 @@ namespace
 
     void test_mismatch()
     {
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
         TEST_DATA;
         int seeking[] = { 1, 2, 3};
-        pair<int*, int*>            pp  = ext::mismatch( p, begin( seeking ) );
-        pair<const int*, int*>      pcp = ext::mismatch( cp, begin( seeking ) );
-        pair<int*, int*>            pa  = ext::mismatch( a, begin( seeking ) );
-        pair<const int*, int*>      pca = ext::mismatch( ca, begin( seeking ) );
-        pair<iterator, int*>        pv  = ext::mismatch( v, begin( seeking ) );
-        pair<const_iterator, int*>  pcv = ext::mismatch( cv, begin( seeking ) );
+        pair<int*, int*>            pp  = ext::mismatch( p, seeking );
+        pair<const int*, int*>      pcp = ext::mismatch( cp, seeking );
+        pair<int*, int*>            pa  = ext::mismatch( a, seeking );
+        pair<const int*, int*>      pca = ext::mismatch( ca, seeking );
+        pair<iterator, int*>        pv  = ext::mismatch( v, seeking );
+        pair<const_iterator, int*>  pcv = ext::mismatch( cv, seeking );
         assert( pcv == mismatch( cv.begin(), cv.end(), seeking ) );
 
-        pp  = ext::mismatch( p, begin( seeking ), bin_predicate() ); 
-        pcp = ext::mismatch( cp, begin( seeking ), bin_predicate() );
-        pa  = ext::mismatch( a, begin( seeking ), bin_predicate() ); 
-        pca = ext::mismatch( ca, begin( seeking ), bin_predicate() );
-        pv  = ext::mismatch( v, begin( seeking ), bin_predicate() );
-        pcv = ext::mismatch( cv, begin( seeking ), bin_predicate() );
+        pp  = ext::mismatch( p, seeking, bin_predicate() ); 
+        pcp = ext::mismatch( cp, seeking, bin_predicate() );
+        pa  = ext::mismatch( a, seeking, bin_predicate() ); 
+        pca = ext::mismatch( ca, seeking, bin_predicate() );
+        pv  = ext::mismatch( v, seeking, bin_predicate() );
+        pcv = ext::mismatch( cv, seeking, bin_predicate() );
         assert( pcv == mismatch( cv.begin(), cv.end(), 
-                                 begin( seeking ), bin_predicate() ) );
+                                 seeking, bin_predicate() ) );
+#endif
     }
 
 
@@ -511,23 +513,23 @@ namespace
     void test_equal()
     {
         TEST_DATA;
-        ext::equal( a, begin( a ) );
-        ext::equal( ca, begin( ca ) );
-        ext::equal( p, begin( p ) );
-        ext::equal( cp, begin( cp ) );
-        ext::equal( v, begin( v ) );
-        assert( ext::equal( cv, begin( cv ) ) == 
+        ext::equal( a, a );
+        ext::equal( ca, ca );
+        ext::equal( p, p );
+        ext::equal( cp, cp );
+        ext::equal( v, v );
+        assert( ext::equal( cv, cv ) == 
                 equal( cv.begin(), cv.end(), cv.begin() ) );
 
         //
         // @note: clash with std::equal
         //
-        ext::equal( p, begin( p ), bin_predicate() );
-        ext::equal( cp, begin( cp ), bin_predicate() );
-        ext::equal( a, begin( a ), bin_predicate() );
-        ext::equal( ca, begin( ca ), bin_predicate() );
-        ext::equal( v, begin( v ), bin_predicate() );
-        assert( ext::equal( cv, begin( cv ), bin_predicate() ) ==
+        ext::equal( p, p, bin_predicate() );
+        ext::equal( cp, cp, bin_predicate() );
+        ext::equal( a, a, bin_predicate() );
+        ext::equal( ca, ca, bin_predicate() );
+        ext::equal( v, v, bin_predicate() );
+        assert( ext::equal( cv, cv, bin_predicate() ) ==
                 equal( cv.begin(), cv.end(), cv.begin(), bin_predicate() ) );
 
     }
@@ -547,7 +549,7 @@ namespace
         iter   = search( v, seeking );
         citer  = search( cv, seeking );
         assert( citer == search( cv.begin(), cv.end(), 
-				 begin( seeking ), seeking.end() ) );
+				 seeking.begin(), seeking.end() ) );
 
         aiter  = search( p, seeking, bin_predicate() );
         caiter = search( cp, seeking, bin_predicate() );
@@ -556,7 +558,7 @@ namespace
         iter   = search( v, seeking, bin_predicate() );
         citer  = search( cv, seeking, bin_predicate() );
         assert( citer == search( cv.begin(), cv.end(), 
-				 begin( seeking ), seeking.end(), 
+				 seeking.begin(), seeking.end(), 
                                  bin_predicate() ) );
     }
 
@@ -600,7 +602,7 @@ namespace
         iter   = find_end( v, seeking );
         citer  = find_end( cv, seeking );
         assert( citer == find_end( cv.begin(), cv.end(), 
-                                   begin( seeking ), seeking.end() ) );
+                                   seeking.begin(), seeking.end() ) );
 
         aiter  = find_end( p, seeking, bin_predicate() );
         caiter = find_end( cp, seeking, bin_predicate() );
@@ -609,7 +611,7 @@ namespace
         iter   = find_end( v, seeking, bin_predicate() );
         citer  = find_end( cv, seeking, bin_predicate() );
         assert( citer == find_end( cv.begin(), cv.end(), 
-                                   begin( seeking ), seeking.end(),
+                                   seeking.begin(), seeking.end(),
                                    bin_predicate() ) );
     }
 
@@ -622,9 +624,9 @@ namespace
         TEST_DATA;
         vector<int> copy1( a_size ), copy2( a_size );
 
-        copy( a, begin( copy1 ) );
+        copy( a, copy1 );
         copy( begin( a ), end( a ), begin( copy2 ) );
-        assert( ext::equal( copy1, begin( copy2 ) ) );
+        assert( ext::equal( copy1, copy2 ) );
 
 	copy( a, out );
     }
@@ -636,9 +638,9 @@ namespace
         TEST_DATA;
         vector<int> copy1( a_size ), copy2( a_size );
 
-        copy_backward( a, begin( copy1 ) );
+        copy_backward( a, copy1 );
         copy_backward( begin( a ), end( a ), end( copy2 ) );
-        assert( ext::equal( copy1, begin( copy2 ) ) );
+        assert( ext::equal( copy1, copy2 ) );
     }
 
 
@@ -647,13 +649,13 @@ namespace
     {
         TEST_DATA;
         vector<int> copy1( a_size ), copy2( a_size ), a2( a_size );
-        copy( a, begin( a2 ) );
+        copy( a, a2 );
         vector<int>::iterator iter2;
 
-        iter  = swap_ranges( a, begin( copy1 ) );
-        swap_ranges( copy1, begin( a ) );
+        iter  = swap_ranges( a, copy1 );
+        swap_ranges( copy1, a );
         iter2 = swap_ranges( begin( a ), end( a ), begin( copy2 ) );
-        assert( ext::equal( a2, begin( copy2 ) ) );
+        assert( ext::equal( a2, copy2 ) );
     }
 
 
@@ -663,14 +665,14 @@ namespace
         TEST_DATA;
         vector<int>  a2( a_size ), a3( a_size ), a4( a_size ), a5( a_size );
 
-        iter = ext::transform( a, begin( a2 ), unary_fun() );
+        iter = transform( a, a2, unary_fun() );
         iter = transform( begin( a ), end( a ), begin( a3 ), unary_fun() );
-        assert( ext::equal( a2, begin( a3 ) ) );
+        assert( ext::equal( a2, a3 ) );
 
-        iter = ext::transform( a, begin( a2 ), begin( a4 ), binary_fun() );
+        iter = transform_( a, a2, a4, binary_fun() );
         iter = transform( begin( a ), end( a ), begin( a2 ), 
                            begin( a5 ), binary_fun() );
-        assert( ext::equal( a4, begin( a5 ) ) );
+        assert( ext::equal( a4, a5 ) );
     }
 
 
@@ -682,7 +684,7 @@ namespace
         vector<int> copy = v;
         replace( v, what, with_what );
         replace( copy.begin(), copy.end(), what, with_what );
-        assert( ext::equal( v, begin( copy ) ) );
+        assert( ext::equal( v, copy ) );
     }
 
 
@@ -694,7 +696,7 @@ namespace
         vector<int> copy = v;
         replace_if( v, predicate(), with_what );
         replace_if( copy.begin(), copy.end(), predicate(), with_what );
-        assert( ext::equal( v, begin( copy ) ) );
+        assert( ext::equal( v, copy ) );
 
     }
 
@@ -705,7 +707,7 @@ namespace
         TEST_DATA;
         int what = 5, with_what = 6;
         vector<int> copy1( v.size() ), copy2( v.size() );
-        iter = replace_copy( v, begin( copy1 ), what, with_what );
+        iter = replace_copy( v, copy1, what, with_what );
         iter = replace_copy( v.begin(), v.end(), copy2.begin(), 
                              what, with_what );
         assert( copy1 == copy2 );
@@ -718,10 +720,10 @@ namespace
         TEST_DATA;
         int with_what = 6;
         vector<int> copy1( v.size() ), copy2( v.size() );
-        iter = replace_copy_if( v, begin( copy1 ), predicate(), with_what );
+        iter = replace_copy_if( v, copy1, predicate(), with_what );
         iter = replace_copy_if( v.begin(), v.end(), copy2.begin(), 
                                 predicate(), with_what );
-        assert( ext::equal( copy1, begin( copy2 ) ) );
+        assert( ext::equal( copy1, copy2 ) );
     }
 
 
@@ -733,7 +735,7 @@ namespace
         vector<int> a( size ), a2( size );
         fill( a, with );
         fill( begin( a2 ), end( a2 ), with );
-        assert( ext::equal( a, begin( a2 ) ) );
+        assert( ext::equal( a, a2 ) );
     }
 
 
@@ -745,7 +747,7 @@ namespace
         vector<int> a( size ), a2( size );
         fill_n_( a, n, with );
         fill_n( begin( a2 ), n, with );
-        assert( ext::equal( a, begin( a2 ) ) );        
+        assert( ext::equal( a, a2 ) );        
     }
 
 
@@ -756,7 +758,7 @@ namespace
         vector<int> a( size ), a2( size );
         generate( a, generator() );
         generate( begin( a2 ), end( a2 ), generator() );
-        assert( ext::equal( a, begin( a2 ) ) );        
+        assert( ext::equal( a, a2 ) );        
     }
 
 
@@ -767,7 +769,7 @@ namespace
         vector<int> a( n ), a2( n );
         ext::generate_n( a, n, generator() );
         generate_n( begin( a2 ), n, generator() );
-        assert( ext::equal( a, begin( a2 ) ) );        
+        assert( ext::equal( a, a2 ) );        
     }
 
 
@@ -777,11 +779,11 @@ namespace
         TEST_DATA;
         vector<int> a2( a_size );
         const int what = 3;
-        copy( a, begin( a2 ) ); 
+        copy( a, a2 ); 
 
         aiter = remove( a, what );
         iter = remove( begin( a2 ), end( a2 ), what );
-        assert( ext::equal( a, begin( a2 ) ) ); // ?
+        assert( ext::equal( a, a2 ) ); // ?
     }
 
 
@@ -791,11 +793,11 @@ namespace
         TEST_DATA;
         vector<int> a2( a_size );
         const int what = 3;
-        copy( a, begin( a2 ) ); 
+        copy( a, a2 ); 
 
         aiter = remove_if( a, predicate() );
         iter  = remove_if( begin( a2 ), end( a2 ), predicate() );
-        assert( ext::equal( a, begin( a2 ) ) );
+        assert( ext::equal( a, a2 ) );
     }
 
 
@@ -808,10 +810,10 @@ namespace
         vector<int>  a2( new_size ), a3( new_size );
         const int what = 3;
 
-        iter  = remove_copy( a, begin( a2 ), what );
+        iter  = remove_copy( a, a2, what );
         iter2 = remove_copy( begin( a ), end( a ), begin( a3 ), what );
 
-        assert( ext::equal( a2, begin( a3 ) ) );    
+        assert( ext::equal( a2, a3 ) );    
     }
 
 
@@ -823,10 +825,10 @@ namespace
 	const int new_size = a_size - 2;
         vector<int>  a2( new_size ), a3( new_size );
 
-        iter  = remove_copy_if( a, begin( a2 ), predicate() );
+        iter  = remove_copy_if( a, a2, predicate() );
         iter2 = remove_copy_if( begin( a ), end( a ), 
                                  begin( a3 ), predicate() ); 
-        assert( ext::equal( a2, begin( a3 ) ) );
+        assert( ext::equal( a2, a3 ) );
     }
 
 
@@ -835,15 +837,15 @@ namespace
     {
         TEST_DATA;
         vector<int>  a2( a_size ), a3( a_size );
-        copy( a, begin( a2 ) ); copy( a, begin( a3 ) );
+        copy( a, a2 ); copy( a, a3 );
 
-        iter = ext::unique( a2 );
+        iter = unique( a2 );
         iter = unique( begin( a3 ), end( a3 ) );
-        assert( ext::equal( a2, begin( a3 ) ) );
+        assert( ext::equal( a2, a3 ) );
 
-        iter = ext::unique( a2, bin_predicate() );
+        iter = unique_( a2, bin_predicate() );
         iter = unique( begin( a3 ), end( a3 ), bin_predicate() );
-        assert( ext::equal( a2, begin( a3 ) ) );
+        assert( ext::equal( a2, a3 ) );
 	print2( a3, a2 );
     }
 
@@ -855,14 +857,14 @@ namespace
         vector<int>  a2( a_size ), a3( a_size );
         fill( a2, 0 ); fill( a3, 0 );
 
-        iter = ext::unique_copy( a, begin( a2 ) );
+        iter = unique_copy( a, a2 );
         iter = unique_copy( begin( a ), end( a ), begin( a3 ) );
-        assert( ext::equal( a2, begin( a3 ) ) );
+        assert( ext::equal( a2, a3 ) );
 
-        iter = ext::unique_copy( a, begin( a2 ), bin_predicate() );
+        iter = unique_copy_( a, a2, bin_predicate() );
         iter = unique_copy( begin( a ), end( a ), 
 			    begin( a3 ), bin_predicate() );
-        assert( ext::equal( a2, begin( a3 ) ) );
+        assert( ext::equal( a2, a3 ) );
 	print2( a3, a2 );
     }
 
@@ -883,7 +885,7 @@ namespace
     {
         TEST_DATA;
         vector<int> v1( v.size() ), v2( v.size() );
-        iter = reverse_copy( v, begin( v1 ) );
+        iter = reverse_copy( v, v1 );
         iter = reverse_copy( v.begin(), v.end(), v2.begin() );
         assert( v1 == v2 ); 
     }
@@ -899,7 +901,7 @@ namespace
 	vector<int>::iterator middle2 = v1.begin() + v.size() / 2;
         rotate( v, middle1 );
         rotate( begin( v1 ), middle2, end( v1 ) );
-        assert( ext::equal( v, begin( v1 ) ) ); 
+        assert( ext::equal( v, v1 ) ); 
 	print2( v, v1 );
     }
 
@@ -911,9 +913,9 @@ namespace
         vector<int> v1( v.size() ), v2( v.size() );
 
         vector<int>::iterator middle = v.begin() + v.size() / 2;
-        iter = rotate_copy( v, middle, begin( v1 ) );
+        iter = rotate_copy( v, middle, v1 );
         iter = rotate_copy( v.begin(), middle, v.end(), v2.begin()  );
-        assert( ext::equal( v1, begin( v2 ) ) ); 
+        assert( ext::equal( v1, v2 ) ); 
 	print2( v1, v2 );
     }
 
@@ -971,11 +973,11 @@ namespace
         iterator middle1 = v.begin() + v.size() / 2;
         iterator middle2 = v2.begin() + v2.size() / 2;
 
-        ext::partial_sort( v, middle1 );
+        partial_sort( v, middle1 );
         partial_sort( v2.begin(), middle2, v2.end() );
         assert( v == v2 );
 
-        ext::partial_sort( v, middle1, bin_predicate() );
+        partial_sort_( v, middle1, bin_predicate() );
         partial_sort( v2.begin(), middle2, v2.end(), bin_predicate() );
         assert( v == v2 );
     }
@@ -1005,11 +1007,11 @@ namespace
         iterator nth1 = v.begin() + v.size() / 2 ;
         iterator nth2 = v2.begin() + v2.size() / 2 ;
 
-        ext::nth_element( v, nth1 );
+        nth_element( v, nth1 );
         nth_element( v2.begin(), nth2, v2.end() );
         assert( v == v2 );
 
-        ext::nth_element( v, nth1, bin_predicate() );
+        nth_element_( v, nth1, bin_predicate() );
         nth_element( v2.begin(), nth2, v2.end(), bin_predicate() );
         assert( v == v2 );
 	print2( v, v2 );
@@ -1165,12 +1167,12 @@ namespace
 	seeking.push_back( 1 ); seeking.push_back( 2 );
 
         bool b1 = includes( v, seeking );
-        bool b2 = includes( v.begin(), v.end(),begin( seeking ),seeking.end() );
+        bool b2 = includes( v.begin(), v.end(),seeking.begin(),seeking.end() );
         assert( b1 == b2 );
 
         b1 = includes( v, seeking, bin_predicate() );
         b2 = includes( v.begin(), v.end(), 
-                       begin( seeking ), seeking.end(), bin_predicate() );
+                       seeking.begin(), seeking.end(), bin_predicate() );
         assert( b1 == b2 );
     }
 
@@ -1182,12 +1184,12 @@ namespace
         vector<int> v1( v.size() + cv.size() ), v2( v.size() + cv.size() );
         fill( v1, 0 ); fill( v2, 0 );
 
-        iter = set_union( v, cv, begin( v1 ) );
+        iter = set_union( v, cv, v1 );
         iter = set_union( v.begin(), v.end(), 
                           cv.begin(), cv.end(), v2.begin() );
         assert( v1 == v2 );
 
-        iter = set_union( v, cv, begin( v1 ), bin_predicate() );
+        iter = set_union( v, cv, v1, bin_predicate() );
         iter = set_union( v.begin(), v.end(), 
                           cv.begin(), cv.end(), v2.begin(), bin_predicate() );
         assert( v1 == v2 );
@@ -1201,15 +1203,14 @@ namespace
         vector<int> v1( v.size() ), v2( v.size() );
         fill( v1, 0 ); fill( v2, 0 );
 
-        iter = set_intersection( v, cv, begin( v1 ) );
+        iter = set_intersection( v, cv, v1 );
         iter = set_intersection( v.begin(), v.end(), 
                                  cv.begin(), cv.end(), v2.begin() );
         assert( v1 == v2 );
 
-        iter = set_intersection( v, cv, begin( v1 ), bin_predicate() );
+        iter = set_intersection( v, cv, v1, bin_predicate() );
         iter = set_intersection( v.begin(), v.end(), 
-                                 cv.begin(), cv.end(), v2.begin(), 
-				 bin_predicate() );
+                                 cv.begin(), cv.end(), v2.begin(), bin_predicate() );
         assert( v1 == v2 );   
     }
 
@@ -1221,12 +1222,12 @@ namespace
         vector<int> v1( v.size() ), v2( v.size() );
         fill( v1, 0 ); fill( v2, 0 );
 
-        iter = set_difference( v, cv , begin( v1 ) );
+        iter = set_difference( v, cv, v1 );
         iter = set_difference( v.begin(), v.end(), 
                                cv.begin(), cv.end(), v2.begin() );
         assert( v1 == v2 );
 
-        iter = set_difference( v, cv, begin( v1 ), bin_predicate() );
+        iter = set_difference( v, cv, v1, bin_predicate() );
         iter = set_difference( v.begin(), v.end(), 
                                cv.begin(), cv.end(), v2.begin(), 
                                bin_predicate() );
@@ -1241,12 +1242,12 @@ namespace
         vector<int> v1( v.size() ), v2( v.size() );
         fill( v1, 0 ); fill( v2, 0 );
 
-        iter = set_symmetric_difference( v, cv, begin( v1 ) );
+        iter = set_symmetric_difference( v, cv, v1 );
         iter = set_symmetric_difference( v.begin(), v.end(), 
                                          cv.begin(), cv.end(), v2.begin() );
         assert( v1 == v2 );
 
-        iter = set_symmetric_difference( v, cv, begin( v1 ), bin_predicate() );
+        iter = set_symmetric_difference( v, cv, v1, bin_predicate() );
         iter = set_symmetric_difference( v.begin(), v.end(), 
                                          cv.begin(), cv.end(), v2.begin(), 
                                          bin_predicate() );
@@ -1336,15 +1337,15 @@ namespace
     {
         TEST_DATA;
         iterator iter2;
-        iter  = ext::min_element( v );
+        iter  = min_element( v );
         iter2 = min_element( v.begin(), v.end() );
         assert( *iter == *iter2 );
-        citer  = ext::min_element( cv );
+        citer  = min_element( cv );
 
-        iter  = ext::min_element( v, bin_predicate() );
+        iter  = min_element_( v, bin_predicate() );
         iter2 = min_element( v.begin(), v.end(), bin_predicate() );
         assert( *iter == *iter2 );
-        citer  = ext::min_element( cv, bin_predicate() );
+        citer  = min_element_( cv, bin_predicate() );
     }
 
 
@@ -1353,15 +1354,15 @@ namespace
     {
         TEST_DATA;
         iterator iter2;
-        iter  = ext::max_element( v );
+        iter  = max_element( v );
         iter2 = max_element( v.begin(), v.end() );
         assert( *iter == *iter2 );
-        citer  = ext::max_element( cv );
+        citer  = max_element( cv );
 
-        iter  = ext::max_element( v, bin_predicate() );
+        iter  = max_element_( v, bin_predicate() );
         iter2 = max_element( v.begin(), v.end(), bin_predicate() );
         assert( *iter == *iter2 );
-        citer  = ext::max_element( cv, bin_predicate() );
+        citer  = max_element_( cv, bin_predicate() );
     }
 
 
@@ -1422,9 +1423,9 @@ namespace
     void test_accumulate()
     {
         TEST_DATA;
-        assert( ext::accumulate( v, 0 ) ==
+        assert( accumulate( v, 0 ) ==
                 accumulate( v.begin(), v.end(), 0 ) );
-        assert( ext::accumulate( v, 0, binary_fun() ) ==
+        assert( accumulate_( v, 0, binary_fun() ) ==
                 accumulate( v.begin(), v.end(), 0, binary_fun() ) );
     }
 
@@ -1433,11 +1434,10 @@ namespace
     void test_inner_product()
     {
         TEST_DATA;
-        assert( inner_product( v, begin( ca ), 0 ) ==
+        assert( inner_product( v, ca, 0 ) ==
                 inner_product( v.begin(), v.end(), ca, 0 ) );
 
-        assert( inner_product( v, begin( ca ), 0, 
-			       binary_fun(), binary_fun() ) ==
+        assert( inner_product( v, ca, 0, binary_fun(), binary_fun() ) ==
                 inner_product( v.begin(), v.end(), ca, 0,
                                binary_fun(), binary_fun() ) );
 
@@ -1450,11 +1450,11 @@ namespace
         TEST_DATA;
         vector<int> v1( v.size() ), v2( v.size() );
 
-        iter = partial_sum( v, begin( v1 ) );
+        iter = partial_sum( v, v1 );
         iter = partial_sum( v.begin(), v.end(), v2.begin() );
         assert( v1 == v2 );
 
-        iter = partial_sum_( v, begin( v1 ), binary_fun() );
+        iter = partial_sum_( v, v1, binary_fun() );
         iter = partial_sum( v.begin(), v.end(), v2.begin(), binary_fun() );
         assert( v1 == v2 );
     }
@@ -1466,11 +1466,11 @@ namespace
         TEST_DATA;
         vector<int> v1( v.size() ), v2( v.size() );
 
-        iter = adjacent_difference( v, begin( v1 ) );
+        iter = adjacent_difference( v, v1 );
         iter = adjacent_difference( v.begin(), v.end(), v2.begin() );
         assert( v1 == v2 );
 
-        iter = adjacent_difference_( v, begin( v1 ), binary_fun() );
+        iter = adjacent_difference_( v, v1, binary_fun() );
         iter = adjacent_difference( v.begin(), v.end(), 
 				    v2.begin(), binary_fun() );
     }

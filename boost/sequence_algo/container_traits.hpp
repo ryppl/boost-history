@@ -13,6 +13,10 @@
 // "as is" without express or implied warranty, and with no claim as
 // to its suitability for any purpose.
 
+//
+// note: should there be special handling of begin/end for chars due
+//       to terminating null? 
+//
 
 #ifndef BOOST_SEQUENCE_ALGO_CONTAINER_TRAITS_HPP
 #define BOOST_SEQUANCE_ALGO_CONTAINER_TRAITS_HPP

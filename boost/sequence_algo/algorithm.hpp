@@ -6,6 +6,7 @@
 //
 // Revision History:
 
+// 16 Mar 2003  pair<min,max> min_max_element should be implemented.
 // 27 Jun 2002	Herve Bronnimann
 //    Added concept checking
 // 27 Jun 2002  Herve Bronnimann
