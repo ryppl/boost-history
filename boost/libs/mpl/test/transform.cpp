@@ -20,6 +20,8 @@
 #include <boost/mpl/equal_to.hpp>
 #include <boost/mpl/plus.hpp>
 #include <boost/mpl/aux_/test.hpp>
+#include <boost/mpl/aux_/config/gcc.hpp>
+#include <boost/mpl/aux_/config/workaround.hpp>
 
 #include <boost/type_traits/add_pointer.hpp>
 
@@ -41,7 +43,9 @@ MPL_TEST_CASE()
 
     typedef transform2< evens, primes, plus<> >::type result;
     MPL_ASSERT(( equal< result,sums,equal_to<_1,_2> > ));
-    
+
+#if !BOOST_WORKAROUND(BOOST_MPL_CFG_GCC, <= 0x0295)
     typedef transform< evens, primes, plus<> >::type result2;
     MPL_ASSERT(( is_same<result2,result> ));
+#endif
 }

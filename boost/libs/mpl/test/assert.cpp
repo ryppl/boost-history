@@ -12,6 +12,7 @@
 // $Revision$
 
 #include <boost/mpl/assert.hpp>
+
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_pointer.hpp>
 

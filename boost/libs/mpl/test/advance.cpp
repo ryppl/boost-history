@@ -25,7 +25,7 @@ template< int pos > struct iter
 
 #if BOOST_WORKAROUND(__MWERKS__, BOOST_TESTED_AT(0x3003))
 namespace boost { namespace mpl {
-template< int pos > struct tag< iter<pos> > : void_ {};
+template< int pos, typename Default > struct tag< iter<pos>,Default > : void_ {};
 }}
 #endif
 

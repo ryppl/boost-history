@@ -33,7 +33,6 @@
 #include <boost/mpl/aux_/config/ttp.hpp>
 #include <boost/mpl/aux_/config/lambda.hpp>
 #include <boost/mpl/aux_/config/overload_resolution.hpp>
-#include <boost/mpl/aux_/config/static_constant.hpp>
 
 
 #define BOOST_MPL_AUX_NA_PARAMS(i) \
@@ -125,10 +124,10 @@ struct template_arity< \
 \
 template<> \
 struct template_arity< \
-      name< BOOST_MPL_PP_ENUM(i, na) > \
-    > \
+          name< BOOST_MPL_PP_ENUM(i, na) > \
+        > \
+    : int_<-1> \
 { \
-    BOOST_STATIC_CONSTANT(int, value = -1); \
 }; \
 } \
 /**/

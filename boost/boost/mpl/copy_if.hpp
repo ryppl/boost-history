@@ -20,8 +20,9 @@
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
-#include <boost/mpl/aux_/inserter_algorithm.hpp>
 #include <boost/mpl/protect.hpp>
+#include <boost/mpl/aux_/inserter_algorithm.hpp>
+#include <boost/mpl/aux_/config/forwarding.hpp>
 
 namespace boost { namespace mpl {
 
@@ -34,12 +35,21 @@ template<
 struct copy_if_op
 {
     template< typename Sequence, typename T > struct apply
+#if !defined(BOOST_MPL_CFG_NO_NESTED_FORWARDING)
         : eval_if<
               typename apply1<Predicate,T>::type
             , apply2<Operation,Sequence,T>
             , identity<Sequence>
             >
     {
+#else
+    {
+        typedef typename eval_if<
+              typename apply1<Predicate,T>::type
+            , apply2<Operation,Sequence,T>
+            , identity<Sequence>
+            >::type type;
+#endif
     };
 };
 

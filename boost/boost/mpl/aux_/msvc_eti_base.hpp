@@ -14,12 +14,13 @@
 // $Date$
 // $Revision$
 
+#include <boost/mpl/aux_/na.hpp>
 #include <boost/mpl/aux_/config/eti.hpp>
 #include <boost/mpl/aux_/is_msvc_eti_arg.hpp>
 
 namespace boost { namespace mpl { namespace aux {
 
-#if defined(BOOST_MPL_CFG_MSVC_ETI_BUG)
+#if defined(BOOST_MPL_CFG_MSVC_70_ETI_BUG)
 
 template< bool > struct msvc_eti_base_impl
 {
@@ -34,7 +35,10 @@ template<> struct msvc_eti_base_impl<true>
 {
     template< typename T > struct result_
     {
-        typedef result_ type;
+        typedef na type;
+        typedef na first;
+        typedef na second;
+        typedef na tag;
     };
 };
 
@@ -44,12 +48,7 @@ template< typename T > struct msvc_eti_base
 {
 };
 
-template<> struct msvc_eti_base<int>
-{
-    typedef msvc_eti_base type;
-};
-
-#else
+#else // BOOST_MPL_CFG_MSVC_70_ETI_BUG
 
 template< typename T > struct msvc_eti_base
     : T
@@ -57,8 +56,16 @@ template< typename T > struct msvc_eti_base
     typedef T type;
 };
 
-#endif // BOOST_MPL_CFG_MSVC_ETI_BUG
+#endif 
 
-}}} // namespace boost::mpl::aux
+template<> struct msvc_eti_base<int>
+{
+    typedef na type;
+    typedef na first;
+    typedef na second;
+    typedef na tag;
+};
+
+}}}
 
 #endif // BOOST_MPL_AUX_MSVC_ETI_BASE_HPP_INCLUDED

@@ -24,6 +24,7 @@
 #   include <boost/mpl/placeholders.hpp>
 #   include <boost/mpl/lambda.hpp>
 #   include <boost/mpl/aux_/na.hpp>
+#   include <boost/mpl/aux_/lambda_support.hpp>
 #endif
 
 #include <boost/mpl/aux_/config/use_preprocessed.hpp>
@@ -37,7 +38,6 @@
 #else
 
 #   include <boost/mpl/limits/arity.hpp>
-#   include <boost/mpl/aux_/lambda_support.hpp>
 #   include <boost/mpl/aux_/preprocessor/params.hpp>
 #   include <boost/mpl/aux_/preprocessor/default_params.hpp>
 #   include <boost/mpl/aux_/preprocessor/partial_spec_params.hpp>

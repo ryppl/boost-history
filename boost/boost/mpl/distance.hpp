@@ -22,7 +22,11 @@
 #include <boost/mpl/tag.hpp>
 #include <boost/mpl/apply_wrap.hpp>
 #include <boost/mpl/aux_/msvc_eti_base.hpp>
+#include <boost/mpl/aux_/value_wknd.hpp>
 #include <boost/mpl/aux_/na_spec.hpp>
+#include <boost/mpl/aux_/config/forwarding.hpp>
+#include <boost/mpl/aux_/config/static_constant.hpp>
+
 
 namespace boost { namespace mpl {
 
@@ -30,12 +34,29 @@ namespace boost { namespace mpl {
 template< typename Tag > struct distance_impl
 {
     template< typename First, typename Last > struct apply
+#if !defined(BOOST_MPL_CFG_NO_NESTED_FORWARDING)
         : aux::msvc_eti_base< typename iter_fold<
               iterator_range<First,Last>
             , long_<0>
             , next<>
             >::type >
     {
+#else
+    {
+        typedef typename iter_fold<
+              iterator_range<First,Last>
+            , long_<0>
+            , next<>
+            >::type type;
+        
+        BOOST_STATIC_CONSTANT(long, value =
+              (iter_fold<
+                  iterator_range<First,Last>
+                , long_<0>
+                , next<>
+                >::type::value)
+            );
+#endif
     };
 };
 

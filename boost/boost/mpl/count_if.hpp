@@ -23,6 +23,7 @@
 #include <boost/mpl/aux_/msvc_eti_base.hpp>
 #include <boost/mpl/aux_/na_spec.hpp>
 #include <boost/mpl/aux_/lambda_support.hpp>
+#include <boost/mpl/aux_/config/forwarding.hpp>
 
 namespace boost { namespace mpl {
 
@@ -36,12 +37,21 @@ struct next_if
         , typename T
         >
     struct apply
+#if !defined(BOOST_MPL_CFG_NO_NESTED_FORWARDING)
         : eval_if<
               typename apply1<Predicate,T>::type
             , next<N>
             , identity<N>
             >
     {
+#else
+    {
+        typedef typename eval_if<
+              typename apply1<Predicate,T>::type
+            , next<N>
+            , identity<N>
+            >::type type;
+#endif
     };
 };
 

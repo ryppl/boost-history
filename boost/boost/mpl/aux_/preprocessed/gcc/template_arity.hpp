@@ -29,7 +29,7 @@ struct max_arity
 
 };
 
-arity_tag<0> arity_helper(...);
+arity_tag<0>::type arity_helper(...);
 
 template<
       template< typename P1 > class F

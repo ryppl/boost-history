@@ -31,6 +31,7 @@ template<> struct minus_impl< na,na >
     template< typename U1, typename U2 > struct apply
     {
         typedef apply type;
+        static int const value = 0;
     };
 };
 
@@ -39,6 +40,7 @@ template<> struct minus_impl< na,integral_c_tag >
     template< typename U1, typename U2 > struct apply
     {
         typedef apply type;
+        static int const value = 0;
     };
 };
 
@@ -47,6 +49,7 @@ template<> struct minus_impl< integral_c_tag,na >
     template< typename U1, typename U2 > struct apply
     {
         typedef apply type;
+        static int const value = 0;
     };
 };
 

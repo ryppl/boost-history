@@ -4,9 +4,9 @@
 
 // Copyright Aleksey Gurtovoy 2000-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -22,6 +22,8 @@
 #include <boost/mpl/aux_/na_spec.hpp>
 #include <boost/mpl/aux_/iter_push_front.hpp>
 #include <boost/mpl/aux_/traits_lambda_spec.hpp>
+#include <boost/mpl/aux_/config/forwarding.hpp>
+
 #include <boost/type_traits/same_traits.hpp>
 
 namespace boost { namespace mpl {
@@ -40,6 +42,7 @@ struct insert_range_impl
         , typename Range
         >
     struct apply
+#if !defined(BOOST_MPL_CFG_NO_NESTED_FORWARDING)
         : reverse_copy<
               joint_view< 
                   iterator_range<typename begin<Sequence>::type,Pos>
@@ -51,6 +54,19 @@ struct insert_range_impl
             , front_inserter< typename clear<Sequence>::type >
             >
     {
+#else
+    {
+        typedef typename reverse_copy<
+              joint_view< 
+                  iterator_range<typename begin<Sequence>::type,Pos>
+                , joint_view< 
+                      Range
+                    , iterator_range<Pos,typename end<Sequence>::type>
+                    >
+                >
+            , front_inserter< typename clear<Sequence>::type >
+            >::type type;
+#endif
     };
 };
 

@@ -42,7 +42,6 @@
 
 #else
 
-#   include <boost/mpl/aux_/config/nttp.hpp>
 #   include <boost/mpl/limits/arity.hpp>
 #   include <boost/mpl/aux_/preprocessor/params.hpp>
 #   include <boost/mpl/aux_/preprocessor/default_params.hpp>
@@ -80,7 +79,7 @@ struct lambda_or< BOOST_MPL_PP_ENUM(n_,false) >
 };
 #undef n_
 
-template< BOOST_MPL_AUX_NTTP_DECL(int, arity_) > struct lambda_impl
+template< typename Arity > struct lambda_impl
 {
     template< typename T, typename Tag, typename Protect > struct result_
     {
@@ -103,9 +102,9 @@ template<
 struct lambda
 {
     /// Metafunction forwarding confuses MSVC 6.x
-    typedef typename aux::lambda_impl<
-          ::boost::mpl::aux::template_arity<T>::value
-        >::template result_< T,Tag,Protect > l_;
+    typedef typename aux::template_arity<T>::type arity_;
+    typedef typename aux::lambda_impl<arity_>
+        ::template result_< T,Tag,Protect > l_;
 
     typedef typename l_::type type;
     typedef typename l_::is_le is_le;
@@ -158,7 +157,7 @@ struct is_lambda_expression
     , typename BOOST_PP_CAT(l,BOOST_PP_INC(i_))::type \
     /**/
 
-template<> struct lambda_impl<i_>
+template<> struct lambda_impl< int_<i_> >
 {
     template< typename F, typename Tag, typename Protect > struct result_
     {

@@ -11,6 +11,7 @@
 // $Date$
 // $Revision$
 
+#include <boost/static_assert.hpp>
 #include <boost/mpl/filter_view.hpp>
 #include <boost/mpl/transform_view.hpp>
 #include <boost/mpl/max_element.hpp>

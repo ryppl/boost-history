@@ -24,7 +24,7 @@
 // of template instantiation symbols, so we apply the workaround on all 
 // platforms that can handle it
 
-#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300) \
+#if BOOST_WORKAROUND(BOOST_MSVC, BOOST_TESTED_AT(1400)) \
     || BOOST_WORKAROUND(__BORLANDC__, < 0x600) \
     || BOOST_WORKAROUND(__DMC__, BOOST_TESTED_AT(0x840)) \
     
@@ -34,12 +34,16 @@
 
 #else
 
+#if !defined(BOOST_MPL_PREPROCESSING_MODE)
+namespace mpl_ { namespace aux {} }
+namespace boost { namespace mpl { using namespace mpl_; 
+namespace aux { using namespace mpl_::aux; }
+}}
+#endif
+
 #   define BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE mpl_
-#   define BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN namespace mpl_ { namespace aux {}
-#   define BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE \
-    } namespace boost { namespace mpl { using namespace mpl_; \
-        namespace aux { using namespace mpl_::aux; } }} \
-    /**/
+#   define BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN namespace mpl_ {
+#   define BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE }
 
 #endif
 

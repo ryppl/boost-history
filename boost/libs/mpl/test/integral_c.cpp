@@ -17,7 +17,6 @@
 
 #include <cassert>
 
-
 #define INTEGRAL_C_TEST(z, i, T) \
     { \
         typedef integral_c<T,i> c##i; \

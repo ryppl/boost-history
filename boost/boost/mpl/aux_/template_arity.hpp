@@ -29,6 +29,7 @@
 #   endif
 #   else
 #       include <boost/mpl/aux_/has_rebind.hpp>
+#       include <boost/mpl/int.hpp>
 #   endif
 #endif
 
@@ -88,7 +89,7 @@ struct max_arity
 
 #undef AUX_MAX_ARITY_OP
 
-arity_tag<0> arity_helper(...);
+arity_tag<0>::type arity_helper(...);
 
 #define BOOST_PP_ITERATION_LIMITS (1, BOOST_MPL_LIMIT_METAFUNCTION_ARITY)
 #define BOOST_PP_FILENAME_1 <boost/mpl/aux_/template_arity.hpp>
@@ -128,8 +129,6 @@ struct template_arity
 #   else // BOOST_MPL_CFG_NO_FULL_LAMBDA_SUPPORT
 
 #   include <boost/mpl/aux_/config/eti.hpp>
-#   include <boost/mpl/aux_/config/static_constant.hpp>
-#   include <boost/mpl/aux_/config/bcc_integral_constants.hpp>
 
 namespace boost { namespace mpl { namespace aux {
 
@@ -137,8 +136,8 @@ template< bool >
 struct template_arity_impl
 {
     template< typename F > struct result_
+        : int_<-1>
     {
-        BOOST_STATIC_CONSTANT(int, value = -1);
     };
 };
 
@@ -146,12 +145,8 @@ template<>
 struct template_arity_impl<true>
 {
     template< typename F > struct result_
+        : F::arity
     {
-#if defined(BOOST_MPL_CFG_BCC_INTEGRAL_CONSTANTS)
-        enum { value = F::arity };
-#else
-        BOOST_STATIC_CONSTANT(int, value = F::arity);
-#endif
     };
 };
 
@@ -165,8 +160,8 @@ struct template_arity
 #if defined(BOOST_MPL_CFG_MSVC_ETI_BUG)
 template<>
 struct template_arity<int>
+    : int_<-1>
 {
-    BOOST_STATIC_CONSTANT(int, value = -1);
 };
 #endif
 

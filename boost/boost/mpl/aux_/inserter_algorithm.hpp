@@ -24,10 +24,10 @@
 #include <boost/mpl/clear.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/aux_/na.hpp>
-#include <boost/mpl/aux_/preprocessor/params.hpp>
-#include <boost/mpl/aux_/preprocessor/default_params.hpp>
 #include <boost/mpl/aux_/common_name_wknd.hpp>
 #include <boost/mpl/aux_/na_spec.hpp>
+#include <boost/mpl/aux_/preprocessor/params.hpp>
+#include <boost/mpl/aux_/preprocessor/default_params.hpp>
 #include <boost/mpl/aux_/config/ctps.hpp>
 
 #include <boost/preprocessor/arithmetic/dec.hpp>

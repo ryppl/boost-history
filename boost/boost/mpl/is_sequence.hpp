@@ -29,8 +29,10 @@
 #include <boost/mpl/aux_/config/eti.hpp>
 #include <boost/mpl/aux_/config/msvc.hpp>
 #include <boost/mpl/aux_/config/workaround.hpp>
-#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
+#if BOOST_WORKAROUND(BOOST_MSVC, <= 1200)
 #   include <boost/mpl/aux_/msvc_is_class.hpp>
+#elif BOOST_WORKAROUND(BOOST_MSVC, == 1300)
+#   include <boost/type_traits/is_class.hpp>
 #endif
 
 #include <boost/type_traits/is_same.hpp>
@@ -61,7 +63,11 @@ template<
     >
 struct is_sequence
     : if_<
+#if BOOST_WORKAROUND(BOOST_MSVC, <= 1200)
           aux::msvc_is_class<T> 
+#else
+          boost::is_class<T> 
+#endif
         , aux::is_sequence_impl<T>
         , bool_<false>
         >::type

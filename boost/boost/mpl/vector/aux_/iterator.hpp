@@ -65,8 +65,7 @@ template<
     >
 struct next< v_iter<Vector,n_> >
 {
-    enum { next_ = n_ + 1 };
-    typedef v_iter<Vector,next_> type;
+    typedef v_iter<Vector,(n_ + 1)> type;
 };
 
 template<
@@ -75,8 +74,7 @@ template<
     >
 struct prior< v_iter<Vector,n_> >
 {
-    enum { prior_ = n_ - 1 };
-    typedef v_iter<Vector,prior_> type;
+    typedef v_iter<Vector,(n_ - 1)> type;
 };
 
 template<

@@ -17,7 +17,8 @@
 #include <boost/mpl/push_back_fwd.hpp>
 #include <boost/mpl/aux_/has_type.hpp>
 #include <boost/mpl/aux_/traits_lambda_spec.hpp>
-#include <boost/mpl/aux_/config/bcc_integral_constants.hpp>
+#include <boost/mpl/aux_/config/forwarding.hpp>
+#include <boost/mpl/aux_/config/static_constant.hpp>
 
 namespace boost { namespace mpl {
 
@@ -33,7 +34,7 @@ template< typename Tag >
 struct has_push_back_impl
 {
     template< typename Seq > struct apply
-#if !defined(BOOST_MPL_CFG_BCC_INTEGRAL_CONSTANTS)
+#if !defined(BOOST_MPL_CFG_NO_NESTED_FORWARDING)
         : aux::has_type< push_back<Seq,int> >
     {
 #else

@@ -15,8 +15,8 @@ template< bool >
 struct template_arity_impl
 {
     template< typename F > struct result_
+        : int_< -1 >
     {
-        enum { value = -1 };
     };
 };
 
@@ -24,9 +24,8 @@ template<>
 struct template_arity_impl<true>
 {
     template< typename F > struct result_
+        : F::arity
     {
-        enum { value = F::arity };
-
     };
 };
 
@@ -39,8 +38,8 @@ struct template_arity
 
 template<>
 struct template_arity<int>
+    : int_< -1 >
 {
-    enum { value = -1 };
 };
 
 }}}

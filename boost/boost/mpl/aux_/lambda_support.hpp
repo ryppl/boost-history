@@ -23,8 +23,10 @@
 
 #else
 
-#   include <boost/mpl/aux_/config/workaround.hpp>
+#   include <boost/mpl/int_fwd.hpp>
 #   include <boost/mpl/aux_/preprocessor/params.hpp>
+#   include <boost/mpl/aux_/config/msvc.hpp>
+#   include <boost/mpl/aux_/config/workaround.hpp>
 #   include <boost/preprocessor/tuple/to_list.hpp>
 #   include <boost/preprocessor/list/for_each_i.hpp>
 #   include <boost/preprocessor/inc.hpp>
@@ -38,7 +40,7 @@
 #if BOOST_WORKAROUND(__EDG_VERSION__, <= 238) 
 
 #   define BOOST_MPL_AUX_LAMBDA_SUPPORT(i, name, params) \
-    BOOST_STATIC_CONSTANT(int, arity = i); \
+    typedef BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE::int_<i> arity; \
     BOOST_PP_LIST_FOR_EACH_I_R( \
           1 \
         , BOOST_MPL_AUX_LAMBDA_SUPPORT_ARG_TYPEDEF_FUNC \
@@ -64,7 +66,7 @@
 // MSVC-optimized implementation
 
 #   define BOOST_MPL_AUX_LAMBDA_SUPPORT_SPEC(i, name, params) \
-    BOOST_STATIC_CONSTANT(int, arity = i); \
+    typedef BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE::int_<i> arity; \
     BOOST_PP_LIST_FOR_EACH_I_R( \
           1 \
         , BOOST_MPL_AUX_LAMBDA_SUPPORT_ARG_TYPEDEF_FUNC \
@@ -89,12 +91,11 @@ struct name<BOOST_MPL_PP_PARAMS(i,T)>::rebind \
 #else // __EDG_VERSION__
 
 namespace boost { namespace mpl { namespace aux {
-struct has_rebind_tag;
-template< typename T > struct has_rebind;
+template< typename T > struct has_rebind_tag;
 }}}
 
 #   define BOOST_MPL_AUX_LAMBDA_SUPPORT_SPEC(i, name, params) \
-    BOOST_STATIC_CONSTANT(int, arity = i); \
+    typedef BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE::int_<i> arity; \
     BOOST_PP_LIST_FOR_EACH_I_R( \
           1 \
         , BOOST_MPL_AUX_LAMBDA_SUPPORT_ARG_TYPEDEF_FUNC \
@@ -105,13 +106,17 @@ template< typename T > struct has_rebind;
     typedef BOOST_PP_CAT(name,_rebind) rebind; \
 /**/
 
+#if !BOOST_WORKAROUND(BOOST_MSVC, <= 1200)
 #   define BOOST_MPL_AUX_LAMBDA_SUPPORT_HAS_REBIND(i, name, params) \
 template< BOOST_MPL_PP_PARAMS(i,typename T) > \
 char operator|( \
-      ::boost::mpl::aux::has_rebind_tag \
-    , ::boost::mpl::aux::has_rebind< name<BOOST_MPL_PP_PARAMS(i,T)> >* \
+      ::boost::mpl::aux::has_rebind_tag<int> \
+    , ::boost::mpl::aux::has_rebind_tag< name<BOOST_MPL_PP_PARAMS(i,T)> >* \
     ); \
 /**/
+#else
+#   define BOOST_MPL_AUX_LAMBDA_SUPPORT_HAS_REBIND(i, name, params) /**/
+#endif
 
 #   if !defined(__BORLANDC__)
 #   define BOOST_MPL_AUX_LAMBDA_SUPPORT(i, name, params) \

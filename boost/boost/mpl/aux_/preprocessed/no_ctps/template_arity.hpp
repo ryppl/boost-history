@@ -15,8 +15,8 @@ template< bool >
 struct template_arity_impl
 {
     template< typename F > struct result_
+        : int_< -1 >
     {
-        static int const value = -1;
     };
 };
 
@@ -24,9 +24,8 @@ template<>
 struct template_arity_impl<true>
 {
     template< typename F > struct result_
+        : F::arity
     {
-        static int const value = F::arity;
-
     };
 };
 

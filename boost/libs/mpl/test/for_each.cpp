@@ -26,7 +26,6 @@
 #include <cassert>
 
 namespace mpl = boost::mpl;
-using mpl::_;
 
 struct type_printer
 {
@@ -59,7 +58,7 @@ struct value_printer
 int main()
 {
     typedef mpl::list<char,short,int,long,float,double> types;
-    mpl::for_each< types,mpl::make_identity<_> >(type_printer(std::cout));
+    mpl::for_each< types,mpl::make_identity<mpl::_1> >(type_printer(std::cout));
 
     typedef mpl::range_c<int,0,10> numbers;
     std::vector<int> v;

@@ -25,6 +25,7 @@
 #include <boost/mpl/aux_/iter_fold_if_impl.hpp>
 #include <boost/mpl/aux_/na_spec.hpp>
 #include <boost/mpl/aux_/lambda_support.hpp>
+#include <boost/mpl/aux_/config/forwarding.hpp>
 #include <boost/mpl/aux_/config/workaround.hpp>
 
 #include <boost/type_traits/is_same.hpp>
@@ -37,11 +38,19 @@ template< typename Predicate, typename LastIterator >
 struct iter_fold_if_pred
 {
     template< typename State, typename Iterator > struct apply
+#if !defined(BOOST_MPL_CFG_NO_NESTED_FORWARDING)
         : and_<
               not_< is_same<Iterator,LastIterator> >
             , apply1<Predicate,Iterator>
             >
     {
+#else
+    {
+        typedef and_<
+              not_< is_same<Iterator,LastIterator> >
+            , apply1<Predicate,Iterator>
+            > type;
+#endif
     };
 };
 

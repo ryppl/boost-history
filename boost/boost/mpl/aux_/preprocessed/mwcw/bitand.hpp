@@ -32,6 +32,7 @@ template<> struct bitand_impl< na,na >
     template< typename U1, typename U2 > struct apply
     {
         typedef apply type;
+        static int const value = 0;
     };
 };
 
@@ -40,6 +41,7 @@ template< typename Tag > struct bitand_impl< na,Tag >
     template< typename U1, typename U2 > struct apply
     {
         typedef apply type;
+        static int const value = 0;
     };
 };
 
@@ -48,6 +50,7 @@ template< typename Tag > struct bitand_impl< Tag,na >
     template< typename U1, typename U2 > struct apply
     {
         typedef apply type;
+        static int const value = 0;
     };
 };
 

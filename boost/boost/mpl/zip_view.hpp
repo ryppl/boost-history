@@ -29,7 +29,7 @@ template< typename IteratorSeq >
 struct zip_iterator
 {
     typedef forward_iterator_tag category;
-    typedef typename transform<
+    typedef typename transform1<
           IteratorSeq
         , deref<_1>
         >::type type;
@@ -48,8 +48,8 @@ template<
 struct zip_view
 {
  private:    
-    typedef typename transform< Sequences, begin<_1> >::type first_ones_;
-    typedef typename transform< Sequences, end<_1> >::type last_ones_;
+    typedef typename transform1< Sequences, begin<_1> >::type first_ones_;
+    typedef typename transform1< Sequences, end<_1> >::type last_ones_;
     
  public:
     typedef nested_begin_end_tag tag;

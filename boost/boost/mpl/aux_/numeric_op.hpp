@@ -27,6 +27,7 @@
 #   include <boost/mpl/aux_/lambda_support.hpp>
 #   include <boost/mpl/aux_/msvc_eti_base.hpp>
 #   include <boost/mpl/aux_/config/eti.hpp>
+#   include <boost/mpl/aux_/config/static_constant.hpp>
 #endif
 
 #if defined(BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS) \
@@ -96,6 +97,7 @@ template<> struct AUX778076_OP_IMPL_NAME<na,na>
     template< typename U1, typename U2 > struct apply 
     {
         typedef apply type;
+        BOOST_STATIC_CONSTANT(int, value = 0);
     };
 };
 
@@ -105,6 +107,7 @@ template< typename Tag > struct AUX778076_OP_IMPL_NAME<na,Tag>
     template< typename U1, typename U2 > struct apply 
     {
         typedef apply type;
+        BOOST_STATIC_CONSTANT(int, value = 0);
     };
 };
 
@@ -113,6 +116,7 @@ template< typename Tag > struct AUX778076_OP_IMPL_NAME<Tag,na>
     template< typename U1, typename U2 > struct apply 
     {
         typedef apply type;
+        BOOST_STATIC_CONSTANT(int, value = 0);
     };
 };
 #else
@@ -121,6 +125,7 @@ template<> struct AUX778076_OP_IMPL_NAME<na,integral_c_tag>
     template< typename U1, typename U2 > struct apply 
     {
         typedef apply type;
+        BOOST_STATIC_CONSTANT(int, value = 0);
     };
 };
 
@@ -129,6 +134,7 @@ template<> struct AUX778076_OP_IMPL_NAME<integral_c_tag,na>
     template< typename U1, typename U2 > struct apply 
     {
         typedef apply type;
+        BOOST_STATIC_CONSTANT(int, value = 0);
     };
 };
 #endif

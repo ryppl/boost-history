@@ -17,8 +17,6 @@
 #ifndef BOOST_MPL_AUX_SORT_IMPL_HPP_INCLUDED
 #define BOOST_MPL_AUX_SORT_IMPL_HPP_INCLUDED
 
-#include <boost/mpl/aux_/select1st_wknd.hpp>
-#include <boost/mpl/aux_/select2nd_wknd.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/reverse_fold.hpp>
@@ -63,10 +61,10 @@ private:
         >::type partitioned;
 
     typedef typename quick_sort<
-          typename BOOST_MPL_AUX_SELECT1ST_WKND(partitioned), Predicate
+          typename first<partitioned>::type, Predicate
         >::type first_part;
     typedef typename quick_sort<
-          typename BOOST_MPL_AUX_SELECT2ND_WKND(partitioned), Predicate
+          typename second<partitioned>::type, Predicate
         >::type second_part;
 
 public:
