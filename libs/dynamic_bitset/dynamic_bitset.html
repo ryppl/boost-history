@@ -48,7 +48,6 @@ align="middle" width="277" height="86">
 <!-- BEGIN TODO -->
 TODO:
 <ul>
- <li> add find_first, find_next</li>
  <li> ask to Jeremy about reference::operator&amp; and about
    making reference itself private</li>
  <li>check the whole synopsis against code changes </li>
@@ -243,14 +242,20 @@ public:
 
     size_type <a href="#size">size</a>() const;
     size_type <a href="#num_blocks">num_blocks</a>() const;
-    size_type <a href="#max_size">max_size()</a> const;
+    size_type <a href="#max_size">max_size</a>() const;
     void <a href="#reserve">reserve</a>(size_type n);
-    size_type <a href="#capacity" >capacity()</a> const;
+    size_type <a href="#capacity" >capacity</a>() const;
 
     bool <a href=
 "#is_subset_of">is_subset_of</a>(const dynamic_bitset&amp; a) const;
     bool <a href=
 "#is_proper_subset_of">is_proper_subset_of</a>(const dynamic_bitset&amp; a) const;
+
+    size_type <a href="#find_first">find_first</a>() const;
+    size_type <a href="#find_next">find_next</a>(size_type pos) const;
+
+
+
 };
 
 template &lt;typename B, typename A&gt;
@@ -1305,6 +1310,23 @@ set in this bitset, the corresponding bit in bitset <tt>a</tt> is
 also set and if <tt>this-&gt;count() &lt; a.count()</tt>.
 Otherwise this function returns false.<br>
 <b>Throws:</b> nothing.
+
+<hr>
+<pre>
+size_type <a name = "find_first">find_first</a>() const;
+</pre>
+
+<b>Returns:</b> the lowest index <tt>i</tt> such as bit <tt>i</tt>
+is set, or <tt>npos</tt> if <tt>*this</tt> has no on bits.
+
+<hr>
+<pre>
+size_type <a name="find_next">find_next</a>(size_type pos) const;
+</pre>
+
+<b>Returns:</b> the lowest index <tt>i</tt> greater than
+<tt>pos</tt> such as bit <tt>i</tt> is set, or <tt>npos</tt> if
+no such index exists.
 
 <hr>
 <pre>
