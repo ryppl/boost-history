@@ -23,17 +23,22 @@
       <p align="left">
         <a href="#reference">Reference</a>
       <ul>
-        <li><a href="#stl">Standard containers</a></li>
+        <li><a href="#stl">Standard containers</a> </li>
         <li><a href="#array"><code>boost::array</code></a></li>
-        <!--<li><a href="#graph"><code>boost::graph</code></a></li>-->
-        <!--<li><a href="#multi_array"><code>boost::multi_array</code></a></li>-->
+        <li><a href="#multi_array"><code>boost::multi_array</code></a></li>   
+        <li><a href="#graph"><code>boost::graph</code></a></li>
         <li><a href="#ublas"><code>boost::ublas</code></a></li>   
         <li><a href="#semantics">Semantics of functions and overloaded operators</a>
-       <li><a href="#insert_assigner">Class <code>insert_assigner</code></a></li> 
-            <li><a href="#fixed_assigner">Class <code>fixed_sized_assigner</code></a></li> </ul>     
-    <li><a href="#extensions">Extensions</a></li>   
-    <ul>
-       <li><a href="#iterator_insert">Function <code>make_iterator_insertion()</code></a></li> </ul>
+        <li><a href="#insert_assigner">Class <code>insert_assigner</code></a></li>
+        <li><a href="#tuple_insert_assigner">Class 
+                    <code>tuple_insert_assigner</code></a> </li>
+        <li><a href="#fixed_assigner">Class <code>fixed_sized_assigner</code></a></li> 
+        <li><a href="#fixed_tuple_assigner">Class 
+                    <code>fixed_size_tuple_assigner</code></a> </li>                
+      </ul>
+    <li> <a href="#extensions">Extensions</a></li> <ul>
+       <li><a href="#make_insertion">Function <code>make_insertion()</code></a></li>
+        <li><a href="#make_tuple_insertion">Function <code>make_tuple_insertion()</code></a></li> </ul>
     <li><a href="#exceptions">Exceptions</a>
         <ul>
         <li><a href="#assignment_exception">Class <code>assignment_exception</code></a></li> </ul> </li>
@@ -124,7 +129,7 @@
   <hr> 
   <h2><a name="reference">Reference</a></h2>
   <p>
-  #include <code>&lt;boost/assign.hpp&gt;</code>
+  <code>#include &lt;boost/assign.hpp&gt;</code>
   </p>
   <p>
     This section will describe how to use the library. At the end of this 
@@ -194,9 +199,53 @@
   template. Both <code>operator<<()</code> and <code>assign_all()</code> will
   throw an <a href="#exception"> <code>assignment_exception</code></a> if
   too few values are specified or is one tries to write past the end of the 
-  end. This way it is impossible to have an <code>array</code> with undefined 
+  array. This way it is impossible to have an <code>array</code> with undefined 
   elements.
 
+  <h3><a name="multi_array"><code>boost::multi_array</code></a></h3>
+  <p>
+  <code>#include &lt;boost/assign/array/multi_array.hpp&gt;</code>
+  </p>
+  The <code>multi_array</code> or <code>multi_array_ref</code> templates in 
+  boost can be assigned as follows: 
+  <pre> 
+        // Create a 3D array that is 3 x 4 x 2
+    	typedef boost::multi_array<double, 3> array_type;
+     	array_type A(boost::extents[3][4][2]);
+    	
+    	// Assign values to the elements
+        // use tuples (here a pair) in a 3x4 matrix
+    	assign_all( A ) (1,1)(2,2)(3,3)
+                        (4,4)(5,5)(6,6)
+                        (7,7)(8,8)(9,9);
+        
+        // use plain comma-separated list
+        A << 1,1, 2,2, 3,3, 
+             4,4, 5,5, 6,6,
+             7,7, 8,8, 9,9; 
+  </pre>
+  The first version makes it a bit easier to visualize 3D arrays.
+  Both <code>operator<<()</code> and <code>assign_all()</code> will
+  throw an <a href="#exception"> <code>assignment_exception</code></a> if
+  too few values are specified or is one tries to write past the end of the 
+  array. This way it is impossible to have an <code>multi_array</code> with 
+  undefined elements. 
+
+  <h3><a name="graph"><code>boost::graph</code></a></h3>
+  <p>
+  <code>#include &lt;boost/assign/graph/adjacency_list.hpp&gt;</code> <br>
+  <code>#include &lt;boost/assign/graph/adjacency_matrix.hpp&gt;</code> 
+  </p>
+  Here is an example that fill values into these two containers:
+  <pre> 
+      typedef property < edge_weight_t, double > Weight;  
+      typedef adjacency_list<vecS, vecS, directedS, no_property, Weight > MyGraphType; 
+      typedef MyGraphType::edge_property_type Weight,W;
+      MyGraphType G(5);
+      insert( G )(4,6);
+      insert( G )(1,2,W(1.2))(2,3,W(3.4));
+  </pre>
+ 
   <h3><a name="ublas"><code>boost::ublas</code></a></h3>   
   <p>
   <code>#include &lt;boost/assign/ublas.hpp&gt;</code>
@@ -207,6 +256,9 @@
   following example shows how it is done. For all of the examples, the
   samantics are the same, that is, the contained elements are overwritten by
   the elements in the list.
+  <p>
+  <i>Please note that only <code>row_major</code> storage layout is 
+     supported.</i> </p>
   </p>
   <pre>
     using namespace std;
@@ -221,6 +273,9 @@
          4,5,6,
          7,8,9;
     
+    //      
+    // @note: this will not work; only 'row_major' layout supported.
+    //
     bnu::matrix&lt;double, bnu::column_major> m2( 3, 3 );
     m2 << 1,2,3,
           4,5,6,
@@ -355,6 +410,41 @@
   </pre>
   </p>
     
+  <h3><a name="tuple_insert_assigner">Class <code>tuple_insert_assigner</code></a></h3>
+  This class is responsible for inserting elements into diverse containers. It 
+  does so by calling <code>make_tuple_insertion()</code> from
+  within <code>operator,()</code> and <code>operator()()</code>. The arguments 
+  to <code>operator()()</code> will <b>not</b> be used to construct a new 
+  object; instead each argument will be forwarded to <code>make_tuple_insertion()</code>
+  which can then decide how the insertion and/or construction should be done.
+  <p>
+  <b>Synopsis:</b> (header <code>&lt;boost/assign/tuple_insert_assigner.hpp&gt;</code>) <pre>
+  namespace boost
+  {
+    namespace assignment
+    {
+        template< typename Container > 
+        class tuple_insert_assigner
+        {
+        public:
+            typedef V  value_type;
+        public:
+            explicit tuple_insert_assigner( C& c );
+            tuple_insert_assigner( C& c, const value_type& v );
+        public:
+            tuple_insert_assigner& operator,( const value_type& v );
+            tuple_insert_assigner& operator()( const value_type& v )
+    
+            template< typename T, typename T2 >
+            tuple_insert_assigner& operator()( const T& t, const T2& t2 );
+    
+            // ... etc. up to 6 arguments
+        };
+     }
+  }
+  </pre>
+  </p>
+
   <h3><a name="fixed_assigner">Class <code>fixed_sized_assigner</code></a></h3> 
   <p>
       This class is responsible for inserting elements into fixed size containers, 
@@ -368,7 +458,7 @@
      the range have not been assigned to wheres <code>operator,()</code> and 
      <code>operator()()</code>
      throws if one tries to write past the end of the range. <i>Of course, 
-     the destructor only throws if <code>std::uncaught_exception()<code> 
+     the destructor only throws if <code>std::uncaught_exception()</code> 
      returns false. </i> 
   </p>
   <p>
@@ -399,13 +489,64 @@
             fixed_size_assigner& operator,( const value_type& v );  // might throw 
             fixed_size_assigner& operator()( const value_type& v ); // might throw 
             template< typename T, typename T2 >
-            insert_assigner& operator()( const T& t, const T2& t2 ); // might throw 
+            fixed_size_assigner& operator()( const T& t, const T2& t2 ); // might throw
             
             // ... etc. up to 6 arguments
         };
      }   
   }
   </pre>
+    <h3><a name="fixed_tuple_assigner">Class 
+<code>fixed_sized_tuple_assigner</code></a></h3> <p>
+      This class is responsible for inserting elements into fixed size containers, 
+      that is, typically containers that use an array underneith. It does so by 
+      using an input iterator from within <code>operator,()</code> and 
+      <code>operator()()</code>. The arguments to <code>operator()()</code> will  
+      <b>not</b> be used to construct a new object, but will passed directly
+      to <code>make_tuple_insertion()</code> which inserts the elements.
+  </p>
+  <p>
+     The destructor throws an <code>assignment_exception</code> if some elements in 
+     the range have not been assigned to wheres <code>operator,()</code> and 
+     <code>operator()()</code>
+     throws if one tries to write past the end of the range. <i>Of course, 
+     the destructor only throws if <code>std::uncaught_exception()</code> 
+     returns false. </i> 
+  </p>
+  <p>
+    If <code>BOOST_NO_EXCEPTIONS</code> is true, <code>assert()</code>
+    will be called instead of throwing an exception.
+  </p>
+     
+  <p>
+  <b>Synopsis:</b> (header <code>&lt;boost/assign/fixed_size_tuple_assigner.hpp&gt;</code>) <pre>
+  namespace boost
+  {
+    namespace assignment
+    {    
+        template< typename InputIterator >
+        class fixed_tuple_size_assigner
+        {
+        public:
+            typedef ValueType      value_type;
+            typedef InputIterator  iterator;
+        public:
+            fixed_size_tuple_assigner( const iterator& begin, const iterator& end );
+            fixed_size_tuple_assigner( const iterator& begin, const iterator& end, const value_type& v ); 
+            fixed_size_tuple_assigner( const fixed_size_assigner& r ); 
+            ~fixed_size_tuple_assigner(); // might throw 
+        public:
+            fixed_size_tuple_assigner& operator,( const value_type& v );  // might throw 
+            fixed_size_tuple_assigner& operator()( const value_type& v ); // might throw 
+            template< typename T, typename T2 >
+            fixed_size_tuple_assigner& operator()( const T& t, const T2& t2 ); // might throw
+            
+            // ... etc. up to 6 arguments
+        };
+     }   
+  }
+  </pre>
+  
   <hr>
   <h2><a name="extensions">Extensions</a></h2> 
   It is very simple to make the library work with new classes. If you
@@ -423,7 +564,7 @@
            specialize those too.
   </ul>
 
-  <h3><a name="iterator_insert">Function <code>make_insertion()</code></a></h3>
+  <h3><a name="make_insertion">Function <code>make_insertion()</code></a></h3>
   The default version from   <code>&lt;boost/assign/make_insertion.hpp&gt;</code> is: <pre>
       template< typename Container, typename Value >
       inline void make_insertion( Container& c, const Value& v )
@@ -432,6 +573,24 @@
       }
   </pre>
       
+  <h3><a name="make_tuple_insertion">Function 
+<code>make_insertion()</code></a></h3>
+  The default versions from 
+  <code>&lt;boost/assign/make_tuple_insertion.hpp&gt;</code> is: <pre>
+    template< typename InputIterator, typename T >
+    inline void make_tuple_insertion( InputIterator& i, const T& t )
+    {
+        *i++ = t;
+    }
+    
+    template< typename InputIterator, typename T, typename T2 >
+    inline void make_tuple_insertion( InputIterator& i, const T& t, const T& t2 )
+    {
+        *i++ = t; *i++ = t2;
+    }  
+    // ... etc up to 6 arguments
+  </pre>
+
   <hr>    
   <h2><a name="exceptions">Exceptions</a></h2>
   The exception guarantees by the library is the same as guarantee as the 

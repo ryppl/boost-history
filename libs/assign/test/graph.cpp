@@ -37,8 +37,7 @@ int main()
     
    // Create the graph, and specify that we will use std::string to
     // store the first name's.
-  typedef property < edge_weight_t, double > Weight;
-  
+    typedef property < edge_weight_t, double > Weight;  
     typedef adjacency_list<vecS, vecS, directedS, no_property, Weight > MyGraphType;
     typedef MyGraphType::edge_property_type Weight,W;
 //    typedef pair<int,int> Pair;
