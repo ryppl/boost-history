@@ -20,58 +20,35 @@
       template<>
       struct string_traits_base< char >
       {
-         static const char             open_default;
-         static const char             close_default;
-         static const char             separator_default;
+         static const char open_default() { return '"'; }
+         static const char close_default() { return '"'; }
       };
-
-      const char string_traits_base< char >::open_default      = '"';
-      const char string_traits_base< char >::close_default     = '"';
 
       // formatting for wide characters:
 
       template<>
       struct string_traits_base< wchar_t >
       {
-         static const wchar_t          open_default;
-         static const wchar_t          close_default;
+         static const wchar_t open_default() { return L'"'; }
+         static const wchar_t close_default() { return L'"'; }
       };
-
-      const wchar_t string_traits_base< wchar_t >::open_default      = L'"';
-      const wchar_t string_traits_base< wchar_t >::close_default     = L'"';
 
       // formatting for strings:
 
       template<>
-      struct string_traits_base< char * >
+      struct string_traits_base< const char * >
       {
-         static char *                 open_default;
-         static char *                 close_default;
-      };
-
-      char * string_traits_base< char * >::open_default      = "\"";
-      char * string_traits_base< char * >::close_default     = "\"";
-
-      template<>
-      struct string_traits_base< const char * >: public string_traits_base< char * >
-      {
+         static const char* open_default() { return "\""; }
+         static const char* close_default() { return "\""; }
       };
 
       // formatting for wide strings:
 
       template<>
-      struct string_traits_base< wchar_t * >
+      struct string_traits_base< const wchar_t * >
       {
-         static wchar_t *              open_default;
-         static wchar_t *              close_default;
-      };
-
-      wchar_t * string_traits_base< wchar_t * >::open_default  = L"\"";
-      wchar_t * string_traits_base< wchar_t * >::close_default = L"\"";
-
-      template<>
-      struct string_traits_base< const wchar_t * >: public string_traits_base< wchar_t * >
-      {
+         static const wchar_t* open_default() { return L"\""; }
+         static const wchar_t* close_default() { return L"\""; }
       };
 
       // JDT: string_string_traits
@@ -82,17 +59,17 @@
          typedef typename String::char_type                          char_type;
          typedef typename String::traits_type                        traits_type;
 
-         static String                 open_default;
-         static String                 close_default;
+         static String open_default();
+         static String close_default();
       };
 
       template< typename String >
-      String string_string_traits< String >::open_default =
-         String( string_traits_base< typename String::char_type * >::open_default );
+      String string_string_traits< String >::open_default() 
+      { return string_traits_base< typename String::char_type * >::open_default(); }
 
       template< typename String >
-      String string_string_traits< String >::close_default =
-         String( string_traits_base< typename String::char_type * >::close_default );
+      String string_string_traits< String >::close_default()
+      { return string_traits_base< typename String::char_type * >::close_default(); }
 
       // JDT: string_traits
 
