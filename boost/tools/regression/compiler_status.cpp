@@ -277,6 +277,19 @@ namespace
     return itr != root->elements.end() ? (*itr)->content : empty_string;
   }
 
+//  find_attribute  ----------------------------------------------------------//
+
+const string & attribute_value( const xml::element_ptr & element,
+                                const string & attribute_name )
+{
+  static const string empty_string;
+  xml::attribute_list::iterator atr;
+  for ( atr = element->attributes.begin();
+        atr != element->attributes.end() && atr->name != attribute_name;
+        ++atr ) {}
+  return atr == element->attributes.end() ? empty_string : atr->value;
+}
+
 //  generate_report  ---------------------------------------------------------//
   
   // return 0 if nothing generated, 1 otherwise, except 2 if compiler msgs
@@ -371,9 +384,8 @@ namespace
     bool pass = false;
 
     // missing jam residue
-    if ( fs::exists( target_dir / (test_name + ".success") ) ) pass = true;
-    else if ( !fs::exists( target_dir / (test_name + ".failure") )
-      && !fs::exists( target_dir / "test_log.xml" ) )
+    if ( fs::exists( target_dir / (test_name + ".run") ) ) pass = true;
+    else if ( !fs::exists( target_dir / "test_log.xml" ) )
     {
       target += "<td>" + missing_residue_msg + "</td>";
       return true;
@@ -425,60 +437,23 @@ namespace
     const string & test_name, // "any_test"
     string & target )
   {
-    // get the path to the test program from the .test file contents
+    // get the library name and test program path from the .xml file
+    string lib_name;
     string test_path( test_name ); // test_name is default if missing .test
-    fs::path file_path;
-    if ( find_file( test_dir, test_name + ".test", file_path ) )
+    fs::path xml_file_path;
+    if ( find_file( test_dir, "test_log.xml", xml_file_path ) )
     {
-      fs::ifstream file( file_path );
+      fs::ifstream file( xml_file_path );
       if ( file )
       {
-        std::getline( file, test_path );
-        if ( test_path.size() )
-        {
-          if ( test_path[0] == '\"' ) // added for non-Win32 systems
-          {
-            test_path = test_path.erase( 0, 1 ); // strip "
-            test_path.erase( test_path.find( "\"" ) );
-          }
-          // test_path is now a disk path, so convert to URL style path
-          convert_backslashes( test_path );
-          string::size_type pos = test_path.find( "/libs/" );
-          if ( pos != string::npos ) test_path.replace( 0, pos, ".." );
-        }
+        xml::element_ptr db = xml::parse( file );
+        test_path = attribute_value( db, "test-program" );
+        lib_name = attribute_value( db, "library" );
       }
     }
 
-    // extract the library name from the test_path
-    string lib_name( test_path );
-    string::size_type pos = lib_name.find( "/libs/" );
-    if ( pos != string::npos )
-    {
-      lib_name.erase( 0, pos+6 );
-      pos = lib_name.find( "/" );
-      if ( pos != string::npos ) lib_name.erase( pos );
-    }
-    else lib_name.clear();
-
     // find the library documentation path
-    string lib_docs_path( "../libs/" + lib_name + "/" );
-    fs::path cur_lib_docs_path( boost_root_dir / "libs" / lib_name );
-    if ( fs::exists( cur_lib_docs_path / "index.htm" ) )
-      lib_docs_path += "index.htm";
-    else if ( fs::exists( cur_lib_docs_path / "index.html" ) )
-      lib_docs_path += "index.html";
-    else if ( fs::exists( cur_lib_docs_path / "doc/index.htm" ) )
-      lib_docs_path += "doc/index.htm";
-    else if ( fs::exists( cur_lib_docs_path / "doc/index.html" ) )
-      lib_docs_path += "doc/index.html";
-    else if ( fs::exists( cur_lib_docs_path / (lib_name + ".htm") ) )
-      lib_docs_path += lib_name + ".htm";
-    else if ( fs::exists( cur_lib_docs_path / (lib_name + ".html") ) )
-      lib_docs_path += lib_name + ".html";
-    else if ( fs::exists( cur_lib_docs_path / "doc" / (lib_name + ".htm") ) )
-      lib_docs_path += lib_name + ".htm";
-    else if ( fs::exists( cur_lib_docs_path / "doc" / (lib_name + ".html") ) )
-      lib_docs_path += lib_name + ".html";
+    string lib_docs_path( "../libs/" + lib_name );
 
     // generate the library name, test name, and test type table data
     string::size_type row_start_pos = target.size();
