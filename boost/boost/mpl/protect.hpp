@@ -24,6 +24,7 @@ namespace boost { namespace mpl {
 
 template<
       typename BOOST_MPL_AUX_NA_PARAM(T)
+    , int not_le_ = 0
     >
 struct protect : T
 {

@@ -21,7 +21,7 @@
 namespace boost {
 namespace mpl {
 
-template< typename T1 >
+template< typename T1, int not_le_ = 0 >
 struct same_as
 {
     template< typename T2 > struct apply
@@ -35,7 +35,7 @@ struct same_as
     };
 };
 
-template< typename T1 >
+template< typename T1, int not_le_ = 0 >
 struct not_same_as
 {
     template< typename T2 > struct apply

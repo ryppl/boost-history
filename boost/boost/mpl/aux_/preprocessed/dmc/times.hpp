@@ -95,8 +95,8 @@ struct times_impl< integral_c_tag,integral_c_tag >
                   typename N1::value_type
                 , typename N2::value_type
                 >::type
-            , BOOST_MPL_AUX_VALUE_WKND(N1)::value
-                * BOOST_MPL_AUX_VALUE_WKND(N2)::value
+            , ( BOOST_MPL_AUX_VALUE_WKND(N1)::value
+                * BOOST_MPL_AUX_VALUE_WKND(N2)::value )
             >
     {
     };

@@ -19,13 +19,17 @@
 #   include <boost/mpl/aux_/value_wknd.hpp>
 #endif
 
+#if !defined(AUX778076_OP_PREFIX)
+#   define AUX778076_OP_PREFIX AUX778076_OP_NAME
+#endif
+
 #include <boost/mpl/aux_/numeric_op.hpp>
 #include <boost/mpl/aux_/config/use_preprocessed.hpp>
 
 #if !defined(BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS) \
     && !defined(BOOST_MPL_PREPROCESSING_MODE)
 
-#   define BOOST_MPL_PREPROCESSED_HEADER AUX778076_OP_NAME.hpp
+#   define BOOST_MPL_PREPROCESSED_HEADER AUX778076_OP_PREFIX.hpp
 #   include <boost/mpl/aux_/include_preprocessed.hpp>
 
 #else
@@ -39,7 +43,7 @@ namespace boost { namespace mpl {
 #if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
 namespace aux {
 template< typename T, T n1, T n2 >
-struct BOOST_PP_CAT(BOOST_PP_CAT(msvc_,AUX778076_OP_NAME),_impl)
+struct BOOST_PP_CAT(BOOST_PP_CAT(msvc_,AUX778076_OP_PREFIX),_impl)
 {
     enum msvc_wknd { value = (n1 AUX778076_OP_TOKEN n2) };
     typedef integral_c<T,value> type;
@@ -48,7 +52,7 @@ struct BOOST_PP_CAT(BOOST_PP_CAT(msvc_,AUX778076_OP_NAME),_impl)
 #endif
 
 template<>
-struct BOOST_PP_CAT(AUX778076_OP_NAME,_impl)<integral_c_tag,integral_c_tag>
+struct AUX778076_OP_IMPL_NAME<integral_c_tag,integral_c_tag>
 {
     template< typename N1, typename N2 > struct apply
 #if !BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
@@ -57,11 +61,11 @@ struct BOOST_PP_CAT(AUX778076_OP_NAME,_impl)<integral_c_tag,integral_c_tag>
                   typename N1::value_type
                 , typename N2::value_type
                 >::type
-            , BOOST_MPL_AUX_VALUE_WKND(N1)::value
-                AUX778076_OP_TOKEN BOOST_MPL_AUX_VALUE_WKND(N2)::value
+            , ( BOOST_MPL_AUX_VALUE_WKND(N1)::value
+                AUX778076_OP_TOKEN BOOST_MPL_AUX_VALUE_WKND(N2)::value )
             >
 #else
-        : aux::BOOST_PP_CAT(BOOST_PP_CAT(msvc_,AUX778076_OP_NAME),_impl)<
+        : aux::BOOST_PP_CAT(BOOST_PP_CAT(msvc_,AUX778076_OP_PREFIX),_impl)<
               typename aux::largest_int<
                   typename N1::value_type
                 , typename N2::value_type
@@ -78,6 +82,9 @@ struct BOOST_PP_CAT(AUX778076_OP_NAME,_impl)<integral_c_tag,integral_c_tag>
 
 #endif // BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
 
+#undef AUX778076_OP_TAG_NAME
+#undef AUX778076_OP_IMPL_NAME
 #undef AUX778076_OP_ARITY
+#undef AUX778076_OP_PREFIX
 #undef AUX778076_OP_NAME
 #undef AUX778076_OP_TOKEN

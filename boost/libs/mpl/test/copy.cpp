@@ -2,9 +2,9 @@
 // Copyright (c) Aleksey Gurtovoy 2000-2004
 // Copyright (c) David Abrahams 2003-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -19,7 +19,6 @@
 #include <boost/mpl/front_inserter.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/equal.hpp>
-
 #include <boost/mpl/aux_/test.hpp>
 
 
@@ -31,7 +30,7 @@ MPL_TEST_CASE()
         , front_inserter< vector0<> >
         >::type result;
 
-    MPL_ASSERT_RELATION(size<result>::value,==, 10);
+    MPL_ASSERT_RELATION( size<result>::value, ==, 10 );
     MPL_ASSERT(( equal< result,answer > ));
 }
 
@@ -43,6 +42,6 @@ MPL_TEST_CASE()
         , front_inserter<numbers>
         >::type result;
 
-    MPL_ASSERT_RELATION(size<result>::value, ==,  20);
+    MPL_ASSERT_RELATION( size<result>::value, ==,  20 );
     MPL_ASSERT(( equal< result,range_c<int,0,20> > ));
 }

@@ -16,11 +16,10 @@
 
 #include <boost/mpl/begin_end.hpp>
 #include <boost/mpl/advance.hpp>
-#include <boost/mpl/aux_/deref_wknd.hpp>
+#include <boost/mpl/deref.hpp>
 #include <boost/mpl/aux_/traits_lambda_spec.hpp>
 
-namespace boost {
-namespace mpl {
+namespace boost { namespace mpl {
 
 // default implementation; conrete sequences might override it by 
 // specializing either the 'at_impl' or the primary 'at' template
@@ -35,13 +34,12 @@ struct at_impl
             , N
             >::type iter_;
 
-        typedef typename BOOST_MPL_AUX_DEREF_WNKD(iter_) type;
+        typedef typename deref<iter_>::type type;
     };
 };
 
 BOOST_MPL_ALGORITM_TRAITS_LAMBDA_SPEC(2, at_impl)
 
-} // namespace mpl
-} // namespace boost
+}}
 
 #endif // BOOST_MPL_AUX_AT_IMPL_HPP_INCLUDED

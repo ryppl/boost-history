@@ -16,8 +16,6 @@
 #include <boost/mpl/apply_wrap.hpp>
 #include <boost/mpl/aux_/test.hpp>
 
-#include <boost/type_traits/is_same.hpp>
-
 namespace {
 
 struct f1

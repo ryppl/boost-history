@@ -16,7 +16,7 @@ compile at.cpp ;
 compile back.cpp ;
 compile bind.cpp ;
 compile bitwise.cpp ;
-compile bool.cpp ;
+run bool.cpp ;
 compile comparison.cpp ;
 compile contains.cpp ;
 compile copy.cpp ;

@@ -16,16 +16,16 @@
 
 #include <cassert>
 
-#define BOOL_C_TEST(c) \
-    { MPL_ASSERT_SAME(2,( bool_<c>::value_type, bool )); } \
-    { MPL_ASSERT_SAME(2,( bool_<c>, c##_ )); } \
-    { MPL_ASSERT_SAME(2,( bool_<c>::type, bool_<c> )); } \
-    { MPL_ASSERT_EQUAL(2,( bool_<c>::value, c )); } \
-    assert(bool_<c>() == c); \
+#define BOOL_TEST(c) \
+    { MPL_ASSERT(( is_same< bool_<c>::value_type, bool > )); } \
+    { MPL_ASSERT(( is_same< bool_<c>, c##_ > )); } \
+    { MPL_ASSERT(( is_same< bool_<c>::type, bool_<c> > )); } \
+    { MPL_ASSERT_RELATION( bool_<c>::value, ==, c ); } \
+    assert( bool_<c>() == c ); \
 /**/
 
 MPL_TEST_CASE()
 {
-    BOOL_C_TEST(true)
-    BOOL_C_TEST(false)
+    BOOL_TEST(true)
+    BOOL_TEST(false)
 }

@@ -24,7 +24,7 @@ namespace boost {
 namespace mpl {
 namespace aux {
 
-template< typename Predicate >
+template< typename Predicate, int not_le_ = 0 >
 struct find_if_pred
 {
     template< typename Iterator >

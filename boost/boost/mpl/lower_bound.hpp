@@ -31,8 +31,8 @@
 #   include <boost/mpl/integral_c.hpp>
 #   include <boost/mpl/int.hpp>
 #   include <boost/mpl/eval_if.hpp>
+#   include <boost/mpl/deref.hpp>
 #   include <boost/mpl/apply.hpp>
-#   include <boost/mpl/aux_/deref_wknd.hpp>
 #   include <boost/mpl/aux_/value_wknd.hpp>
 #else
 #   include <boost/mpl/not.hpp>
@@ -104,7 +104,7 @@ struct lower_bound_step_impl
     typedef typename advance< iter_,offset_ >::type middle_;
     typedef typename apply2<
               Predicate
-            , typename BOOST_MPL_AUX_DEREF_WNKD(middle_)
+            , typename deref<middle_>::type
             , T
             >::type cond_;
 

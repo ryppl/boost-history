@@ -18,14 +18,19 @@
 #   include <boost/mpl/aux_/value_wknd.hpp>
 #endif
 
+#if !defined(AUX778076_OP_PREFIX)
+#   define AUX778076_OP_PREFIX AUX778076_OP_NAME
+#endif
+
 #define AUX778076_OP_ARITY 2
+
 #include <boost/mpl/aux_/numeric_op.hpp>
 #include <boost/mpl/aux_/config/use_preprocessed.hpp>
 
 #if !defined(BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS) \
     && !defined(BOOST_MPL_PREPROCESSING_MODE)
 
-#   define BOOST_MPL_PREPROCESSED_HEADER AUX778076_OP_NAME.hpp
+#   define BOOST_MPL_PREPROCESSED_HEADER AUX778076_OP_PREFIX.hpp
 #   include <boost/mpl/aux_/include_preprocessed.hpp>
 
 #else
@@ -48,7 +53,7 @@ namespace boost { namespace mpl {
 #endif
 
 template<>
-struct BOOST_PP_CAT(AUX778076_OP_NAME,_impl)<integral_c_tag,integral_c_tag>
+struct AUX778076_OP_IMPL_NAME<integral_c_tag,integral_c_tag>
 {
     template< typename N1, typename N2 > struct apply
 #if !BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
@@ -68,6 +73,9 @@ struct BOOST_PP_CAT(AUX778076_OP_NAME,_impl)<integral_c_tag,integral_c_tag>
 
 #endif // BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
 
+#undef AUX778076_OP_TAG_NAME
+#undef AUX778076_OP_IMPL_NAME
 #undef AUX778076_OP_ARITY
+#undef AUX778076_OP_PREFIX
 #undef AUX778076_OP_NAME
 #undef AUX778076_OP_TOKEN

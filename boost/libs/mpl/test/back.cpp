@@ -15,13 +15,15 @@
 #include <boost/mpl/range_c.hpp>
 #include <boost/mpl/aux_/test.hpp>
 
+template< typename Seq, int value > struct back_test
+{
+    typedef typename back<Seq>::type t;
+    MPL_ASSERT_RELATION( t::value, ==, value );
+};
+
 MPL_TEST_CASE()
 {
-    typedef range_c<int,0,1> range1;
-    typedef range_c<int,0,10> range2;
-    typedef range_c<int,-10,0> range3;
-    
-    MPL_ASSERT_EQUAL(2,( back<range1>::type::value, 0 ));
-    MPL_ASSERT_EQUAL(2,( back<range2>::type::value, 9 ));
-    MPL_ASSERT_EQUAL(2,( back<range3>::type::value, -1) );
+    back_test< range_c<int,0,1>, 0 >();
+    back_test< range_c<int,0,10>, 9 >();
+    back_test< range_c<int,-10,0>, -1 >();
 }

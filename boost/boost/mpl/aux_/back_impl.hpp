@@ -16,7 +16,7 @@
 
 #include <boost/mpl/begin_end.hpp>
 #include <boost/mpl/next_prior.hpp>
-#include <boost/mpl/aux_/deref_wknd.hpp>
+#include <boost/mpl/deref.hpp>
 #include <boost/mpl/aux_/traits_lambda_spec.hpp>
 
 namespace boost { namespace mpl {
@@ -32,7 +32,7 @@ struct back_impl
     {
         typedef typename end<Sequence>::type end_;
         typedef typename prior<end_>::type last_;
-        typedef typename BOOST_MPL_AUX_DEREF_WNKD(last_) type;
+        typedef typename deref<last_>::type type;
     };
 };
 

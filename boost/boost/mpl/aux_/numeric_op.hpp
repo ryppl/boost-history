@@ -56,6 +56,13 @@
 #   endif
 #endif
 
+#if !defined(AUX778076_OP_IMPL_NAME)
+#   define AUX778076_OP_IMPL_NAME BOOST_PP_CAT(AUX778076_OP_PREFIX,_impl)
+#endif
+
+#if !defined(AUX778076_OP_TAG_NAME)
+#   define AUX778076_OP_TAG_NAME BOOST_PP_CAT(AUX778076_OP_PREFIX,_tag)
+#endif
 
 namespace boost { namespace mpl {
 
@@ -66,26 +73,26 @@ template<
     , int tag1_ = Tag1::value 
     , int tag2_ = Tag2::value 
     >
-struct BOOST_PP_CAT(AUX778076_OP_NAME,_impl)
+struct AUX778076_OP_IMPL_NAME
     : if_c<
           ( tag1_ > tag2_ )
 #else
     >
-struct BOOST_PP_CAT(AUX778076_OP_NAME,_impl)
+struct AUX778076_OP_IMPL_NAME
     : if_c<
           ( Tag1::value > Tag2::value )
 #endif
-        , aux::cast2nd_impl< BOOST_PP_CAT(AUX778076_OP_NAME,_impl)<Tag1,Tag2>,Tag1,Tag2 >
-        , aux::cast1st_impl< BOOST_PP_CAT(AUX778076_OP_NAME,_impl)<Tag1,Tag2>,Tag1,Tag2 >
+        , aux::cast2nd_impl< AUX778076_OP_IMPL_NAME<Tag1,Tag2>,Tag1,Tag2 >
+        , aux::cast1st_impl< AUX778076_OP_IMPL_NAME<Tag1,Tag2>,Tag1,Tag2 >
         >
 {
 };
 
 /// for Digital Mars C++/compilers with no CTPS support
 #if !BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
-template<> struct BOOST_PP_CAT(AUX778076_OP_NAME,_impl)<na,na>
+template<> struct AUX778076_OP_IMPL_NAME<na,na>
 #else
-template<> struct BOOST_PP_CAT(AUX778076_OP_NAME,_impl)<na,na,0,0>
+template<> struct AUX778076_OP_IMPL_NAME<na,na,0,0>
 #endif
 {
     template< typename U1, typename U2 > struct apply 
@@ -95,7 +102,7 @@ template<> struct BOOST_PP_CAT(AUX778076_OP_NAME,_impl)<na,na,0,0>
 };
 
 
-template< typename T > struct BOOST_PP_CAT(AUX778076_OP_NAME,_tag)
+template< typename T > struct AUX778076_OP_TAG_NAME
 {
     typedef typename T::tag type;
 };
@@ -135,15 +142,15 @@ struct AUX778076_OP_NAME
 #endif // AUX778076_OP_ARITY == 2
 
 #if !defined(BOOST_MPL_CFG_MSVC_ETI_BUG)
-    : BOOST_PP_CAT(AUX778076_OP_NAME,_impl)<
-          typename BOOST_PP_CAT(AUX778076_OP_NAME,_tag)<N1>::type
-        , typename BOOST_PP_CAT(AUX778076_OP_NAME,_tag)<N2>::type
+    : AUX778076_OP_IMPL_NAME<
+          typename AUX778076_OP_TAG_NAME<N1>::type
+        , typename AUX778076_OP_TAG_NAME<N2>::type
         >::template apply<N1,N2>::type
 #else
     : aux::msvc_eti_base< typename apply_wrap2<
-          BOOST_PP_CAT(AUX778076_OP_NAME,_impl)<
-              typename BOOST_PP_CAT(AUX778076_OP_NAME,_tag)<N1>::type
-            , typename BOOST_PP_CAT(AUX778076_OP_NAME,_tag)<N2>::type
+          AUX778076_OP_IMPL_NAME<
+              typename AUX778076_OP_TAG_NAME<N1>::type
+            , typename AUX778076_OP_TAG_NAME<N2>::type
             >
         , N1
         , N2
