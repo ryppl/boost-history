@@ -12,7 +12,7 @@
 
 // BOOST
 #include <boost/config.hpp>
-#include <boost/smart_ptr.hpp>
+#include <boost/scoped_ptr.hpp>
 
 // STL
 #include <list>
@@ -47,6 +47,8 @@ struct unit_test_result::Impl {
 
     static boost::scoped_ptr<unit_test_result> m_head;
     static unit_test_result*        m_curr;
+
+    bool                            is_failed() { return m_assertions_failed != m_expected_failures || m_exception_caught; }
 };
 
 boost::scoped_ptr<unit_test_result> unit_test_result::Impl::m_head;
@@ -123,7 +125,7 @@ unit_test_result::test_case_end()
 
         // for test_cases (vs. test_suite)
         if( curr_impl->m_test_cases_passed == 0 && curr_impl->m_test_cases_failed == 0 ) {
-            if( curr_impl->m_assertions_failed > curr_impl->m_expected_failures || curr_impl->m_exception_caught )
+            if( curr_impl->is_failed() )
                 parent->m_pimpl->m_test_cases_failed++;
             else
                 parent->m_pimpl->m_test_cases_passed++;
@@ -184,7 +186,7 @@ unit_test_result::confirmation_report( std::ostream& where_to )
 {
     assert( this != NULL );
 
-    bool failed = m_pimpl->m_test_cases_failed != 0 || m_pimpl->m_assertions_failed > m_pimpl->m_expected_failures;
+    bool failed = m_pimpl->m_test_cases_failed != 0 || m_pimpl->is_failed();
 
     if( failed ) {
         where_to << "\n*** Failures in \"" << m_pimpl->m_test_case_name << "\"" << std::endl;
@@ -204,7 +206,7 @@ unit_test_result::short_report( std::ostream& where_to, int indent )
 {
     assert( this != NULL );
 
-    bool              failed           = m_pimpl->m_test_cases_failed != 0 || m_pimpl->m_assertions_failed > m_pimpl->m_expected_failures;
+    bool              failed           = m_pimpl->m_test_cases_failed != 0 || m_pimpl->is_failed();
     unit_test_counter total_test_cases = m_pimpl->m_test_cases_failed + m_pimpl->m_test_cases_passed;
     unit_test_counter total_assertions = m_pimpl->m_assertions_failed + m_pimpl->m_assertions_passed;
     
@@ -259,7 +261,7 @@ unit_test_result::result_code()
 {
     return m_pimpl->m_test_cases_failed != 0
             ? m_pimpl->m_test_cases_failed
-            : ( (m_pimpl->m_assertions_failed >m_pimpl->m_expected_failures) ? m_pimpl->m_assertions_failed : 0 );
+            : ( (m_pimpl->is_failed()) ? m_pimpl->m_assertions_failed : 0 );
 }
 
 //____________________________________________________________________________//

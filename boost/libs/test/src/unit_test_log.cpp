@@ -12,7 +12,7 @@
 #include <boost/test/unit_test_suite.hpp>
 
 // BOOST
-#include <boost/smart_ptr.hpp>
+#include <boost/scoped_ptr.hpp>
 #include <boost/progress.hpp>
 
 // STL
