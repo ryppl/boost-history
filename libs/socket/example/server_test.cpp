@@ -30,6 +30,10 @@
 #include "boost/test/unit_test.hpp"
 using namespace boost::unit_test_framework;
 
+#ifdef __CYGWIN__
+#include "sys/select.h"
+#endif
+
 #ifdef _MSC_VER
 #pragma warning (push, 4)
 #pragma warning (disable: 4786 4305)
@@ -41,101 +45,110 @@ typedef std::map<data_socket<>, boost::socket::ip4::address> Clients;
 
 void server_test()
 {
-  BOOST_MESSAGE("starting");
-  socket_base<>::initialise();
-
-  Clients clients;
-
-  ip4::address addr;
-  addr.port(3234);
-  addr.hostname("localhost");
-
-  ip4::tcp_protocol protocol;
-
-  socket_option_non_blocking non_block(true);
-
-  acceptor_socket<> listening_socket;
-  BOOST_CHECK(listening_socket.open(protocol,addr,6)==boost::socket::Success);
-
-  boost::socket::socket_set master_set;
-  master_set.insert(listening_socket.socket());
-
-  while (true)
+  try
   {
-    boost::socket::socket_set active_set;
-    active_set=master_set;
 
-    BOOST_MESSAGE("Selecting");
+    BOOST_MESSAGE("starting");
 
-    if (::select(active_set.width(),
-                 active_set.fdset(),
-                 0,
-                 0,
-                 0)==socket_error)
+    Clients clients;
+
+    ip4::address addr;
+    addr.port(3234);
+    addr.hostname("localhost");
+
+    ip4::tcp_protocol protocol;
+
+    option::non_blocking non_block(true);
+
+    acceptor_socket<> listening_socket;
+    BOOST_CHECK(listening_socket.open(protocol,addr,6)==boost::socket::Success);
+
+    boost::socket::socket_set master_set;
+    master_set.insert(listening_socket.socket());
+
+    while (true)
     {
-      default_error_policy::handle_error();
-      return;
-    }
+      boost::socket::socket_set active_set;
+      active_set=master_set;
 
-    const boost::socket::socket_set::iterator
-      i_end=active_set.end();
+      BOOST_MESSAGE("Selecting");
 
-    for (boost::socket::socket_set::iterator i=active_set.begin();
-         i!=i_end; ++i)
-    {
-      if (*i==listening_socket.socket())
+      if (::select(active_set.width(),
+                   active_set.fdset(),
+                   0,
+                   0,
+                   0)==-1)
       {
-        //! this is our acceptor socket
-        while (true)
+        throw "unexpected select result";
+        return;
+      }
+
+      const boost::socket::socket_set::iterator
+        i_end=active_set.end();
+
+      for (boost::socket::socket_set::iterator i=active_set.begin();
+           i!=i_end; ++i)
+      {
+        if (*i==listening_socket.socket())
         {
-          ip4::address client;
-          data_socket<> accepted_socket=listening_socket.accept(client);
-          if (accepted_socket.is_valid())
+          //! this is our acceptor socket
+          while (true)
           {
-            BOOST_CHECK(accepted_socket.ioctl(non_block)==boost::socket::Success);
-            master_set.insert(accepted_socket.socket());
-            BOOST_MESSAGE("Accepted client");
-            BOOST_MESSAGE(client.ip());
-            BOOST_MESSAGE(client.hostname());
-            std::cout << accepted_socket.socket() <<std::endl;
-            clients.insert(std::make_pair(accepted_socket, client));
+            ip4::address client;
+            std::pair<data_socket<>,int> ret=listening_socket.accept(client);
+            if (ret.second==Success)
+            {
+              data_socket<>& accepted_socket=ret.first;
+              BOOST_CHECK(accepted_socket.ioctl(non_block)==boost::socket::Success);
+              master_set.insert(accepted_socket.socket());
+              BOOST_MESSAGE("Accepted client");
+              BOOST_MESSAGE(client.ip());
+              BOOST_MESSAGE(client.hostname());
+              std::cout << accepted_socket.socket() <<std::endl;
+              clients.insert(std::make_pair(accepted_socket, client));
 
+            }
+            else
+              break;
           }
-          else
-            break;
         }
-        ++i;
-      }
-      else
-      {
-        // these are our data socket
-        BOOST_MESSAGE("Receiving data");
-
-        std::string str;
-        data_socket<> data_socket(*i);
-
-        ip4::address& client=clients[data_socket];
-        BOOST_MESSAGE(client.hostname());
-        boost::socket::basic_socket_stream<char> ss(data_socket);
-
-        while (!ss.eof() && !ss.fail())
+        else
         {
-          ss >> str;
-          if (!ss.fail())
-            BOOST_MESSAGE(str);
-        }
-        if (ss.eof())
-        {
-          master_set.erase(data_socket.socket());
-          clients.erase(data_socket);
-          BOOST_CHECK(data_socket.close()==boost::socket::Success);
+          // these are our data socket
+          BOOST_MESSAGE("Receiving data");
+
+          std::string str;
+          data_socket<> data_socket(*i);
+
+          ip4::address& client=clients[data_socket];
+          BOOST_MESSAGE(client.hostname());
+          boost::socket::basic_socket_stream<char> ss(data_socket);
+
+          while (!ss.eof() && !ss.fail())
+          {
+            ss >> str;
+            if (!ss.fail())
+              BOOST_MESSAGE(str);
+          }
+          if (ss.eof())
+          {
+            master_set.erase(data_socket.socket());
+            clients.erase(data_socket);
+            BOOST_CHECK(data_socket.close()==boost::socket::Success);
+          }
         }
       }
+
     }
+
+    BOOST_CHECK(listening_socket.close()==boost::socket::Success);
 
   }
-
-  BOOST_CHECK(listening_socket.close()==boost::socket::Success);
+  catch (const socket_exception& e)
+  {
+    std::cerr << e.message()<< std::endl;
+    throw;
+  }
 }
 
 

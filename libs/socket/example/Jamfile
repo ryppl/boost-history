@@ -12,6 +12,7 @@ rule socket-example ( example-name : sources + )
 {
     exe $(example-name) :
       $(sources)
+	<lib>../build/boost_socket
 	:
 	<include>$(B_ROOT)
 	<include>$(BOOST_ROOT)

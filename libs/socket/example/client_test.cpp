@@ -18,9 +18,10 @@
 #pragma hdrstop
 #endif
 
-#include "boost/socket/connector_socket.hpp"
 #include "boost/socket/ip4.hpp"
 #include "boost/socket/socketstream.hpp"
+#include "boost/socket/socket_exception.hpp"
+#include "boost/socket/connector_socket.hpp"
 
 #include <iostream>
 #include <cassert>
@@ -37,25 +38,24 @@ using namespace boost::socket;
 
 void client_test()
 {
-  BOOST_MESSAGE("starting");
-  // this call needs to happen automatically
-  socket_base<>::initialise();
+  try
+  {
 
-  ip4::address addr;
-  addr.port(3234);
-  addr.hostname("localhost");
-  BOOST_MESSAGE(addr.ip());
+    BOOST_MESSAGE("starting");
 
-  ip4::tcp_protocol protocol;
+    ip4::address addr;
+    addr.port(3234);
+    addr.hostname("localhost");
+    BOOST_MESSAGE(addr.ip());
 
-  connector<> connector;
+    ip4::tcp_protocol protocol;
 
-  try {
+    connector<> connector;
 
     time_value timeout(10,0);
-    data_socket<> socket(connector.connect(protocol,addr,timeout));
+    data_socket<> socket(connector.connect(protocol,addr));
     BOOST_CHECK(socket.is_valid());
-    BOOST_CHECK(socket.setsockopt(boost::socket::socket_option_linger(1000))
+    BOOST_CHECK(socket.setsockopt(boost::socket::option::linger(1000))
                 ==boost::socket::Success);
     BOOST_MESSAGE("Connected");
 
@@ -71,7 +71,7 @@ void client_test()
   }
   catch (const socket_exception& s)
   {
-    std::cerr << s.what() << std::endl;
+    std::cerr << s.message() << std::endl;
   }
 
 }

@@ -1,0 +1,208 @@
+// Copyright (C) 2002 Hugo Duncan
+
+// Permission to use, copy, modify, distribute and sell this software
+// and its documentation for any purpose is hereby granted without fee,
+// provided that the above copyright notice appear in all copies and
+// that both that copyright notice and this permission notice appear
+// in supporting documentation.  Hugo Duncan makes no representations
+// about the suitability of this software for any purpose.
+// It is provided "as is" without express or implied warranty.
+
+#ifdef _MSC_VER
+#pragma warning (disable: 4786 4305)
+  // 4786 truncated debug symbolic name
+  // 4305 truncation from const double to float
+#endif
+
+#if defined(__BORLANDC__)
+#pragma hdrstop
+#endif
+
+#include "boost/socket/ip4/address.hpp"
+#include "boost/socket/impl/initialiser.hpp"
+
+//! implementation
+#ifdef USES_WINSOCK2
+
+#include <winsock2.h>
+#include <Ws2tcpip.h>
+
+#else
+
+#ifdef __CYGWIN__
+#include "sys/socket.h"
+#include "cygwin/in_systm.h"
+#include "cygwin/in.h"
+#endif
+
+#include <netinet/in.h>
+#include <netinet/ip.h>
+#include <netdb.h>
+#include <arpa/inet.h>
+
+#endif
+
+#include <utility>
+#include <cstring>
+#include "boost/config.hpp"
+#ifdef BOOST_NO_STDC_NAMESPACE
+namespace std { using ::memset; using ::memcpy;  using ::memcmp; }
+#endif
+
+
+#ifdef _MSC_VER
+#pragma warning (push, 4)
+#pragma warning (disable: 4786 4305)
+#endif
+
+
+namespace
+{
+  const int address_size = sizeof(sockaddr_in);
+
+  inline sockaddr_in*
+  sockaddr_ptr(boost::socket::impl::address_storage& addr)
+  {
+    return reinterpret_cast<sockaddr_in*>(addr.storage);
+  }
+
+  inline sockaddr_in const*
+  sockaddr_ptr(boost::socket::impl::address_storage const& addr)
+  {
+    return reinterpret_cast<const sockaddr_in*>(addr.storage);
+  }
+}
+
+namespace boost
+{
+  namespace socket
+  {
+
+    namespace ip4
+    {
+      const boost::socket::impl::initialiser& address::m_initialiser(
+        boost::socket::impl::initialiser::uses_platform());
+
+      address::address()
+      {
+        std::memset(&address_, 0, address_size);
+        sockaddr_ptr(address_)->sin_family = AF_INET;
+      }
+
+      family_t address::family() const
+      {
+        return sockaddr_ptr(address_)->sin_family;
+      }
+
+      port_t address::port() const
+      {
+        return ntohs(sockaddr_ptr(address_)->sin_port);
+      }
+
+      //! set the (host ordered) port number
+      void address::port(port_t port)
+      {
+        sockaddr_ptr(address_)->sin_port = htons(port);
+      }
+
+      void address::hostname(const char* hostname)
+      {
+        hostent *hp = ::gethostbyname(hostname);
+        if (hp == 0)
+          throw "hostname not found";
+        std::memcpy((char*)&(sockaddr_ptr(address_)->sin_addr),
+                    (char*)hp->h_addr, hp->h_length);
+      }
+
+      std::string address::hostname() const
+      {
+        hostent *hp =
+          gethostbyaddr((const char*)&sockaddr_ptr(address_)->sin_addr,
+                        sizeof(unsigned long),
+                        AF_INET );
+        if (hp == 0)
+          throw "hostname not found";
+        return hp->h_name;
+      }
+
+      void address::ip(const char* ip_string)
+      {
+        unsigned long i = inet_addr(ip_string);
+        if (i == INADDR_NONE)
+          throw "ip not valid";
+#ifdef USES_WINSOCK2
+        sockaddr_ptr(address_)->sin_addr.S_un.S_addr=i;
+#else
+        sockaddr_ptr(address_)->sin_addr.s_addr=i;
+#endif
+      }
+
+      const char* address::ip() const
+      {
+        const char* ret=inet_ntoa(sockaddr_ptr(address_)->sin_addr);
+        if (!ret)
+          throw "ip address not representable";
+        return ret;
+      }
+
+      std::string address::to_string() const
+      {
+        return hostname();
+      }
+
+      std::pair<const void*,unsigned> address::representation() const
+      {
+        return std::make_pair(static_cast<const void*>(sockaddr_ptr(address_)),
+                              sizeof(sockaddr_in));
+      }
+
+      // should return something that can be passed to other functions
+      /** This is to make sure we can passs the "correct" sockaddr structure,
+          to eg. accept.
+      */
+      std::pair<void*,unsigned> address::representation()
+      {
+        return std::make_pair(static_cast<void*>(sockaddr_ptr(address_)),
+                              sizeof(sockaddr_in));
+      }
+
+      bool address::operator < (const address& addr) const
+      {
+        const int cmp=std::memcmp(&sockaddr_ptr(address_)->sin_addr,
+                                  &sockaddr_ptr(addr.address_)->sin_addr,
+                                  address_size);
+        return cmp<0
+          || cmp==0
+          && sockaddr_ptr(address_)->sin_port
+           < sockaddr_ptr(addr.address_)->sin_port;
+      }
+
+      bool address::operator == (const address& addr) const
+      {
+        const int cmp=std::memcmp(&sockaddr_ptr(address_)->sin_addr,
+                                  &sockaddr_ptr(addr.address_)->sin_addr,
+                                  address_size);
+        return cmp==0
+          && sockaddr_ptr(address_)->sin_port
+          == sockaddr_ptr(addr.address_)->sin_port;
+      }
+
+      bool address::operator != (const address& addr) const
+      {
+        const int cmp=std::memcmp(&sockaddr_ptr(address_)->sin_addr,
+                                  &sockaddr_ptr(addr.address_)->sin_addr,
+                                  address_size);
+        return cmp!=0
+          || sockaddr_ptr(address_)->sin_port
+          != sockaddr_ptr(addr.address_)->sin_port;
+      }
+
+
+    }// namespace
+  }// namespace
+}// namespace
+
+
+#ifdef _MSC_VER
+#pragma warning (pop)
+#endif
