@@ -67,11 +67,6 @@ template<
 struct bitor_
     : bitor_< bitor_< bitor_< bitor_< N1,N2 >, N3>, N4>, N5>
 {
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(
-          5
-        , bitor_
-        , ( N1, N2, N3, N4, N5 )
-        )
 };
 
 template<

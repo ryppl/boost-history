@@ -67,11 +67,6 @@ template<
 struct bitand_
     : bitand_< bitand_< bitand_< bitand_< N1,N2 >, N3>, N4>, N5>
 {
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(
-          5
-        , bitand_
-        , ( N1, N2, N3, N4, N5 )
-        )
 };
 
 template<

@@ -17,7 +17,7 @@
 #include <boost/mpl/begin_end_fwd.hpp>
 #include <boost/mpl/list/aux_/iterator.hpp>
 #include <boost/mpl/list/aux_/tag.hpp>
-#include <boost/mpl/list/aux_/node.hpp>
+#include <boost/mpl/list/aux_/item.hpp>
 
 namespace boost { namespace mpl {
 
@@ -35,7 +35,7 @@ struct end_impl< aux::list_tag >
 {
     template< typename > struct apply
     {
-        typedef l_iter<null_node> type;
+        typedef l_iter<l_end> type;
     };
 };
 

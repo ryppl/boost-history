@@ -1,20 +1,17 @@
-//-----------------------------------------------------------------------------
-// boost mpl/list/aux_/numbered_c.hpp header file
-// See http://www.boost.org for updates, documentation, and revision history.
-//-----------------------------------------------------------------------------
-//
-// Copyright 2000-02
-// Aleksey Gurtovoy
-//
-// Permission to use, copy, modify, distribute and sell this software
-// and its documentation for any purpose is hereby granted without fee, 
-// provided that the above copyright notice appears in all copies and 
-// that both the copyright notice and this permission notice appear in 
-// supporting documentation. No representations are made about the 
-// suitability of this software for any purpose. It is provided "as is" 
-// without express or implied warranty.
 
-// no include guards, the header is intended for multiple inclusion!
+// Copyright Aleksey Gurtovoy 2000-2004
+//
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
+//
+// See http://www.boost.org/libs/mpl for documentation.
+
+// $Source$
+// $Date$
+// $Revision$
+
+// NO INCLUDE GUARDS, THE HEADER IS INTENDED FOR MULTIPLE INCLUSION!
 
 #if defined(BOOST_PP_IS_ITERATING)
 
@@ -32,10 +29,10 @@ template<
     , BOOST_PP_ENUM_PARAMS(i, T C)
     >
 struct list1_c
-    : list_node<
-          integral_c<long,1>
+    : l_item<
+          long_<1>
         , integral_c<T,C0>
-        , null_node
+        , l_end
         >
 {
     typedef list1_c type;
@@ -54,8 +51,8 @@ template<
     , BOOST_PP_ENUM_PARAMS(i, T C)
     >
 struct BOOST_PP_CAT(BOOST_PP_CAT(list,i),_c)
-    : list_node<
-          integral_c<long,i>
+    : l_item<
+          long_<i>
         , integral_c<T,C0>
         , MPL_AUX_LIST_C_TAIL(list,i,C)
         >

@@ -368,7 +368,7 @@ struct quote3;
 template< typename T1, typename T2, typename T3 > struct if_;
 
 template<
-      typename Tag, typename T1, typename T2, typename T3, int dummy_
+      typename Tag, typename T1, typename T2, typename T3
     >
 struct bind3<
       quote3< if_,Tag >

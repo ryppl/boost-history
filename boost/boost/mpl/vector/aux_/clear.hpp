@@ -2,7 +2,7 @@
 #ifndef BOOST_MPL_VECTOR_AUX_CLEAR_HPP_INCLUDED
 #define BOOST_MPL_VECTOR_AUX_CLEAR_HPP_INCLUDED
 
-// Copyright 2000-04 Aleksey Gurtovoy
+// Copyright Aleksey Gurtovoy 2000-2004
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -20,8 +20,7 @@
 #include <boost/mpl/aux_/config/typeof.hpp>
 #include <boost/mpl/aux_/config/ctps.hpp>
 
-namespace boost {
-namespace mpl {
+namespace boost { namespace mpl {
 
 #if defined(BOOST_MPL_CFG_TYPEOF_BASED_SEQUENCES)
 
@@ -51,7 +50,6 @@ struct clear_impl< aux::vector_tag<N> >
 
 #endif // BOOST_MPL_CFG_TYPEOF_BASED_SEQUENCES
 
-} // namespace mpl
-} // namespace boost
+}}
 
 #endif // BOOST_MPL_VECTOR_AUX_CLEAR_HPP_INCLUDED

@@ -14,7 +14,7 @@
 import preprocess
 
 preprocess.main(
-      [ "plain", "typeof_based" ]
-    , "map"
-    , "boost\\mpl\\map\\aux_\\preprocessed"
+      [ "plain" ]
+    , "list"
+    , "boost\\mpl\\list\\aux_\\preprocessed"
     )

@@ -2,12 +2,12 @@
 #ifndef BOOST_MPL_ITER_FOLD_BACKWARD_HPP_INCLUDED
 #define BOOST_MPL_ITER_FOLD_BACKWARD_HPP_INCLUDED
 
-// Copyright Aleksey Gurtovoy 2001-2002
+// Copyright Aleksey Gurtovoy 2001-2004
 // Copyright Dave Abrahams 2001-2002
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -23,8 +23,7 @@
 #include <boost/mpl/aux_/na_spec.hpp>
 #include <boost/mpl/aux_/lambda_support.hpp>
 
-namespace boost {
-namespace mpl {
+namespace boost { namespace mpl {
 
 template<
       typename BOOST_MPL_AUX_NA_PARAM(Sequence)
@@ -52,7 +51,6 @@ struct reverse_iter_fold
 
 BOOST_MPL_AUX_NA_SPEC(3, reverse_iter_fold)
 
-} // namespace mpl
-} // namespace boost
+}}
 
 #endif // BOOST_MPL_ITER_FOLD_BACKWARD_HPP_INCLUDED

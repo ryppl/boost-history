@@ -2,7 +2,7 @@
 #ifndef BOOST_MPL_NOT_HPP_INCLUDED
 #define BOOST_MPL_NOT_HPP_INCLUDED
 
-// Copyright Aleksey Gurtovoy 2000-2003
+// Copyright Aleksey Gurtovoy 2000-2004
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -19,8 +19,7 @@
 #include <boost/mpl/aux_/na_spec.hpp>
 #include <boost/mpl/aux_/lambda_support.hpp>
 
-namespace boost {
-namespace mpl {
+namespace boost { namespace mpl {
 
 namespace aux {
 
@@ -46,7 +45,6 @@ struct not_
 
 BOOST_MPL_AUX_NA_SPEC(1,not_)
 
-} // namespace mpl
-} // namespace boost
+}}
 
 #endif // BOOST_MPL_NOT_HPP_INCLUDED

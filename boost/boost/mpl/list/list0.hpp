@@ -14,6 +14,7 @@
 // $Date$
 // $Revision$
 
+#include <boost/mpl/long.hpp>
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/mpl/list/aux_/push_front.hpp>
 #include <boost/mpl/list/aux_/pop_front.hpp>
@@ -24,16 +25,16 @@
 #include <boost/mpl/list/aux_/size.hpp>
 #include <boost/mpl/list/aux_/empty.hpp>
 #include <boost/mpl/list/aux_/begin_end.hpp>
-#include <boost/mpl/list/aux_/node.hpp>
+#include <boost/mpl/list/aux_/item.hpp>
 
 namespace boost { namespace mpl {
 
 template< typename Dummy = na > struct list0;
 
 template<> struct list0<na>
-    : null_node
+    : l_end
 {
-    typedef null_node type;
+    typedef l_end type;
 };
 
 }}

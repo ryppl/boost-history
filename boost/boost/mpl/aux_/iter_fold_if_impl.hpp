@@ -2,8 +2,8 @@
 #ifndef BOOST_MPL_AUX_ITER_FOLD_IF_IMPL_HPP_INCLUDED
 #define BOOST_MPL_AUX_ITER_FOLD_IF_IMPL_HPP_INCLUDED
 
-// Copyright 2001-2004 Aleksey Gurtovoy
-// Copyright 2001-2002 David Abrahams
+// Copyright Aleksey Gurtovoy 2001-2004
+// Copyright David Abrahams 2001-2002
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -21,7 +21,6 @@
 #   include <boost/mpl/if.hpp>
 #   include <boost/mpl/apply.hpp>
 #   include <boost/mpl/aux_/value_wknd.hpp>
-#   include <boost/mpl/aux_/bool_value_wknd.hpp>
 #endif
 
 #include <boost/mpl/aux_/config/use_preprocessed.hpp>
@@ -41,9 +40,7 @@
 #   include <boost/preprocessor/dec.hpp>
 #   include <boost/preprocessor/cat.hpp>
 
-namespace boost {
-namespace mpl {
-namespace aux {
+namespace boost { namespace mpl { namespace aux {
 
 template< typename Iterator, typename State >
 struct iter_fold_if_null_step
@@ -207,9 +204,7 @@ struct iter_fold_if_impl
 #   undef AUX_ITER_FOLD_BACKWARD_STEP_FUNC
 #   undef AUX_ITER_FOLD_FORWARD_STEP
 
-} // namespace aux
-} // namespace mpl
-} // namespace boost
+}}}
 
 #endif // BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
 #endif // BOOST_MPL_AUX_ITER_FOLD_IF_IMPL_HPP_INCLUDED

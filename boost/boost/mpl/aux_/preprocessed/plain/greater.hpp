@@ -68,8 +68,6 @@ struct greater
         , typename greater_tag<N2>::type
         >::template apply< N1,N2 >::type
 {
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(2, greater, (N1, N2))
-
 };
 
 BOOST_MPL_AUX_NA_SPEC2(2, 2, greater)

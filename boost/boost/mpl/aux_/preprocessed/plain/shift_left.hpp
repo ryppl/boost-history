@@ -69,8 +69,6 @@ struct shift_left
         , typename shift_left_tag<N2>::type
         >::template apply< N1,N2 >::type
 {
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(2, shift_left, (N1, N2))
-
 };
 
 BOOST_MPL_AUX_NA_SPEC2(2, 2, shift_left)

@@ -1,9 +1,9 @@
 
 // Copyright Aleksey Gurtovoy 2000-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 
 // Preprocessed version of "boost/mpl/Attic/map.hpp" header
@@ -32,7 +32,8 @@ struct map_chooser<0>
     {
         typedef map0<
              
-            > type;
+            >::type type;
+
     };
 };
 
@@ -51,9 +52,10 @@ struct map_chooser<1>
         >
     struct result_
     {
-        typedef map1<
+        typedef typename map1<
               T0
-            > type;
+            >::type type;
+
     };
 };
 
@@ -72,9 +74,10 @@ struct map_chooser<2>
         >
     struct result_
     {
-        typedef map2<
+        typedef typename map2<
               T0, T1
-            > type;
+            >::type type;
+
     };
 };
 
@@ -93,9 +96,10 @@ struct map_chooser<3>
         >
     struct result_
     {
-        typedef map3<
+        typedef typename map3<
               T0, T1, T2
-            > type;
+            >::type type;
+
     };
 };
 
@@ -114,9 +118,10 @@ struct map_chooser<4>
         >
     struct result_
     {
-        typedef map4<
+        typedef typename map4<
               T0, T1, T2, T3
-            > type;
+            >::type type;
+
     };
 };
 
@@ -135,9 +140,10 @@ struct map_chooser<5>
         >
     struct result_
     {
-        typedef map5<
+        typedef typename map5<
               T0, T1, T2, T3, T4
-            > type;
+            >::type type;
+
     };
 };
 
@@ -156,9 +162,10 @@ struct map_chooser<6>
         >
     struct result_
     {
-        typedef map6<
+        typedef typename map6<
               T0, T1, T2, T3, T4, T5
-            > type;
+            >::type type;
+
     };
 };
 
@@ -177,9 +184,10 @@ struct map_chooser<7>
         >
     struct result_
     {
-        typedef map7<
+        typedef typename map7<
               T0, T1, T2, T3, T4, T5, T6
-            > type;
+            >::type type;
+
     };
 };
 
@@ -198,9 +206,10 @@ struct map_chooser<8>
         >
     struct result_
     {
-        typedef map8<
+        typedef typename map8<
               T0, T1, T2, T3, T4, T5, T6, T7
-            > type;
+            >::type type;
+
     };
 };
 
@@ -219,9 +228,10 @@ struct map_chooser<9>
         >
     struct result_
     {
-        typedef map9<
+        typedef typename map9<
               T0, T1, T2, T3, T4, T5, T6, T7, T8
-            > type;
+            >::type type;
+
     };
 };
 
@@ -240,9 +250,10 @@ struct map_chooser<10>
         >
     struct result_
     {
-        typedef map10<
+        typedef typename map10<
               T0, T1, T2, T3, T4, T5, T6, T7, T8, T9
-            > type;
+            >::type type;
+
     };
 };
 
@@ -261,9 +272,10 @@ struct map_chooser<11>
         >
     struct result_
     {
-        typedef map11<
+        typedef typename map11<
               T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10
-            > type;
+            >::type type;
+
     };
 };
 
@@ -282,9 +294,10 @@ struct map_chooser<12>
         >
     struct result_
     {
-        typedef map12<
+        typedef typename map12<
               T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11
-            > type;
+            >::type type;
+
     };
 };
 
@@ -303,9 +316,10 @@ struct map_chooser<13>
         >
     struct result_
     {
-        typedef map13<
+        typedef typename map13<
               T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12
-            > type;
+            >::type type;
+
     };
 };
 
@@ -324,9 +338,10 @@ struct map_chooser<14>
         >
     struct result_
     {
-        typedef map14<
+        typedef typename map14<
               T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13
-            > type;
+            >::type type;
+
     };
 };
 
@@ -345,9 +360,10 @@ struct map_chooser<15>
         >
     struct result_
     {
-        typedef map15<
+        typedef typename map15<
               T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14
-            > type;
+            >::type type;
+
     };
 };
 
@@ -366,9 +382,10 @@ struct map_chooser<16>
         >
     struct result_
     {
-        typedef map16<
+        typedef typename map16<
               T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15
-            > type;
+            >::type type;
+
     };
 };
 
@@ -387,9 +404,10 @@ struct map_chooser<17>
         >
     struct result_
     {
-        typedef map17<
+        typedef typename map17<
               T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16
-            > type;
+            >::type type;
+
     };
 };
 
@@ -408,9 +426,10 @@ struct map_chooser<18>
         >
     struct result_
     {
-        typedef map18<
+        typedef typename map18<
               T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17
-            > type;
+            >::type type;
+
     };
 };
 
@@ -429,9 +448,10 @@ struct map_chooser<19>
         >
     struct result_
     {
-        typedef map19<
+        typedef typename map19<
               T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18
-            > type;
+            >::type type;
+
     };
 };
 
@@ -450,9 +470,10 @@ struct map_chooser<20>
         >
     struct result_
     {
-        typedef map20<
+        typedef typename map20<
               T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19
-            > type;
+            >::type type;
+
     };
 };
 

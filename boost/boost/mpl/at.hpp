@@ -4,9 +4,9 @@
 
 // Copyright Aleksey Gurtovoy 2000-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -22,8 +22,7 @@
 #include <boost/mpl/aux_/lambda_support.hpp>
 #include <boost/mpl/aux_/config/nttp.hpp>
 
-namespace boost {
-namespace mpl {
+namespace boost { namespace mpl {
 
 template<
       typename BOOST_MPL_AUX_NA_PARAM(Sequence)
@@ -48,7 +47,6 @@ struct at_c
 
 BOOST_MPL_AUX_NA_SPEC(2, at)
 
-} // namespace mpl
-} // namespace boost
+}}
 
 #endif // BOOST_MPL_AT_HPP_INCLUDED

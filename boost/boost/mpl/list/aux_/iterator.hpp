@@ -15,7 +15,7 @@
 // $Revision$
 
 #include <boost/mpl/iterator_tags.hpp>
-#include <boost/mpl/list/aux_/node.hpp>
+#include <boost/mpl/list/aux_/item.hpp>
 #include <boost/mpl/aux_/lambda_spec.hpp>
 
 namespace boost { namespace mpl {
@@ -29,7 +29,7 @@ struct l_iter
     typedef l_iter<typename Node::next> next;
 };
 
-template<> struct l_iter<null_node>
+template<> struct l_iter<l_end>
 {
     typedef aux::l_iter_tag tag;
     typedef forward_iterator_tag category;

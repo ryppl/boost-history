@@ -1,18 +1,15 @@
-//-----------------------------------------------------------------------------
-// boost mpl/example/integer.cpp source file
-// See http://www.boost.org for updates, documentation, and revision history.
-//-----------------------------------------------------------------------------
+
+// Copyright Aleksey Gurtovoy 2001-2004
 //
-// Copyright 2001-02
-// Aleksey Gurtovoy
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
-// Permission to use, copy, modify, distribute and sell this software
-// and its documentation for any purpose is hereby granted without fee, 
-// provided that the above copyright notice appears in all copies and 
-// that both the copyright notice and this permission notice appear in 
-// supporting documentation. No representations are made about the 
-// suitability of this software for any purpose. It is provided "as is" 
-// without express or implied warranty.
+// See http://www.boost.org/libs/mpl for documentation.
+
+// $Source$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/multiplies.hpp>
 #include <boost/mpl/list.hpp>
@@ -22,10 +19,12 @@
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/base.hpp>
-#include <boost/mpl/apply_if.hpp>
-#include <boost/mpl/apply.hpp>
+#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/deref.hpp>
 #include <boost/mpl/begin_end.hpp>
-#include <boost/mpl/assert_is_same.hpp>
+#include <boost/mpl/assert.hpp>
+
+#include <boost/type_traits/is_same.hpp>
 
 namespace mpl = boost::mpl;
 using namespace mpl::placeholders;
@@ -48,10 +47,10 @@ struct integer
         >::type >::type iter_;
 
     typedef typename mpl::end<builtins_>::type last_;
-    typedef typename mpl::apply_if<
+    typedef typename mpl::eval_if<
           boost::is_same<iter_,last_>
         , mpl::identity< big_int<bit_size> >
-        , mpl::apply0<iter_>
+        , mpl::deref<iter_>
         >::type type;
 };
 
@@ -61,8 +60,8 @@ typedef integer<15>::type int15;
 typedef integer<32>::type int32;
 typedef integer<100>::type int100;
 
-MPL_ASSERT_SAME(2,(int1, char);
-MPL_ASSERT_SAME(2,(int5, char);
-MPL_ASSERT_SAME(2,(int15, short);
-MPL_ASSERT_SAME(2,(int32, int);
-MPL_ASSERT_SAME(2,(int100, big_int<100>);
+BOOST_MPL_ASSERT(( boost::is_same< int1, char > ));
+BOOST_MPL_ASSERT(( boost::is_same< int5, char > ));
+BOOST_MPL_ASSERT(( boost::is_same< int15, short > ));
+BOOST_MPL_ASSERT(( boost::is_same< int32, int > ));
+BOOST_MPL_ASSERT(( boost::is_same< int100, big_int<100> > ));

@@ -70,7 +70,6 @@ struct advance_c
 };
 
 BOOST_MPL_AUX_NA_SPEC(2, advance)
-//BOOST_MPL_METAFUNCTION(2, advance)
 
 }}
 

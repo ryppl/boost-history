@@ -4,9 +4,9 @@
 
 // Copyright Aleksey Gurtovoy 2000-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
@@ -26,7 +26,7 @@
 
 #endif
 
-//#define BOOST_MPL_CFG_NO_OWN_PP_PRIMITIVES
+#define BOOST_MPL_CFG_NO_OWN_PP_PRIMITIVES
 
 #if !defined(BOOST_MPL_CFG_NO_OWN_PP_PRIMITIVES) \
     && BOOST_WORKAROUND(__DMC__, BOOST_TESTED_AT(0x840))

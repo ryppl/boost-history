@@ -23,13 +23,13 @@
 
 #if !defined(BOOST_MPL_PREPROCESSING_MODE)
 #   include <boost/mpl/aux_/template_arity_fwd.hpp>
+#   include <boost/mpl/int.hpp>
 #   if !defined(BOOST_MPL_CFG_NO_FULL_LAMBDA_SUPPORT)
 #   if defined(BOOST_MPL_CFG_EXTENDED_TEMPLATE_PARAMETERS_MATCHING)
 #       include <boost/mpl/aux_/type_wrapper.hpp>
 #   endif
 #   else
 #       include <boost/mpl/aux_/has_rebind.hpp>
-#       include <boost/mpl/int.hpp>
 #   endif
 #endif
 

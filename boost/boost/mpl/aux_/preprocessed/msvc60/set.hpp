@@ -1,9 +1,9 @@
 
 // Copyright Aleksey Gurtovoy 2000-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 
 // Preprocessed version of "boost/mpl/Attic/set.hpp" header
@@ -32,7 +32,8 @@ struct set_chooser<0>
     {
         typedef set0<
              
-            > type;
+            >::type type;
+
     };
 };
 
@@ -51,9 +52,10 @@ struct set_chooser<1>
         >
     struct result_
     {
-        typedef set1<
+        typedef typename set1<
               T0
-            > type;
+            >::type type;
+
     };
 };
 
@@ -72,9 +74,10 @@ struct set_chooser<2>
         >
     struct result_
     {
-        typedef set2<
+        typedef typename set2<
               T0, T1
-            > type;
+            >::type type;
+
     };
 };
 
@@ -93,9 +96,10 @@ struct set_chooser<3>
         >
     struct result_
     {
-        typedef set3<
+        typedef typename set3<
               T0, T1, T2
-            > type;
+            >::type type;
+
     };
 };
 
@@ -114,9 +118,10 @@ struct set_chooser<4>
         >
     struct result_
     {
-        typedef set4<
+        typedef typename set4<
               T0, T1, T2, T3
-            > type;
+            >::type type;
+
     };
 };
 
@@ -135,9 +140,10 @@ struct set_chooser<5>
         >
     struct result_
     {
-        typedef set5<
+        typedef typename set5<
               T0, T1, T2, T3, T4
-            > type;
+            >::type type;
+
     };
 };
 
@@ -156,9 +162,10 @@ struct set_chooser<6>
         >
     struct result_
     {
-        typedef set6<
+        typedef typename set6<
               T0, T1, T2, T3, T4, T5
-            > type;
+            >::type type;
+
     };
 };
 
@@ -177,9 +184,10 @@ struct set_chooser<7>
         >
     struct result_
     {
-        typedef set7<
+        typedef typename set7<
               T0, T1, T2, T3, T4, T5, T6
-            > type;
+            >::type type;
+
     };
 };
 
@@ -198,9 +206,10 @@ struct set_chooser<8>
         >
     struct result_
     {
-        typedef set8<
+        typedef typename set8<
               T0, T1, T2, T3, T4, T5, T6, T7
-            > type;
+            >::type type;
+
     };
 };
 
@@ -219,9 +228,10 @@ struct set_chooser<9>
         >
     struct result_
     {
-        typedef set9<
+        typedef typename set9<
               T0, T1, T2, T3, T4, T5, T6, T7, T8
-            > type;
+            >::type type;
+
     };
 };
 
@@ -240,9 +250,10 @@ struct set_chooser<10>
         >
     struct result_
     {
-        typedef set10<
+        typedef typename set10<
               T0, T1, T2, T3, T4, T5, T6, T7, T8, T9
-            > type;
+            >::type type;
+
     };
 };
 
@@ -261,9 +272,10 @@ struct set_chooser<11>
         >
     struct result_
     {
-        typedef set11<
+        typedef typename set11<
               T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10
-            > type;
+            >::type type;
+
     };
 };
 
@@ -282,9 +294,10 @@ struct set_chooser<12>
         >
     struct result_
     {
-        typedef set12<
+        typedef typename set12<
               T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11
-            > type;
+            >::type type;
+
     };
 };
 
@@ -303,9 +316,10 @@ struct set_chooser<13>
         >
     struct result_
     {
-        typedef set13<
+        typedef typename set13<
               T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12
-            > type;
+            >::type type;
+
     };
 };
 
@@ -324,9 +338,10 @@ struct set_chooser<14>
         >
     struct result_
     {
-        typedef set14<
+        typedef typename set14<
               T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13
-            > type;
+            >::type type;
+
     };
 };
 
@@ -345,9 +360,10 @@ struct set_chooser<15>
         >
     struct result_
     {
-        typedef set15<
+        typedef typename set15<
               T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14
-            > type;
+            >::type type;
+
     };
 };
 
@@ -366,9 +382,10 @@ struct set_chooser<16>
         >
     struct result_
     {
-        typedef set16<
+        typedef typename set16<
               T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15
-            > type;
+            >::type type;
+
     };
 };
 
@@ -387,9 +404,10 @@ struct set_chooser<17>
         >
     struct result_
     {
-        typedef set17<
+        typedef typename set17<
               T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16
-            > type;
+            >::type type;
+
     };
 };
 
@@ -408,9 +426,10 @@ struct set_chooser<18>
         >
     struct result_
     {
-        typedef set18<
+        typedef typename set18<
               T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17
-            > type;
+            >::type type;
+
     };
 };
 
@@ -429,9 +448,10 @@ struct set_chooser<19>
         >
     struct result_
     {
-        typedef set19<
+        typedef typename set19<
               T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18
-            > type;
+            >::type type;
+
     };
 };
 
@@ -450,9 +470,10 @@ struct set_chooser<20>
         >
     struct result_
     {
-        typedef set20<
+        typedef typename set20<
               T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19
-            > type;
+            >::type type;
+
     };
 };
 

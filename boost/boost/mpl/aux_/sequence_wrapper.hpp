@@ -3,20 +3,19 @@
 
 ///// header body
 
-#ifndef BOOST_MPL_AUX_SEQUENCE_WRAPPER_HPP_INCLUDED
-#define BOOST_MPL_AUX_SEQUENCE_WRAPPER_HPP_INCLUDED
-
 // Copyright Aleksey Gurtovoy 2000-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
 // $Source$
 // $Date$
 // $Revision$
+
+// NO INCLUDE GUARDS, THE HEADER IS INTENDED FOR MULTIPLE INCLUSION!
 
 #   include <boost/mpl/aux_/config/ctps.hpp>
 #   include <boost/mpl/aux_/config/nttp.hpp>
@@ -210,10 +209,9 @@ struct AUX778076_SEQUENCE_NAME
 #   undef AUX778076_SEQUENCE_PARAM_NAME
 #   undef AUX778076_SEQUENCE_LIMIT
 #   undef AUX778076_SEQUENCE_NAME
+#   undef AUX778076_SEQUENCE_INTEGRAL_WRAPPER
 
 }}
-
-#endif // BOOST_MPL_AUX_SEQUENCE_WRAPPER_HPP_INCLUDED
 
 ///// iteration
 

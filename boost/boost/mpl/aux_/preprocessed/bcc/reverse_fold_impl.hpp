@@ -1,9 +1,9 @@
 
 // Copyright Aleksey Gurtovoy 2000-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 
 // Preprocessed version of "boost/mpl/aux_/Attic/reverse_fold_impl.hpp" header
@@ -241,8 +241,8 @@ struct reverse_fold_chunk< -1 >
         >
     struct result_
     {
-        typedef typename if_c<
-              ::boost::is_same< First,Last >::value
+        typedef typename if_<
+              typename is_same< First,Last >::type
             , reverse_fold_null_step< Last,State >
             , reverse_fold_step< First,Last,State,BackwardOp,ForwardOp >
             >::type res_;

@@ -183,7 +183,7 @@ class pretty:
 
             self.reading_copyright = 0
             
-        if self.re_copyright_start.match( line ):
+        if not self.header_was_written and self.re_copyright_start.match( line ):
             self.copyright = line
             self.reading_copyright = 1
             return

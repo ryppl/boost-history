@@ -66,11 +66,6 @@ template<
 struct times
     : times< times< times< times< N1,N2 >, N3>, N4>, N5>
 {
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(
-          5
-        , times
-        , ( N1, N2, N3, N4, N5 )
-        )
 };
 
 template<

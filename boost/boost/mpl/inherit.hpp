@@ -1,14 +1,3 @@
-// Copyright Aleksey Gurtovoy 2001-2002
-//
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
-//
-// See http://www.boost.org/libs/mpl for documentation.
-
-// $Source$
-// $Date$
-// $Revision$
 
 #if !defined(BOOST_PP_IS_ITERATING)
 
@@ -16,6 +5,18 @@
 
 #ifndef BOOST_MPL_INHERIT_HPP_INCLUDED
 #define BOOST_MPL_INHERIT_HPP_INCLUDED
+
+// Copyright Aleksey Gurtovoy 2001-2004
+//
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
+//
+// See http://www.boost.org/libs/mpl for documentation.
+
+// $Source$
+// $Date$
+// $Revision$
 
 #if !defined(BOOST_MPL_PREPROCESSING_MODE)
 #   include <boost/mpl/empty_base.hpp>
@@ -25,25 +26,26 @@
 
 #include <boost/mpl/aux_/config/use_preprocessed.hpp>
 
-#if 0 //!defined(BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS)
- //&& !defined(BOOST_MPL_PREPROCESSING_MODE)
+#if !defined(BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS) \
+    && !defined(BOOST_MPL_PREPROCESSING_MODE)
 
 #   define BOOST_MPL_PREPROCESSED_HEADER inherit.hpp
 #   include <boost/mpl/aux_/include_preprocessed.hpp>
 
 #else
 
+#   include <boost/mpl/limits/arity.hpp>
 #   include <boost/mpl/aux_/preprocessor/params.hpp>
 #   include <boost/mpl/aux_/preprocessor/default_params.hpp>
-#   include <boost/mpl/limits/arity.hpp>
+#   include <boost/mpl/aux_/preprocessor/enum.hpp>
+#   include <boost/mpl/aux_/config/ctps.hpp>
+#   include <boost/mpl/aux_/config/dtp.hpp>
 
 #   include <boost/preprocessor/iterate.hpp>
 #   include <boost/preprocessor/dec.hpp>
 #   include <boost/preprocessor/cat.hpp>
-#   include <boost/config.hpp>
 
-namespace boost {
-namespace mpl {
+namespace boost { namespace mpl {
 
 // 'inherit<T1,T2,..,Tn>' metafunction; returns an unspecified class type
 // produced by public derivation from all metafunction's parameters 
@@ -161,8 +163,7 @@ BOOST_MPL_AUX_NA_SPEC(2, inherit2)
     (3,(3, BOOST_MPL_LIMIT_METAFUNCTION_ARITY, <boost/mpl/inherit.hpp>))
 #include BOOST_PP_ITERATE()
 
-} // namespace mpl
-} // namespace boost
+}}
 
 #endif // BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
 #endif // BOOST_MPL_INHERIT_HPP_INCLUDED
@@ -170,55 +171,59 @@ BOOST_MPL_AUX_NA_SPEC(2, inherit2)
 ///// iteration
 
 #else
-#define n BOOST_PP_FRAME_ITERATION(1)
+#define n_ BOOST_PP_FRAME_ITERATION(1)
 
 template<
-      BOOST_MPL_PP_DEFAULT_PARAMS(n, typename T, na)
+      BOOST_MPL_PP_DEFAULT_PARAMS(n_, typename T, na)
     >
-struct BOOST_PP_CAT(inherit,n)
+struct BOOST_PP_CAT(inherit,n_)
     : inherit2<
-          typename BOOST_PP_CAT(inherit,BOOST_PP_DEC(n))<
-              BOOST_MPL_PP_PARAMS(BOOST_PP_DEC(n), T)
+          typename BOOST_PP_CAT(inherit,BOOST_PP_DEC(n_))<
+              BOOST_MPL_PP_PARAMS(BOOST_PP_DEC(n_), T)
             >::type
-        , BOOST_PP_CAT(T,n)
+        , BOOST_PP_CAT(T,n_)
         >
 {
     BOOST_MPL_AUX_LAMBDA_SUPPORT(
-          n
-        , BOOST_PP_CAT(inherit,n)
-        , (BOOST_MPL_PP_PARAMS(n, T))
+          n_
+        , BOOST_PP_CAT(inherit,n_)
+        , (BOOST_MPL_PP_PARAMS(n_, T))
         )
 };
 
-BOOST_MPL_AUX_NA_SPEC(n, BOOST_PP_CAT(inherit,n))
+BOOST_MPL_AUX_NA_SPEC(n_, BOOST_PP_CAT(inherit,n_))
 
-#if n == BOOST_MPL_LIMIT_METAFUNCTION_ARITY
+#if n_ == BOOST_MPL_LIMIT_METAFUNCTION_ARITY
 /// primary template
 template<
-      BOOST_MPL_PP_DEFAULT_PARAMS(n, typename T, empty_base)
+      BOOST_MPL_PP_DEFAULT_PARAMS(n_, typename T, empty_base)
     >
 struct inherit
-    : BOOST_PP_CAT(inherit,n)<BOOST_MPL_PP_PARAMS(n, T)>
+    : BOOST_PP_CAT(inherit,n_)<BOOST_MPL_PP_PARAMS(n_, T)>
 {
 };
 
 // 'na' specialization
 template<>
-struct inherit< BOOST_MPL_AUX_NA_PARAMS(n) >
+struct inherit< BOOST_MPL_PP_ENUM(5, na) >
 {
     template<
-          BOOST_MPL_PP_NESTED_DEF_PARAMS_TAIL(0, typename T, empty_base)
+#if !defined(BOOST_MPL_CFG_NO_DEFAULT_PARAMETERS_IN_NESTED_TEMPLATES)
+          BOOST_MPL_PP_DEFAULT_PARAMS(n_, typename T, empty_base)
+#else
+          BOOST_MPL_PP_PARAMS(n_, typename T)
+#endif
         >
     struct apply
-        : inherit< BOOST_MPL_PP_PARAMS(n, T) >
+        : inherit< BOOST_MPL_PP_PARAMS(n_, T) >
     {
     };
 };
 
-BOOST_MPL_AUX_NA_SPEC_LAMBDA(n, inherit)
-BOOST_MPL_AUX_NA_SPEC_ARITY(n, inherit)
-BOOST_MPL_AUX_NA_SPEC_TEMPLATE_ARITY(n, n, inherit)
+BOOST_MPL_AUX_NA_SPEC_LAMBDA(n_, inherit)
+BOOST_MPL_AUX_NA_SPEC_ARITY(n_, inherit)
+BOOST_MPL_AUX_NA_SPEC_TEMPLATE_ARITY(n_, n_, inherit)
 #endif
 
-#undef n
+#undef n_
 #endif // BOOST_PP_IS_ITERATING

@@ -2,16 +2,17 @@
 #ifndef BOOST_MPL_MULTISET_AUX_COUNT_IMPL_HPP_INCLUDED
 #define BOOST_MPL_MULTISET_AUX_COUNT_IMPL_HPP_INCLUDED
 
-// + file: boost/mpl/multiset/aux_/count_impl.hpp
-// + last modified: 05/nov/03
-
-// Copyright Aleksey Gurtovoy 2003
+// Copyright Aleksey Gurtovoy 2003-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
+
+// $Source$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/multiset/aux_/tag.hpp>
 #include <boost/mpl/count_fwd.hpp>
@@ -76,6 +77,6 @@ struct count_impl< aux::multiset_tag >
 
 #endif // BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
 
-}} // namespace boost::mpl
+}}
 
 #endif // BOOST_MPL_MULTISET_AUX_COUNT_IMPL_HPP_INCLUDED

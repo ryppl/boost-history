@@ -15,13 +15,14 @@
 // $Revision$
 
 #include <boost/mpl/list/list0.hpp>
+#include <boost/mpl/integral_c.hpp>
 
 namespace boost { namespace mpl {
 
 template< typename T > struct list0_c
-    : null_node
+    : l_end
 {
-    typedef null_node type;
+    typedef l_end type;
 };
 
 }}

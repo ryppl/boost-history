@@ -16,7 +16,7 @@
 
 #include <boost/mpl/push_front_fwd.hpp>
 #include <boost/mpl/next.hpp>
-#include <boost/mpl/list/aux_/node.hpp>
+#include <boost/mpl/list/aux_/item.hpp>
 #include <boost/mpl/list/aux_/tag.hpp>
 
 namespace boost { namespace mpl {
@@ -26,7 +26,7 @@ struct push_front_impl< aux::list_tag >
 {
     template< typename List, typename T > struct apply
     {
-        typedef list_node<
+        typedef l_item<
               typename next<typename List::size>::type
             , T
             , typename List::type

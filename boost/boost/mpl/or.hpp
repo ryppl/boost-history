@@ -48,9 +48,9 @@
 
 #else
 
-#   define AUX_LOGICAL_OP_NAME or_
-#   define AUX_LOGICAL_OP_VALUE1 true
-#   define AUX_LOGICAL_OP_VALUE2 false
+#   define AUX778076_OP_NAME or_
+#   define AUX778076_OP_VALUE1 true
+#   define AUX778076_OP_VALUE2 false
 #   include <boost/mpl/aux_/logical_op.hpp>
 
 #endif // BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS

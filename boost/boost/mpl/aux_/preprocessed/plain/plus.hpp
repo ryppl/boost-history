@@ -66,11 +66,6 @@ template<
 struct plus
     : plus< plus< plus< plus< N1,N2 >, N3>, N4>, N5>
 {
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(
-          5
-        , plus
-        , ( N1, N2, N3, N4, N5 )
-        )
 };
 
 template<

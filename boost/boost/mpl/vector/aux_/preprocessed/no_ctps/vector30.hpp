@@ -1,5 +1,15 @@
-namespace boost {
-namespace mpl {
+
+// Copyright Aleksey Gurtovoy 2000-2004
+//
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
+//
+
+// Preprocessed version of "boost/mpl/vector/vector30.hpp" header
+// -- DO NOT modify by hand!
+
+namespace boost { namespace mpl {
 
 template<
       typename T0, typename T1, typename T2, typename T3, typename T4
@@ -34,6 +44,7 @@ struct vector21
     typedef T19 item19;
     typedef T20 item20;
     
+
     typedef void_ item21;
     typedef T20 back;
     typedef v_iter< type,0 > begin;
@@ -41,7 +52,7 @@ struct vector21
 };
 
 template<>
-struct push_front_impl< aux::vector_tag< 20> >
+struct push_front_impl< aux::vector_tag<20> >
 {
     template< typename Vector, typename T > struct apply
     {
@@ -63,7 +74,7 @@ struct push_front_impl< aux::vector_tag< 20> >
 };
 
 template<>
-struct pop_front_impl< aux::vector_tag< 21> >
+struct pop_front_impl< aux::vector_tag<21> >
 {
     template< typename Vector > struct apply
     {
@@ -83,7 +94,7 @@ struct pop_front_impl< aux::vector_tag< 21> >
 };
 
 template<>
-struct push_back_impl< aux::vector_tag< 20> >
+struct push_back_impl< aux::vector_tag<20> >
 {
     template< typename Vector, typename T > struct apply
     {
@@ -105,7 +116,7 @@ struct push_back_impl< aux::vector_tag< 20> >
 };
 
 template<>
-struct pop_back_impl< aux::vector_tag< 21> >
+struct pop_back_impl< aux::vector_tag<21> >
 {
     template< typename Vector > struct apply
     {
@@ -134,8 +145,9 @@ template<> struct v_at_impl<21>
 };
 
 }
+
 template<>
-struct at_impl< aux::vector_tag< 21> >
+struct at_impl< aux::vector_tag<21> >
 {
     template< typename V_, typename N > struct apply
     {
@@ -145,7 +157,7 @@ struct at_impl< aux::vector_tag< 21> >
 };
 
 template<>
-struct front_impl< aux::vector_tag< 21> >
+struct front_impl< aux::vector_tag<21> >
 {
     template< typename Vector > struct apply
     {
@@ -154,7 +166,7 @@ struct front_impl< aux::vector_tag< 21> >
 };
 
 template<>
-struct back_impl< aux::vector_tag< 21> >
+struct back_impl< aux::vector_tag<21> >
 {
     template< typename Vector > struct apply
     {
@@ -163,7 +175,7 @@ struct back_impl< aux::vector_tag< 21> >
 };
 
 template<>
-struct empty_impl< aux::vector_tag< 21> >
+struct empty_impl< aux::vector_tag<21> >
 {
     template< typename Vector > struct apply
         : false_
@@ -172,7 +184,7 @@ struct empty_impl< aux::vector_tag< 21> >
 };
 
 template<>
-struct size_impl< aux::vector_tag< 21> >
+struct size_impl< aux::vector_tag<21> >
 {
     template< typename Vector > struct apply
         : long_<21>
@@ -181,13 +193,13 @@ struct size_impl< aux::vector_tag< 21> >
 };
 
 template<>
-struct O1_size_impl< aux::vector_tag< 21> >
-    : size_impl< aux::vector_tag< 21> >
+struct O1_size_impl< aux::vector_tag<21> >
+    : size_impl< aux::vector_tag<21> >
 {
 };
 
 template<>
-struct clear_impl< aux::vector_tag< 21> >
+struct clear_impl< aux::vector_tag<21> >
 {
     template< typename Vector > struct apply
     {
@@ -229,6 +241,7 @@ struct vector22
     typedef T20 item20;
     typedef T21 item21;
     
+
     typedef void_ item22;
     typedef T21 back;
     typedef v_iter< type,0 > begin;
@@ -236,7 +249,7 @@ struct vector22
 };
 
 template<>
-struct push_front_impl< aux::vector_tag< 21> >
+struct push_front_impl< aux::vector_tag<21> >
 {
     template< typename Vector, typename T > struct apply
     {
@@ -259,7 +272,7 @@ struct push_front_impl< aux::vector_tag< 21> >
 };
 
 template<>
-struct pop_front_impl< aux::vector_tag< 22> >
+struct pop_front_impl< aux::vector_tag<22> >
 {
     template< typename Vector > struct apply
     {
@@ -280,7 +293,7 @@ struct pop_front_impl< aux::vector_tag< 22> >
 };
 
 template<>
-struct push_back_impl< aux::vector_tag< 21> >
+struct push_back_impl< aux::vector_tag<21> >
 {
     template< typename Vector, typename T > struct apply
     {
@@ -303,7 +316,7 @@ struct push_back_impl< aux::vector_tag< 21> >
 };
 
 template<>
-struct pop_back_impl< aux::vector_tag< 22> >
+struct pop_back_impl< aux::vector_tag<22> >
 {
     template< typename Vector > struct apply
     {
@@ -333,8 +346,9 @@ template<> struct v_at_impl<22>
 };
 
 }
+
 template<>
-struct at_impl< aux::vector_tag< 22> >
+struct at_impl< aux::vector_tag<22> >
 {
     template< typename V_, typename N > struct apply
     {
@@ -344,7 +358,7 @@ struct at_impl< aux::vector_tag< 22> >
 };
 
 template<>
-struct front_impl< aux::vector_tag< 22> >
+struct front_impl< aux::vector_tag<22> >
 {
     template< typename Vector > struct apply
     {
@@ -353,7 +367,7 @@ struct front_impl< aux::vector_tag< 22> >
 };
 
 template<>
-struct back_impl< aux::vector_tag< 22> >
+struct back_impl< aux::vector_tag<22> >
 {
     template< typename Vector > struct apply
     {
@@ -362,7 +376,7 @@ struct back_impl< aux::vector_tag< 22> >
 };
 
 template<>
-struct empty_impl< aux::vector_tag< 22> >
+struct empty_impl< aux::vector_tag<22> >
 {
     template< typename Vector > struct apply
         : false_
@@ -371,7 +385,7 @@ struct empty_impl< aux::vector_tag< 22> >
 };
 
 template<>
-struct size_impl< aux::vector_tag< 22> >
+struct size_impl< aux::vector_tag<22> >
 {
     template< typename Vector > struct apply
         : long_<22>
@@ -380,13 +394,13 @@ struct size_impl< aux::vector_tag< 22> >
 };
 
 template<>
-struct O1_size_impl< aux::vector_tag< 22> >
-    : size_impl< aux::vector_tag< 22> >
+struct O1_size_impl< aux::vector_tag<22> >
+    : size_impl< aux::vector_tag<22> >
 {
 };
 
 template<>
-struct clear_impl< aux::vector_tag< 22> >
+struct clear_impl< aux::vector_tag<22> >
 {
     template< typename Vector > struct apply
     {
@@ -429,6 +443,7 @@ struct vector23
     typedef T21 item21;
     typedef T22 item22;
     
+
     typedef void_ item23;
     typedef T22 back;
     typedef v_iter< type,0 > begin;
@@ -436,7 +451,7 @@ struct vector23
 };
 
 template<>
-struct push_front_impl< aux::vector_tag< 22> >
+struct push_front_impl< aux::vector_tag<22> >
 {
     template< typename Vector, typename T > struct apply
     {
@@ -459,7 +474,7 @@ struct push_front_impl< aux::vector_tag< 22> >
 };
 
 template<>
-struct pop_front_impl< aux::vector_tag< 23> >
+struct pop_front_impl< aux::vector_tag<23> >
 {
     template< typename Vector > struct apply
     {
@@ -480,7 +495,7 @@ struct pop_front_impl< aux::vector_tag< 23> >
 };
 
 template<>
-struct push_back_impl< aux::vector_tag< 22> >
+struct push_back_impl< aux::vector_tag<22> >
 {
     template< typename Vector, typename T > struct apply
     {
@@ -503,7 +518,7 @@ struct push_back_impl< aux::vector_tag< 22> >
 };
 
 template<>
-struct pop_back_impl< aux::vector_tag< 23> >
+struct pop_back_impl< aux::vector_tag<23> >
 {
     template< typename Vector > struct apply
     {
@@ -533,8 +548,9 @@ template<> struct v_at_impl<23>
 };
 
 }
+
 template<>
-struct at_impl< aux::vector_tag< 23> >
+struct at_impl< aux::vector_tag<23> >
 {
     template< typename V_, typename N > struct apply
     {
@@ -544,7 +560,7 @@ struct at_impl< aux::vector_tag< 23> >
 };
 
 template<>
-struct front_impl< aux::vector_tag< 23> >
+struct front_impl< aux::vector_tag<23> >
 {
     template< typename Vector > struct apply
     {
@@ -553,7 +569,7 @@ struct front_impl< aux::vector_tag< 23> >
 };
 
 template<>
-struct back_impl< aux::vector_tag< 23> >
+struct back_impl< aux::vector_tag<23> >
 {
     template< typename Vector > struct apply
     {
@@ -562,7 +578,7 @@ struct back_impl< aux::vector_tag< 23> >
 };
 
 template<>
-struct empty_impl< aux::vector_tag< 23> >
+struct empty_impl< aux::vector_tag<23> >
 {
     template< typename Vector > struct apply
         : false_
@@ -571,7 +587,7 @@ struct empty_impl< aux::vector_tag< 23> >
 };
 
 template<>
-struct size_impl< aux::vector_tag< 23> >
+struct size_impl< aux::vector_tag<23> >
 {
     template< typename Vector > struct apply
         : long_<23>
@@ -580,13 +596,13 @@ struct size_impl< aux::vector_tag< 23> >
 };
 
 template<>
-struct O1_size_impl< aux::vector_tag< 23> >
-    : size_impl< aux::vector_tag< 23> >
+struct O1_size_impl< aux::vector_tag<23> >
+    : size_impl< aux::vector_tag<23> >
 {
 };
 
 template<>
-struct clear_impl< aux::vector_tag< 23> >
+struct clear_impl< aux::vector_tag<23> >
 {
     template< typename Vector > struct apply
     {
@@ -630,6 +646,7 @@ struct vector24
     typedef T22 item22;
     typedef T23 item23;
     
+
     typedef void_ item24;
     typedef T23 back;
     typedef v_iter< type,0 > begin;
@@ -637,7 +654,7 @@ struct vector24
 };
 
 template<>
-struct push_front_impl< aux::vector_tag< 23> >
+struct push_front_impl< aux::vector_tag<23> >
 {
     template< typename Vector, typename T > struct apply
     {
@@ -661,7 +678,7 @@ struct push_front_impl< aux::vector_tag< 23> >
 };
 
 template<>
-struct pop_front_impl< aux::vector_tag< 24> >
+struct pop_front_impl< aux::vector_tag<24> >
 {
     template< typename Vector > struct apply
     {
@@ -683,7 +700,7 @@ struct pop_front_impl< aux::vector_tag< 24> >
 };
 
 template<>
-struct push_back_impl< aux::vector_tag< 23> >
+struct push_back_impl< aux::vector_tag<23> >
 {
     template< typename Vector, typename T > struct apply
     {
@@ -707,7 +724,7 @@ struct push_back_impl< aux::vector_tag< 23> >
 };
 
 template<>
-struct pop_back_impl< aux::vector_tag< 24> >
+struct pop_back_impl< aux::vector_tag<24> >
 {
     template< typename Vector > struct apply
     {
@@ -738,8 +755,9 @@ template<> struct v_at_impl<24>
 };
 
 }
+
 template<>
-struct at_impl< aux::vector_tag< 24> >
+struct at_impl< aux::vector_tag<24> >
 {
     template< typename V_, typename N > struct apply
     {
@@ -749,7 +767,7 @@ struct at_impl< aux::vector_tag< 24> >
 };
 
 template<>
-struct front_impl< aux::vector_tag< 24> >
+struct front_impl< aux::vector_tag<24> >
 {
     template< typename Vector > struct apply
     {
@@ -758,7 +776,7 @@ struct front_impl< aux::vector_tag< 24> >
 };
 
 template<>
-struct back_impl< aux::vector_tag< 24> >
+struct back_impl< aux::vector_tag<24> >
 {
     template< typename Vector > struct apply
     {
@@ -767,7 +785,7 @@ struct back_impl< aux::vector_tag< 24> >
 };
 
 template<>
-struct empty_impl< aux::vector_tag< 24> >
+struct empty_impl< aux::vector_tag<24> >
 {
     template< typename Vector > struct apply
         : false_
@@ -776,7 +794,7 @@ struct empty_impl< aux::vector_tag< 24> >
 };
 
 template<>
-struct size_impl< aux::vector_tag< 24> >
+struct size_impl< aux::vector_tag<24> >
 {
     template< typename Vector > struct apply
         : long_<24>
@@ -785,13 +803,13 @@ struct size_impl< aux::vector_tag< 24> >
 };
 
 template<>
-struct O1_size_impl< aux::vector_tag< 24> >
-    : size_impl< aux::vector_tag< 24> >
+struct O1_size_impl< aux::vector_tag<24> >
+    : size_impl< aux::vector_tag<24> >
 {
 };
 
 template<>
-struct clear_impl< aux::vector_tag< 24> >
+struct clear_impl< aux::vector_tag<24> >
 {
     template< typename Vector > struct apply
     {
@@ -836,6 +854,7 @@ struct vector25
     typedef T23 item23;
     typedef T24 item24;
     
+
     typedef void_ item25;
     typedef T24 back;
     typedef v_iter< type,0 > begin;
@@ -843,7 +862,7 @@ struct vector25
 };
 
 template<>
-struct push_front_impl< aux::vector_tag< 24> >
+struct push_front_impl< aux::vector_tag<24> >
 {
     template< typename Vector, typename T > struct apply
     {
@@ -867,7 +886,7 @@ struct push_front_impl< aux::vector_tag< 24> >
 };
 
 template<>
-struct pop_front_impl< aux::vector_tag< 25> >
+struct pop_front_impl< aux::vector_tag<25> >
 {
     template< typename Vector > struct apply
     {
@@ -889,7 +908,7 @@ struct pop_front_impl< aux::vector_tag< 25> >
 };
 
 template<>
-struct push_back_impl< aux::vector_tag< 24> >
+struct push_back_impl< aux::vector_tag<24> >
 {
     template< typename Vector, typename T > struct apply
     {
@@ -913,7 +932,7 @@ struct push_back_impl< aux::vector_tag< 24> >
 };
 
 template<>
-struct pop_back_impl< aux::vector_tag< 25> >
+struct pop_back_impl< aux::vector_tag<25> >
 {
     template< typename Vector > struct apply
     {
@@ -944,8 +963,9 @@ template<> struct v_at_impl<25>
 };
 
 }
+
 template<>
-struct at_impl< aux::vector_tag< 25> >
+struct at_impl< aux::vector_tag<25> >
 {
     template< typename V_, typename N > struct apply
     {
@@ -955,7 +975,7 @@ struct at_impl< aux::vector_tag< 25> >
 };
 
 template<>
-struct front_impl< aux::vector_tag< 25> >
+struct front_impl< aux::vector_tag<25> >
 {
     template< typename Vector > struct apply
     {
@@ -964,7 +984,7 @@ struct front_impl< aux::vector_tag< 25> >
 };
 
 template<>
-struct back_impl< aux::vector_tag< 25> >
+struct back_impl< aux::vector_tag<25> >
 {
     template< typename Vector > struct apply
     {
@@ -973,7 +993,7 @@ struct back_impl< aux::vector_tag< 25> >
 };
 
 template<>
-struct empty_impl< aux::vector_tag< 25> >
+struct empty_impl< aux::vector_tag<25> >
 {
     template< typename Vector > struct apply
         : false_
@@ -982,7 +1002,7 @@ struct empty_impl< aux::vector_tag< 25> >
 };
 
 template<>
-struct size_impl< aux::vector_tag< 25> >
+struct size_impl< aux::vector_tag<25> >
 {
     template< typename Vector > struct apply
         : long_<25>
@@ -991,13 +1011,13 @@ struct size_impl< aux::vector_tag< 25> >
 };
 
 template<>
-struct O1_size_impl< aux::vector_tag< 25> >
-    : size_impl< aux::vector_tag< 25> >
+struct O1_size_impl< aux::vector_tag<25> >
+    : size_impl< aux::vector_tag<25> >
 {
 };
 
 template<>
-struct clear_impl< aux::vector_tag< 25> >
+struct clear_impl< aux::vector_tag<25> >
 {
     template< typename Vector > struct apply
     {
@@ -1044,6 +1064,7 @@ struct vector26
     typedef T24 item24;
     typedef T25 item25;
     
+
     typedef void_ item26;
     typedef T25 back;
     typedef v_iter< type,0 > begin;
@@ -1051,7 +1072,7 @@ struct vector26
 };
 
 template<>
-struct push_front_impl< aux::vector_tag< 25> >
+struct push_front_impl< aux::vector_tag<25> >
 {
     template< typename Vector, typename T > struct apply
     {
@@ -1076,7 +1097,7 @@ struct push_front_impl< aux::vector_tag< 25> >
 };
 
 template<>
-struct pop_front_impl< aux::vector_tag< 26> >
+struct pop_front_impl< aux::vector_tag<26> >
 {
     template< typename Vector > struct apply
     {
@@ -1099,7 +1120,7 @@ struct pop_front_impl< aux::vector_tag< 26> >
 };
 
 template<>
-struct push_back_impl< aux::vector_tag< 25> >
+struct push_back_impl< aux::vector_tag<25> >
 {
     template< typename Vector, typename T > struct apply
     {
@@ -1124,7 +1145,7 @@ struct push_back_impl< aux::vector_tag< 25> >
 };
 
 template<>
-struct pop_back_impl< aux::vector_tag< 26> >
+struct pop_back_impl< aux::vector_tag<26> >
 {
     template< typename Vector > struct apply
     {
@@ -1156,8 +1177,9 @@ template<> struct v_at_impl<26>
 };
 
 }
+
 template<>
-struct at_impl< aux::vector_tag< 26> >
+struct at_impl< aux::vector_tag<26> >
 {
     template< typename V_, typename N > struct apply
     {
@@ -1167,7 +1189,7 @@ struct at_impl< aux::vector_tag< 26> >
 };
 
 template<>
-struct front_impl< aux::vector_tag< 26> >
+struct front_impl< aux::vector_tag<26> >
 {
     template< typename Vector > struct apply
     {
@@ -1176,7 +1198,7 @@ struct front_impl< aux::vector_tag< 26> >
 };
 
 template<>
-struct back_impl< aux::vector_tag< 26> >
+struct back_impl< aux::vector_tag<26> >
 {
     template< typename Vector > struct apply
     {
@@ -1185,7 +1207,7 @@ struct back_impl< aux::vector_tag< 26> >
 };
 
 template<>
-struct empty_impl< aux::vector_tag< 26> >
+struct empty_impl< aux::vector_tag<26> >
 {
     template< typename Vector > struct apply
         : false_
@@ -1194,7 +1216,7 @@ struct empty_impl< aux::vector_tag< 26> >
 };
 
 template<>
-struct size_impl< aux::vector_tag< 26> >
+struct size_impl< aux::vector_tag<26> >
 {
     template< typename Vector > struct apply
         : long_<26>
@@ -1203,13 +1225,13 @@ struct size_impl< aux::vector_tag< 26> >
 };
 
 template<>
-struct O1_size_impl< aux::vector_tag< 26> >
-    : size_impl< aux::vector_tag< 26> >
+struct O1_size_impl< aux::vector_tag<26> >
+    : size_impl< aux::vector_tag<26> >
 {
 };
 
 template<>
-struct clear_impl< aux::vector_tag< 26> >
+struct clear_impl< aux::vector_tag<26> >
 {
     template< typename Vector > struct apply
     {
@@ -1257,6 +1279,7 @@ struct vector27
     typedef T25 item25;
     typedef T26 item26;
     
+
     typedef void_ item27;
     typedef T26 back;
     typedef v_iter< type,0 > begin;
@@ -1264,7 +1287,7 @@ struct vector27
 };
 
 template<>
-struct push_front_impl< aux::vector_tag< 26> >
+struct push_front_impl< aux::vector_tag<26> >
 {
     template< typename Vector, typename T > struct apply
     {
@@ -1289,7 +1312,7 @@ struct push_front_impl< aux::vector_tag< 26> >
 };
 
 template<>
-struct pop_front_impl< aux::vector_tag< 27> >
+struct pop_front_impl< aux::vector_tag<27> >
 {
     template< typename Vector > struct apply
     {
@@ -1312,7 +1335,7 @@ struct pop_front_impl< aux::vector_tag< 27> >
 };
 
 template<>
-struct push_back_impl< aux::vector_tag< 26> >
+struct push_back_impl< aux::vector_tag<26> >
 {
     template< typename Vector, typename T > struct apply
     {
@@ -1337,7 +1360,7 @@ struct push_back_impl< aux::vector_tag< 26> >
 };
 
 template<>
-struct pop_back_impl< aux::vector_tag< 27> >
+struct pop_back_impl< aux::vector_tag<27> >
 {
     template< typename Vector > struct apply
     {
@@ -1369,8 +1392,9 @@ template<> struct v_at_impl<27>
 };
 
 }
+
 template<>
-struct at_impl< aux::vector_tag< 27> >
+struct at_impl< aux::vector_tag<27> >
 {
     template< typename V_, typename N > struct apply
     {
@@ -1380,7 +1404,7 @@ struct at_impl< aux::vector_tag< 27> >
 };
 
 template<>
-struct front_impl< aux::vector_tag< 27> >
+struct front_impl< aux::vector_tag<27> >
 {
     template< typename Vector > struct apply
     {
@@ -1389,7 +1413,7 @@ struct front_impl< aux::vector_tag< 27> >
 };
 
 template<>
-struct back_impl< aux::vector_tag< 27> >
+struct back_impl< aux::vector_tag<27> >
 {
     template< typename Vector > struct apply
     {
@@ -1398,7 +1422,7 @@ struct back_impl< aux::vector_tag< 27> >
 };
 
 template<>
-struct empty_impl< aux::vector_tag< 27> >
+struct empty_impl< aux::vector_tag<27> >
 {
     template< typename Vector > struct apply
         : false_
@@ -1407,7 +1431,7 @@ struct empty_impl< aux::vector_tag< 27> >
 };
 
 template<>
-struct size_impl< aux::vector_tag< 27> >
+struct size_impl< aux::vector_tag<27> >
 {
     template< typename Vector > struct apply
         : long_<27>
@@ -1416,13 +1440,13 @@ struct size_impl< aux::vector_tag< 27> >
 };
 
 template<>
-struct O1_size_impl< aux::vector_tag< 27> >
-    : size_impl< aux::vector_tag< 27> >
+struct O1_size_impl< aux::vector_tag<27> >
+    : size_impl< aux::vector_tag<27> >
 {
 };
 
 template<>
-struct clear_impl< aux::vector_tag< 27> >
+struct clear_impl< aux::vector_tag<27> >
 {
     template< typename Vector > struct apply
     {
@@ -1471,6 +1495,7 @@ struct vector28
     typedef T26 item26;
     typedef T27 item27;
     
+
     typedef void_ item28;
     typedef T27 back;
     typedef v_iter< type,0 > begin;
@@ -1478,7 +1503,7 @@ struct vector28
 };
 
 template<>
-struct push_front_impl< aux::vector_tag< 27> >
+struct push_front_impl< aux::vector_tag<27> >
 {
     template< typename Vector, typename T > struct apply
     {
@@ -1504,7 +1529,7 @@ struct push_front_impl< aux::vector_tag< 27> >
 };
 
 template<>
-struct pop_front_impl< aux::vector_tag< 28> >
+struct pop_front_impl< aux::vector_tag<28> >
 {
     template< typename Vector > struct apply
     {
@@ -1528,7 +1553,7 @@ struct pop_front_impl< aux::vector_tag< 28> >
 };
 
 template<>
-struct push_back_impl< aux::vector_tag< 27> >
+struct push_back_impl< aux::vector_tag<27> >
 {
     template< typename Vector, typename T > struct apply
     {
@@ -1554,7 +1579,7 @@ struct push_back_impl< aux::vector_tag< 27> >
 };
 
 template<>
-struct pop_back_impl< aux::vector_tag< 28> >
+struct pop_back_impl< aux::vector_tag<28> >
 {
     template< typename Vector > struct apply
     {
@@ -1587,8 +1612,9 @@ template<> struct v_at_impl<28>
 };
 
 }
+
 template<>
-struct at_impl< aux::vector_tag< 28> >
+struct at_impl< aux::vector_tag<28> >
 {
     template< typename V_, typename N > struct apply
     {
@@ -1598,7 +1624,7 @@ struct at_impl< aux::vector_tag< 28> >
 };
 
 template<>
-struct front_impl< aux::vector_tag< 28> >
+struct front_impl< aux::vector_tag<28> >
 {
     template< typename Vector > struct apply
     {
@@ -1607,7 +1633,7 @@ struct front_impl< aux::vector_tag< 28> >
 };
 
 template<>
-struct back_impl< aux::vector_tag< 28> >
+struct back_impl< aux::vector_tag<28> >
 {
     template< typename Vector > struct apply
     {
@@ -1616,7 +1642,7 @@ struct back_impl< aux::vector_tag< 28> >
 };
 
 template<>
-struct empty_impl< aux::vector_tag< 28> >
+struct empty_impl< aux::vector_tag<28> >
 {
     template< typename Vector > struct apply
         : false_
@@ -1625,7 +1651,7 @@ struct empty_impl< aux::vector_tag< 28> >
 };
 
 template<>
-struct size_impl< aux::vector_tag< 28> >
+struct size_impl< aux::vector_tag<28> >
 {
     template< typename Vector > struct apply
         : long_<28>
@@ -1634,13 +1660,13 @@ struct size_impl< aux::vector_tag< 28> >
 };
 
 template<>
-struct O1_size_impl< aux::vector_tag< 28> >
-    : size_impl< aux::vector_tag< 28> >
+struct O1_size_impl< aux::vector_tag<28> >
+    : size_impl< aux::vector_tag<28> >
 {
 };
 
 template<>
-struct clear_impl< aux::vector_tag< 28> >
+struct clear_impl< aux::vector_tag<28> >
 {
     template< typename Vector > struct apply
     {
@@ -1690,6 +1716,7 @@ struct vector29
     typedef T27 item27;
     typedef T28 item28;
     
+
     typedef void_ item29;
     typedef T28 back;
     typedef v_iter< type,0 > begin;
@@ -1697,7 +1724,7 @@ struct vector29
 };
 
 template<>
-struct push_front_impl< aux::vector_tag< 28> >
+struct push_front_impl< aux::vector_tag<28> >
 {
     template< typename Vector, typename T > struct apply
     {
@@ -1723,7 +1750,7 @@ struct push_front_impl< aux::vector_tag< 28> >
 };
 
 template<>
-struct pop_front_impl< aux::vector_tag< 29> >
+struct pop_front_impl< aux::vector_tag<29> >
 {
     template< typename Vector > struct apply
     {
@@ -1747,7 +1774,7 @@ struct pop_front_impl< aux::vector_tag< 29> >
 };
 
 template<>
-struct push_back_impl< aux::vector_tag< 28> >
+struct push_back_impl< aux::vector_tag<28> >
 {
     template< typename Vector, typename T > struct apply
     {
@@ -1773,7 +1800,7 @@ struct push_back_impl< aux::vector_tag< 28> >
 };
 
 template<>
-struct pop_back_impl< aux::vector_tag< 29> >
+struct pop_back_impl< aux::vector_tag<29> >
 {
     template< typename Vector > struct apply
     {
@@ -1806,8 +1833,9 @@ template<> struct v_at_impl<29>
 };
 
 }
+
 template<>
-struct at_impl< aux::vector_tag< 29> >
+struct at_impl< aux::vector_tag<29> >
 {
     template< typename V_, typename N > struct apply
     {
@@ -1817,7 +1845,7 @@ struct at_impl< aux::vector_tag< 29> >
 };
 
 template<>
-struct front_impl< aux::vector_tag< 29> >
+struct front_impl< aux::vector_tag<29> >
 {
     template< typename Vector > struct apply
     {
@@ -1826,7 +1854,7 @@ struct front_impl< aux::vector_tag< 29> >
 };
 
 template<>
-struct back_impl< aux::vector_tag< 29> >
+struct back_impl< aux::vector_tag<29> >
 {
     template< typename Vector > struct apply
     {
@@ -1835,7 +1863,7 @@ struct back_impl< aux::vector_tag< 29> >
 };
 
 template<>
-struct empty_impl< aux::vector_tag< 29> >
+struct empty_impl< aux::vector_tag<29> >
 {
     template< typename Vector > struct apply
         : false_
@@ -1844,7 +1872,7 @@ struct empty_impl< aux::vector_tag< 29> >
 };
 
 template<>
-struct size_impl< aux::vector_tag< 29> >
+struct size_impl< aux::vector_tag<29> >
 {
     template< typename Vector > struct apply
         : long_<29>
@@ -1853,13 +1881,13 @@ struct size_impl< aux::vector_tag< 29> >
 };
 
 template<>
-struct O1_size_impl< aux::vector_tag< 29> >
-    : size_impl< aux::vector_tag< 29> >
+struct O1_size_impl< aux::vector_tag<29> >
+    : size_impl< aux::vector_tag<29> >
 {
 };
 
 template<>
-struct clear_impl< aux::vector_tag< 29> >
+struct clear_impl< aux::vector_tag<29> >
 {
     template< typename Vector > struct apply
     {
@@ -1910,6 +1938,7 @@ struct vector30
     typedef T28 item28;
     typedef T29 item29;
     
+
     typedef void_ item30;
     typedef T29 back;
     typedef v_iter< type,0 > begin;
@@ -1917,7 +1946,7 @@ struct vector30
 };
 
 template<>
-struct push_front_impl< aux::vector_tag< 29> >
+struct push_front_impl< aux::vector_tag<29> >
 {
     template< typename Vector, typename T > struct apply
     {
@@ -1944,7 +1973,7 @@ struct push_front_impl< aux::vector_tag< 29> >
 };
 
 template<>
-struct pop_front_impl< aux::vector_tag< 30> >
+struct pop_front_impl< aux::vector_tag<30> >
 {
     template< typename Vector > struct apply
     {
@@ -1969,7 +1998,7 @@ struct pop_front_impl< aux::vector_tag< 30> >
 };
 
 template<>
-struct push_back_impl< aux::vector_tag< 29> >
+struct push_back_impl< aux::vector_tag<29> >
 {
     template< typename Vector, typename T > struct apply
     {
@@ -1996,7 +2025,7 @@ struct push_back_impl< aux::vector_tag< 29> >
 };
 
 template<>
-struct pop_back_impl< aux::vector_tag< 30> >
+struct pop_back_impl< aux::vector_tag<30> >
 {
     template< typename Vector > struct apply
     {
@@ -2030,8 +2059,9 @@ template<> struct v_at_impl<30>
 };
 
 }
+
 template<>
-struct at_impl< aux::vector_tag< 30> >
+struct at_impl< aux::vector_tag<30> >
 {
     template< typename V_, typename N > struct apply
     {
@@ -2041,7 +2071,7 @@ struct at_impl< aux::vector_tag< 30> >
 };
 
 template<>
-struct front_impl< aux::vector_tag< 30> >
+struct front_impl< aux::vector_tag<30> >
 {
     template< typename Vector > struct apply
     {
@@ -2050,7 +2080,7 @@ struct front_impl< aux::vector_tag< 30> >
 };
 
 template<>
-struct back_impl< aux::vector_tag< 30> >
+struct back_impl< aux::vector_tag<30> >
 {
     template< typename Vector > struct apply
     {
@@ -2059,7 +2089,7 @@ struct back_impl< aux::vector_tag< 30> >
 };
 
 template<>
-struct empty_impl< aux::vector_tag< 30> >
+struct empty_impl< aux::vector_tag<30> >
 {
     template< typename Vector > struct apply
         : false_
@@ -2068,7 +2098,7 @@ struct empty_impl< aux::vector_tag< 30> >
 };
 
 template<>
-struct size_impl< aux::vector_tag< 30> >
+struct size_impl< aux::vector_tag<30> >
 {
     template< typename Vector > struct apply
         : long_<30>
@@ -2077,13 +2107,13 @@ struct size_impl< aux::vector_tag< 30> >
 };
 
 template<>
-struct O1_size_impl< aux::vector_tag< 30> >
-    : size_impl< aux::vector_tag< 30> >
+struct O1_size_impl< aux::vector_tag<30> >
+    : size_impl< aux::vector_tag<30> >
 {
 };
 
 template<>
-struct clear_impl< aux::vector_tag< 30> >
+struct clear_impl< aux::vector_tag<30> >
 {
     template< typename Vector > struct apply
     {
@@ -2091,5 +2121,4 @@ struct clear_impl< aux::vector_tag< 30> >
     };
 };
 
-} // namespace mpl
-} // namespace boost
+}}

@@ -1,39 +1,31 @@
 
-// + file: libs/mpl/test/aux_/template_arity.cpp
-// + last modified: 10/jul/03
-
-// Copyright 2000-03
-// Aleksey Gurtovoy
+// Copyright Aleksey Gurtovoy 2000-2004
 //
-// Permission to use, copy, modify, distribute and sell this software
-// and its documentation for any purpose is hereby granted without fee, 
-// provided that the above copyright notice appears in all copies and 
-// that both the copyright notice and this permission notice appear in 
-// supporting documentation. No representations are made about the 
-// suitability of this software for any purpose. It is provided "as is" 
-// without express or implied warranty.
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
+// $Source$
+// $Date$
+// $Revision$
+
 #include <boost/mpl/aux_/template_arity.hpp>
-#include <boost/static_assert.hpp>
+#include <boost/mpl/aux_/test.hpp>
 
-#   if defined(BOOST_EXTENDED_TEMPLATE_PARAMETERS_MATCHING)
-
-using namespace boost::mpl;
+#if defined(BOOST_EXTENDED_TEMPLATE_PARAMETERS_MATCHING)
 
 struct my {};
 template< typename T1 > struct my1 {};
 template< typename T1, typename T2 = void > struct my2 {};
 
-int main()
+MPL_TEST_CASE()
 {
-    BOOST_STATIC_ASSERT((aux::template_arity<my>::value == -1));
-    BOOST_STATIC_ASSERT((aux::template_arity< my1<int> >::value == 1));
-    BOOST_STATIC_ASSERT((aux::template_arity< my2<int,long> >::value == 2));
-    BOOST_STATIC_ASSERT((aux::template_arity< my2<int> >::value == 2));
-    
-    return 0;
+    MPL_ASSERT_RELATION( (aux::template_arity<my>::value), ==, -1 );
+    MPL_ASSERT_RELATION( (aux::template_arity< my1<int> >::value), ==, 1 );
+    MPL_ASSERT_RELATION( (aux::template_arity< my2<int,long> >::value), ==, 2 );
+    MPL_ASSERT_RELATION( (aux::template_arity< my2<int> >::value), ==, 2 );
 }
 
-#   endif
+#endif

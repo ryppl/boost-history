@@ -66,11 +66,6 @@ template<
 struct divides
     : divides< divides< divides< divides< N1,N2 >, N3>, N4>, N5>
 {
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(
-          5
-        , divides
-        , ( N1, N2, N3, N4, N5 )
-        )
 };
 
 template<

@@ -66,4 +66,4 @@ BOOST_MPL_AUX_NA_SPEC2(
     , and_
     )
 
-}} // namespace boost::mpl
+}}

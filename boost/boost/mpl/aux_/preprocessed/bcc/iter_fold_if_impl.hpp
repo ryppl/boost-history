@@ -1,6 +1,6 @@
 
-// Copyright 2001-2004 Aleksey Gurtovoy
-// Copyright 2001-2002 David Abrahams
+// Copyright Aleksey Gurtovoy 2001-2004
+// Copyright David Abrahams 2001-2002
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -10,9 +10,7 @@
 // Preprocessed version of "boost/mpl/aux_/iter_fold_if_impl.hpp" header
 // -- DO NOT modify by hand!
 
-namespace boost {
-namespace mpl {
-namespace aux {
+namespace boost { namespace mpl { namespace aux {
 
 template< typename Iterator, typename State >
 struct iter_fold_if_null_step
@@ -21,7 +19,7 @@ struct iter_fold_if_null_step
     typedef Iterator iterator;
 };
 
-template< typename >
+template< bool >
 struct iter_fold_if_step_impl
 {
     template<
@@ -38,7 +36,7 @@ struct iter_fold_if_step_impl
 };
 
 template<>
-struct iter_fold_if_step_impl<false_>
+struct iter_fold_if_step_impl<false>
 {
     template<
           typename Iterator
@@ -58,13 +56,12 @@ template<
     , typename State
     , typename ForwardOp
     , typename Predicate
-    , typename NotLast = typename apply2< Predicate,State,Iterator >::type
     >
 struct iter_fold_if_forward_step
 {
-    typedef bool_<NotLast::value> not_last;
+    typedef typename apply2< Predicate,State,Iterator >::type not_last;
     typedef typename iter_fold_if_step_impl<
-          not_last
+          BOOST_MPL_AUX_MSVC_VALUE_WKND(not_last)::value
         >::template result_< Iterator,State,ForwardOp, mpl::next<Iterator> > impl_;
 
     typedef typename impl_::state state;
@@ -76,13 +73,12 @@ template<
     , typename State
     , typename BackwardOp
     , typename Predicate
-    , typename NotLast = typename apply2< Predicate,State,Iterator >::type
     >
 struct iter_fold_if_backward_step
 {
-    typedef bool_<NotLast::value> not_last;
+    typedef typename apply2< Predicate,State,Iterator >::type not_last;
     typedef typename iter_fold_if_step_impl<
-          not_last
+          BOOST_MPL_AUX_MSVC_VALUE_WKND(not_last)::value
         >::template result_< Iterator,State,BackwardOp, identity<Iterator> > impl_;
 
     typedef typename impl_::state state;
@@ -134,6 +130,4 @@ struct iter_fold_if_impl
     typedef typename backward_step4::iterator iterator;
 };
 
-} // namespace aux
-} // namespace mpl
-} // namespace boost
+}}}

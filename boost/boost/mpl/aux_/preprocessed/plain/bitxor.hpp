@@ -67,11 +67,6 @@ template<
 struct bitxor_
     : bitxor_< bitxor_< bitxor_< bitxor_< N1,N2 >, N3>, N4>, N5>
 {
-    BOOST_MPL_AUX_LAMBDA_SUPPORT(
-          5
-        , bitxor_
-        , ( N1, N2, N3, N4, N5 )
-        )
 };
 
 template<

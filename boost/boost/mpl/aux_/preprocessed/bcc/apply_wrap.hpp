@@ -1,12 +1,12 @@
 
 // Copyright Aleksey Gurtovoy 2000-2004
 //
-// Use, modification and distribution are subject to the Boost Software 
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
-// at http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 
-// Preprocessed version of "boost/mpl/Attic/apply_wrap.hpp" header
+// Preprocessed version of "boost/mpl/apply.hpp" header
 // -- DO NOT modify by hand!
 
 namespace boost { namespace mpl {
@@ -30,7 +30,7 @@ struct apply_wrap_impl0<
 /// since the defaults are "lost", we have to pass *something* even for nullary
 /// metafunction classes
         na
-        >::type type;
+        > type;
 };
 
 template<
@@ -45,7 +45,7 @@ struct apply_wrap_impl0<
     typedef typename F::template apply<
          
         na
-        >::type type;
+        > type;
 };
 
 template<
@@ -61,7 +61,7 @@ struct apply_wrap_impl0<
          
         na, na
 
-        >::type type;
+        > type;
 };
 
 template<
@@ -77,7 +77,7 @@ struct apply_wrap_impl0<
          
         na, na, na
 
-        >::type type;
+        > type;
 };
 
 template<
@@ -93,7 +93,7 @@ struct apply_wrap_impl0<
          
         na, na, na, na
 
-        >::type type;
+        > type;
 };
 
 template<
@@ -109,7 +109,7 @@ struct apply_wrap_impl0<
          
         na, na, na, na, na
 
-        >::type type;
+        > type;
 };
 
 template<
@@ -120,7 +120,7 @@ struct apply_wrap0
           ::boost::mpl::aux::arity< F,0 >::value
         , F
        
-        >
+        >::type
 {
 };
 
@@ -140,7 +140,7 @@ struct apply_wrap_impl1<
 {
     typedef typename F::template apply<
           T1
-        >::type type;
+        > type;
 };
 
 template<
@@ -156,7 +156,7 @@ struct apply_wrap_impl1<
           T1
         , na
 
-        >::type type;
+        > type;
 };
 
 template<
@@ -172,7 +172,7 @@ struct apply_wrap_impl1<
           T1
         , na, na
 
-        >::type type;
+        > type;
 };
 
 template<
@@ -188,7 +188,7 @@ struct apply_wrap_impl1<
           T1
         , na, na, na
 
-        >::type type;
+        > type;
 };
 
 template<
@@ -204,7 +204,7 @@ struct apply_wrap_impl1<
           T1
         , na, na, na, na
 
-        >::type type;
+        > type;
 };
 
 template<
@@ -215,7 +215,7 @@ struct apply_wrap1
           ::boost::mpl::aux::arity< F,1 >::value
         , F
         , T1
-        >
+        >::type
 {
 };
 
@@ -236,7 +236,7 @@ struct apply_wrap_impl2<
     typedef typename F::template apply<
           T1, T2
 
-        >::type type;
+        > type;
 };
 
 template<
@@ -253,7 +253,7 @@ struct apply_wrap_impl2<
 
         , na
 
-        >::type type;
+        > type;
 };
 
 template<
@@ -270,7 +270,7 @@ struct apply_wrap_impl2<
 
         , na, na
 
-        >::type type;
+        > type;
 };
 
 template<
@@ -287,7 +287,7 @@ struct apply_wrap_impl2<
 
         , na, na, na
 
-        >::type type;
+        > type;
 };
 
 template<
@@ -298,7 +298,7 @@ struct apply_wrap2
           ::boost::mpl::aux::arity< F,2 >::value
         , F
         , T1, T2
-        >
+        >::type
 {
 };
 
@@ -319,7 +319,7 @@ struct apply_wrap_impl3<
     typedef typename F::template apply<
           T1, T2, T3
 
-        >::type type;
+        > type;
 };
 
 template<
@@ -336,7 +336,7 @@ struct apply_wrap_impl3<
 
         , na
 
-        >::type type;
+        > type;
 };
 
 template<
@@ -353,7 +353,7 @@ struct apply_wrap_impl3<
 
         , na, na
 
-        >::type type;
+        > type;
 };
 
 template<
@@ -364,7 +364,7 @@ struct apply_wrap3
           ::boost::mpl::aux::arity< F,3 >::value
         , F
         , T1, T2, T3
-        >
+        >::type
 {
 };
 
@@ -385,7 +385,7 @@ struct apply_wrap_impl4<
     typedef typename F::template apply<
           T1, T2, T3, T4
 
-        >::type type;
+        > type;
 };
 
 template<
@@ -402,7 +402,7 @@ struct apply_wrap_impl4<
 
         , na
 
-        >::type type;
+        > type;
 };
 
 template<
@@ -413,7 +413,7 @@ struct apply_wrap4
           ::boost::mpl::aux::arity< F,4 >::value
         , F
         , T1, T2, T3, T4
-        >
+        >::type
 {
 };
 
@@ -436,7 +436,7 @@ struct apply_wrap_impl5<
     typedef typename F::template apply<
           T1, T2, T3, T4, T5
 
-        >::type type;
+        > type;
 };
 
 template<
@@ -448,7 +448,7 @@ struct apply_wrap5
           ::boost::mpl::aux::arity< F,5 >::value
         , F
         , T1, T2, T3, T4, T5
-        >
+        >::type
 {
 };
 
