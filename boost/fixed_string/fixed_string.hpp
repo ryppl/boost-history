@@ -315,9 +315,7 @@
                                      const fixed_string< n2, C, CSP > & rhs
                                   )
       {
-         fixed_string< ( n1 + n2 ), C, CSP > res( lhs );
-         res.append( rhs );
-         return( res );
+         return( fixed_string< ( n1 + n2 ), C, CSP >( lhs ).append( rhs ));
       }
 
       template< size_t n, class C, class CSP >
@@ -328,9 +326,7 @@
                                      const typename fixed_string< n, C, CSP >::value_type * rhs
                                   )
       {
-         fixed_string< n, C, CSP > res( lhs );
-         res.append( rhs );
-         return( res );
+         return( fixed_string< n, C, CSP >( lhs ).append( rhs ));
       }
 
       template< size_t n, class C, class CSP >
@@ -341,12 +337,32 @@
                                      const fixed_string< n, C, CSP > & rhs
                                   )
       {
-         fixed_string< n, C, CSP > res( lhs );
-         res.append( rhs );
-         return( res );
+         return( fixed_string< n, C, CSP >( lhs ).append( rhs ));
       }
 
-      // const CharT[ n ]( & s ) variants?
+#     if !defined(BOOST_MSVC) || ( BOOST_MSVC > 1200 )
+         template< size_t n, size_t m, class C, class CSP >
+         inline fixed_string< ( n + m ), C, CSP > 
+                                  operator+
+                                  ( 
+                                     const fixed_string< n, C, CSP > & lhs,
+                                     const typename fixed_string< n, C, CSP >::value_type( & rhs )[ m ]
+                                  )
+         {
+            return( fixed_string< ( n + m ), C, CSP >( lhs ).append( rhs ));
+         }
+
+         template< size_t n, size_t m, class C, class CSP >
+         inline fixed_string< ( n + m ), C, CSP > 
+                                  operator+
+                                  ( 
+                                     const typename fixed_string< n, C, CSP >::value_type( & lhs )[ m ],
+                                     const fixed_string< n, C, CSP > & rhs
+                                  )
+         {
+            return( fixed_string< ( n + m ), C, CSP >( lhs ).append( rhs ));
+         }
+#     endif
 
       template< size_t n, class C, class CSP >
       inline fixed_string< ( n + 1 ), C, CSP > 

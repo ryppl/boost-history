@@ -86,6 +86,10 @@
             {
                return( &*( begin() + pos ));
             }
+            inline const char_type *             offset( size_type pos ) const
+            {
+               return( &*( begin() + pos ));
+            }
          public: // 21.3.2: iterators
             inline const_iterator                begin() const
             {
@@ -251,9 +255,10 @@
                return( *this );
             }
             template< typename InputIterator >
-            inline size_type &                   append( InputIterator first, InputIterator last )
+            inline string_type &                 append( InputIterator first, InputIterator last )
             {
                while( first != last )  push_back_( *first++ );
+               return( *this );
             }
             inline void                          push_back( const char_type c )
             {
@@ -832,7 +837,7 @@
          return( !( lhs < rhs ));
       }
 
-      // stream operations
+      // inserters and extractors
 
       // VC6 bug: VC6 has problems matching std::basic_*stream< typename basic_string_impl< S, C, SP, EP >::value_type, ... >
       //    so std::cout << str; will not work as intended
@@ -851,9 +856,11 @@
          str.erase();
          typename basic_string_impl< Base, EP >::value_type
                                        ch;
-         while( is.get( ch ) && !std::isspace( ch, is.getloc()))
+         is >> ch;
+         while( !std::isspace( ch, is.getloc()))
          {
             str.push_back( ch );
+            if( !is.get( ch ))         break;
          }
          return( is );
       }
@@ -868,24 +875,31 @@
       {
          return( os << str.c_str());
       }
+   }}
+
+   namespace std
+   {
+      // getline
 
       template< class Base, class EP, typename CharT, class Traits >
       inline std::basic_istream< CharT, Traits > &
                                                  getline
                                                  (
                                                     std::basic_istream< CharT, Traits > & is,
-                                                    basic_string_impl< Base, EP > & str,
-                                                    typename basic_string_impl< Base, EP >::value_type delim
+                                                    boost::detail::basic_string_impl< Base, EP > & str,
+                                                    typename boost::detail::basic_string_impl< Base, EP >::value_type delim
                                                  )
       {
-         typedef typename basic_string_impl< Base, EP >::traits_type traits_type;
+         typedef typename boost::detail::basic_string_impl< Base, EP >::traits_type traits_type;
 
          str.erase();
-         typename basic_string_impl< Base, EP >::value_type
+         typename boost::detail::basic_string_impl< Base, EP >::value_type
                                        ch;
-         while( is.get( ch ) && !traits_type::eq( ch, delim ))
+         is >> ch;
+         while( !traits_type::eq( ch, delim ))
          {
             str.push_back( ch );
+            if( !is.get( ch ))         break;
          }
          return( is );
       }
@@ -895,17 +909,14 @@
                                                  getline
                                                  (
                                                     std::basic_istream< CharT, Traits > & is,
-                                                    basic_string_impl< Base, EP > & str
+                                                    boost::detail::basic_string_impl< Base, EP > & str
                                                  )
       {
-         return( getline( is, str, typename basic_string_impl< Base, EP >::value_type( '\n' )));
+         return( getline( is, str, is.widen( '\n' )));
       }
-   }}
 
-   // swap
+      // swap
 
-   namespace std
-   {
       template< class Base, class EP >
       inline void                                swap
                                                  (
