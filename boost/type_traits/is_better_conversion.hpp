@@ -3,7 +3,7 @@
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
-// Copyright (c) 2002
+// Copyright (c) 2002-2003
 // Eric Friedman
 //
 // Permission to use, copy, modify, distribute and sell this software
@@ -17,18 +17,43 @@
 #ifndef BOOST_TYPE_TRAITS_IS_BETTER_CONVERSION_HPP
 #define BOOST_TYPE_TRAITS_IS_BETTER_CONVERSION_HPP
 
+#include "boost/detail/workaround.hpp"
 #include "boost/type_traits/config.hpp"
 #include "boost/type_traits/detail/yes_no_type.hpp"
 
+#include "boost/mpl/and.hpp"
 #include "boost/mpl/bool.hpp"
-#include "boost/mpl/logical.hpp"
-#include "boost/type_traits/is_same.hpp"
+#include "boost/mpl/not.hpp"
 
 namespace boost {
 
 namespace detail {
 
-#if defined(__GNUC__)
+#if !BOOST_WORKAROUND(__GNUC__, BOOST_TESTED_AT(3))
+
+template <typename From, typename To1, typename To2>
+struct is_better_conversion_impl
+{
+private:
+    // Alexander Nasonov suggested (comp.lang.c++.moderated, 4 Jul 2002)
+    // the following fix for the ambiguous conversion case:
+    template <typename Int>
+    static ::boost::type_traits::no_type BOOST_TT_DECL check_(To2, Int);
+    static ::boost::type_traits::no_type BOOST_TT_DECL check_(...);
+
+    static ::boost::type_traits::yes_type BOOST_TT_DECL check_(To1, int);
+
+    static From from_;
+
+public:
+    typedef ::boost::mpl::bool_<
+          ( sizeof( check_(from_,0) ) == sizeof( ::boost::type_traits::yes_type ) )
+        > type;
+
+    void foo(); // avoid warning about all members being private
+};
+
+#else// g++ workaround
 
 struct is_better_conversion_any_t
 {
@@ -56,46 +81,26 @@ struct is_better_conversion_impl
     typedef ::boost::mpl::bool_<value> type;
 };
 
-#else// !defined(__GNUC__)
-
-template <typename From, typename To1, typename To2>
-struct is_better_conversion_impl
-{
-private:
-    // Alexander Nasonov suggested (comp.lang.c++.moderated, 4 Jul 2002)
-    // the following fix for the ambiguous conversion case:
-    template <typename Int>
-    static ::boost::type_traits::no_type BOOST_TT_DECL check_(To2, Int);
-    static ::boost::type_traits::no_type BOOST_TT_DECL check_(...);
-
-    static ::boost::type_traits::yes_type BOOST_TT_DECL check_(To1, int);
-
-    static From from_;
-
-public:
-    typedef ::boost::mpl::bool_<
-          ( sizeof( check_(from_,0) ) == sizeof( ::boost::type_traits::yes_type ) )
-        > type;
-
-    void foo(); // avoid warning about all members being private
-};
-
-#endif // __GNUC__ workaround
+#endif // g++ workaround
 
 } // namespace detail
 
 template <typename From, typename To1, typename To2>
-struct is_better_conversion
+struct is_ambiguous_conversion
+    : mpl::and_< // is_better_impl< 1,2 > && is_better_impl< 2,1 >
+          detail::is_better_conversion_impl< From, To1,To2 >
+        , detail::is_better_conversion_impl< From, To2,To1 >
+        >
 {
-    typedef typename mpl::and_< // !is_same< 1,2 > && is_better< 1,2 > && !is_better< 2,1 >
-          mpl::not_< is_same<To1, To2> >
-        , detail::is_better_conversion_impl<From, To1, To2>
-        , mpl::not_<
-              detail::is_better_conversion_impl<From, To2, To1>
-            >
-        >::type type;
+};
 
-    BOOST_STATIC_CONSTANT(bool, value = type::value);
+template <typename From, typename To1, typename To2>
+struct is_better_conversion
+    : mpl::and_< // is_better_impl< 1,2 > && !is_ambiguous< 1,2 >
+          detail::is_better_conversion_impl< From, To1,To2 >
+        , mpl::not_< detail::is_better_conversion_impl< From, To2,To1 > >
+        >
+{
 };
 
 } // namespace boost
