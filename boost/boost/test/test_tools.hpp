@@ -395,7 +395,7 @@ public:
 
     // helper function
     void            flush();
-    size_t          length();
+    std::size_t     length();
 
 private:
     struct Impl;

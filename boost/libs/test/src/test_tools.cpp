@@ -301,7 +301,7 @@ output_test_stream::match_pattern( bool flush_stream )
         if( m_pimpl->m_match_or_save ) {
             char* ptr = str();
 
-            for( size_t i = 0; i != length(); i++, ptr++ ) {
+            for( std::size_t i = 0; i != length(); i++, ptr++ ) {
                 char c;
                 m_pimpl->m_pattern_to_match_or_save.get( c );
 
@@ -340,10 +340,10 @@ output_test_stream::flush() {
 
 //____________________________________________________________________________//
 
-size_t
+std::size_t
 output_test_stream::length()
 {
-    return static_cast<size_t>( pcount() );
+  return static_cast<std::size_t>( pcount() );
 }
 
 //____________________________________________________________________________//
