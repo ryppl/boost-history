@@ -54,7 +54,7 @@ namespace boost {
     template< typename ResultT, typename InputContainerT, typename SearchContainerT >
     inline ResultT& find_all(
         ResultT& Result,
-        const InputContainerT& Input,
+        InputContainerT& Input,
         const SearchContainerT& Search)
     {
         return string_algo::iter_find(
@@ -87,7 +87,7 @@ namespace boost {
     template< typename ResultT, typename InputContainerT, typename SearchContainerT >
     inline ResultT& ifind_all(
         ResultT& Result,
-        const InputContainerT& Input,
+        InputContainerT& Input,
         const SearchContainerT& Search,
 		const std::locale& Loc=std::locale() )
     {
@@ -127,7 +127,7 @@ namespace boost {
     template< typename ResultT, typename InputContainerT, typename PredicateT >
     inline ResultT& split(
         ResultT& Result,
-        const InputContainerT& Input,
+        InputContainerT& Input,
         PredicateT Pred,
         bool bCompress=true )
     {

@@ -22,10 +22,76 @@
 	Finders are used by as a plugable components for replace, find 
 	and split facilities. This header contains generator functions 
 	for finders provided in this library.
+
+	In addtion there is a finder_adaptor class. It is a wrapper which
+	simplifies the design of user defined finders
 */
 
 namespace boost {
     namespace string_algo {
+
+//  Finder adaptor -----------------------------------------------------------//
+        
+		//! Finder adaptor		
+		/*!
+			This class is provided to simplify writting of custom finders.
+			Finder is required to have two () operators. 
+			- Variant 1 with two iterators as parameters
+			- Variant 2 with a container as a parameter
+			Finder adaptor requires the base to have only the first type.
+			Second one is added by this class.
+		*/
+		template<typename BaseT>
+		struct finder_adaptor 
+		{
+		// Construction
+			//!	Constructor
+			/* 
+				Constructs a finder adaptor
+			*/
+			explicit finder_adaptor( const BaseT& Base ) : m_Base(Base) {}
+		
+		// Operators
+
+			//! Function operator variant 1
+			/*!
+				Function operator, performs find operation
+			*/
+			template<typename IteratorT>
+            iterator_range<IteratorT> operator()( 
+				IteratorT Begin, 
+                IteratorT End ) const
+			{
+				return m_Base(Begin,End);
+			}
+
+			//! Function operator variant 2
+			/*!
+				Function operator, performs find operation
+			*/
+			template<typename InputT>
+			iterator_range< BOOST_STRING_TYPENAME 
+				string_algo::container_traits<InputT>::result_iterator >
+			operator()( InputT& Input ) const
+			{
+	            return m_Base( begin(Input), end(Input) );
+			}
+
+		private:
+			BaseT m_Base;
+		};
+
+		//! Finder adaptor construction helper
+		/*!
+			Construct a finder adaptor for a giver finder
+			\param Base Base finder
+			\return Finder adaptor encapsulating the base finder
+		*/
+		template<class BaseT>
+		inline finder_adaptor<BaseT> make_finder_adaptor( const BaseT& Base )
+		{
+			return finder_adaptor<BaseT>(Base);
+		}
 
 //  Finder generators ------------------------------------------//
         
@@ -39,15 +105,17 @@ namespace boost {
 			\return first_finder functor
         */
         template<typename ContainerT>
-        inline detail::first_finderF<
+        inline finder_adaptor< detail::first_finderF<
             BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator,
-            is_equal>
+            is_equal> >
         first_finder( const ContainerT& Search )
         {
-            return detail::first_finderF<
-                BOOST_STRING_TYPENAME 
-                    container_traits<ContainerT>::const_iterator,
-                is_equal>( Search, is_equal() );
+            return 
+				make_finder_adaptor( 
+					detail::first_finderF<
+						BOOST_STRING_TYPENAME 
+		                    container_traits<ContainerT>::const_iterator,
+						is_equal>( Search, is_equal() ) );
         }
 
         //! "First" finder
@@ -63,16 +131,18 @@ namespace boost {
 			\return first_finder functor
         */
         template<typename ContainerT,typename PredicateT>
-        inline detail::first_finderF<
+        inline finder_adaptor< detail::first_finderF<
             BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator,
-            PredicateT>
+            PredicateT> >
         first_finder( 
             const ContainerT& Search, PredicateT Comp )
         {
-            return detail::first_finderF<
-                BOOST_STRING_TYPENAME 
-                    container_traits<ContainerT>::const_iterator,
-                PredicateT>( Search, Comp );
+            return 
+				make_finder_adaptor( 
+					detail::first_finderF<
+						BOOST_STRING_TYPENAME 
+							container_traits<ContainerT>::const_iterator,
+						PredicateT>( Search, Comp ) );
         }
 
         //! "Last" finder
@@ -85,15 +155,17 @@ namespace boost {
 			\return last_finder functor
         */
         template<typename ContainerT>
-        inline detail::last_finderF<
+        inline finder_adaptor< detail::last_finderF<
             BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator,
-            is_equal>
+            is_equal> >
         last_finder( const ContainerT& Search )
         {
-            return detail::last_finderF<
-                BOOST_STRING_TYPENAME 
-                    container_traits<ContainerT>::const_iterator,
-                is_equal>( Search, is_equal() );
+			return 
+				make_finder_adaptor( 
+					detail::last_finderF<
+					BOOST_STRING_TYPENAME 
+						container_traits<ContainerT>::const_iterator,
+					is_equal>( Search, is_equal() ) );
         }
         //! "Last" finder
         /*!
@@ -108,15 +180,17 @@ namespace boost {
 			\return last_finder functor
         */
         template<typename ContainerT, typename PredicateT>
-        inline detail::last_finderF<
+        inline finder_adaptor< detail::last_finderF<
             BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator,
-            PredicateT>
+            PredicateT> >
         last_finder( const ContainerT& Search, PredicateT Comp )
         {
-            return detail::last_finderF<
-                BOOST_STRING_TYPENAME 
-                    container_traits<ContainerT>::const_iterator,
-                PredicateT>( Search, Comp );
+            return 
+				make_finder_adaptor(
+					detail::last_finderF<
+					BOOST_STRING_TYPENAME 
+						container_traits<ContainerT>::const_iterator,
+					PredicateT>( Search, Comp ) );
         }
 
         //! "Nth" finder
@@ -130,17 +204,19 @@ namespace boost {
 			\return nth_finder functor
         */
         template<typename ContainerT>
-        inline detail::nth_finderF<
+        inline finder_adaptor< detail::nth_finderF<
             BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator,
-            is_equal>
+            is_equal> >
         nth_finder( 
             const ContainerT& Search, 
             unsigned int Nth)
         {
-            return detail::nth_finderF<
-                BOOST_STRING_TYPENAME 
-                    container_traits<ContainerT>::const_iterator,
-                is_equal>( Search, Nth, is_equal() );
+            return 
+				make_finder_adaptor(
+					detail::nth_finderF<
+					BOOST_STRING_TYPENAME 
+						container_traits<ContainerT>::const_iterator,
+					is_equal>( Search, Nth, is_equal() ) );
         }
         //! "Nth" finder
         /*!
@@ -156,18 +232,20 @@ namespace boost {
 			\return nth_finder functor
         */
         template<typename ContainerT, typename PredicateT>
-        inline detail::nth_finderF<
+        inline finder_adaptor< detail::nth_finderF<
             BOOST_STRING_TYPENAME container_traits<ContainerT>::const_iterator,
-            PredicateT>
+            PredicateT> >
         nth_finder( 
             const ContainerT& Search, 
             unsigned int Nth, 
             PredicateT Comp )
         {
-            return detail::nth_finderF<
-                BOOST_STRING_TYPENAME 
-                    container_traits<ContainerT>::const_iterator,
-                PredicateT>( Search, Nth, Comp );
+            return 
+				make_finder_adaptor(
+					detail::nth_finderF<
+					BOOST_STRING_TYPENAME 
+	                    container_traits<ContainerT>::const_iterator,
+					PredicateT>( Search, Nth, Comp ) );
         }
 
         //! "Head" finder
@@ -180,10 +258,10 @@ namespace boost {
 			\param N The size of the head
 			\return head_finder functor
         */
-        inline detail::head_finderF 
+        inline finder_adaptor< detail::head_finderF >
         head_finder( unsigned int N )
         {
-            return detail::head_finderF( N );
+            return make_finder_adaptor( detail::head_finderF( N ) );
         }
         
         //! "Tail" finder
@@ -196,10 +274,10 @@ namespace boost {
 			\param N The size of the head
 			\return tail_finder functor
         */
-        inline detail::tail_finderF 
+        inline finder_adaptor< detail::tail_finderF >
         tail_finder( unsigned int N )
         {
-            return detail::tail_finderF( N );
+            return make_finder_adaptor( detail::tail_finderF( N ) );
         }
 
         //! "Token" finder
@@ -219,10 +297,11 @@ namespace boost {
 			\return token_finder functor
         */
         template< typename PredicateT >
-        inline detail::token_finderF<PredicateT>
+        inline finder_adaptor< detail::token_finderF<PredicateT> >
         token_finder( PredicateT Pred, bool bCompress=true )
         {
-            return detail::token_finderF<PredicateT>( Pred, bCompress );
+            return make_finder_adaptor( 
+				detail::token_finderF<PredicateT>( Pred, bCompress ) );
         }
 
         //! "Range" finder
@@ -236,12 +315,13 @@ namespace boost {
 			\return range_finger functor
         */
         template< typename ForwardIteratorT >
-        inline detail::range_finderF<ForwardIteratorT>
+        inline finder_adaptor< detail::range_finderF<ForwardIteratorT> >
         range_finder(
             ForwardIteratorT Begin,
             ForwardIteratorT End )
         {
-            return detail::range_finderF<ForwardIteratorT>( Begin, End );
+            return make_finder_adaptor(
+				detail::range_finderF<ForwardIteratorT>( Begin, End ) );
         }
 
         //! "Range" finder
@@ -254,10 +334,11 @@ namespace boost {
 			\return range_finger functor
         */
         template< typename ForwardIteratorT >
-        inline detail::range_finderF<ForwardIteratorT>
+        inline finder_adaptor< detail::range_finderF<ForwardIteratorT> >
         range_finder( iterator_range<ForwardIteratorT> Range )
         {
-            return detail::range_finderF<ForwardIteratorT>( Range );
+            return 	make_finder_adaptor(
+				detail::range_finderF<ForwardIteratorT>( Range ) );
         }
 
     } // namespace string_algo

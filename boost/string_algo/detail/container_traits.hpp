@@ -374,7 +374,10 @@ namespace boost {
                     template< typename A >
                     static size_type length( const A& a )
                     {
-                        return std::char_traits<char>::length(a);
+                        if ( a==0 ) 
+							return 0;
+						else
+							return std::char_traits<char>::length(a);
                     }
                     
                     template< typename A >
@@ -398,7 +401,10 @@ namespace boost {
                     template< typename A >
                     static size_type length( const A& a )
                     {
-                        return std::char_traits<wchar_t>::length(a);
+                        if ( a==0 ) 
+							return 0;
+						else
+                            return std::char_traits<wchar_t>::length(a);
                     }
 
                     template< typename A >

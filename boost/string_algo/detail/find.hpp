@@ -15,16 +15,6 @@
 #include <boost/string_algo/container_traits.hpp>
 #include <boost/string_algo/iterator_range.hpp>
 
-// Define container-based variant of functor operator for a find functor
-#define BOOST_STRING_DEFINE_FIND_OPERATOR() \
-    template<typename InputT> \
-    iterator_range< BOOST_STRING_TYPENAME \
-        string_algo::container_traits<InputT>::result_iterator > \
-    operator()( InputT& Input ) const \
-        { \
-            return operator()( begin(Input), end(Input) ); \
-        }
-
 namespace boost {
     namespace string_algo {
         namespace detail {
@@ -88,9 +78,6 @@ namespace boost {
                     return make_range( End, End );
                 }
 
-                // Container based find operator
-                BOOST_STRING_DEFINE_FIND_OPERATOR()
-
             private:
                 iterator_range<search_iterator_type> m_Search;
                 PredicateT m_Comp;
@@ -136,9 +123,6 @@ namespace boost {
 
                     return findit( Begin, End, category() );
                 }   
-
-                // Container based find operator
-                BOOST_STRING_DEFINE_FIND_OPERATOR()
 
             private:
                 // forward iterator
@@ -274,9 +258,6 @@ namespace boost {
                     return M;
                 }
 
-                // Container based find operator
-                BOOST_STRING_DEFINE_FIND_OPERATOR()
-
             private:
                 iterator_range<search_iterator_type> m_Search;
                 unsigned int m_Nth;
@@ -308,9 +289,6 @@ namespace boost {
 
                     return findit( Begin, End, category() );
                 }
-
-                // Container based find operator
-                BOOST_STRING_DEFINE_FIND_OPERATOR()
 
             private:
                 // Find operation implementation
@@ -377,9 +355,6 @@ namespace boost {
 
                     return findit( Begin, End, category() );
                 }
-
-                // Container based find operator
-                BOOST_STRING_DEFINE_FIND_OPERATOR()
 
             private:
                 // Find operation implementation
@@ -497,9 +472,6 @@ namespace boost {
                     }
                 }
 
-                // Container based find operator
-                BOOST_STRING_DEFINE_FIND_OPERATOR()
-
             private:
                 PredicateT m_Pred;
                 bool m_bCompress;
@@ -553,7 +525,5 @@ namespace boost {
         } // namespace detail
     } // namespace string_algo
 } // namespace boost
-
-#undef BOOST_STRING_DEFINE_FIND_OPERATOR
 
 #endif  // BOOST_STRING_FIND_DETAIL_HPP

@@ -10,7 +10,7 @@
 #ifndef BOOST_STRING_STD_SLIST_TRAITS_HPP
 #define BOOST_STRING_STD_SLIST_TRAITS_HPP
 
-#include <boost/string_algo/detail/yes_no_type.hpp>
+#include <boost/string_algo/yes_no_type.hpp>
 #include <slist>
 
 namespace boost {

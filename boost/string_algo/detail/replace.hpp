@@ -22,7 +22,7 @@ namespace boost {
     namespace string_algo {
         namespace detail {
 
-//  temporary format and find reusul storage --------------------------------//
+//  temporary format and find result storage --------------------------------//
 
             template< 
                 typename ForwardIteratorT,

@@ -63,11 +63,11 @@ namespace boost {
         inline ResultT&
         iter_find(
             ResultT& Result,
-            const InputT& Input,
+            InputT& Input,
             FindFT FindF )
         {
             typedef BOOST_STRING_TYPENAME 
-                container_traits<InputT>::const_iterator input_iterator_type;
+                container_traits<InputT>::result_iterator input_iterator_type;
             typedef detail::find_iterator<
                 input_iterator_type,
                 FindFT > find_iterator_type;
@@ -121,11 +121,11 @@ namespace boost {
         inline ResultT&
         iter_split(
             ResultT& Result,
-            const InputT& Input,
+            InputT& Input,
             FindFT FindF )
         {
             typedef BOOST_STRING_TYPENAME 
-                container_traits<InputT>::const_iterator input_iterator_type;
+                container_traits<InputT>::result_iterator input_iterator_type;
             typedef detail::find_iterator<
                 input_iterator_type,
                 FindFT,
