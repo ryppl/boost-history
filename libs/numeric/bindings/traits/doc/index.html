@@ -1,7 +1,7 @@
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="boost.css">
-<title>Boost.Numeric.Traits</title>
+<title>Boost.Numeric.Bindings.Traits</title>
 </head>
 
 <body link="#0000ff" vlink="#800080">
@@ -11,7 +11,7 @@
 <h3><a href="../../../index.htm"><img height="86" width="277" alt="C++ Boost" src="../../../c++boost.gif" border="0"></a></h3>
 </td>
 <td valign="top">
-<h1 align="center">Boost.Numeric.Traits</h1>
+<h1 align="center">Boost.Numeric.Bindings.Traits</h1>
 </td>
 </tr>
 </table>
@@ -37,6 +37,7 @@
 </ol>
 </ol>
 <li><a href="#calling_conventions">Calling conventions</a></li>
+<li><a href="#type_mapping">Type mapping</a></li>
 </ol>
 <hr>
 
@@ -108,7 +109,7 @@ Defined in <boost/numeric/bindings/traits/matrix_traits.hpp>
 
 </table>
 
-<h2>Calling conventions</h2>
+<h2><a name="calling_conventions">2. Calling conventions</a></h2>
 <p>To facilitate generic bindings for libraries of which the API
 is defined in Fortran, the numeric.traits library provides
 a multi-platform mapping between C and Fortran calling conventions:
@@ -122,5 +123,9 @@ symbols will be defined:
 </ul>
 <p><a href="http://www.aei.mpg.de/~jthorn/c2f.html">Here's more information</a> on how to call Fortran routines from C and C++,
 
+<h2><a name="type_mapping">3. Type mapping</a></h2>
+<p>See type.h for mapping of Fortran types to C.
+<p>See type.hpp for mapping of Fortran types to C++
+<p>See value_traits.hpp for value_type inside complex types.
 </body>
 </html>
