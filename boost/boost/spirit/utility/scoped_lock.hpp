@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2003 Martin Wille
     http://spirit.sourceforge.net/
 
@@ -13,7 +13,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 #if !defined(BOOST_SPIRIT_COMPOSITE_HPP)
-#include "boost/spirit/core/composite.hpp"
+#include <boost/spirit/core/composite.hpp>
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////

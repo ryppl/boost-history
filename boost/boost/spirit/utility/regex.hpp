@@ -1,5 +1,5 @@
 /*=============================================================================
-    Spirit v1.6.1
+    Spirit v1.7.0
     Copyright (c) 2002-2003 Hartmut Kaiser
     http://spirit.sourceforge.net/
 
@@ -11,9 +11,9 @@
 #ifndef BOOST_SPIRIT_REGEX_HPP
 #define BOOST_SPIRIT_REGEX_HPP
 
-#include "boost/spirit/core/impl/msvc.hpp"
+#include <boost/spirit/core/impl/msvc.hpp>
 
-#if defined(BOOST_MSVC) && (BOOST_MSVC <= 1300)
+#if defined(BOOST_NO_STD_ITERATOR_TRAITS)
 #define BOOST_SPIRIT_IT_NS impl
 #else
 #define BOOST_SPIRIT_IT_NS std
@@ -36,8 +36,8 @@
 #define BOOST_REGEX_NO_LIB
 #define BOOST_REGEX_STATIC_LINK
 #define BOOST_REGEX_NO_EXTERNAL_TEMPLATES
-#include "boost/regex.hpp"
-#include "boost/regex/src.cpp"
+#include <boost/regex.hpp>
+#include <boost/regex/src.cpp>
 
 #else
 //
@@ -45,15 +45,15 @@
 //  application against the Boost.Regex library as described in the related
 //  documentation.
 //
-#include "boost/regex.hpp"
+#include <boost/regex.hpp>
 #endif // defined(BOOST_SPIRIT_NO_REGEX_LIB)
 
-#include "boost/static_assert.hpp"
+#include <boost/static_assert.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
-#include "boost/spirit/core/meta/impl/parser_type.hpp"
-#include "boost/spirit/core/parser.hpp"
-#include "boost/spirit/utility/impl/regex.ipp"
+#include <boost/spirit/core/meta/impl/parser_type.hpp>
+#include <boost/spirit/core/parser.hpp>
+#include <boost/spirit/utility/impl/regex.ipp>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace spirit {
