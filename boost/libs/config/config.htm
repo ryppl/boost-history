@@ -236,6 +236,25 @@ they are listed in the following table:&nbsp;</p>
         BOOST_NO_PLATFORM_CONFIG.</td>
     </tr>
     <tr>
+        <td valign="top">BOOST_STRICT_CONFIG</td>
+        <td>The normal behavior for compiler versions that are
+        newer than the last known version, is to assume that they
+        have all the same defects as the last known version. By
+        setting this define, then compiler versions that are
+        newer than the last known version are assumed to be fully
+        conforming with the standard. This is probably most
+        useful for boost developers or testers, and for those who
+        want to use boost to test beta compiler versions.</td>
+    </tr>
+    <tr>
+        <td valign="top">BOOST_ASSERT_CONFIG</td>
+        <td>When this flag is set, if the config finds anything
+        unknown, then it will stop with a #error rather than
+        continue. Boost regression testers should set this
+        define, as should anyone who wants to quickly check
+        whether boost is supported on their platform.</td>
+    </tr>
+    <tr>
         <td valign="top" width="48%">BOOST_DISABLE_THREADS</td>
         <td valign="top" width="52%">When defined, disables
         threading support, even if the compiler in its current
