@@ -233,6 +233,13 @@ namespace boost {
     return none(begin(c), end(c), p);
   }
 
+  // container any_if
+  template <typename Container, typename Predicate>
+  bool any_if(const Container& c, Predicate p)
+  {
+    return any_if(begin(c), end(c), p);
+  }
+
   // container count
   template <typename Container, typename T>
   std::size_t count(const Container& c, const T& value)
