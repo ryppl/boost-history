@@ -450,7 +450,10 @@ inheritance hierarchy.
 
    __ `Function Creation`_
 
-:concept:`Module Builders` use a visitation interface to explore
+.. |ModuleBuilder| subst:: :concept:`Module Builder`
+.. |ModuleBuilders| subst:: :concept:`Module Builders`
+
+|ModuleBuilders| use a visitation interface to explore
 the ``module_description`` passed to them.  The visited items
 represent entities such as functions and classes.  For each visited
 item ``v``, the following expressions are valid::
@@ -464,7 +467,7 @@ for holding attributes commonly-needed across target languages
 will be established.
 
 Expressions described in the following sections are required to be
-valid for :concept:`Module Builder` type ``B`` and instance ``b``,
+valid for |ModuleBuilder| type ``B`` and instance ``b``,
 with the access rights of ``backend::module_builder_access``.
 
 Module Creation
@@ -487,11 +490,14 @@ This interface is used both for functions bound at module scope and
 for member functions bound within classes.  Functions visited while
 a class is being visited should be treated as member functions.
 
-Typically, upon visiting a function the :concept:`Module Builder`
+Typically, upon visiting a function the |Module Builder|
 will want to create a new callable object (in its target language)
-that, when called, invokes ``f`` by passing an object of type
-``B::argument_package``, yielding an object of type
-``B::function_result``.  
+that, when called, invokes ``f`` ::
+
+  B::function_result result = f(a, i);
+
+where ``a`` is an object of type ``B::argument_package`` and ``i``
+is an object of type ``B::interpreter``.
 
 .. Likewise, no need for this either.
 
@@ -501,6 +507,18 @@ that, when called, invokes ``f`` by passing an object of type
    ``module_description&`` shown `here`__).
 
    __ basics_
+
+Function Result
+---------------
+
+::
+
+  typedef B::function_result R;
+
+A function result is a copyable type representing the result of
+calling a function in the target language.  In a Python binding
+``R`` might be as simple as ``PyObject*``.  This type is also used
+by C++ to target language data converters.
 
 Argument Package
 ----------------
@@ -516,17 +534,22 @@ keyword argument dictionary.  Argument packages need not be
 copyable types.  This type will also be used by target language to
 C++ data converters.
 
-Function Result
----------------
+Interpreter
+-----------
 
 ::
 
-  typedef B::function_result R;
+  typedef B::interpreter;
 
-A function result is a copyable type representing the result of
-calling a function in the target language.  In a Python binding
-``R`` might be as simple as ``PyObject*``.  This type is also used
-by C++ to target language data converters.
+This can be any type.  Languages that support multiple simulateous
+interpreter states may need to identify the interpreter when
+creating new objects, as typically happens when converting C++
+objects (like function return values) into the target language.
+Typically the interpreter identification would be passed to the
+``B``\ 's constructor and then stored in each target language
+function object that it creates so it can be easily retrieved.
+Languages that don't need this information can use ``int`` and
+always pass zero.
 
 Class Creation
 ==============
