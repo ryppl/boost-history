@@ -1,0 +1,1735 @@
+    <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+
+    <title>C++ Coding Guidelines</title>
+      <h1 align="center"><a name="AEN39">C++ Coding Guidelines</a></h1>
+<p align="center">
+      <b>
+A coding standard for C++ software developers and maintainers<br>
+Copyright &copy; 2001 David Abrahams and Nathan Myers<br>
+All rights Reserved.
+</b>
+
+      <h2>Introduction</h2>
+
+      <p>This document is not intended to act as requirements for boost, but as
+ a set of ``guideposts to uniformity'', for those cases where authors have no
+ preference or are willing to change.  Nobody likes following arbitrary rules,
+ and when compliance is voluntary, it's likely that nobody will. Therefore,
+ wherever possible, choices are made with careful attention to engineering merit and
+ the underlying rationale is presented.
+
+ <p>Because C++ is a markedly different language from C, good C++ code looks markedly different from good C code. Differences from good C style follow from these differences:
+
+  <ul>
+    <li>Names -- particularly, qualified names, and expressions and declarations
+    in C++ are often much longer than in C.
+
+    <li>Scoping in C++ is more complex than in C. 
+
+    <li>Types in C++ are semantically far more important than in C. 
+
+    <li>Local variable definitions in C++ are mixed in with other statements. 
+
+    <li>C++ includes constructs that don't exist in C. 
+
+    <li>C++ overloads syntactic elements even more heavily than C. 
+
+    <li>Semantics of some C++ constructs differ from C. 
+  </ul>
+
+  <p>Rules below are based on some broad principles:
+
+  <ul>
+    <li>Direct expression of concepts in code is much better than annotation in
+    comments.
+
+    <li>Comprehensibility for maintainers, and robustness against changes during
+    maintenance, are at least as important as convenience for coders.
+
+    <li>Formatting should be deterministic and straightforward. Time spent
+    thinking about formatting code is time better spent writing it.
+
+    <li>Sources of subtle bugs should be given a wide berth.
+
+    <li>Meaningless-busywork rules get ignored.
+  </ul>
+
+      <h2>Table of Contents</h2>
+
+<ol>
+      <li><a href="#files_preprocessor">Files and the preprocessor</a>
+
+      <li><a href="#naming">Naming</a>
+
+      <li><a href="#expression_spacing">Expression spacing and bracketing</a>
+
+      <li><a href="#def_decl_spacing">Spacing of definitions and declarations</a>
+
+      <li><a href="#block_formatting">Block and statement formatting</a>
+
+      <li><a href="#decl_initialization">Declarations and initialization</a>
+
+      <li><a href="#documentation">Comments and documentation</a>
+
+      <li><a href="#class_organization">Class organization</a>
+
+      <li><a href="#inheritance">Inheritance and run-time polymorphism</a>
+
+      <li><a href="#component_docs">Component documentation</a>
+
+      <li><a href="#error_handling">Error handling and robustness</a>
+
+      <li><a href="#namespaces">Namespaces</a>
+
+      <li><a href="#overloading">Overloading</a>
+
+      <li><a href="#type_conversion">Type conversions</a>
+
+      <li><a href="#misc">Miscellaneous</a>
+</ol>
+
+      <h2><a name="files_preprocessor">1. Files and the preprocessor</a></h2>
+
+      <p>
+      1.1.   <b>Change logs</b>, if used, appear at the bottom of files. A
+      source file's primary role is as documentation of the <i>current</i> state
+      of the project.
+
+      <p>
+      1.2.   <b>Use unique <tt>#include</tt> guards in header files.</b> With
+      only very rare exceptions, every C++ header file neeeds #include guards to
+      prevent its definitions from being seen multiple times. You may use a <a
+      href="http://www.guid.org">GUID</a>, or you can incorporate your initials
+      and the date as shown in this <a href="#include_guards" title=
+      "RECTANGLE_DWA050499_H_">example</a>. Don't rely on these
+      <tt>#include</tt> guards being meaningful: the date and initials are
+      <i>solely</i> for sufficient uniqueness, and people use different
+      conventions for expressing dates.
+
+      <p>
+      1.3.   <b>Avoid preprocessor macros</b> (i.e. <tt>#define</tt>),
+      especially in header files - use inline functions or function templates
+      (for function-style macros) and enums or constants (for other macros)
+      instead. Preprocessor symbols march across namespace and scope boundaries
+      and can change the meaning of code in unexpected ways. Of course,
+      <tt>#include</tt> guards are a necessary exception to this guideline.
+
+      <p>
+      1.4.   <b>Source file names are <tt>lower_case</tt>,</b> because of the
+      vagaries of filename case-sensitivity on various platforms.
+
+      <p>
+      1.5.   <b>Source files should <tt>#include</tt> the corresponding header
+      file first.</b> To be sure that each header file can be safely
+      <tt>#include</tt>d regardless of which other files have been
+      <tt>#include</tt>d first, we use this technique to help ensure that each
+      header is <tt>#include</tt>d first <i>somewhere.</i> Of course, this
+      technique's effectiveness is mitigated by the extent to which (generic)
+      code appears in header files.
+
+      <p>
+      1.6.   <b>All <tt>#include</tt> directives appear at the top</b> of source
+      files, and just after the <tt>#include</tt> guards in header files.
+
+      <p>
+      1.7.   <b>Avoid header file dependencies.</b> If the header file only
+      needs to use pointers or references to a given class, a <a
+      href="#forward_declaration" title="class point;">forward declaration</a>
+      can be used in lieu of including the header which contains the
+      class' definition.  This practice can reduce compile times and
+      eliminate confusing situations that arise when two definitions appear to
+      be interdependent.  <i>Don't</i> change your designs just for the
+      sake of this guideline, but <i>do</i> apply it whenever possible. Of
+      course, this technique's effectiveness is mitigated by the extent to which
+      (generic) code appears in header files.
+
+      <b>Caveat</b>: it is illegal (with good reason) for users to
+      forward-declare names in namespace std::. We haven't yet seen a
+      compiler which will detect violations of this rule, so be careful not to!
+
+      <p>
+      1.8.   <b>Use relative #include paths.</b> Directory paths should mimic
+      the project's namespace structure. Just as we use namespaces to
+      prevent C++ name collisions, we use directory paths to prevent #include
+      file name collisions.
+
+      <h3>Examples:</h3>
+
+       <table border="0" cellpadding="0" width="100%" bgcolor="#e0e0e0">
+        <tr>
+          <td>
+<pre>
+<a name=
+"include_guards">// rectangle.hpp</a>
+#ifndef RECTANGLE_DWA050499_HPP_
+#define RECTANGLE_DWA050499_HPP_
+#include &lt;boost/operators.hpp&gt; // operators.hpp defines names in namespace boost
+#include &lt;iosfwd&gt;
+ 
+<a name=
+"forward_declaration">class point</a>;
+class rectangle : boost::addable&lt;rectangle&gt;
+{
+   // Construct the rectangle bounded by the two given points.
+   rectangle(point const&amp;, point const&amp;);
+   ...
+};
+ 
+// Change Log:
+//    05/05/99 - DABRAHAMS Fixed stupid bug.
+//    05/04/99 - DABRAHAMS Created.&lt;&lt;/span&gt;
+ 
+#endif // RECTANGLE_DWA050499_H_
+</pre>
+<hr>
+<pre>
+// rectangle.cpp
+#include "rectangle.hpp"
+...
+</pre>
+       </table>
+      <p> 
+
+      <h2><a name="naming">2. Naming</a></h2>
+
+      <p>2.1. <b>Names</b>, unless otherwise specified below, should be written
+      <b><tt>all_lower_case</tt></b> with underscores separating sub-word
+      components. Acronyms should be treated as complete words:
+      <tt>vhdl_ams_parser</tt>. [Contrary to some popular standards, this rule
+      applies to type names in nearly all contexts, making our naming consistent
+      with both the standard library and boost conventions].
+
+      <p>
+      2.2. Names of template <i>formal</i> type parameters e.g., are written
+      <tt>InMixedCase</tt>, with capitalized sub-words, e.g.
+<blockquote>
+<pre>
+template &lt;class <b>InputIterator</b>&gt;
+struct adaptor { typedef <b>InputIterator</b> base_iterator; };
+</pre>
+</blockquote>
+      Treat acronyms as
+      ordinary words, with only the first letter capitalized
+      (e.g. <tt>XmlObject</tt>).
+
+      <p>
+      2.3.   <b>Concept names</b> in documentation (e.g. Assignable,
+      ForwardIterator) follow the same rules as template formal type parameters
+      (i.e. should also be written InMixedCase).
+
+      <p>
+      2.4.   <b>Choose complete
+      words or phrases</b> for names other than loop counters and iterators. A
+      good name is better than a comment explaining what the entity does.
+
+      <p>
+      2.5.   <b>Avoid abbreviations</b> and compound words:
+      ``Iterator'' is better than ``Iter''. A short word is
+      better than a shortened word.
+
+      <p>
+      2.6.   <b>Choose names to indicate purpose</b>
+      (e.g. <tt>known_devices</tt>) rather than implementation
+      (e.g. <tt>device_list</tt>); the implementation is already visible in the
+      declaration.
+
+      <p>
+      2.7.   <b>Boolean variables
+      and functions should read as English predicate phrases</b>, so
+      that conditional statements using them read as grammatical English
+      sentences.
+
+      <p>
+      2.8.   <b>Functions with side effects</b> should be English active-verb
+      phrases.
+
+      <p>
+      2.9.   <b>Avoid trademarks</b> in names (including ``Altra'').
+
+      <p>
+      2.10.        <b>Data members</b> should have a ``<tt>m_</tt>''
+      prefix, to distinguish them from an otherwise-identical member function
+      name and to clarify their provenance in code which uses them. Non-member
+      names must not have an ``<tt>m_</tt>'' prefix.
+
+      <p>
+      2.11.        <b>Short names should respect common conventions</b>:
+      ``<tt>i</tt>'', ``<tt>j</tt>'', and
+      ``<tt>k</tt>'', if used, should be loop control variables;
+      ``<tt>p</tt>'' and ``<tt>q</tt>'' should generally be
+      pointers or iterators.
+
+      <p>
+      2.12. <b>Functions describing the state of an object</b> should be
+      English noun phrases (e.g. <tt>size()</tt>, <i>not</i>
+      <tt>get_size()</tt>).
+
+      <p>
+      2.13. <b>Preprocessor macros</b> should be avoided. Where neccessary,
+      macros are <b>ALL_CAPS</b>. Avoid defining macros in header files with
+      extreme prejudice. Any macro names which <i>must</i> appear in headers
+      should be very long, or #undef'd after use.
+
+      <p>
+      2.14. <b>Names containing double underscores</b> (``<tt>__</tt>'') or
+       beginning with single underscores (``<tt>_</tt>'') are entirely
+       forbidden. These are reserved to the C++ implementation in various
+       contexts.
+
+      <h3><a name="AEN72">Examples:</a></h3>
+
+      <table border="0" cellpadding="0" width="100%" bgcolor="#e0e0e0">
+        <tr>
+          <td>
+<pre>
+struct sector_position
+{
+  long track_cylinder_head;
+};
+ 
+enum permissions
+{
+   read,
+   write,
+   read_write
+};
+ 
+axe::axe()
+ : m_handle(new handle)
+{
+}
+ 
+bool indicates_failure(status s);
+ 
+void write_out_file();  // function with side effect
+ 
+#ifndef COMPILING_UNDER_LINUX
+std::size_t n = a.size();
+for (std::size_t i = 0; i &lt; n; ++i)
+{
+  ++a[i];
+}
+ 
+if (buffer-&gt;was_empty())
+...
+</pre>
+</table>
+
+      <h3><a name="AEN75">Discussion:</a></h3>
+
+      <p>Macro names walk freely across scope boundaries, and their use even in
+      system headers tends to anarchy.
+
+      <p>Trademarked names cause disruptions when ownership of code or
+      trademarks changes hands. For example, we may make a deal to sell or
+      license our code to a partner. If we use a trademark name we might easily
+      create work for ourselves changing names later. We might consider using
+      ``<tt>altra</tt>'' as a namespace name, but should do so only
+      after careful consideration and with group consensus.
+
+      <p>The naming pattern "is_foo" for predicate names comes from decades of C
+      tradition. In general, type prefixes and suffixes
+      (``<tt>psz</tt>'', ``<tt>_p</tt>'',
+      <tt>``_ptr''</tt>) are needed in languages and environments
+      where object type has been lost, or to avoid colliding with type
+      names. They make code harder to read as English and obscure the
+      abstraction being manipulated with implementation details. They also
+      create an undesirable link between interface and implementation,
+      discouraging the drop-in replacement of one type for another (a very
+      common and powerful strategy for correctly evolving and modernizing old
+      code). Solve the problems that type labels solve by writing small
+      functions and declaring local variables close to their point of first use.
+
+      <h2><a name="expression_spacing">3. Expression spacing and bracketing</a></h2>
+
+      <p>
+      3.1.   <b>Binary
+      operators</b> are separated from their operands by whitespace.
+
+      <p>
+      <a name="unary_post_operators"></a>3.2.   <b>Unary
+      post-operators</b> such as the function-call, array-index, and
+      post-increment operators should not be preceded by space.
+
+      <p>
+      3.3.   <b>Unary
+      pre-operators</b> such as dereference and logical negation should not be
+      followed by space.
+
+      <p>
+      3.4.   <b>The dereference
+      operator </b>``<b>-&gt;</b>'' should neither be preceded by nor followed by
+      whitespace.
+
+      <p>
+      3.5.   <b>Fully parenthesize uses of bitwise operators</b>. Most people
+      remember the precedence relationship between ``&amp;'' and ``|'', but lose
+      track when used in any other combinations. To reduce time looking in the
+      standard and tracking down bugs, fully-parenthesize uses of ``&lt;&lt;'',
+      ``&gt;&gt;'', and ``^'' when mixed with other operators. ``&amp;'' and
+      ``|'' may be mixed freely, but should be parenthesized when combined with
+      any other operators.
+
+      <p>
+      3.6.   <b><tt>return</tt> is not a function</b>; do not put parentheses around
+      the value being returned. This also goes for <tt>throw</tt>.
+
+      <p>
+      3.7.   <b>Break expressions
+      before an operator</b> if possible, when they get too long. This helps
+      mark the 2<sup>nd</sup> part of the line as a continuation.
+
+      <h3><a name="AEN114">Examples:</a></h3>
+
+      <table border="0" cellpadding="0" width="100%" bgcolor="#e0e0e0">
+        <tr>
+          <td>
+<pre>
+// <b>Right:</b>
+operator==(char)
+p[i++] = q[j++];
+if (this-&gt;headers()-&gt;is_empty())
+unsigned y = 0xf &amp; (x + 1);
+ 
+std::complex&lt;double&gt; total_offset = initial_offset + 3 * step_size
+   + extra_steps * extra_step_size + 1.0;
+ 
+if (!x)
+    return y;
+
+throw std::range_error(&quot;out of range&quot;);
+
+// <b>Wrong:</b>
+operator == (char)  // no
+p [i ++] = q [ j ++ ];
+if (this-&gt;headers ()-&gt;is_empty ())
+ 
+std::complex&lt;double&gt; total_offset = initial_offset+3*step_size+
+   extra_steps*extra_step_size+1.0;
+ 
+if (! x)
+    return(y);
+
+throw(std::range_error(&quot;out of range&quot;));
+</pre></table>
+
+      <h3><a name="AEN118">Discussion:</a></h3>
+
+      <p>Beginning a continuation line with an operator helps to emphasize that
+      it is not a standalone expression.
+
+      <p>The following arguments, cumulatively, lead to <a href=
+      "#unary_post_operators" title=
+      "No spaces before unary post-operators">3.2</a> above.
+
+<ul>
+      <li>        
+      Parentheses are even more heavily overloaded in C++ than in C,
+      and the placement of a space before some uses (e.g. in control structures
+      and to group expressions) helps to distinguish those uses.
+
+      <li>        
+      Spaces around binary operators help visually to identify terms
+      in an expression, and to distinguish overloaded unary from binary
+      operators. Lack of spaces next to unary operators helps emphasize this
+      role.
+
+      <li>         In
+      C++, unlike in C, "()" is explicitly an operator, and even GNU doesn't
+      suggest a space before other unary operators (although it seems sometimes
+      to suggest a space after some unary operators, e.g. "!", but not others,
+      e.g. "++"... we do not follow that rule).
+
+      <li>         In
+      C++, unlike in C, the argument list of a function is part of its name,
+      just as the tilde is part of the destructor's name.
+
+      <li>        
+      Spaces inserted in expressions involving two or more
+      applications of the function-call <tt>operator()()</tt>, as in
+
+      <table border="0" cellpadding="0" width="90%" bgcolor="#e0e0e0">
+        <tr>
+          <td>
+<pre>
+    return this-&gt;guarantor ()-&gt;lookup (name)-&gt;as_string ().c_str ();
+           +-------------+ +--------+ +---------------+ +------+ +-+ 
+</pre>
+      </table>
+
+      lead to odd groupings.
+
+      <li>        
+      Every C++ textbook -- I have 10 here, not counting C books --
+      places a unary operator, including function-call, directly adjacent to
+      its argument. Only GNU departs from this industry-wide standard, for
+      reasons that appear to refer rather to LISP than C conventions.
+
+</ul>
+      <h2><a name="def_decl_spacing">4. Spacing of definitions and declarations</a></h2>
+
+      <p>
+      4.1.   <b>Definitions at primary namespace or global scope</b> begin at
+      the left margin. Opening the primary named namespace in a file does not
+      induce an extra level of indentation. Secondary nested namespaces
+      (e.g. ``...<tt>::detail</tt>'') may cause additional indentation
+      of 2 spaces.
+
+      <p>
+      4.2.   <b>Separate lines</b> at identical indentation are devoted
+      to:<ul>
+      <li>any `` <tt>template&lt;</tt>...<tt>&gt;</tt>'' clause
+      <li>the name of a class or function being defined
+      <li>the opening and closing braces of a function, statement, or class body
+      </ul>
+
+      <p>
+      4.3.   The <b>return type</b> and storage class of a function go on the
+      same line as the name.
+
+      <p>
+      4.4.   A blank line is required <b>between consecutive multi-line
+      definitions</b>.
+
+      <p>
+      4.5.   <b>Definitions in class bodies</b> are indented four spaces from
+      the enclosing brackets.  Second and subsequent lines of member definitions
+      in class bodies are further indented.
+
+      <p>
+      4.6.   <b>Arguments to function definitions</b> are on separate lines and
+      indented two to four spaces (not out to the open-parenthesis). Other
+      breaks may be indented to line up with other expression elements.
+
+      <p>
+      4.7. <b>Multiline declarations should be separated from other code by blank
+      lines</b>.
+
+      <p>
+      4.8.   <b>Access specifiers</b> (<tt>public</tt>, <tt>private</tt>, and
+      <tt>protected</tt>) are indented one space from the opening brace of a
+      class declaration.
+
+      <p>
+      4.9.   <b>Omit spaces in <a href="#template_instantiation">template
+      instantiations</a></b>. Spaces are allowed between arguments to <a
+      href="#template_declaration">template declarations</a>. Unnecessary spaces
+      in type names weaken their recognizability as a syntactic
+      unit. Instantiations with names that are too unwieldy in this form should
+      be typedef'ed.
+
+      <h3><a name="AEN163">Examples:</a></h3>
+
+      <p>In a ".hpp" file
+
+      <table border="0" cellpadding="0" width="100%" bgcolor="#e0e0e0">
+        <tr>
+          <td>
+<pre>
+namespace altra { namespace device_db {
+
+namespace detail {
+    typedef unsigned long terminal_index;
+};
+
+class catalog
+{
+ public:
+    explicit catalog();
+    template &lt;class T&gt; void f(T);
+
+    template&lt;typename T&gt;
+    void template_function(T* target,
+        std::basic_string&lt;T&gt; const&amp; source);
+
+    int roll_back_transaction();
+};
+ 
+ <a name=
+"template_declaration">template&lt;typename Iterator, size_t N&gt;   // spaces inserted</a>
+ class Range
+ {...
+ 
+}} // namespace altra::device_db
+</pre>
+      </table>
+
+      <p>In a ".cpp" file:
+
+      <table border="0" cellpadding="0" width="100%" bgcolor="#e0e0e0">
+        <tr>
+          <td>
+<pre>
+namespace altra { namespace device_db {
+
+catalog::catalog()
+{
+   <a name=
+"template_instantiation">std::pair&lt;Runtime::Name,Runtime::Value&gt; tagged_result</a>;  // no spaces
+}
+ 
+template&lt;typename T&gt;
+void database::template_function(
+    T* target,
+    std::basic_string&lt;T&gt; const&amp; source)
+{
+    target-&gt;instantiate_element(
+        source.const_begin(), source.const_end());
+}
+ 
+namespace {
+  int f(
+     int x)
+  {
+      return x+1;
+  }
+} // unnamed namespace
+ 
+int 
+database::roll_back_transaction()
+{ ... }
+</pre>
+      </table>
+
+      <h2><a name="block_formatting">5. Block and statement formatting</a></h2>
+
+      <p>
+      5.1.   <b>Use a separate line
+      for opening and closing braces.</b> If you find that your functions are
+      taking up too much space, break them into smaller pieces. Empty blocks
+      may begin and end with brackets on the same line.
+
+      <p>
+      5.2.   <b>Braces should have
+      the same indentation as the previous line.</b> The GNU indentation style,
+      where braces are indented more than the previous line, but less than the
+      code they contain, introduces visual clutter that harms
+      readability.
+
+      <p>
+      5.3.   <b>Statements within a
+      block are indented four spaces</b>.
+
+      <p>
+      5.4.   <b>Use spaces, not
+      tabs, for indentation.</b> If everyone always used tabs, it would
+      probably be OK, but since they don't we end up with files full of
+      mixed spaces and tabs. Variable tab width causes alignment problems, so
+      they are banned from source code.
+
+      <p>
+      5.5.   <b>Use a separate line
+      for dependent clauses of control structures</b> like 
+      if, 
+      for, and 
+      while statements<b>.</b> This helps readability by separating the
+      code into digestible pieces. More importantly it aids debugging by
+      allowing breakpoints to be set on the dependent clause.
+
+      <p>
+      5.6.   <b>Multi-line
+      dependent clauses must be blocks</b>, even if they are simple statements.
+      This helps to clarify structure.
+
+      <p>
+      5.7.   <b>If the
+      `if' clause is a block, the matching `else'
+      clause must also be a block,</b> and vice-versa. Balance between the
+      clauses helps the eye to pick out their association.
+
+      <p>
+      5.8.   <b>Second and subsequent lines of a statement are indented</b> at
+      least two spaces.  The function-call operator "<tt>()</tt>" does not
+      introduce a subexpression, so should not be grouped and indented like
+      parentheses that do. Terms within an expression may be indented according
+      to expression structure.
+
+      <h3><a name=
+      "AEN342">Examples:</a></h3>
+
+      <table border="0" cellpadding="0" width="100%" bgcolor="#e0e0e0">
+        <tr>
+          <td>
+<pre>
+inline void 
+action::set_timeout_time()
+{
+   this-&gt;timeo_time = Boottime::now().add_seconds(
+     this-&gt;timeo == 0 ? 10000000 : this-&gt;timeo);
+}
+
+void f()
+{ 
+    if (x &lt; 0)          // no braces required
+        do_something();    // a breakpoint can be set here
+
+    while (x &gt; 0)
+    {                      // these braces are required
+        if (checklist[x])  // because this is a multi-
+            ++total;       // line statement.
+    }
+
+    if (x &lt; 0)
+    {                    // these braces are required
+        x = 0;           // because the else clause
+    }                    // needs braces.
+    else
+    {
+        for (y = 0; y &lt; x; ++y)
+            do_something();
+
+       do_some_other_thing();
+    }
+}
+</pre>
+      </table>
+
+      <h2><a name="decl_initialization">6. Declarations</a> and initialization</h2>
+
+      <p>6.1.   <b>Only one name</b> may be declared in a definition
+      statement.
+
+      <p>
+      6.2.   <a href= "#place_ptr" title="e.g. char* p;"><b>Place <tt>*</tt> and
+      <tt>&amp;</tt> with the type name</b></a>, not the object name. This
+      guideline and the previous one are corrolaries: we eschew the compact but
+      unclear style inherited from `C' which makes it neccessary to
+      bind type qualifiers to the name they are qualifying.
+
+      <p>
+      6.3.   <a href= "#initialize_locals" title="e.g., int x=1;"><b>Initialize
+      local variables</b></a> whenever a meaningful value is available. This
+      prevents uninitialized variables from being used, and is enables the
+      following guideline to be fully realized.
+
+      <p>
+      6.4.   <b>Define local
+      variables as late as possible</b>, when they can be meaningfully
+      initialized and used immediately. Doing otherwise forces the reader more
+      to consider variables not yet relevant to code at hand, and often costs
+      efficiency since we pay for both construction and initialization.
+
+      <p>
+      6.5.   <a href= "#dont_reuse_variables"><b>Do not re-use a
+      variable</b></a> for different purposes. Re-using local variables does not
+      save on resources; the compiler knows when a variable is no longer
+      used. Re-using a variable can confuse readers, and sometimes also inhibits
+      optimization by the compiler. Reusing variable <i>names</i>, e.g. loop
+      control variables which are limited to different scopes, is OK.
+
+      <p>
+      6.6.   <b>Use <tt>const</tt> wherever possible.</b> Code is clearer when
+      values do not change. Declaring a variable <tt>const</tt> allows a
+      programmer to brace herself against the compiler to check that her
+      intention is fulfilled. This guideline works synergistically with the
+      previous one, and is particularly powerful when used on parameters <a
+      href="#const_in_function_definition" title= "example of const function
+      parameters">in function definitions</a>.  Declaring a value-parameter
+      <tt>const</tt> has no effect in a function declaration and is meaningless
+      to the caller, so leave const off here -- use it at the point of
+      function definition instead.
+
+      <p>6.7. <b><a href= "#const_placement">Place <tt>const</tt> after the base
+      type it modifies</a>.</b> This simple rule makes it easier to
+      write type declarations correctly and will make your declarations
+      consistent with compiler-generated type descriptions in error messages.
+
+      <h3><a name=
+      "AEN93">Examples:</a></h3>
+
+      <table border="0" cellpadding="0" width="100%" bgcolor="#e0e0e0">
+        <tr>
+          <td>
+<pre>
+ 
+<a name=
+"place_ptr">char*</a> p = "flop";
+char&amp; c = *p;
+char const* extract(std::pair&lt;char*,int&gt;&amp; p);
+
+  <b>-<i>not-</i></b>
+
+char *p = "flop"<u>,</u> &amp;c = *p;
+char const *extract(std::pair&lt;char*,int&gt;&amp;p);
+</pre>
+<hr> 
+<pre>
+void f()
+{
+    ...
+ <a name="initialize_locals">   std::size_t n = g();  // delayed declaration</a>
+    std::vector&lt;int&gt; counters(n);
+    list&lt;int&gt; shadow_masks(x.begin(), x.end());
+    ...
+
+   <b>-<i>not-</i></b>
+
+void f()
+{
+    int n;
+    list&lt;int&gt; shadow_masks;
+    ...
+    n = g();  // delayed initialization
+    std::vector&lt;int&gt; counters(n);
+    shadow_masks.insert(x.begin(), x.end());
+</pre>
+<hr>
+<pre>
+<a name=
+"dont_reuse_variables">int</a> const score_from_step_1 = step_1_score();
+int const score_from_step_2 = step_2_score();
+int const best_score = std::max(score_from_step_1, score_from_step_2);
+ 
+  <b>-<i>not-</i></b>
+
+int best_score = step_1_score(); // not really best, neccessarily
+int score2 = step_2_score();
+if (best_score &lt; score2)         // now we know what's best
+    best_score = score2;
+
+</pre><hr><pre><a name=
+"const_placement">int const max_header_lines = 120;   // constant integer</a>
+char* const buffer = &amp;s[0];         // constant pointer to mutable char
+char const* log(const char* s);     // mutable pointer to constant char
+std::string const&amp; lookup();        // reference to constant string
+</pre>
+<hr>
+<pre>
+<a name="const_in_function_definition">double f(double x, double y);   // declaration</a>
+   ...
+double f(double const x, double const y)   // definition
+{
+    // x and y don't change in the function body, so
+    // we know the original values are always accessible
+}
+</pre>
+      </table>
+       
+
+      <h3><a name="AEN200">Discussion:</a></h3>
+
+      <h2><a name="documentation">7. Comments and documentation</a></h2>
+
+      <p>
+      7.1.   <b>Use ``<tt>//</tt>''</b> to delimit comments in
+      lieu of  ``<tt>/*</tt>...<tt>*/</tt>''
+
+      <p>
+      7.2.   <b>Long comments</b>
+      begin on a separate line from active code. Comments of more than one line
+      are separated from other code by a blank line above. Comments refer to
+      code below them.
+
+      <p>
+      7.3.   <b>All function interfaces must be commented</b> (except for copy
+      constructors, operator overloads such as copy-assignment and dereference,
+      and destructors). The comment describes precisely what the function
+      requires, what its effects are (especially including side-effects), and
+      gives notice if the function provides anything other than the <i>strong</i>
+      exception-safety guarantee. <a name= "accuracy_is_important"><b>Accuracy
+      is more important than brevity</b></a><a href="#strive_for_brevity" title=
+      "...but strive for brevity especially within class declarations.">*</a>.
+
+      <p>
+      7.4.   <b>Comment function interfaces in just one place.</b> It can be
+      difficult enough just to keep comments synchronized with code. Just as not
+      duplicating code reduces the risk that some code will grow stale,
+      commenting a function in one place only reduces the risk of comments not
+      being maintained together. Whether a function interface comment must
+      appear at the point of declaration or of definition is covered below.
+
+      <p>
+      7.5.   <b>Comment the <i>declarations</i> of all public and protected member
+      functions</b> other than copy constructors, copy-assignment operators,
+      and destructors when they have well-understood idiomatic meanings.
+
+      <p>
+      7.6.   <b>Comment <i>every</i> virtual function only at its least-derived
+      point of declaration.</b> This applies even if the function is
+      private. The comment describes how and when it is called, why you would
+      want to override it, and, for non-pure functions, the effects of the
+      default implementation.
+
+      <p>
+      7.7.   <b>Declarations of free functions that are part of a public
+      interface</b> should be commented.
+
+      <p>
+      7.8.   <b>All other functions</b> (private non-virtual functions,
+      functions in unnamed namespaces) should be commented where they are
+      implemented. In general, try to keep the description of implementation
+      details out of header files.
+
+      <p>
+      <a name="strive_for_brevity">7.9.   <b>Strive for brevity</b></a>
+      <b>inside of class declarations.</b> Commenting member functions well is
+      difficult. Try to avoid obscuring the structure and interface of the class
+      with long comments. Sometimes this means you spend more time editing the
+      comment than writing the function<a href= "#accuracy_is_important" title=
+      "Accuracy is more important than brevity.">*</a>.
+
+      <p>
+      7.10.        <b>Comments within code</b> should answer the question
+      ``why'', not ``what''. Good comments do not replicate
+      information already clearly visible in code, but call attention to
+      subtleties and fragilities. Obvious code is harmed by commenting, but be
+      aware that what is obvious to the writer is often obscure to the reader. A
+      large comment block organized as paragraphs is more useful than cryptic
+      one-line comments distributed through code, and less distracting.
+
+      <p>
+      7.11.        <b>Use correct English sentences</b>, with proper spelling,
+      capitalization and punctuation.
+
+      <p>
+      7.12.        <b>Use standard C++ terminology</b> when writing about C++
+      code. Write <i>member function</i> or <i>virtual
+      function</i> instead of <i>method</i>. Write <i>class
+      template</i> instead of <i>template class</i> and <i>data
+      member</i> instead of <i>attribute</i> or <i>instance
+      variable</i>.
+
+      <p>
+      7.13.        <b>Write names as they appear in code.</b> Function and
+      variable names are lower-case even at the beginning of a sentence Names of
+      classes are capitalized, wherever they appear. Function names have
+      ``<tt>()</tt>''appended.
+
+      <p>
+      7.14.        <b>Class
+      invariants</b> that are visible through public or protected interfaces
+      should be documented before the class declaration. Invariants specific to
+      the implementation should be documented before most of the class
+      implementation.
+
+      <p>
+      7.15.        <b>Comment out code using ``</b>
+      <tt>#if&nbsp;0</tt>...<tt>#endif</tt>'', or ``<tt>//</tt>'', not
+      ``<tt>/*</tt>...<tt>*/</tt>'' comment notation.
+
+      <h3><a name="AEN222">Discussion:</a></h3>
+
+      <p>The problem with <tt>/*</tt>...<tt>*/</tt> is that it doesn't nest
+      properly.  People sometimes try to comment out a long section by enclosing
+      it in <tt>/*</tt>...<tt>*/</tt>, but if it already contains
+      <tt>/*</tt>...<tt>*/</tt> somewhere, then the first <tt>*/</tt> ends the
+      comment. This is especially dangerous if the section is long enough that
+      you can't see the inner <tt>/*</tt>...<tt>*/</tt>: your syntax highlighter
+      won't show you the problem. It is often suggested that
+      <tt>/*</tt>...<tt>*/</tt> should be allowed for <i>text</i> comments, but
+      you can embed code examples in text, which causes the same nesting
+      problem.
+
+
+
+      <p>A short ``<tt>()</tt>'' makes the difference between having
+      to say ``calls the <tt>insert</tt> function'' and ``calls
+      <tt>insert()</tt>''.
+
+      <p>Short comments on class member functions help to document a
+      class' interface without obscuring its overall structure.
+
+      <p>A virtual function and its overriders share a common interface, and
+      are meant to be able to be used in a common way through a pointer or
+      reference to the base class in which it is first declared. Thus,
+      commentary about how to use this interface goes with the first
+      (least-derived) declaration.
+
+      <h2><a name="class_organization">8. Class organization</a></h2>
+
+      <p>
+      8.1.   <b>Names defined in
+      classes appear in the following order:</b>
+
+      <ul>
+      <li> Public type forward-declarations &amp; typedefs
+
+      <li>
+      Public constructors &amp; destructor
+
+      <li>
+      Public member functions
+
+      <hr>
+
+      <li>Protected type forward-declarations &amp; typedefs
+
+      <li>
+      Protected member functions
+
+      <hr>
+
+      <li>
+      Private type forward-declarations
+
+      <li>Private member functions
+
+      <li>
+      Private data members
+      </ul>
+
+      <p>Class definitions are read most frequently
+      by users, who are most interested in public members, particularly
+      constructors. Data members are of interest only to maintainers, so they
+      appear last.
+
+      <p>
+      8.2.   <b>Make all data
+      members private.</b> Public data members are allowed only in C-like
+      structs, where the only member functions permitted are constructors.
+      Protected data members are forbidden.
+
+      <p>
+      8.3.   <b>Friend access</b>
+      should only proceed through member functions. When special member
+      functions are provided only for the use of a friend, they should be
+      private, declared close to the friend declaration.
+
+      <p>
+      8.4.   <b>Function definitions in the class body are forbidden</b>, except
+      for <i>empty</i> virtual functions (which serve to document the default
+      behavior for hook functions) and the bodies of
+      <tt>operator()</tt> in <a href="#functor">simple function
+      objects</a>. Virtual destructor bodies should usually not be inlined, so use
+      caution when defining these inline.
+
+      <p>
+      8.5.   <b>Nested-class
+      definitions</b> should be defined outside the nesting class body,
+      wherever possible. If the nested class is an implementation detail, move
+      its definition into the appropriate source file.
+
+      <p>
+      8.6.   <b>Re-use the keywords ``<tt>public</tt>'', ``<tt>private</tt>'',
+      and ``<tt>protected</tt>''</b> liberally to separate groups of member
+      types, member functions, and data members.
+
+      <p>
+      8.7.   <b>Do not repeat the
+      `virtual' keyword</b> where derived classes declare overrides
+      for base class virtual functions. Writing `virtual' on the
+      declaration of a virtual function override is neither neccessary nor
+      sufficient to document where it comes from and which code it interacts
+      with. Leaving the keyword off in derived classes reduces clutter and
+      thwarts the temptation to treat it as sufficient documentation.
+
+      <p>
+      8.8.   <b>Do not write the
+      `<tt>inline</tt>' keyword on member function declarations</b>. It is
+      sufficient to use `inline' on the function definition.
+      Writing `<tt>inline</tt>' on the declaration of a member function
+      documents an implementation detail in an inappropriate place. A class
+      declaration should clearly document interface. Implementation details
+      should be documented where they are implemented.
+
+      <h3><a name="AEN263">Example:</a></h3>
+
+      <table border="0" cellpadding="0" bgcolor="#e0e0e0">
+        <tr>
+          <td width="853">
+<pre>
+class outer
+{
+ public:
+    // ...
+ private:
+    struct compare; // nested class declaration
+    int m_count;
+};
+ 
+// nested class definition outside enclosing class
+
+<a name="functor">// a simple function object may define operator() in the class.</a>
+struct outer::compare
+{
+    bool operator()(outer const&amp; x, outer const &amp; y) const
+    {
+        x.m_count &lt; y.m_count;
+    }
+};
+</pre><hr><pre>
+// foo.hpp
+class foo
+{
+ public:
+    // base_name specifies the common prefix for results of
+    // create_unique_name() below.
+    foo(std::string const&amp; base_name);
+
+    foo(foo const&amp;); no comments are needed for standard functions
+    foo&amp; operator=(foo const&amp;);
+    ~foo();
+
+    // Used to apply foo to a collection using std::for_each()
+    void operator()(int) const;
+
+ public: // interface which subclasses must implement
+    // Creates a copy of the concrete instance on the heap.
+    virtual std::auto_ptr&lt;foo&gt; clone() const = 0;
+
+ protected: // types
+    typedef std::list&lt;std::string&gt; name_history;
+ 
+ protected: // helper functions
+    // Creates a new name for use as blah. A different name is created
+    // each time this function is called.
+    std::string create_unique_name() const;
+
+    // Returns the last 1000 names retuned by create_unique_name()
+    name_history const&amp; history() const;
+
+ private: // hook functions
+    // override bar_hook() to do blah, blah. It is called when blah, blah
+    virtual void bar_hook() {}
+
+    // override froom to do blah, blah. It is called when blah, blah.
+    // The default implementation does blah.
+    virtual void froom();
+
+    // Schnix is expected to blah and is called when blah.
+    virtual void schnix() = 0;
+
+ private: // helper functions
+    int invocations() const;        <i>comments for these live with their implementations</i>
+    void g(int);           
+ 
+ private: // data members
+    long m_broom_count;
+    // used only for debugging, thus not part of foo's logical const-ness.
+    mutable int m_invocations;
+};
+ 
+//
+// inlines
+//
+ 
+// Return the number of times the function call operator
+// has been invoked on this object.
+inline int foo::invocations() const
+{
+    return m_invocations;
+}
+</pre><hr><pre>
+// bar.hpp
+...
+class foobar : public foo, public foobaz
+{
+ public: // constructors, other public interface, etc.
+    ...
+ 
+ public: // interface required by base class foo
+    std::auto_ptr&lt;foo&gt; clone() const;  <i>no comment here -- that's in foo.hpp</i>
+    void baz();
+ 
+ private: // foo virtual function implementations
+    void bar_hook();                   <i>no comment here -- that's in foo.hpp</i>
+    void schnix();
+ 
+ private: // helper functions
+    ...
+ private: // data members
+    ...
+};
+</pre>
+      </table>
+
+      <h3><a name="AEN266">Discussion:</a></h3>
+
+      <p>Reading cluttered class bodies is hard enough without big function and
+      nested-class definitions mixed in. Substantial blocks of "other" material
+      can and should be forward-declared in the class body, and defined
+      separately whenever possible. If your class' public and protected
+      interface is still hard to take in at a glance, consider refactoring it
+      into smaller parts.
+
+      <p>Inlines are the third most-misused C++ feature (after inheritance and
+      overloading), used far more often than any practical criterion could
+      justify, just because it is more covenient to write them in place.
+      Anything that encourages their use beyond strict engineering merit is
+      detrimental.
+
+      <p>Function objects are often just wrappers over a simple function or
+      function template. Separating interface from implementation in that case
+      often makes things harder to read.
+
+      <h2><a name="inheritance">9. Inheritance</a> and run-time polymorphism</h2>
+
+      <p>
+      9.1. <b>Avoid inheritance</b> in your public interface, unless you really
+      mean it. Public inheritance establishes an <i>is-a</i> relationship, where
+      the derived class can always be converted to, or used in place of, the
+      base class. Use containment or delegation rather than private inheritance
+      to establish an <i>is-implemented-in-terms-of</i> relationship.
+
+      <p>
+      9.2. <b>Base classes should be abstract.</b> You should avoid creating
+      concrete non-leaf classes for two reasons: first, the implicit is-a
+      relationship is usually not desired, and tends to miscommunicate your
+      intent. Second, instances of the derived class can be converted to actual
+      instances of concrete base classes, which can result in undesirable
+      ``slicing''. A concrete base can be factored into an abstract
+      interface and a concrete non-base class, which helps to document
+      commonality. If you must write concrete base classes, the slicing can be
+      prevented by making them noncopyable.
+
+      <p>
+      9.3.   <b>Override a virtual function at most once</b> in any path up the
+      inheritance hierarchy. No derived class should implement a virtual
+      function that is also implemented in one of its ancestors, except in the
+      class where that function is first declared. This helps to clarify designs
+      by keeping the model simple: the function to be called is either the
+      default implementation, or it is the (single) overrider.
+
+      <p>
+      9.4.   <b>Implementors of derived classes are <i>clients</i> of the base
+      class.</b> Anticipate the needs of derived class implementors (even if
+      they're you). Provide a non-empty, non-pure virtual function only
+      when you expect a subclass to completely replace the function's
+      implementation. Do not force derived class implementors to understand
+      whether to do their work before, after, around, or instead of the base
+      class implementation. Instead, provide hook functions with empty
+      implementations for subclasses to add behavior.
+
+      <p>
+      9.5. <b>Avoid calling a base class' version of a virtual function
+      explicitly</b>, especially from the derived class' override. The need to
+      do this is usually an indication of careless design in the base class.
+      Instead, refactor the base class implementation as detailed above.
+
+      <p>
+      9.6. <b>Non-pure virtual functions should be private.</b> If necessary,
+      provide a separate public or protected interface which calls the virtual
+      function. This allows the base class implementation to add extra pre- or
+      post-processing steps without worrying about the derived class
+      implementations. Pure virtual functions do double-duty as a way of
+      requiring a particular interface in derived classes, so they may be
+      public.
+
+      <p>
+      9.7. <b>Make virtual functions pure virtual in a base class</b> unless a
+      default behavior is desired.
+
+      <h3><a name="AEN284">Discussion:</a></h3>
+
+      <p>Every class provides two interfaces to the outside world. The public
+      interface is obvious, but the interface for derived classes includes all
+      protected members (accessiblity) and all virtual functions, regardless of
+      access privilege (replacement of functionality). Making virtual functions
+      private wherever possible helps to keep down the already substantial
+      amount of thinking needed to verify correctness, by ensuring the context
+      of a call of a particular base implementation. One never needs to ask
+      ``what assumptions are being made about the program's state
+      which might be violated in a derived class?'', because the base class
+      implementation is only called from one place.
+
+      <p>Experience has shown that use of protected data leads to severe
+      maintenance problems, as implementations at different levels of a class
+      hierarchy make different assumptions about how protected data may be used.
+
+      <p>Inheritance is the single most overused language feature. It is
+      over-promoted in textbooks by equating its use with "object-oriented"
+      programming, and that with "good" programming. Object-oriented programming
+      is one style among many supported by C++.
+
+      <p>Occasional use of public inheritance as a <i>private implementation
+      detail</i> of a class is OK when it can be used to avoid writing lots of
+      forwarding functions. In this case, however, the complete public interface
+      of the derived class must be described somewhere in documentation, even
+      though part of it is supplied by a base class.
+
+      <h2><a name="component_docs">10. Component documentation</a></h2>
+
+      <p>
+      10.1.  <b>Precede each component with a comment block describing its
+      interface</b>. A component is a class or small set of closely related
+      classes and functions, usually in a single header file.
+
+      <p>
+      10.2.  <b>Component interface comments</b> should say what the component
+      is for and how it should be used. If the component supports specialized
+      idioms (e.g. the way std::auto_ptr suppports transfer of ownership), this
+      is the place to give examples. If the component being documented is
+      unremarkable, brevity is fine.
+
+      <p>
+      10.3. <b>Document the interface for derived class implementors
+      separately</b> from the public interface. Use a separate section in the
+      comment block, if extra commentary is needed . The latter defines what is
+      required of derived classes that implement the interface, and what the
+      base class definition does (if anything).
+
+      <p>
+      10.4. <b>Template documentation must list the specific operations
+      applied</b> by the template to actual-argument types, as do the Concepts
+      (e.g.  <i>forward iterator</i>, <i>assignable</i>) described by the C++
+      standard. Documentation may simply refer to an already named Concept,
+      either in the standard or elsewhere. It is a grave error for a template to
+      exploit an operation not listed, because the compiler may not report the
+      misuse.
+
+      <p>
+      10.5. <b>Implementation notes</b> appear separately from public interface
+      and derivation interface documentation, preferably not in the header
+      file. These include a concise and complete list of <b>class
+      invariants</b>, preferably in a form that can be verified by
+      assertions. <a name="class_invariant">A class invariant is a condition
+      guaranteed on entry to any public or protected member function, and
+      restored before returning to callers of those functions</a>.
+
+      <h3><a name="AEN317">Examples:</a></h3>
+
+      <table border="0" cellpadding="0" width="100%" bgcolor="#e0e0e0">
+        <tr>
+          <td>
+<pre>
+// Invariants:
+//   1. this-&gt;container is either 0 or points to a valid container
+//   2. if (this-&gt;container != 0) this-&gt;container-&gt;size() &gt; 0.
+</pre>
+      </table>
+
+      <p> 
+
+      <h2><a name="error_handling">11. Error handling and robustness</a></h2>
+
+      <p>
+      11.1. <b>Be conscious of and maintain your <a
+      href="#class_invariant">class invariants</a></b>.  Be sure that if an
+      error occurs your objects are in a "valid state". For example, a class
+      containing two arrays which are always supposed to be the same length must
+      maintain that condition even if it runs out of memory when trying to grow
+      one of the arrays. Sometimes this involves a ``rollback action''.
+
+      <p>
+      11.2. <b>Encapsulate the ownership of every resource</b> with an
+      appropriate resource-owning object. This is essential to exception-safety
+      and helps clarify code by reducing the number of try/catch
+      blocks. Existing classes provided by the standard (<tt>std::auto_ptr</tt>)
+      and the boost library cover most of what you might want already.
+
+      <p>
+      11.3. <b>Document transfer-of-ownership.</b> Using <tt>std::auto_ptr</tt>
+      is the best way; it simplifies function naming and enforces correctness in
+      code. When std::auto_ptr is inappropriate, name prefixes like
+      <tt>create_</tt> and <tt>adopt_</tt> can help.
+
+      <p>
+      11.4. <b>Use <tt>assert()</tt> (or a suitable alternative) liberally to
+      detect unsatisfied preconditions and programming errors</b>. A
+      precondition is a condition which must be true before a function can be
+      called. Each time you write a function, ask yourself ``what am I assuming
+      about the parameters to this function?'', and <tt>assert()</tt> each of
+      your assumptions. For example, if you've implemented an array class with a
+      function <tt>get_nth(int&nbsp;index)</tt>, you'll want to assert that
+      index is non-negative and less than the length of the array. In these
+      cases it may also sometimes be appropriate to throw an exception.
+
+      <p>
+      11.5. <b>Use exceptions to report error conditions which can't be
+      reasonably or efficiently checked by the caller.</b> Usually these are
+      resource allocation failures such as out-of-memory or file-unavailable
+      conditions.
+
+      <p>
+      11.6.        <b>When a function throws an exception it should have no
+      effects</b>, if possible.  In other words, the program state should be
+      returned to a condition indistinguishable from what it was before the
+      function was called. This is known as the <i>strong guarantee</i>.
+      Functions giving the strong guarantee do not need to be specially
+      commented to take note of that fact.
+
+      <p>
+      11.7.  <b>Any functions which do not give the <i>strong guarantee</i> must
+      still give the <i>basic guarantee</i></b> that invariants are preserved
+      and no resources are leaked. Functions giving the basic
+      guarantee should be prominently commented to take note of that fact. The
+      words ``basic guarantee only'' are sufficient.
+
+      <p>
+      11.8.        <b>Provide the <i>no-throw</i> (failsafe) guarantee on
+      functions used for recovery.</b> Try to anticipate which functionality
+      might be needed for rollback of complex operations, and provide an
+      additional, documented guarantee that no exceptions will be thrown. 
+
+      <p>
+      11.9.        <b>Make exceptions descendants of std::exception.</b> This
+      simplifies error reporting by providing a common interface through which
+      information about the error can be retrieved. It is fine to extend the
+      interface of std::exception in your derived class if additional info, such
+      as OS error codes, is available.
+
+      <p>
+      11.10. <b>Do not throw types whose copy constructor may throw an
+      exception.</b> A thrown object is immediately copied into a special memory
+      area by the implementation. If an exception is thrown at that point,
+      <tt>terminate()</tt> will be called. That's probably not what you meant!
+      <i>Resist the tempation to include a std::string member in your exception
+      object, since its copy constructor may throw!</i> A statically-sized array
+      of characters or a <tt>boost::shared_ptr&lt;std::string&gt;</tt> may be
+      used instead. Note that constructing a type with a throwing constructor at
+      the point of error detection may cause the error to be mis-reported.
+
+      <p>
+      11.11.    <b>Do not allow exceptions to escape from destructors.</b> This
+      results in immediate termination if the exception is thrown during stack
+      unwinding.
+
+      <p>
+      11.12.    <b>Beware <tt>std::uncaught_exception()</tt>.</b> It doesn't
+      tell you whether exception recovery is in process, so you can't use it to
+      determine if throwing an exception is actually safe.
+
+      <p>
+      11.13.    <b>Do not use exception specifications</b>,
+      e.g. <tt>void f() <u>throw(std::exception)</u></tt>. Exception
+      specifications provide no compile-time safety, and instead terminate your
+      program at runtime when violated. If you wish to document what a function
+      can throw, use a comment instead. You may use <i>empty</i>
+      exception-specifications (i.e. <tt>throw()</tt>) on functions which do not
+      throw exceptions; some compilers will make optimizations based on this
+      information. In this case the exception-specification should be generated
+      by a standard macro (e.g. <tt>ALTRA_NO_THROW</tt>) which can be made empty
+      for compilers which ``pessimize'' code with
+      exception-specifications.
+
+      <p>
+      11.14.    <b>Understand the
+      real consequences of 
+      new(nothrow).</b> While it guarantees that no exception will occur
+      due to memory allocation, the constructor may still yield an exception.
+      In general, you can't use this construct to suppress exceptions in
+      dynamic allocation.
+
+      <p>
+      11.15.    <b>Do not expect
+      throwing an exception to be efficient.</b> It is inappropriate to use
+      exceptions to report errors which will happen very often in
+      efficiency-critical sections of code. Searching a string for a character
+      by throwing an exception each time the character is not found is an
+      extreme example.
+
+      <p>
+      11.16.    <b>Step through each
+      line of code you write or change in a debugger</b>. This includes
+      error-handling code. It is OK to artificially stimulate error conditions
+      for debugging purposes. See ``Writing Solid Code.''
+
+      <h3><a name="AEN320">Discussion:</a></h3>
+
+      <p>Invariants provide maximally concise documentation of the usage
+      pattern of data members in the various member functions, so that not all
+      members need be studied in detail before modifying one of them.
+
+      <p>Use of explicit Class Invariants is among the most powerful tools
+      known for improving C++ code quality. Assertions which express invariants
+      make testing much more likely to detect errors. Difficulty expressing
+      concise invariants may indicate design problems, so minimizing one's list
+      of invariants is part of design optimization. The earlier invariants are
+      codified, the more useful they are.
+
+      <p>Invariants are important for exception safety, as they provide a
+      checklist of conditions which must be restored to enable safe re-entry
+      after an exception.
+
+      <p>Throwing an exception when you can't meet a postcondition
+      (fulfill a request) is actually a service to your client -- the
+      alternative is usually the imposition of additional preconditions on
+      client code.
+
+      <p>
+      std::uncaught_exception returns false inside of catch blocks, so
+      if a function tries to use this to determine if an exception should be
+      thrown, and this function is called from a catch block, the original
+      exception caught will be discarded and replaced by the new one. Later
+      actions in the catch block will be skipped.
+
+      <p>A few compilers can optimize exception tables away when a cascade of
+      function calls have nondecreasingly strict exception-specifications. With
+      these compilers, it might be a good bet to use empty
+      exception-specifications on functions that don't throw, like
+      destructors -- these are easy enough to keep track of. Of course,
+      use of this optimization is highly non-portable, and will often have the
+      opposite effect on other compilers, since they must generate an implicit
+      try/catch block to implement the run-time termination behavior when an
+      exception specification is violated.
+
+      <h2><a name="namespaces">12. Namespaces</a></h2>
+
+      <p>
+      12.1.        <b>Put all your
+      code in a namespace.</b> This helps prevent collisions with our own code
+      and with 3<sup>rd</sup>-party libraries. It also gives us the flexibility
+      to re-use simple, logical names in different contexts.
+
+      <p>
+      12.2.        <b>Each module should be in a separate sub-namespace.</b> To
+      reduce qualification across modules, names can be imported into the
+      project namespace with <i>using-declarations<a
+      href="#prefer_qualification" title= "...but prefer explicit
+      qualification">*</a></i>. When  names live in separate namespaces,
+      ambiguity can always be resolved with explicit qualification. When they
+      don't, you've violated the language's
+      <i>one-definition-rule.</i>
+
+      <p>
+      <a name="prefer_qualification">12.3.        <b>Prefer explicit
+      qualification</b></a> when referencing a name in another namespace
+      (particularly std::). Explicit qualification clearly indicates what
+      you're referring to.
+
+      <p>
+      12.4.        <b>Avoid using-directives</b> (e.g. <tt>using namespace
+      std;</tt>). A using-directive brings all of the names from a namespace
+      into another namespace (or the global namespace). This can easily cause
+      unexpected effects and ambiguities, especially when the organization of
+      header files changes. Finally, template name lookup doesn't proceed
+      through using-directives the way you might expect it to. Just say no.
+
+      <p>
+      12.5.        <b>Avoid the standard 'C' headers.</b> The standard 'C'
+      headers (e.g. <tt>&lt;stdio.h&gt;</tt>) put names into the global
+      namespace. In fact on some implementations, they add a using-directive
+      which imports all names from <tt>std</tt> into the global namespace. Every
+      standard 'C' header has a C++ counterpart which puts its names into
+      namespace <tt>std</tt>. Simply remove the '.h' suffix and add a 'c'
+      prefix. So <tt>&lt;stdio.h&gt;</tt> becomes <tt>&lt;cstdio&gt;</tt> and
+      <tt>&lt;stdlib.h&gt;</tt> becomes <tt>&lt;cstdlib&gt;</tt>. Of course,
+      since <tt>assert()</tt> is a macro, when you
+      <tt>#include&nbsp;&lt;cassert&gt;</tt>, it still doesn't take any
+      <tt>std::</tt> qualification.
+
+      <p>
+      12.6. <b>Use the unnamed namespace</b> to define names local to a
+      translation unit. Sometimes it is useful to define names (especially
+      type names) in a source file, with the expectation that they won't collide
+      with definitions in other source files. An unnamed namespace may be opened
+      within any other namespace (including the global one).
+
+      <h3><a name="AEN422">Examples:</a></h3>
+
+      <table border="0" cellpadding="0" width="100%" bgcolor="#e0e0e0">
+        <tr>
+          <td>
+<pre>
+namespace {
+  struct my_predicate
+  {
+      bool operator()(char) const;
+  };
+}
+std::pair&lt;std::string,value*&gt; mapping;
+
+std::copy(s.data(),
+   std::find_if(s.data(), s.data() + s.size(), compare_char()),
+   buffer);
+</pre>
+      </table>
+
+      <h2><a name="overloading">13. Overloading</a></h2>
+
+      <p>
+      13.1. <b>Overloaded functions should express the same semantics</b>, or
+      variants thereof.
+
+      <p>
+      13.2. <b>Operator overloading should reflect recognizable idioms.</b> The
+      use of  ``<tt>+</tt>'' should indicate a form of addition,
+      etc. It is rare that operators can be effectively used to express a new
+      idiom, the way <tt>&lt;&lt;</tt> for streaming was introduced (some
+      legitimately dispute that usage).
+
+      <p>
+      13.3.        <b>Default argument values should not run a
+      constructor</b>. Overload instead.  Visible action is better than
+      invisible action. Default arguments that "do work" invisibly make it
+      harder to understand the function and its cost, and make debugging
+      harder. Default argument evaluation is usually done at the call site,
+      increasing code size.
+
+      <p>
+      13.4.        <b>Avoid overloading virtual functions</b>. Because virtual
+      functions are an implementation method, rather than an interface
+      technique, overloading is usually not appropriate for virtuals.
+
+      <p>
+      13.5.        <b>Use <a href= "#overload_for_const_correctness" title=
+      "example of overloading for const-correctness">overloading for
+      const-correctness</a>.</b> When a function returns a non-const reference
+      or iterator into one of its arguments (or <tt>*this</tt>), there should
+      usually be a companion function returning the corresponding const
+      reference or iterator.
+
+      <h3><a name="AEN443">Examples:</a></h3>
+
+      <table border="0" cellpadding="0" width="100%" bgcolor="#e0e0e0">
+        <tr>
+          <td>
+<pre>
+<a name="overload_for_const_correctness">// Free functions</a>
+char* next_word(char* s);
+char* const next_word(char* const s);
+ 
+// in a class
+iterator begin();
+const_iterator begin() const;
+ 
+bool is_locked() const;  // OK
+void is_locked(bool);  // Evil
+void set_lock(bool);  // OK
+ 
+// wrong:
+void format_disk(std::string const&amp; volume_name = "");
+ 
+// right:
+void format_disk(std::string const&amp; volume_name);
+void format_disk();
+</pre>
+      </table>
+
+      <h2><a name="type_conversion">14. Type conversions</a></h2>
+
+      <p>
+      14.1. <b>Eschew implicit conversions.</b> Avoid constructs that implicitly
+      convert one type to another.
+
+      <p>
+      14.2. <b>Use the <tt>explicit</tt> keyword</b> on constructors (other than
+      copy-constructors) that can be called with one argument. Remember that
+      this includes constructors where all arguments, or all but one argument
+      are defaulted.
+
+      <p>
+      14.3. <b>Do not define conversion operators</b>, particularly to numeric
+      types. Defining operator bool() is always a mistake. Write explicit
+      conversion functions instead.
+
+      <p>
+      14.4.        <b>Avoid type casts</b> with <i>extreme prejudice!</i> Every
+      cast in the language allows you to do something you shouldn't. Even if you
+      get the code right today, casts allow changes introduced during
+      maintenance to cover bugs. Changing something and letting the compiler
+      tell you what needs to be adjusted is a very powerful maintenance
+      technique. Too many casts reduce this strategy to a shot in the dark.
+
+      <p>
+      14.5. <b>Isolate type casts</b> where required. If you must use a cast, it
+      is better to isolate it in a wrapper than to proliferate it. For example,
+      a library might implement <tt>vector&lt;T*&gt;</tt> in terms of
+      <tt>vector&lt;void*&gt;</tt> to prevent code bloat, rather than have its
+      users cast pointers to/from <tt>void*</tt> and use a
+      <tt>vector&lt;void*&gt;</tt> directly.
+
+      <p>
+      14.6. <b>Know which casts are safer.</b> <tt>dynamic_cast&lt;&gt;</tt>,
+      where applicable, is safer than
+      <tt>static_cast&lt;&gt;</tt>. <tt>static_cast&lt;&gt;</tt> and
+      <tt>const_cast&lt;&gt;</tt> and <tt>reinterpret_cast&lt;&gt;</tt> are
+      generally safer than `C'-style casts.
+
+      <h3><a name="AEN460">Examples:</a></h3>
+
+      <table border="0" cellpadding="0" width="100%" bgcolor="#e0e0e0">
+        <tr>
+          <td>
+<pre>
+struct grunt
+{
+    explicit grunt(int); // prevent implicit conversion from int
+    explicit grunt(char const* = 0, int = 1);  // or char const*
+    grunt(grunt const&amp;); // copy constructor not explicit
+};
+
+class my_string
+{
+ public:
+    char* const c_string() const; // right
+    operator char const*() const; // wrong
+</pre>
+      </table>
+
+      <h3><a name="AEN463">Discussion:</a></h3>
+
+      <p>Visible action is better than invisible action.
+
+      <p>Implicit conversions are far more frequently a cause of invisible bugs
+      and troublesome ambiguities than they are a convenience for users.
+      Besides providing invisible conversion paths creating usually-unwanted
+      temporaries, conversions may make it harder to call the correct one of a
+      set of overloaded functions.
+
+      <p>One place where experience has shown implicit conversions to be
+      advantageous is in interfacing with older code. Implicit conversion can
+      allow a safer type to act as a drop-in replacement for another which
+      fills the same role. This should only be used as a transitional
+      technique, if at all. A correct long-term strategy would be to write a
+      wrapper for the old interface which uses the safer type in place of the
+      other.
+
+      <p>Because template function argument type deduction cannot take
+      advantage of conversions, otherwise-useful conversions often are not
+      usable in code that uses templates. In such a context explicit casts are
+      often the alternative.
+
+      <p>Explicit casts introduce risk because it is easy to use the wrong cast
+      accidentally, and the compiler won't help. Explicit conversion functions
+      don't suffer these problems.
+
+      <p>A conversion to operator bool() is also a conversion to int, char, and
+      double, since bool participates in promotion. If a type absolutely must be
+      used in a conditional context (this is rare; generally, such a type should
+      have no other purpose) it should instead convert to
+      <tt>void&nbsp;const*</tt>, which doesn't implicitly promote to other
+      types.
+
+      <h2><a name="misc">15. Miscellaneous</a></h2>
+
+      <p>
+      15.1. <b>Use the standard library.</b> If functionality is provided
+      in the C++ standard library, use that instead of reinventing it yourself
+      or using some other library.
+
+      <p>
+      15.2. <b>Don't use functions which accept variable numbers of
+      arguments</b> (e.g. the printf() family of functions). These functions are
+      not typesafe at compile-time <i>or</i> at runtime, and even if you get
+      them right are not resilient to changing types during program
+      maintenance. Better alternatives are families of overloaded functions and
+      operator overloading (e.g. <tt>operator&lt;&lt;()</tt>).
+
+      <p>
+      15.3.  <b>Avoid <tt>std::endl</tt></b> unless you really mean it.
+      <tt>std::endl</tt> is exactly like <tt>"\n"</tt> except that it flushes
+      the output buffer. This results in bigger code because it becomes a
+      separate function call, slower code because it subverts buffering. You
+      might want to use it when generating debug output, to be sure that output
+      is flushed before a hypothetical crash, but simply embedding <tt>"\n"</tt>
+      in an output string usually works better. Note that <tt>std::cerr</tt> is
+      unbuffered by default.
+
+      <p>
+      15.4. <b>Derive classes from <tt>boost::noncopyable</tt></b> if you
+      don't want to think about copy-by-value semantics. The compiler will
+      generate semantics for you if you don't do anything explicit, so
+      either consider the results or disallow copying.
+
+      <p>
+      15.5. <b>Beware reference data members.</b> A reference used as a data
+      member prevents the default assignment semantics from taking effect and
+      usually prevents any useful user-defined assignment operator, since a
+      reference can't be ``reseated''. Consider using a pointer
+      instead.
+
+      <div>
+        <hr size="2" width="100%" align="left" />
+      </div>
+
+
+      <a href="http://www.cantrip.org/coding-standard.html">Original document by
+      Nathan Myers on which this was based</a>.
+
+    <p>Revised 
+    <!--webbot bot="Timestamp" s-type="EDITED" s-format="%d %b %Y" startspan -->01 July 2001<!--webbot bot="Timestamp" endspan i-checksum="14885" -->
+
+
+    </html>
+
