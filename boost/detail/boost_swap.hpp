@@ -28,16 +28,20 @@ namespace detail {
 // Swaps using Koenig lookup but falls back to std::swap for primitive
 // types and on non-conforming compilers.
 //
-template <typename T>
-void boost_swap(T& lhs, T& rhs)
-{
-#	if !defined(__GNUC__)
-		using std::swap;
-#	else// defined(__GNUC__)
-		using namespace std;
-#	endif // __GNUC__ workaround
 
-	swap(lhs, rhs);
+#ifdef __GNUC__
+using std::swap;
+#endif // __GNUC_ workaround
+
+template <typename T>
+inline void boost_swap(T& lhs, T& rhs)
+{
+
+#ifndef __GNUC__
+    using std::swap;
+#endif // __GNUC__ workaround
+
+    swap(lhs, rhs);
 }
 
 } // namespace detail
