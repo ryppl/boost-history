@@ -55,7 +55,8 @@ arrow_from_type< T >::arrow_from_type( const T & v ): value( v )
 template< typename Prop >
 class scalar_property: public Prop
 {
-   scalar_property< Prop > & operator=( const scalar_property< Prop > & );
+   inline scalar_property< Prop > & operator=( const scalar_property< Prop > & );
+   inline scalar_property( const scalar_property< Prop > & );
    public:
       typedef scalar_property< Prop >         this_type;
       typedef Prop                            property_type;

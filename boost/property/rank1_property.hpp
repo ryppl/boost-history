@@ -17,7 +17,8 @@ namespace boost
 template< typename Prop >
 class rank1_property: public Prop
 {
-   rank1_property< Prop > & operator=( const rank1_property< Prop > & );
+   inline rank1_property< Prop > & operator=( const rank1_property< Prop > & );
+   inline rank1_property< Prop >( const rank1_property< Prop > & );
    public:
       typedef rank1_property< Prop >          this_type;
       typedef Prop                            property_type;
@@ -29,6 +30,7 @@ class rank1_property: public Prop
 
       class scalar: public inherited_property_type< Prop, scalar >
       {
+         friend class scalar_type;
          private:
             rank1_property< Prop > & r1;
             index_type               idx;
@@ -49,7 +51,26 @@ class rank1_property: public Prop
             {
             }
       };
-      typedef scalar_property< scalar > scalar_type;
+
+      /** workaround for the lack of a public constructor in scalar_property. */
+
+      class scalar_type: public scalar_property< scalar >
+      {
+         public:
+            value_type operator=( const value_type & value )
+            {
+               return scalar_property< scalar >::operator=( value );
+            }
+         public:
+            scalar_type( const scalar_type & s ):
+               scalar_property< scalar >( scalar( s.r1, s.idx ))
+            {
+            }
+            scalar_type( rank1_property< Prop > & r, index_type i ):
+               scalar_property< scalar >( scalar( r, i ))
+            {
+            }
+      };
    public:
       inline value_type get( index_type i ) const; /**< getter */
       inline value_type operator()( index_type i ) const; /**< getter */
@@ -102,14 +123,14 @@ template< typename Prop >
 const typename rank1_property< Prop >::scalar_type
 rank1_property< Prop >::operator[]( index_type i ) const
 {
-   return scalar_type( scalar( *this, i ));
+   return scalar_type( *this, i );
 }
 
 template< typename Prop >
 typename rank1_property< Prop >::scalar_type
 rank1_property< Prop >::operator[]( index_type i )
 {
-   return scalar_type( scalar( *this, i ));
+   return scalar_type( *this, i );
 }
 
 // constructors
