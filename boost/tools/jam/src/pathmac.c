@@ -153,106 +153,79 @@ file_flags(
 void
 file_build(
 	FILENAME *f,
-	char	*file,
+	string* file,
 	int	binding )
 {
-	char *ofile = file;
-	int dflag, rflag, act;
-	
-	if( DEBUG_SEARCH )
-	{
-	printf("build file: ");
-	if( f->f_root.len )
-		printf( "root = '%.*s' ", f->f_root.len, f->f_root.ptr );
-	if( f->f_dir.len )
-		printf( "dir = '%.*s' ", f->f_dir.len, f->f_dir.ptr );
-	if( f->f_base.len )
-		printf( "base = '%.*s' ", f->f_base.len, f->f_base.ptr );
-	}
-	
-	/* Start with the grist.  If the current grist isn't */
-	/* surrounded by <>'s, add them. */
+    int dflag, rflag, act;
 
-	if( f->f_grist.len )
-	{
-	    if( f->f_grist.ptr[0] != '<' ) *file++ = '<';
-	    memcpy( file, f->f_grist.ptr, f->f_grist.len );
-	    file += f->f_grist.len;
-	    if( file[-1] != '>' ) *file++ = '>';
-	}
+    file_build1( f, file );
 	
-	/* Combine root & directory, according to the grid. */
+    /* Combine root & directory, according to the grid. */
 	
-	dflag = file_flags( f->f_dir.ptr, f->f_dir.len );
-	rflag = file_flags( f->f_root.ptr, f->f_root.len );
+    dflag = file_flags( f->f_dir.ptr, f->f_dir.len );
+    rflag = file_flags( f->f_root.ptr, f->f_root.len );
 	
-	switch( act = grid[ rflag ][ dflag ] )
-	{
-	case G_DTDR:
-		/* :: of rel dir */
-		*file++ = DELIM;
-		/* fall through */
+    switch( act = grid[ rflag ][ dflag ] )
+    {
+    case G_DTDR:
+        {
+            /* :: of rel dir */
+            string_push_back( file, DELIM );
+        }
+        /* fall through */
 		
-	case G_DIR: 	
-		/* take dir */
-		memcpy( file, f->f_dir.ptr, f->f_dir.len );
-	    	file += f->f_dir.len;
-		break;
+    case G_DIR: 	
+        /* take dir */
+        string_append_range( file, f->f_dir.ptr, f->f_dir.ptr + f->f_dir.len  );
+        break;
 		
-	case G_ROOT:	
-		/* take root */
-		memcpy( file, f->f_root.ptr, f->f_root.len );
-	    	file += f->f_root.len;
-		break;
+    case G_ROOT:	
+        /* take root */
+        string_append_range( file, f->f_root.ptr, f->f_root.ptr + f->f_root.len  );
+        break;
 	    
-	case G_CAT:	
-		/* prepend root to dir */
-		memcpy( file, f->f_root.ptr, f->f_root.len );
-	    	file += f->f_root.len;
-		if( file[-1] == DELIM ) --file;
-		memcpy( file, f->f_dir.ptr, f->f_dir.len );
-	    	file += f->f_dir.len;
-		break;
+    case G_CAT:	
+        /* prepend root to dir */
+        string_append_range( file, f->f_root.ptr, f->f_root.ptr + f->f_root.len  );
+        if( file->value[file->size - 1] == DELIM )
+            string_pop_back( file );
+        string_append_range( file, f->f_dir.ptr, f->f_dir.ptr + f->f_dir.len  );
+        break;
 	
-	case G_DDDD:	
-		/* make it ::: (../..) */
-		strcpy( file, ":::" );
-		file += 3;
-		break;
-	}
+    case G_DDDD:	
+        /* make it ::: (../..) */
+        string_append( file, ":::" );
+        break;
+    }
 
-	/* Put : between dir and file (if none already) */
+    /* Put : between dir and file (if none already) */
 	
-	if( act != G_MT && 
-	    file[-1] != DELIM && 
-	    ( f->f_base.len || f->f_suffix.len ) )
-	{
-	    *file++ = DELIM;
-	}
+    if( act != G_MT && 
+        file->value[file->size - 1] != DELIM && 
+        ( f->f_base.len || f->f_suffix.len ) )
+    {
+        string_push_back( file, DELIM );
+    }
 
-	if( f->f_base.len )
-	{
-	    memcpy( file, f->f_base.ptr, f->f_base.len );
-	    file += f->f_base.len;
-	}
+    if( f->f_base.len )
+    {
+        string_append_range( file, f->f_base.ptr, f->f_base.ptr + f->f_base.len  );
+    }
 
-	if( f->f_suffix.len )
-	{
-	    memcpy( file, f->f_suffix.ptr, f->f_suffix.len );
-	    file += f->f_suffix.len;
-	}
+    if( f->f_suffix.len )
+    {
+        string_append_range( file, f->f_suffix.ptr, f->f_suffix.ptr + f->f_suffix.len  );
+    }
 
-	if( f->f_member.len )
-	{
-	    *file++ = '(';
-	    memcpy( file, f->f_member.ptr, f->f_member.len );
-	    file += f->f_member.len;
-	    *file++ = ')';
-	}
-	*file = 0;	
+    if( f->f_member.len )
+    {
+        string_push_back( file, '(' );
+        string_append_range( file, f->f_member.ptr, f->f_member.ptr + f->f_member.len  );
+        string_push_back( file, ')' );
+    }
 	
-	if( DEBUG_SEARCH )
-		printf(" -> '%s'\n", ofile);
+    if( DEBUG_SEARCH )
+        printf(" -> '%s'\n", file->value);
 }
 
 /*

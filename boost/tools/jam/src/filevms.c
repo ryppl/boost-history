@@ -91,7 +91,7 @@ file_dirscan(
     struct XABDAT xab;
     char esa[256];
     char filename[256];
-    char filename2[256];
+    string filename2[1];
     char dirname[256];
     register int status;
     FILENAME f;
@@ -148,6 +148,7 @@ file_dirscan(
 	(*func)( "[-]", 1 /* time valid */, 1 /* old but true */ );
     }
 
+    string_new( filename2 );
     while ( (status = sys$search( &xfab )) & 1 )
     {
 	char *s;
@@ -189,6 +190,7 @@ file_dirscan(
 	    f.f_suffix.len = xnam.nam$b_type;
 	}
 
+        string_truncate( filename2, 0 );
 	file_build( &f, filename2, 0 );
 
 	/*
@@ -200,8 +202,9 @@ file_dirscan(
 		    filename2);
 	*/
 
-	(*func)( filename2, 1 /* time valid */, time );
+	(*func)( filename2->value, 1 /* time valid */, time );
     }
+    string_free( filename2 );
 
     if ( status != RMS$_NMF && status != RMS$_FNF )
 	lib$signal( xfab.fab$l_sts, xfab.fab$l_stv );

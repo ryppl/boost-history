@@ -55,76 +55,78 @@ file_dirscan(
 	char	*dir,
 	void	(*func)( char *file, int s, time_t t ) )
 {
-	FILENAME f;
-	char filename[ MAXJPATH ];
-	unsigned char fullPath[ 512 ];
+    FILENAME f;
+    string filename[1];
+    unsigned char fullPath[ 512 ];
 
-	FSSpec spec;
-	WDPBRec vol;
-	Str63 volName;	
-	CInfoPBRec lastInfo;
-	int index = 1;
+    FSSpec spec;
+    WDPBRec vol;
+    Str63 volName;	
+    CInfoPBRec lastInfo;
+    int index = 1;
 	
-	/* First enter directory itself */
+    /* First enter directory itself */
 
-	memset( (char *)&f, '\0', sizeof( f ) );
+    memset( (char *)&f, '\0', sizeof( f ) );
 
-	f.f_dir.ptr = dir;
-	f.f_dir.len = strlen(dir);
+    f.f_dir.ptr = dir;
+    f.f_dir.len = strlen(dir);
 
-	if( DEBUG_BINDSCAN )
-	    printf( "scan directory %s\n", dir );
+    if( DEBUG_BINDSCAN )
+        printf( "scan directory %s\n", dir );
 		
-	/* Special case ":" - enter it */
+    /* Special case ":" - enter it */
 
-	if( f.f_dir.len == 1 && f.f_dir.ptr[0] == ':' )
-	    (*func)( dir, 0 /* not stat()'ed */, (time_t)0 );
+    if( f.f_dir.len == 1 && f.f_dir.ptr[0] == ':' )
+        (*func)( dir, 0 /* not stat()'ed */, (time_t)0 );
 
-	/* Now enter contents of directory */
+    /* Now enter contents of directory */
 
-	vol.ioNamePtr = volName;
+    vol.ioNamePtr = volName;
 	
-	if( PBHGetVolSync( &vol ) )
-		return;
+    if( PBHGetVolSync( &vol ) )
+        return;
 
-	CopyC2PStr( dir, fullPath );
+    CopyC2PStr( dir, fullPath );
 	
-	if( FSMakeFSSpec( vol.ioWDVRefNum, vol.ioWDDirID, fullPath, &spec ) )
-		return;
+    if( FSMakeFSSpec( vol.ioWDVRefNum, vol.ioWDDirID, fullPath, &spec ) )
+        return;
 	
-      	lastInfo.dirInfo.ioVRefNum 	= spec.vRefNum;
-   	lastInfo.dirInfo.ioDrDirID 	= spec.parID;
-   	lastInfo.dirInfo.ioNamePtr 	= spec.name;
-   	lastInfo.dirInfo.ioFDirIndex 	= 0;
-   	lastInfo.dirInfo.ioACUser 	= 0;
+    lastInfo.dirInfo.ioVRefNum 	= spec.vRefNum;
+    lastInfo.dirInfo.ioDrDirID 	= spec.parID;
+    lastInfo.dirInfo.ioNamePtr 	= spec.name;
+    lastInfo.dirInfo.ioFDirIndex 	= 0;
+    lastInfo.dirInfo.ioACUser 	= 0;
 			
-   	if( PBGetCatInfoSync(&lastInfo) )
-		return;
+    if( PBGetCatInfoSync(&lastInfo) )
+        return;
 
-	if (!(lastInfo.dirInfo.ioFlAttrib & 0x10))
-		return;
+    if (!(lastInfo.dirInfo.ioFlAttrib & 0x10))
+        return;
 
-	// ioDrDirID must be reset each time.
+    // ioDrDirID must be reset each time.
 	
-	spec.parID = lastInfo.dirInfo.ioDrDirID;
-		
-	for( ;; )
-	{
-       	    lastInfo.dirInfo.ioVRefNum 	= spec.vRefNum;
-	    lastInfo.dirInfo.ioDrDirID	= spec.parID;
-	    lastInfo.dirInfo.ioNamePtr 	= fullPath;
-	    lastInfo.dirInfo.ioFDirIndex = index++;
+    spec.parID = lastInfo.dirInfo.ioDrDirID;
+
+    string_new( filename );
+    for( ;; )
+    {
+        lastInfo.dirInfo.ioVRefNum 	= spec.vRefNum;
+        lastInfo.dirInfo.ioDrDirID	= spec.parID;
+        lastInfo.dirInfo.ioNamePtr 	= fullPath;
+        lastInfo.dirInfo.ioFDirIndex = index++;
 	   		
-	    if( PBGetCatInfoSync(&lastInfo) )
-		return;
+        if( PBGetCatInfoSync(&lastInfo) )
+            return;
 			
-	    f.f_base.ptr = (char *)fullPath + 1;
-	    f.f_base.len = *fullPath;
-	    
-	    file_build( &f, filename, 0 );
+        f.f_base.ptr = (char *)fullPath + 1;
+        f.f_base.len = *fullPath;
 
-	    (*func)( filename, 0 /* not stat()'ed */, (time_t)0 );
-	}
+        string_truncate( filename, 0 );
+        file_build( &f, filename, 0 );
+        (*func)( filename->value, 0 /* not stat()'ed */, (time_t)0 );
+    }
+    string_free( filename );
 }
 
 /*

@@ -12,36 +12,37 @@
 #include "parse.h"
 #include "rules.h"
 #include "variable.h"
+#include "strings.h"
 
 static struct hash* module_hash = 0;
 
 static char* new_module_str( module* m, char* suffix )
 {
-    char buffer[4096] = "";
-    strncat(buffer, m->name, sizeof(buffer) - 1);
-    strncat(buffer, "variables", sizeof(buffer) - 1);
-    return newstr( buffer );
+    char* result;
+    string s;
+    string_copy( &s, m->name );
+    string_append( &s, suffix );
+    result = newstr( s.value );
+    string_free( &s );
+    return result;
 }
 
 module* bindmodule( char* name )
 {
-    char buffer[4096] = "";
+    string s;
     module m_, *m = &m_;
-    
+
     if( !module_hash )
         module_hash = hashinit( sizeof( module ), "modules" );
 
+    string_new( &s );
     if (name)
     {
-        strncat( buffer, name, sizeof(buffer) - 1 );
-        strncat( buffer, ".", sizeof(buffer) - 1 );
-    }
-    else
-    {
-        *buffer = 0;
+        string_append( &s, name );
+        string_push_back( &s, '.' );
     }
         
-    m->name = buffer;
+    m->name = s.value;
     
     if ( hashenter( module_hash, (HASHDATA **)&m ) )
     {
@@ -50,6 +51,7 @@ module* bindmodule( char* name )
         m->locals = 0;
         m->rules = hashinit( sizeof( RULE ), new_module_str( m, "rules" ) );
     }
+    string_free( &s );
     return m;
 }
 

@@ -6,6 +6,7 @@
 
 # include "jam.h"
 # include "filesys.h"
+# include "strings.h"
 
 # ifdef USE_FILEUNIX
 
@@ -104,7 +105,7 @@ file_dirscan(
 	FILENAME f;
 	DIR *d;
 	STRUCT_DIRENT *dirent;
-	char filename[ MAXJPATH ];
+        string filename[1];
 
 	/* First enter directory itself */
 
@@ -128,6 +129,7 @@ file_dirscan(
 	if( DEBUG_BINDSCAN )
 	    printf( "scan directory %s\n", dir );
 
+        string_new( filename );
 	while( dirent = readdir( d ) )
 	{
 # ifdef old_sinix
@@ -138,10 +140,12 @@ file_dirscan(
 # endif
 	    f.f_base.len = strlen( f.f_base.ptr );
 
+            string_truncate( filename, 0 );
 	    file_build( &f, filename, 0 );
 
-	    (*func)( filename, 0 /* not stat()'ed */, (time_t)0 );
+	    (*func)( filename->value, 0 /* not stat()'ed */, (time_t)0 );
 	}
+        string_free( filename );
 
 	closedir( d );
 }

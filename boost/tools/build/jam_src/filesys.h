@@ -20,6 +20,11 @@
  * (without a file), so that $(VAR:D) can climb to the parent.
  */
 
+#ifndef FILESYS_DWA20011025_H
+# define FILESYS_DWA20011025_H
+
+# include "strings.h"
+
 typedef struct _filename FILENAME;
 typedef struct _filepart FILEPART;
 
@@ -43,7 +48,9 @@ struct _filename {
 
 } ;
 
-void file_build( FILENAME *f, char *file, int binding );
+void file_build( FILENAME *f, string *file, int binding );
+void file_build1( FILENAME *f, string *file );
+
 void file_parse( char *file, FILENAME *f );
 void file_parent( FILENAME *f );
 
@@ -51,3 +58,5 @@ void file_dirscan( char *dir, void (*func)( char *f, int s, time_t t ) );
 void file_archscan( char *arch, void (*func)( char *f, int s, time_t t ) );
 
 int file_time( char *filename, time_t *time );
+
+#endif // FILESYS_DWA20011025_H

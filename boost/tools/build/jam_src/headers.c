@@ -56,8 +56,12 @@ headers( TARGET *t )
         
     /* the following regexp is used to detect cases where a  */
     /* file is included through a line line "#include MACRO" */
-    regexp *re_macros = regex_compile(
-        "^[ 	]*#[ 	]*include[ 	]*([A-Za-z][A-Za-z0-9_]*).*$" );
+    static regexp *re_macros = 0;
+    if ( re_macros == 0 )
+    {
+        re_macros = regex_compile(
+            "^[ 	]*#[ 	]*include[ 	]*([A-Za-z][A-Za-z0-9_]*).*$" );
+    }
 
     if( !( hdrscan = var_get( "HDRSCAN" ) ) || 
         !( hdrrule = var_get( "HDRRULE" ) ) )

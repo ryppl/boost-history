@@ -6,6 +6,7 @@
 
 # include "jam.h"
 # include "filesys.h"
+# include "strings.h"
 
 # ifdef OS_NT
 
@@ -49,75 +50,87 @@ file_dirscan(
 	char *dir,
 	void (*func)( char *file, int status, time_t t ) )
 {
-	FILENAME f;
-	char filespec[ MAXJPATH ];
-	char filename[ MAXJPATH ];
-	long handle;
-	int ret;
-	struct _finddata_t finfo[1];
+    FILENAME f;
+    string filespec[1];
+    string filename[1];
+    long handle;
+    int ret;
+    struct _finddata_t finfo[1];
 
-	/* First enter directory itself */
+    /* First enter directory itself */
 
-	memset( (char *)&f, '\0', sizeof( f ) );
+    memset( (char *)&f, '\0', sizeof( f ) );
 
-	f.f_dir.ptr = dir;
-	f.f_dir.len = strlen(dir);
+    f.f_dir.ptr = dir;
+    f.f_dir.len = strlen(dir);
 
-	dir = *dir ? dir : ".";
+    dir = *dir ? dir : ".";
 
- 	/* Special case \ or d:\ : enter it */
+    /* Special case \ or d:\ : enter it */
  
- 	if( f.f_dir.len == 1 && f.f_dir.ptr[0] == '\\' )
- 	    (*func)( dir, 0 /* not stat()'ed */, (time_t)0 );
- 	else if( f.f_dir.len == 3 && f.f_dir.ptr[1] == ':' )
- 	    (*func)( dir, 0 /* not stat()'ed */, (time_t)0 );
+    if( f.f_dir.len == 1 && f.f_dir.ptr[0] == '\\' )
+        (*func)( dir, 0 /* not stat()'ed */, (time_t)0 );
+    else if( f.f_dir.len == 3 && f.f_dir.ptr[1] == ':' )
+        (*func)( dir, 0 /* not stat()'ed */, (time_t)0 );
 
-	/* Now enter contents of directory */
+    /* Now enter contents of directory */
 
-	sprintf( filespec, "%s/*", dir );
+    string_copy( filespec, dir );
+    string_append( filespec, "/*" );
 
-	if( DEBUG_BINDSCAN )
-	    printf( "scan directory %s\n", dir );
+    if( DEBUG_BINDSCAN )
+        printf( "scan directory %s\n", dir );
 
 # if defined(__BORLANDC__) && __BORLANDC__ < 0x550
-	if ( ret = findfirst( filespec, finfo, FA_NORMAL | FA_DIREC ) )
-	    return;
+    if ( ret = findfirst( filespec->value, finfo, FA_NORMAL | FA_DIREC ) )
+    {
+        string_free( filespec );
+        return;
+    }
 
-	while( !ret )
-	{
-	    time_t time_write = finfo->ff_fdate;
+    string_new( filename );
+    while( !ret )
+    {
+        time_t time_write = finfo->ff_fdate;
 
-	    time_write = (time_write << 16) | finfo->ff_ftime;
-	    f.f_base.ptr = finfo->ff_name;
-	    f.f_base.len = strlen( finfo->ff_name );
+        time_write = (time_write << 16) | finfo->ff_ftime;
+        f.f_base.ptr = finfo->ff_name;
+        f.f_base.len = strlen( finfo->ff_name );
 
-	    file_build( &f, filename );
+        string_truncate( filename, 0 );
+        file_build( &f, filename );
 
-	    (*func)( filename, 1 /* stat()'ed */, time_write );
+        (*func)( filename->value, 1 /* stat()'ed */, time_write );
 
-	    ret = findnext( finfo );
-	}
+        ret = findnext( finfo );
+    }
 # else
-	handle = _findfirst( filespec, finfo );
+    handle = _findfirst( filespec->value, finfo );
 
-	if( ret = ( handle < 0L ) )
-	    return;
+    if( ret = ( handle < 0L ) )
+    {
+        string_free( filespec );
+        return;
+    }
+        
+    string_new( filename );
+    while( !ret )
+    {
+        f.f_base.ptr = finfo->name;
+        f.f_base.len = strlen( finfo->name );
 
-	while( !ret )
-	{
-	    f.f_base.ptr = finfo->name;
-	    f.f_base.len = strlen( finfo->name );
+        string_truncate( filename, 0 );
+        file_build( &f, filename, 0 );
 
-	    file_build( &f, filename, 0 );
+        (*func)( filename->value, 1 /* stat()'ed */, finfo->time_write );
+ 
+        ret = _findnext( handle, finfo );
+    }
 
-	    (*func)( filename, 1 /* stat()'ed */, finfo->time_write );
-
-	    ret = _findnext( handle, finfo );
-	}
-
-	_findclose( handle );
+    _findclose( handle );
 # endif
-
+    string_free( filename );
+    string_free( filespec );
 }
 
 /*

@@ -6,6 +6,7 @@
 
 # include "jam.h"
 # include "filesys.h"
+# include "strings.h"
 
 # ifdef USE_PATHUNIX
 
@@ -135,85 +136,69 @@ file_parse(
 void
 file_build(
 	FILENAME *f,
-	char	*file,
+	string	*file,
 	int	binding )
 {
-	/* Start with the grist.  If the current grist isn't */
-	/* surrounded by <>'s, add them. */
-
-	if( f->f_grist.len )
-	{
-	    if( f->f_grist.ptr[0] != '<' ) *file++ = '<';
-	    memcpy( file, f->f_grist.ptr, f->f_grist.len );
-	    file += f->f_grist.len;
-	    if( file[-1] != '>' ) *file++ = '>';
-	}
-
-	/* Don't prepend root if it's . or directory is rooted */
-
+    file_build1( f, file );
+    
+    /* Don't prepend root if it's . or directory is rooted */
 # if PATH_DELIM == '/'
 
-	if( f->f_root.len 
-	    && !( f->f_root.len == 1 && f->f_root.ptr[0] == '.' )
-	    && !( f->f_dir.len && f->f_dir.ptr[0] == '/' ) )
+    if( f->f_root.len 
+        && !( f->f_root.len == 1 && f->f_root.ptr[0] == '.' )
+        && !( f->f_dir.len && f->f_dir.ptr[0] == '/' ) )
 
 # else /* unix */
 
-	if( f->f_root.len 
-	    && !( f->f_root.len == 1 && f->f_root.ptr[0] == '.' )
-	    && !( f->f_dir.len && f->f_dir.ptr[0] == '/' )
-	    && !( f->f_dir.len && f->f_dir.ptr[0] == '\\' )
-	    && !( f->f_dir.len && f->f_dir.ptr[1] == ':' ) )
+    if( f->f_root.len 
+        && !( f->f_root.len == 1 && f->f_root.ptr[0] == '.' )
+        && !( f->f_dir.len && f->f_dir.ptr[0] == '/' )
+        && !( f->f_dir.len && f->f_dir.ptr[0] == '\\' )
+        && !( f->f_dir.len && f->f_dir.ptr[1] == ':' ) )
 
 # endif /* unix */
 
-	{
-	    memcpy( file, f->f_root.ptr, f->f_root.len );
-	    file += f->f_root.len;
-	    *file++ = PATH_DELIM;
-	}
+    {
+        string_append_range( file, f->f_root.ptr, f->f_root.ptr + f->f_root.len  );
+        string_push_back( file, PATH_DELIM );
+    }
 
-	if( f->f_dir.len )
-	{
-	    memcpy( file, f->f_dir.ptr, f->f_dir.len );
-	    file += f->f_dir.len;
-	}
+    if( f->f_dir.len )
+    {
+        string_append_range( file, f->f_dir.ptr, f->f_dir.ptr + f->f_dir.len  );
+    }
 
-	/* UNIX: Put / between dir and file */
-	/* NT:   Put \ between dir and file */
+    /* UNIX: Put / between dir and file */
+    /* NT:   Put \ between dir and file */
 
-	if( f->f_dir.len && ( f->f_base.len || f->f_suffix.len ) )
-	{
-	    /* UNIX: Special case for dir \ : don't add another \ */
-	    /* NT:   Special case for dir / : don't add another / */
+    if( f->f_dir.len && ( f->f_base.len || f->f_suffix.len ) )
+    {
+        /* UNIX: Special case for dir \ : don't add another \ */
+        /* NT:   Special case for dir / : don't add another / */
 
 # if PATH_DELIM == '\\'
-	    if( !( f->f_dir.len == 3 && f->f_dir.ptr[1] == ':' ) )
+        if( !( f->f_dir.len == 3 && f->f_dir.ptr[1] == ':' ) )
 # endif
-		if( !( f->f_dir.len == 1 && f->f_dir.ptr[0] == PATH_DELIM ) )
-		    *file++ = PATH_DELIM;
-	}
+            if( !( f->f_dir.len == 1 && f->f_dir.ptr[0] == PATH_DELIM ) )
+                string_push_back( file, PATH_DELIM );
+    }
 
-	if( f->f_base.len )
-	{
-	    memcpy( file, f->f_base.ptr, f->f_base.len );
-	    file += f->f_base.len;
-	}
+    if( f->f_base.len )
+    {
+        string_append_range( file, f->f_base.ptr, f->f_base.ptr + f->f_base.len  );
+    }
 
-	if( f->f_suffix.len )
-	{
-	    memcpy( file, f->f_suffix.ptr, f->f_suffix.len );
-	    file += f->f_suffix.len;
-	}
+    if( f->f_suffix.len )
+    {
+        string_append_range( file, f->f_suffix.ptr, f->f_suffix.ptr + f->f_suffix.len  );
+    }
 
-	if( f->f_member.len )
-	{
-	    *file++ = '(';
-	    memcpy( file, f->f_member.ptr, f->f_member.len );
-	    file += f->f_member.len;
-	    *file++ = ')';
-	}
-	*file = 0;
+    if( f->f_member.len )
+    {
+        string_push_back( file, '(' );
+        string_append_range( file, f->f_member.ptr, f->f_member.ptr + f->f_member.len  );
+        string_push_back( file, ')' );
+    }
 }
 
 /*

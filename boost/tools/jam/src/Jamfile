@@ -5,6 +5,9 @@
 #
 # Put executables in platform-specific  subdirectory.
 
+# compile without assertions by default
+CCFLAGS ?= -DNDEBUG ;
+
 if $(VMS) 	{ LOCATE_TARGET ?= [.binvms] ; }
 else if $(MAC) 	{ LOCATE_TARGET ?= :bin.mac ; }
 else 		{ LOCATE_TARGET ?= bin.$(OSFULL[1]:L) ; }
@@ -101,8 +104,8 @@ Library         libjam.a :
 		    command.c compile.c $(code) expand.c glob.c
 		    hash.c headers.c hdrmacro.c lists.c make.c make1.c newstr.c
 		    option.c parse.c regexp.c rules.c scan.c search.c subst.c
-		    timestamp.c variable.c modules.c ;
-
+		    timestamp.c variable.c modules.c strings.c filesys.c ;
+ 
 
 if $(BINDIR) 	{ InstallBin $(BINDIR) : jam ; }
 
@@ -120,8 +123,8 @@ ALLSOURCE =
 	jamgram.y jamgram.yy jamgramtab.h lists.c lists.h make.c make.h
 	make1.c mkjambase.c modules.c newstr.c newstr.h option.c option.h parse.c
 	parse.h patchlevel.h pathmac.c pathunix.c pathvms.c regexp.c regexp.h
-	rules.c rules.h scan.c scan.h search.c search.h subst.c timestamp.c
-	timestamp.h variable.c variable.h yyacc
+	rules.c rules.h scan.c scan.h search.c search.h strings.c subst.c timestamp.c
+	timestamp.h variable.c variable.h filesys.c filesys.h yyacc
 	INSTALL
 	common.mk
 	builds/win32-visualc.mk

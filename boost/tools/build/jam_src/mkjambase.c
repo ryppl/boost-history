@@ -100,6 +100,7 @@ int main( int argc, char **argv, char **envp )
 		    {
 		    case '\\': putc( '\\', fout ); putc( '\\', fout ); break;
 		    case '"': putc( '\\', fout ); putc( '"', fout ); break;
+                    case '\r': break;
 		    default: putc( *p, fout ); break;
 		    }
 

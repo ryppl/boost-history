@@ -9,6 +9,7 @@
 # include "filesys.h"
 # include "timestamp.h"
 # include "newstr.h"
+# include "strings.h"
 
 /*
  * timestamp.c - get the timestamp of a file or archive member
@@ -63,17 +64,22 @@ timestamp(
 {
 	FILENAME f1, f2;
 	BINDING	binding, *b = &binding;
-	char buf[ MAXJPATH ];
+	string buf[1];
 
 # ifdef DOWNSHIFT_PATHS
-	char path[ MAXJPATH ];
-	char *p = path;
+        string path; 
+	char *p;
 
-	do *p++ = tolower( *target );
-	while( *target++ );
+        string_copy( &path, target );
+        p = path.value;
 
-	target = path;
-# endif 
+	do
+            *p = tolower( *p );
+	while( *p++ );
+
+	target = path.value;
+# endif
+        string_new( buf );
 
 	if( !bindhash )
 	    bindhash = hashinit( sizeof( BINDING ), "bindings" );
@@ -106,16 +112,16 @@ timestamp(
 	    file_parent( &f2 );
 	    file_build( &f2, buf, 0 );
 
-	    b->name = buf;
+	    b->name = buf->value;
 	    b->time = b->flags = 0;
 	    b->progress = BIND_INIT;
 
 	    if( hashenter( bindhash, (HASHDATA **)&b ) )
-		b->name = newstr( buf );	/* never freed */
+		b->name = newstr( buf->value );	/* never freed */
 
 	    if( !( b->flags & BIND_SCANNED ) )
 	    {
-		file_dirscan( buf, time_enter );
+		file_dirscan( buf->value, time_enter );
 		b->flags |= BIND_SCANNED;
 	    }
 	}
@@ -129,18 +135,19 @@ timestamp(
 	    f2 = f1;
 	    f2.f_grist.len = 0;
 	    f2.f_member.len = 0;
+            string_truncate( buf, 0 );
 	    file_build( &f2, buf, 0 );
 
-	    b->name = buf;
+	    b->name = buf->value;
 	    b->time = b->flags = 0;
 	    b->progress = BIND_INIT;
 
 	    if( hashenter( bindhash, (HASHDATA **)&b ) )
-		b->name = newstr( buf );	/* never freed */
+		b->name = newstr( buf->value );	/* never freed */
 
 	    if( !( b->flags & BIND_SCANNED ) )
 	    {
-		file_archscan( buf, time_enter );
+		file_archscan( buf->value, time_enter );
 		b->flags |= BIND_SCANNED;
 	    }
 	}
@@ -156,6 +163,10 @@ timestamp(
 	}
 
 	*time = b->progress == BIND_FOUND ? b->time : 0;
+        string_free( buf );
+# ifdef DOWNSHIFT_PATHS
+        string_free( &path );
+#endif
 }
 
 static void

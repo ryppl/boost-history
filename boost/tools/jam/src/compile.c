@@ -26,6 +26,7 @@
 # include "hdrmacro.h"
 # include "hash.h"
 # include "modules.h"
+# include "strings.h"
 
 # include <time.h>
 # include <assert.h>
@@ -1340,16 +1341,23 @@ static LIST *builtin_caller_module( PARSE *parse, FRAME *frame )
         frame = frame->prev;
 
     if ( frame->module == root_module() )
+    {
         return L0;
-    
-    len = strlen( frame->module->name );
-    if ( len > sizeof(buffer) )
-        len = sizeof(buffer);
-    if ( len > 0 )
-        --len;
+    }
+    else
+    {
+        LIST* result;
+        
+        string name;
+        string_copy( &name, frame->module->name );
+        string_pop_back( &name );
 
-    strncat(buffer, frame->module->name, len);
-    return list_new( L0, newstr(buffer) );
+        result = list_new( L0, newstr(name.value) );
+        
+        string_free( &name );
+        
+        return result;
+    }
 }
 
 /*

@@ -14,6 +14,7 @@
 # include "hdrmacro.h"
 # include "hash.h"
 # include "newstr.h"
+# include "strings.h"
 
 /*
  * hdrmacro.c - handle header files that define macros used in
@@ -60,58 +61,59 @@ static struct hash*   header_macros_hash = 0;
 void
 macro_headers( TARGET *t )
 {
-	LIST	*hdrrule;
-	regexp	*re;
-	FILE	*f;
-	char	buf[ 1024 ];
-	int	i;
-
+    LIST	*hdrrule;
+    static regexp *re = 0;
+    FILE	*f;
+    char	buf[ 1024 ];
+    int	i;
+    
     if ( DEBUG_HEADER )
-      printf( "macro header scan for %s\n", t->name );
+        printf( "macro header scan for %s\n", t->name );
 
     /* this regexp is used to detect lines of the form       */
     /* "#define  MACRO  <....>" or "#define  MACRO  "....."  */
     /* in the header macro files..                           */
-    re = regcomp(
-       "^[ 	]*#[ 	]*define[ 	]*([A-Za-z][A-Za-z0-9_]*)[ 	]*"
-       "[<\"]([^\">]*)[\">].*$" );
+    if ( re == 0 )
+    {
+        re = regex_compile(
+            "^[ 	]*#[ 	]*define[ 	]*([A-Za-z][A-Za-z0-9_]*)[ 	]*"
+            "[<\"]([^\">]*)[\">].*$" );
+    }
+    
+    if( !( f = fopen( t->boundname, "r" ) ) )
+        return;
 
-	if( !( f = fopen( t->boundname, "r" ) ) )
-          return;
+    while( fgets( buf, sizeof( buf ), f ) )
+    {
+        HEADER_MACRO  var, *v = &var;
 
-	while( fgets( buf, sizeof( buf ), f ) )
-	{
-      HEADER_MACRO  var, *v = &var;
-      
-      if ( regexec( re, buf ) && re->startp[1] )
-      {
-        /* we detected a line that looks like "#define  MACRO  filename */
-        re->endp[1][0] = '\0';
-        re->endp[2][0] = '\0';
-        
-        if ( DEBUG_HEADER )
-          printf( "macro '%s' used to define filename '%s' in '%s'\n",
-                   re->startp[1], re->startp[2], t->boundname );
-
-        /* add macro definition to hash table */
-        if ( !header_macros_hash )
-          header_macros_hash = hashinit( sizeof( HEADER_MACRO ), "hdrmacros" );
-
-        v->symbol   = re->startp[1];
-        v->filename = 0;
-        if ( hashenter( header_macros_hash, (HASHDATA **)&v ) )
+        if ( regexec( re, buf ) && re->startp[1] )
         {
-          v->symbol   = newstr( re->startp[1] );  /* never freed */
-          v->filename = newstr( re->startp[2] );  /* never freed */
+            /* we detected a line that looks like "#define  MACRO  filename */
+            re->endp[1][0] = '\0';
+            re->endp[2][0] = '\0';
+        
+            if ( DEBUG_HEADER )
+                printf( "macro '%s' used to define filename '%s' in '%s'\n",
+                        re->startp[1], re->startp[2], t->boundname );
+
+            /* add macro definition to hash table */
+            if ( !header_macros_hash )
+                header_macros_hash = hashinit( sizeof( HEADER_MACRO ), "hdrmacros" );
+
+            v->symbol   = re->startp[1];
+            v->filename = 0;
+            if ( hashenter( header_macros_hash, (HASHDATA **)&v ) )
+            {
+                v->symbol   = newstr( re->startp[1] );  /* never freed */
+                v->filename = newstr( re->startp[2] );  /* never freed */
+            }
+            /* XXXX: FOR NOW, WE IGNORE MULTIPLE MACRO DEFINITIONS !! */
+            /*       WE MIGHT AS WELL USE A LIST TO STORE THEM..      */
         }
-        /* XXXX: FOR NOW, WE IGNORE MULTIPLE MACRO DEFINITIONS !! */
-        /*       WE MIGHT AS WELL USE A LIST TO STORE THEM..      */
-      }
     }
 
-	fclose( f );
-
-    free( re );
+    fclose( f );
 }
 
 

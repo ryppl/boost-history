@@ -12,6 +12,8 @@
 # include "variable.h"
 # include "newstr.h"
 # include "compile.h"
+# include "strings.h"
+# include <string.h>
 
 static void call_bind_rule(
     char* target_,
@@ -64,10 +66,11 @@ search(
 {
     FILENAME f[1];
     LIST    *varlist;
-    char    buf[ MAXJPATH ];
+    string    buf[1];
     int     found = 0;
     char    *boundname = 0;
 
+    string_new( buf );
     /* Parse the filename */
 
     file_parse( target, f );
@@ -83,9 +86,9 @@ search(
         file_build( f, buf, 1 );
 
         if( DEBUG_SEARCH )
-            printf( "locate %s: %s\n", target, buf );
+            printf( "locate %s: %s\n", target, buf->value );
 
-        timestamp( buf, time );
+        timestamp( buf->value, time );
         found = 1;
     }
     else if( varlist = var_get( "SEARCH" ) )
@@ -95,12 +98,13 @@ search(
             f->f_root.ptr = varlist->string;
             f->f_root.len = strlen( varlist->string );
 
+            string_truncate( buf, 0 );
             file_build( f, buf, 1 );
 
             if( DEBUG_SEARCH )
-                printf( "search %s: %s\n", target, buf );
+                printf( "search %s: %s\n", target, buf->value );
 
-            timestamp( buf, time );
+            timestamp( buf->value, time );
 
             if( *time )
             {
@@ -121,15 +125,17 @@ search(
         f->f_root.ptr = 0;
         f->f_root.len = 0;
 
+        string_truncate( buf, 0 );
         file_build( f, buf, 1 );
 
         if( DEBUG_SEARCH )
-            printf( "search %s: %s\n", target, buf );
+            printf( "search %s: %s\n", target, buf->value );
 
-        timestamp( buf, time );
+        timestamp( buf->value, time );
     }
 
-    boundname = newstr( buf );
+    boundname = newstr( buf->value );
+    string_free( buf );
         
     /* prepare a call to BINDRULE if the variable is set */
     call_bind_rule( target, boundname );

@@ -11,10 +11,10 @@
 CC       = cl /nologo
 CFLAGS   = -DNT 
 TARGET   = /Fejam0
-LINKLIBS = oldnames.lib kernel32.lib libc.lib
+LINKLIBS = kernel32.lib
 
 all: jam0
 	attrib -r jambase.c
-	jam0
+	jam0 $(JAM0_ARGS)
 
 !include common.mk

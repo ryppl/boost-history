@@ -162,6 +162,13 @@ extern char **environ;
 
 extern int yydebug;
 
+#ifndef NDEBUG
+static void run_unit_tests()
+{
+    var_expand_unit_test();
+}
+#endif
+
 int  main( int argc, char **argv, char **arg_environ )
 {
     int		n;
@@ -247,6 +254,10 @@ int  main( int argc, char **argv, char **arg_environ )
         else while( i )
             globs.debug[i--] = 1;
     }
+
+#ifndef NDEBUG
+    run_unit_tests();
+#endif // NDEBUG
     if ( DEBUG_PARSE )
         yydebug = 1;
 

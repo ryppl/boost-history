@@ -42,58 +42,59 @@ file_dirscan(
 	char *dir,
 	void (*func)( char *file, int status, time_t t ) )
 {
-	FILENAME f;
-	char filespec[ MAXJPATH ];
-	char filename[ MAXJPATH ];
-	long handle;
-	int ret;
-	struct _find_t finfo[1];
+    FILENAME f;
+    string filespec[1];
+    long handle;
+    int ret;
+    struct _find_t finfo[1];
 
-	/* First enter directory itself */
+    /* First enter directory itself */
 
-	memset( (char *)&f, '\0', sizeof( f ) );
+    memset( (char *)&f, '\0', sizeof( f ) );
 
-	f.f_dir.ptr = dir;
-	f.f_dir.len = strlen(dir);
+    f.f_dir.ptr = dir;
+    f.f_dir.len = strlen(dir);
 
-	dir = *dir ? dir : ".";
+    dir = *dir ? dir : ".";
 
- 	/* Special case \ or d:\ : enter it */
- 
-	strcpy( filespec, dir );
+    /* Special case \ or d:\ : enter it */
+    string_copy( filespec, dir );
 
- 	if( f.f_dir.len == 1 && f.f_dir.ptr[0] == '\\' )
- 	    (*func)( dir, 0 /* not stat()'ed */, (time_t)0 );
- 	else if( f.f_dir.len == 3 && f.f_dir.ptr[1] == ':' )
- 	    (*func)( dir, 0 /* not stat()'ed */, (time_t)0 );
-	else
-	    strcat( filespec, "/" );
+    if( f.f_dir.len == 1 && f.f_dir.ptr[0] == '\\' )
+        (*func)( dir, 0 /* not stat()'ed */, (time_t)0 );
+    else if( f.f_dir.len == 3 && f.f_dir.ptr[1] == ':' )
+        (*func)( dir, 0 /* not stat()'ed */, (time_t)0 );
+    else
+        string_push_back( filespec, '/' );
 
-	strcat( filespec, "*" );
+    string_push_back( filespec, '*' );
 
-	/* Now enter contents of directory */
+    /* Now enter contents of directory */
 
-	if( DEBUG_BINDSCAN )
-	    printf( "scan directory %s\n", filespec );
+    if( DEBUG_BINDSCAN )
+        printf( "scan directory %s\n", filespec->value );
 
-	/* Time info in dos find_t is not very useful.  It consists */
-	/* of a separate date and time, and putting them together is */
-	/* not easy.  So we leave that to a later stat() call. */
+    /* Time info in dos find_t is not very useful.  It consists */
+    /* of a separate date and time, and putting them together is */
+    /* not easy.  So we leave that to a later stat() call. */
 
-	if( !_dos_findfirst( filespec, _A_NORMAL|_A_RDONLY|_A_SUBDIR, finfo ) )
-	{
-	    do
-	    {
-		f.f_base.ptr = finfo->name;
-		f.f_base.len = strlen( finfo->name );
+    if( !_dos_findfirst( filespec->value, _A_NORMAL|_A_RDONLY|_A_SUBDIR, finfo ) )
+    {
+        string filename[1];
+        string_new( filename );
+        do
+        {
+            
+            f.f_base.ptr = finfo->name;
+            f.f_base.len = strlen( finfo->name );
 
-		file_build( &f, filename, 0 );
-
-		(*func)( filename, 0 /* not stat()'ed */, (time_t)0 );
-	    }
-	    while( !_dos_findnext( finfo ) );
-	}
-
+            string_truncate( filename, 0 );
+            file_build( &f, filename, 0 );
+            (*func)( filename->value, 0 /* not stat()'ed */, (time_t)0 );
+        }
+        while( !_dos_findnext( finfo ) );
+        string_free( filename );
+    }
 }
 
 /*
