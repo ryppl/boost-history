@@ -77,9 +77,10 @@ passed to a function than are declared by the function. This feature
 is rarely used in C++ code (except for compatibility with C
 libraries), because passing non-POD types through {\tt ...} invokes
 undefined behavior. However, a typesafe form of such a feature would
-be useful in many contexts, e.g., for implementing a typesafe C++
-{\tt printf} that works for non-POD types. The lack of such a facility
-has resulted in odd syntax for formatting~\cite{Krempp02}:
+be useful in many contexts, e.g., for implementing a typesafe C++ {\tt
+  printf} that works for non-POD types. The lack of such a facility
+has resulted in odd syntax for formatting in the Boost.Format
+library~\cite{Krempp02}:
 \begin{verbatim}
 format("writing %1%, x=%2%: %3%-th try") % "toto" % 40.23 % 50
 \end{verbatim}
@@ -113,15 +114,18 @@ void f(E e, T1& a1, T2& a2, T3& a3) { e(a1, a2, a3); }
 // repeat up to N arguments
 \end{verbatim}
 
-However, this idiom fails to accept literal values. This proposal
-solves both issues: arguments are passed via the ``Const + Non-const
-reference'' option \#3 enumerated in~\cite{Dimov02}, which results in
-``perfect'' forwarding of arguments, but does not require $2^N$
-overloads to support $N$ arguments: instead, a single overload
-suffices for any number of arguments. The solution matches all three
-criteria (C1-C3) of the argument forwarding paper~\cite{Dimov02} by
-bundling the arguments into a single argument and providing an
-unbundling method to pass the arguments on to another function.
+However, this idiom fails to accept literal values and also requires
+repetition for an arbitrary number of arguments (often done via
+preprocessor metaprogramming in the Boost
+libraries~\cite{Preprocessor01}). This proposal solves both issues:
+arguments are passed via the ``Const + Non-const reference'' option
+\#3 enumerated in~\cite{Dimov02}, which results in ``perfect''
+forwarding of arguments, but does not require $2^N$ overloads to
+support $N$ arguments: instead, a single overload suffices for any
+number of arguments. The solution matches all three criteria (C1-C3)
+of the argument forwarding paper~\cite{Dimov02} by bundling the
+arguments into a single argument and providing an unbundling method to
+pass the arguments on to another function.
 
 \section{Syntax and Semantics}
 \subsection{Variable-length template parameter lists}
@@ -145,13 +149,17 @@ Given the instantiation {\tt Foo<int, float, double, std::string>},
 
 Nontype and template template arguments cannot be placed directly in
 the tuple (see~\cite{Jarvi02}), so they are wrapped in {\tt
-  nontype\_template\_arg} or {\tt template\_template\_arg}, respectively. 
+  integral\_constant} or {\tt template\_template\_arg}, respectively. 
 
-{\tt nontype\_template\_arg} is defined as:
+{\tt integral\_constant} is part of the type traits library from the
+library TR~\cite{Maddock03}, but we repeat the definition here:
 \begin{verbatim}
-template<typename T, T V> struct nontype_template_arg {
-  typedef T type;
-  static const T value = V; 
+template <typename T, T v> 
+struct integral_constant
+{
+   static  const T                value = v;
+   typedef T                      value_type;
+   typedef integral_constant<T,v> type;
 };
 \end{verbatim}
 
@@ -208,31 +216,24 @@ the arguments, then {\tt args} is a value of that type containing the
 function call arguments passed after the {\tt format}
 argument.\footnote{Note that, unlike C varargs, we do not require but
   do allow an argument prior to the argument bundle.} Arguments are
-then accessed via any operations on a tuple. 
+then accessed via tuple operations~\cite{Jarvi02}.
 
 \subsection{Forwarding function arguments}
 A tuple of values can be forwarded to a function object via a new
 function template {\tt std::apply} that unbundles a tuple into
 separate elements to be passed to a function object. The
-pseudo-declarations for {\tt std::apply} are:
+pseudo-definitions for {\tt std::apply} are:
 \begin{verbatim}
 template<typename F, typename T1, typename T2, ..., typename TN>
-the-return-type apply(F& f, tuple<T1, T2, ..., TN>& t);
+the-return-type apply(F& f, tuple<T1, T2, ..., TN>& t)
+  { return f(get<0>(t), get<1>(t), ..., get<N-1>(t)); }
 
 template<typename F, typename Class, typename T1, typename T2, ..., typename TN>
-the-return-type apply(F Class::*pm cv, Class& obj, tuple<T1, T2, ..., TN>& t);
-
-template<typename F, typename Class, typename T1, typename T2, ..., typename TN>
-the-return-type apply(F Class::*pm cv, const Class& obj, tuple<T1, T2, ..., TN>& t);
+the-return-type apply(F Class::*pmf cv, Class& obj, tuple<T1, T2, ..., TN>& t)
+  { return (obj.*pmf)(get<0>(t), get<1>(t), ..., get<N-1>(t)); }
 \end{verbatim}
-A call expression {\tt std::apply(f, t)} where {\tt f} is a function
-object and {\tt t} is of type {\tt std::tuple<T1, T2, ..., TN>}
-returns {\tt f(get<0>(t), get<1>(t), ..., get<N-1>(t))}. Similarly, a
-call expression {\tt std::apply(pmf, obj, t)}, where {\tt pmf} is a
-pointer-to-member function, {\tt obj} is an object whose type is equal
-to or derived from the type of the member function pointer's class
-type, and {\tt t} is of type {\tt std::tuple<T1, T2, ..., TN>} returns
-{\tt (obj.*pmf)(get<0>(t), get<1>(t), ..., get<N-1>(t))}.
+The {\tt the-return-type} placeholder denotes the exact return type of
+the return expression, such that the result can be returned unaltered to the caller. This placeholder will be reused through the pro[posal.
 
 With these definitions, we can define a function {\tt g} that forwards
 perfectly to its function object parameter {\tt f}:
