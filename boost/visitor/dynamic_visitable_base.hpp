@@ -34,8 +34,7 @@ struct dynamic_visitable_base
 {
     virtual void apply_visitor(dynamic_visitor_base&) = 0;
 
-protected:
-    ~dynamic_visitable_base()
+    virtual ~dynamic_visitable_base()
     {
     }
 };

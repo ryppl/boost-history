@@ -29,7 +29,7 @@ namespace type_switch {
 
 //////////////////////////////////////////////////////////////////////////
 // class ignore
-// // Implements a no-op. That is, ignore(), ignore()(), and
+// Implements a no-op. That is, ignore(), ignore()(), and
 // ignore()(t1, ..., tN) have no effect.
 //
 // NOTE: N is an implementation defined value.
@@ -71,9 +71,9 @@ struct error_Case_Is_Missing
 
 #if !defined(BOOST_NO_CLASS_TEMPLATE_USING_DECLARATIONS)
 
-    // / Must provide operator(), but it should never be invoked. Accepts \
+    // | Must provide operator(), but it should never be invoked. Accepts |
     // | an argument of an implementation-defined type, which should at   |
-    // \ least keep the user from invoking the method.                    /
+    // | least keep the user from invoking the method.                    |
     void operator()(const error_Case_Is_Missing&) const
     {
     }

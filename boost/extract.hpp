@@ -182,6 +182,18 @@ private: // private helpers
 
     template <typename Extractable>
     static T* extract_impl(
+          const Extractable& operand
+        , mpl::false_c //is_extractable
+        , mpl::true_c //is_static_visitable
+        )
+    {
+        visitor visiting;
+        static_visitable_traits<Extractable>::apply_visitor(visiting, operand);
+        return visiting.p;
+    }
+
+    template <typename Extractable>
+    static T* extract_impl(
           Extractable& operand
         , mpl::false_c //is_extractable
         , mpl::false_c //is_static_visitable
