@@ -31,22 +31,23 @@ class ptr_vector : public detail::reversible_ptr_container< detail::default_conf
     typedef detail::reversible_ptr_container< detail::default_config< std::vector<T*,Allocator>, T > > Base;
 
 public: 
-    BOOST_FORWARD_TYPEDEF( Base );
+    //BOOST_FORWARD_TYPEDEF( Base );
+    typedef typename Base::size_type size_type;
 
 public:
-    explicit ptr_vector( const allocator_type& alloc = allocator_type() )               
+    explicit ptr_vector( const Allocator& alloc = Allocator() )               
     : Base( alloc ) {}
     
-    ptr_vector( size_type n, const_reference x, 
-                const allocator_type& alloc = allocator_type() )  
+    ptr_vector( size_type n, const T& x, 
+                const Allocator& alloc = Allocator() )  
     : Base( n, x, alloc ) {}
     
-    explicit ptr_vector( std::auto_ptr<ptr_vector> r )                                          
+    ptr_vector( std::auto_ptr<ptr_vector> r )                                          
     : Base( r ) {}
     
     template< typename InputIterator >
     ptr_vector( InputIterator first, InputIterator last, 
-                const allocator_type& alloc = allocator_type() ) 
+                const Allocator& alloc = Allocator() ) 
     : Base( first, last, alloc ) {}
     
     void operator=( std::auto_ptr<ptr_vector> r )                                   

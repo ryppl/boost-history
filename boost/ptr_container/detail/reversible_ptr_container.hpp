@@ -66,7 +66,8 @@ namespace detail
         const C& c__() const    { return c_; }
     
     public: // typedefs
-        typedef  BOOST_DEDUCED_TYPENAME Config::value_type    value_type, T; // will this ruin adapters?
+        typedef  BOOST_DEDUCED_TYPENAME Config::value_type    object_type, T;
+        typedef  T*                                           value_type;
         typedef  T*                                           pointer;
         typedef  T&                                           reference;
         typedef  const T&                                     const_reference;
@@ -84,9 +85,9 @@ namespace detail
         typedef BOOST_DEDUCED_TYPENAME C::reverse_iterator                 ptr_reverse_iterator; 
         typedef BOOST_DEDUCED_TYPENAME C::const_reverse_iterator           const_ptr_reverse_iterator;
         
-    private: // implementation
+    protected: // implementation
             
-        typedef ptr_container::detail::scoped_deleter<value_type>          scoped_deleter;
+        typedef ptr_container::detail::scoped_deleter<T>                   scoped_deleter;
         typedef ptr_container::detail::size_undoer<C>                      size_undoer;
 
 
@@ -237,7 +238,7 @@ namespace detail
         template< typename InputIterator >
         reversible_ptr_container( InputIterator first, InputIterator last, 
                                   const allocator_type& alloc = allocator_type() ) 
-        : c_( std::distance( first, last ), 0, alloc ) 
+        : c_( std::distance( first, last ), pointer(), alloc ) 
         { 
             clone_assign( first, last );
         }
@@ -588,6 +589,7 @@ namespace detail
     }
 
 #define BOOST_FORWARD_TYPEDEF( Base ) \
+typedef BOOST_DEDUCED_TYPENAME Base::object_type object_type; \
 typedef BOOST_DEDUCED_TYPENAME Base::value_type value_type; \
 typedef BOOST_DEDUCED_TYPENAME Base::reference reference; \
 typedef BOOST_DEDUCED_TYPENAME Base::const_reference const_reference; \

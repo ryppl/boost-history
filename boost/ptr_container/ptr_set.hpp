@@ -25,50 +25,71 @@
 namespace boost
 {
     
-    template< typename Key, typename Compare = std::less<Key*>, 
+    template< typename Key, typename Compare = ptr_less<Key>, 
               typename Allocator = std::allocator<Key*> >
     class ptr_set : public detail::associative_ptr_container< detail::default_config< std::set<Key*,Compare,Allocator>, Key > >
     {
-        typedef detail::associative_ptr_container< std::set<Key*,Compare,Allocator>, Key, false > Base;
+        typedef detail::associative_ptr_container< detail::default_config< std::set<Key*,Compare,Allocator>, Key > > Base;
     
     public: // typedefs
-        BOOST_FORWARD_ASSOC_TYPEDEF( Base );
+        //BOOST_FORWARD_ASSOC_TYPEDEF( Base );
         
-        public:
-           explicit ptr_set( const Compare& comp = Compare(), 
-                             const allocator_type& alloc = allocator_type() ) : Base( comp, alloc ) 
-           { }
-    
-           template< typename InputIterator >
-           ptr_set( InputIterator first, InputIterator last, const Compare& comp = Compare(), 
-                                     const allocator_type& alloc = allocator_type() ) : Base( first, last, comp, alloc )
-           { }
+    public:
+        explicit ptr_set( const Compare& comp = Compare(), 
+                          const Allocator& alloc = Allocator() ) : Base( comp, alloc ) 
+        { }
+        
+        ptr_set( std::auto_ptr<ptr_set> r ) : Base( r )                
+        { }
+
+        template< typename InputIterator >
+        ptr_set( InputIterator first, InputIterator last, const Compare& comp = Compare(), 
+                 const Allocator& alloc = Allocator() ) 
+        : Base( first, last, comp, alloc )
+        { }
            
-           void operator=( std::auto_ptr<ptr_set> r ) { Base::operator=( r );}
-        
-            BOOST_PTR_CONTAINER_RELEASE_AND_CLONE( ptr_set );
-        };
-        
-        
-        
-        template< typename Key, typename Compare = std::less<Key*>, 
-                  typename Allocator = std::allocator<Key*> >
-        class ptr_multiset : public detail::associative_ptr_container< std::multiset<Key*,Compare,Allocator>, Key, false >
+        void operator=( std::auto_ptr<ptr_set> r ) 
         {
-            typedef detail::associative_ptr_container< std::multiset<Key*,Compare,Allocator>, Key, false > Base;
+            Base::operator=( r );
+        }
         
-        public: // typedefs
-            BOOST_FORWARD_ASSOC_TYPEDEF( Base );
+        BOOST_PTR_CONTAINER_RELEASE_AND_CLONE( ptr_set );
+    };
         
-        public:
-            ptr_multiset() : Base() {}
-            ptr_multiset( std::auto_ptr<ptr_multiset> r ) : Base( r )                {}
-            template< typename InputIterator >
-            ptr_multiset( InputIterator first, InputIterator last ) : Base( first, last ) {}
-            void operator=( std::auto_ptr<ptr_multiset> r ) { Base::operator=( r );}
-            
-            BOOST_PTR_CONTAINER_RELEASE_AND_CLONE( ptr_multiset );
-        };
+        
+        
+    template< typename Key, typename Compare = ptr_less<Key>, 
+              typename Allocator = std::allocator<Key*> >
+    class ptr_multiset : public detail::associative_ptr_container< detail::default_config< std::multiset<Key*,Compare,Allocator>, Key > >
+    {
+        typedef detail::associative_ptr_container< detail::default_config< std::multiset<Key*,Compare,Allocator>, Key > > Base;
+        
+    public: // typedefs
+        //BOOST_FORWARD_ASSOC_TYPEDEF( Base );
+        
+    public:
+        explicit ptr_multiset( const Compare& comp = Compare(), 
+                               const Allocator& alloc = Allocator() )
+        : Base( comp, alloc ) 
+        { }
+
+        
+        ptr_multiset( std::auto_ptr<ptr_multiset> r ) : Base( r )                
+        { }
+        
+        template< typename InputIterator >
+        ptr_multiset( InputIterator first, InputIterator last,
+                      const Compare& comp = Compare(), 
+                      const Allocator& alloc = Allocator() ) 
+        : Base( first, last, comp, alloc ) { }
+        
+        void operator=( std::auto_ptr<ptr_multiset> r ) 
+        {
+            Base::operator=( r );
+        }
+        
+        BOOST_PTR_CONTAINER_RELEASE_AND_CLONE( ptr_multiset );
+    };
 
 }
 

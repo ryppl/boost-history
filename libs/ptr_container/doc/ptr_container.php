@@ -221,7 +221,6 @@ function reference()
                         shows the interface that all of the classes have in common and the indvisual parts shows the interface
                         that is only part of some of the individual classes:" ) .
                     ulist( item( ptrContainerLink() ) .
-                           item( arrayLink() ) .
                            item( dequeLink() ) .
                            item( listLink() ) .
                            item( vectorLink() ) .
@@ -244,7 +243,6 @@ function reference()
 
      $overview   .= $usage . vSpace( 1 ) . 
                     hr() . ptrContainerRef() . 
-                    hr() . arrayRef() . 
                     hr() . dequeRef() .
                     hr() . listRef() .
                     hr() . vectorRef() .
@@ -413,6 +411,10 @@ function exceptionLink()
 function ptrContainerRef()
 {
     $res      = beginSection( ptrContainerLink() );
+    $res     .= "This section describe all the common operations for all the pointer containers. If there are differences in
+                 complexity or exception-safety, the differences will be stated under the documentation of the particular
+                 container.";
+     
     $synopsis = beginSynopsis() . 
 "<pre>             
 namespace boost
@@ -460,16 +462,10 @@ namespace boost
     public: // capacity
         size_type  size() const;
         size_type  max_size() const;
-        void     resize( size_type sz, ptr_type = new value_type() );
-        size_type  capacity() const;
+        void       resize( size_type sz, ptr_type = new value_type() );
         bool       empty() const;	
-        void       reserve( size_type n );
     
     public: // element access
-        reference        operator[]( size_type n );
-        const_reference  operator[]( size_type n ) const;
-        reference        at( size_type n );
-        const_reference  at( size_type n ) const;
         reference        front();
         const_reference  front() const;
         reference        back();
@@ -479,8 +475,8 @@ namespace boost
         void      push_back( T* x );
         void      push_back( const_reference x );
         void      pop_back();
-    iterator  insert( iterator position, const_reference x );
-    void      insert( iterator position, size_type n, ptr_type x );
+        iterator  insert( iterator position, const_reference x );
+        void      insert( iterator position, size_type n, ptr_type x );
         template< typename InputIterator >
         void      insert( iterator position, InputIterator first, InputIterator last ); 
         iterator  erase( iterator position );

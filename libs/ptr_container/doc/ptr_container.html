@@ -119,7 +119,7 @@
                                own copies. </li><li  ><i  >Ownership can be tranferred from a container on a per pointer basis.</i> This can of course also be convinient. Whenever it happens, an <code  >std::auto_ptr&lt;&gt;</code> is used to provide an exception-safe transfer. </li><li  ><i  >Ownership can be transferred from a container to another container on a per iterator range basis.</i> This makes it possible to exchange data safely between different pointer containers
                                without cloning the objects again. </li></ul><p  >The documentation is divided into a common section and an explanation for each container. The common section
                         shows the interface that all of the classes have in common and the indvisual parts shows the interface
-                        that is only part of some of the individual classes:</p><ul  ><li  ><a href="#Pseudo class <code  >ptr_container&lt;&gt;</code>" >Pseudo class <code  >ptr_container&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_array&lt;&gt;</code>" > Class <code  >ptr_array&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_deque&lt;&gt;</code>" > Class <code  >ptr_deque&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_list&lt;&gt;</code>" > Class <code  >ptr_list&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_vector&lt;&gt;</code>" > Class <code  >ptr_vector&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_set&lt;&gt;</code>" > Class <code  >ptr_set&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_map&lt;&gt;</code>" > Class <code  >ptr_map&lt;&gt;</code></a></li><li  ><a href="#Exception classes" >Exception classes</a></li></ul><p  >The recommended usage pattern of the container classes are the 
+                        that is only part of some of the individual classes:</p><ul  ><li  ><a href="#Pseudo class <code  >ptr_container&lt;&gt;</code>" >Pseudo class <code  >ptr_container&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_deque&lt;&gt;</code>" > Class <code  >ptr_deque&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_list&lt;&gt;</code>" > Class <code  >ptr_list&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_vector&lt;&gt;</code>" > Class <code  >ptr_vector&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_set&lt;&gt;</code>" > Class <code  >ptr_set&lt;&gt;</code></a></li><li  ><a href="# Class <code  >ptr_map&lt;&gt;</code>" > Class <code  >ptr_map&lt;&gt;</code></a></li><li  ><a href="#Exception classes" >Exception classes</a></li></ul><p  >The recommended usage pattern of the container classes are the 
                 same as the for normal standard containers.<code  >ptr_vector</code>, <code  >ptr_list</code> and <code  >ptr_deque</code> offer the programmer 
                 different complexity tradeoffs and should be used accordingly. <code  >ptr_vector</code> is the type of sequence that should be used by default. <code  >ptr_list</code> should be used when there 
              are frequent insertions and deletions from the middle of the sequence. <code  >ptr_deque</code> is 
@@ -127,7 +127,9 @@
             the beginning or at the end of the sequence.  An associative container supports  
             unique keys if it may contain at most one element for each key.  Otherwise, it 
             supports equivalent keys. <code  >ptr_set</code> and <code  >ptr_map</code> support unique keys. 
-                <code  >ptr_multiset</code> and <code  >ptr_multimap</code> support equivalent keys.</p><br><hr size="1" ><h2  >Pseudo class <code  >ptr_container&lt;&gt;</code></h2><a name="Pseudo class <code  >ptr_container&lt;&gt;</code>" ></a><h3  >Synopsis:</h3><pre>             
+                <code  >ptr_multiset</code> and <code  >ptr_multimap</code> support equivalent keys.</p><br><hr size="1" ><h2  >Pseudo class <code  >ptr_container&lt;&gt;</code></h2><a name="Pseudo class <code  >ptr_container&lt;&gt;</code>" ></a>This section describe all the common operations for all the pointer containers. If there are differences in
+                 complexity or exception-safety, the differences will be stated under the documentation of the particular
+                 container.<h3  >Synopsis:</h3><pre>             
 namespace boost
 {      
     template< typename T, typename Allocator = std::allocator< T* > >
@@ -173,16 +175,10 @@ namespace boost
     public: // capacity
         size_type  size() const;
         size_type  max_size() const;
-        void     resize( size_type sz, ptr_type = new value_type() );
-        size_type  capacity() const;
+        void       resize( size_type sz, ptr_type = new value_type() );
         bool       empty() const;	
-        void       reserve( size_type n );
     
     public: // element access
-        reference        operator[]( size_type n );
-        const_reference  operator[]( size_type n ) const;
-        reference        at( size_type n );
-        const_reference  at( size_type n ) const;
         reference        front();
         const_reference  front() const;
         reference        back();
@@ -192,8 +188,8 @@ namespace boost
         void      push_back( T* x );
         void      push_back( const_reference x );
         void      pop_back();
-    iterator  insert( iterator position, const_reference x );
-    void      insert( iterator position, size_type n, ptr_type x );
+        iterator  insert( iterator position, const_reference x );
+        void      insert( iterator position, size_type n, ptr_type x );
         template< typename InputIterator >
         void      insert( iterator position, InputIterator first, InputIterator last ); 
         iterator  erase( iterator position );
@@ -245,7 +241,7 @@ namespace boost
     void insert( iterator position, InputIterator first, InputIterator last );</pre><blockquote  ><p  ><b  >Requirements: </b><code  >position</code> is a valid iterator from the container</p><p  ><b  >Effects: </b>Inserts a cloned range before <code  >position</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >iterator erase( iterator position );</code><blockquote  ><p  ><b  >Requirements: </b><code  >position</code> is a valid iterator from the container</p><p  ><b  >Effects: </b>Removes the element defined by <code  >position</code> and returns an
                       iterator to the following element</p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >iterator erase( iterator first, iterator last );</code><blockquote  ><p  ><b  >Requirements: </b><code  >(first,last]</code> is a valid range</p><p  ><b  >Effects: </b>Removes the range of element defined by <code  >position</code> and returns an
                  iterator to the following element</p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >void swap( ptr_container& r );</code><blockquote  ><p  ><b  >Effects: </b>Swaps the content of the two containers</p><p  ><b  >Throws: </b>Nothing</p></blockquote><code  >void clear();</code><blockquote  ><p  ><b  >Effects: </b>Destroys all object of the container </p><p  ><b  >Postconditions: </b><code  >empty() == true</code></p><p  ><b  >Throws: </b>Nothing</p></blockquote><p  ><h3  >Semantics: <i  >pointer container requirements</i></h3></p><code  >std::auto_ptr&lt; ptr_container &gt;  clone() const;</code><blockquote  ><p  ><b  >Effects: </b>Returns a deep copy of the container</p><p  ><b  >Throws: </b><code  >std::bad_alloc</code> if there is not enough memory to make a clone of the container</p><p  ><b  >Complexity: </b>Linear</p></blockquote><code  >std::auto_ptr&lt; ptr_container &gt;  release();</code><blockquote  ><p  ><b  >Effects: </b>Releases ownership of the container. This is a useful way of returning
-                 a container from a function.</p><p  ><b  >Postconditions: </b><code  >empty() == true</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p><p  ><b  >Throws: </b><code  >std::bad_alloc</code> if the return value cannot be allocated</p></blockquote><code  >std::auto_ptr&lt; T &gt; release_back();</code><blockquote  ><p  ><b  >Requirements: </b><code  >not empty()</code></p><p  ><b  >Effects: </b>Releases ownership of the last pointer in the container</p><p  ><b  >Postconditions: </b><code  >size()</code> is one less </p><p  ><b  >Throws: </b><code  >bad_ptr_container_operation</code> if the container is empty</p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >std::auto_ptr&lt; T &gt; release( iterator position );</code><blockquote  ><p  ><b  >Requirements: </b><code  >not empty()</code></p><p  ><b  >Effects: </b>Releases ownership of the pointer referred to by <code  >position</code></p><p  ><b  >Postconditions: </b><code  >size()</code> is one less </p><p  ><b  >Throws: </b><code  >bad_ptr_container_operation</code> if the container is empty</p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><hr size="1" ><h2  > Class <code  >ptr_array&lt;&gt;</code></h2><a name=" Class <code  >ptr_array&lt;&gt;</code>" ></a><hr size="1" ><h2  > Class <code  >ptr_deque&lt;&gt;</code></h2><a name=" Class <code  >ptr_deque&lt;&gt;</code>" ></a><h3  >Synopsis:</h3><pre>             
+                 a container from a function.</p><p  ><b  >Postconditions: </b><code  >empty() == true</code></p><p  ><b  >Exception safety: </b>Strong guarantee</p><p  ><b  >Throws: </b><code  >std::bad_alloc</code> if the return value cannot be allocated</p></blockquote><code  >std::auto_ptr&lt; T &gt; release_back();</code><blockquote  ><p  ><b  >Requirements: </b><code  >not empty()</code></p><p  ><b  >Effects: </b>Releases ownership of the last pointer in the container</p><p  ><b  >Postconditions: </b><code  >size()</code> is one less </p><p  ><b  >Throws: </b><code  >bad_ptr_container_operation</code> if the container is empty</p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><code  >std::auto_ptr&lt; T &gt; release( iterator position );</code><blockquote  ><p  ><b  >Requirements: </b><code  >not empty()</code></p><p  ><b  >Effects: </b>Releases ownership of the pointer referred to by <code  >position</code></p><p  ><b  >Postconditions: </b><code  >size()</code> is one less </p><p  ><b  >Throws: </b><code  >bad_ptr_container_operation</code> if the container is empty</p><p  ><b  >Exception safety: </b>Strong guarantee</p></blockquote><hr size="1" ><h2  > Class <code  >ptr_deque&lt;&gt;</code></h2><a name=" Class <code  >ptr_deque&lt;&gt;</code>" ></a><h3  >Synopsis:</h3><pre>             
 namespace boost
 {
     template< typename T, typename Allocator = std::allocator< T* > >
@@ -288,7 +284,7 @@ public: // modifiers
 public: // list operations
     void  splice( iterator before, ptr_list& x );
     void  splice( iterator before, ptr_list& x, iterator i );
-    void  splice( iterator before, ptr_list& x, iterator first, iterator last );                                                                    { c_.splice( before.base(), x.c_, first.base(), last.base() );}
+    void  splice( iterator before, ptr_list& x, iterator first, iterator last );
     
     // Q: are they really faster as member functions???    
     void  remove( const_reference value );                           
