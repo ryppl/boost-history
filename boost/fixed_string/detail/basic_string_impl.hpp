@@ -16,6 +16,8 @@
 // *  uses an MPL-based approach to check InputIterator on replace( iterator i1, iterator i2, InputIterator j1, InputIterator j2 )
 // *  uses basic_string as the substring type (currently via a typedef: will make this a template policy at some point)
 // *  uses optimized versions of find and rfind for searching for single characters
+// *  uses boost::reverse_iterator< Iterator >: there are various problems when using std::reverse_iterator< Iterator >
+//    on non-conformant compilers/standard libraries
 
 /*
    struct StringPolicy // interface of a StringPolicy class
@@ -42,6 +44,7 @@
 #  include <boost/config.hpp>
 #  include <boost/mpl/if.hpp>
 #  include <boost/mpl/bool.hpp>
+#  include <boost/iterator/reverse_iterator.hpp>
 #  include <algorithm>
 #  include <iostream>
 #  include <typeinfo>
@@ -100,14 +103,8 @@
          public:
             typedef typename allocator_type::pointer                 iterator;
             typedef typename allocator_type::const_pointer           const_iterator;
-#           if !defined(BOOST_NO_STD_ITERATOR)
-               typedef std::reverse_iterator< iterator >             reverse_iterator;
-               typedef std::reverse_iterator< const_iterator >       const_reverse_iterator;
-#           else
-               typedef std::reverse_iterator< iterator, value_type > reverse_iterator;
-               typedef std::reverse_iterator< const_iterator, const value_type >
-                                                                     const_reverse_iterator;
-#           endif
+            typedef boost::reverse_iterator< iterator >              reverse_iterator;
+            typedef boost::reverse_iterator< const_iterator >        const_reverse_iterator;
          public:
             BOOST_STATIC_CONSTANT( size_type, npos = -1 );
          private: // implementation helpers
