@@ -1,9 +1,13 @@
+#ifndef libs_numeric_bindings_blas_blas_hpp
+#define libs_numeric_bindings_blas_blas_hpp
+
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <stdlib.h>
 #include <iomanip>
 
+#include <boost/config.hpp>
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/vector_proxy.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
@@ -11,6 +15,12 @@
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/timer.hpp>
 #include <boost/numeric/bindings/traits/algorithm.hpp>
+
+#if defined(BOOST_NO_MEMBER_TEMPLATE_KEYWORD) || defined(_MSC_VER)
+#define MEMBER_TEMPLATE
+#else
+#define MEMBER_TEMPLATE template
+#endif
 
 namespace numerics = boost::numeric::ublas ;
 
@@ -182,7 +192,7 @@ void loop(std::ostream& os, int start, int step, int stop, int runs, FunctorType
     std::cerr << size_i << "\t";
     os        << size_i << "\t";
     
-    functor.template operator()< T >( os, stop, size_i, runs, runs_i ) ;
+    functor.MEMBER_TEMPLATE operator()< T >( os, stop, size_i, runs, runs_i ) ;
     
     std::cerr << std::endl;
     os        << std::endl;
@@ -198,9 +208,11 @@ void loop(std::ostream& os, int start, int step, int stop, int runs, FunctorType
     std::cerr << size_i << "\t";
     os        << size_i << "\t";
     
-    functor.template operator()< T >( os, stop, size_i, runs, runs_i, ublas_call ) ;
+    functor.MEMBER_TEMPLATE operator()< T >( os, stop, size_i, runs, runs_i, ublas_call ) ;
     
     std::cerr << std::endl;
     os        << std::endl;
   }
 }
+
+#endif // libs_numeric_bindings_blas_blas_hpp
