@@ -34,7 +34,8 @@ namespace boost
     public: // typedefs
        
         typedef BOOST_DEDUCED_TYPENAME Base::iterator     iterator;                 
-        typedef BOOST_DEDUCED_TYPENAME Base::ptr_iterator ptr_iterator;         
+        typedef BOOST_DEDUCED_TYPENAME Base::ptr_iterator ptr_iterator;   
+        typedef BOOST_DEDUCED_TYPENAME Base::size_type    size_type;         
 
     private:
         
@@ -43,8 +44,8 @@ namespace boost
         {                                                                     
             while( first != last )                                            
             {           
-                if( this->find( *first ) != this->end() )
-                    insert( make_clone( *first ) ); // strong, commit                              
+                if( find( *first ) != this->end() )
+                    insert( make_clone( *first ) ); // strong, commit
                 ++first;                                                      
             }                                                                 
         }                         
@@ -85,6 +86,8 @@ namespace boost
         {
             set_basic_clone_and_insert( first, last );
         }
+        
+        BOOST_PTR_SET_ALGORITHMS( Key );      
     };
         
         
@@ -99,7 +102,8 @@ namespace boost
         
         typedef BOOST_DEDUCED_TYPENAME Base::iterator     iterator;              
         typedef BOOST_DEDUCED_TYPENAME Base::ptr_iterator ptr_iterator;  
-        
+        typedef BOOST_DEDUCED_TYPENAME Base::size_type    size_type;         
+         
     private:
         template< typename II >                                               
         void set_basic_clone_and_insert( II first, II last ) // basic                 
@@ -148,6 +152,8 @@ namespace boost
         {
             set_basic_clone_and_insert( first, last );
         }
+        
+        BOOST_PTR_SET_ALGORITHMS( Key )      
     };
 
     //////////////////////////////////////////////////////////////////////////////

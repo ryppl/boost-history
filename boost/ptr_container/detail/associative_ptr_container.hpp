@@ -95,54 +95,7 @@ namespace detail
             this->remove( first, last ); 
             this->c__().erase( first.base(), last.base() );
         }
-
-        iterator find( const search_key_type& x )
-        {
-            return iterator( this->c__().find( x ) );
-        }
-        
-        const_iterator find( const search_key_type& x ) const 
-        {
-            return const_iterator( this->c__().find( x ) );
-        }
-        
-        size_type count( const search_key_type& x ) const 
-        {
-            return this->c__().count( x ); 
-        }
-        
-        iterator lower_bound( const search_key_type& x )
-        {
-            return iterator( this->c__().lower_bound( x ) );
-        }
-         
-        const_iterator lower_bound( const search_key_type& x ) const 
-        {
-            return const_iterator( this->c__().lower_bound( x ) );        
-        } 
-        
-        iterator upper_bound( const search_key_type& x )
-        {
-            return iterator( this->c__().upper_bound( x ) ); 
-        }
-        
-        const_iterator upper_bound( const search_key_type& x ) const
-        {
-            return const_iterator( this->c__().upper_bound( x ) );
-        }
-        
-        std::pair<iterator, iterator> equal_range( const search_key_type& x ) 
-        {
-            std::pair<ptr_iterator,ptr_iterator> p = this->c__().equal_range( x );
-            return std::make_pair( iterator( p.first ), iterator( p.second ) );
-        }
-        
-        std::pair<const_iterator, const_iterator> equal_range( const search_key_type& x ) const 
-        {
-            std::pair<ptr_const_iterator,ptr_const_iterator> p = this->c__().equal_range( x );
-            return std::make_pair( const_iterator( p.first ), const_iterator( p.second ) );
-        }
-        
+  
         /*
         template< typename PtrContainer >
         void transfer( typename PtrContainer::iterator object, PtrContainer& from ) // strong
@@ -184,6 +137,85 @@ namespace detail
             return *l < *r;
         }
     };
+    
+    /////////////////////////////////////////////////////////////////////////
+    // set algorithms
+#define BOOST_PTR_SET_ALGORITHMS( T )                                            \
+                                                                                 \
+    iterator find( T& x )                                                        \
+    {   /* note bug in most std.lib, set::find is not overloaded */              \
+        return iterator( Base::c__().find( &x ) );                               \
+    }                                                                            \
+                                                                                 \
+    size_type count( const T& x ) const                                          \
+    {                                                                            \
+        return this->c__().count( &x );                                          \
+    }                                                                            \
+                                                                                 \
+    iterator lower_bound( const T& x ) const                                     \
+    {                                                                            \
+        return iterator( this->c__().lower_bound( &x ) );                        \
+    }                                                                            \
+                                                                                 \
+    iterator upper_bound( const T& x ) const                                     \
+    {                                                                            \
+        return iterator( this->c__().upper_bound( &x ) );                        \
+    }                                                                            \
+                                                                                 \
+    std::pair<iterator,iterator> equal_range( const T& x ) const                 \
+    {                                                                            \
+        std::pair<ptr_iterator,ptr_iterator> p = this->c__().equal_range( &x );  \
+        return std::make_pair( iterator( p.first ), iterator( p.second ) );      \
+    }
+
+#define BOOST_PTR_MAP_ALGORITHMS( T )                                            \
+    iterator find( const T& x )                                                  \
+    {                                                                            \
+        return iterator( this->c__().find( x ) );                                \
+    }                                                                            \
+                                                                                 \
+    const_iterator find( const T& x ) const                                      \
+    {                                                                            \
+        return const_iterator( this->c__().find( x ) );                          \
+    }                                                                            \
+                                                                                 \
+    size_type count( const T& x ) const                                          \
+    {                                                                            \
+        return this->c__().count( x );                                           \
+    }                                                                            \
+                                                                                 \
+    iterator lower_bound( const T& x )                                           \
+    {                                                                            \
+        return iterator( this->c__().lower_bound( x ) );                         \
+    }                                                                            \
+                                                                                 \
+    const_iterator lower_bound( const T& x ) const                               \
+    {                                                                            \
+        return const_iterator( this->c__().lower_bound( x ) );                   \
+    }                                                                            \
+                                                                                 \
+    iterator upper_bound( const T& x )                                           \
+    {                                                                            \
+        return iterator( this->c__().upper_bound( x ) );                         \
+    }                                                                            \
+                                                                                 \
+    const_iterator upper_bound( const T& x ) const                               \
+    {                                                                            \
+        return const_iterator( this->c__().upper_bound( x ) );                   \
+    }                                                                            \
+                                                                                 \
+    std::pair<iterator, iterator> equal_range( const T& x )                      \
+    {                                                                            \
+        std::pair<ptr_iterator,ptr_iterator> p = this->c__().equal_range( x );   \
+        return std::make_pair( iterator( p.first ), iterator( p.second ) );      \
+    }                                                                            \
+                                                                                 \
+    std::pair<const_iterator, const_iterator> equal_range( const T& x ) const    \
+    {                                                                            \
+        std::pair<ptr_const_iterator,ptr_const_iterator> p = this->c__().equal_range( x ); \
+        return std::make_pair( const_iterator( p.first ), const_iterator( p.second ) );    \
+    }
+
 
 } // namespace 'boost'
 

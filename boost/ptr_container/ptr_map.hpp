@@ -34,9 +34,12 @@ namespace boost
     public:
             // mapped_type ?
         
-        typedef BOOST_DEDUCED_TYPENAME Base::iterator     iterator;                 
-        typedef BOOST_DEDUCED_TYPENAME Base::ptr_iterator ptr_iterator;         
-        typedef BOOST_DEDUCED_TYPENAME Base::object_type  object_type;         
+        typedef BOOST_DEDUCED_TYPENAME Base::iterator           iterator;                 
+        typedef BOOST_DEDUCED_TYPENAME Base::const_iterator     const_iterator;           
+        typedef BOOST_DEDUCED_TYPENAME Base::ptr_iterator       ptr_iterator;         
+        typedef BOOST_DEDUCED_TYPENAME Base::ptr_const_iterator ptr_const_iterator;         
+        typedef BOOST_DEDUCED_TYPENAME Base::object_type        object_type;         
+        typedef BOOST_DEDUCED_TYPENAME Base::size_type          size_type;
 
     private:
            
@@ -92,6 +95,7 @@ namespace boost
             return insert( key, make_clone( x ) );
         }
 
+        BOOST_PTR_MAP_ALGORITHMS( Key );
     };
     
 
@@ -104,9 +108,12 @@ namespace boost
     
     public: // typedefs
         // mapped_type
-        typedef BOOST_DEDUCED_TYPENAME Base::iterator     iterator;                 
-        typedef BOOST_DEDUCED_TYPENAME Base::ptr_iterator ptr_iterator;        
-        typedef BOOST_DEDUCED_TYPENAME Base::object_type  object_type;          
+        typedef BOOST_DEDUCED_TYPENAME Base::iterator           iterator;                 
+        typedef BOOST_DEDUCED_TYPENAME Base::const_iterator     const_iterator;           
+        typedef BOOST_DEDUCED_TYPENAME Base::ptr_iterator       ptr_iterator;         
+        typedef BOOST_DEDUCED_TYPENAME Base::ptr_const_iterator ptr_const_iterator;         
+        typedef BOOST_DEDUCED_TYPENAME Base::object_type        object_type;         
+        typedef BOOST_DEDUCED_TYPENAME Base::size_type          size_type;
 
     private:
         
@@ -158,6 +165,8 @@ namespace boost
         {
             return insert( key, make_clone( x ) );
         }
+        
+        BOOST_PTR_MAP_ALGORITHMS( Key );
     };
 
     //////////////////////////////////////////////////////////////////////////////
