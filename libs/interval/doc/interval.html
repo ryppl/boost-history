@@ -24,18 +24,18 @@ this library is to extend the usual arithmetic functions to
 intervals. These intervals will be written [<i>a</i>,<i>b</i>] to
 represent all the numbers between <i>a</i> and <i>b</i>. <i>a</i> and
 <i>b</i> can be infinite (but they can not be the same infinite) and
-<i>a</i> &lt;= <i>b</i>.</p>
+<i>a</i> &le; <i>b</i>.</p>
 
 <p>The fondamental property of interval arithmetic is: if <i>f</i> is
 a function on a set of numbers, <i>f</i> can be extended to a new
 function defined on intervals. This new function <i>f</i> takes one
-interval argument and returns an interval result such as: <b>for
-each</b> <i>x</i> <b>in</b> [<i>a</i>,<i>b</i>], <i>f</i>(<i>x</i>) is
-<b>in</b> <i>f</i>([<i>a</i>,<i>b</i>]). Such a property is not
-limited to functions with only one argument. Whenever possible, the
-interval result should be the smallest one able to satisfy the
-property (it is not really useful if the new functions always answer
-[-<i>inf</i>,+<i>inf</i>]).</p>
+interval argument and returns an interval result such as: &forall;
+<i>x</i> &isin; [<i>a</i>,<i>b</i>], <i>f</i>(<i>x</i>) &isin;
+<i>f</i>([<i>a</i>,<i>b</i>]). Such a property is not limited to
+functions with only one argument. Whenever possible, the interval
+result should be the smallest one able to satisfy the property (it is
+not really useful if the new functions always answer
+[-&infin;,+&infin;]).</p>
 
 <p>There are two reasons a user would like to use this library. The
 obvious one is when the user has to compute intervals. The other one
@@ -93,15 +93,15 @@ solution, {<i>false</i>,<i>true</i>} can be transformed in
 
 <p>If <i>false</i> is chosen, the comparison will be called
 "certain". Indeed, the result of [<i>a</i>,<i>b</i>] &lt;
-[<i>c</i>,<i>d</i>] will be <i>true</i> if and only if <b>for each</b>
-<i>x</i> <b>in</b> [<i>a</i>,<i>b</i>] and <i>y</i> <b>in</b>
+[<i>c</i>,<i>d</i>] will be <i>true</i> if and only if: &forall;
+<i>x</i> &isin; [<i>a</i>,<i>b</i>] &forall; <i>y</i> &isin;
 [<i>c</i>,<i>d</i>], <i>x</i> &lt; <i>y</i>.</p>
 
 <p>If <i>true</i> is chosen, the comparison will be called
 "possible". Indeed, the result of [<i>a</i>,<i>b</i>] &lt;
-[<i>c</i>,<i>d</i>] will be <i>true</i> if and only if it
-<b>exists</b> <i>x</i> <b>in</b> [<i>a</i>,<i>b</i>] and <i>y</i>
-<b>in</b> [<i>c</i>,<i>d</i>] such as <i>x</i> &lt; <i>y</i>.</p>
+[<i>c</i>,<i>d</i>] will be <i>true</i> if and only if: &exist;
+<i>x</i> &isin; [<i>a</i>,<i>b</i>] &exist; <i>y</i> &isin;
+[<i>c</i>,<i>d</i>], <i>x</i> &lt; <i>y</i>.</p>
 
 <h2><code>interval</code> Class</h2>
 
@@ -480,7 +480,9 @@ true for all the following functions and operators.</p>
 <p>There are also some assignment operators <code>+= -= *=
 /=</code>. There is not much to say: <code>x op= y</code> is
 equivalent to <code>x = x op y</code>. If an exception is thrown
-during the computations, the l-value is not modified.</p>
+during the computations, the l-value is not modified (but it may be
+corrupt if an exception is thrown by the base type during an
+assignment).</p>
 
 <p>The operators <code>/</code> and <code>/=</code> use the <a
 href="#checking">checking</a> policy if necessary.</p>
@@ -603,7 +605,7 @@ operator for the type <code>T</code>.</p>
 
 <p>The static functions <code>empty</code> and <code>entire</code>
 produces the corresponding intervals. Please be aware that the default
-implementation use NaN numbers for the empty interval and infinite
+implementation uses NaN numbers for the empty interval and infinite
 numbers for the entire interval.</p>
 
 <h3>Constants</h3>
@@ -767,46 +769,49 @@ is not what you seek, you will have to directly use
 
 <h3>Synopsis</h3>
 
-<p>Here comes what the class is supposed to provide:</p>
+<p>Here comes what the class is supposed to provide. The domains are
+written next to their respective functions (as you can see, the
+functions do not have to worry about invalid values, but they have to
+handle infinite arguments).</p>
 
 <pre>
 struct rounding {
-  T add_down(T, T);
-  T add_up  (T, T);
-  T sub_down(T, T);
-  T sub_up  (T, T);
-  T mul_down(T, T);
-  T mul_up  (T, T);
-  T div_down(T, T);
-  T div_up  (T, T);
-  T sqrt_down(T);
-  T sqrt_up  (T);
-  T exp_down(T);
-  T exp_up  (T);
-  T log_down(T);
-  T log_up  (T);
-  T cos_down(T);
-  T cos_up  (T);
-  T tan_down(T);
-  T tan_up  (T);
-  T asin_down(T);
-  T asin_up  (T);
-  T acos_down(T);
-  T acos_up  (T);
-  T atan_down(T);
-  T atan_up  (T);
-  T sinh_down(T);
-  T sinh_up  (T);
-  T cosh_down(T);
-  T cosh_up  (T);
-  T tanh_down(T);
-  T tanh_up  (T);
-  T asinh_down(T);
-  T asinh_up  (T);
-  T acosh_down(T);
-  T acosh_up  (T);
-  T atanh_down(T);
-  T atanh_up  (T);
+  T add_down(T, T); // [-&infin;;+&infin;]&sup2;
+  T add_up  (T, T); // [-&infin;;+&infin;]&sup2;
+  T sub_down(T, T); // [-&infin;;+&infin;]&sup2;
+  T sub_up  (T, T); // [-&infin;;+&infin;]&sup2;
+  T mul_down(T, T); // [-&infin;;+&infin;]&sup2;
+  T mul_up  (T, T); // [-&infin;;+&infin;]&sup2;
+  T div_down(T, T); // [-&infin;;+&infin;]&times;([-&infin;;+&infin;]-{0})
+  T div_up  (T, T); // [-&infin;;+&infin;]&times;([-&infin;;+&infin;]-{0})
+  T sqrt_down(T);   // ]0;+&infin;]
+  T sqrt_up  (T);   // ]0;+&infin;]
+  T exp_down(T);    // [-&infin;;+&infin;]
+  T exp_up  (T);    // [-&infin;;+&infin;]
+  T log_down(T);    // ]0;+&infin;]
+  T log_up  (T);    // ]0;+&infin;]
+  T cos_down(T);    // [0;2&pi;]
+  T cos_up  (T);    // [0;2&pi;]
+  T tan_down(T);    // ]-&pi;/2;&pi;/2[
+  T tan_up  (T);    // ]-&pi;/2;&pi;/2[
+  T asin_down(T);   // [-1;1]
+  T asin_up  (T);   // [-1;1]
+  T acos_down(T);   // [-1;1]
+  T acos_up  (T);   // [-1;1]
+  T atan_down(T);   // [-&infin;;+&infin;]
+  T atan_up  (T);   // [-&infin;;+&infin;]
+  T sinh_down(T);   // [-&infin;;+&infin;]
+  T sinh_up  (T);   // [-&infin;;+&infin;]
+  T cosh_down(T);   // [-&infin;;+&infin;]
+  T cosh_up  (T);   // [-&infin;;+&infin;]
+  T tanh_down(T);   // [-&infin;;+&infin;]
+  T tanh_up  (T);   // [-&infin;;+&infin;]
+  T asinh_down(T);  // [-&infin;;+&infin;]
+  T asinh_up  (T);  // [-&infin;;+&infin;]
+  T acosh_down(T);  // [1;+&infin;]
+  T acosh_up  (T);  // [1;+&infin;]
+  T atanh_down(T);  // [-1;1]
+  T atanh_up  (T);  // [-1;1]
   T int_down(T);
   T int_up  (T);
   static T pi_down();
@@ -820,11 +825,6 @@ struct rounding {
 };
 </pre>
 
-<p>These functions do not have to worry about invalid
-arguments. Moreover, the argument of the <code>cos_</code> functions
-is between 0 and 2&pi;; and the argument of the <code>tan_</code>
-functions is between -&pi;/2 and &pi;/2.</p>
-
 <p>The functions <code>int_down</code> and <code>int_up</code>
 compute the nearest integer smaller or bigger than their
 argument. The <code>pi_</code> functions are supposed to return bounds
@@ -837,7 +837,7 @@ class able to work if nested inside <code>rounding</code>. Naturally
 <code>rounding::unprotected_rounding</code> may simply be
 <code>rounding</code> itself. But it can improve performance if it is
 a simplified version without constructor and destructor. See the <a
-href="#perf">performance notes</a> for an explication.</p>
+href="#perf">performance notes</a> for an explanation.</p>
 
 <p>The type <code>tonearest_rounding</code> also provides another
 rounding class. However, it does not have to be as complex as
@@ -845,9 +845,8 @@ rounding class. However, it does not have to be as complex as
 this type is: the basic operators <code>+ - * /</code> will be rounded
 toward the nearest integer while an object of type
 <code>rounding::tonearest_rounding</code> is alive. This type must be
-defined in order for the functions <code>dist</code>,
-<code>median</code>, <code>bisect</code> and
-<code>symmetric_scale</code> to compile.</p>
+defined in order for the functions <code>median</code> and
+<code>bisect</code> to compile.</p>
 
 <h3>Provided classes</h3>
 
@@ -1064,9 +1063,9 @@ expected to return the sum rounded downward.</p>
 
 <p><code>to_int</code> computes the nearest integer accordingly to the
 current rounding mode. <code>force_rounding</code> returns its
-argument correctly rounded according to the current rounding mode if
-it was not already the case. This function is necessary to compensate
-for the extended precision of some floating-point units.</p>
+argument correctly rounded accordingly to the current rounding mode if
+it was not already the case. This function is necessary to handle
+delayed rounding.</p>
 
 <p>The non-specialized version of <code>rounding_control</code> does
 not do anything. The functions for the rounding mode are
@@ -1485,7 +1484,7 @@ precision).</p>
 
 <p><code>cmp.cpp</code> tests if the operators <code>&lt; &gt; &lt;=
 &gt;= == !=</code> (for the three pre-defined comparisons) and the
-functions <code>cer...</code> and <code>pos...</code> behave correctly
+functions <code>cer..</code> and <code>pos..</code> behave correctly
 with some simple intervals ([1,2] and [3,4], [1,3] and [2,4], [1,2]
 and [2,3], etc).</p>
 
