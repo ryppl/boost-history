@@ -191,6 +191,8 @@ namespace boost
 
 #ifndef BOOST_SMART_POINTER_LEGACY_INTERFACE
 
+}   // namespace boost
+
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/lambda.hpp>
 #include <boost/mpl/apply.hpp>
@@ -198,6 +200,9 @@ namespace boost
 #include <boost/mpl/find_if.hpp>
 #include <boost/mpl/apply_if.hpp>
 #include <boost/mpl/is_placeholder.hpp>
+
+namespace boost
+{
 
     using mpl::_;
 
@@ -568,6 +573,7 @@ namespace boost
         bool operator!() const // Enables "if (!sp) ..."
         { return !storage_policy::is_valid(); }
 
+#ifndef __BORLANDC__
         inline friend bool operator==(smart_ptr const& lhs, T const* rhs)
         { return get_impl(lhs) == rhs; }
 
@@ -579,6 +585,7 @@ namespace boost
 
         inline friend bool operator!=(T const* lhs, this_type const& rhs)
         { return rhs != lhs; }
+#endif
 
         // Ambiguity buster
         template <typename U, BOOST_CONVERSION_PARAMETERS>
@@ -645,8 +652,6 @@ namespace boost
     class scalar_storage : public storage_policy_base< scalar_storage<T> >
     {
     public:
-        BOOST_MPL_AUX_LAMBDA_SUPPORT(1, scalar_storage, (T))
-
         typedef T*          stored_type;        // the type of the pointee_
         typedef T const*    const_stored_type;  //   object
         typedef T*          pointer_type;       // type returned by operator->
@@ -659,11 +664,11 @@ namespace boost
     protected:
         scalar_storage() : pointee_(default_value())
         { }
-/*
+
         scalar_storage(scalar_storage const&)
         : pointee_(default_value())
         { }
-*/
+
         // The storage policy doesn't initialize the stored pointer
         //     which will be initialized by the OwnershipPolicy's Clone fn
         template <typename U>
@@ -705,6 +710,8 @@ namespace boost
     private:
         // Data
         stored_type pointee_;
+
+        BOOST_MPL_AUX_LAMBDA_SUPPORT(1, scalar_storage, (T))
     };
 
 #ifdef __BORLANDC__
@@ -720,9 +727,6 @@ namespace boost
     class array_storage : public storage_policy_base< array_storage<T> >
     {
     public:
-#ifdef BOOST_MPL_NO_FULL_LAMBDA_SUPPORT
-        BOOST_MPL_AUX_LAMBDA_SUPPORT(1, array_storage, (T))
-#endif
         typedef T*          stored_type;        // the type of the pointee_
         typedef T const*    const_stored_type;  //   object
         typedef T*          pointer_type;       // type returned by operator->
@@ -784,6 +788,8 @@ namespace boost
     private:
         // Data
         stored_type pointee_;
+
+        BOOST_MPL_AUX_LAMBDA_SUPPORT(1, array_storage, (T))
     };
 
 #ifdef __BORLANDC__
@@ -807,9 +813,6 @@ namespace boost
         typedef ref_counted type;
         typedef ownership_policy_tag policy_category;
         typedef copy_semantics_tag ownership_category;
-#ifdef BOOST_MPL_NO_FULL_LAMBDA_SUPPORT
-        BOOST_MPL_AUX_LAMBDA_SUPPORT(1, ref_counted, (P))
-#endif
 
     protected:
         ref_counted()
@@ -881,6 +884,8 @@ namespace boost
 
         // Data
         unsigned* pCount_;
+
+        BOOST_MPL_AUX_LAMBDA_SUPPORT(1, ref_counted, (P))
     };
 
 #ifdef __BORLANDC__
@@ -1286,9 +1291,6 @@ namespace boost
     {
         typedef disallow_conversion type;
         typedef conversion_policy_tag policy_category;
-#ifdef BOOST_MPL_NO_FULL_LAMBDA_SUPPORT
-        BOOST_MPL_AUX_LAMBDA_SUPPORT(1, disallow_conversion, (P))
-#endif
 
         struct disallow_conversion_result
         {
@@ -1311,6 +1313,8 @@ namespace boost
 
         static void swap(disallow_conversion&)
         { }
+
+        BOOST_MPL_AUX_LAMBDA_SUPPORT(1, disallow_conversion, (P))
     };
 
 #ifdef __BORLANDC__
@@ -1374,8 +1378,6 @@ namespace boost
         typedef checking_policy_tag policy_category;
         typedef assert_check type;
 
-        BOOST_MPL_AUX_LAMBDA_SUPPORT(1, assert_check, (P))
-
         assert_check()
         { }
 
@@ -1401,6 +1403,8 @@ namespace boost
 
         static void swap(assert_check&)
         { }
+
+        BOOST_MPL_AUX_LAMBDA_SUPPORT(1, assert_check, (P))
     };
 
 #ifdef __BORLANDC__
@@ -1619,6 +1623,10 @@ namespace boost
     }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Smart Pointer Concept Interface
+////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
 // C++-style cast operators
 // These were shamelessly ripped off from boost::shared_ptr
 ////////////////////////////////////////////////////////////////////////////////
@@ -1687,25 +1695,9 @@ namespace boost
         return get_impl(p);
     }
 
-}   // namespace boost
-
-#ifdef BOOST_SMART_POINTER_ORDERING_OPERATORS
-# include <boost/smart_ptr/ordering_operators.hpp>
-#endif
-
-////////////////////////////////////////////////////////////////////////////////
-// std::less and std::swap specializations for smart_ptr
-//
-// Strictly speaking, these partial specializations are not legal; but with any
-// luck, they will be by the next standard.  They are useful anyway, and so are
-// included here.
-////////////////////////////////////////////////////////////////////////////////
-
 // MSVC, of course, does not like partial specialization
 #ifndef BOOST_MSVC
 
-namespace std
-{
     template <typename T, BOOST_SMART_POINTER_PARAMETERS>
     struct less<boost::smart_ptr<T, BOOST_SMART_POINTER_POLICIES> >
         : public binary_function<
@@ -1730,6 +1722,12 @@ namespace std
 }
 
 #endif // BOOST_MSVC
+
+}   // namespace boost
+
+#ifdef BOOST_SMART_POINTER_ORDERING_OPERATORS
+# include <boost/smart_ptr/ordering_operators.hpp>
+#endif
 
 #undef BOOST_SMART_POINTER_POLICIES
 #undef BOOST_SMART_POINTER_PARAMETERS
