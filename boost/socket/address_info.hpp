@@ -59,7 +59,7 @@ namespace boost
       }
 
       template <class IteratorAdaptor>
-      const address_info dereference(IteratorAdaptor& x) const
+      const address_info& dereference(IteratorAdaptor& x) const
       {
         static address_info info;
         info.set(x.base());
