@@ -106,7 +106,7 @@ struct iter_fold_impl
     typedef iter_fold_next<typename next3::iterator,LastIterator,ForwardOp,typename next3::type> next4;
     
     typedef typename select_type<
-        is_same<typename next3::iterator,LastIterator>::value
+        is_same<typename next4::iterator,LastIterator>::value
         , iter_fold_done<Iterator,typename next4::type>
         , iter_fold_impl<
           typename next4::iterator
