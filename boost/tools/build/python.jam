@@ -249,7 +249,8 @@ rule Link-PYD
         
         if $(OS) = AIX
         {
-            LINKFLAGS on $(<) += -e init$(<[1]:B) ;
+            # explicitly designate the exported init<module> function
+            LINKFLAGS on $(<) += "-e init$(<[1]:B)" ; 
             Aix-Implib-Action $(<) : $(>) ;
         }
     }
