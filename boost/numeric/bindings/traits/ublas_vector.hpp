@@ -27,8 +27,6 @@
 
 namespace boost { namespace numeric { namespace bindings { namespace traits {
 
-#if ! defined(BOOST_NO_CV_TEMPLATE_TEMPLATES)
-
   // ublas::vector<>
   template <typename T, typename ArrT>
   struct vector_traits<boost::numeric::ublas::vector<T, ArrT> > 
@@ -49,7 +47,6 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       return vector_traits<ArrT const>::storage (v.data()); 
     }
   }; 
-#endif // BOOST_NO_CV_TEMPLATE_TEMPLATES
 
   // ublas::vector_range<>
   template <typename V>
@@ -65,20 +62,17 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     typedef detail::closure_traits<closure_t> cl_traits; 
 
   public:
-#ifndef BOOST_NO_CV_TEMPLATE_TEMPLATES
     static pointer storage (vector_type& vr) {
       typename cl_traits::type& vt = cl_traits::get (vr.data()); 
       pointer ptr = vector_traits<V>::storage (vt); 
       ptr += vr.start() * vector_traits<V>::stride (vt);
       return ptr; 
     }
-#endif // BOOST_NO_CV_TEMPLATE_TEMPLATES
     static int stride (vector_type& vr) {
       return vector_traits<V>::stride (cl_traits::get (vr.data())); 
     }
   }; 
 
-#ifndef BOOST_NO_CV_TEMPLATE_TEMPLATES
 
   template <typename V>
   struct vector_traits<boost::numeric::ublas::vector_range<V> const> 
@@ -104,7 +98,6 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       return vector_traits<V const>::stride (cl_traits::get (vr.data())); 
     }
   }; 
-#endif // BOOST_NO_CV_TEMPLATE_TEMPLATES
 
   // ublas::vector_slice<>
   template <typename V>
@@ -120,21 +113,18 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     typedef detail::closure_traits<closure_t> cl_traits; 
 
   public:
-#ifndef BOOST_NO_CV_TEMPLATE_TEMPLATES
     static pointer storage (vector_type& vs) {
       typename cl_traits::type& vt = cl_traits::get (vs.data()); 
       pointer ptr = vector_traits<V>::storage (vt); 
       ptr += vs.start() * vector_traits<V>::stride (vt);
       return ptr; 
     }
-#endif // BOOST_NO_CV_TEMPLATE_TEMPLATES
     static int stride (vector_type& vs) {
       return vs.stride() 
 	* vector_traits<V>::stride (cl_traits::get (vs.data())); 
     }
   }; 
 
-#ifndef BOOST_NO_CV_TEMPLATE_TEMPLATES
   template <typename V>
   struct vector_traits<boost::numeric::ublas::vector_slice<V> const> 
   : default_vector_traits<boost::numeric::ublas::vector_slice<V> const, typename V::value_type> 
@@ -160,7 +150,6 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
 	* vector_traits<V const>::stride (cl_traits::get (vs.data())); 
     }
   }; 
-#endif // BOOST_NO_CV_TEMPLATE_TEMPLATES
 
 #if 0 // need to rewrite actually
   template < typename T, typename A >
@@ -241,7 +230,5 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
 #endif
 
 }}}}  
-
-#endif // BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
 
 #endif // BOOST_NUMERIC_BINDINGS_TRAITS_UBLAS_VECTOR_H

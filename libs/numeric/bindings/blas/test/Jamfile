@@ -6,7 +6,7 @@ BLAS_LIB  ?= blas g2c ;
 exe blas1
         : blas1.cpp 
         :  <include>$(BOOST_ROOT)
-	   <include>$(B_ROOT)
+	   <include>$(BOOST)
 	   <library-path>$(BLAS_PATH)
 	   <find-library>$(BLAS_LIB)
         ;
@@ -14,7 +14,7 @@ exe blas1
 exe blas2
         : blas2.cpp 
         :  <include>$(BOOST_ROOT)
-	   <include>$(B_ROOT)
+	   <include>$(BOOST)
 	   <library-path>$(BLAS_PATH)
 	   <find-library>$(BLAS_LIB)
         ;
@@ -22,7 +22,7 @@ exe blas2
 exe blas3
         : blas3.cpp 
         :  <include>$(BOOST_ROOT)
-	   <include>$(B_ROOT)
+	   <include>$(BOOST)
 	   <library-path>$(BLAS_PATH)
 	   <find-library>$(BLAS_LIB)
         ;
@@ -30,7 +30,7 @@ exe blas3
 # exe packed_gemv_fail
 #         : packed_gemv_fail.cpp 
 #         :  <include>$(BOOST_ROOT)
-# 	   <include>$(B_ROOT)
+# 	   <include>$(BOOST)
 # 	   <library-path>$(BLAS_PATH)
 # 	   <find-library>$(BLAS_LIB)
 #         ;

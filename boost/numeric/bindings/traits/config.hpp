@@ -28,6 +28,8 @@
 #  endif
 #elif defined(__IBMCPP__)
 #  define BOOST_NO_CV_TEMPLATE_TEMPLATES
+#elif defined(__ICC)
+#elif defined(__GNUC__)
 #else
 #error bindings do not recognise compiler
 #endif
