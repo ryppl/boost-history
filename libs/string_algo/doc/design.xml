@@ -4,11 +4,87 @@
 <section id="string_algo.design" last-revision="$Date$">
 	<title>Design</title>
 
+    <using-namespace name="boost"/>
+    <using-namespace name="boost::string_algo"/>
+	
 	<section id="string_algo.container_traits">
 		<title>Container Traits</title>
 
 		<para>
-			Using the algorithms is pretty straitforward. 
+			Container Traits explanation
+		</para>
+	</section>
+	<section id="string_algo.replace">
+		<title>Replace Algorithms</title>
+
+		<para>
+			Replace algorithms explanation
+		</para>
+	</section>
+	<section id="sequence traits">
+		<title>Sequence Traits</title>
+
+		<para>
+			Major difference between <code>std::list</code> and <code>std::vector</code> is not in the interface
+			and functions they provide, rather in the inner details of the class and the way how it performs 
+			various operation. Problem is that it is not possible to infere this difference from the 
+			definitions of this classes.
+			Some algorithms can make a significant improvement in the performance with the knowledge of particular
+			container properties.
+		</para>
+		<para>
+			Sequence traits allow to specify additional properties of a sequence container.
+			These properties are then used by algorithms to select optimized handling for some operations.
+			Sequence traits are declared in the header <headername>boost/string_algo/sequence_traits.hpp</headername>.
+		</para>
+
+		<table>
+			<title>Sequence Traits</title>
+			<tgroup cols="2" align="left">
+				<thead>
+					<row>	
+						<entry>Trait</entry>
+						<entry>Description</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry><classname>sequence_has_native_replace</classname></entry>
+						<entry>Specifies that the sequence has std::string like replace method</entry>
+					</row>
+					<row>
+						<entry><classname>sequence_has_stable_iterators</classname></entry>
+						<entry>
+							Specifies that the sequence has stable iterators. It means,
+							that operations like insert/erase/replace do not invalidate iterators.
+						</entry>
+					</row>
+					<row>
+						<entry><classname>sequence_has_const_time_insert</classname></entry>
+						<entry>
+							Specifies that the sequence's insert method is has 
+							constant time complexity.
+						</entry>
+					</row>
+					<row>
+						<entry><classname>sequence_has_const_time_erase</classname></entry>
+						<entry>
+							Specifies that the sequence's erase method is has constant time complexity
+						</entry>
+					</row>
+					</tbody>
+			</tgroup>
+		</table>
+	</section>
+	<section>
+		<title>Regular Expressions</title>
+
+		<para>
+			Regular expressions are essential part of text processing. For this reason, the library 
+			provides also regex variants of some algorithms. The library does not try to replace
+			<libraryname>Boost.Regex</libraryname>. It merely wraps its functionality in a new interface.
+			As a part of this library regex algorithms integrate smoothly with other components, thus 
+			bringing additional value.
 		</para>
 	</section>
 </section>

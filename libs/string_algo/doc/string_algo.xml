@@ -28,7 +28,7 @@
 		</legalnotice>
 
 		<librarypurpose>
-			Safe, generic container for single values of different value types
+			A set of generic string-related algorithms and utilities.
 		</librarypurpose> 
 		<librarycategory name="category:algoritms"/>
 	</libraryinfo>
@@ -37,6 +37,7 @@
 	<xi:include href="intro.xml"/>
 	<xi:include href="usage.xml"/>
 	<xi:include href="design.xml"/>
+	<xi:include href="concept.xml"/>
 	<xi:include href="reference.boostbook"/>
 	<xi:include href="environment.xml"/>
 	<xi:include href="credits.xml"/>
