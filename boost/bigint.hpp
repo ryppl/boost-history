@@ -56,6 +56,8 @@ class bigint : boost::operators<bigint> {
     if(buffer.back() == -1)
       return os << '-' << -(*this); 
     
+    // Store fill character
+    char old_fill = os.fill();
     for(buffer_t::const_reverse_iterator i = buffer.rbegin();
 	i != buffer.rend(); ++i) {
       assert(*i < radix);
@@ -66,6 +68,8 @@ class bigint : boost::operators<bigint> {
 
       os << *i;
     }
+    // Restore fill character
+    os.fill(old_fill);
     return os;
   }
 

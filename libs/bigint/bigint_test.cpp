@@ -144,4 +144,10 @@ int main() {
     assert(i.fail());
   }
 
+  {
+    // check that fill character is reset.
+    std::ostringstream o;
+    o << std::setfill('x') << bigint(55555) << std::setw(5) << "x";
+    assert (o.str() == "55555xxxxx");
+  }
 }
