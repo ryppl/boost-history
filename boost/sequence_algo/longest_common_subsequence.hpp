@@ -56,19 +56,22 @@ namespace boost {
                                ItSubSeq  subsequence,
                                Alloc    &alloc)
     {
+        size_type lcs = 0;
+
         // calculate the length of each subsequence
         std::ptrdiff_t size_first  = std::distance<>(begin_first, end_first);
         std::ptrdiff_t size_second = std::distance<>(begin_second, end_second);
 
         // compare the heads of the sequences to skip equal
         // elements more efficiently
-        register std::ptrdiff_t min_size = std::min(size_first, size_second);
+        std::ptrdiff_t min_size = std::min(size_first, size_second);
         while (min_size > 0  &&  *begin_first == *begin_second)
         {
             *subsequence++ = *begin_first;
             ++begin_first;
             ++begin_second;
             --min_size;
+            ++lcs;
             --size_first;
             --size_second;
         }
@@ -89,12 +92,11 @@ namespace boost {
         // VC6's dinkumware STL does not provide an allocate without the hint
         size_type *pA = alloc.allocate(array_size, 0);
 
-        size_type result;
-        result = detail::linear_space_lcs(begin_first, end_first,
-                                          begin_second, end_second,
-                                          subsequence, pA);
+        lcs += detail::linear_space_lcs(begin_first, end_first,
+                                        begin_second, end_second,
+                                        subsequence, pA);
         alloc.deallocate(pA, array_size);
-        return result;
+        return lcs;
     }
     
 

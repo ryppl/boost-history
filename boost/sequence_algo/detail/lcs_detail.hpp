@@ -42,6 +42,25 @@ namespace boost {
             DBG_SCOPE("linear_space_lcs: Sequence lengths %lu and %lu", size_first, size_second);
 #endif
 
+            size_type lcs = 0;
+
+            // compare the heads of the sequences to skip equal
+            // elements more efficiently
+            while (size_first > 0
+               &&  size_second > 0
+               &&  *begin_first == *begin_second)
+            {
+                *subsequence++ = *begin_first;
+                ++begin_first;
+                ++begin_second;
+                --size_first;
+                --size_second;
+                ++lcs;
+            }
+
+            if (size_first == 0  ||  size_second == 0)
+                return lcs;
+
             // the algorithm will use less memory if the second sequence is longer
             // than the first, so we can swap the input iterators
             if (size_first > size_second)
@@ -49,18 +68,6 @@ namespace boost {
                 std::swap(begin_first, begin_second);
                 std::swap(end_first, end_second);
                 std::swap(size_first, size_second);
-            }
-            // if both sequences have a single element, then we can compare the
-            // element for equally immediately and save ourselves some time
-            else if (size_first == 1  &&  size_second == 1)
-            {
-                if (*begin_first == *begin_second)
-                {
-                    *subsequence++ = *begin_first;
-                    return 1;
-                }
-
-                return 0;
             }
 
             // initialise working array
@@ -116,7 +123,7 @@ namespace boost {
             // in pA contains the length of the subsequence and the last entry
             // in pO contains the position in the middle row that the last entry
             // came from. This is the middle node along the solution path.
-            size_type lcs = pA[size_first];
+            lcs += pA[size_first];
             if (lcs > 0)
             {
                 if (size_second > 2  &&  pO[size_first] > 0)
