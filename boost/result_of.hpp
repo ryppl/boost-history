@@ -5,6 +5,7 @@
 #include <boost/type.hpp>
 #include <boost/preprocessor.hpp>
 #include <boost/detail/workaround.hpp>
+#include <boost/mpl/aux_/has_xxx.hpp>
 
 #ifndef BOOST_RESULT_OF_NUM_ARHS
 #  define BOOST_RESULT_OF_NUM_ARGS 10
@@ -16,19 +17,8 @@ template<typename F> struct result_of;
 
 namespace detail {
 
-template<typename T>
-type_traits::yes_type has_result_type_helper(type<typename T::result_type>*);
-
-template<typename T> type_traits::no_type has_result_type_helper(...);
-
-template<typename T>
-struct has_result_type
-{
-  BOOST_STATIC_CONSTANT(bool,
-                        value = (sizeof(has_result_type_helper<T>(0))
-                                   == sizeof(type_traits::yes_type)));
-};
-
+BOOST_MPL_HAS_XXX_TRAIT_DEF(result_type)
+    
 template<typename F, typename FArgs, bool HasResultType> struct get_result_of;
 
 template<typename F, typename FArgs>
