@@ -1,3 +1,15 @@
+
+// Copyright (c) Peter Dimov 2001
+// Copyright (c) Aleksey Gurtovoy 2001-2004
+//
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
+//
+
+// Preprocessed version of "boost/mpl/bind.hpp" header
+// -- DO NOT modify by hand!
+
 namespace boost { namespace mpl {
 
 namespace aux {
@@ -14,9 +26,9 @@ struct resolve_bind_arg
 template<
       int N, typename U1, typename U2, typename U3, typename U4, typename U5
     >
-struct resolve_bind_arg< arg<N>,U1,U2,U3,U4,U5 >
+struct resolve_bind_arg< arg<N>, U1, U2, U3, U4, U5 >
 {
-    typedef typename apply_wrap5<mpl::arg< N>,U1,U2,U3,U4,U5 >::type type;
+    typedef typename apply_wrap5<mpl::arg<N>, U1, U2, U3, U4, U5>::type type;
 };
 
 } // namespace aux
@@ -56,6 +68,7 @@ struct resolve_bind_arg<
 };
 
 } // namespace aux
+
 BOOST_MPL_AUX_ARITY_SPEC(1, bind0)
 
 template<
@@ -95,6 +108,7 @@ struct resolve_bind_arg<
 };
 
 } // namespace aux
+
 BOOST_MPL_AUX_ARITY_SPEC(2, bind1)
 
 template<
@@ -135,6 +149,7 @@ struct resolve_bind_arg<
 };
 
 } // namespace aux
+
 BOOST_MPL_AUX_ARITY_SPEC(3, bind2)
 
 template<
@@ -176,6 +191,7 @@ struct resolve_bind_arg<
 };
 
 } // namespace aux
+
 BOOST_MPL_AUX_ARITY_SPEC(4, bind3)
 
 template<
@@ -218,6 +234,7 @@ struct resolve_bind_arg<
 };
 
 } // namespace aux
+
 BOOST_MPL_AUX_ARITY_SPEC(5, bind4)
 
 template<
@@ -263,5 +280,7 @@ struct resolve_bind_arg<
 };
 
 } // namespace aux
+
 BOOST_MPL_AUX_ARITY_SPEC(6, bind5)
 }}
+

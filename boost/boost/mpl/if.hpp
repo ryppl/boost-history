@@ -19,8 +19,9 @@
 #include <boost/mpl/aux_/static_cast.hpp>
 #include <boost/mpl/aux_/na_spec.hpp>
 #include <boost/mpl/aux_/lambda_support.hpp>
+#include <boost/mpl/aux_/config/bcc_integral_constants.hpp>
+#include <boost/mpl/aux_/config/ctps.hpp>
 #include <boost/mpl/aux_/config/workaround.hpp>
-#include <boost/config.hpp>
 
 #if !defined(BOOST_MPL_CFG_NO_FULL_LAMBDA_SUPPORT)
 #   include <boost/mpl/arg_fwd.hpp>
@@ -64,7 +65,7 @@ struct if_
  private:
     // agurt, 02/jan/03: two-step 'type' definition for the sake of aCC 
     typedef if_c<
-#if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x561))
+#if defined(BOOST_MPL_CFG_BCC_INTEGRAL_CONSTANTS)
           BOOST_MPL_AUX_VALUE_WKND(C)::value
 #else
           BOOST_MPL_AUX_STATIC_CAST(bool, BOOST_MPL_AUX_VALUE_WKND(C)::value)
@@ -125,7 +126,7 @@ template<
     >
 struct if_
 {
-    enum { msvc70_wknd_ = C_::value };
+    enum { msvc70_wknd_ = BOOST_MPL_AUX_MSVC_VALUE_WKND(C_)::value };
 
     typedef typename aux::if_impl< BOOST_MPL_AUX_STATIC_CAST(bool, msvc70_wknd_) >
         ::template result_<T1,T2>::type type;

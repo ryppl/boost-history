@@ -1,4 +1,16 @@
+
+// Copyright (c) Aleksey Gurtovoy 2000-2004
+//
+// Use, modification and distribution are subject to the Boost Software 
+// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
+// at http://www.boost.org/LICENSE_1_0.txt)
+//
+
+// Preprocessed version of "boost/mpl/aux_/advance_forward.hpp" header
+// -- DO NOT modify by hand!
+
 namespace boost { namespace mpl { namespace aux {
+
 template< long N > struct advance_forward;
 template<>
 struct advance_forward<0>
@@ -69,6 +81,7 @@ struct advance_forward
               advance_forward<4>
             , Iterator
             >::type chunk_result_;
+
         typedef typename apply_wrap1<
               advance_forward<(
                 (N - 4) < 0
@@ -81,3 +94,4 @@ struct advance_forward
 };
 
 }}}
+

@@ -1,16 +1,29 @@
+
+// Copyright (c) Aleksey Gurtovoy 2000-2004
+//
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
+//
+
+// Preprocessed version of "boost/mpl/less.hpp" header
+// -- DO NOT modify by hand!
+
 namespace boost { namespace mpl {
 
 template<
       typename Tag1
     , typename Tag2
+
     , int tag1_ = Tag1::value
     , int tag2_ = Tag2::value
     >
 struct less_impl
     : if_c<
           ( tag1_ > tag2_ )
-        , aux::cast2nd_impl< less_impl<Tag1,Tag2>,Tag1,Tag2 >
-        , aux::cast1st_impl< less_impl<Tag1,Tag2>,Tag1,Tag2 >
+
+        , aux::cast2nd_impl< less_impl< Tag1,Tag2 >,Tag1, Tag2 >
+        , aux::cast1st_impl< less_impl< Tag1,Tag2 >,Tag1, Tag2 >
         >
 {
 };
@@ -33,15 +46,19 @@ struct less
         , N1
         , N2
         >::type >::type
+
 {
 };
 
 }}
+
 namespace boost { namespace mpl {
+
 template<>
 struct less_impl< integral_c_tag,integral_c_tag >
 {
     template< typename N1, typename N2 > struct apply
+
     {
         enum { value =
              ( BOOST_MPL_AUX_VALUE_WKND(N2)::value >

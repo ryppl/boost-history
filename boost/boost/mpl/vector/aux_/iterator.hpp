@@ -98,13 +98,8 @@ template<
     , BOOST_MPL_AUX_NTTP_DECL(long, m_)
     > 
 struct distance< v_iter<Vector,n_>, v_iter<Vector,m_> >
+    : long_<(m_ - n_)>
 {
-    BOOST_STATIC_CONSTANT(long, value = (m_ - n_));
-#if !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564))
-    typedef long_<value> type;
-#else
-    typedef long_<(m_ - n_)> type;
-#endif
 };
 
 #else // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
@@ -113,9 +108,10 @@ template<> struct advance_impl<aux::v_iter_tag>
 {
     template< typename Iterator, typename N > struct apply
     {
+        enum { pos_ = Iterator::pos_, n_ = N::value };
         typedef v_iter<
               typename Iterator::vector_
-            , plus_c<long,Iterator::pos_,N::value>::value
+            , (pos_ + n_)
             > type;
     };
 };

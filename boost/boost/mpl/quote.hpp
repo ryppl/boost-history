@@ -25,7 +25,7 @@
 
 #include <boost/mpl/aux_/config/ttp.hpp>
 
-#if !defined(BOOST_MPL_CFG_NO_TEMPLATE_TEMPLATE_PARAMETERS)
+#if defined(BOOST_MPL_CFG_NO_TEMPLATE_TEMPLATE_PARAMETERS)
 #   define BOOST_MPL_CFG_NO_QUOTE_TEMPLATE
 #endif
 

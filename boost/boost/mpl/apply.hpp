@@ -21,9 +21,8 @@
 #if !defined(BOOST_MPL_PREPROCESSING_MODE)
 #   include <boost/mpl/apply_fwd.hpp>
 #   include <boost/mpl/apply_wrap.hpp>
-#   include <boost/mpl/bind.hpp>
 #   include <boost/mpl/placeholders.hpp>
-#   include <boost/mpl/aux_/lambda.hpp>
+#   include <boost/mpl/lambda.hpp>
 #   include <boost/mpl/aux_/na.hpp>
 #endif
 

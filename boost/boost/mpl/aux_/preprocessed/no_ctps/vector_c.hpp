@@ -1,3 +1,14 @@
+
+// Copyright (c) Aleksey Gurtovoy 2000-2004
+//
+// Use, modification and distribution are subject to the Boost Software 
+// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
+// at http://www.boost.org/LICENSE_1_0.txt)
+//
+
+// Preprocessed version of "boost/mpl/vector_c.hpp" header
+// -- DO NOT modify by hand!
+
 namespace boost { namespace mpl {
 
 namespace aux {
@@ -7,6 +18,7 @@ struct vector_c_chooser;
 }
 
 namespace aux {
+
 template<>
 struct vector_c_chooser<0>
 {
@@ -26,6 +38,7 @@ struct vector_c_chooser<0>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct vector_c_chooser<1>
 {
@@ -45,6 +58,7 @@ struct vector_c_chooser<1>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct vector_c_chooser<2>
 {
@@ -64,6 +78,7 @@ struct vector_c_chooser<2>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct vector_c_chooser<3>
 {
@@ -83,6 +98,7 @@ struct vector_c_chooser<3>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct vector_c_chooser<4>
 {
@@ -102,6 +118,7 @@ struct vector_c_chooser<4>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct vector_c_chooser<5>
 {
@@ -121,6 +138,7 @@ struct vector_c_chooser<5>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct vector_c_chooser<6>
 {
@@ -140,6 +158,7 @@ struct vector_c_chooser<6>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct vector_c_chooser<7>
 {
@@ -159,6 +178,7 @@ struct vector_c_chooser<7>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct vector_c_chooser<8>
 {
@@ -178,6 +198,7 @@ struct vector_c_chooser<8>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct vector_c_chooser<9>
 {
@@ -197,6 +218,7 @@ struct vector_c_chooser<9>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct vector_c_chooser<10>
 {
@@ -216,6 +238,7 @@ struct vector_c_chooser<10>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct vector_c_chooser<11>
 {
@@ -235,6 +258,7 @@ struct vector_c_chooser<11>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct vector_c_chooser<12>
 {
@@ -254,6 +278,7 @@ struct vector_c_chooser<12>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct vector_c_chooser<13>
 {
@@ -273,6 +298,7 @@ struct vector_c_chooser<13>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct vector_c_chooser<14>
 {
@@ -292,6 +318,7 @@ struct vector_c_chooser<14>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct vector_c_chooser<15>
 {
@@ -311,6 +338,7 @@ struct vector_c_chooser<15>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct vector_c_chooser<16>
 {
@@ -330,6 +358,7 @@ struct vector_c_chooser<16>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct vector_c_chooser<17>
 {
@@ -349,6 +378,7 @@ struct vector_c_chooser<17>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct vector_c_chooser<18>
 {
@@ -368,6 +398,7 @@ struct vector_c_chooser<18>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct vector_c_chooser<19>
 {
@@ -387,6 +418,7 @@ struct vector_c_chooser<19>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct vector_c_chooser<20>
 {
@@ -406,6 +438,7 @@ struct vector_c_chooser<20>
 } // namespace aux
 
 namespace aux {
+
 template< long C >
 struct is_vector_c_arg
 {
@@ -437,6 +470,7 @@ struct vector_c_count_args
         + is_vector_c_arg<C17>::value + is_vector_c_arg<C18>::value 
         + is_vector_c_arg<C19>::value + is_vector_c_arg<C20>::value
         ;
+
 };
 
 template<
@@ -449,6 +483,7 @@ struct vector_c_impl
     typedef aux::vector_c_count_args<
           C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, C16, C17, C18, C19
         > arg_num_;
+
     typedef typename aux::vector_c_chooser< arg_num_::value >
         ::template result_< T,C0,C1,C2,C3,C4,C5,C6,C7,C8,C9,C10,C11,C12,C13,C14,C15,C16,C17,C18,C19 >::type type;
 };
@@ -475,3 +510,4 @@ struct vector_c
 };
 
 }}
+

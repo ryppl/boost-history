@@ -1,3 +1,14 @@
+
+// Copyright (c) Aleksey Gurtovoy 2000-2004
+//
+// Use, modification and distribution are subject to the Boost Software 
+// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
+// at http://www.boost.org/LICENSE_1_0.txt)
+//
+
+// Preprocessed version of "boost/mpl/Attic/map.hpp" header
+// -- DO NOT modify by hand!
+
 namespace boost { namespace mpl {
 
 template<
@@ -11,6 +22,7 @@ template<
 struct map;
 
 template<
+     
     >
 struct map<
           na, na, na, na, na, na, na, na, na, na, na, na, na, na, na, na, na
@@ -308,3 +320,4 @@ struct map
 };
 
 }}
+

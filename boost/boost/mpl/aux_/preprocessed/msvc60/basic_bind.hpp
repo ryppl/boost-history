@@ -1,3 +1,15 @@
+
+// Copyright (c) Peter Dimov 2001
+// Copyright (c) Aleksey Gurtovoy 2001-2004
+//
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
+//
+
+// Preprocessed version of "boost/mpl/bind.hpp" header
+// -- DO NOT modify by hand!
+
 namespace boost { namespace mpl {
 
 namespace aux {
@@ -37,16 +49,19 @@ template<
     , typename U5
     >
 struct resolve_bind_arg
-    : resolve_arg_impl< is_bind_template<T >::value >
+    : resolve_arg_impl< is_bind_template<T>::value >
             ::template result_< T,U1,U2,U3,U4,U5 >
 {
 };
 
 template< nttp_int arity_ > struct bind_chooser;
+
 aux::no_tag is_bind_helper(...);
 template< typename T > aux::no_tag is_bind_helper(protect<T>*);
+
 template< nttp_int N >
 aux::yes_tag is_bind_helper(arg<N>*);
+
 template< bool is_ref_ = true >
 struct is_bind_template_impl
 {
@@ -65,6 +80,7 @@ struct is_bind_template_impl<false>
              sizeof(aux::is_bind_helper(static_cast<T*>(0))) ==
              sizeof(aux::yes_tag)
             };
+
     };
 };
 
@@ -104,7 +120,9 @@ template<
     >
 aux::yes_tag
 is_bind_helper(bind0<F>*);
+
 } // namespace aux
+
 BOOST_MPL_AUX_ARITY_SPEC(1, bind0)
 
 template<
@@ -137,7 +155,9 @@ template<
     >
 aux::yes_tag
 is_bind_helper(bind1< F,T1 >*);
+
 } // namespace aux
+
 BOOST_MPL_AUX_ARITY_SPEC(2, bind1)
 
 template<
@@ -171,7 +191,9 @@ template<
     >
 aux::yes_tag
 is_bind_helper(bind2< F,T1,T2 >*);
+
 } // namespace aux
+
 BOOST_MPL_AUX_ARITY_SPEC(3, bind2)
 
 template<
@@ -206,7 +228,9 @@ template<
     >
 aux::yes_tag
 is_bind_helper(bind3< F,T1,T2,T3 >*);
+
 } // namespace aux
+
 BOOST_MPL_AUX_ARITY_SPEC(4, bind3)
 
 template<
@@ -242,7 +266,9 @@ template<
     >
 aux::yes_tag
 is_bind_helper(bind4< F,T1,T2,T3,T4 >*);
+
 } // namespace aux
+
 BOOST_MPL_AUX_ARITY_SPEC(5, bind4)
 
 template<
@@ -281,6 +307,9 @@ template<
     >
 aux::yes_tag
 is_bind_helper(bind5< F,T1,T2,T3,T4,T5 >*);
+
 } // namespace aux
+
 BOOST_MPL_AUX_ARITY_SPEC(6, bind5)
 }}
+

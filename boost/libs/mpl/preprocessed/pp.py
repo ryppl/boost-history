@@ -24,10 +24,13 @@ ident = 4
 def nearest_ident_pos(text):
     return (len(text)/ident) * ident
     
-def block_format(limits,text,first_sep='  ',sep=',',need_last_ident=1):
+def block_format(limits, text, first_sep='  ', sep=',', need_last_ident=1 ):
+    if sep == ',' and string.find( text, '<' ) != -1:
+        sep = '%s ' % sep
+    
     words = string.split(
-          string.join(string.split(text),' ')
-        , if_else(sep != ',' or string.find(text,'<') == -1,sep,' %s '%sep)
+          string.join( string.split( text ), ' ' )
+        , sep
         )
 
     s = ' ' * limits[0]
@@ -46,7 +49,7 @@ def block_format(limits,text,first_sep='  ',sep=',',need_last_ident=1):
         , if_else(need_last_ident,s,'')
         )
 
-def handle_args(match):
+def handle_args( match ):
     if re.compile('^\s*(typedef|struct|static)\s+.*?$').match(match.group(0)):
         return match.group(0)
     
@@ -58,6 +61,7 @@ def handle_args(match):
             , ','
             , 0
             )
+
 
 def handle_inline_args(match):
     if len(match.group(0)) < max_len:
@@ -120,7 +124,7 @@ def handle_typedefs(match):
         return match.group(0)
 
     join_sep = ';\n%s' % match.group(1)
-#    return if_else(string.find(match.group(0), '\n') == -1, '%s%s\n', '%s%s') \
+
     return '%s%s\n' \
         % (
             match.group(1)
@@ -136,7 +140,12 @@ class pretty:
         self.output = open(name, "w")
         self.prev_line = ''
 
-        self.re_header_name_comment = re.compile(r"^\s*//\s+\$Source$$")
+        self.re_copyright_start = re.compile( r'^// Copyright .*$' )
+        self.re_copyright_end = re.compile( r'^// See .* for documentation.$' )
+        self.reading_copyright = 0
+        self.copyright = None
+        
+        self.re_header_name_comment = re.compile( r'^\s*//\s+\$Source$$' )
         self.header_was_written = 0
 
         self.re_junk = re.compile(r'^\s*(#|//[^:]).*$')
@@ -145,7 +154,7 @@ class pretty:
         self.inside_c_comment = 0
 
         self.re_empty_line = re.compile(r'^\s*$')
-        self.re_comma = re.compile(r'(\w+)\s*,\s*')
+        self.re_comma = re.compile(r'(\S+)\s*,\s*')
         self.re_assign = re.compile(r'([^<|^!|^>])\s*(=+)\s*')
         self.re_marked_comment = re.compile(r'^(\s*//):(.*)$')
         self.re_marked_empty_comment = re.compile(r'^\s*//\s*$')
@@ -153,29 +162,42 @@ class pretty:
         self.re_nsl = re.compile(r'^(\s+typedef\s+.*?;|\s*(private|public):\s*|\s*{\s*|\s*(\w|\d|,)+\s*)$')
         self.re_templ_decl = re.compile(r'^(\s*template\s*<\s*.*?|\s*(private|public):\s*)$')
         self.re_type_const = re.compile(r'(const)\s+((unsigned|signed)?(bool|char|short|int|long))')
+        #self.re_templ_args = re.compile(r'^(\s*)(, | {2})((.*::.*?,?)+)\s*$')
         self.re_templ_args = re.compile(r'^(\s*)(, | {2})((\s*(\w+)(\s+|::)\w+\s*.*?,?)+)\s*$')
         self.re_inline_templ_args = re.compile(
             r'^(\s+(,|:\s+)?|struct\s+)(\w+)\s*<((\s*(typename\s+)?\w+\s*(=\s*.*|<(\s*\w+\s*,?)+>\s*)?,?)+)\s*>\s+((struct|class).*?)?$'
             )
 
-        self.re_simple_list = re.compile(r'(\w+)\s*<((\w|,| |-|>|<)+)>')
+        self.re_simple_list = re.compile(r'(\w+)\s*<((\w|,| |-)+)>')
         self.re_static_const = re.compile(r'(\s*)((static\s+.*?|enum\s*\w*\s*{\s*)value\s*=)(.*?)(}?;)$')
         self.re_typedefs = re.compile(r'(\s*)((\s*typedef\s*.*?;)+)\s*$')
-        self.re_fix_angle_brackets = re.compile( r'>((\s*>)+)(,|\n$)' )
+        self.re_fix_angle_brackets = re.compile( r'(>(\s*>)+)(,|\n$)' )
         self.re_closing_curly_brace = re.compile(r'^(}|struct\s+\w+);\s*$')
         self.re_namespace_scope_templ = re.compile(r'^template\s*<\s*$')
         self.re_namespace = re.compile(r'^\n?namespace\s+\w+\s*{\s*\n?$')
 
     def process(self, line):
+        if self.reading_copyright:
+            if not self.re_copyright_end.match( line ):
+                self.copyright += line
+                return
 
+            self.reading_copyright = 0
+            
+        if self.re_copyright_start.match( line ):
+            self.copyright = line
+            self.reading_copyright = 1
+            return
+    
         # searching for header line
-        if not self.header_was_written and self.re_header_name_comment.match(line):
+        if not self.header_was_written and self.re_header_name_comment.match( line ):
             self.header_was_written = 1
-            match = self.re_header_name_comment.match(line)
+            match = self.re_header_name_comment.match( line )
             self.output.write( \
-                "// preprocessed version of '%s' header\n"\
-                "// see the original for copyright information\n\n" \
-                % match.group(1)
+                '\n%s\n' \
+                '// Preprocessed version of "%s" header\n' \
+                '// -- DO NOT modify by hand!\n\n' \
+                % ( self.copyright, match.group(1) )
                 )
             return
         
@@ -206,6 +228,7 @@ class pretty:
                 return
 
         # formatting
+
         line = self.re_comma.sub( r'\1, ', line )
         line = self.re_assign.sub( r'\1 \2 ', line )
         line = self.re_marked_comment.sub( r'\1\2', line )
@@ -217,7 +240,7 @@ class pretty:
         line = self.re_static_const.sub( handle_static, line )
         line = self.re_typedefs.sub( handle_typedefs, line )        
         line = self.re_fix_angle_brackets.sub( fix_angle_brackets, line )
-        
+
         # write the output
         self.output.write(line)
         self.prev_line = line

@@ -1,3 +1,14 @@
+
+// Copyright (c) Aleksey Gurtovoy 2000-2004
+//
+// Use, modification and distribution are subject to the Boost Software 
+// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
+// at http://www.boost.org/LICENSE_1_0.txt)
+//
+
+// Preprocessed version of "boost/mpl/Attic/set.hpp" header
+// -- DO NOT modify by hand!
+
 namespace boost { namespace mpl {
 
 namespace aux {
@@ -7,6 +18,7 @@ struct set_chooser;
 }
 
 namespace aux {
+
 template<>
 struct set_chooser<0>
 {
@@ -19,6 +31,7 @@ struct set_chooser<0>
     struct result_
     {
         typedef set0<
+             
             > type;
     };
 };
@@ -26,6 +39,7 @@ struct set_chooser<0>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct set_chooser<1>
 {
@@ -46,6 +60,7 @@ struct set_chooser<1>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct set_chooser<2>
 {
@@ -66,6 +81,7 @@ struct set_chooser<2>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct set_chooser<3>
 {
@@ -86,6 +102,7 @@ struct set_chooser<3>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct set_chooser<4>
 {
@@ -106,6 +123,7 @@ struct set_chooser<4>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct set_chooser<5>
 {
@@ -126,6 +144,7 @@ struct set_chooser<5>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct set_chooser<6>
 {
@@ -146,6 +165,7 @@ struct set_chooser<6>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct set_chooser<7>
 {
@@ -166,6 +186,7 @@ struct set_chooser<7>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct set_chooser<8>
 {
@@ -186,6 +207,7 @@ struct set_chooser<8>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct set_chooser<9>
 {
@@ -206,6 +228,7 @@ struct set_chooser<9>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct set_chooser<10>
 {
@@ -226,6 +249,7 @@ struct set_chooser<10>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct set_chooser<11>
 {
@@ -246,6 +270,7 @@ struct set_chooser<11>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct set_chooser<12>
 {
@@ -266,6 +291,7 @@ struct set_chooser<12>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct set_chooser<13>
 {
@@ -286,6 +312,7 @@ struct set_chooser<13>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct set_chooser<14>
 {
@@ -306,6 +333,7 @@ struct set_chooser<14>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct set_chooser<15>
 {
@@ -326,6 +354,7 @@ struct set_chooser<15>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct set_chooser<16>
 {
@@ -346,6 +375,7 @@ struct set_chooser<16>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct set_chooser<17>
 {
@@ -366,6 +396,7 @@ struct set_chooser<17>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct set_chooser<18>
 {
@@ -386,6 +417,7 @@ struct set_chooser<18>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct set_chooser<19>
 {
@@ -406,6 +438,7 @@ struct set_chooser<19>
 } // namespace aux
 
 namespace aux {
+
 template<>
 struct set_chooser<20>
 {
@@ -426,6 +459,7 @@ struct set_chooser<20>
 } // namespace aux
 
 namespace aux {
+
 template< typename T >
 struct is_set_arg
 {
@@ -458,6 +492,7 @@ struct set_count_args
         + is_set_arg<T17>::value + is_set_arg<T18>::value 
         + is_set_arg<T19>::value + is_set_arg<T20>::value
         ;
+
 };
 
 template<
@@ -471,6 +506,7 @@ struct set_impl
     typedef aux::set_count_args<
           T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19
         > arg_num_;
+
     typedef typename aux::set_chooser< arg_num_::value >
         ::template result_< T0,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19 >::type type;
 };
@@ -496,3 +532,4 @@ struct set
 };
 
 }}
+

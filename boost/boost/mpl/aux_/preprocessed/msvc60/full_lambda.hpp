@@ -1,8 +1,20 @@
+
+// Copyright (c) Aleksey Gurtovoy 2001-2004
+//
+// Use, modification and distribution are subject to the Boost Software 
+// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
+// at http://www.boost.org/LICENSE_1_0.txt)
+//
+
+// Preprocessed version of "boost/mpl/aux_/full_lambda.hpp" header
+// -- DO NOT modify by hand!
+
 namespace boost { namespace mpl {
 
 template<
       typename T
     , typename Tag
+   
     >
 struct lambda
 {
@@ -29,8 +41,9 @@ struct lambda_or< false,false,false,false,false >
 };
 
 } // namespace aux
+
 template< int N, typename Tag >
-struct lambda< arg<N>,Tag >
+struct lambda< arg<N>, Tag >
 {
     typedef true_ is_le;
     typedef mpl::arg<N> result_; // qualified for the sake of MIPSpro 7.41
@@ -44,12 +57,14 @@ template<
 struct lambda<
           bind0<F>
         , Tag
+       
         >
 {
     typedef false_ is_le;
     typedef bind0<
           F
         > result_;
+
     typedef result_ type;
 };
 
@@ -65,6 +80,7 @@ struct le_result1
     typedef F<
           typename L1::type
         > result_;
+
     typedef result_ type;
 };
 
@@ -79,6 +95,7 @@ struct le_result1< true_,Tag,F,L1 >
           quote1< F,Tag >
         , typename L1::result_
         > result_;
+
     typedef protect<result_> type;
 };
 
@@ -92,15 +109,18 @@ template<
 struct lambda<
           F<T1>
         , Tag
+       
         >
 {
     typedef lambda< T1,Tag > l1;
     typedef typename aux::lambda_or<
           l1::is_le::value
         >::type is_le;
+
     typedef aux::le_result1<
           is_le, Tag, F, l1
         > le_result_;
+
     typedef typename le_result_::result_ result_;
     typedef typename le_result_::type type;
 };
@@ -112,6 +132,7 @@ template<
 struct lambda<
           bind1< F,T1 >
         , Tag
+       
         >
 {
     typedef false_ is_le;
@@ -119,6 +140,7 @@ struct lambda<
           F
         , T1
         > result_;
+
     typedef result_ type;
 };
 
@@ -134,6 +156,7 @@ struct le_result2
     typedef F<
           typename L1::type, typename L2::type
         > result_;
+
     typedef result_ type;
 };
 
@@ -148,6 +171,7 @@ struct le_result2< true_,Tag,F,L1,L2 >
           quote2< F,Tag >
         , typename L1::result_, typename L2::result_
         > result_;
+
     typedef protect<result_> type;
 };
 
@@ -161,6 +185,7 @@ template<
 struct lambda<
           F< T1,T2 >
         , Tag
+       
         >
 {
     typedef lambda< T1,Tag > l1;
@@ -169,9 +194,11 @@ struct lambda<
     typedef typename aux::lambda_or<
           l1::is_le::value, l2::is_le::value
         >::type is_le;
+
     typedef aux::le_result2<
           is_le, Tag, F, l1, l2
         > le_result_;
+
     typedef typename le_result_::result_ result_;
     typedef typename le_result_::type type;
 };
@@ -183,6 +210,7 @@ template<
 struct lambda<
           bind2< F,T1,T2 >
         , Tag
+       
         >
 {
     typedef false_ is_le;
@@ -190,6 +218,7 @@ struct lambda<
           F
         , T1, T2
         > result_;
+
     typedef result_ type;
 };
 
@@ -205,6 +234,7 @@ struct le_result3
     typedef F<
           typename L1::type, typename L2::type, typename L3::type
         > result_;
+
     typedef result_ type;
 };
 
@@ -219,6 +249,7 @@ struct le_result3< true_,Tag,F,L1,L2,L3 >
           quote3< F,Tag >
         , typename L1::result_, typename L2::result_, typename L3::result_
         > result_;
+
     typedef protect<result_> type;
 };
 
@@ -232,6 +263,7 @@ template<
 struct lambda<
           F< T1,T2,T3 >
         , Tag
+       
         >
 {
     typedef lambda< T1,Tag > l1;
@@ -241,9 +273,11 @@ struct lambda<
     typedef typename aux::lambda_or<
           l1::is_le::value, l2::is_le::value, l3::is_le::value
         >::type is_le;
+
     typedef aux::le_result3<
           is_le, Tag, F, l1, l2, l3
         > le_result_;
+
     typedef typename le_result_::result_ result_;
     typedef typename le_result_::type type;
 };
@@ -255,6 +289,7 @@ template<
 struct lambda<
           bind3< F,T1,T2,T3 >
         , Tag
+       
         >
 {
     typedef false_ is_le;
@@ -262,6 +297,7 @@ struct lambda<
           F
         , T1, T2, T3
         > result_;
+
     typedef result_ type;
 };
 
@@ -278,6 +314,7 @@ struct le_result4
           typename L1::type, typename L2::type, typename L3::type
         , typename L4::type
         > result_;
+
     typedef result_ type;
 };
 
@@ -293,6 +330,7 @@ struct le_result4< true_,Tag,F,L1,L2,L3,L4 >
         , typename L1::result_, typename L2::result_, typename L3::result_
         , typename L4::result_
         > result_;
+
     typedef protect<result_> type;
 };
 
@@ -306,6 +344,7 @@ template<
 struct lambda<
           F< T1,T2,T3,T4 >
         , Tag
+       
         >
 {
     typedef lambda< T1,Tag > l1;
@@ -317,9 +356,11 @@ struct lambda<
           l1::is_le::value, l2::is_le::value, l3::is_le::value
         , l4::is_le::value
         >::type is_le;
+
     typedef aux::le_result4<
           is_le, Tag, F, l1, l2, l3, l4
         > le_result_;
+
     typedef typename le_result_::result_ result_;
     typedef typename le_result_::type type;
 };
@@ -331,6 +372,7 @@ template<
 struct lambda<
           bind4< F,T1,T2,T3,T4 >
         , Tag
+       
         >
 {
     typedef false_ is_le;
@@ -338,6 +380,7 @@ struct lambda<
           F
         , T1, T2, T3, T4
         > result_;
+
     typedef result_ type;
 };
 
@@ -354,6 +397,7 @@ struct le_result5
           typename L1::type, typename L2::type, typename L3::type
         , typename L4::type, typename L5::type
         > result_;
+
     typedef result_ type;
 };
 
@@ -369,6 +413,7 @@ struct le_result5< true_,Tag,F,L1,L2,L3,L4,L5 >
         , typename L1::result_, typename L2::result_, typename L3::result_
         , typename L4::result_, typename L5::result_
         > result_;
+
     typedef protect<result_> type;
 };
 
@@ -386,6 +431,7 @@ template<
 struct lambda<
           F< T1,T2,T3,T4,T5 >
         , Tag
+       
         >
 {
     typedef lambda< T1,Tag > l1;
@@ -398,9 +444,11 @@ struct lambda<
           l1::is_le::value, l2::is_le::value, l3::is_le::value
         , l4::is_le::value, l5::is_le::value
         >::type is_le;
+
     typedef aux::le_result5<
           is_le, Tag, F, l1, l2, l3, l4, l5
         > le_result_;
+
     typedef typename le_result_::result_ result_;
     typedef typename le_result_::type type;
 };
@@ -413,6 +461,7 @@ template<
 struct lambda<
           bind5< F,T1,T2,T3,T4,T5 >
         , Tag
+       
         >
 {
     typedef false_ is_le;
@@ -420,12 +469,13 @@ struct lambda<
           F
         , T1, T2, T3, T4, T5
         > result_;
+
     typedef result_ type;
 };
 
 // special case for 'protect'
 template< typename T, typename Tag >
-struct lambda< protect<T>,Tag >
+struct lambda< protect<T>, Tag >
 {
     typedef false_ is_le;
     typedef protect<T> result_;
@@ -442,6 +492,7 @@ template<
 struct lambda<
           bind< F,T1,T2,T3,T4,T5 >
         , Tag
+       
         >
 {
     typedef false_ is_le;
@@ -466,3 +517,4 @@ struct lambda<
 };
 
 }}
+

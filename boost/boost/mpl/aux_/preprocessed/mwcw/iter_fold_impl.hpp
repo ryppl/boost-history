@@ -1,4 +1,16 @@
+
+// Copyright (c) Aleksey Gurtovoy 2000-2004
+//
+// Use, modification and distribution are subject to the Boost Software 
+// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
+// at http://www.boost.org/LICENSE_1_0.txt)
+//
+
+// Preprocessed version of "boost/mpl/aux_/iter_fold_impl.hpp" header
+// -- DO NOT modify by hand!
+
 namespace boost { namespace mpl { namespace aux {
+
 // forward declaration
 
 template<
@@ -37,6 +49,7 @@ struct iter_fold_impl< 1,First,Last,State,ForwardOp >
     typedef typename apply2< ForwardOp,state0,iter0 >::type state1;
     typedef typename next<iter0>::type iter1;
     
+
     typedef state1 state;
     typedef iter1 iterator;
 };
@@ -56,6 +69,7 @@ struct iter_fold_impl< 2,First,Last,State,ForwardOp >
     typedef typename apply2< ForwardOp,state1,iter1 >::type state2;
     typedef typename next<iter1>::type iter2;
     
+
     typedef state2 state;
     typedef iter2 iterator;
 };
@@ -77,6 +91,7 @@ struct iter_fold_impl< 3,First,Last,State,ForwardOp >
     typedef typename apply2< ForwardOp,state2,iter2 >::type state3;
     typedef typename next<iter2>::type iter3;
     
+
     typedef state3 state;
     typedef iter3 iterator;
 };
@@ -100,6 +115,7 @@ struct iter_fold_impl< 4,First,Last,State,ForwardOp >
     typedef typename apply2< ForwardOp,state3,iter3 >::type state4;
     typedef typename next<iter3>::type iter4;
     
+
     typedef state4 state;
     typedef iter4 iterator;
 };
@@ -120,6 +136,7 @@ struct iter_fold_impl
         , State
         , ForwardOp
         > chunk_;
+
     typedef iter_fold_impl<
           ( (N - 4) < 0 ? 0 : N - 4 )
         , typename chunk_::iterator
@@ -127,6 +144,7 @@ struct iter_fold_impl
         , typename chunk_::state
         , ForwardOp
         > res_;
+
     typedef typename res_::state state;
     typedef typename res_::iterator iterator;
 };

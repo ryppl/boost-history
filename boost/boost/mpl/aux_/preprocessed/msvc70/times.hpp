@@ -1,16 +1,29 @@
+
+// Copyright (c) Aleksey Gurtovoy 2000-2004
+//
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
+//
+
+// Preprocessed version of "boost/mpl/Attic/times.hpp" header
+// -- DO NOT modify by hand!
+
 namespace boost { namespace mpl {
 
 template<
       typename Tag1
     , typename Tag2
+
     , int tag1_ = Tag1::value
     , int tag2_ = Tag2::value
     >
 struct times_impl
     : if_c<
           ( tag1_ > tag2_ )
-        , aux::cast2nd_impl< times_impl<Tag1,Tag2>,Tag1,Tag2 >
-        , aux::cast1st_impl< times_impl<Tag1,Tag2>,Tag1,Tag2 >
+
+        , aux::cast2nd_impl< times_impl< Tag1,Tag2 >,Tag1, Tag2 >
+        , aux::cast1st_impl< times_impl< Tag1,Tag2 >,Tag1, Tag2 >
         >
 {
 };
@@ -33,10 +46,12 @@ struct times
         , N1
         , N2
         >::type >::type
+
 {
 };
 
 }}
+
 namespace boost { namespace mpl {
 
 namespace aux {
@@ -48,6 +63,7 @@ struct msvc_times_impl
 };
 
 }
+
 template<>
 struct times_impl< integral_c_tag,integral_c_tag >
 {
@@ -60,6 +76,7 @@ struct times_impl< integral_c_tag,integral_c_tag >
             , N1::value
             , N2::value
             >::type
+
     {
     };
 };

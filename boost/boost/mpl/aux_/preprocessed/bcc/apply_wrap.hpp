@@ -1,3 +1,14 @@
+
+// Copyright (c) Aleksey Gurtovoy 2000-2004
+//
+// Use, modification and distribution are subject to the Boost Software 
+// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
+// at http://www.boost.org/LICENSE_1_0.txt)
+//
+
+// Preprocessed version of "boost/mpl/Attic/apply_wrap.hpp" header
+// -- DO NOT modify by hand!
+
 namespace boost { namespace mpl {
 
 template<
@@ -11,9 +22,11 @@ template<
 struct apply_wrap_impl0<
           0
         , F
+       
         >
 {
     typedef typename F::template apply<
+         
 // since the defaults are "lost", we have to pass *something* even for nullary
 // metafunction classes
         na
@@ -26,9 +39,11 @@ template<
 struct apply_wrap_impl0<
           1
         , F
+       
         >
 {
     typedef typename F::template apply<
+         
         na
         > type;
 };
@@ -39,10 +54,13 @@ template<
 struct apply_wrap_impl0<
           2
         , F
+       
         >
 {
     typedef typename F::template apply<
+         
         na, na
+
         > type;
 };
 
@@ -52,10 +70,13 @@ template<
 struct apply_wrap_impl0<
           3
         , F
+       
         >
 {
     typedef typename F::template apply<
+         
         na, na, na
+
         > type;
 };
 
@@ -65,10 +86,13 @@ template<
 struct apply_wrap_impl0<
           4
         , F
+       
         >
 {
     typedef typename F::template apply<
+         
         na, na, na, na
+
         > type;
 };
 
@@ -78,10 +102,13 @@ template<
 struct apply_wrap_impl0<
           5
         , F
+       
         >
 {
     typedef typename F::template apply<
+         
         na, na, na, na, na
+
         > type;
 };
 
@@ -92,6 +119,7 @@ struct apply_wrap0
     : apply_wrap_impl0<
           ::boost::mpl::aux::arity< F,0 >::value
         , F
+       
         >::type
 {
 };
@@ -127,6 +155,7 @@ struct apply_wrap_impl1<
     typedef typename F::template apply<
           T1
         , na
+
         > type;
 };
 
@@ -142,6 +171,7 @@ struct apply_wrap_impl1<
     typedef typename F::template apply<
           T1
         , na, na
+
         > type;
 };
 
@@ -157,6 +187,7 @@ struct apply_wrap_impl1<
     typedef typename F::template apply<
           T1
         , na, na, na
+
         > type;
 };
 
@@ -172,6 +203,7 @@ struct apply_wrap_impl1<
     typedef typename F::template apply<
           T1
         , na, na, na, na
+
         > type;
 };
 
@@ -203,6 +235,7 @@ struct apply_wrap_impl2<
 {
     typedef typename F::template apply<
           T1, T2
+
         > type;
 };
 
@@ -217,7 +250,9 @@ struct apply_wrap_impl2<
 {
     typedef typename F::template apply<
           T1, T2
+
         , na
+
         > type;
 };
 
@@ -232,7 +267,9 @@ struct apply_wrap_impl2<
 {
     typedef typename F::template apply<
           T1, T2
+
         , na, na
+
         > type;
 };
 
@@ -247,7 +284,9 @@ struct apply_wrap_impl2<
 {
     typedef typename F::template apply<
           T1, T2
+
         , na, na, na
+
         > type;
 };
 
@@ -279,6 +318,7 @@ struct apply_wrap_impl3<
 {
     typedef typename F::template apply<
           T1, T2, T3
+
         > type;
 };
 
@@ -293,7 +333,9 @@ struct apply_wrap_impl3<
 {
     typedef typename F::template apply<
           T1, T2, T3
+
         , na
+
         > type;
 };
 
@@ -308,7 +350,9 @@ struct apply_wrap_impl3<
 {
     typedef typename F::template apply<
           T1, T2, T3
+
         , na, na
+
         > type;
 };
 
@@ -340,6 +384,7 @@ struct apply_wrap_impl4<
 {
     typedef typename F::template apply<
           T1, T2, T3, T4
+
         > type;
 };
 
@@ -354,7 +399,9 @@ struct apply_wrap_impl4<
 {
     typedef typename F::template apply<
           T1, T2, T3, T4
+
         , na
+
         > type;
 };
 
@@ -388,6 +435,7 @@ struct apply_wrap_impl5<
 {
     typedef typename F::template apply<
           T1, T2, T3, T4, T5
+
         > type;
 };
 
@@ -405,3 +453,4 @@ struct apply_wrap5
 };
 
 }}
+

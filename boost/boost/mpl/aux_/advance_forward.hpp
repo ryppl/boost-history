@@ -20,7 +20,7 @@
 
 #if !defined(BOOST_MPL_PREPROCESSING_MODE)
 #   include <boost/mpl/next.hpp>
-#   include <boost/mpl/aux_/apply_wrap.hpp>
+#   include <boost/mpl/apply_wrap.hpp>
 #endif
 
 #include <boost/mpl/aux_/config/use_preprocessed.hpp>

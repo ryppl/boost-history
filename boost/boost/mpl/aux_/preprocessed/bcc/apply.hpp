@@ -1,3 +1,14 @@
+
+// Copyright (c) Aleksey Gurtovoy 2000-2004
+//
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
+//
+
+// Preprocessed version of "boost/mpl/apply.hpp" header
+// -- DO NOT modify by hand!
+
 namespace boost { namespace mpl {
 
 template<
@@ -6,6 +17,7 @@ template<
 struct apply0
     : apply_wrap0<
           typename lambda<F>::type
+       
         >
 {
     static int const arity = 1; typedef F arg1;
@@ -14,6 +26,7 @@ struct apply0
  };
  class apply0_rebind { public: template< typename U1 > struct apply : apply0<U1> { };
  
+
 };
 
 template<
@@ -40,6 +53,7 @@ struct apply1
  };
  class apply1_rebind { public: template< typename U1, typename U2 > struct apply : apply1< U1,U2 > { };
  
+
 };
 
 template<
@@ -67,6 +81,7 @@ struct apply2
  };
  class apply2_rebind { public: template< typename U1, typename U2, typename U3 > struct apply : apply2< U1,U2,U3 > { };
  
+
 };
 
 template<
@@ -95,6 +110,7 @@ struct apply3
  };
  class apply3_rebind { public: template< typename U1, typename U2, typename U3, typename U4 > struct apply : apply3< U1,U2,U3,U4 > { };
  
+
 };
 
 template<
@@ -124,6 +140,7 @@ struct apply4
  };
  class apply4_rebind { public: template< typename U1, typename U2, typename U3, typename U4, typename U5 > struct apply : apply4< U1,U2,U3,U4,U5 > { };
  
+
 };
 
 template<
@@ -155,6 +172,7 @@ struct apply5
  };
  class apply5_rebind { public: template< typename U1, typename U2, typename U3, typename U4, typename U5, typename U6 > struct apply : apply5< U1,U2,U3,U4,U5,U6 > { };
  
+
 };
 
 // primary template (not a specialization!)
@@ -169,3 +187,4 @@ struct apply
 };
 
 }}
+

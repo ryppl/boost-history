@@ -20,9 +20,9 @@
 #include <boost/mpl/long.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/tag.hpp>
+#include <boost/mpl/apply_wrap.hpp>
 #include <boost/mpl/aux_/advance_forward.hpp>
 #include <boost/mpl/aux_/advance_backward.hpp>
-#include <boost/mpl/aux_/apply_wrap.hpp>
 #include <boost/mpl/aux_/value_wknd.hpp>
 #include <boost/mpl/aux_/na_spec.hpp>
 #include <boost/mpl/aux_/config/nttp.hpp>
@@ -44,7 +44,7 @@ struct advance_impl
             , aux::advance_forward< BOOST_MPL_AUX_VALUE_WKND(offset_)::value >
             >::type f_;
 
-        typedef typename aux::apply_wrap1<f_,Iterator>::type type;
+        typedef typename apply_wrap1<f_,Iterator>::type type;
     };
 };
 

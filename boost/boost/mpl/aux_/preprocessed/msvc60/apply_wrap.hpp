@@ -1,4 +1,16 @@
+
+// Copyright (c) Aleksey Gurtovoy 2000-2004
+//
+// Use, modification and distribution are subject to the Boost Software 
+// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
+// at http://www.boost.org/LICENSE_1_0.txt)
+//
+
+// Preprocessed version of "boost/mpl/Attic/apply_wrap.hpp" header
+// -- DO NOT modify by hand!
+
 namespace boost { namespace mpl {
+
 template< typename F>
 struct msvc_apply0
 {
@@ -10,11 +22,13 @@ struct msvc_apply0
             typedef int type;
         };
     };
+
     template< typename T = int > struct result_
         : f_< aux::msvc_never_true<F>::value >
             ::template apply<>
     {
     };
+
 };
 
 template<
@@ -23,6 +37,7 @@ template<
 struct apply_wrap0
 {
     typedef typename msvc_apply0<F>::template result_<
+         
         >::type type;
 };
 
@@ -44,6 +59,7 @@ struct msvc_apply1
             typedef int type;
         };
     };
+
     template< typename T1 > struct result_
         : f_< aux::msvc_never_true<F>::value >
             ::template apply<T1>
@@ -79,6 +95,7 @@ struct msvc_apply2
             typedef int type;
         };
     };
+
     template< typename T1, typename T2 > struct result_
         : f_< aux::msvc_never_true<F>::value >
             ::template apply< T1,T2 >
@@ -114,6 +131,7 @@ struct msvc_apply3
             typedef int type;
         };
     };
+
     template< typename T1, typename T2, typename T3 > struct result_
         : f_< aux::msvc_never_true<F>::value >
             ::template apply< T1,T2,T3 >
@@ -152,6 +170,7 @@ struct msvc_apply4
             typedef int type;
         };
     };
+
     template<
           typename T1, typename T2, typename T3, typename T4
         >
@@ -194,6 +213,7 @@ struct msvc_apply5
             typedef int type;
         };
     };
+
     template<
           typename T1, typename T2, typename T3, typename T4
         , typename T5
@@ -224,3 +244,4 @@ struct apply_wrap5< int,int,int,int,int,int >
 };
 
 }}
+

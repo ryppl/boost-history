@@ -1,8 +1,21 @@
+
+// Copyright (c) Peter Dimov 2001-2002
+// Copyright (c) Aleksey Gurtovoy 2001-2004
+//
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
+//
+
+// Preprocessed version of "boost/mpl/arg.hpp" header
+// -- DO NOT modify by hand!
+
 BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_OPEN
-template<> struct arg<-1>
+template<> struct arg< -1 >
 {
     static int const value = -1;
     BOOST_MPL_AUX_ARG_TYPEDEF(void_, tag)
+
     template<
           typename U1 = na, typename U2 = na, typename U3 = na
         , typename U4 = na, typename U5 = na
@@ -19,6 +32,7 @@ template<> struct arg<1>
     static int const value = 1;
     typedef arg<2> next;
     BOOST_MPL_AUX_ARG_TYPEDEF(void_, tag)
+
     template<
           typename U1 = na, typename U2 = na, typename U3 = na
         , typename U4 = na, typename U5 = na
@@ -35,6 +49,7 @@ template<> struct arg<2>
     static int const value = 2;
     typedef arg<3> next;
     BOOST_MPL_AUX_ARG_TYPEDEF(void_, tag)
+
     template<
           typename U1 = na, typename U2 = na, typename U3 = na
         , typename U4 = na, typename U5 = na
@@ -51,6 +66,7 @@ template<> struct arg<3>
     static int const value = 3;
     typedef arg<4> next;
     BOOST_MPL_AUX_ARG_TYPEDEF(void_, tag)
+
     template<
           typename U1 = na, typename U2 = na, typename U3 = na
         , typename U4 = na, typename U5 = na
@@ -67,6 +83,7 @@ template<> struct arg<4>
     static int const value = 4;
     typedef arg<5> next;
     BOOST_MPL_AUX_ARG_TYPEDEF(void_, tag)
+
     template<
           typename U1 = na, typename U2 = na, typename U3 = na
         , typename U4 = na, typename U5 = na
@@ -83,6 +100,7 @@ template<> struct arg<5>
     static int const value = 5;
     typedef arg<6> next;
     BOOST_MPL_AUX_ARG_TYPEDEF(void_, tag)
+
     template<
           typename U1 = na, typename U2 = na, typename U3 = na
         , typename U4 = na, typename U5 = na
@@ -94,5 +112,6 @@ template<> struct arg<5>
     };
 };
 
-BOOST_MPL_AUX_NONTYPE_ARITY_SPEC(1, int, arg)
+BOOST_MPL_AUX_NONTYPE_ARITY_SPEC(1,int, arg)
+
 BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE

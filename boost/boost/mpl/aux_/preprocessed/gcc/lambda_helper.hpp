@@ -1,3 +1,14 @@
+
+// Copyright (c) Aleksey Gurtovoy 2001-2002
+//
+// Use, modification and distribution are subject to the Boost Software 
+// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy 
+// at http://www.boost.org/LICENSE_1_0.txt)
+//
+
+// Preprocessed version of "boost/mpl/lambda_helper.hpp" header
+// -- DO NOT modify by hand!
+
 namespace boost {
 namespace mpl {
 
@@ -114,3 +125,4 @@ struct lambda_helper5
 
 } // namespace mpl
 } // namespace boost
+
