@@ -1,0 +1,265 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>I/O Stream-buffer-wrapping Stream Base Library</title>
+</head>
+<body text="black" bgcolor="white" link="blue" vlink="purple" alink="red">
+<h1><img src="../../../c++boost.gif" alt="c++boost.gif (8819 bytes)"
+align="middle" width="277" height="86">Stream-buffer-wrapping Streams</h1>
+
+<p>The header <cite><a
+href="../../../boost/io/streambuf_wrapping.hpp">boost/io/
+streambuf_wrapping.hpp</a></cite> covers base class templates for easily
+wrapping new stream-buffer classes in streams.</p>
+
+<h2><a name="contents">Contents</a></h2>
+
+<ol>
+	<li><a href="#contents">Contents</a></li>
+	<li><a href="#rationale">Rationale</a></li>
+	<li><a href="#header">Header Synopsis</a></li>
+	<li><a href="#common">Common Interface</a>
+		<ul>
+			<li><a href="#m_types">Member Types</a></li>
+			<li><a href="#m_ctr">Constructors</a></li>
+			<li><a href="#m_observe">Observer Member Functions</a></li>
+		</ul></li>
+	<li><a href="#refer">References</a></li>
+	<li><a href="#credits">Credits</a>
+		<ul>
+			<li><a href="#contributors">Contributors</a></li>
+			<li><a href="#history">History</a></li>
+		</ul></li>
+</ol>
+
+<h2><a name="rationale">Rationale</a></h2>
+
+<p>To extend the C++ IOStream system with a new character sink and/or
+source, a stream-buffer class (template) is defined with the appropiate
+transfer (and buffering) properties.  The actual I/O is done with a
+stream object, that sends/receives characters via a stream-buffer
+object.  The Standard stream base class templates are designed to use
+stream buffers with an independent lifetime, and include functionality
+for switching what stream buffer is used.  The specialized Standard
+stream class templates include a special stream buffer within the
+stream.</p>
+
+<p>All the Standard specialized stream class templates use customized
+code to connect with their internal stream buffer.  This library
+provides base class templates that provide standard ways of using an
+internal stream buffer, accessing that stream buffer, and checking if
+that stream didn't switch to an external stream buffer.</p>
+
+<h2><a name="header">Header Synopsis</a></h2>
+
+<blockquote><pre>
+namespace boost
+{
+namespace io
+{
+
+template &lt; class StreamBuf &gt;
+    class basic_wrapping_istream;
+
+template &lt; class StreamBuf &gt;
+    class basic_wrapping_ostream;
+
+template &lt; class StreamBuf &gt;
+    class basic_wrapping_iostream;
+
+}
+}
+</pre></blockquote>
+
+<h2><a name="common">Common Interface</a></h2>
+
+<p>The three base class templates have the following public (and
+protected) interface.  Just substitute &quot;<code>istream</code>,&quot;
+&quot;<code>ostream</code>,&quot; or &quot;<code>iostream</code>&quot;
+for <var>stream</var>.</p>
+
+<blockquote><pre>
+#include &lt;istream&gt;  <i>// for std::basic_istream, std::basic_iostream</i>
+#include &lt;ostream&gt;  <i>// for std::basic_ostream</i>
+
+template &lt; class StreamBuf &gt;
+class boost::io::basic_wrapping_<var>stream</var>
+    : public std::basic_<var>stream</var>&lt; typename StreamBuf::char_type,
+       typename StreamBuf::traits_type &gt;
+{
+public:
+    // Types
+    typedef StreamBuf  streambuf_type;
+
+    typedef typename StreamBuf::char_type    char_type;
+    typedef typename StreamBuf::traits_type  traits_type;
+
+    // Accessors
+    streambuf_type *  get_internal_streambuf();
+
+    streambuf_type const *  get_internal_streambuf() const;
+
+    bool  is_using_internal_streambuf() const;
+
+protected:
+    // Constructors
+    explicit  basic_wrapping_<var>stream</var>( streambuf_type const &amp;s );
+
+    basic_wrapping_<var>stream</var>();
+
+    template &lt; typename T1 &gt;
+    explicit  basic_wrapping_<var>stream</var>( T1 x1 );
+
+    template &lt; typename T1, typename T2 &gt;
+    basic_wrapping_<var>stream</var>( T1 x1, T2 x2 );
+
+    template &lt; typename T1, typename T2, typename T3 &gt;
+    basic_wrapping_<var>stream</var>( T1 x1, T2 x2, T3 x3 );
+
+};
+</pre></blockquote>
+
+<p>The template argument <var>StreamBuf</var> should represent a
+stream-buffer class.  The class must have member types
+<code>char_type</code> and <code>traits_type</code> and (publically)
+derive from <code>std::basic_streambuf&lt;char_type,
+traits_type&gt;</code>.</p>
+
+<p>These class templates are only meant for (direct) derivation.  A
+derived class is a stream class (template) that should support the
+public (and protected) member interface of its internal stream buffer. 
+The <code>get_internal_streambuf</code> member functions can be used for
+forwarding to the stream buffer's interface.</p>
+
+<h3><a name="m_types">Member Types</a></h3>
+
+<dl>
+	<dt><code>streambuf_type</code>
+	<dd>a synonym for the stream buffer type used as the template parameter
+
+	<dt><code>char_type</code>
+	<dd>a synonym for the stream buffer's character type
+
+	<dt><code>traits_type</code>
+	<dd>a synonym for the stream buffer's character-traits type
+</dl>
+
+<h3><a name="m_ctr">Constructors</a></h3>
+
+<p><strong>Note:</strong> the automatically-defined destructor is used.</p>
+
+<dl>
+	<dt><code>explicit  basic_wrapping_<var>stream</var>( streambuf_type
+		const &amp;s );</code>
+	<dd>
+		<p><strong>Requires:</strong> <code>streambuf_type</code>
+			support copy construction (via a constant reference)</p>
+		<p><strong>Effects:</strong> initializes the internal stream
+			buffer to a copy of <var>s</var></p>
+
+	<dt><code>basic_wrapping_<var>stream</var>();</code>
+	<dd>
+		<p><strong>Requires:</strong> the stream buffer support default
+			construction</p>
+		<p><strong>Effects:</strong> initializes the internal stream
+			buffer to a default state</p>
+
+	<dt><code>template &lt; typename T1 &gt;  explicit 
+		basic_wrapping_<var>stream</var>( T1 x1 );</code>
+	<dd>
+		<p><strong>Requires:</strong> the stream buffer support
+			construction with a single argument of the type
+			<code>T1</code></p>
+		<p><strong>Effects:</strong> initializes the internal stream
+			buffer with <var>x1</var></p>
+
+	<dt><code>template &lt; typename T1, typename T2 &gt; 
+		basic_wrapping_<var>stream</var>( T1 x1, T2 x2 );</code>
+	<dd>
+		<p><strong>Requires:</strong> the stream buffer support
+			construction with two arguments of types <code>T1</code> and
+			<code>T2</code>, respectively</p>
+		<p><strong>Effects:</strong> initializes the internal stream
+			buffer with <var>x1</var> and <var>x2</var></p>
+
+	<dt><code>template &lt; typename T1, typename T2, typename T3 &gt; 
+		basic_wrapping_<var>stream</var>( T1 x1, T2 x2, T3 x3 );</code>
+	<dd>
+		<p><strong>Requires:</strong> the stream buffer support
+			construction with three arguments of types <code>T1</code>,
+			<code>T2</code> and <code>T3</code>, respectively</p>
+		<p><strong>Effects:</strong> initializes the internal stream
+			buffer with <var>x1</var>, <var>x2</var> and
+			<var>x3</var></p>
+</dl>
+
+<h3><a name="m_observe">Observer Member Functions</a></h3>
+
+<dl>
+	<dt><code>streambuf_type *  get_internal_streambuf();</code>
+	<dd>
+		<p><strong>Returns:</strong> a pointer to the internal stream
+			buffer</p>
+		<p><strong>Rationale:</strong> gives access to the stream's
+			internal stream buffer, no matter what stream buffer the
+			stream is currently using; helps forward function calls to
+			the internal stream buffer</p>
+
+	<dt><code>streambuf_type const *  get_internal_streambuf()
+		const;</code>
+	<dd>
+		<p><strong>Returns:</strong> a pointer to the internal stream
+			buffer</p>
+		<p><strong>Rationale:</strong> same as the
+			non-<code>const</code> version</p>
+
+	<dt><code>bool  is_using_internal_streambuf() const;</code>
+	<dd>
+		<p><strong>Returns:</strong> <code>this->get_internal_streambuf() ==
+			this->rdbuf()</code></p>
+		<p><strong>Rationale:</strong> the only reliable way to check if
+			a stream is using its internal stream buffer; if
+			<code>false</code> is returned, then no modifying operations
+			applied to the internal stream buffer could affect the
+			containing stream's processing</p>
+</dl>
+
+<h2><a name="refer">References</a></h2>
+
+<ul>
+	<li>The streambuf-wrapping streams library header itself: <cite><a
+		href="../../../boost/io/streambuf_wrapping.hpp">boost/io/
+		streambuf_wrapping.hpp</a></cite></li>
+	<li>Tests and examples can be seen in the stream libraries that use
+		this library, like <a href="array_stream.html">array-based
+		streams</a>.</li>
+</ul>
+
+<h2><a name="credits">Credits</a></h2>
+
+<h3><a name="contributors">Contributors</a></h3>
+
+<dl>
+	<dt><a href="../../../people/daryle_walker.html">Daryle Walker</a>
+	<dd>Started the library.  Contributed the initial versions of the
+		streambuf-wrapping stream base class templates.
+</dl>
+
+<h3><a name="history">History</a></h3>
+
+<dl>
+	<dt>11 Nov 2002, Daryle Walker
+	<dd>Initial version
+</dl>
+
+<hr>
+
+<p>Revised: 11 November 2002</p>
+
+<p>Copyright &copy; Daryle Walker 2002.  Permission to copy, use,
+modify, sell and distribute this document is granted provided this
+copyright notice appears in all copies.  This document is provided
+&quot;as is&quot; without express or implied warranty, and with no claim
+as to its suitability for any purpose.</p>
+</body>
+</html>
