@@ -11,10 +11,10 @@ struct checking_nothing
 {
   static T inf() { return std::numeric_limits<T>::infinity(); }
   static T nan() { return std::numeric_limits<T>::quiet_NaN(); }
-  static bool is_nan(const T& x) { return false; }
+  static bool is_nan(const T&) { return false; }
   static T empty_lower() { return std::numeric_limits<T>::quiet_NaN(); }
   static T empty_upper() { return std::numeric_limits<T>::quiet_NaN(); }
-  static bool is_empty(const T& x, const T& y) { return false; }
+  static bool is_empty(const T&, const T&) { return false; }
 };
 
 template<class T>
@@ -31,7 +31,7 @@ struct checking_strict
     { throw std::logic_error("boost::interval: Empty output"); }
   static T empty_upper()
     { throw std::logic_error("boost::interval: Empty output"); }
-  static bool is_empty(const T& x, const T& y) { return false; }
+  static bool is_empty(const T&, const T&) { return false; }
 };
 
 template<class T>
