@@ -80,30 +80,45 @@ namespace numerics {
     };
 
 #ifdef NUMERICS_BOUNDS_CHECK
-    template<class E>
-    NUMERICS_INLINE
-    void check (bool expression, const E &e) {
-        if (! expression)
-            throw e;
-    }
-/*
+//    template<class E>
+//    NUMERICS_INLINE
+//    void check (bool expression, const E &e) {
+//        if (! expression)
+//            throw e;
+//    }
+//    template<class E>
+//    NUMERICS_INLINE
+//    void check_ex (bool expression, const char *file, int line, const E &e) {
+//        if (! expression)
+//            throw e;
+//    }
 #define check(expression, e) \
     if (! (expression)) { \
-        std::cout << "Assertion failed in file " << __FILE__ << " at line " << __LINE__ << ":" << std::endl; \
-        std::cout << #expression << std::endl; \
+        std::cerr << "Assertion failed in file " << __FILE__ << " at line " << __LINE__ << ":" << std::endl; \
+        std::cerr << #expression << std::endl; \
         throw e; \
     }
-*/
+#define check_ex(expression, file, line, e) \
+    if (! (expression)) { \
+        std::cerr << "Assertion failed in file " << (file) << " at line " << (line) << ":" << std::endl; \
+        std::cerr << #expression << std::endl; \
+        throw e; \
+    }
 #else
 //    template<class E>
 //    NUMERICS_INLINE
 //    void check (bool expression, const E &e) {}
 // FIXME: this one is too agressive for MSVC?!
 #define check(expression, e)
+#define check_ex(expression, file, line, e)
 #endif
     
 }
 
 #endif 
+
+
+
+
 
 

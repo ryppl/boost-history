@@ -159,7 +159,7 @@ struct fast_tag {};
 
 // #define USE_STD_COMPLEX
 
-#define USE_COMPRESSED_ARRAY
+#define USE_MAP_ARRAY
 // #define USE_STD_MAP
 // #define USE_STD_VALARRAY
 

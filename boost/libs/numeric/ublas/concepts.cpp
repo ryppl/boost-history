@@ -61,12 +61,10 @@ void test_storage () {
         std::copy (v2.rbegin (), v2.rend (), v1.rbegin ());
 #endif
         std::swap (v1, v2);
-#ifndef USE_GCC
         std::copy (v1.begin (), v1.end (), out); 
         std::cout << std::endl;
         std::copy (v2.begin (), v2.end (), out); 
         std::cout << std::endl;
-#endif
 
         // Some unbounded array storage tests
         numerics::unbounded_array<double> ua1 (3), ua2 (3);
@@ -81,12 +79,10 @@ void test_storage () {
 #ifndef USE_GCC
         numerics::swap (ua1, ua2);
 #endif
-#ifndef USE_GCC
         std::copy (ua1.begin (), ua1.end (), out); 
         std::cout << std::endl;
         std::copy (ua2.begin (), ua2.end (), out); 
         std::cout << std::endl;
-#endif
 
         // Some bounded array storage tests
         numerics::bounded_array<double, 3> ba1 (3), ba2 (3);
@@ -101,12 +97,11 @@ void test_storage () {
 #ifndef USE_GCC
         numerics::swap (ba1, ba2);
 #endif
-#ifndef USE_GCC
         std::copy (ba1.begin (), ba1.end (), out);
         std::cout << std::endl;
         std::copy (ba2.begin (), ba2.end (), out);
         std::cout << std::endl;
-#endif
+
         // Some range tests
         numerics::range r (0, 3);
         std::copy (r.begin (), r.end (), out);
@@ -158,7 +153,7 @@ void test_sparse_storage () {
         std::cout << std::endl;
 
         // Some compressed array storage tests
-        numerics::compressed_array<int, double> ca1, ca2;
+        numerics::map_array<int, double> ca1, ca2;
         ca1.resize (3);
         for (i = 0; i < 3; ++ i) 
             ca2 [i] = i;
@@ -175,10 +170,10 @@ void test_sparse_storage () {
 #ifndef USE_GCC
         numerics::swap (ca1, ca2);
 #endif
-        for (numerics::compressed_array<int, double>::const_iterator it_ca1 = ca1.begin (); it_ca1 != ca1.end (); ++ it_ca1)
+        for (numerics::map_array<int, double>::const_iterator it_ca1 = ca1.begin (); it_ca1 != ca1.end (); ++ it_ca1)
             std::cout << (*it_ca1).first << " " << (*it_ca1).second << " ";
         std::cout << std::endl;
-        for (numerics::compressed_array<int, double>::const_iterator it_ca2 = ca2.begin (); it_ca2 != ca2.end (); ++ it_ca2)
+        for (numerics::map_array<int, double>::const_iterator it_ca2 = ca2.begin (); it_ca2 != ca2.end (); ++ it_ca2)
             std::cout << (*it_ca2).first << " " << (*it_ca2).second << " ";
         std::cout << std::endl;
     }
@@ -205,11 +200,11 @@ void test_vector () {
         std::swap (v1, v2);
 #ifndef USE_GCC
         numerics::swap (v1, v2);
+#endif
         std::copy (v1.begin (), v1.end (), out); 
         std::cout << std::endl;
         std::copy (v2.begin (), v2.end (), out); 
         std::cout << std::endl;
-#endif
     }
     catch (std::exception &e) {
         std::cout << e.what () << std::endl;
@@ -220,7 +215,6 @@ void test_vector () {
 }
 
 void test_unit_vector () {
-#ifndef USE_GCC
     try {
         std::ostream_iterator<int> out (std::cout, " ");
 
@@ -244,7 +238,6 @@ void test_unit_vector () {
     catch (...) {
         std::cout << "unknown exception" << std::endl;
     }
-#endif
 }
 
 void test_sparse_vector () {
@@ -261,11 +254,11 @@ void test_sparse_vector () {
         std::swap (v1, v2);
 #ifndef USE_GCC
         numerics::swap (v1, v2);
+#endif
         std::copy (v1.begin (), v1.end (), out); 
         std::cout << std::endl;
         std::copy (v2.begin (), v2.end (), out); 
         std::cout << std::endl;
-#endif
     }
     catch (std::exception &e) {
         std::cout << e.what () << std::endl;
@@ -309,6 +302,7 @@ void test_matrix () {
         std::swap (m1, m2);
 #ifndef USE_GCC
         numerics::swap (m1, m2);
+#endif
         {
 #if ! defined (NUMERICS_USE_CANONICAL_ITERATOR) && ! defined (NUMERICS_USE_INDEXED_ITERATOR) 
             numerics::matrix<double>::const_iterator1 it11 (m1.begin1 ());
@@ -325,7 +319,6 @@ void test_matrix () {
             }
 #endif
         }
-#endif
     }
     catch (std::exception &e) {
         std::cout << e.what () << std::endl;
@@ -336,7 +329,6 @@ void test_matrix () {
 }
 
 void test_identity_matrix () {
-#ifndef USE_GCC
 #ifndef  NUMERICS_USE_CANONICAL_ITERATOR
     try {
         std::ostream_iterator<int> out (std::cout, " ");
@@ -363,7 +355,6 @@ void test_identity_matrix () {
     catch (...) {
         std::cout << "unknown exception" << std::endl;
     }
-#endif
 #endif
 }
 
@@ -400,6 +391,7 @@ void test_sparse_matrix () {
         std::swap (m1, m2);
 #ifndef USE_GCC
         numerics::swap (m1, m2);
+#endif
         {
             numerics::sparse_matrix<double>::const_iterator1 it11 (m1.begin1 ());
             while (it11 != m1.end1 ()) {
@@ -414,7 +406,6 @@ void test_sparse_matrix () {
                 ++ it21;
             } 
         }
-#endif
     }
     catch (std::exception &e) {
         std::cout << e.what () << std::endl;
@@ -716,6 +707,14 @@ void test_const_project () {
 #endif
      // vr3 (0) = 0; // Compile time error: left operand must be l-value
      std::cout << vr3 (0) << std::endl;
+
+    const numerics::vector<double> v (1);
+    std::cout << numerics::project (v, numerics::range (0, 1)) << std::endl;
+
+    const numerics::matrix<double> m (1, 1);
+    std::cout << numerics::row (m, 0) << std::endl;
+    std::cout << numerics::column (m, 0) << std::endl;
+    std::cout << numerics::project (m, numerics::range (0, 1), numerics::range (0, 1)) << std::endl;
 }
 
 #ifdef NUMERICS_DEPRECATED
@@ -745,6 +744,14 @@ void test_project_equivalences () {
 #endif
 
 int main () {
+#ifdef LATER
+    std::cout << sizeof (std::complex<float>) << std::endl;
+    std::cout << sizeof (std::complex<double>) << std::endl;
+    std::complex<float> c1 (1, 2), c2 (3, 4);
+    std::swap (c1, c2);
+    std::cout << c1.real () << " " << c1.imag ()  << std::endl;
+    std::cout << c2.real () << " " << c2.imag ()  << std::endl;
+#endif
     test_storage ();
     test_sparse_storage ();
     test_vector ();
@@ -763,6 +770,15 @@ int main () {
     numerics::concept_checks ();
     return 0;
 }
+
+
+
+
+
+
+
+
+
 
 
 

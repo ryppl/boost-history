@@ -185,8 +185,8 @@ the vector.</p>
 <h4>Models</h4>
 
 <ul>
-    <li><code>vector&lt;T, A, F&gt;</code></li>
-    <li><code>sparse_vector&lt;T, A, F&gt;</code></li>
+    <li><code>vector&lt;T, A&gt;</code></li>
+    <li><code>sparse_vector&lt;T, A&gt;</code></li>
 </ul>
 
 <h2><a name="matrix"></a>Matrix </h2>
@@ -369,8 +369,11 @@ the matrix.</p>
 <h4>Models</h4>
 
 <ul>
-    <li><code>matrix&lt;T, A, F&gt;</code></li>
-    <li><code>sparse_matrix&lt;T, A, F&gt;</code></li>
+    <li><code>matrix&lt;T, F, A&gt;</code></li>
+    <li><code>triangular_matrix&lt;T, F1, F2, A&gt;</code></li>
+    <li><code>symmetric_matrix&lt;T, F1, F2, A&gt;</code></li>
+    <li><code>banded_matrix&lt;T, F, A&gt;</code></li>
+    <li><code>sparse_matrix&lt;T, F, A&gt;</code></li>
 </ul>
 </body>
 </html>

@@ -18,12 +18,12 @@
 #define NUMERICS_CONCEPTS_H
 
 #define INTERNAL_BASE
-#define INTERNAL_EXPRESSION
+// #define INTERNAL_EXPRESSION
 // #define INTERNAL_ITERATOR
 
-// Concept checks based on ideas of Jeremy Siek
-
 // #define EXTERNAL
+
+// Concept checks based on ideas of Jeremy Siek
 
 namespace numerics {
 
@@ -1055,11 +1055,27 @@ namespace numerics {
 #endif
 #endif
 
-        SparseStorageContainer<const compressed_array<std::size_t, double> >::constraints ();
-        MutableSparseStorageContainer<compressed_array<std::size_t, double> >::constraints ();
+        SparseStorageContainer<const map_array<std::size_t, double> >::constraints ();
+        MutableSparseStorageContainer<map_array<std::size_t, double> >::constraints ();
 #ifdef INTERNAL_ITERATOR
-        RandomAccessIterator<compressed_array<std::size_t, double>::const_iterator, std::ptrdiff_t, std::pair<std::size_t, double> >::constraints ();    
-        MutableRandomAccessIterator<compressed_array<std::size_t, double>::iterator, std::ptrdiff_t, std::pair<std::size_t, double> >::constraints ();    
+        RandomAccessIterator<map_array<std::size_t, double>::const_iterator, std::ptrdiff_t, std::pair<std::size_t, double> >::constraints ();    
+        MutableRandomAccessIterator<map_array<std::size_t, double>::iterator, std::ptrdiff_t, std::pair<std::size_t, double> >::constraints ();    
+#endif
+
+#ifndef NUMERICS_NON_STD
+        SparseStorageContainer<const std::set<std::size_t> >::constraints ();
+        MutableSparseStorageContainer<std::set<std::size_t> >::constraints ();
+#ifdef INTERNAL_ITERATOR
+        BidirectionalIterator<std::set<std::size_t>::const_iterator, std::size_t>::constraints ();
+        MutableBidirectionalIterator<std::set<std::size_t>::iterator, std::size_t>::constraints ();
+#endif
+#endif
+
+        SparseStorageContainer<const set_array<std::size_t> >::constraints ();
+        MutableSparseStorageContainer<set_array<std::size_t> >::constraints ();
+#ifdef INTERNAL_ITERATOR
+        RandomAccessIterator<set_array<std::size_t>::const_iterator, std::ptrdiff_t, std::size_t>::constraints ();    
+        MutableRandomAccessIterator<set_array<std::size_t>::iterator, std::ptrdiff_t, std::size_t>::constraints ();    
 #endif
 
         // Vector 
@@ -1121,6 +1137,17 @@ namespace numerics {
 #ifndef USE_MSVC
         IndexedBidirectional1DIterator<sparse_vector<double>::const_reverse_iterator>::constraints ();    
         MutableIndexedBidirectional1DIterator<sparse_vector<double>::reverse_iterator>::constraints ();
+#endif
+#endif
+
+        Vector<const compressed_vector<double> >::constraints ();
+        MutableVector<compressed_vector<double> >::constraints ();
+#ifdef INTERNAL_ITERATOR
+        IndexedBidirectional1DIterator<compressed_vector<double>::const_iterator>::constraints ();    
+        MutableIndexedBidirectional1DIterator<compressed_vector<double>::iterator>::constraints ();
+#ifndef USE_MSVC
+        IndexedBidirectional1DIterator<compressed_vector<double>::const_reverse_iterator>::constraints ();    
+        MutableIndexedBidirectional1DIterator<compressed_vector<double>::reverse_iterator>::constraints ();
 #endif
 #endif
 
@@ -1391,6 +1418,21 @@ namespace numerics {
 											  sparse_vector_of_sparse_vector<double>::reverse_iterator2>::constraints ();
 #endif
 #endif
+
+        Matrix<const compressed_matrix<double> >::constraints ();
+        MutableMatrix<compressed_matrix<double> >::constraints ();
+#ifdef INTERNAL_ITERATOR
+        IndexedBidirectional2DIterator<compressed_matrix<double>::const_iterator1, 
+									   compressed_matrix<double>::const_iterator2>::constraints ();
+        MutableIndexedBidirectional2DIterator<compressed_matrix<double>::iterator1, 
+											  compressed_matrix<double>::iterator2>::constraints ();
+#ifndef USE_MSVC
+        IndexedBidirectional2DIterator<compressed_matrix<double>::const_reverse_iterator1, 
+									   compressed_matrix<double>::const_reverse_iterator2>::constraints ();
+        MutableIndexedBidirectional2DIterator<compressed_matrix<double>::reverse_iterator1, 
+											  compressed_matrix<double>::reverse_iterator2>::constraints ();
+#endif
+#endif
 #endif
 
 #ifdef INTERNAL_EXPRESSION
@@ -1524,10 +1566,10 @@ namespace numerics {
         MatrixExpression<matrix_binary_scalar2<matrix<double>, scalar_value<double>, scalar_multiplies<double, double> > >::constraints ();
 #ifdef INTERNAL_ITERATOR
         IndexedBidirectional2DIterator<matrix_binary_scalar2<matrix<double>, scalar_value<double>, scalar_multiplies<double, double> >::const_iterator1, 
-									   matrix_binary_scalar2<scalar_value<double>, matrix<double>, scalar_multiplies<double, double> >::const_iterator2>::constraints ();
+									   matrix_binary_scalar2<matrix<double>, scalar_value<double>, scalar_multiplies<double, double> >::const_iterator2>::constraints ();
 #ifndef USE_MSVC
         IndexedBidirectional2DIterator<matrix_binary_scalar2<matrix<double>, scalar_value<double>, scalar_multiplies<double, double> >::const_reverse_iterator1, 
-									   matrix_binary_scalar2<scalar_value<double>, matrix<double>, scalar_multiplies<double, double> >::const_reverse_iterator2>::constraints ();
+									   matrix_binary_scalar2<matrix<double>, scalar_value<double>, scalar_multiplies<double, double> >::const_reverse_iterator2>::constraints ();
 #endif
 #endif
 

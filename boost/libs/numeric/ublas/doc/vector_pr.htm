@@ -213,6 +213,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
     class vector_range:
 	public vector_expression&lt;vector_range&lt;V&gt; &gt; {
     public:      
+        typedef const V const_vector_type;
         typedef V vector_type;
         typedef typename V::size_type size_type;
         typedef typename V::difference_type difference_type;
@@ -233,6 +234,8 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
         size_type start () const; 
         size_type size () const; 
+        const_vector_type &amp;data () const;
+        vector_type &amp;data ();
 
         // Element access
         value_type operator () (size_type i) const;
@@ -561,8 +564,9 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
 <pre><code>    // Vector based slice class
     template&lt;class V&gt;
     class vector_slice:
-		public vector_expression&lt;vector_slice&lt;V&gt; &gt; {
+	public vector_expression&lt;vector_slice&lt;V&gt; &gt; {
     public:      
+        typedef const V const_vector_type;
         typedef V vector_type;
         typedef typename V::size_type size_type;
         typedef typename V::difference_type difference_type;
@@ -584,6 +588,8 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         size_type start () const;
         size_type stride () const;
         size_type size () const;
+        const_vector_type &amp;data () const;
+        vector_type &amp;data ();
 
         // Element access
         value_type operator () (size_type i) const;

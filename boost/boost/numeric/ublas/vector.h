@@ -45,8 +45,12 @@ namespace numerics {
             typedef typename V::difference_type difference_type;
             difference_type size (v.size ());
             typename V::iterator it (v.begin ());
+#ifndef NUMERICS_USE_DUFF_DEVICE
             while (-- size >= 0)
                 functor_type () (*it, t), ++ it;
+#else
+	    DD (size, 4, r, (functor_type () (*it, t), ++ it));
+#endif
         }
         // Indexing case
         template<class V, class T>
@@ -55,8 +59,13 @@ namespace numerics {
         void indexing_assign (V &v, const T &t) {
             typedef typename V::difference_type difference_type;
             difference_type size (v.size ());
+#ifndef NUMERICS_USE_DUFF_DEVICE
             for (difference_type i = 0; i < size; ++ i)
                 functor_type () (v (i), t); 
+#else
+	    difference_type i (0);
+	    DD (size, 4, r, (functor_type () (v (i), t), ++ i));
+#endif
         }
 
         // Dense case
@@ -162,8 +171,12 @@ namespace numerics {
             difference_type size (common (v.size (), e ().size ()));
             typename V::iterator it (v.begin ());
             typename E::const_iterator ite (e ().begin ());
+#ifndef NUMERICS_USE_DUFF_DEVICE
             while (-- size >= 0) 
                 functor_type () (*it, *ite), ++ it, ++ ite;
+#else
+	    DD (size, 2, r, (functor_type () (*it, *ite), ++ it, ++ ite));
+#endif
         }
         // Indexing scase
         template<class V, class E>
@@ -172,8 +185,13 @@ namespace numerics {
         void indexing_assign (V &v, const vector_expression<E> &e) {
             typedef typename V::difference_type difference_type;
             difference_type size (common (v.size (), e ().size ()));
+#ifndef NUMERICS_USE_DUFF_DEVICE
             for (difference_type i = 0; i < size; ++ i)
                 functor_type () (v (i), e () (i)); 
+#else
+	    difference_type i (0);
+	    DD (size, 2, r, (functor_type () (v (i), e () (i)), ++ i)); 
+#endif
         }
 
         // Dense case
@@ -215,13 +233,14 @@ namespace numerics {
                 functor_type () (*it, value_type ());
                 ++ it;
             }
-#ifdef NUMERICS_BOUNDS_CHECK
+#ifdef NUMERICS_BOUNDS_CHECK_EX
             {
                 // Need the const member dispatched.
                 const V &cv = v;
                 typename E::const_iterator ite (e ().begin ());
                 typename E::const_iterator ite_end (e ().end ());
                 while (ite != ite_end) {
+	 	    // FIXME: we need a better floating point comparison...
                     check (*ite == cv (ite.index ()), bad_index ());
                     ++ ite;
                 }
@@ -260,9 +279,10 @@ namespace numerics {
                     functor_type () (*it, value_type ());
                     ++ it;
                 } else if (compare > 0) {
-#ifdef NUMERICS_BOUNDS_CHECK
+#ifdef NUMERICS_BOUNDS_CHECK_EX
                     // Need the const member dispatched.
                     const V &cv = v;
+	 	    // FIXME: we need a better floating point comparison...
                     check (*ite == cv (ite.index ()), bad_index ());
 #endif
                     ++ ite;
@@ -272,10 +292,11 @@ namespace numerics {
                 functor_type () (*it, value_type ());
                 ++ it;
             }
-#ifdef NUMERICS_BOUNDS_CHECK
+#ifdef NUMERICS_BOUNDS_CHECK_EX
             while (ite != ite_end) {
                 // Need the const member dispatched.
                 const V &cv = v;
+	 	// FIXME: we need a better floating point comparison...
                 check (*ite == cv (ite.index ()), bad_index ());
                 ++ ite;
             }
@@ -318,6 +339,7 @@ namespace numerics {
         typedef const T *const_pointer;
         typedef T *pointer;
         typedef A array_type;
+        typedef const A const_array_type;
         typedef const vector<T, A> const_self_type;
         typedef vector<T, A> self_type;
         typedef const vector_const_reference<const_self_type> const_closure_type;
@@ -338,6 +360,9 @@ namespace numerics {
         vector (size_type size): 
             size_ (size), data_ (size) {}
         NUMERICS_INLINE
+        vector (size_type size, const array_type &data): 
+            size_ (size), data_ (data) {}
+        NUMERICS_INLINE
         vector (const vector &v): 
             size_ (v.size_), data_ (v.data_) {}
         template<class AE>
@@ -357,6 +382,14 @@ namespace numerics {
         NUMERICS_INLINE
         size_type size () const { 
             return size_; 
+        }
+        NUMERICS_INLINE
+        const_array_type &data () const {
+            return data_;
+        }
+        NUMERICS_INLINE
+        array_type &data () {
+            return data_;
         }
 
         // Element access
@@ -842,7 +875,7 @@ namespace numerics {
         }
         NUMERICS_INLINE
         const_iterator upper_bound (size_type i) const {
-			return const_iterator (*this, std::min (i + 1, index_));
+			return const_iterator (*this, std::min (i, index_ + 1));
         }
 
         // Iterators simply are pointers.
@@ -1634,6 +1667,18 @@ namespace numerics {
 }
 
 #endif 
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -29,6 +29,8 @@
 
 #define NUMERICS_EXPLICIT explicit
 
+#define NUMERICS_RESTRICT 
+
 #ifdef NDEBUG
 
 // Inlining options
@@ -111,6 +113,9 @@ namespace std {
 
 #define NUMERICS_EXPLICIT explicit
 
+#define NUMERICS_RESTRICT __restrict__
+// #define NUMERICS_RESTRICT 
+
 #ifdef NDEBUG
 
 // Inlining options
@@ -165,6 +170,8 @@ namespace std {
 
 #define NUMERICS_EXPLICIT explicit
 
+#define NUMERICS_RESTRICT 
+
 #ifdef NDEBUG
 
 // Inlining options
@@ -217,6 +224,8 @@ namespace std {
 
 #define NUMERICS_EXPLICIT explicit
 
+#define NUMERICS_RESTRICT 
+
 #ifdef NDEBUG
 
 // Inlining options
@@ -230,6 +239,9 @@ namespace std {
 
 // Use expression templates.
 #define NUMERICS_USE_ET
+
+// Use Duff's device
+// #define NUMERICS_USE_DUFF_DEVICE
 
 #define NUMERICS_TRACE(s)
 
@@ -276,7 +288,7 @@ namespace numerics {
     class unbounded_array;
 
     template<class I, class T>
-    class compressed_array;
+    class map_array;
 
     struct vector_tag {};
 
@@ -320,8 +332,11 @@ namespace numerics {
     template<class T>
     class scalar_vector;
 
-    template<class T, class A = compressed_array<std::size_t, T> >
+    template<class T, class A = map_array<std::size_t, T> >
     class sparse_vector;
+
+    template<class T, class AI = unbounded_array<std::size_t>, class AT = unbounded_array<T> >
+    class compressed_vector;
 
     struct unknown_orientation_tag {};
 
@@ -383,15 +398,33 @@ namespace numerics {
     template<class M, class F = lower>
     class hermitean_adaptor;
 
-    template<class T, class F = row_major, class A = compressed_array<std::size_t, T> >
+    template<class T, class F = row_major, class A = map_array<std::size_t, T> >
     class sparse_matrix;
 
-    template<class T, class F = row_major, class A = compressed_array<std::size_t, compressed_array<std::size_t, T> > >
+    template<class T, class F = row_major, class A = map_array<std::size_t, map_array<std::size_t, T> > >
     class sparse_vector_of_sparse_vector;
 
+    template<class T, class F = row_major, class IA = unbounded_array<std::size_t>, class TA = unbounded_array<T> >
+    class compressed_matrix;
 }
 
 #endif 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,4 +1,4 @@
-//  
+//
 //  Copyright (c) 2000-2001
 //  Joerg Walter, Mathias Koch
 //  
@@ -66,6 +66,14 @@ namespace numerics {
         NUMERICS_INLINE
         size_type size () const {
             return data_.size2 (); 
+        }
+        NUMERICS_INLINE
+        const_matrix_type &data () const {
+            return data_;
+        }
+        NUMERICS_INLINE
+        matrix_type &data () {
+            return data_;
         }
 
         // Element access
@@ -462,6 +470,13 @@ namespace numerics {
     matrix_row<M> row (M &data, std::size_t i) {
         return matrix_row<M> (data, i);
     }
+#ifndef USE_MSVC
+    template<class M>
+    NUMERICS_INLINE
+    matrix_row<const M> row (const M &data, std::size_t i) {
+        return matrix_row<const M> (data, i);
+    }
+#endif
 
     // Matrix row iterator
     template<class M, class I>
@@ -733,6 +748,14 @@ namespace numerics {
         NUMERICS_INLINE
         size_type size () const { 
             return data_.size1 (); 
+        }
+        NUMERICS_INLINE
+        const_matrix_type &data () const {
+            return data_;
+        }
+        NUMERICS_INLINE
+        matrix_type &data () {
+            return data_;
         }
 
         // Element access
@@ -1129,12 +1152,19 @@ namespace numerics {
     matrix_column<M> column (M &data, std::size_t j) {
         return matrix_column<M> (data, j);
     }
+#ifndef USE_MSVC
+    template<class M>
+    NUMERICS_INLINE
+    matrix_column<const M> column (const M &data, std::size_t j) {
+        return matrix_column<const M> (data, j);
+    }
+#endif
 
     // Matrix column iterator
     template<class M, class I>
     class matrix_column_iterator:
-        public container_reference<M>, 
-        public random_access_iterator_base<matrix_column_iterator<M, I>, 
+        public container_reference<M>,
+        public random_access_iterator_base<matrix_column_iterator<M, I>,
                                            matrix_column<M>,
                                            typename M::difference_type> {
     public:
@@ -1403,6 +1433,14 @@ namespace numerics {
         NUMERICS_INLINE
         size_type size () const { 
             return common (r1_.size (), r2_.size ()); 
+        }
+        NUMERICS_INLINE
+        const_matrix_type &data () const {
+            return data_;
+        }
+        NUMERICS_INLINE
+        matrix_type &data () {
+            return data_;
         }
 
         // Element access
@@ -1792,13 +1830,21 @@ namespace numerics {
             data_ (data), s1_ (s1), s2_ (s2) {}
 #ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
-        matrix_vector_slice (matrix_type &data, size_type start1, size_type stride1, size_type size1, size_type start2, size_type stride2, size_type size2): 
+        matrix_vector_slice (matrix_type &data, size_type start1, difference_type stride1, size_type size1, size_type start2, difference_type stride2, size_type size2): 
             data_ (data), s1_ (start1, stride1, size1), s2_ (start2, stride2, size2) {}
 #endif
 
         NUMERICS_INLINE
         size_type size () const { 
             return common (s1_.size (), s2_.size ()); 
+        }
+        NUMERICS_INLINE
+        const_matrix_type &data () const {
+            return data_;
+        }
+        NUMERICS_INLINE
+        matrix_type &data () {
+            return data_;
         }
 
         // Element access
@@ -2214,6 +2260,14 @@ namespace numerics {
         NUMERICS_INLINE
         size_type size2 () const { 
             return r2_.size ();
+        }
+        NUMERICS_INLINE
+        const_matrix_type &data () const {
+            return data_;
+        }
+        NUMERICS_INLINE
+        matrix_type &data () {
+            return data_;
         }
 
         // Element access
@@ -3005,11 +3059,18 @@ namespace numerics {
     matrix_range<M> project (M &data, const range &r1, const range &r2) {
         return matrix_range<M> (data, r1, r2);
     }
+#ifndef USE_MSVC
+    template<class M>
+    NUMERICS_INLINE
+    matrix_range<const M> project (const M &data, const range &r1, const range &r2) {
+        return matrix_range<const M> (data, r1, r2);
+    }
+#endif
 #ifdef NUMERICS_HAS_PARTIAL_TEMPLATE_SPECIALIZATION
     template<class M>
     NUMERICS_INLINE
     matrix_range<M> project (const matrix_range<M> &data, const range &r1, const range &r2) {
-		NUMERICS_TRACE ("project (matrix_range<M>, range, range)");
+        NUMERICS_TRACE ("project (matrix_range<M>, range, range)");
         return data.project (r1, r2);
     }
 #endif
@@ -3058,7 +3119,7 @@ namespace numerics {
             data_ (data), s1_ (s1), s2_ (s2) {}
 #ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
-        matrix_slice (matrix_type &data, size_type start1, size_type stride1, size_type size1, size_type start2, size_type stride2, size_type size2): 
+        matrix_slice (matrix_type &data, size_type start1, difference_type stride1, size_type size1, size_type start2, difference_type stride2, size_type size2): 
             data_ (data), s1_ (start1, stride1, size1), s2_ (start2, stride2, size2) {}
 #endif
 
@@ -3069,6 +3130,14 @@ namespace numerics {
         NUMERICS_INLINE
         size_type size2 () const { 
             return s2_.size ();
+        }
+        NUMERICS_INLINE
+        const_matrix_type &data () const {
+            return data_;
+        }
+        NUMERICS_INLINE
+        matrix_type &data () {
+            return data_;
         }
 
         // Element access
@@ -3865,6 +3934,8 @@ namespace numerics {
 }
 
 #endif 
+
+
 
 
 

@@ -53,7 +53,7 @@ the base container adaptor for sparse matrices.</p>
     <tr>
         <td><code>A</code></td>
         <td>The type of the adapted array.</td>
-        <td><code>compressed_array&lt;std::size_t, T&gt;</code></td>
+        <td><code>map_array&lt;std::size_t, T&gt;</code></td>
     </tr>
 </table>
 
@@ -310,6 +310,7 @@ href="container.htm#matrix">Matrix</a>.</p>
         typedef T *pointer;
         typedef F functor_type;
         typedef A array_type;
+        typedef const A const_array_type;
         typedef const sparse_matrix&lt;T, F, A&gt; const_self_type;
         typedef sparse_matrix&lt;T, F, A&gt; self_type;
         typedef const matrix_const_reference&lt;const_self_type&gt; const_closure_type;
@@ -331,6 +332,8 @@ href="container.htm#matrix">Matrix</a>.</p>
 
         size_type size1 () const;
         size_type size2 () const;
+        const_array_type &amp;data () const;
+        array_type &amp;data ();
 
         // Element access
         value_type operator () (size_type i, size_type j) const;

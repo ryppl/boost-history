@@ -61,12 +61,12 @@ struct test_my_matrix {
 
 			// Scaling a matrix
 			t = N;
-			initialize_matrix (m1);
+			initialize_matrix (m1, numerics::lower_tag ());
 			m2 = value_type (1.) * m1;
 			std::cout << "1. * m1 = " << m2 << std::endl;
 			m2 = t * m1;
 			std::cout << "N * m1 = " << m2 << std::endl;
-			initialize_matrix (m1);
+			initialize_matrix (m1, numerics::lower_tag ());
 			m2 = m1 * value_type (1.);
 			std::cout << "m1 * 1. = " << m2 << std::endl;
 			m2 = m1 * t;

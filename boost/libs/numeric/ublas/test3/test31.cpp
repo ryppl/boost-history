@@ -157,18 +157,19 @@ struct test_my_vector {
 void test_vector () {
     std::cout << "test_vector" << std::endl;
 
-#ifdef USE_COMPRESSED_ARRAY
-    std::cout << "float, compressed_array" << std::endl;
-    test_my_vector<numerics::sparse_vector<float, numerics::compressed_array<std::size_t, float> >, 3 > () ();
+#ifdef USE_SPARSE_VECTOR
+#ifdef USE_MAP_ARRAY
+    std::cout << "float, map_array" << std::endl;
+    test_my_vector<numerics::sparse_vector<float, numerics::map_array<std::size_t, float> >, 3 > () ();
 
-    std::cout << "double, compressed_array" << std::endl;
-    test_my_vector<numerics::sparse_vector<double, numerics::compressed_array<std::size_t, double> >, 3 > () ();
+    std::cout << "double, map_array" << std::endl;
+    test_my_vector<numerics::sparse_vector<double, numerics::map_array<std::size_t, double> >, 3 > () ();
 
-    std::cout << "std::complex<float>, compressed_array" << std::endl;
-    test_my_vector<numerics::sparse_vector<std::complex<float>, numerics::compressed_array<std::size_t, std::complex<float> > >, 3 > () ();
+    std::cout << "std::complex<float>, map_array" << std::endl;
+    test_my_vector<numerics::sparse_vector<std::complex<float>, numerics::map_array<std::size_t, std::complex<float> > >, 3 > () ();
 
-    std::cout << "std::complex<double>, compressed_array" << std::endl;
-    test_my_vector<numerics::sparse_vector<std::complex<double>, numerics::compressed_array<std::size_t, std::complex<double> > >, 3 > () ();
+    std::cout << "std::complex<double>, map_array" << std::endl;
+    test_my_vector<numerics::sparse_vector<std::complex<double>, numerics::map_array<std::size_t, std::complex<double> > >, 3 > () ();
 #endif
 
 #ifdef USE_STD_MAP
@@ -183,6 +184,21 @@ void test_vector () {
 
     std::cout << "std::complex<double>, std::map" << std::endl;
     test_my_vector<numerics::sparse_vector<std::complex<double>, std::map<size_t, std::complex<double> > > , 3 > () ();
+#endif
+#endif
+
+#ifdef USE_COMPRESSED_VECTOR
+    std::cout << "float" << std::endl;
+    test_my_vector<numerics::compressed_vector<float>, 3 > () ();
+
+    std::cout << "double" << std::endl;
+    test_my_vector<numerics::compressed_vector<double>, 3 > () ();
+
+    std::cout << "std::complex<float>" << std::endl;
+    test_my_vector<numerics::compressed_vector<std::complex<float> >, 3 > () ();
+
+    std::cout << "std::complex<double>" << std::endl;
+    test_my_vector<numerics::compressed_vector<std::complex<double> >, 3 > () ();
 #endif
 }
 

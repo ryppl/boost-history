@@ -78,6 +78,7 @@ namespace numerics {
         size_type lower_element (size_type i, size_type size1, size_type j, size_type size2) {
             check (i <= size1, bad_index ());
             check (j <= size2, bad_index ());
+            check (i >= j, bad_index ());
             // sigma_i (i + 1) = (i + 1) * i / 2
             // i = 0 1 2 3, sigma = 0 1 3 6
             return ((i + 1) * i) / 2 + j; 
@@ -87,9 +88,10 @@ namespace numerics {
         size_type upper_element (size_type i, size_type size1, size_type j, size_type size2) {
             check (i <= size1, bad_index ());
             check (j <= size2, bad_index ());
+            check (i <= j, bad_index ());
             // sigma_i (size - i) = size * i - i * (i - 1) / 2
             // i = 0 1 2 3, sigma = 0 4 7 9
-            return (i * (2 * std::max (size1, size2) - i + 1)) / 2 + j; 
+            return (i * (2 * std::max (size1, size2) - i + 1)) / 2 + j - i; 
         }
 
         static 
@@ -203,15 +205,17 @@ namespace numerics {
         size_type lower_element (size_type i, size_type size1, size_type j, size_type size2) {
             check (i <= size1, bad_index ());
             check (j <= size2, bad_index ());
+            check (i >= j, bad_index ());
             // sigma_j (size - j) = size * j - j * (j - 1) / 2
             // j = 0 1 2 3, sigma = 0 4 7 9
-            return i + (j * (2 * std::max (size1, size2) - j + 1)) / 2; 
+            return i - j + (j * (2 * std::max (size1, size2) - j + 1)) / 2; 
         }
         static 
         NUMERICS_INLINE
         size_type upper_element (size_type i, size_type size1, size_type j, size_type size2) {
             check (i <= size1, bad_index ());
             check (j <= size2, bad_index ());
+            check (i <= j, bad_index ());
             // sigma_j (j + 1) = (j + 1) * j / 2
             // j = 0 1 2 3, sigma = 0 1 3 6
             return i + ((j + 1) * j) / 2; 
@@ -327,8 +331,12 @@ namespace numerics {
             while (-- size1 >= 0) {
                 typename matrix_row<M>::iterator it2 ((*it1).begin ());
                 difference_type size2 (m.size2 ()); 
+#ifndef NUMERICS_USE_DUFF_DEVICE
                 while (-- size2 >= 0) 
                     functor_type () (*it2, t), ++ it2;
+#else
+		DD (size2, 4, r, (functor_type () (*it2, t), ++ it2));
+#endif
                 ++ it1;
             }
 #else
@@ -338,8 +346,12 @@ namespace numerics {
             while (-- size1 >= 0) {
                 typename M::iterator2 it2 (it1.begin ());
                 difference_type size2 (m.size2 ()); 
+#ifndef NUMERICS_USE_DUFF_DEVICE
                 while (-- size2 >= 0) 
                     functor_type () (*it2, t), ++ it2;
+#else
+		DD (size2, 4, r, (functor_type () (*it2, t), ++ it2));
+#endif
                 ++ it1;
             }
 #endif
@@ -353,8 +365,13 @@ namespace numerics {
             difference_type size1 (m.size1 ());
             difference_type size2 (m.size2 ()); 
             for (difference_type i = 0; i < size1; ++ i) {
+#ifndef NUMERICS_USE_DUFF_DEVICE
                 for (difference_type j = 0; j < size2; ++ j)
-                    functor_type () (m (i, j), t); 
+                    functor_type () (m (i, j), t);
+#else
+		difference_type j (0);
+		DD (size2, 4, r, (functor_type () (m (i, j), t), ++ j));
+#endif 
             }
         }
 
@@ -568,8 +585,12 @@ namespace numerics {
                 typename matrix_row<M>::iterator it2 ((*it1).begin ());
                 typename matrix_row<const E>::const_iterator it2e ((*it1e).begin ());
                 difference_type size2 (common (m.size2 (), e ().size2 ())); 
+#ifndef NUMERICS_USE_DUFF_DEVICE
                 while (-- size2 >= 0) 
                     functor_type () (*it2, *it2e), ++ it2, ++ it2e;
+#else
+		DD (size2, 2, r, (functor_type () (*it2, *it2e), ++ it2, ++ it2e));
+#endif
                 ++ it1, ++ it1e;
             }
 #else
@@ -581,8 +602,12 @@ namespace numerics {
                 typename M::iterator2 it2 (it1.begin ());
                 typename E::const_iterator2 it2e (it1e.begin ());
                 difference_type size2 (common (m.size2 (), e ().size2 ())); 
+#ifndef NUMERICS_USE_DUFF_DEVICE
                 while (-- size2 >= 0) 
                     functor_type () (*it2, *it2e), ++ it2, ++ it2e;
+#else
+		DD (size2, 2, r, (functor_type () (*it2, *it2e), ++ it2, ++ it2e));
+#endif
                 ++ it1, ++ it1e;
             }
 #endif
@@ -596,8 +621,13 @@ namespace numerics {
             difference_type size1 (common (m.size1 (), e ().size1 ()));
             difference_type size2 (common (m.size2 (), e ().size2 ())); 
             for (difference_type i = 0; i < size1; ++ i) {
+#ifndef NUMERICS_USE_DUFF_DEVICE
                 for (difference_type j = 0; j < size2; ++ j) 
                     functor_type () (m (i, j), e () (i, j)); 
+#else
+		difference_type j (0);
+		DD (size2, 2, r, (functor_type () (m (i, j), e () (i, j)), ++ j));
+#endif
             }
         }
 
@@ -671,7 +701,7 @@ namespace numerics {
                 }
                 ++ it1;
             }
-#ifdef NUMERICS_BOUNDS_CHECK
+#ifdef NUMERICS_BOUNDS_CHECK_EX
             {
                 // Need the const member dispatched.
                 const M &cm = m;
@@ -681,6 +711,7 @@ namespace numerics {
                     typename matrix_row<const E>::const_iterator it2e ((*it1e).begin ());
                     typename matrix_row<const E>::const_iterator it2e_end ((*it1e).end ());
                     while (it2e != it2e_end) {
+			// FIXME: we need a better floating point comparison...
                         check (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
                         ++ it2e;
                     }
@@ -738,7 +769,7 @@ namespace numerics {
                 }
                 ++ it1;
             }
-#ifdef NUMERICS_BOUNDS_CHECK
+#ifdef NUMERICS_BOUNDS_CHECK_EX
             {
                 // Need the const member dispatched.
                 const M &cm = m;
@@ -748,6 +779,7 @@ namespace numerics {
                     typename E::const_iterator2 it2e (it1e.begin ());
                     typename E::const_iterator2 it2e_end (it1e.end ());
                     while (it2e != it2e_end) {
+			// FIXME: we need a better floating point comparison...
                         check (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
                         ++ it2e;
                     }
@@ -852,9 +884,10 @@ namespace numerics {
                             functor_type () (*it2, value_type ());
                             ++ it2;
                         } else if (compare > 0) {
-#ifdef NUMERICS_BOUNDS_CHECK
+#ifdef NUMERICS_BOUNDS_CHECK_EX
                             // Need the const member dispatched.
                             const M &cm = m;
+			    // FIXME: we need a better floating point comparison...
                             check (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
 #endif
                             ++ it2e;
@@ -864,10 +897,11 @@ namespace numerics {
                         functor_type () (*it2, value_type ());
                         ++ it2;
                     }
-#ifdef NUMERICS_BOUNDS_CHECK
+#ifdef NUMERICS_BOUNDS_CHECK_EX
                     while (it2e != it2e_end) {
                         // Need the const member dispatched.
                         const M &cm = m;
+			// FIXME: we need a better floating point comparison...
                         check (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
                         ++ it2e;
                     }
@@ -882,12 +916,13 @@ namespace numerics {
                     }
                     ++ it1;
                 } else if (compare > 0) {
-#ifdef NUMERICS_BOUNDS_CHECK
+#ifdef NUMERICS_BOUNDS_CHECK_EX
                     typename matrix_row<const E>::const_iterator it2e ((*it1e).begin ());
                     typename matrix_row<const E>::const_iterator it2e_end ((*it1e).end ());
                     while (it2e != it2e_end) {
                         // Need the const member dispatched.
                         const M &cm = m;
+			// FIXME: we need a better floating point comparison...
                         check (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
                         ++ it2e;
                     }
@@ -904,13 +939,14 @@ namespace numerics {
                 }
                 ++ it1;
             }
-#ifdef NUMERICS_BOUNDS_CHECK
+#ifdef NUMERICS_BOUNDS_CHECK_EX
             while (it1e != it1e_end) {
                 typename matrix_row<const E>::const_iterator it2e ((*it1e).begin ());
                 typename matrix_row<const E>::const_iterator it2e_end ((*it1e).end ());
                 while (it2e != it2e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
+		    // FIXME: we need a better floating point comparison...
                     check (*it2e == cm (it1e.index (), it2e.index ()), bad_index ());
                     ++ it2e;
                 }
@@ -941,9 +977,10 @@ namespace numerics {
                             functor_type () (*it2, value_type ());
                             ++ it2;
                         } else if (compare > 0) {
-#ifdef NUMERICS_BOUNDS_CHECK
+#ifdef NUMERICS_BOUNDS_CHECK_EX
                             // Need the const member dispatched.
                             const M &cm = m;
+			    // FIXME: we need a better floating point comparison...
                             check (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
 #endif
                             ++ it2e;
@@ -953,10 +990,11 @@ namespace numerics {
                         functor_type () (*it2, value_type ());
                         ++ it2;
                     }
-#ifdef NUMERICS_BOUNDS_CHECK
+#ifdef NUMERICS_BOUNDS_CHECK_EX
                     while (it2e != it2e_end) {
                         // Need the const member dispatched.
                         const M &cm = m;
+			// FIXME: we need a better floating point comparison...
                         check (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
                         ++ it2e;
                     }
@@ -971,12 +1009,13 @@ namespace numerics {
                     }
                     ++ it1;
                 } else if (compare > 0) {
-#ifdef NUMERICS_BOUNDS_CHECK
+#ifdef NUMERICS_BOUNDS_CHECK_EX
                     typename E::const_iterator2 it2e (it1e.begin ());
                     typename E::const_iterator2 it2e_end (it1e.end ());
                     while (it2e != it2e_end) {
                         // Need the const member dispatched.
                         const M &cm = m;
+			// FIXME: we need a better floating point comparison...
                         check (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
                         ++ it2e;
                     }
@@ -993,13 +1032,14 @@ namespace numerics {
                 }
                 ++ it1;
             }
-#ifdef NUMERICS_BOUNDS_CHECK
+#ifdef NUMERICS_BOUNDS_CHECK_EX
             while (it1e != it1e_end) {
                 typename E::const_iterator2 it2e (it1e.begin ());
                 typename E::const_iterator2 it2e_end (it1e.end ());
                 while (it2e != it2e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
+	 	    // FIXME: we need a better floating point comparison...
                     check (*it2e == cm (it2e.index1 (), it2e.index2 ()), bad_index ());
                     ++ it2e;
                 }
@@ -1037,9 +1077,10 @@ namespace numerics {
                             functor_type () (*it1, value_type ());
                             ++ it1;
                         } else if (compare > 0) {
-#ifdef NUMERICS_BOUNDS_CHECK
+#ifdef NUMERICS_BOUNDS_CHECK_EX
                             // Need the const member dispatched.
                             const M &cm = m;
+			    // FIXME: we need a better floating point comparison...
                             check (*it1e == cm (it1e.index (), it2e.index ()), bad_index ());
 #endif
                             ++ it1e;
@@ -1049,10 +1090,11 @@ namespace numerics {
                         functor_type () (*it1, value_type ());
                         ++ it1;
                     }
-#ifdef NUMERICS_BOUNDS_CHECK
+#ifdef NUMERICS_BOUNDS_CHECK_EX
                     while (it1e != it1e_end) {
                         // Need the const member dispatched.
                         const M &cm = m;
+			// FIXME: we need a better floating point comparison...
                         check (*it1e == cm (it1e.index (), it2e.index ()), bad_index ());
                         ++ it1e;
                     }
@@ -1067,12 +1109,13 @@ namespace numerics {
                     }
                     ++ it2;
                 } else if (compare > 0) {
-#ifdef NUMERICS_BOUNDS_CHECK
+#ifdef NUMERICS_BOUNDS_CHECK_EX
                     typename matrix_column<const E>::const_iterator it1e ((*it2e).begin ());
                     typename matrix_column<const E>::const_iterator it1e_end ((*it2e).end ());
                     while (it1e != it1e_end) {
                         // Need the const member dispatched.
                         const M &cm = m;
+			// FIXME: we need a better floating point comparison...
                         check (*it1e == cm (it1e.index (), it2e.index ()), bad_index ());
                         ++ it1e;
                     }
@@ -1089,13 +1132,14 @@ namespace numerics {
                 }
                 ++ it2;
             }
-#ifdef NUMERICS_BOUNDS_CHECK
+#ifdef NUMERICS_BOUNDS_CHECK_EX
             while (it2e != it2e_end) {
                 typename matrix_column<const E>::const_iterator it1e ((*it2e).begin ());
                 typename matrix_column<const E>::const_iterator it1e_end ((*it2e).end ());
                 while (it1e != it1e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
+		    // FIXME: we need a better floating point comparison...
                     check (*it1e == cm (it1e.index (), it2e.index ()), bad_index ());
                     ++ it1e;
                 }
@@ -1126,9 +1170,10 @@ namespace numerics {
                             functor_type () (*it1, value_type ());
                             ++ it1;
                         } else if (compare > 0) {
-#ifdef NUMERICS_BOUNDS_CHECK
+#ifdef NUMERICS_BOUNDS_CHECK_EX
                             // Need the const member dispatched.
                             const M &cm = m;
+	 		    // FIXME: we need a better floating point comparison...
                             check (*it1e == cm (it1e.index1 (), it1e.index2 ()), bad_index ());
 #endif
                             ++ it1e;
@@ -1138,10 +1183,11 @@ namespace numerics {
                         functor_type () (*it1, value_type ());
                         ++ it1;
                     }
-#ifdef NUMERICS_BOUNDS_CHECK
+#ifdef NUMERICS_BOUNDS_CHECK_EX
                     while (it1e != it1e_end) {
                         // Need the const member dispatched.
                         const M &cm = m;
+			// FIXME: we need a better floating point comparison...
                         check (*it1e == cm (it1e.index1 (), it1e.index2 ()), bad_index ());
                         ++ it1e;
                     }
@@ -1156,12 +1202,13 @@ namespace numerics {
                     }
                     ++ it2;
                 } else if (compare > 0) {
-#ifdef NUMERICS_BOUNDS_CHECK
+#ifdef NUMERICS_BOUNDS_CHECK_EX
                     typename E::const_iterator1 it1e (it2e.begin ());
                     typename E::const_iterator1 it1e_end (it2e.end ());
                     while (it1e != it1e_end) {
                         // Need the const member dispatched.
                         const M &cm = m;
+			// FIXME: we need a better floating point comparison...
                         check (*it1e == cm (it1e.index1 (), it1e.index2 ()), bad_index ());
                         ++ it1e;
                     }
@@ -1178,13 +1225,14 @@ namespace numerics {
                 }
                 ++ it2;
             }
-#ifdef NUMERICS_BOUNDS_CHECK
+#ifdef NUMERICS_BOUNDS_CHECK_EX
             while (it2e != it2e_end) {
                 typename E::const_iterator1 it1e (it2e.begin ());
                 typename E::const_iterator1 it1e_end (it2e.end ());
                 while (it1e != it1e_end) {
                     // Need the const member dispatched.
                     const M &cm = m;
+		    // FIXME: we need a better floating point comparison...
                     check (*it1e == cm (it1e.index1 (), it1e.index2 ()), bad_index ());
                     ++ it1e;
                 }
@@ -1447,6 +1495,7 @@ namespace numerics {
         typedef T *pointer;
         typedef F functor_type;
         typedef A array_type;
+        typedef const A const_array_type;
         typedef const matrix<T, F, A> const_self_type;
         typedef matrix<T, F, A> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
@@ -1472,6 +1521,9 @@ namespace numerics {
         matrix (size_type size1, size_type size2): 
             size1_ (size1), size2_ (size2), data_ (size1 * size2) {}
         NUMERICS_INLINE
+        matrix (size_type size1, size_type size2, const array_type &data): 
+            size1_ (size1), size2_ (size2), data_ (data) {}
+        NUMERICS_INLINE
         matrix (const matrix &m): 
             size1_ (m.size1_), size2_ (m.size2_), data_ (m.data_) {}
         template<class AE>
@@ -1496,6 +1548,14 @@ namespace numerics {
         NUMERICS_INLINE
         size_type size2 () const { 
             return size2_;
+        }
+        NUMERICS_INLINE
+        const_array_type &data () const {
+            return data_;
+        }
+        NUMERICS_INLINE
+        array_type &data () {
+            return data_;
         }
 
         // Element access
@@ -4896,6 +4956,22 @@ namespace numerics {
 }
 
 #endif 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -242,6 +242,7 @@ href="container.htm#vector">Vector</a>.</p>
         typedef T *pointer;
         typedef F functor_type;
         typedef A array_type;
+        typedef const A const_array_type;
         typedef const vector&lt;T, A&gt; const_self_type;
         typedef vector&lt;T, A&gt; self_type;
         typedef const vector_const_reference&lt;const_self_type&gt; const_closure_type;
@@ -261,6 +262,8 @@ href="container.htm#vector">Vector</a>.</p>
         void resize (size_type size);
 
         size_type size () const;
+        const_array_type &amp;data () const;
+        array_type &amp;data ();
 
         // Element access
         const_reference operator () (size_type i) const;

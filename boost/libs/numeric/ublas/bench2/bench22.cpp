@@ -343,14 +343,14 @@ void bench_2<T, N>::operator () (int runs) {
 	header ("C array");
 	bench_c_outer_prod<T, N> () (runs);
 
-#ifdef USE_COMPRESSED_ARRAY
+#ifdef USE_MAP_ARRAY
     header ("matrix<bounded_array>, vector<bounded_array> safe");
-    bench_my_outer_prod<numerics::sparse_matrix<T, numerics::row_major, numerics::compressed_array<std::size_t, T> >,
-						numerics::sparse_vector<T, numerics::compressed_array<std::size_t, T> >, N> () (runs, safe_tag ());
+    bench_my_outer_prod<numerics::sparse_matrix<T, numerics::row_major, numerics::map_array<std::size_t, T> >,
+						numerics::sparse_vector<T, numerics::map_array<std::size_t, T> >, N> () (runs, safe_tag ());
 
     header ("matrix<bounded_array>, vector<bounded_array> fast");
-	bench_my_outer_prod<numerics::sparse_matrix<T, numerics::row_major, numerics::compressed_array<std::size_t, T> >, 
-						numerics::sparse_vector<T, numerics::compressed_array<std::size_t, T> >, N> () (runs, fast_tag ());
+	bench_my_outer_prod<numerics::sparse_matrix<T, numerics::row_major, numerics::map_array<std::size_t, T> >, 
+						numerics::sparse_vector<T, numerics::map_array<std::size_t, T> >, N> () (runs, fast_tag ());
 #endif
 
 #ifdef USE_STD_MAP
@@ -373,14 +373,14 @@ void bench_2<T, N>::operator () (int runs) {
 	header ("C array");
 	bench_c_matrix_vector_prod<T, N> () (runs);
 
-#ifdef USE_COMPRESSED_ARRAY
-    header ("sparse_matrix<compressed_array>, sparse_vector<compressed_array> safe");
-    bench_my_matrix_vector_prod<numerics::sparse_matrix<T, numerics::row_major, numerics::compressed_array<std::size_t, T> >,
-								numerics::sparse_vector<T, numerics::compressed_array<std::size_t, T> >, N> () (runs, safe_tag ());
+#ifdef USE_MAP_ARRAY
+    header ("sparse_matrix<map_array>, sparse_vector<map_array> safe");
+    bench_my_matrix_vector_prod<numerics::sparse_matrix<T, numerics::row_major, numerics::map_array<std::size_t, T> >,
+								numerics::sparse_vector<T, numerics::map_array<std::size_t, T> >, N> () (runs, safe_tag ());
 
-    header ("sparse_matrix<compressed_array>, sparse_vector<compressed_array> fast");
-	bench_my_matrix_vector_prod<numerics::sparse_matrix<T, numerics::row_major, numerics::compressed_array<std::size_t, T> >, 
-								numerics::sparse_vector<T, numerics::compressed_array<std::size_t, T> >, N> () (runs, fast_tag ());
+    header ("sparse_matrix<map_array>, sparse_vector<map_array> fast");
+	bench_my_matrix_vector_prod<numerics::sparse_matrix<T, numerics::row_major, numerics::map_array<std::size_t, T> >, 
+								numerics::sparse_vector<T, numerics::map_array<std::size_t, T> >, N> () (runs, fast_tag ());
 #endif
 
 #ifdef USE_STD_MAP
@@ -403,12 +403,12 @@ void bench_2<T, N>::operator () (int runs) {
 	header ("C array");
 	bench_c_matrix_add<T, N> () (runs);
 
-#ifdef USE_COMPRESSED_ARRAY
-	header ("sparse_matrix<compressed_array> safe");
-    bench_my_matrix_add<numerics::sparse_matrix<T, numerics::row_major, numerics::compressed_array<std::size_t, T> >, N> () (runs, safe_tag ());
+#ifdef USE_MAP_ARRAY
+	header ("sparse_matrix<map_array> safe");
+    bench_my_matrix_add<numerics::sparse_matrix<T, numerics::row_major, numerics::map_array<std::size_t, T> >, N> () (runs, safe_tag ());
 
-	header ("sparse_matrix<compressed_array> fast");
-	bench_my_matrix_add<numerics::sparse_matrix<T, numerics::row_major, numerics::compressed_array<std::size_t, T> >, N> () (runs, fast_tag ());
+	header ("sparse_matrix<map_array> fast");
+	bench_my_matrix_add<numerics::sparse_matrix<T, numerics::row_major, numerics::map_array<std::size_t, T> >, N> () (runs, fast_tag ());
 #endif
 
 #ifdef USE_STD_MAP

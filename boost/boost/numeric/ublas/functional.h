@@ -23,6 +23,7 @@
 #include "exception.h"
 #include "traits.h"
 #include "math.h"
+#include "duff.h"
 
 namespace numerics {
 
@@ -302,10 +303,10 @@ namespace numerics {
         template<class E>
         NUMERICS_INLINE
         result_type operator () (const vector_expression<E> &e) const { 
-            result_type t (0);
+            real_type t (0);
             size_type size (e ().size ());
             for (size_type i = 0; i < size; ++ i) {
-                result_type u (detail::abs (e () (i)));
+                real_type u (detail::norm_1 (e () (i)));
                 t += u;
             }
             return t; 
@@ -314,9 +315,9 @@ namespace numerics {
         template<class I>
         NUMERICS_INLINE
         result_type operator () (difference_type size, I it) const { 
-            result_type t (0);
+            real_type t (0);
             while (-- size >= 0) {
-                result_type u (detail::abs (*it));
+                real_type u (detail::norm_1 (*it));
                 t += u;
                 ++ it;
             }
@@ -326,9 +327,9 @@ namespace numerics {
         template<class I>
         NUMERICS_INLINE
         result_type operator () (I it, const I &it_end) const { 
-            result_type t (0);
+            real_type t (0);
             while (it != it_end) {
-                result_type u (detail::abs (*it));
+                real_type u (detail::norm_1 (*it));
                 t += u;
                 ++ it;
             }
@@ -350,7 +351,7 @@ namespace numerics {
             real_type t (0);
             size_type size (e ().size ());
             for (size_type i = 0; i < size; ++ i) {
-                real_type u (detail::abs (e () (i)));
+                real_type u (detail::norm_2 (e () (i)));
                 t +=  u * u;
             }
             return detail::sqrt (t); 
@@ -361,7 +362,7 @@ namespace numerics {
         result_type operator () (difference_type size, I it) const { 
             real_type t (0);
             while (-- size >= 0) {
-                real_type u (detail::abs (*it));
+                real_type u (detail::norm_2 (*it));
                 t +=  u * u;
                 ++ it;
             }
@@ -373,7 +374,7 @@ namespace numerics {
         result_type operator () (I it, const I &it_end) const { 
             real_type t (0);
             while (it != it_end) {
-                real_type u (detail::abs (*it));
+                real_type u (detail::norm_2 (*it));
                 t +=  u * u;
                 ++ it;
             }
@@ -395,7 +396,7 @@ namespace numerics {
             real_type t (0);
             size_type size (e ().size ());
             for (size_type i = 0; i < size; ++ i) {
-                real_type u (detail::abs (e () (i)));
+                real_type u (detail::norm_inf (e () (i)));
                 if (u > t) 
                     t = u;
             }
@@ -407,7 +408,7 @@ namespace numerics {
         result_type operator () (difference_type size, I it) const { 
             real_type t (0);
             while (-- size >= 0) {
-                real_type u (detail::abs (*it));
+                real_type u (detail::norm_inf (*it));
                 if (u > t) 
                     t = u;
                 ++ it;
@@ -420,7 +421,7 @@ namespace numerics {
         result_type operator () (I it, const I &it_end) const { 
             real_type t (0);
             while (it != it_end) {
-                real_type u (detail::abs (*it));
+                real_type u (detail::norm_inf (*it));
                 if (u > t) 
                     t = u;
                 ++ it;
@@ -455,7 +456,7 @@ namespace numerics {
             real_type t (0);
             size_type size (e ().size ());
             for (size_type i = 0; i < size; ++ i) {
-                real_type u (detail::abs (e () (i)));
+                real_type u (detail::norm_inf (e () (i)));
                 if (u > t) {
                     i_norm_inf = i;
                     t = u;
@@ -470,7 +471,7 @@ namespace numerics {
             result_type i_norm_inf (0);
             real_type t (0);
             while (-- size >= 0) {
-                real_type u (detail::abs (*it));
+                real_type u (detail::norm_inf (*it));
                 if (u > t) {
                     i_norm_inf = it.index ();
                     t = u;
@@ -486,7 +487,7 @@ namespace numerics {
             result_type i_norm_inf (it.index ());
             real_type t (0);
             while (it != it_end) {
-                real_type u (detail::abs (*it));
+                real_type u (detail::norm_inf (*it));
                 if (u > t) {
                     i_norm_inf = it.index ();
                     t = u;
@@ -520,8 +521,13 @@ namespace numerics {
                                  const vector_expression<E2> &e2) const { 
             result_type t (0);
             size_type size (common (e1 ().size (), e2 ().size ()));
+#ifndef NUMERICS_USE_DUFF_DEVICE
             for (size_type i = 0; i < size; ++ i)
-                t = t + e1 () (i) * e2 () (i);
+                t += e1 () (i) * e2 () (i);
+#else
+	    size_type i (0);
+	    DD (size, 4, r, (t += e1 () (i) * e2 () (i), ++ i));
+#endif
             return t; 
         }
         // Dense case
@@ -529,8 +535,12 @@ namespace numerics {
         NUMERICS_INLINE
         result_type operator () (difference_type size, I1 it1, I2 it2) const { 
             result_type t (0);
+#ifndef NUMERICS_USE_DUFF_DEVICE
             while (-- size >= 0)
-                t = t + *it1 * *it2, ++ it1, ++ it2;
+                t += *it1 * *it2, ++ it1, ++ it2;
+#else
+	    DD (size, 4, r, (t += *it1 * *it2, ++ it1, ++ it2));
+#endif
             return t; 
         }
         // Packed case
@@ -590,8 +600,13 @@ namespace numerics {
                                  size_type i) const { 
             size_type size = common (e1 ().size2 (), e2 ().size ());
             result_type t (0);
+#ifndef NUMERICS_USE_DUFF_DEVICE
             for (size_type j = 0; j < size; ++ j)
                 t += e1 () (i, j) * e2 () (j);
+#else
+	    size_type j (0);
+	    DD (size, 4, r, (t += e1 () (i, j) * e2 () (j), ++ j));
+#endif
             return t; 
         }
         // Dense case
@@ -599,8 +614,12 @@ namespace numerics {
         NUMERICS_INLINE
         result_type operator () (difference_type size, I1 it1, I2 it2) const { 
             result_type t (0);
+#ifndef NUMERICS_USE_DUFF_DEVICE
             while (-- size >= 0)
                 t += *it1 * *it2, ++ it1, ++ it2;
+#else
+	    DD (size, 4, r, (t += *it1 * *it2, ++ it1, ++ it2));
+#endif
             return t; 
         }
         // Packed case
@@ -674,8 +693,13 @@ namespace numerics {
                                  size_type i) const { 
             size_type size = common (e1 ().size (), e2 ().size1 ());
             result_type t (0);
+#ifndef NUMERICS_USE_DUFF_DEVICE
             for (size_type j = 0; j < size; ++ j)
                 t += e1 () (j) * e2 () (j, i);
+#else
+	    size_type j (0);
+	    DD (size, 4, r, (t += e1 () (j) * e2 () (j, i), ++ j));
+#endif
             return t; 
         }
         // Dense case
@@ -683,8 +707,12 @@ namespace numerics {
         NUMERICS_INLINE
         result_type operator () (difference_type size, I1 it1, I2 it2) const { 
             result_type t (0);
+#ifndef NUMERICS_USE_DUFF_DEVICE
             while (-- size >= 0)
                 t += *it1 * *it2, ++ it1, ++ it2;
+#else
+	    DD (size, 4, r, (t += *it1 * *it2, ++ it1, ++ it2));
+#endif
             return t; 
         }
         // Packed case
@@ -767,8 +795,13 @@ namespace numerics {
                                  size_type i, size_type j) const { 
             size_type size = common (e1 ().size2 (), e2 ().size1 ());
             result_type t (0);
+#ifndef NUMERICS_USE_DUFF_DEVICE
             for (size_type k = 0; k < size; ++ k) 
                 t += e1 () (i, k) * e2 () (k, j);
+#else
+	    size_type k (0);
+	    DD (size, 4, r, (t += e1 () (i, k) * e2 () (k, j), ++ k));
+#endif
             return t; 
         }
         // Dense case
@@ -776,8 +809,12 @@ namespace numerics {
         NUMERICS_INLINE
         result_type operator () (difference_type size, I1 it1, I2 it2) const { 
             result_type t (0);
+#ifndef NUMERICS_USE_DUFF_DEVICE
             while (-- size >= 0)
                 t += *it1 * *it2, ++ it1, ++ it2;
+#else
+	    DD (size, 4, r, (t += *it1 * *it2, ++ it1, ++ it2));
+#endif
             return t; 
         }
         // Packed case
@@ -839,7 +876,7 @@ namespace numerics {
                 real_type u (0);
                 size_type size1 (e ().size1 ());
                 for (size_type i = 0; i < size1; ++ i) {
-                    real_type v (detail::abs (e () (i, j)));
+                    real_type v (detail::norm_1 (e () (i, j)));
                     u += v;
                 }
                 if (u > t) 
@@ -865,7 +902,7 @@ namespace numerics {
             for (size_type i = 0; i < size1; ++ i) {
                 size_type size2 (e ().size2 ());
                 for (size_type j = 0; j < size2; ++ j) {
-                    real_type u (detail::abs (e () (i, j)));
+                    real_type u (detail::norm_2 (e () (i, j)));
                     t +=  u * u;
                 }
             }
@@ -890,7 +927,7 @@ namespace numerics {
                 real_type u (0);
                 size_type size2 (e ().size2 ());
                 for (size_type j = 0; j < size2; ++ j) {
-                    real_type v (detail::abs (e () (i, j)));
+                    real_type v (detail::norm_inf (e () (i, j)));
                     u += v;
                 }
                 if (u > t) 
@@ -903,6 +940,17 @@ namespace numerics {
 }
 
 #endif 
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -592,10 +592,10 @@ common constructions of vectors and matrices comes next.</p>
     </tr>
     <tr>
         <td><code>sparse_vector&lt;T,<br>
-        &nbsp;compressed_array&lt;std::size_t, T&gt; &gt; <br>
+        &nbsp;map_array&lt;std::size_t, T&gt; &gt; <br>
         &nbsp;&nbsp;v (size, non_zeroes)</code></td>
         <td>Constructs a sparse vector, storage is provided by a
-        compressed array.</td>
+        map array.</td>
     </tr>
     <tr>
         <td><code>vector_range&lt;V&gt; <br>
@@ -674,18 +674,18 @@ common constructions of vectors and matrices comes next.</p>
     <tr>
         <td><code>sparse_matrix&lt;T, <br>
         &nbsp;row_major,<br>
-        &nbsp;compressed_array&lt;std::size_t, T&gt; &gt; <br>
+        &nbsp;map_array&lt;std::size_t, T&gt; &gt; <br>
         &nbsp;&nbsp;m (size1, size2, non_zeroes)</code></td>
         <td>Constructs a sparse matrix, storage is provided by a
-        compressed array, orientation is row major.</td>
+        map array, orientation is row major.</td>
     </tr>
     <tr>
         <td><code>sparse_matrix&lt;T, <br>
         &nbsp;column_major,<br>
-        &nbsp;compressed_array&lt;std::size_t, T&gt; &gt; <br>
+        &nbsp;map_array&lt;std::size_t, T&gt; &gt; <br>
         &nbsp;&nbsp;m (size1, size2, non_zeroes)</code></td>
         <td>Constructs a sparse matrix, storage is provided by a
-        compressed array, orientation is column major.</td>
+        map array, orientation is column major.</td>
     </tr>
     <tr>
         <td><code>matrix_row&lt;M&gt; <br>
@@ -725,25 +725,25 @@ optimization to be fragile.</p>
 
 <h2>Reference</h2>
 
-<ol type="1" start="1">
-    <li><a href="expression.htm">Expression Concepts</a><ol
-        type="1" start="1">
+<ul>
+    <li><a href="expression.htm">Expression Concepts</a><ul
+        type="circle">
             <li><a href="expression.htm#scalar_expression">Scalar
                 Expression</a></li>
             <li><a href="expression.htm#vector_expression">Vector
                 Expression</a></li>
             <li><a href="expression.htm#matrix_expression">Matrix
                 Expression</a></li>
-        </ol>
+        </ul>
     </li>
-    <li><a href="container.htm">Container Concepts</a><ol
-        type="1" start="1">
+    <li><a href="container.htm">Container Concepts</a><ul
+        type="circle">
             <li><a href="container.htm#vector">Vector</a></li>
             <li><a href="container.htm#matrix">Matrix</a></li>
-        </ol>
+        </ul>
     </li>
-    <li><a href="iterator.htm">Iterator Concepts</a><ol type="1"
-        start="1">
+    <li><a href="iterator.htm">Iterator Concepts</a><ul
+        type="circle">
             <li><a
                 href="iterator.htm#indexed_bidirectional_iterator">Indexed
                 Bidirectional Iterator</a></li>
@@ -756,41 +756,40 @@ optimization to be fragile.</p>
             <li><a
                 href="iterator.htm#indexed_random_access_cr_iterator">Indexed
                 Random Access Column/Row Iterator</a></li>
-        </ol>
+        </ul>
     </li>
-    <li><a href="storage.htm">Storage</a><ol type="1" start="1">
+    <li><a href="storage.htm">Storage</a><ul type="circle">
             <li><a href="storage.htm#unbounded_array">Unbounded
                 Array</a></li>
             <li><a href="storage.htm#bounded_array">Bounded Array</a></li>
             <li><a href="storage.htm#range">Range</a></li>
             <li><a href="storage.htm#slice">Slice</a></li>
-        </ol>
+        </ul>
     </li>
-    <li><a href="storage_sp.htm">Sparse Storage</a><ol type="1"
-        start="1">
-            <li><a href="storage_sp.htm#compressed_array">Compressed
-                Array</a></li>
-        </ol>
+    <li><a href="storage_sp.htm">Sparse Storage</a><ul
+        type="circle">
+            <li><a href="storage_sp.htm#map_array">Map Array</a></li>
+        </ul>
     </li>
-    <li><a href="vector.htm">Vector</a><ol type="1" start="1">
+    <li><a href="vector.htm">Vector</a><ul type="circle">
             <li><a href="vector.htm#vector">Vector</a></li>
             <li><a href="vector.htm#unit_vector">Unit Vector</a></li>
-        </ol>
+        </ul>
     </li>
-    <li><a href="vector_sp.htm">Sparse Vector</a><ol type="1"
-        start="1">
+    <li><a href="vector_sp.htm">Sparse Vector</a><ul
+        type="circle">
             <li><a href="vector_sp.htm#sparse_vector">Sparse
                 Vector</a></li>
-        </ol>
+        </ul>
     </li>
-    <li><a href="vector_pr.htm">Vector Proxies</a><ol type="1"
-        start="1">
+    <li><a href="vector_pr.htm">Vector Proxies</a><ul
+        type="circle">
             <li><a href="vector_pr.htm#vector_range">Vector Range</a></li>
             <li><a href="vector_pr.htm#vector_slice">Vector Slice</a></li>
-        </ol>
+        </ul>
     </li>
-    <li><a href="vector_et.htm">Vector Expressions</a><ol
-        type="1" start="1">
+    <li><a href="vector_et.htm">Vector Expressions</a><ul
+        type="circle">
             <li><a href="vector_et.htm#vector_expression">Vector
                 Expression</a></li>
             <li><a href="vector_et.htm#vector_references">Vector
@@ -799,22 +798,37 @@ optimization to be fragile.</p>
                 Operations</a></li>
             <li><a href="vector_et.htm#vector_reductions">Vector
                 Reductions</a></li>
-        </ol>
+        </ul>
     </li>
-    <li><a href="matrix.htm">Matrix</a><ol type="1" start="1">
+    <li><a href="matrix.htm">Matrix</a><ul type="circle">
             <li><a href="matrix.htm#matrix">Matrix</a></li>
             <li><a href="matrix.htm#identity_matrix">Identity
                 Matrix</a></li>
-        </ol>
+        </ul>
     </li>
-    <li><a href="matrix_sp.htm">Sparse Matrix</a><ol type="1"
-        start="1">
+    <li><a href="triangular.htm">Triangular Matrix</a><ul type="circle">
+            <li><a href="triangular.htm#triangular_matrix">Triangular Matrix</a></li>
+            <li><a href="triangular.htm#triangular_adaptor">Triangular Adaptor</a></li>
+        </ul>
+    </li>
+    <li><a href="symmetric.htm">Symmetric Matrix</a><ul type="circle">
+            <li><a href="symmetric.htm#symmetric_matrix">Symmetric Matrix</a></li>
+            <li><a href="symmetric.htm#symmetric_adaptor">Symmetric Adaptor</a></li>
+        </ul>
+    </li>
+    <li><a href="banded.htm">Banded Matrix</a><ul type="circle">
+            <li><a href="banded.htm#banded_matrix">Banded Matrix</a></li>
+            <li><a href="banded.htm#banded_adaptor">Banded Adaptor</a></li>
+        </ul>
+    </li>
+    <li><a href="matrix_sp.htm">Sparse Matrix</a><ul
+        type="circle">
             <li><a href="matrix_sp.htm#sparse_matrix">Sparse
                 Matrix</a></li>
-        </ol>
+        </ul>
     </li>
-    <li><a href="matrix_pr.htm">Matrix Proxies</a><ol type="1"
-        start="1">
+    <li><a href="matrix_pr.htm">Matrix Proxies</a><ul
+        type="circle">
             <li><a href="matrix_pr.htm#matrix_row">Matrix Row</a></li>
             <li><a href="matrix_pr.htm#matrix_column">Matrix
                 Column</a></li>
@@ -822,10 +836,10 @@ optimization to be fragile.</p>
             <li><a href="matrix_pr.htm#vector_slice">Vector Slice</a></li>
             <li><a href="matrix_pr.htm#matrix_range">Matrix Range</a></li>
             <li><a href="matrix_pr.htm#matrix_slice">Matrix Slice</a></li>
-        </ol>
+        </ul>
     </li>
-    <li><a href="matrix_et.htm">Matrix Expressions</a><ol
-        type="1" start="1">
+    <li><a href="matrix_et.htm">Matrix Expressions</a><ul
+        type="circle">
             <li><a href="matrix_et.htm#matrix_expression">Matrix
                 Expression</a></li>
             <li><a href="matrix_et.htm#matrix_references">Matrix
@@ -838,9 +852,9 @@ optimization to be fragile.</p>
                 Vector Operations</a></li>
             <li><a href="matrix_et.htm#matrix_matrix_operations">Matrix
                 Matrix Operations</a></li>
-        </ol>
+        </ul>
     </li>
-</ol>
+</ul>
 
 <h2>Benchmark Results</h2>
 

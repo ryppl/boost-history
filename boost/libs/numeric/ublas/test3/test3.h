@@ -26,11 +26,15 @@ void test_matrix ();
 #define USE_RANGE
 // #define USE_SLICE
 
-#define USE_COMPRESSED_ARRAY
+#define USE_MAP_ARRAY
 // #define USE_STD_MAP
 
-// #define USE_SPARSE_MATRIX
-#define USE_SPARSE_VECTOR_OF_SPARSE_VECTOR
+#define USE_SPARSE_VECTOR
+// #define USE_COMPRESSED_VECTOR
+
+#define USE_SPARSE_MATRIX
+// #define USE_SPARSE_VECTOR_OF_SPARSE_VECTOR
+// #define USE_COMPRESSED_MATRIX
 
 #endif 
 

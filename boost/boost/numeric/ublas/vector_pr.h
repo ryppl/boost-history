@@ -29,6 +29,7 @@ namespace numerics {
     class vector_range:
         public vector_expression<vector_range<V> > {
     public:      
+        typedef const V const_vector_type;
         typedef V vector_type;
         typedef typename V::size_type size_type;
         typedef typename V::difference_type difference_type;
@@ -69,6 +70,14 @@ namespace numerics {
         NUMERICS_INLINE
         size_type size () const { 
             return r_.size (); 
+        }
+        NUMERICS_INLINE
+        const_vector_type &data () const {
+            return data_;
+        }
+        NUMERICS_INLINE
+        vector_type &data () {
+            return data_;
         }
 
         // Element access
@@ -467,6 +476,13 @@ namespace numerics {
     vector_range<V> project (V &data, const range &r) {
         return vector_range<V> (data, r);
     }
+#ifndef USE_MSVC
+    template<class V>
+    NUMERICS_INLINE
+    vector_range<const V> project (const V &data, const range &r) {
+        return vector_range<const V> (data, r);
+    }
+#endif
 #ifdef NUMERICS_HAS_PARTIAL_TEMPLATE_SPECIALIZATION
     template<class V>
     NUMERICS_INLINE
@@ -481,6 +497,7 @@ namespace numerics {
     class vector_slice:
 		public vector_expression<vector_slice<V> > {
     public:
+        typedef const V const_vector_type;
         typedef V vector_type;
         typedef typename V::size_type size_type;
         typedef typename V::difference_type difference_type;
@@ -510,7 +527,7 @@ namespace numerics {
             data_ (data), s_ (s) {}
 #ifdef NUMERICS_DEPRECATED
         NUMERICS_INLINE
-        vector_slice (vector_type &data, size_type start, size_type stride, size_type size): 
+        vector_slice (vector_type &data, size_type start, difference_type stride, size_type size): 
             data_ (data), s_ (start, stride, size) {}
 #endif
 
@@ -519,12 +536,20 @@ namespace numerics {
             return s_.start (); 
         }
         NUMERICS_INLINE
-        size_type stride () const { 
+        difference_type stride () const { 
             return s_.stride (); 
         }
         NUMERICS_INLINE
         size_type size () const { 
             return s_.size (); 
+        }
+        NUMERICS_INLINE
+        const_vector_type &data () const {
+            return data_;
+        }
+        NUMERICS_INLINE
+        vector_type &data () {
+            return data_;
         }
 
         // Element access
@@ -936,6 +961,7 @@ namespace numerics {
 }
 
 #endif 
+
 
 
 

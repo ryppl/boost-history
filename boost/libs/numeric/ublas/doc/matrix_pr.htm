@@ -221,6 +221,8 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         matrix_row (matrix_type &amp;data, size_type i);
 
         size_type size () const;
+        const_matrix_type &amp;data () const;
+        matrix_type &amp;data ();
 
         // Element access
         value_type operator () (size_type j) const;
@@ -562,6 +564,8 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         matrix_column (matrix_type &amp;data, size_type j);
 
         size_type size () const;
+        const_matrix_type &amp;data () const;
+        matrix_type &amp;data ();
 
         // Element access
         value_type operator () (size_type i) const;
@@ -907,6 +911,8 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         matrix_vector_range (matrix_type &amp;data, const range &amp;r1, const range &amp;r2);
 
         size_type size () const;
+        const_matrix_type &amp;data () const;
+        matrix_type &amp;data ();
 
         // Element access
         value_type operator () (size_type i) const;
@@ -1254,6 +1260,8 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         matrix_vector_slice (matrix_type &amp;data, const slice &amp;s1, const slice &amp;s2);
 
         size_type size () const;
+        const_matrix_type &amp;data () const;
+        matrix_type &amp;data ();
 
         // Element access
         value_type operator () (size_type i) const;
@@ -1471,8 +1479,8 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         the<code> i</code>-th row. </td>
     </tr>
     <tr>
-        <td><code>reference operator () (size_type i,
-        size_type j)</code></td>
+        <td><code>reference operator () (size_type i, size_type
+        j)</code></td>
         <td>Returns a reference of the <code>j</code>-th element
         in the<code> i</code>-th row. </td>
     </tr>
@@ -1658,6 +1666,8 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         size_type size1 () const;
         size_type start2() const;
         size_type size2 () const;
+        const_matrix_type &amp;data () const;
+        matrix_type &amp;data ();
 
         // Element access
         value_type operator () (size_type i, size_type j) const;
@@ -1983,8 +1993,8 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         the<code> i</code>-th row. </td>
     </tr>
     <tr>
-        <td><code>reference operator () (size_type i,
-        size_type j)</code></td>
+        <td><code>reference operator () (size_type i, size_type
+        j)</code></td>
         <td>Returns a reference of the <code>j</code>-th element
         in the<code> i</code>-th row. </td>
     </tr>
@@ -2142,7 +2152,7 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 <pre><code>    // Matrix based slice class
     template&lt;class M&gt;
     class matrix_slice:
-		public matrix_expression&lt;matrix_slice&lt;M&gt; &gt; {
+	public matrix_expression&lt;matrix_slice&lt;M&gt; &gt; {
     public:      
         typedef const M const_matrix_type;
         typedef M matrix_type;
@@ -2168,6 +2178,8 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
         size_type size1 () const;
         size_type size2 () const;
+        const_matrix_type &amp;data () const;
+        matrix_type &amp;data ();
 
         // Element access
         value_type operator () (size_type i, size_type j) const;

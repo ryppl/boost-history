@@ -258,6 +258,7 @@ namespace numerics {
         typedef F1 functor1_type;
         typedef F2 functor2_type;
         typedef A array_type;
+        typedef const A const_array_type;
         typedef const triangular_matrix<T, F1, F2, A> const_self_type;
         typedef triangular_matrix<T, F1, F2, A> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
@@ -283,6 +284,10 @@ namespace numerics {
         triangular_matrix (size_type size1, size_type size2): 
             size1_ (size1), size2_ (size2),
             data_ (functor1_type::packed_size (size1, size2)) {}
+        NUMERICS_INLINE
+        triangular_matrix (size_type size1, size_type size2, const array_type &data): 
+            size1_ (size1), size2_ (size2),
+            data_ (data) {}
         NUMERICS_INLINE
         triangular_matrix (const triangular_matrix &m): 
             size1_ (m.size1_), size2_ (m.size2_),
@@ -310,6 +315,14 @@ namespace numerics {
         NUMERICS_INLINE
         size_type size2 () const { 
             return size2_;
+        }
+        NUMERICS_INLINE
+        const_array_type &data () const {
+            return data_;
+        }
+        NUMERICS_INLINE
+        array_type &data () {
+            return data_;
         }
 
         // Element access
@@ -1134,6 +1147,14 @@ namespace numerics {
         NUMERICS_INLINE
         size_type size2 () const { 
             return data_.size2 ();
+        }
+        NUMERICS_INLINE
+        const_matrix_type &data () const {
+            return data_;
+        }
+        NUMERICS_INLINE
+        matrix_type &data () {
+            return data_;
         }
 
         // Element access
@@ -2176,5 +2197,8 @@ namespace numerics {
 }
 
 #endif 
+
+
+
 
 

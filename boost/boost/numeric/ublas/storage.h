@@ -30,18 +30,26 @@ namespace numerics {
 #ifndef NUMERICS_USE_FAST_COMMON
     template<class T>
     NUMERICS_INLINE
-    const T &common (const T &size1, const T &size2) {
+    const T &common_impl (const T &size1, const T &size2) {
         check (size1 == size2, bad_size ());
         return std::min (size1, size2);
     }
+    template<class T>
+    NUMERICS_INLINE
+    const T &common_impl_ex (const T &size1, const T &size2, const char *file, int line) {
+        check_ex (size1 == size2, file, line, bad_size ());
+        return std::min (size1, size2);
+    }
+#define common(size1, size2) common_impl_ex ((size1), (size2), __FILE__, __LINE__)
 #else 
 //    template<class T>
 //    NUMERICS_INLINE
-//    const T &common (const T &size1, const T &size2) {
+//    const T &common_impl (const T &size1, const T &size2) {
 //        return size1;
 //    }
+// #define common(size1, size2) common_impl ((size1), (size2))
 // FIXME: this one is too agressive for MSVC?!
-#define common(size1,size2) (size1)
+#define common(size1, size2) (size1)
 #endif 
 
     // Unbounded array 
@@ -433,6 +441,217 @@ namespace numerics {
         return a1.assign_temporary (a2);
     }
 
+    // Array adaptor 
+    template<class T>
+    class array_adaptor {
+    public:      
+        typedef std::size_t size_type;
+        typedef std::ptrdiff_t difference_type;
+        typedef T value_type;
+        typedef const T &const_reference;
+        typedef T &reference;
+        typedef const T *const_pointer;
+        typedef T *pointer;
+
+        // Construction and destruction
+        NUMERICS_INLINE
+        array_adaptor (): 
+            size_ (0), own_ (true), data_ (new value_type [0]) {}
+        NUMERICS_EXPLICIT NUMERICS_INLINE
+        array_adaptor (size_type size): 
+            size_ (size), own_ (true), data_ (new value_type [size]) {
+            if (! data_)
+                throw std::bad_alloc ();
+	}
+        NUMERICS_INLINE
+        array_adaptor (size_type size, pointer data): 
+            size_ (size), own_ (false), data_ (data) {}
+//      NUMERICS_INLINE
+//      array_adaptor (const array_adaptor &a): 
+//          size_ (a.size_), own_ (true), data_ (new value_type [a.size_]) {
+//          if (! data_)
+//              throw std::bad_alloc ();
+//	    *this = a;
+//	}
+        NUMERICS_INLINE
+        ~array_adaptor () { 
+            if (own_) {
+            	if (! data_)
+                    throw std::bad_alloc ();
+            	delete [] data_; 
+	    }
+	}
+
+        // Resizing
+        NUMERICS_INLINE
+        void resize (size_type size) {
+            if (own_) {
+            	if (! data_)
+                    throw std::bad_alloc ();
+            	delete [] data_; 
+	    }
+	    size_ = size;
+	    own_ = true;
+	    data_ = new value_type [size];
+            if (! data_)
+                throw std::bad_alloc ();
+        }
+        NUMERICS_INLINE
+        void resize (size_type size, pointer data) {
+            if (own_) {
+            	if (! data_)
+                	throw std::bad_alloc ();
+            	delete [] data_; 
+	    }
+	    size_ = size;
+	    own_ = false;
+	    data_ = data;
+        }
+
+        NUMERICS_INLINE
+        size_type size () const { 
+            return size_; 
+        }
+
+        // Element access
+        NUMERICS_INLINE
+        const_reference operator [] (size_type i) const {
+            check (i < size_, bad_index ());
+            return data_ [i];
+        }
+        NUMERICS_INLINE
+        reference operator [] (size_type i) {
+            check (i < size_, bad_index ());
+            return data_ [i];
+        }
+
+        // Assignment
+        NUMERICS_INLINE
+        array_adaptor &operator = (const array_adaptor &a) { 
+            check (this != &a, external_logic ());
+            check (size_ == a.size_, bad_size ());
+            std::copy (a.data_, a.data_ + a.size_, data_);
+            return *this;
+        }
+        NUMERICS_INLINE
+        array_adaptor &assign_temporary (array_adaptor &a) { 
+            swap (a);
+            return *this;
+        }
+
+        // Swapping
+        NUMERICS_INLINE
+	    void swap (array_adaptor &a) {
+            check (this != &a, external_logic ());
+            check (size_ == a.size_, bad_size ());
+            std::swap (size_, a.size_);
+            std::swap (own_, a.own_);
+            std::swap (data_, a.data_);
+        }
+#ifndef USE_GCC
+        NUMERICS_INLINE
+	    friend void swap (array_adaptor &a1, array_adaptor &a2) {
+            a1.swap (a2);
+        }
+#endif
+
+        // Element insertion and deletion
+        NUMERICS_INLINE
+        pointer insert (pointer it, const value_type &t) {
+            check (begin () <= it && it < end (), bad_index ());
+            check (*it == value_type (), external_logic ());
+            *it = t;
+            return it;
+        }
+        NUMERICS_INLINE
+        void insert (pointer it, pointer it1, pointer it2) {
+            while (it1 != it2) {
+                check (begin () <= it && it < end (), bad_index ());
+                check (*it == value_type (), external_logic ());
+                *it = *it1;
+                ++ it, ++ it1;
+            }
+        }
+        NUMERICS_INLINE
+        void erase (pointer it) {
+            check (begin () <= it && it < end (), bad_index ());
+            *it = value_type ();
+        }
+        NUMERICS_INLINE
+        void erase (pointer it1, pointer it2) {
+            while (it1 != it2) {
+                check (begin () <= it1 && it1 < end (), bad_index ());
+                *it1 = value_type ();
+                ++ it1;
+            }
+        }
+        NUMERICS_INLINE
+        void clear () {
+            erase (begin (), end ());
+        }
+
+        // Iterators simply are pointers.
+
+        typedef const_pointer const_iterator;
+
+        NUMERICS_INLINE
+        const_iterator begin () const {
+            return data_;
+        }
+        NUMERICS_INLINE
+        const_iterator end () const {
+            return data_ + size_;
+        }
+
+        typedef pointer iterator;
+
+        NUMERICS_INLINE
+        iterator begin () {
+            return data_;
+        }
+        NUMERICS_INLINE
+        iterator end () {
+            return data_ + size_;
+        }
+
+        // Reverse iterators
+
+#ifdef USE_MSVC
+        typedef std::reverse_iterator<const_iterator, value_type, const_reference> const_reverse_iterator;
+#else
+        typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+#endif
+
+        NUMERICS_INLINE
+        const_reverse_iterator rbegin () const {
+            return const_reverse_iterator (end ());
+        }
+        NUMERICS_INLINE
+        const_reverse_iterator rend () const {
+            return const_reverse_iterator (begin ());
+        }
+
+#ifdef USE_MSVC
+        typedef std::reverse_iterator<iterator, value_type, reference> reverse_iterator;
+#else
+        typedef std::reverse_iterator<iterator> reverse_iterator;
+#endif
+
+        NUMERICS_INLINE
+        reverse_iterator rbegin () {
+            return reverse_iterator (end ());
+        }
+        NUMERICS_INLINE
+        reverse_iterator rend () {
+            return reverse_iterator (begin ());
+        }
+
+    private:
+        size_type size_;
+	bool own_;
+        pointer data_;
+    };
+
     template<class T>
     NUMERICS_INLINE
     std::valarray<T> &assign_temporary (std::valarray<T> &a1, std::valarray<T> &a2) { 
@@ -624,14 +843,14 @@ namespace numerics {
         typedef difference_type reference;
         typedef const difference_type *const_pointer;
         typedef difference_type *pointer;
-        typedef size_type const_iterator_type;
+        typedef difference_type const_iterator_type;
 
         // Construction and destruction
         NUMERICS_INLINE
         slice (): 
             start_ (), stride_ (), size_ () {}
         NUMERICS_INLINE
-        slice (size_type start, size_type stride, size_type size): 
+        slice (size_type start, difference_type stride, size_type size): 
             start_ (start), stride_ (stride), size_ (size) {}
 
         NUMERICS_INLINE
@@ -639,7 +858,7 @@ namespace numerics {
             return start_; 
         }
         NUMERICS_INLINE
-        size_type stride () const { 
+        difference_type stride () const { 
             return stride_; 
         }
         NUMERICS_INLINE
@@ -651,7 +870,7 @@ namespace numerics {
         NUMERICS_INLINE
         value_type operator () (size_type i) const { 
             check (i < size_, bad_index ());
-            return start_ + i * stride_; 
+            return start_ + i * stride_;
         }
 
         // Composition
@@ -724,8 +943,7 @@ namespace numerics {
             // Dereference
             NUMERICS_INLINE
             value_type operator * () const {
-                check ((*this) ().start () <= it_, bad_index ());
-                check (it_ < (*this) ().start () + (*this) ().stride () * (*this) ().size (), bad_index ());
+                check (index () < (*this) ().size (), bad_index ());
                 return it_; 
             }
 
@@ -784,12 +1002,33 @@ namespace numerics {
 
     private:
         size_type start_;
-        size_type stride_;
+        difference_type stride_;
         size_type size_;
     };
 
 }
 
 #endif 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

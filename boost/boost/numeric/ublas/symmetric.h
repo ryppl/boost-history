@@ -57,6 +57,7 @@ namespace numerics {
         typedef F1 functor1_type;
         typedef F2 functor2_type;
         typedef A array_type;
+        typedef const A const_array_type;
         typedef const symmetric_matrix<T, F1, F2, A> const_self_type;
         typedef symmetric_matrix<T, F1, F2, A> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
@@ -83,6 +84,10 @@ namespace numerics {
             size_ (common (size1, size2)),
             data_ (functor1_type::packed_size (size1, size2)) {}
         NUMERICS_INLINE
+        symmetric_matrix (size_type size, const array_type &data): 
+            size_ (size),
+            data_ (data) {}
+        NUMERICS_INLINE
         symmetric_matrix (const symmetric_matrix &m): 
             size_ (m.size_),
             data_ (m.data_) {}
@@ -108,6 +113,14 @@ namespace numerics {
         NUMERICS_INLINE
         size_type size2 () const { 
             return size_;
+        }
+        NUMERICS_INLINE
+        const_array_type &data () const {
+            return data_;
+        }
+        NUMERICS_INLINE
+        array_type &data () {
+            return data_;
         }
 
         // Element access
@@ -932,6 +945,14 @@ namespace numerics {
         size_type size2 () const { 
             return data_.size2 ();
         }
+        NUMERICS_INLINE
+        const_matrix_type &data () const {
+            return data_;
+        }
+        NUMERICS_INLINE
+        matrix_type &data () {
+            return data_;
+        }
 
         // Element access
         NUMERICS_INLINE
@@ -1659,6 +1680,7 @@ namespace numerics {
 }
 
 #endif 
+
 
 
 

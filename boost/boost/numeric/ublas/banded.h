@@ -40,6 +40,7 @@ namespace numerics {
         typedef T *pointer;
         typedef F functor_type;
         typedef A array_type;
+        typedef const A const_array_type;
         typedef const banded_matrix<T, F, A> const_self_type;
         typedef banded_matrix<T, F, A> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
@@ -64,7 +65,12 @@ namespace numerics {
         banded_matrix (size_type size1, size_type size2, size_type lower = 0, size_type upper = 0): 
             size1_ (size1), size2_ (size2),
             lower_ (lower), upper_ (upper),
-            data_ (std::min (size1, size2) * (lower + 1 + upper)) {}
+            data_ (std::max (size1, size2) * (lower + 1 + upper)) {}
+        NUMERICS_INLINE
+        banded_matrix (size_type size1, size_type size2, size_type lower, size_type upper, const array_type &data): 
+            size1_ (size1), size2_ (size2),
+            lower_ (lower), upper_ (upper),
+            data_ (data) {}
         NUMERICS_INLINE
         banded_matrix (const banded_matrix &m): 
             size1_ (m.size1_), size2_ (m.size2_),       
@@ -75,7 +81,7 @@ namespace numerics {
         banded_matrix (const matrix_expression<AE> &ae, size_type lower = 0, size_type upper = 0): 
             size1_ (ae ().size1 ()), size2_ (ae ().size2 ()),
             lower_ (lower), upper_ (upper),
-            data_ (std::min (ae ().size1 (), ae ().size2 ()) * (lower + 1 + upper)) {
+            data_ (std::max (ae ().size1 (), ae ().size2 ()) * (lower + 1 + upper)) {
             matrix_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
         }
 
@@ -86,7 +92,7 @@ namespace numerics {
             size2_ = size2;
             lower_ = lower;
             upper_ = upper;
-            data_.resize (std::min (size1, size2) * (lower + 1 + upper));
+            data_.resize (std::max (size1, size2) * (lower + 1 + upper));
         }
 
         NUMERICS_INLINE
@@ -105,30 +111,56 @@ namespace numerics {
         size_type upper () const {
             return upper_;
         }
+        NUMERICS_INLINE
+        const_array_type &data () const {
+            return data_;
+        }
+        NUMERICS_INLINE
+        array_type &data () {
+            return data_;
+        }
 
         // Element access
         NUMERICS_INLINE
         value_type operator () (size_type i, size_type j) const {
             check (i < size1_, bad_index ());
             check (j < size2_, bad_index ());
-            size_type k = std::min (i, j);
+#ifdef NUMERICS_OWN_BANDED
+            size_type k = std::max (i, j);
             size_type l = lower_ + j - i;
-            if (k < std::min (size1_, size2_) &&
+            if (k < std::max (size1_, size2_) &&
                 l < lower_ + 1 + upper_) 
-                return data_ [functor_type::element (k, std::min (size1_, size2_),
+                return data_ [functor_type::element (k, std::max (size1_, size2_),
                                                      l, lower_ + 1 + upper_)]; 
+#else
+	    size_type k = j;
+            size_type l = upper_ + i - j;
+            if (k < size2_ &&
+                l < lower_ + 1 + upper_) 
+                return data_ [functor_type::element (k, size2_,
+                                                     l, lower_ + 1 + upper_)]; 
+#endif
             return value_type ();
         }
         NUMERICS_INLINE
         reference operator () (size_type i, size_type j) {
             check (i < size1_, bad_index ());
             check (j < size2_, bad_index ());
-            size_type k = std::min (i, j);
+#ifdef NUMERICS_OWN_BANDED
+            size_type k = std::max (i, j);
             size_type l = lower_ + j - i;
-            if (k < std::min (size1_, size2_) &&
+            if (k < std::max (size1_, size2_) &&
                 l < lower_ + 1 + upper_) 
-                return data_ [functor_type::element (k, std::min (size1_, size2_),
+                return data_ [functor_type::element (k, std::max (size1_, size2_),
                                                      l, lower_ + 1 + upper_)]; 
+#else
+	    size_type k = j;
+            size_type l = upper_ + i - j;
+            if (k < size2_ &&
+                l < lower_ + 1 + upper_) 
+                return data_ [functor_type::element (k, size2_,
+                                                     l, lower_ + 1 + upper_)]; 
+#endif
             throw external_logic ();
         }
 
@@ -240,21 +272,37 @@ namespace numerics {
             if (t == value_type ()) 
                 return;
 #endif
-            size_type k = std::min (i, j);
+#ifdef NUMERICS_OWN_BANDED
+            size_type k = std::max (i, j);
             size_type l = lower_ + j - i;
-            check (data_ [functor_type::element (k, std::min (size1_, size2_), 
+            check (data_ [functor_type::element (k, std::max (size1_, size2_), 
                                                  l, lower_ + 1 + upper_)] == value_type (), bad_index ());
-            data_.insert (data_.begin () + functor_type::element (k, std::min (size1_, size2_), 
+            data_.insert (data_.begin () + functor_type::element (k, std::max (size1_, size2_), 
                                                                   l, lower_ + 1 + upper_), t);
+#else
+            size_type k = j;
+            size_type l = upper_ + i - j;
+            check (data_ [functor_type::element (k, size2_, 
+                                                 l, lower_ + 1 + upper_)] == value_type (), bad_index ());
+            data_.insert (data_.begin () + functor_type::element (k, size2_, 
+                                                                  l, lower_ + 1 + upper_), t);
+#endif
         }
         NUMERICS_INLINE
         void erase (size_type i, size_type j) {
             check (i < size1_, bad_index ());
             check (j < size2_, bad_index ());
-            size_type k = std::min (i, j);
+#ifdef NUMERICS_OWN_BANDED
+            size_type k = std::max (i, j);
             size_type l = lower_ + j - i;
-            data_.erase (data_.begin () + functor_type::element (k, std::min (size1_, size2_), 
+            data_.erase (data_.begin () + functor_type::element (k, std::max (size1_, size2_), 
                                                                  l, lower_ + 1 + upper_));
+#else
+            size_type k = j;
+            size_type l = upper_ + i - j;
+            data_.erase (data_.begin () + functor_type::element (k, size2_, 
+                                                                 l, lower_ + 1 + upper_));
+#endif
         }
         NUMERICS_INLINE
         void clear () {
@@ -966,28 +1014,52 @@ namespace numerics {
         size_type upper () const {
             return upper_;
         }
+        NUMERICS_INLINE
+        const_matrix_type &data () const {
+            return data_;
+        }
+        NUMERICS_INLINE
+        matrix_type &data () {
+            return data_;
+        }
 
         // Element access
         NUMERICS_INLINE
         value_type operator () (size_type i, size_type j) const {
             check (i < size1 (), bad_index ());
             check (j < size2 (), bad_index ());
-            size_type k = std::min (i, j);
+#ifdef NUMERICS_OWN_BANDED
+            size_type k = std::max (i, j);
             size_type l = lower_ + j - i;
-            if (k < std::min (size1 (), size2 ()) &&
+            if (k < std::max (size1 (), size2 ()) &&
                 l < lower_ + 1 + upper_) 
                 return data_ (i, j); 
+#else
+	    size_type k = j;
+            size_type l = upper_ + i - j;
+            if (k < size2 () &&
+                l < lower_ + 1 + upper_) 
+                return data_ (i, j); 
+#endif
             return value_type ();
         }
         NUMERICS_INLINE
         reference operator () (size_type i, size_type j) {
             check (i < size1 (), bad_index ());
             check (j < size2 (), bad_index ());
-            size_type k = std::min (i, j);
+#ifdef NUMERICS_OWN_BANDED
+            size_type k = std::max (i, j);
             size_type l = lower_ + j - i;
-            if (k < std::min (size1 (), size2 ()) &&
+            if (k < std::max (size1 (), size2 ()) &&
                 l < lower_ + 1 + upper_) 
                 return data_ (i, j); 
+#else
+	    size_type k = j;
+            size_type l = upper_ + i - j;
+            if (k < size2 () &&
+                l < lower_ + 1 + upper_) 
+                return data_ (i, j); 
+#endif
             throw external_logic ();
         }
 
@@ -1725,5 +1797,9 @@ namespace numerics {
 }
 
 #endif 
+
+
+
+
 
 

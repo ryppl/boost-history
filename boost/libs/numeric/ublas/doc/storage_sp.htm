@@ -11,17 +11,17 @@ content="text/html; charset=iso-8859-1">
 
 <h1>Sparse Storage</h1>
 
-<h2><a name="compressed_array"></a>Compressed Array</h2>
+<h2><a name="map_array"></a>Map Array</h2>
 
 <h4>Description</h4>
 
-<p>The templated class <code>compressed_array&lt;I, T&gt; </code>implements
+<p>The templated class <code>map_array&lt;I, T&gt; </code>implements
 a simple std::map-like associative container as a sorted array.</p>
 
 <h4>Example</h4>
 
 <pre>int main () {
-    numerics::compressed_array&lt;int, double&gt; a (3);
+    numerics::map_array&lt;int, double&gt; a (3);
     for (int i = 0; i &lt; a.size (); ++ i) {
         a [i] = i;
         std::cout &lt;&lt; a [i] &lt;&lt; std::endl;
@@ -73,55 +73,55 @@ Reversible Container.</p>
         <th>Description </th>
     </tr>
     <tr>
-        <td><code>compressed_array ()</code> </td>
-        <td>Allocates a <code>compressed_array </code>that holds
+        <td><code>map_array ()</code> </td>
+        <td>Allocates a <code>map_array </code>that holds
         at most zero elements.</td>
     </tr>
     <tr>
-        <td><code>compressed_array (size_type size)</code></td>
-        <td>Allocates a <code>compressed_array </code>that holds
+        <td><code>map_array (size_type size)</code></td>
+        <td>Allocates a <code>map_array </code>that holds
         at most <code>size</code> elements.</td>
     </tr>
     <tr>
-        <td><code>compressed_array (const compressed_array
+        <td><code>map_array (const map_array
         &amp;a)</code></td>
         <td>The copy constructor.</td>
     </tr>
     <tr>
-        <td><code>~compressed_array ()</code></td>
-        <td>Deallocates the <code>compressed_array </code>itself.
+        <td><code>~map_array ()</code></td>
+        <td>Deallocates the <code>map_array </code>itself.
         </td>
     </tr>
     <tr>
         <td><code>void resize (size_type size)</code></td>
-        <td>Reallocates a <code>compressed_array </code>to hold
-        at most <code>size</code> elements. The content of the <code>compressed_array
+        <td>Reallocates a <code>map_array </code>to hold
+        at most <code>size</code> elements. The content of the <code>map_array
         </code>is preserved.</td>
     </tr>
     <tr>
         <td><code>size_type size () const</code></td>
-        <td>Returns the size of the <code>compressed_array</code>.
+        <td>Returns the size of the <code>map_array</code>.
         </td>
     </tr>
     <tr>
         <td><code>data_reference operator [] (index_type i)</code></td>
         <td>Returns a reference of the element that is associated
-        with a particular index. If the <code>compressed_array</code>
+        with a particular index. If the <code>map_array</code>
         does not already contain such an element, <code>operator[]</code>
         inserts the default<code> T ()</code>.</td>
     </tr>
     <tr>
-        <td><code>compressed_array &amp;operator = (const
-        compressed_array &amp;a)</code></td>
+        <td><code>map_array &amp;operator = (const
+        map_array &amp;a)</code></td>
         <td>The assignment operator.</td>
     </tr>
     <tr>
-        <td><code>compressed_array &amp;assign_temporary
-        (compressed_array &amp;a)</code></td>
+        <td><code>map_array &amp;assign_temporary
+        (map_array &amp;a)</code></td>
         <td>Assigns a temporary. May change the array <code>a</code>.</td>
     </tr>
     <tr>
-        <td><code>void swap (compressed_array &amp;a)</code></td>
+        <td><code>void swap (map_array &amp;a)</code></td>
         <td>Swaps the contents of the arrays. </td>
     </tr>
     <tr>
@@ -170,53 +170,53 @@ Reversible Container.</p>
     <tr>
         <td><code>const_iterator begin () const</code></td>
         <td>Returns a <code>const_iterator</code> pointing to the
-        beginning of the <code>compressed_array</code>. </td>
+        beginning of the <code>map_array</code>. </td>
     </tr>
     <tr>
         <td><code>const_iterator end () const</code></td>
         <td>Returns a <code>const_iterator</code> pointing to the
-        end of the <code>compressed_array</code>. </td>
+        end of the <code>map_array</code>. </td>
     </tr>
     <tr>
         <td><code>iterator begin () </code></td>
         <td>Returns a <code>iterator</code> pointing to the
-        beginning of the <code>compressed_array</code>. </td>
+        beginning of the <code>map_array</code>. </td>
     </tr>
     <tr>
         <td><code>iterator end () </code></td>
         <td>Returns a <code>iterator</code> pointing to the end
-        of the <code>compressed_array</code>. </td>
+        of the <code>map_array</code>. </td>
     </tr>
     <tr>
         <td><code>const_reverse_iterator rbegin () const</code></td>
         <td>Returns a <code>const_reverse_iterator</code>
-        pointing to the beginning of the reversed <code>compressed_array</code>.
+        pointing to the beginning of the reversed <code>map_array</code>.
         </td>
     </tr>
     <tr>
         <td><code>const_reverse_iterator rend () const</code></td>
         <td>Returns a <code>const_reverse_iterator</code>
-        pointing to the end of the reversed <code>compressed_array</code>.
+        pointing to the end of the reversed <code>map_array</code>.
         </td>
     </tr>
     <tr>
         <td><code>reverse_iterator rbegin () </code></td>
         <td>Returns a <code>reverse_iterator</code> pointing to
-        the beginning of the reversed <code>compressed_array</code>.
+        the beginning of the reversed <code>map_array</code>.
         </td>
     </tr>
     <tr>
         <td><code>reverse_iterator rend () </code></td>
         <td>Returns a <code>reverse_iterator</code> pointing to
-        the end of the reversed <code>compressed_array</code>. </td>
+        the end of the reversed <code>map_array</code>. </td>
     </tr>
 </table>
 
 <h4>Interface</h4>
 
-<pre><code>    // Compressed array 
+<pre><code>    // Map array 
     template&lt;class I, class T&gt;
-    class compressed_array {
+    class map_array {
     public:      
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
@@ -231,10 +231,10 @@ Reversible Container.</p>
         typedef std::pair&lt;I, T&gt; *pointer;
 
         // Construction and destruction
-        compressed_array ();
-        compressed_array (size_type size);
-        compressed_array (const compressed_array &amp;a);
-        ~compressed_array ();
+        map_array ();
+        map_array (size_type size);
+        map_array (const map_array &amp;a);
+        ~map_array ();
 
         // Resizing
         void resize (size_type size);
@@ -245,12 +245,12 @@ Reversible Container.</p>
         data_reference operator [] (index_type i);
 
         // Assignment
-        compressed_array &amp;operator = (const compressed_array &amp;a);
-        compressed_array &amp;assign_temporary (compressed_array &amp;a);
+        map_array &amp;operator = (const map_array &amp;a);
+        map_array &amp;assign_temporary (map_array &amp;a);
 
         // Swapping
-	void swap (compressed_array &amp;a);
-	friend void swap (compressed_array &amp;a1, compressed_array &amp;a2);
+	void swap (map_array &amp;a);
+	friend void swap (map_array &amp;a1, map_array &amp;a2);
 
         // Element insertion and deletion
         pointer insert (pointer it, const value_type &amp;p);
@@ -293,6 +293,6 @@ Reversible Container.</p>
     };
 
     template&lt;class I, class T&gt;
-    compressed_array&lt;I, T&gt; &amp;assign_temporary (compressed_array&lt;I, T&gt; &amp;a1, compressed_array&lt;I, T&gt; &amp;a2);</code></pre>
+    map_array&lt;I, T&gt; &amp;assign_temporary (map_array&lt;I, T&gt; &amp;a1, map_array&lt;I, T&gt; &amp;a2);</code></pre>
 </body>
 </html>

@@ -38,6 +38,7 @@ namespace numerics {
         typedef const T *const_pointer;
         typedef T *pointer;
         typedef A array_type;
+        typedef const A const_array_type;
         typedef const sparse_vector<T, A> const_self_type;
         typedef sparse_vector<T, A> self_type;
         typedef const vector_const_reference<const_self_type> const_closure_type;
@@ -71,12 +72,21 @@ namespace numerics {
         NUMERICS_INLINE
         void resize (size_type size, size_type non_zeros = 0) {
             size_ = size;
-            non_zeros_ = non_zeros_;
+            non_zeros_ = non_zeros;
+			data_.clear ();
         }
 
         NUMERICS_INLINE
         size_type size () const { 
             return size_; 
+        }
+        NUMERICS_INLINE
+        const_array_type &data () const {
+            return data_;
+        }
+        NUMERICS_INLINE
+        array_type &data () {
+            return data_;
         }
 
         // Element access
@@ -312,11 +322,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         const_iterator begin () const {
-            return find (0);
+            return lower_bound (0);
         }
         NUMERICS_INLINE
         const_iterator end () const {
-            return find (size_);
+            return upper_bound (size_);
         }
 
         class iterator:
@@ -387,11 +397,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         iterator begin () {
-            return find (0);
+            return lower_bound (0);
         }
         NUMERICS_INLINE
         iterator end () {
-            return find (size_);
+            return upper_bound (size_);
         }
 
         // Reverse iterator
@@ -430,6 +440,446 @@ namespace numerics {
         size_type size_;
         size_type non_zeros_;
         array_type data_;
+    };
+
+    // Array based sparse vector class 
+    template<class T, class IA, class TA>
+    class compressed_vector: 
+        public vector_expression<compressed_vector<T, IA, TA> > {
+    public:      
+        typedef std::size_t size_type;
+        typedef std::ptrdiff_t difference_type;
+        typedef T value_type;
+        typedef const T &const_reference;
+        typedef T &reference;
+        typedef const T *const_pointer;
+        typedef T *pointer;
+        typedef IA index_array_type;
+        typedef TA value_array_type;
+        typedef const compressed_vector<T, IA, TA> const_self_type;
+        typedef compressed_vector<T, IA, TA> self_type;
+        typedef const vector_const_reference<const_self_type> const_closure_type;
+        typedef vector_reference<self_type> closure_type;
+#ifdef NUMERICS_DEPRECATED
+        typedef const vector_range<const_self_type> const_vector_range_type;
+        typedef vector_range<self_type> vector_range_type;
+#endif
+        typedef typename IA::const_iterator const_iterator_type;
+        typedef typename IA::iterator iterator_type;
+        typedef sparse_tag storage_category;
+
+        // Construction and destruction
+        NUMERICS_INLINE
+        compressed_vector (): 
+            size_ (0), non_zeros_ (0), filled_ (0),
+			index_data_ (), value_data_ () {}
+        NUMERICS_INLINE
+        compressed_vector (size_type size, size_type non_zeros = 0): 
+            size_ (size), non_zeros_ (non_zeros), filled_ (0),
+			index_data_ (non_zeros), value_data_ (non_zeros) {}
+        NUMERICS_INLINE
+        compressed_vector (const compressed_vector &v): 
+            size_ (v.size_), non_zeros_ (v.non_zeros_), filled_ (v.filled_),
+			index_data_ (v.index_data_), value_data_ (v.value_data_) {}
+        template<class AE>
+        NUMERICS_INLINE
+        compressed_vector (const vector_expression<AE> &ae, size_type non_zeros = 0): 
+            size_ (ae ().size ()), non_zeros_ (non_zeros), filled_ (0),
+			index_data_ (non_zeros), value_data_ (non_zeros) { 
+            vector_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae);
+        }
+
+        // Resizing
+        NUMERICS_INLINE
+        void resize (size_type size, size_type non_zeros = 0) {
+            size_ = size;
+            non_zeros_ = non_zeros;
+			filled_ = 0;
+			index_data_.resize (non_zeros);
+			value_data_.resize (non_zeros);
+        }
+
+        NUMERICS_INLINE
+        size_type size () const { 
+            return size_; 
+        }
+        NUMERICS_INLINE
+		const index_array_type &index_data () const {
+			return index_data_;
+		}
+        NUMERICS_INLINE
+		index_array_type &index_data () {
+			return index_data_;
+		}
+        NUMERICS_INLINE
+		const value_array_type &value_data () const {
+			return value_data_;
+		}
+        NUMERICS_INLINE
+		value_array_type &value_data () {
+			return value_data_;
+		}
+
+        // Element access
+        NUMERICS_INLINE
+        value_type operator () (size_type i) const {
+            const_iterator_type it (std::lower_bound (index_data_.begin (), index_data_.begin () + filled_, i + 1, std::less<size_type> ()));
+            if (it == index_data_.begin () + filled_ || *it != i + 1)
+                return value_type ();
+            return value_data_ [it - index_data_.begin ()];
+        }
+        NUMERICS_INLINE
+        reference operator () (size_type i) {
+            iterator_type it (std::lower_bound (index_data_.begin (), index_data_.begin () + filled_, i + 1, std::less<size_type> ()));
+            if (it == index_data_.begin () + filled_ || *it != i + 1) 
+                insert (i, value_type ());
+            return value_data_ [it - index_data_.begin ()];
+        }
+
+        NUMERICS_INLINE
+        value_type operator [] (size_type i) const { 
+            return (*this) (i); 
+        }
+        NUMERICS_INLINE
+        reference operator [] (size_type i) { 
+            return (*this) (i); 
+        }
+
+        // Assignment
+        NUMERICS_INLINE
+        compressed_vector &operator = (const compressed_vector &v) { 
+            check (size_ == v.size_, bad_size ());
+            check (non_zeros_ == v.non_zeros_, bad_size ());
+			filled_ = v.filled_;
+            index_data_ = v.index_data_;
+            value_data_ = v.value_data_;
+            return *this;
+        }
+        NUMERICS_INLINE
+        compressed_vector &assign_temporary (compressed_vector &v) { 
+            swap (v);
+            return *this;
+        }
+        template<class AE>
+        NUMERICS_INLINE
+        compressed_vector &operator = (const vector_expression<AE> &ae) {
+#ifndef USE_GCC
+            return assign_temporary (self_type (ae, non_zeros_));
+#else
+            return assign (self_type (ae, non_zeros_));
+#endif
+        }
+        template<class AE>
+        NUMERICS_INLINE
+        compressed_vector &assign (const vector_expression<AE> &ae) {
+            vector_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae);
+            return *this;
+        }
+        template<class AE>
+        NUMERICS_INLINE
+        compressed_vector &operator += (const vector_expression<AE> &ae) {
+#ifndef USE_GCC
+            return assign_temporary (self_type (*this + ae, non_zeros_));
+#else
+            return assign (self_type (*this + ae, non_zeros_));
+#endif
+        }
+        template<class AE>
+        NUMERICS_INLINE
+        compressed_vector &plus_assign (const vector_expression<AE> &ae) {
+            vector_assign<scalar_plus_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae);
+            return *this;
+        }
+        template<class AE>
+        NUMERICS_INLINE
+        compressed_vector &operator -= (const vector_expression<AE> &ae) {
+#ifndef USE_GCC
+            return assign_temporary (self_type (*this - ae, non_zeros_));
+#else
+            return assign (self_type (*this - ae, non_zeros_));
+#endif
+        }
+        template<class AE>
+        NUMERICS_INLINE
+        compressed_vector &minus_assign (const vector_expression<AE> &ae) {
+            vector_assign<scalar_minus_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae);
+            return *this;
+        }
+        template<class AT>
+        NUMERICS_INLINE
+        compressed_vector &operator *= (const AT &at) {
+            vector_assign_scalar<scalar_multiplies_assign<value_type, AT> > () (*this, at);
+            return *this;
+        }
+
+        // Swapping
+        NUMERICS_INLINE
+	    void swap (compressed_vector &v) {
+            check (this != &v, external_logic ());
+            check (size_ == v.size_, bad_size ());
+            check (non_zeros_ == v.non_zeros_, bad_size ());
+            std::swap (size_, v.size_);
+            std::swap (non_zeros_, v.non_zeros_);
+            std::swap (filled_, v.filled_);
+            index_data_.swap (v.index_data_);
+            value_data_.swap (v.value_data_);
+        }
+#ifndef USE_GCC
+        NUMERICS_INLINE
+	    friend void swap (compressed_vector &v1, compressed_vector &v2) {
+            v1.swap (v2);
+        }
+#endif
+
+        // Element insertion and erasure
+        NUMERICS_INLINE
+        void insert (size_type i, const_reference t) {
+#ifndef NUMERICS_USE_ET
+            if (t == value_type ()) 
+                return;
+#endif
+			check (filled_ == 0 || index_data_ [filled_ - 1] < i + 1, external_logic ()); 
+			index_data_ [filled_] = i + 1;
+			value_data_ [filled_] = t;
+			++ filled_;
+        }
+        NUMERICS_INLINE
+        void erase (size_type i) {
+			check (filled_ > 0 && index_data_ [filled_ - 1] == i + 1, external_logic ());
+			-- filled_;
+        }
+        NUMERICS_INLINE
+        void clear () {
+			filled_ = 0;
+        }
+
+        class const_iterator;
+        class iterator;
+
+        // Element lookup
+        // This function seems to be big. So we do not let the compiler inline it.
+        // NUMERICS_INLINE
+        const_iterator find (size_type i) const {			
+            return const_iterator (*this, std::lower_bound (index_data_.begin (), index_data_.begin () + filled_, i + 1, std::less<size_type> ()));
+        }
+        // This function seems to be big. So we do not let the compiler inline it.
+        // NUMERICS_INLINE
+        iterator find (size_type i) {
+            return iterator (*this, std::lower_bound (index_data_.begin (), index_data_.begin () + filled_, i + 1, std::less<size_type> ()));
+        }
+        NUMERICS_INLINE
+        const_iterator lower_bound (size_type i) const {
+			return find (i);
+        }
+        NUMERICS_INLINE
+        iterator lower_bound (size_type i) {
+			return find (i);
+        }
+        NUMERICS_INLINE
+        const_iterator upper_bound (size_type i) const {
+			return find (i);
+        }
+        NUMERICS_INLINE
+        iterator upper_bound (size_type i) {
+			return find (i);
+        }
+
+        // Iterators simply are pointers.
+
+        class const_iterator:
+            public container_const_reference<compressed_vector>,
+            public bidirectional_iterator_base<const_iterator, value_type> {
+        public:
+            typedef sparse_bidirectional_iterator_tag iterator_category;
+#ifndef USE_MSVC
+            typedef typename compressed_vector::difference_type difference_type;
+            typedef typename compressed_vector::value_type value_type;
+            typedef typename compressed_vector::value_type reference;
+            typedef typename compressed_vector::const_pointer pointer;
+#endif
+
+            // Construction and destruction
+            NUMERICS_INLINE
+            const_iterator ():
+                container_const_reference<compressed_vector> (), it_ () {}
+            NUMERICS_INLINE
+            const_iterator (const compressed_vector &v, const const_iterator_type &it):
+                container_const_reference<compressed_vector> (v), it_ (it) {}
+#ifndef USE_ICC
+            NUMERICS_INLINE
+            const_iterator (const iterator &it):
+                container_const_reference<compressed_vector> (it ()), it_ (it.it_) {}
+#else
+            NUMERICS_INLINE
+            const_iterator (const typename compressed_vector::iterator &it):
+                container_const_reference<compressed_vector> (it ()), it_ (it.it_) {}
+#endif
+            // Arithmetic
+            NUMERICS_INLINE
+            const_iterator &operator ++ () {
+                ++ it_;
+                return *this;
+            }
+            NUMERICS_INLINE
+            const_iterator &operator -- () {
+                -- it_;
+                return *this;
+            }
+
+            // Dereference
+            NUMERICS_INLINE
+            value_type operator * () const {
+                check (index () < (*this) ().size (), bad_index ());
+                return (*this) ().value_data () [it_ - (*this) ().index_data ().begin ()];
+            }
+
+            // Index
+            NUMERICS_INLINE
+            size_type index () const {
+                return (*it_) - 1;
+            }
+
+            // Assignment
+            NUMERICS_INLINE
+            const_iterator &operator = (const const_iterator &it) {
+                container_const_reference<compressed_vector>::assign (&it ());
+                it_ = it.it_;
+                return *this;
+            }
+
+            // Comparison
+            NUMERICS_INLINE
+            bool operator == (const const_iterator &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ == it.it_;
+            }
+
+        private:
+            const_iterator_type it_;
+        };
+
+        NUMERICS_INLINE
+        const_iterator begin () const {
+            return lower_bound (0);
+        }
+        NUMERICS_INLINE
+        const_iterator end () const {
+            return upper_bound (size_);
+        }
+
+        class iterator:
+            public container_reference<compressed_vector>,
+            public bidirectional_iterator_base<iterator, value_type> {
+        public:
+            typedef sparse_bidirectional_iterator_tag iterator_category;
+#ifndef USE_MSVC
+            typedef typename compressed_vector::difference_type difference_type;
+            typedef typename compressed_vector::value_type value_type;
+            typedef typename compressed_vector::reference reference;
+            typedef typename compressed_vector::pointer pointer;
+#endif
+
+            // Construction and destruction
+            NUMERICS_INLINE
+            iterator ():
+                container_reference<compressed_vector> (), it_ () {}
+            NUMERICS_INLINE
+            iterator (compressed_vector &v, const iterator_type &it):
+                container_reference<compressed_vector> (v), it_ (it) {}
+
+            // Arithmetic
+            NUMERICS_INLINE
+            iterator &operator ++ () {
+                ++ it_;
+                return *this;
+            }
+            NUMERICS_INLINE
+            iterator &operator -- () {
+                -- it_;
+                return *this;
+            }
+
+            // Dereference
+            NUMERICS_INLINE
+            reference operator * () const {
+                check (index () < (*this) ().size (), bad_index ());
+                return (*this) ().value_data () [it_ - (*this) ().index_data ().begin ()];
+            }
+
+            // Index
+            NUMERICS_INLINE
+            size_type index () const {
+                return (*it_) - 1;
+            }
+
+            // Assignment
+            NUMERICS_INLINE
+            iterator &operator = (const iterator &it) {
+                container_reference<compressed_vector>::assign (&it ());
+                it_ = it.it_;
+                return *this;
+            }
+
+            // Comparison
+            NUMERICS_INLINE
+            bool operator == (const iterator &it) const {
+                check (&(*this) () == &it (), external_logic ());
+                return it_ == it.it_;
+            }
+
+        private:
+            iterator_type it_;
+
+            friend class const_iterator;
+        };
+
+        NUMERICS_INLINE
+        iterator begin () {
+            return lower_bound (0);
+        }
+        NUMERICS_INLINE
+        iterator end () {
+            return upper_bound (size_);
+        }
+
+        // Reverse iterator
+
+#ifdef USE_MSVC
+        typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
+#else
+        typedef reverse_iterator<const_iterator> const_reverse_iterator;
+#endif
+
+        NUMERICS_INLINE
+        const_reverse_iterator rbegin () const {
+            return const_reverse_iterator (end ());
+        }
+        NUMERICS_INLINE
+        const_reverse_iterator rend () const {
+            return const_reverse_iterator (begin ());
+        }
+
+#ifdef USE_MSVC
+        typedef reverse_iterator<iterator, value_type, reference> reverse_iterator;
+#else
+        typedef reverse_iterator<iterator> reverse_iterator;
+#endif
+
+        NUMERICS_INLINE
+        reverse_iterator rbegin () {
+            return reverse_iterator (end ());
+        }
+        NUMERICS_INLINE
+        reverse_iterator rend () {
+            return reverse_iterator (begin ());
+        }
+
+    private:
+        size_type size_;
+        size_type non_zeros_;
+        size_type filled_;
+        index_array_type index_data_;
+        value_array_type value_data_;
     };
 
 }
