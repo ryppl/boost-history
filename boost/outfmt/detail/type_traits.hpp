@@ -6,13 +6,19 @@
 #     pragma once
 #  endif
 
+#  include <boost/config.hpp>               // partial spec.
 #  include <boost/outfmt/detail/range.hpp>
 #  include <string>
 
 #  include <boost/mpl/or.hpp>
 #  include <boost/mpl/if.hpp>
 #  include <boost/mpl/apply_if.hpp>
+#  include <boost/mpl/equal_to.hpp>
 #  include <boost/mpl/identity.hpp>
+#  ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+#     include <boost/mpl/int.hpp>          // used by CLASSIFY_TYPE.
+#  endif
+#  include <boost/preprocessor/enum_params.hpp>
 
    namespace boost { namespace io
    {
@@ -56,24 +62,16 @@
       template< typename T >
       struct get_typeid
       {
-         static const T *              io;
          struct type
          {
-            BOOST_STATIC_CONSTANT( int, value = sizeof( boost::io::detail::classify( io )));
+            BOOST_STATIC_CONSTANT( int, value =
+                sizeof( boost::io::detail::classify( static_cast<T*>(0) )));
          };
          BOOST_STATIC_CONSTANT( int, value = type::value );
       };
 
       template< typename T, int id >
-      struct is_type
-      {
-         static const T *              io;
-         struct type
-         {
-            BOOST_STATIC_CONSTANT( bool, value = ( sizeof( boost::io::detail::classify( io )) == id ));
-         };
-         BOOST_STATIC_CONSTANT( bool, value = type::value  );
-      };
+      struct is_type : mpl::equal_to< get_typeid<T>, mpl::int_<id> > { };
 
       template< class FmtObject, int id >
       struct is_formatter
@@ -136,25 +134,24 @@
 
    // helper macros
 
-#  define BOOST_IO_CLASSIFY_TYPE_1( type, id )\
-      template< typename T1 >                 \
-      boost::io::seq_type< id > classify( const type< T1 > * );
-#  define BOOST_IO_CLASSIFY_TYPE_2( type, id )\
-      template< typename T1, typename T2 >    \
-      boost::io::seq_type< id > classify( const type< T1, T2 > * );
-#  define BOOST_IO_CLASSIFY_TYPE_3( type, id )\
-      template< typename T1, typename T2, typename T3 >\
-      boost::io::seq_type< id > classify( const type< T1, T2, T3 > * );
-#  define BOOST_IO_CLASSIFY_TYPE_4( type, id )\
-      template< typename T1, typename T2, typename T3, typename T4 >\
-      boost::io::seq_type< id > classify( const type< T1, T2, T3, T4 > * );
-#  define BOOST_IO_CLASSIFY_TYPE_5( type, id )\
-      template< typename T1, typename T2, typename T3, typename T4, typename T5 >\
-      boost::io::seq_type< id > classify( const type< T1, T2, T3, T4, T5 > * );
+#  ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+#    define BOOST_IO_CLASSIFY_TYPE(arity, type, id)              \
+       namespace boost { namespace io {                          \
+       template<BOOST_PP_ENUM_PARAMS(arity, typename T)>         \
+       struct get_typeid< type<BOOST_PP_ENUM_PARAMS(arity, T)> > \
+           : mpl::int_<id> { };                                  \
+       } }                                                       \
+       /**/
+#  else
+#    define BOOST_IO_CLASSIFY_TYPE(arity, type, id)                       \
+       namespace boost { namespace io { namespace detail {                \
+       template<BOOST_PP_ENUM_PARAMS(arity, typename T)>                  \
+       boost::io::seq_type< id >                                          \
+       classify( const volatile type<BOOST_PP_ENUM_PARAMS(arity, T)> * ); \
+       } } }                                                              \
+       /**/
+#  endif
 
-   namespace boost { namespace io { namespace detail
-   {
-      BOOST_IO_CLASSIFY_TYPE_2( std::basic_string,  boost::io::std_string_type );
-      BOOST_IO_CLASSIFY_TYPE_1( boost::io::range_t, boost::io::range_type );
-   }}}
+   BOOST_IO_CLASSIFY_TYPE( 2, std::basic_string,  boost::io::std_string_type )
+   BOOST_IO_CLASSIFY_TYPE( 1, boost::io::range_t, boost::io::range_type )
 #endif
