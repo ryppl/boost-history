@@ -17,27 +17,29 @@ namespace boost { namespace numeric { namespace blasbindings {
   template <typename M>
   struct blas_vector_traits<boost::numeric::ublas::matrix_row<M> > {
     typedef boost::numeric::ublas::matrix_row<M> vector_type; 
-    typedef typename vector_type::value_type value_type;
+    typedef typename vector_type::value_type              value_type;
     typedef typename storage_traits<vector_type>::pointer pointer; 
+    typedef typename M::functor_type                      functor_type ;
     static pointer storage (vector_type& mr) {
       return storage_traits<vector_type>::storage (mr); 
     }
     static int size (vector_type& mr) { return mr.size(); } 
     static int stride (vector_type& mr) { 
-      return M::functor_type::one2 (mr.data().size1(), mr.data().size2()) ;
+      return functor_type::one2 (mr.data().size1(), mr.data().size2()) ;
     } 
   }; 
   template <typename M>
   struct blas_vector_traits<boost::numeric::ublas::matrix_row<M> const> {
     typedef boost::numeric::ublas::matrix_row<M> vector_type; 
-    typedef typename vector_type::value_type value_type;
+    typedef typename vector_type::value_type                    value_type;
     typedef typename storage_traits<vector_type const>::pointer pointer; 
+    typedef typename M::functor_type                            functor_type ;
     static pointer storage (vector_type const& mr) {
       return storage_traits<vector_type const>::storage (mr); 
     }
     static int size (vector_type const& mr) { return mr.size(); } 
     static int stride (vector_type const& mr) { 
-      return M::functor_type::one2 (mr.data().size1(), mr.data().size2()) ;
+      return functor_type::one2 (mr.data().size1(), mr.data().size2()) ;
     } 
   }; 
 
@@ -46,27 +48,29 @@ namespace boost { namespace numeric { namespace blasbindings {
   template <typename M>
   struct blas_vector_traits<boost::numeric::ublas::matrix_column<M> > {
     typedef boost::numeric::ublas::matrix_column<M> vector_type; 
-    typedef typename vector_type::value_type value_type;
+    typedef typename vector_type::value_type              value_type;
     typedef typename storage_traits<vector_type>::pointer pointer; 
+    typedef typename M::functor_type                      functor_type ;
     static pointer storage (vector_type& mc) {
       return storage_traits<vector_type>::storage (mc); 
     }
     static int size (vector_type& mc) { return mc.size(); } 
     static int stride (vector_type& mc) { 
-      return M::functor_type::one1 (mc.data().size1(), mc.data().size2()) ;
+      return functor_type::one1 (mc.data().size1(), mc.data().size2()) ;
     } 
   }; 
   template <typename M>
   struct blas_vector_traits<boost::numeric::ublas::matrix_column<M> const> {
     typedef boost::numeric::ublas::matrix_column<M> vector_type; 
-    typedef typename vector_type::value_type value_type;
+    typedef typename vector_type::value_type                    value_type;
     typedef typename storage_traits<vector_type const>::pointer pointer; 
+    typedef typename M::functor_type                            functor_type ;
     static pointer storage (vector_type const& mc) {
       return storage_traits<vector_type const>::storage (mc); 
     }
     static int size (vector_type const& mc) { return mc.size(); } 
     static int stride (vector_type const& mc) { 
-      return M::functor_type::one1 (mc.data().size1(), mc.data().size2()) ;
+      return functor_type::one1 (mc.data().size1(), mc.data().size2()) ;
     } 
   }; 
 

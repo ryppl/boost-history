@@ -57,9 +57,10 @@ namespace boost { namespace numeric { namespace blasbindings {
     typedef boost::numeric::ublas::matrix_row<Matr> matrix_type; 
     typedef typename storage_traits<Matr>::pointer pointer;
     static pointer storage (matrix_type& m) {
+      typedef typename Matr::functor_type functor_type ;
       pointer ptr = storage_traits<Matr>::storage (m.data()); 
       ptr += m.index() 
-	* Matr::functor_type::one1 (m.data().size1(), m.data().size2()) ;
+	* functor_type::one1 (m.data().size1(), m.data().size2()) ;
       return ptr; 
     }
   }; 
@@ -68,9 +69,10 @@ namespace boost { namespace numeric { namespace blasbindings {
     typedef boost::numeric::ublas::matrix_row<Matr> matrix_type; 
     typedef typename storage_traits<Matr const>::pointer pointer;
     static pointer storage (matrix_type const& m) {
+      typedef typename Matr::functor_type functor_type ;
       pointer ptr = storage_traits<Matr const>::storage (m.data()); 
       ptr += m.index() 
-	* Matr::functor_type::one1 (m.data().size1(), m.data().size2()) ;
+	* functor_type::one1 (m.data().size1(), m.data().size2()) ;
       return ptr; 
     }
   }; 
@@ -82,9 +84,10 @@ namespace boost { namespace numeric { namespace blasbindings {
     typedef boost::numeric::ublas::matrix_column<Matr> matrix_type; 
     typedef typename storage_traits<Matr>::pointer pointer;
     static pointer storage (matrix_type& m) {
+      typedef typename Matr::functor_type functor_type ;
       pointer ptr = storage_traits<Matr>::storage (m.data()); 
       ptr += m.index() 
-	* Matr::functor_type::one2 (m.data().size1(), m.data().size2()) ;
+	* functor_type::one2 (m.data().size1(), m.data().size2()) ;
       return ptr; 
     }
   }; 
@@ -93,9 +96,10 @@ namespace boost { namespace numeric { namespace blasbindings {
     typedef boost::numeric::ublas::matrix_column<Matr> matrix_type; 
     typedef typename storage_traits<Matr const>::pointer pointer;
     static pointer storage (matrix_type const& m) {
+      typedef typename Matr::functor_type functor_type ;
       pointer ptr = storage_traits<Matr const>::storage (m.data()); 
       ptr += m.index() 
-	* Matr::functor_type::one2 (m.data().size1(), m.data().size2()) ;
+	* functor_type::one2 (m.data().size1(), m.data().size2()) ;
       return ptr; 
     }
   }; 
