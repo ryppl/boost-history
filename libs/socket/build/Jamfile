@@ -14,6 +14,7 @@ CPP_SOURCE =
   default_socket_impl
   address_info
   any_address
+  interface
   impl/socket_init
   ip4/address ip4/protocol ;
 
