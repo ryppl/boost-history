@@ -2,7 +2,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" type="text/css" href="../../../boost.css">
-    <title>Boost Smart Pointer - Header &lt;smart_ptr/smart_ptr.hpp&gt;</title>
+    <title>Boost.Smart Pointer - Header &lt;policy_ptr/smart_ptr.hpp&gt;</title>
   </head>
   <body link="#0000ff" vlink="#800080">
     <table border="0" cellpadding="7" cellspacing="0" width="100%" summary="header">
@@ -11,8 +11,8 @@
           <h3><a href="../../../index.htm"><img height="86" width="277" alt="C++ Boost" src="../../../c++boost.gif" border="0"></a></h3>
         </td>
         <td valign="top"> 
-          <h1 align="center">Boost Smart Pointer</h1>
-          <h2 align="center">Header &lt;smart_ptr/smart_ptr.hpp&gt;</h2>
+          <h1 align="center">Boost.Smart Pointer</h1>
+          <h2 align="center">Header &lt;policy_ptr/smart_ptr.hpp&gt;</h2>
         </td>
       </tr>
     </table>
@@ -23,11 +23,11 @@
       <dt><a href="#introduction">Introduction</a></dt>
       <dt><a href="#macros">Macros</a></dt>
       <dl class="page-index">
-        <dt><a href="header.html#macro-sp1">BOOST_SMART_PTR1</a></dt>
-        <dt><a href="header.html#macro-sp2">BOOST_SMART_PTR2</a></dt>
-        <dt><a href="header.html#macro-sp3">BOOST_SMART_PTR3</a></dt>
-        <dt><a href="header.html#macro-sp4">BOOST_SMART_PTR4</a></dt>
-        <dt><a href="header.html#macro-spoo">BOOST_SMART_POINTER_ORDERING_OPERATORS</a></dt>
+        <dt><a href="header.html#macro-sp1"><code>BOOST_SMART_PTR1(T, OwnershipPolicy)</code></a></dt>
+        <dt><a href="header.html#macro-sp2"><code>BOOST_SMART_PTR2(T, OwnershipPolicy, ConversionPolicy)</code></a></dt>
+        <dt><a href="header.html#macro-sp3"><code>BOOST_SMART_PTR3(T, OwnershipPolicy, ConversionPolicy, CheckingPolicy)</code></a></dt>
+        <dt><a href="header.html#macro-sp4"><code>BOOST_SMART_PTR4(T, OwnershipPolicy, ConversionPolicy, CheckingPolicy, StoragePolicy)</code></a></dt>
+        <dt><a href="header.html#macro-spoo"><code>BOOST_SMART_POINTER_ORDERING_OPERATORS</code></a></dt>
       </dl>
       <dt><a href="#classes">Classes</a></dt>
       <dl class="page-index">
@@ -38,30 +38,52 @@
           <dt><a href="#class-smart_ptr-comparisons">Class <code>smart_ptr</code> comparison functions</a></dt>
           <dt><a href="#class-smart_ptr-modifiers">Class <code>smart_ptr</code> modifier functions</a></dt>
           <dt><a href="#class-smart_ptr-observers">Class <code>smart_ptr</code> observer functions</a></dt>
-          <dt><a href="#class-smart_ptr-statics">Class <code>smart_ptr</code> static functions</a></dt>
+<!--          <dt><a href="#class-smart_ptr-statics">Class <code>smart_ptr</code> static functions</a></dt> -->
         </dl>
       </dl>
       <dt><a href="#functions">Functions</a></dt>
       <dl class="page-index">
-        <dt><a href="#function-spec">{{function name}}</a></dt>
+        <dt><a href="#function-eq1"><code>bool operator==(smart_ptr&lt;&gt;, U*)</code></a></dt>
+        <dt><a href="#function-eq2"><code>bool operator==(U*, smart_ptr&lt;&gt;)</code></a></dt>
+        <dt><a href="#function-ne1"><code>bool operator!=(smart_ptr&lt;&gt;, U*)</code></a></dt>
+        <dt><a href="#function-ne2"><code>bool operator!=(U*, smart_ptr&lt;&gt;)</code></a></dt>
       </dl>
-      <dt><a href="#objects">Objects</a></dt>
+<!--      <dt><a href="#objects">Objects</a></dt>
       <dl class="page-index">
         <dt><a href="#object-spec">{{object name}}</a></dt>
-      </dl>
-      <dt><a href="#examples">Example(s)</a></dt>
+      </dl> -->
+      <dt><a href="#examples">Examples</a></dt>
     </dl>
 
     <hr>
     <h2><a name="introduction"></a>Introduction</h2>
-    <p>{{Introductory text}}</p>
+    <p>The first four macros are simply convenience functions for declaring smart pointer
+    types when template templates are not available.  While the main <code>smart_ptr</code>
+    class provides the unifying interface for the family of smart pointer types made possible
+    by this library, it should be noted that individual policies (e.g. the 
+    <code>array_storage</code> policy) may introduce additional interfaces which do not
+    appear in the <code>smart_ptr</code> synopsis.  Documentation for each policy used should
+    be consulted as well to understand the complete interface provided by this library.</p>
 
     <h2><a name="macros"></a>Macros</h2>
-    <p><a name="macro-sp1"></a>BOOST_SMART_PTR1</p>
-    <p><a name="macro-sp2"></a>BOOST_SMART_PTR2</p>
-    <p><a name="macro-sp3"></a>BOOST_SMART_PTR3</p>
-    <p><a name="macro-sp4"></a>BOOST_SMART_PTR4</p>
-    <p><a name="macro-spoo"></a>BOOST_SMART_POINTER_ORDERING_OPERATORS</p>
+    <p><a name="macro-sp1"></a><code>BOOST_SMART_PTR1(T, OwnershipPolicy)</code></p>
+    <p>Declares a smart pointer type on <code>T</code> with policies <code>{OwnershipPolicy, 
+      default, default, default}</code>.</p>
+    <p><a name="macro-sp2"></a><code>BOOST_SMART_PTR2(T, OwnershipPolicy, 
+      ConversionPolicy)</code></p>
+    <p>Declares a smart pointer type on <code>T</code> with policies <code>{OwnershipPolicy, 
+      ConversionPolicy, default, default}</code>.</p>
+    <p><a name="macro-sp3"></a><code>BOOST_SMART_PTR3(T, OwnershipPolicy, ConversionPolicy, 
+      CheckingPolicy)</code></p>
+    <p>Declares a smart pointer type on <code>T</code> with policies <code>{OwnershipPolicy, 
+      ConversionPolicy, CheckingPolicy, default}</code>.</p>
+    <p><a name="macro-sp4"></a><code>BOOST_SMART_PTR4(T, OwnershipPolicy, ConversionPolicy, 
+      CheckingPolicy, StoragePolicy)</code></p>
+    <p>Declares a smart pointer type on <code>T</code> with policies <code>{OwnershipPolicy, 
+      ConversionPolicy, CheckingPolicy, StoragePolicy}</code>.</p>
+    <p><a name="macro-spoo"></a><code>BOOST_SMART_POINTER_ORDERING_OPERATORS</code></p>
+    <p>Enables the ordering comparison operators (<code>&lt;, &lt;=, &gt;=, &gt;</code>) for 
+    smart pointers.</p>
 
     <h2><a name="classes"></a>Classes</h2>
     <h3><a name="class-smart_ptr"></a>Class <code>smart_ptr</code></h3>
@@ -296,68 +318,159 @@
     </dl>
     <h4><a name="class-smart_ptr-modifiers"></a>Class <code>smart_ptr</code> modifier functions</h4>
     <pre>
-{{function}}
-</pre>
-<dl class="function-semantics"> 
-  <dt><b>Requires:</b> {{text}}</dt>
-  <dt><b>Effects:</b> {{text}}</dt>
-  <dt><b>Postconditions:</b> {{text}}</dt>
-  <dt><b>Returns:</b> {{text}}</dt>
-  <dt><b>Throws:</b> {{text}}</dt>
-  <dt><b>Complexity:</b> {{text}}</dt>
-  <dt><b>Note:</b> {{text}}</dt>
-  <dt><b>Danger:</b> {{text}}</dt>
-  <dt><b>Rationale:</b> {{text}}</dt>
-</dl>
-<h4><a name="class-spec-observers"></a>Class <code>{{class name}}</code> observer functions</h4>
-<pre>
-{{function}}
-</pre>
-<dl class="function-semantics"> 
-  <dt><b>Requires:</b> {{text}}</dt>
-  <dt><b>Effects:</b> {{text}}</dt>
-  <dt><b>Postconditions:</b> {{text}}</dt>
-  <dt><b>Returns:</b> {{text}}</dt>
-  <dt><b>Throws:</b> {{text}}</dt>
-  <dt><b>Complexity:</b> {{text}}</dt>
-  <dt><b>Note:</b> {{text}}</dt>
-  <dt><b>Danger:</b> {{text}}</dt>
-  <dt><b>Rationale:</b> {{text}}</dt>
-</dl>
-<h4><a name="class-spec-statics"></a>Class <code>{{class name}}</code> static functions</h4>
-<pre>
-{{function}}
-</pre>
-<dl class="function-semantics"> 
-  <dt><b>Requires:</b> {{text}}</dt>
-  <dt><b>Effects:</b> {{text}}</dt>
-  <dt><b>Postconditions:</b> {{text}}</dt>
-  <dt><b>Returns:</b> {{text}}</dt>
-  <dt><b>Throws:</b> {{text}}</dt>
-  <dt><b>Complexity:</b> {{text}}</dt>
-  <dt><b>Note:</b> {{text}}</dt>
-  <dt><b>Danger:</b> {{text}}</dt>
-  <dt><b>Rationale:</b> {{text}}</dt>
-</dl>
-<h2><a name="functions"></a>Functions</h2>
-<pre>
-<a name="function-spec"></a>{{function}}
-</pre>
-<dl class="function-semantics"> 
-  <dt><b>Requires:</b> {{text}}</dt>
-  <dt><b>Effects:</b> {{text}}</dt>
-  <dt><b>Postconditions:</b> {{text}}</dt>
-  <dt><b>Returns:</b> {{text}}</dt>
-  <dt><b>Throws:</b> {{text}}</dt>
-  <dt><b>Complexity:</b> {{text}}</dt>
-  <dt><b>Note:</b> {{text}}</dt>
-  <dt><b>Danger:</b> {{text}}</dt>
-  <dt><b>Rationale:</b> {{text}}</dt>
-</dl>
-<h2><a name="objects"></a>Objects</h2>
-<p><a name="object-spec"></a>{{Object specifications}}</p>
-<h2><a name="examples"></a>Example(s)</h2>
-<p>{{Example(s)}}</p>
+
+      smart_ptr&  operator=(copy_arg& rhs);</pre>
+    <dl class="function-semantics"> 
+      <dt><b>Effects:</b> Copies <code>rhs</code> to <code>*this</code> and transfers ownership
+        if a move policy is in effect.</dt>
+      <dt><b>Postconditions:</b> If <code>this_type</code> is a move pointer, <code>*this</code>
+        owns the resource previously owned by <code>rhs</code>.</dt>
+      <dt><b>Returns:</b> <code>*this</code></dt>
+    </dl>
+    <pre>
+
+                  template &lt;typename U, ...&gt;
+      smart_ptr&  operator=(smart_ptr&lt;U, ...&gt; const& rhs);</pre>
+    <dl class="function-semantics"> 
+      <dt><b>Effects:</b> Converts <code>rhs</code> to <code>this_type</code> and assigns the
+        result to <code>*this</code>.</dt>
+      <dt><b>Postconditions:</b> <code>*this == rhs</code></dt>
+      <dt><b>Returns:</b> <code>*this</code></dt>
+    </dl>
+    <pre>
+
+                  template &lt;typename U, ...&gt;
+      smart_ptr&  operator=(smart_ptr&lt;U, ...&gt;& rhs);</pre>
+    <dl class="function-semantics"> 
+      <dt><b>Effects:</b> Converts <code>rhs</code> to <code>this_type</code> and assigns the
+        result to <code>*this</code>.  May transfer ownership if a move policy is in effect.</dt>
+      <dt><b>Postconditions:</b> <code>*this == rhs</code></dt>
+      <dt><b>Returns:</b> <code>*this</code></dt>
+    </dl>
+    <pre>
+
+      void        swap(smart_ptr& rhs);</pre>
+    <dl class="function-semantics"> 
+      <dt><b>Effects:</b> Exchanges <code>*this</code> with <code>rhs</code>.</dt>
+      <dt><b>Note:</b> Technically, this transfers ownership out of the pointer.  This is not
+        regarded as a serious risk, however.</dt>
+      <dt><b>Rationale:</b> Enables the copy/swap idiom for exception safety.</dt>
+    </dl>
+    <pre>
+
+      friend void release(smart_ptr& sp, stored_type& p);</pre>
+    <dl class="function-semantics"> 
+      <dt><b>Effects:</b> Relinquishes ownership to <code>p</code></dt>
+      <dt><b>Postconditions:</b> <code>p</code> owns the resource.</dt>
+      <dt><b>Note:</b> This function is a synonym for: 
+        <code>smart_ptr().swap(sp);</code>
+    </dl>
+    <pre>
+    
+      friend void reset(smart_ptr& sp, stored_type p);</pre>
+    <dl class="function-semantics"> 
+      <dt><b>Effects:</b> Releases owned resources, and acquires <code>p</code></dt>
+      <dt><b>Postconditions:</b> <code>*this</code> owns <code>p</code></dt>
+      <dt><b>Note:</b> This function is a convenient alias for: 
+        <code>smart_ptr(p).swap(sp);</code>
+      </dt>
+    </dl>
+    <h4><a name="class-spec-observers"></a>Class <code>smart_ptr</code> observer functions</h4>
+    <pre>
+
+                  operator detail::by_ref&lt;smart_ptr&gt;()</pre>
+    <dl class="function-semantics">
+      <dt><b>Returns:</b> A reference proxy.</dt>
+    </dl>
+    <pre>
+
+      pointer_type
+                  operator->();</pre>
+    <dl class="function-semantics">
+      <dt><b>Returns:</b> <code>StoragePolicy::get_pointer()</code></dt>
+      <dt><b>Note:</b> Calls <code>CheckingPolicy::on_dereference()</code></dt>
+    </dl>
+    <pre>
+
+      const_pointer_type
+                  operator->() const;</pre>
+    <dl class="function-semantics">
+      <dt><b>Returns:</b> <code>StoragePolicy::get_pointer()</code></dt>
+      <dt><b>Note:</b> Calls <code>CheckingPolicy::on_dereference()</code></dt>
+    </dl>
+    <pre>
+
+      reference_type
+                  operator*();</pre>
+    <dl class="function-semantics">
+      <dt><b>Returns:</b> <code>StoragePolicy::get_reference()</code></dt>
+      <dt><b>Note:</b> Calls <code>CheckingPolicy::on_dereference()</code></dt>
+    </dl>
+    <pre>
+
+      const_reference_type
+                  operator*() const;</pre>
+    <dl class="function-semantics">
+      <dt><b>Returns:</b> <code>StoragePolicy::get_reference()</code></dt>
+      <dt><b>Note:</b> Calls <code>CheckingPolicy::on_dereference()</code></dt>
+    </dl>
+<!--    <h4><a name="class-spec-statics"></a>Class <code>{{class name}}</code> static functions</h4>
+    <pre>
+      {{function}}
+    </pre>
+    <dl class="function-semantics">
+      <dt><b>Requires:</b> {{text}}</dt>
+      <dt><b>Effects:</b> {{text}}</dt>
+      <dt><b>Postconditions:</b> {{text}}</dt>
+      <dt><b>Returns:</b> {{text}}</dt>
+      <dt><b>Throws:</b> {{text}}</dt>
+      <dt><b>Complexity:</b> {{text}}</dt>
+      <dt><b>Note:</b> {{text}}</dt>
+      <dt><b>Danger:</b> {{text}}</dt>
+      <dt><b>Rationale:</b> {{text}}</dt>
+    </dl> -->
+    <h2><a name="functions"></a>Functions</h2>
+    <pre>
+      <a name="function-eq1"></a><code>
+      template &lt;typename T, ..., typename U&gt;
+      bool operator==(smart_ptr&lt;T, ...&gt; const& lhs, U const* rhs)</code></pre>
+    <dl class="function-semantics">
+      <dt><b>Returns:</b> <code>get_impl(lhs) == rhs</code></dt>
+    </dl>
+    <pre>
+      <a name="function-eq2"></a><code>
+      template &lt;typename T, ..., typename U&gt;
+      bool operator==(U const* lhs, smart_ptr&lt;T, ...&gt; const& rhs)</code></pre>
+    <dl class="function-semantics">
+      <dt><b>Returns:</b> <code>rhs == lhs</code></dt>
+    </dl>
+    <pre>
+      <a name="function-ne1"></a><code>
+      template &lt;typename T, ..., typename U&gt;
+      bool operator!=(smart_ptr&lt;T, ...&gt; const& lhs, U const* rhs)</code></pre>
+    <dl class="function-semantics">
+      <dt><b>Returns:</b> <code>!(lhs == rhs)</code></dt>
+    </dl>
+    <pre>
+      <a name="function-ne2"></a><code>
+      template &lt;typename T, ..., typename U&gt;
+      bool operator!=(U const* lhs, smart_ptr&lt;T, ...&gt; const& rhs)</code></pre>
+    <dl class="function-semantics">
+      <dt><b>Returns:</b> <code>rhs != lhs</code></dt>
+    </dl>
+<!--    <h2><a name="objects"></a>Objects</h2>
+    <p><a name="object-spec"></a>{{Object specifications}}</p> -->
+    <h2><a name="examples"></a>Examples</h2>
+    <p>1. This example declares a default <code>smart_ptr</code>, with all the default
+    policies:</p>
+    <pre>
+      boost::smart_ptr&lt;Foo&gt; p;
+    </pre>
+    <p>2. This code declares a <code>std::auto_ptr</code>-like variable and initializes
+    it with a dynamically allocated resource.</p>
+    <pre>
+      boost::smart_ptr&lt;Foo, boost::destructive_copy&gt; p(new Foo);
+    </pre>
 
     <hr>
     <p>Revised 
