@@ -18,6 +18,15 @@
 #include <string>
 #include <vector>
 
+template< typename C >
+std::back_insert_iterator<C>&
+make_back_inserter( C& c )
+{
+    static std::back_insert_iterator<C> bii( c );
+    bii = back_inserter( c );
+    return bii;
+}
+
 int main()
 {
     using namespace std;
@@ -33,7 +42,8 @@ int main()
     ostream_iterator< string >    os( out_file, " " );
 
     
-    copy( is, back );
+    copy( is, make_back_inserter( text ) );
+    //copy( is, eof, back_inserter( text ) );
     ext::sort( text );
     copy( text, os );
     

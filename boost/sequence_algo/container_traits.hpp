@@ -20,7 +20,7 @@
 #include <boost/config.hpp>
 #include <boost/type_traits/is_array.hpp>
 #include <boost/type_traits/is_const.hpp>
-#include <boost/type_traits/is_base_and_derived.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/if.hpp>
 #include <cstddef>  
 #include <iterator>
@@ -74,10 +74,11 @@ namespace boost
     //
     ///////////////////////////////////////////////////////////////////////
 
+    struct not_a_container_tag {};
     struct container_tag {};
     struct sequence_container_tag : public container_tag {};
     struct contiguous_sequence_container_tag : public sequence_container_tag{};
-    struct associative_sequence_container_tag : public container_tag {};
+    struct associative_container_tag : public container_tag {};
     struct iterator_range_container_tag : public container_tag {};
     
     namespace detail
@@ -117,60 +118,78 @@ namespace boost
 	    true_t  is_iterator( const std::ostreambuf_iterator<C,Tr>& );
 	    false_t is_iterator( ... );
 
-// 	    template< typename C >
-// 	    true_t  is_container( const C&, const typename C::iterator& = 
-// 				  typename C::iterator() );
-// 	    template< typename T, std::size_t sz >
-// 	    trut_t  is_container( const T (&)[sz] );
-// 	    template< typename T, typename U >
-// 	    true_t  is_container( const std::pair<T,U>& );
-// 	    false_t is_container( ... );
+ 	    template< typename C >
+	    true_t  is_container( const C&, const typename C::iterator& = 
+				  typename C::iterator() );
+	    template< typename T, std::size_t sz >
+	    true_t  is_container( const T (&)[sz] );
+	    template< typename T, typename U >
+	    true_t  is_container( const std::pair<T,U>& );
+	    false_t is_container( ... );
+
+	    template< typename C >
+	    true_t  is_associative_container( const C&, 
+					      const typename C::key_type =
+					      typename C::key_type() );
+	    false_t is_associative_container( ... );
 
 // 	    template< typename C >
-// 	    true_t  is_associative_container( const C&, 
-// 					      const typename C::key_type =
-// 					      typename C::key_type() );
-// 	    false_t is_associative_container( ... );
-
-// 	    template< typename T, typename U >
-// 	    true_t  is_iterator_range( const std::pair<T,U>& );
+// 	    true_t  has_random_access_iterator( const C&, 
+// 				const std::random_access_iterator_tag& = 
+//             std::iterator_traits< typename C::iterator >::iterator_category());
 // 	    template< typename C >
-// 	    true_t  is_iterator_range( const C&, 
-// 				       const typename C::iterator_range_tag& =
-// 				       typename C::iterator_range_tag() );
-// 	    false_t is_iterator_range( ... );
+// 	    true_t  has_random_access_iterator( const C&,  			             	const std::random_access_iterator_tag& =
+//                std::iterator_traits< typename container_traits<C>::iterator >
+// 						::iterator_category() );
+// 	    false_t has_random_access_iterator( ... );
+
+	    template< typename T, typename U >
+	    true_t  is_iterator_range( const std::pair<T,U>& );
+	    template< typename C >
+	    true_t  is_iterator_range( const C&, 
+				       const typename C::iterator_range_tag& =
+				       typename C::iterator_range_tag() );
+	    false_t is_iterator_range( ... );
 				       
 	    template< typename C >
 	    struct tag_generator
 	    {
-// 		BOOST_STATIC_CONSTANT( bool, is_container_ );
-// 		BOOST_STATIC_CONSTANT( bool, is_sequence_ );
-// 		BOOST_STATIC_CONSTANT( bool, is_contiguous_sequence_ );
-// 		BOOST_STATIC_CONSTANT( bool, is_associative_ );
-// 		BOOST_STATIC_CONSTANT( bool, is_iterator_range_ );
+		static C& c;
 
+ 		BOOST_STATIC_CONSTANT( bool, is_container_ = sizeof( true_t )
+				       == sizeof( is_container( c ) ) );
+ 		BOOST_STATIC_CONSTANT( bool, is_associative_container_ = 
+				       sizeof( true_t ) == 
+				     sizeof( is_associative_container( c ) ) );
+ 		BOOST_STATIC_CONSTANT( bool, is_sequence_container_ = 
+				       is_container_ && 
+				       not is_associative_container_ );
+		enum { has_random_access_iterator_ = 
+	               ::boost::is_same< std::random_access_iterator_tag,
+                       typename std::iterator_traits< 
+		       typename container_traits<C>::iterator >
+		                ::iterator_category 
+                                       >::value };
+		      
+ 		BOOST_STATIC_CONSTANT( bool, is_contiguous_sequence_container_ 
+				       = ::boost::is_array<C>::value || 
+				       is_sequence_container_ && 
+				       has_random_access_iterator_ );
 			       		    
-// 	typedef typename mpl::if_c< is_pair_, 
-// 			 typename detail::pair_container_helper<C>,
-// 	        typename mpl::if_c< is_array_, 
-// 			 typename detail::array_container_helper<C>,
-// 		typename mpl::if_c< is_iterator, 
-//                          typename detail::iterator_container_helper<C>,
-// 			 typename detail::default_container_helper<C>
-// 	                          >::type 
-// 		                  >::type 
-		
-		
+		typedef typename mpl::if_c< is_associative_container_, 
+					    associative_container_tag,
+		        typename mpl::if_c< is_contiguous_sequence_container_,
+					    contiguous_sequence_container_tag,
+		        typename mpl::if_c< is_sequence_container_,
+					    sequence_container_tag,
+					    not_a_container_tag
+ 	                                  >::type 
+		                          >::type
+	 	                          >::type                         tag;
+				
 	    }; // struct 'tag_generator'
 
-// 	    template
-// 	    true_t  is_sequence_container()
-//
-// hm...how to destinguish sequence and maps? is_container && not_is_map
-//                                            && not_is_iterator_range
-//
-	    
-		} // namespace 'container'
+	} // namespace 'container'
 
 
     
@@ -433,15 +452,31 @@ namespace boost
 		                  >::type 
 	                          >::type container_helper_t;
     public:
-
 	typedef container_helper_t                             function_t;
 	typedef typename container_helper_t::size_type         size_type;
 	typedef typename container_helper_t::iterator          iterator;
 	typedef typename container_helper_t::const_iterator    const_iterator;
 	typedef typename container_helper_t::result_iterator   result_iterator;
 	typedef typename container_helper_t::difference_type   difference_type;
-	//typedef typename container::tag_generator<C>::tag   container_category;
+    
+    private:
+	typedef typename detail::container::tag_generator<C>   tag_generator;
 
+    public:
+	typedef typename tag_generator::tag                 container_category;
+
+	static inline bool is_container() 
+	{ return tag_generator::is_container_; }
+
+	static inline bool is_sequence()
+	{ return tag_generator::is_sequence_container_; }
+
+	static inline bool is_contiguous_sequence()
+	{ return tag_generator::is_contiguous_sequence_container_; }
+
+	static inline bool is_associative()
+	{ return tag_generator::is_associative_container_; }
+	    
     }; // 'container_traits'
 
     ///////////////////////////////////////////////////////////////////////////
