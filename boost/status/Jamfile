@@ -108,7 +108,7 @@ ECHO ****************************************************** )" ;
           echo "failed" > "$(<:S=.failure)"
             
           echo *
-          echo ***************** failed test: $(<:B:S=) ********************
+          echo ***************** failed above test: $(<:B:S=) ********************
           $(CATENATE1)$(output-file)$(CATENATE2)$(output-file)$(CATENATE3)
           echo *
         ) ELSE (
@@ -130,7 +130,7 @@ ECHO ****************************************************** )" ;
           echo failed > $(>)
             
           echo *
-          echo ***************** failed test: $(<:B:S=) ********************
+          echo ***************** failed above test: $(<:B:S=) ********************
           $(CATENATE1)$(output-file)$(CATENATE2)$(output-file)$(CATENATE3)
           echo *
         )
