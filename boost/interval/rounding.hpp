@@ -22,7 +22,7 @@ namespace boost {
     void          set_rounding_mode(rounding_mode)  {}
     void          upward   ()                       {}
     void          downward ()                       {}
-    void          tonearest()                       {}
+    void          to_nearest()                      {}
     T             to_int(const T& x)                { return x; }
     T             force_rounding(const T& x)        { return x; }
   };

@@ -22,10 +22,10 @@ typedef union {
   double dmode;
 } rounding_mode_struct;
 
-static const rounding_mode_struct mode_upward     = { 0xFFF8000000000002LL };
-static const rounding_mode_struct mode_downward   = { 0xFFF8000000000003LL };
-static const rounding_mode_struct mode_tonearest  = { 0xFFF8000000000001LL };
-static const rounding_mode_struct mode_towardzero = { 0xFFF8000000000000LL };
+static const rounding_mode_struct mode_upward      = { 0xFFF8000000000002LL };
+static const rounding_mode_struct mode_downward    = { 0xFFF8000000000003LL };
+static const rounding_mode_struct mode_to_nearest  = { 0xFFF8000000000001LL };
+static const rounding_mode_struct mode_toward_zero = { 0xFFF8000000000000LL };
 
 struct ppc_rounding_control
 {
@@ -37,10 +37,10 @@ struct ppc_rounding_control
   static void get_rounding_mode(rounding_mode& mode)
   { __asm__ __volatile__ ("mffs %0" : "=f"(mode)); }
 
-  static void downward()   { set_rounding_mode(mode_downward.dmode);   }
-  static void upward()     { set_rounding_mode(mode_upward.dmode);     }
-  static void tonearest()  { set_rounding_mode(mode_tonearest.dmode);  }
-  static void towardzero() { set_rounding_mode(mode_towardzero.dmode); }
+  static void downward()    { set_rounding_mode(mode_downward.dmode);    }
+  static void upward()      { set_rounding_mode(mode_upward.dmode);      }
+  static void to_nearest()  { set_rounding_mode(mode_to_nearest.dmode);  }
+  static void toward_zero() { set_rounding_mode(mode_toward_zero.dmode); }
 };
 
     } // namespace detail

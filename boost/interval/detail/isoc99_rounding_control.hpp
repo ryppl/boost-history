@@ -42,10 +42,10 @@ struct isoc99_rounding_control
     (void) &ret;        // avoid "unused variable" warning if NDEBUG
   }
   static get_rounding_mode(rounding_mode &mode) { mode = fegetround(); }
-  static void downward()   { set_rounding_mode(FE_DOWNWARD);   }
-  static void upward()     { set_rounding_mode(FE_UPWARD);     }
-  static void tonearest()  { set_rounding_mode(FE_TONEAREST);  }
-  static void towardzero() { set_rounding_mode(FE_TOWARDZERO); }
+  static void downward()    { set_rounding_mode(FE_DOWNWARD);   }
+  static void upward()      { set_rounding_mode(FE_UPWARD);     }
+  static void to_nearest()  { set_rounding_mode(FE_TONEAREST);  }
+  static void toward_zero() { set_rounding_mode(FE_TOWARDZERO); }
 
   template<class T>
   static T force_rounding(const T& r) { volatile T r_ = r; return r_; }

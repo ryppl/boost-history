@@ -70,15 +70,15 @@ struct sparc_rounding_control
   }
 
 #if defined(__SUNPRO_CC)
-  static void downward()   { set_rounding_mode(FP_RM); }
-  static void upward()     { set_rounding_mode(FP_RP); }
-  static void tonearest()  { set_rounding_mode(FP_RN); }
-  static void towardzero() { set_rounding_mode(FP_RZ); }
+  static void downward()    { set_rounding_mode(FP_RM); }
+  static void upward()      { set_rounding_mode(FP_RP); }
+  static void to_nearest()  { set_rounding_mode(FP_RN); }
+  static void toward)zero() { set_rounding_mode(FP_RZ); }
 #else
-  static void downward()   { set_rounding_mode(0xc0000000); }
-  static void upward()     { set_rounding_mode(0x80000000); }
-  static void tonearest()  { set_rounding_mode(0x00000000); }
-  static void towardzero() { set_rounding_mode(0x40000000); }
+  static void downward()    { set_rounding_mode(0xc0000000); }
+  static void upward()      { set_rounding_mode(0x80000000); }
+  static void to_nearest()  { set_rounding_mode(0x00000000); }
+  static void toward_zero() { set_rounding_mode(0x40000000); }
 #endif
 };
 

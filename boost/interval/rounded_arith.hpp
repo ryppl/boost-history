@@ -69,9 +69,9 @@ namespace boost {
   template<class T, class Rounding>
   struct rounded_arith_opp: Rounding {
     void init() { upward(); }
-    #define ROUND_DOWN(EXPR) (downward(),  force_rounding( EXPR ))
-    #define ROUND_NEAR(EXPR) (tonearest(), force_rounding( EXPR ))
-    #define ROUND_UP(EXPR)                 force_rounding( EXPR )
+    #define ROUND_DOWN(EXPR) (downward(),   force_rounding( EXPR ))
+    #define ROUND_NEAR(EXPR) (to_nearest(), force_rounding( EXPR ))
+    #define ROUND_UP(EXPR)                  force_rounding( EXPR )
     T add_down (const T& x, const T& y) { return -ROUND_UP  ( (-x) - y ); }
     T add_up   (const T& x, const T& y) { return ROUND_UP   ( x + y    ); }
     T sub_down (const T& x, const T& y) { return -ROUND_UP  ( y - x    ); }
