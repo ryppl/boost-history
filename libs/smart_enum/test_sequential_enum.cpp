@@ -6,7 +6,7 @@
 #include <boost/test/test_tools.hpp>
 
 // The class we're testing.
-#include <boost/enum_state.hpp>
+#include <boost/smart_enum.hpp>
 
 enum myEnum { state1, state2, state3, state4 };
 

@@ -51,7 +51,7 @@ test_bounded_enum.o: /home/simons/projects/boost-current/boost/test/cpp_main.cpp
 test_bounded_enum.o: /home/simons/projects/boost-current/boost/detail/catch_exceptions.hpp
 test_bounded_enum.o: /home/simons/projects/boost-current/boost/cstdlib.hpp
 test_bounded_enum.o: /home/simons/projects/boost-current/boost/test/test_main.cpp
-test_bounded_enum.o: /home/simons/projects/boost-sandbox/boost/enum_state.hpp
+test_bounded_enum.o: /home/simons/projects/boost-sandbox/boost/smart_enum.hpp
 test_lambda_enum.o: /home/simons/projects/boost-current/boost/function.hpp
 test_lambda_enum.o: /home/simons/projects/boost-current/boost/function/function_base.hpp
 test_lambda_enum.o: /home/simons/projects/boost-current/boost/config.hpp
@@ -150,7 +150,7 @@ test_lambda_enum.o: /home/simons/projects/boost-current/boost/test/cpp_main.cpp
 test_lambda_enum.o: /home/simons/projects/boost-current/boost/detail/catch_exceptions.hpp
 test_lambda_enum.o: /home/simons/projects/boost-current/boost/cstdlib.hpp
 test_lambda_enum.o: /home/simons/projects/boost-current/boost/test/test_main.cpp
-test_lambda_enum.o: /home/simons/projects/boost-sandbox/boost/enum_state.hpp
+test_lambda_enum.o: /home/simons/projects/boost-sandbox/boost/smart_enum.hpp
 test_sequential_enum.o: /home/simons/projects/boost-current/boost/static_assert.hpp
 test_sequential_enum.o: /home/simons/projects/boost-current/boost/config.hpp
 test_sequential_enum.o: /home/simons/projects/boost-current/boost/config/user.hpp
@@ -164,7 +164,7 @@ test_sequential_enum.o: /home/simons/projects/boost-current/boost/test/cpp_main.
 test_sequential_enum.o: /home/simons/projects/boost-current/boost/detail/catch_exceptions.hpp
 test_sequential_enum.o: /home/simons/projects/boost-current/boost/cstdlib.hpp
 test_sequential_enum.o: /home/simons/projects/boost-current/boost/test/test_main.cpp
-test_sequential_enum.o: /home/simons/projects/boost-sandbox/boost/enum_state.hpp
+test_sequential_enum.o: /home/simons/projects/boost-sandbox/boost/smart_enum.hpp
 test_wrapped_enum.o: /home/simons/projects/boost-current/boost/static_assert.hpp
 test_wrapped_enum.o: /home/simons/projects/boost-current/boost/config.hpp
 test_wrapped_enum.o: /home/simons/projects/boost-current/boost/config/user.hpp
@@ -178,4 +178,4 @@ test_wrapped_enum.o: /home/simons/projects/boost-current/boost/test/cpp_main.cpp
 test_wrapped_enum.o: /home/simons/projects/boost-current/boost/detail/catch_exceptions.hpp
 test_wrapped_enum.o: /home/simons/projects/boost-current/boost/cstdlib.hpp
 test_wrapped_enum.o: /home/simons/projects/boost-current/boost/test/test_main.cpp
-test_wrapped_enum.o: /home/simons/projects/boost-sandbox/boost/enum_state.hpp
+test_wrapped_enum.o: /home/simons/projects/boost-sandbox/boost/smart_enum.hpp
