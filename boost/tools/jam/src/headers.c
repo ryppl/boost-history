@@ -12,7 +12,6 @@
 # include "variable.h"
 # include "regexp.h"
 # include "headers.h"
-# include "hdrmacro.h"
 # include "newstr.h"
 
 /*
@@ -36,8 +35,7 @@
  *		just to invoke a rule.
  */
 
-static LIST *headers1( LIST *l, char *file, int rec, regexp *re[],
-                       regexp*  re_macros );
+static LIST *headers1( LIST *l, char *file, int rec, regexp *re[] );
 
 /*
  * headers() - scan a target for include files and call HDRRULE
@@ -48,51 +46,44 @@ static LIST *headers1( LIST *l, char *file, int rec, regexp *re[],
 void
 headers( TARGET *t )
 {
-    LIST	*hdrscan;
-    LIST	*hdrrule;
-    LIST	*headlist = 0;
-    regexp	*re[ MAXINC ];
-    int	rec = 0;
-        
-    /* the following regexp is used to detect cases where a  */
-    /* file is included through a line line "#include MACRO" */
-    static regexp *re_macros = 0;
-    if ( re_macros == 0 )
-    {
-        re_macros = regex_compile(
-            "^[ 	]*#[ 	]*include[ 	]*([A-Za-z][A-Za-z0-9_]*).*$" );
-    }
+	LIST	*hdrscan;
+	LIST	*hdrrule;
+	LIST	*headlist = 0;
+	LOL	lol;
+	regexp	*re[ MAXINC ];
+	int	rec = 0;
 
-    if( !( hdrscan = var_get( "HDRSCAN" ) ) || 
-        !( hdrrule = var_get( "HDRRULE" ) ) )
-        return;
+	if( !( hdrscan = var_get( "HDRSCAN" ) ) || 
+	    !( hdrrule = var_get( "HDRRULE" ) ) )
+	        return;
 
-    if( DEBUG_HEADER )
-        printf( "header scan %s\n", t->name );
+	if( DEBUG_HEADER )
+	    printf( "header scan %s\n", t->name );
 
-    /* Compile all regular expressions in HDRSCAN */
+	/* Compile all regular expressions in HDRSCAN */
 
-    while( rec < MAXINC && hdrscan )
-    {
-        re[rec++] = regex_compile( hdrscan->string );
-        hdrscan = list_next( hdrscan );
-    }
+	while( rec < MAXINC && hdrscan )
+	{
+	    re[rec++] = regcomp( hdrscan->string );
+	    hdrscan = list_next( hdrscan );
+	}
 
-    /* Doctor up call to HDRRULE rule */
-    /* Call headers1() to get LIST of included files. */
-    {
-        FRAME	frame[1];
-        frame_init( frame );
-        lol_add( frame->args, list_new( L0, t->name ) );
-        lol_add( frame->args, headers1( headlist, t->boundname, rec, re, re_macros ) );
+	/* Doctor up call to HDRRULE rule */
+	/* Call headers1() to get LIST of included files. */
 
-        if( lol_get( frame->args, 1 ) )
-            evaluate_rule( hdrrule->string, frame );
+	lol_init( &lol );
+	lol_add( &lol, list_new( L0, t->name ) );
+	lol_add( &lol, headers1( headlist, t->boundname, rec, re ) );
 
-        /* Clean up */
+	if( lol_get( &lol, 1 ) )
+	    list_free( evaluate_rule( hdrrule->string, &lol, L0 ) );
 
-        frame_free( frame );
-    }
+	/* Clean up */
+
+	lol_free( &lol );
+
+	while( rec )
+	    free( (char *)re[--rec] );
 }
 
 /*
@@ -104,8 +95,7 @@ headers1(
 	LIST	*l,
 	char	*file,
 	int	rec,
-	regexp	*re[],
-        regexp  *re_macros )
+	regexp	*re[] )
 {
 	FILE	*f;
 	char	buf[ 1024 ];
@@ -126,30 +116,6 @@ headers1(
 
 		l = list_new( l, newstr( re[i]->startp[1] ) );
 	    }
-            
-            /* special treatment for #include MACRO */
-            if ( regexec( re_macros, buf ) && re_macros->startp[1] )
-            {
-              char*  header_filename;
-              
-              re_macros->endp[1][0] = '\0';
-              
-              if ( DEBUG_HEADER )
-                printf( "macro header found: %s", re_macros->startp[1] );
-                
-              header_filename = macro_header_get( re_macros->startp[1] );
-              if (header_filename)
-              {
-	        if ( DEBUG_HEADER )
-                  printf( " resolved to '%s'\n", header_filename );
-                l = list_new( l, newstr( header_filename ) );
-              }
-              else
-              {
-	        if ( DEBUG_HEADER )
-                  printf( " ignored !!\n" );
-              }
-            }
 	}
 
 	fclose( f );

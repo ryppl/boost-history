@@ -51,6 +51,7 @@
 #include "scan.h"
 #include "compile.h"
 #include "newstr.h"
+#include "rules.h"
 
 # define F0 (LIST *(*)(PARSE *, LOL *))0
 # define P0 (PARSE *)0
@@ -65,7 +66,7 @@
 # define plocal( l,r,t )  	parse_make( compile_local,l,r,t,S0,S0,0 )
 # define pnull()	  	parse_make( compile_null,P0,P0,P0,S0,S0,0 )
 # define pon( l,r )	  	parse_make( compile_on,l,r,P0,S0,S0,0 )
-# define prule( s,p )     	parse_make( compile_rule,p,P0,P0,s,S0,0 )
+# define prule( a,p )     	parse_make( compile_rule,a,p,P0,S0,S0,0 )
 # define prules( l,r )	  	parse_make( compile_rules,l,r,P0,S0,S0,0 )
 # define pset( l,r,a ) 	  	parse_make( compile_set,l,r,P0,S0,S0,a )
 # define pset1( l,r,t,a )	parse_make( compile_settings,l,r,t,S0,S0,a )
@@ -114,8 +115,8 @@ rule	: `{` block `}`
 		{ $$.parse = $2.parse; }
 	| `include` list `;`
 		{ $$.parse = pincl( $2.parse ); }
-	| ARG lol `;`
-		{ $$.parse = prule( $1.string, $2.parse ); }
+	| arg lol `;`
+		{ $$.parse = prule( $1.parse, $2.parse ); }
 	| arg assign list `;`
 		{ $$.parse = pset( $1.parse, $3.parse, $2.number ); }
 	| arg `on` list assign list `;`
@@ -184,7 +185,7 @@ expr	: arg
 		{ $$.parse = peval( EXPR_OR, $1.parse, $3.parse ); }
 	| expr `||` expr
 		{ $$.parse = peval( EXPR_OR, $1.parse, $3.parse ); }
-	| expr `in` expr
+	| arg `in` list
 		{ $$.parse = peval( EXPR_IN, $1.parse, $3.parse ); }
 	| `!` expr
 		{ $$.parse = peval( EXPR_NOT, $2.parse, pnull() ); }
@@ -246,10 +247,10 @@ arg	: ARG
  * This needs to be split cleanly out of 'rule'
  */
 
-func	: ARG lol
-		{ $$.parse = prule( $1.string, $2.parse ); }
-	| `on` arg ARG lol
-		{ $$.parse = pon( $2.parse, prule( $3.string, $4.parse ) ); }
+func	: arg lol
+		{ $$.parse = prule( $1.parse, $2.parse ); }
+	| `on` arg arg lol
+		{ $$.parse = pon( $2.parse, prule( $3.parse, $4.parse ) ); }
 	| `on` arg `return` list 
 		{ $$.parse = pon( $2.parse, $4.parse ); }
 	;
@@ -266,17 +267,17 @@ eflags	: /* empty */
 	;
 
 eflag	: `updated`
-		{ $$.number = EXEC_UPDATED; }
+		{ $$.number = RULE_UPDATED; }
 	| `together`
-		{ $$.number = EXEC_TOGETHER; }
+		{ $$.number = RULE_TOGETHER; }
 	| `ignore`
-		{ $$.number = EXEC_IGNORE; }
+		{ $$.number = RULE_IGNORE; }
 	| `quietly`
-		{ $$.number = EXEC_QUIETLY; }
+		{ $$.number = RULE_QUIETLY; }
 	| `piecemeal`
-		{ $$.number = EXEC_PIECEMEAL; }
+		{ $$.number = RULE_PIECEMEAL; }
 	| `existing`
-		{ $$.number = EXEC_EXISTING; }
+		{ $$.number = RULE_EXISTING; }
 	;
 
 

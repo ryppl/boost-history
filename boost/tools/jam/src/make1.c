@@ -367,12 +367,15 @@ make1d(
 	    printf( "...failed %s ", cmd->rule->name );
 	    list_print( lol_get( &cmd->args, 0 ) );
 	    printf( "...\n" );
+
+	    if( globs.quitquick ) ++intr;
 	}
 
 	/* If the command was interrupted or failed and the target */
-	/* is not "precious", remove the targets */
+	/* is not "precious", remove the targets. */
+	/* Precious == 'actions updated' -- the target maintains state. */
 
-	if( status != EXEC_CMD_OK && !( cmd->rule->flags & RULE_TOGETHER ) )
+	if( status != EXEC_CMD_OK && !( cmd->rule->flags & RULE_UPDATED ) )
 	{
 	    LIST *targets = lol_get( &cmd->args, 0 );
 
@@ -396,7 +399,7 @@ make1d(
  *
  * Essentially copies a chain of ACTIONs to a chain of CMDs, 
  * grouping RULE_TOGETHER actions, splitting RULE_PIECEMEAL actions,
- * and handling RULE_NEWSRCS actions.  The result is a chain of
+ * and handling RULE_UPDATED actions.  The result is a chain of
  * CMDs which can be expanded by var_string() and executed with
  * execcmd().
  */
@@ -446,7 +449,7 @@ make1cmds( ACTIONS *a0 )
 	    /* If doing only updated (or existing) sources, but none have */
 	    /* been updated (or exist), skip this action. */
 
-	    if( !ns && ( rule->flags & ( RULE_NEWSRCS | RULE_EXISTING ) ) )
+	    if( !ns && ( rule->flags & ( RULE_UPDATED | RULE_EXISTING ) ) )
 	    {
 		list_free( nt );
 		continue;
@@ -552,7 +555,7 @@ make1list(
 	if( ( flags & RULE_EXISTING ) && t->binding != T_BIND_EXISTS )
 	    continue;
 
-	if( ( flags & RULE_NEWSRCS ) && t->fate <= T_FATE_STABLE )
+	if( ( flags & RULE_UPDATED ) && t->fate <= T_FATE_STABLE )
 	    continue;
 
 	/* Prohibit duplicates for RULE_TOGETHER */

@@ -28,22 +28,13 @@ LIST *compile_settings( PARSE *parse, LOL *args );
 LIST *compile_switch( PARSE *parse, LOL *args );
 LIST *compile_while( PARSE *parse, LOL *args );
 
-LIST *evaluate_rule( char *rulename, LOL *args );
+LIST *evaluate_rule( char *rulename, LOL *args, LIST *result );
 
 /* Flags for compile_set(), etc */
 
 # define ASSIGN_SET	0x00	/* = assign variable */
 # define ASSIGN_APPEND	0x01	/* += append variable */
 # define ASSIGN_DEFAULT	0x02	/* set only if unset */
-
-/* Flags for compile_setexec() */
-
-# define EXEC_UPDATED	0x01	/* executes updated */
-# define EXEC_TOGETHER	0x02	/* executes together */
-# define EXEC_IGNORE	0x04	/* executes ignore */
-# define EXEC_QUIETLY	0x08	/* executes quietly */
-# define EXEC_PIECEMEAL	0x10	/* executes piecemeal */
-# define EXEC_EXISTING	0x20	/* executes existing */
 
 /* Conditions for compile_if() */
 
