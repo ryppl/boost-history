@@ -22,12 +22,13 @@ namespace boost
 {
     namespace assignment
     {
-    	template< typename V, std::size_t N, typename V2 >
-    	inline detail::fixed_size_assigner<V, V*>
+/*    	template< typename V, std::size_t N, typename V2 >
+    	inline fixed_size_assigner<V, V*>
     	operator<<( boost::array<V,N>& c, const V2& v )
     	{
-    	    return detail::fixed_size_assigner<V,V*>( c.begin(), c.end(), v );
+    	    return fixed_size_assigner<V,V*>( c.begin(), c.end(), v );
     	}
+*/        
     }
 
 }

@@ -15,7 +15,6 @@
 #ifndef BOOST_ASSIGN_FIXED_SIZE_ASSIGNER_HPP
 #define BOOST_ASSIGN_FIXED_SIZE_ASSIGNER_HPP
 
-//#include "assign_traits.hpp"
 #include "exception.hpp"
 
 namespace boost
@@ -78,7 +77,7 @@ namespace assignment
 
 
         template< typename T, typename T2 >
-        insert_assigner& operator()( const T& t, const T2& t2 )
+        fixed_size_assigner& operator()( const T& t, const T2& t2 )
         {
             insert_( value_type( t, t2 ) );
             return *this;

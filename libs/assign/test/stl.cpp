@@ -192,10 +192,6 @@ int main()
         assign( v_five ) (1,2,3,4,5) ("1","2","3","4","5");
     	assign( v_six ) (1,2,3,4,5,6) ("1","2","3","4","5","6");
         
-        vector<int> v_all( 4 );
-        assign_all( v_all )(1)(2)(3);
-        assign_all( v_all ) << 1, 2;
-        
     }
     catch( std::exception& e )
     {

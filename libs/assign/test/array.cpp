@@ -27,48 +27,44 @@ int main()
 
     try
     {
-	///////////////////////////////////////////////////////////////////////
-	// 'boost::array'
-	///////////////////////////////////////////////////////////////////////
-	
-	typedef boost::array<float,6> Array;
-
-	// create and initialize an array
-	Array a = {  42  };
-
-	// access elements
-	for (unsigned i=1; i<a.size(); ++i) 
-	    a[i] = a[i-1]+1;
-
-	copy( a.begin(), a.end(), ostream_iterator< float >( cout, " " ) );
-	
-	a << 1,2,3,4,5,6;
-
-	copy( a.begin(), a.end(), ostream_iterator< float >( cout, " " ) );
-
-	///////////////////////////////////////////////////////////////////////
-	// 'boost::multi_array'
-	///////////////////////////////////////////////////////////////////////
-
- 	// Create a 3D array that is 3 x 4 x 2
-	typedef boost::multi_array<double, 3> array_type;
-	typedef array_type::index index;
-	array_type A(boost::extents[3][4][2]);
-	
-	// Assign values to the elements
-	int values = 0;
-	for(index i = 0; i != 3; ++i) 
-	    for(index j = 0; j != 4; ++j)
-            for(index k = 0; k != 2; ++k)
-                A[i][j][k] = values++;
-	
-	// Verify values
-	int verify = 0;
-	for(index i = 0; i != 3; ++i) 
-	    for(index j = 0; j != 4; ++j)
-            for(index k = 0; k != 2; ++k)
-                assert(A[i][j][k] == verify++);
-	
+    	///////////////////////////////////////////////////////////////////////
+    	// 'boost::array'
+    	///////////////////////////////////////////////////////////////////////
+    	
+    	typedef boost::array<float,6> Array;
+    
+    	// create and initialize an array
+    	Array a; 
+       	copy( a.begin(), a.end(), ostream_iterator< float >( cout, " " ) );
+    	
+    	a << 1,2,3,4,5,6;
+        assign_all( a )(2)(3)(4)(5)(6)(7);
+    
+    	copy( a.begin(), a.end(), ostream_iterator< float >( cout, " " ) );
+    
+    	///////////////////////////////////////////////////////////////////////
+    	// 'boost::multi_array'
+    	///////////////////////////////////////////////////////////////////////
+    
+     	// Create a 3D array that is 3 x 4 x 2
+    	typedef boost::multi_array<double, 3> array_type;
+    	typedef array_type::index index;
+    	array_type A(boost::extents[3][4][2]);
+    	
+    	// Assign values to the elements
+    	int values = 0;
+    	for(index i = 0; i != 3; ++i) 
+    	    for(index j = 0; j != 4; ++j)
+                for(index k = 0; k != 2; ++k)
+                    A[i][j][k] = values++;
+    	
+    	// Verify values
+    	int verify = 0;
+    	for(index i = 0; i != 3; ++i) 
+    	    for(index j = 0; j != 4; ++j)
+                for(index k = 0; k != 2; ++k)
+                    assert(A[i][j][k] == verify++);
+                        
     }
     catch( std::exception& e )
     {

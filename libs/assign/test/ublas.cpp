@@ -67,6 +67,7 @@ int main()
                0; 
         
         cout << msl << endl << msu << endl;
+        
     }
     catch( std::exception& e )
     {

@@ -106,7 +106,7 @@ namespace assignment
         
         void insert_( const value_type& v )
         {
-            make_iterator_insertion( c_, v );
+            make_insertion( c_, v );
         }
 
         insert_assigner& operator=( const insert_assigner& );
