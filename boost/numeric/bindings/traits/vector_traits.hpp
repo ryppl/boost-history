@@ -39,9 +39,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     typedef T                                                    value_type; 
     typedef typename detail::generate_const<V,value_type>::type* pointer;      // if V is const, pointer will be a const value_type*
 
-    // assumption: iterator==pointer
-    // .. e.g. ublas::(un)bounded_array 
-    static pointer storage (V& v) { return v.begin(); }
+    static pointer storage (V& v) { return &v[0]; }
     static int size (V& v) { return v.size(); } 
     static int stride (V& v) { return 1; } 
   }; 
