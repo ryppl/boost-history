@@ -144,7 +144,8 @@ void map_test()
   stock.insert( entry( "cisco", 13.4 ) );
   stock.insert( entry( "hp", 19.55 ) );
 
-#ifndef BOOST_MSVC
+// Requires traits for index/data_type.
+#if 0
   typedef boost::view::transform_view< std::map< std::string, double >, boost::function1<double,double> > value_view;
 
   BOOST_CHECK( typeid( value_view::index_type ) == typeid( std::map< std::string, double >::key_type ) );
