@@ -1,0 +1,35 @@
+<!doctype html public "-//ietf//dtd html//en">
+<html><head><title>boost::mpl::find</title>
+<link rel="stylesheet" href="./mpl_wiki.css">
+</head><body bgcolor="white">
+<h1><a href="./Table_of_Content.html"><img src="./mpl_logo.jpg" alt="[Home]" border=0 align="right"></a>find</h1><h3>Synopsis
+</h3>
+<p>
+<pre>
+template&lt;typename InputSequence, typename T&gt;
+struct find
+{
+    typedef /* implementation defined */ type;
+};
+</pre>
+<p>
+<h3>Description
+</h3>
+<p>
+<code>find</code> algorithm returns the first iterator <code>i</code> in the range <code>[Sequence::begin, Sequence::end)</code> such that <code>typeof(i::element_type) == typeof(T)</code>. If no such iterator exists then <code>typeof(iterator)==typeof(Sequence::end)</code>. 
+<p>
+<h3>Example
+</h3>
+<p>
+<pre>
+typedef mpl::type_list<a href="./action=edit&id=type_list.html">?</a>&lt;char, int, unsigned, long, unsigned_long&gt; list;
+BOOST_STATIC_ASSERT(<a href="./find.html">mpl::find</a>&lt;list, unsigned&gt;::iterator::position == 2);
+</pre>
+<p>
+<h3>See also
+</h3>
+<p>
+<code>find_if<a href="./action=edit&id=find_if.html">?</a></code>, <code>search<a href="./action=edit&id=search.html">?</a></code>.
+<p>
+<p><hr>
+<a href="./Table_of_Content.html">Table of Content</a><br>Last edited December 23, 2001 2:04 pm</body></html>

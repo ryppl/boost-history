@@ -1,0 +1,67 @@
+<!doctype html public "-//ietf//dtd html//en">
+<html><head><title>boost::mpl::logical or</title>
+<link rel="stylesheet" href="./mpl_wiki.css">
+</head><body bgcolor="white">
+<h1><a href="./Table_of_Content.html"><img src="./mpl_logo.jpg" alt="[Home]" border=0 align="right"></a>logical or</h1><h3>Synopsis
+</h3>
+<p>
+<pre>
+template&lt; 
+      typename T1
+    , typename T2
+    , typename T3 = false_t<a href="./action=edit&id=false_t.html">?</a>
+    ...
+    , typename Tn = false_t<a href="./action=edit&id=false_t.html">?</a>
+    &gt;
+struct logical_or
+{
+    static bool const value = T1::value || T2::value || T3::value || ... Tn::value;
+};
+</pre>
+<p>
+<h3>Description
+</h3>
+<p>
+<code>logical_or</code> class template performs short-circuit <em>logical or</em> (<code>||</code>) operation on its arguments.
+<p>
+<h3>Header
+</h3>
+<p>
+<pre>
+#include "<a href="\boost/mpl/logical/or.hpp">boost/mpl/logical/or.hpp</a>"
+</pre>
+<p>
+<h3>Template parameters
+</h3>
+<p>
+<table border="1">
+<tr><th>&nbsp;Parameters&nbsp;</th><th>&nbsp;Description &nbsp;</th></tr>
+<tr><td><code>T1, .., T5</code></td><td>The <code>logical_or</code>'s input parameters. Must be a model of [Intergal Expression]<a href="./action=edit&id=Intergal_Expression.html">?</a>. </td></tr>
+</table>
+<p>
+<h3>Members
+</h3>
+<p>
+<table border="1">
+<tr><th>&nbsp;Member&nbsp;</th><th>&nbsp;Description &nbsp;</th></tr>
+<tr><td><code>value</code></td><td>The result of the <em>logical or</em> operation performed.</td></tr>
+</table>
+<p>
+<h3>Example
+</h3>
+<p>
+Find the position of a type in a <code>type_list<a href="./action=edit&id=type_list.html">?</a></code> [<a href="#1">1</a>].
+<p>
+<pre> </pre>
+<p>
+<h3>Notes
+</h3>
+<p>
+[<a name="1">1</a>]  This is an example of how to use the short-circuit logic operations to simplify your code; it is not the recommended way of searching for something in a <code>type_list<a href="./action=edit&id=type_list.html">?</a></code> or any other Sequence<a href="./action=edit&id=Sequence.html">?</a>. The <code><a href="./find.html">find</a></code> or <code>find_if<a href="./action=edit&id=find_if.html">?</a></code> algorithms offer a better way of doing it.<br>
+<p>
+<h3>See also
+</h3>
+<p>
+<code>logical_and<a href="./action=edit&id=logical_and.html">?</a></code>, <code>logical_not<a href="./action=edit&id=logical_not.html">?</a></code>, [short-circuit logic]<a href="./action=edit&id=short-circuit_logic.html">?</a>. 
+<p><hr>
+<a href="./Table_of_Content.html">Table of Content</a><br>Last edited December 23, 2001 2:09 pm</body></html>
