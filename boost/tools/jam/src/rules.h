@@ -42,6 +42,8 @@
  * 02/14/95 (seiwald) - new NOUPDATE modifier on targets.
  */
 
+# undef RULE /* Nasty macro shows up in jamgram.c */
+# undef ACTIONS /* Nasty macro shows up in jamgram.c */
 typedef struct _rule RULE;
 typedef struct _target TARGET;
 typedef struct _targets TARGETS;
@@ -66,7 +68,7 @@ struct rule_actions
     LIST* bindlist;
     int flags;          /* modifiers on ACTIONS */
 
-# define    RULE_NEWSRCS    0x01    /* $(>) is updated sources only */
+# define	RULE_UPDATED	0x01	/* $(>) is updated sources only */
 # define    RULE_TOGETHER   0x02    /* combine actions on single target */
 # define    RULE_IGNORE 0x04    /* ignore return status of executes */
 # define    RULE_QUIETLY    0x08    /* don't mention it unless verbose */

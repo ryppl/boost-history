@@ -87,6 +87,6 @@ cmd_free( CMD *cmd )
 {
 	lol_free( &cmd->args );
 	list_free( cmd->shell );
-    free( cmd->buf );
+	free( cmd->buf );
 	free( (char *)cmd );
 }

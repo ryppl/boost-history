@@ -5,7 +5,7 @@
  */
 
 /*  This file is ALSO:
- *  (C) Copyright David Abrahams 2001. Permission to copy, use,
+ *  (C) Copyright David Abrahams 2002. Permission to copy, use,
  *  modify, sell and distribute this software is granted provided this
  *  copyright notice appears in all copies. This software is provided
  *  "as is" without express or implied warranty, and with no claim as
@@ -529,8 +529,8 @@ compile_on(
 /*
  * compile_rule() - compile a single user defined rule
  *
- *  parse->string   name of user defined rule
- *  parse->left parameters (list of lists) to rule, recursing left
+ *	parse->left	list of rules to run
+ *	parse->right	parameters (list of lists) to rule, recursing left
  *
  * Wrapped around evaluate_rule() so that headers() can share it.
  */
@@ -541,7 +541,7 @@ compile_rule(
     FRAME *frame )
 {
     FRAME       inner[1];
-    LIST    *result;
+    LIST    *result = 0;
     PARSE   *p;
     
 
@@ -555,7 +555,7 @@ compile_rule(
     for( p = parse->left; p; p = p->left )
         lol_add( inner->args, parse_evaluate( p->right, frame ) );
 
-    /* And invoke rule */
+	/* Run rules, appending results from each */
 
     result = evaluate_rule( parse->string, inner );
 

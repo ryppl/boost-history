@@ -103,6 +103,7 @@
 #include "scan.h"
 #include "compile.h"
 #include "newstr.h"
+#include "rules.h"
 
 # define F0 (LIST *(*)(PARSE *, FRAME *))0
 # define P0 (PARSE *)0
@@ -120,7 +121,7 @@
 # define pmodule( l,r )	  	parse_make( compile_module,l,r,P0,S0,S0,0 )
 # define pnull()	  	parse_make( compile_null,P0,P0,P0,S0,S0,0 )
 # define pon( l,r )	  	parse_make( compile_on,l,r,P0,S0,S0,0 )
-# define prule( s,p )     	parse_make( compile_rule,p,P0,P0,s,S0,0 )
+# define prule( a,p )     	parse_make( compile_rule,a,p,P0,S0,S0,0 )
 # define prules( l,r )	  	parse_make( compile_rules,l,r,P0,S0,S0,0 )
 # define pset( l,r,a )          parse_make( compile_set,l,r,P0,S0,S0,a )
 # define psetmodule( l,r,a ) 	parse_make( compile_set_module,l,r,P0,S0,S0,a )
@@ -189,8 +190,8 @@ rule	: _LBRACE block _RBRACE
 		{ $$.parse = $2.parse; }
 	| INCLUDE list _SEMIC
 		{ $$.parse = pincl( $2.parse ); }
-	| ARG lol _SEMIC
-		{ $$.parse = prule( $1.string, $2.parse ); }
+	| arg lol _SEMIC
+		{ $$.parse = prule( $1.parse, $2.parse ); }
 	| arg assign list _SEMIC
 		{ $$.parse = pset( $1.parse, $3.parse, $2.number ); }
 	| MODULE LOCAL list assign_list_opt _SEMIC
@@ -325,10 +326,10 @@ arg	: ARG
  * This needs to be split cleanly out of 'rule'
  */
 
-func	: ARG lol
-		{ $$.parse = prule( $1.string, $2.parse ); }
-	| ON arg ARG lol
-		{ $$.parse = pon( $2.parse, prule( $3.string, $4.parse ) ); }
+func	: arg lol
+		{ $$.parse = prule( $1.parse, $2.parse ); }
+	| ON arg arg lol
+		{ $$.parse = pon( $2.parse, prule( $3.parse, $4.parse ) ); }
 	| ON arg RETURN list 
 		{ $$.parse = pon( $2.parse, $4.parse ); }
 	;
@@ -346,17 +347,17 @@ eflags	: /* empty */
 	;
 
 eflag	: UPDATED
-		{ $$.number = EXEC_UPDATED; }
+		{ $$.number = RULE_UPDATED; }
 	| TOGETHER
-		{ $$.number = EXEC_TOGETHER; }
+		{ $$.number = RULE_TOGETHER; }
 	| IGNORE
-		{ $$.number = EXEC_IGNORE; }
+		{ $$.number = RULE_IGNORE; }
 	| QUIETLY
-		{ $$.number = EXEC_QUIETLY; }
+		{ $$.number = RULE_QUIETLY; }
 	| PIECEMEAL
-		{ $$.number = EXEC_PIECEMEAL; }
+		{ $$.number = RULE_PIECEMEAL; }
 	| EXISTING
-		{ $$.number = EXEC_EXISTING; }
+		{ $$.number = RULE_EXISTING; }
 	;
 
 

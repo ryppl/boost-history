@@ -94,7 +94,7 @@ headers( TARGET *t )
         lol_add( frame->args, headers1( headlist, t->boundname, rec, re, re_macros ) );
 
         if( lol_get( frame->args, 1 ) )
-            evaluate_rule( hdrrule->string, frame );
+            list_free( evaluate_rule( hdrrule->string, frame ) );
 
         /* Clean up */
 

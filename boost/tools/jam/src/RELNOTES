@@ -1,33 +1,3 @@
-<<<<<<< variant A
-Release notes for FTJam 2.3.5 (previous release was named "20010626")
-
-0. Bugs fixed since 20010626:
-
-    DEBUG OUTPUT FORMATTING: indentation was "wrapped" when too many levels
-    were reached, making debugging extremly difficult
-
-1. Release info:
-
-    FTJam 2.3.5 (based on Jam 2.3.2)
-    July 30, 2001
-    VERSION 2.3.5
-    PATCHLEVEL 3
-
-2. Compatibility
-
-   FTJam 2.3.5 is upward compatible with Jam 2.3 and 2.2
-   Only a few new builtin rules were added, and some small bugs fixed
-   
-3. Changes since 20010626:
-
-   Added a new builtin named FAIL_EXPECTED. It is used to invert the result
-   of a given action. Used by the Boost.Build sub-system.
-
-============================================================================
-============================================================================
-   
-
->>>>>>> variant B
 Release notes for Jam/MR [UNRELEASED]
 (aka Jam - make(1) redux)
 
@@ -62,8 +32,8 @@ Release notes for Jam/MR [UNRELEASED]
         Add "[ on targ rule ... ]" to call a rule returning a value,
         under the influence of a target's specific variables.
 
-	New 'Glob' builtin that returns a list of files in a list of
-	directories, given a list of patterns.
+	New 'Glob' builtin that returns a list of files, given a list
+	of directories, and a list of filename patterns.
 
 	New 'while expr { block }' construct.
 
@@ -98,7 +68,13 @@ Release notes for Jam/MR [UNRELEASED]
 	Jambase has been compacted by applying the new E: and J:
 	expansion modifiers.
 
-3.3.  Jam internal code changes
+
+3.3   'jam' Changes (See Jam.html)
+
+	Added '-q' (quit quick) option; jam will exit promptly (as if it
+	received an interrupt), as soon as any target fails.
+
+3.4.  Jam internal code changes
 
 	Optimize rule compilation, with right-recursion instead of left.
 
@@ -113,6 +89,9 @@ Release notes for Jam/MR [UNRELEASED]
 	essentially the same but returns a LIST.
 
 4.  Fixed bugs
+
+	Fixed broken $(v[1-]), which always returned an empty expansion.
+	Thanks to Ian Godin <ian@sgrail.com>.
 
 	Defining a rule within another rule, and invoking the enclosing
 	rule more than once, would result in giving the first rule a
@@ -174,12 +153,12 @@ Release notes for Jam/MR [UNRELEASED]
         [NT] Add entry for DevStudio when the settings are already in the
         system environment.
 
+        [NT] default $(MV) to "move /y" in Jambase.
+
 ===============================================================================
 ===============================================================================
 
 
-####### Ancestor
-======= end
 Release notes for Jam/MR 2.3
 (aka Jam - make(1) redux)
 

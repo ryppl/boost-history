@@ -414,7 +414,9 @@ int unlink( char *f ); 	/* In filevms.c */
 # define OSPLAT "OSPLAT=ARM"
 # endif
 
-# if defined( __ia64__ ) || defined( __IA64__ )
+# if defined( __ia64__ ) || \
+     defined( __IA64__ ) || \
+     defined( _M_IA64 )
 # define OSPLAT "OSPLAT=IA64"
 # endif
 
@@ -458,6 +460,7 @@ int unlink( char *f ); 	/* In filevms.c */
 struct globs {
 	int	noexec;
 	int	jobs;
+	int	quitquick;
 	char	debug[DEBUG_MAX];
 	FILE	*cmdout;		/* print cmds, not run them */
 } ;

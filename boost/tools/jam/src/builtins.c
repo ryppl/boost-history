@@ -15,6 +15,7 @@
 # include "frames.h"
 # include "hash.h"
 # include "strings.h"
+# include "regexp.h"
 
 /*
  * builtins.c - builtin jam rules
@@ -30,6 +31,7 @@
  *	builtin_exit() - EXIT rule
  *	builtin_flags() - NOCARE, NOTFILE, TEMPORARY rule
  *	builtin_glob() - GLOB rule
+ *	builtin_match() - MATCH rule
  *
  * 01/10/01 (seiwald) - split from compile.c
  */
@@ -121,6 +123,10 @@ load_builtins()
       bind_builtin( "HDRMACRO" ,
                     builtin_hdrmacro, 0, 0 ) );
 
+    duplicate_rule( "Match" ,
+      bind_builtin( "MATCH" ,
+	            builtin_match, 0, 0 ) );
+    
     /* FAIL_EXPECTED is an experimental built-in that is used to indicate        */
     /* that the result of a target build action should be inverted (ok <=> fail) */
     /* this can be useful when performing test runs from Jamfiles..              */
@@ -592,3 +598,54 @@ static void lol_build( LOL* lol, char** elements )
         lol_add( lol, l );
 }
 
+/*
+ * builtin_match() - MATCH rule, regexp matching
+ */
+
+LIST *
+builtin_match(
+	PARSE	*parse,
+	FRAME	*frame )
+{
+	LOL *args = frame->args;
+	LIST *l = lol_get( args, 0 );
+	LIST *r = lol_get( args, 1 );
+	LIST *result = 0;
+	regexp *re;
+
+	/* No pattern or string?  No results. */
+
+	if( !l || !r )
+	    return L0;
+
+	/* Just use first arg of each list. */
+
+	re = regcomp( l->string );
+
+	if( regexec( re, r->string ) )
+	{
+	    int i, top;
+
+	    /* Find highest parameter */
+
+	    for( top = NSUBEXP; top-- > 1; )
+		if( re->startp[top] != re->endp[top] )
+		    break;
+
+	    /* And add all parameters up to highest onto list. */
+	    /* Must have parameters to have results! */
+
+	    for( i = 1; i <= top; i++ )
+	    {
+		char buf[ MAXSYM ];
+		int l = re->endp[i] - re->startp[i];
+		memcpy( buf, re->startp[i], l );
+		buf[ l ] = 0;
+		result = list_new( result, newstr( buf ) );
+	    }
+	}
+
+	free( (char *)re );
+
+	return result;
+}
