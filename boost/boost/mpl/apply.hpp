@@ -104,28 +104,6 @@ struct BOOST_PREPROCESSOR_CAT(apply, n) \
               , n \
               , T \
               ) >::type type; \
-              \
-    static void execute() \
-    { \
-        F_wrapper< \
-          aux::msvc_never_true<F>::value \
-        >::template apply< BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS( \
-                BOOST_PREPROCESSOR_EMPTY \
-              , n \
-              , T \
-              ) >::execute(); \
-    } \
-    template <class T> \
-    static void execute(T x) \
-    { \
-        F_wrapper< \
-          aux::msvc_never_true<F>::value \
-        >::template apply< BOOST_MPL_AUX_APPLY_VARIABLE_PARAMS( \
-                BOOST_PREPROCESSOR_EMPTY \
-              , n \
-              , T \
-              ) >::execute(x); \
-    } \
 }; \
 /**/
 
