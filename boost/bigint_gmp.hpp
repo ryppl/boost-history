@@ -1,6 +1,14 @@
 #ifndef BIGINT_GMP_RG08272003_HPP
 #define BIGINT_GMP_RG08272003_HPP
 
+// Use, modification and distribution is subject to the Boost Software 
+// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
+
+//  Bigint Library
+//  Authors: Ronald Garcia
+//           Andrew Lumsdaine
+
 //
 // bigint_gmp.hpp - an arbitrary magnitude integer type. This code uses the same
 // interface as bigint.hpp, though it is implemented using the GNU MP library
