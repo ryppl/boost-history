@@ -3,7 +3,7 @@
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
-// Copyright (c) 2000-01
+// Copyright (c) 2000-02
 // Aleksey Gurtovoy
 //
 // Permission to use, copy, modify, distribute and sell this software
@@ -18,21 +18,19 @@
 #define BOOST_MPL_LIST_FACTORY_HPP
 
 #include "boost/mpl/list/traits.hpp"
+#include "boost/mpl/parameter/count.hpp"
 #include "boost/mpl/preprocessor/template_params.hpp"
 #include "boost/mpl/preprocessor/enumerate_n.hpp"
 #include "boost/mpl/preprocessor/repeat_n.hpp"
-#include "boost/mpl/preprocessor/tokens.hpp"
 #include "boost/mpl/preprocessor/config.hpp"
-#include "boost/type_traits/same_traits.hpp"
 #include "boost/preprocessor/repeat_2nd.hpp"
-#include "boost/preprocessor/empty.hpp"
 #include "boost/preprocessor/inc.hpp"
 #include "boost/preprocessor/dec.hpp"
 
 namespace boost {
 namespace mpl {
 
-namespace detail {
+namespace aux {
 
 template<long N>
 struct list_factory_part1
@@ -44,23 +42,23 @@ struct list_factory_part1
     };
 };
 
-#define BOOST_MPL_LIST_FACTORY_SPECIALIZATION(N)                              \
-template<>                                                                    \
-struct list_factory_part1<N>                                                  \
-{                                                                             \
-    template<typename Tag, BOOST_MPL_TEMPLATE_PARAMS(typename T)>             \
-    struct part2                                                              \
-    {                                                                         \
-        typedef BOOST_MPL_ENUMERATE_N(N                                       \
-            , typename mpl::list_traits<Tag>::template make_node<T)           \
-            , typename mpl::list_traits<Tag>::null_node BOOST_MPL_REPEAT_N(N  \
-            , >::type) type;                                                  \
-    };                                                                        \
-};                                                                            \
+#define BOOST_MPL_LIST_FACTORY_SPECIALIZATION(N) \
+template<> \
+struct list_factory_part1<N> \
+{ \
+    template<typename Tag, BOOST_MPL_TEMPLATE_PARAMS(typename T)> \
+    struct part2 \
+    { \
+        typedef BOOST_MPL_ENUMERATE_N(N  \
+            , typename mpl::list_traits<Tag>::template make_node<T) \
+            , typename mpl::list_traits<Tag>::null_node BOOST_MPL_REPEAT_N(N \
+            , >::type) type; \
+    }; \
+}; \
 /**/
 
-#define BOOST_MPL_LIST_FACTORY_SPEC(i, unused)                                \
-	  BOOST_MPL_LIST_FACTORY_SPECIALIZATION(BOOST_PREPROCESSOR_INC(i))        \
+#define BOOST_MPL_LIST_FACTORY_SPEC(i, unused) \
+	  BOOST_MPL_LIST_FACTORY_SPECIALIZATION(BOOST_PREPROCESSOR_INC(i)) \
 /**/
 
 BOOST_PREPROCESSOR_REPEAT_2ND(
@@ -69,51 +67,20 @@ BOOST_PREPROCESSOR_REPEAT_2ND(
     , unused
     )
 
-template<typename Tag, typename T>
-struct is_list_argument
-{
-    typedef mpl::list_traits<Tag> traits;
-    BOOST_STATIC_CONSTANT(long, value = 
-        !(::boost::is_same<typename traits::null_argument, T>::value)
-        );
-};
-
-#define BOOST_MPL_IS_LIST_ARGUMENT(i, Tag_T_tuple) \
-    BOOST_PREPROCESSOR_IF(i, \
-          BOOST_MPL_PREPROCESSOR_PLUS_TOKEN \
-        , BOOST_PREPROCESSOR_EMPTY)() \
-    ::boost::mpl::detail::is_list_argument< \
-          BOOST_PREPROCESSOR_TUPLE_ELEM(2,0,Tag_T_tuple) \
-        , BOOST_PREPROCESSOR_CAT( \
-              BOOST_PREPROCESSOR_TUPLE_ELEM(2,1,Tag_T_tuple) \
-            , i \
-            ) \
-        >::value \
-/**/
-
-#define BOOST_MPL_LIST_ARGUMENTS_NUMBER(Tag, T) \
-    BOOST_PREPROCESSOR_REPEAT( \
-        BOOST_MPL_PARAMETERS_NUMBER \
-      , BOOST_MPL_IS_LIST_ARGUMENT \
-      , (Tag, T) \
-      ) \
-/**/
-
-} // namespace detail
+} // namespace aux
 
 
 template<typename Tag, BOOST_MPL_TEMPLATE_PARAMS(typename T)>
 struct list_factory
 {
-    typedef typename mpl::detail::list_factory_part1<
-                BOOST_MPL_LIST_ARGUMENTS_NUMBER(Tag, T)
-                >::template part2< Tag
-                                  , BOOST_MPL_TEMPLATE_PARAMS(T)
-                                  >::type type;
+    typedef typename mpl::aux::list_factory_part1<
+        mpl::parameter::count_if_not<
+              typename mpl::list_traits<Tag>::null_argument
+            , BOOST_MPL_TEMPLATE_PARAMS(T)
+            >::value
+        >::template part2<Tag, BOOST_MPL_TEMPLATE_PARAMS(T)>::type type;
 };
 
-#undef BOOST_MPL_IS_LIST_ARGUMENT
-#undef BOOST_MPL_LIST_ARGUMENTS_NUMBER
 #undef BOOST_MPL_LIST_FACTORY_SPEC
 
 } // namespace mpl
