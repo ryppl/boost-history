@@ -44,6 +44,38 @@ namespace assignment
 } // namespace 'boost'
 
 #include <boost/assign/insert_assigner.hpp>
-#include <boost/assign/glist.hpp>
+
+
+namespace boost
+{
+namespace assignment
+{
+
+    template< typename K, typename V, typename C, typename A, typename P >
+    inline insert_assigner< std::map<K,V,C,A> > operator+=( std::map<K,V,C,A>& m, const P& p )
+    {
+        return insert_assigner< std::map<K,V,C,A> >( m ),p;
+    }
+    
+    template< typename K, typename V, typename C, typename A, typename P >
+    inline insert_assigner< std::multimap<K,V,C,A> > operator+=( std::multimap<K,V,C,A>& m, const P& p )
+    {
+        return insert_assigner< std::multimap<K,V,C,A> >( m ),p;
+    }
+    
+    template< typename K, typename V, typename C, typename A >
+    inline insert_assigner< std::map<K,V,C,A> > insert( std::map<K,V,C,A>& m )
+    {
+        return insert_assigner< std::map<K,V,C,A> >( m );
+    }
+    
+    template< typename K, typename V, typename C, typename A >
+    inline insert_assigner< std::multimap<K,V,C,A> > insert( std::multimap<K,V,C,A>& m )
+    {
+        return insert_assigner< std::multimap<K,V,C,A> >( m );
+    }
+
+}
+}
 
 #endif

@@ -12,71 +12,50 @@
  *
  */
 
-#include <boost/multi_array.hpp>
 #include <boost/assign/fixed_size_assigner.hpp>
-#include <boost/assign/array/multi_array.hpp>
+#include <boost/assign/list_of.hpp>
+#include <boost/test/unit_test.hpp>
+#include <boost/test/test_tools.hpp>
+#include <boost/array.hpp>
 #include <iostream>
 #include <algorithm>
 #include <iterator>
-#include <cassert>
 
-int main()
+void check_array()
 {
     using namespace std;
     using namespace boost;
     using namespace boost::assignment;
 
-    try
-    {
-    	///////////////////////////////////////////////////////////////////////
-    	// 'boost::array'
-    	///////////////////////////////////////////////////////////////////////
-    	
-    	typedef boost::array<float,6> Array;
-    
-    	// create and initialize an array
-    	Array a; 
-       	copy( a.begin(), a.end(), ostream_iterator< float >( cout, " " ) );
-    	
-    	a << 1,2,3,4,5,6;
-        assign_all( a )(2)(3)(4)(5)(6)(7);
-    
-    	copy( a.begin(), a.end(), ostream_iterator< float >( cout, " " ) );
-    
-    	///////////////////////////////////////////////////////////////////////
-    	// 'boost::multi_array'
-    	///////////////////////////////////////////////////////////////////////
-    
-        /*
-     	// Create a 3D array that is 3 x 4 x 2
-    	typedef boost::multi_array<double, 3> array_type;
-    	typedef array_type::index index;
-    	array_type A(boost::extents[3][4][2]);
-    	
-    	// Assign values to the elements
-        // use tuples (here a pair) in a 3x4 matrix
-    	assign_all( A ) (1,1)(2,2)(3,3)
-                        (4,4)(5,5)(6,6)
-                        (7,7)(8,8)(9,9);
-        
-        // use plain comma-separated list
-        A << 1.,1, 2,2, 3,3, 
-             4,4, 5,5, 6,6,
-             7,7, 8,8, 9,9; 
-    	
-    	// Verify values
-    	int verify = 0;
-    	for(index i = 0; i != 3; ++i) 
-    	    for(index j = 0; j != 4; ++j)
-                for(index k = 0; k != 2; ++k)
-                    assert(A[i][j][k] == verify++);
-        */            
-                        
-    }
-    catch( std::exception& e )
-    {
-        cout << e.what() << endl;
-    }
-    
-    return 0;
+    typedef array<float,6> Array;
+
+    Array a = (list_of(1),2,3,4,5,6);
+    BOOST_CHECK_EQUAL( a[0], 1 );
+    BOOST_CHECK_EQUAL( a[5], 6 );
+    assign_all( a )(2)(3)(4)(5)(6)(7);
+    BOOST_CHECK_EQUAL( a[0], 2 );
+    BOOST_CHECK_EQUAL( a[5], 7 );
+    // last element is implicitly 0
+    Array a2 = (list_of(1),2,3,4,5);
+    BOOST_CHECK_EQUAL( a2[5], 0 );
+    // two last elements are implicitly 0
+    a2 = (list_of(1),2,3,4);
+    BOOST_CHECK_EQUAL( a2[4], 0 );
+    BOOST_CHECK_EQUAL( a2[5], 0 );
+    // too many arguments
+    BOOST_CHECK_THROW( a2 = list_of(1)(2)(3)(4)(5)(6)(7), assignment_exception );
 }
+
+#include <boost/test/included/unit_test_framework.hpp> 
+
+using boost::unit_test_framework::test_suite;
+
+test_suite* init_unit_test_suite( int argc, char* argv[] )
+{
+    test_suite* test = BOOST_TEST_SUITE( "List Test Suite" );
+
+    test->add( BOOST_TEST_CASE( &check_array ) );
+
+    return test;
+}
+

@@ -28,14 +28,14 @@ namespace boost
 namespace assignment
 {
 
-    template< typename K, typename C, typename A >
-    inline void make_insertion( std::set<K,C,A>& c, const K& k )
+    template< typename K, typename C, typename A, typename K2 >
+    inline void make_insertion( std::set<K,C,A>& c, K2 k )
     {
         c.insert( k );
     }
 
-    template< typename K, typename C, typename A >
-    inline void make_insertion( std::multiset<K,C,A>& c, const K& k )
+    template< typename K, typename C, typename A, typename K2 >
+    inline void make_insertion( std::multiset<K,C,A>& c, K2 k )
     {
         c.insert( k );
     }
@@ -49,18 +49,32 @@ namespace boost
 {
 namespace assignment
 {
-    template< typename K, typename C, typename A >
+    template< typename K, typename C, typename A, typename K2 >
     inline insert_assigner< std::set<K,C,A> > 
-    operator+=( std::set<K,C,A>& c, const K& k )
+    operator+=( std::set<K,C,A>& c, K2 k )
     {
         return insert_assigner< std::set<K,C,A> >( c ),k;
     }
 
-    template< typename K, typename C, typename A >
+    template< typename K, typename C, typename A, typename K2 >
     inline insert_assigner< std::multiset<K,C,A> > 
-    operator+=( std::multiset<K,C,A>& c, const K& k )
+    operator+=( std::multiset<K,C,A>& c, K2 k )
     {
         return insert_assigner< std::multiset<K,C,A> >( c ),k;
+    }
+
+    template< typename K, typename C, typename A >
+    inline insert_assigner< std::set<K,C,A> > 
+    insert( std::set<K,C,A>& c )
+    {
+        return insert_assigner< std::set<K,C,A> >( c );
+    }
+    
+    template< typename K, typename C, typename A >
+    inline insert_assigner< std::multiset<K,C,A> > 
+    insert( std::multiset<K,C,A>& c )
+    {
+        return insert_assigner< std::multiset<K,C,A> >( c );
     }
 
 }

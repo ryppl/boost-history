@@ -28,8 +28,8 @@ namespace boost
 namespace assignment
 {
 
-    template< typename V, typename A >
-    inline void make_insertion( std::list<V,A>& c, const V& v )
+    template< typename V, typename A, typename V2 >
+    inline void make_insertion( std::list<V,A>& c, V2 v )
     {
         c.push_back( v );
     }
@@ -44,11 +44,18 @@ namespace boost
 namespace assignment
 {
 
-    template< typename V, typename A >
-    inline insert_assigner< std::list<V,A> > operator+=( std::list<V,A>& c, const V& v )
+    template< typename V, typename A, typename V2 >
+    inline insert_assigner< std::list<V,A> > operator+=( std::list<V,A>& c, V2 v )
     {
         return insert_assigner< std::list<V,A> >( c ),v;
     }
+    
+    template< typename V, typename A >
+    inline insert_assigner< std::list<V,A> > append( std::list<V,A>& c )
+    {
+        return insert_assigner< std::list<V,A> >( c );
+    }
+
 }
 }
 

@@ -28,8 +28,8 @@ namespace boost
 namespace assignment
 {
 
-    template< typename V, typename A >
-    inline void make_insertion( std::deque<V,A>& c, const V& v )
+    template< typename V, typename A, typename V2 >
+    inline void make_insertion( std::deque<V,A>& c, V2 v )
     {
         c.push_back( v );
     }
@@ -44,11 +44,19 @@ namespace boost
 namespace assignment
 {
 
-    template< typename V, typename A >
-    inline insert_assigner< std::deque<V,A> > operator+=( std::deque<V,A>& c, const V& v )
+    template< typename V, typename A, typename V2 >
+    inline insert_assigner< std::deque<V,A> > operator+=( std::deque<V,A>& c, V2 v )
     {
         return insert_assigner< std::deque<V,A> >( c ),v;
     }
+    
+    template< typename V, typename A >
+    inline insert_assigner< std::deque<V,A> > append( std::deque<V,A>& c )
+    {
+        return insert_assigner< std::deque<V,A> >( c );
+    }
+
+    
 }
 }
 

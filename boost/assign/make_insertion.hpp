@@ -31,11 +31,11 @@ namespace assignment
 #else 
 
     template< typename C, typename V >
-    inline void make_insertion( C& c, const V& v )
-    {
+    inline void make_insertion( C& c, const V& v );
+/*    {
         c.insert( c.end(), v );
     }
-
+*/
 #endif
 
 } // namespace 'assignment'

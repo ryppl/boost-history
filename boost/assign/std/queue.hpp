@@ -28,14 +28,14 @@ namespace boost
 namespace assignment
 {
 
-    template< typename V, typename C >
-    inline void make_insertion( std::queue<V,C>& c, const V& v )
+    template< typename V, typename C, typename V2 >
+    inline void make_insertion( std::queue<V,C>& c, V2 v )
     {
         c.push( v );
     }
 
-    template< typename V, typename C >
-    inline void make_insertion( std::priority_queue<V,C>& c, const V& v )
+    template< typename V, typename C, typename V2 >
+    inline void make_insertion( std::priority_queue<V,C>& c, V2 v )
     {
         c.push( v );
     }
@@ -50,16 +50,28 @@ namespace boost
 namespace assignment
 {
 
-    template< typename V, typename C >
-    inline insert_assigner< std::queue<V,C> > operator+=( std::queue<V,C>& c, const V& v )
+    template< typename V, typename C, typename V2 >
+    inline insert_assigner< std::queue<V,C> > operator+=( std::queue<V,C>& c, V2 v )
     {
         return insert_assigner< std::queue<V,C> >( c ),v;
     }
     
-    template< typename V, typename C >
-    inline insert_assigner< std::priority_queue<V,C> > operator+=( std::priority_queue<V,C>& c, const V& v )
+    template< typename V, typename C, typename V2 >
+    inline insert_assigner< std::priority_queue<V,C> > operator+=( std::priority_queue<V,C>& c, V2 v )
     {
         return insert_assigner< std::priority_queue<V,C> >( c ),v;
+    }
+
+    template< typename V, typename C >
+    inline insert_assigner< std::queue<V,C> > append( std::queue<V,C>& c )
+    {
+        return insert_assigner< std::queue<V,C> >( c );
+    }
+    
+    template< typename V, typename C >
+    inline insert_assigner< std::priority_queue<V,C> > append( std::priority_queue<V,C>& c )
+    {
+        return insert_assigner< std::priority_queue<V,C> >( c );
     }
 
 }

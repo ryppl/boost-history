@@ -1,20 +1,22 @@
 subproject libs/assign/test ;
 
-template base : 
-    ## Requirements ##
-    : <include>$(BOOST_ROOT)
-      <include>../../.. 
-      
-    
-    ## default-BUILD ##
-    : debug 
-      <debug>static
+SEARCH on testing.jam = $(BOOST_BUILD_PATH) ;
+include testing.jam ;
+
+test-suite "assign"
+    : [ run
+            array.cpp
+	    : array
+       ]         
+    : [ run
+            std.cpp
+	    : std
+       ]         
+    : [ run
+            list_of.cpp
+	    : list_of
+       ]         
+
     ;
 
-exe  array : <template>base array.cpp ;
-exe  ublas : <template>base ublas.cpp ;
-exe  stl   : <template>base stl.cpp ;
-exe  graph : <template>base graph.cpp ;
-#exe  tuple : <template>base stl.cpp ;
-#exe  tuple : <template>base stl.cpp ;
 
