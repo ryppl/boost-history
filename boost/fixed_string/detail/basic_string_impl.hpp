@@ -33,6 +33,7 @@
 #  include <algorithm>  // std::copy
 #  include <locale>     // std::isspace
 #  include <limits>     // std::numeric_limits
+#  include <stddef.h>   // size_t
 
    namespace boost{ namespace detail
    {

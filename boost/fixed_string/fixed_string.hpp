@@ -7,8 +7,9 @@
 #  include <boost/fixed_string/detail/basic_string_impl.hpp>
 
 #  include <string.h>
+#  include <wchar.h>
 #  include <stdio.h>
-#  include <stddef.h>
+#  include <stdarg.h>
 
    namespace boost
    {
@@ -36,6 +37,8 @@
                {
 #                 if defined(BOOST_MSVC)
                      return( ::_vsnwprintf( s, n, fmt, args ));
+#                 elif defined(__MWERKS__)
+                     return( ::vswprintf( s, n, fmt, args ));
 #                 else
                      return( ::vsnwprintf( s, n, fmt, args ));
 #                 endif
@@ -136,7 +139,7 @@
                   traits_type::copy( str, s, len );
                   str[ len ] = CharT();
                }
-               inline void                       append_( const CharT * s, size_type l = npos )
+               inline void                       append_( const CharT * s, size_type l = size_type( -1 ))
                {
                   if( l == -1 )        l = traits_type::length( s );
                   l = (( l + len ) >= cap ) ? ( cap - len ) : l;
@@ -207,6 +210,7 @@
                                                                      base_type;
             typedef fixed_string_base< CharT, CharStringPolicy, FmtPolicy >
                                                                      this_type;
+            BOOST_STATIC_CONSTANT( size_t, npos = base_type::npos );
          public:
             typedef typename base_type::traits_type                  traits_type;
             typedef typename base_type::value_type                   value_type;
@@ -289,6 +293,7 @@
          public:
             typedef fixed_string_base< CharT, CharStringPolicy, FmtPolicy >    base_type;
             typedef fixed_string< n,   CharT, CharStringPolicy, FmtPolicy >    this_type;
+            BOOST_STATIC_CONSTANT( size_t, npos = base_type::npos );
          public:
             typedef typename base_type::traits_type                  traits_type;
             typedef typename base_type::value_type                   value_type;
