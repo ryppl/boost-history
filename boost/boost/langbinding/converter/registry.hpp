@@ -40,7 +40,6 @@ inline registration::registration()
 }
 
 BOOST_LANGBINDING_DECL void insert(bool rvalue, util::type_info, converter_function);
-BOOST_LANGBINDING_DECL void insert(bool rvalue, util::type_info, converter_function);
 BOOST_LANGBINDING_DECL registration* get(util::type_info);
 BOOST_LANGBINDING_DECL arg_conversion convert(void* src, converter_chain* chain);
 

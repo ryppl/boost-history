@@ -2,9 +2,11 @@
 subproject libs/langbinding/build ;
 
 sources =  
-    ../src/module/id.cpp 
+    ../src/backend/plugin.cpp
+    ../src/backend/call_xxx_data.cpp
     ../src/classes/inheritance.cpp
     ../src/converter/registry.cpp
+    ../src/module/id.cpp 
     ;
 
 dll langbinding 
