@@ -20,7 +20,7 @@
 #include <boost/ref.hpp>
 #include <boost/type_traits/is_class.hpp>
 // MSVC 6/7 decides the implicit move assignment operator is ambiguous.
-# define BOOST_COPY_SWAP_LVALUE_ASSIGN // Also binds rvalues to non-const refs in assignment
+# define BOOST_MOVE_COPY_SWAP_ASSIGN // Also binds rvalues to non-const refs in assignment
 #endif
 
 // Normal EDG like Comeau does enough (N)RVO that the only case where
@@ -66,28 +66,75 @@ struct enable_if_same<X, X, R>
     typedef R type;
 };
 
-// This is the class that enables the distinction of rvalues in the
-// move overload set.  Any type T with a conversion to move_from<T> is
-// movable.
+template <class T, class X, class R = void*>
+struct disable_if_same
+{
+    typedef R type;
+};
+
+#ifndef BOOST_NO_SFINAE
+template <class X, class R>
+struct disable_if_same<X, X, R>
+{
+};
+#endif
+
+// This is the class that enables the distinction of const lvalues in
+// the move overload set in case you don't like using the templated
+// reference method.  Movable types T used with const_lvalue overloads
+// must have a separate conversion to const_lvalue<T>
 template <class X>
-struct move_from
+struct const_lvalue
+{
+    explicit const_lvalue(X const* p)
+      : p(p) {}
+
+    // It acts like a smart pointer, for syntactic convenience
+    X const& operator*() const { return *p; }
+    
+    X const* operator->() const { return p; }
+
+#if !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564))
+    // A convenience for constructors taking a const_lvalue.  As a
+    // result, implicit_cast<X const&>(rhs) can be used to get at the
+    // rhs uniformly.
+    operator X const&() const { return **this; }
+#endif 
+    
+    friend inline X const& copy_source(const_lvalue<X> x) { return *x; }
+#ifdef BOOST_DEBUG_MOVE
+    ~const_lvalue()
+    {
+        p =0;
+    }
+#endif
+    
+ protected:
+    X const* p; // this pointer will refer to the object from which to move
+};
+
+template <class T>
+inline T const& copy_source(T& x) { return x; }
+    
+template <class X>
+struct move_from : const_lvalue<X>
 {
     explicit move_from(X* p)
-      : p(p) {}
+      : const_lvalue<X>(p) {}
 
     // Some compilers need this; seems to do no harm in general.
     explicit move_from(X& x)
-      : p(&x) {}
+      : const_lvalue<X>(&x) {}
+
+#if !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564))
+    // It would be perverse if we inherited const_lvalue's conversion
+    // to X const& without providing this one.
+    operator X&() const { return **this; }
+#endif 
     
     // It acts like a smart pointer, for syntactic convenience
-    X& operator*() const { return *p; }
-    X* operator->() const { return p; }
-
-#ifdef DEBUG_MOVE
-    ~move_from() { p =0; }
-#endif 
- private:
-    X* p; // this pointer will refer to the object from which to move
+    X& operator*() const { return *const_cast<X*>(this->p); }
+    X* operator->() const { return const_cast<X*>(this->p); }
 };
 
 // Detect whether T is movable
@@ -193,12 +240,16 @@ move(T& x)
 template <class Derived>
 struct movable
 {
-    // Provide the conversion operator
     operator move_from<Derived>()
     {
         return move_from<Derived>(static_cast<Derived*>(this));
     }
 
+    operator const_lvalue<Derived>() const
+    {
+        return const_lvalue<Derived>(static_cast<Derived const*>(this));
+    }
+    
  protected:
     movable() {}
     
@@ -327,6 +378,15 @@ move_backward(BidirectionalIterator1 first, BidirectionalIterator1 last,
         BOOST_MOVE_INITIALIZER_LIST(arg_init)                                   \
     body
 
+# define BOOST_LVALUE_COPY_CTOR2(klass, arg_init, body)                             \
+    klass(klass& BOOST_PP_SEQ_HEAD(arg_init))                                       \
+        BOOST_MOVE_INITIALIZER_LIST(arg_init)                                       \
+        body                                                                        \
+                                                                                    \
+    klass(boost::const_lvalue<klass> BOOST_PP_SEQ_HEAD(arg_init))                   \
+        BOOST_MOVE_INITIALIZER_LIST(arg_init)                                       \
+        body
+
 #else
 
 // Generate a "regular" copy ctor.
@@ -334,7 +394,9 @@ move_backward(BidirectionalIterator1 first, BidirectionalIterator1 last,
     klass(klass const& BOOST_PP_SEQ_HEAD(arg_init))                             \
         BOOST_MOVE_INITIALIZER_LIST(arg_init)                                   \
         body 
- 
+
+# define BOOST_LVALUE_COPY_CTOR2(klass, arg_init, body) \
+    BOOST_LVALUE_COPY_CTOR(klass, arg_init, body)
 #endif 
 
 // Generates copy assignment operators for lvalue right-hand-side.
@@ -364,6 +426,9 @@ move_backward(BidirectionalIterator1 first, BidirectionalIterator1 last,
     operator=(klass BOOST_PP_SEQ_HEAD(rhs))                             \
     { return *this = boost::move_from<klass>(BOOST_PP_SEQ_HEAD(rhs)); }
         
+# define BOOST_LVALUE_ASSIGN2(klass, rhs, body)                         \
+    BOOST_LVALUE_ASSIGN(klass, rhs, body)
+        
 #else
 
 # define BOOST_LVALUE_ASSIGN(klass, rhs, body)                                  \
@@ -376,11 +441,29 @@ move_backward(BidirectionalIterator1 first, BidirectionalIterator1 last,
     typename boost::enable_if_same<klass const,BoostMove_##klass,klass&>::type  \
     operator=(BoostMove_##klass& BOOST_PP_SEQ_HEAD(rhs))                        \
         body
+
+# define BOOST_LVALUE_ASSIGN2(klass, rhs, body)                             \
+                                                                            \
+    klass&                                                                  \
+    operator=(klass& BOOST_PP_SEQ_HEAD(rhs))                                \
+    {                                                                       \
+        return *this = boost::const_lvalue<klass>(&BOOST_PP_SEQ_HEAD(rhs)); \
+    }                                                                       \
+                                                                            \
+    klass&                                                                  \
+    operator=(boost::const_lvalue<klass> BOOST_MOVE_DUMMY_VAR(rhs))         \
+    {                                                                       \
+        klass const& BOOST_PP_SEQ_HEAD(rhs) = *BOOST_MOVE_DUMMY_VAR(rhs);   \
+        body                                                                \
+    }
+
 #endif 
 
 //
-// Helper macros for BOOST_LVALUE_COPY_CTOR
+// Helper macros
 //
+
+# define BOOST_MOVE_DUMMY_VAR(arg_init) BOOST_PP_CAT(BoostMove_,BOOST_PP_SEQ_HEAD(arg_init))
 
 // Given a SEQ appropriate for the 2nd argument to
 // BOOST_LVALUE_COPY_CTOR, extract the initializer list.
