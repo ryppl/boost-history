@@ -99,7 +99,7 @@ Incrementor to manipulate its value. This relationship is illustrated in the fol
 diagram:</p>
 
      <fieldset class="center"><legend>What makes a <code>smart_enum</code></legend><img
-        src="architecture.gif" alt="UML diagram of smart_enum's components"></fieldset>
+        src="architecture.png" alt="UML diagram of smart_enum's components"></fieldset>
 
     <p>To understand how this construct works, let us take a look at the Incrementor first. An
 Incrementor is any function object, that provides the member function:</p>
@@ -150,7 +150,7 @@ nicer interface. The example code shown above, could also be written as:</p>
 following diagram:</p>
 
     <fieldset class="center"><legend>Combining <code>smart_enum</code> with a specific
-<code>Incrementor</code></legend><img src="architecture-concrete.gif" alt="UML diagram of
+<code>Incrementor</code></legend><img src="architecture-concrete.png" alt="UML diagram of
         sequential_smart_enum"></fieldset>
 
     <p>The library provides three standard Incrementors plus appropriate helper classes to
@@ -326,8 +326,9 @@ assert(++e == east);</pre></fieldset>
     <p>This example almost exactly duplicates the functionality of a <a
 href="#wrapped"><code>wrapped_smart_enum</code></a>, but unlike its simpler (and more generic)
 counterpart, this version can cope with an <code>enum</code> that is not sequential. Take a
-look at the <a href="test_lambda_enum.cpp"><tt>test_lambda_enum.cpp</tt></a> regression test
-included in this library, if you want to see a full example program for this technique.</p>
+look at the <a href="../test/test_lambda_enum.cpp"><tt>test_lambda_enum.cpp</tt></a> regression
+test included in this library, if you want to see a full example program for this
+technique.</p>
 
 
     <hr>
@@ -336,7 +337,7 @@ included in this library, if you want to see a full example program for this tec
     <p>The current version of the <code>smart_enum</code>library is available by checking-out
 the <a href="http://sourceforge.net/projects/boost-sandbox/">Boost Sandbox</a> project via CVS,
 or by downloading the archive <a
-href="http://cryp.to/smart-enum-src.tar.gz"><tt>smart-enum-src.tar.gz</tt></a> directly.</p>
+href="smart-enum-src.tar.gz"><tt>smart-enum-src.tar.gz</tt></a> directly.</p>
 
     <p>Since this component is really just being developed, I would really, really appreciate
 any kind of feedback, ideas for improvement, bug reports, or just general thoughts!</p>
