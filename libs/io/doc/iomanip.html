@@ -18,9 +18,10 @@ function templates and function-acting [template] classes).</p>
 	<li><a href="#contents">Contents</a></li>
 	<li><a href="#rationale">Rationale</a></li>
 	<li><a href="#header">Header Synopsis</a></li>
-	<li><a href="#mdelimitate">Repeated-character Manipulator</a></li>
-	<li><a href="#mnewer">Repeated-character Output Manipulator</a></li>
-	<li><a href="#mskipper">Repeated-character Input Manipulator</a></li>
+	<li><a href="#mbnewer">Repeated-character Output Manipulator</a></li>
+	<li><a href="#mbskipper">Repeated-character Input Manipulator</a></li>
+	<li><a href="#mnewer">Repeated-narrow-character Output Manipulator</a></li>
+	<li><a href="#mskipper">Repeated-narrow-character Input Manipulator</a></li>
 	<li><a href="#mnewl">Repeated-line-break Output Manipulator</a></li>
 	<li><a href="#mskipl">Repeated-line-break Input Manipulator</a></li>
 	<li><a href="#newl">Non-flushing Line-break Output Manipulator</a></li>
@@ -52,7 +53,9 @@ namespace io
 {
 
 template &lt; typename Ch = char &gt;
-    class multi_delimitator;
+    class multi_basic_newer;
+template &lt; typename Ch = char &gt;
+    class multi_basic_skipper;
 
 class multi_newer;
 class multi_skipper;
@@ -74,75 +77,103 @@ template &lt; typename Ch, class Tr &gt;
 }
 </pre></blockquote>
 
-<h2><a name="mdelimitate">Repeated-character Manipulator</a></h2>
+<h2><a name="mbnewer">Repeated-character Output Manipulator</a></h2>
 
-<p>Objects from a <code>boost::io::multi_delimitator</code> template class represent manipulators that either send multiple consecutive copies of a character to a given output stream or receive and ignore several copies of a character (and all characters in between) from a given input stream.  Said manipulators can be temporarily created (in-line, without a name) or created conventionally in advance for multiple insertions/extractions or for use as a function object.</p>
+<p>Objects from a <code>boost::io::multi_basic_newer</code> template class represent manipulators that send multiple consecutive copies of a character to a given output stream.  Said manipulators can be temporarily created (in-line, without a name) or created conventionally in advance for multiple insertions or for use as a function object.</p>
 
 <blockquote><pre>
 #include &lt;ios&gt;      <i>// for std::streamsize</i>
-#include &lt;istream&gt;  <i>// for std::basic_istream</i>
 #include &lt;ostream&gt;  <i>// for std::basic_ostream</i>
 
 template &lt; typename Ch &gt;
-class boost::io::multi_delimitator
+class boost::io::multi_basic_newer
 {
 public:
     // Template argument
     typedef Ch  char_type;
 
     // Lifetime management
-    multi_delimitator( char_type c, std::streamsize count, bool final_sync = false );
+    multi_basic_newer( char_type c, std::streamsize count, bool final_flush = false );
 
     // Accessors
     char_type        repeated_char() const;
     std::streamsize  repeat_count() const;
     bool             will_synchronize_afterwards() const;
 
-    // Operators
+    // Operator
     template &lt; class Tr &gt;
     void  operator ()( std::basic_ostream&lt;Ch, Tr&gt; &amp;os ) const;
 
+};
+</pre></blockquote>
+
+<p>The template parameter, <var>Ch</var>, represents type of characters that will be marked for repeated insertions.  The <code>char_type</code> type-alias reveals that type of that template parameter (helpful if the template parameter is hidden by a <code>typedef</code>).</p>
+
+<p>The first constructor argument is the marked character <var>c</var> to be repeatedly inserted.  The second argument of the constructor indicates the number, or <var>count</var>, of characters that the manipulator object will insert in a single call.  The optional third constructor argument, <var>final_flush</var>, determines whether or not a request to synchronize the stream will be done after an insertion (defaults to no synchronization).  The values used in these arguments can be retrieved later with the <code>repeated_char</code>, <code>repeat_count</code>, and <code>will_synchronize_afterwards</code> member functions, respectively.</p>
+
+<p>The function-call operator takes an output stream as its only argument.  While the stream <var>os</var> is in a good condition, an unformatted insertion of the marked character occurs <var>count</var> (from the constructor) times.  The marked character shall be appropiate for the stream's character type and locale.  If mandated by the constructor's <var>final_flush</var> state, then the stream is flushed (if it's still good).</p>
+
+<blockquote><pre>
+template &lt; typename Ch, class Tr &gt;
+std::basic_ostream&lt;Ch, Tr&gt; &amp;
+boost::io::operator &lt;&lt;( std::basic_ostream&lt;Ch, Tr&gt; &amp;os, multi_basic_newer&lt;Ch&gt; const &amp;n );
+</pre></blockquote>
+
+<p><strong>Effects:</strong> calls <code><var>n</var>( <var>os</var> )</code></p>
+
+<p><strong>Returns:</strong> <var>os</var></p>
+
+<p><strong>Rationale:</strong> enables <code>multi_basic_newer&lt;&gt;</code> objects to be activated by output streaming</p>
+
+<h2><a name="mbskipper">Repeated-character Input Manipulator</a></h2>
+
+<p>Objects from a <code>boost::io::multi_basic_skipper</code> template class represent manipulators that receive and ignore several copies of a character (and all characters in between) from a given input stream.  Said manipulators can be temporarily created (in-line, without a name) or created conventionally in advance for multiple extractions or for use as a function object.</p>
+
+<blockquote><pre>
+#include &lt;ios&gt;      <i>// for std::streamsize</i>
+#include &lt;istream&gt;  <i>// for std::basic_istream</i>
+
+template &lt; typename Ch &gt;
+class boost::io::multi_basic_skipper
+{
+public:
+    // Template argument
+    typedef Ch  char_type;
+
+    // Lifetime management
+    multi_basic_skipper( char_type c, std::streamsize count, bool final_sync = false );
+
+    // Accessors
+    char_type        repeated_char() const;
+    std::streamsize  repeat_count() const;
+    bool             will_synchronize_afterwards() const;
+
+    // Operator
     template &lt; class Tr &gt;
     void  operator ()( std::basic_istream&lt;Ch, Tr&gt; &amp;is ) const;
 
 };
 </pre></blockquote>
 
-<p>The template parameter, <var>Ch</var>, represents type of characters that will be marked for repeated insertions or extractions.  The <code>char_type</code> type-alias reveals that type of that template parameter (helpful if the template parameter is hidden by a <code>typedef</code>).</p>
+<p>The template parameter, <var>Ch</var>, represents type of characters that will be marked for repeated extractions.  The <code>char_type</code> type-alias reveals that type of that template parameter (helpful if the template parameter is hidden by a <code>typedef</code>).</p>
 
-<p>The first constructor argument is the marked character <var>c</var> to be repeatedly inserted or extracted.  The second argument of the constructor indicates the number, or <var>count</var>, of characters that the manipulator object will insert or extract in a single call.  The optional third constructor argument, <var>final_sync</var>, determines whether or not a request to synchronize the stream will be done after an insertion/extraction (defaults to no synchronization).  The values used in these arguments can be retrieved later with the <code>repeated_char</code>, <code>repeat_count</code>, and <code>will_synchronize_afterwards</code> member functions, respectively.</p>
+<p>The first constructor argument is the marked character <var>c</var> to be repeatedly extracted.  The second argument of the constructor indicates the number, or <var>count</var>, of (matching) characters that the manipulator object will extract in a single call.  The optional third constructor argument, <var>final_sync</var>, determines whether or not a request to synchronize the stream will be done after an extraction (defaults to no synchronization).  The values used in these arguments can be retrieved later with the <code>repeated_char</code>, <code>repeat_count</code>, and <code>will_synchronize_afterwards</code> member functions, respectively.</p>
 
-<p>One function-call operator takes an output stream as its only argument.  While the stream <var>os</var> is in a good condition, an unformatted insertion of the marked character occurs <var>count</var> (from the constructor) times.  The marked character shall be appropiate for the stream's character type and locale.  If mandated by the constructor's <var>final_sync</var> state, then the stream is flushed (if it's still good).</p>
-
-<p>The other function-call operator takes an input stream as its only argument.  While the stream <var>is</var> is in a good condition, characters will be extracted from the stream and ignored until an expanded marked character is encountered <var>count</var> (from the constructor) times.  The marked character expansion shall be appropiate for the stream's character type, traits type, and locale.  If mandated by the constructor's <var>final_sync</var> state, then the stream is synchronized (if it's still good).</p>
-
-<p><strong>Note:</strong> since there are two function-call operators, using them with a combined input/output stream will result in an ambiguity error (since <code>std::basic_iostream</code> is derived from both <code>std::basic_ostream</code> and <code>std::basic_istream</code>).  A cast to a specific base class is required before using such streams with the function-call interface.</p>
-
-<blockquote><pre>
-template &lt; typename Ch, class Tr &gt;
-std::basic_ostream&lt;Ch, Tr&gt; &amp;
-boost::io::operator &lt;&lt;( std::basic_ostream&lt;Ch, Tr&gt; &amp;os, multi_delimitator&lt;Ch&gt; const &amp;d );
-</pre></blockquote>
-
-<p><strong>Effects:</strong> calls <code><var>d</var>( <var>os</var> )</code></p>
-
-<p><strong>Returns:</strong> <var>os</var></p>
-
-<p><strong>Rationale:</strong> enables <code>multi_delimitator&lt;&gt;</code> objects to be activated by output streaming</p>
+<p>The function-call operator takes an input stream as its only argument.  While the stream <var>is</var> is in a good condition, characters will be extracted from the stream and ignored until the expanded marked character is encountered <var>count</var> (from the constructor) times.  The marked character expansion shall be appropiate for the stream's character type, traits type, and locale.  If mandated by the constructor's <var>final_sync</var> state, then the stream is synchronized (if it's still good).</p>
 
 <blockquote><pre>
 template &lt; typename Ch, class Tr &gt;
 std::basic_istream&lt;Ch, Tr&gt; &amp;
-boost::io::operator &gt;&gt;( std::basic_istream&lt;Ch, Tr&gt; &amp;is, multi_delimitator&lt;Ch&gt; const &amp;d );
+boost::io::operator &gt;&gt;( std::basic_istream&lt;Ch, Tr&gt; &amp;is, multi_basic_skipper&lt;Ch&gt; const &amp;s );
 </pre></blockquote>
 
-<p><strong>Effects:</strong> calls <code><var>d</var>( <var>is</var> )</code></p>
+<p><strong>Effects:</strong> calls <code><var>s</var>( <var>is</var> )</code></p>
 
 <p><strong>Returns:</strong> <var>is</var></p>
 
-<p><strong>Rationale:</strong> enables <code>multi_delimitator&lt;&gt;</code> objects to be activated by input streaming</p>
+<p><strong>Rationale:</strong> enables <code>multi_basic_skipper&lt;&gt;</code> objects to be activated by input streaming</p>
 
-<h2><a name="mnewer">Repeated-character Output Manipulator</a></h2>
+<h2><a name="mnewer">Repeated-narrow-character Output Manipulator</a></h2>
 
 <p>Objects from the <code>boost::io::multi_newer</code> class represent
 manipulators that send multiple consecutive copies of a character to a given output
@@ -188,7 +219,7 @@ boost::io::operator &lt;&lt;( std::basic_ostream&lt;Ch, Tr&gt; &amp;os, multi_ne
 
 <p><strong>Rationale:</strong> enables <code>multi_newer</code> objects to be activated by streaming</p>
 
-<h2><a name="mskipper">Repeated-character Input Manipulator</a></h2>
+<h2><a name="mskipper">Repeated-narrow-character Input Manipulator</a></h2>
 
 <p>Objects from the <code>boost::io::multi_skipper</code> class represent
 manipulators that pass over many characters until a given count of a certain character
@@ -337,27 +368,33 @@ attributes of a stream, especially after many attribute changes</p>
 	<dt><a href="../../../people/dietmar_kuehl.htm">Dietmar Kuehl</a>
 	<dd><a href="news:94atsm$27u$6@news.BelWue.DE">Posted the idea</a>
 		that led to <a href="#newl"><code>newl</code></a> on
-		<a
-		href="news:comp.lang.c++.moderated">comp.lang.c++.moderated</a>.
+		<a href="news:comp.lang.c++.moderated">comp.lang.c++.moderated</a>.
 
-	<dt>Angelika Langer and Klaus Kreft
+	<dt><a href="http://www.langer.camelot.de/Welcome.html">Angelika Langer</a>
+		and Klaus Kreft
 	<dd>Section 3.2.2.1 of their <cite>Standard C++ IOStreams and Locales:
 		Advanced Programmer's Guide and Reference</cite> book is the
-                basis of <a href="#mnewl"><code>multi_newl</code></a> (called
+		basis of <a href="#mnewl"><code>multi_newl</code></a> (called
 		<code>mendl</code> in the book).
+
+	<dt><a href="http://www.research.att.com/~bs/homepage.html">Bjarne Stroustrup</a>
+	<dd>Exercise 27 of Section 21.10 of his <cite>The C++ Programming Language,
+		3<sup>rd</sup> edition</cite> book is the basis of <a
+		href="#resetios"><code>resetios</code></a> (called
+		<code>general</code> in the book).
 
 	<dt><a href="../../../people/daryle_walker.html">Daryle Walker</a>
 	<dd>Started the library.  Contributed the initial versions of <a
 		href="#skipl"><code>skipl</code></a>, <a
-                href="#newl"><code>newl</code></a>, <a
-                href="#resetios"><code>resetios</code></a>, <a
-                href="#mnewl"><code>multi_newl</code></a>, <a
-                href="#mskipl"><code>multi_skipl</code></a>, <a
-                href="#mdelimitate"><code>multi_delimitator</code></a>, <a
-                href="#mnewer"><code>multi_newer</code></a>, and <a
-                href="#mskipper"><code>multi_skipper</code></a>.  Contributed
-                <cite><a
-                href="../test/iomanip_test.cpp">iomanip_test.cpp</a></cite>.
+		href="#newl"><code>newl</code></a>, <a
+		href="#resetios"><code>resetios</code></a>, <a
+		href="#mnewl"><code>multi_newl</code></a>, <a
+		href="#mskipl"><code>multi_skipl</code></a>, <a
+		href="#mbnewer"><code>multi_basic_newer</code></a>, <a
+		href="#mbskipper"><code>multi_basic_skipper</code></a>, <a
+		href="#mnewer"><code>multi_newer</code></a>, and <a
+		href="#mskipper"><code>multi_skipper</code></a>.  Contributed
+		<cite><a href="../test/iomanip_test.cpp">iomanip_test.cpp</a></cite>.
 </dl>
 
 <h3><a name="history">History</a></h3>
@@ -369,9 +406,9 @@ attributes of a stream, especially after many attribute changes</p>
 
 <hr>
 
-<p>Revised: 6 December 2003</p>
+<p>Revised: 22 January 2004</p>
 
-<p>Copyright 2003 Daryle Walker.  Use, modification, and distribution
+<p>Copyright 2003-2004 Daryle Walker.  Use, modification, and distribution
 are subject to the Boost Software License, Version 1.0.  (See accompanying
 file <a href="../../../LICENSE_1_0.txt">LICENSE_1_0.txt</a> or a copy at
 &lt;<a href="http://www.boost.org/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</a>&gt;.)</p>

@@ -1,6 +1,6 @@
 //  Boost io/iomanip.hpp header file  ----------------------------------------//
 
-//  Copyright 2003 Daryle Walker.  Use, modification, and distribution are
+//  Copyright 2003-2004 Daryle Walker.  Use, modification, and distribution are
 //  subject to the Boost Software License, Version 1.0.  (See accompanying file
 //  LICENSE_1_0.txt or a copy at <http://www.boost.org/LICENSE_1_0.txt>.)
 
@@ -44,11 +44,11 @@ template < typename Ch, class Tr >
 
 template < typename Ch, class Tr >
     std::basic_ostream<Ch, Tr> &  operator <<( std::basic_ostream<Ch, Tr> &os,
-     multi_delimitator<Ch> const &d );
+     multi_basic_newer<Ch> const &n );
 
 template < typename Ch, class Tr >
     std::basic_istream<Ch, Tr> &  operator >>( std::basic_istream<Ch, Tr> &is,
-     multi_delimitator<Ch> const &d );
+     multi_basic_skipper<Ch> const &s );
 
 template < typename Ch, class Tr >
     std::basic_ostream<Ch, Tr> &  operator <<( std::basic_ostream<Ch, Tr> &os,
@@ -72,17 +72,18 @@ namespace detail
         // Template argument
         typedef Ch  char_type;
 
-        // Lifetime management
-        repeated_character_streamer_base( char_type c, ::std::streamsize count,
-         bool synchronize_afterwards )
-            : c_( c ), count_( count ), sync_( synchronize_afterwards )
-            {}
-
         // Accessors
         char_type          repeated_char() const { return this->c_; }
         ::std::streamsize  repeat_count() const { return this->count_; }
 
         bool  will_synchronize_afterwards() const { return this->sync_; }
+
+    protected:
+        // Lifetime management
+        repeated_character_streamer_base( char_type c, ::std::streamsize count,
+         bool synchronize_afterwards )
+            : c_( c ), count_( count ), sync_( synchronize_afterwards )
+            {}
 
     private:
          // Member data
@@ -98,7 +99,7 @@ namespace detail
 //  I/O-manipulator object class (template) declarations  --------------------//
 
 template < typename Ch >
-class multi_delimitator
+class multi_basic_newer
     : public detail::repeated_character_streamer_base<Ch>
 {
     typedef detail::repeated_character_streamer_base<Ch>  base_type;
@@ -108,17 +109,34 @@ public:
     typedef Ch  char_type;
 
     // Lifetime management
-    multi_delimitator( char_type c, std::streamsize count,
-     bool final_sync = false );
+    multi_basic_newer( char_type c, std::streamsize count,
+     bool final_flush = false );
 
-    // Operators
+    // Operator
     template < class Tr >
     void  operator ()( ::std::basic_ostream<Ch, Tr> &os ) const;
 
+};  // boost::io::multi_basic_newer
+
+template < typename Ch >
+class multi_basic_skipper
+    : public detail::repeated_character_streamer_base<Ch>
+{
+    typedef detail::repeated_character_streamer_base<Ch>  base_type;
+
+public:
+    // Template argument
+    typedef Ch  char_type;
+
+    // Lifetime management
+    multi_basic_skipper( char_type c, std::streamsize count,
+     bool final_sync = false );
+
+    // Operator
     template < class Tr >
     void  operator ()( ::std::basic_istream<Ch, Tr> &is ) const;
 
-};  // boost::io::multi_delimitator
+};  // boost::io::multi_basic_skipper
 
 class multi_newer
     : public detail::repeated_character_streamer_base<>
@@ -129,7 +147,7 @@ public:
     // Lifetime management
     multi_newer( char c, ::std::streamsize count, bool final_flush = false );
 
-    // Operators
+    // Operator
     template < typename Ch, class Tr >
     void  operator ()( ::std::basic_ostream<Ch, Tr> &os ) const;
 
@@ -144,7 +162,7 @@ public:
     // Lifetime management
     multi_skipper( char c, ::std::streamsize count, bool final_sync = false );
 
-    // Operators
+    // Operator
     template < typename Ch, class Tr >
     void  operator ()( ::std::basic_istream<Ch, Tr> &is ) const;
 
@@ -218,13 +236,13 @@ resetios
 
 template < typename Ch >
 inline
-multi_delimitator<Ch>::multi_delimitator
+multi_basic_newer<Ch>::multi_basic_newer
 (
     char_type        c,
     std::streamsize  count,
-    bool             final_sync  // = false
+    bool             final_flush  // = false
 )
-    : base_type( c, count, final_sync )
+    : base_type( c, count, final_flush )
 {
 }
 
@@ -232,7 +250,7 @@ template < typename Ch >
 template < class Tr >
 inline
 void
-multi_delimitator<Ch>::operator ()
+multi_basic_newer<Ch>::operator ()
 (
     std::basic_ostream<Ch, Tr> &  os
 ) const
@@ -251,10 +269,22 @@ multi_delimitator<Ch>::operator ()
 }
 
 template < typename Ch >
+inline
+multi_basic_skipper<Ch>::multi_basic_skipper
+(
+    char_type        c,
+    std::streamsize  count,
+    bool             final_sync  // = false
+)
+    : base_type( c, count, final_sync )
+{
+}
+
+template < typename Ch >
 template < class Tr >
 inline
 void
-multi_delimitator<Ch>::operator ()
+multi_basic_skipper<Ch>::operator ()
 (
     std::basic_istream<Ch, Tr> &  is
 ) const
@@ -291,7 +321,7 @@ multi_newer::operator ()
     std::basic_ostream<Ch, Tr> &  os
 ) const
 {
-    os << multi_delimitator<Ch>( os.widen(this->repeated_char()),
+    os << multi_basic_newer<Ch>( os.widen(this->repeated_char()),
      this->repeat_count(), this->will_synchronize_afterwards() );
 }
 
@@ -314,7 +344,7 @@ multi_skipper::operator ()
     std::basic_istream<Ch, Tr> &  is
 ) const
 {
-    is >> multi_delimitator<Ch>( is.widen(this->repeated_char()),
+    is >> multi_basic_skipper<Ch>( is.widen(this->repeated_char()),
      this->repeat_count(), this->will_synchronize_afterwards() );
 }
 
@@ -327,10 +357,10 @@ std::basic_ostream<Ch, Tr> &
 operator <<
 (
     std::basic_ostream<Ch, Tr> &   os,
-    multi_delimitator<Ch> const &  d
+    multi_basic_newer<Ch> const &  n
 )
 {
-    return d( os ), os;
+    return n( os ), os;
 }
 
 template < typename Ch, class Tr >
@@ -338,11 +368,11 @@ inline
 std::basic_istream<Ch, Tr> &
 operator >>
 (
-    std::basic_istream<Ch, Tr> &   is,
-    multi_delimitator<Ch> const &  d
+    std::basic_istream<Ch, Tr> &     is,
+    multi_basic_skipper<Ch> const &  s
 )
 {
-    return d( is ), is;
+    return s( is ), is;
 }
 
 template < typename Ch, class Tr >

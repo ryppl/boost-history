@@ -1,6 +1,6 @@
 //  Boost io_fwd.hpp header file  --------------------------------------------//
 
-//  Copyright 2002-2003 Boost.org.  Use, modification, and distribution are
+//  Copyright 2002-2004 Boost.org.  Use, modification, and distribution are
 //  subject to the Boost Software License, Version 1.0.  (See accompanying file
 //  LICENSE_1_0.txt or a copy at <http://www.boost.org/LICENSE_1_0.txt>.)
 
@@ -64,7 +64,9 @@ class ios_all_word_saver;
 //  From <boost/io/iomanip.hpp>  ---------------------------------------------//
 
 template < typename Ch = char >
-    class multi_delimitator;
+    class multi_basic_newer;
+template < typename Ch = char >
+    class multi_basic_skipper;
 
 class multi_newer;
 class multi_skipper;
