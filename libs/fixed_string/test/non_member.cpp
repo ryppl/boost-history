@@ -6,38 +6,97 @@
 
 #include <boost/fixed_string/fixed_string.hpp>
 #include <boost/test/minimal.hpp>
+#include <sstream>
 
 int test_main( int, char *[] )
 {
-   boost::fixed_string< 15 >           s1( "Welt" );
-   boost::fixed_string< 15 >           s2( "Welt" );
-   boost::fixed_string< 12 >           s3( "World" );
+   typedef boost::fixed_string< 15 >   string15;
 
    // lhs + rhs
 
-   boost::fixed_string< 15 >           s4 = "Hello " + s3;
-   boost::fixed_string< 15 >           s5 = boost::fixed_string< 15 >( "Hello " ) + s3;
+   string15                            s1 = string15( "Hello " ) + string15( "World" );
+   string15                            s2 = string15( "Hello " ) + "World";
+   string15                            s3 = "Hello " + string15( "World" );
 
-   BOOST_TEST( s4 == s5 );
-   BOOST_TEST( s4 == "Hello World" );
+   BOOST_TEST( s1 == s2 && s2 == s3 );
+   BOOST_TEST( s1 == "Hello World" );
+
+   BOOST_TEST( string15( "ABC" ) + 'D' == "ABCD" );
+   BOOST_TEST( 'A' + string15( "BC" ) == "ABC" );
 
    // ==; !=
 
+   s1 = "Welt";
+   s2 = "Welt";
+
    BOOST_TEST( s1 == s2 );
    BOOST_TEST( s1 == "Welt" );
+   BOOST_TEST( "Hello World" == s3 );
+
    BOOST_TEST( s1 != s3 );
    BOOST_TEST( s1 != "World" );
+   BOOST_TEST( "abc" != s2 );
 
    // <; <=; >; >=
 
-   BOOST_TEST( s1 < s3 );
-   BOOST_TEST( s1 <= s3 );
-   BOOST_TEST( s1 <= s2 );
-   BOOST_TEST( s3 > s1 );
-   BOOST_TEST( s3 >= s1 );
-   BOOST_TEST( s2 >= s1 );
+   s3 = "World";
 
-   // inserters; extractors; getline
+   BOOST_TEST( s1 < s3 );
+   BOOST_TEST( "Abc" < s3 );
+   BOOST_TEST( s1 < "Xyz" );
+
+   BOOST_TEST( s1 <= s3 );
+   BOOST_TEST( "General" <= s3 );
+   BOOST_TEST( s1 <= "Zebra" );
+
+   BOOST_TEST( s1 <= s2 );     // test equality
+   BOOST_TEST( "Welt" <= s1 ); // test equality
+   BOOST_TEST( s1 <= "Welt" ); // test equality
+
+   BOOST_TEST( s3 > s1 );
+   BOOST_TEST( "Xyz" > s1 );
+   BOOST_TEST( s3 > "Abc" );
+
+   BOOST_TEST( s3 >= s1 );
+   BOOST_TEST( s3 >= "General" );
+   BOOST_TEST( "Zebra" >= s1 );
+
+   BOOST_TEST( s2 >= s1 );     // test equality
+   BOOST_TEST( s1 >= "Welt" ); // test equality
+   BOOST_TEST( "Welt" >= s1 ); // test equality
+
+   // inserters; extractors
+
+   {
+      std::stringstream                ss;
+      boost::fixed_string< 25 >        s1( "This is  \n\t a string!" );
+      ss << s1;
+
+      BOOST_TEST( ss.str() == "This is  \n\t a string!" );
+
+      ss >> s1 >> s2 >> s3;
+
+      BOOST_TEST( s1 == "This" );
+      BOOST_TEST( s2 == "is" );
+      BOOST_TEST( s3 == "a" );
+   }
+
+   // getline
+
+   {
+      std::stringstream                ss( "Meine Welt|My World\nSchoen|Beautiful" );
+      std::getline( ss, s1, '|' );
+      std::getline( ss, s2 );
+
+      BOOST_TEST( s1 == "Meine Welt" );
+      BOOST_TEST( s2 == "My World" );
+
+      std::getline( ss, s1, '|' );
+      std::getline( ss, s2 );
+
+      BOOST_TEST( s1 == "Schoen" );
+      BOOST_TEST( s2 == "Beautiful" );
+   }
 
    // swap
 
