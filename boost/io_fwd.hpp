@@ -63,19 +63,39 @@ class ios_all_word_saver;
 
 //  From <boost/io/iomanip.hpp>  ---------------------------------------------//
 
-template < typename Ch = char >
-    class multi_basic_newer;
-template < typename Ch = char >
-    class multi_basic_skipper;
+// Only includes other headers
 
-class multi_newer;
-class multi_skipper;
+
+//  From <boost/io/iomanip_form.hpp>  ----------------------------------------//
 
 template < typename Ch, class Tr = ::std::char_traits<Ch> >
     class basic_ios_form;
 
 typedef basic_ios_form<char>      ios_form;
 typedef basic_ios_form<wchar_t>  wios_form;
+
+
+//  From <boost/io/iomanip_general.hpp>  -------------------------------------//
+
+// Only has function template
+
+
+//  From <boost/io/iomanip_in.hpp>  ------------------------------------------//
+
+template < typename Ch = char >
+    class multi_basic_skipper;
+
+class multi_skipper;
+
+// Also has functions and function templates
+
+
+//  From <boost/io/iomanip_out.hpp>  -----------------------------------------//
+
+template < typename Ch = char >
+    class multi_basic_newer;
+
+class multi_newer;
 
 // Also has functions and function templates
 
