@@ -113,7 +113,7 @@ struct BOOST_PREPROCESSOR_CAT(apply, n) \
                 BOOST_PREPROCESSOR_EMPTY \
               , n \
               , T \
-              ) >::execute() \
+              ) >::execute(); \
     } \
     template <class T> \
     static void execute(T x) \
@@ -124,7 +124,7 @@ struct BOOST_PREPROCESSOR_CAT(apply, n) \
                 BOOST_PREPROCESSOR_EMPTY \
               , n \
               , T \
-              ) >::execute(x) \
+              ) >::execute(x); \
     } \
 }; \
 /**/
