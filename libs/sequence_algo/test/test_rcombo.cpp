@@ -11,6 +11,17 @@
 // See http://www.boost.org for updates, documentation, and revision
 // history.
 
+// This program exercises all of the functions in rcombo.h.
+// First all of the lowest level support functions are tested.
+// Then the combination and permutation functions are tested for
+// correctness in four aspects:
+
+// 1. Internal sort order is correct for combination sequences.
+// 2. Each sequence in the series is in lexicographical
+//    order with respect to the previously generated sequence.
+// 3. The total number of combinations or permutations
+//    is correct.
+// 4. The last sequence is equal to the first.
 
 #include <iostream>
 #include <iomanip>        
@@ -33,16 +44,25 @@ using namespace std;
 //#define BOOST_INCLUDE_MAIN
 #include <boost/test/test_tools.hpp>
 #include <boost/lexical_cast.hpp>
- 
+
 #include "rcombo.hpp"
 using namespace boost;
 
+// macros ---------------------------------------->>
+
 #define DIM(a)    (sizeof(a)/sizeof(a)[0])
 
-// Test data
+// externals
 
-char numerals[] = { '6', '3', '2', '5', '4', '1' };
-const unsigned R = 4;
+namespace boost {
+	namespace test {
+		extern int test_tools_errors;	// defined in test_main.cpp
+	}
+}
+
+// Test data ---------------------------------------->>
+
+char theNumerals[] = { '6', '3', '2', '5', '4', '1' };
   
 #if _MSC_VER <= 1200
 //
@@ -99,57 +119,196 @@ unsigned long factorial(unsigned n, unsigned r)
 }
 
 
-// valid_r_permutation --------------------------------------------------//
-
-template<class ForwardIterator>
-inline bool valid_r_permutation(ForwardIterator /*first*/,
-                                ForwardIterator /*middle*/,
-                                ForwardIterator /*last*/)
-{
-    return true;
-}   // valid_permutation
-
-template<class ForwardIterator, class Compare>
-inline bool valid_r_permutation(ForwardIterator /*first*/,
-                                ForwardIterator /*middle*/,
-                                ForwardIterator /*last*/,
-                                Compare comp)
-{
-    return true;
-}   // valid_permutation
-
-
-// valid_r_combination --------------------------------------------------//
-
-template<class ForwardIterator>
-inline bool valid_r_combination(ForwardIterator first,
-                                ForwardIterator middle,
-                                ForwardIterator /*last*/)
-{
-    return is_sorted(first, middle);
-}   // valid_r_combination
-
-template<class ForwardIterator, class Compare>
-inline bool valid_r_combination(ForwardIterator first,
-                                ForwardIterator middle,
-                                ForwardIterator /*last*/,
-                                Compare comp)
-{
-    return is_sorted(first, middle, comp);
-}   // valid_r_combination
-
-// print_combo_sequence -------------------------------------------------//
+// format_sequence -------------------------------------------------//
 
 template<class InputIterator>
-display_sequence(InputIterator first, InputIterator middle,
+void format_sequence(InputIterator first, InputIterator middle,
                  InputIterator last, ostream& os = cout)
 {
     copy(first, middle, ostream_iterator<char>(os, "  "));
     os << "|  ";
     copy(middle, last, ostream_iterator<char>(os, "  "));
-    os << '\n';
+    //os << '\n';
 }
 
+
+// invalid_combination_msg ------------------------------------------//
+
+template<class T>
+string invalid_sequence_msg(const string& seq_type, unsigned n, const T& con, int r)
+{
+    ostringstream msg;
+    msg << "Invalid " << seq_type << " #" << n << " of P(" << con.size()
+    	<< ", " << r << "): ";
+    format_sequence(con.begin(), con.begin() + r, con.end(), msg);
+    return msg.str();
+}	// invalid_sequence_msg
+
+template<class T>
+inline string invalid_combination_msg(unsigned n, const T& con, int r)
+{
+	return invalid_sequence_msg("combination", n, con, r);
+}
+
+template<class T>
+inline string invalid_permutation_msg(unsigned n, const T& con, int r)
+{
+	return invalid_sequence_msg("permutation", n, con, r);
+}
+
+// valid_r_permutation --------------------------------------------------//
+
+template<class ForwardIterator>
+bool valid_next_r_permutation(ForwardIterator first,
+                              ForwardIterator middle,
+                              bool fresh_start)
+{
+	typedef typename iterator_traits<ForwardIterator>::value_type T;
+	static vector<T> prev;
+	bool retval = true;
+	if (!fresh_start && first != middle)	// test to ensure curr sequence is greater than previous
+		retval = lexicographical_compare(prev.begin(), prev.end(), first, middle);
+	
+	prev = vector<T>(first, middle);
+
+    return retval;
+}   // valid_next_r_permutation
+
+template<class ForwardIterator, class Compare>
+bool valid_next_r_permutation(ForwardIterator first,
+                              ForwardIterator middle,
+                              Compare comp,
+                              bool fresh_start)
+{
+	typedef typename iterator_traits<ForwardIterator>::value_type T;
+	static vector<T> prev;
+	bool retval = true;
+	if (!fresh_start && first != middle)	// test to ensure curr sequence is greater than previous
+		retval = lexicographical_compare(prev.begin(), prev.end(), first, middle, comp);
+	
+	prev = vector<T>(first, middle);
+
+    return retval;
+}   // valid_next_r_permutation
+
+
+template<class ForwardIterator>
+bool valid_prev_r_permutation(ForwardIterator first,
+                              ForwardIterator middle,
+                              bool fresh_start)
+{
+	typedef typename iterator_traits<ForwardIterator>::value_type T;
+	static vector<T> prev;
+	bool retval = true;
+	if (!fresh_start && first != middle)	// test to ensure curr sequence is greater than previous
+		retval = lexicographical_compare(first, middle, prev.begin(), prev.end());
+	
+	prev = vector<T>(first, middle);
+
+    return retval;
+}   // valid_prev_r_permutation
+
+template<class ForwardIterator, class Compare>
+bool valid_prev_r_permutation(ForwardIterator first,
+                              ForwardIterator middle,
+                              Compare comp,
+                              bool fresh_start)
+{
+	typedef typename iterator_traits<ForwardIterator>::value_type T;
+	static vector<T> prev;
+	bool retval = true;
+	if (!fresh_start && first != middle)	// test to ensure curr sequence is greater than previous
+		retval = lexicographical_compare(first, middle, prev.begin(), prev.end(), comp);
+	
+	prev = vector<T>(first, middle);
+
+    return retval;
+}   // valid_prev_r_permutation
+
+// valid_r_combination --------------------------------------------------//
+
+template<class ForwardIterator>
+bool valid_next_r_combination(ForwardIterator first,
+                              ForwardIterator middle,
+                              bool fresh_start)
+{
+    if (!is_sorted(first, middle))
+    	return false;
+    	
+   	// and greater than the last one
+ 	typedef typename iterator_traits<ForwardIterator>::value_type T;
+	static vector<T> prev;
+	bool retval = true;
+	if (!fresh_start && first != middle)	// test to ensure curr sequence is greater than last
+		retval = lexicographical_compare(prev.begin(), prev.end(), first, middle);
+	
+	prev = vector<T>(first, middle);
+
+    return retval;
+
+}   // valid_next_r_combination
+
+template<class ForwardIterator>
+bool valid_prev_r_combination(ForwardIterator first,
+                              ForwardIterator middle,
+                              bool fresh_start)
+{
+    if (!is_sorted(first, middle))
+    	return false;
+    	
+   	// and less than the last one
+ 	typedef typename iterator_traits<ForwardIterator>::value_type T;
+	static vector<T> prev;
+	bool retval = true;
+	if (!fresh_start && first != middle)	// test to ensure curr sequence is less than last
+		retval = lexicographical_compare(first, middle, prev.begin(), prev.end());
+	
+	prev = vector<T>(first, middle);
+
+    return retval;
+
+}   // valid_prev_r_combination
+
+template<class ForwardIterator, class Compare>
+bool valid_next_r_combination(ForwardIterator first,
+                              ForwardIterator middle,
+                              Compare comp,
+                              bool fresh_start)
+{
+    if (!is_sorted(first, middle, comp))
+    	return false;
+    	
+	typedef typename iterator_traits<ForwardIterator>::value_type T;
+	static vector<T> prev;
+	bool retval = true;
+	if (!fresh_start && first != middle)	// test to ensure curr sequence is greater than last
+		retval = lexicographical_compare(prev.begin(), prev.end(), first, middle, comp);
+	
+	prev = vector<T>(first, middle);
+
+    return retval;
+}   // valid_next_r_combination
+
+
+template<class ForwardIterator, class Compare>
+bool valid_prev_r_combination(ForwardIterator first,
+                              ForwardIterator middle,
+                              Compare comp,
+                              bool fresh_start)
+{
+    if (!is_sorted(first, middle, comp))
+    	return false;
+    	
+	typedef typename iterator_traits<ForwardIterator>::value_type T;
+	static vector<T> prev;
+	bool retval = true;
+	if (!fresh_start && first != middle)	// test to ensure curr sequence is less than last
+		retval = lexicographical_compare(first, middle, prev.begin(), prev.end(), comp);
+	
+	prev = vector<T>(first, middle);
+
+    return retval;
+}   // valid_prev_r_combination
 
 // main -----------------------------------------------------------------//
 
@@ -158,9 +317,8 @@ int test_main(int argc, char* argv[])
 #ifdef __MWERKS__
     argc = ccommand(&argv);
 #endif
-    bool error = false;
 
-    // test factorial function
+    // test factorial function ---------------------------------------->>
     BOOST_CRITICAL_TEST(factorial(0) == 1);
     BOOST_CRITICAL_TEST(factorial(1) == 1);
     BOOST_CRITICAL_TEST(factorial(5) == 120);
@@ -177,10 +335,9 @@ int test_main(int argc, char* argv[])
     BOOST_CRITICAL_TEST(factorial(7, 2) == 42);
     BOOST_CRITICAL_TEST(factorial(7, 7) == 5040);
 
-    // test is_sorted function
-    vector<char> nums(numerals, numerals + DIM(numerals));
+    // test is_sorted function ---------------------------------------->>
+    vector<char> nums(theNumerals, theNumerals + DIM(theNumerals));
     sort(nums.begin(), nums.end());
-    vector<char> checknums(nums);
 
     BOOST_CRITICAL_TEST(is_sorted(nums.begin(), nums.end()));
     BOOST_CRITICAL_TEST(!is_sorted(nums.rbegin(), nums.rend()));
@@ -194,286 +351,295 @@ int test_main(int argc, char* argv[])
     random_shuffle(nums.begin(), nums.end());
     // may very well end up sorted, but unlikely.
     BOOST_TEST(!is_sorted(nums.begin(), nums.end(), greater<char>()));
-
-    const unsigned long perm_cnt = factorial(nums.size(), R);
-    const unsigned long comb_cnt = factorial(nums.size(), R) / factorial(R);
-
-    // testing next_r_permutation
-
-    sort(nums.begin(), nums.end());
-    unsigned count = 0;
-    do {
-        ++count;
-        if (!valid_r_permutation(nums.begin(), nums.begin() + R, nums.end()))
-        {
-            error = true;
-            BOOST_ERROR("Invalid permutation");
-        }
-    } while(next_r_permutation(nums.begin(), nums.begin() + R, nums.end()));
-
-    if (count != perm_cnt)
-    {
-        ostringstream msg;
-        msg << "next_r_permutation generated "<< count
-            << " permutations when there should have been "
-            << perm_cnt << '\n';
-        BOOST_ERROR(msg.str().c_str());
-        error = true;
-    }
-                           
-    if (nums != checknums)
-    {
-        BOOST_ERROR("next_r_permutation didn't restore sequence to initial value at end of series.");
-        error = true;
-        display_sequence(nums.begin(), nums.begin() + R, nums.end());
-        display_sequence(checknums.begin(), checknums.begin() + R, checknums.end());
-    }
-
-    // testing prev_r_permutation
-
-    sort(nums.begin(), nums.end(), greater<char>());
-    count = 0;
-    do {
-        ++count;
-        if (!valid_r_permutation(nums.begin(), nums.begin() + R, nums.end()))
-        {
-            error = true;
-            BOOST_ERROR("Invalid permutation");
-        }
-    } while(prev_r_permutation(nums.begin(), nums.begin() + R, nums.end()));
-
-    if (count != perm_cnt)
-    {
-        ostringstream msg;
-        msg << "prev_r_permutation generated "<< count
-            << " permutations when there should have been "
-            << perm_cnt << '\n';
-        BOOST_ERROR(msg.str().c_str());
-        error = true;
-    }
-
-    sort(checknums.begin(), checknums.end(), greater<char>());
-    if (nums != checknums)
-    {
-        BOOST_ERROR("prev_r_permutation didn't restore sequence to initial value at end of series.");
-        error = true;
-        display_sequence(nums.begin(), nums.begin() + R, nums.end());
-        display_sequence(checknums.begin(), checknums.begin() + R, checknums.end());
-    }
-
-
-    // testing next_r_combination
-
-    sort(nums.begin(), nums.end());
-    count = 0;
-    do {
-        ++count;
-        if (!valid_r_combination(nums.begin(), nums.begin() + R, nums.end()))
-        {
-            error = true;
-            BOOST_ERROR("Invalid combination");
-        }
-    } while(next_r_combination(nums.begin(), nums.begin() + R, nums.end()));
-
-    if (count != comb_cnt)
-    {
-        ostringstream msg;
-        msg << "next_r_combination generated "<< count
-            << " combinations when there should have been "
-            << comb_cnt << '\n';
-        BOOST_ERROR(msg.str().c_str());
-        error = true;
-    }
-
-    sort(checknums.begin(), checknums.end());
-    if (nums != checknums)
-    {
-        BOOST_ERROR("next_r_permutation didn't restore sequence to initial value at end of series.");
-        error = true;
-        display_sequence(nums.begin(), nums.begin() + R, nums.end());
-        display_sequence(checknums.begin(), checknums.begin() + R, checknums.end());
-    }
-
-
-    // testing prev_r_combination
-
-    sort(nums.begin(), nums.end());
-    rotate(nums.begin(), nums.end() - R, nums.end());
-    count = 0;
-    do {
-        ++count;
-        if (!valid_r_combination(nums.begin(), nums.begin() + R, nums.end()))
-        {
-            error = true;
-            BOOST_ERROR("Invalid combination");
-        }
-    } while(prev_r_combination(nums.begin(), nums.begin() + R, nums.end()));
-
-    if (count != comb_cnt)
-    {
-        ostringstream msg;
-        msg << "prev_r_combination generated "<< count
-            << " combinations when there should have been "
-            << comb_cnt << '\n';
-        BOOST_ERROR(msg.str().c_str());
-        error = true;
-    }
-
-    sort(checknums.begin(), checknums.end());
-    rotate(checknums.begin(), checknums.end() - R, checknums.end());
-    if (nums != checknums)
-    {
-        BOOST_ERROR("prev_r_combination didn't restore sequence to initial value at end of series.");
-        error = true;
-        display_sequence(nums.begin(), nums.begin() + R, nums.end());
-        display_sequence(checknums.begin(), checknums.begin() + R, checknums.end());
-    }
-
-    sort(checknums.begin(), checknums.end(), greater<char>());
-
-    // testing next_r_permutation using compare functor
     
-    sort(nums.begin(), nums.end(), greater<char>());
-    count = 0;
-    do {
-        ++count;
-        if (!valid_r_permutation(nums.begin(), nums.begin() + R, nums.end(),
-            greater<char>()))
-        {
-            error = true;
-            BOOST_ERROR("Invalid permutation");
-        }
-    } while(next_r_permutation(nums.begin(), nums.begin() + R, nums.end(),
-        greater<char>()));
-
-    if (count != perm_cnt)
-    {
-        ostringstream msg;
-        msg << "next_r_permutation generated "<< count
-            << " permutations when there should have been "
-            << perm_cnt << '\n';
-        BOOST_ERROR(msg.str().c_str());
-        error = true;
-    }
-
-    if (nums != checknums)
-    {
-        BOOST_ERROR("next_r_permutation didn't restore sequence to initial value at end of series.");
-        error = true;
-        display_sequence(nums.begin(), nums.begin() + R, nums.end());
-        display_sequence(checknums.begin(), checknums.begin() + R, checknums.end());
-    }
-
-
-    // testing prev_r_permutation using compare functor
-
-    sort(nums.begin(), nums.end());
-    count = 0;
-    do {
-        ++count;
-        if (!valid_r_permutation(nums.begin(), nums.begin() + R, nums.end(),
-            greater<char>()))
-        {
-            error = true;
-            BOOST_ERROR("Invalid permutation");
-        }
-    } while(prev_r_permutation(nums.begin(), nums.begin() + R, nums.end(),
-        greater<char>()));
-
-    if (count != perm_cnt)
-    {
-        ostringstream msg;
-        msg << "prev_r_permutation generated "<< count
-            << " permutations when there should have been "
-            << perm_cnt << '\n';
-        BOOST_ERROR(msg.str().c_str());
-        error = true;
-    }
-
-    sort(checknums.begin(), checknums.end());
-    if (nums != checknums)
-    {
-        BOOST_ERROR("prev_r_permutation didn't restore sequence to initial value at end of series.");
-        error = true;
-        display_sequence(nums.begin(), nums.begin() + R, nums.end());
-        display_sequence(checknums.begin(), checknums.begin() + R, checknums.end());
-    }
-
-
-    // testing next_r_combination using compare functor
-
-    sort(nums.begin(), nums.end(), greater<char>());
-    count = 0;
-    do {
-        ++count;
-        if (!valid_r_combination(nums.begin(), nums.begin() + R, nums.end(),
-            greater<char>()))
-        {
-            error = true;
-            BOOST_ERROR("Invalid permutation");
-        }
-    } while(next_r_combination(nums.begin(), nums.begin() + R, nums.end(),
-        greater<char>()));
-
-    if (count != comb_cnt)
-    {
-        ostringstream msg;
-        msg << "next_r_combination generated "<< count
-            << " combinations when there should have been "
-            << comb_cnt << '\n';
-        BOOST_ERROR(msg.str().c_str());
-        error = true;
-    }
-
-    sort(checknums.begin(), checknums.end(), greater<char>());
-    if (nums != checknums)
-    {
-        BOOST_ERROR("next_r_combutation didn't restore sequence to initial value at end of series.");
-        error = true;
-        display_sequence(nums.begin(), nums.begin() + R, nums.end());
-        display_sequence(checknums.begin(), checknums.begin() + R, checknums.end());
-    }
-
-    // testing prev_r_combination using compare functor
+    // test smallest_greater and largest_less functions --------------->>
     
-    sort(nums.begin(), nums.end(), greater<char>());
-    rotate(nums.begin(), nums.end() - R, nums.end());
-    count = 0;
-    do {
-        ++count;
-        if (!valid_r_combination(nums.begin(), nums.begin() + R, nums.end(),
-            greater<char>()))
-        {
-            error = true;
-            BOOST_ERROR("Invalid permutation");
-        }
-    } while(prev_r_combination(nums.begin(), nums.begin() + R, nums.end(),
-        greater<char>()));
+    BOOST_CRITICAL_TEST(smallest_greater(nums.begin(), nums.end(), '3')
+    	== find(nums.begin(), nums.end(), '4'));
+    BOOST_CRITICAL_TEST(smallest_greater(nums.begin(), nums.end(), '9') == nums.end());
+    BOOST_CRITICAL_TEST(smallest_greater(nums.begin(), nums.end(), '6') == nums.end());
+    BOOST_CRITICAL_TEST(largest_less(nums.begin(), nums.end(), '4')
+    	== find(nums.begin(), nums.end(), '3'));
+    BOOST_CRITICAL_TEST(largest_less(nums.begin(), nums.end(), '1') == nums.end());
+    BOOST_CRITICAL_TEST(largest_less(nums.begin(), nums.end(), '0') == nums.end());
+    
+    BOOST_CRITICAL_TEST(smallest_greater(nums.begin(), nums.end(), '3', greater<char>())
+    	== find(nums.begin(), nums.end(), '2'));
+    BOOST_CRITICAL_TEST(smallest_greater(nums.begin(), nums.end(), '9', greater<char>())
+    	== find(nums.begin(), nums.end(), '6'));
+    BOOST_CRITICAL_TEST(smallest_greater(nums.begin(), nums.end(), '6', greater<char>())
+    	==  find(nums.begin(), nums.end(), '5'));
+    BOOST_CRITICAL_TEST(largest_less(nums.begin(), nums.end(), '4', greater<char>())
+    	== find(nums.begin(), nums.end(), '5'));
+    BOOST_CRITICAL_TEST(largest_less(nums.begin(), nums.end(), '1', greater<char>())
+    	== find(nums.begin(), nums.end(), '2'));
+    BOOST_CRITICAL_TEST(largest_less(nums.begin(), nums.end(), '0', greater<char>())
+    	== find(nums.begin(), nums.end(), '1'));
+    BOOST_CRITICAL_TEST(largest_less(nums.begin(), nums.end(), '7', greater<char>())
+    	== nums.end());
 
-    if (count != comb_cnt)
+
+    // test permutation and combination functions --------------------->>
+    
+    // Each function version is tested for three things:
+    //   1. That each generated sequence is valid. I.e., objects within
+    //      the sequence are lexicographically sorted (combinations only),
+    //      and that each sequence follows the previous sequence 
+    //      in the proper lexicographical series order.
+    //   2. The total number of generated sequences is equal to the
+    //      expected number.
+    //   3. The last sequence is equal to the first.
+    
+    
+    // Repeat tests for r equal to 0 through the size of the container.
+    for(int r = 0; r <= nums.size(); r++)
     {
-        ostringstream msg;
-        msg << "prev_r_combination generated "<< count
-            << " combinations when there should have been "
-            << comb_cnt << '\n';
-        BOOST_ERROR(msg.str().c_str());
-        error = true;
-    }
+	    const unsigned long perm_cnt = factorial(nums.size(), r);
+	    const unsigned long comb_cnt = factorial(nums.size(), r) / factorial(r);
 
-    sort(checknums.begin(), checknums.end(), greater<char>());
-    rotate(checknums.begin(), checknums.end() - R, checknums.end());
-    if (nums != checknums)
-    {
-        BOOST_ERROR("prev_r_combination didn't restore sequence to initial value at end of series.");
-        error = true;
-        display_sequence(nums.begin(), nums.begin() + R, nums.end());
-        display_sequence(checknums.begin(), checknums.begin() + R, checknums.end());
-    }
+	    // testing next_r_permutation ------------------------->>
 
+	    sort(nums.begin(), nums.end());
+    	vector<char> checknums = nums;
+	    unsigned count = 0;
+	    do {
+	        ++count;
+	        if (!valid_next_r_permutation(nums.begin(), nums.begin() + r, count == 1))
+	        {
+	            BOOST_ERROR(invalid_permutation_msg(count, nums, r).c_str());
+	        }
+	    } while(next_r_permutation(nums.begin(), nums.begin() + r, nums.end()));
+
+	    if (count != perm_cnt)
+	    {
+	        ostringstream msg;
+	        msg << "next_r_permutation generated "<< count
+	            << " permutations when there should have been "
+	            << perm_cnt << '\n';
+	        BOOST_ERROR(msg.str().c_str());
+	    }
+	                           
+	    if (nums != checknums)
+	    {
+	        BOOST_ERROR("next_r_permutation didn't restore sequence to initial value at end of series.");
+	        format_sequence(nums.begin(), nums.begin() + r, nums.end());
+	        cout << '\n';
+	        format_sequence(checknums.begin(), checknums.begin() + r, checknums.end());
+	        cout << '\n';
+	    }
+
+	    // testing prev_r_permutation ------------------------->>
+
+	    sort(nums.begin(), nums.end(), greater<char>());
+	    checknums = nums;
+	    count = 0;
+	    do {
+	        ++count;
+	        if (!valid_prev_r_permutation(nums.begin(), nums.begin() + r, count == 1))
+	        {
+	            BOOST_ERROR(invalid_permutation_msg(count, nums, r).c_str());
+	        }
+	    } while(prev_r_permutation(nums.begin(), nums.begin() + r, nums.end()));
+
+	    if (count != perm_cnt)
+	    {
+	        ostringstream msg;
+	        msg << "prev_r_permutation generated "<< count
+	            << " permutations when there should have been "
+	            << perm_cnt << '\n';
+	        BOOST_ERROR(msg.str().c_str());
+	    }
+
+	    if (nums != checknums)
+	    {
+	        BOOST_ERROR("prev_r_permutation didn't restore sequence to initial value at end of series.");
+	        format_sequence(nums.begin(), nums.begin() + r, nums.end());
+	        format_sequence(checknums.begin(), checknums.begin() + r, checknums.end());
+	    }
+
+
+	    // testing next_r_combination ------------------------->>
+
+	    sort(nums.begin(), nums.end());
+	    checknums = nums;
+	    count = 0;
+	    do {
+        	++count;
+	        if (!valid_next_r_combination(nums.begin(), nums.begin() + r, count == 1))
+        		BOOST_ERROR(invalid_combination_msg(count, nums, r).c_str());
+	    } while(next_r_combination(nums.begin(), nums.begin() + r, nums.end()));
+
+	    if (count != comb_cnt)
+	    {
+	        ostringstream msg;
+	        msg << "next_r_combination generated "<< count
+	            << " combinations when there should have been "
+	            << comb_cnt << '\n';
+	        BOOST_ERROR(msg.str().c_str());
+	    }
+
+	    if (nums != checknums)
+	    {
+	        BOOST_ERROR("next_r_permutation didn't restore sequence to initial value at end of series.");
+	        format_sequence(nums.begin(), nums.begin() + r, nums.end());
+	        format_sequence(checknums.begin(), checknums.begin() + r, checknums.end());
+	    }
+
+	    // testing prev_r_combination ------------------------->>
+
+	    sort(nums.begin(), nums.end());
+	    rotate(nums.begin(), nums.end() - r, nums.end());
+	    checknums = nums;
+	    count = 0;
+	    do {
+        	++count;
+	        if (!valid_prev_r_combination(nums.begin(), nums.begin() + r, count == 1))
+        		BOOST_ERROR(invalid_combination_msg(count, nums, r).c_str());
+	    } while(prev_r_combination(nums.begin(), nums.begin() + r, nums.end()));
+
+	    if (count != comb_cnt)
+	    {
+	        ostringstream msg;
+	        msg << "prev_r_combination generated "<< count
+	            << " combinations when there should have been "
+	            << comb_cnt << '\n';
+	        BOOST_ERROR(msg.str().c_str());
+	    }
+
+	    if (nums != checknums)
+	    {
+	        BOOST_ERROR("prev_r_combination didn't restore sequence to initial value at end of series.");
+	        format_sequence(nums.begin(), nums.begin() + r, nums.end());
+	        format_sequence(checknums.begin(), checknums.begin() + r, checknums.end());
+	    }
+
+	    // testing next_r_permutation using compare functor ------------------------->>
+	    
+	    sort(nums.begin(), nums.end(), greater<char>());
+	    checknums = nums;
+	    count = 0;
+	    do {
+	        ++count;
+	        if (!valid_next_r_permutation(nums.begin(), nums.begin() + r,
+	            greater<char>(), count == 1))
+	        {
+	            BOOST_ERROR(invalid_permutation_msg(count, nums, r).c_str());
+	        }
+	    } while(next_r_permutation(nums.begin(), nums.begin() + r, nums.end(),
+	        greater<char>()));
+
+	    if (count != perm_cnt)
+	    {
+	        ostringstream msg;
+	        msg << "next_r_permutation generated "<< count
+	            << " permutations when there should have been "
+	            << perm_cnt << '\n';
+	        BOOST_ERROR(msg.str().c_str());
+	    }
+
+	    if (nums != checknums)
+	    {
+	        BOOST_ERROR("next_r_permutation didn't restore sequence to initial value at end of series.");
+	        format_sequence(nums.begin(), nums.begin() + r, nums.end());
+	        format_sequence(checknums.begin(), checknums.begin() + r, checknums.end());
+	    }
+
+
+	    // testing prev_r_permutation using compare functor ------------------------->>
+
+	    sort(nums.begin(), nums.end());
+	    checknums = nums;
+	    count = 0;
+	    do {
+	        ++count;
+	        if (!valid_prev_r_permutation(nums.begin(), nums.begin() + r,
+	            greater<char>(), count == 1))
+	        {
+	            BOOST_ERROR(invalid_permutation_msg(count, nums, r).c_str());
+	        }
+	    } while(prev_r_permutation(nums.begin(), nums.begin() + r, nums.end(),
+	        greater<char>()));
+
+	    if (count != perm_cnt)
+	    {
+	        ostringstream msg;
+	        msg << "prev_r_permutation generated "<< count
+	            << " permutations when there should have been "
+	            << perm_cnt << '\n';
+	        BOOST_ERROR(msg.str().c_str());
+	    }
+
+	    if (nums != checknums)
+	    {
+	        BOOST_ERROR("prev_r_permutation didn't restore sequence to initial value at end of series.");
+	        format_sequence(nums.begin(), nums.begin() + r, nums.end());
+	        format_sequence(checknums.begin(), checknums.begin() + r, checknums.end());
+	    }
+
+
+	    // testing next_r_combination using compare functor ------------------------->>
+
+	    sort(nums.begin(), nums.end(), greater<char>());
+	    checknums = nums;
+	    count = 0;
+	    do {
+        	++count;
+	        if (!valid_next_r_combination(nums.begin(), nums.begin() + r,
+	        	greater<char>(), count == 1))
+        		BOOST_ERROR(invalid_combination_msg(count, nums, r).c_str());
+	    } while(next_r_combination(nums.begin(), nums.begin() + r, nums.end(),
+	        greater<char>()));
+
+	    if (count != comb_cnt)
+	    {
+	        ostringstream msg;
+	        msg << "next_r_combination generated "<< count
+	            << " combinations when there should have been "
+	            << comb_cnt << '\n';
+	        BOOST_ERROR(msg.str().c_str());
+	    }
+
+	    if (nums != checknums)
+	    {
+	        BOOST_ERROR("next_r_combutation didn't restore sequence to initial value at end of series.");
+	        format_sequence(nums.begin(), nums.begin() + r, nums.end());
+	        format_sequence(checknums.begin(), checknums.begin() + r, checknums.end());
+	    }
+
+	    // testing prev_r_combination using compare functor ------------------------->>
+	    
+	    sort(nums.begin(), nums.end(), greater<char>());
+	    rotate(nums.begin(), nums.end() - r, nums.end());
+	    checknums = nums;
+	    count = 0;
+	    do {
+        	++count;
+	        if (!valid_prev_r_combination(nums.begin(), nums.begin() + r,
+	        	greater<char>(), count == 1))
+        		BOOST_ERROR(invalid_combination_msg(count, nums, r).c_str());
+	    } while(prev_r_combination(nums.begin(), nums.begin() + r, nums.end(),
+	        greater<char>()));
+
+	    if (count != comb_cnt)
+	    {
+	        ostringstream msg;
+	        msg << "prev_r_combination generated "<< count
+	            << " combinations when there should have been "
+	            << comb_cnt << '\n';
+	        BOOST_ERROR(msg.str().c_str());
+	    }
+
+	    if (nums != checknums)
+	    {
+	        BOOST_ERROR("prev_r_combination didn't restore sequence to initial value at end of series.");
+	        format_sequence(nums.begin(), nums.begin() + r, nums.end());
+	        format_sequence(checknums.begin(), checknums.begin() + r, checknums.end());
+	    }
+	}	// for
 
     cout << "\nTest of rcombo.hpp is complete." << endl;
 
-    return error ? EXIT_FAILURE : EXIT_SUCCESS;
+    return test::test_tools_errors ? EXIT_FAILURE : EXIT_SUCCESS;
 
 }   // test_main
 
