@@ -1,19 +1,21 @@
-/* boost detail/interval_misc.hpp template implementation file
+/* Boost interval/io.hpp template implementation file
  *
  * Copyright Jens Maurer 2000
+ * Copyright Hervé Brönnimann, Guillaume Melquiond, Sylvain Pion 2002
  * Permission to use, copy, modify, sell, and distribute this software
- * is hereby granted without free provided that the above copyright notice
+ * is hereby granted without fee provided that the above copyright notice
  * appears in all copies and that both that copyright notice and this
  * permission notice appear in supporting documentation,
  *
- * Jens Maurer makes no representations about the suitability of this
- * software for any purpose. It is provided "as is" without express or
- * implied warranty.
+ * None of the above authors nor Polytechnic University make any
+ * representation about the suitability of this software for any
+ * purpose. It is provided "as is" without express or implied warranty.
  *
  * $Id$
  *
- * Revision History
- *  2000-09-24  separated from interval.hpp
+ * Revision history:
+ *   2002-08-31	 Prepared for boost formal review
+ *   2000-09-24	 Separated from interval.hpp
  */
 
 #ifndef BOOST_INTERVAL_IO_HPP
@@ -21,7 +23,7 @@
 
 #include <iostream>
 #include <string>        // for non-explicit string constructor
-//#include <locale>
+// #include <locale>
 
 
 namespace boost {
@@ -30,8 +32,8 @@ namespace boost {
  * Input/Output
  */
 
+#if 0
 // Ensure generation of outer bounds in all cases
-#if 0 // FIXME: essayer de générer l'interval extérieur
 template<class Ch, class ChTr, class T, class Traits>
 std::basic_ostream<Ch, ChTr>&
 operator<<(std::basic_ostream<Ch, ChTr>& os, const interval<T, Traits>& r)
@@ -44,6 +46,8 @@ operator<<(std::basic_ostream<Ch, ChTr>& os, const interval<T, Traits>& r)
   return os;
 }
 #else
+// FIXME: try to generate an enclosing interval (would depend on
+// precision of stream, etc.)
 template<class T, class Traits> inline
 std::ostream& operator<<(std::ostream& os, const interval<T, Traits>& r)
 {
@@ -53,7 +57,7 @@ std::ostream& operator<<(std::ostream& os, const interval<T, Traits>& r)
 #endif
 
 
-#if 0 // FIXME: arranger le code pour les g++ 3.*
+#if 0 // FIXME: make the code work for g++ 3.*
 template<class Ch, class ChTr, class T, class Traits>
 std::basic_istream<Ch, ChTr>&
 operator>>(std::basic_istream<Ch, ChTr>& is, const interval<T, Traits>& r)
