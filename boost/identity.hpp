@@ -9,7 +9,7 @@
 //  See http://www.boost.org for updates, documentation, and revision history. 
 
 #ifndef BOOST_IDENTITY_HPP
-#define BOOST_DENTITY_HPP
+#define BOOST_IDENTITY_HPP
 
 namespace boost {
 
