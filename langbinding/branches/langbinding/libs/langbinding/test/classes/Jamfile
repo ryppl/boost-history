@@ -5,4 +5,4 @@ import testing ;
 
 DEPENDS all : test ;
 
-run inheritance.cpp <dll>../../build/langbinding : : : <include>$(BOOST_ROOT) ;
+run inheritance.cpp <lib>../../build/langbinding : : : <include>$(BOOST_ROOT) ;

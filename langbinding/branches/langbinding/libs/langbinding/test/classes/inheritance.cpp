@@ -3,6 +3,7 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/langbinding/classes/inheritance.hpp>
+#include <boost/langbinding/classes/aux_/inheritance_query.hpp>
 #include <boost/langbinding/util/type_id.hpp>
 
 using namespace boost::langbinding;
@@ -16,13 +17,21 @@ struct Y : X {};
 
 int main()
 {
+    classes::register_dynamic_id<X>();
+    classes::register_dynamic_id<Y>();
+
     classes::register_conversion<Y, X>();
+    classes::register_conversion<X, Y>();
 
     Y y;
+    X* x = &y;
 
-    void* p = classes::aux::find_dynamic_type(
-        (X*)&y, util::type_id<X>(), util::type_id<Y>());
+    void* p = classes::aux::find_static_type(
+        &y, util::type_id<Y>(), util::type_id<X>());
+    assert(p == x);
 
+    p = classes::aux::find_dynamic_type(
+        x, util::type_id<X>(), util::type_id<Y>());
     assert(p == &y);
 }
 
