@@ -40,6 +40,8 @@
 #include <vector>
 #include <functional>
 
+#include <iostream>
+
 //
 // Procedure:
 //
@@ -426,6 +428,8 @@ namespace boost { namespace langbinding {
    void inheritance_graph_base::add_cast(class_id src_t, class_id dst_t, 
             void*(*cast)(void*), bool is_downcast)
    {
+      std::cout << "adding cast: " << src_t << " -> " << dst_t << "\n";
+      
       // adding an edge will invalidate any record of unreachability in
       // the cache.
       cache_t& c = m_pimpl->cache;

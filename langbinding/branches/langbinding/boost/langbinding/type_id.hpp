@@ -24,11 +24,47 @@
 #define BOOST_LANGBINDING_TYPE_ID_HPP
 
 #include <typeinfo>
+#include <cstring>
+#include <ostream>
 
 namespace boost { namespace langbinding {
 
+   class default_type_info
+   {
+   public:
+
+      default_type_info()
+         : m_type(&typeid(void))
+      {}
+      
+      explicit default_type_info(const std::type_info* x)
+         : m_type(x)
+      {}
+
+      const char* name() const
+      { return m_type->name(); }
+
+      bool operator<(const default_type_info& rhs) const
+      { return strcmp(name(), rhs.name()) < 0; }
+
+      bool operator==(const default_type_info& rhs) const
+      { return !strcmp(name(), rhs.name()); }
+
+      bool operator!=(const default_type_info& rhs) const
+      { return strcmp(name(), rhs.name()); }
+      
+   private:
+      const std::type_info* m_type;
+   };
+   
+   inline std::ostream& operator<<(std::ostream& s, default_type_info const& x)
+   {
+      s << x.name();
+      return s;
+   }
+   
    #ifndef BOOST_LANGBINDING_TYPE_INFO
-   #  define BOOST_LANGBINDING_TYPE_INFO const std::type_info*
+   #  define BOOST_LANGBINDING_TYPE_INFO default_type_info
    #endif
 
    typedef BOOST_LANGBINDING_TYPE_INFO type_info;
@@ -37,21 +73,21 @@ namespace boost { namespace langbinding {
    struct type_id_traits {};
 
    template<>
-   struct type_id_traits<const std::type_info*>
+   struct type_id_traits<default_type_info>
    {
       template<class T>
-      static const std::type_info* static_type_id(T*)
+      static default_type_info static_type_id(T*)
       {
-         return &typeid(T);
+         return default_type_info(&typeid(T));
       }
 
      template<class T>
-     static const std::type_info* dynamic_type_id(T* p)
+     static default_type_info dynamic_type_id(T* p)
      {
-        return &typeid(*p);
+        return default_type_info(&typeid(*p));
      }
    };
-   
+
    template<class T>
    type_info static_type_id(const volatile T* = 0)
    {
