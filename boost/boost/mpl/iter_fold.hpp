@@ -78,7 +78,7 @@ struct iter_fold_more : apply2<ForwardOp,State,Iterator>
     typedef typename Iterator::next iterator;
 };
 
-template <class Iterator, class LastIterator, class ForwardOp, class State>
+template <class Iterator, class LastIterator, class State, class ForwardOp>
 struct iter_fold_next
     : select_type<is_same<Iterator,LastIterator>::value
                   , iter_fold_done<Iterator,State>
