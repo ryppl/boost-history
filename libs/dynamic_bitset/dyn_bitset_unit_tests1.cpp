@@ -52,69 +52,66 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
 
   const std::string long_string = get_long_string();
 
-  std::size_t   n,
-                ul_width    = std::numeric_limits<unsigned long>::digits,
-                block_width = std::numeric_limits<Block>::digits;
-  const unsigned long ulong_max = (std::numeric_limits<unsigned long>::max)();
-  unsigned long numbers[]   = { 0, 1, 40247,
-                                ulong_max >> 1,
-                                ulong_max };
-
   //=====================================================================
   // Test construction from unsigned long
-  const std::size_t array_count =
-        sizeof(numbers) / sizeof(numbers[0]);
+  {
+    const std::size_t ulong_width = std::numeric_limits<unsigned long>::digits;
+    const unsigned long ulong_max =(std::numeric_limits<unsigned long>::max)();
 
-  for (std::size_t i = 0; i < array_count; ++i) {
-    unsigned long number = numbers[i];
-    n = 0;
-    Tests::from_unsigned_long(n, number);
+    unsigned long numbers[]   = { 0, 1, 40247, ulong_max >> 1, ulong_max };
+    const std::size_t array_count = sizeof(numbers) / sizeof(numbers[0]);
 
-    n = std::size_t(0.7 * double(ul_width));
-    Tests::from_unsigned_long(n, number);
+    for (std::size_t i = 0; i < array_count; ++i) {
+      unsigned long number = numbers[i];
+      std::size_t n = 0;
+      Tests::from_unsigned_long(n, number);
 
-    n = 1 * ul_width;
-    Tests::from_unsigned_long(n, number);
+      n = std::size_t(0.7 * double(ulong_width));
+      Tests::from_unsigned_long(n, number);
 
-    n = std::size_t(1.3 * double(ul_width));
-    Tests::from_unsigned_long(n, number);
+      n = 1 * ulong_width;
+      Tests::from_unsigned_long(n, number);
 
-    n = std::size_t(0.7 * double(block_width));
-    Tests::from_unsigned_long(n, number);
+      n = std::size_t(1.3 * double(ulong_width));
+      Tests::from_unsigned_long(n, number);
 
-    n = 1 * block_width;
-    Tests::from_unsigned_long(n, number);
+      n = std::size_t(0.7 * double(bits_per_block));
+      Tests::from_unsigned_long(n, number);
 
-    n = std::size_t(1.3 * double(block_width));
-    Tests::from_unsigned_long(n, number);
+      n = 1 * bits_per_block;
+      Tests::from_unsigned_long(n, number);
 
-    n = 3 * block_width;
-    Tests::from_unsigned_long(n, number);
+      n = std::size_t(1.3 * double(bits_per_block));
+      Tests::from_unsigned_long(n, number);
+
+      n = 3 * bits_per_block;
+      Tests::from_unsigned_long(n, number);
+    }
   }
   //=====================================================================
   // Test construction from a string
   {
 
-      run_string_tests<Tests>(std::string("")); // empty string
-      run_string_tests<Tests>(std::string("1"));
+    run_string_tests<Tests>(std::string("")); // empty string
+    run_string_tests<Tests>(std::string("1"));
 
-      run_string_tests<Tests>(long_string);
+    run_string_tests<Tests>(long_string);
 
 # if !defined BOOST_NO_STD_WSTRING
-      // I need to decide what to do for non "C" locales here. On
-      // one hand I should have better tests. On the other one
-      // I don't want tests for dynamic_bitset to cope with locales,
-      // ctype::widen, etc. (but that's what you deserve when you
-      // don't separate concerns at the library level) - gps
-      //
-      run_string_tests<Tests>(
-          std::wstring(L"11111000000111111111010101010101010101010111111"));
+    // I need to decide what to do for non "C" locales here. On
+    // one hand I should have better tests. On the other one
+    // I don't want tests for dynamic_bitset to cope with locales,
+    // ctype::widen, etc. (but that's what you deserve when you
+    // don't separate concerns at the library level) - gps
+    //
+    run_string_tests<Tests>(
+        std::wstring(L"11111000000111111111010101010101010101010111111"));
 # endif
 
-      // Note that this are _valid_ arguments
-      Tests::from_string(std::string("x11y"), 1, 2);
-      Tests::from_string(std::string("x11"), 1, 10);
-      Tests::from_string(std::string("x11"), 1, 10, 10);
+    // Note that these are _valid_ arguments
+    Tests::from_string(std::string("x11y"), 1, 2);
+    Tests::from_string(std::string("x11"), 1, 10);
+    Tests::from_string(std::string("x11"), 1, 10, 10);
 
   }
   //=====================================================================
@@ -131,7 +128,7 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
     Tests::from_block_range(blocks);
   }
   {
-    const unsigned int n = (std::numeric_limits<unsigned char>::max());
+    const unsigned int n = (std::numeric_limits<unsigned char>::max)();
     std::vector<Block> blocks(n);
     for (typename std::vector<Block>::size_type i = 0; i < n; ++i)
       blocks[i] = static_cast<Block>(i);
