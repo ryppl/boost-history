@@ -1,0 +1,16 @@
+------- string_algo TODO list ----------
+
+- fix tests
+
+- replace substring -> optimization
+- replace trace tunning
+
+- specializations for basic_string where necessary
+- trim_end_if and find_last fix for ForwardIterator
+- regex variants for search, replace 
+
+- change trim to use the replace library
+
+- find algoritms complexity reduction / provide optional algorithms
+
+- !!!! Write documentation !!! -

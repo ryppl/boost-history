@@ -10,429 +10,307 @@
 #ifndef BOOST_STRING_REPLACE_HPP
 #define BOOST_STRING_REPLACE_HPP
 
-#include <utility>
-
-#include "string_funct.hpp"
 #include "string_traits.hpp"
-#include "string_find.hpp"
+#include "string_replace_impl.hpp"
+#include "detail/find.hpp"
+#include "detail/replace.hpp"
 
 namespace boost {
-
-//  replace_substr ----------------------------------------------------------------------//
-
-    namespace string_algo {
-        
-        namespace detail {
-
-            // Replace a range in the sequence with another range
-            /*
-            Returns the iterator pointing just after inserted subrange.
-            Note:
-            Function first tries to replace elements in the input sequence,
-            up to To position with the elements form Repl sequence.
-            The rest of the Repl is then inserted thereafter.
-            If the Repl sequence is shorter, overlaping elements are erased from the Input
-            */
-            template< typename InputSeqT, typename ReplSeqT >
-                inline typename InputSeqT::iterator
-                replace_substr(
-                InputSeqT& Input,
-                typename InputSeqT::iterator From,
-                typename InputSeqT::iterator To,
-                ReplSeqT& Repl )
-            {       
-                typename InputSeqT::iterator InsertIt=From;
-                bool bReplace=(InsertIt!=To);
-
-                for( typename ReplSeqT::const_iterator ReplIt=Repl.begin();
-                    ReplIt!=Repl.end();
-                    ReplIt++)
-                {
-                    if ( bReplace )
-                    {
-                        // Replace mode
-                        *InsertIt=*ReplIt;
-
-                        InsertIt++;
-                        bReplace=(InsertIt!=To);
-                    }
-                    else
-                    {
-                        // Insert mode
-                        InsertIt=Input.insert( InsertIt, *ReplIt );
-                        // Advance to the next item
-                        InsertIt++;
-                    }
-                }
-
-                // Erase the overlapping elements
-                if ( bReplace )
-                {
-                    InsertIt=Input.erase( InsertIt, To );
-                }
-
-                // Return InputIt iterator
-                return InsertIt;
-            }
-        
-        } // namespace detail
-    
-    } // namespace string_algo
-
-// generic replace  -----------------------------------------------------------------//
-
-    // replace iterator version
-    /*
-        Create new sequence into output interator as a copy of input sequence,
-        but with the match replaced with substitute range. The match is searched 
-        using find functor.
-    */
-    template< 
-        typename InputIterator, 
-        typename MatchIterator, 
-        typename ReplIterator,
-        typename OutputIterator,
-        typename FindT >
-    inline OutputIterator replace_copy(
-        InputIterator Begin, InputIterator End,
-        MatchIterator MatchBegin, MatchIterator MatchEnd,
-        ReplIterator ReplBegin, ReplIterator ReplEnd,
-        OutputIterator Output,
-        FindT Find )
-    {
-        // Find first match
-        typename string_algo::search_traits<InputIterator, MatchIterator>::range_type M=
-            Find( Begin, End, MatchBegin, MatchEnd );
-
-        if ( M.first==M.second )
-        {
-            // Match not found - return original sequence
-            std::copy( Begin, End, Output );
-            return Output;
-        }
-
-        // Copy the beggining of the sequence
-        std::copy( Begin, M.first, Output );
-        // Copy repl range
-        std::copy( ReplBegin, ReplEnd, Output );
-        // Copy the rest of the sequence
-        std::copy( M.second, End, Output );
-
-        return Output;
-    }
-
-    // replace_first sequence version
-    template<
-        typename InputSeqT,
-        typename MatchSeqT,
-        typename ReplSeqT,
-        typename FindT >
-    InputSeqT replace_copy( 
-        const InputSeqT& Input,
-        const MatchSeqT& Match,
-        const ReplSeqT& Repl,
-        FindT Find )
-    {
-        InputSeqT Output;
-        replace_copy( 
-            Input.begin(), Input.end(), 
-            Match.begin(), Match.end(), 
-            Repl.begin(), Repl.end(), 
-            std::back_inserter( Output ),
-            Find );
-
-        return Output;
-    }
-
-    // replace in-place sequence version
-    template<
-        typename InputSeqT,
-        typename MatchSeqT,
-        typename ReplSeqT,
-        typename FindF >
-    InputSeqT& replace( 
-        InputSeqT& Input,
-        const MatchSeqT& Match,
-        const ReplSeqT& Repl,
-        FindF Find )
-    {
-        // Find range for the match
-        typename string_algo::search_traits<
-            typename InputSeqT::iterator, 
-            typename MatchSeqT::const_iterator>::range_type M=
-                Find( Input.begin(), Input.end(), Match.begin(), Match.end() );
-
-        if ( M.first==M.second )
-        {
-            // Match not found - return original sequence
-            return Input;
-        }
-
-        // Replace match
-        string_algo::detail::replace_substr( Input, M.first, M.second, Repl );
-        
-        return Input;
-    }
 
 //  replace_first --------------------------------------------------------------------//
 
     // replace_first iterator version
     template< 
-        typename InputIterator, 
-        typename MatchIterator, 
-        typename ReplIterator,
-        typename OutputIterator >
-    inline OutputIterator replace_first_copy(
-        InputIterator Begin,
-        InputIterator End,
-        MatchIterator MatchBegin,
-        MatchIterator MatchEnd,
-        ReplIterator ReplBegin,
-        ReplIterator ReplEnd,
-        OutputIterator Output )
+        typename InputIteratorT, 
+        typename SearchIteratorT, 
+        typename FormatIteratorT,
+        typename OutputIteratorT >
+    inline OutputIteratorT replace_first_copy(
+        InputIteratorT Begin,
+        InputIteratorT End,
+        SearchIteratorT SearchBegin,
+        SearchIteratorT SearchEnd,
+        FormatIteratorT FormatBegin,
+        FormatIteratorT FormatEnd,
+        OutputIteratorT Output )
     {
-        return replace_copy(
-            Begin, End, 
-            MatchBegin, MatchEnd,
-            ReplBegin, ReplEnd,
+        return string_algo::replace_copy(
+			string_algo::make_range( Begin, End ), 
+            string_algo::make_range( SearchBegin, SearchEnd ),
+            string_algo::make_range( FormatBegin, FormatEnd ),
             Output,
-            string_algo::find_firstF< InputIterator, MatchIterator >() );
+            string_algo::detail::find_first_iterF< InputIteratorT, SearchIteratorT >(),
+			string_algo::detail::identity_formatF< string_algo::iterator_range<FormatIteratorT> >() );
     }
 
+    template< 
+        typename InputT, 
+        typename SearchT,
+        typename FormatT,
+        typename OutputIteratorT >
+	inline OutputIteratorT replace_first_copy(
+        const InputT& Input,
+        const SearchT& Search,
+        const FormatT& Format,
+        OutputIteratorT Output )
+	{
+        return string_algo::replace_copy(
+            Input,
+            Search,
+            Format,
+            Output,
+            string_algo::detail::find_first_constF<InputT, SearchT>(),
+			string_algo::detail::identity_formatF<FormatT>() );
+	}
+
     // replace_first sequence version
-    template< typename InputSeqT, typename MatchSeqT, typename ReplSeqT >
-    InputSeqT replace_first_copy( 
-        const InputSeqT& Input,
-        const MatchSeqT& Match,
-        const ReplSeqT& Repl )
+    template< typename InputT, typename SearchT, typename FormatT >
+    InputT replace_first_copy( 
+        const InputT& Input,
+        const SearchT& Search,
+        const FormatT& Format )
     {
-        return replace_copy( 
-            Input, Match, Repl, 
-            string_algo::find_firstF< 
-                typename InputSeqT::const_iterator,
-                typename MatchSeqT::const_iterator >() );
+        return string_algo::replace_copy( 
+            Input, Search, Format, 
+			string_algo::detail::find_first_constF<InputT,SearchT>(),
+			string_algo::detail::identity_formatF<FormatT>() );
     }
 
     // replace_first in-place sequence version
-    template< typename InputSeqT, typename MatchSeqT, typename ReplSeqT >
-    InputSeqT& replace_first( 
-        InputSeqT& Input,
-        const MatchSeqT& Match,
-        const ReplSeqT& Repl )
+    template< typename InputT, typename SearchT, typename FormatT >
+    InputT& replace_first( 
+        InputT& Input,
+        const SearchT& Search,
+        const FormatT& Format )
     {
-        return replace( 
-            Input, Match, Repl, 
-            string_algo::find_firstF< 
-                typename InputSeqT::iterator,
-                typename MatchSeqT::const_iterator >() );
+        return string_algo::replace( 
+            Input, Search, Format, 
+            string_algo::detail::find_firstF<InputT,SearchT>(),
+			string_algo::detail::identity_formatF<FormatT>());
     }
 
 //  replace_last --------------------------------------------------------------------//
 
-    // replace_last iterator version
+    // replace_first iterator version
     template< 
-        typename InputIterator, 
-        typename MatchIterator, 
-        typename ReplIterator,
-        typename OutputIterator >
-    inline OutputIterator replace_last_copy(
-        InputIterator Begin,
-        InputIterator End,
-        MatchIterator MatchBegin,
-        MatchIterator MatchEnd,
-        ReplIterator ReplBegin,
-        ReplIterator ReplEnd,
-        OutputIterator Output )
+        typename InputIteratorT, 
+        typename SearchIteratorT, 
+        typename FormatIteratorT,
+        typename OutputIteratorT >
+    inline OutputIteratorT replace_last_copy(
+        InputIteratorT Begin,
+        InputIteratorT End,
+        SearchIteratorT SearchBegin,
+        SearchIteratorT SearchEnd,
+        FormatIteratorT FormatBegin,
+        FormatIteratorT FormatEnd,
+        OutputIteratorT Output )
     {
-        return replace_copy(
-            Begin, End, 
-            MatchBegin, MatchEnd,
-            ReplBegin, ReplEnd,
+        return string_algo::replace_copy(
+            make_range( Begin, End ), 
+            make_range( SearchBegin, SearchEnd ),
+            make_range( FormatBegin, FormatEnd ),
             Output,
-            string_algo::find_lastF< InputIterator, MatchIterator >() );
+            string_algo::detail::find_last_iterF< InputIterator, SearchIterator >(),
+			string_algo::detail::identity_formatF< string_algo::iterator_range<FormatIteratorT>() );
     }
 
-    // replace_last sequence version
-    template< typename InputSeqT, typename MatchSeqT, typename ReplSeqT >
-    InputSeqT replace_last_copy( 
-        const InputSeqT& Input,
-        const MatchSeqT& Match,
-        const ReplSeqT& Repl )
+    template< 
+        typename InputT, 
+        typename SearchT,
+        typename FormatT,
+        typename OutputIteratorT >
+	inline OutputIteratorT replace_last_copy(
+        const InputT& Input,
+        const SearchT& Search,
+        const FormatT& Format,
+        OutputIteratorT Output )
+	{
+        return string_algo::replace_copy(
+            Input,
+            Search,
+            Format,
+            Output,
+            string_algo::detail::find_last_constF<InputT, SearchT>(),
+			string_algo::detail::identity_formatF<FormatT>() );
+	}
+
+	// replace_first sequence version
+    template< typename InputT, typename SearchT, typename FormatT >
+    InputT replace_last_copy( 
+        const InputT& Input,
+        const SearchT& Search,
+        const FormatT& Format )
     {
-        return replace_copy( 
-            Input, Match, Repl, 
-            string_algo::find_lastF< 
-                typename InputSeqT::const_iterator,
-                typename MatchSeqT::const_iterator >() );
+        return string_algo::replace_copy( 
+            Input, Search, Format, 
+            string_algo::detail::find_last_constF<InputT,SearchT>(),
+			string_algo::detail::identity_formatF<FormatT>() );
     }
 
-    // replace_last in-place sequence version
-    template< typename InputSeqT, typename MatchSeqT, typename ReplSeqT >
-    InputSeqT& replace_last( 
-        InputSeqT& Input,
-        const MatchSeqT& Match,
-        const ReplSeqT& Repl )
+    // replace_first in-place sequence version
+    template< typename InputT, typename SearchT, typename FormatT >
+    InputT& replace_last( 
+        InputT& Input,
+        const SearchT& Search,
+        const FormatT& Format )
     {
-        return replace( 
-            Input, Match, Repl, 
-            string_algo::find_lastF< 
-                typename InputSeqT::iterator,
-                typename MatchSeqT::const_iterator >() );
+        return string_algo::replace( 
+            Input, Search, Format, 
+			string_algo::detail::find_lastF<InputT,SearchT>(),
+			string_algo::detail::identity_formatF<FormatT>() );
     }
 
 //  replace_nth --------------------------------------------------------------------//
 
     // replace_nth iterator version
     template< 
-        typename InputIterator, 
-        typename MatchIterator, 
-        typename ReplIterator,
-        typename OutputIterator >
-    inline OutputIterator replace_nth_copy(
-        InputIterator Begin,
-        InputIterator End,
-        MatchIterator MatchBegin,
-        MatchIterator MatchEnd,
+        typename InputIteratorT, 
+        typename SearchIteratorT, 
+        typename FormatIteratorT,
+        typename OutputIteratorT >
+    inline OutputIteratorT replace_nth_copy(
+        InputIteratorT Begin,
+        InputIteratorT End,
+        SearchIteratorT SearchBegin,
+        SearchIteratorT SearchEnd,
         unsigned int Nth,
-        ReplIterator ReplBegin,
-        ReplIterator ReplEnd,
-        OutputIterator Output )
+        FormatIteratorT FormatBegin,
+        FormatIteratorT FormatEnd,
+        OutputIteratorT Output )
     {
-        return replace_copy(
-            Begin, End, 
-            MatchBegin, MatchEnd,
-            ReplBegin, ReplEnd,
+        return string_algo::replace_copy(
+            make_range( Begin, End ), 
+            make_range( SearchBegin, SearchEnd ),
+            make_range( FormatBegin, FormatEnd ),
             Output,
-            string_algo::find_nthF< InputIterator, MatchIterator >(Nth) );
+            string_algo::detail::find_nth_iterF< InputIterator, SearchIterator >(Nth),
+			string_algo::detail::identity_formatF<FormatT>() );
     }
 
-    // replace_nth sequence version
-    template< typename InputSeqT, typename MatchSeqT, typename ReplSeqT >
-    InputSeqT replace_nth_copy( 
-        const InputSeqT& Input,
-        const MatchSeqT& Match,
+    template< 
+        typename InputT, 
+        typename SearchT,
+        typename FormatT,
+        typename OutputIteratorT >
+	inline OutputIteratorT replace_nth_copy(
+        const InputT& Input,
+        const SearchT& Search,
         unsigned int Nth,
-        const ReplSeqT& Repl )
+        const FormatT& Format,
+        OutputIteratorT Output )
+	{
+        return string_algo::replace_copy(
+            Input,
+            Search,
+            Format,
+            Output,
+            string_algo::detail::find_nth_constF<InputT, SearchT>(Nth),
+			string_algo::detail::identity_formatF<FormatT>() );
+	}
+
+	// replace_nth sequence version
+    template< typename InputT, typename SearchT, typename FormatT >
+    InputT replace_nth_copy( 
+        const InputT& Input,
+        const SearchT& Search,
+        unsigned int Nth,
+        const FormatT& Format )
     {
-        return replace_copy( 
-            Input, Match, Repl, 
-            string_algo::find_nthF< 
-                typename InputSeqT::const_iterator,
-                typename MatchSeqT::const_iterator >(Nth) );
+        return string_algo::replace_copy( 
+            Input, Search, Format, 
+            string_algo::detail::find_nth_constF<InputT,SearchT>(Nth),
+			string_algo::detail::identity_formatF<FormatT>() );
     }
 
     // replace_nth in-place sequence version
-    template< typename InputSeqT, typename MatchSeqT, typename ReplSeqT >
-    InputSeqT& replace_nth( 
-        InputSeqT& Input,
-        const MatchSeqT& Match,
+    template< typename InputT, typename SearchT, typename FormatT >
+    InputT& replace_nth( 
+        InputT& Input,
+        const SearchT& Search,
         unsigned int Nth,
-        const ReplSeqT& Repl )
+        const FormatT& Format )
     {
-        return replace( 
-            Input, Match, Repl, 
-            string_algo::find_nthF< 
-                typename InputSeqT::iterator,
-                typename MatchSeqT::const_iterator >(Nth) );
+        return string_algo::replace( 
+            Input, Search, Format, 
+            string_algo::detail::find_nthF<InputT,SearchT>(Nth),
+			string_algo::detail::identity_formatF<FormatT>() );
     }
 
-//  replace_all    ----------------------------------------------------------------//
 
+//  replace_all --------------------------------------------------------------------//
+	
     // replace_all iterator version
-    /*
-        Create new sequence into output interator as a copy of input sequence,
-        but with the all matches replaced with substitute range
-    */
     template< 
-        typename InputIterator, 
-        typename MatchIterator, 
-        typename ReplIterator,
-        typename OutputIterator >
-    inline void replace_all_copy(
-        InputIterator Begin,
-        InputIterator End,
-        MatchIterator MatchBegin,
-        MatchIterator MatchEnd,
-        ReplIterator ReplBegin,
-        ReplIterator ReplEnd,
-        OutputIterator Output )
+        typename InputIteratorT, 
+        typename SearchIteratorT, 
+        typename FormatIteratorT,
+        typename OutputIteratorT >
+    inline OutputIteratorT replace_all_copy(
+        InputIteratorT Begin,
+        InputIteratorT End,
+        SearchIteratorT SearchBegin,
+        SearchIteratorT SearchEnd,
+        FormatIteratorT FormatBegin,
+        FormatIteratorT FormatEnd,
+        OutputIteratorT Output )
     {
-        // Find the first match
-        InputIterator LastMatch=Begin;
-        typename string_algo::search_traits<InputIterator, MatchIterator>::range_type M=
-            find_first( Begin, End, MatchBegin, MatchEnd );
-
-        // Iterate throug all matches
-        while( M.first != M.second )
-        {
-            // Copy the beggining of the sequence
-            std::copy( LastMatch, M.first, Output );
-            // Copy repl range
-            std::copy( ReplBegin, ReplEnd, Output );
-
-            // Proceed to the next match
-            LastMatch=M.second;
-            M=find_first( LastMatch, End, MatchBegin, MatchEnd );
-        }
-
-        // Copy the rest of the sequence
-        std::copy( LastMatch, End, Output );
+        return string_algo::replace_all_copy(
+			string_algo::make_range( Begin, End ), 
+            string_algo::make_range( SearchBegin, SearchEnd ),
+            string_algo::make_range( FormatBegin, FormatEnd ),
+            Output,
+            string_algo::detail::find_first_iterF< InputIteratorT, SearchIteratorT >(),
+			string_algo::detail::identity_formatF< string_algo::iterator_range<FormatIteratorT> >() );
     }
+
+    // replace_all sequence version   
+	template< 
+        typename InputT, 
+        typename SearchT,
+        typename FormatT,
+        typename OutputIteratorT >
+	inline OutputIteratorT replace_all_copy(
+        const InputT& Input,
+        const SearchT& Search,
+        const FormatT& Format,
+        OutputIteratorT Output )
+	{
+        return string_algo::replace_all_copy(
+            Input,
+            Search,
+            Format,
+            Output,
+            string_algo::detail::find_first_constF<InputT, SearchT>(),
+			string_algo::detail::identity_formatF<FormatT>() );
+	}
 
     // replace_all sequence version
-    template<
-        typename InputSeqT,
-        typename MatchSeqT,
-        typename ReplSeqT >
-    InputSeqT replace_all_copy( 
-        const InputSeqT& Input,
-        const MatchSeqT& Match,
-        const ReplSeqT& Repl )
+    template< typename InputT, typename SearchT, typename FormatT >
+    InputT replace_all_copy( 
+        const InputT& Input,
+        const SearchT& Search,
+        const FormatT& Format )
     {
-        InputSeqT output;
-        replace_all_copy( 
-            Input.begin(), Input.end(), 
-            Match.begin(), Match.end(), 
-            Repl.begin(), Repl.end(), 
-            std::back_inserter( output ) );
-
-        return output;
+        return string_algo::replace_all_copy( 
+            Input, Search, Format, 
+			string_algo::detail::find_first_constF<InputT,SearchT>(),
+			string_algo::detail::identity_formatF<FormatT>() );
     }
 
     // replace_all in-place sequence version
-    /*
-        Makes in-place replacement of all matches in the seqence
-    */
-    template<
-        typename InputSeqT,
-        typename MatchSeqT,
-        typename ReplSeqT >
-    InputSeqT& replace_all( 
-        InputSeqT& Input,
-        const MatchSeqT& Match,
-        const ReplSeqT& Repl )
+    template< typename InputT, typename SearchT, typename FormatT >
+    InputT& replace_all( 
+        InputT& Input,
+        const SearchT& Search,
+        const FormatT& Format )
     {
-        // Find the first match
-        typename string_algo::search_traits<
-            typename InputSeqT::iterator, 
-            typename MatchSeqT::iterator>::range_type M=
-            find_first( Input.begin(), Input.end(), Match.begin(), Match.end() );
-
-        // Iterate throug all matches
-        while( M.first != M.second )
-        {
-            // Replace the match
-            typename InputSeqT::iterator It=string_algo::detail::replace_substr(
-                Input,
-                M.first, M.second,
-                Repl );
-
-            // Proceed to the next match
-            M=find_first( It, Input.end(), Match.begin(), Match.end() );
-        }
-            
-        return Input;
+        return string_algo::replace_all( 
+            Input, Search, Format, 
+            string_algo::detail::find_firstF<InputT,SearchT>(),
+			string_algo::detail::identity_formatF<FormatT>());
     }
+	
 
 } // namespace boost
 

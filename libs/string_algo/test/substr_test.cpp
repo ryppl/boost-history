@@ -24,50 +24,50 @@ void find_test()
     vector<int> vec1( str1.begin(), str1.end() );
 
     // find results
-    pair<string::iterator, string::iterator> nc_result;
-    pair<string::const_iterator, string::const_iterator> cv_result;
+    string_algo::iterator_range<string::iterator> nc_result;
+    string_algo::iterator_range<string::const_iterator> cv_result;
     
-    pair<vector<int>::iterator, vector<int>::iterator> nc_vresult;
-    pair<vector<int>::const_iterator, vector<int>::const_iterator> cv_vresult;
+    string_algo::iterator_range<vector<int>::iterator> nc_vresult;
+    string_algo::iterator_range<vector<int>::const_iterator> cv_vresult;
 
     // basic tests
     nc_result=find_first( str1.begin(), str1.end(), str2.begin(), str2.end() );
-    BOOST_CHECK( string( nc_result.first, nc_result.second)==str2 );
+    BOOST_CHECK( string( nc_result.begin(), nc_result.end())==str2 );
     cv_result=find_first( str1.begin(), str1.end(), str2.begin(), str2.end() );
-    BOOST_CHECK( string( cv_result.first, cv_result.second)==str2 );
+    BOOST_CHECK( string( cv_result.begin(), cv_result.end())==str2 );
 
     nc_result=find_last( str1.begin(), str1.end(), str2.begin(), str2.end() );
-    BOOST_CHECK( string( nc_result.first, nc_result.second)==str2 );
+    BOOST_CHECK( string( nc_result.begin(), nc_result.end())==str2 );
     cv_result=find_last( str1.begin(), str1.end(), str2.begin(), str2.end() );
-    BOOST_CHECK( string( cv_result.first, cv_result.second)==str2 );
+    BOOST_CHECK( string( cv_result.begin(), cv_result.end())==str2 );
 
     nc_result=BOOST_STRING_NON_CONST_FUNCTION(find_first)( str1, string("abc") );
-    BOOST_CHECK( string( nc_result.first, nc_result.second)==string("abc") );
+    BOOST_CHECK( string( nc_result.begin(), nc_result.end())==string("abc") );
     cv_result=find_first( str1, str2 );
-    BOOST_CHECK( string( cv_result.first, cv_result.second)==string("abc") );
+    BOOST_CHECK( string( cv_result.begin(), cv_result.end())==string("abc") );
 
     // multi-type comparison test
     nc_vresult=BOOST_STRING_NON_CONST_FUNCTION(find_first)( vec1, string("abc") );
-    BOOST_CHECK( string( nc_vresult.first, nc_vresult.second)==string("abc") );
+    BOOST_CHECK( string( nc_vresult.begin(), nc_vresult.end())==string("abc") );
     cv_vresult=find_first( vec1, str2 );
-    BOOST_CHECK( string( cv_vresult.first, cv_vresult.second)==string("abc") );
+    BOOST_CHECK( string( cv_vresult.begin(), cv_vresult.end())==string("abc") );
 
     // overflow test
     nc_result=BOOST_STRING_NON_CONST_FUNCTION(find_first)( str2, string("abcd") );
-    BOOST_CHECK( nc_result.first==nc_result.second );
+    BOOST_CHECK( nc_result.begin()==nc_result.end() );
     cv_result=find_first( str2, string("abcd") );
-    BOOST_CHECK( cv_result.first==cv_result.second );
+    BOOST_CHECK( cv_result.begin()==cv_result.end() );
 
     //! Empty string test
     nc_result=BOOST_STRING_NON_CONST_FUNCTION(find_first)( str3, string("abcd") );
-    BOOST_CHECK( nc_result.first==nc_result.second );
+    BOOST_CHECK( nc_result.begin()==nc_result.end() );
     nc_result=BOOST_STRING_NON_CONST_FUNCTION(find_first)( str1, string("") );
-    BOOST_CHECK( nc_result.first==nc_result.second );
+    BOOST_CHECK( nc_result.begin()==nc_result.end() );
 
     cv_result=find_first( str3, string("abcd") );
-    BOOST_CHECK( cv_result.first==cv_result.second );
+    BOOST_CHECK( cv_result.begin()==cv_result.end() );
     cv_result=find_first( str1, string("") );
-    BOOST_CHECK( cv_result.first==cv_result.second ); 
+    BOOST_CHECK( cv_result.begin()==cv_result.end() ); 
 }
 
 void replace_test()
@@ -119,7 +119,7 @@ void replace_test()
     BOOST_CHECK( str1==string("123mno456x456mno321") );
     replace_all( str1, string("mno"), string("ZZZ") );
     BOOST_CHECK( str1==string("123ZZZ456x456ZZZ321") );
-    erase_first( str1, string("ZZZ" ) );
+    erase_first( str1, string("ZZZ") );
     BOOST_CHECK( str1==string("123456x456ZZZ321") );
     erase_all( str1, string("Z") );
     BOOST_CHECK( str1==string("123456x456321") );

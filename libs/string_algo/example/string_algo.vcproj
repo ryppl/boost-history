@@ -121,10 +121,13 @@
 				RelativePath="..\..\..\boost\string_algo\string_erase.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\boost\string_algo\string_erase_impl.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\boost\string_algo\string_find.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\boost\string_algo\string_funct.hpp">
+				RelativePath="..\..\..\boost\string_algo\string_find_impl.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\boost\string_algo\string_predicate.hpp">
@@ -133,16 +136,41 @@
 				RelativePath="..\..\..\boost\string_algo\string_replace.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\boost\string_algo\string_replace_impl.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\boost\string_algo\string_traits.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\boost\string_algo\string_trim.hpp">
 			</File>
+			<Filter
+				Name="Detail"
+				Filter="">
+				<File
+					RelativePath="..\..\..\boost\string_algo\detail\case_conv.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\boost\string_algo\detail\find.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\boost\string_algo\detail\replace.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\boost\string_algo\detail\trim.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\boost\string_algo\detail\util.hpp">
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
 		</Filter>
+		<File
+			RelativePath="..\doc\todo.txt">
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

@@ -21,7 +21,6 @@
 #   define BOOST_STRING_NON_CONST_FUNCTION(x) x
 #endif
 
-#include <boost/string_algo/string_funct.hpp>
 #include <boost/string_algo/string_traits.hpp>
 #include <boost/string_algo/string_trim.hpp>
 #include <boost/string_algo/string_conv.hpp>

@@ -11,9 +11,7 @@
 #define BOOST_STRING_PREDICATE_HPP
 
 #include <algorithm>
-#include <functional>
 
-#include "string_funct.hpp"
 #include "string_traits.hpp"
 #include "string_find.hpp"
 
@@ -30,7 +28,7 @@ namespace boost {
         SubIterator SubEnd )
     {
         // Instantiate comp from search traits
-        typename string_algo::search_traits< InputIterator, SubIterator >
+        typename string_algo::iter_search_traits< InputIterator, SubIterator >
             ::compare_function_type Comp;
 
         InputIterator it=Begin;
@@ -78,10 +76,7 @@ namespace boost {
             return true;
         }
         
-        std::pair<InputIterator, InputIterator> M=
-            find_first( Begin, End, SubBegin, SubEnd );
-
-        return ( M.first != M.second );
+        return ( !find_first( Begin, End, SubBegin, SubEnd ).empty() );
     }
 
     // contains sequence version

@@ -11,10 +11,9 @@
 #define BOOST_STRING_CONV_HPP
 
 #include <algorithm>
-#include <functional>
 #include <locale>
 
-#include "string_funct.hpp"
+#include "detail/case_conv.hpp"
 
 namespace boost {
 

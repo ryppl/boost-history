@@ -10,50 +10,40 @@
 #ifndef BOOST_STRING_TRIM_HPP
 #define BOOST_STRING_TRIM_HPP
 
-#include <algorithm>
-#include <functional>
 #include <locale>
 
-#include "string_funct.hpp"
+#include "detail/trim.hpp"
 
 // some macros for simplify definition of trim functions
 #define BOOST_STRING_TRIM_SEQ_FWD( Alg, Seq, Pred ) Alg( Seq, Pred )
 
 namespace boost {
 
+//  trim specific predicates -------------------------------------//
 
-    namespace string_algo {
+    // Construct isclassified functor
+    template< typename CharT >
+    string_algo::detail::isclassifiedF<CharT> 
+    if_isclassified( std::ctype_base::mask Type, const std::locale& Loc=std::locale() )
+    {
+        return string_algo::detail::isclassifiedF<CharT>( Type, Loc );
+    }
 
-        namespace detail {
+    // Construct isspace functor to use with trim
+    template< typename CharT >
+    string_algo::detail::isclassifiedF<CharT> 
+    if_isspace( const std::locale& Loc=std::locale() )
+    {
+        return string_algo::detail::isclassifiedF<CharT>( std::ctype_base::space, Loc );
+    }
 
-            //  trim iterator helper -----------------------------------------------//
-
-            // Search for first non matching character from the beginning of the sequence
-            template< typename Iterator, typename Predicate >
-            inline Iterator trim_begin_if( Iterator InBegin, Iterator InEnd, Predicate IsSpace )
-            {
-                return std::find_if( 
-                    InBegin, 
-                    InEnd, 
-                    std::not1(IsSpace));
-            }
-
-            // Search for first non matching character from the end of the sequence
-            template< typename Iterator, typename Predicate >
-            inline Iterator trim_end_if( Iterator InBegin, Iterator InEnd, Predicate IsSpace )
-            {
-                for( Iterator It=InEnd; It!=InBegin;  )
-                {
-                    if ( !IsSpace(*(--It)) )
-                        return ++It;
-                }
-
-                return InBegin;
-            }
-
-        } // detail
-
-    } // string_algo
+    // Construct isfrom functor 
+    template< typename SeqT >
+    string_algo::detail::isfromF<SeqT> 
+    if_isfrom( const SeqT& Seq )
+    {
+        return string_algo::detail::isfromF<SeqT>(Seq); 
+    }
 
 //  left trim  -----------------------------------------------//
 

@@ -1,5 +1,6 @@
 #include <string>
 #include <iostream>
+#include <iterator>
 #include <boost/string_algo.hpp>
 
 using namespace std;
@@ -83,51 +84,6 @@ void algo()
     cout << (contains( str1, string("xxx") )?"true":"false") << endl; 
     cout << (contains( str1, string("") )?"true":"false") << endl; 
     cout << (contains( str1, string("abc") )?"true":"false") << endl; 
-
-
-}
-
-void substr()
-{
-    string str1("123abcxxxabcXXXabc321");
-    const string str2("abc");
-
-    pair<string::iterator, string::iterator> fresult=
-        find_last( str1.begin(), str1.end(), str2.begin(), str2.end() );
-
-    cout << string( fresult.first, str1.end() ) << endl;
-    cout << string( str1.begin(), fresult.second ) << endl;
-
-    cout << endl;
-
-    cout << " --------------------- " << endl;
-
-    for ( unsigned int n=0; n<5; n++ )
-    {
-        pair<string::iterator, string::iterator> fresult=
-            find_nth( str1.begin(), str1.end(), str2.begin(), str2.end(), n );
-
-        cout << string( fresult.first, str1.end() ) << endl;
-        cout << string( str1.begin(), fresult.second ) << endl;
-    
-        cout << endl;
-    }
-
-    cout << " --------------------- " << endl;
-
-    fresult=BOOST_STRING_NON_CONST_FUNCTION(find_first)( str1, str2 );
-    cout << string( fresult.first, str1.end() ) << endl;
-    cout << string( str1.begin(), fresult.second ) << endl;
-
-    cout << endl;
-
-    fresult=BOOST_STRING_NON_CONST_FUNCTION(find_first)( str1, str2 );
-    cout << string( fresult.first, str1.end() ) << endl;
-    cout << string( str1.begin(), fresult.second ) << endl;
-
-    cout << endl;
-
-
 }
 
 void replace()
@@ -138,8 +94,23 @@ void replace()
 
     cout << endl;
 
+    ostream_iterator<char> ost(cout);
+
+    replace_first_copy( string("abcabc"), string("abc"), string("YYY"), ost );
+    cout << endl;
+    replace_first_copy( 
+        str1.begin(), str1.end(), 
+        str2.begin(), str2.end(),
+        str3.begin(), str3.end(),
+        ost );
+
+    cout << endl;
+
     cout << replace_first_copy( string("abcabc"), string("abc"), string("YYY") ) << endl; 
     cout << replace_first_copy( string("abcabc"), string(""), string("YYY") ) << endl; 
+
+    cout << replace_last_copy( string("abcabc"), string("abc"), string("YYY") ) << endl; 
+    cout << replace_last_copy( string("abcabc"), string(""), string("YYY") ) << endl; 
     cout << replace_all_copy( string("abcabc"), string("abc"), string("YYY") ) << endl; 
     cout << replace_all_copy( string("abcabc"), string("abd"), string("YYY") ) << endl; 
     cout << replace_all_copy( str1, str2, string("") ) << endl;
@@ -157,11 +128,107 @@ void replace()
     replace_all( str1, string("X"), string("mno") );
     cout << str1 << endl;
     replace_all( str1, string("mno"), string("ZZZ") );
-    cout << str1 << endl;
-    
-    
+    cout << str1 << endl; 
 
     cout << endl;
+}
+
+
+void substr()
+{
+    string str1("123abcxxxabcXXXabc321");
+    const string str3("123abcxxxabcXXXabc321");
+    const string str2("abc");
+
+    string_algo::iterator_range<string::const_iterator> cv_result=
+        find_first( str3, str2 );
+
+    cout << string( cv_result.begin(), str3.end() ) << endl;
+    cout << string( str3.begin(), cv_result.end() ) << endl;
+
+    cout << endl;
+
+    cv_result=find_first( str3.begin(), str3.end(), str2.begin(), str2.end() );
+
+    cout << string( cv_result.begin(), str3.end() ) << endl;
+    cout << string( str3.begin(), cv_result.end() ) << endl;
+
+    cout << endl;
+
+    string_algo::iterator_range<string::iterator> nc_result=
+        BOOST_STRING_NON_CONST_FUNCTION(find_first)( str1, str2 );
+    cout << string( nc_result.begin(), str1.end() ) << endl;
+    cout << string( str1.begin(), nc_result.end() ) << endl;
+
+    cout << endl;
+
+    nc_result=find_first( str1.begin(), str1.end(), str2.begin(), str2.end() );
+    cout << string( nc_result.begin(), str1.end() ) << endl;
+    cout << string( str1.begin(), nc_result.end() ) << endl;
+
+    cout << endl;
+
+    cv_result=find_last( str3, str2 );
+
+    cout << string( cv_result.begin(), str3.end() ) << endl;
+    cout << string( str3.begin(), cv_result.end() ) << endl;
+
+    cout << endl;
+
+    cv_result=find_last( str3.begin(), str3.end(), str2.begin(), str2.end() );
+
+    cout << string( cv_result.begin(), str3.end() ) << endl;
+    cout << string( str3.begin(), cv_result.end() ) << endl;
+
+    cout << endl;
+
+    nc_result=BOOST_STRING_NON_CONST_FUNCTION(find_last)( str1, str2 );
+    cout << string( nc_result.begin(), str1.end() ) << endl;
+    cout << string( str1.begin(), nc_result.end() ) << endl;
+
+    cout << endl;
+
+    nc_result=find_last( str1.begin(), str1.end(), str2.begin(), str2.end() );
+    cout << string( nc_result.begin(), str1.end() ) << endl;
+    cout << string( str1.begin(), nc_result.end() ) << endl;
+
+    cout << endl;
+
+    cv_result=find_nth( str3, str2, 1 );
+
+    cout << string( cv_result.begin(), str3.end() ) << endl;
+    cout << string( str3.begin(), cv_result.end() ) << endl;
+
+    cout << endl;
+
+    cv_result=find_nth( str3.begin(), str3.end(), str2.begin(), str2.end(), 1 );
+
+    cout << string( cv_result.begin(), str3.end() ) << endl;
+    cout << string( str3.begin(), cv_result.end() ) << endl;
+
+    cout << endl;
+
+    nc_result=BOOST_STRING_NON_CONST_FUNCTION(find_nth)( str1, str2, 1 );
+    cout << string( nc_result.begin(), str1.end() ) << endl;
+    cout << string( str1.begin(), nc_result.end() ) << endl;
+
+    cout << endl;
+
+    nc_result=find_nth( str1.begin(), str1.end(), str2.begin(), str2.end(), 1 );
+    cout << string( nc_result.begin(), str1.end() ) << endl;
+    cout << string( str1.begin(), nc_result.end() ) << endl;
+
+    cout << endl;
+}
+
+void range_test()
+{
+    using namespace boost::string_algo;
+
+    string str1("123");
+    const string str2( "456" );
+
+    cout << str1 << endl;
 }
 
 int main()
@@ -169,8 +236,9 @@ int main()
 //  trimtest();
 //  convtest();
 //  algo();
-  substr();
-//  replace();
+//  substr();
+  replace();
+//  range_test();
 
     cout << "Done." << endl;
     cin.get();
