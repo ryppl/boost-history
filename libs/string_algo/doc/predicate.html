@@ -40,115 +40,105 @@
     <h3><a name="overview">Overview</a></h3>
     <p>
       Predicates are included in <a href="../../../boost/string_algo/predicate.hpp">&lt;boost/string_algo/predicate.hpp&gt;</a>
-      header ( in <code>boost</code> namespace ).<br>
-      Provided algorithms are resolving if a substring is contained in the input
-      string under various conditions. This includes suffix and prefix check,
-      equality check and containment check.
+      header.<br>
+      The algorithms are resolving if a substring is contained in the input
+      string under various conditions. These conditions are suffix and prefix
+      check, equality check and containment check.
     </p>
     <h3><a name="description">Description</a></h3>
     <p>
-      &nbsp;Following table shows the summary of all predicates. Each algorithm
-      returns a <code>bool</code> value representing a success of condition
-      check.
+      The following table shows the summary of all predicates. Each algorithm
+      returns a <code>true</code> if the condition is satisfied.
     </p>
-    <table border="1" height="28" width="827">
+    <table border="1" width="597">
       <tr>
-        <th height="30" valign="top" align="center" width="107">Function</th>
-        <th height="30" width="234">Description</th>
-        <th height="30" width="464">Example</th>
+        <th height="30" valign="top" align="center" width="146">Function</th>
+        <th height="30" width="435" valign="top" align="center">Description</th>
       </tr>
       <tr>
-        <td height="28" valign="top" align="center" width="107"><code>starts_with</code></td>
-        <td height="28" valign="top" align="center" width="234">Checks if the
+        <td height="28" valign="top" align="center" width="146"><code>starts_with</code></td>
+        <td height="28" valign="top" align="center" width="435">Checks if the
           substring is a prefix of the input.</td>
-        <td height="28" valign="top" align="center" width="464"><code>bool
-          b=starts_with( begin, end, subbegin, subend );<br>
-          bool b=starts_with( string(&quot;123abc&quot;),
-          string(&quot;123&quot;) );</code></td>
       </tr>
       <tr>
-        <td height="30" valign="top" align="center" width="107"><code>ends_with</code></td>
-        <td height="30" valign="top" align="center" width="234">Checks if the
+        <td height="30" valign="top" align="center" width="146"><code>ends_with</code></td>
+        <td height="30" valign="top" align="center" width="435">Checks if the
           substring is a suffix of the input.</td>
-        <td height="30" valign="top" align="center" width="464"><code>bool
-          b=starts_with( begin, end, subbegin, subend );<br>
-          bool b=starts_with( string(&quot;123abc&quot;),
-          string(&quot;abc&quot;) );</code></td>
       </tr>
       <tr>
-        <td height="30" valign="top" align="center" width="107"><code>contains</code></td>
-        <td height="28" valign="top" align="center" width="234">Checks if the
+        <td height="30" valign="top" align="center" width="146"><code>contains</code></td>
+        <td height="28" valign="top" align="center" width="435">Checks if the
           input contains an instance of substring.</td>
-        <td height="28" valign="top" align="center" width="464"><code>bool
-          b=starts_with( begin, end, subbegin, subend );<br>
-          bool b=starts_with( string(&quot;123abc&quot;),
-          string(&quot;23a&quot;) );</code></td>
       </tr>
       <tr>
-        <td height="30" valign="top" align="center" width="107"><code>equals</code></td>
-        <td height="30" valign="top" align="center" width="234">Checks if both
+        <td height="30" valign="top" align="center" width="146"><code>equals</code></td>
+        <td height="30" valign="top" align="center" width="435">Checks if both
           operands are equal.<br>
           ( Note: this is two-directional equivalent of <code>std::equal</code>
           algorithm)</td>
-        <td height="30" valign="top" align="center" width="464"><code>bool
-          b=starts_with( begin, end, subbegin, subend );<br>
-          bool b=starts_with( string(&quot;123abc&quot;),
-          string(&quot;123abc&quot;) );</code></td>
       </tr>
     </table>
     <h3><a name="synopsis">Synopsis</a></h3>
     <p>
       Iterator based variants.&nbsp;
     </p>
-    <pre>    <b>template</b>&lt; <b>typename</b> InputIteratorT, <b>typename</b> SubIteratorT &gt;
+    <pre><b>namespace</b> boost {
+
+    <b>template</b>&lt; <b>typename</b> ForwardIterator1T, <b>typename</b> ForwardIterator2T &gt;
     <b>inline</b> <b>bool</b> starts_with( 
-        InputIteratorT Begin, 
-        InputIteratorT End, 
-        SubIteratorT SubBegin,
-        SubIteratorT SubEnd );</pre>
-    <pre>    <b>template</b>&lt; <b>typename</b> InputIteratorT, <b>typename</b> SubIteratorT &gt;
+        ForwardIterator1T Begin, 
+        ForwardIterator1T End, 
+        ForwardIterator2T SubBegin,
+        ForwardIterator2T SubEnd );</pre>
+    <pre>    <b>template</b>&lt; <b>typename</b> ForwardIterator1T, <b>typename</b> ForwardIterator2T &gt;
     <b>inline</b> <b>bool</b> ends_with( 
-        InputIteratorT Begin, 
-        InputIteratorT End, 
-        SubIteratorT SubBegin,
-        SubIteratorT SubEnd );</pre>
-    <pre>    <b>template</b>&lt; <b>typename</b> InputIteratorT, <b>typename</b> SubIteratorT &gt;
+        ForwardIterator1T Begin, 
+        ForwardIterator1T End, 
+        ForwardIterator2T SubBegin,
+        ForwardIterator2T SubEnd );</pre>
+    <pre>    <b>template</b>&lt; <b>typename</b> ForwardIterator1T, <b>typename</b> ForwardIterator2T &gt;
     <b>inline</b> <b>bool</b> contains( 
-        InputIteratorT Begin, 
-        InputIteratorT End, 
-        SubIteratorT SubBegin,
-        SubIteratorT SubEnd );</pre>
-    <pre>    <b>template</b>&lt; <b>typename</b> InputIteratorT, <b>typename</b> SubIteratorT &gt;
+        ForwardIterator1T Begin, 
+        ForwardIterator1T End, 
+        ForwardIterator2T SubBegin,
+        ForwardIterator2T SubEnd );</pre>
+    <pre>    <b>template</b>&lt; <b>typename</b> ForwardIterator1T, <b>typename</b> ForwardIterator2T &gt;
     <b>inline</b> <b>bool</b> equals( 
-        InputIteratorT Begin, 
-        InputIteratorT End, 
-        SubIteratorT SubBegin,
-        SubIteratorT SubEnd );</pre>
+        ForwardIterator1T Begin, 
+        ForwardIterator1T End, 
+        ForwardIterator2T SubBegin,
+        ForwardIterator2T SubEnd );
+}</pre>
     <p>
       Sequence variants.
     </p>
-    <pre>    <b>template</b>&lt; <b>typename</b> SeqT1, <b>typename </b>SeqT2 &gt;
+    <pre><b>namespace</b> boost {
+
+    <b>template</b>&lt; <b>typename</b> SeqT1, <b>typename </b>SeqT2 &gt;
     <b>inline</b> <b>bool</b> starts_with( <b>const</b> SeqT1&amp; Input, <b>const</b> SeqT2&amp; Substr );</pre>
     <pre>    <b>template</b>&lt; <b>typename</b> SeqT1, <b>typename </b>SeqT2 &gt;
     <b>inline</b> <b>bool</b> ends_with( <b>const</b> SeqT1&amp; Input, <b>const</b> SeqT2&amp; Substr );</pre>
     <pre>    <b>template</b>&lt; <b>typename</b> SeqT1, <b>typename </b>SeqT2 &gt;
     <b>inline</b> <b>bool</b> contains( <b>const</b> SeqT1&amp; Input, <b>const</b> SeqT2&amp; Substr );</pre>
     <pre>    <b>template</b>&lt; <b>typename</b> SeqT1, <b>typename </b>SeqT2 &gt;
-    <b>inline</b> <b>bool</b> equals( <b>const</b> SeqT1&amp; Input, <b>const</b> SeqT2&amp; Substr );</pre>
+    <b>inline</b> <b>bool</b> equals( <b>const</b> SeqT1&amp; Input, <b>const</b> SeqT2&amp; Substr );
+}</pre>
     <p>
       Parameters:
     </p>
     <div align="left">
       <table border="1" width="574" height="1">
         <tr>
-          <td width="437" height="31" valign="top"><code><b>typename</b>
-            InputIteratorT</code></td>
-          <td width="709" height="31" valign="top">A forward iterator type</td>
+          <td width="443" height="31" valign="top"><code><b>typename</b>
+            ForwardIterator1T</code></td>
+          <td width="703" height="31" valign="top">Forward iterator delimiting
+            the input</td>
         </tr>
         <tr>
-          <td width="437" height="31" valign="top"><code><b>typename</b>
-            SubIteratorT</code></td>
-          <td width="709" height="31" valign="top">A forward iterator type</td>
+          <td width="443" height="31" valign="top"><code><b>typename</b>
+            ForwardIterator2T</code></td>
+          <td width="703" height="31" valign="top">Forward iterator delimiting
+            the search sequence</td>
         </tr>
         <tr>
           <td width="437" height="31" valign="top"><code><b>typename</b> SeqT1, <b>typename</b>
@@ -157,19 +147,21 @@
             satisfy the <a href="http://www.boost.org/libs/concept_check/reference.htm#container-concepts">ContainerConcept</a>)</td>
         </tr>
         <tr>
-          <td width="437" height="31" valign="top"><code>InputIteratorT Begin</code></td>
+          <td width="437" height="31" valign="top"><code>ForwardIterator1T Begin</code></td>
           <td width="709" height="31" valign="top">Begin of an input sequence</td>
         </tr>
         <tr>
-          <td width="437" height="31" valign="top"><code>InputIteratorT End</code></td>
+          <td width="437" height="31" valign="top"><code>ForwardIterator1T End</code></td>
           <td width="709" height="31" valign="top">End of an input sequence</td>
         </tr>
         <tr>
-          <td width="437" height="31" valign="top"><code>SubIteratorT SubBegin</code></td>
+          <td width="437" height="31" valign="top"><code>ForwardIterator2T</code><code>
+            SubBegin</code></td>
           <td width="709" height="31" valign="top">Begin of a substring sequence</td>
         </tr>
         <tr>
-          <td width="437" height="31" valign="top"><code>SubIteratorT SubEnd</code></td>
+          <td width="437" height="31" valign="top"><code>ForwardIterator2T</code><code>
+            SubEnd</code></td>
           <td width="709" height="31" valign="top">End of a substring sequence</td>
         </tr>
         <tr>

@@ -27,10 +27,10 @@ namespace boost {
                 This functor actually does not perform any find operation.
                 It always returns given iterator range as a result.
             */
-            template< typename InputIteratorT >
+            template< typename ForwardIteratorT >
             struct find_rangeF
             {
-                typedef InputIteratorT input_iterator_type;
+                typedef ForwardIteratorT input_iterator_type;
                 typedef iterator_range<input_iterator_type> result_type;
 
                 // Construction
@@ -43,7 +43,7 @@ namespace boost {
 
                 // Operation
                 result_type operator()( 
-					input_iterator_type, 
+                    input_iterator_type, 
                     input_iterator_type ) const
                 {
                     return m_Range;
@@ -55,14 +55,14 @@ namespace boost {
 
             // Construction helper
             template<typename InputT>
-			find_rangeF<typename input_policy<InputT>::iterator_type>
-			create_find_range( 
-				InputT&, 
-				const iterator_range<typename input_policy<InputT>::iterator_type>& Range )
-			{
-				return find_rangeF<typename input_policy<InputT>::iterator_type>(Range); 
-			};
-		
+            find_rangeF<typename input_policy<InputT>::iterator_type>
+            create_find_range( 
+                InputT&, 
+                const iterator_range<typename input_policy<InputT>::iterator_type>& Range )
+            {
+                return find_rangeF<typename input_policy<InputT>::iterator_type>(Range); 
+            };
+        
 //  find first functor -----------------------------------------------//
 
             // find a subsequnce in the sequence ( functor )
@@ -70,10 +70,10 @@ namespace boost {
                 Returns a pair <begin,end> marking the subsequence in the sequence. 
                 If the find fails, functor returns <End,End>
             */
-            template< typename InputIteratorT, typename SearchT >
+            template< typename ForwardIteratorT, typename SearchT >
             struct find_firstF
             {
-                typedef InputIteratorT input_iterator_type;
+                typedef ForwardIteratorT input_iterator_type;
                 typedef iterator_range<input_iterator_type> result_type;
 
                 typedef SearchT search_type;
@@ -118,15 +118,15 @@ namespace boost {
             };
 
             // Construction helper
-			template<typename InputT, typename SearchT>
-			find_firstF<typename input_policy<InputT>::iterator_type, SearchT>
-			create_find_first(
-				InputT&,
-				const SearchT& Search )
-			{
-				return find_firstF<
-					typename input_policy<InputT>::iterator_type, SearchT>( Search );
-			}
+            template<typename InputT, typename SearchT>
+            find_firstF<typename input_policy<InputT>::iterator_type, SearchT>
+            create_find_first(
+                InputT&,
+                const SearchT& Search )
+            {
+                return find_firstF<
+                    typename input_policy<InputT>::iterator_type, SearchT>( Search );
+            }
 
 //  find last functor -----------------------------------------------//
 
@@ -135,10 +135,10 @@ namespace boost {
                 Returns a pair <begin,end> marking the subsequence in the sequence. 
                 If the find fails, returns <End,End>
             */
-            template< typename InputIteratorT, typename SearchT >
+            template< typename ForwardIteratorT, typename SearchT >
             struct find_lastF
             {
-                typedef InputIteratorT input_iterator_type;
+                typedef ForwardIteratorT input_iterator_type;
                 typedef iterator_range<input_iterator_type> result_type;
 
                 typedef SearchT search_type;
@@ -153,7 +153,7 @@ namespace boost {
 
                 // Operation
                 result_type operator()(                     
-					input_iterator_type Begin, 
+                    input_iterator_type Begin, 
                     input_iterator_type End  ) const
                 {
                     typedef typename boost::detail::
@@ -165,7 +165,7 @@ namespace boost {
             private:
                 // forward iterator
                 result_type findit( 
-					input_iterator_type Begin, 
+                    input_iterator_type Begin, 
                     input_iterator_type End, 
                     std::forward_iterator_tag ) const
                 {
@@ -185,7 +185,7 @@ namespace boost {
 
                 // bidirectional iterator
                 result_type findit( 
-					input_iterator_type Begin, 
+                    input_iterator_type Begin, 
                     input_iterator_type End, 
                     std::bidirectional_iterator_tag ) const
                 {
@@ -218,15 +218,15 @@ namespace boost {
             };
 
             // Construction helper
-			template<typename InputT, typename SearchT>
-			find_lastF<typename input_policy<InputT>::iterator_type, SearchT>
-			create_find_last(
-				InputT&,
-				const SearchT& Search )
-			{
-				return find_lastF<
-					typename input_policy<InputT>::iterator_type, SearchT>( Search );
-			}
+            template<typename InputT, typename SearchT>
+            find_lastF<typename input_policy<InputT>::iterator_type, SearchT>
+            create_find_last(
+                InputT&,
+                const SearchT& Search )
+            {
+                return find_lastF<
+                    typename input_policy<InputT>::iterator_type, SearchT>( Search );
+            }
 
 //  find n-th functor -----------------------------------------------//
 
@@ -235,10 +235,10 @@ namespace boost {
                 Returns a pair <begin,end> marking the subsequence in the sequence. 
                 If the find fails, returns <End,End>
             */
-            template< typename InputIteratorT, typename SearchT >
+            template< typename ForwardIteratorT, typename SearchT >
             struct find_nthF
             {
-                typedef InputIteratorT input_iterator_type;
+                typedef ForwardIteratorT input_iterator_type;
                 typedef iterator_range<input_iterator_type> result_type;
 
                 typedef SearchT search_type;
@@ -254,7 +254,7 @@ namespace boost {
 
                 // Operation
                 result_type operator()( 
-					input_iterator_type Begin, 
+                    input_iterator_type Begin, 
                     input_iterator_type End ) const
                 {
                     // Instantiate find funtor 
@@ -283,16 +283,16 @@ namespace boost {
             };
 
             // Construction helper
-			template<typename InputT, typename SearchT>
-			find_nthF<typename input_policy<InputT>::iterator_type, SearchT>
-			create_find_nth(
-				InputT&,
-				const SearchT& Search,
-				unsigned int Nth )
-			{
-				return find_nthF<
-					typename input_policy<InputT>::iterator_type, SearchT>( Search, Nth );
-			}
+            template<typename InputT, typename SearchT>
+            find_nthF<typename input_policy<InputT>::iterator_type, SearchT>
+            create_find_nth(
+                InputT&,
+                const SearchT& Search,
+                unsigned int Nth )
+            {
+                return find_nthF<
+                    typename input_policy<InputT>::iterator_type, SearchT>( Search, Nth );
+            }
 
         } // namespace detail
 

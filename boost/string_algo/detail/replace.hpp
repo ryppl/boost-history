@@ -59,16 +59,16 @@ namespace boost {
                 template< 
                     typename StorageT,
                     typename InputT,
-                    typename InputIteratorT >
-                InputIteratorT operator()(
+                    typename ForwardIteratorT >
+                ForwardIteratorT operator()(
                     StorageT& Storage,
                     InputT& Input,
-                    InputIteratorT InsertIt,
-                    InputIteratorT SegmentBegin,
-                    InputIteratorT SegmentEnd )
+                    ForwardIteratorT InsertIt,
+                    ForwardIteratorT SegmentBegin,
+                    ForwardIteratorT SegmentEnd )
                 {
                     // Copy data from the storage until the beginning of the segment
-                    InputIteratorT It=move_from_storage( Storage, InsertIt, SegmentBegin );
+                    ForwardIteratorT It=move_from_storage( Storage, InsertIt, SegmentBegin );
 
                     // 3 cases are possible :
                     //   a) Storage is empty, It==SegmentBegin
@@ -115,13 +115,13 @@ namespace boost {
                 template< 
                     typename StorageT,
                     typename InputT,
-                    typename InputIteratorT >
-                InputIteratorT operator()(
+                    typename ForwardIteratorT >
+                ForwardIteratorT operator()(
                     StorageT& Storage,
                     InputT& Input,
-                    InputIteratorT InsertIt,
-                    InputIteratorT SegmentBegin,
-                    InputIteratorT SegmentEnd )
+                    ForwardIteratorT InsertIt,
+                    ForwardIteratorT SegmentBegin,
+                    ForwardIteratorT SegmentEnd )
                 {
                     // Call replace to do the job
                     replace( Input, InsertIt, SegmentBegin, Storage );
@@ -136,13 +136,13 @@ namespace boost {
             template< 
                 typename StorageT,
                 typename InputT,
-                typename InputIteratorT >
-            inline InputIteratorT process_segment(
+                typename ForwardIteratorT >
+            inline ForwardIteratorT process_segment(
                 StorageT& Storage,
                 InputT& Input,
-                InputIteratorT InsertIt,
-                InputIteratorT SegmentBegin,
-                InputIteratorT SegmentEnd )
+                ForwardIteratorT InsertIt,
+                ForwardIteratorT SegmentBegin,
+                ForwardIteratorT SegmentEnd )
             {
                 return 
                     process_segment_helper< 

@@ -40,15 +40,15 @@ void trim_test()
 
     // iterator tests
     string str;
-    trim_left_copy_if( std::back_inserter(str), str1.begin(), str1.end(), isspace<char>() );
+    trim_left_copy_if( std::back_inserter(str), str1.begin(), str1.end(), is_space<char>() );
     BOOST_CHECK( str=="1x x x x1     " );
 
     str.clear();
-    trim_right_copy_if( std::back_inserter(str), str1.begin(), str1.end(), isspace<char>() );
+    trim_right_copy_if( std::back_inserter(str), str1.begin(), str1.end(), is_space<char>() );
     BOOST_CHECK( str=="     1x x x x1" );
 
     str.clear();
-    trim_copy_if( std::back_inserter(str), str1.begin(), str1.end(), isspace<char>() );
+    trim_copy_if( std::back_inserter(str), str1.begin(), str1.end(), is_space<char>() );
     BOOST_CHECK( str=="1x x x x1" );
 
     // *** inplace tests *** //
@@ -81,6 +81,6 @@ void trim_test()
     BOOST_CHECK( 
         trim_copy_if( 
             string("123abc456"), 
-            isclassified<char>(std::ctype_base::digit) )=="abc" );
-    BOOST_CHECK( trim_copy_if( string("<>abc<>"), isfrom( string("<<>>") ) )=="abc" );
+            is_classified<char>(std::ctype_base::digit) )=="abc" );
+    BOOST_CHECK( trim_copy_if( string("<>abc<>"), is_from( string("<<>>") ) )=="abc" );
 }

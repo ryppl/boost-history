@@ -23,59 +23,69 @@
       </table>
     </div>
     <ul>
-      <li><a href="#description">Description</a></li>
-      <li><a href="#synopsis">Synopsis</a>&nbsp;&nbsp;&nbsp;&nbsp;</li>
-      <li><a href="#examples">Examples</a></li>
+      <li><code><a href="#title">replace_last/erase_last</a></code>
+        <ul>
+          <li><a href="#description">Description</a></li>
+          <li><a href="#synopsis">Synopsis</a>&nbsp;&nbsp;&nbsp;&nbsp;</li>
+          <li><a href="#examples">Examples</a></li>
+        </ul>
+      </li>
     </ul>
     <hr>
-    <h2><a name="description">Description</a></h2>
+    <h2><code><a name="title">replace_last/erase_last</a></code></h2>
+    <h3><a name="description">Description</a></h3>
     <p align="left">
-      <code>replace_last</code> is included in <a href="../../../boost/string_algo/replace.hpp">&lt;boost/string_algo/replace.hpp&gt;</a>
-      header <code>erase_last</code> is included <a href="../../../boost/string_algo/erase.hpp">&lt;boost/string_algo/erase.hpp&gt;</a>
-      header ( both in <code>boost</code> namespace ).
+      <code>replace_last</code> is declared in <a href="../../../boost/string_algo/replace.hpp">&lt;boost/string_algo/replace.hpp&gt;</a>
+      header <code>erase_last</code> is declared <a href="../../../boost/string_algo/erase.hpp">&lt;boost/string_algo/erase.hpp&gt;</a>
+      header.
     <p align="left">
-      Algorithm finds a last occurrence of the search string within the input
-      sequence. <code>replace_last</code> substitutes this occurrence with
-      specified format sequence. <code>erase_last</code> removes this occurrence
-      from the input sequence.
+      The algorithm finds a last occurrence of the search string within the
+      input sequence. <code>replace_last</code> substitutes this occurrence with
+      the specified format sequence. <code>erase_last</code> removes this
+      occurrence from the input sequence.
     </p>
-    <h2><a name="synopsis">Synopsis</a></h2>
+    <h3><a name="synopsis">Synopsis</a></h3>
     <p>
-      Algorithm is provided in 4 subvariants. Three variants with copy semantics
-      ( all have suffix <code>_copy</code> ) and one in-place variant.
+      The algorithm is provided in 4 subvariants. Three variants with copy
+      semantics ( all have suffix <code>_copy</code> ) and one in-place variant.
     </p>
     <p>
       Copy variant with iterator based input. Result is copied into an output
       iterator.
     </p>
-    <pre>    <b>template</b>&lt; 
-        <b>typename</b> InputIteratorT, 
-        <b>typename</b> SearchIteratorT, 
-        <b>typename</b> FormatIteratorT,
+    <pre><b>namespace</b> boost {
+
+    <b>template</b>&lt; 
+        <b>typename</b> ForwardIterator1T, 
+        <b>typename</b> ForwardIterator2T, 
+        <b>typename</b> ForwardIterator3T,
         <b>typename</b> OutputIteratorT &gt;
     <b>inline</b> OutputIteratorT replace_last_copy(
         OutputIteratorT Output,
-        InputIteratorT Begin,
-        InputIteratorT End,
-        SearchIteratorT SearchBegin,
-        SearchIteratorT SearchEnd,
-        FormatIteratorT FormatBegin,
-        FormatIteratorT FormatEnd );</pre>
+        ForwardIterator1T Begin,
+        ForwardIterator1T End,
+        ForwardIterator2T SearchBegin,
+        ForwardIterator2T SearchEnd,
+        ForwardIterator3T FormatBegin,
+        ForwardIterator3T FormatEnd );</pre>
     <pre>    <b>template</b>&lt; 
-        <b>typename</b> InputIteratorT, 
-        <b>typename</b> SearchIteratorT, 
+        <b>typename</b> ForwardIterator1T, 
+        <b>typename</b> ForwardIterator2T, 
         <b>typename</b> OutputIteratorT &gt;
     <b>inline</b> OutputIteratorT erase_last_copy(
         OutputIteratorT Output,
-        InputIteratorT Begin,
-        InputIteratorT End,
-        SearchIteratorT SearchBegin,
-        SearchIteratorT SearchEnd )</pre>
+        ForwardIterator1T Begin,
+        ForwardIterator1T End,
+        ForwardIterator2T SearchBegin,
+        ForwardIterator2T SearchEnd );
+}</pre>
     <p>
       Copy variants with a sequence based input. Result is copied into an output
       iterator.
     </p>
-    <pre>    <b>template</b>&lt; 
+    <pre><b>namespace</b> boost {
+
+    <b>template</b>&lt; 
         <b>typename</b> InputT, 
         <b>typename</b> SearchT,
         <b>typename</b> FormatT,
@@ -93,11 +103,14 @@
     <b>inline</b> OutputIteratorT erase_last_copy(
         OutputIteratorT Output,
         <b>const</b> InputT&amp; Input,
-        <b>const</b> SearchT&amp; Search );</pre>
+        <b>const</b> SearchT&amp; Search );
+}</pre>
     <p>
       Copy variants with a sequence based input. Result is a new sequence.
     </p>
-    <pre>    <b>template</b>&lt; <b>typename</b> InputT, <b>typename</b> SearchT, <b>typename</b> FormatT &gt;
+    <pre><b>namespace</b> boost {
+
+    <b>template</b>&lt; <b>typename</b> InputT, <b>typename</b> SearchT, <b>typename</b> FormatT &gt;
     <b>inline</b> InputT replace_last_copy( 
         <b>const</b> InputT&amp; Input,
         <b>const</b> SearchT&amp; Search,
@@ -106,9 +119,12 @@
     <b>template</b>&lt; <b>typename</b> InputT, <b>typename</b> SearchT &gt;
     <b>inline</b> InputT erase_last_copy( 
         <b>const</b> InputT&amp; Input,
-        <b>const</b> SearchT&amp; Search );</pre>
+        <b>const</b> SearchT&amp; Search );
+}</pre>
     <pre>In-place variant. Returns the reference to the modified input.</pre>
-    <pre>    <b>template</b>&lt; <b>typename</b> InputT, <b>typename</b> SearchT, <b>typename</b> FormatT &gt;
+    <pre><b>namespace</b> boost {
+
+    <b>template</b>&lt; <b>typename</b> InputT, <b>typename</b> SearchT, <b>typename</b> FormatT &gt;
     <b>inline</b> InputT&amp; replace_last( 
         InputT&amp; Input,
         <b>const</b> SearchT&amp; Search,
@@ -117,9 +133,9 @@
     <b>template</b>&lt; <b>typename</b> InputT, <b>typename</b> SearchT &gt;
     <b>inline</b> InputT&amp; erase_last( 
         InputT&amp; Input,
-        <b>const</b> SearchT&amp; Search );</pre>
+        <b>const</b> SearchT&amp; Search );
+}</pre>
     <p>
-      <br>
       Parameters:
     </p>
     <table border="1" width="574" height="1">
@@ -130,20 +146,20 @@
       </tr>
       <tr>
         <td width="443" height="31" valign="top"><code><b>typename</b>
-          InputIteratorT</code></td>
-        <td width="703" height="31" valign="top">Forward iterator delimiting an
+          ForwardIterator1T</code></td>
+        <td width="703" height="31" valign="top">Forward iterator delimiting the
           input</td>
       </tr>
       <tr>
         <td width="443" height="31" valign="top"><code><b>typename</b>
-          SearchIteratorT</code></td>
-        <td width="703" height="31" valign="top">Forward iterator delimiting a
+          ForwardIterator2T</code></td>
+        <td width="703" height="31" valign="top">Forward iterator delimiting the
           search sequence</td>
       </tr>
       <tr>
         <td width="443" height="31" valign="top"><code><b>typename</b>
-          FormatIteratorT</code></td>
-        <td width="703" height="31" valign="top">Forward iterator delimiting a
+          ForwardIterator3T</code></td>
+        <td width="703" height="31" valign="top">Forward iterator delimiting the
           format sequence</td>
       </tr>
       <tr>
@@ -167,29 +183,33 @@
           result</td>
       </tr>
       <tr>
-        <td width="443" height="31" valign="top"><code>InputIteratorT Begin</code></td>
+        <td width="443" height="31" valign="top"><code>ForwardIterator1T</code><code>
+          Begin</code></td>
         <td width="703" height="31" valign="top">Begin of an input sequence</td>
       </tr>
       <tr>
-        <td width="443" height="31" valign="top"><code>InputIteratorT End</code></td>
+        <td width="443" height="31" valign="top"><code>ForwardIterator1T</code><code>
+          End</code></td>
         <td width="703" height="31" valign="top">End of an input sequence</td>
       </tr>
       <tr>
-        <td width="443" height="31" valign="top"><code>SearchIteratorT
+        <td width="443" height="31" valign="top"><code>ForwardIterator2T</code><code>
           SearchBegin</code></td>
         <td width="703" height="31" valign="top">Begin of a search range</td>
       </tr>
       <tr>
-        <td width="443" height="31" valign="top"><code>SearchIteratorT SearchEnd</code></td>
+        <td width="443" height="31" valign="top"><code>ForwardIterator2T</code><code>
+          SearchEnd</code></td>
         <td width="703" height="31" valign="top">End of a search range</td>
       </tr>
       <tr>
-        <td width="443" height="31" valign="top"><code>FormatIteratorT
+        <td width="443" height="31" valign="top"><code>ForwardIterator3T</code><code>
           FormatBegin</code></td>
         <td width="703" height="31" valign="top">Begin of a format sequence</td>
       </tr>
       <tr>
-        <td width="443" height="31" valign="top"><code>FormatIteratorT FormatEnd</code></td>
+        <td width="443" height="31" valign="top"><code>ForwardIterator3T</code><code>
+          FormatEnd</code></td>
         <td width="703" height="31" valign="top">End of a format sequence</td>
       </tr>
       <tr>
@@ -208,7 +228,7 @@
         <td width="703" height="31" valign="top">A format sequence</td>
       </tr>
     </table>
-    <h2><a name="examples">Examples</a></h2>
+    <h3><a name="examples">Examples</a></h3>
     <p>
       Following example shows basic usage of <code>replace_range</code>
       algorithms. More examples can be found in the library tests in <a href="../test/replace_test.cpp">&lt;libs/string_algo/test/replace_test.cpp&gt;</a>

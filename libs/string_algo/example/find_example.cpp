@@ -9,7 +9,7 @@
 
 #include <string>
 #include <iostream>
-#include <boost/string_algo/conv.hpp>
+#include <boost/string_algo/case_conv.hpp>
 #include <boost/string_algo/find.hpp>
 
 using namespace std;

@@ -20,21 +20,21 @@ namespace boost {
 //  find_first  -----------------------------------------------//
 
     // find the first match a subsequnce in the sequence
-    template< typename InputIteratorT, typename SearchIteratorT >
-    inline iterator_range<InputIteratorT>
+    template< typename ForwardIterator1T, typename ForwardIterator2T >
+    inline iterator_range<ForwardIterator1T>
     find_first( 
-        InputIteratorT Begin, 
-        InputIteratorT End, 
-        SearchIteratorT SearchBegin,
-        SearchIteratorT SearchEnd )
+        ForwardIterator1T Begin, 
+        ForwardIterator1T End, 
+        ForwardIterator2T SearchBegin,
+        ForwardIterator2T SearchEnd )
     {
-		iterator_range<InputIteratorT> Range( Begin, End );
+        iterator_range<ForwardIterator1T> Range( Begin, End );
 
-		return string_algo::find( 
+        return string_algo::find( 
             Range,
             string_algo::detail::
                 create_find_first( 
-					Range,
+                    Range,
                     string_algo::make_range( SearchBegin, SearchEnd ) ) );
     }
 
@@ -47,27 +47,27 @@ namespace boost {
     {
         return string_algo::find( 
             Input, 
-            string_algo::detail::create_find_first(	Input, Search ) );
+            string_algo::detail::create_find_first( Input, Search ) );
     }
 
 //  find_last  -----------------------------------------------//
 
     // find the last match a subsequnce in the sequence
-    template< typename InputIteratorT, typename SearchIteratorT >
-    inline iterator_range<InputIteratorT>
+    template< typename ForwardIterator1T, typename ForwardIterator2T >
+    inline iterator_range<ForwardIterator1T>
     find_last( 
-        InputIteratorT Begin, 
-        InputIteratorT End, 
-        SearchIteratorT SearchBegin,
-        SearchIteratorT SearchEnd )
+        ForwardIterator1T Begin, 
+        ForwardIterator1T End, 
+        ForwardIterator2T SearchBegin,
+        ForwardIterator2T SearchEnd )
     {
-		iterator_range<InputIteratorT> Range( Begin, End );
+        iterator_range<ForwardIterator1T> Range( Begin, End );
 
-		return string_algo::find( 
+        return string_algo::find( 
             Range,
             string_algo::detail::
                 create_find_last( 
-						Range,
+                        Range,
                         string_algo::make_range( SearchBegin, SearchEnd ) ) );
     }
 
@@ -86,22 +86,22 @@ namespace boost {
 //  find_nth ----------------------------------------------------------------------//
 
     // find the n-th match of a subsequnce in the sequence
-    template< typename InputIteratorT, typename SearchIteratorT >
-    inline iterator_range<InputIteratorT>
+    template< typename ForwardIterator1T, typename ForwardIterator2T >
+    inline iterator_range<ForwardIterator1T>
     find_nth( 
-        InputIteratorT Begin, 
-        InputIteratorT End, 
-        SearchIteratorT SearchBegin,
-        SearchIteratorT SearchEnd,
+        ForwardIterator1T Begin, 
+        ForwardIterator1T End, 
+        ForwardIterator2T SearchBegin,
+        ForwardIterator2T SearchEnd,
         unsigned int Nth )
     {
-		iterator_range<InputIteratorT> Range( Begin, End );
+        iterator_range<ForwardIterator1T> Range( Begin, End );
 
-		return string_algo::find( 
+        return string_algo::find( 
             Range,
             string_algo::detail::
                 create_find_nth( 
-					Range,
+                    Range,
                     string_algo::make_range( SearchBegin, SearchEnd ), Nth ) );
     }
 

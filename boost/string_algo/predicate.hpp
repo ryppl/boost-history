@@ -18,15 +18,15 @@ namespace boost {
 //  starts_with predicate  -----------------------------------------------//
 
     // start_with iterator version
-    template< typename InputIteratorT, typename SubIteratorT >
+    template< typename ForwardIterator1T, typename ForwardIterator2T >
     inline bool starts_with( 
-        InputIteratorT Begin, 
-        InputIteratorT End, 
-        SubIteratorT SubBegin,
-        SubIteratorT SubEnd )
+        ForwardIterator1T Begin, 
+        ForwardIterator1T End, 
+        ForwardIterator2T SubBegin,
+        ForwardIterator2T SubEnd )
     {
-        InputIteratorT it=Begin;
-        SubIteratorT pit=SubBegin;
+        ForwardIterator1T it=Begin;
+        ForwardIterator2T pit=SubBegin;
         for(;
             it!=End && pit!=SubEnd;
             it++,pit++)
@@ -49,15 +49,15 @@ namespace boost {
 
 //  ends_with predicate  -----------------------------------------------//
 
-    template< typename InputIteratorT, typename SubIteratorT >
+    template< typename ForwardIterator1T, typename ForwardIterator2T >
     inline bool ends_with( 
-        InputIteratorT Begin, 
-        InputIteratorT End, 
-        SubIteratorT SubBegin,
-        SubIteratorT SubEnd )
+        ForwardIterator1T Begin, 
+        ForwardIterator1T End, 
+        ForwardIterator2T SubBegin,
+        ForwardIterator2T SubEnd )
     {
         typedef typename boost::detail::
-            iterator_traits<InputIteratorT>::iterator_category category;
+            iterator_traits<ForwardIterator1T>::iterator_category category;
 
         return string_algo::detail::
             ends_with_iter_select( 
@@ -76,12 +76,12 @@ namespace boost {
 //  contains predicate  -----------------------------------------------//
 
     // contains iterator version
-    template< typename InputIteratorT, typename SubIteratorT >
+    template< typename ForwardIterator1T, typename ForwardIterator2T >
     inline bool contains( 
-        InputIteratorT Begin, 
-        InputIteratorT End, 
-        SubIteratorT SubBegin,
-        SubIteratorT SubEnd )
+        ForwardIterator1T Begin, 
+        ForwardIterator1T End, 
+        ForwardIterator2T SubBegin,
+        ForwardIterator2T SubEnd )
     {
         if ( SubBegin==SubEnd )
         {
@@ -105,15 +105,15 @@ namespace boost {
 //  equal predicate  -----------------------------------------------//
 
     // equal iterator version
-    template< typename InputIteratorT, typename SubIteratorT >
+    template< typename ForwardIterator1T, typename ForwardIterator2T >
     inline bool equals( 
-        InputIteratorT Begin, 
-        InputIteratorT End, 
-        SubIteratorT SubBegin,
-        SubIteratorT SubEnd )
+        ForwardIterator1T Begin, 
+        ForwardIterator1T End, 
+        ForwardIterator2T SubBegin,
+        ForwardIterator2T SubEnd )
     {
-        InputIteratorT it=Begin;
-        SubIteratorT pit=SubBegin;
+        ForwardIterator1T it=Begin;
+        ForwardIterator2T pit=SubBegin;
         for(;
             it!=End && pit!=SubEnd;
             it++,pit++)

@@ -21,20 +21,20 @@ namespace boost {
 
         // find sequence version
         template< 
-			typename InputIteratorT,
-			typename FindF >
+            typename ForwardIteratorT,
+            typename FindF >
         inline typename FindF::result_type 
         find( 
-            InputIteratorT Begin, 
-			InputIteratorT End, 
+            ForwardIteratorT Begin, 
+            ForwardIteratorT End, 
             FindF Find )
         {
             return Find( Begin, End );
         }
 
-		template< 
-			typename InputT,
-			typename FindF >
+        template< 
+            typename InputT,
+            typename FindF >
         inline typename FindF::result_type 
         find( 
             InputT& Input, 

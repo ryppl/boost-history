@@ -1,4 +1,4 @@
-//  Boost string_algo library conv.hpp header file  ---------------------------//
+//  Boost string_algo library case_conv.hpp header file  ---------------------------//
 
 //  (C) Copyright Pavol Droba 2002. Permission to copy, use, modify, sell and
 //  distribute this software is granted provided this copyright notice appears
@@ -7,8 +7,8 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
-#ifndef BOOST_STRING_CONV_HPP
-#define BOOST_STRING_CONV_HPP
+#ifndef BOOST_STRING_CASE_CONV_HPP
+#define BOOST_STRING_CASE_CONV_HPP
 
 #include <algorithm>
 #include <locale>
@@ -112,4 +112,4 @@ namespace boost {
 } // namespace boost
 
 
-#endif  // BOOST_STRING_CONV_HPP
+#endif  // BOOST_STRING_CASE_CONV_HPP

@@ -29,11 +29,11 @@ void trim_example()
 
     cout 
         << "trimmed copy of str4 ( space='<>' ): " 
-        << "\""<< trim_copy_if( str2, isfrom( string("<>") ) ) << "\"" << endl;
+        << "\""<< trim_copy_if( str2, is_from( string("<>") ) ) << "\"" << endl;
     
     cout 
         << "trimmed copy of str5 ( space=digit ): " 
-        << "\"" << trim_copy_if( str3, isclassified<char>(ctype_base::digit) ) << "\"" << endl;
+        << "\"" << trim_copy_if( str3, is_classified<char>(ctype_base::digit) ) << "\"" << endl;
 
     cout << endl;
 }

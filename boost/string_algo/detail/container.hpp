@@ -31,12 +31,12 @@ namespace boost {
                 insert( Input, At, Insert.begin(), Insert.end() );
             }
 
-            template< typename InputT, typename InsertIteratorT >
+            template< typename InputT, typename ForwardIteratorT >
             inline void insert(
                 InputT& Input,
                 typename InputT::iterator At,
-                InsertIteratorT Begin,
-                InsertIteratorT End )
+                ForwardIteratorT Begin,
+                ForwardIteratorT End )
             {
                 Input.insert( At, Begin, End );
             }
@@ -63,16 +63,16 @@ namespace boost {
             template< typename HasConstTimeOperations >
             struct replace_const_time_helper
             {
-                template< typename InputT, typename InsertIteratorT >
+                template< typename InputT, typename ForwardIteratorT >
                 void operator()(
                     InputT& Input,
                     typename InputT::iterator From,
                     typename InputT::iterator To,
-                    InsertIteratorT Begin,
-                    InsertIteratorT End )
+                    ForwardIteratorT Begin,
+                    ForwardIteratorT End )
                 {
                     // Copy data to the container ( as much as possible )
-                    InsertIteratorT InsertIt=Begin;
+                    ForwardIteratorT InsertIt=Begin;
                     typename InputT::iterator InputIt=From;
                     for(; InsertIt!=End && InputIt!=To; InsertIt++, InputIt++ )
                     {
@@ -99,13 +99,13 @@ namespace boost {
             struct replace_const_time_helper< boost::mpl::true_c >
             {
                 // Const-time erase and insert methods -> use them
-                template< typename InputT, typename InsertIteratorT >
+                template< typename InputT, typename ForwardIteratorT >
                 void operator()(
                     InputT& Input,
                     typename InputT::iterator From,
                     typename InputT::iterator To,
-                    InsertIteratorT Begin,
-                    InsertIteratorT End ) 
+                    ForwardIteratorT Begin,
+                    ForwardIteratorT End ) 
                 {
                     typename InputT::iterator At=Input.erase( From, To );
                     if ( Begin!=End )
@@ -119,13 +119,13 @@ namespace boost {
             template< typename HasNative >
             struct replace_native_helper
             {
-                template< typename InputT, typename InsertIteratorT >
+                template< typename InputT, typename ForwardIteratorT >
                 void operator()(
                     InputT& Input,
                     typename InputT::iterator From,
                     typename InputT::iterator To,
-                    InsertIteratorT Begin,
-                    InsertIteratorT End ) 
+                    ForwardIteratorT Begin,
+                    ForwardIteratorT End ) 
                 {
                     replace_const_time_helper< 
                         typename boost::mpl::logical_and<
@@ -139,13 +139,13 @@ namespace boost {
             template<>
             struct replace_native_helper< boost::mpl::true_c >
             {
-                template< typename InputT, typename InsertIteratorT >
+                template< typename InputT, typename ForwardIteratorT >
                 void operator()(
                     InputT& Input,
                     typename InputT::iterator From,
                     typename InputT::iterator To,
-                    InsertIteratorT Begin,
-                    InsertIteratorT End )
+                    ForwardIteratorT Begin,
+                    ForwardIteratorT End )
                 {
                     Input.replace( From, To, Begin, End );
                 }
@@ -163,13 +163,13 @@ namespace boost {
                 replace( Input, From, To, Insert.begin(), Insert.end() );
             }
 
-            template< typename InputT, typename InsertIteratorT >
+            template< typename InputT, typename ForwardIteratorT >
             inline void replace(
                 InputT& Input,
                 typename InputT::iterator From,
                 typename InputT::iterator To,
-                InsertIteratorT Begin,
-                InsertIteratorT End )
+                ForwardIteratorT Begin,
+                ForwardIteratorT End )
             {
                 replace_native_helper< 
                     typename container_traits<InputT>::native_replace >()(

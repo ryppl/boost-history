@@ -21,16 +21,16 @@ namespace boost {
 
 //  ends_with predicate implementation ----------------------------------//
 
-            template< typename InputIteratorT, typename SubIteratorT >
+            template< typename ForwardIterator1T, typename ForwardIterator2T >
             inline bool ends_with_iter_select( 
-                InputIteratorT Begin, 
-                InputIteratorT End, 
-                SubIteratorT SubBegin,
-                SubIteratorT SubEnd,
+                ForwardIterator1T Begin, 
+                ForwardIterator1T End, 
+                ForwardIterator2T SubBegin,
+                ForwardIterator2T SubEnd,
                 std::bidirectional_iterator_tag )
             {
-                InputIteratorT it=End;
-                SubIteratorT pit=SubEnd;
+                ForwardIterator1T it=End;
+                ForwardIterator2T pit=SubEnd;
                 for(;it!=Begin && pit!=SubBegin;)
                 {
                     if( !( (*(--it))==(*(--pit)) ) )
@@ -40,12 +40,12 @@ namespace boost {
                 return pit==SubBegin;
             }
 
-            template< typename InputIteratorT, typename SubIteratorT >
+            template< typename ForwardIterator1T, typename ForwardIterator2T >
             inline bool ends_with_iter_select( 
-                InputIteratorT Begin, 
-                InputIteratorT End, 
-                SubIteratorT SubBegin,
-                SubIteratorT SubEnd,
+                ForwardIterator1T Begin, 
+                ForwardIterator1T End, 
+                ForwardIterator2T SubBegin,
+                ForwardIterator2T SubEnd,
                 std::forward_iterator_tag )
             {
                 if ( SubBegin==SubEnd )
@@ -54,7 +54,7 @@ namespace boost {
                     return true;
                 }
 
-                iterator_range<InputIteratorT> Result
+                iterator_range<ForwardIterator1T> Result
                     =find_last( Begin, End, SubBegin, SubEnd );
 
                 return !Result.empty() && Result.end()==End;

@@ -11,7 +11,7 @@
 #include <vector>
 #include <iostream>
 #include <iterator>
-#include <boost/string_algo/conv.hpp>
+#include <boost/string_algo/case_conv.hpp>
 
 using namespace std;
 using namespace boost;

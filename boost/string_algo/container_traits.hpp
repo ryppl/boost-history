@@ -21,8 +21,8 @@
 namespace std {
     template<typename T, typename TraitsT, typename AllocT> class basic_string;
     template<typename T, typename AllocT> class list;
-	template<typename T, typename AllocT > class rope;
-	template<typename T, typename AllocT > class slist;
+    template<typename T, typename AllocT > class rope;
+    template<typename T, typename AllocT > class slist;
 }
 
 namespace boost {
@@ -77,7 +77,7 @@ namespace boost {
             typedef boost::mpl::true_c const_time_erase;
         };
 
-		// basic_string container traits
+        // basic_string container traits
         template< typename CharT, typename TraitsT, typename AllocT >
         struct container_traits< std::basic_string<CharT, TraitsT, AllocT> >
         {
@@ -196,11 +196,11 @@ namespace boost {
             typedef boost::mpl::false_c const_time_erase;
         };
 
-		// Rope container traits
-		/*
-			Traits for rope like containers
-		*/
-		template< typename ContainerT >
+        // Rope container traits
+        /*
+            Traits for rope like containers
+        */
+        template< typename ContainerT >
         struct rope_container_traits
         {
             // Input types
@@ -224,8 +224,8 @@ namespace boost {
             // list selection --------------------------------------------//
             template< typename T, typename AllocT >
             yes_type is_list_tester( const std::list<T,AllocT>& );
-			template< typename T, typename AllocT >
-			yes_type is_list_tester( const std::slist<T,AllocT>& );
+            template< typename T, typename AllocT >
+            yes_type is_list_tester( const std::slist<T,AllocT>& );
             no_type is_list_tester(...);
 
             struct list_traits_selector
@@ -280,7 +280,7 @@ namespace boost {
                 };
             };
 
-			// default selector ----------------------------------------//
+            // default selector ----------------------------------------//
             // this selector should be last in the selector list
             struct default_traits_selector
             {
@@ -332,7 +332,7 @@ namespace boost {
             typedef boost::mpl::list4< 
                 string_traits_selector,
                 list_traits_selector,
-				rope_traits_selector,
+                rope_traits_selector,
                 default_traits_selector >::type container_traits_selectors;
 
         } // namespace detail

@@ -23,28 +23,36 @@ namespace boost {
 //  regex find functor -----------------------------------------------//
 
             // regex search result
-            template< typename InputIteratorT >
+            template<typename IteratorT>
             struct regex_search_result : 
-                public iterator_range< InputIteratorT >
+                public iterator_range_base<IteratorT>
             {
-                typedef InputIteratorT iterator_type;
+                typedef IteratorT iterator_type;
                 typedef match_results<iterator_type> match_results_type;
-                typedef iterator_range<iterator_type> range_type;
+                typedef iterator_range_base<iterator_type> base_type;
 
                 // Contruction
 
                 // Construction from the match result
                 regex_search_result( const match_results_type& MatchResults ) :
-                    range_type( MatchResults[0].first, MatchResults[0].second ),
+                    base_type( MatchResults[0].first, MatchResults[0].second ),
                     m_MatchResults( MatchResults ) {}
                 
                 // Construction of empty match. End iterator has to be specified
-                regex_search_result( InputIteratorT End ) :
-                    range_type( End, End ) {}
+                regex_search_result( IteratorT End ) :
+                    base_type( End, End ) {}
 
                 regex_search_result( const regex_search_result& Other ) :
-                    range_type( Other.begin(), Other.end() ),
+                    base_type( Other.begin(), Other.end() ),
                     m_MatchResults( Other.m_MatchResults ) {}
+
+                // Assignment
+                regex_search_result& operator=( const regex_search_result& Other )
+                {
+                    base_type::operator=( Other );
+                    m_MatchResults=Other.m_MatchResults;
+                    return *this;
+                }
 
                 // Match result retrival
                 const match_results_type& match_results() const
@@ -67,7 +75,7 @@ namespace boost {
                 typedef InputIteratorT input_iterator_type;
                 typedef regex_search_result< input_iterator_type > result_type;
 
-				typedef RegExT regex_type;
+                typedef RegExT regex_type;
                 typedef const RegExT& regex_reference_type;
                     
                 // Construction
@@ -76,7 +84,7 @@ namespace boost {
 
                 // Operation
                 result_type operator()( 
-					input_iterator_type Begin, 
+                    input_iterator_type Begin, 
                     input_iterator_type End ) const
                 {
                     // instantiate match result
@@ -100,16 +108,16 @@ namespace boost {
             };
 
             // Construction helper
-			template<typename InputT, typename RegExT>
-			find_regexF<typename input_policy<InputT>::iterator_type, RegExT>
-			create_find_regex(
-				InputT&,
-				const RegExT& Rx, 
-				unsigned int MatchFlags=match_default )
-			{
-				return find_regexF<
-					typename input_policy<InputT>::iterator_type, RegExT>( Rx, MatchFlags );
-			}
+            template<typename InputT, typename RegExT>
+            find_regexF<typename input_policy<InputT>::iterator_type, RegExT>
+            create_find_regex(
+                InputT&,
+                const RegExT& Rx, 
+                unsigned int MatchFlags=match_default )
+            {
+                return find_regexF<
+                    typename input_policy<InputT>::iterator_type, RegExT>( Rx, MatchFlags );
+            }
    
         } // namespace detail
 

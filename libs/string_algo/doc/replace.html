@@ -23,144 +23,106 @@
       </table>
     </div>
     <ul>
-      <li><a href="#overview">Overview</a></li>
-      <li><a href="#replace">Replace Algorithms</a></li>
-      <li><a href="#rationale">Rationale</a>
+      <li><a href="#replace">Replace Algorithms</a>
         <ul>
-          <li><a href="#implementation">Design and Implementation</a></li>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#description">Description</a></li>
+          <li><a href="#rationale">Rationale</a>
+            <ul>
+              <li><a href="#implementation">Design and Implementation</a></li>
+            </ul>
+          </li>
         </ul>
       </li>
     </ul>
     <hr>
-    <h2><a name="overview">Overview</a></h2>
-    <p>
-      String Algorithms Library contains a set of algorithms for replace and
-      erase operations on sequences. Each algorithm finds a range in the input
-      sequence matching given criteria and injects a replacement sequence into
-      this range. Replacement sequence does not have to be constant.
-      Implementation allows generic formatting used for example in variants
-      using regular expressions.
-    </p>
-    <hr>
     <h2><a name="replace">Replace Algorithms</a></h2>
+    <h3><a name="overview">Overview</a></h3>
+    <p>
+      The String Algorithms Library contains a set of algorithms for replace and
+      erase operations on sequences. Each algorithm finds a range in the input
+      sequence matching the given criteria and injects a replacement sequence
+      into this range. A replacement sequence does not have to be constant. The
+      implementation allows generic formatting which, for example, is used in
+      variants using regular expressions.
+    </p>
+    <h3><a name="description">Description</a></h3>
     <p align="left">
-      Regular variants are included in <a href="../../../boost/string_algo/replace.hpp">&lt;boost/string_algo/replace.hpp&gt;</a>
-      header and regex variants are included in <a href="../../../boost/string_algo/regex.hpp">&lt;boost/string_algo/regex.hpp&gt;</a>
-      header ( both in <code>boost</code> namespace ).
+      The regular variants are declared in <a href="../../../boost/string_algo/replace.hpp">&lt;boost/string_algo/replace.hpp&gt;</a>
+      header and the regex variants are declared in <a href="../../../boost/string_algo/regex.hpp">&lt;boost/string_algo/regex.hpp&gt;</a>
+      header.
     <p align="left">
       Following table contains a summary of the replace algorithms and links to
       their details. Follow the links in the table for detailed description.
     </p>
-    <table border="1" height="28" width="829">
+    <table border="1" width="723">
       <tr>
-        <th height="30" valign="top" align="center" width="137">Function</th>
-        <th height="30" width="225">Description</th>
-        <th height="30" width="445">Example</th>
+        <th height="30" valign="top" align="center" width="176">Function</th>
+        <th height="30" width="531">Description</th>
       </tr>
       <tr>
-        <td height="28" valign="top" align="center" width="137"><code><a href="replace_range.html">replace_range<br>
+        <td height="28" valign="top" align="center" width="176"><code><a href="replace_range.html">replace_range<br>
           erase_range</a></code></td>
-        <td height="28" valign="top" align="center" width="225">Replace the
+        <td height="28" valign="top" align="center" width="531">Replace the
           specified range with the format string /<br>
           Remove the specified range from the sequence.</td>
-        <td height="28" valign="top" align="center" width="445"><code>replace_range_copy(str1,
-          Begin, End, string(&quot;23&quot;));<br>
-          replace_range(Input, Begin, End, string(&quot;23&quot;));<br>
-          erase_range_copy(str1, Begin, End);<br>
-          erase_range(Input, Begin, End);</code></td>
       </tr>
       <tr>
-        <td height="28" valign="top" align="center" width="137"><code><a href="replace_first.html">replace_first<br>
+        <td height="28" valign="top" align="center" width="176"><code><a href="replace_first.html">replace_first<br>
           erase_first</a></code></td>
-        <td height="28" valign="top" align="center" width="225">Replace the
+        <td height="28" valign="top" align="center" width="531">Replace the
           first occurrence of the search string with the format string /<br>
           Remove the occurrence from the sequence.</td>
-        <td height="28" valign="top" align="center" width="445"><code>replace_first_copy(str1,
-          string(&quot;&lt;&gt;&quot;), string(&quot;23&quot;));<br>
-          replace_first(Input, string(&quot;&lt;&gt;&quot;),
-          string(&quot;23&quot;));<br>
-          erase_first_copy(str1, string(&quot;&lt;&gt;&quot;));<br>
-          erase_first(Input, string(&quot;&lt;&gt;&quot;));</code></td>
       </tr>
       <tr>
-        <td height="30" valign="top" align="center" width="137"><code><a href="replace_last.html">replace_last<br>
+        <td height="30" valign="top" align="center" width="176"><code><a href="replace_last.html">replace_last<br>
           erase_last</a></code></td>
-        <td height="30" valign="top" align="center" width="225">Replace the last
+        <td height="30" valign="top" align="center" width="531">Replace the last
           occurrence of the search string with the format string /<br>
           Remove the occurrence from the sequence.</td>
-        <td height="30" valign="top" align="center" width="445"><code>replace_last_copy(str1,
-          string(&quot;&lt;&gt;&quot;), string(&quot;23&quot;));<br>
-          replace_last(Input, string(&quot;&lt;&gt;&quot;),
-          string(&quot;23&quot;));<br>
-          erase_last_copy(str1, string(&quot;&lt;&gt;&quot;));<br>
-          erase_last(Input, string(&quot;&lt;&gt;&quot;));</code></td>
       </tr>
       <tr>
-        <td height="30" valign="top" align="center" width="137"><code><a href="replace_nth.html">replace_nth<br>
+        <td height="30" valign="top" align="center" width="176"><code><a href="replace_nth.html">replace_nth<br>
           erase_nth</a></code></td>
-        <td height="28" valign="top" align="center" width="225">Replace the n-th
+        <td height="28" valign="top" align="center" width="531">Replace the n-th
           occurrence of the search string with the format string /<br>
           Remove the occurrence from the sequence.<br>
           Position is 0-based.</td>
-        <td height="28" valign="top" align="center" width="445"><code>replace_nth_copy(str1,
-          string(&quot;&lt;&gt;&quot;), 2, string(&quot;23&quot;));<br>
-          replace_nth(Input, string(&quot;&lt;&gt;&quot;), 2,
-          string(&quot;23&quot;));<br>
-          erase_nth_copy(str1, string(&quot;&lt;&gt;&quot;), 2);<br>
-          erase_nth(Input, string(&quot;&lt;&gt;&quot;), 2);</code></td>
       </tr>
       <tr>
-        <td height="30" valign="top" align="center" width="137"><code><a href="replace_all.html">replace_all<br>
+        <td height="30" valign="top" align="center" width="176"><code><a href="replace_all.html">replace_all<br>
           erase_all</a></code></td>
-        <td height="28" valign="top" align="center" width="225">Replace all
+        <td height="28" valign="top" align="center" width="531">Replace all
           occurrences of the search string with the format string /<br>
           Remove all the occurrence from the sequence.</td>
-        <td height="28" valign="top" align="center" width="445"><code>replace_all_copy(str1,
-          string(&quot;&lt;&gt;&quot;), string(&quot;23&quot;));<br>
-          replace_all(Input, string(&quot;&lt;&gt;&quot;),
-          string(&quot;23&quot;));<br>
-          erase_all_copy(str1, string(&quot;&lt;&gt;&quot;));<br>
-          erase_all(Input, string(&quot;&lt;&gt;&quot;));</code></td>
       </tr>
       <tr>
-        <td height="30" valign="top" align="center" width="137"><code><a href="replace_regex.html">replace_regex<br>
+        <td height="30" valign="top" align="center" width="176"><code><a href="replace_regex.html">replace_regex<br>
           erase_regex</a></code></td>
-        <td height="30" valign="top" align="center" width="225">Format a
+        <td height="30" valign="top" align="center" width="531">Format a
           substring matching given regular expression with the specified format
           /<br>
           Remove the substring from the sequence.</td>
-        <td height="30" valign="top" align="center" width="445"><code>replace_regex_copy(str1,
-          regex(&quot;([A-Z]).*xxx&quot;), string(&quot;$1-yyy&quot;));<br>
-          replace_regex(Input, str1, regex(&quot;([A-Z]).*xxx&quot;),
-          string(&quot;$1-yyy&quot;));<br>
-          erase_regex_copy(str1, regex(&quot;([A-Z]).*xxx&quot;));
-          erase_regex(Input, str1, regex(&quot;([A-Z]).*xxx&quot;));</code></td>
       </tr>
       <tr>
-        <td height="30" valign="top" align="center" width="137"><code><a href="replace_regex.html">replace_all_regex<br>
+        <td height="30" valign="top" align="center" width="176"><code><a href="replace_regex.html">replace_all_regex<br>
           erase_all_regex</a></code></td>
-        <td height="30" valign="top" align="center" width="225">Format all
+        <td height="30" valign="top" align="center" width="531">Format all
           substrings matching given regular expression with the specified format
           /<br>
           Remove all the matching substrings from the sequence.</td>
-        <td height="30" valign="top" align="center" width="445"><code>replace_all_regex_copy(str1,
-          regex(&quot;([A-Z]).*xxx&quot;), string(&quot;$1-yyy&quot;));<br>
-          replace_all_regex(Input, str1, regex(&quot;([A-Z]).*xxx&quot;),
-          string(&quot;$1-yyy&quot;));<br>
-          erase_all_regex_copy(str1, regex(&quot;([A-Z]).*xxx&quot;));
-          erase_all_regex(Input, str1, regex(&quot;([A-Z]).*xxx&quot;));</code></td>
       </tr>
     </table>
-    <h2><a name="rationale">Rationale</a></h2>
-    <h3><a name="implementation">Design and </a><a name="implementation">Implementation</a></h3>
+    <h3><a name="rationale">Rationale</a></h3>
+    <h4><a name="implementation">Design and </a><a name="implementation">Implementation</a></h4>
     <p>
-      Replace algorithms are implemented using layered structure. Lower layer
-      implements generic substitution of a range in an input sequence with
-      another sequence. This layer take an input in form of <b>find</b> and <b>format</b>
-      functor. These two functors define what is to be replaced and what will be
-      the replacement. Upper layer functions are just wrapping calls to lower
-      layer provided with specific functors. Find functors are shared with the <a href="find.html">find
-      facility</a>.
+      The replace algorithms are implemented using a layered structure. The
+      lower layer implements generic substitution of a range in an input
+      sequence with another sequence. This layer take an input in form of <b>find</b>
+      and <b>format</b> functor. These two functors define what is to be
+      replaced and what will be the replacement. The upper layer functions are
+      just wrapping calls to lower layer provided with specific functors. Find
+      functors are shared with the <a href="find.html">find facility</a>.
     </p>
     <p>
       Implementation of lower layer is designed to work with a generic sequence,

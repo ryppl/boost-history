@@ -12,7 +12,7 @@
 
 #include <boost/string_algo/iterator_range.hpp>
 #include <boost/string_algo/trim.hpp>
-#include <boost/string_algo/conv.hpp>
+#include <boost/string_algo/case_conv.hpp>
 #include <boost/string_algo/predicate.hpp>
 #include <boost/string_algo/find.hpp>
 #include <boost/string_algo/replace.hpp>

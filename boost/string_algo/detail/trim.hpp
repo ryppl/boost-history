@@ -25,8 +25,11 @@ namespace boost {
 //  trim iterator helper -----------------------------------------------//
 
             // Search for first non matching character from the beginning of the sequence
-            template< typename IteratorT, typename PredicateT >
-            inline IteratorT trim_begin_if( IteratorT InBegin, IteratorT InEnd, PredicateT IsSpace )
+            template< typename ForwardIteratorT, typename PredicateT >
+            inline ForwardIteratorT trim_begin_if( 
+                ForwardIteratorT InBegin, 
+                ForwardIteratorT InEnd, 
+                PredicateT IsSpace )
             {
                 return std::find_if( 
                     InBegin, 
@@ -35,25 +38,28 @@ namespace boost {
             }
 
             // Search for first non matching character from the end of the sequence
-            template< typename IteratorT, typename PredicateT >
-            inline IteratorT trim_end_if( IteratorT InBegin, IteratorT InEnd, PredicateT IsSpace )
+            template< typename ForwardIteratorT, typename PredicateT >
+            inline ForwardIteratorT trim_end_if( 
+                ForwardIteratorT InBegin, 
+                ForwardIteratorT InEnd, 
+                PredicateT IsSpace )
             {
                 typedef typename boost::detail::
-                    iterator_traits<IteratorT>::iterator_category category;
+                    iterator_traits<ForwardIteratorT>::iterator_category category;
 
                 return trim_end_if_iter_select( InBegin, InEnd, IsSpace, category() );
             }
 
-            template< typename IteratorT, typename PredicateT >
-            inline IteratorT trim_end_if_iter_select( 
-                IteratorT InBegin, 
-                IteratorT InEnd, 
+            template< typename ForwardIteratorT, typename PredicateT >
+            inline ForwardIteratorT trim_end_if_iter_select( 
+                ForwardIteratorT InBegin, 
+                ForwardIteratorT InEnd, 
                 PredicateT IsSpace,
                 std::forward_iterator_tag )
             {
-                IteratorT TrimIt=InBegin;
+                ForwardIteratorT TrimIt=InBegin;
 
-                for( IteratorT It=InBegin; It!=InEnd; It++ )
+                for( ForwardIteratorT It=InBegin; It!=InEnd; It++ )
                 {
                     if ( !IsSpace(*It) ) 
                     {
@@ -65,14 +71,14 @@ namespace boost {
                 return TrimIt;
             }
 
-            template< typename IteratorT, typename PredicateT >
-            inline IteratorT trim_end_if_iter_select( 
-                IteratorT InBegin, 
-                IteratorT InEnd, 
+            template< typename ForwardIteratorT, typename PredicateT >
+            inline ForwardIteratorT trim_end_if_iter_select( 
+                ForwardIteratorT InBegin, 
+                ForwardIteratorT InEnd, 
                 PredicateT IsSpace,
                 std::bidirectional_iterator_tag )
             {
-                for( IteratorT It=InEnd; It!=InBegin;  )
+                for( ForwardIteratorT It=InEnd; It!=InBegin;  )
                 {
                     if ( !IsSpace(*(--It)) )
                         return ++It;
@@ -85,17 +91,17 @@ namespace boost {
 
             // isclassified functor
             template< typename CharT >
-            struct isclassifiedF : public std::unary_function< CharT, bool >
+            struct is_classifiedF : public std::unary_function< CharT, bool >
             {
                 typedef typename std::unary_function< CharT, bool >::result_type result_type;
                 typedef typename std::unary_function< CharT, bool >::argument_type argument_type;
 
                 // Constructor from a ctype
-                isclassifiedF(std::ctype_base::mask Type, std::ctype<CharT> & Ct) : 
+                is_classifiedF(std::ctype_base::mask Type, std::ctype<CharT> & Ct) : 
                     m_Type(Type), m_CType(Ct) {}
 
                 // Constructor from a locale 
-                isclassifiedF(std::ctype_base::mask Type, std::locale const & Loc = std::locale()) :
+                is_classifiedF(std::ctype_base::mask Type, std::locale const & Loc = std::locale()) :
                     m_Type(Type), m_CType(std::use_facet< std::ctype<CharT> >(Loc)) {}
 
                 // Operation
@@ -114,14 +120,14 @@ namespace boost {
                 returns true if the value is from specitied range
             */
             template< typename SeqT >
-            struct isfromF : public std::unary_function< typename SeqT::value_type, bool > 
+            struct is_fromF : public std::unary_function< typename SeqT::value_type, bool > 
             {
                 typedef typename SeqT::value_type CharT;
                 typedef typename std::unary_function< CharT, bool >::result_type result_type;
                 typedef typename std::unary_function< CharT, bool >::argument_type argument_type;
 
                 // Constructor 
-                isfromF( const SeqT& Seq ) : m_Set( Seq.begin(), Seq.end() ) {}
+                is_fromF( const SeqT& Seq ) : m_Set( Seq.begin(), Seq.end() ) {}
                 
                 // Operation
                 result_type operator()( argument_type Ch ) const

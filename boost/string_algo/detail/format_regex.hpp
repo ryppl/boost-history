@@ -39,7 +39,7 @@ namespace boost {
 
                 template<typename InputIteratorT>
                 result_type operator()( 
-					const regex_search_result<InputIteratorT>& Replace ) const
+                    const regex_search_result<InputIteratorT>& Replace ) const
                 {
                     return regex_format( 
                         Replace.match_results(), m_Fmt, m_Flags );                      

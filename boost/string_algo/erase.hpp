@@ -22,25 +22,25 @@ namespace boost {
 //  erase_range -------------------------------------------------------//
 
     // erase_range iterator version
-    template< typename InputIteratorT, typename OutputIteratorT >
+    template< typename ForwardIterator1T, typename OutputIteratorT >
     inline OutputIteratorT erase_range_copy(
         OutputIteratorT Output,
-        InputIteratorT Begin,
-        InputIteratorT End,
-        InputIteratorT SearchBegin,
-        InputIteratorT SearchEnd )
+        ForwardIterator1T Begin,
+        ForwardIterator1T End,
+        ForwardIterator1T SearchBegin,
+        ForwardIterator1T SearchEnd )
     {
-        iterator_range<InputIteratorT> Range( Begin, End );
+        iterator_range<ForwardIterator1T> Range( Begin, End );
 
-		return string_algo::replace_copy(
+        return string_algo::replace_copy(
             Output,
             Range, 
             string_algo::detail::
                 create_find_range( 
-						Range,
+                        Range,
                         string_algo::make_range( SearchBegin, SearchEnd ) ),
             string_algo::detail::empty_formatF< 
-                typename boost::detail::iterator_traits<InputIteratorT>::value_type >() );
+                typename boost::detail::iterator_traits<ForwardIterator1T>::value_type >() );
     }
 
     template< typename InputT, typename OutputIteratorT >
@@ -55,7 +55,7 @@ namespace boost {
             Input,
             string_algo::detail::
                 create_find_range(
-					Input,
+                    Input,
                     string_algo::make_range( SearchBegin, SearchEnd ) ),
             string_algo::detail::
                 empty_formatF<typename InputT::value_type>() );
@@ -72,7 +72,7 @@ namespace boost {
             Input,
             string_algo::detail::
                 create_find_range(
-					Input,
+                    Input,
                     string_algo::make_range( SearchBegin, SearchEnd ) ),
             string_algo::detail::
                 empty_formatF<typename InputT::value_type>() );
@@ -89,7 +89,7 @@ namespace boost {
             Input, 
             string_algo::detail::
                 create_find_range(
-					Input,
+                    Input,
                     string_algo::make_range( SearchBegin, SearchEnd ) ),
             string_algo::detail::
                 empty_formatF<typename InputT::value_type>() );
@@ -99,27 +99,27 @@ namespace boost {
 
     // erase_first iterator version
     template< 
-        typename InputIteratorT, 
-        typename SearchIteratorT, 
+        typename ForwardIterator1T, 
+        typename ForwardIterator2T, 
         typename OutputIteratorT >
     inline OutputIteratorT erase_first_copy(
         OutputIteratorT Output,
-        InputIteratorT Begin,
-        InputIteratorT End,
-        SearchIteratorT SearchBegin,
-        SearchIteratorT SearchEnd )
+        ForwardIterator1T Begin,
+        ForwardIterator1T End,
+        ForwardIterator2T SearchBegin,
+        ForwardIterator2T SearchEnd )
     {
-		iterator_range<InputIteratorT> Range( Begin, End );
+        iterator_range<ForwardIterator1T> Range( Begin, End );
 
         return string_algo::replace_copy(
             Output,
             Range, 
             string_algo::detail::
                 create_find_first( 
-					Range,
-					string_algo::make_range( SearchBegin, SearchEnd ) ),
+                    Range,
+                    string_algo::make_range( SearchBegin, SearchEnd ) ),
             string_algo::detail::empty_formatF< 
-                typename boost::detail::iterator_traits<InputIteratorT>::value_type >() );
+                typename boost::detail::iterator_traits<ForwardIterator1T>::value_type >() );
     }
 
     template< 
@@ -172,27 +172,27 @@ namespace boost {
 
     // erase_last iterator version
     template< 
-        typename InputIteratorT, 
-        typename SearchIteratorT, 
+        typename ForwardIterator1T, 
+        typename ForwardIterator2T, 
         typename OutputIteratorT >
     inline OutputIteratorT erase_last_copy(
         OutputIteratorT Output,
-        InputIteratorT Begin,
-        InputIteratorT End,
-        SearchIteratorT SearchBegin,
-        SearchIteratorT SearchEnd )
+        ForwardIterator1T Begin,
+        ForwardIterator1T End,
+        ForwardIterator2T SearchBegin,
+        ForwardIterator2T SearchEnd )
     {
-		iterator_range<InputIteratorT> Range( Begin, End );
+        iterator_range<ForwardIterator1T> Range( Begin, End );
 
-		return string_algo::replace_copy(
+        return string_algo::replace_copy(
             Output,
             Range, 
             string_algo::detail::
                 create_find_last( 
-					Range,
-					string_algo::make_range( SearchBegin, SearchEnd ) ),
+                    Range,
+                    string_algo::make_range( SearchBegin, SearchEnd ) ),
             string_algo::detail::empty_formatF< 
-                typename boost::detail::iterator_traits<InputIteratorT>::value_type >() );
+                typename boost::detail::iterator_traits<ForwardIterator1T>::value_type >() );
     }
 
     template< 
@@ -245,28 +245,28 @@ namespace boost {
 
     // erase_nth iterator version
     template< 
-        typename InputIteratorT, 
-        typename SearchIteratorT, 
+        typename ForwardIterator1T, 
+        typename ForwardIterator2T, 
         typename OutputIteratorT >
     inline OutputIteratorT erase_nth_copy(
         OutputIteratorT Output,
-        InputIteratorT Begin,
-        InputIteratorT End,
-        SearchIteratorT SearchBegin,
-        SearchIteratorT SearchEnd,
+        ForwardIterator1T Begin,
+        ForwardIterator1T End,
+        ForwardIterator2T SearchBegin,
+        ForwardIterator2T SearchEnd,
         unsigned int Nth )
     {
-		iterator_range<InputIteratorT> Range( Begin, End );
+        iterator_range<ForwardIterator1T> Range( Begin, End );
 
-		return string_algo::replace_copy(
+        return string_algo::replace_copy(
             Output,
             Range, 
             string_algo::detail::
                 create_find_last( 
-					Range,
-					string_algo::make_range( SearchBegin, SearchEnd ), Nth ),
+                    Range,
+                    string_algo::make_range( SearchBegin, SearchEnd ), Nth ),
             string_algo::detail::empty_formatF< 
-                typename boost::detail::iterator_traits<InputIteratorT>::value_type >() );
+                typename boost::detail::iterator_traits<ForwardIterator1T>::value_type >() );
     }
 
     template< 
@@ -323,27 +323,27 @@ namespace boost {
 
     // erase_all iterator version
     template< 
-        typename InputIteratorT, 
-        typename SearchIteratorT, 
+        typename ForwardIterator1T, 
+        typename ForwardIterator2T, 
         typename OutputIteratorT >
     inline OutputIteratorT erase_all_copy(
         OutputIteratorT Output,
-        InputIteratorT Begin,
-        InputIteratorT End,
-        SearchIteratorT SearchBegin,
-        SearchIteratorT SearchEnd )
+        ForwardIterator1T Begin,
+        ForwardIterator1T End,
+        ForwardIterator2T SearchBegin,
+        ForwardIterator2T SearchEnd )
     {
-		iterator_range<InputIteratorT> Range( Begin, End );
+        iterator_range<ForwardIterator1T> Range( Begin, End );
 
-		return string_algo::replace_all_copy(
+        return string_algo::replace_all_copy(
             Output,
             Range,
             string_algo::detail::
                 create_find_first( 
-					Range,
-					string_algo::make_range( SearchBegin, SearchEnd ) ),
+                    Range,
+                    string_algo::make_range( SearchBegin, SearchEnd ) ),
             string_algo::detail::empty_formatF< 
-                typename boost::detail::iterator_traits<InputIteratorT>::value_type >() );
+                typename boost::detail::iterator_traits<ForwardIterator1T>::value_type >() );
     }
 
     template< 

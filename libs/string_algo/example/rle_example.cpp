@@ -204,14 +204,14 @@ void rle_example()
 
     string compress=string_algo::replace_all_copy( 
         original, 
-		find_compressF<string::const_iterator>(), 
+        find_compressF<string::const_iterator>(), 
         format_compressF<string>() );
 
     cout << "Compressed string: " << compress << endl;
 
     string decompress=string_algo::replace_all_copy( 
         compress, 
-		find_decompressF<string::const_iterator>(), 
+        find_decompressF<string::const_iterator>(), 
         format_decompressF<string>() );
 
     cout << "Decompressed string: " << decompress << endl;
@@ -220,14 +220,14 @@ void rle_example()
 
     string_algo::replace_all( 
         original, 
-		find_compressF<string::iterator>(), 
+        find_compressF<string::iterator>(), 
         format_compressF<string>() );
     
     cout << "Compressed string: " << original << endl;
 
     string_algo::replace_all( 
         original, 
-		find_decompressF<string::iterator>(), 
+        find_decompressF<string::iterator>(), 
         format_decompressF<string>() );
 
     cout << "Decompressed string: " << original << endl;
