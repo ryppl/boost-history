@@ -327,6 +327,27 @@ extern "C" {
 		     int* ifst, const int * ilst, int* info );
 
 
+  /* Hermitian banded matrices */
+  
+  void LAPACK_SSBEV( char const* jobz, char const* uplo, int const* n,
+                     int const* kd, float* ab, int const* ldab, float* w,
+                     float* z, int const* ldz, float* work, int const* info );
+
+  void LAPACK_DSBEV( char const* jobz, char const* uplo, int const* n,
+                     int const* kd, double* ab, int const* ldab, double* w,
+                     double* z, int const* ldz, double* work, int const* info );
+
+  void LAPACK_CHBEV( char const* jobz, char const* uplo, int const* n,
+                     int const* kd, fcomplex_t* ab, int const* ldab, float* w,
+                     fcomplex_t* z, int const* ldz, fcomplex_t* work,
+                     float* rwork, int const* info );
+
+  void LAPACK_ZHBEV( char const* jobz, char const* uplo, int const* n,
+                     int const* kd, dcomplex_t* ab, int const* ldab, double* w,
+                     dcomplex_t* z, int const* ldz, dcomplex_t* work,
+                     double* rwork, int const* info );
+
+
   /*********************************************************************/
   /*                             SVD                                   */
   /*********************************************************************/

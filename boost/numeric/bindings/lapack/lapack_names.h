@@ -163,6 +163,16 @@
 
 
 /********************************************/
+/* eigenproblems for banded matrices */ 
+
+#define LAPACK_SSBEV FORTRAN_ID( ssbev )
+#define LAPACK_DSBEV FORTRAN_ID( dsbev )
+#define LAPACK_CHBEV FORTRAN_ID( chbev )
+#define LAPACK_ZHBEV FORTRAN_ID( zhbev )
+
+
+
+/********************************************/
 /* QR factorization */
 
 #define LAPACK_SGEQRF FORTRAN_ID( sgeqrf )
