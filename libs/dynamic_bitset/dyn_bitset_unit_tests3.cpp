@@ -32,6 +32,16 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
     Tests::to_ulong(b);
   }
   {
+    boost::dynamic_bitset<Block> b(std::string("1"));
+    Tests::to_ulong(b);
+  }
+  {
+    Block all_ones = ~Block(0);
+    boost::dynamic_bitset<Block> b(bitset_type::bits_per_block,
+                                   static_cast<unsigned long>(all_ones));
+    Tests::to_ulong(b);
+  }
+  {
     std::string ul_str(ul_width, '1');
     boost::dynamic_bitset<Block> b(ul_str);
     Tests::to_ulong(b);
