@@ -36,25 +36,25 @@ template<typename Type,typename Allocator>
 Type* allocate(Allocator& al,typename Allocator::size_type n,Type* =0)
 {
   return static_cast<Type*>(static_cast<void*>(al._Charalloc(n*sizeof(Type))));
-};
+}
 
 template<typename Allocator,typename Type>
 void deallocate(Allocator& al,Type* p,typename Allocator::size_type n)
 {
   al.deallocate(p,n);
-};
+}
 
 template<typename Allocator,typename Type>
 void construct(Allocator& al,Type* p,const Type& t)
 {
   new(static_cast<void*>(p))Type(t);
-};
+}
 
 template<typename Allocator,typename Type>
 void destroy(Allocator& al,Type* p)
 {
   (static_cast<Type*>(p))->~Type();
-};
+}
 
 #else
 
@@ -106,25 +106,25 @@ template<typename Type,typename Allocator>
 typename Allocator::pointer allocate(Allocator& al,typename Allocator::size_type n)
 {
   return al.allocate(n);
-};
+}
 
 template<typename Allocator>
 void deallocate(Allocator& al,typename Allocator::pointer p,typename Allocator::size_type n)
 {
   al.deallocate(p,n);
-};
+}
 
 template<typename Allocator,typename Type>
 void construct(Allocator& al,typename Allocator::pointer p,const Type& t)
 {
   al.construct(p,t);
-};
+}
 
 template<typename Allocator>
 void destroy(Allocator& al,typename Allocator::pointer p)
 {
   al.destroy(p);
-};
+}
 
 #endif
 
@@ -134,13 +134,13 @@ template<typename Type>
 void construct(void* p,const Type& t)
 {
   new (p) Type(t);
-};
+}
 
 template<typename Type>
 void destroy(const Type* p)
 {
   p->~Type();
-};
+}
 
 } /* namespace indexed_sets::detail::allocator */
 
