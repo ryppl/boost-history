@@ -35,10 +35,10 @@ namespace numerics {
         typedef typename M::size_type size_type;
         typedef typename M::difference_type difference_type;
         typedef typename M::value_type value_type;
-        typedef typename M::const_reference_type const_reference_type;
-        typedef typename M::reference_type reference_type;
-        typedef typename M::const_pointer_type const_pointer_type;
-        typedef typename M::pointer_type pointer_type;
+        typedef typename M::const_reference const_reference;
+        typedef typename M::reference reference;
+        typedef typename M::const_pointer const_pointer;
+        typedef typename M::pointer pointer;
 #ifdef NUMERICS_ET_CLOSURE_REFERENCE
         typedef const vector_const_reference<const matrix_row<matrix_type> > const_closure_type;
         typedef vector_reference<matrix_row<matrix_type> > closure_type;
@@ -76,7 +76,7 @@ namespace numerics {
             return data (i_, j); 
         }
         NUMERICS_INLINE
-        reference_type operator () (size_type j) {
+        reference operator () (size_type j) {
             return data_ (i_, j); 
         }
 
@@ -85,7 +85,7 @@ namespace numerics {
             return (*this) (j); 
         }
         NUMERICS_INLINE
-        reference_type operator [] (size_type j) { 
+        reference operator [] (size_type j) { 
             return (*this) (j); 
         }
 
@@ -344,7 +344,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            reference_type operator * () const {
+            reference operator * () const {
                 check (index () < (*this) ().size (), bad_index ());
                 return *it_;
             }
@@ -404,7 +404,7 @@ namespace numerics {
         }
 
 #ifdef USE_MSVC
-        typedef reverse_iterator<iterator, value_type, reference_type> reverse_iterator;
+        typedef reverse_iterator<iterator, value_type, reference> reverse_iterator;
 #else
         typedef reverse_iterator<iterator> reverse_iterator;
 #endif
@@ -444,10 +444,10 @@ namespace numerics {
         typedef typename M::size_type size_type;
         typedef typename M::difference_type difference_type;
         typedef typename M::value_type value_type;
-        typedef typename M::const_reference_type const_reference_type;
-        typedef typename M::reference_type reference_type;
-        typedef typename M::const_pointer_type const_pointer_type;
-        typedef typename M::pointer_type pointer_type;
+        typedef typename M::const_reference const_reference;
+        typedef typename M::reference reference;
+        typedef typename M::const_pointer const_pointer;
+        typedef typename M::pointer pointer;
 #ifdef NUMERICS_ET_CLOSURE_REFERENCE
         typedef const vector_const_reference<const matrix_column<matrix_type> > const_closure_type;
         typedef vector_reference<matrix_column<matrix_type> > closure_type;
@@ -485,7 +485,7 @@ namespace numerics {
             return data (i, j_); 
         }
         NUMERICS_INLINE
-        reference_type operator () (size_type i) {
+        reference operator () (size_type i) {
             return data_ (i, j_); 
         }
 
@@ -494,7 +494,7 @@ namespace numerics {
             return (*this) (i); 
         }
         NUMERICS_INLINE
-        reference_type operator [] (size_type i) { 
+        reference operator [] (size_type i) { 
             return (*this) (i); 
         }
 
@@ -753,7 +753,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            reference_type operator * () const {
+            reference operator * () const {
                 check (index () < (*this) ().size (), bad_index ());
                 return *it_;
             }
@@ -813,7 +813,7 @@ namespace numerics {
         }
 
 #ifdef USE_MSVC
-        typedef reverse_iterator<iterator, value_type, reference_type> reverse_iterator;
+        typedef reverse_iterator<iterator, value_type, reference> reverse_iterator;
 #else
         typedef reverse_iterator<iterator> reverse_iterator;
 #endif
@@ -853,10 +853,10 @@ namespace numerics {
         typedef typename M::size_type size_type;
         typedef typename M::difference_type difference_type;
         typedef typename M::value_type value_type;
-        typedef typename M::const_reference_type const_reference_type;
-        typedef typename M::reference_type reference_type;
-        typedef typename M::const_pointer_type const_pointer_type;
-        typedef typename M::pointer_type pointer_type;
+        typedef typename M::const_reference const_reference;
+        typedef typename M::reference reference;
+        typedef typename M::const_pointer const_pointer;
+        typedef typename M::pointer pointer;
 #ifdef NUMERICS_ET_CLOSURE_REFERENCE
         typedef const vector_const_reference<const matrix_vector_range<matrix_type> > const_closure_type;
         typedef vector_reference<matrix_vector_range<matrix_type> > closure_type;
@@ -895,7 +895,7 @@ namespace numerics {
             return data (r1_ (i), r2_ (i)); 
         }
         NUMERICS_INLINE
-        reference_type operator () (size_type i) {
+        reference operator () (size_type i) {
             return data_ (r1_ (i), r2_ (i)); 
         }
 
@@ -904,7 +904,7 @@ namespace numerics {
             return (*this) (i); 
         }
         NUMERICS_INLINE
-        reference_type operator [] (size_type i) { 
+        reference operator [] (size_type i) { 
             return (*this) (i); 
         }
 
@@ -1019,7 +1019,7 @@ namespace numerics {
             typedef typename matrix_type::difference_type difference_type;
             typedef typename matrix_type::value_type value_type;
             typedef typename matrix_type::value_type reference;
-            typedef typename matrix_type::const_pointer_type pointer;
+            typedef typename matrix_type::const_pointer pointer;
 #endif
 
             // Construction and destruction
@@ -1114,8 +1114,8 @@ namespace numerics {
 #ifndef USE_MSVC
             typedef typename matrix_type::difference_type difference_type;
             typedef typename matrix_type::value_type value_type;
-            typedef typename matrix_type::reference_type reference;
-            typedef typename matrix_type::pointer_type pointer;
+            typedef typename matrix_type::reference reference;
+            typedef typename matrix_type::pointer pointer;
 #endif
 
             // Construction and destruction
@@ -1158,7 +1158,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            reference_type operator * () const {
+            reference operator * () const {
                 return (*this) () (*it1_, *it2_); 
             }
 
@@ -1218,7 +1218,7 @@ namespace numerics {
         }
 
 #ifdef USE_MSVC
-        typedef reverse_iterator<iterator, value_type, reference_type> reverse_iterator;
+        typedef reverse_iterator<iterator, value_type, reference> reverse_iterator;
 #else
         typedef reverse_iterator<iterator> reverse_iterator;
 #endif
@@ -1252,10 +1252,10 @@ namespace numerics {
         typedef typename M::size_type size_type;
         typedef typename M::difference_type difference_type;
         typedef typename M::value_type value_type;
-        typedef typename M::const_reference_type const_reference_type;
-        typedef typename M::reference_type reference_type;
-        typedef typename M::const_pointer_type const_pointer_type;
-        typedef typename M::pointer_type pointer_type;
+        typedef typename M::const_reference const_reference;
+        typedef typename M::reference reference;
+        typedef typename M::const_pointer const_pointer;
+        typedef typename M::pointer pointer;
 #ifdef NUMERICS_ET_CLOSURE_REFERENCE
         typedef const vector_const_reference<const matrix_vector_slice<matrix_type> > const_closure_type;
         typedef vector_reference<matrix_vector_slice<matrix_type> > closure_type;
@@ -1294,7 +1294,7 @@ namespace numerics {
             return data (s1_ (i), s2_ (i)); 
         }
         NUMERICS_INLINE
-        reference_type operator () (size_type i) {
+        reference operator () (size_type i) {
             return data_ (s1_ (i), s2_ (i)); 
         }
 
@@ -1303,7 +1303,7 @@ namespace numerics {
             return (*this) (i); 
         }
         NUMERICS_INLINE
-        reference_type operator [] (size_type i) { 
+        reference operator [] (size_type i) { 
             return (*this) (i); 
         }
 
@@ -1418,7 +1418,7 @@ namespace numerics {
             typedef typename matrix_type::difference_type difference_type;
             typedef typename matrix_type::value_type value_type;
             typedef typename matrix_type::value_type reference;
-            typedef typename matrix_type::const_pointer_type pointer;
+            typedef typename matrix_type::const_pointer pointer;
 #endif
 
             // Construction and destruction
@@ -1513,8 +1513,8 @@ namespace numerics {
 #ifndef USE_MSVC
             typedef typename matrix_type::difference_type difference_type;
             typedef typename matrix_type::value_type value_type;
-            typedef typename matrix_type::reference_type reference;
-            typedef typename matrix_type::pointer_type pointer;
+            typedef typename matrix_type::reference reference;
+            typedef typename matrix_type::pointer pointer;
 #endif
 
             // Construction and destruction
@@ -1557,7 +1557,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            reference_type operator * () const {
+            reference operator * () const {
                 return (*this) () (*it1_, *it2_); 
             }
 
@@ -1617,7 +1617,7 @@ namespace numerics {
         }
 
 #ifdef USE_MSVC
-        typedef reverse_iterator<iterator, value_type, reference_type> reverse_iterator;
+        typedef reverse_iterator<iterator, value_type, reference> reverse_iterator;
 #else
         typedef reverse_iterator<iterator> reverse_iterator;
 #endif
@@ -1651,10 +1651,10 @@ namespace numerics {
         typedef typename M::size_type size_type;
         typedef typename M::difference_type difference_type;
         typedef typename M::value_type value_type;
-        typedef typename M::const_reference_type const_reference_type;
-        typedef typename M::reference_type reference_type;
-        typedef typename M::const_pointer_type const_pointer_type;
-        typedef typename M::pointer_type pointer_type;
+        typedef typename M::const_reference const_reference;
+        typedef typename M::reference reference;
+        typedef typename M::const_pointer const_pointer;
+        typedef typename M::pointer pointer;
 #ifdef NUMERICS_ET_CLOSURE_REFERENCE
         typedef const matrix_const_reference<const matrix_range<matrix_type> > const_closure_type;
         typedef matrix_reference<matrix_range<matrix_type> > closure_type;
@@ -1710,7 +1710,7 @@ namespace numerics {
             return data (r1_ (i), r2_ (j)); 
         }
         NUMERICS_INLINE
-        reference_type operator () (size_type i, size_type j) {
+        reference operator () (size_type i, size_type j) {
             return data_ (r1_ (i), r2_ (j)); 
         }
 
@@ -1839,9 +1839,9 @@ namespace numerics {
 #endif
 #ifdef USE_MSVC
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
-        typedef reverse_iterator1<iterator1, value_type, reference_type> reverse_iterator1;
+        typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
-        typedef reverse_iterator2<iterator2, value_type, reference_type> reverse_iterator2;
+        typedef reverse_iterator2<iterator2, value_type, reference> reverse_iterator2;
 #else
         typedef reverse_iterator1<const_iterator1> const_reverse_iterator1;
         typedef reverse_iterator1<iterator1> reverse_iterator1;
@@ -2056,7 +2056,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            reference_type operator * () const {
+            reference operator * () const {
                 return *it_; 
             }
 
@@ -2287,7 +2287,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            reference_type operator * () const {
+            reference operator * () const {
                 return *it_;
             }
 
@@ -2422,10 +2422,10 @@ namespace numerics {
         typedef typename M::size_type size_type;
         typedef typename M::difference_type difference_type;
         typedef typename M::value_type value_type;
-        typedef typename M::const_reference_type const_reference_type;
-        typedef typename M::reference_type reference_type;
-        typedef typename M::const_pointer_type const_pointer_type;
-        typedef typename M::pointer_type pointer_type;
+        typedef typename M::const_reference const_reference;
+        typedef typename M::reference reference;
+        typedef typename M::const_pointer const_pointer;
+        typedef typename M::pointer pointer;
 #ifdef NUMERICS_ET_CLOSURE_REFERENCE
         typedef const matrix_const_reference<const matrix_slice<matrix_type> > const_closure_type;
         typedef matrix_reference<matrix_slice<matrix_type> > closure_type;
@@ -2473,7 +2473,7 @@ namespace numerics {
             return data (s1_ (i), s2_ (j)); 
         }
         NUMERICS_INLINE
-        reference_type operator () (size_type i, size_type j) {
+        reference operator () (size_type i, size_type j) {
             return data_ (s1_ (i), s2_ (j)); 
         }
 
@@ -2602,9 +2602,9 @@ namespace numerics {
 #endif
 #ifdef USE_MSVC
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
-        typedef reverse_iterator1<iterator1, value_type, reference_type> reverse_iterator1;
+        typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
-        typedef reverse_iterator2<iterator2, value_type, reference_type> reverse_iterator2;
+        typedef reverse_iterator2<iterator2, value_type, reference> reverse_iterator2;
 #else
         typedef reverse_iterator1<const_iterator1> const_reverse_iterator1;
         typedef reverse_iterator1<iterator1> reverse_iterator1;
@@ -2823,7 +2823,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            reference_type operator * () const {
+            reference operator * () const {
                 return (*this) () (*it1_, *it2_); 
             }
 
@@ -3070,7 +3070,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            reference_type operator * () const {
+            reference operator * () const {
                 return (*this) () (*it1_, *it2_); 
             }
 

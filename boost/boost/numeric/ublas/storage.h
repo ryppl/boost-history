@@ -51,10 +51,10 @@ namespace numerics {
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
-        typedef const T &const_reference_type;
-        typedef T &reference_type;
-        typedef const T *const_pointer_type;
-        typedef T *pointer_type;
+        typedef const T &const_reference;
+        typedef T &reference;
+        typedef const T *const_pointer;
+        typedef T *pointer;
 
         // Construction and destruction
         NUMERICS_INLINE
@@ -87,7 +87,7 @@ namespace numerics {
         NUMERICS_INLINE
         void resize (size_type size) {
             if (size != size_) {
-                pointer_type data = new value_type [size];
+                pointer data = new value_type [size];
                 if (! data)
                     throw std::bad_alloc ();
                 if (! data_)
@@ -106,12 +106,12 @@ namespace numerics {
 
         // Element access
         NUMERICS_INLINE
-        const_reference_type operator [] (size_type i) const {
+        const_reference operator [] (size_type i) const {
             check (i < size_, bad_index ());
             return data_ [i];
         }
         NUMERICS_INLINE
-        reference_type operator [] (size_type i) {
+        reference operator [] (size_type i) {
             check (i < size_, bad_index ());
             return data_ [i];
         }
@@ -147,14 +147,14 @@ namespace numerics {
 
         // Element insertion and deletion
         NUMERICS_INLINE
-        pointer_type insert (pointer_type it, const value_type &t) {
+        pointer insert (pointer it, const value_type &t) {
             check (begin () <= it && it < end (), bad_index ());
             check (*it == value_type (), external_logic ());
             *it = t;
             return it;
         }
         NUMERICS_INLINE
-        void insert (pointer_type it, pointer_type it1, pointer_type it2) {
+        void insert (pointer it, pointer it1, pointer it2) {
             while (it1 != it2) {
                 check (begin () <= it && it < end (), bad_index ());
                 check (*it == value_type (), external_logic ());
@@ -163,12 +163,12 @@ namespace numerics {
             }
         }
         NUMERICS_INLINE
-        void erase (pointer_type it) {
+        void erase (pointer it) {
             check (begin () <= it && it < end (), bad_index ());
             *it = value_type ();
         }
         NUMERICS_INLINE
-        void erase (pointer_type it1, pointer_type it2) {
+        void erase (pointer it1, pointer it2) {
             while (it1 != it2) {
                 check (begin () <= it1 && it1 < end (), bad_index ());
                 *it1 = value_type ();
@@ -182,7 +182,7 @@ namespace numerics {
 
         // Iterators simply are pointers.
 
-        typedef const_pointer_type const_iterator;
+        typedef const_pointer const_iterator;
 
         NUMERICS_INLINE
         const_iterator begin () const {
@@ -193,7 +193,7 @@ namespace numerics {
             return data_ + size_;
         }
 
-        typedef pointer_type iterator;
+        typedef pointer iterator;
 
         NUMERICS_INLINE
         iterator begin () {
@@ -207,7 +207,7 @@ namespace numerics {
         // Reverse iterators
 
 #ifdef USE_MSVC
-        typedef std::reverse_iterator<const_iterator, value_type, const_reference_type> const_reverse_iterator;
+        typedef std::reverse_iterator<const_iterator, value_type, const_reference> const_reverse_iterator;
 #else
         typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 #endif
@@ -222,7 +222,7 @@ namespace numerics {
         }
 
 #ifdef USE_MSVC
-        typedef std::reverse_iterator<iterator, value_type, reference_type> reverse_iterator;
+        typedef std::reverse_iterator<iterator, value_type, reference> reverse_iterator;
 #else
         typedef std::reverse_iterator<iterator> reverse_iterator;
 #endif
@@ -238,7 +238,7 @@ namespace numerics {
 
     private:
         size_type size_;
-        pointer_type data_;
+        pointer data_;
     };
 
     template<class T>
@@ -254,10 +254,10 @@ namespace numerics {
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
-        typedef const T &const_reference_type;
-        typedef T &reference_type;
-        typedef const T *const_pointer_type;
-        typedef T *pointer_type;
+        typedef const T &const_reference;
+        typedef T &reference;
+        typedef const T *const_pointer;
+        typedef T *pointer;
 
         // Construction and destruction
         NUMERICS_INLINE
@@ -293,12 +293,12 @@ namespace numerics {
 
         // Element access
         NUMERICS_INLINE
-        const_reference_type operator [] (size_type i) const {
+        const_reference operator [] (size_type i) const {
             check (i < size_, bad_index ());
             return data_ [i];
         }
         NUMERICS_INLINE
-        reference_type operator [] (size_type i) {
+        reference operator [] (size_type i) {
             check (i < size_, bad_index ());
             return data_ [i];
         }
@@ -333,14 +333,14 @@ namespace numerics {
 
         // Element insertion and deletion
         NUMERICS_INLINE
-        pointer_type insert (pointer_type it, const value_type &t) {
+        pointer insert (pointer it, const value_type &t) {
             check (begin () <= it && it < end (), bad_index ());
             check (*it == value_type (), external_logic ());
             *it = t;
             return it;
         }
         NUMERICS_INLINE
-        void insert (pointer_type it, pointer_type it1, pointer_type it2) {
+        void insert (pointer it, pointer it1, pointer it2) {
             while (it1 != it2) {
                 check (begin () <= it && it < end (), bad_index ());
                 check (*it == value_type (), external_logic ());
@@ -349,12 +349,12 @@ namespace numerics {
             }
         }
         NUMERICS_INLINE
-        void erase (pointer_type it) {
+        void erase (pointer it) {
             check (begin () <= it && it < end (), bad_index ());
             *it = value_type ();
         }
         NUMERICS_INLINE
-        void erase (pointer_type it1, pointer_type it2) {
+        void erase (pointer it1, pointer it2) {
             while (it1 != it2) {
                 check (begin () <= it1 && it1 < end (), bad_index ());
                 *it1 = value_type ();
@@ -368,7 +368,7 @@ namespace numerics {
 
         // Iterators simply are pointers.
 
-        typedef const_pointer_type const_iterator;
+        typedef const_pointer const_iterator;
 
         NUMERICS_INLINE
         const_iterator begin () const {
@@ -379,7 +379,7 @@ namespace numerics {
             return data_ + size_;
         }
 
-        typedef pointer_type iterator;
+        typedef pointer iterator;
 
         NUMERICS_INLINE
         iterator begin () {
@@ -393,7 +393,7 @@ namespace numerics {
         // Reverse iterators
 
 #ifdef USE_MSVC
-        typedef std::reverse_iterator<const_iterator, value_type, const_reference_type> const_reverse_iterator;
+        typedef std::reverse_iterator<const_iterator, value_type, const_reference> const_reverse_iterator;
 #else
         typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 #endif
@@ -408,7 +408,7 @@ namespace numerics {
         }
 
 #ifdef USE_MSVC
-        typedef std::reverse_iterator<iterator, value_type, reference_type> reverse_iterator;
+        typedef std::reverse_iterator<iterator, value_type, reference> reverse_iterator;
 #else
         typedef std::reverse_iterator<iterator> reverse_iterator;
 #endif
@@ -456,10 +456,10 @@ namespace numerics {
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef difference_type value_type;
-        typedef const difference_type &const_reference_type;
-        typedef difference_type reference_type;
-        typedef const difference_type *const_pointer_type;
-        typedef difference_type *pointer_type;
+        typedef const difference_type &const_reference;
+        typedef difference_type reference;
+        typedef const difference_type *const_pointer;
+        typedef difference_type *pointer;
         typedef size_type const_iterator_type;
 
         // Construction and destruction
@@ -620,10 +620,10 @@ namespace numerics {
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef difference_type value_type;
-        typedef const difference_type &const_reference_type;
-        typedef difference_type reference_type;
-        typedef const difference_type *const_pointer_type;
-        typedef difference_type *pointer_type;
+        typedef const difference_type &const_reference;
+        typedef difference_type reference;
+        typedef const difference_type *const_pointer;
+        typedef difference_type *pointer;
         typedef size_type const_iterator_type;
 
         // Construction and destruction

@@ -251,10 +251,10 @@ namespace numerics {
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
-        typedef const T &const_reference_type;
-        typedef T &reference_type;
-        typedef const T *const_pointer_type;
-        typedef T *pointer_type;
+        typedef const T &const_reference;
+        typedef T &reference;
+        typedef const T *const_pointer;
+        typedef T *pointer;
         typedef F1 functor1_type;
         typedef F2 functor2_type;
         typedef A array_type;
@@ -288,7 +288,7 @@ namespace numerics {
             size1_ (m.size1_), size2_ (m.size2_),
             data_ (m.data_) {}
         template<class AE>
-        NUMERICS_EXPLICIT NUMERICS_INLINE
+        NUMERICS_INLINE
         triangular_matrix (const matrix_expression<AE> &ae): 
             size1_ (ae ().size1 ()), size2_ (ae ().size2 ()),
             data_ (functor1_type::packed_size (ae ().size1 (), ae ().size2 ())) {
@@ -325,7 +325,7 @@ namespace numerics {
                 return value_type (0);
         }
         NUMERICS_INLINE
-        reference_type operator () (size_type i, size_type j) {
+        reference operator () (size_type i, size_type j) {
             check (i < size1_, bad_index ());
             check (j < size2_, bad_index ());
             if (functor1_type::other (i, j))
@@ -462,7 +462,7 @@ namespace numerics {
 
         // Element insertion and erasure
         NUMERICS_INLINE
-        void insert (size_type i, size_type j, const_reference_type t) {
+        void insert (size_type i, size_type j, const_reference t) {
             check (i < size1_, bad_index ());
             check (j < size2_, bad_index ());
 #ifndef NUMERICS_USE_ET
@@ -500,9 +500,9 @@ namespace numerics {
 #endif
 #ifdef USE_MSVC
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
-        typedef reverse_iterator1<iterator1, value_type, reference_type> reverse_iterator1;
+        typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
-        typedef reverse_iterator2<iterator2, value_type, reference_type> reverse_iterator2;
+        typedef reverse_iterator2<iterator2, value_type, reference> reverse_iterator2;
 #else
         typedef reverse_iterator1<const_iterator1> const_reverse_iterator1;
         typedef reverse_iterator1<iterator1> reverse_iterator1;
@@ -548,7 +548,7 @@ namespace numerics {
             typedef typename triangular_matrix::difference_type difference_type;
             typedef typename triangular_matrix::value_type value_type;
             typedef typename triangular_matrix::value_type reference;
-            typedef typename triangular_matrix::const_pointer_type pointer;
+            typedef typename triangular_matrix::const_pointer pointer;
 #endif
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
@@ -663,8 +663,8 @@ namespace numerics {
 #ifndef USE_MSVC
             typedef typename triangular_matrix::difference_type difference_type;
             typedef typename triangular_matrix::value_type value_type;
-            typedef typename triangular_matrix::reference_type reference;
-            typedef typename triangular_matrix::pointer_type pointer;
+            typedef typename triangular_matrix::reference reference;
+            typedef typename triangular_matrix::pointer pointer;
 #endif
             typedef iterator2 dual_iterator_type;
             typedef reverse_iterator2 dual_reverse_iterator_type;
@@ -705,7 +705,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            reference_type operator * () const {
+            reference operator * () const {
                 return (*this) () (it1_, it2_); 
             }
 
@@ -779,7 +779,7 @@ namespace numerics {
             typedef typename triangular_matrix::difference_type difference_type;
             typedef typename triangular_matrix::value_type value_type;
             typedef typename triangular_matrix::value_type reference;
-            typedef typename triangular_matrix::const_pointer_type pointer;
+            typedef typename triangular_matrix::const_pointer pointer;
 #endif
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
@@ -894,8 +894,8 @@ namespace numerics {
 #ifndef USE_MSVC
             typedef typename triangular_matrix::difference_type difference_type;
             typedef typename triangular_matrix::value_type value_type;
-            typedef typename triangular_matrix::reference_type reference;
-            typedef typename triangular_matrix::pointer_type pointer;
+            typedef typename triangular_matrix::reference reference;
+            typedef typename triangular_matrix::pointer pointer;
 #endif
             typedef iterator1 dual_iterator_type;
             typedef reverse_iterator1 dual_reverse_iterator_type;
@@ -936,7 +936,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            reference_type operator * () const {
+            reference operator * () const {
                 return (*this) () (it1_, it2_); 
             }
 
@@ -1055,10 +1055,10 @@ namespace numerics {
         typedef typename M::size_type size_type;
         typedef typename M::difference_type difference_type;
         typedef typename M::value_type value_type;
-        typedef typename M::const_reference_type const_reference_type;
-        typedef typename M::reference_type reference_type;
-        typedef typename M::const_pointer_type const_pointer_type;
-        typedef typename M::pointer_type pointer_type;
+        typedef typename M::const_reference const_reference;
+        typedef typename M::reference reference;
+        typedef typename M::const_pointer const_pointer;
+        typedef typename M::pointer pointer;
         typedef const triangular_adaptor<M, F> const_self_type;
         typedef triangular_adaptor<M, F> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
@@ -1108,7 +1108,7 @@ namespace numerics {
                 return value_type (0);
         }
         NUMERICS_INLINE
-        reference_type operator () (size_type i, size_type j) {
+        reference operator () (size_type i, size_type j) {
             check (i < size1 (), bad_index ());
             check (j < size2 (), bad_index ());
             if (functor_type::other (i, j))
@@ -1241,9 +1241,9 @@ namespace numerics {
 #endif
 #ifdef USE_MSVC
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
-        typedef reverse_iterator1<iterator1, value_type, reference_type> reverse_iterator1;
+        typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
-        typedef reverse_iterator2<iterator2, value_type, reference_type> reverse_iterator2;
+        typedef reverse_iterator2<iterator2, value_type, reference> reverse_iterator2;
 #else
         typedef reverse_iterator1<const_iterator1> const_reverse_iterator1;
         typedef reverse_iterator1<iterator1> reverse_iterator1;
@@ -1289,7 +1289,7 @@ namespace numerics {
             typedef typename triangular_adaptor::difference_type difference_type;
             typedef typename triangular_adaptor::value_type value_type;
             typedef typename triangular_adaptor::value_type reference;
-            typedef typename triangular_adaptor::const_pointer_type pointer;
+            typedef typename triangular_adaptor::const_pointer pointer;
 #endif
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
@@ -1404,8 +1404,8 @@ namespace numerics {
 #ifndef USE_MSVC
             typedef typename triangular_adaptor::difference_type difference_type;
             typedef typename triangular_adaptor::value_type value_type;
-            typedef typename triangular_adaptor::reference_type reference;
-            typedef typename triangular_adaptor::pointer_type pointer;
+            typedef typename triangular_adaptor::reference reference;
+            typedef typename triangular_adaptor::pointer pointer;
 #endif
             typedef iterator2 dual_iterator_type;
             typedef reverse_iterator2 dual_reverse_iterator_type;
@@ -1446,7 +1446,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            reference_type operator * () const {
+            reference operator * () const {
                 return (*this) () (it1_, it2_); 
             }
 
@@ -1520,7 +1520,7 @@ namespace numerics {
             typedef typename triangular_adaptor::difference_type difference_type;
             typedef typename triangular_adaptor::value_type value_type;
             typedef typename triangular_adaptor::value_type reference;
-            typedef typename triangular_adaptor::const_pointer_type pointer;
+            typedef typename triangular_adaptor::const_pointer pointer;
 #endif
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
@@ -1635,8 +1635,8 @@ namespace numerics {
 #ifndef USE_MSVC
             typedef typename triangular_adaptor::difference_type difference_type;
             typedef typename triangular_adaptor::value_type value_type;
-            typedef typename triangular_adaptor::reference_type reference;
-            typedef typename triangular_adaptor::pointer_type pointer;
+            typedef typename triangular_adaptor::reference reference;
+            typedef typename triangular_adaptor::pointer pointer;
 #endif
             typedef iterator1 dual_iterator_type;
             typedef reverse_iterator1 dual_reverse_iterator_type;
@@ -1677,7 +1677,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            reference_type operator * () const {
+            reference operator * () const {
                 return (*this) () (it1_, it2_); 
             }
 
@@ -2094,5 +2094,6 @@ namespace numerics {
 }
 
 #endif 
+
 
 

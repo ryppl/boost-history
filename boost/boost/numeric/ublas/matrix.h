@@ -1025,10 +1025,10 @@ namespace numerics {
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
-        typedef const T &const_reference_type;
-        typedef T &reference_type;
-        typedef const T *const_pointer_type;
-        typedef T *pointer_type;
+        typedef const T &const_reference;
+        typedef T &reference;
+        typedef const T *const_pointer;
+        typedef T *pointer;
         typedef F functor_type;
         typedef A array_type;
         typedef const matrix<T, F, A> const_self_type;
@@ -1059,7 +1059,7 @@ namespace numerics {
         matrix (const matrix &m): 
             size1_ (m.size1_), size2_ (m.size2_), data_ (m.data_) {}
         template<class AE>
-        NUMERICS_EXPLICIT NUMERICS_INLINE
+        NUMERICS_INLINE
         matrix (const matrix_expression<AE> &ae): 
             size1_ (ae ().size1 ()), size2_ (ae ().size2 ()), data_ (ae ().size1 () * ae ().size2 ()) { 
             matrix_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
@@ -1084,11 +1084,11 @@ namespace numerics {
 
         // Element access
         NUMERICS_INLINE
-        const_reference_type operator () (size_type i, size_type j) const {
+        const_reference operator () (size_type i, size_type j) const {
             return data_ [functor_type::element (i, size1_, j, size2_)]; 
         }
         NUMERICS_INLINE
-        reference_type operator () (size_type i, size_type j) {
+        reference operator () (size_type i, size_type j) {
             return data_ [functor_type::element (i, size1_, j, size2_)]; 
         }
 
@@ -1220,7 +1220,7 @@ namespace numerics {
 
         // Element insertion and erasure
         NUMERICS_INLINE
-        void insert (size_type i, size_type j, const_reference_type t) {
+        void insert (size_type i, size_type j, const_reference t) {
             check (data_ [functor_type::element (i, size1_, j, size2_)] == value_type (), bad_index ());
             data_.insert (data_.begin () + functor_type::element (i, size1_, j, size2_), t);
         }
@@ -1246,9 +1246,9 @@ namespace numerics {
 #endif
 #ifdef USE_MSVC
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
-        typedef reverse_iterator1<iterator1, value_type, reference_type> reverse_iterator1;
+        typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
-        typedef reverse_iterator2<iterator2, value_type, reference_type> reverse_iterator2;
+        typedef reverse_iterator2<iterator2, value_type, reference> reverse_iterator2;
 #else
         typedef reverse_iterator1<const_iterator1> const_reverse_iterator1;
         typedef reverse_iterator1<iterator1> reverse_iterator1;
@@ -1301,8 +1301,8 @@ namespace numerics {
 #ifndef USE_MSVC
             typedef typename matrix::difference_type difference_type;
             typedef typename matrix::value_type value_type;
-            typedef typename matrix::const_reference_type reference;
-            typedef typename matrix::const_pointer_type pointer;
+            typedef typename matrix::const_reference reference;
+            typedef typename matrix::const_pointer pointer;
 #endif
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
@@ -1346,7 +1346,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            const_reference_type operator * () const {
+            const_reference operator * () const {
                 check (index1 () < (*this) ().size1 (), bad_index ());
                 check (index2 () < (*this) ().size2 (), bad_index ());
                 return *it_;
@@ -1423,8 +1423,8 @@ namespace numerics {
 #ifndef USE_MSVC
             typedef typename matrix::difference_type difference_type;
             typedef typename matrix::value_type value_type;
-            typedef typename matrix::reference_type reference;
-            typedef typename matrix::pointer_type pointer;
+            typedef typename matrix::reference reference;
+            typedef typename matrix::pointer pointer;
 #endif
             typedef iterator2 dual_iterator_type;
             typedef reverse_iterator2 dual_reverse_iterator_type;
@@ -1465,7 +1465,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            reference_type operator * () const {
+            reference operator * () const {
                 check (index1 () < (*this) ().size1 (), bad_index ());
                 check (index2 () < (*this) ().size2 (), bad_index ());
                 return *it_;
@@ -1542,8 +1542,8 @@ namespace numerics {
 #ifndef USE_MSVC
             typedef typename matrix::difference_type difference_type;
             typedef typename matrix::value_type value_type;
-            typedef typename matrix::const_reference_type reference;
-            typedef typename matrix::const_pointer_type pointer;
+            typedef typename matrix::const_reference reference;
+            typedef typename matrix::const_pointer pointer;
 #endif
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
@@ -1587,7 +1587,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            const_reference_type operator * () const {
+            const_reference operator * () const {
                 check (index1 () < (*this) ().size1 (), bad_index ());
                 check (index2 () < (*this) ().size2 (), bad_index ());
                 return *it_;
@@ -1664,8 +1664,8 @@ namespace numerics {
 #ifndef USE_MSVC
             typedef typename matrix::difference_type difference_type;
             typedef typename matrix::value_type value_type;
-            typedef typename matrix::reference_type reference;
-            typedef typename matrix::pointer_type pointer;
+            typedef typename matrix::reference reference;
+            typedef typename matrix::pointer pointer;
 #endif
             typedef iterator1 dual_iterator_type;
             typedef reverse_iterator1 dual_reverse_iterator_type;
@@ -1706,7 +1706,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            reference_type operator * () const {
+            reference operator * () const {
                 check (index1 () < (*this) ().size1 (), bad_index ());
                 check (index2 () < (*this) ().size2 (), bad_index ());
                 return *it_;
@@ -1826,10 +1826,10 @@ namespace numerics {
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
-        typedef const T &const_reference_type;
-        typedef T &reference_type;
-        typedef const T *const_pointer_type;
-        typedef T *pointer_type;
+        typedef const T &const_reference;
+        typedef T &reference;
+        typedef const T *const_pointer;
+        typedef T *pointer;
         typedef F functor_type;
         typedef A array_type;
         typedef const vector_of_vector<T, F, A> const_self_type;
@@ -1866,7 +1866,7 @@ namespace numerics {
         vector_of_vector (const vector_of_vector &m): 
             size1_ (m.size1_), size2_ (m.size2_), data_ (m.data_) {}
         template<class AE>
-        NUMERICS_EXPLICIT NUMERICS_INLINE
+        NUMERICS_INLINE
         vector_of_vector (const matrix_expression<AE> &ae): 
             size1_ (ae ().size1 ()), size2_ (ae ().size2 ()),
             data_ (functor_type::size1 (ae ().size1 (), ae ().size2 ()) + 1) { 
@@ -1896,11 +1896,11 @@ namespace numerics {
 
         // Element access
         NUMERICS_INLINE
-        const_reference_type operator () (size_type i, size_type j) const {
+        const_reference operator () (size_type i, size_type j) const {
             return data_ [functor_type::element1 (i, size1_, j, size2_)] [functor_type::element2 (i, size1_, j, size2_)]; 
         }
         NUMERICS_INLINE
-        reference_type operator () (size_type i, size_type j) {
+        reference operator () (size_type i, size_type j) {
             return data_ [functor_type::element1 (i, size1_, j, size2_)] [functor_type::element2 (i, size1_, j, size2_)]; 
         }
 
@@ -2032,7 +2032,7 @@ namespace numerics {
 
         // Element insertion and erasure
         NUMERICS_INLINE
-        void insert (size_type i, size_type j, const_reference_type t) {
+        void insert (size_type i, size_type j, const_reference t) {
             check (data_ [functor_type::element1 (i, size1_, j, size2_)] [functor_type::element2 (i, size1_, j, size2_)] == value_type (), bad_index ());
             data_ [functor_type::element1 (i, size1_, j, size2_)] [functor_type::element2 (i, size1_, j, size2_)] = t; 
         }
@@ -2059,9 +2059,9 @@ namespace numerics {
 #endif
 #ifdef USE_MSVC
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
-        typedef reverse_iterator1<iterator1, value_type, reference_type> reverse_iterator1;
+        typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
-        typedef reverse_iterator2<iterator2, value_type, reference_type> reverse_iterator2;
+        typedef reverse_iterator2<iterator2, value_type, reference> reverse_iterator2;
 #else
         typedef reverse_iterator1<const_iterator1> const_reverse_iterator1;
         typedef reverse_iterator1<iterator1> reverse_iterator1;
@@ -2114,8 +2114,8 @@ namespace numerics {
 #ifndef USE_MSVC
             typedef typename vector_of_vector::difference_type difference_type;
             typedef typename vector_of_vector::value_type value_type;
-            typedef typename vector_of_vector::const_reference_type reference;
-            typedef typename vector_of_vector::const_pointer_type pointer;
+            typedef typename vector_of_vector::const_reference reference;
+            typedef typename vector_of_vector::const_pointer pointer;
 #endif
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
@@ -2185,7 +2185,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            const_reference_type operator * () const {
+            const_reference operator * () const {
                 check (index1 () < (*this) ().size1 (), bad_index ());
                 check (index2 () < (*this) ().size2 (), bad_index ());
                 return *it_;
@@ -2262,8 +2262,8 @@ namespace numerics {
 #ifndef USE_MSVC
             typedef typename vector_of_vector::difference_type difference_type;
             typedef typename vector_of_vector::value_type value_type;
-            typedef typename vector_of_vector::reference_type reference;
-            typedef typename vector_of_vector::pointer_type pointer;
+            typedef typename vector_of_vector::reference reference;
+            typedef typename vector_of_vector::pointer pointer;
 #endif
             typedef iterator2 dual_iterator_type;
             typedef reverse_iterator2 dual_reverse_iterator_type;
@@ -2330,7 +2330,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            reference_type operator * () const {
+            reference operator * () const {
                 check (index1 () < (*this) ().size1 (), bad_index ());
                 check (index2 () < (*this) ().size2 (), bad_index ());
                 return *it_;
@@ -2407,8 +2407,8 @@ namespace numerics {
 #ifndef USE_MSVC
             typedef typename vector_of_vector::difference_type difference_type;
             typedef typename vector_of_vector::value_type value_type;
-            typedef typename vector_of_vector::const_reference_type reference;
-            typedef typename vector_of_vector::const_pointer_type pointer;
+            typedef typename vector_of_vector::const_reference reference;
+            typedef typename vector_of_vector::const_pointer pointer;
 #endif
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
@@ -2478,7 +2478,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            const_reference_type operator * () const {
+            const_reference operator * () const {
                 check (index1 () < (*this) ().size1 (), bad_index ());
                 check (index2 () < (*this) ().size2 (), bad_index ());
                 return *it_;
@@ -2555,8 +2555,8 @@ namespace numerics {
 #ifndef USE_MSVC
             typedef typename vector_of_vector::difference_type difference_type;
             typedef typename vector_of_vector::value_type value_type;
-            typedef typename vector_of_vector::reference_type reference;
-            typedef typename vector_of_vector::pointer_type pointer;
+            typedef typename vector_of_vector::reference reference;
+            typedef typename vector_of_vector::pointer pointer;
 #endif
             typedef iterator1 dual_iterator_type;
             typedef reverse_iterator1 dual_reverse_iterator_type;
@@ -2623,7 +2623,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            reference_type operator * () const {
+            reference operator * () const {
                 check (index1 () < (*this) ().size1 (), bad_index ());
                 check (index2 () < (*this) ().size2 (), bad_index ());
                 return *it_;
@@ -2743,10 +2743,10 @@ namespace numerics {
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
-        typedef const T &const_reference_type;
-        typedef T &reference_type;
-        typedef const T *const_pointer_type;
-        typedef T *pointer_type;
+        typedef const T &const_reference;
+        typedef T &reference;
+        typedef const T *const_pointer;
+        typedef T *pointer;
         typedef const identity_matrix<T> const_self_type;
         typedef identity_matrix<T> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
@@ -2938,7 +2938,7 @@ namespace numerics {
             typedef typename identity_matrix::difference_type difference_type;
             typedef typename identity_matrix::value_type value_type;
             typedef typename identity_matrix::value_type reference;
-            typedef typename identity_matrix::const_pointer_type pointer;
+            typedef typename identity_matrix::const_pointer pointer;
 #endif
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
@@ -3057,7 +3057,7 @@ namespace numerics {
             typedef typename identity_matrix::difference_type difference_type;
             typedef typename identity_matrix::value_type value_type;
             typedef typename identity_matrix::value_type reference;
-            typedef typename identity_matrix::const_pointer_type pointer;
+            typedef typename identity_matrix::const_pointer pointer;
 #endif
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
@@ -3199,10 +3199,10 @@ namespace numerics {
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
-        typedef const T &const_reference_type;
-        typedef T &reference_type;
-        typedef const T *const_pointer_type;
-        typedef T *pointer_type;
+        typedef const T &const_reference;
+        typedef T &reference;
+        typedef const T *const_pointer;
+        typedef T *pointer;
         typedef const c_matrix<T, N, M> const_self_type;
         typedef c_matrix<T, N, M> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
@@ -3239,7 +3239,7 @@ namespace numerics {
             *this = m;
         }
         template<class AE>
-        NUMERICS_EXPLICIT NUMERICS_INLINE
+        NUMERICS_INLINE
         c_matrix (const matrix_expression<AE> &ae): 
             size1_ (ae ().size1 ()), size2_ (ae ().size2 ()) /* , data_ () */ { 
             if (size1_ > N || size2_ > M) 
@@ -3268,13 +3268,13 @@ namespace numerics {
 
         // Element access
         NUMERICS_INLINE
-        const_reference_type operator () (size_type i, size_type j) const {
+        const_reference operator () (size_type i, size_type j) const {
             check (i < size1_, bad_index ());
             check (j < size2_, bad_index ());
             return data_ [i] [j]; 
         }
         NUMERICS_INLINE
-        reference_type operator () (size_type i, size_type j) {
+        reference operator () (size_type i, size_type j) {
             check (i < size1_, bad_index ());
             check (j < size2_, bad_index ());
             return data_ [i] [j]; 
@@ -3410,7 +3410,7 @@ namespace numerics {
 
         // Element insertion and erasure
         NUMERICS_INLINE
-        void insert (size_type i, size_type j, const_reference_type t) {
+        void insert (size_type i, size_type j, const_reference t) {
             check (i < size1_, bad_index ());
             check (j < size2_, bad_index ());
             check (data_ [i] [j] == value_type (), bad_index ());
@@ -3441,9 +3441,9 @@ namespace numerics {
 #endif
 #ifdef USE_MSVC
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
-        typedef reverse_iterator1<iterator1, value_type, reference_type> reverse_iterator1;
+        typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
-        typedef reverse_iterator2<iterator2, value_type, reference_type> reverse_iterator2;
+        typedef reverse_iterator2<iterator2, value_type, reference> reverse_iterator2;
 #else
         typedef reverse_iterator1<const_iterator1> const_reverse_iterator1;
         typedef reverse_iterator1<iterator1> reverse_iterator1;
@@ -3496,8 +3496,8 @@ namespace numerics {
 #ifndef USE_MSVC
             typedef typename c_matrix::difference_type difference_type;
             typedef typename c_matrix::value_type value_type;
-            typedef typename c_matrix::const_reference_type reference;
-            typedef typename c_matrix::const_pointer_type pointer;
+            typedef typename c_matrix::const_reference reference;
+            typedef typename c_matrix::const_pointer pointer;
 #endif
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
@@ -3541,7 +3541,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            const_reference_type operator * () const {
+            const_reference operator * () const {
                 check (index1 () < (*this) ().size1 (), bad_index ());
                 check (index2 () < (*this) ().size2 (), bad_index ());
                 return *it_;
@@ -3618,8 +3618,8 @@ namespace numerics {
 #ifndef USE_MSVC
             typedef typename c_matrix::difference_type difference_type;
             typedef typename c_matrix::value_type value_type;
-            typedef typename c_matrix::reference_type reference;
-            typedef typename c_matrix::pointer_type pointer;
+            typedef typename c_matrix::reference reference;
+            typedef typename c_matrix::pointer pointer;
 #endif
             typedef iterator2 dual_iterator_type;
             typedef reverse_iterator2 dual_reverse_iterator_type;
@@ -3660,7 +3660,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            reference_type operator * () const {
+            reference operator * () const {
                 check (index1 () < (*this) ().size1 (), bad_index ());
                 check (index2 () < (*this) ().size2 (), bad_index ());
                 return *it_;
@@ -3737,8 +3737,8 @@ namespace numerics {
 #ifndef USE_MSVC
             typedef typename c_matrix::difference_type difference_type;
             typedef typename c_matrix::value_type value_type;
-            typedef typename c_matrix::const_reference_type reference;
-            typedef typename c_matrix::const_pointer_type pointer;
+            typedef typename c_matrix::const_reference reference;
+            typedef typename c_matrix::const_pointer pointer;
 #endif
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
@@ -3782,7 +3782,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            const_reference_type operator * () const {
+            const_reference operator * () const {
                 check (index1 () < (*this) ().size1 (), bad_index ());
                 check (index2 () < (*this) ().size2 (), bad_index ());
                 return *it_;
@@ -3859,8 +3859,8 @@ namespace numerics {
 #ifndef USE_MSVC
             typedef typename c_matrix::difference_type difference_type;
             typedef typename c_matrix::value_type value_type;
-            typedef typename c_matrix::reference_type reference;
-            typedef typename c_matrix::pointer_type pointer;
+            typedef typename c_matrix::reference reference;
+            typedef typename c_matrix::pointer pointer;
 #endif
             typedef iterator1 dual_iterator_type;
             typedef reverse_iterator1 dual_reverse_iterator_type;
@@ -3901,7 +3901,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            reference_type operator * () const {
+            reference operator * () const {
                 check (index1 () < (*this) ().size1 (), bad_index ());
                 check (index2 () < (*this) ().size2 (), bad_index ());
                 return *it_;
@@ -4016,5 +4016,6 @@ namespace numerics {
 }
 
 #endif 
+
 
 

@@ -33,10 +33,10 @@ namespace numerics {
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
-        typedef const T &const_reference_type;
-        typedef T &reference_type;
-        typedef const T *const_pointer_type;
-        typedef T *pointer_type;
+        typedef const T &const_reference;
+        typedef T &reference;
+        typedef const T *const_pointer;
+        typedef T *pointer;
         typedef F functor_type;
         typedef A array_type;
         typedef const sparse_vector<T, F, A> const_self_type;
@@ -89,7 +89,7 @@ namespace numerics {
             return (*it).second;
         }
         NUMERICS_INLINE
-        reference_type operator () (size_type i) {
+        reference operator () (size_type i) {
             return data_ [functor_type::element (i, size_)]; 
         }
 
@@ -98,7 +98,7 @@ namespace numerics {
             return (*this) (i); 
         }
         NUMERICS_INLINE
-        reference_type operator [] (size_type i) { 
+        reference operator [] (size_type i) { 
             return (*this) (i); 
         }
 
@@ -205,7 +205,7 @@ namespace numerics {
 
         // Element insertion and erasure
         NUMERICS_INLINE
-        void insert (size_type i, const_reference_type t) {
+        void insert (size_type i, const_reference t) {
 #ifndef NUMERICS_USE_ET
             if (t == value_type ()) 
                 return;
@@ -265,7 +265,7 @@ namespace numerics {
             typedef typename sparse_vector::difference_type difference_type;
             typedef typename sparse_vector::value_type value_type;
             typedef typename sparse_vector::value_type reference;
-            typedef typename sparse_vector::const_pointer_type pointer;
+            typedef typename sparse_vector::const_pointer pointer;
 #endif
 
             // Construction and destruction
@@ -340,8 +340,8 @@ namespace numerics {
 #ifndef USE_MSVC
             typedef typename sparse_vector::difference_type difference_type;
             typedef typename sparse_vector::value_type value_type;
-            typedef typename sparse_vector::reference_type reference;
-            typedef typename sparse_vector::pointer_type pointer;
+            typedef typename sparse_vector::reference reference;
+            typedef typename sparse_vector::pointer pointer;
 #endif
 
             // Construction and destruction
@@ -366,7 +366,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            reference_type operator * () const {
+            reference operator * () const {
                 check (index () < (*this) ().size (), bad_index ());
                 return (*it_).second;
             }
@@ -425,7 +425,7 @@ namespace numerics {
         }
 
 #ifdef USE_MSVC
-        typedef reverse_iterator<iterator, value_type, reference_type> reverse_iterator;
+        typedef reverse_iterator<iterator, value_type, reference> reverse_iterator;
 #else
         typedef reverse_iterator<iterator> reverse_iterator;
 #endif

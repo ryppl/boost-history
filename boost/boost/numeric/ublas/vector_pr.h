@@ -33,10 +33,10 @@ namespace numerics {
         typedef typename V::size_type size_type;
         typedef typename V::difference_type difference_type;
         typedef typename V::value_type value_type;
-        typedef typename V::const_reference_type const_reference_type;
-        typedef typename V::reference_type reference_type;
-        typedef typename V::const_pointer_type const_pointer_type;
-        typedef typename V::pointer_type pointer_type;
+        typedef typename V::const_reference const_reference;
+        typedef typename V::reference reference;
+        typedef typename V::const_pointer const_pointer;
+        typedef typename V::pointer pointer;
 #ifdef NUMERICS_ET_CLOSURE_REFERENCE
         typedef const vector_const_reference<const vector_range<vector_type> > const_closure_type;
         typedef vector_reference<vector_range<vector_type> > closure_type;
@@ -77,7 +77,7 @@ namespace numerics {
             return data (r_ (i));
         }
         NUMERICS_INLINE
-        reference_type operator () (size_type i) {
+        reference operator () (size_type i) {
             return data_ (r_ (i)); 
         }
 
@@ -86,7 +86,7 @@ namespace numerics {
             return (*this) (i); 
         }
         NUMERICS_INLINE
-        reference_type operator [] (size_type i) { 
+        reference operator [] (size_type i) { 
             return (*this) (i); 
         }
 
@@ -347,7 +347,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            reference_type operator * () const {
+            reference operator * () const {
                 check (index () < (*this) ().size (), bad_index ());
                 return *it_;
             }
@@ -407,7 +407,7 @@ namespace numerics {
         }
 
 #ifdef USE_MSVC
-        typedef reverse_iterator<iterator, value_type, reference_type> reverse_iterator;
+        typedef reverse_iterator<iterator, value_type, reference> reverse_iterator;
 #else
         typedef reverse_iterator<iterator> reverse_iterator;
 #endif
@@ -452,10 +452,10 @@ namespace numerics {
         typedef typename V::size_type size_type;
         typedef typename V::difference_type difference_type;
         typedef typename V::value_type value_type;
-        typedef typename V::const_reference_type const_reference_type;
-        typedef typename V::reference_type reference_type;
-        typedef typename V::const_pointer_type const_pointer_type;
-        typedef typename V::pointer_type pointer_type;
+        typedef typename V::const_reference const_reference;
+        typedef typename V::reference reference;
+        typedef typename V::const_pointer const_pointer;
+        typedef typename V::pointer pointer;
 #ifdef NUMERICS_ET_CLOSURE_REFERENCE
         typedef const vector_const_reference<const vector_slice<vector_type> > const_closure_type;
         typedef vector_reference<vector_slice<vector_type> > closure_type;
@@ -500,7 +500,7 @@ namespace numerics {
             return data (s_ (i)); 
         }
         NUMERICS_INLINE
-        reference_type operator () (size_type i) {
+        reference operator () (size_type i) {
             return data_ (s_ (i)); 
         }
 
@@ -509,7 +509,7 @@ namespace numerics {
             return (*this) (i); 
         }
         NUMERICS_INLINE
-        reference_type operator [] (size_type i) { 
+        reference operator [] (size_type i) { 
             return (*this) (i); 
         }
 
@@ -776,7 +776,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            reference_type operator * () const {
+            reference operator * () const {
                 check (index () < (*this) ().size (), bad_index ());
                 return (*this) () (*it_);
             }
@@ -844,7 +844,7 @@ namespace numerics {
         }
 
 #ifdef USE_MSVC
-        typedef reverse_iterator<iterator, value_type, reference_type> reverse_iterator;
+        typedef reverse_iterator<iterator, value_type, reference> reverse_iterator;
 #else
         typedef reverse_iterator<iterator> reverse_iterator;
 #endif

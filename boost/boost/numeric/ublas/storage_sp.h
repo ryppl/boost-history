@@ -42,13 +42,13 @@ namespace numerics {
         typedef std::ptrdiff_t difference_type;
         typedef I index_type;
         typedef T data_value_type;
-        typedef const T &data_const_reference_type;
-        typedef T &data_reference_type;
+        typedef const T &data_const_reference;
+        typedef T &data_reference;
         typedef std::pair<I, T> value_type;
-        typedef const std::pair<I, T> &const_reference_type;
-        typedef std::pair<I, T> &reference_type;
-        typedef const std::pair<I, T> *const_pointer_type;
-        typedef std::pair<I, T> *pointer_type;
+        typedef const std::pair<I, T> &const_reference;
+        typedef std::pair<I, T> &reference;
+        typedef const std::pair<I, T> *const_pointer;
+        typedef std::pair<I, T> *pointer;
 
         // Construction and destruction
         NUMERICS_INLINE
@@ -81,7 +81,7 @@ namespace numerics {
         NUMERICS_INLINE
         void resize (size_type size) {
             if (size > capacity_) {
-                pointer_type data = new value_type [size << 1];
+                pointer data = new value_type [size << 1];
                 if (! data)
                     throw std::bad_alloc ();
                 if (! data_)
@@ -101,8 +101,8 @@ namespace numerics {
 
         // Element access
         NUMERICS_INLINE
-        data_reference_type operator [] (index_type i) {
-            pointer_type it = find (i);
+        data_reference operator [] (index_type i) {
+            pointer it = find (i);
             if (it == end ()) 
                 it = insert (end (), value_type (i, data_value_type ()));
             return it->second;
@@ -140,7 +140,7 @@ namespace numerics {
         // Element insertion and deletion
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        pointer_type insert (pointer_type it, const value_type &p) {
+        pointer insert (pointer it, const value_type &p) {
             if (size () == 0 || (it = end () - 1)->first < p.first) {
                 resize (size () + 1);
                 *(it = end () - 1) = p;
@@ -162,7 +162,7 @@ namespace numerics {
         }
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        void insert (pointer_type it, pointer_type it1, pointer_type it2) {
+        void insert (pointer it, pointer it1, pointer it2) {
 #ifdef NUMERICS_BOUNDS_CHECK
             while (it1 != it2) {
                 insert (it, *it1);
@@ -178,14 +178,14 @@ namespace numerics {
         }
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        void erase (pointer_type it) {
+        void erase (pointer it) {
             // FIXME: delete physically?
             check (begin () <= it && it < end (), bad_index ());
             *it = value_type ();
         }
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        void erase (pointer_type it1, pointer_type it2) {
+        void erase (pointer it1, pointer it2) {
             // FIXME: delete physically?
             while (it1 != it2) {
                 check (begin () <= it1 && it1 < end (), bad_index ());
@@ -202,8 +202,8 @@ namespace numerics {
         // Element lookup
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        const_pointer_type find (index_type i) const {
-            std::pair<const_pointer_type, const_pointer_type> pit;
+        const_pointer find (index_type i) const {
+            std::pair<const_pointer, const_pointer> pit;
 //            pit = std::equal_range (begin (), end (), value_type (i, 0), less<value_type> ());
             pit = std::equal_range (begin (), end (), value_type (i, data_value_type ()), less<value_type> ());
             if (pit.first->first == i)
@@ -215,8 +215,8 @@ namespace numerics {
         }
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        pointer_type find (index_type i) {
-            std::pair<pointer_type, pointer_type> pit;
+        pointer find (index_type i) {
+            std::pair<pointer, pointer> pit;
 //            pit = std::equal_range (begin (), end (), value_type (i, 0), less<value_type> ());
             pit = std::equal_range (begin (), end (), value_type (i, data_value_type ()), less<value_type> ());
             if (pit.first->first == i)
@@ -228,32 +228,32 @@ namespace numerics {
         }
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        const_pointer_type lower_bound (index_type i) const {
+        const_pointer lower_bound (index_type i) const {
 //            return std::lower_bound (begin (), end (), value_type (i, 0), less<value_type> ());
             return std::lower_bound (begin (), end (), value_type (i, data_value_type ()), less<value_type> ());
         }
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        pointer_type lower_bound (index_type i) {
+        pointer lower_bound (index_type i) {
 //            return std::lower_bound (begin (), end (), value_type (i, 0), less<value_type> ());
             return std::lower_bound (begin (), end (), value_type (i, data_value_type ()), less<value_type> ());
         }
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        const_pointer_type upper_bound (index_type i) const {
+        const_pointer upper_bound (index_type i) const {
 //            return std::upper_bound (begin (), end (), value_type (i, 0), less<value_type> ());
             return std::upper_bound (begin (), end (), value_type (i, data_value_type ()), less<value_type> ());
         }
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        pointer_type upper_bound (index_type i) {
+        pointer upper_bound (index_type i) {
 //            return std::upper_bound (begin (), end (), value_type (i, 0), less<value_type> ());
             return std::upper_bound (begin (), end (), value_type (i, data_value_type ()), less<value_type> ());
         }
 
         // Iterators simply are pointers.
 
-        typedef const_pointer_type const_iterator;
+        typedef const_pointer const_iterator;
 
         NUMERICS_INLINE
         const_iterator begin () const {
@@ -264,7 +264,7 @@ namespace numerics {
             return data_ + size_;
         }
 
-        typedef pointer_type iterator;
+        typedef pointer iterator;
 
         NUMERICS_INLINE
         iterator begin () {
@@ -278,7 +278,7 @@ namespace numerics {
         // Reverse iterators
 
 #ifdef USE_MSVC
-        typedef std::reverse_iterator<const_iterator, value_type, const_reference_type> const_reverse_iterator;
+        typedef std::reverse_iterator<const_iterator, value_type, const_reference> const_reverse_iterator;
 #else
         typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 #endif
@@ -293,7 +293,7 @@ namespace numerics {
         }
 
 #ifdef USE_MSVC
-        typedef std::reverse_iterator<iterator, value_type, reference_type> reverse_iterator;
+        typedef std::reverse_iterator<iterator, value_type, reference> reverse_iterator;
 #else
         typedef std::reverse_iterator<iterator> reverse_iterator;
 #endif
@@ -309,7 +309,7 @@ namespace numerics {
 
     private:
         size_type capacity_;
-        pointer_type data_;
+        pointer data_;
         size_type size_;
     };
 

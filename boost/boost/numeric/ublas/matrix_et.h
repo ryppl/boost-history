@@ -55,10 +55,10 @@ namespace numerics {
         typedef typename E::size_type size_type;
         typedef typename E::difference_type difference_type;
         typedef typename E::value_type value_type;
-        typedef typename E::const_reference_type const_reference_type;
-        typedef const_reference_type reference_type;
-        typedef typename E::const_pointer_type const_pointer_type;
-        typedef const_pointer_type pointer_type;
+        typedef typename E::const_reference const_reference;
+        typedef const_reference reference;
+        typedef typename E::const_pointer const_pointer;
+        typedef const_pointer pointer;
         typedef typename E::orientation_category orientation_category;
         typedef typename E::const_iterator1 const_iterator1_type;
         typedef typename E::const_iterator2 const_iterator2_type;
@@ -205,10 +205,10 @@ namespace numerics {
         typedef typename E::size_type size_type;
         typedef typename E::difference_type difference_type;
         typedef typename E::value_type value_type;
-        typedef typename E::const_reference_type const_reference_type;
-        typedef typename E::reference_type reference_type;
-        typedef typename E::const_pointer_type const_pointer_type;
-        typedef typename E::pointer_type pointer_type;
+        typedef typename E::const_reference const_reference;
+        typedef typename E::reference reference;
+        typedef typename E::const_pointer const_pointer;
+        typedef typename E::pointer pointer;
         typedef typename E::orientation_category orientation_category;
         typedef typename E::const_iterator1 const_iterator1_type;
         typedef typename E::iterator1 iterator1_type;
@@ -262,7 +262,7 @@ namespace numerics {
             return e_ (i, j); 
         }
         NUMERICS_INLINE
-        reference_type operator () (size_type i, size_type j) { 
+        reference operator () (size_type i, size_type j) { 
             return e_ (i, j); 
         }
 
@@ -389,7 +389,7 @@ namespace numerics {
         }
 
 #ifdef USE_MSVC
-        typedef reverse_iterator1<iterator1, value_type, reference_type> reverse_iterator1;
+        typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
 #else
         typedef reverse_iterator1<iterator1> reverse_iterator1;
 #endif
@@ -419,7 +419,7 @@ namespace numerics {
         }
 
 #ifdef USE_MSVC
-        typedef reverse_iterator2<iterator2, value_type, reference_type> reverse_iterator2;
+        typedef reverse_iterator2<iterator2, value_type, reference> reverse_iterator2;
 #else
         typedef reverse_iterator2<iterator2> reverse_iterator2;
 #endif
@@ -451,10 +451,10 @@ namespace numerics {
         typedef typename promote_traits<typename E1::size_type, typename E2::size_type>::promote_type size_type;
         typedef typename promote_traits<typename E1::difference_type, typename E2::difference_type>::promote_type difference_type;
         typedef typename F::result_type value_type;
-        typedef const value_type &const_reference_type;
-        typedef const_reference_type reference_type;
-        typedef const value_type *const_pointer_type;
-        typedef const_pointer_type pointer_type;
+        typedef const value_type &const_reference;
+        typedef const_reference reference;
+        typedef const value_type *const_pointer;
+        typedef const_pointer pointer;
         typedef const vector_matrix_binary<E1, E2, F> const_closure_type;
         typedef unknown_orientation_tag orientation_category;
         typedef typename E1::const_iterator const_iterator1_type;
@@ -574,7 +574,7 @@ namespace numerics {
             typedef typename vector_matrix_binary::difference_type difference_type;
             typedef typename vector_matrix_binary::value_type value_type;
             typedef typename vector_matrix_binary::value_type reference;
-            typedef typename vector_matrix_binary::const_pointer_type pointer;
+            typedef typename vector_matrix_binary::const_pointer pointer;
 #endif
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
@@ -723,7 +723,7 @@ namespace numerics {
             typedef typename vector_matrix_binary::difference_type difference_type;
             typedef typename vector_matrix_binary::value_type value_type;
             typedef typename vector_matrix_binary::value_type reference;
-            typedef typename vector_matrix_binary::const_pointer_type pointer;
+            typedef typename vector_matrix_binary::const_pointer pointer;
 #endif
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
@@ -922,10 +922,10 @@ namespace numerics {
         typedef typename E::size_type size_type;
         typedef typename E::difference_type difference_type;
         typedef typename F::result_type value_type;
-        typedef const value_type &const_reference_type;
-        typedef const_reference_type reference_type;
-        typedef const value_type *const_pointer_type;
-        typedef const_pointer_type pointer_type;
+        typedef const value_type &const_reference;
+        typedef const_reference reference;
+        typedef const value_type *const_pointer;
+        typedef const_pointer pointer;
         typedef const matrix_unary1<E, F> const_closure_type;
         typedef typename E::orientation_category orientation_category;
         typedef typename E::const_iterator1 const_iterator1_type;
@@ -1300,10 +1300,10 @@ namespace numerics {
         typedef typename E::size_type size_type;
         typedef typename E::difference_type difference_type;
         typedef typename F::result_type value_type;
-        typedef const value_type &const_reference_type;
-        typedef const_reference_type reference_type;
-        typedef const value_type *const_pointer_type;
-        typedef const_pointer_type pointer_type;
+        typedef const value_type &const_reference;
+        typedef const_reference reference;
+        typedef const value_type *const_pointer;
+        typedef const_pointer pointer;
         typedef const matrix_unary2<E, F> const_closure_type;
         typedef typename E::orientation_category orientation_category;
         typedef typename E::const_iterator1 const_iterator2_type;
@@ -1679,10 +1679,10 @@ namespace numerics {
         typedef typename promote_traits<typename E1::size_type, typename E2::size_type>::promote_type size_type;
         typedef typename promote_traits<typename E1::difference_type, typename E2::difference_type>::promote_type difference_type;
         typedef typename F::result_type value_type;
-        typedef const value_type &const_reference_type;
-        typedef const_reference_type reference_type;
-        typedef const value_type *const_pointer_type;
-        typedef const_pointer_type pointer_type;
+        typedef const value_type &const_reference;
+        typedef const_reference reference;
+        typedef const value_type *const_pointer;
+        typedef const_pointer pointer;
         typedef const matrix_binary<E1, E2, F> const_closure_type;
         typedef unknown_orientation_tag orientation_category;
         typedef typename E1::const_iterator1 const_iterator11_type;
@@ -1785,7 +1785,7 @@ namespace numerics {
             typedef typename matrix_binary::difference_type difference_type;
             typedef typename matrix_binary::value_type value_type;
             typedef typename matrix_binary::value_type reference;
-            typedef typename matrix_binary::const_pointer_type pointer;
+            typedef typename matrix_binary::const_pointer pointer;
 #endif
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
@@ -1958,7 +1958,7 @@ namespace numerics {
             typedef typename matrix_binary::difference_type difference_type;
             typedef typename matrix_binary::value_type value_type;
             typedef typename matrix_binary::value_type reference;
-            typedef typename matrix_binary::const_pointer_type pointer;
+            typedef typename matrix_binary::const_pointer pointer;
 #endif
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
@@ -2198,10 +2198,10 @@ namespace numerics {
         typedef typename E2::size_type size_type;
         typedef typename E2::difference_type difference_type;
         typedef typename F::result_type value_type;
-        typedef const value_type &const_reference_type;
-        typedef const_reference_type reference_type;
-        typedef const value_type *const_pointer_type;
-        typedef const_pointer_type pointer_type;
+        typedef const value_type &const_reference;
+        typedef const_reference reference;
+        typedef const value_type *const_pointer;
+        typedef const_pointer pointer;
         typedef const matrix_binary_scalar<E1, E2, F> const_closure_type;
         typedef typename E2::orientation_category orientation_category;
         typedef typename E1::value_type const_iterator1_type;
@@ -2581,10 +2581,10 @@ namespace numerics {
         typedef typename E::size_type size_type;
         typedef typename E::difference_type difference_type;
         typedef typename E::value_type value_type;
-        typedef typename E::const_reference_type const_reference_type;
-        typedef const_reference_type reference_type;
-        typedef typename E::const_pointer_type const_pointer_type;
-        typedef const_pointer_type pointer_type;
+        typedef typename E::const_reference const_reference;
+        typedef const_reference reference;
+        typedef typename E::const_pointer const_pointer;
+        typedef const_pointer pointer;
         typedef const matrix_expression_row<E> const_closure_type;
         typedef typename E::size_type const_iterator_type;
 #ifdef NUMERICS_DEPRECATED
@@ -2760,10 +2760,10 @@ namespace numerics {
         typedef typename E::size_type size_type;
         typedef typename E::difference_type difference_type;
         typedef typename E::value_type value_type;
-        typedef typename E::const_reference_type const_reference_type;
-        typedef const_reference_type reference_type;
-        typedef typename E::const_pointer_type const_pointer_type;
-        typedef const_pointer_type pointer_type;
+        typedef typename E::const_reference const_reference;
+        typedef const_reference reference;
+        typedef typename E::const_pointer const_pointer;
+        typedef const_pointer pointer;
         typedef const matrix_expression_column<E> const_closure_type;
         typedef typename E::size_type const_iterator_type;
 #ifdef NUMERICS_DEPRECATED
@@ -2981,10 +2981,10 @@ namespace numerics {
         typedef typename promote_traits<typename E1::size_type, typename E2::size_type>::promote_type size_type;
         typedef typename promote_traits<typename E1::difference_type, typename E2::difference_type>::promote_type difference_type;
         typedef typename F::result_type value_type;
-        typedef const value_type &const_reference_type;
-        typedef const_reference_type reference_type;
-        typedef const value_type *const_pointer_type;
-        typedef const_pointer_type pointer_type;
+        typedef const value_type &const_reference;
+        typedef const_reference reference;
+        typedef const value_type *const_pointer;
+        typedef const_pointer pointer;
         typedef const matrix_vector_binary1<E1, E2, F> const_closure_type;
         typedef typename E1::const_iterator1 const_iterator1_type;
         typedef typename E2::const_iterator const_iterator2_type;
@@ -3062,7 +3062,7 @@ namespace numerics {
             typedef typename matrix_vector_binary1::difference_type difference_type;
             typedef typename matrix_vector_binary1::value_type value_type;
             typedef typename matrix_vector_binary1::value_type reference;
-            typedef typename matrix_vector_binary1::const_pointer_type pointer;
+            typedef typename matrix_vector_binary1::const_pointer pointer;
 #endif
 
             // Construction and destruction
@@ -3291,10 +3291,10 @@ namespace numerics {
         typedef typename promote_traits<typename E1::size_type, typename E2::size_type>::promote_type size_type;
         typedef typename promote_traits<typename E1::difference_type, typename E2::difference_type>::promote_type difference_type;
         typedef typename F::result_type value_type;
-        typedef const value_type &const_reference_type;
-        typedef const_reference_type reference_type;
-        typedef const value_type *const_pointer_type;
-        typedef const_pointer_type pointer_type;
+        typedef const value_type &const_reference;
+        typedef const_reference reference;
+        typedef const value_type *const_pointer;
+        typedef const_pointer pointer;
         typedef const matrix_vector_binary2<E1, E2, F> const_closure_type;
         typedef typename E1::const_iterator const_iterator1_type;
         typedef typename E2::const_iterator2 const_iterator2_type;
@@ -3372,7 +3372,7 @@ namespace numerics {
             typedef typename matrix_vector_binary2::difference_type difference_type;
             typedef typename matrix_vector_binary2::value_type value_type;
             typedef typename matrix_vector_binary2::value_type reference;
-            typedef typename matrix_vector_binary2::const_pointer_type pointer;
+            typedef typename matrix_vector_binary2::const_pointer pointer;
 #endif
 
             // Construction and destruction
@@ -3601,10 +3601,10 @@ namespace numerics {
         typedef typename promote_traits<typename E1::size_type, typename E2::size_type>::promote_type size_type;
         typedef typename promote_traits<typename E1::difference_type, typename E2::difference_type>::promote_type difference_type;
         typedef typename F::result_type value_type;
-        typedef const value_type &const_reference_type;
-        typedef const_reference_type reference_type;
-        typedef const value_type *const_pointer_type;
-        typedef const_pointer_type pointer_type;
+        typedef const value_type &const_reference;
+        typedef const_reference reference;
+        typedef const value_type *const_pointer;
+        typedef const_pointer pointer;
         typedef const matrix_matrix_binary<E1, E2, F> const_closure_type;
         typedef unknown_orientation_tag orientation_category;
         typedef typename E1::const_iterator1 const_iterator11_type;
@@ -3715,7 +3715,7 @@ namespace numerics {
             typedef typename matrix_matrix_binary::difference_type difference_type;
             typedef typename matrix_matrix_binary::value_type value_type;
             typedef typename matrix_matrix_binary::value_type reference;
-            typedef typename matrix_matrix_binary::const_pointer_type pointer;
+            typedef typename matrix_matrix_binary::const_pointer pointer;
 #endif
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
@@ -3867,7 +3867,7 @@ namespace numerics {
             typedef typename matrix_matrix_binary::difference_type difference_type;
             typedef typename matrix_matrix_binary::value_type value_type;
             typedef typename matrix_matrix_binary::value_type reference;
-            typedef typename matrix_matrix_binary::const_pointer_type pointer;
+            typedef typename matrix_matrix_binary::const_pointer pointer;
 #endif
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
@@ -4122,10 +4122,10 @@ namespace numerics {
         typedef typename E::size_type size_type;
         typedef typename E::difference_type difference_type;
         typedef typename E::value_type value_type;
-        typedef typename E::const_reference_type const_reference_type;
-        typedef const_reference_type reference_type;
-        typedef typename E::const_pointer_type const_pointer_type;
-        typedef const_pointer_type pointer_type;
+        typedef typename E::const_reference const_reference;
+        typedef const_reference reference;
+        typedef typename E::const_pointer const_pointer;
+        typedef const_pointer pointer;
         typedef const matrix_expression_range<E> const_closure_type;
         typedef typename E::orientation_category orientation_category;
         typedef range::const_iterator const_iterator_type;
@@ -4503,10 +4503,10 @@ namespace numerics {
         typedef typename E::size_type size_type;
         typedef typename E::difference_type difference_type;
         typedef typename E::value_type value_type;
-        typedef typename E::const_reference_type const_reference_type;
-        typedef const_reference_type reference_type;
-        typedef typename E::const_pointer_type const_pointer_type;
-        typedef const_pointer_type pointer_type;
+        typedef typename E::const_reference const_reference;
+        typedef const_reference reference;
+        typedef typename E::const_pointer const_pointer;
+        typedef const_pointer pointer;
         typedef const matrix_expression_slice<E> const_closure_type;
         typedef typename E::orientation_category orientation_category;
         typedef slice::const_iterator const_iterator_type;

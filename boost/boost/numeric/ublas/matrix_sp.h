@@ -33,10 +33,10 @@ namespace numerics {
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
-        typedef const T &const_reference_type;
-        typedef T &reference_type;
-        typedef const T *const_pointer_type;
-        typedef T *pointer_type;
+        typedef const T &const_reference;
+        typedef T &reference;
+        typedef const T *const_pointer;
+        typedef T *pointer;
         typedef F functor_type;
         typedef A array_type;
         typedef const sparse_matrix<T, F, A> const_self_type;
@@ -99,7 +99,7 @@ namespace numerics {
             return (*it).second;
         }
         NUMERICS_INLINE
-        reference_type operator () (size_type i, size_type j) {
+        reference operator () (size_type i, size_type j) {
             return data_ [functor_type::element (i, size1_, j, size2_)]; 
         }
 
@@ -234,7 +234,7 @@ namespace numerics {
 
         // Element insertion and erasure
         NUMERICS_INLINE
-        void insert (size_type i, size_type j, const_reference_type t) {
+        void insert (size_type i, size_type j, const_reference t) {
 #ifndef NUMERICS_USE_ET
             if (t == value_type ()) 
                 return;
@@ -260,9 +260,9 @@ namespace numerics {
         class iterator2;
 #ifdef USE_MSVC
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
-        typedef reverse_iterator1<iterator1, value_type, reference_type> reverse_iterator1;
+        typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
-        typedef reverse_iterator2<iterator2, value_type, reference_type> reverse_iterator2;
+        typedef reverse_iterator2<iterator2, value_type, reference> reverse_iterator2;
 #else
         typedef reverse_iterator1<const_iterator1> const_reverse_iterator1;
         typedef reverse_iterator1<iterator1> reverse_iterator1;
@@ -376,7 +376,7 @@ namespace numerics {
             typedef typename sparse_matrix::difference_type difference_type;
             typedef typename sparse_matrix::value_type value_type;
             typedef typename sparse_matrix::value_type reference;
-            typedef typename sparse_matrix::const_pointer_type pointer;
+            typedef typename sparse_matrix::const_pointer pointer;
 #endif
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
@@ -504,8 +504,8 @@ namespace numerics {
 #ifndef USE_MSVC
             typedef typename sparse_matrix::difference_type difference_type;
             typedef typename sparse_matrix::value_type value_type;
-            typedef typename sparse_matrix::reference_type reference;
-            typedef typename sparse_matrix::pointer_type pointer;
+            typedef typename sparse_matrix::reference reference;
+            typedef typename sparse_matrix::pointer pointer;
 #endif
             typedef iterator2 dual_iterator_type;
             typedef reverse_iterator2 dual_reverse_iterator_type;
@@ -553,7 +553,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            reference_type operator * () const {
+            reference operator * () const {
                 check (index1 () < (*this) ().size1 (), bad_index ());
                 check (index2 () < (*this) ().size2 (), bad_index ());
                 return (*it_).second;
@@ -633,7 +633,7 @@ namespace numerics {
             typedef typename sparse_matrix::difference_type difference_type;
             typedef typename sparse_matrix::value_type value_type;
             typedef typename sparse_matrix::value_type reference;
-            typedef typename sparse_matrix::const_pointer_type pointer;
+            typedef typename sparse_matrix::const_pointer pointer;
 #endif
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
@@ -761,8 +761,8 @@ namespace numerics {
 #ifndef USE_MSVC
             typedef typename sparse_matrix::difference_type difference_type;
             typedef typename sparse_matrix::value_type value_type;
-            typedef typename sparse_matrix::reference_type reference;
-            typedef typename sparse_matrix::pointer_type pointer;
+            typedef typename sparse_matrix::reference reference;
+            typedef typename sparse_matrix::pointer pointer;
 #endif
             typedef iterator1 dual_iterator_type;
             typedef reverse_iterator1 dual_reverse_iterator_type;
@@ -810,7 +810,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            reference_type operator * () const {
+            reference operator * () const {
                 check (index1 () < (*this) ().size1 (), bad_index ());
                 check (index2 () < (*this) ().size2 (), bad_index ());
                 return (*it_).second;
@@ -934,10 +934,10 @@ namespace numerics {
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef T value_type;
-        typedef const T &const_reference_type;
-        typedef T &reference_type;
-        typedef const T *const_pointer_type;
-        typedef T *pointer_type;
+        typedef const T &const_reference;
+        typedef T &reference;
+        typedef const T *const_pointer;
+        typedef T *pointer;
         typedef A array_type;
         typedef F functor_type;
         typedef const sparse_vector_of_sparse_vector<T, F, A> const_self_type;
@@ -1012,7 +1012,7 @@ namespace numerics {
             return (*it).second;
         }
         NUMERICS_INLINE
-        reference_type operator () (size_type i, size_type j) {
+        reference operator () (size_type i, size_type j) {
             return data_ [functor_type::element1 (i, size1_, j, size2_)] [functor_type::element2 (i, size1_, j, size2_)]; 
         }
 
@@ -1147,7 +1147,7 @@ namespace numerics {
 
         // Element insertion and erasure
         NUMERICS_INLINE
-        void insert (size_type i, size_type j, const_reference_type t) {
+        void insert (size_type i, size_type j, const_reference t) {
 #ifndef NUMERICS_USE_ET
             if (t == value_type ()) 
                 return;
@@ -1179,9 +1179,9 @@ namespace numerics {
         class iterator2;
 #ifdef USE_MSVC
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
-        typedef reverse_iterator1<iterator1, value_type, reference_type> reverse_iterator1;
+        typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
-        typedef reverse_iterator2<iterator2, value_type, reference_type> reverse_iterator2;
+        typedef reverse_iterator2<iterator2, value_type, reference> reverse_iterator2;
 #else
         typedef reverse_iterator1<const_iterator1> const_reverse_iterator1;
         typedef reverse_iterator1<iterator1> reverse_iterator1;
@@ -1367,7 +1367,7 @@ namespace numerics {
             typedef typename sparse_vector_of_sparse_vector::difference_type difference_type;
             typedef typename sparse_vector_of_sparse_vector::value_type value_type;
             typedef typename sparse_vector_of_sparse_vector::value_type reference;
-            typedef typename sparse_vector_of_sparse_vector::const_pointer_type pointer;
+            typedef typename sparse_vector_of_sparse_vector::const_pointer pointer;
 #endif
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
@@ -1512,8 +1512,8 @@ namespace numerics {
 #ifndef USE_MSVC
             typedef typename sparse_vector_of_sparse_vector::difference_type difference_type;
             typedef typename sparse_vector_of_sparse_vector::value_type value_type;
-            typedef typename sparse_vector_of_sparse_vector::reference_type reference;
-            typedef typename sparse_vector_of_sparse_vector::pointer_type pointer;
+            typedef typename sparse_vector_of_sparse_vector::reference reference;
+            typedef typename sparse_vector_of_sparse_vector::pointer pointer;
 #endif
             typedef iterator2 dual_iterator_type;
             typedef reverse_iterator2 dual_reverse_iterator_type;
@@ -1578,7 +1578,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            reference_type operator * () const {
+            reference operator * () const {
                 check (index1 () < (*this) ().size1 (), bad_index ());
                 check (index2 () < (*this) ().size2 (), bad_index ());
                 return (*it_).second;
@@ -1658,7 +1658,7 @@ namespace numerics {
             typedef typename sparse_vector_of_sparse_vector::difference_type difference_type;
             typedef typename sparse_vector_of_sparse_vector::value_type value_type;
             typedef typename sparse_vector_of_sparse_vector::value_type reference;
-            typedef typename sparse_vector_of_sparse_vector::const_pointer_type pointer;
+            typedef typename sparse_vector_of_sparse_vector::const_pointer pointer;
 #endif
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
@@ -1803,8 +1803,8 @@ namespace numerics {
 #ifndef USE_MSVC
             typedef typename sparse_vector_of_sparse_vector::difference_type difference_type;
             typedef typename sparse_vector_of_sparse_vector::value_type value_type;
-            typedef typename sparse_vector_of_sparse_vector::reference_type reference;
-            typedef typename sparse_vector_of_sparse_vector::pointer_type pointer;
+            typedef typename sparse_vector_of_sparse_vector::reference reference;
+            typedef typename sparse_vector_of_sparse_vector::pointer pointer;
 #endif
             typedef iterator1 dual_iterator_type;
             typedef reverse_iterator1 dual_reverse_iterator_type;
@@ -1869,7 +1869,7 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            reference_type operator * () const {
+            reference operator * () const {
                 check (index1 () < (*this) ().size1 (), bad_index ());
                 check (index2 () < (*this) ().size2 (), bad_index ());
                 return (*it_).second;

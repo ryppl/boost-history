@@ -114,8 +114,8 @@ namespace numerics {
         public std::iterator<std::forward_iterator_tag, T> {
         typedef I derived_iterator_type;
         typedef T derived_value_type;
-        typedef const T &derived_const_reference_type;
-        typedef T &derived_reference_type;
+        typedef const T &derived_const_reference;
+        typedef T &derived_reference;
 
         // Arithmetic
         NUMERICS_INLINE
@@ -147,8 +147,8 @@ namespace numerics {
         public std::iterator<std::bidirectional_iterator_tag, T> {
         typedef I derived_iterator_type;
         typedef T derived_value_type;
-        typedef const T &derived_const_reference_type;
-        typedef T &derived_reference_type;
+        typedef const T &derived_const_reference;
+        typedef T &derived_reference;
 
         // Arithmetic
         NUMERICS_INLINE
@@ -195,8 +195,8 @@ namespace numerics {
         public std::iterator<std::random_access_iterator_tag, T> {
         typedef I derived_iterator_type;
         typedef T derived_value_type;
-        typedef const T &derived_const_reference_type;
-        typedef T &derived_reference_type;
+        typedef const T &derived_const_reference;
+        typedef T &derived_reference;
         typedef D derived_difference_type;
 #ifdef USE_MSVC
         typedef D difference_type;
@@ -274,16 +274,16 @@ namespace numerics {
         typedef std::ptrdiff_t difference_type;
         typedef I iterator_type;
         typedef T value_type;
-        typedef R reference_type;
+        typedef R reference;
         typedef typename I::container_type container_type;
 
         // Construction and destruction
         NUMERICS_INLINE
         reverse_iterator ():
-            std::reverse_iterator<iterator_type, value_type, reference_type> () {}
+            std::reverse_iterator<iterator_type, value_type, reference> () {}
         NUMERICS_INLINE NUMERICS_EXPLICIT
         reverse_iterator (const iterator_type &it):
-            std::reverse_iterator<iterator_type, value_type, reference_type> (it) {}
+            std::reverse_iterator<iterator_type, value_type, reference> (it) {}
 
         // Arithmetic
         NUMERICS_INLINE
@@ -328,7 +328,7 @@ namespace numerics {
         typedef std::ptrdiff_t difference_type;
         typedef I iterator_type;
         typedef T value_type;
-        typedef R reference_type;
+        typedef R reference;
         typedef typename I::container_type container_type;
         typedef typename I::dual_iterator_type dual_iterator_type;
         typedef typename I::dual_reverse_iterator_type dual_reverse_iterator_type;
@@ -336,10 +336,10 @@ namespace numerics {
         // Construction and destruction
         NUMERICS_INLINE
         reverse_iterator1 ():
-            std::reverse_iterator<iterator_type, value_type, reference_type> () {}
+            std::reverse_iterator<iterator_type, value_type, reference> () {}
         NUMERICS_INLINE NUMERICS_EXPLICIT
         reverse_iterator1 (const iterator_type &it):
-            std::reverse_iterator<iterator_type, value_type, reference_type> (it) {}
+            std::reverse_iterator<iterator_type, value_type, reference> (it) {}
 
         // Arithmetic
         NUMERICS_INLINE
@@ -405,7 +405,7 @@ namespace numerics {
         typedef std::ptrdiff_t difference_type;
         typedef I iterator_type;
         typedef T value_type;
-        typedef R reference_type;
+        typedef R reference;
         typedef typename I::container_type container_type;
         typedef typename I::dual_iterator_type dual_iterator_type;
         typedef typename I::dual_reverse_iterator_type dual_reverse_iterator_type;
@@ -413,10 +413,10 @@ namespace numerics {
         // Construction and destruction
         NUMERICS_INLINE
         reverse_iterator2 ():
-            std::reverse_iterator<iterator_type, value_type, reference_type> () {}
+            std::reverse_iterator<iterator_type, value_type, reference> () {}
         NUMERICS_INLINE NUMERICS_EXPLICIT
         reverse_iterator2 (const iterator_type &it):
-            std::reverse_iterator<iterator_type, value_type, reference_type> (it) {}
+            std::reverse_iterator<iterator_type, value_type, reference> (it) {}
 
         // Arithmetic
         NUMERICS_INLINE
@@ -720,8 +720,8 @@ namespace numerics {
         typedef typename container_type::size_type size_type;
         typedef typename container_type::difference_type difference_type;
         typedef typename container_type::value_type value_type;
-        typedef typename container_type::reference_type reference;
-        typedef typename container_type::pointer_type pointer;
+        typedef typename container_type::reference reference;
+        typedef typename container_type::pointer pointer;
 
         // Construction and destruction
         NUMERICS_INLINE
@@ -835,7 +835,7 @@ namespace numerics {
         typedef typename container_type::difference_type difference_type;
         typedef typename container_type::value_type value_type;
         typedef typename container_type::value_type reference;
-        typedef typename container_type::const_pointer_type pointer;
+        typedef typename container_type::const_pointer pointer;
         typedef indexed_iterator<container_type> iterator_type;
 
         // Construction and destruction
@@ -951,15 +951,15 @@ namespace numerics {
         public container_reference<C>, 
         public random_access_iterator_base<indexed_iterator1<C>, 
                                            typename C::value_type,
-                                           typename C::reference_type> {
+                                           typename C::reference> {
     public:
         typedef C container_type;
         typedef std::random_access_iterator_tag iterator_category;
         typedef typename container_type::size_type size_type;
         typedef typename container_type::difference_type difference_type;
         typedef typename container_type::value_type value_type;
-        typedef typename container_type::reference_type reference;
-        typedef typename container_type::pointer_type pointer;
+        typedef typename container_type::reference reference;
+        typedef typename container_type::pointer pointer;
         typedef indexed_iterator2<container_type> dual_iterator_type;
 #ifdef USE_MSVC
         typedef reverse_iterator2<dual_iterator_type, value_type, reference> dual_reverse_iterator_type;
@@ -1098,7 +1098,7 @@ namespace numerics {
         public container_const_reference<C>, 
         public random_access_iterator_base<indexed_const_iterator1<C>, 
                                            typename C::value_type,
-                                           typename C::const_reference_type> {
+                                           typename C::const_reference> {
     public:
         typedef C container_type;
         typedef std::random_access_iterator_tag iterator_category;
@@ -1106,7 +1106,7 @@ namespace numerics {
         typedef typename container_type::difference_type difference_type;
         typedef typename container_type::value_type value_type;
         typedef typename container_type::value_type reference;
-        typedef typename container_type::const_pointer_type pointer;
+        typedef typename container_type::const_pointer pointer;
         typedef indexed_iterator1<container_type> iterator_type;
         typedef indexed_const_iterator2<container_type> dual_iterator_type;
 #ifdef USE_MSVC
@@ -1249,15 +1249,15 @@ namespace numerics {
         public container_reference<C>, 
         public random_access_iterator_base<indexed_iterator2<C>, 
                                            typename C::value_type,
-                                           typename C::reference_type> {
+                                           typename C::reference> {
     public:
         typedef C container_type;
         typedef std::random_access_iterator_tag iterator_category;
         typedef typename container_type::size_type size_type;
         typedef typename container_type::difference_type difference_type;
         typedef typename container_type::value_type value_type;
-        typedef typename container_type::reference_type reference;
-        typedef typename container_type::pointer_type pointer;
+        typedef typename container_type::reference reference;
+        typedef typename container_type::pointer pointer;
         typedef indexed_iterator1<container_type> dual_iterator_type;
 #ifdef USE_MSVC
         typedef reverse_iterator1<dual_iterator_type, value_type, reference> dual_reverse_iterator_type;
@@ -1393,7 +1393,7 @@ namespace numerics {
         public container_const_reference<C>, 
         public random_access_iterator_base<indexed_const_iterator2<C>, 
                                            typename C::value_type,
-                                           typename C::const_reference_type> {
+                                           typename C::const_reference> {
     public:
         typedef C container_type;
         typedef std::random_access_iterator_tag iterator_category;
@@ -1401,7 +1401,7 @@ namespace numerics {
         typedef typename container_type::difference_type difference_type;
         typedef typename container_type::value_type value_type;
         typedef typename container_type::value_type reference;
-        typedef typename container_type::const_pointer_type pointer;
+        typedef typename container_type::const_pointer pointer;
         typedef indexed_iterator2<container_type> iterator_type;
         typedef indexed_const_iterator1<container_type> dual_iterator_type;
 #ifdef USE_MSVC
