@@ -4,33 +4,22 @@
 #  pragma once
 #endif
 
-#ifndef BOOST_IOFM_FormatObjects_ContainerOutput_HPP
-#define BOOST_IOFM_FormatObjects_ContainerOutput_HPP
-#  include <boost/outfmt/format_objects/detail/list_output.hpp>
+#ifndef BOOST_IOFM_FormatObjects_Container_HPP
+#define BOOST_IOFM_FormatObjects_Container_HPP
+#  include <boost/outfmt/format_objects/detail/list.hpp>
 
    namespace boost { namespace io
    {
-      template< typename FormatType, class Outputter >
-      class container_output: public detail::list_output< FormatType, container_output
+      template< typename FormatType, class FmtObject >
+      class container_object: public detail::list_object< FormatType, container_object
                                                                       <
                                                                          FormatType,
-                                                                         Outputter
-                                                                      >, Outputter >
+                                                                         FmtObject
+                                                                      >, FmtObject >
       {
          private:
-            typedef detail::list_output< FormatType, container_output< FormatType, Outputter >, Outputter >
+            typedef detail::list_object< FormatType, container_object< FormatType, FmtObject >, FmtObject >
                                                                      base_type;
-         public:
-            template< typename Container, class OutputStream >
-            inline OutputStream & operator()
-                                  (
-                                     OutputStream &    os,
-                                     const Container & c
-                                  ) const
-            {
-               const base_type *       self = static_cast< const base_type * >( this );
-               return(( *self )( os, c.begin(), c.end()));
-            }
          public:
             template< typename Container, class InputStream >
             inline bool                          read( InputStream & is, Container & c ) const
@@ -38,6 +27,13 @@
                c.clear();
                get_typeid< Container >::value; // BCB workaround
                return( read( is, c, seq_type< get_typeid< Container >::value >()));
+            }
+         public:
+            template< typename Container, class OutputStream >
+            inline OutputStream &                write( OutputStream & os, const Container & c ) const
+            {
+               const base_type *       self = static_cast< const base_type * >( this );
+               return(( *self ).write( os, c.begin(), c.end()));
             }
          private:
             template< typename Container, class InputStream >
@@ -56,39 +52,39 @@
             }
             // [todo]: read( seq_type< assoc_container_type > ) -- map-like containers
          public:
-            inline           container_output()
+            inline           container_object()
             {
             }
-            inline           container_output( const container_output & o ):
-               detail::list_output< FormatType, container_output< FormatType, Outputter >, Outputter >( o )
+            inline           container_object( const container_object & o ):
+               detail::list_object< FormatType, container_object< FormatType, FmtObject >, FmtObject >( o )
             {
             }
-            inline           container_output( const Outputter & o ):
-               detail::list_output< FormatType, container_output< FormatType, Outputter >, Outputter >( o )
+            inline           container_object( const FmtObject & o ):
+               detail::list_object< FormatType, container_object< FormatType, FmtObject >, FmtObject >( o )
             {
             }
       };
 
       template< class FormatType >
-      inline container_output< FormatType >      containerfmtex()
+      inline container_object< FormatType >      containerfmtex()
       {
-         container_output< FormatType > out;
-         return( out );
+         container_object< FormatType > ob;
+         return( ob );
       }
 
-      inline container_output< char * >          containerfmt()
+      inline container_object< char * >          containerfmt()
       {
          return( containerfmtex< char * >());
       }
 
-      template< class Outputter >
-      inline container_output< BOOST_DEDUCED_TYPENAME Outputter::format_type, Outputter >
+      template< class FmtObject >
+      inline container_object< BOOST_DEDUCED_TYPENAME FmtObject::format_type, FmtObject >
                                                  containerfmt
                                                  (
-                                                    const Outputter & out
+                                                    const FmtObject & o
                                                  )
       {
-         return( container_output< BOOST_DEDUCED_TYPENAME Outputter::format_type, Outputter >( out ));
+         return( container_object< BOOST_DEDUCED_TYPENAME FmtObject::format_type, FmtObject >( o ));
       }
    }}
 #endif

@@ -4,23 +4,17 @@
 #  pragma once
 #endif
 
-#ifndef BOOST_IOFM_FormatObjects_BasicOutput_HPP
-#define BOOST_IOFM_FormatObjects_BasicOutput_HPP
+#ifndef BOOST_IOFM_FormatObjects_Basic_HPP
+#define BOOST_IOFM_FormatObjects_Basic_HPP
 #  include <typeinfo>
 
    namespace boost { namespace io
    {
-      class basic_output
+      class basic_object
       {
          public:
             typedef void                                             traits_type;
             typedef char *                                           format_type;
-         public:
-            template< typename T, class OutputStream >
-            inline OutputStream & operator()( OutputStream & os, const T & value ) const
-            {
-               return( os << value );
-            }
          public:
             template< typename T, class InputStream >
             inline bool                          read( InputStream & is, T & value ) const
@@ -29,18 +23,24 @@
                return( is.isgood());
             }
          public:
-            inline           basic_output()
+            template< typename T, class OutputStream >
+            inline OutputStream &                write( OutputStream & os, const T & value ) const
+            {
+               return( os << value );
+            }
+         public:
+            inline           basic_object()
             {
             }
-            inline           basic_output( const basic_output & )
+            inline           basic_object( const basic_object & )
             {
             }
       };
 
-      inline basic_output basicfmt()
+      inline basic_object basicfmt()
       {
-         basic_output                  out;
-         return( out );
+         basic_object                  ob;
+         return( ob );
       }
    }}
 #endif

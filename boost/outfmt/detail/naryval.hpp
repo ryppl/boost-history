@@ -4,8 +4,8 @@
 #  pragma once
 #endif
 
-#ifndef BOOST_IOFM_GETVAL_HPP
-#define BOOST_IOFM_GETVAL_HPP
+#ifndef BOOST_IOFM_NAryVal_HPP
+#define BOOST_IOFM_NAryVal_HPP
 #  include <boost/outfmt/detail/selector.hpp>
 
 #  include <utility>                             // std::pair

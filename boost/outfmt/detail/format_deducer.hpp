@@ -4,8 +4,8 @@
 #  pragma once
 #endif
 
-#ifndef BOOST_IOFM_DETAIL_OUTPUT_DEDUCER_HPP
-#define BOOST_IOFM_DETAIL_OUTPUT_DEDUCER_HPP
+#ifndef BOOST_IOFM_DETAIL_FormatDeducer_HPP
+#define BOOST_IOFM_DETAIL_FormatDeducer_HPP
 #  include <boost/mpl/apply_if.hpp>
 #  include <boost/mpl/identity.hpp>
 #  include <boost/outfmt/format_objects.hpp>
@@ -59,7 +59,7 @@
 
             template<typename Base>
             struct get_array_out { 
-                typedef array_output<  
+                typedef array_object<  
                             FormatType, 
                             typename Base::type::outputter
                         > type;
@@ -67,7 +67,7 @@
 
             template<typename Base>
             struct get_container_out { 
-                typedef container_output<  
+                typedef container_object<  
                             FormatType, 
                             typename Base::type::outputter
                         > type;
@@ -75,7 +75,7 @@
 
             template<typename Base1, typename Base2>
             struct get_pair_out { 
-                typedef pair_output<  
+                typedef pair_object<  
                             FormatType, 
                             typename Base1::type::outputter, 
                             typename Base2::type::outputter 
@@ -84,7 +84,7 @@
 
             template<typename Base>
             struct get_nary_out { 
-                typedef static_nary_output<  
+                typedef static_nary_object<  
                             FormatType, 
                             typename Base::type::outputter
                         > type;
@@ -114,7 +114,7 @@
             typedef typename
                     select<
                         is_same<category, basic_tag>, 
-                            basic_output,
+                            basic_object,
                         is_same<category, array_tag>, 
                             eval< get_array_out<base1> >,
                         is_same<category, container_tag>, 

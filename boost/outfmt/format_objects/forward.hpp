@@ -4,33 +4,33 @@
 #  pragma once
 #endif
 
-#ifndef BOOST_IOFM_FormatObjects_FORWARD_HPP
-#define BOOST_IOFM_FormatObjects_FORWARD_HPP
+#ifndef BOOST_IOFM_FormatObjects_Forward_HPP
+#define BOOST_IOFM_FormatObjects_Forward_HPP
 #  include <boost/outfmt/formatter.hpp>
 
    namespace boost { namespace io
    {
-      class                            basic_output;
+      class                            basic_object;
 
-      template< typename FormatType, class Outputter = boost::io::basic_output >
-      class                            wrapped_output;
+      template< typename FormatType, class FmtObject = boost::io::basic_object >
+      class                            wrapped_object;
 
-      template< typename FormatType, class StateObject, bool pre = true, class Outputter = boost::io::basic_output >
-      class                            state_output;
+      template< typename FormatType, class StateObject, bool pre = true, class FmtObject = boost::io::basic_object >
+      class                            state_object;
 
-      template< typename FormatType, class Outputter1 = boost::io::basic_output, class Outputter2 = boost::io::basic_output >
-      class                            pair_output;
+      template< typename FormatType, class FmtObject1 = boost::io::basic_object, class FmtObject2 = boost::io::basic_object >
+      class                            pair_object;
 
-      template< typename FormatType, class Outputter = boost::io::basic_output >
-      class                            static_nary_output;
+      template< typename FormatType, class FmtObject = boost::io::basic_object >
+      class                            static_nary_object;
 
-      template< typename FormatType, class Outputter = boost::io::basic_output >
-      class                            range_output;
+      template< typename FormatType, class FmtObject = boost::io::basic_object >
+      class                            range_object;
 
-      template< typename FormatType, class Outputter = boost::io::basic_output >
-      class                            array_output;
+      template< typename FormatType, class FmtObject = boost::io::basic_object >
+      class                            array_object;
 
-      template< typename FormatType, class Outputter = boost::io::basic_output >
-      class                            container_output;
+      template< typename FormatType, class FmtObject = boost::io::basic_object >
+      class                            container_object;
    }}
 #endif

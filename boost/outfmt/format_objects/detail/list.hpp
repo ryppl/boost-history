@@ -4,43 +4,22 @@
 #  pragma once
 #endif
 
-#ifndef BOOST_IOFM_FormatObjects_DETAIL_ListOutput_HPP
-#define BOOST_IOFM_FormatObjects_DETAIL_ListOutput_HPP
+#ifndef BOOST_IOFM_FormatObjects_DETAIL_List_HPP
+#define BOOST_IOFM_FormatObjects_DETAIL_List_HPP
 #  include <boost/outfmt/formatter.hpp>
 #  include <boost/detail/iterator.hpp>  // boost::detail::iterator_traits
 
    namespace boost { namespace io { namespace detail
    {
-      template< typename FormatType, class RetType, typename Outputter = boost::io::basic_output >
-      class list_output: public formatter_t< FormatType, RetType >
+      template< typename FormatType, class RetType, typename FmtObject = boost::io::basic_object >
+      class list_object: public formatter_t< FormatType, RetType >
       {
          public:
-            typedef list_output< FormatType, RetType, Outputter >    this_type;
+            typedef list_object< FormatType, RetType, FmtObject >    this_type;
             typedef typename formatter_t< FormatType, this_type >::traits_type
                                                                      traits_type;
          private:
-            Outputter                  outputter;
-         public:
-            template< typename ForwardIterator, class OutputStream >
-            inline OutputStream & operator()
-                                  (
-                                     OutputStream &  os,
-                                     ForwardIterator first,
-                                     ForwardIterator last
-                                  ) const 
-            {
-               os << open();
-
-               while( first != last )
-               {
-                  outputter( os, *first );
-
-                  if( ++first != last )
-                     os << separator();
-               }
-
-               return( os << close());
-            }
+            FmtObject                  fo;
          public:
             template< class InputStream, class OutputIterator, typename T >
             inline bool                          readc
@@ -59,7 +38,7 @@
 
                while( is.readfirstch( ch ) && !is.eq( ch, cch ))
                {
-                  if( !outputter.read( is, value ))
+                  if( !fo.read( is, value )) 
                      return( false );
 
                   *i++ = value;
@@ -93,7 +72,7 @@
 
                while(( first != last ) && is.readfirstch( ch ) && !is.eq( ch, cch ))
                {
-                  if( !outputter.read( is, value ))
+                  if( !fo.read( is, value ))
                      return( false );
 
                   *first++ = value;
@@ -108,16 +87,37 @@
                return( is.match( close()));
             }
          public:
-            inline           list_output()
+            template< typename ForwardIterator, class OutputStream >
+            inline OutputStream &                write
+                                                 (
+                                                    OutputStream &  os,
+                                                    ForwardIterator first,
+                                                    ForwardIterator last
+                                                 ) const 
+            {
+               os << open();
+
+               while( first != last )
+               {
+                  fo.write( os, *first );
+
+                  if( ++first != last )
+                     os << separator();
+               }
+
+               return( os << close());
+            }
+         public:
+            inline           list_object()
             {
             }
-            inline           list_output( const list_output & lo ):
+            inline           list_object( const list_object & lo ):
                formatter_t< FormatType, RetType >( lo ),
-               outputter( lo.outputter )
+               fo( lo.fo )
             {
             }
-            inline           list_output( const Outputter & o ):
-               outputter( o )
+            inline           list_object( const FmtObject & o ):
+               fo( o )
             {
             }
       };
