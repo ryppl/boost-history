@@ -29,15 +29,27 @@
 
 #endif
 
+#if defined(USES_WINSOCK2)
+#define HAVE_GETADDRINFO
+#else
+#include <ctype.h>
+#include <netdb.h>
+#include <arpa/inet.h>
+#include <cstring>
+#ifdef __CYGWIN__
+#include <cygwin/in.h>
+#include <cygwin/socket.h>
+#else
+#include <sys/in.h>
+#include <sys/socket.h>
+#endif
+#include "boost/lexical_cast.hpp"
+#endif
+
 #ifdef _MSC_VER
 #pragma warning (push, 4)
 #pragma warning (disable: 4786 4305)
 #endif
-
-#if defined(USES_WINSOCK2)
-#define HAVE_GETADDRINFO
-#endif
-
 
 
 namespace boost
@@ -48,8 +60,27 @@ namespace boost
 #if !defined(HAVE_GETADDRINFO)
     namespace detail
     {
+      // this work around should be made thread safe(r)
+      // by copy result structures
 
       struct addrinfo {
+        addrinfo()
+            : ai_flags(0),
+              ai_family(0),
+              ai_socktype(0),
+              ai_protocol(0),
+              ai_addrlen(0),
+              ai_canonname(0),
+              ai_addr(0),
+              ai_next(0)
+        {}
+
+        ~addrinfo()
+        {
+          delete ai_canonname;
+          delete ai_addr;
+        }
+
         int     ai_flags;
         int     ai_family;
         int     ai_socktype;
@@ -73,6 +104,112 @@ namespace boost
         addrinfo** result )
       {
         *result=0;
+
+        if (name && *name)
+        {
+          if (::isalpha(*name))
+          {
+            //assume host name
+            ::hostent *hp = ::gethostbyname(name);
+            if (hp == 0)
+              return -1;
+
+            addrinfo* res=*result;
+            addrinfo* prev_res=0;
+
+            for (int i=0; i<hp->h_length; ++i)
+            {
+              res=new addrinfo;
+              if (*result)
+                prev_res->ai_next=res;
+              else
+                *result=res;
+
+              if (hp->h_addrtype==AF_INET)
+              {
+                res->ai_family=hp->h_addrtype;
+                sockaddr_in* addr=new sockaddr_in;
+                res->ai_addr=(sockaddr*)addr;
+                memset(addr,0,sizeof(sockaddr_in));
+                res->ai_addrlen=sizeof(sockaddr_in);
+                addr->sin_family=hp->h_addrtype;
+                std::memcpy(&addr->sin_addr, &hp->h_addr, hp->h_length);
+              }
+              else
+              {
+                res->ai_family=hp->h_addrtype;
+                sockaddr_in6* addr=new sockaddr_in6;
+                res->ai_addr=(sockaddr*)addr;
+                memset(addr,0,sizeof(sockaddr_in6));
+                res->ai_addrlen=sizeof(sockaddr_in6);
+                addr->sin6_family=hp->h_addrtype;
+                std::memcpy(&addr->sin6_addr, &hp->h_addr, hp->h_length);
+              }
+              prev_res=res;
+            }
+
+          }
+          else if (::isdigit(*name))
+          {
+            unsigned long i = ::inet_addr(name);
+            if (i == INADDR_NONE)
+              return -1;
+
+            addrinfo* res=new detail::addrinfo;
+            *result=res;
+            res->ai_family=AF_INET;
+            sockaddr_in* addr=new sockaddr_in;
+            res->ai_addr=(sockaddr*)addr;
+            memset(addr,0,sizeof(sockaddr_in));
+            res->ai_addrlen=sizeof(sockaddr_in);
+            addr->sin_addr.s_addr=i;
+          }
+          else
+          {
+            return -1;
+          }
+        }
+
+        if (service && *service)
+        {
+          ::servent *hp = 0;
+          if (::isalpha(*service))
+            hp=::getservbyname(service,0);
+          else
+            try{
+              hp=::getservbyport(boost::lexical_cast<int>(service),0);
+            }
+            catch (boost::bad_lexical_cast &)
+            {
+              return -1;
+            }
+
+          if (hp == 0)
+            return -1;
+
+          addrinfo* addr=*result;
+          while (addr)
+          {
+            if (strncmp(hp->s_proto,"udp",3)==0)
+              addr->ai_protocol=IPPROTO_UDP;
+            else if (strncmp(hp->s_proto,"tcp",3)==0)
+              addr->ai_protocol=IPPROTO_TCP;
+            else
+              return -1;
+
+            if (addr->ai_protocol==IPPROTO_UDP)
+              addr->ai_socktype=SOCK_DGRAM;
+            else
+              addr->ai_socktype=SOCK_STREAM;
+            if (addr->ai_family==AF_INET)
+              ((sockaddr_in*)addr->ai_addr)->sin_port=hp->s_port;
+            else
+              ((sockaddr_in6*)addr->ai_addr)->sin6_port=hp->s_port;
+
+            addr=addr->ai_next;
+          }
+        }
+
         return 0;
       }
     }
@@ -109,9 +246,9 @@ namespace boost
 
     any_protocol address_info::protocol() const
     {
-      return any_protocol(cast_addrinfo(m_addrinfo)->ai_socktype,
-                          cast_addrinfo(m_addrinfo)->ai_protocol,
-                          cast_addrinfo(m_addrinfo)->ai_family);
+      return any_protocol(cast_addrinfo(m_addrinfo)->ai_family,
+                          cast_addrinfo(m_addrinfo)->ai_socktype,
+                          cast_addrinfo(m_addrinfo)->ai_protocol);
     }
 
     any_address address_info::address() const
