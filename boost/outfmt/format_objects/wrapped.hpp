@@ -30,50 +30,7 @@
             template< typename T, class InputStream >
             inline bool                          read( InputStream & is, T & v ) const
             {
-               get_typeid< T >::value; // BCB workaround
-               return( readex( is, v, seq_type< get_typeid< T >::value >()));
-            }
-         private:
-            template< typename T, class InputStream >
-            inline bool                          readex
-                                                 (
-                                                    InputStream & is,
-                                                    T & v,
-                                                    ...
-                                                 ) const
-            {
                return( is.match( open()) && fo.read( is, v ) && is.match( close()));
-            }
-            template< typename T, class InputStream >
-            inline bool                          readex // special treatment for string types
-                                                 (
-                                                    InputStream & is,
-                                                    T & s,
-                                                    seq_type< std_string_type >
-                                                 ) const
-            {
-               s.erase();
-               if( !is.match( open())) return( false );
-
-               typename InputStream::char_type
-                                       ch  = '\0';
-               typename InputStream::char_type
-                                       sch = is.firstch( close());
-
-               is.skipws();
-               
-               for( ;; )
-               {
-                  while( is.getch( ch ) && !is.eq( ch, sch ))
-                     s.push_back( ch );
-
-                  is.putback( sch );
-
-                  if( is.match( close(), true ))
-                     return( true );
-                  else if( is.failed())          is.clear(); // lets continue...
-                  else                           return( false );
-               }
             }
          public:
             template< typename T, class OutputStream >
