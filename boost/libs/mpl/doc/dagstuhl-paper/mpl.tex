@@ -1329,6 +1329,46 @@ class player
 \end{verbatim}
 }
 
+%%% IMO this implementation bends over backward to be inefficient. My
+%%% first thought would have been:
+%%
+%%     // "input" function
+%%     template <class Event>
+%%     void process_event(Event const&); // throws
+%%
+%%  private:
+%%     // states
+%%     enum state_t { stopped, playing, paused };
+%%
+%%     // transition functions
+%%     void transition(play_event const&);
+%%     void transition(stop_event const&);
+%%     void transition(pause_event const&);
+%%     void transition(play_event const&);
+%%
+%%% Which avoids RTTI AFAICT.
+%%%
+%%% And then, once I realized that it wouldn't work ;-) I would have
+%%% used an event base class which contained its own event ID. There
+%%% are lots of ways to achieve this:
+%%
+%% struct event_base
+%% {
+%%   event_base(unsigned id) : m_id(id) {}
+%% protected:
+%%   static unsigned counter;
+%% private:
+%%   unsigned m_id;
+%% };
+%% template <class Event> struct event : event_base
+%% {
+%%    event() : event_base(id) {}
+%%    virtual ~event();
+%%    static unsigned id;
+%% };
+%% template <class Event> struct event_base<Event>::id = counter++;
+%% struct play : event<play> { ... };
+
 then the most straightforward way to derive the FSM 
 implementation from the above table would be something 
 like this:
@@ -1394,6 +1434,7 @@ player::process_event(event const& e)
 \end{verbatim}
 }
 
+%%% Not sure the part below is too relevant
 Note that despite seemed obviousity of optimization of making 
 a transition function to return the next state in not such a 
 good idea. While it will reduce the amount of lines required 
@@ -1412,6 +1453,11 @@ doesn't scale - even for our simple FSM the
 long. One way to reduce the maintainance problems would be to 
 factor body's of top-level \code{if} statements in separate 
 event processing functions, one for each state:
+
+%%% I think a simple example of a switch statement from a naive lexer
+%%% implementation would suffice to show why the switch/if approach is
+%%% bad, and we could afford to show just a single example of this,
+%%% taking it on faith that people will understand.
 
 {\footnotesize
 \begin{verbatim}
@@ -1467,6 +1513,7 @@ the technique tends to lead to large functions is only one
 side of the problem; after all, you can split the functions 
 even further - and that's in fact what the State pattern does.
 
+%%% This is a good point
 Another obvious thing about it that most of the code is 
 boilerplate. What you tend to do with boilerplate code is copy 
 and paste it, and then change names etc. to adjust it to its new 
