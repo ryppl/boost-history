@@ -1,11 +1,12 @@
 <html>
 	<head>
-		<title>A Proposal to Add General Purpose Smart Pointers to the Standard Library</title>
+		<title>A Proposal to Add General Purpose Smart Pointers to the Library 
+        Technical Report</title>
 		<meta content="http://schemas.microsoft.com/intellisense/ie5" name="vs_targetSchema">
 		<meta http-equiv="Content-Language" content="en-us">
 		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 	</head>
-	<body>
+	<body bgcolor="#FFFFFF">
 		<ADDRESS>Document number: N????=??-????</ADDRESS>
 		<ADDRESS>Programming Language C++, Library Subgroup</ADDRESS>
 		<ADDRESS>&nbsp;</ADDRESS>
@@ -13,7 +14,8 @@
 		<ADDRESS>Peter Dimov &lt;<A href="mailto:pdimov@mmltd.net">pdimov@mmltd.net</A>&gt;</ADDRESS>
 		<ADDRESS>&nbsp;</ADDRESS>
 		<ADDRESS>March ??, 2003</ADDRESS>
-		<h1>A Proposal to Add General Purpose Smart Pointers to the Standard Library</h1>
+		<h1>A Proposal to Add General Purpose Smart Pointers to the Library 
+        Technical Report</h1>
 		<h2>I. Motivation</h2>
 		<p>Resource management, particularly of dynamically allocated memory, has been a 
 			serious concern since the days of the earliest digital computers. Many modern 
@@ -213,7 +215,7 @@ void test()
 		<p>The proposed text uses "<STRONG>p</STRONG> <EM>shares ownership with</EM> <STRONG>q</STRONG>" 
 			to indicate that <STRONG>p</STRONG> and <STRONG>q</STRONG> have both originated 
 			from the same smart pointer, and <EM>own</EM> the same object. "<EM>Shares 
-				ownerwhip with</EM>" is an equivalence relation. It is reflexive (<STRONG>p</STRONG>
+				ownership with</EM>" is an equivalence relation. It is reflexive (<STRONG>p</STRONG>
 			<EM>shares ownership with</EM> <STRONG>p</STRONG>), commutative (if <STRONG>p</STRONG>
 			<EM>shares ownership with</EM> <STRONG>q</STRONG>, <STRONG>q</STRONG> also <EM>shares 
 				ownership with</EM> <STRONG>p</STRONG>), and transitive (if <STRONG>p</STRONG>
@@ -405,7 +407,7 @@ template&lt;class T, class A1, class A2&gt; shared_ptr&lt;T&gt; shared_new(A1 co
 		<P>In most typical scenarios, a <code>std::map</code> with <EM>shared_ptr</EM> as 
 			key would behave as if the stored pointers have been used. The exception is 
 			that in some situations involving multiple or virtual inheritance, it is 
-			possible for two pointers of the same type to point to different subobjects 
+			possible for two pointers of the same type to point to different sub-objects 
 			within the same object. Therefore, two <EM>shared_ptr</EM> instances storing 
 			such pointers but sharing ownership will be considered equivalent by <code>operator&lt;</code>, 
 			but may not compare equal when using <code>operator==</code> (defined as a 
@@ -592,7 +594,7 @@ else
 		<P>The configuration described above is able to execute 8388608 (2<SUP>23</SUP> ) <code>
 				push_back</code> operations into a <code>std::vector&lt; shared_ptr&lt;int&gt; 
 				&gt;</code> (without calling <code>reserve</code> first) in about 2.63 
-			seconds in a singlethreaded build, 5.44 seconds in a multithreaded build. A 
+			seconds in a single threaded build, 5.44 seconds in a multi-threaded build. A 
 			factor of two increase seems like a lot, but the difference rarely impacts real 
 			code, since it never needs to repeatedly make so many <EM>shared_ptr</EM> copies.</P>
 		<P>The source code used for the test is available as part of the Boost 
