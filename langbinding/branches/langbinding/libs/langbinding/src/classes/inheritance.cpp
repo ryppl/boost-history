@@ -437,7 +437,7 @@ namespace
   }
 }
 
-namespace langbinding { namespace classes {
+namespace langbinding { namespace classes { namespace aux {
 
 BOOST_LANGBINDING_DECL void* find_dynamic_type(void* p, class_id src_t, class_id dst_t)
 {
@@ -493,5 +493,5 @@ BOOST_LANGBINDING_DECL void register_dynamic_id_aux(
     tuples::get<kdynamic_id>(*demand_type(static_id)) = get_dynamic_id;
 }
 
-}}} // namespace boost::langbinding::classes
+}}}} // namespace boost::langbinding::classes::aux
 
