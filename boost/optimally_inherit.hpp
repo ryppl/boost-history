@@ -1,19 +1,20 @@
 //----------------------------------------------------------------------------
+//
+// optimally_inherit.hpp
+//
+//----------------------------------------------------------------------------
 // Copyright (C) 2002, David B. Held.
-// 
+//
 // Code inspired by Andrei Alexandrescu's OptionallyInherit template as well
 // as boost::compressed_pair.
-// 
+//
 // Permission to copy, use, modify, sell, and distribute this software is
 // granted provided this copyright notice appears in all copies. This software
 // is provided "as is" without express or implied warranty, and with no claim
 // as to its suitability for any purpose.
-// 
+//
 // See http://www.boost.org/ for most recent version, including documentation.
 //----------------------------------------------------------------------------
-//
-// optimally_inherit.hpp
-// 
 // optimally_inherit<> helps avoid EBO pessimization with multiple inheritance
 // by only inheriting from non-empty base classes.  See 
 // libs/optimally_inherit/doc/index.html
@@ -22,6 +23,8 @@
 #define BOOST_OPTIMALLY_INHERIT_20020703_HPP
 //----------------------------------------------------------------------------
 #include <boost/type_traits/object_traits.hpp>
+//----------------------------------------------------------------------------
+#ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 //----------------------------------------------------------------------------
 namespace boost
 {
@@ -34,8 +37,8 @@ namespace boost
         // derived classes.  Clearly, this is not an optimal solution, but
         // is a necessary evil until a better one is found.
         //--------------------------------------------------------------------
-        class init_first_tag { };
-        class init_first_first_tag { };
+        struct init_first_tag { };
+        struct init_first_first_tag { };
         //--------------------------------------------------------------------
         // Child implementation
         template <class T1, class T2, bool FirstIsEmpty, bool SecondIsEmpty>
@@ -66,8 +69,15 @@ namespace boost
                         : T1(x)                     { }
 
                     template <typename U>
-                    optimal_parents(U const& x, detail::init_first_first_tag const& t)
-                        : T1(x, t)                  { }
+                    optimal_parents(U const& x, detail::init_first_first_tag const&)
+                        : T1(x, detail::init_first_tag())
+                                                    { }
+
+            void    swap(optimal_parents& rhs)
+            {
+                T1::swap(static_cast<T1&>(rhs));
+                T2::swap(static_cast<T2&>(rhs));
+            }
         };
         //--------------------------------------------------------------------
         // Inherit first
@@ -84,19 +94,25 @@ namespace boost
                     template <class U1, class U2>
                     optimal_parents(optimal_parents<U1, U2, false, true> const& rhs)
                         : T1(static_cast<U1 const&>(rhs))
-                                                    { U2 u2; T2 t2(u2); }
+                                                    { U2 u2; T2 t2(u2); (void) t2; }
 
                     template <typename U>
                     optimal_parents(U const& x)
-                        : T1(x)                     { T2 t2(x); }
+                        : T1(x)                     { T2 t2(x); (void) t2; }
 
                     template <typename U>
                     optimal_parents(U const& x, detail::init_first_tag const&)
                         : T1(x)                     { }
 
                     template <typename U>
-                    optimal_parents(U const& x, detail::init_first_first_tag const& t)
-                        : T1(x, t)                  { }
+                    optimal_parents(U const& x, detail::init_first_first_tag const&)
+                        : T1(x, detail::init_first_tag())
+                                                    { }
+
+            void    swap(optimal_parents& rhs)
+            {
+                T1::swap(static_cast<T1&>(rhs));
+            }
         };
         //--------------------------------------------------------------------
         // Inherit second
@@ -113,19 +129,24 @@ namespace boost
                     template <class U1, class U2>
                     optimal_parents(optimal_parents<U1, U2, true, false> const& rhs)
                         : T2(static_cast<U2 const&>(rhs))
-                                                    { U1 u1; T1 t1(u1); }
+                                                    { U1 u1; T1 t1(u1); (void) t1; }
 
                     template <typename U>
                     optimal_parents(U const& x)
-                        : T2(x)                     { T1 t1(x); }
+                        : T2(x)                     { T1 t1(x); (void) t1; }
 
                     template <typename U>
                     optimal_parents(U const& x, detail::init_first_tag const&)
-                                                    { T1 t1(x); }
+                                                    { T1 t1(x); (void) t1; }
 
                     template <typename U>
-                    optimal_parents(U const& x, detail::init_first_first_tag const& t)
-                                                    { T1 t1(x, t); }
+                    optimal_parents(U const& x, detail::init_first_first_tag const&)
+                                                    { T1 t1(x, detail::init_first_tag()); (void) t1; }
+
+            void    swap(optimal_parents& rhs)
+            {
+                T2::swap(static_cast<T2&>(rhs));
+            }
         };
         //--------------------------------------------------------------------
         // Inherit neither
@@ -140,21 +161,21 @@ namespace boost
 
                     template <class U1, class U2>
                     optimal_parents(optimal_parents<U1, U2, true, true> const& rhs)
-                                                    { U1 u1; T1 t1(u1); U2 u2; T2 t2(u2); }
+                                                    { U1 u1; T1 t1(u1); U2 u2; T2 t2(u2); (void) t1; (void) t2; }
 
                     template <typename U>
                     optimal_parents(U const& x)
-                                                    { T1 t1(x); T2 t2(x); }
+                                                    { T1 t1(x); T2 t2(x); (void) t1; (void) t2; }
 
                     template <typename U>
                     optimal_parents(U const& x, detail::init_first_tag const&)
-                                                     { T1 t1(x); }
+                                                    { T1 t1(x); (void) t1; }
 
                     template <typename U>
-                    optimal_parents(U const& x, detail::init_first_first_tag const& t)
-                                                     { T1 t1(x, t); }
-        private:
-            enum    prevent_gcc_over_optimization { };
+                    optimal_parents(U const& x, detail::init_first_first_tag const&)
+                                                    { T1 t1(x, detail::init_first_tag()); (void) t1; }
+
+            void    swap(optimal_parents& rhs)      { }
         };
         //--------------------------------------------------------------------
     }   // namespace detail
@@ -172,5 +193,9 @@ namespace boost
     };
     //------------------------------------------------------------------------
 }   // namespace boost
+//----------------------------------------------------------------------------
+#else  // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+#include "detail/ob_optimally_inherit.hpp"
+#endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 //----------------------------------------------------------------------------
 #endif // BOOST_OPTIMALLY_INHERIT_20020703_HPP

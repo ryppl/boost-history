@@ -4,7 +4,7 @@
   <MACROS>
     <VERSION value="BCB.05.03"/>
     <PROJECT value="opt_test.exe"/>
-    <OBJFILES value="\\JACOB\DHELD\optinh\opt_test.obj"/>
+    <OBJFILES value="opt_test.obj"/>
     <RESFILES value=""/>
     <DEFFILE value=""/>
     <RESDEPEN value="$(RESFILES)"/>
@@ -13,7 +13,7 @@
     <SPARELIBS value=""/>
     <PACKAGES value="VCL50.bpi VCLX50.bpi ZBuilder.bpi CodeLogic.bpi QRPT50.bpi VCLDB50.bpi 
       VCLBDE50.bpi VCLDBX50.bpi VCLIE50.bpi INETDB50.bpi INET50.bpi bcbsmp50.bpi"/>
-    <PATHCPP value=".;\\JACOB\DHELD\optinh"/>
+    <PATHCPP value=".;"/>
     <PATHPAS value=".;"/>
     <PATHRC value=".;"/>
     <PATHASM value=".;"/>
@@ -28,8 +28,8 @@
     <WARNINGS value="-w-par"/>
   </MACROS>
   <OPTIONS>
-    <CFLAG1 value="-Od -H=$(BCB)\lib\vcl50.csm -Hc -Vx -Ve -X- -r- -a8 -b- -k -y -v -vi- -tWC 
-      -tWM- -c"/>
+    <CFLAG1 value="-Od -H=$(BCB)\lib\vcl50.csm -Hc -Q -Vx -Ve -X- -r- -a8 -b- -k -y -v -vi- 
+      -tWC -tWM- -c"/>
     <PFLAGS value="-$YD -$W -$O- -v -JPHNE -M"/>
     <RFLAGS value=""/>
     <AFLAGS value="/mx /w2 /zd"/>
@@ -82,6 +82,7 @@ $(BCB)\Bin\mfcwizard.bpl=MFC Wizard
 $(BCB)\Bin\bcb97axserver50.bpl=Borland C++Builder COM Server Components Sample Package
 $(BCB)\Bin\dcltee50.bpl=TeeChart 5.0 Components
 $(BCB)\Bin\dcltqr50.bpl=TeeChart 5.0 for QuickReport Components Design Package
+$(BCB)\Projects\Bpl\Package1.bpl=c:\program files\borland\cbuilder5\Projects\Bpl\Package1
 
 [Debugging]
 DebugSourceDirs=$(BCB)\source\vcl
@@ -94,7 +95,7 @@ RemotePath=
 RemoteDebug=0
 
 [Compiler]
-ShowInfoMsgs=1
+ShowInfoMsgs=0
 LinkDebugVcl=0
 LinkCGLIB=0
   </IDEOPTIONS>

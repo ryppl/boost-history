@@ -1,78 +1,87 @@
 [Closed Files]
-File_0=SourceModule,'C:\Program Files\Borland\CBuilder5\Include\boost\ct_if.hpp',0,1,22,1,1,0,0
-File_1=SourceModule,'C:\Program Files\Borland\CBuilder5\Include\boost\type_traits\ice.hpp',0,1,19,33,24,0,0
-File_2=SourceModule,'C:\Program Files\Borland\CBuilder5\Include\boost\type_traits\fwd.hpp',0,1,37,27,63,0,0
-File_3=SourceModule,'C:\Program Files\Borland\CBuilder5\Include\boost\type_traits\object_traits.hpp',0,1,1,1,108,0,0
-File_4=SourceModule,'C:\Program Files\Borland\CBuilder5\Include\boost\type_traits\transform_traits.hpp',0,1,42,1,68,0,0
-File_5=SourceModule,'C:\Program Files\Borland\CBuilder5\Include\boost\type_traits\conversion_traits.hpp',0,1,81,58,96,0,0
-File_6=SourceModule,'C:\Program Files\Borland\CBuilder5\Include\boost\type_traits.hpp',0,1,7,1,1,0,0
-File_7=SourceModule,'C:\PROGRAM FILES\BORLAND\CBUILDER5\INCLUDE\boost\type_traits\transform_traits_spec.hpp',0,1,40,55,60,0,0
-File_8=SourceModule,'N:\shared\Projects\Test\inherit_test.cpp',0,1,14,40,39,0,0
-File_9=SourceModule,'N:\shared\Projects\CodeLogic\Option.h',0,1,1,1,1,0,0
+File_0=SourceModule,'L:\boost\boost-sandbox\boost-sandbox\libs\optimally_inherit\test\opt_test.cpp',0,1,16,72,17,0,0
+File_1=SourceModule,'C:\Program Files\Borland\CBuilder5\Include\boost\ct_if.hpp',0,1,22,1,1,0,0
+File_2=SourceModule,'C:\Program Files\Borland\CBuilder5\Include\boost\type_traits\ice.hpp',0,1,19,33,24,0,0
+File_3=SourceModule,'C:\Program Files\Borland\CBuilder5\Include\boost\type_traits\fwd.hpp',0,1,37,27,63,0,0
+File_4=SourceModule,'C:\Program Files\Borland\CBuilder5\Include\boost\type_traits\object_traits.hpp',0,1,1,1,108,0,0
+File_5=SourceModule,'C:\Program Files\Borland\CBuilder5\Include\boost\type_traits\transform_traits.hpp',0,1,42,1,68,0,0
+File_6=SourceModule,'C:\Program Files\Borland\CBuilder5\Include\boost\type_traits\conversion_traits.hpp',0,1,81,58,96,0,0
+File_7=SourceModule,'C:\Program Files\Borland\CBuilder5\Include\boost\type_traits.hpp',0,1,7,1,1,0,0
+File_8=SourceModule,'C:\PROGRAM FILES\BORLAND\CBUILDER5\INCLUDE\boost\type_traits\transform_traits_spec.hpp',0,1,40,55,60,0,0
 
 [Modules]
-Module0=L:\optinh\opt_test.cpp
-Module1=\\JACOB\DHELD\optinh\OPTIMALLY_INHERIT.HPP
-Count=2
+Module0=N:\shared\Projects\Boost\boost-sandbox\boost-sandbox\libs\optimally_inherit\test\opt_test.cpp
+Module1=N:\shared\Projects\Boost\boost-sandbox\boost-sandbox\BOOST\OPTIMALLY_INHERIT.HPP
+Module2=N:\shared\Projects\Boost\boost-sandbox\boost-sandbox\libs\optimally_inherit\test\opt_test.bpr
+Count=3
 EditWindowCount=1
 
-[L:\optinh\opt_test.cpp]
+[N:\shared\Projects\Boost\boost-sandbox\boost-sandbox\libs\optimally_inherit\test\opt_test.cpp]
 ModuleType=SourceModule
 FormState=0
 FormOnTop=0
 
-[\\JACOB\DHELD\optinh\OPTIMALLY_INHERIT.HPP]
+[N:\shared\Projects\Boost\boost-sandbox\boost-sandbox\BOOST\OPTIMALLY_INHERIT.HPP]
 ModuleType=SourceModule
 FormState=0
 FormOnTop=0
 
-[N:\shared\Projects\FDC\Manifest 7.0\Server\ProjectGroup1.bpg]
+[N:\shared\Projects\Boost\boost-sandbox\boost-sandbox\libs\optimally_inherit\test\opt_test.bpr]
+ModuleType=SourceModule
 FormState=0
 FormOnTop=0
 
-[L:\optinh\opt_test.bpr]
+[C:\Program Files\Borland\CBuilder5\Projects\ProjectGroup1.bpg]
 FormState=0
 FormOnTop=0
 
 [EditWindow0]
-ViewCount=2
+ViewCount=3
 CurrentView=1
 View0=0
 View1=1
+View2=2
 CodeExplorer=CodeExplorer@EditWindow0
 MessageView=MessageView@EditWindow0
 ClassHierarchy=ClassHierarchy@EditWindow0
 Create=1
 Visible=1
 State=0
-Left=371
-Top=103
-Width=783
-Height=764
+Left=456
+Top=101
+Width=696
+Height=751
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=775
-ClientHeight=737
+ClientWidth=688
+ClientHeight=724
 LeftPanelSize=0
 LeftPanelClients=CodeExplorer@EditWindow0
 LeftPanelData=00000400010000000C000000436F64654578706C6F7265720000000000000000000000000000000000FFFFFFFF
 RightPanelSize=0
-BottomPanelSize=52
+BottomPanelSize=0
 BottomPanelClients=MessageView@EditWindow0
-BottomPanelData=000004000000000000000000000000000000000000000000000100000000000000000B0000004D65737361676556696577FFFFFFFF
+BottomPanelData=00000400010000000B0000004D657373616765566965770000000000000000000000000000000000FFFFFFFF
 
 [View0]
-Module=\\JACOB\DHELD\optinh\OPTIMALLY_INHERIT.HPP
-CursorX=23
-CursorY=173
-TopLine=153
+Module=N:\shared\Projects\Boost\boost-sandbox\boost-sandbox\libs\optimally_inherit\test\opt_test.bpf
+CursorX=1
+CursorY=1
+TopLine=1
 LeftCol=1
 
 [View1]
-Module=L:\optinh\opt_test.cpp
+Module=N:\shared\Projects\Boost\boost-sandbox\boost-sandbox\libs\optimally_inherit\test\opt_test.cpp
+CursorX=17
+CursorY=58
+TopLine=34
+LeftCol=1
+
+[View2]
+Module=N:\shared\Projects\Boost\boost-sandbox\boost-sandbox\BOOST\OPTIMALLY_INHERIT.HPP
 CursorX=1
-CursorY=46
-TopLine=22
+CursorY=131
+TopLine=101
 LeftCol=1
 
 [Watches]
@@ -91,9 +100,9 @@ State=2
 Left=0
 Top=0
 Width=1152
-Height=105
-MaxLeft=-4
-MaxTop=-4
+Height=101
+MaxLeft=-1
+MaxTop=-1
 MaxWidth=1160
 MaxHeight=105
 ClientWidth=1152
@@ -132,46 +141,6 @@ DisassemblyPane=187
 RegisterPane=231
 FlagPane=64
 
-[ToDo List]
-Create=1
-Visible=0
-State=0
-Left=190
-Top=690
-Width=718
-Height=162
-MaxLeft=-1
-MaxTop=-1
-ClientWidth=710
-ClientHeight=138
-TBDockHeight=250
-LRDockWidth=470
-Dockable=1
-Column0Width=200
-Column1Width=30
-Column2Width=340
-Column3Width=70
-Column4Width=70
-SortOrder=4
-ShowHints=1
-ShowChecked=1
-
-[CallStackWindow]
-Create=1
-Visible=0
-State=0
-Left=0
-Top=0
-Width=454
-Height=658
-MaxLeft=-1
-MaxTop=-1
-ClientWidth=446
-ClientHeight=634
-TBDockHeight=317
-LRDockWidth=495
-Dockable=1
-
 [AlignmentPalette]
 Create=1
 Visible=0
@@ -191,11 +160,11 @@ Visible=1
 State=0
 Left=0
 Top=101
-Width=191
+Width=190
 Height=751
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=181
+ClientWidth=180
 ClientHeight=725
 TBDockHeight=556
 LRDockWidth=190
@@ -203,7 +172,7 @@ Dockable=1
 SplitPos=86
 ArrangeBy=Name
 SelectedItem=
-ExpandedItems=Bands,"Drag, Drop and Docking","Help and Hints",Input,Linkage,Localizable,Miscellaneous,Visual
+ExpandedItems="Drag, Drop and Docking","Help and Hints",Input,Layout,Linkage,Localizable,Miscellaneous,Visual
 HiddenCategories=Legacy
 ShowStatusBar=1
 
@@ -246,14 +215,14 @@ Col2Width=120
 Create=1
 Visible=0
 State=0
-Left=179
-Top=-33
+Left=0
+Top=12
 Width=170
-Height=388
+Height=694
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=170
-ClientHeight=388
+ClientHeight=694
 TBDockHeight=388
 LRDockWidth=170
 Dockable=1
@@ -261,15 +230,15 @@ ClassViewDisplayMode=0
 
 [MessageView@EditWindow0]
 Create=1
-Visible=1
+Visible=0
 State=0
 Left=12
 Top=0
-Width=763
+Width=676
 Height=52
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=763
+ClientWidth=676
 ClientHeight=52
 TBDockHeight=52
 LRDockWidth=443
