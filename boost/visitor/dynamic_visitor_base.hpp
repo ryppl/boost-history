@@ -17,6 +17,9 @@
 #ifndef BOOST_VISITOR_DYNAMIC_VISITOR_BASE_HPP
 #define BOOST_VISITOR_DYNAMIC_VISITOR_BASE_HPP
 
+#include "boost/config.hpp"
+#include "boost/type_traits/is_base_and_derived.hpp"
+
 namespace boost {
 
 //////////////////////////////////////////////////////////////////////////

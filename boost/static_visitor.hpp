@@ -18,7 +18,7 @@
 #define BOOST_STATIC_VISITOR_HPP
 
 #include "boost/config.hpp"
-#include "boost/mpl/bool_c.hpp"
+#include "boost/type_traits/is_base_and_derived.hpp"
 
 #include "boost/mpl/aux_/lambda_support.hpp" // used by is_static_visitor
 

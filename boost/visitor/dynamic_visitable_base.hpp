@@ -17,7 +17,9 @@
 #ifndef BOOST_VISITOR_DYNAMIC_VISITABLE_BASE_HPP
 #define BOOST_VISITOR_DYNAMIC_VISITABLE_BASE_HPP
 
+#include "boost/config.hpp"
 #include "boost/visitor/dynamic_visitor_base.hpp"
+#include "boost/type_traits/is_base_and_derived.hpp"
 
 #include "boost/mpl/aux_/lambda_support.hpp" // used by is_dynamic_visitable
 

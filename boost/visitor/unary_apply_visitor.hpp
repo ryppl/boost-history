@@ -17,16 +17,14 @@
 #ifndef BOOST_VISITOR_UNARY_APPLY_VISITOR_HPP
 #define BOOST_VISITOR_UNARY_APPLY_VISITOR_HPP
 
-#include "boost/static_visitable.hpp"
+#include "boost/static_visitable.hpp" // for is_static_visitable
 #include "boost/visitor/dynamic_visitable_base.hpp"
 #include "boost/visitor/dynamic_visitor_base.hpp"
 #include "boost/visitor/dynamic_visitor_return_base.hpp"
-#include "boost/visitor/dynamic_visitor_interface.hpp"
 #include "boost/visitor/detail/wrap_dynamic_visitor.hpp"
 #include "boost/visitor/detail/dynamic_return_error.hpp"
 
 #include "boost/preprocessor/define_forwarding_func.hpp"
-#include "boost/type_traits/is_base_and_derived.hpp"
 #include "boost/mpl/bool_c.hpp"
 
 namespace boost {
