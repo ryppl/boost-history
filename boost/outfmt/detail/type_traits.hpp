@@ -111,7 +111,11 @@
       {
          struct type
          {
-            BOOST_STATIC_CONSTANT( bool, value = ( sizeof( BOOST_DEDUCED_TYPENAME FmtObject::formatter_type ) == id ));
+#           if defined(__BORLANDC__)
+               BOOST_STATIC_CONSTANT( bool, value = ( sizeof( FmtObject::formatter_type ) == id ));
+#           else
+               BOOST_STATIC_CONSTANT( bool, value = ( sizeof( BOOST_DEDUCED_TYPENAME FmtObject::formatter_type ) == id ));
+#           endif
          };
          BOOST_STATIC_CONSTANT( bool, value = type::value  );
       };
