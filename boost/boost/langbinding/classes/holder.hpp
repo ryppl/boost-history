@@ -5,7 +5,8 @@
 # define HOLDER_DWA2004918_HPP
 
 # include <boost/langbinding/aux_/config.hpp>
-# include <boost/langbinding/aux_/holder.hpp>
+# include <boost/langbinding/classes/aux_/holder.hpp>
+# include <boost/langbinding/classes/polymorphic.hpp>
 # include <boost/noncopyable.hpp>
 
 namespace boost { namespace langbinding { namespace classes { 
@@ -35,38 +36,55 @@ template <class Pointer>
 struct instance_holder
   : instance_link
 {
-    instance_holder(Pointer ptr, instance_link* siblings)
+    instance_holder(
+        backend::class_instance const& instance, Pointer ptr, instance_link* siblings
+    )
       : instance_link(siblings)
       , ptr(ptr)
-    {}
+    {
+        construct_polymorphic(instance, get_pointer(ptr));
+    }
         
     void* find(util::type_info const& sought) const
     {
         if (typeid(Pointer) == sought)
             return &this->ptr;
 
-        typedef typename boost::pointee<Pointer>::type pointee;
-
-        pointee* p = get_pointer(this->ptr);
-        if (p == 0)
-            return 0;
-
-        if (void* found = find_polymorphic(sought, (pointee*)0, p))
-            return found;
-            
-        util::type_info const held = python::type_id<pointee>();
-        return held == sought ? p : aux::find_dynamic_type(p, held, sought);
+        return find_pointee(get_pointer(this->ptr));
     }
 
  private:
+    
     template <class T>
-    void* find_polymorphic(util::type_info const& sought, polymorphic<T>*, T* p)
+    inline void construct_polymorphic(backend::class_instance& instance, polymorphic<T>* p)
+    {
+        if (p) p->instance = instance;
+    }
+    
+    inline void construct_polymorphic(backend::class_instance&, ...)
+    {}
+    
+    template <class Pointee>
+    inline void* find_pointee(Pointee* p)
+    {
+        if (p == 0)
+            return 0;
+
+        if (void* found = find_polymorphic(sought, (Pointee*)0, p))
+            return found;
+            
+        util::type_info const held = python::type_id<Pointee>();
+        return held == sought ? p : aux::find_dynamic_type(p, held, sought);
+    }
+        
+    template <class T>
+    inline void* find_polymorphic(util::type_info const& sought, polymorphic<T>*, T* p)
     {
         return sought == util::type_id<T>() ? p : 0;
     }
     
     template <class T>
-    void* find_polymorphic(util::type_info const&, ...)
+    inline void* find_polymorphic(util::type_info const&, ...)
     {
         return 0;
     }

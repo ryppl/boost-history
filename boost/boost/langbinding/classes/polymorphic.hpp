@@ -4,6 +4,8 @@
 #ifndef POLYMORPHIC_DWA2004921_HPP
 # define POLYMORPHIC_DWA2004921_HPP
 
+# include <boost/langbinding/classes/override>
+
 namespace boost { namespace langbinding { namespace classes {
 
 // Derive a wrapper class from T and polymorphic<T> in order to
@@ -11,8 +13,17 @@ namespace boost { namespace langbinding { namespace classes {
 template <class T>
 struct polymorphic
 {
- private:
+ public:
+    override find_override(char const* name)
+    {
+        backend::plugin const& back_end = this->instance.class_->back_end;
+        
+        return classes::override(back_end, back_end.find_override(name, data));
+    }
     
+ private:
+    template<class T> friend class instance_holder;
+    backend::class_instance instance;
 };
 
 
