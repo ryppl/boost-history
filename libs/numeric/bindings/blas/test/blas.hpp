@@ -122,7 +122,7 @@ void check(value_type a, value_type b)
 template < typename Iterator0, typename Iterator1 >
 void check(Iterator0 begin0, Iterator0 end0, Iterator1 begin1)
 {
-  typedef std::iterator_traits< Iterator0 >::value_type value_type ;
+  typedef typename std::iterator_traits< Iterator0 >::value_type value_type ;
 
   Iterator0 it0 = begin0 ;
   Iterator1 end1 = begin1 + std::distance(begin0,end0);

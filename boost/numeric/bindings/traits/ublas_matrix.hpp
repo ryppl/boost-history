@@ -62,7 +62,7 @@ namespace boost { namespace numeric { namespace bindings {
     typedef T const* pointer; 
     typedef boost::numeric::ublas::matrix<T, F, ArrT> matrix_type;
     static pointer storage (matrix_type const& m) {
-      typedef const typename matrix_type::const_array_type array_type;  //toon: need const array_type to take correct trait in next line
+      typedef typename matrix_type::const_array_type array_type;  
       return vector_traits<array_type>::storage (m.data()); 
     }
     static int size1 (matrix_type const& m) { return m.size1(); } 
