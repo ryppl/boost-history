@@ -3,7 +3,11 @@
 - fix tests
 
 - replace substring -> optimization
-- replace trace tunning
+- replace traits tunning
+
+- change erase to use replace and a special format
+  ( requires that the result code compiles to optimal 
+    version ) 
 
 - specializations for basic_string where necessary
 - trim_end_if and find_last fix for ForwardIterator
