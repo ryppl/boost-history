@@ -556,7 +556,7 @@ private:
 template <class R> struct evaluator0
 {
     template<class L, class F, class A>
-    static R eval(L const& l, F f, A & a)
+    static R eval(L const&, F f, A &)
     {
         return f();
     }
@@ -565,7 +565,7 @@ template <class R> struct evaluator0
 template <> struct evaluator0<void>
 {
     template<class L, class F, class A>
-    static void eval(L const& l, F f, A & a)
+    static void eval(L const&, F f, A &)
     {
         f();
     }
