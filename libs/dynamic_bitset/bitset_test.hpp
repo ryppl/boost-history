@@ -1,34 +1,51 @@
-// (C) Copyright Jeremy Siek 2001.
-// Permission to copy, use, modify, sell and distribute this software
-// is granted provided this copyright notice appears in all
-// copies. This software is provided "as is" without express or
-// implied warranty, and with no claim as to its suitability for any
-// purpose.
+// --------------------------------------------------
+//        (C) Copyright Jeremy Siek   2001.
+//        (C) Copyright Gennaro Prota 2003 - 2004.
+//
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+//
+// -----------------------------------------------------------
+
+
+#ifndef BOOST_BITSET_TEST_HPP_GP_20040319
+#define BOOST_BITSET_TEST_HPP_GP_20040319
+
+ // NOTE: Tests are designed to be generic.
+ //       No need to include "boost/dynamic_bitset.hpp".
+ //
+#include "boost/config.hpp"
+#if !defined (BOOST_NO_STD_LOCALE)
+# include <locale>
+#endif
+
+#if defined (__STL_CONFIG_H) && !defined (__STL_USE_NEW_IOSTREAMS)
+# define BOOST_OLD_IOSTREAMS // gps
+#endif
 
 #include <vector>
-#include <fstream>
-#include <string>
+#include <fstream> // used for operator<< :( - gps
+#include <string>    // for (basic_string and) getline()
 #include <algorithm> // for std::min
 #include <cassert>
 
-#include "boost/config.hpp" // for BOOST_STATIC_CONSTANT
 #include "boost/limits.hpp"
 #include "boost/test/minimal.hpp"
 
-// Extract the bit at position n from num.
+
+
 template <typename Block>
 inline bool nth_bit(Block num, std::size_t n)
 {
-  assert(n < std::numeric_limits<Block>::digits);
-  // Move the nth bit to position 0 and then mask out all other bits.
+  assert(n < (std::size_t)std::numeric_limits<Block>::digits);
   return (num >> n) & 1;
 }
-
 
 // A long, 'irregular', string useful for various tests
 std::string get_long_string()
 {
-  const char * p =
+  const char * const p =
   //    6         5         4         3         2         1
   // 3210987654321098765432109876543210987654321098765432109876543210
     "1110011100011110000011110000011111110000000000000110101110000000"
@@ -39,6 +56,50 @@ std::string get_long_string()
     "101000111100011010101110011011000000010";
 
   return std::string(p);
+}
+
+const char * const test_file_name()
+{
+  return "boost_dynamic_bitset_tests";
+}
+
+#if defined BOOST_OLD_IOSTREAMS
+template <typename Stream>
+bool is_one_or_zero(const Stream & /*s*/, char c)
+{
+  return c == '1' || c == '0';
+}
+template <typename Stream>
+bool is_white_space(const Stream & /*s*/, char c)
+{
+  return std::isspace(c);
+}
+#else
+template <typename Stream, typename Ch>
+bool is_one_or_zero(const Stream& s, Ch c) // gps
+{
+  typedef typename Stream::traits_type Tr;
+  const Ch zero = s.widen('0');
+  const Ch one  = s.widen('1');
+
+  return Tr::eq(c, one) || Tr::eq(c, zero) ;
+}
+template <typename Stream, typename Ch>
+bool is_white_space(const Stream & s, Ch c)
+{
+  // NOTE: the using directive is to satisfy Borland 5.6.4
+  //       with its own library (STLport), which chokes
+  //       on std::isspace(c, loc) - gps
+  using namespace std;
+  return isspace(c, s.getloc());
+}
+#endif // defined BOOST_OLD_IOSTREAMS
+
+
+template <typename Stream>
+bool has_flags(const Stream& s, std::ios::iostate flags)
+{
+  return (s.rdstate() & flags) != std::ios::goodbit;
 }
 
 
@@ -63,7 +124,7 @@ struct bitset_test {
     BOOST_CHECK(b.size() == N);
 
     const std::size_t ulong_width = std::numeric_limits<unsigned long>::digits;
-    std::size_t M = std::min(N, ulong_width);
+    std::size_t M = (std::min)(N, ulong_width);
     std::size_t I;
     for (I = 0; I < M; ++I)
       BOOST_CHECK(b[I] == nth_bit(num, I));
@@ -78,14 +139,17 @@ struct bitset_test {
   // test the correct working of those defaults here (except for the
   // default of num_bits). I'm not sure what to do in this regard.
   //
+  // Note2: the default argument expression for num_bits doesn't use
+  //        static_cast, to avoid a gcc 2.95.3 'sorry, not implemented'
+  //
   template <typename Ch, typename Tr, typename Al>
   static void from_string(const std::basic_string<Ch, Tr, Al>& str,
                           std::size_t pos,
                           std::size_t max_char,
-                          std::size_t num_bits = -1)
+                          std::size_t num_bits = (std::size_t)(-1))
   {
 
-      std::size_t rlen = std::min(max_char, str.size() - pos); // [gps]
+      std::size_t rlen = (std::min)(max_char, str.size() - pos); // [gps]
 
       // The resulting size N of the bitset is num_bits, if
       // that is different from the default arg, rlen otherwise.
@@ -101,7 +165,7 @@ struct bitset_test {
 
       const std::size_t actual_size = size_upon_string? rlen : num_bits;
       BOOST_CHECK(b.size() == actual_size);
-      std::size_t m = std::min(num_bits, rlen);
+      std::size_t m = (std::min)(num_bits, rlen);
       std::size_t j;
       for (j = 0; j < m; ++j)
           BOOST_CHECK(b[j] == (str[pos + m - 1 - j] == '1')); // [gps]
@@ -116,28 +180,32 @@ struct bitset_test {
   BOOST_STATIC_CONSTANT(int, bits_per_block = Bitset::bits_per_block);
 
   // PRE: std::equal(first1, last1, first2) == true
-  static void from_block_range(std::vector<Block> blocks)
+  static void from_block_range(const std::vector<Block>& blocks)
   {
-    {
+    { // test constructor from block range
       Bitset bset(blocks.begin(), blocks.end());
       std::size_t n = blocks.size();
       for (std::size_t b = 0; b < n; ++b) {
-        for (std::size_t i = 0; i < bits_per_block; ++i) {
+        typename Bitset::block_width_type i = 0;
+        for (; i < bits_per_block; ++i) {
           std::size_t bit = b * bits_per_block + i;
           BOOST_CHECK(bset[bit] == nth_bit(blocks[b], i));
         }
       }
+      BOOST_CHECK(bset.size() == n * bits_per_block);
     }
-    {
-      Bitset bset(blocks.size() * bits_per_block);
+    { // test boost::from_block_range
+      const typename Bitset::size_type n = blocks.size();
+      Bitset bset(n * bits_per_block);
       boost::from_block_range(blocks.begin(), blocks.end(), bset);
-      std::size_t n = blocks.size();
       for (std::size_t b = 0; b < n; ++b) {
-        for (std::size_t i = 0; i < bits_per_block; ++i) {
+        typename Bitset::block_width_type i = 0;
+        for (; i < bits_per_block; ++i) {
           std::size_t bit = b * bits_per_block + i;
           BOOST_CHECK(bset[bit] == nth_bit(blocks[b], i));
         }
       }
+      BOOST_CHECK(n <= bset.num_blocks()); // gps - ok? ask on the list
     }
   }
 
@@ -168,6 +236,30 @@ struct bitset_test {
       b.flip(pos);
       BOOST_CHECK(b[pos] != rhs[pos]);
     }
+  }
+
+  static void swap(const Bitset& lhs, const Bitset& rhs)
+  {
+    // bitsets must be swapped
+    Bitset b1(lhs);
+    Bitset b2(rhs);
+    b1.swap(b2);
+
+    BOOST_CHECK(b1 == rhs);
+    BOOST_CHECK(b2 == lhs);
+
+    // references must be stable under a swap
+    for(typename Bitset::size_type i = 0; i < b1.size(); ++i) {
+      typename Bitset::reference ref = b1[i];
+      bool x = ref;
+      if (i < b2.size())
+        b2[i] = !x; // make sure b2[i] is different
+      b1.swap(b2);
+      BOOST_CHECK(b2[i] == x); // now it must be equal..
+      b2.flip(i);
+      BOOST_CHECK(ref == !x); // .. and ref must be into b2
+    }
+
   }
 
   static void resize(const Bitset& lhs)
@@ -220,18 +312,18 @@ struct bitset_test {
   static void append_block(const Bitset& lhs)
   {
     Bitset b(lhs);
-    Block value(128);
+    Block value(128); // gps
     b.append(value);
-    BOOST_CHECK(b.size() == lhs.size() + Bitset::bits_per_block);
-    for (std::size_t i = 0; i < Bitset::bits_per_block; ++i)
+    BOOST_CHECK(b.size() == lhs.size() + bits_per_block);
+    for (typename Bitset::block_width_type i = 0; i < bits_per_block; ++i)
       BOOST_CHECK(b[lhs.size() + i] == bool((value >> i) & 1));
   }
 
-  static void append_block_range(const Bitset& lhs, std::vector<Block> blocks)
+  static void append_block_range(const Bitset& lhs, const std::vector<Block>& blocks)
   {
     Bitset b(lhs), c(lhs);
     b.append(blocks.begin(), blocks.end());
-    for (typename std::vector<Block>::iterator i = blocks.begin();
+    for (typename std::vector<Block>::const_iterator i = blocks.begin();
          i != blocks.end(); ++i)
       c.append(*i);
     BOOST_CHECK(b == c);
@@ -777,22 +869,245 @@ struct bitset_test {
     BOOST_CHECK((lhs - rhs) == (x -= rhs));
   }
 
-  // operator<<(ostream,
-  // operator>>(istream,
+//------------------------------------------------------------------------------
+//                               I/O TESTS
+   // The following tests assume the results of extraction (i.e.: contents,
+   // state and width of is, contents of b) only depend on input (the string
+   // str). In other words, they don't consider "unexpected" errors such as
+   // stream corruption or out of memory. The reason is simple: if e.g. the
+   // stream buffer throws, the stream layer may eat the exception and
+   // transform it into a badbit. But we can't trust the stream state here,
+   // because one of the things that we want to test is exactly whether it
+   // is set correctly. Similarly for insertion.
+   //
+   // To provide for these cases would require that the test functions know
+   // in advance whether the stream buffer and/or allocations will fail, and
+   // when; that is, we should write both a special allocator and a special
+   // stream buffer capable of throwing "on demand" and pass them here.
 
-  static
-  void stream_read_write(const Bitset& out, const Bitset& in)
+   // Seems overkill for these kinds of unit tests.
+  //-------------------------------------------------------------------------
+
+  // operator<<( [basic_]ostream,
+  template<typename Stream>
+  static void stream_inserter(const Bitset & b,
+                              Stream & s,
+                              const char * file_name
+                              )
   {
-    Bitset x(in);
-    {
-      std::ofstream f("tmp");
-      f << out;
+#  if defined BOOST_OLD_IOSTREAMS
+    typedef char char_type;
+    typedef std::string string_type;
+    typedef ifstream corresponding_input_stream_type;
+#  else
+    typedef typename Stream::char_type char_type;
+    typedef std::basic_string<char_type> string_type;
+    typedef std::basic_ifstream<char_type> corresponding_input_stream_type;
+
+    std::ios::iostate except = s.exceptions();
+#endif
+
+    typedef typename Bitset::size_type size_type;
+    std::streamsize w = s.width();
+    char_type fill_char = s.fill();
+    std::ios::iostate oldstate = s.rdstate();
+    bool stream_was_good = s.good();
+
+    bool did_throw = false;
+    try {
+      s << b;
     }
-    {
-      std::ifstream f("tmp");
-      f >> x;
-      BOOST_CHECK(out == x);
+#if defined BOOST_OLD_IOSTREAMS
+    catch(...) {
+      BOOST_CHECK(false);
+    }
+#else
+    catch (const std::ios_base::failure &) {
+        BOOST_CHECK((except & s.rdstate()) != 0);
+        did_throw = true;
+    } catch (...) {
+        did_throw = true;
+    }
+#endif
+
+    BOOST_CHECK(did_throw || !stream_was_good || (s.width() == 0)); // gps
+
+    if (!stream_was_good) { // gps
+      BOOST_CHECK(s.good() == false);
+
+      // this should actually be oldstate == s.rdstate()
+      // but some implementations add badbit in the
+      // sentry constructor - gps
+      //
+      BOOST_CHECK((oldstate & s.rdstate()) == oldstate);
+      BOOST_CHECK(s.width() == w);
+    }
+    else {
+      if(!did_throw)
+        BOOST_CHECK(s.width() == 0);
+      // This test require that os be an output _and_ input stream.
+      // Of course dynamic_bitset's operator << doesn't require that.
+
+      size_type total_len = w <= 0 || (size_type)(w) < b.size()? b.size() : w;
+      const string_type padding (total_len - b.size(), fill_char); // gps
+      string_type expected;
+      boost::to_string(b, expected);
+      if ((s.flags() & std::ios::adjustfield) != std::ios::left)
+        expected = padding + expected;
+      else
+        expected = expected + padding;
+
+      assert(expected.length() == total_len);
+
+      // close, and reopen the file stream to verify contents
+      s.close();
+      corresponding_input_stream_type is(file_name);
+      string_type contents;
+      std::getline(is, contents, char_type()); // gps
+      BOOST_CHECK(contents == expected);
     }
   }
 
+  // operator>>( [basic_]istream
+  template<typename Stream, typename String>
+  static void stream_extractor(Bitset& b,
+                               Stream& is,
+                               String& str
+                              )
+  {
+    // save necessary info then do extraction
+	//
+    const std::streamsize w = is.width();
+    Bitset a_copy(b);
+    bool stream_was_good = is.good();
+
+    bool did_throw = false;
+
+#if defined BOOST_OLD_IOSTREAMS
+    bool has_stream_exceptions = false;
+    is >> b;
+#else
+	const std::ios::iostate except = is.exceptions();
+    bool has_stream_exceptions = true;
+    try {
+      is >> b;
+    }
+    catch(const std::ios::failure &) {
+      did_throw = true;
+    }// catch bad alloc?? - gps
+
+    // postconditions
+    BOOST_CHECK(except == is.exceptions()); // paranoid
+#endif
+	//------------------------------------------------------------------
+
+    // postconditions
+    BOOST_CHECK(b.size() <= b.max_size());
+    if(w > 0)
+      BOOST_CHECK(b.size() <= static_cast<typename Bitset::size_type>(w));
+
+    // throw if and only if required
+    if(has_stream_exceptions) {
+        const bool exceptional_state = has_flags(is, is.exceptions());
+        BOOST_CHECK(exceptional_state == did_throw);
+    }
+ 
+    typedef typename String::size_type size_type;
+    typedef typename String::value_type Ch;
+    size_type after_digits = 0;
+
+    if(!stream_was_good) {
+        BOOST_CHECK(has_flags(is, std::ios::failbit));
+        BOOST_CHECK(b == a_copy);
+        BOOST_CHECK(is.width() == (did_throw ? w : 0));
+    }
+    else {
+      // stream was good(), parse the string;
+      // it may contain three parts, all of which are optional
+      // {spaces}   {digits}   {non-digits}
+      //        opt        opt            opt
+      //
+      // The values of b.max_size() and is.width() may lead to
+      // ignore part of the digits, if any.
+      
+      size_type pos = 0;
+      size_type len = str.length();
+      // {spaces}
+      for( ; pos < len && is_white_space(is, str[pos]); ++pos)
+        ;
+      size_type after_spaces = pos;
+      // {digits} or part of them
+      const typename Bitset::size_type max_digits =
+            w > 0 && static_cast<typename Bitset::size_type>(w) < b.max_size()
+                               ? w : b.max_size();
+
+      for( ; pos < len && (pos - after_spaces) < max_digits; ++pos) {
+          if(!is_one_or_zero(is, str[pos]))
+              break;
+      }
+      after_digits = pos;
+      size_type num_digits = after_digits - after_spaces;
+
+      // eofbit
+      if((after_digits == len && max_digits > num_digits ))
+          BOOST_CHECK(has_flags(is, std::ios::eofbit)); // gps
+      else
+          BOOST_CHECK(!has_flags(is, std::ios::eofbit));
+
+      // failbit <=> there are no digits, except for the library
+      // issue explained below.
+      // 
+      if(num_digits == 0) {
+        if(after_digits == len && has_stream_exceptions &&
+            (is.exceptions() & std::ios::eofbit) != std::ios::goodbit) {
+                // This is a special case related to library issue 195:
+                // reaching eof when skipping whitespaces in the sentry ctor.
+                // The resolution says the sentry constructor should set *both*
+                // eofbit and failbit; but many implementations deliberately
+                // set eofbit only. See for instance:
+                //  http://gcc.gnu.org/ml/libstdc++/2000-q1/msg00086.html
+                //
+                BOOST_CHECK(did_throw);
+
+            }
+        else {
+            BOOST_CHECK(has_flags(is, std::ios::failbit));
+        }
+      }
+      else
+        BOOST_CHECK(!has_flags(is, std::ios::failbit));
+
+
+      if(num_digits == 0 && after_digits == len) { // reaches eof in sentry
+        BOOST_CHECK(b == a_copy);
+      }
+      else {
+        String sub = str.substr(after_spaces, num_digits); // gps
+        BOOST_CHECK(b == Bitset(sub));
+      }
+
+      // check width
+      BOOST_CHECK(is.width() == 0
+                  || (after_digits == len && num_digits == 0 && did_throw));
+    }
+
+
+    // clear the stream to allow further reading then
+    // retrieve any remaining chars with a single getline()
+    is.exceptions(std::ios::goodbit);
+    is.clear(); // gps
+    String remainder;
+    std::getline(is, remainder, Ch());
+    if(stream_was_good)
+      BOOST_CHECK(remainder == str.substr(after_digits));
+    else
+      BOOST_CHECK(remainder == str);
+  
+  }
+
+
 };
+
+
+
+#endif // include guard
