@@ -85,6 +85,7 @@ search(
 		printf( "locate %s: %s\n", target, buf );
 
 	    timestamp( buf, time );
+            found = 1;
 	}
 	else if( varlist = var_get( "SEARCH" ) )
 	{
