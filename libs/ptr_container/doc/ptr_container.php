@@ -266,8 +266,7 @@ function portability()
                     p( "Most of the tests have been run successfully on these compilers:" . 
                        ulist( li( "vc7.1" ) . 
                               li( "gcc3.3.1" ) . 
-                              li( "como4.3.3" ) .
-                              li( "bcc6" ) ) );
+                              li( "como4.3.3" ) ) );
 
     return $header . $compilerList;
 }
@@ -320,7 +319,29 @@ function Faq()
 function literature()
 {   
     $header       = beginSection( literatureLink() );
-    return $header;
+    $list = olist( 
+        li( 'Matt Austern: "The Standard Librarian: Containers of Pointers," 
+            C/C++ Users Journal Experts Forum, <www.cuj.com/experts/1910/austern.htm>.' ) .
+        li( 'Bjarne Stroustrup, "The C++ Programming Language", Appendix E: "Standard-Library Exception Safety", 
+            (http://www.research.att.com/~bs/3rd_safe.pdf).' ) .
+        li( 'Herb Sutter, "Exceptional C++".' ) .
+        li( 'Herb Sutter, "More Exceptional C++".' ) .
+        li( 'Kevlin Henney, "From Mechanism to Method: The Safe Stacking of Cats", C++ Experts Forum, February 2002.' ) .
+        li( 'Some of the few earlier attempts of smart containers I have seen are the rather interesting 
+             NTL (http://www.ntllib.org/) and
+             the "pointainer" from http://ootips.org/yonat/4dev/pointainer.h. As of this writing both libraries
+             are not exceptions-safe and can leak.' ) .
+        li( 'INTERNATIONAL STANDARD, Programming languages --- C++, ISO/IEC 14882, 1998. See section 23.2.[1.3|2.3|4.3].' ) .
+        li( 'C++ Standard Library Closed Issues List (Revision 27), Item 218, 
+            "Algorithms do not use binary predicate objects for default comparisons", 
+            http://anubis.dkuug.dk/jtc1/sc22/wg21/docs/lwg-closed.html#218.' ) .
+        li( 'C++ Standard Library Active Issues List (Revision 27), Item 226, 
+            "User supplied specializations or overloads of namespace std function templates", 
+           http://gcc.gnu.org/onlinedocs/libstdc++/ext/lwg-active.html#226.' ) .
+        li( 'Harald Nowak, "A remove_if for vector<T*>", C/C++ Users Journal, July 2001.' ) );
+
+
+    return $header . $list;
 }
 
 
