@@ -220,11 +220,11 @@ namespace aux
   };
 
   template <class KW, class T>
-  struct arg_holder;
+  struct tagged_argument;
 
-  // A tuple of labeled argument holders, terminated with empty_arg_list.
-  // Every ArgHolder is an instance of arg_holder<>.
-  template <class ArgHolder, class Next = empty_arg_list>
+  // A tuple of tagged arguments, terminated with empty_arg_list.
+  // Every TaggedArg is an instance of tagged_argument<>.
+  template <class TaggedArg, class Next = empty_arg_list>
   struct arg_list : Next
   {
 #if BOOST_WORKAROUND(BOOST_MSVC, <= 1300) || BOOST_NAMED_PARAMS_GCC2
@@ -236,8 +236,8 @@ namespace aux
           template<class KW>
           struct apply
             : mpl::eval_if<
-                  boost::is_same<KW, typename ArgHolder::key_type>
-                , mpl::identity<arg_list<ArgHolder,Next> >
+                  boost::is_same<KW, typename TaggedArg::key_type>
+                , mpl::identity<arg_list<TaggedArg,Next> >
                 , mpl::apply_wrap1<typename Next::key_owner,KW>
               >
           {};
@@ -251,8 +251,8 @@ namespace aux
           template <class KW, class Default>
           struct apply
             : mpl::eval_if<
-                  boost::is_same<KW, typename ArgHolder::key_type>
-                , mpl::identity<typename ArgHolder::value_type>
+                  boost::is_same<KW, typename TaggedArg::key_type>
+                , mpl::identity<typename TaggedArg::value_type>
                 , mpl::apply_wrap2<typename Next::key_value_type, KW, Default>
               >
           {
@@ -260,7 +260,7 @@ namespace aux
       };
 #endif
 
-      ArgHolder holder;
+      TaggedArg arg;
 
       template<
           BOOST_PP_ENUM_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, class A)
@@ -272,12 +272,12 @@ namespace aux
               BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, a)
             , empty_arg_list()
           )
-        , holder(a0)
+        , arg(a0)
       {}
 
-      arg_list(ArgHolder arg, Next const& next)
+      arg_list(TaggedArg arg, Next const& next)
         : Next(next)
-        , holder(arg)
+        , arg(arg)
       {}
 
 #if BOOST_WORKAROUND(BOOST_MSVC, <= 1300) || BOOST_NAMED_PARAMS_GCC2
@@ -308,43 +308,43 @@ namespace aux
           return sublist.get(x);
       }
 
-      typename ArgHolder::value_type& get(keyword<typename ArgHolder::key_type> x) const
+      typename TaggedArg::value_type& get(keyword<typename TaggedArg::key_type> x) const
       {
-          return holder[x];
+          return arg[x];
       }
 
       template <class Default>
-      typename ArgHolder::value_type& 
-      get(default_<typename ArgHolder::key_type, Default> x) const
+      typename TaggedArg::value_type& 
+      get(default_<typename TaggedArg::key_type, Default> x) const
       {
-          return holder[x];
+          return arg[x];
       }
 
       template <class Default>
-      typename ArgHolder::value_type& 
-      get(lazy_default<typename ArgHolder::key_type, Default> x) const
+      typename TaggedArg::value_type& 
+      get(lazy_default<typename TaggedArg::key_type, Default> x) const
       {
-          return holder[x];
+          return arg[x];
       }
 #else
-      typename ArgHolder::value_type&
-      operator[](keyword<typename ArgHolder::key_type> x) const
+      typename TaggedArg::value_type&
+      operator[](keyword<typename TaggedArg::key_type> x) const
       {
-          return holder[x];
+          return arg[x];
       }
 
       template <class Default>
-      typename ArgHolder::value_type&
-      operator[](default_<typename ArgHolder::key_type, Default> x) const
+      typename TaggedArg::value_type&
+      operator[](default_<typename TaggedArg::key_type, Default> x) const
       {
-          return holder[x];
+          return arg[x];
       }
 
       template <class Default>
-      typename ArgHolder::value_type&
-      operator[](lazy_default<typename ArgHolder::key_type, Default> x) const
+      typename TaggedArg::value_type&
+      operator[](lazy_default<typename TaggedArg::key_type, Default> x) const
       {
-          return holder[x];
+          return arg[x];
       }
 
       using Next::operator[];
@@ -352,10 +352,10 @@ namespace aux
       template <class HasDefault, class Predicate>
       static typename mpl::apply1<
           Predicate
-        , typename ArgHolder::value_type
+        , typename TaggedArg::value_type
       >::type
       keyword_passes_predicate(
-          parameter_requirements<typename ArgHolder::key_type,Predicate,HasDefault>*
+          parameter_requirements<typename TaggedArg::key_type,Predicate,HasDefault>*
       );
 
       using Next::keyword_passes_predicate;
@@ -364,10 +364,10 @@ namespace aux
       // Comma operator to compose argument list without using keywords<>.
       // Useful for argument lists with undetermined length.
       template <class KW, class T2>
-      arg_list<arg_holder<KW, T2>, arg_list> 
-      operator,(arg_holder<KW, T2> const& x) const
+      arg_list<tagged_argument<KW, T2>, arg_list> 
+      operator,(tagged_argument<KW, T2> x) const
       {
-          return arg_list<arg_holder<KW, T2>, arg_list>(x, *this);
+          return arg_list<tagged_argument<KW, T2>, arg_list>(x, *this);
       }
   };
 
@@ -375,12 +375,12 @@ namespace aux
 
   // Holds a name-tagged argument reference.
   template <class KW, class T>
-  struct arg_holder
+  struct tagged_argument
   {
       typedef KW key_type;
       typedef T value_type;
 
-      arg_holder(T& x) : val(x) {}
+      tagged_argument(T& x) : val(x) {}
 
       T& operator[](keyword<KW>) const
       {
@@ -403,24 +403,24 @@ namespace aux
       // Useful for argument lists with undetermined length.
       template <class KW2, class T2>
       arg_list<
-          arg_holder<KW, T>
-        , arg_list<arg_holder<KW2, T2> > 
+          tagged_argument<KW, T>
+        , arg_list<tagged_argument<KW2, T2> > 
       >
-      operator,(arg_holder<KW2, T2> const& x) const
+      operator,(tagged_argument<KW2, T2> x) const
       {
           return arg_list<
-              arg_holder<KW, T>
-            , arg_list<arg_holder<KW2, T2> > 
+              tagged_argument<KW, T>
+            , arg_list<tagged_argument<KW2, T2> > 
           >(
               *this
-            , arg_list<arg_holder<KW2, T2> >(x, empty_arg_list())
+            , arg_list<tagged_argument<KW2, T2> >(x, empty_arg_list())
           );
       }
 
       T& val;
   };
 
-  BOOST_PYTHON_IS_XXX_DEF(arg_holder,arg_holder,2)
+  BOOST_PYTHON_IS_XXX_DEF(tagged_argument,tagged_argument,2)
 
   template <class U>
   yes_t is_cv_reference_wrapper_check(reference_wrapper<U> const volatile*);
@@ -459,13 +459,13 @@ struct keyword
 {
 #if !BOOST_WORKAROUND(BOOST_MSVC, == 1200)  // partial ordering bug
     template <class T>
-    aux::arg_holder<
+    aux::tagged_argument<
         Tag
       , typename aux::unwrap_cv_reference<T const>::type
     > 
     operator=(T const& x) const
     {
-        return aux::arg_holder<
+        return aux::tagged_argument<
             Tag
           , BOOST_DEDUCED_TYPENAME aux::unwrap_cv_reference<T const>::type
         >(x);
@@ -473,13 +473,13 @@ struct keyword
 #endif
 
     template <class T>
-    aux::arg_holder<
+    aux::tagged_argument<
         Tag
       , typename aux::unwrap_cv_reference<T>::type
     > 
     operator=(T& x) const
     {
-        return aux::arg_holder<
+        return aux::tagged_argument<
             Tag
           , BOOST_DEDUCED_TYPENAME aux::unwrap_cv_reference<T>::type
         >(x);
@@ -591,12 +591,12 @@ namespace aux
 
   // labels T with keyword KW if it is not already named
   template <class KW, class T>
-  struct as_arg_holder
+  struct as_tagged_argument
   {
       typedef typename mpl::if_<
-          is_arg_holder<T>
+          is_tagged_argument<T>
         , T
-        , arg_holder<
+        , tagged_argument<
               typename key_type<KW>::type
             , typename unwrap_cv_reference<T const>::type
           >
@@ -605,12 +605,14 @@ namespace aux
 
 #if BOOST_WORKAROUND(BOOST_MSVC, == 1200)
   template <>
-  struct as_arg_holder<int,int>
+  struct as_tagged_argument<int,int>
   {
       typedef int type;
   };
 #endif
 
+  struct void_;
+  
   // Seq ::= a list of named<K,T> objects
   // Arg ::= an arg<...> instantiation
   //
@@ -639,11 +641,13 @@ namespace aux
     : keyword_passes_predicate_aux<Seq, typename as_parameter_requirements<K>::type>
   {};
 
+#ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
   template <class Seq>
-  struct keyword_passes_predicate<Seq,void>
+  struct keyword_passes_predicate<Seq,void_>
     : mpl::true_
   {};
-
+#endif
+  
   template <class B /* = mpl::true_ */>
   struct restrict_keywords
   {
@@ -680,13 +684,13 @@ namespace aux
   };
 
   // Given actual argument types T0...Tn, return a list of
-  // arg_holder<U0...Um> types where:
+  // tagged_argument<U0...Um> types where:
   //
   //   T0...Tm != empty_arg_list
   //
   // and
   //
-  //   Ui = Ti is arg_holder<...> ? Ti : arg_holder<Ki,Ti>
+  //   Ui = Ti is tagged_argument<...> ? Ti : tagged_argument<Ki,Ti>
   //
   template<
       BOOST_PP_ENUM_BINARY_PARAMS(
@@ -701,7 +705,7 @@ namespace aux
       struct apply
       {
           typedef arg_list<
-              typename as_arg_holder<K0, T0>::type
+              typename as_tagged_argument<K0, T0>::type
             , typename BOOST_PP_CAT(mpl::apply_wrap, BOOST_NAMED_PARAMS_MAX_ARITY)<
                   make_arg_list<
                       BOOST_PP_ENUM_SHIFTED_PARAMS(
@@ -732,7 +736,7 @@ namespace aux
 
 } // namespace aux
 
-#define BOOST_KEYWORDS_TEMPLATE_ARGS(z, n, text) class BOOST_PP_CAT(K, n) = void
+#define BOOST_KEYWORDS_TEMPLATE_ARGS(z, n, text) class BOOST_PP_CAT(K, n) = aux::void_
 
 template<
      class K0
@@ -756,14 +760,13 @@ struct keywords
     struct restrict_base
     {
         // metafunction forwarding here would confuse vc6
-        typedef mpl::apply1<
+        typedef mpl::apply_wrap1<
             aux::restrict_keywords<
                 typename mpl::and_<
                     BOOST_PP_ENUM(BOOST_NAMED_PARAMS_MAX_ARITY, BOOST_PASSES_PREDICATE, _)
                 >::type
             >
           , keywords
-
         > type;
     };
 
@@ -780,7 +783,7 @@ struct keywords
     struct restrict
 #ifndef BOOST_NO_SFINAE
       : restrict_base<
-            // Build a list of named_arg_holder<K,T> items for each keyword and actual 
+            // Build a list of tagged_argument<K,T> items for each keyword and actual 
             BOOST_DEDUCED_TYPENAME BOOST_PP_CAT(mpl::apply, BOOST_NAMED_PARAMS_MAX_ARITY)<
                 aux::make_arg_list<
                     BOOST_PP_ENUM_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, T)

@@ -37,14 +37,14 @@
 
 #define BOOST_NAMED_PARAMS_LIST(z, n, text) \
     aux::arg_list< \
-        BOOST_DEDUCED_TYPENAME aux::as_arg_holder< \
+        BOOST_DEDUCED_TYPENAME aux::as_tagged_argument< \
             BOOST_PP_CAT(K, n), BOOST_PP_CAT(A, n) \
         >::type
 
 #define BOOST_NAMED_PARAMS_CLOSE_LIST(z, n, text) > 
 
 #define BOOST_NAMED_PARAMS_NAMED_TYPE(z, n, text) \
-    typename aux::as_arg_holder< \
+    typename aux::as_tagged_argument< \
         BOOST_PP_CAT(K, n), BOOST_PP_CAT(A, n) \
     >::type BOOST_PP_CAT(named, n)(BOOST_PP_CAT(a, n));
 
@@ -54,7 +54,7 @@ BOOST_PP_REPEAT(N, BOOST_NAMED_PARAMS_CLOSE_LIST, _)
 operator()(BOOST_PP_ENUM_BINARY_PARAMS(N, A, const& a)) const
 {
     using aux::arg_list;
-    using aux::empty;
+    using aux::empty_arg_list;
 
     typedef BOOST_PP_ENUM(N, BOOST_NAMED_PARAMS_LIST, _)
         BOOST_PP_REPEAT(N, BOOST_NAMED_PARAMS_CLOSE_LIST, _) list_t;
@@ -65,7 +65,7 @@ operator()(BOOST_PP_ENUM_BINARY_PARAMS(N, A, const& a)) const
         BOOST_PP_ENUM_PARAMS(N, named)
         BOOST_PP_ENUM_TRAILING_PARAMS(
             BOOST_PP_SUB(BOOST_NAMED_PARAMS_MAX_ARITY, N)
-          , empty() BOOST_PP_INTERCEPT
+          , empty_arg_list() BOOST_PP_INTERCEPT
         ));
 }
 
