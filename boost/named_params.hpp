@@ -108,6 +108,9 @@ namespace detail
   };
 #endif 
 
+  template <class KW, class T>
+  struct named;
+  
   struct nil
   {
       nil() {}
@@ -210,8 +213,9 @@ namespace detail
   template <class H, class T = nil>
   struct list : T
   {
-#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300) || BOOST_NAMED_PARAMS_GCC2
       typedef list<H, T> self_t;
+
+#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300) || BOOST_NAMED_PARAMS_GCC2
 
       typedef H head_type;
       typedef T tail_type;
@@ -261,6 +265,12 @@ namespace detail
          : T(BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_NAMED_PARAMS_MAX_ARITY, a), nil())
          , head(a0)
       {}
+
+      list(H const& head_, T const& tail)
+          : T(tail)
+          , head(head_)
+      {
+      }
 
 #if BOOST_WORKAROUND(BOOST_MSVC, <= 1300) || BOOST_NAMED_PARAMS_GCC2
       template<class KW>
@@ -340,6 +350,15 @@ namespace detail
 
       using T::keyword_passes_predicate;
 #endif
+
+      template<class KW, class T2>
+      list<named<KW, T2>, self_t>
+      operator,(named<KW, T2> const& x) const
+      {
+          return list<named<KW, T2>, self_t>(
+              x, *this
+          );
+      }
   };
 
   template <> struct list<int,int> {};
@@ -367,6 +386,15 @@ namespace detail
       T& operator[](const lazy_named_default<KW, Default>& x) const
       {
           return val;
+      }
+
+      template<class KW2, class T2>
+      list<named<KW, T>, list<named<KW2, T2> > >
+      operator,(named<KW2, T2> const& x) const
+      {
+          return list<named<KW, T>, list<named<KW2, T2> > >(
+              *this, list<named<KW2, T2> >(x, nil())
+          );
       }
 
       T& val;
