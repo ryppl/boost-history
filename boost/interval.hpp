@@ -1,15 +1,15 @@
 /* boost interval.hpp header file
  *
  * Copyright Jens Maurer 2000
- * Copyright Hervé Brönnimann, Guillaume Melquiond, Sylvain Pion, 2002
+ * Copyright Hervé Brönnimann, Guillaume Melquiond, Sylvain Pion 2002
  * Permission to use, copy, modify, sell, and distribute this software
  * is hereby granted without fee provided that the above copyright notice
  * appears in all copies and that both that copyright notice and this
  * permission notice appear in supporting documentation,
  *
- * None of the above authors make any representation about the
- * suitability of this software for any purpose. It is provided "as is"
- * without express or implied warranty.
+ * None of the above authors nor Polytechnic University make any
+ * representation about the suitability of this software for any
+ * purpose. It is provided "as is" without express or implied warranty.
  *
  * $Id$
  */
@@ -153,19 +153,23 @@ namespace boost {
     template<class T, class Traits> \
       bool name (const T& x, const interval<T,Traits>& y);
 
-  BOOST_INTERVAL_DEFINE_COMPARISON( cerlt )
-  BOOST_INTERVAL_DEFINE_COMPARISON( cerle )
-  BOOST_INTERVAL_DEFINE_COMPARISON( cergt )
-  BOOST_INTERVAL_DEFINE_COMPARISON( cerge )
-  BOOST_INTERVAL_DEFINE_COMPARISON( cereq )
-  BOOST_INTERVAL_DEFINE_COMPARISON( cerne )
+  namespace interval_lib {
 
-  BOOST_INTERVAL_DEFINE_COMPARISON( poslt )
-  BOOST_INTERVAL_DEFINE_COMPARISON( posle )
-  BOOST_INTERVAL_DEFINE_COMPARISON( posgt )
-  BOOST_INTERVAL_DEFINE_COMPARISON( posge )
-  BOOST_INTERVAL_DEFINE_COMPARISON( poseq )
-  BOOST_INTERVAL_DEFINE_COMPARISON( posne )
+    BOOST_INTERVAL_DEFINE_COMPARISON( cerlt )
+    BOOST_INTERVAL_DEFINE_COMPARISON( cerle )
+    BOOST_INTERVAL_DEFINE_COMPARISON( cergt )
+    BOOST_INTERVAL_DEFINE_COMPARISON( cerge )
+    BOOST_INTERVAL_DEFINE_COMPARISON( cereq )
+    BOOST_INTERVAL_DEFINE_COMPARISON( cerne )
+  
+    BOOST_INTERVAL_DEFINE_COMPARISON( poslt )
+    BOOST_INTERVAL_DEFINE_COMPARISON( posle )
+    BOOST_INTERVAL_DEFINE_COMPARISON( posgt )
+    BOOST_INTERVAL_DEFINE_COMPARISON( posge )
+    BOOST_INTERVAL_DEFINE_COMPARISON( poseq )
+    BOOST_INTERVAL_DEFINE_COMPARISON( posne )
+  
+  } // namespace interval_lib
 
   BOOST_INTERVAL_DEFINE_COMPARISON( operator<  )
   BOOST_INTERVAL_DEFINE_COMPARISON( operator<= )
@@ -259,19 +263,6 @@ namespace boost {
     std::pair<interval<T,Traits>, interval<T,Traits> >
     bisect(const interval<T,Traits>& x);
 
-
-  /*
-   * Interval set manipulations
-   */
-
-#if 0
-  template<class T, class Traits>
-    interval<T,Traits>
-    scale(const interval<T,Traits>& x, const T& mirror, const T& factor);
-  template<class T, class Traits>
-    interval<T,Traits>
-    symmetric_scale(const interval<T,Traits>& x, const T& factor);
-#endif
 
   /*
    * Min, max, abs, square
