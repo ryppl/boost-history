@@ -14,14 +14,6 @@
 
 
 template <typename Block>
-void test_from_ulong(std::size_t n, unsigned long number)
-{
-  boost::dynamic_bitset<Block> b(n, number);
-  bitset_test< boost::dynamic_bitset<Block> >::from_unsigned_long(b, number);
-}
-
-
-template <typename Block>
 void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
 {
   typedef boost::dynamic_bitset<Block> bitset_type;
@@ -41,28 +33,28 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
   for (std::size_t i = 0; i < 3; ++i) {
     unsigned long number = numbers[i];
     N = 0;
-    test_from_ulong<Block>(N, number);
+    Tests::from_unsigned_long(N, number);
 
     N = std::size_t(0.7 * double(ul_width));
-    test_from_ulong<Block>(N, number);
+    Tests::from_unsigned_long(N, number);
 
     N = 1 * ul_width;
-    test_from_ulong<Block>(N, number);
+    Tests::from_unsigned_long(N, number);
 
     N = std::size_t(1.3 * double(ul_width));
-    test_from_ulong<Block>(N, number);
+    Tests::from_unsigned_long(N, number);
 
     N = std::size_t(0.7 * double(block_width));
-    test_from_ulong<Block>(N, number);
+    Tests::from_unsigned_long(N, number);
 
     N = block_width;
-    test_from_ulong<Block>(N, number);
+    Tests::from_unsigned_long(N, number);
 
     N = std::size_t(1.3 * double(block_width));
-    test_from_ulong<Block>(N, number);
+    Tests::from_unsigned_long(N, number);
 
     N = 3 * block_width;
-    test_from_ulong<Block>(N, number);
+    Tests::from_unsigned_long(N, number);
   }
   //=====================================================================
   // Test construction from a string

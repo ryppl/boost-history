@@ -48,7 +48,7 @@ std::string get_long_string()
 template <typename Bitset>
 struct bitset_test {
 
-  static void from_unsigned_long(Bitset b, unsigned long num)
+  static void from_unsigned_long(std::size_t N, unsigned long num)
   {
     // initializes the first M bit position to the cooresponding bit
     // values in val. M is the smaller of N and the width of unsigned
@@ -57,8 +57,10 @@ struct bitset_test {
     // missing from the std?
     //   if M < N then the remaining bit positions are initialized to zero
 
-    std::size_t ulong_width = std::numeric_limits<unsigned long>::digits;
-    std::size_t N = b.size();
+    Bitset b(N, num);
+    BOOST_CHECK(b.size() == N);
+
+    const std::size_t ulong_width = std::numeric_limits<unsigned long>::digits;
     std::size_t M = std::min(N, ulong_width);
     std::size_t I;
     for (I = 0; I < M; ++I)
