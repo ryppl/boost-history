@@ -96,35 +96,19 @@ class bigint : boost::operators<bigint> {
           base = 8;
           digits = octals;
         }
-#if 1    
         std::vector<char> text;
         bigint quotient = *this;
         bigint remainder;
         quotient.quotient_remainder(bigint(base),quotient,remainder);
-        // Then 'remainder.buffer.back()' is the remainder. 
-        // invariant: assert(radix > 16).
+        // invariant: assert(radix > 16) -> 
+        //    'remainder.buffer.back()' is the remainder.
         // invariant: remainder < length of digits.
         text.push_back(digits[remainder.buffer.back()]);
         while (!quotient.is_zero()) {
           quotient.quotient_remainder(bigint(base),quotient,remainder);
           text.push_back(digits[remainder.buffer.back()]);
         }
-        // spit it out!
         stringrep.append(text.rbegin(),text.rend());
-#else
-        std::string::iterator spot = stringrep.end();
-        bigint quotient = *this;
-        bigint remainder;
-        quotient.quotient_remainder(bigint(base),quotient,remainder);
-        // Then 'remainder.buffer.back()' is the remainder. 
-        // invariant: assert(radix > 16).
-        // invariant: remainder < length of digits.
-        spot = stringrep.insert(spot,digits[remainder.buffer.back()]);
-        while (!quotient.is_zero()) {
-          quotient.quotient_remainder(bigint(base),quotient,remainder);
-          spot = stringrep.insert(spot,digits[remainder.buffer.back()]);
-        }
-#endif
       }
       os << stringrep;
     }
