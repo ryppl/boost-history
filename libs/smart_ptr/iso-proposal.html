@@ -159,8 +159,8 @@ void test()
 		<P><EM>weak_ptr</EM> represents an additional source of difficulty. Its stored 
 			pointer can be invalidated literally at any time; even in strictly single 
 			threaded and synchronous programs it is possible for the code to call a library 
-			that calls back a routine invalidating a <EM>weak_ptr</EM>. As the value 
-			of a pointer referring to deallocated storage is indeterminate (5.3.5/4), the <EM>weak_ptr</EM>
+			that calls back a routine invalidating a <EM>weak_ptr</EM>. As the value of a 
+			pointer referring to deallocated storage is indeterminate (5.3.5/4), the <EM>weak_ptr</EM>
 			implementation must take care not to access the stored pointer value after the <EM>weak_ptr</EM>
 			has <EM>expired</EM>. Furthermore, the <EM>weak_ptr</EM> interface should 
 			protect users from accidentally accessing a pointer to deallocated storage.</P>
@@ -1080,7 +1080,7 @@ else
 					Effective STL</a></i>, page 39, Addison-Wesley, 2001, ISBN 
 			0-201-74962-9.</p>
 		<p>[<a name="Stroustrup94">Stroustrup94</a>] Bjarne Stroustrup, <i><A href="http://www.research.att.com/~bs/dne.html">
-					The Design and Evolution of C++</A></i>, section 14.2.2 (dynamic_cast), 
+					The Design and Evolution of C++</A></i>, section 14.2.1, page 307, 
 			Addison Wesley, ISBN 0-201-54330-3, March 1994.</p>
 		<P>&nbsp;</P>
 	</body>
