@@ -16,8 +16,8 @@
  *
  */
 
-#ifndef BOOST_NUMERIC_CBLAS_SYMM_HERM_TRAITS_HPP
-#define BOOST_NUMERIC_CBLAS_SYMM_HERM_TRAITS_HPP
+#ifndef BOOST_NUMERIC_BINDINGS_TRAITS_SYMM_HERM_TRAITS_HPP
+#define BOOST_NUMERIC_BINDINGS_TRAITS_SYMM_HERM_TRAITS_HPP
 
 #include <complex> 
 #include <boost/numeric/bindings/traits/traits.hpp>

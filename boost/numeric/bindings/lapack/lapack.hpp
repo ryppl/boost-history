@@ -22,4 +22,5 @@
 #include <boost/numeric/bindings/lapack/sysv.hpp>
 #include <boost/numeric/bindings/lapack/hesv.hpp>
 
-#endif 
+#endif // BOOST_NUMERIC_BINDINGS_LAPACK_LAPACK_HPP
+
