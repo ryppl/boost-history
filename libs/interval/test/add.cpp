@@ -179,9 +179,36 @@ bool test_subeq1() {
 using namespace boost;
 using namespace interval_lib;
 
+struct my_checking
+{
+  static void inverted_bound(const pexpr&, const pexpr&) {}
+  static void divide_by_zero(const pexpr&, const pexpr&) {}
+  static void sqrt_nan() {}
+  static void logarithmic_nan() {}
+  static void logarithmic_inf() {}
+  static void trigonometric_nan() {}
+  static void trigonometric_inf() {}
+  static void hyperbolic_nan() {}
+  static void hyperbolic_inf() {}
+  static void created_empty() {}
+  static pexpr empty_lower() { return pexpr(); }
+  static pexpr empty_upper() { return pexpr(); }
+  static bool is_empty(const pexpr&, const pexpr&) { return false; }
+  BOOST_STATIC_CONSTANT(bool, test_empty_input = false);
+};
+
+template<class Rounding>
+struct my_interval {
+  typedef interval<pexpr,
+		   interval_traits<pexpr,
+				   compare_certainly<pexpr>,
+				   save_state<Rounding>,
+				   my_checking > > type;
+};
+
 int test_main(int, char *[]) {
-  typedef interval<pexpr, interval_traits<pexpr, compare_certainly<pexpr>, save_state<rounded_arith_std<pexpr> > > > I1;
-  typedef interval<pexpr, interval_traits<pexpr, compare_certainly<pexpr>, save_state<rounded_arith_opp<pexpr> > > > I2;
+  typedef my_interval<rounded_arith_std<pexpr> >::type I1;
+  typedef my_interval<rounded_arith_opp<pexpr> >::type I2;
   BOOST_TEST((test_neg<I1>()));
   BOOST_TEST((test_neg<I2>()));
   BOOST_TEST((test_add<I1>()));

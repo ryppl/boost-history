@@ -16,14 +16,18 @@ namespace boost {
 template<class T, class Traits> inline
 void interval<T, Traits>::set_empty()
 {
-  low = up = base_limits::quiet_NaN();
+  typedef typename Traits::checking checking;
+  checking::created_empty();
+  low = checking::empty_lower();
+  up  = checking::empty_upper();
 }
 
 template<class T, class Traits> inline
 void interval<T, Traits>::set_whole()
 {
-  low = -base_limits::infinity();
-  up = base_limits::infinity();
+  T inf = base_limits::infinity();
+  low = -inf;
+  up  =  inf;
 }
 
 template<class T, class Traits> inline
@@ -72,8 +76,10 @@ interval<T, Traits> interval<T, Traits>::hull(const T& x, const T& y)
 template<class T, class Traits> inline
 interval<T, Traits> interval<T, Traits>::empty()
 {
-  T nan = base_limits::quiet_NaN();
-  return interval<T, Traits>(nan, nan, true);
+  typedef typename Traits::checking checking;
+  checking::created_empty();
+  return interval<T, Traits>(checking::empty_lower(),
+			     checking::empty_upper(), true);
 }
 
 template<class T, class Traits> inline
@@ -114,30 +120,6 @@ T median(const interval<T, Traits>& x)
   return rnd.median(x.lower(), x.upper());
 }
 
-#if 0
-template<class T, class Traits> inline
-interval<T, Traits> pred(const interval<T, Traits>& x)
-{
-  typename Traits::rounding rnd;
-  T l = rnd.add_up(x.lower(), interval_lib::detail::smallest<T>());
-  T u = rnd.sub_down(x.upper(), interval_lib::detail::smallest<T>());
-  if (u < l)
-    // We could not shrink the interval any further
-    return x;
-  else
-    return interval<T, Traits>(l, u, true);
-}
-
-template<class T, class Traits> inline
-interval<T, Traits> succ(const interval<T, Traits>& x)
-{
-  typename Traits::rounding rnd;
-  T l = rnd.sub_down(x.lower(), interval_lib::detail::smallest<T>());
-  T u = rnd.add_up(x.upper(), interval_lib::detail::smallest<T>());
-  return interval<T, Traits>(l, u);
-}
-#endif
-
 template<class T, class Traits> inline
 interval<T, Traits> widen(const interval<T, Traits>& x, const T& v)
 {
@@ -153,7 +135,8 @@ interval<T, Traits> widen(const interval<T, Traits>& x, const T& v)
 template<class T, class Traits> inline
 bool empty(const interval<T, Traits>& b)
 {
-  return detail::is_nan(b.lower()) || detail::is_nan(b.upper());
+  typedef typename Traits::checking checking;
+  return checking::is_empty(b.lower(), b.upper());
 }
 
 template<class T, class Traits> inline
@@ -268,48 +251,6 @@ bisect(const interval<T, Traits>& x)
   const T m = median(x);
   return std::pair<I,I>(I(x.lower(), m, true), I(m, x.upper(), true));
 }
-
-#if 0
-template<class T, class Traits> inline
-T dist(const interval<T, Traits>& x, const interval<T, Traits>& y)
-{
-  typename interval_lib::detail::tonearest<typename Traits::rounding>::type rnd;
-  return std::min(std::abs(x.lower() - y.lower()), std::abs(x.upper() - y.upper()));
-}
-
-template<class T, class Traits> inline
-T dist(const interval<T, Traits>& x, const T& y)
-{
-  typename interval_lib::detail::tonearest<typename Traits::rounding>::type rnd;
-  if (y < x.lower())
-    return y - x.lower();
-  else if (y > x.upper())
-    return x.upper() - y;
-  else
-    return 0;
-}
-
-template<class T, class Traits> inline
-T dist(const T& x, const interval<T, Traits>& y)
-{
-  return -dist(y,x);
-}
-
-template<class T, class Traits> inline
-interval<T, Traits> scale(const interval<T, Traits>& x,
-			  const T& mirror, const T& factor)
-{
-  return factor * (x - mirror);
-}
-
-template<class T, class Traits> inline
-interval<T, Traits> symmetric_scale(const interval<T, Traits>& x,
-				    const T& factor)
-{
-  return scale(x, median(x), factor);
-}
-#endif
-
 
 /*
  * Elementary functions

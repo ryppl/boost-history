@@ -35,7 +35,7 @@ namespace boost {
    */
 
   template<class T,
-           class Compare = interval_lib::compare_certainly<T>,
+           class Compare  = interval_lib::compare_certainly<T>,
            class Rounding = interval_lib::rounded_math<T>,
            class Checking = interval_lib::checking_strict<T> >
   struct interval_traits
