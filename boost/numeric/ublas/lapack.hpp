@@ -41,11 +41,11 @@ extern "C"
   // void LAPACK_DSYTRS(char* trans, int *n, int* nrhs, double*               a, int* lda, int* ipiv, double*               b, int* ldb, int* info);
   // void LAPACK_ZSYTRS(char* trans, int *n, int* nrhs, std::complex<double>* a, int* lda, int* ipiv, std::complex<double>* b, int* ldb, int* info);
 
-  void LAPACK_DGEEV(char* jobvl, char* jobvr, int * n, double*   a, int* lda, double*   wr, double*   wi, double*   vl, int* ldvl, double*   vr, int* ldvr, double*   work, int* lwork, int* info);
-  void LAPACK_ZGEEV(char* jobvl, char* jobvr, int * n, dcomplex* a, int* lda, dcomplex* wr, dcomplex* wi, dcomplex* vl, int* ldvl, dcomplex* vr, int* ldvr, dcomplex* work, int* lwork, int* info);
+  void LAPACK_DGEEV(char* jobvl, char* jobvr, int * n, double*   a, int* lda, double* wr, double* wi, double* vl, int* ldvl, double* vr, int* ldvr, double* work, int* lwork, int* info);
+  void LAPACK_ZGEEV(char* jobvl, char* jobvr, int * n, dcomplex* a, int* lda, dcomplex* w, dcomplex* vl, int* ldvl, dcomplex* vr, int* ldvr, dcomplex* work, int* lwork, double* rwork, int* info);
 
   void LAPACK_DGEES(char* jobvl, char* sort, fortran_function_type select, int* n, double*   a, int* lda, int* sdim, double*   wr, double*   wi, double*   vs, int* ldvs, double*   work, int* lwork, int* bwork, int* info);
-  void LAPACK_ZGEES(char* jobvl, char* sort, fortran_function_type select, int* n, dcomplex* a, int* lda, int* sdim, dcomplex* wr, dcomplex* wi, dcomplex* vs, int* ldvs, dcomplex* work, int* lwork, int* bwork, int* info);
+  void LAPACK_ZGEES(char* jobvl, char* sort, fortran_function_type select, int* n, dcomplex* a, int* lda, int* sdim, dcomplex* w, dcomplex* vs, int* ldvs, dcomplex* work, int* lwork, double* rwork, int* bwork, int* info);
 }
 
 
@@ -57,18 +57,17 @@ namespace boost { namespace numerics {
     typedef void (*getrf_type)(int* m, int* n, T* a, int* lda, int* ipiv, int* info) ;
     typedef void (*getrs_type)(char* trans, int *n, int* nrhs, T* a, int* lda, int* ipiv, T* b, int* ldb, int* info);
     // typedef void (*sytrs_type)(char* trans, int *n, int* nrhs, T* a, int* lda, int* ipiv, T* b, int* ldb, int* info);
-    typedef void (*geev_type)(char* jobvl, char* jobvr, int * n, T* a, int* lda, T* wr, T* wi, T* vl, int* ldvl, T* vr, int* ldvr, T* work, int* lwork, int* info);
-    typedef void (*gees_type)(char* jobvl, char* sort, fortran_function_type select, int* n, T* a, int* lda, int* sdim, T*  wr, T* wi, T* vs, int* ldvs, T* work, int* lwork, int* bwork, int* info);
 
     static getrf_type getrf ;
     static getrs_type getrs ;
     // static sytrs_type sytrs ;
-    static geev_type geev ;
-    static gees_type gees ;
   };
 
   extern double* work_buffer ;
   extern int work_buffer_size ;
+
+  extern double* rwork_buffer ;
+  extern int rwork_buffer_size ;
 
   extern int* bwork_buffer ;
   extern int bwork_buffer_size ;
@@ -105,47 +104,25 @@ namespace boost { namespace numerics {
     return info ;
   }
 
-  template < typename T, typename VectorT >
-  int geev(char jobvl, char jobvr, matrix< T, column_major >& a, VectorT& wr, VectorT& wi, matrix< T, column_major >& vl, matrix< T, column_major >& vr) 
-  {
-    assert( jobvl == 'N' || jobvl == 'V' );
-    assert( jobvr == 'N' || jobvr == 'V' );
-    assert( a.size1() == a.size2() );
-    int n = a.size2();
-    int lda = a.size1();
-    int ldvl = vl.size1();
-    int ldvr = vr.size1();
-    int lwork = 8 * n;
-    if ( lwork > work_buffer_size ) {
-      delete[] work_buffer ;
-      work_buffer = new double[ lwork ];
-      work_buffer_size = lwork ;
-    }
-    int info = 0;
-    lapack_traits< T >::geev( &jobvl, &jobvr, &n, &(a.data()[0]), &lda, &wr[0], &wi[0], &(vl.data()[0]), &ldvl, &(vr.data()[0]), &ldvr, work_buffer, &work_buffer_size, &info );
-    return info;
-  }
+  template < typename T >
+  int geev(char jobvl, char jobvr, matrix< T, column_major >& a, vector< std::complex< double > >& w, matrix< T, column_major >& vl, matrix< T, column_major >& vr) 
+  { assert( 0 ); return 0; }
 
-  template < typename T, typename VectorT >
-  void gees(char jobvl, char sort, fortran_function_type select, matrix< T, column_major >& a, int& sdim, VectorT& wr, VectorT& wi, matrix< T, column_major >& vs)
-  {
-    assert( a.size1() == a.size2() );
-    int n = a.size2();
-    int ldvs = vs.size2();
-    if ( work_buffer_size < 6 * n ) {
-      buffer_work_size = 6 * n;
-      delete[] buffer_work;
-      buffer_work = new T[ buffer_work_size ];
-    }
-    if ( bwork_buffer_size < n ) {
-      bwork_buffer_size = n;
-      delete[] bwork_buffer;
-      bwork_buffer = new T[ bwork_buffer_size ];
-    }
-    int info = 0;
-    lapack_traits< T >::gees( &jobvl, &sort, select, &(a.data()[0]), &lda, &sdim, &wr[0], &wi[0], &(vs.data()[0]), work_buffer, &work_buffer_size, bwork_buffer, &info );
-    return info;
-  }
+  template <>
+  int geev< double >(char jobvl, char jobvr, matrix< double, column_major >& a, vector< std::complex< double > >& w, matrix< double, column_major >& vl, matrix< double, column_major >& vr) ;
+
+  template <>
+  int geev< std::complex< double > >(char jobvl, char jobvr, matrix< std::complex< double >, column_major >& a, vector< std::complex< double > >& w, matrix< std::complex< double >, column_major >& vl, matrix< std::complex< double >, column_major >& vr) ;
+
+  template < typename T >
+  int gees(char jobvl, char sort, matrix< T, column_major >& a, int& sdim, vector< std::complex< double > >& w, matrix< T, column_major >& vs)
+  { assert( 0 ); return 0; }
+
+  template <>
+  int gees< double >(char jobvl, char sort, matrix< double, column_major >& a, int& sdim, vector< std::complex< double > >& w, matrix< double, column_major >& vs) ;
+
+  template <>
+  int gees< std::complex< double > >(char jobvl, char sort, matrix< std::complex< double >, column_major >& a, int& sdim, vector< std::complex< double > >& w, matrix< std::complex< double >, column_major >& vs) ;
 }}
 
 #endif // boost_ublas_lapack_hpp
