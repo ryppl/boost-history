@@ -131,8 +131,8 @@ struct unprotect<interval<T, Traits> >
 #  include <boost/interval/detail/ppc_rounding_control.hpp>
 #elif defined(sparc) || defined(__sparc__)
 #  include <boost/interval/detail/sparc_rounding_control.hpp>
-#elif defined(__USE_ISOC99)
-#  include <boost/interval/detail/isoc99_rounding_control.hpp>
+//#elif defined(__USE_ISOC99)
+//#  include <boost/interval/detail/isoc99_rounding_control.hpp>
 #else
 #  error Please specify rounding control mechanism.
 #endif

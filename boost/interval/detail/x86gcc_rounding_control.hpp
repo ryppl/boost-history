@@ -34,29 +34,16 @@ namespace boost {
   namespace interval_lib {
     namespace detail {
 
-/*
- * We could use immediate constants for the FPU control word values.
- * However, the fldcw assember instruction requires a memory
- * reference, so gcc 2.95.2 always copies the immediate to a temporary
- * on the stack.  This seems to incur a 5% performance penalty for the
- * basic interval arithmetic operations, thus we help the compiler by
- * defining these constants as global variables.  It is important that
- * the definition of the constants comes after the definition of class
- * rounding_control to prevent constant folding in the latter.  Using
- * a struct instead of separate variables makes sure that all values
- * are adjacent, thereby fitting in one line of the CPU cache.
- */
+struct fpu_rounding_modes
+{
+  unsigned short tonearest;
+  unsigned short downward;
+  unsigned short upward;
+  unsigned short towardzero;
+};
 
-// namespace {
-  struct fpu_rounding_modes
-  {
-    unsigned short tonearest;
-    unsigned short downward;
-    unsigned short upward;
-    unsigned short towardzero;
-  };
-  extern const fpu_rounding_modes rnd_mode /*__attribute__((weak))*/;
-// }
+// exceptions masked, extended precision
+static const fpu_rounding_modes rnd_mode = { 0x137f, 0x177f, 0x1b7f, 0x1f7f };
 
 struct x86_rounding_control
 {
@@ -87,9 +74,6 @@ struct x86_rounding_control
     return r_;
   }
 };
-
-// exceptions masked, extended precision
-const fpu_rounding_modes rnd_mode = { 0x137f, 0x177f, 0x1b7f, 0x1f7f };
 
     } // namespace detail
   } // namespace interval_lib

@@ -44,7 +44,7 @@ operator<<(std::basic_ostream<Ch, ChTr>& os, const interval<T, Traits>& r)
   return os;
 }
 #else
-template<class T, class Traits>
+template<class T, class Traits> inline
 std::ostream& operator<<(std::ostream& os, const interval<T, Traits>& r)
 {
   os << "[" << r.lower() << "," << r.upper() << "]";
@@ -82,7 +82,7 @@ operator>>(std::basic_istream<Ch, ChTr>& is, const interval<T, Traits>& r)
   return is;
 }
 #else
-template<class T, class Traits>
+template<class T, class Traits> inline
 std::istream& operator>>(std::istream& is, interval<T, Traits>& r)
 {
   T l, u;

@@ -27,7 +27,7 @@
 
 namespace boost {
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> fmod(const interval<T, Traits>& x, const T& y)
 {
   typename Traits::rounding rnd;
@@ -36,9 +36,9 @@ interval<T, Traits> fmod(const interval<T, Traits>& x, const T& y)
   return (I)x - n * I(y);
 }
 
-template<class T, class Traits>
-inline interval<T, Traits> fmod(const interval<T, Traits>& x,
-				const interval<T, Traits>& y)
+template<class T, class Traits> inline
+interval<T, Traits> fmod(const interval<T, Traits>& x,
+			 const interval<T, Traits>& y)
 {
   typename Traits::rounding rnd;
   typedef interval<T, typename interval_lib::unprotect<Traits>::type> I;
@@ -47,7 +47,7 @@ inline interval<T, Traits> fmod(const interval<T, Traits>& x,
   return (I)x - n * (I)y;
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> exp(const interval<T, Traits>& x)
 {
   typename Traits::rounding rnd;
@@ -55,7 +55,7 @@ interval<T, Traits> exp(const interval<T, Traits>& x)
 			     rnd.exp_up(x.upper()), true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> log(const interval<T, Traits>& x)
 {
   typedef typename Traits::checking checking;
@@ -76,7 +76,7 @@ interval<T, Traits> log(const interval<T, Traits>& x)
   return interval<T, Traits>(l, u, true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> cos(const interval<T, Traits>& x)
 {
   typename Traits::rounding rnd;
@@ -102,15 +102,15 @@ interval<T, Traits> cos(const interval<T, Traits>& x)
     return interval<T, Traits>(-1, 1, true);
 }
 
-template<class T, class Traits>
-inline interval<T, Traits> sin(const interval<T, Traits>& x)
+template<class T, class Traits> inline
+interval<T, Traits> sin(const interval<T, Traits>& x)
 {
   typename Traits::rounding rnd;
   typedef interval<T, typename interval_lib::unprotect<Traits>::type> I;
   return cos((I)x - I::pi_1_2());
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> tan(const interval<T, Traits>& x)
 {
   typename Traits::rounding rnd;
@@ -130,7 +130,7 @@ interval<T, Traits> tan(const interval<T, Traits>& x)
 			     rnd.tan_up(tmp.upper()), true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> asin(const interval<T, Traits>& x)
 {
   if (x.upper() < T(-1) || x.lower() > T(1)) {
@@ -144,7 +144,7 @@ interval<T, Traits> asin(const interval<T, Traits>& x)
   return interval<T, Traits>(l, u, true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> acos(const interval<T, Traits>& x)
 {
   if (x.upper() < T(-1) || x.lower() > T(1)) {
@@ -158,7 +158,7 @@ interval<T, Traits> acos(const interval<T, Traits>& x)
   return interval<T, Traits>(l, u, true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> atan(const interval<T, Traits>& x)
 {
   typename Traits::rounding rnd;
@@ -166,7 +166,7 @@ interval<T, Traits> atan(const interval<T, Traits>& x)
 			     rnd.atan_up(x.upper()), true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> sinh(const interval<T, Traits>& x)
 {
   typename Traits::rounding rnd;
@@ -174,7 +174,7 @@ interval<T, Traits> sinh(const interval<T, Traits>& x)
 			     rnd.sinh_up(x.upper()), true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> cosh(const interval<T, Traits>& x)
 {
   typedef interval<T, Traits> I;
@@ -188,7 +188,7 @@ interval<T, Traits> cosh(const interval<T, Traits>& x)
 	     true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> tanh(const interval<T, Traits>& x)
 {
   typename Traits::rounding rnd;
@@ -196,7 +196,7 @@ interval<T, Traits> tanh(const interval<T, Traits>& x)
 			     rnd.tanh_up(x.upper()), true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> asinh(const interval<T, Traits>& x)
 {
   typename Traits::rounding rnd;
@@ -204,7 +204,7 @@ interval<T, Traits> asinh(const interval<T, Traits>& x)
 			     rnd.asinh_up(x.upper()), true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> acosh(const interval<T, Traits>& x)
 {
   if (x.upper() < T(1)) {
@@ -217,7 +217,7 @@ interval<T, Traits> acosh(const interval<T, Traits>& x)
   return interval<T, Traits>(l, rnd.acosh_up(x.upper()), true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> atanh(const interval<T, Traits>& x)
 {
   typedef typename Traits::checking checking;

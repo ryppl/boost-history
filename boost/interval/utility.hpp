@@ -11,20 +11,20 @@
 
 namespace boost {
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 void interval<T, Traits>::set_empty()
 {
   low = up = base_limits::quiet_NaN();
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 void interval<T, Traits>::set_entire()
 {
   low = -base_limits::infinity();
   up = base_limits::infinity();
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits>::interval(const T& l, const T& u): low(l), up(u)
 {
   if (low > up) {
@@ -34,14 +34,14 @@ interval<T, Traits>::interval(const T& l, const T& u): low(l), up(u)
   }
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits>& interval<T, Traits>::operator=(const T& x)
 {
   low = up = x;
   return *this;
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 void interval<T, Traits>::assign(const T& l, const T& u)
 {
   if (l > u) {
@@ -51,14 +51,14 @@ void interval<T, Traits>::assign(const T& l, const T& u)
   } else set(l, u);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 void interval<T, Traits>::set(const T& l, const T& u)
 {
   low = l;
   up = u;
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> interval<T, Traits>::hull(const T& x, const T& y)
 {
   if (x < y)
@@ -67,14 +67,14 @@ interval<T, Traits> interval<T, Traits>::hull(const T& x, const T& y)
     return interval<T, Traits>(y, x, true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> interval<T, Traits>::empty()
 {
   T nan = base_limits::quiet_NaN();
   return interval<T, Traits>(nan, nan, true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> interval<T, Traits>::entire()
 {
   T inf = base_limits::infinity();
@@ -86,33 +86,33 @@ interval<T, Traits> interval<T, Traits>::entire()
  * Utility Functions
  */
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 const T& lower(const interval<T, Traits>& x)
 {
   return x.lower();
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 const T& upper(const interval<T, Traits>& x)
 {
   return x.upper();
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 T width(const interval<T, Traits>& x)
 {
   typename Traits::rounding rnd;
   return rnd.sub_up(x.upper(), x.lower());
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 T median(const interval<T, Traits>& x)
 {
   typename interval_lib::detail::tonearest<typename Traits::rounding>::type rnd;
   return (x.lower() + x.upper())/2;
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> pred(const interval<T, Traits>& x)
 {
   typename Traits::rounding rnd;
@@ -125,7 +125,7 @@ interval<T, Traits> pred(const interval<T, Traits>& x)
     return interval<T, Traits>(l, u, true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> succ(const interval<T, Traits>& x)
 {
   typename Traits::rounding rnd;
@@ -138,25 +138,25 @@ interval<T, Traits> succ(const interval<T, Traits>& x)
  * Set-like operations
  */
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 bool empty(const interval<T, Traits>& b)
 {
   return detail::is_nan(b.lower()) || detail::is_nan(b.upper());
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 bool in_zero(const interval<T, Traits>& b)
 {
   return b.lower() <= T(0) && T(0) <= b.upper();
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 bool in(const T& r, const interval<T, Traits> & b)
 {
   return b.lower() <= r && r <= b.upper();
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 bool subset(const interval<T, Traits>& a,
 	    const interval<T, Traits>& b)
 {
@@ -166,7 +166,7 @@ bool subset(const interval<T, Traits>& a,
     return b.lower() <= a.lower() && a.upper() <= b.upper();
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 bool proper_subset(const interval<T, Traits> & a,
 		   const interval<T, Traits> & b)
 {
@@ -177,7 +177,7 @@ bool proper_subset(const interval<T, Traits> & a,
       b.lower() <= a.lower() && a.upper() <= b.upper();
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 bool overlap(const interval<T, Traits>& x,
 	     const interval<T, Traits>& y)
 {
@@ -185,19 +185,19 @@ bool overlap(const interval<T, Traits>& x,
     y.lower() <= x.lower() && x.lower() <= y.upper();
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 bool singleton(const interval<T, Traits>& x)
 {
   return x.lower() == x.upper();
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 bool equal(const interval<T, Traits>& x, const interval<T, Traits>& y)
 {
   return x.lower() == y.lower() && x.upper() == y.upper();
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> intersect(const interval<T, Traits>& x,
 			      const interval<T, Traits>& y)
 {
@@ -209,7 +209,7 @@ interval<T, Traits> intersect(const interval<T, Traits>& x,
     return interval<T, Traits>::empty();
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> hull(const interval<T, Traits>& x,
 				const interval<T, Traits>& y)
 {
@@ -222,7 +222,7 @@ interval<T, Traits> hull(const interval<T, Traits>& x,
 			       std::max(x.upper(), y.upper()), true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> hull(const interval<T, Traits>& x, const T& y)
 {
   if (empty(x))
@@ -232,7 +232,7 @@ interval<T, Traits> hull(const interval<T, Traits>& x, const T& y)
 			       std::max(x.upper(), y), true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> hull(const T& x, const interval<T, Traits>& y)
 {
   if (empty(y))
@@ -242,13 +242,13 @@ interval<T, Traits> hull(const T& x, const interval<T, Traits>& y)
 			       std::max(x, y.upper()), true);
 }
 
-template<class T>
+template<class T> inline
 interval<T> hull(const T& x, const T& y)
 {
   return interval<T>::hull(x, y);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 std::pair<interval<T, Traits>, interval<T, Traits> >
 bisect(const interval<T, Traits>& x)
 {
@@ -257,14 +257,14 @@ bisect(const interval<T, Traits>& x)
   return std::pair<I,I>(I(x.lower(), m), I(m, x.upper()));
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 T dist(const interval<T, Traits>& x, const interval<T, Traits>& y)
 {
   typename interval_lib::detail::tonearest<typename Traits::rounding>::type rnd;
   return std::min(std::abs(x.lower() - y.lower()), std::abs(x.upper() - y.upper()));
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 T dist(const interval<T, Traits>& x, const T& y)
 {
   typename interval_lib::detail::tonearest<typename Traits::rounding>::type rnd;
@@ -276,13 +276,13 @@ T dist(const interval<T, Traits>& x, const T& y)
     return 0;
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 T dist(const T& x, const interval<T, Traits>& y)
 {
   return -dist(y,x);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> scale(const interval<T, Traits>& x,
 			  const T& mirror, const T& factor)
 {
@@ -291,7 +291,7 @@ interval<T, Traits> scale(const interval<T, Traits>& x,
   return factor * ((I)x - mirror);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> symmetric_scale(const interval<T, Traits>& x,
 				    const T& factor)
 {
@@ -303,7 +303,7 @@ interval<T, Traits> symmetric_scale(const interval<T, Traits>& x,
  * Elementary functions
  */
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> abs(const interval<T, Traits>& x)
 {
   if (!detail::sign(x.lower()))
@@ -315,7 +315,7 @@ interval<T, Traits> abs(const interval<T, Traits>& x)
   }
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> max(const interval<T, Traits>& x,
 			const interval<T, Traits>& y)
 {
@@ -323,21 +323,21 @@ interval<T, Traits> max(const interval<T, Traits>& x,
 			     std::max(x.upper(), y.upper()), true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> max(const interval<T, Traits>& x, const T& y)
 {
   return interval<T, Traits>(std::max(x.lower(), y),
 			     std::max(x.upper(), y), true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> max(const T& x, const interval<T, Traits>& y)
 {
   return interval<T, Traits>(std::max(x, y.lower()),
 			     std::max(x, y.upper()), true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> min(const interval<T, Traits>& x,
 			const interval<T, Traits>& y)
 {
@@ -345,35 +345,35 @@ interval<T, Traits> min(const interval<T, Traits>& x,
 			     std::min(x.upper(), y.upper()), true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> min(const interval<T, Traits>& x, const T& y)
 {
   return interval<T, Traits>(std::min(x.lower(), y),
 			     std::min(x.upper(), y), true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> min(const T& x, const interval<T, Traits>& y)
 {
   return interval<T, Traits>(std::min(x, y.lower()),
 			     std::min(x, y.upper()), true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> interval<T, Traits>::pi()
 {
   typedef typename Traits::rounding rounding;
   return interval<T, Traits>(rounding::pi_down(), rounding::pi_up(), true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> interval<T, Traits>::pi_1_2()
 {
   typedef typename Traits::rounding rounding;
   return interval<T, Traits>(rounding::pi_1_2_down(), rounding::pi_1_2_up(), true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> interval<T, Traits>::pi_2_1()
 {
   typedef typename Traits::rounding rounding;

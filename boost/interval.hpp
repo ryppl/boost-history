@@ -18,8 +18,6 @@
 
 #include <boost/config.hpp>
 #include <boost/limits.hpp>
-#include <cmath>
-#include <iosfwd>
 
 namespace boost {
   namespace interval_lib {

@@ -53,18 +53,21 @@ propagation.</p>
 
 <h3>Numbers</h3>
 
-<p>In order to successfully use the interval arithmetic, the bounds of
-the interval must present some characteristics. First of all, due to
-the definition of an interval, the numbers have to be strongly
-ordered. Secondly, the arithmetic must be exact or provide some
+<p>In order to successfully use interval arithmetic, the bounds of the
+interval must present some characteristics. First of all, due to the
+definition of an interval, the numbers have to be strongly ordered (so
+complex numbers are not usable as bounds). The mathematical functions
+for this type should also have the same monotonicity properties than
+for the real numbers (so modulo types are not usable
+either). Secondly, the computations must be exact or provide some
 rounding methods (toward minus or plus infinity) in order to always
 ensure large enough intervals. Finally, because heavy loss of
 precision are always possible, some numbers have to represent
 infinities or an exceptional behavior must be defined. The same
-situation occurs also for NaN (<i>Not a Number</i>).</p>
+situation also occurs for NaN (<i>Not a Number</i>).</p>
 
 <p>Knowing all of this, a good candidate can be the set of the
-floating point numbers defined by the standard IEEE-754. Indeed, if
+floating-point numbers defined by the standard IEEE-754. Indeed, if
 the interval arithmetic is intended to replace some arithmetic using
 the floating point unit of a processor, they are the best
 choice.</p>
@@ -73,11 +76,12 @@ choice.</p>
 
 <p>It is straightforward to define the elementary arithmetic
 operations on intervals. It is also possible to define some comparison
-operators. Given two intervals, the returned value is a subset of
+operators. Given two intervals, the result is a subset of
 {<i>false</i>,<i>true</i>}. The answers {<i>false</i>} and
-{<i>true</i>} are easy to manipulate. But it is not the case for the
-answer {<i>false</i>,<i>true</i>} since comparison operators are
-supposed to be boolean functions.</p>
+{<i>true</i>} are easy to manipulate since they can directly be mapped
+on <i>true</i> and <i>false</i>. But it is not the case for the answer
+{<i>false</i>,<i>true</i>} since comparison operators are supposed to
+be boolean functions.</p>
 
 <p>So, what to do in order to obtain boolean answers? Nobody will be
 shocked if {<i>false</i>} is transformed in <i>false</i> and
@@ -506,7 +510,16 @@ interval is empty or is a singleton. Finally, <code>equal</equal>
 tests if two intervals are equal.</p>
 
 <p>The functions <code>square sqrt log exp sin cos tan asin acos atan
-sinh cosh tanh asinh acosh atanh</code> are also defined.
+sinh cosh tanh asinh acosh atanh</code> are also defined.</p>
+
+<p>The function <code>fmod(interval x, interval y)</code> expects the
+lower bound of <code>y</code> to be strictly positive and returns an
+interval <code>z</code> such as <code>0 &lt;= z.lower() &lt;
+y.upper()</code> and such as <code>x</code> is a subset of
+<code>z+n*y</code> (with <code>n</code> being an integer). So, if the
+two arguments are positive singleton, this function
+<code>fmod(interval, interval)</code> will behave like the traditional
+function <code>fmod(double, double)</code>.</p>
 
 <h4>Constructors and alike</h4>
 
@@ -1269,6 +1282,45 @@ the PowerPC processors). But for the FPUs that do not provide it (the
 x86 processors), the only solution is to write the values to memory
 and read them back. Such an operation is obviously very expensive.</p>
 
+<h2>Test Programs</h2>
+
+<p><code>pi.cpp</code> tests if the interval value of &pi; (for
+<code>int</code>, <code>float</code> and <code>double</code> base
+types) contains the number &pi; (defined with 21 decimal digits) and
+if it is a subset of [&pi;&plusmn;1ulp] (in order to ensure some
+precision).</p>
+
+<p><code>cmp.cpp</code> tests if the operators <code>&lt; &gt; &lt;=
+&gt;= == !=</code> (for the three pre-defined comparisons) and the
+functions <code>cer...</code> and <code>pos...</code> behave correctly
+with some simple intervals ([1,2] and [3,4], [1,3] and [2,4], [1,2]
+and [2,3], etc).</p>
+
+<p><code>det.cpp</code> tests if the <code>_std</code> and
+<code>_opp</code> versions in protected and unprotected mode produce
+the same result when Gauss scheme is used on an unstable matrix (in
+order to exercise rounding). The tests are done for
+<code>interval&lt;float&gt;</code> and
+<code>interval&lt;double&gt;</code>.
+
+<p><code>interval_test.cpp</code> tests if the interval library
+respects the basic property of interval arithmetic by computing some
+functions and operations for both <code>double</code> and
+<code>interval&lt;double&gt;</code>.</p>
+
+<h2>History and Acknowledgements</h2>
+
+<p>This library was mostly inspired by a previous work from Jens
+Maurer. Some discussions about his work were reproduced <a
+href="http://www.mscs.mu.edu/~georgec/IFAQ/maurer1.html">here</a> and
+the work itself can be found <a
+href="http://www.rhein-main.de/people/jmaurer/interval.tar.gz">here</a>.</p>
+
+<p>Herv&eacute; Br&ouml;nnimann and Sylvain Pion have provided some
+useful comments in order for this library to be written.</p>
+
+<hr>
+Guillaume Melquiond, 2002-08-02
 
 </body>
 </html>

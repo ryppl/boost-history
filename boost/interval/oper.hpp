@@ -27,28 +27,27 @@ namespace boost {
  * Basic arithmetic operators
  */
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> operator+(const interval<T, Traits>& x)
 {
   return x;
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> operator-(const interval<T, Traits>& x)
 {
   return interval<T, Traits>(-x.upper(), -x.lower(), true);
 }
 
-template<class T, class Traits>
-interval<T, Traits>&
-interval<T, Traits>::operator+=(const interval<T, Traits>& r)
+template<class T, class Traits> inline
+interval<T, Traits>& interval<T, Traits>::operator+=(const interval<T, Traits>& r)
 {
   typename Traits::rounding rnd;
   set(rnd.add_down(low, r.low), rnd.add_up(up, r.up));
   return *this;
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits>& interval<T, Traits>::operator+=(const T& r)
 {
   typename Traits::rounding rnd;
@@ -56,16 +55,15 @@ interval<T, Traits>& interval<T, Traits>::operator+=(const T& r)
   return *this;
 }
 
-template<class T, class Traits>
-interval<T, Traits>&
-interval<T, Traits>::operator-=(const interval<T, Traits>& r)
+template<class T, class Traits> inline
+interval<T, Traits>& interval<T, Traits>::operator-=(const interval<T, Traits>& r)
 {
   typename Traits::rounding rnd;
   set(rnd.sub_down(low, r.up), rnd.sub_up(up, r.low));
   return *this;
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits>& interval<T, Traits>::operator-=(const T& r)
 {
   typename Traits::rounding rnd;
@@ -73,26 +71,24 @@ interval<T, Traits>& interval<T, Traits>::operator-=(const T& r)
   return *this;
 }
 
-template<class T, class Traits>
-interval<T, Traits>&
-interval<T, Traits>::operator*=(const interval<T, Traits>& r)
+template<class T, class Traits> inline
+interval<T, Traits>& interval<T, Traits>::operator*=(const interval<T, Traits>& r)
 {
   return *this = *this * r;
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits>& interval<T, Traits>::operator*=(const T& r)
 {
   return *this = *this * r;
 }
 
-template<class T, class Traits>
-interval<T, Traits>
-multiplicative_inverse(const interval<T, Traits>& x)
+template<class T, class Traits> inline
+interval<T, Traits> multiplicative_inverse(const interval<T, Traits>& x)
 {
   if (in_zero(x)) {
     typedef typename Traits::checking checking;
-    checking::divide_by_zero(T(1), T(1), x.lower(), x.upper());
+    checking::divide_by_zero(x.lower(), x.upper());
     return interval<T, Traits>::entire();
   }
   typename Traits::rounding rnd;
@@ -100,14 +96,13 @@ multiplicative_inverse(const interval<T, Traits>& x)
 			     rnd.div_up(T(1), x.lower()), true);
 }
 
-template<class T, class Traits>
-interval<T, Traits>&
-interval<T, Traits>::operator/=(const interval<T, Traits>& r)
+template<class T, class Traits> inline
+interval<T, Traits>& interval<T, Traits>::operator/=(const interval<T, Traits>& r)
 {
   return *this = *this / r;
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits>& interval<T, Traits>::operator/=(const T& r)
 {
   return *this = *this / r;
@@ -115,16 +110,16 @@ interval<T, Traits>& interval<T, Traits>::operator/=(const T& r)
 
 #ifndef BOOST_INTERVAL_USE_FRIEND_OPERATORS
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> operator+(const interval<T, Traits>& x,
-				     const interval<T, Traits>& y)
+			      const interval<T, Traits>& y)
 {
   typename Traits::rounding rnd;
   return interval<T,Traits>(rnd.add_down(x.lower(), y.lower()),
 			    rnd.add_up(x.upper(), y.upper()), true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> operator+(const T& x, const interval<T, Traits>& y)
 {
   typename Traits::rounding rnd;
@@ -132,11 +127,11 @@ interval<T, Traits> operator+(const T& x, const interval<T, Traits>& y)
 			    rnd.add_up(x, y.upper()), true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> operator+(const interval<T, Traits>& x, const T& y)
 { return y + x; }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> operator-(const interval<T, Traits>& x,
 				     const interval<T, Traits>& y)
 {
@@ -145,7 +140,7 @@ interval<T, Traits> operator-(const interval<T, Traits>& x,
 			    rnd.sub_up(x.upper(), y.lower()), true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> operator-(const interval<T, Traits>& x, const T& y)
 {
   typename Traits::rounding rnd;
@@ -153,7 +148,7 @@ interval<T, Traits> operator-(const interval<T, Traits>& x, const T& y)
 			    rnd.sub_up(x.upper(), y), true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> operator-(const T& x, const interval<T, Traits>& y)
 {
   typename Traits::rounding rnd;
@@ -164,9 +159,9 @@ interval<T, Traits> operator-(const T& x, const interval<T, Traits>& y)
 #define _m_ibo_(A, B, C, D) \
   return interval<T, Traits>(rnd.mul_down(A, B), rnd.mul_up(C, D), true);
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> operator*(const interval<T, Traits>& x,
-				     const interval<T, Traits>& y)
+			      const interval<T, Traits>& y)
 {
   typename Traits::rounding rnd;
   if (detail::sign(x.upper())) {
@@ -200,7 +195,7 @@ interval<T, Traits> operator*(const interval<T, Traits>& x,
   }
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> operator*(const T& x, const interval<T, Traits>& y)
 { 
   typename Traits::rounding rnd;
@@ -213,16 +208,16 @@ interval<T, Traits> operator*(const T& x, const interval<T, Traits>& y)
 
 #undef _m_ibo_
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> operator*(const interval<T, Traits>& x, const T& y)
 { return y * x; }
 
 #define _m_ibo_(A, B, C, D) \
   return interval<T, Traits>(rnd.div_down(A, B), rnd.div_up(C, D), true);
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> operator/(const interval<T, Traits>& x,
-				     const interval<T, Traits>& y)
+			      const interval<T, Traits>& y)
 {
   if (in_zero(y)) {
     typedef typename Traits::checking checking;
@@ -252,7 +247,7 @@ interval<T, Traits> operator/(const interval<T, Traits>& x,
   }
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> operator/(const interval<T, Traits>& x, const T& y)
 {
   if (y == 0) {
@@ -268,7 +263,7 @@ interval<T, Traits> operator/(const interval<T, Traits>& x, const T& y)
   }
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> operator/(const T& x, const interval<T, Traits>& y)
 {
   typename Traits::rounding rnd;
@@ -286,10 +281,10 @@ interval<T, Traits> operator/(const T& x, const interval<T, Traits>& y)
 
 #undef _m_ibo_
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> sqrt(const interval<T, Traits>& x)
 {
-  if (x.upper() < T(0)) {
+  if (detail::sign(x.upper())) {
     typedef typename Traits::checking checking;
     checking::sqrt_nan();
     return interval<T, Traits>::empty();
@@ -300,7 +295,7 @@ interval<T, Traits> sqrt(const interval<T, Traits>& x)
   return interval<T, Traits>(l, rnd.sqrt_up(x.upper()), true);
 }
 
-template<class T, class Traits>
+template<class T, class Traits> inline
 interval<T, Traits> square(const interval<T, Traits>& x)
 {
   typedef interval<T, Traits> I;

@@ -205,75 +205,75 @@ struct hyperbolic_from_explog: Rounding
 namespace boost {
   namespace interval_lib {
 
-template<class T, class Rounding>
+template<class T, class Rounding> inline
 T hyperbolic_from_explog<T, Rounding>::sinh_down(const T& x)
 {
   return div_down(sub_down(exp_down(x), exp_up(-x)), 2);
 }
 
-template<class T, class Rounding>
+template<class T, class Rounding> inline
 T hyperbolic_from_explog<T, Rounding>::sinh_up(const T& x)
 {
   return div_up(sub_up(exp_up(x), exp_down(-x)), 2);
 }
 
-template<class T, class Rounding>
+template<class T, class Rounding> inline
 T hyperbolic_from_explog<T, Rounding>::cosh_down(const T& x)
 {
   return div_down(add_down(exp_down(x), exp_down(-x)), 2);
 }
 
-template<class T, class Rounding>
+template<class T, class Rounding> inline
 T hyperbolic_from_explog<T, Rounding>::cosh_up(const T& x)
 {
   return div_up(add_up(exp_up(x), exp_up(-x)), 2);
 }
 
-template<class T, class Rounding>
+template<class T, class Rounding> inline
 T hyperbolic_from_explog<T, Rounding>::tanh_down(const T& x)
 {
   return div_down(sub_down(exp_down(mul_down(x, 2)), 1),
 		  add_up(exp_up(mul_up(x, 2)), 1));
 }
 
-template<class T, class Rounding>
+template<class T, class Rounding> inline
 T hyperbolic_from_explog<T, Rounding>::tanh_up(const T& x)
 {
   return div_up(sub_up(exp_up(mul_up(x, 2)), 1),
 		add_down(exp_down(mul_down(x, 2)), 1));
 }
 
-template<class T, class Rounding>
+template<class T, class Rounding> inline
 T hyperbolic_from_explog<T, Rounding>::asinh_down(const T& x)
 {
   return log_down(add_down(x, sqrt_down(add_down(mul_down(x, x), 1))));
 }
 
-template<class T, class Rounding>
+template<class T, class Rounding> inline
 T hyperbolic_from_explog<T, Rounding>::asinh_up(const T& x)
 {
   return log_up(add_up(x, sqrt_up(add_up(mul_up(x, x), 1))));
 }
 
-template<class T, class Rounding>
+template<class T, class Rounding> inline
 T hyperbolic_from_explog<T, Rounding>::acosh_down(const T& x)
 {
   return log_down(add_down(x, sqrt_down(sub_down(mul_down(x, x), 1))));
 }
 
-template<class T, class Rounding>
+template<class T, class Rounding> inline
 T hyperbolic_from_explog<T, Rounding>::acosh_up(const T& x)
 {
   return log_up(add_up(x, sqrt_up(sub_up(mul_up(x, x), 1))));
 }
 
-template<class T, class Rounding>
+template<class T, class Rounding> inline
 T hyperbolic_from_explog<T, Rounding>::atanh_down(const T& x)
 {
   return div_down(log_down(div_down(add_down(1, x), sub_up(1, x))), 2);
 }
 
-template<class T, class Rounding>
+template<class T, class Rounding> inline
 T hyperbolic_from_explog<T, Rounding>::atanh_up(const T& x)
 {
   return div_up(log_up(div_up(add_up(1, x), sub_down(1, x))), 2);
