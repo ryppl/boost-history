@@ -16,27 +16,41 @@
 #define BOOST_ASSIGN_UBLAS_MATRIX_HPP
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
-# pragma once
+    #pragma once
 #endif
 
-#include <boost/assign/fixed_size_assigner.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
+#include <boost/assign/fixed_size_assigner.hpp>
+#include <boost/assign/make_tuple_insertion.hpp>
+#include <boost/assign/fixed_size_tuple_assigner.hpp>
 
 namespace boost
 {
-    namespace assignment
+namespace assignment
+{
+    namespace bnu = boost::numeric::ublas;
+    
+    template< typename V, typename F, typename A, typename V2 > 
+    inline fixed_size_assigner<V, typename A::iterator>
+    operator<<( bnu::matrix<V,F,A>& c, const V2& v )
     {
-    	namespace bnu = boost::numeric::ublas;
-    	
-    	template< typename V, typename F, typename A, typename V2 > 
-    	inline fixed_size_assigner<V, typename A::iterator>
-    	operator<<( bnu::matrix<V,F,A>& c, const V2& v )
-    	{
-    	    A& a = c.data();
-    	    return fixed_size_assigner<V, typename A::iterator>
-    		( a.begin(), a.end(), v );
-    	}
+        A& a = c.data();
+        return fixed_size_assigner<V, typename A::iterator>
+            ( a.begin(), a.end(), v );
     }
+
+    
+    
+    template< typename V, typename F, typename A > 
+    inline fixed_size_tuple_assigner<typename A::iterator>
+    assign_all( bnu::matrix<V,F,A>& c )
+    {
+        A& a = c.data();
+        return fixed_size_tuple_assigner<typename A::iterator>
+            ( a.begin(), a.end() );
+    }
+
+}
 }
 
 #endif

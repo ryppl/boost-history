@@ -21,6 +21,5 @@
 
 #include <boost/assign/graph/adjacency_list.hpp>
 #include <boost/assign/graph/adjacency_matrix.hpp>
-#include <boost/assign/graph/property_map.hpp>
 
 #endif

@@ -34,13 +34,18 @@ int main()
              4,5,6,
              7,8,9;
         
-        //
-        // This needs to be remedied or documented.
-        //    
+        assign_all( m ) (1,2,3)
+                        (4,5,6)
+                        (6,7,8);
+        
         bnu::matrix<double, bnu::column_major> m2( 3, 3 );
         m2 << 1,2,3,
               4,5,6,
               7,8,9;
+        
+        assign_all( m2 ) (1,2,3)
+                         (4,5,6)
+                         (6,7,8);
         
         cout << v << endl <<  m << endl << m2 << endl;
         

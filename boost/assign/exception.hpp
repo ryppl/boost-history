@@ -12,8 +12,8 @@
  *
  */
 
-#ifndef BOOST_ASSIGN_EXCEPTIOM_HPP
-#define BOOST_ASSIGN_EXCEPTIOM_HPP
+#ifndef BOOST_ASSIGN_EXCEPTION_HPP
+#define BOOST_ASSIGN_EXCEPTION_HPP
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 # pragma once

@@ -30,7 +30,7 @@ namespace assignment
               typename GP, typename A, typename Tuple >
     inline void make_insertion( adjacency_matrix<D,VP,EP,GP,A>& g, const Tuple& t )
     { 
-        detail::make_insertion_impl< tuples::length<Tuple>::value >()( g, t ); 
+        detail::make_graph_insertion_impl< tuples::length<Tuple>::value >()( g, t ); 
     }   
 }
 }   

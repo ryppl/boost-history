@@ -52,11 +52,15 @@ int main()
     	array_type A(boost::extents[3][4][2]);
     	
     	// Assign values to the elements
-    	int values = 0;
-    	for(index i = 0; i != 3; ++i) 
-    	    for(index j = 0; j != 4; ++j)
-                for(index k = 0; k != 2; ++k)
-                    A[i][j][k] = values++;
+        // use tuples (here a pair) in a 3x4 matrix
+    	assign_all( A ) (1,1)(2,2)(3,3)
+                        (4,4)(5,5)(6,6)
+                        (7,7)(8,8)(9,9);
+        
+        // use plain comma-separated list
+        A << 1,1, 2,2, 3,3, 
+             4,4, 5,5, 6,6,
+             7,7, 8,8, 9,9; 
     	
     	// Verify values
     	int verify = 0;

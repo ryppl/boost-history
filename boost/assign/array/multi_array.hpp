@@ -16,35 +16,58 @@
 #define BOOST_ASSIGN_ARRAY_MULTI_ARRAY_HPP
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
-# pragma once
+    #pragma once
 #endif
 
 #include <boost/assign/fixed_size_assigner.hpp>
-//#include <boost/multi_array.hpp>
-//#include <boost/multi_array_ref.hpp>
+#include <boost/assign/make_tuple_insertion.hpp>
+#include <boost/assign/fixed_size_tuple_assigner.hpp>
+#include <boost/multi_array.hpp>
+#include <boost/multi_array_ref.hpp>
 
-// namespace init
-// {
-//     template< typename V, std::size_t D, typename A, typename V2 > 
-//     inline detail::fixed_size_assigner<V, typename boost::
-// 				       multi_array<V,D,A>::iterator>
-//     operator<<( boost::multi_array<V,D,A>& c, const V2& v )
-//     {
-// 	return detail::fixed_size_assigner<V, typename boost::
-// 	    multi_array<V,D,A>::iterator>( c.begin(), c.end(), v );
-//     }
+namespace boost
+{
+namespace assignment
+{
+    template< typename V, std::size_t D, typename A, typename V2 > 
+    inline fixed_size_assigner<V, typename boost::multi_array<V,D,A>::iterator>
+    operator<<( multi_array<V,D,A>& c, const V2& v )
+    {
+        return fixed_size_assigner<V, 
+            typename multi_array<V,D,A>::iterator>( c.begin(), c.end(), v );
+    }
 
 
 
-//     template< typename V, std::size_t D, typename V2 > 
-//     inline detail::fixed_size_assigner<V, typename boost::
-// 				       multi_array_ref<V,D>::iterator>
-//     operator<<( boost::multi_array_ref<V,D>& c, const V2& v )
-//     {
-// 	return detail::fixed_size_assigner<V, typename boost::
-// 	    multi_array_ref<V,D>::iterator>( c.begin(), c.end(), v );
-//     }
+    template< typename V, std::size_t D, typename A, typename V2 > 
+    inline fixed_size_assigner<V, typename multi_array_ref<V,D,A>::iterator>
+    operator<<( multi_array_ref<V,D,A>& c, const V2& v )
+    {
+        return fixed_size_assigner<V, 
+            typename multi_array_ref<V,D,A>::iterator>( c.begin(), c.end(), v );
+    }
 
-// } // namespace 'init'
+
+
+    template< typename V, std::size_t D, typename A, typename V2 > 
+    inline fixed_size_tuple_assigner<typename multi_array<V,D,A>::iterator>
+    assign_all( multi_array<V,D,A>& c, const V2& v )
+    {
+        return fixed_size_tuple_assigner< 
+            typename multi_array<V,D,A>::iterator>( c.begin(), c.end() );
+    }
+
+
+
+    template< typename V, std::size_t D, typename A, typename V2 > 
+    inline fixed_size_tuple_tuple_assigner<typename multi_array_ref<V,D,A>::iterator>
+    assign_all( multi_array_ref<V,D,A>& c, const V2& v )
+    {
+        return fixed_size_tuple_assigner< 
+            typename multi_array_ref<V,D,A>::iterator>( c.begin(), c.end() );
+    }
+
+}   
+}
 
 #endif
