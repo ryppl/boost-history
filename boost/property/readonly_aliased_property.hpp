@@ -13,23 +13,23 @@ namespace boost
 /** Implement a property that is an alias to a variable. */
 
 template< typename T >
-class aliased_property: public property_type< T, T & >
+class readonly_aliased_property: public property_type< T, T & >
 {
    T * value;
    public:
       inline T get() const; /**< get the value of the property. */
    public:
-      inline aliased_property( T & v );
+      inline readonly_aliased_property( T & v );
 };
 
 template< typename T >
-T aliased_property< T >::get() const
+T readonly_aliased_property< T >::get() const
 {
    return *value;
 }
 
 template< typename T >
-aliased_property< T >::aliased_property( T & v ): value( &v )
+readonly_aliased_property< T >::readonly_aliased_property( T & v ): value( &v )
 {
 }
 
