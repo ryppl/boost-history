@@ -80,6 +80,7 @@ namespace boost
     struct contiguous_sequence_container_tag : public sequence_container_tag{};
     struct associative_container_tag : public container_tag {};
     struct iterator_range_container_tag : public container_tag {};
+    struct container_adapter_tag : public container_tag {};
     
     namespace detail
     {
@@ -96,39 +97,39 @@ namespace boost
 	    typedef has_size<2> true_t;
 
 	    template< typename T, typename U >
-	    true_t  is_pair( const std::pair<T,U>& );
+	    true_t  is_pair( const std::pair<T,U>* );
 	    false_t is_pair( ... );
  
 	    template< typename C, typename T, typename D,
 		      typename P, typename R >
- 	    true_t  is_iterator( const std::iterator<C,T,D,P,R>& );	
+ 	    true_t  is_iterator( const std::iterator<C,T,D,P,R>* );	
 	    template< typename C >
-	    true_t  is_iterator( const std::back_insert_iterator<C>& );
+	    true_t  is_iterator( const std::back_insert_iterator<C>* );
 	    template< typename C >
-	    true_t  is_iterator( const std::front_insert_iterator<C>& );
+	    true_t  is_iterator( const std::front_insert_iterator<C>* );
 	    template< typename C >
-	    true_t  is_iterator( const std::insert_iterator<C>& );
+	    true_t  is_iterator( const std::insert_iterator<C>* );
 	    template< typename T, typename C, typename Tr >
-	    true_t  is_iterator( const std::istream_iterator<T,C,Tr>& );
+	    true_t  is_iterator( const std::istream_iterator<T,C,Tr>* );
 	    template< typename T, typename C, typename Tr >
-	    true_t  is_iterator( const std::ostream_iterator<T,C,Tr>& );
+	    true_t  is_iterator( const std::ostream_iterator<T,C,Tr>* );
 	    template< typename C, typename Tr >
-	    true_t  is_iterator( const std::istreambuf_iterator<C,Tr>& );
+	    true_t  is_iterator( const std::istreambuf_iterator<C,Tr>* );
 	    template< typename C, typename Tr >
-	    true_t  is_iterator( const std::ostreambuf_iterator<C,Tr>& );
+	    true_t  is_iterator( const std::ostreambuf_iterator<C,Tr>* );
 	    false_t is_iterator( ... );
 
  	    template< typename C >
-	    true_t  is_container( const C&, const typename C::iterator& = 
+	    true_t  is_container( const C*, const typename C::iterator& = 
 				  typename C::iterator() );
 	    template< typename T, std::size_t sz >
 	    true_t  is_container( const T (&)[sz] );
 	    template< typename T, typename U >
-	    true_t  is_container( const std::pair<T,U>& );
+	    true_t  is_container( const std::pair<T,U>* );
 	    false_t is_container( ... );
 
 	    template< typename C >
-	    true_t  is_associative_container( const C&, 
+	    true_t  is_associative_container( const C*, 
 					      const typename C::key_type =
 					      typename C::key_type() );
 	    false_t is_associative_container( ... );
@@ -144,9 +145,9 @@ namespace boost
 // 	    false_t has_random_access_iterator( ... );
 
 	    template< typename T, typename U >
-	    true_t  is_iterator_range( const std::pair<T,U>& );
+	    true_t  is_iterator_range( const std::pair<T,U>* );
 	    template< typename C >
-	    true_t  is_iterator_range( const C&, 
+	    true_t  is_iterator_range( const C*, 
 				       const typename C::iterator_range_tag& =
 				       typename C::iterator_range_tag() );
 	    false_t is_iterator_range( ... );
@@ -154,7 +155,7 @@ namespace boost
 	    template< typename C >
 	    struct tag_generator
 	    {
-		static C& c;
+		static C* c;
 
  		BOOST_STATIC_CONSTANT( bool, is_container_ = sizeof( true_t )
 				       == sizeof( is_container( c ) ) );
@@ -430,7 +431,7 @@ namespace boost
     struct container_traits
     {
     private:
-	static C& c;
+	static C* c;
 
 	BOOST_STATIC_CONSTANT( bool, is_pair_ = 
 			       sizeof( detail::container::is_pair( c ) ) == 
