@@ -37,6 +37,8 @@ supplies some of them.</p>
 <h2><a name="header">Header Synopsis</a></h2>
 
 <blockquote><pre>
+#include &lt;iosfwd&gt;   <i>// for std::basic_ostream and std::basic_istream (declarations)</i>
+
 namespace boost
 {
 namespace io
@@ -47,7 +49,6 @@ template &lt; typename Ch, class Tr &gt;
 
 template &lt; typename Ch, class Tr &gt;
     std::basic_istream&lt;Ch, Tr&gt; &amp;  skipl( std::basic_istream&lt;Ch, Tr&gt; &amp;is );
-
 
 }
 }
@@ -133,7 +134,7 @@ href="#newl"><code>newl</code></a></p>
 
 <hr>
 
-<p>Revised: 23 May 2003</p>
+<p>Revised: 25 May 2003</p>
 
 <p>Copyright &copy; Daryle Walker 2003.  Permission to copy, use,
 modify, sell and distribute this document is granted provided this

@@ -42,7 +42,10 @@ represents the virtual array as an actual array that is stored in the
 stream buffer.  This library is fairly uninteresting; meant mainly as a
 test case for the <a
 href="streambuf_wrapping.html">stream-buffer-wrapping stream base
-library</a>, but it may have real-life applications.</p>
+library</a>, but it may have real-life applications.  For outputting,
+an user can observe how inserted objects are represented.  For
+inputting, an user can have the internal array mapped to some
+inspection process.</p>
 
 <h2><a name="header">Header Synopsis</a></h2>
 
@@ -77,6 +80,7 @@ array is mapped to a compile-time-sized array that is stored in the
 stream buffer.</p>
 
 <blockquote><pre>
+#include &lt;cstddef&gt;    <i>// for std::size_t</i>
 #include &lt;streambuf&gt;  <i>// for std::basic_streambuf</i>
 
 template &lt; std::size_t N, typename Ch, class Tr &gt;
@@ -127,16 +131,16 @@ character type is the array's element type.</p>
 <dl>
 	<dt><code>basic_array_streambuf();</code>
 	<dd>
-		<p><strong>Effects:</strong> initializes the base class's
+		<strong>Effects:</strong> initializes the base class's
 			internal buffer pointers to the bounds of the internal
-			array</p>
+			array
 
 	<dt><code>basic_array_streambuf( basic_array_streambuf const &amp;c );</code>
 	<dd>
-		<p><strong>Effects:</strong> initializes the base class's
+		<strong>Effects:</strong> initializes the base class's
 			internal buffer pointers to the bounds of the internal array
 			and copies the element values in <var>c</var>'s internal
-			array to the new object's internal array</p>
+			array to the new object's internal array
 </dl>
 
 <h3><a name="m_observe">Observer Member Functions</a></h3>
@@ -144,31 +148,31 @@ character type is the array's element type.</p>
 <dl>
     <dt><code>char_type *  array_begin();</code>
 	<dd>
-		<p><strong>Returns:</strong> a pointer to the first element of
-			the internal array</p>
-		<p><strong>Rationale:</strong> useful to initialize or read the
-			internal array</p>
+		<strong>Returns:</strong> a pointer to the first element of
+			the internal array<br>
+		<strong>Rationale:</strong> useful to initialize or read the
+			internal array
 
     <dt><code>char_type *  array_end();</code>
 	<dd>
-		<p><strong>Returns:</strong> a pointer to the one-past-the-end
-			element of the internal array</p>
-		<p><strong>Rationale:</strong> useful to initialize or read the
-			internal array</p>
+		<strong>Returns:</strong> a pointer to the one-past-the-end
+			element of the internal array<br>
+		<strong>Rationale:</strong> useful to initialize or read the
+			internal array
 
     <dt><code>char_type const *  array_begin() const;</code>
 	<dd>
-		<p><strong>Returns:</strong> a pointer to the first element of
-			the internal array</p>
-		<p><strong>Rationale:</strong> similar to the
-			non-<code>const</code> version</p>
+		<strong>Returns:</strong> a pointer to the first element of
+			the internal array<br>
+		<strong>Rationale:</strong> similar to the
+			non-<code>const</code> version
 
     <dt><code>char_type const *  array_end() const;</code>
 	<dd>
-		<p><strong>Returns:</strong> a pointer to the one-past-the-end
-			element of the internal array</p>
-		<p><strong>Rationale:</strong> similar to the
-			non-<code>const</code> version</p>
+		<strong>Returns:</strong> a pointer to the one-past-the-end
+			element of the internal array<br>
+		<strong>Rationale:</strong> similar to the
+			non-<code>const</code> version
 </dl>
 
 <h3><a name="m_obj">Member Objects</a></h3>
@@ -186,11 +190,34 @@ character type is the array's element type.</p>
 classes that use an internal <code>basic_array_streambuf</code> object. 
 They are implemented with the <a
 href="streambuf_wrapping.html">stream-buffer-wrapping stream base
-library</a>.  They have same template interface and accessor member
-functions as <code>basic_array_streambuf</code>.  The member functions
-forward to the stream's internal stream buffer.  They also have the same
-(public) interface as their corresponding stream-buffer-wrapping stream
-base class.</p>
+library</a>.  (Do the appropriate substitutions for <var>stream</var>.)
+
+<blockquote><pre>
+#include &lt;boost/io/streambuf_wrapping.hpp&gt;
+
+template &lt; std::size_t N, typename Ch, class Tr &gt;
+class boost::io::basic_array_<var>stream</var>
+    : public boost::io::basic_wrapping_<var>stream</var>&lt;
+       boost::io::basic_array_streambuf&lt;N, Ch, Tr&gt; &gt;
+{
+public:
+    // Template arguments
+    static  std::size_t const  array_size = N;
+
+    typedef Ch  char_type;
+    typedef Tr  traits_type;
+
+    // Use automatically-defined default constructor
+
+    // Accessors (forwarded to the internal streambuf)
+    char_type *  array_begin();
+    char_type *  array_end();
+
+    char_type const *  array_begin() const;
+    char_type const *  array_end() const;
+
+};
+</pre></blockquote>
 
 <h2><a name="refer">References</a></h2>
 
@@ -222,9 +249,9 @@ base class.</p>
 
 <hr>
 
-<p>Revised: 11 November 2002</p>
+<p>Revised: 26 May 2003</p>
 
-<p>Copyright &copy; Daryle Walker 2002.  Permission to copy, use,
+<p>Copyright &copy; Daryle Walker 2003.  Permission to copy, use,
 modify, sell and distribute this document is granted provided this
 copyright notice appears in all copies.  This document is provided
 &quot;as is&quot; without express or implied warranty, and with no claim
