@@ -36,8 +36,7 @@ struct is_polymorphic_imp1
       virtual ~d2()throw();
 #  ifndef BOOST_MSVC
       // for some reason this messes up VC++ when T has virtual bases:
-      struct unique{};
-      virtual void foo(unique*);
+      virtual void foo();
 #  endif
       char padding[256];
    };

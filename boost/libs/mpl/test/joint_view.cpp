@@ -1,8 +1,9 @@
-
-// + file: libs/mpl/test/joint_view.cpp
-// + last modified: 25/may/03
-
-// Copyright (c) 2001-03
+//-----------------------------------------------------------------------------
+// boost mpl/test/joint_view.cpp source file
+// See http://www.boost.org for updates, documentation, and revision history.
+//-----------------------------------------------------------------------------
+//
+// Copyright (c) 2001-02
 // Aleksey Gurtovoy
 //
 // Permission to use, copy, modify, distribute and sell this software
@@ -12,13 +13,10 @@
 // supporting documentation. No representations are made about the 
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
-//
-// See http://www.boost.org/libs/mpl for documentation.
 
 #include "boost/mpl/joint_view.hpp"
 #include "boost/mpl/range_c.hpp"
 #include "boost/mpl/equal.hpp"
-#include "boost/mpl/size.hpp"
 #include "boost/static_assert.hpp"
 
 namespace mpl = boost::mpl;
@@ -31,9 +29,7 @@ int main()
         > numbers;
 
     typedef mpl::range_c<int,0,15> answer;
-
     BOOST_STATIC_ASSERT((mpl::equal<numbers,answer>::type::value));
-    BOOST_STATIC_ASSERT((mpl::size<numbers>::value == 15));
 
     return 0;
 }
