@@ -12,125 +12,149 @@
 
 #include <algorithm>
 #include <functional>
-#include <locale>
+
+#include "string_funct.hpp"
+#include "string_substr.hpp"
 
 namespace boost {
 
-namespace string_util_impl {
-
-    // equal_to functor reimplementation
-    /*
-        standard STL implementation does handles only comparison between types
-        of the same value. This is too restrictive for us.
-    */
-    template< typename Type1, typename Type2 >
-        struct equal_toF : public std::binary_function< Type1, Type2, bool > 
-    {
-        typedef typename std::binary_function< Type1, Type2, bool >::result_type result_type;
-        typedef typename std::binary_function< Type1, Type2, bool >::first_argument_type first_argument_type;
-        typedef typename std::binary_function< Type1, Type2, bool >::second_argument_type second_argument_type;
-
-        result_type operator ()( first_argument_type Ch, const second_argument_type& Loc ) const
-        {
-            return Ch==Loc;
-        }
-    };
-
-}; // string_util_impl
-
 //  string predicates  -----------------------------------------------//
 
-    // is_prefix iterator version
-    template< typename InputIterator, typename PrefixIterator, typename BinaryPredicate >
-    inline bool is_prefix( 
-        InputIterator BeginSequence, 
-        InputIterator EndSequence, 
-        PrefixIterator BeginPrefix,
-        PrefixIterator EndPrefix,
+    // start_with iterator version
+    template< typename InputIterator, typename SubIterator, typename BinaryPredicate >
+    inline bool start_with( 
+        InputIterator Begin, 
+        InputIterator End, 
+        SubIterator SubBegin,
+        SubIterator SubEnd,
         BinaryPredicate Comp )
     {
-        InputIterator it=BeginSequence;
-        PrefixIterator pit=BeginPrefix;
+        InputIterator it=Begin;
+        SubIterator pit=SubBegin;
         for(;
-            it!=EndSequence && pit!=EndPrefix;
+            it!=End && pit!=SubEnd;
             it++,pit++)
         {
             if( !Comp(*it,*pit) )
                 return false;
         }
 
-        return pit==EndPrefix;
+        return pit==SubEnd;
     }
 
-    // is_prefix iterator version with implicit comparison predicate
-    /*
-        Implicit parameters are not correctly handled by VC7 so we have to provide
-        two variants of the same method
-    */
-    template< typename InputIterator, typename PrefixIterator >
-    inline bool is_prefix( 
-        InputIterator BeginSequence, 
-        InputIterator EndSequence, 
-        PrefixIterator BeginPrefix,
-        PrefixIterator EndPrefix )
+    // start_with iterator version with implicit comparison predicate
+    template< typename InputIterator, typename SubIterator >
+    inline bool start_with( 
+        InputIterator Begin, 
+        InputIterator End, 
+        SubIterator SubBegin,
+        SubIterator SubEnd )
     {
-        return is_prefix( 
-            BeginSequence,
-            EndSequence,
-            BeginPrefix,
-            EndPrefix,
-            string_util_impl::equal_toF< typename InputIterator::value_type, typename PrefixIterator::value_type >() );
+        return start_with( 
+            Begin,
+            End,
+            SubBegin,
+            SubEnd,
+            string_util_impl::equal_toF< typename InputIterator::value_type, typename SubIterator::value_type >() );
     }
 
 
-    // is_prefix sequence version
+    // start_with sequence version
     template< typename Seq1, typename Seq2, typename BinaryPredicate >
-    inline bool is_prefix( 
+    inline bool start_with( 
         const Seq1& Input, 
         const Seq2& Prefix, 
         BinaryPredicate Comp )
     {
-        return is_prefix( Input.begin(), Input.end(), Prefix.begin(), Prefix.end(), Comp );
+        return start_with( Input.begin(), Input.end(), Prefix.begin(), Prefix.end(), Comp );
     }
 
-    // is_prefix sequence version with implicit comparison predicate
-    /*
-        Implicit parameters are not correctly handled by VC7 so we have to provide
-        two variants of the same method
-    */
+    // start_with sequence version with implicit comparison predicate
     template< typename Seq1, typename Seq2 >
-    inline bool is_prefix( const Seq1& Input, const Seq2& Prefix )
+    inline bool start_with( const Seq1& Input, const Seq2& Prefix )
     {
-        return is_prefix( 
+        return start_with( 
             Input, 
             Prefix, 
             string_util_impl::equal_toF<typename Seq1::value_type, typename Seq2::value_type>());
     }
 
-    // is_suffix sequence version
+    // end_with sequence version
     template< typename Seq1, typename Seq2, typename BinaryPredicate >
-    inline bool is_suffix( 
+    inline bool end_with( 
         const Seq1& Input, 
         const Seq2& Prefix, 
         BinaryPredicate Comp )
     {
-        return is_prefix( Input.rbegin(), Input.rend(), Prefix.rbegin(), Prefix.rend(), Comp );
+        return start_with( Input.rbegin(), Input.rend(), Prefix.rbegin(), Prefix.rend(), Comp );
     }
 
-    // is_suffix sequence version with implicit comparison predicate
-    /*
-        Implicit parameters are not correctly handled by VC7 so we have to provide
-        two variants of the same method
-    */
+    // end_with sequence version with implicit comparison predicate
     template< typename Seq1, typename Seq2 >
-    inline bool is_suffix( const Seq1& Input, const Seq2& Prefix )
+    inline bool end_with( const Seq1& Input, const Seq2& Prefix )
     {
-        return is_suffix( 
+        return end_with( 
             Input, 
             Prefix, 
             string_util_impl::equal_toF<typename Seq1::value_type, typename Seq2::value_type>());
     }
 
+    // contains iterator version
+    template< typename InputIterator, typename SubIterator, typename BinaryPredicate >
+    inline bool contains( 
+        InputIterator Begin, 
+        InputIterator End, 
+        SubIterator SubBegin,
+        SubIterator SubEnd,
+        BinaryPredicate Comp )
+    {
+		if ( SubBegin==SubEnd )
+		{
+			// Empty range is contained always
+			return true;
+		}
+		
+		std::pair<InputIterator, InputIterator> M=
+			find( Begin, End, SubBegin, SubEnd );
+
+		return ( M.first != M.second );
+	}
+
+	// contains iterator version with implicit comparison predicate
+    template< typename InputIterator, typename SubIterator >
+    inline bool contains( 
+        InputIterator Begin, 
+        InputIterator End, 
+        SubIterator SubBegin,
+        SubIterator SubEnd )
+    {
+        return contains( 
+            Begin,
+            End,
+            SubBegin,
+            SubEnd,
+            string_util_impl::equal_toF< typename InputIterator::value_type, typename SubIterator::value_type >() );
+    }
+
+    // contains sequence version
+    template< typename Seq1, typename Seq2, typename BinaryPredicate >
+    inline bool contains( 
+        const Seq1& Input, 
+        const Seq2& Substr, 
+        BinaryPredicate Comp )
+    {
+        return contains( Input.begin(), Input.end(), Substr.begin(), Substr.end(), Comp );
+    }
+
+    // contains sequence version with implicit comparison predicate
+    template< typename Seq1, typename Seq2 >
+    inline bool contains( const Seq1& Input, const Seq2& Substr )
+    {
+        return contains( 
+            Input, 
+            Substr, 
+            string_util_impl::equal_toF<typename Seq1::value_type, typename Seq2::value_type>());
+    }
 
 } // namespace boost
 

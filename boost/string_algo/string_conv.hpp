@@ -1,4 +1,4 @@
-//  Boost string_algo library case_conv.hpp header file  ---------------------------//
+//  Boost string_algo library string_conv.hpp header file  ---------------------------//
 
 //  (C) Copyright Pavol Droba 2002. Permission to copy, use, modify, sell and
 //  distribute this software is granted provided this copyright notice appears
@@ -7,50 +7,16 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
-#ifndef BOOST_CASE_CONV_HPP
-#define BOOST_CASE_CONV_HPP
+#ifndef BOOST_STRING_CONV_HPP
+#define BOOST_STRING_CONV_HPP
 
 #include <algorithm>
 #include <functional>
 #include <locale>
 
+#include "string_funct.hpp"
+
 namespace boost {
-
-
-//  case conversion functions  -----------------------------------------------//
-
-namespace string_util_impl {
-
-    // a tolower functor 
-    template< typename CharT >
-        struct tolowerF : public std::binary_function< CharT, std::locale, CharT > 
-    {
-        typedef typename std::binary_function< CharT, std::locale, CharT >::result_type result_type;
-        typedef typename std::binary_function< CharT, std::locale, CharT >::first_argument_type first_argument_type;
-        typedef typename std::binary_function< CharT, std::locale, CharT >::second_argument_type second_argument_type;
-
-        result_type operator ()( first_argument_type Ch, const second_argument_type& Loc ) const
-        {
-            return std::tolower( Ch, Loc );
-        }
-    };
-
-    // a toupper functor 
-    template< typename CharT >
-        struct toupperF : public std::binary_function< CharT, std::locale, CharT > 
-    {
-        typedef typename std::binary_function< CharT, std::locale, CharT >::result_type result_type;
-        typedef typename std::binary_function< CharT, std::locale, CharT >::first_argument_type first_argument_type;
-        typedef typename std::binary_function< CharT, std::locale, CharT >::second_argument_type second_argument_type;
-
-        result_type operator ()( first_argument_type Ch, const second_argument_type& Loc ) const
-        {
-            return std::toupper( Ch, Loc );
-        }
-    };
-
-} // namespace string_util_impl
-
 
 //  tolower  -----------------------------------------------//
 
@@ -113,4 +79,4 @@ namespace string_util_impl {
 } // namespace boost
 
 
-#endif  // BOOST_CASE_CONV_HPP
+#endif  // BOOST_STRING_CONV_HPP
