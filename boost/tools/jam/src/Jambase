@@ -84,7 +84,11 @@ rule record-file-location ( file : location )
 }
 
 if [ MATCH .*(bjam).* : $(ARGV[1]:B:L) ]
+  || $(BOOST_ROOT)    # A temporary measure so Jam works with Boost.Build v1
 {
+    # Another temporary measure so Jam works with Boost.Build v1
+    BOOST_BUILD_PATH ?= $(BOOST_ROOT)/tools/build ;
+    
     # We attempt to load "boost-build.jam" by searching from the current invocation directory
     # up to the root of the file-system and in the paths specified by BOOST_BUILD_PATH.
     # Within this, one invokes the "boost-build" rule to indicate where the Boost.Build
