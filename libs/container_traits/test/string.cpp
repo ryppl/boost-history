@@ -4,7 +4,6 @@
 #include <boost/test/included/test_exec_monitor.hpp>
 #include <boost/test/test_tools.hpp>
 #include <boost/config.hpp>
-#include <boost/iterator/counting_iterator.hpp>
 #include <vector>
 #include <fstream>
 #include <algorithm>
