@@ -6,6 +6,9 @@
 
 # include <boost/langbinding/backend/id.hpp>
 # include <boost/langbinding/backend/call_xxx_data.hpp>
+# include <boost/langbinding/backend/class_instance.hpp>
+# include <boost/langbinding/backend/override.hpp>
+# include <utility>
 
 namespace boost { namespace langbinding { namespace backend { 
 
@@ -20,8 +23,13 @@ class BOOST_LANGBINDING_DECL plugin
       , void* result_storage
       , void** arg_storage) = 0;
 
+    virtual override
+    find_override(char const* function_name, class_instance const&) = 0;
+
     langbinding::backend::id id()
     { return id_; }
+
+ protected:
     
  private:
     langbinding::backend::id id_;

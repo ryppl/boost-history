@@ -98,13 +98,12 @@ namespace aux
 struct override
 {
  public:
-    override(backend::plugin const& back_end, void* impl, void (&destroy)(void*))
+    override(backend::plugin const& back_end, backend::override const& x)
       : back_end(back_end)
-      , impl(impl)
-      , destroy(destroy)
+      , impl(x.data)
+      , destroy(x.destroy)
     {}
-             
-
+ 
     ~override()
     {
         if (this->impl)
