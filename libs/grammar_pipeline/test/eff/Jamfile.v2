@@ -1,0 +1,21 @@
+
+import testing ;
+
+project eff_productions_test
+        : requirements <hardcode-dll-paths>true
+        : default-build debug
+        ;
+  
+
+{
+    local development_libs = ../../../../libs ;
+    test-suite "eff-productions"
+        : [ run productions.cpp 
+            $(development_libs)/dyn_inherit/src/virtual_dtor_abs.cpp
+            $(development_libs)/io/filters/src/mout.cpp 
+            $(development_libs)/utility/src/obj_id.cpp
+            $(development_libs)/utility/src/object_tracked.cpp
+          ]
+        ;
+}
+    
