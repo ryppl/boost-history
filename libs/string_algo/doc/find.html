@@ -299,7 +299,7 @@ void find_example()
     <pre><b>namespace</b> boost {
 
     <b>template</b>&lt; <b>typename</b> IteratorT &gt; 
-    <b>class</b> iterator_range : <b>public</b> iterator_range_base&lt;IteratorT&gt;
+    <b>class</b> iterator_range 
     {
     <b>public</b>:
         <b>typedef</b> iterator_range&lt;IteratorT&gt; type;
@@ -317,18 +317,18 @@ void find_example()
         iterator_range( <b>const</b> std::pair&lt;IteratorT,IteratorT&gt;&amp; Range );
         iterator_range( <b>const</b> iterator_range&amp; Other );
         <b>template</b>&lt; <b>typename</b> OtherItT &gt;
-            iterator_range( <b>const</b> iterator_range_base&lt;OtherItT&gt;&amp; Other );
+            iterator_range( <b>const</b> iterator_range&lt;OtherItT&gt;&amp; Other );
 
         // Assignment
         iterator_range&amp; operator=( <b>const</b> iterator_range&amp; Other );
         <b>template</b>&lt; <b>typename</b> OtherItT &gt;
-            iterator_range&amp; operator=( <b>const</b> iterator_range_base&lt;OtherItT&gt;&amp; Other );
+            iterator_range&amp; operator=( <b>const</b> iterator_range&lt;OtherItT&gt;&amp; Other );
 
 	// Comparison
         <b>template</b>&lt;<b>typename</b> OtherItT&gt; 
-        <b>bool</b> <b>operator</b>==( <b>const</b> iterator_range_base&lt;OtherItT&gt;&amp; Other );
+            <b>bool</b> <b>operator</b>==( <b>const</b> iterator_range&lt;OtherItT&gt;&amp; Other );
         <b>template</b>&lt;<b>typename</b> OtherItT&gt; 
-        <b>bool</b> <b>operator</b>!=( <b>const</b> iterator_range_base&lt;OtherItT&gt;&amp; Other );
+            <b>bool</b> <b>operator</b>!=( <b>const</b> iterator_range&lt;OtherItT&gt;&amp; Other );
 
         // Access
 	IteratorT begin() <b>const</b>;
@@ -342,94 +342,95 @@ void find_example()
     </p>
     <table border="1" width="742" height="1">
       <tr>
-        <td width="752" height="31" valign="top"><code><b>typename</b> IteratorT</code></td>
-        <td width="562" height="31" valign="top">An iterator type, to be
+        <td width="644" height="31" valign="top"><code><b>typename</b> IteratorT</code></td>
+        <td width="670" height="31" valign="top">An iterator type, to be
           contained by an&nbsp; <code>iteratator_range </code>class</td>
       </tr>
       <tr>
-        <td width="752" height="31" valign="top"><code>type</code></td>
-        <td width="562" height="31" valign="top">Self type</td>
+        <td width="644" height="31" valign="top"><code>type</code></td>
+        <td width="670" height="31" valign="top">Self type</td>
       </tr>
       <tr>
-        <td width="752" height="31" valign="top"><code>value_type</code></td>
-        <td width="562" height="31" valign="top"><code>value_type</code> of the
+        <td width="644" height="31" valign="top"><code>value_type</code></td>
+        <td width="670" height="31" valign="top"><code>value_type</code> of the
           contained iterator</td>
       </tr>
       <tr>
-        <td width="752" height="31" valign="top"><code>difference_type</code></td>
-        <td width="562" height="31" valign="top"><code>difference_type</code> of
+        <td width="644" height="31" valign="top"><code>difference_type</code></td>
+        <td width="670" height="31" valign="top"><code>difference_type</code> of
           the container iterator</td>
       </tr>
       <tr>
-        <td width="752" height="31" valign="top"><code>const_iterator</code></td>
-        <td width="562" height="31" valign="top"><code>const_iterator</code>
+        <td width="644" height="31" valign="top"><code>const_iterator</code></td>
+        <td width="670" height="31" valign="top"><code>const_iterator</code>
           type</td>
       </tr>
       <tr>
-        <td width="752" height="31" valign="top"><code>iterator</code></td>
-        <td width="562" height="31" valign="top"><code>iterator</code> type</td>
+        <td width="644" height="31" valign="top"><code>iterator</code></td>
+        <td width="670" height="31" valign="top"><code>iterator</code> type</td>
       </tr>
       <tr>
-        <td width="752" height="31" valign="top"><code>iterator_range()</code></td>
-        <td width="562" height="31" valign="top">Default constructor</td>
+        <td width="644" height="31" valign="top"><code>iterator_range()</code></td>
+        <td width="670" height="31" valign="top">Default constructor</td>
       </tr>
       <tr>
-        <td width="752" height="31" valign="top"><code>iterator_range(<br>
+        <td width="644" height="31" valign="top"><code>iterator_range(<br>
           &nbsp;&nbsp;&nbsp; iterator Begin, iterator End);</code></td>
-        <td width="562" height="31" valign="top">Constructor from a pair of
+        <td width="670" height="31" valign="top">Constructor from a pair of
           iterators</td>
       </tr>
       <tr>
-        <td width="752" height="31" valign="top"><code>iterator_range(<b><br>
+        <td width="644" height="31" valign="top"><code>iterator_range(<b><br>
           &nbsp; const</b> std::pair&lt;IteratorT,IteratorT&gt;&amp; Range);</code></td>
-        <td width="562" height="31" valign="top"></td>
+        <td width="670" height="31" valign="top">Construction from <code>std::pair&lt;&gt;.
+          </code>Useful when interoperating with some STL algoritms.</td>
       </tr>
       <tr>
-        <td width="752" height="31" valign="top"><code>iterator_range( <b>const</b>
+        <td width="644" height="31" valign="top"><code>iterator_range( <b>const</b>
           iterator_range&amp; Other );<br>
           <b>template</b>&lt;<b>typename</b> OtherItT&gt;<br>
-          &nbsp;&nbsp;&nbsp; iterator_range(<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>const</b>
-          iterator_range_base&lt;OtherItT&gt;&amp; Other);</code></td>
-        <td width="562" height="31" valign="top">Copy constructors. Templated to
+          &nbsp;&nbsp;&nbsp; iterator_range(<b><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; const</b>
+          iterator_range&lt;OtherItT&gt;&amp; Other);</code></td>
+        <td width="670" height="31" valign="top">Copy constructors. Templated to
           make possible a conversion between const_iterator and iterator types</td>
       </tr>
       <tr>
-        <td width="752" height="31" valign="top"><code>iterator_range&amp;
+        <td width="644" height="31" valign="top"><code>iterator_range&amp;
           operator=(<br>
           &nbsp;&nbsp;&nbsp; <b>const</b> iterator_range&amp; Other);<br>
           <b>template</b>&lt; <b>typename</b> OtherItT &gt;<br>
           &nbsp;&nbsp;&nbsp; iterator_range&amp; operator=(<b><br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; const</b>
-          iterator_range_base&lt;OtherItT&gt;&amp; Other);</code></td>
-        <td width="562" height="31" valign="top">Assignment. Templated to make
+          iterator_range&lt;OtherItT&gt;&amp; Other);</code></td>
+        <td width="670" height="31" valign="top">Assignment. Templated to make
           possible a conversion between const_iterator and iterator types</td>
       </tr>
       <tr>
-        <td width="752" height="31" valign="top"><code><b>bool</b> <b>operator</b>==(<br>
+        <td width="644" height="31" valign="top"><code><b>bool</b> <b>operator</b>==(<br>
           &nbsp; <b>const</b> iterator_range&lt;OtherItT&gt;&amp; Other)<b><br>
           bool</b> <b>operator</b>!=(<br>
           &nbsp; <b>const</b> iterator_range&lt;OtherItT&gt;&amp; Other)</code></td>
-        <td width="562" height="31" valign="top">Comparison operators.</td>
+        <td width="670" height="31" valign="top">Comparison operators.</td>
       </tr>
       <tr>
-        <td width="752" height="31" valign="top"><code>IteratorT begin() <b>const</b></code></td>
-        <td width="562" height="31" valign="top">Returns first iterator from the
+        <td width="644" height="31" valign="top"><code>IteratorT begin() <b>const</b></code></td>
+        <td width="670" height="31" valign="top">Returns first iterator from the
           range</td>
       </tr>
       <tr>
-        <td width="752" height="31" valign="top"><code>IteratorT end() <b>const</b></code></td>
-        <td width="562" height="31" valign="top">Returns second iterator from
+        <td width="644" height="31" valign="top"><code>IteratorT end() <b>const</b></code></td>
+        <td width="670" height="31" valign="top">Returns second iterator from
           the range</td>
       </tr>
       <tr>
-        <td width="752" height="31" valign="top"><code><b>bool</b> empty() <b>const</b></code></td>
-        <td width="562" height="31" valign="top">Check if the range is empty.<br>
+        <td width="644" height="31" valign="top"><code><b>bool</b> empty() <b>const</b></code></td>
+        <td width="670" height="31" valign="top">Check if the range is empty.<br>
           <code>begin()==end()</code></td>
       </tr>
       <tr>
-        <td width="752" height="31" valign="top"><code>difference_type size() <b>const</b></code></td>
-        <td width="562" height="31" valign="top">Returns the distance between
+        <td width="644" height="31" valign="top"><code>difference_type size() <b>const</b></code></td>
+        <td width="670" height="31" valign="top">Returns the distance between
           iterators.<br>
           <code>std::distance(begin(), end())</code></td>
       </tr>
