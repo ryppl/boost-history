@@ -1,4 +1,4 @@
-// (C) Copyright 2003-2004: Reece H. Dunn 
+// (C) Copyright 2003-2004: Reece H. Dunn
 
 #ifndef BOOST_IOFM_FormatObjects_Container_HPP
 #define BOOST_IOFM_FormatObjects_Container_HPP
@@ -6,7 +6,6 @@
 #     pragma once
 #  endif
 
-#  include <boost/outfmt/format_objects/detail/list.hpp>
 #  include <boost/outfmt/format_objects/detail/list.hpp>
 
    namespace boost { namespace io
@@ -37,11 +36,11 @@
             private:
                void                              insert( Container & cont, typename Container::const_reference val, seq_type< seq_container_type > )
                {
-                  cont.push_back( val );
+                  cont.insert( cont.end(), val );
                }
                void                              insert( Container & cont, typename Container::const_reference val, seq_type< set_container_type > )
                {
-                  cont.insert( cont.end(), val );
+                  cont.insert( val );
                }
                void                              insert( Container & cont, typename Container::const_reference val, seq_type< assoc_container_type > )
                {
@@ -55,6 +54,23 @@
                {
                }
          };
+
+         template< class Container >
+         insert_iterator< Container >            inserter( Container & c )
+         {
+            return( insert_iterator< Container >( c ));
+         }
+
+         template< class Container >
+         insert_iterator< Container, std::pair< typename Container::key_type, typename Container::mapped_type > >
+                                                 inserter_assoc( Container & c ) 
+         {
+            return( insert_iterator
+            <
+               Container,
+               std::pair< typename Container::key_type, typename Container::mapped_type >
+            >( c ));
+         }
       }
 
       template< typename FormatType, class FmtObject >
@@ -77,7 +93,6 @@
                get_typeid< Container >::value; // BCB workaround
                return( read( is, c, seq_type< get_typeid< Container >::value >()));
             }
-         public:
             template< typename Container, class OutputStream >
             inline OutputStream &                write( OutputStream & os, const Container & c ) const
             {
@@ -86,49 +101,22 @@
             }
          private:
             template< typename Container, class InputStream >
-            inline bool                          read
-                                                 (
-                                                    InputStream & is,
-                                                    Container   & c,
-                                                    seq_type< seq_container_type >
-                                                 ) const
+            inline bool                          read( InputStream & is, Container & c, seq_type< seq_container_type > ) const
             {
                const base_type *       self = static_cast< const base_type * >( this );
-               typename Container::value_type
-                                       value;
-
-               return(( *self ).readc( is, detail::insert_iterator< Container >( c ), value ));
+               return(( *self ).readc( is, detail::inserter( c )));
             }
             template< typename Container, class InputStream >
-            inline bool                          read
-                                                 (
-                                                    InputStream & is,
-                                                    Container   & c,
-                                                    seq_type< set_container_type >
-                                                 ) const
+            inline bool                          read( InputStream & is, Container & c, seq_type< set_container_type > ) const
             {
                const base_type *       self = static_cast< const base_type * >( this );
-               typename Container::value_type
-                                       value;
-
-               return(( *self ).readc( is, detail::insert_iterator< Container >( c ), value ));
+               return(( *self ).readc( is, detail::inserter( c )));
             }
             template< typename Container, class InputStream >
-            inline bool                          read
-                                                 (
-                                                    InputStream & is,
-                                                    Container   & c,
-                                                    seq_type< assoc_container_type >
-                                                 ) const
+            inline bool                          read( InputStream & is, Container & c, seq_type< assoc_container_type > ) const
             {
-               // [bug]: problems with associative containers
-
                const base_type *       self = static_cast< const base_type * >( this );
-               typedef std::pair< typename Container::key_type, typename Container::mapped_type >
-                                                                     value_type;
-               value_type              value;
-
-               return(( *self ).readc( is, detail::insert_iterator< Container, value_type >( c ), value ));
+               return(( *self ).readc( is, detail::inserter_assoc( c )));
             }
          public:
             inline           container_object()

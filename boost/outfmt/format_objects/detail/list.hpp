@@ -21,12 +21,11 @@
          private:
             FmtObject                  fo;
          public:
-            template< class InputStream, class OutputIterator, typename T >
+            template< class InputStream, class Iterator >
             inline bool                          readc
                                                  (
-                                                    InputStream  & is,
-                                                    OutputIterator i,
-                                                    T            & value
+                                                    InputStream & is,
+                                                    Iterator      i
                                                  ) const
             {
                if( !is.match( open()))           return( false );
@@ -35,6 +34,8 @@
                                        cch = is.firstch( close());
                typename InputStream::char_type
                                        ch  = '\0';
+               typename Iterator::value_type
+                                       value;
 
                while( is.readfirstch( ch ) && !is.eq( ch, cch ))
                {

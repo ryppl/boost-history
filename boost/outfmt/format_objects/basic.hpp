@@ -6,8 +6,6 @@
 #     pragma once
 #  endif
 
-#  include <typeinfo>
-
    namespace boost { namespace io
    {
       class basic_object

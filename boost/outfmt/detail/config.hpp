@@ -15,7 +15,7 @@
    // custom configuration to identify supported boost libraries and
    // I/O formatting technologies available
 
-   // Check for presence of hash containers
+   // Check for presence of hash containers and extensions
 
 #  if defined(BOOST_HAS_HASH)
 #     define BOOST_IOFM_HASH_CONTAINERS          // SGI hash containers
@@ -31,16 +31,20 @@
 #     define BOOST_IOFM_HASH_SET_ARG             KeyT, Cmp, Allocator
 #  endif
 
+#  if defined(_CPPLIB_VER) && (_CPPLIB_VER == 313)   // Dinkumware stdlib 313
+#     if defined(BOOST_MSVC) && (BOOST_MSVC == 1310) // MS VC7.1
+#        define BOOST_IOFM_STDEXT                stdext
+#     endif
+#  endif
+
+#  if !defined(BOOST_IOFM_STDEXT)
+#     define BOOST_IOFM_STDEXT                   BOOST_STD_EXTENSION_NAMESPACE
+#  endif
+
    // Generic configuration information
 
 #  if defined(BOOST_NO_STD_LOCALE) // new I/O streams are broken or not implemented
 #     define BOOST_IOFM_NO_BASIC_STREAM  // use old I/O streams
-#  endif
-
-#  if defined(BOOST_MSVC) && (BOOST_MSVC >= 1310) // MS VC7.1
-#     define BOOST_IOFM_STDEXT                   stdext
-#  else
-#     define BOOST_IOFM_STDEXT                   BOOST_STD_EXTENSION_NAMESPACE
 #  endif
 
    // Compiler/Library specific information

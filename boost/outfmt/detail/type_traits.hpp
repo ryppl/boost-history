@@ -215,8 +215,8 @@
 #        endif
 #     endif
 
-#     if defined(BOOST_HAS_SLIST) // hack: slist does not support push_back
-         BOOST_IO_CLASSIFY_TYPE_2( BOOST_IOFM_STDEXT::slist, boost::io::set_container_type );
+#     if defined(BOOST_HAS_SLIST)
+         BOOST_IO_CLASSIFY_TYPE_2( BOOST_IOFM_STDEXT::slist, boost::io::seq_container_type );
 #     endif
 
       // Boost types

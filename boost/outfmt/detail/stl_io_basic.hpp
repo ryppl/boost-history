@@ -338,7 +338,7 @@
       template< typename CharT, class TraitsT, BOOST_IOFM_HASH_SET_T >
       inline std::basic_istream< CharT, TraitsT > & operator>>
       (
-         std::basic_istream< CharT, TraitsT >  is,
+         std::basic_istream< CharT, TraitsT > & is,
          BOOST_IOFM_STDEXT::hash_set< BOOST_IOFM_HASH_SET_ARG > & s
       )
       {
