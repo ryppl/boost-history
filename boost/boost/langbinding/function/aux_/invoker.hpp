@@ -75,11 +75,33 @@ struct transform_extractor_op
     template<class T>
     typename apply<wrap<T> >::type operator()(wrap<T>) const
     {
-        return typename apply<wrap<T> >::type(*args--);
+        return typename apply<wrap<T> >::type(*args++);
     }
 
     mutable void**& args;
 };
+
+template<class R, class Arguments>
+struct converter_package
+{
+    converter_package(
+        R& result_converter
+      , Arguments const& converters)
+        : return_(result_converter)
+        , args(converters)
+    {
+    }
+
+    R& return_;
+    Arguments const& args;
+};
+
+template<class R, class Converters>
+converter_package<R, Converters> make_converter_package(
+    R& return_, Converters const& args)
+{
+    return converter_package<R, Converters>(return_, args);
+}
 
 template<class F, class Signature>
 struct invoker : boost::langbinding::function::invoker
@@ -98,20 +120,25 @@ struct invoker : boost::langbinding::function::invoker
       , wrap<mpl::_>
     > argument_tuple;
 
-    void invoke(void** args, void* result) const
+    typedef typename mpl::front<Signature>::type return_type_;
+    
+    void* invoke(void** args, result_converter_base& rc_) const
     {
-        void** last = args + arity() - 1;
-
+        result_converter<return_type_>& rc = static_cast<
+            result_converter<return_type_>&>(rc_);
+        
         aux::invoke(
             aux::invoke_tag<
-                typename mpl::front<Signature>::type
+                return_type_
               , F
             >()
           , typename mpl::size<argument_types>::type()
           , m_fn
-          , fusion::generate(fusion::transform(
-                argument_tuple()
-              , transform_extractor_op(last)
+          , make_converter_package(
+                rc
+              , fusion::generate(fusion::transform(
+                    argument_tuple()
+                  , transform_extractor_op(args))
             ))
         );
     }

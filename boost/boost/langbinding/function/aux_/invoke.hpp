@@ -3,8 +3,6 @@
 #ifndef INVOKE_040917_HPP
 #define INVOKE_040917_HPP
 
-#include <boost/langbinding/function/config.hpp>
-
 #include <boost/preprocessor/iterate.hpp>
 #include <boost/preprocessor/repetition/enum.hpp>
 #include <boost/preprocessor/arithmetic/dec.hpp>
@@ -33,10 +31,19 @@ namespace boost { namespace langbinding { namespace function { namespace aux {
 
 #define N BOOST_PP_ITERATION()
 
-template<class F, class Extractors>
-void invoke(invoke_tag_<true, false>, mpl::long_<N>, F const& fn, Extractors const& args)
+template<class F, class Converters>
+void* invoke(invoke_tag_<true, false>, mpl::long_<N>, F const& fn, Converters const& cvs)
 {
-    fn(BOOST_PP_ENUM(N, BOOST_LANGBINDING_EXTRACT, args));
+    fn(BOOST_PP_ENUM(N, BOOST_LANGBINDING_EXTRACT, cvs.args));
+    return cvs.return_();
+}
+
+template<class F, class Converters>
+void* invoke(invoke_tag_<false, false>, mpl::long_<N>, F const& fn, Converters const& cvs)
+{
+    return cvs.return_(
+        fn(BOOST_PP_ENUM(N, BOOST_LANGBINDING_EXTRACT, cvs.args))
+    );
 }
 
 #endif
