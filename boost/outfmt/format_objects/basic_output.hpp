@@ -16,6 +16,12 @@
                return( os << value );
             }
          public:
+            template< typename T, class InputStream >
+            inline bool                          read( InputStream & is, T & value )
+            {
+               return( is >> value );
+            }
+         public:
             inline           basic_output()
             {
             }
