@@ -27,10 +27,12 @@
 
 #ifdef __GNUC__
 #  include <boost/interval/detail/x86gcc_rounding_control.hpp>
-#elif __BORLANDC__
+#elif defined(__BORLANDC__)
 #  include <boost/interval/detail/bcc_rounding_control.hpp>
-#elif _MSC_VER
+#elif defined(_MSC_VER)
 #  include <boost/interval/detail/msvc_rounding_control.hpp>
+#elif defined(__MWERKS__)
+#  include <boost/interval/detail/x86mw_rounding_control.hpp>
 #else
 #  error Unsupported C++ compiler.
 #endif
@@ -38,6 +40,7 @@
 namespace boost {
   namespace interval_lib {
 
+#ifndef __MWERKS__
     namespace detail {
 
 struct fpu_rounding_modes
@@ -61,6 +64,7 @@ struct x86_rounding_control: x86_rounding
 };
 
     } // namespace detail
+#endif // __MWERKS__
 
 template<>
 struct rounding_control<float>: detail::x86_rounding_control

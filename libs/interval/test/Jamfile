@@ -24,12 +24,6 @@ unit-test fmod
     : <include>$(BOOST_ROOT)
     ;
 
-unit-test io
-    : io.cpp
-      <lib>../../test/build/test_exec_monitor
-    : <include>$(BOOST_ROOT)
-    ;
-
 unit-test mul
     : mul.cpp
       <lib>../../test/build/test_exec_monitor

@@ -1,4 +1,4 @@
-/* Boost interval/detail/isoc99_rounding_control.hpp file
+/* Boost interval/detail/x86mw_rounding_control.hpp file
  *
  * Copyright Jens Maurer 2000
  * Copyright Hervé Brönnimann, Guillaume Melquiond, Sylvain Pion 2002
@@ -18,8 +18,8 @@
  *   2000-09-24	 Separated from interval.hpp
  */
 
-#ifndef BOOST_INTERVAL_DETAIL_ISOC99_ROUNDING_CONTROL_HPP
-#define BOOST_INTERVAL_DETAIL_ISOC99_ROUNDING_CONTROL_HPP
+#ifndef BOOST_INTERVAL_DETAIL_X86MW_ROUNDING_CONTROL_HPP
+#define BOOST_INTERVAL_DETAIL_X86MW_ROUNDING_CONTROL_HPP
 
 #ifndef BOOST_INTERVAL_HPP
 #error Internal header file: This header must be included by <boost/interval.hpp> only.
@@ -34,7 +34,7 @@ namespace boost {
 
 extern "C" { double rint(double); }
 
-struct isoc99_rounding_control
+struct x86_rounding_control
 {
   typedef int rounding_mode;
 
@@ -51,28 +51,12 @@ struct isoc99_rounding_control
   static void toward_zero() { set_rounding_mode(FE_TOWARDZERO); }
 
   template<class T>
-  static T force_rounding(const T& r) { volatile T r_ = r; return r_; }
-
-  template<class T>
-  static T to_int(const T& r) { return rint(r); }
+  static double to_int(const double& r) { return rint(r); }
 };
 
     } // namespace detail
-
-template<>
-struct rounding_control<float>:
-  detail::isoc99_rounding_control { };
-
-template<>
-struct rounding_control<double>:
-  detail::isoc99_rounding_control { };
-
-template<>
-struct rounding_control<long double>:
-  detail::isoc99_rounding_control { };
-
   } // namespace interval_lib
 } // namespace boost
 
-#endif /* BOOST_INTERVAL_DETAIL_ISOC99_ROUBDING_CONTROL_HPP */
+#endif /* BOOST_INTERVAL_DETAIL_X86MW_ROUBDING_CONTROL_HPP */
 
