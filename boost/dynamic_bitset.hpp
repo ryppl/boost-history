@@ -1583,11 +1583,14 @@ operator-(const dynamic_bitset<Block, Allocator>& x,
 //-----------------------------------------------------------------------------
 // private member functions (on conforming compilers)
 
+
+// checked access to the highest block
+//
 template <typename Block, typename Allocator>
 inline Block& dynamic_bitset<Block, Allocator>::m_highest_block()
 {
     assert(size() > 0 && num_blocks() > 0);
-    return *(m_bits.end() - 1);
+    return m_bits.back();
 }
 
 
