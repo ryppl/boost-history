@@ -1,27 +1,39 @@
-// (C) Copyright 2003-2004: Reece H. Dunn
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+// (C) Copyright 2003-2004: Reece H. Dunn. Distributed under the Boost Software
+// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
-// This code is based on boost-sandbox/boost/wave/util/flex_string.hpp by Andrei Alexandrescu,
-// modified by Hartmut Kasier
-
-// The main changes are:
-// *  made a few modifications to the StoragePolicy interface
-// *  uses an ErrorPolicy class to handle out_of_range and length_error exceptions
-// *  uses the traits_type functions instead of the POD functions
-//       pod_move( const Pod * b, const Pod * e, Pod * d ) --> traits_type::move( d, b, ( e - b ))
-//       pod_copy( const Pod * b, const Pod * e, Pod * d ) --> traits_type::copy( d, b, ( e - b ))
-//       pod_fill( Pod * b, Pod * e, T c )                 --> traits_type::assign( b, ( e - b ), c )
-// *  added exception handling for resize and reserve
-// *  uses an MPL-based approach to check InputIterator on replace( iterator i1, iterator i2, InputIterator j1, InputIterator j2 )
-// *  uses a substring_type typedef for the result of substr to allow substring implementation supression and/or alternative
-//    implementations
-// *  uses optimized versions of find and rfind for searching for single characters
-// *  uses boost::reverse_iterator< Iterator >: there are various problems when using std::reverse_iterator< Iterator >
-//    on non-conformant compilers/standard libraries
-// *  proper implementation of reverse< InputIterator >( ... ) for non-integral types
-// *  implementations of swap and getline are in the std namespace to allow std qualified calls to work
-// *  operator+ is not implemented to allow for non-constructable policy types (e.g. my fixed_string implementation)
+/** This code is based on boost-sandbox/boost/wave/util/flex_string.hpp by
+  * Andrei Alexandrescu, modified by Hartmut Kasier
+  *
+  * The main changes are:
+  * +  made a few modifications to the StoragePolicy interface
+  * +  uses an ErrorPolicy class to handle out_of_range and length_error
+  *    exceptions
+  * +  uses the traits_type functions instead of the POD functions
+  *    -  pod_move( const Pod * b, const Pod * e, Pod * d )
+  *         --> traits_type::move( d, b, ( e - b ))
+  *    -  pod_copy( const Pod * b, const Pod * e, Pod * d )
+  *         --> traits_type::copy( d, b, ( e - b ))
+  *    -  pod_fill( Pod * b, Pod * e, T c )
+  *         --> traits_type::assign( b, ( e - b ), c )
+  * +  added exception handling for resize and reserve
+  * +  uses an MPL-based approach to check InputIterator on
+  *    replace( iterator i1, iterator i2, InputIterator j1, InputIterator j2 )
+  * +  uses a substring_type typedef for the result of substr to allow substring
+  *    implementation supression and/or alternative implementations that return
+  *    a different type
+  * +  uses optimized versions of find and rfind for searching for single
+  *    characters
+  * +  uses boost::reverse_iterator< Iterator >: there are various problems when
+  *    using std::reverse_iterator< Iterator > on non-conformant
+  *    compilers/standard libraries
+  * +  proper implementation of reverse< InputIterator >( ... ) for non-integral
+  *    types
+  * +  implementations of swap and getline are in the std namespace to allow std
+  *    qualified calls to work
+  * +  operator+ is not implemented to allow for non-constructable policy types
+  *    (e.g. my fixed_string implementation)
+  */
 
 #ifndef BOOST_BASIC_STRING_IMPL_HPP
 #define BOOST_BASIC_STRING_IMPL_HPP
@@ -29,6 +41,7 @@
 #  include <boost/mpl/if.hpp>
 #  include <boost/iterator/reverse_iterator.hpp>
 #  include <iostream>
+#  include <stdexcept>
 #  include <functional> // std::less_equal
 #  include <algorithm>  // std::copy
 #  include <locale>     // std::isspace
@@ -508,7 +521,8 @@
             }
             inline allocator_type                get_allocator() const
             {
-               return( allocator_type());
+               allocator_type alloc;
+               return( alloc );
             }
          public:
             inline size_type                     find( const string_type & s, size_type pos = 0 ) const
@@ -567,7 +581,12 @@
                if( pos > size())       pos = size();
 
                const_iterator          last( begin());
-               for( const_iterator first( begin() + pos ); pos != 0; --first, --pos )
+               for
+               (
+                  const_iterator first( begin() + pos );
+                  pos != 0 && first != last;
+                  --first, --pos
+               )
                {
                   if( traits_type::eq( *first, c ))
                      return( pos );
