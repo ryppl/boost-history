@@ -6,7 +6,7 @@
 //  The author gratefully acknowleges the support of Dragon Systems, Inc., in
 //  producing this work.
 //
-//  This file automatically generated for 5-argument constructors by
+//  This file automatically generated for 10-argument constructors by
 //  gen_extclass.python
 
 #ifndef EXTENSION_CLASS_DWA052000_H_
@@ -319,98 +319,6 @@ class read_only_setattr_function : public function
     string m_name;
 };
 
-
-/* helper class to wrap STL conforming iterators. 
-
-Given a wrapped container ("FooList", say), this template is used to create
-an auxiliary class "FooList_cursor" that wraps the container's iterator.
-The cursor can be used in Python loops likes this:
-
-   >>> for i in foo_list.cursor():
-   ...     print i.get_data()
-   
-The auxiliary cursor class can be created for any STL conforming
-container. It implements random access functions (get_item() and
-set_item()) for any iterator, but these will only be as efficient as the
-underlying iterator allows. However, this is not a problem because 
-the above Python loop accesses the items in forward order anyway. 
-*/
-template <class Container>
-struct cursor
-{
-    typedef typename Container::iterator iterator;
-    typedef typename Container::value_type value_type;
-    
-    cursor(Container & c, ref python_object)
-    : m_python_object(python_object),
-      m_begin(c.begin()), 
-      m_iter(c.begin()),
-      m_size(c.size()),
-      m_index(0)
-    {}
-    
-    void advance(int index, std::forward_iterator_tag)
-    {
-        if(index < 0 || index >= m_size)
-        {
-            PyErr_SetObject(PyExc_KeyError, BOOST_PYTHON_CONVERSION::to_python(index));
-            throw python::error_already_set();            
-        }
-        
-        int delta = index - m_index;
-        if(delta < 0)
-        {
-            m_iter = m_begin;
-            delta = index;
-        }
-        std::advance(m_iter, delta);
-        m_index = index;
-    }
-    
-    void advance(int index, std::bidirectional_iterator_tag)
-    {
-        if(index < 0 || index >= m_size)
-        {
-            PyErr_SetObject(PyExc_KeyError, BOOST_PYTHON_CONVERSION::to_python(index));
-            throw python::error_already_set();            
-        }
-        int delta = index - m_index;
-        std::advance(m_iter, delta);
-        m_index = index;
-    }
-    
-    value_type const & get_item(int index)
-    {
-        advance(index, std::iterator_category(m_iter));
-        return *m_iter;
-    }
-    
-    void set_item(int index, value_type const & v)
-    {
-        advance(index, std::iterator_category(m_iter));
-        *m_iter = v;
-    }
-    
-    int len() const
-        { return m_size; }
-        
-    ref m_python_object;
-    iterator m_begin, m_iter;
-    int m_index, m_size;
-};
-
-/* create a cursor for an STL conforming container */
-template <class T>
-struct extension_class_cursor_factory
-{
-    static cursor<T> get(ref container)
-    {
-        return cursor<T>(
-            BOOST_PYTHON_CONVERSION::from_python(container.get(), type<T&>()), 
-            container);
-    }
-};
-
   template <class From, class To>
   struct define_conversion
   {
@@ -455,8 +363,8 @@ class extension_class
     ~extension_class();
 
     // define constructors
-    template <class A1, class A2, class A3, class A4, class A5>
-    inline void def(constructor<A1, A2, A3, A4, A5>)
+    template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10>
+    inline void def(constructor<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10>)
     // The following incantation builds a signature1, signature2,... object. It
     // should _all_ get optimized away.
     { add_constructor(
@@ -465,7 +373,12 @@ class extension_class
         prepend(type<A3>::id(),
         prepend(type<A4>::id(),
         prepend(type<A5>::id(),
-                signature0()))))));
+        prepend(type<A6>::id(),
+        prepend(type<A7>::id(),
+        prepend(type<A8>::id(),
+        prepend(type<A9>::id(),
+        prepend(type<A10>::id(),
+                signature0())))))))))));
     }
 
 
@@ -700,23 +613,33 @@ class extension_class
 
 // A simple wrapper over a T which allows us to use extension_class<T> with a
 // single template parameter only. See extension_class<T>, above.
-template <class T>
-class held_instance : public T
+template <class Held>
+class held_instance : public Held
 {
     // There are no member functions: we want to avoid inadvertently overriding
     // any virtual functions in T.
 public:
-    held_instance(PyObject*) : T() {}
+    held_instance(PyObject*) : Held() {}
     template <class A1>
-    held_instance(PyObject*, A1 a1) : T(a1) {}
+    held_instance(PyObject*, A1 a1) : Held(a1) {}
     template <class A1, class A2>
-    held_instance(PyObject*, A1 a1, A2 a2) : T(a1, a2) {}
+    held_instance(PyObject*, A1 a1, A2 a2) : Held(a1, a2) {}
     template <class A1, class A2, class A3>
-    held_instance(PyObject*, A1 a1, A2 a2, A3 a3) : T(a1, a2, a3) {}
+    held_instance(PyObject*, A1 a1, A2 a2, A3 a3) : Held(a1, a2, a3) {}
     template <class A1, class A2, class A3, class A4>
-    held_instance(PyObject*, A1 a1, A2 a2, A3 a3, A4 a4) : T(a1, a2, a3, a4) {}
+    held_instance(PyObject*, A1 a1, A2 a2, A3 a3, A4 a4) : Held(a1, a2, a3, a4) {}
     template <class A1, class A2, class A3, class A4, class A5>
-    held_instance(PyObject*, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5) : T(a1, a2, a3, a4, a5) {}
+    held_instance(PyObject*, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5) : Held(a1, a2, a3, a4, a5) {}
+    template <class A1, class A2, class A3, class A4, class A5, class A6>
+    held_instance(PyObject*, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6) : Held(a1, a2, a3, a4, a5, a6) {}
+    template <class A1, class A2, class A3, class A4, class A5, class A6, class A7>
+    held_instance(PyObject*, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7) : Held(a1, a2, a3, a4, a5, a6, a7) {}
+    template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8>
+    held_instance(PyObject*, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8) : Held(a1, a2, a3, a4, a5, a6, a7, a8) {}
+    template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9>
+    held_instance(PyObject*, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9) : Held(a1, a2, a3, a4, a5, a6, a7, a8, a9) {}
+    template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10>
+    held_instance(PyObject*, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10) : Held(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10) {}
 };
 
 // Abstract base class for all obj holders. Base for template class
@@ -768,6 +691,21 @@ public:
     template <class A1, class A2, class A3, class A4, class A5>
     instance_value_holder(extension_instance* p, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5) :
         m_held(p, a1, a2, a3, a4, a5) {}
+    template <class A1, class A2, class A3, class A4, class A5, class A6>
+    instance_value_holder(extension_instance* p, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6) :
+        m_held(p, a1, a2, a3, a4, a5, a6) {}
+    template <class A1, class A2, class A3, class A4, class A5, class A6, class A7>
+    instance_value_holder(extension_instance* p, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7) :
+        m_held(p, a1, a2, a3, a4, a5, a6, a7) {}
+    template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8>
+    instance_value_holder(extension_instance* p, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8) :
+        m_held(p, a1, a2, a3, a4, a5, a6, a7, a8) {}
+    template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9>
+    instance_value_holder(extension_instance* p, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9) :
+        m_held(p, a1, a2, a3, a4, a5, a6, a7, a8, a9) {}
+    template <class A1, class A2, class A3, class A4, class A5, class A6, class A7, class A8, class A9, class A10>
+    instance_value_holder(extension_instance* p, A1 a1, A2 a2, A3 a3, A4 a4, A5 a5, A6 a6, A7 a7, A8 a8, A9 a9, A10 a10) :
+        m_held(p, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10) {}
 
  public: // implementation of instance_holder_base required interface
     bool held_by_value() { return true; }
@@ -921,4 +859,3 @@ std::vector<derived_class_info> class_registry<T>::static_derived_class_info;
 }}} // namespace boost::python::detail
 
 #endif // EXTENSION_CLASS_DWA052000_H_
-
