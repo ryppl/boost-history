@@ -14,9 +14,11 @@
 // $Date$
 // $Revision$
 
+#include <boost/mpl/not.hpp>
 #include <boost/mpl/long.hpp>
 #include <boost/mpl/aux_/yes_no.hpp>
 #include <boost/mpl/aux_/na.hpp>
+#include <boost/mpl/aux_/value_wknd.hpp>
 #include <boost/mpl/aux_/adl_barrier.hpp>
 #include <boost/mpl/aux_/config/ctps.hpp>
 #include <boost/mpl/aux_/config/msvc.hpp>
@@ -144,30 +146,22 @@ template< assert_::relations r, long x, long y > struct assert_relation {};
 #endif 
 
 
-#if !BOOST_WORKAROUND(__MWERKS__, BOOST_TESTED_AT(0x3003))
-
+#if !BOOST_WORKAROUND(__MWERKS__, BOOST_TESTED_AT(0x3003)) \
+    && !BOOST_WORKAROUND(__BORLANDC__, < 0x600)
 template< bool > struct assert_arg_pred_impl { typedef int type; };
 template<> struct assert_arg_pred_impl<true> { typedef void* type; };
 
 template< typename P > struct assert_arg_pred
 {
-#if !BOOST_WORKAROUND(__BORLANDC__,< 0x600)
     typedef typename P::type p_type;
     typedef typename assert_arg_pred_impl< p_type::value >::type type;
-#else
-    typedef typename assert_arg_pred_impl<(P::type::value)>::type type;
-#endif
 };
 
 template< typename P > struct assert_arg_pred_not
 {
-#if !BOOST_WORKAROUND(__BORLANDC__,< 0x600)
     typedef typename P::type p_type;
     enum { p = !p_type::value };
     typedef typename assert_arg_pred_impl<p>::type type;
-#else
-    typedef typename assert_arg_pred_impl<(!(P::type::value != 0))>::type type;
-#endif
 };
 
 template< typename Pred >
@@ -176,12 +170,22 @@ failed ************ (Pred::************
     );
 
 template< typename Pred >
+failed ************ (boost::mpl::not_<Pred>::************ 
+      assert_not_arg( void (*)(Pred), typename assert_arg_pred_not<Pred>::type )
+    );
+
+template< typename Pred >
 assert<false>
 assert_arg( void (*)(Pred), typename assert_arg_pred_not<Pred>::type );
 
+template< typename Pred >
+assert<false>
+assert_not_arg( void (*)(Pred), typename assert_arg_pred<Pred>::type );
 
-#else // BOOST_WORKAROUND(__MWERKS__, BOOST_TESTED_AT(0x3003))
 
+#else // BOOST_WORKAROUND(__MWERKS__, BOOST_TESTED_AT(0x3003)) 
+    //  || BOOST_WORKAROUND(__BORLANDC__, < 0x600)
+        
 template< bool c, typename Pred > struct assert_arg_type_impl
 {
     typedef failed      ************ Pred::* mwcw83_wknd;
@@ -194,13 +198,17 @@ template< typename Pred > struct assert_arg_type_impl<true,Pred>
 };
 
 template< typename Pred > struct assert_arg_type
-    : assert_arg_type_impl<Pred::type::value,Pred>
+    : assert_arg_type_impl<BOOST_MPL_AUX_VALUE_WKND(Pred::type)::value,Pred>
 {
 };
 
 template< typename Pred >
 typename assert_arg_type<Pred>::type 
 assert_arg(void (*)(Pred), int);
+
+template< typename Pred >
+typename assert_arg_type< boost::mpl::not_<Pred> >::type 
+assert_not_arg(void (*)(Pred), int);
 
 template< long x, long y, bool (*r)(failed, failed) >
 typename assert_arg_type_impl< false,assert_relation<x,y,r> >::type
@@ -217,12 +225,23 @@ BOOST_MPL_AUX_ADL_BARRIER_NAMESPACE_CLOSE
 enum { \
     BOOST_PP_CAT(mpl_assertion_in_line_,__LINE__) = sizeof( \
           boost::mpl::assertion_failed<false>( \
-              boost::mpl::assert_arg( (void (*)pred)0, 1 ) \
+              boost::mpl::assert_arg( (void (*) pred)0, 1 ) \
             ) \
         ) \
 }\
 /**/
 
+// MPL_ASSERT_NOT((pred<x,...>))
+
+#define MPL_ASSERT_NOT(pred) \
+enum { \
+    BOOST_PP_CAT(mpl_assertion_in_line_,__LINE__) = sizeof( \
+          boost::mpl::assertion_failed<false>( \
+              boost::mpl::assert_not_arg( (void (*) pred)0, 1 ) \
+            ) \
+        ) \
+}\
+/**/
 
 // MPL_ASSERT_RELATION(x, ==|!=|<=|<|>=|>, y)
 
@@ -253,7 +272,7 @@ enum { \
 #   define MPL_ASSERT_RELATION(x, rel, y) \
 enum { \
     BOOST_PP_CAT(mpl_assertion_in_line_,__LINE__) = sizeof( \
-        boost::mpl::assertion_failed<(x rel y)>( (boost::mpl::failed ************ (\
+        boost::mpl::assertion_failed<(x rel y)>( (boost::mpl::failed ************ ( \
             boost::mpl::assert_relation<x,y,(&boost::mpl::operator rel) >::************))0 ) \
         ) \
 }\
@@ -267,11 +286,12 @@ enum { \
     struct msg; \
     typedef struct BOOST_PP_CAT(msg,__LINE__) : boost::mpl::assert_ \
     { \
-        static boost::mpl::failed **************** (msg::**************** assert_arg()) types { return 0; } \
+        typedef boost::mpl::failed **************** (msg::**************** arg_type) types; \
+        arg_type assert_arg() const { return 0; } \
     } BOOST_PP_CAT(mpl_assert_arg,__LINE__); \
     enum { \
         BOOST_PP_CAT(mpl_assertion_in_line_,__LINE__) = sizeof( \
-              boost::mpl::assertion_failed<(c)>( BOOST_PP_CAT(mpl_assert_arg,__LINE__)::assert_arg() ) \
+              boost::mpl::assertion_failed<(c)>( BOOST_PP_CAT(mpl_assert_arg,__LINE__)().assert_arg() ) \
             ) \
     }\
 /**/

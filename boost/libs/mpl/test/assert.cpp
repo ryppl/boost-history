@@ -18,6 +18,8 @@
 
 BOOST_MPL_ASSERT((boost::is_same<int,int>));
 BOOST_MPL_ASSERT((boost::is_pointer<int*>));
+BOOST_MPL_ASSERT_NOT((boost::is_same<int,long>));
+BOOST_MPL_ASSERT_NOT((boost::is_pointer<int>));
 BOOST_MPL_ASSERT_RELATION(5, >, 1);
 BOOST_MPL_ASSERT_RELATION(1, <, 5);
 BOOST_MPL_ASSERT_MSG( true, GLOBAL_SCOPE_ERROR, (int,long) );
@@ -26,6 +28,8 @@ BOOST_MPL_ASSERT_MSG( true, ANOTHER_GLOBAL_SCOPE_ERROR, () );
 namespace my {
 BOOST_MPL_ASSERT((boost::is_same<int,int>));
 BOOST_MPL_ASSERT((boost::is_pointer<int*>));
+BOOST_MPL_ASSERT_NOT((boost::is_same<int,long>));
+BOOST_MPL_ASSERT_NOT((boost::is_pointer<int>));
 BOOST_MPL_ASSERT_RELATION(5, >, 1);
 BOOST_MPL_ASSERT_RELATION(1, <, 5);
 BOOST_MPL_ASSERT_MSG( true, GLOBAL_SCOPE_ERROR, (int,long) );
@@ -38,6 +42,8 @@ struct her
 {
     BOOST_MPL_ASSERT((boost::is_same<void,T>));
     BOOST_MPL_ASSERT((boost::is_pointer<T*>));
+    BOOST_MPL_ASSERT_NOT((boost::is_same<int,T>));
+    BOOST_MPL_ASSERT_NOT((boost::is_pointer<T>));
     BOOST_MPL_ASSERT_RELATION(sizeof(T*), >, 1);
     BOOST_MPL_ASSERT_RELATION(1, <, sizeof(T*));
     BOOST_MPL_ASSERT_MSG( true, GLOBAL_SCOPE_ERROR, (int,long) );
@@ -48,6 +54,8 @@ struct her
     {
         BOOST_MPL_ASSERT((boost::is_same<void,T>));
         BOOST_MPL_ASSERT((boost::is_pointer<T*>));
+        BOOST_MPL_ASSERT_NOT((boost::is_same<int,T>));
+        BOOST_MPL_ASSERT_NOT((boost::is_pointer<T>));
         BOOST_MPL_ASSERT_RELATION(sizeof(T*), >, 1);
         BOOST_MPL_ASSERT_RELATION(1, <, sizeof(T*));
         BOOST_MPL_ASSERT_MSG( true, GLOBAL_SCOPE_ERROR, (int,long) );
@@ -63,6 +71,8 @@ int main()
     
     BOOST_MPL_ASSERT((boost::is_same<int,int>));
     BOOST_MPL_ASSERT((boost::is_pointer<int*>));
+    BOOST_MPL_ASSERT_NOT((boost::is_same<int,long>));
+    BOOST_MPL_ASSERT_NOT((boost::is_pointer<int>));
     BOOST_MPL_ASSERT_RELATION(5, >, 1);
     BOOST_MPL_ASSERT_RELATION(1, <, 5);
     BOOST_MPL_ASSERT_MSG( true, GLOBAL_SCOPE_ERROR, (int,long) );

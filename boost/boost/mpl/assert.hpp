@@ -17,14 +17,8 @@
 #include <boost/mpl/aux_/test/assert.hpp>
 
 #define BOOST_MPL_ASSERT(pred)                      MPL_ASSERT(pred)
+#define BOOST_MPL_ASSERT_NOT(pred)                  MPL_ASSERT_NOT(pred)
 #define BOOST_MPL_ASSERT_MSG(c, msg, types)         MPL_ASSERT_MSG(c, msg, types)
 #define BOOST_MPL_ASSERT_RELATION(x, rel, y)        MPL_ASSERT_RELATION(x, rel, y)
-
-/*
-#define BOOST_MPL_ASSERT_EQUAL(arity, tuple)        MPL_ASSERT_EQUAL(arity, tuple)
-#define BOOST_MPL_ASSERT_NOT_EQUAL(arity, tuple)    MPL_ASSERT_NOT_EQUAL(arity, tuple)
-#define BOOST_MPL_ASSERT_SAME(arity, tuple)         MPL_ASSERT_SAME(arity, tuple)
-#define BOOST_MPL_ASSERT_NOT_SAME(arity, tuple)     MPL_ASSERT_NOT_SAME(arity, tuple)
-*/
 
 #endif // BOOST_MPL_ASSERT_HPP_INCLUDED
