@@ -7,6 +7,7 @@
 #include <list>     // std::list
 
 #include <boost/outfmt/formatob.hpp>
+#include <boost/outfmt/stl_io.hpp>
 
 int main()
 {
@@ -169,6 +170,7 @@ int main()
 
       boost::io::static_nary_output< char * >
                                        naryio;
+      naryio.format( "[ ", " ]" ); // container-compatible formatting
 
       // create the data to be serialized
 
@@ -211,6 +213,27 @@ int main()
             after reading:
                quaternion = ( 0.12, 2.75, 3.3345, 70.2 )
                octonion   = ( 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8 )
+         */
+      }
+
+      // read data into a standard container
+      {
+         std::ifstream                 is( "doc3.txt" );
+         std::list< double >           l;
+         char                          ch;
+
+         std::cout << "before:      " << l << '\n';
+
+         is >> l;
+         std::cout << "first read:  " << l << '\n';
+
+         is >> l;
+         std::cout << "second read: " << l << '\n';
+
+         /* [output]:
+            before:      [  ]
+            first read:  [ 0.12, 2.75, -3.3345, 70.2 ]
+            second read: [ 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8 ]
          */
       }
 #  endif
