@@ -26,6 +26,14 @@
 #include <memory>
 #include <boost/langbinding/config.hpp>
 
+// language descriptor concept
+//
+// typedef /* impl */ type_info
+// typedef /* impl */ param_type
+// typedef /* impl */ args_type
+//
+// param_type extract_param(args_type, index_type)
+
 namespace boost { namespace langbinding {
 
    namespace detail {
@@ -42,7 +50,8 @@ namespace boost { namespace langbinding {
       template<class T>
       struct registration;
    }
-   
+  
+   template<class T> 
    struct rvalue_data_base;
 
    template<class T>
@@ -50,11 +59,11 @@ namespace boost { namespace langbinding {
    {
    public:
       typedef typename T::type_info type_info_;
-      typedef typename T::argument_type argument_type;
+      typedef typename T::param_type param_type;
 
-      typedef void*(*lvalue_from_function)(const argument_type&, int&);
-      typedef void*(*rvalue_from_stage1)(const argument_type&, int&);
-      typedef void(*rvalue_from_stage2)(const argument_type&, rvalue_data_base*);
+      typedef void*(*lvalue_from_function)(const param_type&, int&);
+      typedef void*(*rvalue_from_stage1)(const param_type&, int&);
+      typedef void(*rvalue_from_stage2)(const param_type&, rvalue_data_base<T>*);
 
       const detail::registration<T>* lookup(const type_info_&);
 
