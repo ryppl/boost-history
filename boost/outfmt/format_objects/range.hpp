@@ -7,6 +7,7 @@
 #ifndef BOOST_IOFM_FormatObjects_Range_HPP
 #define BOOST_IOFM_FormatObjects_Range_HPP
 #  include <boost/outfmt/format_objects/detail/list.hpp>
+#  include <boost/outfmt/detail/range.hpp>
 
 #  include <utility> // std::pair
 
@@ -45,6 +46,17 @@
                return(( *self ).write( os, ip.first, ip.second ));
             }
          public:
+            template< typename ForwardIterator, class OutputStream >
+            inline OutputStream &                write
+                                                 (
+                                                    OutputStream & os,
+                                                    const range_t< ForwardIterator > & ip
+                                                 ) const
+            {
+               const base_type *       self = static_cast< const base_type * >( this );
+               return(( *self ).write( os, ip.first, ip.last ));
+            }
+         public:
             inline           range_object()
             {
             }
@@ -57,46 +69,6 @@
             {
             }
       };
-
-      // range construction helpers
-
-      template< typename ForwardIterator >
-      std::pair< ForwardIterator, ForwardIterator >
-                                                 range( ForwardIterator f, ForwardIterator l )
-      {
-         return( std::pair< ForwardIterator, ForwardIterator >( f, l ));
-      }
-
-      template< class Container >
-      std::pair< typename Container::iterator, typename Container::iterator >
-                                                 range( Container & c )
-      {
-         return( range( c.begin(), c.end()));
-      }
-
-      template< typename T, std::size_t n >
-      std::pair< const T *, const T * >
-                                                 range( const T a[ n ] )
-      {
-         return( range( a, a + n ));
-      }
-
-      template< typename T, std::size_t n >
-      std::pair< const T *, const T * >
-                                                 range( const T a[ n ], std::size_t off )
-      {
-         // pre: 0 <= off < n
-         return( range( a + off, a + n ));
-      }
-
-      template< typename T, std::size_t n >
-      std::pair< const T *, const T * >
-                                                 range( const T a[ n ], std::size_t off, std::size_t len )
-      {
-         // pre: 0 <= off < n
-         // pre: 0 <= ( off + len ) < n
-         return( range( a + off, a + off + len ));
-      }
 
       // range format generators
 
