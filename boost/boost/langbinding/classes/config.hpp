@@ -5,7 +5,7 @@
 #ifndef BOOST_LANGBINDING_CLASSES_CONFIG_040922_HPP
 # define BOOST_LANGBINDING_CLASSES_CONFIG_040922_HPP
 
-# include <boost/langbinding/aux/config.hpp>
+# include <boost/langbinding/aux_/config.hpp>
 
 #endif // BOOST_LANGBINDING_CLASSES_CONFIG_040922_HPP
 
