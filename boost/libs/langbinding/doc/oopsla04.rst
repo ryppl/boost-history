@@ -17,6 +17,9 @@
 
 .. sectnum::
 
+.. role:: concept
+   :class: interpreted
+
 :abstract: We describe a library for binding C++ to dynamic languages.
 
 =========================
@@ -74,7 +77,7 @@ example:
 ::
 
   // front-end binding code
-  module_description& my_module =
+  module_description my_module =
   
      module("my_module")
      [
@@ -87,8 +90,8 @@ example:
       my_module.bind(python::build_module());
   }
 
-The ``module_description`` is typically a namespace-scope reference
-with static storage duration, initialized with a ``module``
+The ``module_description`` is typically a namespace-scope object
+with static storage duration, and is initialized with a ``module``
 instance by front end binding code.  This initialization may occur
 in a shared library, making it pluggable.  If a shared library is
 not used, or if the system does not guarantee that shared library
@@ -119,12 +122,19 @@ interface to be declared ``private``.
 Each distinct parameter to module_visitor is associated with a
 unique backend ID, so each backend should only declare one
 ``build_module``, or at least one such class at the root of an
-inheritance hierarchy.  The backend ID is accessible through
-``backend::module_builder``\ 's ``::backend_id()`` member
-function.  Backend authors will only need to use this interface in
-`one place`__.
+inheritance hierarchy.  
 
-__ `Function Creation`_
+.. I see no reason to do this.  The ``xxx_fn`` (now
+   ``backend::function`` object) can just be cheaply copyable.  Use
+   reference counting if neccessary.  We'll pass it to the visitor,
+   and the visitor will store it in the XXX function.
+
+   The backend ID is accessible through
+   ``backend::module_builder``\ 's ``::backend_id()`` member
+   function.  Backend authors will only need to use this interface in
+   `one place`__.
+
+   __ `Function Creation`_
 
 :concept:`Module Builders` use a visitation interface to explore
 the ``module_description`` passed to them.  The visited items
@@ -157,48 +167,28 @@ Function Creation
 
 ::
 
-  b.visit(backend::cpp_function const& f);
-  b.leave(backend::cpp_function const& f);
+  b.visit(backend::function const& f);                     
+  b.leave(backend::function const& f);
 
-This interface is used both for functions bound at module scope
-and for member functions bound within classes.  Functions visited
-while a class is being visited are treated as member functions.
+This interface is used both for functions bound at module scope and
+for member functions bound within classes.  Functions visited while
+a class is being visited should be treated as member functions.
 
-Typically upon visiting a ``cpp_function``, the :concept:`Module
-Builder` will want to create a new callable object in its target
-language that invokes the
+Typically, upon visiting a function the :concept:`Module Builder`
+will want to create a new object that is callable in its target
+language and that, when called, invokes ``f`` by passing an object
+of type ``B::argument_package``, yielding an object of type
+``B::function_result``.
 
-The lifetime of the ``backend::function`` object is guaranteed to
-be at least that of the front-end ``module`` object (not
-``backend::module`` but the object bound to the
-``module_description&`` shown `here`__).
+.. Likewise, no need for this either.
 
-__ basics_
+   The lifetime of the ``backend::function`` object is guaranteed to
+   be at least that of the front-end ``module`` object (not
+   ``backend::module`` but the object bound to the
+   ``module_description&`` shown `here`__).
 
-  The visitor must be a class derived from
-``langbinding::backend::visitor``::
+   __ basics_
 
-  class visitor
-  {
-      virtual ~visitor() {}
-
-   private:
-      virtual void visit_module(char const* name) = 0;
-      virtual void leave_module(char const* name) = 0;
-      virtual void visit_function(char const* name, ) = 0;
-      virtual void leave_function(char const* name) = 0;
-  };
-
-Some function (*any* function) in the translation unit containing
-this declaration must be called in order to load the backend.
-Classes and functions registered before a backend is loaded will
-not appear in the corresponding language.
-
-The rest of this section discusses the declarations that are
-required in the binding class.
-
-at some point, which will force
-the dynamic initialization of a static member of langbinding
 
 Responsibilities of the backend:
 
