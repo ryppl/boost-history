@@ -124,7 +124,7 @@ if [ install-sources lib ]
             [ install-sources lib ]
         :
             <locate>$(lib-locate:D)
-            common-stage-tag <tag><postfix>-$(version-tag)
+            [ common-names ]
             [ cond $(with-install) : <target>install : <target>all ]
             [ cond $(with-stage) : <target>stage : <target>all ]
         :
