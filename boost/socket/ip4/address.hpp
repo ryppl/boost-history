@@ -51,7 +51,7 @@ namespace boost
         bool operator != (const address& addr) const;
 
       private:
-        impl::address_storage address_;
+        impl::address_storage m_address;
       };
 
 

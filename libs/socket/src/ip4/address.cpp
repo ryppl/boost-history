@@ -83,24 +83,24 @@ namespace boost
 
       address::address()
       {
-        std::memset(&address_, 0, address_size);
-        sockaddr_ptr(address_)->sin_family = AF_INET;
+        std::memset(m_address.storage, 0, address_size);
+        sockaddr_ptr(m_address)->sin_family = AF_INET;
       }
 
       family_t address::family() const
       {
-        return sockaddr_ptr(address_)->sin_family;
+        return sockaddr_ptr(m_address)->sin_family;
       }
 
       port_t address::port() const
       {
-        return ntohs(sockaddr_ptr(address_)->sin_port);
+        return ntohs(sockaddr_ptr(m_address)->sin_port);
       }
 
       //! set the (host ordered) port number
       void address::port(port_t port)
       {
-        sockaddr_ptr(address_)->sin_port = htons(port);
+        sockaddr_ptr(m_address)->sin_port = htons(port);
       }
 
       void address::hostname(const char* hostname)
@@ -108,14 +108,14 @@ namespace boost
         hostent *hp = ::gethostbyname(hostname);
         if (hp == 0)
           throw "hostname not found";
-        std::memcpy((char*)&(sockaddr_ptr(address_)->sin_addr),
+        std::memcpy((char*)&(sockaddr_ptr(m_address)->sin_addr),
                     (char*)hp->h_addr, hp->h_length);
       }
 
       std::string address::hostname() const
       {
         hostent *hp =
-          gethostbyaddr((const char*)&sockaddr_ptr(address_)->sin_addr,
+          gethostbyaddr((const char*)&sockaddr_ptr(m_address)->sin_addr,
                         sizeof(unsigned long),
                         AF_INET );
         if (hp == 0)
@@ -129,15 +129,15 @@ namespace boost
         if (i == INADDR_NONE)
           throw "ip not valid";
 #ifdef USES_WINSOCK2
-        sockaddr_ptr(address_)->sin_addr.S_un.S_addr=i;
+        sockaddr_ptr(m_address)->sin_addr.S_un.S_addr=i;
 #else
-        sockaddr_ptr(address_)->sin_addr.s_addr=i;
+        sockaddr_ptr(m_address)->sin_addr.s_addr=i;
 #endif
       }
 
       const char* address::ip() const
       {
-        const char* ret=inet_ntoa(sockaddr_ptr(address_)->sin_addr);
+        const char* ret=inet_ntoa(sockaddr_ptr(m_address)->sin_addr);
         if (!ret)
           throw "ip address not representable";
         return ret;
@@ -150,7 +150,7 @@ namespace boost
 
       std::pair<const void*,unsigned> address::representation() const
       {
-        return std::make_pair(static_cast<const void*>(sockaddr_ptr(address_)),
+        return std::make_pair(static_cast<const void*>(sockaddr_ptr(m_address)),
                               sizeof(sockaddr_in));
       }
 
@@ -160,39 +160,32 @@ namespace boost
       */
       std::pair<void*,unsigned> address::representation()
       {
-        return std::make_pair(static_cast<void*>(sockaddr_ptr(address_)),
+        return std::make_pair(static_cast<void*>(sockaddr_ptr(m_address)),
                               sizeof(sockaddr_in));
       }
 
       bool address::operator < (const address& addr) const
       {
-        const int cmp=std::memcmp(&sockaddr_ptr(address_)->sin_addr,
-                                  &sockaddr_ptr(addr.address_)->sin_addr,
+        const int cmp=std::memcmp(m_address.storage,
+                                  addr.m_address.storage,
                                   address_size);
-        return cmp<0
-          || cmp==0
-          && sockaddr_ptr(address_)->sin_port
-           < sockaddr_ptr(addr.address_)->sin_port;
+        return cmp<0;
       }
 
       bool address::operator == (const address& addr) const
       {
-        const int cmp=std::memcmp(&sockaddr_ptr(address_)->sin_addr,
-                                  &sockaddr_ptr(addr.address_)->sin_addr,
+        const int cmp=std::memcmp(m_address.storage,
+                                  addr.m_address.storage,
                                   address_size);
-        return cmp==0
-          && sockaddr_ptr(address_)->sin_port
-          == sockaddr_ptr(addr.address_)->sin_port;
+        return cmp==0;
       }
 
       bool address::operator != (const address& addr) const
       {
-        const int cmp=std::memcmp(&sockaddr_ptr(address_)->sin_addr,
-                                  &sockaddr_ptr(addr.address_)->sin_addr,
+        const int cmp=std::memcmp(m_address.storage,
+                                  addr.m_address.storage,
                                   address_size);
-        return cmp!=0
-          || sockaddr_ptr(address_)->sin_port
-          != sockaddr_ptr(addr.address_)->sin_port;
+        return cmp!=0;
       }
 
 

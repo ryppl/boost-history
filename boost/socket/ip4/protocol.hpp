@@ -74,17 +74,17 @@ namespace boost
       class tcp_protocol
       {
       public:
-        static int type();
-        static int protocol();
-        static short family();
+        static protocol_type_t type();
+        static protocol_t protocol();
+        static family_t family();
       };
 
       class udp_protocol
       {
       public:
-        static int type();
-        static int protocol();
-        static short family();
+        static protocol_type_t type();
+        static protocol_t protocol();
+        static family_t family();
       };
 
 

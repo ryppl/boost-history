@@ -12,6 +12,7 @@ subproject libs/socket/build ;
 CPP_SOURCE =
   socket_option
   default_socket_impl
+  address_info
   impl/socket_init
   ip4/address ip4/protocol ;
 

@@ -13,27 +13,42 @@
 #endif
 
 /// include guard
-#ifndef BOOST_SOCKET_CONCEPT_PROTOCOL_HPP
-#define BOOST_SOCKET_CONCEPT_PROTOCOL_HPP 1
+#ifndef BOOST_SOCKET_ANY_PROTOCOL_HPP
+#define BOOST_SOCKET_ANY_PROTOCOL_HPP 1
+
+#include "boost/socket/config.hpp"
 
 namespace boost
 {
   namespace socket
   {
-    //! concept check for protocols
-    template <class Protocol>
-    struct ProtocolConcept
+    //! any protocol class
+    class any_protocol
     {
-      void constraints()
+    public:
+      any_protocol(protocol_type_t type, protocol_t protocol, family_t family)
+          : m_type(type),  m_protocol(protocol), m_family(family)
+      {}
+
+      protocol_type_t type() const
       {
-        int p=protocol.protocol();
-        int t=protocol.type();
-        short s=protocol.family();
-        boost::ignore_unused_variable_warning(p);
-        boost::ignore_unused_variable_warning(t);
-        boost::ignore_unused_variable_warning(s);
+        return m_type;
       }
-      Protocol protocol;
+
+      protocol_t protocol() const
+      {
+        return m_protocol;
+      }
+
+      family_t family() const
+      {
+        return m_family;
+      }
+
+    private:
+      protocol_type_t m_type;
+      protocol_t m_protocol;
+      family_t m_family;
     };
   }
 }
