@@ -17,11 +17,12 @@
 #ifndef BOOST_MPL_STABLE_PARTITION_HPP_INCLUDED
 #define BOOST_MPL_STABLE_PARTITION_HPP_INCLUDED
 
+#include "boost/mpl/aux_/partition_op.hpp"
 #include "boost/mpl/clear.hpp"
-#include "boost/mpl/copy_backward_if.hpp"
+#include "boost/mpl/iter_fold_backward.hpp"
+#include "boost/mpl/lambda.hpp"
 #include "boost/mpl/pair.hpp"
-#include "boost/mpl/remove_if.hpp"
-#include "boost/mpl/push_front.hpp"
+#include "boost/mpl/protect.hpp"
 #include "boost/mpl/aux_/void_spec.hpp"
 #include "boost/mpl/aux_/lambda_support.hpp"
 
@@ -37,26 +38,17 @@ template <
 struct stable_partition
 {
 private:
-
-    typedef typename copy_backward_if<
-          Sequence
-        , typename clear<Sequence>::type
-        , push_front<_,_>
-        , Predicate
-        >::type first_part;
-
-    typedef typename remove_if<
-          Sequence
-        , Predicate
-        >::type second_part;
+    typedef typename lambda<Predicate>::type pred_;
+    typedef typename clear<Sequence>::type cleared_;
 
 public:
-
-    typedef pair< first_part,second_part >
-        type;
+    typedef typename iter_fold_backward<
+          Sequence
+        , pair< cleared_,cleared_ >
+        , protect< aux::partition_op<pred_> >
+        >::type type;
 
     BOOST_MPL_AUX_LAMBDA_SUPPORT(2,stable_partition,(Sequence,Predicate))
-
 };
 
 BOOST_MPL_AUX_AGLORITHM_NAMESPACE_END
