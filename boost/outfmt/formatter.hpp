@@ -7,8 +7,9 @@
 #     pragma once
 #  endif
 
-#  include <boost/outfmt/detail/format_traits.hpp>
-#  include <boost/outfmt/detail/pair_traits.hpp>
+#  include <boost/outfmt/detail/format_traits.hpp> // [ A, B, ... ]
+#  include <boost/outfmt/detail/pair_traits.hpp>   // ( A, B )
+#  include <boost/outfmt/detail/string_traits.hpp> // "..."
 
 #  include <boost/outfmt/detail/openclose_formatter.hpp>
 #  include <boost/outfmt/detail/formatter.hpp>
