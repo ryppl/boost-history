@@ -211,7 +211,7 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
       Tests::find_next(b, 0);
       Tests::find_next(b, 1);
       Tests::find_next(b, 200);
-      Tests::find_next(b, b.npos); // G.P.S.
+      Tests::find_next(b, b.npos);
   }
   {
       // all-1s bitset
@@ -222,6 +222,8 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
       for(size_type i = 0; i < b.size(); ++i) {
           Tests::find_next(b, i);
       }
+
+      Tests::find_next(b, b.npos);
   }
   {
       // bitset with 1s at block boundary only
