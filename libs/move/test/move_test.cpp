@@ -128,7 +128,7 @@ public: // operators
     }
 };
 
-  boost::move_return<moveable_string>
+  boost::return_t<moveable_string>::type
 operator+(const moveable_string& lhs, const moveable_string& rhs)
 {
     // we *need* to do a copy here -- the only place though!
@@ -147,7 +147,7 @@ bool operator==(const moveable_string& lhs, const moveable_string& rhs)
 // 
 // Returns a moveable_string via move (i.e. without deep copy).
 //
-  boost::move_return<moveable_string>
+  boost::return_t<moveable_string>::type
 source()
 {
     moveable_string str("efg");
