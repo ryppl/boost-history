@@ -19,6 +19,12 @@
 #include <boost/iterator/detail/config_def.hpp>
 #include <boost/python/detail/is_xxx.hpp>
 
+#if defined(__GNUC__) && __GNUC__ < 3
+#   define BOOST_NAMED_PARAMS_GCC2 1
+#else
+#   define BOOST_NAMED_PARAMS_GCC2 0
+#endif
+
 namespace boost {
 
 template<class T>
@@ -59,7 +65,7 @@ namespace detail
       nil() {}
       nil(nil,nil,nil,nil,nil) {}
 
-#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
+#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300) || BOOST_NAMED_PARAMS_GCC2
       // A metafunction class which, given a keyword, returns the base
       // sublist whose get() function can produce the value for that
       // key.
@@ -117,7 +123,7 @@ namespace detail
   template <class H, class T = nil>
   struct list : T
   {
-#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
+#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300) || BOOST_NAMED_PARAMS_GCC2
       typedef list<H, T> self_t;
 
       typedef H head_type;
@@ -177,7 +183,7 @@ namespace detail
          , head(a0)
       {}
 
-#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
+#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300) || BOOST_NAMED_PARAMS_GCC2
       template<class KW>
       typename mpl::apply2<key_value_type,KW, nil>::type&
       operator[](const keyword<KW>& x) const
@@ -257,17 +263,17 @@ namespace detail
 
   BOOST_PYTHON_IS_XXX_DEF(named,named,2)
 
+  template<class U>
+  yes_t is_const_reference_wrapper_check(const reference_wrapper<U>*);
+  no_t is_const_reference_wrapper_check(...);
+
   // Returns mpl::true_ if T is of type const reference_wrapper<U>
   template<class T>
   struct is_const_reference_wrapper
   {
-     template<class U>
-     static yes_t check(const reference_wrapper<U>*);
-     static no_t check(...);
-
      BOOST_STATIC_CONSTANT(
          bool, value = (
-             sizeof(check((T*)0)) == sizeof(yes_t)
+             sizeof(is_const_reference_wrapper_check((T*)0)) == sizeof(yes_t)
          )
      );
 
@@ -704,6 +710,8 @@ struct keywords
 };
 
 } // namespace boost
+
+#undef BOOST_NAMED_PARAMS_GCC2
 
 #endif // BOOST_NAMED_PARAMS_031014_HPP
 
