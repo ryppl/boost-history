@@ -5,64 +5,55 @@ namespace boost {
   namespace interval_lib {
     namespace detail {
 
-typedef union {
-  unsigned int b;
-  float f;
-} binary_float;
-
-static const binary_float cf_pi_1_2_d = { 0x3FC90FDA };
-static const binary_float cf_pi_1_2_u = { 0x3FC90FDB };
-static const binary_float cf_pi_d     = { 0x40490FDA };
-static const binary_float cf_pi_u     = { 0x40490FDB };
-static const binary_float cf_pi_2_1_d = { 0x40C90FDA };
-static const binary_float cf_pi_2_1_u = { 0x40C90FDB };
+// These constants should be exactly computed.
+// Decimal representations wouldn't do it since the standard doesn't
+// specify the rounding (even nearest) that should be used.
 
 struct ieee_float_constants
 {
-  static float pi_down()     { return cf_pi_d.f; }
-  static float pi_up  ()     { return cf_pi_u.f; }
-  static float pi_1_2_down() { return cf_pi_1_2_d.f; }
-  static float pi_1_2_up  () { return cf_pi_1_2_u.f; }
-  static float pi_2_1_down() { return cf_pi_2_1_d.f; }
-  static float pi_2_1_up  () { return cf_pi_2_1_u.f; }
+  static float pi_down()     { return 13176794.0f/(1<<22); }
+  static float pi_up  ()     { return 13176795.0f/(1<<22); }
+  static float pi_1_2_down() { return 13176794.0f/(1<<23); }
+  static float pi_1_2_up  () { return 13176795.0f/(1<<23); }
+  static float pi_2_1_down() { return 13176794.0f/(1<<21); }
+  static float pi_2_1_up  () { return 13176795.0f/(1<<21); }
 };
-
-typedef union {
-  unsigned
-#ifdef BOOST_HAS_MS_INT64
-  __int64 b;
-# define _m_ibc_(a) a##ui64
-#elif defined(BOOST_HAS_LONG_LONG)
-  long long int b;
-# define _m_ibc_(a) a##uLL 
-#else
-# error The compiler does not support long long nor __int64 types
-#endif
-  double d;
-} binary_double;
-
-static const binary_double cd_pi_1_2_d = { _m_ibc_(0x3FF921FB54442D18) };
-static const binary_double cd_pi_1_2_u = { _m_ibc_(0x3FF921FB54442D19) };
-static const binary_double cd_pi_d     = { _m_ibc_(0x400921FB54442D18) };
-static const binary_double cd_pi_u     = { _m_ibc_(0x400921FB54442D19) };
-static const binary_double cd_pi_2_1_d = { _m_ibc_(0x401921FB54442D18) };
-static const binary_double cd_pi_2_1_u = { _m_ibc_(0x401921FB54442D19) };
-
-#undef _m_ibc_
 
 struct ieee_double_constants
 {
-  static double pi_down()     { return cd_pi_d.d; }
-  static double pi_up  ()     { return cd_pi_u.d; }
-  static double pi_1_2_down() { return cd_pi_1_2_d.d; }
-  static double pi_1_2_up  () { return cd_pi_1_2_u.d; }
-  static double pi_2_1_down() { return cd_pi_2_1_d.d; }
-  static double pi_2_1_up  () { return cd_pi_2_1_u.d; }
+  static double pi_down()
+  { return (3373259426.0 + 273688.0 / (1<<21)) / (1<<30); }
+  static double pi_up  ()
+  { return (3373259426.0 + 273689.0 / (1<<21)) / (1<<30); }
+  static double pi_1_2_down()
+  { return ((3373259426.0 + 273688.0 / (1<<21)) / (1<<30)) / 2; }
+  static double pi_1_2_up  ()
+  { return ((3373259426.0 + 273689.0 / (1<<21)) / (1<<30)) / 2; }
+  static double pi_2_1_down()
+  { return (3373259426.0 + 273688.0 / (1<<21)) / (1<<29); }
+  static double pi_2_1_up  ()
+  { return (3373259426.0 + 273689.0 / (1<<21)) / (1<<29); }
+};
+
+// For now, the long double version returns the same precision as double.
+struct long_double_constants
+{
+  static long double pi_down()
+  { return (3373259426.0 + 273688.0 / (1<<21)) / (1<<30); }
+  static long double pi_up  ()
+  { return (3373259426.0 + 273689.0 / (1<<21)) / (1<<30); }
+  static long double pi_1_2_down()
+  { return ((3373259426.0 + 273688.0 / (1<<21)) / (1<<30)) / 2; }
+  static long double pi_1_2_up  ()
+  { return ((3373259426.0 + 273689.0 / (1<<21)) / (1<<30)) / 2; }
+  static long double pi_2_1_down()
+  { return (3373259426.0 + 273688.0 / (1<<21)) / (1<<29); }
+  static long double pi_2_1_up  ()
+  { return (3373259426.0 + 273689.0 / (1<<21)) / (1<<29); }
 };
 
     } // namespace detail
   } // namespace interval_lib
 } // namespace boost
-
 
 #endif // BOOST_INTERVAL_DETAIL_CONSTANTS_HPP

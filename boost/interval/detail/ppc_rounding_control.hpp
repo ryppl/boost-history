@@ -67,10 +67,19 @@ struct rounding_control<float>:
 template<>
 struct rounding_control<double>:
   detail::ppc_rounding_control,
-  detail::ieee_double_constants
+  detail::long_double_constants
 {
-  static double force_rounding(const double& r) { return r; }
+  static const double & force_rounding(const double& r) { return r; }
   static double to_int(const double& r) { return rint(r); }
+};
+
+template<>
+struct rounding_control<long double>:
+  detail::ppc_rounding_control,
+  detail::long_double_constants
+{
+  static const long double & force_rounding(const long double& r) { return r; }
+  static long double to_int(const long double& r) { return rint(r); }
 };
 
   } // namespace interval_lib

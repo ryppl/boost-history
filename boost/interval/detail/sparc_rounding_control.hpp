@@ -107,6 +107,15 @@ struct rounding_control<double>:
   static double to_int(const double& x) { return rint(x); }
 };
 
+template<>
+struct rounding_control<long double>:
+  detail::sparc_rounding_control,
+  detail::long_double_constants
+{
+  static const long double& force_rounding(const long double& x) { return x; }
+  static long double to_int(const long double& x) { return rint(x); }
+};
+
   } // namespace interval_lib
 } // namespace boost
 

@@ -66,7 +66,7 @@ struct rounding_control<double>:
 
 template<>
 struct rounding_control<long double>:
-  detail::isoc99_rounding_control, detail::ieee_double_constants { };
+  detail::isoc99_rounding_control, detail::long_double_constants { };
 
 #if 0
 // signbit() and isnan() are macros in ISO C99.  However, at least the
