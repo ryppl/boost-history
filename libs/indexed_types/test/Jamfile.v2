@@ -7,3 +7,17 @@ project
 run product.cpp
     ../../../../libs/test/build//boost_unit_test_framework
   ;
+
+run sum.cpp
+    ../../../../libs/test/build//boost_unit_test_framework
+  ;
+
+run enum_size.cpp
+    ../../../../libs/test/build//boost_unit_test_framework
+  ;
+
+obj class_scope_specialization
+  : class_scope_specialization.cpp
+  ;
+
+
