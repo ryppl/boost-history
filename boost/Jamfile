@@ -14,7 +14,7 @@ Usage:
 
 Options:
     --help                  This message.
-    --tools=<toolsets>      Indicates the tools used to build with.
+    -sTOOLS=<toolsets>      Indicates the tools to build with.
 
 Locations:
     --prefix=PREFIX         Install architecture independent files here.
@@ -62,9 +62,6 @@ if stage in $(ARGV)
     with-stage = stage ;
     with-install = ;
 }
-
-# the toolsets to build
-TOOLS ?= [ MATCH "^--tools=(.*)" : $(ARGV) ] ;
 
 # possible stage only location
 local stage-locate = [ MATCH "^--stagedir=(.*)" : $(ARGV) ] ;
