@@ -1,0 +1,396 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+<title>Boost Interval Arithmetic Library</title>
+</head>
+
+<body>
+
+<h1>
+<img src="../../c++boost.gif" alt="c++boost.gif (8819 bytes)"
+align="center" WIDTH="277" HEIGHT="86">
+Header &lt;<a href="../../boost/interval.hpp">boost/interval.hpp</a>&gt;</h1>
+
+<h2>Introduction</h2>
+
+<h3>Interval Arithmetic</h3>
+
+<p>As it is implied by its name, this library is intended to help
+manipulating mathematical intervals. Such an interval is a pair of
+numbers which represents all the numbers between these two. The
+purpose of this library is to extend the usual arithmetic functions to
+intervals. And it is underlied by this property: if <i>f</i> is a
+function on a set of numbers, <b>for each</b> <i>x</i> <b>in</b> the
+interval [<i>a</i>,<i>b</i>], <i>f</i>(<i>x</i>) is <b>in</b>
+<i>f</i>([<i>a</i>,<i>b</i>]).</p>
+
+<p>There are two reasons a user would like to use this library. The
+obvious one is when the user has to compute intervals. The other one
+appears when the computer doesn't produce exact results anymore. By
+using intervals, it is possible to quantify the propagation of
+rounding errors.</p>
+
+<p>For example, let's suppose the computer stores numbers with ten
+decimal significant digits. To the question 1 + 1E-100 - 1, the
+computer will answer 0 although the correct answer would be
+1E-100. With the help of interval arithmetic, the computer will answer
+[0,1E-9]. This is quite a huge interval for such a little result, but
+the precision is now known, without having to compute the error
+propagation.</p>
+
+<h3>Numbers</h3>
+
+<p>In order to successfully use the interval arithmetic, the bounds of
+the interval must present some characteristics. First of all, due to
+the definition of an interval, the numbers have to be strongly
+ordered. Secondly, the arithmetic must be exact or provide some
+rounding methods (toward minus or plus infinity) in order to always
+ensure large enough intervals. Finally, because heavy loss of
+precision are always possible, some numbers have to represent
+infinities or an exceptional behavior must be defined. The same
+situation occurs also for NaN (<i>Not a Number</i>).</p>
+
+<p>Knowing all of this, a good candidate can be the set of the
+floating point numbers defined by the standard IEEE-754. Indeed, if
+the interval arithmetic is intended to replace some arithmetic using
+the floating point unit of a processor, they are the best
+choice.</p>
+
+<h3>Comparisons</h3>
+
+<p>It is straightforward to define the elementary arithmetic
+operations on intervals. It is also possible to define some comparison
+operators. Given two intervals, the returned value is a subset of
+{<i>false</i>,<i>true</i>}. The answers {<i>false</i>} and
+{<i>true</i>} are easy to manipulate. But it is not the case for the
+answer {<i>false</i>,<i>true</i>} since comparison operators are
+supposed to be boolean functions.</p>
+
+<p>So, what to do in order to obtain boolean answers? Nobody will be
+shocked if {<i>false</i>} is transformed in <i>false</i> and
+{<i>true</i>} in <i>true</i>. And {<i>false</i>,<i>true</i>}? First
+solution, an exceptional behavior can be adopted. It will happen when
+the two compared intervals overlap on more than a single point. Second
+solution, {<i>false</i>,<i>true</i>} can be transformed in
+<i>false</i> or <i>true</i>.</p>
+
+<p>If <i>false</i> is chosen, the comparison will be called
+"certain". Indeed, the result of [<i>a</i>,<i>b</i>] &lt;
+[<i>c</i>,<i>d</i>] will be <i>true</i> if and only if <b>for each</b>
+<i>x</i> <b>in</b> [<i>a</i>,<i>b</i>] and <i>y</i> <b>in</b>
+[<i>c</i>,<i>d</i>], <i>x</i> &lt; <i>y</i>.</p>
+
+<p>If <i>true</i> is chosen, the comparison will be called
+"possible". Indeed, the result of [<i>a</i>,<i>b</i>] &lt;
+[<i>c</i>,<i>d</i>] will be <i>true</i> if and only if it
+<b>exists</b> <i>x</i> <b>in</b> [<i>a</i>,<i>b</i>] and <i>y</i>
+<b>in</b> [<i>c</i>,<i>d</i>] such as <i>x</i> &lt; <i>y</i>.</p>
+
+
+<h2>Performance Notes</h2>
+
+<p>This paragraph deals mostly with the performance of the library
+with intervals using the floating point unit (FPU) of the
+computer. Let's consider the sum of [<i>a</i>,<i>b</i>] and
+[<i>c</i>,<i>d</i>] as an example. The result is
+[<code>down</code>(<i>a</i>+<i>c</i>),
+<code>up</code>(<i>b</i>+<i>d</i>)]. <code>down</code> and
+<code>up</code> indicate the rounding mode needed.</p>
+
+<p>If the FPU is able to use a different rounding mode for each
+operation, there is no problem. However, the standard does not require
+such behavior. So most of the FPUs only provide some instructions to
+set the rounding mode for all subsequent operations. And generally,
+these instructions need to flush the pipeline of the FPU. In that
+case, the time needed to sum [<i>a</i>,<i>b</i>] and
+[<i>c</i>,<i>d</i>] is far worse than the time needed to calculate
+<i>a</i>+<i>b</i> and <i>c</i>+<i>d</i>.</p>
+
+<p>In order to avoid this situation, a trick can be used to diminish
+the number of rounding mode switch. Indeed,
+<code>down</code>(<i>a</i>+<i>c</i>) =
+-<code>up</code>(-<i>a</i>-<i>c</i>) if the unary minus is an exact
+operation. It is now possible to calculate the whole sum with the same
+rounding mode. Generally, the cost of the mode switching is worse than
+the cost of the sign changes. The performance would be almost optimal
+if the rounding mode was set at the beginning of the program once and
+for all.</p>
+
+<p>However, the precision of the result is not always needed if the
+user only want to work with wide intervals. In that case, it can be
+better to remove all the rounding mode switches. The precision of the
+result will no more be guaranteed, but the performance will be
+optimal.</p>
+
+<p>There is another problem besides the cost of the rounding mode
+switch on the FPUs which use extended registers (for example,
+<code>float</code> computations with <code>double</code> registers, or
+<code>double</code> computations with <code>long double</code>
+registers). To illustrate the problem, let <i>m</i> be the biggest
+number before +<i>inf</i>. If we calculate 2*[<i>m</i>,<i>m</i>], the
+answer should be [<i>m</i>,<i>inf</i>]. But due to the extended
+registers, the FPU will first obtain [<i>2m</i>,<i>2m</i>] and then
+convert it to [<i>inf</i>,<i>inf</i>] (because we have considered the
+rounding mode to be toward +<i>inf</i>). So the answer is no more
+accurate. There is only one solution, to force the FPU to convert the
+extended values back to standard values before applying the sign
+change. In that case, the result will be
+[-(-<i>m</i>),<i>inf</i>].</p>
+
+<p>Unfortunately, such a conversion is not possible on the x86
+FPUs. The only way is to force the FPU to write the values to memory
+and read them back. Such an operation is obviously very expensive.</p>
+
+<h2>Rounded Arithmetic</h2>
+
+<p>Here comes the tricky part. In order to be as general as possible,
+the library uses a complex class hierarchy. The class
+<code>interval_traits</code> requires an argument describing a class
+able to compute rounded arithmetic. This class must be able to provide
+all the elementary operations on the base type. Two versions of each
+operation are needed: one rounded upward, and the other rounded
+downward. Here is an example of such a class :</p>
+
+<pre>
+struct rounded_arithmetic {
+  T add_down(const T&amp;, const T&amp;);
+  T add_up(const T&amp;, const T&amp;);
+  T sub_down(const T&amp;, const T&amp;);
+  T sub_up(const T&amp;, const T&amp;);
+  T mul_down(const T&amp;, const T&amp;);
+  T mul_up(const T&amp;, const T&amp;);
+  T div_down(const T&amp;, const T&amp;);
+  T div_up(const T&amp;, const T&amp;);
+  T sqrt_down(const T&amp;);
+  T sqrt_up(const T&amp;);
+};
+</pre>
+
+<p>In order to simplify the use of the library, two templates are
+provided: <code>rounded_arithmetic_standard</code> and
+<code>rounded_arithmetic_opposite_trick</code>. The first one changes
+the rounding mode for each operation. The second one use the trick
+described in the paragraph "Note on performance" to avoid switching
+when possible.</p>
+
+<pre>
+template &lt;class T, class Rounding&gt;
+struct rounded_arithmetic_standard;
+template &lt;class T, class Rounding&gt;
+struct rounded_arithmetic_opposite_trick;
+</pre>
+
+<p><code>rounded_arithmetic_standard</code> is not really useful and
+is only provided as a test case. It is better to use
+<code>rounded_arithmetic_opposite_trick</code> when possible and to
+define a new class if not (for example in order to use a
+multi-precision type). This two structs take two template
+parameters. The first one is the base type. And the second one is a
+class able to change the rounding mode. It must provide the following
+functions:</p>
+
+<pre>
+struct rounding {
+  void downward();
+  void upward();
+  T force_rounding(const T&amp;);
+};
+</pre>
+
+<p>The last function ensures that the current rounding mode is
+effectively applied; it can be used as a workaround for FPUs with
+extended precision. In order to use the <code>save_state</code>
+described below, the class must be extended with:</p>
+
+<pre>
+struct rounding {
+  ...
+  typedef ... rounding_mode;
+  void set_rounding_mode(rounding_mode mode);
+  rounding_mode get_rounding_mode();
+};
+
+template&lt;class Rounding&gt;
+struct save_state;
+</pre>
+
+<p><code>save_state</code> is a structure used to save and restore the
+rounding mode at the time of construction and destruction of the
+rounding object. Thanks to this behavior, the operations on intervals
+restore the rounding mode at the end of their computations.</p>
+
+<h3>Some Examples</h3>
+
+<p>The default behavior uses <code>rounded_arithmetic_standard</code>.
+There is a specialization in order to use the primitive type
+<code>double</code> with <code>rounded_arithmetic_opposite_trick</code>
+and <code>save_state</code>.</p>
+
+<pre>
+template&lt;class T&gt;
+struct rounded_arithmetic:
+    rounded_arithmetic_standard&lt;T, rounding_control&lt;T&gt; &gt;
+{};
+
+template&lt;&gt;
+struct rounded_arithmetic&lt;double&gt;:
+  rounded_arithmetic_opposite_trick&lt;double,
+				    save_state&lt;rounding_control&lt;double&gt; &gt; &gt;
+{};
+</pre>
+
+<p>If the default behavior is not what you seek, there are many
+possibilities:
+
+<ul>
+<li>For fast wide intervals without any rounding nor precision, use
+<code>rounded_arithmetic_standard&lt;T, no_rounding_control&lt;T&gt;
+&gt;</code>.
+
+<li>For computations without rounding mode switch, use
+<code>rounded_arithmetic_opposite_trick&lt;T,
+no_rounding_control&lt;T&gt; &gt;</code>. The rounding mode must be
+set at the beginning toward plus infinity, and it must not change
+anymore (or it must be restored before each operation on intervals).
+
+<li>For precise computations which do not restore rounding mode at the
+end of the operations, use
+<code>rounded_arithmetic_opposite_trick&lt;T,
+rounding_control&lt;T&gt; &gt;.</code>
+
+<li>For interval on a multi-precision base type, specialize
+<code>rounded_arithmetic</code>.
+
+<li>etc
+
+</ul>
+</p>
+
+<h2><code>interval</code> Class</h2>
+
+<p>This class is templated by a base type and a traits type. Here is the synopsis of the class :</p>
+
+<pre>
+namespace boost {
+
+template&lt;class T, class Traits = interval_traits&lt;T&gt; &gt;
+class interval
+{
+public:
+  typedef T base_type;
+  typedef std::numeric_limits&lt;base_type&gt; base_limits;
+  typedef Traits traits_type;
+
+  interval(const T&amp; value = 0);
+  interval(const T&amp; l, const T&amp; u);
+
+  template&lt;class Traits2&gt;
+  interval(const interval&lt;T, Traits2&gt;&amp; r);
+
+  // compiler-generated copy constructor and assignment operator are fine
+  interval&amp; operator=(const T&amp; x);
+  void assign(const T&amp; l, const T&amp; u);
+
+  // constructor-like functions
+  static interval empty();
+  static interval entire();
+
+  interval&amp; operator+= (const T&amp; r);
+  interval&amp; operator+= (const interval&amp; r);
+  interval&amp; operator-= (const T&amp; r);
+  interval&amp; operator-= (const interval&amp; r);
+  interval&amp; operator*= (const T&amp; r);
+  interval&amp; operator*= (const interval&amp; r);
+  interval&amp; operator/= (const T&amp; r);
+  interval&amp; operator/= (const interval&amp; r);
+
+  T lower() const;
+  T upper() const;
+};
+
+} // namespace boost
+</pre>
+
+
+
+<p>There is also a bunch of functions defined outside the class:</p>
+
+<pre>
+</pre>
+
+<h2>Comparisons</h2>
+
+<p>As it was said before, the definition of the comparison operators
+induces a slight problem. If their return type is restricted to
+<code>bool</code>, there are many ways to define them. It is the
+reason why the class <code>interval</code> is influenced by a
+comparison policy. So the class <code>interval_traits</code> requires
+an argument describing a class providing the following functions:</p>
+
+<pre>
+struct interval_compare {
+  static bool lessthan(const T&amp; x_low, const T&amp; x_up, const T&amp; y_low, const T&amp; y_up);
+  static bool lessthan_TI(const T&amp; x, const T&amp; y_low, const T&amp; y_up);
+  static bool lessthan_IT(const T&amp; x_low, const T&amp; x_up, const T&amp; y);
+};
+</pre>
+
+<p>The function <code>lessthan</code> compares two intervals given
+their bounds. The functions <code>lessthan_TI</code> and
+<code>lessthan_IT</code> compare an interval and an element of base
+type. Thanks to this parameter, the class <code>interval</code> can
+now define the following operators: <code>&lt;</code>,
+<code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>. For
+example, <code>x &lt;= y</code> is calculated by <code>!lessthan(y,
+x)</code>.</p>
+
+<p>However, these operators are not really handy. For example, if
+<code>lessthan</code> is a comparison "certain", then
+<code>&lt;</code> et <code>&gt;</code> are also "certain", but
+<code>&lt;=</code> and <code>&gt;=</code> are only "possible". The
+reason of this discordance is: it is impossible to have
+<code>&lt;</code> and <code>&lt;=</code> both "possible" or "certain",
+and to have <code>(x&lt;=y) == !(y&lt;x)</code>. However, if you do
+not consider overlapping intervals, these two comparisons are
+equivalent.</p>
+
+<p>To avoid these problems, it is probably better to use some explicit
+comparison functions. Their names are composed by <code>cer</code>
+(for "certain") or <code>pos</code> (for "possible") followed by
+<code>lt</code>, <code>le</code>, <code>gt</code>, <code>ge</code>,
+<code>eq</code>, <code>ne</code>. Each of these functions takes two
+parameters and returns a boolean. For example:</p>
+
+<pre>
+template&lt;class T, class Traits&gt;
+bool cerlt(const interval&lt;T, Traits&gt;&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+template&lt;class T, class Traits&gt;
+bool cerlt(const interval&lt;T, Traits&gt;&amp; x, const T&amp; y);
+template&lt;class T, class Traits&gt;
+bool cerlt(const T&amp; x, const interval&lt;T, Traits&gt;&amp; y);
+</pre>
+
+<h2>Operations</h2>
+
+<h3>Basic Arithmetic Operations</h3>
+
+The basic operations are the unary minus and <code>sqrt</code>, and
+the binary <code>+ - * /</code>. There is also the multiplicative
+inverse. The unary operations take an interval and returns an
+interval. The binary operations take two intervals, or one interval
+and a number, and returns an interval.
+
+<pre>
+</pre>
+
+<h3>Assignment Operators</h3>
+
+There are also some assignment operators <code>+= -= *=
+/=</code>. There is not much to say.
+
+
+
+</body>
+</html>
