@@ -9,11 +9,11 @@ digraph vt_deps {
 
   LengthOfPP [label="Length of parameter packs"];
   NthElement [label="Get Nth element for parameter packs"];
-  NthElementTemplate [label="Get Nth element for template parameter packs"];
 
   CVRefPatterns [label="[Yuck] const/volatile/reference patterns"];
-  ArbitraryExpansion [label="Arbitrary expansion patterns"];
   ArbitraryMatching [label="Arbitrary matching patterns"];
+
+  ArbitraryExpansion [label="Arbitrary expansion"];
   NestedExpansion [label="Nested expansion"];
   PairwiseExpansion [label="Pairwise expansion"]; 
 
@@ -24,7 +24,6 @@ digraph vt_deps {
 
   BasicVariadics -> LengthOfPP;
 
-  LengthOfPP -> NthElementTemplate;
   LengthOfPP -> NthElement;
 
   FirstClassPP -> Initializers;
