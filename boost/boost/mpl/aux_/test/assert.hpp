@@ -286,12 +286,12 @@ enum { \
     struct msg; \
     typedef struct BOOST_PP_CAT(msg,__LINE__) : boost::mpl::assert_ \
     { \
-        typedef boost::mpl::failed **************** (msg::**************** arg_type) types; \
-        arg_type assert_arg() const { return 0; } \
+        static boost::mpl::failed **************** (msg::**************** assert_arg()) types \
+        { return 0; } \
     } BOOST_PP_CAT(mpl_assert_arg,__LINE__); \
     enum { \
         BOOST_PP_CAT(mpl_assertion_in_line_,__LINE__) = sizeof( \
-              boost::mpl::assertion_failed<(c)>( BOOST_PP_CAT(mpl_assert_arg,__LINE__)().assert_arg() ) \
+              boost::mpl::assertion_failed<(c)>( BOOST_PP_CAT(mpl_assert_arg,__LINE__)::assert_arg() ) \
             ) \
     }\
 /**/
