@@ -18,6 +18,10 @@
 #ifndef BOOST_CONTAINER_TRAITS_HPP
 #define BOOST_CONTAINER_TRAITS_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+# pragma once
+#endif
+
 #include <boost/type_traits/is_array.hpp>
 #include <boost/type_traits/is_pointer.hpp>
 #include <boost/mpl/apply_if.hpp>
@@ -37,19 +41,19 @@ namespace boost {
             //
             // struct container_helper_type : ...
             // 
-            typedef BOOST_DEDUCED_TYPENAME ::boost::mpl::apply_if< 
-                    ::boost::detail::is_pair<T>, 
-                        detail::pair_container_traits_selector<T>,
-                        BOOST_DEDUCED_TYPENAME ::boost::mpl::apply_if< 
-                        ::boost::is_array<T>, 
-                            detail::array_container_traits_selector<T>,
-                            BOOST_DEDUCED_TYPENAME ::boost::mpl::apply_if<
+            typedef BOOST_CT_DEDUCED_TYPENAME ::boost::mpl::apply_if< 
+                    ::boost::container_traits_detail::is_pair<T>, 
+                        ::boost::container_traits_detail::pair_container_traits_selector<T>,
+                        BOOST_CT_DEDUCED_TYPENAME ::boost::mpl::apply_if<
+                        ::boost::is_array<T>,
+                            ::boost::container_traits_detail::array_container_traits_selector<T>,
+                            BOOST_CT_DEDUCED_TYPENAME ::boost::mpl::apply_if<
                             ::boost::is_pointer<T>,
-                                detail::pointer_container_traits_selector<T>,
-                                BOOST_DEDUCED_TYPENAME ::boost::mpl::apply_if<
-                                detail::is_iterator<T>,
-                                    detail::iterator_container_traits_selector<T>,
-                                    detail::default_container_traits_selector<T>
+                                ::boost::container_traits_detail::pointer_container_traits_selector<T>,
+                                BOOST_CT_DEDUCED_TYPENAME ::boost::mpl::apply_if<
+                                ::boost::container_traits_detail::is_iterator<T>,
+                                    ::boost::container_traits_detail::iterator_container_traits_selector<T>,
+                                    ::boost::container_traits_detail::default_container_traits_selector<T>
                                 >
                             >   
                         > 
@@ -138,10 +142,12 @@ namespace boost {
 #endif // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
  
         template< typename T, std::size_t sz >
-        detail::size<sz> sizer( const T (&array)[sz] );
-          
+        container_traits_detail::container_traits_size<sz>
+        sizer( const T (&array)[sz] );
+
         template< typename T, std::size_t sz >
-        detail::size<sz> sizer( T (&array)[sz] );
+        container_traits_detail::container_traits_size<sz>
+        sizer( T (&array)[sz] );
 
 } // namespace boost
 

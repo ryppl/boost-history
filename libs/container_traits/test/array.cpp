@@ -10,7 +10,8 @@ void check_array()
 {
     typedef int   array_t[9];
     int           my_array[9]  = { 1,2,3,4,5,6,7,8,9 };
-    BOOST_STATIC_ASSERT(( sizeof( sizer( my_array ) ) == 9 ));
+    BOOST_STATIC_CONSTANT( std::size_t, the_size = sizeof( sizer( my_array ) ) );
+    BOOST_STATIC_ASSERT(( the_size == 9 ));
     BOOST_STATIC_ASSERT(( is_same< container_traits<array_t>::value_type, int >::value ));
     BOOST_STATIC_ASSERT(( is_same< container_traits<array_t>::iterator, int* >::value ));
     BOOST_STATIC_ASSERT(( is_same< container_traits<array_t>::const_iterator, const int* >::value ));

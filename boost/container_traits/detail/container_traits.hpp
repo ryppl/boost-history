@@ -13,7 +13,11 @@
 #ifndef BOOST_CONTAINER_TRAITS_DETAIL_CONTAINER_TRAITS_HPP
 #define BOOST_CONTIANER_TRAITS_DETAIL_CONTAINER_TRAITS_HPP
 
-#include <boost/config.hpp>
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+# pragma once
+#endif
+
+#include <boost/container_traits/config.hpp>
 #include <string>
 #include <boost/type_traits/is_array.hpp>
 #include <boost/type_traits/is_pointer.hpp>
@@ -29,7 +33,7 @@
 #include <boost/type_traits/detail/yes_no_type.hpp>
 
 namespace boost {
-    namespace detail {
+    namespace container_traits_detail {
 
         using type_traits::yes_type;
         using type_traits::no_type;
@@ -46,7 +50,7 @@ namespace boost {
             typedef BOOST_DEDUCED_TYPENAME ContainerT::value_type value_type;
             typedef BOOST_DEDUCED_TYPENAME ContainerT::iterator iterator;
             typedef BOOST_DEDUCED_TYPENAME ContainerT::const_iterator const_iterator;
-            typedef BOOST_DEDUCED_TYPENAME 
+            typedef BOOST_CT_DEDUCED_TYPENAME 
                 ::boost::mpl::if_< ::boost::is_const<ContainerT>,
                     const_iterator,
                     iterator 
@@ -142,19 +146,16 @@ namespace boost {
             //
             typedef BOOST_DEDUCED_TYPENAME PairT::first_type element_type;
 
-            typedef BOOST_DEDUCED_TYPENAME ::boost::detail::
+            typedef BOOST_CT_DEDUCED_TYPENAME ::boost::detail::
                 iterator_traits<element_type>::value_type value_type;
             typedef std::size_t size_type;
-            typedef BOOST_DEDUCED_TYPENAME ::boost::detail::
+            typedef BOOST_CT_DEDUCED_TYPENAME ::boost::detail::
                 iterator_traits<element_type>::difference_type difference_type;
 
             typedef element_type iterator;
             typedef element_type const_iterator;
             typedef element_type result_iterator;
 
-            //
-            // why not result iterator?
-            //
             // static operations
             template< typename P >
             static size_type size( const P& p )
@@ -424,7 +425,8 @@ namespace boost {
         {
         private:
             // resolve array traits
-            typedef array_traits<T> traits_type;
+            typedef BOOST_CT_DEDUCED_TYPENAME ::boost::remove_cv<T>::type T_t;
+            typedef array_traits<T_t>                             traits_type;
 
         public:
             typedef BOOST_DEDUCED_TYPENAME
@@ -438,7 +440,7 @@ namespace boost {
             typedef BOOST_DEDUCED_TYPENAME
                 traits_type::difference_type difference_type;
 
-            typedef BOOST_DEDUCED_TYPENAME
+            typedef BOOST_CT_DEDUCED_TYPENAME
                 ::boost::mpl::if_< ::boost::is_const<T>,
                     const_iterator,
                     iterator 
@@ -446,7 +448,7 @@ namespace boost {
             
         private:
             // resolve array size
-            typedef BOOST_DEDUCED_TYPENAME
+            typedef BOOST_CT_DEDUCED_TYPENAME
                 ::boost::remove_cv<value_type>::type char_type;
             typedef BOOST_DEDUCED_TYPENAME
                 array_length_selector<char_type>::
@@ -486,13 +488,13 @@ namespace boost {
             template< typename A >
             static iterator end( A& a )
             {
-                return a+array_length_type::length(a);
+                return a + array_length_type::length( &a[0] );
             }
 
             template< typename A >
             static const_iterator end( const A& a )
             {
-                return a+array_length_type::length(a);
+                return a + array_length_type::length( &a[0] );
             }
 
 #else // BOOST_NO_FUNCTION_TEMPLATE_ORDERING
@@ -530,12 +532,16 @@ namespace boost {
             BOOST_STATIC_ASSERT(( ::boost::is_convertible<char*,T>::value ||
                                   ::boost::is_convertible<wchar_t*,T>::value ));             
 #endif
+#ifdef __BORLANDC__
+            typedef ::boost::remove_pointer<T>::type value_type__;
+            typedef ::boost::remove_cv<value_type__>::type value_type;
+#else
             typedef BOOST_DEDUCED_TYPENAME
                 ::boost::remove_pointer<
-                    BOOST_DEDUCED_TYPENAME 
+                    BOOST_DEDUCED_TYPENAME
                         ::boost::remove_cv<T>::type>::type value_type;
-
-            typedef BOOST_DEDUCED_TYPENAME
+#endif
+            typedef BOOST_CT_DEDUCED_TYPENAME
                 ::boost::remove_cv<value_type>::type char_type;
             typedef ::std::char_traits<char_type> char_traits;
 
@@ -544,7 +550,7 @@ namespace boost {
             typedef BOOST_DEDUCED_TYPENAME std::ptrdiff_t difference_type;
             typedef BOOST_DEDUCED_TYPENAME std::size_t size_type;
 
-            typedef BOOST_DEDUCED_TYPENAME
+            typedef BOOST_CT_DEDUCED_TYPENAME
                 ::boost::mpl::if_< ::boost::is_const<T>,
                     const_iterator,
                     iterator 
@@ -693,12 +699,12 @@ namespace boost {
 // sizer helper -------------------------------------------------------------------------
         
         template< std::size_t sz >
-        class size
+        class container_traits_size
         {
             char give_size[sz];
         };
 
-    } // namespace 'detail'
+    } // namespace 'container_traits_detail'
 } // namespace 'boost'
 
 

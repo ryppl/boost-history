@@ -27,7 +27,7 @@
 using namespace std;
 using namespace boost;
 
-namespace sa = ::boost::string_algo;
+namespace sa = ::boost;
 
 template< typename T >
 void argument_cv_test( const T& C, const string& strResult )
