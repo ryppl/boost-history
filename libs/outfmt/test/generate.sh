@@ -1,8 +1,13 @@
 #!/bin/sh
+# (C) Copyright 2003-2004: Reece H. Dunn
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 ##### Configuration
 
-tools="gcc msvc"
+# tools="msvc-7.1 msvc-7.0 msvc-6.0 borland"
+
+tools="borland msvc-6.0"
 
 ##### [1]: Perform the tests
 
