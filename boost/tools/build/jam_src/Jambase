@@ -6,6 +6,52 @@
 # This file is part of Jam - see jam.c for Copyright information.
 #
 
+# This file is ALSO:
+# (C) Copyright David Abrahams 2001. Permission to copy, use,
+# modify, sell and distribute this software is granted provided this
+# copyright notice appears in all copies. This software is provided
+# "as is" without express or implied warranty, and with no claim as
+# to its suitability for any purpose.
+
+# The logic for finding the build system:
+#
+# The process is controlled by variables (in decreasing
+# precedence):
+#
+# If JAMBASE is set, it specifies the build system filename
+#
+# Otherwise, if BOOST_BUILD_PATH or BOOST_ROOT is set, the build system filename
+# is boost-build.jam.
+#
+# If the build system filename does not contain a path specification, the build
+# system file is searched for on $(BOOST_BUILD_PATH) then at
+# $(BOOST_ROOT)/tools/build.
+#
+# If neither JAMBASE, BOOST_ROOT, nor BOOST_BUILD_PATH is set, we use the
+# built-in Jambase (this file) and load the user's Jamfile. Perforce Jam has
+# this behavior, and it is used for building Jam itself. Thus, if you rebuild
+# Jam, these variables should be unset.
+if $(BOOST_ROOT)
+{
+    BOOST_BUILD_PATH ?= $(BOOST_ROOT)/tools/build ;
+}
+
+if $(BOOST_BUILD_PATH)
+{
+    JAMBASE ?= boost-build.jam ;
+}
+
+if $(JAMBASE)
+{
+    JAMBASE = $(JAMBASE:G=jam-module) ; # puts the Jambase target in a different
+                                        # namespace from other targets so that
+                                        # it doesn't collide.
+    SEARCH on $(JAMBASE) = $(JAMBASE_PATH) $(BOOST_BUILD_PATH) ;
+    include $(JAMBASE) ;
+}
+else
+{
+
 #
 # JAMBASE - jam 2.3 ruleset providing make(1)-like functionality
 #
@@ -2231,47 +2277,11 @@ rule makeRelPath { $(<[1]) = [ FRelPath $(<[2-]) : $(>) ] ; }
 rule makeSuffixed { $(<[1]) = [ FAppendSuffix $(>) : $(<[2]) ] ; }
 
 #
-# Now include the build system, or, if no build system specified,
-# the user's Jamfile.
+# Now include the user's Jamfile.
 #
 
-# The logic for finding the build system:
-#
-# The process is controlled by the  variables (in decreasing
-# precedence):
-
-# If JAMBASE is set, it specifies the build system filename
-#
-# Otherwise, if BOOST_BUILD_PATH or BOOST_ROOT is set, the build system filename
-# is boost-build.jam.
-#
-# If the build system filename does not contain a path specification, the build
-# system file is searched for on $(BOOST_BUILD_PATH) then at
-# $(BOOST_ROOT)/tools/build.
-#
-# If neither JAMBASE, BOOST_ROOT, nor BOOST_BUILD_PATH is set, we use the
-# built-in Jambase (this file) and load the user's Jamfile. Perforce Jam has
-# this behavior, and it is used for building Jam itself. Thus, if you rebuild
-# Jam, these variables should be unset.
-if $(BOOST_ROOT)
-{
-    BOOST_BUILD_PATH ?= $(BOOST_ROOT)/tools/build ;
-}
-
-if $(BOOST_BUILD_PATH)
-{
-    JAMBASE ?= boost-build.jam ;
-}
-
-if $(JAMBASE)
-{
-    JAMBASE = $(JAMBASE:G=jam-module) ; # puts the Jambase target in a different
-                                        # namespace from other targets so that
-                                        # it doesn't collide.
-    SEARCH on $(JAMBASE) = $(JAMBASE_PATH) $(BOOST_BUILD_PATH) ;
-    include $(JAMBASE) ;
-}
-else
 {
     if $(JAMFILE) { include $(JAMFILE) ; }
+}
+
 }

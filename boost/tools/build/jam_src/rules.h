@@ -185,9 +185,13 @@ struct _target {
 	char	*cmds;			/* type-punned command list */
 } ;
 
-RULE 	*bindrule( char *rulename, struct module* );
-RULE*    new_rule_body( struct module* m, char* rulename, argument_list* args, PARSE* procedure );
-RULE*    new_rule_actions( struct module* m, char* rulename, char* command, LIST* bindlist, int flags );
+typedef struct module module; /* MSVC debugger gets confused unless this is provided */
+
+RULE 	*bindrule( char *rulename, module* );
+
+RULE*   import_rule( RULE* source, module* m, char* name );
+RULE*    new_rule_body( module* m, char* rulename, argument_list* args, PARSE* procedure );
+RULE*    new_rule_actions( module* m, char* rulename, char* command, LIST* bindlist, int flags );
 TARGET  *bindtarget( char *targetname );
 void 	touchtarget( char *t );
 TARGETS *targetlist( TARGETS *chain, LIST  *targets );

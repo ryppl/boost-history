@@ -5,6 +5,8 @@
 #include "newstr.h"
 #include "lists.h"
 #include "parse.h"
+#include "compile.h"
+#include "frames.h"
 
 struct regex_entry
 {
@@ -15,7 +17,7 @@ typedef struct regex_entry regex_entry;
 
 static struct hash* regex_hash;
 
-static regexp* regex_compile( const char* pattern )
+regexp* regex_compile( const char* pattern )
 {
     regex_entry entry, *e = &entry;
     entry.pattern = pattern;
@@ -32,10 +34,10 @@ static regexp* regex_compile( const char* pattern )
 LIST*
 builtin_subst(
     PARSE    *parse,
-    LOL      *args )
+    FRAME      *frame )
 {        
   LIST* result = L0;
-  LIST* arg1 = lol_get( args, 0 );
+  LIST* arg1 = lol_get( frame->args, 0 );
 
   if ( arg1 && list_next(arg1) && list_next(list_next(arg1)) )
   {    

@@ -45,19 +45,19 @@ static struct hash *targethash = 0;
 static RULE *
 enter_rule( char *rulename, module* m )
 {
-	RULE rule, *r = &rule;
+    RULE rule, *r = &rule;
 
-	r->name = rulename;
+    r->name = rulename;
 
-	if( hashenter( m->rules, (HASHDATA **)&r ) )
-	{
-	    r->name = newstr( rulename );	/* never freed */
-	    r->procedure = (PARSE *)0;
-	    r->actions = 0;
+    if( hashenter( m->rules, (HASHDATA **)&r ) )
+    {
+        r->name = newstr( rulename );	/* never freed */
+        r->procedure = (PARSE *)0;
+        r->actions = 0;
         r->arguments = 0;
-	}
+    }
 
-	return r;
+    return r;
 }
 
 /*
@@ -330,19 +330,21 @@ void set_rule_body( RULE* rule, argument_list* args, PARSE* procedure )
 
 static RULE* global_rule( char* rulename, module* m )
 {
-    char global_name[4096];
-    strncpy(global_name, m->name, sizeof(global_name) - 1);
+    char global_name[4096] = "";
+    strncat(global_name, m->name, sizeof(global_name) - 1);
     strncat(global_name, rulename, sizeof(global_name) - 1);
     return enter_rule( global_name, root_module() );
 }
 
-RULE* new_rule_body( struct module* m, char* rulename, argument_list* args, PARSE* procedure )
+RULE* new_rule_body( module* m, char* rulename, argument_list* args, PARSE* procedure )
 {
     RULE* local = enter_rule( rulename, m );
     RULE* global = global_rule( rulename, m );
     procedure->module = m;
+    procedure->rulename = copystr( global->name );
     set_rule_body( local, args, procedure );
     set_rule_body( global, args, procedure );
+    
     return local;
 }
 
@@ -366,7 +368,7 @@ static rule_actions* actions_new( char* command, LIST* bindlist, int flags )
     return result;
 }
 
-RULE* new_rule_actions( struct module* m, char* rulename, char* command, LIST* bindlist, int flags )
+RULE* new_rule_actions( module* m, char* rulename, char* command, LIST* bindlist, int flags )
 {
     RULE* local = enter_rule( rulename, m );
     RULE* global = global_rule( rulename, m );
@@ -375,7 +377,7 @@ RULE* new_rule_actions( struct module* m, char* rulename, char* command, LIST* b
     return local;
 }
 
-RULE *bindrule( char *rulename, struct module* m )
+RULE *bindrule( char *rulename, module* m )
 {
 	RULE rule, *r = &rule;
 	r->name = rulename;
@@ -386,3 +388,10 @@ RULE *bindrule( char *rulename, struct module* m )
         return enter_rule( rulename, root_module() );
 }
 
+RULE* import_rule( RULE* source, module* m, char* name )
+{
+    RULE* dest = enter_rule( name, m );
+    set_rule_body( dest, source->arguments, source->procedure );
+    set_rule_actions( dest, source->actions );
+    return dest;
+}

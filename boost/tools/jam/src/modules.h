@@ -14,7 +14,7 @@ struct module
     struct _settings* locals;
 };
 
-typedef struct module module;
+typedef struct module module; /* MSVC debugger gets confused unless this is provided */
 
 module* bindmodule( char* name );
 module* root_module();

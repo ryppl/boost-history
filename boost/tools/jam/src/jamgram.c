@@ -57,7 +57,7 @@
 #include "compile.h"
 #include "newstr.h"
 
-# define F0 (LIST *(*)(PARSE *, LOL *))0
+# define F0 (LIST *(*)(PARSE *, FRAME *))0
 # define P0 (PARSE *)0
 # define S0 (char *)0
 

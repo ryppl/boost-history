@@ -48,51 +48,47 @@ static LIST *headers1( LIST *l, char *file, int rec, regexp *re[],
 void
 headers( TARGET *t )
 {
-	LIST	*hdrscan;
-	LIST	*hdrrule;
-	LIST	*headlist = 0;
-	LOL	lol;
-	regexp	*re[ MAXINC ];
-        regexp  *re_macros;
-	int	rec = 0;
+    LIST	*hdrscan;
+    LIST	*hdrrule;
+    LIST	*headlist = 0;
+    regexp	*re[ MAXINC ];
+    int	rec = 0;
+        
+    /* the following regexp is used to detect cases where a  */
+    /* file is included through a line line "#include MACRO" */
+    regexp *re_macros = regex_compile(
+        "^[ 	]*#[ 	]*include[ 	]*([A-Za-z][A-Za-z0-9_]*).*$" );
 
-	if( !( hdrscan = var_get( "HDRSCAN" ) ) || 
-	    !( hdrrule = var_get( "HDRRULE" ) ) )
-	        return;
+    if( !( hdrscan = var_get( "HDRSCAN" ) ) || 
+        !( hdrrule = var_get( "HDRRULE" ) ) )
+        return;
 
-	if( DEBUG_HEADER )
-	    printf( "header scan %s\n", t->name );
+    if( DEBUG_HEADER )
+        printf( "header scan %s\n", t->name );
 
-	/* Compile all regular expressions in HDRSCAN */
+    /* Compile all regular expressions in HDRSCAN */
 
-	while( rec < MAXINC && hdrscan )
-	{
-	    re[rec++] = regcomp( hdrscan->string );
-	    hdrscan = list_next( hdrscan );
-	}
+    while( rec < MAXINC && hdrscan )
+    {
+        re[rec++] = regex_compile( hdrscan->string );
+        hdrscan = list_next( hdrscan );
+    }
 
-        /* the following regexp is used to detect cases where a  */
-        /* file is included through a line line "#include MACRO" */
-        re_macros = regcomp(
-           "^[ 	]*#[ 	]*include[ 	]*([A-Za-z][A-Za-z0-9_]*).*$" );
+    /* Doctor up call to HDRRULE rule */
+    /* Call headers1() to get LIST of included files. */
+    {
+        FRAME	frame[1];
+        frame_init( frame );
+        lol_add( frame->args, list_new( L0, t->name ) );
+        lol_add( frame->args, headers1( headlist, t->boundname, rec, re, re_macros ) );
 
-	/* Doctor up call to HDRRULE rule */
-	/* Call headers1() to get LIST of included files. */
+        if( lol_get( frame->args, 1 ) )
+            evaluate_rule( hdrrule->string, frame );
 
-	lol_init( &lol );
-	lol_add( &lol, list_new( L0, t->name ) );
-	lol_add( &lol, headers1( headlist, t->boundname, rec, re, re_macros ) );
+        /* Clean up */
 
-	if( lol_get( &lol, 1 ) )
-	    evaluate_rule( hdrrule->string, &lol );
-
-	/* Clean up */
-
-	lol_free( &lol );
-
-        free( re_macros );
-	while( rec )
-	    free( (char *)re[--rec] );
+        frame_free( frame );
+    }
 }
 
 /*

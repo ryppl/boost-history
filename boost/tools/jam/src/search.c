@@ -11,6 +11,7 @@
 # include "filesys.h"
 # include "variable.h"
 # include "newstr.h"
+# include "compile.h"
 
 static void call_bind_rule(
     char* target_,
@@ -29,18 +30,18 @@ static void call_bind_rule(
         if( boundname && target )
         {
             /* Prepare the argument list */
-            LOL args;
-            lol_init( &args );
+            FRAME frame[1];
+            frame_init( frame );
                     
             /* First argument is the target name */
-            lol_add( &args, list_new( L0, target ) );
+            lol_add( frame->args, list_new( L0, target ) );
                     
-            lol_add( &args, list_new( L0, boundname ) );
-            if( lol_get( &args, 1 ) )
-                evaluate_rule( bind_rule->string, &args );
+            lol_add( frame->args, list_new( L0, boundname ) );
+            if( lol_get( frame->args, 1 ) )
+                evaluate_rule( bind_rule->string, frame );
             
             /* Clean up */
-            lol_free( &args );
+            frame_free( frame );
         }
         else
         {

@@ -17,26 +17,23 @@ static struct hash* module_hash = 0;
 
 static char* new_module_str( module* m, char* suffix )
 {
-    char buffer[4096];
-    strncpy(buffer, m->name, sizeof(buffer) - 1);
+    char buffer[4096] = "";
+    strncat(buffer, m->name, sizeof(buffer) - 1);
     strncat(buffer, "variables", sizeof(buffer) - 1);
     return newstr( buffer );
 }
 
 module* bindmodule( char* name )
 {
-    char buffer[4096];
+    char buffer[4096] = "";
     module m_, *m = &m_;
-    
-    if ( !name )
-        return 0;
     
     if( !module_hash )
         module_hash = hashinit( sizeof( module ), "modules" );
 
     if (name)
     {
-        strncpy( buffer, name, sizeof(buffer) - 1 );
+        strncat( buffer, name, sizeof(buffer) - 1 );
         strncat( buffer, ".", sizeof(buffer) - 1 );
     }
     else
@@ -60,7 +57,7 @@ module* root_module()
 {
     static module* root = 0;
     if ( !root )
-        root = bindmodule("");
+        root = bindmodule(0);
     return root;
 }
 

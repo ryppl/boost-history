@@ -36,6 +36,9 @@
  * 08/23/94 (seiwald) - new list_append()
  */
 
+#ifndef LISTS_DWA20011022_H
+# define LISTS_DWA20011022_H
+
 /*
  * LIST - list of strings
  */
@@ -58,7 +61,6 @@ typedef struct _lol LOL;
 
 struct _lol {
 	int	count;
-    struct module* module;
 	LIST	*list[ LOL_MAX ];
 } ;
 
@@ -79,3 +81,5 @@ void	lol_init( LOL *lol );
 void	lol_free( LOL *lol );
 LIST *	lol_get( LOL *lol, int i );
 void	lol_print( LOL *lol );
+
+#endif // LISTS_DWA20011022_H

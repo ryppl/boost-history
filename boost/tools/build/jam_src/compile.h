@@ -4,31 +4,40 @@
  * This file is part of Jam - see jam.c for Copyright information.
  */
 
+#ifndef COMPILE_DWA20011022_H
+# define COMPILE_DWA20011022_H
+
+# include "frames.h"
+# include "parse.h"
+
 /*
  * compile.h - compile parsed jam statements
  */
 
 void compile_builtins();
 
-LIST *compile_append( PARSE *parse, LOL *args );
-LIST *compile_foreach( PARSE *parse, LOL *args );
-LIST *compile_if( PARSE *parse, LOL *args );
-LIST *compile_include( PARSE *parse, LOL *args );
-LIST *compile_list( PARSE *parse, LOL *args );
-LIST *compile_local( PARSE *parse, LOL *args );
-LIST *compile_module( PARSE *parse, LOL *args );
-LIST *compile_null( PARSE *parse, LOL *args );
-LIST *compile_rule( PARSE *parse, LOL *args );
-LIST *compile_rules( PARSE *parse, LOL *args );
-LIST *compile_set( PARSE *parse, LOL *args );
-LIST *compile_set_module( PARSE *parse, LOL *args );
-LIST *compile_setcomp( PARSE *parse, LOL *args );
-LIST *compile_setexec( PARSE *parse, LOL *args );
-LIST *compile_settings( PARSE *parse, LOL *args );
-LIST *compile_switch( PARSE *parse, LOL *args );
-LIST *compile_while( PARSE *parse, LOL *args );
+LIST *compile_append( PARSE *parse, FRAME *frame );
+LIST *compile_foreach( PARSE *parse, FRAME *frame );
+LIST *compile_if( PARSE *parse, FRAME *frame );
+LIST *compile_include( PARSE *parse, FRAME *frame );
+LIST *compile_list( PARSE *parse, FRAME *frame );
+LIST *compile_local( PARSE *parse, FRAME *frame );
+LIST *compile_module( PARSE *parse, FRAME *frame );
+LIST *compile_null( PARSE *parse, FRAME *frame );
+LIST *compile_rule( PARSE *parse, FRAME *frame );
+LIST *compile_rules( PARSE *parse, FRAME *frame );
+LIST *compile_set( PARSE *parse, FRAME *frame );
+LIST *compile_set_module( PARSE *parse, FRAME *frame );
+LIST *compile_setcomp( PARSE *parse, FRAME *frame );
+LIST *compile_setexec( PARSE *parse, FRAME *frame );
+LIST *compile_settings( PARSE *parse, FRAME *frame );
+LIST *compile_switch( PARSE *parse, FRAME *frame );
+LIST *compile_while( PARSE *parse, FRAME *frame );
 
-LIST *evaluate_rule( char *rulename, LOL *args );
+LIST *evaluate_rule( char *rulename, FRAME *frame );
+
+typedef struct regexp regexp;
+regexp* regex_compile( const char* pattern );
 
 void profile_dump();
 
@@ -61,3 +70,5 @@ void profile_dump();
 # define COND_MORE	8	/* arg > arg  */
 # define COND_MOREEQ	9	/* arg >= arg */
 # define COND_IN	10	/* arg in arg */
+
+#endif // COMPILE_DWA20011022_H

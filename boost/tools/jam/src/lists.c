@@ -7,7 +7,6 @@
 # include "jam.h"
 # include "newstr.h"
 # include "lists.h"
-# include "modules.h"
 
 /*
  * lists.c - maintain lists of strings
@@ -183,8 +182,7 @@ list_length( LIST *l )
 void
 lol_init( LOL *lol )
 {
-	lol->count = 0;
-    lol->module = root_module();
+    lol->count = 0;
 }
 
 /*

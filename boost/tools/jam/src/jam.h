@@ -478,6 +478,6 @@ extern struct globs globs;
 # define DEBUG_SCAN	( globs.debug[ 9 ] )	/* show scanner tokens */
 # define DEBUG_MEM	( globs.debug[ 9 ] )	/* show memory use */
 
-# define DEBUG_PARSE	( globs.debug[ 10 ] )	/* debug parsing */
-# define DEBUG_PROFILE	( globs.debug[ 11 ] )	/* dump rule execution times */
+# define DEBUG_PROFILE	( globs.debug[ 10 ] )	/* dump rule execution times */
+# define DEBUG_PARSE	( globs.debug[ 11 ] )	/* debug parsing */
 

@@ -164,203 +164,211 @@ extern int yydebug;
 
 int  main( int argc, char **argv, char **arg_environ )
 {
-	int		n;
-	char		*s;
-	struct option	optv[N_OPTS];
-	char		*all = "all";
-	int		anyhow = 0;
-	int		status;
+    int		n;
+    char		*s;
+    struct option	optv[N_OPTS];
+    char		*all = "all";
+    int		anyhow = 0;
+    int		status;
 
 # ifdef OS_MAC
-	InitGraf(&qd.thePort);
+    InitGraf(&qd.thePort);
 # endif
 
-	argc--, argv++;
+    argc--, argv++;
 
-	if( ( n = getoptions( argc, argv, "d:j:f:s:t:ano:v", optv ) ) < 0 )
-	{
-	    printf( "\nusage: jam [ options ] targets...\n\n" );
+    if( ( n = getoptions( argc, argv, "d:j:f:s:t:ano:v", optv ) ) < 0 )
+    {
+        printf( "\nusage: jam [ options ] targets...\n\n" );
 
-            printf( "-a      Build all targets, even if they are current.\n" );
-            printf( "-dx     Set the debug level to x (0-9).\n" );
-            printf( "-fx     Read x instead of Jambase.\n" );
-            printf( "-jx     Run up to x shell commands concurrently.\n" );
-            printf( "-n      Don't actually execute the updating actions.\n" );
-            printf( "-ox     Write the updating actions to file x.\n" );
-	    printf( "-sx=y   Set variable x=y, overriding environment.\n" );
-            printf( "-tx     Rebuild x, even if it is up-to-date.\n" );
-            printf( "-v      Print the version of jam and exit.\n\n" );
+        printf( "-a      Build all targets, even if they are current.\n" );
+        printf( "-dx     Set the debug level to x (0-9).\n" );
+        printf( "-fx     Read x instead of Jambase.\n" );
+        printf( "-jx     Run up to x shell commands concurrently.\n" );
+        printf( "-n      Don't actually execute the updating actions.\n" );
+        printf( "-ox     Write the updating actions to file x.\n" );
+        printf( "-sx=y   Set variable x=y, overriding environment.\n" );
+        printf( "-tx     Rebuild x, even if it is up-to-date.\n" );
+        printf( "-v      Print the version of jam and exit.\n\n" );
 
-	    exit( EXITBAD );
-	}
+        exit( EXITBAD );
+    }
 
-	argc -= n, argv += n;
+    argc -= n, argv += n;
 
-	/* Version info. */
+    /* Version info. */
 
-	if( ( s = getoptval( optv, 'v', 0 ) ) )
-	{
-	    printf( "Jam/MR  " );
-	    printf( "Version %s.  ", VERSION );
-	    printf( "Copyright 1993, 2000 Christopher Seiwald.  " );
-	    printf( "%s.\n", OSMINOR );
+    if( ( s = getoptval( optv, 'v', 0 ) ) )
+    {
+        printf( "Jam/MR  " );
+        printf( "Version %s.  ", VERSION );
+        printf( "Copyright 1993, 2000 Christopher Seiwald.  " );
+        printf( "%s.\n", OSMINOR );
 
-	    return EXITOK;
-	}
+        return EXITOK;
+    }
 
-	/* Pick up interesting options */
+    /* Pick up interesting options */
 
-	if( ( s = getoptval( optv, 'n', 0 ) ) )
-	    globs.noexec++, globs.debug[2] = 1;
+    if( ( s = getoptval( optv, 'n', 0 ) ) )
+        globs.noexec++, globs.debug[2] = 1;
 
-	if( ( s = getoptval( optv, 'a', 0 ) ) )
-	    anyhow++;
+    if( ( s = getoptval( optv, 'a', 0 ) ) )
+        anyhow++;
 
-	if( ( s = getoptval( optv, 'j', 0 ) ) )
-	    globs.jobs = atoi( s );
+    if( ( s = getoptval( optv, 'j', 0 ) ) )
+        globs.jobs = atoi( s );
 
-	/* Turn on/off debugging */
+    /* Turn on/off debugging */
 
-	for( n = 0; s = getoptval( optv, 'd', n ); n++ )
-	{
-	    int i;
+    for( n = 0; s = getoptval( optv, 'd', n ); n++ )
+    {
+        int i;
 
-	    /* First -d, turn off defaults. */
+        /* First -d, turn off defaults. */
 
-	    if( !n )
-		for( i = 0; i < DEBUG_MAX; i++ )
-		    globs.debug[i] = 0;
+        if( !n )
+            for( i = 0; i < DEBUG_MAX; i++ )
+                globs.debug[i] = 0;
 
-	    i = atoi( s );
+        i = atoi( s );
 
-	    if( i < 0 || i >= DEBUG_MAX )
-	    {
-		printf( "Invalid debug level '%s'.\n", s );
-		continue;
-	    }
+        if( i < 0 || i >= DEBUG_MAX )
+        {
+            printf( "Invalid debug level '%s'.\n", s );
+            continue;
+        }
 
-	    /* n turns on levels 1-n */
-	    /* +n turns on level n */
+        /* n turns on levels 1-n */
+        /* +n turns on level n */
 
-	    if( *s == '+' )
-		globs.debug[i] = 1;
-	    else while( i )
-		globs.debug[i--] = 1;
-	}
-        if ( DEBUG_PARSE )
-            yydebug = 1;
+        if( *s == '+' )
+            globs.debug[i] = 1;
+        else while( i )
+            globs.debug[i--] = 1;
+    }
+    if ( DEBUG_PARSE )
+        yydebug = 1;
 
-	/* Set JAMDATE first */
+    /* Set JAMDATE first */
 
-	{
-	    char *date;
-	    time_t clock;
-	    time( &clock );
-	    date = newstr( ctime( &clock ) );
+    {
+        char *date;
+        time_t clock;
+        time( &clock );
+        date = newstr( ctime( &clock ) );
 
-	    /* Trim newline from date */
+        /* Trim newline from date */
 
-	    if( strlen( date ) == 25 )
-		date[ 24 ] = 0;
+        if( strlen( date ) == 25 )
+            date[ 24 ] = 0;
 
-	    var_set( "JAMDATE", list_new( L0, newstr( date ) ), VAR_SET );
-	}
+        var_set( "JAMDATE", list_new( L0, newstr( date ) ), VAR_SET );
+    }
 
-	/* And JAMUNAME */
+    var_set( "JAM_VERSION",
+             list_new( list_new( L0, newstr( "03" ) ), newstr( "00" ) ),
+             VAR_SET );
+
+    /* And JAMUNAME */
 # ifdef unix
-	{
-	    struct utsname u;
+    {
+        struct utsname u;
 
-	    if( uname( &u ) >= 0 )
-	    {
-		var_set( "JAMUNAME", 
-			list_new( 
-			list_new(
-			list_new(
-			list_new(
-			list_new( L0, 
-				newstr( u.sysname ) ),
-				newstr( u.nodename ) ),
-				newstr( u.release ) ),
-				newstr( u.version ) ),
-				newstr( u.machine ) ), VAR_SET );
-	    }
-	}
+        if( uname( &u ) >= 0 )
+        {
+            var_set( "JAMUNAME", 
+                     list_new( 
+                         list_new(
+                             list_new(
+                                 list_new(
+                                     list_new( L0, 
+                                               newstr( u.sysname ) ),
+                                     newstr( u.nodename ) ),
+                                 newstr( u.release ) ),
+                             newstr( u.version ) ),
+                         newstr( u.machine ) ), VAR_SET );
+        }
+    }
 # endif /* unix */
 
 	/*
 	 * Jam defined variables OS, OSPLAT
 	 */
 
-	var_defines( othersyms );
+    var_defines( othersyms );
 
-	/* load up environment variables */
+    /* load up environment variables */
 
-	var_defines( use_environ );
+    var_defines( use_environ );
 
-	/* Load up variables set on command line. */
+    /* Load up variables set on command line. */
 
-	for( n = 0; s = getoptval( optv, 's', n ); n++ )
-	{
-	    char *symv[2];
-	    symv[0] = s;
-	    symv[1] = 0;
-	    var_defines( symv );
-	}
+    for( n = 0; s = getoptval( optv, 's', n ); n++ )
+    {
+        char *symv[2];
+        symv[0] = s;
+        symv[1] = 0;
+        var_defines( symv );
+    }
 
-	/* Initialize builtins */
+    /* Initialize builtins */
 
 
-	compile_builtins();
+    compile_builtins();
 
-	/* Parse ruleset */
+    /* Parse ruleset */
 
+    {
+        FRAME frame[1];
+        frame_init( frame );
 	for( n = 0; s = getoptval( optv, 'f', n ); n++ )
-	    parse_file( s );
+	    parse_file( s, frame );
 
 	if( !n )
-	    parse_file( "+" );
+	    parse_file( "+", frame );
+    }
 
-	status = yyanyerrors();
+    status = yyanyerrors();
 
-	/* Manually touch -t targets */
+    /* Manually touch -t targets */
 
-	for( n = 0; s = getoptval( optv, 't', n ); n++ )
-	    touchtarget( s );
+    for( n = 0; s = getoptval( optv, 't', n ); n++ )
+        touchtarget( s );
 
-	/* If an output file is specified, set globs.cmdout to that */
+    /* If an output file is specified, set globs.cmdout to that */
 
-	if( s = getoptval( optv, 'o', 0 ) )
-	{
-	    if( !( globs.cmdout = fopen( s, "w" ) ) )
-	    {
-		printf( "Failed to write to '%s'\n", s );
-		exit( EXITBAD );
-	    }
-	    globs.noexec++;
-	}
+    if( s = getoptval( optv, 'o', 0 ) )
+    {
+        if( !( globs.cmdout = fopen( s, "w" ) ) )
+        {
+            printf( "Failed to write to '%s'\n", s );
+            exit( EXITBAD );
+        }
+        globs.noexec++;
+    }
 
-	/* Now make target */
+    /* Now make target */
 
-	if( !argc )
-	    status |= make( 1, &all, anyhow );
-	else
-	    status |= make( argc, argv, anyhow );
+    if( !argc )
+        status |= make( 1, &all, anyhow );
+    else
+        status |= make( argc, argv, anyhow );
 
-        if ( DEBUG_PROFILE )
-            profile_dump();
+    if ( DEBUG_PROFILE )
+        profile_dump();
 
-	/* Widely scattered cleanup */
+    /* Widely scattered cleanup */
 
-	var_done();
-	donerules();
-	donestamps();
-	donestr();
+    var_done();
+    donerules();
+    donestamps();
+    donestr();
 
-	/* close cmdout */
+    /* close cmdout */
 
-	if( globs.cmdout )
-	    fclose( globs.cmdout );
+    if( globs.cmdout )
+        fclose( globs.cmdout );
 
-	return status ? EXITBAD : EXITOK;
+    return status ? EXITBAD : EXITOK;
 }

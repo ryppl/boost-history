@@ -10,6 +10,7 @@
 # include "scan.h"
 # include "newstr.h"
 # include "modules.h"
+# include "frames.h"
 
 /*
  * parse.c - make and destroy parse trees as driven by the parser
@@ -23,7 +24,7 @@
 static PARSE *yypsave;
 
 void
-parse_file( char *f )
+parse_file( char *f, FRAME* frame )
 {
 	/* Suspend scan of current file */
 	/* and push this new file in the stream */
@@ -36,12 +37,7 @@ parse_file( char *f )
 
 	for(;;)
 	{
-	    LOL l;
 	    PARSE *p;
-
-	    /* $(<) and $(>) empty in outer scope. */
-
-	    lol_init( &l );
 
 	    /* Filled by yyparse() calling parse_save() */
 
@@ -54,7 +50,7 @@ parse_file( char *f )
 
 	    /* Run the parse tree. */
 
-	    (*(p->func))( p, &l );
+	    (*(p->func))( p, frame );
 
 	    parse_free( p );
 	}
@@ -68,7 +64,7 @@ parse_save( PARSE *p )
 
 PARSE *
 parse_make( 
-	LIST	*(*func)( PARSE *p, LOL *args ),
+	LIST	*(*func)( PARSE *p, FRAME *args ),
 	PARSE	*left,
 	PARSE	*right,
 	PARSE	*third,
@@ -87,6 +83,7 @@ parse_make(
 	p->num = num;
 	p->refs = 1;
         p->module = 0;
+        p->rulename = 0;
 
 	return p;
 }
@@ -113,6 +110,8 @@ parse_free( PARSE *p )
 	    parse_free( p->right );
 	if( p->third )
 	    parse_free( p->third );
+        if ( p->rulename )
+            freestr( p->rulename );
 	
 	free( (char *)p );
 }
