@@ -19,7 +19,7 @@
 
 // EDG-based compilers have serious problems with preprocessor performance,
 // so we have to feed them already preprocessed version of code
-#if defined(__EDG__) && (__EDG_VERSION__ <= 245)
+#if defined(__EDG_VERSION__) && (__EDG_VERSION__ <= 245)
 #   include "boost/mpl/aux_/preprocessed/factory.hpp"
 #else
 
@@ -97,6 +97,6 @@ struct list_factory
 } // namespace mpl
 } // namespace boost 
 
-#endif // defined(__EDG__)
+#endif // defined(__EDG_VERSION__)
 
 #endif // BOOST_MPL_LIST_FACTORY_HPP_ICNLUDED

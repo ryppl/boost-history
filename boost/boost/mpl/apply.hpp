@@ -19,7 +19,7 @@
 
 // EDG-based compilers have serious problems with preprocessor performance,
 // so we have to feed them already preprocessed version of code
-#if defined(__EDG__) // && (__EDG_VERSION__ <= ???)
+#if defined(__EDG_VERSION__) && (__EDG_VERSION__ <= 245)
 #   include "boost/mpl/aux_/preprocessed/apply.hpp"
 #else
 
@@ -196,6 +196,6 @@ struct apply
 } // namespace mpl
 } // namespace boost 
 
-#endif // #if defined(__EDG__)
+#endif // #if defined(__EDG_VERSION__)
 
 #endif // BOOST_MPL_APPLY_HPP_INCLUDED
