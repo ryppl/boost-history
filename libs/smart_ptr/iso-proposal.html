@@ -399,9 +399,9 @@ template&lt;class T, class A1, class A2&gt; shared_ptr&lt;T&gt; shared_new(A1 co
 			where the value of the stored pointer may be (or become) indeterminate without 
 			affecting the ordering provided by <code>operator&lt;</code>. Another 
 			motivation for this <code>operator&lt;</code> behavior is support for the <code>std::map&lt; 
-				shared_ptr&lt;X&gt;, V &gt;</code> idiom that associates data with objects 
-			managed by <EM>shared_ptr</EM> (with an important special case being <code>X=void</code>.) 
-			[<A href="#Dimov03">Dimov03</A>]</P>
+				shared_ptr&lt;X&gt;, V &gt;</code> <A href="http://www.boost.org/libs/smart_ptr/sp_techniques.html#extra_data">
+				idiom</A> that associates data with objects managed by <EM>shared_ptr</EM> (with 
+			an important special case being <code>X=void</code>.) [<A href="#Dimov03">Dimov03</A>]</P>
 		<P>In most typical scenarios, a <code>std::map</code> with <EM>shared_ptr</EM> as 
 			key would behave as if the stored pointers have been used. The exception is 
 			that in some situations involving multiple or virtual inheritance, it is 
@@ -441,11 +441,11 @@ template&lt;class T, class A1, class A2&gt; shared_ptr&lt;T&gt; shared_new(A1 co
 			instance that was stored in the deleter at creation.</p>
 		<P>One example is a library that implements a predefined <EM>shared_ptr</EM>-based 
 			interface. The library needs to interoperate with an existing infrastructure 
-			that uses a different smart pointer for its resource management, and the 
-			technique described in [<A href="#Dimov03">Dimov03</A>] is used to wrap the 
-			existing smart pointers with a <EM>shared_ptr</EM> "shell". When the library 
-			receives a <EM>shared_ptr</EM> from the client, it can extract the original 
-			wrapped smart pointer (if there is one) by using <code>get_deleter</code>.</P>
+			that uses a different smart pointer for its resource management, and the <A href="http://www.boost.org/libs/smart_ptr/sp_techniques.html#another_sp">
+				technique</A> described in [<A href="#Dimov03">Dimov03</A>] is used to wrap 
+			the existing smart pointers with a <EM>shared_ptr</EM> "shell". When the 
+			library receives a <EM>shared_ptr</EM> from the client, it can extract the 
+			original wrapped smart pointer (if there is one) by using <code>get_deleter</code>.</P>
 		<h3>C. weak_ptr</h3>
 		<h4>1. Default Constructor</h4>
 		<p>Default-constructed <EM>weak_ptr</EM> instances have a use_count() of zero, and 
@@ -454,7 +454,7 @@ template&lt;class T, class A1, class A2&gt; shared_ptr&lt;T&gt; shared_new(A1 co
 			needs to be "two phase constructed", i.e. first default-constructed, then 
 			initialized from a <EM>shared_ptr</EM> via assignment. If a <EM>shared_ptr</EM> 
 			conversion is attempted before initialization, an exception is the appropriate 
-			response. See, for example, the "<A name="from_this" href="http://www.boost.org/libs/smart_ptr/sp_techniques.html#from_this"><EM>Obtaining 
+			response. See, for example, the "<A href="http://www.boost.org/libs/smart_ptr/sp_techniques.html#from_this"><EM>Obtaining 
 					a <CODE>shared_ptr</CODE> to <CODE>this</CODE></EM></A>" technique in [<A href="#Dimov03">Dimov03</A>].</p>
 		<h4>2. Converting Constructor</h4>
 		<p>A converting constructor enables <code>weak_ptr&lt;Y&gt;</code> to be converted 
@@ -471,20 +471,19 @@ template&lt;class T, class A1, class A2&gt; shared_ptr&lt;T&gt; shared_new(A1 co
 			accessing its value). When <code>Y</code> inherits from <code>T</code> virtually, 
 			however, most existing implementations will fail to convert an invalid pointer 
 			of type <code>Y*</code> to <code>T*</code>.</P>
-		<P>
-			This constructor has been provided to support the useful idiom of using <code>std::map&lt; 
-				weak_ptr&lt;void&gt;, X &gt;</code> to non-intrusively associate arbitrary 
-			data with existing <EM>shared_ptr</EM>-managed objects.</P>
+		<P>This constructor has been provided to support the useful <A href="http://www.boost.org/libs/smart_ptr/sp_techniques.html#extra_data">
+				idiom</A> of using <code>std::map&lt; weak_ptr&lt;void&gt;, X &gt;</code> to 
+			non-intrusively associate arbitrary data with existing <EM>shared_ptr</EM>-managed 
+			objects.</P>
 		<h4>3. <code>lock</code></h4>
-		<p><EM>weak_ptr</EM> does not provide the usual smart pointer accessors <code>operator*</code>, 
-			<code>operator-&gt;</code>, or <code>get</code>. Any attempt to use their return values would be 
-			inherently unsafe, as <EM>weak_ptr</EM>'s stored pointer can be invalidated at 
-			any time. Instead, <EM>weak_ptr</EM> provides a member function <code>lock</code> that 
-			returns a <EM>shared_ptr</EM>. The returned <EM>shared_ptr</EM> keeps the 
-			object alive, effectively locking it against deletion.</p>
+		<p><EM>weak_ptr</EM> does not provide the usual smart pointer accessors <code>operator*</code>,
+			<code>operator-&gt;</code>, or <code>get</code>. Any attempt to use their 
+			return values would be inherently unsafe, as <EM>weak_ptr</EM>'s stored pointer 
+			can be invalidated at any time. Instead, <EM>weak_ptr</EM> provides a member 
+			function <code>lock</code> that returns a <EM>shared_ptr</EM>. The returned <EM>shared_ptr</EM>
+			keeps the object alive, effectively locking it against deletion.</p>
 		<P>The idiomatic way to access a <EM>weak_ptr</EM> is as shown below:</P>
-<pre>
-weak_ptr&lt;X&gt; target;
+		<pre>weak_ptr&lt;X&gt; target;
 
 // ...
 
@@ -497,7 +496,21 @@ else
   // target lost (expired), acquire a new one
 }
 </pre>
-		<h3>D. Alternatives</h3>
+		<h3>D. enable_shared_from_this</h3>
+		<p>Experienced smart pointer users often need the ability to obtain a <EM>shared_ptr</EM>
+			to this from within a member function. While the <A href="http://www.boost.org/libs/smart_ptr/sp_techniques.html#from_this">
+				technique</A> described in [<A href="#Dimov03">Dimov03</A>] solves the 
+			problem, this proposal provides direct support for this idiom via the <code>enable_shared_from_this</code>
+			helper class template. Encapsulating the boilerplate code in a standard helper 
+			has the additional benefit that users no longer need to manually initialize the 
+			internal <EM>weak_ptr</EM> member; <EM>shared_ptr</EM> automatically recognizes 
+			the <code>enable_shared_from_this</code> base class and performs the 
+			initialization automatically.</p>
+		<h3>E. Size and Performance</h3>
+		<h4>1.
+		</h4>
+		<p>[...]</p>
+		<h3>F. Alternatives</h3>
 		<h4>1. Policy Based Smart Pointers</h4>
 		<p>[...]</p>
 		<h4>2. Garbage Collection</h4>
@@ -568,7 +581,7 @@ else
       public:
         typedef T element_type;
 
-        <em>// constructors</em>
+        <em>// constructors</EM>
         shared_ptr();
         template&lt;class Y&gt; explicit shared_ptr(Y * p);
         template&lt;class Y, class D&gt; shared_ptr(Y * p, D d);
@@ -577,30 +590,30 @@ else
         template&lt;class Y&gt; explicit shared_ptr(weak_ptr&lt;Y&gt; const &amp; r);
         template&lt;class Y&gt; explicit shared_ptr(auto_ptr&lt;Y&gt; &amp; r);
 
-        <em>// destructor</em>
+        <em>// destructor</EM>
         ~shared_ptr();
 
-        <em>// assignment</em>
+        <em>// assignment</EM>
         shared_ptr &amp; operator=(shared_ptr const &amp; r);
         template&lt;class Y&gt; shared_ptr &amp; operator=(shared_ptr&lt;Y&gt; const &amp; r);
         template&lt;class Y&gt; shared_ptr &amp; operator=(auto_ptr&lt;Y&gt; &amp; r);
 
-        <em>// modifiers</em>
+        <em>// modifiers</EM>
         void swap(shared_ptr &amp; r);
         void reset();
         template&lt;class Y&gt; void reset(Y * p);
         template&lt;class Y, class D&gt; void reset(Y * p, D d);
 
-        <em>// observers</em>
+        <em>// observers</EM>
         T * get() const;
         T &amp; operator*() const;
         T * operator-&gt;() const;
         long use_count() const;
         bool unique() const;
-        operator <em>unspecified-bool-type</em>() const;
+        operator <em>unspecified-bool-type</EM>() const;
       };
 
-      <em>// comparison</em>
+      <em>// comparison</EM>
       template&lt;class T, class U&gt;
         bool operator==(shared_ptr&lt;T&gt; const &amp; a, shared_ptr&lt;U&gt; const &amp; b);
 
@@ -610,21 +623,21 @@ else
       template&lt;class T, class U&gt;
         bool operator&lt;(shared_ptr&lt;T&gt; const &amp; a, shared_ptr&lt;U&gt; const &amp; b);
 
-      <em>// other operators</em>
+      <em>// other operators</EM>
       template&lt;class E, class T, class Y&gt;
         basic_ostream&lt;E, T&gt; &amp; operator&lt;&lt; (basic_ostream&lt;E, T&gt; &amp; os, shared_ptr&lt;Y&gt; const &amp; p);
 
-      <em>// specialized algorithms</em>
+      <em>// specialized algorithms</EM>
       template&lt;class T&gt; void swap(shared_ptr&lt;T&gt; &amp; a, shared_ptr&lt;T&gt; &amp; b);
 
-      <em>// casts</em>
+      <em>// casts</EM>
       template&lt;class T, class U&gt;
         shared_ptr&lt;T&gt; static_pointer_cast(shared_ptr&lt;U&gt; const &amp; r);
 
       template&lt;class T, class U&gt;
         shared_ptr&lt;T&gt; dynamic_pointer_cast</A>(shared_ptr&lt;U&gt; const &amp; r);
 
-      <em>// get_deleter</em>
+      <em>// get_deleter</EM>
       template&lt;class D, class T&gt;
         D * get_deleter(shared_ptr&lt;T&gt; const &amp; p);
     }
@@ -786,7 +799,7 @@ else
 		<P><B>Notes:</B> <code>unique()</code> may be faster than <code>use_count()</code>. 
 			If you are using <code>unique()</code> to implement copy on write, do not rely 
 			on a specific value when <code>get() == 0</code>.</P>
-		<pre>    operator <em>unspecified-bool-type</em> () const;
+		<pre>    operator <em>unspecified-bool-type</EM> () const;
 </pre>
 		<p><b>Returns:</b> an unspecified value that, when used in boolean contexts, is 
 			equivalent to <code>get() != 0</code>.</p>
@@ -873,42 +886,44 @@ else
 			returns 0.</P>
 		<P><B>Throws:</B> nothing.</P>
 		<h3>D. Class template <code>weak_ptr</code></h3>
-		<p>The class template <code>weak_ptr</code>...</p>
+		<p>The <code>weak_ptr</code> class template stores a "weak reference" to an object 
+			that's already managed by a <code>shared_ptr</code>. To access the object, a <code>weak_ptr</code>
+			can be converted to a <code>shared_ptr</code> using the member function <code>lock</code>.</p>
 		<pre>    namespace std {
       template&lt;class T&gt; class weak_ptr {
 
       public:
         typedef T element_type;
 
-        <em>// constructors</em>
+        <em>// constructors</EM>
         weak_ptr();
         template&lt;class Y&gt; weak_ptr(shared_ptr&lt;Y&gt; const &amp; r);
         weak_ptr(weak_ptr const &amp; r);
         template&lt;class Y&gt; weak_ptr(weak_ptr&lt;Y&gt; const &amp; r);
 
-        <em>// destructor</em>
+        <em>// destructor</EM>
         ~weak_ptr();
 
-        <em>// assignment</em>
+        <em>// assignment</EM>
         weak_ptr &amp; operator=(weak_ptr const &amp; r);
         template&lt;class Y&gt; weak_ptr &amp; operator=(weak_ptr&lt;Y&gt; const &amp; r);
         template&lt;class Y&gt; weak_ptr &amp; operator=(shared_ptr&lt;Y&gt; const &amp; r);
 
-        <em>// modifiers</em>
+        <em>// modifiers</EM>
         void swap(weak_ptr &amp; r);
         void reset();
 
-        <em>// observers</em>
+        <em>// observers</EM>
         long use_count() const;
         bool expired() const;
         shared_ptr&lt;T&gt; lock() const;
       };
 
-      <em>// comparison</em>
+      <em>// comparison</EM>
       template&lt;class T, class U&gt;
         bool operator&lt;(weak_ptr&lt;T&gt; const &amp; a, weak_ptr&lt;U&gt; const &amp; b);
 
-      <em>// specialized algorithms</em>
+      <em>// specialized algorithms</EM>
       template&lt;class T&gt;
         void swap(weak_ptr&lt;T&gt; &amp; a, weak_ptr&lt;T&gt; &amp; b);
     }
@@ -995,6 +1010,9 @@ else
 		<P><B>Effects:</B> Equivalent to <code>a.swap(b)</code>.</P>
 		<P><B>Throws:</B> nothing.</P>
 		<h3>E. Class template <code>enable_shared_from_this</code></h3>
+		<p>A class can derive from the <code>enable_shared_from_this</code> class template, 
+			passing itself as a template parameter, to inherit the <code>shared_from_this</code>
+			member functions that obtain a <EM>shared_ptr</EM> instance pointing to <code>this</code>.</p>
 		<pre>    namespace std {
       template&lt;class T&gt; class enable_shared_from_this {
       public:
@@ -1013,8 +1031,8 @@ else
 			of an instance <code>t</code> of type <code>T</code> . There must exist at 
 			least one <code>shared_ptr</code> instance <code>p</code> that <EM>owns</EM> <code>&amp;t</code>.
 		</p>
-		<p><b>Returns:</b> A <code>shared_ptr&lt;T&gt;</code> instance <code>r</code> that 
-			shares ownership with <code>p</code>.
+		<p><b>Returns:</b> A <code>shared_ptr&lt;T&gt;</code> instance <code>r</code> that <EM>shares 
+				ownership with</EM> <code>p</code>.
 		</p>
 		<p><b>Postconditions:</b> <code>r.get() == this</code>.
 		</p>
