@@ -13,9 +13,9 @@
 // warranty, and with no claim as to its suitability for any purpose.
 #ifndef BOOST_TUPPLE_DETAIL_ITERATOR_TUPPLE_PART_SPEC_HPP
 #define BOOST_TUPPLE_DETAIL_ITERATOR_TUPPLE_PART_SPEC_HPP
-#include "boost/tupple/tupple.hpp"
-#include "boost/tupple/detail/iterator_tupple_traits_detail.hpp"
-#include "boost/tupple/detail/ref_workaround.hpp"
+#include <boost/tupple/tupple.hpp>
+#include <boost/tupple/detail/iterator_tupple_traits_detail.hpp>
+#include <boost/tupple/detail/ref_workaround.hpp>
 
 #include <boost/utility.hpp>
 
@@ -65,6 +65,7 @@ namespace boost
       null_type >:public tuple < T0 >
     {
       typedef iterator_tuple < T0 > self_type;
+      typedef tuple < T0 > parent_type;
       typedef iterator_traits_tuple < detail::iterator_traits < T0 > >traits;
       typedef typename traits::iterator_category iterator_category;
       typedef typename traits::value_type value_type;
@@ -72,15 +73,15 @@ namespace boost
       typedef typename traits::const_reference const_reference;
       typedef typename traits::pointer pointer;
       typedef typename traits::difference_type difference_type;
-        iterator_tuple( arg_type0 theM0 ):tuple < T0 > ( theM0 )
+        iterator_tuple( arg_type0 theM0 ):parent_type( theM0 )
       {
       }
       template < class S0 > iterator_tuple( const iterator_tuple < S0 >
-                                            &rhs ):tuple < T0 > ( rhs )
+                                            &rhs ):parent_type( rhs )
       {
       }
       iterator_tuple( arg_type0 theM0,
-                      const tail_type & tail ):tuple < T0 > ( theM0, tail )
+                      const tail_type & tail ):parent_type( theM0, tail )
       {
       }
       self_type & operator++(  )
@@ -171,6 +172,7 @@ namespace boost
       null_type >:public tuple < T0, T1 >
     {
       typedef iterator_tuple < T0, T1 > self_type;
+      typedef tuple < T0, T1 > parent_type;
       typedef iterator_traits_tuple < detail::iterator_traits < T0 >,
         detail::iterator_traits < T1 > >traits;
       typedef typename traits::iterator_category iterator_category;
@@ -179,17 +181,17 @@ namespace boost
       typedef typename traits::const_reference const_reference;
       typedef typename traits::pointer pointer;
       typedef typename traits::difference_type difference_type;
-        iterator_tuple( arg_type0 theM0, arg_type1 theM1 ):tuple < T0,
-        T1 > ( theM0, theM1 )
+        iterator_tuple( arg_type0 theM0, arg_type1 theM1 ):parent_type( theM0,
+                                                                        theM1 )
       {
       }
       template < class S0,
         class S1 > iterator_tuple( const iterator_tuple < S0,
-                                   S1 > &rhs ):tuple < T0, T1 > ( rhs )
+                                   S1 > &rhs ):parent_type( rhs )
       {
       }
-      iterator_tuple( arg_type0 theM0, const tail_type & tail ):tuple < T0,
-        T1 > ( theM0, tail )
+      iterator_tuple( arg_type0 theM0,
+                      const tail_type & tail ):parent_type( theM0, tail )
       {
       }
       self_type & operator++(  )
@@ -289,6 +291,7 @@ namespace boost
       null_type >:public tuple < T0, T1, T2 >
     {
       typedef iterator_tuple < T0, T1, T2 > self_type;
+      typedef tuple < T0, T1, T2 > parent_type;
       typedef iterator_traits_tuple < detail::iterator_traits < T0 >,
         detail::iterator_traits < T1 >,
         detail::iterator_traits < T2 > >traits;
@@ -299,17 +302,16 @@ namespace boost
       typedef typename traits::pointer pointer;
       typedef typename traits::difference_type difference_type;
         iterator_tuple( arg_type0 theM0, arg_type1 theM1,
-                        arg_type2 theM2 ):tuple < T0, T1, T2 > ( theM0, theM1,
-                                                                 theM2 )
+                        arg_type2 theM2 ):parent_type( theM0, theM1, theM2 )
       {
       }
       template < class S0, class S1,
         class S2 > iterator_tuple( const iterator_tuple < S0, S1,
-                                   S2 > &rhs ):tuple < T0, T1, T2 > ( rhs )
+                                   S2 > &rhs ):parent_type( rhs )
       {
       }
-      iterator_tuple( arg_type0 theM0, const tail_type & tail ):tuple < T0,
-        T1, T2 > ( theM0, tail )
+      iterator_tuple( arg_type0 theM0,
+                      const tail_type & tail ):parent_type( theM0, tail )
       {
       }
       self_type & operator++(  )
@@ -419,6 +421,7 @@ namespace boost
       T3 >
     {
       typedef iterator_tuple < T0, T1, T2, T3 > self_type;
+      typedef tuple < T0, T1, T2, T3 > parent_type;
       typedef iterator_traits_tuple < detail::iterator_traits < T0 >,
         detail::iterator_traits < T1 >, detail::iterator_traits < T2 >,
         detail::iterator_traits < T3 > >traits;
@@ -429,20 +432,17 @@ namespace boost
       typedef typename traits::pointer pointer;
       typedef typename traits::difference_type difference_type;
         iterator_tuple( arg_type0 theM0, arg_type1 theM1, arg_type2 theM2,
-                        arg_type3 theM3 ):tuple < T0, T1, T2, T3 > ( theM0,
-                                                                     theM1,
-                                                                     theM2,
-                                                                     theM3 )
+                        arg_type3 theM3 ):parent_type( theM0, theM1, theM2,
+                                                       theM3 )
       {
       }
       template < class S0, class S1, class S2,
         class S3 > iterator_tuple( const iterator_tuple < S0, S1, S2,
-                                   S3 > &rhs ):tuple < T0, T1, T2,
-        T3 > ( rhs )
+                                   S3 > &rhs ):parent_type( rhs )
       {
       }
-      iterator_tuple( arg_type0 theM0, const tail_type & tail ):tuple < T0,
-        T1, T2, T3 > ( theM0, tail )
+      iterator_tuple( arg_type0 theM0,
+                      const tail_type & tail ):parent_type( theM0, tail )
       {
       }
       self_type & operator++(  )
@@ -562,6 +562,7 @@ namespace boost
       T3, T4 >
     {
       typedef iterator_tuple < T0, T1, T2, T3, T4 > self_type;
+      typedef tuple < T0, T1, T2, T3, T4 > parent_type;
       typedef iterator_traits_tuple < detail::iterator_traits < T0 >,
         detail::iterator_traits < T1 >, detail::iterator_traits < T2 >,
         detail::iterator_traits < T3 >,
@@ -573,18 +574,20 @@ namespace boost
       typedef typename traits::pointer pointer;
       typedef typename traits::difference_type difference_type;
         iterator_tuple( arg_type0 theM0, arg_type1 theM1, arg_type2 theM2,
-                        arg_type3 theM3, arg_type4 theM4 ):tuple < T0, T1, T2,
-        T3, T4 > ( theM0, theM1, theM2, theM3, theM4 )
+                        arg_type3 theM3, arg_type4 theM4 ):parent_type( theM0,
+                                                                        theM1,
+                                                                        theM2,
+                                                                        theM3,
+                                                                        theM4 )
       {
       }
       template < class S0, class S1, class S2, class S3,
         class S4 > iterator_tuple( const iterator_tuple < S0, S1, S2, S3,
-                                   S4 > &rhs ):tuple < T0, T1, T2, T3,
-        T4 > ( rhs )
+                                   S4 > &rhs ):parent_type( rhs )
       {
       }
-      iterator_tuple( arg_type0 theM0, const tail_type & tail ):tuple < T0,
-        T1, T2, T3, T4 > ( theM0, tail )
+      iterator_tuple( arg_type0 theM0,
+                      const tail_type & tail ):parent_type( theM0, tail )
       {
       }
       self_type & operator++(  )
@@ -712,6 +715,7 @@ namespace boost
       T5 >
     {
       typedef iterator_tuple < T0, T1, T2, T3, T4, T5 > self_type;
+      typedef tuple < T0, T1, T2, T3, T4, T5 > parent_type;
       typedef iterator_traits_tuple < detail::iterator_traits < T0 >,
         detail::iterator_traits < T1 >, detail::iterator_traits < T2 >,
         detail::iterator_traits < T3 >, detail::iterator_traits < T4 >,
@@ -724,18 +728,17 @@ namespace boost
       typedef typename traits::difference_type difference_type;
         iterator_tuple( arg_type0 theM0, arg_type1 theM1, arg_type2 theM2,
                         arg_type3 theM3, arg_type4 theM4,
-                        arg_type5 theM5 ):tuple < T0, T1, T2, T3, T4,
-        T5 > ( theM0, theM1, theM2, theM3, theM4, theM5 )
+                        arg_type5 theM5 ):parent_type( theM0, theM1, theM2,
+                                                       theM3, theM4, theM5 )
       {
       }
       template < class S0, class S1, class S2, class S3, class S4,
         class S5 > iterator_tuple( const iterator_tuple < S0, S1, S2, S3, S4,
-                                   S5 > &rhs ):tuple < T0, T1, T2, T3, T4,
-        T5 > ( rhs )
+                                   S5 > &rhs ):parent_type( rhs )
       {
       }
-      iterator_tuple( arg_type0 theM0, const tail_type & tail ):tuple < T0,
-        T1, T2, T3, T4, T5 > ( theM0, tail )
+      iterator_tuple( arg_type0 theM0,
+                      const tail_type & tail ):parent_type( theM0, tail )
       {
       }
       self_type & operator++(  )
@@ -873,6 +876,7 @@ namespace boost
       null_type, null_type >:public tuple < T0, T1, T2, T3, T4, T5, T6 >
     {
       typedef iterator_tuple < T0, T1, T2, T3, T4, T5, T6 > self_type;
+      typedef tuple < T0, T1, T2, T3, T4, T5, T6 > parent_type;
       typedef iterator_traits_tuple < detail::iterator_traits < T0 >,
         detail::iterator_traits < T1 >, detail::iterator_traits < T2 >,
         detail::iterator_traits < T3 >, detail::iterator_traits < T4 >,
@@ -886,18 +890,18 @@ namespace boost
       typedef typename traits::difference_type difference_type;
         iterator_tuple( arg_type0 theM0, arg_type1 theM1, arg_type2 theM2,
                         arg_type3 theM3, arg_type4 theM4, arg_type5 theM5,
-                        arg_type6 theM6 ):tuple < T0, T1, T2, T3, T4, T5,
-        T6 > ( theM0, theM1, theM2, theM3, theM4, theM5, theM6 )
+                        arg_type6 theM6 ):parent_type( theM0, theM1, theM2,
+                                                       theM3, theM4, theM5,
+                                                       theM6 )
       {
       }
       template < class S0, class S1, class S2, class S3, class S4, class S5,
         class S6 > iterator_tuple( const iterator_tuple < S0, S1, S2, S3, S4,
-                                   S5, S6 > &rhs ):tuple < T0, T1, T2, T3, T4,
-        T5, T6 > ( rhs )
+                                   S5, S6 > &rhs ):parent_type( rhs )
       {
       }
-      iterator_tuple( arg_type0 theM0, const tail_type & tail ):tuple < T0,
-        T1, T2, T3, T4, T5, T6 > ( theM0, tail )
+      iterator_tuple( arg_type0 theM0,
+                      const tail_type & tail ):parent_type( theM0, tail )
       {
       }
       self_type & operator++(  )
@@ -1042,6 +1046,7 @@ namespace boost
       T7 >
     {
       typedef iterator_tuple < T0, T1, T2, T3, T4, T5, T6, T7 > self_type;
+      typedef tuple < T0, T1, T2, T3, T4, T5, T6, T7 > parent_type;
       typedef iterator_traits_tuple < detail::iterator_traits < T0 >,
         detail::iterator_traits < T1 >, detail::iterator_traits < T2 >,
         detail::iterator_traits < T3 >, detail::iterator_traits < T4 >,
@@ -1055,20 +1060,24 @@ namespace boost
       typedef typename traits::difference_type difference_type;
         iterator_tuple( arg_type0 theM0, arg_type1 theM1, arg_type2 theM2,
                         arg_type3 theM3, arg_type4 theM4, arg_type5 theM5,
-                        arg_type6 theM6, arg_type7 theM7 ):tuple < T0, T1, T2,
-        T3, T4, T5, T6, T7 > ( theM0, theM1, theM2, theM3, theM4, theM5,
-                               theM6, theM7 )
+                        arg_type6 theM6, arg_type7 theM7 ):parent_type( theM0,
+                                                                        theM1,
+                                                                        theM2,
+                                                                        theM3,
+                                                                        theM4,
+                                                                        theM5,
+                                                                        theM6,
+                                                                        theM7 )
       {
       }
       template < class S0, class S1, class S2, class S3, class S4, class S5,
         class S6, class S7 > iterator_tuple( const iterator_tuple < S0, S1,
                                              S2, S3, S4, S5, S6,
-                                             S7 > &rhs ):tuple < T0, T1, T2,
-        T3, T4, T5, T6, T7 > ( rhs )
+                                             S7 > &rhs ):parent_type( rhs )
       {
       }
-      iterator_tuple( arg_type0 theM0, const tail_type & tail ):tuple < T0,
-        T1, T2, T3, T4, T5, T6, T7 > ( theM0, tail )
+      iterator_tuple( arg_type0 theM0,
+                      const tail_type & tail ):parent_type( theM0, tail )
       {
       }
       self_type & operator++(  )
@@ -1222,6 +1231,7 @@ namespace boost
       T6, T7, T8 >
     {
       typedef iterator_tuple < T0, T1, T2, T3, T4, T5, T6, T7, T8 > self_type;
+      typedef tuple < T0, T1, T2, T3, T4, T5, T6, T7, T8 > parent_type;
       typedef iterator_traits_tuple < detail::iterator_traits < T0 >,
         detail::iterator_traits < T1 >, detail::iterator_traits < T2 >,
         detail::iterator_traits < T3 >, detail::iterator_traits < T4 >,
@@ -1237,20 +1247,19 @@ namespace boost
         iterator_tuple( arg_type0 theM0, arg_type1 theM1, arg_type2 theM2,
                         arg_type3 theM3, arg_type4 theM4, arg_type5 theM5,
                         arg_type6 theM6, arg_type7 theM7,
-                        arg_type8 theM8 ):tuple < T0, T1, T2, T3, T4, T5, T6,
-        T7, T8 > ( theM0, theM1, theM2, theM3, theM4, theM5, theM6, theM7,
-                   theM8 )
+                        arg_type8 theM8 ):parent_type( theM0, theM1, theM2,
+                                                       theM3, theM4, theM5,
+                                                       theM6, theM7, theM8 )
       {
       }
       template < class S0, class S1, class S2, class S3, class S4, class S5,
         class S6, class S7,
         class S8 > iterator_tuple( const iterator_tuple < S0, S1, S2, S3, S4,
-                                   S5, S6, S7, S8 > &rhs ):tuple < T0, T1, T2,
-        T3, T4, T5, T6, T7, T8 > ( rhs )
+                                   S5, S6, S7, S8 > &rhs ):parent_type( rhs )
       {
       }
-      iterator_tuple( arg_type0 theM0, const tail_type & tail ):tuple < T0,
-        T1, T2, T3, T4, T5, T6, T7, T8 > ( theM0, tail )
+      iterator_tuple( arg_type0 theM0,
+                      const tail_type & tail ):parent_type( theM0, tail )
       {
       }
       self_type & operator++(  )

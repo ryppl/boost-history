@@ -31,9 +31,9 @@ PREPROCESS_LATER(#define BOOST_TUPPLE_DETAIL_ITERATOR_TUPPLE_NO_PART_SPEC_HPP)
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
 
-PREPROCESS_LATER(#include "boost/tupple/tupple.hpp")
-PREPROCESS_LATER(#include "boost/tupple/detail/iterator_tupple_traits_detail.hpp")
-PREPROCESS_LATER(#include "boost/tupple/detail/ref_workaround.hpp")
+PREPROCESS_LATER(#include <boost/tupple/tupple.hpp>)
+PREPROCESS_LATER(#include <boost/tupple/detail/iterator_tupple_traits_detail.hpp>)
+PREPROCESS_LATER(#include <boost/tupple/detail/ref_workaround.hpp>)
 
 PREPROCESS_LATER(#include <boost/utility.hpp>)
 
@@ -87,6 +87,9 @@ namespace tupple {
 #define THEMYELEM7 theH
 #define THEMYELEM8 theI
 #define THEMYELEM9 theJ
+
+#define _DELAY_(fct,arg)  __DELAY__(fct,arg)
+#define __DELAY__(fct,arg)  fct##arg
 
 #ifdef TUPPLE_PARTIAL_SPEC
 #  define TUPLE(k) tuple
@@ -208,11 +211,6 @@ namespace tupple {
 #  define ITERTRAITSTYPE(k) ITERTRAITS(k)<BOOST_PP_ENUM(k,DETAILTRAITS,_)>
 #  define TRAITSTEMPLATE(k,a,b) template<BOOST_PP_ENUM_PARAMS(k,class a)>
 #  define TRAITSDEFAULT(k,A)
-//#  define ITERSELFTYPE(k) TYPE2(ITERTUPLE(k),k,T,R)
-//#  define ITERTRAITSTYPE(k) TYPE( ITERTRAITS(k),k,R )
-//
-//#  define TRAITSTEMPLATE(k,a,b) template<BOOST_PP_ENUM_PARAMS(k,class a),BOOST_PP_ENUM(k,b,_)>
-//#  define TRAITSDEFAULT(z,k,_) class R##k = detail::iterator_traits<T##k>
 #endif
 
 #if 0
@@ -233,7 +231,8 @@ TEMPLATE(k,R) struct ITERTRAITS(k) TEMPLATESPEC(k,r,R) {                        
 TRAITSTEMPLATE( k,T,TRAITSDEFAULT ) struct ITERTUPLE(k) TEMPLATESPEC(k,r,T)       \
   : public TYPE(TUPLE(k),k,T)                                             \
 {                                                                         \
-  typedef ITERSELFTYPE(k) self_type;                                      \
+  typedef ITERSELFTYPE(k)    self_type;                                   \
+  typedef TYPE(TUPLE(k),k,T) parent_type;                                 \
   typedef ITERTRAITSTYPE(k) traits;                                       \
                                                                           \
   typedef typename traits::iterator_category iterator_category;           \
@@ -244,13 +243,13 @@ TRAITSTEMPLATE( k,T,TRAITSDEFAULT ) struct ITERTUPLE(k) TEMPLATESPEC(k,r,T)     
   typedef typename traits::difference_type   difference_type;             \
                                                                           \
   ITERTUPLE(k)(BOOST_PP_ENUM(k,CTORARG,_))                                \
-  : TYPE(TUPLE(k),k,T)( BOOST_PP_ENUM(k,THEELEMS,A) ) {}                  \
+  : parent_type( BOOST_PP_ENUM(k,THEELEMS,A) ) {}                         \
                                                                           \
   TEMPLATE(k,S) ITERTUPLE(k)( const TYPE(ITERTUPLE(k),k,S)& rhs )         \
-  : TYPE(TUPLE(k),k,T)( rhs ) {}                                          \
+  : parent_type( rhs ) {}                                                 \
                                                                           \
   ITERTUPLE(k)( CTORARG(z,0,_), const tail_type& tail )                   \
-  : TYPE(TUPLE(k),k,T)( THEELEM(0,A), tail ) {}                           \
+  : parent_type( THEELEM(0,A), tail ) {}                                  \
                                                                           \
   self_type& operator++() {                                               \
     BOOST_PP_REPEAT(k,INC,_) return *this;                                \
@@ -393,17 +392,14 @@ template<class T, int N> struct n_fold_iterator_tuple
 
   namespace detail {
 
-    #define BASE_TYPE_SELECTOR(k) DELAY_BASE_TYPE_SELECTOR(k)
-    #define DELAY_BASE_TYPE_SELECTOR(k) iterator_tuple_base_type_selector##k
-
-    #define TEE(k) DELAY_TEE(k)
-    #define DELAY_TEE(k) T##k
+    #define BASE_TYPE_SELECTOR(k) _DELAY_(iterator_tuple_base_type_selector,k)
+    #define TEE(k) _DELAY_(T,k)
 
     #define BASE_TYPE_SELECT(k)                                               \
     TEMPLATE(k,T) struct BASE_TYPE_SELECTOR(k)                                \
     {                                                                         \
-      typedef ::boost::mpl::if_c<                                               \
-        ::boost::is_same< TEE(BOOST_PP_DEC(k)), null_type >::value,             \
+      typedef ::boost::mpl::if_c<                                             \
+        ::boost::is_same< TEE(BOOST_PP_DEC(k)), null_type >::value,           \
           BASE_TYPE_SELECTOR(BOOST_PP_DEC(k))                                 \
            < BOOST_PP_ENUM_PARAMS( BOOST_PP_DEC(k), T ) > ::type,             \
           ITERTUPLE(k)< BOOST_PP_ENUM_PARAMS( k, T ) >                        \
@@ -429,13 +425,6 @@ template<class T, int N> struct n_fold_iterator_tuple
     BASE_TYPE_SELECT(7)
     BASE_TYPE_SELECT(8)
     BASE_TYPE_SELECT(9)
-
-    #undef BASE_TYPE_SELECTOR
-    #undef DELAY_BASE_TYPE_SELECTOR
-    #undef TEE
-    #undef DELAY_TEE
-
-    #undef BASE_TYPE_SELECT
 
   } // namespace detail
 
@@ -475,11 +464,6 @@ template<class T, int N> struct n_fold_iterator_tuple
     }
   };
 
-  #undef VEEVEE
-  #undef VEE
-
-  #undef REFLECT_CTOR
-
 #endif
 
 #if 0
@@ -491,91 +475,8 @@ template<BOOST_PP_ENUM_PARAMS(k,class T),class S>   \
 TYPE(ITERTUPLE(k),k,T) operator##op( const TYPE(ITERTUPLE(k),k,T)& lhs, const S& rhs ) \
 { return TYPE(ITERTUPLE(k),k,T)(lhs) op##= rhs; }
 
-#undef BINOP
-
-#undef PLUS2
-#undef MINUS2
-
-#undef ITERATOR_TUPLE
-
-#undef INC
-#undef DEC
-
-#undef DEREF
-#undef CONSTDEREF
-#undef ARRAYACCESS
-#undef CONSTARRAYACCESS
-
-#undef EMPTY
-#undef SIZE
-#undef BEGIN
-#undef END
-
-
-#undef ITERTRAITS_CATEGORY
-#undef ITERTRAITS_VALUE
-#undef ITERTRAITS_REFERENCE
-#undef ITERTRAITS_POINTER
-#undef ITERTRAITS_DIFFERENCE
-#undef ITERTRAITS_CONSTREFERENCE
-
-
-#if 0
-// === undef globals ===
-#endif
-
-#undef IF_INT0
-#undef IF_INT1
-
-#undef MYELEM0
-#undef MYELEM1
-#undef MYELEM2
-#undef MYELEM3
-#undef MYELEM4
-#undef MYELEM5
-#undef MYELEM6
-#undef MYELEM7
-#undef MYELEM8
-#undef MYELEM9
-
-#undef THEMYELEM0
-#undef THEMYELEM1
-#undef THEMYELEM2
-#undef THEMYELEM3
-#undef THEMYELEM4
-#undef THEMYELEM5
-#undef THEMYELEM6
-#undef THEMYELEM7
-#undef THEMYELEM8
-#undef THEMYELEM9
-
-#undef NULLTYPE
-
-#undef ELEM
-#undef THEELEM
-
-#undef THEELEMS
-
-#undef TYPE
-#undef TEMPLATE
-#undef TEMPLATENULL
-
-#undef NULLTYPES
-
-#undef TEMPLATESPEC
-
-#undef CTORARG
-
-#undef NTIMES
-
-#undef ARGTYPE
-
-#undef OP_IF
-
 } // namespace tupple
 } // namespace boost
 
 
 PREPROCESS_LATER(#endif)
-
-#undef PREPROCESS_LATER
