@@ -16,8 +16,14 @@ namespace boost {
 template<class T>
 struct keyword;
 
-namespace detail {
- 
+namespace detail
+{
+
+  // just to avoid confusion.  We have to build a conversion operator
+  // that returns this type to get around ETI; int seemed a little too
+  // dangerous.
+  struct non_int_eti_type { private: non_int_eti_type(); };
+  
    template<class KW, class Default>
    struct get_keyword
    {
@@ -112,6 +118,19 @@ struct keyword
       return detail::named<Derived,T const>(x);
    }
 
+   template <class T>
+   detail::named<Derived,T> operator()(T& x) const
+   {
+      return detail::named<Derived,T>(x);
+   }
+#if !BOOST_WORKAROUND(BOOST_MSVC, == 1200)  // partial ordering bug
+   template <class T>
+   detail::named<Derived,T const> operator()(T const& x) const
+   {
+      return detail::named<Derived,T const>(x);
+   }
+#endif
+    
    template<class Default>
    detail::get_keyword<Derived, Default>
    operator|(Default& default_) const
@@ -127,7 +146,8 @@ struct keyword
    }
 };
 
-namespace detail {
+namespace detail
+{
 
    typedef char yes_t;
    struct no_t { char x[128]; };
@@ -158,13 +178,27 @@ namespace detail {
       };
    };
 
-   template<class KW, class T>
-   struct as_named
-      : as_named_base<
-           (sizeof(::boost::detail::is_named((T*)0)) == sizeof(yes_t))
-        >::template apply<KW, T>
-   {};
+  template<class KW, class T>
+  struct as_named
+  {
+      // metafunction forwarding would confuse vc6
+      BOOST_STATIC_CONSTANT(
+          bool, named
+                = sizeof(::boost::detail::is_named((T*)0)) == sizeof(yes_t)
+      );
+      
+      typedef typename as_named_base<named>
+          ::template apply<KW, T>::type type;
+  };
 
+#if BOOST_WORKAROUND(BOOST_MSVC, == 1200)
+   template<>
+   struct as_named<int,int>
+   {
+       typedef int type;
+   };
+#endif 
+  
    template<class Seq, class KW>
    struct has_named_of
    {
@@ -200,9 +234,19 @@ namespace detail {
       };
    };
 
-template <>
-struct restrict_keywords<int> { template <class Keywords> struct apply { typedef int type; }; };
-
+#if BOOST_WORKAROUND(BOOST_MSVC, == 1200)
+  // ETI workaround
+  template <>
+  struct restrict_keywords<int>
+  {
+      template <class Keywords>
+      struct apply
+      {
+          typedef int type;
+      };
+  };
+#endif
+  
    template<>
    struct restrict_keywords<mpl::false_>
    {
@@ -270,26 +314,33 @@ struct keywords
 
    template<class Seq>
    struct restrict_base
-      : mpl::apply1<
-         detail::restrict_keywords<
-             typename mpl::and_<
-                 detail::has_named_of<Seq, K0>
-               , detail::has_named_of<Seq, K1>
-               , detail::has_named_of<Seq, K2>
-               , detail::has_named_of<Seq, K3>
-               , detail::has_named_of<Seq, K4>
-           >::type
-         >
+   {
+       // metafunction forwarding here would confuse vc6
+       typedef typename mpl::apply1<
+           detail::restrict_keywords<
+               typename mpl::and_<
+                   detail::has_named_of<Seq, K0>
+                 , detail::has_named_of<Seq, K1>
+                 , detail::has_named_of<Seq, K2>
+                 , detail::has_named_of<Seq, K3>
+                 , detail::has_named_of<Seq, K4>
+               >::type
+           >
          , self_t
-     >
-     {};
+       >::type type;
+   };
 
-#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
+#if BOOST_WORKAROUND(BOOST_MSVC, == 1200)
+    // To satisfy ETI
+    operator detail::non_int_eti_type() const;
+#endif 
+
+#if  BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
     // ETI workaround
     template <>
     struct restrict_base<int>
     {
-        typedef int type;
+        typedef detail::non_int_eti_type type;
     };
 #endif
 
@@ -301,55 +352,57 @@ struct keywords
       , class T4 = detail::nil
    >
    struct restrict
-      : restrict_base<
-            typename mpl::apply5<
-                detail::make_as_named_list<T0,T1,T2,T3,T4>
-              , K0, K1, K2, K3, K4
-            >::type
-        >
-   {};
+   {
+       // metafunction forwarding here would confuse vc6
+       typedef BOOST_DEDUCED_TYPENAME restrict_base<
+           BOOST_DEDUCED_TYPENAME mpl::apply5<
+               detail::make_as_named_list<T0,T1,T2,T3,T4>
+             , K0, K1, K2, K3, K4
+           >::type
+       >::type type;
+   };
 
    template<class A0>
    detail::list<
-        typename detail::as_named<K0, A0>::type
+        BOOST_DEDUCED_TYPENAME detail::as_named<K0, A0>::type
       , detail::nil
    >
    operator()(const A0& a0) const
    {
       return detail::list<
-           typename detail::as_named<K0, A0>::type
+           BOOST_DEDUCED_TYPENAME detail::as_named<K0, A0>::type
          , detail::nil>(a0, detail::nil());
    }
 
    template<class A0, class A1>
    detail::list<
-        typename detail::as_named<K0, A0>::type
+        BOOST_DEDUCED_TYPENAME detail::as_named<K0, A0>::type
       , detail::list<
-             typename detail::as_named<K1, A1>::type
+             BOOST_DEDUCED_TYPENAME detail::as_named<K1, A1>::type
            , detail::nil
         >
    >
    operator()(const A0& a0, const A1& a1) const
    {
       return detail::list<
-           typename detail::as_named<K0, A0>::type
+           BOOST_DEDUCED_TYPENAME detail::as_named<K0, A0>::type
          , detail::list<
-                typename detail::as_named<K1, A1>::type
+                BOOST_DEDUCED_TYPENAME detail::as_named<K1, A1>::type
               , detail::nil
            >
       >(a0, detail::list<
-                typename detail::as_named<K1, A1>::type
+                BOOST_DEDUCED_TYPENAME detail::as_named<K1, A1>::type
               , detail::nil
            >(a1, detail::nil()));
    }
 
    template<class A0, class A1, class A2>
    detail::list<
-        typename detail::as_named<K0, A0>::type
+        BOOST_DEDUCED_TYPENAME detail::as_named<K0, A0>::type
       , detail::list<
-           typename detail::as_named<K1, A1>::type
+           BOOST_DEDUCED_TYPENAME detail::as_named<K1, A1>::type
          , detail::list<
-                typename detail::as_named<K2, A2>::type
+                BOOST_DEDUCED_TYPENAME detail::as_named<K2, A2>::type
               , detail::nil
          >
       >
@@ -357,22 +410,22 @@ struct keywords
    operator()(const A0& a0, const A1& a1, const A2& a2) const
    {
       return detail::list<
-              typename detail::as_named<K0, A0>::type
+              BOOST_DEDUCED_TYPENAME detail::as_named<K0, A0>::type
             , detail::list<
-                 typename detail::as_named<K1, A1>::type
+                 BOOST_DEDUCED_TYPENAME detail::as_named<K1, A1>::type
                , detail::list<
-                    typename detail::as_named<K2, A2>::type
+                    BOOST_DEDUCED_TYPENAME detail::as_named<K2, A2>::type
                   , detail::nil
                >
             >
       >(a0, detail::list<
-                typename detail::as_named<K1, A1>::type
+                BOOST_DEDUCED_TYPENAME detail::as_named<K1, A1>::type
               , detail::list<
-                    typename detail::as_named<K2, A2>::type
+                    BOOST_DEDUCED_TYPENAME detail::as_named<K2, A2>::type
                   , detail::nil
                >
           >(a1, detail::list<
-                    typename detail::as_named<K2, A2>::type
+                    BOOST_DEDUCED_TYPENAME detail::as_named<K2, A2>::type
                   , detail::nil
                >(a2, detail::nil())));
    }
