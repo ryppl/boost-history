@@ -398,9 +398,10 @@ template&lt;class T, class A1, class A2&gt; shared_ptr&lt;T&gt; shared_new(A1 co
 		<P>One reason to avoid stored pointer comparisons is consistency with <EM>weak_ptr</EM>, 
 			where the value of the stored pointer may be (or become) indeterminate without 
 			affecting the ordering provided by <code>operator&lt;</code>. Another 
-			motivation for this <code>operator&lt;</code> behavior is support for the <code>std::map&lt;&nbsp;shared_ptr&lt;X&gt;, 
-				V&nbsp;&gt;</code> idiom that associates data with objects managed by <EM>shared_ptr</EM>
-			(with an important special case being <code>X=void</code>.) [<A href="#Dimov03">Dimov03</A>]</P>
+			motivation for this <code>operator&lt;</code> behavior is support for the <code>std::map&lt; 
+				shared_ptr&lt;X&gt;, V &gt;</code> idiom that associates data with objects 
+			managed by <EM>shared_ptr</EM> (with an important special case being <code>X=void</code>.) 
+			[<A href="#Dimov03">Dimov03</A>]</P>
 		<P>In most typical scenarios, a <code>std::map</code> with <EM>shared_ptr</EM> as 
 			key would behave as if the stored pointers have been used. The exception is 
 			that in some situations involving multiple or virtual inheritance, it is 
@@ -417,7 +418,21 @@ template&lt;class T, class A1, class A2&gt; shared_ptr&lt;T&gt; shared_new(A1 co
 			the conversion operator may cause <EM>shared_ptr</EM> to be treated in stream 
 			insertion contexts as if it were a <code>bool</code>.</p>
 		<h4>11. Casts</h4>
-		<p>...</p>
+		<p>Two cast functions, <code>static_pointer_cast</code> and <code>dynamic_pointer_cast</code>, 
+			are provided for <EM>shared_ptr</EM>.</p>
+		<P><code>shared_pointer_cast</code> is useful when heterogeneous <EM>shared_ptr</EM>
+			instances are temporarily stored in a container as <code>shared_ptr&lt;void&gt;</code>, 
+			along with a corresponding function pointer or polymorphic function object 
+			wrapper [<A href="#Gregor02">Gregor02</A>] that remembers the original type and 
+			is able to use <code>static_pointer_cast</code> to obtain the original <EM>shared_ptr</EM>.</P>
+		<P><code>dynamic_pointer_cast</code> is useful for passing <EM>shared_ptr</EM> instances 
+			through a third-party library, then recognizing, and recovering, the original 
+			value, as described in the original <code>dynamic_cast</code> rationale 
+			[Stroustrup94].</P>
+		<P><code>reinterpret_cast</code> and <code>const_cast</code> equivalents have been 
+			omitted since they have never been requested by users (although it's possible 
+			to emulate a <code>reinterpret_pointer_cast</code> by using an intermediate <code>shared_ptr&lt;void&gt;</code>
+			and a <code>static_pointer_cast</code>).</P>
 		<h4>12. <code>get_deleter</code></h4>
 		<p>...</p>
 		<h3>C. weak_ptr</h3>
@@ -977,6 +992,10 @@ template&lt;class T, class A1, class A2&gt; shared_ptr&lt;T&gt; shared_new(A1 co
 			for "reference counted smart pointer" yields 2,400 entries. Anyone doubting 
 			that shared-ownership smart pointers have been reinvented a large number of 
 			times should read a random selection of these entries.</p>
+		<p>[<a name="Gregor02">Gregor02</a>] Douglas Gregor, <em>A Proposal to add a 
+				Polymorphic Function Object Wrapper to the Standard Library</em>, C++ 
+			committee document N1402=02-0060, October 2002. Available online at <a href="http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/2002/n1402.htm">
+				http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/2002/n1402.htm</a></p>
 		<p>[<a name="Hinnant02">Hinnant02</a>] Howard E. Hinnant, Peter Dimov, and Dave 
 			Abrahams, <em>A Proposal to Add Move Semantics Support to the C++ Language</em>, 
 			C++ committee document N1377=02-0035, September 2002. Available online at <a href="http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/2002/n1377.htm">
