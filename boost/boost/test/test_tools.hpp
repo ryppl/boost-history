@@ -11,6 +11,7 @@
 
 // LOCAL
 #include <boost/test/unit_test_log.hpp>
+#include <boost/test/detail/class_properties.hpp>
 #include <boost/test/detail/grinning_ptr.hpp>
 
 // BOOST
@@ -20,6 +21,7 @@
 #include <strstream> //!!
 #include <cstdlib>
 #include <stdexcept>
+#include <memory>
 
 // ************************************************************************** //
 // **************                    TOOL BOX                  ************** //
@@ -121,10 +123,43 @@ namespace detail {
 struct wrapstrstream {
     mutable std::ostrstream buf;
 
-    template <class T>
-    wrapstrstream const& operator<<( T t ) const    { buf << t; return *this; }
-
     char const*          str() const;
+};
+
+//____________________________________________________________________________//
+
+template <class T>
+inline wrapstrstream const&
+operator<<( wrapstrstream const& targ, T const& t )
+{ 
+    targ.buf << t;
+    return targ;
+}
+
+//____________________________________________________________________________//
+
+inline wrapstrstream const& 
+operator<<( wrapstrstream const& targ, wrapstrstream const& src )
+{ 
+    targ << src.str();
+    return targ;
+}
+
+//____________________________________________________________________________//
+
+// ************************************************************************** //
+// **************            extended_predicate_value          ************** //
+// ************************************************************************** //
+
+struct extended_predicate_value {
+    // Constructor
+    explicit    extended_predicate_value( bool predicate_value ) 
+    : p_predicate_value( predicate_value ), p_message( new wrapstrstream ) {}
+
+    bool        operator!() { return !p_predicate_value.get(); }
+
+    BOOST_READONLY_PROPERTY( bool, 0, () )  p_predicate_value;
+    std::auto_ptr<wrapstrstream>            p_message;
 };
 
 // ************************************************************************** //
@@ -152,14 +187,26 @@ private:
 void
 checkpoint_impl( wrapstrstream const& message, char const* file_name, int line_num );
 
+//____________________________________________________________________________//
+
 void
 message_impl( wrapstrstream const& message, char const* file_name, int line_num );
+
+//____________________________________________________________________________//
 
 // ************************************* //
 
 void
 warn_and_continue_impl( bool predicate, wrapstrstream const& message, char const* file_name, int line_num,
                         bool add_fail_pass = true );
+
+//____________________________________________________________________________//
+
+void
+warn_and_continue_impl( extended_predicate_value v, wrapstrstream const& message, char const* file_name, int line_num,
+                        bool add_fail_pass = true );
+
+//____________________________________________________________________________//
 
 // ************************************* //
 
@@ -174,8 +221,22 @@ test_and_throw_impl   ( bool predicate, wrapstrstream const& message, char const
 
 //____________________________________________________________________________//
 
-template<typename ArgType, typename Predicate>
 bool
+test_and_continue_impl( extended_predicate_value v, wrapstrstream const& message, char const* file_name, int line_num,
+                        bool add_fail_pass = true, 
+                        unit_test_framework::report_level loglevel = unit_test_framework::report_all_errors );
+
+//____________________________________________________________________________//
+
+void
+test_and_throw_impl   ( extended_predicate_value v, wrapstrstream const& message, char const* file_name, int line_num,
+                        bool add_fail_pass = true, 
+                        unit_test_framework::report_level loglevel = unit_test_framework::report_fatal_errors );
+
+//____________________________________________________________________________//
+
+template<typename ArgType, typename Predicate>
+inline bool
 test_and_continue_impl( Predicate const& pred, ArgType const& arg,
                         wrapstrstream const& message, char const* file_name, int line_num,
                         unit_test_framework::report_level loglevel = unit_test_framework::report_all_errors )
@@ -184,7 +245,7 @@ test_and_continue_impl( Predicate const& pred, ArgType const& arg,
 
     if( !predicate ) {
         return test_and_continue_impl( predicate,
-                                       wrapstrstream() << "test " << message.str() << " failed for " << arg,
+                                       wrapstrstream() << "test " << message << " failed for " << arg,
                                        file_name, line_num, false, loglevel );
     }
 
@@ -194,7 +255,7 @@ test_and_continue_impl( Predicate const& pred, ArgType const& arg,
 //____________________________________________________________________________//
 
 template<typename ArgType, typename Predicate>
-void
+inline void
 test_and_throw_impl   ( Predicate const& pred, ArgType const& arg,
                         wrapstrstream const& message, char const* file_name, int line_num,
                         unit_test_framework::report_level loglevel = unit_test_framework::report_fatal_errors )
@@ -207,7 +268,7 @@ test_and_throw_impl   ( Predicate const& pred, ArgType const& arg,
 //____________________________________________________________________________//
 
 template<typename First, typename Second, typename Predicate>
-bool
+inline bool
 test_and_continue_impl( Predicate const& pred, First const& first, Second const& second,
                         wrapstrstream const& message, char const* file_name, int line_num,
                         unit_test_framework::report_level loglevel = unit_test_framework::report_all_errors )
@@ -216,7 +277,7 @@ test_and_continue_impl( Predicate const& pred, First const& first, Second const&
 
     if( !predicate ) {
         return test_and_continue_impl( predicate,
-            wrapstrstream() << "test " << message.str() << " failed for (" << first << ", " << second << ")",
+            wrapstrstream() << "test " << message << " failed for (" << first << ", " << second << ")",
             file_name, line_num, false, loglevel );
     }
 
@@ -226,7 +287,7 @@ test_and_continue_impl( Predicate const& pred, First const& first, Second const&
 //____________________________________________________________________________//
 
 template<typename First, typename Second, typename Predicate>
-void
+inline void
 test_and_throw_impl   ( First const& first, Second const& second, Predicate const& pred,
                         wrapstrstream const& message, char const* file_name, int line_num,
                         unit_test_framework::report_level loglevel = unit_test_framework::report_fatal_errors )
@@ -257,7 +318,7 @@ equal_and_continue_impl( Left const& left, Right const& right,
 
     if( !predicate ) {
         return test_and_continue_impl( predicate,
-                                       wrapstrstream() << "test " << message.str() << " failed [" << left << " != " << right << "]",
+                                       wrapstrstream() << "test " << message << " failed [" << left << " != " << right << "]",
                                        file_name, line_num, false, loglevel );
     }
 
@@ -291,7 +352,7 @@ compare_and_continue_impl( FPT left, FPT right, ToleranceSource tolerance_src,
 
     if( !predicate ) {
         return test_and_continue_impl( predicate,
-                                       wrapstrstream() << "test " << message.str() 
+                                       wrapstrstream() << "test " << message 
                                                        << " failed [" << left << " (!=) " << right << " (" << pred.p_tolerance.get() << ")]",
                                        file_name, line_num, false, loglevel );
     }
@@ -306,6 +367,8 @@ compare_and_continue_impl( FPT left, FPT right, ToleranceSource tolerance_src,
 bool
 is_defined_impl( char const* symbol_name, char const* symbol_value );
 
+//____________________________________________________________________________//
+
 } // namespace detail
 
 // ************************************************************************** //
@@ -315,6 +378,7 @@ is_defined_impl( char const* symbol_name, char const* symbol_value );
 // class to be used to simplify testing of ostream print functions
 
 class output_test_stream : public std::ostrstream {
+    typedef detail::extended_predicate_value result_type;
 public:
     // Constructor
     explicit        output_test_stream( char const* pattern_file = NULL, bool match_or_save = true );
@@ -323,14 +387,15 @@ public:
     ~output_test_stream();
 
     // checking function
-    bool            is_empty( bool flush_stream = true );
-    bool            check_length( std::size_t length, bool flush_stream = true );
-    bool            is_equal( char const* arg, bool flush_stream = true );
-    bool            is_equal( char const* arg, std::size_t n, bool flush_stream = true );
+    result_type     is_empty( bool flush_stream = true );
+    result_type     check_length( std::size_t length, bool flush_stream = true );
+    result_type     is_equal( char const* arg, bool flush_stream = true );
+    result_type     is_equal( char const* arg, std::size_t n, bool flush_stream = true );
     bool            match_pattern( bool flush_stream = true );
 
     // helper function
     void            flush();
+    size_t          length();
 
 private:
     struct Impl;
