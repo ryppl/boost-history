@@ -97,6 +97,7 @@ class bigint : boost::operators<bigint> {
           digits = octals;
         }
         std::vector<char> text;
+        // RG - calculate number of characters and reserve that space.
         bigint quotient = *this;
         bigint remainder;
         quotient.quotient_remainder(bigint(base),quotient,remainder);
