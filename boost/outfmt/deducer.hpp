@@ -10,7 +10,7 @@
 
 #  if !defined(BOOST_IOFM_NO_OUTPUT_DEDUCTION)
 #     include <boost/outfmt/detail/type_deducer.hpp>
-#     include <boost/outfmt/detail/output_deducer.hpp>
+#     include <boost/outfmt/detail/format_deducer.hpp>
 #  else
 #     error I/O Formatting Manipulators: type deduction is not supported on this configuration
 #  endif

@@ -17,43 +17,43 @@
 
    namespace boost { namespace io
    {
-      template< typename T, typename FormatType = char *, class Outputter = boost::io::basic_output >
-      class formatob_t: public Outputter, public boost::noncopyable
+      template< typename T, typename FormatType = char *, class FmtObject = boost::io::basic_object >
+      class formatob_t: public FmtObject, public boost::noncopyable
       {
          public:
             const T &                  ob;
          public: // constructors
             inline           formatob_t( const formatob_t & fo ):
-               Outputter( fo ),
+               FmtObject( fo ),
                ob( fo.ob )
             {
             }
             inline           formatob_t( const T & val ): ob( val )
             {
             }
-            inline           formatob_t( const T & val, const Outputter & o ):
-               Outputter( o ),
+            inline           formatob_t( const T & val, const FmtObject & o ):
+               FmtObject( o ),
                ob( val )
             {
             }
       };
 
 #     if !defined(BOOST_IOFM_NO_BASIC_STREAM)
-         template< typename CharT, class TraitsT, typename T, typename FormatType, typename Outputter >
+         template< typename CharT, class TraitsT, typename T, typename FormatType, typename FmtObject >
          inline std::basic_ostream< CharT, TraitsT > & operator<<
          (
             std::basic_ostream< CharT, TraitsT >         & os,
-            const formatob_t< T, FormatType, Outputter > & fo
+            const formatob_t< T, FormatType, FmtObject > & fo
          )
          {
-            return( fo( os, fo.ob ));
+            return( fo.write( os, fo.ob ));
          }
-         
-         template< typename CharT, class TraitsT, typename T, typename FormatType, typename Inputter >
+
+         template< typename CharT, class TraitsT, typename T, typename FormatType, typename FmtObject >
          inline std::basic_istream< CharT, TraitsT > & operator>>
          (
-            std::basic_istream< CharT, TraitsT >        & is,
-            const formatob_t< T, FormatType, Inputter > & fo
+            std::basic_istream< CharT, TraitsT >         & is,
+            const formatob_t< T, FormatType, FmtObject > & fo
          )
          {
             boost::io::detail::input_helper< std::basic_istream< CharT, TraitsT > >
@@ -62,21 +62,21 @@
             return( is );
          }
 #     else
-         template< typename T, typename FormatType, typename Outputter >
+         template< typename T, typename FormatType, typename FmtObject >
          inline std::ostream & operator<<
          (
             std::ostream & os,
-            const formatob_t< T, FormatType, Outputter > & fo
+            const formatob_t< T, FormatType, FmtObject > & fo
          )
          {
-            return( fo( os, fo.ob ));
+            return( fo.write( os, fo.ob ));
          }
 
-         template< typename T, typename FormatType, typename Inputter >
+         template< typename T, typename FormatType, typename FmtObject >
          inline std::istream & operator>>
          (
             std::istream & is,
-            const formatob_t< T, FormatType, Inputter > & fo
+            const formatob_t< T, FormatType, FmtObject > & fo
          )
          {
             boost::io::detail::input_helper< std::istream >
@@ -124,11 +124,11 @@
          }
 #     endif
 
-      template< typename T, class Outputter >
-      inline formatob_t< T, typename Outputter::format_type, Outputter >
-                                                 formatob( const T & t, const Outputter & o )
+      template< typename T, class FmtObject >
+      inline formatob_t< T, typename FmtObject::format_type, FmtObject >
+                                                 formatob( const T & t, const FmtObject & o )
       {
-         return( formatob_t< T, BOOST_DEDUCED_TYPENAME Outputter::format_type, Outputter >( t, o ));
+         return( formatob_t< T, BOOST_DEDUCED_TYPENAME FmtObject::format_type, FmtObject >( t, o ));
       }
    }}
 #endif
