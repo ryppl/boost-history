@@ -196,7 +196,7 @@ namespace aux
                   aux::to_yesno(
                       ArgList::satisfies((ParameterRequirements*)0)
                   )
-              ) == sizeof(yes_t)
+              ) == sizeof(yes_tag)
           )
       );
 
