@@ -17,6 +17,11 @@
 #ifndef BOOST_MPL_FOLD_HPP_INCLUDED
 #define BOOST_MPL_FOLD_HPP_INCLUDED
 
+#include <boost/mpl/apply.hpp>
+#include <boost/mpl/identity.hpp>
+#include <boost/mpl/begin_end.hpp>
+#include "boost/mpl/lambda.hpp"
+
 namespace boost {
 namespace mpl {
 
@@ -32,7 +37,8 @@ template<
 struct iter_fold_impl
 {
     typedef typename apply2<
-          ForwardOp
+          BackwardOp
+        , Iterator
         , typename iter_fold_impl<
               typename Iterator::next
             , LastIterator
@@ -40,7 +46,6 @@ struct iter_fold_impl
             , ForwardOp
             , BackwardOp
             >::type
-        , Iterator
         >::type type;
 };
 
@@ -61,19 +66,28 @@ struct iter_fold_impl<
     typedef State type;
 };
 
+struct select2nd
+{
+    template <class T, class U>
+    struct apply
+    {
+        typedef U type;
+    };
+};
+
 } // namespace aux
 
 template<
-    , typename Sequence
+      typename Sequence
     , typename State
     , typename ForwardOp
-    , typename BackwardOp = identity<_1>
+    , typename BackwardOp = aux::select2nd
     >
 struct iter_fold
 {
     typedef typename aux::iter_fold_impl<
-          typename begin<Sequence>::type
-        , typename end<Sequence>::type
+          typename begin<Sequence>::iterator
+        , typename end<Sequence>::iterator
         , State
         , ForwardOp
         , BackwardOp
