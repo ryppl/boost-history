@@ -82,7 +82,7 @@ bool operator==(pexpr a, pexpr b) {
   return a->e1 == b->e1 && a->e2 == b->e2;
 }
 
-bool operator>(pexpr, pexpr) { return false; }
+bool operator<=(pexpr, pexpr) { return true; }
 
 namespace boost {
   namespace interval_lib {
@@ -181,16 +181,10 @@ using namespace interval_lib;
 
 struct my_checking
 {
-  static void inverted_bound(const pexpr&, const pexpr&) {}
-  static void divide_by_zero(const pexpr&, const pexpr&) {}
-  static void sqrt_nan() {}
-  static void logarithmic_nan() {}
-  static void logarithmic_inf() {}
-  static void trigonometric_nan() {}
-  static void trigonometric_inf() {}
-  static void hyperbolic_nan() {}
-  static void hyperbolic_inf() {}
-  static void created_empty() {}
+  static pexpr inf() { return pexpr(); }
+  static pexpr nan() { return pexpr(); }
+  static bool is_nan(const pexpr&) { return false; }
+  BOOST_STATIC_CONSTANT(bool, test_nan_input = false);
   static pexpr empty_lower() { return pexpr(); }
   static pexpr empty_upper() { return pexpr(); }
   static bool is_empty(const pexpr&, const pexpr&) { return false; }

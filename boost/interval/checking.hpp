@@ -6,83 +6,80 @@
 namespace boost {
   namespace interval_lib {
 
-    namespace detail {
-
-template <class T> inline bool is_nan(const T& x) { return x != x; }
-
-    } // namespace detail
-
-
 template<class T>
 struct checking_nothing
 {
-  static void inverted_bound(const T&, const T&) {}
-  static void divide_by_zero(const T&, const T&) {}
-  static void sqrt_nan() {}
-  static void logarithmic_nan() {}
-  static void logarithmic_inf() {}
-  static void trigonometric_nan() {}
-  static void trigonometric_inf() {}
-  static void hyperbolic_nan() {}
-  static void hyperbolic_inf() {}
-  static void created_empty() {}
+  static T inf() { return std::numeric_limits<T>::infinity(); }
+  static T nan() { return std::numeric_limits<T>::quiet_NaN(); }
+  static bool is_nan(const T& x) { return detail::is_nan(x); }
+  BOOST_STATIC_CONSTANT(bool, test_nan_input = false);
   static T empty_lower() { return std::numeric_limits<T>::quiet_NaN(); }
   static T empty_upper() { return std::numeric_limits<T>::quiet_NaN(); }
-  static bool is_empty(const T& x, const T& y)
-  { return detail::is_nan(x) || detail::is_nan(y); }
+  static bool is_empty(const T& x, const T& y) { return !(x <= y); }
   BOOST_STATIC_CONSTANT(bool, test_empty_input = false);
 };
 
 template<class T>
-struct checking_lax
-{
-  static void inverted_bound(const T&, const T&) {
-    throw std::invalid_argument("boost::interval: inverted bounds");
-  }
-  static void divide_by_zero(const T&, const T&) {}
-  static void sqrt_nan() {}
-  static void logarithmic_nan() {}
-  static void logarithmic_inf() {}
-  static void trigonometric_nan() {}
-  static void trigonometric_inf() {}
-  static void hyperbolic_nan() {}
-  static void hyperbolic_inf() {}
-  static void created_empty() {}
-  static T empty_lower() { return std::numeric_limits<T>::quiet_NaN(); }
-  static T empty_upper() { return std::numeric_limits<T>::quiet_NaN(); }
-  static bool is_empty(const T& x, const T& y)
-  { return detail::is_nan(x) || detail::is_nan(y); }
-  BOOST_STATIC_CONSTANT(bool, test_empty_input = false);
-};
+struct checking_lax: checking_nothing<T>
+{};
 
 template<class T>
 struct checking_strict
 {
-  static void inverted_bound(const T&, const T&)
-  { throw std::invalid_argument("boost::interval: inverted bounds"); }
-  static void divide_by_zero(const T& l, const T& u) {
-    if (l == 0 && u == 0)
-      throw std::invalid_argument("boost::interval: division by zero");
-  }
-  static void sqrt_nan()
-  { throw std::invalid_argument("boost::interval: square root of a negative interval"); }
-  static void logarithmic_nan()
-  { throw std::invalid_argument("boost::interval: logarithmic nan"); }
-  static void logarithmic_inf() {}
-  static void trigonometric_nan()
-  { throw std::invalid_argument("boost::interval: trigonometric nan"); }
-  static void trigonometric_inf() {}
-  static void hyperbolic_nan()
-  { throw std::invalid_argument("boost::interval: hyperbolic nan"); }
-  static void hyperbolic_inf() {}
-  static void created_empty()
-  { throw std::invalid_argument("boost::interval: nan construction"); }
-  static T empty_lower() { return T(1); }
-  static T empty_upper() { return T(0); }
-  static bool is_empty(const T& x, const T& y)
-  { return !(x <= y); }
+  static T inf() { return std::numeric_limits<T>::infinity(); }
+  static T nan() { return std::numeric_limits<T>::quiet_NaN(); }
+  static bool is_nan(const T& x) { return detail::is_nan(x); }
+  BOOST_STATIC_CONSTANT(bool, test_nan_input = false);
+  static T empty_lower() { throw; }
+  static T empty_upper() { throw; }
+  static bool is_empty(const T& x, const T& y) { return !(x <= y); }
   BOOST_STATIC_CONSTANT(bool, test_empty_input = false);
 };
+
+    namespace detail {
+
+template <class T> inline bool is_nan(const T& x) { return x != x; }
+
+template<class T, class Traits> inline
+bool test_input(const interval<T, Traits>& r) {
+  typedef typename Traits::checking checking;
+  return (checking::test_empty_input && empty(r));
+}
+
+template<class T, class Traits> inline
+bool test_input(const interval<T, Traits>& x, const interval<T, Traits>& y) {
+  typedef typename Traits::checking checking;
+  return (checking::test_empty_input && (empty(x) || empty(y)));
+}
+
+template<class T, class Traits> inline
+bool test_input(const T& x, const interval<T, Traits>& y) {
+  typedef typename Traits::checking checking;
+  return (checking::test_nan_input && checking::is_nan(x) ||
+	  checking::test_empty_input && empty(y));
+}
+
+template<class T, class Traits> inline
+bool test_input(const interval<T, Traits>& x, const T& y) {
+  typedef typename Traits::checking checking;
+  return (checking::test_empty_input && empty(x) ||
+	  checking::test_nan_input && checking::is_nan(y));
+}
+
+template<class T, class Traits> inline
+bool test_input(const T& x) {
+  typedef typename Traits::checking checking;
+  return (checking::test_nan_input && checking::is_nan(x));
+}
+
+template<class T, class Traits> inline
+bool test_input(const T& x, const T& y) {
+  typedef typename Traits::checking checking;
+  return (checking::test_nan_input && checking::is_nan(x) ||
+	  checking::test_nan_input && checking::is_nan(y));
+}
+
+    } // namespace detail
 
   } // namespace interval
 } // namespace boost

@@ -16,10 +16,10 @@ typedef my_interval<double, boost::interval_lib::compare_possibly<double> >::typ
 typedef my_interval<double, boost::interval_lib::compare_full<double, my_function> >::type I_f;
 
 #define TEST_EXN_Y(e) \
-  try { (void)(e); BOOST_TEST(false); } catch (...) { }
+  { bool _b_ = false; try { (void)(e); } catch (...) { _b_ = true; } BOOST_TEST(_b_); }
 
 #define TEST_EXN_N(e) \
-  try { BOOST_TEST(e); } catch (...) { BOOST_TEST(false); }
+  { bool _b_ = true; try { _b_ = e; } catch (...) { _b_ = false; } BOOST_TEST(_b_); }
 
 // comparisons between [1,2] and [3,4]
 

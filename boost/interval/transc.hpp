@@ -31,6 +31,8 @@ template<class T, class Traits> inline
 interval<T, Traits> fmod(const interval<T, Traits>& x,
 			 const interval<T, Traits>& y)
 {
+  if (interval_lib::detail::test_input(x, y))
+    return interval<T, Traits>::empty();
   typename Traits::rounding rnd;
   typedef typename interval_lib::unprotect<interval<T, Traits> >::type I;
   const T& yb = detail::sign(x.lower()) ? y.lower() : y.upper();
@@ -41,6 +43,8 @@ interval<T, Traits> fmod(const interval<T, Traits>& x,
 template<class T, class Traits> inline
 interval<T, Traits> fmod(const interval<T, Traits>& x, const T& y)
 {
+  if (interval_lib::detail::test_input(x, y))
+    return interval<T, Traits>::empty();
   typename Traits::rounding rnd;
   typedef typename interval_lib::unprotect<interval<T, Traits> >::type I;
   T n = rnd.int_down(rnd.div_down(x.lower(), y));
@@ -50,6 +54,8 @@ interval<T, Traits> fmod(const interval<T, Traits>& x, const T& y)
 template<class T, class Traits> inline
 interval<T, Traits> fmod(const T& x, const interval<T, Traits>& y)
 {
+  if (interval_lib::detail::test_input(x, y))
+    return interval<T, Traits>::empty();
   typename Traits::rounding rnd;
   typedef typename interval_lib::unprotect<interval<T, Traits> >::type I;
   const T& yb = detail::sign(x) ? y.lower() : y.upper();
@@ -60,27 +66,21 @@ interval<T, Traits> fmod(const T& x, const interval<T, Traits>& y)
 template<class T, class Traits> inline
 interval<T, Traits> exp(const interval<T, Traits>& x)
 {
+  if (interval_lib::detail::test_input(x))
+    return interval<T, Traits>::empty();
   typename Traits::rounding rnd;
   return interval<T, Traits>(rnd.exp_down(x.lower()),
-			     rnd.exp_up(x.upper()), true);
+			     rnd.exp_up  (x.upper()), true);
 }
 
 template<class T, class Traits> inline
 interval<T, Traits> log(const interval<T, Traits>& x)
 {
-  typedef typename Traits::checking checking;
-  if (x.upper() <= T(0)) {
-    checking::logarithmic_nan();
+  if (interval_lib::detail::test_input(x) || x.upper() <= T(0))
     return interval<T, Traits>::empty();
-  }
   typename Traits::rounding rnd;
-  T l;
-  if (x.lower() <= T(0)) {
-    checking::logarithmic_inf();
-    l = -std::numeric_limits<T>::infinity();
-  } else {
-    l = rnd.log_down(x.lower());
-  }
+  typedef typename Traits::checking checking;
+  T l = (x.lower() <= T(0)) ? -checking::inf() : rnd.log_down(x.lower());
   return interval<T, Traits>(l, rnd.log_up(x.upper()), true);
 }
 
@@ -105,6 +105,9 @@ T pow_aux(T x, int pwr, Rounding& rnd) // x and pwr are positive
 template<class T, class Traits> inline
 interval<T, Traits> pow(const interval<T, Traits>& x, int pwr)
 {
+  if (interval_lib::detail::test_input(x))
+    return interval<T, Traits>::empty();
+
   if (pwr == 0) {
     return interval<T, Traits>(T(1));
   } else if (pwr < 0) {
@@ -138,6 +141,8 @@ interval<T, Traits> pow(const interval<T, Traits>& x, int pwr)
 template<class T, class Traits> inline
 interval<T, Traits> cos(const interval<T, Traits>& x)
 {
+  if (interval_lib::detail::test_input(x))
+    return interval<T, Traits>::empty();
   typename Traits::rounding rnd;
   typedef typename interval_lib::unprotect<interval<T, Traits> >::type I;
 
@@ -164,6 +169,8 @@ interval<T, Traits> cos(const interval<T, Traits>& x)
 template<class T, class Traits> inline
 interval<T, Traits> sin(const interval<T, Traits>& x)
 {
+  if (interval_lib::detail::test_input(x))
+    return interval<T, Traits>::empty();
   typename Traits::rounding rnd;
   typedef typename interval_lib::unprotect<interval<T, Traits> >::type I;
   return cos((const I&)x - interval_lib::pi_1_2<I>());
@@ -172,6 +179,8 @@ interval<T, Traits> sin(const interval<T, Traits>& x)
 template<class T, class Traits> inline
 interval<T, Traits> tan(const interval<T, Traits>& x)
 {
+  if (interval_lib::detail::test_input(x))
+    return interval<T, Traits>::empty();
   typename Traits::rounding rnd;
   typedef typename interval_lib::unprotect<interval<T, Traits> >::type I;
 
@@ -181,62 +190,59 @@ interval<T, Traits> tan(const interval<T, Traits>& x)
   T pi_1_2_d = rnd.pi_1_2_down();
   if (tmp.lower() >= pi_1_2_d)
     tmp -= pi;
-  if (tmp.lower() <= -pi_1_2_d || tmp.upper() >= pi_1_2_d) {
-    typedef typename Traits::checking checking;
-    checking::trigonometric_inf();
+  if (tmp.lower() <= -pi_1_2_d || tmp.upper() >= pi_1_2_d)
     return interval<T, Traits>::whole();
-  }
   return interval<T, Traits>(rnd.tan_down(tmp.lower()),
-			     rnd.tan_up(tmp.upper()), true);
+			     rnd.tan_up  (tmp.upper()), true);
 }
 
 template<class T, class Traits> inline
 interval<T, Traits> asin(const interval<T, Traits>& x)
 {
-  if (x.upper() < T(-1) || x.lower() > T(1)) {
-    typedef typename Traits::checking checking;
-    checking::trigonometric_nan();
+  if (interval_lib::detail::test_input(x) || x.upper() < T(-1) || x.lower() > T(1))
     return interval<T, Traits>::empty();
-  }
   typename Traits::rounding rnd;
-  T l = x.lower() <= T(-1) ? -rnd.pi_1_2_up() : rnd.asin_down(x.lower());
-  T u = x.upper() >= T(1) ? rnd.pi_1_2_up() : rnd.asin_up(x.upper());
+  T l = (x.lower() <= T(-1)) ? -rnd.pi_1_2_up() : rnd.asin_down(x.lower());
+  T u = (x.upper() >= T(1) ) ?  rnd.pi_1_2_up() : rnd.asin_up  (x.upper());
   return interval<T, Traits>(l, u, true);
 }
 
 template<class T, class Traits> inline
 interval<T, Traits> acos(const interval<T, Traits>& x)
 {
-  if (x.upper() < T(-1) || x.lower() > T(1)) {
-    typedef typename Traits::checking checking;
-    checking::trigonometric_nan();
+  if (interval_lib::detail::test_input(x) || x.upper() < T(-1) || x.lower() > T(1))
     return interval<T, Traits>::empty();
-  }
   typename Traits::rounding rnd;
-  T l = x.upper() >= T(1) ? 0 : rnd.acos_down(x.upper());
-  T u = x.lower() <= T(-1) ? rnd.pi_up() : rnd.acos_up(x.lower());
+  T l = (x.upper() >= T(1) ) ? 0           : rnd.acos_down(x.upper());
+  T u = (x.lower() <= T(-1)) ? rnd.pi_up() : rnd.acos_up  (x.lower());
   return interval<T, Traits>(l, u, true);
 }
 
 template<class T, class Traits> inline
 interval<T, Traits> atan(const interval<T, Traits>& x)
 {
+  if (interval_lib::detail::test_input(x))
+    return interval<T, Traits>::empty();
   typename Traits::rounding rnd;
   return interval<T, Traits>(rnd.atan_down(x.lower()),
-			     rnd.atan_up(x.upper()), true);
+			     rnd.atan_up  (x.upper()), true);
 }
 
 template<class T, class Traits> inline
 interval<T, Traits> sinh(const interval<T, Traits>& x)
 {
+  if (interval_lib::detail::test_input(x))
+    return interval<T, Traits>::empty();
   typename Traits::rounding rnd;
   return interval<T, Traits>(rnd.sinh_down(x.lower()),
-			     rnd.sinh_up(x.upper()), true);
+			     rnd.sinh_up  (x.upper()), true);
 }
 
 template<class T, class Traits> inline
 interval<T, Traits> cosh(const interval<T, Traits>& x)
 {
+  if (interval_lib::detail::test_input(x))
+    return interval<T, Traits>::empty();
   typedef interval<T, Traits> I;
   typename Traits::rounding rnd;
   if (detail::sign(x.upper()))
@@ -244,34 +250,34 @@ interval<T, Traits> cosh(const interval<T, Traits>& x)
   else if (!detail::sign(x.lower()))
     return I(rnd.cosh_down(x.lower()), rnd.cosh_up(x.upper()), true);
   else
-    return I(0, rnd.cosh_up(-x.lower() > x.upper() ? x.lower() : x.upper()),
-	     true);
+    return I(0, rnd.cosh_up(-x.lower() > x.upper() ? x.lower() : x.upper()), true);
 }
 
 template<class T, class Traits> inline
 interval<T, Traits> tanh(const interval<T, Traits>& x)
 {
+  if (interval_lib::detail::test_input(x))
+    return interval<T, Traits>::empty();
   typename Traits::rounding rnd;
   return interval<T, Traits>(rnd.tanh_down(x.lower()),
-			     rnd.tanh_up(x.upper()), true);
+			     rnd.tanh_up  (x.upper()), true);
 }
 
 template<class T, class Traits> inline
 interval<T, Traits> asinh(const interval<T, Traits>& x)
 {
+  if (interval_lib::detail::test_input(x))
+    return interval<T, Traits>::empty();
   typename Traits::rounding rnd;
   return interval<T, Traits>(rnd.asinh_down(x.lower()),
-			     rnd.asinh_up(x.upper()), true);
+			     rnd.asinh_up  (x.upper()), true);
 }
 
 template<class T, class Traits> inline
 interval<T, Traits> acosh(const interval<T, Traits>& x)
 {
-  if (x.upper() < T(1)) {
-    typedef typename Traits::checking checking;
-    checking::hyperbolic_nan();
+  if (interval_lib::detail::test_input(x) || x.upper() < T(1))
     return interval<T, Traits>::empty();
-  }
   typename Traits::rounding rnd;
   T l = x.lower() <= T(1) ? 0 : rnd.acosh_down(x.lower());
   return interval<T, Traits>(l, rnd.acosh_up(x.upper()), true);
@@ -280,25 +286,12 @@ interval<T, Traits> acosh(const interval<T, Traits>& x)
 template<class T, class Traits> inline
 interval<T, Traits> atanh(const interval<T, Traits>& x)
 {
-  typedef typename Traits::checking checking;
-  if (x.upper() < T(-1) || x.lower() > T(1)) {
-    checking::hyperbolic_nan();
+  if (interval_lib::detail::test_input(x) || x.upper() < T(-1) || x.lower() > T(1))
     return interval<T, Traits>::empty();
-  }
   typename Traits::rounding rnd;
-  T l, u;
-  if (x.lower() <= T(-1)) {
-    checking::hyperbolic_inf();
-    l = -std::numeric_limits<T>::infinity();
-  } else {
-    l = rnd.atanh_down(x.lower());
-  }
-  if (x.upper() >= T(1)) {
-    checking::hyperbolic_inf();
-    u = std::numeric_limits<T>::infinity();
-  } else {
-    u = rnd.atanh_up(x.upper());
-  }
+  typedef typename Traits::checking checking;
+  T l = (x.lower() <= T(-1)) ? -checking::inf() : rnd.atanh_down(x.lower());
+  T u = (x.upper() >= T(1) ) ?  checking::inf() : rnd.atanh_up  (x.upper());
   return interval<T, Traits>(l, u, true);
 }
 

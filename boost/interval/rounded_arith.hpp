@@ -10,24 +10,10 @@ namespace boost {
   namespace detail {
 
     template <class T> inline bool sign(const T& x) { return x < 0; }
-    template <class T> inline bool is_nan(const T& x) { return x != x; }
 
   } // namespace detail
 
   namespace interval_lib {
-
-    namespace detail {
-
-      template <class T>
-      inline T smallest()
-      {
-        if (std::numeric_limits<T>::is_integer)
-	  return 1;
-        else
-	  return std::numeric_limits<T>::min();
-      }
-
-    } // namespace detail
 
   /*
    * Three classes of rounding: exact, std, opp
