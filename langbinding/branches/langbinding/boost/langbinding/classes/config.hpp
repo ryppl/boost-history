@@ -3,9 +3,9 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_LANGBINDING_CLASSES_CONFIG_040922_HPP
-#define BOOST_LANGBINDING_CLASSES_CONFIG_040922_HPP
+# define BOOST_LANGBINDING_CLASSES_CONFIG_040922_HPP
 
-# include <boost/langbinding/config.hpp>
+# include <boost/langbinding/aux/config.hpp>
 
 #endif // BOOST_LANGBINDING_CLASSES_CONFIG_040922_HPP
 
