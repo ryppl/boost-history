@@ -11,7 +11,7 @@
    {
       template
       <
-         size_t n, typename CharT = char, class CharStringTraits = std::char_traits< CharT >
+         size_t n, typename CharT = char, class CharStringTraits = std::char_traits< CharT >,
          class FmtPolicy = detail::format_policy< CharT >
       >
       class formatterex: public fixed_string< n, CharT, CharStringTraits, FmtPolicy >
