@@ -129,15 +129,11 @@ stage $(lib-locate:D=)
         <dll>libs/thread/build/boost_thread
     :
         <locate>$(lib-locate:D)
-        <architecture-subdirs>yes
-        common-stage-tag
-        <tag><postfix>-$(version-tag)
+        common-stage-tag <tag><postfix>-$(version-tag)
         [ cond $(with-install) : <target>install : <target>all ]
         [ cond $(with-stage) : <target>stage : <target>all ]
     :
-        debug
-        release
-        [ cond $(with-debug-python) : debug-python ]
+        debug release [ cond $(with-debug-python) : debug-python ] <threading>single/multi
         [ unless $(with-install) $(with-stage) : <suppress>true ]
     ;
 
