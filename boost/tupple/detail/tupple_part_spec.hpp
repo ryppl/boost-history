@@ -5,7 +5,7 @@
 // warranty, and with no claim as to its suitability for any purpose.
 #ifndef BOOST_TUPPLE_DETAIL_TUPPLE_PART_SPEC_HPP
 #define BOOST_TUPPLE_DETAIL_TUPPLE_PART_SPEC_HPP
-#include "boost/tupple/detail/tupple_detail.hpp"
+#include <boost/tupple/detail/tupple_detail.hpp>
 #include <algorithm>
 
 
@@ -46,9 +46,9 @@ namespace boost
       null_type, null_type, null_type, null_type, null_type, null_type >
     {
       typedef T0 type0;
-      typedef access_traits < T0 >::arg_type arg_type0;
-      typedef access_traits < T0 >::non_const_type get_type0;
-      typedef access_traits < T0 >::const_type const_get_type0;
+      typedef typename access_traits < T0 >::arg_type arg_type0;
+      typedef typename access_traits < T0 >::non_const_type get_type0;
+      typedef typename access_traits < T0 >::const_type const_get_type0;
       typedef tuple < T0 > self_type;
       typedef tuple < null_type > tail_type;
         tuple(  )
@@ -123,12 +123,12 @@ namespace boost
     {
       typedef T0 type0;
       typedef T1 type1;
-      typedef access_traits < T0 >::arg_type arg_type0;
-      typedef access_traits < T1 >::arg_type arg_type1;
-      typedef access_traits < T0 >::non_const_type get_type0;
-      typedef access_traits < T1 >::non_const_type get_type1;
-      typedef access_traits < T0 >::const_type const_get_type0;
-      typedef access_traits < T1 >::const_type const_get_type1;
+      typedef typename access_traits < T0 >::arg_type arg_type0;
+      typedef typename access_traits < T1 >::arg_type arg_type1;
+      typedef typename access_traits < T0 >::non_const_type get_type0;
+      typedef typename access_traits < T1 >::non_const_type get_type1;
+      typedef typename access_traits < T0 >::const_type const_get_type0;
+      typedef typename access_traits < T1 >::const_type const_get_type1;
       typedef tuple < T0, T1 > self_type;
       typedef tuple < T1 > tail_type;
         tuple(  )
@@ -226,15 +226,15 @@ namespace boost
       typedef T0 type0;
       typedef T1 type1;
       typedef T2 type2;
-      typedef access_traits < T0 >::arg_type arg_type0;
-      typedef access_traits < T1 >::arg_type arg_type1;
-      typedef access_traits < T2 >::arg_type arg_type2;
-      typedef access_traits < T0 >::non_const_type get_type0;
-      typedef access_traits < T1 >::non_const_type get_type1;
-      typedef access_traits < T2 >::non_const_type get_type2;
-      typedef access_traits < T0 >::const_type const_get_type0;
-      typedef access_traits < T1 >::const_type const_get_type1;
-      typedef access_traits < T2 >::const_type const_get_type2;
+      typedef typename access_traits < T0 >::arg_type arg_type0;
+      typedef typename access_traits < T1 >::arg_type arg_type1;
+      typedef typename access_traits < T2 >::arg_type arg_type2;
+      typedef typename access_traits < T0 >::non_const_type get_type0;
+      typedef typename access_traits < T1 >::non_const_type get_type1;
+      typedef typename access_traits < T2 >::non_const_type get_type2;
+      typedef typename access_traits < T0 >::const_type const_get_type0;
+      typedef typename access_traits < T1 >::const_type const_get_type1;
+      typedef typename access_traits < T2 >::const_type const_get_type2;
       typedef tuple < T0, T1, T2 > self_type;
       typedef tuple < T1, T2 > tail_type;
         tuple(  )
@@ -339,18 +339,18 @@ namespace boost
       typedef T1 type1;
       typedef T2 type2;
       typedef T3 type3;
-      typedef access_traits < T0 >::arg_type arg_type0;
-      typedef access_traits < T1 >::arg_type arg_type1;
-      typedef access_traits < T2 >::arg_type arg_type2;
-      typedef access_traits < T3 >::arg_type arg_type3;
-      typedef access_traits < T0 >::non_const_type get_type0;
-      typedef access_traits < T1 >::non_const_type get_type1;
-      typedef access_traits < T2 >::non_const_type get_type2;
-      typedef access_traits < T3 >::non_const_type get_type3;
-      typedef access_traits < T0 >::const_type const_get_type0;
-      typedef access_traits < T1 >::const_type const_get_type1;
-      typedef access_traits < T2 >::const_type const_get_type2;
-      typedef access_traits < T3 >::const_type const_get_type3;
+      typedef typename access_traits < T0 >::arg_type arg_type0;
+      typedef typename access_traits < T1 >::arg_type arg_type1;
+      typedef typename access_traits < T2 >::arg_type arg_type2;
+      typedef typename access_traits < T3 >::arg_type arg_type3;
+      typedef typename access_traits < T0 >::non_const_type get_type0;
+      typedef typename access_traits < T1 >::non_const_type get_type1;
+      typedef typename access_traits < T2 >::non_const_type get_type2;
+      typedef typename access_traits < T3 >::non_const_type get_type3;
+      typedef typename access_traits < T0 >::const_type const_get_type0;
+      typedef typename access_traits < T1 >::const_type const_get_type1;
+      typedef typename access_traits < T2 >::const_type const_get_type2;
+      typedef typename access_traits < T3 >::const_type const_get_type3;
       typedef tuple < T0, T1, T2, T3 > self_type;
       typedef tuple < T1, T2, T3 > tail_type;
         tuple(  )
@@ -468,21 +468,21 @@ namespace boost
       typedef T2 type2;
       typedef T3 type3;
       typedef T4 type4;
-      typedef access_traits < T0 >::arg_type arg_type0;
-      typedef access_traits < T1 >::arg_type arg_type1;
-      typedef access_traits < T2 >::arg_type arg_type2;
-      typedef access_traits < T3 >::arg_type arg_type3;
-      typedef access_traits < T4 >::arg_type arg_type4;
-      typedef access_traits < T0 >::non_const_type get_type0;
-      typedef access_traits < T1 >::non_const_type get_type1;
-      typedef access_traits < T2 >::non_const_type get_type2;
-      typedef access_traits < T3 >::non_const_type get_type3;
-      typedef access_traits < T4 >::non_const_type get_type4;
-      typedef access_traits < T0 >::const_type const_get_type0;
-      typedef access_traits < T1 >::const_type const_get_type1;
-      typedef access_traits < T2 >::const_type const_get_type2;
-      typedef access_traits < T3 >::const_type const_get_type3;
-      typedef access_traits < T4 >::const_type const_get_type4;
+      typedef typename access_traits < T0 >::arg_type arg_type0;
+      typedef typename access_traits < T1 >::arg_type arg_type1;
+      typedef typename access_traits < T2 >::arg_type arg_type2;
+      typedef typename access_traits < T3 >::arg_type arg_type3;
+      typedef typename access_traits < T4 >::arg_type arg_type4;
+      typedef typename access_traits < T0 >::non_const_type get_type0;
+      typedef typename access_traits < T1 >::non_const_type get_type1;
+      typedef typename access_traits < T2 >::non_const_type get_type2;
+      typedef typename access_traits < T3 >::non_const_type get_type3;
+      typedef typename access_traits < T4 >::non_const_type get_type4;
+      typedef typename access_traits < T0 >::const_type const_get_type0;
+      typedef typename access_traits < T1 >::const_type const_get_type1;
+      typedef typename access_traits < T2 >::const_type const_get_type2;
+      typedef typename access_traits < T3 >::const_type const_get_type3;
+      typedef typename access_traits < T4 >::const_type const_get_type4;
       typedef tuple < T0, T1, T2, T3, T4 > self_type;
       typedef tuple < T1, T2, T3, T4 > tail_type;
         tuple(  )
@@ -613,24 +613,24 @@ namespace boost
       typedef T3 type3;
       typedef T4 type4;
       typedef T5 type5;
-      typedef access_traits < T0 >::arg_type arg_type0;
-      typedef access_traits < T1 >::arg_type arg_type1;
-      typedef access_traits < T2 >::arg_type arg_type2;
-      typedef access_traits < T3 >::arg_type arg_type3;
-      typedef access_traits < T4 >::arg_type arg_type4;
-      typedef access_traits < T5 >::arg_type arg_type5;
-      typedef access_traits < T0 >::non_const_type get_type0;
-      typedef access_traits < T1 >::non_const_type get_type1;
-      typedef access_traits < T2 >::non_const_type get_type2;
-      typedef access_traits < T3 >::non_const_type get_type3;
-      typedef access_traits < T4 >::non_const_type get_type4;
-      typedef access_traits < T5 >::non_const_type get_type5;
-      typedef access_traits < T0 >::const_type const_get_type0;
-      typedef access_traits < T1 >::const_type const_get_type1;
-      typedef access_traits < T2 >::const_type const_get_type2;
-      typedef access_traits < T3 >::const_type const_get_type3;
-      typedef access_traits < T4 >::const_type const_get_type4;
-      typedef access_traits < T5 >::const_type const_get_type5;
+      typedef typename access_traits < T0 >::arg_type arg_type0;
+      typedef typename access_traits < T1 >::arg_type arg_type1;
+      typedef typename access_traits < T2 >::arg_type arg_type2;
+      typedef typename access_traits < T3 >::arg_type arg_type3;
+      typedef typename access_traits < T4 >::arg_type arg_type4;
+      typedef typename access_traits < T5 >::arg_type arg_type5;
+      typedef typename access_traits < T0 >::non_const_type get_type0;
+      typedef typename access_traits < T1 >::non_const_type get_type1;
+      typedef typename access_traits < T2 >::non_const_type get_type2;
+      typedef typename access_traits < T3 >::non_const_type get_type3;
+      typedef typename access_traits < T4 >::non_const_type get_type4;
+      typedef typename access_traits < T5 >::non_const_type get_type5;
+      typedef typename access_traits < T0 >::const_type const_get_type0;
+      typedef typename access_traits < T1 >::const_type const_get_type1;
+      typedef typename access_traits < T2 >::const_type const_get_type2;
+      typedef typename access_traits < T3 >::const_type const_get_type3;
+      typedef typename access_traits < T4 >::const_type const_get_type4;
+      typedef typename access_traits < T5 >::const_type const_get_type5;
       typedef tuple < T0, T1, T2, T3, T4, T5 > self_type;
       typedef tuple < T1, T2, T3, T4, T5 > tail_type;
         tuple(  )
@@ -774,27 +774,27 @@ namespace boost
       typedef T4 type4;
       typedef T5 type5;
       typedef T6 type6;
-      typedef access_traits < T0 >::arg_type arg_type0;
-      typedef access_traits < T1 >::arg_type arg_type1;
-      typedef access_traits < T2 >::arg_type arg_type2;
-      typedef access_traits < T3 >::arg_type arg_type3;
-      typedef access_traits < T4 >::arg_type arg_type4;
-      typedef access_traits < T5 >::arg_type arg_type5;
-      typedef access_traits < T6 >::arg_type arg_type6;
-      typedef access_traits < T0 >::non_const_type get_type0;
-      typedef access_traits < T1 >::non_const_type get_type1;
-      typedef access_traits < T2 >::non_const_type get_type2;
-      typedef access_traits < T3 >::non_const_type get_type3;
-      typedef access_traits < T4 >::non_const_type get_type4;
-      typedef access_traits < T5 >::non_const_type get_type5;
-      typedef access_traits < T6 >::non_const_type get_type6;
-      typedef access_traits < T0 >::const_type const_get_type0;
-      typedef access_traits < T1 >::const_type const_get_type1;
-      typedef access_traits < T2 >::const_type const_get_type2;
-      typedef access_traits < T3 >::const_type const_get_type3;
-      typedef access_traits < T4 >::const_type const_get_type4;
-      typedef access_traits < T5 >::const_type const_get_type5;
-      typedef access_traits < T6 >::const_type const_get_type6;
+      typedef typename access_traits < T0 >::arg_type arg_type0;
+      typedef typename access_traits < T1 >::arg_type arg_type1;
+      typedef typename access_traits < T2 >::arg_type arg_type2;
+      typedef typename access_traits < T3 >::arg_type arg_type3;
+      typedef typename access_traits < T4 >::arg_type arg_type4;
+      typedef typename access_traits < T5 >::arg_type arg_type5;
+      typedef typename access_traits < T6 >::arg_type arg_type6;
+      typedef typename access_traits < T0 >::non_const_type get_type0;
+      typedef typename access_traits < T1 >::non_const_type get_type1;
+      typedef typename access_traits < T2 >::non_const_type get_type2;
+      typedef typename access_traits < T3 >::non_const_type get_type3;
+      typedef typename access_traits < T4 >::non_const_type get_type4;
+      typedef typename access_traits < T5 >::non_const_type get_type5;
+      typedef typename access_traits < T6 >::non_const_type get_type6;
+      typedef typename access_traits < T0 >::const_type const_get_type0;
+      typedef typename access_traits < T1 >::const_type const_get_type1;
+      typedef typename access_traits < T2 >::const_type const_get_type2;
+      typedef typename access_traits < T3 >::const_type const_get_type3;
+      typedef typename access_traits < T4 >::const_type const_get_type4;
+      typedef typename access_traits < T5 >::const_type const_get_type5;
+      typedef typename access_traits < T6 >::const_type const_get_type6;
       typedef tuple < T0, T1, T2, T3, T4, T5, T6 > self_type;
       typedef tuple < T1, T2, T3, T4, T5, T6 > tail_type;
         tuple(  )
@@ -951,30 +951,30 @@ namespace boost
       typedef T5 type5;
       typedef T6 type6;
       typedef T7 type7;
-      typedef access_traits < T0 >::arg_type arg_type0;
-      typedef access_traits < T1 >::arg_type arg_type1;
-      typedef access_traits < T2 >::arg_type arg_type2;
-      typedef access_traits < T3 >::arg_type arg_type3;
-      typedef access_traits < T4 >::arg_type arg_type4;
-      typedef access_traits < T5 >::arg_type arg_type5;
-      typedef access_traits < T6 >::arg_type arg_type6;
-      typedef access_traits < T7 >::arg_type arg_type7;
-      typedef access_traits < T0 >::non_const_type get_type0;
-      typedef access_traits < T1 >::non_const_type get_type1;
-      typedef access_traits < T2 >::non_const_type get_type2;
-      typedef access_traits < T3 >::non_const_type get_type3;
-      typedef access_traits < T4 >::non_const_type get_type4;
-      typedef access_traits < T5 >::non_const_type get_type5;
-      typedef access_traits < T6 >::non_const_type get_type6;
-      typedef access_traits < T7 >::non_const_type get_type7;
-      typedef access_traits < T0 >::const_type const_get_type0;
-      typedef access_traits < T1 >::const_type const_get_type1;
-      typedef access_traits < T2 >::const_type const_get_type2;
-      typedef access_traits < T3 >::const_type const_get_type3;
-      typedef access_traits < T4 >::const_type const_get_type4;
-      typedef access_traits < T5 >::const_type const_get_type5;
-      typedef access_traits < T6 >::const_type const_get_type6;
-      typedef access_traits < T7 >::const_type const_get_type7;
+      typedef typename access_traits < T0 >::arg_type arg_type0;
+      typedef typename access_traits < T1 >::arg_type arg_type1;
+      typedef typename access_traits < T2 >::arg_type arg_type2;
+      typedef typename access_traits < T3 >::arg_type arg_type3;
+      typedef typename access_traits < T4 >::arg_type arg_type4;
+      typedef typename access_traits < T5 >::arg_type arg_type5;
+      typedef typename access_traits < T6 >::arg_type arg_type6;
+      typedef typename access_traits < T7 >::arg_type arg_type7;
+      typedef typename access_traits < T0 >::non_const_type get_type0;
+      typedef typename access_traits < T1 >::non_const_type get_type1;
+      typedef typename access_traits < T2 >::non_const_type get_type2;
+      typedef typename access_traits < T3 >::non_const_type get_type3;
+      typedef typename access_traits < T4 >::non_const_type get_type4;
+      typedef typename access_traits < T5 >::non_const_type get_type5;
+      typedef typename access_traits < T6 >::non_const_type get_type6;
+      typedef typename access_traits < T7 >::non_const_type get_type7;
+      typedef typename access_traits < T0 >::const_type const_get_type0;
+      typedef typename access_traits < T1 >::const_type const_get_type1;
+      typedef typename access_traits < T2 >::const_type const_get_type2;
+      typedef typename access_traits < T3 >::const_type const_get_type3;
+      typedef typename access_traits < T4 >::const_type const_get_type4;
+      typedef typename access_traits < T5 >::const_type const_get_type5;
+      typedef typename access_traits < T6 >::const_type const_get_type6;
+      typedef typename access_traits < T7 >::const_type const_get_type7;
       typedef tuple < T0, T1, T2, T3, T4, T5, T6, T7 > self_type;
       typedef tuple < T1, T2, T3, T4, T5, T6, T7 > tail_type;
         tuple(  )
@@ -1146,33 +1146,33 @@ namespace boost
       typedef T6 type6;
       typedef T7 type7;
       typedef T8 type8;
-      typedef access_traits < T0 >::arg_type arg_type0;
-      typedef access_traits < T1 >::arg_type arg_type1;
-      typedef access_traits < T2 >::arg_type arg_type2;
-      typedef access_traits < T3 >::arg_type arg_type3;
-      typedef access_traits < T4 >::arg_type arg_type4;
-      typedef access_traits < T5 >::arg_type arg_type5;
-      typedef access_traits < T6 >::arg_type arg_type6;
-      typedef access_traits < T7 >::arg_type arg_type7;
-      typedef access_traits < T8 >::arg_type arg_type8;
-      typedef access_traits < T0 >::non_const_type get_type0;
-      typedef access_traits < T1 >::non_const_type get_type1;
-      typedef access_traits < T2 >::non_const_type get_type2;
-      typedef access_traits < T3 >::non_const_type get_type3;
-      typedef access_traits < T4 >::non_const_type get_type4;
-      typedef access_traits < T5 >::non_const_type get_type5;
-      typedef access_traits < T6 >::non_const_type get_type6;
-      typedef access_traits < T7 >::non_const_type get_type7;
-      typedef access_traits < T8 >::non_const_type get_type8;
-      typedef access_traits < T0 >::const_type const_get_type0;
-      typedef access_traits < T1 >::const_type const_get_type1;
-      typedef access_traits < T2 >::const_type const_get_type2;
-      typedef access_traits < T3 >::const_type const_get_type3;
-      typedef access_traits < T4 >::const_type const_get_type4;
-      typedef access_traits < T5 >::const_type const_get_type5;
-      typedef access_traits < T6 >::const_type const_get_type6;
-      typedef access_traits < T7 >::const_type const_get_type7;
-      typedef access_traits < T8 >::const_type const_get_type8;
+      typedef typename access_traits < T0 >::arg_type arg_type0;
+      typedef typename access_traits < T1 >::arg_type arg_type1;
+      typedef typename access_traits < T2 >::arg_type arg_type2;
+      typedef typename access_traits < T3 >::arg_type arg_type3;
+      typedef typename access_traits < T4 >::arg_type arg_type4;
+      typedef typename access_traits < T5 >::arg_type arg_type5;
+      typedef typename access_traits < T6 >::arg_type arg_type6;
+      typedef typename access_traits < T7 >::arg_type arg_type7;
+      typedef typename access_traits < T8 >::arg_type arg_type8;
+      typedef typename access_traits < T0 >::non_const_type get_type0;
+      typedef typename access_traits < T1 >::non_const_type get_type1;
+      typedef typename access_traits < T2 >::non_const_type get_type2;
+      typedef typename access_traits < T3 >::non_const_type get_type3;
+      typedef typename access_traits < T4 >::non_const_type get_type4;
+      typedef typename access_traits < T5 >::non_const_type get_type5;
+      typedef typename access_traits < T6 >::non_const_type get_type6;
+      typedef typename access_traits < T7 >::non_const_type get_type7;
+      typedef typename access_traits < T8 >::non_const_type get_type8;
+      typedef typename access_traits < T0 >::const_type const_get_type0;
+      typedef typename access_traits < T1 >::const_type const_get_type1;
+      typedef typename access_traits < T2 >::const_type const_get_type2;
+      typedef typename access_traits < T3 >::const_type const_get_type3;
+      typedef typename access_traits < T4 >::const_type const_get_type4;
+      typedef typename access_traits < T5 >::const_type const_get_type5;
+      typedef typename access_traits < T6 >::const_type const_get_type6;
+      typedef typename access_traits < T7 >::const_type const_get_type7;
+      typedef typename access_traits < T8 >::const_type const_get_type8;
       typedef tuple < T0, T1, T2, T3, T4, T5, T6, T7, T8 > self_type;
       typedef tuple < T1, T2, T3, T4, T5, T6, T7, T8 > tail_type;
         tuple(  )
@@ -1439,16 +1439,16 @@ namespace boost
     {
       return t.m0;
     }
-    template < class T0 > tuple < make_tuple_traits < T0 >::type >
+    template < class T0 > tuple < typename make_tuple_traits < T0 >::type >
       make_tuple( const T0 & theM0 )
     {
-      return tuple < make_tuple_traits < T0 >::type > ( theM0 );
+      return tuple < typename make_tuple_traits < T0 >::type > ( theM0 );
     }
     template < class T0 > struct make_tuple_function <T0, null_type,
       null_type, null_type, null_type, null_type, null_type, null_type,
       null_type, null_type >
     {
-      typedef tuple < make_tuple_traits < T0 >::type > result_type;
+      typedef tuple < typename make_tuple_traits < T0 >::type > result_type;
       result_type operator(  ) ( const T0 & theM0 ) const
       {
         return result_type( theM0 );
@@ -1467,19 +1467,20 @@ namespace boost
     {
       return t.m1;
     }
-    template < class T0, class T1 > tuple < make_tuple_traits < T0 >::type,
-      make_tuple_traits < T1 >::type > make_tuple( const T0 & theM0,
-                                                   const T1 & theM1 )
+    template < class T0,
+      class T1 > tuple < typename make_tuple_traits < T0 >::type,
+      typename make_tuple_traits < T1 >::type > make_tuple( const T0 & theM0,
+                                                            const T1 & theM1 )
     {
-      return tuple < make_tuple_traits < T0 >::type,
-        make_tuple_traits < T1 >::type > ( theM0, theM1 );
+      return tuple < typename make_tuple_traits < T0 >::type,
+        typename make_tuple_traits < T1 >::type > ( theM0, theM1 );
     }
     template < class T0, class T1 > struct make_tuple_function <T0, T1,
       null_type, null_type, null_type, null_type, null_type, null_type,
       null_type, null_type >
     {
-      typedef tuple < make_tuple_traits < T0 >::type,
-        make_tuple_traits < T1 >::type > result_type;
+      typedef tuple < typename make_tuple_traits < T0 >::type,
+        typename make_tuple_traits < T1 >::type > result_type;
       result_type operator(  ) ( const T0 & theM0, const T1 & theM1 ) const
       {
         return result_type( theM0, theM1 );
@@ -1500,23 +1501,23 @@ namespace boost
       return t.m2;
     }
     template < class T0, class T1,
-      class T2 > tuple < make_tuple_traits < T0 >::type,
-      make_tuple_traits < T1 >::type,
-      make_tuple_traits < T2 >::type > make_tuple( const T0 & theM0,
-                                                   const T1 & theM1,
-                                                   const T2 & theM2 )
+      class T2 > tuple < typename make_tuple_traits < T0 >::type,
+      typename make_tuple_traits < T1 >::type,
+      typename make_tuple_traits < T2 >::type > make_tuple( const T0 & theM0,
+                                                            const T1 & theM1,
+                                                            const T2 & theM2 )
     {
-      return tuple < make_tuple_traits < T0 >::type,
-        make_tuple_traits < T1 >::type,
-        make_tuple_traits < T2 >::type > ( theM0, theM1, theM2 );
+      return tuple < typename make_tuple_traits < T0 >::type,
+        typename make_tuple_traits < T1 >::type,
+        typename make_tuple_traits < T2 >::type > ( theM0, theM1, theM2 );
     }
     template < class T0, class T1, class T2 > struct make_tuple_function <T0,
       T1, T2, null_type, null_type, null_type, null_type, null_type,
       null_type, null_type >
     {
-      typedef tuple < make_tuple_traits < T0 >::type,
-        make_tuple_traits < T1 >::type,
-        make_tuple_traits < T2 >::type > result_type;
+      typedef tuple < typename make_tuple_traits < T0 >::type,
+        typename make_tuple_traits < T1 >::type,
+        typename make_tuple_traits < T2 >::type > result_type;
       result_type operator(  ) ( const T0 & theM0, const T1 & theM1,
                                  const T2 & theM2 ) const
       {
@@ -1538,24 +1539,28 @@ namespace boost
       return t.m3;
     }
     template < class T0, class T1, class T2,
-      class T3 > tuple < make_tuple_traits < T0 >::type,
-      make_tuple_traits < T1 >::type, make_tuple_traits < T2 >::type,
-      make_tuple_traits < T3 >::type > make_tuple( const T0 & theM0,
-                                                   const T1 & theM1,
-                                                   const T2 & theM2,
-                                                   const T3 & theM3 )
+      class T3 > tuple < typename make_tuple_traits < T0 >::type,
+      typename make_tuple_traits < T1 >::type,
+      typename make_tuple_traits < T2 >::type,
+      typename make_tuple_traits < T3 >::type > make_tuple( const T0 & theM0,
+                                                            const T1 & theM1,
+                                                            const T2 & theM2,
+                                                            const T3 & theM3 )
     {
-      return tuple < make_tuple_traits < T0 >::type,
-        make_tuple_traits < T1 >::type, make_tuple_traits < T2 >::type,
-        make_tuple_traits < T3 >::type > ( theM0, theM1, theM2, theM3 );
+      return tuple < typename make_tuple_traits < T0 >::type,
+        typename make_tuple_traits < T1 >::type,
+        typename make_tuple_traits < T2 >::type,
+        typename make_tuple_traits < T3 >::type > ( theM0, theM1, theM2,
+                                                    theM3 );
     }
     template < class T0, class T1, class T2,
       class T3 > struct make_tuple_function <T0, T1, T2, T3, null_type,
       null_type, null_type, null_type, null_type, null_type >
     {
-      typedef tuple < make_tuple_traits < T0 >::type,
-        make_tuple_traits < T1 >::type, make_tuple_traits < T2 >::type,
-        make_tuple_traits < T3 >::type > result_type;
+      typedef tuple < typename make_tuple_traits < T0 >::type,
+        typename make_tuple_traits < T1 >::type,
+        typename make_tuple_traits < T2 >::type,
+        typename make_tuple_traits < T3 >::type > result_type;
       result_type operator(  ) ( const T0 & theM0, const T1 & theM1,
                                  const T2 & theM2, const T3 & theM3 ) const
       {
@@ -1577,29 +1582,32 @@ namespace boost
       return t.m4;
     }
     template < class T0, class T1, class T2, class T3,
-      class T4 > tuple < make_tuple_traits < T0 >::type,
-      make_tuple_traits < T1 >::type, make_tuple_traits < T2 >::type,
-      make_tuple_traits < T3 >::type,
-      make_tuple_traits < T4 >::type > make_tuple( const T0 & theM0,
-                                                   const T1 & theM1,
-                                                   const T2 & theM2,
-                                                   const T3 & theM3,
-                                                   const T4 & theM4 )
+      class T4 > tuple < typename make_tuple_traits < T0 >::type,
+      typename make_tuple_traits < T1 >::type,
+      typename make_tuple_traits < T2 >::type,
+      typename make_tuple_traits < T3 >::type,
+      typename make_tuple_traits < T4 >::type > make_tuple( const T0 & theM0,
+                                                            const T1 & theM1,
+                                                            const T2 & theM2,
+                                                            const T3 & theM3,
+                                                            const T4 & theM4 )
     {
-      return tuple < make_tuple_traits < T0 >::type,
-        make_tuple_traits < T1 >::type, make_tuple_traits < T2 >::type,
-        make_tuple_traits < T3 >::type,
-        make_tuple_traits < T4 >::type > ( theM0, theM1, theM2, theM3,
-                                           theM4 );
+      return tuple < typename make_tuple_traits < T0 >::type,
+        typename make_tuple_traits < T1 >::type,
+        typename make_tuple_traits < T2 >::type,
+        typename make_tuple_traits < T3 >::type,
+        typename make_tuple_traits < T4 >::type > ( theM0, theM1, theM2,
+                                                    theM3, theM4 );
     }
     template < class T0, class T1, class T2, class T3,
       class T4 > struct make_tuple_function <T0, T1, T2, T3, T4, null_type,
       null_type, null_type, null_type, null_type >
     {
-      typedef tuple < make_tuple_traits < T0 >::type,
-        make_tuple_traits < T1 >::type, make_tuple_traits < T2 >::type,
-        make_tuple_traits < T3 >::type,
-        make_tuple_traits < T4 >::type > result_type;
+      typedef tuple < typename make_tuple_traits < T0 >::type,
+        typename make_tuple_traits < T1 >::type,
+        typename make_tuple_traits < T2 >::type,
+        typename make_tuple_traits < T3 >::type,
+        typename make_tuple_traits < T4 >::type > result_type;
       result_type operator(  ) ( const T0 & theM0, const T1 & theM1,
                                  const T2 & theM2, const T3 & theM3,
                                  const T4 & theM4 ) const
@@ -1627,30 +1635,36 @@ namespace boost
       return t.m5;
     }
     template < class T0, class T1, class T2, class T3, class T4,
-      class T5 > tuple < make_tuple_traits < T0 >::type,
-      make_tuple_traits < T1 >::type, make_tuple_traits < T2 >::type,
-      make_tuple_traits < T3 >::type, make_tuple_traits < T4 >::type,
-      make_tuple_traits < T5 >::type > make_tuple( const T0 & theM0,
-                                                   const T1 & theM1,
-                                                   const T2 & theM2,
-                                                   const T3 & theM3,
-                                                   const T4 & theM4,
-                                                   const T5 & theM5 )
+      class T5 > tuple < typename make_tuple_traits < T0 >::type,
+      typename make_tuple_traits < T1 >::type,
+      typename make_tuple_traits < T2 >::type,
+      typename make_tuple_traits < T3 >::type,
+      typename make_tuple_traits < T4 >::type,
+      typename make_tuple_traits < T5 >::type > make_tuple( const T0 & theM0,
+                                                            const T1 & theM1,
+                                                            const T2 & theM2,
+                                                            const T3 & theM3,
+                                                            const T4 & theM4,
+                                                            const T5 & theM5 )
     {
-      return tuple < make_tuple_traits < T0 >::type,
-        make_tuple_traits < T1 >::type, make_tuple_traits < T2 >::type,
-        make_tuple_traits < T3 >::type, make_tuple_traits < T4 >::type,
-        make_tuple_traits < T5 >::type > ( theM0, theM1, theM2, theM3, theM4,
-                                           theM5 );
+      return tuple < typename make_tuple_traits < T0 >::type,
+        typename make_tuple_traits < T1 >::type,
+        typename make_tuple_traits < T2 >::type,
+        typename make_tuple_traits < T3 >::type,
+        typename make_tuple_traits < T4 >::type,
+        typename make_tuple_traits < T5 >::type > ( theM0, theM1, theM2,
+                                                    theM3, theM4, theM5 );
     }
     template < class T0, class T1, class T2, class T3, class T4,
       class T5 > struct make_tuple_function <T0, T1, T2, T3, T4, T5,
       null_type, null_type, null_type, null_type >
     {
-      typedef tuple < make_tuple_traits < T0 >::type,
-        make_tuple_traits < T1 >::type, make_tuple_traits < T2 >::type,
-        make_tuple_traits < T3 >::type, make_tuple_traits < T4 >::type,
-        make_tuple_traits < T5 >::type > result_type;
+      typedef tuple < typename make_tuple_traits < T0 >::type,
+        typename make_tuple_traits < T1 >::type,
+        typename make_tuple_traits < T2 >::type,
+        typename make_tuple_traits < T3 >::type,
+        typename make_tuple_traits < T4 >::type,
+        typename make_tuple_traits < T5 >::type > result_type;
       result_type operator(  ) ( const T0 & theM0, const T1 & theM1,
                                  const T2 & theM2, const T3 & theM3,
                                  const T4 & theM4, const T5 & theM5 ) const
@@ -1680,34 +1694,41 @@ namespace boost
       return t.m6;
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6 > tuple < make_tuple_traits < T0 >::type,
-      make_tuple_traits < T1 >::type, make_tuple_traits < T2 >::type,
-      make_tuple_traits < T3 >::type, make_tuple_traits < T4 >::type,
-      make_tuple_traits < T5 >::type,
-      make_tuple_traits < T6 >::type > make_tuple( const T0 & theM0,
-                                                   const T1 & theM1,
-                                                   const T2 & theM2,
-                                                   const T3 & theM3,
-                                                   const T4 & theM4,
-                                                   const T5 & theM5,
-                                                   const T6 & theM6 )
+      class T6 > tuple < typename make_tuple_traits < T0 >::type,
+      typename make_tuple_traits < T1 >::type,
+      typename make_tuple_traits < T2 >::type,
+      typename make_tuple_traits < T3 >::type,
+      typename make_tuple_traits < T4 >::type,
+      typename make_tuple_traits < T5 >::type,
+      typename make_tuple_traits < T6 >::type > make_tuple( const T0 & theM0,
+                                                            const T1 & theM1,
+                                                            const T2 & theM2,
+                                                            const T3 & theM3,
+                                                            const T4 & theM4,
+                                                            const T5 & theM5,
+                                                            const T6 & theM6 )
     {
-      return tuple < make_tuple_traits < T0 >::type,
-        make_tuple_traits < T1 >::type, make_tuple_traits < T2 >::type,
-        make_tuple_traits < T3 >::type, make_tuple_traits < T4 >::type,
-        make_tuple_traits < T5 >::type,
-        make_tuple_traits < T6 >::type > ( theM0, theM1, theM2, theM3, theM4,
-                                           theM5, theM6 );
+      return tuple < typename make_tuple_traits < T0 >::type,
+        typename make_tuple_traits < T1 >::type,
+        typename make_tuple_traits < T2 >::type,
+        typename make_tuple_traits < T3 >::type,
+        typename make_tuple_traits < T4 >::type,
+        typename make_tuple_traits < T5 >::type,
+        typename make_tuple_traits < T6 >::type > ( theM0, theM1, theM2,
+                                                    theM3, theM4, theM5,
+                                                    theM6 );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
       class T6 > struct make_tuple_function <T0, T1, T2, T3, T4, T5, T6,
       null_type, null_type, null_type >
     {
-      typedef tuple < make_tuple_traits < T0 >::type,
-        make_tuple_traits < T1 >::type, make_tuple_traits < T2 >::type,
-        make_tuple_traits < T3 >::type, make_tuple_traits < T4 >::type,
-        make_tuple_traits < T5 >::type,
-        make_tuple_traits < T6 >::type > result_type;
+      typedef tuple < typename make_tuple_traits < T0 >::type,
+        typename make_tuple_traits < T1 >::type,
+        typename make_tuple_traits < T2 >::type,
+        typename make_tuple_traits < T3 >::type,
+        typename make_tuple_traits < T4 >::type,
+        typename make_tuple_traits < T5 >::type,
+        typename make_tuple_traits < T6 >::type > result_type;
       result_type operator(  ) ( const T0 & theM0, const T1 & theM1,
                                  const T2 & theM2, const T3 & theM3,
                                  const T4 & theM4, const T5 & theM5,
@@ -1736,35 +1757,45 @@ namespace boost
       return t.m7;
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class T7 > tuple < make_tuple_traits < T0 >::type,
-      make_tuple_traits < T1 >::type, make_tuple_traits < T2 >::type,
-      make_tuple_traits < T3 >::type, make_tuple_traits < T4 >::type,
-      make_tuple_traits < T5 >::type, make_tuple_traits < T6 >::type,
-      make_tuple_traits < T7 >::type > make_tuple( const T0 & theM0,
-                                                   const T1 & theM1,
-                                                   const T2 & theM2,
-                                                   const T3 & theM3,
-                                                   const T4 & theM4,
-                                                   const T5 & theM5,
-                                                   const T6 & theM6,
-                                                   const T7 & theM7 )
+      class T6, class T7 > tuple < typename make_tuple_traits < T0 >::type,
+      typename make_tuple_traits < T1 >::type,
+      typename make_tuple_traits < T2 >::type,
+      typename make_tuple_traits < T3 >::type,
+      typename make_tuple_traits < T4 >::type,
+      typename make_tuple_traits < T5 >::type,
+      typename make_tuple_traits < T6 >::type,
+      typename make_tuple_traits < T7 >::type > make_tuple( const T0 & theM0,
+                                                            const T1 & theM1,
+                                                            const T2 & theM2,
+                                                            const T3 & theM3,
+                                                            const T4 & theM4,
+                                                            const T5 & theM5,
+                                                            const T6 & theM6,
+                                                            const T7 & theM7 )
     {
-      return tuple < make_tuple_traits < T0 >::type,
-        make_tuple_traits < T1 >::type, make_tuple_traits < T2 >::type,
-        make_tuple_traits < T3 >::type, make_tuple_traits < T4 >::type,
-        make_tuple_traits < T5 >::type, make_tuple_traits < T6 >::type,
-        make_tuple_traits < T7 >::type > ( theM0, theM1, theM2, theM3, theM4,
-                                           theM5, theM6, theM7 );
+      return tuple < typename make_tuple_traits < T0 >::type,
+        typename make_tuple_traits < T1 >::type,
+        typename make_tuple_traits < T2 >::type,
+        typename make_tuple_traits < T3 >::type,
+        typename make_tuple_traits < T4 >::type,
+        typename make_tuple_traits < T5 >::type,
+        typename make_tuple_traits < T6 >::type,
+        typename make_tuple_traits < T7 >::type > ( theM0, theM1, theM2,
+                                                    theM3, theM4, theM5,
+                                                    theM6, theM7 );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
       class T6, class T7 > struct make_tuple_function <T0, T1, T2, T3, T4, T5,
       T6, T7, null_type, null_type >
     {
-      typedef tuple < make_tuple_traits < T0 >::type,
-        make_tuple_traits < T1 >::type, make_tuple_traits < T2 >::type,
-        make_tuple_traits < T3 >::type, make_tuple_traits < T4 >::type,
-        make_tuple_traits < T5 >::type, make_tuple_traits < T6 >::type,
-        make_tuple_traits < T7 >::type > result_type;
+      typedef tuple < typename make_tuple_traits < T0 >::type,
+        typename make_tuple_traits < T1 >::type,
+        typename make_tuple_traits < T2 >::type,
+        typename make_tuple_traits < T3 >::type,
+        typename make_tuple_traits < T4 >::type,
+        typename make_tuple_traits < T5 >::type,
+        typename make_tuple_traits < T6 >::type,
+        typename make_tuple_traits < T7 >::type > result_type;
       result_type operator(  ) ( const T0 & theM0, const T1 & theM1,
                                  const T2 & theM2, const T3 & theM3,
                                  const T4 & theM4, const T5 & theM5,
@@ -1798,39 +1829,50 @@ namespace boost
       return t.m8;
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
-      class T6, class T7, class T8 > tuple < make_tuple_traits < T0 >::type,
-      make_tuple_traits < T1 >::type, make_tuple_traits < T2 >::type,
-      make_tuple_traits < T3 >::type, make_tuple_traits < T4 >::type,
-      make_tuple_traits < T5 >::type, make_tuple_traits < T6 >::type,
-      make_tuple_traits < T7 >::type,
-      make_tuple_traits < T8 >::type > make_tuple( const T0 & theM0,
-                                                   const T1 & theM1,
-                                                   const T2 & theM2,
-                                                   const T3 & theM3,
-                                                   const T4 & theM4,
-                                                   const T5 & theM5,
-                                                   const T6 & theM6,
-                                                   const T7 & theM7,
-                                                   const T8 & theM8 )
+      class T6, class T7,
+      class T8 > tuple < typename make_tuple_traits < T0 >::type,
+      typename make_tuple_traits < T1 >::type,
+      typename make_tuple_traits < T2 >::type,
+      typename make_tuple_traits < T3 >::type,
+      typename make_tuple_traits < T4 >::type,
+      typename make_tuple_traits < T5 >::type,
+      typename make_tuple_traits < T6 >::type,
+      typename make_tuple_traits < T7 >::type,
+      typename make_tuple_traits < T8 >::type > make_tuple( const T0 & theM0,
+                                                            const T1 & theM1,
+                                                            const T2 & theM2,
+                                                            const T3 & theM3,
+                                                            const T4 & theM4,
+                                                            const T5 & theM5,
+                                                            const T6 & theM6,
+                                                            const T7 & theM7,
+                                                            const T8 & theM8 )
     {
-      return tuple < make_tuple_traits < T0 >::type,
-        make_tuple_traits < T1 >::type, make_tuple_traits < T2 >::type,
-        make_tuple_traits < T3 >::type, make_tuple_traits < T4 >::type,
-        make_tuple_traits < T5 >::type, make_tuple_traits < T6 >::type,
-        make_tuple_traits < T7 >::type,
-        make_tuple_traits < T8 >::type > ( theM0, theM1, theM2, theM3, theM4,
-                                           theM5, theM6, theM7, theM8 );
+      return tuple < typename make_tuple_traits < T0 >::type,
+        typename make_tuple_traits < T1 >::type,
+        typename make_tuple_traits < T2 >::type,
+        typename make_tuple_traits < T3 >::type,
+        typename make_tuple_traits < T4 >::type,
+        typename make_tuple_traits < T5 >::type,
+        typename make_tuple_traits < T6 >::type,
+        typename make_tuple_traits < T7 >::type,
+        typename make_tuple_traits < T8 >::type > ( theM0, theM1, theM2,
+                                                    theM3, theM4, theM5,
+                                                    theM6, theM7, theM8 );
     }
     template < class T0, class T1, class T2, class T3, class T4, class T5,
       class T6, class T7, class T8 > struct make_tuple_function <T0, T1, T2,
       T3, T4, T5, T6, T7, T8, null_type >
     {
-      typedef tuple < make_tuple_traits < T0 >::type,
-        make_tuple_traits < T1 >::type, make_tuple_traits < T2 >::type,
-        make_tuple_traits < T3 >::type, make_tuple_traits < T4 >::type,
-        make_tuple_traits < T5 >::type, make_tuple_traits < T6 >::type,
-        make_tuple_traits < T7 >::type,
-        make_tuple_traits < T8 >::type > result_type;
+      typedef tuple < typename make_tuple_traits < T0 >::type,
+        typename make_tuple_traits < T1 >::type,
+        typename make_tuple_traits < T2 >::type,
+        typename make_tuple_traits < T3 >::type,
+        typename make_tuple_traits < T4 >::type,
+        typename make_tuple_traits < T5 >::type,
+        typename make_tuple_traits < T6 >::type,
+        typename make_tuple_traits < T7 >::type,
+        typename make_tuple_traits < T8 >::type > result_type;
       result_type operator(  ) ( const T0 & theM0, const T1 & theM1,
                                  const T2 & theM2, const T3 & theM3,
                                  const T4 & theM4, const T5 & theM5,
