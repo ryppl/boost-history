@@ -152,13 +152,13 @@ public:
     const index<KeyFromValue,Compare,Super,TagList,Category>& x)
   {
     BOOST_INDEXED_SET_INDEX_CHECK_INVARIANT;
-    final()=x.final();
+    this->final()=x.final();
     return *this;
   }
 
   allocator_type get_allocator()const
   {
-    return final().get_allocator();
+    return this->final().get_allocator();
   }
 
   /* iterators */
@@ -174,9 +174,9 @@ public:
  
   /* capacity */
 
-  bool      empty()const{return final_empty_();}
-  size_type size()const{return final_size_();}
-  size_type max_size()const{return final_max_size_();}
+  bool      empty()const{return this->final_empty_();}
+  size_type size()const{return this->final_size_();}
+  size_type max_size()const{return this->final_max_size_();}
 
   /* modifiers */
 
@@ -722,11 +722,11 @@ BOOST_INDEXED_SET_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
    * in BOOST_INDEXED_SET_INDEX_CHECK_INVARIANT. Actually, final_check_invariant
    * is already an inherited member function of index.
    */
-  void check_invariant_()const{final_check_invariant_();}
+  void check_invariant_()const{this->final_check_invariant_();}
 #endif
 
 private:
-  node_type* header()const{return final_header();}
+  node_type* header()const{return this->final_header();}
   node_type* root()const{return node_type::from_impl(header()->parent());}
   node_type* leftmost()const{return node_type::from_impl(header()->left());}
   node_type* rightmost()const{return node_type::from_impl(header()->right());}

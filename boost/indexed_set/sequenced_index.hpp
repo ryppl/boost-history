@@ -131,7 +131,7 @@ public:
 
   sequenced_index<Super,TagList>& operator=(const sequenced_index<Super,TagList>& x)
   {
-    final()=x.final();
+    this->final()=x.final();
     return *this;
   }
 
@@ -154,7 +154,7 @@ public:
     
   allocator_type get_allocator()const
   {
-    return final().get_allocator();
+    return this->final().get_allocator();
   }
 
   /* iterators */
@@ -172,9 +172,9 @@ public:
 
   /* capacity */
 
-  bool      empty()const{return final_empty_();}
-  size_type size()const{return final_size_();}
-  size_type max_size()const{return final_max_size_();}
+  bool      empty()const{return this->final_empty_();}
+  size_type size()const{return this->final_size_();}
+  size_type max_size()const{return this->final_max_size_();}
 
   void resize(size_type n,value_param_type x=value_type())
   {
@@ -573,11 +573,11 @@ BOOST_INDEXED_SET_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
    * in BOOST_INDEXED_SET_SEQ_INDEX_CHECK_INVARIANT. Actually, final_check_invariant
    * is already an inherited member function of index.
    */
-  void check_invariant_()const{final_check_invariant_();}
+  void check_invariant_()const{this->final_check_invariant_();}
 #endif
 
 private:
-  node_type* header()const{return final_header();}
+  node_type* header()const{return this->final_header();}
 
   void link(node_type* x)
   {

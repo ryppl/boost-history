@@ -130,8 +130,10 @@ public:
   {
     BOOST_INDEXED_SET_CHECK_INVARIANT;
     BOOST_INDEXED_SET_TRY{
-      iterator hint=end();
-      for(;first!=last;++first)hint=insert(hint,*first);
+      iterator hint=super::end();
+      for(;first!=last;++first){
+        hint=super::make_iterator(insert_(*first,hint.get_node()).first);
+      }
     }
     BOOST_INDEXED_SET_CATCH(...){
       clean_up();
@@ -456,7 +458,7 @@ BOOST_INDEXED_SET_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
 private:
   void clean_up()
   {
-    for(iterator it=begin();it!=end();)erase_(it++.get_node());
+    for(iterator it=super::begin();it!=super::end();)erase_(it++.get_node());
   }
 
   std::size_t node_count;
