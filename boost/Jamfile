@@ -1,79 +1,47 @@
 project-root ;
 
+if --help in $(ARGV)
+{
+    ECHO "
+Usage: bjam [options]
+Options:
+    --help                  This message.
+    --prefix=PREFIX         Install architecture independent files here.
+                            Default; C:\\Boost on Win32
+                            Default; /usr/local on Unix. Linux, etc.
+    --exec-prefix=EPREFIX   Install architecture dependent files here.
+                            Default; PREFIX
+    --libdir=DIR            Install libraries here.
+                            Default; EPREFIX/lib
+    --includedir=DIR        Install source headers here.
+                            Default; PREFIX/include
+" ;
+    EXIT "" ;
+}
+
 local version-tag = [ MATCH "^([^.]+).([^.]+)" : $(BOOST_VERSION) ] ;
 if $(NT) { version-tag = $(version-tag:J=) ; }
 else { version-tag = $(version-tag:J=".") ; }
 version-tag = $(version-tag:J=) ;
 
-rule common-stage-tag ( toolset variant : properties * )
-{
-    local tags = ;
+# architecture independent files
+local boost-locate = [ MATCH "^--prefix=(.*)" : $(ARGV) ] ;
+if $(NT) { boost-locate ?= C:\\Boost ; }
+else if $(UNIX) { boost-locate ?= /usr/local ; }
 
-    local toolset-tag = ;
-    switch $(toolset)
-    {
-        case *borland* : toolset-tag += bcb ;
-        case *como* : toolset-tag += como ;
-        case *cwpro8* : toolset-tag += cw8 ;
-        case *darwin* : toolset-tag += ;
-        case *edg* : toolset-tag += edg ;
-        case *gcc* : toolset-tag += gcc ;
-        case *intel-linux* : toolset-tag += il ;
-        case *intel-win32* : toolset-tag += iw ;
-        case *kcc* : toolset-tag += kcc ;
-        case *kylix* : toolset-tag += bck ;
-        case *metrowerks* : toolset-tag += cw ;
-        case *mingw* : toolset-tag += mgw ;
-        case *mipspro* : toolset-tag += mp ;
-        case *msvc* : toolset-tag += vc6 ;
-        case *sunpro* : toolset-tag += sw ;
-        case *tru64cxx* : toolset-tag += tru ;
-        case *vacpp* : toolset-tag += xlc ;
-        case *vc7* : toolset-tag += vc ;
-    }
-    toolset-tag += [ MATCH "[-c]([0123456789]+).([0123456789]*)" : $(toolset) ] ;
-    tags += $(toolset-tag:J=) ;
-    
-    local thread-tag = ;
-    if <threading>multi in $(properties) { thread-tag = mt ; }
-    tags += $(thread-tag:J=) ;
-    
-    local runtime-tag = ;
-    if <runtime-link>static in $(properties) { runtime-tag += s ; }
-    if <runtime-build>debug in $(properties) { runtime-tag += d ; }
-    if [ MATCH .*(debug).* : $(variant) ] { runtime-tag += d ; }
-    if [ MATCH .*(stlport).* : $(toolset) ] { runtime-tag += p ; }
-    tags += $(runtime-tag:J=) ;
-    
-    tags += $(version-tag) ;
-    
-    return $(properties) <tag><prefix>-$(tags:J=-) ;
-}
+# architecture dependent files
+local exec-locate = [ MATCH "^--exec-prefix=(.*)" : $(ARGV) ] ;
+exec-locate ?= $(boost-locate) ;
 
-rule glob-tree ( root : patterns * )
-{
-    local e ;
-    local f = [ GLOB $(root) : $(patterns) ] ;
-    local files ;
-    for e in $(f)
-    {
-        if $(e:D=) != CVS { files += $(e) ; }
-    }
-    local d = [ difference [ GLOB $(root) : * ] : $(files) ] ;
-    for e in $(d)
-    {
-        if ! ( $(e:D=) in . .. ) { files += [ glob-tree $(e) : $(patterns) ] ; }
-    }
-    return $(files) ;
-}
+# object code libraries
+local lib-locate = [ MATCH "^--libdir=(.*)" : $(ARGV) ] ;
+lib-locate ?= $(exec-locate)/lib ;
 
-rule unless ( test : no-value * : yes-value * )
-{ if ! $(test) { return $(no-value) ; } else { return $(yes-value) ; } }
+# source header files
+local include-locate = [ MATCH "^--includedir=(.*)" : $(ARGV) ] ;
+include-locate ?= $(boost-locate)/include ;
 
-rule cond ( test : yes-value * : no-value * )
-{ if $(test) { return $(yes-value) ; } else { return $(no-value) ; } }
-
-stage lib
+stage $(lib-locate:D=)
     :
         # please order by name to ease maintenance
         #~ <dll>libs/date_time/build/boost_date_time
@@ -94,18 +62,21 @@ stage lib
         <lib>libs/test/build/boost_unit_test_framework
         <dll>libs/thread/build/boost_thread
     :
+        <locate>$(lib-locate:D)
         <architecture-subdirs>yes
         common-stage-tag
+        <tag><postfix>-$(version-tag)
     :
         debug
         release
     ;
 
-stage include/boost-$(version-tag)
+stage $(include-locate:D=)/boost-$(version-tag)
     :
         [ glob-tree $(BOOST_ROOT)/boost/compatibility/cpp_c_headers : c* ]
         [ glob-tree $(BOOST_ROOT)/boost : *.hpp *.ipp ]
     :
+        <locate>$(include-locate:D)
         <tree-subdirs>$(BOOST_ROOT)
     :
     ;

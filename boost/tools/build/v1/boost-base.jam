@@ -2132,6 +2132,8 @@ rule stage ( name : sources + : requirements * : local-build * )
     local arch-subdirs = [ get-values <architecture-subdirs> : $(requirements) ] ;
     local tree-root = [ get-values <tree-subdirs> : $(requirements) ] ;
     if $(tree-root) { tree-root = [ split-path $(tree-root) ] ; }
+    local locate = [ get-values <locate> : $(requirements) ] ;
+    if $(locate) { locate = [ split-path $(locate) ] ; }
 
     # Supress the regular build of this target
     local gSUPPRESS_FAKE_TARGETS =  [ get-values <suppress> : $(local-build) ] ;
@@ -2224,6 +2226,8 @@ rule stage ( name : sources + : requirements * : local-build * )
     # are getting defined in the dependent phase skip the actual instructions.
     #
     local destination-files = ;
+    local locate-target = $(locate) ;
+    locate-target ?= [ split-path $(LOCATE_TARGET) ] ;
     for local file in $(files)
     {
         local destination-file ;
@@ -2245,7 +2249,7 @@ rule stage ( name : sources + : requirements * : local-build * )
             local FILEMODE = $(FILEMODE) ;
             if $(file-mode($(file))) { FILEMODE = $(file-mode($(file))) ; }
             MakeLocate $(destination-file) :
-                [ FDirName [ split-path $(LOCATE_TARGET)/$(stage-dir) ] $(destination-subdir) ] ;
+                [ FDirName $(locate-target) [ split-path $(stage-dir) ] $(destination-subdir) ] ;
             FileClone $(destination-file) : $(file) ;
             local target = $(stage-id) $(destination-subdir) $(destination-file:G=) ;
             declare-fake-targets $(target:J=/) : $(destination-file) ;
@@ -2282,3 +2286,103 @@ rule target-id-of ( target )
         [ FGristFiles $(target:D=:G=) ] ;
     return $(target-id) ;
 }
+
+# Common rules for generating a single stage tag based on the
+# variant, build properties, and the toolset used to build.
+# To use place this rule name in the requirementes section of
+# a stage target.
+#
+# The tag is constructed as such:
+#
+#   [-<toolset-tag>][-<thread-tag>][-<runtime-tag>]
+#
+#   <toolset-tag> maps to an abbreviated name of the toolset
+#   and when possible and applicable the version of the toolset.
+#
+#   <thread-tag> "mt" when multi-threading is enabled.
+#
+#   <runtime-tag> adds these single letter tags:
+#       "s" when static linking to runtime
+#       "g" when linking to debug runtime
+#       "d" when building debug variants
+#       "p" when building with stlport libraries
+#
+# The tag added is a <tag><prefix> to allow for additional tags
+# in the stage. For example the version tag.
+#
+rule common-stage-tag ( toolset variant : properties * )
+{
+    local tags = ;
+
+    local toolset-tag = ;
+    switch $(toolset)
+    {
+        case *borland* : toolset-tag += bcb ;
+        case *como* : toolset-tag += como ;
+        case *cwpro8* : toolset-tag += cw8 ;
+        case *darwin* : toolset-tag += ;
+        case *edg* : toolset-tag += edg ;
+        case *gcc* : toolset-tag += gcc ;
+        case *intel-linux* : toolset-tag += il ;
+        case *intel-win32* : toolset-tag += iw ;
+        case *kcc* : toolset-tag += kcc ;
+        case *kylix* : toolset-tag += bck ;
+        case *metrowerks* : toolset-tag += cw ;
+        case *mingw* : toolset-tag += mgw ;
+        case *mipspro* : toolset-tag += mp ;
+        case *msvc* : toolset-tag += vc6 ;
+        case *sunpro* : toolset-tag += sw ;
+        case *tru64cxx* : toolset-tag += tru ;
+        case *vacpp* : toolset-tag += xlc ;
+        case *vc7* : toolset-tag += vc ;
+    }
+    toolset-tag += [ MATCH "[-c]([0123456789]+).([0123456789]*)" : $(toolset) ] ;
+    toolset-tag += [ MATCH "[-]([0123456789]+).([0123456789]*)" : $(toolset) ] ;
+    tags += $(toolset-tag:J=) ;
+    
+    local thread-tag = ;
+    if <threading>multi in $(properties) { thread-tag = mt ; }
+    tags += $(thread-tag:J=) ;
+    
+    local runtime-tag = ;
+    if <runtime-link>static in $(properties) { runtime-tag += s ; }
+    if <runtime-build>debug in $(properties) { runtime-tag += g ; }
+    if [ MATCH .*(debug).* : $(variant) ] { runtime-tag += d ; }
+    if [ MATCH .*(stlport).* : $(toolset) ] { runtime-tag += p ; }
+    tags += $(runtime-tag:J=) ;
+    
+    if $(tags)
+    {
+        return $(properties) <tag><prefix>-$(tags:J=-) ;
+    }
+    else
+    {
+        return $(properties) ;
+    }
+}
+
+# Recursive version of GLOB. Builds the glob of files while
+# also searching in the subdirectories of the given root.
+#
+rule glob-tree ( root : patterns * )
+{
+    local e ;
+    local f = [ GLOB $(root) : $(patterns) ] ;
+    local files ;
+    for e in $(f)
+    {
+        if $(e:D=) != CVS { files += $(e) ; }
+    }
+    local d = [ difference [ GLOB $(root) : * ] : $(files) ] ;
+    for e in $(d)
+    {
+        if ! ( $(e:D=) in . .. ) { files += [ glob-tree $(e) : $(patterns) ] ; }
+    }
+    return $(files) ;
+}
+
+rule unless ( test : no-value * : yes-value * )
+{ if ! $(test) { return $(no-value) ; } else { return $(yes-value) ; } }
+
+rule cond ( test : yes-value * : no-value * )
+{ if $(test) { return $(yes-value) ; } else { return $(no-value) ; } }
