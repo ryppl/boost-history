@@ -19,7 +19,7 @@
 
 \author{Aleksey Gurtovoy$^\dag$ and David Abrahams$^\ddag$ \\
 \\
-$^\dag$ Meta Communications \\
+$^\dag$ MetaCommunications, Inc. \\
 \texttt{agurtovoy@meta-comm.com}\\
 \\
 $^\ddag$ Boost Consulting \\
@@ -475,7 +475,7 @@ the lingua franca of every day programmers.
 
 \subsection{Relation to other work.}
 
-\section{Basic usage (What can I do with boost::mpl?)}
+\section{Basic usage (What can I do with mpl?)}
 
 \subsection{Conditional type selection}
 
@@ -502,8 +502,8 @@ struct select_if
 };
 
 // usage/semantics
-typedef boost::mpl::select_if<boost::mpl::true_c,char,long>::type t1;
-typedef boost::mpl::select_if<boost::mpl::false_c,char,long>::type t2;
+typedef mpl::select_if<mpl::true_c,char,long>::type t1;
+typedef mpl::select_if<mpl::false_c,char,long>::type t2;
 
 BOOST_MPL_ASSERT_IS_SAME(t1, char);
 BOOST_MPL_ASSERT_IS_SAME(t2, long);
@@ -574,7 +574,7 @@ the straighforward approach does not work:
 template< typename T >
 struct pointed_type
 {
-    typedef typename boost::mpl::select_if<
+    typedef typename mpl::select_if<
           boost::is_pointer<T>
         , typename boost::remove_pointer<T>::type
         , typename T::element_type // #1
@@ -644,7 +644,7 @@ struct element_type
 template< typename T >
 struct pointed_type
 {
-    typedef typename boost::mpl::select_if<
+    typedef typename mpl::select_if<
           boost::is_pointer<T>
         , typename boost::remove_pointer<T>::type
         , typename aux::element_type<T>::type
@@ -681,7 +681,7 @@ template< typename T >
 struct pointed_type
 {
  private:
-    typedef typename boost::mpl::select_if<
+    typedef typename mpl::select_if<
           boost::is_pointer<T>
         , boost::remove_pointer<T>
         , aux::element_type<T>
@@ -714,7 +714,7 @@ can re-write the above code as simple as:
 template< typename T >
 struct pointed_type
 {
-    typedef typename boost::mpl::apply_if<
+    typedef typename mpl::apply_if<
           boost::is_pointer<T>
         , boost::remove_pointer<T>
         , aux::element_type<T>
@@ -737,7 +737,7 @@ template<
     >
 struct remove_pointer_if
 {
-    typedef typename boost::mpl::select_if<
+    typedef typename mpl::select_if<
           Condition
         , typename boost::remove_pointer<T>::type
         , T
@@ -759,7 +759,7 @@ the refactoring just doesn't seem possible. An easiest way out of
 this situation would be to pass to \code{select\_if} a real 
 nullary function instead of \code{T}, - the one that returns 
 \code{T} on its invocation. The \Mpl provides a simple way to do it -
-we just substitute \code{T} with \code{boost::mpl::identity<T>},
+we just substitute \code{T} with \code{mpl::identity<T>},
 and \code{boost::select\_if} with more compact 
 \code{boost::apply\_if}:
 
@@ -771,10 +771,10 @@ template<
     >
 struct remove_pointer_if
 {
-    typedef typename boost::mpl::apply_if<
+    typedef typename mpl::apply_if<
           Condition
         , boost::remove_pointer<T>
-        , boost::mpl::identity<T>
+        , mpl::identity<T>
         >::type type;
 };
 \end{verbatim}
@@ -974,8 +974,8 @@ is the only way to "return" a class template.
 %%% doesn't seem to cause problems... or maybe it does (we can't declare
 %%% a variable to hold the result of bind)
 
-\emph{MORE IMPORTANLY - why representing metafunctions as plain class
-templates (ct-metafunctions) is not a option.}
+%%\emph{MORE IMPORTANLY - why representing metafunctions as plain class
+%% templates (ct-metafunctions) is not a option.}
 
 
 Definitions: 
@@ -1070,7 +1070,7 @@ struct my_func
     typedef /* ... */ type;
 };
 
-typedef boost::mpl::list< 
+typedef mpl::list< 
       my_func
     , boost::is_same
     , boost::is_convertible
@@ -1125,9 +1125,9 @@ have to write
 
 {\footnotesize
 \begin{verbatim}
-typedef boost::mpl::find::apply<list,long>::type iter;
+typedef mpl::find::apply<list,long>::type iter;
 // or, if you prefer,
-// typedef boost::mpl::apply< boost::mpl::find,list,long >::type iter;
+// typedef mpl::apply< mpl::find,list,long >::type iter;
 \end{verbatim}
 }
 
@@ -1135,7 +1135,7 @@ instead of
 
 {\footnotesize
 \begin{verbatim}
-typedef boost::mpl::find<list,long>::type iter;
+typedef mpl::find<list,long>::type iter;
 \end{verbatim}
 }
 
@@ -1152,7 +1152,7 @@ to a higher-oder function, you just write:
 
 {\footnotesize
 \begin{verbatim}
-typedef boost::mpl::apply< my_f, boost::mpl::find<_1,_2> >::type result;
+typedef mpl::apply< my_f, mpl::find<_1,_2> >::type result;
 \end{verbatim}
 }
 
@@ -1161,7 +1161,7 @@ you still have the intuitive
 
 {\footnotesize
 \begin{verbatim}
-typedef boost::mpl::find<list,long>::type iter;
+typedef mpl::find<list,long>::type iter;
 \end{verbatim}
 }
 
@@ -1225,8 +1225,8 @@ searching type in a list looks like this:
 
 {\footnotesize
 \begin{verbatim}
-typedef boost::mpl::list< char,short,int,long,float,double > types;
-typedef boost::mpl::find< types,long >::type iter;
+typedef mpl::list< char,short,int,long,float,double > types;
+typedef mpl::find< types,long >::type iter;
 \end{verbatim}
 }
 
@@ -1237,7 +1237,7 @@ such that \code{iter::type} is identical to \code{long}; if no such
 element exists, \code{iter} is identical to
 \code{end<types>::type}. Basically, this is how one would search for a
 value in \code{std::list} or \code{std::vector}, except that
-\code{boost::mpl::find} accepts the sequence as a single parameter,
+\code{mpl::find} accepts the sequence as a single parameter,
 while \code{std::find} takes two iterators.  Everything else is pretty
 much the same - the names are the same, the semantics is very close,
 there are iterators, and you can search not only by type, but also
@@ -1245,7 +1245,7 @@ using a predicate:
 
 {\footnotesize
 \begin{verbatim}
-typedef boost::mpl::find_if< types,boost::is_float >::type iter;
+typedef mpl::find_if< types,boost::is_float >::type iter;
 \end{verbatim}
 }
 
@@ -1261,9 +1261,9 @@ template metaprogramming library.
 \subsubsection{Sequence Concepts}
 
 In the \code{find} example above we searched for a type in the
-sequence built using the \code{boost::mpl::list} template, but
+sequence built using the \code{mpl::list} template, but
 \code{list} is not the only sequence that the library provides you
-with. Neither is\code{boost::mpl::find} or any other algorithm
+with. Neither is\code{mpl::find} or any other algorithm
 hard-coded to work only with \code{list} sequences. \code{list} is
 just one model of MPL's ForwardSequence concept, and \code{find} works
 with anything that satisfies this concept's requirements. The
@@ -1320,12 +1320,12 @@ struct tiny_list_item<TinyList,2>
 }
 
 and then use it with any of the library algorithms as if it 
-was \code{boost::mpl::list}:
+was \code{mpl::list}:
 
 {\footnotesize
 \begin{verbatim}
 typedef tiny_list< char,short,int > types;
-typedef boost::mpl::transform<
+typedef mpl::transform<
       types
     , boost::add_pointer
     >::type pointers;
@@ -1380,7 +1380,7 @@ So, the library provides you with almost complete compile-time
 equivalent of STL framework. Does it help you to solve you 
 metaprogramming tasks? Let's return to our \code{largest} 
 example to see if we can rewrite it in a better way with what 
-\code{boost::mpl} has to offer. Well, actually there is not 
+\code{mpl} has to offer. Well, actually there is not 
 much to look at, because implementation of it with MPL is a 
 one-liner:
 
@@ -1389,11 +1389,11 @@ one-liner:
 template< typename Sequence >
 struct largest
 {
-    typedef typename boost::mpl::max_element<
+    typedef typename mpl::max_element<
           Sequence
-        , boost::mpl::less<
-              boost::mpl::size_of<_1>
-            , boost::mpl::size_of<_2>
+        , mpl::less<
+              mpl::size_of<_1>
+            , mpl::size_of<_2>
             >
         >::type type;
 };
@@ -1477,7 +1477,7 @@ effective as it's possible (for example, using such techniques
 as recursion unrolling), your brand-new algorithm will 
 automatically benefit from these optimizations as well. And of 
 course it means that your algorithm will work with any 
-sequence that is a model of \code{boost::mpl}'s 
+sequence that is a model of \code{mpl}'s 
 ForwardSequence, because it's the only requirement of 
 \code{iter\_fold}/\code{find\_if} pair.
 
@@ -1486,7 +1486,7 @@ ForwardSequence, because it's the only requirement of
 and well-known primitives in many functional programming 
 languages. A more familiar to a \Cpp\ programmer analogy would 
 be \code{std::accumulate} algorithm from the \Cpp\ standard 
-library. \code{iter\_fold} is defined in \code{boost::mpl} 
+library. \code{iter\_fold} is defined in \code{mpl} 
 as follows:
 
 {\footnotesize
@@ -1543,7 +1543,7 @@ What we've seen so far were sequences (and algorithms on
 sequences) of types. It's very much possible and easy to 
 manipulate values using the library as well. The only thing 
 to remember is that in \Cpp\ class template non-type template 
-parameters is one more example of non-polymorphic behavior (??).
+parameters is one more example of non-polymorphic behavior. %%% (??).
 That means, that if you declared a metafunction to take a 
 non-type template parameter - let's say \emph{long} - 
 it's not possible to pass anything besides compile-time 
@@ -1739,13 +1739,13 @@ work with foreign type sequences.
 It may be an eye-opening fact for some that type lists are not the
 only useful compile-time sequence. Again, the need for a variety of
 compile-time containers arises for the same reasons that we have
-lists, vectors, deques, and sets in the /Cpp/ standard library -
+lists, vectors, deques, and sets in the \Cpp\ standard library -
 different containers have different functional and performance
 characteristics which determine not only applicability and efficiency
 of particular algorithms, but also the expressiveness or verbosity of
 the code that uses them. While runtime performance is not an issue for
 \Cpp\ metaprograms, compilation speed is often a significant
-bottleneck to advanced \Cpp\ software development[Abr01].
+bottleneck to advanced \Cpp\ software development [Abr01].
 
 The \Mpl\ provides four built-in sequences: \code{type\_\-list},
 \code{value\_\-list} (really just a \code{type\_\-list} of value
@@ -1776,7 +1776,7 @@ compile-time iterative algorithms as it is to runtime algorithms.
 
 \subsection{Lambda facility}
 
-\section{Design of boost::mpl}
+\section{Design of mpl}
 \subsection{Design goals}
 \subsection{Design decisions}
 \subsubsection{Use of iterators}
@@ -2095,7 +2095,7 @@ pros:
 \item readability, direct mapping between a FSM design and 
     implementation ( one-to-one relation between the 
     definition and the state table of the FSM )
-\item performance ??
+\item performance %%%??
 \item compile-time checking 
 \item FSM "installation" is done at compile-time; cost 
     nothing in performance 
