@@ -111,6 +111,15 @@ int main()
       test_stlio( test, p, "( \"Abschied Nehmen\", \"Farewell\" )", "std::string" );
    }
 
+   // std::string (character escaping)
+   {
+      // [note]: results shown in escaped form
+
+      std::pair< std::string, std::string >
+                                       p( "message", "quote: \"Hello\\ World!\"" );
+      test_stlio( test, p, "( \"message\", \"quote: \\\"Hello\\\\ World!\\\"\" )", "std::string (character escaping)" );
+   }
+
 #  if defined(BOOST_IOFM_HASH_CONTAINERS)
       // hash_map
       {
