@@ -20,7 +20,7 @@ using std::endl;
 
 typedef std::complex<double> cmpx; 
 
-#ifndef ROW_MAJOR
+#ifndef F_ROW_MAJOR
 typedef ublas::matrix<double, ublas::column_major> m_t;
 typedef ublas::matrix<cmpx, ublas::column_major> cm_t;
 #else
@@ -31,36 +31,39 @@ typedef ublas::matrix<cmpx, ublas::row_major> cm_t;
 int main() {
 
   cout << endl; 
+  cout << "real matrix:" << endl << endl; 
 
-  // real
   size_t n = 5; 
   m_t a (n, n);
-
-  for (size_t i = 0; i < n; ++i) {
-    a (i, i) = n;
-    for (size_t j = i + 1; j < n; ++j)
-      a (i, j) = a (j, i) = n - (j - i);
-  } 
+  init_symm (a); 
+  //     [n   n-1 n-2  ... 1]
+  //     [n-1 n   n-1  ... 2]
+  // a = [n-2 n-1 n    ... 3]
+  //     [        ...       ]
+  //     [1   2   ...  n-1 n]
   print_m (a, "A"); 
   cout << endl; 
 
-  m_t aa (a); 
+  m_t aa (a);  // copy of a, for later use
 
-  std::vector<int> ipiv (n); 
-  atlas::lu_factor (a, ipiv);  // getrf()
-  atlas::lu_invert (a, ipiv);  // getri() 
+  std::vector<int> ipiv (n);   // pivot vector 
+  atlas::lu_factor (a, ipiv);  // alias for getrf()
+  atlas::lu_invert (a, ipiv);  // alias for getri() 
 
-  m_t i1 (n, n), i2 (n, n); 
-  atlas::gemm (a, aa, i1);
-  atlas::gemm (aa, a, i2);
+  m_t i1 (n, n), i2 (n, n);  
+  atlas::gemm (a, aa, i1);   // i1 should be (almost) identity matrix
+  atlas::gemm (aa, a, i2);   // i2 should be (almost) identity matrix
 
-  print_m (i1, "Ainv * A"); 
-  print_m (i2, "A * Ainv"); 
+  print_m (i1, "I = A^(-1) * A");  
+  cout << endl; 
+  print_m (i2, "I = A * A^(-1)"); 
+  cout << endl; 
   
   cout << endl; 
 
+  //////////////////////////////////////////////////////
 
-  // complex 
+  cout << "complex matrix:" << endl << endl; 
   cm_t ca (3, 3); 
 
   ca (0, 0) = cmpx (3, 0);
@@ -73,6 +76,7 @@ int main() {
   ca (2, 1) = cmpx (0, 3);
   ca (2, 2) = cmpx (2, 0);
   print_m (ca, "CA"); 
+  cout << endl; 
 
   cm_t caa (ca); 
   
@@ -83,9 +87,11 @@ int main() {
     atlas::getri (ca, ipiv2); 
     cm_t ii (3, 3); 
     atlas::gemm (ca, caa, ii);
-    print_m (ii, "CAinv * CA"); 
+    print_m (ii, "I = CA^(-1) * CA"); 
+    cout << endl; 
     atlas::gemm (caa, ca, ii);
-    print_m (ii, "CA * CAinv"); 
+    print_m (ii, "I = CA * CA^(-1)"); 
+    cout << endl; 
   }
   else
     cout << "matrix is singular" << endl; 

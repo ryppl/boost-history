@@ -1,21 +1,17 @@
 
 // BLAS level 2 -- complex numbers
 
-//#define USE_STD_VECTOR
-
 #include <iostream>
 #include <complex>
-#include <boost/numeric/ublas/vector.hpp>
-#include <boost/numeric/ublas/matrix.hpp>
-#include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/bindings/atlas/cblas1.hpp>
 #include <boost/numeric/bindings/atlas/cblas2.hpp>
 #include <boost/numeric/bindings/traits/ublas_vector.hpp>
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
-#ifdef USE_STD_VECTOR
+#ifdef F_USE_STD_VECTOR
 #include <vector>
 #include <boost/numeric/bindings/traits/std_vector.hpp> 
 #endif 
+#include "utils.h" 
 
 namespace ublas = boost::numeric::ublas;
 namespace atlas = boost::numeric::bindings::atlas;
@@ -26,7 +22,7 @@ using std::endl;
 typedef double real_t;
 typedef std::complex<real_t> cmplx_t; 
 
-#ifndef USE_STD_VECTOR
+#ifndef F_USE_STD_VECTOR
 typedef ublas::vector<cmplx_t> vct_t;
 typedef ublas::matrix<cmplx_t, ublas::row_major> m_t;
 #else
@@ -38,28 +34,25 @@ int main() {
 
   cout << endl; 
 
-  vct_t v (2);
-  atlas::set (cmplx_t (1., 0.), v);
-  cout << v << endl; 
-  vct_t vy (4); 
+  vct_t vx (2);
+  atlas::set (cmplx_t (1., 0.), vx);
+  print_v (vx, "vx"); 
+  vct_t vy (4); // vector size can be larger 
+                // than corresponding matrix size 
   atlas::set (cmplx_t (0., 0.), vy); 
-  cout << vy << endl; 
+  print_v (vy, "vy"); 
   cout << endl; 
 
   m_t m (3, 2);
-  m (0, 0) = cmplx_t (1., 0.);
-  m (0, 1) = cmplx_t (2., 0.);
-  m (1, 0) = cmplx_t (3., 0.);
-  m (1, 1) = cmplx_t (4., 0.);
-  m (2, 0) = cmplx_t (5., 0.);
-  m (2, 1) = cmplx_t (6., 0.);
-  cout << m << endl;
+  init_m (m, kpp (1)); 
+  print_m (m, "m"); 
+  cout << endl; 
 
-  atlas::gemv (CblasNoTrans, 1.0, m, v, 0.0, vy);
-  cout << vy << endl; 
-  atlas::gemv (m, v, vy);
-  cout << vy << endl; 
-
+  // vy = m vx
+  atlas::gemv (CblasNoTrans, 1.0, m, vx, 0.0, vy);
+  print_v (vy, "m vx"); 
+  atlas::gemv (m, vx, vy);
+  print_v (vy, "m vx"); 
   cout << endl; 
 
   m (0, 0) = cmplx_t (0., 1.);
@@ -68,13 +61,14 @@ int main() {
   m (1, 1) = cmplx_t (0., 4.);
   m (2, 0) = cmplx_t (0., 5.);
   m (2, 1) = cmplx_t (0., 6.);
-  cout << m << endl;
+  print_m (m, "m"); 
+  cout << endl; 
 
-  atlas::gemv (CblasNoTrans, 1.0, m, v, 0.0, vy);
-  cout << vy << endl; 
-  atlas::gemv (m, v, vy);
-  cout << vy << endl; 
-
+  // vy = m vx
+  atlas::gemv (CblasNoTrans, 1.0, m, vx, 0.0, vy);
+  print_v (vy, "m vx"); 
+  atlas::gemv (m, vx, vy);
+  print_v (vy, "m vx"); 
   cout << endl; 
 
   m (0, 0) = cmplx_t (-1., 1.);
@@ -83,49 +77,41 @@ int main() {
   m (1, 1) = cmplx_t (-4., 4.);
   m (2, 0) = cmplx_t (-5., 5.);
   m (2, 1) = cmplx_t (-6., 6.);
-  cout << m << endl;
-
-  atlas::gemv (CblasNoTrans, 1.0, m, v, 0.0, vy);
-  cout << vy << endl; 
-  atlas::gemv (m, v, vy);
-  cout << vy << endl; 
-
+  print_m (m, "m"); 
   cout << endl; 
 
-  atlas::set (cmplx_t (0., 1.), v);
-  cout << v << endl; 
-
-  m (0, 0) = cmplx_t (-1., 1.);
-  m (0, 1) = cmplx_t (-2., 2.);
-  m (1, 0) = cmplx_t (-3., 3.);
-  m (1, 1) = cmplx_t (-4., 4.);
-  m (2, 0) = cmplx_t (-5., 5.);
-  m (2, 1) = cmplx_t (-6., 6.);
-  cout << m << endl;
-
-  atlas::gemv (CblasNoTrans, 1.0, m, v, 0.0, vy);
-  cout << vy << endl; 
-  atlas::gemv (m, v, vy);
-  cout << vy << endl; 
-
+  // vy = m vx
+  atlas::gemv (CblasNoTrans, 1.0, m, vx, 0.0, vy);
+  print_v (vy, "m vx"); 
+  atlas::gemv (m, vx, vy);
+  print_v (vy, "m vx"); 
   cout << endl; 
 
-  atlas::set (cmplx_t (1., 1.), v);
-  cout << v << endl; 
+  atlas::set (cmplx_t (0., 1.), vx);
+  print_v (vx, "vx"); 
 
-  m (0, 0) = cmplx_t (-1., 1.);
-  m (0, 1) = cmplx_t (-2., 2.);
-  m (1, 0) = cmplx_t (-3., 3.);
-  m (1, 1) = cmplx_t (-4., 4.);
-  m (2, 0) = cmplx_t (-5., 5.);
-  m (2, 1) = cmplx_t (-6., 6.);
-  cout << m << endl;
+  // vy = m vx
+  atlas::gemv (CblasNoTrans, 1.0, m, vx, 0.0, vy);
+  print_v (vy, "m vx"); 
+  atlas::gemv (m, vx, vy);
+  print_v (vy, "m vx"); 
+  cout << endl; 
 
-  atlas::gemv (CblasNoTrans, 1.0, m, v, 0.0, vy);
-  cout << vy << endl; 
-  atlas::gemv (m, v, vy);
-  cout << vy << endl; 
+  atlas::set (cmplx_t (1., 1.), vx);
+  print_v (vx, "vx"); 
 
+  // vy = m vx
+  atlas::gemv (CblasNoTrans, 1.0, m, vx, 0.0, vy);
+  print_v (vy, "m vx"); 
+  atlas::gemv (m, vx, vy);
+  print_v (vy, "m vx"); 
+  cout << endl; 
+
+  // vx = m^H vy
+  atlas::set (cmplx_t (-1., -1.), vy); 
+  print_v (vy, "vy"); 
+  atlas::gemv (CblasConjTrans, 1.0, m, vy, 0.0, vx);
+  print_v (vx, "m^H vy"); 
   cout << endl; 
 
   m_t mx (2, 2); 
@@ -138,12 +124,14 @@ int main() {
   atlas::set (cmplx_t (0., 0.), mxc1);
   atlas::set (cmplx_t (0., 0.), myc0);
   atlas::set (cmplx_t (0., 0.), myc1);
+  print_m (mx, "mx");
+  cout << endl; 
+  print_m (my, "my");
+  cout << endl; 
 
-  cout << mx << endl;
-  cout << my << endl;
-
+  // my[.,0] = m mx[.,0] 
   atlas::gemv (m, mxc0, myc0); 
-  cout << my << endl;
+  print_m (my, "m mx[.,0]");
 
   cout << endl;
 

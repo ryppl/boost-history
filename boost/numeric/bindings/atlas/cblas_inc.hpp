@@ -16,8 +16,19 @@
  *
  */
 
-#ifndef BOOST_NUMERIC_CBLAS_INC_H
-#define BOOST_NUMERIC_CBLAS_INC_H
+//////////////////////////////////////////////////////////////////////////
+//
+// ATLAS (Automatically Tuned Linear Algebra Software)
+//
+// ``At present, it provides C and Fortran77 interfaces to a portably 
+// efficient BLAS implementation, as well as a few routines from LAPACK.''
+//
+// see: http://math-atlas.sourceforge.net/
+//
+//////////////////////////////////////////////////////////////////////////
+
+#ifndef BOOST_NUMERIC_BINDINGS_CBLAS_INC_H
+#define BOOST_NUMERIC_BINDINGS_CBLAS_INC_H
 
 extern "C" {
 #  include <atlas/cblas.h> 

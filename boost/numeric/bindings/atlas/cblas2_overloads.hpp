@@ -16,16 +16,17 @@
  *
  */
 
-#ifndef BOOST_NUMERIC_CBLAS2_OVERLOADS_HPP
-#define BOOST_NUMERIC_CBLAS2_OVERLOADS_HPP
+#ifndef BOOST_NUMERIC_BINDINGS_CBLAS2_OVERLOADS_HPP
+#define BOOST_NUMERIC_BINDINGS_CBLAS2_OVERLOADS_HPP
 
 #include <complex> 
-#include <boost/numeric/bindings/atlas/cblas_inc.h>
+#include <boost/numeric/bindings/atlas/cblas_inc.hpp>
 
 
 namespace boost { namespace numeric { namespace bindings { 
 
   namespace atlas { namespace detail {
+
 
     // y <- alpha * op (A) * x + beta * y
 
@@ -86,10 +87,128 @@ namespace boost { namespace numeric { namespace bindings {
 		   static_cast<void const*> (&beta), 
 		   static_cast<void*> (Y), incY); 
     }
-    
+
+
+    // y <- alpha * A * x + beta * y
+    // A real symmetric
+
+    inline 
+    void symv (CBLAS_ORDER const Order, CBLAS_UPLO const Uplo,
+               int const N, float const alpha, float const* A,
+               int const lda, float const* X, int const incX,
+               float const beta, float* Y, int const incY) 
+    {
+      cblas_ssymv (Order, Uplo, N, alpha, A, lda, 
+                   X, incX, beta, Y, incY);
+    }
+
+    inline 
+    void symv (CBLAS_ORDER const Order, CBLAS_UPLO const Uplo,
+               int const N, double const alpha, double const* A,
+               int const lda, double const* X, int const incX,
+               double const beta, double* Y, int const incY) 
+    {
+      cblas_dsymv (Order, Uplo, N, alpha, A, lda, 
+                   X, incX, beta, Y, incY);
+    }
+
+
+    // y <- alpha * A * x + beta * y
+    // A real symmetric in packed form 
+
+    inline
+    void spmv (CBLAS_ORDER const Order, CBLAS_UPLO const Uplo,
+               int const N, float const alpha, float const* A,
+               float const* X, int const incX,
+               float const beta, float* Y, int const incY) 
+    {
+      cblas_sspmv (Order, Uplo, N, alpha, A, X, incX, beta, Y, incY);
+    }
+
+    inline
+    void spmv (CBLAS_ORDER const Order, CBLAS_UPLO const Uplo,
+               int const N, double const alpha, double const* A,
+               double const* X, int const incX,
+               double const beta, double* Y, int const incY) 
+    {
+      cblas_dspmv (Order, Uplo, N, alpha, A, X, incX, beta, Y, incY);
+    }
+
+
+    // y <- alpha * A * x + beta * y
+    // A complex hermitian 
+
+    inline 
+    void hemv (CBLAS_ORDER const Order, CBLAS_UPLO const Uplo,
+               int const N, std::complex<float> const& alpha, 
+               std::complex<float> const* A, int const lda, 
+               std::complex<float> const* X, int const incX,
+               std::complex<float> const& beta, 
+               std::complex<float>* Y, int const incY) 
+    {
+      cblas_chemv (Order, Uplo, N, 
+                   static_cast<void const*> (&alpha), 
+                   static_cast<void const*> (A), lda, 
+                   static_cast<void const*> (X), incX, 
+                   static_cast<void const*> (&beta), 
+                   static_cast<void*> (Y), incY);
+    }
+
+    inline 
+    void hemv (CBLAS_ORDER const Order, CBLAS_UPLO const Uplo,
+               int const N, std::complex<double> const& alpha, 
+               std::complex<double> const* A, int const lda, 
+               std::complex<double> const* X, int const incX,
+               std::complex<double> const& beta, 
+               std::complex<double>* Y, int const incY) 
+    {
+      cblas_zhemv (Order, Uplo, N, 
+                   static_cast<void const*> (&alpha), 
+                   static_cast<void const*> (A), lda, 
+                   static_cast<void const*> (X), incX, 
+                   static_cast<void const*> (&beta), 
+                   static_cast<void*> (Y), incY);
+    }
+
+
+    // y <- alpha * A * x + beta * y
+    // A complex hermitian in packed form 
+
+    inline 
+    void hpmv (CBLAS_ORDER const Order, CBLAS_UPLO const Uplo,
+               int const N, std::complex<float> const& alpha, 
+               std::complex<float> const* A, 
+               std::complex<float> const* X, int const incX,
+               std::complex<float> const& beta, 
+               std::complex<float>* Y, int const incY) 
+    {
+      cblas_chpmv (Order, Uplo, N, 
+                   static_cast<void const*> (&alpha), 
+                   static_cast<void const*> (A), 
+                   static_cast<void const*> (X), incX, 
+                   static_cast<void const*> (&beta), 
+                   static_cast<void*> (Y), incY);
+    }
+
+    inline 
+    void hpmv (CBLAS_ORDER const Order, CBLAS_UPLO const Uplo,
+               int const N, std::complex<double> const& alpha, 
+               std::complex<double> const* A, 
+               std::complex<double> const* X, int const incX,
+               std::complex<double> const& beta, 
+               std::complex<double>* Y, int const incY) 
+    {
+      cblas_zhpmv (Order, Uplo, N, 
+                   static_cast<void const*> (&alpha), 
+                   static_cast<void const*> (A), 
+                   static_cast<void const*> (X), incX, 
+                   static_cast<void const*> (&beta), 
+                   static_cast<void*> (Y), incY);
+    }
+
   }} // namepaces detail & atlas
 
 }}} 
 
 
-#endif // BOOST_NUMERIC_CBLAS2_OVERLOADS_HPP
+#endif // BOOST_NUMERIC_BINDINGS_CBLAS2_OVERLOADS_HPP

@@ -5,11 +5,10 @@
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/bindings/traits/ublas_vector.hpp>
 #include <boost/numeric/bindings/atlas/cblas1.hpp>
-#ifdef USE_STD_VECTOR
+#ifdef F_USE_STD_VECTOR
 #include <vector>
 #include <boost/numeric/bindings/traits/std_vector.hpp> 
 #endif 
-
 #include "utils.h"
 
 namespace atlas = boost::numeric::bindings::atlas;
@@ -19,10 +18,12 @@ using std::cout;
 using std::endl; 
 using std::size_t; 
 
-#ifndef USE_STD_VECTOR
-typedef ublas::vector<double> vct_t;
+typedef double real_t;
+
+#ifndef F_USE_STD_VECTOR
+typedef ublas::vector<real_t> vct_t;
 #else
-typedef ublas::vector<double, std::vector<double> > vct_t;
+typedef ublas::vector<real_t, std::vector<double> > vct_t;
 #endif 
 
 int main() {
@@ -30,93 +31,156 @@ int main() {
   cout << endl; 
 
   vct_t v (10);
-  init_v (v, 0.1); 
+  init_v (v, times_plus<real_t> (0.1, 0.1)); 
   print_v (v, "v"); 
-  vct_t v1 (10);
-  init_v (v1, 10.1); 
-  print_v (v1, "v1"); 
   vct_t vy (10); 
-  atlas::set (0., vy); 
+  atlas::set (1., vy); 
   print_v (vy, "vy"); 
   cout << endl; 
 
+  // v <- 2 v
   atlas::scal (2.0, v); 
-  print_v (v, "2 v");
+  print_v (v, "v <- 2 v");
 
-  atlas::axpy (2.0, v1, vy); 
-  print_v (vy, "vy = 2 v1"); 
+  // vy <- 0.5 v + vy
+  atlas::axpy (0.5, v, vy); 
+  print_v (vy, "vy <- 0.5 v + vy"); 
 
-  cout << "v v1: " << atlas::dot (v, v1) << endl;
+  // v^T vy
+  cout << "v vy = " << atlas::dot (v, vy) << endl;
   cout << endl; 
 
   /////////////////
+  // ranges 
+
+  // v -- new init 
+  init_v (v, times_plus<real_t> (0.1, 0.1)); 
+  print_v (v, "v"); 
+  // vy -- new init 
+  init_v (vy, kpp (1)); 
+  print_v (vy, "vy"); 
+
+  // v[2..6]
   ublas::vector_range<vct_t> vr (v, ublas::range (2, 6)); 
+  print_v (vr, "v[2..6]"); 
+  // vy[4..8] 
   ublas::vector_range<vct_t> vry (vy, ublas::range (4, 8)); 
+  print_v (vry, "vy[4..8]"); 
 
+  // v[2..6] <- 10 v[2..6]
+  atlas::scal (0.1, vr); 
+  print_v (v, "v[2..6] <- 10 v[2..6]"); 
 
-  init_v (v, 0.1); 
-  atlas::scal (10.0, vr); 
-  print_v (v, "10 vr"); 
+  // vr^T vr 
+  cout << "v[2..6] v[2..6] = " << atlas::dot (vr, vr) << endl;
 
-  cout << "vr vr: " << atlas::dot (vr, vr) << endl;
-
-  atlas::set (0., vy); 
-  atlas::axpy (0.01, vr, vry); 
-
-  print_v (vy, "vry = 0.01 vr"); 
+  // vy[4..8] <- v[2..6] + vy[4..8]
+  atlas::xpy (vr, vry); 
+  print_v (vy, "vy[4..8] <- v[2..6] + vy[4..8]"); 
   cout << endl; 
 
   /////////////////
+  // slices 
+
+  // v -- new init 
+  init_v (v, times_plus<real_t> (0.1, 0.1)); 
+  print_v (v, "v"); 
+  // vy -- new init 
+  init_v (vy, kpp (1)); 
+  print_v (vy, "vy"); 
+
+  // v[1:2:4]
   ublas::vector_slice<vct_t> vs (v, ublas::slice (1, 2, 4)); 
+  print_v (vs, "v[1:2:4]"); 
+  // vy[2:2:4] 
   ublas::vector_slice<vct_t> vsy (vy, ublas::slice (2, 2, 4)); 
+  print_v (vsy, "vy[2:2:4]"); 
 
-  init_v (v, 0.1); 
+  // v[1:2:4] <- 10 v[1:2:4]
   atlas::scal (10.0, vs); 
-  print_v (v, "10 vs"); 
+  print_v (v, "v[1:2:4] <- 10 v[1:2:4]"); 
 
-  cout << "vs vs: " << atlas::dot (vs, vs) << endl;
+  // vs^T vs
+  cout << "v[1:2:4] v[1:2:4] = " << atlas::dot (vs, vs) << endl;
 
-  atlas::set (0., vy); 
+  // vy[2:2:4] <- 0.01 v[1:2:4] + vy[2:2:4] 
   atlas::axpy (0.01, vs, vsy); 
-  print_v (vy, "vsy = 0.01 vs"); 
+  print_v (vy, "vy[2:2:4] <- 0.01 v[1:2:4] + vy[2:2:4]"); 
   cout << endl; 
 
-  atlas::set (0., vy); 
+  ////////////////////////////////////////////
+  // ranges & slices 
+
+  // v -- new init 
+  init_v (v, times_plus<real_t> (0.1, 0.1)); 
+  print_v (v, "v"); 
+  // vy <- 1.0
+  atlas::set (1., vy);
+  print_v (vy, "vy <- 0.1"); 
+
+  // vy[2:2:4] <- 0.01 v[2..6] + vy[2:2:4] 
   atlas::axpy (0.01, vr, vsy); 
-  print_v (vy, "vsy = 0.01 vr"); 
+  print_v (vy, "vy[2:2:4] <- 0.01 v[2..6] + vy[2:2:4]"); 
 
-  atlas::set (0., vy); 
+  // vy <- 1.0
+  atlas::set (1., vy); 
+  print_v (vy, "vy <- 0.1"); 
+
+  // vy[4..8] <- 0.01 v[1:2:4] + vy[4..8] 
   atlas::axpy (0.01, vs, vry); 
-  print_v (vy, "vry = 0.01 vs"); 
+  print_v (vy, "vy[4..8] <- 0.01 v[1:2:4] + vy[4..8]"); 
 
-  cout << "vr vs: " << atlas::dot (vr, vs) << " == " 
+  // vr^T vs == vs^T vr
+  cout << "v[2..6] v[1:2:4] = " << atlas::dot (vr, vs) << " == " 
        << atlas::dot (vs, vr) << endl;
 
+  // vr^T vsy == vsy^T vr
+  cout << "v[2..6] vy[2:2:4] = " << atlas::dot (vr, vsy) << " == " 
+       << atlas::dot (vsy, vr) << endl;
+
   cout << endl; 
 
-  ///////////////
-  init_v (v, 0.1); 
+  ///////////////////
+  // slice of range
+
+  // v -- new init 
+  init_v (v, times_plus<real_t> (0.1, 0.1)); 
+  print_v (v, "v"); 
+
+  // v[1..9][1:2:3] 
   ublas::vector_range<vct_t> vr1 (v, ublas::range (1, 9)); 
   ublas::vector_slice< 
     ublas::vector_range<vct_t> 
   > vsr (vr1, ublas::slice (1, 2, 3)); 
-  print_v (vsr, "vs(vr)"); 
+  print_v (vr1, "v[1..9]"); 
+  print_v (vsr, "v[1..9][1:2:3]"); 
 
+  // v[1..9][1:2:3] <- 0.1 v[1..9][1:2:3]
   atlas::scal (0.1, vsr); 
-  print_v (v, "0.1 vs(vr)"); 
+  print_v (v, "0.1 v[1..9][1:2:3]"); 
 
-  cout << "||vs (vr)||: " << atlas::nrm2 (vsr) << endl; 
-
+  // ||vsr||_2 
+  cout << "||v[1..9][1:2:3]||_2 = " << atlas::nrm2 (vsr) << endl; 
   cout << endl; 
 
-  atlas::set (0., vy); 
+  ///////////////////
+  // range of slice 
+
+  // vy <- 1.0
+  init_v (vy, kpp (1)); 
+  print_v (vy, "vy"); 
+
+  // v[1:2:4][1:4] 
   ublas::vector_slice<vct_t> vsy1 (vy, ublas::slice (0, 2, 5));
   ublas::vector_range<
     ublas::vector_slice<vct_t> 
   > vrs (vsy1, ublas::range (1, 4)); 
+  print_v (vsy1, "v[1:2:4]");
+  print_v (vrs, "v[1:2:4][1:4]");
 
+  // v[1:2:4][1:4] <- 0.01 v[1..9][1:2:3] + v[1:2:4][1:4]
   atlas::axpy (0.01, vsr, vrs); 
-  print_v (vy, "vr(vs) = 0.01 vs(vr)"); 
+  print_v (vy, "0.01 v[1..9][1:2:3] + v[1:2:4][1:4]"); 
 
   cout << endl; 
 

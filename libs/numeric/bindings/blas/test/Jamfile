@@ -30,3 +30,11 @@ exe blas3
 	   <find-library>$(BLAS_LIB)
         ;
 
+exe packed_gemv_fail
+        : packed_gemv_fail.cpp 
+	  <lib>../bindings_blas
+        :  <include>$(BOOST_ROOT)
+	   <include>$(B_ROOT)
+	   <library-path>$(BLAS_PATH)
+	   <find-library>$(BLAS_LIB)
+        ;

@@ -1,18 +1,15 @@
 
 // BLAS level 3 -- complex numbers
 
-//#define USE_STD_VECTOR
-
 #include <iostream>
 #include <complex>
-#include <boost/numeric/ublas/matrix.hpp>
-#include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/bindings/atlas/cblas3.hpp>
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
-#ifdef USE_STD_VECTOR
+#ifdef F_USE_STD_VECTOR
 #include <vector>
 #include <boost/numeric/bindings/traits/std_vector.hpp> 
 #endif 
+#include "utils.h" 
 
 namespace ublas = boost::numeric::ublas;
 namespace atlas = boost::numeric::bindings::atlas;
@@ -23,7 +20,7 @@ using std::endl;
 typedef double real_t;
 typedef std::complex<real_t> cmplx_t; 
 
-#ifndef USE_STD_VECTOR
+#ifndef F_USE_STD_VECTOR
 typedef ublas::matrix<cmplx_t, ublas::row_major> m_t;
 #else
 typedef ublas::matrix<cmplx_t, ublas::column_major, std::vector<cmplx_t> > m_t;
@@ -38,7 +35,7 @@ int main() {
   a (0, 1) = cmplx_t (2., 0.);
   a (1, 0) = cmplx_t (3., 0.);
   a (1, 1) = cmplx_t (4., 0.);
-  cout << a << endl;
+  print_m (a, "A"); 
   cout << endl; 
 
   m_t b (2, 3);
@@ -48,25 +45,36 @@ int main() {
   b (1, 0) = cmplx_t (1., 0.);
   b (1, 1) = cmplx_t (2., 0.);
   b (1, 2) = cmplx_t (3., 0.);
-  cout << b << endl;
+  print_m (b, "B"); 
   cout << endl; 
   
   m_t c (2, 3);
-  c (0, 0) = 0.;
-  c (0, 1) = 0.;
-  c (0, 2) = 0.;
-  c (1, 0) = 0.;
-  c (1, 1) = 0.;
-  c (1, 2) = 0.;
-  cout << c << endl;
+
+  // c = a b
+  atlas::gemm (a, b, c); 
+  print_m (c, "A B"); 
   cout << endl; 
 
-  atlas::gemm (a, b, c); 
-  cout << c << endl;
+  a (0, 0) = cmplx_t (0., 1.);
+  a (0, 1) = cmplx_t (0., 2.);
+  a (1, 0) = cmplx_t (0., 3.);
+  a (1, 1) = cmplx_t (0., 4.);
+  print_m (a, "A"); 
+  cout << endl; 
+  
+  // c = a b
   atlas::gemm (CblasNoTrans, CblasNoTrans, 1.0, a, b, 0.0, c); 
-  cout << c << endl;
-  atlas::gemm (1.0, a, b, 0.0, c); 
-  cout << c << endl;
+  print_m (c, "A B"); 
+  cout << endl; 
+
+  // c = a^T b
+  atlas::gemm (CblasTrans, CblasNoTrans, 1.0, a, b, 0.0, c); 
+  print_m (c, "A^T B"); 
+  cout << endl; 
+
+  // c = a^H b
+  atlas::gemm (CblasConjTrans, CblasNoTrans, 1.0, a, b, 0.0, c); 
+  print_m (c, "A^H B"); 
 
   cout << endl; 
 

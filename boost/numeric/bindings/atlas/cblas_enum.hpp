@@ -16,11 +16,11 @@
  *
  */
 
-#ifndef BOOST_NUMERIC_CBLAS_ENUM_HPP
-#define BOOST_NUMERIC_CBLAS_ENUM_HPP
+#ifndef BOOST_NUMERIC_BINDINGS_CBLAS_ENUM_HPP
+#define BOOST_NUMERIC_BINDINGS_CBLAS_ENUM_HPP
 
 #include <boost/numeric/bindings/traits/traits.hpp>
-#include <boost/numeric/bindings/atlas/cblas_inc.h>
+#include <boost/numeric/bindings/atlas/cblas_inc.hpp>
 
 namespace boost { namespace numeric { namespace bindings { 
 

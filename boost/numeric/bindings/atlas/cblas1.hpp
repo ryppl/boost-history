@@ -16,8 +16,8 @@
  *
  */
 
-#ifndef BOOST_NUMERIC_CBLAS_LEVEL_1_HPP
-#define BOOST_NUMERIC_CBLAS_LEVEL_1_HPP
+#ifndef BOOST_NUMERIC_BINDINGS_CBLAS_LEVEL_1_HPP
+#define BOOST_NUMERIC_BINDINGS_CBLAS_LEVEL_1_HPP
 
 #include <cassert>
 
@@ -51,7 +51,7 @@ namespace boost { namespace numeric { namespace bindings {
     // x_i <- alpha for all i
     template <typename T, typename Vct> 
     inline 
-    void set (T const alpha, Vct& x) {
+    void set (T const& alpha, Vct& x) {
       typedef traits::vector_traits<Vct> vtraits;
       detail::set (vtraits::size (x),
 		   alpha, vtraits::storage (x), vtraits::stride (x)); 
@@ -84,7 +84,7 @@ namespace boost { namespace numeric { namespace bindings {
     // x <- alpha * x
     template <typename T, typename Vct> 
     inline 
-    void scal (T const alpha, Vct& x) {
+    void scal (T const& alpha, Vct& x) {
       typedef traits::vector_traits<Vct> vtraits;
 #ifdef BOOST_BINDINGS_CHECK_TYPES
     BOOST_STATIC_ASSERT(
@@ -102,7 +102,7 @@ namespace boost { namespace numeric { namespace bindings {
     // y <- alpha * x + y
     template <typename T, typename VctX, typename VctY>
     inline 
-    void axpy (T const alpha, VctX const& x, VctY& y) {
+    void axpy (T const& alpha, VctX const& x, VctY& y) {
       typedef traits::vector_traits<VctX const> xvtraits;
       typedef traits::vector_traits<VctY> yvtraits;
       assert (yvtraits::size (y) >= xvtraits::size (x));
@@ -111,11 +111,19 @@ namespace boost { namespace numeric { namespace bindings {
 		    yvtraits::storage (y), yvtraits::stride (y)); 
     }
 
+    // y <- x + y
+    template <typename VctX, typename VctY>
+    inline 
+    void xpy (VctX const& x, VctY& y) {
+      typedef typename traits::vector_traits<VctX const>::value_type val_t; 
+      axpy ((val_t) 1, x, y); 
+    }
+
     // y <- alpha * x + beta * y
     template <typename T, typename VctX, typename VctY>
     inline 
-    void axpby (T const alpha, VctX const& x, 
-		T const beta, VctY& y) { 
+    void axpby (T const& alpha, VctX const& x, 
+		T const& beta, VctY& y) { 
       typedef traits::vector_traits<VctX const> xvtraits;
       typedef traits::vector_traits<VctY> yvtraits;
       assert (yvtraits::size (y) >= xvtraits::size (x));
@@ -155,7 +163,7 @@ namespace boost { namespace numeric { namespace bindings {
     // .. float only -- computation uses double precision 
     template <typename VctX, typename VctY>
     inline 
-    float sdsdot (float alpha, VctX const& x, VctY const& y) {
+    float sdsdot (float const alpha, VctX const& x, VctY const& y) {
       typedef traits::vector_traits<VctX const> xvtraits;
       typedef traits::vector_traits<VctY const> yvtraits;
       assert (yvtraits::size (y) >= xvtraits::size (x));
@@ -265,4 +273,4 @@ namespace boost { namespace numeric { namespace bindings {
 
 }}} 
 
-#endif // BOOST_NUMERIC_CBLAS_LEVEL_1_HPP
+#endif // BOOST_NUMERIC_BINDINGS_CBLAS_LEVEL_1_HPP

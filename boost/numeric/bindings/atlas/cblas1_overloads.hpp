@@ -16,11 +16,11 @@
  *
  */
 
-#ifndef BOOST_NUMERIC_CBLAS1_OVERLOADS_HPP
-#define BOOST_NUMERIC_CBLAS1_OVERLOADS_HPP
+#ifndef BOOST_NUMERIC_BINDINGS_CBLAS1_OVERLOADS_HPP
+#define BOOST_NUMERIC_BINDINGS_CBLAS1_OVERLOADS_HPP
 
 #include <complex> 
-#include <boost/numeric/bindings/atlas/cblas_inc.h>
+#include <boost/numeric/bindings/atlas/cblas_inc.hpp>
 
 
 namespace boost { namespace numeric { namespace bindings { 
@@ -356,4 +356,4 @@ namespace boost { namespace numeric { namespace bindings {
 }}} 
 
 
-#endif // BOOST_NUMERIC_CBLAS1_OVERLOADS_HPP
+#endif // BOOST_NUMERIC_BINDINGS_CBLAS1_OVERLOADS_HPP

@@ -2,17 +2,17 @@
 
 /*
  * 
- * Copyright (c) Kresimir Fresl 2002 
+ * Copyright (c) Kresimir Fresl and Toon Knapen 2002 
  *
  * Permission to copy, modify, use and distribute this software 
  * for any non-commercial or commercial purpose is granted provided 
  * that this license appear on all copies of the software source code.
  *
- * Author assumes no responsibility whatsoever for its use and makes 
+ * Authors assume no responsibility whatsoever for its use and makes 
  * no guarantees about its quality, correctness or reliability.
  *
- * Author acknowledges the support of the Faculty of Civil Engineering, 
- * University of Zagreb, Croatia.
+ * First author acknowledges the support of the Faculty of Civil 
+ * Engineering, University of Zagreb, Croatia.
  *
  */
 
@@ -24,9 +24,10 @@
 #include <boost/numeric/bindings/traits/detail/ublas_matrix_closure.hpp>
 #include <boost/numeric/bindings/traits/detail/ublas_ordering.hpp>
 
-#ifdef BOOST_BINDINGS_FORTRAN
+#if defined (BOOST_NUMERIC_BINDINGS_FORTRAN) || !defined (BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK)
 #  include <boost/static_assert.hpp>
 #  include <boost/type_traits/same_traits.hpp>
+#  include <boost/mpl/if.hpp> 
 #endif
 
 namespace boost { namespace numeric { namespace bindings { namespace traits {
@@ -36,13 +37,14 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   struct matrix_traits<boost::numeric::ublas::matrix<T, F, ArrT> > 
   {
   private:
-#ifdef BOOST_BINDINGS_FORTRAN
+#ifdef BOOST_NUMERIC_BINDINGS_FORTRAN
     BOOST_STATIC_ASSERT((boost::is_same<
       typename F::orientation_category, 
       boost::numeric::ublas::column_major_tag
     >::value)); 
 #endif 
   public: 
+    typedef general_t matrix_structure; 
     typedef T value_type; 
     typedef T* pointer; 
     typedef boost::numeric::ublas::matrix<T, F, ArrT> matrix_type;
@@ -52,10 +54,9 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     }
     static int size1 (matrix_type& m) { return m.size1(); } 
     static int size2 (matrix_type& m) { return m.size2(); }
-
-    static int storage_size(matrix_type& m) 
-    { return size1( m ) * size2( m ) ; }
-
+    static int storage_size (matrix_type& m) { 
+      return size1 (m) * size2 (m); 
+    }
     // stride1 == distance (m (i, j), m (i+1, j)) 
     static int stride1 (matrix_type& m) { 
       return matrix_type::functor_type::one1 (m.size1(), m.size2());
@@ -76,13 +77,14 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   struct matrix_traits<boost::numeric::ublas::matrix<T, F, ArrT> const> 
   {
   private:
-#ifdef BOOST_BINDINGS_FORTRAN
+#ifdef BOOST_NUMERIC_BINDINGS_FORTRAN
     BOOST_STATIC_ASSERT((boost::is_same<
       typename F::orientation_category, 
       boost::numeric::ublas::column_major_tag
     >::value)); 
 #endif 
   public:
+    typedef general_t matrix_structure; 
     typedef T value_type; 
     typedef T const* pointer; 
     typedef boost::numeric::ublas::matrix<T, F, ArrT> matrix_type;
@@ -92,10 +94,9 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     }
     static int size1 (matrix_type const& m) { return m.size1(); } 
     static int size2 (matrix_type const& m) { return m.size2(); }
-
-    static int storage_size(matrix_type const& m) 
-    { return size1( m ) * size2( m ) ; }
-
+    static int storage_size (matrix_type const& m) { 
+      return size1 (m) * size2 (m); 
+    }
     static int stride1 (matrix_type const& m) { 
       return matrix_type::functor_type::one1 (m.size1(), m.size2());
     } 
@@ -110,90 +111,26 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     >::type ordering_type; 
   }; 
 
-  // ublas::matrix_symmetric<>
-  template <typename T, typename U, typename F, typename ArrT>
-  struct matrix_traits<boost::numeric::ublas::symmetric_matrix<T, U, F, ArrT> > 
-  {
-  private:
-#ifdef BOOST_BINDINGS_FORTRAN
-    BOOST_STATIC_ASSERT((boost::is_same<
-      typename F::orientation_category, 
-      boost::numeric::ublas::column_major_tag
-    >::value)); 
-#endif 
-  public: 
-    typedef T value_type; 
-    typedef T* pointer; 
-    typedef boost::numeric::ublas::symmetric_matrix<T, U, F, ArrT> matrix_type;
-    static pointer storage (matrix_type& m) {
-      typedef typename matrix_type::array_type array_type; 
-      return vector_traits<array_type>::storage (m.data()); 
-    }
-    static int size1 (matrix_type& m) { return m.size1(); } 
-    static int size2 (matrix_type& m) { return m.size2(); }
-
-    static int storage_size(matrix_type& m) 
-    { return ( size1( m ) + 1 ) * size2( m ) / 2 ; }
-
-    // stride1 == distance (m (i, j), m (i+1, j)) 
-    static int stride1 (matrix_type& m) { 
-      return (typename matrix_type::functor_type)::one1 (m.size1(), m.size2());
-    } 
-    // stride2 == distance (m (i, j), m (i, j+1)) 
-    static int stride2 (matrix_type& m) { 
-      return (typename matrix_type::functor_type)::one2 (m.size1(), m.size2());
-    }
-    static int leading_dimension (matrix_type& m) {
-      return (typename matrix_type::functor_type)::size2 (m.size1(), m.size2());
-    }
-    typedef typename detail::ublas_ordering<
-      typename F::orientation_category
-    >::type ordering_type; 
-  }; 
-
-  template <typename T, typename U, typename F, typename ArrT>
-  struct matrix_traits<boost::numeric::ublas::symmetric_matrix<T, U, F, ArrT> const> 
-  {
-  private:
-#ifdef BOOST_BINDINGS_FORTRAN
-    BOOST_STATIC_ASSERT((boost::is_same<
-      typename F::orientation_category, 
-      boost::numeric::ublas::column_major_tag
-    >::value)); 
-#endif 
-  public:
-    typedef T value_type; 
-    typedef T const* pointer; 
-    typedef boost::numeric::ublas::symmetric_matrix<T, U, F, ArrT> matrix_type;
-    static pointer storage (matrix_type const& m) {
-      typedef typename matrix_type::const_array_type const array_type; 
-      // toon: need const array_type to take correct trait in next line
-      return vector_traits<array_type>::storage (m.data()); 
-    }
-    static int size1 (matrix_type const& m) { return m.size1(); } 
-    static int size2 (matrix_type const& m) { return m.size2(); }
-    static int storage_size(matrix_type const& m) 
-    { return ( size1( m ) + 1 ) * size2( m ) / 2 ; }
-
-    static int stride1 (matrix_type const& m) { 
-      return (typename matrix_type::functor_type)::one1 (m.size1(), m.size2());
-    } 
-    static int stride2 (matrix_type const& m) { 
-      return (typename matrix_type::functor_type)::one2 (m.size1(), m.size2());
-    }
-    static int leading_dimension (matrix_type const& m) {
-      return (typename matrix_type::functor_type)::size2 (m.size1(), m.size2());
-    }
-    typedef typename detail::ublas_ordering<
-      typename F::orientation_category
-    >::type ordering_type; 
-  }; 
-
 
   // ublas::matrix_range<> 
   template <typename M>
   struct matrix_traits<boost::numeric::ublas::matrix_range<M> > 
   {
+  private: 
+    typedef typename matrix_traits<M>::matrix_structure m_struct_t; 
+
+  public:
+#ifdef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
+    typedef m_struct_t matrix_structure; 
+#else
+    typedef typename 
+      boost::mpl::if_c<
+        boost::is_same<m_struct_t, traits::general_t>::value,
+        traits::general_t,
+        traits::unknown_structure_t
+      >::type matrix_structure; 
+#endif 
+
     typedef boost::numeric::ublas::matrix_range<M> matrix_type;
     typedef typename M::value_type value_type;
     typedef value_type* pointer; 
@@ -229,6 +166,21 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
   template <typename M>
   struct matrix_traits<boost::numeric::ublas::matrix_range<M> const> 
   {
+  private: 
+    typedef typename matrix_traits<M>::matrix_structure m_struct_t; 
+
+  public:
+#ifdef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
+    typedef m_struct_t matrix_structure; 
+#else
+    typedef typename 
+      boost::mpl::if_c<
+        boost::is_same<m_struct_t, traits::general_t>::value,
+        traits::general_t,
+        traits::unknown_structure_t
+      >::type matrix_structure; 
+#endif 
+
     typedef boost::numeric::ublas::matrix_range<M> matrix_type;
     typedef typename M::value_type value_type;
     typedef value_type const* pointer; 
@@ -276,6 +228,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       return s2; 
     }
   public:
+    typedef unknown_structure_t matrix_structure; 
     typedef boost::numeric::ublas::matrix_slice<M> matrix_type;
     typedef typename M::value_type value_type;
     typedef value_type* pointer; 
@@ -324,6 +277,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
       return s2; 
     }
   public:
+    typedef unknown_structure_t matrix_structure; 
     typedef boost::numeric::ublas::matrix_slice<M> matrix_type;
     typedef typename M::value_type value_type;
     typedef value_type const* pointer; 
@@ -354,7 +308,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     static int leading_dimension (matrix_type const& ms) {
       typedef typename matrix_type::orientation_category oc_t; 
       return ld (ms.stride1(), ms.stride2(), oc_t())
-	* matrix_traits<M>::leading_dimension 
+	* matrix_traits<M const>::leading_dimension 
 	(cl_traits::get (ms.data())); 
     }
     typedef typename detail::ublas_ordering<

@@ -16,8 +16,8 @@
  *
  */
 
-#ifndef BOOST_NUMERIC_CBLAS_HPP
-#define BOOST_NUMERIC_CBLAS_HPP
+#ifndef BOOST_NUMERIC_BINDINGS_CBLAS_HPP
+#define BOOST_NUMERIC_BINDINGS_CBLAS_HPP
 
 #include <boost/numeric/bindings/atlas/cblas1.hpp>
 #include <boost/numeric/bindings/atlas/cblas2.hpp>

@@ -4,8 +4,7 @@
 
 #include <cstddef>
 #include <iostream>
-#include <boost/numeric/ublas/matrix.hpp>
-#include <boost/numeric/ublas/io.hpp>
+#include <boost/numeric/bindings/atlas/cblas.hpp>
 #include <boost/numeric/bindings/atlas/clapack.hpp>
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
 #include "utils.h"
@@ -17,7 +16,7 @@ using std::size_t;
 using std::cout;
 using std::endl; 
 
-#ifndef ROW_MAJOR
+#ifndef F_ROW_MAJOR
 typedef ublas::matrix<double, ublas::column_major> m_t;
 #else
 typedef ublas::matrix<double, ublas::row_major> m_t;
@@ -27,43 +26,53 @@ int main() {
 
   cout << endl; 
 
-  size_t n = 5; 
-  size_t nrhs = 2; 
-  m_t a (n, n);
-  m_t b (n, nrhs);
+  size_t n = 5;   
+  m_t a (n, n);   // system matrix 
 
-  for (size_t i = 0; i < n; ++i) {
-    a (i, i) = n;
-    b (i, 0) = 0; 
-    for (size_t j = i + 1; j < n; ++j)
-      a (i, j) = a (j, i) = n - (j - i);
-    for (size_t j = 0; j < n; ++j)
-      b (i, 0) += a (i, j);
-    for (size_t k = 1; k < nrhs; ++k)
-      b (i, k) = (k + 1) * b (i, 0); 
-  } 
+  size_t nrhs = 2; 
+  m_t x (n, nrhs), bb (n, nrhs);  
+  // b -- right-hand side matrix, see below 
+
+  init_symm (a); 
+  //     [n   n-1 n-2  ... 1]
+  //     [n-1 n   n-1  ... 2]
+  // a = [n-2 n-1 n    ... 3]
+  //     [        ...       ]
+  //     [1   2   ...  n-1 n]
+
+  m_t const aa (a); // copy of a, because a is `lost' after gesv()
+
+  ublas::matrix_column<m_t> xc0 (x, 0), xc1 (x, 1); 
+  atlas::set (1., xc0);
+  atlas::set (2., xc1);
+  atlas::gemm (a, x, bb);  // bb = a x, so we know the result ;o) 
 
   print_m (a, "A"); 
-  print_m (b, "B"); 
-  m_t const aa (a); 
-
-#ifndef ROW_MAJOR
-  m_t bb (b); 
-#else 
-  // see leading comments for `gesv()' in clapack.cpp
-  m_t bb (trans (b)); 
-#endif 
+  cout << endl; 
   print_m (bb, "B"); 
+  cout << endl; 
 
-  atlas::gesv (a, bb); 
-
-#ifndef ROW_MAJOR
-  print_m (bb, "X");
-  print_m (prod (aa, bb), "B"); 
-#else
-  print_m (trans (bb), "X"); 
-  print_m (prod (aa, trans (bb)), "X"); 
+  // see leading comments for `gesv()' in clapack.hpp
+#ifndef F_ROW_MAJOR
+  m_t b (bb); 
+#else 
+  m_t b (trans (bb)); 
 #endif 
+  print_m (b, "B for gesv()"); 
+  cout << endl; 
+
+  atlas::gesv (a, b);  // solving the system, b contains x 
+
+#ifndef F_ROW_MAJOR
+  print_m (b, "X");
+  cout << endl; 
+  atlas::gemm (aa, b, x); 
+#else
+  print_m (b, "X^T"); 
+  cout << endl; 
+  atlas::gemm (CblasNoTrans, CblasTrans, 1.0, aa, b, 0.0, x); 
+#endif 
+  print_m (x, "B = A X"); 
 
   cout << endl; 
 

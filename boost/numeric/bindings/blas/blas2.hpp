@@ -12,6 +12,9 @@
 #include <boost/numeric/bindings/blas/blaspp.hpp>
 #include <boost/numeric/bindings/traits/traits.hpp>
 #include <boost/numeric/bindings/traits/transpose.hpp>
+#include <boost/numeric/ublas/traits.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/type_traits.hpp>
 
 namespace boost { namespace numeric { namespace bindings { namespace blas {
 
@@ -28,6 +31,15 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
 	    vector_type_y &y
 	    )
   {
+    // precondition: matrix_type must be dense or dense_proxy
+    BOOST_STATIC_ASSERT( ( boost::is_same< typename matrix_type::storage_category, 
+                                           boost::numeric::ublas::dense_tag 
+                                         >::value ) ||
+                         ( boost::is_same< typename matrix_type::storage_category, 
+                                           boost::numeric::ublas::dense_proxy_tag 
+                                         >::value ) 
+                        ) ;
+
     typedef traits::matrix_traits< const matrix_type > mtraits ; 
     typedef traits::vector_traits< const vector_type_x > xvtraits ; 
     typedef traits::vector_traits< vector_type_y > yvtraits ; 

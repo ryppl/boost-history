@@ -16,8 +16,8 @@
  *
  */
 
-#ifndef BOOST_NUMERIC_CLAPACK_HPP
-#define BOOST_NUMERIC_CLAPACK_HPP
+#ifndef BOOST_NUMERIC_BINDINGS_CLAPACK_HPP
+#define BOOST_NUMERIC_BINDINGS_CLAPACK_HPP
 
 #include <cassert>
 #include <new>
@@ -26,6 +26,12 @@
 #include <boost/numeric/bindings/traits/detail/symm_herm_traits.hpp>
 #include <boost/numeric/bindings/atlas/clapack_overloads.hpp>
 #include <boost/numeric/bindings/atlas/cblas_enum.hpp>
+
+#ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
+#  include <boost/static_assert.hpp>
+#  include <boost/type_traits/same_traits.hpp>
+#endif
+
 
 namespace boost { namespace numeric { namespace bindings { 
 
@@ -61,7 +67,7 @@ namespace boost { namespace numeric { namespace bindings {
     // [comments from `clapack_dgesv.c':]
     /* The LU factorization used to factor A is dependent on the Order 
      * parameter, as detailed in the leading comments of clapack_dgetrf.
-     * The factored form of A is then used solve the system of equations 
+     * The factored form of A is then used to solve the system of equations 
      *   A * X = B.
      * A is overwritten with the appropriate LU factorization, and B [...]
      * is overwritten with the solution X on output.
@@ -73,6 +79,15 @@ namespace boost { namespace numeric { namespace bindings {
       typedef traits::matrix_traits<MatrA> matraits; 
       typedef traits::matrix_traits<MatrB> mbtraits; 
       typedef traits::vector_traits<IVec> vtraits;
+
+#ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
+      BOOST_STATIC_ASSERT((boost::is_same<
+        typename matraits::matrix_structure, traits::general_t
+      >::value)); 
+      BOOST_STATIC_ASSERT((boost::is_same<
+        typename mbtraits::matrix_structure, traits::general_t
+      >::value)); 
+#endif 
 
       CBLAS_ORDER const stor_ord_a
         = static_cast<CBLAS_ORDER const>
@@ -105,6 +120,15 @@ namespace boost { namespace numeric { namespace bindings {
 
       typedef traits::matrix_traits<MatrA> matraits; 
       typedef traits::matrix_traits<MatrB> mbtraits; 
+
+#ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
+      BOOST_STATIC_ASSERT((boost::is_same<
+        typename matraits::matrix_structure, traits::general_t
+      >::value)); 
+      BOOST_STATIC_ASSERT((boost::is_same<
+        typename mbtraits::matrix_structure, traits::general_t
+      >::value)); 
+#endif 
 
       CBLAS_ORDER const stor_ord_a
         = static_cast<CBLAS_ORDER const>
@@ -173,6 +197,12 @@ namespace boost { namespace numeric { namespace bindings {
       typedef traits::matrix_traits<MatrA> mtraits; 
       typedef traits::vector_traits<IVec> vtraits;
       
+#ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
+      BOOST_STATIC_ASSERT((boost::is_same<
+        typename mtraits::matrix_structure, traits::general_t
+      >::value)); 
+#endif 
+
       CBLAS_ORDER const stor_ord
         = static_cast<CBLAS_ORDER const>
         (storage_order<typename mtraits::ordering_type>::value); 
@@ -204,6 +234,15 @@ namespace boost { namespace numeric { namespace bindings {
       typedef traits::matrix_traits<MatrA const> matraits; 
       typedef traits::matrix_traits<MatrB> mbtraits; 
       typedef traits::vector_traits<IVec const> vtraits;
+
+#ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
+      BOOST_STATIC_ASSERT((boost::is_same<
+        typename matraits::matrix_structure, traits::general_t
+      >::value)); 
+      BOOST_STATIC_ASSERT((boost::is_same<
+        typename mbtraits::matrix_structure, traits::general_t
+      >::value)); 
+#endif 
 
       CBLAS_ORDER const stor_ord_a
         = static_cast<CBLAS_ORDER const>
@@ -251,6 +290,12 @@ namespace boost { namespace numeric { namespace bindings {
       typedef traits::matrix_traits<MatrA> mtraits; 
       typedef traits::vector_traits<IVec> vtraits;
       
+#ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
+      BOOST_STATIC_ASSERT((boost::is_same<
+        typename mtraits::matrix_structure, traits::general_t
+      >::value)); 
+#endif 
+
       CBLAS_ORDER const stor_ord
         = static_cast<CBLAS_ORDER const>
         (storage_order<typename mtraits::ordering_type>::value); 
@@ -279,6 +324,7 @@ namespace boost { namespace numeric { namespace bindings {
     //
     /////////////////////////////////////////////////////////////////////
 
+#ifdef BINDINGS_NO_ATLAS_POTRS_BUG
     // posv(): `driver' function 
     //
     // [from `dposv.f' (slightly edited):]
@@ -305,12 +351,19 @@ namespace boost { namespace numeric { namespace bindings {
     template <typename SymmMatrA, typename MatrB>
     inline
     int posv (SymmMatrA& a, MatrB& b) {
+      typedef traits::matrix_traits<SymmMatrA> matraits;
       typedef traits::matrix_traits<MatrB> mbtraits; 
-      // typedef typename mbtraits::value_type val_t;
-      typedef typename SymmMatrA::value_type val_t; 
-      typedef typename 
-        traits::detail::symm_herm_adaptor_traits<val_t, SymmMatrA>::type
-        matraits; 
+      typedef typename matraits::value_type val_t;
+
+#ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
+      BOOST_STATIC_ASSERT((boost::is_same<
+        typename matraits::matrix_structure, 
+        typename traits::detail::symm_herm_t<val_t>::type
+      >::value)); 
+      BOOST_STATIC_ASSERT((boost::is_same<
+        typename mbtraits::matrix_structure, traits::general_t
+      >::value)); 
+#endif 
 
       CBLAS_ORDER const stor_ord_a
         = static_cast<CBLAS_ORDER const>
@@ -342,16 +395,22 @@ namespace boost { namespace numeric { namespace bindings {
     int cholesky_solve (SymmMatrA& a, MatrB& b) {
       return posv (a, b); 
     }
+#endif // BINDINGS_NO_ATLAS_POTRS_BUG
 
 
     // potrf(): Cholesky factorization of A 
     template <typename SymmMatrA>
     inline
     int potrf (SymmMatrA& a) {
-      typedef typename SymmMatrA::value_type val_t; 
-      typedef typename 
-        traits::detail::symm_herm_adaptor_traits<val_t, SymmMatrA>::type
-        mtraits; 
+      typedef traits::matrix_traits<SymmMatrA> mtraits;
+      typedef typename mtraits::value_type val_t;
+
+#ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
+      BOOST_STATIC_ASSERT((boost::is_same<
+        typename mtraits::matrix_structure, 
+        typename traits::detail::symm_herm_t<val_t>::type
+      >::value)); 
+#endif 
 
       CBLAS_ORDER const stor_ord
         = static_cast<CBLAS_ORDER const>
@@ -376,14 +435,22 @@ namespace boost { namespace numeric { namespace bindings {
 
     // potrs(): solves a system of linear equations A * X = B
     //          using the Cholesky factorization computed by potrf()
-    template <typename SymmMA, typename MatrB>
+    template <typename SymmMatrA, typename MatrB>
     inline
-    int potrs (SymmMA const& a, MatrB& b) {
+    int potrs (SymmMatrA const& a, MatrB& b) {
+      typedef traits::matrix_traits<SymmMatrA const> matraits;
       typedef traits::matrix_traits<MatrB> mbtraits; 
-      typedef typename SymmMA::value_type val_t; 
-      typedef typename 
-        traits::detail::symm_herm_adaptor_traits<val_t, SymmMA const>::type
-        matraits; 
+      typedef typename matraits::value_type val_t;
+
+#ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
+      BOOST_STATIC_ASSERT((boost::is_same<
+        typename matraits::matrix_structure, 
+        typename traits::detail::symm_herm_t<val_t>::type
+      >::value)); 
+      BOOST_STATIC_ASSERT((boost::is_same<
+        typename mbtraits::matrix_structure, traits::general_t
+      >::value)); 
+#endif 
 
       CBLAS_ORDER const stor_ord_a
         = static_cast<CBLAS_ORDER const>
@@ -403,18 +470,54 @@ namespace boost { namespace numeric { namespace bindings {
                     ? mbtraits::size1 (b)
                     : mbtraits::size2 (b))); 
 
+#ifndef BINDINGS_NO_ATLAS_POTRS_BUG
+      int ierr; 
+      if (stor_ord_a == CblasColMajor)
+        ierr = detail::potrs (stor_ord_a, uplo, n, nrhs, 
+                              matraits::storage (a), 
+                              matraits::leading_dimension (a),
+                              mbtraits::storage (b),
+                              mbtraits::leading_dimension (b));
+      else // ATLAS bug with CblasRowMajor 
+        ierr = detail::potrs_bug (stor_ord_a, uplo, n, nrhs, 
+                                  matraits::storage (a), 
+                                  matraits::leading_dimension (a),
+                                  mbtraits::storage (b),
+                                  mbtraits::leading_dimension (b));
+      return ierr; 
+#else 
       return detail::potrs (stor_ord_a, uplo, n, nrhs, 
                             matraits::storage (a), 
                             matraits::leading_dimension (a),
                             mbtraits::storage (b),
                             mbtraits::leading_dimension (b));
+#endif 
     }
 
-    template <typename SymmMA, typename MatrB>
+    template <typename SymmMatrA, typename MatrB>
     inline 
-    int cholesky_triang_solve (SymmMA const& a, MatrB& b) {
+    int cholesky_triang_solve (SymmMatrA const& a, MatrB& b) {
       return potrs (a, b);
     }
+
+
+#ifndef BINDINGS_NO_ATLAS_POTRS_BUG
+    // posv(): `driver' function 
+    template <typename SymmMatrA, typename MatrB>
+    inline
+    int posv (SymmMatrA& a, MatrB& b) {
+      int ierr = potrf (a); 
+      if (ierr == 0)
+        ierr = potrs (a, b);
+      return ierr; 
+    }
+
+    template <typename SymmMatrA, typename MatrB>
+    inline
+    int cholesky_solve (SymmMatrA& a, MatrB& b) {
+      return posv (a, b); 
+    }
+#endif 
 
 
     // potri(): computes the inverse of a symmetric or Hermitian positive 
@@ -423,10 +526,15 @@ namespace boost { namespace numeric { namespace bindings {
     template <typename SymmMatrA>
     inline
     int potri (SymmMatrA& a) {
-      typedef typename SymmMatrA::value_type val_t; 
-      typedef typename 
-        traits::detail::symm_herm_adaptor_traits<val_t, SymmMatrA>::type
-        mtraits; 
+      typedef traits::matrix_traits<SymmMatrA> mtraits;
+      typedef typename mtraits::value_type val_t;
+
+#ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK 
+      BOOST_STATIC_ASSERT((boost::is_same<
+        typename mtraits::matrix_structure, 
+        typename traits::detail::symm_herm_t<val_t>::type
+      >::value)); 
+#endif 
 
       CBLAS_ORDER const stor_ord
         = static_cast<CBLAS_ORDER const>
@@ -453,4 +561,4 @@ namespace boost { namespace numeric { namespace bindings {
 
 }}} 
 
-#endif // BOOST_NUMERIC_CLAPACK_HPP
+#endif // BOOST_NUMERIC_BINDINGS_CLAPACK_HPP

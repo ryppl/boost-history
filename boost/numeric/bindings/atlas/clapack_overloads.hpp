@@ -16,8 +16,8 @@
  *
  */
 
-#ifndef BOOST_NUMERIC_CLAPACK_OVERLOADS_HPP
-#define BOOST_NUMERIC_CLAPACK_OVERLOADS_HPP
+#ifndef BOOST_NUMERIC_BINDINGS_CLAPACK_OVERLOADS_HPP
+#define BOOST_NUMERIC_BINDINGS_CLAPACK_OVERLOADS_HPP
 
 #include <complex> 
 #include <boost/numeric/bindings/atlas/clapack_inc.hpp>
@@ -263,7 +263,7 @@ namespace boost { namespace numeric { namespace bindings {
     {
       return clapack_spotrs (Order, Uplo, N, NRHS, A, lda, B, ldb);
     }
-   
+
     inline 
     int potrs (CBLAS_ORDER const Order, CBLAS_UPLO const Uplo,
                int const N, int const NRHS,
@@ -293,6 +293,60 @@ namespace boost { namespace numeric { namespace bindings {
                              static_cast<void const*> (A), lda, 
                              static_cast<void*> (B), ldb);
     }
+
+#ifndef BINDINGS_NO_ATLAS_POTRS_BUG
+    // .. ATLAS bug with row major hermitian matrices 
+    // .... symmetric matrices are OK, but to simplify atlas::potrs() ... 
+    inline 
+    int potrs_bug (CBLAS_ORDER const Order, CBLAS_UPLO const Uplo,
+                   int const N, int const NRHS,
+                   float const* A, int const lda, float* B, int const ldb) 
+    {
+      return clapack_spotrs (Order, Uplo, N, NRHS, A, lda, B, ldb);
+    }
+
+    inline 
+    int potrs_bug (CBLAS_ORDER const Order, CBLAS_UPLO const Uplo,
+                   int const N, int const NRHS,
+                   double const* A, int const lda, double* B, int const ldb) 
+    {
+      return clapack_dpotrs (Order, Uplo, N, NRHS, A, lda, B, ldb);
+    }
+   
+    inline 
+    int potrs_bug (CBLAS_ORDER const Order, CBLAS_UPLO const Uplo,
+                   int const N, int const NRHS,
+                   std::complex<float> const* A, int const lda, 
+                   std::complex<float>* B, int const ldb) 
+    {
+      int sz = N * lda; 
+      std::complex<float>* A1 = new std::complex<float>[sz]; 
+      for (int i = 0; i < sz; ++i) 
+        A1[i] = conj (A[i]); 
+      int r = clapack_cpotrs (Order, Uplo, N, NRHS, 
+                              static_cast<void const*> (A1), lda, 
+                              static_cast<void*> (B), ldb);
+      delete[] A1; 
+      return r; 
+    }
+   
+    inline 
+    int potrs_bug (CBLAS_ORDER const Order, CBLAS_UPLO const Uplo,
+                   int const N, int const NRHS,
+                   std::complex<double> const* A, int const lda, 
+                   std::complex<double>* B, int const ldb) 
+    {
+      int sz = N * lda; 
+      std::complex<double>* A1 = new std::complex<double>[sz]; 
+      for (int i = 0; i < sz; ++i) 
+        A1[i] = conj (A[i]); 
+      int r = clapack_zpotrs (Order, Uplo, N, NRHS, 
+                              static_cast<void const*> (A1), lda, 
+                              static_cast<void*> (B), ldb);
+      delete[] A1; 
+      return r; 
+    }
+#endif 
 
     // invert (using factorization computed by potrf()) 
     inline 
@@ -329,4 +383,4 @@ namespace boost { namespace numeric { namespace bindings {
 }}} 
 
 
-#endif // BOOST_NUMERIC_CLAPACK_OVERLOADS_HPP
+#endif // BOOST_NUMERIC_BINDINGS_CLAPACK_OVERLOADS_HPP

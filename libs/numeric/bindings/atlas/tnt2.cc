@@ -1,82 +1,65 @@
 
 // BLAS level 2
-// TNT 2D array
+// TNT arrays
 
 #include <iostream>
 #include <boost/numeric/bindings/atlas/cblas1.hpp>
 #include <boost/numeric/bindings/atlas/cblas2.hpp>
 #include <boost/numeric/bindings/traits/tnt.hpp>
-#include <tnt/tnt.h>
+#include "utils.h"
+#include "tnt_utils.h"
 
 namespace atlas = boost::numeric::bindings::atlas;
 
 using std::cout;
 using std::endl; 
 
-#ifndef FORTRAN
+#ifndef F_FORTRAN
 typedef TNT::Array1D<double> vct_t;
-typedef TNT::Array2D<double> m_t;
+typedef TNT::Array2D<double> matr_t;
 #else
 typedef TNT::Fortran_Array1D<double> vct_t;
-typedef TNT::Fortran_Array2D<double> m_t;
+typedef TNT::Fortran_Array2D<double> matr_t;
 #endif 
 
 int main() {
 
   cout << endl; 
 
-  vct_t v (2);
-  atlas::set (1., v);
-  cout << v << endl; 
-  vct_t vy (4); 
+  vct_t vx (2);
+  atlas::set (1., vx);
+  print_v (vx, "vx"); 
+  vct_t vy (3); 
   atlas::set (0., vy); 
-  cout << vy << endl; 
+  print_v (vy, "vy"); 
   cout << endl; 
 
-  m_t m (3, 2);
-#ifndef FORTRAN
-  m[0][0] = 1.;
-  m[0][1] = 2.;
-  m[1][0] = 3.;
-  m[1][1] = 4.;
-  m[2][0] = 5.;
-  m[2][1] = 6.;
-#else
-  m (1, 1) = 1.;
-  m (1, 2) = 2.;
-  m (2, 1) = 3.;
-  m (2, 2) = 4.;
-  m (3, 1) = 5.;
-  m (3, 2) = 6.;
-#endif
-  cout << m << endl;
+  matr_t m (3, 2);
+  init_m (m, kpp (1)); 
+  print_m (m, "m"); 
   cout << endl; 
 
-  atlas::gemv (CblasNoTrans, 1.0, m, v, 0.0, vy);
-  cout << vy << endl; 
+  atlas::gemv (CblasNoTrans, 1.0, m, vx, 0.0, vy);
+  print_v (vy, "m vx"); 
 
-  atlas::set (0, vy); 
-  atlas::gemv (m, v, vy);
-  cout << vy << endl; 
-
-  atlas::set (0, vy); 
-  atlas::gemv (1.0, m, v, 0.0, vy);
-  cout << vy << endl; 
+  atlas::gemv (m, vx, vy);
+  print_v (vy, "m vx"); 
   cout << endl; 
 
-  atlas::set (0, v); 
+  atlas::set (0, vx); 
   atlas::set (1, vy); 
-  atlas::gemv (CblasTrans, 1.0, m, vy, 0.0, v);
-  cout << v << endl; 
+  atlas::gemv (CblasTrans, 1.0, m, vy, 0.0, vx);
+  print_v (vx, "m^T vy"); 
   cout << endl; 
 
   atlas::set (1, vy); 
-  atlas::gemv (CblasNoTrans, 1.0, m, v, 1.0, vy);
-  cout << vy << endl; 
+  atlas::gemv (CblasNoTrans, 1.0, m, vx, 1.0, vy);
+  print_v (vy, "vy + m vx"); 
+  cout << endl; 
 
   atlas::set (1, vy); 
-  atlas::gemv (CblasNoTrans, 2.0, m, v, 0.5, vy);
-  cout << vy << endl; 
-  
+  atlas::gemv (CblasNoTrans, 2.0, m, vx, 0.5, vy);
+  print_v (vy, "0.5 vy + 2.0 m vx"); 
   cout << endl; 
+
 }
