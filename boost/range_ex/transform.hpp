@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
-//
-// File: transform.hpp
+/// \file transform.hpp
+///   Defines the transform range adaptor, as well as the make_transform_range() helper
 //
 ///////////////////////////////////////////////////////////////////////////////
 #ifndef RANGE_TRANSFORM_EN_12_09_2004_HPP
@@ -15,9 +15,10 @@
 namespace boost
 {
 
-///////////////////////////////////////////////////////////////////////////////
-// make_transform_range
-//
+/// \brief transforms a range using the specified unary function
+///
+/// transforms a range using the specified unary function
+///
 template<typename FwdRng,typename UnaryFunc>
 boost::iterator_range<
     ::boost::transform_iterator<
@@ -33,6 +34,7 @@ make_transform_range(FwdRng& rng, UnaryFunc fun)
     );
 }
 
+/// \overload
 template<typename FwdRng,typename UnaryFunc>
 boost::iterator_range<
     ::boost::transform_iterator<
@@ -48,9 +50,8 @@ make_transform_range(FwdRng const& rng, UnaryFunc fun)
     );
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// transform_range_adaptor
-//
+/// transform_range_adaptor
+///   INTERNAL ONLY
 struct transform_range_adaptor
 {
     template<typename Rng,typename Args>
@@ -93,6 +94,10 @@ namespace adaptor
 {
     namespace
     {
+        /// \brief the transform range adaptor
+        ///
+        /// the transform range adaptor
+        ///
         range_adaptor<transform_range_adaptor> const transform;
     }
 }

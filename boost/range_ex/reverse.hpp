@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
-//
-// File: reverse.hpp
+/// \file reverse.hpp
+///   Defines the reverse range adaptor, as well as the make_reverse_range() helper
 //
 ///////////////////////////////////////////////////////////////////////////////
 #ifndef RANGE_REVERSE_EN_12_09_2004_HPP
@@ -15,9 +15,10 @@
 namespace boost
 {
 
-///////////////////////////////////////////////////////////////////////////////
-// make_reverse_range
-//
+/// \brief produces a range that is the reverse of the original
+///
+/// produces a range that is the reverse of the original
+///
 template<typename FwdRng>
 boost::iterator_range<
     ::boost::reverse_iterator<
@@ -32,6 +33,7 @@ make_reverse_range(FwdRng& rng)
     );
 }
 
+/// \overload
 template<typename FwdRng>
 boost::iterator_range<
     ::boost::reverse_iterator<
@@ -46,9 +48,8 @@ make_reverse_range(FwdRng const& rng)
     );
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// reverse_range_adaptor
-//
+/// reverse_range_adaptor
+///   INTERNAL ONLY
 struct reverse_range_adaptor
 {
     template<typename Rng,typename Args>
@@ -75,13 +76,14 @@ struct reverse_range_adaptor
     }
 };
 
-///////////////////////////////////////////////////////////////////////////////
-// reverse
-//
 namespace adaptor
 {
     namespace
     {
+        /// \brief the reverse range adaptor
+        ///
+        /// the reverse range adaptor
+        ///
         range_adaptor<reverse_range_adaptor> const reverse;
     }
 }

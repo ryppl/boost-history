@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
-//
-// File: filter.hpp
+/// \file filter.hpp
+///   Defines the filter range adaptor, as well as the make_filter_range() helper
 //
 ///////////////////////////////////////////////////////////////////////////////
 #ifndef RANGE_FILTER_EN_12_09_2004_HPP
@@ -15,9 +15,10 @@
 namespace boost
 {
 
-///////////////////////////////////////////////////////////////////////////////
-// make_filter_range
-//
+/// \brief filters a range using the specified predicate
+///
+/// filters a range using the specified predicate
+///
 template<typename FwdRng,typename Pred>
 boost::iterator_range<
     ::boost::filter_iterator<
@@ -33,6 +34,7 @@ make_filter_range(FwdRng& rng,Pred pred)
     );
 }
 
+/// \overload
 template<typename FwdRng,typename Pred>
 boost::iterator_range<
     ::boost::filter_iterator<
@@ -48,9 +50,8 @@ make_filter_range(FwdRng const& rng,Pred pred)
     );
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// filter_range_adaptor
-//
+/// filter_range_adaptor
+///   INTERNAL ONLY
 struct filter_range_adaptor
 {
     template<typename Rng,typename Args>
@@ -88,13 +89,14 @@ struct filter_range_adaptor
     }
 };
 
-///////////////////////////////////////////////////////////////////////////////
-// filter
-//
 namespace adaptor
 {
     namespace
     {
+        /// \brief the filter range adaptor
+        ///
+        /// the filter range adaptor
+        ///
         range_adaptor<filter_range_adaptor> const filter;
     }
 }

@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
-//
-// File: indirect.hpp
+/// \file indirect.hpp
+///   Defines the indirect range adaptor, as well as the make_indirect_range() helper
 //
 ///////////////////////////////////////////////////////////////////////////////
 #ifndef RANGE_INDIRECT_EN_12_09_2004_HPP
@@ -15,9 +15,12 @@
 namespace boost
 {
 
-///////////////////////////////////////////////////////////////////////////////
-// make_indirect_range
-//
+/// \brief produced an indirect range
+///
+/// produced an indirect range, where each element in the new
+/// range is the result of a dereference of the corresponding
+/// element in the original range.
+///
 template<typename FwdRng>
 boost::iterator_range<
     ::boost::indirect_iterator<
@@ -32,6 +35,7 @@ make_indirect_range(FwdRng& rng)
     );
 }
 
+/// \overload
 template<typename FwdRng>
 boost::iterator_range<
     ::boost::indirect_iterator<
@@ -46,9 +50,8 @@ make_indirect_range(FwdRng const& rng)
     );
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// indirect_range_adaptor
-//
+/// indirect_range_adaptor
+///   INTERNAL ONLY
 struct indirect_range_adaptor
 {
     template<typename Rng,typename Args>
@@ -74,13 +77,14 @@ struct indirect_range_adaptor
     }
 };
 
-///////////////////////////////////////////////////////////////////////////////
-// indirect
-//
 namespace adaptor
 {
     namespace
     {
+        /// \brief the indirect range adaptor
+        ///
+        /// the indirect range adaptor
+        ///
         range_adaptor<indirect_range_adaptor> const indirect;
     }
 }
