@@ -16,6 +16,7 @@
 # include "rules.h"
 
 # include "command.h"
+# include <limits.h>
 
 /*
  * cmd_new() - return a new CMD or 0 if too many args
