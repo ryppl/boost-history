@@ -85,9 +85,11 @@ namespace
 
 	#define TEST_DATA                                                        \
         pair<int, int>      p( 1, 2 );                                       \
+		const pair<int,int> cp( 2, 3);                                       \
 		int                 a[] = { 1, 2, 4, 2, 6, 7, 9, 3, 2, 5, 5, 3, 3 }; \
-        vector<int>         v( a, a + sizeof( a ) / sizeof( a[0] ) );        \
-		const vector<int>   cv( v );                                        
+		const int           ca[] = { 1, 2, 3, 5, 7, 9, 11 };                 \
+		vector<int>         v( a, a + sizeof( a ) / sizeof( a[0] ) );        \
+		const vector<int>   cv( v );
 
 
 	int    unary_function( int i );
@@ -121,14 +123,21 @@ namespace
 	{
 		TEST_DATA;
 		//for_each( p, ptr_fun<int,int>( &unary_function ) );  
-//		for_each( a, unary_function );
+		//for_each( cp, ptr_fun<int,int>( &unary_function ) );  
+		for_each( a, unary_function );
+		for_each( ca, unary_function );
 		for_each( v, ptr_fun<int,int>( &unary_function ) );
-		for_each( cv, unary_function );
+		for_each( cv, ptr_fun<int,int>( &unary_function ) );
 	}
 
+	
+	
 	void test_find()
 	{
+		TEST_DATA;
+//		find( a
 	}
+	
 	void test_find_if()
 	{
 	}
