@@ -38,7 +38,7 @@ int main()
    // example using formatter objects
 
    std::cout << "char[ 3 ][ 3 ][ 3 ] = "
-             << boost::io::formatlist( a3D, a3D + 3, array3Dfmt( 3 ))
+             << boost::io::formatlistout( a3D, a3D + 3, array3Dfmt( 3 )) // [review]: out signature
                 .format( "\n", "", "\n" )
              << '\n' << '\n';
 
@@ -53,10 +53,10 @@ int main()
    // partially inlined form
 
    std::cout << "char[ 3 ][ 3 ][ 3 ] = "
-             << boost::io::formatlist
+             << boost::io::formatlistout // [review]: out signature
                 (
                    a3D, a3D + 3,
-                   boost::io::arrayfmtout( arrayfmt( 3 ), 3 ) // inlined form
+                   boost::io::arrayfmtout( arrayfmt( 3 ), 3 ) // inlined form // [review]: out signature
                    .format( "< ", " >", " : " )
                 )
                 .format( "\n", "", "\n" )
@@ -75,10 +75,10 @@ int main()
    // as they will deduce the object types for you!
 
    std::cout << "char[ 3 ][ 3 ][ 3 ] = "
-             << boost::io::formatlist
+             << boost::io::formatlistout // [review]: out signature
                 (
                    a3D, a3D + 3, // outermost index
-                   boost::io::arrayfmtout
+                   boost::io::arrayfmtout // [review]: out signature
                    (
                       boost::io::arrayfmt( 3 ), // innermost index
                       3 // middle index
@@ -101,10 +101,10 @@ int main()
    // as they will deduce the object types for you!
 
    std::cout << "char[ 3 ][ 3 ][ 3 ] = "
-             << boost::io::formatlist
+             << boost::io::formatlistout // [review]: out signature
                 (
                    a3D, a3D + 3, // outermost index
-                   boost::io::arrayfmtout
+                   boost::io::arrayfmtout // [review]: out signature
                    (
                       boost::io::arrayfmtex< char * >( 3 ) // innermost index
                       .format( "( ", " )" ), // [note]: cannot use characters here; must be char *.

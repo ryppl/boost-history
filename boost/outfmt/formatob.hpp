@@ -1,10 +1,10 @@
 // (C) Copyright 2003: Reece H. Dunn 
 
-#ifndef BOOST__IOFM__FORMATOB__HPP
-#define BOOST__IOFM__FORMATOB__HPP
+#ifndef BOOST_IOFM_FormatOb_HPP
+#define BOOST_IOFM_FormatOb_HPP
 #  include <boost/outfmt/format_objects.hpp>
 #  include <boost/outfmt/detail/config.hpp>
-#  if !defined(BOOST_IOFM__NO_OUTPUT_DEDUCTION) // automatic type deduction
+#  if !defined(BOOST_IOFM_NO_OUTPUT_DEDUCTION) // automatic type deduction
 #     include <boost/outfmt/deducer.hpp>
 #  endif
 
@@ -24,17 +24,17 @@
                ob( fo.ob )
             {
             }
-            inline           formatob_t( const T & val ) throw(): ob( val )
+            inline           formatob_t( const T & val ): ob( val )
             {
             }
-            inline           formatob_t( const T & val, const Outputter & o ) throw():
+            inline           formatob_t( const T & val, const Outputter & o ):
                Outputter( o ),
                ob( val )
             {
             }
       };
 
-#     if !defined(BOOST_IOFM__NO_BASIC_STREAM)
+#     if !defined(BOOST_IOFM_NO_BASIC_STREAM)
          template< typename CharT, class TraitsT, typename T, typename FormatType, typename Outputter >
          inline std::basic_ostream< CharT, TraitsT > & operator<<
          (
@@ -58,7 +58,7 @@
 
       // format object generators
 
-#     if !defined(BOOST_IOFM__NO_OUTPUT_DEDUCTION) // automatic type deduction
+#     if !defined(BOOST_IOFM_NO_OUTPUT_DEDUCTION) // automatic type deduction
          template< typename T >
          inline formatob_t< T, char *, typename deducer< T, char * >::type::outputter >
                                                  formatob( const T & t )

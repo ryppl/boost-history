@@ -51,7 +51,7 @@
 
 //--------------Non-standard STL headers containing types to be analyzed------//
 
-#  if defined(BOOST_IOFM__HASH_CONTAINERS)
+#  if defined(BOOST_IOFM_HASH_CONTAINERS)
 #     include <hash_map>
 #     include <hash_set>
 #  endif
@@ -64,13 +64,13 @@
 #  include <boost/compressed_pair.hpp>           
 #  include <boost/rational.hpp>                 
 
-#  if !defined(BOOST_IOFM__NO_LIB_INTERVAL)
+#  if !defined(BOOST_IOFM_NO_LIB_INTERVAL)
 #     include <boost/numeric/interval/interval.hpp>
 #  endif
-#  if !defined(BOOST_IOFM__NO_LIB_QUATERNION)
+#  if !defined(BOOST_IOFM_NO_LIB_QUATERNION)
 #     include <boost/math/quaternion.hpp>           
 #  endif
-#  if !defined(BOOST_IOFM__NO_LIB_OCTONION)
+#  if !defined(BOOST_IOFM_NO_LIB_OCTONION)
 #     include <boost/math/octonion.hpp>             
 #  endif
 
@@ -186,7 +186,7 @@ BOOST_IO_MAKE_TRAITS_HELPERS_2(is_vector_helper, std::vector)
 
 // Note: The SGI versions each have an additional template parameter.
 
-#ifdef BOOST_IOFM__HASH_CONTAINERS
+#ifdef BOOST_IOFM_HASH_CONTAINERS
 #ifdef BOOST_DINKUMWARE_STDLIB
     BOOST_IO_MAKE_TRAITS_HELPERS_3 \
         (is_hash_set_helper, std::hash_set)
@@ -206,7 +206,7 @@ BOOST_IO_MAKE_TRAITS_HELPERS_2(is_vector_helper, std::vector)
     BOOST_IO_MAKE_TRAITS_HELPERS_5 \
         (is_hash_multimap_helper, std::hash_multimap)
 #endif // #ifdef BOOST_DINKUMWARE_STDLIB
-#endif // #ifdef BOOST_IOFM__HASH_CONTAINERS
+#endif // #ifdef BOOST_IOFM_HASH_CONTAINERS
 
 #if defined(BOOST_HAS_SLIST) // RHD: added support for the SGI slist container
    BOOST_IO_MAKE_TRAITS_HELPERS_2(is_slist_helper, std::slist)
@@ -217,17 +217,17 @@ BOOST_IO_MAKE_TRAITS_HELPERS_2(is_vector_helper, std::vector)
 BOOST_IO_MAKE_TRAITS_HELPERS_2(is_compressed_pair_helper, boost::compressed_pair)
 BOOST_IO_MAKE_TRAITS_HELPERS_1(is_rational_helper, boost::rational)
     
-#ifndef BOOST_IOFM__NO_LIB_INTERVAL
+#ifndef BOOST_IOFM_NO_LIB_INTERVAL
     BOOST_IO_MAKE_TRAITS_HELPERS_2(is_interval_helper, boost::numeric::interval)
-#endif // #ifndef BOOST_IOFM__NO_LIB_INTERVAL
+#endif // #ifndef BOOST_IOFM_NO_LIB_INTERVAL
 
-#ifndef BOOST_IOFM__NO_LIB_QUATERNION
+#ifndef BOOST_IOFM_NO_LIB_QUATERNION
    BOOST_IO_MAKE_TRAITS_HELPERS_1(is_quaternion_helper, boost::math::quaternion)
-#endif // #ifndef BOOST_IOFM__NO_LIB_QUATERNION
+#endif // #ifndef BOOST_IOFM_NO_LIB_QUATERNION
 
-#ifndef BOOST_IOFM__NO_LIB_OCTONION
+#ifndef BOOST_IOFM_NO_LIB_OCTONION
    BOOST_IO_MAKE_TRAITS_HELPERS_1(is_octonion_helper, boost::math::octonion)
-#endif // #ifndef BOOST_IOFM__NO_LIB_OCTONION
+#endif // #ifndef BOOST_IOFM_NO_LIB_OCTONION
 
 }               // End namespace detail.
 
@@ -248,12 +248,12 @@ BOOST_IO_MAKE_TRAITS(is_std_vector, detail::is_vector_helper)
 
     //--------------Non-standard containers-----------------------------------//
 
-#ifdef BOOST_IOFM__HASH_CONTAINERS
+#ifdef BOOST_IOFM_HASH_CONTAINERS
     BOOST_IO_MAKE_TRAITS(is_hash_set, detail::is_hash_set_helper)
     BOOST_IO_MAKE_TRAITS(is_hash_multiset, detail::is_hash_multiset_helper)
     BOOST_IO_MAKE_TRAITS(is_hash_map, detail::is_hash_map_helper)
     BOOST_IO_MAKE_TRAITS(is_hash_multimap, detail::is_hash_multimap_helper)
-#else // #ifdef BOOST_IOFM__HASH_CONTAINERS
+#else // #ifdef BOOST_IOFM_HASH_CONTAINERS
     template<typename T> struct is_hash_set : public mpl::false_ { };
     template<typename T> struct is_hash_multiset : public mpl::false_ { };
     template<typename T> struct is_hash_map : public mpl::false_ { };
@@ -271,23 +271,23 @@ BOOST_IO_MAKE_TRAITS(is_std_vector, detail::is_vector_helper)
 BOOST_IO_MAKE_TRAITS(is_compressed_pair, detail::is_compressed_pair_helper)
 BOOST_IO_MAKE_TRAITS(is_rational, detail::is_rational_helper)
 
-#ifndef BOOST_IOFM__NO_LIB_INTERVAL
+#ifndef BOOST_IOFM_NO_LIB_INTERVAL
     BOOST_IO_MAKE_TRAITS(is_interval, detail::is_interval_helper)
-#else  // #ifndef BOOST_IOFM__NO_LIB_INTERVAL
+#else  // #ifndef BOOST_IOFM_NO_LIB_INTERVAL
     template<typename T> struct is_interval : public mpl::false_ { };
-#endif // #ifndef BOOST_IOFM__NO_LIB_INTERVAL
+#endif // #ifndef BOOST_IOFM_NO_LIB_INTERVAL
 
-#ifndef BOOST_IOFM__NO_LIB_QUATERNION
+#ifndef BOOST_IOFM_NO_LIB_QUATERNION
     BOOST_IO_MAKE_TRAITS(is_quaternion, detail::is_quaternion_helper)
-#else  // #ifndef BOOST_IOFM__NO_LIB_QUATERNION
+#else  // #ifndef BOOST_IOFM_NO_LIB_QUATERNION
     template<typename T> struct is_quaternion : public mpl::false_ { };
-#endif // #ifndef BOOST_IOFM__NO_LIB_QUATERNION
+#endif // #ifndef BOOST_IOFM_NO_LIB_QUATERNION
 
-#ifndef BOOST_IOFM__NO_LIB_OCTONION
+#ifndef BOOST_IOFM_NO_LIB_OCTONION
    BOOST_IO_MAKE_TRAITS(is_octonion, detail::is_octonion_helper)
-#else  // #ifndef BOOST_IOFM__NO_LIB_OCTONION
+#else  // #ifndef BOOST_IOFM_NO_LIB_OCTONION
     template<typename T> struct is_octonion : public mpl::false_ { };
-#endif // #ifndef BOOST_IOFM__NO_LIB_OCTONION
+#endif // #ifndef BOOST_IOFM_NO_LIB_OCTONION
 
 template<typename T>
 struct is_container

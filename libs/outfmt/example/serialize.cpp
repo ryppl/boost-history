@@ -119,10 +119,10 @@ int main()
    >                                   textio2;
 
    // create the data to be serialized
-   std::pair< std::complex< float >, int >
-                                         pc1 = std::pair< std::complex< float >, int >
+   std::pair< std::complex< double >, int >
+                                         pc1 = std::pair< std::complex< double >, int >
                                          (
-                                            std::complex< float >( 0.5f, 1.345f ),
+                                            std::complex< double >( 0.5, 1.345 ),
                                             5
                                          );
 
@@ -141,7 +141,7 @@ int main()
       //    it is only currently supported for basic_output and pair_output/std::pair.
 
       std::ifstream                    is( "doc2.txt" );
-      std::pair< std::complex< float >, int >
+      std::pair< std::complex< double >, int >
                                        pc2;
 
       std::cout << "pair before reading: " << boost::io::formatob( pc2, textio2 ) << '\n';

@@ -1,7 +1,7 @@
 // (C) Copyright 2003: Reece H. Dunn
 
-#ifndef BOOST__IOFM__FORMATTER__HPP
-#define BOOST__IOFM__FORMATTER__HPP
+#ifndef BOOST_IOFM_FORMATTER_HPP
+#define BOOST_IOFM_FORMATTER_HPP
 #  include <boost/outfmt/detail/config.hpp>
 
 #  include <boost/outfmt/detail/format_traits.hpp>

@@ -1,7 +1,7 @@
 // (C) Copyright 2003: Reece H. Dunn
 
-#ifndef BOOST__IOFM__DETAIL__OPENCLOSE_FORMATTER__HPP
-#define BOOST__IOFM__DETAIL__OPENCLOSE_FORMATTER__HPP
+#ifndef BOOST_IOFM_DETAIL_OpenCloseFormatter_HPP
+#define BOOST_IOFM_DETAIL_OpenCloseFormatter_HPP
    namespace boost { namespace io
    {
       template
@@ -19,11 +19,11 @@
             format_type                fmt_open;
             format_type                fmt_close;
          public:
-            inline format_type                   open() const throw()
+            inline format_type                   open() const
             {
                return( fmt_open );
             }
-            inline format_type                   close() const throw()
+            inline format_type                   close() const
             {
                return( fmt_close );
             }
@@ -32,7 +32,7 @@
                                                  (
                                                     format_type o,
                                                     format_type c
-                                                 ) throw()
+                                                 ) 
             {
                fmt_open  = o;
                fmt_close = c;
@@ -47,18 +47,18 @@
                return( format( fmt.open(), fmt.close()));
             }
          public: // constructors
-            inline           openclose_formatter_t() throw():
+            inline           openclose_formatter_t():
                fmt_open(  traits_type::open_default  ),
                fmt_close( traits_type::close_default )
             {
             }
-            inline           openclose_formatter_t( format_type o, format_type c ) throw():
+            inline           openclose_formatter_t( format_type o, format_type c ):
                fmt_open(  o ),
                fmt_close( c )
             {
             }
             template< typename RT2, class FormatTraits2 >
-            inline           openclose_formatter_t( const openclose_formatter_t< FormatType, RT2, FormatTraits2 > & fmt ) throw():
+            inline           openclose_formatter_t( const openclose_formatter_t< FormatType, RT2, FormatTraits2 > & fmt ):
                fmt_open(  fmt.open()),
                fmt_close( fmt.close())
             {
@@ -83,16 +83,16 @@
             typedef typename base_type::format_type        format_type;
             typedef typename base_type::traits_type        traits_type;
          public:
-            inline           openclose_formatter() throw():
+            inline           openclose_formatter():
                openclose_formatter_t< FormatType, openclose_formatter, FormatTraits >()
             {
             }
-            inline           openclose_formatter( format_type o, format_type c ) throw():
+            inline           openclose_formatter( format_type o, format_type c ):
                openclose_formatter_t< FormatType, openclose_formatter, FormatTraits >( o, c )
             {
             }
             template< typename RT2, class FormatTraits2 >
-            inline           openclose_formatter( const openclose_formatter_t< FormatType, RT2, FormatTraits2 > & fmt ) throw():
+            inline           openclose_formatter( const openclose_formatter_t< FormatType, RT2, FormatTraits2 > & fmt ):
                openclose_formatter_t< FormatType, openclose_formatter, FormatTraits >( fmt )
             {
             }

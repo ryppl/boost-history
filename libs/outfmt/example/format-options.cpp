@@ -34,19 +34,20 @@ int main()
    // examples
 
    std::cout << "vector< int > = "
-             << boost::io::formatlist( v ).format( "( ", " )" )
+             << boost::io::format( v ).format( "( ", " )" )
              << '\n';
 
    // [results]: vector< int > = ( 41, 18467, 6334, 26500, 19169, 15724, 11478, 29358, 26962, 24464 )
 
    std::cout << "vector< int > = "
-             << boost::io::formatlist( v ).format( " | " )
+             << boost::io::format( v ).format( " | " )
              << '\n';
 
    // [results]: vector< int > = [ 41 | 18467 | 6334 | 26500 | 19169 | 15724 | 11478 | 29358 | 26962 | 24464 ]
 
    std::cout << "int[ 4 ] = "
-             << boost::io::formatlist( i, i + 4 ).format( " ; " )
+//           << boost::io::formatlist( i, i + 1 ) // [review]
+             << boost::io::formatob( boost::io::range( i, i + 4 ), boost::io::rangefmt().format( " ; " ))
              << '\n';
 
    // [results]: int[ 4 ] = [ 3 ; 6 ; 9 ; 12 ]
@@ -59,7 +60,7 @@ int main()
    // [results]: char * = [J; e; a; n; e; t; t; e;  ; B; i; e; d; e; r; m; a; n; n]
 
    std::cout << "std::string = "
-             << boost::io::formatlist( s ).format( "", "", "|" )
+             << boost::io::format( s ).format( "", "", "|" )
              << '\n';
 
    // [results]: std::string = W|a|r|u|m| |b|i|s|t| |d|u| |n|i|c|h|t| |d|a|?
@@ -76,13 +77,13 @@ int main()
    std::cout << '\n' << "advanced formatting:" << '\n' << '\n';
 
    std::cout << "std::string = "
-             << boost::io::formatlist( s ).format( "<: ", " :>", " " )
+             << boost::io::format( s ).format( "<: ", " :>", " " )
              << '\n';
 
    // [results]: std::string = <: W a r u m   b i s t   d u   n i c h t   d a ? :>
 
    std::cout << "std::string = "
-             << boost::io::formatlist
+             << boost::io::formatout // [review]: out signature
                 (
                    s,
                    boost::io::wrappedfmt().format( "'", "'" ) // :-)

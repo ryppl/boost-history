@@ -35,13 +35,13 @@ int main()
    // STL container examples
 
    std::cout << "vector< int > = "
-             << boost::io::formatlist( v )
+             << boost::io::format( v )
              << '\n';
 
    // [results]: vector< int > = [ 41, 18467, 6334, 26500, 19169, 15724, 11478, 29358, 26962, 24464 ]
 
    std::cout << "list< char > = "
-             << boost::io::formatlist( l )
+             << boost::io::format( l )
              << '\n';
 
    // [results]: list< char > = [ A, B, C ]
@@ -63,7 +63,7 @@ int main()
    // C++-style strings
 
    std::cout << "std::string = "
-             << boost::io::formatlist( s )
+             << boost::io::format( s )
              << '\n';
 
    // [results]: std::string = [ W, a, r, u, m,  , b, i, s, t,  , d, u,  , n, i, c, h, t,  , d, a, ? ]
@@ -71,7 +71,7 @@ int main()
    // Iterator ranges in a std::pair
 
    std::cout << "std::pair< int *, int * > = "
-             << boost::io::formatlist( ip )
+             << boost::io::formatrange( ip )
              << '\n';
 
    // [results]: int[ 4 ] = [ 3, 6, 9, 12 ]

@@ -1,7 +1,7 @@
 // (C) Copyright Jonathan Turkanis 2003.
 
-#ifndef BOOST__IOFM__DETAIL__OUTPUT_DEDUCER__HPP
-#define BOOST__IOFM__DETAIL__OUTPUT_DEDUCER__HPP
+#ifndef BOOST_IOFM_DETAIL_OUTPUT_DEDUCER_HPP
+#define BOOST_IOFM_DETAIL_OUTPUT_DEDUCER_HPP
 #  include <boost/mpl/apply_if.hpp>
 #  include <boost/mpl/identity.hpp>
 #  include <boost/outfmt/format_objects.hpp>

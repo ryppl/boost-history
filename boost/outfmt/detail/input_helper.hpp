@@ -1,7 +1,7 @@
 // (C) Copyright 2003: Reece H. Dunn
 
-#ifndef BOOST__IOFM__DETAIL__INPUT_HELPER__HPP
-#define BOOST__IOFM__DETAIL__INPUT_HELPER__HPP
+#ifndef BOOST_IOFM_DETAIL_InputHelper_HPP
+#define BOOST_IOFM_DETAIL_InputHelper_HPP
 #  include <boost/noncopyable.hpp>
 
    namespace boost { namespace io { namespace detail

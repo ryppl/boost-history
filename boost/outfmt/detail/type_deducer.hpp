@@ -1,7 +1,7 @@
 // (C) Copyright Jonathan Turkanis 2003.
 
-#ifndef BOOST__IOFM__DETAIL__TYPE_DEDUCER__HPP
-#define BOOST__IOFM__DETAIL__TYPE_DEDUCER__HPP
+#ifndef BOOST_IOFM_DETAIL_TYPE_DEDUCER_HPP
+#define BOOST_IOFM_DETAIL_TYPE_DEDUCER_HPP
 
 #include <boost/outfmt/detail/type_traits.hpp>
 #include <boost/outfmt/detail/select.hpp>    

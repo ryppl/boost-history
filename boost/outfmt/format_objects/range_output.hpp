@@ -1,10 +1,10 @@
 // (C) Copyright 2003: Reece H. Dunn 
 
-#ifndef BOOST__IOFM__FORMAT_OBJECTS__RANGE_OUTPUT__HPP
-#define BOOST__IOFM__FORMAT_OBJECTS__RANGE_OUTPUT__HPP
-#  include <boost/outfmt/formatter.hpp>
+#ifndef BOOST_IOFM_FormatObjects_RangeOutput_HPP
+#define BOOST_IOFM_FormatObjects_RangeOutput_HPP
+#  include <boost/outfmt/format_objects/detail/list_output.hpp>
 
-#  include <utility>                             // std::pair
+#  include <utility> // std::pair
 
    namespace boost { namespace io
    {
@@ -82,7 +82,6 @@
          // pre: 0 <= ( off + len ) < n
          return( range( a + off, a + off + len ));
       }
-      */
 
       // range format generators
 

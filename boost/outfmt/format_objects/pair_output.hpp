@@ -1,18 +1,9 @@
 // (C) Copyright 2003: Reece H. Dunn 
 
-#ifndef BOOST__IOFM__FORMAT_OBJECTS__PAIR_OUTPUT__HPP
-#define BOOST__IOFM__FORMAT_OBJECTS__PAIR_OUTPUT__HPP
+#ifndef BOOST_IOFM_FormatObjects_PairOutput_HPP
+#define BOOST_IOFM_FormatObjects_PairOutput_HPP
 #  include <boost/outfmt/formatter.hpp>
-
-#  include <utility>                             // std::pair
-#  include <complex>                             // std::complex
-#  include <boost/compressed_pair.hpp>           // boost::compressed_pair
-#  if !defined(BOOST_IOFM__NO_LIB_INTERVAL)
-#     include <boost/numeric/interval/interval.hpp> // boost::numeric::interval
-#  endif
-#  if !defined(BOOST_IOFM__NO_LIB_RATIONAL)
-#     include <boost/rational.hpp>               // boost::rational
-#  endif
+#  include <boost/outfmt/getval.hpp>
 
    namespace boost { namespace io
    {
@@ -32,74 +23,17 @@
          private:
             Outputter1                 out1;
             Outputter2                 out2;
-
-         // output:
-
-         public: // standard library dual-valued types
-            template< typename T1, typename T2, class OutputStream >
+         public: // nary< 2 > types
+            template< class T, class OutputStream >
             inline OutputStream & operator()
                                   (
                                      OutputStream & os,
-                                     const std::pair< T1, T2 > & p
+                                     const T      & v
                                   ) const
-            {
-               return( out( os, p.first, p.second ));
-            }
-            template< typename T, class OutputStream >
-            inline OutputStream & operator()
-                                  (
-                                     OutputStream & os,
-                                     const std::complex< T > & c
-                                  ) const
-            {
-               return( out( os, c.real(), c.imag()));
-            }
-         public: // boost dual-valued types
-#           if !defined(BOOST_IOFM__NO_LIB_INTERVAL)
-               template< typename T, class Traits, class OutputStream >
-               inline OutputStream &
-                                  operator()
-                                  (
-                                     OutputStream & os,
-                                     const boost::numeric::interval< T, Traits > & i
-                                  ) const
-               {
-                  return( out( os, i.lower(), i.upper()));
-               }
-#           endif
-#           if !defined(BOOST_IOFM__NO_LIB_RATIONAL)
-               template< typename T, class OutputStream >
-               inline OutputStream &
-                                  operator()
-                                  (
-                                     OutputStream & os,
-                                     const boost::rational< T > & r
-                                  ) const
-               {
-                  return( out( os, r.numerator(), r.denominator()));
-               }
-#           endif
-            template< typename T1, typename T2, class OutputStream >
-            inline OutputStream & operator()
-                                  (
-                                     OutputStream & os,
-                                     const boost::compressed_pair< T1, T2 > & cp
-                                  ) const
-            {
-               return( out( os, cp.first(), cp.second()));
-            }
-         private: // internal implementation
-            template< typename T1, typename T2, class OutputStream >
-            inline OutputStream &                out
-                                                 (
-                                                    OutputStream & os,
-                                                    const T1 &     first,
-                                                    const T2 &     second
-                                                 ) const 
             {
                os << open();
-               out1( os, first ) << separator();
-               return( out2( os, second ) << close());
+               out1( os, getval< 1 >( v )) << separator();
+               return( out2( os, getval< 2 >( v )) << close());
             }
 
          // input
@@ -131,7 +65,7 @@
                return( false );
             }
          public: // boost dual-valued types
-#           if !defined(BOOST_IOFM__NO_LIB_INTERVAL)
+#           if !defined(BOOST_IOFM_NO_LIB_INTERVAL)
                template< typename T, class Traits, class InputStream >
                inline bool                       read
                                                  (
@@ -149,7 +83,7 @@
                   return( false );
                }
 #           endif
-#           if !defined(BOOST_IOFM__NO_LIB_RATIONAL)
+#           if !defined(BOOST_IOFM_NO_LIB_RATIONAL)
                template< typename T, class InputStream >
                inline bool                       read
                                                  (
@@ -192,7 +126,7 @@
                }
                return( false );
             }
-         
+
          public:
 
          // constructors

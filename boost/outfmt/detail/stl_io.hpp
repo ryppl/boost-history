@@ -1,7 +1,7 @@
 // (C) Copyright 2003: Reece H. Dunn
 
-#ifndef BOOST__IOFM__STL_IO__OSTREAM__HPP
-#define BOOST__IOFM__STL_IO__OSTREAM__HPP
+#ifndef BOOST_IOFM_STL_IO_OSTREAM_HPP
+#define BOOST_IOFM_STL_IO_OSTREAM_HPP
    // std::vector outputter
 
    template< typename T, class Allocator >
@@ -112,14 +112,14 @@
       return( os << boost::io::formatob( p, boost::io::pairfmt()));
    }
 
-#  if defined(BOOST_IOFM__HASH_CONTAINERS)
+#  if defined(BOOST_IOFM_HASH_CONTAINERS)
       // std::hash_map outputter
 
-      template< BOOST_IOFM__HASH_MAP_T >
+      template< BOOST_IOFM_HASH_MAP_T >
       inline std::ostream & operator<<
       (
          std::ostream & os,
-         const std::hash_map< BOOST_IOFM__HASH_MAP_ARG > & m
+         const std::hash_map< BOOST_IOFM_HASH_MAP_ARG > & m
       )
       {
          return
@@ -134,11 +134,11 @@
 
       // std::hash_multimap outputter
 
-      template< BOOST_IOFM__HASH_MAP_T >
+      template< BOOST_IOFM_HASH_MAP_T >
       inline std::ostream & operator<<
       (
          std::ostream & os,
-         const std::hash_multimap< BOOST_IOFM__HASH_MAP_ARG > & mm
+         const std::hash_multimap< BOOST_IOFM_HASH_MAP_ARG > & mm
       )
       {
          return
@@ -153,11 +153,11 @@
 
       // std::hash_set outputter
 
-      template< BOOST_IOFM__HASH_SET_T >
+      template< BOOST_IOFM_HASH_SET_T >
       inline std::ostream & operator<<
       (
          std::ostream & os,
-         const std::hash_set< BOOST_IOFM__HASH_SET_ARG > & s
+         const std::hash_set< BOOST_IOFM_HASH_SET_ARG > & s
       )
       {
          return( os << boost::io::formatob( s, boost::io::containerfmt()));
@@ -165,11 +165,11 @@
 
       // std::hash_multiset outputter
 
-      template< BOOST_IOFM__HASH_SET_T >
+      template< BOOST_IOFM_HASH_SET_T >
       inline std::ostream & operator<<
       (
          std::ostream & os,
-         const std::hash_multiset< BOOST_IOFM__HASH_SET_ARG > & ms
+         const std::hash_multiset< BOOST_IOFM_HASH_SET_ARG > & ms
       )
       {
          return( os << boost::io::formatob( ms, boost::io::containerfmt()));

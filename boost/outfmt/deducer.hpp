@@ -1,10 +1,10 @@
 // (C) Copyright 2003: Reece H. Dunn
 
-#ifndef BOOST__IOFM__DEDUCER__HPP
-#define BOOST__IOFM__DEDUCER__HPP
+#ifndef BOOST_IOFM_DEDUCER_HPP
+#define BOOST_IOFM_DEDUCER_HPP
 #  include <boost/outfmt/detail/config.hpp>
 
-#  if !defined(BOOST_IOFM__NO_OUTPUT_DEDUCTION)
+#  if !defined(BOOST_IOFM_NO_OUTPUT_DEDUCTION)
 #     include <boost/outfmt/detail/type_deducer.hpp>
 #     include <boost/outfmt/detail/output_deducer.hpp>
 #  else

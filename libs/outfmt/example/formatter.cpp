@@ -59,13 +59,13 @@ int main()
    // [results]: char * = ( J, e, a, n, e, t, t, e,  , B, i, e, d, e, r, m, a, n, n )
 
    std::cout << "list< char > = "
-             << boost::io::formatlist( l ).format( fmt )
+             << boost::io::format( l ).format( fmt )
              << '\n';
 
    // [results]: int[ 4 ] = ( A, B, C )
 
    std::cout << "list< char > = "
-             << boost::io::formatlist( l ).format( fmt2 )
+             << boost::io::format( l ).format( fmt2 )
              << '\n';
 
    // [results]: int[ 4 ] = ( A -- B -- C )

@@ -1,7 +1,7 @@
 // (C) Copyright 2003: Reece H. Dunn
 
-#ifndef BOOST__IOFM__DETAIL__FORMATTER__HPP
-#define BOOST__IOFM__DETAIL__FORMATTER__HPP
+#ifndef BOOST_IOFM_DETAIL_FORMATTER_HPP
+#define BOOST_IOFM_DETAIL_FORMATTER_HPP
    namespace boost { namespace io
    {
       template
@@ -20,7 +20,7 @@
          private:
             format_type                fmt_separator;
          public:
-            inline format_type                   separator() const throw()
+            inline format_type                   separator() const
             {
                return( fmt_separator );
             }
@@ -30,7 +30,7 @@
                                                     format_type o,
                                                     format_type c,
                                                     format_type s
-                                                 ) throw()
+                                                 )
             {
                fmt_separator = s;
                return( base_type::format( o, c ));
@@ -39,14 +39,14 @@
                                                  (
                                                     format_type o,
                                                     format_type c
-                                                 ) throw()
+                                                 )
             {
                return( base_type::format( o, c ));
             }
             inline ReferenceType &               format
                                                  (
                                                     format_type s
-                                                 ) throw()
+                                                 ) 
             {
                fmt_separator = s;
                return( *static_cast< ReferenceType * >( this ));
@@ -70,7 +70,7 @@
                return( format( fmt.open(), fmt.close(), fmt.separator()));
             }
          public: // constructors
-            inline           formatter_t() throw():
+            inline           formatter_t():
                openclose_formatter_t< FormatType, ReferenceType, FormatTraits >(),
                fmt_separator( traits_type::separator_default )
             {
@@ -80,15 +80,15 @@
                                 format_type o,
                                 format_type c,
                                 format_type s
-#                               if !defined(BOOST_IOFM__NO_FMT_DEFAULT)
+#                               if !defined(BOOST_IOFM_NO_FMT_DEFAULT)
                                    = traits_type::separator_default
 #                               endif
-                             ) throw():
+                             ):
                openclose_formatter_t< FormatType, ReferenceType, FormatTraits >( o, c ),
                fmt_separator( s )
             {
             }
-            inline           formatter_t( format_type s ) throw():
+            inline           formatter_t( format_type s ):
                openclose_formatter_t< FormatType, ReferenceType, FormatTraits >(),
                fmt_separator( s )
             {
@@ -98,10 +98,10 @@
                              (
                                 const openclose_formatter_t< FormatType, RT2, FormatTraits2 > & fmt,
                                 format_type s
-#                               if !defined(BOOST_IOFM__NO_FMT_DEFAULT)
+#                               if !defined(BOOST_IOFM_NO_FMT_DEFAULT)
                                    = traits_type::separator_default
 #                               endif
-                             ) throw():
+                             ):
                openclose_formatter_t< FormatType, ReferenceType, FormatTraits >( fmt ),
                fmt_separator( s )
             {
@@ -110,7 +110,7 @@
             inline           formatter_t
                              (
                                 const formatter_t< FormatType, RT2, FormatTraits2 > & fmt
-                             ) throw():
+                             ):
                openclose_formatter_t< FormatType, ReferenceType, FormatTraits >( fmt ),
                fmt_separator( fmt.separator())
             {
@@ -135,7 +135,7 @@
             typedef typename base_type::format_type        format_type;
             typedef typename base_type::traits_type        traits_type;
          public:
-            inline           formatter() throw():
+            inline           formatter():
                formatter_t< FormatType, formatter, FormatTraits >()
             {
             }
@@ -144,14 +144,14 @@
                                 format_type o,
                                 format_type c,
                                 format_type s
-#                               if !defined(BOOST_IOFM__NO_FMT_DEFAULT)
+#                               if !defined(BOOST_IOFM_NO_FMT_DEFAULT)
                                    = traits_type::separator_default
 #                               endif
-                             ) throw():
+                             ):
                formatter_t< FormatType, formatter, FormatTraits >( o, c, s )
             {
             }
-            inline           formatter( format_type s ) throw():
+            inline           formatter( format_type s ):
                formatter_t< FormatType, formatter, FormatTraits >( s )
             {
             }
@@ -160,10 +160,10 @@
                              (
                                 const openclose_formatter_t< FormatType, RT2, FormatTraits2 > & fmt,
                                 format_type s
-#                               if !defined(BOOST_IOFM__NO_FMT_DEFAULT)
+#                               if !defined(BOOST_IOFM_NO_FMT_DEFAULT)
                                    = traits_type::separator_default
 #                               endif
-                             ) throw():
+                             ):
                formatter_t< FormatType, formatter, FormatTraits >( fmt, s )
             {
             }
@@ -172,7 +172,7 @@
                inline        formatter
                              (
                                 const formatter_t< FormatType, RT2, FormatTraits2 > & fmt
-                             ) throw():
+                             ):
                   formatter_t< FormatType, formatter, FormatTraits >( fmt )
                {
                }

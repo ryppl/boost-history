@@ -1,4 +1,4 @@
-// (C) Copyright 2003: Reece H. Dunn 
+// (C) Copyright 2003: Reece H. Dunn
 
 #include <iostream>  // std::cout
 #include <list>      // std::list
@@ -45,13 +45,13 @@ int main()
    // examples
 
    std::cout << "int[ 3 ][ 3 ] = "
-             << boost::io::formatlist( a2D, a2D + 3, arrayfmt( 3 ))
+             << boost::io::formatlistout( a2D, a2D + 3, arrayfmt( 3 )) // [review]: out signature
              << '\n';
 
    // [results:] int[ 3 ][ 3 ] = [ ( 1, 0, 0 ), ( 0, 1, 0 ), ( 0, 0, 1 ) ]
 
    std::cout << "int[ 3 ][ 3 ] = "
-             << boost::io::formatlist
+             << boost::io::formatlistout // [review]: out signature
                 (
                    a2D, a2D + 3,
                    boost::io::arrayfmt( 3 ).format( "( ", " )" ) // inlined form
@@ -61,7 +61,7 @@ int main()
    // [results]: int[ 3 ][ 3 ] = [ ( 1, 0, 0 ), ( 0, 1, 0 ), ( 0, 0, 1 ) ]
 
    std::cout << "int[ 3 ][ 3 ] = "
-             << boost::io::formatlist( a2D, a2D + 3, arrayfmt( 3 ))
+             << boost::io::formatlistout( a2D, a2D + 3, arrayfmt( 3 )) // [review]: out signature
                 .format( "\n", "", "\n" )
              << '\n' << '\n';
 
@@ -74,7 +74,7 @@ int main()
    */
 
    std::cout << "int[ 3 ][ 3 ] = "
-             << boost::io::formatlist( a2D, a2D + 3, arrayfmt( 1, 2 ))
+             << boost::io::formatlistout( a2D, a2D + 3, arrayfmt( 1, 2 )) // [review]: out signature
                .format( "\n", "\0", "\n" )
              << '\n' << '\n';
 
@@ -87,7 +87,7 @@ int main()
    */
 
    std::cout << "std::list< std::list< char > > tictactoe = "
-             << boost::io::formatlist( tictactoe, containerfmt )
+             << boost::io::formatout( tictactoe, containerfmt ) // [review]: out signature
                 .format( "\n", "", "\n" )
              << '\n' << '\n';
 
@@ -100,7 +100,7 @@ int main()
    */
 
    std::cout << "std::list< std::list< char > > tictactoe = "
-             << boost::io::formatlist
+             << boost::io::formatout // [review]: out signature
                 (
                    tictactoe,
                    boost::io::containerfmt() // inlined form

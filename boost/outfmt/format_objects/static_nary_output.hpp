@@ -1,15 +1,9 @@
 // (C) Copyright 2003: Reece H. Dunn
 
-#ifndef BOOST__IOFM__FORMAT_OBJECTS__STATIC_NARY_OUTPUT__HPP
-#define BOOST__IOFM__FORMAT_OBJECTS__STATIC_NARY_OUTPUT__HPP
+#ifndef BOOST_IOFM_FormatObjects_StaticNaryOutput_HPP
+#define BOOST_IOFM_FormatObjects_StaticNaryOutput_HPP
 #  include <boost/outfmt/formatter.hpp>
-
-#  if !defined(BOOST_IOFM__NO_LIB_QUATERNION)
-#     include <boost/math/quaternion.hpp> // boost::math::quaternion
-#  endif
-#  if !defined(BOOST_IOFM__NO_LIB_OCTONION)
-#     include <boost/math/octonion.hpp>   // boost::math::octonion
-#  endif
+#  include <boost/outfmt/getval.hpp>
 
    namespace boost { namespace io
    {
@@ -28,7 +22,7 @@
          public:
             Outputter                  out;
          public: // nary-valued types
-#        if !defined(BOOST_IOFM__NO_LIB_QUATERNION)
+#        if !defined(BOOST_IOFM_NO_LIB_QUATERNION)
             template< typename T, class OutputStream >
             inline OutputStream & operator()
                                   (
@@ -37,13 +31,16 @@
                                   ) const
             {
                os << open();
-               out( os, h.R_component_1()) << separator();
-               out( os, h.R_component_2()) << separator();
-               out( os, h.R_component_3()) << separator();
-               return( out( os, h.R_component_4()) << close());
+            /*
+               out( os, getval< 1 >( h )) << separator();
+               out( os, getval< 2 >( h )) << separator();
+               out( os, getval< 3 >( h )) << separator();
+               return( out( os, getval< 4 >( h )) << close());
+            */
+               return( os << close());
             }
 #        endif
-#        if !defined(BOOST_IOFM__NO_LIB_OCTONION)
+#        if !defined(BOOST_IOFM_NO_LIB_OCTONION)
             template< typename T, class OutputStream >
             inline OutputStream & operator()
                                   (

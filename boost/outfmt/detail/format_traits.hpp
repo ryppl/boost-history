@@ -1,8 +1,8 @@
 // (C) Copyright 2003: Reece H. Dunn 
 // (C) Copyright Jonathan Turkanis 2003.
 
-#ifndef BOOST__IOFM__DETAIL__FORMAT_TRAITS__HPP
-#define BOOST__IOFM__DETAIL__FORMAT_TRAITS__HPP
+#ifndef BOOST_IOFM_DETAIL_FormatTraits_HPP
+#define BOOST_IOFM_DETAIL_FormatTraits_HPP
 #  include <boost/outfmt/detail/config.hpp>
 #  include <boost/outfmt/detail/type_traits.hpp>
 #  include <boost/mpl/if.hpp>

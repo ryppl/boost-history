@@ -1,7 +1,7 @@
 // (C) Copyright 2003: Reece H. Dunn 
 
-#ifndef BOOST__IOFM__FORMAT_OBJECTS__ARRAY_OUTPUT__HPP
-#define BOOST__IOFM__FORMAT_OBJECTS__ARRAY_OUTPUT__HPP
+#ifndef BOOST_IOFM_FormatObjects_ArrayOutput_HPP
+#define BOOST_IOFM_FormatObjects_ArrayOutput_HPP
 #  include <boost/outfmt/format_objects/detail/list_output.hpp>
 
    namespace boost { namespace io

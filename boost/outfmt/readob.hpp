@@ -1,7 +1,7 @@
 // (C) Copyright 2003: Reece H. Dunn 
 
-#ifndef BOOST__IOFM__READOB__HPP
-#define BOOST__IOFM__READOB__HPP
+#ifndef BOOST_IOFM_READOB_HPP
+#define BOOST_IOFM_READOB_HPP
 #  include <boost/outfmt/format_objects.hpp>
 #  include <boost/outfmt/detail/config.hpp>
 
@@ -21,17 +21,17 @@
                ob( ro.ob )
             {
             }
-            inline           readob_t( T & val ) throw(): ob( val )
+            inline           readob_t( T & val ): ob( val )
             {
             }
-            inline           readob_t( T & val, const Inputter & i ) throw():
+            inline           readob_t( T & val, const Inputter & i ):
                Inputter( i ),
                ob( val )
             {
             }
       };
 
-#     if !defined(BOOST_IOFM__NO_BASIC_STREAM)
+#     if !defined(BOOST_IOFM_NO_BASIC_STREAM)
          template< typename CharT, class TraitsT, typename T, typename FormatType, typename Inputter >
          inline std::basic_istream< CharT, TraitsT > & operator>>
          (

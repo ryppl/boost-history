@@ -58,13 +58,13 @@ int main()
    // [1]: John, James, Corina
 
    std::cout << "[1]: "
-             << boost::io::formatlist( names ).format( "", "" )
+             << boost::io::format( names ).format( "", "" )
              << '\n';
 
    // [2]: {John}, {James}, {Corina}
 
    std::cout << "[2]: "
-             << boost::io::formatlist
+             << boost::io::formatout // [review]: out signature
                 (
                    names,
                    // use wrapped output to simplify construction:
@@ -73,13 +73,13 @@ int main()
              << '\n';
 
    std::cout << "[2]: "
-             << boost::io::formatlist( names ).format( "{", "}", "}, {" )
+             << boost::io::format( names ).format( "{", "}", "}, {" )
              << '\n';
 
    // [3]: {[0] John}, {[1] James}, {[2] Corina}
 
    std::cout << "[3]: "
-             << boost::io::formatlist
+             << boost::io::formatout // [review]: out signature
                 (
                    names,
                    boost::io::wrappedfmt
@@ -92,7 +92,7 @@ int main()
              << '\n';
 
    std::cout << "[3]: "
-             << boost::io::formatlist
+             << boost::io::formatout // [review]: out signature
                 (
                    names,
                    boost::io::wrappedfmt
@@ -107,7 +107,7 @@ int main()
    // [4]: [0] John, [1] James, [2] Corina
 
    std::cout << "[4]: "
-             << boost::io::formatlist( names, position_output< char * >())
+             << boost::io::formatout( names, position_output< char * >()) // [review]: out signature
                 .format( "", "" )
              << '\n' << '\n';
 
@@ -119,7 +119,7 @@ int main()
    */
 
    std::cout << "[5]:"
-             << boost::io::formatlist( names, boost::io::wrappedfmt().format( "[", "]" ))
+             << boost::io::formatout( names, boost::io::wrappedfmt().format( "[", "]" )) // [review]: out signature
                 .format( "\n", "", "\n" )
              << '\n';
 
@@ -131,7 +131,7 @@ int main()
    */
 
    std::cout << "[6]:"
-             << boost::io::formatlist( names, position_output< char * >())
+             << boost::io::formatout( names, position_output< char * >()) // [review]: out signature
                 .format( "\n", "", "\n" )
              << '\n' << '\n';
 
@@ -143,7 +143,7 @@ int main()
    */
 
    std::cout << "[7]:"
-             << boost::io::formatlist( names, position_output< char * >())
+             << boost::io::formatout( names, position_output< char * >()) // [review]: out signature
                 .format( "\n'", "'", "'\n'" )
              << '\n' << '\n';
 
