@@ -23,6 +23,7 @@ their source/sink.</p>
 			<li><a href="#m_types">Member Types</a></li>
 			<li><a href="#m_ctr">Constructors</a></li>
 			<li><a href="#m_observe">Observer Member Functions</a></li>
+			<li><a href="#m_override">Overridden Virtual Functions</a></li>
 			<li><a href="#m_obj">Member Objects</a></li>
 		</ul></li>
 	<li><a href="#array_s">Array-based Stream Class Templates</a></li>
@@ -125,6 +126,14 @@ public:
 
     std::ios_base::openmode  open_mode() const;
 
+protected:
+    // Overridden virtual functions
+    virtual  pos_type  seekoff( off_type off, std::ios_base::seekdir way,
+     std::ios_base::openmode which = std::ios_base::in | std::ios_base::out );
+
+    virtual  pos_type  seekpos( pos_type sp,
+     std::ios_base::openmode which = std::ios_base::in | std::ios_base::out );
+
 };
 </pre></blockquote>
 
@@ -170,7 +179,7 @@ array, and the end marking pointer is set to one-past-the-end of the internal
 array.  For an inactive area, the three marking pointers remain NULL.</p>
 
 <p><strong>Note 4:</strong> if the opening mode given by the <var>which</var>
-constructor parameter is omitted, it defaults to allowing input and output.
+constructor parameter is omitted, it defaults to allowing input and output.</p>
 
 <dl>
 	<dt><code>basic_array_streambuf( std::ios_base::openmode which );</code>
@@ -255,6 +264,60 @@ constructor parameter is omitted, it defaults to allowing input and output.
                         active<br>
 		<strong>Rationale:</strong> in case the opening mode needs
 			to be confirmed
+</dl>
+
+<h3><a name="m_override">Overridden Virtual Functions</a></h3>
+
+<p><strong>Note:</strong> if the selected area given by the <var>which</var>
+parameter is omitted, it defaults to changing the input and output areas.</p>
+
+<dl>
+    <dt><code>pos_type  seekoff( off_type off, std::ios_base::seekdir way,
+		std::ios_base::openmode which );</code>
+	<dd>
+		<strong>Effects:</strong> shifts the markers of the
+			designated area(s) [indicated by <var>which</var>]
+                        by the amount <var>off</var> from base-point
+                        <var>way</var>; the base-point is the start of the
+                        internal array if <code>way == std::ios_base::beg</code>,
+                        one-past-the-end of the internal array if <code>way ==
+                        std::ios_base::end</code>, and the current marker
+                        position if <code>way == std::ios_base::cur</code>; the
+                        get area marker is moved if <code>(which &amp;
+                        std::ios_base::in) != 0</code>, the put area marker is
+                        moved if <code>(which &amp; std::ios_base::out) !=
+                        0</code>, at least one marker must be indicated; if the
+                        current marker position is used as the base-point, at
+                        most one marker can be indicated; the index(ices) into
+                        the internal array of the affected marker(s) are changed
+                        to the value of <var>off</var>, which can be nonpositive,
+                        added to the base-point index<br>
+		<strong>Returns:</strong> the new stream position for the
+			marker(s) of the affected area(s), if the parameters
+                        are a valid combination and the indicated destination
+                        exists; an invalid stream position [typically
+                        <code>pos_type(off_type(-1))</code>] otherwise<br>
+		<strong>Rationale:</strong> moving the get and/or put area
+			markers to an relatively-defined location
+
+    <dt><code>pos_type  seekpos( pos_type sp, std::ios_base::openmode which );</code>
+	<dd>
+		<strong>Effects:</strong> moves the get and/or put area
+			markers [indicated by <var>which</var>] to the
+                        location designated by <var>sp</var>; the get area
+                        marker is moved if <code>(which &amp; std::ios_base::in)
+                        != 0</code>, the put area marker is moved if <code>(which
+                        &amp; std::ios_base::out) != 0</code>, at least one
+                        marker must be indicated; the position <var>sp</var>
+                        corresponds to the index of the current element of the
+                        internal array [<code>index = off_type(sp)</code>]<br>
+		<strong>Returns:</strong> a copy of <var>sp</var>, if
+			<var>sp</var> is a valid destination and the selected
+                        marker(s) were successfully moved to that destination;
+                        an invalid stream position [typically
+                        <code>pos_type(off_type(-1))</code>] otherwise<br>
+		<strong>Rationale:</strong> moving the get and/or put area
+			markers to an absolutely-defined location
 </dl>
 
 <h3><a name="m_obj">Member Objects</a></h3>
@@ -356,7 +419,7 @@ modifications to the opening mode.</p>
 
 <hr>
 
-<p>Revised: 8 June 2003</p>
+<p>Revised: 9 June 2003</p>
 
 <p>Copyright &copy; Daryle Walker 2003.  Permission to copy, use,
 modify, sell and distribute this document is granted provided this

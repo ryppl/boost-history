@@ -15,8 +15,8 @@
 #include <boost/config.hpp>                 // for BOOST_STATIC_CONSTANT
 #include <boost/io/streambuf_wrapping.hpp>  // for basic_wrapping_istream, etc.
 
-#include <cstddef>    // for std::size_t
-#include <ios>        // for std::streamsize, std::ios_base::openmode
+#include <cstddef>    // for std::size_t, NULL
+#include <ios>        // for std::streamsize, std::ios_base
 #include <streambuf>  // for std::basic_streambuf
 #include <string>     // for std::char_traits
 
@@ -84,6 +84,14 @@ public:
     std::streamsize  characters_read() const;
 
     std::ios_base::openmode  open_mode() const;
+
+protected:
+    // Overriden virtual functions
+    virtual  pos_type  seekoff( off_type off, std::ios_base::seekdir way,
+     std::ios_base::openmode which = std::ios_base::in | std::ios_base::out );
+
+    virtual  pos_type  seekpos( pos_type sp,
+     std::ios_base::openmode which = std::ios_base::in | std::ios_base::out );
 
 private:
     // Limit copying
@@ -256,10 +264,124 @@ basic_array_streambuf<N, Ch, Tr>::open_mode
 {
     using std::ios_base;
 
-    ios_base::openmode const  zero( 0 );
+    ios_base::openmode const  zero = static_cast<ios_base::openmode>( 0 );
 
     return ( this->gptr() ? ios_base::in : zero ) | ( this->pptr()
      ? ios_base::out : zero );
+}
+
+template < std::size_t N, typename Ch, class Tr >
+typename basic_array_streambuf<N, Ch, Tr>::pos_type
+basic_array_streambuf<N, Ch, Tr>::seekoff
+(
+    typename basic_array_streambuf<N, Ch, Tr>::off_type  off,
+    std::ios_base::seekdir                               way,
+    std::ios_base::openmode                              which
+      // = std::ios_base::in | std::ios_base::out
+)
+{
+    using std::ios_base;
+
+    char * const    old_gptr = this->gptr();
+    char * const    old_pptr = this->pptr();
+    bool const      do_input = ( (which & ios_base::in) != 0 );
+    bool const      do_output = ( (which & ios_base::out) != 0 );
+    pos_type const  invalid( static_cast<off_type>(-1) );
+
+    pos_type  answer = invalid;
+
+    if ( do_input )
+    {
+        off_type  newoff, newindex;
+
+        if ( NULL == old_gptr )  goto bail;
+
+        switch ( way )
+        {
+        case ios_base::beg :
+            newoff = 0;
+            break;
+        case ios_base::end :
+            newoff = this->egptr() - this->eback();
+            break;
+        case ios_base::cur :
+            newoff = this->gptr() - this->eback();
+            break;
+        default :
+            goto bail;
+        }
+        newindex = newoff + off;
+
+        if ( newindex < off_type(0) )  goto bail;
+        if ( newindex > off_type(self_type::array_size) )  goto bail;
+
+        this->gbump( newindex - off_type(this->characters_read()) );
+        answer = pos_type( newindex );
+    }
+
+    if ( do_output )
+    {
+        off_type  newoff, newindex;
+
+        if ( NULL == old_pptr )  goto bail;
+
+        switch ( way )
+        {
+        case ios_base::beg :
+            newoff = 0;
+            break;
+        case ios_base::end :
+            newoff = this->epptr() - this->pbase();
+            break;
+        case ios_base::cur :
+            newoff = this->pptr() - this->pbase();
+            if ( !do_input ) break;  // can't do both areas with "cur"!
+        default :
+            goto bail;
+        }
+        newindex = newoff + off;
+
+        if ( newindex < off_type(0) )  goto bail;
+        if ( newindex > off_type(self_type::array_size) )  goto bail;
+
+        // make sure answers are consistent with both areas if neccessary
+        if ( do_input && (pos_type( newindex ) != answer) )  goto bail;
+
+        this->pbump( newindex - off_type(this->characters_written()) );
+        answer = pos_type( newindex );
+    }
+
+    // At this point, either sole area successfully changed, both areas
+    // successfully changed to the same position, or neither area changed.
+    return answer;
+
+bail:
+    if ( old_gptr )
+    {
+        this->setg( this->array_, old_gptr, this->array_
+         + self_type::array_size );
+    }
+
+    if ( old_pptr )
+    {
+        this->setp( this->array_, this->array_ + self_type::array_size );
+        this->pbump( old_pptr - this->array_ );
+    }
+
+    return invalid;
+}
+
+template < std::size_t N, typename Ch, class Tr >
+inline
+typename basic_array_streambuf<N, Ch, Tr>::pos_type
+basic_array_streambuf<N, Ch, Tr>::seekpos
+(
+    typename basic_array_streambuf<N, Ch, Tr>::pos_type  sp,
+    std::ios_base::openmode                              which
+      // = std::ios_base::in | std::ios_base::out
+)
+{
+    return this->self_type::seekoff( off_type(sp), std::ios_base::beg, which );
 }
 
 template < std::size_t N, typename Ch, class Tr >
