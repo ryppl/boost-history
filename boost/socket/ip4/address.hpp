@@ -36,6 +36,8 @@ namespace boost
       public:
         address();
         address(const any_address&);
+        address(char const* ip, port_t port);
+        
         family_t family() const;
         port_t port() const;
         void port(port_t port);
