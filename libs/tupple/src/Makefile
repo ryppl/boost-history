@@ -1,0 +1,56 @@
+#
+#  Makefile for GNU make >= 3.77
+#
+
+
+# compiler settings
+
+GCC = g++
+LD  = g++
+INDENT = indent
+
+DRIVE_E = /cygdrive/e
+
+BINDIR = $(DRIVE_E)/roland/bin
+BOOSTDIR = ../../../boost
+DETAILDIR = $(BOOSTDIR)/tupple/detail
+
+OPTS  = -w -O2 -g0
+PREFLAGS = -E -C -P
+FLAGS =
+INCLUDE = -I$(DRIVE_E)/lib/boost_1_29_0 -I.
+LINK  =
+
+FORMAT_OPTS = --no-tabs -bl -bli0 -nce -npcs -nsaf -nsai -nsaw -prs
+
+all: tupple.hpp container_tupple.hpp
+
+tupple.hpp:
+	@echo " "
+	-$(GCC) $(PREFLAGS) generate_tupple_hpp.cpp -o tupple.ii -DTUPPLE_PARTIAL_SPEC $(OPTS) $(INCLUDE)
+	$(INDENT) $(FORMAT_OPTS) tupple.ii -o $(DETAILDIR)/tupple_part_spec.hpp
+	@echo " "
+	-$(GCC) $(PREFLAGS) generate_tupple_hpp.cpp -o tupple_no_part_spec.ii $(OPTS) $(INCLUDE)
+	$(INDENT) $(FORMAT_OPTS) tupple_no_part_spec.ii -o $(DETAILDIR)/tupple_no_part_spec.hpp
+	rm *.ii
+
+container_tupple.hpp:
+	@echo " "
+	-$(GCC) $(PREFLAGS) generate_container_tupple_hpp.cpp -o container_tupple.ii -DTUPPLE_PARTIAL_SPEC $(OPTS) $(INCLUDE)
+	$(INDENT) $(FORMAT_OPTS) container_tupple.ii -o $(DETAILDIR)/container_tupple_part_spec.hpp
+	@echo " "
+	-$(GCC) $(PREFLAGS) generate_container_tupple_hpp.cpp -o container_tupple.ii $(OPTS) $(INCLUDE)
+	$(INDENT) $(FORMAT_OPTS) container_tupple.ii -o $(DETAILDIR)/container_tupple_no_part_spec.hpp
+	rm *.ii
+
+
+# Make object in BINDIR:
+$(BINDIR)/%.o: %.cpp
+	@echo " "
+	@-$(GCC) -MM $< $(INCLUDE)
+	-$(GCC) -c $< -o $@ $(OPTS) $(FLAGS) $(INCLUDE)
+
+# Link exe in BINDIR:
+%.exe: $(BINDIR)/%.o
+	@echo " "
+	-$(GCC) $< -o $(BINDIR)/$* $(OPTS) $(LINK)
