@@ -51,7 +51,7 @@ struct list_traits<value_list_tag>
 /**/
 
 #define BOOST_MPL_ENUMERATE_INT_VALUE_PARAMS(param) \
-    BOOST_PP_REPEAT( \
+    BOOST_PP_REPEAT_1ST( \
         BOOST_MPL_LIST_PARAMETERS_NUMBER \
       , BOOST_MPL_INT_VALUE_TEMPLATE_PARAMETER \
       , param \

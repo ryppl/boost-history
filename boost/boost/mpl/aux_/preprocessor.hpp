@@ -33,13 +33,13 @@
     BOOST_PP_COMMA_IF(i) \
     BOOST_PP_CAT( \
           BOOST_PP_TUPLE_ELEM(2, 1, op) \
-        , BOOST_PP_ADD(i, BOOST_PP_TUPLE_ELEM(2, 0, op)) \
+        , BOOST_PP_ADD_D(1, i, BOOST_PP_TUPLE_ELEM(2, 0, op)) \
         ) \
 /**/
 
 #define BOOST_MPL_TEMPLATE_PARAMETERS(first, last, param) \
-    BOOST_PP_REPEAT( \
-          BOOST_PP_SUB(last, first) \
+    BOOST_PP_REPEAT_1ST( \
+          BOOST_PP_SUB_D(1, last, first) \
         , BOOST_MPL_AUX_TEMPLATE_PARAMETER \
         , (first, param) \
         ) \
@@ -54,13 +54,13 @@
     BOOST_PP_COMMA_IF(i) \
     BOOST_PP_CAT( \
           BOOST_PP_TUPLE_ELEM(3, 1, opv) \
-        , BOOST_PP_ADD(i, BOOST_PP_TUPLE_ELEM(3, 0, opv)) \
+        , BOOST_PP_ADD_D(1, i, BOOST_PP_TUPLE_ELEM(3, 0, opv)) \
         ) = BOOST_PP_TUPLE_ELEM(3, 2, opv) \
 /**/
 
 #define BOOST_MPL_DEFAULT_TEMPLATE_PARAMETERS(first, last, param, value) \
-    BOOST_PP_REPEAT( \
-          BOOST_PP_SUB(last, first) \
+    BOOST_PP_REPEAT_1ST( \
+          BOOST_PP_SUB_D(1, last, first) \
         , BOOST_MPL_AUX_DEFAULT_TEMPLATE_PARAMETER \
         , (first, param, value) \
         ) \

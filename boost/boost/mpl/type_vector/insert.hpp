@@ -50,7 +50,7 @@ struct type_vector_insert_algorithm;
                 ) \
             BOOST_PP_COMMA_IF(i) T \
             BOOST_PP_COMMA_IF( \
-                BOOST_PP_SUB(BOOST_MPL_AUX_LAST_VECTOR_PARAMETER, i) \
+                BOOST_PP_SUB_D(1, BOOST_MPL_AUX_LAST_VECTOR_PARAMETER, i) \
                 ) \
                 BOOST_MPL_TEMPLATE_PARAMETERS( \
                       i \

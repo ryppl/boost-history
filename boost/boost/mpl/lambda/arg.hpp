@@ -44,7 +44,7 @@ using boost::mpl::BOOST_PP_CAT(_,n); \
 /**/
 
 // typedef arg<#> _#; namespace lambda_arg { using boost::mpl::_#; }
-BOOST_PP_REPEAT(
+BOOST_PP_REPEAT_1ST(
       BOOST_MPL_FUNCTION_CLASS_MAX_ARITY
     , BOOST_MPL_AUX_ARG_N_DEF
     , unused

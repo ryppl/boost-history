@@ -66,7 +66,7 @@ struct lambda< Function<BOOST_MPL_AUX_LAMBDA_PARAMS(n, T)> > \
 { \
     typedef typename mpl::BOOST_PP_CAT(bind,n)< \
           typename mpl::BOOST_PP_CAT(make_f,n)<Function>::type \
-        , BOOST_PP_REPEAT(n, BOOST_MPL_AUX_LAMBDA_INVOCATION, T) \
+        , BOOST_PP_REPEAT_1ST(n, BOOST_MPL_AUX_LAMBDA_INVOCATION, T) \
         >::type type; \
 }; \
 /**/

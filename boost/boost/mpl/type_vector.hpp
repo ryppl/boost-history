@@ -50,7 +50,7 @@ namespace mpl {
 /**/
 
 #define BOOST_MPL_AUX_VECTOR_SIZE(T) \
-    BOOST_PP_REPEAT( \
+    BOOST_PP_REPEAT_1ST( \
         BOOST_MPL_VECTOR_MAX_SIZE \
       , BOOST_MPL_AUX_IS_VECTOR_ARGUMENT \
       , T \
@@ -72,7 +72,7 @@ struct type_vector
     //    typedef T1 value_type_1;
     //    ...
     //    typedef TN value_type_N;
-    BOOST_PP_REPEAT(
+    BOOST_PP_REPEAT_1ST(
           BOOST_MPL_VECTOR_MAX_SIZE
         , BOOST_MPL_AUX_VECTOR_ELEMENT_TYPEDEF
         , T

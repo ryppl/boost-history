@@ -36,7 +36,7 @@ namespace mpl {
 
 #define BOOST_MPL_AUX_REPEAT_BODY(z, n, expr) expr
 #define BOOST_MPL_AUX_REPEAT(n, expr) \
-    BOOST_PP_REPEAT(n, BOOST_MPL_AUX_REPEAT_BODY, expr) \
+    BOOST_PP_REPEAT_1ST(n, BOOST_MPL_AUX_REPEAT_BODY, expr) \
 /**/
 
 namespace aux {

@@ -48,7 +48,7 @@ template<
     >
 struct count_if_not
 {
-    BOOST_STATIC_CONSTANT(long, value = BOOST_PP_REPEAT(
+    BOOST_STATIC_CONSTANT(long, value = BOOST_PP_REPEAT_1ST(
           BOOST_MPL_TOP_PARAMETERS_NUMBER
         , BOOST_MPL_AUX_PARAMETER_COUNT
         , U

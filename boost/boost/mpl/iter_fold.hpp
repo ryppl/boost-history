@@ -127,7 +127,7 @@ struct iter_fold_first
 
 #define BOOST_MPL_AUX_ITER_FOLD_PREV(z, i, unused) \
     BOOST_MPL_AUX_ITER_FOLD_PREV_FUNC( \
-        BOOST_PP_SUB(BOOST_MPL_LIMIT_UNROLLING,i) \
+        BOOST_PP_SUB_D(1, BOOST_MPL_LIMIT_UNROLLING,i) \
         ) \
 /**/
 
@@ -147,7 +147,7 @@ struct iter_fold_impl
 {
  private:
     typedef iter_fold_first<Iterator,State> next0;
-    BOOST_PP_REPEAT(BOOST_MPL_LIMIT_UNROLLING, BOOST_MPL_AUX_ITER_FOLD_NEXT, unused)
+    BOOST_PP_REPEAT_1ST(BOOST_MPL_LIMIT_UNROLLING, BOOST_MPL_AUX_ITER_FOLD_NEXT, unused)
 
     #define BOOST_MPL_AUX_ITER_FOLD_LAST BOOST_PP_CAT(next, BOOST_MPL_LIMIT_UNROLLING)
     #define BOOST_MPL_AUX_ITER_FOLD_LAST_PREV BOOST_PP_CAT(prev, BOOST_MPL_LIMIT_UNROLLING)
@@ -164,24 +164,24 @@ struct iter_fold_impl
             >
         >::type BOOST_MPL_AUX_ITER_FOLD_LAST_PREV;
 
-    BOOST_PP_REPEAT(BOOST_MPL_LIMIT_UNROLLING, BOOST_MPL_AUX_ITER_FOLD_PREV, unused)
+    BOOST_PP_REPEAT_1ST(BOOST_MPL_LIMIT_UNROLLING, BOOST_MPL_AUX_ITER_FOLD_PREV, unused)
 
  public:
     typedef typename prev0::type type;
 
     static void execute()
     {
-        BOOST_PP_REPEAT(BOOST_MPL_LIMIT_UNROLLING, BOOST_MPL_AUX_ITER_FOLD_EXECUTE, (next, execute()))
+        BOOST_PP_REPEAT_1ST(BOOST_MPL_LIMIT_UNROLLING, BOOST_MPL_AUX_ITER_FOLD_EXECUTE, (next, execute()))
         BOOST_MPL_AUX_ITER_FOLD_LAST_PREV::execute();
-        BOOST_PP_REPEAT(BOOST_MPL_LIMIT_UNROLLING, BOOST_MPL_AUX_ITER_FOLD_EXECUTE, (prev, execute()))
+        BOOST_PP_REPEAT_1ST(BOOST_MPL_LIMIT_UNROLLING, BOOST_MPL_AUX_ITER_FOLD_EXECUTE, (prev, execute()))
     }
 
     template <class T>
     static void execute(T x)
     {
-        BOOST_PP_REPEAT(BOOST_MPL_LIMIT_UNROLLING, BOOST_MPL_AUX_ITER_FOLD_EXECUTE, (next, execute(x)))
+        BOOST_PP_REPEAT_1ST(BOOST_MPL_LIMIT_UNROLLING, BOOST_MPL_AUX_ITER_FOLD_EXECUTE, (next, execute(x)))
         BOOST_MPL_AUX_ITER_FOLD_LAST_PREV::execute(x);
-        BOOST_PP_REPEAT(BOOST_MPL_LIMIT_UNROLLING, BOOST_MPL_AUX_ITER_FOLD_EXECUTE, (prev, execute(x)))
+        BOOST_PP_REPEAT_1ST(BOOST_MPL_LIMIT_UNROLLING, BOOST_MPL_AUX_ITER_FOLD_EXECUTE, (prev, execute(x)))
     }
 };
 
