@@ -83,34 +83,26 @@ namespace boost {
     return std::find_if(first, last, p) == last;
   }
 
-  template <typename ForwardIterator>
-  bool is_sorted(ForwardIterator first, ForwardIterator last)
+  template<class ForwardIterator>
+  inline bool
+  is_sorted(ForwardIterator first, ForwardIterator last)
   {
-    if (first == last)
-      return true;
-
-    ForwardIterator next = first;
-    for (++next; next != last; first = next, ++next) {
-      if (*next < *first)
-	return false;
-    }
-
+    if (first != last)
+      for (ForwardIterator old = first; ++first != last; old = first)
+        if (*first < *old)
+          return false;
     return true;
   }
 
-  template <typename ForwardIterator, typename StrictWeakOrdering>
-  bool is_sorted(ForwardIterator first, ForwardIterator last,
-		 StrictWeakOrdering comp)
+  template<class ForwardIterator, class StrictWeakOrdering>
+  inline bool
+  is_sorted(ForwardIterator first, ForwardIterator last,
+            StrictWeakOrdering comp)
   {
-    if (first == last)
-      return true;
-
-    ForwardIterator next = first;
-    for (++next; next != last; first = next, ++next) {
-      if (comp(*next, *first))
-	return false;
-    }
-
+    if (first != last)
+      for (ForwardIterator old = first; ++first != last; old = first)
+        if (comp(*first, *old))
+          return false;
     return true;
   }
 
