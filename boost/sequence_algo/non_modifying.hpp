@@ -166,7 +166,23 @@ namespace boost {
     }
     return last;
   }
-  
+
+
+
+  template <typename Iterator1, typename Iterator2, typename BinaryPredicate>
+  Iterator1 search(Iterator1 first1, Iterator1 last1,
+		   Iterator2 first2, Iterator2 last2,
+		   BinaryPredicate  predicate) 
+  {
+    function_requires< ReadableIteratorConcept<Iterator1> >();
+    function_requires< ForwardTraversalConcept<Iterator1> >();
+    function_requires< ReadableIteratorConcept<Iterator2> >();
+    function_requires< ForwardTraversalConcept<Iterator2> >();
+    typedef typename std::iterator_traits<Iterator1>::value_type T1;
+    typedef typename std::iterator_traits<Iterator2>::value_type T2;
+    function_requires< BinaryPredicateConcept<BinaryPredicate, T1, T2> >();    
+    detail::search(first1, last1, first2, last2, predicate);
+  }  
   
 } // namespace boost
 
