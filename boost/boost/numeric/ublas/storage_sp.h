@@ -1,16 +1,16 @@
-//  
+//
 //  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
-//  
+//
 //  Permission to use, copy, modify, distribute and sell this software
 //  and its documentation for any purpose is hereby granted without fee,
 //  provided that the above copyright notice appear in all copies and
 //  that both that copyright notice and this permission notice appear
 //  in supporting documentation.  The authors make no representations
-//  about the suitability of this software for any purpose.  
+//  about the suitability of this software for any purpose.
 //  It is provided "as is" without express or implied warranty.
-//  
-//  The authors gratefully acknowledge the support of 
+//
+//  The authors gratefully acknowledge the support of
 //  GeNeSys mbH & Co. KG in producing this work.
 //
 
@@ -26,7 +26,7 @@
 #include "iterator.h"
 #include "storage.h"
 
-namespace numerics {
+namespace boost { namespace numerics {
 
     template<class P>
     struct less {
@@ -132,7 +132,7 @@ namespace numerics {
             std::swap (data_, a.data_);
             std::swap (size_, a.size_);
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (map_array &a1, map_array &a2) {
             a1.swap (a2);
@@ -289,7 +289,7 @@ namespace numerics {
 
         // Reverse iterators
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef std::reverse_iterator<const_iterator, value_type, const_reference> const_reverse_iterator;
 #else
         typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
@@ -304,7 +304,7 @@ namespace numerics {
             return const_reverse_iterator (begin ());
         }
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef std::reverse_iterator<iterator, value_type, reference> reverse_iterator;
 #else
         typedef std::reverse_iterator<iterator> reverse_iterator;
@@ -439,7 +439,7 @@ namespace numerics {
             std::swap (data_, a.data_);
             std::swap (size_, a.size_);
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (set_array &a1, set_array &a2) {
             a1.swap (a2);
@@ -593,7 +593,7 @@ namespace numerics {
 
         // Reverse iterators
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef std::reverse_iterator<const_iterator, value_type, const_reference> const_reverse_iterator;
 #else
         typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
@@ -608,7 +608,7 @@ namespace numerics {
             return const_reverse_iterator (begin ());
         }
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef std::reverse_iterator<iterator, value_type, reference> reverse_iterator;
 #else
         typedef std::reverse_iterator<iterator> reverse_iterator;
@@ -650,8 +650,8 @@ namespace numerics {
         a1.swap (a2);
     }
 
-}
+}}
 
-#endif 
+#endif
 
 

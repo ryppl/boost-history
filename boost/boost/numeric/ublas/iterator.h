@@ -21,27 +21,26 @@
 
 #include "config.h"
 
-#ifdef USE_GCC
-// FIXME: couldn't we use BOOST_NO_STD_ITERATOR and <boost/iterator.h> here?
-#if __GNUC__ <= 2 && __GNUC_MINOR__ <= 95
+// Using GCC the following is missing:
+//
+// namespace std {
+//
+//    template <class I, class T, class D = std::ptrdiff_t, class P = T *, class R = T &>
+//    struct iterator {
+//        typedef I iterator_category;
+//        typedef T value_type;
+//        typedef D difference_type;
+//        typedef P pointer;
+//        typedef R reference;
+//    };
+//
+// }
+//
+// We therefore include the following header
+#include <boost/iterator.hpp>
+// and use namespace boost instead of std.
 
-namespace std {
-
-    template <class I, class T, class D = std::ptrdiff_t, class P = T *, class R = T &>
-    struct iterator {
-        typedef I iterator_category;
-        typedef T value_type;
-        typedef D difference_type;
-        typedef P pointer;
-        typedef R reference;
-    };
-
-}
-
-#endif
-#endif
-
-namespace numerics {
+namespace boost { namespace numerics {
 
 #ifdef NUMERICS_NEED_CONVERSION
     template<class C>
@@ -101,15 +100,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         container_type &operator () () const {
-            return *c_; 
-        }
-        NUMERICS_INLINE
-        container_type &operator () () {
-            return *c_; 
+           return *c_;
         }
 
         NUMERICS_INLINE
-        container_reference &assign (container_type *c) { 
+        container_reference &assign (container_type *c) {
             c_ = c;
             return *this;
         }
@@ -123,8 +118,8 @@ namespace numerics {
     };
 
     template<class I, class T>
-    struct forward_iterator_base: 
-        public std::iterator<std::forward_iterator_tag, T> {
+    struct forward_iterator_base:
+        public boost::iterator<std::forward_iterator_tag, T> {
         typedef I derived_iterator_type;
         typedef T derived_value_type;
         typedef const T &derived_const_reference;
@@ -138,7 +133,7 @@ namespace numerics {
             ++ d;
             return tmp;
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend derived_iterator_type operator ++ (derived_iterator_type &d, int) {
             derived_iterator_type tmp (d);
@@ -157,7 +152,7 @@ namespace numerics {
 
     template<class I, class T>
     struct bidirectional_iterator_base: 
-        public std::iterator<std::bidirectional_iterator_tag, T> {
+        public boost::iterator<std::bidirectional_iterator_tag, T> {
         typedef I derived_iterator_type;
         typedef T derived_value_type;
         typedef const T &derived_const_reference;
@@ -171,7 +166,7 @@ namespace numerics {
             ++ d;
             return tmp;
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend derived_iterator_type operator ++ (derived_iterator_type &d, int) {
             derived_iterator_type tmp (d);
@@ -186,7 +181,7 @@ namespace numerics {
             -- d;
             return tmp;
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend derived_iterator_type operator -- (derived_iterator_type &d, int) {
             derived_iterator_type tmp (d);
@@ -205,13 +200,13 @@ namespace numerics {
 
     template<class I, class T, class D = std::ptrdiff_t>
     struct random_access_iterator_base:
-        public std::iterator<std::random_access_iterator_tag, T> {
+        public boost::iterator<std::random_access_iterator_tag, T> {
         typedef I derived_iterator_type;
         typedef T derived_value_type;
         typedef const T &derived_const_reference;
         typedef T &derived_reference;
         typedef D derived_difference_type;
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef D difference_type;
 #endif
 
@@ -223,7 +218,7 @@ namespace numerics {
             ++ d;
             return tmp;
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend derived_iterator_type operator ++ (derived_iterator_type &d, int) {
             derived_iterator_type tmp (d);
@@ -238,7 +233,7 @@ namespace numerics {
             -- d;
             return tmp;
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend derived_iterator_type operator -- (derived_iterator_type &d, int) {
             derived_iterator_type tmp (d);
@@ -251,7 +246,7 @@ namespace numerics {
             derived_iterator_type tmp (*static_cast<const derived_iterator_type *> (this));
             return tmp += n;
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend derived_iterator_type operator + (const derived_iterator_type &d, derived_difference_type n) {
             derived_iterator_type tmp (d);
@@ -263,7 +258,7 @@ namespace numerics {
             derived_iterator_type tmp (*static_cast<const derived_iterator_type *> (this));
             return tmp -= n;
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend derived_iterator_type operator - (const derived_iterator_type &d, derived_difference_type n) {
             derived_iterator_type tmp (d);
@@ -279,7 +274,7 @@ namespace numerics {
         }
     };
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
     template <class I, class T, class R>
     class reverse_iterator:
         public std::reverse_iterator<I, T, R> {
@@ -545,7 +540,7 @@ namespace numerics {
             return *this;
         }
 
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend reverse_iterator operator + (const reverse_iterator &it, difference_type n) {
             reverse_iterator tmp (it);
@@ -605,7 +600,7 @@ namespace numerics {
             return *this;
         }
 
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend reverse_iterator1 operator + (const reverse_iterator1 &it, difference_type n) {
             reverse_iterator1 tmp (it);
@@ -691,7 +686,7 @@ namespace numerics {
             return *this;
         }
 
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend reverse_iterator2 operator + (const reverse_iterator2 &it, difference_type n) {
             reverse_iterator2 tmp (it);
@@ -744,7 +739,7 @@ namespace numerics {
     };
 #endif
 
-#ifdef USE_GCC
+#ifndef NUMERICS_FRIEND_FUNCTION
 // The following operators are underspecified and conflict with std::complex operators
 // If we really need these, they have to be specialized.
 //     template<class I>
@@ -862,7 +857,7 @@ namespace numerics {
         size_type it_;
     };
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
     template<class C, class I>
     NUMERICS_INLINE
     indexed_iterator<C, I> operator ++ (const indexed_iterator<C, I> &it, int) {
@@ -985,7 +980,7 @@ namespace numerics {
         friend class indexed_iterator<container_type, iterator_category>;
     };
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
     template<class C, class I>
     NUMERICS_INLINE
     indexed_const_iterator<C, I> operator ++ (const indexed_const_iterator<C, I> &it, int) {
@@ -1032,7 +1027,7 @@ namespace numerics {
         typedef typename container_type::reference reference;
         typedef typename container_type::pointer pointer;
         typedef indexed_iterator2<container_type, iterator_category> dual_iterator_type;
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator2<dual_iterator_type, value_type, reference> dual_reverse_iterator_type;
 #else
         typedef reverse_iterator2<dual_iterator_type> dual_reverse_iterator_type;
@@ -1132,7 +1127,7 @@ namespace numerics {
         size_type it2_;
     };
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
     template<class C, class I>
     NUMERICS_INLINE
     indexed_iterator1<C, I> operator ++ (const indexed_iterator1<C, I> &it, int) {
@@ -1180,7 +1175,7 @@ namespace numerics {
         typedef typename container_type::const_pointer pointer;
         typedef indexed_iterator1<container_type, iterator_category> iterator_type;
         typedef indexed_const_iterator2<container_type, iterator_category> dual_iterator_type;
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator2<dual_iterator_type, value_type, value_type> dual_reverse_iterator_type;
 #else
         typedef reverse_iterator2<dual_iterator_type> dual_reverse_iterator_type;
@@ -1286,7 +1281,7 @@ namespace numerics {
         friend class indexed_iterator1<container_type, iterator_category>;
     };
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
     template<class C, class I>
     NUMERICS_INLINE
     indexed_const_iterator1<C, I> operator ++ (const indexed_const_iterator1<C, I> &it, int) {
@@ -1330,7 +1325,7 @@ namespace numerics {
         typedef typename container_type::reference reference;
         typedef typename container_type::pointer pointer;
         typedef indexed_iterator1<container_type, iterator_category> dual_iterator_type;
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator1<dual_iterator_type, value_type, reference> dual_reverse_iterator_type;
 #else
         typedef reverse_iterator1<dual_iterator_type> dual_reverse_iterator_type;
@@ -1430,7 +1425,7 @@ namespace numerics {
         size_type it2_;
     };
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
     template<class C, class I>
     NUMERICS_INLINE
     indexed_iterator2<C, I> operator ++ (const indexed_iterator2<C, I> &it, int) {
@@ -1475,7 +1470,7 @@ namespace numerics {
         typedef typename container_type::const_pointer pointer;
         typedef indexed_iterator2<container_type, iterator_category> iterator_type;
         typedef indexed_const_iterator1<container_type, iterator_category> dual_iterator_type;
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator1<dual_iterator_type, value_type, value_type> dual_reverse_iterator_type;
 #else
         typedef reverse_iterator1<dual_iterator_type> dual_reverse_iterator_type;
@@ -1581,7 +1576,7 @@ namespace numerics {
         friend class indexed_iterator2<container_type, iterator_category>;
     };
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
     template<class C, class I>
     NUMERICS_INLINE
     indexed_const_iterator2<C, I> operator ++ (const indexed_const_iterator2<C, I> &it, int) {
@@ -1610,7 +1605,7 @@ namespace numerics {
     }
 #endif
 
-}
+}}
 
 #endif
 

@@ -7,10 +7,10 @@
 //  provided that the above copyright notice appear in all copies and
 //  that both that copyright notice and this permission notice appear
 //  in supporting documentation.  The authors make no representations
-//  about the suitability of this software for any purpose.  
+//  about the suitability of this software for any purpose.
 //  It is provided "as is" without express or implied warranty.
-//  
-//  The authors gratefully acknowledge the support of 
+//
+//  The authors gratefully acknowledge the support of
 //  GeNeSys mbH & Co. KG in producing this work.
 //
 
@@ -21,10 +21,10 @@
 #include "exception.h"
 #include "functional.h"
 
-// Expression templates based on ideas of Todd Veldhuizen and Geoffrey Furnish 
+// Expression templates based on ideas of Todd Veldhuizen and Geoffrey Furnish
 // Iterators based on ideas of Jeremy Siek
 
-namespace numerics {
+namespace boost { namespace numerics {
 
     // Base class for the Barton Nackman trick
     template<class E>
@@ -146,13 +146,13 @@ namespace numerics {
         // Reverse iterators
 
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator1, matrix_row<matrix_const_reference<E> >, matrix_row<matrix_const_reference<E> > > const_reverse_iterator1;
 #else
         typedef reverse_iterator<const_iterator1> const_reverse_iterator1;
 #endif
 #else
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
 #else
         typedef reverse_iterator1<const_iterator1> const_reverse_iterator1;
@@ -169,13 +169,13 @@ namespace numerics {
         }
 
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator2, matrix_column<matrix_const_reference<E> >, matrix_column<matrix_const_reference<E> > > const_reverse_iterator2;
 #else
         typedef reverse_iterator<const_iterator2> const_reverse_iterator2;
 #endif
 #else
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
 #else
         typedef reverse_iterator2<const_iterator2> const_reverse_iterator2;
@@ -351,13 +351,13 @@ namespace numerics {
         // Reverse iterators
 
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator1, matrix_row<matrix_reference<E> >, matrix_row<matrix_reference<E> > > const_reverse_iterator1;
 #else
         typedef reverse_iterator<const_iterator1> const_reverse_iterator1;
 #endif
 #else
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
 #else
         typedef reverse_iterator1<const_iterator1> const_reverse_iterator1;
@@ -374,13 +374,13 @@ namespace numerics {
         }
 
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<iterator1, matrix_row<matrix_reference<E> >, matrix_row<matrix_reference<E> > > reverse_iterator1;
 #else
         typedef reverse_iterator<iterator1> reverse_iterator1;
 #endif
 #else
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
 #else
         typedef reverse_iterator1<iterator1> reverse_iterator1;
@@ -397,13 +397,13 @@ namespace numerics {
         }
 
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator2, matrix_column<matrix_reference<E> >, matrix_column<matrix_reference<E> > > const_reverse_iterator2;
 #else
         typedef reverse_iterator<const_iterator2> const_reverse_iterator2;
 #endif
 #else
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
 #else
         typedef reverse_iterator2<const_iterator2> const_reverse_iterator2;
@@ -420,13 +420,13 @@ namespace numerics {
         }
 
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<iterator2, matrix_column<matrix_reference<E> >, matrix_column<matrix_reference<E> > > reverse_iterator2;
 #else
         typedef reverse_iterator<iterator2> reverse_iterator2;
 #endif
 #else
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator2<iterator2, value_type, reference> reverse_iterator2;
 #else
         typedef reverse_iterator2<iterator2> reverse_iterator2;
@@ -513,7 +513,7 @@ namespace numerics {
         typedef const_iterator1 iterator1;
         typedef matrix_column_const_iterator<vector_matrix_binary<E1, E2, F>, iterator_category> const_iterator2;
         typedef const_iterator2 iterator2;
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator1, matrix_row<vector_matrix_binary<E1, E2, F> >, matrix_row<vector_matrix_binary<E1, E2, F> > >const_reverse_iterator1;
         typedef reverse_iterator<const_iterator2, matrix_column<vector_matrix_binary<E1, E2, F> >, matrix_column<vector_matrix_binary<E1, E2, F> > > const_reverse_iterator2;
 #else
@@ -534,7 +534,7 @@ namespace numerics {
         class const_iterator2;
         typedef const_iterator2 iterator2;
 #endif
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
 #else
@@ -627,7 +627,7 @@ namespace numerics {
         public:
             typedef typename restrict_traits<typename E1::const_iterator::iterator_category, 
                                              typename E2::const_iterator::iterator_category>::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename vector_matrix_binary::difference_type difference_type;
             typedef typename vector_matrix_binary::value_type value_type;
             typedef typename vector_matrix_binary::value_type reference;
@@ -764,7 +764,7 @@ namespace numerics {
         public:
             typedef typename restrict_traits<typename E1::const_iterator::iterator_category, 
                                              typename E2::const_iterator::iterator_category>::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename vector_matrix_binary::difference_type difference_type;
             typedef typename vector_matrix_binary::value_type value_type;
             typedef typename vector_matrix_binary::value_type reference;
@@ -1006,7 +1006,7 @@ namespace numerics {
         typedef const_iterator1 iterator1;
         typedef matrix_column_const_iterator<matrix_unary1<E, F>, typename const_iterator2_type::iterator_category> const_iterator2;
         typedef const_iterator2 iterator2;
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator1, matrix_row<matrix_unary1<E, F> >, matrix_row<matrix_unary1<E, F> > > const_reverse_iterator1;
         typedef reverse_iterator<const_iterator2, matrix_column<matrix_unary1<E, F> >, matrix_column<matrix_unary1<E, F> > > const_reverse_iterator2;
 #else
@@ -1025,7 +1025,7 @@ namespace numerics {
         class const_iterator2;
         typedef const_iterator2 iterator2;
 #endif
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
 #else
@@ -1097,7 +1097,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator1, value_type> {
         public:
             typedef typename E::const_iterator1::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename matrix_unary1::difference_type difference_type;
             typedef typename matrix_unary1::value_type value_type;
             typedef typename matrix_unary1::value_type reference;
@@ -1208,7 +1208,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator2, value_type> {
         public:
             typedef typename E::const_iterator2::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename matrix_unary1::difference_type difference_type;
             typedef typename matrix_unary1::value_type value_type;
             typedef typename matrix_unary1::value_type reference;
@@ -1448,7 +1448,7 @@ namespace numerics {
         typedef const_iterator1 iterator1;
         typedef matrix_column_const_iterator<matrix_unary2<E, F>, typename const_iterator2_type::iterator_category> const_iterator2;
         typedef const_iterator2 iterator2;
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator1, matrix_row<matrix_unary2<E, F> >, matrix_row<matrix_unary2<E, F> > > const_reverse_iterator1;
         typedef reverse_iterator<const_iterator2, matrix_column<matrix_unary2<E, F> >, matrix_column<matrix_unary2<E, F> > > const_reverse_iterator2;
 #else
@@ -1467,7 +1467,7 @@ namespace numerics {
         class const_iterator2;
         typedef const_iterator2 iterator2;
 #endif
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
 #else
@@ -1547,7 +1547,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator1, value_type> {
         public:
             typedef typename E::const_iterator2::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename matrix_unary2::difference_type difference_type;
             typedef typename matrix_unary2::value_type value_type;
             typedef typename matrix_unary2::value_type reference;
@@ -1658,7 +1658,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator2, value_type> {
         public:
             typedef typename E::const_iterator1::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename matrix_unary2::difference_type difference_type;
             typedef typename matrix_unary2::value_type value_type;
             typedef typename matrix_unary2::value_type reference;
@@ -1887,7 +1887,7 @@ namespace numerics {
                                          typename const_iterator22_type::iterator_category>::iterator_category iterator_category2;
         typedef matrix_column_const_iterator<matrix_binary<E1, E2, F>, iterator_category2> const_iterator2;
         typedef const_iterator2 iterator2;
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator1, matrix_binary<E1, E2, F>, matrix_binary<E1, E2, F> > const_reverse_iterator1;
         typedef reverse_iterator<const_iterator2, matrix_binary<E1, E2, F>, matrix_binary<E1, E2, F> > const_reverse_iterator2;
 #else
@@ -1910,7 +1910,7 @@ namespace numerics {
         class const_iterator2;
         typedef const_iterator2 iterator2;
 #endif
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
 #else
@@ -1991,7 +1991,7 @@ namespace numerics {
         public:
             typedef typename restrict_traits<typename E1::const_iterator1::iterator_category, 
                                              typename E2::const_iterator1::iterator_category>::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename matrix_binary::difference_type difference_type;
             typedef typename matrix_binary::value_type value_type;
             typedef typename matrix_binary::value_type reference;
@@ -2041,7 +2041,7 @@ namespace numerics {
             }
             NUMERICS_INLINE
             value_type dereference (packed_random_access_iterator_tag) const {
-#ifndef USE_MSVC
+#ifndef NUMERICS_CONDITIONAL_DEFECT
                 value_type t1 = i_ - it1_.index1 () ? value_type () : *it1_;
                 value_type t2 = i_ - it2_.index1 () ? value_type () : *it2_;
 #else
@@ -2071,7 +2071,7 @@ namespace numerics {
             }
             NUMERICS_INLINE
             value_type dereference (sparse_bidirectional_iterator_tag) const {
-#ifndef USE_MSVC
+#ifndef NUMERICS_CONDITIONAL_DEFECT
                 value_type t1 = i_ - it1_.index1 () ? value_type () : *it1_;
                 value_type t2 = i_ - it2_.index1 () ? value_type () : *it2_;
 #else
@@ -2180,7 +2180,7 @@ namespace numerics {
         public:
             typedef typename restrict_traits<typename E1::const_iterator2::iterator_category, 
                                              typename E2::const_iterator2::iterator_category>::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename matrix_binary::difference_type difference_type;
             typedef typename matrix_binary::value_type value_type;
             typedef typename matrix_binary::value_type reference;
@@ -2230,7 +2230,7 @@ namespace numerics {
             }
             NUMERICS_INLINE
             value_type dereference (packed_random_access_iterator_tag) const {
-#ifndef USE_MSVC
+#ifndef NUMERICS_CONDITIONAL_DEFECT
                 value_type t1 = j_ - it1_.index2 () ? value_type () : *it1_;
                 value_type t2 = j_ - it2_.index2 () ? value_type () : *it2_;
 #else
@@ -2260,7 +2260,7 @@ namespace numerics {
             }
             NUMERICS_INLINE
             value_type dereference (sparse_bidirectional_iterator_tag) const {
-#ifndef USE_MSVC
+#ifndef NUMERICS_CONDITIONAL_DEFECT
                 value_type t1 = j_ - it1_.index2 () ? value_type () : *it1_;
                 value_type t2 = j_ - it2_.index2 () ? value_type () : *it2_;
 #else
@@ -2492,7 +2492,7 @@ expression_type;
         typedef const_iterator1 iterator1;
         typedef matrix_column_const_iterator<matrix_binary_scalar1<E1, E2, F>, typename const_iterator22_type::iterator_category> const_iterator2;
         typedef const_iterator2 iterator2;
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator1, matrix_binary_scalar1<E1, E2, F>, matrix_binary_scalar1<E1, E2, F> > const_reverse_iterator1;
         typedef reverse_iterator<const_iterator2, matrix_binary_scalar1<E1, E2, F>, matrix_binary_scalar1<E1, E2, F> > const_reverse_iterator2;
 #else
@@ -2511,7 +2511,7 @@ expression_type;
         class const_iterator2;
         typedef const_iterator2 iterator2;
 #endif
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
 #else
@@ -2583,7 +2583,7 @@ expression_type;
             public random_access_iterator_base<const_iterator1, value_type> {
         public:
             typedef typename E2::const_iterator1::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename matrix_binary_scalar1::difference_type difference_type;
             typedef typename matrix_binary_scalar1::value_type value_type;
             typedef typename matrix_binary_scalar1::value_type reference;
@@ -2698,7 +2698,7 @@ expression_type;
             public random_access_iterator_base<const_iterator2, value_type> {
         public:
             typedef typename E2::const_iterator2::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename matrix_binary_scalar1::difference_type difference_type;
             typedef typename matrix_binary_scalar1::value_type value_type;
             typedef typename matrix_binary_scalar1::value_type reference;
@@ -2921,7 +2921,7 @@ expression_type;
         typedef const_iterator1 iterator1;
         typedef matrix_column_const_iterator<matrix_binary_scalar2<E1, E2, F>, typename const_iterator22_type::iterator_category> const_iterator2;
         typedef const_iterator2 iterator2;
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator1, matrix_binary_scalar2<E1, E2, F>, matrix_binary_scalar2<E1, E2, F> > const_reverse_iterator1;
         typedef reverse_iterator<const_iterator2, matrix_binary_scalar2<E1, E2, F>, matrix_binary_scalar2<E1, E2, F> > const_reverse_iterator2;
 #else
@@ -2940,7 +2940,7 @@ expression_type;
         class const_iterator2;
         typedef const_iterator2 iterator2;
 #endif
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
 #else
@@ -3012,7 +3012,7 @@ expression_type;
             public random_access_iterator_base<const_iterator1, value_type> {
         public:
             typedef typename E1::const_iterator1::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename matrix_binary_scalar2::difference_type difference_type;
             typedef typename matrix_binary_scalar2::value_type value_type;
             typedef typename matrix_binary_scalar2::value_type reference;
@@ -3127,7 +3127,7 @@ expression_type;
             public random_access_iterator_base<const_iterator2, value_type> {
         public:
             typedef typename E1::const_iterator2::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename matrix_binary_scalar2::difference_type difference_type;
             typedef typename matrix_binary_scalar2::value_type value_type;
             typedef typename matrix_binary_scalar2::value_type reference;
@@ -3396,7 +3396,7 @@ expression_type;
         public:
             typedef typename restrict_traits<typename E1::const_iterator1::iterator_category, 
                                              typename E2::const_iterator::iterator_category>::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename matrix_vector_binary1::difference_type difference_type;
             typedef typename matrix_vector_binary1::value_type value_type;
             typedef typename matrix_vector_binary1::value_type reference;
@@ -3568,7 +3568,7 @@ sparse_bidirectional_iterator_tag ());
 
         // Reverse iterator
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
 #else
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
@@ -3755,7 +3755,7 @@ sparse_bidirectional_iterator_tag ());
         public:
             typedef typename restrict_traits<typename E1::const_iterator::iterator_category, 
                                              typename E2::const_iterator2::iterator_category>::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename matrix_vector_binary2::difference_type difference_type;
             typedef typename matrix_vector_binary2::value_type value_type;
             typedef typename matrix_vector_binary2::value_type reference;
@@ -3927,7 +3927,7 @@ sparse_bidirectional_iterator_tag ());
 
         // Reverse iterator
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
 #else
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
@@ -4089,7 +4089,7 @@ sparse_bidirectional_iterator_tag ());
         typedef const_iterator1 iterator1;
         typedef matrix_column_const_iterator<matrix_matrix_binary<E1, E2, F>, iterator_category> const_iterator2;
         typedef const_iterator2 iterator2;
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator1, matrix_matrix_binary<E1, E2, F>, matrix_matrix_binary<E1, E2, F> > const_reverse_iterator1;
         typedef reverse_iterator<const_iterator2, matrix_matrix_binary<E1, E2, F>, matrix_matrix_binary<E1, E2, F> > const_reverse_iterator2;
 #else
@@ -4110,7 +4110,7 @@ sparse_bidirectional_iterator_tag ());
         class const_iterator2;
         typedef const_iterator2 iterator2;
 #endif
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
 #else
@@ -4202,7 +4202,7 @@ sparse_bidirectional_iterator_tag ());
         public:
             typedef typename restrict_traits<typename E1::const_iterator1::iterator_category,
                                              typename E2::const_iterator2::iterator_category>::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename matrix_matrix_binary::difference_type difference_type;
             typedef typename matrix_matrix_binary::value_type value_type;
             typedef typename matrix_matrix_binary::value_type reference;
@@ -4370,7 +4370,7 @@ sparse_bidirectional_iterator_tag ());
         public:
             typedef typename restrict_traits<typename E1::const_iterator1::iterator_category, 
                                              typename E2::const_iterator2::iterator_category>::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename matrix_matrix_binary::difference_type difference_type;
             typedef typename matrix_matrix_binary::value_type value_type;
             typedef typename matrix_matrix_binary::value_type reference;
@@ -4688,7 +4688,7 @@ sparse_bidirectional_iterator_tag ());
         return expression_type (e ());
     }
 
-}
+}}
 
 #endif
 

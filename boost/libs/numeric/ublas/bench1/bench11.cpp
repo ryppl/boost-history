@@ -1,4 +1,4 @@
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC
 
 #pragma warning (disable: 4355)
 #pragma warning (disable: 4503)
@@ -9,19 +9,11 @@
 #include <iostream>
 #include <string>
 
-#ifdef NUMERICS_PRIVATE
-#include "../config.h"
-#include "../vector.h"
-#include "../matrix.h"
-
-#include "../timer.h"
-#else
 #include <boost/numeric/ublas/config.h>
 #include <boost/numeric/ublas/vector.h>
 #include <boost/numeric/ublas/matrix.h>
 
-#include <boost/numeric/ublas/timer.h>
-#endif
+#include <boost/timer.hpp>
 
 #include "bench1.h"
 
@@ -34,7 +26,7 @@ struct bench_c_inner_prod {
             static typename c_vector_traits<T, N>::type v1, v2;
             initialize_c_vector<T, N> () (v1);
             initialize_c_vector<T, N> () (v2);
-            numerics::timer t;
+            boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 static value_type s (0);
                 for (int j = 0; j < N; ++ j) {
@@ -61,7 +53,7 @@ struct bench_my_inner_prod {
             static V v1 (N), v2 (N);
             initialize_vector (v1);
             initialize_vector (v2);
-            numerics::timer t;
+            boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 static value_type s (0);
                 s = numerics::inner_prod (v1, v2);
@@ -86,7 +78,7 @@ struct bench_cpp_inner_prod {
             static V v1 (N), v2 (N);
             initialize_vector (v1);
             initialize_vector (v2);
-            numerics::timer t;
+            boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 static value_type s (0);
                 s = (v1 * v2).sum ();
@@ -112,7 +104,7 @@ struct bench_c_vector_add {
             static typename c_vector_traits<T, N>::type v1, v2, v3;
             initialize_c_vector<T, N> () (v1);
             initialize_c_vector<T, N> () (v2);
-            numerics::timer t;
+            boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 for (int j = 0; j < N; ++ j) {
                     v3 [j] = - (v1 [j] + v2 [j]);
@@ -138,7 +130,7 @@ struct bench_my_vector_add {
             static V v1 (N), v2 (N), v3 (N);
             initialize_vector (v1);
             initialize_vector (v2);
-            numerics::timer t;
+            boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 v3 = - (v1 + v2);
 //                sink_vector (v3);
@@ -157,7 +149,7 @@ struct bench_my_vector_add {
             static V v1 (N), v2 (N), v3 (N);
             initialize_vector (v1);
             initialize_vector (v2);
-            numerics::timer t;
+            boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 v3.assign (- (v1 + v2));
 //                sink_vector (v3);
@@ -181,7 +173,7 @@ struct bench_cpp_vector_add {
             static V v1 (N), v2 (N), v3 (N);
             initialize_vector (v1);
             initialize_vector (v2);
-            numerics::timer t;
+            boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 v3 = - (v1 + v2);
 //                sink_vector (v3);

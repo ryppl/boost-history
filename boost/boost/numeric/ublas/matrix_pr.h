@@ -1,16 +1,16 @@
 //
 //  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
-//  
+//
 //  Permission to use, copy, modify, distribute and sell this software
 //  and its documentation for any purpose is hereby granted without fee,
 //  provided that the above copyright notice appear in all copies and
 //  that both that copyright notice and this permission notice appear
 //  in supporting documentation.  The authors make no representations
-//  about the suitability of this software for any purpose.  
+//  about the suitability of this software for any purpose.
 //  It is provided "as is" without express or implied warranty.
-//  
-//  The authors gratefully acknowledge the support of 
+//
+//  The authors gratefully acknowledge the support of
 //  GeNeSys mbH & Co. KG in producing this work.
 //
 
@@ -23,13 +23,13 @@
 
 // Iterators based on ideas of Jeremy Siek
 
-namespace numerics {
+namespace boost { namespace numerics {
 
     // Matrix based row vector class
     template<class M>
     class matrix_row:
         public vector_expression<matrix_row<M> > {
-    public:      
+    public:
         typedef const M const_matrix_type;
         typedef M matrix_type;
         typedef typename M::size_type size_type;
@@ -110,7 +110,7 @@ namespace numerics {
             return *this;
         }
         NUMERICS_INLINE
-        matrix_row &assign_temporary (matrix_row &mr) { 
+        matrix_row &assign_temporary (matrix_row &mr) {
             return *this = mr;
         }
         template<class AE>
@@ -169,7 +169,7 @@ namespace numerics {
             check (size () == mr.size (), bad_size ());
             std::swap_ranges (begin (), end (), mr.begin ());
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (matrix_row &mr1, matrix_row &mr2) {
             mr1.swap (mr2);
@@ -248,7 +248,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator, value_type> {
         public:
             typedef typename M::const_iterator2::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename M::const_iterator2::difference_type difference_type;
             typedef typename M::const_iterator2::value_type value_type;
             typedef typename M::const_iterator2::value_type reference;
@@ -262,7 +262,7 @@ namespace numerics {
             NUMERICS_INLINE
             const_iterator (const matrix_row &mr, const const_iterator_type &it):
                 container_const_reference<matrix_row> (mr), it_ (it) {}
-#ifndef USE_ICC
+#ifndef NUMERICS_QUALIFIED_TYPENAME
             NUMERICS_INLINE
             const_iterator (const iterator &it):
                 container_const_reference<matrix_row> (it ()), it_ (it.it_) {}
@@ -346,7 +346,7 @@ namespace numerics {
             public random_access_iterator_base<iterator, value_type> {
         public:
             typedef typename M::iterator2::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename M::iterator2::difference_type difference_type;
             typedef typename M::iterator2::value_type value_type;
             typedef typename M::iterator2::reference reference;
@@ -433,7 +433,7 @@ namespace numerics {
 
         // Reverse iterator
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
 #else
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
@@ -448,7 +448,7 @@ namespace numerics {
             return const_reverse_iterator (begin ());
         }
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<iterator, value_type, reference> reverse_iterator;
 #else
         typedef reverse_iterator<iterator> reverse_iterator;
@@ -478,7 +478,7 @@ namespace numerics {
     matrix_row<M> row (M &data, std::size_t i) {
         return matrix_row<M> (data, i);
     }
-#ifndef USE_MSVC
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
     template<class M>
     NUMERICS_INLINE
     matrix_row<const M> row (const M &data, std::size_t i) {
@@ -489,7 +489,7 @@ namespace numerics {
     // Matrix row iterator
     template<class M, class I>
     class matrix_row_iterator:
-        public container_reference<M>, 
+        public container_reference<M>,
         public random_access_iterator_base<matrix_row_iterator<M, I>, 
                                            matrix_row<M>,
                                            typename M::difference_type> {
@@ -568,7 +568,7 @@ namespace numerics {
         size_type it_;
     };
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
     template<class M, class I>
     NUMERICS_INLINE
     matrix_row_iterator<M, I> operator ++ (const matrix_row_iterator<M, I> &it, int) {
@@ -686,7 +686,7 @@ namespace numerics {
         friend class matrix_row_iterator<matrix_type, iterator_category>;
     };
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
     template<class M, class I>
     NUMERICS_INLINE
     matrix_row_const_iterator<M, I> operator ++ (const matrix_row_const_iterator<M, I> &it, int) {
@@ -859,7 +859,7 @@ namespace numerics {
             check (size () == mc.size (), bad_size ());
             std::swap_ranges (begin (), end (), mc.begin ());
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (matrix_column &mc1, matrix_column &mc2) {
             mc1.swap (mc2);
@@ -938,7 +938,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator, value_type> {
         public:
             typedef typename M::const_iterator1::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename M::const_iterator1::difference_type difference_type;
             typedef typename M::const_iterator1::value_type value_type;
             typedef typename M::const_iterator1::value_type reference;
@@ -952,7 +952,7 @@ namespace numerics {
             NUMERICS_INLINE
             const_iterator (const matrix_column &mc, const const_iterator_type &it):
                 container_const_reference<matrix_column> (mc), it_ (it) {}
-#ifndef USE_ICC
+#ifndef NUMERICS_QUALIFIED_TYPENAME
             NUMERICS_INLINE
             const_iterator (const iterator &it):
                 container_const_reference<matrix_column> (it ()), it_ (it.it_) {}
@@ -1036,7 +1036,7 @@ namespace numerics {
             public random_access_iterator_base<iterator, value_type> {
         public:
             typedef typename M::iterator1::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename M::iterator1::difference_type difference_type;
             typedef typename M::iterator1::value_type value_type;
             typedef typename M::iterator1::reference reference;
@@ -1123,7 +1123,7 @@ namespace numerics {
 
         // Reverse iterator
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
 #else
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
@@ -1138,7 +1138,7 @@ namespace numerics {
             return const_reverse_iterator (begin ());
         }
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<iterator, value_type, reference> reverse_iterator;
 #else
         typedef reverse_iterator<iterator> reverse_iterator;
@@ -1168,7 +1168,7 @@ namespace numerics {
     matrix_column<M> column (M &data, std::size_t j) {
         return matrix_column<M> (data, j);
     }
-#ifndef USE_MSVC
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
     template<class M>
     NUMERICS_INLINE
     matrix_column<const M> column (const M &data, std::size_t j) {
@@ -1258,7 +1258,7 @@ namespace numerics {
         size_type it_;
     };
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
     template<class M, class I>
     NUMERICS_INLINE
     matrix_column_iterator<M, I> operator ++ (const matrix_column_iterator<M, I> &it, int) {
@@ -1376,7 +1376,7 @@ namespace numerics {
         friend class matrix_column_iterator<matrix_type, iterator_category>;
     };
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
     template<class M, class I>
     NUMERICS_INLINE
     matrix_column_const_iterator<M, I> operator ++ (const matrix_column_const_iterator<M, I> &it, int) {
@@ -1553,7 +1553,7 @@ namespace numerics {
             check (size () == mvr.size (), bad_size ());
             std::swap_ranges (begin (), end (), mvr.begin ());
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (matrix_vector_range &mvr1, matrix_vector_range &mvr2) {
             mvr1.swap (mvr2);
@@ -1589,7 +1589,7 @@ namespace numerics {
         public:
             typedef typename restrict_traits<typename M::const_iterator1::iterator_category,
                                              typename M::const_iterator2::iterator_category>::iterator_category iterator_category; 
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename matrix_type::difference_type difference_type;
             typedef typename matrix_type::value_type value_type;
             typedef typename matrix_type::value_type reference;
@@ -1603,7 +1603,7 @@ namespace numerics {
             NUMERICS_INLINE
             const_iterator (const matrix_type &m, const const_iterator1_type &it1, const const_iterator2_type &it2):
                 container_const_reference<matrix_type> (m), it1_ (it1), it2_ (it2) {}
-#ifndef USE_ICC
+#ifndef NUMERICS_QUALIFIED_TYPENAME
             NUMERICS_INLINE
             const_iterator (const iterator &it):
                 container_const_reference<matrix_type> (it ()), it1_ (it.it1_), it2_ (it.it2_) {}
@@ -1691,7 +1691,7 @@ namespace numerics {
         public:
             typedef typename restrict_traits<typename M::iterator1::iterator_category,
                                              typename M::iterator2::iterator_category>::iterator_category iterator_category; 
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename matrix_type::difference_type difference_type;
             typedef typename matrix_type::value_type value_type;
             typedef typename matrix_type::reference reference;
@@ -1782,7 +1782,7 @@ namespace numerics {
 
         // Reverse iterator
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
 #else
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
@@ -1797,7 +1797,7 @@ namespace numerics {
             return const_reverse_iterator (begin ());
         }
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<iterator, value_type, reference> reverse_iterator;
 #else
         typedef reverse_iterator<iterator> reverse_iterator;
@@ -1970,7 +1970,7 @@ namespace numerics {
             check (size () == mvs.size (), bad_size ());
             std::swap_ranges (begin (), end (), mvs.begin ());
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (matrix_vector_slice &mvs1, matrix_vector_slice &mvs2) {
             mvs1.swap (mvs2);
@@ -2006,7 +2006,7 @@ namespace numerics {
         public:
             typedef typename restrict_traits<typename M::const_iterator1::iterator_category,
                                              typename M::const_iterator2::iterator_category>::iterator_category iterator_category; 
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename matrix_type::difference_type difference_type;
             typedef typename matrix_type::value_type value_type;
             typedef typename matrix_type::value_type reference;
@@ -2020,7 +2020,7 @@ namespace numerics {
             NUMERICS_INLINE
             const_iterator (const matrix_type &m, const const_iterator1_type &it1, const const_iterator2_type &it2):
                 container_const_reference<matrix_type> (m), it1_ (it1), it2_ (it2) {}
-#ifndef USE_ICC
+#ifndef NUMERICS_QUALIFIED_TYPENAME
             NUMERICS_INLINE
             const_iterator (const iterator &it):
                 container_const_reference<matrix_type> (it ()), it1_ (it.it1_), it2_ (it.it2_) {}
@@ -2108,7 +2108,7 @@ namespace numerics {
         public:
             typedef typename restrict_traits<typename M::iterator1::iterator_category,
                                              typename M::iterator2::iterator_category>::iterator_category iterator_category; 
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename matrix_type::difference_type difference_type;
             typedef typename matrix_type::value_type value_type;
             typedef typename matrix_type::reference reference;
@@ -2199,7 +2199,7 @@ namespace numerics {
 
         // Reverse iterator
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
 #else
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
@@ -2214,7 +2214,7 @@ namespace numerics {
             return const_reverse_iterator (begin ());
         }
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<iterator, value_type, reference> reverse_iterator;
 #else
         typedef reverse_iterator<iterator> reverse_iterator;
@@ -2341,16 +2341,14 @@ namespace numerics {
             return matrix_row_type (*this, i);
         }
 #endif
-#ifdef NUMERICS_HAS_PARTIAL_TEMPLATE_SPECIALIZATION
         NUMERICS_INLINE
-        matrix_range<matrix_type> project (const range &r1, const range &r2) const {
-            return matrix_range<matrix_type>  (data (), r1_.composite (r1), r2_.composite (r2));
+        matrix_range<const_matrix_type> project (const range &r1, const range &r2) const {
+            return matrix_range<const_matrix_type>  (data (), r1_.composite (r1), r2_.composite (r2));
         }
         NUMERICS_INLINE
-        matrix_range<matrix_type>  project (const range &r1, const range &r2) {
+        matrix_range<matrix_type> project (const range &r1, const range &r2) {
             return matrix_range<matrix_type>  (data (), r1_.composite (r1), r2_.composite (r2));
         }
-#endif
 
         // Assignment
         NUMERICS_INLINE
@@ -2419,7 +2417,7 @@ namespace numerics {
             check (size2 () == mr.size2 (), bad_size ());
             matrix_swap<scalar_swap<value_type, value_type> > () (*this, mr); 
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (matrix_range &mr1, matrix_range &mr2) {
             mr1.swap (mr2);
@@ -2435,7 +2433,7 @@ namespace numerics {
                                           matrix_type::const_iterator1::iterator_category> const_iterator1;
         typedef matrix_column_const_iterator<matrix_range<matrix_type>, 
                                              matrix_type::const_iterator2::iterator_category> const_iterator2;
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator1, typename matrix_row<matrix_range<matrix_type> >, typename matrix_row<matrix_range<const_matrix_type> > > const_reverse_iterator1;
         typedef reverse_iterator<iterator1, typename matrix_row<matrix_range<matrix_type> >, typename matrix_row<matrix_range<matrix_type> > > reverse_iterator1;
         typedef reverse_iterator<const_iterator2, typename matrix_column<matrix_range<matrix_type> >, typename matrix_column<matrix_range<const_matrix_type> > > const_reverse_iterator2;
@@ -2462,7 +2460,7 @@ namespace numerics {
         class const_iterator2;
         class iterator2;
 #endif
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
         typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
@@ -2589,7 +2587,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator1, value_type> {
         public:
             typedef typename M::const_iterator1::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename M::const_iterator1::difference_type difference_type;
             typedef typename M::const_iterator1::value_type value_type;
             typedef typename M::const_iterator1::value_type reference;
@@ -2705,7 +2703,7 @@ namespace numerics {
             public random_access_iterator_base<iterator1, value_type> {
         public:
             typedef typename M::iterator1::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename M::iterator1::difference_type difference_type;
             typedef typename M::iterator1::value_type value_type;
             typedef typename M::iterator1::reference reference;
@@ -2820,7 +2818,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator2, value_type> {
         public:
             typedef typename M::const_iterator2::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename M::const_iterator2::difference_type difference_type;
             typedef typename M::const_iterator2::value_type value_type;
             typedef typename M::const_iterator2::value_type reference;
@@ -2936,7 +2934,7 @@ namespace numerics {
             public random_access_iterator_base<iterator2, value_type> {
         public:
             typedef typename M::iterator2::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename M::iterator2::difference_type difference_type;
             typedef typename M::iterator2::value_type value_type;
             typedef typename M::iterator2::reference reference;
@@ -3106,18 +3104,20 @@ namespace numerics {
     matrix_range<M> project (M &data, const range &r1, const range &r2) {
         return matrix_range<M> (data, r1, r2);
     }
-#ifndef USE_MSVC
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
     template<class M>
     NUMERICS_INLINE
     matrix_range<const M> project (const M &data, const range &r1, const range &r2) {
         return matrix_range<const M> (data, r1, r2);
     }
-#endif
-#ifdef NUMERICS_HAS_PARTIAL_TEMPLATE_SPECIALIZATION
     template<class M>
     NUMERICS_INLINE
-    matrix_range<M> project (const matrix_range<M> &data, const range &r1, const range &r2) {
-        NUMERICS_TRACE ("project (matrix_range<M>, range, range)");
+    matrix_range<M> project (matrix_range<M> &data, const range &r1, const range &r2) {
+        return data.project (r1, r2);
+    }
+    template<class M>
+    NUMERICS_INLINE
+    matrix_range<const M> project (const matrix_range<const M> &data, const range &r1, const range &r2) {
         return data.project (r1, r2);
     }
 #endif
@@ -3216,24 +3216,22 @@ namespace numerics {
             return matrix_row_type (*this, i);
         }
 #endif
-#ifdef NUMERICS_HAS_PARTIAL_TEMPLATE_SPECIALIZATION
         NUMERICS_INLINE
-        matrix_slice<matrix_type> project (const range &r1, const range &r2) const {
-            return matrix_slice<matrix_type>  (data (), s1_.composite (r1), s2_.composite (r2));
+        matrix_slice<const_matrix_type> project (const range &r1, const range &r2) const {
+            return matrix_slice<const_matrix_type>  (data (), s1_.composite (r1), s2_.composite (r2));
         }
         NUMERICS_INLINE
         matrix_slice<matrix_type> project (const range &r1, const range &r2) {
             return matrix_slice<matrix_type>  (data (), s1_.composite (r1), s2_.composite (r2));
         }
         NUMERICS_INLINE
-        matrix_slice<matrix_type> project (const slice &s1, const slice &s2) const {
-            return matrix_slice<matrix_type>  (data (), s1_.composite (s1), s2_.composite (s2));
+        matrix_slice<const_matrix_type> project (const slice &s1, const slice &s2) const {
+            return matrix_slice<const_matrix_type>  (data (), s1_.composite (s1), s2_.composite (s2));
         }
         NUMERICS_INLINE
         matrix_slice<matrix_type> project (const slice &s1, const slice &s2) {
             return matrix_slice<matrix_type>  (data (), s1_.composite (s1), s2_.composite (s2));
         }
-#endif
 
         // Assignment
         NUMERICS_INLINE
@@ -3302,7 +3300,7 @@ namespace numerics {
             check (size2 () == ms.size2 (), bad_size ());
             matrix_swap<scalar_swap<value_type, value_type> > () (*this, ms); 
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (matrix_slice &ms1, matrix_slice &ms2) {
             ms1.swap (ms2);
@@ -3318,7 +3316,7 @@ namespace numerics {
                                           matrix_type::const_iterator1::iterator_category> const_iterator1;
         typedef matrix_column_const_iterator<matrix_slice<matrix_type>, 
                                              matrix_type::const_iterator2::iterator_category> const_iterator2;
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator1, typename matrix_row<matrix_slice<matrix_type> >, typename matrix_row<matrix_slice<const_matrix_type> > > const_reverse_iterator1;
         typedef reverse_iterator<iterator1, typename matrix_row<matrix_slice<matrix_type> >, typename matrix_row<matrix_slice<matrix_type> > > reverse_iterator1;
         typedef reverse_iterator<const_iterator2, typename matrix_column<matrix_slice<matrix_type> >, typename matrix_column<matrix_slice<const_matrix_type> > > const_reverse_iterator2;
@@ -3345,7 +3343,7 @@ namespace numerics {
         class const_iterator2;
         class iterator2;
 #endif
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
         typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
@@ -3464,7 +3462,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator1, value_type> {
         public:
             typedef typename M::const_iterator1::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename M::const_iterator1::difference_type difference_type;
             typedef typename M::const_iterator1::value_type value_type;
             typedef typename M::const_iterator1::value_type reference;
@@ -3580,7 +3578,7 @@ namespace numerics {
             public random_access_iterator_base<iterator1, value_type> {
         public:
             typedef typename M::iterator1::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename M::iterator1::difference_type difference_type;
             typedef typename M::iterator1::value_type value_type;
             typedef typename M::iterator1::reference reference;
@@ -3695,7 +3693,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator2, value_type> {
         public:
             typedef typename M::const_iterator2::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename M::const_iterator2::difference_type difference_type;
             typedef typename M::const_iterator2::value_type value_type;
             typedef typename M::const_iterator2::value_type reference;
@@ -3753,7 +3751,7 @@ namespace numerics {
             }
             NUMERICS_INLINE
             const_iterator1 end () const {
-                return const_iterator1 ((*this) (), it1_ ().end (), it2_); 
+                return const_iterator1 ((*this) (), it1_ ().end (), it2_);
             }
             NUMERICS_INLINE
             const_reverse_iterator1 rbegin () const {
@@ -3811,7 +3809,7 @@ namespace numerics {
             public random_access_iterator_base<iterator2, value_type> {
         public:
             typedef typename M::iterator2::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename M::iterator2::difference_type difference_type;
             typedef typename M::iterator2::value_type value_type;
             typedef typename M::iterator2::reference reference;
@@ -3969,11 +3967,15 @@ namespace numerics {
     typename matrix_slice<M>::matrix_type matrix_slice<M>::nil_;
 
     // Projections
-#ifdef NUMERICS_HAS_PARTIAL_TEMPLATE_SPECIALIZATION
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
     template<class M>
     NUMERICS_INLINE
-    matrix_slice<M> project (const matrix_slice<M> &data, const range &r1, const range &r2) {
-        NUMERICS_TRACE ("project (matrix_slice<M>, range, range)");
+    matrix_slice<M> project (matrix_slice<M> &data, const range &r1, const range &r2) {
+        return data.project (r1, r2);
+    }
+    template<class M>
+    NUMERICS_INLINE
+    matrix_slice<const M> project (const matrix_slice<const M> &data, const range &r1, const range &r2) {
         return data.project (r1, r2);
     }
 #endif
@@ -3982,18 +3984,27 @@ namespace numerics {
     matrix_slice<M> project (M &data, const slice &s1, const slice &s2) {
         return matrix_slice<M> (data, s1, s2);
     }
-#ifdef NUMERICS_HAS_PARTIAL_TEMPLATE_SPECIALIZATION
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
     template<class M>
     NUMERICS_INLINE
-    matrix_slice<M> project (const matrix_slice<M> &data, const slice &s1, const slice &s2) {
-        NUMERICS_TRACE ("project (matrix_slice<M>, slice, slice)");
+    matrix_slice<const M> project (const M &data, const slice &s1, const slice &s2) {
+        return matrix_slice<const M> (data, s1, s2);
+    }
+    template<class M>
+    NUMERICS_INLINE
+    matrix_slice<M> project (matrix_slice<M> &data, const slice &s1, const slice &s2) {
+        return data.project (s1, s2);
+    }
+    template<class M>
+    NUMERICS_INLINE
+    matrix_slice<const M> project (const matrix_slice<const M> &data, const slice &s1, const slice &s2) {
         return data.project (s1, s2);
     }
 #endif
 
-}
+}}
 
-#endif 
+#endif
 
 
 

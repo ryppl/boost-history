@@ -1,16 +1,16 @@
-//  
+//
 //  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
-//  
+//
 //  Permission to use, copy, modify, distribute and sell this software
 //  and its documentation for any purpose is hereby granted without fee,
 //  provided that the above copyright notice appear in all copies and
 //  that both that copyright notice and this permission notice appear
 //  in supporting documentation.  The authors make no representations
-//  about the suitability of this software for any purpose.  
+//  about the suitability of this software for any purpose.
 //  It is provided "as is" without express or implied warranty.
-//  
-//  The authors gratefully acknowledge the support of 
+//
+//  The authors gratefully acknowledge the support of
 //  GeNeSys mbH & Co. KG in producing this work.
 //
 
@@ -23,7 +23,7 @@
 
 // Iterators based on ideas of Jeremy Siek
 
-namespace numerics {
+namespace boost { namespace numerics {
 
     // Array based sparse vector class 
     template<class T, class A>
@@ -134,21 +134,20 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         sparse_vector &operator = (const vector_expression<AE> &ae) {
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (ae, non_zeros_));
 #else
-            return assign (self_type (ae, non_zeros_));
+            // return assign (self_type (ae, non_zeros_));
+            self_type temporary (ae, non_zeros_);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
         NUMERICS_INLINE
         sparse_vector &reset (const vector_expression<AE> &ae) {
-            resize (ae ().size (), non_zeros_);
-#ifndef USE_GCC
-            return assign_temporary (self_type (ae, non_zeros_));
-#else
-            return assign (self_type (ae, non_zeros_));
-#endif
+            self_type temporary (ae, non_zeros_);
+            resize (temporary.size (), non_zeros_);
+            return assign_temporary (temporary);
         }
         template<class AE>
         NUMERICS_INLINE
@@ -159,10 +158,12 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         sparse_vector &operator += (const vector_expression<AE> &ae) {
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (*this + ae, non_zeros_));
 #else
-            return assign (self_type (*this + ae, non_zeros_));
+            // return assign (self_type (*this + ae, non_zeros_));
+            self_type temporary (*this + ae, non_zeros_);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
@@ -174,10 +175,12 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         sparse_vector &operator -= (const vector_expression<AE> &ae) {
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (*this - ae, non_zeros_));
 #else
-            return assign (self_type (*this - ae, non_zeros_));
+            // return assign (self_type (*this - ae, non_zeros_));
+            self_type temporary (*this - ae, non_zeros_);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
@@ -209,7 +212,7 @@ namespace numerics {
             std::swap (non_zeros_, v.non_zeros_);
             data ().swap (v.data ());
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (sparse_vector &v1, sparse_vector &v2) {
             v1.swap (v2);
@@ -220,7 +223,7 @@ namespace numerics {
         NUMERICS_INLINE
         void insert (size_type i, const_reference t) {
 #ifndef NUMERICS_USE_ET
-            if (t == value_type ()) 
+            if (t == value_type ())
                 return;
 #endif
             check (data ().find (i) == data ().end (), bad_index ());
@@ -276,7 +279,7 @@ namespace numerics {
             public bidirectional_iterator_base<const_iterator, value_type> {
         public:
             typedef sparse_bidirectional_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename sparse_vector::difference_type difference_type;
             typedef typename sparse_vector::value_type value_type;
             typedef typename sparse_vector::value_type reference;
@@ -290,7 +293,7 @@ namespace numerics {
             NUMERICS_INLINE
             const_iterator (const sparse_vector &v, const const_iterator_type &it):
                 container_const_reference<sparse_vector> (v), it_ (it) {}
-#ifndef USE_ICC
+#ifndef NUMERICS_QUALIFIED_TYPENAME
             NUMERICS_INLINE
             const_iterator (const iterator &it):
                 container_const_reference<sparse_vector> (it ()), it_ (it.it_) {}
@@ -357,7 +360,7 @@ namespace numerics {
             public bidirectional_iterator_base<iterator, value_type> {
         public:
             typedef sparse_bidirectional_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename sparse_vector::difference_type difference_type;
             typedef typename sparse_vector::value_type value_type;
             typedef typename sparse_vector::reference reference;
@@ -429,7 +432,7 @@ namespace numerics {
 
         // Reverse iterator
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
 #else
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
@@ -444,7 +447,7 @@ namespace numerics {
             return const_reverse_iterator (begin ());
         }
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<iterator, value_type, reference> reverse_iterator;
 #else
         typedef reverse_iterator<iterator> reverse_iterator;
@@ -593,21 +596,20 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         compressed_vector &operator = (const vector_expression<AE> &ae) {
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (ae, non_zeros_));
 #else
-            return assign (self_type (ae, non_zeros_));
+            // return assign (self_type (ae, non_zeros_));
+            self_type temporary (ae, non_zeros_);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
         NUMERICS_INLINE
         compressed_vector &reset (const vector_expression<AE> &ae) {
-            resize (ae ().size (), non_zeros_);
-#ifndef USE_GCC
-            return assign_temporary (self_type (ae, non_zeros_));
-#else
-            return assign (self_type (ae, non_zeros_));
-#endif
+            self_type temporary (ae, non_zeros_);
+            resize (temporary.size (), non_zeros_);
+            return assign_temporary (temporary);
         }
         template<class AE>
         NUMERICS_INLINE
@@ -618,10 +620,12 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         compressed_vector &operator += (const vector_expression<AE> &ae) {
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (*this + ae, non_zeros_));
 #else
-            return assign (self_type (*this + ae, non_zeros_));
+            // return assign (self_type (*this + ae, non_zeros_));
+            self_type temporary (*this + ae, non_zeros_);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
@@ -633,10 +637,12 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         compressed_vector &operator -= (const vector_expression<AE> &ae) {
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (*this - ae, non_zeros_));
 #else
-            return assign (self_type (*this - ae, non_zeros_));
+            // return assign (self_type (*this - ae, non_zeros_));
+            self_type temporary (*this - ae, non_zeros_);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
@@ -670,7 +676,7 @@ namespace numerics {
             index_data ().swap (v.index_data ());
             value_data ().swap (v.value_data ());
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (compressed_vector &v1, compressed_vector &v2) {
             v1.swap (v2);
@@ -737,7 +743,7 @@ namespace numerics {
             public bidirectional_iterator_base<const_iterator, value_type> {
         public:
             typedef sparse_bidirectional_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename compressed_vector::difference_type difference_type;
             typedef typename compressed_vector::value_type value_type;
             typedef typename compressed_vector::value_type reference;
@@ -751,7 +757,7 @@ namespace numerics {
             NUMERICS_INLINE
             const_iterator (const compressed_vector &v, const const_iterator_type &it):
                 container_const_reference<compressed_vector> (v), it_ (it) {}
-#ifndef USE_ICC
+#ifndef NUMERICS_QUALIFIED_TYPENAME
             NUMERICS_INLINE
             const_iterator (const iterator &it):
                 container_const_reference<compressed_vector> (it ()), it_ (it.it_) {}
@@ -818,7 +824,7 @@ namespace numerics {
             public bidirectional_iterator_base<iterator, value_type> {
         public:
             typedef sparse_bidirectional_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename compressed_vector::difference_type difference_type;
             typedef typename compressed_vector::value_type value_type;
             typedef typename compressed_vector::reference reference;
@@ -890,7 +896,7 @@ namespace numerics {
 
         // Reverse iterator
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
 #else
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
@@ -905,7 +911,7 @@ namespace numerics {
             return const_reverse_iterator (begin ());
         }
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<iterator, value_type, reference> reverse_iterator;
 #else
         typedef reverse_iterator<iterator> reverse_iterator;
@@ -928,8 +934,8 @@ namespace numerics {
         value_array_type value_data_;
     };
 
-}
+}}
 
-#endif 
+#endif
 
 

@@ -24,15 +24,7 @@
 
 // Promote traits borrowed from Todd Veldhuizen
 
-namespace numerics {
-
-// We should use BOOST_STATIC_CONSTANT one day.
-#ifndef USE_MSVC
-#define NUMERICS_STATIC_CONSTANT(type, assignment) static const type assignment
-#else
-// Static constant workaround from John Maddock
-#define NUMERICS_STATIC_CONSTANT(type, assignment) enum { assignment }
-#endif
+namespace boost { namespace numerics {
 
     template<class T>
     struct type_traits {
@@ -40,8 +32,8 @@ namespace numerics {
         typedef T real_type;
         typedef T precision_type;
 
-        NUMERICS_STATIC_CONSTANT (std::size_t, plus_complexity = 0);
-        NUMERICS_STATIC_CONSTANT (std::size_t, multiplies_complexity = 0);
+        BOOST_STATIC_CONSTANT (std::size_t, plus_complexity = 0);
+        BOOST_STATIC_CONSTANT (std::size_t, multiplies_complexity = 0);
 
         static
         NUMERICS_INLINE
@@ -67,8 +59,8 @@ namespace numerics {
         typedef float real_type;
         typedef double precision_type;
 
-        NUMERICS_STATIC_CONSTANT (std::size_t, plus_complexity = 1);
-        NUMERICS_STATIC_CONSTANT (std::size_t, multiplies_complexity = 1);
+        BOOST_STATIC_CONSTANT (std::size_t, plus_complexity = 1);
+        BOOST_STATIC_CONSTANT (std::size_t, multiplies_complexity = 1);
 
         static
         NUMERICS_INLINE
@@ -89,19 +81,27 @@ namespace numerics {
         static
         NUMERICS_INLINE
         real_type abs (const value_type &t) {
-#ifdef USE_MSVC
+#ifdef BOOST_NO_STDC_NAMESPACE
             return ::fabsf (t);
 #else
+#ifdef NUMERICS_FLOAT_FUNCTION
+            return std::fabsf (t);
+#else
             return std::fabs (t);
+#endif
 #endif
         }
         static
         NUMERICS_INLINE
         value_type sqrt (const value_type &t) {
-#ifdef USE_MSVC
-            return ::sqrt (t);
+#ifdef BOOST_NO_STDC_NAMESPACE
+            return ::sqrtf (t);
+#else
+#ifdef NUMERICS_FLOAT_FUNCTION
+            return std::sqrtf (t);
 #else
             return std::sqrt (t);
+#endif
 #endif
         }
     };
@@ -111,8 +111,8 @@ namespace numerics {
         typedef double real_type;
         typedef double precision_type;
 
-        NUMERICS_STATIC_CONSTANT (std::size_t, plus_complexity = 1);
-        NUMERICS_STATIC_CONSTANT (std::size_t, multiplies_complexity = 1);
+        BOOST_STATIC_CONSTANT (std::size_t, plus_complexity = 1);
+        BOOST_STATIC_CONSTANT (std::size_t, multiplies_complexity = 1);
 
         static
         NUMERICS_INLINE
@@ -133,7 +133,7 @@ namespace numerics {
         static
         NUMERICS_INLINE
         real_type abs (const value_type &t) {
-#ifdef USE_MSVC
+#ifdef BOOST_NO_STDC_NAMESPACE
             return ::fabs (t);
 #else
             return std::fabs (t);
@@ -142,7 +142,7 @@ namespace numerics {
         static
         NUMERICS_INLINE
         value_type sqrt (const value_type &t) {
-#ifdef USE_MSVC
+#ifdef BOOST_NO_STDC_NAMESPACE
             return ::sqrt (t);
 #else
             return std::sqrt (t);
@@ -156,8 +156,8 @@ namespace numerics {
         typedef float real_type;
         typedef std::complex<double> precision_type;
 
-        NUMERICS_STATIC_CONSTANT (std::size_t, plus_complexity = 2);
-        NUMERICS_STATIC_CONSTANT (std::size_t, multiplies_complexity = 6);
+        BOOST_STATIC_CONSTANT (std::size_t, plus_complexity = 2);
+        BOOST_STATIC_CONSTANT (std::size_t, multiplies_complexity = 6);
 
         static
         NUMERICS_INLINE
@@ -195,8 +195,8 @@ namespace numerics {
         typedef double real_type;
         typedef std::complex<double> precision_type;
 
-        NUMERICS_STATIC_CONSTANT (std::size_t, plus_complexity = 2);
-        NUMERICS_STATIC_CONSTANT (std::size_t, multiplies_complexity = 6);
+        BOOST_STATIC_CONSTANT (std::size_t, plus_complexity = 2);
+        BOOST_STATIC_CONSTANT (std::size_t, multiplies_complexity = 6);
 
         static
         NUMERICS_INLINE
@@ -261,11 +261,15 @@ namespace numerics {
 
     template<>
     struct promote_traits<double, std::complex<float> > {
-        typedef std::complex<float> promote_type;
+        // Here we'd better go the conservative way.
+        // typedef std::complex<float> promote_type;
+        typedef std::complex<double> promote_type;
     };
     template<>
     struct promote_traits<std::complex<float>, double> {
-        typedef std::complex<float> promote_type;
+        // Here we'd better go the conservative way.
+        // typedef std::complex<float> promote_type;
+        typedef std::complex<double> promote_type;
     };
     template<>
     struct promote_traits<double, std::complex<double> > {
@@ -329,8 +333,8 @@ namespace numerics {
         typedef packed_random_access_iterator_tag iterator_category;
     };
 
-}
+}}
 
-#endif 
+#endif
 
 

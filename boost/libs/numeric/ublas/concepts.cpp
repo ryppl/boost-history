@@ -1,4 +1,4 @@
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC
 
 #pragma warning (disable: 4355)
 #pragma warning (disable: 4503)
@@ -9,20 +9,6 @@
 #include <cassert>
 #include <iostream>
 
-#ifdef NUMERICS_PRIVATE
-#include "config.h"
-#include "vector.h"
-#include "vector_sp.h"
-#include "matrix.h"
-#include "banded.h"
-#include "triangular.h"
-#include "symmetric.h"
-#include "hermitean.h"
-#include "matrix_sp.h"
-#include "io.h"
-
-#include "concepts.h"
-#else
 #include <boost/numeric/ublas/config.h>
 #include <boost/numeric/ublas/vector.h>
 #include <boost/numeric/ublas/vector_sp.h>
@@ -35,7 +21,8 @@
 #include <boost/numeric/ublas/io.h>
 
 #include <boost/numeric/ublas/concepts.h>
-#endif
+
+namespace numerics = boost::numerics;
 
 void test_norm () {
     std::complex<double> c (1, 1);
@@ -57,44 +44,44 @@ void test_storage () {
             v2 [i] = i;
         v1 = v2;
         std::copy (v2.begin (), v2.end (), v1.begin ());
-#if ! defined (USE_BCC) && ! defined (USE_ICC)
+#ifdef BOOST_MSVC_ITERATOR
         std::copy (v2.rbegin (), v2.rend (), v1.rbegin ());
 #endif
         std::swap (v1, v2);
-        std::copy (v1.begin (), v1.end (), out); 
+        std::copy (v1.begin (), v1.end (), out);
         std::cout << std::endl;
-        std::copy (v2.begin (), v2.end (), out); 
+        std::copy (v2.begin (), v2.end (), out);
         std::cout << std::endl;
 
         // Some unbounded array storage tests
         numerics::unbounded_array<double> ua1 (3), ua2 (3);
-        for (i = 0; i < 3; ++ i) 
+        for (i = 0; i < 3; ++ i)
             ua2 [i] = i;
         ua1 = ua2;
         std::copy (ua2.begin (), ua2.end (), ua1.begin ());
-#if ! defined (USE_BCC) && ! defined (USE_ICC)
+#ifdef BOOST_MSVC_ITERATOR
         std::copy (ua2.rbegin (), ua2.rend (), ua1.rbegin ());
 #endif
         std::swap (ua1, ua2);
-#ifndef USE_GCC
+#ifdef  NUMERICS_FRIEND_FUNCTION
         numerics::swap (ua1, ua2);
 #endif
-        std::copy (ua1.begin (), ua1.end (), out); 
+        std::copy (ua1.begin (), ua1.end (), out);
         std::cout << std::endl;
         std::copy (ua2.begin (), ua2.end (), out);
         std::cout << std::endl;
 
         // Some bounded array storage tests
         numerics::bounded_array<double, 3> ba1 (3), ba2 (3);
-        for (i = 0; i < 3; ++ i) 
+        for (i = 0; i < 3; ++ i)
             ba2 [i] = i;
         ba1 = ba2;
         std::copy (ba2.begin (), ba2.end (), ba1.begin ());
-#if ! defined (USE_BCC) && ! defined (USE_ICC)
+#ifdef BOOST_MSVC_ITERATOR
         std::copy (ba2.rbegin (), ba2.rend (), ba1.rbegin ());
 #endif
         std::swap (ba1, ba2);
-#ifndef USE_GCC
+#ifdef  NUMERICS_FRIEND_FUNCTION
         numerics::swap (ba1, ba2);
 #endif
         std::copy (ba1.begin (), ba1.end (), out);
@@ -106,7 +93,7 @@ void test_storage () {
         numerics::range r (0, 3);
         std::copy (r.begin (), r.end (), out);
         std::cout << std::endl;
-#if ! defined (USE_BCC) && ! defined (USE_GCC) && ! defined (USE_ICC)
+#ifdef BOOST_MSVC_ITERATOR
         std::copy (r.rbegin (), r.rend (), out);
         std::cout << std::endl;
 #endif
@@ -115,7 +102,7 @@ void test_storage () {
         numerics::slice s (0, 2, 3);
         std::copy (s.begin (), s.end (), out);
         std::cout << std::endl;
-#if ! defined (USE_BCC) && ! defined (USE_GCC) && ! defined (USE_ICC)
+#ifdef BOOST_MSVC_ITERATOR
         std::copy (s.rbegin (), s.rend (), out);
         std::cout << std::endl;
 #endif
@@ -141,7 +128,7 @@ void test_sparse_storage () {
         m1.clear ();
         std::copy (m2.begin (), m2.end (), std::inserter (m1, m1.end ()));
         m1.clear ();
-#if ! defined (USE_BCC) && ! defined (USE_ICC)
+#ifdef BOOST_MSVC_ITERATOR
         std::copy (m2.rbegin (), m2.rend (), std::inserter (m1, m1.begin ()));
 #endif
         std::swap (m1, m2);
@@ -159,15 +146,15 @@ void test_sparse_storage () {
             ca2 [i] = i;
         ca1 = ca2;
         ca1.clear ();
-#if ! defined (USE_BCC) && ! defined (USE_ICC)
+#ifdef BOOST_MSVC_ITERATOR
         std::copy (ca2.begin (), ca2.end (), std::inserter (ca1, ca1.end ()));
 #endif
         ca1.clear ();
-#if ! defined (USE_BCC) && ! defined (USE_ICC)
+#ifdef BOOST_MSVC_ITERATOR
         std::copy (ca2.rbegin (), ca2.rend (), std::inserter (ca1, ca1.begin ()));
 #endif
         std::swap (ca1, ca2);
-#ifndef USE_GCC
+#ifdef  NUMERICS_FRIEND_FUNCTION
         numerics::swap (ca1, ca2);
 #endif
         for (numerics::map_array<int, double>::const_iterator it_ca1 = ca1.begin (); it_ca1 != ca1.end (); ++ it_ca1)
@@ -198,7 +185,7 @@ void test_vector () {
         std::copy (v2.begin (), v2.end (), v1.begin ());
         std::copy (v2.rbegin (), v2.rend (), v1.rbegin ());
         std::swap (v1, v2);
-#ifndef USE_GCC
+#ifdef  NUMERICS_FRIEND_FUNCTION
         numerics::swap (v1, v2);
 #endif
         std::copy (v1.begin (), v1.end (), out); 
@@ -252,7 +239,7 @@ void test_sparse_vector () {
         v1 = v2;
         std::copy (v2.begin (), v2.end (), v1.begin ());
         std::swap (v1, v2);
-#ifndef USE_GCC
+#ifdef  NUMERICS_FRIEND_FUNCTION
         numerics::swap (v1, v2);
 #endif
         std::copy (v1.begin (), v1.end (), out); 
@@ -300,7 +287,7 @@ void test_matrix () {
 #endif
         }
         std::swap (m1, m2);
-#ifndef USE_GCC
+#ifdef  NUMERICS_FRIEND_FUNCTION
         numerics::swap (m1, m2);
 #endif
         {
@@ -389,7 +376,7 @@ void test_sparse_matrix () {
             } 
         }
         std::swap (m1, m2);
-#ifndef USE_GCC
+#ifdef  NUMERICS_FRIEND_FUNCTION
         numerics::swap (m1, m2);
 #endif
         {
@@ -468,52 +455,52 @@ void test_sparse_prod () {
     numerics::sparse_matrix<double, numerics::row_major> mr (3, 3, 9), mr1 (3, 3, 9), mr2 (3, 3, 9);
     numerics::sparse_vector<double> v1 (3, 3), v2 (3, 3);
 
-#ifdef USE_MSVC
+#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
     v2 = numerics::prod (mc, v1, numerics::sparse_column_major_tag ());
 #else
     v2 = numerics::prod (mc, v1);
 #endif
     std::cout << v2 << std::endl;
-#ifdef USE_MSVC
+#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
     v2 = numerics::prec_prod (mc, v1, numerics::sparse_column_major_tag ());
 #else
     v2 = numerics::prec_prod (mc, v1);
 #endif
     std::cout << v2 << std::endl;
 
-#ifdef USE_MSVC
+#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
     v2 = numerics::prod (v1, mr, numerics::sparse_row_major_tag ());
 #else
     v2 = numerics::prod (v1, mr);
 #endif
     std::cout << v2 << std::endl;
-#ifdef USE_MSVC
+#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
     v2 = numerics::prec_prod (v1, mr, numerics::sparse_row_major_tag ());
 #else
     v2 = numerics::prec_prod (v1, mr);
 #endif
     std::cout << v2 << std::endl;
 
-#ifdef USE_MSVC
+#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
     mr = numerics::prod (mc1, mc2, numerics::sparse_column_major_tag ());
 #else
     mr = numerics::prod (mc1, mc2);
 #endif
     std::cout << mr << std::endl;
-#ifdef USE_MSVC
+#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
     mr = numerics::prec_prod (mc1, mc2, numerics::sparse_column_major_tag ());
 #else
     mr = numerics::prec_prod (mc1, mc2);
 #endif
     std::cout << mr << std::endl;
 
-#ifdef USE_MSVC
+#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
     mc = numerics::prod (mr1, mr2, numerics::sparse_row_major_tag ());
 #else
     mc = numerics::prod (mr1, mr2);
 #endif
     std::cout << mc << std::endl;
-#ifdef USE_MSVC
+#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
     mc = numerics::prec_prod (mr1, mr2, numerics::sparse_row_major_tag ());
 #else
     mc = numerics::prec_prod (mr1, mr2);
@@ -574,7 +561,7 @@ void test_iterator () {
         }
     }
     {
-#if defined (USE_MSVC) || defined (USE_ICC)
+#ifdef BOOST_MSVC_ITERATOR
         const numerics::vector<double> &cv = v;
         for (numerics::vector<double>::const_iterator itv = cv.begin ();
                 itv != cv.end ();
@@ -623,7 +610,7 @@ void test_iterator () {
         }
     }
     {
-#if defined (USE_MSVC) || defined (USE_ICC)
+#ifdef BOOST_MSVC_ITERATOR
         const numerics::matrix<double> &cm = m;
         for (numerics::matrix<double>::const_iterator1 itmr = cm.begin1 ();
                 itmr != cm.end1 ();
@@ -685,7 +672,6 @@ void test_iterator () {
 }
 
 void test_project () {
-#ifndef USE_GCC
      numerics::vector<double> v (1), v1 (1), v2 (1);
      v (0) = v1 (0) = v2 (0) = 0;
      std::cout << numerics::project (numerics::project (v, numerics::range (0, 1)), numerics::range (0, 1)) << std::endl;
@@ -695,7 +681,6 @@ void test_project () {
      m1 (0, 0) = m2 (0, 0) = 0;
      std::cout << numerics::project (numerics::project (m, numerics::range (0, 1), numerics::range (0, 1)), numerics::range (0, 1), numerics::range (0, 1)) << std::endl;
      std::cout << (m1 + m2) (0, 0) << std::endl;
-#endif
 }
 
 void test_const_project () {

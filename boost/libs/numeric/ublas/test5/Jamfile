@@ -5,10 +5,6 @@ SOURCES = test5 test51 test52 test53 ;
 exe test5
 	: $(SOURCES).cpp 
 	: <include>$(BOOST_ROOT)
-	  <msvc><*><define>USE_MSVC
 	  <borland><*><cxxflags>"-w-8026 -w-8027 -w-8057 -w-8084 -w-8092"
-	  <borland><*><define>USE_BCC 	  
-  	  <gcc><*><define>USE_GCC
-	  <intel-linux><*><define>USE_ICC
 	;
 

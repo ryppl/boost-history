@@ -1,16 +1,16 @@
 //
 //  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
-//  
+//
 //  Permission to use, copy, modify, distribute and sell this software
 //  and its documentation for any purpose is hereby granted without fee,
 //  provided that the above copyright notice appear in all copies and
 //  that both that copyright notice and this permission notice appear
 //  in supporting documentation.  The authors make no representations
-//  about the suitability of this software for any purpose.  
+//  about the suitability of this software for any purpose.
 //  It is provided "as is" without express or implied warranty.
-//  
-//  The authors gratefully acknowledge the support of 
+//
+//  The authors gratefully acknowledge the support of
 //  GeNeSys mbH & Co. KG in producing this work.
 //
 
@@ -25,7 +25,7 @@
 // Iterators based on ideas of Jeremy Siek
 // Symmetric matrices are square. Thanks to Peter Schmitteckert for spotting this.
 
-namespace numerics {
+namespace boost { namespace numerics {
 
     template<class M>
     bool is_symmetric (const M &m) {
@@ -170,22 +170,21 @@ namespace numerics {
         }
         template<class AE>
         NUMERICS_INLINE
-        symmetric_matrix &operator = (const matrix_expression<AE> &ae) { 
-#ifndef USE_GCC
+        symmetric_matrix &operator = (const matrix_expression<AE> &ae) {
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (ae));
 #else
-            return assign (self_type (ae));
+            // return assign (self_type (ae));
+            self_type temporary (ae);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
         NUMERICS_INLINE
         symmetric_matrix &reset (const matrix_expression<AE> &ae) { 
-            resize (ae ().size1 (), ae ().size2 ());
-#ifndef USE_GCC
-            return assign_temporary (self_type (ae));
-#else
-            return assign (self_type (ae));
-#endif
+            self_type temporary (ae);
+            resize (temporary.size1 (), temporary.size2 ());
+            return assign_temporary (temporary);
         }
         template<class AE>
         NUMERICS_INLINE
@@ -196,10 +195,12 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         symmetric_matrix& operator += (const matrix_expression<AE> &ae) {
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (*this + ae));
 #else
-            return assign (self_type (*this + ae));
+            // return assign (self_type (*this + ae));
+            self_type temporary (*this + ae);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
@@ -211,10 +212,12 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         symmetric_matrix& operator -= (const matrix_expression<AE> &ae) {
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (*this - ae));
 #else
-            return assign (self_type (*this - ae));
+            // return assign (self_type (*this - ae));
+            self_type temporary (*this - ae);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
@@ -244,7 +247,7 @@ namespace numerics {
             std::swap (size_, m.size_);
             data ().swap (m.data ());
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (symmetric_matrix &m1, symmetric_matrix &m2) {
             m1.swap (m2);
@@ -252,6 +255,8 @@ namespace numerics {
 #endif
 
         // Element insertion and erasure
+        // These functions should work with std::vector.
+        // Thanks to Kresimir Fresl for spotting this.
         NUMERICS_INLINE
         void insert (size_type i, size_type j, const_reference t) {
             check (i < size_, bad_index ());
@@ -262,10 +267,12 @@ namespace numerics {
 #endif
             if (functor1_type::other (i, j)) {
                 check (data () [functor1_type::element (functor2_type (), i, size_, j, size_)] == value_type (), bad_index ());
-                data ().insert (data ().begin () + functor1_type::element (functor2_type (), i, size_, j, size_), t);
+                // data ().insert (data ().begin () + functor1_type::element (functor2_type (), i, size_, j, size_), t);
+                data () [functor1_type::element (functor2_type (), i, size_, j, size_)] = t;
             } else {
                 check (data () [functor1_type::element (functor2_type (), j, size_, i, size_)] == value_type (), bad_index ());
-                data ().insert (data ().begin () + functor1_type::element (functor2_type (), j, size_, i, size_), t);
+                // data ().insert (data ().begin () + functor1_type::element (functor2_type (), j, size_, i, size_), t);
+                data () [functor1_type::element (functor2_type (), j, size_, i, size_)] = t;
             }
         }
         NUMERICS_INLINE
@@ -274,15 +281,18 @@ namespace numerics {
             check (j < size_, bad_index ());
             if (functor1_type::other (i, j)) {
                 check (data () [functor1_type::element (functor2_type (), i, size_, j, size_)] == value_type (), bad_index ());
-                data ().erase (data ().begin () + functor1_type::element (functor2_type (), i, size_, j, size_));
+                // data ().erase (data ().begin () + functor1_type::element (functor2_type (), i, size_, j, size_));
+                data () [functor1_type::element (functor2_type (), i, size_, j, size_)] = value_type ();
             } else {
                 check (data () [functor1_type::element (functor2_type (), j, size_, i, size_)] == value_type (), bad_index ());
-                data ().erase (data ().begin () + functor1_type::element (functor2_type (), j, size_, i, size_));
+                // data ().erase (data ().begin () + functor1_type::element (functor2_type (), j, size_, i, size_));
+                data () [functor1_type::element (functor2_type (), j, size_, i, size_)] = value_type ();
             }
         }
         NUMERICS_INLINE
         void clear () {
-            data ().clear ();
+            // data ().clear ();
+            std::fill (data ().begin (), data ().end (), value_type ());
         }
 
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
@@ -290,7 +300,7 @@ namespace numerics {
         typedef matrix_column_iterator<self_type, packed_random_access_iterator_tag> iterator2;
         typedef matrix_row_const_iterator<self_type, packed_random_access_iterator_tag> const_iterator1;
         typedef matrix_column_const_iterator<self_type, packed_random_access_iterator_tag> const_iterator2;
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator1, typename matrix_row<self_type>, typename matrix_row<const_self_type> > const_reverse_iterator1;
         typedef reverse_iterator<iterator1, typename matrix_row<self_type>, typename matrix_row<self_type> > reverse_iterator1;
         typedef reverse_iterator<const_iterator2, typename matrix_column<self_type>, typename matrix_column<const_self_type> > const_reverse_iterator2;
@@ -313,7 +323,7 @@ namespace numerics {
         class const_iterator2;
         class iterator2;
 #endif
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
         typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
@@ -408,7 +418,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator1, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename symmetric_matrix::difference_type difference_type;
             typedef typename symmetric_matrix::value_type value_type;
             typedef typename symmetric_matrix::value_type reference;
@@ -524,7 +534,7 @@ namespace numerics {
             public random_access_iterator_base<iterator1, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename symmetric_matrix::difference_type difference_type;
             typedef typename symmetric_matrix::value_type value_type;
             typedef typename symmetric_matrix::reference reference;
@@ -639,7 +649,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator2, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename symmetric_matrix::difference_type difference_type;
             typedef typename symmetric_matrix::value_type value_type;
             typedef typename symmetric_matrix::value_type reference;
@@ -755,7 +765,7 @@ namespace numerics {
             public random_access_iterator_base<iterator2, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename symmetric_matrix::difference_type difference_type;
             typedef typename symmetric_matrix::value_type value_type;
             typedef typename symmetric_matrix::reference reference;
@@ -1077,7 +1087,7 @@ namespace numerics {
             check (this != &m, external_logic ());
             matrix_swap<scalar_swap<value_type, value_type> > () (*this, m); 
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (symmetric_adaptor &m1, symmetric_adaptor &m2) {
             m1.swap (m2);
@@ -1089,7 +1099,7 @@ namespace numerics {
         typedef matrix_column_iterator<self_type, packed_random_access_iterator_tag> iterator2;
         typedef matrix_row_const_iterator<self_type, packed_random_access_iterator_tag> const_iterator1;
         typedef matrix_column_const_iterator<self_type, packed_random_access_iterator_tag> const_iterator2;
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator1, typename matrix_row<self_type>, typename matrix_row<const_self_type> > const_reverse_iterator1;
         typedef reverse_iterator<iterator1, typename matrix_row<self_type>, typename matrix_row<self_type> > reverse_iterator1;
         typedef reverse_iterator<const_iterator2, typename matrix_column<self_type>, typename matrix_column<const_self_type> > const_reverse_iterator2;
@@ -1112,7 +1122,7 @@ namespace numerics {
         class const_iterator2;
         class iterator2;
 #endif
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
         typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
@@ -1207,7 +1217,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator1, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename symmetric_adaptor::difference_type difference_type;
             typedef typename symmetric_adaptor::value_type value_type;
             typedef typename symmetric_adaptor::value_type reference;
@@ -1323,7 +1333,7 @@ namespace numerics {
             public random_access_iterator_base<iterator1, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename symmetric_adaptor::difference_type difference_type;
             typedef typename symmetric_adaptor::value_type value_type;
             typedef typename symmetric_adaptor::reference reference;
@@ -1438,7 +1448,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator2, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename symmetric_adaptor::difference_type difference_type;
             typedef typename symmetric_adaptor::value_type value_type;
             typedef typename symmetric_adaptor::value_type reference;
@@ -1554,7 +1564,7 @@ namespace numerics {
             public random_access_iterator_base<iterator2, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename symmetric_adaptor::difference_type difference_type;
             typedef typename symmetric_adaptor::value_type value_type;
             typedef typename symmetric_adaptor::reference reference;
@@ -1709,9 +1719,9 @@ namespace numerics {
     template<class M, class F>
     symmetric_adaptor<M, F>::matrix_type symmetric_adaptor<M, F>::nil_;
 
-}
+}}
 
-#endif 
+#endif
 
 
 

@@ -254,7 +254,7 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         value_type operator [] (size_type i) const;
         reference operator [] (size_type i);
 
-        vector_range&lt;vector_type&gt; project (const range &amp;r) const;
+        vector_range&lt;const_vector_type&gt; project (const range &amp;r) const;
         vector_range&lt;vector_type&gt; project (const range &amp;r);
 
         // Assignment
@@ -620,9 +620,9 @@ href="expression.htm#vector_expression">Vector Expression</a>.</p>
         value_type operator [] (size_type i) const;
         reference operator [] (size_type i);
 
-        vector_slice&lt;vector_type&gt; project (const range &amp;r) const;
+        vector_slice&lt;const_vector_type&gt; project (const range &amp;r) const;
         vector_slice&lt;vector_type&gt; project (const range &amp;r);
-        vector_slice&lt;vector_type&gt; project (const slice &amp;s) const;
+        vector_slice&lt;const_vector_type&gt; project (const slice &amp;s) const;
         vector_slice&lt;vector_type&gt; project (const slice &amp;s);
 
         // Assignment

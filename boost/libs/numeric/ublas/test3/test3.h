@@ -1,6 +1,8 @@
 #ifndef TEST3_H
 #define TEST3_H
 
+namespace numerics = boost::numerics;
+
 template<class V>
 void initialize_vector (V &v) {
     int size = v.size ();

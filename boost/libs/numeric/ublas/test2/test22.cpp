@@ -1,4 +1,4 @@
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC
 
 #pragma warning (disable: 4355)
 #pragma warning (disable: 4503)
@@ -8,15 +8,6 @@
 
 #include <iostream>
 
-#ifdef NUMERICS_PRIVATE
-#include "../config.h"
-#include "../vector.h"
-#include "../matrix.h"
-#include "../triangular.h"
-#include "../io.h"
-
-#include "../blas.h"
-#else
 #include <boost/numeric/ublas/config.h>
 #include <boost/numeric/ublas/vector.h>
 #include <boost/numeric/ublas/matrix.h>
@@ -24,7 +15,6 @@
 #include <boost/numeric/ublas/io.h>
 
 #include <boost/numeric/ublas/blas.h>
-#endif
 
 #include "test2.h"
 
@@ -101,8 +91,6 @@ void test_blas_2<V, M, N>::operator () () {
         std::cout << "gmv (v1, 1, 1, herm (m), v2) = " << v1 << std::endl;
 #endif
 
-// FIXME: MSVC ICE
-#if ! defined (USE_MSVC) || ! defined (_DEBUG)
         // _g_r
         // _g_ru
         // _g_rc
@@ -142,7 +130,6 @@ void test_blas_2<V, M, N>::operator () () {
         initialize_matrix (m);
         numerics::blas_2::hr2 (m, value_type (1), v1, v2);
         std::cout << "hr2 (m, 1, v1, v2) = " << m << std::endl;
-#endif
 #endif
     }
     catch (std::exception &e) {

@@ -1,16 +1,16 @@
-//  
+//
 //  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
-//  
+//
 //  Permission to use, copy, modify, distribute and sell this software
 //  and its documentation for any purpose is hereby granted without fee,
 //  provided that the above copyright notice appear in all copies and
 //  that both that copyright notice and this permission notice appear
 //  in supporting documentation.  The authors make no representations
-//  about the suitability of this software for any purpose.  
+//  about the suitability of this software for any purpose.
 //  It is provided "as is" without express or implied warranty.
-//  
-//  The authors gratefully acknowledge the support of 
+//
+//  The authors gratefully acknowledge the support of
 //  GeNeSys mbH & Co. KG in producing this work.
 //
 
@@ -25,7 +25,7 @@
 #include "exception.h"
 #include "iterator.h"
 
-namespace numerics {
+namespace boost { namespace numerics {
 
 #ifndef NUMERICS_USE_FAST_COMMON
 //    template<class T>
@@ -68,7 +68,7 @@ namespace numerics {
         // Construction and destruction
         NUMERICS_INLINE
         unbounded_array (): 
-            size_ (0), data_ (new value_type [0]) { 
+            size_ (0), data_ (new value_type [0]) {
             if (! data_)
                 throw std::bad_alloc ();
         }
@@ -127,14 +127,14 @@ namespace numerics {
 
         // Assignment
         NUMERICS_INLINE
-        unbounded_array &operator = (const unbounded_array &a) { 
+        unbounded_array &operator = (const unbounded_array &a) {
             check (this != &a, external_logic ());
             check (size_ == a.size_, bad_size ());
             std::copy (a.data_, a.data_ + a.size_, data_);
             return *this;
         }
         NUMERICS_INLINE
-        unbounded_array &assign_temporary (unbounded_array &a) { 
+        unbounded_array &assign_temporary (unbounded_array &a) {
             swap (a);
             return *this;
         }
@@ -147,7 +147,7 @@ namespace numerics {
             std::swap (size_, a.size_);
             std::swap (data_, a.data_);
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (unbounded_array &a1, unbounded_array &a2) {
             a1.swap (a2);
@@ -215,7 +215,7 @@ namespace numerics {
 
         // Reverse iterators
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef std::reverse_iterator<const_iterator, value_type, const_reference> const_reverse_iterator;
 #else
         typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
@@ -230,7 +230,7 @@ namespace numerics {
             return const_reverse_iterator (begin ());
         }
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef std::reverse_iterator<iterator, value_type, reference> reverse_iterator;
 #else
         typedef std::reverse_iterator<iterator> reverse_iterator;
@@ -333,7 +333,7 @@ namespace numerics {
             check (size_ == a.size_, bad_size ());
             std::swap_ranges (data_, data_ + size_, a.data_);
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (bounded_array &a1, bounded_array &a2) {
             a1.swap (a2);
@@ -401,7 +401,7 @@ namespace numerics {
 
         // Reverse iterators
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef std::reverse_iterator<const_iterator, value_type, const_reference> const_reverse_iterator;
 #else
         typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
@@ -416,7 +416,7 @@ namespace numerics {
             return const_reverse_iterator (begin ());
         }
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef std::reverse_iterator<iterator, value_type, reference> reverse_iterator;
 #else
         typedef std::reverse_iterator<iterator> reverse_iterator;
@@ -555,7 +555,7 @@ namespace numerics {
             std::swap (own_, a.own_);
             std::swap (data_, a.data_);
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (array_adaptor &a1, array_adaptor &a2) {
             a1.swap (a2);
@@ -623,7 +623,7 @@ namespace numerics {
 
         // Reverse iterators
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef std::reverse_iterator<const_iterator, value_type, const_reference> const_reverse_iterator;
 #else
         typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
@@ -638,7 +638,7 @@ namespace numerics {
             return const_reverse_iterator (begin ());
         }
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef std::reverse_iterator<iterator, value_type, reference> reverse_iterator;
 #else
         typedef std::reverse_iterator<iterator> reverse_iterator;
@@ -820,7 +820,7 @@ namespace numerics {
 
         // Reverse iterator
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef std::reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
 #else
         typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
@@ -992,7 +992,7 @@ namespace numerics {
 
         // Reverse iterator
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef std::reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
 #else
         typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
@@ -1013,9 +1013,9 @@ namespace numerics {
         size_type size_;
     };
 
-}
+}}
 
-#endif 
+#endif
 
 
 

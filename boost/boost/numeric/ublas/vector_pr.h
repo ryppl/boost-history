@@ -1,16 +1,16 @@
 //
 //  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
-//  
+//
 //  Permission to use, copy, modify, distribute and sell this software
 //  and its documentation for any purpose is hereby granted without fee,
 //  provided that the above copyright notice appear in all copies and
 //  that both that copyright notice and this permission notice appear
 //  in supporting documentation.  The authors make no representations
-//  about the suitability of this software for any purpose.  
+//  about the suitability of this software for any purpose.
 //  It is provided "as is" without express or implied warranty.
-//  
-//  The authors gratefully acknowledge the support of 
+//
+//  The authors gratefully acknowledge the support of
 //  GeNeSys mbH & Co. KG in producing this work.
 //
 
@@ -22,7 +22,7 @@
 
 // Iterators based on ideas of Jeremy Siek
 
-namespace numerics {
+namespace boost { namespace numerics {
 
     // Vector based range class
     template<class V>
@@ -107,16 +107,14 @@ namespace numerics {
             return (*this) (i); 
         }
 
-#ifdef NUMERICS_HAS_PARTIAL_TEMPLATE_SPECIALIZATION
         NUMERICS_INLINE
-        vector_range<vector_type> project (const range &r) const {
-            return vector_range<vector_type> (data (), r_.composite (r));
+        vector_range<const_vector_type> project (const range &r) const {
+            return vector_range<const_vector_type> (data (), r_.composite (r));
         }
         NUMERICS_INLINE
         vector_range<vector_type> project (const range &r) {
             return vector_range<vector_type> (data (), r_.composite (r));
         }
-#endif
 
         // Assignment
         NUMERICS_INLINE
@@ -184,7 +182,7 @@ namespace numerics {
             check (size () == vr.size (), bad_size ());
             std::swap_ranges (begin (), end (), vr.begin ());
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (vector_range &vr1, vector_range &vr2) {
             vr1.swap (vr2);
@@ -247,7 +245,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator, value_type> {
         public:
             typedef typename V::const_iterator::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename V::const_iterator::difference_type difference_type;
             typedef typename V::const_iterator::value_type value_type;
             typedef typename V::const_iterator::value_type reference;
@@ -261,7 +259,7 @@ namespace numerics {
             NUMERICS_INLINE
             const_iterator (const vector_range &vr, const const_iterator_type &it):
                 container_const_reference<vector_range> (vr), it_ (it) {}
-#ifndef USE_ICC
+#ifndef NUMERICS_QUALIFIED_TYPENAME
             NUMERICS_INLINE
             const_iterator (const iterator &it):
                 container_const_reference<vector_range> (it ()), it_ (it.it_) {}
@@ -345,7 +343,7 @@ namespace numerics {
             public random_access_iterator_base<iterator, value_type> {
         public:
             typedef typename V::iterator::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename V::iterator::difference_type difference_type;
             typedef typename V::iterator::value_type value_type;
             typedef typename V::iterator::reference reference;
@@ -432,7 +430,7 @@ namespace numerics {
 
         // Reverse iterator
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
 #else
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
@@ -447,7 +445,7 @@ namespace numerics {
             return const_reverse_iterator (begin ());
         }
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<iterator, value_type, reference> reverse_iterator;
 #else
         typedef reverse_iterator<iterator> reverse_iterator;
@@ -484,18 +482,20 @@ namespace numerics {
     vector_range<V> project (V &data, const range &r) {
         return vector_range<V> (data, r);
     }
-#ifndef USE_MSVC
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
     template<class V>
     NUMERICS_INLINE
     vector_range<const V> project (const V &data, const range &r) {
         return vector_range<const V> (data, r);
     }
-#endif
-#ifdef NUMERICS_HAS_PARTIAL_TEMPLATE_SPECIALIZATION
     template<class V>
     NUMERICS_INLINE
-    vector_range<V> project (const vector_range<V> &data, const range &r) {
-        NUMERICS_TRACE ("project (vector_range<V>, range)");
+    vector_range<V> project (vector_range<V> &data, const range &r) {
+        return data.project (r);
+    }
+    template<class V>
+    NUMERICS_INLINE
+    vector_range<const V> project (const vector_range<const V> &data, const range &r) {
         return data.project (r);
     }
 #endif
@@ -587,24 +587,22 @@ namespace numerics {
             return (*this) (i); 
         }
 
-#ifdef NUMERICS_HAS_PARTIAL_TEMPLATE_SPECIALIZATION
         NUMERICS_INLINE
-        vector_slice<vector_type> project (const range &r) const {
-            return vector_slice<vector_type>  (data (), s_.composite (r));
+        vector_slice<const_vector_type> project (const range &r) const {
+            return vector_slice<const_vector_type>  (data (), s_.composite (r));
         }
         NUMERICS_INLINE
         vector_slice<vector_type> project (const range &r) {
             return vector_slice<vector_type>  (data (), s_.composite (r));
         }
         NUMERICS_INLINE
-        vector_slice<vector_type> project (const slice &s) const {
-            return vector_slice<vector_type>  (data (), s_.composite (s));
+        vector_slice<const_vector_type> project (const slice &s) const {
+            return vector_slice<const_vector_type>  (data (), s_.composite (s));
         }
         NUMERICS_INLINE
         vector_slice<vector_type> project (const slice &s) {
-            return vector_slice<vector_type> (data (), s_.composite (s));
+            return vector_slice<vector_type>  (data (), s_.composite (s));
         }
-#endif
 
         // Assignment
         NUMERICS_INLINE
@@ -672,7 +670,7 @@ namespace numerics {
             check (size () == vs.size (), bad_size ());
             std::swap_ranges (begin (), end (), vs.begin ());
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (vector_slice &vs1, vector_slice &vs2) {
             vs1.swap (vs2);
@@ -731,7 +729,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator, value_type> {
         public:
             typedef typename V::const_iterator::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename V::const_iterator::difference_type difference_type;
             typedef typename V::const_iterator::value_type value_type;
             typedef typename V::const_iterator::value_type reference;
@@ -745,7 +743,7 @@ namespace numerics {
             NUMERICS_INLINE
             const_iterator (const vector_type &v, const const_iterator_type &it):
                 container_const_reference<vector_type> (v), it_ (it) {}
-#ifndef USE_ICC
+#ifndef NUMERICS_QUALIFIED_TYPENAME
             NUMERICS_INLINE
             const_iterator (const iterator &it):
                 container_const_reference<vector_type> (it ()), it_ (it.it_) {}
@@ -829,7 +827,7 @@ namespace numerics {
             public random_access_iterator_base<iterator, value_type> {
         public:
             typedef typename V::iterator::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename V::iterator::difference_type difference_type;
             typedef typename V::iterator::value_type value_type;
             typedef typename V::iterator::reference reference;
@@ -916,7 +914,7 @@ namespace numerics {
 
         // Reverse iterator
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
 #else
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
@@ -931,7 +929,7 @@ namespace numerics {
             return const_reverse_iterator (begin ());
         }
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<iterator, value_type, reference> reverse_iterator;
 #else
         typedef reverse_iterator<iterator> reverse_iterator;
@@ -956,11 +954,15 @@ namespace numerics {
     typename vector_slice<V>::vector_type vector_slice<V>::nil_;
 
     // Projections
-#ifdef NUMERICS_HAS_PARTIAL_TEMPLATE_SPECIALIZATION
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
     template<class V>
     NUMERICS_INLINE
-    vector_slice<V> project (const vector_slice<V> &data, const range &r) {
-        NUMERICS_TRACE ("project (vector_slice<V>, range)");
+    vector_slice<V> project (vector_slice<V> &data, const range &r) {
+        return data.project (r);
+    }
+    template<class V>
+    NUMERICS_INLINE
+    vector_slice<const V> project (const vector_slice<const V> &data, const range &r) {
         return data.project (r);
     }
 #endif
@@ -969,18 +971,27 @@ namespace numerics {
     vector_slice<V> project (V &data, const slice &s) {
         return vector_slice<V> (data, s);
     }
-#ifdef NUMERICS_HAS_PARTIAL_TEMPLATE_SPECIALIZATION
+#ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
     template<class V>
     NUMERICS_INLINE
-    vector_slice<V> project (const vector_slice<V> &data, const slice &s) {
-        NUMERICS_TRACE ("project (vector_slice<V>, slice)");
+    vector_slice<const V> project (const V &data, const slice &s) {
+        return vector_slice<const V> (data, s);
+    }
+    template<class V>
+    NUMERICS_INLINE
+    vector_slice<V> project (vector_slice<V> &data, const slice &s) {
+        return data.project (s);
+    }
+    template<class V>
+    NUMERICS_INLINE
+    vector_slice<const V> project (const vector_slice<const V> &data, const slice &s) {
         return data.project (s);
     }
 #endif
 
-}
+}}
 
-#endif 
+#endif
 
 
 

@@ -22,7 +22,7 @@
 #include "config.h"
 #include "traits.h"
 
-namespace numerics {
+namespace boost { namespace numerics {
 
     // GNU does not honour std, so we have to use namespace detail?
     namespace detail {
@@ -79,7 +79,7 @@ namespace numerics {
 
     }
 
-}
+}}
 
 #endif
 

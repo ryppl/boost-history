@@ -1,16 +1,16 @@
-//  
+//
 //  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
-//  
+//
 //  Permission to use, copy, modify, distribute and sell this software
 //  and its documentation for any purpose is hereby granted without fee,
 //  provided that the above copyright notice appear in all copies and
 //  that both that copyright notice and this permission notice appear
 //  in supporting documentation.  The authors make no representations
-//  about the suitability of this software for any purpose.  
+//  about the suitability of this software for any purpose.
 //  It is provided "as is" without express or implied warranty.
-//  
-//  The authors gratefully acknowledge the support of 
+//
+//  The authors gratefully acknowledge the support of
 //  GeNeSys mbH & Co. KG in producing this work.
 //
 
@@ -24,7 +24,7 @@
 
 // Iterators based on ideas of Jeremy Siek
 
-namespace numerics {
+namespace boost { namespace numerics {
 
     struct lower {
         typedef std::size_t size_type;
@@ -377,21 +377,20 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         triangular_matrix &operator = (const matrix_expression<AE> &ae) { 
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (ae));
 #else
-            return assign (self_type (ae));
+            // return assign (self_type (ae));
+            self_type temporary (ae);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
         NUMERICS_INLINE
-        triangular_matrix &reset (const matrix_expression<AE> &ae) { 
-            resize (ae ().size1 (), ae ().size2 ());
-#ifndef USE_GCC
-            return assign_temporary (self_type (ae));
-#else
-            return assign (self_type (ae));
-#endif
+        triangular_matrix &reset (const matrix_expression<AE> &ae) {
+            self_type temporary (ae);
+            resize (temporary.size1 (), temporary.size2 ());
+            return assign_temporary (temporary);
         }
         template<class AE>
         NUMERICS_INLINE
@@ -402,10 +401,12 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         triangular_matrix& operator += (const matrix_expression<AE> &ae) {
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (*this + ae));
 #else
-            return assign (self_type (*this + ae));
+            // return assign (self_type (*this + ae));
+            self_type temporary (*this + ae);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
@@ -417,10 +418,12 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         triangular_matrix& operator -= (const matrix_expression<AE> &ae) {
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (*this - ae));
 #else
-            return assign (self_type (*this - ae));
+            // return assign (self_type (*this - ae));
+            self_type temporary (*this - ae);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
@@ -452,7 +455,7 @@ namespace numerics {
             std::swap (size2_, m.size2_);
             data ().swap (m.data ());
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (triangular_matrix &m1, triangular_matrix &m2) {
             m1.swap (m2);
@@ -460,6 +463,8 @@ namespace numerics {
 #endif
 
         // Element insertion and erasure
+        // These functions should work with std::vector.
+        // Thanks to Kresimir Fresl for spotting this.
         NUMERICS_INLINE
         void insert (size_type i, size_type j, const_reference t) {
             check (i < size1_, bad_index ());
@@ -470,7 +475,8 @@ namespace numerics {
 #endif
             if (functor1_type::other (i, j)) {
                 check (data () [functor1_type::element (functor2_type (), i, size1_, j, size2_)] == value_type (), bad_index ());
-                data ().insert (data ().begin () + functor1_type::element (functor2_type (), i, size1_, j, size2_), t);
+                // data ().insert (data ().begin () + functor1_type::element (functor2_type (), i, size1_, j, size2_), t);
+                data () [functor1_type::element (functor2_type (), i, size1_, j, size2_)] = t;
             } else
                 throw external_logic ();
         }
@@ -479,11 +485,13 @@ namespace numerics {
             check (i < size1_, bad_index ());
             check (j < size2_, bad_index ());
             if (functor1_type::other (i, j)) 
-                data ().erase (data ().begin () + functor1_type::element (functor2_type (), i, size1_, j, size2_));
+                // data ().erase (data ().begin () + functor1_type::element (functor2_type (), i, size1_, j, size2_));
+                data () [functor1_type::element (functor2_type (), i, size1_, j, size2_)] = value_type ();
         }
         NUMERICS_INLINE
         void clear () {
-            data ().clear ();
+            // data ().clear ();
+            std::fill (data ().begin (), data ().end (), value_type ());
         }
 
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
@@ -491,7 +499,7 @@ namespace numerics {
         typedef matrix_column_iterator<self_type, packed_random_access_iterator_tag> iterator2;
         typedef matrix_row_const_iterator<self_type, packed_random_access_iterator_tag> const_iterator1;
         typedef matrix_column_const_iterator<self_type, packed_random_access_iterator_tag> const_iterator2;
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator1, typename matrix_row<self_type>, typename matrix_row<const_self_type> > const_reverse_iterator1;
         typedef reverse_iterator<iterator1, typename matrix_row<self_type>, typename matrix_row<self_type> > reverse_iterator1;
         typedef reverse_iterator<const_iterator2, typename matrix_column<self_type>, typename matrix_column<const_self_type> > const_reverse_iterator2;
@@ -514,7 +522,7 @@ namespace numerics {
         class const_iterator2;
         class iterator2;
 #endif
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
         typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
@@ -617,7 +625,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator1, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename triangular_matrix::difference_type difference_type;
             typedef typename triangular_matrix::value_type value_type;
             typedef typename triangular_matrix::value_type reference;
@@ -733,7 +741,7 @@ namespace numerics {
             public random_access_iterator_base<iterator1, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename triangular_matrix::difference_type difference_type;
             typedef typename triangular_matrix::value_type value_type;
             typedef typename triangular_matrix::reference reference;
@@ -848,7 +856,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator2, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename triangular_matrix::difference_type difference_type;
             typedef typename triangular_matrix::value_type value_type;
             typedef typename triangular_matrix::value_type reference;
@@ -964,7 +972,7 @@ namespace numerics {
             public random_access_iterator_base<iterator2, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename triangular_matrix::difference_type difference_type;
             typedef typename triangular_matrix::value_type value_type;
             typedef typename triangular_matrix::reference reference;
@@ -1282,7 +1290,7 @@ namespace numerics {
             check (this != &m, external_logic ());
             matrix_swap<scalar_swap<value_type, value_type> > () (*this, m); 
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (triangular_adaptor &m1, triangular_adaptor &m2) {
             m1.swap (m2);
@@ -1294,7 +1302,7 @@ namespace numerics {
         typedef matrix_column_iterator<self_type, packed_random_access_iterator_tag> iterator2;
         typedef matrix_row_const_iterator<self_type, packed_random_access_iterator_tag> const_iterator1;
         typedef matrix_column_const_iterator<self_type, packed_random_access_iterator_tag> const_iterator2;
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator1, typename matrix_row<self_type>, typename matrix_row<const_self_type> > const_reverse_iterator1;
         typedef reverse_iterator<iterator1, typename matrix_row<self_type>, typename matrix_row<self_type> > reverse_iterator1;
         typedef reverse_iterator<const_iterator2, typename matrix_column<self_type>, typename matrix_column<const_self_type> > const_reverse_iterator2;
@@ -1317,7 +1325,7 @@ namespace numerics {
         class const_iterator2;
         class iterator2;
 #endif
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
         typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
@@ -1420,7 +1428,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator1, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename triangular_adaptor::difference_type difference_type;
             typedef typename triangular_adaptor::value_type value_type;
             typedef typename triangular_adaptor::value_type reference;
@@ -1536,7 +1544,7 @@ namespace numerics {
             public random_access_iterator_base<iterator1, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename triangular_adaptor::difference_type difference_type;
             typedef typename triangular_adaptor::value_type value_type;
             typedef typename triangular_adaptor::reference reference;
@@ -1651,7 +1659,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator2, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename triangular_adaptor::difference_type difference_type;
             typedef typename triangular_adaptor::value_type value_type;
             typedef typename triangular_adaptor::value_type reference;
@@ -1767,7 +1775,7 @@ namespace numerics {
             public random_access_iterator_base<iterator2, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename triangular_adaptor::difference_type difference_type;
             typedef typename triangular_adaptor::value_type value_type;
             typedef typename triangular_adaptor::reference reference;
@@ -2226,9 +2234,9 @@ namespace numerics {
         return r;
     }
 
-}
+}}
 
-#endif 
+#endif
 
 
 

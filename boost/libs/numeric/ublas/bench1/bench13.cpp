@@ -1,4 +1,4 @@
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC
 
 #pragma warning (disable: 4355)
 #pragma warning (disable: 4503)
@@ -9,19 +9,11 @@
 #include <iostream>
 #include <string>
 
-#ifdef NUMERICS_PRIVATE
-#include "../config.h"
-#include "../vector.h"
-#include "../matrix.h"
-
-#include "../timer.h"
-#else
 #include <boost/numeric/ublas/config.h>
 #include <boost/numeric/ublas/vector.h>
 #include <boost/numeric/ublas/matrix.h>
 
-#include <boost/numeric/ublas/timer.h>
-#endif
+#include <boost/timer.hpp>
 
 #include "bench1.h"
 
@@ -34,7 +26,7 @@ struct bench_c_matrix_prod {
             static typename c_matrix_traits<T, N, N>::type m1, m2, m3;
             initialize_c_matrix<T, N, N> () (m1);
             initialize_c_matrix<T, N, N> () (m2);
-            numerics::timer t;
+            boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 for (int j = 0; j < N; ++ j) {
                     for (int k = 0; k < N; ++ k) {
@@ -65,7 +57,7 @@ struct bench_my_matrix_prod {
             static M m1 (N, N), m2 (N, N), m3 (N, N);
             initialize_matrix (m1);
             initialize_matrix (m2);
-            numerics::timer t;
+            boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 m3 = numerics::prod (m1, m2);
 //                sink_matrix (m3);
@@ -84,7 +76,7 @@ struct bench_my_matrix_prod {
             static M m1 (N, N), m2 (N, N), m3 (N, N);
             initialize_matrix (m1);
             initialize_matrix (m2);
-            numerics::timer t;
+            boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 m3.assign (numerics::prod (m1, m2));
 //                sink_matrix (m3);
@@ -108,7 +100,7 @@ struct bench_cpp_matrix_prod {
             static M m1 (N * N), m2 (N * N), m3 (N * N);
             initialize_vector (m1);
             initialize_vector (m2);
-            numerics::timer t;
+            boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 for (int j = 0; j < N; ++ j) {
                     std::valarray<value_type> row (m1 [std::slice (N * j, N, 1)]);

@@ -1,5 +1,7 @@
-#ifndef TEST1_H
-#define TEST1_H
+#ifndef TEST5_H
+#define TEST5_H
+
+namespace numerics = boost::numerics;
 
 template<class V>
 void initialize_vector (V &v) {
@@ -48,8 +50,8 @@ void test_matrix_vector ();
 
 void test_matrix ();
 
-// FIXME: Borland out of memory!
-#ifndef USE_BCC
+// Borland gets out of memory!
+#ifndef __BORLANDC__
 #define USE_RANGE
 // #define USE_SLICE
 #endif
@@ -58,6 +60,6 @@ void test_matrix ();
 #define USE_UNBOUNDED_ARRAY
 // #define USE_STD_VECTOR
 
-#endif 
+#endif
 
 

@@ -1,6 +1,8 @@
 #ifndef BENCH1_H
 #define BENCH1_H
 
+namespace numerics = boost::numerics;
+
 void header (std::string text);
 
 template<class T>
@@ -28,7 +30,7 @@ struct c_matrix_traits {
 
 template<class T, int N> 
 struct initialize_c_vector  {
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC
     NUMERICS_INLINE
     void operator () (c_vector_traits<T, N>::type v) {
 #else 
@@ -50,7 +52,7 @@ void initialize_vector (V &v) {
 
 template<class T, int N, int M> 
 struct initialize_c_matrix  {
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC
     NUMERICS_INLINE
     void operator () (c_matrix_traits<T, N, M>::type m) {
 #else 
@@ -97,7 +99,7 @@ void sink_scalar (const T &s) {
 
 template<class T, int N>
 struct sink_c_vector {
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC
     NUMERICS_INLINE
     void operator () (const c_vector_traits<T, N>::type v) {
 #else 
@@ -116,7 +118,7 @@ void sink_vector (const V &v) {
 
 template<class T, int N, int M>
 struct sink_c_matrix {
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC
     NUMERICS_INLINE
     void operator () (const c_matrix_traits<T, N, M>::type m) {
 #else 

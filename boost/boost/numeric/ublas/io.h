@@ -1,16 +1,16 @@
-//  
+//
 //  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
-//  
+//
 //  Permission to use, copy, modify, distribute and sell this software
 //  and its documentation for any purpose is hereby granted without fee,
 //  provided that the above copyright notice appear in all copies and
 //  that both that copyright notice and this permission notice appear
 //  in supporting documentation.  The authors make no representations
-//  about the suitability of this software for any purpose.  
+//  about the suitability of this software for any purpose.
 //  It is provided "as is" without express or implied warranty.
-//  
-//  The authors gratefully acknowledge the support of 
+//
+//  The authors gratefully acknowledge the support of
 //  GeNeSys mbH & Co. KG in producing this work.
 //
 
@@ -19,14 +19,14 @@
 
 #include <iostream>
 
-namespace numerics {
+namespace boost { namespace numerics {
 
-#ifdef USE_MSVC
+#ifdef NUMERICS_USE_BASIC_STREAM
 
-    template<class E, class T, class VE> 
+    template<class E, class T, class VE>
     // This function seems to be big. So we do not let the compiler inline it.
     // NUMERICS_INLINE
-    std::basic_ostream<E, T> &operator << (std::basic_ostream<E, T> &os, 
+    std::basic_ostream<E, T> &operator << (std::basic_ostream<E, T> &os,
                                            const vector_expression<VE> &v) {
         std::size_t size = v ().size ();
         std::basic_ostringstream<E, T, std::allocator<E> > s;
@@ -98,7 +98,7 @@ namespace numerics {
                 v = s;
             }
         }
-        return is; 
+        return is;
     }
 
     template<class E, class T, class ME> 
@@ -123,9 +123,9 @@ namespace numerics {
         }
         for (std::size_t i = 1; i < size1; ++ i) {
             s << ",(" ;
-            if (size2 > 0) 
+            if (size2 > 0)
                 s << m () (i, 0);
-            for (std::size_t j = 1; j < size2; ++ j) 
+            for (std::size_t j = 1; j < size2; ++ j)
                 s << ',' << m () (i, j);
             s << ')';
         }
@@ -225,14 +225,14 @@ namespace numerics {
                 m = s;
             }
         }
-        return is; 
+        return is;
     }
 
-#endif 
+#endif
 
-#if defined (USE_GCC) || defined (USE_BCC) || defined (USE_ICC)
+#ifdef NUMERICS_USE_STREAM
 
-    template<class VE> 
+    template<class VE>
     // This function seems to be big. So we do not let the compiler inline it.
     // NUMERICS_INLINE
     std::ostream &operator << (std::ostream &os, 
@@ -333,7 +333,7 @@ namespace numerics {
     template<class MT, class MF, class MA> 
     // This function seems to be big. So we do not let the compiler inline it.
     // NUMERICS_INLINE
-    std::ostream &operator << (std::ostream &os, 
+    std::ostream &operator << (std::ostream &os,
                                const matrix<MT, MF, MA> &m) {
         std::size_t size1 = m.size1 ();
         std::size_t size2 = m.size2 ();
@@ -348,7 +348,7 @@ namespace numerics {
         }
         for (std::size_t i = 1; i < size1; ++ i) {
             os << ",(" ;
-            if (size2 > 0) 
+            if (size2 > 0)
                 os << m (i, 0);
             for (std::size_t j = 1; j < size2; ++ j) 
                 os << ',' << m (i, j);
@@ -423,9 +423,9 @@ namespace numerics {
 
 #endif 
 
-}
+}}
 
-#endif 
+#endif
 
 
 

@@ -1,16 +1,16 @@
 //
 //  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
-//  
+//
 //  Permission to use, copy, modify, distribute and sell this software
 //  and its documentation for any purpose is hereby granted without fee,
 //  provided that the above copyright notice appear in all copies and
 //  that both that copyright notice and this permission notice appear
 //  in supporting documentation.  The authors make no representations
-//  about the suitability of this software for any purpose.  
+//  about the suitability of this software for any purpose.
 //  It is provided "as is" without express or implied warranty.
-//  
-//  The authors gratefully acknowledge the support of 
+//
+//  The authors gratefully acknowledge the support of
 //  GeNeSys mbH & Co. KG in producing this work.
 //
 
@@ -20,26 +20,51 @@
 #include <cassert>
 #include <cstddef>
 
-#ifdef USE_MSVC
+#include <boost/config.hpp>
 
+#ifdef BOOST_MSVC
+// Disable some MSVC specific warnings.
 #pragma warning (disable: 4355)
 #pragma warning (disable: 4503)
 #pragma warning (disable: 4786)
+#endif
 
+
+
+#ifdef BOOST_MSVC
+// MSVC doesn't always accept the 'typename' keyword.
 #define NUMERICS_TYPENAME
-
+#else
+#define NUMERICS_TYPENAME typename
+#endif
+// This could be eliminated.
 #define NUMERICS_EXPLICIT explicit
 
-#define NUMERICS_RESTRICT 
 
+
+// #ifdef BOOST_MSVC
+// With MSVC we can could perform IO via basic_stream
+// #define NUMERICS_USE_BASIC_STREAM
+// #else
+// IO via streams
+#define NUMERICS_USE_STREAM
+// #endif
+
+
+
+// Enable performance options in release mode
 #ifdef NDEBUG
 
-// Inlining options
+#ifdef BOOST_MSVC
+// MSVC has special inlining options
 #pragma inline_recursion (on)
 #pragma inline_depth (255)
 #pragma auto_inline (on)
 // #define NUMERICS_INLINE __forceinline
 #define NUMERICS_INLINE __inline
+#else
+#define NUMERICS_INLINE inline
+#endif
 
 // Do not check sizes!
 #define NUMERICS_USE_FAST_COMMON
@@ -47,223 +72,45 @@
 // Use expression templates.
 #define NUMERICS_USE_ET
 
-#define NUMERICS_TRACE(s)
-
+// Disable performance options in debug mode
 #else
 
+#ifdef BOOST_MSVC
+// MSVC has special inlining options
 // #pragma inline_recursion (off)
 // #pragma inline_depth ()
 // #pragma auto_inline (off)
-// #define NUMERICS_INLINE inline
+#endif
 #define NUMERICS_INLINE
 
+#ifdef BOOST_MSVC
 // Use expression templates (otherwise we get many ICE's)
 #define NUMERICS_USE_ET
+#endif
 
 // Bounds check
 #define NUMERICS_BOUNDS_CHECK
 
-#define NUMERICS_TRACE(s)
-
 #endif
 
-#define NUMERICS_ET_VALUE
-// #define NUMERICS_ET_REFERENCE
-// #define NUMERICS_ET_CLOSURE_VALUE
-#define NUMERICS_ET_CLOSURE_REFERENCE
 
-// #define NUMERICS_ITERATOR_THRESHOLD 0
-#define NUMERICS_ITERATOR_THRESHOLD 32
-// #define NUMERICS_ITERATOR_THRESHOLD 128
-
-// Use canonical iterators.
-// #define NUMERICS_USE_CANONICAL_ITERATOR
-
-// Use indexed iterators.
-// #define NUMERICS_USE_INDEXED_ITERATOR
 
 // Use invariant hoisting.
 #define NUMERICS_USE_INVARIANT_HOISTING
-
-namespace std {
-
-    typedef unsigned size_t;
-    typedef signed ptrdiff_t;
-
-    template<class T>
-    NUMERICS_INLINE
-    const T &max (const T &t1, const T &t2) {
-        return t1 > t2 ? t1 : t2;
-    }
-    template<class T>
-    NUMERICS_INLINE
-    const T &min (const T &t1, const T &t2) {
-        return t1 < t2 ? t1 : t2;
-    }
-
-}
-
-#endif
-
-
-
-#ifdef USE_GCC
-
-#define NUMERICS_TYPENAME typename
-
-#define NUMERICS_EXPLICIT explicit
-
-#define NUMERICS_RESTRICT __restrict__
-// #define NUMERICS_RESTRICT
-
-#ifdef NDEBUG
-
-// Inlining options
-#define NUMERICS_INLINE inline
-
-// Do not check sizes!
-#define NUMERICS_USE_FAST_COMMON
-
-// Use expression templates.
-#define NUMERICS_USE_ET
-
-#define NUMERICS_TRACE(s)
-
-#else
-
-// #define NUMERICS_INLINE inline
-#define NUMERICS_INLINE
-
-// Bounds check
-#define NUMERICS_BOUNDS_CHECK
-
-#define NUMERICS_TRACE(s)
-
-#endif
-
-#define NUMERICS_ET_VALUE
-// #define NUMERICS_ET_REFERENCE
-// #define NUMERICS_ET_CLOSURE_VALUE
-#define NUMERICS_ET_CLOSURE_REFERENCE
-
-#define NUMERICS_ITERATOR_THRESHOLD 32
-
-// Use canonical iterators.
-// #define NUMERICS_USE_CANONICAL_ITERATOR
-
-// Use indexed iterators.
-// #define NUMERICS_USE_INDEXED_ITERATOR
-
-// Use invariant hoisting.
-#define NUMERICS_USE_INVARIANT_HOISTING
-
-#endif 
-
-
-
-#ifdef USE_BCC
-
-#define NUMERICS_HAS_PARTIAL_TEMPLATE_SPECIALIZATION
-
-#define NUMERICS_TYPENAME typename
-
-#define NUMERICS_EXPLICIT explicit
-
-#define NUMERICS_RESTRICT 
-
-#ifdef NDEBUG
-
-// Inlining options
-#define NUMERICS_INLINE inline
-
-// Do not check sizes!
-#define NUMERICS_USE_FAST_COMMON
-
-// Use expression templates.
-#define NUMERICS_USE_ET
-
-#define NUMERICS_TRACE(s)
-
-#else
-
-// #define NUMERICS_INLINE inline
-#define NUMERICS_INLINE
-
-// Bounds check
-#define NUMERICS_BOUNDS_CHECK
-
-#define NUMERICS_TRACE(s)
-
-#endif
-
-#define NUMERICS_ET_VALUE
-// #define NUMERICS_ET_REFERENCE
-// #define NUMERICS_ET_CLOSURE_VALUE
-#define NUMERICS_ET_CLOSURE_REFERENCE
-
-#define NUMERICS_ITERATOR_THRESHOLD 32
-
-// Use canonical iterators.
-// #define NUMERICS_USE_CANONICAL_ITERATOR
-
-// Use indexed iterators.
-// #define NUMERICS_USE_INDEXED_ITERATOR
-
-// Use invariant hoisting.
-#define NUMERICS_USE_INVARIANT_HOISTING
-
-#endif
-
-
-
-#ifdef USE_ICC
-
-#define NUMERICS_TYPENAME typename
-
-#define NUMERICS_EXPLICIT explicit
-
-#define NUMERICS_RESTRICT 
-
-#ifdef NDEBUG
-
-// Inlining options
-#pragma inline_recursion (on)
-#pragma inline_depth (255)
-#pragma auto_inline (on)
-#define NUMERICS_INLINE inline
-
-// Do not check sizes!
-#define NUMERICS_USE_FAST_COMMON
-
-// Use expression templates.
-#define NUMERICS_USE_ET
 
 // Use Duff's device
 // #define NUMERICS_USE_DUFF_DEVICE
 
-#define NUMERICS_TRACE(s)
+// When to switch from indexing to iterating
+// #define NUMERICS_ITERATOR_THRESHOLD 0
+#define NUMERICS_ITERATOR_THRESHOLD 32
+// #define NUMERICS_ITERATOR_THRESHOLD 128
 
-#else
-
-// #pragma inline_recursion (off)
-// #pragma inline_depth ()
-// #pragma auto_inline (off)
-// #define NUMERICS_INLINE inline
-#define NUMERICS_INLINE
-
-// Bounds check
-#define NUMERICS_BOUNDS_CHECK
-
-#define NUMERICS_TRACE(s)
-
-#endif
-
+// ET options
 #define NUMERICS_ET_VALUE
 // #define NUMERICS_ET_REFERENCE
 // #define NUMERICS_ET_CLOSURE_VALUE
 #define NUMERICS_ET_CLOSURE_REFERENCE
-
-#define NUMERICS_ITERATOR_THRESHOLD 32
 
 // Use canonical iterators.
 // #define NUMERICS_USE_CANONICAL_ITERATOR
@@ -271,15 +118,77 @@ namespace std {
 // Use indexed iterators.
 // #define NUMERICS_USE_INDEXED_ITERATOR
 
-// Use invariant hoisting.
-#define NUMERICS_USE_INVARIANT_HOISTING
+
+
+// Compiler specific problems
+#ifdef BOOST_MSVC
+
+// Open problems:
+// MSVC's conditional operator is said to be defect?
+#define NUMERICS_CONDITIONAL_DEFECT
+// MSVC allows to implement free function as friends.
+#define NUMERICS_FRIEND_FUNCTION
+
+// Using MSVC the following is missing:
+// namespace std {
+//
+//     typedef unsigned size_t;
+//     typedef signed ptrdiff_t;
+//
+//     template<class T>
+//     NUMERICS_INLINE
+//     const T &max (const T &t1, const T &t2) {
+//         return t1 > t2 ? t1 : t2;
+//     }
+//     template<class T>
+//     NUMERICS_INLINE
+//     const T &min (const T &t1, const T &t2) {
+//         return t1 < t2 ? t1 : t2;
+//     }
+//
+// }
+// But boost provides it for us.
+
+#endif
+
+
+
+#ifdef __GNUC__
+
+// Open problems:
+// GCC 2.95.3 is known not to accept NUMERICS_FRIEND_FUNCTION (this seems to be arguable).
+// GCC 2.95.3 is known not to accept NUMERICS_MUTABLE_TEMPORARY (this seems to be correct).
+
+#endif
+
+
+
+#ifdef __BORLANDC__
+
+// Open problems:
+// BCC is known not to accept NUMERICS_FLOAT_FUNCTION (this seems to be arguable).
+// BCC allows to implement free function as friends.
+#define NUMERICS_FRIEND_FUNCTION
+
+#endif
+
+
+
+// FIXME: What about __ICL?
+#ifdef __ICC
+
+// Open problems:
+// ICC allows to implement free function as friends.
+#define NUMERICS_FRIEND_FUNCTION
+// ICC sometimes needs qualified type names.
+#define NUMERICS_QUALIFIED_TYPENAME
 
 #endif
 
 
 
 // Forward declarations
-namespace numerics {
+namespace boost { namespace numerics {
 
     template<class T>
     class unbounded_array;
@@ -421,9 +330,12 @@ namespace numerics {
     typename MV::size_type num_non_zeros (const MV &mv) {
         return mv.non_zeros ();
     }
-}
+}}
 
-#endif 
+// This temporarily is intended to keep existent code compatible.
+namespace numerics = boost::numerics;
+
+#endif
 
 
 

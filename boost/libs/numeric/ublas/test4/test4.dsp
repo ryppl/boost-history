@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Target_Dir ""
 dCPP=cl.exe
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /O2 /I "..\..\..\.." /D "NDEBUG" /D "WIN32" /D "_CONSOLE" /D "_MBCS" /D "USE_MSVC" /YX /FD /Zm500 /c
+# ADD CPP /nologo /W3 /GX /O2 /I "..\..\..\.." /D "NDEBUG" /D "WIN32" /D "_CONSOLE" /D "_MBCS" /YX /FD /Zm500 /c
 # ADD BASE RSC /l 0x407 /d "NDEBUG"
 # ADD RSC /l 0x407 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -67,7 +67,7 @@ LINK32=link.exe
 # PROP Target_Dir ""
 dCPP=cl.exe
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /W3 /Gm /GX /ZI /Od /I "..\..\..\.." /D "_DEBUG" /D "WIN32" /D "_CONSOLE" /D "_MBCS" /D "USE_MSVC" /YX /FD /GZ /Zm500 /c
+# ADD CPP /nologo /W3 /Gm /GX /ZI /Od /I "..\..\..\.." /D "_DEBUG" /D "WIN32" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ /Zm500 /c
 # ADD BASE RSC /l 0x407 /d "_DEBUG"
 # ADD RSC /l 0x407 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -181,10 +181,6 @@ SOURCE=..\..\..\..\boost\numeric\ublas\symmetric.h
 # Begin Source File
 
 SOURCE=.\test4.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\boost\numeric\ublas\timer.h
 # End Source File
 # Begin Source File
 

@@ -1,16 +1,16 @@
 //
 //  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
-//  
+//
 //  Permission to use, copy, modify, distribute and sell this software
 //  and its documentation for any purpose is hereby granted without fee,
 //  provided that the above copyright notice appear in all copies and
 //  that both that copyright notice and this permission notice appear
 //  in supporting documentation.  The authors make no representations
-//  about the suitability of this software for any purpose.  
+//  about the suitability of this software for any purpose.
 //  It is provided "as is" without express or implied warranty.
-//  
-//  The authors gratefully acknowledge the support of 
+//
+//  The authors gratefully acknowledge the support of
 //  GeNeSys mbH & Co. KG in producing this work.
 //
 
@@ -21,10 +21,10 @@
 #include "exception.h"
 #include "functional.h"
 
-// Expression templates based on ideas of Todd Veldhuizen and Geoffrey Furnish 
+// Expression templates based on ideas of Todd Veldhuizen and Geoffrey Furnish
 // Iterators based on ideas of Jeremy Siek
 
-namespace numerics {
+namespace boost { namespace numerics {
 
     template<class T>
     struct scalar_expression {
@@ -171,7 +171,7 @@ namespace numerics {
 
         // Reverse iterator
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
 #else
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
@@ -296,7 +296,7 @@ namespace numerics {
 
         // Reverse iterator
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
 #else
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
@@ -311,7 +311,7 @@ namespace numerics {
             return const_reverse_iterator (begin ());
         }
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<iterator, value_type, reference> reverse_iterator;
 #else
         typedef reverse_iterator<iterator> reverse_iterator;
@@ -416,7 +416,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator, value_type> {
         public:
             typedef typename E::const_iterator::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename vector_unary::difference_type difference_type;
             typedef typename vector_unary::value_type value_type;
             typedef typename vector_unary::value_type reference;
@@ -500,7 +500,7 @@ namespace numerics {
 
         // Reverse iterator
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
 #else
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
@@ -679,7 +679,7 @@ namespace numerics {
         public:
             typedef typename restrict_traits<typename E1::const_iterator::iterator_category,
                                              typename E2::const_iterator::iterator_category>::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename vector_binary::difference_type difference_type;
             typedef typename vector_binary::value_type value_type;
             typedef typename vector_binary::value_type reference;
@@ -727,7 +727,7 @@ namespace numerics {
             }
             NUMERICS_INLINE
             value_type dereference (packed_random_access_iterator_tag) const {
-#ifndef USE_MSVC
+#ifndef NUMERICS_CONDITIONAL_DEFECT
                 value_type t1 = i_ - it1_.index () ? value_type () : *it1_;
                 value_type t2 = i_ - it2_.index () ? value_type () : *it2_;
 #else
@@ -757,7 +757,7 @@ namespace numerics {
             }
             NUMERICS_INLINE
             value_type dereference (sparse_bidirectional_iterator_tag) const {
-#ifndef USE_MSVC
+#ifndef NUMERICS_CONDITIONAL_DEFECT
                 value_type t1 = i_ - it1_.index () ? value_type () : *it1_;
                 value_type t2 = i_ - it2_.index () ? value_type () : *it2_;
 #else
@@ -840,7 +840,7 @@ namespace numerics {
 
         // Reverse iterator
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
 #else
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
@@ -985,7 +985,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator, value_type> {
         public:
             typedef typename E2::const_iterator::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename vector_binary_scalar1::difference_type difference_type;
             typedef typename vector_binary_scalar1::value_type value_type;
             typedef typename vector_binary_scalar1::value_type reference;
@@ -1073,7 +1073,7 @@ namespace numerics {
 
         // Reverse iterator
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
 #else
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
@@ -1204,7 +1204,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator, value_type> {
         public:
             typedef typename E1::const_iterator::iterator_category iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename vector_binary_scalar2::difference_type difference_type;
             typedef typename vector_binary_scalar2::value_type value_type;
             typedef typename vector_binary_scalar2::value_type reference;
@@ -1292,7 +1292,7 @@ namespace numerics {
 
         // Reverse iterator
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
 #else
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
@@ -1565,7 +1565,7 @@ namespace numerics {
         return expression_type (e1 (), e2 ());
     }
 
-}
+}}
 
 #endif
 

@@ -1,16 +1,16 @@
-//  
+//
 //  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
-//  
+//
 //  Permission to use, copy, modify, distribute and sell this software
 //  and its documentation for any purpose is hereby granted without fee,
 //  provided that the above copyright notice appear in all copies and
 //  that both that copyright notice and this permission notice appear
 //  in supporting documentation.  The authors make no representations
-//  about the suitability of this software for any purpose.  
+//  about the suitability of this software for any purpose.
 //  It is provided "as is" without express or implied warranty.
-//  
-//  The authors gratefully acknowledge the support of 
+//
+//  The authors gratefully acknowledge the support of
 //  GeNeSys mbH & Co. KG in producing this work.
 //
 
@@ -24,7 +24,7 @@
 
 // Iterators based on ideas of Jeremy Siek
 
-namespace numerics {
+namespace boost { namespace numerics {
 
     // Array based banded matrix class 
     template<class T, class F, class A>
@@ -137,7 +137,7 @@ namespace numerics {
             size_type k = j;
             size_type l = upper_ + i - j;
             if (k < size2_ &&
-                l < lower_ + 1 + upper_) 
+                l < lower_ + 1 + upper_)
                 return data () [functor_type::element (k, size2_,
                                                        l, lower_ + 1 + upper_)]; 
 #endif
@@ -198,21 +198,20 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         banded_matrix &operator = (const matrix_expression<AE> &ae) { 
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (ae, lower_, upper_));
 #else
-            return assign (self_type (ae, lower_, upper_));
+            // return assign (self_type (ae, lower_, upper_));
+            self_type temporary (ae, lower_, upper_);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
         NUMERICS_INLINE
         banded_matrix &reset (const matrix_expression<AE> &ae) { 
-            resize (ae ().size1 (), ae ().size2 (), lower_, upper_);
-#ifndef USE_GCC
-            return assign_temporary (self_type (ae, lower_, upper_));
-#else
-            return assign (self_type (ae, lower_, upper_));
-#endif
+            self_type temporary (ae, lower_, upper_);
+            resize (temporary.size1 (), temporary.size2 (), lower_, upper_);
+            return assign_temporary (temporary);
         }
         template<class AE>
         NUMERICS_INLINE
@@ -223,10 +222,12 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         banded_matrix& operator += (const matrix_expression<AE> &ae) {
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (*this + ae, lower_, upper_));
 #else
-            return assign (self_type (*this + ae, lower_, upper_));
+            // return assign (self_type (*this + ae, lower_, upper_));
+            self_type temporary (*this + ae, lower_, upper_);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
@@ -238,10 +239,12 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         banded_matrix& operator -= (const matrix_expression<AE> &ae) {
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (*this - ae, lower_, upper_));
 #else
-            return assign (self_type (*this - ae, lower_, upper_));
+            // return assign (self_type (*this - ae, lower_, upper_));
+            self_type temporary (*this - ae, lower_, upper_);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
@@ -277,7 +280,7 @@ namespace numerics {
             std::swap (upper_, m.upper_);
             data ().swap (m.data ());
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (banded_matrix &m1, banded_matrix &m2) {
             m1.swap (m2);
@@ -285,6 +288,8 @@ namespace numerics {
 #endif
 
         // Element insertion and erasure
+        // These functions should work with std::vector.
+        // Thanks to Kresimir Fresl for spotting this.
         NUMERICS_INLINE
         void insert (size_type i, size_type j, const_reference t) {
             check (i < size1_, bad_index ());
@@ -298,15 +303,19 @@ namespace numerics {
             size_type l = lower_ + j - i;
             check (data () [functor_type::element (k, std::max (size1_, size2_), 
                                                    l, lower_ + 1 + upper_)] == value_type (), bad_index ());
-            data ().insert (data ().begin () + functor_type::element (k, std::max (size1_, size2_), 
-                                                                      l, lower_ + 1 + upper_), t);
+            // data ().insert (data ().begin () + functor_type::element (k, std::max (size1_, size2_), 
+            //                                                           l, lower_ + 1 + upper_), t);
+            data () [functor_type::element (k, std::max (size1_, size2_), 
+                                            l, lower_ + 1 + upper_)] = t;
 #else
             size_type k = j;
             size_type l = upper_ + i - j;
             check (data () [functor_type::element (k, size2_, 
                                                    l, lower_ + 1 + upper_)] == value_type (), bad_index ());
-            data ().insert (data ().begin () + functor_type::element (k, size2_, 
-                                                                      l, lower_ + 1 + upper_), t);
+            // data ().insert (data ().begin () + functor_type::element (k, size2_, 
+            //                                                           l, lower_ + 1 + upper_), t);
+            data () [functor_type::element (k, size2_, 
+                                            l, lower_ + 1 + upper_)] = t;
 #endif
         }
         NUMERICS_INLINE
@@ -316,18 +325,23 @@ namespace numerics {
 #ifdef NUMERICS_OWN_BANDED
             size_type k = std::max (i, j);
             size_type l = lower_ + j - i;
-            data ().erase (data ().begin () + functor_type::element (k, std::max (size1_, size2_), 
-                                                                     l, lower_ + 1 + upper_));
+            // data ().erase (data ().begin () + functor_type::element (k, std::max (size1_, size2_), 
+            //                                                         l, lower_ + 1 + upper_));
+            data () [functor_type::element (k, std::max (size1_, size2_), 
+                                            l, lower_ + 1 + upper_)] = value_type ();
 #else
             size_type k = j;
             size_type l = upper_ + i - j;
-            data ().erase (data ().begin () + functor_type::element (k, size2_, 
-                                                                     l, lower_ + 1 + upper_));
+            // data ().erase (data ().begin () + functor_type::element (k, size2_, 
+            //                                                          l, lower_ + 1 + upper_));
+            data () [functor_type::element (k, size2_, 
+                                            l, lower_ + 1 + upper_)] = value_type ();
 #endif
         }
         NUMERICS_INLINE
         void clear () {
-            data ().clear ();
+            // data ().clear ();
+            std::fill (data ().begin (), data ().end (), value_type ());
         }
 
 #ifdef NUMERICS_USE_CANONICAL_ITERATOR
@@ -335,7 +349,7 @@ namespace numerics {
         typedef matrix_column_iterator<self_type, packed_random_access_iterator_tag> iterator2;
         typedef matrix_row_const_iterator<self_type, packed_random_access_iterator_tag> const_iterator1;
         typedef matrix_column_const_iterator<self_type, packed_random_access_iterator_tag> const_iterator2;
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator1, typename matrix_row<self_type>, typename matrix_row<const_self_type> > const_reverse_iterator1;
         typedef reverse_iterator<iterator1, typename matrix_row<self_type>, typename matrix_row<self_type> > reverse_iterator1;
         typedef reverse_iterator<const_iterator2, typename matrix_column<self_type>, typename matrix_column<const_self_type> > const_reverse_iterator2;
@@ -358,7 +372,7 @@ namespace numerics {
         class const_iterator2;
         class iterator2;
 #endif
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
         typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
@@ -477,7 +491,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator1, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename banded_matrix::difference_type difference_type;
             typedef typename banded_matrix::value_type value_type;
             typedef typename banded_matrix::value_type reference;
@@ -593,7 +607,7 @@ namespace numerics {
             public random_access_iterator_base<iterator1, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename banded_matrix::difference_type difference_type;
             typedef typename banded_matrix::value_type value_type;
             typedef typename banded_matrix::reference reference;
@@ -708,7 +722,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator2, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename banded_matrix::difference_type difference_type;
             typedef typename banded_matrix::value_type value_type;
             typedef typename banded_matrix::value_type reference;
@@ -824,7 +838,7 @@ namespace numerics {
             public random_access_iterator_base<iterator2, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename banded_matrix::difference_type difference_type;
             typedef typename banded_matrix::value_type value_type;
             typedef typename banded_matrix::reference reference;
@@ -1172,7 +1186,7 @@ namespace numerics {
             check (upper_ == m.upper_, bad_size ());
             matrix_swap<scalar_swap<value_type, value_type> > () (*this, m); 
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (banded_adaptor &m1, banded_adaptor &m2) {
             m1.swap (m2);
@@ -1184,7 +1198,7 @@ namespace numerics {
         typedef matrix_column_iterator<self_type, packed_random_access_iterator_tag> iterator2;
         typedef matrix_row_const_iterator<self_type, packed_random_access_iterator_tag> const_iterator1;
         typedef matrix_column_const_iterator<self_type, packed_random_access_iterator_tag> const_iterator2;
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator1, typename matrix_row<self_type>, typename matrix_row<const_self_type> > const_reverse_iterator1;
         typedef reverse_iterator<iterator1, typename matrix_row<self_type>, typename matrix_row<self_type> > reverse_iterator1;
         typedef reverse_iterator<const_iterator2, typename matrix_column<self_type>, typename matrix_column<const_self_type> > const_reverse_iterator2;
@@ -1207,7 +1221,7 @@ namespace numerics {
         class const_iterator2;
         class iterator2;
 #endif
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
         typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
@@ -1326,7 +1340,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator1, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename banded_adaptor::difference_type difference_type;
             typedef typename banded_adaptor::value_type value_type;
             typedef typename banded_adaptor::value_type reference;
@@ -1442,7 +1456,7 @@ namespace numerics {
             public random_access_iterator_base<iterator1, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename banded_adaptor::difference_type difference_type;
             typedef typename banded_adaptor::value_type value_type;
             typedef typename banded_adaptor::reference reference;
@@ -1557,7 +1571,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator2, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename banded_adaptor::difference_type difference_type;
             typedef typename banded_adaptor::value_type value_type;
             typedef typename banded_adaptor::value_type reference;
@@ -1673,7 +1687,7 @@ namespace numerics {
             public random_access_iterator_base<iterator2, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename banded_adaptor::difference_type difference_type;
             typedef typename banded_adaptor::value_type value_type;
             typedef typename banded_adaptor::reference reference;
@@ -1830,9 +1844,9 @@ namespace numerics {
     template<class M>
     banded_adaptor<M>::matrix_type banded_adaptor<M>::nil_;
 
-}
+}}
 
-#endif 
+#endif
 
 
 

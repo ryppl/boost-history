@@ -1,4 +1,4 @@
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC
 
 #pragma warning (disable: 4355)
 #pragma warning (disable: 4503)
@@ -9,23 +9,13 @@
 #include <iostream>
 #include <string>
 
-#ifdef NUMERICS_PRIVATE
-#include "../config.h"
-#include "../vector.h"
-#include "../vector_sp.h"
-#include "../matrix.h"
-#include "../matrix_sp.h"
-
-#include "../timer.h"
-#else
 #include <boost/numeric/ublas/config.h>
 #include <boost/numeric/ublas/vector.h>
 #include <boost/numeric/ublas/vector_sp.h>
 #include <boost/numeric/ublas/matrix.h>
 #include <boost/numeric/ublas/matrix_sp.h>
 
-#include <boost/numeric/ublas/timer.h>
-#endif
+#include <boost/timer.hpp>
 
 #include "bench2.h"
 
@@ -41,7 +31,7 @@ struct peak_c_plus {
     void operator () (int runs) const {
         try {
             static T s (0);
-            numerics::timer t;
+            boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 s += T (0);
 //                sink_scalar (s);
@@ -63,7 +53,7 @@ struct peak_c_multiplies {
     void operator () (int runs) const {
         try {
             static T s (1);
-            numerics::timer t;
+            boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 s *= T (1);
 //                sink_scalar (s);

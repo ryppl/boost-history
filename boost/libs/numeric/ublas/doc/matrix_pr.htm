@@ -1731,8 +1731,8 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         value_type operator () (size_type i, size_type j) const;
         reference operator () (size_type i, size_type j);
 
-        matrix_range&lt;matrix_type&gt; project (const range &amp;r1, const range &amp;r2) const;
-        matrix_range&lt;matrix_type&gt;  project (const range &amp;r1, const range &amp;r2);
+        matrix_range&lt;const_matrix_type&gt; project (const range &amp;r1, const range &amp;r2) const;
+        matrix_range&lt;matrix_type&gt; project (const range &amp;r1, const range &amp;r2);
 
         // Assignment
         matrix_range &amp;operator = (const matrix_range &amp;mr);
@@ -2255,9 +2255,9 @@ href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
         value_type operator () (size_type i, size_type j) const;
         reference operator () (size_type i, size_type j);
 
-        matrix_slice&lt;matrix_type&gt; project (const range &amp;r1, const range &amp;r2) const;
+        matrix_slice&lt;const_matrix_type&gt; project (const range &amp;r1, const range &amp;r2) const;
         matrix_slice&lt;matrix_type&gt; project (const range &amp;r1, const range &amp;r2);
-        matrix_slice&lt;matrix_type&gt; project (const slice &amp;s1, const slice &amp;s2) const;
+        matrix_slice&lt;const_matrix_type&gt; project (const slice &amp;s1, const slice &amp;s2) const;
         matrix_slice&lt;matrix_type&gt; project (const slice &amp;s1, const slice &amp;s2);
 
         // Assignment

@@ -1,16 +1,16 @@
-//  
+//
 //  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
-//  
+//
 //  Permission to use, copy, modify, distribute and sell this software
 //  and its documentation for any purpose is hereby granted without fee,
 //  provided that the above copyright notice appear in all copies and
 //  that both that copyright notice and this permission notice appear
 //  in supporting documentation.  The authors make no representations
-//  about the suitability of this software for any purpose.  
+//  about the suitability of this software for any purpose.
 //  It is provided "as is" without express or implied warranty.
-//  
-//  The authors gratefully acknowledge the support of 
+//
+//  The authors gratefully acknowledge the support of
 //  GeNeSys mbH & Co. KG in producing this work.
 //
 
@@ -24,7 +24,7 @@
 
 // Iterators based on ideas of Jeremy Siek
 
-namespace numerics {
+namespace boost { namespace numerics {
 
     template<class S, class A> 
     struct vector_assign_scalar_traits {
@@ -106,7 +106,7 @@ namespace numerics {
         template<class V, class T>
         NUMERICS_INLINE
         void operator () (V &v, const T &t) {
-            typedef typename vector_assign_scalar_traits<NUMERICS_TYPENAME V::storage_category, 
+            typedef typename vector_assign_scalar_traits<NUMERICS_TYPENAME V::storage_category,
                                                          assign_category>::dispatch_category dispatch_category ;
             operator () (v, t, dispatch_category ());
         }
@@ -421,28 +421,27 @@ namespace numerics {
             return *this;
         }
         NUMERICS_INLINE
-        vector &assign_temporary (vector &v) { 
+        vector &assign_temporary (vector &v) {
             swap (v);
             return *this;
         }
         template<class AE>
         NUMERICS_INLINE
         vector &operator = (const vector_expression<AE> &ae) {
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (ae));
 #else
-            return assign (self_type (ae));
+            // return assign (self_type (ae));
+            self_type temporary (ae);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
         NUMERICS_INLINE
         vector &reset (const vector_expression<AE> &ae) {
-            resize (ae ().size ());
-#ifndef USE_GCC
-            return assign_temporary (self_type (ae));
-#else
-            return assign (self_type (ae));
-#endif
+            self_type temporary (ae);
+            resize (temporary.size ());
+            return assign_temporary (temporary);
         }
         template<class AE>
         NUMERICS_INLINE
@@ -453,10 +452,12 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         vector &operator += (const vector_expression<AE> &ae) {
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (*this + ae));
 #else
-            return assign (self_type (*this + ae));
+            // return assign (self_type (*this + ae));
+            self_type temporary (*this + ae);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
@@ -468,10 +469,12 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         vector &operator -= (const vector_expression<AE> &ae) {
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (*this - ae));
 #else
-            return assign (self_type (*this - ae));
+            // return assign (self_type (*this - ae));
+            self_type temporary (*this - ae);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
@@ -501,7 +504,7 @@ namespace numerics {
             std::swap (size_, v.size_);
             data ().swap (v.data ());
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (vector &v1, vector &v2) {
             v1.swap (v2);
@@ -509,19 +512,21 @@ namespace numerics {
 #endif
 
         // Element insertion and erasure
+        // These functions should work with std::vector.
+        // Thanks to Kresimir Fresl for spotting this.
         NUMERICS_INLINE
         void insert (size_type i, const_reference t) {
             check (data () [i] == value_type (), bad_index ());
-            data ().insert (data ().begin () + i, t);
+            // data ().insert (data ().begin () + i, t);
+            data () [i] = t;
         }
         NUMERICS_INLINE
         void erase (size_type i) {
-            data ().erase (data ().begin () + i);
+            // data ().erase (data ().begin () + i);
+            data () [i] = value_type ();
         }
         NUMERICS_INLINE
         void clear () {
-            // clear won't work for std::vector.
-            // Thanks to Kresimir Fresl for spotting this.
             // data ().clear ();
             std::fill (data ().begin (), data ().end (), value_type ());
         }
@@ -576,7 +581,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator, value_type> {
         public:
             typedef dense_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename vector::difference_type difference_type;
             typedef typename vector::value_type value_type;
             typedef typename vector::const_reference reference;
@@ -591,7 +596,7 @@ namespace numerics {
             const_iterator (const vector &v, const const_iterator_type &it):
                 container_const_reference<vector> (v), it_ (it) {}
             NUMERICS_INLINE
-#ifndef USE_ICC
+#ifndef NUMERICS_QUALIFIED_TYPENAME
             const_iterator (const iterator &it):
 #else
             const_iterator (const typename vector::iterator &it):
@@ -674,7 +679,7 @@ namespace numerics {
             public random_access_iterator_base<iterator, value_type> {
         public:
             typedef dense_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename vector::difference_type difference_type;
             typedef typename vector::value_type value_type;
             typedef typename vector::reference reference;
@@ -761,7 +766,7 @@ namespace numerics {
 
         // Reverse iterator
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
 #else
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
@@ -776,7 +781,7 @@ namespace numerics {
             return const_reverse_iterator (begin ());
         }
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<iterator, value_type, reference> reverse_iterator;
 #else
         typedef reverse_iterator<iterator> reverse_iterator;
@@ -877,7 +882,7 @@ namespace numerics {
             std::swap (size_, v.size_);
             std::swap (index_, v.index_);
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (unit_vector &v1, unit_vector &v2) {
             v1.swap (v2);
@@ -909,7 +914,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator, value_type> {
         public:
             typedef packed_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename unit_vector::difference_type difference_type;
             typedef typename unit_vector::value_type value_type;
             typedef typename unit_vector::value_type reference;
@@ -996,7 +1001,7 @@ namespace numerics {
 
         // Reverse iterator
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
 #else
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
@@ -1073,7 +1078,7 @@ namespace numerics {
 
         // Assignment
         NUMERICS_INLINE
-        scalar_vector &operator = (const scalar_vector &v) { 
+        scalar_vector &operator = (const scalar_vector &v) {
             check (size_ == v.size_, bad_size ());
             size_ = v.size_;
             value_ = v.value_;
@@ -1093,7 +1098,7 @@ namespace numerics {
             std::swap (size_, v.size_);
             std::swap (value_, v.value_);
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (scalar_vector &v1, scalar_vector &v2) {
             v1.swap (v2);
@@ -1129,7 +1134,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator, value_type> {
         public:
             typedef dense_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename scalar_vector::difference_type difference_type;
             typedef typename scalar_vector::value_type value_type;
             typedef typename scalar_vector::value_type reference;
@@ -1216,7 +1221,7 @@ namespace numerics {
 
         // Reverse iterator
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
 #else
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
@@ -1330,29 +1335,28 @@ namespace numerics {
             std::copy (v.data_, v.data_ + v.size_, data_);
             return *this;
         }
-        template<class AE>
         NUMERICS_INLINE
-        c_vector &reset (const vector_expression<AE> &ae) {
-            resize (ae ().size ());
-#ifndef USE_GCC
-            return assign_temporary (self_type (ae));
-#else
-            return assign (self_type (ae));
-#endif
-        }
-        NUMERICS_INLINE
-        c_vector &assign_temporary (c_vector &v) { 
+        c_vector &assign_temporary (c_vector &v) {
             swap (v);
             return *this;
         }
         template<class AE>
         NUMERICS_INLINE
         c_vector &operator = (const vector_expression<AE> &ae) {
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (ae));
 #else
-            return assign (self_type (ae));
+            // return assign (self_type (ae));
+            self_type temporary (ae);
+            return assign_temporary (temporary);
 #endif
+        }
+        template<class AE>
+        NUMERICS_INLINE
+        c_vector &reset (const vector_expression<AE> &ae) {
+            self_type temporary (ae);
+            resize (temporary.size ());
+            return assign_temporary (temporary);
         }
         template<class AE>
         NUMERICS_INLINE
@@ -1363,10 +1367,12 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         c_vector &operator += (const vector_expression<AE> &ae) {
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (*this + ae));
 #else
-            return assign (self_type (*this + ae));
+            // return assign (self_type (*this + ae));
+            self_type temporary (*this + ae);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
@@ -1378,10 +1384,12 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         c_vector &operator -= (const vector_expression<AE> &ae) {
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (*this - ae));
 #else
-            return assign (self_type (*this - ae));
+            // return assign (self_type (*this - ae));
+            self_type temporary (*this - ae);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
@@ -1411,7 +1419,7 @@ namespace numerics {
             std::swap (size_, v.size_);
             std::swap_ranges (data_, data_ + size_, v.data_);
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (c_vector &v1, c_vector &v2) {
             v1.swap (v2);
@@ -1485,7 +1493,7 @@ namespace numerics {
             public random_access_iterator_base<const_iterator, value_type> {
         public:
             typedef dense_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename c_vector::difference_type difference_type;
             typedef typename c_vector::value_type value_type;
             typedef typename c_vector::const_reference reference;
@@ -1500,7 +1508,7 @@ namespace numerics {
             const_iterator (const c_vector &v, const const_iterator_type &it):
                 container_const_reference<c_vector> (v), it_ (it) {}
             NUMERICS_INLINE
-#ifndef USE_ICC
+#ifndef NUMERICS_QUALIFIED_TYPENAME
             const_iterator (const iterator &it):
 #else
             const_iterator (const typename c_vector::iterator &it):
@@ -1584,7 +1592,7 @@ namespace numerics {
             public random_access_iterator_base<iterator, value_type> {
         public:
             typedef dense_random_access_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename c_vector::difference_type difference_type;
             typedef typename c_vector::value_type value_type;
             typedef typename c_vector::reference reference;
@@ -1672,7 +1680,7 @@ namespace numerics {
 
         // Reverse iterator
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
 #else
         typedef reverse_iterator<const_iterator> const_reverse_iterator;
@@ -1687,7 +1695,7 @@ namespace numerics {
             return const_reverse_iterator (begin ());
         }
 
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator<iterator, value_type, reference> reverse_iterator;
 #else
         typedef reverse_iterator<iterator> reverse_iterator;
@@ -1707,9 +1715,9 @@ namespace numerics {
         value_type data_ [N];
     };
 
-}
+}}
 
-#endif 
+#endif
 
 
 

@@ -1,16 +1,16 @@
 //
 //  Copyright (c) 2000-2002
 //  Joerg Walter, Mathias Koch
-//  
+//
 //  Permission to use, copy, modify, distribute and sell this software
 //  and its documentation for any purpose is hereby granted without fee,
 //  provided that the above copyright notice appear in all copies and
 //  that both that copyright notice and this permission notice appear
 //  in supporting documentation.  The authors make no representations
-//  about the suitability of this software for any purpose.  
+//  about the suitability of this software for any purpose.
 //  It is provided "as is" without express or implied warranty.
-//  
-//  The authors gratefully acknowledge the support of 
+//
+//  The authors gratefully acknowledge the support of
 //  GeNeSys mbH & Co. KG in producing this work.
 //
 
@@ -23,7 +23,7 @@
 
 // Iterators based on ideas of Jeremy Siek
 
-namespace numerics {
+namespace boost { namespace numerics {
 
     // Array based sparse matrix class 
     template<class T, class F, class A>
@@ -149,21 +149,20 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         sparse_matrix &operator = (const matrix_expression<AE> &ae) { 
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (ae, non_zeros_));
 #else
-            return assign (self_type (ae, non_zeros_));
+            // return assign (self_type (ae, non_zeros_));
+            self_type temporary (ae, non_zeros_);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
         NUMERICS_INLINE
-        sparse_matrix &reset (const matrix_expression<AE> &ae) { 
-            resize (ae ().size1 (), ae ().size2 (), non_zeros_);
-#ifndef USE_GCC
-            return assign_temporary (self_type (ae, non_zeros_));
-#else
-            return assign (self_type (ae, non_zeros_));
-#endif
+        sparse_matrix &reset (const matrix_expression<AE> &ae) {
+            self_type temporary (ae, non_zeros_);
+            resize (temporary.size1 (), temporary.size2 (), non_zeros_);
+            return assign_temporary (temporary);
         }
         template<class AE>
         NUMERICS_INLINE
@@ -174,10 +173,12 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         sparse_matrix& operator += (const matrix_expression<AE> &ae) {
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (*this + ae, non_zeros_));
 #else
-            return assign (self_type (*this + ae, non_zeros_));
+            // return assign (self_type (*this + ae, non_zeros_));
+            self_type temporary (*this + ae, non_zeros_);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
@@ -189,10 +190,12 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         sparse_matrix& operator -= (const matrix_expression<AE> &ae) {
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (*this - ae, non_zeros_));
 #else
-            return assign (self_type (*this - ae, non_zeros_));
+            // return assign (self_type (*this - ae, non_zeros_));
+            self_type temporary (*this - ae, non_zeros_);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
@@ -226,7 +229,7 @@ namespace numerics {
             std::swap (non_zeros_, m.non_zeros_);
             data ().swap (m.data ());
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (sparse_matrix &m1, sparse_matrix &m2) {
             m1.swap (m2);
@@ -266,7 +269,7 @@ namespace numerics {
         class const_iterator2;
         class iterator2;
 #endif
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
         typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
@@ -420,7 +423,7 @@ namespace numerics {
             public bidirectional_iterator_base<const_iterator1, value_type> {
         public:
             typedef sparse_bidirectional_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename sparse_matrix::difference_type difference_type;
             typedef typename sparse_matrix::value_type value_type;
             typedef typename sparse_matrix::value_type reference;
@@ -538,7 +541,7 @@ namespace numerics {
             public bidirectional_iterator_base<iterator1, value_type> {
         public:
             typedef sparse_bidirectional_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename sparse_matrix::difference_type difference_type;
             typedef typename sparse_matrix::value_type value_type;
             typedef typename sparse_matrix::reference reference;
@@ -655,7 +658,7 @@ namespace numerics {
             public bidirectional_iterator_base<const_iterator2, value_type> {
         public:
             typedef sparse_bidirectional_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename sparse_matrix::difference_type difference_type;
             typedef typename sparse_matrix::value_type value_type;
             typedef typename sparse_matrix::value_type reference;
@@ -773,7 +776,7 @@ namespace numerics {
             public bidirectional_iterator_base<iterator2, value_type> {
         public:
             typedef sparse_bidirectional_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename sparse_matrix::difference_type difference_type;
             typedef typename sparse_matrix::value_type value_type;
             typedef typename sparse_matrix::reference reference;
@@ -1066,22 +1069,21 @@ namespace numerics {
         }
         template<class AE>
         NUMERICS_INLINE
-        sparse_vector_of_sparse_vector &operator = (const matrix_expression<AE> &ae) { 
-#ifndef USE_GCC
+        sparse_vector_of_sparse_vector &operator = (const matrix_expression<AE> &ae) {
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (ae, non_zeros_));
 #else
-            return assign (self_type (ae, non_zeros_));
+            // return assign (self_type (ae, non_zeros_));
+            self_type temporary (ae, non_zeros_);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
         NUMERICS_INLINE
-        sparse_vector_of_sparse_vector &reset (const matrix_expression<AE> &ae) { 
-            resize (ae ().size1 (), ae ().size2 (), non_zeros_);
-#ifndef USE_GCC
-            return assign_temporary (self_type (ae, non_zeros_));
-#else
-            return assign (self_type (ae, non_zeros_));
-#endif
+        sparse_vector_of_sparse_vector &reset (const matrix_expression<AE> &ae) {
+            self_type temporary (ae, non_zeros_);
+            resize (temporary.size1 (), temporary.size2 (), non_zeros_);
+            return assign_temporary (temporary);
         }
         template<class AE>
         NUMERICS_INLINE
@@ -1092,10 +1094,12 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         sparse_vector_of_sparse_vector& operator += (const matrix_expression<AE> &ae) {
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (*this + ae, non_zeros_));
 #else
-            return assign (self_type (*this + ae, non_zeros_));
+            // return assign (self_type (*this + ae, non_zeros_));
+            self_type temporary (*this + ae, non_zeros_);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
@@ -1107,10 +1111,12 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         sparse_vector_of_sparse_vector& operator -= (const matrix_expression<AE> &ae) {
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (*this - ae, non_zeros_));
 #else
-            return assign (self_type (*this - ae, non_zeros_));
+            // return assign (self_type (*this - ae, non_zeros_));
+            self_type temporary (*this - ae, non_zeros_);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
@@ -1144,7 +1150,7 @@ namespace numerics {
             std::swap (non_zeros_, m.non_zeros_);
             data ().swap (m.data ());
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (sparse_vector_of_sparse_vector &m1, sparse_vector_of_sparse_vector &m2) {
             m1.swap (m2);
@@ -1190,7 +1196,7 @@ namespace numerics {
         class const_iterator2;
         class iterator2;
 #endif
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
         typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
@@ -1408,7 +1414,7 @@ namespace numerics {
             public bidirectional_iterator_base<const_iterator1, value_type> {
         public:
             typedef sparse_bidirectional_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename sparse_vector_of_sparse_vector::difference_type difference_type;
             typedef typename sparse_vector_of_sparse_vector::value_type value_type;
             typedef typename sparse_vector_of_sparse_vector::value_type reference;
@@ -1544,7 +1550,7 @@ namespace numerics {
             public bidirectional_iterator_base<iterator1, value_type> {
         public:
             typedef sparse_bidirectional_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename sparse_vector_of_sparse_vector::difference_type difference_type;
             typedef typename sparse_vector_of_sparse_vector::value_type value_type;
             typedef typename sparse_vector_of_sparse_vector::reference reference;
@@ -1679,7 +1685,7 @@ namespace numerics {
             public bidirectional_iterator_base<const_iterator2, value_type> {
         public:
             typedef sparse_bidirectional_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename sparse_vector_of_sparse_vector::difference_type difference_type;
             typedef typename sparse_vector_of_sparse_vector::value_type value_type;
             typedef typename sparse_vector_of_sparse_vector::value_type reference;
@@ -1815,7 +1821,7 @@ namespace numerics {
             public bidirectional_iterator_base<iterator2, value_type> {
         public:
             typedef sparse_bidirectional_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename sparse_vector_of_sparse_vector::difference_type difference_type;
             typedef typename sparse_vector_of_sparse_vector::value_type value_type;
             typedef typename sparse_vector_of_sparse_vector::reference reference;
@@ -2179,36 +2185,37 @@ namespace numerics {
         }
         template<class AE>
         NUMERICS_INLINE
-        compressed_matrix &operator = (const matrix_expression<AE> &ae) { 
-#ifndef USE_GCC
+        compressed_matrix &operator = (const matrix_expression<AE> &ae) {
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (ae, non_zeros_));
 #else
-            return assign (self_type (ae, non_zeros_));
+            // return assign (self_type (ae, non_zeros_));
+            self_type temporary (ae, non_zeros_);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
         NUMERICS_INLINE
-        compressed_matrix &reset(const matrix_expression<AE> &ae) { 
-            resize (ae ().size1 (), ae ().size2 (), non_zeros_);
-#ifndef USE_GCC
-            return assign_temporary (self_type (ae, non_zeros_));
-#else
-            return assign (self_type (ae, non_zeros_));
-#endif
+        compressed_matrix &reset(const matrix_expression<AE> &ae) {
+            self_type temporary (ae, non_zeros_);
+            resize (temporary.size1 (), temporary.size2 (), non_zeros_);
+            return assign_temporary (temporary);
         }
         template<class AE>
         NUMERICS_INLINE
-        compressed_matrix &assign (const matrix_expression<AE> &ae) { 
-            matrix_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
+        compressed_matrix &assign (const matrix_expression<AE> &ae) {
+            matrix_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae);
             return *this;
         }
         template<class AE>
         NUMERICS_INLINE
         compressed_matrix& operator += (const matrix_expression<AE> &ae) {
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (*this + ae, non_zeros_));
 #else
-            return assign (self_type (*this + ae, non_zeros_));
+            // return assign (self_type (*this + ae, non_zeros_));
+            self_type temporary (*this + ae, non_zeros_);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
@@ -2220,10 +2227,12 @@ namespace numerics {
         template<class AE>
         NUMERICS_INLINE
         compressed_matrix& operator -= (const matrix_expression<AE> &ae) {
-#ifndef USE_GCC
+#ifdef NUMERICS_MUTABLE_TEMPORARY
             return assign_temporary (self_type (*this - ae, non_zeros_));
 #else
-            return assign (self_type (*this - ae, non_zeros_));
+            // return assign (self_type (*this - ae, non_zeros_));
+            self_type temporary (*this - ae, non_zeros_);
+            return assign_temporary (temporary);
 #endif
         }
         template<class AE>
@@ -2261,7 +2270,7 @@ namespace numerics {
             index2_data ().swap (m.index2_data ());
             value_data ().swap (m.value_data ());
         }
-#ifndef USE_GCC
+#ifdef NUMERICS_FRIEND_FUNCTION
         NUMERICS_INLINE
         friend void swap (compressed_matrix &m1, compressed_matrix &m2) {
             m1.swap (m2);
@@ -2321,7 +2330,7 @@ namespace numerics {
         class const_iterator2;
         class iterator2;
 #endif
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC_STD_ITERATOR
         typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
         typedef reverse_iterator1<iterator1, value_type, reference> reverse_iterator1;
         typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
@@ -2551,7 +2560,7 @@ namespace numerics {
             public bidirectional_iterator_base<const_iterator1, value_type> {
         public:
             typedef sparse_bidirectional_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename compressed_matrix::difference_type difference_type;
             typedef typename compressed_matrix::value_type value_type;
             typedef typename compressed_matrix::value_type reference;
@@ -2673,7 +2682,7 @@ namespace numerics {
             public bidirectional_iterator_base<iterator1, value_type> {
         public:
             typedef sparse_bidirectional_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename compressed_matrix::difference_type difference_type;
             typedef typename compressed_matrix::value_type value_type;
             typedef typename compressed_matrix::reference reference;
@@ -2794,7 +2803,7 @@ namespace numerics {
             public bidirectional_iterator_base<const_iterator2, value_type> {
         public:
             typedef sparse_bidirectional_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename compressed_matrix::difference_type difference_type;
             typedef typename compressed_matrix::value_type value_type;
             typedef typename compressed_matrix::value_type reference;
@@ -2916,7 +2925,7 @@ namespace numerics {
             public bidirectional_iterator_base<iterator2, value_type> {
         public:
             typedef sparse_bidirectional_iterator_tag iterator_category;
-#ifndef USE_MSVC
+#ifndef BOOST_MSVC_STD_ITERATOR
             typedef typename compressed_matrix::difference_type difference_type;
             typedef typename compressed_matrix::value_type value_type;
             typedef typename compressed_matrix::reference reference;
@@ -3080,7 +3089,7 @@ namespace numerics {
         value_array_type value_data_;
     };
 
-#ifndef USE_MSVC
+#ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
     template<class T1, class A1, class T2, class E2>
     struct matrix_vector_binary1_traits<T1, sparse_matrix<T1, column_major, A1>, 
                                         T2, E2> {
@@ -3093,7 +3102,7 @@ namespace numerics {
     template<class E1, class E2>
     // This function seems to be big. So we do not let the compiler inline it.
     // NUMERICS_INLINE
-#ifdef USE_MSVC
+#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
     sparse_vector<typename promote_traits<typename E1::value_type, 
                                           typename E2::value_type>::promote_type>
 #else
@@ -3103,7 +3112,7 @@ namespace numerics {
     prod (const matrix_expression<E1> &e1, 
           const vector_expression<E2> &e2, 
           sparse_column_major_tag) {
-#ifdef USE_MSVC
+#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
         typedef sparse_vector<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type, 
                                                                NUMERICS_TYPENAME E2::value_type>::promote_type> result_type;
 #else
@@ -3169,7 +3178,7 @@ namespace numerics {
     template<class E1, class E2>
     // This function seems to be big. So we do not let the compiler inline it.
     // NUMERICS_INLINE
-#ifdef USE_MSVC
+#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
     sparse_vector<typename type_traits<typename promote_traits<typename E1::value_type, 
                                                                typename E2::value_type>::promote_type>::precision_type>
 #else
@@ -3179,7 +3188,7 @@ namespace numerics {
     prec_prod (const matrix_expression<E1> &e1, 
                const vector_expression<E2> &e2,
                sparse_column_major_tag) {        
-#ifdef USE_MSVC
+#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
         typedef sparse_vector<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type, 
                                                                                              NUMERICS_TYPENAME E2::value_type>::promote_type>::precision_type> result_type;
 #else
@@ -3242,7 +3251,7 @@ namespace numerics {
 #endif
     }
 
-#ifndef USE_MSVC
+#ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
     template<class T1, class E1, class T2, class A2>
     struct matrix_vector_binary2_traits<T1, E1,
                                         T2, sparse_matrix<T2, column_major, A2> > {
@@ -3255,7 +3264,7 @@ namespace numerics {
     template<class E1, class E2>
     // This function seems to be big. So we do not let the compiler inline it.
     // NUMERICS_INLINE
-#ifdef USE_MSVC
+#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
     sparse_vector<typename promote_traits<typename E1::value_type, 
                                           typename E2::value_type>::promote_type>
 #else
@@ -3265,7 +3274,7 @@ namespace numerics {
     prod (const vector_expression<E1> &e1, 
           const matrix_expression<E2> &e2, 
           sparse_row_major_tag) {
-#ifdef USE_MSVC
+#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
         typedef sparse_vector<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type, 
                                                                NUMERICS_TYPENAME E2::value_type>::promote_type> result_type;
 #else
@@ -3331,7 +3340,7 @@ namespace numerics {
     template<class E1, class E2>
     // This function seems to be big. So we do not let the compiler inline it.
     // NUMERICS_INLINE
-#ifdef USE_MSVC
+#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
     sparse_vector<typename type_traits<typename promote_traits<typename E1::value_type, 
                                                                typename E2::value_type>::promote_type>::precision_type>
 #else
@@ -3341,7 +3350,7 @@ namespace numerics {
     prec_prod (const vector_expression<E1> &e1,
                const matrix_expression<E2> &e2, 
                sparse_row_major_tag) {        
-#ifdef USE_MSVC
+#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
         typedef sparse_vector<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type, 
                                                                                              NUMERICS_TYPENAME E2::value_type>::promote_type>::precision_type> result_type;
 #else
@@ -3404,7 +3413,7 @@ namespace numerics {
 #endif
     }
 
-#ifndef USE_MSVC
+#ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
     template<class T1, class A1, class T2, class A2>
     struct matrix_matrix_binary_traits<T1, sparse_matrix<T1, column_major, A1> ,
                                        T2, sparse_matrix<T2, column_major, A2> > {
@@ -3417,7 +3426,7 @@ namespace numerics {
     template<class E1, class E2>
     // This function seems to be big. So we do not let the compiler inline it.
     // NUMERICS_INLINE
-#ifdef USE_MSVC
+#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
     sparse_matrix<typename promote_traits<typename E1::value_type, 
                                           typename E2::value_type>::promote_type, row_major>
 #else
@@ -3427,7 +3436,7 @@ namespace numerics {
     prod (const matrix_expression<E1> &e1, 
           const matrix_expression<E2> &e2, 
           sparse_column_major_tag) {
-#ifdef USE_MSVC
+#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
         typedef sparse_matrix<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type, 
                                                                NUMERICS_TYPENAME E2::value_type>::promote_type, row_major> result_type;
 #else
@@ -3487,7 +3496,7 @@ namespace numerics {
     template<class E1, class E2>
     // This function seems to be big. So we do not let the compiler inline it.
     // NUMERICS_INLINE
-#ifdef USE_MSVC
+#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
     sparse_matrix<typename type_traits<typename promote_traits<typename E1::value_type,
                                                                typename E2::value_type>::promote_type>::precision_type, row_major>
 #else
@@ -3497,7 +3506,7 @@ namespace numerics {
     prec_prod (const matrix_expression<E1> &e1,
                const matrix_expression<E2> &e2,
                sparse_column_major_tag) {
-#ifdef USE_MSVC
+#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
         typedef sparse_matrix<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type,
                                                                                              NUMERICS_TYPENAME E2::value_type>::promote_type>::precision_type, row_major> result_type;
 #else
@@ -3554,7 +3563,7 @@ namespace numerics {
 #endif
     }
 
-#ifndef USE_MSVC
+#ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
     template<class T1, class A1, class T2, class A2>
     struct matrix_matrix_binary_traits<T1, sparse_matrix<T1, row_major, A1> ,
                                        T2, sparse_matrix<T2, row_major, A2> > {
@@ -3567,7 +3576,7 @@ namespace numerics {
     template<class E1, class E2>
     // This function seems to be big. So we do not let the compiler inline it.
     // NUMERICS_INLINE
-#ifdef USE_MSVC
+#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
     sparse_matrix<typename promote_traits<typename E1::value_type,
                                           typename E2::value_type>::promote_type, column_major>
 #else
@@ -3577,7 +3586,7 @@ namespace numerics {
     prod (const matrix_expression<E1> &e1, 
           const matrix_expression<E2> &e2, 
           sparse_row_major_tag) {
-#ifdef USE_MSVC
+#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
         typedef sparse_matrix<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type, 
                                                                NUMERICS_TYPENAME E2::value_type>::promote_type, column_major> result_type;
 #else
@@ -3637,7 +3646,7 @@ namespace numerics {
     template<class E1, class E2>
     // This function seems to be big. So we do not let the compiler inline it.
     // NUMERICS_INLINE
-#ifdef USE_MSVC
+#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
     sparse_matrix<typename type_traits<typename promote_traits<typename E1::value_type,
                                                                typename E2::value_type>::promote_type>::precision_type, column_major>
 #else
@@ -3647,7 +3656,7 @@ namespace numerics {
     prec_prod (const matrix_expression<E1> &e1,
                const matrix_expression<E2> &e2,
                sparse_row_major_tag) {
-#ifdef USE_MSVC
+#ifdef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
         typedef sparse_matrix<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type,
                                                                                              NUMERICS_TYPENAME E2::value_type>::promote_type>::precision_type, column_major> result_type;
 #else
@@ -3704,7 +3713,7 @@ namespace numerics {
 #endif
     }
 
-}
+}}
 
 #endif
 

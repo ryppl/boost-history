@@ -1,4 +1,4 @@
-#ifdef USE_MSVC
+#ifdef BOOST_MSVC
 
 #pragma warning (disable: 4355)
 #pragma warning (disable: 4503)
@@ -9,23 +9,13 @@
 #include <iostream>
 #include <string>
 
-#ifdef NUMERICS_PRIVATE
-#include "../config.h"
-#include "../vector.h"
-#include "../vector_sp.h"
-#include "../matrix.h"
-#include "../matrix_sp.h"
-
-#include "../timer.h"
-#else
 #include <boost/numeric/ublas/config.h>
 #include <boost/numeric/ublas/vector.h>
 #include <boost/numeric/ublas/vector_sp.h>
 #include <boost/numeric/ublas/matrix.h>
 #include <boost/numeric/ublas/matrix_sp.h>
 
-#include <boost/numeric/ublas/timer.h>
-#endif
+#include <boost/timer.hpp>
 
 #include "bench2.h"
 
@@ -39,7 +29,7 @@ struct bench_c_outer_prod {
             static typename c_vector_traits<T, N>::type v1, v2;
             initialize_c_vector<T, N> () (v1);
             initialize_c_vector<T, N> () (v2);
-            numerics::timer t;
+            boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 for (int j = 0; j < N; ++ j) {
                     for (int k = 0; k < N; ++ k) {
@@ -68,7 +58,7 @@ struct bench_my_outer_prod {
             static V v1 (N, N), v2 (N, N);
             initialize_vector (v1);
             initialize_vector (v2);
-            numerics::timer t;
+            boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 m = - numerics::outer_prod (v1, v2);
 //                sink_matrix (m);
@@ -88,7 +78,7 @@ struct bench_my_outer_prod {
             static V v1 (N, N), v2 (N, N);
             initialize_matrix (m);
             initialize_vector (v1);
-            numerics::timer t;
+            boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 m.assign (- numerics::outer_prod (v1, v2));
 //                sink_matrix (m);
@@ -113,7 +103,7 @@ struct bench_cpp_outer_prod {
             static V v1 (N), v2 (N);
             initialize_vector (v1);
             initialize_vector (v2);
-            numerics::timer t;
+            boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 for (int j = 0; j < N; ++ j) {
                     for (int k = 0; k < N; ++ k) {
@@ -143,7 +133,7 @@ struct bench_c_matrix_vector_prod {
             static typename c_vector_traits<T, N>::type v1, v2;
             initialize_c_matrix<T, N, N> () (m);
             initialize_c_vector<T, N> () (v1);
-            numerics::timer t;
+            boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 for (int j = 0; j < N; ++ j) {
                     v2 [j] = 0;
@@ -173,7 +163,7 @@ struct bench_my_matrix_vector_prod {
             static V v1 (N, N), v2 (N, N);
             initialize_matrix (m);
             initialize_vector (v1);
-            numerics::timer t;
+            boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 v2 = numerics::prod (m, v1);
 //                sink_vector (v2);
@@ -193,7 +183,7 @@ struct bench_my_matrix_vector_prod {
             static V v1 (N, N), v2 (N, N);
             initialize_matrix (m);
             initialize_vector (v1);
-            numerics::timer t;
+            boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 v2.assign (numerics::prod (m, v1));
 //                sink_vector (v2);
@@ -218,7 +208,7 @@ struct bench_cpp_matrix_vector_prod {
             static V v1 (N), v2 (N);
             initialize_vector (m);
             initialize_vector (v1);
-            numerics::timer t;
+            boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 for (int j = 0; j < N; ++ j) {
                     std::valarray<value_type> row (m [std::slice (N * j, N, 1)]);
@@ -246,7 +236,7 @@ struct bench_c_matrix_add {
             static typename c_matrix_traits<T, N, N>::type m1, m2, m3;
             initialize_c_matrix<T, N, N> () (m1);
             initialize_c_matrix<T, N, N> () (m2);
-            numerics::timer t;
+            boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 for (int j = 0; j < N; ++ j) {
                     for (int k = 0; k < N; ++ k) {
@@ -274,7 +264,7 @@ struct bench_my_matrix_add {
             static M m1 (N, N, N * N), m2 (N, N, N * N), m3 (N, N, N * N);
             initialize_matrix (m1);
             initialize_matrix (m2);
-            numerics::timer t;
+            boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 m3 = - (m1 + m2);
 //                sink_matrix (m3);
@@ -293,7 +283,7 @@ struct bench_my_matrix_add {
             static M m1 (N, N, N * N), m2 (N, N, N * N), m3 (N, N, N * N);
             initialize_matrix (m1);
             initialize_matrix (m2);
-            numerics::timer t;
+            boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 m3.assign (- (m1 + m2));
 //                sink_matrix (m3);
@@ -317,7 +307,7 @@ struct bench_cpp_matrix_add {
             static M m1 (N * N), m2 (N * N), m3 (N * N);
             initialize_vector (m1);
             initialize_vector (m2);
-            numerics::timer t;
+            boost::timer t;
             for (int i = 0; i < runs; ++ i) {
                 m3 = - (m1 + m2);
 //                sink_vector (m3);
