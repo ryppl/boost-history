@@ -33,8 +33,8 @@
 #     define BOOST_IOFM_HASH_SET_ARG             KeyT, Cmp, Allocator
 #  endif
 
-#  if defined(_CPPLIB_VER) && (_CPPLIB_VER == 313)   // Dinkumware stdlib 313
-#     if defined(BOOST_MSVC) && (BOOST_MSVC == 1310) // MS VC7.1
+#  if defined(_CPPLIB_VER) && (_CPPLIB_VER >= 313)   // Dinkumware stdlib 313+
+#     if defined(BOOST_MSVC) && (BOOST_MSVC >= 1310) // MS VC7.1+
 #        define BOOST_IOFM_STDEXT                stdext
 #     endif
 #  endif
