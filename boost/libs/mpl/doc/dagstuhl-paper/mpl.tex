@@ -1,0 +1,76 @@
+\documentclass{netobjectdays}
+
+\newcommand{\Cpp}{C\kern-0.05em\texttt{+\kern-0.03em+}}
+\newcommand{\mpl}{\code{boost::mpl}}
+
+\input{defs}
+
+\begin{document}
+
+\title{The Boost \Cpp\ Template Metaprogramming Library}
+
+\author{Aleksey Gurtovoy$^\dag$ and David Abrahams$^\ddag$ \\
+\\
+$^\dag$ Meta Communications \\
+\texttt{agurtovoy@meta-comm.com}\\
+\\
+$^\ddag$ Boost Consulting \\
+\texttt{david.abrahams@rcn.com}
+}
+
+\maketitle
+
+\begin{abstract} $\!$This paper describes the Boost \Cpp template
+metaprogramming library (\mpl), an extensible compile-time framework
+of algorithms, sequences and function classes. The library brings
+together important abstractions from the generic and functional
+programming worlds to build a powerful, and easy-to-use
+metaprogramming toolset which makes template metaprogramming practical
+enough for the real-world environments. The MPL is heavily influenced
+by its run-time equivalent - the Standard Template Library (STL), a
+part of the C++ standard library. Like the STL, it defines an open
+conceptual and implementation framework which can serve as a
+foundation for future contributions in the domain. The library's
+fundamental idioms enable the user to focus on solutions without
+navigating the universe of possible ad-hoc approaches to a given
+metaprogramming problem, even if no actual MPL code is used. The
+library also provides a compile-time lambda facility that enables an
+arbitrary currying and composition of class templates. This paper
+explains motivation, usage, design, and implementation of /mpl/, with
+advanced examples of its real-life applications, and offers some
+lessons learned about C++ template metaprogramming.\end{abstract}
+
+
+
+\section{Introduction}
+\subsection{What is template metaprogramming? }
+\subsection{Is it for real-world? }
+\subsection{Motivation (Why a library is needed?)}
+\subsection{What about portability? }
+\subsection{Relation to other work.}
+
+\section{Basic usage}
+\subsection{Sequences, algorithms, and iterators}
+\subsection{Function classes, simple composition}
+\subsection{Lambda facility}
+
+\section{Design of boost::mpl}
+\subsection{Design goals}
+\subsection{Design decisions}
+
+\section{Advanced examples (What can I do with boost::mpl?)}
+\subsection{Using \mpl\ to implement compile-time FSM generator}
+
+\section{About implementation}
+
+\section{Lessons learned}
+
+\section{Conclusions}
+\section{Acknowledgements}
+\section{References}
+
+\bibliographystyle{abbrv}
+\bibliography{refs}
+
+\end{document}
+% LocalWords:  Aleksey David Gurtovoy Abrahams MPL STL Boost boost
