@@ -18,7 +18,11 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
   template < typename value_type, typename vector_type >
   void scal(const value_type &alpha, vector_type &x )
   {
-    BOOST_STATIC_ASSERT( ( is_same< value_type, typename vector_type::value_type >::value ) ) ;
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
+    BOOST_STATIC_ASSERT( ( boost::is_same< value_type, typename traits::vector_traits<vector_type>::value_type >::value ) ) ;
+#else
+    BOOST_STATIC_ASSERT( ( boost::is_same< value_type, typename vector_type::value_type >::value ) ) ;
+#endif
 
     const int n =  traits::vector_size( x ) ;
     const int stride = traits::vector_stride( x ) ;
@@ -32,8 +36,13 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
   template < typename value_type, typename vector_type_x, typename vector_type_y >
   void axpy(const value_type& alpha, const vector_type_x &x, vector_type_y &y )
   { 
+#ifdef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
     BOOST_STATIC_ASSERT( ( is_same< value_type, typename vector_type_x::value_type >::value ) ) ;
     BOOST_STATIC_ASSERT( ( is_same< value_type, typename vector_type_y::value_type >::value ) ) ;
+#else
+    BOOST_STATIC_ASSERT( ( is_same< value_type, typename traits::vector_traits< vector_type_x >::value_type >::value ) ) ;
+    BOOST_STATIC_ASSERT( ( is_same< value_type, typename traits::vector_traits< vector_type_y >::value_type >::value ) ) ;
+#endif
     assert( traits::vector_size( x ) == traits::vector_size( y ) ) ;
 
     const int n = traits::vector_size( x ) ;
@@ -51,7 +60,12 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
   typename traits::vector_traits< vector_type_x >::value_type 
   dot(const vector_type_x &x, const vector_type_y &y)
   {
+#ifdef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
     BOOST_STATIC_ASSERT( ( is_same< typename vector_type_y::value_type, typename vector_type_x::value_type >::value ) ) ;
+#else
+    BOOST_STATIC_ASSERT( ( is_same< typename traits::vector_traits< vector_type_y >::value_type, typename traits::vector_traits< vector_type_x >::value_type >::value ) ) ;
+#endif
+
     assert( traits::vector_size( x ) == traits::vector_size( y ) ) ;
 
     typedef typename vector_type_x::value_type value_type ;
@@ -70,7 +84,11 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
   typename traits::vector_traits< vector_type_x >::value_type 
   dotu(const vector_type_x &x, const vector_type_y &y)
   {
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
+    BOOST_STATIC_ASSERT( ( is_same< typename traits::vector_traits< vector_type_y >::value_type, typename traits::vector_traits< vector_type_x >::value_type >::value ) ) ;
+#else
     BOOST_STATIC_ASSERT( ( is_same< typename vector_type_y::value_type, typename vector_type_x::value_type >::value ) ) ;
+#endif
     assert( traits::vector_size( x ) == traits::vector_size( y ) ) ;
 
     typedef typename vector_type_x::value_type value_type ;
@@ -91,7 +109,11 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
   typename traits::vector_traits< vector_type_x >::value_type 
   dotc(const vector_type_x &x, const vector_type_y &y)
   {
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
+    BOOST_STATIC_ASSERT( ( is_same< typename traits::vector_traits< vector_type_y >::value_type, typename traits::vector_traits< vector_type_x >::value_type >::value ) ) ;
+#else
     BOOST_STATIC_ASSERT( ( is_same< typename vector_type_y::value_type, typename vector_type_x::value_type >::value ) ) ;
+#endif
     assert( traits::vector_size( x ) == traits::vector_size( y ) ) ;
 
     typedef typename vector_type_x::value_type value_type ;
