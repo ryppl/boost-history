@@ -136,7 +136,7 @@ template<class Writer>
 class save_descriptor
 {
 public:
-  BOOST_STATIC_CONSTANT(bool, loading = true);
+  BOOST_STATIC_CONSTANT(bool, loading = false);
   save_descriptor(Writer & w)
     : writer(w), first(true)
   {
