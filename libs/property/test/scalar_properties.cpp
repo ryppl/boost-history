@@ -112,7 +112,8 @@ int test_main( int, char *[] )
 
    // accessing members of the property value
 
-   objectprop ob = mytype();
+   mytype mt; // so gcc doesn't think ob( mytype()) is a function decleration.
+   objectprop ob( mt );
 
    BOOST_TEST( ob().calc() == 314159 );
    BOOST_TEST( ob -> calc() == 314159 );
