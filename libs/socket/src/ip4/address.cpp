@@ -19,7 +19,11 @@
 #endif
 
 #include "boost/socket/ip4/address.hpp"
+#include "boost/socket/any_address.hpp"
 #include "boost/socket/impl/socket_init.hpp"
+#include "boost/socket/socket_exception.hpp"
+
+#include "boost/lexical_cast.hpp"
 
 //! implementation
 #ifdef USES_WINSOCK2
@@ -87,6 +91,13 @@ namespace boost
         sockaddr_ptr(m_address)->sin_family = AF_INET;
       }
 
+      address::address(const any_address& addr)
+      {
+        std::memset(m_address.storage, 0, address_size);
+        std::pair<const void*,size_t> rep=addr.representation();
+        std::memcpy(m_address.storage, rep.first, rep.second);
+      }
+
       family_t address::family() const
       {
         return sockaddr_ptr(m_address)->sin_family;
@@ -103,25 +114,25 @@ namespace boost
         sockaddr_ptr(m_address)->sin_port = htons(port);
       }
 
-      void address::hostname(const char* hostname)
-      {
-        hostent *hp = ::gethostbyname(hostname);
-        if (hp == 0)
-          throw "hostname not found";
-        std::memcpy((char*)&(sockaddr_ptr(m_address)->sin_addr),
-                    (char*)hp->h_addr, hp->h_length);
-      }
+//       void address::hostname(const char* hostname)
+//       {
+//         hostent *hp = ::gethostbyname(hostname);
+//         if (hp == 0)
+//           throw "hostname not found";
+//         std::memcpy((char*)&(sockaddr_ptr(m_address)->sin_addr),
+//                     (char*)hp->h_addr, hp->h_length);
+//       }
 
-      std::string address::hostname() const
-      {
-        hostent *hp =
-          gethostbyaddr((const char*)&sockaddr_ptr(m_address)->sin_addr,
-                        sizeof(unsigned long),
-                        AF_INET );
-        if (hp == 0)
-          throw "hostname not found";
-        return hp->h_name;
-      }
+//       std::string address::hostname() const
+//       {
+//         hostent *hp =
+//           gethostbyaddr((const char*)&sockaddr_ptr(m_address)->sin_addr,
+//                         sizeof(unsigned long),
+//                         AF_INET );
+//         if (hp == 0)
+//           throw "hostname not found";
+//         return hp->h_name;
+//       }
 
       void address::ip(const char* ip_string)
       {
@@ -135,17 +146,30 @@ namespace boost
 #endif
       }
 
-      const char* address::ip() const
+      std::string address::ip() const
       {
         const char* ret=inet_ntoa(sockaddr_ptr(m_address)->sin_addr);
         if (!ret)
-          throw "ip address not representable";
+          return "";
         return ret;
       }
 
       std::string address::to_string() const
       {
-        return hostname();
+        const char *ret=inet_ntoa(sockaddr_ptr(m_address)->sin_addr);
+        if (!ret)
+          return "";
+
+        std::string s(ret);
+        s+=":";
+        try{
+          s+=boost::lexical_cast<std::string>(
+            ntohs(sockaddr_ptr(m_address)->sin_port));
+        }
+        catch (boost::bad_lexical_cast& e)
+        {}
+
+        return s;
       }
 
       std::pair<const void*,unsigned> address::representation() const

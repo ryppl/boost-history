@@ -20,6 +20,8 @@
 #include "boost/socket/socket_errors.hpp"
 #include "boost/iterator_adaptors.hpp"
 
+#include <string>
+
 namespace boost
 {
   namespace socket
@@ -37,6 +39,7 @@ namespace boost
       {}
       any_protocol protocol() const;
       any_address address() const;
+      std::string hostname() const;
       const int flags() const;
     private:
       // help for the iterators
@@ -97,6 +100,8 @@ namespace boost
       {
         return iterator(0);
       }
+
+      enum hints { passive=1, canonname, numerichost };
 
     private:
       void get_addrinfo(

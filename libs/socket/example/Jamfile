@@ -7,6 +7,7 @@ SEARCH on testing.jam = $(BOOST_BUILD_PATH) ;
 include testing.jam ;
 
 B_ROOT ?= c:/usr/boost ;
+SPIRIT_ROOT ?= c:/usr/spirit ;
 
 rule socket-example ( example-name : sources + )
 {
@@ -16,6 +17,7 @@ rule socket-example ( example-name : sources + )
 	:
 	<include>$(B_ROOT)
 	<include>$(BOOST_ROOT)
+	<include>$(SPIRIT_ROOT)
 	<bcc56><*><cxxflags>-Q
 	  <runtime-link>static
 	  <threading>single
@@ -53,6 +55,7 @@ socket-test-example simple_client : client_test.cpp ;
 socket-test-example simple_server : server_test.cpp ;
 
 socket-example http_get : http_get.cpp ;
+socket-example async_server : async_server.cpp ;
 
 #socket-example named_pipe_server : named_pipe_server.cpp ;
 #socket-example named_pipe_client : named_pipe_client.cpp ;

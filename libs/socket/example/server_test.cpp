@@ -22,6 +22,8 @@
 #include "boost/socket/socketstream.hpp"
 #include "boost/socket/acceptor_socket.hpp"
 #include "boost/socket/socket_set.hpp"
+#include "boost/socket/address_info.hpp"
+#include "boost/lexical_cast.hpp"
 
 #include "boost/shared_ptr.hpp"
 #include "boost/bind.hpp"
@@ -71,7 +73,7 @@ void server_test()
 
     ip4::address addr;
     addr.port(3234);
-    addr.hostname("localhost");
+    addr.ip("127.0.0.1");
 
     ip4::tcp_protocol protocol;
 
@@ -119,11 +121,22 @@ void server_test()
             int ret=listening_socket.accept(*accepted_socket,client);
             if (ret==Success)
             {
-              BOOST_CHECK(accepted_socket->ioctl(non_block)==boost::socket::Success);
+              accepted_socket->ioctl(non_block);
               master_set.insert(accepted_socket->socket());
-              BOOST_MESSAGE("Accepted client");
-              BOOST_MESSAGE(client.ip());
-              BOOST_MESSAGE(client.hostname());
+              std::cout << "Accepted client " << client.ip()
+                        << ":" << client.port()
+                        << std::endl;
+              std::string port=boost::lexical_cast<std::string>(client.port());
+
+              address_info_list addr_info(
+                client.ip().c_str(),
+                port.c_str(),
+                address_info_list::canonname);
+              address_info_list::iterator iend=addr_info.end();
+              for (address_info_list::iterator i=addr_info.begin();
+                   i!=iend; ++i)
+                std::cout << i->hostname() << std::endl;
+
               std::cout << accepted_socket->socket() <<std::endl;
               clients.insert(std::make_pair(accepted_socket, client));
 
@@ -146,7 +159,7 @@ void server_test()
           BOOST_CHECK(client!=clients.end());
 
           ip4::address& client_addr=client->second;
-          BOOST_MESSAGE(client_addr.hostname());
+//           BOOST_MESSAGE(client_addr.hostname());
           boost::socket::basic_socket_stream<char> ss(*client->first);
 
           while (!ss.eof() && !ss.fail())

@@ -109,7 +109,6 @@ namespace boost
         return ret;
       }
 
-
       //! accept a connection
       /** Blocking version */
       template <class Addr>

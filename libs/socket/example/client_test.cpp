@@ -45,7 +45,7 @@ void client_test()
 
     ip4::address addr;
     addr.port(3234);
-    addr.hostname("localhost");
+    addr.ip("127.0.0.1");
     BOOST_MESSAGE(addr.ip());
 
     ip4::tcp_protocol protocol;

@@ -153,8 +153,9 @@ namespace boost
       }
 
       //! accept a connection
-      socket_errno default_socket_impl::accept(default_socket_impl& new_socket,
-                                        std::pair<void *,size_t>& address)
+      socket_errno default_socket_impl::accept(
+        default_socket_impl& new_socket,
+        std::pair<void *,size_t>& address)
       {
 #if defined(USES_WINSOCK2) || defined(__CYGWIN__)
         int len=address.second;

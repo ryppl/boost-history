@@ -25,6 +25,7 @@ namespace boost
 {
   namespace socket
   {
+    class any_address;
 
     namespace ip4
     {
@@ -34,13 +35,12 @@ namespace boost
       {
       public:
         address();
+        address(const any_address&);
         family_t family() const;
         port_t port() const;
         void port(port_t port);
-        void hostname(char const* hostname);
-        std::string hostname() const;
         void ip(char const * ip_string);
-        char const* ip() const;
+        std::string ip() const;
 
         std::string to_string() const;
         std::pair<void*,size_t> representation();

@@ -18,13 +18,20 @@
 #pragma hdrstop
 #endif
 
+
 #include "boost/socket/address_info.hpp"
-#include "boost/socket/connector_socket.hpp"
-#include "boost/socket/data_socket.hpp"
-#include "boost/socket/socketstream.hpp"
 #include "boost/socket/any_protocol.hpp"
 #include "boost/socket/any_address.hpp"
+#include "boost/socket/ip4/address.hpp"
+
+#include "boost/socket/connector_socket.hpp"
+#include "boost/socket/socketstream.hpp"
+
 #include "boost/socket/socket_exception.hpp"
+
+//#define SPIRIT_DEBUG
+#include "url.hpp"
+
 
 #include <iostream>
 
@@ -34,20 +41,32 @@
 #endif
 
 
-int main(int argc, char** argv)
+int main(int argc, const char** argv)
 {
-  if (argc!=3)
+  if (argc!=2)
   {
-    std::cerr << "usage: http_get hostname page" << std::endl;
+    std::cerr << "usage: http_get url" << std::endl;
     return 1;
   }
 
-  boost::socket::address_info_list list(argv[1],"http");
+  UrlGrammar grammar;
+  SPIRIT_DEBUG_RULE(grammar);
+
+  spirit::parse_info<const char*> info
+    =spirit::parse((char const*)argv[1], grammar);
+
+  if (schemename!="http")
+  {
+    std::cerr << schemename << " not supported" << std::endl;
+    return 1;
+  }
+
+  boost::socket::address_info_list list(servername.c_str(), "http");
 
   boost::socket::address_info_list::iterator i=list.begin(), iend=list.end();
   if (i==iend)
   {
-    std::cerr << "host " << argv[1] << " not found\n";
+    std::cerr << "host " << servername << " not found\n";
     return 2;
   }
   std::cout << std::distance(i,iend) << " addresses found\n";
@@ -58,15 +77,12 @@ int main(int argc, char** argv)
   try
   {
     connector.connect(connection, i->protocol(), i->address());
-
     boost::socket::basic_socket_stream<char> s(connection);
 
-    s << "GET /" << argv[2] << " HTTP/1.0\r\n\r\n";
+    s << "GET " << pathname << " HTTP/1.0\r\n\r\n";
     s.flush();
 
     std::string result;
-
-
     s >> result;
     while (!s.eof())
     {

@@ -46,6 +46,9 @@
 #include "boost/lexical_cast.hpp"
 #endif
 
+#include <iostream>
+#include <string.h>
+
 #ifdef _MSC_VER
 #pragma warning (push, 4)
 #pragma warning (disable: 4786 4305)
@@ -117,13 +120,27 @@ namespace boost
             addrinfo* res=*result;
             addrinfo* prev_res=0;
 
-            for (int i=0; i<hp->h_length; ++i)
+            for (char** hp_addr=hp->h_addr_list; *hp_addr; ++hp_addr)
             {
               res=new addrinfo;
               if (*result)
                 prev_res->ai_next=res;
               else
                 *result=res;
+
+
+              res->ai_canonname=0;
+              if (hp->h_name)
+                res->ai_canonname=::strdup(hp->h_name);
+              else if (*hp->h_aliases)
+                res->ai_canonname=::strdup(*hp->h_aliases);
+              else if (hint->ai_flags & 2)
+              {
+                hostent *hp =
+                  gethostbyaddr(*hp_addr,sizeof(unsigned long),AF_INET );
+                if (hp->h_name)
+                  res->ai_canonname=::strdup(hp->h_name);
+              }
 
               if (hp->h_addrtype==AF_INET)
               {
@@ -133,7 +150,7 @@ namespace boost
                 memset(addr,0,sizeof(sockaddr_in));
                 res->ai_addrlen=sizeof(sockaddr_in);
                 addr->sin_family=hp->h_addrtype;
-                std::memcpy(&addr->sin_addr, &hp->h_addr, hp->h_length);
+                std::memcpy(&addr->sin_addr, *hp_addr, hp->h_length);
               }
               else
               {
@@ -143,7 +160,7 @@ namespace boost
                 memset(addr,0,sizeof(sockaddr_in6));
                 res->ai_addrlen=sizeof(sockaddr_in6);
                 addr->sin6_family=hp->h_addrtype;
-                std::memcpy(&addr->sin6_addr, &hp->h_addr, hp->h_length);
+                std::memcpy(&addr->sin6_addr, *hp_addr, hp->h_length);
               }
               prev_res=res;
             }
@@ -163,6 +180,7 @@ namespace boost
             memset(addr,0,sizeof(sockaddr_in));
             res->ai_addrlen=sizeof(sockaddr_in);
             addr->sin_addr.s_addr=i;
+            addr->sin_family=AF_INET;
           }
           else
           {
@@ -202,9 +220,13 @@ namespace boost
             else
               addr->ai_socktype=SOCK_STREAM;
             if (addr->ai_family==AF_INET)
-              ((sockaddr_in*)addr->ai_addr)->sin_port=hp->s_port;
+              std::memcpy(&((sockaddr_in*)addr->ai_addr)->sin_port,
+                          &hp->s_port,
+                          sizeof(hp->s_port));
             else
-              ((sockaddr_in6*)addr->ai_addr)->sin6_port=hp->s_port;
+              std::memcpy(&((sockaddr_in6*)addr->ai_addr)->sin6_port,
+                          &hp->s_port,
+                          sizeof(hp->s_port));
 
             addr=addr->ai_next;
           }
@@ -261,6 +283,13 @@ namespace boost
     const int address_info::flags() const
     {
       return cast_addrinfo(m_addrinfo)->ai_flags;
+    }
+
+    std::string address_info::hostname() const
+    {
+      if (!cast_addrinfo(m_addrinfo)->ai_canonname)
+        return "";
+      return cast_addrinfo(m_addrinfo)->ai_canonname;
     }
 
     addrinfo const* address_info::next() const
