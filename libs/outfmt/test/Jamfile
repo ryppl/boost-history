@@ -6,13 +6,28 @@ lib testlib : impl/test_engine.cpp
        xmldom/impl/xmldom-lite.cpp
     :
        <link>static
+    :
+       release
     ;
 
 # generate the test programs
 
 exe stl_io : stl_io.cpp //testlib
+  : :
+       release
     ;
 
 exe formatter : formatter.cpp //testlib
+  : :
+       release
+    ;
+
+stage run
+    :
+       stl_io
+       formatter
+       view.xsl
+  : :
+       release
     ;
 
