@@ -115,6 +115,7 @@ interval<T, Traits> pow(const interval<T, Traits>& x, int pwr)
   }
 
   using interval_lib::detail::pow_aux;
+  using std::max;
 
   typename Traits::rounding rnd;
   bool sgnl = detail::sign(x.lower());
@@ -122,7 +123,7 @@ interval<T, Traits> pow(const interval<T, Traits>& x, int pwr)
   bool odd_pwr = pwr & 1;
   
   if (sgnl && !sgnu && !odd_pwr) {
-    T y = pow_aux(std::max(-x.lower(), x.upper()), pwr, rnd);
+    T y = pow_aux(max(-x.lower(), x.upper()), pwr, rnd);
     return interval<T, Traits>(0, y, true);
   } else if (sgnu) {
     T yl = pow_aux(-x.upper(), pwr, rnd);
@@ -156,11 +157,13 @@ interval<T, Traits> cos(const interval<T, Traits>& x)
   T l = tmp.lower();
   T u = tmp.upper();
 
+  using std::min;
+
   // separate into monotone subintervals
   if (u <= rnd.pi_down())
     return interval<T, Traits>(rnd.cos_down(u), rnd.cos_up(l), true);
   else if (u <= pi2.lower()) {
-    T cu = rnd.cos_up(std::min(rnd.sub_down(pi2.lower(), u), l));
+    T cu = rnd.cos_up(min(rnd.sub_down(pi2.lower(), u), l));
     return interval<T, Traits>(-1, cu, true);
   } else
     return interval<T, Traits>(-1, 1, true);

@@ -187,6 +187,8 @@ template<class T, class Traits> inline
 interval<T, Traits> operator*(const interval<T, Traits>& x,
 			      const interval<T, Traits>& y)
 {
+  using std::min;
+  using std::max;
   if (interval_lib::detail::test_input(x, y))
     return interval<T, Traits>::empty();
   typename Traits::rounding rnd;
@@ -197,10 +199,10 @@ interval<T, Traits> operator*(const interval<T, Traits>& x,
   bool zro_x = !neg_x && !pos_x;
   bool zro_y = !neg_y && !pos_y;
   if (zro_x && zro_y)
-    return interval<T, Traits>(std::min(rnd.mul_down(x.lower(), y.upper()),
-					rnd.mul_down(x.upper(), y.lower())),
-			       std::max(rnd.mul_up  (x.lower(), y.lower()),
-					rnd.mul_up  (x.upper(), y.upper())), true);
+    return interval<T, Traits>(min(rnd.mul_down(x.lower(), y.upper()),
+				   rnd.mul_down(x.upper(), y.lower())),
+			       max(rnd.mul_up  (x.lower(), y.lower()),
+				   rnd.mul_up  (x.upper(), y.upper())), true);
   else {
     const T& xl = (neg_y || zro_y &&  pos_x) ? x.upper() : x.lower();
     const T& xu = (neg_y || zro_y && !pos_x) ? x.lower() : x.upper();

@@ -5,6 +5,8 @@
 #error Internal header file: This header must be included by <boost/interval.hpp> only.
 #endif
 
+#include <cmath>
+
 namespace boost {
 
   namespace detail {
@@ -32,10 +34,10 @@ namespace boost {
     T div_down (const T& x, const T& y) { return x / y; }
     T div_up   (const T& x, const T& y) { return x / y; }
     T median   (const T& x, const T& y) { return (x + y) / 2; }
-    T sqrt_down(const T& x)             { return std::sqrt(x); }
-    T sqrt_up  (const T& x)             { return std::sqrt(x); }
-    T int_down (const T& x)             { return std::floor(x); }
-    T int_up   (const T& x)             { return std::ceil(x); }
+    T sqrt_down(const T& x)             { using std::sqrt;  return sqrt(x); }
+    T sqrt_up  (const T& x)             { using std::sqrt;  return sqrt(x); }
+    T int_down (const T& x)             { using std::floor; return floor(x); }
+    T int_up   (const T& x)             { using std::ceil;  return ceil(x); }
   };
 
   template<class T, class Rounding>
@@ -53,8 +55,10 @@ namespace boost {
     T div_down (const T& x, const T& y) { return ROUND_DOWN ( x / y        ); }
     T div_up   (const T& x, const T& y) { return ROUND_UP   ( x / y        ); }
     T median   (const T& x, const T& y) { return ROUND_NEAR ( (x+y)/2      ); }
-    T sqrt_down(const T& x)             { return ROUND_DOWN ( std::sqrt(x) ); }
-    T sqrt_up  (const T& x)             { return ROUND_UP   ( std::sqrt(x) ); }
+    T sqrt_down(const T& x)             { using std::sqrt;
+	    				  return ROUND_DOWN ( sqrt(x) ); }
+    T sqrt_up  (const T& x)             { using std::sqrt;
+	    				  return ROUND_UP   ( sqrt(x) ); }
     T int_down (const T& x)             { return ROUND_DOWN ( to_int(x)    ); }
     T int_up   (const T& x)             { return ROUND_UP   ( to_int(x)    ); }
     #undef ROUND_DOWN
@@ -80,11 +84,13 @@ namespace boost {
                                           upward();
                                           return r;
 					}
-    T sqrt_down(const T& x)             { T r = ROUND_DOWN ( std::sqrt(x) );
+    T sqrt_down(const T& x)             { using std::sqrt;
+	    				  T r = ROUND_DOWN ( sqrt(x) );
                                           upward();
                                           return r;
 					}
-    T sqrt_up  (const T& x)             { return ROUND_UP  ( std::sqrt(x) ); }
+    T sqrt_up  (const T& x)             { using std::sqrt;
+	    				  return ROUND_UP  ( sqrt(x) ); }
     T int_down (const T& x)             { return -to_int(-x); }
     T int_up   (const T& x)             { return to_int(x); }
     #undef ROUND_DOWN

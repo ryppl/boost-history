@@ -234,10 +234,12 @@ template<class T, class Traits> inline
 interval<T, Traits> intersect(const interval<T, Traits>& x,
 			      const interval<T, Traits>& y)
 {
+  using std::min;
+  using std::max;
   if (interval_lib::detail::test_input(x, y))
     return interval<T, Traits>::empty();
-  const T& l = std::max(x.lower(), y.lower());
-  const T& u = std::min(x.upper(), y.upper());
+  const T& l = max(x.lower(), y.lower());
+  const T& u = min(x.upper(), y.upper());
   if (l <= u) return interval<T, Traits>(l, u, true);
   else        return interval<T, Traits>::empty();
 }
@@ -246,6 +248,8 @@ template<class T, class Traits> inline
 interval<T, Traits> hull(const interval<T, Traits>& x,
 			 const interval<T, Traits>& y)
 {
+  using std::min;
+  using std::max;
   typedef typename Traits::checking checking;
   bool bad_x = interval_lib::detail::test_input(x);
   bool bad_y = interval_lib::detail::test_input(y);
@@ -254,13 +258,15 @@ interval<T, Traits> hull(const interval<T, Traits>& x,
     else       return y;
   else
     if (bad_y) return x;
-  return interval<T, Traits>(std::min(x.lower(), y.lower()),
-			     std::max(x.upper(), y.upper()), true);
+  return interval<T, Traits>(min(x.lower(), y.lower()),
+			     max(x.upper(), y.upper()), true);
 }
 
 template<class T, class Traits> inline
 interval<T, Traits> hull(const interval<T, Traits>& x, const T& y)
 {
+  using std::min;
+  using std::max;
   typedef typename Traits::checking checking;
   bool bad_x = interval_lib::detail::test_input(x);
   bool bad_y = interval_lib::detail::test_input<T, Traits>(y);
@@ -269,13 +275,15 @@ interval<T, Traits> hull(const interval<T, Traits>& x, const T& y)
     else       return x;
   else
     if (bad_x) return interval<T, Traits>(y, y, true);
-  return interval<T, Traits>(std::min(x.lower(), y),
-			     std::max(x.upper(), y), true);
+  return interval<T, Traits>(min(x.lower(), y),
+			     max(x.upper(), y), true);
 }
 
 template<class T, class Traits> inline
 interval<T, Traits> hull(const T& x, const interval<T, Traits>& y)
 {
+  using std::min;
+  using std::max;
   typedef typename Traits::checking checking;
   bool bad_x = interval_lib::detail::test_input<T, Traits>(x);
   bool bad_y = interval_lib::detail::test_input(y);
@@ -284,8 +292,8 @@ interval<T, Traits> hull(const T& x, const interval<T, Traits>& y)
     else       return y;
   else
     if (bad_y) return interval<T, Traits>(x, x, true);
-  return interval<T, Traits>(std::min(x, y.lower()),
-			     std::max(x, y.upper()), true);
+  return interval<T, Traits>(min(x, y.lower()),
+			     max(x, y.upper()), true);
 }
 
 template<class T> inline
@@ -312,67 +320,74 @@ bisect(const interval<T, Traits>& x)
 template<class T, class Traits> inline
 interval<T, Traits> abs(const interval<T, Traits>& x)
 {
+  using std::max;
   if (interval_lib::detail::test_input(x))
     return interval<T, Traits>::empty();
   if (!detail::sign(x.lower())) return x;
   if (detail::sign(x.upper())) return -x;
-  return interval<T, Traits>(0, std::max(-x.lower(), x.upper()), true);
+  return interval<T, Traits>(0, max(-x.lower(), x.upper()), true);
 }
 
 template<class T, class Traits> inline
 interval<T, Traits> max(const interval<T, Traits>& x,
 			const interval<T, Traits>& y)
 {
+  using std::max;
   if (interval_lib::detail::test_input(x, y))
     return interval<T, Traits>::empty();
-  return interval<T, Traits>(std::max(x.lower(), y.lower()),
-			     std::max(x.upper(), y.upper()), true);
+  return interval<T, Traits>(max(x.lower(), y.lower()),
+			     max(x.upper(), y.upper()), true);
 }
 
 template<class T, class Traits> inline
 interval<T, Traits> max(const interval<T, Traits>& x, const T& y)
 {
+  using std::max;
   if (interval_lib::detail::test_input(x, y))
     return interval<T, Traits>::empty();
-  return interval<T, Traits>(std::max(x.lower(), y),
-			     std::max(x.upper(), y), true);
+  return interval<T, Traits>(max(x.lower(), y),
+			     max(x.upper(), y), true);
 }
 
 template<class T, class Traits> inline
 interval<T, Traits> max(const T& x, const interval<T, Traits>& y)
 {
+  using std::max;
   if (interval_lib::detail::test_input(x, y))
     return interval<T, Traits>::empty();
-  return interval<T, Traits>(std::max(x, y.lower()),
-			     std::max(x, y.upper()), true);
+  return interval<T, Traits>(max(x, y.lower()),
+			     max(x, y.upper()), true);
 }
 
 template<class T, class Traits> inline
 interval<T, Traits> min(const interval<T, Traits>& x,
 			const interval<T, Traits>& y)
 {
+  using std::min;
   if (interval_lib::detail::test_input(x, y))
     return interval<T, Traits>::empty();
-  return interval<T, Traits>(std::min(x.lower(), y.lower()),
-			     std::min(x.upper(), y.upper()), true);
+  return interval<T, Traits>(min(x.lower(), y.lower()),
+			     min(x.upper(), y.upper()), true);
 }
 
 template<class T, class Traits> inline
 interval<T, Traits> min(const interval<T, Traits>& x, const T& y)
 {
+  using std::min;
   if (interval_lib::detail::test_input(x, y))
     return interval<T, Traits>::empty();
-  return interval<T, Traits>(std::min(x.lower(), y),
-			     std::min(x.upper(), y), true);
+  return interval<T, Traits>(min(x.lower(), y),
+			     min(x.upper(), y), true);
 }
 
 template<class T, class Traits> inline
 interval<T, Traits> min(const T& x, const interval<T, Traits>& y)
 {
+  using std::min;
   if (interval_lib::detail::test_input(x, y))
     return interval<T, Traits>::empty();
-  return interval<T, Traits>(std::min(x, y.lower()),
-			     std::min(x, y.upper()), true);
+  return interval<T, Traits>(min(x, y.lower()),
+			     min(x, y.upper()), true);
 }
 
   namespace interval_lib {

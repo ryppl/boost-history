@@ -76,9 +76,9 @@ inline bool sign(float x) { return signbit(x); }
 inline bool sign(double x) { return signbit(x); }
 inline bool sign(long double x) { return signbit(x); }
 #else
-inline bool sign(float x) { return std::signbit(x); }
-inline bool sign(double x) { return std::signbit(x); }
-inline bool sign(long double x) { return std::signbit(x); }
+inline bool sign(float x) { using std::signbit; return signbit(x); }
+inline bool sign(double x) { using std::signbit; return signbit(x); }
+inline bool sign(long double x) { using std::signbit; return signbit(x); }
 #endif
 inline bool is_nan(float x) { return isnan(x); }
 inline bool is_nan(double x) { return isnan(x); }
