@@ -22,7 +22,7 @@ namespace boost {
 namespace string_util_impl {
 
 	// a tolower functor 
-	template< class CharT >
+	template< typename CharT >
 	    struct tolowerF : public std::binary_function< CharT, std::locale, CharT > 
 	{
 		result_type operator ()( first_argument_type Ch, const second_argument_type& Loc ) const
@@ -32,7 +32,7 @@ namespace string_util_impl {
 	};
 
 	// a toupper functor 
-	template< class CharT >
+	template< typename CharT >
 	    struct toupperF : public std::binary_function< CharT, std::locale, CharT > 
 	{
 		result_type operator ()( first_argument_type Ch, const second_argument_type& Loc ) const
@@ -55,7 +55,7 @@ namespace string_util_impl {
 			Input.begin(), 
 			Input.end(), 
 			std::back_inserter<Seq>( Output ),
-			std::bind2nd( string_util_impl::tolowerF<Seq::value_type>(), Loc ) );
+			std::bind2nd( string_util_impl::tolowerF<typename Seq::value_type>(), Loc ) );
 
 		return Output;
 	}
@@ -68,7 +68,7 @@ namespace string_util_impl {
 			Input.begin(), 
 			Input.end(), 
 			Input.begin(),
-			std::bind2nd( string_util_impl::tolowerF<Seq::value_type>(), Loc ) );
+			std::bind2nd( string_util_impl::tolowerF<typename Seq::value_type>(), Loc ) );
 		
 		return Input;
 	}
@@ -84,7 +84,7 @@ namespace string_util_impl {
 			Input.begin(), 
 			Input.end(), 
 			std::back_inserter<Seq>( Output ),
-			std::bind2nd( string_util_impl::toupperF<Seq::value_type>(), Loc ) );
+			std::bind2nd( string_util_impl::toupperF<typename Seq::value_type>(), Loc ) );
 
 		return Output;
 	}
@@ -97,7 +97,7 @@ namespace string_util_impl {
 			Input.begin(), 
 			Input.end(), 
 			Input.begin(),
-			std::bind2nd( string_util_impl::toupperF<Seq::value_type>(), Loc ) );
+			std::bind2nd( string_util_impl::toupperF<typename Seq::value_type>(), Loc ) );
 		
 		return Input;
 	}

@@ -26,14 +26,14 @@ namespace string_util_impl {
 		this forward is provided here to allow non standard isspace implementations.
 		f.e. non character base overrides
 	*/
-	template< class CharT >
+	template< typename CharT >
 	bool isspace_impl( CharT Ch, const std::locale& Loc )
 	{
 		return std::isspace( Ch, Loc );
 	}
 
 	// an isspace functor 
-	template< class CharT >
+	template< typename CharT >
 	    struct isspaceF : public std::binary_function< CharT, std::locale, bool > 
 	{
 		result_type operator ()( first_argument_type Ch, const second_argument_type& Loc ) const
@@ -48,12 +48,12 @@ namespace string_util_impl {
 
 	// Search for first non space character from the beginning of the sequence
 	template< class Iterator >
-	Iterator trim_begin( Iterator& InBegin, Iterator& InEnd, const std::locale& Loc=std::locale() )
+	Iterator trim_begin( const Iterator& InBegin, const Iterator& InEnd, const std::locale& Loc=std::locale() )
 	{
 		return std::find_if( 
 			InBegin, 
 			InEnd, 
-			std::not1(std::bind2nd(string_util_impl::isspaceF<Iterator::value_type>(), Loc )));
+			std::not1(std::bind2nd(string_util_impl::isspaceF<typename Iterator::value_type>(), Loc )));
 	}
 
 //  left trim  -----------------------------------------------//
@@ -108,7 +108,7 @@ namespace string_util_impl {
 	template< class Seq >
 	Seq trim( const Seq& Input, const std::locale& Loc=std::locale() )
 	{
-		Seq::const_iterator TrimEnd=trim_begin( Input.rbegin(), Input.rend(), Loc).base();
+		typename Seq::const_iterator TrimEnd=trim_begin( Input.rbegin(), Input.rend(), Loc).base();
 
 		return Seq( 
 			trim_begin( Input.begin(), TrimEnd, Loc ),
