@@ -1,4 +1,4 @@
-// Copyright (C) 2001,2002 Roland Richter <roland@flll.jku.at>
+// Copyright (C) 2001-2003 Roland Richter <roland@flll.jku.at>
 // Permission to copy, use, modify, sell and distribute this software
 // is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
@@ -6,6 +6,11 @@
 #ifndef TUPPLE_PART_SPEC_HPP
 #define TUPPLE_PART_SPEC_HPP
 #include "boost/tupple/detail/tupple_detail.hpp"
+
+
+
+
+
 
 
 namespace boost
@@ -16,9 +21,6 @@ namespace boost
       null_type, class T3 = null_type, class T4 = null_type, class T5 =
       null_type, class T6 = null_type, class T7 = null_type, class T8 =
       null_type, class T9 = null_type > struct tuple
-    {
-    };
-      template < class T, int N > struct n_fold_tuple
     {
     };
       template < class T0 = null_type, class T1 = null_type, class T2 =
@@ -39,10 +41,6 @@ namespace boost
         return 0;
       }
     };
-
-
-
-
       template < class T0 > struct tuple <T0, null_type, null_type, null_type,
       null_type, null_type, null_type, null_type, null_type, null_type >
     {
@@ -139,6 +137,13 @@ namespace boost
           m0 = rhs.m0;
           m1 = rhs.m1;
         }
+        return *this;
+      }
+      template < class U1,
+        class U2 > self_type & operator=( const std::pair < U1, U2 > &p )
+      {
+        m0 = p.first;
+        m1 = p.second;
         return *this;
       }
       int size(  ) const
@@ -1195,6 +1200,57 @@ namespace boost
     };
 
 
+
+
+    template < class T, int N > struct n_fold_tuple
+    {
+    };
+
+
+
+
+
+
+    template < class T > struct n_fold_tuple <T, 0 >
+    {
+      typedef tuple <> type;
+    };
+    template < class T > struct n_fold_tuple <T, 1 >
+    {
+      typedef tuple < T > type;
+    };
+    template < class T > struct n_fold_tuple <T, 2 >
+    {
+      typedef tuple < T, T > type;
+    };
+    template < class T > struct n_fold_tuple <T, 3 >
+    {
+      typedef tuple < T, T, T > type;
+    };
+    template < class T > struct n_fold_tuple <T, 4 >
+    {
+      typedef tuple < T, T, T, T > type;
+    };
+    template < class T > struct n_fold_tuple <T, 5 >
+    {
+      typedef tuple < T, T, T, T, T > type;
+    };
+    template < class T > struct n_fold_tuple <T, 6 >
+    {
+      typedef tuple < T, T, T, T, T, T > type;
+    };
+    template < class T > struct n_fold_tuple <T, 7 >
+    {
+      typedef tuple < T, T, T, T, T, T, T > type;
+    };
+    template < class T > struct n_fold_tuple <T, 8 >
+    {
+      typedef tuple < T, T, T, T, T, T, T, T > type;
+    };
+    template < class T > struct n_fold_tuple <T, 9 >
+    {
+      typedef tuple < T, T, T, T, T, T, T, T, T > type;
+    };
     template < class TupleT > typename TupleT::get_type0 get0( TupleT & t )
     {
       return t.m0;
@@ -1223,10 +1279,6 @@ namespace boost
     {
       return tuple < T0 & >( theM0 );
     }
-    template < class T > struct n_fold_tuple <T, 1 >
-    {
-      typedef tuple < T > type;
-    };
     template < class TupleT > typename TupleT::get_type1 get1( TupleT & t )
     {
       return t.m1;
@@ -1259,10 +1311,6 @@ namespace boost
     {
       return tuple < T0 &, T1 & >( theM0, theM1 );
     }
-    template < class T > struct n_fold_tuple <T, 2 >
-    {
-      typedef tuple < T, T > type;
-    };
     template < class TupleT > typename TupleT::get_type2 get2( TupleT & t )
     {
       return t.m2;
@@ -1301,10 +1349,6 @@ namespace boost
     {
       return tuple < T0 &, T1 &, T2 & >( theM0, theM1, theM2 );
     }
-    template < class T > struct n_fold_tuple <T, 3 >
-    {
-      typedef tuple < T, T, T > type;
-    };
     template < class TupleT > typename TupleT::get_type3 get3( TupleT & t )
     {
       return t.m3;
@@ -1344,10 +1388,6 @@ namespace boost
     {
       return tuple < T0 &, T1 &, T2 &, T3 & >( theM0, theM1, theM2, theM3 );
     }
-    template < class T > struct n_fold_tuple <T, 4 >
-    {
-      typedef tuple < T, T, T, T > type;
-    };
     template < class TupleT > typename TupleT::get_type4 get4( TupleT & t )
     {
       return t.m4;
@@ -1398,10 +1438,6 @@ namespace boost
       return tuple < T0 &, T1 &, T2 &, T3 &, T4 & >( theM0, theM1, theM2,
                                                      theM3, theM4 );
     }
-    template < class T > struct n_fold_tuple <T, 5 >
-    {
-      typedef tuple < T, T, T, T, T > type;
-    };
     template < class TupleT > typename TupleT::get_type5 get5( TupleT & t )
     {
       return t.m5;
@@ -1455,10 +1491,6 @@ namespace boost
                                                            theM2, theM3,
                                                            theM4, theM5 );
     }
-    template < class T > struct n_fold_tuple <T, 6 >
-    {
-      typedef tuple < T, T, T, T, T, T > type;
-    };
     template < class TupleT > typename TupleT::get_type6 get6( TupleT & t )
     {
       return t.m6;
@@ -1515,10 +1547,6 @@ namespace boost
                                                                  theM4, theM5,
                                                                  theM6 );
     }
-    template < class T > struct n_fold_tuple <T, 7 >
-    {
-      typedef tuple < T, T, T, T, T, T, T > type;
-    };
     template < class TupleT > typename TupleT::get_type7 get7( TupleT & t )
     {
       return t.m7;
@@ -1581,10 +1609,6 @@ namespace boost
                                                                        theM6,
                                                                        theM7 );
     }
-    template < class T > struct n_fold_tuple <T, 8 >
-    {
-      typedef tuple < T, T, T, T, T, T, T, T > type;
-    };
     template < class TupleT > typename TupleT::get_type8 get8( TupleT & t )
     {
       return t.m8;
@@ -1648,10 +1672,6 @@ namespace boost
         T8 & >( theM0, theM1, theM2, theM3, theM4, theM5, theM6, theM7,
                 theM8 );
     }
-    template < class T > struct n_fold_tuple <T, 9 >
-    {
-      typedef tuple < T, T, T, T, T, T, T, T, T > type;
-    };
     template < class T0 = null_type, class T1 = null_type, class T2 =
       null_type, class T3 = null_type, class T4 = null_type, class T5 =
       null_type, class T6 = null_type, class T7 = null_type, class T8 =
@@ -2431,7 +2451,7 @@ namespace boost
 
 // operator!= seems to be defined within STL, sometimes,
 // for instance in file stl_relops.h of SGI's STL
-#ifndef TUPPLE_SKIP_NOT_EQUAL
+#ifndef TUPPLE_SKIP_UNEQUAL
     template < class T0, class S0 > bool operator!=( const tuple < T0 > &lhs,
                                                      const tuple < S0 > &rhs )
     {
