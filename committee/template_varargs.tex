@@ -128,15 +128,15 @@ arguments are passed via the ``Const + Non-const reference'' option
 \#3 enumerated in~\cite{Dimov02}, which results in ``perfect''
 forwarding of arguments, but does not require $2^N$ overloads to
 support $N$ arguments: instead, a single overload suffices for any
-number of arguments. The solution matches all three criteria (C1-C3)
+number of arguments. Our solution matches all three criteria (C1-C3)
 of the argument forwarding paper~\cite{Dimov02} by bundling the
 arguments into a single argument and providing an unbundling method to
-pass the arguments on to another function. Note, that the solution
-directly supports only functions which accept an arbitrary 
-number of arguments. With additional library tools, it is possible
-to define perfectly forwarding functions that only match to
+pass the arguments on to another function. Note that our solution
+directly supports only functions which accept an unbounded number of
+arguments. With this proposal and additional library tools, it is
+possible to define perfect forwarding functions that only match to
 invocations with a fixed number of arguments (or even with the number
-of arguments in a fixed range). This is explained in 
+of arguments in a fixed range). This is explained in
 Section~\ref{building_blocks}.
 
 \section{Syntax and Semantics}
@@ -206,7 +206,7 @@ When template and value parameter packs are used in any manner, they
 are implicitly ``unpacked'' into a list of template arguments or
 values, respectively. For instance, given a template parameter pack
 {\tt Elements}, we can create a {\tt tuple} storing elements of those
-types via {\tt tuple<Elements>}; should we wish to append an {\tt int}
+types via {\tt tuple<Elements>}. Should we wish to append an {\tt int}
 to the end of the tuple, we may write {\tt tuple<Elements, int>}.
 
 Value parameter packs are similarly expanded within a function call,
@@ -409,7 +409,10 @@ libraries are implemented:
 The implementations are not generally complete, but omit only features
 that are irrelevant to the discussion of variadic template. The
 implementations use several class templates (metafunctions) from the
-type traits proposal~\cite{Maddock03}.
+type traits proposal~\cite{Maddock03}. Additionally, we use the
+keyword {\tt auto} to make the examples cleaner and easier by omitting
+the messy---but expressible--return types; however, this proposal does
+not depend on the {\tt decltype} proposal~\cite{Jarvi03}.
 
 \subsection{Building Blocks}
 \label{building_blocks}
@@ -522,9 +525,9 @@ mem_fn(FunctionType Class::*pmf)
 
 template<typename Class, typename T>
 typename enable_if<(!is_function<T>::value), 
-                   mem_fn_adaptor<Class, T> >::type
+                   mem_ptr_adaptor<Class, T> >::type
 mem_fn(T Class::*pm)
-  { return mem_fn_adaptor<Class, T>(pm); }
+  { return mem_ptr_adaptor<Class, T>(pm); }
 \end{verbatim}
 \normalsize 
 
@@ -594,49 +597,6 @@ template<> class tuple<> : public tuple_base
 {
 public:
   static const size_t size = 0;
-};
-
-// 2-element case, for pair specializations
-template<typename T1, typename T2>
-class tuple : public tuple_base 
-{
-  typename add_reference<typename add_const<T1>::type>::type param1_type;
-  typename add_reference<typename add_const<T2>::type>::type param2_type;
-
-public:
-  typedef T1 head_type;
-  typedef tuple<T2> tail_type;
-
-  static const size_t size = 2;
-
-  tuple() {}
-
-  tuple(param1_type t1, param2_type) : head(t1), tail(t2) {}
-
-  template<typename U1, typename U2>
-  tuple(const pair<U1, U2>& other) : head(other.first), tail(other.second) {}
-
-  template<typename U1, typename U2>
-  tuple(const tuple<U1, U2>& other) : head(other.head), tail(other.tail) {}
-
-  template<typename U1, typename U2>
-  tuple& operator=(const pair<U1, U2>& other)
-  {
-    head = other.first;
-    tail = tail_type(other.second);
-    return *this;
-  }
-
-  template<typename U1, typename U2>
-  tuple& operator=(const tuple<U1, U2>& other)
-  {
-    head = other.head;
-    tail = other.tail;
-    return *this;
-  }
-
-  head_type head;
-  tail_type tail;
 };
 
 // Performs an arbitrary transform on each of the types in a
