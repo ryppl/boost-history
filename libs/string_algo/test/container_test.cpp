@@ -51,27 +51,27 @@ void container_test()
         
     // types test
     BOOST_REQUIRE( (is_same< 
-        sa::container_traits<string>::result_iterator, 
+        sa::container_result_iterator<string>::type, 
         string::iterator>::value) );
     BOOST_REQUIRE( (is_same< 
-        sa::container_traits<const string>::result_iterator, 
+        sa::container_result_iterator<const string>::type, 
         string::const_iterator>::value) );
     BOOST_REQUIRE( (is_same< 
-        sa::container_traits<char[4]>::result_iterator, char*>::value) );
+        sa::container_result_iterator<char[4]>::type, char*>::value) );
     BOOST_REQUIRE( (is_same< 
-        sa::container_traits<const char[4]>::result_iterator, 
+        sa::container_result_iterator<const char[4]>::type, 
         const char*>::value) );
     BOOST_REQUIRE( (is_same< 
-        sa::container_traits<char*>::result_iterator, char*>::value) );
+        sa::container_result_iterator<char*>::type, char*>::value) );
     BOOST_REQUIRE( (is_same< 
-        sa::container_traits<const char*>::result_iterator, 
+        sa::container_result_iterator<const char*>::type, 
         const char*>::value) );
     BOOST_REQUIRE( (is_same< 
-        sa::container_traits<
-            pair<string::iterator, string::iterator> >::result_iterator, string::iterator>::value) );
+        sa::container_result_iterator<
+            pair<string::iterator, string::iterator> >::type, string::iterator>::value) );
     BOOST_REQUIRE( (is_same< 
-         sa::container_traits<
-            const pair<string::iterator, string::iterator> >::result_iterator, 
+         sa::container_result_iterator<
+            const pair<string::iterator, string::iterator> >::type, 
             string::iterator>::value) );
 
     BOOST_CHECKPOINT( "non-empty sequence test" );
