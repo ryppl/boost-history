@@ -65,13 +65,13 @@ inline Iterator begin( std::pair<Iterator,Iterator>& p )
 //////////////////////////////////////////////////////////////////////
 
 template< typename T, std::size_t sz >
-inline const T* begin( const T BOOST_ARRAY_REF[sz] )
+inline const T* begin( const T (&array)[sz] )
 {
     return array;
 }
 
 template< typename T, std::size_t sz >
-inline T* begin( T BOOST_ARRAY_REF[sz] )
+inline T* begin( T (&array)[sz] )
 {
     return array;
 }

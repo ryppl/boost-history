@@ -48,13 +48,13 @@ namespace boost
         //////////////////////////////////////////////////////////////////////
 
         template< typename T, std::size_t sz >
-        inline bool empty( const T BOOST_ARRAY_REF[sz] )
+        inline bool empty( const T (&array)[sz] )
         {
             return sz == 0;
         }
 
         template< typename T, std::size_t sz >
-        inline bool empty( T BOOST_ARRAY_REF[sz] )
+        inline bool empty( T (&array)[sz] )
         {
             return sz == 0;
         }

@@ -65,13 +65,13 @@ namespace boost
         //////////////////////////////////////////////////////////////////////
 
         template< typename T, std::size_t sz >
-        inline const T* end( const T BOOST_ARRAY_REF[sz] )
+        inline const T* end( const T (&array)[sz] )
         {
             return array + sz;
         }
         
         template< typename T, std::size_t sz >
-        inline T* end( T BOOST_ARRAY_REF[sz] )
+        inline T* end( T (&array)[sz] )
         {
             return array + sz;
         }
