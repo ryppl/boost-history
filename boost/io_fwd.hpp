@@ -103,6 +103,11 @@ template < typename Ch, class Tr = ::std::char_traits<Ch> >
 typedef basic_onullstream<char>      onullstream;
 typedef basic_onullstream<wchar_t>  wonullstream;
 
+template < typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_inullstream;
+typedef basic_inullstream<char>      inullstream;
+typedef basic_inullstream<wchar_t>  winullstream;
+
 
 //  From <boost/io/pointer_stream.hpp>  --------------------------------------//
 

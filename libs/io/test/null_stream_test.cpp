@@ -7,12 +7,13 @@
 //  See <http://www.boost.org/libs/io/> for the library's home page.
 
 //  Revision History
-//   18 Nov 2003  Initial version (Daryle Walker)
+//   24 Nov 2003  Initial version (Daryle Walker)
 
 #include <boost/io/null_stream.hpp>  // for ...io::basic_onullstream, etc.
 #include <boost/test/unit_test.hpp>  // for main, BOOST_CHECK, etc.
 
 #include <cstddef>  // for std::size_t, NULL
+#include <cstdio>   // for EOF
 
 
 // Unit test for null-stream-buffer
@@ -76,6 +77,52 @@ onullstream_unit_test
     BOOST_CHECK_EQUAL( (message_length + 1), ons.rdbuf()->pcount() );
 }
 
+// Unit test for null input stream
+void
+inullstream_unit_test
+(
+)
+{
+    boost::io::inullstream  ins;
+    char                    temp = '\0';
+    boost::io::nullbuf      temp_nb;
+
+    BOOST_CHECK_EQUAL( EOF, ins.get() );
+    BOOST_CHECK( !ins );
+    ins.clear();
+
+    BOOST_CHECK( !ins.get(temp) );
+    ins.clear();
+
+    BOOST_CHECK( !ins.get(&temp, 1) );
+    ins.clear();
+
+    BOOST_CHECK( !ins.get(temp_nb) );
+    ins.clear();
+    BOOST_CHECK_EQUAL( 0, temp_nb.pcount() );
+
+    BOOST_CHECK( !ins.getline(&temp, 1) );
+    ins.clear();
+
+    BOOST_CHECK( ins.ignore() );  // sets only EOF, not "fail" nor "bad"
+    BOOST_CHECK( ins.eof() );
+    ins.clear();
+
+    BOOST_CHECK_EQUAL( EOF, ins.peek() );
+    BOOST_CHECK( ins );
+    ins.clear();  // my system sets EOF (by mistake?)!
+
+    BOOST_CHECK( !ins.read(&temp, 1) );
+    ins.clear();
+    BOOST_CHECK_EQUAL( 0, ins.readsome(&temp, 1) );
+    BOOST_CHECK( ins );  // "showmanyc" still returns 0, not -1; stream's good
+
+    BOOST_CHECK( !ins.putback('A') );
+    ins.clear();
+    BOOST_CHECK( !ins.unget() );
+    ins.clear();
+}
+
 
 // Unit test program
 boost::unit_test_framework::test_suite *
@@ -90,6 +137,7 @@ init_unit_test_suite
 
     test->add( BOOST_TEST_CASE(nullbuf_unit_test) );
     test->add( BOOST_TEST_CASE(onullstream_unit_test) );
+    test->add( BOOST_TEST_CASE(inullstream_unit_test) );
 
     return test;
 }

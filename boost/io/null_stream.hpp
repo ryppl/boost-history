@@ -11,7 +11,7 @@
 
 #include <boost/io_fwd.hpp>  // self include
 
-#include <boost/io/streambuf_wrapping.hpp>  // for basic_wrapping_ostream
+#include <boost/io/streambuf_wrapping.hpp>  // for basic_wrapping_ostream, etc.
 
 #include <ios>        // for std::streamsize
 #include <streambuf>  // for std::basic_streambuf
@@ -61,28 +61,28 @@ private:
 };  // boost::io::basic_nullbuf
 
 
-//  Voided stream class template declaration  --------------------------------//
+//  Voided stream class template declarations  -------------------------------//
 
-template < typename Ch, class Tr >
-class basic_onullstream
-    : public basic_wrapping_ostream< basic_nullbuf<Ch, Tr> >
-{
-    typedef basic_nullbuf<Ch, Tr>              streambuf_type;
-    typedef basic_wrapping_ostream<streambuf_type>  base_type;
+// Macro to template the templates!
+#define BOOST_PRIVATE_WRAPPER( SuffixF, SuffixB ) \
+    template < typename Ch, class Tr > \
+    class basic_##SuffixF \
+        : public basic_wrapping_##SuffixB< basic_nullbuf<Ch, Tr> > \
+    { \
+        typedef basic_nullbuf<Ch, Tr>                streambuf_type; \
+        typedef basic_wrapping_##SuffixB<streambuf_type>  base_type; \
+    public: \
+        typedef Ch  char_type; \
+        typedef Tr  traits_type; \
+        typedef typename Tr::int_type  int_type; \
+        typedef typename Tr::pos_type  pos_type; \
+        typedef typename Tr::off_type  off_type; \
+    }
 
-public:
-    // Template arguments
-    typedef Ch  char_type;
-    typedef Tr  traits_type;
+BOOST_PRIVATE_WRAPPER( onullstream, ostream );
+BOOST_PRIVATE_WRAPPER( inullstream, istream );
 
-    // Other types
-    typedef typename Tr::int_type  int_type;
-    typedef typename Tr::pos_type  pos_type;
-    typedef typename Tr::off_type  off_type;
-
-    // Use automatically-defined default-constructor and destructor
-
-};  // boost::io::basic_onullstream
+#undef BOOST_PRIVATE_WRAPPER
 
 
 //  Voided stream-buffer class template member function definitions  ---------//

@@ -21,7 +21,7 @@
 			<li><a href="#mns_observe">Observer Member Functions</a></li>
 			<li><a href="#mns_override">Overridden Virtual Functions</a></li>
 		</ul></li>
-	<li><a href="#null_s">Disconnected Stream Class Template</a></li>
+	<li><a href="#null_s">Disconnected Stream Class Templates</a></li>
 	<li><a href="#refer">References</a></li>
 	<li><a href="#credits">Credits</a>
 		<ul>
@@ -53,6 +53,11 @@ template &lt; typename Ch, class Tr = ::std::char_traits&lt;Ch&gt; &gt;
     class basic_onullstream;
 typedef basic_onullstream&lt;char&gt;      onullstream;
 typedef basic_onullstream&lt;wchar_t&gt;  wonullstream;
+
+template &lt; typename Ch, class Tr = ::std::char_traits&lt;Ch&gt; &gt;
+    class basic_inullstream;
+typedef basic_inullstream&lt;char&gt;      inullstream;
+typedef basic_inullstream&lt;wchar_t&gt;  winullstream;
 
 }
 }
@@ -151,16 +156,16 @@ protected:
 		<strong>Rationale:</strong> writing out a single character, or pretending to flush the output sequence
 </dl>
 
-<h2><a name="null_s">Disconnected Stream Class Template</a></h2>
+<h2><a name="null_s">Disconnected Stream Class Templates</a></h2>
 
-<p>The <code>boost::io:: basic_onullstream</code> class template is a stream class that uses an internal <a href="#null_sb"><code>basic_nullbuf</code></a> object.  It is implemented with the <a href="streambuf_wrapping.html">stream-buffer-wrapping stream base library</a>.  (There is only an output-only stream provided, since the associated stream buffer class only overrides output operations.  The user has build an always-empty input-only stream his/herself.)
+<p>The <code>boost::io::basic_onullstream</code> and <code>boost::io::basic_inullstream</code> class templates are stream classes that use an internal <a href="#null_sb"><code>basic_nullbuf</code></a> object.  They are implemented with the <a href="streambuf_wrapping.html">stream-buffer-wrapping stream base library</a>.  (Replace the <var>M</var> in the declaration with <var>o</var> for the output stream and <var>i</var> for the input stream.)
 
 <blockquote><pre>
 #include &lt;boost/io/streambuf_wrapping.hpp&gt;
 
 template &lt; typename Ch, class Tr &gt;
-class basic_onullstream
-    : public basic_wrapping_ostream&lt; basic_nullbuf&lt;Ch, Tr&gt; &gt;
+class basic_<var>M</var>nullstream
+    : public basic_wrapping_<var>M</var>stream&lt; basic_nullbuf&lt;Ch, Tr&gt; &gt;
 {
 public:
     // Template arguments
@@ -196,13 +201,13 @@ public:
 <h3><a name="history">History</a></h3>
 
 <dl>
-	<dt>18 Nov 2003, Daryle Walker
+	<dt>24 Nov 2003, Daryle Walker
 	<dd>Initial version
 </dl>
 
 <hr>
 
-<p>Revised: 18 November 2003</p>
+<p>Revised: 24 November 2003</p>
 
 <p>Copyright 2003 Daryle Walker.  Use, modification, and distribution are subject to the Boost Software License, Version 1.0.  (See accompanying file <a href="../../../LICENSE_1_0.txt">LICENSE_1_0.txt</a> or a copy at &lt;<a href="http://www.boost.org/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</a>&gt;.)</p>
 </body>
