@@ -116,6 +116,7 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
   }
   //=====================================================================
   // Test construction from a block range
+  // [gps - this comment is erroneous]
   {
     std::vector<Block> blocks;
     Tests::from_block_range(blocks);
@@ -134,6 +135,21 @@ void run_test_cases( BOOST_EXPLICIT_TEMPLATE_TYPE(Block) )
       blocks[i] = static_cast<Block>(i);
     Tests::from_block_range(blocks);
   }
+  //=====================================================================
+  // test to_block_range
+  {
+    bitset_type b;
+    Tests::to_block_range(b);
+  }
+  {
+    bitset_type b(1, 1ul);
+    Tests::to_block_range(b);
+  }
+  {
+    bitset_type b(long_string);
+    Tests::to_block_range(b);
+  }
+
   //=====================================================================
   // Test copy constructor
   {
