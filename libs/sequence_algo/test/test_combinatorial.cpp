@@ -736,7 +736,7 @@ void test_prev_r_combination_comp(T& seq, int r)
 
 // test_main ------------------------------------------------------------//
 
-int test_main(int argc, char* argv[])
+int test_main(int, char*[])
 {
 #ifdef __MWERKS__
     // argc = ccommand(&argv);
