@@ -1,25 +1,33 @@
 ------- string_algo TODO list ----------
 
 - docs update
-	- add replace_head, replace_tail documentation
-	- move classification from trim to the separate doc file
-	- document all predicate
+	- iterator pair version removed
+	- case_conv functions renamed	
 
-	- iterator_range documentation - add make_range
+	- add classification documentation
+	- add split and find_iterator docs
+	- iterator_range documentation - add make_range, copy_range
+	- change examples to simplier form
+	- document 2nd layer
+	- modify doc structure to tie 1st and 2nd layer
+
 
 - cleanup tests 
+- cleanup examples
 
+- add case-insensitive versions, allow parametric comparison
+- ?move find functors to string_algo namespace?
+- ?use preprocessor the generate replace and erase function?
 
 ----- FUTURES: ------
 
 - functor concept checks
-- add case-insensitive versions, allow parametric comparison
-- find iterator
 - add trim find functor(s).
 - find algoritms complexity reduction / provide optional algorithms
 
 ----- DONE: ------
 
+- find iterator
 - trim_end_if and find_last fix for ForwardIterator
 - in-place replace_all -> optimization
 - change erase to use replace and a special format
