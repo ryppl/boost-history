@@ -60,8 +60,12 @@ ostream& operator<<( ostream& out, Base& b )
 }
 
 
-template<>
-Base* boost::make_clone<Base>( const Base& b )
+//
+// @note: no need for specialization of
+//       boost::make_clone; we rely on
+//       argument dependent lookup
+//
+Base* make_clone( const Base& b )
 {
     return b.clone();
 }
@@ -279,7 +283,7 @@ void associative_container_test()
     BOOST_MESSAGE( "starting associative container test" ); 
     enum { max_cnt = 10, size = 100 };
     C  c;
-/*    BOOST_CHECK( c.size() == 0 );
+    BOOST_CHECK( c.size() == 0 );
     
     const C c2( c.begin(), c.end() );
     BOOST_CHECK( c.size() == c2.size() );
@@ -318,14 +322,12 @@ void associative_container_test()
     c3.clear();
     BOOST_CHECK( c3.empty() );
     BOOST_MESSAGE( "finished modifiers test" ); 
-    */
-   /*          
-    typedef BOOST_DEDUCED_TYPENAME C::auto_type auto_type;
+             
     c.push_back( T() ); c.push_back( T() ); c.push_back( T() ); 
-    auto_type ptr       = c.release_back();
-    auto_type ptr2      = c.release( c.begin() );
-    std::auto_ptr<C> ap = c.release();
-    c                   = c2.clone();
+    std::auto_ptr<T> ptr   = c.release_back();
+    std::auto_ptr<T> ptr2  = c.release( c.begin() );
+    std::auto_ptr<C> ap    = c.release();
+    c                      = c2.clone();
     BOOST_MESSAGE( "finished release/clone test" ); 
                      
     c3.push_back( T() );
@@ -337,7 +339,7 @@ void associative_container_test()
     BOOST_CHECK( !c3.empty() );
     BOOST_CHECK( c.empty() );
     BOOST_MESSAGE( "finished transfer test" );         
-    */
+    
 }
 
 
@@ -353,12 +355,16 @@ void algo_test()
         c.push_back( T() );
         
     copy( c.begin(), c.end(), std::ostream_iterator<T>( std::cout ) ); 
-    std::sort( c.ptr_begin(), c.ptr_end() );
-    // std::sort( c.begin(), c.end() ); does the job, but much slower!
+    std::sort( c.begin(), c.end() ); 
     cout << endl;     
     copy( c.begin(), c.end(), std::ostream_iterator<T>( std::cout ) ); 
-    
+    C tmp( c.clone() );
+    unique( c.begin(), c.end() );
+    remove( c.begin(), c.end(), T() );
     // todo: remove, remove_if, unique
+    // + test performance for cheap types..ie is
+    // sort<int>( iterator ) as fast as sort<int*>( ptr_iterator, comp ) ?
+    //
 }
 
 
@@ -373,9 +379,7 @@ void algo_test_polymorphic()
         c.push_back( T() );
    
     print<C>( c, "before" );
-    std::sort( c.ptr_begin(), c.ptr_end() );
-    //std::sort( c.begin(), c.end() );
-    // won't work snice T is not copyable
+    std::sort( c.begin(), c.end() );
     print<C>( c, "after" );
 }
 

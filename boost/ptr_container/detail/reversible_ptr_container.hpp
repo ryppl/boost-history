@@ -8,7 +8,6 @@
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/ptr_container/detail/map_iterator.hpp>
-#include <boost/ptr_container/ptr_container_iterator.hpp>
 #include <boost/ptr_container/bad_pointer.hpp>
 #include <boost/ptr_container/bad_ptr_container_operation.hpp>
 #include <boost/ptr_container/detail/scoped_deleter.hpp>
@@ -238,7 +237,7 @@ namespace detail
         template< typename InputIterator >
         reversible_ptr_container( InputIterator first, InputIterator last, 
                                   const allocator_type& alloc = allocator_type() ) 
-        : c_( std::distance( first, last ), ptr_type(), alloc ) 
+        : c_( std::distance( first, last ), 0, alloc ) 
         { 
             clone_assign( first, last );
         }
@@ -399,7 +398,7 @@ namespace detail
             erase( --end() );
         }
         
-        iterator insert( iterator before, ptr_type x ) // strong
+        iterator insert( iterator before, T* x ) // strong
         { 
             if( 0 == x )
                 throw bad_pointer();
@@ -488,15 +487,15 @@ namespace detail
         reference at( size_type n )
         {
             if( n < size() )
-                throw bad_container_operation( "'at()' out of bounds" );
+                throw bad_ptr_container_operation( "'at()' out of bounds" );
              
-            return *c[n];
+            return *c_[n];
         }
         
         const_reference at( size_type n ) const
         {
             if( n < size() )
-                throw bad_container_operation( "'at()' out of bounds" );
+                throw bad_ptr_container_operation( "'at()' out of bounds" );
              
             return *c_[n]; 
         }
@@ -539,19 +538,19 @@ namespace detail
             *where.base() = x;               // nothrow, commit
         }
         
-        void replace( unsigned idx, T* x ) // strong
+        void replace( size_type idx, T* x ) // strong
         {
             if( 0 == x )
                 throw bad_pointer();
             
-            std::auto_ptr<T> ptr( x }; 
+            std::auto_ptr<T> ptr( x ); 
             
             if( idx >= size() ) 
                 throw bad_ptr_container_operation( "'replace()' out of bounds" );
             
             std::auto_ptr<T> old( c_[idx] ); // nothrow
-            c_[idx] = ptr.get();             // nothrow, commit
-            ptr.release();                   // nothrow
+            c_[idx] = ptr.get();              // nothrow, commit
+            ptr.release();                    // nothrow
         } 
                                   
         template< typename PtrContainer >
@@ -601,9 +600,10 @@ typedef BOOST_DEDUCED_TYPENAME Base::allocator_type allocator_type; \
 typedef BOOST_DEDUCED_TYPENAME Base::reverse_iterator reverse_iterator; \
 typedef BOOST_DEDUCED_TYPENAME Base::const_reverse_iterator const_reverse_iterator; \
 typedef BOOST_DEDUCED_TYPENAME Base::ptr_iterator ptr_iterator; \
-typedef BOOST_DEDUCED_TYPENAME Base::const_ptr_iterator const_ptr_iterator;
+typedef BOOST_DEDUCED_TYPENAME Base::const_ptr_iterator const_ptr_iterator; \
 typedef BOOST_DEDUCED_TYPENAME Base::reverse_ptr_iterator reverse_ptr_iterator; \
 typedef BOOST_DEDUCED_TYPENAME Base::reverse_const_ptr_iterator reverse_const_ptr_iterator;
+
     //
     // two-phase lookup of template functions 
     // is buggy on most compilers, so we use a macro instead

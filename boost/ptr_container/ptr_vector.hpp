@@ -26,27 +26,47 @@ namespace boost
 {
 
 template< typename T, typename Allocator = std::allocator<T*> >
-class ptr_vector : public detail::reversible_ptr_container< std::vector<T*,Allocator>, T >//,ptr_vector<T,Allocator>*/ >
+class ptr_vector : public detail::reversible_ptr_container< detail::default_config< std::vector<T*,Allocator>, T > >
 {
-    typedef detail::reversible_ptr_container< std::vector<T*,Allocator >, T/*, ptr_vector<T,Allocator>*/ > Base;
+    typedef detail::reversible_ptr_container< detail::default_config< std::vector<T*,Allocator>, T > > Base;
 
 public: 
     BOOST_FORWARD_TYPEDEF( Base );
 
 public:
-    explicit ptr_vector( const allocator_type& alloc = allocator_type() )                : Base( alloc ) {}
-    ptr_vector( size_type n, const_reference x, const allocator_type& alloc = allocator_type() )   : Base( n, x, alloc ) {}
-    explicit ptr_vector( std::auto_ptr<ptr_vector> r )                                            : Base( r )             {}
+    explicit ptr_vector( const allocator_type& alloc = allocator_type() )               
+    : Base( alloc ) {}
+    
+    ptr_vector( size_type n, const_reference x, 
+                const allocator_type& alloc = allocator_type() )  
+    : Base( n, x, alloc ) {}
+    
+    explicit ptr_vector( std::auto_ptr<ptr_vector> r )                                          
+    : Base( r ) {}
+    
     template< typename InputIterator >
-    ptr_vector( InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type() ) : Base( first, last, alloc ) {}
-    void operator=( std::auto_ptr<ptr_vector> r )                                    { Base::operator=( r ); }
+    ptr_vector( InputIterator first, InputIterator last, 
+                const allocator_type& alloc = allocator_type() ) 
+    : Base( first, last, alloc ) {}
+    
+    void operator=( std::auto_ptr<ptr_vector> r )                                   
+    {
+        Base::operator=( r );
+    }
     
     BOOST_PTR_CONTAINER_RELEASE_AND_CLONE( ptr_vector );
     
 public: // vector interface
     
-    size_type   capacity() const                             { return this->c__().capacity(); }
-    void        reserve( size_type n )                       { this->c__().reserve( n ); }
+    size_type capacity() const
+    {
+        return this->c__().capacity();
+    }
+    
+    void reserve( size_type n )
+    {
+        this->c__().reserve( n ); 
+    }
 
 };
 
