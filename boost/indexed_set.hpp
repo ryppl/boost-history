@@ -94,7 +94,7 @@ public:
 #if defined(BOOST_MSVC)
   typedef 
     detail::default_constructible_tuple_cons<
-      super::ctor_args_list>                       ctor_args_list;
+      typename super::ctor_args_list>              ctor_args_list;
 #else
   typedef typename super::ctor_args_list           ctor_args_list;
 #endif
