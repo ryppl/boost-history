@@ -98,39 +98,11 @@ struct factorial<0>
 \end{verbatim}
 }
 
-We might use this function, for example, to enumerate the values of a
-given function when used to reduce all permutations of an array:
-
-{\footnotesize
-\begin{verbatim}
-// Holder for an array of N doubles
-template <unsigned N>
-struct double_array
-{
-   double values[N];
-};
-
-template <unsigned N, class F>
-double_array<factorial<N>::value>
-accumulate_all_permutations(double (&input)[N], F f)
-{
-   double_array<factorial<N>::value> result;
-   double* p = result.values;
-   for (unsigned i = 0; i < N; ++i)
-   {
-       double copied[N];
-       std::copy(input, input + N, copied);
-       *p++ = std::accumulate(copied, copied+N, 0, f);
-       std::next_permutation(input, input + N);
-   }
-   return result;
-}
-\end{verbatim}
-}
-
 Because of the hard line between the expression of compile-time and
 runtime computation in \Cpp, metaprograms look different from their
-runtime counterparts. Take for example a straightforward runtime
+runtime counterparts. Thus, only a subset of the language is available
+to the \Cpp metaprogrammer: those expressions which can be evaluated
+at compile-time. Compare the above with a straightforward runtime
 definition of the factorial function:
 
 {\footnotesize
@@ -142,20 +114,18 @@ unsigned factorial(unsigned N)
 \end{verbatim}
 }
 
-This definition would be useless in \code{accumulate\_\-all\_\-permutations}
-above, since in \Cpp array sizes are required to be computed at
-compile-time. While it is easy to see the analogy between the two
-recursive defintions, this feature is in fact more important to \Cpp
+While it is easy to see the analogy between the two recursive
+defintions, recursion is in general more important to \Cpp
 metaprograms than it is to runtime \Cpp. In contrast to languages such
 as Lisp where recursion is idiomatic, \Cpp programmers will typically
-avoid recursion when possible. This is often for efficiency reasons,
-but also because of ``cultural momentum'': recursive programs are just
-harder (for \Cpp programmers) to think about. Like pure Lisp, the \Cpp
-template mechanism is a \emph{functional} programming language which
-rules out the use of data mutation required to maintain loop
-variables.
+avoid it when possible. This is done not only for efficiency
+reasons, but also because of ``cultural momentum'': recursive programs
+are just harder (for \Cpp programmers) to think about. Like pure Lisp,
+though, the \Cpp template mechanism is a \emph{functional} programming
+language: as such it rules out the use of data mutation required to
+maintain loop variables.
 
-Another key difference between the runtime and compile-time factorial
+A key difference between the runtime and compile-time factorial
 functions is the expression of the termination condition: our
 meta-factorial uses template specialization as a kind of
 \emph{pattern-matching} mechanism to describe the behavior when
@@ -167,33 +137,73 @@ definitions can become significant.
 
 \subsection{Why Metaprogramming?}
 
-It's worth asking why anyone would want to do this. To see the answer,
-let's examine the alternatives:
+It's worth asking why anyone would want to do this. Even a simple toy
+example like the factorial metafunction has its uses. It could be
+applied, for example, to compute the type of an array which can hold
+all permutations of another array:
+
+{\footnotesize
+\begin{verbatim}
+// Holder for an array of N elements of type T
+template <class T, unsigned N>
+struct array
+{
+   T elements[N];
+};
+
+// Return an array of the N! permutations of x
+template <class T, unsigned N>
+array<T[N], factorial<N>::value>
+all_permutations(const T (&x)[N])
+{
+   array<T[N],factorial<N>::value> result;
+   std::copy(x, x+N, result.elements[0]);
+
+   for (unsigned i = 1; i < factorial<N>::value; ++i)
+   {
+       T (*src)[N] = result.elements + i - 1;
+       T (*dst)[N] = result.elements + i;
+       
+       std::copy(&(*src)[0], &(*dst)[0], &(*dst)[0]);
+       std::next_permutation(&(*dst)[0], &(*dst)[0] + N);
+   }
+   return result;
+}
+\end{verbatim}
+}
+
+The runtime definition of \code{factorial} would be useless in
+\code{all\_\-permutations} above, since in \Cpp the sizes of array
+members must be computed at compile-time. However, there are
+alternative approaches:
 
 \begin{enumerate}
 
-\item We could write programs to interpret the meta-data directly. For
-  example, YACC might have been written as a function which accepts a
-  string containing the grammar description and a pointer-to-function
-  returning tokens from the stream to be parsed. This approach,
+\item We could write programs to interpret the meta-data directly. In
+  our factorial example, the array size could have been a runtime
+  quantity; then we'd have been able to use the straightforward
+  factorial function. However, that would imply the use of dynamic
+  allocation, which is often expensive.
+
+  To carry this further, YACC might could be rewritten to accept a
+  pointer-to-function returning tokens from the stream to be parsed,
+  and a string containing the grammar description. This approach,
   however, would impose unacceptable runtime costs for most
   applications: either the parser would have to treat the grammar
-  nondeterministically, exploring the space of possible parses, or it
+  nondeterministically, exploring the grammar for each parse, or it
   would have to begin by replicating at runtime the substantial
-  table-generation work of the existing YACC for each input
-  grammar. In our factorial example, the array size would become a
-  runtime quantity with the associated cost of dynamic allocation.
+  table-generation and optimization work of the existing YACC for each
+  input grammar.
 
 \item We could replace the compile-time computation with our own
   analysis. After all, the size of arrays passed to
-  \code{accumulate\_\-all\_\-permutations} are always known at
-  compile-time, and thus can be known to its user. We could ask the
-  user to supply the result size:
-  {\footnotesize
+  \code{all\_\-permutations} are always known at compile-time, and
+  thus can be known to its user. We could ask the user to supply the
+  result size: {\footnotesize
   \begin{verbatim}
 template <unsigned ResultSize, unsigned N, class F>
-double_array<ResultSize>
-accumulate_all_permutations(double (&input)[N], F f)
+array<T,ResultSize>
+all_permutations(double (&input)[N], F f)
   \end{verbatim}
   }
   The costs to this approach are obvious: we give up expressivity (by
@@ -207,8 +217,9 @@ accumulate_all_permutations(double (&input)[N], F f)
 So, the motivation for Metaprogramming comes down to the combination
 of three factors: efficiency, expressivity, and correctness.
 
-\subsection{Is it for real-world? }
-\subsection{Motivation (Why a library is needed?)}
+\subsection{Why a Metaprogramming Library?}
+
+
 \subsection{What about portability? }
 \subsection{Relation to other work.}
 
