@@ -10,6 +10,7 @@
 #include <string>
 #include <iostream>
 #include <boost/string_algo/predicate.hpp>
+#include <boost/string_algo/classification.hpp>
 
 using namespace std;
 using namespace boost;
@@ -38,7 +39,14 @@ int main()
 	cout << "str2 equals \"abc\": " << 
         (equals( str2, string("abc") )?"true":"false") << endl; 
 
-    cout << endl;
+
+	// Classification functors and all predicate
+	if ( all(";.,", is_punct<char>() ) )
+	{
+		cout << "\";.,\" are all punctuation characters" << endl;  
+	}
+
+	cout << endl;
 
 	return 0;
 }   

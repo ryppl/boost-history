@@ -35,22 +35,22 @@ template< typename T > T repeat_mark() { return std::numeric_limits<T>::max(); }
     Find a sequence which can be compressed. It has to be at least 3-character long
     sequence of repetitive characters 
 */
-template<typename InputIteratorT>
 struct find_compressF 
 {
-    typedef InputIteratorT input_iterator_type;
-    typedef typename boost::detail::iterator_traits<input_iterator_type>::value_type value_type;
-    typedef iterator_range<input_iterator_type> result_type;
-
     // Construction
     find_compressF() {}
 
     // Operation
-    result_type operator()( 
-        input_iterator_type Begin, 
-        input_iterator_type End ) const
+	template<typename ForwardIteratorT>
+    iterator_range<ForwardIteratorT> operator()( 
+        ForwardIteratorT Begin, 
+        ForwardIteratorT End ) const
     {
-        // begin of matchin segment
+	    typedef ForwardIteratorT input_iterator_type;
+	    typedef typename boost::detail::iterator_traits<input_iterator_type>::value_type value_type;
+	    typedef iterator_range<input_iterator_type> result_type;
+
+		// begin of matchin segment
         input_iterator_type MStart=End;
         // Repetition counter
         value_type Cnt=0;
@@ -103,7 +103,6 @@ template< typename SeqT >
 struct format_compressF
 {
     typedef SeqT result_type;
-    typedef const result_type result_reference_type;
     typedef typename SeqT::value_type value_type;
 
     // Construction
@@ -129,22 +128,22 @@ struct format_compressF
 /*
     find a repetition block
 */
-template<typename InputIteratorT>
 struct find_decompressF
 {
-    typedef InputIteratorT input_iterator_type;
-    typedef typename boost::detail::iterator_traits<input_iterator_type>::value_type value_type;
-    typedef iterator_range<input_iterator_type> result_type;
-
     // Construction
     find_decompressF() {}
 
     // Operation
-    result_type operator()( 
-        input_iterator_type Begin, 
-        input_iterator_type End ) const
+	template<typename ForwardIteratorT>
+    iterator_range<ForwardIteratorT> operator()( 
+        ForwardIteratorT Begin, 
+        ForwardIteratorT End ) const
     {
-        for(input_iterator_type It=Begin; It!=End; It++)
+	    typedef ForwardIteratorT input_iterator_type;
+	    typedef typename boost::detail::iterator_traits<input_iterator_type>::value_type value_type;
+	    typedef iterator_range<input_iterator_type> result_type;
+
+		for(input_iterator_type It=Begin; It!=End; It++)
         {
             if( *It==repeat_mark<value_type>() )
             {
@@ -172,7 +171,6 @@ template< typename SeqT >
 struct format_decompressF
 {
     typedef SeqT result_type;
-    typedef const result_type result_reference_type;
     typedef typename SeqT::value_type value_type;
 
     // Construction
@@ -202,15 +200,10 @@ int main()
 
     string original("123_AA_*ZZZZZZZZZZZZZZ*34");
 
-
-	// note that we have to use finder_adaptor on out compress finder.
-	// finder_adaptor add complete interface needed by finder, so
-	// we don't have to define it.
-
     // copy compression
     string compress=sa::replace_all_copy( 
         original, 
-		sa::make_finder_adaptor(find_compressF<string::const_iterator>()), 
+		find_compressF(), 
         format_compressF<string>() );
 
     cout << "Compressed string: " << compress << endl;
@@ -218,7 +211,7 @@ int main()
 	// Copy decompression
     string decompress=sa::replace_all_copy( 
         compress, 
-		sa::make_finder_adaptor(find_decompressF<string::const_iterator>()), 
+		find_decompressF(), 
         format_decompressF<string>() );
 
     cout << "Decompressed string: " << decompress << endl;
@@ -226,7 +219,7 @@ int main()
     // in-place compression
     sa::replace_all( 
         original, 
-        sa::make_finder_adaptor(find_compressF<string::iterator>()), 
+        find_compressF(), 
         format_compressF<string>() );
     
     cout << "Compressed string: " << original << endl;
@@ -234,7 +227,7 @@ int main()
 	// in-place decompression
     sa::replace_all( 
         original, 
-        sa::make_finder_adaptor(find_decompressF<string::iterator>()), 
+        find_decompressF(), 
         format_decompressF<string>() );
 
     cout << "Decompressed string: " << original << endl;

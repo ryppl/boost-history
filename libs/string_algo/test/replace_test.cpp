@@ -28,32 +28,27 @@
 
 using namespace std;
 using namespace boost;
+namespace sa=boost::string_algo;
 
 void sequence_traits_test()
 {
     // basic_string traits
-    typedef string_algo::sequence_traits<string> string_traits;
-
-    BOOST_CHECK( string_traits::native_replace::value );
-    BOOST_CHECK( !string_traits::stable_iterators::value );
-    BOOST_CHECK( !string_traits::const_time_insert::value );    
-    BOOST_CHECK( !string_traits::const_time_erase::value ); 
+	BOOST_CHECK( sa::sequence_has_native_replace<string>::value );
+	BOOST_CHECK( !sa::sequence_has_stable_iterators<string>::value );
+	BOOST_CHECK( !sa::sequence_has_const_time_insert<string>::value );    
+	BOOST_CHECK( !sa::sequence_has_const_time_erase<string>::value ); 
 
     // vector traits
-    typedef string_algo::sequence_traits< vector<char> > vector_traits;
-
-    BOOST_CHECK( !vector_traits::native_replace::value );
-    BOOST_CHECK( !vector_traits::stable_iterators::value );
-    BOOST_CHECK( !vector_traits::const_time_insert::value );    
-    BOOST_CHECK( !vector_traits::const_time_erase::value ); 
+	BOOST_CHECK( !sa::sequence_has_native_replace< vector<char> >::value );
+	BOOST_CHECK( !sa::sequence_has_stable_iterators< vector<char> >::value );
+	BOOST_CHECK( !sa::sequence_has_const_time_insert< vector<char> >::value );    
+	BOOST_CHECK( !sa::sequence_has_const_time_erase< vector<char> >::value ); 
 
     // list traits
-    typedef string_algo::sequence_traits< list<char> > list_traits;
-
-    BOOST_CHECK( !list_traits::native_replace::value );
-    BOOST_CHECK( list_traits::stable_iterators::value );
-    BOOST_CHECK( list_traits::const_time_insert::value );   
-    BOOST_CHECK( list_traits::const_time_erase::value );    
+	BOOST_CHECK( !sa::sequence_has_native_replace< list<char> >::value );
+	BOOST_CHECK( sa::sequence_has_stable_iterators< list<char> >::value );
+	BOOST_CHECK( sa::sequence_has_const_time_insert< list<char> >::value );   
+	BOOST_CHECK( sa::sequence_has_const_time_erase< list<char> >::value );    
 }
 
 // Combine tests for all variants of the algorithm

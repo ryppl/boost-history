@@ -20,6 +20,7 @@
 
 using namespace std;
 using namespace boost;
+namespace sa=boost::string_algo;
 
 void find_test()
 {
@@ -161,6 +162,19 @@ void find_test()
 
     ch_result=find_token( pch1, is_of<char>("abc"),false );
     BOOST_CHECK( ( (ch_result.begin() - pch1 ) == 3 ) && ( (ch_result.end() - pch1 ) == 4 ) );
+
+    // generic find
+    BOOST_CHECKPOINT( "generic find" );
+
+    nc_result=sa::find(str1, sa::first_finder(string("abc")));
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),nc_result.begin()) == 3) &&
+        (distance<string::const_iterator>( str1.begin(),nc_result.end()) == 6) );
+
+    cv_result=sa::find(const_cast<const string&>(str1), sa::first_finder(str2) );
+    BOOST_CHECK( 
+        (distance<string::const_iterator>( str1.begin(),cv_result.begin()) == 3) &&
+        (distance<string::const_iterator>( str1.begin(),cv_result.end()) == 6) );
 
     // multi-type comparison test 
     BOOST_CHECKPOINT( "multi-type" );
