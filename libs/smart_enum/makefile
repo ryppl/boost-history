@@ -2,8 +2,10 @@
 # Build smart_enum<> test programs.
 #
 
+BOOSTDIR	= /home/simons/projects/boost-current
+
 CXX		= g++
-CPPFLAGS        = -I/home/simons/projects/boost-current -I../..
+CPPFLAGS        = -I$(BOOSTDIR) -I../..
 CXXFLAGS        = -O3 -Wall -ansi -pedantic -Wno-long-long
 LDFLAGS	        =
 LIBS		=
