@@ -55,7 +55,7 @@ namespace boost { namespace langbinding {
    struct rvalue_data_base;
 
    template<class T>
-   class BOOST_LANGBINDING_DECL registry
+   class BOOST_LANGBINDING_DECL registry_base
    {
    public:
       typedef typename T::type_info type_info_;
@@ -74,21 +74,31 @@ namespace boost { namespace langbinding {
       void insert(const type_info_& x, 
          rvalue_from_stage1 convertible, rvalue_from_stage2 convert);
 
-      void export_converters(const type_info_&, registry&);
+      void export_converters(const type_info_&, registry_base&);
 
-      void export_converters(registry&);
+      void export_converters(registry_base&);
  
-      static registry* instance();
+      registry_base(const registry_base&);
+      registry_base& operator=(const registry_base&);
 
-      registry(const registry&);
-      registry& operator=(const registry&);
-
-      ~registry();
+      virtual ~registry_base();
       
+   protected:
+      registry_base();
+
+   private:
+      std::auto_ptr<detail::registry_impl<T> > m_pimpl;
+   };
+
+   template<class T>
+   class registry : public registry_base<T>
+   {
+   public:
+      static registry* instance();
+      ~registry();
+
    private:
       registry();
-
-      std::auto_ptr<detail::registry_impl<T> > m_pimpl;
    };
 
 }}
