@@ -1930,6 +1930,125 @@ unrolling is used.
   \subsubsection{numbered forms of \code{list}}
   \subsubsection{algorithm support lambda}
 
+\subsection{Code generation facilities}
+
+\subsection{execute}
+
+There are cases, especially in domain of numeric computations, then 
+you want make some part of calculations at compile-time, and then 
+pass the results to a run-time part of the program for furhter 
+processing. For example, suppose you've impelemented a complex 
+compile-time algorithm that works with fixed-point arithmetics:
+
+{\footnotesize
+\begin{verbatim}
+// fixed-point algorithm input
+typedef mpl::vector<
+      mpl::fixed_c<-1,2345678>
+    , mpl::fixed_c<9,0001>
+    // ..
+    , mpl::fixed_c<3,14159>
+    > input_data;
+
+/*
+  complex compile-time algorithm 
+*/
+typedef /*...*/ result_data;
+\end{verbatim}
+}
+
+Suppose the \code{result\_\-data} here is a sequence of 
+\code{mpl::fixed\_c} types that keeps the results of your 
+algorithm, and now you want to feed that result to run-time part 
+of the algorithm. With \code{boost::mpl} you can do it this way:
+
+{\footnotesize
+\begin{verbatim}
+namespace aux {
+struct push_back
+{
+    template< typename T > struct apply
+    {
+        template< typename C > void execute(C& c)
+        {
+            // in our case T() == fixed_c() == fixed_c().operator()()
+            c.push_back(T());
+        }
+    };
+};
+}
+
+double my_algorithm()
+{
+    // passing the results to the run-time part of the program
+    std::vector<double> results;
+    results.reserve(mpl::size<result_data>::value);
+    mpl::for_each<result_data, aux::push_back>::execute(results);
+    // ...
+}
+\end{verbatim}
+}
+
+\code{for\_each<...>::\-execute} call there is what actually 
+transfers the compile-time \code{result\_\-data} into run-time 
+\code{std::vector<double> results}. The \code{for\_each} algorithm 
+is one of the explicit facilites the library provides for run-time 
+code generation:
+
+{\footnotesize
+\begin{verbatim}
+template<
+      typename Sequence
+    , typename Operation
+    >
+struct for_each
+{
+    template< typename T >
+    static void execute(T& x)
+    {
+       // ...
+    }
+
+    static void execute()
+    {
+       // ...
+    }
+};
+\end{verbatim}
+}
+
+The semantics of \code{for\_each::\-execute} is simple: it 
+iterates over a \code{Sequence} and applies the \code{Operation}
+for each element \code{E} of the sequence:
+
+{\footnotesize
+\begin{verbatim}
+mpl::apply<Operation,E>::execute(x);
+\end{verbatim}
+}
+
+Applying this to our example, the 
+
+{\footnotesize
+\begin{verbatim}
+mpl::for_each<result_data, aux::push_back>::execute(results);
+\end{verbatim}
+}
+
+line is equivalent to this:
+
+{\footnotesize
+\begin{verbatim}
+mpl::apply< Operation, mpl::at_c<result_data,0>::type >::execute(results);
+mpl::apply< Operation, mpl::at_c<result_data,1>::type >::execute(results);
+// ...
+mpl::apply< Operation, mpl::at_c<result_data,n>::type >::execute(results);
+\end{verbatim}
+}
+
+There are other ways to generate an analogous code, 
+but they are much less expressive.
+
 
 \subsection{Lambda facility}
 
