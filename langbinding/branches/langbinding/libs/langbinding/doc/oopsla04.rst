@@ -89,6 +89,8 @@ added to the module using ``operator[]``.
         module& operator[](module_description const&);
     };
 
+A module may be unnamed, in which case it represents the global module.
+
 ------------------------------
  Functions
 ------------------------------
@@ -319,12 +321,12 @@ that expects a ``boost::shared_ptr``.
 Inheritance
 ===========
 
-To indicate inheritance relationships the function type syntax is used. It was
-choosen to emulate the Python class declaration syntax. Indicating a
+To indicate inheritance relationships the function type syntax is used. This
+was choosen to emulate the Python class declaration syntax. Indicating an
 inheritance relationship will register the relationship in a cast-graph, with
-``derived->base``, and possibly ``base->derived`` conversions (if the
-registered class is polymorphic). The derived class will also automatically
-inherit any registered member functions from it's base.
+``derived->base``, and possibly ``base->derived`` (if the registered class is
+polymorphic) conversions . The derived class will also automatically inherit
+any registered member functions from it's base.
 
 For example::
 
@@ -344,9 +346,9 @@ the function type::
     to expose virtual functions to the target language, where they can be called
     and overridden. This is discussed in `Overridable Virtual Functions`_.
 
-------------------------------
- Overridable Virtual Functions
-------------------------------
+
+Overridable Virtual Functions
+=============================
 
 To be able to expose overridable virtual functions for a class ``T`` without
 being intrusive on the exposed class, we need to define a wrapper-class. This
@@ -434,6 +436,44 @@ in place of an ``Base``. ::
         end
 
     g(Derived())    *Returns 10*
+
+
+Operators
+=========
+
+Boost.Langbinding makes use of expression templates to make the syntax for
+exposing operators as intuitive as possible.
+
+::
+
+    class_<X>("X")
+        .def(self + self)
+        .def(self + int())
+        .def(int() + self)
+
+::
+
+    template<class T>
+    struct other
+    {
+        other();
+    };
+
+We support most of C++'s operators. How many of these that are actually supported
+by a target language can vary. Normally at least the binary arithmetic operators
+are supported.
+
+Binary operators::
+
+    +   -   *   /   %   ^   &   |   &&  ||
+
+In place operators::
+
+    +=  -=  *=  /=  %=  ^=  &=  |=  ++  --
+
+Unary operators::
+
+    -   ~   *   !
 
 =========================
  Backend Interface
