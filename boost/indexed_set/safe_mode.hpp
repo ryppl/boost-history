@@ -223,6 +223,20 @@ inline bool check_same_owner(const Iterator& it0,const Iterator& it1)
   return it0.valid()&&it1.valid()&&it0.owner()==it1.owner();
 }
 
+template<typename Iterator>
+inline bool check_valid_range(const Iterator& it0,const Iterator& it1)
+{
+  if(!it0.valid()||!it1.valid()||it0.owner()!=it1.owner())return false;
+
+  Iterator last=it0.owner()->end();
+  if(it1==last)return true;
+
+  for(Iterator first=it0;first!=last;++first){
+    if(first==it1)return true;
+  }
+  return false;
+}
+
 } /* namespace indexed_sets::safe_mode */
 
 } /* namespace indexed_sets */
@@ -272,5 +286,10 @@ inline bool check_same_owner(const Iterator& it0,const Iterator& it1)
   BOOST_INDEXED_SET_SAFE_MODE_ASSERT(\
     safe_mode::check_same_owner(it0,it1),\
     safe_mode::not_same_owner);
+
+#define BOOST_INDEXED_SET_CHECK_VALID_RANGE(it0,it1) \
+  BOOST_INDEXED_SET_SAFE_MODE_ASSERT(\
+    safe_mode::check_valid_range(it0,it1),\
+    safe_mode::invalid_range);
 
 #endif

@@ -27,7 +27,8 @@ enum error_code
   not_incrementable_iterator,
   not_decrementable_iterator,
   not_owner,
-  not_same_owner
+  not_same_owner,
+  invalid_range
 };
 
 } /* namespace indexed_sets::safe_mode */

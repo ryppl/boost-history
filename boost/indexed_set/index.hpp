@@ -240,6 +240,7 @@ public:
     BOOST_INDEXED_SET_CHECK_VALID_ITERATOR(last);
     BOOST_INDEXED_SET_CHECK_IS_OWNER(first,*this);
     BOOST_INDEXED_SET_CHECK_IS_OWNER(last,*this);
+    BOOST_INDEXED_SET_CHECK_VALID_RANGE(first,last);
     BOOST_INDEXED_SET_INDEX_CHECK_INVARIANT;
     while(first!=last){
       erase(first++);
@@ -453,7 +454,6 @@ public:
 
     return make_iterator(y);
   }
-
 
   const_iterator upper_bound(key_param_type x)const
   {

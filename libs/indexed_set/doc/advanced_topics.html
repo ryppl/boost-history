@@ -667,7 +667,8 @@ is one value of the <code>safe_mode::error_code</code> enumeration:
   <span class=identifier>not_incrementable_iterator</span><span class=special>,</span>   <span class=comment>// the iterator points to the end of its sequence</span>
   <span class=identifier>not_decrementable_iterator</span><span class=special>,</span>   <span class=comment>// the iterator points to the beginning of its sequence</span> 
   <span class=identifier>not_owner</span><span class=special>,</span>                    <span class=comment>// the iterator does not belong to the container</span>
-  <span class=identifier>not_same_owner</span>                <span class=comment>// iterators belong to different containers</span>
+  <span class=identifier>not_same_owner</span><span class=special>,</span>               <span class=comment>// iterators belong to different containers</span>
+  <span class=identifier>invalid_range</span>                 <span class=comment>// range not valid (last is not reachable from first)</span>
 <span class=special>};</span>
 
 <span class=special>}</span> <span class=comment>// namespace indexed_sets::safe_mode</span>

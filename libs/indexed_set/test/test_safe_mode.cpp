@@ -89,6 +89,10 @@ void test_safe_mode()
   CATCH_SAFE_MODE(safe_mode::not_same_owner)
 
   TRY_SAFE_MODE
+    es.erase(es.end(),es.begin());
+  CATCH_SAFE_MODE(safe_mode::invalid_range)
+
+  TRY_SAFE_MODE
     employee_set::iterator it;
     es.insert(it,employee(0,"Joe",31));
   CATCH_SAFE_MODE(safe_mode::invalid_iterator)
