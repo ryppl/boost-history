@@ -248,6 +248,7 @@ void com_test(void)
 
 void ref_linked_test(void)
 {
+#ifndef BOOST_MSVC
     bool dead(false);
     bool dead2(false);
     {
@@ -267,6 +268,10 @@ void ref_linked_test(void)
     }
     BOOST_CHECK(dead);
     BOOST_CHECK(dead2);
+#else
+    bool ref_linked_unsupported_on_mscv = false;
+    BOOST_CHECK(ref_linked_unsupported_on_mscv);
+#endif
 }
 
 class dolly
