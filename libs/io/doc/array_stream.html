@@ -130,33 +130,34 @@ character type is the array's element type.</p>
 
 <h3><a name="m_ctr">Constructors</a></h3>
 
-<p><strong>Note:</strong> the automatically-defined destructor is used.</p>
+<p><strong>Note 1:</strong> the automatically-defined destructor is used.</p>
+
+<p><strong>Note 2:</strong> all the constructors set the bounds of the get
+and put areas to the bounds of the internal array.  The place-marking pointers
+for the get and put areas are set to the beginning of the internal array.</p>
 
 <dl>
 	<dt><code>basic_array_streambuf();</code>
 	<dd>
-		<strong>Effects:</strong> initializes the base class's
-			internal buffer pointers to the bounds of the internal
-			array; all elements of the internal array are set to
+		<strong>Effects:</strong> besides the bounds setting,
+			all elements of the internal array are set to
                         the default value of the elements' type
 
 	<dt><code>basic_array_streambuf( basic_array_streambuf const &amp;c );</code>
 	<dd>
-		<strong>Effects:</strong> initializes the base class's
-			internal buffer pointers to the bounds of the internal array;
-			copies the element values in <var>c</var>'s internal
-			array to the new object's internal array
+		<strong>Effects:</strong> besides base-class copy construction
+			and the bounds setting, copies the element values in
+                        <var>c</var>'s internal array to the new object's
+                        internal array
 	<dt><code>basic_array_streambuf( char_type const *b, char_type const *e );</code>
 	<dd>
-		<strong>Effects:</strong> initializes the base class's
-			internal buffer pointers to the bounds of the internal array;
+		<strong>Effects:</strong> besides the bounds setting,
 			copies the values of the array-segment between <var>b</var>
 			and <var>e</var> to the internal array
 	<dt><code>template &lt; typename InIter &gt;
         	basic_array_streambuf( InIter b, InIter e );</code>
 	<dd>
-		<strong>Effects:</strong> initializes the base class's
-			internal buffer pointers to the bounds of the internal array;
+		<strong>Effects:</strong> besides the bounds setting,
 			copies the values of the sequence between <var>b</var> and
 			<var>e</var> to the internal array
 </dl>
@@ -272,7 +273,7 @@ public:
 
 <hr>
 
-<p>Revised: 26 May 2003</p>
+<p>Revised: 6 June 2003</p>
 
 <p>Copyright &copy; Daryle Walker 2003.  Permission to copy, use,
 modify, sell and distribute this document is granted provided this
