@@ -63,6 +63,9 @@ Better support for single-valued free features. GCC needs a default
 
 === for test system ===
 
+Add platform library path to <runtime-link>dynamic executable targets' RUN_PATH,
+    so they can be run even without the tools set up in the environment.
+
 Add Jam rules for constructing build/test tools (built exes used for build/test). 
     Must only try to build one compiler/variant of these
 
@@ -78,3 +81,9 @@ Implement some test tools:
     Facilities to update boost html compiler status page
 
 
+=== FTJam core requests ===
+
+In debugging output, indirect rule invocations should reflect the rule name
+being invoked.
+
+Fix modulus on nesting in debug output, so my tools don't get confused.
