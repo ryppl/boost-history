@@ -35,7 +35,7 @@ public:
   typedef filter_view<ContainerT,PredicateT> self_type;
 
   /// The type of the underlying container.
-  typedef ownership::wrap<ContainerT>::domain domain_type;
+  typedef typename ownership::wrap<ContainerT>::domain domain_type;
 
   /// @name The iterator/container traits types.
   //@{    
@@ -115,7 +115,7 @@ public:
   // since filter_iterator is forward only.
 
 private:
-  ownership::wrap<ContainerT>::type data;
+  typename ownership::wrap<ContainerT>::type data;
   PredicateT p;
 };
 
