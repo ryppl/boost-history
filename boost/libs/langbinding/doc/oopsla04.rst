@@ -22,13 +22,14 @@
 .. role:: concept
    :class: interpreted
 
+.. |copy| unicode:: 0xA9 .. copyright sign
 
 =========================
  Introduction
 =========================
 
 Boost.Langbinding is a generalization of earlier attempts at binding 
-libraries, specifically Boost.Python and Luabind.
+libraries, specifically Boost.Python [#]_ and Luabind [#]_.
 
 This library is spawned from the realization that the language specific
 code, which has previously been intertwined with the template generated
@@ -48,6 +49,10 @@ to allow for simple declararative syntax while maintaining
 efficiency and flexibility, and type-erasure to normalize multiple
 plugins.
 
+.. [#] Boost.Python, Copyright |copy| David Abrahams, http://www.boost.org/libs/python/
+.. [#] Luabind, Boost.Python derivative for Lua. Copyright |copy| Daniel Wallin 
+       and Arvid Norberg, http://luabind.sf.net/
+
 =========================
  User Interface
 =========================
@@ -55,6 +60,9 @@ plugins.
 Here we describe the interface authors that are adding a language binding to 
 their library or application use. This includes support for modules, 
 namespaces, classes, member functions, free functions and operators.
+
+Where example code for a target language is neccessary, code for both Python
+and Lua is given.
 
 Every entity is derived from ``module_description``, which is the abstract
 representation that is passed to the target language for binding.
@@ -134,6 +142,17 @@ that function object.
     additional first argument, and free functions can be exposed as class member
     functions.    
 
+.. parsed-literal::
+
+    struct X
+    {
+        void f();
+    };
+
+    def("f", &X::f)
+
+Will register a unary function that expects an ``X&`` as it's parameter.
+
 Parameters
 ==========
 
@@ -179,13 +198,13 @@ the ``def()`` call.
 
 Notice how placeholders are used to indicate which elements are involved.
 
-Signature Transformations
-=========================
+..  Signature Transformations
+    =========================
 
-.. parsed-literal::
+    .. parsed-literal::
 
-    def("f", &f, signature(_1, _1))
-    def("f", &f, signature(_1[_1], _1[_2]))
+        def("f", &f, signature(_1, _1))
+        def("f", &f, signature(_1[_1], _1[_2]))
 
 ------------------------------
  Classes
@@ -227,14 +246,21 @@ Classes are exposed using ``class_``.
 Constructors
 ============
 
-Exposing constructors is done by calling ``def()``, passing an instance of ``init<>``.
+.. topic:: Init Synopsis
 
-.. topic:: Synopsis
+ .. parsed-literal::
 
-  ::
+    template<class A0 = */\* implementation defined \*/*, ..., class AN = */\* implementation defined \*/*>
+    struct init
+    {
+        init();
+        ...
+    };
 
-    template<class A0, class A1, ..., class AN>
-    struct init;
+ The template parameters ``A0`` .. ``AN`` indicate the positional constructor arguments.
+
+Exposing constructors is done by calling ``def()``, passing an instance of ``init<>``
+with the desired constructor signature:
 
 .. parsed-literal::
 
@@ -245,10 +271,26 @@ Exposing constructors is done by calling ``def()``, passing an instance of ``ini
 Creates a wrapper for the class type ``X``, with a default constructor and a
 constructor taking two ``int`` parameters.
 
+
+Member Functions
+================
+
+Member functions are exposed using one of the ``class_<>::def()`` overloads.
+The parameters are exactly the same as with the global ``def()`` described
+in the previous section.
+
+For example::
+
+    class_<X>("X")
+        .def("f", &f)
+
+Will expose the class ``X`` with a single member function ``f``.
+
+
 Holder Types
 ============
 
-Sometimes an interface passed instances of a class managed by smart pointers.
+Sometimes an interface passes instances of a class managed by smart pointers.
 In these cases it is important to be able to pass instances created in the
 target language environment to functions expecting a smart pointer. ::
 
@@ -262,92 +304,105 @@ To handle this we specify that our class instances is to be held with
 Now instances of ``X`` created in the target language can be safely passed to functions
 that expects a ``boost::shared_ptr``.
 
-.. parsed-literal::
-
-    class_<X, boost::shared_ptr<X> >("X")
-
-Creates a wrapper for the class type ``Y``, with new instances being held in
-a ``boost::shared_ptr<X>``.
 
 Inheritance
 ===========
 
-.. parsed-literal::
-
-    class_<XWrap, boost::shared_ptr<X> >("X")
-
-.. parsed-literal::
-
-    class_<YWrap(X), boost::shared_ptr<X> >("X")
-
-In addition to registering the class type it is also possible to express
-inheritance relationship and control how the class instances is held within
-the target language. This is discussed in greater depth in Inheritance_ and
-HolderTypes. For polymorphic types it is possible, with a little extra effort,
-to expose virtual functions to the target language, where they can be called
-and overridden. This is discussed in `Overridable Virtual Functions`_.
-
-Member functions are exposed using one of the ``class_<>::def()`` overloads.
-The parameters are exactly the same as with the global ``def()`` described
-in the previous section.
+To indicate inheritance relationships the function type syntax is used. It
+was choosen to emulate the Python class declaration syntax.
 
 For example::
 
-    class_<X>("X")
-        .def("f", &f)
+    class_<Derived(Base)>("Derived")
 
-Will expose the class ``X`` with a single member function ``f``.
+Multiple inheritance is exposed by simply adding more argument types to
+the function type::
 
-Inheritance2
-============
+    class_<Derived(Base1, Base2)>("Derived")
 
-To express inheritance relationships between types we use the function type
-syntax, choosen to emulate the syntax used in Python.
-
-.. parsed-literal::
-
-    class\_<**X(Y)**>("X")
-    class\_<**X(Y,Z)**>("X")
-
-This will register the relationship in a cast-graph, with ``derived->base``, 
+This will register the relationships in a cast-graph, with ``derived->base``, 
 and possibly ``base->derived`` conversions (if the registered class is 
 polymorphic). The derived class will also automatically inherit any registered
 member functions from it's base.
+
+..  Inheritance2
+    ============
+
+     and control how the class instances is held within
+    the target language. This is discussed in greater depth in Inheritance_ and
+    HolderTypes. For polymorphic types it is possible, with a little extra effort,
+    to expose virtual functions to the target language, where they can be called
+    and overridden. This is discussed in `Overridable Virtual Functions`_.
 
 ------------------------------
  Overridable Virtual Functions
 ------------------------------
 
-To be able to expose overridable virtual functions without being intrusive on
-the exposed class, we need to define a wrapper-class. This class derives from
-``polymorphic<Base>`` and implements virtual dispatch overrides, as well as
-default implementation functions for every virtual function.
+To be able to expose overridable virtual functions for a class ``T`` without
+being intrusive on the exposed class, we need to define a wrapper-class. This
+class must derive from ``polymorphic<T>`` and implement virtual dispatch
+overrides, as well as default implementation functions for every virtual
+function.
 
-A typical wrapper-class will look something like this:
+A typical wrapper-class for a class ``Base`` will look something like this:
 
 .. parsed-literal::
 
-    struct XWrap : polymorphic<X>
+    struct Base
+    {
+        virtual int f() { return 0; }
+    }
+
+    struct BaseWrap : polymorphic<Base>
     {
         int f()
         {
             if (override f = this->find_override("f"))
                 return f();
             else
-                return X::f();
+                return Base::f();
         }
 
         int default_f()
         {
-            return X::f();
+            return Base::f();
         }
     };
 
-To expose this class and it's virtual function ``f``, we use ``class_`` like
-this::
+The virtual dispatch override looks if there is an override with the given
+function name in the target language representation of the instance. If
+there is one it is called using ``operator()``. If there is no overload,
+the default implementation in Base is called instead.
+
+``default_f`` is needed for when there is actually an override defined in
+the target language, but we want to call the base class function statically
+anyway. This happens when virtual overrides wants to call their base
+implementation::
+
+    class Derived(Base):
+        def f():
+            return Base.f(self) + 10
+
+If not for ``default_f``, this would call the virtual function ending up in
+and infinite loop.
+
+To expose the class above and it's virtual function ``f``, we use ``class_`` 
+like this::
 
     class_<BaseWrap>("Base")
         .def("f", &Base::f, &BaseWrap::default_f)
+
+Now instances of derived classes defined in a target language can be passed
+in place of an ``Base``. ::
+
+    int g(Base& x)
+    {
+        return x.f();
+    }
+
+    ...
+
+    def("g", &g);
 
 **Python code:**
 
@@ -357,6 +412,8 @@ this::
         def f():
             return 10
 
+    g(Derived())    *Returns 10*
+
 **Lua code:**
 
 .. parsed-literal::
@@ -365,6 +422,8 @@ this::
         function Derived:f()
             return 10
         end
+
+    g(Derived())    *Returns 10*
 
 =========================
  Backend Interface
