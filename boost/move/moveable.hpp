@@ -26,7 +26,7 @@ namespace boost {
 namespace detail {
 
 //////////////////////////////////////////////////////////////////////////
-// class template const_lvalue_ref
+// (detail) class template const_lvalue_ref
 //
 // Returned from moveable to distinguish from rvalue references (i.e.,
 // move_sources).
