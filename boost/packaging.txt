@@ -8,10 +8,8 @@ just enough to make Spirit work. Packaging instructions:
 5. Create a boost directory in this top level directory.
 6. Move miniboost/boost/spirit.hpp and miniboost/boost/spirit directory into the
    new boost directory.
-7. Move the contents of "top-level-dir" directory into 
-   this top level directory (the readme there will replace this readme).
-8. Create a libs directory in the miniboost directory.
-9. Move the libs/test directory to miniboost/libs
-10. Delete "top-level-dir" and "mini-boost-dir".
-11. Compress and release.
+7. Create a libs directory in the miniboost directory.
+8. Move the libs/test directory to miniboost/libs
+9. Delete "mini-boost-dir".
+10. Compress and release.
 
