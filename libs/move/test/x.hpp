@@ -31,6 +31,12 @@ class X : public boost::movable<X>
         release();
     }
 
+# ifdef BOOST_NO_IMPLICIT_MOVE_ASSIGN_FOR_COPYABLE_TYPES
+    X& operator=(X rhs)
+    {
+        return *this = boost::move_from<X>(rhs);
+    }
+# else
     BOOST_LVALUE_ASSIGN(
         X, (rhs), 
     {
@@ -39,6 +45,7 @@ class X : public boost::movable<X>
         SAY("copy #" << resource << " <- #" << rhs.resource);
         return *this;
     })
+# endif 
     
  public: // Move stuff
     // non-const rvalue - move ctor

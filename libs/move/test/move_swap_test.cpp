@@ -95,13 +95,22 @@ public: // operators
         return v_ == rhs.v_;
     }
 };
+}  // namespace ns
 
-void swap(my_swappable& lhs, my_swappable& rhs)
+#if !defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP) // || BOOST_WORKAROUND(BOOST_MSVC, == 1310)
+namespace
+ns
+{
+#endif
+
+void swap(ns::my_swappable& lhs, ns::my_swappable& rhs)
 {
     lhs.swap(rhs);
 }
 
+#if !defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP) // || BOOST_WORKAROUND(BOOST_MSVC, == 1310)
 } // namespace ns
+#endif 
 
 //////////////////////////////////////////////////////////////////////////
 // function template swap_test
@@ -121,11 +130,22 @@ void swap_test()
     BOOST_ASSERT( y == y_orig );
     BOOST_ASSERT( !(x == y) );
 
+#if BOOST_WORKAROUND(__GNUC__, == 2) || defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)
+# define swap boost::move_swap
+#else
     using boost::swap;
+#endif 
     swap(x, y);
 
     BOOST_ASSERT( x == y_orig );
-    BOOST_ASSERT( y == x_orig );    
+    BOOST_ASSERT( y == x_orig );
+
+    // Make sure it works on builtins
+    int i1 = 1, i2 = 2;
+    swap(i1, i2);
+
+    BOOST_ASSERT(i1 == 2);
+    BOOST_ASSERT(i2 == 1);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -145,4 +165,6 @@ int main()
     swap_test< ns::my_swappable >();
 
 #endif // !defined(BOOST_NO_MOVE_SWAP_BY_OVERLOAD)
+    
+    return 0;
 }

@@ -6,10 +6,16 @@ subproject libs/move/test ;
 import testing ;
 
 {
-    test-suite "move"
-       : [ run move.cpp ]
+    test-suite "move-suite"
+       : 
+         [ compile has_swap.cpp ]
+         [ run move.cpp ]
          [ run move_test.cpp ]
          [ run move_swap_test.cpp ]
+       ;
+    
+    test-suite "move-fail"
+       : 
          [ compile-fail rvalue_by_ref_fail.cpp ]
          [ compile-fail const_rvalue_by_ref_fail.cpp ]
          [ compile-fail const_lvalue_by_ref_fail.cpp ]

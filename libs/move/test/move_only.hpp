@@ -25,9 +25,6 @@ struct move_only : boost::movable<move_only>
         SAY("move assign move_only");
         return *this;
     }
-// private:
-//    BOOST_LVALUE_COPY_CTOR(move_only, (rhs), ;)
-//    BOOST_LVALUE_ASSIGN(move_only, (rhs), ;)
 };
 
 

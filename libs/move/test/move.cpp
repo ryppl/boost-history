@@ -101,7 +101,6 @@ int main()
     SAY(" ------ test 16, pass const lvalue by const reference ------- ");
     sink2(z7);
 
-
     SAY(" ------ test 17, pass rvalue by value to template param ------- ");
     tsink(source());
 
@@ -122,15 +121,16 @@ int main()
     X z10(boost::move(z2));
     
     SAY(" ------ test 23, move assign from movable lvalue ------- ");
-    z10 = boost::move(z4);
-    
+    z10 = boost::move(z4, 0); // Using 0 to see that the msvc6-generic form works too
+
     SAY(" ------ test 24, request move construct from non-movable lvalue ------- ");
     std::string s1("hello");
-    std::string s2(boost::move(s1));
+    std::string s2(boost::move(s1, 0));
 
     SAY(" ------ test 25, movable but noncopyable test ------- ");
     
     move_only quack(test_returnable());
     
     SAY("----- done -----");
+    return 0;
 }

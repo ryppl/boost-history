@@ -7,6 +7,6 @@
 # include <iostream>
 
 // A convenient macro for making debugging announcements
-#define SAY(x) std::cout << __FILE__ << ":" << __LINE__ << ": " << x << std::endl
+#define SAY(x) std::cout << __FILE__ << ":" << __LINE__ << ":\t" << x << std::endl
 
 #endif // SAY_DWA2004410_HPP

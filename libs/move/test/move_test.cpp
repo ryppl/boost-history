@@ -19,7 +19,12 @@
 #include <boost/utility.hpp> // for boost::noncopyable
 
 #include <cstdlib> // for size_t
-#include <cstring> // for strlen, str(n)cpy
+#include <cstring> // for strlen, strncpy, strncmp
+
+#ifdef BOOST_NO_STDC_NAMESPACE
+namespace std { using ::size_t; using ::strlen; using ::strncpy; using ::strncmp; }
+#endif
+
 #include <algorithm> // for swap
 
 //////////////////////////////////////////////////////////////////////////
@@ -29,9 +34,6 @@
 //
 class moveable_string
   : public boost::movable<moveable_string>
-#ifndef __GNUC__
-    , boost::noncopyable
-#endif 
 {
 public: // constants
     BOOST_STATIC_CONSTANT(
@@ -55,9 +57,6 @@ public: // structors
     {
     }
 
-    operator boost::move_from<moveable_string>() {
-        return boost::move_from<moveable_string>(*this);
-    }
     moveable_string(boost::move_from<moveable_string> source)
       : len_(source->len_)
       , str_(source->str_)
@@ -121,19 +120,18 @@ public: // operators
     {
         if (rhs.length() > 0)
         {
-            char* newstr = new char[length() + rhs.length() + 1];
+            std::size_t len = length();
+            char* newstr = new char[len + rhs.length() + 1];
 
-            std::strncpy(newstr,            str_,     length());
-            std::strncpy(newstr + length(), rhs.str_, rhs.length());
+            std::strncpy(newstr,            str_,     len);
+            std::strncpy(newstr + len, rhs.str_, rhs.length());
 
             clear();
             str_ = newstr;
-            len_ = length() + rhs.length();
+            len_ = len + rhs.length();
         }
         return *this;
     }
-// private:
-//    void operator=(moveable_string
 };
 
 moveable_string operator+(const moveable_string& lhs, const moveable_string& rhs)
@@ -146,7 +144,7 @@ moveable_string operator+(const moveable_string& lhs, const moveable_string& rhs
 
 bool operator==(const moveable_string& lhs, const moveable_string& rhs)
 {
-    return std::strcmp(lhs.c_str(), rhs.c_str()) == 0;
+    return lhs.length() == rhs.length() && std::strncmp(lhs.c_str(), rhs.c_str(), lhs.length()) == 0;
 }
 
 //////////////////////////////////////////////////////////////////////////
