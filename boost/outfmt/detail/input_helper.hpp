@@ -36,12 +36,7 @@
          public:
             inline bool                          isgood() const
             {
-               return( !!is );
-            }
-            inline bool                          getch( char_type & ch )
-            {
-               is.get( ch );
-               return( isgood());
+               return( !is.fail());
             }
             inline bool                          isspace( char_type ch ) const
             {
@@ -51,11 +46,52 @@
                   return( std::isspace( ch ));
 #              endif
             }
+            inline bool                          isnewline( char_type ch ) const
+            {
+               return(( ch == is.widen( '\n' )) || ( ch == is.widen( '\r' )));
+            }
+            inline bool                          eq( char_type c1, char_type c2 ) const
+            {
+#              if !defined(BOOST_IOFM_NO_BASIC_STREAM)
+                  return( traits_type::eq( c1, c2 ));
+#              else
+                  return( c1 == c2 );
+#              endif
+            }
+         public:
+            inline bool                          getch( char_type & ch )
+            {
+               is.get( ch );
+               return( isgood());
+            }
+            inline bool                          readch( char_type & ch )
+            {
+               is.get( ch );
+               is.putback( ch );
+               return( isgood());
+            }
+            inline bool                          readfirstch( char_type & ch )
+            {
+               is >> ch;
+               is.putback( ch );
+               return( isgood());
+            }
+         public:
+            inline char_type                     firstch( char_type ch ) const
+            {
+               return( ch );
+            }
+            inline char_type                     firstch( const char_type * s ) const
+            {
+               while( *s && isspace( *s ))
+                  ++s;
+               return( *s );
+            }
          public:
             inline void                          skipws()
             {
                char_type               ch;
-               while( getch( ch ) && isspace( ch ))
+               while( is.get( ch ) && isspace( ch ))
                   ;
                is.putback( ch );
             }
@@ -75,13 +111,8 @@
             bool                                 match( char_type c )
             {
                char_type               ch;
-#              if !defined(BOOST_IOFM_NO_BASIC_STREAM)
-                  if( getch( ch ) && traits_type::eq( c, ch ))
-                     return( true );
-#              else
-                  if( getch( ch ) && ( c == ch ))
-                     return( true );
-#              endif
+               if( getch( ch ) && eq( c, ch ))
+                  return( true );
 
                is.putback( ch );
 #              if !defined(BOOST_IOFM_NO_BASIC_STREAM)
