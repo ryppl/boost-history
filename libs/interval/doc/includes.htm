@@ -14,18 +14,19 @@
 header:</p>
 <pre>#include &lt;boost/interval.hpp&gt;</pre>
 
-<p>This header will include almost all the other headers. However, you may
-not want to access all the functionalities of the library. So this page
-stands as a reminder for the whole structure of the library.
-<code>&lt;boost/interval.hpp&gt;</code> is the only header to be located
-directly under <code>boost/</code>; all the other headers are located in the
-subdirectory <code>boost/interval/</code>. And each time this documentation
-will refer to <code>interval/something.hpp</code>, it is
+<p>This header will include almost all the other headers (except the ones
+listed as extensions). However, you may not want to access all the
+functionalities of the library. So this page stands as a reminder for the
+whole structure of the library. <code>&lt;boost/interval.hpp&gt;</code> is
+the only header to be located directly under <code>boost/</code>; all the
+other headers are located in the subdirectory <code>boost/interval/</code>.
+And each time this documentation will refer to
+<code>interval/something.hpp</code>, it is
 <code>&lt;boost/interval/something.hpp&gt;</code>.</p>
 
 <p>Please also note that all the following headers are independent and can
-easily be pre-compiled if necessary (with compilers which support
-pre-compiled headers of course).</p>
+easily be pre-compiled if necessary (for compilers which support pre-compiled
+headers of course).</p>
 
 <h2>Function definitions</h2>
 
@@ -79,15 +80,79 @@ provides the following functions: <code>cos</code>, <code>sin</code>,
 
 <h2>Policies</h2>
 
-<p></p>
+<p>The following headers define some policies. They may be needed if you use
+the default policies.</p>
+
+<h3><code>interval/rounded_arith.hpp</code></h3>
+
+<p>This header defines the three provided rounding policies for the
+arithmetic functions: <code>rounded_arith_std</code>,
+<code>rounded_arith_opp</code>, <code>rounded_arith_exact</code>.</p>
+
+<h3><code>interval/rounded_transc.hpp</code></h3>
+
+<p>This header defines the three provided rounding policies for the
+transcendental functions: <code>rounded_transc_std</code>,
+<code>rounded_transc_opp</code>, <code>rounded_transc_exact</code>. It is
+separated from <code>rounded_arith.hpp</code> since the transcendental part
+of the rounding policy is probably less useful than the arithmetic part.</p>
+
+<h3><code>interval/hw_rounding.hpp</code></h3>
+
+<p>Here are full rounding policies for the basic floating-point types. The
+policies are processor-dependent; and to allow the user code to be portable,
+they only define the common subset of the hardware available functions, which
+are the arithmetic functions of the rounding policy.</p>
+
+<h3><code>interval/checking.hpp</code></h3>
+
+<p>This header provides the predefined checking policies:
+<code>checking_base</code>, <code>checking_no_empty</code>,
+<code>checking_no_nan</code>, <code>checking_catch_nan</code>,
+<code>checking_strict</code>.</p>
 
 <h2>Comparisons</h2>
 
-<p></p>
+<h3><code>interval/compare.hpp</code></h3>
+
+<p>This header includes all the following headers. They provide some
+predefined comparison namespaces.</p>
+
+<h3><code>interval/compare/explicit.hpp</code></h3>
+
+<p>The explicit comparison functions <code>cerlt</code>, <code>posge</code>,
+etc are defined in this header.</p>
+
+<h3><code>interval/compare/lexicographic.hpp</code></h3>
+
+<p>This header provides <code>compare::lexicographic</code>.</p>
+
+<h3><code>interval/compare/set.hpp</code></h3>
+
+<p>This header provides <code>compare::set</code>.</p>
 
 <h2>Extensions</h2>
 
-<p></p>
+<p>The following headers are not included by <code>interval.hpp</code> and
+will usually provide not always desirable capabilities.</p>
+
+<h3><code>interval/io.hpp</code></h3>
+
+<p>Here are defined basic stream operators <code>&lt;&lt;</code> and
+<code>&gt;&gt;</code>. They should only be used as a first approach and later
+be replaced by a customized version.</p>
+
+<h3><code>interval/compare/tribool.hpp</code></h3>
+
+<p>This header provides a comparison namespace <code>compare::tribool</code>
+especially adapted to a tristate boolean.</p>
+
+<h3><code>interval/ext/x86_fast_rounding_control.hpp</code></h3>
+
+<p>This header defines a new rounding policy allowing to workaround the
+precision problem of the x86 processors (and so speeding up the
+computations). However, it only is a partial solution and it shouldn't be
+used when there is a possibility of underflow.</p>
 <hr>
 
 <p>Revised: 2002-10-11<br>
