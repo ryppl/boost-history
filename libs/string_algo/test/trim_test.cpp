@@ -24,43 +24,43 @@ void trim_test()
     // *** value passing tests *** //
 
     // general string test
-    BOOST_CHECK( ltrim( str1 )=="1x x x x1     " ) ;
-    BOOST_CHECK( rtrim( str1 )=="     1x x x x1" ) ;
-    BOOST_CHECK( trim( str1 )=="1x x x x1" ) ;
+    BOOST_CHECK( trim_left_copy( str1 )=="1x x x x1     " ) ;
+    BOOST_CHECK( trim_right_copy( str1 )=="     1x x x x1" ) ;
+    BOOST_CHECK( trim_copy( str1 )=="1x x x x1" ) ;
 
     // spaces-only string test
-    BOOST_CHECK( ltrim( str3 )=="" );
-    BOOST_CHECK( rtrim( str3 )=="" );
-    BOOST_CHECK( trim( str3 )=="" );
+    BOOST_CHECK( trim_left_copy( str3 )=="" );
+    BOOST_CHECK( trim_right_copy( str3 )=="" );
+    BOOST_CHECK( trim_copy( str3 )=="" );
 
     // empty string check 
-    BOOST_CHECK( ltrim( string("") )=="" );
-    BOOST_CHECK( rtrim( string("") )=="" );
-    BOOST_CHECK( trim( string("") )=="" );
+    BOOST_CHECK( trim_left_copy( string("") )=="" );
+    BOOST_CHECK( trim_right_copy( string("") )=="" );
+    BOOST_CHECK( trim_copy( string("") )=="" );
 
     // *** inplace tests *** //
 
     // general string test
-    ltrim_in( str1 );
+    trim_left( str1 );
     BOOST_CHECK( str1=="1x x x x1     " );
-    rtrim_in( str1 );
+    trim_right( str1 );
     BOOST_CHECK( str1=="1x x x x1" );
-    trim_in( str2 );
+    trim( str2 );
     BOOST_CHECK( str2=="2x x x x2" );
     
     // spaces-only string test
-    str3 = "    "; ltrim_in( str3 );
+    str3 = "    "; trim_left( str3 );
     BOOST_CHECK( str3=="" );
-    str3 = "    "; rtrim_in( str3 );
+    str3 = "    "; trim_right( str3 );
     BOOST_CHECK( str3=="" );
-    str3 = "    "; trim_in( str3 );
+    str3 = "    "; trim( str3 );
     BOOST_CHECK( str3=="" );
 
     // empty string check 
-    str3 = ""; ltrim_in( str3 );
+    str3 = ""; trim_left( str3 );
     BOOST_CHECK( str3=="" );
-    str3 = ""; rtrim_in( str3 );
+    str3 = ""; trim_right( str3 );
     BOOST_CHECK( str3=="" );
-    str3 = ""; trim_in( str3 );
+    str3 = ""; trim( str3 );
     BOOST_CHECK( str3=="" );
 }

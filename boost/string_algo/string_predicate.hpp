@@ -22,7 +22,7 @@ namespace boost {
 
     // start_with iterator version
     template< typename InputIterator, typename SubIterator, typename BinaryPredicate >
-    inline bool start_with( 
+    inline bool starts_with( 
         InputIterator Begin, 
         InputIterator End, 
         SubIterator SubBegin,
@@ -44,13 +44,13 @@ namespace boost {
 
     // start_with iterator version with implicit comparison predicate
     template< typename InputIterator, typename SubIterator >
-    inline bool start_with( 
+    inline bool starts_with( 
         InputIterator Begin, 
         InputIterator End, 
         SubIterator SubBegin,
         SubIterator SubEnd )
     {
-        return start_with( 
+        return starts_with( 
             Begin,
             End,
             SubBegin,
@@ -61,41 +61,41 @@ namespace boost {
 
     // start_with sequence version
     template< typename Seq1, typename Seq2, typename BinaryPredicate >
-    inline bool start_with( 
+    inline bool starts_with( 
         const Seq1& Input, 
-        const Seq2& Prefix, 
+        const Seq2& Substr, 
         BinaryPredicate Comp )
     {
-        return start_with( Input.begin(), Input.end(), Prefix.begin(), Prefix.end(), Comp );
+        return starts_with( Input.begin(), Input.end(), Substr.begin(), Substr.end(), Comp );
     }
 
     // start_with sequence version with implicit comparison predicate
     template< typename Seq1, typename Seq2 >
-    inline bool start_with( const Seq1& Input, const Seq2& Prefix )
+    inline bool starts_with( const Seq1& Input, const Seq2& Substr )
     {
-        return start_with( 
+        return starts_with( 
             Input, 
-            Prefix, 
+            Substr, 
             string_util_impl::equal_toF<typename Seq1::value_type, typename Seq2::value_type>());
     }
 
     // end_with sequence version
     template< typename Seq1, typename Seq2, typename BinaryPredicate >
-    inline bool end_with( 
+    inline bool ends_with( 
         const Seq1& Input, 
-        const Seq2& Prefix, 
+        const Seq2& Substr, 
         BinaryPredicate Comp )
     {
-        return start_with( Input.rbegin(), Input.rend(), Prefix.rbegin(), Prefix.rend(), Comp );
+        return starts_with( Input.rbegin(), Input.rend(), Substr.rbegin(), Substr.rend(), Comp );
     }
 
     // end_with sequence version with implicit comparison predicate
     template< typename Seq1, typename Seq2 >
-    inline bool end_with( const Seq1& Input, const Seq2& Prefix )
+    inline bool ends_with( const Seq1& Input, const Seq2& Substr )
     {
-        return end_with( 
+        return ends_with( 
             Input, 
-            Prefix, 
+            Substr, 
             string_util_impl::equal_toF<typename Seq1::value_type, typename Seq2::value_type>());
     }
 
@@ -108,19 +108,19 @@ namespace boost {
         SubIterator SubEnd,
         BinaryPredicate Comp )
     {
-		if ( SubBegin==SubEnd )
-		{
-			// Empty range is contained always
-			return true;
-		}
-		
-		std::pair<InputIterator, InputIterator> M=
-			find( Begin, End, SubBegin, SubEnd );
+        if ( SubBegin==SubEnd )
+        {
+            // Empty range is contained always
+            return true;
+        }
+        
+        std::pair<InputIterator, InputIterator> M=
+            find( Begin, End, SubBegin, SubEnd );
 
-		return ( M.first != M.second );
-	}
+        return ( M.first != M.second );
+    }
 
-	// contains iterator version with implicit comparison predicate
+    // contains iterator version with implicit comparison predicate
     template< typename InputIterator, typename SubIterator >
     inline bool contains( 
         InputIterator Begin, 

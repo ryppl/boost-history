@@ -35,7 +35,7 @@ namespace boost {
 
     // const version of left trim
     template< typename Seq >
-    inline Seq ltrim( const Seq& Input, const std::locale& Loc=std::locale() )
+    inline Seq trim_left_copy( const Seq& Input, const std::locale& Loc=std::locale() )
     {
         return Seq( 
                 trim_begin( Input.begin(), Input.end(), Loc ),
@@ -44,7 +44,7 @@ namespace boost {
 
     // in-place version of left trim
     template< typename Seq >
-    inline Seq& ltrim_in( Seq& Input, const std::locale& Loc=std::locale() )
+    inline Seq& trim_left( Seq& Input, const std::locale& Loc=std::locale() )
     {
         Input.erase( 
             Input.begin(),
@@ -57,7 +57,7 @@ namespace boost {
 
     // const version of right trim
     template< typename Seq >
-    inline Seq rtrim( const Seq& Input, const std::locale& Loc=std::locale() )
+    inline Seq trim_right_copy( const Seq& Input, const std::locale& Loc=std::locale() )
     {
         return Seq( 
             Input.begin(),
@@ -67,7 +67,7 @@ namespace boost {
     
     // in-place version of right trim
     template< typename Seq >
-    inline Seq& rtrim_in( Seq& Input, const std::locale& Loc=std::locale() )
+    inline Seq& trim_right( Seq& Input, const std::locale& Loc=std::locale() )
     {
         Input.erase(
             trim_begin( Input.rbegin(), Input.rend(), Loc ).base(),
@@ -81,7 +81,7 @@ namespace boost {
 
     // const version of trim
     template< typename Seq >
-    inline Seq trim( const Seq& Input, const std::locale& Loc=std::locale() )
+    inline Seq trim_copy( const Seq& Input, const std::locale& Loc=std::locale() )
     {
         typename Seq::const_iterator TrimEnd=trim_begin( Input.rbegin(), Input.rend(), Loc).base();
 
@@ -93,9 +93,9 @@ namespace boost {
     
     // in-place version of trim
     template< typename Seq >
-    inline Seq& trim_in( Seq& Input, const std::locale& Loc=std::locale() )
+    inline Seq& trim( Seq& Input, const std::locale& Loc=std::locale() )
     {
-        return ltrim_in( rtrim_in( Input, Loc ), Loc );
+        return trim_left( trim_right( Input, Loc ), Loc );
     }
     
 

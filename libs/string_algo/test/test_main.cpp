@@ -22,7 +22,7 @@ int test_main( int, char*[] )
     trim_test();
     conv_test();
     predicate_test();
-	substr_test();
+    substr_test();
 
     return 0;
 }

@@ -11,32 +11,32 @@ void trimtest()
     string str2("     2x x x x2     ");
     string str3("    ");
 
-    cout << "*" << ltrim( str1 ) << "*" << endl;
-    cout << "*" << rtrim( str1 ) << "*" << endl;
-    cout << "*" << trim( str1 ) << "*" << endl;
+    cout << "*" << trim_left_copy( str1 ) << "*" << endl;
+    cout << "*" << trim_right_copy( str1 ) << "*" << endl;
+    cout << "*" << trim_copy( str1 ) << "*" << endl;
 
     cout << "----" << endl;
 
-    cout << "*" << ltrim( str3 ) << "*" << endl;
-    cout << "*" << rtrim( str3 ) << "*" << endl;
-    cout << "*" << trim( str3 ) << "*" << endl;
+    cout << "*" << trim_left_copy( str3 ) << "*" << endl;
+    cout << "*" << trim_right_copy( str3 ) << "*" << endl;
+    cout << "*" << trim_copy( str3 ) << "*" << endl;
 
     cout << "----" << endl;
 
-    rtrim_in( str1 );
+    trim_right( str1 );
     cout << "*" << str1 << "*" << endl;
-    ltrim_in( str1 );
+    trim_left( str1 );
     cout << "*" << str1 << "*" << endl;
-    trim_in( str2 );
+    trim( str2 );
     cout << "*" << str2 << "*" << endl;
 
     cout << "----" << endl;
 
-    rtrim_in( str3 );
+    trim_right( str3 );
     cout << "*" << str3 << "*" << endl;
-    ltrim_in( str3 );
+    trim_left( str3 );
     cout << "*" << str3 << "*" << endl;
-    trim_in( str3 );
+    trim( str3 );
     cout << "*" << str3 << "*" << endl;
 }
 
@@ -46,14 +46,14 @@ void convtest()
     string str2("aaaaBBBB");
     string str3("");
 
-    cout << "*" << tolower( str1 ) << "*" << endl;
-    cout << "*" << toupper( str1 ) << "*" << endl;
+    cout << "*" << tolower_copy( str1 ) << "*" << endl;
+    cout << "*" << toupper_copy( str1 ) << "*" << endl;
 
     cout << "----" << endl;
 
-    tolower_in( str1 );
+    tolower( str1 );
     cout << "*" << str1 << "*" << endl;
-    toupper_in( str1 );
+    toupper( str1 );
     cout << "*" << str1 << "*" << endl;
 }
 
@@ -63,16 +63,16 @@ void algo()
     string str2("abc");
     string str3("");
 
-    cout << (start_with( str1, string("123") )?"true":"false") << endl; 
-    cout << (start_with( str1, string("1234") )?"true":"false") << endl; 
-    cout << (end_with( str1, string("321") )?"true":"false") << endl; 
-    cout << (end_with( str1, string("123") )?"true":"false") << endl; 
+    cout << (starts_with( str1, string("123") )?"true":"false") << endl; 
+    cout << (starts_with( str1, string("1234") )?"true":"false") << endl; 
+    cout << (ends_with( str1, string("321") )?"true":"false") << endl; 
+    cout << (ends_with( str1, string("123") )?"true":"false") << endl; 
 
-    cout << (start_with( str2, string("abc") )?"true":"false") << endl; 
-    cout << (end_with( str2, string("abc") )?"true":"false") << endl; 
+    cout << (starts_with( str2, string("abc") )?"true":"false") << endl; 
+    cout << (ends_with( str2, string("abc") )?"true":"false") << endl; 
 
-    cout << (start_with( str2, string("abcd") )?"true":"false") << endl; 
-    cout << (end_with( str2, string("abcd") )?"true":"false") << endl; 
+    cout << (starts_with( str2, string("abcd") )?"true":"false") << endl; 
+    cout << (ends_with( str2, string("abcd") )?"true":"false") << endl; 
 
     cout << (contains( str1, string("xxx") )?"true":"false") << endl; 
     cout << (contains( str1, string("") )?"true":"false") << endl; 
@@ -115,25 +115,25 @@ void replace()
 
 	cout << endl;
 
-	cout << replace_first( string("abcabc"), string("abc"), string("YYY") ) << endl; 
-	cout << replace_first( string("abcabc"), string(""), string("YYY") ) << endl; 
-	cout << replace_all( string("abcabc"), string("abc"), string("YYY") ) << endl; 
-	cout << replace_all( string("abcabc"), string("abd"), string("YYY") ) << endl; 
-	cout << replace_all( str1, str2, string("") ) << endl;
+	cout << replace_first_copy( string("abcabc"), string("abc"), string("YYY") ) << endl; 
+	cout << replace_first_copy( string("abcabc"), string(""), string("YYY") ) << endl; 
+	cout << replace_all_copy( string("abcabc"), string("abc"), string("YYY") ) << endl; 
+	cout << replace_all_copy( string("abcabc"), string("abd"), string("YYY") ) << endl; 
+	cout << replace_all_copy( str1, str2, string("") ) << endl;
 
-	cout << erase_all( string("abcabc"), string("abc") ) << endl; 
-	cout << erase_first( string("abcabc"), string("abc") ) << endl; 
-	cout << erase_all( str1, string("") ) << endl;
+	cout << erase_all_copy( string("abcabc"), string("abc") ) << endl; 
+	cout << erase_first_copy( string("abcabc"), string("abc") ) << endl; 
+	cout << erase_all_copy( str1, string("") ) << endl;
 
 	cout << endl;
 
-	replace_first_in( str1, string("x"), string("456") );
+	replace_first( str1, string("x"), string("456") );
 	cout << str1 << endl;
-	replace_all_in( str1, string("abc"), string("X") );
+	replace_all( str1, string("abc"), string("X") );
 	cout << str1 << endl;
-	replace_all_in( str1, string("X"), string("mno") );
+	replace_all( str1, string("X"), string("mno") );
 	cout << str1 << endl;
-	replace_all_in( str1, string("mno"), string("ZZZ") );
+	replace_all( str1, string("mno"), string("ZZZ") );
 	cout << str1 << endl;
 	
 	

@@ -23,21 +23,21 @@ void conv_test()
 
     // *** value passing tests *** //
 
-    BOOST_CHECK( tolower( str1 )=="abcdefg 123 xxxyyyzzzz" );
-    BOOST_CHECK( toupper( str1 )=="ABCDEFG 123 XXXYYYZZZZ" );
+    BOOST_CHECK( tolower_copy( str1 )=="abcdefg 123 xxxyyyzzzz" );
+    BOOST_CHECK( toupper_copy( str1 )=="ABCDEFG 123 XXXYYYZZZZ" );
 
-    BOOST_CHECK( tolower( str3 )=="" );
-    BOOST_CHECK( toupper( str3 )=="" );
+    BOOST_CHECK( tolower_copy( str3 )=="" );
+    BOOST_CHECK( toupper_copy( str3 )=="" );
 
     // *** inplace tests *** //
 
-    tolower_in( str1 );
+    tolower( str1 );
     BOOST_CHECK( str1=="abcdefg 123 xxxyyyzzzz" );
-    toupper_in( str2 );
+    toupper( str2 );
     BOOST_CHECK( str2=="ABCDEFG 123 XXXYYYZZZZ" );
 
-    tolower_in( str3 );
+    tolower( str3 );
     BOOST_CHECK( str3=="" );
-    toupper_in( str3 );
+    toupper( str3 );
     BOOST_CHECK( str3=="" );
 }

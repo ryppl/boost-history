@@ -22,7 +22,7 @@ namespace boost {
 
     // const version of tolower
     template< typename Seq >
-    inline Seq tolower( const Seq& Input, const std::locale& Loc=std::locale() )
+    inline Seq tolower_copy( const Seq& Input, const std::locale& Loc=std::locale() )
     {
         Seq Output;
         std::transform( 
@@ -36,7 +36,7 @@ namespace boost {
 
     // in-place version of tolower
     template< typename Seq >
-    inline Seq& tolower_in( Seq& Input, const std::locale& Loc=std::locale() )
+    inline Seq& tolower( Seq& Input, const std::locale& Loc=std::locale() )
     {
         std::transform( 
             Input.begin(), 
@@ -51,7 +51,7 @@ namespace boost {
 
     // const version of toupper
     template< typename Seq >
-    inline Seq toupper( const Seq& Input, const std::locale& Loc=std::locale() )
+    inline Seq toupper_copy( const Seq& Input, const std::locale& Loc=std::locale() )
     {
         Seq Output;
         std::transform( 
@@ -65,7 +65,7 @@ namespace boost {
 
     // in-place version of toupper
     template< typename Seq >
-    inline Seq& toupper_in( Seq& Input, const std::locale& Loc=std::locale() )
+    inline Seq& toupper( Seq& Input, const std::locale& Loc=std::locale() )
     {
         std::transform( 
             Input.begin(), 
