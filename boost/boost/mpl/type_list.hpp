@@ -3,7 +3,7 @@
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
-// Copyright (c) 2000-01
+// Copyright (c) 2000-02
 // Aleksey Gurtovoy
 //
 // Permission to use, copy, modify, distribute and sell this software
@@ -14,8 +14,8 @@
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
 
-#ifndef BOOST_MPL_TYPE_LIST_HPP
-#define BOOST_MPL_TYPE_LIST_HPP
+#ifndef BOOST_MPL_TYPE_LIST_HPP_INCLUDED
+#define BOOST_MPL_TYPE_LIST_HPP_INCLUDED
 
 #include "boost/mpl/list/preprocessor.hpp"
 #include "boost/mpl/list/traits.hpp"
@@ -49,4 +49,4 @@ struct type_list
 } // namespace mpl
 } // namespace boost 
 
-#endif // BOOST_MPL_TYPE_LIST_HPP
+#endif // BOOST_MPL_TYPE_LIST_HPP_INCLUDED

@@ -17,6 +17,12 @@
 #ifndef BOOST_MPL_AUX_COUNT_IF_NOT_HPP_INCLUDED
 #define BOOST_MPL_AUX_COUNT_IF_NOT_HPP_INCLUDED
 
+// EDG-based compilers have serious problems with preprocessor performance,
+// so we have to feed them already preprocessed version of code
+#if defined(__EDG__) // && (__EDG_VERSION__ <= ???)
+#   include "boost/mpl/aux_/preprocessed/count_if_not.hpp"
+#else
+
 #include "boost/mpl/limits/top.hpp"
 #include "boost/mpl/aux_/preprocessor.hpp"
 
@@ -54,5 +60,7 @@ struct count_if_not
 } // namespace aux
 } // namespace mpl
 } // namespace boost
+
+#endif // #if defined(__EDG__)
 
 #endif // BOOST_MPL_AUX_COUNT_IF_NOT_HPP_INCLUDED

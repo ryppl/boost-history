@@ -70,10 +70,12 @@ struct test5
 
 int main()
 {
-    typedef mpl::bind1<test1, mpl::_3>::type b1;
+    using namespace mpl::lambda_arg;
+
+    typedef mpl::bind1<test1, _3>::type b1;
     typedef b1::apply<int, long, char>::type t1;
 
-    typedef mpl::bind5<test5, char, int, short, long, mpl::_2>::type b5;
+    typedef mpl::bind5<test5, char, int, short, long, _2>::type b5;
     typedef b5::apply<int, long>::type t2;
 
     BOOST_MPL_ASSERT_IS_SAME(t1, char);
@@ -81,10 +83,10 @@ int main()
 
 
     typedef mpl::bind<test0>::type nested_bind_0;
-    typedef mpl::bind<test1, mpl::_2>::type nested_bind_1;
-    typedef mpl::bind<test2, mpl::_1, char>::type nested_bind_2;
-    typedef mpl::bind<test3, void, mpl::_4, int>::type nested_bind_3;
-    typedef mpl::bind<test4, nested_bind_0, mpl::_2, mpl::_1, mpl::_3>::type nested_bind_4;
+    typedef mpl::bind<test1, _2>::type nested_bind_1;
+    typedef mpl::bind<test2, _1, char>::type nested_bind_2;
+    typedef mpl::bind<test3, void, _4, int>::type nested_bind_3;
+    typedef mpl::bind<test4, nested_bind_0, _2, _1, _3>::type nested_bind_4;
 
     typedef mpl::bind<test4, nested_bind_1, nested_bind_2, nested_bind_3, nested_bind_4>::type bound;
     typedef bound::apply<void, char, long, float>::type result;

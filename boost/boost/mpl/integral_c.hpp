@@ -22,16 +22,32 @@
 namespace boost {
 namespace mpl {
 
-template<typename T, T N>
+// for 'integral_ops'
+template< typename T, T N > struct integral_c;
+
+namespace aux {
+template< typename T >
+struct integral_ops
+{
+    // increment/decrement support
+    template<T N> struct next_prior
+    {
+        // agurt, 15/jan/02: MSVC6.5 workaround; the compiler gives an ICE 
+        // if you write 'N + 1' instead of 'value + 1'
+        BOOST_STATIC_CONSTANT(T, value = N);
+        
+        typedef integral_c<T, value + 1> next;
+        typedef integral_c<T, value - 1> prior;
+    };
+};
+} // namespace aux
+
+template< typename T, T N >
 struct integral_c
+    : aux::integral_ops<T>::template next_prior<N>
 {
     BOOST_STATIC_CONSTANT(T, value = N);
     typedef integral_c<T, N> type;
-
-    // increment/decrement support
-    // agurt 15/jan/02: 'N' instead of 'value' gives an ICE on MSVC6.5
-    typedef integral_c<T, value + 1> next;
-    typedef integral_c<T, value - 1> prior;
 
     // user-declared default ctor is required for definition of namespace 
     // scope constants

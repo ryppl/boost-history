@@ -17,7 +17,13 @@
 #ifndef BOOST_MPL_BIND_HPP_INCLUDED
 #define BOOST_MPL_BIND_HPP_INCLUDED
 
-#include "boost/mpl/et/placeholder.hpp"
+// EDG-based compilers have serious problems with preprocessor performance,
+// so we have to feed them already preprocessed version of code
+#if defined(__EDG__) // && (__EDG_VERSION__ <= ???)
+#   include "boost/mpl/aux_/preprocessed/bind.hpp"
+#else
+
+#include "boost/mpl/lambda/arg.hpp"
 #include "boost/mpl/apply.hpp"
 #include "boost/mpl/limits/arity.hpp"
 #include "boost/mpl/aux_/count_if_not.hpp"
@@ -111,7 +117,7 @@ struct resolve_bind_argument
 #define BOOST_MPL_AUX_RESOLVE_BIND_ARGUMENT_N_SPEC(n) \
 namespace aux { \
 template<> \
-struct resolve_bind_argument<BOOST_PREPROCESSOR_CAT(_,n)> \
+struct resolve_bind_argument< mpl::arg<n> > \
 { \
     template<BOOST_MPL_AUX_BIND_PARAMS(typename U)> struct result_ \
     { \
@@ -289,5 +295,7 @@ struct bind2nd
 
 } // namespace mpl
 } // namespace boost 
+
+#endif // #if defined(__EDG__)
 
 #endif // #ifndef BOOST_MPL_BIND_HPP_INCLUDED

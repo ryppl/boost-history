@@ -22,6 +22,15 @@
 namespace boost {
 namespace mpl {
 
+namespace aux {
+template<>
+struct integral_ops<bool>
+{
+    // increment/decrement are not supported
+    template<bool N> struct next_prior {};
+};
+} // namespace aux
+
 template<bool C> struct bool_c : integral_c<bool, C> {};
 
 // shorcuts

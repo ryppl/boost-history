@@ -41,14 +41,16 @@ struct my
 
 int main()
 {
+    using namespace mpl::lambda_arg;
+
     // !(x == char) && !(x == double) && x convertible to int || size_of(x) > 8
     typedef mpl::lambda<
         mpl::logical_or<
               mpl::logical_and<
-                    mpl::logical_not< is_same<mpl::_1,char> >
-                  , mpl::logical_not< is_float<mpl::_1> >
+                    mpl::logical_not< is_same<_1, char> >
+                  , mpl::logical_not< is_float<_1> >
                   >
-            , mpl::greater< mpl::size_of<mpl::_1>, mpl::int_c<8> >
+            , mpl::greater< mpl::size_of<_1>, mpl::int_c<8> >
             >
         >::type f1;
 
@@ -60,9 +62,9 @@ int main()
     // x == y || x == my || sizeof(x) == sizeof(y)
     typedef mpl::lambda<
         mpl::logical_or< 
-              is_same<mpl::_1,mpl::_2>
-            , is_same<mpl::_2,my>
-            , mpl::equal_to< mpl::size_of<mpl::_1>, mpl::size_of<mpl::_2> >
+              is_same<_1, _2>
+            , is_same<_2, my>
+            , mpl::equal_to< mpl::size_of<_1>, mpl::size_of<_2> >
             >
         >::type f2;
 

@@ -18,7 +18,6 @@
 #define BOOST_MPL_LAMBDA_HPP_INCLUDED
 
 #include "boost/mpl/bind.hpp"
-#include "boost/mpl/et/placeholder.hpp"
 #include "boost/mpl/make_fun.hpp"
 #include "boost/mpl/limits/arity.hpp"
 #include "boost/mpl/aux_/preprocessor.hpp"

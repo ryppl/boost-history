@@ -14,8 +14,14 @@
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
 
-#ifndef BOOST_MPL_LIST_FACTORY_HPP
-#define BOOST_MPL_LIST_FACTORY_HPP
+#ifndef BOOST_MPL_LIST_FACTORY_HPP_ICNLUDED
+#define BOOST_MPL_LIST_FACTORY_HPP_ICNLUDED
+
+// EDG-based compilers have serious problems with preprocessor performance,
+// so we have to feed them already preprocessed version of code
+#if defined(__EDG__) // && (__EDG_VERSION__ <= ???)
+#   include "boost/mpl/aux_/preprocessed/factory.hpp"
+#else
 
 #include "boost/mpl/list/preprocessor.hpp"
 #include "boost/mpl/list/traits.hpp"
@@ -91,4 +97,6 @@ struct list_factory
 } // namespace mpl
 } // namespace boost 
 
-#endif // BOOST_MPL_LIST_FACTORY_HPP
+#endif // defined(__EDG__)
+
+#endif // BOOST_MPL_LIST_FACTORY_HPP_ICNLUDED

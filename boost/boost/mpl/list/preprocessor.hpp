@@ -14,10 +14,11 @@
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
 
-#ifndef BOOST_MPL_LIST_PREPROCESSOR_HPP
-#define BOOST_MPL_LIST_PREPROCESSOR_HPP
+#ifndef BOOST_MPL_LIST_PREPROCESSOR_HPP_INCLUDED
+#define BOOST_MPL_LIST_PREPROCESSOR_HPP_INCLUDED
 
 #include "boost/mpl/limits/list.hpp"
+#include "boost/mpl/aux_/preprocessor.hpp"
 
 #define BOOST_MPL_LIST_PARAMETERS(param) \
     BOOST_MPL_TEMPLATE_PARAMETERS(0, BOOST_MPL_LIST_PARAMETERS_NUMBER, param) \
@@ -32,4 +33,4 @@
         ) \
 /**/
 
-#endif // BOOST_MPL_LIST_PREPROCESSOR_HPP
+#endif // BOOST_MPL_LIST_PREPROCESSOR_HPP_INCLUDED
