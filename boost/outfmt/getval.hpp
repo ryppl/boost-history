@@ -30,10 +30,12 @@
    {
       // type classification:
 
-      struct seperable_pair{};
+      struct nary2_type{};
+
+      struct seperable_pair: public nary2_type{};
 
       template< typename T1, typename T2 = T1 >
-      struct inseperable_pair
+      struct inseperable_pair: public nary2_type
       {
          typedef T1                    base1_type;
          typedef T2                    base2_type;
@@ -112,6 +114,13 @@
          return( detail::selector< n, T1, T2 >::value( cp.first(), cp.second()));
       }
 
+      template< int n, typename T1, typename T2 >
+      typename detail::selector< n, T1, T2 >::ref_type
+                                                 refval( boost::compressed_pair< T1, T2 > & p )
+      {
+         return( detail::selector< n, T1, T2 >::ref( p.first(), p.second()));
+      }
+
       // std::complex
 
       BOOST_IO_NARY_PARAM1( std::complex, inseperable_pair< T > )
@@ -138,6 +147,12 @@
          {
             return( detail::selector< n, T >::value( i.lower(), i.upper()));
          }
+
+         template< typename T, class Traits >
+         void assignval( boost::numeric::interval< T, Traits > & i, const T & a, const T & b )
+         {
+            i = boost::numeric::interval< T, Traits >( a, b );
+         }
 #     endif
 
       // boost::rational
@@ -149,6 +164,12 @@
          T getval( const boost::rational< T > & r )
          {
             return( detail::selector< n, T >::value( r.numerator(), r.denominator()));
+         }
+
+         template< typename T >
+         void assignval( boost::rational< T > & r, const T & a, const T & b )
+         {
+            r = boost::rational< T >( a, b );
          }
 #     endif
 
@@ -166,6 +187,12 @@
                h.R_component_3(), h.R_component_4()
             ));
          }
+
+         template< typename T >
+         void assignval( boost::math::quaternion< T > & q, const T & a, const T & b, const T & c, const T & d )
+         {
+            q = boost::math::quaternion< T >( a, b, c, d );
+         }
 #     endif
 
       // boost::math::octonion
@@ -181,6 +208,12 @@
                o.R_component_1(), o.R_component_2(), o.R_component_3(), o.R_component_4(),
                o.R_component_5(), o.R_component_6(), o.R_component_7(), o.R_component_8()
             ));
+         }
+
+         template< typename T >
+         void assignval( boost::math::octonion< T > & o, const T & a, const T & b, const T & c, const T & d, const T & e, const T & f, const T & g, const T & h )
+         {
+            o = boost::math::octonion< T >( a, b, c, d, e, f, g, h );
          }
 #     endif
    }}
