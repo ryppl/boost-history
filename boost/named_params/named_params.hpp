@@ -274,7 +274,6 @@ template<
 >
 struct parameters
 {
-    typedef parameters self;
 #undef BOOST_PARAMETERS_TEMPLATE_ARGS
 
     // if the elements of NamedList match the criteria of overload
