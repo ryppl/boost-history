@@ -67,7 +67,14 @@
 #    building specific target types by repeatedly redefining the generalized
 #    build actions in the various <build-tools>-tools.jam files
 
-TOOLS ?= borland gcc metrowerks msvc ;
+if $(NT)
+{
+    TOOLS ?= borland gcc metrowerks msvc ;
+}
+else
+{
+    TOOLS ?= gcc ;
+}
 
 # detect-build-tools <tools-name> : <detection-command>
 #
@@ -105,11 +112,8 @@ rule dll-files
         INCLUDES $(f) : $(<) ;
     }
     
-    main-from-objects [ FAppendSuffix $(<) : $(SUFDLL) ] : [ Objects $(>) ] : DLL ;
+    main-from-objects $(<) : [ Objects $(>) ] : DLL ;
 }
-
-gLINK_FUNCTION(EXE) = Link ;
-gLINK_FUNCTION(DLL) = Link-DLL ;
 
 # main-from-objects exe-target : obj-target... : ("EXE"|"DLL")
 #
@@ -126,26 +130,41 @@ rule main-from-objects
 
     Clean clean : $(<) ;
 
-    local ignored = [ $(gLINK_FUNCTION($(3))) $(<) : $(>) : $(3) ] ;
+    MODE on $(<) = $($(3)MODE) ;
+    local link-function = Link-$(3) ;
+    local ignored = [ $(link-function) $(<) : $(>) : $(3) ] ;
+    Chmod $(<[1]) ;
+}
+
+rule Link-EXE
+{
+    # N.B. By the time this rule is invoked, we had better have gRUN_PATH completely set.
+    RUN_PATH on $(<) = [ join $(gRUN_PATH($(<))) $(RUN_PATH) : $(SPLITPATH) ] ;
+    Link-action $(<) : $(>) : EXE ;
 }
 
 rule Link-DLL
 {
-    MODE on $(<[1]) = $(DLLMODE) ;
-    
     if $(<[2])
     {
-      MODE on $(<[2]) = $(IMPMODE) ;
-      Chmod $(<[2]) ;
+        MODE on $(<[2]) = $(IMPMODE) ;
+        Chmod $(<[2]) ;
     }
-    Link-action $(<) : $(>) : $(3) ;
     
-    Chmod $(<[1]) ;
+    gRUN_PATH($(<)) += $(gLOCATE($(<[1]))) ;
+    
+    Link-action $(<) : $(>) : DLL ;
 }
+
+# store the shell's PATH again, just in case someone uses PATH.
+# This also allows the user to customize the base path for running built
+# products from the command-line
+RUN_PATH ?= $(PATH) ;
 
 # A simple action to run an executable target
 actions Run
 {
+    $(SHELL_EXPORT)PATH=$(RUN_PATH)
     $(<)
 }
 
@@ -1171,6 +1190,15 @@ else
   gIMPORT_SUFFIX(LIB) = .a ;
 }
 
+# depend-on-libraries target-files : library-targets
+rule depend-on-libraries
+{
+    NEEDLIBS on $(<) += $(>) ;
+    DEPENDS $(<) : $(>) ;
+    # To run these targets, we need everything needed to run the libraries
+    gRUN_PATH($(<)) += $(gRUN_PATH($(>))) ;
+}
+
 # subvariant-target target : subvariant-id build-properties : toolset variant
 #
 # Given target, a main target name gristed with $(SOURCE_GRIST), generate build
@@ -1226,11 +1254,6 @@ rule subvariant-target
     # transfer target variables to the target file.
     set-target-variables $(target-files) ;
 
-    # dispatch to the appropriate declaration function. Here we are using an
-    # FTJam-only feature (thanks, David Turner!)
-    local ignored = [ $(gGENERATOR_FUNCTION($(target-type))) $(target-files)
-                        : $(gTARGET_SOURCES($(<))) ] ;
-
     if $(gTARGET_LIBS($(<)))
     {
         # extract the simple properties from dependent-properties
@@ -1239,9 +1262,14 @@ rule subvariant-target
         
         # generate library build instructions
         local libs = [ link-libraries $(gTARGET_LIBS($(<))) : $(3) : $(simple-properties) ] ;
-        NEEDLIBS on $(target-files) += $(libs) ;
-        DEPENDS $(target-files) : $(libs) ; 
+        depend-on-libraries $(target-files) : $(libs) ;
     }
+
+    # dispatch to the appropriate declaration function. Here we are using an
+    # FTJam-only feature (thanks, David Turner!)
+    local ignored = [ $(gGENERATOR_FUNCTION($(target-type))) $(target-files)
+                        : $(gTARGET_SOURCES($(<))) ] ;
+
   }
   return $(gTARGET_FILES($(subvariant))) ;
 }
