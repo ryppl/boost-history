@@ -8,9 +8,9 @@
 <table border="0" cellpadding="7" cellspacing="0" width="100%" summary="header">
 <tr>
 <td valign="top" width="300">
-<h3><a href="../../../index.htm"><img height="86" width="277" alt="C++ Boost" src="../../../c++boost.gif" border="0"></a></h3>
+<h3><a href="../../../index.htm"><img height="86" width="277" alt="C++ Boost" src="../../doc/c++boost.gif" border="0"></a></h3>
 </td>
-<td valign="top">
+<td valign="center">
 <h1 align="center">Boost.Numeric.Bindings.LAPACK</h1>
 </td>
 </tr>
@@ -27,10 +27,13 @@ Back to <a href="../../doc/index.html">Bindings Library Synopsis</a>
 <ol>
 <li><a href="#lineqs">Linear Equations</a></li>
 <ol>
-<li>General System
-<li>Positive Definite System
-<li>Symmetric (Real and Complex) Indefinite System
-<li>Hermitian Indefinite System
+<li><a href="#lineqs-ge">General System</a>
+<li><a href="#lineqs-po">Positive Definite System</a>
+<li><a href="#lineqs-pp">Positive Definite System with Coefficient Matrix in Packed Storage</a>
+<li><a href="#lineqs-sy">Symmetric (Real and Complex) Indefinite System</a>
+<li><a href="#lineqs-sp">Symmetric Indefinite System with Coefficient Matrix in Packed Storage</a>
+<li><a href="#lineqs-he">Hermitian Indefinite System</a>
+<li><a href="#lineqs-hp">Hermitian Indefinite System with Coefficient Matrix in Packed Storage</a>
 </ol>
 </ol>
 <li><a href="#extend_lapack">Extending LAPACK bindings</a></li>
@@ -85,9 +88,9 @@ compiler.'' [quote from <a href="http://www.netlib.org/clapack/readme">CLAPACK r
 
 <p>
 LAPACK Bindings Library provides generic, higher level interface to LAPACK
-or CLAPACK routines. By `generic' we mean that bindings are based on
+routines. By `generic' we mean that bindings are based on
 <a href="../../traits/doc/index.html">traits</a> and therefore can be used with various
-matrix and vector classes, and by `higher level' that some
+(sparse) matrix and vector classes, and by `higher level' that some
 complexities of the Fortran or C interfaces and calling conventions are hidden from the user. 
 But, as LAPACK was written in Fortran (and CLAPACK is a direct conversion to C), matrices must have column major storage order. 
 
@@ -102,13 +105,10 @@ functions are in the namespace <code>boost::numeric::bindings::lapack</code>.
 
 <p>
 <b>Note:</b> LAPACK bindings can be used with either LAPACK or CLAPACK
-libraries. If used with CLAPACK, you must 
-<ol> 
-<li> edit the file <code>clapack_inc.h</code> to provide the path to the CLAPACK's
-header <code>clapack.h</code> on your machine;
-<li> define BOOST_NUMERIC_BINDINGS_CLAPACK before the inclusion of LAPACK
+libraries. We recommend to use bindings with genuine LAPACK. 
+But if you use CLAPACK, 
+define BOOST_NUMERIC_BINDINGS_USE_CLAPACK before the inclusion of LAPACK
 bindings files. 
-</ol>
 
 <h3><a name="lineqs">2.1 Linear Equations</a></h3>
 
@@ -161,8 +161,11 @@ computation to be done:
 <ul>
 <li><code>ge</code> -- general,
 <li><code>po</code> -- symmetric/Hermitian positive definite (not packed),
+<li><code>pp</code> -- symmetric/Hermitian positive definite stored in packed format,
 <li><code>sy</code> -- symmetric (real and complex) indefinite (not packed),
-<li><code>he</code> -- Hermitian indefinite (not packed);
+<li><code>sp</code> -- symmetric indefinite stored in packed format,
+<li><code>he</code> -- Hermitian indefinite (not packed),
+<li><code>hp</code> -- Hermitian indefinite stored in packed format;
 </ul>
 <li> computation (<i>yyy</i>):
 <ul>
@@ -178,10 +181,10 @@ Our convention is to group the functions which solve the same problem
 (or part of it) in separate files, named after the corresponding
 driver routine -- for example, <code>gesv()</code>, 
 <code>getrf()</code> and <code>getrs()</code>, that is, functions for
-solving (perhaps in several steps) a system with general coefficient matrices, 
+solving (perhaps in several steps) a system with general coefficient matrix, 
 are defined in <code>gesv.hpp</code>. 
 
-<h4>2.1.1 General System</h4>
+<h4><a name="lineqs-ge">2.1.1 General System</a></h4>
 
 Defined in <code>boost/numeric/bindings/lapack/gesv.hpp</code>.
 
@@ -219,7 +222,7 @@ allocated and deallocated internally
 &nbsp; returns <code>ierr</code> 
 </table>
 
-<h4>2.1.2 Positive Definite System</h4>
+<h4><a name="lineqs-po">2.1.2 Positive Definite System</a></h4>
 
 Defined in <code>boost/numeric/bindings/lapack/posv.hpp</code>. 
 
@@ -277,7 +280,50 @@ part of the symmetric/Hermitian matrix (e.g. traits for
 <a href="http://www.boost.org/libs/numeric/ublas/doc/symmetric.htm#symmetric_adaptor"><code>ublas::symmetric_adaptor&lt;&gt;</code></a>
 and <a href="http://www.boost.org/libs/numeric/ublas/doc/hermitian.htm#hermitian_adaptor"><code>ublas::hermitian_adaptor&lt;&gt;</code></a>).
 
-<h4>2.1.3 Symmetric (Real and Complex) Indefinite System</h4>
+<h4><a name="lineqs-pp">2.1.3 Positive Definite System with Coefficient Matrix in Packed Storage</a></h4>
+
+Defined in <code>boost/numeric/bindings/lapack/ppsv.hpp</code>. 
+
+<p>
+Namespace is <code>boost::numeric::bindings::lapack</code>. 
+
+<p>
+In the following table <code>A</code>, <code>B</code>, <code>L</code>,
+<code>U</code> are matrices (for more details see description of
+the Cholesky factorisation above) 
+and <code>ierr</code> is LAPACK's `diagnostic argument' <code>INFO</code>. 
+Matrix <code>A</code> is stored in packed format (e.g. 
+<a href="http://www.boost.org/libs/numeric/ublas/doc/symmetric.htm#symmetric_matrix"><code>ublas::symmetric_matrix&lt;&gt;</code></a>
+and <a href="http://www.boost.org/libs/numeric/ublas/doc/hermitian.htm#hermitian_matrix"><code>ublas::hermitian_matrix&lt;&gt;</code></a>).
+
+
+<p>
+<table border=1>
+<tr><th>Expression<th>Semantics
+<tr><td><code>ppsv(A,B)</code><td>
+<code>B <- A<sup>-1</sup>B</code>, using 
+<code>A = U<sup>T</sup>U</code> or <code>A = LL<sup>T</sup></code> 
+or <code>A = U<sup>H</sup>U</code> or <code>A = LL<sup>H</sup></code>; 
+&nbsp; returns <code>ierr</code> 
+<tr><td><code>pptrf(A)</code><td>
+<code>A = U<sup>T</sup>U</code> or <code>A = LL<sup>T</sup></code> 
+or <code>A = U<sup>H</sup>U</code> or <code>A = LL<sup>H</sup></code>; 
+&nbsp; returns <code>ierr</code> 
+<tr><td><code>pptrs(A,B)</code><td>
+<code>B <- A<sup>-1</sup>B</code> assuming  
+<code>A = U<sup>T</sup>U</code> or <code>A = LL<sup>T</sup></code> 
+or <code>A = U<sup>H</sup>U</code> or <code>A = LL<sup>H</sup></code>; 
+&nbsp; returns <code>ierr</code> 
+</table>
+
+<p>
+It is assumed that matrix traits class can determine whether 
+or lower triangular part of the symmetric/Hermitian matrix is stored
+(e.g. traits for 
+<a href="http://www.boost.org/libs/numeric/ublas/doc/symmetric.htm#symmetric_matrix"><code>ublas::symmetric_matrix&lt;&gt;</code></a>
+and <a href="http://www.boost.org/libs/numeric/ublas/doc/hermitian.htm#hermitian_matrix"><code>ublas::hermitian_matrix&lt;&gt;</code></a>).
+
+<h4><a name="lineqs-sy">2.1.4 Symmetric (Real and Complex) Indefinite System</a></h4>
 
 Defined in <code>boost/numeric/bindings/lapack/sysv.hpp</code>.
 
@@ -293,7 +339,9 @@ the Bunch-Kaufman factorisation above),
 <code>Uplo</code> can be <code>'U'</code> 
 or <code>'L'</code>, denoting that leading upper or lower, respectively, triangular part of <code>A</code> contains 
 the upper or lower triangular part of the symmetric matrix
-(and that the lower or upper triangular part, respectively, is not referenced) 
+(and that the lower or upper triangular part, respectively, is not referenced),
+<code>Spec</code> can be <code>'O'</code> or <code>'M'</code>,
+specifying whether optimal or minimum block size is to be returned, 
 and <code>ierr</code> is LAPACK's `diagnostic argument'
 <code>INFO</code>. 
 
@@ -324,10 +372,10 @@ as above, with <code>w</code> allocated and deallocated internally
 &nbsp; returns <code>ierr</code> &nbsp;&nbsp; [1]
 <tr><td><code>sytrf(A,ipiv)</code><td>
 as above, with <code>w</code> allocated and deallocated internally  &nbsp;&nbsp; [1]
-<tr><td><code>sytrf_querry(Uplo,A)</code><td>
-returns optimal size of <code>w</code>
-<tr><td><code>sytrf_querry(A)</code><td>
-returns optimal size of <code>w</code> &nbsp;&nbsp; [1]
+<tr><td><code>sytrf_query(Spec,Uplo,A)</code><td>
+returns optimal or minimum block size &nbsp;&nbsp; [2]
+<tr><td><code>sytrf_query(Spec,A)</code><td>
+returns optimal or minimum block size &nbsp;&nbsp; [1][2] 
 <tr><td><code>sytrs(Uplo,A,ipiv,B)</code><td>
 <code>B <- A<sup>-1</sup>B</code> assuming  
 <code>A = UDU<sup>T</sup></code> or <code>A = LDL<sup>T</sup></code>;
@@ -344,7 +392,52 @@ or lower triangular part of <code>A</code> contains the corresponding
 part of the symmetric matrix (e.g. traits for 
 <a href="http://www.boost.org/libs/numeric/ublas/doc/symmetric.htm#symmetric_adaptor"><code>ublas::symmetric_adaptor&lt;&gt;</code></a>).
 
-<h4>2.1.4 Hermitian Indefinite System</h4>
+<p> 
+[2] Optimal size of the `work' vector <code>w</code> is <code>n*nb</code>, where 
+<code>nb</code> is optimal block size and <code>n</code> the
+order of matrix <code>A</code>. 
+
+<h4><a name="lineqs-sp">2.1.5 Symmetric Indefinite System with Coefficient Matrix in Packed Storage</a></h4>
+
+Defined in <code>boost/numeric/bindings/lapack/spsv.hpp</code>.
+
+<p>
+Namespace is <code>boost::numeric::bindings::lapack</code>. 
+
+<p>
+In the following table <code>A</code>, <code>B</code>, <code>L</code>,
+<code>U</code>, <code>D</code> are matrices, <code>ipiv</code> is a
+vector of pivot indices (for more details see description of 
+the Bunch-Kaufman factorisation above) 
+and <code>ierr</code> is LAPACK's `diagnostic argument' <code>INFO</code>. 
+Matrix <code>A</code> is stored in packed format (e.g. 
+<a href="http://www.boost.org/libs/numeric/ublas/doc/symmetric.htm#symmetric_matrix"><code>ublas::symmetric_matrix&lt;&gt;</code></a>).
+
+<p>
+<table border=1>
+<tr><th>Expression<th>Semantics
+<tr><td><code>spsv(A,ipiv,B)</code><td>
+<code>B <- A<sup>-1</sup>B</code>, using 
+<code>A = UDU<sup>T</sup></code> or <code>A = LDL<sup>T</sup></code>;
+&nbsp; returns <code>ierr</code> 
+<tr><td><code>spsv(A,B)</code><td>
+as above, with <code>ipiv</code> allocated and deallocated internally
+<tr><td><code>sptrf(A,ipiv)</code><td>
+<code>A = UDU<sup>T</sup></code> or <code>A = LDL<sup>T</sup></code>;
+&nbsp; returns <code>ierr</code> 
+<tr><td><code>sptrs(A,ipiv,B)</code><td>
+<code>B <- A<sup>-1</sup>B</code> assuming  
+<code>A = UDU<sup>T</sup></code> or <code>A = LDL<sup>T</sup></code>;
+&nbsp; returns <code>ierr</code> 
+</table>
+
+<p>
+It is assumed that matrix traits class can determine whether upper
+or lower triangular part of the symmetric matrix is stored (e.g. traits for 
+<a href="http://www.boost.org/libs/numeric/ublas/doc/symmetric.htm#symmetric_matrix"><code>ublas::symmetric_matrix&lt;&gt;</code></a>).
+
+
+<h4><a name="lineqs-he">2.1.6 Hermitian Indefinite System</a></h4>
 
 Defined in <code>boost/numeric/bindings/lapack/hesv.hpp</code>.
 
@@ -358,7 +451,9 @@ vector of pivot indices (for more details see description of
 the Bunch-Kaufman factorisation above), <code>w</code> is a `work' vector, <code>Uplo</code> can be <code>'U'</code>
 or <code>'L'</code>, denoting that leading upper or lower, respectively, triangular part of <code>A</code> contains 
 the upper or lower triangular part of the Hermitian matrix
-(and that the lower or upper triangular part, respectively, is not referenced) 
+(and that the lower or upper triangular part, respectively, is not referenced),
+<code>Spec</code> can be <code>'O'</code> or <code>'M'</code>,
+specifying whether optimal or minimum block size is to be returned, 
 and <code>ierr</code> is LAPACK's `diagnostic argument'
 <code>INFO</code>. 
 
@@ -389,10 +484,10 @@ as above, with <code>w</code> allocated and deallocated internally
 &nbsp; returns <code>ierr</code> &nbsp;&nbsp; [1]
 <tr><td><code>hetrf(A,ipiv)</code><td>
 as above, with <code>w</code> allocated and deallocated internally  &nbsp;&nbsp; [1]
-<tr><td><code>hetrf_querry(Uplo,A)</code><td>
-returns optimal size of <code>w</code>
-<tr><td><code>hetrf_querry(A)</code><td>
-returns optimal size of <code>w</code> &nbsp;&nbsp; [1]
+<tr><td><code>hetrf_query(Spec,Uplo,A)</code><td>
+returns optimal or minimal block size &nbsp;&nbsp; [2]
+<tr><td><code>hetrf_query(Spec,A)</code><td>
+returns optimal or minimal block size &nbsp;&nbsp; [1][2]
 <tr><td><code>hetrs(Uplo,A,ipiv,B)</code><td>
 <code>B <- A<sup>-1</sup>B</code> assuming  
 <code>A = UDU<sup>H</sup></code> or <code>A = LDL<sup>H</sup></code>;
@@ -409,6 +504,50 @@ or lower triangular part of <code>A</code> contains the corresponding
 part of the Hermitian matrix (e.g. traits for 
 <a href="http://www.boost.org/libs/numeric/ublas/doc/hermitian.htm#hermitian_adaptor"><code>ublas::hermitian_adaptor&lt;&gt;</code></a>).
 
+<p> 
+[2] Optimal size of the `work' vector <code>w</code> is <code>n*nb</code>, where 
+<code>nb</code> is optimal block size and <code>n</code> the
+order of matrix <code>A</code>. 
+
+<h4><a name="lineqs-hp">2.1.7 Hermitian Indefinite System with Coefficient Matrix in Packed Storage</a></h4>
+
+Defined in <code>boost/numeric/bindings/lapack/hpsv.hpp</code>.
+
+<p>
+Namespace is <code>boost::numeric::bindings::lapack</code>. 
+
+<p>
+In the following table <code>A</code>, <code>B</code>, <code>L</code>,
+<code>U</code>, <code>D</code> are matrices<code>, ipiv</code> is a
+vector of pivot indices (for more details see description of
+the Bunch-Kaufman factorisation above)
+and <code>ierr</code> is LAPACK's `diagnostic argument' <code>INFO</code>. 
+Matrix <code>A</code> is stored in packed format (e.g. 
+<a href="http://www.boost.org/libs/numeric/ublas/doc/hermitian.htm#hermitian_matrix"><code>ublas::hermitian_matrix&lt;&gt;</code></a>).
+
+<p>
+<table border=1>
+<tr><th>Expression<th>Semantics
+<tr><td><code>hpsv(A,ipiv,B)</code><td>
+<code>B <- A<sup>-1</sup>B</code>, using 
+<code>A = UDU<sup>H</sup></code> or <code>A = LDL<sup>H</sup></code>;
+&nbsp; returns <code>ierr</code> 
+<tr><td><code>hpsv(A,B)</code><td>
+as above, with <code>ipiv</code> allocated and deallocated internally
+<tr><td><code>hptrf(A,ipiv)</code><td>
+<code>A = UDU<sup>H</sup></code> or <code>A = LDL<sup>H</sup></code>;
+&nbsp; returns <code>ierr</code> 
+<tr><td><code>hptrs(A,ipiv,B)</code><td>
+<code>B <- A<sup>-1</sup>B</code> assuming  
+<code>A = UDU<sup>H</sup></code> or <code>A = LDL<sup>H</sup></code>;
+&nbsp; returns <code>ierr</code> 
+</table>
+
+<p>
+It is assumed that matrix traits class can determine whether upper
+or lower triangular part of the Hermitian matrix is stored (e.g. traits for 
+<a href="http://www.boost.org/libs/numeric/ublas/doc/hermitian.htm#hermitian_matrix"><code>ublas::hermitian_matrix&lt;&gt;</code></a>).
+
 <h2><a name="extend_lapack">3. Extending LAPACK bindings</a></h2>
 
 LAPACK is a huge library and LAPACK Bindings Library does not contain bindings
@@ -417,10 +556,9 @@ In this section we will describe the implementation of function
 <code>getrs</code> to provide guidelines for user's additions and extensions. 
 
 <p>
-Implementation will be described in three stages:
+Implementation will be described in two stages:
 <ol>
 <li> core implementation, i.e. binding to Fortran routine; 
-<li> enabling the use of CLAPACK library;
 <li> some workarounds for broken compilers. 
 </ol>
 
@@ -493,7 +631,11 @@ Using function overloading, we can remove array parameters type from the functio
         LAPACK_ZGETRS (&amp;trans, &amp;n, &amp;nrhs, traits::complex_ptr (a), &amp;lda, ipiv, traits::complex_ptr (b), &amp;ldb, info);
      }
 </pre> 
-(there are two more functions which call <code>sgetrs</code> and <code>cgetrs</code>).
+(and there are two more functions which call <code>sgetrs</code> and <code>cgetrs</code>).
+Now we are closer to C/C++ calling convention: array parameters are
+pointers and scalars are passed by value. 
+
+<p>
 As these overloads are not intended for direct use, they are in the
 subnamespace <code>detail</code> of <code>boost::numeric::bindings::lapack</code>.
 
@@ -504,7 +646,7 @@ Finally, we can define higher level, generic C++ interface.
 Higher level interfaces (bindings) are written in terms of 
 <a href="../../traits/doc/index.html">traits classes</a> which are
 the interface between LAPACK routines and 
-vector and matrix classes. Namely, idea is to make bindings independent of the concrete vector/matrix libraries as much as possible.
+vector and matrix classes. Namely, the idea is to make bindings independent of the concrete vector/matrix libraries as much as possible.
 LAPACK routines usually require the starting address of the matrix,
 number of rows and columns and the so-called leading dimension.
 So, <a href="../../traits/doc/index.html#matrix_traits"><code>matrix_traits&lt;&gt;</code> class</a> and its specializations for
@@ -513,7 +655,7 @@ Note that bindings don't know and need not know anything
 about traits specializations -- 
 e.g. <code>boost/numeric/bindings/traits/ublas_matrix.hpp</code>
 must be included in your program (if it uses
-<code>ublas::matrix&lt;&gt;</code>), and not in bindings headers, which
+<code>ublas::matrix&lt;&gt;</code>), but not in bindings headers, which
 include only <code>boost/numeric/bindings/traits/matrix_traits.hpp</code>.
 
 <p>
@@ -565,13 +707,12 @@ Overloaded set and the generic function are defined in <code>gesv.hpp</code>.
 <p>
 In short, addition of a new binding is done in four steps:
 <ol>
-<li> using the macro <code>FORTRAN_ID</code>, in
-<code>lapack_names.h</code> define names to be used to refer to LAPACK subroutines in C/C++ code; 
-<li> declare interfaces of LAPACK routines (in <code>lapack.h</code>);
-interfaces are written in terms of pointers to matrix and vector storage and corresponding sizes; 
+<li> using the macro <code>FORTRAN_ID</code>, define names to be used to refer to LAPACK subroutines in C/C++ code; 
+<li> declare interfaces of LAPACK routines; 
+interfaces are written in terms of pointers to matrix and vector storage and pointers to corresponding sizes; 
 <li> define a set of overloaded functions which call LAPACK routines
 (overload resolution is based on the type of matrix elements); 
-again, parameters are pointers to storage and sizes; 
+parameters are pointers to storage and sizes (their values now, not pointers); 
 <li> using traits classes and/or free accessor functions to extract
 storage and size data from matrix and vector objects, 
 define generic function(s) which forward the job to the overloaded
@@ -589,72 +730,20 @@ must be known in certain cases. They can be obtained through traits classes, e.g
 
 <p>
 <b>2.</b>
-Enabling the linking with CLAPACK library requires few modifications. 
-Integer parameters in CLAPACK have type <code>integer</code> which
-need not be <code>int</code> (and in fact, in <code>f2c.h</code> it is
-defined as: <code>typedef long int integer;</code>). 
-Therefore, we introduced (in <code>lapack_impl.h</code>) type <code>int_t</code>:
-<pre  class="programlisting">
-     #ifndef BOOST_NUMERIC_BINDINGS_CLAPACK
-        typedef int int_t;
-     #else
-        typedef integer int_t;
-     #endif 
-</pre> 
-Furthermore, CLAPACK function interfaces are not <code>const</code>-correct; for example:
-<pre  class="programlisting">
-     int dgetrs_ (char *trans, integer *n, integer *nrhs, doublereal *a, integer *lda, 
-                  integer *ipiv, doublereal *b, integer *ldb, integer *info);
-</pre> 
-So, we also introduced helper function <code>mrc()</code> (short for
-<code>maybe_remove_const()</code>, as <code>const</code> should be
-removed only if CLAPACK is used):
-<pre  class="programlisting">
-     #ifndef BOOST_NUMERIC_BINDINGS_CLAPACK
-        template &lt;typename T&gt;
-        inline T const* mrc (T const* t) { return t; }
-     #else
-        template &lt;typename T&gt; 
-        inline T* mrc (T const* t) { return const_cast<T*> (t); }
-     #endif 
-</pre>
-Taking all this into account, overloaded set of functions in namespace <code>detail</code> is: 
-<pre  class="programlisting">
-     void getrs (char const trans, int_t const n, int_t const nrhs, double const* a, int_t const lda, 
-                 int_t const* ipiv, double* b, int_t const ldb, int_t* info) 
-     {
-        LAPACK_DGETRS (mrc (&amp;trans), mrc (&amp;n), mrc (&amp;nrhs), mrc (a), mrc (&amp;lda), mrc (ipiv), b, mrc (&amp;ldb), info);
-     }
-
-     void getrs (char const trans, int_t const n, int_t const nrhs, traits::complex_d const* a, int_t const lda,
-                 int_t const* ipiv, traits::complex_d* b, int_t const ldb, int_t* info)
-     {
-        LAPACK_ZGETRS (mrc (&amp;trans), mrc (&amp;n), mrc (&amp;nrhs), traits::complex_ptr (mrc (a)), mrc (&amp;lda), 
-                       mrc (ipiv), traits::complex_ptr (b), mrc (&amp;ldb), info);
-     }
-</pre> 
-(similar overloads for <code>sgetrs</code> and <code>cgetrs</code> are not shown).
-
-<p>
-Note that the type of the return value of the generic <code>getrs()</code> 
-must be changed to <code>int_t</code>, too. 
-
-<p>
-<b>3.</b>
 On compilers which do not support partial template specialisation,
 traits classes cannot be used. Accessor functions are then 
-(with macro <code>BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS</code> defined)
+(i.e. when macro <code>BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS</code> is defined)
 simple set of overloaded functions (defined in
 <code>traits/vector_raw.hpp</code> and <code>traits/matrix_raw.hpp</code>).
 Unfortunately, some of these compilers cannot distinguish functions 
 <pre  class="programlisting">
      template &lt;typename T, typename F, typename A&gt;
-     typename ublas::matrix&lt;T,F,A&gt;::const_pointer matrix_storage (ublas::matrix<T,F,A> const&amp; m); 
+     typename ublas::matrix&lt;T,F,A&gt;::const_pointer matrix_storage (ublas::matrix&lt;T,F,A&gt; const&amp; m); 
 </pre>
 and 
 <pre  class="programlisting">
      template &lt;typename T, typename F, typename A&gt;
-     typename ublas::matrix&lt;T,F,A&gt;::pointer matrix_storage (ublas::matrix<T,F,A>&amp; m); 
+     typename ublas::matrix&lt;T,F,A&gt;::pointer matrix_storage (ublas::matrix&lt;T,F,A&gt;&amp; m); 
 </pre>
 (<code>boost</code> macro <code>BOOST_NO_FUNCTION_TEMPLATE_ORDERING</code> covers this case).
 
@@ -662,7 +751,7 @@ and
 Therefore we introduced additional function
 <pre  class="programlisting">
      template &lt;typename T, typename F, typename A&gt;
-     typename ublas::matrix&lt;T,F,A&gt;::const_pointer matrix_storage_const (ublas::matrix<T,F,A> const&amp; m); 
+     typename ublas::matrix&lt;T,F,A&gt;::const_pointer matrix_storage_const (ublas::matrix&lt;T,F,A&gt; const&amp; m); 
 </pre>
 and the call in the generic <code>getrs()</code> is now :o(
 <pre  class="programlisting">
@@ -699,10 +788,13 @@ If some type name is needed, workaround is e.g.:
             // ...
          }
 </pre>
+Prerequisite is, of course, that <code>MatrA</code> has <code>value_type</code> defined.
 
 <br>
 <div class="footnotes"><br><hr width="100" align="left"><div
 class="footnote">
+
+<font size=-1>
 
 <p><sup>[<a name="ftn.bnd.lap.1" href="#bnd.lap.1">1</a>]</sup>
 These are thorny issues; see
@@ -721,8 +813,8 @@ R. W. Grosse-Kunstleve and D. Abrahams: <i>Predictable Data Layout for Certain N
 
 <p><sup>[<a name="ftn.bnd.lap.2" href="#bnd.lap.2">2</a>]</sup>
 First parameter of <code>getrs</code>, <code>char const trans</code>,
-specifies the form of the system of equations (<code>AX = B</code>,
-<code>A<sup>T</sup>X = B</code> or <code>A<sup>H</sup>X = B</code>).
+specifies the form of the system of equations: <code>AX = B</code>,
+<code>A<sup>T</sup>X = B</code> or <code>A<sup>H</sup>X = B</code>.
 As the form <code>AX = B</code> is the most common, LAPACK Bindings Library
 also provides  version with three parameters: 
 <pre  class="programlisting">
@@ -732,6 +824,8 @@ also provides  version with three parameters:
         return getrs (no_transpose, a, ipiv, b);
      }
 </pre> 
+
+</font>
 
 <br><p><br>
 </body>
