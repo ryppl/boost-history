@@ -18,6 +18,9 @@
 #define BOOST_VISITOR_PTR_HPP
 
 #include "boost/static_visitor.hpp"
+#include "boost/visitor/dynamic_visitor_base.hpp"
+#include "boost/visitor/dynamic_visitor_interface.hpp"
+
 #include "boost/type_traits/add_reference.hpp"
 
 namespace boost {
