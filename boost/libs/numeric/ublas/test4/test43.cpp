@@ -122,6 +122,29 @@ struct test_my_matrix {
 		catch (...) {
 			std::cout << "unknown exception" << std::endl;
 		}
+    }
+    void operator () (int) const {
+		try {
+			M m1 (N, N, 1, 1), m2 (N, N, 1, 1), m3 (N, N, 1, 1);
+            numerics::banded_adaptor<M> bam1 (m1, 1, 1), bam2 (m2, 1, 1), bam3 (m3, 1, 1);
+            (*this) (bam1, bam2, bam3);
+
+#ifdef USE_RANGE
+            numerics::matrix_range<numerics::banded_adaptor<M> > mr1 (bam1, 0, N, 0, N), mr2 (bam2, 0, N, 0, N), mr3 (bam3, 0, N, 0, N);
+            (*this) (mr1, mr2, mr3);
+#endif
+
+#ifdef USE_SLICE
+            numerics::matrix_slice<numerics::banded_adaptor<M> > ms1 (bam1, 0, 1, N, 0, 1, N), ms2 (bam2, 0, 1, N, 0, 1, N), ms3 (bam3, 0, 1, N, 0, 1, N);
+            (*this) (ms1, ms2, ms3);
+#endif
+		}
+        catch (std::exception &e) {
+			std::cout << e.what () << std::endl;
+		}
+		catch (...) {
+			std::cout << "unknown exception" << std::endl;
+		}
 	}
 };
 
@@ -132,43 +155,55 @@ void test_matrix () {
 #ifdef USE_BOUNDED_ARRAY
     std::cout << "float, bounded_array" << std::endl;
     test_my_matrix<numerics::banded_matrix<float, numerics::row_major<>, numerics::bounded_array<float, 3 * 3> >, 3 > () ();
+    test_my_matrix<numerics::banded_matrix<float, numerics::row_major<>, numerics::bounded_array<float, 3 * 3> >, 3 > () (0);
 
     std::cout << "double, bounded_array" << std::endl;
     test_my_matrix<numerics::banded_matrix<double, numerics::row_major<>, numerics::bounded_array<double, 3 * 3> >, 3 > () ();
+    test_my_matrix<numerics::banded_matrix<double, numerics::row_major<>, numerics::bounded_array<double, 3 * 3> >, 3 > () (0);
 
     std::cout << "std::complex<float>, bounded_array" << std::endl;
     test_my_matrix<numerics::banded_matrix<std::complex<float>, numerics::row_major<>, numerics::bounded_array<std::complex<float>, 3 * 3> >, 3 > () ();
+    test_my_matrix<numerics::banded_matrix<std::complex<float>, numerics::row_major<>, numerics::bounded_array<std::complex<float>, 3 * 3> >, 3 > () (0);
 
     std::cout << "std::complex<double>, bounded_array" << std::endl;
     test_my_matrix<numerics::banded_matrix<std::complex<double>, numerics::row_major<>, numerics::bounded_array<std::complex<double>, 3 * 3> >, 3 > () ();
+    test_my_matrix<numerics::banded_matrix<std::complex<double>, numerics::row_major<>, numerics::bounded_array<std::complex<double>, 3 * 3> >, 3 > () (0);
 #endif
 
 #ifdef USE_UNBOUNDED_ARRAY
     std::cout << "float, unbounded_array" << std::endl;
     test_my_matrix<numerics::banded_matrix<float, numerics::row_major<>, numerics::unbounded_array<float> >, 3 > () ();
+    test_my_matrix<numerics::banded_matrix<float, numerics::row_major<>, numerics::unbounded_array<float> >, 3 > () (0);
 
     std::cout << "double, unbounded_array" << std::endl;
     test_my_matrix<numerics::banded_matrix<double, numerics::row_major<>, numerics::unbounded_array<double> >, 3 > () ();
+    test_my_matrix<numerics::banded_matrix<double, numerics::row_major<>, numerics::unbounded_array<double> >, 3 > () (0);
 
     std::cout << "std::complex<float>, unbounded_array" << std::endl;
     test_my_matrix<numerics::banded_matrix<std::complex<float>, numerics::row_major<>, numerics::unbounded_array<std::complex<float> > >, 3 > () ();
+    test_my_matrix<numerics::banded_matrix<std::complex<float>, numerics::row_major<>, numerics::unbounded_array<std::complex<float> > >, 3 > () (0);
 
     std::cout << "std::complex<double>, unbounded_array" << std::endl;
     test_my_matrix<numerics::banded_matrix<std::complex<double>, numerics::row_major<>, numerics::unbounded_array<std::complex<double> > >, 3 > () ();
+    test_my_matrix<numerics::banded_matrix<std::complex<double>, numerics::row_major<>, numerics::unbounded_array<std::complex<double> > >, 3 > () (0);
 #endif
 
 #ifdef USE_STD_VECTOR
     std::cout << "float, std::vector" << std::endl;
     test_my_matrix<numerics::banded_matrix<float, numerics::row_major<>, std::vector<float> >, 3 > () ();
+    test_my_matrix<numerics::banded_matrix<float, numerics::row_major<>, std::vector<float> >, 3 > () (0);
 
     std::cout << "double, std::vector" << std::endl;
     test_my_matrix<numerics::banded_matrix<double, numerics::row_major<>, std::vector<double> >, 3 > () ();
+    test_my_matrix<numerics::banded_matrix<double, numerics::row_major<>, std::vector<double> >, 3 > () (0);
 
     std::cout << "std::complex<float>, std::vector" << std::endl;
     test_my_matrix<numerics::banded_matrix<std::complex<float>, numerics::row_major<>, std::vector<std::complex<float> > >, 3 > () ();
+    test_my_matrix<numerics::banded_matrix<std::complex<float>, numerics::row_major<>, std::vector<std::complex<float> > >, 3 > () (0);
 
     std::cout << "std::complex<double>, std::vector" << std::endl;
     test_my_matrix<numerics::banded_matrix<std::complex<double>, numerics::row_major<>, std::vector<std::complex<double> > >, 3 > () ();
+    test_my_matrix<numerics::banded_matrix<std::complex<double>, numerics::row_major<>, std::vector<std::complex<double> > >, 3 > () (0);
 #endif
 }
 

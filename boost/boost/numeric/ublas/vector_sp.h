@@ -35,6 +35,8 @@ namespace numerics {
         typedef T value_type;
         typedef const T &const_reference_type;
         typedef T &reference_type;
+        typedef const T *const_pointer_type;
+        typedef T *pointer_type;
         typedef F functor_type;
         typedef A array_type;
         typedef const sparse_vector<T, F, A> const_self_type;
@@ -45,28 +47,28 @@ namespace numerics {
         typedef vector_range<self_type> vector_range_type;
         typedef typename A::const_iterator const_iterator_type;
         typedef typename A::iterator iterator_type;
-        typedef sparse_tag storage_category;
+        typedef struct sparse_tag storage_category;
 
         // Construction and destruction
         NUMERICS_INLINE
         sparse_vector (): 
             size_ (0), non_zeroes_ (0), data_ () {}
         NUMERICS_INLINE
-        sparse_vector (size_type size, size_type non_zeroes): 
+        sparse_vector (size_type size, size_type non_zeroes = 0): 
             size_ (size), non_zeroes_ (non_zeroes), data_ () {}
         NUMERICS_INLINE
         sparse_vector (const sparse_vector &v): 
             size_ (v.size_), non_zeroes_ (v.non_zeroes_), data_ (v.data_) {}
         template<class AE>
         NUMERICS_INLINE
-        sparse_vector (size_type non_zeroes, const vector_expression<AE> &ae): 
+        sparse_vector (const vector_expression<AE> &ae, size_type non_zeroes = 0): 
             size_ (ae ().size ()), non_zeroes_ (non_zeroes), data_ () { 
             vector_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae);
         }
 
         // Resizing
         NUMERICS_INLINE
-        void resize (size_type size, size_type non_zeroes) {
+        void resize (size_type size, size_type non_zeroes = 0) {
             size_ = size;
             non_zeroes_ = non_zeroes_;
         }
@@ -104,7 +106,7 @@ namespace numerics {
         }
         NUMERICS_INLINE
         const_vector_range_type project (const range &r) const {
-            return const_vector_range_type (r);
+            return const_vector_range_type (*this, r);
         }
         NUMERICS_INLINE
         vector_range_type project (size_type start, size_type stop) {
@@ -112,14 +114,14 @@ namespace numerics {
         }
         NUMERICS_INLINE
         vector_range_type project (const range &r) {
-            return vector_range_type (r);
+            return vector_range_type (*this, r);
         }
 
         // Assignment
         NUMERICS_INLINE
         sparse_vector &operator = (const sparse_vector &v) { 
-            check<bad_size>::precondition (size_ == v.size_);
-            check<bad_size>::precondition (non_zeroes_ == v.non_zeroes_);
+            check (size_ == v.size_, bad_size ());
+            check (non_zeroes_ == v.non_zeroes_, bad_size ());
             data_ = v.data_;
             return *this;
         }
@@ -132,9 +134,9 @@ namespace numerics {
         NUMERICS_INLINE
         sparse_vector &operator = (const vector_expression<AE> &ae) {
 #ifndef USE_GCC
-            return assign_temporary (self_type (non_zeroes_, ae));
+            return assign_temporary (self_type (ae, non_zeroes_));
 #else
-            return assign (self_type (non_zeroes_, ae));
+            return assign (self_type (ae, non_zeroes_));
 #endif
         }
         template<class AE>
@@ -147,9 +149,9 @@ namespace numerics {
         NUMERICS_INLINE
         sparse_vector &operator += (const vector_expression<AE> &ae) {
 #ifndef USE_GCC
-            return assign_temporary (self_type (non_zeroes_, *this + ae));
+            return assign_temporary (self_type (*this + ae, non_zeroes_));
 #else
-            return assign (self_type (non_zeroes_, *this + ae));
+            return assign (self_type (*this + ae, non_zeroes_));
 #endif
         }
         template<class AE>
@@ -162,9 +164,9 @@ namespace numerics {
         NUMERICS_INLINE
         sparse_vector &operator -= (const vector_expression<AE> &ae) {
 #ifndef USE_GCC
-            return assign_temporary (self_type (non_zeroes_, *this - ae));
+            return assign_temporary (self_type (*this - ae, non_zeroes_));
 #else
-            return assign (self_type (non_zeroes_, *this - ae));
+            return assign (self_type (*this - ae, non_zeroes_));
 #endif
         }
         template<class AE>
@@ -183,9 +185,9 @@ namespace numerics {
         // Swapping
         NUMERICS_INLINE
 	    void swap (sparse_vector &v) {
-            check<external_logic>::precondition (this != &v);
-            check<bad_size>::precondition (size_ == v.size_);
-            check<bad_size>::precondition (non_zeroes_ == v.non_zeroes_);
+            check (this != &v, external_logic ());
+            check (size_ == v.size_, bad_size ());
+            check (non_zeroes_ == v.non_zeroes_, bad_size ());
             std::swap (size_, v.size_);
             std::swap (non_zeroes_, v.non_zeroes_);
             data_.swap (v.data_);
@@ -197,18 +199,26 @@ namespace numerics {
         }
 #endif
 
-        // Element insertion
-        NUMERICS_INLINE
-        void clear () {
-            data_.clear ();
-        }
+        // Element insertion and erasure
         NUMERICS_INLINE
         void insert (size_type i, const_reference_type t) {
 #ifndef NUMERICS_USE_ET
             if (t == value_type ()) 
                 return;
 #endif
+            check (data_.find (functor_type::element (i, size_)) == data_.end (), bad_index ());
             data_.insert (data_.end (), std::pair<size_type, value_type> (functor_type::element (i, size_), t));
+        }
+        NUMERICS_INLINE
+        void erase (size_type i) {
+            iterator_type it = data_.find (functor_type::element (i, size_));
+            if (it == data_.end ())
+                return;
+            data_.erase (it);
+        }
+        NUMERICS_INLINE
+        void clear () {
+            data_.clear ();
         }
 
         class const_iterator;
@@ -247,8 +257,11 @@ namespace numerics {
             public bidirectional_iterator_base<const_iterator, value_type> {
         public:
             typedef std::bidirectional_iterator_tag iterator_category;
-#ifdef USE_GCC
+#ifndef USE_MSVC
+            typedef typename sparse_vector::difference_type difference_type;
             typedef typename sparse_vector::value_type value_type;
+            typedef typename sparse_vector::value_type reference;
+            typedef typename sparse_vector::const_pointer_type pointer;
 #endif
 
             // Construction and destruction
@@ -277,7 +290,7 @@ namespace numerics {
             // Dereference
             NUMERICS_INLINE
             value_type operator * () const {
-                check<bad_index>::precondition (index () < (*this) ().size ());
+                check (index () < (*this) ().size (), bad_index ());
                 return (*it_).second;
             }
 
@@ -287,10 +300,18 @@ namespace numerics {
                 return (*it_).first;
             }
 
+            // Assignment
+            NUMERICS_INLINE
+            const_iterator &operator = (const const_iterator &it) {
+                container_const_reference<sparse_vector>::assign (&it ());
+                it_ = it.it_;
+                return *this;
+            }
+
             // Comparison
             NUMERICS_INLINE
             bool operator == (const const_iterator &it) const {
-                check<external_logic>::precondition (&(*this) () == &it ());
+                check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
             }
 
@@ -312,8 +333,11 @@ namespace numerics {
             public bidirectional_iterator_base<iterator, value_type> {
         public:
             typedef std::bidirectional_iterator_tag iterator_category;
-#ifdef USE_GCC
+#ifndef USE_MSVC
+            typedef typename sparse_vector::difference_type difference_type;
             typedef typename sparse_vector::value_type value_type;
+            typedef typename sparse_vector::reference_type reference;
+            typedef typename sparse_vector::pointer_type pointer;
 #endif
 
             // Construction and destruction
@@ -338,8 +362,8 @@ namespace numerics {
 
             // Dereference
             NUMERICS_INLINE
-            reference_type operator * () {
-                check<bad_index>::precondition (index () < (*this) ().size ());
+            reference_type operator * () const {
+                check (index () < (*this) ().size (), bad_index ());
                 return (*it_).second;
             }
 
@@ -349,10 +373,18 @@ namespace numerics {
                 return (*it_).first;
             }
 
+            // Assignment
+            NUMERICS_INLINE
+            iterator &operator = (const iterator &it) {
+                container_reference<sparse_vector>::assign (&it ());
+                it_ = it.it_;
+                return *this;
+            }
+
             // Comparison
             NUMERICS_INLINE
             bool operator == (const iterator &it) const {
-                check<external_logic>::precondition (&(*this) () == &it ());
+                check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
             }
 
@@ -369,6 +401,38 @@ namespace numerics {
         NUMERICS_INLINE
         iterator end () {
             return find (size_);
+        }
+
+        // Reverse iterator
+
+#ifdef USE_MSVC
+        typedef reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
+#else
+        typedef reverse_iterator<const_iterator> const_reverse_iterator;
+#endif
+
+        NUMERICS_INLINE
+        const_reverse_iterator rbegin () const {
+            return const_reverse_iterator (end ());
+        }
+        NUMERICS_INLINE
+        const_reverse_iterator rend () const {
+            return const_reverse_iterator (begin ());
+        }
+
+#ifdef USE_MSVC
+        typedef reverse_iterator<iterator, value_type, reference_type> reverse_iterator;
+#else
+        typedef reverse_iterator<iterator> reverse_iterator;
+#endif
+
+        NUMERICS_INLINE
+        reverse_iterator rbegin () {
+            return reverse_iterator (end ());
+        }
+        NUMERICS_INLINE
+        reverse_iterator rend () {
+            return reverse_iterator (begin ());
         }
 
     private:

@@ -228,8 +228,8 @@ namespace numerics {
         NUMERICS_INLINE
         value_type operator () (I it, const I &it_end, std::random_access_iterator_tag) const { 
             value_type t (0);
+            // FIXME: can't we get the size as parameter?
             difference_type size (it_end - it);
-//            for (difference_type i = 0; i < size; ++ i)
             while (-- size >= 0)
                 t += *it, ++ it;
             return t; 
@@ -274,8 +274,8 @@ namespace numerics {
         NUMERICS_INLINE
         value_type operator () (I it, const I &it_end, std::random_access_iterator_tag) const { 
             value_type t (0);
+            // FIXME: can't we get the size as parameter?
             difference_type size (it_end - it);
-//            for (difference_type i = 0; i < size; ++ i) {
             while (-- size >= 0) {
                 value_type u (detail::abs (*it));
                 t += u;
@@ -317,8 +317,8 @@ namespace numerics {
         NUMERICS_INLINE
         value_type operator () (I it, const I &it_end, std::random_access_iterator_tag) const { 
             value_type t (0);
+            // FIXME: can't we get the size as parameter?
             difference_type size (it_end - it);
-//            for (difference_type i = 0; i < size; ++ i) {
             while (-- size >= 0) {
                 value_type u (detail::abs (*it));
                 t +=  u * u;
@@ -361,8 +361,8 @@ namespace numerics {
         NUMERICS_INLINE
         value_type operator () (I it, const I &it_end, std::random_access_iterator_tag) const { 
             value_type t (0);
+            // FIXME: can't we get the size as parameter?
             difference_type size (it_end - it);
-//            for (difference_type i = 0; i < size; ++ i) {
             while (-- size >= 0) {
                 value_type u (detail::abs (*it));
                 if (u > t) 
@@ -385,12 +385,20 @@ namespace numerics {
         }
     };
 
+    // Unary returning index
+    template<class T>
+    struct vector_scalar_index_unary_functor {
+        typedef std::size_t size_type;
+        typedef std::ptrdiff_t difference_type;
+        typedef std::size_t value_type;
+    };
+
     template<class T>
     struct vector_index_norm_inf: 
-        public vector_scalar_norm_unary_functor<T> {
-        typedef typename vector_scalar_norm_unary_functor<T>::size_type size_type;
-        typedef typename vector_scalar_norm_unary_functor<T>::difference_type difference_type;
-        typedef typename vector_scalar_norm_unary_functor<T>::value_type value_type;
+        public vector_scalar_index_unary_functor<T> {
+        typedef typename vector_scalar_index_unary_functor<T>::size_type size_type;
+        typedef typename vector_scalar_index_unary_functor<T>::difference_type difference_type;
+        typedef typename vector_scalar_index_unary_functor<T>::value_type value_type;
 
         template<class E>
         NUMERICS_INLINE
@@ -412,12 +420,11 @@ namespace numerics {
         size_type operator () (I it, const I &it_end, std::random_access_iterator_tag) const { 
             value_type t (0);
             size_type i_norm_inf (0);
+            // FIXME: can't we get the size as parameter?
             difference_type size (it_end - it);
-//            for (difference_type i = 0; i < size; ++ i) {
             while (-- size >= 0) {
                 value_type u (detail::abs (*it));
                 if (u > t) {
-//                    i_norm_inf = i;
                     i_norm_inf = it.index ();
                     t = u;
                 }
@@ -471,8 +478,8 @@ namespace numerics {
         NUMERICS_INLINE
         value_type operator () (I1 it1, const I1 &it1_end, I2 it2, const I2 &it2_end, std::random_access_iterator_tag) const { 
             value_type t (0);
+            // FIXME: can't we get the size as parameter?
             difference_type size (common (it1_end - it1, it2_end - it2));
-//          for (difference_type i = 0; i < size; ++ i)
             while (-- size >= 0)
                 t += *it1 * *it2, ++ it1, ++ it2;
             return t; 
@@ -526,8 +533,8 @@ namespace numerics {
         NUMERICS_INLINE
         value_type operator () (I1 it1, const I1 &it1_end, I2 it2, const I2 &it2_end, std::random_access_iterator_tag) const { 
             value_type t (0);
+            // FIXME: can't we get the size as parameter?
             difference_type size (common (it1_end - it1, it2_end - it2));
-//          for (difference_type j = 0; j < size; ++ j)
             while (-- size >= 0)
                 t += *it1 * *it2, ++ it1, ++ it2;
             return t; 
@@ -571,8 +578,8 @@ namespace numerics {
         NUMERICS_INLINE
         value_type operator () (I1 it1, const I1 &it1_end, I2 it2, const I2 &it2_end, std::random_access_iterator_tag) const { 
             value_type t (0);
+            // FIXME: can't we get the size as parameter?
             difference_type size (common (it1_end - it1, it2_end - it2));
-//          for (difference_type j = 0; j < size; ++ j)
             while (-- size >= 0)
                 t += *it1 * *it2, ++ it1, ++ it2;
             return t; 
@@ -624,8 +631,8 @@ namespace numerics {
         NUMERICS_INLINE
         value_type operator () (I1 it1, const I1 &it1_end, I2 it2, const I2 &it2_end, std::random_access_iterator_tag) const { 
             value_type t (0);
+            // FIXME: can't we get the size as parameter?
             difference_type size = common (it1_end - it1, it2_end - it2);
-//          for (difference_type k = 0; k < size; ++ k) 
             while (-- size >= 0) 
                 t += *it1 * *it2, ++ it1, ++ it2;
             return t; 
@@ -642,6 +649,87 @@ namespace numerics {
                     t += *it1 * *it2, ++ it1, ++ it2;
                 else if (compare > 0)
                     ++ it2;
+            }
+            return t; 
+        }
+    };
+
+    // Unary returning scalar norm
+    template<class T>
+    struct matrix_scalar_norm_unary_functor {
+        typedef std::size_t size_type;
+        typedef std::ptrdiff_t difference_type;
+        typedef typename type_traits<T>::norm_type value_type;
+    };
+
+    template<class T>
+    struct matrix_norm_1: 
+        public matrix_scalar_norm_unary_functor<T> {
+        typedef typename matrix_scalar_norm_unary_functor<T>::size_type size_type;
+        typedef typename matrix_scalar_norm_unary_functor<T>::difference_type difference_type;
+        typedef typename matrix_scalar_norm_unary_functor<T>::value_type value_type;
+
+        template<class E>
+        NUMERICS_INLINE
+        value_type operator () (const matrix_expression<E> &e) const { 
+            value_type t (0);
+            size_type size2 (e ().size2 ());
+            for (size_type j = 0; j < size2; ++ j) {
+                value_type u (0);
+                size_type size1 (e ().size1 ());
+                for (size_type i = 0; i < size1; ++ i) {
+                    value_type v (detail::abs (e () (i, j)));
+                    u += v;
+                }
+                if (u > t) 
+                    t = u;  
+            }
+            return t; 
+        }
+    };
+    template<class T>
+    struct matrix_norm_2: 
+        public matrix_scalar_norm_unary_functor<T> {
+        typedef typename matrix_scalar_norm_unary_functor<T>::size_type size_type;
+        typedef typename matrix_scalar_norm_unary_functor<T>::difference_type difference_type;
+        typedef typename matrix_scalar_norm_unary_functor<T>::value_type value_type;
+
+        template<class E>
+        NUMERICS_INLINE
+        value_type operator () (const matrix_expression<E> &e) const { 
+            value_type t (0);
+            size_type size1 (e ().size1 ());
+            for (size_type i = 0; i < size1; ++ i) {
+                size_type size2 (e ().size2 ());
+                for (size_type j = 0; j < size2; ++ j) {
+                    value_type u (detail::abs (e () (i, j)));
+                    t +=  u * u;
+                }
+            }
+            return detail::sqrt (t); 
+        }
+    };
+    template<class T>
+    struct matrix_norm_inf: 
+        public matrix_scalar_norm_unary_functor<T> {
+        typedef typename matrix_scalar_norm_unary_functor<T>::size_type size_type;
+        typedef typename matrix_scalar_norm_unary_functor<T>::difference_type difference_type;
+        typedef typename matrix_scalar_norm_unary_functor<T>::value_type value_type;
+
+        template<class E>
+        NUMERICS_INLINE
+        value_type operator () (const matrix_expression<E> &e) const { 
+            value_type t (0);
+            size_type size1 (e ().size1 ());
+            for (size_type i = 0; i < size1; ++ i) {
+                value_type u (0);
+                size_type size2 (e ().size2 ());
+                for (size_type j = 0; j < size2; ++ j) {
+                    value_type v (detail::abs (e () (i, j)));
+                    u += v;
+                }
+                if (u > t) 
+                    t = u;  
             }
             return t; 
         }

@@ -11,6 +11,7 @@
 #include "../config.h"
 #include "../vector.h"
 #include "../matrix.h"
+#include "../triangular.h"
 #include "../io.h"
 
 #include "../blas.h"

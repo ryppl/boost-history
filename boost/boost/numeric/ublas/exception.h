@@ -26,81 +26,61 @@ namespace numerics {
     struct divide_by_zero:
         public std::exception {
         virtual const char *what () const throw () {
-            return "divide by zero";
+            return "exception: divide by zero";
         }
     };
     struct internal_logic:
         public std::exception {
         virtual const char *what () const throw () {
-            return "internal logic";
+            return "exception: internal logic";
         }
     };
     struct external_logic:
         public std::exception {
         virtual const char *what () const throw () {
-            return "external logic";
+            return "exception: external logic";
         }
     };
     struct bad_size:
         public std::exception {
         virtual const char *what () const throw () {
-            return "bad size";
+            return "exception: bad size";
         }
     };
     struct bad_index:
         public std::exception {
         virtual const char *what () const throw () {
-            return "bad index";
+            return "exception: bad index";
         }
     };
     struct singular:
         public std::exception {
         virtual const char *what () const throw () {
-            return "singular";
+            return "exception: singular";
         }
     };
     struct non_triangular:
         public std::exception {
         virtual const char *what () const throw () {
-            return "non triangular";
+            return "exception: non triangular";
         }
     };
     struct non_band:
         public std::exception {
         virtual const char *what () const throw () {
-            return "non band";
+            return "exception: non band";
         }
     };
 
+#ifdef NUMERICS_BOUNDS_CHECK
     template<class E>
-    struct check {
-        static 
-        NUMERICS_INLINE
-        void precondition (bool expression) {
-            if (! expression)
-                throw E ();
-        }
-        static 
-        NUMERICS_INLINE
-        void postcondition (bool expression) {
-            if (! expression)
-                throw E ();
-        }
-        static 
-        NUMERICS_INLINE
-        void invariant (bool expression) {
-            if (! expression)
-                throw E ();
-        }
-        static 
-        NUMERICS_INLINE
-        void nop () {}
-    };
-
-#ifndef NUMERICS_BOUNDS_CHECK
-#define precondition(expression) nop()
-#define postcondition(expression) nop()
-#define invariant(expression) nop()
+    NUMERICS_INLINE
+    void check (bool expression, const E &e) {
+        if (! expression)
+            throw e;
+    }
+#else
+#define check(expression, e)
 #endif
     
 }

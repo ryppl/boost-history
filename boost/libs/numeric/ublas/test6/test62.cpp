@@ -11,10 +11,11 @@
 #include "../config.h"
 #include "../vector.h"
 #include "../matrix.h"
-#include "../banded.h"
+#include "../triangular.h"
+#include "../symmetric.h"
 #include "../io.h"
 
-#include "test4.h"
+#include "test6.h"
 
 // Test matrix & vector expression templates 
 template<class V, class M, int N>
@@ -25,7 +26,7 @@ struct test_my_matrix_vector {
     void operator () (VP &v1, VP &v2, MP &m1) const {
 		try {
 			// Rows and columns
-			initialize_matrix (m1);
+            initialize_matrix (m1, numerics::lower_tag ());
 			for (int i = 0; i < N; ++ i) {
 				v2 = numerics::row (m1, i);
 				std::cout << "row (m, " << i << ") = " << v2 << std::endl;
@@ -45,7 +46,7 @@ struct test_my_matrix_vector {
 #endif
 
 			// Matrix vector product 
-			initialize_matrix (m1);
+            initialize_matrix (m1, numerics::lower_tag ());
 			initialize_vector (v1);
             v2 = numerics::prod (m1, v1);
 			std::cout << "prod (m1, v1) = " << v2 << std::endl;
@@ -62,13 +63,13 @@ struct test_my_matrix_vector {
     void operator () () const {
 		try {
 			V v1 (N), v2 (N);
-			M m1 (N, N, 1, 1);
+			M m1 (N, N);
             (*this) (v1, v2, m1);
 
-            numerics::matrix_row<M> mr1 (m1, 1), mr2 (m1, 1);
+            numerics::matrix_row<M> mr1 (m1, N - 1), mr2 (m1, N - 1);
             (*this) (mr1, mr2, m1);
 
-            numerics::matrix_column<M> mc1 (m1, 1), mc2 (m1, 1);
+            numerics::matrix_column<M> mc1 (m1, 0), mc2 (m1, 0);
             (*this) (mc1, mc2, m1);
 
 #ifdef USE_RANGE_AND_SLICE
@@ -89,22 +90,22 @@ struct test_my_matrix_vector {
     void operator () (int) const {
 		try {
 			V v1 (N), v2 (N);
-			M m1 (N, N, 1, 1);
-            numerics::banded_adaptor<M> bam1 (m1, 1, 1);
-            (*this) (v1, v2, bam1);
+			M m1 (N, N);
+            numerics::symmetric_adaptor<M> tam1 (m1);
+            (*this) (v1, v2, tam1);
 
-            numerics::matrix_row<numerics::banded_adaptor<M> > mr1 (bam1, 1), mr2 (bam1, 1);
-            (*this) (mr1, mr2, bam1);
+            numerics::matrix_row<numerics::symmetric_adaptor<M> > mr1 (tam1, N - 1), mr2 (tam1, N - 1);
+            (*this) (mr1, mr2, tam1);
 
-            numerics::matrix_column<numerics::banded_adaptor<M> > mc1 (bam1, 1), mc2 (bam1, 1);
-            (*this) (mc1, mc2, bam1);
+            numerics::matrix_column<numerics::symmetric_adaptor<M> > mc1 (tam1, 0), mc2 (tam1, 0);
+            (*this) (mc1, mc2, tam1);
 
 #ifdef USE_RANGE_AND_SLICE
-            numerics::matrix_vector_range<numerics::banded_adaptor<M> > mvr1 (bam1, 0, N, 0, N), mvr2 (bam1, 0, N, 0, N);
-            (*this) (mvr1, mvr2, bam1);
+            numerics::matrix_vector_range<numerics::symmetric_adaptor<M> > mvr1 (tam1, 0, N, 0, N), mvr2 (tam1, 0, N, 0, N);
+            (*this) (mvr1, mvr2, tam1);
 
-            numerics::matrix_vector_slice<numerics::banded_adaptor<M> > mvs1 (bam1, 0, 1, N, 0, 1, N), mvs2 (bam1, 0, 1, N, 0, 1, N);
-            (*this) (mvs1, mvs2, bam1);
+            numerics::matrix_vector_slice<numerics::symmetric_adaptor<M> > mvs1 (tam1, 0, 1, N, 0, 1, N), mvs2 (tam1, 0, 1, N, 0, 1, N);
+            (*this) (mvs1, mvs2, tam1);
 #endif
 		}
         catch (std::exception &e) {
@@ -123,79 +124,79 @@ void test_matrix_vector () {
 #ifdef USE_BOUNDED_ARRAY
     std::cout << "float, bounded_array" << std::endl;
     test_my_matrix_vector<numerics::vector<float, numerics::forward, numerics::bounded_array<float, 3> >,
-                          numerics::banded_matrix<float, numerics::row_major<>, numerics::bounded_array<float, 3 * 3> >, 3> () ();
+                          numerics::symmetric_matrix<float, numerics::lower, numerics::row_major<>, numerics::bounded_array<float, 3 * 3> >, 3> () ();
     test_my_matrix_vector<numerics::vector<float, numerics::forward, numerics::bounded_array<float, 3> >,
-                          numerics::banded_matrix<float, numerics::row_major<>, numerics::bounded_array<float, 3 * 3> >, 3> () (0);
+                          numerics::symmetric_matrix<float, numerics::lower, numerics::row_major<>, numerics::bounded_array<float, 3 * 3> >, 3> () (0);
 
     std::cout << "double, bounded_array" << std::endl;
     test_my_matrix_vector<numerics::vector<double, numerics::forward, numerics::bounded_array<double, 3> >,
-                          numerics::banded_matrix<double, numerics::row_major<>, numerics::bounded_array<double, 3 * 3> >, 3> () ();
+                          numerics::symmetric_matrix<double, numerics::lower, numerics::row_major<>, numerics::bounded_array<double, 3 * 3> >, 3> () ();
     test_my_matrix_vector<numerics::vector<double, numerics::forward, numerics::bounded_array<double, 3> >,
-                          numerics::banded_matrix<double, numerics::row_major<>, numerics::bounded_array<double, 3 * 3> >, 3> () (0);
+                          numerics::symmetric_matrix<double, numerics::lower, numerics::row_major<>, numerics::bounded_array<double, 3 * 3> >, 3> () (0);
 
     std::cout << "std::complex<float>, bounded_array" << std::endl;
     test_my_matrix_vector<numerics::vector<std::complex<float>, numerics::forward, numerics::bounded_array<std::complex<float>, 3> >,
-                          numerics::banded_matrix<std::complex<float>, numerics::row_major<>, numerics::bounded_array<std::complex<float>, 3 * 3> >, 3> () ();
+                          numerics::symmetric_matrix<std::complex<float>, numerics::lower, numerics::row_major<>, numerics::bounded_array<std::complex<float>, 3 * 3> >, 3> () ();
     test_my_matrix_vector<numerics::vector<std::complex<float>, numerics::forward, numerics::bounded_array<std::complex<float>, 3> >,
-                          numerics::banded_matrix<std::complex<float>, numerics::row_major<>, numerics::bounded_array<std::complex<float>, 3 * 3> >, 3> () (0);
+                          numerics::symmetric_matrix<std::complex<float>, numerics::lower, numerics::row_major<>, numerics::bounded_array<std::complex<float>, 3 * 3> >, 3> () (0);
 
     std::cout << "std::complex<double>, bounded_array" << std::endl;
     test_my_matrix_vector<numerics::vector<std::complex<double>, numerics::forward, numerics::bounded_array<std::complex<double>, 3> >,
-                          numerics::banded_matrix<std::complex<double>, numerics::row_major<>, numerics::bounded_array<std::complex<double>, 3 * 3> >, 3> () ();
+                          numerics::symmetric_matrix<std::complex<double>, numerics::lower, numerics::row_major<>, numerics::bounded_array<std::complex<double>, 3 * 3> >, 3> () ();
     test_my_matrix_vector<numerics::vector<std::complex<double>, numerics::forward, numerics::bounded_array<std::complex<double>, 3> >,
-                          numerics::banded_matrix<std::complex<double>, numerics::row_major<>, numerics::bounded_array<std::complex<double>, 3 * 3> >, 3> () (0);
+                          numerics::symmetric_matrix<std::complex<double>, numerics::lower, numerics::row_major<>, numerics::bounded_array<std::complex<double>, 3 * 3> >, 3> () (0);
 #endif
 
 #ifdef USE_UNBOUNDED_ARRAY
     std::cout << "float, unbounded_array" << std::endl;
     test_my_matrix_vector<numerics::vector<float, numerics::forward, numerics::unbounded_array<float> >,
-                          numerics::banded_matrix<float, numerics::row_major<>, numerics::unbounded_array<float> >, 3> () ();
+                          numerics::symmetric_matrix<float, numerics::lower, numerics::row_major<>, numerics::unbounded_array<float> >, 3> () ();
     test_my_matrix_vector<numerics::vector<float, numerics::forward, numerics::unbounded_array<float> >,
-                          numerics::banded_matrix<float, numerics::row_major<>, numerics::unbounded_array<float> >, 3> () (0);
+                          numerics::symmetric_matrix<float, numerics::lower, numerics::row_major<>, numerics::unbounded_array<float> >, 3> () (0);
 
     std::cout << "double, unbounded_array" << std::endl;
     test_my_matrix_vector<numerics::vector<double, numerics::forward, numerics::unbounded_array<double> >,
-                          numerics::banded_matrix<double, numerics::row_major<>, numerics::unbounded_array<double> >, 3> () ();
+                          numerics::symmetric_matrix<double, numerics::lower, numerics::row_major<>, numerics::unbounded_array<double> >, 3> () ();
     test_my_matrix_vector<numerics::vector<double, numerics::forward, numerics::unbounded_array<double> >,
-                          numerics::banded_matrix<double, numerics::row_major<>, numerics::unbounded_array<double> >, 3> () (0);
+                          numerics::symmetric_matrix<double, numerics::lower, numerics::row_major<>, numerics::unbounded_array<double> >, 3> () (0);
 
     std::cout << "std::complex<float>, unbounded_array" << std::endl;
     test_my_matrix_vector<numerics::vector<std::complex<float>, numerics::forward, numerics::unbounded_array<std::complex<float> > >,
-                          numerics::banded_matrix<std::complex<float>, numerics::row_major<>, numerics::unbounded_array<std::complex<float> > >, 3> () ();
+                          numerics::symmetric_matrix<std::complex<float>, numerics::lower, numerics::row_major<>, numerics::unbounded_array<std::complex<float> > >, 3> () ();
     test_my_matrix_vector<numerics::vector<std::complex<float>, numerics::forward, numerics::unbounded_array<std::complex<float> > >,
-                          numerics::banded_matrix<std::complex<float>, numerics::row_major<>, numerics::unbounded_array<std::complex<float> > >, 3> () (0);
+                          numerics::symmetric_matrix<std::complex<float>, numerics::lower, numerics::row_major<>, numerics::unbounded_array<std::complex<float> > >, 3> () (0);
 
     std::cout << "std::complex<double>, unbounded_array" << std::endl;
     test_my_matrix_vector<numerics::vector<std::complex<double>, numerics::forward, numerics::unbounded_array<std::complex<double> > >,
-                          numerics::banded_matrix<std::complex<double>, numerics::row_major<>, numerics::unbounded_array<std::complex<double> > >, 3> () ();
+                          numerics::symmetric_matrix<std::complex<double>, numerics::lower, numerics::row_major<>, numerics::unbounded_array<std::complex<double> > >, 3> () ();
     test_my_matrix_vector<numerics::vector<std::complex<double>, numerics::forward, numerics::unbounded_array<std::complex<double> > >,
-                          numerics::banded_matrix<std::complex<double>, numerics::row_major<>, numerics::unbounded_array<std::complex<double> > >, 3> () (0);
+                          numerics::symmetric_matrix<std::complex<double>, numerics::lower, numerics::row_major<>, numerics::unbounded_array<std::complex<double> > >, 3> () (0);
 #endif
 
 #ifdef USE_STD_VECTOR
     std::cout << "float, std::vector" << std::endl;
     test_my_matrix_vector<numerics::vector<float, numerics::forward, std::vector<float> >,
-                          numerics::banded_matrix<float, numerics::row_major<>, std::vector<float> >, 3> () ();
+                          numerics::symmetric_matrix<float, numerics::lower, numerics::row_major<>, std::vector<float> >, 3> () ();
     test_my_matrix_vector<numerics::vector<float, numerics::forward, std::vector<float> >,
-                          numerics::banded_matrix<float, numerics::row_major<>, std::vector<float> >, 3> () (0);
+                          numerics::symmetric_matrix<float, numerics::lower, numerics::row_major<>, std::vector<float> >, 3> () (0);
 
     std::cout << "double, std::vector" << std::endl;
     test_my_matrix_vector<numerics::vector<double, numerics::forward, std::vector<double> >,
-                          numerics::banded_matrix<double, numerics::row_major<>, std::vector<double> >, 3> () ();
+                          numerics::symmetric_matrix<double, numerics::lower, numerics::row_major<>, std::vector<double> >, 3> () ();
     test_my_matrix_vector<numerics::vector<double, numerics::forward, std::vector<double> >,
-                          numerics::banded_matrix<double, numerics::row_major<>, std::vector<double> >, 3> () (0);
+                          numerics::symmetric_matrix<double, numerics::lower, numerics::row_major<>, std::vector<double> >, 3> () (0);
 
     std::cout << "std::complex<float>, std::vector" << std::endl;
     test_my_matrix_vector<numerics::vector<std::complex<float>, numerics::forward, std::vector<std::complex<float> > >,
-                          numerics::banded_matrix<std::complex<float>, numerics::row_major<>, std::vector<std::complex<float> > >, 3> () ();
+                          numerics::symmetric_matrix<std::complex<float>, numerics::lower, numerics::row_major<>, std::vector<std::complex<float> > >, 3> () ();
     test_my_matrix_vector<numerics::vector<std::complex<float>, numerics::forward, std::vector<std::complex<float> > >,
-                          numerics::banded_matrix<std::complex<float>, numerics::row_major<>, std::vector<std::complex<float> > >, 3> () (0);
+                          numerics::symmetric_matrix<std::complex<float>, numerics::lower, numerics::row_major<>, std::vector<std::complex<float> > >, 3> () (0);
 
     std::cout << "std::complex<double>, std::vector" << std::endl;
     test_my_matrix_vector<numerics::vector<std::complex<double>, numerics::forward, std::vector<std::complex<double> > >,
-                          numerics::banded_matrix<std::complex<double>, numerics::row_major<>, std::vector<std::complex<double> > >, 3> () ();
+                          numerics::symmetric_matrix<std::complex<double>, numerics::lower, numerics::row_major<>, std::vector<std::complex<double> > >, 3> () ();
     test_my_matrix_vector<numerics::vector<std::complex<double>, numerics::forward, std::vector<std::complex<double> > >,
-                          numerics::banded_matrix<std::complex<double>, numerics::row_major<>, std::vector<std::complex<double> > >, 3> () (0);
+                          numerics::symmetric_matrix<std::complex<double>, numerics::lower, numerics::row_major<>, std::vector<std::complex<double> > >, 3> () (0);
 #endif
 }
 

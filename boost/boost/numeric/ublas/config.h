@@ -37,15 +37,15 @@
 // Bounds check
 #define NUMERICS_BOUNDS_CHECK
 
-// Use iterators.
-#define NUMERICS_USE_ITERATOR
-
 // Use expression templates.
 // #define NUMERICS_USE_ET
 #define NUMERICS_ET_VALUE
 // #define NUMERICS_ET_REFERENCE
 // #define NUMERICS_ET_CLOSURE_VALUE
 #define NUMERICS_ET_CLOSURE_REFERENCE
+
+// Use iterators.
+#define NUMERICS_USE_ITERATOR
 
 #else 
 
@@ -70,6 +70,10 @@
 
 // Use iterators.
 #define NUMERICS_USE_ITERATOR
+
+// Use indexed iterators.
+// #define NUMERICS_USE_INDEXED_ITERATOR
+// #define NUMERICS_INDEXED_ITERATOR_PROXIES
 
 // Use invariant hoisting.
 #define NUMERICS_USE_INVARIANT_HOISTING
@@ -119,39 +123,12 @@ namespace std {
 // Use iterators.
 #define NUMERICS_USE_ITERATOR
 
+// Use indexed iterators.
+// #define NUMERICS_USE_INDEXED_ITERATOR
+// #define NUMERICS_INDEXED_ITERATOR_PROXIES
+
 // Use invariant hoisting.
 #define NUMERICS_USE_INVARIANT_HOISTING
-
-namespace numerics {
-
-    namespace detail {
-
-        // FIXME: eliminate someday.
-        template<class I1, class I2>
-        NUMERICS_INLINE
-        void copy (I1 it1, const I1 &it1_end, I2 it2) {
-#if __GNUC__ <= 2
-            while (it1 != it1_end)
-                *it2 = *it1, ++ it2, ++ it1;
-#else
-            std::copy (it1, it1_end, it2);
-#endif
-        }
-        // FIXME: eliminate someday.
-        template<class I1, class I2>
-        NUMERICS_INLINE
-        void swap_ranges (I1 it1, const I1 &it1_end, I2 it2) {
-#if __GNUC__ <= 2
-            while (it1 != it1_end)
-                std::swap (*it1, *it2), ++ it2, ++ it1;
-#else
-            std::swap_ranges (it1, it1_end, it2);
-#endif
-        }
-
-    }
-
-}
 
 #endif 
 
@@ -178,6 +155,10 @@ namespace numerics {
 // Use iterators.
 #define NUMERICS_USE_ITERATOR
 
+// Use indexed iterators.
+// #define NUMERICS_USE_INDEXED_ITERATOR
+// #define NUMERICS_INDEXED_ITERATOR_PROXIES
+
 // Use invariant hoisting.
 #define NUMERICS_USE_INVARIANT_HOISTING
 
@@ -190,7 +171,8 @@ namespace numerics {
 
     struct sparse_proxy_tag {};
     struct sparse_tag: public sparse_proxy_tag {};
-    struct dense_tag: public sparse_tag {};
+    struct packed_tag: public sparse_tag {};
+    struct dense_tag: public packed_tag {};
 
     template<class S>
     struct proxy_traits {
@@ -208,8 +190,12 @@ namespace numerics {
     template<class I, class T>
     class compressed_array;
 
+    struct vector_tag {};
+
     template<class E>
     struct vector_expression;
+
+    struct matrix_tag {};
 
     template<class E>
     struct matrix_expression;
@@ -253,6 +239,36 @@ namespace numerics {
 
     template<class T, class F = row_major<>, class A = unbounded_array<T> >
     class banded_matrix;
+
+    struct lower_tag {};
+    struct lower;
+
+    struct upper_tag {};
+    struct upper;
+
+    struct unit_lower_tag: public lower_tag {};
+    struct unit_lower;
+
+    struct unit_upper_tag: public upper_tag {};
+    struct unit_upper;
+
+    template<class T, class F1 = lower, class F2 = row_major<>, class A = unbounded_array<T> >
+    class triangular_matrix;
+
+    template<class M, class F = lower>
+    class triangular_adaptor;
+
+    template<class T, class F1 = lower, class F2 = row_major<>, class A = unbounded_array<T> >
+    class symmetric_matrix;
+
+    template<class M, class F = lower>
+    class symmetric_adaptor;
+
+    template<class T, class F1 = lower, class F2 = row_major<>, class A = unbounded_array<T> >
+    class hermitean_matrix;
+
+    template<class M, class F = lower>
+    class hermitean_adaptor;
 
     template<class T, class F = row_major<>, class A = compressed_array<std::size_t, T> >
     class sparse_matrix;

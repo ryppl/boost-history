@@ -31,7 +31,7 @@ namespace numerics {
     template<class T>
     NUMERICS_INLINE
     const T &common (const T &size1, const T &size2) {
-        check<bad_size>::precondition (size1 == size2);
+        check (size1 == size2, bad_size ());
         return std::min (size1, size2);
     }
 #else 
@@ -101,20 +101,20 @@ namespace numerics {
         // Element access
         NUMERICS_INLINE
         const_reference_type operator [] (size_type i) const {
-            check<bad_index>::precondition (i < size_);
+            check (i < size_, bad_index ());
             return data_ [i];
         }
         NUMERICS_INLINE
         reference_type operator [] (size_type i) {
-            check<bad_index>::precondition (i < size_);
+            check (i < size_, bad_index ());
             return data_ [i];
         }
 
         // Assignment
         NUMERICS_INLINE
         unbounded_array &operator = (const unbounded_array &a) { 
-            check<external_logic>::precondition (this != &a);
-            check<bad_size>::precondition (size_ == a.size_);
+            check (this != &a, external_logic ());
+            check (size_ == a.size_, bad_size ());
             std::copy (a.data_, a.data_ + a.size_, data_);
             return *this;
         }
@@ -127,8 +127,8 @@ namespace numerics {
         // Swapping
         NUMERICS_INLINE
 	    void swap (unbounded_array &a) {
-            check<external_logic>::precondition (this != &a);
-            check<bad_size>::precondition (size_ == a.size_);
+            check (this != &a, external_logic ());
+            check (size_ == a.size_, bad_size ());
             std::swap (size_, a.size_);
             std::swap (data_, a.data_);
         }
@@ -139,16 +139,39 @@ namespace numerics {
         }
 #endif
 
-        NUMERICS_INLINE
-        void fill (const value_type &t) {
-            std::fill (begin (), end (), t);
-        }
+        // Element insertion and deletion
         NUMERICS_INLINE
         pointer_type insert (pointer_type it, const value_type &t) {
-            check<bad_index>::precondition (begin () <= it && it < end ());
-            check<bad_index>::precondition (*it == value_type ());
+            check (begin () <= it && it < end (), bad_index ());
+            check (*it == value_type (), external_logic ());
             *it = t;
             return it;
+        }
+        NUMERICS_INLINE
+        void insert (pointer_type it, pointer_type it1, pointer_type it2) {
+            while (it1 != it2) {
+                check (begin () <= it && it < end (), bad_index ());
+                check (*it == value_type (), external_logic ());
+                *it = *it1;
+                ++ it, ++ it1;
+            }
+        }
+        NUMERICS_INLINE
+        void erase (pointer_type it) {
+            check (begin () <= it && it < end (), bad_index ());
+            *it = value_type ();
+        }
+        NUMERICS_INLINE
+        void erase (pointer_type it1, pointer_type it2) {
+            while (it1 != it2) {
+                check (begin () <= it1 && it1 < end (), bad_index ());
+                *it1 = value_type ();
+                ++ it1;
+            }
+        }
+        NUMERICS_INLINE
+        void clear () {
+            erase (begin (), end ());
         }
 
         // Iterators simply are pointers.
@@ -176,8 +199,6 @@ namespace numerics {
         }
 
         // Reverse iterators
-
-#ifndef USE_GCC
 
 #ifdef USE_MSVC
         typedef std::reverse_iterator<const_iterator, value_type, const_reference_type> const_reverse_iterator;
@@ -208,8 +229,6 @@ namespace numerics {
         reverse_iterator rend () {
             return reverse_iterator (begin ());
         }
-
-#endif
 
     private:
         size_type size_;
@@ -269,20 +288,20 @@ namespace numerics {
         // Element access
         NUMERICS_INLINE
         const_reference_type operator [] (size_type i) const {
-            check<bad_index>::precondition (i < size_);
+            check (i < size_, bad_index ());
             return data_ [i];
         }
         NUMERICS_INLINE
         reference_type operator [] (size_type i) {
-            check<bad_index>::precondition (i < size_);
+            check (i < size_, bad_index ());
             return data_ [i];
         }
 
         // Assignment
         NUMERICS_INLINE
         bounded_array &operator = (const bounded_array &a) { 
-            check<external_logic>::precondition (this != &a);
-            check<bad_size>::precondition (size_ == a.size_);
+            check (this != &a, external_logic ());
+            check (size_ == a.size_, bad_size ());
             std::copy (a.data_, a.data_ + a.size_, data_);
             return *this;
         }
@@ -295,8 +314,8 @@ namespace numerics {
         // Swapping
         NUMERICS_INLINE
 	    void swap (bounded_array &a) {
-            check<external_logic>::precondition (this != &a);
-            check<bad_size>::precondition (size_ == a.size_);
+            check (this != &a, external_logic ());
+            check (size_ == a.size_, bad_size ());
             std::swap_ranges (data_, data_ + size_, a.data_);
         }
 #ifndef USE_GCC
@@ -306,17 +325,39 @@ namespace numerics {
         }
 #endif
 
-        // Element insertion
-        NUMERICS_INLINE
-        void fill (const value_type &t) {
-            std::fill (begin (), end (), t);
-        }
+        // Element insertion and deletion
         NUMERICS_INLINE
         pointer_type insert (pointer_type it, const value_type &t) {
-            check<bad_index>::precondition (begin () <= it && it < end ());
-            check<bad_index>::precondition (*it == value_type ());
+            check (begin () <= it && it < end (), bad_index ());
+            check (*it == value_type (), external_logic ());
             *it = t;
             return it;
+        }
+        NUMERICS_INLINE
+        void insert (pointer_type it, pointer_type it1, pointer_type it2) {
+            while (it1 != it2) {
+                check (begin () <= it && it < end (), bad_index ());
+                check (*it == value_type (), external_logic ());
+                *it = *it1;
+                ++ it, ++ it1;
+            }
+        }
+        NUMERICS_INLINE
+        void erase (pointer_type it) {
+            check (begin () <= it && it < end (), bad_index ());
+            *it = value_type ();
+        }
+        NUMERICS_INLINE
+        void erase (pointer_type it1, pointer_type it2) {
+            while (it1 != it2) {
+                check (begin () <= it1 && it1 < end (), bad_index ());
+                *it1 = value_type ();
+                ++ it1;
+            }
+        }
+        NUMERICS_INLINE
+        void clear () {
+            erase (begin (), end ());
         }
 
         // Iterators simply are pointers.
@@ -344,8 +385,6 @@ namespace numerics {
         }
 
         // Reverse iterators
-
-#ifndef USE_GCC
 
 #ifdef USE_MSVC
         typedef std::reverse_iterator<const_iterator, value_type, const_reference_type> const_reverse_iterator;
@@ -377,8 +416,6 @@ namespace numerics {
             return reverse_iterator (begin ());
         }
 
-#endif
-
     private:
         size_type size_;
         value_type data_ [N];
@@ -393,16 +430,16 @@ namespace numerics {
     template<class T>
     NUMERICS_INLINE
     std::valarray<T> &assign_temporary (std::valarray<T> &a1, std::valarray<T> &a2) { 
-        check<external_logic>::precondition (&a1 != &a2);
-        check<bad_size>::precondition (a1.size () == a2.size ());
+        check (&a1 != &a2, external_logic ());
+        check (a1.size () == a2.size (), bad_size ());
         return a1 = a2;
     }
 
     template<class T>
     NUMERICS_INLINE
     std::vector<T> &assign_temporary (std::vector<T> &a1, std::vector<T> &a2) { 
-        check<external_logic>::precondition (&a1 != &a2);
-        check<bad_size>::precondition (a1.size () == a2.size ());
+        check (&a1 != &a2, external_logic ());
+        check (a1.size () == a2.size (), bad_size ());
         a1.swap (a2);
         return a1;
     }
@@ -413,6 +450,10 @@ namespace numerics {
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef difference_type value_type;
+        typedef const difference_type &const_reference_type;
+        typedef difference_type reference_type;
+        typedef const difference_type *const_pointer_type;
+        typedef difference_type *pointer_type;
         typedef size_type const_iterator_type;
 
         // Construction and destruction
@@ -422,7 +463,7 @@ namespace numerics {
         NUMERICS_INLINE
         range (size_type start, size_type stop): 
             start_ (start), size_ (stop - start) {
-            check<bad_size>::precondition (start <= stop);
+            check (start <= stop, bad_size ());
         }
 
         NUMERICS_INLINE
@@ -437,14 +478,14 @@ namespace numerics {
         // Element access
         NUMERICS_INLINE
         value_type operator () (size_type i) const { 
-            check<bad_index>::precondition (i < size_);
+            check (i < size_, bad_index ());
             return start_ + i; 
         }
 
         // Composition
         NUMERICS_INLINE
         range composite (const range &r) const {
-            check<bad_size>::precondition (r.start_ + r.size_ <= size_);
+            check (r.start_ + r.size_ <= size_, bad_size ());
             return range (start_ + r.start_, start_ + r.start_ + r.size_);
         }
 
@@ -460,6 +501,9 @@ namespace numerics {
 
         // Iterator simply is a index.
 
+#ifdef NUMERICS_USE_INDEXED_ITERATOR
+        typedef indexed_const_iterator<range> const_iterator;
+#else
         class const_iterator:
             public container_const_reference<range>,
             public random_access_iterator_base<const_iterator, value_type> {
@@ -502,8 +546,8 @@ namespace numerics {
             // Dereference
             NUMERICS_INLINE
             value_type operator * () const {
-                check<bad_index>::precondition ((*this) ().start () <= it_);
-                check<bad_index>::precondition (it_ < (*this) ().start () + (*this) ().size ());
+                check ((*this) ().start () <= it_, bad_index ());
+                check (it_ < (*this) ().start () + (*this) ().size (), bad_index ());
                 return it_; 
             }
 
@@ -513,16 +557,25 @@ namespace numerics {
                 return it_ - (*this) ().start ();
             }
 
+            // Assignment 
+            NUMERICS_INLINE
+            const_iterator &operator = (const const_iterator &it) {
+                assign (&it ());
+                it_ = it.it_;
+                return *this;
+            }
+
             // Comparison
             NUMERICS_INLINE
             bool operator == (const const_iterator &it) const {
-                check<external_logic>::precondition (&(*this) () == &it ());
+                check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_; 
             }
 
         private:
             const_iterator_type it_;
         };
+#endif
 
         NUMERICS_INLINE
         const_iterator begin () const {
@@ -534,8 +587,6 @@ namespace numerics {
         }
 
         // Reverse iterator
-
-#ifndef USE_GCC
 
 #ifdef USE_MSVC
         typedef std::reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
@@ -552,8 +603,6 @@ namespace numerics {
             return const_reverse_iterator (begin ());
         }
 
-#endif
-
     private:
         size_type start_;
         size_type size_;
@@ -565,6 +614,10 @@ namespace numerics {
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef difference_type value_type;
+        typedef const difference_type &const_reference_type;
+        typedef difference_type reference_type;
+        typedef const difference_type *const_pointer_type;
+        typedef difference_type *pointer_type;
         typedef size_type const_iterator_type;
 
         // Construction and destruction
@@ -591,19 +644,19 @@ namespace numerics {
         // Element access
         NUMERICS_INLINE
         value_type operator () (size_type i) const { 
-            check<bad_index>::precondition (i < size_);
+            check (i < size_, bad_index ());
             return start_ + i * stride_; 
         }
 
         // Composition
         NUMERICS_INLINE
         slice composite (const range &r) const {
-            check<bad_size>::precondition (r.start () + r.size () <= size_);
+            check (r.start () + r.size () <= size_, bad_size ());
             return slice (start_ + stride_ * r.start (), stride_, r.size ());
         }
         NUMERICS_INLINE
         slice composite (const slice &s) const {
-            check<bad_size>::precondition (s.start_ + s.stride_ * s.size_ <= size_);
+            check (s.start_ + s.stride_ * s.size_ <= size_, bad_size ());
             return slice (start_ + stride_ * s.start_, stride_ * s.stride_, s.size_);
         }
 
@@ -619,6 +672,9 @@ namespace numerics {
 
         // Iterator simply is a index.
 
+#ifdef NUMERICS_USE_INDEXED_ITERATOR
+        typedef indexed_const_iterator<slice> const_iterator;
+#else
         class const_iterator:
             public container_const_reference<slice>,
             public random_access_iterator_base<const_iterator, value_type> {
@@ -655,35 +711,44 @@ namespace numerics {
             }
             NUMERICS_INLINE
             difference_type operator - (const const_iterator &it) const {
-                check<divide_by_zero>::precondition ((*this) ().stride () != 0);
+                check ((*this) ().stride () != 0, divide_by_zero ());
                 return (it_ - it.it_) / (*this) ().stride ();
             }
 
             // Dereference
             NUMERICS_INLINE
             value_type operator * () const {
-                check<bad_index>::precondition ((*this) ().start () <= it_);
-                check<bad_index>::precondition (it_ < (*this) ().start () + (*this) ().stride () * (*this) ().size ());
+                check ((*this) ().start () <= it_, bad_index ());
+                check (it_ < (*this) ().start () + (*this) ().stride () * (*this) ().size (), bad_index ());
                 return it_; 
             }
 
             // Index
             NUMERICS_INLINE
             size_type index () const {
-                check<divide_by_zero>::precondition ((*this) ().stride () != 0);
+                check ((*this) ().stride () != 0, divide_by_zero ());
                 return (it_ - (*this) ().start ()) / (*this) ().stride ();
+            }
+
+            // Assignment 
+            NUMERICS_INLINE
+            const_iterator &operator = (const const_iterator &it) {
+                assign (&it ());
+                it_ = it.it_;
+                return *this;
             }
 
             // Comparison
             NUMERICS_INLINE
             bool operator == (const const_iterator &it) const {
-                check<external_logic>::precondition (&(*this) () == &it ());
+                check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_; 
             }
 
         private:
             const_iterator_type it_;
         };
+#endif
 
         NUMERICS_INLINE
         const_iterator begin () const {
@@ -695,8 +760,6 @@ namespace numerics {
         }
 
         // Reverse iterator
-
-#ifndef USE_GCC
 
 #ifdef USE_MSVC
         typedef std::reverse_iterator<const_iterator, value_type, value_type> const_reverse_iterator;
@@ -712,8 +775,6 @@ namespace numerics {
         const_reverse_iterator rend () const {
             return const_reverse_iterator (begin ());
         }
-
-#endif
 
     private:
         size_type start_;

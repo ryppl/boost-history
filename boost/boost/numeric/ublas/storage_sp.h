@@ -111,7 +111,7 @@ namespace numerics {
         // Assignment
         NUMERICS_INLINE
         compressed_array &operator = (const compressed_array &a) { 
-            check<external_logic>::precondition (this != &a);
+            check (this != &a, external_logic ());
             resize (a.size_);
             std::copy (a.data_, a.data_ + a.size_, data_);
             return *this;
@@ -125,7 +125,7 @@ namespace numerics {
         // Swapping
         NUMERICS_INLINE
 	    void swap (compressed_array &a) {
-            check<external_logic>::precondition (this != &a);
+            check (this != &a, external_logic ());
             std::swap (capacity_, a.capacity_);
             std::swap (data_, a.data_);
             std::swap (size_, a.size_);
@@ -137,12 +137,7 @@ namespace numerics {
         }
 #endif
 
-        // Element insertion
-        // This function seems to be big. So we do not let the compiler inline it.
-        // NUMERICS_INLINE
-        void clear () {
-            resize (0);
-        }
+        // Element insertion and deletion
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
         pointer_type insert (pointer_type it, const value_type &p) {
@@ -155,8 +150,8 @@ namespace numerics {
             throw external_logic ();
 #else
             it = std::upper_bound (begin (), end (), p, less<value_type> ());
-            check<internal_logic>::invariant (it != end ());
-            check<external_logic>::precondition (it->first != p.first);
+            check (it != end (), internal_logic ());
+            check (it->first != p.first, external_logic ());
             difference_type n = it - begin ();
             resize (size () + 1);
             it = begin () + n;
@@ -167,8 +162,41 @@ namespace numerics {
         }
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        void sort () {
+        void insert (pointer_type it, pointer_type it1, pointer_type it2) {
+#ifdef NUMERICS_BOUNDS_CHECK
+            while (it1 != it2) {
+                insert (it, *it1);
+                ++ it1;
+            }
+#else
+            difference_type n = it - begin ();
+            resize (size () + it2 - it1);
+            it = begin () + n;
+            std::copy (it1, it2, it);
             std::sort (begin (), end (), less<value_type> ()); 
+#endif
+        }
+        // This function seems to be big. So we do not let the compiler inline it.
+        // NUMERICS_INLINE
+        void erase (pointer_type it) {
+            // FIXME: delete physically?
+            check (begin () <= it && it < end (), bad_index ());
+            *it = value_type ();
+        }
+        // This function seems to be big. So we do not let the compiler inline it.
+        // NUMERICS_INLINE
+        void erase (pointer_type it1, pointer_type it2) {
+            // FIXME: delete physically?
+            while (it1 != it2) {
+                check (begin () <= it1 && it1 < end (), bad_index ());
+                *it1 = value_type ();
+                ++ it1;
+            }
+        }
+        // This function seems to be big. So we do not let the compiler inline it.
+        // NUMERICS_INLINE
+        void clear () {
+            resize (0);
         }
 
         // Element lookup
@@ -249,8 +277,6 @@ namespace numerics {
 
         // Reverse iterators
 
-#ifndef USE_GCC
-
 #ifdef USE_MSVC
         typedef std::reverse_iterator<const_iterator, value_type, const_reference_type> const_reverse_iterator;
 #else
@@ -281,8 +307,6 @@ namespace numerics {
             return reverse_iterator (begin ());
         }
 
-#endif
-
     private:
         size_type capacity_;
         pointer_type data_;
@@ -298,7 +322,7 @@ namespace numerics {
     template<class I, class T, class F>
     NUMERICS_INLINE
     std::map<I, T, F> &assign_temporary (std::map<I, T, F> &a1, std::map<I, T, F> &a2) { 
-        check<external_logic>::precondition (&a1 != &a2);
+        check (&a1 != &a2, external_logic ());
         a1.swap (a2);
         return  a1;
     }
@@ -306,7 +330,7 @@ namespace numerics {
     template<class I, class T, class F>
     NUMERICS_INLINE
     void swap (std::map<I, T, F> &a1, std::map<I, T, F> &a2) { 
-        check<external_logic>::precondition (&a1 != &a2);
+        check (&a1 != &a2, external_logic ());
         a1.swap (a2);
     }
 

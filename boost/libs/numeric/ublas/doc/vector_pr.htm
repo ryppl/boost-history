@@ -4,12 +4,12 @@
 <meta http-equiv="Content-Type"
 content="text/html; charset=iso-8859-1">
 <meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
-<title>Vector Proxy Related</title>
+<title>Vector Proxies</title>
 </head>
 
 <body bgcolor="#FFFFFF">
 
-<h1>Vector Proxy Related</h1>
+<h1>Vector Proxies</h1>
 
 <h2><a name="vector_range"></a>Vector Range</h2>
 
@@ -41,7 +41,7 @@ to address a range of a vector.</p>
         <th>Default </th>
     </tr>
     <tr>
-        <td><tt>V</tt> </td>
+        <td><code>V</code> </td>
         <td>The type of vector referenced. </td>
         <td>&nbsp;</td>
     </tr>
@@ -49,11 +49,12 @@ to address a range of a vector.</p>
 
 <h4>Model of</h4>
 
-<p>Vector. </p>
+<p><a href="proxy.htm#vector_proxy">Vector Proxy</a>. </p>
 
 <h4>Type requirements</h4>
 
-<p>None, except for those imposed by the requirements of Vector.</p>
+<p>None, except for those imposed by the requirements of <a
+href="proxy.htm#vector_proxy">Vector Proxy</a>.</p>
 
 <h4>Public base classes</h4>
 
@@ -86,25 +87,37 @@ to address a range of a vector.</p>
     </tr>
     <tr>
         <td><code>value_type operator () (size_type i) const</code></td>
-        <td>Returns the value of the <tt>i</tt>-th element. </td>
+        <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
         <td><code>reference_type operator () (size_type i)</code></td>
-        <td>Returns a reference of the <tt>i</tt>-th element. </td>
+        <td>Returns a reference of the <code>i</code>-th element.
+        </td>
     </tr>
     <tr>
         <td><code>value_type operator [] (size_type i) const</code></td>
-        <td>Returns the value of the <tt>i</tt>-th element. </td>
+        <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
         <td><code>reference_type operator [] (size_type i)</code></td>
-        <td>Returns a reference of the <tt>i</tt>-th element. </td>
+        <td>Returns a reference of the <code>i</code>-th element.
+        </td>
+    </tr>
+    <tr>
+        <td><code>vector_range project (size_type start,
+        size_type stop) const</code></td>
+        <td>Returns a sub vector ranging from the <code>start</code>-th
+        to the <code>stop</code>-th element.</td>
+    </tr>
+    <tr>
+        <td><code>vector_range project (const range &amp;r) const</code></td>
+        <td>Returns a sub vector.</td>
     </tr>
     <tr>
         <td><code>vector_range project (size_type start,
         size_type stop)</code></td>
-        <td>Returns a sub vector ranging from the <tt>start</tt>-th
-        to the <tt>stop</tt>-th element.</td>
+        <td>Returns a sub vector ranging from the <code>start</code>-th
+        to the <code>stop</code>-th element.</td>
     </tr>
     <tr>
         <td><code>vector_range project (const range &amp;r)</code></td>
@@ -174,32 +187,46 @@ to address a range of a vector.</p>
         <td>Swaps the contents of the sub vectors. </td>
     </tr>
     <tr>
-        <td><code>const_iterator find (size_type i) const</code></td>
-        <td>Finds the <tt>i</tt>-th element. </td>
-    </tr>
-    <tr>
-        <td><code>iterator find (size_type i)</code></td>
-        <td>Finds the <tt>i</tt>-th element. </td>
-    </tr>
-    <tr>
         <td><code>const_iterator begin () const</code></td>
-        <td>Returns a <tt>const_iterator</tt> pointing to the
-        beginning of the <tt>vector_range</tt>. </td>
+        <td>Returns a <code>const_iterator</code> pointing to the
+        beginning of the <code>vector_range</code>. </td>
     </tr>
     <tr>
         <td><code>const_iterator end () const</code></td>
-        <td>Returns a <tt>const_iterator</tt> pointing to the end
-        of the <tt>vector_range</tt>. </td>
+        <td>Returns a <code>const_iterator</code> pointing to the
+        end of the <code>vector_range</code>. </td>
     </tr>
     <tr>
         <td><code>iterator begin () </code></td>
-        <td>Returns a <tt>iterator</tt> pointing to the beginning
-        of the <tt>vector_range</tt>. </td>
+        <td>Returns a <code>iterator</code> pointing to the
+        beginning of the <code>vector_range</code>. </td>
     </tr>
     <tr>
         <td><code>iterator end () </code></td>
-        <td>Returns a <tt>iterator</tt> pointing to the end of
-        the <tt>vector_range</tt>. </td>
+        <td>Returns a <code>iterator</code> pointing to the end
+        of the <code>vector_range</code>. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rbegin () const</code></td>
+        <td>Returns a <code>const_reverse_iterator</code>
+        pointing to the beginning of the reversed <code>vector_range</code>.
+        </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rend () const</code></td>
+        <td>Returns a <code>const_reverse_iterator</code>
+        pointing to the end of the reversed <code>vector_range</code>.
+        </td>
+    </tr>
+    <tr>
+        <td><code>reverse_iterator rbegin () </code></td>
+        <td>Returns a <code>reverse_iterator</code> pointing to
+        the beginning of the reversed <code>vector_range</code>. </td>
+    </tr>
+    <tr>
+        <td><code>reverse_iterator rend () </code></td>
+        <td>Returns a <code>reverse_iterator</code> pointing to
+        the end of the reversed <code>vector_range</code>. </td>
     </tr>
 </table>
 
@@ -216,13 +243,16 @@ to address a range of a vector.</p>
         typedef typename V::value_type value_type;
         typedef typename V::const_reference_type const_reference_type;
         typedef typename V::reference_type reference_type;
-        typedef vector_range&lt;V&gt; const_closure_type;
-        typedef vector_range&lt;V&gt; closure_type;
+        typedef typename V::const_pointer_type const_pointer_type;
+        typedef typename V::pointer_type pointer_type;
+        typedef const vector_const_reference&lt;const vector_range&lt;vector_type&gt; &gt; const_closure_type;
+        typedef vector_reference&lt;vector_range&lt;vector_type&gt; &gt; closure_type;
         typedef typename V::const_iterator const_iterator_type;
         typedef typename V::iterator iterator_type;
         typedef typename proxy_traits&lt;typename V::storage_category&gt;::storage_category storage_category;
 
         // Construction and destruction
+        vector_range ();
         vector_range (vector_type &amp;data, const range &amp;r);
         vector_range (vector_type &amp;data, size_type start, size_type stop);
 
@@ -236,6 +266,8 @@ to address a range of a vector.</p>
         value_type operator [] (size_type i) const;
         reference_type operator [] (size_type i);
 
+        vector_range project (size_type start, size_type stop) const;
+        vector_range project (const range &amp;r) const;
         vector_range project (size_type start, size_type stop);
         vector_range project (const range &amp;r);
 
@@ -275,8 +307,13 @@ to address a range of a vector.</p>
             public random_access_iterator_base&lt;const_iterator, value_type&gt; {
         public:
             typedef typename V::const_iterator::iterator_category iterator_category;
+            typedef typename V::const_iterator::difference_type difference_type;
+            typedef typename V::const_iterator::value_type value_type;
+            typedef typename V::const_iterator::value_type reference;
+            typedef typename V::const_iterator::pointer pointer;
 
             // Construction and destruction
+            const_iterator ();
             const_iterator (const vector_range &amp;vr, const const_iterator_type &amp;it);
             const_iterator (const iterator &amp;it);
 
@@ -293,6 +330,9 @@ to address a range of a vector.</p>
             // Index
             size_type index () const;
 
+            // Assignment 
+            const_iterator &amp;operator = (const const_iterator &amp;it);
+
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
         };
@@ -305,8 +345,13 @@ to address a range of a vector.</p>
             public random_access_iterator_base&lt;iterator, value_type&gt; {
         public:
             typedef typename V::iterator::iterator_category iterator_category;
+            typedef typename V::iterator::difference_type difference_type;
+            typedef typename V::iterator::value_type value_type;
+            typedef typename V::iterator::reference reference;
+            typedef typename V::iterator::pointer pointer;
 
             // Construction and destruction
+            iterator ();
             iterator (vector_range &amp;vr, const iterator_type &amp;it);
 
             // Arithmetic
@@ -317,10 +362,13 @@ to address a range of a vector.</p>
             difference_type operator - (const iterator &amp;it) const;
 
             // Dereference
-            reference_type operator * ();
+            reference_type operator * () const;
 
             // Index
             size_type index () const;
+
+            // Assignment 
+            iterator &amp;operator = (const iterator &amp;it);
 
             // Comparison
             bool operator == (const iterator &amp;it) const;
@@ -328,6 +376,18 @@ to address a range of a vector.</p>
 
         iterator begin ();
         iterator end ();
+
+        // Reverse iterator
+
+        typedef reverse_iterator&lt;const_iterator&gt; const_reverse_iterator;
+
+        const_reverse_iterator rbegin () const;
+        const_reverse_iterator rend () const;
+
+        typedef reverse_iterator&lt;iterator&gt; reverse_iterator;
+
+        reverse_iterator rbegin ();
+        reverse_iterator rend ();
     };</code></pre>
 
 <h2><a name="vector_slice"></a>Vector Slice</h2>
@@ -360,7 +420,7 @@ to address a slice of a vector.</p>
         <th>Default </th>
     </tr>
     <tr>
-        <td><tt>V</tt> </td>
+        <td><code>V</code> </td>
         <td>The type of vector referenced. </td>
         <td>&nbsp;</td>
     </tr>
@@ -368,11 +428,12 @@ to address a slice of a vector.</p>
 
 <h4>Model of</h4>
 
-<p>Vector. </p>
+<p><a href="proxy.htm#vector_proxy">Vector Proxy</a>. </p>
 
 <h4>Type requirements</h4>
 
-<p>None, except for those imposed by the requirements of Vector.</p>
+<p>None, except for those imposed by the requirements of <a
+href="proxy.htm#vector_proxy">Vector Proxy</a>.</p>
 
 <h4>Public base classes</h4>
 
@@ -401,19 +462,29 @@ to address a slice of a vector.</p>
     </tr>
     <tr>
         <td><code>value_type operator () (size_type i) const</code></td>
-        <td>Returns the value of the <tt>i</tt>-th element. </td>
+        <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
         <td><code>reference_type operator () (size_type i)</code></td>
-        <td>Returns a reference of the <tt>i</tt>-th element. </td>
+        <td>Returns a reference of the <code>i</code>-th element.
+        </td>
     </tr>
     <tr>
         <td><code>value_type operator [] (size_type i) const</code></td>
-        <td>Returns the value of the <tt>i</tt>-th element. </td>
+        <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
         <td><code>reference_type operator [] (size_type i)</code></td>
-        <td>Returns a reference of the <tt>i</tt>-th element. </td>
+        <td>Returns a reference of the <code>i</code>-th element.
+        </td>
+    </tr>
+    <tr>
+        <td><code>vector_slice project (const range &amp;r) const</code></td>
+        <td>Returns a sub vector.</td>
+    </tr>
+    <tr>
+        <td><code>vector_slice project (const slice &amp;s) const</code></td>
+        <td>Returns a sub vector.</td>
     </tr>
     <tr>
         <td><code>vector_slice project (const range &amp;r)</code></td>
@@ -487,32 +558,46 @@ to address a slice of a vector.</p>
         <td>Swaps the contents of the sub vectors. </td>
     </tr>
     <tr>
-        <td><code>const_iterator find (size_type i) const</code></td>
-        <td>Finds the <tt>i</tt>-th element. </td>
-    </tr>
-    <tr>
-        <td><code>iterator find (size_type i)</code></td>
-        <td>Finds the <tt>i</tt>-th element. </td>
-    </tr>
-    <tr>
         <td><code>const_iterator begin () const</code></td>
-        <td>Returns a <tt>const_iterator</tt> pointing to the
+        <td>Returns a <code>const_iterator</code> pointing to the
         beginning of the <code>vector_slice</code>. </td>
     </tr>
     <tr>
         <td><code>const_iterator end () const</code></td>
-        <td>Returns a <tt>const_iterator</tt> pointing to the end
-        of the <code>vector_slice</code>. </td>
+        <td>Returns a <code>const_iterator</code> pointing to the
+        end of the <code>vector_slice</code>. </td>
     </tr>
     <tr>
         <td><code>iterator begin () </code></td>
-        <td>Returns a <tt>iterator</tt> pointing to the beginning
-        of the <code>vector_slice</code>. </td>
+        <td>Returns a <code>iterator</code> pointing to the
+        beginning of the <code>vector_slice</code>. </td>
     </tr>
     <tr>
         <td><code>iterator end () </code></td>
-        <td>Returns a <tt>iterator</tt> pointing to the end of
-        the <code>vector_slice</code>. </td>
+        <td>Returns a <code>iterator</code> pointing to the end
+        of the <code>vector_slice</code>. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rbegin () const</code></td>
+        <td>Returns a <code>const_reverse_iterator</code>
+        pointing to the beginning of the reversed <code>vector_slice</code>.
+        </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rend () const</code></td>
+        <td>Returns a <code>const_reverse_iterator</code>
+        pointing to the end of the reversed <code>vector_slice</code>.
+        </td>
+    </tr>
+    <tr>
+        <td><code>reverse_iterator rbegin () </code></td>
+        <td>Returns a <code>reverse_iterator</code> pointing to
+        the beginning of the reversed <code>vector_slice</code>. </td>
+    </tr>
+    <tr>
+        <td><code>reverse_iterator rend () </code></td>
+        <td>Returns a <code>reverse_iterator</code> pointing to
+        the end of the reversed <code>vector_slice</code>. </td>
     </tr>
 </table>
 
@@ -529,16 +614,21 @@ to address a slice of a vector.</p>
         typedef typename V::value_type value_type;
         typedef typename V::const_reference_type const_reference_type;
         typedef typename V::reference_type reference_type;
-        typedef vector_slice&lt;V&gt; const_closure_type;
-        typedef vector_slice&lt;V&gt; closure_type;
+        typedef typename V::const_pointer_type const_pointer_type;
+        typedef typename V::pointer_type pointer_type;
+        typedef const vector_const_reference&lt;const vector_slice&lt;vector_type&gt; &gt; const_closure_type;
+        typedef vector_reference&lt;vector_slice&lt;vector_type&gt; &gt; closure_type;
         typedef slice::const_iterator const_iterator_type;
         typedef slice::const_iterator iterator_type;
         typedef typename proxy_traits&lt;typename V::storage_category&gt;::storage_category storage_category;
 
         // Construction and destruction
+        vector_slice ();
         vector_slice (vector_type &amp;data, const slice &amp;s);
         vector_slice (vector_type &amp;data, size_type start, size_type stride, size_type size);
 
+        size_type start () const;
+        size_type stride () const;
         size_type size () const;
 
         // Element access
@@ -548,6 +638,8 @@ to address a slice of a vector.</p>
         value_type operator [] (size_type i) const;
         reference_type operator [] (size_type i);
 
+        vector_slice project (const range &amp;r) const;
+        vector_slice project (const slice &amp;s) const;
         vector_slice project (const range &amp;r);
         vector_slice project (const slice &amp;s);
 
@@ -573,17 +665,27 @@ to address a slice of a vector.</p>
 	void swap (vector_slice &amp;vs);
 	friend void swap (vector_slice &amp;vs1, vector_slice &amp;vs2);
 
-        // Iterators simply are indexes.
-
+        class const_iterator;
         class iterator;
+
+        // Element lookup
+        const_iterator find (size_type i) const;
+        iterator find (size_type i);
+
+        // Iterators simply are indices.
 
         class const_iterator:
             public container_const_reference&lt;vector_type&gt;,
             public random_access_iterator_base&lt;const_iterator, value_type&gt; {
         public:
-            typedef std::random_access_iterator_tag iterator_category;
+            typedef typename V::const_iterator::iterator_category iterator_category;
+            typedef typename V::const_iterator::difference_type difference_type;
+            typedef typename V::const_iterator::value_type value_type;
+            typedef typename V::const_iterator::value_type reference;
+            typedef typename V::const_iterator::pointer pointer;
 
             // Construction and destruction
+            const_iterator ();
             const_iterator (const vector_type &amp;v, const const_iterator_type &amp;it);
             const_iterator (const iterator &amp;it);
 
@@ -600,6 +702,9 @@ to address a slice of a vector.</p>
             // Index
             size_type index () const;
 
+            // Assignment 
+            const_iterator &amp;operator = (const const_iterator &amp;it);
+
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
         };
@@ -611,9 +716,14 @@ to address a slice of a vector.</p>
             public container_reference&lt;vector_type&gt;,
             public random_access_iterator_base&lt;iterator, value_type&gt; {
         public:
-            typedef std::random_access_iterator_tag iterator_category;
+            typedef typename V::iterator::iterator_category iterator_category;
+            typedef typename V::iterator::difference_type difference_type;
+            typedef typename V::iterator::value_type value_type;
+            typedef typename V::iterator::reference reference;
+            typedef typename V::iterator::pointer pointer;
 
             // Construction and destruction
+            iterator ();
             iterator (vector_type &amp;v, const iterator_type &amp;it);
 
             // Arithmetic
@@ -624,10 +734,13 @@ to address a slice of a vector.</p>
             difference_type operator - (const iterator &amp;it) const;
 
             // Dereference
-            reference_type operator * ();
+            reference_type operator * () const;
 
             // Index
             size_type index () const;
+
+            // Assignment 
+            iterator &amp;operator = (const iterator &amp;it);
 
             // Comparison
             bool operator == (const iterator &amp;it) const;
@@ -635,6 +748,18 @@ to address a slice of a vector.</p>
 
         iterator begin ();
         iterator end ();
+
+        // Reverse iterator
+
+        typedef reverse_iterator&lt;const_iterator&gt; const_reverse_iterator;
+
+        const_reverse_iterator rbegin () const;
+        const_reverse_iterator rend () const;
+
+        typedef reverse_iterator&lt;iterator&gt; reverse_iterator;
+
+        reverse_iterator rbegin ();
+        reverse_iterator rend ();
     };</code></pre>
 </body>
 </html>

@@ -35,6 +35,7 @@ namespace numerics {
         typedef T value_type;
         typedef const T &const_reference_type;
         typedef T &reference_type;
+        typedef const T *const_pointer_type;
         typedef T *pointer_type;
         typedef F functor_type;
         typedef A array_type;
@@ -50,7 +51,7 @@ namespace numerics {
         typedef matrix_range<self_type> matrix_range_type;
         typedef typename A::const_iterator const_iterator_type;
         typedef typename A::iterator iterator_type;
-        typedef sparse_tag storage_category;
+        typedef struct sparse_tag storage_category;
         typedef typename F::orientation_category orientation_category;
 
         // Construction and destruction
@@ -58,21 +59,21 @@ namespace numerics {
         sparse_matrix (): 
             size1_ (0), size2_ (0), non_zeroes_ (0), data_ () {}
         NUMERICS_INLINE
-        sparse_matrix (size_type size1, size_type size2, size_type non_zeroes): 
+        sparse_matrix (size_type size1, size_type size2, size_type non_zeroes = 0): 
             size1_ (size1), size2_ (size2), non_zeroes_ (non_zeroes), data_ () {}
         NUMERICS_INLINE
         sparse_matrix (const sparse_matrix &m): 
             size1_ (m.size1_), size2_ (m.size2_), non_zeroes_ (m.non_zeroes_), data_ (m.data_) {}
         template<class AE>
         NUMERICS_INLINE
-        sparse_matrix (size_type non_zeroes, const matrix_expression<AE> &ae): 
+        sparse_matrix (const matrix_expression<AE> &ae, size_type non_zeroes = 0): 
             size1_ (ae ().size1 ()), size2_ (ae ().size2 ()), non_zeroes_ (non_zeroes), data_ () { 
             matrix_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
         }
 
         // Resizing
         NUMERICS_INLINE
-        void resize (size_type size1, size_type size2, size_type non_zeroes) {
+        void resize (size_type size1, size_type size2, size_type non_zeroes = 0) {
             size1_ = size1;
             size2_ = size2;
             non_zeroes_ = non_zeroes;
@@ -145,9 +146,9 @@ namespace numerics {
         // Assignment
         NUMERICS_INLINE
         sparse_matrix &operator = (const sparse_matrix &m) { 
-            check<bad_size>::precondition (size1_ == m.size1_);
-            check<bad_size>::precondition (size2_ == m.size2_);
-            check<bad_size>::precondition (non_zeroes_ == m.non_zeroes_);
+            check (size1_ == m.size1_, bad_size ());
+            check (size2_ == m.size2_, bad_size ());
+            check (non_zeroes_ == m.non_zeroes_, bad_size ());
             data_ = m.data_;
             return *this;
         }
@@ -160,9 +161,9 @@ namespace numerics {
         NUMERICS_INLINE
         sparse_matrix &operator = (const matrix_expression<AE> &ae) { 
 #ifndef USE_GCC
-            return assign_temporary (self_type (non_zeroes_, ae));
+            return assign_temporary (self_type (ae, non_zeroes_));
 #else
-            return assign (self_type (non_zeroes_, ae));
+            return assign (self_type (ae, non_zeroes_));
 #endif
         }
         template<class AE>
@@ -175,9 +176,9 @@ namespace numerics {
         NUMERICS_INLINE
         sparse_matrix& operator += (const matrix_expression<AE> &ae) {
 #ifndef USE_GCC
-            return assign_temporary (self_type (non_zeroes_, *this + ae));
+            return assign_temporary (self_type (*this + ae, non_zeroes_));
 #else
-            return assign (self_type (non_zeroes_, *this + ae));
+            return assign (self_type (*this + ae, non_zeroes_));
 #endif
         }
         template<class AE>
@@ -190,9 +191,9 @@ namespace numerics {
         NUMERICS_INLINE
         sparse_matrix& operator -= (const matrix_expression<AE> &ae) {
 #ifndef USE_GCC
-            return assign_temporary (self_type (non_zeroes_, *this - ae));
+            return assign_temporary (self_type (*this - ae, non_zeroes_));
 #else
-            return assign (self_type (non_zeroes_, *this - ae));
+            return assign (self_type (*this - ae, non_zeroes_));
 #endif
         }
         template<class AE>
@@ -211,10 +212,10 @@ namespace numerics {
         // Swapping
         NUMERICS_INLINE
 	    void swap (sparse_matrix &m) {
-            check<external_logic>::precondition (this != &m);
-            check<bad_size>::precondition (size1_ == m.size1_);
-            check<bad_size>::precondition (size2_ == m.size2_);
-            check<bad_size>::precondition (non_zeroes_ == m.non_zeroes_);
+            check (this != &m, external_logic ());
+            check (size1_ == m.size1_, bad_size ());
+            check (size2_ == m.size2_, bad_size ());
+            check (non_zeroes_ == m.non_zeroes_, bad_size ());
             std::swap (size1_, m.size1_);
             std::swap (size2_, m.size2_);
             std::swap (non_zeroes_, m.non_zeroes_);
@@ -227,29 +228,48 @@ namespace numerics {
         }
 #endif
 
-        // Element insertion
-        NUMERICS_INLINE
-        void clear () {
-            data_.clear ();
-        }
+        // Element insertion and erasure
         NUMERICS_INLINE
         void insert (size_type i, size_type j, const_reference_type t) {
 #ifndef NUMERICS_USE_ET
             if (t == value_type ()) 
                 return;
 #endif
+            check (data_.find (functor_type::element (i, size1_, j, size2_)) == data_.end (), bad_index ());
             data_.insert (data_.end (), std::pair<size_type, value_type> (functor_type::element (i, size1_, j, size2_), t));
+        }
+        NUMERICS_INLINE
+        void erase (size_type i, size_type j) {
+            iterator_type it = data_.find (functor_type::element (i, size1_, j, size2_));
+            if (it == data_.end ())
+                return;
+            data_.erase (it);
+        }
+        NUMERICS_INLINE
+        void clear () {
+            data_.clear ();
         }
 
         class const_iterator1;
         class iterator1;
         class const_iterator2;
         class iterator2;
+#ifdef USE_MSVC
+        typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
+        typedef reverse_iterator1<iterator1, value_type, reference_type> reverse_iterator1;
+        typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
+        typedef reverse_iterator2<iterator2, value_type, reference_type> reverse_iterator2;
+#else
+        typedef reverse_iterator1<const_iterator1> const_reverse_iterator1;
+        typedef reverse_iterator1<iterator1> reverse_iterator1;
+        typedef reverse_iterator2<const_iterator2> const_reverse_iterator2;
+        typedef reverse_iterator2<iterator2> reverse_iterator2;
+#endif
 
         // Element lookup
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        const_iterator1 find1 (size_type i, size_type j) const {
+        const_iterator1 find1 (int rank, size_type i, size_type j) const {
             difference_type o (functor_type::one1 (size1_, size2_));
             if (o >= 1) {
                 const_iterator_type it (data_.lower_bound (functor_type::element (i, size1_, j, size2_)));
@@ -272,7 +292,7 @@ namespace numerics {
         }
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        iterator1 find1 (size_type i, size_type j) {
+        iterator1 find1 (int rank, size_type i, size_type j) {
             difference_type o (functor_type::one1 (size1_, size2_));
             if (o >= 1) {
                 iterator_type it (data_.lower_bound (functor_type::element (i, size1_, j, size2_)));
@@ -295,7 +315,7 @@ namespace numerics {
         }
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        const_iterator2 find2 (size_type i, size_type j) const {
+        const_iterator2 find2 (int rank, size_type i, size_type j) const {
             difference_type o (functor_type::one2 (size1_, size2_));
             if (o >= 1) {
                 const_iterator_type it (data_.lower_bound (functor_type::element (i, size1_, j, size2_)));
@@ -318,7 +338,7 @@ namespace numerics {
         }
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        iterator2 find2 (size_type i, size_type j) {
+        iterator2 find2 (int rank, size_type i, size_type j) {
             difference_type o (functor_type::one2 (size1_, size2_));
             if (o >= 1) {
                 iterator_type it (data_.lower_bound (functor_type::element (i, size1_, j, size2_)));
@@ -348,9 +368,14 @@ namespace numerics {
             public bidirectional_iterator_base<const_iterator1, value_type> {
         public:
             typedef std::bidirectional_iterator_tag iterator_category;
-#ifdef USE_GCC
+#ifndef USE_MSVC
+            typedef typename sparse_matrix::difference_type difference_type;
             typedef typename sparse_matrix::value_type value_type;
+            typedef typename sparse_matrix::value_type reference;
+            typedef typename sparse_matrix::const_pointer_type pointer;
 #endif
+            typedef const_iterator2 dual_iterator_type;
+            typedef const_reverse_iterator2 dual_reverse_iterator_type;
             typedef typename functor_type::functor1_type functor1_type;
 
             // Construction and destruction
@@ -375,7 +400,8 @@ namespace numerics {
                     functor1_type::increment (it_);
                     break;
                 default:
-                    it_ = m.find1 (index1 () + 1, j_).it_;
+                    *this = m.find1 (1, index1 () + 1, j_);
+                    break;
                 }
                 return *this;
             }
@@ -389,7 +415,8 @@ namespace numerics {
                     functor1_type::decrement (it_);
                     break;
                 default:
-                    it_ = m.find1 (index1 () - 1, j_).it_;
+                    *this = m.find1 (1, index1 () - 1, j_);
+                    break;
                 }
                 return *this;
             }
@@ -397,20 +424,28 @@ namespace numerics {
             // Dereference
             NUMERICS_INLINE
             value_type operator * () const {
-                check<bad_index>::precondition (index1 () < (*this) ().size1 ());
-                check<bad_index>::precondition (index2 () < (*this) ().size2 ());
+                check (index1 () < (*this) ().size1 (), bad_index ());
+                check (index2 () < (*this) ().size2 (), bad_index ());
                 return (*it_).second;
             }
 
             NUMERICS_INLINE
             const_iterator2 begin () const {
                 const sparse_matrix &m = (*this) ();
-                return m.find2 (index1 (), 0); 
+                return m.find2 (1, index1 (), 0); 
             }
             NUMERICS_INLINE
             const_iterator2 end () const {
                 const sparse_matrix &m = (*this) ();
-                return m.find2 (index1 (), m.size2 ()); 
+                return m.find2 (1, index1 (), m.size2 ()); 
+            }
+            NUMERICS_INLINE
+            const_reverse_iterator2 rbegin () const {
+                return const_reverse_iterator2 (end ());
+            }
+            NUMERICS_INLINE
+            const_reverse_iterator2 rend () const {
+                return const_reverse_iterator2 (begin ());
             }
 
             // Indices
@@ -425,10 +460,20 @@ namespace numerics {
                 return functor_type::index2 ((*it_).first, m.size1 (), m.size2 ());
             }
 
+            // Assignment 
+            NUMERICS_INLINE
+            const_iterator1 &operator = (const const_iterator1 &it) {
+                container_const_reference<sparse_matrix>::assign (&it ());
+                i_ = it.i_;
+                j_ = it.j_;
+                it_ = it.it_;
+                return *this;
+            }
+
             // Comparison
             NUMERICS_INLINE
             bool operator == (const const_iterator1 &it) const {
-                check<external_logic>::precondition (&(*this) () == &it ());
+                check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
             }
 
@@ -440,11 +485,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         const_iterator1 begin1 () const {
-            return find1 (0, 0);
+            return find1 (0, 0, 0);
         }
         NUMERICS_INLINE
         const_iterator1 end1 () const {
-            return find1 (size1_, 0);
+            return find1 (0, size1_, 0);
         }
 
         class iterator1:
@@ -452,9 +497,14 @@ namespace numerics {
             public bidirectional_iterator_base<iterator1, value_type> {
         public:
             typedef std::bidirectional_iterator_tag iterator_category;
-#ifdef USE_GCC
+#ifndef USE_MSVC
+            typedef typename sparse_matrix::difference_type difference_type;
             typedef typename sparse_matrix::value_type value_type;
+            typedef typename sparse_matrix::reference_type reference;
+            typedef typename sparse_matrix::pointer_type pointer;
 #endif
+            typedef iterator2 dual_iterator_type;
+            typedef reverse_iterator2 dual_reverse_iterator_type;
             typedef typename functor_type::functor1_type functor1_type;
 
             // Construction and destruction
@@ -476,7 +526,8 @@ namespace numerics {
                     functor1_type::increment (it_);
                     break;
                 default:
-                    it_ = m.find1 (index1 () + 1, j_).it_;
+                    *this = m.find1 (1, index1 () + 1, j_);
+                    break;
                 }
                 return *this;
             }
@@ -490,7 +541,8 @@ namespace numerics {
                     functor1_type::decrement (it_);
                     break;
                 default:
-                    it_ = m.find1 (index1 () - 1, j_).it_;
+                    *this = m.find1 (1, index1 () - 1, j_);
+                    break;
                 }
                 return *this;
             }
@@ -498,20 +550,28 @@ namespace numerics {
             // Dereference
             NUMERICS_INLINE
             reference_type operator * () const {
-                check<bad_index>::precondition (index1 () < (*this) ().size1 ());
-                check<bad_index>::precondition (index2 () < (*this) ().size2 ());
+                check (index1 () < (*this) ().size1 (), bad_index ());
+                check (index2 () < (*this) ().size2 (), bad_index ());
                 return (*it_).second;
             }
 
             NUMERICS_INLINE
-            iterator2 begin () {
+            iterator2 begin () const {
                 sparse_matrix &m = (*this) ();
-                return m.find2 (index1 (), 0); 
+                return m.find2 (1, index1 (), 0); 
             }
             NUMERICS_INLINE
-            iterator2 end () {
+            iterator2 end () const {
                 sparse_matrix &m = (*this) ();
-                return m.find2 (index1 (), m.size2 ()); 
+                return m.find2 (1, index1 (), m.size2 ()); 
+            }
+            NUMERICS_INLINE
+            reverse_iterator2 rbegin () const {
+                return reverse_iterator2 (end ());
+            }
+            NUMERICS_INLINE
+            reverse_iterator2 rend () const {
+                return reverse_iterator2 (begin ());
             }
 
             // Indices
@@ -526,10 +586,20 @@ namespace numerics {
                 return functor_type::index2 ((*it_).first, m.size1 (), m.size2 ());
             }
 
+            // Assignment 
+            NUMERICS_INLINE
+            iterator1 &operator = (const iterator1 &it) {
+                container_reference<sparse_matrix>::assign (&it ());
+                i_ = it.i_;
+                j_ = it.j_;
+                it_ = it.it_;
+                return *this;
+            }
+
             // Comparison
             NUMERICS_INLINE
             bool operator == (const iterator1 &it) const {
-                check<external_logic>::precondition (&(*this) () == &it ());
+                check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
             }
 
@@ -543,11 +613,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         iterator1 begin1 () {
-            return find1 (0, 0);
+            return find1 (0, 0, 0);
         }
         NUMERICS_INLINE
         iterator1 end1 () {
-            return find1 (size1_, 0);
+            return find1 (0, size1_, 0);
         }
 
         class const_iterator2:
@@ -555,9 +625,14 @@ namespace numerics {
             public bidirectional_iterator_base<const_iterator2, value_type> {
         public:
             typedef std::bidirectional_iterator_tag iterator_category;
-#ifdef USE_GCC
+#ifndef USE_MSVC
+            typedef typename sparse_matrix::difference_type difference_type;
             typedef typename sparse_matrix::value_type value_type;
+            typedef typename sparse_matrix::value_type reference;
+            typedef typename sparse_matrix::const_pointer_type pointer;
 #endif
+            typedef const_iterator1 dual_iterator_type;
+            typedef const_reverse_iterator1 dual_reverse_iterator_type;
             typedef typename functor_type::functor2_type functor2_type;
 
             // Construction and destruction
@@ -582,7 +657,8 @@ namespace numerics {
                     functor2_type::increment (it_);
                     break;
                 default:
-                    it_ = m.find2 (i_, index2 () + 1).it_;
+                    *this = m.find2 (1, i_, index2 () + 1);
+                    break;
                 }
                 return *this;
             }
@@ -596,7 +672,8 @@ namespace numerics {
                     functor2_type::decrement (it_);
                     break;
                 default:
-                    it_ = m.find2 (i_, index2 () - 1).it_;
+                    *this = m.find2 (1, i_, index2 () - 1);
+                    break;
                 }
                 return *this;
             }
@@ -604,20 +681,28 @@ namespace numerics {
             // Dereference
             NUMERICS_INLINE
             value_type operator * () const {
-                check<bad_index>::precondition (index1 () < (*this) ().size1 ());
-                check<bad_index>::precondition (index2 () < (*this) ().size2 ());
+                check (index1 () < (*this) ().size1 (), bad_index ());
+                check (index2 () < (*this) ().size2 (), bad_index ());
                 return (*it_).second;
             }
 
             NUMERICS_INLINE
             const_iterator1 begin () const {
                 const sparse_matrix &m = (*this) ();
-                return m.find1 (0, index2 ()); 
+                return m.find1 (1, 0, index2 ()); 
             }
             NUMERICS_INLINE
             const_iterator1 end () const {
                 const sparse_matrix &m = (*this) ();
-                return m.find1 (m.size1 (), index2 ()); 
+                return m.find1 (1, m.size1 (), index2 ()); 
+            }
+            NUMERICS_INLINE
+            const_reverse_iterator1 rbegin () const {
+                return const_reverse_iterator1 (end ());
+            }
+            NUMERICS_INLINE
+            const_reverse_iterator1 rend () const {
+                return const_reverse_iterator1 (begin ());
             }
 
             // Indices
@@ -632,10 +717,20 @@ namespace numerics {
                 return functor_type::index2 ((*it_).first, m.size1 (), m.size2 ());
             }
 
+            // Assignment 
+            NUMERICS_INLINE
+            const_iterator2 &operator = (const const_iterator2 &it) {
+                container_const_reference<sparse_matrix>::assign (&it ());
+                i_ = it.i_;
+                j_ = it.j_;
+                it_ = it.it_;
+                return *this;
+            }
+
             // Comparison
             NUMERICS_INLINE
             bool operator == (const const_iterator2 &it) const {
-                check<external_logic>::precondition (&(*this) () == &it ());
+                check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
             }
 
@@ -647,11 +742,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         const_iterator2 begin2 () const {
-            return find2 (0, 0);
+            return find2 (0, 0, 0);
         }
         NUMERICS_INLINE
         const_iterator2 end2 () const {
-            return find2 (0, size2_);
+            return find2 (0, 0, size2_);
         }
 
         class iterator2:
@@ -659,9 +754,14 @@ namespace numerics {
             public bidirectional_iterator_base<iterator2, value_type> {
         public:
             typedef std::bidirectional_iterator_tag iterator_category;
-#ifdef USE_GCC
+#ifndef USE_MSVC
+            typedef typename sparse_matrix::difference_type difference_type;
             typedef typename sparse_matrix::value_type value_type;
+            typedef typename sparse_matrix::reference_type reference;
+            typedef typename sparse_matrix::pointer_type pointer;
 #endif
+            typedef iterator1 dual_iterator_type;
+            typedef reverse_iterator1 dual_reverse_iterator_type;
             typedef typename functor_type::functor2_type functor2_type;
 
             // Construction and destruction
@@ -683,7 +783,8 @@ namespace numerics {
                     functor2_type::increment (it_);
                     break;
                 default:
-                    it_ = m.find2 (i_, index2 () + 1).it_;
+                    *this = m.find2 (1, i_, index2 () + 1);
+                    break;
                 }
                 return *this;
             }
@@ -697,7 +798,8 @@ namespace numerics {
                     functor2_type::decrement (it_);
                     break;
                 default:
-                    it_ = m.find2 (i_, index2 () - 1).it_;
+                    *this = m.find2 (1, i_, index2 () - 1);
+                    break;
                 }
                 return *this;
             }
@@ -705,20 +807,28 @@ namespace numerics {
             // Dereference
             NUMERICS_INLINE
             reference_type operator * () const {
-                check<bad_index>::precondition (index1 () < (*this) ().size1 ());
-                check<bad_index>::precondition (index2 () < (*this) ().size2 ());
+                check (index1 () < (*this) ().size1 (), bad_index ());
+                check (index2 () < (*this) ().size2 (), bad_index ());
                 return (*it_).second;
             }
 
             NUMERICS_INLINE
-            iterator1 begin () {
+            iterator1 begin () const {
                 sparse_matrix &m = (*this) ();
-                return m.find1 (0, index2 ()); 
+                return m.find1 (1, 0, index2 ()); 
             }
             NUMERICS_INLINE
-            iterator1 end () {
+            iterator1 end () const {
                 sparse_matrix &m = (*this) ();
-                return m.find1 (m.size1 (), index2 ()); 
+                return m.find1 (1, m.size1 (), index2 ()); 
+            }
+            NUMERICS_INLINE
+            reverse_iterator1 rbegin () const {
+                return reverse_iterator1 (end ());
+            }
+            NUMERICS_INLINE
+            reverse_iterator1 rend () const {
+                return reverse_iterator1 (begin ());
             }
 
             // Indices
@@ -733,10 +843,20 @@ namespace numerics {
                 return functor_type::index2 ((*it_).first, m.size1 (), m.size2 ());
             }
 
+            // Assignment 
+            NUMERICS_INLINE
+            iterator2 &operator = (const iterator2 &it) {
+                container_reference<sparse_matrix>::assign (&it ());
+                i_ = it.i_;
+                j_ = it.j_;
+                it_ = it.it_;
+                return *this;
+            }
+
             // Comparison
             NUMERICS_INLINE
             bool operator == (const iterator2 &it) const {
-                check<external_logic>::precondition (&(*this) () == &it ());
+                check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
             }
 
@@ -750,11 +870,49 @@ namespace numerics {
 
         NUMERICS_INLINE
         iterator2 begin2 () {
-            return find2 (0, 0);
+            return find2 (0, 0, 0);
         }
         NUMERICS_INLINE
         iterator2 end2 () {
-            return find2 (0, size2_);
+            return find2 (0, 0, size2_);
+        }
+
+        // Reverse iterators
+
+        NUMERICS_INLINE
+        const_reverse_iterator1 rbegin1 () const {
+            return const_reverse_iterator1 (end1 ());
+        }
+        NUMERICS_INLINE
+        const_reverse_iterator1 rend1 () const {
+            return const_reverse_iterator1 (begin1 ());
+        }
+
+        NUMERICS_INLINE
+        reverse_iterator1 rbegin1 () {
+            return reverse_iterator1 (end1 ());
+        }
+        NUMERICS_INLINE
+        reverse_iterator1 rend1 () {
+            return reverse_iterator1 (begin1 ());
+        }
+
+        NUMERICS_INLINE
+        const_reverse_iterator2 rbegin2 () const {
+            return const_reverse_iterator2 (end2 ());
+        }
+        NUMERICS_INLINE
+        const_reverse_iterator2 rend2 () const {
+            return const_reverse_iterator2 (begin2 ());
+        }
+
+        NUMERICS_INLINE
+        reverse_iterator2 rbegin2 () {
+            return reverse_iterator2 (end2 ());
+        }
+        NUMERICS_INLINE
+        reverse_iterator2 rend2 () {
+            return reverse_iterator2 (begin2 ());
         }
 
     private:
@@ -774,6 +932,7 @@ namespace numerics {
         typedef T value_type;
         typedef const T &const_reference_type;
         typedef T &reference_type;
+        typedef const T *const_pointer_type;
         typedef T *pointer_type;
         typedef A array_type;
         typedef F functor_type;
@@ -792,7 +951,7 @@ namespace numerics {
         typedef typename A::iterator vector_iterator_type;
         typedef typename A::value_type::second_type::const_iterator const_iterator_type;
         typedef typename A::value_type::second_type::iterator iterator_type;
-        typedef sparse_tag storage_category;
+        typedef struct sparse_tag storage_category;
         typedef typename F::orientation_category orientation_category;
 
         // Construction and destruction
@@ -802,7 +961,7 @@ namespace numerics {
             data_ [functor_type::size1 (size1_, size2_)] = vector_data_value_type ();
         }
         NUMERICS_INLINE
-        sparse_vector_of_sparse_vector (size_type size1, size_type size2, size_type non_zeroes): 
+        sparse_vector_of_sparse_vector (size_type size1, size_type size2, size_type non_zeroes = 0): 
             size1_ (size1), size2_ (size2), non_zeroes_ (non_zeroes), data_ () {
             data_ [functor_type::size1 (size1_, size2_)] = vector_data_value_type ();
         }
@@ -811,14 +970,14 @@ namespace numerics {
             size1_ (m.size1_), size2_ (m.size2_), non_zeroes_ (m.non_zeroes_), data_ (m.data_) {}
         template<class AE>
         NUMERICS_INLINE
-        sparse_vector_of_sparse_vector (size_type non_zeroes, const matrix_expression<AE> &ae): 
+        sparse_vector_of_sparse_vector (const matrix_expression<AE> &ae, size_type non_zeroes = 0): 
             size1_ (ae ().size1 ()), size2_ (ae ().size2 ()), non_zeroes_ (non_zeroes), data_ () { 
             matrix_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
         }
 
         // Resizing
         NUMERICS_INLINE
-        void resize (size_type size1, size_type size2, size_type non_zeroes) {
+        void resize (size_type size1, size_type size2, size_type non_zeroes = 0) {
             size1_ = size1;
             size2_ = size2;
             non_zeroes_ = non_zeroes;
@@ -896,9 +1055,9 @@ namespace numerics {
         // Assignment
         NUMERICS_INLINE
         sparse_vector_of_sparse_vector &operator = (const sparse_vector_of_sparse_vector &m) { 
-            check<bad_size>::precondition (size1_ == m.size1_);
-            check<bad_size>::precondition (size2_ == m.size2_);
-            check<bad_size>::precondition (non_zeroes_ == m.non_zeroes_);
+            check (size1_ == m.size1_, bad_size ());
+            check (size2_ == m.size2_, bad_size ());
+            check (non_zeroes_ == m.non_zeroes_, bad_size ());
             data_ = m.data_;
             return *this;
         }
@@ -911,9 +1070,9 @@ namespace numerics {
         NUMERICS_INLINE
         sparse_vector_of_sparse_vector &operator = (const matrix_expression<AE> &ae) { 
 #ifndef USE_GCC
-            return assign_temporary (self_type (non_zeroes_, ae));
+            return assign_temporary (self_type (ae, non_zeroes_));
 #else
-            return assign (self_type (non_zeroes_, ae));
+            return assign (self_type (ae, non_zeroes_));
 #endif
         }
         template<class AE>
@@ -926,9 +1085,9 @@ namespace numerics {
         NUMERICS_INLINE
         sparse_vector_of_sparse_vector& operator += (const matrix_expression<AE> &ae) {
 #ifndef USE_GCC
-            return assign_temporary (self_type (non_zeroes_, *this + ae));
+            return assign_temporary (self_type (*this + ae, non_zeroes_));
 #else
-            return assign (self_type (non_zeroes_, *this + ae));
+            return assign (self_type (*this + ae, non_zeroes_));
 #endif
         }
         template<class AE>
@@ -941,9 +1100,9 @@ namespace numerics {
         NUMERICS_INLINE
         sparse_vector_of_sparse_vector& operator -= (const matrix_expression<AE> &ae) {
 #ifndef USE_GCC
-            return assign_temporary (self_type (non_zeroes_, *this - ae));
+            return assign_temporary (self_type (*this - ae, non_zeroes_));
 #else
-            return assign (self_type (non_zeroes_, *this - ae));
+            return assign (self_type (*this - ae, non_zeroes_));
 #endif
         }
         template<class AE>
@@ -962,10 +1121,10 @@ namespace numerics {
         // Swapping
         NUMERICS_INLINE
 	    void swap (sparse_vector_of_sparse_vector &m) {
-            check<external_logic>::precondition (this != &m);
-            check<bad_size>::precondition (size1_ == m.size1_);
-            check<bad_size>::precondition (size2_ == m.size2_);
-            check<bad_size>::precondition (non_zeroes_ == m.non_zeroes_);
+            check (this != &m, external_logic ());
+            check (size1_ == m.size1_, bad_size ());
+            check (size2_ == m.size2_, bad_size ());
+            check (non_zeroes_ == m.non_zeroes_, bad_size ());
             std::swap (size1_, m.size1_);
             std::swap (size2_, m.size2_);
             std::swap (non_zeroes_, m.non_zeroes_);
@@ -978,11 +1137,7 @@ namespace numerics {
         }
 #endif
 
-        // Element insertion
-        NUMERICS_INLINE
-        void clear () {
-            data_.clear ();
-        }
+        // Element insertion and erasure
         NUMERICS_INLINE
         void insert (size_type i, size_type j, const_reference_type t) {
 #ifndef NUMERICS_USE_ET
@@ -990,23 +1145,49 @@ namespace numerics {
                 return;
 #endif
             vector_iterator_type itv (data_.find (functor_type::element1 (i, size1_, j, size2_)));
-            if (itv == data_.end () || (*itv).first != functor_type::element1 (i, size1_, j, size2_)) 
+            if (itv == data_.end ()) 
                 itv = data_.insert (data_.end (), std::pair<size_type, vector_data_value_type> (functor_type::element1 (i, size1_, j, size2_), vector_data_value_type ()));
+            check ((*itv).second.find (functor_type::element2 (i, size1_, j, size2_)) == (*itv).second.end (), bad_index ());
             (*itv).second.insert ((*itv).second.end (), std::pair<size_type, value_type> (functor_type::element2 (i, size1_, j, size2_), t));
+        }
+        NUMERICS_INLINE
+        void erase (size_type i, size_type j) {
+            vector_iterator_type itv (data_.find (functor_type::element1 (i, size1_, j, size2_)));
+            if (itv == data_.end ()) 
+                return;
+            iterator_type it ((*itv).second.find (functor_type::element2 (i, size1_, j, size2_)));
+            if (it == (*itv).second.end ()) 
+                return;
+            (*itv).second.erase (it);
+        }
+        NUMERICS_INLINE
+        void clear () {
+            data_.clear ();
         }
 
         class const_iterator1;
         class iterator1;
         class const_iterator2;
         class iterator2;
+#ifdef USE_MSVC
+        typedef reverse_iterator1<const_iterator1, value_type, value_type> const_reverse_iterator1;
+        typedef reverse_iterator1<iterator1, value_type, reference_type> reverse_iterator1;
+        typedef reverse_iterator2<const_iterator2, value_type, value_type> const_reverse_iterator2;
+        typedef reverse_iterator2<iterator2, value_type, reference_type> reverse_iterator2;
+#else
+        typedef reverse_iterator1<const_iterator1> const_reverse_iterator1;
+        typedef reverse_iterator1<iterator1> reverse_iterator1;
+        typedef reverse_iterator2<const_iterator2> const_reverse_iterator2;
+        typedef reverse_iterator2<iterator2> reverse_iterator2;
+#endif
 
         // Element lookup
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        const_iterator1 find1 (size_type i, size_type j) const {
+        const_iterator1 find1 (int rank, size_type i, size_type j) const {
             difference_type o (functor_type::one1 (size1_, size2_));
             if (o >= 1) {
-                check<internal_logic>::precondition (data_.begin () != data_.end ());
+                check (data_.begin () != data_.end (), internal_logic ());
                 for (;;) {
                     vector_const_iterator_type itv (data_.lower_bound (functor_type::element1 (i, size1_, j, size2_)));
                     vector_const_iterator_type itv_end (data_.end ());
@@ -1023,7 +1204,7 @@ namespace numerics {
                     i = functor_type::index1 ((*itv).first, (*it).first);
                 }
             } else if (o <= -1) {
-                check<internal_logic>::precondition (data_.begin () != data_.end ());
+                check (data_.begin () != data_.end (), internal_logic ());
                 for (;;) {
                     vector_const_iterator_type itv (data_.upper_bound (functor_type::element1 (i, size1_, j, size2_)));
                     vector_const_iterator_type itv_end (data_.end ());
@@ -1044,10 +1225,10 @@ namespace numerics {
         }
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        iterator1 find1 (size_type i, size_type j) {
+        iterator1 find1 (int rank, size_type i, size_type j) {
             difference_type o (functor_type::one1 (size1_, size2_));
             if (o >= 1) {
-                check<internal_logic>::precondition (data_.begin () != data_.end ());
+                check (data_.begin () != data_.end (), internal_logic ());
                 for (;;) {
                     vector_iterator_type itv (data_.lower_bound (functor_type::element1 (i, size1_, j, size2_)));
                     vector_iterator_type itv_end (data_.end ());
@@ -1064,7 +1245,7 @@ namespace numerics {
                     i = functor_type::index1 ((*itv).first, (*it).first);
                 }
             } else if (o <= -1) {
-                check<internal_logic>::precondition (data_.begin () != data_.end ());
+                check (data_.begin () != data_.end (), internal_logic ());
                 for (;;) {
                     vector_iterator_type itv (data_.upper_bound (functor_type::element1 (i, size1_, j, size2_)));
                     vector_iterator_type itv_end (data_.end ());
@@ -1085,10 +1266,10 @@ namespace numerics {
         }
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        const_iterator2 find2 (size_type i, size_type j) const {
+        const_iterator2 find2 (int rank, size_type i, size_type j) const {
             difference_type o (functor_type::one2 (size1_, size2_));
             if (o >= 1) {
-                check<internal_logic>::precondition (data_.begin () != data_.end ());
+                check (data_.begin () != data_.end (), internal_logic ());
                 for (;;) {
                     vector_const_iterator_type itv (data_.lower_bound (functor_type::element1 (i, size1_, j, size2_)));
                     vector_const_iterator_type itv_end (data_.end ());
@@ -1105,7 +1286,7 @@ namespace numerics {
                     j = functor_type::index2 ((*itv).first, (*it).first);
                 }
             } else if (o <= -1) {
-                check<internal_logic>::precondition (data_.begin () != data_.end ());
+                check (data_.begin () != data_.end (), internal_logic ());
                 for (;;) {
                     vector_const_iterator_type itv (data_.upper_bound (functor_type::element1 (i, size1_, j, size2_)));
                     vector_const_iterator_type itv_end (data_.end ());
@@ -1126,10 +1307,10 @@ namespace numerics {
         }
         // This function seems to be big. So we do not let the compiler inline it.
         // NUMERICS_INLINE
-        iterator2 find2 (size_type i, size_type j) {
+        iterator2 find2 (int rank, size_type i, size_type j) {
             difference_type o (functor_type::one2 (size1_, size2_));
             if (o >= 1) {
-                check<internal_logic>::precondition (data_.begin () != data_.end ());
+                check (data_.begin () != data_.end (), internal_logic ());
                 for (;;) {
                     vector_iterator_type itv (data_.lower_bound (functor_type::element1 (i, size1_, j, size2_)));
                     vector_iterator_type itv_end (data_.end ());
@@ -1146,7 +1327,7 @@ namespace numerics {
                     j = functor_type::index2 ((*itv).first, (*it).first);
                 }
             } else if (o <= -1) {
-                check<internal_logic>::precondition (data_.begin () != data_.end ());
+                check (data_.begin () != data_.end (), internal_logic ());
                 for (;;) {
                     vector_iterator_type itv (data_.upper_bound (functor_type::element1 (i, size1_, j, size2_)));
                     vector_iterator_type itv_end (data_.end ());
@@ -1174,10 +1355,16 @@ namespace numerics {
             public bidirectional_iterator_base<const_iterator1, value_type> {
         public:
             typedef std::bidirectional_iterator_tag iterator_category;
-#ifdef USE_GCC
+#ifndef USE_MSVC
+            typedef typename sparse_vector_of_sparse_vector::difference_type difference_type;
             typedef typename sparse_vector_of_sparse_vector::value_type value_type;
+            typedef typename sparse_vector_of_sparse_vector::value_type reference;
+            typedef typename sparse_vector_of_sparse_vector::const_pointer_type pointer;
 #endif
+            typedef const_iterator2 dual_iterator_type;
+            typedef const_reverse_iterator2 dual_reverse_iterator_type;
             typedef typename functor_type::functor1_type functor1_type;
+            typedef typename functor_type::functor2_type functor2_type;
 
             // Construction and destruction
             NUMERICS_INLINE
@@ -1201,9 +1388,16 @@ namespace numerics {
                     functor1_type::increment (it_);
                     break;
                 default:
-                    const_iterator1 it (m.find1 (index1 () + 1, j_));
-                    itv_ = it.itv_;
-                    it_ = it.it_;
+                    i_ = index1 ();
+                    functor2_type::increment (itv_);
+                    if (itv_ == m.end1 ().itv_) 
+                        *this = m.find1 (1, i_ + 1, j_);
+                    else {
+                        it_ = (*itv_).second.begin ();
+                        if (it_ == (*itv_).second.end () || index2 () < j_) 
+                            *this = m.find1 (1, i_ + 1, j_);
+                    } 
+                    break;
                 }
                 return *this;
             }
@@ -1217,9 +1411,16 @@ namespace numerics {
                     functor1_type::decrement (it_);
                     break;
                 default:
-                    const_iterator1 it (m.find1 (index1 () - 1, j_));
-                    itv_ = it.itv_;
-                    it_ = it.it_;
+                    i_ = index1 ();
+                    functor2_type::decrement (itv_);
+                    if (itv_ == m.end1 ().itv_) 
+                        *this = m.find1 (1, i_ - 1, j_);
+                    else {
+                        it_ = (*itv_).second.begin ();
+                        if (it_ == (*itv_).second.end () || index2 () < j_) 
+                            *this = m.find1 (1, i_ - 1, j_);
+                    } 
+                    break;
                 }
                 return *this;
             }
@@ -1227,20 +1428,28 @@ namespace numerics {
             // Dereference
             NUMERICS_INLINE
             value_type operator * () const {
-                check<bad_index>::precondition (index1 () < (*this) ().size1 ());
-                check<bad_index>::precondition (index2 () < (*this) ().size2 ());
+                check (index1 () < (*this) ().size1 (), bad_index ());
+                check (index2 () < (*this) ().size2 (), bad_index ());
                 return (*it_).second;
             }
 
             NUMERICS_INLINE
             const_iterator2 begin () const {
                 const sparse_vector_of_sparse_vector &m = (*this) ();
-                return m.find2 (index1 (), 0); 
+                return m.find2 (1, index1 (), 0); 
             }
             NUMERICS_INLINE
             const_iterator2 end () const {
                 const sparse_vector_of_sparse_vector &m = (*this) ();
-                return m.find2 (index1 (), m.size2 ()); 
+                return m.find2 (1, index1 (), m.size2 ()); 
+            }
+            NUMERICS_INLINE
+            const_reverse_iterator2 rbegin () const {
+                return const_reverse_iterator2 (end ());
+            }
+            NUMERICS_INLINE
+            const_reverse_iterator2 rend () const {
+                return const_reverse_iterator2 (begin ());
             }
 
             // Indices
@@ -1255,10 +1464,21 @@ namespace numerics {
                 return functor_type::index2 ((*itv_).first, (*it_).first);
             }
 
+            // Assignment 
+            NUMERICS_INLINE
+            const_iterator1 &operator = (const const_iterator1 &it) {
+                container_const_reference<sparse_vector_of_sparse_vector>::assign (&it ());
+                i_ = it.i_;
+                j_ = it.j_;
+                itv_ = it.itv_;
+                it_ = it.it_;
+                return *this;
+            }
+
             // Comparison
             NUMERICS_INLINE
             bool operator == (const const_iterator1 &it) const {
-                check<external_logic>::precondition (&(*this) () == &it ());
+                check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
             }
 
@@ -1271,11 +1491,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         const_iterator1 begin1 () const {
-            return find1 (0, 0);
+            return find1 (0, 0, 0);
         }
         NUMERICS_INLINE
         const_iterator1 end1 () const {
-            return find1 (size1_, 0);
+            return find1 (0, size1_, 0);
         }
 
         class iterator1:
@@ -1283,10 +1503,16 @@ namespace numerics {
             public bidirectional_iterator_base<iterator1, value_type> {
         public:
             typedef std::bidirectional_iterator_tag iterator_category;
-#ifdef USE_GCC
+#ifndef USE_MSVC
+            typedef typename sparse_vector_of_sparse_vector::difference_type difference_type;
             typedef typename sparse_vector_of_sparse_vector::value_type value_type;
+            typedef typename sparse_vector_of_sparse_vector::reference_type reference;
+            typedef typename sparse_vector_of_sparse_vector::pointer_type pointer;
 #endif
+            typedef iterator2 dual_iterator_type;
+            typedef reverse_iterator2 dual_reverse_iterator_type;
             typedef typename functor_type::functor1_type functor1_type;
+            typedef typename functor_type::functor2_type functor2_type;
 
             // Construction and destruction
             NUMERICS_INLINE
@@ -1307,9 +1533,16 @@ namespace numerics {
                     functor1_type::increment (it_);
                     break;
                 default:
-                    iterator1 it (m.find1 (index1 () + 1, j_));
-                    itv_ = it.itv_;
-                    it_ = it.it_;
+                    i_ = index1 ();
+                    functor2_type::increment (itv_);
+                    if (itv_ == m.end1 ().itv_) 
+                        *this = m.find1 (1, i_ + 1, j_);
+                    else {
+                        it_ = (*itv_).second.begin ();
+                        if (it_ == (*itv_).second.end () || index2 () < j_) 
+                            *this = m.find1 (1, i_ + 1, j_);
+                    } 
+                    break;
                 }
                 return *this;
             }
@@ -1323,9 +1556,16 @@ namespace numerics {
                     functor1_type::decrement (it_);
                     break;
                 default:
-                    iterator1 it (m.find1 (index1 () - 1, j_));
-                    itv_ = it.itv_;
-                    it_ = it.it_;
+                    i_ = index1 ();
+                    functor2_type::decrement (itv_);
+                    if (itv_ == m.end1 ().itv_) 
+                        *this = m.find1 (1, i_ - 1, j_);
+                    else {
+                        it_ = (*itv_).second.begin ();
+                        if (it_ == (*itv_).second.end () || index2 () < j_) 
+                            *this = m.find1 (1, i_ - 1, j_);
+                    } 
+                    break;
                 }
                 return *this;
             }
@@ -1333,20 +1573,28 @@ namespace numerics {
             // Dereference
             NUMERICS_INLINE
             reference_type operator * () const {
-                check<bad_index>::precondition (index1 () < (*this) ().size1 ());
-                check<bad_index>::precondition (index2 () < (*this) ().size2 ());
+                check (index1 () < (*this) ().size1 (), bad_index ());
+                check (index2 () < (*this) ().size2 (), bad_index ());
                 return (*it_).second;
             }
 
             NUMERICS_INLINE
-            iterator2 begin () {
+            iterator2 begin () const {
                 sparse_vector_of_sparse_vector &m = (*this) ();
-                return m.find2 (index1 (), 0); 
+                return m.find2 (1, index1 (), 0); 
             }
             NUMERICS_INLINE
-            iterator2 end () {
+            iterator2 end () const {
                 sparse_vector_of_sparse_vector &m = (*this) ();
-                return m.find2 (index1 (), m.size2 ()); 
+                return m.find2 (1, index1 (), m.size2 ()); 
+            }
+            NUMERICS_INLINE
+            reverse_iterator2 rbegin () const {
+                return reverse_iterator2 (end ());
+            }
+            NUMERICS_INLINE
+            reverse_iterator2 rend () const {
+                return reverse_iterator2 (begin ());
             }
 
             // Indices
@@ -1361,10 +1609,21 @@ namespace numerics {
                 return functor_type::index2 ((*itv_).first, (*it_).first);
             }
 
+            // Assignment 
+            NUMERICS_INLINE
+            iterator1 &operator = (const iterator1 &it) {
+                container_reference<sparse_vector_of_sparse_vector>::assign (&it ());
+                i_ = it.i_;
+                j_ = it.j_;
+                itv_ = it.itv_;
+                it_ = it.it_;
+                return *this;
+            }
+
             // Comparison
             NUMERICS_INLINE
             bool operator == (const iterator1 &it) const {
-                check<external_logic>::precondition (&(*this) () == &it ());
+                check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
             }
 
@@ -1379,11 +1638,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         iterator1 begin1 () {
-            return find1 (0, 0);
+            return find1 (0, 0, 0);
         }
         NUMERICS_INLINE
         iterator1 end1 () {
-            return find1 (size1_, 0);
+            return find1 (0, size1_, 0);
         }
 
         class const_iterator2:
@@ -1391,9 +1650,15 @@ namespace numerics {
             public bidirectional_iterator_base<const_iterator2, value_type> {
         public:
             typedef std::bidirectional_iterator_tag iterator_category;
-#ifdef USE_GCC
+#ifndef USE_MSVC
+            typedef typename sparse_vector_of_sparse_vector::difference_type difference_type;
             typedef typename sparse_vector_of_sparse_vector::value_type value_type;
+            typedef typename sparse_vector_of_sparse_vector::value_type reference;
+            typedef typename sparse_vector_of_sparse_vector::const_pointer_type pointer;
 #endif
+            typedef const_iterator1 dual_iterator_type;
+            typedef const_reverse_iterator1 dual_reverse_iterator_type;
+            typedef typename functor_type::functor1_type functor1_type;
             typedef typename functor_type::functor2_type functor2_type;
 
             // Construction and destruction
@@ -1418,9 +1683,16 @@ namespace numerics {
                     functor2_type::increment (it_);
                     break;
                 default:
-                    const_iterator2 it (m.find2 (i_, index2 () + 1));
-                    itv_ = it.itv_;
-                    it_ = it.it_;
+                    j_ = index2 ();
+                    functor1_type::increment (itv_);
+                    if (itv_ == m.end2 ().itv_) 
+                        *this = m.find2 (1, i_, j_ + 1);
+                    else {
+                        it_ = (*itv_).second.begin ();
+                        if (it_ == (*itv_).second.end () || index1 () < i_) 
+                            *this = m.find2 (1, i_, j_ + 1);
+                    } 
+                    break;
                 }
                 return *this;
             }
@@ -1434,9 +1706,16 @@ namespace numerics {
                     functor2_type::decrement (it_);
                     break;
                 default:
-                    const_iterator2 it (m.find2 (i_, index2 () - 1));
-                    itv_ = it.itv_;
-                    it_ = it.it_;
+                    j_ = index2 ();
+                    functor1_type::decrement (itv_);
+                    if (itv_ == m.end2 ().itv_) 
+                        *this = m.find2 (1, i_, j_ - 1);
+                    else {
+                        it_ = (*itv_).second.begin ();
+                        if (it_ == (*itv_).second.end () || index1 () < i_) 
+                            *this = m.find2 (1, i_, j_ - 1);
+                    } 
+                    break;
                 }
                 return *this;
             }
@@ -1444,20 +1723,28 @@ namespace numerics {
             // Dereference
             NUMERICS_INLINE
             value_type operator * () const {
-                check<bad_index>::precondition (index1 () < (*this) ().size1 ());
-                check<bad_index>::precondition (index2 () < (*this) ().size2 ());
+                check (index1 () < (*this) ().size1 (), bad_index ());
+                check (index2 () < (*this) ().size2 (), bad_index ());
                 return (*it_).second;
             }
 
             NUMERICS_INLINE
             const_iterator1 begin () const {
                 const sparse_vector_of_sparse_vector &m = (*this) ();
-                return m.find1 (0, index2 ()); 
+                return m.find1 (1, 0, index2 ()); 
             }
             NUMERICS_INLINE
             const_iterator1 end () const {
                 const sparse_vector_of_sparse_vector &m = (*this) ();
-                return m.find1 (m.size1 (), index2 ()); 
+                return m.find1 (1, m.size1 (), index2 ()); 
+            }
+            NUMERICS_INLINE
+            const_reverse_iterator1 rbegin () const {
+                return const_reverse_iterator1 (end ());
+            }
+            NUMERICS_INLINE
+            const_reverse_iterator1 rend () const {
+                return const_reverse_iterator1 (begin ());
             }
 
             // Indices
@@ -1472,10 +1759,21 @@ namespace numerics {
                 return functor_type::index2 ((*itv_).first, (*it_).first);
             }
 
+            // Assignment 
+            NUMERICS_INLINE
+            const_iterator2 &operator = (const const_iterator2 &it) {
+                container_const_reference<sparse_vector_of_sparse_vector>::assign (&it ());
+                i_ = it.i_;
+                j_ = it.j_;
+                itv_ = it.itv_;
+                it_ = it.it_;
+                return *this;
+            }
+
             // Comparison
             NUMERICS_INLINE
             bool operator == (const const_iterator2 &it) const {
-                check<external_logic>::precondition (&(*this) () == &it ());
+                check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
             }
 
@@ -1488,11 +1786,11 @@ namespace numerics {
 
         NUMERICS_INLINE
         const_iterator2 begin2 () const {
-            return find2 (0, 0);
+            return find2 (0, 0, 0);
         }
         NUMERICS_INLINE
         const_iterator2 end2 () const {
-            return find2 (0, size2_);
+            return find2 (0, 0, size2_);
         }
 
         class iterator2:
@@ -1500,9 +1798,15 @@ namespace numerics {
             public bidirectional_iterator_base<iterator2, value_type> {
         public:
             typedef std::bidirectional_iterator_tag iterator_category;
-#ifdef USE_GCC
+#ifndef USE_MSVC
+            typedef typename sparse_vector_of_sparse_vector::difference_type difference_type;
             typedef typename sparse_vector_of_sparse_vector::value_type value_type;
+            typedef typename sparse_vector_of_sparse_vector::reference_type reference;
+            typedef typename sparse_vector_of_sparse_vector::pointer_type pointer;
 #endif
+            typedef iterator1 dual_iterator_type;
+            typedef reverse_iterator1 dual_reverse_iterator_type;
+            typedef typename functor_type::functor1_type functor1_type;
             typedef typename functor_type::functor2_type functor2_type;
 
             // Construction and destruction
@@ -1524,9 +1828,16 @@ namespace numerics {
                     functor2_type::increment (it_);
                     break;
                 default:
-                    iterator2 it (m.find2 (i_, index2 () + 1));
-                    itv_ = it.itv_;
-                    it_ = it.it_;
+                    j_ = index2 ();
+                    functor1_type::increment (itv_);
+                    if (itv_ == m.end2 ().itv_)
+                        *this = m.find2 (1, i_, j_ + 1);
+                    else {
+                        it_ = (*itv_).second.begin ();
+                        if (it_ == (*itv_).second.end () || index1 () < i_) 
+                            *this = m.find2 (1, i_, j_ + 1);
+                    } 
+                    break;
                 }
                 return *this;
             }
@@ -1540,9 +1851,16 @@ namespace numerics {
                     functor2_type::decrement (it_);
                     break;
                 default:
-                    iterator2 it (m.find2 (i_, index2 () - 1));
-                    itv_ = it.itv_;
-                    it_ = it.it_;
+                    j_ = index2 ();
+                    functor1_type::decrement (itv_);
+                    if (itv_ == m.end2 ().itv_) 
+                        *this = m.find2 (1, i_, j_ - 1);
+                    else {
+                        it_ = (*itv_).second.begin ();
+                        if (it_ == (*itv_).second.end () || index1 () < i_) 
+                            *this = m.find2 (1, i_, j_ - 1);
+                    } 
+                    break;
                 }
                 return *this;
             }
@@ -1550,20 +1868,28 @@ namespace numerics {
             // Dereference
             NUMERICS_INLINE
             reference_type operator * () const {
-                check<bad_index>::precondition (index1 () < (*this) ().size1 ());
-                check<bad_index>::precondition (index2 () < (*this) ().size2 ());
+                check (index1 () < (*this) ().size1 (), bad_index ());
+                check (index2 () < (*this) ().size2 (), bad_index ());
                 return (*it_).second;
             }
 
             NUMERICS_INLINE
-            iterator1 begin () {
+            iterator1 begin () const {
                 sparse_vector_of_sparse_vector &m = (*this) ();
-                return m.find1 (0, index2 ()); 
+                return m.find1 (1, 0, index2 ()); 
             }
             NUMERICS_INLINE
-            iterator1 end () {
+            iterator1 end () const {
                 sparse_vector_of_sparse_vector &m = (*this) ();
-                return m.find1 (m.size1 (), index2 ()); 
+                return m.find1 (1, m.size1 (), index2 ()); 
+            }
+            NUMERICS_INLINE
+            reverse_iterator1 rbegin () const {
+                return reverse_iterator1 (end ());
+            }
+            NUMERICS_INLINE
+            reverse_iterator1 rend () const {
+                return reverse_iterator1 (begin ());
             }
 
             // Indices
@@ -1578,10 +1904,21 @@ namespace numerics {
                 return functor_type::index2 ((*itv_).first, (*it_).first);
             }
 
+            // Assignment 
+            NUMERICS_INLINE
+            iterator2 &operator = (const iterator2 &it) {
+                container_reference<sparse_vector_of_sparse_vector>::assign (&it ());
+                i_ = it.i_;
+                j_ = it.j_;
+                itv_ = it.itv_;
+                it_ = it.it_;
+                return *this;
+            }
+
             // Comparison
             NUMERICS_INLINE
             bool operator == (const iterator2 &it) const {
-                check<external_logic>::precondition (&(*this) () == &it ());
+                check (&(*this) () == &it (), external_logic ());
                 return it_ == it.it_;
             }
 
@@ -1596,11 +1933,49 @@ namespace numerics {
 
         NUMERICS_INLINE
         iterator2 begin2 () {
-            return find2 (0, 0);
+            return find2 (0, 0, 0);
         }
         NUMERICS_INLINE
         iterator2 end2 () {
-            return find2 (0, size2_);
+            return find2 (0, 0, size2_);
+        }
+
+        // Reverse iterators
+
+        NUMERICS_INLINE
+        const_reverse_iterator1 rbegin1 () const {
+            return const_reverse_iterator1 (end1 ());
+        }
+        NUMERICS_INLINE
+        const_reverse_iterator1 rend1 () const {
+            return const_reverse_iterator1 (begin1 ());
+        }
+
+        NUMERICS_INLINE
+        reverse_iterator1 rbegin1 () {
+            return reverse_iterator1 (end1 ());
+        }
+        NUMERICS_INLINE
+        reverse_iterator1 rend1 () {
+            return reverse_iterator1 (begin1 ());
+        }
+
+        NUMERICS_INLINE
+        const_reverse_iterator2 rbegin2 () const {
+            return const_reverse_iterator2 (end2 ());
+        }
+        NUMERICS_INLINE
+        const_reverse_iterator2 rend2 () const {
+            return const_reverse_iterator2 (begin2 ());
+        }
+
+        NUMERICS_INLINE
+        reverse_iterator2 rbegin2 () {
+            return reverse_iterator2 (end2 ());
+        }
+        NUMERICS_INLINE
+        reverse_iterator2 rend2 () {
+            return reverse_iterator2 (begin2 ());
         }
 
     private:
@@ -1616,14 +1991,16 @@ namespace numerics {
                                         T2, E2> {
         typedef sparse_column_major_tag dispatch_category;
         typedef NUMERICS_TYPENAME promote_traits<T1, T2>::promote_type promote_type;
-        typedef vector<promote_type> result_type;
+        typedef sparse_vector<promote_type> result_type;
     };
 #endif
 
     template<class E1, class E2>
-    NUMERICS_INLINE
+    // This function seems to be big. So we do not let the compiler inline it.
+    // NUMERICS_INLINE
 #ifdef USE_MSVC
-    vector<typename promote_traits<typename E1::value_type, typename E2::value_type>::promote_type>
+    sparse_vector<typename promote_traits<typename E1::value_type, 
+                                          typename E2::value_type>::promote_type>
 #else
     typename matrix_vector_binary1_traits<typename E1::value_type, E1, 
                                           typename E2::value_type, E2>::result_type
@@ -1632,7 +2009,8 @@ namespace numerics {
           const vector_expression<E2> &e2, 
           sparse_column_major_tag) {
 #ifdef USE_MSVC
-        typedef vector<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type, NUMERICS_TYPENAME E2::value_type>::promote_type> result_type;
+        typedef sparse_vector<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type, 
+                                                               NUMERICS_TYPENAME E2::value_type>::promote_type> result_type;
 #else
         typedef NUMERICS_TYPENAME matrix_vector_binary1_traits<NUMERICS_TYPENAME E1::value_type, E1, 
                                                                NUMERICS_TYPENAME E2::value_type, E2>::result_type result_type;
@@ -1640,7 +2018,7 @@ namespace numerics {
         typedef NUMERICS_TYPENAME result_type::size_type size_type;
         typedef NUMERICS_TYPENAME result_type::value_type value_type;
 
-        check<bad_size>::precondition (e1 ().size2 () == e2 ().size ());
+        check (e1 ().size2 () == e2 ().size (), bad_size ());
         result_type r (e1 ().size2 ());
         r.clear ();
         typename E1::const_iterator2 it2e1 (e1 ().begin2 ());
@@ -1667,9 +2045,11 @@ namespace numerics {
     }
 
     template<class E1, class E2>
-    NUMERICS_INLINE
+    // This function seems to be big. So we do not let the compiler inline it.
+    // NUMERICS_INLINE
 #ifdef USE_MSVC
-    vector<typename type_traits<typename promote_traits<typename E1::value_type, typename E2::value_type>::promote_type>::precision_type>
+    sparse_vector<typename type_traits<typename promote_traits<typename E1::value_type, 
+                                                               typename E2::value_type>::promote_type>::precision_type>
 #else
     typename matrix_vector_binary1_traits<typename type_traits<typename E1::value_type>::precision_type, E1, 
                                           typename type_traits<typename E2::value_type>::precision_type, E2>::result_type
@@ -1678,7 +2058,8 @@ namespace numerics {
                const vector_expression<E2> &e2,
                sparse_column_major_tag) {        
 #ifdef USE_MSVC
-        typedef vector<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type, NUMERICS_TYPENAME E2::value_type>::promote_type>::precision_type> result_type;
+        typedef sparse_vector<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type, 
+                                                                                             NUMERICS_TYPENAME E2::value_type>::promote_type>::precision_type> result_type;
 #else
         typedef NUMERICS_TYPENAME matrix_vector_binary1_traits<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E1::value_type>::precision_type, E1, 
                                                                NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E2::value_type>::precision_type, E2>::result_type result_type;
@@ -1686,7 +2067,7 @@ namespace numerics {
         typedef NUMERICS_TYPENAME result_type::size_type size_type;
         typedef NUMERICS_TYPENAME result_type::value_type value_type;
 
-        check<bad_size>::precondition (e1 ().size2 () == e2 ().size ());
+        check (e1 ().size2 () == e2 ().size (), bad_size ());
         result_type r (e1 ().size2 ());       
         r.clear ();
         typename E1::const_iterator2 it2e1 (e1 ().begin2 ());
@@ -1708,6 +2089,318 @@ namespace numerics {
                 i = std::min (it1e1.index1 (), ite2.index ());
             }
             ++ it2e1;
+        }
+        return r;
+    }
+
+#ifndef USE_MSVC
+    template<class T1, class E1, class T2, class A2>
+    struct matrix_vector_binary2_traits<T1, E1,
+                                        T2, sparse_matrix<T2, column_major<>, A2> > {
+        typedef sparse_row_major_tag dispatch_category;
+        typedef NUMERICS_TYPENAME promote_traits<T1, T2>::promote_type promote_type;
+        typedef sparse_vector<promote_type> result_type;
+    };
+#endif
+
+    template<class E1, class E2>
+    // This function seems to be big. So we do not let the compiler inline it.
+    // NUMERICS_INLINE
+#ifdef USE_MSVC
+    sparse_vector<typename promote_traits<typename E1::value_type, 
+                                          typename E2::value_type>::promote_type>
+#else
+    typename matrix_vector_binary2_traits<typename E1::value_type, E1, 
+                                          typename E2::value_type, E2>::result_type
+#endif
+    prod (const vector_expression<E1> &e1, 
+          const matrix_expression<E2> &e2, 
+          sparse_row_major_tag) {
+#ifdef USE_MSVC
+        typedef sparse_vector<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type, 
+                                                               NUMERICS_TYPENAME E2::value_type>::promote_type> result_type;
+#else
+        typedef NUMERICS_TYPENAME matrix_vector_binary2_traits<NUMERICS_TYPENAME E1::value_type, E1, 
+                                                               NUMERICS_TYPENAME E2::value_type, E2>::result_type result_type;
+#endif
+        typedef NUMERICS_TYPENAME result_type::size_type size_type;
+        typedef NUMERICS_TYPENAME result_type::value_type value_type;
+
+        check (e1 ().size () == e2 ().size1 (), bad_size ());
+        result_type r (e2 ().size2 ());
+        r.clear ();
+        typename E2::const_iterator1 it1e2 (e2 ().begin1 ());
+        typename E2::const_iterator1 it1e2_end (e2 ().end1 ());
+        while (it1e2 != it1e2_end) {
+            typename E2::const_iterator2 it2e2 (it1e2.begin ());
+            typename E2::const_iterator2 it2e2_end (it1e2.end ());
+            typename E1::const_iterator ite1 (e1 ().begin ());
+            typename E1::const_iterator ite1_end (e1 ().end ());
+            size_type i = std::min (it2e2.index2 (), ite1.index ());
+            while (it2e2 != it2e2_end && ite1 != ite1_end) {
+                value_type t2 = i - it2e2.index2 () ? value_type () : *it2e2;
+                value_type t1 = i - ite1.index () ? value_type () : *ite1;
+                r (i) += t2 * t1;
+                if (it2e2.index2 () <= i) 
+                    ++ it2e2;
+                if (ite1.index () <= i) 
+                    ++ ite1;
+                i = std::min (it2e2.index2 (), ite1.index ());
+            }
+            ++ it1e2;
+        }
+        return r;
+    }
+
+    template<class E1, class E2>
+    // This function seems to be big. So we do not let the compiler inline it.
+    // NUMERICS_INLINE
+#ifdef USE_MSVC
+    sparse_vector<typename type_traits<typename promote_traits<typename E1::value_type, 
+                                                               typename E2::value_type>::promote_type>::precision_type>
+#else
+    typename matrix_vector_binary2_traits<typename type_traits<typename E1::value_type>::precision_type, E1, 
+                                          typename type_traits<typename E2::value_type>::precision_type, E2>::result_type
+#endif
+    prec_prod (const vector_expression<E1> &e1,
+               const matrix_expression<E2> &e2, 
+               sparse_row_major_tag) {        
+#ifdef USE_MSVC
+        typedef sparse_vector<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type, 
+                                                                                             NUMERICS_TYPENAME E2::value_type>::promote_type>::precision_type> result_type;
+#else
+        typedef NUMERICS_TYPENAME matrix_vector_binary2_traits<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E1::value_type>::precision_type, E1, 
+                                                               NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E2::value_type>::precision_type, E2>::result_type result_type;
+#endif
+        typedef NUMERICS_TYPENAME result_type::size_type size_type;
+        typedef NUMERICS_TYPENAME result_type::value_type value_type;
+
+        check (e1 ().size () == e2 ().size1 (), bad_size ());
+        result_type r (e2 ().size2 ());
+        r.clear ();
+        typename E2::const_iterator1 it1e2 (e2 ().begin1 ());
+        typename E2::const_iterator1 it1e2_end (e2 ().end1 ());
+        while (it1e2 != it1e2_end) {
+            typename E2::const_iterator2 it2e2 (it1e2.begin ());
+            typename E2::const_iterator2 it2e2_end (it1e2.end ());
+            typename E1::const_iterator ite1 (e1 ().begin ());
+            typename E1::const_iterator ite1_end (e1 ().end ());
+            size_type i = std::min (it2e2.index2 (), ite1.index ());
+            while (it2e2 != it2e2_end && ite1 != ite1_end) {
+                value_type t2 = i - it2e2.index2 () ? value_type () : *it2e2;
+                value_type t1 = i - ite1.index () ? value_type () : *ite1;
+                r (i) += t2 * t1;
+                if (it2e2.index2 () <= i) 
+                    ++ it2e2;
+                if (ite1.index () <= i) 
+                    ++ ite1;
+                i = std::min (it2e2.index2 (), ite1.index ());
+            }
+            ++ it1e2;
+        }
+        return r;
+    }
+
+#ifndef USE_MSVC
+    template<class T1, class A1, class T2, class A2>
+    struct matrix_matrix_binary_traits<T1, sparse_matrix<T1, column_major<>, A1> ,
+                                       T2, sparse_matrix<T2, column_major<>, A2> > {
+        typedef sparse_column_major_tag dispatch_category;
+        typedef NUMERICS_TYPENAME promote_traits<T1, T2>::promote_type promote_type;
+        typedef sparse_matrix<promote_type, row_major<> > result_type;
+    };
+#endif
+
+    template<class E1, class E2>
+    // This function seems to be big. So we do not let the compiler inline it.
+    // NUMERICS_INLINE
+#ifdef USE_MSVC
+    sparse_matrix<typename promote_traits<typename E1::value_type, 
+                                          typename E2::value_type>::promote_type, row_major<> >
+#else
+    typename matrix_matrix_binary_traits<typename E1::value_type, E1, 
+                                         typename E2::value_type, E2>::result_type
+#endif
+    prod (const matrix_expression<E1> &e1, 
+          const matrix_expression<E2> &e2, 
+          sparse_column_major_tag) {
+#ifdef USE_MSVC
+        typedef sparse_matrix<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type, 
+                                                               NUMERICS_TYPENAME E2::value_type>::promote_type, row_major<> > result_type;
+#else
+        typedef NUMERICS_TYPENAME matrix_matrix_binary_traits<NUMERICS_TYPENAME E1::value_type, E1, 
+                                                              NUMERICS_TYPENAME E2::value_type, E2>::result_type result_type;
+#endif
+        typedef NUMERICS_TYPENAME result_type::size_type size_type;
+        typedef NUMERICS_TYPENAME result_type::value_type value_type;
+
+        check (e1 ().size2 () == e2 ().size1 (), bad_size ());
+        result_type r (e1 ().size1 (), e2 ().size2 ());
+        r.clear ();
+        typename E2::const_iterator2 it2e2 (e2 ().begin2 ());
+        typename E2::const_iterator2 it2e2_end (e2 ().end2 ());
+        while (it2e2 != it2e2_end) {
+            typename E2::const_iterator1 it2e1 (it2e2.begin ());
+            typename E2::const_iterator1 it2e1_end (it2e2.end ());
+            while (it2e1 != it2e1_end) {
+                value_type t2 = *it2e1;
+                typename E1::const_iterator2 it1e2 (e1 ().find2 (1, 0, it2e1.index1 ()));
+                typename E1::const_iterator2 it1e2_end (e1 ().find2 (1, e1 ().size1 (), it2e1.index1 ()));
+                while (it1e2 != it1e2_end) {
+                    r (it2e1.index2 (), it1e2.index1 ()) += *it1e2 * t2;
+                    ++ it1e2;
+                }
+                ++ it2e1;
+            }
+            ++ it2e2;
+        }
+        return r;
+    }
+
+    template<class E1, class E2>
+    // This function seems to be big. So we do not let the compiler inline it.
+    // NUMERICS_INLINE
+#ifdef USE_MSVC
+    sparse_matrix<typename type_traits<typename promote_traits<typename E1::value_type, 
+                                                               typename E2::value_type>::promote_type>::precision_type, row_major<> >
+#else
+    typename matrix_matrix_binary_traits<typename type_traits<typename E1::value_type>::precision_type, E1, 
+                                         typename type_traits<typename E2::value_type>::precision_type, E2>::result_type
+#endif
+    prec_prod (const matrix_expression<E1> &e1,
+               const matrix_expression<E2> &e2, 
+               sparse_column_major_tag) {        
+#ifdef USE_MSVC
+        typedef sparse_matrix<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type, 
+                                                                                             NUMERICS_TYPENAME E2::value_type>::promote_type>::precision_type, row_major<> > result_type;
+#else
+        typedef NUMERICS_TYPENAME matrix_matrix_binary_traits<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E1::value_type>::precision_type, E1, 
+                                                              NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E2::value_type>::precision_type, E2>::result_type result_type;
+#endif
+        typedef NUMERICS_TYPENAME result_type::size_type size_type;
+        typedef NUMERICS_TYPENAME result_type::value_type value_type;
+
+        check (e1 ().size2 () == e2 ().size1 (), bad_size ());
+        result_type r (e1 ().size1 (), e2 ().size2 ());
+        r.clear ();
+        typename E2::const_iterator2 it2e2 (e2 ().begin2 ());
+        typename E2::const_iterator2 it2e2_end (e2 ().end2 ());
+        while (it2e2 != it2e2_end) {
+            typename E2::const_iterator1 it2e1 (it2e2.begin ());
+            typename E2::const_iterator1 it2e1_end (it2e2.end ());
+            while (it2e1 != it2e1_end) {
+                value_type t2 = *it2e1;
+                typename E1::const_iterator2 it1e2 (e1 ().find2 (1, 0, it2e1.index1 ()));
+                typename E1::const_iterator2 it1e2_end (e1 ().find2 (1, e1 ().size1 (), it2e1.index1 ()));
+                while (it1e2 != it1e2_end) {
+                    r (it2e1.index2 (), it1e2.index1 ()) += *it1e2 * t2;
+                    ++ it1e2;
+                }
+                ++ it2e1;
+            }
+            ++ it2e2;
+        }
+        return r;
+    }
+
+#ifndef USE_MSVC
+    template<class T1, class A1, class T2, class A2>
+    struct matrix_matrix_binary_traits<T1, sparse_matrix<T1, row_major<>, A1> ,
+                                       T2, sparse_matrix<T2, row_major<>, A2> > {
+        typedef sparse_row_major_tag dispatch_category;
+        typedef NUMERICS_TYPENAME promote_traits<T1, T2>::promote_type promote_type;
+        typedef sparse_matrix<promote_type, column_major<> > result_type;
+    };
+#endif
+
+    template<class E1, class E2>
+    // This function seems to be big. So we do not let the compiler inline it.
+    // NUMERICS_INLINE
+#ifdef USE_MSVC
+    sparse_matrix<typename promote_traits<typename E1::value_type, 
+                                          typename E2::value_type>::promote_type, column_major<> >
+#else
+    typename matrix_matrix_binary_traits<typename E1::value_type, E1, 
+                                         typename E2::value_type, E2>::result_type
+#endif
+    prod (const matrix_expression<E1> &e1, 
+          const matrix_expression<E2> &e2, 
+          sparse_row_major_tag) {
+#ifdef USE_MSVC
+        typedef sparse_matrix<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type, 
+                                                               NUMERICS_TYPENAME E2::value_type>::promote_type, column_major<> > result_type;
+#else
+        typedef NUMERICS_TYPENAME matrix_matrix_binary_traits<NUMERICS_TYPENAME E1::value_type, E1, 
+                                                              NUMERICS_TYPENAME E2::value_type, E2>::result_type result_type;
+#endif
+        typedef NUMERICS_TYPENAME result_type::size_type size_type;
+        typedef NUMERICS_TYPENAME result_type::value_type value_type;
+
+        check (e1 ().size2 () == e2 ().size1 (), bad_size ());
+        result_type r (e1 ().size1 (), e2 ().size2 ());
+        r.clear ();
+        typename E1::const_iterator1 it1e1 (e1 ().begin1 ());
+        typename E1::const_iterator1 it1e1_end (e1 ().end1 ());
+        while (it1e1 != it1e1_end) {
+            typename E1::const_iterator2 it1e2 (it1e1.begin ());
+            typename E1::const_iterator2 it1e2_end (it1e1.end ());
+            while (it1e2 != it1e2_end) {
+                value_type t1 = *it1e2;
+                typename E2::const_iterator1 it2e1 (e2 ().find1 (1, it1e2.index2 (), 0));
+                typename E2::const_iterator1 it2e1_end (e2 ().find1 (1, it1e2.index2 (), e2 ().size1 ()));
+                while (it2e1 != it2e1_end) {
+                    r (it1e2.index1 (), it2e1.index2 ()) += t1 * *it2e1;
+                    ++ it2e1;
+                }
+                ++ it1e2;
+            }
+            ++ it1e1;
+        }
+        return r;
+    }
+
+    template<class E1, class E2>
+    // This function seems to be big. So we do not let the compiler inline it.
+    // NUMERICS_INLINE
+#ifdef USE_MSVC
+    sparse_matrix<typename type_traits<typename promote_traits<typename E1::value_type, 
+                                                               typename E2::value_type>::promote_type>::precision_type, column_major<> >
+#else
+    typename matrix_matrix_binary_traits<typename type_traits<typename E1::value_type>::precision_type, E1, 
+                                         typename type_traits<typename E2::value_type>::precision_type, E2>::result_type
+#endif
+    prec_prod (const matrix_expression<E1> &e1,
+               const matrix_expression<E2> &e2, 
+               sparse_row_major_tag) {        
+#ifdef USE_MSVC
+        typedef sparse_matrix<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME promote_traits<NUMERICS_TYPENAME E1::value_type, 
+                                                                                             NUMERICS_TYPENAME E2::value_type>::promote_type>::precision_type, column_major<> > result_type;
+#else
+        typedef NUMERICS_TYPENAME matrix_matrix_binary_traits<NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E1::value_type>::precision_type, E1, 
+                                                              NUMERICS_TYPENAME type_traits<NUMERICS_TYPENAME E2::value_type>::precision_type, E2>::result_type result_type;
+#endif
+        typedef NUMERICS_TYPENAME result_type::size_type size_type;
+        typedef NUMERICS_TYPENAME result_type::value_type value_type;
+
+        check (e1 ().size2 () == e2 ().size1 (), bad_size ());
+        result_type r (e1 ().size1 (), e2 ().size2 ());
+        r.clear ();
+        typename E1::const_iterator1 it1e1 (e1 ().begin1 ());
+        typename E1::const_iterator1 it1e1_end (e1 ().end1 ());
+        while (it1e1 != it1e1_end) {
+            typename E1::const_iterator2 it1e2 (it1e1.begin ());
+            typename E1::const_iterator2 it1e2_end (it1e1.end ());
+            while (it1e2 != it1e2_end) {
+                value_type t1 = *it1e2;
+                typename E2::const_iterator1 it2e1 (e2 ().find1 (1, it1e2.index2 (), 0));
+                typename E2::const_iterator1 it2e1_end (e2 ().find1 (1, it1e2.index2 (), e2 ().size1 ()));
+                while (it2e1 != it2e1_end) {
+                    r (it1e2.index1 (), it2e1.index2 ()) += t1 * *it2e1;
+                    ++ it2e1;
+                }
+                ++ it1e2;
+            }
+            ++ it1e1;
         }
         return r;
     }

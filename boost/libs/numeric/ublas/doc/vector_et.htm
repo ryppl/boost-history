@@ -4,12 +4,12 @@
 <meta http-equiv="Content-Type"
 content="text/html; charset=iso-8859-1">
 <meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
-<title>Vector Expression Related</title>
+<title>Vector Expressions</title>
 </head>
 
 <body bgcolor="#FFFFFF">
 
-<h1>Vector Expression Related</h1>
+<h1>Vector Expressions</h1>
 
 <h2><a name="vector_expression"></a>Vector Expression</h2>
 
@@ -32,7 +32,7 @@ including class <code>vector</code> itself.</p>
         <th>Default </th>
     </tr>
     <tr>
-        <td><tt>E</tt> </td>
+        <td><code>E</code> </td>
         <td>The type of the vector expression. </td>
         <td>&nbsp;</td>
     </tr>
@@ -106,7 +106,7 @@ a constant reference to a vector expression.</p>
         <th>Default </th>
     </tr>
     <tr>
-        <td><tt>E</tt> </td>
+        <td><code>E</code> </td>
         <td>The type of the vector expression. </td>
         <td>&nbsp;</td>
     </tr>
@@ -114,11 +114,12 @@ a constant reference to a vector expression.</p>
 
 <h4>Model of</h4>
 
-<p>Vector. </p>
+<p><a href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
 <h4>Type requirements</h4>
 
-<p>None, except for those imposed by the requirements of Vector.</p>
+<p>None, except for those imposed by the requirements of <a
+href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
 <h4>Public base classes</h4>
 
@@ -143,17 +144,27 @@ a constant reference to a vector expression.</p>
     </tr>
     <tr>
         <td><code>value_type operator () (size_type i) const</code></td>
-        <td>Returns the value of the <tt>i</tt>-th element. </td>
+        <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
         <td><code>const_iterator begin () const</code></td>
-        <td>Returns a <tt>const_iterator</tt> pointing to the
+        <td>Returns a <code>const_iterator</code> pointing to the
         beginning of the expression. </td>
     </tr>
     <tr>
         <td><code>const_iterator end () const</code></td>
-        <td>Returns a <tt>const_iterator</tt> pointing to the end
-        of the expression. </td>
+        <td>Returns a <code>const_iterator</code> pointing to the
+        end of the expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rbegin () const</code></td>
+        <td>Returns a <code>const_reverse_iterator</code>
+        pointing to the beginning of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rend () const</code></td>
+        <td>Returns a <code>const_reverse_iterator</code>
+        pointing to the end of the reversed expression. </td>
     </tr>
 </table>
 
@@ -167,9 +178,11 @@ a constant reference to a vector expression.</p>
         typedef typename E::size_type size_type;
         typedef typename E::difference_type difference_type;
         typedef typename E::value_type value_type;
+        typedef typename E::const_reference_type const_reference_type;
         typedef typename E::const_iterator const_iterator_type;
 
         // Construction and destruction
+        vector_const_reference ();
         vector_const_reference (const expression_type &amp;e);
 
         size_type size () const;
@@ -183,6 +196,13 @@ a constant reference to a vector expression.</p>
 
         const_iterator begin () const;
         const_iterator end () const;
+
+        // Reverse iterator
+
+        typedef reverse_iterator&lt;const_iterator&gt; const_reverse_iterator;
+
+        const_reverse_iterator rbegin () const;
+        const_reverse_iterator rend () const;
     };</code></pre>
 
 <h3>Reference</h3>
@@ -205,7 +225,7 @@ a reference to a vector expression.</p>
         <th>Default </th>
     </tr>
     <tr>
-        <td><tt>E</tt> </td>
+        <td><code>E</code> </td>
         <td>The type of the vector expression. </td>
         <td>&nbsp;</td>
     </tr>
@@ -213,11 +233,12 @@ a reference to a vector expression.</p>
 
 <h4>Model of</h4>
 
-<p>Vector. </p>
+<p><a href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
 <h4>Type requirements</h4>
 
-<p>None, except for those imposed by the requirements of Vector.</p>
+<p>None, except for those imposed by the requirements of <a
+href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
 <h4>Public base classes</h4>
 
@@ -245,31 +266,52 @@ a reference to a vector expression.</p>
     </tr>
     <tr>
         <td><code>value_type operator () (size_type i) const</code></td>
-        <td>Returns the value of the <tt>i</tt>-th element. </td>
+        <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
         <td><code>reference_type operator () (size_type i)</code></td>
-        <td>Returns a reference of the <tt>i</tt>-th element. </td>
+        <td>Returns a reference of the <code>i</code>-th element.
+        </td>
     </tr>
     <tr>
         <td><code>const_iterator begin () const</code></td>
-        <td>Returns a <tt>const_iterator</tt> pointing to the
+        <td>Returns a <code>const_iterator</code> pointing to the
         beginning of the expression. </td>
     </tr>
     <tr>
         <td><code>const_iterator end () const</code></td>
-        <td>Returns a <tt>const_iterator</tt> pointing to the end
-        of the expression. </td>
+        <td>Returns a <code>const_iterator</code> pointing to the
+        end of the expression. </td>
     </tr>
     <tr>
         <td><code>iterator begin () </code></td>
-        <td>Returns a <tt>iterator</tt> pointing to the beginning
-        of the expression. </td>
+        <td>Returns a <code>iterator</code> pointing to the
+        beginning of the expression. </td>
     </tr>
     <tr>
         <td><code>iterator end () </code></td>
-        <td>Returns a <tt>iterator</tt> pointing to the end of
-        the expression. </td>
+        <td>Returns a <code>iterator</code> pointing to the end
+        of the expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rbegin () const</code></td>
+        <td>Returns a <code>const_reverse_iterator</code>
+        pointing to the beginning of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rend () const</code></td>
+        <td>Returns a <code>const_reverse_iterator</code>
+        pointing to the end of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>reverse_iterator rbegin () </code></td>
+        <td>Returns a <code>reverse_iterator</code> pointing to
+        the beginning of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>reverse_iterator rend () </code></td>
+        <td>Returns a <code>reverse_iterator</code> pointing to
+        the end of the reversed expression. </td>
     </tr>
 </table>
 
@@ -283,11 +325,13 @@ a reference to a vector expression.</p>
         typedef typename E::size_type size_type;
         typedef typename E::difference_type difference_type;
         typedef typename E::value_type value_type;
+        typedef typename E::const_reference_type const_reference_type;
         typedef typename E::reference_type reference_type;
         typedef typename E::const_iterator const_iterator_type;
         typedef typename E::iterator iterator_type;
 
         // Construction and destruction
+        vector_reference ();
         vector_reference (expression_type &amp;e);
 
         // Resizing
@@ -310,6 +354,18 @@ a reference to a vector expression.</p>
 
         iterator begin ();
         iterator end ();
+
+        // Reverse iterator
+
+        typedef reverse_iterator&lt;const_iterator&gt; const_reverse_iterator;
+
+        const_reverse_iterator rbegin () const;
+        const_reverse_iterator rend () const;
+
+        typedef reverse_iterator&lt;iterator&gt; reverse_iterator;
+
+        reverse_iterator rbegin ();
+        reverse_iterator rend ();
     };</code></pre>
 
 <h2><a name="vector_operations"></a>Vector Operations</h2>
@@ -334,12 +390,12 @@ a unary vector operation.</p>
         <th>Default </th>
     </tr>
     <tr>
-        <td><tt>E</tt> </td>
+        <td><code>E</code> </td>
         <td>The type of the vector expression. </td>
         <td>&nbsp;</td>
     </tr>
     <tr>
-        <td><tt>F</tt></td>
+        <td><code>F</code></td>
         <td>The type of the operation.</td>
         <td>&nbsp;</td>
     </tr>
@@ -347,11 +403,12 @@ a unary vector operation.</p>
 
 <h4>Model of</h4>
 
-<p>Vector. </p>
+<p><a href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
 <h4>Type requirements</h4>
 
-<p>None, except for those imposed by the requirements of Vector.</p>
+<p>None, except for those imposed by the requirements of <a
+href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
 <h4>Public base classes</h4>
 
@@ -374,17 +431,27 @@ a unary vector operation.</p>
     </tr>
     <tr>
         <td><code>value_type operator () (size_type i) const</code></td>
-        <td>Returns the value of the <tt>i</tt>-th element. </td>
+        <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
         <td><code>const_iterator begin () const</code></td>
-        <td>Returns a <tt>const_iterator</tt> pointing to the
+        <td>Returns a <code>const_iterator</code> pointing to the
         beginning of the expression. </td>
     </tr>
     <tr>
         <td><code>const_iterator end () const</code></td>
-        <td>Returns a <tt>const_iterator</tt> pointing to the end
-        of the expression. </td>
+        <td>Returns a <code>const_iterator</code> pointing to the
+        end of the expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rbegin () const</code></td>
+        <td>Returns a <code>const_reverse_iterator</code>
+        pointing to the beginning of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rend () const</code></td>
+        <td>Returns a <code>const_reverse_iterator</code>
+        pointing to the end of the reversed expression. </td>
     </tr>
 </table>
 
@@ -399,10 +466,12 @@ a unary vector operation.</p>
         typedef typename E::size_type size_type;
         typedef typename E::difference_type difference_type;
         typedef typename F::value_type value_type;
-        typedef vector_unary&lt;E, F&gt; const_closure_type;
+        typedef const value_type &amp;const_reference_type;
+        typedef const vector_unary&lt;E, F&gt; const_closure_type;
         typedef typename E::const_iterator const_iterator_type;
 
         // Construction and destruction
+        vector_unary ();
         vector_unary (const expression_type &amp;e);
 
         size_type size () const;
@@ -414,12 +483,18 @@ a unary vector operation.</p>
         // with the unary functor.
 
         class const_iterator:
+            public container_const_reference&lt;vector_unary&gt;, 
             public random_access_iterator_base&lt;const_iterator, value_type&gt; {
         public:
             typedef typename E::const_iterator::iterator_category iterator_category;
+            typedef typename E::const_iterator::difference_type difference_type;
+            typedef typename E::const_iterator::value_type value_type;
+            typedef typename E::const_iterator::value_type reference;
+            typedef typename E::const_iterator::pointer pointer;
 
             // Construction and destruction
-            const_iterator (const const_iterator_type &amp;it);
+            const_iterator ();
+            const_iterator (const vector_unary &amp;vu, const const_iterator_type &amp;it);
 
             // Arithmetic
             const_iterator &amp;operator ++ ();
@@ -434,12 +509,22 @@ a unary vector operation.</p>
             // Index
             size_type index () const;
 
+            // Assignment 
+            const_iterator &amp;operator = (const const_iterator &amp;it);
+
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
         const_iterator end () const;
+
+        // Reverse iterator
+
+        typedef reverse_iterator&lt;const_iterator&gt; const_reverse_iterator;
+
+        const_reverse_iterator rbegin () const;
+        const_reverse_iterator rend () const;
     };</code></pre>
 
 <h3>Unary Operations</h3>
@@ -488,7 +573,8 @@ vector expression.</p>
 <h4>Type requirements</h4>
 
 <dir>
-    <li><code>E</code> is a model of Vector.</li>
+    <li><code>E</code> is a model of <a
+        href="expression.htm#vector_expression">Vector Expression</a>.</li>
 </dir>
 
 <h4>Preconditions</h4>
@@ -532,17 +618,17 @@ a binary vector operation.</p>
         <th>Default </th>
     </tr>
     <tr>
-        <td><tt>E1</tt> </td>
+        <td><code>E1</code> </td>
         <td>The type of the first vector expression. </td>
         <td>&nbsp;</td>
     </tr>
     <tr>
-        <td><tt>E2</tt></td>
+        <td><code>E2</code></td>
         <td>The type of the second vector expression. </td>
         <td>&nbsp;</td>
     </tr>
     <tr>
-        <td><tt>F</tt></td>
+        <td><code>F</code></td>
         <td>The type of the operation.</td>
         <td>&nbsp;</td>
     </tr>
@@ -550,11 +636,12 @@ a binary vector operation.</p>
 
 <h4>Model of</h4>
 
-<p>Vector. </p>
+<p><a href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
 <h4>Type requirements</h4>
 
-<p>None, except for those imposed by the requirements of Vector.</p>
+<p>None, except for those imposed by the requirements of <a
+href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
 <h4>Public base classes</h4>
 
@@ -578,17 +665,27 @@ a binary vector operation.</p>
     </tr>
     <tr>
         <td><code>value_type operator () (size_type i) const</code></td>
-        <td>Returns the value of the <tt>i</tt>-th element. </td>
+        <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
         <td><code>const_iterator begin () const</code></td>
-        <td>Returns a <tt>const_iterator</tt> pointing to the
+        <td>Returns a <code>const_iterator</code> pointing to the
         beginning of the expression. </td>
     </tr>
     <tr>
         <td><code>const_iterator end () const</code></td>
-        <td>Returns a <tt>const_iterator</tt> pointing to the end
-        of the expression. </td>
+        <td>Returns a <code>const_iterator</code> pointing to the
+        end of the expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rbegin () const</code></td>
+        <td>Returns a <code>const_reverse_iterator</code>
+        pointing to the beginning of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rend () const</code></td>
+        <td>Returns a <code>const_reverse_iterator</code>
+        pointing to the end of the reversed expression. </td>
     </tr>
 </table>
 
@@ -604,11 +701,14 @@ a binary vector operation.</p>
         typedef typename promote_traits&lt;typename E1::size_type, typename E2::size_type&gt;::promote_type size_type;
         typedef typename promote_traits&lt;typename E1::difference_type, typename E2::difference_type&gt;::promote_type difference_type;
         typedef typename F::value_type value_type;
-        typedef vector_binary&lt;E1, E2, F&gt; const_closure_type;
+        typedef const value_type &amp;const_reference_type;
+        typedef const value_type *const_pointer_type;
+        typedef const vector_binary&lt;E1, E2, F&gt; const_closure_type;
         typedef typename E1::const_iterator const_iterator1_type;
         typedef typename E2::const_iterator const_iterator2_type;
 
         // Construction and destruction
+        vector_binary ();
         vector_binary (const expression1_type &amp;e1, const expression2_type &amp;e2);
 
         size_type size () const;
@@ -620,14 +720,20 @@ a binary vector operation.</p>
         // enhances them with the binary functor.
 
         class const_iterator:
+            public container_const_reference&lt;vector_binary&gt;, 
             public random_access_iterator_base&lt;const_iterator, value_type&gt; {
         public:
-            typedef </code>typename <code>restrict_traits&lt;typename E1::const_iterator::iterator_category, 
-                                    	     typename E2::const_iterator::iterator_category&gt;::iterator_category iterator_category;
+            typedef typename restrict_traits&lt;typename E1::const_iterator::iterator_category, 
+                                             typename E2::const_iterator::iterator_category&gt;::iterator_category iterator_category;
+            typedef typename vector_binary::difference_type difference_type;
+            typedef typename vector_binary::value_type value_type;
+            typedef typename vector_binary::value_type reference;
+            typedef typename vector_binary::const_pointer_type pointer;
 
             // Construction and destruction
-            const_iterator (size_type i, const const_iterator1_type &amp;it1, const const_iterator2_type &amp;it2);
-            
+            const_iterator ();
+            const_iterator (const vector_binary &amp;vb, size_type i, const const_iterator1_type &amp;it1, const const_iterator2_type &amp;it2);
+
             // Random access specializations
             void increment (std::random_access_iterator_tag);
             void decrement (std::random_access_iterator_tag);
@@ -651,12 +757,22 @@ a binary vector operation.</p>
             // Index
             size_type index () const;
 
+            // Assignment 
+            const_iterator &amp;operator = (const const_iterator &amp;it);
+
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
         const_iterator end () const;
+
+        // Reverse iterator
+
+        typedef reverse_iterator&lt;const_iterator&gt; const_reverse_iterator;
+
+        const_reverse_iterator rbegin () const;
+        const_reverse_iterator rend () const;
     };</code></pre>
 
 <h3>Binary Operations</h3>
@@ -697,8 +813,10 @@ two vector expressions.</p>
 <h4>Type requirements</h4>
 
 <dir>
-    <li><code>E1</code> is a model of Vector.</li>
-    <li><code>E2</code> is a model of Vector.</li>
+    <li><code>E1</code> is a model of <a
+        href="expression.htm#vector_expression">Vector Expression</a>.</li>
+    <li><code>E2</code> is a model of <a
+        href="expression.htm#vector_expression">Vector Expression</a>.</li>
 </dir>
 
 <h4>Preconditions</h4>
@@ -743,17 +861,17 @@ vector.</p>
         <th>Default </th>
     </tr>
     <tr>
-        <td><tt>E1</tt> </td>
+        <td><code>E1</code> </td>
         <td>The type of the scalar expression. </td>
         <td>&nbsp;</td>
     </tr>
     <tr>
-        <td><tt>E2</tt></td>
+        <td><code>E2</code></td>
         <td>The type of the vector expression. </td>
         <td>&nbsp;</td>
     </tr>
     <tr>
-        <td><tt>F</tt></td>
+        <td><code>F</code></td>
         <td>The type of the operation.</td>
         <td>&nbsp;</td>
     </tr>
@@ -761,11 +879,12 @@ vector.</p>
 
 <h4>Model of</h4>
 
-<p>Vector. </p>
+<p><a href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
 <h4>Type requirements</h4>
 
-<p>None, except for those imposed by the requirements of Vector.</p>
+<p>None, except for those imposed by the requirements of <a
+href="expression.htm#vector_expression">Vector Expression</a>.</p>
 
 <h4>Public base classes</h4>
 
@@ -790,17 +909,27 @@ F&gt; &gt;</code></p>
     </tr>
     <tr>
         <td><code>value_type operator () (size_type i) const</code></td>
-        <td>Returns the value of the <tt>i</tt>-th element. </td>
+        <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
         <td><code>const_iterator begin () const</code></td>
-        <td>Returns a <tt>const_iterator</tt> pointing to the
+        <td>Returns a <code>const_iterator</code> pointing to the
         beginning of the expression. </td>
     </tr>
     <tr>
         <td><code>const_iterator end () const</code></td>
-        <td>Returns a <tt>const_iterator</tt> pointing to the end
-        of the expression. </td>
+        <td>Returns a <code>const_iterator</code> pointing to the
+        end of the expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rbegin () const</code></td>
+        <td>Returns a <code>const_reverse_iterator</code>
+        pointing to the beginning of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rend () const</code></td>
+        <td>Returns a <code>const_reverse_iterator</code>
+        pointing to the end of the reversed expression. </td>
     </tr>
 </table>
 
@@ -816,11 +945,13 @@ F&gt; &gt;</code></p>
         typedef typename E2::size_type size_type;
         typedef typename E2::difference_type difference_type;
         typedef typename F::value_type value_type;
-        typedef vector_binary_scalar&lt;E1, E2, F&gt; const_closure_type;
+        typedef const value_type &amp;const_reference_type;
+        typedef const vector_binary_scalar&lt;E1, E2, F&gt; const_closure_type;
         typedef typename E1::value_type const_iterator1_type;
         typedef typename E2::const_iterator const_iterator2_type;
 
         // Construction and destruction
+        vector_binary_scalar ();
         vector_binary_scalar (const expression1_type &amp;e1, const expression2_type &amp;e2);
 
         size_type size () const;
@@ -832,12 +963,18 @@ F&gt; &gt;</code></p>
         // with the binary functor.
 
         class const_iterator:
+            public container_const_reference&lt;vector_binary_scalar&gt;, 
             public random_access_iterator_base&lt;const_iterator, value_type&gt; {
         public:
             typedef typename E2::const_iterator::iterator_category iterator_category;
+            typedef typename E2::const_iterator::difference_type difference_type;
+            typedef typename E2::const_iterator::value_type value_type;
+            typedef typename E2::const_iterator::value_type reference;
+            typedef typename E2::const_iterator::pointer pointer;
 
             // Construction and destruction
-            const_iterator (const const_iterator1_type &amp;it1, const const_iterator2_type &amp;it2);
+            const_iterator ();
+            const_iterator (const vector_binary_scalar &amp;vbs, const const_iterator1_type &amp;it1, const const_iterator2_type &amp;it2);
 
             // Arithmetic
             const_iterator &amp;operator ++ ();
@@ -852,12 +989,22 @@ F&gt; &gt;</code></p>
             // Index
             size_type index () const;
 
+            // Assignment 
+            const_iterator &amp;operator = (const const_iterator &amp;it);
+
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
         const_iterator end () const;
+
+        // Reverse iterator
+
+        typedef reverse_iterator&lt;const_iterator&gt; const_reverse_iterator;
+
+        const_reverse_iterator rbegin () const;
+        const_reverse_iterator rend () const;
     };</code></pre>
 
 <h3>Scalar Vector Operations </h3>
@@ -889,8 +1036,10 @@ vector expression. </p>
 <h4>Type requirements</h4>
 
 <dir>
-    <li><code>T1</code> is a model of Scalar.</li>
-    <li><code>E2</code> is a model of Vector.</li>
+    <li><code>T1</code> is a model of <a
+        href="expression.htm#scalar_expression">Scalar Expression</a>.</li>
+    <li><code>E2</code> is a model of <a
+        href="expression.htm#vector_expression">Vector Expression</a>.</li>
 </dir>
 
 <h4>Preconditions</h4>
@@ -963,7 +1112,8 @@ vector expression's first element having maximal absolute value.</p>
 <h4>Type requirements</h4>
 
 <dir>
-    <li><code>E</code> is a model of Vector.</li>
+    <li><code>E</code> is a model of <a href="#vector_expression">Vector
+        Expression</a>.</li>
 </dir>
 
 <h4>Preconditions</h4>
@@ -1027,8 +1177,10 @@ double precision inner product of the vector expressions<code>.</code></p>
 <h4>Type requirements</h4>
 
 <dir>
-    <li><code>E1</code> is a model of Vector.</li>
-    <li><code>E2</code> is a model of Vector.</li>
+    <li><code>E1</code> is a model of <a
+        href="#vector_expression">Vector Expression</a>.</li>
+    <li><code>E2</code> is a model of <a
+        href="#vector_expression">Vector Expression</a>.</li>
 </dir>
 
 <h4>Preconditions</h4>

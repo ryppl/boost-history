@@ -1,5 +1,5 @@
-#ifndef TEST2_H
-#define TEST2_H
+#ifndef TEST1_H
+#define TEST1_H
 
 template<class V>
 void initialize_vector (V &v) {
@@ -11,13 +11,13 @@ void initialize_vector (V &v) {
 template<class M>
 void initialize_matrix (M &m, numerics::lower_tag) {
     int size1 = m.size1 ();
-    int size2 = m.size2 ();
+//    int size2 = m.size2 ();
     for (int i = 0; i < size1; ++ i) {
 		int j = 0;
         for (; j <= i; ++ j) 
             m (i, j) = i * size1 + j + 1;
-        for (; j < size2; ++ j) 
-            m (i, j) = 0;
+//        for (; j < size2; ++ j) 
+//            m (i, j) = 0;
 	}
 }
 template<class M>
@@ -26,8 +26,8 @@ void initialize_matrix (M &m, numerics::upper_tag) {
     int size2 = m.size2 ();
     for (int i = 0; i < size1; ++ i) {
 		int j = 0;
-        for (; j < i; ++ j) 
-            m (i, j) = 0;
+//        for (; j < i; ++ j) 
+//            m (i, j) = 0;
         for (; j < size2; ++ j) 
             m (i, j) = i * size1 + j + 1;
 	}
@@ -37,33 +37,23 @@ void initialize_matrix (M &m) {
     int size1 = m.size1 ();
     int size2 = m.size2 ();
     for (int i = 0; i < size1; ++ i) 
-        for (int j = 0; j < size2; ++ j) 
+        for (int j = std::max (i - 1, 0); j < std::min (i + 2, size2); ++ j) 
             m (i, j) = i * size1 + j + 1;
 }
 
-template<class V, int N>
-struct test_blas_1 {
-    typedef typename V::value_type value_type;
-    typedef typename numerics::type_traits<value_type>::norm_type norm_type;
 
-	void operator () ();
-};
+void test_vector ();
 
-template<class V, class M, int N>
-struct test_blas_2 {
-    typedef typename V::value_type value_type;
+void test_matrix_vector ();
 
-	void operator () ();
-};
+void test_matrix ();
 
-template<class M, int N>
-struct test_blas_3 {
-    typedef typename M::value_type value_type;
+#define USE_RANGE
+// #define USE_SLICE
 
-	void operator () ();
-};
-
-// #define USE_STD_COMPLEX
+// #define USE_BOUNDED_ARRAY
+#define USE_UNBOUNDED_ARRAY
+// #define USE_STD_VECTOR
 
 #endif 
 

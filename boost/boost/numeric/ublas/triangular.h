@@ -14,8 +14,8 @@
 //	GeNeSys mbH & Co. KG in producing this work.
 //
 
-#ifndef NUMERICS_BANDED_H
-#define NUMERICS_BANDED_H
+#ifndef NUMERICS_TRIANGULAR_H
+#define NUMERICS_TRIANGULAR_H
 
 #include "config.h"
 #include "storage.h"
@@ -26,10 +26,227 @@
 
 namespace numerics {
 
-    // Array based banded matrix class 
-    template<class T, class F, class A>
-    class banded_matrix: 
-        public matrix_expression<banded_matrix<T, F, A> > {
+    struct lower {
+        typedef std::size_t size_type;
+        typedef lower_tag packed_category;
+
+        static
+        NUMERICS_INLINE
+        size_type packed_size (size_type size1, size_type size2) {
+            size_type size = std::max (size1, size2);
+            return ((size + 1) * size) / 2;
+        }
+
+        static 
+        NUMERICS_INLINE
+        bool zero (size_type i, size_type j) {
+            return j > i;
+        }
+        static 
+        NUMERICS_INLINE
+        bool one (size_type i, size_type j) {
+            return false;
+        }
+        static 
+        NUMERICS_INLINE
+        bool other (size_type i, size_type j) {
+            return j <= i;
+        }
+        template<class F>
+        static 
+        NUMERICS_INLINE
+        size_type element (F, size_type i, size_type size1, size_type j, size_type size2) {
+            return F::lower_element (i, size1, j, size2);
+        }
+
+        static 
+        NUMERICS_INLINE
+        size_type restrict1 (size_type i, size_type j) {
+            return std::max (i, j);
+        }
+        static 
+        NUMERICS_INLINE
+        size_type restrict2 (size_type i, size_type j) {
+            return std::min (i + 1, j);
+        }
+        static 
+        NUMERICS_INLINE
+        size_type mutable_restrict1 (size_type i, size_type j) {
+            return std::max (i, j);
+        }
+        static 
+        NUMERICS_INLINE
+        size_type mutable_restrict2 (size_type i, size_type j) {
+            return std::min (i + 1, j);
+        }
+    };
+    struct upper {
+        typedef std::size_t size_type;
+        typedef upper_tag packed_category;
+
+        static
+        NUMERICS_INLINE
+        size_type packed_size (size_type size1, size_type size2) {
+            size_type size = std::max (size1, size2);
+            return ((size + 1) * size) / 2;
+        }
+
+        static 
+        NUMERICS_INLINE
+        bool zero (size_type i, size_type j) {
+            return j < i;
+        }
+        static 
+        NUMERICS_INLINE
+        bool one (size_type i, size_type j) {
+            return false;
+        }
+        static 
+        NUMERICS_INLINE
+        bool other (size_type i, size_type j) {
+            return j >= i;
+        }
+        template<class F>
+        static 
+        NUMERICS_INLINE
+        size_type element (F, size_type i, size_type size1, size_type j, size_type size2) {
+            return F::upper_element (i, size1, j, size2);
+        }
+
+        static 
+        NUMERICS_INLINE
+        size_type restrict1 (size_type i, size_type j) {
+            return std::min (i, j + 1);
+        }
+        static 
+        NUMERICS_INLINE
+        size_type restrict2 (size_type i, size_type j) {
+            return std::max (i, j);
+        }
+        static 
+        NUMERICS_INLINE
+        size_type mutable_restrict1 (size_type i, size_type j) {
+            return std::min (i, j + 1);
+        }
+        static 
+        NUMERICS_INLINE
+        size_type mutable_restrict2 (size_type i, size_type j) {
+            return std::max (i, j);
+        }
+    };
+    struct unit_lower {
+        typedef std::size_t size_type;
+        typedef unit_lower_tag packed_category;
+
+        static
+        NUMERICS_INLINE
+        size_type packed_size (size_type size1, size_type size2) {
+            size_type size = std::max (size1, size2);
+            return ((size + 1) * size) / 2;
+        }
+
+        static 
+        NUMERICS_INLINE
+        bool zero (size_type i, size_type j) {
+            return j > i;
+        }
+        static 
+        NUMERICS_INLINE
+        bool one (size_type i, size_type j) {
+            return j == i;
+        }
+        static 
+        NUMERICS_INLINE
+        bool other (size_type i, size_type j) {
+            return j < i;
+        }
+        template<class F>
+        static 
+        NUMERICS_INLINE
+        size_type element (F, size_type i, size_type size1, size_type j, size_type size2) {
+            return F::lower_element (i, size1, j, size2);
+        }
+
+        static 
+        NUMERICS_INLINE
+        size_type restrict1 (size_type i, size_type j) {
+            return std::max (i, j);
+        }
+        static 
+        NUMERICS_INLINE
+        size_type restrict2 (size_type i, size_type j) {
+            return std::min (i + 1, j);
+        }
+        static 
+        NUMERICS_INLINE
+        size_type mutable_restrict1 (size_type i, size_type j) {
+            return std::max (i, j);
+        }
+        static 
+        NUMERICS_INLINE
+        size_type mutable_restrict2 (size_type i, size_type j) {
+            return std::min (i, j);
+        }
+    };
+    struct unit_upper {
+        typedef std::size_t size_type;
+        typedef unit_upper_tag packed_category;
+
+        static
+        NUMERICS_INLINE
+        size_type packed_size (size_type size1, size_type size2) {
+            size_type size = std::max (size1, size2);
+            return ((size + 1) * size) / 2;
+        }
+
+        static 
+        NUMERICS_INLINE
+        bool zero (size_type i, size_type j) {
+            return j < i;
+        }
+        static 
+        NUMERICS_INLINE
+        bool one (size_type i, size_type j) {
+            return j == i;
+        }
+        static 
+        NUMERICS_INLINE
+        bool other (size_type i, size_type j) {
+            return j > i;
+        }
+        template<class F>
+        static 
+        NUMERICS_INLINE
+        size_type element (F, size_type i, size_type size1, size_type j, size_type size2) {
+            return F::upper_element (i, size1, j, size2);
+        }
+
+        static 
+        NUMERICS_INLINE
+        size_type restrict1 (size_type i, size_type j) {
+            return std::min (i, j + 1);
+        }
+        static 
+        NUMERICS_INLINE
+        size_type restrict2 (size_type i, size_type j) {
+            return std::max (i, j);
+        }
+        static 
+        NUMERICS_INLINE
+        size_type mutable_restrict1 (size_type i, size_type j) {
+            return std::min (i, j);
+        }
+        static 
+        NUMERICS_INLINE
+        size_type mutable_restrict2 (size_type i, size_type j) {
+            return std::max (i, j);
+        }
+    };
+
+    // Array based triangular matrix class 
+    template<class T, class F1, class F2, class A>
+    class triangular_matrix: 
+        public matrix_expression<triangular_matrix<T, F1, F2, A> > {
     public:      
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
@@ -38,10 +255,11 @@ namespace numerics {
         typedef T &reference_type;
         typedef const T *const_pointer_type;
         typedef T *pointer_type;
-        typedef F functor_type;
+        typedef F1 functor1_type;
+        typedef F2 functor2_type;
         typedef A array_type;
-        typedef const banded_matrix<T, F, A> const_self_type;
-        typedef banded_matrix<T, F, A> self_type;
+        typedef const triangular_matrix<T, F1, F2, A> const_self_type;
+        typedef triangular_matrix<T, F1, F2, A> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
         typedef matrix_reference<self_type> closure_type;
         typedef const matrix_row<const_self_type> const_matrix_row_type;
@@ -51,40 +269,36 @@ namespace numerics {
         typedef const matrix_range<const_self_type> const_matrix_range_type;
         typedef matrix_range<self_type> matrix_range_type;
         typedef struct packed_tag storage_category;
-        typedef typename F::orientation_category orientation_category;
+        typedef typename F1::packed_category packed_category;
+        typedef typename F2::orientation_category orientation_category;
 
         // Construction and destruction
         NUMERICS_INLINE
-        banded_matrix (): 
+        triangular_matrix (): 
             size1_ (0), size2_ (0),
-            lower_ (0), upper_ (0), data_ (0) {}
+            data_ (0) {}
         NUMERICS_INLINE
-        banded_matrix (size_type size1, size_type size2, size_type lower = 0, size_type upper = 0): 
+        triangular_matrix (size_type size1, size_type size2): 
             size1_ (size1), size2_ (size2),
-            lower_ (lower), upper_ (upper),
-            data_ (std::min (size1, size2) * (lower + 1 + upper)) {}
+            data_ (functor1_type::packed_size (size1, size2)) {}
         NUMERICS_INLINE
-        banded_matrix (const banded_matrix &m): 
-            size1_ (m.size1_), size2_ (m.size2_),       
-            lower_ (m.lower_), upper_ (m.upper_),
+        triangular_matrix (const triangular_matrix &m): 
+            size1_ (m.size1_), size2_ (m.size2_),
             data_ (m.data_) {}
         template<class AE>
         NUMERICS_EXPLICIT NUMERICS_INLINE
-        banded_matrix (const matrix_expression<AE> &ae, size_type lower = 0, size_type upper = 0): 
+        triangular_matrix (const matrix_expression<AE> &ae): 
             size1_ (ae ().size1 ()), size2_ (ae ().size2 ()),
-            lower_ (lower), upper_ (upper),
-            data_ (std::min (ae ().size1 (), ae ().size2 ()) * (lower + 1 + upper)) {
+            data_ (functor1_type::packed_size (ae ().size1 (), ae ().size2 ())) {
             matrix_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
         }
 
         // Resizing
         NUMERICS_INLINE
-        void resize (size_type size1, size_type size2, size_type lower = 0, size_type upper = 0) {
+        void resize (size_type size1, size_type size2) {
             size1_ = size1;
             size2_ = size2;
-            lower_ = lower;
-            upper_ = upper;
-            data_.resize (std::min (size1, size2) * (lower + 1 + upper));
+            data_.resize (functor1_type::packed_size (size1, size2));
         }
 
         NUMERICS_INLINE
@@ -95,39 +309,27 @@ namespace numerics {
         size_type size2 () const { 
             return size2_;
         }
-        NUMERICS_INLINE
-        size_type lower () const {
-            return lower_;
-        }
-        NUMERICS_INLINE
-        size_type upper () const {
-            return upper_;
-        }
 
         // Element access
         NUMERICS_INLINE
         value_type operator () (size_type i, size_type j) const {
             check (i < size1_, bad_index ());
             check (j < size2_, bad_index ());
-            size_type k = std::min (i, j);
-            size_type l = lower_ + j - i;
-            if (k < std::min (size1_, size2_) &&
-                l < lower_ + 1 + upper_) 
-                return data_ [functor_type::element (k, std::min (size1_, size2_),
-                                                     l, lower_ + 1 + upper_)]; 
-            return value_type ();
+            if (functor1_type::other (i, j))
+                return data_ [functor1_type::element (functor2_type (), i, size1_, j, size2_)];
+            else if (functor1_type::one (i, j))
+                return value_type (1);
+            else
+                return value_type (0);
         }
         NUMERICS_INLINE
         reference_type operator () (size_type i, size_type j) {
             check (i < size1_, bad_index ());
             check (j < size2_, bad_index ());
-            size_type k = std::min (i, j);
-            size_type l = lower_ + j - i;
-            if (k < std::min (size1_, size2_) &&
-                l < lower_ + 1 + upper_) 
-                return data_ [functor_type::element (k, std::min (size1_, size2_),
-                                                     l, lower_ + 1 + upper_)]; 
-            throw external_logic ();
+            if (functor1_type::other (i, j))
+                return data_ [functor1_type::element (functor2_type (), i, size1_, j, size2_)];
+            else
+                throw external_logic ();
         }
 
         NUMERICS_INLINE
@@ -174,88 +376,82 @@ namespace numerics {
 
         // Assignment
         NUMERICS_INLINE
-        banded_matrix &operator = (const banded_matrix &m) { 
+        triangular_matrix &operator = (const triangular_matrix &m) { 
             check (size1_ == m.size1_, bad_size ());
             check (size2_ == m.size2_, bad_size ());
-            check (lower_ == m.lower_, bad_size ());
-            check (upper_ == m.upper_, bad_size ());
             data_ = m.data_;
             return *this;
         }
         NUMERICS_INLINE
-        banded_matrix &assign_temporary (banded_matrix &m) { 
+        triangular_matrix &assign_temporary (triangular_matrix &m) { 
             swap (m);
             return *this;
         }
         template<class AE>
         NUMERICS_INLINE
-        banded_matrix &operator = (const matrix_expression<AE> &ae) { 
+        triangular_matrix &operator = (const matrix_expression<AE> &ae) { 
 #ifndef USE_GCC
-            return assign_temporary (self_type (ae, lower_, upper_));
+            return assign_temporary (self_type (ae));
 #else
-            return assign (self_type (ae, lower_, upper_));
+            return assign (self_type (ae));
 #endif
         }
         template<class AE>
         NUMERICS_INLINE
-        banded_matrix &assign (const matrix_expression<AE> &ae) { 
+        triangular_matrix &assign (const matrix_expression<AE> &ae) { 
             matrix_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
             return *this;
         }
         template<class AE>
         NUMERICS_INLINE
-        banded_matrix& operator += (const matrix_expression<AE> &ae) {
+        triangular_matrix& operator += (const matrix_expression<AE> &ae) {
 #ifndef USE_GCC
-            return assign_temporary (self_type (*this + ae, lower_, upper_));
+            return assign_temporary (self_type (*this + ae));
 #else
-            return assign (self_type (*this + ae, lower_, upper_));
+            return assign (self_type (*this + ae));
 #endif
         }
         template<class AE>
         NUMERICS_INLINE
-        banded_matrix &plus_assign (const matrix_expression<AE> &ae) { 
+        triangular_matrix &plus_assign (const matrix_expression<AE> &ae) { 
             matrix_assign<scalar_plus_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
             return *this;
         }
         template<class AE>
         NUMERICS_INLINE
-        banded_matrix& operator -= (const matrix_expression<AE> &ae) {
+        triangular_matrix& operator -= (const matrix_expression<AE> &ae) {
 #ifndef USE_GCC
-            return assign_temporary (self_type (*this - ae, lower_, upper_));
+            return assign_temporary (self_type (*this - ae));
 #else
-            return assign (self_type (*this - ae, lower_, upper_));
+            return assign (self_type (*this - ae));
 #endif
         }
         template<class AE>
         NUMERICS_INLINE
-        banded_matrix &minus_assign (const matrix_expression<AE> &ae) { 
+        triangular_matrix &minus_assign (const matrix_expression<AE> &ae) { 
             matrix_assign<scalar_minus_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
             return *this;
         }
         template<class AT>
         NUMERICS_INLINE
-        banded_matrix& operator *= (const AT &at) {
+        triangular_matrix& operator *= (const AT &at) {
             matrix_assign_scalar<scalar_multiplies_assign<value_type, AT> > () (*this, at);
             return *this;
         }
 
         // Swapping
         NUMERICS_INLINE
-	    void swap (banded_matrix &m) {
+	    void swap (triangular_matrix &m) {
             check (this != &m, external_logic ());
             check (size1_ == m.size1_, bad_size ());
             check (size2_ == m.size2_, bad_size ());
-            check (lower_ == m.lower_, bad_size ());
-            check (upper_ == m.upper_, bad_size ());
             std::swap (size1_, m.size1_);
             std::swap (size2_, m.size2_);
-            std::swap (lower_, m.lower_);
-            std::swap (upper_, m.upper_);
             data_.swap (m.data_);
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
-	    friend void swap (banded_matrix &m1, banded_matrix &m2) {
+	    friend void swap (triangular_matrix &m1, triangular_matrix &m2) {
             m1.swap (m2);
         }
 #endif
@@ -269,21 +465,18 @@ namespace numerics {
             if (t == value_type ()) 
                 return;
 #endif
-            size_type k = std::min (i, j);
-            size_type l = lower_ + j - i;
-            check (data_ [functor_type::element (k, std::min (size1_, size2_), 
-                                                 l, lower_ + 1 + upper_)] == value_type (), bad_index ());
-            data_.insert (data_.begin () + functor_type::element (k, std::min (size1_, size2_), 
-                                                                  l, lower_ + 1 + upper_), t);
+            if (functor1_type::other (i, j)) {
+                check (data_ [functor1_type::element (functor2_type (), i, size1_, j, size2_)] == value_type (), bad_index ());
+                data_.insert (data_.begin () + functor1_type::element (functor2_type (), i, size1_, j, size2_), t);
+            } else
+                throw external_logic ();
         }
         NUMERICS_INLINE
         void erase (size_type i, size_type j) {
             check (i < size1_, bad_index ());
             check (j < size2_, bad_index ());
-            size_type k = std::min (i, j);
-            size_type l = lower_ + j - i;
-            data_.erase (data_.begin () + functor_type::element (k, std::min (size1_, size2_), 
-                                                                 l, lower_ + 1 + upper_));
+            if (functor1_type::other (i, j)) 
+                data_.erase (data_.begin () + functor1_type::element (functor2_type (), i, size1_, j, size2_));
         }
         NUMERICS_INLINE
         void clear () {
@@ -316,42 +509,26 @@ namespace numerics {
         // Element lookup
         NUMERICS_INLINE
         const_iterator1 find1 (int rank, size_type i, size_type j) const {
-            if (rank == 1 && i <= size1_ && j < size2_) {
-                size_type lower_i = std::max (difference_type (j - lower_), difference_type (0));
-                i = std::max (i, lower_i);
-                size_type upper_i = std::min (j + 1 + upper_, size1_);
-                i = std::min (i, upper_i);
-            }
+            if (rank == 1 && i <= size1_ && j < size2_) 
+                i = functor1_type::restrict1 (i, j);
             return const_iterator1 (*this, i, j);
         }
         NUMERICS_INLINE
         iterator1 find1 (int rank, size_type i, size_type j) {
-            if (rank == 1 && i <= size1_ && j < size2_) {
-                size_type lower_i = std::max (difference_type (j - lower_), difference_type (0));
-                i = std::max (i, lower_i);
-                size_type upper_i = std::min (j + 1 + upper_, size1_);
-                i = std::min (i, upper_i);
-            }
+            if (rank == 1 && i <= size1_ && j < size2_) 
+                i = functor1_type::mutable_restrict1 (i, j);
             return iterator1 (*this, i, j);
         }
         NUMERICS_INLINE
         const_iterator2 find2 (int rank, size_type i, size_type j) const {
-            if (rank == 1 && i < size1_ && j <= size2_) {
-                size_type lower_j = std::max (difference_type (i - lower_), difference_type (0));
-                j = std::max (j, lower_j);
-                size_type upper_j = std::min (i + 1 + upper_, size2_);
-                j = std::min (j, upper_j);
-            }
+            if (rank == 1 && i < size1_ && j <= size2_) 
+                j = functor1_type::restrict2 (i, j);
             return const_iterator2 (*this, i, j);
         }
         NUMERICS_INLINE
         iterator2 find2 (int rank, size_type i, size_type j) {
-            if (rank == 1 && i < size1_ && j <= size2_) {
-                size_type lower_j = std::max (difference_type (i - lower_), difference_type (0));
-                j = std::max (j, lower_j);
-                size_type upper_j = std::min (i + 1 + upper_, size2_);
-                j = std::min (j, upper_j);
-            }
+            if (rank == 1 && i < size1_ && j <= size2_) 
+                j = functor1_type::mutable_restrict2 (i, j);
             return iterator2 (*this, i, j);
         }
 
@@ -359,15 +536,15 @@ namespace numerics {
 
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
         class const_iterator1:
-            public container_const_reference<banded_matrix>,
+            public container_const_reference<triangular_matrix>,
             public random_access_iterator_base<const_iterator1, value_type> {
         public:
             typedef std::bidirectional_iterator_tag iterator_category;
 #ifndef USE_MSVC
-            typedef typename banded_matrix::difference_type difference_type;
-            typedef typename banded_matrix::value_type value_type;
-            typedef typename banded_matrix::value_type reference;
-            typedef typename banded_matrix::const_pointer_type pointer;
+            typedef typename triangular_matrix::difference_type difference_type;
+            typedef typename triangular_matrix::value_type value_type;
+            typedef typename triangular_matrix::value_type reference;
+            typedef typename triangular_matrix::const_pointer_type pointer;
 #endif
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
@@ -375,13 +552,13 @@ namespace numerics {
             // Construction and destruction
             NUMERICS_INLINE
             const_iterator1 ():
-                container_const_reference<banded_matrix> (), it1_ (), it2_ () {}
+                container_const_reference<triangular_matrix> (), it1_ (), it2_ () {}
             NUMERICS_INLINE
-            const_iterator1 (const banded_matrix &m, size_type it1, size_type it2):
-                container_const_reference<banded_matrix> (m), it1_ (it1), it2_ (it2) {}
+            const_iterator1 (const triangular_matrix &m, size_type it1, size_type it2):
+                container_const_reference<triangular_matrix> (m), it1_ (it1), it2_ (it2) {}
             NUMERICS_INLINE
             const_iterator1 (const iterator1 &it):
-                container_const_reference<banded_matrix> (it ()), it1_ (it.it1_), it2_ (it.it2_) {}
+                container_const_reference<triangular_matrix> (it ()), it1_ (it.it1_), it2_ (it.it2_) {}
 
             // Arithmetic
             NUMERICS_INLINE
@@ -445,7 +622,7 @@ namespace numerics {
             // Assignment 
             NUMERICS_INLINE
             const_iterator1 &operator = (const const_iterator1 &it) {
-                container_const_reference<banded_matrix>::assign (&it ());
+                container_const_reference<triangular_matrix>::assign (&it ());
                 it1_ = it.it1_;
                 it2_ = it.it2_;
                 return *this;
@@ -475,15 +652,15 @@ namespace numerics {
 
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
         class iterator1:
-            public container_reference<banded_matrix>,
+            public container_reference<triangular_matrix>,
             public random_access_iterator_base<iterator1, value_type> {
         public:
             typedef std::bidirectional_iterator_tag iterator_category;
 #ifndef USE_MSVC
-            typedef typename banded_matrix::difference_type difference_type;
-            typedef typename banded_matrix::value_type value_type;
-            typedef typename banded_matrix::reference_type reference;
-            typedef typename banded_matrix::pointer_type pointer;
+            typedef typename triangular_matrix::difference_type difference_type;
+            typedef typename triangular_matrix::value_type value_type;
+            typedef typename triangular_matrix::reference_type reference;
+            typedef typename triangular_matrix::pointer_type pointer;
 #endif
             typedef iterator2 dual_iterator_type;
             typedef reverse_iterator2 dual_reverse_iterator_type;
@@ -491,10 +668,10 @@ namespace numerics {
             // Construction and destruction
             NUMERICS_INLINE
             iterator1 ():
-                container_reference<banded_matrix> (), it1_ (), it2_ () {}
+                container_reference<triangular_matrix> (), it1_ (), it2_ () {}
             NUMERICS_INLINE
-            iterator1 (banded_matrix &m, size_type it1, size_type it2):
-                container_reference<banded_matrix> (m), it1_ (it1), it2_ (it2) {}
+            iterator1 (triangular_matrix &m, size_type it1, size_type it2):
+                container_reference<triangular_matrix> (m), it1_ (it1), it2_ (it2) {}
 
             // Arithmetic
             NUMERICS_INLINE
@@ -558,7 +735,7 @@ namespace numerics {
             // Assignment 
             NUMERICS_INLINE
             iterator1 &operator = (const iterator1 &it) {
-                container_reference<banded_matrix>::assign (&it ());
+                container_reference<triangular_matrix>::assign (&it ());
                 it1_ = it.it1_;
                 it2_ = it.it2_;
                 return *this;
@@ -590,15 +767,15 @@ namespace numerics {
 
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
         class const_iterator2:
-            public container_const_reference<banded_matrix>,
+            public container_const_reference<triangular_matrix>,
             public random_access_iterator_base<const_iterator2, value_type> {
         public:
             typedef std::bidirectional_iterator_tag iterator_category;
 #ifndef USE_MSVC
-            typedef typename banded_matrix::difference_type difference_type;
-            typedef typename banded_matrix::value_type value_type;
-            typedef typename banded_matrix::value_type reference;
-            typedef typename banded_matrix::const_pointer_type pointer;
+            typedef typename triangular_matrix::difference_type difference_type;
+            typedef typename triangular_matrix::value_type value_type;
+            typedef typename triangular_matrix::value_type reference;
+            typedef typename triangular_matrix::const_pointer_type pointer;
 #endif
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
@@ -606,13 +783,13 @@ namespace numerics {
             // Construction and destruction
             NUMERICS_INLINE
             const_iterator2 ():
-                container_const_reference<banded_matrix> (), it1_ (), it2_ () {}
+                container_const_reference<triangular_matrix> (), it1_ (), it2_ () {}
             NUMERICS_INLINE
-            const_iterator2 (const banded_matrix &m, size_type it1, size_type it2):
-                container_const_reference<banded_matrix> (m), it1_ (it1), it2_ (it2) {}
+            const_iterator2 (const triangular_matrix &m, size_type it1, size_type it2):
+                container_const_reference<triangular_matrix> (m), it1_ (it1), it2_ (it2) {}
             NUMERICS_INLINE
             const_iterator2 (const iterator2 &it):
-                container_const_reference<banded_matrix> (it ()), it1_ (it.it1_), it2_ (it.it2_) {}
+                container_const_reference<triangular_matrix> (it ()), it1_ (it.it1_), it2_ (it.it2_) {}
 
             // Arithmetic
             NUMERICS_INLINE
@@ -676,7 +853,7 @@ namespace numerics {
             // Assignment 
             NUMERICS_INLINE
             const_iterator2 &operator = (const const_iterator2 &it) {
-                container_const_reference<banded_matrix>::assign (&it ());
+                container_const_reference<triangular_matrix>::assign (&it ());
                 it1_ = it.it1_;
                 it2_ = it.it2_;
                 return *this;
@@ -706,15 +883,15 @@ namespace numerics {
 
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
         class iterator2:
-            public container_reference<banded_matrix>,
+            public container_reference<triangular_matrix>,
             public random_access_iterator_base<iterator2, value_type> {
         public:
             typedef std::bidirectional_iterator_tag iterator_category;
 #ifndef USE_MSVC
-            typedef typename banded_matrix::difference_type difference_type;
-            typedef typename banded_matrix::value_type value_type;
-            typedef typename banded_matrix::reference_type reference;
-            typedef typename banded_matrix::pointer_type pointer;
+            typedef typename triangular_matrix::difference_type difference_type;
+            typedef typename triangular_matrix::value_type value_type;
+            typedef typename triangular_matrix::reference_type reference;
+            typedef typename triangular_matrix::pointer_type pointer;
 #endif
             typedef iterator1 dual_iterator_type;
             typedef reverse_iterator1 dual_reverse_iterator_type;
@@ -722,10 +899,10 @@ namespace numerics {
             // Construction and destruction
             NUMERICS_INLINE
             iterator2 ():
-                container_reference<banded_matrix> (), it1_ (), it2_ () {}
+                container_reference<triangular_matrix> (), it1_ (), it2_ () {}
             NUMERICS_INLINE
-            iterator2 (banded_matrix &m, size_type it1, size_type it2):
-                container_reference<banded_matrix> (m), it1_ (it1), it2_ (it2) {}
+            iterator2 (triangular_matrix &m, size_type it1, size_type it2):
+                container_reference<triangular_matrix> (m), it1_ (it1), it2_ (it2) {}
 
             // Arithmetic
             NUMERICS_INLINE
@@ -789,7 +966,7 @@ namespace numerics {
             // Assignment 
             NUMERICS_INLINE
             iterator2 &operator = (const iterator2 &it) {
-                container_reference<banded_matrix>::assign (&it ());
+                container_reference<triangular_matrix>::assign (&it ());
                 it1_ = it.it1_;
                 it2_ = it.it2_;
                 return *this;
@@ -860,18 +1037,17 @@ namespace numerics {
     private:
         size_type size1_;
         size_type size2_;
-        size_type lower_;
-        size_type upper_;
         array_type data_;
     };
 
-    // Banded matrix adaptor class 
-    template<class M>
-    class banded_adaptor: 
-        public matrix_expression<banded_adaptor<M> > {
+    // Triangular matrix adaptor class 
+    template<class M, class F>
+    class triangular_adaptor: 
+        public matrix_expression<triangular_adaptor<M, F> > {
     public:      
         typedef const M const_matrix_type;
         typedef M matrix_type;
+        typedef F functor_type;
         typedef typename M::size_type size_type;
         typedef typename M::difference_type difference_type;
         typedef typename M::value_type value_type;
@@ -879,8 +1055,8 @@ namespace numerics {
         typedef typename M::reference_type reference_type;
         typedef typename M::const_pointer_type const_pointer_type;
         typedef typename M::pointer_type pointer_type;
-        typedef const banded_adaptor<M> const_self_type;
-        typedef banded_adaptor<M> self_type;
+        typedef const triangular_adaptor<M, F> const_self_type;
+        typedef triangular_adaptor<M, F> self_type;
         typedef const matrix_const_reference<const_self_type> const_closure_type;
         typedef matrix_reference<self_type> closure_type;
         typedef const matrix_row<const_self_type> const_matrix_row_type;
@@ -890,18 +1066,19 @@ namespace numerics {
         typedef const matrix_range<const_self_type> const_matrix_range_type;
         typedef matrix_range<self_type> matrix_range_type;
         typedef struct packed_tag storage_category;
+        typedef typename F::packed_category packed_category;
         typedef typename M::orientation_category orientation_category;
 
         // Construction and destruction
         NUMERICS_INLINE
-        banded_adaptor (): 
-            data_ (nil_), lower_ (0), upper_ (0) {}
+        triangular_adaptor (): 
+            data_ (nil_) {}
         NUMERICS_INLINE
-        banded_adaptor (matrix_type &data, size_type lower = 0, size_type upper = 0): 
-            data_ (data), lower_ (lower), upper_ (upper) {}
+        triangular_adaptor (matrix_type &data): 
+            data_ (data) {}
         NUMERICS_INLINE
-        banded_adaptor (const banded_adaptor &m): 
-            data_ (m.data_), lower_ (m.lower_), upper_ (m.upper_) {}
+        triangular_adaptor (const triangular_adaptor &m): 
+            data_ (m.data_) {}
 
         NUMERICS_INLINE
         size_type size1 () const { 
@@ -911,37 +1088,27 @@ namespace numerics {
         size_type size2 () const { 
             return data_.size2 ();
         }
-        NUMERICS_INLINE
-        size_type lower () const {
-            return lower_;
-        }
-        NUMERICS_INLINE
-        size_type upper () const {
-            return upper_;
-        }
 
         // Element access
         NUMERICS_INLINE
         value_type operator () (size_type i, size_type j) const {
             check (i < size1 (), bad_index ());
             check (j < size2 (), bad_index ());
-            size_type k = std::min (i, j);
-            size_type l = lower_ + j - i;
-            if (k < std::min (size1 (), size2 ()) &&
-                l < lower_ + 1 + upper_) 
-                return data_ (i, j); 
-            return value_type ();
+            if (functor_type::other (i, j))
+                return data_ (i, j);
+            else if (functor_type::one (i, j))
+                return value_type (1);
+            else
+                return value_type (0);
         }
         NUMERICS_INLINE
         reference_type operator () (size_type i, size_type j) {
             check (i < size1 (), bad_index ());
             check (j < size2 (), bad_index ());
-            size_type k = std::min (i, j);
-            size_type l = lower_ + j - i;
-            if (k < std::min (size1 (), size2 ()) &&
-                l < lower_ + 1 + upper_) 
-                return data_ (i, j); 
-            throw external_logic ();
+            if (functor_type::other (i, j))
+                return data_ (i, j);
+            else
+                throw external_logic ();
         }
 
         NUMERICS_INLINE
@@ -988,69 +1155,67 @@ namespace numerics {
 
         // Assignment
         NUMERICS_INLINE
-        banded_adaptor &operator = (const banded_adaptor &m) { 
+        triangular_adaptor &operator = (const triangular_adaptor &m) { 
             matrix_assign<scalar_assign<value_type, value_type> > () (*this, m); 
             return *this;
         }
         NUMERICS_INLINE
-        banded_adaptor &assign_temporary (banded_adaptor &m) { 
+        triangular_adaptor &assign_temporary (triangular_adaptor &m) { 
             *this = m;
             return *this;
         }
         template<class AE>
         NUMERICS_INLINE
-        banded_adaptor &operator = (const matrix_expression<AE> &ae) { 
+        triangular_adaptor &operator = (const matrix_expression<AE> &ae) { 
             matrix_assign<scalar_assign<value_type, value_type> > () (*this, matrix<value_type> (ae)); 
             return *this;
         }
         template<class AE>
         NUMERICS_INLINE
-        banded_adaptor &assign (const matrix_expression<AE> &ae) { 
+        triangular_adaptor &assign (const matrix_expression<AE> &ae) { 
             matrix_assign<scalar_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
             return *this;
         }
         template<class AE>
         NUMERICS_INLINE
-        banded_adaptor& operator += (const matrix_expression<AE> &ae) {
+        triangular_adaptor& operator += (const matrix_expression<AE> &ae) {
             matrix_assign<scalar_assign<value_type, value_type> > () (*this, matrix<value_type> (*this + ae)); 
             return *this;
         }
         template<class AE>
         NUMERICS_INLINE
-        banded_adaptor &plus_assign (const matrix_expression<AE> &ae) { 
+        triangular_adaptor &plus_assign (const matrix_expression<AE> &ae) { 
             matrix_assign<scalar_plus_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
             return *this;
         }
         template<class AE>
         NUMERICS_INLINE
-        banded_adaptor& operator -= (const matrix_expression<AE> &ae) {
+        triangular_adaptor& operator -= (const matrix_expression<AE> &ae) {
             matrix_assign<scalar_assign<value_type, value_type> > () (*this, matrix<value_type> (*this - ae)); 
             return *this;
         }
         template<class AE>
         NUMERICS_INLINE
-        banded_adaptor &minus_assign (const matrix_expression<AE> &ae) { 
+        triangular_adaptor &minus_assign (const matrix_expression<AE> &ae) { 
             matrix_assign<scalar_minus_assign<value_type, NUMERICS_TYPENAME AE::value_type> > () (*this, ae); 
             return *this;
         }
         template<class AT>
         NUMERICS_INLINE
-        banded_adaptor& operator *= (const AT &at) {
+        triangular_adaptor& operator *= (const AT &at) {
             matrix_assign_scalar<scalar_multiplies_assign<value_type, AT> > () (*this, at);
             return *this;
         }
 
         // Swapping
         NUMERICS_INLINE
-	    void swap (banded_adaptor &m) {
+	    void swap (triangular_adaptor &m) {
             check (this != &m, external_logic ());
-            check (lower_ == m.lower_, bad_size ());
-            check (upper_ == m.upper_, bad_size ());
             matrix_swap<scalar_swap<value_type, value_type> > () (*this, m); 
         }
 #ifndef USE_GCC
         NUMERICS_INLINE
-	    friend void swap (banded_adaptor &m1, banded_adaptor &m2) {
+	    friend void swap (triangular_adaptor &m1, triangular_adaptor &m2) {
             m1.swap (m2);
         }
 #endif
@@ -1081,42 +1246,26 @@ namespace numerics {
         // Element lookup
         NUMERICS_INLINE
         const_iterator1 find1 (int rank, size_type i, size_type j) const {
-            if (rank == 1 && i <= size1 () && j < size2 ()) {
-                size_type lower_i = std::max (difference_type (j - lower_), difference_type (0));
-                i = std::max (i, lower_i);
-                size_type upper_i = std::min (j + 1 + upper_, size1 ());
-                i = std::min (i, upper_i);
-            }
+            if (rank == 1 && i <= size1 () && j < size2 ()) 
+                i = functor_type::restrict1 (i, j);
             return const_iterator1 (*this, i, j);
         }
         NUMERICS_INLINE
         iterator1 find1 (int rank, size_type i, size_type j) {
-            if (rank == 1 && i <= size1 () && j < size2 ()) {
-                size_type lower_i = std::max (difference_type (j - lower_), difference_type (0));
-                i = std::max (i, lower_i);
-                size_type upper_i = std::min (j + 1 + upper_, size1 ());
-                i = std::min (i, upper_i);
-            }
+            if (rank == 1 && i <= size1 () && j < size2 ()) 
+                i = functor_type::mutable_restrict1 (i, j);
             return iterator1 (*this, i, j);
         }
         NUMERICS_INLINE
         const_iterator2 find2 (int rank, size_type i, size_type j) const {
-            if (rank == 1 && i < size1 () && j <= size2 ()) {
-                size_type lower_j = std::max (difference_type (i - lower_), difference_type (0));
-                j = std::max (j, lower_j);
-                size_type upper_j = std::min (i + 1 + upper_, size2 ());
-                j = std::min (j, upper_j);
-            }
+            if (rank == 1 && i < size1 () && j <= size2 ()) 
+                j = functor_type::restrict2 (i, j);
             return const_iterator2 (*this, i, j);
         }
         NUMERICS_INLINE
         iterator2 find2 (int rank, size_type i, size_type j) {
-            if (rank == 1 && i < size1 () && j <= size2 ()) {
-                size_type lower_j = std::max (difference_type (i - lower_), difference_type (0));
-                j = std::max (j, lower_j);
-                size_type upper_j = std::min (i + 1 + upper_, size2 ());
-                j = std::min (j, upper_j);
-            }
+            if (rank == 1 && i < size1 () && j <= size2 ()) 
+                j = functor_type::mutable_restrict2 (i, j);
             return iterator2 (*this, i, j);
         }
 
@@ -1124,15 +1273,15 @@ namespace numerics {
 
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
         class const_iterator1:
-            public container_const_reference<banded_adaptor>,
+            public container_const_reference<triangular_adaptor>,
             public random_access_iterator_base<const_iterator1, value_type> {
         public:
             typedef std::bidirectional_iterator_tag iterator_category;
 #ifndef USE_MSVC
-            typedef typename banded_adaptor::difference_type difference_type;
-            typedef typename banded_adaptor::value_type value_type;
-            typedef typename banded_adaptor::value_type reference;
-            typedef typename banded_adaptor::const_pointer_type pointer;
+            typedef typename triangular_adaptor::difference_type difference_type;
+            typedef typename triangular_adaptor::value_type value_type;
+            typedef typename triangular_adaptor::value_type reference;
+            typedef typename triangular_adaptor::const_pointer_type pointer;
 #endif
             typedef const_iterator2 dual_iterator_type;
             typedef const_reverse_iterator2 dual_reverse_iterator_type;
@@ -1140,13 +1289,13 @@ namespace numerics {
             // Construction and destruction
             NUMERICS_INLINE
             const_iterator1 ():
-                container_const_reference<banded_adaptor> (), it1_ (), it2_ () {}
+                container_const_reference<triangular_adaptor> (), it1_ (), it2_ () {}
             NUMERICS_INLINE
-            const_iterator1 (const banded_adaptor &m, size_type it1, size_type it2):
-                container_const_reference<banded_adaptor> (m), it1_ (it1), it2_ (it2) {}
+            const_iterator1 (const triangular_adaptor &m, size_type it1, size_type it2):
+                container_const_reference<triangular_adaptor> (m), it1_ (it1), it2_ (it2) {}
             NUMERICS_INLINE
             const_iterator1 (const iterator1 &it):
-                container_const_reference<banded_adaptor> (it ()), it1_ (it.it1_), it2_ (it.it2_) {}
+                container_const_reference<triangular_adaptor> (it ()), it1_ (it.it1_), it2_ (it.it2_) {}
 
             // Arithmetic
             NUMERICS_INLINE
@@ -1210,7 +1359,7 @@ namespace numerics {
             // Assignment 
             NUMERICS_INLINE
             const_iterator1 &operator = (const const_iterator1 &it) {
-                container_const_reference<banded_adaptor>::assign (&it ());
+                container_const_reference<triangular_adaptor>::assign (&it ());
                 it1_ = it.it1_;
                 it2_ = it.it2_;
                 return *this;
@@ -1240,15 +1389,15 @@ namespace numerics {
 
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
         class iterator1:
-            public container_reference<banded_adaptor>,
+            public container_reference<triangular_adaptor>,
             public random_access_iterator_base<iterator1, value_type> {
         public:
             typedef std::bidirectional_iterator_tag iterator_category;
 #ifndef USE_MSVC
-            typedef typename banded_adaptor::difference_type difference_type;
-            typedef typename banded_adaptor::value_type value_type;
-            typedef typename banded_adaptor::reference_type reference;
-            typedef typename banded_adaptor::pointer_type pointer;
+            typedef typename triangular_adaptor::difference_type difference_type;
+            typedef typename triangular_adaptor::value_type value_type;
+            typedef typename triangular_adaptor::reference_type reference;
+            typedef typename triangular_adaptor::pointer_type pointer;
 #endif
             typedef iterator2 dual_iterator_type;
             typedef reverse_iterator2 dual_reverse_iterator_type;
@@ -1256,10 +1405,10 @@ namespace numerics {
             // Construction and destruction
             NUMERICS_INLINE
             iterator1 ():
-                container_reference<banded_adaptor> (), it1_ (), it2_ () {}
+                container_reference<triangular_adaptor> (), it1_ (), it2_ () {}
             NUMERICS_INLINE
-            iterator1 (banded_adaptor &m, size_type it1, size_type it2):
-                container_reference<banded_adaptor> (m), it1_ (it1), it2_ (it2) {}
+            iterator1 (triangular_adaptor &m, size_type it1, size_type it2):
+                container_reference<triangular_adaptor> (m), it1_ (it1), it2_ (it2) {}
 
             // Arithmetic
             NUMERICS_INLINE
@@ -1323,7 +1472,7 @@ namespace numerics {
             // Assignment 
             NUMERICS_INLINE
             iterator1 &operator = (const iterator1 &it) {
-                container_reference<banded_adaptor>::assign (&it ());
+                container_reference<triangular_adaptor>::assign (&it ());
                 it1_ = it.it1_;
                 it2_ = it.it2_;
                 return *this;
@@ -1355,15 +1504,15 @@ namespace numerics {
 
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
         class const_iterator2:
-            public container_const_reference<banded_adaptor>,
+            public container_const_reference<triangular_adaptor>,
             public random_access_iterator_base<const_iterator2, value_type> {
         public:
             typedef std::bidirectional_iterator_tag iterator_category;
 #ifndef USE_MSVC
-            typedef typename banded_adaptor::difference_type difference_type;
-            typedef typename banded_adaptor::value_type value_type;
-            typedef typename banded_adaptor::value_type reference;
-            typedef typename banded_adaptor::const_pointer_type pointer;
+            typedef typename triangular_adaptor::difference_type difference_type;
+            typedef typename triangular_adaptor::value_type value_type;
+            typedef typename triangular_adaptor::value_type reference;
+            typedef typename triangular_adaptor::const_pointer_type pointer;
 #endif
             typedef const_iterator1 dual_iterator_type;
             typedef const_reverse_iterator1 dual_reverse_iterator_type;
@@ -1371,13 +1520,13 @@ namespace numerics {
             // Construction and destruction
             NUMERICS_INLINE
             const_iterator2 ():
-                container_const_reference<banded_adaptor> (), it1_ (), it2_ () {}
+                container_const_reference<triangular_adaptor> (), it1_ (), it2_ () {}
             NUMERICS_INLINE
-            const_iterator2 (const banded_adaptor &m, size_type it1, size_type it2):
-                container_const_reference<banded_adaptor> (m), it1_ (it1), it2_ (it2) {}
+            const_iterator2 (const triangular_adaptor &m, size_type it1, size_type it2):
+                container_const_reference<triangular_adaptor> (m), it1_ (it1), it2_ (it2) {}
             NUMERICS_INLINE
             const_iterator2 (const iterator2 &it):
-                container_const_reference<banded_adaptor> (it ()), it1_ (it.it1_), it2_ (it.it2_) {}
+                container_const_reference<triangular_adaptor> (it ()), it1_ (it.it1_), it2_ (it.it2_) {}
 
             // Arithmetic
             NUMERICS_INLINE
@@ -1441,7 +1590,7 @@ namespace numerics {
             // Assignment 
             NUMERICS_INLINE
             const_iterator2 &operator = (const const_iterator2 &it) {
-                container_const_reference<banded_adaptor>::assign (&it ());
+                container_const_reference<triangular_adaptor>::assign (&it ());
                 it1_ = it.it1_;
                 it2_ = it.it2_;
                 return *this;
@@ -1471,15 +1620,15 @@ namespace numerics {
 
 #ifndef NUMERICS_USE_INDEXED_ITERATOR
         class iterator2:
-            public container_reference<banded_adaptor>,
+            public container_reference<triangular_adaptor>,
             public random_access_iterator_base<iterator2, value_type> {
         public:
             typedef std::bidirectional_iterator_tag iterator_category;
 #ifndef USE_MSVC
-            typedef typename banded_adaptor::difference_type difference_type;
-            typedef typename banded_adaptor::value_type value_type;
-            typedef typename banded_adaptor::reference_type reference;
-            typedef typename banded_adaptor::pointer_type pointer;
+            typedef typename triangular_adaptor::difference_type difference_type;
+            typedef typename triangular_adaptor::value_type value_type;
+            typedef typename triangular_adaptor::reference_type reference;
+            typedef typename triangular_adaptor::pointer_type pointer;
 #endif
             typedef iterator1 dual_iterator_type;
             typedef reverse_iterator1 dual_reverse_iterator_type;
@@ -1487,10 +1636,10 @@ namespace numerics {
             // Construction and destruction
             NUMERICS_INLINE
             iterator2 ():
-                container_reference<banded_adaptor> (), it1_ (), it2_ () {}
+                container_reference<triangular_adaptor> (), it1_ (), it2_ () {}
             NUMERICS_INLINE
-            iterator2 (banded_adaptor &m, size_type it1, size_type it2):
-                container_reference<banded_adaptor> (m), it1_ (it1), it2_ (it2) {}
+            iterator2 (triangular_adaptor &m, size_type it1, size_type it2):
+                container_reference<triangular_adaptor> (m), it1_ (it1), it2_ (it2) {}
 
             // Arithmetic
             NUMERICS_INLINE
@@ -1554,7 +1703,7 @@ namespace numerics {
             // Assignment 
             NUMERICS_INLINE
             iterator2 &operator = (const iterator2 &it) {
-                container_reference<banded_adaptor>::assign (&it ());
+                container_reference<triangular_adaptor>::assign (&it ());
                 it1_ = it.it1_;
                 it2_ = it.it2_;
                 return *this;
@@ -1624,13 +1773,315 @@ namespace numerics {
 
     private:
         matrix_type &data_;
-        size_type lower_;
-        size_type upper_;
         static matrix_type nil_;
     };
 
-    template<class M>
-    banded_adaptor<M>::matrix_type banded_adaptor<M>::nil_;
+    template<class M, class F>
+    triangular_adaptor<M, F>::matrix_type triangular_adaptor<M, F>::nil_;
+
+    // FIXME: don't we need iterator versions?
+    template<class E1, class E2>
+    struct matrix_vector_solve_traits {
+        typedef typename promote_traits<typename E1::value_type, typename E2::value_type>::promote_type promote_type;
+        typedef vector<promote_type> result_type;
+    };
+
+    // Operations: 
+    //  n * (n - 1) / 2 + n = n * (n + 1) / 2 multiplies,
+    //  n * (n - 1) / 2 plus
+
+    template<class E1, class E2>
+    NUMERICS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, 
+                        E2 &e2,
+                        lower_tag,
+                        vector_tag) {
+        typedef NUMERICS_TYPENAME E2::size_type size_type;
+        typedef NUMERICS_TYPENAME E2::difference_type difference_type;
+        typedef NUMERICS_TYPENAME E2::value_type value_type;
+
+        check (e1 ().size1 () == e1 ().size2 (), bad_size ());
+        check (e1 ().size2 () == e2.size (), bad_size ());
+        size_type size = e2.size ();
+        for (size_type n = 0; n < size; ++ n) {
+            check (e1 () (n, n) != value_type (), singular ());
+            value_type t = e2 (n) /= e1 () (n, n);
+            for (size_type m = n + 1; m < size; ++ m) 
+                e2 (m) -= e1 () (m, n) * t;
+        }
+    }
+    template<class E1, class E2>
+    NUMERICS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, 
+                        E2 &e2,
+                        upper_tag,
+                        vector_tag) {
+        typedef NUMERICS_TYPENAME E2::size_type size_type;
+        typedef NUMERICS_TYPENAME E2::difference_type difference_type;
+        typedef NUMERICS_TYPENAME E2::value_type value_type;
+
+        check (e1 ().size1 () == e1 ().size2 (), bad_size ());
+        check (e1 ().size2 () == e2.size (), bad_size ());
+        size_type size = e2.size ();
+        for (difference_type n = size - 1; n >= 0; -- n) {
+            check (e1 () (n, n) != value_type (), singular ());
+            value_type t = e2 (n) /= e1 () (n, n);
+            for (difference_type m = n - 1; m >= 0; -- m) 
+                e2 (m) -= e1 () (m, n) * t;
+        }
+    }
+    template<class E1, class E2>
+    NUMERICS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, 
+                        E2 &e2,
+                        unit_lower_tag,
+                        vector_tag) {
+        typedef NUMERICS_TYPENAME E2::size_type size_type;
+        typedef NUMERICS_TYPENAME E2::difference_type difference_type;
+        typedef NUMERICS_TYPENAME E2::value_type value_type;
+
+        check (e1 ().size1 () == e1 ().size2 (), bad_size ());
+        check (e1 ().size2 () == e2.size (), bad_size ());
+        size_type size = e2.size ();
+        for (size_type n = 0; n < size; ++ n) {
+            value_type t = e2 (n);
+            for (size_type m = n + 1; m < size; ++ m) 
+                e2 (m) -= e1 () (m, n) * t;
+        }
+    }
+    template<class E1, class E2>
+    NUMERICS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, 
+                        E2 &e2,
+                        unit_upper_tag,
+                        vector_tag) {
+        typedef NUMERICS_TYPENAME E2::size_type size_type;
+        typedef NUMERICS_TYPENAME E2::difference_type difference_type;
+        typedef NUMERICS_TYPENAME E2::value_type value_type;
+
+        check (e1 ().size1 () == e1 ().size2 (), bad_size ());
+        check (e1 ().size2 () == e2.size (), bad_size ());
+        size_type size = e2.size ();
+        for (difference_type n = size - 1; n >= 0; -- n) {
+            value_type t = e2 (n);
+            for (difference_type m = n - 1; m >= 0; -- m) 
+                e2 (m) -= e1 () (m, n) * t;
+        }
+    }
+
+    template<class E1, class E2, class C>
+    NUMERICS_INLINE
+    typename matrix_vector_solve_traits<E1, E2>::result_type
+    solve (const matrix_expression<E1> &e1, 
+           const vector_expression<E2> &e2,
+           C) {
+        typename matrix_vector_solve_traits<E1, E2>::result_type r (e2);
+        inplace_solve (e1, r, C (), vector_tag ());
+        return r;
+    }
+
+    template<class E1, class E2>
+    NUMERICS_INLINE
+    void inplace_solve (E1 &e1,
+                        const matrix_expression<E2> &e2, 
+                        vector_tag, 
+                        lower_tag) {
+        typedef NUMERICS_TYPENAME E1::size_type size_type;
+        typedef NUMERICS_TYPENAME E1::difference_type difference_type;
+        typedef NUMERICS_TYPENAME E1::value_type value_type;
+
+        check (e1 ().size () == e2.size1 (), bad_size ());
+        check (e2.size1 () == e2.size2 (), bad_size ());
+        size_type size = e1.size ();
+        for (size_type n = 0; n < size; ++ n) {
+            check (e2 (n, n) != value_type (), singular ());
+            value_type t = e1 (n) /= e2 (n, n);
+            for (size_type m = n + 1; m < size; ++ m) 
+                e1 (m) -= t * e2 (n, m);
+        }
+    }
+    template<class E1, class E2>
+    NUMERICS_INLINE
+    void inplace_solve (E1 &e1,
+                        const matrix_expression<E2> &e2, 
+                        vector_tag, 
+                        upper_tag) {
+        typedef NUMERICS_TYPENAME E1::size_type size_type;
+        typedef NUMERICS_TYPENAME E1::difference_type difference_type;
+        typedef NUMERICS_TYPENAME E1::value_type value_type;
+
+        check (e1 ().size () == e2.size1 (), bad_size ());
+        check (e2.size1 () == e2.size2 (), bad_size ());
+        size_type size = e1.size ();
+        for (difference_type n = size - 1; n >= 0; -- n) {
+            check (e2 (n, n) != value_type (), singular ());
+            value_type t = e1 (n) /= e2 (n, n);
+            for (difference_type m = n - 1; m >= 0; -- m) 
+                e1 (m) -= t * e2 (n, m);
+        }
+    }
+    template<class E1, class E2>
+    NUMERICS_INLINE
+    void inplace_solve (E1 &e1,
+                        const matrix_expression<E2> &e2, 
+                        vector_tag, 
+                        unit_lower_tag) {
+        typedef NUMERICS_TYPENAME E2::size_type size_type;
+        typedef NUMERICS_TYPENAME E2::difference_type difference_type;
+        typedef NUMERICS_TYPENAME E2::value_type value_type;
+
+        check (e1 ().size () == e2.size1 (), bad_size ());
+        check (e2.size1 () == e2.size2 (), bad_size ());
+        size_type size = e1.size ();
+        for (size_type n = 0; n < size; ++ n) {
+            value_type t = e1 (n);
+            for (size_type m = n + 1; m < size; ++ m) 
+                e1 (m) -= t * e2 (n, m);
+        }
+    }
+    template<class E1, class E2>
+    NUMERICS_INLINE
+    void inplace_solve (E1 &e1,
+                        const matrix_expression<E2> &e2, 
+                        vector_tag, 
+                        unit_upper_tag) {
+        typedef NUMERICS_TYPENAME E2::size_type size_type;
+        typedef NUMERICS_TYPENAME E2::difference_type difference_type;
+        typedef NUMERICS_TYPENAME E2::value_type value_type;
+
+        check (e1 ().size1 () == e1 ().size2 (), bad_size ());
+        check (e1 ().size2 () == e2.size (), bad_size ());
+        size_type size = e1.size ();
+        for (difference_type n = size - 1; n >= 0; -- n) {
+            value_type t = e1 (n);
+            for (difference_type m = n - 1; m >= 0; -- m) 
+                e1 (m) -= t * e2 (n, m);
+        }
+    }
+
+    template<class E1, class E2, class C>
+    NUMERICS_INLINE
+    typename matrix_vector_solve_traits<E1, E2>::result_type
+    solve (const vector_expression<E1> &e1, 
+           const matrix_expression<E2> &e2,
+           C) {
+        typename matrix_vector_solve_traits<E1, E2>::result_type r (e1);
+        inplace_solve (r, e2, vector_tag (), C ());
+        return r;
+    }
+
+    // FIXME: don't we need iterator versions?
+    template<class E1, class E2>
+    struct matrix_matrix_solve_traits {
+        typedef typename promote_traits<typename E1::value_type, typename E2::value_type>::promote_type promote_type;
+        typedef matrix<promote_type> result_type;
+    };
+
+    // Operations: 
+    //  k * n * (n - 1) / 2 + k * n = k * n * (n + 1) / 2 multiplies,
+    //  k * n * (n - 1) / 2 plus
+
+    template<class E1, class E2>
+    NUMERICS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, 
+                        E2 &e2,
+                        lower_tag,
+                        matrix_tag) {
+        typedef NUMERICS_TYPENAME E2::size_type size_type;
+        typedef NUMERICS_TYPENAME E2::difference_type difference_type;
+        typedef NUMERICS_TYPENAME E2::value_type value_type;
+
+        check (e1 ().size1 () == e1 ().size2 (), bad_size ());
+        check (e1 ().size2 () == e2.size1 (), bad_size ());
+        size_type size1 = e2.size1 ();
+        size_type size2 = e2.size2 ();
+        for (size_type n = 0; n < size1; ++ n) {
+            check (e1 () (n, n) != value_type (), singular ());
+            for (size_type l = 0; l < size2; ++ l) {
+                value_type t = e2 (n, l) /= e1 () (n, n);
+                for (size_type m = n + 1; m < size1; ++ m) 
+                    e2 (m, l) -= e1 () (m, n) * t;
+            }
+        }
+    }
+    template<class E1, class E2>
+    NUMERICS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, 
+                        E2 &e2,
+                        upper_tag,
+                        matrix_tag) {
+        typedef NUMERICS_TYPENAME E2::size_type size_type;
+        typedef NUMERICS_TYPENAME E2::difference_type difference_type;
+        typedef NUMERICS_TYPENAME E2::value_type value_type;
+
+        check (e1 ().size1 () == e1 ().size2 (), bad_size ());
+        check (e1 ().size2 () == e2.size1 (), bad_size ());
+        size_type size1 = e2.size1 ();
+        size_type size2 = e2.size2 ();
+        for (difference_type n = size1 - 1; n >= 0; -- n) {
+            check (e1 () (n, n) != value_type (), singular ());
+            for (difference_type l = size2 - 1; l >= 0; -- l) {
+                value_type t = e2 (n, l) /= e1 () (n, n);
+                for (difference_type m = n - 1; m >= 0; -- m) 
+                    e2 (m, l) -= e1 () (m, n) * t;
+            }
+        }
+    }
+    template<class E1, class E2>
+    NUMERICS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, 
+                        E2 &e2,
+                        unit_lower_tag,
+                        matrix_tag) {
+        typedef NUMERICS_TYPENAME E2::size_type size_type;
+        typedef NUMERICS_TYPENAME E2::difference_type difference_type;
+        typedef NUMERICS_TYPENAME E2::value_type value_type;
+
+        check (e1 ().size1 () == e1 ().size2 (), bad_size ());
+        check (e1 ().size2 () == e2.size1 (), bad_size ());
+        size_type size1 = e2.size1 ();
+        size_type size2 = e2.size2 ();
+        for (size_type n = 0; n < size1; ++ n) {
+            for (size_type l = 0; l < size2; ++ l) {
+                value_type t = e2 (n, l);
+                for (size_type m = n + 1; m < size1; ++ m) 
+                    e2 (m, l) -= e1 () (m, n) * t;
+            }
+        }
+    }
+    template<class E1, class E2>
+    NUMERICS_INLINE
+    void inplace_solve (const matrix_expression<E1> &e1, 
+                        E2 &e2,
+                        unit_upper_tag,
+                        matrix_tag) {
+        typedef NUMERICS_TYPENAME E2::size_type size_type;
+        typedef NUMERICS_TYPENAME E2::difference_type difference_type;
+        typedef NUMERICS_TYPENAME E2::value_type value_type;
+
+        check (e1 ().size1 () == e1 ().size2 (), bad_size ());
+        check (e1 ().size2 () == e2.size1 (), bad_size ());
+        size_type size1 = e2.size1 ();
+        size_type size2 = e2.size2 ();
+        for (difference_type n = size1 - 1; n >= 0; -- n) {
+            for (difference_type l = size2 - 1; l >= 0; -- l) {
+                value_type t = e2 (n, l);
+                for (difference_type m = n - 1; m >= 0; -- m) 
+                    e2 (m, l) -= e1 () (m, n) * t;
+            }
+        }
+    }
+
+    template<class E1, class E2, class C>
+    NUMERICS_INLINE
+    typename matrix_matrix_solve_traits<E1, E2>::result_type
+    solve (const matrix_expression<E1> &e1, 
+           const matrix_expression<E2> &e2,
+           C) {
+        typename matrix_matrix_solve_traits<E1, E2>::result_type r (e2);
+        inplace_solve (e1, r, C (), matrix_tag ());
+        return r;
+    }
 
 }
 

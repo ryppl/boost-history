@@ -1,0 +1,670 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>Expression Concepts</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<h1>Expression Concepts</h1>
+
+<h2><a name="scalar_expression"></a>Scalar Expression</h2>
+
+<h4>Description</h4>
+
+<p>A Scalar Expression is an expression convertible to a builtin
+type. </p>
+
+<h4>Refinement of </h4>
+
+<p>Default Constructible.</p>
+
+<h4>Associated types</h4>
+
+<table border="1">
+    <tr>
+        <td>Value type </td>
+        <td><code>value_type</code> </td>
+        <td>The type of the scalar expression. </td>
+    </tr>
+</table>
+
+<h4>Notation</h4>
+
+<table border="0">
+    <tr>
+        <td><code>S</code> </td>
+        <td>A type that is a model of Scalar Expression</td>
+    </tr>
+</table>
+
+<h4>Definitions</h4>
+
+<h4>Valid expressions</h4>
+
+<p>In addition to the expressions defined in Default
+Constructible the following expressions must be valid. </p>
+
+<table border="1">
+    <tr>
+        <th>Name </th>
+        <th>Expression </th>
+        <th>Type requirements </th>
+        <th>Return type </th>
+    </tr>
+    <tr>
+        <td>Evaluation </td>
+        <td><code>operator value_type () const</code></td>
+        <td>&nbsp; </td>
+        <td><code>value_type</code></td>
+    </tr>
+</table>
+
+<h4>Expression semantics</h4>
+
+<p>Semantics of an expression is defined only where it differs
+from, or is not defined in Default Constructible.</p>
+
+<table border="1">
+    <tr>
+        <th>Name </th>
+        <th>Expression </th>
+        <th>Precondition </th>
+        <th>Semantics </th>
+        <th>Postcondition </th>
+    </tr>
+    <tr>
+        <td>Evaluation </td>
+        <td><code>operator value_type () const</code></td>
+        <td>&nbsp; </td>
+        <td>&nbsp; Evaluates the scalar expression.</td>
+        <td>&nbsp;</td>
+    </tr>
+</table>
+
+<h4>Complexity guarantees</h4>
+
+<p>The run-time complexity of the evaluation is specific for the
+evaluated scalar expression. </p>
+
+<h4>Invariants</h4>
+
+<h4>Models</h4>
+
+<ul>
+    <li><code>vector_scalar_unary&lt;E, F&gt;</code></li>
+    <li><code>vector_scalar_binary&lt;E1, E2, F&gt;</code></li>
+</ul>
+
+<h2><a name="vector_expression"></a>Vector Expression</h2>
+
+<h4>Description</h4>
+
+<p>A Vector Expression is an expression evaluatable to a vector.
+A Vector Expression provides a <a
+href="iterator.htm#indexed_bidirectional_iterator">Indexed
+Bidirectional Iterator</a> or an <a
+href="iterator.htm#indexed_random_access_iterator">Indexed Random
+Access Iterator</a>.</p>
+
+<h4>Refinement of </h4>
+
+<p>Default Constructible.</p>
+
+<h4>Associated types</h4>
+
+<table border="1">
+    <tr>
+        <td>Value type </td>
+        <td><code>value_type</code> </td>
+        <td>The type of the vector expression. </td>
+    </tr>
+    <tr>
+        <td>Const iterator type </td>
+        <td><code>const_iterator</code> </td>
+        <td>A type of iterator that may be used to examine a
+        vector expression's elements. </td>
+    </tr>
+    <tr>
+        <td>Distance type </td>
+        <td><code>difference_type</code> </td>
+        <td>A signed integral type used to represent the distance
+        between two of the vector expression's iterators. </td>
+    </tr>
+    <tr>
+        <td>Size type </td>
+        <td><code>size_type</code> </td>
+        <td>An unsigned integral type that can represent any
+        nonnegative value of the vector expression's distance
+        type. </td>
+    </tr>
+    <tr>
+        <td>Const reverse iterator type </td>
+        <td><code>const_reverse_iterator</code> </td>
+        <td>A Reverse Iterator adaptor whose base iterator type
+        is the vector expression's const iterator type. </td>
+    </tr>
+</table>
+
+<h4>Notation</h4>
+
+<table border="0">
+    <tr>
+        <td><code>V</code> </td>
+        <td>A type that is a model of Vector Expression</td>
+    </tr>
+    <tr>
+        <td><code>v</code></td>
+        <td>Object of type <code>V</code> </td>
+    </tr>
+    <tr>
+        <td><code>i</code> </td>
+        <td>Object of a type convertible to <code>size_type</code>
+        </td>
+    </tr>
+</table>
+
+<h4>Definitions</h4>
+
+<h4>Valid expressions</h4>
+
+<p>In addition to the expressions defined in Default
+Constructible the following expressions must be valid. </p>
+
+<table border="1">
+    <tr>
+        <th>Name </th>
+        <th>Expression </th>
+        <th>Type requirements </th>
+        <th>Return type </th>
+    </tr>
+    <tr>
+        <td>Beginning of range </td>
+        <td><code>v.begin ()</code> </td>
+        <td>&nbsp; </td>
+        <td><code>const_iterator</code></td>
+    </tr>
+    <tr>
+        <td>End of range </td>
+        <td><code>v.end ()</code> </td>
+        <td>&nbsp; </td>
+        <td><code>const_iterator</code></td>
+    </tr>
+    <tr>
+        <td>Size </td>
+        <td><code>v.size ()</code> </td>
+        <td>&nbsp; </td>
+        <td><code>size_type</code> </td>
+    </tr>
+    <tr>
+        <td>Beginning of reverse range </td>
+        <td><code>v.rbegin ()</code> </td>
+        <td>&nbsp; </td>
+        <td><code>const_reverse_iterator</code></td>
+    </tr>
+    <tr>
+        <td>End of reverse range </td>
+        <td><code>v.rend ()</code> </td>
+        <td>&nbsp; </td>
+        <td><code>const_reverse_iterator</code></td>
+    </tr>
+    <tr>
+        <td>Element access </td>
+        <td><code>v (i)</code> </td>
+        <td><code>i</code> is convertible to <code>size_type</code>
+        </td>
+        <td>Convertible to <code>value_type</code>.</td>
+    </tr>
+</table>
+
+<h4>Expression semantics</h4>
+
+<p>Semantics of an expression is defined only where it differs
+from, or is not defined in Default Constructible.</p>
+
+<table border="1">
+    <tr>
+        <th>Name </th>
+        <th>Expression </th>
+        <th>Precondition </th>
+        <th>Semantics </th>
+        <th>Postcondition </th>
+    </tr>
+    <tr>
+        <td>Beginning of range </td>
+        <td><code>v.begin ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Returns an iterator pointing to the first element in
+        the vector expression. </td>
+        <td><code>v.begin ()</code> is either dereferenceable or
+        past-the-end. It is past-the-end if and only if <code>v.size
+        () == 0</code>. </td>
+    </tr>
+    <tr>
+        <td>End of range </td>
+        <td><code>v.end ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Returns an iterator pointing one past the last
+        element in the vector expression. </td>
+        <td><code>v.end ()</code> is past-the-end. </td>
+    </tr>
+    <tr>
+        <td>Size </td>
+        <td><code>v.size ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Returns the size of the vector expression, that is,
+        its number of elements. </td>
+        <td><code>v.size () &gt;= 0 </code></td>
+    </tr>
+    <tr>
+        <td>Beginning of reverse range </td>
+        <td><code>v.rbegin ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Equivalent to <code>const_reverse_iterator (v.end ())</code>.
+        </td>
+        <td><code>v.rbegin ()</code> is either dereferenceable or
+        past-the-end. It is past-the-end if and only if <code>v.size
+        () == 0</code>. </td>
+    </tr>
+    <tr>
+        <td>End of reverse range </td>
+        <td><code>v.rend ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Equivalent to <code>const_reverse_iterator (v.begin
+        ())</code>. </td>
+        <td><code>v.rend ()</code> is past-the-end.</td>
+    </tr>
+    <tr>
+        <td>Element access </td>
+        <td><code>v (i)</code> </td>
+        <td><code>0 &lt;= i &lt; v.size ()</code> </td>
+        <td>Returns the <code>i</code>-th element of the vector
+        expression. </td>
+        <td>&nbsp;</td>
+    </tr>
+</table>
+
+<h4>Complexity guarantees</h4>
+
+<p>The run-time complexity of <code>begin () </code>and <code>end
+() </code>is specific for the evaluated vector expression,
+typically amortized constant time.</p>
+
+<p>The run-time complexity of <code>size () </code>is constant
+time. </p>
+
+<p>The run-time complexity of <code>rbegin () </code>and <code>rend
+() </code>is specific for the evaluated vector expression,
+typically amortized constant time.</p>
+
+<p>The run-time complexity of the element access is specific for
+the evaluated vector expression, typically amortized constant
+time for the dense and logarithmic for the sparse case.</p>
+
+<h4>Invariants</h4>
+
+<table border="1">
+    <tr>
+        <td>Valid range </td>
+        <td>For any vector expression <code>v</code>, <code>[v.begin
+        (), v.end ())</code> is a valid range. </td>
+    </tr>
+    <tr>
+        <td>Completeness </td>
+        <td>An algorithm that iterates through the range <code>[v.begin
+        (), v.end ())</code> will pass through every element of <code>v</code>.
+        </td>
+    </tr>
+    <tr>
+        <td>Valid reverse range </td>
+        <td><code>[v.rbegin (), v.rend ())</code> is a valid
+        range. </td>
+    </tr>
+    <tr>
+        <td>Equivalence of ranges </td>
+        <td>The distance from <code>v.begin ()</code> to <code>v.end
+        ()</code> is the same as the distance from <code>v.rbegin
+        ()</code> to <code>v.rend ()</code>. </td>
+    </tr>
+</table>
+
+<h4>Models</h4>
+
+<ul>
+    <li><code>vector_unary&lt;E, F&gt;</code></li>
+    <li><code>vector_binary&lt;E1, E2, F&gt;</code></li>
+    <li><code>vector_binary_scalar&lt;E1, E2, F&gt;</code></li>
+    <li><code>vector_expression_range&lt;E&gt;</code></li>
+    <li><code>matrix_vector_unary1&lt;E&gt;</code></li>
+    <li><code>matrix_vector_unary2&lt;E&gt;</code></li>
+    <li><code>matrix_vector_binary1&lt;E1, E2, F&gt;</code></li>
+    <li><code>matrix_vector_binary2&lt;E1, E2, F&gt;</code></li>
+</ul>
+
+<h2><a name="matrix_expression"></a>Matrix Expression</h2>
+
+<h4>Description</h4>
+
+<p>A Matrix Expression is an expression evaluatable to a matrix.
+A Matrix Expression provides a <a
+href="iterator.htm#indexed_bidirectional_cr_iterator">Indexed
+Bidirectional Column/Row Iterator</a> or a <a
+href="iterator.htm#indexed_random_access_cr_iterator">Indexed
+Random Access Column/Row Iterator</a>.</p>
+
+<h4>Refinement of </h4>
+
+<p>Default Constructible.</p>
+
+<h4>Associated types</h4>
+
+<table border="1">
+    <tr>
+        <td>Value type </td>
+        <td><code>value_type</code> </td>
+        <td>The type of the matrix expression. </td>
+    </tr>
+    <tr>
+        <td rowspan="2">Const iterator types </td>
+        <td><code>const_iterator1</code> </td>
+        <td>A type of column iterator that may be used to examine
+        a matrix expression's elements. </td>
+    </tr>
+    <tr>
+        <td><code>const_iterator2</code></td>
+        <td>A type of row iterator that may be used to examine a
+        matrix expression's elements. </td>
+    </tr>
+    <tr>
+        <td>Distance type </td>
+        <td><code>difference_type</code> </td>
+        <td>A signed integral type used to represent the distance
+        between two of the matrix expression's iterators. </td>
+    </tr>
+    <tr>
+        <td>Size type </td>
+        <td><code>size_type</code> </td>
+        <td>An unsigned integral type that can represent any
+        nonnegative value of the matrix expression's distance
+        type. </td>
+    </tr>
+    <tr>
+        <td rowspan="2">Const reverse iterator types </td>
+        <td><code>const_reverse_iterator1</code> </td>
+        <td>A Reverse Iterator adaptor whose base iterator type
+        is the matrix expression's const column iterator type. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator2</code> </td>
+        <td>A Reverse Iterator adaptor whose base iterator type
+        is the matrix expression's const row iterator type. </td>
+    </tr>
+</table>
+
+<h4>Notation</h4>
+
+<table border="0">
+    <tr>
+        <td><code>M</code> </td>
+        <td>A type that is a model of Matrix Expression</td>
+    </tr>
+    <tr>
+        <td><code>m</code></td>
+        <td>Object of type <code>M</code> </td>
+    </tr>
+    <tr>
+        <td><code>i, j</code></td>
+        <td>Objects of a type convertible to <code>size_type</code>
+        </td>
+    </tr>
+</table>
+
+<h4>Definitions</h4>
+
+<h4>Valid expressions</h4>
+
+<p>In addition to the expressions defined in Default
+Constructible the following expressions must be valid. </p>
+
+<table border="1">
+    <tr>
+        <th>Name </th>
+        <th>Expression </th>
+        <th>Type requirements </th>
+        <th>Return type </th>
+    </tr>
+    <tr>
+        <td rowspan="2">Beginning of range </td>
+        <td><code>m.begin1 ()</code> </td>
+        <td>&nbsp; </td>
+        <td><code>const_iterator1</code></td>
+    </tr>
+    <tr>
+        <td><code>m.begin2 ()</code> </td>
+        <td>&nbsp;</td>
+        <td><code>const_iterator2</code></td>
+    </tr>
+    <tr>
+        <td rowspan="2">End of range </td>
+        <td><code>m.end1 ()</code> </td>
+        <td>&nbsp; </td>
+        <td><code>const_iterator1</code></td>
+    </tr>
+    <tr>
+        <td><code>m.end2 ()</code> </td>
+        <td>&nbsp;</td>
+        <td><code>const_iterator2</code></td>
+    </tr>
+    <tr>
+        <td rowspan="2">Size </td>
+        <td><code>m.size1 ()</code> </td>
+        <td>&nbsp; </td>
+        <td><code>size_type</code> </td>
+    </tr>
+    <tr>
+        <td><code>m.size2 ()</code> </td>
+        <td>&nbsp;</td>
+        <td><code>size_type</code> </td>
+    </tr>
+    <tr>
+        <td rowspan="2">Beginning of reverse range </td>
+        <td><code>m.rbegin1 ()</code> </td>
+        <td>&nbsp; </td>
+        <td><code>const_reverse_iterator1</code></td>
+    </tr>
+    <tr>
+        <td><code>m.rbegin2 ()</code> </td>
+        <td>&nbsp;</td>
+        <td><code>const_reverse_iterator2</code></td>
+    </tr>
+    <tr>
+        <td rowspan="2">End of reverse range </td>
+        <td><code>m.rend1 ()</code> </td>
+        <td>&nbsp; </td>
+        <td><code>const_reverse_iterator1</code></td>
+    </tr>
+    <tr>
+        <td><code>m.rend2 ()</code> </td>
+        <td>&nbsp;</td>
+        <td><code>const_reverse_iterator2</code></td>
+    </tr>
+    <tr>
+        <td>Element access </td>
+        <td><code>m (i, j)</code> </td>
+        <td><code>i</code> and <code>j </code>are convertible to <code>size_type</code>
+        </td>
+        <td>Convertible to <code>value_type</code>.</td>
+    </tr>
+</table>
+
+<h4>Expression semantics</h4>
+
+<p>Semantics of an expression is defined only where it differs
+from, or is not defined in Default Constructible.</p>
+
+<table border="1">
+    <tr>
+        <th>Name </th>
+        <th>Expression </th>
+        <th>Precondition </th>
+        <th>Semantics </th>
+        <th>Postcondition </th>
+    </tr>
+    <tr>
+        <td rowspan="2">Beginning of range </td>
+        <td><code>m.begin1 ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Returns an iterator pointing to the first element in
+        the first column of a matrix expression. </td>
+        <td><code>m.begin1 ()</code> is either dereferenceable or
+        past-the-end. It is past-the-end if and only if <code>m.size1
+        () == 0</code>. </td>
+    </tr>
+    <tr>
+        <td><code>m.begin2 ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Returns an iterator pointing to the first element in
+        the first row of a matrix expression. </td>
+        <td><code>m.begin2 ()</code> is either dereferenceable or
+        past-the-end. It is past-the-end if and only if <code>m.size2
+        () == 0</code>. </td>
+    </tr>
+    <tr>
+        <td rowspan="2">End of range </td>
+        <td><code>m.end1 ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Returns an iterator pointing one past the last
+        element in the matrix expression. </td>
+        <td><code>m.end1 ()</code> is past-the-end. </td>
+    </tr>
+    <tr>
+        <td><code>m.end2 ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Returns an iterator pointing one past the last
+        element in the matrix expression. </td>
+        <td><code>m.end2 ()</code> is past-the-end. </td>
+    </tr>
+    <tr>
+        <td rowspan="2">Size </td>
+        <td><code>m.size1 ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Returns the number of rows of the matrix expression. </td>
+        <td><code>m.size1 () &gt;= 0 </code></td>
+    </tr>
+    <tr>
+        <td><code>m.size2 ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Returns the number of columns of the matrix
+        expression. </td>
+        <td><code>m.size2 () &gt;= 0 </code></td>
+    </tr>
+    <tr>
+        <td rowspan="2">Beginning of reverse range </td>
+        <td><code>m.rbegin1 ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Equivalent to <code>const_reverse_iterator1 (m.end1
+        ())</code>. </td>
+        <td><code>m.rbegin1 ()</code> is either dereferenceable
+        or past-the-end. It is past-the-end if and only if <code>m.size1
+        () == 0</code>. </td>
+    </tr>
+    <tr>
+        <td><code>m.rbegin2 ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Equivalent to <code>const_reverse_iterator2 (m.end2
+        ())</code>. </td>
+        <td><code>m.rbegin2 ()</code> is either dereferenceable
+        or past-the-end. It is past-the-end if and only if <code>m.size2
+        () == 0</code>. </td>
+    </tr>
+    <tr>
+        <td rowspan="2">End of reverse range </td>
+        <td><code>m.rend1 ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Equivalent to <code>const_reverse_iterator1 (m.begin1
+        ())</code>. </td>
+        <td><code>m.rend1 ()</code> is past-the-end.</td>
+    </tr>
+    <tr>
+        <td><code>m.rend2 ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Equivalent to <code>const_reverse_iterator2 (m.begin2
+        ())</code>. </td>
+        <td><code>m.rend2 ()</code> is past-the-end.</td>
+    </tr>
+    <tr>
+        <td>Element access </td>
+        <td><code>m (i, j)</code> </td>
+        <td><code>0 &lt;= i &lt; m.size1 ()</code> and <code>0
+        &lt;= j &lt; m.size2 ()</code> </td>
+        <td>Returns the <code>j</code>-th element of the <code>i</code>-th
+        row of the matrix expression. </td>
+        <td>&nbsp;</td>
+    </tr>
+</table>
+
+<h4>Complexity guarantees</h4>
+
+<p>The run-time complexity of <code>begin1 ()</code>,<code>
+begin2 ()</code>,<code> end1 () </code>and <code>end2 () </code>is
+specific for the evaluated matrix expression.</p>
+
+<p>The run-time complexity of <code>size1 () </code>and <code>size2
+() </code>is constant time. </p>
+
+<p>The run-time complexity of <code>rbegin1 ()</code>,<code>
+rbegin2 ()</code>,<code> rend1 () </code>and <code>rend2 () </code>is
+specific for the evaluated matrix expression.</p>
+
+<p>The run-time complexity of the element access is specific for
+the evaluated matrix expression, typically amortized constant
+time for the dense and logarithmic for the sparse case.</p>
+
+<h4>Invariants</h4>
+
+<table border="1">
+    <tr>
+        <td>Valid range </td>
+        <td>For any matrix expression <code>m</code>, <code>[m.begin1
+        (), m.end1 ())</code> and <code>[m.begin2 (), m.end2 ())</code>
+        are valid ranges. </td>
+    </tr>
+    <tr>
+        <td>Completeness </td>
+        <td>An algorithm that iterates through the range <code>[m.begin1
+        (), m.end1 ())</code> will pass through every row of <code>m</code>,
+        an algorithm that iterates through the range <code>[m.begin2
+        (), m.end2 ())</code> will pass through every column of <code>m</code>.</td>
+    </tr>
+    <tr>
+        <td>Valid reverse range </td>
+        <td><code>[m.rbegin1 (), m.rend1 ())</code> and <code>[m.rbegin2
+        (), m.rend2 ())</code> are valid ranges. </td>
+    </tr>
+    <tr>
+        <td>Equivalence of ranges </td>
+        <td>The distance from <code>m.begin1 ()</code> to <code>m.end1
+        ()</code> is the same as the distance from <code>m.rbegin1
+        ()</code> to <code>m.rend1 ()</code> and the distance
+        from <code>m.begin2 ()</code> to <code>m.end2 ()</code>
+        is the same as the distance from <code>m.rbegin2 ()</code>
+        to <code>m.rend2 ()</code>. </td>
+    </tr>
+</table>
+
+<h4>Models</h4>
+
+<ul>
+    <li><code>vector_matrix_binary&lt;E1, E2, F&gt;</code></li>
+    <li><code>matrix_unary1&lt;E, F&gt;</code></li>
+    <li><code>matrix_unary2&lt;E, F&gt;</code></li>
+    <li><code>matrix_binary&lt;E1, E2, F&gt;</code></li>
+    <li><code>matrix_binary_scalar&lt;E1, E2, F&gt;</code></li>
+    <li><code>matrix_matrix_binary&lt;E1, E2, F&gt;</code></li>
+    <li><code>matrix_expression_range&lt;E&gt;</code></li>
+</ul>
+</body>
+</html>

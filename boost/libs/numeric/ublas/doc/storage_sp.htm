@@ -41,12 +41,12 @@ a simple std::map-like associative container as a sorted array.</p>
         <th>Default </th>
     </tr>
     <tr>
-        <td><tt>I</tt></td>
+        <td><code>I</code></td>
         <td>The type of index stored in the array.</td>
         <td>&nbsp;</td>
     </tr>
     <tr>
-        <td><tt>T</tt> </td>
+        <td><code>T</code> </td>
         <td>The type of object stored in the array. </td>
         <td>&nbsp;</td>
     </tr>
@@ -54,12 +54,12 @@ a simple std::map-like associative container as a sorted array.</p>
 
 <h4>Model of</h4>
 
-<p>Sparse Storage Container. </p>
+<p>Reversible Container. </p>
 
 <h4>Type requirements</h4>
 
-<p>None, except for those imposed by the requirements of Sparse
-Storage Container.</p>
+<p>None, except for those imposed by the requirements of
+Reversible Container.</p>
 
 <h4>Public base classes</h4>
 
@@ -106,9 +106,9 @@ Storage Container.</p>
     <tr>
         <td><code>data_reference_type operator [] (index_type i)</code></td>
         <td>Returns a reference of the element that is associated
-        with a particular index. If the <tt>compressed_array</tt>
-        does not already contain such an element, <tt>operator[]</tt>
-        inserts the default<tt> T ()</tt>.</td>
+        with a particular index. If the <code>compressed_array</code>
+        does not already contain such an element, <code>operator[]</code>
+        inserts the default<code> T ()</code>.</td>
     </tr>
     <tr>
         <td><code>compressed_array &amp;operator = (const
@@ -125,84 +125,90 @@ Storage Container.</p>
         <td>Swaps the contents of the arrays. </td>
     </tr>
     <tr>
-        <td><code>void clear ()</code></td>
-        <td>Erases all of the array's elements. </td>
-    </tr>
-    <tr>
         <td><code>pointer_type insert (pointer_type it, const
         value_type &amp;p)</code></td>
-        <td>Inserts <tt>p</tt> into the array, using <tt>it</tt>
+        <td>Inserts <code>p</code> into the array, using <code>it</code>
         as a hint to where it will be inserted. </td>
     </tr>
     <tr>
+        <td><code>void erase (pointer_type it)</code></td>
+        <td>Erases the value at <code>it</code>.</td>
+    </tr>
+    <tr>
+        <td><code>void clear ()</code></td>
+        <td>Clears the array. </td>
+    </tr>
+    <tr>
         <td><code>const_pointer_type find (index_type i) const</code></td>
-        <td>Finds an element whose index is <tt>i</tt>. </td>
+        <td>Finds an element whose index is <code>i</code>. </td>
     </tr>
     <tr>
         <td><code>pointer_type find (index_type i)</code></td>
-        <td>Finds an element whose index is <tt>i</tt>. </td>
+        <td>Finds an element whose index is <code>i</code>. </td>
     </tr>
     <tr>
         <td><code>const_pointer_type lower_bound (index_type i)
         const</code></td>
-        <td>Finds the first element whose index is not less than <tt>i</tt>.</td>
+        <td>Finds the first element whose index is not less than <code>i</code>.</td>
     </tr>
     <tr>
         <td><code>pointer_type lower_bound (index_type i)</code></td>
-        <td>Finds the first element whose index is not less than <tt>i</tt>.
+        <td>Finds the first element whose index is not less than <code>i</code>.
         </td>
     </tr>
     <tr>
         <td><code>const_pointer_type upper_bound (index_type i)
         const</code></td>
-        <td>Finds the first element whose index is greater than <tt>i</tt>.
+        <td>Finds the first element whose index is greater than <code>i</code>.
         </td>
     </tr>
     <tr>
         <td><code>pointer_type upper_bound (index_type i)</code></td>
-        <td>Finds the first element whose index is greater than <tt>i</tt>.
+        <td>Finds the first element whose index is greater than <code>i</code>.
         </td>
     </tr>
     <tr>
         <td><code>const_iterator begin () const</code></td>
-        <td>Returns a <tt>const_iterator</tt> pointing to the
+        <td>Returns a <code>const_iterator</code> pointing to the
         beginning of the <code>compressed_array</code>. </td>
     </tr>
     <tr>
         <td><code>const_iterator end () const</code></td>
-        <td>Returns a <tt>const_iterator</tt> pointing to the end
-        of the <code>compressed_array</code>. </td>
+        <td>Returns a <code>const_iterator</code> pointing to the
+        end of the <code>compressed_array</code>. </td>
     </tr>
     <tr>
         <td><code>iterator begin () </code></td>
-        <td>Returns a <tt>iterator</tt> pointing to the beginning
-        of the <code>compressed_array</code>. </td>
+        <td>Returns a <code>iterator</code> pointing to the
+        beginning of the <code>compressed_array</code>. </td>
     </tr>
     <tr>
         <td><code>iterator end () </code></td>
-        <td>Returns a <tt>iterator</tt> pointing to the end of
-        the <code>compressed_array</code>. </td>
+        <td>Returns a <code>iterator</code> pointing to the end
+        of the <code>compressed_array</code>. </td>
     </tr>
     <tr>
         <td><code>const_reverse_iterator rbegin () const</code></td>
-        <td>Returns a <tt>const_reverse_iterator</tt> pointing to
-        the beginning of the reversed <code>compressed_array</code>.
+        <td>Returns a <code>const_reverse_iterator</code>
+        pointing to the beginning of the reversed <code>compressed_array</code>.
         </td>
     </tr>
     <tr>
         <td><code>const_reverse_iterator rend () const</code></td>
-        <td>Returns a <tt>const_reverse_iterator</tt> pointing to
-        the end of the reversed <code>compressed_array</code>. </td>
+        <td>Returns a <code>const_reverse_iterator</code>
+        pointing to the end of the reversed <code>compressed_array</code>.
+        </td>
     </tr>
     <tr>
         <td><code>reverse_iterator rbegin () </code></td>
-        <td>Returns a <tt>reverse_iterator</tt> pointing to the
-        beginning of the reversed <code>compressed_array</code>. </td>
+        <td>Returns a <code>reverse_iterator</code> pointing to
+        the beginning of the reversed <code>compressed_array</code>.
+        </td>
     </tr>
     <tr>
         <td><code>reverse_iterator rend () </code></td>
-        <td>Returns a <tt>reverse_iterator</tt> pointing to the
-        end of the reversed <code>compressed_array</code>. </td>
+        <td>Returns a <code>reverse_iterator</code> pointing to
+        the end of the reversed <code>compressed_array</code>. </td>
     </tr>
 </table>
 
@@ -246,9 +252,12 @@ Storage Container.</p>
 	void swap (compressed_array &amp;a);
 	friend void swap (compressed_array &amp;a1, compressed_array &amp;a2);
 
-        // Element insertion
+        // Element insertion and deletion
+        pointer_type insert (pointer_type it, const value_type &amp;p);
+        void insert (pointer_type it, pointer_type it1, pointer_type it2);
+        void erase (pointer_type it);
+        void erase (pointer_type it1, pointer_type it2);
         void clear ();
-        pointer_type insert (pointer_type it, value_type &amp;p);
 
         // Element lookup
         const_pointer_type find (index_type i) const;
@@ -272,12 +281,12 @@ Storage Container.</p>
 
         // Reverse iterators
 
-        typedef std::reverse_iterator&lt;const_iterator, value_type, const_reference_type&gt; const_reverse_iterator;
+        typedef std::reverse_iterator&lt;const_iterator&gt; const_reverse_iterator;
 
         const_reverse_iterator rbegin () const;
         const_reverse_iterator rend () const;
 
-        typedef std::reverse_iterator&lt;iterator, value_type, reference_type&gt; reverse_iterator;
+        typedef std::reverse_iterator&lt;iterator&gt; reverse_iterator;
 
         reverse_iterator rbegin ();
         reverse_iterator rend ();

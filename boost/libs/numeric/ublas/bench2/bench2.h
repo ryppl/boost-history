@@ -1,8 +1,6 @@
 #ifndef BENCH1_H
 #define BENCH1_H
 
-#define USE_STD_VECTOR
-
 void header (std::string text);
 
 template<class T>

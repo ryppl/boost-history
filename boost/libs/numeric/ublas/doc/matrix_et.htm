@@ -4,12 +4,12 @@
 <meta http-equiv="Content-Type"
 content="text/html; charset=iso-8859-1">
 <meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
-<title>Matrix Expression Related</title>
+<title>Matrix Expressions</title>
 </head>
 
 <body bgcolor="#FFFFFF">
 
-<h1>Matrix Expression Related</h1>
+<h1>Matrix Expressions</h1>
 
 <h2><a name="matrix_expression"></a>Matrix Expression</h2>
 
@@ -32,7 +32,7 @@ including class <code>matrix</code> itself.</p>
         <th>Default </th>
     </tr>
     <tr>
-        <td><tt>E</tt> </td>
+        <td><code>E</code> </td>
         <td>The type of the matrix expression. </td>
         <td>&nbsp;</td>
     </tr>
@@ -106,7 +106,7 @@ a constant reference to a matrix expression.</p>
         <th>Default </th>
     </tr>
     <tr>
-        <td><tt>E</tt> </td>
+        <td><code>E</code> </td>
         <td>The type of the matrix expression. </td>
         <td>&nbsp;</td>
     </tr>
@@ -114,11 +114,13 @@ a constant reference to a matrix expression.</p>
 
 <h4>Model of</h4>
 
-<p>Matrix. </p>
+<p><a href="expression.htm#matrix_expression">Matrix Expression</a>.
+</p>
 
 <h4>Type requirements</h4>
 
-<p>None, except for those imposed by the requirements of Matrix.</p>
+<p>None, except for those imposed by the requirements of <a
+href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
 <h4>Public base classes</h4>
 
@@ -148,28 +150,48 @@ a constant reference to a matrix expression.</p>
     <tr>
         <td><code>value_type operator () (size_type i, size_type
         j) const</code></td>
-        <td>Returns the value of the <tt>j</tt>-th element in the<tt>
-        i</tt>-th row. </td>
+        <td>Returns the value of the <code>j</code>-th element in
+        the<code> i</code>-th row. </td>
     </tr>
     <tr>
         <td><code>const_iterator1 begin1 () const</code></td>
-        <td>Returns a <tt>const_iterator1</tt> pointing to the
-        beginning of the expression. </td>
+        <td>Returns a <code>const_iterator1</code> pointing to
+        the beginning of the expression. </td>
     </tr>
     <tr>
         <td><code>const_iterator1 end1 () const</code></td>
-        <td>Returns a <tt>const_iterator1</tt> pointing to the
-        end of the expression. </td>
+        <td>Returns a <code>const_iterator1</code> pointing to
+        the end of the expression. </td>
     </tr>
     <tr>
         <td><code>const_iterator2 begin2 () const</code></td>
-        <td>Returns a <tt>const_iterator2</tt> pointing to the
-        beginning of the expression. </td>
+        <td>Returns a <code>const_iterator2</code> pointing to
+        the beginning of the expression. </td>
     </tr>
     <tr>
         <td><code>const_iterator2 end2 () const</code></td>
-        <td>Returns a <tt>const_iterator2</tt> pointing to the
-        end of the expression. </td>
+        <td>Returns a <code>const_iterator2</code> pointing to
+        the end of the expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator1 rbegin1 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator1</code>
+        pointing to the beginning of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator1 rend1 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator1</code>
+        pointing to the end of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator2 rbegin2 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator2</code>
+        pointing to the beginning of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator2 rend2 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator2</code>
+        pointing to the end of the reversed expression. </td>
     </tr>
 </table>
 
@@ -183,11 +205,13 @@ a constant reference to a matrix expression.</p>
         typedef typename E::size_type size_type;
         typedef typename E::difference_type difference_type;
         typedef typename E::value_type value_type;
+        typedef typename E::const_reference_type const_reference_type;
         typedef typename E::orientation_category orientation_category;
         typedef typename E::const_iterator1 const_iterator1_type;
         typedef typename E::const_iterator2 const_iterator2_type;
 
         // Construction and destruction
+        matrix_const_reference ();
         matrix_const_reference (const expression_type &amp;e);
 
         size_type size1 () const;
@@ -207,6 +231,18 @@ a constant reference to a matrix expression.</p>
 
         const_iterator2 begin2 () const;
         const_iterator2 end2 () const;
+
+        // Reverse iterators
+
+        typedef reverse_iterator1&lt;const_iterator1&gt; const_reverse_iterator1;
+
+        const_reverse_iterator1 rbegin1 () const;
+        const_reverse_iterator1 rend1 () const;
+
+        typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
+
+        const_reverse_iterator2 rbegin2 () const;
+        const_reverse_iterator2 rend2 () const;
     };</code></pre>
 
 <h3>Reference</h3>
@@ -229,7 +265,7 @@ a reference to a matrix expression.</p>
         <th>Default </th>
     </tr>
     <tr>
-        <td><tt>E</tt> </td>
+        <td><code>E</code> </td>
         <td>The type of the matrix expression. </td>
         <td>&nbsp;</td>
     </tr>
@@ -237,11 +273,13 @@ a reference to a matrix expression.</p>
 
 <h4>Model of</h4>
 
-<p>Matrix. </p>
+<p><a href="expression.htm#matrix_expression">Matrix Expression</a>.
+</p>
 
 <h4>Type requirements</h4>
 
-<p>None, except for those imposed by the requirements of Matrix.</p>
+<p>None, except for those imposed by the requirements of <a
+href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
 <h4>Public base classes</h4>
 
@@ -275,54 +313,94 @@ a reference to a matrix expression.</p>
     <tr>
         <td><code>value_type operator () (size_type i, size_type
         j) const</code></td>
-        <td>Returns the value of the <tt>j</tt>-th element in the<tt>
-        i</tt>-th row. </td>
+        <td>Returns the value of the <code>j</code>-th element in
+        the<code> i</code>-th row. </td>
     </tr>
     <tr>
         <td><code>reference_type operator () (size_type i,
         size_type j)</code></td>
-        <td>Returns a reference of the <tt>j</tt>-th element in
-        the<tt> i</tt>-th row. </td>
+        <td>Returns a reference of the <code>j</code>-th element
+        in the<code> i</code>-th row. </td>
     </tr>
     <tr>
         <td><code>const_iterator1 begin1 () const</code></td>
-        <td>Returns a <tt>const_iterator1</tt> pointing to the
-        beginning of the expression. </td>
+        <td>Returns a <code>const_iterator1</code> pointing to
+        the beginning of the expression. </td>
     </tr>
     <tr>
         <td><code>const_iterator1 end1 () const</code></td>
-        <td>Returns a <tt>const_iterator1</tt> pointing to the
-        end of the expression. </td>
+        <td>Returns a <code>const_iterator1</code> pointing to
+        the end of the expression. </td>
     </tr>
     <tr>
         <td><code>iterator1 begin1 () </code></td>
-        <td>Returns a <tt>iterator1</tt> pointing to the
+        <td>Returns a <code>iterator1</code> pointing to the
         beginning of the expression. </td>
     </tr>
     <tr>
         <td><code>iterator1 end1 () </code></td>
-        <td>Returns a <tt>iterator1</tt> pointing to the end of
-        the expression. </td>
+        <td>Returns a <code>iterator1</code> pointing to the end
+        of the expression. </td>
     </tr>
     <tr>
         <td><code>const_iterator2 begin2 () const</code></td>
-        <td>Returns a <tt>const_iterator2</tt> pointing to the
-        beginning of the expression. </td>
+        <td>Returns a <code>const_iterator2</code> pointing to
+        the beginning of the expression. </td>
     </tr>
     <tr>
         <td><code>const_iterator2 end2 () const</code></td>
-        <td>Returns a <tt>const_iterator2</tt> pointing to the
-        end of the expression. </td>
+        <td>Returns a <code>const_iterator2</code> pointing to
+        the end of the expression. </td>
     </tr>
     <tr>
         <td><code>iterator2 begin2 () </code></td>
-        <td>Returns a <tt>iterator2</tt> pointing to the
+        <td>Returns a <code>iterator2</code> pointing to the
         beginning of the expression. </td>
     </tr>
     <tr>
         <td><code>iterator2 end2 () </code></td>
-        <td>Returns a <tt>iterator2</tt> pointing to the end of
-        the expression. </td>
+        <td>Returns a <code>iterator2</code> pointing to the end
+        of the expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator1 rbegin1 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator1</code>
+        pointing to the beginning of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator1 rend1 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator1</code>
+        pointing to the end of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>reverse_iterator1 rbegin1 () </code></td>
+        <td>Returns a <code>reverse_iterator1</code> pointing to
+        the beginning of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>reverse_iterator1 rend1 () </code></td>
+        <td>Returns a <code>reverse_iterator1</code> pointing to
+        the end of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator2 rbegin2 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator2</code>
+        pointing to the beginning of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator2 rend2 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator2</code>
+        pointing to the end of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>reverse_iterator2 rbegin2 () </code></td>
+        <td>Returns a <code>reverse_iterator2</code> pointing to
+        the beginning of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>reverse_iterator2 rend2 () </code></td>
+        <td>Returns a <code>reverse_iterator2</code> pointing to
+        the end of the reversed expression. </td>
     </tr>
 </table>
 
@@ -336,6 +414,7 @@ a reference to a matrix expression.</p>
         typedef typename E::size_type size_type;
         typedef typename E::difference_type difference_type;
         typedef typename E::value_type value_type;
+        typedef typename E::const_reference_type const_reference_type;
         typedef typename E::reference_type reference_type;
         typedef typename E::orientation_category orientation_category;
         typedef typename E::const_iterator1 const_iterator1_type;
@@ -344,6 +423,7 @@ a reference to a matrix expression.</p>
         typedef typename E::iterator2 iterator2_type;
 
         // Construction and destruction
+        matrix_reference ();
         matrix_reference (expression_type &amp;e);
 
         // Resizing
@@ -377,6 +457,28 @@ a reference to a matrix expression.</p>
 
         iterator2 begin2 ();
         iterator2 end2 ();
+
+        // Reverse iterators
+
+        typedef reverse_iterator1&lt;const_iterator1&gt; const_reverse_iterator1;
+
+        const_reverse_iterator1 rbegin1 () const;
+        const_reverse_iterator1 rend1 () const;
+
+        typedef reverse_iterator1&lt;iterator1&gt; reverse_iterator1;
+
+        reverse_iterator1 rbegin1 ();
+        reverse_iterator1 rend1 ();
+
+        typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
+
+        const_reverse_iterator2 rbegin2 () const;
+        const_reverse_iterator2 rend2 () const;
+
+        typedef reverse_iterator2&lt;iterator2&gt; reverse_iterator2;
+
+        reverse_iterator2 rbegin2 ();
+        reverse_iterator2 rend2 ();
     };</code></pre>
 
 <h2><a name="matrix_operations"></a>Matrix Operations</h2>
@@ -402,12 +504,12 @@ operations.</p>
         <th>Default </th>
     </tr>
     <tr>
-        <td><tt>E</tt> </td>
+        <td><code>E</code> </td>
         <td>The type of the matrix expression. </td>
         <td>&nbsp;</td>
     </tr>
     <tr>
-        <td><tt>F</tt></td>
+        <td><code>F</code></td>
         <td>The type of the operation.</td>
         <td>&nbsp;</td>
     </tr>
@@ -415,11 +517,13 @@ operations.</p>
 
 <h4>Model of</h4>
 
-<p>Matrix. </p>
+<p><a href="expression.htm#matrix_expression">Matrix Expression</a>.
+</p>
 
 <h4>Type requirements</h4>
 
-<p>None, except for those imposed by the requirements of Matrix.</p>
+<p>None, except for those imposed by the requirements of <a
+href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
 
 <h4>Public base classes</h4>
 
@@ -453,28 +557,48 @@ matrix_expression&lt;matrix_unary2&lt;E, F&gt; &gt; </code>resp.</p>
     <tr>
         <td><code>value_type operator () (size_type i, size_type
         j) const</code></td>
-        <td>Returns the value of the <tt>j</tt>-th element in the<tt>
-        i</tt>-th row. </td>
+        <td>Returns the value of the <code>j</code>-th element in
+        the<code> i</code>-th row. </td>
     </tr>
     <tr>
         <td><code>const_iterator1 begin1 () const</code></td>
-        <td>Returns a <tt>const_iterator1</tt> pointing to the
-        beginning of the expression. </td>
+        <td>Returns a <code>const_iterator1</code> pointing to
+        the beginning of the expression. </td>
     </tr>
     <tr>
         <td><code>const_iterator1 end1 () const</code></td>
-        <td>Returns a <tt>const_iterator1</tt> pointing to the
-        end of the expression. </td>
+        <td>Returns a <code>const_iterator1</code> pointing to
+        the end of the expression. </td>
     </tr>
     <tr>
         <td><code>const_iterator2 begin2 () const</code></td>
-        <td>Returns a <tt>const_iterator2</tt> pointing to the
-        beginning of the expression. </td>
+        <td>Returns a <code>const_iterator2</code> pointing to
+        the beginning of the expression. </td>
     </tr>
     <tr>
         <td><code>const_iterator2 end2 () const</code></td>
-        <td>Returns a <tt>const_iterator2</tt> pointing to the
-        end of the expression. </td>
+        <td>Returns a <code>const_iterator2</code> pointing to
+        the end of the expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator1 rbegin1 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator1</code>
+        pointing to the beginning of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator1 rend1 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator1</code>
+        pointing to the end of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator2 rbegin2 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator2</code>
+        pointing to the beginning of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator2 rend2 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator2</code>
+        pointing to the end of the reversed expression. </td>
     </tr>
 </table>
 
@@ -489,12 +613,14 @@ matrix_expression&lt;matrix_unary2&lt;E, F&gt; &gt; </code>resp.</p>
         typedef typename E::size_type size_type;
         typedef typename E::difference_type difference_type;
         typedef typename F::value_type value_type;
-        typedef matrix_unary1&lt;E, F&gt; const_closure_type;
+        typedef const value_type &amp;const_reference_type;
+        typedef const matrix_unary1&lt;E, F&gt; const_closure_type;
         typedef typename E::orientation_category orientation_category;
         typedef typename E::const_iterator1 const_iterator1_type;
         typedef typename E::const_iterator2 const_iterator2_type;
 
         // Construction and destruction
+        matrix_unary1 ();
         matrix_unary1 (const expression_type &amp;e);
 
         size_type size1 () const;
@@ -506,15 +632,25 @@ matrix_expression&lt;matrix_unary2&lt;E, F&gt; &gt; </code>resp.</p>
         // Iterators enhance the iterators of the referenced expression
         // with the unary functor.
 
+        class const_iterator1;
         class const_iterator2;
+        typedef reverse_iterator1&lt;const_iterator1&gt; const_reverse_iterator1;
+        typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
 
         class const_iterator1:
             public container_const_reference&lt;matrix_unary1&gt;,
             public random_access_iterator_base&lt;const_iterator1, value_type&gt; {
         public:
             typedef typename E::const_iterator1::iterator_category iterator_category;
+            typedef typename E::const_iterator1::difference_type difference_type;
+            typedef typename E::const_iterator1::value_type value_type;
+            typedef typename E::const_iterator1::value_type reference;
+            typedef typename E::const_iterator1::pointer pointer;
+            typedef const_iterator2 dual_iterator_type;
+            typedef const_reverse_iterator2 dual_reverse_iterator_type;
 
             // Construction and destruction
+            const_iterator1 ();
             const_iterator1 (const matrix_unary1 &amp;mu, const const_iterator1_type &amp;it);
 
             // Arithmetic
@@ -529,10 +665,15 @@ matrix_expression&lt;matrix_unary2&lt;E, F&gt; &gt; </code>resp.</p>
 
             const_iterator2 begin () const;
             const_iterator2 end () const;
+            const_reverse_iterator2 rbegin () const;
+            const_reverse_iterator2 rend () const;
 
             // Indices
             size_type index1 () const;
             size_type index2 () const;
+
+            // Assignment 
+            const_iterator1 &amp;operator = (const const_iterator1 &amp;it);
 
             // Comparison
             bool operator == (const const_iterator1 &amp;it) const;
@@ -546,8 +687,15 @@ matrix_expression&lt;matrix_unary2&lt;E, F&gt; &gt; </code>resp.</p>
             public random_access_iterator_base&lt;const_iterator2, value_type&gt; {
         public:
             typedef typename E::const_iterator2::iterator_category iterator_category;
+            typedef typename E::const_iterator2::difference_type difference_type;
+            typedef typename E::const_iterator2::value_type value_type;
+            typedef typename E::const_iterator2::value_type reference;
+            typedef typename E::const_iterator2::pointer pointer;
+            typedef const_iterator1 dual_iterator_type;
+            typedef const_reverse_iterator1 dual_reverse_iterator_type;
 
             // Construction and destruction
+            const_iterator2 ();
             const_iterator2 (const matrix_unary1 &amp;mu, const const_iterator2_type &amp;it);
 
             // Arithmetic
@@ -562,10 +710,15 @@ matrix_expression&lt;matrix_unary2&lt;E, F&gt; &gt; </code>resp.</p>
 
             const_iterator1 begin () const;
             const_iterator1 end () const;
+            const_reverse_iterator1 rbegin () const;
+            const_reverse_iterator1 rend () const;
 
             // Indices
             size_type index1 () const;
             size_type index2 () const;
+
+            // Assignment 
+            const_iterator2 &amp;operator = (const const_iterator2 &amp;it);
 
             // Comparison
             bool operator == (const const_iterator2 &amp;it) const;
@@ -573,6 +726,14 @@ matrix_expression&lt;matrix_unary2&lt;E, F&gt; &gt; </code>resp.</p>
 
         const_iterator2 begin2 () const;
         const_iterator2 end2 () const;
+
+        // Reverse iterators
+
+        const_reverse_iterator1 rbegin1 () const;
+        const_reverse_iterator1 rend1 () const;
+
+        const_reverse_iterator2 rbegin2 () const;
+        const_reverse_iterator2 rend2 () const;
     };
 
     template&lt;class E, class F&gt;
@@ -584,12 +745,14 @@ matrix_expression&lt;matrix_unary2&lt;E, F&gt; &gt; </code>resp.</p>
         typedef typename E::size_type size_type;
         typedef typename E::difference_type difference_type;
         typedef typename F::value_type value_type;
-        typedef matrix_unary2&lt;E, F&gt; const_closure_type;
+        typedef const value_type &amp;const_reference_type;
+        typedef const matrix_unary2&lt;E, F&gt; const_closure_type;
         typedef typename E::orientation_category orientation_category;
         typedef typename E::const_iterator1 const_iterator2_type;
         typedef typename E::const_iterator2 const_iterator1_type;
 
         // Construction and destruction
+        matrix_unary2 ();
         matrix_unary2 (const expression_type &amp;e);
 
         size_type size1 () const;
@@ -601,15 +764,25 @@ matrix_expression&lt;matrix_unary2&lt;E, F&gt; &gt; </code>resp.</p>
         // Iterators enhance the iterators of the referenced expression
         // with the unary functor.
 
+        class const_iterator1;
         class const_iterator2;
+        typedef reverse_iterator1&lt;const_iterator1&gt; const_reverse_iterator1;
+        typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
 
         class const_iterator1:
             public container_const_reference&lt;matrix_unary2&gt;,
             public random_access_iterator_base&lt;const_iterator1, value_type&gt; {
         public:
             typedef typename E::const_iterator1::iterator_category iterator_category;
+            typedef typename E::const_iterator1::difference_type difference_type;
+            typedef typename E::const_iterator1::value_type value_type;
+            typedef typename E::const_iterator1::value_type reference;
+            typedef typename E::const_iterator1::pointer pointer;
+            typedef const_iterator2 dual_iterator_type;
+            typedef const_reverse_iterator2 dual_reverse_iterator_type;
 
             // Construction and destruction
+            const_iterator1 ();
             const_iterator1 (const matrix_unary2 &amp;mu, const const_iterator1_type &amp;it);
 
             // Arithmetic
@@ -624,10 +797,15 @@ matrix_expression&lt;matrix_unary2&lt;E, F&gt; &gt; </code>resp.</p>
 
             const_iterator2 begin () const;
             const_iterator2 end () const;
+            const_reverse_iterator2 rbegin () const;
+            const_reverse_iterator2 rend () const;
 
             // Indices
             size_type index1 () const;
             size_type index2 () const;
+
+            // Assignment 
+            const_iterator1 &amp;operator = (const const_iterator1 &amp;it);
 
             // Comparison
             bool operator == (const const_iterator1 &amp;it) const;
@@ -641,8 +819,15 @@ matrix_expression&lt;matrix_unary2&lt;E, F&gt; &gt; </code>resp.</p>
             public random_access_iterator_base&lt;const_iterator2, value_type&gt; {
         public:
             typedef typename E::const_iterator2::iterator_category iterator_category;
+            typedef typename E::const_iterator2::difference_type difference_type;
+            typedef typename E::const_iterator2::value_type value_type;
+            typedef typename E::const_iterator2::value_type reference;
+            typedef typename E::const_iterator2::pointer pointer;
+            typedef const_iterator1 dual_iterator_type;
+            typedef const_reverse_iterator1 dual_reverse_iterator_type;
 
             // Construction and destruction
+            const_iterator2 ();
             const_iterator2 (const matrix_unary2 &amp;mu, const const_iterator2_type &amp;it);
 
             // Arithmetic
@@ -657,10 +842,15 @@ matrix_expression&lt;matrix_unary2&lt;E, F&gt; &gt; </code>resp.</p>
 
             const_iterator1 begin () const;
             const_iterator1 end () const;
+            const_reverse_iterator1 rbegin () const;
+            const_reverse_iterator1 rend () const;
 
             // Indices
             size_type index1 () const;
             size_type index2 () const;
+
+            // Assignment 
+            const_iterator2 &amp;operator = (const const_iterator2 &amp;it);
 
             // Comparison
             bool operator == (const const_iterator2 &amp;it) const;
@@ -668,6 +858,14 @@ matrix_expression&lt;matrix_unary2&lt;E, F&gt; &gt; </code>resp.</p>
 
         const_iterator2 begin2 () const;
         const_iterator2 end2 () const;
+
+        // Reverse iterators
+
+        const_reverse_iterator1 rbegin1 () const;
+        const_reverse_iterator1 rend1 () const;
+
+        const_reverse_iterator2 rbegin2 () const;
+        const_reverse_iterator2 rend2 () const;
     };</code></pre>
 
 <h3>Unary Operations</h3>
@@ -722,7 +920,8 @@ matrix expression.</p>
 <h4>Type requirements</h4>
 
 <dir>
-    <li><code>E</code> is a model of Matrix.</li>
+    <li><code>E</code> is a model of <a
+        href="expression.htm#matrix_expression">Matrix Expression</a>.</li>
 </dir>
 
 <h4>Preconditions</h4>
@@ -767,17 +966,17 @@ a binary matrix operation.</p>
         <th>Default </th>
     </tr>
     <tr>
-        <td><tt>E1</tt> </td>
+        <td><code>E1</code> </td>
         <td>The type of the first matrix expression. </td>
         <td>&nbsp;</td>
     </tr>
     <tr>
-        <td><tt>E2</tt></td>
+        <td><code>E2</code></td>
         <td>The type of the second matrix expression. </td>
         <td>&nbsp;</td>
     </tr>
     <tr>
-        <td><tt>F</tt></td>
+        <td><code>F</code></td>
         <td>The type of the operation.</td>
         <td>&nbsp;</td>
     </tr>
@@ -785,11 +984,13 @@ a binary matrix operation.</p>
 
 <h4>Model of</h4>
 
-<p>Matrix. </p>
+<p><a href="expression.htm#matrix_expression">Matrix Expression</a>.
+</p>
 
 <h4>Type requirements</h4>
 
-<p>None, except for those imposed by the requirements of Matrix.</p>
+<p>None, except for those imposed by the requirements of <a
+href="expression.htm#matrix_expression">Matrix Expression</a>. </p>
 
 <h4>Public base classes</h4>
 
@@ -818,28 +1019,48 @@ a binary matrix operation.</p>
     <tr>
         <td><code>value_type operator () (size_type i, size_type
         j) const</code></td>
-        <td>Returns the value of the <tt>j</tt>-th element in the<tt>
-        i</tt>-th row. </td>
+        <td>Returns the value of the <code>j</code>-th element in
+        the<code> i</code>-th row. </td>
     </tr>
     <tr>
         <td><code>const_iterator1 begin1 () const</code></td>
-        <td>Returns a <tt>const_iterator1</tt> pointing to the
-        beginning of the expression. </td>
+        <td>Returns a <code>const_iterator1</code> pointing to
+        the beginning of the expression. </td>
     </tr>
     <tr>
         <td><code>const_iterator1 end1 () const</code></td>
-        <td>Returns a <tt>const_iterator1</tt> pointing to the
-        end of the expression. </td>
+        <td>Returns a <code>const_iterator1</code> pointing to
+        the end of the expression. </td>
     </tr>
     <tr>
         <td><code>const_iterator2 begin2 () const</code></td>
-        <td>Returns a <tt>const_iterator2</tt> pointing to the
-        beginning of the expression. </td>
+        <td>Returns a <code>const_iterator2</code> pointing to
+        the beginning of the expression. </td>
     </tr>
     <tr>
         <td><code>const_iterator2 end2 () const</code></td>
-        <td>Returns a <tt>const_iterator2</tt> pointing to the
-        end of the expression. </td>
+        <td>Returns a <code>const_iterator2</code> pointing to
+        the end of the expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator1 rbegin1 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator1</code>
+        pointing to the beginning of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator1 rend1 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator1</code>
+        pointing to the end of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator2 rbegin2 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator2</code>
+        pointing to the beginning of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator2 rend2 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator2</code>
+        pointing to the end of the reversed expression.</td>
     </tr>
 </table>
 
@@ -855,7 +1076,9 @@ a binary matrix operation.</p>
         typedef typename promote_traits&lt;typename E1::size_type, typename E2::size_type&gt;::promote_type size_type;
         typedef typename promote_traits&lt;typename E1::difference_type, typename E2::difference_type&gt;::promote_type difference_type;
         typedef typename F::value_type value_type;
-        typedef matrix_binary&lt;E1, E2, F&gt; const_closure_type;
+        typedef const value_type &amp;const_reference_type;
+        typedef const value_type *const_pointer_type;
+        typedef const matrix_binary&lt;E1, E2, F&gt; const_closure_type;
         typedef struct major_tag orientation_category;
         typedef typename E1::const_iterator1 const_iterator11_type;
         typedef typename E1::const_iterator2 const_iterator12_type;
@@ -863,6 +1086,7 @@ a binary matrix operation.</p>
         typedef typename E2::const_iterator2 const_iterator22_type;
 
         // Construction and destruction
+        matrix_binary ();
         matrix_binary (const E1 &amp;e1, const E2 &amp;e2);
 
         size_type size1 () const;
@@ -874,16 +1098,26 @@ a binary matrix operation.</p>
         // Iterators enhance the iterators of the referenced expression
         // with the binary functor.
 
+        class const_iterator1;
         class const_iterator2;
+        typedef reverse_iterator1&lt;const_iterator1&gt; const_reverse_iterator1;
+        typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
 
         class const_iterator1:
             public container_const_reference&lt;matrix_binary&gt;,
             public random_access_iterator_base&lt;const_iterator1, value_type&gt; {
         public:
             typedef typename restrict_traits&lt;typename E1::const_iterator1::iterator_category, 
-                                    	     typename E2::const_iterator1::iterator_category&gt;::iterator_category iterator_category;
+                                             typename E2::const_iterator1::iterator_category&gt;::iterator_category iterator_category;
+            typedef typename matrix_binary::difference_type difference_type;
+            typedef typename matrix_binary::value_type value_type;
+            typedef typename matrix_binary::value_type reference;
+            typedef typename matrix_binary::const_pointer_type pointer;
+            typedef const_iterator2 dual_iterator_type;
+            typedef const_reverse_iterator2 dual_reverse_iterator_type;
 
             // Construction and destruction
+            const_iterator1 ();
             const_iterator1 (const matrix_binary &amp;mb, size_type i, const const_iterator11_type &amp;it1, const const_iterator21_type &amp;it2);
 
             // Random access specializations
@@ -908,10 +1142,15 @@ a binary matrix operation.</p>
 
             const_iterator2 begin () const;
             const_iterator2 end () const;
+            const_reverse_iterator2 rbegin () const;
+            const_reverse_iterator2 rend () const;
 
             // Indices
             size_type index1 () const;
             size_type index2 () const;
+
+            // Assignment 
+            const_iterator1 &amp;operator = (const const_iterator1 &amp;it);
 
             // Comparison
             bool operator == (const const_iterator1 &amp;it) const;
@@ -925,9 +1164,16 @@ a binary matrix operation.</p>
             public random_access_iterator_base&lt;const_iterator2, value_type&gt; {
         public:
             typedef typename restrict_traits&lt;typename E1::const_iterator2::iterator_category, 
-                                    	     typename E2::const_iterator2::iterator_category&gt;::iterator_category iterator_category;
+                                             typename E2::const_iterator2::iterator_category&gt;::iterator_category iterator_category;
+            typedef typename matrix_binary::difference_type difference_type;
+            typedef typename matrix_binary::value_type value_type;
+            typedef typename matrix_binary::value_type reference;
+            typedef typename matrix_binary::const_pointer_type pointer;
+            typedef const_iterator1 dual_iterator_type;
+            typedef const_reverse_iterator1 dual_reverse_iterator_type;
 
             // Construction and destruction
+            const_iterator2 ();
             const_iterator2 (const matrix_binary &amp;mb, size_type j, const const_iterator12_type &amp;it1, const const_iterator22_type &amp;it2);
 
             // Random access specializations
@@ -952,10 +1198,15 @@ a binary matrix operation.</p>
 
             const_iterator1 begin () const;
             const_iterator1 end () const;
+            const_reverse_iterator1 rbegin () const;
+            const_reverse_iterator1 rend () const;
 
             // Indices
             size_type index1 () const;
             size_type index2 () const;
+
+            // Assignment 
+            const_iterator2 &amp;operator = (const const_iterator2 &amp;it);
 
             // Comparison
             bool operator == (const const_iterator2 &amp;it) const;
@@ -963,6 +1214,14 @@ a binary matrix operation.</p>
 
         const_iterator2 begin2 () const;
         const_iterator2 end2 () const;
+
+        // Reverse iterators
+
+        const_reverse_iterator1 rbegin1 () const;
+        const_reverse_iterator1 rend1 () const;
+
+        const_reverse_iterator2 rbegin2 () const;
+        const_reverse_iterator2 rend2 () const;
     };</code></pre>
 
 <h3>Binary Operations</h3>
@@ -1003,14 +1262,18 @@ two matrix expressions.</p>
 <h4>Type requirements</h4>
 
 <dir>
-    <li><code>E1</code> is a model of Matrix.</li>
-    <li><code>E2</code> is a model of Matrix.</li>
+    <li><code>E1</code> is a model of <a
+        href="expression.htm#matrix_expression">Matrix Expression</a>.
+    </li>
+    <li><code>E2</code> is a model of <a
+        href="expression.htm#matrix_expression">Matrix Expression</a>.
+    </li>
 </dir>
 
 <h4>Preconditions</h4>
 
 <dir>
-    <li><code>e1 ().size1 () == e2 ().size1 ()</code></li>
+    <li><code>e1 ().size1 () == e2 ().size1 ()</code> </li>
     <li><code>e1 ().size2 () == e2 ().size2 ()</code></li>
 </dir>
 
@@ -1051,17 +1314,17 @@ matrix.</p>
         <th>Default </th>
     </tr>
     <tr>
-        <td><tt>E1</tt> </td>
+        <td><code>E1</code> </td>
         <td>The type of the scalar expression. </td>
         <td>&nbsp;</td>
     </tr>
     <tr>
-        <td><tt>E2</tt></td>
+        <td><code>E2</code></td>
         <td>The type of the matrix expression. </td>
         <td>&nbsp;</td>
     </tr>
     <tr>
-        <td><tt>F</tt></td>
+        <td><code>F</code></td>
         <td>The type of the operation.</td>
         <td>&nbsp;</td>
     </tr>
@@ -1069,11 +1332,13 @@ matrix.</p>
 
 <h4>Model of</h4>
 
-<p>Matrix. </p>
+<p><a href="expression.htm#matrix_expression">Matrix Expression</a>.
+</p>
 
 <h4>Type requirements</h4>
 
-<p>None, except for those imposed by the requirements of Matrix.</p>
+<p>None, except for those imposed by the requirements of <a
+href="expression.htm#matrix_expression">Matrix Expression</a>. </p>
 
 <h4>Public base classes</h4>
 
@@ -1103,28 +1368,48 @@ F&gt; &gt;</code></p>
     <tr>
         <td><code>value_type operator () (size_type i, size_type
         j) const</code></td>
-        <td>Returns the value of the <tt>j</tt>-th element in the<tt>
-        i</tt>-th row. </td>
+        <td>Returns the value of the <code>j</code>-th element in
+        the<code> i</code>-th row. </td>
     </tr>
     <tr>
         <td><code>const_iterator1 begin1 () const</code></td>
-        <td>Returns a <tt>const_iterator1</tt> pointing to the
-        beginning of the expression. </td>
+        <td>Returns a <code>const_iterator1</code> pointing to
+        the beginning of the expression. </td>
     </tr>
     <tr>
         <td><code>const_iterator1 end1 () const</code></td>
-        <td>Returns a <tt>const_iterator1</tt> pointing to the
-        end of the expression. </td>
+        <td>Returns a <code>const_iterator1</code> pointing to
+        the end of the expression. </td>
     </tr>
     <tr>
         <td><code>const_iterator2 begin2 () const</code></td>
-        <td>Returns a <tt>const_iterator2</tt> pointing to the
-        beginning of the expression. </td>
+        <td>Returns a <code>const_iterator2</code> pointing to
+        the beginning of the expression. </td>
     </tr>
     <tr>
         <td><code>const_iterator2 end2 () const</code></td>
-        <td>Returns a <tt>const_iterator2</tt> pointing to the
-        end of the expression. </td>
+        <td>Returns a <code>const_iterator2</code> pointing to
+        the end of the expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator1 rbegin1 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator1</code>
+        pointing to the beginning of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator1 rend1 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator1</code>
+        pointing to the end of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator2 rbegin2 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator2</code>
+        pointing to the beginning of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator2 rend2 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator2</code>
+        pointing to the end of the reversed expression. </td>
     </tr>
 </table>
 
@@ -1140,13 +1425,15 @@ F&gt; &gt;</code></p>
         typedef typename E2::size_type size_type;
         typedef typename E2::difference_type difference_type;
         typedef typename F::value_type value_type;
-        typedef matrix_binary_scalar&lt;E1, E2, F&gt; const_closure_type;
+        typedef const value_type &amp;const_reference_type;
+        typedef const matrix_binary_scalar&lt;E1, E2, F&gt; const_closure_type;
         typedef typename E2::orientation_category orientation_category;
         typedef typename E1::value_type const_iterator1_type;
         typedef typename E2::const_iterator1 const_iterator21_type;
         typedef typename E2::const_iterator2 const_iterator22_type;
 
         // Construction and destruction
+        matrix_binary_scalar ();
         matrix_binary_scalar (const expression1_type &amp;e1, const expression2_type &amp;e2);
 
         size_type size1 () const;
@@ -1158,15 +1445,26 @@ F&gt; &gt;</code></p>
         // Iterators enhance the iterators of the referenced expression
         // with the binary functor.
 
+        class const_iterator1;
         class const_iterator2;
+        typedef reverse_iterator1&lt;const_iterator1&gt; const_reverse_iterator1;
+        typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
 
         class const_iterator1:
+            public container_const_reference&lt;matrix_binary_scalar&gt;,
             public random_access_iterator_base&lt;const_iterator1, value_type&gt; {
         public:
             typedef typename E2::const_iterator1::iterator_category iterator_category;
+            typedef typename E2::const_iterator1::difference_type difference_type;
+            typedef typename E2::const_iterator1::value_type value_type;
+            typedef typename E2::const_iterator1::value_type reference;
+            typedef typename E2::const_iterator1::pointer pointer;
+            typedef const_iterator2 dual_iterator_type;
+            typedef const_reverse_iterator2 dual_reverse_iterator_type;
 
             // Construction and destruction
-            const_iterator1 (const const_iterator1_type &amp;it1, const const_iterator21_type &amp;it2);
+            const_iterator1 ();
+            const_iterator1 (const matrix_binary_scalar &amp;mbs, const const_iterator1_type &amp;it1, const const_iterator21_type &amp;it2);
 
             // Arithmetic
             const_iterator1 &amp;operator ++ ();
@@ -1180,10 +1478,15 @@ F&gt; &gt;</code></p>
 
             const_iterator2 begin () const;
             const_iterator2 end () const;
+            const_reverse_iterator2 rbegin () const;
+            const_reverse_iterator2 rend () const;
 
             // Indices
             size_type index1 () const;
             size_type index2 () const;
+
+            // Assignment 
+            const_iterator1 &amp;operator = (const const_iterator1 &amp;it);
 
             // Comparison
             bool operator == (const const_iterator1 &amp;it) const;
@@ -1193,12 +1496,20 @@ F&gt; &gt;</code></p>
         const_iterator1 end1 () const;
 
         class const_iterator2:
+            public container_const_reference&lt;matrix_binary_scalar&gt;,
             public random_access_iterator_base&lt;const_iterator2, value_type&gt; {
         public:
             typedef typename E2::const_iterator2::iterator_category iterator_category;
+            typedef typename E2::const_iterator2::difference_type difference_type;
+            typedef typename E2::const_iterator2::value_type value_type;
+            typedef typename E2::const_iterator2::value_type reference;
+            typedef typename E2::const_iterator2::pointer pointer;
+            typedef const_iterator1 dual_iterator_type;
+            typedef const_reverse_iterator1 dual_reverse_iterator_type;
 
             // Construction and destruction
-            const_iterator2 (const const_iterator1_type &amp;it1, const const_iterator22_type &amp;it2);
+            const_iterator2 ();
+            const_iterator2 (const matrix_binary_scalar &amp;mbs, const const_iterator1_type &amp;it1, const const_iterator22_type &amp;it2);
 
             // Arithmetic
             const_iterator2 &amp;operator ++ ();
@@ -1212,10 +1523,15 @@ F&gt; &gt;</code></p>
 
             const_iterator1 begin () const;
             const_iterator1 end () const;
+            const_reverse_iterator1 rbegin () const;
+            const_reverse_iterator1 rend () const;
 
             // Indices
             size_type index1 () const;
             size_type index2 () const;
+
+            // Assignment 
+            const_iterator2 &amp;operator = (const const_iterator2 &amp;it);
 
             // Comparison
             bool operator == (const const_iterator2 &amp;it) const;
@@ -1223,6 +1539,14 @@ F&gt; &gt;</code></p>
 
         const_iterator2 begin2 () const;
         const_iterator2 end2 () const;
+
+        // Reverse iterators
+
+        const_reverse_iterator1 rbegin1 () const;
+        const_reverse_iterator1 rend1 () const;
+
+        const_reverse_iterator2 rbegin2 () const;
+        const_reverse_iterator2 rend2 () const;
     };</code></pre>
 
 <h3>Scalar Matrix Operations </h3>
@@ -1254,8 +1578,11 @@ matrix expression. </p>
 <h4>Type requirements</h4>
 
 <dir>
-    <li><code>T1</code> is a model of Scalar.</li>
-    <li><code>E2</code> is a model of Matrix.</li>
+    <li><code>T1</code> is a model of <a
+        href="expression.htm#scalar_expression">Scalar Expression</a>.
+    </li>
+    <li><code>E2</code> is a model of <a
+        href="expression.htm#matrix_expression">Matrix Expression</a>.</li>
 </dir>
 
 <h4>Preconditions</h4>
@@ -1300,7 +1627,7 @@ reducing operations.</p>
         <th>Default </th>
     </tr>
     <tr>
-        <td><tt>E</tt> </td>
+        <td><code>E</code> </td>
         <td>The type of the matrix expression. </td>
         <td>&nbsp;</td>
     </tr>
@@ -1308,11 +1635,13 @@ reducing operations.</p>
 
 <h4>Model of</h4>
 
-<p>Vector. </p>
+<p><a href="expression.htm#vector_expression">Vector Expression</a>.
+</p>
 
 <h4>Type requirements</h4>
 
-<p>None, except for those imposed by the requirements of Vector.</p>
+<p>None, except for those imposed by the requirements of <a
+href="expression.htm#vector_expression">Vector Expression</a>. </p>
 
 <h4>Public base classes</h4>
 
@@ -1342,17 +1671,27 @@ reducing operations.</p>
     </tr>
     <tr>
         <td><code>value_type operator () (size_type i) const</code></td>
-        <td>Returns the value of the <tt>i</tt>-th element. </td>
+        <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
         <td><code>const_iterator begin () const</code></td>
-        <td>Returns a <tt>const_iterator</tt> pointing to the
+        <td>Returns a <code>const_iterator</code> pointing to the
         beginning of the expression. </td>
     </tr>
     <tr>
         <td><code>const_iterator end () const</code></td>
-        <td>Returns a <tt>const_iterator</tt> pointing to the end
-        of the expression. </td>
+        <td>Returns a <code>const_iterator</code> pointing to the
+        end of the expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rbegin () const</code></td>
+        <td>Returns a <code>const_reverse_iterator</code>
+        pointing to the beginning of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rend () const</code></td>
+        <td>Returns a <code>const_reverse_iterator</code>
+        pointing to the end of the reversed expression. </td>
     </tr>
 </table>
 
@@ -1366,10 +1705,12 @@ reducing operations.</p>
         typedef typename E::size_type size_type;
         typedef typename E::difference_type difference_type;
         typedef typename E::value_type value_type;
-        typedef matrix_vector_unary1&lt;E&gt; const_closure_type;
+        typedef typename E::const_reference_type const_reference_type;
+        typedef const matrix_vector_unary1&lt;E&gt; const_closure_type;
         typedef typename E::size_type const_iterator_type;
 
         // Construction and destruction
+        matrix_vector_unary1 ();
         matrix_vector_unary1 (const expression_type &amp;e, size_type i);
 
         size_type size () const;
@@ -1384,8 +1725,13 @@ reducing operations.</p>
             public random_access_iterator_base&lt;const_iterator, value_type&gt; {
         public:
             typedef typename E::const_iterator2::iterator_category iterator_category;
+            typedef typename E::const_iterator2::difference_type difference_type;
+            typedef typename E::const_iterator2::value_type value_type;
+            typedef typename E::const_iterator2::value_type reference;
+            typedef typename E::const_iterator2::pointer pointer;
 
             // Construction and destruction
+            const_iterator ();
             const_iterator (const matrix_vector_unary1 &amp;mvu, const const_iterator_type &amp;it);
 
             // Arithmetic
@@ -1401,12 +1747,22 @@ reducing operations.</p>
             // Index
             size_type index () const;
 
+            // Assignment 
+            const_iterator &amp;operator = (const const_iterator &amp;it);
+
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
         const_iterator end () const;
+
+        // Reverse iterator
+
+        typedef reverse_iterator&lt;const_iterator&gt; const_reverse_iterator;
+
+        const_reverse_iterator rbegin () const;
+        const_reverse_iterator rend () const;
     };
 
     template&lt;class E&gt;
@@ -1417,10 +1773,12 @@ reducing operations.</p>
         typedef typename E::size_type size_type;
         typedef typename E::difference_type difference_type;
         typedef typename E::value_type value_type;
-        typedef matrix_vector_unary2&lt;E&gt; const_closure_type;
+        typedef typename E::const_reference_type const_reference_type;
+        typedef const matrix_vector_unary2&lt;E&gt; const_closure_type;
         typedef typename E::size_type const_iterator_type;
 
         // Construction and destruction
+        matrix_vector_unary2 ();
         matrix_vector_unary2 (const expression_type &amp;e, size_type j);
 
         size_type size () const;
@@ -1435,8 +1793,13 @@ reducing operations.</p>
             public random_access_iterator_base&lt;const_iterator, value_type&gt; {
         public:
             typedef typename E::const_iterator1::iterator_category iterator_category;
+            typedef typename E::const_iterator1::difference_type difference_type;
+            typedef typename E::const_iterator1::value_type value_type;
+            typedef typename E::const_iterator1::value_type reference;
+            typedef typename E::const_iterator1::pointer pointer;
 
             // Construction and destruction
+            const_iterator ();
             const_iterator (const matrix_vector_unary2 &amp;mvu, const const_iterator_type &amp;it);
 
             // Arithmetic
@@ -1452,12 +1815,22 @@ reducing operations.</p>
             // Index
             size_type index () const;
 
+            // Assignment 
+            const_iterator &amp;operator = (const const_iterator &amp;it);
+
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
         const_iterator end () const;
+
+        // Reverse iterator
+
+        typedef reverse_iterator&lt;const_iterator&gt; const_reverse_iterator;
+
+        const_reverse_iterator rbegin () const;
+        const_reverse_iterator rend () const;
     };</code></pre>
 
 <h3>Operations</h3>
@@ -1499,13 +1872,14 @@ of a matrix expression. </p>
 <h4>Type requirements</h4>
 
 <dir>
-    <li><code>E</code> is a model of Matrix.</li>
+    <li><code>E</code> is a model of <a
+        href="expression.htm#matrix_expression">Matrix Expression</a>.</li>
 </dir>
 
 <h4>Preconditions</h4>
 
 <dir>
-    <li><code>i &lt; e ().size1 ()</code></li>
+    <li><code>i &lt; e ().size1 ()</code> </li>
     <li><code>j &lt; e ().size2 ()</code></li>
 </dir>
 
@@ -1551,17 +1925,17 @@ binary matrix vector operations.</p>
         <th>Default </th>
     </tr>
     <tr>
-        <td><tt>E1</tt> </td>
+        <td><code>E1</code> </td>
         <td>The type of the matrix or vector expression. </td>
         <td>&nbsp;</td>
     </tr>
     <tr>
-        <td><tt>E2</tt> </td>
+        <td><code>E2</code> </td>
         <td>The type of the vector or matrix expression. </td>
         <td>&nbsp;</td>
     </tr>
     <tr>
-        <td><tt>F</tt> </td>
+        <td><code>F</code> </td>
         <td>The type of the operation.</td>
         <td>&nbsp;</td>
     </tr>
@@ -1569,11 +1943,13 @@ binary matrix vector operations.</p>
 
 <h4>Model of</h4>
 
-<p>Vector. </p>
+<p><a href="expression.htm#vector_expression">Vector Expression</a>.
+</p>
 
 <h4>Type requirements</h4>
 
-<p>None, except for those imposed by the requirements of Vector.</p>
+<p>None, except for those imposed by the requirements of <a
+href="expression.htm#vector_expression">Vector Expression</a>. </p>
 
 <h4>Public base classes</h4>
 
@@ -1604,17 +1980,27 @@ E2, F&gt; &gt;</code> resp.</p>
     </tr>
     <tr>
         <td><code>value_type operator () (size_type i) const</code></td>
-        <td>Returns the value of the <tt>i</tt>-th element. </td>
+        <td>Returns the value of the <code>i</code>-th element. </td>
     </tr>
     <tr>
         <td><code>const_iterator begin () const</code></td>
-        <td>Returns a <tt>const_iterator</tt> pointing to the
+        <td>Returns a <code>const_iterator</code> pointing to the
         beginning of the expression. </td>
     </tr>
     <tr>
         <td><code>const_iterator end () const</code></td>
-        <td>Returns a <tt>const_iterator</tt> pointing to the end
-        of the expression. </td>
+        <td>Returns a <code>const_iterator</code> pointing to the
+        end of the expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rbegin () const</code></td>
+        <td>Returns a <code>const_reverse_iterator</code>
+        pointing to the beginning of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator rend () const</code></td>
+        <td>Returns a <code>const_reverse_iterator</code>
+        pointing to the end of the reversed expression. </td>
     </tr>
 </table>
 
@@ -1630,11 +2016,14 @@ E2, F&gt; &gt;</code> resp.</p>
         typedef typename promote_traits&lt;typename E1::size_type, typename E2::size_type&gt;::promote_type size_type;
         typedef typename promote_traits&lt;typename E1::difference_type, typename E2::difference_type&gt;::promote_type difference_type;
         typedef typename F::value_type value_type;
-        typedef matrix_vector_binary1&lt;E1, E2, F&gt; const_closure_type;
+        typedef const value_type &amp;const_reference_type;
+        typedef const value_type *const_pointer_type;
+        typedef const matrix_vector_binary1&lt;E1, E2, F&gt; const_closure_type;
         typedef typename E1::const_iterator1 const_iterator1_type;
         typedef typename E2::const_iterator const_iterator2_type;
 
         // Construction and destruction
+        matrix_vector_binary1 ();
         matrix_vector_binary1 (const expression1_type &amp;e1, const expression2_type &amp;e2);
 
         size_type size () const;
@@ -1649,9 +2038,14 @@ E2, F&gt; &gt;</code> resp.</p>
             public random_access_iterator_base&lt;const_iterator, value_type&gt; {
         public:
             typedef typename restrict_traits&lt;typename E1::const_iterator1::iterator_category, 
-                                    	     typename E2::const_iterator::iterator_category&gt;::iterator_category iterator_category;
+                                             typename E2::const_iterator::iterator_category&gt;::iterator_category iterator_category;
+            typedef typename matrix_vector_binary1::difference_type difference_type;
+            typedef typename matrix_vector_binary1::value_type value_type;
+            typedef typename matrix_vector_binary1::value_type reference;
+            typedef typename matrix_vector_binary1::const_pointer_type pointer;
 
             // Construction and destruction
+            const_iterator ();
             const_iterator (const expression2_type &amp;e2, const const_iterator1_type &amp;it1);
 
             // Arithmetic
@@ -1667,12 +2061,22 @@ E2, F&gt; &gt;</code> resp.</p>
             // Index
             size_type index () const;
 
+            // Assignment 
+            const_iterator &amp;operator = (const const_iterator &amp;it);
+
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
         const_iterator end () const;
+
+        // Reverse iterator
+
+        typedef reverse_iterator&lt;const_iterator&gt; const_reverse_iterator;
+
+        const_reverse_iterator rbegin () const;
+        const_reverse_iterator rend () const;
     };
 
     template&lt;class E1, class E2, class F&gt;
@@ -1685,11 +2089,14 @@ E2, F&gt; &gt;</code> resp.</p>
         typedef typename promote_traits&lt;typename E1::size_type, typename E2::size_type&gt;::promote_type size_type;
         typedef typename promote_traits&lt;typename E1::difference_type, typename E2::difference_type&gt;::promote_type difference_type;
         typedef typename F::value_type value_type;
-        typedef matrix_vector_binary2&lt;E1, E2, F&gt; const_closure_type;
+        typedef const value_type &amp;const_reference_type;
+        typedef const value_type *const_pointer_type;
+        typedef const matrix_vector_binary2&lt;E1, E2, F&gt; const_closure_type;
         typedef typename E1::const_iterator const_iterator1_type;
         typedef typename E2::const_iterator2 const_iterator2_type;
 
         // Construction and destruction
+        matrix_vector_binary2 ();
         matrix_vector_binary2 (const expression1_type &amp;e1, const expression2_type &amp;e2);
 
         size_type size () const;
@@ -1705,8 +2112,13 @@ E2, F&gt; &gt;</code> resp.</p>
         public:
             typedef typename restrict_traits&lt;typename E1::const_iterator::iterator_category, 
                                              typename E2::const_iterator2::iterator_category&gt;::iterator_category iterator_category;
+            typedef typename matrix_vector_binary2::difference_type difference_type;
+            typedef typename matrix_vector_binary2::value_type value_type;
+            typedef typename matrix_vector_binary2::value_type reference;
+            typedef typename matrix_vector_binary2::const_pointer_type pointer;
 
             // Construction and destruction
+            const_iterator ();
             const_iterator (const expression1_type &amp;e1, const const_iterator2_type &amp;it2);
 
             // Arithmetic
@@ -1722,12 +2134,22 @@ E2, F&gt; &gt;</code> resp.</p>
             // Index
             size_type index () const;
 
+            // Assignment 
+            const_iterator &amp;operator = (const const_iterator &amp;it);
+
             // Comparison
             bool operator == (const const_iterator &amp;it) const;
         };
 
         const_iterator begin () const;
         const_iterator end () const;
+
+        // Reverse iterator
+
+        typedef reverse_iterator&lt;const_iterator&gt; const_reverse_iterator;
+
+        const_reverse_iterator rbegin () const;
+        const_reverse_iterator rend () const;
     };</code></pre>
 
 <h3>Binary Operations</h3>
@@ -1823,14 +2245,20 @@ precision product of the matrix and the vector expression.</p>
 <h4>Type requirements</h4>
 
 <dir>
-    <li><code>E1</code> is a model of Matrix or Vector.</li>
-    <li><code>E2</code> is a model of Vector or Matrix.</li>
+    <li><code>E1</code> is a model of <a
+        href="expression.htm#matrix_expression">Matrix Expression</a>&nbsp;or
+        <a href="expression.htm#vector_expression">Vector
+        Expression</a>. </li>
+    <li><code>E2</code> is a model of <a
+        href="expression.htm#vector_expression">Vector Expression</a>
+        or <a href="expression.htm#matrix_expression">Matrix
+        Expression</a>.</li>
 </dir>
 
 <h4>Preconditions</h4>
 
 <dir>
-    <li><code>e1 ().size2 () == e2 ().size ()</code></li>
+    <li><code>e1 ().size2 () == e2 ().size ()</code> </li>
     <li><code>e1 ().size () == e2 ().size1 ()</code></li>
 </dir>
 
@@ -1917,21 +2345,27 @@ triangular matrices.</p>
 
 <h4>Definition</h4>
 
-<p>Defined in the header matrix.h.</p>
+<p>Defined in the header triangular.h.</p>
 
 <h4>Type requirements</h4>
 
 <dir>
-    <li><code>E1</code> is a model of Matrix or Vector.</li>
-    <li><code>E2</code> is a model of Vector or Matrix.</li>
+    <li><code>E1</code> is a model of <a
+        href="expression.htm#matrix_expression">Matrix Expression</a>
+        or <a href="expression.htm#vector_expression">Vector
+        Expression</a>. </li>
+    <li><code>E2</code> is a model of <a
+        href="expression.htm#vector_expression">Vector Expression</a>
+        or <a href="expression.htm#matrix_expression">Matrix
+        Expression</a>.</li>
 </dir>
 
 <h4>Preconditions</h4>
 
 <dir>
-    <li><code>e1 ().size1 () == e1 ().size2 ()</code></li>
-    <li><code>e1 ().size2 () == e2 ().size ()</code></li>
-    <li><code>e1 ().size () == e2 ().size1 ()</code></li>
+    <li><code>e1 ().size1 () == e1 ().size2 ()</code> </li>
+    <li><code>e1 ().size2 () == e2 ().size ()</code> </li>
+    <li><code>e1 ().size () == e2 ().size1 ()</code> </li>
     <li><code>e2 ().size1 () == e2 ().size2 ()</code></li>
 </dir>
 
@@ -1976,17 +2410,17 @@ F&gt; </code>describes a binary matrix operation.</p>
         <th>Default </th>
     </tr>
     <tr>
-        <td><tt>E1</tt> </td>
+        <td><code>E1</code> </td>
         <td>The type of the first matrix expression. </td>
         <td>&nbsp;</td>
     </tr>
     <tr>
-        <td><tt>E2</tt></td>
+        <td><code>E2</code></td>
         <td>The type of the second matrix expression. </td>
         <td>&nbsp;</td>
     </tr>
     <tr>
-        <td><tt>F</tt></td>
+        <td><code>F</code></td>
         <td>The type of the operation.</td>
         <td>&nbsp;</td>
     </tr>
@@ -1994,11 +2428,13 @@ F&gt; </code>describes a binary matrix operation.</p>
 
 <h4>Model of</h4>
 
-<p>Matrix. </p>
+<p><a href="expression.htm#matrix_expression">Matrix Expression</a>.
+</p>
 
 <h4>Type requirements</h4>
 
-<p>None, except for those imposed by the requirements of Matrix.</p>
+<p>None, except for those imposed by the requirements of <a
+href="expression.htm#matrix_expression">Matrix Expression</a>. </p>
 
 <h4>Public base classes</h4>
 
@@ -2028,28 +2464,48 @@ F&gt; &gt;</code>.</p>
     <tr>
         <td><code>value_type operator () (size_type i, size_type
         j) const</code></td>
-        <td>Returns the value of the <tt>j</tt>-th element in the<tt>
-        i</tt>-th row. </td>
+        <td>Returns the value of the <code>j</code>-th element in
+        the<code> i</code>-th row. </td>
     </tr>
     <tr>
         <td><code>const_iterator1 begin1 () const</code></td>
-        <td>Returns a <tt>const_iterator1</tt> pointing to the
-        beginning of the expression. </td>
+        <td>Returns a <code>const_iterator1</code> pointing to
+        the beginning of the expression. </td>
     </tr>
     <tr>
         <td><code>const_iterator1 end1 () const</code></td>
-        <td>Returns a <tt>const_iterator1</tt> pointing to the
-        end of the expression. </td>
+        <td>Returns a <code>const_iterator1</code> pointing to
+        the end of the expression. </td>
     </tr>
     <tr>
         <td><code>const_iterator2 begin2 () const</code></td>
-        <td>Returns a <tt>const_iterator2</tt> pointing to the
-        beginning of the expression. </td>
+        <td>Returns a <code>const_iterator2</code> pointing to
+        the beginning of the expression. </td>
     </tr>
     <tr>
         <td><code>const_iterator2 end2 () const</code></td>
-        <td>Returns a <tt>const_iterator2</tt> pointing to the
-        end of the expression. </td>
+        <td>Returns a <code>const_iterator2</code> pointing to
+        the end of the expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator1 rbegin1 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator1</code>
+        pointing to the beginning of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator1 rend1 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator1</code>
+        pointing to the end of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator2 rbegin2 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator2</code>
+        pointing to the beginning of the reversed expression. </td>
+    </tr>
+    <tr>
+        <td><code>const_reverse_iterator2 rend2 () const</code></td>
+        <td>Returns a <code>const_reverse_iterator2</code>
+        pointing to the end of the reversed expression. </td>
     </tr>
 </table>
 
@@ -2065,7 +2521,9 @@ F&gt; &gt;</code>.</p>
         typedef typename promote_traits&lt;typename E1::size_type, typename E2::size_type&gt;::promote_type size_type;
         typedef typename promote_traits&lt;typename E1::difference_type, typename E2::difference_type&gt;::promote_type difference_type;
         typedef typename F::value_type value_type;
-        typedef matrix_matrix_binary&lt;E1, E2, F&gt; const_closure_type;
+        typedef const value_type &amp;const_reference_type;
+        typedef const value_type *const_pointer_type;
+        typedef const matrix_matrix_binary&lt;E1, E2, F&gt; const_closure_type;
         typedef struct major_tag orientation_category;
         typedef typename E1::const_iterator1 const_iterator11_type;
         typedef typename E1::const_iterator2 const_iterator12_type;
@@ -2073,6 +2531,7 @@ F&gt; &gt;</code>.</p>
         typedef typename E2::const_iterator2 const_iterator22_type;
 
         // Construction and destruction
+        matrix_matrix_binary ();
         matrix_matrix_binary (const expression1_type &amp;e1, const expression2_type &amp;e2);
 
         const expression1_type &amp;expression1 () const;
@@ -2086,16 +2545,26 @@ F&gt; &gt;</code>.</p>
 
         // Iterators simply are pointers.
 
+        class const_iterator1;
         class const_iterator2;
+        typedef reverse_iterator1&lt;const_iterator1&gt; const_reverse_iterator1;
+        typedef reverse_iterator2&lt;const_iterator2&gt; const_reverse_iterator2;
 
         class const_iterator1:
             public container_const_reference&lt;matrix_matrix_binary&gt;,
             public random_access_iterator_base&lt;const_iterator1, value_type&gt; {
         public:
             typedef typename restrict_traits&lt;typename E1::const_iterator1::iterator_category, 
-	                                     typename E2::const_iterator2::iterator_category&gt;::iterator_category iterator_category;
+                                             typename E2::const_iterator2::iterator_category&gt;::iterator_category iterator_category;
+            typedef typename matrix_matrix_binary::difference_type difference_type;
+            typedef typename matrix_matrix_binary::value_type value_type;
+            typedef typename matrix_matrix_binary::value_type reference;
+            typedef typename matrix_matrix_binary::const_pointer_type pointer;
+            typedef const_iterator2 dual_iterator_type;
+            typedef const_reverse_iterator2 dual_reverse_iterator_type;
 
             // Construction and destruction
+            const_iterator1 ();
             const_iterator1 (const matrix_matrix_binary &amp;mmb, const const_iterator11_type &amp;it1, const const_iterator22_type &amp;it2);
 
             // Arithmetic
@@ -2110,10 +2579,15 @@ F&gt; &gt;</code>.</p>
 
             const_iterator2 begin () const;
             const_iterator2 end () const;
+            const_reverse_iterator2 rbegin () const;
+            const_reverse_iterator2 rend () const;
 
             // Indices
             size_type index1 () const;
             size_type index2 () const;
+
+            // Assignment 
+            const_iterator1 &amp;operator = (const const_iterator1 &amp;it);
 
             // Comparison
             bool operator == (const const_iterator1 &amp;it) const;
@@ -2127,9 +2601,16 @@ F&gt; &gt;</code>.</p>
             public random_access_iterator_base&lt;const_iterator2, value_type&gt; {
         public:
             typedef typename restrict_traits&lt;typename E1::const_iterator1::iterator_category, 
-		                             typename E2::const_iterator2::iterator_category&gt;::iterator_category iterator_category;
+                                             typename E2::const_iterator2::iterator_category&gt;::iterator_category iterator_category;
+            typedef typename matrix_matrix_binary::difference_type difference_type;
+            typedef typename matrix_matrix_binary::value_type value_type;
+            typedef typename matrix_matrix_binary::value_type reference;
+            typedef typename matrix_matrix_binary::const_pointer_type pointer;
+            typedef const_iterator1 dual_iterator_type;
+            typedef const_reverse_iterator1 dual_reverse_iterator_type;
 
             // Construction and destruction
+            const_iterator2 ();
             const_iterator2 (const matrix_matrix_binary &amp;mmb, const const_iterator11_type &amp;it1, const const_iterator22_type &amp;it2);
 
             // Arithmetic
@@ -2144,10 +2625,15 @@ F&gt; &gt;</code>.</p>
 
             const_iterator1 begin () const;
             const_iterator1 end () const;
+            const_reverse_iterator1 rbegin () const;
+            const_reverse_iterator1 rend () const;
 
             // Indices
             size_type index1 () const;
             size_type index2 () const;
+
+            // Assignment 
+            const_iterator2 &amp;operator = (const const_iterator2 &amp;it);
 
             // Comparison
             bool operator == (const const_iterator2 &amp;it) const;
@@ -2155,6 +2641,14 @@ F&gt; &gt;</code>.</p>
 
         const_iterator2 begin2 () const;
         const_iterator2 end2 () const;
+
+        // Reverse iterators
+
+        const_reverse_iterator1 rbegin1 () const;
+        const_reverse_iterator1 rend1 () const;
+
+        const_reverse_iterator2 rbegin2 () const;
+        const_reverse_iterator2 rend2 () const;
     };</code></pre>
 
 <h3>Binary Operations</h3>
@@ -2163,6 +2657,7 @@ F&gt; &gt;</code>.</p>
 
 <pre><code>    template&lt;class T1, class E1, class T2, class E2&gt;
     struct matrix_matrix_binary_traits {
+        typedef major_tag dispatch_category;
         typedef typename promote_traits&lt;T1, T2&gt;::promote_type promote_type;
         typedef matrix_matrix_binary&lt;typename E1::const_closure_type, 
                                      typename E2::const_closure_type, 
@@ -2174,8 +2669,24 @@ F&gt; &gt;</code>.</p>
     typename matrix_matrix_binary_traits&lt;typename E1::value_type, E1, 
                                          typename E2::value_type, E2&gt;::result_type
     prod (const matrix_expression&lt;E1&gt; &amp;e1, 
+          const matrix_expression&lt;E2&gt; &amp;e2,
+          major_tag);
+
+    // Dispatcher
+    template&lt;class E1, class E2&gt;
+    typename matrix_matrix_binary_traits&lt;typename E1::value_type, E1, 
+                                         typename E2::value_type, E2&gt;::result_type
+    prod (const matrix_expression&lt;E1&gt; &amp;e1, 
           const matrix_expression&lt;E2&gt; &amp;e2);
 
+    template&lt;class E1, class E2&gt;
+    typename matrix_matrix_binary_traits&lt;typename type_traits&lt;typename E1::value_type&gt;::precision_type, E1, 
+                                         typename type_traits&lt;typename E2::value_type&gt;::precision_type, E2&gt;::result_type
+    prec_prod (const matrix_expression&lt;E1&gt; &amp;e1, 
+               const matrix_expression&lt;E2&gt; &amp;e2,
+               major_tag);
+
+    // Dispatcher
     template&lt;class E1, class E2&gt;
     typename matrix_matrix_binary_traits&lt;typename type_traits&lt;typename E1::value_type&gt;::precision_type, E1, 
                                          typename type_traits&lt;typename E2::value_type&gt;::precision_type, E2&gt;::result_type
@@ -2195,8 +2706,11 @@ product of the matrix expressions.</p>
 <h4>Type requirements</h4>
 
 <dir>
-    <li><code>E1</code> is a model of Matrix.</li>
-    <li><code>E2</code> is a model of Matrix.</li>
+    <li><code>E1</code> is a model of <a
+        href="expression.htm#matrix_expression">Matrix Expression</a>.
+    </li>
+    <li><code>E2</code> is a model of <a
+        href="expression.htm#matrix_expression">Matrix Expression</a>.</li>
 </dir>
 
 <h4>Preconditions</h4>
@@ -2262,19 +2776,22 @@ triangular matrices.</p>
 
 <h4>Definition</h4>
 
-<p>Defined in the header matrix.h.</p>
+<p>Defined in the header triangular.h.</p>
 
 <h4>Type requirements</h4>
 
 <dir>
-    <li><code>E1</code> is a model of Matrix.</li>
-    <li><code>E2</code> is a model of Matrix.</li>
+    <li><code>E1</code> is a model of <a
+        href="expression.htm#matrix_expression">Matrix Expression</a>.
+    </li>
+    <li><code>E2</code> is a model of <a
+        href="expression.htm#matrix_expression">Matrix Expression</a>.</li>
 </dir>
 
 <h4>Preconditions</h4>
 
 <dir>
-    <li><code>e1 ().size1 () == e1 ().size2 ()</code></li>
+    <li><code>e1 ().size1 () == e1 ().size2 ()</code> </li>
     <li><code>e1 ().size2 () == e2 ().size1 ()</code></li>
 </dir>
 

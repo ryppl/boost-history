@@ -1,0 +1,757 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>Proxy Concepts</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<h1>Proxy Concepts</h1>
+
+<h2><a name="vector_proxy"></a>Vector Proxy</h2>
+
+<h4>Description</h4>
+
+<p>A Vector Proxy is a projection of a vector. </p>
+
+<h4>Refinement of </h4>
+
+<p><a href="expression.htm#vector_expression">Vector Expression</a>.</p>
+
+<h4>Associated types</h4>
+
+<table border="1">
+    <tr>
+        <td>Value type </td>
+        <td><code>value_type</code> </td>
+        <td>The type of the vector proxy. </td>
+    </tr>
+    <tr>
+        <td>Iterator type </td>
+        <td><code>iterator</code> </td>
+        <td>A type of iterator that may be used to modify a
+        vector proxy's elements. </td>
+    </tr>
+    <tr>
+        <td>Distance type </td>
+        <td><code>difference_type</code> </td>
+        <td>A signed integral type used to represent the distance
+        between two of the vector proxy's iterators. </td>
+    </tr>
+    <tr>
+        <td>Size type </td>
+        <td><code>size_type</code> </td>
+        <td>An unsigned integral type that can represent any
+        nonnegative value of the vector proxy's distance type. </td>
+    </tr>
+    <tr>
+        <td>Reverse iterator type </td>
+        <td><code>reverse_iterator</code> </td>
+        <td>A Reverse Iterator adaptor whose base iterator type
+        is the vector proxy's iterator type. </td>
+    </tr>
+    <tr>
+        <td>Vector range type</td>
+        <td><code>vector_range_type</code> </td>
+        <td>A type to hold a projection of a vector proxy.</td>
+    </tr>
+</table>
+
+<h4>Notation</h4>
+
+<table border="0">
+    <tr>
+        <td><code>V</code> </td>
+        <td>A type that is a model of Vector Proxy</td>
+    </tr>
+    <tr>
+        <td><code>v, v1, v2</code></td>
+        <td>Objects of type <code>V</code> </td>
+    </tr>
+    <tr>
+        <td><code>i1, i2</code></td>
+        <td>Objects of a type convertible to <code>size_type</code>
+        </td>
+    </tr>
+    <tr>
+        <td><code>t</code></td>
+        <td>Object of a type convertible to <code>value_type</code>
+        </td>
+    </tr>
+</table>
+
+<h4>Definitions</h4>
+
+<h4>Valid expressions</h4>
+
+<p>In addition to the expressions defined in <a
+href="expression.htm#vector_expression">Vector Expression</a> the
+following expressions must be valid. </p>
+
+<table border="1">
+    <tr>
+        <th>Name </th>
+        <th>Expression </th>
+        <th>Type requirements </th>
+        <th>Return type </th>
+    </tr>
+    <tr>
+        <td>Beginning of range </td>
+        <td><code>v.begin ()</code> </td>
+        <td>&nbsp; </td>
+        <td><code>iterator</code></td>
+    </tr>
+    <tr>
+        <td>End of range </td>
+        <td><code>v.end ()</code> </td>
+        <td>&nbsp; </td>
+        <td><code>iterator</code></td>
+    </tr>
+    <tr>
+        <td>Swap </td>
+        <td><code>v1.swap (v2)</code> </td>
+        <td>&nbsp; </td>
+        <td><code>void</code></td>
+    </tr>
+    <tr>
+        <td>Beginning of reverse range </td>
+        <td><code>v.rbegin ()</code> </td>
+        <td>&nbsp; </td>
+        <td><code>reverse_iterator</code></td>
+    </tr>
+    <tr>
+        <td>End of reverse range </td>
+        <td><code>v.rend ()</code> </td>
+        <td>&nbsp; </td>
+        <td><code>reverse_iterator</code></td>
+    </tr>
+    <tr>
+        <td>Projection</td>
+        <td><code>v.project (i1, i2)</code> </td>
+        <td><code>i1</code> and<code> i2</code> are convertible
+        to <code>size_type</code>.</td>
+        <td><code>vector_range_type</code></td>
+    </tr>
+    <tr>
+        <td rowspan="2">Assignment</td>
+        <td><code>v2 = v1</code></td>
+        <td><code>v2</code> is mutable and <code>v1</code> is
+        convertible to <code>V</code>. </td>
+        <td><code>V &amp;</code></td>
+    </tr>
+    <tr>
+        <td><code>v2.assign (v1)</code></td>
+        <td><code>v2</code> is mutable and <code>v1</code> is
+        convertible to <code>V</code>.</td>
+        <td><code>V &amp;</code></td>
+    </tr>
+    <tr>
+        <td rowspan="5">Computed assignment</td>
+        <td><code>v2 += v1</code></td>
+        <td><code>v2</code> is mutable and <code>v1</code> is
+        convertible to <code>V</code>.</td>
+        <td><code>V &amp;</code></td>
+    </tr>
+    <tr>
+        <td><code>v2.plus_assign (v1)</code></td>
+        <td><code>v2</code> is mutable and <code>v1</code> is
+        convertible to <code>V</code>.</td>
+        <td><code>V &amp;</code></td>
+    </tr>
+    <tr>
+        <td><code>v2 -= v1</code></td>
+        <td><code>v2</code> is mutable and <code>v1</code> is
+        convertible to <code>V</code>.</td>
+        <td><code>V &amp;</code></td>
+    </tr>
+    <tr>
+        <td><code>v2.minus_assign (v1)</code></td>
+        <td><code>v2</code> is mutable and <code>v1</code> is
+        convertible to <code>V</code>.</td>
+        <td><code>V &amp;</code></td>
+    </tr>
+    <tr>
+        <td><code>v *= t</code></td>
+        <td><code>v</code> is mutable and <code>t</code> is
+        convertible to <code>value_type</code>.</td>
+        <td><code>V &amp;</code></td>
+    </tr>
+</table>
+
+<h4>Expression semantics</h4>
+
+<p>Semantics of an expression is defined only where it differs
+from, or is not defined in <a
+href="expression.htm#vector_expression">Vector Expression</a>.</p>
+
+<table border="1">
+    <tr>
+        <th>Name </th>
+        <th>Expression </th>
+        <th>Precondition </th>
+        <th>Semantics </th>
+        <th>Postcondition </th>
+    </tr>
+    <tr>
+        <td>Beginning of range </td>
+        <td><code>v.begin ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Returns an iterator pointing to the first element in
+        the vector proxy. </td>
+        <td><code>v.begin ()</code> is either dereferenceable or
+        past-the-end. It is past-the-end if and only if <code>v.size
+        () == 0</code>. </td>
+    </tr>
+    <tr>
+        <td>End of range </td>
+        <td><code>v.end ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Returns an iterator pointing one past the last
+        element in the vector proxy. </td>
+        <td><code>v.end ()</code> is past-the-end. </td>
+    </tr>
+    <tr>
+        <td>Swap </td>
+        <td><code>v1.swap (v2)</code> </td>
+        <td>&nbsp; </td>
+        <td>Equivalent to <code>swap (v1, v2)</code>. </td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td>Beginning of reverse range </td>
+        <td><code>v.rbegin ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Equivalent to <code>const_reverse_iterator (v.end ())</code>.
+        </td>
+        <td><code>v.rbegin ()</code> is either dereferenceable or
+        past-the-end. It is past-the-end if and only if <code>v.size
+        () == 0</code>. </td>
+    </tr>
+    <tr>
+        <td>End of reverse range </td>
+        <td><code>v.rend ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Equivalent to <code>const_reverse_iterator (v.begin
+        ())</code>. </td>
+        <td><code>v.rend ()</code> is past-the-end.</td>
+    </tr>
+    <tr>
+        <td>Projection</td>
+        <td><code>v.project (i1, i2)</code> </td>
+        <td><code>0 &lt;= i1 &lt; i2 &lt;= v.size ()</code> </td>
+        <td>Returns the range <code>[i1, i2)</code> of the vector
+        proxy's elements. </td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td rowspan="2">Assignment</td>
+        <td><code>v2 = v1</code></td>
+        <td><code>v1.size () == v2.size ()</code></td>
+        <td>Assigns every element of the evaluated vector proxy <code>v1</code>
+        to the corresponding element of <code>v2</code>.</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td><code>v2.assign (v1)</code></td>
+        <td><code>v1.size () == v2.size ()</code></td>
+        <td>Assigns every element of <code>v1 </code>to the
+        corresponding element of <code>v2</code>.</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td rowspan="5">Computed assignment</td>
+        <td><code>v2 += v1</code></td>
+        <td><code>v1.size () == v2.size ()</code></td>
+        <td>Adds every element of the evaluated vector proxy <code>v1</code>
+        to the corresponding element of <code>v2</code>.</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td><code>v2.plus_assign (v1)</code></td>
+        <td><code>v1.size () == v2.size ()</code></td>
+        <td>Adds every element of <code>v1</code> to the
+        corresponding element of <code>v2</code>.</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td><code>v2 -= v1</code></td>
+        <td><code>v1.size () == v2.size ()</code></td>
+        <td>Subtracts every element of the evaluated vector proxy
+        <code>v1</code> from the corresponding element of <code>v2</code>.</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td><code>v2.minus_assign (v1)</code></td>
+        <td><code>v1.size () == v2.size ()</code></td>
+        <td>Subtracts every element of <code>v1</code> from the
+        corresponding element of <code>v2</code>.</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td><code>v *= t</code></td>
+        <td>&nbsp;</td>
+        <td>Multiplies every element of <code>v</code> with <code>t</code>.</td>
+        <td>&nbsp;</td>
+    </tr>
+</table>
+
+<h4>Complexity guarantees</h4>
+
+<p>The run-time complexity of <code>begin ()</code> and <code>end
+()</code> is specific for the evaluated vector proxy, typically
+amortized constant time.</p>
+
+<p>The run-time complexity of <code>swap () </code>is specific
+for the evaluated vector proxy, typically constant time. </p>
+
+<p>The run-time complexity of <code>rbegin () </code>and <code>rend
+() </code>is specific for the evaluated vector proxy, typically
+amortized constant time.</p>
+
+<p>The run-time complexity of the projection is constant time.</p>
+
+<p>The run-time complexity of the arithmetic operations is
+specific for the evaluated vector proxies, typically linear in
+the size of the proxies.</p>
+
+<h4>Invariants</h4>
+
+<h4>Models</h4>
+
+<ul>
+    <li><code>vector_range&lt;V&gt;</code></li>
+    <li><code>vector_slice&lt;V&gt;</code></li>
+    <li><code>matrix_row&lt;M&gt;</code></li>
+    <li><code>matrix_column&lt;M&gt;</code></li>
+    <li><code>matrix_vector_range&lt;M&gt;</code></li>
+    <li><code>matrix_vector_slice&lt;M&gt;</code></li>
+</ul>
+
+<h2><a name="matrix_proxy"></a>Matrix Proxy</h2>
+
+<h4>Description</h4>
+
+<p>A Matrix Proxy is a projection of a matrix. </p>
+
+<h4>Refinement of </h4>
+
+<p><a href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
+
+<h4>Associated types</h4>
+
+<table border="1">
+    <tr>
+        <td>Value type </td>
+        <td><code>value_type</code> </td>
+        <td>The type of the matrix proxy. </td>
+    </tr>
+    <tr>
+        <td rowspan="2">Iterator types </td>
+        <td><code>iterator1</code> </td>
+        <td>A type of column iterator that may be used to modify
+        a matrix proxy's elements. </td>
+    </tr>
+    <tr>
+        <td><code>iterator2</code></td>
+        <td>A type of row iterator that may be used to modify a
+        matrix proxy's elements. </td>
+    </tr>
+    <tr>
+        <td>Distance type </td>
+        <td><code>difference_type</code> </td>
+        <td>A signed integral type used to represent the distance
+        between two of the matrix proxy's iterators. </td>
+    </tr>
+    <tr>
+        <td>Size type </td>
+        <td><code>size_type</code> </td>
+        <td>An unsigned integral type that can represent any
+        nonnegative value of the matrix proxy's distance type. </td>
+    </tr>
+    <tr>
+        <td rowspan="2">Reverse iterator types </td>
+        <td><code>reverse_iterator1</code> </td>
+        <td>A Reverse Iterator adaptor whose base iterator type
+        is the matrix proxy's column iterator type. </td>
+    </tr>
+    <tr>
+        <td><code>reverse_iterator2</code> </td>
+        <td>A Reverse Iterator adaptor whose base iterator type
+        is the matrix proxy's row iterator type. </td>
+    </tr>
+    <tr>
+        <td>Matrix row type</td>
+        <td><code>matrix_row_type</code> </td>
+        <td>A type to hold a projection of a matrix proxy to a
+        row.</td>
+    </tr>
+    <tr>
+        <td>Matrix column type</td>
+        <td><code>matrix_column_type</code> </td>
+        <td>A type to hold a projection of a matrix proxy to a
+        column.</td>
+    </tr>
+    <tr>
+        <td>Matrix range type</td>
+        <td><code>matrix_range_type</code> </td>
+        <td>A type to hold a projection of a matrix proxy.</td>
+    </tr>
+</table>
+
+<h4>Notation</h4>
+
+<table border="0">
+    <tr>
+        <td><code>M</code> </td>
+        <td>A type that is a model of Matrix Proxy</td>
+    </tr>
+    <tr>
+        <td><code>m, m1, m2</code></td>
+        <td>Objects of type <code>M</code> </td>
+    </tr>
+    <tr>
+        <td><code>i, i1, i2, j, j1, j2</code></td>
+        <td>Objects of a type convertible to <code>size_type</code>
+        </td>
+    </tr>
+    <tr>
+        <td><code>t</code></td>
+        <td>Object of a type convertible to <code>value_type</code>
+        </td>
+    </tr>
+</table>
+
+<h4>Definitions</h4>
+
+<h4>Valid expressions</h4>
+
+<p>In addition to the expressions defined in <a
+href="expression.htm#matrix_expression">Matrix Expression</a> the
+following expressions must be valid. </p>
+
+<table border="1">
+    <tr>
+        <th>Name </th>
+        <th>Expression </th>
+        <th>Type requirements </th>
+        <th>Return type </th>
+    </tr>
+    <tr>
+        <td rowspan="2">Beginning of range </td>
+        <td><code>m.begin1 ()</code> </td>
+        <td>&nbsp; </td>
+        <td><code>iterator1</code></td>
+    </tr>
+    <tr>
+        <td><code>m.begin2 ()</code> </td>
+        <td>&nbsp;</td>
+        <td><code>iterator2</code></td>
+    </tr>
+    <tr>
+        <td rowspan="2">End of range </td>
+        <td><code>m.end1 ()</code> </td>
+        <td>&nbsp; </td>
+        <td><code>iterator1</code></td>
+    </tr>
+    <tr>
+        <td><code>m.end2 ()</code> </td>
+        <td>&nbsp;</td>
+        <td><code>iterator2</code></td>
+    </tr>
+    <tr>
+        <td>Swap </td>
+        <td><code>m1.swap (m2)</code></td>
+        <td>&nbsp; </td>
+        <td><code>void</code></td>
+    </tr>
+    <tr>
+        <td rowspan="2">Beginning of reverse range </td>
+        <td><code>m.rbegin1 ()</code> </td>
+        <td>&nbsp; </td>
+        <td><code>reverse_iterator1</code></td>
+    </tr>
+    <tr>
+        <td><code>m.rbegin2 ()</code> </td>
+        <td>&nbsp;</td>
+        <td><code>reverse_iterator2</code></td>
+    </tr>
+    <tr>
+        <td rowspan="2">End of reverse range </td>
+        <td><code>m.rend1 ()</code> </td>
+        <td>&nbsp; </td>
+        <td><code>reverse_iterator1</code></td>
+    </tr>
+    <tr>
+        <td><code>m.rend2 ()</code> </td>
+        <td>&nbsp;</td>
+        <td><code>reverse_iterator2</code></td>
+    </tr>
+    <tr>
+        <td rowspan="3">Projection</td>
+        <td><code>m.row (i)</code> </td>
+        <td><code>i</code> is convertible to <code>size_type</code>.</td>
+        <td><code>matrix_row_type</code></td>
+    </tr>
+    <tr>
+        <td><code>m.column (j)</code></td>
+        <td><code>j</code> is convertible to <code>size_type</code>.</td>
+        <td><code>matrix_column_type</code></td>
+    </tr>
+    <tr>
+        <td><code>m.project (i1, i2, j1, j2)</code> </td>
+        <td><code>i1</code>, <code>i2</code>, <code>j1 </code>and
+        <code>j2 </code>are convertible to <code>size_type</code>.</td>
+        <td><code>matrix_range_type</code></td>
+    </tr>
+    <tr>
+        <td rowspan="2">Assignment</td>
+        <td><code>m2 = m1</code></td>
+        <td><code>m2</code> is mutable and <code>m1</code> is
+        convertible to <code>M</code>.</td>
+        <td><code>M &amp;</code></td>
+    </tr>
+    <tr>
+        <td><code>m2.assign (m1)</code></td>
+        <td><code>m2</code> is mutable and <code>m1</code> is
+        convertible to <code>M</code>.</td>
+        <td><code>M &amp;</code></td>
+    </tr>
+    <tr>
+        <td rowspan="5">Computed assignment</td>
+        <td><code>m2 += m1</code></td>
+        <td><code>m2</code> is mutable and <code>m1</code> is
+        convertible to <code>M</code>.</td>
+        <td><code>M &amp;</code></td>
+    </tr>
+    <tr>
+        <td><code>m2.plus_assign (m1)</code></td>
+        <td><code>m2</code> is mutable and <code>m1</code> is
+        convertible to <code>M</code>.</td>
+        <td><code>M &amp;</code></td>
+    </tr>
+    <tr>
+        <td><code>m2 -= m1</code></td>
+        <td><code>m2</code> is mutable and <code>m1</code> is
+        convertible to <code>M</code>.</td>
+        <td><code>M &amp;</code></td>
+    </tr>
+    <tr>
+        <td><code>m2.minus_assign (m1)</code></td>
+        <td><code>m2</code> is mutable and <code>m1</code> is
+        convertible to <code>M</code>.</td>
+        <td><code>M &amp;</code></td>
+    </tr>
+    <tr>
+        <td><code>m *= t</code></td>
+        <td><code>m</code> is mutable and <code>t</code> is
+        convertible to <code>value_type</code>.</td>
+        <td><code>M &amp;</code></td>
+    </tr>
+</table>
+
+<h4>Expression semantics</h4>
+
+<p>Semantics of an expression is defined only where it differs
+from, or is not defined in <a
+href="expression.htm#matrix_expression">Matrix Expression</a>.</p>
+
+<table border="1">
+    <tr>
+        <th>Name </th>
+        <th>Expression </th>
+        <th>Precondition </th>
+        <th>Semantics </th>
+        <th>Postcondition </th>
+    </tr>
+    <tr>
+        <td rowspan="2">Beginning of range </td>
+        <td><code>m.begin1 ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Returns an iterator pointing to the first element in
+        the first column of a matrix proxy. </td>
+        <td><code>m.begin1 ()</code> is either dereferenceable or
+        past-the-end. It is past-the-end if and only if <code>m.size1
+        () == 0</code>. </td>
+    </tr>
+    <tr>
+        <td><code>m.begin2 ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Returns an iterator pointing to the first element in
+        the first row of a matrix proxy. </td>
+        <td><code>m.begin2 ()</code> is either dereferenceable or
+        past-the-end. It is past-the-end if and only if <code>m.size2
+        () == 0</code>. </td>
+    </tr>
+    <tr>
+        <td rowspan="2">End of range </td>
+        <td><code>m.end1 ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Returns an iterator pointing one past the last
+        element in the matrix proxy. </td>
+        <td><code>m.end1 ()</code> is past-the-end. </td>
+    </tr>
+    <tr>
+        <td><code>m.end2 ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Returns an iterator pointing one past the last
+        element in the matrix proxy. </td>
+        <td><code>m.end2 ()</code> is past-the-end. </td>
+    </tr>
+    <tr>
+        <td>Swap </td>
+        <td><code>m1.swap (m2)</code> </td>
+        <td>&nbsp; </td>
+        <td>Equivalent to <code>swap (m1, m2)</code>. </td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td rowspan="2">Beginning of reverse range </td>
+        <td><code>m.rbegin1 ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Equivalent to <code>const_reverse_iterator1 (m.end1
+        ())</code>. </td>
+        <td><code>m.rbegin1 ()</code> is either dereferenceable
+        or past-the-end. It is past-the-end if and only if <code>m.size1
+        () == 0</code>. </td>
+    </tr>
+    <tr>
+        <td><code>m.rbegin2 ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Equivalent to <code>const_reverse_iterator2 (m.end2
+        ())</code>. </td>
+        <td><code>m.rbegin2 ()</code> is either dereferenceable
+        or past-the-end. It is past-the-end if and only if <code>m.size2
+        () == 0</code>. </td>
+    </tr>
+    <tr>
+        <td rowspan="2">End of reverse range </td>
+        <td><code>m.rend1 ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Equivalent to <code>const_reverse_iterator1 (m.begin1
+        ())</code>. </td>
+        <td><code>m.rend1 ()</code> is past-the-end.</td>
+    </tr>
+    <tr>
+        <td><code>m.rend2 ()</code> </td>
+        <td>&nbsp; </td>
+        <td>Equivalent to <code>const_reverse_iterator2 (m.begin2
+        ())</code>. </td>
+        <td><code>m.rend2 ()</code> is past-the-end.</td>
+    </tr>
+    <tr>
+        <td rowspan="3">Projection</td>
+        <td><code>m.row (i)</code> </td>
+        <td><code>0 &lt;= i1 &lt; i2 &lt;= m.size1 ()</code>
+        &nbsp;</td>
+        <td>Returns the <code>i</code>-th row of the matrix
+        proxy. </td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td><code>m.column (j)</code></td>
+        <td><code>0 &lt;= j1 &lt; j2 &lt;= m.size2 ()</code> </td>
+        <td>Returns the <code>j</code>-th column of the matrix
+        proxy. </td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td><code>m.project (i1, i2, j1, j2)</code> </td>
+        <td><code>0 &lt;= i1 &lt; i2 &lt;= m.size1 ()</code>
+        &nbsp;and <code><br>
+        0 &lt;= j1 &lt; j2 &lt;= m.size2 ()</code> </td>
+        <td>Returns the range <code>[i1, i2) x [j1, j2) </code>of
+        the matrix proxy's elements. </td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td rowspan="2">Assignment</td>
+        <td><code>m2 = m1</code></td>
+        <td><code>m1.size1 () == m2.size1 ()</code> and <code><br>
+        m1.size2 () == m2.size2 ()</code> </td>
+        <td>Assigns every element of the evaluated matrix proxy <code>m1</code>
+        to the corresponding element of <code>m2</code>.</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td><code>m2.assign (m1)</code></td>
+        <td><code>m1.size1 () == m2.size1 ()</code> and <code><br>
+        m1.size2 () == m2.size2 ()</code> </td>
+        <td>Assigns every element of <code>m1 </code>to the
+        corresponding element of <code>m2</code>.</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td rowspan="5">Computed assignment</td>
+        <td><code>m2 += m1</code></td>
+        <td><code>m1.size1 () == m2.size1 ()</code> and <code><br>
+        m1.size2 () == m2.size2 ()</code> </td>
+        <td>Adds every element of the evaluated matrix proxy <code>m1</code>
+        to the corresponding element of <code>m2</code>.</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td><code>m2.plus_assign (m1)</code></td>
+        <td><code>m1.size1 () == m2.size1 ()</code> and <code><br>
+        m1.size2 () == m2.size2 ()</code> </td>
+        <td>Adds every element of <code>m1</code> to the
+        corresponding element of <code>m2</code>.</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td><code>m2 -= m1</code></td>
+        <td><code>m1.size1 () == m2.size1 ()</code> and <code><br>
+        m1.size2 () == m2.size2 ()</code> </td>
+        <td>Subtracts every element of the evaluated matrix proxy
+        <code>m1</code> from the corresponding element of <code>m2</code>.</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td><code>m2.minus_assign (m1)</code></td>
+        <td><code>m1.size1 () == m2.size1 ()</code> and <code><br>
+        m1.size2 () == m2.size2 ()</code> </td>
+        <td>Subtracts every element of <code>m1</code> from the
+        corresponding element of <code>m2</code>.</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td><code>m *= t</code></td>
+        <td>&nbsp;</td>
+        <td>Multiplies every element of <code>m</code> with <code>t</code>.</td>
+        <td>&nbsp;</td>
+    </tr>
+</table>
+
+<h4>Complexity guarantees</h4>
+
+<p>The run-time complexity of <code>begin1 ()</code>,<code>
+begin2 ()</code>,<code> end1 () </code>and <code>end2 () </code>is
+specific for the evaluated matrix proxy, typically amortized
+constant time.</p>
+
+<p>The run-time complexity of <code>swap () </code>is specific
+for the evaluated matrix proxy, typically constant time. </p>
+
+<p>The run-time complexity of <code>rbegin1 ()</code>,<code>
+rbegin2 ()</code>,<code> rend1 () </code>and <code>rend2 () </code>is
+specific for the evaluated matrix proxy, typically amortized
+constant time.</p>
+
+<p>The run-time complexity of the projections is constant time.</p>
+
+<p>The run-time complexity of the arithmetic operations is
+specific for the evaluated matrix proxies, typically quadratic in
+the size of the proxies.</p>
+
+<h4>Invariants</h4>
+
+<h4>Models</h4>
+
+<ul>
+    <li><code>matrix_range&lt;M&gt;</code></li>
+    <li><code>matrix_slice&lt;M&gt;</code></li>
+</ul>
+</body>
+</html>
