@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// boost incomplete_fwd.hpp header file
+// boost libs/incomplete/pimpl_test.cpp header file
 // See http://www.boost.org for updates, documentation, and revision history.
 //-----------------------------------------------------------------------------
 //
@@ -14,16 +14,28 @@
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
 
-#ifndef BOOST_INCOMPLETE_FWD_HPP
-#define BOOST_INCOMPLETE_FWD_HPP
+#include "pimpl_test.h"
 
-namespace boost {
+struct pimpl_test::Impl
+{
+    int i;
+};
 
-// class template incomplete
-//
-// Treats an incomplete type as a value type.
-template <typename T> class incomplete;
+pimpl_test::pimpl_test(int value)
+{
+    pimpl_.get().i = value;
+}
 
-} // namespace boost
+pimpl_test::~pimpl_test()
+{
+}
 
-#endif // BOOST_INCOMPLETE_FWD_HPP
+void pimpl_test::swap(pimpl_test& operand)
+{
+    pimpl_.swap(operand.pimpl_);
+}
+
+int pimpl_test::value() const
+{
+    return pimpl_.get().i;
+}

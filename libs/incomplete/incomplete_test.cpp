@@ -14,20 +14,20 @@
 // suitability of this software for any purpose. It is provided "as is" 
 // without express or implied warranty.
 
-#include <iostream>
+#include "pimpl_test.h"
 
-#include "stack_pimpl_test.h"
-#include "heap_pimpl_test.h"
+#define BOOST_INCLUDE_MAIN
+#include "boost/test/test_tools.hpp"
+#include "boost/cstdlib.hpp"
 
-int main()
+//////////////////////////////////////////////////////////////////////////
+// function test_main
+//
+int test_main( int, char *[] )
 {
-    std::cout << "boost::incomplete tests";
+    static const int value = 42;
+	pimpl_test test(value);
+    BOOST_TEST(test.value() == value);
 
-    std::cout << "\n\ntesting stack-based use of incomplete as pimpl:\n";
-    stack_pimpl_test stack_test(42);
-    std::cout << " - the meaning of life is " << stack_test.value();
-
-    std::cout << "\n\ntesting heap-based use of incomplete as pimpl:\n";
-    heap_pimpl_test heap_test(3141592);
-    std::cout << " - some digits of pi are " << heap_test.value();
+	return boost::exit_success;
 }

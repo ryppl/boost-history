@@ -33,11 +33,6 @@
 #include "boost/mpl/apply_if.hpp"
 #include "boost/mpl/identity.hpp"
 
-// / Delay inclusion of {safe_swap,safe_assign}.hpp     \
-// \ because of circular dependencies with this header: /
-// #include "boost/utility/safe_assign.hpp"
-// #include "boost/utility/safe_swap.hpp"
-
 // BOOST_ALIGNED_STORAGE_LIMIT_CONSTRUCT_AS_ARITY
 // / Implementation-defined value describing the greatest number of arguments \
 // \ that may be provided to aligned_storage::construct_as.                   /
@@ -188,34 +183,11 @@ public:
         get_pointer_as<const T>()->~T();
     }
 
-    template <typename T>
-    void assign_as(const aligned_storage& operand)
-    {
-        safe_assign(
-              get_as<T>()
-            , operand.template get_as<const T>()
-            );
-    }
-
-    template <typename T>
-    void swap_as(aligned_storage& operand)
-    {
-        safe_swap(
-              get_as<T>()
-            , operand.template get_as<T>()
-            );
-    }
-
 private:
 	aligned_storage(const aligned_storage&);
 	aligned_storage& operator=(const aligned_storage&);
 };
 
 } // namespace boost
-
-// / Delay inclusion of {safe_swap,safe_assign}.hpp because \
-// \ of circular dependencies with this header:             /
-#include "boost/utility/safe_assign.hpp"
-#include "boost/utility/safe_swap.hpp"
 
 #endif // BOOST_ALIGNED_STORAGE_HPP
