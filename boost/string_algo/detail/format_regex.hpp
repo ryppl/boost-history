@@ -12,7 +12,6 @@
 
 #include <string>
 #include <boost/regex.hpp>
-#include <boost/string_algo/traits.hpp>
 #include <boost/string_algo/detail/find_regex.hpp>
 
 namespace boost {

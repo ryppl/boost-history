@@ -14,9 +14,13 @@
 #include <vector>
 #include <list>
 #include <iostream>
+
 #include <boost/string_algo/replace.hpp>
 #include <boost/string_algo/erase.hpp>
 #include <boost/string_algo/find.hpp>
+#include <boost/string_algo/std/list_traits.hpp>
+#include <boost/string_algo/std/string_traits.hpp>
+
 #include <boost/test/test_tools.hpp>
 
 using namespace std;
@@ -24,29 +28,29 @@ using namespace boost;
 
 void sequence_traits_test()
 {
-	// basic_string traits
-	typedef string_algo::sequence_traits<string> string_traits;
+    // basic_string traits
+    typedef string_algo::sequence_traits<string> string_traits;
 
-	BOOST_CHECK( string_traits::native_replace::value );
-	BOOST_CHECK( !string_traits::stable_iterators::value );
-	BOOST_CHECK( !string_traits::const_time_insert::value );	
-	BOOST_CHECK( !string_traits::const_time_erase::value );	
+    BOOST_CHECK( string_traits::native_replace::value );
+    BOOST_CHECK( !string_traits::stable_iterators::value );
+    BOOST_CHECK( !string_traits::const_time_insert::value );    
+    BOOST_CHECK( !string_traits::const_time_erase::value ); 
 
-	// vector traits
-	typedef string_algo::sequence_traits< vector<char> > vector_traits;
+    // vector traits
+    typedef string_algo::sequence_traits< vector<char> > vector_traits;
 
-	BOOST_CHECK( !vector_traits::native_replace::value );
-	BOOST_CHECK( !vector_traits::stable_iterators::value );
-	BOOST_CHECK( !vector_traits::const_time_insert::value );	
-	BOOST_CHECK( !vector_traits::const_time_erase::value );	
+    BOOST_CHECK( !vector_traits::native_replace::value );
+    BOOST_CHECK( !vector_traits::stable_iterators::value );
+    BOOST_CHECK( !vector_traits::const_time_insert::value );    
+    BOOST_CHECK( !vector_traits::const_time_erase::value ); 
 
-	// list traits
-	typedef string_algo::sequence_traits< list<char> > list_traits;
+    // list traits
+    typedef string_algo::sequence_traits< list<char> > list_traits;
 
-	BOOST_CHECK( !list_traits::native_replace::value );
-	BOOST_CHECK( list_traits::stable_iterators::value );
-	BOOST_CHECK( list_traits::const_time_insert::value );	
-	BOOST_CHECK( list_traits::const_time_erase::value );	
+    BOOST_CHECK( !list_traits::native_replace::value );
+    BOOST_CHECK( list_traits::stable_iterators::value );
+    BOOST_CHECK( list_traits::const_time_insert::value );   
+    BOOST_CHECK( list_traits::const_time_erase::value );    
 }
 
 void replace_test()
@@ -193,8 +197,8 @@ void replace_test()
 // test main 
 int test_main( int, char*[] )
 {
-	sequence_traits_test();	
-	replace_test();
+    sequence_traits_test(); 
+    replace_test();
     
     return 0;
 }

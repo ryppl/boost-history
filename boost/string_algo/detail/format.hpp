@@ -10,7 +10,6 @@
 #ifndef BOOST_STRING_FORMAT_DETAIL_HPP
 #define BOOST_STRING_FORMAT_DETAIL_HPP
 
-#include <boost/string_algo/traits.hpp>
 #include <boost/string_algo/detail/util.hpp>
 
 namespace boost {

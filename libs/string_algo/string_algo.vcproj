@@ -102,9 +102,6 @@
 				RelativePath="..\..\boost\string_algo\config.hpp">
 			</File>
 			<File
-				RelativePath="..\..\boost\string_algo\container_traits.hpp">
-			</File>
-			<File
 				RelativePath="..\..\boost\string_algo\erase.hpp">
 			</File>
 			<File
@@ -112,6 +109,9 @@
 			</File>
 			<File
 				RelativePath="..\..\boost\string_algo\find_impl.hpp">
+			</File>
+			<File
+				RelativePath="..\..\boost\string_algo\input_policy.hpp">
 			</File>
 			<File
 				RelativePath="..\..\boost\string_algo\iterator_range.hpp">
@@ -132,13 +132,13 @@
 				RelativePath="..\..\boost\string_algo\sequence_traits.hpp">
 			</File>
 			<File
+				RelativePath="..\..\boost\string_algo\std_containers_traits.hpp">
+			</File>
+			<File
 				RelativePath="..\..\boost\string_algo.hpp">
 			</File>
 			<File
 				RelativePath="..\..\boost\string_algo_regex.hpp">
-			</File>
-			<File
-				RelativePath="..\..\boost\string_algo\traits.hpp">
 			</File>
 			<File
 				RelativePath="..\..\boost\string_algo\trim.hpp">
@@ -178,6 +178,16 @@
 				</File>
 				<File
 					RelativePath="..\..\boost\string_algo\detail\yes_no_type.hpp">
+				</File>
+			</Filter>
+			<Filter
+				Name="std"
+				Filter="">
+				<File
+					RelativePath="..\..\boost\string_algo\std\list_traits.hpp">
+				</File>
+				<File
+					RelativePath="..\..\boost\string_algo\std\string_traits.hpp">
 				</File>
 			</Filter>
 		</Filter>

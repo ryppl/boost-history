@@ -11,7 +11,6 @@
 #define BOOST_STRING_REPLACE_IMPL_HPP
 
 #include <deque>
-#include <boost/string_algo/traits.hpp>
 #include <boost/string_algo/iterator_range.hpp>
 #include <boost/string_algo/detail/replace.hpp>
 #include <boost/string_algo/detail/container.hpp>

@@ -11,7 +11,6 @@
 #define BOOST_STRING_ERASE_HPP
 
 #include <boost/detail/iterator.hpp>
-#include <boost/string_algo/traits.hpp>
 #include <boost/string_algo/iterator_range.hpp>
 #include <boost/string_algo/replace_impl.hpp>
 #include <boost/string_algo/detail/find.hpp>

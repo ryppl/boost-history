@@ -11,7 +11,7 @@
 #define BOOST_STRING_REGEX_HPP
 
 #include <boost/regex.hpp>
-#include <boost/string_algo/traits.hpp>
+#include <boost/string_algo/input_policy.hpp>
 #include <boost/string_algo/iterator_range.hpp>
 #include <boost/string_algo/find_impl.hpp>
 #include <boost/string_algo/replace_impl.hpp>

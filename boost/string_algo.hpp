@@ -10,6 +10,7 @@
 #ifndef BOOST_STRING_ALGO_HPP
 #define BOOST_STRING_ALGO_HPP
 
+#include <boost/string_algo/std_containers_traits.hpp>
 #include <boost/string_algo/iterator_range.hpp>
 #include <boost/string_algo/trim.hpp>
 #include <boost/string_algo/case_conv.hpp>

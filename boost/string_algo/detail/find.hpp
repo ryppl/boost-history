@@ -12,7 +12,7 @@
 
 #include <boost/detail/iterator.hpp>
 #include <boost/string_algo/iterator_range.hpp>
-#include <boost/string_algo/traits.hpp>
+#include <boost/string_algo/input_policy.hpp>
 
 namespace boost {
 

@@ -10,7 +10,7 @@
 #ifndef BOOST_STRING_FIND_HPP
 #define BOOST_STRING_FIND_HPP
 
-#include <boost/string_algo/traits.hpp>
+#include <boost/string_algo/input_policy.hpp>
 #include <boost/string_algo/iterator_range.hpp>
 #include <boost/string_algo/detail/find.hpp>
 #include <boost/string_algo/find_impl.hpp>

@@ -10,7 +10,6 @@
 #ifndef BOOST_STRING_REPLACE_HPP
 #define BOOST_STRING_REPLACE_HPP
 
-#include <boost/string_algo/traits.hpp>
 #include <boost/string_algo/iterator_range.hpp>
 #include <boost/string_algo/replace_impl.hpp>
 #include <boost/string_algo/detail/find.hpp>
