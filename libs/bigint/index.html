@@ -116,6 +116,11 @@ public:
     // Operator not
     bool operator!() const;
 
+    // Queries
+    bool is_zero() const;
+    bool negative() const;
+    bool positive() const;
+
     // Comparison operators
     bool operator&lt; (bigint const&amp; n) const;
     bool operator== (bigint const&amp; n) const;
@@ -203,6 +208,15 @@ class. These include:
 
 These operations have the semantics expected of a numeric type. Divide 
 by zero results in undefined behavior.
+
+<h3><a name="queries">Sign Queries</a></h3>
+Convenient query member functions are supplied to abstract comparisons 
+against a default constructed <tt>bigint</tt>.  Those functions are 
+<tt>positive()</tt>, <tt>negative()</tt>, and
+<tt>is_zero()</tt>. Given a <tt>bigint</tt> variable <tt>x</tt>,
+the above are respectively equivalent to <tt>x &gt; bigint()</tt>,
+<tt>x &lt; bigint()</tt>, and <tt>x == bigint()</tt>.
+
 
 <h3><a name="input_output">Input and Output</a></h3>
 <tt>bigint</tt> provides an IOstream inserter (<tt>operator&lt;&lt;</tt>)
@@ -308,7 +322,7 @@ current implementation are welcome.
 
 <p>
 <!-- hhmts start -->
-Last modified: Mon Sep  9 09:48:26 EST 2002
+Last modified: Mon Aug 25 16:32:14 EST 2003
 <!-- hhmts end -->
 
 </body>

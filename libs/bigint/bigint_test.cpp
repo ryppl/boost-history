@@ -8,7 +8,7 @@
 //
 
 
-#include "bigint.hpp"
+#include "boost/bigint.hpp"
 #include "boost/lexical_cast.hpp"
 #include <cassert>
 #include <sstream>
@@ -33,6 +33,16 @@ int main() {
   bigint x5("0");
   assert(x4 == x5);
 
+  assert(bigint().is_zero());
+  assert(bigint("0").is_zero());
+  assert(bigint("10001").positive());
+  assert(bigint("-50005").negative());
+  assert(!bigint("50").is_zero());
+  assert(!bigint().negative());
+  assert(!bigint().positive());
+  assert(!bigint("50005").negative());
+  assert(!bigint("-50005").positive());
+
   assert(x1 + x1 == bigint("20002"));
 
 
@@ -40,7 +50,8 @@ int main() {
   assert( bigint("-10001") < bigint("10001") );
   assert( bigint("-10001") < bigint("1") );
   assert( !(bigint("1") < bigint("-10001")) );
-
+  
+  
 
   // implementation detail: bigint is stored in base 10000.
   bigint x6("9999");

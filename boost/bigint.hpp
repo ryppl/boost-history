@@ -5,7 +5,6 @@
 // bigint.hpp - an arbitrary magnitude integer type
 //
 
-#include "stream_range.hpp"
 #include "boost/config.hpp"
 #include "boost/operators.hpp"
 #include <algorithm>
@@ -20,6 +19,21 @@
 #include <cctype>
 
 namespace boost {
+
+
+  // bigint is based on information found in The Art of Computer Programming
+  // Volume 2: Seminumerical Algorithms, Chapter 4.3 by Donald Knuth.  
+
+  // The implementation uses std::vector<int> as its buffer format and a fixed
+  // radix of 10,000 for easy conversion to and from ascii strings.
+
+  // Bigits (base 10,000 digits) are stored in reverse order (most significant
+  // bigits at the end of the vector) to take advantage of std::vector's fast
+  // pushing and popping at the end of the vector.
+
+  // Summary: Positive numbers are stored obviously as base 10,000
+  // numbers. Negative numbers are stored in complement form, with -1 as the
+  // most significant bigit.
 
 class bigint : boost::operators<bigint> {
   BOOST_STATIC_CONSTANT(int, radix = 10000);
@@ -123,6 +137,7 @@ class bigint : boost::operators<bigint> {
   bigint& operate(bigint const& other, OP op) {
     align_to(other);
 
+    // other.buffer.size() <= buffer.size() 
     std::transform(other.buffer.begin(),other.buffer.end(),
 		   buffer.begin(),
 		   buffer.begin(),op);
@@ -302,8 +317,20 @@ public:
     from_string(os.str());
   }
 
+  bool is_zero() const {
+    return buffer.size() == 1 && buffer.back() == 0;
+  }
+
+  bool negative() const {
+    return buffer.back() == -1;
+  }
+
+  bool positive() const {
+    return !(this->negative() || this->is_zero());
+  }
+
   bool operator!() const {
-    return *this == bigint(0);
+    this->is_zero();
   }
 
   bool operator<(bigint const& other) const {
