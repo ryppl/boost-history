@@ -578,21 +578,50 @@ templates.
 
 <h4 id="nontype_parameters">Nontype template parameters</h4>
 
-<p>The scheme described here does not directly support nontype template 
-parameters.
-The simplest solution to this is to use wrappers which can be used as
-type template parameters.
+<p>The Boost NTP library supports nontype template parameters with little
+extra difficulty.
+Instead of typedefs, you just define static constants in the default value
+classes and in the named template parameter templates. 
+
+For example, to add the feature <i>Number_of_wheels</i> to the <code>car</code>
+template we would add the line:
+<pre>
+static const int Number_of_wheels = 4;
+</pre>
+<p>
+into the <code>car_defaults</code> class.
+The named template parameter template for this feature would be:
+</p>
+<pre>
+template &lt;int N&gt; Number_of_wheels_is { static const int Number_of_wheels = N };
+</pre>
+<p>
+Finally, to access the feature in the <code>car</code> class we would write:
+</p>
+<pre>
+static const int number_of_wheels = final_features::Number_of_wheels;
+</pre>
+<p>
+However, the case where one wants to have a nontype template parameter 
+that can either be provided as a named or as an unnamed template parameter, 
+is not supported.
+
+If this kind of behaviour is desired, 
+the simplest solution is to wrap the compile time constants into wrapper 
+templates which can be used as type template parameters.
 For example:
 </p>
 
 <pre>
 template&lt;int N&gt; struct int_wrapper {
-  BOOST_STATIC_CONSTANT(int, value = N);
+  static const int value = N; 
 };
 </pre>
 
 <p>
 defines a wrapper that can carry an integral constant.
+Note that for better portability you may want to use the 
+<code>BOOST_STATIC_CONSTANT</code> macro to define the static constants.
 </p>
 
 
