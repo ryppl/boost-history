@@ -40,7 +40,8 @@ namespace boost { namespace langbinding { namespace util {
 // which works across shared libraries.
 struct type_info : private totally_ordered<type_info>
 {
-    inline type_info(std::type_info const& = typeid(void), int module = module::id());
+    type_info();
+    explicit inline type_info(std::type_info const&, int module = module::id());
 
     inline bool operator<(type_info const& rhs) const;
     inline bool operator==(type_info const& rhs) const;
@@ -62,24 +63,6 @@ struct type_info : private totally_ordered<type_info>
     int m_module;
 };
 
-template<class T>
-struct type_id_
-{
-    static type_info id;
-};
-
-template<class T>
-type_info type_id_<T>::id(
-#  if !defined(_MSC_VER)                                       \
-      || (!BOOST_WORKAROUND(BOOST_MSVC, <= 1300)                \
-          && !BOOST_WORKAROUND(BOOST_INTEL_CXX_VERSION, <= 700))
-    typeid(T)
-#  else // strip the decoration which msvc and Intel mistakenly leave in
-    aux_::msvc_typeid((boost::type<T>*)0)
-#endif
-  , module::id()
-  );
-
 #  ifdef BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS
 #   define BOOST_LANGBINDING_UTIL_EXPLICIT_TT_DEF(T) ::boost::type<T>*
 #  else
@@ -89,7 +72,17 @@ type_info type_id_<T>::id(
 template <class T>
 inline type_info const& type_id(BOOST_EXPLICIT_TEMPLATE_TYPE(T))
 {
-    return type_id_<T>::id;
+    static type_info id( 
+#  if !defined(_MSC_VER)                                       \
+          || (!BOOST_WORKAROUND(BOOST_MSVC, <= 1300)                \
+              && !BOOST_WORKAROUND(BOOST_INTEL_CXX_VERSION, <= 700))
+        typeid(T)
+#  else // strip the decoration which msvc and Intel mistakenly leave in
+        aux_::msvc_typeid((boost::type<T>*)0)
+#endif
+      , module::id());
+
+    return id;
 }
 
 #  if (defined(__EDG_VERSION__) && __EDG_VERSION__ < 245) \
@@ -104,7 +97,8 @@ inline type_info const& type_id(BOOST_EXPLICIT_TEMPLATE_TYPE(T))
 template <>                                                                   \
 inline type_info const& type_id<T>(BOOST_LANGBINDING_UTIL_EXPLICIT_TT_DEF(T)) \
 {                                                                             \
-    return type_id_<T>::id;                                                   \
+    static type_info id(typeid(T), module::id()); \
+    return id; \
 }
 
 BOOST_LANGBINDING_UTIL_SIGNED_INTEGRAL_TYPE_ID(short)
@@ -119,6 +113,18 @@ BOOST_LANGBINDING_UTIL_SIGNED_INTEGRAL_TYPE_ID(long long)
 #  endif
 
 //
+inline type_info::type_info()
+    : m_base_type(
+#  ifdef BOOST_LANGBINDING_UTIL_TYPE_ID_NAME
+        typeid(void).name()
+#  else
+        &typeid(void)
+#  endif
+      )
+    , m_module(0)
+{
+}
+
 inline type_info::type_info(std::type_info const& id, int module)
     : m_base_type(
 #  ifdef BOOST_LANGBINDING_UTIL_TYPE_ID_NAME

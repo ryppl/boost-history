@@ -2,6 +2,7 @@
 #define INVOKER_040916_HPP
 
 #include <boost/langbinding/function/argument_type.hpp>
+#include <boost/langbinding/function/result_converter.hpp>
 #include <boost/langbinding/converter/converter.hpp>
 #include <typeinfo>
 
@@ -14,35 +15,6 @@
 
 namespace boost { namespace langbinding { namespace function {
 
-class result_converter_base
-{
-public:
-    virtual ~result_converter_base() {}
-};
-
-template<class T>
-class result_converter : public result_converter_base
-{
-public:
-    typedef typename mpl::eval_if<
-        mpl::or_<
-            is_pointer<T>
-          , is_reference<T>
-        >
-      , mpl::identity<T>
-      , add_reference<T const>
-    >::type argument_type;
-
-    virtual void* operator()(argument_type) = 0;
-};
-
-template<>
-class result_converter<void> : public result_converter_base
-{
-public:
-    virtual void* operator()() = 0;
-};
-
 class invoker
 {
 public:
@@ -50,7 +22,8 @@ public:
     virtual int arity() const = 0;
 
     virtual void* invoke(
-        converter::arg_conversion* args, result_converter_base& rc) const = 0;
+        backend::plugin const& backend_
+      , converter::arg_conversion* args) const = 0;
 
     virtual argument_type const* arguments() const = 0;
     virtual argument_type const& return_type() const = 0;

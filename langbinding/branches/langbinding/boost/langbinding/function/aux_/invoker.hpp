@@ -23,6 +23,8 @@
 #include <boost/langbinding/function/aux_/fusion_arg_iterator.hpp>
 #include <boost/langbinding/util/type_id.hpp>
 
+#include <stdexcept>
+
 namespace boost { namespace langbinding { namespace function { namespace aux { 
 
 template<class T>
@@ -32,6 +34,7 @@ struct wrap
     typedef T value_type;
 };
 
+// TODO: rewrite this to just use type traits..
 struct fill_argument_types
 {
     fill_argument_types(argument_type* args) : arg(args) {}
@@ -46,31 +49,31 @@ struct fill_argument_types
     }
 
     template<class T>
-    static util::type_info const& strip(T(*)())
+    static util::type_info strip(T(*)())
     {
         return util::type_id<T>();
     }
 
     template<class T>
-    static util::type_info const& strip(T&(*)())
+    static util::type_info strip(T&(*)())
     {
         return util::type_id<T>();
     }
 
     template<class T>
-    static util::type_info const& strip(T const&(*)())
+    static util::type_info strip(T const&(*)())
     {
         return util::type_id<T>();
     }
 
     template<class T>
-    static util::type_info const& strip(T*(*)())
+    static util::type_info strip(T*(*)())
     {
         return util::type_id<T>();
     }
 
     template<class T>
-    static util::type_info const& strip(T const*(*)())
+    static util::type_info strip(T const*(*)())
     {
         return util::type_id<T>();
     }
@@ -95,44 +98,24 @@ inline arg_vector<Signature>::arg_vector()
     mpl::for_each<Signature>(fill_argument_types(args));
 }
 
-struct transform_extractor_op
-{
-    transform_extractor_op(converter::arg_conversion*& args) 
-        : args(args) {}
-
-    template<class T>
-    struct apply
-        : arg_extractor<typename T::value_type>
-    {
-    };
-
-    template<class T>
-    typename apply<T>::type operator()(T) const
-    {
-        return typename apply<T>::type(*args++);
-    }
-
-    mutable converter::arg_conversion*& args;
-};
-
 template<class R, class Arguments>
 struct converter_package
 {
     converter_package(
-        R& result_converter
+        R const& result_converter
       , Arguments const& converters)
         : return_(result_converter)
         , args(converters)
     {
     }
 
-    R& return_;
+    R const& return_;
     Arguments const& args;
 };
 
 template<class R, class Converters>
 converter_package<R, Converters> make_converter_package(
-    R& return_, Converters const& args)
+    R const& return_, Converters const& args)
 {
     return converter_package<R, Converters>(return_, args);
 }
@@ -148,12 +131,12 @@ struct invoker : boost::langbinding::function::invoker
     > argument_types;
 
     typedef typename mpl::front<Signature>::type return_type_;
+    typedef result_converter<return_type_> rc_type;
 
-    void* invoke(converter::arg_conversion* args, result_converter_base& rc_) const
+    void* invoke(
+        backend::plugin const& backend_
+      , converter::arg_conversion* args) const
     {
-        result_converter<return_type_>& rc = static_cast<
-            result_converter<return_type_>&>(rc_);
-
         aux::fusion_arg_iterator arg_iterator(args);
 
         typename fusion::meta::generate<
@@ -163,6 +146,12 @@ struct invoker : boost::langbinding::function::invoker
             >
         >::type argument_converters(arg_iterator);
 
+        // Find to_xxx converter in registry.
+        converter::to_xxx_function rc_fn = get_result_converter(
+            mpl::identity<return_type_>()
+          , backend_.id()
+        );
+
         return aux::invoke(
             aux::invoke_tag<
                 return_type_
@@ -171,12 +160,34 @@ struct invoker : boost::langbinding::function::invoker
           , typename mpl::size<argument_types>::type()
           , m_fn
           , make_converter_package(
-                rc
+                rc_type(rc_fn, backend_)
               , argument_converters
             )
         );
     }
 
+    // void return means no to_xxx converter in the registry
+    static converter::to_xxx_function get_result_converter(
+        mpl::identity<void>, backend::id)
+    {
+        return 0;
+    }
+
+    template<class T>
+    static converter::to_xxx_function get_result_converter(
+        mpl::identity<T>, backend::id backend_)
+    {
+        converter::to_xxx_function result = 
+            converter::registered<T>::instance.get(backend_).to_xxx;
+
+        if (!result)
+        {
+            throw std::runtime_error("No result converter found");
+        }
+
+        return result;
+    }
+    
     int arity() const
     {
         return mpl::size<argument_types>();
@@ -192,7 +203,7 @@ struct invoker : boost::langbinding::function::invoker
 
     argument_type const& return_type() const
     {
-        static argument_type x;
+        static argument_type x(util::type_id<return_type_>(), false);
         return x;
     }
 
