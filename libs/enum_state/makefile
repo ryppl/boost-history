@@ -1,3 +1,7 @@
+#
+# Build checked_enum<> test program.
+#
+
 CXX		= g++
 
 OPTIMFLAGS     += -O3
