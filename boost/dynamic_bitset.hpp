@@ -1591,7 +1591,7 @@ operator>>(std::basic_istream<CharT, Traits>& is,
             for (; err == ios_base::goodbit && bits_read < limit; c = buf->snextc()) {
 
                 if (mask == 0) {
-                    mask = 1u << (bits_per_block-1);
+                    mask = Block(1) << (bits_per_block-1);
                     vect.push_back(0);
                     it = vect.end() - 1;
                 }
