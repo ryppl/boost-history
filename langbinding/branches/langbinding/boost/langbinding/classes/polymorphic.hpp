@@ -18,7 +18,7 @@ struct polymorphic
     {
         backend::plugin const& back_end = this->instance.class_->back_end;
         
-        return classes::override(back_end, back_end.find_override(name, data));
+        return classes::override(back_end, back_end.find_override(name, this->instance));
     }
     
  private:
