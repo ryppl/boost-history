@@ -43,6 +43,14 @@ namespace boost
 
     private:
            
+        void safe_insert( const Key& key, auto_ptr<T> ptr ) // strong
+        {
+            std::pair<ptr_iterator,bool> res = 
+                this->c__().insert( std::make_pair( key, ptr.get() ) ); // strong, commit      
+            if( res.second )                                            // nothrow     
+                ptr.release();                                          // nothrow
+        }
+
         template< typename II >                                               
         void map_basic_clone_and_insert( II first, II last )                  
         {                                                                     
@@ -50,10 +58,9 @@ namespace boost
             {                                            
                 if( this->find( first.key() ) != this->end() )
                 {
-                    const object_type& pair = *first.base();            // nothrow                     
-                    std::auto_ptr<T> ptr( make_clone( *pair.second ) ); // strong
-                    insert( pair.first, ptr.get() );                    // strong, commit
-                    ptr.release();                                      // nothrow
+                    const object_type& pair = *first.base();       // nothrow                    
+                    auto_ptr<T> ptr( make_clone( *pair.second ) ); // strong 
+                    this->safe_insert( pair.first, ptr );          // strong, commit
                 }
                 ++first;                                                      
             }                                                                 
@@ -117,6 +124,12 @@ namespace boost
 
     private:
         
+        void safe_insert( const Key& key, auto_ptr<T> ptr ) // strong
+        {
+            this->c__().insert( std::make_pair( key, ptr.get() ) ); // strong, commit      
+            ptr.release();                                          // nothrow
+        }
+
         template< typename II >                                               
         void map_basic_clone_and_insert( II first, II last )                  
         {                                                                     
@@ -124,8 +137,7 @@ namespace boost
             {                                            
                 const object_type& pair = *first.base();            // nothrow                     
                 std::auto_ptr<T> ptr( make_clone( *pair.second ) ); // strong
-                insert( pair.first, ptr.get() );                    // strong, commit
-                ptr.release();                                      // nothrow
+                safe_insert( pair.first, ptr );                     // strong, commit
                 ++first;                                                      
             }                                                                 
         }

@@ -119,6 +119,7 @@ namespace detail
             from.c__().clear();                                         // nothrow
         }
         */
+        
     };
     
 } // namespace 'detail'
@@ -199,9 +200,26 @@ namespace detail
     {                                                                            \
         std::pair<ptr_const_iterator,ptr_const_iterator> p = this->c__().equal_range( x ); \
         return std::make_pair( const_iterator( p.first ), const_iterator( p.second ) );    \
+    }                                                                            \
+                                                                                 \
+    T& operator[]( const Key& key )                                              \
+    {                                                                            \
+       iterator i = this->find( key );                                           \
+       if( i != this->end() )                                                    \
+           return *i;                                                            \
+       else                                                                      \
+           throw bad_ptr_container_operation( "'operator[]()' could not find key" ); \
+    }                                                                            \
+                                                                                 \
+    const T& operator[]( const Key& key ) const                                  \
+    {                                                                            \
+       iterator i = this->find( key );                                           \
+       if( i != this->end() )                                                    \
+           return *i;                                                            \
+       else                                                                      \
+           throw bad_ptr_container_operation( "'operator[]()' could not find key" ); \
     }
-
-
+    
 } // namespace 'boost'
 
 
