@@ -11,16 +11,21 @@
 //  software is provided "as is" without express or implied warranty, and
 //  with no claim as to its suitability for any purpose.
 //
+//  See http://www.boost.org/ for most recent version, including documentation.
+//
 //////////////////////////////////////////////////////////////////////////////
 //
-//  Inspired by Andrei Alexandrescu
+//  Inspired by Andrei Alexandrescu, this header provides a type generator for
+//  the most common smart pointer configurations, including emulations of the
+//  current Boost smart pointers.  See libs/policy_ptr/doc/index.html
 //
 //////////////////////////////////////////////////////////////////////////////
 
 #ifndef STD_PTRS_HPP
 #define STD_PTRS_HPP
 
-#include "mi_smart_ptr.hpp"
+#include "smart_ptr.hpp"
+#include "policy/boost.hpp"
 
 //////////////////////////////////////////////////////////////////////////////
 // Usage:

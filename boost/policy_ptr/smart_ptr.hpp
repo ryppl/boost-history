@@ -64,6 +64,12 @@
 #include <boost/type_traits/same_traits.hpp>
 #include <boost/type_traits/add_reference.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/lambda.hpp>
+#include <boost/mpl/apply.hpp>
+#include <boost/mpl/aux_/void_spec.hpp>
+#include <boost/mpl/list.hpp>
+#include <boost/mpl/find_if.hpp>
+#include <boost/mpl/apply_if.hpp>
 
 #include "../optimally_inherit.hpp"
 
@@ -76,7 +82,7 @@
 #endif
 
 #ifdef BOOST_NO_TEMPLATE_TEMPLATES
-# define BOOST_SMART_POINTER_LAMBDA_INTERFACE
+# undef BOOST_SMART_POINTER_LEGACY_INTERFACE
 #endif
 
 //////////////////////////////////////////////////////////////////////////////
@@ -143,6 +149,24 @@ namespace boost
 // Default policy declarations
 //////////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////////////////
+// Ownership categories that each OwnershipPolicy must declare
+//////////////////////////////////////////////////////////////////////////////
+
+    class copy_semantics_tag { };
+    class move_semantics_tag { };
+    class no_copy_semantics_tag { };
+
+    class storage_policy_tag { };
+    class ownership_policy_tag { };
+    class conversion_policy_tag { };
+    class checking_policy_tag { };
+
+    struct empty_policy
+    { typedef void policy_category; };
+
+    using mpl::_;
+
     template <typename> class ref_counted;
     template <typename> struct disallow_conversion;
     template <typename> struct assert_check;
@@ -152,82 +176,90 @@ namespace boost
     <
         typename T,
 
-#ifndef BOOST_SMART_POINTER_LAMBDA_INTERFACE
+#ifndef BOOST_SMART_POINTER_LEGACY_INTERFACE
+
+        class OwnershipPolicy = empty_policy, // = ref_counted<_>,
+        class ConversionPolicy = empty_policy, // = disallow_conversion<_>,
+        class CheckingPolicy = empty_policy, // = assert_check<_>,
+        class StoragePolicy = empty_policy, // = scalar_storage<_>
+        class policies_ = mpl::list<OwnershipPolicy, ConversionPolicy, CheckingPolicy, StoragePolicy>
+
+#else // BOOST_SMART_POINTER_LEGACY_INTERFACE
 
         template <typename> class OwnershipPolicy = ref_counted,
         template <typename> class ConversionPolicy = disallow_conversion,
         template <typename> class CheckingPolicy = assert_check,
         template <typename> class StoragePolicy = scalar_storage
 
-#else // BOOST_SMART_POINTER_LAMBDA_INTERFACE
-
-        class OwnershipPolicy = ref_counted<_>,
-        class ConversionPolicy = disallow_conversion<_>,
-        class CheckingPolicy = assert_check<_>,
-        class StoragePolicy = scalar_storage<_>
-
-#endif // BOOST_SMART_POINTER_LAMBDA_INTERFACE
+#endif // BOOST_SMART_POINTER_LEGACY_INTERFACE
 
     >
     class smart_ptr;
 
 //////////////////////////////////////////////////////////////////////////////
-// Helper macros for compilers without template template support
-//////////////////////////////////////////////////////////////////////////////
-
-#ifdef BOOST_SMART_POINTER_LAMBDA_INTERFACE
-
-#define BOOST_SMART_PTR1(T, OwnershipPolicy)                                 \
-    boost::smart_ptr<T,                                                      \
-        OwnershipPolicy<typename boost::scalar_storage<T>::pointer_type>,    \         \
-        boost::disallow_conversion<                                          \
-            typename boost::scalar_storage<T>::pointer_type                  \
-        >,                                                                   \
-        boost::assert_check<boost::scalar_storage<T>::stored_type>,          \
-        boost::scalar_storage<T>                                             \
-    >
-
-#define BOOST_SMART_PTR2(T, OwnershipPolicy, ConversionPolicy)               \
-    boost::smart_ptr<T,                                                      \
-        OwnershipPolicy<boost::scalar_storage<T>::pointer_type>,             \
-        ConversionPolicy<boost::scalar_storage<T>::pointer_type>,            \
-        boost::assert_check<boost::scalar_storage<T>::stored_type>,          \
-        boost::scalar_storage<T>                                             \
-    >
-
-#define BOOST_SMART_PTR3(T, OwnershipPolicy, ConversionPolicy,               \
-            CheckingPolicy)                                                  \
-    boost::smart_ptr<T,                                                      \
-        OwnershipPolicy<boost::scalar_storage<T>::pointer_type>,             \
-        ConversionPolicy<boost::scalar_storage<T>::pointer_type>,            \
-        CheckingPolicy<boost::scalar_storage<T>::stored_type>,               \
-        boost::scalar_storage<T>                                             \
-    >
-
-#define BOOST_SMART_PTR4(T, OwnershipPolicy, ConversionPolicy,               \
-            CheckingPolicy, StoragePolicy)                                   \
-    boost::smart_ptr<T,                                                      \
-        OwnershipPolicy<StoragePolicy<T>::pointer_type>,                     \
-        ConversionPolicy<StoragePolicy<T>::pointer_type>,                    \
-        CheckingPolicy<StoragePolicy<T>::stored_type>,                       \
-        StoragePolicy<T>                                                     \
-    >
-
-#endif // BOOST_SMART_POINTER_LAMBDA_INTERFACE
-
-//////////////////////////////////////////////////////////////////////////////
-// Ownership categories that each OwnershipPolicy must declare
-//////////////////////////////////////////////////////////////////////////////
-
-    class copy_semantics_tag { };
-    class move_semantics_tag { };
-    class no_copy_semantics_tag { };
-
-//////////////////////////////////////////////////////////////////////////////
 // class template smart_ptr (definition)
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_SMART_POINTER_LAMBDA_INTERFACE
+#ifndef BOOST_SMART_POINTER_LEGACY_INTERFACE
+
+    template <class F, typename T>
+    struct apply_lambda
+    {
+        typedef typename mpl::lambda<F>::type f_;
+        typedef typename mpl::apply<f_, T>::type type;
+    };
+
+    template <class Policy>
+    struct get_category
+    {
+        typedef typename Policy::policy_category type;
+    };
+
+    template <class Sequence, class Category, class Default>
+    struct get_policy
+    {
+        typedef typename mpl::find_if<
+            Sequence, is_same<get_category<_>, Category>
+        >::type iter_;
+        typedef typename mpl::end<Sequence>::type last_;
+        typedef typename mpl::apply_if<
+            typename is_same<iter_, last_>::type,
+            mpl::identity<Default>, iter_
+        >::type type;
+    };
+
+# define BOOST_SMART_POINTER_PARAMETERS                                      \
+    class OwnershipPolicy,                                                   \
+    class ConversionPolicy,                                                  \
+    class CheckingPolicy,                                                    \
+    class StoragePolicy
+# define BOOST_CONVERSION_PARAMETERS                                         \
+    class OwnershipPolicy1,                                                  \
+    class ConversionPolicy1,                                                 \
+    class CheckingPolicy1,                                                   \
+    class StoragePolicy1
+# define BOOST_STORAGE_POLICY                                                \
+    apply_lambda<                                                            \
+        get_policy<policies_, storage_policy_tag, scalar_storage<_> >::type, \
+        T                                                                    \
+    >::type
+# define BOOST_CHECKING_POLICY                                               \
+    apply_lambda<                                                            \
+        get_policy<policies_, checking_policy_tag, assert_check<_> >::type,  \
+        typename BOOST_STORAGE_POLICY::stored_type                           \
+    >::type
+# define BOOST_OWNERSHIP_POLICY                                              \
+    apply_lambda<                                                            \
+        get_policy<policies_, ownership_policy_tag, ref_counted<_> >::type,  \
+        typename BOOST_STORAGE_POLICY::pointer_type                          \
+    >::type
+# define BOOST_CONVERSION_POLICY                                             \
+    apply_lambda<                                                            \
+        get_policy<policies_, conversion_policy_tag, disallow_conversion<_> >::type, \
+        typename BOOST_STORAGE_POLICY::pointer_type                          \
+    >::type
+
+#else // BOOST_SMART_POINTER_LEGACY_INTERFACE
 
 # define BOOST_SMART_POINTER_PARAMETERS                                      \
     template <typename> class OwnershipPolicy,                               \
@@ -244,31 +276,14 @@ namespace boost
 # define BOOST_OWNERSHIP_POLICY     OwnershipPolicy<typename StoragePolicy<T>::pointer_type>
 # define BOOST_CONVERSION_POLICY    ConversionPolicy<typename StoragePolicy<T>::pointer_type>
 
-#else // BOOST_SMART_POINTER_LAMBDA_INTERFACE
-
-# define BOOST_SMART_POINTER_PARAMETERS                                      \
-    class OwnershipPolicy,                                                   \
-    class ConversionPolicy,                                                  \
-    class CheckingPolicy,                                                    \
-    class StoragePolicy
-# define BOOST_CONVERSION_PARAMETERS                                         \
-    class OwnershipPolicy1,                                                  \
-    class ConversionPolicy1,                                                 \
-    class CheckingPolicy1,                                                   \
-    class StoragePolicy1
-# define BOOST_STORAGE_POLICY       StoragePolicy
-# define BOOST_CHECKING_POLICY      CheckingPolicy
-# define BOOST_OWNERSHIP_POLICY     OwnershipPolicy
-# define BOOST_CONVERSION_POLICY    ConversionPolicy
-
-#endif // BOOST_SMART_POINTER_LAMBDA_INTERFACE
+#endif // BOOST_SMART_POINTER_LEGACY_INTERFACE
 
 #define BOOST_SMART_POINTER_POLICIES                                         \
     OwnershipPolicy, ConversionPolicy, CheckingPolicy, StoragePolicy
 #define BOOST_CONVERSION_POLICIES                                            \
     OwnershipPolicy1, ConversionPolicy1, CheckingPolicy1, StoragePolicy1
 
-    template <typename T, BOOST_SMART_POINTER_PARAMETERS>
+    template <typename T, class P1, class P2, class P3, class P4, class policies_>
     class smart_ptr
         : public optimally_inherit<
             optimally_inherit<
@@ -473,7 +488,7 @@ namespace boost
     public:     // Comparison
         bool operator!() const // Enables "if (!sp) ..."
         { return !storage_policy::is_valid(); }
-/*
+
         inline friend bool operator==(smart_ptr const& lhs, T const* rhs)
         { return get_impl(lhs) == rhs; }
 
@@ -485,7 +500,7 @@ namespace boost
 
         inline friend bool operator!=(T const* lhs, this_type const& rhs)
         { return rhs != lhs; }
-*/
+
         // Ambiguity buster
         template <typename U, BOOST_CONVERSION_PARAMETERS>
         bool operator==(smart_ptr<U, BOOST_CONVERSION_POLICIES> const& rhs) const
@@ -531,26 +546,25 @@ namespace boost
 // These are the default policies provided for smart_ptr
 //////////////////////////////////////////////////////////////////////////////
 
-    class storage_policy_tag { };
-    class ownership_policy_tag { };
-    class conversion_policy_tag { };
-    class checking_policy_tag { };
-
 //////////////////////////////////////////////////////////////////////////////
 // class template scalar_storage
 // Implementation of the StoragePolicy used by smart_ptr
 //////////////////////////////////////////////////////////////////////////////
 
+    template <class Policy>
+    struct storage_policy_base
+    {
+        typedef Policy type;
+        typedef storage_policy_tag policy_category;
+    };
+
     template <typename T>
-    class scalar_storage
+    class scalar_storage : public storage_policy_base< scalar_storage<T> >
     {
     public:
-        typedef storage_policy_tag policy_category;
-
-        template <typename U>
-        struct rebind
-        { typedef scalar_storage<U> other; };
-
+#ifdef BOOST_MPL_NO_FULL_LAMBDA_SUPPORT
+        BOOST_MPL_AUX_LAMBDA_SUPPORT(1, scalar_storage, (T))
+#endif
         typedef T*          stored_type;        // the type of the pointee_
         typedef T const*    const_stored_type;  //   object
         typedef T*          pointer_type;       // type returned by operator->
@@ -564,10 +578,14 @@ namespace boost
         scalar_storage() : pointee_(default_value())
         { }
 
+        scalar_storage(scalar_storage const&)
+        : pointee_(default_value())
+        { }
+
         // The storage policy doesn't initialize the stored pointer
         //     which will be initialized by the OwnershipPolicy's Clone fn
         template <typename U>
-        scalar_storage(scalar_storage<U> const&)
+        scalar_storage(scalar_storage<U> const& rhs)
         : pointee_(default_value())
         { }
 
@@ -607,17 +625,22 @@ namespace boost
         stored_type pointee_;
     };
 
+#ifdef BOOST_MPL_NO_FULL_LAMBDA_SUPPORT
+    namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, scalar_storage) }
+#endif
+
 //////////////////////////////////////////////////////////////////////////////
 // class template array_storage
 // Implementation of an array-based StoragePolicy for smart_ptr
 //////////////////////////////////////////////////////////////////////////////
 
     template <typename T>
-    class array_storage
+    class array_storage : public storage_policy_base< array_storage<T> >
     {
     public:
-        typedef storage_policy_tag policy_category;
-
+#ifdef BOOST_MPL_NO_FULL_LAMBDA_SUPPORT
+        BOOST_MPL_AUX_LAMBDA_SUPPORT(1, array_storage, (T))
+#endif
         typedef T*          stored_type;        // the type of the pointee_
         typedef T const*    const_stored_type;  //   object
         typedef T*          pointer_type;       // type returned by operator->
@@ -681,6 +704,10 @@ namespace boost
         stored_type pointee_;
     };
 
+#ifdef BOOST_MPL_NO_FULL_LAMBDA_SUPPORT
+    namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, array_storage) }
+#endif
+
 ////////////////////////////////////////////////////////////////////////////////
 // Ownership Policies
 ////////////////////////////////////////////////////////////////////////////////
@@ -695,12 +722,12 @@ namespace boost
     class ref_counted
     {
     public:
+        typedef ref_counted type;
         typedef ownership_policy_tag policy_category;
         typedef copy_semantics_tag ownership_category;
-
-        template <typename U>
-        struct rebind
-        { typedef ref_counted<U> other; };
+#ifdef BOOST_MPL_NO_FULL_LAMBDA_SUPPORT
+        BOOST_MPL_AUX_LAMBDA_SUPPORT(1, ref_counted, (P))
+#endif
 
     protected:
         ref_counted()
@@ -721,8 +748,15 @@ namespace boost
 # endif // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
         { }
 
+        // GCC incorrectly chooses the greedy c'tor below, instead of the
+        // conversion c'tor above.  So this weaker pointer c'tor must be
+        // used instead.
+#ifdef __GCC__
+        ref_counted(P const&)
+#else
         template <typename U>
         ref_counted(U const&)
+#endif
         {
 //            pCount_ = static_cast<unsigned int*>(
 //                SmallObject<>::operator new(sizeof(unsigned int)));
@@ -767,13 +801,17 @@ namespace boost
         unsigned* pCount_;
     };
 
+#ifdef BOOST_MPL_NO_FULL_LAMBDA_SUPPORT
+    namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, ref_counted) }
+#endif
+
 //////////////////////////////////////////////////////////////////////////////
 // class template ref_counted_mt
 // Implementation of the OwnershipPolicy used by smart_ptr
 // Implements external reference counting for multithreaded programs
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_SMART_POINTER_LAMBDA_INTERFACE
+#ifndef BOOST_SMART_POINTER_LEGACY_INTERFACE
 
     template <template <class> class ThreadingModel>
     class ref_counted_mt
@@ -785,13 +823,13 @@ namespace boost
     : public ThreadingModel< ref_counted_mt<ThreadingModel> >
 #endif // __GNUC__
 
-#else // BOOST_SMART_POINTER_LAMBDA_INTERFACE
+#else // BOOST_SMART_POINTER_LEGACY_INTERFACE
 
     template <class ThreadingModel>
     class ref_counted_mt
     : public ThreadingModel
 
-#endif // BOOST_SMART_POINTER_LAMBDA_INTERFACE
+#endif // BOOST_SMART_POINTER_LEGACY_INTERFACE
 
     {
     public:
@@ -803,11 +841,11 @@ namespace boost
             typedef copy_semantics_tag ownership_category;
 
         protected:
-#ifndef BOOST_SMART_POINTER_LAMBDA_INTERFACE
+#ifndef BOOST_SMART_POINTER_LEGACY_INTERFACE
             typedef ThreadingModel<ref_counted_mt> threading_model;
-#else // BOOST_SMART_POINTER_LAMBDA_INTERFACE
+#else // BOOST_SMART_POINTER_LEGACY_INTERFACE
             typedef ThreadingModel threading_model;
-#endif // BOOST_SMART_POINTER_LAMBDA_INTERFACE
+#endif // BOOST_SMART_POINTER_LEGACY_INTERFACE
             typedef typename threading_model::int_type int_type;
 
         protected:
@@ -879,7 +917,7 @@ namespace boost
 // Helper macro for compilers without template template support
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifdef BOOST_SMART_POINTER_LAMBDA_INTERFACE
+#ifdef BOOST_SMART_POINTER_LEGACY_INTERFACE
 
     template <class ThreadingModel>
     class ref_counted_mt;
@@ -888,7 +926,7 @@ namespace boost
 //   typedef BOOST_SMART_PTR1(int, BOOST_THREADING_MODEL(my_thread)) my_ptr;
 #define BOOST_THREADING_MODEL(ThreadingModel) ThreadingModel<ref_counted_mt>::impl
 
-#endif // BOOST_SMART_POINTER_LAMBDA_INTERFACE
+#endif // BOOST_SMART_POINTER_LEGACY_INTERFACE
 
 ////////////////////////////////////////////////////////////////////////////////
 // class template com_ref_counted
@@ -940,7 +978,7 @@ namespace boost
         class ref_linked_base
         {
         public:
-            ref_linked_base() 
+            ref_linked_base()
             { prev_ = next_ = this; }
 
             ref_linked_base(ref_linked_base const& rhs)
@@ -1164,7 +1202,11 @@ namespace boost
     template <typename P>
     struct disallow_conversion
     {
+        typedef disallow_conversion type;
         typedef conversion_policy_tag policy_category;
+#ifdef BOOST_MPL_NO_FULL_LAMBDA_SUPPORT
+        BOOST_MPL_AUX_LAMBDA_SUPPORT(1, disallow_conversion, (P))
+#endif
 
         struct disallow_conversion_result
         {
@@ -1173,10 +1215,6 @@ namespace boost
         };
 
         typedef disallow_conversion_result result_type;
-
-        template <typename U>
-        struct rebind
-        { typedef disallow_conversion<U> other; };
 
         disallow_conversion()
         { }
@@ -1192,6 +1230,10 @@ namespace boost
         static void swap(disallow_conversion&)
         { }
     };
+
+#ifdef BOOST_MPL_NO_FULL_LAMBDA_SUPPORT
+    namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, disallow_conversion) }
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // class null_pointer_error
@@ -1248,10 +1290,10 @@ namespace boost
     struct assert_check
     {
         typedef checking_policy_tag policy_category;
-
-        template <typename U>
-        struct rebind
-        { typedef assert_check<U> other; };
+        typedef assert_check type;
+#ifdef BOOST_MPL_NO_FULL_LAMBDA_SUPPORT
+        BOOST_MPL_AUX_LAMBDA_SUPPORT(1, assert_check, (P))
+#endif
 
         assert_check()
         { }
@@ -1279,6 +1321,10 @@ namespace boost
         static void swap(assert_check&)
         { }
     };
+
+#ifdef BOOST_MPL_NO_FULL_LAMBDA_SUPPORT
+    namespace mpl { BOOST_MPL_AUX_VOID_SPEC(1, assert_check) }
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // class template assert_check_strict
@@ -1501,32 +1547,10 @@ namespace boost
 ////////////////////////////////////////////////////////////////////////////////
 
     template <typename T, BOOST_SMART_POINTER_PARAMETERS, typename U>
-    inline smart_ptr<T,
-        typename OwnershipPolicy::template rebind<
-            typename StoragePolicy::template rebind<T>::other::pointer_type
-        >::other,
-        typename ConversionPolicy::template rebind<
-            typename StoragePolicy::template rebind<T>::other::pointer_type
-        >::other,
-        typename CheckingPolicy::template rebind<
-            typename StoragePolicy::template rebind<T>::other::stored_type
-        >::other,
-        typename StoragePolicy::template rebind<T>::other
-    >
+    inline smart_ptr<T, BOOST_SMART_POINTER_POLICIES>
         smart_static_cast(smart_ptr<U, BOOST_SMART_POINTER_POLICIES> const& p)
     {
-        return smart_ptr<T, 
-            typename OwnershipPolicy::template rebind<
-                typename StoragePolicy::template rebind<T>::other::pointer_type
-            >::other,
-            typename ConversionPolicy::template rebind<
-                typename StoragePolicy::template rebind<T>::other::pointer_type
-            >::other,
-            typename CheckingPolicy::template rebind<
-                typename StoragePolicy::template rebind<T>::other::stored_type
-            >::other,
-            typename StoragePolicy::template rebind<T>::other
-        >(
+        return smart_ptr<T, BOOST_SMART_POINTER_POLICIES>(
             p, detail::static_cast_tag()
         );
     }
@@ -1536,10 +1560,12 @@ namespace boost
 ////////////////////////////////////////////////////////////////////////////////
 
     template <typename T, BOOST_SMART_POINTER_PARAMETERS, typename U>
-    inline smart_ptr<U, BOOST_SMART_POINTER_POLICIES>
-        smart_dynamic_cast(smart_ptr<T, BOOST_SMART_POINTER_POLICIES> const& p)
+    inline smart_ptr<T, BOOST_SMART_POINTER_POLICIES>
+        smart_dynamic_cast(smart_ptr<U, BOOST_SMART_POINTER_POLICIES> const& p)
     {
-        return smart_ptr<U, BOOST_SMART_POINTER_POLICIES>(p, detail::dynamic_cast_tag());
+        return smart_ptr<T, BOOST_SMART_POINTER_POLICIES>(
+            p, detail::dynamic_cast_tag()
+        );
     }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1547,10 +1573,12 @@ namespace boost
 ////////////////////////////////////////////////////////////////////////////////
 
     template <typename T, BOOST_SMART_POINTER_PARAMETERS, typename U>
-    inline smart_ptr<U, BOOST_SMART_POINTER_POLICIES>
-        smart_polymorphic_cast(smart_ptr<T, BOOST_SMART_POINTER_POLICIES> const& p)
+    inline smart_ptr<T, BOOST_SMART_POINTER_POLICIES>
+        smart_polymorphic_cast(smart_ptr<U, BOOST_SMART_POINTER_POLICIES> const& p)
     {
-        return smart_ptr<U, BOOST_SMART_POINTER_POLICIES>(p, detail::polymorphic_cast_tag());
+        return smart_ptr<T, BOOST_SMART_POINTER_POLICIES>(
+            p, detail::polymorphic_cast_tag()
+        );
     }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1558,13 +1586,13 @@ namespace boost
 ////////////////////////////////////////////////////////////////////////////////
 
     template <typename T, BOOST_SMART_POINTER_PARAMETERS, typename U>
-    inline smart_ptr<U, BOOST_SMART_POINTER_POLICIES>
-        smart_polymorphic_downcast(smart_ptr<T, BOOST_SMART_POINTER_POLICIES> const& p)
+    inline smart_ptr<T, BOOST_SMART_POINTER_POLICIES>
+        smart_polymorphic_downcast(smart_ptr<U, BOOST_SMART_POINTER_POLICIES> const& p)
     {
-        typedef typename smart_ptr<U, BOOST_SMART_POINTER_POLICIES>::pointer_type
+        typedef typename smart_ptr<T, BOOST_SMART_POINTER_POLICIES>::pointer_type
             pointer_type;
         BOOST_ASSERT(dynamic_cast<pointer_type>(get_impl(p)) == get_impl(p));
-        return smart_static_cast<U>(p);
+        return smart_static_cast<T>(p);
     }
 
 ////////////////////////////////////////////////////////////////////////////////
