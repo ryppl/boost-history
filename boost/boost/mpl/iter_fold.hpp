@@ -101,26 +101,9 @@ struct iter_fold_impl_more
         recursion::execute(x);
         backward::execute(x);
     }
-
-    // We're not ready for this yet, are we?
-#if 0
-    template <class T>
-    typename backward::template result_type<
-        typename recursion::template result_type<
-            typename forward::template result_type<T>::type
-        >::type
-    >::type execute2(T x)
-    {
-        return backward::execute(
-            recursion::execute(
-                forward::execute(x)));
-    }
-#endif 
 };
 
-template<
-    typename State
-    >
+template<typename State>
 struct iter_fold_impl_done
 {
     typedef State type;
@@ -138,14 +121,8 @@ struct iter_fold_impl_done
 struct select2nd
 {
     template <class T, class U>
-    struct apply
+    struct apply : iter_fold_impl_done<U>
     {
-        typedef U type;
-        
-        static void execute() {}
-        
-        template <class V>
-        static void execute(V) {}
     };
 };
 
