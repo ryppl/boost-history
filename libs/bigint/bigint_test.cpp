@@ -181,6 +181,18 @@ int main() {
     assert(i.fail());
   }
 
+
+  {
+    // check eof-ness
+    bigint x;
+    std::istringstream i1("555");
+    i1 >> x;
+    assert(!i1.fail());
+    assert(i1.eof());
+    std::istringstream i2("555 ");
+    assert(!i2.eof() && !i2.fail()) ;
+  }
+
   {
     // check that fill character is reset.
     std::ostringstream o;
@@ -290,4 +302,27 @@ int main() {
     assert (o3.str() == "12345");
   }
 
+  {
+    // exception test. user fail exception should not go off
+    std::istringstream is("555");
+    is.exceptions(std::ios_base::failbit);
+    bigint x;
+    try {
+      is >> x;
+    } catch (std::ios_base::failure&) {
+      assert(0); // shouldn't get here
+    }
+  }
+
+  {
+    // eof exception SHOULD go off.
+    std::istringstream is("555");
+    is.exceptions(std::ios_base::eofbit);
+    bigint x;
+    try {
+      is >> x;
+      assert(0);
+    } catch (std::ios_base::failure&) { }
+  }
+   
 }

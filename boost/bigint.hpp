@@ -46,73 +46,105 @@ class bigint : boost::operators<bigint> {
 
   // Streaming in a base-agnostic form
   std::ostream& to_ostream(std::ostream& os) const {
+    using std::ios_base;
+    ios_base::iostate err = ios_base::goodbit;
 
     if(!os.good()) return os;
 
-    // Manage prefix and postfix operations (RAII object)
-    std::ostream::sentry opfx(os);
+    try {
+      // Manage prefix and postfix operations (RAII object)
+      std::ostream::sentry opfx(os);
     
-    if(opfx) {
-      // Build the string representation, then stream it out.
-      std::string stringrep;
-      std::ios_base::fmtflags flags = os.flags();
+      if(opfx) {
+        // Build the string representation, then stream it out.
+        std::string stringrep;
+        ios_base::fmtflags flags = os.flags();
 
-      if(this->negative()) {
-        std::ostringstream ostr;
-        ostr.flags(flags);
-        ostr << '-' << std::noshowpos;
-        (-(*this)).to_ostream(ostr);
-        stringrep += ostr.str();
-      } else {
-        if(flags & std::ios_base::showpos) 
-          stringrep.push_back('+');
+        if(this->negative()) {
+          std::ostringstream ostr;
+          ostr.flags(flags);
+          ostr << '-' << std::noshowpos;
+          (-(*this)).to_ostream(ostr);
+          stringrep += ostr.str();
+        } else {
+          if(flags & ios_base::showpos) 
+            stringrep.push_back('+');
         
-        // Add base representation if needed
-        if (flags & std::ios_base::showbase) {
-          if (flags & std::ios_base::hex) 
-            stringrep += ((flags & std::ios_base::uppercase) ? "0X" : "0x");
-          else if (flags & std::ios_base::oct)
-            stringrep.push_back('0');
-        }
+          // Add base representation if needed
+          if (flags & ios_base::showbase) {
+            if (flags & ios_base::hex) 
+              stringrep += ((flags & ios_base::uppercase) ? "0X" : "0x");
+            else if (flags & ios_base::oct)
+              stringrep.push_back('0');
+          }
         
-        // Valid digits for each base
-        static char const decimals[] = {'0','1','2','3','4','5',
+          // Valid digits for each base
+          static char const decimals[] = {'0','1','2','3','4','5',
                                           '6','7','8','9'};
-        static char const lowerhex[] = {'0','1','2','3','4','5','6','7','8',
+          static char const lowerhex[] = {'0','1','2','3','4','5','6','7','8',
                                           '9','a','b','c','d','e','f'};
-        static char const upperhex[] = {'0','1','2','3','4','5','6','7','8',
+          static char const upperhex[] = {'0','1','2','3','4','5','6','7','8',
                                           '9','A','B','C','D','E','F'};
-        static char const octals[] = {'0','1','2','3','4','5','6','7'};
+          static char const octals[] = {'0','1','2','3','4','5','6','7'};
         
-        int base;
-        char const* digits;
-        if (flags & std::ios_base::dec) {
-          base = 10;
-          digits = decimals;
-        } else if (flags & std::ios_base::hex) {
-          base = 16;
-          digits = (flags & std::ios_base::uppercase) ? upperhex : lowerhex;
-        } else { // if (flags & std::ios_base::oct)
-          base = 8;
-          digits = octals;
-        }
-        std::vector<char> text;
-        // RG - calculate number of characters and reserve that space.
-        bigint quotient = *this;
-        bigint remainder;
-        quotient.quotient_remainder(bigint(base),quotient,remainder);
-        // invariant: assert(radix > 16) -> 
-        //    'remainder.buffer.back()' is the remainder.
-        // invariant: remainder < length of digits.
-        text.push_back(digits[remainder.buffer.back()]);
-        while (!quotient.is_zero()) {
+          int base;
+          char const* digits;
+          if (flags & ios_base::dec) {
+            base = 10;
+            digits = decimals;
+          } else if (flags & ios_base::hex) {
+            base = 16;
+            digits = (flags & ios_base::uppercase) ? upperhex : lowerhex;
+          } else { // if (flags & ios_base::oct)
+            base = 8;
+            digits = octals;
+          }
+          std::vector<char> text;
+          // RG - calculate number of characters and reserve that space.
+          bigint quotient = *this;
+          bigint remainder;
           quotient.quotient_remainder(bigint(base),quotient,remainder);
+          // invariant: assert(radix > 16) -> 
+          //    'remainder.buffer.back()' is the remainder.
+          // invariant: remainder < length of digits.
           text.push_back(digits[remainder.buffer.back()]);
+          while (!quotient.is_zero()) {
+            quotient.quotient_remainder(bigint(base),quotient,remainder);
+            text.push_back(digits[remainder.buffer.back()]);
+          }
+          stringrep.append(text.rbegin(),text.rend());
         }
-        stringrep.append(text.rbegin(),text.rend());
+        os << stringrep;
       }
-      os << stringrep;
+    } catch (std::bad_alloc& ) {
+      // Error handling code taken from Kreft & Langer
+      err |= ios_base::badbit;
+      ios_base::iostate exception_mask = os.exceptions();
+
+      if ((exception_mask & ios_base::failbit) &&
+          !(exception_mask & ios_base::badbit)) {
+        os.setstate(err);
+      } else if (exception_mask & ios_base::badbit) {
+        // set bad_bit, but rethrow the original exception
+        try { os.setstate(err); }
+        catch (ios_base::failure&) { }
+        throw;
+      }
+    } catch (...) {
+      err |= ios_base::failbit;
+      ios_base::iostate exception_mask = os.exceptions();
+
+      if ((exception_mask & ios_base::badbit) &&
+          (err & ios_base::badbit)) {
+        os.setstate(err);
+      } else if (exception_mask & ios_base::failbit) {
+        // set fail_bit, but rethrow the original exception
+        try { os.setstate(err); }
+        catch ( ios_base::failure& ) { }
+        throw;
+      }
     }
+    if(err != ios_base::goodbit) os.setstate(err);
     return os; 
   }
 
@@ -121,48 +153,85 @@ public:
 private:
 
   std::istream& from_istream(std::istream& is) {
+    using std::ios_base;
+    ios_base::iostate err = ios_base::goodbit;
 
     if(!is.good()) return is;
 
-    // Manage prefix and postfix operations (RAII object)
-    std::istream::sentry ipfx(is);
+    try {
+      // Manage prefix and postfix operations (RAII object)
+      std::istream::sentry ipfx(is);
     
-    if(ipfx) {
-      std::ios_base::fmtflags flags = is.flags();
-      base_type base;
-      if (flags & std::ios_base::dec) {
-        base = decimal;
-      } else if (flags & std::ios_base::hex) {
-        base = hexadecimal;
-      } else { // if (flags & std::ios_base::oct)
-        base = octal;
-      }
+      if(ipfx) {
+        ios_base::fmtflags flags = is.flags();
+        base_type base;
+        if (flags & ios_base::dec) {
+          base = decimal;
+        } else if (flags & ios_base::hex) {
+          base = hexadecimal;
+        } else { // if (flags & ios_base::oct)
+          base = octal;
+        }
 
-      // Read the number into a string, then initialize from that.
-      std::string str;
-      char c;
+        // Read the number into a string, then initialize from that.
+        std::string str;
+        char c;
 
-      // check for minus sign.
-      is.get(c);
-      if(!(c == '-' || std::isxdigit(c))) {
-        is.putback(c);
-        // signal error
-        is.clear(is.rdstate() | std::ios::failbit);
-      } else {
-        str.push_back(c);
-
-        // read in ASCII (hexadecimal) digits till it stops.
-        while(is.get(c) && isxdigit(c))
-          str.push_back(c);
-        if(is.fail())
-          // clear error state
-          is.clear();
-        else
-          // put back the last character retrieved
+        // check for minus sign.
+        is.get(c);
+        if(!(c == '-' || std::isxdigit(c))) {
           is.putback(c);
-        *this = bigint(str,base);
+          // signal error
+          is.setstate(std::ios::failbit);
+        } else {
+          str.push_back(c);
+          
+          // Don't let failbit exceptions propogate for the following loop
+          ios_base::iostate user_exceptions = is.exceptions();
+          is.exceptions(user_exceptions & (~ios_base::failbit));
+          // read in ASCII (hexadecimal) digits till it stops.
+          while(is.get(c) && isxdigit(c))
+            str.push_back(c);
+          if(is.fail())
+            // clear error state
+            is.clear(is.rdstate() & ~ios_base::failbit);
+          else
+            // put back the last character retrieved
+            is.putback(c);
+          // restore user exceptions
+          is.exceptions(user_exceptions);
+          *this = bigint(str,base);
+        }
+      }
+    } catch (std::bad_alloc& ) {
+      // Error handling code taken from Kreft & Langer
+      err |= ios_base::badbit;
+      ios_base::iostate exception_mask = is.exceptions();
+
+      if ((exception_mask & ios_base::failbit) &&
+          !(exception_mask & ios_base::badbit)) {
+        is.setstate(err);
+      } else if (exception_mask & ios_base::badbit) {
+        // set bad_bit, but rethrow the original exception
+        try { is.setstate(err); }
+        catch (ios_base::failure&) { }
+        throw;
+      }
+    } catch (...) {
+      err |= ios_base::failbit;
+      ios_base::iostate exception_mask = is.exceptions();
+
+      if ((exception_mask & ios_base::badbit) &&
+          (err & ios_base::badbit)) {
+        is.setstate(err);
+      } else if (exception_mask & ios_base::failbit) {
+        // set fail_bit, but rethrow the original exception
+        try { is.setstate(err); }
+        catch ( ios_base::failure& ) { }
+        throw;
       }
     }
+    if(err != ios_base::goodbit) is.setstate(err);
     return is;
   }
 
