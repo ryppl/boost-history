@@ -18,13 +18,11 @@
 
 namespace boost {
 
-namespace detail {
-  /**
-   * A type used only to uniquely identify the 'indeterminate' 
-   * function/keyword.
-   */
-  struct indeterminate_t {};
-} // end namespace boost
+/**
+ * A type used only to uniquely identify the 'indeterminate' 
+ * function/keyword.
+ */
+struct indeterminate_t {};
 
 // Forward declaration of tribool class
 class tribool;
@@ -34,17 +32,16 @@ class tribool;
  * function 'indeterminate' so that we can recognize when the keyword is
  * used.
  */
-typedef bool (*indeterminate_keyword_t)(tribool, detail::indeterminate_t);
+typedef bool (*indeterminate_keyword_t)(tribool, indeterminate_t);
 
 // Declaration for the indeterminate function
 inline bool 
 indeterminate(tribool x, 
-              detail::indeterminate_t dummy = detail::indeterminate_t());
+              indeterminate_t dummy = indeterminate_t());
 
 // Equality comparisons among tribools and bools ----------------------
 inline tribool operator==(tribool x, bool y);
 inline tribool operator==(bool x, tribool y);
-   
 inline tribool operator==(indeterminate_keyword_t, tribool x);
 inline tribool operator==(tribool x, indeterminate_keyword_t);
 inline tribool operator==(tribool x, tribool y);
@@ -136,9 +133,6 @@ public:
           :tribool(indeterminate);
   }
 
-  friend bool indeterminate(tribool x, detail::indeterminate_t);
-
-private:
   /**
    * The actual stored value in this 3-state boolean, which may be false, true,
    * or indeterminate.
@@ -148,7 +142,7 @@ private:
 
 // Check if the given tribool has an indeterminate value. Also doubles as a
 // keyword for the 'indeterminate' value
-inline bool indeterminate(tribool x, detail::indeterminate_t)
+inline bool indeterminate(tribool x, indeterminate_t)
 {
   return x.value == tribool::indeterminate_value;
 }
