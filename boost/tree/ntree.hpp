@@ -56,6 +56,18 @@ namespace boost
     *  in-order and post-order. These apply certainly only for ordered
     *  trees. Also algorithms testing the staus of a node as child, parent
     *  root or leaf will be added.
+    *
+    *  The implementation reuses an STL map for simplicity, better
+    *  and/or faster implementations using double linked nodes are
+    *  also possible (like the usual red-black trees found in
+    *  implementations of the STL container classes). The
+    *  implementation relies on the fact that the nodes of ordered
+    *  trees with at most N childen can be numbered by 0 for root, [1
+    *  N+1) for the children, [N+1 N*(N+1)+1) for the grandchildren,
+    *  and so on. Thus, kparent = (kchild - 1)/N and 
+    *  kchild(n) = (kparent*N) + 1 + n    
+    *
+    *  PLAIN WRONG DESIGN USING std::map ITERATORS AS ITERATORS FOR NTREE
     */
    template < size_t N, class Type, class Alloc = std::allocator<Type > >
    class ntree 
@@ -119,18 +131,18 @@ namespace boost
 	    difference_type n = std::distance(first, last);
 	    for (size_type id = 0; n > 0; id++ , n--, first++)
 	    {
- 	       std::pair<const size_type, Type> valuepair =
+ 	        std::pair<const size_type, Type> valuepair =
  		  std::make_pair<const size_type, Type>(id, *first);
  	       rep.insert(valuepair);
 	    }
 	 }
 
-	 /**
-	  *  Destructor  
-	  */
-	 ~ntree()
-	 {
-	 }
+// 	 /**
+// 	  *  Destructor  
+// 	  */
+// 	 ~ntree()
+// 	 {
+// 	 }
 
 	 // assignment --------------------------------------------------------
 	 /**
@@ -139,6 +151,12 @@ namespace boost
 	 ntree<N,Type,Alloc>&
 	 operator=(const ntree<N, Type, Alloc>& x)
 	 {
+	    if (*this == x)
+	       return *this;
+	    
+	    rep = x.rep;
+	    return *this;
+	    
 	 }
 
 	 // reversible container iterators ------------------------------------
@@ -428,13 +446,17 @@ namespace boost
 	 iterator insert_child(iterator iparent, size_type n,
 					       const Type& x = Type())
 	 {
-// 	    std::pair<const size_type, Type> valuepair =
-// 	       std::make_pair<const size_type, Type>(0,x);
-// 	    std::pair<iterator, bool> result = rep.insert(valuepair);
-//  	   if (result.second)
-//  	      return result.first;
-//  	   else
- 	      return rep.end();
+	    if(!check(n))
+	       return rep.end();
+
+	    key_type kchild = child_key(iparent->first, n);
+ 	    std::pair<const size_type, Type> valuepair =
+ 	       std::make_pair<const size_type, Type>(kchild,x);
+ 	    std::pair<iterator, bool> result = rep.insert(valuepair);
+	    if (result.second)
+	       return result.first;
+	    else
+	       return rep.end();
 	 }
       
 	 /**
@@ -576,8 +598,33 @@ namespace boost
 
 
 
-//       private:
-// 	 // Private ntree operations:------------------------------------------
+      private:
+ 	 // Private ntree types:-----------------------------------------------
+	 typedef typename std::map<size_t, Type, std::less<Type>, 
+				   Alloc>::key_type key_type;
+
+
+ 	 // Private ntree operations:------------------------------------------
+
+	 bool check(size_type n)
+	 {
+	    if (n < N)
+	       return true;
+	    else
+	       return false;
+	 }
+
+	 key_type parent_key(key_type kchild)
+	 {
+	    return (kchild - 1)/N;
+	 }
+	 
+	 key_type child_key(key_type kparent, size_type n = 0)
+	 {
+	    return (kparent*N) + 1 + n;
+	 }
+	 
+
 // 	 /**
 // 	  *  This function takes a key and tries to locate the node
 // 	  *  with which the key matches.  If successful the function
