@@ -79,6 +79,17 @@ struct test {
 	      << std::endl;
   }
 
+  template<class T1, class T2, class T3>
+  static void error(double i_d1, double i_d2, double i_d3, double o_d,
+		    const T1& i_r1, const T2& i_r2, const T3& i_r3,
+		    const R& o_r) {
+    if (nb_errors++ > 0) return;
+    std::cerr << test_name << "(" << i_d1 << ", " << i_d2 << ", " << i_d3
+	      << ") = " << o_d << " not in "
+	      << test_name << "(" << i_r1 << ", " << i_r2 << ", " << i_r3
+	      << ") = " << o_r << std::endl;
+  }
+
   static void end() {
     if (nb_errors <= 1) return;
     std::cerr << test_name << ": " << nb_errors << " errors" << std::endl;
@@ -144,6 +155,7 @@ void iterate_two_intervals(BinaryFunction func, const std::string & msg,
   } catch(std::exception & ex) {
     std::cerr << "Exception with " << msg << ": " << ex.what() << std::endl;
   }
+  test::end();
 }
 
 template<class FuncI, class FuncD>
@@ -380,14 +392,15 @@ void runtest_unary_functions()
 	      std::ptr_fun((double(*)(double))std::acosh), "acosh", -3, 3, 0.17);
   check_unary(std::ptr_fun( (R (*)(const R &)) boost::atanh),
 	      std::ptr_fun((double(*)(double))std::atanh), "atanh", -3, 3, 0.17);
+#else
+  std::cout << "Skipping inverse hyperbolic functions\n";
 #endif // BOOST_HAVE_INV_HYPERBOLIC
-  std::cout << "Skipping some unary functions from interval/transc.hpp\n";
 }
 
 template<class FuncR, class FuncD>
-struct test_compare
+struct test_compare_certain
 {
-  test_compare(FuncR fr, FuncD fd, const std::string& func)
+  test_compare_certain(FuncR fr, FuncD fd, const std::string& func)
     : funcr(fr), funcd(fd), name(func) { }
   void operator()(const R& r1, const R& r2)
   {
@@ -396,8 +409,7 @@ struct test_compare
     for(double f = r1.lower(); f <= r1.upper(); f += width(r1)/10.0)
       for(double g = r2.lower(); g <= r2.upper(); g += width(r2)/10.0) {
 	bool presult = funcd(f, g);
-	if (!presult && result)
-	  test::error(f, g, presult, r1, r2, result);
+	if (!presult) test::error(f, g, presult, r1, r2, result);
       }
   }
 private:
@@ -406,29 +418,52 @@ private:
   std::string name;
 };
 
+template<class FuncR, class FuncD>
+struct test_compare_possible
+{
+  test_compare_possible(FuncR fr, FuncD fd, const std::string& func)
+    : funcr(fr), funcd(fd), name(func) { }
+  void operator()(const R& r1, const R& r2)
+  {
+    bool result = funcr(r1,r2);
+    if (result) return;
+    for(double f = r1.lower(); f <= r1.upper(); f += width(r1)/10.0)
+      for(double g = r2.lower(); g <= r2.upper(); g += width(r2)/10.0) {
+	bool presult = funcd(f, g);
+	if (presult) test::error(f, g, presult, r1, r2, result);
+      }
+  }
+private:
+  FuncR funcr;
+  FuncD funcd;
+  std::string name;
+};
 
 template<class FuncR, class FuncD>
-void check_compare(FuncR funcr, FuncD funcd, const std::string& func)
+void check_compare_certain(FuncR funcr, FuncD funcd, const std::string& func)
 {
-  iterate_two_intervals(test_compare<FuncR, FuncD>(funcr, funcd, func), func);
+  iterate_two_intervals
+    (test_compare_certain<FuncR, FuncD>(funcr, funcd, func), func);
 }
 
+template<class FuncR, class FuncD>
+void check_compare_possible(FuncR funcr, FuncD funcd, const std::string& func)
+{
+  iterate_two_intervals
+    (test_compare_possible<FuncR, FuncD>(funcr, funcd, func), func);
+}
 
 void runtest_compare()
 {
-  check_compare(std::less<R>(), std::less<double>(), "<");
-  check_compare(std::greater<R>(), std::greater<double>(), ">");
-#if 0
-  check_compare(std::less_equal<R>(), std::less_equal<double>(), "<=");
-  check_compare(std::greater_equal<R>(), std::greater_equal<double>(), ">=");
-  R i1(-1, 1);
-  R i2 = i1;
-  assert(i1 == i2);
-  i2 += 0.1;
-  assert(i1 != i2);
-#else
-  std::cout << "Skipping <=, >=, == and != tests\n";
-#endif
+  check_compare_certain(std::less<R>(), std::less<double>(), "<");
+  check_compare_certain(std::greater<R>(), std::greater<double>(), ">");
+  check_compare_possible(std::less_equal<R>(),
+			 std::less_equal<double>(), "<=");
+  check_compare_possible(std::greater_equal<R>(),
+			 std::greater_equal<double>(), ">=");
+  check_compare_certain(std::equal_to<R>(), std::equal_to<double>(), "==");
+  check_compare_possible(std::not_equal_to<R>(),
+			 std::not_equal_to<double>(), "!=");
 }
 
 void test_bisect_median(const R& r)
@@ -456,13 +491,13 @@ void test_overlap(const R& r1, const R& r2)
 #if 0
 void test_combine(const R& r1, const R& r2)
 {
-  if(!overlap(r1,r2))
+  if (!overlap(r1, r2))
     return;
-  R comb = combine(r1,r2);
+  R comb = combine(r1, r2);
   for(double f = std::min(r1.lower(), r2.lower());
       f <= std::max(r1.upper(), r2.upper());
       f += std::min(width(r1), width(r2))/100.0) {
-    if(!in(f, comb))
+    if (!in(f, comb))
       std::cerr << "combine(" << r1 << ", " << r2 << ") = " 
 		<< comb << " does not contain "
 		<< f << std::endl;
@@ -472,13 +507,13 @@ void test_combine(const R& r1, const R& r2)
 
 void test_intersect(const R& r1, const R& r2)
 {
-  if(!overlap(r1, r2))
+  if (!overlap(r1, r2))
     return;
   R is = intersect(r1, r2);
   for(double f = std::min(r1.lower(), r2.lower());
       f <= std::max(r1.upper(), r2.upper());
       f += std::min(width(r1), width(r2))/100.0) {
-    if(in(f,r1) && in(f,r2) && !in(f,is))
+    if (in(f, r1) && in(f, r2) && !in(f, is))
       std::cerr << "intersect(" << r1 << ", " << r2 << ") = "
 		<< is << " does not contain "
 		<< f << std::endl;
@@ -491,7 +526,7 @@ void test_hull(const R& r1, const R& r2)
   for(double f = std::min(r1.lower(), r2.lower());
       f <= std::max(r1.upper(), r2.upper());
       f += width(h)/100)
-    if(!in(f,h))
+    if (!in(f, h))
       std::cerr << "hull(" << r1 << ", " << r2 << ") = "
 		<< h << " does not contain "
 		<< f << std::endl;
@@ -502,11 +537,9 @@ void test_scale(const R& r, double factor)
   for(double m = r.lower(); m <= r.upper(); m += width(r)/10) {
     R res = scale(r, m, factor);
     for(double f = r.lower(); f < r.upper(); f += width(r)/10) {
-      if(!in((f-m) * factor, res))
-	std::cerr << "scale(" << r << ", " << m << ", " << f << ") = "
-		  << res << " does not contain "
-		  << "scale(" << f << ", ...) = " << (f-m)*factor
-		  << std::endl;
+      double pres = (f - m) * factor;
+      if (!in(pres, res))
+	test::error(f, m, factor, pres, r, m, factor, res);
     }
   }
 }

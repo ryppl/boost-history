@@ -58,22 +58,26 @@
 #include <boost/operators.hpp>
 #endif
 
-#include <boost/interval/rounded_transc.hpp>
-#include <boost/interval/rounded_arith.hpp>
-#include <boost/interval/checking.hpp>
-
 namespace boost {
 
   namespace interval_lib {
-    template<class T>
-    struct compare_certainly;
-  }
+
+template<class T>
+struct compare_certainly;
+
+template<class T>
+struct rounded_arithmetic;
+
+template<class T>
+struct checking_lax;
+
+  } // namespace interval_lib
 
 // default traits class
 template<class T,
 	 class Compare = interval_lib::compare_certainly<T>,
 	 class Rounding = interval_lib::rounded_arithmetic<T>,
-	 class Checking = interval_lib::checking_nothing<T> >
+	 class Checking = interval_lib::checking_lax<T> >
 struct interval_traits
 {
   typedef T base_type;
@@ -81,19 +85,6 @@ struct interval_traits
   typedef Rounding rounding;
   typedef Checking checking;
 };
-
-  namespace interval_lib {
-    namespace detail {
-
-template<class T, class Compare, class Rounding, class Checking>
-struct unprotect<interval_traits<T, Compare, Rounding, Checking> > {
-  typedef
-    interval_traits<T, Compare, typename unprotect<Rounding>::type, Checking>
-    type;
-};
-
-    }
-  }
 
 template<class T, class Traits = interval_traits<T> >
 class interval
@@ -492,373 +483,11 @@ struct less<boost::interval<T, Traits> >
 } // namespace std
 #endif
 
-
-/*
- * Implementation of simple functions
- */
-
-namespace boost {
-
-template<class T, class Traits>
-inline void interval<T, Traits>::set_empty()
-{
-  low = up = std::numeric_limits<T>::quiet_NaN();
-}
-
-template<class T, class Traits>
-inline void interval<T, Traits>::set_entire()
-{
-  low = -std::numeric_limits<T>::infinity();
-  up = std::numeric_limits<T>::infinity();
-}
-
-template<class T, class Traits>
-inline interval<T, Traits>::interval(const T& x)
-{
-  *this = x;
-}
-
-template<class T, class Traits>
-inline interval<T, Traits>::interval(const T& l, const T& u): low(l), up(u)
-{
-  if (low > up) {
-    typedef typename Traits::checking checking;
-    checking::inverted_bound(l, u);
-    set_empty();
-  }
-}
-
-template<class T, class Traits>
-inline interval<T, Traits>& interval<T, Traits>::operator=(const T& x)
-{
-  low = up = x;
-  return *this;
-}
-
-template<class T, class Traits>
-inline void interval<T, Traits>::assign(const T& l, const T& u)
-{
-  if (l > u) {
-    typedef typename Traits::checking checking;
-    checking::inverted_bound(l, u);
-    set_empty();
-  } else set(l, u);
-}
-
-template<class T, class Traits>
-inline void interval<T, Traits>::set(const T& l, const T& u)
-{
-  low = l;
-  up = u;
-}
-
-template<class T, class Traits>
-inline interval<T, Traits> interval<T, Traits>::hull(const T& x, const T& y)
-{
-  if (x < y)
-    return interval<T, Traits>(x, y, true);
-  else
-    return interval<T, Traits>(y, x, true);
-}
-
-template<class T, class Traits>
-inline interval<T, Traits> interval<T, Traits>::empty()
-{
-  return interval<T, Traits>(std::numeric_limits<T>::quiet_NaN(),
-			     std::numeric_limits<T>::quiet_NaN(), true);
-}
-
-template<class T, class Traits>
-inline interval<T, Traits> interval<T, Traits>::entire()
-{
-  return interval<T, Traits>(-std::numeric_limits<T>::infinity(),
-			     std::numeric_limits<T>::infinity(), true);
-}
-
-
-/*
- * Utility Functions
- */
-
-template<class T, class Traits>
-inline T lower(const interval<T, Traits>& x)
-{
-  return x.lower();
-}
-
-template<class T, class Traits>
-inline T upper(const interval<T, Traits>& x)
-{
-  return x.upper();
-}
-
-template<class T, class Traits>
-inline T width(const interval<T, Traits>& x)
-{
-  typename Traits::rounding rnd;
-  return rnd.sub_up(x.upper(), x.lower());
-}
-
-template<class T, class Traits>
-inline T median(const interval<T, Traits>& x)
-{
-  typename Traits::rounding rnd;
-  rnd.tonearest();
-  return (x.lower() + x.upper())/2;
-}
-
-template<class T, class Traits>
-inline interval<T, Traits> pred(const interval<T, Traits>& x)
-{
-  typename Traits::rounding rnd;
-  T l = rnd.add_up(x.lower(), std::numeric_limits<T>::min());
-  T u = rnd.sub_down(x.upper(), std::numeric_limits<T>::min());
-  if (u < l)
-    // We could not shrink the interval any further
-    return x;
-  else
-    return interval<T, Traits>(l, u, true);
-}
-
-template<class T, class Traits>
-inline interval<T, Traits> succ(const interval<T, Traits>& x)
-{
-  typename Traits::rounding rnd;
-  T l = rnd.sub_down(x.lower(), std::numeric_limits<T>::min());
-  T u = rnd.add_up(x.upper(), std::numeric_limits<T>::min());
-  return interval<T, Traits>(l, u);
-}
-
-/*
- * Set-like operations
- */
-
-template<class T, class Traits>
-bool empty(const interval<T, Traits>& b)
-{
-  return detail::is_nan(b.lower()) || detail::is_nan(b.upper());
-}
-
-template<class T, class Traits>
-bool in_zero(const interval<T, Traits>& b)
-{
-  return b.lower() <= T(0) && T(0) <= b.upper();
-}
-
-template<class T, class Traits>
-bool in(const T& r, const interval<T, Traits> & b)
-{
-  return b.lower() <= r && r <= b.upper();
-}
-
-template<class T, class Traits>
-bool subset(const interval<T, Traits>& a,
-	    const interval<T, Traits>& b)
-{
-  if (empty(a))
-    return true;
-  else
-    return b.lower() <= a.lower() && a.upper() <= b.upper();
-}
-
-template<class T, class Traits>
-bool proper_subset(const interval<T, Traits> & a,
-		   const interval<T, Traits> & b)
-{
-  if (empty(a) && !empty(b))
-    return true;
-  else
-    return b.lower() < a.lower() && a.upper() <= b.upper() ||
-      b.lower() <= a.lower() && a.upper() <= b.upper();
-}
-
-template<class T, class Traits>
-inline bool overlap(const interval<T, Traits>& x,
-		    const interval<T, Traits>& y)
-{
-  return x.lower() <= y.lower() && y.lower() <= x.upper() ||
-    y.lower() <= x.lower() && x.lower() <= y.upper();
-}
-
-template<class T, class Traits>
-inline bool singleton(const interval<T, Traits>& x)
-{
-  return x.lower() == x.upper();
-}
-
-template<class T, class Traits>
-inline bool equal(const interval<T, Traits>& x,
-		  const interval<T, Traits>& y)
-{
-  return x.lower() == y.lower() && x.upper() == y.upper();
-}
-
-template<class T, class Traits>
-interval<T, Traits> intersect(const interval<T, Traits>& x,
-			      const interval<T, Traits>& y)
-{
-  T l = std::max(x.lower(), y.lower());
-  T u = std::min(x.upper(), y.upper());
-  if (l <= u)
-    return interval<T, Traits>(l, u, true);
-  else
-    return interval<T, Traits>::empty();
-}
-
-template<class T, class Traits>
-inline interval<T, Traits> hull(const interval<T, Traits>& x,
-				const interval<T, Traits>& y)
-{
-  if (empty(x))
-    return y;
-  else if (empty(y))
-    return x;
-  else
-    return interval<T, Traits>(std::min(x.lower(), y.lower()),
-			       std::max(x.upper(), y.upper()), true);
-}
-
-template<class T, class Traits>
-inline interval<T, Traits> hull(const interval<T, Traits>& x, const T& y)
-{
-  if (empty(x))
-    return interval<T, Traits>(y);
-  else
-    return interval<T, Traits>(std::min(x.lower(), y),
-			       std::max(x.upper(), y), true);
-}
-
-template<class T, class Traits>
-inline interval<T, Traits> hull(const T& x, const interval<T, Traits>& y)
-{
-  if (empty(y))
-    return interval<T, Traits>(x);
-  else
-    return interval<T, Traits>(std::min(x, y.lower()),
-			       std::max(x, y.upper()), true);
-}
-
-template<class T>
-inline interval<T> hull(const T& x, const T& y)
-{
-  return interval<T>::hull(x, y);
-}
-
-template<class T, class Traits>
-inline std::pair<interval<T, Traits>, interval<T, Traits> >
-bisect(const interval<T, Traits>& x)
-{
-  typedef interval<T, Traits> I;
-  T m = median(x);
-  return std::pair<I,I>(I(x.lower(), m), I(m, x.upper()));
-}
-
-template<class T, class Traits>
-T dist(const interval<T, Traits>& x, const interval<T, Traits>& y)
-{
-  using std::abs;
-  typename Traits::rounding rnd;
-  rnd.tonearest();
-  return std::min(abs(x.lower() - y.lower()), abs(x.upper() - y.upper()));
-}
-
-template<class T, class Traits>
-T dist(const interval<T, Traits>& x, const T& y)
-{
-  typename Traits::rounding rnd;
-  rnd.tonearest();
-  if (y < x.lower())
-    return y - x.lower();
-  else if (y > x.upper())
-    return x.upper() - y;
-  else
-    return 0;
-}
-
-template<class T, class Traits>
-T dist(const T& x, const interval<T, Traits>& y)
-{
-  return -dist(y,x);
-}
-
-template<class T, class Traits>
-inline interval<T, Traits> scale(const interval<T, Traits>& x,
-				 const T& mirror, const T& factor)
-{
-  return factor * (x - mirror);
-}
-
-template<class T, class Traits>
-interval<T, Traits> symmetric_scale(const interval<T, Traits>& x,
-				    const T& factor)
-{
-  return scale(x, median(x), factor);
-}
-
-
-/*
- * Elementary functions
- */
-
-template<class T, class Traits>
-inline interval<T, Traits> abs(const interval<T, Traits>& x)
-{
-  if (!detail::sign(x.lower()))
-    return x;
-  else if (detail::sign(x.upper()))
-    return -x;
-  else {
-    return interval<T, Traits>(T(0), std::max(-x.lower(), x.upper()), true);
-  }
-}
-
-template<class T, class Traits>
-interval<T, Traits> max(const interval<T, Traits>& x,
-			const interval<T, Traits>& y)
-{
-  return interval<T, Traits>(std::max(x.lower(), y.lower()),
-			     std::max(x.upper(), y.upper()), true);
-}
-
-template<class T, class Traits>
-interval<T, Traits> max(const interval<T, Traits>& x, const T& y)
-{
-  return interval<T, Traits>(std::max(x.lower(), y),
-			     std::max(x.upper(), y), true);
-}
-
-template<class T, class Traits>
-interval<T, Traits> max(const T& x, const interval<T, Traits>& y)
-{
-  return interval<T, Traits>(std::max(x, y.lower()),
-			     std::max(x, y.upper()), true);
-}
-
-template<class T, class Traits>
-interval<T, Traits> min(const interval<T, Traits>& x,
-			const interval<T, Traits>& y)
-{
-  return interval<T, Traits>(std::min(x.lower(), y.lower()),
-			     std::min(x.upper(), y.upper()), true);
-}
-
-template<class T, class Traits>
-interval<T, Traits> min(const interval<T, Traits>& x, const T& y)
-{
-  return interval<T, Traits>(std::min(x.lower(), y),
-			     std::min(x.upper(), y), true);
-}
-
-template<class T, class Traits>
-interval<T, Traits> min(const T& x, const interval<T, Traits>& y)
-{
-  return interval<T, Traits>(std::min(x, y.lower()),
-			     std::min(x, y.upper()), true);
-}
-
-} // namespace boost
-
+#include <boost/interval/rounded_transc.hpp>
+#include <boost/interval/rounded_arith.hpp>
+#include <boost/interval/checking.hpp>
 #include <boost/interval/compare.hpp>
+#include <boost/interval/utility.hpp>
 
 #ifndef BOOST_INTERVAL_NO_INLINE
 #include <boost/interval/oper.hpp>

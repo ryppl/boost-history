@@ -84,7 +84,19 @@ struct unprotect<save_state<Rounding> > {
   typedef Rounding type;
 };
 
-    } // detail
+template<class T, class Compare, class Rounding, class Checking>
+struct unprotect<interval_traits<T, Compare, Rounding, Checking> > {
+  typedef
+    interval_traits<T, Compare, typename unprotect<Rounding>::type, Checking>
+    type;
+};
+
+template<class T, class Traits>
+struct unprotect<interval<T, Traits> > {
+  typedef interval<T, typename unprotect<Traits>::type> type;
+};
+
+    } // namespace detail
 
 template<class T>
 struct rounding_control
