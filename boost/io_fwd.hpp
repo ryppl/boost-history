@@ -1,8 +1,8 @@
 //  Boost io_fwd.hpp header file  --------------------------------------------//
 
-//  (C) Copyright boost.org 2002.  Permission to copy, use, modify, sell and
-//  distribute this software is granted provided this copyright notice appears
-//  in all copies.  This software is provided "as is" without express or
+//  (C) Copyright boost.org 2002-2003.  Permission to copy, use, modify, sell
+//  and distribute this software is granted provided this copyright notice
+//  appears in all copies.  This software is provided "as is" without express or
 //  implied warranty, and with no claim as to its suitability for any purpose.
 
 //  See http://www.boost.org for most recent version including documentation.
@@ -90,6 +90,29 @@ template < std::size_t N, typename Ch, class Tr = ::std::char_traits<Ch> >
     class basic_array_ostream;
 template < std::size_t N, typename Ch, class Tr = ::std::char_traits<Ch> >
     class basic_array_stream;
+
+
+//  From <boost/io/pointer_stream.hpp>  --------------------------------------//
+
+template < typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_pointerbuf;
+typedef basic_pointerbuf<char>      pointerbuf;
+typedef basic_pointerbuf<wchar_t>  wpointerbuf;
+
+template < typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_ipointerstream;
+typedef basic_ipointerstream<char>      ipointerstream;
+typedef basic_ipointerstream<wchar_t>  wipointerstream;
+
+template < typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_opointerstream;
+typedef basic_opointerstream<char>      opointerstream;
+typedef basic_opointerstream<wchar_t>  wopointerstream;
+
+template < typename Ch, class Tr = ::std::char_traits<Ch> >
+    class basic_pointerstream;
+typedef basic_pointerstream<char>      pointerstream;
+typedef basic_pointerstream<wchar_t>  wpointerstream;
 
 
 }  // namespace io
