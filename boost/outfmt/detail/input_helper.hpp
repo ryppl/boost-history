@@ -16,8 +16,14 @@
       class input_helper: public boost::noncopyable
       {
          public:
+#        if !defined(BOOST_IOFM_NO_BASIC_STREAM)
             typedef typename InputStream::char_type                  char_type;
             typedef typename InputStream::traits_type                traits_type;
+            typedef std::basic_string< char_type, traits_type >      string_type;
+#        else
+            typedef char                                             char_type;
+            typedef std::string                                      string_type;
+#        endif
          private:
             InputStream              & is;
          public:
@@ -39,7 +45,11 @@
             }
             inline bool                          isspace( char_type ch ) const
             {
-               return( std::isspace( ch, is.getloc()));
+#              if !defined(BOOST_IOFM_NO_BASIC_STREAM)
+                  return( std::isspace( ch, is.getloc()));
+#              else
+                  return( std::isspace( ch ));
+#              endif
             }
          public:
             inline void                          skipws()
@@ -50,22 +60,40 @@
                is.putback( ch );
             }
          public: // string and character matching
+            inline bool                          match( const string_type & s )
+            {
+               return( match( s.begin(), s.end()));
+            }
             inline bool                          match( const char_type * s )
             {
-               return( match( s, s + traits_type::length( s )));
+#              if !defined(BOOST_IOFM_NO_BASIC_STREAM)
+                  return( match( s, s + traits_type::length( s )));
+#              else
+                  return( match( s, s + ::strlen( s )));
+#              endif
             }
             bool                                 match( char_type c )
             {
                char_type               ch;
-               if( getch( ch ) && traits_type::eq( c, ch ))
-                  return( true );
+#              if !defined(BOOST_IOFM_NO_BASIC_STREAM)
+                  if( getch( ch ) && traits_type::eq( c, ch ))
+                     return( true );
+#              else
+                  if( getch( ch ) && ( c == ch ))
+                     return( true );
+#              endif
 
                is.putback( ch );
-               is.setstate( std::ios_base::failbit );
+#              if !defined(BOOST_IOFM_NO_BASIC_STREAM)
+                  is.setstate( std::ios_base::failbit );
+#              else
+                  is.setstate( std::ios::failbit );
+#              endif
                return( false );
             }
          private:
-            bool                                 match( const char_type * first, const char_type * last )
+            template< typename ForwardIterator >
+            bool                                 match( ForwardIterator first, ForwardIterator last )
             {
                skipws();
 

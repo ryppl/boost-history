@@ -56,7 +56,7 @@
             const readob_t< T, FormatType, Inputter > & ro
          )
          {
-            boost::io::detail::input_helper< std::basic_istream< CharT, TraitsT > >
+            boost::io::detail::input_helper< std::istream >
                                                  in( is );
             ro.read( in, ro.ob );
             return( is );
