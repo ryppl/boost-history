@@ -19,30 +19,30 @@ struct x86_fast_rounding_control;
 template<>
 struct x86_fast_rounding_control<float>: detail::x86_rounding
 {
-  static void tonearest()  { set_rounding_mode(detail::rnd_mode_f.tonearest);  }
-  static void downward()   { set_rounding_mode(detail::rnd_mode_f.downward);   }
-  static void upward()     { set_rounding_mode(detail::rnd_mode_f.upward);     }
-  static void towardzero() { set_rounding_mode(detail::rnd_mode_f.towardzero); }
+  static void to_nearest()  { set_rounding_mode(detail::rnd_mode_f.to_nearest);  }
+  static void downward()    { set_rounding_mode(detail::rnd_mode_f.downward);    }
+  static void upward()      { set_rounding_mode(detail::rnd_mode_f.upward);      }
+  static void toward_zero() { set_rounding_mode(detail::rnd_mode_f.toward_zero); }
   static const float& force_rounding(const float& r) { return r; }
 };
 
 template<>
 struct x86_fast_rounding_control<double>: detail::x86_rounding
 {
-  static void tonearest()  { set_rounding_mode(detail::rnd_mode_d.tonearest);  }
-  static void downward()   { set_rounding_mode(detail::rnd_mode_d.downward);   }
-  static void upward()     { set_rounding_mode(detail::rnd_mode_d.upward);     }
-  static void towardzero() { set_rounding_mode(detail::rnd_mode_d.towardzero); }
+  static void to_nearest()  { set_rounding_mode(detail::rnd_mode_d.to_nearest);  }
+  static void downward()    { set_rounding_mode(detail::rnd_mode_d.downward);    }
+  static void upward()      { set_rounding_mode(detail::rnd_mode_d.upward);      }
+  static void toward_zero() { set_rounding_mode(detail::rnd_mode_d.toward_zero); }
   static const double& force_rounding(const double& r) { return r; }
 };
 
 template<>
 struct x86_fast_rounding_control<long double>: detail::x86_rounding
 {
-  static void tonearest()  { set_rounding_mode(detail::rnd_mode_l.tonearest);  }
-  static void downward()   { set_rounding_mode(detail::rnd_mode_l.downward);   }
-  static void upward()     { set_rounding_mode(detail::rnd_mode_l.upward);     }
-  static void towardzero() { set_rounding_mode(detail::rnd_mode_l.towardzero); }
+  static void to_nearest()  { set_rounding_mode(detail::rnd_mode_l.to_nearest);  }
+  static void downward()    { set_rounding_mode(detail::rnd_mode_l.downward);    }
+  static void upward()      { set_rounding_mode(detail::rnd_mode_l.upward);      }
+  static void toward_zero() { set_rounding_mode(detail::rnd_mode_l.toward_zero); }
   static const long double& force_rounding(const long double& r) { return r; }
 };
 

@@ -22,10 +22,10 @@ namespace boost {
 
 struct fpu_rounding_modes
 {
-  unsigned short tonearest;
+  unsigned short to_nearest;
   unsigned short downward;
   unsigned short upward;
-  unsigned short towardzero;
+  unsigned short toward_zero;
 };
 
 // exceptions masked, extended precision
@@ -34,10 +34,10 @@ static const fpu_rounding_modes rnd_mode = { 0x137f, 0x177f, 0x1b7f, 0x1f7f };
 
 struct x86_rounding_control: x86_rounding
 {
-  static void tonearest()  { set_rounding_mode(rnd_mode.tonearest);  }
-  static void downward()   { set_rounding_mode(rnd_mode.downward);   }
-  static void upward()     { set_rounding_mode(rnd_mode.upward);     }
-  static void towardzero() { set_rounding_mode(rnd_mode.towardzero); }
+  static void to_nearest()  { set_rounding_mode(rnd_mode.to_nearest);  }
+  static void downward()    { set_rounding_mode(rnd_mode.downward);    }
+  static void upward()      { set_rounding_mode(rnd_mode.upward);      }
+  static void toward_zero() { set_rounding_mode(rnd_mode.toward_zero); }
 };
 
     } // namespace detail

@@ -391,8 +391,8 @@ namespace boost {
   namespace interval_lib {
 
     template<class I> I pi();
-    template<class I> I pi_1_2();
-    template<class I> I pi_2_1();
+    template<class I> I pi_half();
+    template<class I> I pi_twice();
 
   } // namespace interval_lib
 

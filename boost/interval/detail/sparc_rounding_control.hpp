@@ -91,8 +91,7 @@ extern "C" {
 
 template<>
 struct rounding_control<float>:
-  detail::sparc_rounding_control,
-  detail::ieee_float_constants
+  detail::sparc_rounding_control
 {
   static const float& force_rounding(const float& x) { return x; }
   static float to_int(const float& x) { return rintf(x); }
@@ -100,8 +99,7 @@ struct rounding_control<float>:
 
 template<>
 struct rounding_control<double>:
-  detail::sparc_rounding_control,
-  detail::ieee_double_constants
+  detail::sparc_rounding_control
 {
   static const double& force_rounding(const double& x) { return x; }
   static double to_int(const double& x) { return rint(x); }
@@ -109,8 +107,7 @@ struct rounding_control<double>:
 
 template<>
 struct rounding_control<long double>:
-  detail::sparc_rounding_control,
-  detail::long_double_constants
+  detail::sparc_rounding_control
 {
   static const long double& force_rounding(const long double& x) { return x; }
   static long double to_int(const long double& x) { return rint(x); }

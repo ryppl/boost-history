@@ -9,8 +9,8 @@ typedef boost::interval<double>      I_d;
 typedef boost::interval<long double> I_ld;
 
 using boost::interval_lib::pi;
-using boost::interval_lib::pi_1_2;
-using boost::interval_lib::pi_2_1;
+using boost::interval_lib::pi_half;
+using boost::interval_lib::pi_twice;
 
 int test_main(int, char *[]) {
   I_i  pi_i  = pi<I_i>();
@@ -26,22 +26,22 @@ int test_main(int, char *[]) {
   BOOST_TEST(subset(pi_d, widen(I_d((double)PI), std::numeric_limits<double>::min())));
 
   // We can't test the following equalities for interval<int>.
-  I_f pi_f_1_2 = pi_1_2<I_f>();
-  I_f pi_f_2_1 = pi_2_1<I_f>();
+  I_f pi_f_half = pi_half<I_f>();
+  I_f pi_f_twice = pi_twice<I_f>();
 
-  I_d pi_d_1_2 = pi_1_2<I_d>();
-  I_d pi_d_2_1 = pi_2_1<I_d>();
+  I_d pi_d_half = pi_half<I_d>();
+  I_d pi_d_twice = pi_twice<I_d>();
 
-  I_ld pi_ld_1_2 = pi_1_2<I_ld>();
-  I_ld pi_ld_2_1 = pi_2_1<I_ld>();
+  I_ld pi_ld_half = pi_half<I_ld>();
+  I_ld pi_ld_twice = pi_twice<I_ld>();
 
-  BOOST_TEST(equal(2.0f * pi_f_1_2, pi_f));
-  BOOST_TEST(equal(2.0  * pi_d_1_2, pi_d));
-  BOOST_TEST(equal(2.0l * pi_ld_1_2, pi_ld));
+  BOOST_TEST(equal(2.0f * pi_f_half, pi_f));
+  BOOST_TEST(equal(2.0  * pi_d_half, pi_d));
+  BOOST_TEST(equal(2.0l * pi_ld_half, pi_ld));
 
-  BOOST_TEST(equal(2.0f * pi_f, pi_f_2_1));
-  BOOST_TEST(equal(2.0  * pi_d, pi_d_2_1));
-  BOOST_TEST(equal(2.0l * pi_ld, pi_ld_2_1));
+  BOOST_TEST(equal(2.0f * pi_f, pi_f_twice));
+  BOOST_TEST(equal(2.0  * pi_d, pi_d_twice));
+  BOOST_TEST(equal(2.0l * pi_ld, pi_ld_twice));
 
   return 0;
 }

@@ -18,13 +18,13 @@ namespace boost {
   struct rounding_control
   {
     typedef int rounding_mode;
-    rounding_mode get_rounding_mode()               {}
-    void          set_rounding_mode(rounding_mode)  {}
-    void          upward   ()                       {}
-    void          downward ()                       {}
-    void          to_nearest()                      {}
-    T             to_int(const T& x)                { return x; }
-    T             force_rounding(const T& x)        { return x; }
+    static void get_rounding_mode(rounding_mode&) {}
+    static void set_rounding_mode(rounding_mode)  {}
+    static void upward()     {}
+    static void downward()   {}
+    static void to_nearest() {}
+    static const T& to_int(const T& x)         { return x; }
+    static const T& force_rounding(const T& x) { return x; }
   };
 
   /*
