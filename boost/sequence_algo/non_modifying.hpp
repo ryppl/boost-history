@@ -70,6 +70,7 @@ namespace boost {
 	   Iterator2 first2, Iterator2 last2,
 	   BinaryPredicate comp)
   {
+    using namespace boost_concepts;
     function_requires< ReadableIteratorConcept<Iterator1> >();
     function_requires< ForwardTraversalConcept<Iterator1> >();
     function_requires< ReadableIteratorConcept<Iterator2> >();
@@ -89,6 +90,7 @@ namespace boost {
   find_end(Iterator1 first1, Iterator1 last1, 
 	   Iterator2 first2, Iterator2 last2)
   {
+    using namespace boost_concepts;
     function_requires< ReadableIteratorConcept<Iterator1> >();
     function_requires< ForwardTraversalConcept<Iterator1> >();
     function_requires< ReadableIteratorConcept<Iterator2> >();
@@ -108,6 +110,7 @@ namespace boost {
 			  Iterator2 first2, Iterator2 last2,
 			  BinaryPredicate comp)
   {
+    using namespace boost_concepts;
     function_requires< InputIteratorConcept<Iterator1> >();
     function_requires< ReadableIteratorConcept<Iterator2> >();
     function_requires< ForwardTraversalConcept<Iterator2> >();
@@ -131,6 +134,7 @@ namespace boost {
   template <typename Iterator>
   Iterator adjacent_find(Iterator first, Iterator last)
   {
+    using namespace boost_concepts;
     function_requires< ReadableIteratorConcept<Iterator> >();
     function_requires< ForwardTraversalConcept<Iterator> >();
     typedef typename std::iterator_traits<Iterator>::value_type T;
@@ -151,6 +155,7 @@ namespace boost {
   Iterator 
   adjacent_find(Iterator first, Iterator last, BinaryPredicate binary_pred)
   {
+    using namespace boost_concepts;
     function_requires< ReadableIteratorConcept<Iterator> >();
     function_requires< ForwardTraversalConcept<Iterator> >();
     typedef typename std::iterator_traits<Iterator>::value_type T;
@@ -174,6 +179,7 @@ namespace boost {
 		   Iterator2 first2, Iterator2 last2,
 		   BinaryPredicate  predicate) 
   {
+    using namespace boost_concepts;
     function_requires< ReadableIteratorConcept<Iterator1> >();
     function_requires< ForwardTraversalConcept<Iterator1> >();
     function_requires< ReadableIteratorConcept<Iterator2> >();
