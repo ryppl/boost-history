@@ -101,10 +101,19 @@ void ownership_usecount_test()
   BOOST_CHECK( a.use_count() == 2 );
   BOOST_CHECK( b.use_count() == 2 );
 
-  boost::view::ownership::shared< boost::view::ownership::shared< container_type > >   aa(a);
-  BOOST_CHECK( aa.use_count() == 1 );
-  BOOST_CHECK( aa.get()->use_count() == 3 );
+  boost::view::ownership::shared< boost::view::ownership::shared< container_type > >   bb(b);
+  BOOST_CHECK( bb.use_count() == 1 );
+  BOOST_CHECK( bb.get()->use_count() == 3 );
+  BOOST_CHECK( b.use_count() == 3 );
+
+  // Creates a shared container with its own new copy.
+  boost::view::ownership::shared< container_type >   c(*a);
+  BOOST_CHECK( c.use_count() == 1 );
   BOOST_CHECK( a.use_count() == 3 );
+
+  a.swap( c );
+  BOOST_CHECK( a.use_count() == 1 );
+  BOOST_CHECK( c.use_count() == 3 );
 }
 
 

@@ -1,5 +1,5 @@
 
-// Copyright (C) 2001-2003 Roland Richter <roland@flll.jku.at>
+// Copyright (C) 2001-2004 Roland Richter <roland@flll.jku.at>
 // Permission to copy, use, modify, sell and distribute this software
 // is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
@@ -9,15 +9,16 @@
 #define BOOST_VIEW_OWNERSHIP_DETAIL_HPP
 
 #include <algorithm>
+
 #include <boost/config.hpp>
-#include <boost/smart_ptr.hpp>
+#include <boost/scoped_ptr.hpp>
+#include <boost/shared_ptr.hpp>
 
 
 namespace boost {
   namespace view {
     namespace ownership {
 
-// Forward declarations
 template<class T> class unique;
 template<class T> class shared;
 template<class T> class external;
@@ -53,8 +54,6 @@ public:
     return *this;
   }
 
-  long use_count() const { return 1; }
-
   T& operator*()  const { return *ptr; }
   T* operator->() const { return ptr; }
   operator T*()   const { return ptr; }
@@ -64,8 +63,13 @@ private:
   T* ptr;
 };
 
-// Remark: The reason why these are all stored as pointers
-// (instead of references) is that I wanted to use shared_ptr!
+
+/// Returns a unique copy of owner.
+template<class T> T& writeAccessTo( unique<T>& owner )
+{
+  return *owner;
+}
+
 
 template<class T> class shared {
 public:
@@ -91,15 +95,6 @@ public:
     return *this;
   }
 
-  /// Swap to allow 'cheap conversion' of unique -> shared ownership.
-  shared& swap( unique<T>& rhs )
-  {
-    //###
-
-    return *this;
-  }
-
-
   template<class S> shared& operator=( const S& rhs )
   {
     shared(rhs).swap(*this);
@@ -108,20 +103,27 @@ public:
 
   long use_count() const { return ptr.use_count(); }
 
-  /// @name Methods to access the owned contents.
-  ///  In order to avoid problems, these should be const.
-  ///  In order to avoid other problems, these are non-const.
-  /// In a strict sense, a shared entity might be writeable only if use_count() == 1.
-  //@{
   T& operator*()  const { return *(ptr.get()); }
   T* operator->() const { return ptr.get(); }
   operator T*()   const { return ptr.get(); }
   T* get()        const { return ptr.get(); }
-  //@}
 
 private:
   boost::shared_ptr<T> ptr;
 };
+
+
+/// Returns a unique copy of owner.
+template<class T> T& writeAccessTo( shared<T>& owner )
+{
+  if( owner.use_count() != 1 ) // If owner is not unique, make it.
+  {
+    shared<T> newOwner( *owner );
+    owner.swap( newOwner );
+  }
+
+  return *owner;
+}
 
 
 template<class T> class external {
@@ -151,8 +153,6 @@ public:
     return *this;
   }
 
-  long use_count() const { return 0; }
-
   T& operator*()  const { return *ptr; }
   T* operator->() const { return ptr; }
   operator T*()   const { return ptr; }
@@ -171,7 +171,6 @@ private:
   template<class T> unique<T>::unique( const external<T>& rhs )
     : ptr( new T( *(rhs.get()) ) )
   { }
-
 
 
   template<class T> shared<T>::shared( const unique<T>& rhs )
