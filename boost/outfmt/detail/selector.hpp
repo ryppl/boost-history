@@ -11,7 +11,7 @@
 
    namespace boost { namespace io { namespace detail
    {
-      // mpl-style class to test for equality of two numbers
+      // mpl-style class to test for comparison of two numbers
 
       template< int a, int b >
       struct eq_int
@@ -19,41 +19,49 @@
          BOOST_STATIC_CONSTANT( bool, value = ( a == b ));
       };
 
-      // mpl-style compile-time switch statement
+      template< int a, int b >
+      struct lt_int
+      {
+         BOOST_STATIC_CONSTANT( bool, value = ( a < b ));
+      };
 
-      template< int n,                    // switch( n ){
-         int v1,      typename T1,        //    case v1: T1;
-         int v2,      typename T2,        //    case v2: T2;
-         int v3 = -1, typename T3 = void, //   [case v3: T3;]
-         int v4 = -1, typename T4 = void, //   [case v4: T4;]
-         int v5 = -1, typename T5 = void, //   [case v5: T5;]
-         int v6 = -1, typename T6 = void, //   [case v6: T6;]
-         int v7 = -1, typename T7 = void, //   [case v7: T7;]
-         typename T8              = void  //   [default: T8;] }
+      // mpl-style compile-time switch statement for sequentially numbered objects 
+
+      template
+      <
+         int n,
+         typename T1,        typename T2,
+         typename T3 = void, typename T4 = void, typename T5 = void,
+         typename T6 = void, typename T7 = void, typename T8 = void
       >
-      struct switch_: public boost::mpl::if_
-                      <
-                         eq_int< n, v1 >, T1, typename boost::mpl::if_
-                         <
-                            eq_int< n, v2 >, T2, typename boost::mpl::if_
-                            <
-                               eq_int< n, v3 >, T3, typename boost::mpl::if_
-                               <
-                                  eq_int< n, v4 >, T4, typename boost::mpl::if_
-                                  <
-                                     eq_int< n, v5 >, T5, typename boost::mpl::if_
-                                     <
-                                        eq_int< n, v6 >, T6, typename boost::mpl::if_
-                                        <
-                                           eq_int< n, v7 >, T7,
-                                           T8
-                                        >::type
-                                     >::type
-                                  >::type
-                               >::type
-                            >::type
-                         >::type
-                      >
+      struct sequential_switch_: public boost::mpl::if_
+             <
+                lt_int< n, 5 >,
+                typename boost::mpl::if_
+                <
+                   lt_int< n, 3 >,
+                   typename boost::mpl::if_
+                   <
+                      eq_int< n, 1 >, T1, T2
+                   >::type,
+                   typename boost::mpl::if_
+                   <
+                      eq_int< n, 3 >, T3, T4
+                   >::type
+                >::type,
+                typename boost::mpl::if_
+                <
+                   lt_int< n, 7 >,
+                   typename boost::mpl::if_
+                   <
+                      eq_int< n, 5 >, T5, T6
+                   >::type,
+                   typename boost::mpl::if_
+                   <
+                      eq_int< n, 7 >, T7, T8
+                   >::type
+                >::type
+             >
       {
       };
 
@@ -159,25 +167,17 @@
 
          // type selectors
 
-         typedef typename const switch_
+         typedef typename sequential_switch_
                  <
-                    n,
-                    1, T1, 2, T2, 3, T3, 4, T4, 5, T5, 6, T6, 7, T7,
-                    T8
-                 >::type &                                           type;
+                    n, T1, T2, T3, T4, T5, T6, T7, T8
+                 >::type                                             base_type;
 
-         typedef typename switch_
-                 <
-                    n,
-                    1, T1, 2, T2, 3, T3, 4, T4, 5, T5, 6, T6, 7, T7,
-                    T8
-                 >::type &                                           ref_type;
+         typedef const base_type &                                   type;
+         typedef       base_type &                                   ref_type;
 
-         typedef typename switch_
+         typedef typename sequential_switch_
                  <
-                    n,
-                    1, get1, 2, get2, 3, get3, 4, get4, 5, get5, 6, get6, 7, get7,
-                    get8
+                    n, get1, get2, get3, get4, get5, get6, get7, get8
                  >::type                                             getter;
 
          // nary< 2 > value selection
@@ -200,6 +200,13 @@
          {
             return( getter::value( a, b, c, d ));
          }
+         static ref_type                         ref
+                                                 (
+                                                    const T1 & a, const T2 & b, const T3 & c, const T4 & d
+                                                 )
+         {
+            return( const_cast< ref_type >( getter::value( a, b, c, d )));
+         }
 
          // nary< 8 > value selection
 
@@ -210,6 +217,14 @@
                                                  )
          {
             return( getter::value( a, b, c, d, e, f, g, h ));
+         }
+         static ref_type                         ref
+                                                 (
+                                                    const T1 & a, const T2 & b, const T3 & c, const T4 & d,
+                                                    const T5 & e, const T6 & f, const T7 & g, const T8 & h
+                                                 )
+         {
+            return( const_cast< ref_type >( getter::value( a, b, c, d, e, f, g, h )));
          }
       };
    }}}
