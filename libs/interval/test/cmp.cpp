@@ -75,6 +75,8 @@ static void test_f_12_34() {
 }
 
 static void test_12_34() {
+  using namespace boost::interval_lib;
+
   test_c_12_34();
   test_p_12_34();
   test_f_12_34();
@@ -161,6 +163,8 @@ static void test_f_13_24() {
 }
 
 static void test_13_24() {
+  using namespace boost::interval_lib;
+
   test_c_13_24();
   test_p_13_24();
   test_f_13_24();
@@ -247,6 +251,8 @@ static void test_f_12_23() {
 }
 
 static void test_12_23() {
+  using namespace boost::interval_lib;
+
   test_c_12_23();
   test_p_12_23();
   test_f_12_23();
@@ -282,6 +288,8 @@ static void test_12_23() {
 
 int test_main(int, char *[])
 {
+  using namespace boost::interval_lib;
+
   test_12_34();
   test_13_24();
   test_12_23();
