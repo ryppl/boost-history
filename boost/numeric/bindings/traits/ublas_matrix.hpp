@@ -1,7 +1,23 @@
 // (-*- C++ -*- header)  
 
-#ifndef BOOST_BINDINGS_TRAITS_UBLAS_MATRIX_H
-#define BOOST_BINDINGS_TRAITS_UBLAS_MATRIX_H
+/*
+ * 
+ * Copyright (c) Kresimir Fresl 2002 
+ *
+ * Permission to copy, modify, use and distribute this software 
+ * for any non-commercial or commercial purpose is granted provided 
+ * that this license appear on all copies of the software source code.
+ *
+ * Author assumes no responsibility whatsoever for its use and makes 
+ * no guarantees about its quality, correctness or reliability.
+ *
+ * Author acknowledges the support of the Faculty of Civil Engineering, 
+ * Zagreb, Croatia.
+ *
+ */
+
+#ifndef BOOST_NUMERIC_BINDINGS_TRAITS_UBLAS_MATRIX_H
+#define BOOST_NUMERIC_BINDINGS_TRAITS_UBLAS_MATRIX_H
 
 #include <boost/numeric/bindings/traits/traits.hpp>
 #include <boost/numeric/ublas/matrix.hpp> 
@@ -11,7 +27,23 @@
 #  include <boost/type_traits/same_traits.hpp>
 #endif
 
-namespace boost { namespace numeric { namespace bindings {
+namespace boost { namespace numeric { namespace bindings { namespace traits {
+
+  namespace detail {
+
+    template <typename StOrdTag>
+    struct ublas_ordering {};
+    
+    template<> 
+    struct ublas_ordering<boost::numeric::ublas::row_major_tag> {
+      typedef row_major_t type; 
+    };
+    template<> 
+    struct ublas_ordering<boost::numeric::ublas::column_major_tag> {
+      typedef column_major_t type; 
+    };
+
+  }
 
   // ublas::matrix<>
   template <typename T, typename F, typename ArrT>
@@ -45,6 +77,9 @@ namespace boost { namespace numeric { namespace bindings {
     static int leading_dimension (matrix_type& m) {
       return matrix_type::functor_type::size2 (m.size1(), m.size2());
     }
+    typedef typename detail::ublas_ordering<
+      typename F::orientation_category
+    >::type ordering_type; 
   }; 
 
   template <typename T, typename F, typename ArrT>
@@ -62,7 +97,8 @@ namespace boost { namespace numeric { namespace bindings {
     typedef T const* pointer; 
     typedef boost::numeric::ublas::matrix<T, F, ArrT> matrix_type;
     static pointer storage (matrix_type const& m) {
-      typedef typename matrix_type::const_array_type array_type;  
+      typedef typename matrix_type::const_array_type const array_type; 
+      // toon: need const array_type to take correct trait in next line
       return vector_traits<array_type>::storage (m.data()); 
     }
     static int size1 (matrix_type const& m) { return m.size1(); } 
@@ -76,6 +112,9 @@ namespace boost { namespace numeric { namespace bindings {
     static int leading_dimension (matrix_type const& m) {
       return matrix_type::functor_type::size2 (m.size1(), m.size2());
     }
+    typedef typename detail::ublas_ordering<
+      typename F::orientation_category
+    >::type ordering_type; 
   }; 
 
 
@@ -103,6 +142,9 @@ namespace boost { namespace numeric { namespace bindings {
     static int leading_dimension (matrix_type& mr) {
       return matrix_traits<M>::leading_dimension (mr.data()); 
     }
+    typedef typename detail::ublas_ordering<
+      typename M::orientation_category
+    >::type ordering_type; 
   }; 
 
   template <typename M>
@@ -128,6 +170,9 @@ namespace boost { namespace numeric { namespace bindings {
     static int leading_dimension (matrix_type const& mr) {
       return matrix_traits<M const>::leading_dimension (mr.data()); 
     }
+    typedef typename detail::ublas_ordering<
+      typename M::orientation_category
+    >::type ordering_type; 
   }; 
 
 
@@ -165,6 +210,9 @@ namespace boost { namespace numeric { namespace bindings {
       return ld (ms.stride1(), ms.stride2(), oc_t())
 	* matrix_traits<M>::leading_dimension (ms.data()); 
     }
+    typedef typename detail::ublas_ordering<
+      typename M::orientation_category
+    >::type ordering_type; 
   }; 
 
   template <typename M>
@@ -200,6 +248,9 @@ namespace boost { namespace numeric { namespace bindings {
       return ld (ms.stride1(), ms.stride2(), oc_t())
 	* matrix_traits<M>::leading_dimension (ms.data()); 
     }
+    typedef typename detail::ublas_ordering<
+      typename M::orientation_category
+    >::type ordering_type; 
   }; 
 
 
@@ -272,6 +323,6 @@ namespace boost { namespace numeric { namespace bindings {
     } 
   }; 
 
-}}}
+}}}}
 
-#endif // BOOST_BINDINGS_TRAITS_UBLAS_MATRIX_H
+#endif 

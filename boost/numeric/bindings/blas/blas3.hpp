@@ -13,30 +13,30 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
     typename matrix_type_a, typename matrix_type_b, typename matrix_type_c 
     >
   void gemm(const char TRANSA, const char TRANSB, 
-	    const typename matrix_traits<matrix_type_a>::value_type& alpha,
+	    const typename traits::matrix_traits<matrix_type_a>::value_type& alpha,
 	    const matrix_type_a &a,
 	    const matrix_type_b &b,
-	    const typename matrix_traits<matrix_type_c>::value_type &beta,
+	    const typename traits::matrix_traits<matrix_type_c>::value_type &beta,
 	    matrix_type_c &c
 	    )
   {
-    typedef matrix_traits< const matrix_type_a > matraits ; 
-    typedef matrix_traits< const matrix_type_b > mbtraits ; 
-    typedef matrix_traits< matrix_type_c > mctraits ; 
+    typedef traits::matrix_traits< const matrix_type_a > matraits ; 
+    typedef traits::matrix_traits< const matrix_type_b > mbtraits ; 
+    typedef traits::matrix_traits< matrix_type_c > mctraits ; 
 
     typedef typename mctraits::value_type  value_type ;
-    typedef typename value_traits< value_type >::value_type bind_type ;
+    typedef typename traits::value_traits< value_type >::value_type bind_type ;
 
-    const int m = TRANSA == NO_TRANSPOSE 
+    const int m = TRANSA == traits::NO_TRANSPOSE 
       ? matraits::size1( a )
       : matraits::size2( a ) ;
-    const int n = TRANSB == NO_TRANSPOSE 
+    const int n = TRANSB == traits::NO_TRANSPOSE 
       ? mbtraits::size2( b )
       : mbtraits::size1( b );
-    const int k = TRANSA == NO_TRANSPOSE 
+    const int k = TRANSA == traits::NO_TRANSPOSE 
       ? matraits::size2( a )
       : matraits::size1( a ) ;
-    const int k1 = TRANSB == NO_TRANSPOSE 
+    const int k1 = TRANSB == traits::NO_TRANSPOSE 
       ? mbtraits::size1( b )
       : mbtraits::size2( b );
     assert( m == mctraits::size1( c ) ); 
@@ -65,14 +65,14 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
   template < 
     typename matrix_type_a, typename matrix_type_b, typename matrix_type_c 
     >
-  void gemm(const typename matrix_traits<matrix_type_a>::value_type& alpha,
+  void gemm(const typename traits::matrix_traits<matrix_type_a>::value_type& alpha,
 	    const matrix_type_a &a,
 	    const matrix_type_b &b,
-	    const typename matrix_traits<matrix_type_c>::value_type &beta,
+	    const typename traits::matrix_traits<matrix_type_c>::value_type &beta,
 	    matrix_type_c &c
 	    )
   {
-    gemm( NO_TRANSPOSE, NO_TRANSPOSE, alpha, a, b, beta, c ) ;
+    gemm( traits::NO_TRANSPOSE, traits::NO_TRANSPOSE, alpha, a, b, beta, c ) ;
   }
 
 
@@ -82,8 +82,8 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
     >
   void gemm(const matrix_type_a &a, const matrix_type_b &b, matrix_type_c &c)
   {
-    typedef typename matrix_traits<matrix_type_c>::value_type val_t; 
-    gemm( NO_TRANSPOSE, NO_TRANSPOSE, (val_t) 1, a, b, (val_t) 0, c ) ;
+    typedef typename traits::matrix_traits<matrix_type_c>::value_type val_t; 
+    gemm( traits::NO_TRANSPOSE, traits::NO_TRANSPOSE, (val_t) 1, a, b, (val_t) 0, c ) ;
   }
 
 }}}}

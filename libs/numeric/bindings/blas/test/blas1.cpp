@@ -1,3 +1,9 @@
+//  Permission to copy, use, modify, sell and
+//  distribute this software is granted provided this copyright notice appears
+//  in all copies. This software is provided "as is" without express or implied
+//  warranty, and with no claim as to its suitability for any purpose.
+//  Copyright Toon Knapen
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -8,17 +14,12 @@
 #include <boost/numeric/bindings/traits/ublas_vector.hpp>
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
 #include <boost/numeric/bindings/blas/blas1.hpp>
+#include <stdlib.h>
 
 template < typename VectorType >
 void test_scal(std::ostream& os, int runs, int runs_i, int size, int size_i, typename VectorType::value_type alpha, VectorType& vector_native, VectorType& vector_toblas)
 {
   typedef typename VectorType::value_type value_type ;
-
-  std::cout << "\ntest_scal : \n";
-  std::cout << alpha << "\n";
-  std::copy( vector_native.begin(), vector_native.end(), std::ostream_iterator< value_type >( std::cout, " " ) ); std::cout << "\n";
-  std::copy( vector_toblas.begin(), vector_toblas.end(), std::ostream_iterator< value_type >( std::cout, " " ) ); std::cout << "\n";
-  std::cout << std::endl;
 
   boost::timer t ;
   for(int i = 0 ; i < runs_i ; ++i ) vector_native *= alpha ;
@@ -30,9 +31,6 @@ void test_scal(std::ostream& os, int runs, int runs_i, int size, int size_i, typ
   
   report< value_type >( os, runs, runs_i, size_i, t.elapsed() );
   
-  std::cout << "\n";
-  std::copy( vector_native.begin(), vector_native.end(), std::ostream_iterator< value_type >( std::cout, " " ) ); std::cout << "\n";
-  std::copy( vector_toblas.begin(), vector_toblas.end(), std::ostream_iterator< value_type >( std::cout, " " ) ); std::cout << "\n";
   check( vector_native.begin(), vector_native.end(), vector_toblas.begin() );
 }
 
@@ -60,17 +58,10 @@ struct scal_vector_range
     numerics::vector< T > vector_toblas( vector_native ) ;
     T alpha = 1.0000002 ;
 
-    std::cout << std::endl;
-    std::cout << static_cast< T >( std::numeric_limits< float >::max() ) << std::endl;
-    std::cout << 100.0 * 10 * runs_i << std::endl;
-    std::cout << runs_i << std::endl;
-    std::cout << alpha << std::endl;
     int start = std::max( 0, ( size / 2 ) - size_i );
     int stop  = start + size_i ;
     numerics::vector_range< numerics::vector< T > > native_range( vector_native, numerics::range(start,stop) );
     numerics::vector_range< numerics::vector< T > > toblas_range( vector_toblas, numerics::range(start,stop) );
-    std::copy( native_range.begin(), native_range.end(), std::ostream_iterator< T >( std::cout, " " ) ) ; std::cout << std::endl;
-    std::copy( toblas_range.begin(), toblas_range.end(), std::ostream_iterator< T >( std::cout, " " ) ) ; std::cout << std::endl;
       
     test_scal( os, runs, runs_i, size, size_i, alpha, native_range, toblas_range );
   }
@@ -289,11 +280,6 @@ void test_dot(std::ostream& os, int runs, int runs_i, int size, int size_i, Vect
 
   value_type result_native = value_type(), result_toblas = value_type();
 
-  std::copy( x_native.begin(), x_native.end(), std::ostream_iterator< value_type >( std::cout, " " ) ); std::cout << std::endl;
-  std::copy( y_native.begin(), y_native.end(), std::ostream_iterator< value_type >( std::cout, " " ) ); std::cout << std::endl;
-  std::copy( x_toblas.begin(), x_toblas.end(), std::ostream_iterator< value_type >( std::cout, " " ) ); std::cout << std::endl;
-  std::copy( y_toblas.begin(), y_toblas.end(), std::ostream_iterator< value_type >( std::cout, " " ) ); std::cout << std::endl;
-
   boost::timer t ;
   for(int i = 0 ; i < runs_i ; ++i ) result_native = numerics::inner_prod( x_native, y_native );
   
@@ -446,9 +432,19 @@ struct dotc_vector_slice
 int main (int argc, char *argv []) 
 {
   int runs = 1 ; // 10000000 ;
+  int stop  = 10 ; // 10000 ;
+
+  switch ( argc ) {
+  case 3:
+    stop = atoi( argv[2] ) ;
+  case 2:
+    runs = atoi( argv[1] ) ;
+  case 1:
+  default: {}
+  }
+
   int start = 1 ;
   int step  = 50 ;
-  int stop  = 10 ; // 10000 ;
 
   std::cerr << "\npeak float\n";
   peak<float> () ( runs );

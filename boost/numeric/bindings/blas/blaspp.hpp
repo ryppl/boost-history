@@ -23,7 +23,7 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
   template < typename T >
   struct blas
   {
-    typedef typename value_traits<T>::value_type bind_type ;
+    typedef typename traits::value_traits<T>::value_type bind_type ;
 
     // level 1 types
     typedef void  (*scal_type)(const int *n, const bind_type *alpha, bind_type *x, const int *incx) ;

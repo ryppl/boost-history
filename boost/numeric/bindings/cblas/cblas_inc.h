@@ -16,10 +16,11 @@
  *
  */
 
-#ifndef BOOST_NUMERIC_BINDINGS_TRAITS_BOOST_ARRAY_H
-#define BOOST_NUMERIC_BINDINGS_TRAITS_BOOST_ARRAY_H
+#ifndef BOOST_NUMERIC_CBLAS_H
+#define BOOST_NUMERIC_CBLAS_H
 
-#include <boost/numeric/bindings/traits/traits.hpp>
-#include <boost/array.hpp>
+extern "C" {
+#  include <cblas/cblas.h> 
+}
 
 #endif 

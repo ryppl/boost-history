@@ -15,23 +15,23 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
     typename matrix_type, typename vector_type_x, typename vector_type_y 
     >
   void gemv(const char TRANS, 
-	    const typename matrix_traits<matrix_type>::value_type &alpha, 
+	    const typename traits::matrix_traits<matrix_type>::value_type &alpha, 
 	    const matrix_type &a, 
 	    const vector_type_x &x, 
-	    const typename vector_traits<vector_type_y>::value_type &beta,
+	    const typename traits::vector_traits<vector_type_y>::value_type &beta,
 	    vector_type_y &y
 	    )
   {
-    typedef matrix_traits< const matrix_type > mtraits ; 
-    typedef vector_traits< const vector_type_x > xvtraits ; 
-    typedef vector_traits< vector_type_y > yvtraits ; 
+    typedef traits::matrix_traits< const matrix_type > mtraits ; 
+    typedef traits::vector_traits< const vector_type_x > xvtraits ; 
+    typedef traits::vector_traits< vector_type_y > yvtraits ; 
     typedef typename mtraits::value_type value_type ;
-    typedef typename value_traits< value_type >::value_type bind_type ;
+    typedef typename traits::value_traits< value_type >::value_type bind_type ;
 
     const int m = mtraits::size1( a ) ;
     const int n = mtraits::size2( a ) ;
-    assert ( xvtraits::size( x ) >= (TRANS == NO_TRANSPOSE ? n : m) ) ; 
-    assert ( yvtraits::size( y ) >= (TRANS == NO_TRANSPOSE ? m : n) ) ; 
+    assert ( xvtraits::size( x ) >= (TRANS == traits::NO_TRANSPOSE ? n : m) ) ; 
+    assert ( yvtraits::size( y ) >= (TRANS == traits::NO_TRANSPOSE ? m : n) ) ; 
     const int lda = mtraits::leading_dimension( a ) ; 
     const int stride_x = xvtraits::stride( x ) ;
     const int stride_y = yvtraits::stride( y ) ;
@@ -55,14 +55,14 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
     typename matrix_type, typename vector_type_x, typename vector_type_y 
     >
   inline 
-  void gemv(const typename matrix_traits<matrix_type>::value_type &alpha, 
+  void gemv(const typename traits::matrix_traits<matrix_type>::value_type &alpha, 
 	    const matrix_type &a, 
 	    const vector_type_x &x, 
-	    const typename vector_traits<vector_type_y>::value_type &beta,
+	    const typename traits::vector_traits<vector_type_y>::value_type &beta,
 	    vector_type_y &y
 	    )
   {
-    gemv( NO_TRANSPOSE, alpha, a, x, beta, y ); 
+    gemv( traits::NO_TRANSPOSE, alpha, a, x, beta, y ); 
   }
 
 
@@ -73,8 +73,8 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
   inline 
   void gemv(const matrix_type &a, const vector_type_x &x, vector_type_y &y)
   {
-    typedef typename matrix_traits<matrix_type>::value_type val_t; 
-    gemv( NO_TRANSPOSE, (val_t) 1, a, x, (val_t) 0, y );
+    typedef typename traits::matrix_traits<matrix_type>::value_type val_t; 
+    gemv( traits::NO_TRANSPOSE, (val_t) 1, a, x, (val_t) 0, y );
   }
 
 }}}}

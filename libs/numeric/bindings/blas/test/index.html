@@ -1,0 +1,42 @@
+<html>
+<head>
+</head>
+<body>
+<h1>Blas bindings regression and performance tests</h1>
+<h3>Synopsis</h3>
+The executables blas1, blas2 and blas3 (that can be built with bjam in
+this directory) both serve as:
+<ul>
+<li>regression-tests for the blas-bindings for ublas vectors and matrices</li>
+<li>regression-tests for ublas routines</li>
+<li>and as performance test for the ublas routines in respect to the equivalent BLAS operations</li>
+</ul>
+The first two tests are achieved by performing several uBlas vector and matrix
+operations with the native uBlas implementation and the equivalent operation
+via the blas bindings and comparing the results of both.<br>
+The latter test is achieved by repeating every operation many times too
+be able to time the uBlas native and the equivalent BLAS operation.
+
+<h3>Performance test</h3>
+To run the executables for performance test purposes, launch the executable
+with two arguments.<br>
+The first argument must be the number of times every operation will be repeated
+in order to time it. This must be at least 1e5 for a 500Mhz PIII.<br>
+The second argument is the size up to which the vectors and matrices will be
+sized when testing the performance.<br>
+For every test, a file is created, with a name describing the test, that contains
+5 columns of data. The first column is the size of the vector of matrix that
+was timed. The second and fourth column provide the estimated MFlops for the
+uBlas native and BLAS implementation respectively. The third and fifth column
+provide the normalized-time (normalized in respect to the size) for performing
+the operation.
+
+<h3>Regression tests</h3>
+To run the executables for regression-test purposes, no arguments need to 
+be provided. You will however see a lot of 'inf' on your screen because
+the timer is not accurate enough to provide timing info.
+
+
+<br><br><br>Copyright Toon Knapen
+</body>
+</html>

@@ -1,3 +1,9 @@
+//  Permission to copy, use, modify, sell and
+//  distribute this software is granted provided this copyright notice appears
+//  in all copies. This software is provided "as is" without express or implied
+//  warranty, and with no claim as to its suitability for any purpose.
+//  Copyright Toon Knapen
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -47,9 +53,19 @@ struct gemm_matrix_matrix_matrix
 int main (int argc, char *argv []) 
 {
   int runs = 10 ; // 10000000 ;
+  int stop  = 10 ; // 10000 ;
+
+  switch ( argc ) {
+  case 3:
+    stop = atoi( argv[2] ) ;
+  case 2:
+    runs = atoi( argv[1] ) ;
+  case 1:
+  default: {}
+  }
+
   int start = 1 ;
   int step  = 50 ;
-  int stop  = 10 ; // 10000 ;
 
   std::cerr << "\npeak float\n";
   peak<float> () ( runs );

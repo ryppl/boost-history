@@ -9,7 +9,7 @@ namespace boost { namespace numeric { namespace bindings { namespace lapack {
   template < typename T >
   struct traits
   {
-    typedef typename value_traits< T >::value_type bind_type ;
+    typedef typename ::boost::numeric::bindings::traits::value_traits< T >::value_type bind_type ;
 
     typedef void (*getrf_type)(int* m, int* n, bind_type* a, int* lda, int* ipiv, int* info) ;
     typedef void (*getrs_type)(char* trans, int *n, int* nrhs, bind_type* a, int* lda, int* ipiv, bind_type* b, int* ldb, int* info);

@@ -16,10 +16,27 @@
  *
  */
 
-#ifndef BOOST_NUMERIC_BINDINGS_TRAITS_BOOST_ARRAY_H
-#define BOOST_NUMERIC_BINDINGS_TRAITS_BOOST_ARRAY_H
+#ifndef BOOST_NUMERIC_CBLAS_STORAGE_ORDERING_HPP
+#define BOOST_NUMERIC_CBLAS_STORAGE_ORDERING_HPP
 
 #include <boost/numeric/bindings/traits/traits.hpp>
-#include <boost/array.hpp>
+#include <boost/numeric/bindings/cblas/cblas_inc.h>
+
+namespace boost { namespace numeric { namespace bindings { 
+
+  namespace cblas {
+
+    template <typename O>
+    struct storage_order {};
+    template<> struct storage_order<traits::row_major_t> {
+      enum { value = CblasRowMajor };
+    };
+    template<> struct storage_order<traits::column_major_t> {
+      enum { value = CblasColMajor };
+    };
+
+  }
+
+}}}
 
 #endif 

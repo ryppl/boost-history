@@ -1,2 +1,3 @@
 project-root ;
-subinclude libs/numeric/ublas ;
+subinclude libs/numeric/bindings/blas ;
+subinclude libs/numeric/bindings/lapack ;

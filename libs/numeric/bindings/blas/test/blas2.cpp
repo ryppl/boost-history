@@ -1,3 +1,9 @@
+//  Permission to copy, use, modify, sell and
+//  distribute this software is granted provided this copyright notice appears
+//  in all copies. This software is provided "as is" without express or implied
+//  warranty, and with no claim as to its suitability for any purpose.
+//  Copyright Toon Knapen
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -14,15 +20,10 @@ void test_gemv(std::ostream& os, int runs, int runs_i, int size, int size_i, cha
 {
   typedef typename VectorType::value_type value_type ;
 
-  std::cout << a << std::endl;
-  std::cout << x << std::endl;
-  std::cout << y_native << std::endl;
-  std::cout << y_toblas << std::endl;
-
   boost::timer t ;
-  if ( c == boost::numeric::bindings::NO_TRANSPOSE )    for(int i = 0 ; i < runs_i ; ++i ) y_native += alpha * numerics::prod( a, x) ;
-  else if ( c == boost::numeric::bindings::TRANSPOSE )  for(int i = 0 ; i < runs_i ; ++i ) y_native += alpha * numerics::prod( trans(a), x) ;
-  else if ( c == boost::numeric::bindings::CONJUGATE )  for(int i = 0 ; i < runs_i ; ++i ) y_native += alpha * numerics::prod( herm(a), x) ;
+  if ( c == boost::numeric::bindings::traits::NO_TRANSPOSE )    for(int i = 0 ; i < runs_i ; ++i ) y_native += alpha * numerics::prod( a, x) ;
+  else if ( c == boost::numeric::bindings::traits::TRANSPOSE )  for(int i = 0 ; i < runs_i ; ++i ) y_native += alpha * numerics::prod( trans(a), x) ;
+  else if ( c == boost::numeric::bindings::traits::CONJUGATE )  for(int i = 0 ; i < runs_i ; ++i ) y_native += alpha * numerics::prod( herm(a), x) ;
   else assert( 0 ) ;
   
   report< value_type >( os, runs, runs_i, size_i, t.elapsed() );
@@ -51,7 +52,7 @@ struct gemv_matrix_vector_vector
     numerics::vector< T > y_native( x ) ;
     numerics::vector< T > y_toblas( x ) ;
       
-    test_gemv( os, runs, runs_i, size, size_i, boost::numeric::bindings::NO_TRANSPOSE, alpha, beta, a, x, y_native, y_toblas );
+    test_gemv( os, runs, runs_i, size, size_i, boost::numeric::bindings::traits::NO_TRANSPOSE, alpha, beta, a, x, y_native, y_toblas );
   }
 };
 
@@ -71,7 +72,7 @@ struct gemv_trans_matrix_vector_vector
     numerics::vector< T > y_native( x ) ;
     numerics::vector< T > y_toblas( x ) ;
       
-    test_gemv( os, runs, runs_i, size, size_i, boost::numeric::bindings::TRANSPOSE, alpha, beta, a, x, y_native, y_toblas );
+    test_gemv( os, runs, runs_i, size, size_i, boost::numeric::bindings::traits::TRANSPOSE, alpha, beta, a, x, y_native, y_toblas );
   }
 };
 
@@ -91,7 +92,7 @@ struct gemv_conj_matrix_vector_vector
     numerics::vector< T > y_native( x ) ;
     numerics::vector< T > y_toblas( x ) ;
       
-    test_gemv( os, runs, runs_i, size, size_i, boost::numeric::bindings::CONJUGATE, alpha, beta, a, x, y_native, y_toblas );
+    test_gemv( os, runs, runs_i, size, size_i, boost::numeric::bindings::traits::CONJUGATE, alpha, beta, a, x, y_native, y_toblas );
   }
 };
 
@@ -114,16 +115,26 @@ struct gemv_matrix_range_vector_vector
     numerics::vector< T > y_native( x ) ;
     numerics::vector< T > y_toblas( x ) ;
       
-    test_gemv( os, runs, runs_i, size, size_i, boost::numeric::bindings::NO_TRANSPOSE, alpha, beta, mr, x, y_native, y_toblas );
+    test_gemv( os, runs, runs_i, size, size_i, boost::numeric::bindings::traits::NO_TRANSPOSE, alpha, beta, mr, x, y_native, y_toblas );
   }
 };
 
 int main (int argc, char *argv []) 
 {
   int runs = 1 ; // 10000000 ;
+  int stop  = 10 ; // 10000 ;
+
+  switch ( argc ) {
+  case 3:
+    stop = atoi( argv[2] ) ;
+  case 2:
+    runs = atoi( argv[1] ) ;
+  case 1:
+  default: {}
+  }
+
   int start = 1 ;
   int step  = 50 ;
-  int stop  = 10 ; // 10000 ;
 
   std::cerr << "\npeak float\n";
   peak<float> () ( runs );

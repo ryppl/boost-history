@@ -7,15 +7,16 @@
 #include <boost/numeric/bindings/traits/traits.hpp>
 
 namespace boost { namespace numeric { namespace bindings { namespace blas {
-  
+
+  // x <- alpha * x
   template < typename vector_type >
-  void scal(const typename vector_traits<vector_type>::value_type &alpha, 
+  void scal(const typename traits::vector_traits<vector_type>::value_type &alpha, 
 	    vector_type &x
 	    )
   {
-    typedef vector_traits< vector_type > vtraits ; 
+    typedef traits::vector_traits< vector_type > vtraits ; 
     typedef typename vtraits::value_type value_type ;
-    typedef typename value_traits< value_type >::value_type bind_type ;
+    typedef typename traits::value_traits< value_type >::value_type bind_type ;
 
     const int n =  vtraits::size( x ) ;
     const int stride = vtraits::stride( x ) ;
@@ -28,16 +29,17 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
   }
 
 
+  // y <- alpha * x + y
   template < typename vector_type_x, typename vector_type_y >
-  void axpy(const typename vector_traits<vector_type_x>::value_type alpha,
+  void axpy(const typename traits::vector_traits<vector_type_x>::value_type alpha,
 	    const vector_type_x &x, 
 	    vector_type_y &y
 	    )
   { 
-    typedef vector_traits< const vector_type_x > xvtraits ; 
-    typedef vector_traits< vector_type_y > yvtraits ; 
+    typedef traits::vector_traits< const vector_type_x > xvtraits ; 
+    typedef traits::vector_traits< vector_type_y > yvtraits ; 
     typedef typename xvtraits::value_type  value_type ;
-    typedef typename value_traits< value_type >::value_type bind_type ;
+    typedef typename traits::value_traits< value_type >::value_type bind_type ;
 
     const int n = xvtraits::size( x ) ;
     assert( n == yvtraits::size( y ) ) ;
@@ -54,14 +56,15 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
   }
 
 
+  // dot <- x^T * y  (real vectors)
   template < typename vector_type_x, typename vector_type_y >
-  typename vector_traits< vector_type_x >::value_type 
+  typename traits::vector_traits< vector_type_x >::value_type 
   dot(const vector_type_x &x, const vector_type_y &y)
   {
-    typedef vector_traits< const vector_type_x > xvtraits ; 
-    typedef vector_traits< const vector_type_y > yvtraits ; 
+    typedef traits::vector_traits< const vector_type_x > xvtraits ; 
+    typedef traits::vector_traits< const vector_type_y > yvtraits ; 
     typedef typename xvtraits::value_type  value_type ;
-    typedef typename value_traits< value_type >::value_type bind_type ;
+    typedef typename traits::value_traits< value_type >::value_type bind_type ;
 
     const int n = xvtraits::size( x ) ;
     assert( n == yvtraits::size( y ) ) ;
@@ -76,14 +79,15 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
 				    ) ;
   }
 
+  // dotu <- x^T * y  (complex vectors)
   template < typename vector_type_x, typename vector_type_y >
-  typename vector_traits< vector_type_x >::value_type 
+  typename traits::vector_traits< vector_type_x >::value_type 
   dotu(const vector_type_x &x, const vector_type_y &y)
   {
-    typedef vector_traits< const vector_type_x > xvtraits ; 
-    typedef vector_traits< const vector_type_y > yvtraits ; 
+    typedef traits::vector_traits< const vector_type_x > xvtraits ; 
+    typedef traits::vector_traits< const vector_type_y > yvtraits ; 
     typedef typename xvtraits::value_type  value_type ;
-    typedef typename value_traits< value_type >::value_type bind_type ;
+    typedef typename traits::value_traits< value_type >::value_type bind_type ;
 
     const int n = xvtraits::size( x ) ;
     assert( n == yvtraits::size( y ) ) ;
@@ -101,14 +105,15 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
     return ret;
   }
 
+  // dotc <- x^H * y  (complex vectors) 
   template < typename vector_type_x, typename vector_type_y >
-  typename vector_traits< vector_type_x >::value_type 
+  typename traits::vector_traits< vector_type_x >::value_type 
   dotc(const vector_type_x &x, const vector_type_y &y)
   {
-    typedef vector_traits< const vector_type_x > xvtraits ; 
-    typedef vector_traits< const vector_type_y > yvtraits ; 
+    typedef traits::vector_traits< const vector_type_x > xvtraits ; 
+    typedef traits::vector_traits< const vector_type_y > yvtraits ; 
     typedef typename xvtraits::value_type  value_type ;
-    typedef typename value_traits< value_type >::value_type bind_type ;
+    typedef typename traits::value_traits< value_type >::value_type bind_type ;
 
     const int n = xvtraits::size( x ) ;
     assert( n == yvtraits::size( y ) ) ;
@@ -126,13 +131,16 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
     return ret ;
   }
 
+
+  // nrm2 <- ||x||_2
+  // .. for now works only with real vectors
   template < typename vector_type >
-  typename vector_traits< vector_type >::value_type 
+  typename traits::vector_traits< vector_type >::value_type 
   nrm2(const vector_type &x) 
   {
-    typedef vector_traits< const vector_type > vtraits ; 
+    typedef traits::vector_traits< const vector_type > vtraits ; 
     typedef typename vtraits::value_type  value_type ;
-    typedef typename value_traits< value_type >::value_type bind_type ;
+    typedef typename traits::value_traits< value_type >::value_type bind_type ;
 
     const int n = vtraits::size( x ) ;
     const int stride_x = vtraits::stride( x ) ;
@@ -142,13 +150,16 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
       blas< value_type >::nrm2( &n, (const bind_type*)x_ptr, &stride_x ) ;
   }
 
+
+  // asum <- ||x||_1
+  // .. for now works only with real vectors
   template < typename vector_type >
-  typename vector_traits< vector_type >::value_type 
+  typename traits::vector_traits< vector_type >::value_type 
   asum(const vector_type &x) 
   {
-    typedef vector_traits< const vector_type > vtraits ; 
+    typedef traits::vector_traits< const vector_type > vtraits ; 
     typedef typename vtraits::value_type  value_type ;
-    typedef typename value_traits< value_type >::value_type bind_type ;
+    typedef typename traits::value_traits< value_type >::value_type bind_type ;
 
     const int n = vtraits::size( x ) ;
     const int stride_x = vtraits::stride( x ) ;

@@ -19,7 +19,7 @@
 #include <complex>
 #include <float.h>
 
-namespace boost { namespace numeric { namespace bindings {
+namespace boost { namespace numeric { namespace bindings { namespace traits {
 
   enum ValueTag { REAL, COMPLEX } ;
 
@@ -74,6 +74,6 @@ namespace boost { namespace numeric { namespace bindings {
     value_type tolerance_ ;
   };
 
-}}}
+}}}}
 
 #endif // femtown_valuetraits_hpp
