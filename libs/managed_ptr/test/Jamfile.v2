@@ -1,0 +1,18 @@
+import testing ;
+
+project manged_ptr_test
+        : requirements <hardcode-dll-paths>true <toolset>intel_linux
+        : default-build debug
+        ;
+{
+    test-suite "managed_ptr"
+        : [ run smart_ptr_test.cpp 
+            ../../io/filters/src/mout.cpp
+            ../../../../libs/test/build//boost_unit_test_framework
+          ]
+        ;
+    
+}
+    
+
+    
