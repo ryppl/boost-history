@@ -6,6 +6,7 @@
 #  include <fstream> // std::ifstream
 #  include <stack>   // std::stack
 #  include <cctype>  // std::isspace
+#  include <string>  // std::string
 
    // filestream -- implement a character stream from a file
    // *  provide a putback buffer independant of the std::ifstream implementation

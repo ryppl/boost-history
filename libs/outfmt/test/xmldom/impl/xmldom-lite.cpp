@@ -172,7 +172,7 @@
                                        indent( os );
 
                   bool                 iof = true; // indent-on-first
-                  long                 n   = 1;
+                  size_type            n   = 1;
                   for( iterator i = begin(); i != end(); ++i, ++n )
                   {
                      bool              pre  = single ? false : iof;

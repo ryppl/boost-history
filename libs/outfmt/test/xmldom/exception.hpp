@@ -5,8 +5,6 @@
 #  include "exception.hpp" // xmldom::exception
 #  include <string>
 
-   // define BOOST_XMLDOMLITE_DUMP_TOKENSTREAM: dumps the token stream to std::cout
-
    namespace xmldom
    {
       class exception

@@ -140,7 +140,7 @@
       {
          bool                          quit = false;
          char                          ch   = 0;
-         while( ch = getch())
+         while(( ch = getch()))
          {
             switch( ptok )
             {
