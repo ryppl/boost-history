@@ -1,10 +1,11 @@
 <?
 
 include_once( "common.php" );
+include_once( "boost.php" );
 
 echo bareHtmlHeader( "Container Algortihms" );
 
-echo pictureAndName();
+echo pictureAndName( "Container Algorithms" );
 echo overviewLinks(); echo hr();
 echo introduction();  echo hr();
 echo synopsis();      echo hr();
@@ -17,7 +18,6 @@ echo htmlFooter();
 // implementation
 //////////////////////////////////////////////////////////////////////////////
 //
-// pictureAndName();
 // overviewLinks(); 
 // introduction();  
 // synopsis();      
@@ -28,27 +28,17 @@ echo htmlFooter();
 // synopsLink();
 // portLink();
 // refLink();
-// beginSection( $title );
 // iteratorRangeLink();
 // functionList(); 
 //
 
-
-function pictureAndName()
-{
-    return table( tr( td( noScaleImg( "cboost.gif" ) ) . 
-                      td( h1( "Iterator Range Algorithms" ) ) ) );
-}
-
-
-
 function overviewLinks()
 {
     $list = "";
-    $list .= li( aLocal( introLink(),  introLink() ) ) . 
-             li( aLocal( synopsLink(), synopsLink() ) ) .
-             li( aLocal( portLink(),   portLink() ) ) .
-             li( aLocal( refLink(),    refLink() ) ); 
+    $list .= item( introLink() ) . 
+             item( synopsLink() ) .
+             item( portLink() ) .
+             item( refLink() ); 
     return ulist( $list );
 }
 
@@ -160,39 +150,9 @@ function references()
 
 
 
-function introLink()
-{
-    return "Introduction";
-}
 
 
 
-function synopsLink()
-{
-    return "Synopsis";
-}
-
-
-
-function portLink()
-{
-    return "Portability";
-}
-
-
-
-function refLink()
-{
-    return "References";
-}
-
-
-
-function beginSection( $title )
-{
-    return h2( $title ) . aTarget( $title );
-}
-   
 
 
 function iteratorRangeLink()
