@@ -1,14 +1,12 @@
-//
-// Copyright (C) 2000,2001,2002 Si-Lab b.v.b.a.
+//  Permission to copy, use, modify, sell and
+//  distribute this software is granted provided this copyright notice appears
+//  in all copies. This software is provided "as is" without express or implied
+//  warranty, and with no claim as to its suitability for any purpose.
+//  Copyright (C) 2000,2001,2002 Si-Lab b.v.b.a.
 // 
-// License is hereby granted to use and modify this software 
-// as long as this copyright notice is retained and modifications
-// are clearly marked.
-// This License does not permit you to redistribute this software.
-// 
-//
-#ifndef blaspp_hpp
-#define blaspp_hpp
+
+#ifndef boost_numeric_bindings_blas_blaspp_hpp
+#define boost_numeric_bindings_blas_blaspp_hpp
 
 #ifndef __cplusplus
 #error "include directly blas_h"
@@ -58,4 +56,4 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
 
 }}}}
 
-#endif // blaspp_hpp
+#endif // boost_numeric_bindings_blas_blaspp_hpp

@@ -1,12 +1,8 @@
-//
-// Copyright (C) 2000,2001,2002 Si-Lab b.v.b.a.
-// 
-// License is hereby granted to use and modify this software 
-// as long as this copyright notice is retained and modifications
-// are clearly marked.
-// This License does not permit you to redistribute this software.
-// 
-//
+//  Permission to copy, use, modify, sell and
+//  distribute this software is granted provided this copyright notice appears
+//  in all copies. This software is provided "as is" without express or implied
+//  warranty, and with no claim as to its suitability for any purpose.
+//  Copyright (C) 2002 Si-Lab b.v.b.a.
 
 #ifndef femtown_valuetraits_hpp
 #define femtown_valuetraits_hpp

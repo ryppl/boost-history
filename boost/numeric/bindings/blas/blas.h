@@ -1,17 +1,14 @@
-/*
- * Copyright (C) 2000,2001 Si-Lab b.v.b.a.
- * 
- * License is hereby granted to use and modify this software 
- * as long as this copyright notice is retained and modifications
- * are clearly marked.
- * This License does not permit you to redistribute this software.
- * 
- */
-#ifndef blas_h
-#define blas_h
+//  Permission to copy, use, modify, sell and
+//  distribute this software is granted provided this copyright notice appears
+//  in all copies. This software is provided "as is" without express or implied
+//  warranty, and with no claim as to its suitability for any purpose.
+//  Copyright (C) 2002 Si-Lab b.v.b.a.
+
+#ifndef boost_numeric_bindings_blas_blas_h
+#define boost_numeric_bindings_blas_blas_h
 
 #ifdef __cplusplus
-#ifndef blaspp_hpp
+#ifndef boost_numeric_bindings_blas_blaspp_hpp
 #error "include blaspp.hpp instead"
 #endif
 #endif
@@ -184,4 +181,4 @@ extern "C"
   void   BLAS_ZGEMM(const char *transa, const char *transb, const int *m, const int *n, const int *k, const dcomplex *alpha, const dcomplex *a, const int *lda, const dcomplex *b, const int *ldb, const dcomplex *beta, dcomplex *c, const int *ldc);
 }
 
-#endif // blas_h
+#endif // boost_numeric_bindings_blas_blas_h

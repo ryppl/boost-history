@@ -21,11 +21,17 @@ ublas_matrix.hpp.
 <h3>Amos</h3>
 
 <h3>Blas</h3>
-The blas-bindings are split up per blas-level.
+First the blas-bindings are split in plain C-bindings for blas
+and next higher-level bindings. The C-bindings are direct matches
+on the fortran signature. The C++ bindings however also change the 
+signature (e.g. return value not as extra parameter, ...)
 
 <h3>cblas</h3>
 
 <h3>LAPACK</h3>
+Uses a traits class to map the functions for the different value_type's. This
+is possible for all calls for which the signature does not change for the different
+value_type's.
 
 <br><br><br>Copyright Toon Knapen
 </body>

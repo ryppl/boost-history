@@ -1,5 +1,11 @@
-#ifndef BOOST_BLASBINDINGS_BLAS3_HPP
-#define BOOST_BLASBINDINGS_BLAS3_HPP
+//  Permission to copy, use, modify, sell and
+//  distribute this software is granted provided this copyright notice appears
+//  in all copies. This software is provided "as is" without express or implied
+//  warranty, and with no claim as to its suitability for any purpose.
+//  Copyright Toon Knapen and Kresimir Fresl
+
+#ifndef BOOST_BINDINGS_BLAS_BLAS3_HPP
+#define BOOST_BINDINGS_BLAS_BLAS3_HPP
 
 #include <boost/numeric/bindings/blas/blaspp.hpp>
 #include <boost/numeric/bindings/traits/traits.hpp>
@@ -88,4 +94,4 @@ namespace boost { namespace numeric { namespace bindings { namespace blas {
 
 }}}}
 
-#endif // BOOST_BLASBINDINGS_BLAS3_HPP
+#endif // BOOST_BINDINGS_BLAS_BLAS3_HPP
