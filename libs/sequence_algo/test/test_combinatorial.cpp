@@ -36,6 +36,7 @@
 #include <sstream>      // ostringstream
 #include <functional>   // greater<>
 #include <stdexcept>
+#include <cstring>      // strncmp
 using namespace std;
 
 #ifdef __MWERKS__
@@ -162,7 +163,8 @@ inline string invalid_permutation_msg(unsigned n, const T& seq, int r)
 	return invalid_sequence_msg("permutation", n, seq, r);
 }
 
-// valid_r_permutation --------------------------------------------------//
+
+// valid_next_r_permutation --------------------------------------------------//
 
 template<class ForwardIterator>
 bool valid_next_r_permutation(ForwardIterator first,
@@ -423,13 +425,22 @@ void test_next_r_permutation(T& seq, int r)
 	sort(seq.begin(), seq.end());
     T checkseq = seq;
 	unsigned count = 0;
-	do {
-	    ++count;
-	    if (!valid_next_r_permutation(seq.begin(), seq.begin() + r, count == 1))
-	    {
-	        BOOST_ERROR(invalid_permutation_msg(count, seq, r).c_str());
-	    }
-	} while(next_r_permutation(seq.begin(), seq.begin() + r, seq.end()));
+    try {
+        do {
+            ++count;
+            if (!valid_next_r_permutation(seq.begin(), seq.begin() + r, count == 1))
+            {
+                BOOST_ERROR(invalid_permutation_msg(count, seq, r).c_str());
+            }
+        } while(next_r_permutation(seq.begin(), seq.begin() + r, seq.end()));
+    }
+    catch(exception& oops)
+    {
+        if (strncmp(oops.what(), "next_r_permutation", 18) != 0)
+            throw;
+        BOOST_ERROR(oops.what());
+        return;
+    }   // catch
 
     const unsigned long perm_cnt = factorial(seq.size(), r);
 	if (count != perm_cnt)
@@ -460,15 +471,24 @@ void test_next_r_permutation_comp(T& seq, int r)
 	sort(seq.begin(), seq.end(), greater<U>());
 	T checkseq = seq;
 	unsigned count = 0;
-	do {
-	    ++count;
-	    if (!valid_next_r_permutation(seq.begin(), seq.begin() + r,
-	        greater<U>(), count == 1))
-	    {
-	        BOOST_ERROR(invalid_permutation_msg(count, seq, r).c_str());
-	    }
-	} while(next_r_permutation(seq.begin(), seq.begin() + r, seq.end(),
-	    greater<U>()));
+    try {
+        do {
+            ++count;
+            if (!valid_next_r_permutation(seq.begin(), seq.begin() + r,
+                greater<U>(), count == 1))
+            {
+                BOOST_ERROR(invalid_permutation_msg(count, seq, r).c_str());
+            }
+        } while(next_r_permutation(seq.begin(), seq.begin() + r, seq.end(),
+            greater<U>()));
+    }   // try
+    catch(exception& oops)
+    {
+        if (strncmp(oops.what(), "next_r_permutation", 18) != 0)
+            throw;
+        BOOST_ERROR(oops.what());
+        return;
+    }   // catch
 
     const unsigned long perm_cnt = factorial(seq.size(), r);
 	if (count != perm_cnt)
@@ -496,14 +516,23 @@ void test_prev_r_permutation(T& seq, int r)
     typedef typename T::value_type U;
 	sort(seq.begin(), seq.end(), greater<U>());
 	T checkseq = seq;
-	unsigned count = 0;
-	do {
-	    ++count;
-	    if (!valid_prev_r_permutation(seq.begin(), seq.begin() + r, count == 1))
-	    {
-	        BOOST_ERROR(invalid_permutation_msg(count, seq, r).c_str());
-	    }
-	} while(prev_r_permutation(seq.begin(), seq.begin() + r, seq.end()));
+    unsigned count = 0;
+    try {
+        do {
+            ++count;
+            if (!valid_prev_r_permutation(seq.begin(), seq.begin() + r, count == 1))
+            {
+                BOOST_ERROR(invalid_permutation_msg(count, seq, r).c_str());
+            }
+        } while(prev_r_permutation(seq.begin(), seq.begin() + r, seq.end()));
+    }   // try
+    catch(exception& oops)
+    {
+        if (strncmp(oops.what(), "prev_r_permutation", 18) != 0)
+            throw;
+        BOOST_ERROR(oops.what());
+        return;
+    }   // catch
 
     const unsigned long perm_cnt = factorial(seq.size(), r);
 	if (count != perm_cnt)
@@ -532,15 +561,24 @@ void test_prev_r_permutation_comp(T& seq, int r)
 	sort(seq.begin(), seq.end());
 	T checkseq = seq;
 	unsigned count = 0;
-	do {
-	    ++count;
-	    if (!valid_prev_r_permutation(seq.begin(), seq.begin() + r,
-	        greater<U>(), count == 1))
-	    {
-	        BOOST_ERROR(invalid_permutation_msg(count, seq, r).c_str());
-	    }
-	} while(prev_r_permutation(seq.begin(), seq.begin() + r, seq.end(),
-	    greater<U>()));
+    try {
+        do {
+            ++count;
+            if (!valid_prev_r_permutation(seq.begin(), seq.begin() + r,
+                greater<U>(), count == 1))
+            {
+                BOOST_ERROR(invalid_permutation_msg(count, seq, r).c_str());
+            }
+        } while(prev_r_permutation(seq.begin(), seq.begin() + r, seq.end(),
+            greater<U>()));
+    }   // try
+    catch(exception& oops)
+    {
+        if (strncmp(oops.what(), "prev_r_permutation", 18) != 0)
+            throw;
+        BOOST_ERROR(oops.what());
+        return;
+    }   // catch
 
     const unsigned long perm_cnt = factorial(seq.size(), r);
 	if (count != perm_cnt)
@@ -568,11 +606,21 @@ void test_next_r_combination(T& seq, int r)
 	sort(seq.begin(), seq.end());
 	T checkseq = seq;
 	unsigned count = 0;
-	do {
-        ++count;
-	    if (!valid_next_r_combination(seq.begin(), seq.begin() + r, count == 1))
-        	BOOST_ERROR(invalid_combination_msg(count, seq, r).c_str());
-	} while(next_r_combination(seq.begin(), seq.begin() + r, seq.end()));
+    try {
+        do {
+            ++count;
+            if (!valid_next_r_combination(seq.begin(), seq.begin() + r, count == 1))
+                BOOST_ERROR(invalid_combination_msg(count, seq, r).c_str());
+        } while(next_r_combination(seq.begin(), seq.begin() + r, seq.end()));
+    }   // try
+    catch(exception& oops)
+    {
+        if (strncmp(oops.what(), "next_r_combination", 18) != 0)
+            throw;
+        BOOST_ERROR(oops.what());
+        return;
+    }   // catch
+
 
     const unsigned long comb_cnt = factorial(seq.size(), r) / factorial(r);
 	if (count != comb_cnt)
@@ -601,13 +649,23 @@ void test_next_r_combination_comp(T& seq, int r)
 	sort(seq.begin(), seq.end(), greater<U>());
 	T checkseq = seq;
 	unsigned count = 0;
-	do {
-        ++count;
-	    if (!valid_next_r_combination(seq.begin(), seq.begin() + r,
-	        greater<U>(), count == 1))
-        	BOOST_ERROR(invalid_combination_msg(count, seq, r).c_str());
-	} while(next_r_combination(seq.begin(), seq.begin() + r, seq.end(),
-	    greater<U>()));
+    try {
+        do {
+            ++count;
+            if (!valid_next_r_combination(seq.begin(), seq.begin() + r,
+                greater<U>(), count == 1))
+                BOOST_ERROR(invalid_combination_msg(count, seq, r).c_str());
+        } while(next_r_combination(seq.begin(), seq.begin() + r, seq.end(),
+            greater<U>()));
+    }   // try
+    catch(exception& oops)
+    {
+        if (strncmp(oops.what(), "next_r_combination", 18) != 0)
+            throw;
+        BOOST_ERROR(oops.what());
+        return;
+    }   // catch
+
 
     const unsigned long comb_cnt = factorial(seq.size(), r) / factorial(r);
 	if (count != comb_cnt)
@@ -636,11 +694,20 @@ void test_prev_r_combination(T& seq, int r)
 	rotate(seq.begin(), seq.end() - r, seq.end());
 	T checkseq = seq;
 	unsigned count = 0;
-	do {
-        ++count;
-	    if (!valid_prev_r_combination(seq.begin(), seq.begin() + r, count == 1))
-        	BOOST_ERROR(invalid_combination_msg(count, seq, r).c_str());
-	} while(prev_r_combination(seq.begin(), seq.begin() + r, seq.end()));
+    try {
+        do {
+            ++count;
+            if (!valid_prev_r_combination(seq.begin(), seq.begin() + r, count == 1))
+                BOOST_ERROR(invalid_combination_msg(count, seq, r).c_str());
+        } while(prev_r_combination(seq.begin(), seq.begin() + r, seq.end()));
+    }   // try
+    catch(exception& oops)
+    {
+        if (strncmp(oops.what(), "prev_r_combination", 18) != 0)
+            throw;
+        BOOST_ERROR(oops.what());
+        return;
+    }   // catch
 
     const unsigned long comb_cnt = factorial(seq.size(), r) / factorial(r);
 	if (count != comb_cnt)
@@ -670,13 +737,23 @@ void test_prev_r_combination_comp(T& seq, int r)
 	rotate(seq.begin(), seq.end() - r, seq.end());
 	T checkseq = seq;
 	unsigned count = 0;
-	do {
-        ++count;
-	    if (!valid_prev_r_combination(seq.begin(), seq.begin() + r,
-	        greater<U>(), count == 1))
-        	BOOST_ERROR(invalid_combination_msg(count, seq, r).c_str());
-	} while(prev_r_combination(seq.begin(), seq.begin() + r, seq.end(),
-	    greater<U>()));
+    try {
+        do {
+            ++count;
+            if (!valid_prev_r_combination(seq.begin(), seq.begin() + r,
+                greater<U>(), count == 1))
+                BOOST_ERROR(invalid_combination_msg(count, seq, r).c_str());
+        } while(prev_r_combination(seq.begin(), seq.begin() + r, seq.end(),
+            greater<U>()));
+    }   // try
+    catch(exception& oops)
+    {
+        if (strncmp(oops.what(), "prev_r_combination", 18) != 0)
+            throw;
+        BOOST_ERROR(oops.what());
+        return;
+    }   // catch
+
 
     const unsigned long comb_cnt = factorial(seq.size(), r) / factorial(r);
 	if (count != comb_cnt)
@@ -718,21 +795,26 @@ int test_main(int argc, char* argv[])
     test_largest_less(nums);
 
     // test permutation and combination functions --------------------->>
-    // Repeat tests for r equal to 0 through the size of the container.
-    for(int r = 0; r <= nums.size(); r++)
+    // Repeat for various container sizes
+    for (int s = 0; s < DIM(theNumerals); s++)
     {
-        test_next_r_permutation(nums, r);
-        test_next_r_permutation_comp(nums, r);
+        vector<char> nums2(theNumerals, theNumerals + s);
+        // repeat tests for r equal to 1 through the size of the container.
+        for(int r = 1; r <= nums2.size(); r++)
+        {
+            test_next_r_permutation(nums2, r);
+            test_next_r_permutation_comp(nums2, r);
 
-        test_prev_r_permutation(nums, r);
-        test_prev_r_permutation_comp(nums, r);
+            test_prev_r_permutation(nums2, r);
+            test_prev_r_permutation_comp(nums2, r);
 
-        test_next_r_combination(nums, r);
-        test_next_r_combination_comp(nums, r);
+            test_next_r_combination(nums2, r);
+            test_next_r_combination_comp(nums2, r);
 
-        test_prev_r_combination(nums, r);
-        test_prev_r_combination_comp(nums, r);
-	}	// for
+            test_prev_r_combination(nums2, r);
+            test_prev_r_combination_comp(nums2, r);
+	    }	// for
+    }   // for
 
     cout << "\nTest of rcombo.hpp is complete." << endl;
 

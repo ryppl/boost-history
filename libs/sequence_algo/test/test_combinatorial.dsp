@@ -91,11 +91,11 @@ SOURCE=..\..\..\..\boost_1_27_0\boost\test\cpp_main.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\boost_1_27_0\boost\test\test_main.cpp
+SOURCE=.\test_combinatorial.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\test_combinatorial.cpp
+SOURCE=..\..\..\..\boost_1_27_0\boost\test\test_main.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
