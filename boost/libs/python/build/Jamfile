@@ -74,7 +74,7 @@ rule boost-python-test1
     # the python-file name followed by the subvariant path of the first module
     # being tested
     MakeLocate $(tests[1])
-     : [ join-path $(LOCATE_TARGET) $(<:B:S=) $(subvariant-path) ] ;
+     : [ join-path $(LOCATE_TARGET) $(BIN_DIRECTORY) $(<:B:S=) $(subvariant-path) ] ;
             
     DEPENDS $(tests) : $(<) $(>) ;
 
