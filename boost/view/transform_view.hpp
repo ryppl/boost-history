@@ -1,5 +1,5 @@
 
-// Copyright (C) 2001,2002 Roland Richter (roland@flll.jku.at)
+// Copyright (C) 2001-2003 Roland Richter <roland@flll.jku.at>
 // Permission to copy, use, modify, sell and distribute this software
 // is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
@@ -28,20 +28,7 @@ namespace boost {
 template< class ContainerT, class FunctionT >
 class transform_view
 {
-public:
-  /// The view's own type (i.e. transform_view<...>).
-  typedef transform_view< ContainerT, FunctionT > self_type;
-  
-  // HACK: 'overwrite' traits data_type
-  //typedef typename FunctionT::result_type data_type;
-  // gcc-2.95.2 bug?
-  // value_type is defined here (inherited from adapted_iterator_traits),
-  // but gcc doesn't know it and gives a syntax error with front() and back()
-
-  /// The type of the elements accessed through the view.
-  //typedef typename FunctionT::result_type value_type;
-  
-  
+private:
   typedef traits::adapted_iterator_traits<
              boost::transform_iterator_generator<
                FunctionT, typename ownership::wrap<ContainerT>::domain::iterator >::type,
@@ -54,7 +41,14 @@ public:
              typename traits::index_data_traits< typename ownership::wrap<ContainerT>::domain >::index_type,
              typename FunctionT::result_type
            > cont_traits;          
-           
+
+public:
+  /// The view's own type (i.e. transform_view<...>).
+  typedef transform_view< ContainerT, FunctionT > self_type;
+  
+  /// The type of the underlying container.
+  typedef ownership::wrap<ContainerT>::domain domain_type;
+
   /// @name The traits types visible to the public.
   //@{           
   typedef typename iter_traits::value_type       value_type;
@@ -75,7 +69,7 @@ public:
   //@}
 
   /// Creates a view of container \c theData transformed by the function \c theF.
-  explicit transform_view( const ContainerT& theData, const FunctionT& theF = FunctionT() )
+  explicit transform_view( const domain_type& theData, const FunctionT& theF = FunctionT() )
     : data( theData ), f( theF )
   { }
 
@@ -88,7 +82,7 @@ public:
   ~transform_view()
   { }
 
- /// Returns true iff the view's size is 0.
+  /// Returns true iff the view's size is 0.
   bool      empty() const { return data->empty(); }
 
   /// Returns the size of the view.
@@ -139,3 +133,4 @@ private:
 } // namespace boost
 
 #endif
+
