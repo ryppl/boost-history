@@ -7,6 +7,62 @@
 #  include <boost/fixed_string/fixed_string.hpp>
 #  include <string.h>
 
+#  if defined(__BORLANDC__) && defined(strcpy) // replace Borland instrinsic string function
+#     undef strcpy
+      inline char *                              strcpy( char * dest, const char * src )
+      {
+         return( __strcpy__( dest, src ));
+      }
+#  endif
+
+#  if defined(__BORLANDC__) && defined(strcat) // replace Borland instrinsic string function
+#     undef strcat
+      inline char *                              strcat( char * dest, const char * src )
+      {
+         return( __strcat__( dest, src ));
+      }
+#  endif
+
+#  if defined(__BORLANDC__) && defined(strlen) // replace Borland instrinsic string function
+#     undef strlen
+      inline size_t                              strlen( const char * s )
+      {
+         return( __strlen__( s ));
+      }
+#  endif
+
+#  if defined(__BORLANDC__) && defined(strcmp) // replace Borland instrinsic string function
+#     undef strcmp
+      inline int                                 strcmp( const char * s1, const char * s2 )
+      {
+         return( __strcmp__( s1, s2 ));
+      }
+#  endif
+
+#  if defined(__BORLANDC__) && defined(strncpy) // replace Borland instrinsic string function
+#     undef strncpy
+      inline char *                              strncpy( char * dest, const char * src, size_t n )
+      {
+         return( __strncpy__( dest, src, n ));
+      }
+#  endif
+
+#  if defined(__BORLANDC__) && defined(strncat) // replace Borland instrinsic string function
+#     undef strncat
+      inline char *                              strncat( char * dest, const char * src, size_t n )
+      {
+         return( __strncat__( dest, src, n ));
+      }
+#  endif
+
+#  if defined(__BORLANDC__) && defined(strncmp) // replace Borland instrinsic string function
+#     undef strncmp
+      inline int                                 strncmp( const char * s1, const char * s2, size_t n )
+      {
+         return( __strncmp__( s1, s2, n ));
+      }
+#  endif
+
    // string.h functions
 
    inline char *                                 strcpy( boost::char_string & d, const char * s )
