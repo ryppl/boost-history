@@ -55,6 +55,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     typedef typename detail::ublas_ordering<
       typename F::orientation_category
     >::type ordering_type; 
+    typedef F layout_type;
 
     typedef T value_type; 
 
@@ -69,8 +70,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     BOOST_STATIC_CONSTANT (std::size_t, index_base = IB);
 
     static index_pointer index1_storage (matrix_type& cm) {
-      if ( cm.filled1()<=ordering_type::size1(cm.size1(), cm.size2()) )
-         std::fill( cm.index1_data().begin()+cm.filled1(), cm.index1_data().begin()+ordering_type::size1(cm.size1(), cm.size2())+1, cm.filled2() ) ;
+      assert (cm.filled1() == layout_type::size1 (cm.size1(), cm.size2()) + 1);
       return vector_traits<idx_array_t>::storage (cm.index1_data()); 
     }
     static index_pointer index2_storage (matrix_type& cm) {
