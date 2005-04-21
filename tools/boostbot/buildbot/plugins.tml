@@ -1,0 +1,6 @@
+#!/usr/bin/python
+register("BuildBot master/slave TAP builder",
+        "buildbot.bb_tap",
+        description="Create/modify a BuildBot master or slave",
+        type="tap",
+        tapname="buildbot")
