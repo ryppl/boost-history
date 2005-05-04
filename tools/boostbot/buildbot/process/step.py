@@ -1,4 +1,4 @@
-#! /usr/bin/python
+# -*- test-case-name: buildbot.test.test_steps -*-
 
 import time, random, types, re, warnings
 from email.Utils import formatdate
@@ -11,32 +11,55 @@ from twisted.web.util import formatFailure
 
 from buildbot.util import now
 from buildbot.status import progress, builder
-from buildbot.status.builder import SUCCESS, WARNINGS, FAILURE, SKIPPED
+from buildbot.status.builder import SUCCESS, WARNINGS, FAILURE, SKIPPED, \
+     EXCEPTION
+
+"""
+BuildStep and RemoteCommand classes for master-side representation of the
+build process
+"""
 
 class RemoteCommand(pb.Referenceable):
+    """
+    I represent a single command to be run on the slave. I handle the details
+    of reliably gathering status updates from the slave (acknowledging each),
+    and (eventually, in a future release) recovering from interrupted builds.
+    This is the master-side object that is known to the slave-side
+    L{buildbot.slave.bot.SlaveBuilder}, to which status update are sent.
 
-    """This base class represents a single command to be run on the slave. It
-    handles the details of reliably gathering status updates from the slave
-    (acknowledging each), and (eventually) recovering from interrupted
-    builds.
-
-    The command should be started by calling .run(), which returns a Deferred
-    that will fire when the command has finished, or will errback if an
-    exception is raised. Typically __init__ or run() will set up
-    self.remote_command to be a string which corresponds to one of the
-    SlaveCommands registered in the buildslave, and self.args to a dictionary
-    of arguments that will be passed to the SlaveCommand instance.
+    My command should be started by calling .run(), which returns a
+    Deferred that will fire when the command has finished, or will
+    errback if an exception is raised.
+    
+    Typically __init__ or run() will set up self.remote_command to be a
+    string which corresponds to one of the SlaveCommands registered in
+    the buildslave, and self.args to a dictionary of arguments that will
+    be passed to the SlaveCommand instance.
 
     start, remoteUpdate, and remoteComplete are available to be overridden
 
+    @type  commandCounter: list of one int
+    @cvar  commandCounter: provides a unique value for each
+                           RemoteCommand executed across all slaves
+    @type  active:         boolean
+    @cvar  active:         whether the command is currently running
     """
-
-    # this counter provides a unique value for each RemoteCommand executed
-    # across all slaves. It is a class attribute.
-    commandCounter = [0]
+    commandCounter = [0] # we use a list as a poor man's singleton
     active = False
 
     def __init__(self, remote_command, args):
+        """
+        @type  remote_command: string
+        @param remote_command: remote command to start.  This will be
+                               passed to
+                               L{buildbot.slave.bot.SlaveBuilder.remote_startCommand}
+                               and needs to have been registered
+                               slave-side by
+                               L{buildbot.slave.registry.registerSlaveCommand}
+        @type  args:           dict
+        @param args:           arguments to send to the remote command
+        """
+
         self.remote_command = remote_command
         self.args = args
 
@@ -74,6 +97,14 @@ class RemoteCommand(pb.Referenceable):
         return self.deferred
 
     def start(self):
+        """
+        Tell the slave to start executing the remote command.
+
+        @rtype:   L{twisted.internet.defer.Deferred}
+        @returns: a deferred that will fire when the remote command is
+                  done (with None as the result)
+        """
+        # This method only initiates the remote command.
         # We will receive remote_update messages as the command runs.
         # We will get a single remote_complete when it finishes.
         # We should fire self.deferred when the command is done.
@@ -115,6 +146,13 @@ class RemoteCommand(pb.Referenceable):
         return None
 
     def remote_update(self, updates):
+        """
+        I am called by the slave's L{buildbot.slave.bot.SlaveBuilder} so
+        I can receive updates from the running remote command.
+
+        @type  updates: list of [object, int]
+        @param updates: list of updates from the remote command
+        """
         max_updatenum = 0
         for (update, num) in updates:
             #log.msg("update[%d]:" % num)
@@ -134,6 +172,14 @@ class RemoteCommand(pb.Referenceable):
         raise NotImplementedError("You must implement this in a subclass")
 
     def remote_complete(self, failure=None):
+        """
+        Called by the slave's L{buildbot.slave.bot.SlaveBuilder} to
+        notify me the remote command has finished.
+
+        @type  failure: L{twisted.python.failure.Failure} or None
+
+        @rtype: None
+        """
         # call the real remoteComplete a moment later, but first return an
         # acknowledgement so the slave can retire the completion message.
         if self.active:
@@ -151,6 +197,8 @@ class RemoteCommand(pb.Referenceable):
         # arrange for the callback to get this RemoteCommand instance
         # instead of just None
         d.addCallback(lambda r: self)
+        # this fires the original deferred we returned from .run(),
+        # with self as the result, or a failure
         d.addBoth(self.deferred.callback)
 
     def remoteComplete(self, maybeFailure):
@@ -160,32 +208,32 @@ class RemoteCommand(pb.Referenceable):
         will be None if the command completed normally, or a Failure
         instance in one of the following situations:
 
-        #  the slave was lost before the command was started
-        #  the slave didn't respond to the startCommand message
-        #  the slave raised an exception while starting the command
-        #   (bad command name, bad args, OSError from missing executable)
-        #  the slave raised an exception while finishing the command
-        #   (they send back a remote_complete message with a Failure payload)
-        # and also (for now):
-        #  slave disconnected while the command was running
+         - the slave was lost before the command was started
+         - the slave didn't respond to the startCommand message
+         - the slave raised an exception while starting the command
+           (bad command name, bad args, OSError from missing executable)
+         - the slave raised an exception while finishing the command
+           (they send back a remote_complete message with a Failure payload)
+
+        and also (for now):
+         -  slave disconnected while the command was running
         
         This method should do cleanup, like closing log files. It should
         normally return the 'failure' argument, so that any exceptions will
         be propagated to the Step. If it wants to consume them, return None
         instead."""
 
-        return failure
+        return maybeFailure
 
 class LoggedRemoteCommand(RemoteCommand):
-    """This is a RemoteCommand which expects the slave to send back
-    stdout/stderr/rc updates. It gathers these updates into a
-    builder.LogFile named self.log . You can give it a LogFile to use by
-    calling useLog(), or it will create its own when the command is started.
-    Unless you tell it otherwise, it will close the log when the command is
-    complete.
-
-    The constructor takes an 'args' parameter which is a dictionary of
-    arguments to send to the remote command."""
+    """
+    I am a L{RemoteCommand} which expects the slave to send back
+    stdout/stderr/rc updates. I gather these updates into a
+    L{buildbot.status.builder.LogFile} named C{self.log}. You can give me a
+    LogFile to use by calling useLog(), or I will create my own when the
+    command is started. Unless you tell me otherwise, I will close the log
+    when the command is complete.
+    """
 
     log = None
     closeWhenFinished = False
@@ -237,40 +285,56 @@ class RemoteShellCommand(LoggedRemoteCommand):
     """This class helps you run a shell command on the build slave. It will
     accumulate all the command's output into a Log. When the command is
     finished, it will fire a Deferred. You can then check the results of the
-    command and parse the output however you like.
-
-    @param workdir: the directory where the command ought to run, relative to
-    the Builder's home directory. If missing or 'None', it will default to
-    '.': the same as the Builder's homedir. This should probably be '.' for
-    the initial 'cvs checkout' command (which creates a workdir), and the
-    workdir for all subsequent commands (including compiles and 'cvs
-    update').
-
-    @param command: the shell command to run, like 'make all' or 'cvs
-    update'. This should be a list or tuple which can be used directly as the
-    argv array. For backwards compatibility, if this is a string, the text
-    will be given to '/bin/sh -c %s'.
-
-    @param env: a dict of environment variables to add or change, or None
-    to leave the slave's environment alone. Each command gets a separate
-    environment; all inherit the slave's initial one.
-    TODO: make it possible to delete some or all of the slave's environment.
-
-    @param want_stdout: defaults to 1. Set to 0 if stdout should be thrown
-    away. Do this to avoid storing or sending large amounts of useless data.
-
-    @param want_stderr: Set to 0 if stderr should be thrown away.
-
-    @param timeout: tell the remote that if the command fails to produce any
-    output for this number of seconds, the command is hung and should be
-    killed. Use None to disable the timeout.
-
-    """
+    command and parse the output however you like."""
 
     def __init__(self, workdir, command, env=None, 
                  want_stdout=1, want_stderr=1,
                  timeout=20*60, **kwargs):
+        """
+        @type  workdir: string
+        @param workdir: directory where the command ought to run,
+                        relative to the Builder's home directory. Defaults to
+                        '.': the same as the Builder's homedir. This should
+                        probably be '.' for the initial 'cvs checkout'
+                        command (which creates a workdir), and the Build-wide
+                        workdir for all subsequent commands (including
+                        compiles and 'cvs update').
+
+        @type  command: list of strings (or string)
+        @param command: the shell command to run, like 'make all' or
+                        'cvs update'. This should be a list or tuple
+                        which can be used directly as the argv array.
+                        For backwards compatibility, if this is a
+                        string, the text will be given to '/bin/sh -c
+                        %s'.
+
+        @type  env:     dict of string->string
+        @param env:     environment variables to add or change for the
+                        slave.  Each command gets a separate
+                        environment; all inherit the slave's initial
+                        one.  TODO: make it possible to delete some or
+                        all of the slave's environment.
+
+        @type  want_stdout: bool
+        @param want_stdout: defaults to True. Set to False if stdout should
+                            be thrown away. Do this to avoid storing or
+                            sending large amounts of useless data.
+
+        @type  want_stderr: bool
+        @param want_stderr: False if stderr should be thrown away
+
+        @type  timeout: int
+        @param timeout: tell the remote that if the command fails to
+                        produce any output for this number of seconds,
+                        the command is hung and should be killed. Use
+                        None to disable the timeout.
+        """
         self.command = command # stash .command, set it later
+        if env is not None:
+            # avoid mutating the original master.cfg dictionary. Each
+            # ShellCommand gets its own copy, any start() methods won't be
+            # able to modify the original.
+            env = env.copy()
         args = {'workdir': workdir,
                 'env': env,
                 'want_stdout': want_stdout,
@@ -294,15 +358,16 @@ class RemoteShellCommand(LoggedRemoteCommand):
     def __repr__(self):
         return "<RemoteShellCommand '%s'>" % self.command
 
-
-
 class BuildStep:
-    """This class represents a single step of the build process. This step
-    may involve multiple commands to be run in the build slave, as well as
-    arbitrary processing on the master side.
+    """
+    I represent a single step of the build process. This step may involve
+    zero or more commands to be run in the build slave, as well as arbitrary
+    processing on the master side. Regardless of how many slave commands are
+    run, the BuildStep will result in a single status value.
 
     The step is started by calling startStep(), which returns a Deferred that
-    fires when the step finishes.
+    fires when the step finishes. See C{startStep} for a description of the
+    results provided by that Deferred.
 
     __init__ and start are good methods to override. Don't forget to upcall
     BuildStep.__init__ or bad things will happen.
@@ -310,20 +375,22 @@ class BuildStep:
     To launch a RemoteCommand, pass it to .runCommand and wait on the
     Deferred it returns.
 
-    Each BuildStep has a collection of output status. These will all be put
-    into the 'step_status' (a BuildStepStatus instance). 'results' is also
-    passed to the first callback of the Deferred that is returned by
-    .startStep():
+    Each BuildStep generates status as it runs. This status data is fed to
+    the L{buildbot.status.builder.BuildStepStatus} listener that sits in
+    C{self.step_status}. It can also feed progress data (like how much text
+    is output by a shell command) to the
+    L{buildbot.status.progress.StepProgress} object that lives in
+    C{self.progress}, by calling C{progress.setProgress(metric, value)} as it
+    runs.
 
-     results: this is one of SUCCESS/WARNINGS/FAILURE/SKIPPED
-     progress: a StepProgress instance, which tracks ETA
-     logs={}: a set of named status.builder.LogFile objects, holding text
-     color: a string indicating the color that this step feels best
-            represents its current mood. yellow,green,red,orange are the
-            most likely choices, although purple indicates an exception
-     text=[]: short text strings that describe the command and its status
-     text2=[]: short text that is added to the overall build description
+    @type build: L{buildbot.process.base.Build}
+    @ivar build: the parent Build which is executing this step
 
+    @type progress: L{buildbot.status.progress.StepProgress}
+    @ivar progress: tracks ETA for the step
+
+    @type step_status: L{buildbot.status.builder.BuildStepStatus}
+    @ivar step_status: collects output status
     """
 
     # these parameters are used by the parent Build object to decide how to
@@ -375,15 +442,29 @@ class BuildStep:
         return None
 
     def startStep(self, remote):
-        """Begin the step. This returns a Deferred that will fire with a
-        constant of: SUCCESS, WARNINGS, FAILURE, SKIPPED. Any other status
-        can be read out of our attributes.
+        """Begin the step. This returns a Deferred that will fire when the
+        step finishes.
 
-        'status' is a BuildStepStatus object to which I will send status
-        updates. 'progress' is a StepProgress object: I will call
-        progress.setProgress(metric, value) as I work. 'remote' is a
-        RemoteReference to a buildslave that will execute any RemoteCommands
-        I want to run."""
+        This deferred fires with a tuple of (result, [extra text]), although
+        older steps used to return just the 'result' value, so the receiving
+        L{base.Build} needs to be prepared to handle that too. C{result} is
+        one of the SUCCESS/WARNINGS/FAILURE/SKIPPED constants from
+        L{buildbot.status.builder}, and the extra text is a list of short
+        strings which should be appended to the Build's text results. This
+        text allows a test-case step which fails to append B{17 tests} to the
+        Build's status, in addition to marking the build as failing.
+
+        The deferred will errback if the step encounters an exception,
+        including an exception on the slave side (or if the slave goes away
+        altogether). Failures in shell commands (rc!=0) will B{not} cause an
+        errback, in general the BuildStep will evaluate the results and
+        decide whether to treat it as a WARNING or FAILURE.
+
+        @type remote: L{twisted.spread.pb.RemoteReference}
+        @param remote: a reference to the slave's
+                       L{buildbot.slave.bot.SlaveBuilder} instance where any
+                       RemoteCommands may be run
+        """
 
         self.remote = remote
         self.deferred = defer.Deferred()
@@ -400,39 +481,40 @@ class BuildStep:
         return self.deferred
 
     def start(self):
-        """Begin the step. Add code here to do local processing, fire off
-        remote commands, etc.
+        """Begin the step. Override this method and add code to do local
+        processing, fire off remote commands, etc.
 
         To spawn a command in the buildslave, create a RemoteCommand instance
-        and run it with self.runCommand:
+        and run it with self.runCommand::
 
-         c = RemoteCommandFoo(args)
-         d = self.runCommand(c)
-         d.addCallback(self.fooDone).addErrback(self.failed)
+          c = RemoteCommandFoo(args)
+          d = self.runCommand(c)
+          d.addCallback(self.fooDone).addErrback(self.failed)
 
         As the step runs, it should send status information to the
-        BuildStepStatus.
+        BuildStepStatus::
 
-         self.step_status.setColor('red')
-         self.step_status.setText(['compile', 'failed'])
-         self.step_status.setText2(['4', 'warnings'])
+          self.step_status.setColor('red')
+          self.step_status.setText(['compile', 'failed'])
+          self.step_status.setText2(['4', 'warnings'])
 
         To add a LogFile, use self.addLog. Make sure it gets closed when it
         finishes. When giving a Logfile to a RemoteShellCommand, just ask it
-        to close the log when the command completes:
+        to close the log when the command completes::
 
-         log = self.addLog('output')
-         cmd = RemoteShellCommand
-         cmd.useLog(log, closeWhenFinished=True)
+          log = self.addLog('output')
+          cmd = RemoteShellCommand(args)
+          cmd.useLog(log, closeWhenFinished=True)
 
         You can also create complete Logfiles with generated text in a single
-        step:
+        step::
 
-         self.addCompleteLog('warnings', text)
+          self.addCompleteLog('warnings', text)
 
         When the step is done, it should call self.finished(result). 'result'
-        will be provided to the BuildProcess, and should one of the constants
-        defined above: SUCCESS, WARNINGS, FAILURE, or SKIPPED.
+        will be provided to the L{buildbot.process.base.Build}, and should be
+        one of the constants defined above: SUCCESS, WARNINGS, FAILURE, or
+        SKIPPED.
 
         If the step encounters an exception, it should call self.failed(why).
         'why' should be a Failure object. This automatically fails the whole
@@ -473,10 +555,10 @@ class BuildStep:
             self.addHTMLLog("err.html", formatFailure(why))
             self.addCompleteLog("err.text", why.getTraceback())
             # could use why.getDetailedTraceback() for more information
-            self.step_status.setColor("#c000c0")
+            self.step_status.setColor("purple")
             self.step_status.setText([self.name, "exception"])
             self.step_status.setText2([self.name])
-            self.step_status.stepFinished(FAILURE)
+            self.step_status.stepFinished(EXCEPTION)
         except:
             log.msg("exception during failure processing")
             log.err()
@@ -484,7 +566,7 @@ class BuildStep:
             # think that it is still running), but the build overall will now
             # finish
         log.msg("BuildStep.failed now firing callback")
-        self.deferred.callback(FAILURE)
+        self.deferred.callback(EXCEPTION)
 
     # utility methods that BuildSteps may find useful
 
@@ -513,7 +595,7 @@ class BuildStep:
 class ShellCommand(BuildStep):
     """I run a single shell command on the buildslave. I return FAILURE if
     the exit code of that command is non-zero, SUCCESS otherwise. To change
-    this behavior, override my .commandFinished method.
+    this behavior, override my .evaluateCommand method.
 
     I create a single Log named 'log' which contains the output of the
     command. To create additional summary Logs, override my .createSummary
@@ -521,12 +603,9 @@ class ShellCommand(BuildStep):
 
     The shell command I run (a list of argv strings) can be provided in
     several ways:
-
-     a class-level .command attribute
-
-     a command= parameter to my constructor (overrides .command)
-
-     set explicitly with my .setCommand() method (overrides both)
+      - a class-level .command attribute
+      - a command= parameter to my constructor (overrides .command)
+      - set explicitly with my .setCommand() method (overrides both)
 
     """
 
@@ -554,16 +633,21 @@ class ShellCommand(BuildStep):
         self.cmd.command = command
 
     def describe(self, done=False):
-        """Return a list of short strings to describe this step. This uses
-        the first few words of the shell command. You can replace this by
-        setting .description in your subclass, or by overriding this method
-        to describe the step better.
+        """Return a list of short strings to describe this step, for the
+        status display. This uses the first few words of the shell command.
+        You can replace this by setting .description in your subclass, or by
+        overriding this method to describe the step better.
 
-        done=False is used to describe the step while it is running, so a
-        single imperfect-tense verb is appropriate ('compiling', 'testing',
-        etc). done=True is used when the step has finished, and the default
-        getText() method adds some text, so a noun is appropriate
-        ('compile', 'tests', etc)."""
+        @type  done: boolean
+        @param done: whether the command is complete or not, to improve the
+                     way the command is described. C{done=False} is used
+                     while the command is still running, so a single
+                     imperfect-tense verb is appropriate ('compiling',
+                     'testing', ...) C{done=True} is used when the command
+                     has finished, and the default getText() method adds some
+                     text, so a simple noun is appropriate ('compile',
+                     'tests' ...)
+        """
 
         if done and self.descriptionDone is not None:
             return self.descriptionDone
@@ -582,6 +666,18 @@ class ShellCommand(BuildStep):
         return ["'%s" % words[0], "%s" % words[1], "...'"]
 
     def start(self, errorMessage=None):
+        # merge in anything from Build.slaveEnvironment . Earlier steps
+        # (perhaps ones which compile libraries or sub-projects that need to
+        # be referenced by later steps) can add keys to
+        # self.build.slaveEnvironment to affect later steps.
+        slaveEnv = self.build.slaveEnvironment
+        if slaveEnv:
+            if self.cmd.args['env'] is None:
+                self.cmd.args['env'] = {}
+            self.cmd.args['env'].update(slaveEnv)
+            # note that each RemoteShellCommand gets its own copy of the
+            # dictionary, so we shouldn't be affecting anyone but ourselves.
+
         self.step_status.setColor("yellow")
         self.step_status.setText(self.describe(False))
         loog = self.addLog("log")
@@ -747,61 +843,6 @@ class Source(ShellCommand):
     startVC(). The class as a whole builds up the self.args dictionary, then
     starts a LoggedRemoteCommand with those arguments.
 
-    @param workdir: a string giving the local directory (relative to the
-    Builder's root) where the tree should be placed.
-
-    @param mode: a string describing the kind of VC operation that is
-    desired.
-
-     'update' specifies that the checkout/update should be performed
-     directly into the workdir. Each build is performed in the same
-     directory, allowing for incremental builds. This minimizes disk space,
-     bandwidth, and CPU time. However, it may encounter problems if the
-     build process does not handle dependencies properly (if you must
-     sometimes do a 'clean build' to make sure everything gets compiled), or
-     if source files are deleted but generated files can influence test
-     behavior (e.g. python's .pyc files), or when source directories are
-     deleted but generated files prevent CVS from removing them.
-
-     'copy' specifies that the source-controlled workspace should be
-     maintained in a separate directory (called the 'copydir'), using
-     checkout or update as necessary. For each build, a new workdir is
-     created with a copy of the source tree (rm -rf workdir; cp -r copydir
-     workdir). This doubles the disk space required, but keeps the bandwidth
-     low (update instead of a full checkout). A full 'clean' build is
-     performed each time. This avoids any generated-file build problems, but
-     is still occasionally vulnerable to problems such as a CVS repository
-     being manually rearranged (causing CVS errors on update) which are not
-     an issue with a full checkout.
-
-     'clobber' specifes that the working directory should be deleted each
-     time, necessitating a full checkout for each build. This insures a
-     clean build off a complete checkout, avoiding any of the problems
-     described above, but is bandwidth intensive, as the whole source tree
-     must be pulled down for each build.
-
-     'export' is like 'clobber', except that e.g. the 'cvs export' command
-     is used to create the working directory. This command removes all VC
-     metadata files (the CVS/.svn/{arch} directories) from the tree, which
-     is sometimes useful for creating source tarballs (to avoid including
-     the metadata in the tar file). Not all VC systems support export.
-
-    @param alwaysUseLatest: normally the Source step asks its Build for a
-     list of all Changes that are supposed to go into the build, then
-     computes a 'source stamp' (revision number or timestamp) that will
-     cause exactly that set of changes to be present in the checked out
-     tree. This is turned into, e.g., 'cvs update -D timestamp', or 'svn
-     update -r revnum'. If alwaysUseLatest=True, bypass this computation and
-     always update to the latest available sources for each build.
-
-     The source stamp helps avoid a race condition in which someone commits
-     a change after the master has decided to start a build but before the
-     slave finishes checking out the sources. At best this results in a
-     build which contains more changes than the buildmaster thinks it has
-     (possibly resulting in the wrong person taking the blame for any
-     problems that result), at worst is can result in an incoherent set of
-     sources (splitting a non-atomic commit) which may not build at all.
-
     """
 
     # if the checkout fails, there's no point in doing anything else
@@ -810,6 +851,75 @@ class Source(ShellCommand):
 
     def __init__(self, workdir, mode='update', alwaysUseLatest=False,
                  timeout=20*60, **kwargs):
+        """
+        @type  workdir: string
+        @param workdir: local directory (relative to the Builder's root)
+                        where the tree should be placed
+
+        @type  mode: string
+        @param mode: the kind of VC operation that is desired:
+           - 'update': specifies that the checkout/update should be
+             performed directly into the workdir. Each build is performed
+             in the same directory, allowing for incremental builds. This
+             minimizes disk space, bandwidth, and CPU time. However, it
+             may encounter problems if the build process does not handle
+             dependencies properly (if you must sometimes do a 'clean
+             build' to make sure everything gets compiled), or if source
+             files are deleted but generated files can influence test
+             behavior (e.g. python's .pyc files), or when source
+             directories are deleted but generated files prevent CVS from
+             removing them.
+
+           - 'copy': specifies that the source-controlled workspace
+             should be maintained in a separate directory (called the
+             'copydir'), using checkout or update as necessary. For each
+             build, a new workdir is created with a copy of the source
+             tree (rm -rf workdir; cp -r copydir workdir). This doubles
+             the disk space required, but keeps the bandwidth low
+             (update instead of a full checkout). A full 'clean' build
+             is performed each time.  This avoids any generated-file
+             build problems, but is still occasionally vulnerable to
+             problems such as a CVS repository being manually rearranged
+             (causing CVS errors on update) which are not an issue with
+             a full checkout.
+
+           - 'clobber': specifies that the working directory should be
+             deleted each time, necessitating a full checkout for each
+             build. This insures a clean build off a complete checkout,
+             avoiding any of the problems described above, but is
+             bandwidth intensive, as the whole source tree must be
+             pulled down for each build.
+
+           - 'export': is like 'clobber', except that e.g. the 'cvs
+             export' command is used to create the working directory.
+             This command removes all VC metadata files (the
+             CVS/.svn/{arch} directories) from the tree, which is
+             sometimes useful for creating source tarballs (to avoid
+             including the metadata in the tar file). Not all VC systems
+             support export.
+
+        @type  alwaysUseLatest: boolean
+        @param alwaysUseLatest: whether to always update to the most
+        recent available sources for this build.
+
+        Normally the Source step asks its Build for a list of all
+        Changes that are supposed to go into the build, then computes a
+        'source stamp' (revision number or timestamp) that will cause
+        exactly that set of changes to be present in the checked out
+        tree. This is turned into, e.g., 'cvs update -D timestamp', or
+        'svn update -r revnum'. If alwaysUseLatest=True, bypass this
+        computation and always update to the latest available sources
+        for each build.
+
+        The source stamp helps avoid a race condition in which someone
+        commits a change after the master has decided to start a build
+        but before the slave finishes checking out the sources. At best
+        this results in a build which contains more changes than the
+        buildmaster thinks it has (possibly resulting in the wrong
+        person taking the blame for any problems that result), at worst
+        is can result in an incoherent set of sources (splitting a
+        non-atomic commit) which may not build at all.  """
+
         BuildStep.__init__(self, **kwargs)
         assert mode in ("update", "copy", "clobber", "export")
         self.args = {'mode': mode,
@@ -863,38 +973,6 @@ class Source(ShellCommand):
 class CVS(Source):
     """I do CVS checkout/update operations.
 
-    @param cvsroot (required): a string which describes the CVS Repository
-    from which the source tree should be obtained. '/home/warner/Repository'
-    for local or NFS-reachable repositories, ':pserver:anon@foo.com:/cvs'
-    for anonymous CVS, 'user@host.com:/cvs' for non-anonymous CVS or CVS
-    over ssh. Lots of possibilities, check the CVS documentation for more.
-
-    @param cvsmodule (required): a string giving the subdirectory of the CVS
-    repository that should be retrieved.
-
-    @param login: if not None, a string which will be provided as a password
-    to the 'cvs login' command, used when a :pserver: method is used to
-    access the repository. This login is only needed once, but must be run
-    each time (just before the CVS operation) because there is no way for
-    the buildslave to tell whether it was previously performed or not.
-
-    @param branch: a string to be used in a '-r' argument to specify which
-    named branch of the source tree should be used for this checkout.
-    Defaults to 'HEAD'.
-
-    @param checkoutDelay: if not None, the number of seconds to put between
-    the last known Change and the timestamp given to the -D argument. This
-    defaults to exactly half of the parent Build's .treeStableTimer, but it
-    could be set to something else if your CVS change notification has
-    particularly weird latency characteristics.
-
-    @param global_options=[]: these arguments are inserted in the cvs
-    command line, before the 'checkout'/'update' command word. See 'cvs
-    --help-options' for a list of what may be accepted here. ['-r'] will
-    make the checked out files read only. ['-r', '-R'] will also assume the
-    repository is read-only (I assume this means it won't use locks to
-    insure atomic access to the ,v files).
-
     Note: if you are doing anonymous/pserver CVS operations, you will need
     to manually do a 'cvs login' on each buildslave before the slave has any
     hope of success. XXX: fix then, take a cvs password as an argument and
@@ -919,6 +997,56 @@ class CVS(Source):
                  clobber=0, export=0, copydir=None,
                  **kwargs):
 
+        """
+        @type  cvsroot: string
+        @param cvsroot: CVS Repository from which the source tree should
+                        be obtained. '/home/warner/Repository' for local
+                        or NFS-reachable repositories,
+                        ':pserver:anon@foo.com:/cvs' for anonymous CVS,
+                        'user@host.com:/cvs' for non-anonymous CVS or
+                        CVS over ssh. Lots of possibilities, check the
+                        CVS documentation for more.
+
+        @type  cvsmodule: string
+        @param cvsmodule: subdirectory of CVS repository that should be
+                          retrieved
+
+        @type  login: string or None
+        @param login: if not None, a string which will be provided as a
+                      password to the 'cvs login' command, used when a
+                      :pserver: method is used to access the repository.
+                      This login is only needed once, but must be run
+                      each time (just before the CVS operation) because
+                      there is no way for the buildslave to tell whether
+                      it was previously performed or not.
+
+        @type  branch: string
+        @param branch: a string to be used in a '-r' argument to specify
+                       which named branch of the source tree should be
+                       used for this checkout.  Defaults to 'HEAD'.
+
+        @type  checkoutDelay: int or None
+        @param checkoutDelay: if not None, the number of seconds to put
+                              between the last known Change and the
+                              timestamp given to the -D argument. This
+                              defaults to exactly half of the parent
+                              Build's .treeStableTimer, but it could be
+                              set to something else if your CVS change
+                              notification has particularly weird
+                              latency characteristics.
+
+        @type  global_options: list of strings
+        @param global_options: these arguments are inserted in the cvs
+                               command line, before the
+                               'checkout'/'update' command word. See
+                               'cvs --help-options' for a list of what
+                               may be accepted here.  ['-r'] will make
+                               the checked out files read only. ['-r',
+                               '-R'] will also assume the repository is
+                               read-only (I assume this means it won't
+                               use locks to insure atomic access to the
+                               ,v files)."""
+                               
         self.checkoutDelay = checkoutDelay
 
         if not kwargs.has_key('mode') and (clobber or export or copydir):
@@ -978,17 +1106,19 @@ class CVS(Source):
 
 
 class SVN(Source):
-    """I perform Subversion checkout/update operations.
-
-    @param svnurl (required): the URL which points to the Subversion server.
-    This one string combines the access method (HTTP, ssh, local file), the
-    repository host/port, the repository path, the sub-tree within the
-    repository, and which branch to check out.
-    """
+    """I perform Subversion checkout/update operations."""
 
     name = 'svn'
 
     def __init__(self, svnurl, directory=None, **kwargs):
+        """
+        @type  svnurl: string
+        @param svnurl: the URL which points to the Subversion server,
+                       combining the access method (HTTP, ssh, local file),
+                       the repository host/port, the repository path,
+                       the sub-tree within the repository, and the branch
+                       to check out.
+        """
 
         if not kwargs.has_key('workdir') and directory is not None:
             # deal with old configs
@@ -1039,12 +1169,16 @@ class Darcs(Source):
     means the eXecute-bit will be cleared on all source files. As a result,
     you may need to invoke configuration scripts with something like:
 
-     s(step.Configure, command=['/bin/sh', './configure'])
+    C{s(step.Configure, command=['/bin/sh', './configure'])}
     """
 
     name = "darcs"
 
     def __init__(self, repourl, **kwargs):
+        """
+        @type  repourl: string
+        @param repourl: the URL which points at the Darcs repository
+        """
         assert kwargs['mode'] != "export", \
                "Darcs does not have an 'export' mode"
         Source.__init__(self, **kwargs)
@@ -1057,36 +1191,123 @@ class Darcs(Source):
         ShellCommand.start(self)
 
 class Arch(Source):
-    """Check out a source tree from an Arch repository at 'url'. 'version'
-    specifies which version number (development line) will be used for the
-    checkout: this is mostly equivalent to a branch name.
-    
-    This step will first register the archive, which requires a per-user
-    'archive name' to correspond to the URL from which the sources can be
-    fetched. The archive's default name will be used for this unless you
-    override it by setting the 'archive' parameter. You might want to do
-    this if, for some reason, you are hosting the archive on the same
-    machine (and in the same account) as the build slave, and you don't want
-    to confuse local access with remote access.
-
-    [forgive the confusion expressed in the previous paragraph, I'm still
-    trying to get my head around Arch.. -warner]
+    """Check out a source tree from an Arch repository named 'archive'
+    available at 'url'. 'version' specifies which version number (development
+    line) will be used for the checkout: this is mostly equivalent to a
+    branch name. This version uses the 'tla' tool to do the checkout, to use
+    'baz' see L{Bazaar} instead.
     """
 
     name = "arch"
 
     def __init__(self, url, version, archive=None, **kwargs):
+        """
+        @type  url: string
+        @param url: the Arch coordinates of the repository. This is
+                    typically an http:// URL, but could also be the absolute
+                    pathname of a local directory instead.
+
+        @type  version: string
+        @param version: the category--branch--version to check out
+
+        @type  archive: string
+        @param archive: The archive name. If provided, it must match the one
+                        that comes from the repository. If not, the
+                        repository's default will be used.
+        """
         Source.__init__(self, **kwargs)
         self.args.update({'url': url,
                           'version': version,
                           'archive': archive,
                           })
 
-    def startVC(self):
+    def checkSlaveVersion(self):
         slavever = self.slaveVersion("arch")
         assert slavever, "slave is too old, does not know about arch"
+        # slave 1.28 and later understand 'revision'
+        oldslave = False
+        try:
+            if slavever.startswith("1.") and int(slavever[2:]) < 28:
+                oldslave = True
+        except ValueError:
+            pass
+        if oldslave:
+            if not self.alwaysUseLatest:
+                log.msg("warning, slave is too old to use a revision")
+
+    def startVC(self):
+        self.checkSlaveVersion()
         self.cmd = LoggedRemoteCommand("arch", self.args)
         ShellCommand.start(self)
+
+    def computeSourceRevision(self, changes):
+        # in Arch, fully-qualified revision numbers look like:
+        #  arch@buildbot.sourceforge.net--2004/buildbot--dev--0--patch-104
+        # For any given builder, all of this is fixed except the patch-104.
+        # The Change might have any part of the fully-qualified string, so we
+        # just look for the last part. We return the "patch-NN" string.
+        if not changes:
+            return None
+        lastChange = None
+        for c in changes:
+            if not c.revision:
+                continue
+            if c.revision.endswith("--base-0"):
+                rev = 0
+            else:
+                i = c.revision.rindex("patch")
+                rev = int(c.revision[i+len("patch-"):])
+            lastChange = max(lastChange, rev)
+        if lastChange is None:
+            return None
+        if lastChange == 0:
+            return "base-0"
+        return "patch-%d" % lastChange
+
+class Bazaar(Arch):
+    """Bazaar is an alternative client for Arch repositories. baz is mostly
+    compatible with tla, but archive registration is slightly different."""
+
+
+    def __init__(self, url, version, archive, **kwargs):
+        """
+        @type  url: string
+        @param url: the Arch coordinates of the repository. This is
+                    typically an http:// URL, but could also be the absolute
+                    pathname of a local directory instead.
+
+        @type  version: string
+        @param version: the category--branch--version to check out
+
+        @type  archive: string
+        @param archive: The archive name (required). This must always match
+                        the one that comes from the repository, otherwise the
+                        buildslave will attempt to get sources from the wrong
+                        archive.
+        """
+        Source.__init__(self, **kwargs)
+        self.args.update({'url': url,
+                          'version': version,
+                          'archive': archive,
+                          })
+
+    def checkSlaveVersion(self):
+        slavever = self.slaveVersion("arch")
+        assert slavever, "slave is too old, does not know about arch"
+        # slave 1.28 and later understand baz
+        oldslave = False
+        try:
+            if slavever.startswith("1.") and int(slavever[2:]) < 28:
+                oldslave = True
+        except ValueError:
+            pass
+        assert not oldslave, "slave is too old, does not know about baz"
+
+    def startVC(self):
+        self.checkSlaveVersion()
+        self.cmd = LoggedRemoteCommand("bazaar", self.args)
+        ShellCommand.start(self)
+
 
 class todo_P4(Source):
     name = "p4"
@@ -1118,9 +1339,9 @@ class P4Sync(Source):
 
     Each slave needs the following environment:
 
-    PATH: the 'p4' binary must be on the slave's PATH
-    P4USER: each slave needs a distinct user account
-    P4CLIENT: each slave needs a distinct client specification
+     - PATH: the 'p4' binary must be on the slave's PATH
+     - P4USER: each slave needs a distinct user account
+     - P4CLIENT: each slave needs a distinct client specification
 
     You should use 'p4 client' (?) to set up a client view spec which maps
     the desired files into $SLAVEBASE/$BUILDERBASE/source .
@@ -1147,14 +1368,18 @@ class P4Sync(Source):
 
 
 class Dummy(BuildStep):
-    """I am a dummy no-op step that takes 5 seconds to complete.
-    @param timeout: the number of seconds to delay
+    """I am a dummy no-op step, which runs entirely on the master, and simply
+    waits 5 seconds before finishing with SUCCESS
     """
 
     haltOnFailure = True
     name = "dummy"
 
     def __init__(self, timeout=5, **kwargs):
+        """
+        @type  timeout: int
+        @param timeout: the number of seconds to delay before completing
+        """
         BuildStep.__init__(self, **kwargs)
         self.timeout = timeout
         self.timer = None
@@ -1177,9 +1402,8 @@ class Dummy(BuildStep):
         self.finished(SUCCESS)
 
 class FailingDummy(Dummy):
-    """I am a dummy step that raises an Exception after 5 seconds
-    @param timeout: the number of seconds to delay
-    """
+    """I am a dummy no-op step that 'runs' master-side and raises an
+    Exception after by default 5 seconds."""
 
     name = "failing dummy"
 
@@ -1197,18 +1421,21 @@ class FailingDummy(Dummy):
             f = Failure()
         self.failed(f)
 
+# subclasses from Shell Command to get the output reporting
 class RemoteDummy(ShellCommand):
-    """I am a dummy no-op step that runs on the remote side and takes 5
-    seconds to complete.
-
-    @param timeout: the number of seconds to delay
-    @param results: None
+    """I am a dummy no-op step that runs on the remote side and
+    simply waits 5 seconds before completing with success.
+    See L{buildbot.slave.commands.DummyCommand}
     """
 
     haltOnFailure = True
     name = "remote dummy"
 
     def __init__(self, timeout=5, **kwargs):
+        """
+        @type  timeout: int
+        @param timeout: the number of seconds to delay
+        """
         BuildStep.__init__(self, **kwargs)
         args = {'timeout': timeout}
         self.cmd = LoggedRemoteCommand("dummy", args)

@@ -1,4 +1,4 @@
-#! /usr/bin/python
+# -*- test-case-name: buildbot.test.test_util -*-
 
 from twisted.internet.defer import Deferred
 from twisted.python import log

@@ -1,4 +1,4 @@
-#! /usr/bin/python
+# -*- test-case-name: buildbot.test.test_run -*-
 
 from __future__ import generators
 import string, sys, os, time, warnings
@@ -52,16 +52,29 @@ class BotPerspective(NewCredPerspective):
         self.slave = None # a RemoteReference to the Bot, when connected
 
     def addBuilder(self, builder):
-        """Called to add a builder after the slave has connected."""
+        """Called to add a builder after the slave has connected.
+
+        @return: a Deferred that indicates when an attached slave has
+        accepted the new builder."""
+
         self.builders.append(builder)
         if self.slave:
-            self.sendBuilderList()
+            return self.sendBuilderList()
+        return defer.succeed(None)
 
     def removeBuilder(self, builder):
+        """Tell the slave that the given builder has been removed, allowing
+        it to discard the associated L{buildbot.slave.bot.SlaveBuilder}
+        object.
+
+        @return: a Deferred that fires when the slave has finished removing
+                 the SlaveBuilder
+        """
         self.builders.remove(builder)
         if self.slave:
             builder.detached()
-            self.sendBuilderList()
+            return self.sendBuilderList()
+        return defer.succeed(None)
 
     def __repr__(self):
         return "<BotPerspective '%s', builders: %s>" % \
@@ -69,9 +82,10 @@ class BotPerspective(NewCredPerspective):
                 string.join(map(lambda b: b.name, self.builders), ','))
 
     def attached(self, mind):
-        # this is called when the slave connects. It returns a Deferred that
-        # fires with a suitable pb.IPerspective to give to the slave (i.e.
-        # 'self')
+        """This is called when the slave connects.
+
+        @return: a Deferred that fires with a suitable pb.IPerspective to
+                 give to the slave (i.e. 'self')"""
 
         if self.slave:
             # uh-oh, we've got a duplicate slave. The most likely
@@ -91,10 +105,11 @@ class BotPerspective(NewCredPerspective):
             d.addCallback(lambda res: self._attached(mind))
             return d
 
-        self._attached(mind)
-        return defer.succeed(self)
+        return self._attached(mind)
 
     def disconnect(self):
+        if not self.slave:
+            return defer.succeed(None)
         log.msg("disconnecting old slave %s now" % self.slavename)
 
         # all kinds of teardown will happen as a result of
@@ -132,20 +147,25 @@ class BotPerspective(NewCredPerspective):
         return d
 
     def _attached(self, mind):
-        # We go through a sequence of calls, gathering information, then
-        # tell our Builders that they have a slave to work with.
+        """We go through a sequence of calls, gathering information, then
+        tell our Builders that they have a slave to work with.
+
+        @return: a Deferred that fires (with 'self') when our Builders are
+                 prepared to deal with the slave.
+        """
         self.slave = mind
-        self.slave.callRemote("print", "attached").addErrback(lambda why: 0)
+        d = self.slave.callRemote("print", "attached")
+        d.addErrback(lambda why: 0)
         self.slave_status.connected = True
         log.msg("bot attached")
 
         # TODO: there is a window here (while we're retrieving slaveinfo)
         # during which a disconnect or a duplicate-slave will be confusing
-        d = self.slave.callRemote("getSlaveInfo")
-        d.addCallback(self.got_info)
-        d.addErrback(self.infoUnavailable)
+        d.addCallback(lambda res: self.slave.callRemote("getSlaveInfo"))
+        d.addCallbacks(self.got_info, self.infoUnavailable)
         d.addCallback(self._attached2)
-        return self
+        d.addCallback(lambda res: self)
+        return d
 
     def got_info(self, info):
         log.msg("Got slaveinfo from '%s'" % self.slavename)
@@ -212,14 +232,17 @@ class BotPerspective(NewCredPerspective):
 
     def list_done(self, blist):
         # this could come back at weird times. be prepared to handle oddness
+        dl = []
         for name, remote in blist.items():
             for b in self.builders:
                 if b.name == name:
                     # if we sent the builders list because of a config
                     # change, the Builder might already be attached.
                     # Builder.attached will ignore us if this happens.
-                    b.attached(remote, self.slave_commands)
+                    d = b.attached(remote, self.slave_commands)
+                    dl.append(d)
                     continue
+        return defer.DeferredList(dl)
 
     def _listFailed(self, why):
         log.msg("BotPerspective._listFailed")
@@ -297,8 +320,9 @@ class BotMaster(service.Service):
         self.slaves[slavename] = slave
 
     def removeSlave(self, slavename):
-        d = self.slaves[slavename].disconnect
+        d = self.slaves[slavename].disconnect()
         del self.slaves[slavename]
+        return d
 
     def getBuildernames(self):
         return self.builderNames
@@ -307,7 +331,12 @@ class BotMaster(service.Service):
         """This is called by the setup code to define what builds should be
         performed. Each Builder object has a build slave that should host
         that build: the builds cannot be done until the right slave
-        connects."""
+        connects.
+
+        @return: a Deferred that fires when an attached slave has accepted
+                 the new builder.
+        """
+
         if self.debug: print "addBuilder", builder
         log.msg("Botmaster.addBuilder(%s)" % builder.name)
 
@@ -324,9 +353,15 @@ class BotMaster(service.Service):
         self.checkInactiveInterlocks() # TODO?: do this in caller instead?
 
         slave = self.slaves[slavename]
-        slave.addBuilder(builder)
+        return slave.addBuilder(builder)
 
     def removeBuilder(self, builder):
+        """Stop using a Builder.
+        This removes the Builder from the list of active Builders.
+
+        @return: a Deferred that fires when an attached slave has finished
+                 removing the SlaveBuilder
+        """
         if self.debug: print "removeBuilder", builder
         log.msg("Botmaster.removeBuilder(%s)" % builder.name)
         b = self.builders[builder.name]
@@ -346,7 +381,8 @@ class BotMaster(service.Service):
         self.builderNames.remove(builder.name)
         slave = self.slaves.get(builder.slavename)
         if slave:
-            slave.removeBuilder(builder)
+            return slave.removeBuilder(builder)
+        return defer.succeed(None)
 
     def addInterlock(self, interlock):
         """This is called by the setup code to create build interlocks:
@@ -488,6 +524,11 @@ class Dispatcher(styles.Versioned):
     def upgradeToVersion2(self):
         self.names = {}
 
+    def __getstate__(self):
+        state = styles.Versioned.__getstate__(self)
+        state['names'] = {}
+        return state
+
     def register(self, name, afactory):
         self.names[name] = afactory
     def unregister(self, name):
@@ -535,12 +576,13 @@ class Dispatcher(styles.Versioned):
 
 class BuildMaster(service.MultiService, styles.Versioned):
     debug = 0
-    persistenceVersion = 2
+    persistenceVersion = 3
     manhole = None
     debugPassword = None
     projectName = "(unspecified)"
     projectURL = None
     buildbotURL = None
+    change_svc = None
 
     def __init__(self, basedir, configFileName="master.cfg"):
         service.MultiService.__init__(self)
@@ -574,13 +616,20 @@ class BuildMaster(service.MultiService, styles.Versioned):
         self.statusTargets = []
 
         self.bots = []
-        self.sources = []
+        # this ChangeMaster is a dummy, only used by tests. In the real
+        # buildmaster, where the BuildMaster instance is created by mktap,
+        # this attribute is not saved in the buildbot.tap file.
+        self.useChanges(ChangeMaster())
 
         self.readConfig = False
 
     def __getstate__(self):
         state = service.MultiService.__getstate__(self)
         state = styles.Versioned.__getstate__(self, state)
+        if state.has_key('change_svc'):
+            del state['change_svc']
+        state['services'] = []
+        state['namedServices'] = {}
         return state
 
     def upgradeToVersion1(self):
@@ -592,6 +641,13 @@ class BuildMaster(service.MultiService, styles.Versioned):
         self.webDistribServer = self.webUNIXPort
         del self.webUNIXPort
         self.configFileName = "master.cfg"
+
+    def upgradeToVersion3(self):
+        # post 0.6.3, solely to deal with the 0.6.3 breakage. Starting with
+        # 0.6.5 I intend to do away with .tap files altogether
+        self.services = []
+        self.namedServices = {}
+        del self.change_svc
 
     def startService(self):
         service.MultiService.startService(self)
@@ -610,28 +666,36 @@ class BuildMaster(service.MultiService, styles.Versioned):
             b.builder_status.addPointEvent(["master", "started"])
             b.builder_status.saveYourself()
 
-    def loadChanges(self):
-        filename = os.path.join(self.basedir, "changes.pck")
-        try:
-            self.change_svc = pickle.load(open(filename, "r"))
-        except IOError:
-            log.msg("changes.pck missing, creating new one")
-            self.change_svc = ChangeMaster()
-        except EOFError:
-            log.msg("corrupted changes.pck, creating new one")
-            self.change_svc = ChangeMaster()
-
+    def useChanges(self, changes):
+        if self.change_svc:
+            # TODO: can return a Deferred
+            self.change_svc.disownServiceParent()
+        self.change_svc = changes
         self.change_svc.basedir = self.basedir
         self.change_svc.botmaster = self.botmaster
         self.change_svc.setName("changemaster")
-        self.change_svc.setServiceParent(self)
         self.dispatcher.changemaster = self.change_svc
+        self.change_svc.setServiceParent(self)
 
+    def loadChanges(self):
+        filename = os.path.join(self.basedir, "changes.pck")
+        try:
+            changes = pickle.load(open(filename, "r"))
+        except IOError:
+            log.msg("changes.pck missing, using new one")
+            changes = ChangeMaster()
+        except EOFError:
+            log.msg("corrupted changes.pck, using new one")
+            changes = ChangeMaster()
+        self.useChanges(changes)
 
     def _handleSIGHUP(self, *args):
         reactor.callLater(0, self.loadTheConfigFile)
 
     def getStatus(self):
+        """
+        @rtype: L{buildbot.status.builder.Status}
+        """
         return self.status
 
     def loadTheConfigFile(self, configFile=None):
@@ -657,6 +721,13 @@ class BuildMaster(service.MultiService, styles.Versioned):
         f.close()
 
     def loadConfig(self, f):
+        """Internal function to load a specific configuration file. Any
+        errors in the file will be signalled by raising an exception.
+
+        @return: a Deferred that will fire (with None) when the configuration
+        changes have been completed. This may involve a round-trip to each
+        buildslave that was involved."""
+
         localDict = {'basedir': os.path.expanduser(self.basedir)}
         try:
             exec f in localDict
@@ -671,10 +742,11 @@ class BuildMaster(service.MultiService, styles.Versioned):
             log.err("config file must define BuildmasterConfig")
             raise
 
-        known_keys = "bots sources builders slavePortnum irc " + \
-                     "webPortnum webPathname debugPassword manhole " + \
+        known_keys = "bots sources builders slavePortnum " + \
+                     "debugPassword manhole " + \
                      "interlocks status projectName projectURL buildbotURL"
-        known_keys = known_keys.split()
+        deprecated_keys = "webPortnum webPathname irc"
+        known_keys = (known_keys + " " + deprecated_keys).split()
         for k in config.keys():
             if k not in known_keys:
                 log.msg("unknown key '%s' defined in config dictionary" % k)
@@ -725,15 +797,36 @@ class BuildMaster(service.MultiService, styles.Versioned):
             raise TypeError, "webPortnum '%s' must be an int" % webPortnum
         for s in status:
             assert interfaces.IStatusReceiver(s)
-        if 0: # tuple-specified builders are a problem
-            slavenames = [name for name,pw in bots]
-            for b in builders:
-                if b['slavename'] not in slavenames:
-                    raise ValueError("builder %s uses undefined slave %s" \
-                                     % (b['name'], b['slavename']))
+
+        slavenames = [name for name,pw in bots]
+        buildernames = []
+        dirnames = []
+        for b in builders:
+            if type(b) is tuple:
+                warnings.warn("defining builder %s with a tuple is deprecated"
+                              ", please use a dict instead" % b[0],
+                              DeprecationWarning)
+                continue
+            if type(b) is tuple:
+                raise ValueError("builder %s must be defined with a dict, "
+                                 "not a tuple" % b[0])
+            if b['slavename'] not in slavenames:
+                raise ValueError("builder %s uses undefined slave %s" \
+                                 % (b['name'], b['slavename']))
+            if b['name'] in buildernames:
+                raise ValueError("duplicate builder name %s"
+                                 % b['name'])
+            buildernames.append(b['name'])
+            if b['builddir'] in dirnames:
+                raise ValueError("builder %s reuses builddir %s"
+                                 % (b['name'], b['builddir']))
+            dirnames.append(b['builddir'])
 
         # now we're committed to implementing the new configuration, so do
         # it atomically
+
+        # asynchronous updates can add a Deferred to this list
+        dl = []
 
         self.projectName = projectName
         self.projectURL = projectURL
@@ -742,7 +835,7 @@ class BuildMaster(service.MultiService, styles.Versioned):
         # self.bots: Disconnect any that were attached and removed from the
         # list. Update self.checker with the new list of passwords,
         # including debug/change/status.
-        self.loadConfig_Slaves(bots)
+        dl.append(self.loadConfig_Slaves(bots))
 
         # self.debugPassword
         if debugPassword:
@@ -757,25 +850,28 @@ class BuildMaster(service.MultiService, styles.Versioned):
         if manhole != self.manhole:
             # changing
             if self.manhole:
-                # TODO: disownServiceParent may return Deferred
-                self.manhole.disownServiceParent()
+                # disownServiceParent may return a Deferred
+                d = defer.maybeDeferred(self.manhole.disownServiceParent)
+                dl.append(d)
                 self.manhole = None
             if manhole:
                 self.manhole = manhole
                 manhole.setServiceParent(self)
 
-        self.loadConfig_Sources(sources)
+        dl.append(self.loadConfig_Sources(sources))
 
         # add/remove self.botmaster.builders to match builders. The
         # botmaster will handle startup/shutdown issues.
-        self.loadConfig_Builders(builders)
+        dl.append(self.loadConfig_Builders(builders))
 
-        self.loadConfig_status(status, irc, webPortnum, webPathname)
+        d = self.loadConfig_status(status, irc, webPortnum, webPathname)
+        dl.append(d)
 
         # self.slavePort
         if self.slavePortnum != slavePortnum:
             if self.slavePort:
-                self.slavePort.disownServiceParent()
+                d = defer.maybeDeferred(self.slavePort.disownServiceParent)
+                dl.append(d)
                 self.slavePort = None
             if slavePortnum is not None:
                 self.slavePort = internet.TCPServer(slavePortnum,
@@ -788,6 +884,7 @@ class BuildMaster(service.MultiService, styles.Versioned):
         self.loadConfig_Interlocks(interlocks)
         
         log.msg("configuration updated")
+        return defer.DeferredList(dl)
 
     def loadConfig_Slaves(self, bots):
         # set up the Checker with the names and passwords of all valid bots
@@ -800,31 +897,33 @@ class BuildMaster(service.MultiService, styles.Versioned):
         old = self.bots; oldnames = [name for name,pw in old]
         new = bots; newnames = [name for name,pw in new]
         # removeSlave will hang up on the old bot
-        [self.botmaster.removeSlave(name)
-         for name in oldnames if name not in newnames]
+        dl = [self.botmaster.removeSlave(name)
+              for name in oldnames if name not in newnames]
         [self.botmaster.addSlave(name)
          for name in newnames if name not in oldnames]
 
         # all done
         self.bots = bots
+        return defer.DeferredList(dl)
 
     def loadConfig_Sources(self, sources):
+        log.msg("loadConfig_Sources, change_svc is", self.change_svc,
+                self.change_svc.parent)
         # shut down any that were removed, start any that were added
-        old = self.sources
-        new = sources
-        [self.change_svc.removeSource(source)
-         for source in old if source not in new]
+        oldsources = list(self.change_svc)
+        dl = [self.change_svc.removeSource(source)
+              for source in oldsources if source not in sources]
         [self.change_svc.addSource(source)
-         for source in new if source not in old]
-        self.sources = sources
+         for source in sources if source not in self.change_svc]
+        return defer.DeferredList(dl)
 
     def loadConfig_Builders(self, newBuilders):
+        dl = []
         old = self.botmaster.getBuildernames()
         newNames = []
         newList = {}
         for data in newBuilders:
-            if type(data) == type(()):
-                # TODO: DeprecationWarning
+            if type(data) is tuple:
                 name, slavename, builddir, factory = data
                 data = {'name': name,
                         'slavename': slavename,
@@ -838,7 +937,8 @@ class BuildMaster(service.MultiService, styles.Versioned):
         for old in self.botmaster.builders.values()[:]:
             if old.name not in newList.keys():
                 log.msg("removing old builder %s" % old.name)
-                self.botmaster.removeBuilder(old)
+                d = self.botmaster.removeBuilder(old)
+                dl.append(d)
                 # announce the change
                 self.status.builderRemoved(old.name)
 
@@ -849,10 +949,14 @@ class BuildMaster(service.MultiService, styles.Versioned):
             basedir = data['builddir'] # used on both master and slave
             #name, slave, builddir, factory = data
             if not old: # new
-                log.msg("adding new builder %s" % name)
-                statusbag = self.status.builderAdded(name, basedir)
+                # category added after 0.6.2
+                category = data.get('category', None)
+                log.msg("adding new builder %s for category %s" %
+                        (name, category))
+                statusbag = self.status.builderAdded(name, basedir, category)
                 builder = Builder(data, statusbag)
-                self.botmaster.addBuilder(builder)
+                d = self.botmaster.addBuilder(builder)
+                dl.append(d)
             else:
                 diffs = old.compareToSetup(data)
                 if not diffs: # unchanged: leave it alone
@@ -867,14 +971,17 @@ class BuildMaster(service.MultiService, styles.Versioned):
                     # make a new statusbag
                     statusbag = old.builder_status
                     statusbag.saveYourself() # seems like a good idea
-                    self.botmaster.removeBuilder(old)
+                    d = self.botmaster.removeBuilder(old)
+                    dl.append(d)
                     builder = Builder(data, statusbag)
                     # point out that the builder was updated
                     statusbag.addPointEvent(["config", "updated"])
-                    self.botmaster.addBuilder(builder)
+                    d = self.botmaster.addBuilder(builder)
+                    dl.append(d)
         # now that everything is up-to-date, make sure the names are in the
         # desired order
         self.botmaster.builderNames = newNames
+        return defer.DeferredList(dl)
 
     def loadConfig_status(self, status,
                           irc=None, webPortnum=None, webPathname=None):
@@ -900,12 +1007,14 @@ class BuildMaster(service.MultiService, styles.Versioned):
             status.append(Waterfall(distrib_port=webPathname))
 
         # here is where the real work happens
+        dl = []
 
         # remove old ones
         for s in self.statusTargets[:]:
             if not s in status:
                 log.msg("removing IStatusReceiver", s)
-                s.disownServiceParent()
+                d = defer.maybeDeferred(s.disownServiceParent)
+                dl.append(d)
                 self.statusTargets.remove(s)
         # add new ones
         for s in status:
@@ -913,6 +1022,8 @@ class BuildMaster(service.MultiService, styles.Versioned):
                 log.msg("adding IStatusReceiver", s)
                 s.setServiceParent(self)
                 self.statusTargets.append(s)
+
+        return defer.DeferredList(dl)
 
     def loadConfig_Interlocks(self, newInterlocks):
         newList = {}

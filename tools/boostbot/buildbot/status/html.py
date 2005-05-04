@@ -1,8 +1,9 @@
-#! /usr/bin/python
+# -*- test-case-name: buildbot.test.test_web -*-
 
 from __future__ import generators
 
 from twisted.python import log, components
+from twisted.python.util import sibpath
 import urllib
 
 from twisted.internet import defer, reactor
@@ -13,7 +14,7 @@ from twisted.web.util import Redirect, DeferredResource
 from twisted.application import service, internet
 from twisted.spread import pb
 
-import string, types, time
+import string, types, time, os.path
 
 from buildbot import interfaces, util
 from buildbot import version
@@ -68,8 +69,11 @@ def td(text="", parms={}, **props):
     if comment:
         data += "<!-- %s -->" % comment
     data += "<td"
+    class_ = props.get('class_', None)
+    if class_:
+        props["class"] = class_
     for prop in ("align", "bgcolor", "colspan", "rowspan", "border",
-                 "valign", "halign"):
+                 "valign", "halign", "class"):
         p = props.get(prop, None)
         if p != None:
             data += " %s=\"%s\"" % (prop, p)
@@ -81,14 +85,39 @@ def td(text="", parms={}, **props):
     data += "</td>\n"
     return data
 
+def build_get_class(b):
+    """
+    Return the class to use for a finished build or buildstep,
+    based on the result.
+    """
+    # FIXME: this getResults duplicity might need to be fixed
+    result = b.getResults()
+    #print "THOMAS: result for b %r: %r" % (b, result)
+    if isinstance(b, builder.BuildStatus):
+        result = b.getResults()
+    elif isinstance(b, builder.BuildStepStatus):
+        result = b.getResults()[0]
+        # after forcing a build, b.getResults() returns ((None, []), []), ugh
+        if isinstance(result, tuple):
+            result = result[0]
+    else:
+        raise TypeError, "%r is not a BuildStatus or BuildStepStatus" % b
+
+    if result == None:
+        # FIXME: this happens when a buildstep is running ?
+        return "running"
+    return builder.Results[result]
+
 class Box:
     # a Box wraps an Event. The Box has HTML <td> parameters that Events
     # lack, and it has a base URL to which each File's name is relative.
     # Events don't know about HTML.
     spacer = False
-    def __init__(self, text=[], color=None, urlbase=None, **parms):
+    def __init__(self, text=[], color=None, class_=None, urlbase=None,
+                 **parms):
         self.text = text
         self.color = color
+        self.class_ = class_
         self.urlbase = urlbase
         self.show_idle = 0
         if parms.has_key('show_idle'):
@@ -104,10 +133,11 @@ class Box:
         text = self.text
         if not text and self.show_idle:
             text = ["[idle]"]
-        return td(text, props, bgcolor=self.color)
+        return td(text, props, bgcolor=self.color, class_=self.class_)
 
 
 class HtmlResource(Resource):
+    css = None
     contentType = "text/html"
     def render(self, request):
         data = self.content(request)
@@ -119,6 +149,12 @@ class HtmlResource(Resource):
     title = "Dummy"
     def content(self, request):
         data = "<html>\n<head><title>" + self.title + "</title></head>\n"
+        if self.css:
+            # TODO: use some sort of relative link up to the root page, so
+            # this css can be used from child pages too
+            data += ("<link href=\"%s\""
+                     " rel=\"stylesheet\""
+                     " type=\"text/css\">\n" % "buildbot.css")
         data += "<body vlink=\"#800080\">\n"
         data += self.body(request)
         data += "</body></html>\n"
@@ -128,6 +164,7 @@ class HtmlResource(Resource):
 
 class StaticHTML(HtmlResource):
     def __init__(self, body, title):
+        HtmlResource.__init__(self)
         self.bodyHTML = body
         self.title = title
     def body(self, request):
@@ -456,7 +493,7 @@ class StatusResourceChanges(HtmlResource):
     def body(self, request):
         data = ""
         data += "Change sources:\n"
-        sources = self.changemaster.sources
+        sources = list(self.changemaster)
         if sources:
             data += "<ol>\n"
             for s in sources:
@@ -565,6 +602,12 @@ class TextLog(Resource):
         d = self.original.waitUntilFinished()
         d.addCallback(self.finished)
 
+    # TODO: under heavy load (a rogue web crawler hammering all the build log
+    # pages), this method gets called, and we don't implement it, which is
+    # bad.
+    #def pauseProducing(self):
+    #    pass
+
     def stopProducing(self):
         pass
 
@@ -610,6 +653,9 @@ class TextLog(Resource):
             self.req.finish()
         except pb.DeadReferenceError:
             pass
+        # break the cycle, the Request's .notifications list includes the
+        # Deferred (from req.notifyFinish) that's pointing at us.
+        self.req = None
 
 components.registerAdapter(TextLog, interfaces.IStatusLog, IHTMLLog)
 
@@ -656,20 +702,21 @@ class CurrentBox(components.Adapter):
             else:
                 text.extend(["ETA: ?"])
 
-        return Box(text, color)
+        return Box(text, color=color, class_="Activity " + state)
 components.registerAdapter(CurrentBox, builder.BuilderStatus, ICurrentBox)
 
-class CommitBox(components.Adapter):
+class ChangeBox(components.Adapter):
     __implements__ = IBox,
     def getBox(self):
         url = "changes/%d" % self.original.number
         text = '<a href="%s">%s</a>' % (url, html.escape(self.original.who))
-        return Box([text], "white")
-components.registerAdapter(CommitBox, changes.Change, IBox)
+        return Box([text], color="white", class_="Change")
+components.registerAdapter(ChangeBox, changes.Change, IBox)
 
 class BuildBox(components.Adapter):
     # this provides the yellow "starting line" box for each build
     __implements__ = IBox,
+
     def getBox(self):
         b = self.original
         name = b.getBuilder().getName()
@@ -677,12 +724,14 @@ class BuildBox(components.Adapter):
         url = "%s/builds/%d" % (name, number)
         text = '<a href="%s">Build %d</a>' % (urllib.quote(url), number)
         color = "yellow"
+        class_ = "start"
         if b.isFinished() and not b.getSteps():
             # the steps have been pruned, so there won't be any indication
             # of whether it succeeded or failed. Color the box red or green
             # to show its status
             color = b.getColor()
-        return Box([text], color)
+            class_ = build_get_class(b)
+        return Box([text], color=color, class_="BuildStep " + class_)
 components.registerAdapter(BuildBox, builder.BuildStatus, IBox)
 
 class StepBox(components.Adapter):
@@ -702,14 +751,20 @@ class StepBox(components.Adapter):
             name = logs[num].getName()
             url = urllib.quote("%s/%d" % (urlbase, num))
             text.append("<a href=\"%s\">%s</a>" % (url, html.escape(name)))
-        return Box(text, self.original.getColor())
+        color = self.original.getColor()
+        class_ = "BuildStep " + build_get_class(self.original)
+        return Box(text, color, class_=class_)
 components.registerAdapter(StepBox, builder.BuildStepStatus, IBox)
 
 class EventBox(components.Adapter):
     __implements__ = IBox,
     def getBox(self):
         text = self.original.getText()
-        return Box(text, self.original.getColor())
+        color = self.original.getColor()
+        class_ = "Event"
+        if color:
+            class_ += " " + color
+        return Box(text, color, class_=class_)
 components.registerAdapter(EventBox, builder.Event, IBox)
         
 
@@ -721,14 +776,16 @@ class BuildTopBox(components.Adapter):
         assert interfaces.IBuilderStatus(self.original)
         b = self.original.getLastFinishedBuild()
         if not b:
-            return Box(["none"], "white")
+            return Box(["none"], "white", class_="LastBuild")
         name = b.getBuilder().getName()
         number = b.getNumber()
         url = "%s/builds/%d" % (name, number)
         text = b.getText()
         # TODO: add logs?
         # TODO: add link to the per-build page at 'url'
-        return Box(text, b.getColor())
+        c = b.getColor()
+        class_ = build_get_class(b)
+        return Box(text, c, class_="LastBuild %s" % class_)
 components.registerAdapter(BuildTopBox, builder.BuilderStatus, ITopBox)
 
 class Spacer(builder.Event):
@@ -786,10 +843,15 @@ class WaterfallStatusResource(HtmlResource):
     """This builds the main status page, with the waterfall display, and
     all child pages."""
     title = "BuildBot"
-    def __init__(self, status, changemaster):
+    def __init__(self, status, changemaster, categories, css=None):
         HtmlResource.__init__(self)
         self.status = status
         self.changemaster = changemaster
+        self.categories = categories
+        p = self.status.getProjectName()
+        if p:
+            self.title = "BuildBot: %s" % p
+        self.css = css
 
     def body(self, request):
         "This method builds the main waterfall display."
@@ -797,25 +859,29 @@ class WaterfallStatusResource(HtmlResource):
         phase = int(phase[0])
 
         showBuilders = request.args.get("show", None)
+        allBuilders = self.status.getBuilderNames(categories=self.categories)
         if showBuilders:
             builderNames = []
             for b in showBuilders:
-                if b in self.status.getBuilderNames() and \
-                       not b in builderNames:
-                    builderNames.append(b)
+                if b not in allBuilders:
+                    continue
+                if b in builderNames:
+                    continue
+                builderNames.append(b)
         else:
-            builderNames = self.status.getBuilderNames()
+            builderNames = allBuilders
         builders = map(lambda name: self.status.getBuilder(name),
                        builderNames)
 
         if phase == -1:
             return self.body0(request, builders)
-        (sourceNames, timestamps, eventGrid, sourceEvents) = \
+        (changeNames, builderNames, timestamps, eventGrid, sourceEvents) = \
                       self.buildGrid(request, builders)
         if phase == 0:
             return self.phase0(request, sourceNames, timestamps, eventGrid)
         # start the table: top-header material
-        data = "<table frame=\"rhs\" rules=\"all\">\n"
+        data = "<table class=\"table\" border=\"0\" cellspacing=\"0\">\n"
+        #data = "<table frame=\"rhs\" rules=\"all\" class=\"table\">\n"
 
         data += " <tr>\n"
         projectName = self.status.getProjectName()
@@ -826,33 +892,40 @@ class WaterfallStatusResource(HtmlResource):
                       (projectURL, projectName)
         else:
             topleft = "last build"
-        data += td(topleft, align="right", colspan=2)
+        data += td(topleft, align="right", colspan=2, class_="Project")
         for b in builders:
             box = ITopBox(b).getBox()
             data += box.td(align="center")
         data += " </tr>\n"
 
         data += " <tr>\n"
-        data += td("current activity", align="right", colspan=2)
+        data += td("current activity", align="right", colspan=2,
+                   class_="Activity")
         for b in builders:
             box = ICurrentBox(b).getBox()
             data += box.td(align="center")
         data += " </tr>\n"
         
         data += " <tr>\n"
-        data += td("time", align="center")
-        for name in sourceNames:
+        TZ = time.tzname[time.daylight]
+        data += td("time (%s)" % TZ, align="center", class_="Time")
+        name = changeNames[0]
+        data += td(
+                "<a href=\"%s\">%s</a>" % (urllib.quote(name), name),
+                align="center", class_="Change")
+        for name in builderNames:
             data += td(
                 #"<a href=\"%s\">%s</a>" % (request.childLink(name), name),
                 "<a href=\"%s\">%s</a>" % (urllib.quote(name), name),
-                align="center")
+                align="center", class_="Builder")
         data += " </tr>\n"
 
         if phase == 1:
             f = self.phase1
         else:
             f = self.phase2
-        data += f(request, sourceNames, timestamps, eventGrid, sourceEvents)
+        data += f(request, changeNames + builderNames, timestamps, eventGrid,
+                  sourceEvents)
 
         data += "</table>\n"
 
@@ -884,7 +957,8 @@ class WaterfallStatusResource(HtmlResource):
         data += " for the waterfall display</p>\n"
                 
         #data += "<table border=\"1\">\n"
-        data += "<table frame=\"rhs\" rules=\"all\">\n"
+        #data += "<table frame=\"rhs\" rules=\"all\" class=\"table\">\n"
+        data += "<table class=\"table\" border=\"0\" cellspacing=\"0\">\n"
         names = map(lambda builder: builder.name, builders)
 
         # the top row is two blank spaces, then the top-level status boxes
@@ -935,8 +1009,9 @@ class WaterfallStatusResource(HtmlResource):
 
         lastEventTime = util.now()
         sources = [commit_source] + builders
-        sourceNames = ["changes"] + map(lambda builder: builder.getName(),
-                                        builders)
+        changeNames = ["changes"]
+        builderNames = map(lambda builder: builder.getName(), builders)
+        sourceNames = changeNames + builderNames
         sourceEvents = []
         sourceGenerators = []
         for s in sources:
@@ -1036,7 +1111,7 @@ class WaterfallStatusResource(HtmlResource):
         # loop is finished. now we have eventGrid[] and timestamps[]
         if debugGather: log.msg("finished loop")
         assert(len(timestamps) == len(eventGrid))
-        return (sourceNames, timestamps, eventGrid, sourceEvents)
+        return (changeNames, builderNames, timestamps, eventGrid, sourceEvents)
     
     def phase0(self, request, sourceNames, timestamps, eventGrid):
         # phase0 rendering
@@ -1093,7 +1168,7 @@ class WaterfallStatusResource(HtmlResource):
                         time.strftime("%H:%M:%S",
                                       time.localtime(timestamps[r])))
                     data += td(stuff, valign="bottom", align="center",
-                               rowspan=maxRows)
+                               rowspan=maxRows, class_="Time")
                 for c in range(0, len(chunkstrip)):
                     block = chunkstrip[c]
                     assert(block != None) # should be [] instead
@@ -1150,8 +1225,9 @@ class WaterfallStatusResource(HtmlResource):
                     stuff.append(
                         time.strftime("%H:%M:%S",
                                       time.localtime(timestamps[r])))
-                    grid[0].append(Box(text=stuff,
+                    grid[0].append(Box(text=stuff, class_="Time",
                                        valign="bottom", align="center"))
+
             # at this point the timestamp column has been populated with
             # maxRows boxes, most None but the last one has the time string
             for c in range(0, len(chunkstrip)):
@@ -1175,7 +1251,8 @@ class WaterfallStatusResource(HtmlResource):
             if strip[-1] == None:
                 if sourceEvents[i-1]:
                     filler = IBox(sourceEvents[i-1]).getBox()
-                else: # TODO: can this actually happen?
+                else:
+                    # this can happen if you delete part of the build history
                     filler = Box(text=["?"], align="center")
                 strip[-1] = filler
             strip[-1].parms['rowspan'] = 1
@@ -1252,13 +1329,22 @@ class WaterfallStatusResource(HtmlResource):
 class StatusResource(Resource):
     status = None
     control = None
+    favicon = None
 
-    def __init__(self, status, control, changemaster):
+    def __init__(self, status, control, changemaster, categories, css):
+        """
+        @type  status:       L{buildbot.status.builder.Status}
+        @type  control:      L{buildbot.master.Control}
+        @type  changemaster: L{buildbot.changes.changes.ChangeMaster}
+        """
         Resource.__init__(self)
         self.status = status
         self.control = control
         self.changemaster = changemaster
-        waterfall = WaterfallStatusResource(self.status, changemaster)
+        self.categories = categories
+        self.css = css
+        waterfall = WaterfallStatusResource(self.status, changemaster,
+                                            categories, css)
         self.putChild("", waterfall)
 
     def render(self, request):
@@ -1266,28 +1352,121 @@ class StatusResource(Resource):
         request.finish()
 
     def getChild(self, path, request):
+        if path == "buildbot.css" and self.css:
+            return static.File(self.css)
+        if path == "changes":
+            return StatusResourceChanges(self.changemaster)
+        if path == "favicon.ico":
+            if self.favicon:
+                return static.File(self.favicon)
+            return NoResource("No favicon.ico registered")
+
         if path in self.status.getBuilderNames():
             builder = self.status.getBuilder(path)
             control = None
             if self.control:
                 control = self.control.getBuilder(path)
             return StatusResourceBuilder(builder, control)
-        if path == "changes":
-            return StatusResourceChanges(self.changemaster)
+
         return NoResource("No such Builder '%s'" % path)
 
+# the icon is sibpath(__file__, "../buildbot.png") . This is for portability.
+up = os.path.dirname
+buildbot_icon = os.path.abspath(os.path.join(up(up(__file__)), "buildbot.png"))
+buildbot_css = os.path.abspath(os.path.join(up(__file__), "classic.css"))
 
 class Waterfall(service.MultiService, util.ComparableMixin):
+    """I implement the primary web-page status interface, called a 'Waterfall
+    Display' because builds and steps are presented in a grid of boxes which
+    move downwards over time. The top edge is always the present. Each column
+    represents a single builder. Each box describes a single Step, which may
+    have logfiles or other status information.
+
+    All these pages are served via a web server of some sort. The simplest
+    approach is to let the buildmaster run its own webserver, on a given TCP
+    port, but it can also publish its pages to a L{twisted.web.distrib}
+    distributed web server (which lets the buildbot pages be a subset of some
+    other web server).
+
+    Since 0.6.3, BuildBot defines class attributes on elements so they can be
+    styled with CSS stylesheets. Buildbot uses some generic classes to
+    identify the type of object, and some more specific classes for the
+    various kinds of those types. It does this by specifying both in the
+    class attributes where applicable, separated by a space. It is important
+    that in your CSS you declare the more generic class styles above the more
+    specific ones. For example, first define a style for .Event, and below
+    that for .SUCCESS
+
+    The following CSS class names are used:
+        - Activity, Event, BuildStep, LastBuild: general classes
+        - waiting, interlocked, building, offline, idle: Activity states
+        - start, running, success, failure, warnings, skipped, exception:
+          LastBuild and BuildStep states
+        - Change: box with change
+        - Builder: box for builder name (at top)
+        - Project
+        - Time
+
+    @type parent: L{buildbot.master.BuildMaster}
+    @ivar parent: like all status plugins, this object is a child of the
+                  BuildMaster, so C{.parent} points to a
+                  L{buildbot.master.BuildMaster} instance, through which
+                  the status-reporting object is acquired.
+    """
     __implements__ = (interfaces.IStatusReceiver,
                       service.MultiService.__implements__)
-    compare_attrs = ["http_port", "distrib_port", "allowForce"]
+    compare_attrs = ["http_port", "distrib_port", "allowForce",
+                     "categories", "css"]
 
-    def __init__(self, http_port=None, distrib_port=None, allowForce=True):
+    def __init__(self, http_port=None, distrib_port=None, allowForce=True,
+                 categories=None, css=buildbot_css, favicon=buildbot_icon):
+        """
+
+        xxxTo have the buildbot run its own web server, pass a port number to
+        C{http_port}. To have it run a web.distrib server
+        
+        @type  http_port: int
+        @param http_port: the TCP port number on which the buildbot should
+                          run its own web server, with the Waterfall display
+                          as the root page
+
+        @type  distrib_port: string or int
+        @param distrib_port: Use this if you want to publish the Waterfall
+                             page using web.distrib instead. The most common
+                             case is to provide a string that is a pathname
+                             to the unix socket on which the publisher should
+                             listen (C{os.path.expanduser(~/.twistd-web-pb)}
+                             will match the default settings of a standard
+                             twisted.web 'personal web server'). Another
+                             possibility is to pass an integer, which means
+                             the publisher should listen on a TCP socket,
+                             allowing the web server to be on a different
+                             machine entirely.
+
+        @type  allowForce: bool
+        @param allowForce: if True, present a 'Force Build' button on the
+                           per-Builder page that allows visitors to the web
+                           site to initiate a build. If False, don't provide
+                           this button.
+
+        @type  favicon: string
+        @param favicon: if set, provide the pathname of an image file that
+                        will be used for the 'favicon.ico' resource. Many
+                        browsers automatically request this file and use it
+                        as an icon in any bookmark generated from this site.
+                        Defaults to the L{buildbot.png} image provided in the
+                        distribution. Can be set to None to avoid using
+                        a favicon at all.
+                        
+        """
         service.MultiService.__init__(self)
         assert allowForce in (True, False) # TODO: implement others
         self.http_port = http_port
         self.distrib_port = distrib_port
         self.allowForce = allowForce
+        self.categories = categories
+        self.css = css
+        self.favicon = favicon
 
     def __repr__(self):
         if self.http_port is None:
@@ -1298,6 +1477,9 @@ class Waterfall(service.MultiService, util.ComparableMixin):
                                                        self.distrib_port)
 
     def setServiceParent(self, parent):
+        """
+        @type  parent: L{buildbot.master.BuildMaster}
+        """
         service.MultiService.setServiceParent(self, parent)
         self.setup()
 
@@ -1308,7 +1490,10 @@ class Waterfall(service.MultiService, util.ComparableMixin):
         else:
             control = None
         change_svc = self.parent.change_svc
-        self.site = server.Site(StatusResource(status, control, change_svc))
+        sr = StatusResource(status, control, change_svc, self.categories,
+                            self.css)
+        sr.favicon = self.favicon
+        self.site = server.Site(sr)
 
         if self.http_port is not None:
             s = internet.TCPServer(self.http_port, self.site)

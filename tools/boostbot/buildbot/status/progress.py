@@ -1,4 +1,4 @@
-#! /usr/bin/python
+# -*- test-case-name: buildbot.test.test_status -*-
 
 from twisted.internet import reactor
 from twisted.spread import pb

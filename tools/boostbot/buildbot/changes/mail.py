@@ -1,4 +1,4 @@
-#! /usr/bin/python
+# -*- test-case-name: buildbot.test.test_mailparse -*-
 
 """
 Parse various kinds of 'CVS notify' email.

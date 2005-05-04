@@ -347,7 +347,7 @@ class Command_Boost_CollectResults(NoOpCommand):
                 ,locate = os.path.normpath(os.path.join(
                     self.builder.basedir,self.args.get('locate','build')))
                 ,runner = self.args['runner']
-                ,timestamp = self.args['stamp']
+                ,timestamp = string.replace(self.args['stamp'],'T',' ')
                 ,tag = '%s-%s' % (self.args['source_type'],self.args['branch'])
                 ,source = self.args['source_type']
                 ,comments = self.args.get('comments',
@@ -377,9 +377,9 @@ class Command_Boost_CollectResults(NoOpCommand):
         results_xml.startDocument()
         results_xml.startElement( 'test-run' ,{
             'tag': kwargs['tag']
-            ,'platform': sys.platform
+            ,'platform': kwargs['platform']
             ,'runner': kwargs['runner']
-            ,'timestamp': kwargs['timestamp']     
+            ,'timestamp': kwargs['timestamp']
             ,'source': kwargs['source']
             ,'run-type': 'incremental'
             })

@@ -17,9 +17,9 @@ class IChangeSource(Interface):
     """Object which feeds Change objects to the changemaster. When files or
     directories are changed and the version control system provides some
     kind of notification, this object should turn it into a Change object
-    and pass it through:
+    and pass it through::
 
-     self.changemaster.addChange(change)
+      self.changemaster.addChange(change)
     """
 
     def start(self):
@@ -58,7 +58,7 @@ class IStatus(Interface):
         """Return the URL of the top-most Buildbot status page, or None if
         this Buildbot does not provide a web status page."""
 
-    def getBuilderNames():
+    def getBuilderNames(categories=None):
         """Return a list of the names of all current Builders."""
     def getBuilder(name):
         """Return the IBuilderStatus object for a given named Builder."""
@@ -154,7 +154,11 @@ class IBuildStatus(Interface):
     finished."""
 
     def getBuilder():
-        """Return the name of the Builder that ran this build."""
+        """
+        Return the BuilderStatus that ran this build.
+        
+        @rtype: implementor of L{IBuilderStatus}
+        """
 
     def getNumber():
         """Within each builder, each Build has a number. Return it."""
@@ -307,7 +311,7 @@ class IBuildStepStatus(Interface):
         may have spaces in it."""
 
     def getBuild():
-        """Returns an IBuildStatus object which contains this step."""
+        """Returns the IBuildStatus object which contains this step."""
 
     def getTimes():
         """Returns a tuple of (start, end). 'start' and 'end' are the times
@@ -433,9 +437,9 @@ class IStatusLog(Interface):
     These names are not guaranteed to be unique, however they are usually
     chosen to be useful within the scope of a single step (i.e. the Compile
     step might produce both 'log' and 'warnings'). The name may also have
-    spaces. If you want something more globally meaningful, try:
+    spaces. If you want something more globally meaningful, try::
 
-     '%s.%s' % (log.getStep.getName(), log.getName())
+      '%s.%s' % (log.getStep.getName(), log.getName())
 
     The Log can be represented as plain text, or it can be accessed as a
     list of items, each of which has a channel indicator (header, stdout,
@@ -499,9 +503,15 @@ class IStatusReceiver(Interface):
     subscribed to an IStatus, an IBuilderStatus, or an IBuildStatus."""
 
     def builderAdded(builderName, builder):
-        """A new Builder has just been added. This method may return an
-        IStatusTarget (probably 'self') which will be subscribed to receive
-        builderChangedState and buildStarted/Finished events."""
+        """
+        A new Builder has just been added. This method may return an
+        IStatusReceiver (probably 'self') which will be subscribed to receive
+        builderChangedState and buildStarted/Finished events.
+
+        @type  builderName: string
+        @type  builder:     L{buildbot.status.builder.BuilderStatus}
+        @rtype: implementor of L{IStatusReceiver}
+        """
 
     def builderChangedState(builderName, state, eta=None):
         """Builder 'builderName' has changed state. The possible values for
@@ -514,13 +524,12 @@ class IStatusReceiver(Interface):
         object which implements IBuildStatus, and can be queried for more
         information.
 
-        This method may return an IStatusTarget (it could even return
+        This method may return an IStatusReceiver (it could even return
         'self'). If it does so, stepStarted and stepFinished methods will be
         invoked on the object for the steps of this one build. This is a
-        convenient way to subscribe to all build steps without missing
-        any.
+        convenient way to subscribe to all build steps without missing any.
 
-        It can also return a tuple of (IStatusTarget, interval), in which
+        It can also return a tuple of (IStatusReceiver, interval), in which
         case buildETAUpdate messages are sent ever 'interval' seconds, in
         addition to the stepStarted and stepFinished messages."""
 
@@ -532,12 +541,12 @@ class IStatusReceiver(Interface):
         """A step has just started. 'step' is the IBuildStepStatus which
         represents the step: it can be queried for more information.
 
-        This method may return an IStatusTarget (it could even return
+        This method may return an IStatusReceiver (it could even return
         'self'). If it does so, logStarted and logFinished methods will be
         invoked on the object for logs created by this one step.
 
-        Alternatively, the method may return a tuple of an IStatusTarget and
-        an integer named 'updateInterval'. In addition to
+        Alternatively, the method may return a tuple of an IStatusReceiver
+        and an integer named 'updateInterval'. In addition to
         logStarted/logFinished messages, it will also receive stepETAUpdate
         messages about every updateInterval seconds."""
 
@@ -553,7 +562,7 @@ class IStatusReceiver(Interface):
         started running a shell command. 'log' is the IStatusLog object
         which can be queried for more information.
 
-        This method may return an IStatusTarget (such as 'self'), in which
+        This method may return an IStatusReceiver (such as 'self'), in which
         case the target's logChunk method will be invoked as text is added to
         the logfile. """
 
@@ -569,8 +578,14 @@ class IStatusReceiver(Interface):
         in IBuildStepStatus.getResults."""
 
     def buildFinished(builderName, build, results):
-        """A build has just finished. 'results' is the result tuple described
-        in IBuildStatus.getResults."""
+        """
+        A build has just finished. 'results' is the result tuple described
+        in L{IBuildStatus.getResults}.
+
+        @type  builderName: string
+        @type  build:       L{buildbot.status.builder.BuildStatus}
+        @type  results:     tuple
+        """
 
     def builderRemoved(builderName):
         """The Builder has been removed."""

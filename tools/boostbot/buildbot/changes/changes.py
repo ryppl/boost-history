@@ -1,13 +1,14 @@
 #! /usr/bin/python
 
 from __future__ import generators
-import string, os, os.path, time, types
+import string, sys, os, os.path, time, types
 try:
     import cPickle as pickle
 except ImportError:
     import pickle
 
 from twisted.python import log, components
+from twisted.internet import defer
 from twisted.spread import pb
 from twisted.application import service
 from twisted.cred import portal
@@ -144,18 +145,20 @@ class ChangeMaster(service.MultiService):
     They are expected to call self.changemaster.addChange() with Change
     objects.
 
-    There are several different variants of the second type of source.
+    There are several different variants of the second type of source:
     
-     MaildirSource watches a maildir for CVS commit mail. It uses DNotify if
-     available, or polls every 10 seconds if not. It parses incoming mail to
-     determine what files were changed.
+      - L{buildbot.changes.mail.MaildirSource} watches a maildir for CVS
+        commit mail. It uses DNotify if available, or polls every 10
+        seconds if not.  It parses incoming mail to determine what files
+        were changed.
 
-     FreshCVSSource makes a PB connection to the CVSToys 'freshcvs' daemon
-     and relays any changes it announces.
+       - L{buildbot.changes.freshcvs.FreshCVSSource} makes a PB
+         connection to the CVSToys 'freshcvs' daemon and relays any
+         changes it announces.
     
     """
 
-    debug = 0
+    debug = False
     # todo: use Maildir class to watch for changes arriving by mail
 
     def __init__(self):
@@ -164,7 +167,6 @@ class ChangeMaster(service.MultiService):
         # self.basedir must be filled in by the parent
         # self.botmaster too
         self.nextNumber = 1
-        self.sources = [] # for status page: what sources are being monitored
 
     def addSource(self, source):
         assert components.implements(source, interfaces.IChangeSource)
@@ -172,13 +174,13 @@ class ChangeMaster(service.MultiService):
         if self.debug:
             print "ChangeMaster.addSource", source
         source.setServiceParent(self)
-        self.sources.append(source)
 
     def removeSource(self, source):
+        assert source in self
         if self.debug:
-            print "ChangeMaster.removeSource", source
-        source.disownServiceParent()
-        self.sources.remove(source)
+            print "ChangeMaster.removeSource", source, source.parent
+        d = defer.maybeDeferred(source.disownServiceParent)
+        return d
 
     def addChange(self, change):
         """Deliver a file change event. The event should be a Change object.
@@ -223,14 +225,12 @@ class ChangeMaster(service.MultiService):
         del d['services'] # lose all children
         del d['namedServices']
         del d['botmaster']
-        del d['sources']
         return d
 
     def __setstate__(self, d):
         self.__dict__ = d
         # self.basedir must be set by the parent
         # self.botmaster too
-        self.sources = [] # will be filled when the config file is read
         self.services = [] # they'll be repopulated by readConfig
         self.namedServices = {}
 
@@ -240,6 +240,10 @@ class ChangeMaster(service.MultiService):
         tmpfilename = filename + ".tmp"
         try:
             pickle.dump(self, open(tmpfilename, "w"))
+            if sys.platform == 'win32':
+                # windows cannot rename a file on top of an existing one
+                if os.path.exists(filename):
+                    os.unlink(filename)
             os.rename(tmpfilename, filename)
         except Exception, e:
             log.msg("unable to save changes")

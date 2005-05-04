@@ -61,10 +61,9 @@ class SlaveBuilder(pb.Referenceable, service.Service):
     # when the step is started
     remoteStep = None
 
-    def __init__(self, parent, name, builddir, not_really):
+    def __init__(self, parent, name, not_really):
         #service.Service.__init__(self)
         self.name = name
-        self.builddir = builddir
         self.not_really = not_really
         
     def __repr__(self):
@@ -73,6 +72,10 @@ class SlaveBuilder(pb.Referenceable, service.Service):
     def setServiceParent(self, parent):
         service.Service.setServiceParent(self, parent)
         self.bot = self.parent
+
+    def setBuilddir(self, builddir):
+        assert self.parent
+        self.builddir = builddir
         self.basedir = os.path.join(self.bot.basedir, self.builddir)
         if not os.path.isdir(self.basedir):
             os.mkdir(self.basedir)
@@ -114,8 +117,13 @@ class SlaveBuilder(pb.Referenceable, service.Service):
         log.msg("startBuild")
 
     def remote_startCommand(self, stepref, stepId, command, args):
-        """This is called multiple times by various master-side BuildSteps,
-        to start various commands that actually do the build."""
+        """
+        This gets invoked by L{buildbot.process.step.RemoteCommand.start}, as
+        part of various master-side BuildSteps, to start various commands
+        that actually do the build. I return nothing. Eventually I will call
+        .commandComplete() to notify the master-side RemoteCommand that I'm
+        done.
+        """
 
         self.activity()
 
@@ -162,13 +170,14 @@ class SlaveBuilder(pb.Referenceable, service.Service):
         self.command.interrupt() # die!
         self.command = None # forget you!
 
-
     # sendUpdate is invoked by the Commands we spawn
     def sendUpdate(self, data):
-        """This sends the status update to the master-side BuildStep object,
-        giving it a sequence number in the process. It adds the update to
-        a queue, and asks the master to acknowledge the update so it can be
-        removed from that queue."""
+        """This sends the status update to the master-side
+        L{buildbot.process.step.RemoteCommand} object, giving it a sequence
+        number in the process. It adds the update to a queue, and asks the
+        master to acknowledge the update so it can be removed from that
+        queue."""
+
         if not self.running:
             # .running comes from service.Service, and says whether the
             # service is running or not. If we aren't running, don't send any
@@ -224,6 +233,7 @@ class SlaveBuilder(pb.Referenceable, service.Service):
         
         
 class Bot(pb.Referenceable, service.MultiService):
+    """I represent the slave-side bot."""
     usePTY = None
     name = "bot"
 
@@ -233,6 +243,10 @@ class Bot(pb.Referenceable, service.MultiService):
         self.usePTY = usePTY
         self.not_really = not_really
         self.builders = {}
+
+    def startService(self):
+        assert os.path.isdir(self.basedir)
+        service.MultiService.startService(self)
 
     def remote_getDirs(self):
         return filter(lambda d: os.path.isdir(d), os.listdir(self.basedir))
@@ -251,11 +265,12 @@ class Bot(pb.Referenceable, service.MultiService):
                 if b.builddir != builddir:
                     log.msg("changing builddir for builder %s from %s to %s" \
                             % (name, b.builddir, builddir))
-                    b.builddir = builddir
+                    b.setBuilddir(builddir)
             else:
-                b = SlaveBuilder(self, name, builddir, self.not_really)
+                b = SlaveBuilder(self, name, self.not_really)
                 b.usePTY = self.usePTY
                 b.setServiceParent(self)
+                b.setBuilddir(builddir)
                 self.builders[name] = b
             retval[name] = b
         for name in self.builders.keys():
@@ -312,6 +327,7 @@ class BotFactory(ReconnectingPBClientFactory):
     activityTimer = None
     lastActivity = 0
     unsafeTracebacks = 1
+    perspective = None
 
     def __init__(self, keepaliveInterval, keepaliveTimeout):
         ReconnectingPBClientFactory.__init__(self)
@@ -409,6 +425,7 @@ class BuildSlave(service.MultiService):
         service.MultiService.__init__(self)
         bot = self.botClass(basedir, usePTY)
         bot.setServiceParent(self)
+        self.bot = bot
         if keepalive == 0:
             keepalive = None
         bf = self.bf = BotFactory(keepalive, keepaliveTimeout)

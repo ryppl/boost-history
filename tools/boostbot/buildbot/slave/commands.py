@@ -1,4 +1,4 @@
-#! /usr/bin/python
+# -*- test-case-name: buildbot.test.test_slavecommand -*-
 
 import os, os.path, re, signal, shutil, types
 
@@ -13,6 +13,7 @@ cvs_ver = '$Revision$'[1+len("Revision: "):-2]
 
 # version history:
 #  >=1.17: commands are interruptable
+#  >=1.28: Arch understands 'revision', added Bazaar
 
 class CommandInterrupted(Exception):
     pass
@@ -99,7 +100,7 @@ class ShellCommand:
                 # ones. This will break if you send over empty strings, so
                 # don't do that.
                 environ['PYTHONPATH'] = (environ['PYTHONPATH']
-                                         + ":"
+                                         + os.pathsep
                                          + self.environ['PYTHONPATH'])
                 # this will proceed to replace the old one
             self.environ.update(environ)
@@ -147,6 +148,7 @@ class ShellCommand:
             msg += " (timeout %d secs)" % self.timeout
         log.msg("  " + msg)
         self.sendStatus({'header': msg+"\n"})
+        log.msg("  env is: %s" % self.environ)
         if self.notreally:
             self.sendStatus({'header': "(not really)\n"})
             self.finished(None, 0)
@@ -162,7 +164,10 @@ class ShellCommand:
                 # hurt to try
                 argv = ['/bin/sh', '-c', self.command]
         else:
-            argv = self.command
+            if runtime.platformType  == 'win32':
+                argv = [os.environ['COMSPEC'], '/c'] + list(self.command)
+            else:
+                argv = self.command
 
         # self.stdin is handled in ShellCommandPP.connectionMade
 
@@ -377,22 +382,22 @@ class SlaveShellCommand(Command):
     """This is a Command which runs a shell command. The args dict contains
     the following keys:
 
-     ['command'] (required): a shell command to run. If this is a string,
-      it will be run with /bin/sh (['/bin/sh', '-c', command]). If it is a
-      list (preferred), it will be used directly.
-     ['workdir'] (required): subdirectory in which the command will be run,
-      relative to the builder dir
-     ['env']: a dict of environment variables to augment/replace os.environ
-     ['want_stdout']: 0 if stdout should be thrown away
-     ['want_stderr']: 0 if stderr should be thrown away
-     ['not_really']: 1 to skip execution and return rc=0
-     ['timeout']: seconds of silence to tolerate before killing command
+        - ['command'] (required): a shell command to run. If this is a string,
+          it will be run with /bin/sh (['/bin/sh', '-c', command]). If it is a
+          list (preferred), it will be used directly.
+        - ['workdir'] (required): subdirectory in which the command will be run,
+          relative to the builder dir
+        - ['env']: a dict of environment variables to augment/replace os.environ
+        - ['want_stdout']: 0 if stdout should be thrown away
+        - ['want_stderr']: 0 if stderr should be thrown away
+        - ['not_really']: 1 to skip execution and return rc=0
+        - ['timeout']: seconds of silence to tolerate before killing command
 
     ShellCommand creates the following status messages:
-     {'stdout': data} : when stdout data is available
-     {'stderr': data} : when stderr data is available
-     {'header': data} : when headers (command start/stop) are available
-     {'rc': rc} : when the process has terminated
+        - {'stdout': data} : when stdout data is available
+        - {'stderr': data} : when stderr data is available
+        - {'header': data} : when headers (command start/stop) are available
+        - {'rc': rc} : when the process has terminated
     """
 
     def start(self):
@@ -422,6 +427,11 @@ registerSlaveCommand("shell", SlaveShellCommand, cvs_ver)
 
 
 class DummyCommand(Command):
+    """
+    I am a dummy no-op command that by default takes 5 seconds to complete.
+    See L{buildbot.process.step.RemoteDummy}
+    """
+    
     def start(self):
         self.d = defer.Deferred()
         log.msg("  starting dummy command [%s]" % self.stepId)
@@ -458,26 +468,29 @@ class SourceBase(Command):
     and update). This class extracts the following arguments from the
     dictionary received from the master:
 
-    ['workdir'] (required): the subdirectory where the buildable sources
-     should be placed
+        - ['workdir']:  (required) the subdirectory where the buildable sources
+                        should be placed
 
-    ['mode']: one of update/copy/clobber/export, defaults to 'update'
+        - ['mode']:     one of update/copy/clobber/export, defaults to 'update'
 
-    ['revision']: If not None, this is an int or string which indicates
-     which sources (along a time-like axis) should be used. It is the thing
-     you provide as the CVS -r or -D argument.
+        - ['revision']: If not None, this is an int or string which indicates
+                        which sources (along a time-like axis) should be used.
+                        It is the thing you provide as the CVS -r or -D
+                        argument.
 
-    ['patch']: If not None, this is a tuple of (striplevel, patch) which
-     contains a patch that should be applied after the checkout has
-     occurred. Once applied, the tree is no longer eligible for use with
-     mode='update', and it only makes sense to use this in conjunction with
-     a ['revision'] argument. striplevel is an int, and patch is a string in
-     standard unified diff format. The patch will be applied with 'patch
-     -p%d <PATCH', with STRIPLEVEL substituted as %d. The command will fail
-     if the patch process fails (rejected hunks).
+        - ['patch']:    If not None, this is a tuple of (striplevel, patch)
+                        which contains a patch that should be applied after the
+                        checkout has occurred. Once applied, the tree is no
+                        longer eligible for use with mode='update', and it only
+                        makes sense to use this in conjunction with a
+                        ['revision'] argument. striplevel is an int, and patch
+                        is a string in standard unified diff format. The patch
+                        will be applied with 'patch -p%d <PATCH', with
+                        STRIPLEVEL substituted as %d. The command will fail if
+                        the patch process fails (rejected hunks).
 
-    ['timeout']: seconds of silence tolerated before we kill of the command
-
+        - ['timeout']:  seconds of silence tolerated before we kill of the
+                        command
     """
 
     def setup(self, args):
@@ -582,7 +595,7 @@ class SourceBase(Command):
             # if we're running on w32, use rmtree instead. It will block,
             # but hopefully it won't take too long.
             shutil.rmtree(d, ignore_errors=1)
-            return
+            return defer.succeed(0)
         command = ["rm", "-rf", d]
         c = ShellCommand(self.builder, command, self.builder.basedir,
                          sendRC=0, timeout=self.timeout)
@@ -600,7 +613,7 @@ class SourceBase(Command):
         todir = os.path.join(self.builder.basedir, self.workdir)
         if runtime.platformType != "posix":
             shutil.copytree(fromdir, todir)
-            return
+            return defer.succeed(0)
         command = ['cp', '-r', '-p', fromdir, todir]
         c = ShellCommand(self.builder, command, self.builder.basedir,
                          sendRC=False, timeout=self.timeout)
@@ -804,18 +817,21 @@ class Arch(SourceBase):
 
     ['url'] (required): the repository string
     ['version'] (required): which version (i.e. branch) to retrieve
+    ['revision'] (optional): the 'patch-NN' argument to check out
     ['archive']: the archive name to use. If None, use the archive's default
     ['build-config']: if present, give to 'tla build-config' after checkout
     """
 
+    arch_command = "tla"
     header = "arch operation"
-    archive = None
     buildconfig = None
 
     def setup(self, args):
         SourceBase.setup(self, args)
+        self.archive = args.get('archive')
         self.url = args['url']
         self.version = args['version']
+        self.revision = args.get('revision')
 
     def sourcedirIsUpdateable(self):
         if os.path.exists(os.path.join(self.builder.basedir,
@@ -827,25 +843,21 @@ class Arch(SourceBase):
     def doVCUpdate(self):
         # update: possible for mode in ('copy', 'update')
         d = os.path.join(self.builder.basedir, self.srcdir)
-        command = ['tla', 'replay']
+        command = [self.arch_command, 'replay']
+        if self.revision:
+            command.append(self.revision)
         c = ShellCommand(self.builder, command, d,
                          sendRC=False, timeout=self.timeout)
         self.command = c
         return c.start()
 
     def doVCFull(self):
-        # to do a checkout, we first must register the archive. This
-        # involves passing the URL to arch and letting it tell us the
-        # archive name.
+        # to do a checkout, we must first "register" the archive by giving
+        # the URL to tla, which will go to the repository at that URL and
+        # figure out the archive name. tla will tell you the archive name
+        # when it is done, and all further actions must refer to this name.
 
-        if self.args['archive']:
-            # explicit archive name, we don't need to extract the default
-            # name from stdout
-            self.archive = self.args['archive']
-            command = ['tla', 'register-archive', '--force',
-                       self.archive, self.url]
-        else:
-            command = ['tla', 'register-archive', '--force', self.url]
+        command = [self.arch_command, 'register-archive', '--force', self.url]
         c = ShellCommand(self.builder, command, self.builder.basedir,
                          sendRC=False, keepStdout=True,
                          timeout=self.timeout)
@@ -856,19 +868,30 @@ class Arch(SourceBase):
         return d
 
     def _didRegister(self, res, c):
-        if not self.archive:
-            r = re.search(r'Registering archive: (\S+)\s*$', c.stdout)
-            if not r:
-                msg = "Unable to register archive"
+        # find out what tla thinks the archive name is. If the user told us
+        # to use something specific, make sure it matches.
+        r = re.search(r'Registering archive: (\S+)\s*$', c.stdout)
+        if r:
+            msg = "tla reports archive name is '%s'" % r.group(1)
+            log.msg(msg)
+            self.builder.sendUpdate({'header': msg+"\n"})
+            if self.archive and r.group(1) != self.archive:
+                msg = (" mismatch, we wanted an archive named '%s'"
+                       % self.archive)
                 log.msg(msg)
-                log.msg('output is \"%s\"' % c.stdout)
                 self.builder.sendUpdate({'header': msg+"\n"})
                 raise AbandonChain(-1)
             self.archive = r.group(1)
-            log.msg("computed archive name '%s'" % self.archive)
-        # TODO: revision
-        command = ['tla', 'get', '--archive', self.archive, '--no-pristine',
-                   self.version, self.srcdir]
+        assert self.archive, "need archive name to continue"
+        return self._doGet()
+
+    def _doGet(self):
+        ver = self.version
+        if self.revision:
+            ver += "--%s" % self.revision
+        command = [self.arch_command, 'get', '--archive', self.archive,
+                   '--no-pristine',
+                   ver, self.srcdir]
         c = ShellCommand(self.builder, command, self.builder.basedir,
                          sendRC=False, timeout=self.timeout)
         self.command = c
@@ -880,7 +903,7 @@ class Arch(SourceBase):
 
     def _didGet(self, res):
         d = os.path.join(self.builder.basedir, self.srcdir)
-        command = ['tla', 'build-config', self.buildconfig]
+        command = [self.arch_command, 'build-config', self.buildconfig]
         c = ShellCommand(self.builder, command, d,
                          sendRC=False, timeout=self.timeout)
         self.command = c
@@ -890,6 +913,47 @@ class Arch(SourceBase):
 
 registerSlaveCommand("arch", Arch, cvs_ver)
 
+class Bazaar(Arch):
+    """Bazaar (/usr/bin/baz) is an alternative client for Arch repositories.
+    It is mostly option-compatible, but archive registration is different
+    enough to warrant a separate Command.
+
+    ['archive'] (required): the name of the archive being used
+    """
+
+    arch_command = "baz"
+
+    def setup(self, args):
+        Arch.setup(self, args)
+        # baz doesn't emit the repository name after registration (and
+        # grepping through the output of 'baz archives' is too hard), so we
+        # require that the buildmaster configuration to provide both the
+        # archive name and the URL.
+        self.archive = args['archive'] # required for Baz
+
+    # in _didRegister, the regexp won't match, so we'll stick with the name
+    # in self.archive
+
+    def _doGet(self):
+        # baz prefers ARCHIVE/VERSION. This will work even if
+        # my-default-archive is not set.
+        ver = self.archive + "/" + self.version
+        if self.revision:
+            ver += "--%s" % self.revision
+        command = [self.arch_command, 'get', '--no-pristine',
+                   ver, self.srcdir]
+        c = ShellCommand(self.builder, command, self.builder.basedir,
+                         sendRC=False, timeout=self.timeout)
+        self.command = c
+        d = c.start()
+        d.addCallback(self._abandonOnFailure)
+        if self.buildconfig:
+            d.addCallback(self._didGet)
+        return d
+
+
+
+registerSlaveCommand("bazaar", Bazaar, cvs_ver)
 
 class P4Sync(SourceBase):
     """A partial P4 source-updater. Requires manual setup of a per-slave P4

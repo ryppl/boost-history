@@ -27,10 +27,20 @@ class IrcStatusBot(irc.IRCClient):
         "What you say !!": ["You have no chance to survive make your time.",
                             "HA HA HA HA ...."],
         }
-    def __init__(self, nickname, channels, status):
+    def __init__(self, nickname, channels, status, categories):
+        """
+        @type  nickname: string
+        @param nickname: the nickname by which this bot should be known
+        @type  channels: list of strings
+        @param channels: the bot will maintain a presence in these channels
+        @type  status: L{buildbot.status.builder.Status}
+        @param status: the build master's Status object, through which the
+                       bot retrieves all status information
+        """
         self.nickname = nickname
         self.channels = channels
         self.status = status
+        self.categories = categories
         self.counter = 0
         self.hasQuit = 0
 
@@ -119,7 +129,10 @@ class IrcStatusBot(irc.IRCClient):
         return bc
 
     def getAllBuilders(self):
-        names = self.status.getBuilderNames()
+        """
+        @rtype: list of L{buildbot.process.builder.Builder}
+        """
+        names = self.status.getBuilderNames(categories=self.categories)
         names.sort()
         builders = [self.status.getBuilder(n) for n in names]
         return builders
@@ -159,7 +172,11 @@ class IrcStatusBot(irc.IRCClient):
             str = "Configured builders: "
             for b in builders:
                 str += b.name
-                if not b.remote:
+                # FIXME: b is a buildbot.status.builder.BuilderStatus
+                # has no .remote, so maybe it should be added there
+                #if not b.remote:
+                state = b.getState()[0]
+                if state == 'offline':
                     str += "[offline]"
                 str += " "
             str.rstrip()
@@ -210,6 +227,15 @@ class IrcStatusBot(irc.IRCClient):
                    WARNINGS: "Warnings",
                    FAILURE: "Failure",
                    }
+
+        # only notify about builders we are interested in
+        builder = b.getBuilder()
+        log.msg('builder %r in category %s finished' % (builder,
+                                                        builder.category))
+        if (self.categories != None and
+            builder.category not in self.categories):
+            return
+
         r = "Hey! build %s #%d is complete: %s" % \
             (b.getBuilder().getName(),
              b.getNumber(),
@@ -419,11 +445,12 @@ class IrcStatusFactory(ThrottledClientFactory):
     shuttingDown = False
     p = None
 
-    def __init__(self, nickname, channels):
+    def __init__(self, nickname, channels, categories):
         #ThrottledClientFactory.__init__(self) # doesn't exist
         self.status = None
         self.nickname = nickname
         self.channels = channels
+        self.categories = categories
 
     def __getstate__(self):
         d = self.__dict__.copy()
@@ -436,7 +463,8 @@ class IrcStatusFactory(ThrottledClientFactory):
             self.p.quit("buildmaster reconfigured: bot disconnecting")
 
     def buildProtocol(self, address):
-        p = self.protocol(self.nickname, self.channels, self.status)
+        p = self.protocol(self.nickname, self.channels, self.status,
+                          self.categories)
         p.factory = self
         p.status = self.status
         p.control = self.control
@@ -464,11 +492,13 @@ class IRC(service.MultiService, util.ComparableMixin):
     connect to a single IRC server and am known by a single nickname on that
     server, however I can join multiple channels."""
 
-    compare_attrs = ["host", "port", "nick", "channels", "allowForce"]
+    compare_attrs = ["host", "port", "nick", "channels", "allowForce",
+                     "categories"]
     __implements__ = (interfaces.IStatusReceiver,
                       service.MultiService.__implements__)
 
-    def __init__(self, host, nick, channels, port=6667, allowForce=True):
+    def __init__(self, host, nick, channels, port=6667, allowForce=True,
+                 categories=None):
         service.MultiService.__init__(self)
 
         assert allowForce in (True, False) # TODO: implement others
@@ -479,9 +509,10 @@ class IRC(service.MultiService, util.ComparableMixin):
         self.nick = nick
         self.channels = channels
         self.allowForce = allowForce
+        self.categories = categories
 
         # need to stash the factory so we can give it the status object
-        self.f = IrcStatusFactory(self.nick, self.channels)
+        self.f = IrcStatusFactory(self.nick, self.channels, self.categories)
 
         c = internet.TCPClient(host, port, self.f)
         c.setServiceParent(self)

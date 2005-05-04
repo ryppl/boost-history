@@ -12,36 +12,50 @@ from buildbot.process import base
 
 class Builder(pb.Referenceable):
 
-    """This class defines how and when a given kind of build is performed.
-    Each Builder has an associated BuildProcess object. This class should be
-    subclassed by the user to define how their build ought to work.
+    """I manage all Builds of a given type.
 
-    The BuildProcess object is responsible for two things. The first is
-    deciding *when* a build ought to occur. This involves knowing which file
-    changes to ignore (documentation or comments files, for example), and
-    deciding how long to wait for the tree to become stable before starting.
-    The base class pays attention to all files, and waits 10 minutes for a
-    stable tree:
+    Each Builder is created by an entry in the config file (the c['builders']
+    list), with a number of parameters.
 
-     .fileChanged(filename, when) is called when a file has been modified.
+    One of these parameters is the L{buildbot.process.factory.BuildFactory}
+    object that is associated with this Builder. The factory is responsible
+    for creating new L{Build<buildbot.process.base.Build>} objects. Each
+    Build object defines when and how the build is performed, so a new
+    Factory or Builder should be defined to control this behavior.
 
-     .startBuild(when) should be called when the build should begin. The
-     build should use a tree checked out with a timestamp of 'when' to make
-     sure no partial commits are picked up. 'when' should be in the middle
-     of the 10-minute stable window.
+    The Builder holds on to a number of these Build
+    objects, in various slots like C{.waiting}, C{.interlocked},
+    C{.buildable}, and C{.currentBuild}. Incoming
+    L{Change<buildbot.change.changes.Change>} objects are passed to the
+    C{.waiting} build, and when it decides it is ready to go, I move it to
+    the C{.buildable} slot. When a slave becomes available, I move it to the
+    C{.currentBuild} slot and start it running.
 
-    The second is controlling *how* the build proceeds. The actual build is
-    broken up into a series of steps, saved in the .buildSteps[] array as a
-    list of BuildStep objects. Each step is a single remote command, possibly
-    a shell command.
+    The Builder is also the master-side representative for one of the
+    L{buildbot.slave.bot.SlaveBuilder} objects that lives in a remote
+    buildbot. When a remote builder connects, I query it for command versions
+    and then make it available to any Builds that are ready to run.
+
+    I also manage Interlocks, periodic build timers, forced builds, progress
+    expectation (ETA) management, and some status delivery chores.
+
+    @type waiting: L{buildbot.process.base.Build}
+    @ivar waiting: a slot for a Build waiting for its 'tree stable' timer to
+                   expire
+
+    @type interlocked: list of L{buildbot.process.base.Build}
+    @ivar interlocked: a slot for the Builds that are stable, but which must
+                       wait for other Builds to complete successfully before
+                       they can be run.
+
+    @type buildable: L{buildbot.process.base.Build}
+    @ivar buildable: a slot for a Build that is stable and ready to build,
+                     but which is waiting for a buildslave to be available.
+
+    @type currentBuild: L{buildbot.process.base.Build}
+    @ivar currentBuild: a slot for the Build that actively running
 
     """
-
-    """This is the master-side representative for one of the SlaveBuilder
-    objects that lives in a remote buildbot. Change notifications are
-    delivered to it with .fileChanged(), which influences the enclosed
-    BuildProcess state machine. When a remote builder is available, this
-    object sends it commands to be executed in the slave process."""
 
     remote = None
     lastChange = None
@@ -55,6 +69,13 @@ class Builder(pb.Referenceable):
     expectations = None # this is created the first time we get a good build
 
     def __init__(self, setup, builder_status):
+        """
+        @type  setup: dict
+        @param setup: builder setup data, as stored in
+                      BuildmasterConfig['builders'].  Contains name,
+                      slavename, builddir, factory.
+        @type  builder_status: L{buildbot.status.builder.BuilderStatus}
+        """
         self.name = setup['name']
         self.slavename = setup['slavename']
         self.builddir = setup['builddir']
@@ -93,6 +114,12 @@ class Builder(pb.Referenceable):
         return diffs
 
     def newBuild(self):
+        """
+        Create a new build from our build factory and set ourself as the
+        builder.
+
+        @rtype: L{buildbot.process.base.Build}
+        """
         b = self.buildFactory.newBuild()
         b.setBuilder(self)
         return b
@@ -123,11 +150,16 @@ class Builder(pb.Referenceable):
         
     def attached(self, remote, commands):
         """This is invoked by the BotPerspective when the self.slavename bot
-        registers their builder."""
+        registers their builder.
+
+        @rtype : L{twisted.internet.defer.Deferred}
+        @return: a Deferred that fires (with 'self') when the slave-side
+                 builder is fully attached and ready to accept commands.
+        """
         if self.remote == remote:
             # already attached to them
             log.msg("Builder %s already attached" % self.name)
-            return
+            return defer.succeed(self)
         if self.remote:
             log.msg("WEIRD", self.remote, remote)
         self.remote = remote
@@ -222,6 +254,12 @@ class Builder(pb.Referenceable):
             self.builder_status.currentlyOffline()
 
     def filesChanged(self, change):
+        """
+        Tell the waiting L{buildbot.process.base.Build} that files have
+        changed.
+
+        @type  change: L{buildbot.changes.changes.Change}
+        """
         # this is invoked by the BotMaster to distribute change notification
         # we assume they are added in strictly increasing order
         if not self.waiting:
@@ -230,6 +268,13 @@ class Builder(pb.Referenceable):
         # eventually, our buildTimerFired() method will be called
         
     def buildTimerFired(self, wb):
+        """
+        Called by the Build when the build timer fires.
+
+        @type  wb: L{buildbot.process.base.Build}
+        @param wb: the waiting build that fires the timer
+        """
+
         if not self.interlocks:
             # move from .waiting to .buildable
             if self.buildable:
@@ -317,12 +362,16 @@ class Builder(pb.Referenceable):
         # Finally it will start the actual build process.
         d = build.startBuild(bs, self.expectations, self.remote)
         d.addCallback(self.buildFinished)
-        d.addErrback(log.err)
+        d.addErrback(self._buildNotFinished)
         control = base.BuildControl(build)
         return control
 
+    def _buildNotFinished(self, why):
+        log.msg("_buildNotFinished")
+        log.err()
+
     def _startBuildFailed(self, why, build):
-        log.msg("wanted to start build %s, but "
+        log.msg("I tried to tell the slave that the build %s started, but "
                 "remote_startBuild failed: %s" % (build, why))
 
     def testsFinished(self, results):

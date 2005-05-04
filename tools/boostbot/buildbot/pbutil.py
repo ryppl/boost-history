@@ -129,5 +129,15 @@ class ReconnectingPBClientFactory(PBClientFactory,
         pass
 
     def failedToGetPerspective(self, why):
+        """The login process failed, most likely because of an authorization
+        failure (bad password), but it is also possible that we lost the new
+        connection before we managed to send our credentials.
+        """
+        log.msg("ReconnectingPBClientFactory.failedToGetPerspective")
+        if why.check(pb.PBConnectionLost):
+            log.msg("we lost the brand-new connection")
+            # retrying might help here, let clientConnectionLost decide
+            return
+        # probably authorization
         self.stopTrying() # logging in harder won't help
         log.err(why)

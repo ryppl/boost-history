@@ -13,21 +13,7 @@ from buildbot.changes.changes import Change
 
 class P4Source(service.Service, util.ComparableMixin):
     """This source will poll a perforce repository for changes and submit
-    them to the change master.
-
-    @param p4port: p4 port definition (host:portno)
-
-    @param p4user: p4 user
-
-    @param p4client: name of p4 client to poll
-
-    @param p4base: p4 file specification to limit a poll to (i.e., //...)
-
-
-    @param p4path: path to p4 binary, defaults to just 'p4'
-    @param pollinterval: interval in seconds between polls
-    @param histmax: maximum number of changes to look back through
-    """
+    them to the change master."""
 
     __implements__ = IChangeSource, service.Service.__implements__
     compare_attrs = ["p4port", "p4user", "p4client", "p4base",
@@ -40,6 +26,24 @@ class P4Source(service.Service, util.ComparableMixin):
 
     def __init__(self, p4port, p4user, p4client, p4base,
                  p4bin='p4', pollinterval=60 * 10, histmax=100):
+        """
+        @type  p4port:       string
+        @param p4port:       p4 port definition (host:portno)
+        @type  p4user:       string
+        @param p4user:       p4 user
+        @type  p4client:     string
+        @param p4client:     name of p4 client to poll
+        @type  p4base:       string
+        @param p4base:       p4 file specification to limit a poll to
+                             (i.e., //...)
+        @type  p4bin:        string
+        @param p4bin:        path to p4 binary, defaults to just 'p4'
+        @type  pollinterval: int
+        @param pollinterval: interval in seconds between polls
+        @type  histmax:      int
+        @param histmax:      maximum number of changes to look back through
+        """
+
         self.p4port = p4port
         self.p4user = p4user
         self.p4client = p4client

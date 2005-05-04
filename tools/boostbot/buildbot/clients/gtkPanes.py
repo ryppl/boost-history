@@ -6,30 +6,19 @@ gtk2reactor.install()
 from twisted.internet import reactor
 
 import sys, time
-#from twisted.python import log
-#log.startLogging(sys.stdout)
 
-# requires PyGTK 1.99.15, otherwise you get spurious complaints about
-# multiple pygtk.require calls
 import pygtk
 pygtk.require("2.0")
 import gtk
+assert(gtk.Window) # in gtk1 it's gtk.GtkWindow
 
 from twisted.spread import pb
 
-from buildbot.clients.base import Builder, Client
-from buildbot.status import event
-from buildbot.util import now
+#from buildbot.clients.base import Builder, Client
+from buildbot.clients.base import TextClient
+#from buildbot.util import now
 
-assert(gtk.Window) # in gtk1 it's gtk.GtkWindow
-
-class GtkUpdatingEvent(event.RemoteEvent):
-    def observe_update(self, **kwargs):
-        event.RemoteEvent.observe_update(self, **kwargs)
-        self.builder.updateCurrent()
-        
-pb.setUnjellyableForClass(event.Event, GtkUpdatingEvent)
-
+'''
 class Pane:
     def __init__(self):
         pass
@@ -267,23 +256,145 @@ class CompactBuilder(Builder):
         self.stopTimer()
         self.updateText()
         eta.callRemote("unsubscribe", self)
-            
-class GtkClient(Client):
-    RowClass = OneRow
-    BuilderClass = R2Builder
-    def __init__(self):
-        Client.__init__(self)
+'''
+
+class TwoRowBuilder:
+    def __init__(self, ref):
+        self.lastbox = lastbox = gtk.EventBox()
+        self.lastlabel = lastlabel = gtk.Label("?")
+        lastbox.add(lastlabel)
+        lastbox.set_size_request(64,64)
+
+        self.currentbox = currentbox = gtk.EventBox()
+        self.currentlabel = currentlabel = gtk.Label("?")
+        currentbox.add(currentlabel)
+        currentbox.set_size_request(64,64)
+
+        self.ref = ref
+
+    def setColor(self, box, color):
+        box.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
+
+    def getLastBuild(self):
+        d = self.ref.callRemote("getLastFinishedBuild")
+        d.addCallback(self.gotLastBuild)
+    def gotLastBuild(self, build):
+        if build:
+            build.callRemote("getText").addCallback(self.gotLastText)
+            build.callRemote("getColor").addCallback(self.gotLastColor)
+
+    def gotLastText(self, text):
+        self.lastlabel.set_text("\n".join(text))
+    def gotLastColor(self, color):
+        self.setColor(self.lastbox, color)
+
+    def getState(self):
+        self.ref.callRemote("getState").addCallback(self.gotState)
+    def gotState(self, res):
+        state, ETA, build = res
+        # state is one of: offline, idle, waiting, interlocked, building
+        currentmap = {"offline": "red",
+                      "idle": "white",
+                      "waiting": "yellow",
+                      "interlocked": "yellow",
+                      "building": "yellow",}
+        text = state
+        self.setColor(self.currentbox, currentmap[state])
+        if ETA is not None:
+            text += "\nETA=%s secs" % ETA
+        self.currentlabel.set_text(state)
+
+    def buildStarted(self, build):
+        pass
+    def buildFinished(self, build, results):
+        self.gotLastBuild(build)
+
+
+class TwoRowClient(pb.Referenceable):
+    def __init__(self, window):
+        self.window = window
+        self.buildernames = []
+        self.builders = {}
+
+    def connected(self, ref):
+        print "connected"
+        self.ref = ref
+        self.pane = gtk.VBox(False, 2)
+        self.table = gtk.Table(1+2, 1)
+        self.pane.add(self.table)
+        self.window.vb.add(self.pane)
+        self.pane.show_all()
+        ref.callRemote("subscribe", "builds", 5, self)
+
+    def removeTable(self):
+        for child in self.table.get_children():
+            self.table.remove(child)
+        self.pane.remove(self.table)
+
+    def makeTable(self):
+        columns = len(self.builders)
+        self.table = gtk.Table(2, columns)
+        self.pane.add(self.table)
+        for i in range(len(self.buildernames)):
+            name = self.buildernames[i]
+            b = self.builders[name]
+            self.table.attach(gtk.Label(name), i, i+1, 0, 1)
+            self.table.attach(b.lastbox, i, i+1, 1, 2,
+                              xpadding=1, ypadding=1)
+            self.table.attach(b.currentbox, i, i+1, 2, 3,
+                              xpadding=1, ypadding=1)
+        self.table.show_all()
+
+    def rebuildTable(self):
+        self.removeTable()
+        self.makeTable()
+
+    def remote_builderAdded(self, buildername, builder):
+        print "builderAdded", buildername
+        assert buildername not in self.buildernames
+        self.buildernames.append(buildername)
+
+        b = TwoRowBuilder(builder)
+        self.builders[buildername] = b
+        self.rebuildTable()
+        b.getLastBuild()
+        b.getState()
+
+    def remote_builderRemoved(self, buildername):
+        self.builders.remove(buildername)
+        del self.builder_ref[buildername]
+        self.rebuildTable()
+
+    def remote_builderChangedState(self, name, state, eta):
+        self.builders[name].gotState((state, eta, None))
+    def remote_buildStarted(self, name, build):
+        self.builders[name].buildStarted(build)
+    def remote_buildFinished(self, name, build, results):
+        self.builders[name].buildFinished(build, results)
+
+
+class GtkClient(TextClient):
+    ClientClass = TwoRowClient
+
+    def __init__(self, master):
+        self.master = master
+
         w = gtk.Window()
         self.w = w
         #w.set_size_request(64,64)
         w.connect('destroy', lambda win: gtk.main_quit())
-        self.vb = gtk.VBox(gtk.FALSE, 2)
+        self.vb = gtk.VBox(False, 2)
         self.status = gtk.Label("unconnected")
         self.vb.add(self.status)
-        self.pane = self.RowClass()
-        self.vb.add(self.pane.getWidget())
+        self.listener = self.ClientClass(self)
         w.add(self.vb)
         w.show_all()
+
+    def connected(self, ref):
+        self.status.set_text("connected")
+        TextClient.connected(self, ref)
+
+"""
     def addBuilder(self, name, builder):
         Client.addBuilder(self, name, builder)
         self.pane.addBuilder(builder)
@@ -301,18 +412,14 @@ class GtkClient(Client):
         remote.notifyOnDisconnect(self.disconnected)
     def disconnected(self, remote):
         self.status.set_text("disconnected, will retry")
-
-class CompactGtkClient(GtkClient):
-    RowClass = CompactRow
-    BuilderClass = CompactBuilder
+"""
 
 def main():
     master = "localhost:8007"
     if len(sys.argv) > 1:
         master = sys.argv[1]
-    a = CompactGtkClient()
-    a.startConnecting(master)
-    reactor.run()
+    c = GtkClient(master)
+    c.run()
 
 if __name__ == '__main__':
     main()

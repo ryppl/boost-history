@@ -1,4 +1,4 @@
-#! /usr/bin/python
+# -*- test-case-name: buildbot.test.test_interlock -*-
 
 from twisted.python import log
 from buildbot.util import CancelableDeferred
@@ -13,13 +13,21 @@ class Interlock:
     debug = 0
 
     def __init__(self, name, feeders, watchers):
+        """
+        @type  name: string
+        @param name: name of the interlock
+        @type  feeders: list of strings
+        @param feeders: names of the builders that feed this interlock
+        @type  watchers: list of strings
+        @param watchers: names of the builders that wait on this interlock
+        """
         self.name = name
         self.feederNames = feeders  # these feed me
         self.watcherNames = watchers  # these watch me
         self.feeders = {}
         for n in feeders:
             self.feeders[n] = (None, 0)
-        # feeders.keys are .names of BuildProcess objects that we watch
+        # feeders.keys are .names of Builder objects that we watch
         # feeders.values are Change numbers that have been successfully built
         self.watchers = {}
         # watchers.keys are Change numbers that a builder cares about
@@ -57,7 +65,25 @@ class Interlock:
         for watcherName in self.watcherNames:
             builders[watcherName].stopWatchingInterlock(self)
 
+    # FIXME: maybe rename to changeProcessed instead ?
+    # that way it can be used for builders with unimportant changes
+    # to pass interlocks
     def buildFinished(self, feederName, changenum, successful):
+        """
+        Tell the interlock the build on the given builder with the given
+        changenum has finished.
+        In practice, this just informs the interlock that the given builder
+        has processed changes up to the given changenum, with the given
+        result.
+
+        @type  feederName: string
+        @param feederName: name of the builder that finished a build
+        @type  changenum:  int
+        @param changenum:  number of the L{buildbot.changes.changes.Change}
+                           that this builder finished a build for
+        @type  successful: bool
+        @param successful: whether the build succeeded
+        """
         # we assume that any given build will process Changes in strict order
         self.feeders[feederName] = (changenum, successful)
         if self.debug:

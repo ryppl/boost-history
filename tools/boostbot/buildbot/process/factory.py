@@ -1,4 +1,4 @@
-#! /usr/bin/python
+# -*- test-case-name: buildbot.test.test_step -*-
 
 from buildbot import util
 from buildbot.process.base import Build
@@ -10,6 +10,10 @@ def s(steptype, **kwargs):
     return (steptype, kwargs)
 
 class BuildFactory(util.ComparableMixin):
+    """
+    @cvar  buildClass: class to use when creating builds
+    @type  buildClass: L{buildbot.process.base.Build}
+    """
     buildClass = Build
     treeStableTimer = None
     steps = []

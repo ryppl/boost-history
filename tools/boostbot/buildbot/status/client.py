@@ -1,4 +1,4 @@
-#! /usr/bin/python
+# -*- test-case-name: buildbot.test.test_status -*-
 
 from twisted.spread import pb
 from twisted.python import log, components
@@ -15,6 +15,13 @@ from buildbot.changes import changes
 class IRemote(components.Interface):
     pass
 
+def makeRemote(obj):
+    # we want IRemote(None) to be None, but you can't really do that with
+    # adapters, so we fake it
+    if obj is None:
+        return None
+    return IRemote(obj)
+
 class RemoteBuilder(pb.Referenceable):
     def __init__(self, builder):
         self.b = builder
@@ -24,25 +31,23 @@ class RemoteBuilder(pb.Referenceable):
 
     def remote_getState(self):
         state, ETA, build = self.b.getState()
-        return (state, ETA, IRemote(build))
+        return (state, ETA, makeRemote(build))
 
     def remote_getSlave(self):
         return IRemote(self.b.getSlave())
 
-    def remote_getCurrentBuild(self):
-        return IRemote(self.b.getCurrentBuild())
-
     def remote_getLastFinishedBuild(self):
-        return IRemote(self.b.getLastFinishedBuild())
+        return makeRemote(self.b.getLastFinishedBuild())
 
     def remote_getCurrentBuild(self):
-        return IRemote(self.b.getCurrentBuild())
+        return makeRemote(self.b.getCurrentBuild())
 
     def remote_getBuild(self, number):
-        return IRemote(self.b.getBuild(number))
+        return makeRemote(self.b.getBuild(number))
 
     def remote_getEvent(self, number):
         return IRemote(self.b.getEvent(number))
+
 components.registerAdapter(RemoteBuilder,
                            interfaces.IBuilderStatus, IRemote)    
 
@@ -83,7 +88,7 @@ class RemoteBuild(pb.Referenceable):
         return self.b.getETA()
 
     def remote_getCurrentStep(self):
-        return IRemote(self.b.getCurrentStep())
+        return makeRemote(self.b.getCurrentStep())
 
     def remote_getText(self):
         return self.b.getText()
@@ -140,6 +145,7 @@ class RemoteBuildStep(pb.Referenceable):
 
     def remote_getResults(self):
         return self.s.getResults()
+
 components.registerAdapter(RemoteBuildStep,
                            interfaces.IBuildStepStatus, IRemote)    
 
@@ -155,6 +161,7 @@ class RemoteSlave:
         return self.s.getHost()
     def remote_isConnected(self):
         return self.s.isConnected()
+
 components.registerAdapter(RemoteSlave,
                            interfaces.ISlaveStatus, IRemote)
 
@@ -168,6 +175,7 @@ class RemoteEvent:
         return self.s.getText()
     def remote_getColor(self):
         return self.s.getColor()
+
 components.registerAdapter(RemoteEvent,
                            interfaces.IStatusEvent, IRemote)
 
@@ -192,6 +200,7 @@ class RemoteLog(pb.Referenceable):
     def remote_getChunks(self):
         return self.l.getChunks()
     # TODO: subscription interface
+
 components.registerAdapter(RemoteLog, builder.LogFile, IRemote)
 # TODO: something similar for builder.HTMLLogfile ?
 
@@ -205,6 +214,7 @@ class RemoteChange:
         return self.c.files
     def getComments(self):
         return self.c.comments
+
 components.registerAdapter(RemoteChange, changes.Change, IRemote)
 
 

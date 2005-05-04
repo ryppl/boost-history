@@ -6,114 +6,25 @@ from twisted.spread import pb
 from twisted.cred import credentials
 from twisted.internet import reactor
 
-from buildbot.pbutil import ReconnectingPBClientFactory
-
-from buildbot.status import event
-
-class UpdatingEvent(event.RemoteEvent):
-    def observe_setFiles(self, filesdict):
-        event.RemoteEvent.observe_setFiles(self, filesdict)
-        pass
-    def observe_update(self, **kwargs):
-        event.RemoteEvent.observe_update(self, **kwargs)
-        print "%s: update: %s" % (self.builder.name, kwargs)
-    def observe_addFile(self, name, file):
-        event.RemoteEvent.observe_addFile(self, name, file)
-        pass
-    def observe_finish(self):
-        event.RemoteEvent.observe_finish(self)
-        pass
-pb.setUnjellyableForClass(event.Event, UpdatingEvent)
-
-from twisted.python import log
-#log.startLogging(sys.stdout)
-
-class Builder(pb.Referenceable):
-    def __init__(self, name, remote, parent):
-        self.name = name
-        self.remote = remote
-        self.parent = parent
-        self.current = None
-        remote.notifyOnDisconnect(self.disconnect)
-        self.setup()
-    def setup(self):
-        pass
-    def subscribe(self):
-        self.remote.callRemote("subscribe", self)
-        # after this, we will get all methods except appendFiles
-        #self.remote.callRemote("subscribeFiles")
-    def goAway(self):
-        self.unsubscribe()
-    def disconnect(self, remote):
-        self.parent.removeBuilder(self.name)
-    def unsubscribe(self):
-        self.remote.callRemote("unsubscribeFiles")
-        self.remote.callRemote("unsubscribe")
-        self.remote.dontNotifyOnDisconnect(self.disconnect)
-
-    # last-build-status
-    def remote_newLastBuildStatus(self, event):
-        print "%s: newLastBuildStatus: %s" % (self.name, event)
-
-    # current-activity-big
-    def remote_currentlyOffline(self):
-        print "%s: big=offline" % self.name
-    def remote_currentlyIdle(self):
-        print "%s: big=idle" % self.name
-    def remote_currentlyWaiting(self, seconds):
-        print "%s: big=waiting" % self.name, seconds
-    def remote_currentlyInterlocked(self):
-        print "%s: big=interlocked" % self.name
-    def remote_currentlyBuilding(self, eta):
-        print "%s: big=building" % self.name, eta
-        if eta:
-            d = eta.callRemote("subscribe", self, 1)
-        # TODO: addCallback
-        # results in _progress, _finished messages
-
-    # current-activity-small
-    def remote_newEvent(self, event):
-        assert(event.__class__ == UpdatingEvent)
-        print "%s: newEvent: %s" % (self.name, event)
-        self.current = event
-        event.builder = self
-
-    # from the BuildProgress object
-    def remote_progress(self, seconds):
-        print "%s: progress: %s" % (self.name, seconds)
-    def remote_finished(self, eta):
-        print "%s: finished" % self.name
-        eta.callRemote("unsubscribe", self)
-
-class Client(pb.Referenceable):
+class StatusClient(pb.Referenceable):
     """To use this, call my .connected method with a RemoteReference to the
-    buildmaster's status port object.
+    buildmaster's StatusClientPerspective object.
     """
-    BuilderClass = Builder
 
-    def __init__(self):
+    def __init__(self, events):
         self.builders = {}
+        self.events = events
 
-    def done(*args):
-        reactor.stop()
-
-    def addBuilder(self, name, builder):
-        self.builders[name] = builder
-        #builder.subscribe()
-    def removeBuilder(self, name):
-        del self.builders[name]
+    def connected(self, remote):
+        print "connected"
+        self.remote = remote
+        remote.callRemote("subscribe", self.events, 5, self)
 
     def remote_builderAdded(self, buildername, builder):
-        # get get a remote interface to an IBuilderStatus
-        #b = self.BuilderClass(name, remote, self)
         print "builderAdded", buildername
-        #self.addBuilder(name, b)
-        #return b
 
     def remote_builderRemoved(self, buildername):
         print "builderRemoved", buildername
-        #self.builders[name].goAway()
-        #self.removeBuilder(name)
 
     def remote_builderChangedState(self, buildername, state, eta):
         print "builderChangedState", buildername, state, eta
@@ -150,37 +61,50 @@ class Client(pb.Referenceable):
         ChunkTypes = ["STDOUT", "STDERR", "HEADER"]
         print "logChunk[%s]: %s" % (ChunkTypes[channel], text)
 
-    def connected(self, remote):
-        print "connected"
-        self.remote = remote
-        remote.callRemote("subscribe", "logs", 3, self)
+class TextClient:
+    def __init__(self, master, events="steps"):
+        self.master = master
+        self.listener = StatusClient(events)
 
-    def startConnecting(self, master):
+    def run(self):
+        """Start the TextClient.
+        @type  events: string, one of builders, builds, steps, logs, full
+        @param events: specify what level of detail should be reported.
+        - 'builders': only announce new/removed Builders
+        - 'builds': also announce builderChangedState, buildStarted, and
+          buildFinished
+        - 'steps': also announce buildETAUpdate, stepStarted, stepFinished
+        - 'logs': also announce stepETAUpdate, logStarted, logFinished
+        - 'full': also announce log contents
+        """
+        self.startConnecting()
+        reactor.run()
+
+    def startConnecting(self):
         try:
-            host, port = re.search(r'(.+):(\d+)', master).groups()
+            host, port = re.search(r'(.+):(\d+)', self.master).groups()
             port = int(port)
         except:
-            print "unparseable master location '%s'" % master
+            print "unparseable master location '%s'" % self.master
             print " expecting something more like localhost:8007"
             raise
-        cf = ClientFactory()
-        cf.client = self
-        cf.startLogin(credentials.UsernamePassword("statusClient",
-                                                   "clientpw"))
+        cf = pb.PBClientFactory()
+        creds = credentials.UsernamePassword("statusClient", "clientpw")
+        d = cf.login(creds)
         reactor.connectTCP(host, port, cf)
+        d.addCallback(self.connected)
+        return d
+    def connected(self, ref):
+        ref.notifyOnDisconnect(self.disconnected)
+        self.listener.connected(ref)
 
+    def disconnected(self, ref):
+        print "lost connection"
+        reactor.stop()
 
-class ClientFactory(ReconnectingPBClientFactory):
-    def gotPerspective(self, perspective):
-        self.client.connected(perspective)
-
-def main():
+if __name__ == '__main__':
     master = "localhost:8007"
     if len(sys.argv) > 1:
         master = sys.argv[1]
-    c = Client()
-    c.startConnecting(master)
-    reactor.run()
-
-if __name__ == '__main__':
-    main()
+    c = TextClient()
+    c.run()

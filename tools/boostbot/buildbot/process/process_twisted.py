@@ -1,6 +1,6 @@
 #! /usr/bin/python
 
-# BuildProcesses specific to the Twisted codebase
+# Build classes specific to the Twisted codebase
 
 from buildbot.process.base import Build
 from buildbot.process.factory import BuildFactory, s
@@ -47,7 +47,7 @@ class QuickTwistedBuildFactory(TwistedBaseFactory):
         self.steps.append(s(HLint, python=python[0]))
         self.steps.append(s(RemovePYCs))
         for p in python:
-            cmd = "%s setup.py build_ext -i" % p
+            cmd = [p, "setup.py", "all", "build_ext", "-i"]
             self.steps.append(s(step.Compile, command=cmd,
                                 flunkOnFailure=True))
             self.steps.append(s(TwistedTrial,
@@ -70,7 +70,7 @@ class FullTwistedBuildFactory(TwistedBaseFactory):
             python = [python]
         assert type(compileOpts) is list
         assert type(compileOpts2) is list
-        cmd = (python + compileOpts + ["setup.py", "build_ext"]
+        cmd = (python + compileOpts + ["setup.py", "all", "build_ext"]
                + compileOpts2 + ["-i"])
 
         self.steps.append(s(step.Compile, command=cmd, flunkOnFailure=True))
@@ -100,7 +100,7 @@ class TwistedReactorsBuildFactory(TwistedBaseFactory):
             python = [python]
         assert type(compileOpts) is list
         assert type(compileOpts2) is list
-        cmd = (python + compileOpts + ["setup.py", "build_ext"]
+        cmd = (python + compileOpts + ["setup.py", "all", "build_ext"]
                + compileOpts2 + ["-i"])
 
         self.steps.append(s(step.Compile, command=cmd, warnOnFailure=True))

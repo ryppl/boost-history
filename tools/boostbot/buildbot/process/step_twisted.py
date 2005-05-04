@@ -1,4 +1,4 @@
-#! /usr/bin/python
+# -*- test-case-name: buildbot.test.test_twisted -*-
 
 from twisted.python import log, failure
 
@@ -20,12 +20,7 @@ class HLint(ShellCommand):
     from recommended style is flagged and put in the output log.
 
     This step looks at .changes in the parent Build to extract a list of
-    Lore XHTML files to check.
-
-    @param results: [warnings, output]. 'warnings' is the number of problems
-    that were found in the XHTML files (equal to the number of lines of
-    output that have colons in them), 0 if none were found. 'output' is a
-    string with all the warnings."""
+    Lore XHTML files to check."""
 
     name = "hlint"
     description = ["running", "hlint"]
@@ -201,53 +196,7 @@ class Trial(ShellCommand):
     exceptions) to a file named test.log . This file will be pulled up to
     the master where it can be seen as part of the status output.
 
-
-    @param testpath: a string to use in PYTHONPATH when running the tests. If
-     None, do not set PYTHONPATH. Setting this to '.' will cause the source
-     files to be used in-place.
-
-    @param python: which python executable to use. Must be a string (without
-     spaces) or a list, and will form the start of the argv array that will
-     launch trial. If you use this, you should set 'trial' to an explicit
-     path (like /usr/bin/trial or ./bin/trial). Defaults to None, which
-     leaves it out entirely (running 'trial args' instead of 'python
-     ./bin/trial args'). Likely values are 'python', ['python2.2'],
-     ['python', '-Wall'], etc.
-
-    @param trial: which 'trial' executable to run. Defaults to 'trial', which
-     will cause $PATH to be searched and probably find /usr/bin/trial . If
-     you set 'python', this should be set to an explicit path (because
-     'python2.3 trial' will not work).
-
-    @param tests: a list of test modules to run, like
-     ['twisted.test.test_defer', 'twisted.test.test_process']. If this is
-     a string, it will be converted into a one-item list.
-
-    @param testChanges: if True, ignore the 'tests' parameter and instead ask
-     the Build for all the files that make up the Changes going into this
-     build. Pass these filenames to trial and ask it to look for
-     test-case-name tags, running just the tests necessary to cover the
-     changes.
-
-    @param recurse: If true, pass the --recurse option to trial, allowing
-     test cases to be found in deeper subdirectories of the modules listed in
-     'tests'. This does not appear to be necessary when using testChanges.
-
-    @param reactor: which reactor to use, like 'gtk' or 'java'. If not
-     provided, the Twisted's usual platform-dependent default is used.
-
-    @param randomly: if True, add the --random=0 argument, which instructs
-     trial to run the unit tests in a random order each time. This
-     occasionally catches problems that might be masked when one module
-     always runs before another (like failing to make registerAdapter calls
-     before lookups are done).
-
-    In addition, the following parameters are inherited from ShellCommand and
-    may be useful to set: workdir, haltOnFailure, flunkOnWarnings,
-    flunkOnFailure, warnOnWarnings, warnOnFailure, want_stdout, want_stderr,
-    timeout.
-
-    Also, there are some class attributes which may be usefully overridden
+    There are some class attributes which may be usefully overridden
     by subclasses. 'trialMode' and 'trialArgs' can influence the trial
     command line.
     """
@@ -268,6 +217,68 @@ class Trial(ShellCommand):
                  testpath=UNSPECIFIED,
                  tests=None, testChanges=None,
                  recurse=None, randomly=None, **kwargs):
+        """
+        @type  testpath: string
+        @param testpath: use in PYTHONPATH when running the tests. If
+                         None, do not set PYTHONPATH. Setting this to '.' will
+                         cause the source files to be used in-place.
+
+        @type  python: string (without spaces) or list
+        @param python: which python executable to use. Will form the start of
+                       the argv array that will launch trial. If you use this,
+                       you should set 'trial' to an explicit path (like
+                       /usr/bin/trial or ./bin/trial). Defaults to None, which
+                       leaves it out entirely (running 'trial args' instead of
+                       'python ./bin/trial args'). Likely values are 'python',
+                       ['python2.2'], ['python', '-Wall'], etc.
+
+        @type  trial: string
+        @param trial: which 'trial' executable to run.
+                      Defaults to 'trial', which will cause $PATH to be
+                      searched and probably find /usr/bin/trial . If you set
+                      'python', this should be set to an explicit path (because
+                      'python2.3 trial' will not work).
+
+        @type  tests: list of strings
+        @param tests: a list of test modules to run, like
+                      ['twisted.test.test_defer', 'twisted.test.test_process'].
+                      If this is a string, it will be converted into a one-item
+                      list.
+
+        @type  testChanges: boolean
+        @param testChanges: if True, ignore the 'tests' parameter and instead
+                            ask the Build for all the files that make up the
+                            Changes going into this build. Pass these filenames
+                            to trial and ask it to look for test-case-name
+                            tags, running just the tests necessary to cover the
+                            changes.
+
+        @type  recurse: boolean
+        @param recurse: If True, pass the --recurse option to trial, allowing
+                        test cases to be found in deeper subdirectories of the
+                        modules listed in 'tests'. This does not appear to be
+                        necessary when using testChanges.
+
+        @type  reactor: string
+        @param reactor: which reactor to use, like 'gtk' or 'java'. If not
+                        provided, the Twisted's usual platform-dependent
+                        default is used.
+
+        @type  randomly: boolean
+        @param randomly: if True, add the --random=0 argument, which instructs
+                         trial to run the unit tests in a random order each
+                         time. This occasionally catches problems that might be
+                         masked when one module always runs before another
+                         (like failing to make registerAdapter calls before
+                         lookups are done).
+
+        @type  kwargs: dict
+        @param kwargs: parameters. The following parameters are inherited from
+                       L{ShellCommand} and may be useful to set: workdir,
+                       haltOnFailure, flunkOnWarnings, flunkOnFailure,
+                       warnOnWarnings, warnOnFailure, want_stdout, want_stderr,
+                       timeout.
+        """
         ShellCommand.__init__(self, **kwargs)
 
         if python:
@@ -579,13 +590,6 @@ class ProcessDocs(ShellCommand):
     """I build all docs. This requires some LaTeX packages to be installed.
     It will result in the full documentation book (dvi, pdf, etc).
     
-    @param workdir: the workdir to start from: must be the base of the
-    Twisted tree
-
-    @param results: [rc, warnings, output]. rc==0 if all files were
-    converted successfully. warnings is a count of hlint warnings. 'output'
-    is the verbose output of the command.
-
     """
 
     name = "process-docs"
@@ -594,6 +598,20 @@ class ProcessDocs(ShellCommand):
     description = ["processing", "docs"]
     descriptionDone = ["docs"]
     # TODO: track output and time
+
+    def __init__(self, **kwargs):
+        """
+        @type    workdir: string
+        @keyword workdir: the workdir to start from: must be the base of the
+                          Twisted tree
+
+        @type    results: triple of (int, int, string)
+        @keyword results: [rc, warnings, output]
+                          - rc==0 if all files were converted successfully.
+                          - warnings is a count of hlint warnings. 
+                          - output is the verbose output of the command.
+        """
+        ShellCommand.__init__(self, **kwargs)
 
     def createSummary(self, log):
         output = log.getText()
@@ -630,21 +648,25 @@ class ProcessDocs(ShellCommand):
 
     
 class BuildDebs(ShellCommand):
-    """I build the .deb packages.
-    
-    @param workdir: the workdir to start from: must be the base of the
-    Twisted tree
-
-    @param results: [rc, output]. rc==0 if all .debs were created
-    successfully. 'output' is a string with any errors or warnings.
-
-    """
-
+    """I build the .deb packages."""
+ 
     name = "debuild"
     flunkOnFailure = 1
     command = ["debuild", "-uc", "-us"]
     description = ["building", "debs"]
     descriptionDone = ["debs"]
+
+    def __init__(self, **kwargs):
+        """
+        @type    workdir: string
+        @keyword workdir: the workdir to start from (must be the base of the
+                          Twisted tree)
+        @type    results: double of [int, string]
+        @keyword results: [rc, output].
+                          - rc == 0 if all .debs were created successfully
+                          - output: string with any errors or warnings
+        """
+        ShellCommand.__init__(self, **kwargs)
 
     def commandComplete(self, cmd):
         errors, warnings = 0, 0

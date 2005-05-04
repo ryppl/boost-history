@@ -1,4 +1,4 @@
-#! /usr/bin/python
+# -*- test-case-name: buildbot.test.test_status -*-
 
 # the email.MIMEMultipart module is only available in python-2.2.2 and later
 
@@ -17,7 +17,7 @@ from twisted.protocols.smtp import sendmail
 from twisted.python import components, log
 
 from buildbot import interfaces, util
-from buildbot.status import builder
+from buildbot.status.builder import FAILURE, SUCCESS, WARNINGS
 
 
 class Domain(util.ComparableMixin):
@@ -46,57 +46,9 @@ class MailNotifier(service.Service, util.ComparableMixin):
     To get a simple one-message-per-build (say, for a mailing list), use
     sendToInterestedUsers=False, extraRecipients=['listaddr@example.org']
 
-    Parameters:
-
-     fromaddr (required): the email address to be used in the 'From' header.
-
-     sendToInterestedUsers: if True (the default), send mail to all of the
-                            Interested Users. If False, only send mail to
-                            the extraRecipients list.
-
-     extraRecipients: a list of email addresses to which messages should be
-                      sent (in addition to the InterestedUsers list, which
-                      includes any developers who made Changes that went into
-                      this build). It is a good idea to create a small
-                      mailing list and deliver to that, then let subscribers
-                      come and go as they please.
-
-     subject: a string to be used as the subject line of the message.
-              %(builder)s will be replaced with the name of the builder
-              which provoked the message.
-
-     mode: a string, one of the following (defaults to 'all'):
-
-      'all': send mail about all builds, passing and failing
-      'failing': only send mail about builds which fail
-      'problem': only send mail about a build which failed when the previous
-                 build passed
-
-     builders: a list of builder names for which mail should be sent.
-               Defaults to all builds.
-
-     addLogs: if True, include all build logs as attachments to the messages.
-              These can be quite large. This can also be set to a list of log
-              names, to send a subset of the logs. Defaults to False.
-
-     relayhost: the host to which the outbound SMTP connection should be
-                made. Defaults to 'localhost'
-
-     lookup: this is an object which provides IEmailLookup, which is
-             responsible for mapping User names (which come from the VC
-             system) into valid email addresses. If not provided, the
-             notifier will only be able to send mail to the addresses in the
-             extraRecipients list. Most of the time you can use a simple
-             Domain instance. As a shortcut, you can pass as string: this
-             will be treated as if you had provided Domain(str). For example,
-             lookup='twistedmatrix.com' will allow mail to be sent to all
-             developers whose SVN usernames match their twistedmatrix.com
-             account names.
-
     Each MailNotifier sends mail to a single set of recipients. To send
     different kinds of mail to different recipients, use multiple
     MailNotifiers.
-
     """
 
     __implements__ = (interfaces.IStatusReceiver,
@@ -104,14 +56,78 @@ class MailNotifier(service.Service, util.ComparableMixin):
                       service.Service.__implements__)
 
     compare_attrs = ["extraRecipients", "lookup", "fromaddr", "mode",
-                     "builders", "addLogs", "relayhost", "subject",
-                     "sendToInterestedUsers"]
+                     "categories", "builders", "addLogs", "relayhost",
+                     "subject", "sendToInterestedUsers"]
 
-    def __init__(self, fromaddr, mode="all", builders=None,
+    def __init__(self, fromaddr, mode="all", categories=None, builders=None,
                  addLogs=False, relayhost="localhost",
                  subject="buildbot %(result)s in %(builder)s",
                  lookup=None, extraRecipients=[],
                  sendToInterestedUsers=True):
+        """
+        @type  fromaddr: string
+        @param fromaddr: the email address to be used in the 'From' header.
+        @type  sendToInterestedUsers: boolean
+        @param sendToInterestedUsers: if True (the default), send mail to all 
+                                      of the Interested Users. If False, only
+                                      send mail to the extraRecipients list.
+
+        @type  extraRecipients: tuple of string
+        @param extraRecipients: a list of email addresses to which messages
+                                should be sent (in addition to the
+                                InterestedUsers list, which includes any
+                                developers who made Changes that went into this
+                                build). It is a good idea to create a small
+                                mailing list and deliver to that, then let
+                                subscribers come and go as they please.
+
+        @type  subject: string
+        @param subject: a string to be used as the subject line of the message.
+                        %(builder)s will be replaced with the name of the
+                        %builder which provoked the message.
+
+        @type  mode: string (defaults to all)
+        @param mode: one of:
+                     - 'all': send mail about all builds, passing and failing
+                     - 'failing': only send mail about builds which fail
+                     - 'problem': only send mail about a build which failed
+                     when the previous build passed
+
+        @type  builders: list of strings
+        @param builders: a list of builder names for which mail should be
+                         sent. Defaults to None (send mail for all builds).
+                         Use either builders or categories, but not both.
+
+        @type  categories: list of strings
+        @param categories: a list of category names to serve status
+                           information for. Defaults to None (all
+                           categories). Use either builders or categories,
+                           but not both.
+
+        @type  addLogs: boolean.
+        @param addLogs: if True, include all build logs as attachments to the
+                        messages.  These can be quite large. This can also be
+                        set to a list of log names, to send a subset of the
+                        logs. Defaults to False.
+
+        @type  relayhost: string
+        @param relayhost: the host to which the outbound SMTP connection
+                          should be made. Defaults to 'localhost'
+
+        @type  lookup:    implementor of {IEmailLookup}
+        @param lookup:    object which provides IEmailLookup, which is
+                          responsible for mapping User names (which come from
+                          the VC system) into valid email addresses. If not
+                          provided, the notifier will only be able to send mail
+                          to the addresses in the extraRecipients list. Most of
+                          the time you can use a simple Domain instance. As a
+                          shortcut, you can pass as string: this will be
+                          treated as if you had provided Domain(str). For
+                          example, lookup='twistedmatrix.com' will allow mail
+                          to be sent to all developers whose SVN usernames
+                          match their twistedmatrix.com account names.
+        """
+
         assert type(extraRecipients) in (list, tuple)
         for r in extraRecipients:
             assert type(r) is str
@@ -120,6 +136,7 @@ class MailNotifier(service.Service, util.ComparableMixin):
         self.sendToInterestedUsers = sendToInterestedUsers
         self.fromaddr = fromaddr
         self.mode = mode
+        self.categories = categories
         self.builders = builders
         self.addLogs = addLogs
         self.relayhost = relayhost
@@ -130,8 +147,17 @@ class MailNotifier(service.Service, util.ComparableMixin):
             assert components.implements(lookup, interfaces.IEmailLookup)
         self.lookup = lookup
         self.watched = []
+        self.status = None
+
+        # you should either limit on builders or categories, not both
+        if self.builders != None and self.categories != None:
+            log.err("Please specify only builders to ignore or categories to include")
+            raise # FIXME: the asserts above do not raise some Exception either
 
     def setServiceParent(self, parent):
+        """
+        @type  parent: L{buildbot.master.BuildMaster}
+        """
         service.Service.setServiceParent(self, parent)
         self.setup()
 
@@ -146,8 +172,13 @@ class MailNotifier(service.Service, util.ComparableMixin):
         return service.Service.disownServiceParent(self)
 
     def builderAdded(self, name, builder):
+        # only subscribe to builders we are interested in
+        if self.categories != None and builder.category not in self.categories:
+            return None
+
         self.watched.append(builder)
-        return self # subscribe to all builders
+        return self # subscribe to this builder
+
     def builderRemoved(self, name):
         pass
 
@@ -157,15 +188,20 @@ class MailNotifier(service.Service, util.ComparableMixin):
         pass
     def buildFinished(self, name, build, results):
         # here is where we actually do something.
-        if self.builders != None and name in self.builders:
+        builder = build.getBuilder()
+        if self.builders is not None and name not in self.builders:
             return # ignore this build
-        if self.mode == "failing" and results != builder.FAILURE:
+        if self.categories is not None and \
+               builder.category not in self.categories:
+            return # ignore this build
+
+        if self.mode == "failing" and results != FAILURE:
             return
         if self.mode == "problem":
-            if results != builder.FAILURE:
+            if results != FAILURE:
                 return
             prev = build.getPreviousBuild()
-            if prev and prev.getResults() == builder.FAILURE:
+            if prev and prev.getResults() == FAILURE:
                 return
         # for testing purposes, buildMessage returns a Deferred that fires
         # when the mail has been sent. To help unit tests, we return that
@@ -214,10 +250,10 @@ class MailNotifier(service.Service, util.ComparableMixin):
         else:
             t = ""
 
-        if results == builder.SUCCESS:
+        if results == SUCCESS:
             text += "Build succeeded!\n"
             res = "success"
-        elif results == builder.WARNINGS:
+        elif results == WARNINGS:
             text += "Build Had Warnings%s\n" % t
             res = "warnings"
         else:

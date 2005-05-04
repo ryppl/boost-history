@@ -1,4 +1,4 @@
-#! /usr/bin/python
+# -*- test-case-name: buildbot.test.test_step -*-
 
 import types, time
 from StringIO import StringIO
@@ -11,13 +11,27 @@ import twisted.web.util
 
 from buildbot import interfaces
 from buildbot.util import now
-from buildbot.status.builder import SUCCESS, WARNINGS, FAILURE, Results
+from buildbot.status.builder import SUCCESS, WARNINGS, FAILURE, EXCEPTION
+from buildbot.status.builder import Results
 from buildbot.status.progress import BuildProgress
 
 class Build:
     """I represent a single build by a single bot. Specialized Builders can
     use subclasses of Build to hold status information unique to those build
     processes.
+
+    I am responsible for two things:
+      1. deciding B{when} a build should occur.  This involves knowing
+         which file changes to ignore (documentation or comments files,
+         for example), and deciding how long to wait for the tree to
+         become stable before starting.  The base class pays attention
+         to all files, and waits 10 seconds for a stable tree.
+      
+      2. controlling B{how} the build proceeds.  The actual build is
+         broken up into a series of steps, saved in the .buildSteps[]
+         array as a list of L{buildbot.process.step.BuildStep}
+         objects. Each step is a single remote command, possibly a shell
+         command.
 
     Before the build is started, I accumulate Changes and track the
     tree-stable timers and interlocks necessary to decide when I ought to
@@ -28,7 +42,11 @@ class Build:
     After the build, I hold historical data about the build, like how long
     it took, tree size, lines of code, etc. It is expected to be used to
     generate graphs and quantify long-term trends. It does not hold any
-    status events or build logs."""
+    status events or build logs.
+
+    I can be used by a factory by setting buildClass on
+    L{buildbot.process.factory.BuildFactory}
+    """
 
     treeStableTimer = 10 #*60
     workdir = "build"
@@ -52,8 +70,14 @@ class Build:
 
         self.progress = None
         self.currentStep = None
+        self.slaveEnvironment = {}
 
     def setBuilder(self, builder):
+        """
+        Set the given builder as our builder.
+
+        @type  builder: L{buildbot.process.builder.Builder}
+        """
         self.builder = builder
 
     def setSourceStamp(self, baserev, patch, reason="try"):
@@ -62,12 +86,24 @@ class Build:
         self.reason = reason
 
     def isFileImportant(self, filename):
-        """I return 1 if the given file is important enough to trigger a
-        rebuild, 0 if it should be ignored. Override me to ignore unimporant
-        files: documentation, .cvsignore files, etc. The timer is not
-        restarted,, so a checkout may occur in the middle of a set of
-        changes marked 'unimportant'. Also, the checkout may or may not pick
-        up the 'unimportant' changes."""
+        """
+        I check if the given file is important enough to trigger a rebuild.
+
+        Override me to ignore unimporant files: documentation, .cvsignore
+        files, etc. 
+
+        The timer is not restarted, so a checkout may occur in the middle of
+        a set of changes marked 'unimportant'. Also, the checkout may or may
+        not pick up the 'unimportant' changes. The implicit assumption is
+        that any file marked 'unimportant' is incapable of affecting the
+        results of the build.
+
+        @param filename: name of a file to check, relative to the VC base
+        @type  filename: string
+      
+        @rtype: 0 or 1
+        @returns: whether the change to this file should trigger a rebuild
+        """
         return 1
     
     def bumpMaxChangeNumber(self, change):
@@ -75,7 +111,14 @@ class Build:
             self.maxChangeNumber = change.number
         if change.number > self.maxChangeNumber:
             self.maxChangeNumber = change.number
+
     def addChange(self, change):
+        """
+        Add the change, deciding if the change is important or not. 
+        Called by L{buildbot.process.builder.filesChanged}
+
+        @type  change: L{buildbot.changes.changes.Change}
+        """
         important = 0
         for filename in change.files:
             if self.isFileImportant(filename):
@@ -138,6 +181,9 @@ class Build:
             self.timer = None
 
     def fireTimer(self):
+        """
+        Fire the build timer on the builder.
+        """
         self.timer = None
         self.nextBuildTime = None
         # tell the Builder to deal with us
@@ -225,7 +271,7 @@ class Build:
         self.build_status = build_status
         self.remote = remote
         self.remote.notifyOnDisconnect(self.lostRemote)
-        self.deferred = defer.Deferred()
+        d = self.deferred = defer.Deferred()
 
         try:
             self.setupBuild(expectations) # create .steps
@@ -239,17 +285,16 @@ class Build:
             log.err(Failure())
             self.builder.builder_status.addPointEvent(["setupBuild",
                                                        "exception"],
-                                                      color="#c000c0")
+                                                      color="purple")
             self.finished = True
             self.results = FAILURE
-            d = self.deferred
             self.deferred = None
             d.callback(self)
             return d
 
         self.build_status.buildStarted(self)
         self.startNextStep()
-        return self.deferred
+        return d
 
     def setupBuild(self, expectations):
         # create the actual BuildSteps. If there are any name collisions, we
@@ -373,6 +418,9 @@ class Build:
                     self.result = WARNINGS
             if step.flunkOnWarnings:
                 self.result = FAILURE
+        elif result == EXCEPTION:
+            self.result = EXCEPTION
+            terminate = True
         return terminate
 
     def lostRemote(self, remote):
@@ -422,8 +470,9 @@ class Build:
         return self.buildFinished(text, color, self.result)
 
     def buildException(self, why):
+        log.msg("%s.buildException" % self)
         log.err(why)
-        self.buildFinished(["build", "exception"], "#c000c0", FAILURE)
+        self.buildFinished(["build", "exception"], "purple", FAILURE)
 
     def buildFinished(self, text, color, results):
         """This method must be called when the last Step has completed. It

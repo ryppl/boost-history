@@ -1,4 +1,4 @@
-#! /usr/bin/python
+# -*- test-case-name: buildbot.test.test_status -*-
 
 from __future__ import generators
 
@@ -14,8 +14,8 @@ except ImportError:
 # sibling imports
 from buildbot import interfaces, util
 
-SUCCESS, WARNINGS, FAILURE, SKIPPED = range(4)
-Results = ["success", "warnings", "failure", "skipped"]
+SUCCESS, WARNINGS, FAILURE, SKIPPED, EXCEPTION = range(5)
+Results = ["success", "warnings", "failure", "skipped", "exception"]
 
 
 # build processes call the following methods:
@@ -287,6 +287,24 @@ class TestResult:
 
 
 class BuildStepStatus:
+    """
+    I represent a collection of output status for a
+    L{buildbot.process.step.BuildStep}.
+
+    @type color: string
+    @cvar color: color that this step feels best represents its
+                 current mood. yellow,green,red,orange are the
+                 most likely choices, although purple indicates
+                 an exception
+    @type progress: L{buildbot.status.progress.StepProgress}
+    @cvar progress: tracks ETA for the step
+    @type text: list of strings
+    @cvar text: list of short texts that describe the command and its status
+    @type text2: list of strings
+    @cvar text2: list of short texts added to the overall build description
+    @type logs: dict of string -> L{buildbot.status.builder.LogFile}
+    @ivar logs: logs of steps
+    """
     # note that these are created when the Build is set up, before each
     # corresponding BuildStep has started.
     __implements__ = interfaces.IBuildStepStatus, interfaces.IStatusEvent
@@ -360,7 +378,7 @@ class BuildStepStatus:
         return self.progress.remaining()
 
     # Once you know the step has finished, the following methods are legal.
-    # Before ths step has finished, they all return None.
+    # Before this step has finished, they all return None.
 
     def getText(self):
         """Returns a list of strings which describe the step. These are
@@ -371,18 +389,23 @@ class BuildStepStatus:
 
     def getColor(self):
         """Returns a single string with the color that should be used to
-        display this step. 'green', 'orange', 'red' and 'yellow' are the
-        most likely ones."""
+        display this step. 'green', 'orange', 'red', 'yellow' and 'purple'
+        are the most likely ones."""
         return self.color
 
     def getResults(self):
-        """Return a tuple describing the results of the step: (result,
-        strings). 'result' is one of the constants in buildbot.status.builder:
-        SUCCESS, WARNINGS, FAILURE, or SKIPPED. 'strings' is an optional
-        list of strings that the step wants to append to the overall build's
-        results. These strings are usually more terse than the ones returned
-        by getText(): in particular, successful Steps do not usually
-        contribute any text to the overall build."""
+        """Return a tuple describing the results of the step.
+        'result' is one of the constants in L{buildbot.status.builder}:
+        SUCCESS, WARNINGS, FAILURE, or SKIPPED.
+        'strings' is an optional list of strings that the step wants to
+        append to the overall build's results. These strings are usually
+        more terse than the ones returned by getText(): in particular,
+        successful Steps do not usually contribute any text to the
+        overall build.
+
+        @rtype:   tuple of int, list of strings
+        @returns: (result, strings)
+        """
         return (self.results, self.text2)
 
     # subscription interface
@@ -531,6 +554,10 @@ class BuildStatus:
     testResults = {}
 
     def __init__(self, parent, number):
+        """
+        @type  parent: L{BuilderStatus}
+        @type  number: int
+        """
         self.builder = parent
         self.number = number
         self.watchers = []
@@ -542,6 +569,9 @@ class BuildStatus:
     # IBuildStatus
 
     def getBuilder(self):
+        """
+        @rtype: L{BuilderStatus}
+        """
         return self.builder
 
     def getNumber(self):
@@ -818,6 +848,10 @@ class BuilderStatus:
 
     I live in the buildbot.process.base.Builder object, in the .statusbag
     attribute.
+
+    @type  category: string
+    @ivar  category: user-defined category this builder belongs to; can be
+                     used to filter on in status clients
     """
 
     __implements__ = interfaces.IBuilderStatus,
@@ -828,14 +862,16 @@ class BuilderStatus:
     stepHorizon = 50 # prune steps in builds beyond this
     logHorizon = 20 # prune logs in builds beyond this
     slavename = None
+    category = None
     currentBuild = None
     currentBigState = "offline" # or idle/waiting/interlocked/building
     ETA = None
     nextBuildNumber = 0
     basedir = None # filled in by our parent
 
-    def __init__(self, buildername):
+    def __init__(self, buildername, category=None):
         self.name = buildername
+        self.category = category
 
         self.events = []
         # these three hold Events, and are used to retrieve the current
@@ -1051,7 +1087,6 @@ class BuilderStatus:
             yield e
             eventIndex -= 1
             e = self.getEvent(eventIndex)
-
 
     def subscribe(self, receiver):
         # will get builderChangedState, buildStarted, and buildFinished
@@ -1352,9 +1387,25 @@ class SlaveStatus:
         return self.connected
 
 class Status:
+    """
+    I represent the status of the buildmaster.
+    """
     __implements__ = interfaces.IStatus,
 
     def __init__(self, botmaster, basedir):
+        """
+        @type  botmaster: L{buildbot.master.BotMaster}
+        @param botmaster: the Status object uses C{.botmaster} to get at
+                          both the L{buildbot.master.BuildMaster} (for
+                          various buildbot-wide parameters) and the
+                          actual Builders (to get at their L{BuilderStatus}
+                          objects). It is not allowed to change or influence
+                          anything through this reference.
+        @type  basedir: string
+        @param basedir: this provides a base directory in which saved status
+                        information (changes.pck, saved Build status
+                        pickles) can be stored
+        """
         self.botmaster = botmaster
         self.basedir = basedir
         self.watchers = []
@@ -1367,9 +1418,22 @@ class Status:
     def getBuildbotURL(self):
         return self.botmaster.parent.buildbotURL
 
-    def getBuilderNames(self):
-        return self.botmaster.builderNames[:] # don't let them break it
+    def getBuilderNames(self, categories=None):
+        if categories == None:
+            return self.botmaster.builderNames[:] # don't let them break it
+        
+        l = []
+        # respect addition order
+        for name in self.botmaster.builderNames:
+            builder = self.botmaster.builders[name]
+            if builder.builder_status.category in categories:
+                l.append(name)
+        return l
+
     def getBuilder(self, name):
+        """
+        @rtype: L{BuilderStatus}
+        """
         return self.botmaster.builders[name].builder_status
 
     def getSlave(self, slavename):
@@ -1387,7 +1451,10 @@ class Status:
         if t:
             builder_status.subscribe(t)
 
-    def builderAdded(self, name, basedir):
+    def builderAdded(self, name, basedir, category=None):
+        """
+        @rtype: L{BuilderStatus}
+        """
         filename = os.path.join(self.basedir, basedir, "builder")
         log.msg("trying to load status pickle from %s" % filename)
         builder_status = None
@@ -1398,9 +1465,14 @@ class Status:
         except:
             log.msg("error while loading status pickle, creating a new one")
         if not builder_status:
-            builder_status = BuilderStatus(name)
+            builder_status = BuilderStatus(name, category)
             builder_status.addPointEvent(["builder", "created"])
+        log.msg("added builder %s in category %s" % (name, category))
+        # an unpickled object might not have category set from before,
+        # so set it here to make sure
+        builder_status.category = category
         builder_status.basedir = os.path.join(self.basedir, basedir)
+        builder_status.name = name # it might have been updated
         builder_status.status = self
 
         if not os.path.isdir(builder_status.basedir):

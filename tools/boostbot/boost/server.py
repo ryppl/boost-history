@@ -23,8 +23,7 @@ import twisted.python.components
 import twisted.web.static
 import urllib
 
-waterfall_content_html = '''
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+waterfall_content_html = '''<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -61,7 +60,7 @@ waterfall_body_html = '''
 
     <tr id="last-activity">
       <td class="heading">
-        TIME
+        TIME %(timezone)+02.0f
       </td>
 
       <td class="heading">
@@ -86,11 +85,11 @@ waterfall_footer_html = '''
 
 class Boost_WaterfallStatusResource(buildbot.status.html.WaterfallStatusResource):
     
-    def __init__(self, status, changemaster):
-        buildbot.status.html.WaterfallStatusResource.__init__(self,status,changemaster)
-        self.page_time = time.strftime("%a %d %b %Y %H:%M:%S",time.localtime(buildbot.util.now()))
+    def __init__(self, status, changemaster, categories, css=None):
+        buildbot.status.html.WaterfallStatusResource.__init__(self,status,changemaster,categories,css)
         
     def content(self, request):
+        self.page_time = time.strftime("%a %d %b %Y %H:%M:%S",time.localtime(buildbot.util.now()))
         return waterfall_content_html % {
             "project_name"      : self.status.getProjectName(),
             "project_url"       : self.status.getProjectURL(),
@@ -108,13 +107,17 @@ class Boost_WaterfallStatusResource(buildbot.status.html.WaterfallStatusResource
         phase = int(phase[0])
 
         showBuilders = request.args.get("show", None)
+        allBuilders = self.status.getBuilderNames(categories=self.categories)
         if showBuilders:
             builderNames = []
             for b in showBuilders:
-                if b in self.status.getBuilderNames() and not b in builderNames:
-                    builderNames.append(b)
+                if b not in allBuilders:
+                    continue
+                if b in builderNames:
+                    continue
+                builderNames.append(b)
         else:
-            builderNames = self.status.getBuilderNames()
+            builderNames = allBuilders
         builders = map(
             lambda name: self.status.getBuilder(name),
             builderNames)
@@ -122,9 +125,9 @@ class Boost_WaterfallStatusResource(buildbot.status.html.WaterfallStatusResource
         if phase == -1:
             return self.body0(request, builders)
         
-        (sourceNames, timestamps, eventGrid, sourceEvents) = self.buildGrid(request, builders)
+        (changeNames, builderNames, timestamps, eventGrid, sourceEvents) = self.buildGrid(request, builders)
         if phase == 0:
-            return self.phase0(request, sourceNames, timestamps, eventGrid)
+            return self.phase0(request, changeNames, timestamps, eventGrid)
         
         last_activity_html = "";
         for b in builders:
@@ -137,7 +140,7 @@ class Boost_WaterfallStatusResource(buildbot.status.html.WaterfallStatusResource
             current_activity_html += box.td()
         
         builders_html = "";
-        for name in sourceNames[1:]:
+        for name in builderNames:
             builders_html += "<td class=\"builder\"><a href=\"%s\">%s</a></td>" % (
                 urllib.quote(name),
                 string.join(string.split(name,'-'),'<br />') )
@@ -146,7 +149,7 @@ class Boost_WaterfallStatusResource(buildbot.status.html.WaterfallStatusResource
             f = self.phase1
         else:
             f = self.phase2
-        waterfall_html = f(request, sourceNames, timestamps, eventGrid, sourceEvents)
+        waterfall_html = f(request, changeNames+builderNames, timestamps, eventGrid, sourceEvents)
         
         return waterfall_body_html % {
             "project_name"      : self.status.getProjectName(),
@@ -156,7 +159,8 @@ class Boost_WaterfallStatusResource(buildbot.status.html.WaterfallStatusResource
             "builders"          : builders_html,
             "waterfall"         : waterfall_html,
             "version"           : buildbot.version,
-            "page_time"         : self.page_time
+            "page_time"         : self.page_time,
+            "timezone"          : time.timezone/60
             }
 
     def footer(self, request):
@@ -179,7 +183,7 @@ def td(text="", parms={}, **props):
             td_props_html += " %s=\"%s\"" % (prop, p)
     
     if type(text) == types.ListType:
-        td_text_html = "<div>%s</div>" % string.join(text, "<div/><div>")
+        td_text_html = "<div>%s</div>" % string.join(text, "</div><div>")
     else:
         td_text_html = "<div>%s</div>" % text
     
@@ -224,14 +228,14 @@ class Boost_CurrentBox(buildbot.status.html.CurrentBox):
 twisted.python.components.theAdapterRegistry.adapterRegistry[
     (buildbot.status.builder.BuilderStatus, buildbot.status.html.ICurrentBox)] = Boost_CurrentBox
 
-class Boost_CommitBox(buildbot.status.html.CommitBox):
+class Boost_ChangeBox(buildbot.status.html.ChangeBox):
 
     def getBox(self):
-        return Boost_Box( buildbot.status.html.CommitBox.getBox(self),
+        return Boost_Box( buildbot.status.html.ChangeBox.getBox(self),
             { 'class': "commit" } )
 
 twisted.python.components.theAdapterRegistry.adapterRegistry[
-    (buildbot.changes.changes.Change, buildbot.status.html.IBox)] = Boost_CommitBox
+    (buildbot.changes.changes.Change, buildbot.status.html.IBox)] = Boost_ChangeBox
 
 class Boost_BuildBox(buildbot.status.html.BuildBox):
 
@@ -274,10 +278,13 @@ twisted.python.components.theAdapterRegistry.adapterRegistry[
 
 class Boost_StatusResource(buildbot.status.html.StatusResource):
     
-    def __init__(self, status, control, changemaster, root):
-        buildbot.status.html.StatusResource.__init__(self, status, control, changemaster)
+    def __init__(self, status, control, changemaster, categories, root):
+        buildbot.status.html.StatusResource.__init__(self,
+            status, control, changemaster, categories,
+            twisted.web.static.File(os.path.join(root,"buildbot.css")))
         self.putChild("",
-            Boost_WaterfallStatusResource(self.status, self.changemaster))
+            Boost_WaterfallStatusResource(self.status, self.changemaster,
+                self.categories, self.css))
         self.putChild("buildbot.css",
             twisted.web.static.File(os.path.join(root,"buildbot.css")))
 
@@ -295,6 +302,7 @@ class Boost_Waterfall(buildbot.status.html.Waterfall):
             self.site.resource.status,
             self.site.resource.control,
             self.site.resource.changemaster,
+            self.site.resource.categories,
             self.root)
 
 def Boost_parseSyncmail(self, fd, prefix=None, sep="/"):
