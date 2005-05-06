@@ -7,13 +7,6 @@
 #include "boost/managed_ptr/smart_ptr.hpp"
 namespace boost{namespace managed_ptr{
 
-template
-  < typename ProxVisitor
-  >
-  class 
-prox_iterator_acceptor_abs
-;
-
   struct 
 refcycle_prox_visitor_abs
 //Purpose:

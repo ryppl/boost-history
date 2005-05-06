@@ -25,7 +25,9 @@
 #define STD_PTRS_HPP
 
 #include "smart_ptr.hpp"
-#include "policy/boost.hpp"
+#include "policy/boost_policies.hpp"
+#include "policy/auto_copy.hpp"
+#include "policy/no_copy.hpp"
 
 //////////////////////////////////////////////////////////////////////////////
 // Usage:
@@ -43,38 +45,42 @@ namespace boost
 #ifndef BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
 
         typedef T* raw;
-        typedef smart_ptr<T,
-            destructive_copy, disallow_conversion, assert_check
-        > std_auto;
+      #if 0
+        typedef smart_ptr<
+            auto_copy, disallow_conversion, assert_check
+        >::to<T> std_auto;
 
-        typedef smart_ptr<T,
-            no_copy, disallow_conversion, assert_check, default_storage
-        > scoped;
-        typedef smart_ptr<T,
+        typedef smart_ptr<
+            no_copy, disallow_conversion, assert_check, scalar_storage
+        >::to<T> scoped;
+      #endif
+        typedef smart_ptr<
             boost_ref, disallow_conversion, assert_check, shared_storage
-        > shared;
-        typedef smart_ptr<T,
+        >::to<T> shared;
+        typedef smart_ptr<
             boost_ref, disallow_conversion, assert_check, weak_storage
-        > weak;
-        typedef smart_ptr<T,
+        >::to<T> weak;
+        typedef smart_ptr<
             boost_ref, disallow_conversion, assert_check, intrusive_storage
-        > intrusive;
+        >::to<T> intrusive;
+      #if 0
 
-        typedef smart_ptr<T,
+        typedef smart_ptr<
             no_copy, disallow_conversion, assert_check, array_storage
-        > scoped_array;
+        >::to<T> scoped_array;
         // Need shared_array
         // weak_array? intrusive_array?
 
-        typedef smart_ptr<T,
+        typedef smart_ptr<
             com_ref_counted, disallow_conversion, assert_check
-        > com;
+        >::to<T> com;
+      #endif
 
 #else // BOOST_NO_TEMPLATE_TEMPLATE_PARAMETERS
 
         typedef T* raw;
         typedef BOOST_SMART_PTR(T,
-            destructive_copy, disallow_conversion, assert_check
+            auto_copy, disallow_conversion, assert_check
         ) std_auto;
 
         typedef BOOST_SMART_PTR(T,

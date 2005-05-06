@@ -15,7 +15,10 @@
 namespace boost
 {
     //------------------------------------------------------------------------
-    template <class StoragePolicy>
+    template 
+      < class StoragePolicy
+      , class Counter=std::size_t //non-default type needed by refcycle_counted_
+      >
     class ref_counted_ : public StoragePolicy
     {
     public:             // Types
@@ -23,7 +26,7 @@ namespace boost
         typedef StoragePolicy                           storage_policy;
         typedef storage_policy                          base_type;
         typedef typename storage_policy::pointer_type   pointer_type;
-        typedef std::size_t                             counter_type;
+        typedef Counter                                 counter_type;
         typedef typename storage_policy::stored_param   stored_param;
         typedef typename storage_policy::pointer_param  pointer_param;
 
@@ -113,7 +116,7 @@ namespace boost
 
         stored_param    clone(stored_param p) const
         {
-            ++*count_;
+            if(count_) ++*count_;
             return p;
         }
 
@@ -149,7 +152,7 @@ namespace boost
 
     private:            // Implementation
         ref_counted_&   operator=(ref_counted_ const&);
-        BOOST_SP_DECLARE_TEMPLATE_FRIEND(U, ref_counted_, 1)
+        BOOST_SP_DECLARE_TEMPLATE_FRIEND(U, ref_counted_, 2)
 
         counter_type*   count_;
     };

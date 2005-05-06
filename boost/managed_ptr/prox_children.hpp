@@ -93,7 +93,7 @@ prox_children
 
       typedef 
     ProxVisitor 
-  prox_visitor
+  prox_visitor_type
   ;
       typedef 
     void 
@@ -127,7 +127,7 @@ prox_children
       {}
           virtual
         void
-      accept(prox_visitor& a_visitor)const
+      accept(prox_visitor_type& a_visitor)const
       /**
        *@brief apply a_visitor to current
        *  proxy and its children
@@ -566,7 +566,7 @@ prox_children
               , m_piter(0)
               {}
               void
-            accept(prox_visitor& a_visitor)const
+            accept(prox_visitor_type& a_visitor)const
               { 
                 m_piter->accept(a_visitor);
               } 
@@ -646,7 +646,7 @@ prox_children
             first_non_empty();
           } 
           void
-        accept(prox_visitor& a_visitor)const
+        accept(prox_visitor_type& a_visitor)const
           { m_iter.accept(a_visitor);
           } 
           void
@@ -722,7 +722,7 @@ prox_children
           {
           } 
           void
-        accept(prox_visitor& a_visitor)const
+        accept(prox_visitor_type& a_visitor)const
           { super_type::accept(a_visitor);
           } 
           void
@@ -817,7 +817,7 @@ prox_children
           : super_type(a_subj)
           {}
           void
-        accept(prox_visitor& a_visitor)const
+        accept(prox_visitor_type& a_visitor)const
           { super_type::accept(a_visitor);
           } 
           void
@@ -860,7 +860,10 @@ prox_children
           } 
           void
         accept(prox_visitor& a_visitor)const
-          { utility::trace_scope ts("prox_container_iterator::accept(prox_visitor&)");
+          { 
+            #ifdef TRACE_SCOPE_HPP
+            utility::trace_scope ts("prox_container_iterator::accept(prox_visitor&)");
+            #endif
             value_type& l_val = super_type::deref();
             a_visitor.visit_prox(l_val);
           } 
@@ -964,7 +967,7 @@ prox_children
           : super_type(a_subj,a_prox_offsets)
           {}
           void
-        accept(prox_visitor& a_visitor)const
+        accept(prox_visitor_type& a_visitor)const
           { value_type& l_val = this->super_type::deref();
             a_visitor.visit_prox(l_val);
           } 

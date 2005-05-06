@@ -15,84 +15,116 @@ namespace boost
 //////////////////////////////////////////////////////////////////////////////
 
     template <typename T>
-    class shared_storage;
+    class shared_storage_;
 
     template <typename T>
-    class weak_storage;
+    class weak_storage_;
 
     template <typename T>
-    class intrusive_storage;
+    class intrusive_storage_;
 
+    template <typename T>
+    class boost_ref_;
+    
+namespace detail
+{
+    class shared_count_accessor
+    /**@requires
+     *  shared_count declaring this class as friend
+     */
+    {
+     protected:
+        static void add_ref_copy(detail::shared_count& a_count)
+        {
+            if(a_count.pi_) a_count.pi_->add_ref_copy();
+        }
+     
+        static void release(detail::shared_count& a_count)
+        {
+            if(a_count.pi_) a_count.pi_->release();
+        }
+     
+    };
+}//exit detail namespace
 //////////////////////////////////////////////////////////////////////////////
 // class template shared_storage
 // A boost::shared_count StoragePolicy for boost::shared_ptr emulation
 //////////////////////////////////////////////////////////////////////////////
 
     template <typename T>
-    class shared_storage
+    class shared_storage_
+    : private detail::shared_count_accessor
     {
-    protected:
+    public:
         typedef T* stored_type;         // the type of the pointee_ object
+        typedef T const*                                const_stored_type;
         typedef T* pointer_type;        // type returned by operator->
-        typedef T& reference_type;      // type returned by operator*
+        typedef T const*                                const_pointer_type;
+        typedef typename add_reference<T>::type         reference_type;
+        typedef typename add_reference<T const>::type   const_reference_type;
+        typedef typename call_traits<stored_type>::param_type
+                                                        stored_param;
+        typedef typename call_traits<pointer_type>::param_type
+                                                        pointer_param;
 
-        shared_storage()
+    protected:
+        shared_storage_()
         : pointee_(default_value()), count_()
         { }
 
 #ifndef BOOST_NO_MEMBER_TEMPLATES
 
         template <typename U>
-        shared_storage(const shared_storage<U>& rhs)
+        shared_storage_(const shared_storage_<U>& rhs)
 # ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
         : pointee_(rhs.pointee_), count_(rhs.count_)
 # else // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-        : pointee_(reinterpret_cast<const shared_storage&>(rhs).pointee_)
-        , count_(reinterpret_cast<const shared_storage&>(rhs).count_)
+        : pointee_(reinterpret_cast<const shared_storage_&>(rhs).pointee_)
+        , count_(reinterpret_cast<const shared_storage_&>(rhs).count_)
 # endif // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
         { }
 
         template <typename U>
-        explicit shared_storage(const weak_storage<U>& rhs)
+        explicit shared_storage_(const weak_storage_<U>& rhs)
 # ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
         : pointee_(rhs.pointee_), count_(rhs.count_)
 # else // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-        : pointee_(reinterpret_cast<const weak_storage<T>&>(rhs).pointee_)
-        , count_(reinterpret_cast<const weak_storage<T>&>(rhs).count_)
+        : pointee_(reinterpret_cast<const weak_storage_<T>&>(rhs).pointee_)
+        , count_(reinterpret_cast<const weak_storage_<T>&>(rhs).count_)
 # endif // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
         { }
 
         template <typename U>
-        shared_storage(const intrusive_storage<U>& rhs)
+        shared_storage_(const intrusive_storage_<U>& rhs)
         : pointee_(get_impl(rhs)), count_(get_impl(rhs))
-        { std::cout << "shared_storage(intrusive_storage<U>)" << std::endl; }
+        { std::cout << "shared_storage_(intrusive_storage_<U>)" << std::endl; }
 
         template <typename U>
-        explicit shared_storage(U* p)
-        : pointee_(p), count_(p, checked_deleter<U>(), p)
-        { std::cout << "shared_storage(U*)" << std::endl; }
+        explicit shared_storage_(U* p)
+        : pointee_(p), count_(p, checked_deleter<U>() )
+        { std::cout << "shared_storage_(U*)" << std::endl; }
 
 #else // BOOST_NO_MEMBER_TEMPLATES
 
-        shared_storage(const shared_storage& rhs)
+        shared_storage_(const shared_storage_& rhs)
         : pointee_(rhs.pointee_), count_(rhs.count_)
         { }
 
-        explicit shared_storage(const weak_storage<T>& rhs)
+        explicit shared_storage_(const weak_storage_<T>& rhs)
         : pointee_(rhs.pointee_), count_(rhs.count_)
         { }
 
-        shared_storage(const intrusive_storage<T>& rhs)
+        shared_storage_(const intrusive_storage_<T>& rhs)
         : pointee_(get_impl(rhs)), count_(get_impl(rhs))
         { }
 
-        explicit shared_storage(const stored_type& p)
+        explicit shared_storage_(const stored_type& p)
         : pointee_(p), count_(p, checked_deleter<U>(), p)
         { }
 
 #endif // BOOST_NO_MEMBER_TEMPLATES
 
-        void swap(shared_storage& rhs)
+        void swap(shared_storage_& rhs)
         {
             std::swap(pointee_, rhs.pointee_);
             // No std specialization of shared_count
@@ -110,13 +142,13 @@ namespace boost
 
     public:
         // Accessors
-        friend inline pointer_type get_impl(const shared_storage& sp)
+        friend inline pointer_type get_impl(const shared_storage_& sp)
         { return sp.pointee_; }
 
-        friend inline stored_type& get_impl_ref(shared_storage& sp)
+        friend inline stored_type& get_impl_ref(shared_storage_& sp)
         { return sp.pointee_; }
 
-        friend inline const stored_type& get_impl_ref(const shared_storage& sp)
+        friend inline const stored_type& get_impl_ref(const shared_storage_& sp)
         { return sp.pointee_; }
 
         // boost::smart_ptr compatibility interface
@@ -130,7 +162,7 @@ namespace boost
         { return count_.use_count(); }
 
         void reset()
-        { shared_storage().swap(*this); }
+        { shared_storage_().swap(*this); }
 
 #ifndef BOOST_NO_MEMBER_TEMPLATES
 
@@ -140,7 +172,7 @@ namespace boost
         {
             // Catch self-reset errors
             BOOST_ASSERT(p == 0 || p != pointee_);
-            shared_storage(p).swap(*this);
+            shared_storage_(p).swap(*this);
         }
 
 #else // BOOST_NO_MEMBER_TEMPLATES
@@ -149,7 +181,7 @@ namespace boost
         {
             // Catch self-reset errors
             BOOST_ASSERT(p == 0 || p != pointee_);
-            shared_storage(p).swap(*this);
+            shared_storage_(p).swap(*this);
         }
 
 #endif // BOOST_NO_MEMBER_TEMPLATES
@@ -162,71 +194,96 @@ namespace boost
         static stored_type default_value()
         { return 0; }
 
+        stored_param    clone(stored_param p) const
+        {
+            detail::shared_count& cnt=const_cast<detail::shared_count&>(count_);
+            add_ref_copy(cnt);
+            return p;
+        }
+
+        static
+        void            swap(shared_storage_& lhs, shared_storage_& rhs)
+        {
+            lhs.swap(rhs);
+        }
+
     private:
 
 #ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-        template <typename U> friend class shared_storage;
-        template <typename U> friend class weak_storage;
+        template <typename U> friend class shared_storage_;
+        template <typename U> friend class weak_storage_;
 #else // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-        friend class weak_storage<T>;
+        friend class weak_storage_<T>;
 #endif // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
+        friend class boost_ref_<shared_storage_<T> >;
 
         // Data
         stored_type pointee_;
         detail::shared_count count_;
     };
 
+    //------------------------------------------------------------------------
+    struct shared_storage
+    {
+        typedef storage_policy_tag policy_category;
+
+        template <typename T>
+        struct apply
+        {
+            typedef shared_storage_<T> type;
+        };
+    };
 //////////////////////////////////////////////////////////////////////////////
-// class template weak_storage
+// class template weak_storage_
 // A boost::shared_count StoragePolicy for boost::weak_ptr emulation
 //////////////////////////////////////////////////////////////////////////////
 
     template <typename T>
-    class weak_storage
+    class weak_storage_
     {
     protected:
         typedef T* stored_type;         // the type of the pointee_ object
         typedef T* pointer_type;        // type returned by operator->
         typedef T& reference_type;      // type returned by operator*
 
-        weak_storage() : pointee_(default_value()), count_()
+        weak_storage_() : pointee_(default_value()), count_()
         { }
 
 #ifndef BOOST_NO_MEMBER_TEMPLATES
 
         template <typename U>
-        weak_storage(const weak_storage<U>& rhs)
+        weak_storage_(const weak_storage_<U>& rhs)
 # ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
         : pointee_(rhs.pointee_), count_(rhs.count_)
 # else // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-        : pointee_(reinterpret_cast<const weak_storage&>(rhs).pointee_)
-        , count_(reinterpret_cast<const weak_storage&>(rhs).count_)
+        : pointee_(reinterpret_cast<const weak_storage_&>(rhs).pointee_)
+        , count_(reinterpret_cast<const weak_storage_&>(rhs).count_)
 # endif // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
         { }
 
         template <typename U>
-        weak_storage(const shared_storage<U>& rhs)
+        weak_storage_(const shared_storage_<U>& rhs)
 # ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
         : pointee_(rhs.pointee_), count_(rhs.count_)
 # else // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-        : pointee_(reinterpret_cast<const shared_storage<T>&>(rhs).pointee_)
-        , count_(reinterpret_cast<const shared_storage<T>&>(rhs).count_)
+        : pointee_(reinterpret_cast<const shared_storage_<T>&>(rhs).pointee_)
+        , count_(reinterpret_cast<const shared_storage_<T>&>(rhs).count_)
 # endif // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-        { std::cout << "weak_storage(shared_storage<U>)" << std::endl; }
+        { std::cout << "weak_storage_(shared_storage_<U>)" << std::endl; }
 
 #else // BOOST_NO_MEMBER_TEMPLATES
 
-        weak_storage(const weak_storage& rhs)
+        weak_storage_(const weak_storage_& rhs)
         : pointee_(rhs.pointee_), count_(rhs.count_)
         { }
 
-        weak_storage(const shared_storage<T>& rhs)
+        weak_storage_(const shared_storage_<T>& rhs)
         : pointee_(rhs.pointee_), count_(rhs.count_)
         { }
 
 #endif // BOOST_NO_MEMBER_TEMPLATES
 
-        void swap(weak_storage& rhs)
+        void swap(weak_storage_& rhs)
         {
             std::swap(pointee_, rhs.pointee_);
             // No std specialization of weak_count
@@ -244,13 +301,13 @@ namespace boost
 
     public:
         // Accessors
-        friend inline pointer_type get_impl(const weak_storage& sp)
+        friend inline pointer_type get_impl(const weak_storage_& sp)
         { return sp.pointee_; }
 
-        friend inline stored_type& get_impl_ref(weak_storage& sp)
+        friend inline stored_type& get_impl_ref(weak_storage_& sp)
         { return sp.pointee_; }
 
-        friend inline const stored_type& get_impl_ref(const weak_storage& sp)
+        friend inline const stored_type& get_impl_ref(const weak_storage_& sp)
         { return sp.pointee_; }
 
         // boost::smart_ptr compatibility interface
@@ -261,7 +318,7 @@ namespace boost
         { return count_.use_count(); }
 
         void reset()
-        { weak_storage().swap(*this); }
+        { weak_storage_().swap(*this); }
 
     protected:
         // Destruction is handled by weak_count
@@ -274,10 +331,10 @@ namespace boost
     private:
 
 #ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-        template <typename U> friend class weak_storage;
-        template <typename U> friend class shared_storage;
+        template <typename U> friend class weak_storage_;
+        template <typename U> friend class shared_storage_;
 #else // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-        friend class shared_storage<T>;
+        friend class shared_storage_<T>;
 #endif // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
 
         // Data
@@ -285,13 +342,24 @@ namespace boost
         detail::weak_count count_;
     };
 
+    //------------------------------------------------------------------------
+    struct weak_storage
+    {
+        typedef storage_policy_tag policy_category;
+
+        template <typename T>
+        struct apply
+        {
+            typedef weak_storage_<T> type;
+        };
+    };
 //////////////////////////////////////////////////////////////////////////////
 // class template intrusive_storage
 // A boost::shared_count StoragePolicy for boost::shared_ptr emulation
 //////////////////////////////////////////////////////////////////////////////
 
     template <typename T>
-    class intrusive_storage
+    class intrusive_storage_
     {
     protected:
         typedef T* stored_type;         // the type of the pointee_ object
@@ -301,11 +369,11 @@ namespace boost
 #ifndef BOOST_NO_MEMBER_TEMPLATES
 
         template <typename U>
-        intrusive_storage(const intrusive_storage<U>& rhs)
+        intrusive_storage_(const intrusive_storage_<U>& rhs)
 # ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
         : pointee_(rhs.pointee_)
 # else // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-        : pointee_(reinterpret_cast<const intrusive_storage&>(rhs).pointee_)
+        : pointee_(reinterpret_cast<const intrusive_storage_&>(rhs).pointee_)
 # endif // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
         {
             if (pointee_ != default_value()) intrusive_ptr_add_ref(pointee_);
@@ -313,7 +381,7 @@ namespace boost
 
 #else // BOOST_NO_MEMBER_TEMPLATES
 
-        intrusive_storage(const intrusive_storage<T>& rhs)
+        intrusive_storage_(const intrusive_storage_<T>& rhs)
         : pointee_(rhs.pointee_)
         {
             if (pointee_ != default_value()) intrusive_ptr_add_ref(pointee_);
@@ -321,14 +389,14 @@ namespace boost
 
 #endif // BOOST_NO_MEMBER_TEMPLATES
 
-        explicit intrusive_storage(const stored_type& p = default_value())
+        explicit intrusive_storage_(const stored_type& p = default_value())
         : pointee_(p)
         {
-            std::cout << "intrusive_storage(T*): " << p << std::endl;
+            std::cout << "intrusive_storage_(T*): " << p << std::endl;
             if (pointee_ != default_value()) intrusive_ptr_add_ref(pointee_);
         }
 
-        void swap(intrusive_storage& rhs)
+        void swap(intrusive_storage_& rhs)
         {
             std::swap(pointee_, rhs.pointee_);
         }
@@ -344,13 +412,13 @@ namespace boost
 
     public:
         // Accessors
-        friend inline pointer_type get_impl(const intrusive_storage& sp)
+        friend inline pointer_type get_impl(const intrusive_storage_& sp)
         { return sp.pointee_; }
 
-        friend inline stored_type& get_impl_ref(intrusive_storage& sp)
+        friend inline stored_type& get_impl_ref(intrusive_storage_& sp)
         { return sp.pointee_; }
 
-        friend inline const stored_type& get_impl_ref(const intrusive_storage& sp)
+        friend inline const stored_type& get_impl_ref(const intrusive_storage_& sp)
         { return sp.pointee_; }
 
         // boost::smart_ptr compatibility interface
@@ -381,45 +449,62 @@ namespace boost
         stored_type pointee_;
     };
 
+    //------------------------------------------------------------------------
+    struct intrusive_storage
+    {
+        typedef storage_policy_tag policy_category;
+
+        template <typename T>
+        struct apply
+        {
+            typedef intrusive_storage_<T> type;
+        };
+    };
 //////////////////////////////////////////////////////////////////////////////
 // class template boost_ref
 // Implementation of boost::*_ptr-emulating Ownership policy
 //////////////////////////////////////////////////////////////////////////////
 
-    template <typename P>
-    class boost_ref
+    template <typename StoragePolicy>
+    class boost_ref_ : public StoragePolicy
     {
+    public:
+        typedef copy_semantics_tag                      ownership_category;
+        typedef StoragePolicy                           storage_policy;
+        typedef storage_policy                          base_type;
+        typedef typename storage_policy::stored_type    stored_type;
+        typedef typename storage_policy::pointer_type   pointer_type;
+        typedef typename storage_policy::stored_param   stored_param;
+        typedef typename storage_policy::pointer_param  pointer_param;
     protected:
-        boost_ref()
+        boost_ref_()
         { }
 
+        boost_ref_(stored_type p)
+                            : base_type(p)
+        { }
 #ifndef BOOST_NO_MEMBER_TEMPLATES
 
         template <typename U>
-        boost_ref(const boost_ref<U>& rhs)
+        boost_ref_(const boost_ref_<U>& rhs)
+                            : base_type(static_cast<
+                                typename boost_ref_<U>::base_type const&
+                            >(rhs))
         { }
 
 #else // BOOST_NO_MEMBER_TEMPLATES
 
-        boost_ref(const boost_ref& rhs)
+        boost_ref_(const boost_ref_& rhs)
+                            : base_type(static_cast<base_type const&>(rhs))
         { }
 
 #endif // BOOST_NO_MEMBER_TEMPLATES
 
-        P clone(const P& val)
+        bool release(const StoragePolicy&)
         {
-            return val;
-        }
-
-        bool release(const P&)
-        {
-            // This allows us to call release() in intrusive_storage, instead
+            // This allows us to call release() in intrusive_storage_, instead
             // of defining a d'tor.
             return true;
-        }
-
-        void swap(boost_ref& rhs)
-        {
         }
 
 #ifndef BOOST_BCC_NON_TYPE_TEMPLATE_PARAMETERS
@@ -431,7 +516,7 @@ namespace boost
     private:
 
 #ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-        template <typename U> friend class boost_ref;
+        template <typename U> friend class boost_ref_;
 #endif // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
 
 #if defined(__BORLANDC__) || defined(BOOST_MSVC)
@@ -439,6 +524,17 @@ namespace boost
 #endif // __BORLANDC__ || BOOST_MSVC
     };
 
+    //------------------------------------------------------------------------
+    struct boost_ref
+    {
+        typedef ownership_policy_tag policy_category;
+
+        template <typename T>
+        struct apply
+        {
+            typedef boost_ref_<T> type;
+        };
+    };
 }   // namespace boost
 
 #endif // BOOST_POLICIES_20020502_HPP
