@@ -13,11 +13,14 @@
 // Change log:
 // - 29 Oct 2004: Jonathan Turkanis modified move_copy_test to reflect cases
 //   which should fail.
+// Change log:
+// - 06 May 2005: Larry Evans uncommented #include for unit_test and rm'ed that
+//   for unit_test_framework because, with unit_test_framework, got
+//     EXIT STATUS: 139
 //----------------------------------------------------------------------------
 #define BOOST_SP_DEBUG_MODE
 #include <string>
-//#include <boost/test/unit_test.hpp>
-#include <boost/test/included/unit_test_framework.hpp>
+#include <boost/test/unit_test.hpp>
 
 #include "../../../boost/policy_ptr/smart_ptr.hpp"
 #include "../../../boost/policy_ptr/policy/array_storage.hpp"
