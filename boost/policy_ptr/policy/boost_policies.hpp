@@ -118,8 +118,8 @@ namespace detail
         : pointee_(get_impl(rhs)), count_(get_impl(rhs))
         { }
 
-        explicit shared_storage_(const stored_type& p)
-        : pointee_(p), count_(p, checked_deleter<U>(), p)
+        explicit shared_storage_(T* p)
+        : pointee_(p), count_(p, checked_deleter<T>(), p)
         { }
 
 #endif // BOOST_NO_MEMBER_TEMPLATES
