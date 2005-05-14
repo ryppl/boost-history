@@ -1,0 +1,151 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!-- C++Builder XML Project -->
+<PROJECT>
+  <MACROS>
+    <VERSION value="BCB.05.03"/>
+    <PROJECT value="Build\smart_ptr_test.exe"/>
+    <OBJFILES value="Build\smart_ptr_test.obj Build\execution_monitor.obj Build\test_tools.obj 
+      Build\unit_test_log.obj Build\unit_test_main.obj 
+      Build\unit_test_monitor.obj Build\unit_test_parameters.obj 
+      Build\unit_test_result.obj Build\unit_test_suite.obj"/>
+    <RESFILES value=""/>
+    <DEFFILE value=""/>
+    <RESDEPEN value="$(RESFILES)"/>
+    <LIBFILES value=""/>
+    <LIBRARIES value=""/>
+    <SPARELIBS value=""/>
+    <PACKAGES value="VCL50.bpi VCLX50.bpi ZBuilder.bpi CodeLogic.bpi VCLDB50.bpi VCLBDE50.bpi 
+      VCLDBX50.bpi VCLIE50.bpi INETDB50.bpi INET50.bpi bcbsmp50.bpi QRPT50.bpi"/>
+    <PATHCPP value=".;"/>
+    <PATHPAS value=".;"/>
+    <PATHRC value=".;"/>
+    <PATHASM value=".;"/>
+    <DEBUGLIBPATH value="$(BCB)\lib\debug"/>
+    <RELEASELIBPATH value="$(BCB)\lib\release"/>
+    <LINKER value="tlink32"/>
+    <USERDEFINES value="_DEBUG"/>
+    <SYSDEFINES value="NO_STRICT;_NO_VCL"/>
+    <MAINSOURCE value="smart_ptr_test.bpf"/>
+    <INCLUDEPATH value="I:\boost-sandbox\libs\policy_ptr\test;$(BCB)\include;$(BCB)\include\vcl;&quot;I:\boost\libs\test\src\&quot;"/>
+    <LIBPATH value="I:\boost-sandbox\libs\policy_ptr\test;$(BCB)\lib\obj;$(BCB)\lib;&quot;I:\boost\libs\test\src\&quot;"/>
+    <WARNINGS value="-w-par"/>
+  </MACROS>
+  <OPTIONS>
+    <CFLAG1 value="-Od -Q -Vx -Ve -X- -r- -a4 -5 -b- -k -y -v -vi- -tWC -tWM- -c"/>
+    <PFLAGS value="-N2Build -N0Build -$YD -$W -$O- -v -JPHNE -M"/>
+    <RFLAGS value=""/>
+    <AFLAGS value="/mx /w2 /zd"/>
+    <LFLAGS value="-IBuild -D&quot;&quot; -ap -Tpe -x -Gn -v"/>
+  </OPTIONS>
+  <LINKER>
+    <ALLOBJ value="c0x32.obj $(OBJFILES)"/>
+    <ALLRES value="$(RESFILES)"/>
+    <ALLLIB value="$(LIBFILES) $(LIBRARIES) import32.lib cw32.lib"/>
+  </LINKER>
+  <IDEOPTIONS>
+[Version Info]
+IncludeVerInfo=0
+AutoIncBuild=0
+MajorVer=1
+MinorVer=0
+Release=0
+Build=0
+Debug=0
+PreRelease=0
+Special=0
+Private=0
+DLL=0
+Locale=1033
+CodePage=1252
+
+[Version Info Keys]
+CompanyName=
+FileDescription=
+FileVersion=1.0.0.0
+InternalName=
+LegalCopyright=
+LegalTrademarks=
+OriginalFilename=
+ProductName=
+ProductVersion=1.0.0.0
+Comments=
+
+[Excluded Packages]
+$(BCB)\Bin\dclib50.bpl=InterBase Data Access Components
+$(BCB)\Bin\dcl31w50.bpl=Delphi 1.0 Compatibility Components
+$(BCB)\Bin\bcbsmp50.bpl=Borland C++ Sample Components
+C:\WINDOWS\SYSTEM\ibsmp50.bpl=Borland C++ InterBase Alerter Component
+$(BCB)\Bin\applet50.bpl=Borland Control Panel Applet Package
+$(BCB)\Bin\dclsmpedit50.bpl=Borland Editor Script Enhancements
+$(BCB)\Bin\bcbie50.bpl=Borland C++Builder Internet Explorer 5 Components Package
+$(BCB)\Bin\DBWEBXPRT.BPL=Borland Web Wizard Package
+$(BCB)\Bin\DCLNMF50.bpl=NetMasters Fastnet Tools
+$(BCB)\Bin\dclocx50.bpl=Borland Sample Imported ActiveX Controls
+$(BCB)\Bin\dclite50.bpl=Borland Integrated Translation Environment
+$(BCB)\Bin\mfcwizard.bpl=MFC Wizard
+$(BCB)\Bin\bcb97axserver50.bpl=Borland C++Builder COM Server Components Sample Package
+$(BCB)\Bin\dcltee50.bpl=TeeChart 5.0 Components
+$(BCB)\Bin\dcltqr50.bpl=TeeChart 5.0 for QuickReport Components Design Package
+
+[HistoryLists\hlIncludePath]
+Count=11
+Item0=$(BCB)\include;$(BCB)\include\vcl;I:\boost\libs\test\src
+Item1=I:\boost\libs\test\src;$(BCB)\include;$(BCB)\include\vcl
+Item2=$(BCB)\include;$(BCB)\include\vcl
+Item3=..\..\..\boost-sandbox\libs\policy_ptr\test;I:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test;:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test;$(BCB)\include;$(BCB)\include\vcl;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test\;I:\boost\libs\test\src\
+Item4=$(BCB)\include;$(BCB)\include\vcl;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test\;I:\boost\libs\test\src\
+Item5=L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test\;I:\boost\libs\test\src\;$(BCB)\include;$(BCB)\include\vcl
+Item6=L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test;I:\boost\libs\test\src\;$(BCB)\include;$(BCB)\include\vcl
+Item7=I:\boost\libs\test\src;I:\boost\boost\boost\libs\test\src;:\boost\boost\boost\libs\test\src;L:\boost\boost\boost\libs\test\src\;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test\;$(BCB)\include;$(BCB)\include\vcl
+Item8=L:\boost\boost\boost\libs\test\src;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test;$(BCB)\include;$(BCB)\include\vcl
+Item9=L:\boost\boost\boost\libs\test\src;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test;..\..\..\..\..\boost\boost\libs\test\src;$(BCB)\include;$(BCB)\include\vcl
+Item10=..\..\..\..\..\boost\boost\libs\test\src;$(BCB)\include;$(BCB)\include\vcl
+
+[HistoryLists\hlLibraryPath]
+Count=11
+Item0=$(BCB)\lib\obj;$(BCB)\lib;I:\boost\libs\test\src
+Item1=I:\boost\libs\test\src;$(BCB)\lib\obj;$(BCB)\lib
+Item2=$(BCB)\lib\obj;$(BCB)\lib
+Item3=..\..\..\boost-sandbox\libs\policy_ptr\test;I:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test;:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test;$(BCB)\lib\obj;$(BCB)\lib;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test\;I:\boost\libs\test\src\
+Item4=$(BCB)\lib\obj;$(BCB)\lib;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test\;I:\boost\libs\test\src\
+Item5=I:\boost\libs\test\src\;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test\;$(BCB)\lib\obj;$(BCB)\lib
+Item6=I:\boost\libs\test\src;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test;$(BCB)\lib\obj;$(BCB)\lib
+Item7=I:\boost\libs\test\src;I:\boost\boost\boost\libs\test\src;:\boost\boost\boost\libs\test\src;L:\boost\boost\boost\libs\test\src\;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test\;$(BCB)\lib\obj;$(BCB)\lib
+Item8=L:\boost\boost\boost\libs\test\src;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test;$(BCB)\lib\obj;$(BCB)\lib
+Item9=L:\boost\boost\boost\libs\test\src;L:\boost\boost-sandbox\boost-sandbox\libs\policy_ptr\test;..\..\..\..\..\boost\boost\libs\test\src;$(BCB)\lib\obj;$(BCB)\lib
+Item10=..\..\..\..\..\boost\boost\libs\test\src;$(BCB)\lib\obj;$(BCB)\lib
+
+[HistoryLists\hlDebugSourcePath]
+Count=1
+Item0=$(BCB)\source\vcl
+
+[HistoryLists\hlConditionals]
+Count=2
+Item0=_DEBUG
+Item1=_DEBUG;BOOST_SMART_POINTER_BASIC_INTERFACE
+
+[HistoryLists\hlIntOutputDir]
+Count=1
+Item0=Build
+
+[HistoryLists\hlFinalOutputDir]
+Count=2
+Item0=Build\
+Item1=Build
+
+[Debugging]
+DebugSourceDirs=$(BCB)\source\vcl
+
+[Parameters]
+RunParams=
+HostApplication=
+RemoteHost=
+RemotePath=
+RemoteDebug=0
+
+[Compiler]
+ShowInfoMsgs=0
+LinkDebugVcl=0
+LinkCGLIB=0
+  </IDEOPTIONS>
+</PROJECT>

@@ -1,0 +1,14 @@
+USEUNIT("I:\boost-sandbox\libs\policy_ptr\test\smart_ptr_test.cpp");
+USEUNIT("I:\boost\libs\test\src\execution_monitor.cpp");
+USEUNIT("I:\boost\libs\test\src\test_tools.cpp");
+USEUNIT("I:\boost\libs\test\src\unit_test_log.cpp");
+USEUNIT("I:\boost\libs\test\src\unit_test_main.cpp");
+USEUNIT("I:\boost\libs\test\src\unit_test_monitor.cpp");
+USEUNIT("I:\boost\libs\test\src\unit_test_parameters.cpp");
+USEUNIT("I:\boost\libs\test\src\unit_test_result.cpp");
+USEUNIT("I:\boost\libs\test\src\unit_test_suite.cpp");
+//---------------------------------------------------------------------------
+This file is used by the project manager only and should be treated like the project file
+
+
+main

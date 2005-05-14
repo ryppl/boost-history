@@ -1,0 +1,70 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <link rel="stylesheet" type="text/css" href="../../../boost.css">
+    <title>Boost.Smart Pointer - FAQ</title>
+  </head>
+  <body link="#0000ff" vlink="#800080">
+    <table border="0" cellpadding="7" cellspacing="0" width="100%" summary="header">
+      <tr> 
+        <td valign="top" width="300"> 
+          <h3><a href="../../../index.htm"><img height="86" width="277" alt="C++ Boost" src="../../../c++boost.gif" border="0"></a></h3>
+        </td>
+        <td valign="top"> 
+          <h1 align="center">Boost.Smart Pointer</h1>
+          <h2 align="center">Frequently Asked Questions (FAQs)</h2>
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <dl class="page-index">
+      <dt><a href="#question1">1. How does this library relate to the existing boost::smart_ptr
+        library?</a></dt>
+      <dt><a href="#question2">2. Why do we need YASP (Yet Another Smart Pointer)?</a></dt>
+      <dt><a href="#question3">3. What are the advantages of policy-based design?</a></dt>
+      <dt><a href="#question4">4. What are the disadvantages of policy-based design?</a></dt>
+    </dl>
+    <h2><a name="question1"></a>1. How does this library relate to the existing 
+      <a href="../../../libs/smart_ptr/index.htm">boost::smart_ptr</a> library?</h2>
+    <p>While this is a political hot-button issue, the simple answer is: peaceful co-existence.
+    That is, it seems likely that if this library is accepted into Boost, both libraries will 
+    continue to be a part of Boost until a compelling reason to do otherwise is presented.  Is
+    there overlap?  Yes.  Is this bad?  Not necessarily.  For more rationale, see the other
+    FAQs.</p>
+    <h2><a name="question2"></a>2. Why do we need YASP (Yet Another Smart Pointer)?</h2>
+    <p>Because no smart pointer is optimal in every situation.  While the constellation of
+    current Boost smart pointers satisfy a large number of use cases, they have grown over
+    time to accomodate more and more situations.  The policy-based design of this library is
+    intended to provide a central framework whereby any desired smart pointer can be 
+    assembled in a straightforward, safe, and reliable way.</p>
+    <h2><a name="question3"></a>3. What are the advantages of policy-based design?</h2>
+    <p>Policy-based design allows one to reuse the parts of a smart pointer that are common
+    while adding features that are not.  Different checking policies can be defined to give
+    different levels of security, while novel ownership policies can be created to handle
+    resources in unique ways.  While each policy combination creates a unique type, the types
+    may be related through an inheritance graph.  Thus, it is possible to make the types
+    aware of each other and interoperate accordingly.  Furthermore, the high level of
+    customization allows for maximal efficiency.  Only the necessary functionality need be
+    included in any given type.  This allows for small pointers, fast pointers, and everything
+    in between.</p>
+    <h2><a name="question4"></a>4. What are the disadvantages of policy-based design?</h2>
+    <p>Two major criticisms of policy-based design are noted here: Interoperability, and
+    Simplicity.  Even though policy-based design unifies smart pointers into a common
+    framework, it is true that it tends to encourage type proliferation.  Thus, it may
+    make it more difficult for users to agree on which type to pass between module or
+    library boundaries.  Monolithic types tend to combine more features into fewer
+    pointers, leading to easier interoperability.  Furthermore, policy-based smart
+    pointers can be complicated to specify.  There are several template parameters
+    that can be specified, and this could lead to confusion among users.  This is alleviated
+    somewhat by the use of type generators, and could be alleviated further if
+    template typedefs were added to the language.</p>
+    <hr>
+    <p>Revised
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+      26 September, 2002
+      <!--webbot bot="Timestamp" endspan i-checksum="39359" -->
+    </p>
+    <p><i>&copy; Copyright <a href="mailto:dheld@codelogicconsulting.com">David B. Held</a> 2002.
+    All Rights Reserved.</i></p>
+  </body>
+</html>

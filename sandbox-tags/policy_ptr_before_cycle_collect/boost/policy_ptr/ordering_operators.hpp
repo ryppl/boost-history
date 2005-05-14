@@ -1,0 +1,93 @@
+#ifndef BOOST_ORDERING_OPERATORS_20020920_HPP
+#define BOOST_ORDERING_OPERATORS_20020920_HPP
+
+namespace boost
+{
+
+////////////////////////////////////////////////////////////////////////////////
+// free ordering operators for smart_ptr
+////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
+// operator< for lhs = smart_ptr, rhs = raw pointer
+////////////////////////////////////////////////////////////////////////////////
+
+    template <typename T, SMART_POINTER_TEMPLATE_PARAMETERS, typename U>
+    inline bool operator<(SMART_POINTER_TYPE const& lhs, U const* rhs)
+    {
+        return get_impl(lhs) < rhs;
+    }
+
+////////////////////////////////////////////////////////////////////////////////
+// operator< for lhs = raw pointer, rhs = smart_ptr
+////////////////////////////////////////////////////////////////////////////////
+
+    template <typename T, SMART_POINTER_TEMPLATE_PARAMETERS, typename U>
+    inline bool operator<(U const* lhs, SMART_POINTER_TYPE const& rhs)
+    {
+        return lhs < get_impl(rhs);
+    }
+
+////////////////////////////////////////////////////////////////////////////////
+// operator> for lhs = smart_ptr, rhs = raw pointer
+////////////////////////////////////////////////////////////////////////////////
+
+    template <typename T, SMART_POINTER_TEMPLATE_PARAMETERS, typename U>
+    inline bool operator>(SMART_POINTER_TYPE const& lhs, U const* rhs)
+    {
+        return rhs < lhs;
+    }
+
+////////////////////////////////////////////////////////////////////////////////
+// operator> for lhs = raw pointer, rhs = smart_ptr
+////////////////////////////////////////////////////////////////////////////////
+
+    template <typename T, SMART_POINTER_TEMPLATE_PARAMETERS, typename U>
+    inline bool operator>(U const* lhs, SMART_POINTER_TYPE const& rhs)
+    {
+        return rhs < lhs;
+    }
+
+////////////////////////////////////////////////////////////////////////////////
+// operator<= for lhs = smart_ptr, rhs = raw pointer
+////////////////////////////////////////////////////////////////////////////////
+
+    template <typename T, SMART_POINTER_TEMPLATE_PARAMETERS, typename U>
+    inline bool operator<=(SMART_POINTER_TYPE const& lhs, U const* rhs)
+    {
+        return !(rhs < lhs);
+    }
+
+////////////////////////////////////////////////////////////////////////////////
+// operator<= for lhs = raw pointer, rhs = smart_ptr
+////////////////////////////////////////////////////////////////////////////////
+
+    template <typename T, SMART_POINTER_TEMPLATE_PARAMETERS, typename U>
+    inline bool operator<=(U const* lhs, SMART_POINTER_TYPE const& rhs)
+    {
+        return !(rhs < lhs);
+    }
+
+////////////////////////////////////////////////////////////////////////////////
+// operator>= for lhs = smart_ptr, rhs = raw pointer
+////////////////////////////////////////////////////////////////////////////////
+
+    template <typename T, SMART_POINTER_TEMPLATE_PARAMETERS, typename U>
+    inline bool operator>=(SMART_POINTER_TYPE const& lhs, U const* rhs)
+    {
+        return !(lhs < rhs);
+    }
+
+////////////////////////////////////////////////////////////////////////////////
+// operator>= for lhs = raw pointer, rhs = smart_ptr
+////////////////////////////////////////////////////////////////////////////////
+
+    template <typename T, SMART_POINTER_TEMPLATE_PARAMETERS, typename U>
+    inline bool operator>=(U const* lhs, SMART_POINTER_TYPE const& rhs)
+    {
+        return !(lhs < rhs);
+    }
+
+}   // namespace boost
+
+#endif // BOOST_ORDERING_OPERATORS_20020920_HPP

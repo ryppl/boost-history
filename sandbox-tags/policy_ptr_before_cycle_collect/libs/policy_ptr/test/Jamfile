@@ -1,0 +1,45 @@
+# Boost Move Ptr Library test Jamfile
+
+# (C) Copyright Jonathan Turkanis 2004
+# Distributed under the Boost Software License, Version 1.0. (See accompanying 
+# file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt.)
+
+subproject libs/policy_ptr/test ;
+
+# bring in rules for testing
+import testing ;
+
+# Make tests run by default.
+DEPENDS all : test ;
+
+template unit_test
+    : # sources
+        <lib>../../../libs/test/build/boost_unit_test_framework
+    : # build requirements
+    : # build variants
+    ; 
+    
+{
+    # look in BOOST_ROOT for sources first, just in this Jamfile
+    local SEARCH_SOURCE = $(BOOST_ROOT) $(SEARCH_SOURCE) ;
+
+    test-suite "policy_ptr"
+        : # general test
+          [ run libs/policy_ptr/test/smart_ptr_test.cpp ]
+          # auto_ptr tests
+	      [ run libs/policy_ptr/test/auto_ptr/ap_assignment.cpp <template>unit_test ] 
+          [ run libs/policy_ptr/test/auto_ptr/ap_construction.cpp <template>unit_test ] 
+          [ compile-fail libs/policy_ptr/test/auto_ptr/ap_fail_move.cpp <template>unit_test ] 
+          [ compile libs/policy_ptr/test/auto_ptr/ap_sizeof.cpp <template>unit_test ] 
+          [ run libs/policy_ptr/test/auto_ptr/ap_source_sink.cpp <template>unit_test ]
+          # move_ptr tests 
+          [ run libs/policy_ptr/test/move_ptr/mp_assignment.cpp <template>unit_test ]
+          [ run libs/policy_ptr/test/move_ptr/mp_construction.cpp <template>unit_test ] 
+          [ compile-fail libs/policy_ptr/test/move_ptr/mp_fail_move1.cpp <template>unit_test ] 
+          [ compile-fail libs/policy_ptr/test/move_ptr/mp_fail_move2.cpp <template>unit_test ] 
+          [ compile-fail libs/policy_ptr/test/move_ptr/mp_fail_move3.cpp <template>unit_test ] 
+          [ run libs/policy_ptr/test/move_ptr/mp_move.cpp <template>unit_test ] 
+          [ compile libs/policy_ptr/test/move_ptr/mp_sizeof.cpp <template>unit_test ] 
+          [ run libs/policy_ptr/test/move_ptr/mp_source_sink.cpp <template>unit_test ] 
+       ;
+}
