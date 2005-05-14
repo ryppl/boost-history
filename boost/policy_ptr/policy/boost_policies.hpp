@@ -26,26 +26,6 @@ namespace boost
     template <typename T>
     class boost_ref_;
     
-namespace detail
-{
-    class shared_count_accessor
-    /**@requires
-     *  shared_count declaring this class as friend
-     */
-    {
-     protected:
-        static void add_ref_copy(detail::shared_count& a_count)
-        {
-            if(a_count.pi_) a_count.pi_->add_ref_copy();
-        }
-     
-        static void release(detail::shared_count& a_count)
-        {
-            if(a_count.pi_) a_count.pi_->release();
-        }
-     
-    };
-}//exit detail namespace
 //////////////////////////////////////////////////////////////////////////////
 // class template shared_storage
 // A boost::shared_count StoragePolicy for boost::shared_ptr emulation
@@ -53,7 +33,6 @@ namespace detail
 
     template <typename T>
     class shared_storage_
-    : private detail::shared_count_accessor
     {
     public:
         typedef T* stored_type;         // the type of the pointee_ object
@@ -97,12 +76,12 @@ namespace detail
         template <typename U>
         shared_storage_(const intrusive_storage_<U>& rhs)
         : pointee_(get_impl(rhs)), count_(get_impl(rhs))
-        { std::cout << "shared_storage_(intrusive_storage_<U>)" << std::endl; }
+        { }
 
         template <typename U>
         explicit shared_storage_(U* p)
         : pointee_(p), count_(p, checked_deleter<U>() )
-        { std::cout << "shared_storage_(U*)" << std::endl; }
+        { }
 
 #else // BOOST_NO_MEMBER_TEMPLATES
 
@@ -196,8 +175,6 @@ namespace detail
 
         stored_param    clone(stored_param p) const
         {
-            detail::shared_count& cnt=const_cast<detail::shared_count&>(count_);
-            add_ref_copy(cnt);
             return p;
         }
 
@@ -269,7 +246,7 @@ namespace detail
         : pointee_(reinterpret_cast<const shared_storage_<T>&>(rhs).pointee_)
         , count_(reinterpret_cast<const shared_storage_<T>&>(rhs).count_)
 # endif // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-        { std::cout << "weak_storage_(shared_storage_<U>)" << std::endl; }
+        { }
 
 #else // BOOST_NO_MEMBER_TEMPLATES
 
@@ -392,7 +369,6 @@ namespace detail
         explicit intrusive_storage_(const stored_type& p = default_value())
         : pointee_(p)
         {
-            std::cout << "intrusive_storage_(T*): " << p << std::endl;
             if (pointee_ != default_value()) intrusive_ptr_add_ref(pointee_);
         }
 
