@@ -16,6 +16,7 @@
  */
 #include "boost/rangelib/range.hpp"
 //^ from http://www.torjo.com/code/rangelib15.zip on 2004-11-09
+#include <boost/type_traits/is_base_and_derived.hpp>
 #include <vector>
 #include <map>
 namespace boost
@@ -77,8 +78,7 @@ namespace detail
   
   struct mem_buffer
    /**@brief
-    *  Memory buffer for use by placement new in
-    *  a descriptor_builder<Record>, for some Record.
+    *  Simple memory buffer.
     */
   {
    public:
@@ -140,18 +140,37 @@ namespace detail
   {
       build_buffer(std::size_t a_size)
         : mem_buffer(a_size)
-      {}
+        , c_tail_start(start_con())
+        , c_tail_end(c_tail_start+a_size)
+      {
+      }
+        template
+        < typename Field
+        >
         bool
-      contains(void* a_loc)const
+      contains(Field const* a_field)
       /**@brief
-        * Is a_loc within this mem_buffer?
+        * Is a_field within this mem_buffer?
         */
       { 
-          char* c_loc = cp_cast(a_loc);
-          char const* c_start = start_con();
-          bool r =(c_start <= c_loc) && (c_loc < c_start+size());
+          char const*const c_fld_start = cp_cast(a_field);
+          bool r =(c_tail_start <= c_fld_start) && (c_fld_start < c_tail_end);
+          if(r)
+          {
+              c_tail_start=c_fld_start+sizeof(Field);//move past this field
+          }
           return r;
       } 
+   private:
+        char const*
+      c_tail_start
+      //Start of remaining part of Record memory which may contain 
+      //fields not already processed by contains(Field*).
+      ;
+        char const*const
+      c_tail_end
+      //End of Record memory+1.
+      ;
   };//end build_buffer struct
           
       typedef
@@ -348,9 +367,9 @@ struct names_descriptor
       *
       *    maker_iterator_acceptor_typed<SelectedField>::the_singleton() 
       *
-      *  since it's installed in the descriptor by:
+      *  since it's "registered" in the descriptor by:
       *
-      *    field_selector<SelectedField>::field_selector(SelectedField*)
+      *    field_registrar<FieldsVisitor>::field_registrar<SelectedField>(SelectedField*)
       *
       *  defined below.
       */
@@ -570,47 +589,67 @@ names_builder
             return !super_type::operator bool();
         } 
     };//end field_iterator_acceptor_typed template
-      
+    
     struct build_materials
     /**@class build_materials
       * @brief
-      *  Simply a convenience class
-      *  to hold all build materials
-      *  for building a selected_fields_descriptor.
+      *  Simply a convenience class to hold all 
+      *  build materials for building a 
+      *  selected_fields_descriptor for some "record"
+      *  i.e. some type.
       */
     {
      public:
           selected_fields_descriptor*
         m_descriptor
-          ;
+          /**@brief 
+           * The descriptor being built.
+           */
+        ;
           detail::build_buffer*
         m_buffer
-          ;
+          /**@brief 
+           * memory where "dummy" record, described by m_descriptor
+           * is being created.
+           */
+        ;
+          maker_iterator_acceptor_abs const*
+        m_record_maker
+          /**@brief 
+           * The ONLY purpose is to prevent m_descriptor from indicating
+           * the record it describes contains itself.
+           */
+        ;
      public:
         build_materials(void)
           : m_descriptor(0)
           , m_buffer(0)
+          , m_record_maker(0)
         {}
         build_materials
           ( build_materials const& a_self
           )
           : m_descriptor(a_self.m_descriptor)
           , m_buffer(a_self.m_buffer)
+          , m_record_maker(a_self.m_record_maker)
         {}
           void
         set_desc_buf
           ( selected_fields_descriptor* a_descriptor
           , detail::build_buffer* a_buffer
+          , maker_iterator_acceptor_abs const* a_record_maker
           )
         {
             m_descriptor= a_descriptor;
             m_buffer= a_buffer;
+            m_record_maker= a_record_maker;
         }
           void
         reset(void)
         {
             m_descriptor= 0;
             m_buffer= 0;
+            m_record_maker= 0;
         }
     };//end build_materials struct
       
@@ -678,44 +717,114 @@ names_builder
 template
   < typename FieldsVisitor
   >
-struct field_selector
+struct field_registrar
 {
     template
       < typename SelectedField
       >
-    field_selector
+    field_registrar
       ( SelectedField* a_selected_field
       )
    /**
-    * Record the maker_iterator_acceptor_abs for given SelectedField
-    * in the descriptor for the Record currently being
-    * constructed in a descriptor_builder<Record> 
-    * instantiation.
+    * If building a descriptor, record the maker_iterator_acceptor_abs
+    * for given SelectedField in the descriptor for the Record
+    * currently being constructed in a
+    * descriptor_builder<FieldsVisitor,Record> instantiation.
     */
     {
-        typedef names_builder<FieldsVisitor> nb_type;
-        typename nb_type::build_materials& l_materials= nb_type::the_materials();
-        if
-        (  l_materials.m_buffer //is a descriptor being built?
-        && l_materials.m_buffer //memory for the Record being contructed
-           ->contains(a_selected_field) //is a_selected_field within the Record?
-        )
+        typedef names_builder<FieldsVisitor> bldr_ns;
+        typename bldr_ns::build_materials& l_materials= bldr_ns::the_materials();
+        bool descriptor_is_building
+          =  l_materials.m_buffer; //is a descriptor being built?
+        if(descriptor_is_building)
         {
-            typename nb_type::maker_iterator_acceptor_abs const& the_maker 
-              = nb_type::template maker_iterator_acceptor_typed<SelectedField>
-                ::the_singleton();
-            detail::offset_type offset_field_record 
-              = detail::offset_from_to
-                ( a_selected_field
-                , l_materials.m_buffer->start_con() //record start
-                );
-            l_materials.m_descriptor->append_maker_at
-              ( &the_maker 
-              , offset_field_record
-              );
-        }//end if a descriptor being built?
-    }//end field_selector CTOR
-};//end field_selector struct
+            typename bldr_ns::maker_iterator_acceptor_abs const* the_field_maker 
+              = &(bldr_ns::template maker_iterator_acceptor_typed<SelectedField>
+                ::the_singleton());
+            bool record_not_field
+              = l_materials.m_record_maker != the_field_maker; //is record != field
+          #ifdef CONTAINER_SINGLE_OBJ_ID
+            mout()
+              <<"***field_registrar.descriptor_is_building\n"
+              <<": record_not_field="<<record_not_field
+              <<": record_maker="<<(void*)l_materials.m_record_maker
+              <<": field_maker="<<(void*)the_field_maker
+              <<": obj_id="<<a_selected_field->id_get()
+              <<"\n";
+          #endif
+            if(record_not_field)
+            {
+                bool record_contains_field
+                  = l_materials.m_buffer
+                    ->contains(a_selected_field); //is a_selected_field within the Record?
+                if(record_contains_field)
+                {
+                    detail::offset_type offset_field_record 
+                      = detail::offset_from_to
+                        ( a_selected_field
+                        , l_materials.m_buffer->start_con() //record start
+                        );
+                    l_materials.m_descriptor->append_maker_at
+                      ( the_field_maker 
+                      , offset_field_record
+                      );
+                }//end record_contains_field
+            }//end record_not_field
+        }//end descriptor_is_building
+    }//end field_registrar CTOR
+};//end field_registrar struct
+
+  template
+  < typename FieldsVisitor
+  , typename Record
+  , bool IsRecordFieldSelector
+  >
+struct record_iter_maker_is_selector
+{
+    typedef names_builder<FieldsVisitor> bldr_ns;
+    typedef typename bldr_ns::maker_iterator_acceptor_abs maker_type;
+        static
+      maker_type const*
+    the_maker(void)
+    {
+        maker_type const*l_maker
+          = &(bldr_ns::template maker_iterator_acceptor_typed<Record>
+            ::the_singleton());
+        return l_maker;
+    }
+};
+  template
+  < typename FieldsVisitor
+  , typename Record
+  >
+struct record_iter_maker_is_selector
+  < FieldsVisitor
+  , Record
+  , false
+  >
+{
+    typedef names_builder<FieldsVisitor> bldr_ns;
+    typedef typename bldr_ns::maker_iterator_acceptor_abs maker_type;
+        static
+      maker_type const*
+    the_maker(void)
+    {
+        return 0;
+    }
+};
+
+  template
+  < typename FieldsVisitor
+  , typename Record
+  >
+struct record_iter_maker
+  : public record_iter_maker_is_selector
+    < FieldsVisitor
+    , Record
+    , is_base_and_derived<field_registrar<FieldsVisitor>,Record>::value
+    >
+{
+};
 
 template
   < typename Record
@@ -745,7 +854,7 @@ struct descriptor_builder
  /**@class descriptor_builder
   * @brief
   * "Build" the selected_fields_descriptor for Record class
-  *  which MIGHT have children.
+  *  which MIGHT have fields visited by FieldsVisitor.
   */
   : public names_descriptor<FieldsVisitor>::selected_fields_descriptor
 {
@@ -757,19 +866,13 @@ struct descriptor_builder
     
     descriptor_builder(void)
     {
-    #if defined(TRACE_SCOPE_HPP)
-        utility::trace_scope ts("descriptor_builder::CTOR");
-    #endif
         typedef names_builder<FieldsVisitor> bldr_ns;
         detail::build_buffer parent_mem(sizeof(Record));
-        bldr_ns::the_materials().set_desc_buf(this,&parent_mem);
+        typename bldr_ns::maker_iterator_acceptor_abs const* the_maker
+          = record_iter_maker<FieldsVisitor,Record>::the_maker();
+        bldr_ns::the_materials().set_desc_buf(this,&parent_mem,the_maker);
         Record* a_record = builder_new<Record>::make(parent_mem.start_mut());
-        {
-        #if defined(TRACE_SCOPE_HPP)
-            utility::trace_scope ts("descriptor_builder::CTOR.~Record()");
-        #endif
-            a_record->~Record();
-        }
+        a_record->~Record();
         bldr_ns::the_materials().reset(); 
     }
         
@@ -984,10 +1087,6 @@ names_iterator
             typedef
           field_iterator_acceptor_fwd
         iter_type
-        ;
-            typedef
-          iterator_iterator_described
-        super_type
         ;
             typedef
           field_iterator_described
