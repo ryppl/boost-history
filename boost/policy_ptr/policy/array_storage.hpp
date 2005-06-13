@@ -5,6 +5,14 @@
 // Distributed under the Boost Software License, Version 1.0. (See accompany-
 // ing file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //----------------------------------------------------------------------------
+// ChangeLog(latest at top):
+//   2005-06-01 Larry Evans
+//     WHAT:
+//       1) Added friend get_less_comparator
+//     WHY:
+//       1) It is now used in smart_ptr.hpp in comparison ops; hence,
+//          it needs to be defined here.
+//----------------------------------------------------------------------------
 #ifndef BOOST_ARRAY_STORAGE_HPP
 #define BOOST_ARRAY_STORAGE_HPP
 //----------------------------------------------------------------------------
@@ -97,6 +105,12 @@ namespace boost
         pointer_type    get_impl(array_storage_ const& sp)
         {
             return sp.p_;
+        }
+
+        friend inline 
+        pointer_type    get_less_comparator(array_storage_ const& sp)
+        { 
+            return get_impl(sp); 
         }
 
         friend inline
