@@ -1,10 +1,54 @@
-#ifndef BOOST_POLICIES_20020502_HPP
-#define BOOST_POLICIES_20020502_HPP
+#ifndef BOOST_POLICY_PTR_POLICY_STD_20020502_HPP
+#define BOOST_POLICY_PTR_POLICY_STD_20020502_HPP
+
+// ChangeLog(latest at top):
+//   2005-06-01 Larry Evans
+//     WHAT:
+//       1)Added templated boost_ref_ CTOR for pointer type argument.
+//       2)Added friend get_compare to storage classes.
+//     WHY:
+//       1)Enable derived pointers to be stored, and enable tests in:
+//           n_constructors::copy_constructor(void)
+//         in:
+//           policy_ptr/test/std_ptrs_shared_ptr_test.cpp
+//         to pass.
+//       2)Enable comparison operators in smart_ptr.hpp to work
+//         correctly for these storage classes.
+//   2005-05-31 Larry Evans
+//     WHAT:
+//       1)Added weak_storage_::clone
+//       2)Added static_cast<T*> to shared_storage_ CTOR init_list for pointee_.
+//     WHY:
+//       1)To get test/std_ptrs_shared_ptr_test.cpp:weak_ptr_constructor(void)
+//         to compile.
+//       2)Enable compile of libs/smart_ptr/test/std_ptrs_shared_ptr_test.cpp:
+//         n_const_cast::test(void).
+//   2005-05-30 Larry Evans
+//     WHAT:
+//       Added further typedefs to weak_storage_
+//     WHY:
+//       To handle case where boost_ref_ StoragePolicy= weak_storage. 
+//   2005-05-28 Larry Evans
+//     WHAT:
+//       Renamed to std.hpp
+//     WHY:
+//       To remain consistent with the boost/policy_ptr/std_ptrs.hpp
+//       name.  The _policies suffix was removed since that's
+//       implied by the location in the policy directory.
+//   2005-05-18 Larry Evans
+//     WHAT:
+//       Substituted shared_cyclic_count for boost/detail/shared_count
+//     WHY:
+//       See boost/policy_ptr/detail/shared_count ChangeLog for
+//       this date.
+//   2002-10-02 David Held
+//     Original code.
+//
 
 #include <boost/config.hpp>
 #include <boost/assert.hpp>
 #include <boost/checked_delete.hpp>
-#include <boost/detail/shared_count.hpp>
+#include "boost/policy_ptr/detail/shared_count.hpp"
 
 namespace boost
 {
@@ -14,10 +58,10 @@ namespace boost
 // Declarations of boost-emulating StoragePolicies.
 //////////////////////////////////////////////////////////////////////////////
 
-    template <typename T>
+    template <typename T, typename SpCounter=policy_ptr::detail::sp_counted_base>
     class shared_storage_;
 
-    template <typename T>
+    template <typename T, typename SpCounter=policy_ptr::detail::sp_counted_base>
     class weak_storage_;
 
     template <typename T>
@@ -31,7 +75,7 @@ namespace boost
 // A boost::shared_count StoragePolicy for boost::shared_ptr emulation
 //////////////////////////////////////////////////////////////////////////////
 
-    template <typename T>
+    template <typename T, typename SpCounter>
     class shared_storage_
     {
     public:
@@ -45,7 +89,8 @@ namespace boost
                                                         stored_param;
         typedef typename call_traits<pointer_type>::param_type
                                                         pointer_param;
-
+        typedef policy_ptr::detail::shared_count<SpCounter>     
+                                                        counter_type;
     protected:
         shared_storage_()
         : pointee_(default_value()), count_()
@@ -54,9 +99,9 @@ namespace boost
 #ifndef BOOST_NO_MEMBER_TEMPLATES
 
         template <typename U>
-        shared_storage_(const shared_storage_<U>& rhs)
+        shared_storage_(const shared_storage_<U,SpCounter>& rhs)
 # ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-        : pointee_(rhs.pointee_), count_(rhs.count_)
+        : pointee_(static_cast<T*>(rhs.pointee_)), count_(rhs.count_)
 # else // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
         : pointee_(reinterpret_cast<const shared_storage_&>(rhs).pointee_)
         , count_(reinterpret_cast<const shared_storage_&>(rhs).count_)
@@ -64,12 +109,12 @@ namespace boost
         { }
 
         template <typename U>
-        explicit shared_storage_(const weak_storage_<U>& rhs)
+        explicit shared_storage_(const weak_storage_<U,SpCounter>& rhs)
 # ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
         : pointee_(rhs.pointee_), count_(rhs.count_)
 # else // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-        : pointee_(reinterpret_cast<const weak_storage_<T>&>(rhs).pointee_)
-        , count_(reinterpret_cast<const weak_storage_<T>&>(rhs).count_)
+        : pointee_(reinterpret_cast<const weak_storage_<T,SpCounter>&>(rhs).pointee_)
+        , count_(reinterpret_cast<const weak_storage_<T,SpCounter>&>(rhs).count_)
 # endif // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
         { }
 
@@ -80,8 +125,10 @@ namespace boost
 
         template <typename U>
         explicit shared_storage_(U* p)
-        : pointee_(p), count_(p, checked_deleter<U>() )
-        { }
+        : pointee_(p), count_(p)
+        { 
+            BOOST_SP_CONSTRUCTOR_HOOK(*this, "shared_storage_(U*)");
+        }
 
 #else // BOOST_NO_MEMBER_TEMPLATES
 
@@ -89,7 +136,7 @@ namespace boost
         : pointee_(rhs.pointee_), count_(rhs.count_)
         { }
 
-        explicit shared_storage_(const weak_storage_<T>& rhs)
+        explicit shared_storage_(const weak_storage_<T,SpCounter>& rhs)
         : pointee_(rhs.pointee_), count_(rhs.count_)
         { }
 
@@ -98,7 +145,7 @@ namespace boost
         { }
 
         explicit shared_storage_(T* p)
-        : pointee_(p), count_(p, checked_deleter<T>(), p)
+        : pointee_(p), count_(p, checked_deleter<T>() )
         { }
 
 #endif // BOOST_NO_MEMBER_TEMPLATES
@@ -124,6 +171,9 @@ namespace boost
         friend inline pointer_type get_impl(const shared_storage_& sp)
         { return sp.pointee_; }
 
+        friend inline counter_type const& get_less_comparator(const shared_storage_& sp)
+        { return sp.count_; }
+
         friend inline stored_type& get_impl_ref(shared_storage_& sp)
         { return sp.pointee_; }
 
@@ -135,14 +185,17 @@ namespace boost
         { return pointee_; }
 
         bool unique() const
-        { return pointee_ == default_value(); }
+        { return count_.unique(); }
 
         long use_count() const
         { return count_.use_count(); }
+        
+        counter_type& get_counter()
+        { return count_; }
 
         void reset()
         { shared_storage_().swap(*this); }
-
+        
 #ifndef BOOST_NO_MEMBER_TEMPLATES
 
         // U must be complete
@@ -164,7 +217,6 @@ namespace boost
         }
 
 #endif // BOOST_NO_MEMBER_TEMPLATES
-
     protected:
         // Destruction is handled by shared_count
         void destroy()
@@ -187,19 +239,20 @@ namespace boost
     private:
 
 #ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-        template <typename U> friend class shared_storage_;
-        template <typename U> friend class weak_storage_;
+        template <typename U, typename C> friend class shared_storage_;
+        template <typename U, typename C> friend class weak_storage_;
 #else // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-        friend class weak_storage_<T>;
+        friend class weak_storage_<T,SpCounter>;
 #endif // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-        friend class boost_ref_<shared_storage_<T> >;
+        friend class boost_ref_<shared_storage_<T,SpCounter> >;
 
         // Data
         stored_type pointee_;
-        detail::shared_count count_;
+        counter_type count_;
     };
-
+    
     //------------------------------------------------------------------------
+    template<typename SpCounter=policy_ptr::detail::sp_counted_base>
     struct shared_storage
     {
         typedef storage_policy_tag policy_category;
@@ -207,7 +260,7 @@ namespace boost
         template <typename T>
         struct apply
         {
-            typedef shared_storage_<T> type;
+            typedef shared_storage_<T,SpCounter> type;
         };
     };
 //////////////////////////////////////////////////////////////////////////////
@@ -215,13 +268,21 @@ namespace boost
 // A boost::shared_count StoragePolicy for boost::weak_ptr emulation
 //////////////////////////////////////////////////////////////////////////////
 
-    template <typename T>
+    template <typename T, typename SpCounter>
     class weak_storage_
     {
     protected:
         typedef T* stored_type;         // the type of the pointee_ object
+        typedef T const*                                const_stored_type;
         typedef T* pointer_type;        // type returned by operator->
+        typedef T const*                                const_pointer_type;
         typedef T& reference_type;      // type returned by operator*
+        typedef typename add_reference<T const>::type   const_reference_type;
+        typedef typename call_traits<stored_type>::param_type
+                                                        stored_param;
+        typedef typename call_traits<pointer_type>::param_type
+                                                        pointer_param;
+        typedef policy_ptr::detail::weak_count<SpCounter> counter_type;
 
         weak_storage_() : pointee_(default_value()), count_()
         { }
@@ -229,7 +290,7 @@ namespace boost
 #ifndef BOOST_NO_MEMBER_TEMPLATES
 
         template <typename U>
-        weak_storage_(const weak_storage_<U>& rhs)
+        weak_storage_(const weak_storage_<U,SpCounter>& rhs)
 # ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
         : pointee_(rhs.pointee_), count_(rhs.count_)
 # else // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
@@ -239,12 +300,12 @@ namespace boost
         { }
 
         template <typename U>
-        weak_storage_(const shared_storage_<U>& rhs)
+        weak_storage_(const shared_storage_<U,SpCounter>& rhs)
 # ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
         : pointee_(rhs.pointee_), count_(rhs.count_)
 # else // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-        : pointee_(reinterpret_cast<const shared_storage_<T>&>(rhs).pointee_)
-        , count_(reinterpret_cast<const shared_storage_<T>&>(rhs).count_)
+        : pointee_(reinterpret_cast<const shared_storage_<T,SpCounter>&>(rhs).pointee_)
+        , count_(reinterpret_cast<const shared_storage_<T,SpCounter>&>(rhs).count_)
 # endif // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
         { }
 
@@ -254,7 +315,7 @@ namespace boost
         : pointee_(rhs.pointee_), count_(rhs.count_)
         { }
 
-        weak_storage_(const shared_storage_<T>& rhs)
+        weak_storage_(const shared_storage_<T,SpCounter>& rhs)
         : pointee_(rhs.pointee_), count_(rhs.count_)
         { }
 
@@ -276,8 +337,16 @@ namespace boost
         bool is_valid() const
         { return pointee_ != default_value(); }
 
+        stored_param    clone(stored_param p) const
+        {
+            return p;
+        }
+
     public:
         // Accessors
+        friend inline counter_type const& get_compare(const weak_storage_& sp)
+        { return sp.count_; }
+
         friend inline pointer_type get_impl(const weak_storage_& sp)
         { return sp.pointee_; }
 
@@ -296,7 +365,7 @@ namespace boost
 
         void reset()
         { weak_storage_().swap(*this); }
-
+        
     protected:
         // Destruction is handled by weak_count
         void destroy()
@@ -308,18 +377,19 @@ namespace boost
     private:
 
 #ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-        template <typename U> friend class weak_storage_;
-        template <typename U> friend class shared_storage_;
+        template <typename U, typename C> friend class weak_storage_;
+        template <typename U, typename C> friend class shared_storage_;
 #else // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-        friend class shared_storage_<T>;
+        friend class shared_storage_<T,SpCounter>;
 #endif // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
 
         // Data
         stored_type pointee_;
-        detail::weak_count count_;
+        counter_type count_;
     };
 
     //------------------------------------------------------------------------
+    template<typename SpCounter=policy_ptr::detail::sp_counted_base>
     struct weak_storage
     {
         typedef storage_policy_tag policy_category;
@@ -327,7 +397,7 @@ namespace boost
         template <typename T>
         struct apply
         {
-            typedef weak_storage_<T> type;
+            typedef weak_storage_<T,SpCounter> type;
         };
     };
 //////////////////////////////////////////////////////////////////////////////
@@ -462,6 +532,13 @@ namespace boost
 #ifndef BOOST_NO_MEMBER_TEMPLATES
 
         template <typename U>
+        boost_ref_(U* p)
+                            : base_type(p)
+        { 
+            BOOST_SP_CONSTRUCTOR_HOOK(*this, "boost_ref_(U*)");
+        }
+
+        template <typename U>
         boost_ref_(const boost_ref_<U>& rhs)
                             : base_type(static_cast<
                                 typename boost_ref_<U>::base_type const&
@@ -513,4 +590,4 @@ namespace boost
     };
 }   // namespace boost
 
-#endif // BOOST_POLICIES_20020502_HPP
+#endif // STD_20020502_HPP
