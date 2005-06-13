@@ -1,0 +1,47 @@
+import testing
+  ;
+
+rule run-utf ( name : other-sources * )
+#Purpose:
+#  Short-hand for linking with boost_unit_test_framework
+{
+    return [
+      run 
+        $(name).cpp 
+        $(other-sources)
+        $(BOOST_ROOT)/libs/test/build//boost_unit_test_framework ]
+      ;
+}
+
+project
+  : requirements 
+  : default-build debug
+  ;
+
+run-utf smart_ptr_test
+  :
+  ;
+
+run std_ptr_shared_ptr_test.cpp
+  ;
+
+run-output collector_sp_counted_tagged_test
+  : collector_sp_counted_tagged_test.cpp
+    ../src/detail/collector_sp_counted_tagged.cpp
+  ;
+
+run-utf sp_graph_dfs_print_test
+  :     ../../utility/build//debug
+    ../../io/filters/build//mout
+  ;
+
+run-utf std_ptr_binary_node_test
+  : ../src/detail/sp_counted_accepting.cpp
+    ../src/detail/collector_sp_counted_tagged.cpp
+    ../../utility/build//debug
+    ../../io/filters/build//mout
+  #2005-06-13
+  #  Test fails for add_spid_tests<std_shared_graph_tagged>
+  #  for cycle_{1,2}_external
+  ;
+
