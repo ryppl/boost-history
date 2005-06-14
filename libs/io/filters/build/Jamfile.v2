@@ -1,0 +1,11 @@
+
+project
+    :
+    : default-build debug
+    ;
+
+lib mout
+    : #sources
+      ../src/mout.cpp
+    ;
+
