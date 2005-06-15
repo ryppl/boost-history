@@ -1,3 +1,50 @@
+#WORK_AROUNDS:
+#  2005-06-14: mpl vector_c.hpp files:
+
+#    PROBLEM_DESCRIPTION:
+
+#      Some main targets in this Jamfile.v2 require modifications of
+#      the vector_c.hpp files below boost/mpl/aux_/preprocessed.
+#      These modifications enable use of enumerators as elements of a
+#      vector_c.
+
+#    SOLUTION:
+
+#      The required modification can be done by executing the following
+#      command:
+  
+#        python preprocess.py all $(BOOST_ROOT) vector_c.cpp
+#  
+#      in libs/mpl/preprocessed *after* replacing:
+#  
+#        boost/mpl/aux_/sequence_wrapper.hpp
+#  
+#      with the corresponding file in the boost-sandbox.
+
+#    OPERATING_SYSTEMS:
+  
+#      The above works for windows.  However for linux/unix like
+#      systems, the files:
+
+#        libs/mpl/preprocessed/preprocess.py
+#        libs/mpl/preprocessed/preprocess
+
+#      should also be copied from the sandbox to the corresponding
+#      files below your $(BOOST_ROOT) *before* implementing the steps
+#      described under SOLUTION:
+
+#    TESTED:
+
+#      The only vector_c.hpp's modified by the above which have been
+#      tested are in subdirectories:
+
+#        gcc
+#        plain
+
+#      The only operating system tested is linux/debian.
+
+#-----------------------------------------------------------------
+
 import testing
   ;
 
