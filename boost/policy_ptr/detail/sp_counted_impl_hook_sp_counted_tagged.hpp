@@ -37,7 +37,9 @@ class sp_counted_impl_hook<Referent,sp_counted_tagged>
      //     The original code in boost/detail/sp_counted_impl.hpp,
      //     had the sp_scalar_destructor_hook in sp_counted_impl_p::dispose;
      //     however, it was absent in sp_counted_impl_pd::dispose.  In 
-     //     order for the hook code to be called by both
+     //     order for the hook code to be called by the dispose of both sp_counted_impl_p
+     //     and sp_counted_impl_pd, it was moved to this class, a common
+     //     superclass of those classes.
      //     
         collector<sp_counted_tagged>::
           sp_scalar_destructor_hook( this );
