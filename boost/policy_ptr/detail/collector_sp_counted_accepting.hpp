@@ -2,7 +2,7 @@
 #ifndef BOOST_POLICY_PTR_DETAIL_COLLECTOR_SP_COUNTED_ACCEPTING_HPP_LJE20050523
 #define BOOST_POLICY_PTR_DETAIL_COLLECTOR_SP_COUNTED_ACCEPTING_HPP_LJE20050523
 #include "boost/policy_ptr/detail/collector.hpp"
-#include "boost/policy_ptr/detail/shared_count_sp_counted_accepting.hpp"
+#include "boost/policy_ptr/detail/shared_count_hook_sp_counted_accepting.hpp"
 #include <algorithm>
 #include <deque>
 
@@ -36,7 +36,7 @@ collector
     vertex_set_type
     ;
         typedef
-      shared_count<vertex_type>
+      shared_count_hook<vertex_type>
     arc_type
     ;
         typedef
@@ -297,4 +297,12 @@ collector
 }//exit detail namespace
 }//exit policy_ptr namespace
 }//exit boost namespace
+//-----------------------------------
+//ChangeLog:
+//  2005-06-15: Larry Evans
+//    WHAT:
+//      retyped arc_type to shared_count_hook.
+//    WHY:
+//      as part of change to make ~shared_count behave more like
+//      original when defined(BOOST_SP_ENABLE_DEBUG_HOOKS).
 #endif
