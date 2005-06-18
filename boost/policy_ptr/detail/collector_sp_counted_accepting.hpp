@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <deque>
 
-//#define BOOST_POLICY_PTR_DETAIL_COLLECTOR_SP_COUNTED_ACCEPTING_HPP_TRACE
+#define BOOST_POLICY_PTR_DETAIL_COLLECTOR_SP_COUNTED_ACCEPTING_HPP_TRACE
 namespace boost
 {
 namespace policy_ptr
@@ -125,14 +125,28 @@ collector
       struct
     break_cycle
     {
+          
           void
         operator()(arc_type* a_arc)
         {
 #ifdef  BOOST_POLICY_PTR_DETAIL_COLLECTOR_SP_COUNTED_ACCEPTING_HPP_TRACE
             utility::trace_scope ts("break_cycle::operator()(arc_type* a_arc)");
+            vertex_type const* vertex_ptr=a_arc->count_ptr_con();
+            mout()
+              #if defined(SP_COUNTED_BASE_ISA_OBJ_ID)
+              <<":obj_id="<<vertex_ptr->id_get()
+              #endif
+              <<":use_count="<<vertex_ptr->use_count()
+              <<"\n";
 #endif
-            arc_type l_arc;
-            a_arc->swap(l_arc);
+            typedef shared_count<vertex_type> arc_sub_type;
+            arc_sub_type* source_sub_arc=static_cast<arc_sub_type*>(a_arc);
+            //^above needed because vertex release is done in sub_type.
+            arc_sub_type target_sub_arc;
+            source_sub_arc->swap(target_sub_arc); 
+            //^when target_sub_arc goes out-of-scope, above causes refcount
+            //decrement and subsequent destruction and maybe deletion
+            //(since refcount at entry is 1) of vertex.
         }
     };
     
@@ -165,6 +179,14 @@ collector
             utility::trace_scope ts("remove_internal::visit_count");
 #endif
             vertex_type* vertex_ptr=get_counter(a_arc);
+#ifdef  BOOST_POLICY_PTR_DETAIL_COLLECTOR_SP_COUNTED_ACCEPTING_HPP_TRACE
+            mout()
+              #if defined(SP_COUNTED_BASE_ISA_OBJ_ID)
+              <<":obj_id="<<vertex_ptr->id_get()
+              #endif
+              <<":use_count="<<vertex_ptr->use_count()
+              <<"\n";
+#endif
             decrement_strong(*vertex_ptr);
         }
     };
@@ -211,7 +233,12 @@ collector
                 long use_count=vertex_ptr->use_count();
 #ifdef  BOOST_POLICY_PTR_DETAIL_COLLECTOR_SP_COUNTED_ACCEPTING_HPP_TRACE
                 utility::trace_scope ts("filter_live::checked:==rm_internal");
-                mout()<<"use_count="<<use_count<<"\n";
+                mout()
+                  #if defined(SP_COUNTED_BASE_ISA_OBJ_ID)
+                  <<":obj_id="<<vertex_ptr->id_get()
+                  #endif
+                  <<":use_count="<<use_count
+                  <<"\n";
 #endif                
                 if(use_count > 0)
                 {
@@ -299,6 +326,12 @@ collector
 }//exit boost namespace
 //-----------------------------------
 //ChangeLog:
+//  2005-06-18: Larry Evans
+//    WHAT:
+//      added static_cast to break_cycle::operator(arc_type*)
+//    WHY:
+//      previous change prevented destruction of vertex since this was
+//      done (after previous change) in subclass' DTOR.
 //  2005-06-15: Larry Evans
 //    WHAT:
 //      retyped arc_type to shared_count_hook.
