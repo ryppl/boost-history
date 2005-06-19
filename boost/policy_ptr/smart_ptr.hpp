@@ -5,7 +5,44 @@
 // Distributed under the Boost Software License, Version 1.0. (See accompany-
 // ing file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //----------------------------------------------------------------------------
-// Change log:
+// Change log(latest at top):
+// - 02 June 2005: Larry Evans 
+//   WHAT:
+//     1) added:
+//          template<class U> smart_ptr<...>::to<T>::to(to<U>&).
+//   WHY:
+//     1) to enable operator=(this_type rhs) to work where rhs was created
+//        from to<U>, where U is derived from T, as in
+//        libs/policy_ptr/smart_ptr_test.cpp:assign_test.
+//
+//        NOTE:
+//          For some unknown reasons, the previous changes caused the
+//          assign_test to fail.
+//
+// - 01 June 2005: Larry Evans 
+//   WHAT:
+//     1) added:
+//          template<class U> smart_ptr<...>::to<T>::to(U&).
+//     2) used newly added non-member function, get_less_comparator,
+//        in less than comparison operations.
+//   WHY:
+//     1) to allow derived class pointer to be used as arg, and thus allow
+//        tests in:
+//          n_constructors::copy_constructor(void)
+//        in:
+//          policy_ptr/test/std_ptrs_shared_ptr_test.cpp
+//        to pass.
+//     2) Allow operator< on std_ptrs to work correctly.  This function
+//        serves a similar purpose to member method, _internal_less, in 
+//        shared_ptr.hpp.
+// - 31 May 2005: Larry Evans 
+//   WHAT:
+//     added smart_ptr<...>::to<T>::operator bool
+//   WHY:
+//     to avoid ambiguity compiler diagnostic when std_ptrs uses 'allow_conversions'
+//     and test/std_ptrs_shared_ptr_test.cpp is compiled.
+// - 14 May 2005: Larry Evans 
+//   removed extraneous \\n 's around smart_ptr superclass specification.
 // - 29 Oct 2004: Jonathan Turkanis added VC7.1 workarounds and move_ptr 
 //   emulation
 //----------------------------------------------------------------------------
@@ -373,15 +410,15 @@ namespace boost
     template <class P1, class P2, class P3, class P4>
     template <typename T>
     class smart_ptr<P1, P2, P3, P4>::to
-        : public detail::policy_ptr::conversion_policy_<                       \
-            T, mpl::list<P1, P2, P3, P4>, BOOST_SP_DEFAULT_CONVERSION_POLICY   \
+        : public detail::policy_ptr::conversion_policy_<
+            T, mpl::list<P1, P2, P3, P4>, BOOST_SP_DEFAULT_CONVERSION_POLICY
         >::type
     {
     public:             // Public Types
         typedef T                               element_type;
         typedef T                               value_type;
-        typedef typename detail::policy_ptr::conversion_policy_<               \
-            T, mpl::list<P1, P2, P3, P4>, BOOST_SP_DEFAULT_CONVERSION_POLICY   \
+        typedef typename detail::policy_ptr::conversion_policy_<
+            T, mpl::list<P1, P2, P3, P4>, BOOST_SP_DEFAULT_CONVERSION_POLICY
         >::type                                 conversion_policy;
         typedef typename conversion_policy::checking_policy
                                                 checking_policy;
@@ -446,6 +483,13 @@ namespace boost
             get_impl_ref(*this) = 
                 enclosing_class::clone(rhs, get_impl_ref(rhs));
             BOOST_SP_CONSTRUCTOR_HOOK(*this, "smart_ptr(smart_ptr const&)");
+        }
+
+        template <class U>
+        to(to<U> const& rhs)
+            : base_type(static_cast<base_type const&>(rhs))
+        {
+            BOOST_SP_CONSTRUCTOR_HOOK(*this, "to(to<U> const&)");
         }
 
         template <class SmartPtr>
@@ -532,6 +576,14 @@ namespace boost
             BOOST_SP_CONSTRUCTOR_HOOK(*this, "smart_ptr(stored_param)");
         }
 
+        template <typename U>
+        to(U& p)
+            : base_type(p)
+        {
+            checking_policy::on_init(get_impl(*this));
+            BOOST_SP_CONSTRUCTOR_HOOK(*this, "smart_ptr(U&)");
+        }
+
         template <typename U, typename V>
         to(U& p, V& v)
             : base_type(p, v)
@@ -593,6 +645,22 @@ namespace boost
                 enclosing_class::clone(rhs, get_impl_ref(rhs));
             BOOST_SP_CONSTRUCTOR_HOOK(*this, "smart_ptr(smart_ptr const&)");
         }
+
+        template <class U>        
+        to(to<U>& rhs)
+            : base_type(static_cast<base_type const&>(rhs))
+        {
+            BOOST_STATIC_ASSERT((
+                is_convertible<
+                    typename ownership_policy::ownership_category,
+                    copy_mutable_lvalue_tag
+                >::value
+            ));
+            get_impl_ref(*this) = 
+                enclosing_class::clone(rhs, get_impl_ref(rhs));
+            BOOST_SP_CONSTRUCTOR_HOOK(*this, "to(to<U>&)");
+        }
+
     private: // More move semantics machinery
         template <class SmartPtr>
         to( SmartPtr&,
@@ -615,15 +683,15 @@ namespace boost
                 P1, P2, P3, P4, U
             >::type = 0 );
     public:             // Ownership modifiers
+        void            swap(this_type& rhs)
+        {
+            base_type::swap(*this, rhs);
+        }
+
         to&             operator=(this_type rhs)
         {
             swap(rhs);
             return *this;
-        }
-
-        void            swap(this_type& rhs)
-        {
-            base_type::swap(*this, rhs);
         }
 
         friend inline
@@ -732,7 +800,7 @@ namespace boost
         template <class SmartPtr>
         bool            operator<(SmartPtr const& rhs) const
         {
-            return get_impl(*this) < get_impl(rhs);
+            return get_less_comparator(*this) < get_less_comparator(rhs);
         }
 
         template <typename U>
@@ -774,6 +842,11 @@ namespace boost
         bool            operator!(void) const
         {
             return !storage_policy::is_valid();
+        }
+
+                        operator bool(void) const
+        {
+            return storage_policy::is_valid();
         }
 
     public:             // Conversion to pointer_type

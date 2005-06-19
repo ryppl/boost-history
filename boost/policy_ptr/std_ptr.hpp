@@ -41,8 +41,8 @@
 #ifndef BOOST_POLICY_PTR_STD_PTR_HPP
 #define BOOST_POLICY_PTR_STD_PTR_HPP
 
-#include "detail/shared_count_sp_counted_accepting.hpp"
-#include "detail/shared_count_sp_counted_tagged.hpp"
+#include "detail/shared_count_hook_sp_counted_accepting.hpp"
+#include "detail/shared_count_hook_sp_counted_tagged.hpp"
 #include "smart_ptr.hpp"
 #include "policy/std.hpp"
 #include "policy/auto_copy.hpp"

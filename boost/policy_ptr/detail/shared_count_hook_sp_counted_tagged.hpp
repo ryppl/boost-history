@@ -52,6 +52,7 @@ class shared_count_hook<sp_counted_tagged>
     template<class P, class D> 
     shared_count_hook(P p, D d)
       : count_super_type(p,d)
+      , id_(shared_count_id)
     { }
     
     ~shared_count_hook()

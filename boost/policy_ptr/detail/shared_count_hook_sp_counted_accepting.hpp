@@ -82,12 +82,6 @@ class shared_count_hook<sp_counted_accepting>
       , registrar_super_type(this)
     { }
 
- private:
-      sp_counted_accepting*
-    get_counter(void)
-    {
-        return this->pi_;
-    }   
 };
 
 class shared_count_visitor_abs
@@ -129,7 +123,7 @@ class shared_count_visitor_abs
       sp_counted_accepting*
     get_counter(shared_count_hook<sp_counted_accepting>& a_count)
     {
-        return a_count.get_counter();
+        return a_count.count_ptr_mut();
     }  
     
  private:    
@@ -164,6 +158,11 @@ sp_counted_impl_hook<Referent,sp_counted_accepting>::
 }//exit boost namespace
 //----------------------------------------
 //ChangeLog:
+//  2005-06-17: Larry Evans
+//    WHAT:
+//      Added public shared_count_hook<...>::get_counter()const
+//    WHY:
+//      To provide debug print information in collector_sp_counted_accepting.hpp.
 //  2005-06-15: Larry Evans
 //    WHAT:
 //      Renamed from shared_count_sp_counted_accepting and renamed

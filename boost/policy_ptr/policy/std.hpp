@@ -1,50 +1,6 @@
 #ifndef BOOST_POLICY_PTR_POLICY_STD_20020502_HPP
 #define BOOST_POLICY_PTR_POLICY_STD_20020502_HPP
 
-// ChangeLog(latest at top):
-//   2005-06-01 Larry Evans
-//     WHAT:
-//       1)Added templated boost_ref_ CTOR for pointer type argument.
-//       2)Added friend get_compare to storage classes.
-//     WHY:
-//       1)Enable derived pointers to be stored, and enable tests in:
-//           n_constructors::copy_constructor(void)
-//         in:
-//           policy_ptr/test/std_ptrs_shared_ptr_test.cpp
-//         to pass.
-//       2)Enable comparison operators in smart_ptr.hpp to work
-//         correctly for these storage classes.
-//   2005-05-31 Larry Evans
-//     WHAT:
-//       1)Added weak_storage_::clone
-//       2)Added static_cast<T*> to shared_storage_ CTOR init_list for pointee_.
-//     WHY:
-//       1)To get test/std_ptrs_shared_ptr_test.cpp:weak_ptr_constructor(void)
-//         to compile.
-//       2)Enable compile of libs/smart_ptr/test/std_ptrs_shared_ptr_test.cpp:
-//         n_const_cast::test(void).
-//   2005-05-30 Larry Evans
-//     WHAT:
-//       Added further typedefs to weak_storage_
-//     WHY:
-//       To handle case where boost_ref_ StoragePolicy= weak_storage. 
-//   2005-05-28 Larry Evans
-//     WHAT:
-//       Renamed to std.hpp
-//     WHY:
-//       To remain consistent with the boost/policy_ptr/std_ptrs.hpp
-//       name.  The _policies suffix was removed since that's
-//       implied by the location in the policy directory.
-//   2005-05-18 Larry Evans
-//     WHAT:
-//       Substituted shared_cyclic_count for boost/detail/shared_count
-//     WHY:
-//       See boost/policy_ptr/detail/shared_count ChangeLog for
-//       this date.
-//   2002-10-02 David Held
-//     Original code.
-//
-
 #include <boost/config.hpp>
 #include <boost/assert.hpp>
 #include <boost/checked_delete.hpp>
@@ -90,7 +46,7 @@ namespace boost
         typedef typename call_traits<pointer_type>::param_type
                                                         pointer_param;
         typedef policy_ptr::detail::shared_count<SpCounter>     
-                                                        counter_type;
+                                                        count_prox_type;
     protected:
         shared_storage_()
         : pointee_(default_value()), count_()
@@ -168,11 +124,18 @@ namespace boost
 
     public:
         // Accessors
+        count_prox_type& count_prox_mut()
+        { return count_; }
+
+        count_prox_type const& count_prox_con()const
+        { return count_; }
+
         friend inline pointer_type get_impl(const shared_storage_& sp)
         { return sp.pointee_; }
 
-        friend inline counter_type const& get_less_comparator(const shared_storage_& sp)
-        { return sp.count_; }
+        friend inline count_prox_type const& 
+        get_less_comparator(const shared_storage_& sp)
+        { return sp.count_prox_con(); }
 
         friend inline stored_type& get_impl_ref(shared_storage_& sp)
         { return sp.pointee_; }
@@ -190,9 +153,6 @@ namespace boost
         long use_count() const
         { return count_.use_count(); }
         
-        counter_type& get_counter()
-        { return count_; }
-
         void reset()
         { shared_storage_().swap(*this); }
         
@@ -248,7 +208,7 @@ namespace boost
 
         // Data
         stored_type pointee_;
-        counter_type count_;
+        count_prox_type count_;
     };
     
     //------------------------------------------------------------------------
@@ -282,7 +242,7 @@ namespace boost
                                                         stored_param;
         typedef typename call_traits<pointer_type>::param_type
                                                         pointer_param;
-        typedef policy_ptr::detail::weak_count<SpCounter> counter_type;
+        typedef policy_ptr::detail::weak_count<SpCounter> count_prox_type;
 
         weak_storage_() : pointee_(default_value()), count_()
         { }
@@ -344,7 +304,7 @@ namespace boost
 
     public:
         // Accessors
-        friend inline counter_type const& get_compare(const weak_storage_& sp)
+        friend inline count_prox_type const& get_compare(const weak_storage_& sp)
         { return sp.count_; }
 
         friend inline pointer_type get_impl(const weak_storage_& sp)
@@ -385,7 +345,7 @@ namespace boost
 
         // Data
         stored_type pointee_;
-        counter_type count_;
+        count_prox_type count_;
     };
 
     //------------------------------------------------------------------------
@@ -589,5 +549,58 @@ namespace boost
         };
     };
 }   // namespace boost
-
+//------------------------------------
+// ChangeLog(latest at top):
+//   2005-06-17 Larry Evans
+//     WHAT:
+//       1) Renamed get_counter to count_prox_mut
+//       2) Added count_prox_con
+//       3) Renamed counter_type to count_prox_type
+//     WHY:
+//       1-2) Conform to corresponding member function names added to
+//          shared_count_base in ../detail/shared_count.hpp.
+//       3) Emphasize that it's not really a counter, but a proxy
+//          (somewhat like a smart pointer) to one.
+//   2005-06-01 Larry Evans
+//     WHAT:
+//       1)Added templated boost_ref_ CTOR for pointer type argument.
+//       2)Added friend get_compare to storage classes.
+//     WHY:
+//       1)Enable derived pointers to be stored, and enable tests in:
+//           n_constructors::copy_constructor(void)
+//         in:
+//           policy_ptr/test/std_ptrs_shared_ptr_test.cpp
+//         to pass.
+//       2)Enable comparison operators in smart_ptr.hpp to work
+//         correctly for these storage classes.
+//   2005-05-31 Larry Evans
+//     WHAT:
+//       1)Added weak_storage_::clone
+//       2)Added static_cast<T*> to shared_storage_ CTOR init_list for pointee_.
+//     WHY:
+//       1)To get test/std_ptrs_shared_ptr_test.cpp:weak_ptr_constructor(void)
+//         to compile.
+//       2)Enable compile of libs/smart_ptr/test/std_ptrs_shared_ptr_test.cpp:
+//         n_const_cast::test(void).
+//   2005-05-30 Larry Evans
+//     WHAT:
+//       Added further typedefs to weak_storage_
+//     WHY:
+//       To handle case where boost_ref_ StoragePolicy= weak_storage. 
+//   2005-05-28 Larry Evans
+//     WHAT:
+//       Renamed to std.hpp
+//     WHY:
+//       To remain consistent with the boost/policy_ptr/std_ptrs.hpp
+//       name.  The _policies suffix was removed since that's
+//       implied by the location in the policy directory.
+//   2005-05-18 Larry Evans
+//     WHAT:
+//       Substituted shared_cyclic_count for boost/detail/shared_count
+//     WHY:
+//       See boost/policy_ptr/detail/shared_count ChangeLog for
+//       this date.
+//   2002-10-02 David Held
+//     Original code.
+//
 #endif // STD_20020502_HPP

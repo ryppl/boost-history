@@ -17,32 +17,6 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
-// ChangeLog(latest at top):
-//   2005-06-08 Larry Evans
-//     WHAT:
-//       1) removed all use of BOOST_SP_ENABLE_DEBUG_HOOKS
-//     WHY:
-//       1) the code guarded by this macro has been moved to specialization
-//          of shared_count<C> on C=sp_counted_tagged.  This was done
-//          to simplify the specialization code and because then the hook
-//          functions ( sp_scalar_{constructor,destructor}_hook ) only
-//          are not overloaded.  This, IMO, made understanding the code
-//          and linking the code easier.
-//   2005-05-25 Larry Evans
-//     WHAT:
-//       1) added shared_count_base::is_valid
-//     WHY:
-//       1) convenience (for use in shared_count_sp_counted_accepting:
-//          shared_count_visitor_abs::visit_field).
-//   2005-05-18 Larry Evans
-//     WHAT:
-//       1) Copied from boost/detail and then modified by adding another
-//          template parameter to shared_count
-//       2) Moved to policy_ptr/detail namespace.
-//     WHY:
-//       1) See ChangeLog in boost/policy_ptr/detail/sp_counted_impl.hpp.
-//       2) Avoid name conflict.
-//
 
 #include <boost/config.hpp>
 #include <boost/checked_delete.hpp>
@@ -79,7 +53,7 @@ class shared_count_base
  *    2) Do 1) but also allow collection of cycles.
  */
 {
-protected:
+private:
 
     SpCountedBase * pi_;
 
@@ -170,13 +144,6 @@ public:
 
 #endif 
 
-    ~shared_count_base() // nothrow
-    {
-#if 1
-        if( pi_ != 0 ) pi_->release();
-#endif
-    }
-
     shared_count_base(shared_count_base const & r): pi_(r.pi_) // nothrow
     {
         if( pi_ != 0 ) pi_->add_ref_copy();
@@ -229,20 +196,70 @@ public:
     {
         return pi_? pi_->get_deleter( ti ): 0;
     }
+    
+      SpCountedBase const*
+    count_ptr_con(void)const
+    {
+        return this->pi_;
+    }   
+    
+ protected:
+ 
+      SpCountedBase*
+    count_ptr_mut(void)
+    {
+        return this->pi_;
+    }
+    
 };
 
 template<class SpCountedBase>
-class shared_count
+class shared_count_hook
   : public shared_count_base<SpCountedBase>
 /**@brief
- *  General template which
- *    1) Emulates current boost shared_count
- *  but allow specialzation (in shared_cyclic_count.hpp) to:
- *    2) Do 1) but also allow collection of cycles.
+ *  Allow specialization to collect cycles.  See:
+ *   shared_count_hook_sp_counted_tagged.hpp
+ *   shared_count_hook_sp_counted_accepting.hpp
  */
 {
         typedef
       shared_count_base<SpCountedBase>
+    count_super_type
+    ;
+ protected:
+
+    shared_count_hook(void)
+    { }
+    
+    shared_count_hook(shared_count_hook const & r)
+      : count_super_type(r)
+    { }
+    
+    template<class Y>
+    shared_count_hook(Y* p)
+      : count_super_type(p)
+    { }
+    
+    template<class P, class D> 
+    shared_count_hook(P p, D d)
+      : count_super_type(p,d)
+    { }
+    
+    explicit shared_count_hook(weak_count<SpCountedBase> const & r)
+      : count_super_type(r)
+    { }
+};
+
+template<class SpCountedBase>
+class shared_count
+  : public shared_count_hook<SpCountedBase>
+/**@brief
+ *  Emulates boost/detail/shared_count but has different
+ *  superclass for reasons cited in that superclass.
+ */
+{
+        typedef
+      shared_count_hook<SpCountedBase>
     count_super_type
     ;
  public:
@@ -255,13 +272,33 @@ class shared_count
     { }
     
     template<class Y>
-    shared_count(Y* p)
+    explicit shared_count(Y* p)
       : count_super_type(p)
+    { }
+    
+    template<class P, class D> 
+    shared_count(P p, D d)
+      : count_super_type(p,d)
     { }
     
     explicit shared_count(weak_count<SpCountedBase> const & r)
       : count_super_type(r)
     { }
+    
+    ~shared_count() // nothrow
+     //2005-06-15 Larry Evans
+     //   SHARED_PTR_DIFF_NOTE:  
+     //     In the original code, boost/detail/shared_count.hpp,
+     //     the following statement was followed by zeroing the
+     //     smart pointer "tag" in case defined(BOOST_SP_ENABLE_DEBUG_HOOKS).
+     //     That is now done by specialization of superclass.
+    {
+        if( this->count_ptr_con() != 0 )
+        {
+            this->count_ptr_mut()->release();
+        }
+    }
+
 };
 
 template<class SpCountedBase>
@@ -357,4 +394,53 @@ shared_count_base(weak_count<SpCountedBase> const & r): pi_(r.pi_)
 # pragma warn .8027     // Functions containing try are not expanded inline
 #endif
 
+//----------------------------------------
+// ChangeLog(latest at top):
+//   2005-06-17 Larry Evans
+//     WHAT:
+//       1) Added shared_count_base::{count_ptr_mut,count_ptr_con}
+//     WHY:
+//       1) Provide common access to counter. This will make it
+//          easier to track modifications to counter.  This also
+//          helps debugging.
+//   2005-06-15 Larry Evans
+//     WHAT:
+//       1) 
+//         a) Added shared_count_hook between shared_count and shared_count_base.
+//         b) Moved the pi_->release from ~shared_count_base to ~shared_count.
+//     WHY:
+//       1) *Partly* correct the order of release and zeroing the tag for tagged
+//          pointers, as currently implemented in:
+//
+//            shared_count_sp_counted_tagged.hpp.
+//       
+//          the *rest* of the correction will be replacement of that file with:
+//
+//            shared_count_hook_sp_counted_tagged.hpp
+//
+//   2005-06-08 Larry Evans
+//     WHAT:
+//       1) removed all use of BOOST_SP_ENABLE_DEBUG_HOOKS
+//     WHY:
+//       1) the code guarded by this macro has been moved to specialization
+//          of shared_count<C> on C=sp_counted_tagged.  This was done
+//          to simplify the specialization code and because then the hook
+//          functions ( sp_scalar_{constructor,destructor}_hook ) only
+//          are not overloaded.  This, IMO, made understanding the code
+//          and linking the code easier.
+//   2005-05-25 Larry Evans
+//     WHAT:
+//       1) added shared_count_base::is_valid
+//     WHY:
+//       1) convenience (for use in shared_count_sp_counted_accepting:
+//          shared_count_visitor_abs::visit_field).
+//   2005-05-18 Larry Evans
+//     WHAT:
+//       1) Copied from boost/detail and then modified by adding another
+//          template parameter to shared_count
+//       2) Moved to policy_ptr/detail namespace.
+//     WHY:
+//       1) See ChangeLog in boost/policy_ptr/detail/sp_counted_impl.hpp.
+//       2) Avoid name conflict.
+//
 #endif  // #ifndef BOOST_POLICY_PTR_DETAIL_SHARED_COUNT_HPP_INCLUDED
