@@ -18,41 +18,53 @@ sp_graph_dfs_print
     {}
  private:
         typedef
-      sp_graph_dfs_abs<VertexType,delim_stk_print>
-    super_type
-    ;
-        typedef
       VertexType
     vertex_type
     ;
+        typedef
+      typename vertex_type::sp_type
+    arc_type
+    ;
+        typedef
+      sp_graph_dfs_abs<vertex_type,delim_stk_print>
+    super_type
+    ;
+      vertex_type const*
+    get_arc_target
+      ( arc_type const& a_arc
+      )
+    {
+        return get_impl(a_arc);
+    }
       void
-    visit_vertex_null
+    visit_arc_target
+      ( arc_type const& a_arc
+      )
+    {
+        mout()
+          <<":target id="<<get_arc_target(a_arc)->id_get()
+          <<":count id="<<a_arc.count_prox_con().count_ptr_con()->id_get()
+          <<"\n";
+    }
+      void
+    visit_vertex_absent
       ( void
       )
     {
-        mout()<<"(null vertex)\n";
-    }
-      void
-    visit_vertex_non_null
-      ( vertex_type const& a_vertex
-      )
-    {
-        mout()<<a_vertex.id_get();
+        mout()<<"(absent vertex)\n";
     }
       void
     visit_vertex_first
-      ( vertex_type const& a_vertex
+      ( void
       )
     {
-        visit_vertex_non_null(a_vertex);
         mout()<<"\n";
     }
       void
     visit_vertex_repeat
-      ( vertex_type const& a_vertex
+      ( void
       )
     {
-        visit_vertex_non_null(a_vertex);
         mout()<<"<>\n";
     }
 };

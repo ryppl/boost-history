@@ -14,7 +14,15 @@ sp_graph_dfs_abs
   : public NextStk
 {
         typedef
-      std::set<Vertex const*>
+      Vertex
+    vertex_type
+    ;
+        typedef
+      typename vertex_type::sp_type
+    arc_type
+    ;
+        typedef
+      std::set<vertex_type const*>
     vertex_ptr_set_type
     ;
         virtual
@@ -37,26 +45,51 @@ sp_graph_dfs_abs
     }
     
       void
-    visit_sp
-      ( typename Vertex::sp_type const& a_sp
+    visit_arc_check
+      ( arc_type const& a_arc
       )
     {
-        Vertex const* ref=get_impl(a_sp);
-        if(ref)
+        vertex_type const* target_ptr=get_arc_target(a_arc);
+        if(target_ptr)
         {  
-            visit_tree(*ref);
+            visit_arc_target(a_arc);
+            vertex_type const& target_ref=*target_ptr;
+            if(is_visited(target_ref))
+            {
+                visit_vertex_repeat();
+            }
+            else
+            {
+                visit_vertex_first();
+                mark_visited(target_ref);
+                traverse_arcs(target_ref);
+            }
         }
         else
         {
-            visit_vertex_null();
+            visit_vertex_absent();
         }
     }
     
  private:
  
         virtual
+      vertex_type const*
+    get_arc_target
+      ( arc_type const& a_arc
+      )
+    =0
+    ;
+        virtual
       void
-    visit_vertex_null
+    visit_arc_target
+      ( arc_type const& a_arc
+      )
+    =0
+    ;
+        virtual
+      void
+    visit_vertex_absent
       ( void
       )
     =0
@@ -64,20 +97,20 @@ sp_graph_dfs_abs
         virtual
       void
     visit_vertex_first
-      ( Vertex const& a_vertex
+      ( void
       )
     =0
     ;
         virtual
       void
     visit_vertex_repeat
-      ( Vertex const& a_vertex
+      ( void
       )
     =0
     ;
 
       bool
-    is_visited(Vertex const&a_vertex)const
+    is_visited(vertex_type const&a_vertex)const
     {
         typename vertex_ptr_set_type::const_iterator found
           =my_visited_vertices.find(&a_vertex);
@@ -87,34 +120,18 @@ sp_graph_dfs_abs
     
       void
     mark_visited
-      ( Vertex const& a_vertex
+      ( vertex_type const& a_vertex
       )
     {
         my_visited_vertices.insert(&a_vertex);
     }
     
       void
-    visit_tree
-      ( Vertex const& a_vertex
+    traverse_arcs
+      ( vertex_type const& a_vertex
       )
     {
-        if(is_visited(a_vertex))
-        {
-            visit_vertex_repeat(a_vertex);
-        }
-        else
-        {
-            visit_vertex_first(a_vertex);
-            mark_visited(a_vertex);
-            visit_children(a_vertex);
-        }
-    }
-      void
-    visit_children
-      ( Vertex const& a_vertex
-      )
-    {
-        typedef typename Vertex::const_iterator iter_type;
+        typedef typename vertex_type::const_iterator iter_type;
         iter_type iter_end(a_vertex.end());
         typename NextStk::next_abs_type& next=NextStk::push_next();
         for
@@ -124,8 +141,8 @@ sp_graph_dfs_abs
           )
         {
             ++next;
-            typename Vertex::sp_type const& sp_cur=*iter_cur;
-            visit_sp(sp_cur);
+            arc_type const& arc_cur=*iter_cur;
+            visit_arc_check(arc_cur);
         }
         NextStk::pop_next();
     }

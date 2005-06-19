@@ -44,7 +44,7 @@ void simple_test(void)
         sp_type left_child_sp(src_left_child.release());
         root_sp->left()=left_child_sp;
         sp_graph_dfs_print<node_type> printer;
-        printer.visit_sp(root_sp);
+        printer.visit_arc_check(root_sp);
     }
 }
 

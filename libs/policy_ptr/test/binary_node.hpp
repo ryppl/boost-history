@@ -53,8 +53,14 @@ namespace binary_node
     enum
   member_multiplicity
   /**@brief
-   *  Indicates how many elements of containing class, a member variable
-   *  contains, indirectly (via smart ptr or the like).
+   *  Indicates how many elements of containing class that a member 
+   *  variable of that same class contains indirectly either:
+   *
+   *    a) individually at 2 different fields of smart pointers 
+   *       to instances of the class.
+   *  or:
+   *    b) through a single container field that contains 2 smart pointers
+   *       to instances of the class.
    */
   { contains_one
   , contains_two
@@ -347,5 +353,13 @@ namespace binary_node
   };//end binary_container
 
 }//exit binary_node namespace   
-
+//---------------------------
+//ChangeLog:
+//  2005-06-17 Larry Evans
+//    WHAT:
+//      added counter_con()const
+//    WHY:
+//      to conform to newly modified interface for std_ptr.
+//      See ChangeLog for boost/policy_ptr/policy/std.hpp where it
+//      mentions shared_
 #endif //include guard

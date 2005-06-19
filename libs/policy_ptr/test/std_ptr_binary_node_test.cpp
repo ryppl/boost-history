@@ -118,7 +118,7 @@ namespace boost
                 sp_type* a_sp=the_roots()[i];
                 if(a_sp)
                 {                
-                    dfs_printer.visit_sp(*a_sp);
+                    dfs_printer.visit_arc_check(*a_sp);
                 }
                 else
                 {
@@ -143,43 +143,43 @@ namespace boost
         }
     };
     
-    template
-      < test_ids TypeId
-      , typename BinaryNode
-      >
-      bool
+      bool const
     expect_pass
-      (void)
-    {
-        return true;
-    }
-    
-    template
-      <
-      >
-      bool
-    expect_pass
-      < cycle_1_external
-      , sp_node<sp_types_std<std_shared_dag>, binary_node::contains_one>
-      >
-      (void)
-      {
-          return false;
+      [ num_tests ]
+      [ binary_node::contains_one+1 ]
+      [ num_sp ]
+    =
+    { //simple_list
+      { //contains_one
+        { //std_shared_dag
+          true
+        , //std_shared_graph_accepting
+          true
+        , //std_shared_graph_tagged
+          true
+        }
       }
-
-    template
-      <
-      >
-      bool
-    expect_pass
-      < cycle_2_external
-      , sp_node<sp_types_std<std_shared_dag>, binary_node::contains_one>
-      >
-      (void)
-      {
-          return false;
+    , //cycle_1_external
+      { //contains_one
+        { //std_shared_dag
+          false
+        , //std_shared_graph_accepting
+          true
+        , //std_shared_graph_tagged
+          false
+        }
       }
-
+    , //cycle_2_external
+      { //contains_one
+        { //std_shared_dag
+          false
+        , //std_shared_graph_accepting
+          true
+        , //std_shared_graph_tagged
+          false
+        }
+      }
+    };
     template
       < test_ids TestId
       , typename BinaryNode
@@ -189,16 +189,19 @@ namespace boost
     run(void)
     {
         utility::object_tracked::reset();
+        sp_std_numerals const sp_id=BinaryNode::our_std_numeral;
+        binary_node::member_multiplicity const multip_id=BinaryNode::our_multiplicity;
         mout()
           <<":TestId="<<TestId
-          <<":std_numeral="<<BinaryNode::our_std_numeral
-          <<":multiplicity="<<BinaryNode::our_multiplicity
+          <<":std_numeral="<<sp_id
+          <<":multiplicity="<<multip_id
           <<"\n";
         ++mout();
         test<BinaryNode,test_ops>::vec[TestId](); 
         //The above assumes that the function uses objects derived from object_tracked
         unsigned n_members = utility::object_tracked::members_size();
-        bool expected_result = expect_pass<TestId,BinaryNode>();
+        mout()<<"n_members="<<n_members<<"\n";
+        bool expected_result = expect_pass[TestId][multip_id][sp_id];
         BOOST_CHECK_EQUAL(n_members == 0u, expected_result);
         --mout();
     }
@@ -257,4 +260,13 @@ butf::test_suite* init_unit_test_suite(int argc, char* argv[])
 
     return tests;
 }
+//--------------------------------
+//ChangeLog:
+//  2005-06-18 Larry Evans
+//    WHAT:
+//      1) changed expect_pass to array from specializations of template.
+//      2) changed dfs_printer call.
+//    WHY:
+//      1) Less typing and consequent "clutter".
+//      2) dfs_printer interface changed.
 

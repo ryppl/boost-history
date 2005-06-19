@@ -3,6 +3,7 @@
 #define LIBS_POLICY_PTR_TEST_SP_TYPES_SCOPED_HPP
 #include <vector>
 #include "source_auto_ptr.hpp"
+#include "boost/utility/obj_id.hpp"
 
 namespace boost
 {
@@ -28,6 +29,31 @@ namespace boost
             scalar
           type
           ;
+          
+            struct
+          count_prox
+            : public utility::obj_id
+          /**@brief
+           *  Models part of the shared_count iterface
+           */
+          {
+                  typedef
+                utility::obj_id
+              count_type
+              ;
+          
+                count_type const*      
+              count_ptr_con(void)const
+              {
+                  return this;
+              }
+          };
+          
+              typedef
+            count_prox
+          count_prox_type
+          ;
+          
           scalar(Referent* a_ptr=0)
             : my_ptr(a_ptr)
           { }
@@ -48,9 +74,17 @@ namespace boost
           {
               return a_scalar.get();
           }
+            count_prox_type const&
+          count_prox_con(void)const
+          {
+              return my_count_prox;
+          }
        private:
             Referent*
           my_ptr
+          ;
+            count_prox_type
+          my_count_prox
           ;
       };
       
