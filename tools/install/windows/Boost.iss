@@ -46,6 +46,7 @@ Source: dist\bin\process_jam_log.exe; DestDir: {app}\bin; Flags: ignoreversion; 
 Source: dist\bin\quickbook.exe; DestDir: {app}\bin; Flags: ignoreversion; Components: Tools/BoostBook
 Source: dist\bin\bcp.exe; DestDir: {app}\bin; Flags: ignoreversion; Components: Tools/BoostCP
 Source: ..\share\boostbook\*; DestDir: {app}\share\boostbook; Flags: ignoreversion recursesubdirs createallsubdirs; Components: Tools/BoostBook
+Source: dist\bin\inspect.exe; DestDir: {app}\bin; Flags: ignoreversion; Components: Tools/Inspect
 
 [INI]
 Filename: {app}\{#BoostUrlName}; Section: InternetShortcut; Key: URL; String: {#BoostURL}
@@ -64,6 +65,7 @@ Name: Tools/BoostBook; Description: Boost.Book and QuickBook tools.; Flags: chec
 Name: Tools/BoostCP; Description: Boost.Copy subset extraction tool.; Flags: checkablealone; Types: full custom
 Name: Tools/Wave; Description: Boost.Wave C99/C++ preprocessor.; Flags: checkablealone; Types: full custom
 Name: Tools/Regression; Description: Boost regression testing tools.; Flags: checkablealone; Types: full custom
+Name: Tools/Inspect; Description: Boost.Inspect library requirements and guidelines tester.; Flags: checkablealone; Types: full custom
 
 [Tasks]
 Name: ModifyENV; Description: Modify environment variables.; Flags: checkablealone
