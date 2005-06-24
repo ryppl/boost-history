@@ -30,7 +30,7 @@
 //       4) Allow garbage collector to decrement strong count without
 //          calling dispose.
 
-#define SP_COUNTED_BASE_ISA_OBJ_ID
+
 #if defined(SP_COUNTED_BASE_ISA_OBJ_ID)
 #include "boost/utility/obj_id.hpp"
 #endif

@@ -5,47 +5,6 @@
 // Distributed under the Boost Software License, Version 1.0. (See accompany-
 // ing file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //----------------------------------------------------------------------------
-// Change log(latest at top):
-// - 02 June 2005: Larry Evans 
-//   WHAT:
-//     1) added:
-//          template<class U> smart_ptr<...>::to<T>::to(to<U>&).
-//   WHY:
-//     1) to enable operator=(this_type rhs) to work where rhs was created
-//        from to<U>, where U is derived from T, as in
-//        libs/policy_ptr/smart_ptr_test.cpp:assign_test.
-//
-//        NOTE:
-//          For some unknown reasons, the previous changes caused the
-//          assign_test to fail.
-//
-// - 01 June 2005: Larry Evans 
-//   WHAT:
-//     1) added:
-//          template<class U> smart_ptr<...>::to<T>::to(U&).
-//     2) used newly added non-member function, get_less_comparator,
-//        in less than comparison operations.
-//   WHY:
-//     1) to allow derived class pointer to be used as arg, and thus allow
-//        tests in:
-//          n_constructors::copy_constructor(void)
-//        in:
-//          policy_ptr/test/std_ptrs_shared_ptr_test.cpp
-//        to pass.
-//     2) Allow operator< on std_ptrs to work correctly.  This function
-//        serves a similar purpose to member method, _internal_less, in 
-//        shared_ptr.hpp.
-// - 31 May 2005: Larry Evans 
-//   WHAT:
-//     added smart_ptr<...>::to<T>::operator bool
-//   WHY:
-//     to avoid ambiguity compiler diagnostic when std_ptrs uses 'allow_conversions'
-//     and test/std_ptrs_shared_ptr_test.cpp is compiled.
-// - 14 May 2005: Larry Evans 
-//   removed extraneous \\n 's around smart_ptr superclass specification.
-// - 29 Oct 2004: Jonathan Turkanis added VC7.1 workarounds and move_ptr 
-//   emulation
-//----------------------------------------------------------------------------
 #ifndef BOOST_SMART_PTR_HPP
 #define BOOST_SMART_PTR_HPP
 //----------------------------------------------------------------------------
@@ -80,35 +39,10 @@
 # pragma warning(push)
 # pragma warning(disable:4521) // Multiple copy constructors
 #endif
-
+#include "boost/policy_ptr/policy/tags.hpp"
 //----------------------------------------------------------------------------
-// Policies
 namespace boost
 {
-    //------------------------------------------------------------------------
-    // Policy Tags
-    struct copy_rvalue_tag { }; // Included for clarity.
-    struct copy_mutable_lvalue_tag { };
-    struct copy_const_lvalue_tag { };
-    struct copy_lvalue_tag 
-        : copy_mutable_lvalue_tag, 
-          copy_const_lvalue_tag
-        { };
-    struct copy_semantics_tag 
-        : copy_rvalue_tag, 
-          copy_lvalue_tag 
-        { };
-    struct move_semantics_tag : copy_rvalue_tag { };
-    struct auto_semantics_tag 
-        : copy_rvalue_tag, 
-          copy_mutable_lvalue_tag 
-        { };
-    struct no_copy_semantics_tag { };
-
-    struct storage_policy_tag { };
-    struct ownership_policy_tag { };
-    struct conversion_policy_tag { };
-    struct checking_policy_tag { };
     //------------------------------------------------------------------------
     // Exceptions
     struct null_pointer_error
@@ -152,14 +86,7 @@ namespace boost
 # define BOOST_SP_INVARIANT(x)
 #endif // BOOST_SP_INVARIANT_CHECKING
 
-// Debug hooks
-#ifdef BOOST_SP_DEBUG_MODE
-# define BOOST_SP_CONSTRUCTOR_HOOK(p, s)                sp_constructor_hook(p, s)
-# define BOOST_SP_DESTRUCTOR_HOOK(p, s)                 sp_destructor_hook(p, s)
-#else
-# define BOOST_SP_CONSTRUCTOR_HOOK(p, s)
-# define BOOST_SP_DESTRUCTOR_HOOK(p, s)
-#endif // BOOST_SP_DEBUG_MODE
+#include "boost/policy_ptr/detail/sp_debug_cdtor_hooks.hpp"
 
 #ifndef BOOST_SP_DEFAULT_STORAGE_POLICY
 # define BOOST_SP_DEFAULT_STORAGE_POLICY                scalar_storage
@@ -182,9 +109,9 @@ namespace boost
 namespace boost
 {
     //------------------------------------------------------------------------
-    namespace detail
-    {
     namespace policy_ptr 
+    {
+    namespace detail
     {
 
         //--------------------------------------------------------------------
@@ -281,16 +208,16 @@ namespace boost
             >
         { };
         //--------------------------------------------------------------------
-    }   // namespace policy_ptr
     }   // namespace detail
+    }   // namespace policy_ptr
 
     //------------------------------------------------------------------------
     // Type generator smart_ptr
     template <
-        class P1 = detail::policy_ptr::empty_policy,
-        class P2 = detail::policy_ptr::empty_policy,
-        class P3 = detail::policy_ptr::empty_policy,
-        class P4 = detail::policy_ptr::empty_policy
+        class P1 = policy_ptr::detail::empty_policy,
+        class P2 = policy_ptr::detail::empty_policy,
+        class P3 = policy_ptr::detail::empty_policy,
+        class P4 = policy_ptr::detail::empty_policy
     >
     struct smart_ptr
     {
@@ -314,9 +241,9 @@ namespace boost
         }
     };
     //------------------------------------------------------------------------
-    namespace detail
-    {
     namespace policy_ptr 
+    {
+    namespace detail
     {
         //BOOST_MPL_HAS_XXX_TRAIT_NAMED_DEF(has_enclosing_class, enclosing_class, true)
         BOOST_MPL_HAS_XXX_TRAIT_NAMED_DEF(has_first_policy, first_policy, true)
@@ -410,14 +337,14 @@ namespace boost
     template <class P1, class P2, class P3, class P4>
     template <typename T>
     class smart_ptr<P1, P2, P3, P4>::to
-        : public detail::policy_ptr::conversion_policy_<
+        : public policy_ptr::detail::conversion_policy_<
             T, mpl::list<P1, P2, P3, P4>, BOOST_SP_DEFAULT_CONVERSION_POLICY
         >::type
     {
     public:             // Public Types
         typedef T                               element_type;
         typedef T                               value_type;
-        typedef typename detail::policy_ptr::conversion_policy_<
+        typedef typename policy_ptr::detail::conversion_policy_<
             T, mpl::list<P1, P2, P3, P4>, BOOST_SP_DEFAULT_CONVERSION_POLICY
         >::type                                 conversion_policy;
         typedef typename conversion_policy::checking_policy
@@ -504,7 +431,7 @@ namespace boost
         }
 
         template <class SmartPtr>
-        to(SmartPtr const& rhs, detail::policy_ptr::const_cast_tag)
+        to(SmartPtr const& rhs, policy_ptr::detail::const_cast_tag)
             : base_type(static_cast<typename SmartPtr::base_type const&>(rhs))
         {
             get_impl_ref(*this) = 
@@ -518,7 +445,7 @@ namespace boost
         }
 
         template <class SmartPtr>
-        to(SmartPtr const& rhs, detail::policy_ptr::static_cast_tag)
+        to(SmartPtr const& rhs, policy_ptr::detail::static_cast_tag)
             : base_type(static_cast<typename SmartPtr::base_type const&>(rhs))
         {
             get_impl_ref(*this) = 
@@ -533,7 +460,7 @@ namespace boost
         }
 
         template <class SmartPtr>
-        to(SmartPtr const& rhs, detail::policy_ptr::dynamic_cast_tag)
+        to(SmartPtr const& rhs, policy_ptr::detail::dynamic_cast_tag)
             : base_type(static_cast<typename SmartPtr::base_type const&>(rhs))
         {
             get_impl_ref(*this) = 
@@ -553,7 +480,7 @@ namespace boost
         }
 
         template <class SmartPtr>
-        to(detail::policy_ptr::move_source<SmartPtr> const& rhs)
+        to(policy_ptr::detail::move_source<SmartPtr> const& rhs)
             : base_type(static_cast<typename SmartPtr::base_type const&>(rhs.ptr()))
         {
             BOOST_STATIC_ASSERT((
@@ -667,7 +594,7 @@ namespace boost
             typename 
             enable_if< 
                 mpl::and_<
-                    detail::policy_ptr::is_smart_ptr<SmartPtr>,
+                    policy_ptr::detail::is_smart_ptr<SmartPtr>,
                     mpl::not_<
                         is_convertible<
                             typename ownership_policy::ownership_category,
@@ -679,7 +606,7 @@ namespace boost
 
         template <class U>
         to( U&, 
-            typename detail::policy_ptr::enforce_move_semantics<
+            typename policy_ptr::detail::enforce_move_semantics<
                 P1, P2, P3, P4, U
             >::type = 0 );
     public:             // Ownership modifiers
@@ -872,45 +799,45 @@ namespace boost
     template <typename U, typename Ptr>
     inline 
     typename enable_if<
-        detail::policy_ptr::is_smart_ptr<Ptr>,
+        policy_ptr::detail::is_smart_ptr<Ptr>,
         typename Ptr::enclosing_class::template to<U>
     >::type
     const_pointer_cast(Ptr const& p)
     {
         typedef typename Ptr::enclosing_class::template to<U> result_type;
-        return result_type(p, detail::policy_ptr::const_cast_tag());
+        return result_type(p, policy_ptr::detail::const_cast_tag());
     }
 
     template <typename U, typename Ptr>
     typename enable_if<
-        detail::policy_ptr::is_smart_ptr<Ptr>,
+        policy_ptr::detail::is_smart_ptr<Ptr>,
         typename Ptr::enclosing_class::template to<U>
     >::type
     static_pointer_cast(Ptr const& p)
     {
         typedef typename Ptr::enclosing_class::template to<U> result_type;
-        return result_type(p, detail::policy_ptr::static_cast_tag());
+        return result_type(p, policy_ptr::detail::static_cast_tag());
     }
 
     template <typename U, typename Ptr>
     typename enable_if<
-        detail::policy_ptr::is_smart_ptr<Ptr>,
+        policy_ptr::detail::is_smart_ptr<Ptr>,
         typename Ptr::enclosing_class::template to<U>
     >::type
     dynamic_pointer_cast(Ptr const& p)
     {
         typedef typename Ptr::enclosing_class::template to<U> result_type;
-        return result_type(p, detail::policy_ptr::dynamic_cast_tag());
+        return result_type(p, policy_ptr::detail::dynamic_cast_tag());
     }
 
     template <typename Ptr>
     typename enable_if<
-        detail::policy_ptr::is_smart_ptr<Ptr>,
-        detail::policy_ptr::move_source<Ptr>
+        policy_ptr::detail::is_smart_ptr<Ptr>,
+        policy_ptr::detail::move_source<Ptr>
     >::type
     move(Ptr& p)
     {
-        return detail::policy_ptr::move_source<Ptr>(p);
+        return policy_ptr::detail::move_source<Ptr>(p);
     }
 
     //------------------------------------------------------------------------
@@ -946,4 +873,57 @@ namespace boost
 # pragma warning(pop)
 #endif
 
+//----------------------------------------------------------------------------
+// Change log(latest at top):
+// - 24 June 2005: Larry Evans 
+//   WHAT:
+//     1) changed detail::policy_ptr to policy_ptr::detail
+//   WHY:
+//     1) remain consistent with naming in directory ./detail.
+// - 22 June 2005: Larry Evans 
+//   WHAT:
+//     1) moved tags to new policy/tags.hpp
+//     2) moved constructor/destructor debug hooks macro to new 
+//        detail/sp_debug_cdtor_hooks.hpp
+//   WHY:
+//     1-2) so policy/std.hpp wouldn't have to include all of this file.
+// - 02 June 2005: Larry Evans 
+//   WHAT:
+//     1) added:
+//          template<class U> smart_ptr<...>::to<T>::to(to<U>&).
+//   WHY:
+//     1) to enable operator=(this_type rhs) to work where rhs was created
+//        from to<U>, where U is derived from T, as in
+//        libs/policy_ptr/smart_ptr_test.cpp:assign_test.
+//
+//        NOTE:
+//          For some unknown reasons, the previous changes caused the
+//          assign_test to fail.
+//
+// - 01 June 2005: Larry Evans 
+//   WHAT:
+//     1) added:
+//          template<class U> smart_ptr<...>::to<T>::to(U&).
+//     2) used newly added non-member function, get_less_comparator,
+//        in less than comparison operations.
+//   WHY:
+//     1) to allow derived class pointer to be used as arg, and thus allow
+//        tests in:
+//          n_constructors::copy_constructor(void)
+//        in:
+//          policy_ptr/test/std_ptrs_shared_ptr_test.cpp
+//        to pass.
+//     2) Allow operator< on std_ptrs to work correctly.  This function
+//        serves a similar purpose to member method, _internal_less, in 
+//        shared_ptr.hpp.
+// - 31 May 2005: Larry Evans 
+//   WHAT:
+//     added smart_ptr<...>::to<T>::operator bool
+//   WHY:
+//     to avoid ambiguity compiler diagnostic when std_ptrs uses 'allow_conversions'
+//     and test/std_ptrs_shared_ptr_test.cpp is compiled.
+// - 14 May 2005: Larry Evans 
+//   removed extraneous \\n 's around smart_ptr superclass specification.
+// - 29 Oct 2004: Jonathan Turkanis added VC7.1 workarounds and move_ptr 
+//   emulation
 #endif // BOOST_SMART_PTR_HPP

@@ -4,7 +4,11 @@
 #include <boost/config.hpp>
 #include <boost/assert.hpp>
 #include <boost/checked_delete.hpp>
+#include <boost/type_traits/add_reference.hpp>
+#include <boost/call_traits.hpp>
 #include "boost/policy_ptr/detail/shared_count.hpp"
+#include "boost/policy_ptr/policy/tags.hpp"
+#include "boost/policy_ptr/detail/sp_debug_cdtor_hooks.hpp"
 
 namespace boost
 {
@@ -551,6 +555,11 @@ namespace boost
 }   // namespace boost
 //------------------------------------
 // ChangeLog(latest at top):
+//   2005-06-22 Larry Evans
+//     WHAT:
+//       1) Added new #includes.
+//     WHY:
+//       1) Minimize dependency on other declarations.
 //   2005-06-17 Larry Evans
 //     WHAT:
 //       1) Renamed get_counter to count_prox_mut
