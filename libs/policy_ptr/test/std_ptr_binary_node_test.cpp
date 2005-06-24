@@ -1,10 +1,11 @@
 //test std/policies:shared_storage
-#define CONTAINER_SINGLE_OBJ_ID
 #include "sp_types_std.hpp"
 #include "binary_node.hpp"
 #include "sp_graph_dfs_print.hpp"
 #include "boost/policy_ptr/detail/collector_sp_counted_accepting.hpp"
 #include <boost/test/unit_test.hpp>
+#include <boost/mpl/vector_c.hpp>
+#include <boost/mpl/for_each.hpp>
 
   template
   < class SpTypes
@@ -36,9 +37,18 @@ struct sp_node
   < boost::sp_types_std<boost::std_shared_graph_accepting>
   , binary_node::contains_one
   >::type 
-desc_type;
+desc_one_type;
 
-SELECTED_FIELDS_DESCRIPTION_OF_RECORD(desc_type)
+SELECTED_FIELDS_DESCRIPTION_OF_RECORD(desc_one_type)
+
+    typedef 
+  sp_node
+  < boost::sp_types_std<boost::std_shared_graph_accepting>
+  , binary_node::contains_two
+  >::type 
+desc_two_type;
+
+SELECTED_FIELDS_DESCRIPTION_OF_RECORD(desc_two_type)
 
   template
   < class BinaryNode
@@ -146,11 +156,19 @@ namespace boost
       bool const
     expect_pass
       [ num_tests ]
-      [ binary_node::contains_one+1 ]
+      [ binary_node::contains_two+1 ]
       [ num_sp ]
     =
     { //simple_list
       { //contains_one
+        { //std_shared_dag
+          true
+        , //std_shared_graph_accepting
+          true
+        , //std_shared_graph_tagged
+          true
+        }
+      , //contains_two
         { //std_shared_dag
           true
         , //std_shared_graph_accepting
@@ -168,9 +186,25 @@ namespace boost
         , //std_shared_graph_tagged
           false
         }
+      , //contains_two
+        { //std_shared_dag
+          false
+        , //std_shared_graph_accepting
+          true
+        , //std_shared_graph_tagged
+          false
+        }
       }
     , //cycle_2_external
       { //contains_one
+        { //std_shared_dag
+          false
+        , //std_shared_graph_accepting
+          true
+        , //std_shared_graph_tagged
+          false
+        }
+      , //contains_two
         { //std_shared_dag
           false
         , //std_shared_graph_accepting
@@ -215,37 +249,66 @@ using namespace boost;
 
   template
   < sp_std_numerals SpId
+  , binary_node::member_multiplicity Multip=binary_node::contains_two
   >
-void add_spid_tests(butf::test_suite* tests)
+struct add_test
 {
-  #if 0
-  #endif
-    tests->add(BOOST_TEST_CASE((&simple_test<sp_node<sp_types_std<SpId>,binary_node::contains_one> >)));
+    add_test(butf::test_suite* a_tests)
+      : my_tests(a_tests)
+    {}
+    
+      template
+      < class TestId
+      >
+      void
+    operator()
+      ( TestId
+      )const
     {
+        binary_node_graph_tests::test_ids const test_id=TestId::value;
         binary_node_graph_tests::test_fun_type test_fun=boost::binary_node_graph_tests::run
-          < binary_node_graph_tests::simple_list
-          , sp_node<sp_types_std<SpId>,binary_node::contains_one>
+          < test_id
+          , sp_node<sp_types_std<SpId>,Multip>
           >;
-        tests->add(BOOST_TEST_CASE(test_fun));
+        my_tests->add(BOOST_TEST_CASE(test_fun));
     }
-    {
-        binary_node_graph_tests::test_fun_type test_fun=boost::binary_node_graph_tests::run
-          < binary_node_graph_tests::cycle_1_external
-          , sp_node<sp_types_std<SpId>,binary_node::contains_one>
-          >;
-        tests->add(BOOST_TEST_CASE(test_fun));
-    }
-    {
-        binary_node_graph_tests::test_fun_type test_fun=boost::binary_node_graph_tests::run
-          < binary_node_graph_tests::cycle_2_external
-          , sp_node<sp_types_std<SpId>,binary_node::contains_one>
-          >;
-        tests->add(BOOST_TEST_CASE(test_fun));
-    }
-  #if 0
-  #endif
-}
+    
+ private:
+ 
+      butf::test_suite*const
+    my_tests
+    ;
+};
 
+  template
+  < binary_node::member_multiplicity Multip=binary_node::contains_two
+  , class TestIds=mpl::vector_c
+    < binary_node_graph_tests::test_ids
+   // , binary_node_graph_tests::simple_list
+   // , binary_node_graph_tests::cycle_1_external
+    , binary_node_graph_tests::cycle_2_external
+    >
+  >
+struct add_tests
+{
+    add_tests(butf::test_suite* a_tests)
+      : my_tests(a_tests)
+    {}
+      template
+      < sp_std_numerals SpId
+      >
+      void
+    add_spid(void)const
+    {
+        //my_tests->add(BOOST_TEST_CASE((&simple_test<sp_node<sp_types_std<SpId>,Multip> >)));
+        add_test<SpId,Multip> test_adder(my_tests);
+        mpl::for_each<TestIds>(test_adder);
+    }
+ private:
+      butf::test_suite*const
+    my_tests
+    ;
+};
 void always_fail(void)
 {
     BOOST_CHECK(false);
@@ -254,14 +317,22 @@ void always_fail(void)
 butf::test_suite* init_unit_test_suite(int argc, char* argv[])
 {
     butf::test_suite* tests = BOOST_TEST_SUITE("std_binary_node tests");
-    add_spid_tests<std_shared_graph_accepting>(tests);
-    add_spid_tests<std_shared_graph_tagged>(tests);
+    add_tests<> test_adder(tests);
+    test_adder.add_spid<std_shared_graph_accepting>();
 //    tests->add(BOOST_TEST_CASE(always_fail));
 
     return tests;
 }
 //--------------------------------
 //ChangeLog:
+//  2005-06-22 Larry Evans
+//    WHAT:
+//      1) added expect_pass elements for multiplicity=contains_two.
+//      2) added SELECTED_FIELDS_DESCRIPTION_OF_RECORD for contains_two.
+//      3) converted function add_tests to class and added class add_test.
+//    WHY:
+//      1-2) enable testing stl-like containers of smart_ptr's.
+//      3) ease selection tests to run.
 //  2005-06-18 Larry Evans
 //    WHAT:
 //      1) changed expect_pass to array from specializations of template.

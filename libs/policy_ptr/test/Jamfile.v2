@@ -52,11 +52,17 @@ rule run-utf ( name : other-sources * )
 #Purpose:
 #  Short-hand for linking with boost_unit_test_framework
 {
-    return [
+    return 
+    [
       run 
         $(name).cpp 
         $(other-sources)
-        $(BOOST_ROOT)/libs/test/build//boost_unit_test_framework ]
+        $(BOOST_ROOT)/libs/test/build//boost_unit_test_framework 
+      : : :
+        <define>CONTAINER_SINGLE_OBJ_ID  
+        <define>SP_COUNTED_BASE_ISA_OBJ_ID
+        <define>USE_CONTAINER_INTERN
+    ]
       ;
 }
 
@@ -87,6 +93,18 @@ run-utf std_ptr_binary_node_test
     ../src/detail/collector_sp_counted_tagged.cpp
     ../../utility/build//debug
     ../../io/filters/build//mout
+  #2005-06-23
+  #  Added tests for container_two (stl-like containers).  Tests
+  #  for container_two pass; however, there's a serious problem
+  #  mentioned in ChangeLog to shared_count_hook_sp_counted_accepting.hpp.
+  #2005-06-17
+  #  Test for add_spid_tests<std_shared_graph_tagged>
+  #  for cycle_{1,2}_external
+  #  still fails (despite the "shared_count_hook*" changes which
+  #  corrected the order of release and tag zeroing).  In addition,
+  #  std_shared_graph_accepting for TestId=1:std_numeral=1
+  #  (i.e. simple_cycle_1_external_sp and std_shared_graph_accepting)
+  #  now fails.
   #2005-06-13
   #  Test fails for add_spid_tests<std_shared_graph_tagged>
   #  for cycle_{1,2}_external
