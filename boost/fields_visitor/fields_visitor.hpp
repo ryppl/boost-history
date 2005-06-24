@@ -19,6 +19,9 @@
 #include <boost/type_traits/is_base_and_derived.hpp>
 #include <vector>
 #include <map>
+#ifdef CONTAINER_SINGLE_OBJ_ID
+#include "boost/io/filters/mout.hpp"
+#endif
 namespace boost
 {
 namespace fields_visitor
@@ -686,7 +689,7 @@ names_builder
         * Create iterator over SelectedField's in a_record.
         */
         {
-            assert(iter_size() <= a_buffer.size() );
+//            assert(iter_size() <= a_buffer.size() );
             field_iterator_type*l_iter=new (a_buffer.start_mut())
               field_iterator_type(a_record,a_field_offsets);
             return l_iter;

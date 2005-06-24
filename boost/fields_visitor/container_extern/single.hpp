@@ -7,12 +7,12 @@
 //  This software is provided "as is" without express or implied
 //  warranty, and with no claim as to its suitability for any purpose.
 //
-#include "boost/fields_visitor/fields_visitor.hpp"
-#include <memory>
-//#define CONTAINER_SINGLE_OBJ_ID
 #ifdef CONTAINER_SINGLE_OBJ_ID
 #include "boost/utility/obj_id.hpp"
+#include "boost/utility/trace_scope.hpp"
 #endif
+#include "boost/fields_visitor/registrar_heirarchy.hpp"
+#include <memory>
 namespace boost
 {
 namespace fields_visitor
@@ -21,7 +21,7 @@ namespace container_extern
 {
 /**@brief
  *  Enable visiting a record's fields where
- *  record is a templated container containing
+ *  record is a templated container with
  *  a single template parameter describing it's
  *  contained fields.
  */
@@ -32,18 +32,16 @@ template
       >
     class Container
   , typename Element
-  , typename FieldsVisitor
+  , typename VisitorSequence
   , typename Allocator=std::allocator<Element>
   >
   class
 single
-#ifdef CONTAINER_SINGLE_OBJ_ID
-  : public utility::obj_id
-  , public Container<Element,Allocator>
-#else
   : public Container<Element,Allocator>
+#ifdef CONTAINER_SINGLE_OBJ_ID
+  , public utility::obj_id
 #endif
-  , private field_selector<FieldsVisitor>
+  , public registrar_heirarchy<VisitorSequence>
 {
  public:
         typedef
@@ -54,7 +52,7 @@ single
       single
         < Container
         , element_type
-        , FieldsVisitor
+        , VisitorSequence
         , Allocator
         >
     my_type
@@ -64,31 +62,44 @@ single
     container_type
     ;
         typedef
-      field_selector<FieldsVisitor>
-    selector_type
+      registrar_heirarchy<VisitorSequence>
+    registrar_type
     ;
     ~single(void)
     {
         #ifdef CONTAINER_SINGLE_OBJ_ID
+        utility::trace_scope ts("-single(void)");
         mout()<<"single::TOR-:id="<<id_get()<<":"<<"\n";
         #endif
     }
-    single(void)
-      : selector_type(this)
+    single
+      ( void
+      )
+      : registrar_type(this)
     {
+        #ifdef CONTAINER_SINGLE_OBJ_ID
+        utility::trace_scope ts("+single(void)");
+        mout()<<"single::TOR+:id="<<id_get()<<":"<<"\n";
+        #endif
     }
-    single(unsigned const a_size)
+    single
+      ( unsigned const a_size
+      )
       : container_type(a_size)
-      , selector_type(this)
+      , registrar_type(this)
     {
+        #ifdef CONTAINER_SINGLE_OBJ_ID
+        utility::trace_scope ts("+single(unsigned)");
+        mout()<<"single::TOR+:id="<<id_get()<<":size="<<a_size<<"\n";
+        #endif
     }
-      
 };//end single<FieldsVisitor, Container, Element> general template
   
 }//exit container_extern namespace
 
 template
-  < typename FieldsVisitor
+  < typename VisitorSequence
+  , typename FieldsVisitor
   , template
       < typename //Element
       , typename //Allocator
@@ -102,7 +113,7 @@ struct field_iterator_of
   , container_extern::single
     < Container
     , Element
-    , FieldsVisitor
+    , VisitorSequence
     , Allocator
     >
   >
@@ -125,7 +136,7 @@ struct field_iterator_of
       container_extern::single
       < Container
       , Element
-      , fields_visitor_type
+      , VisitorSequence
       , Allocator
       >
     record_type
@@ -165,7 +176,7 @@ private:
       iter_type
     m_iter
     ;
-};//end field_iterator_of<FieldsVisitor,single<...> > specialization
+};//end field_iterator_of<FieldsVisitor,container_extern::single<...> > specialization
 
 }//exit fields_visitor namespace
 }//exit boost namespace
