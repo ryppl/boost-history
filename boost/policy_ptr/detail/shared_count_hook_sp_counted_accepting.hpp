@@ -5,6 +5,7 @@
 #include "boost/policy_ptr/detail/sp_counted_accepting.hpp"
 #include "boost/fields_visitor/container_extern/single.hpp"
 #include "boost/fields_visitor/container_intern/field_iterator_of_container_intern_single.hpp"
+#include "boost/policy_ptr/detail/is_smart_ptr.hpp"
 #ifdef CONTAINER_SINGLE_OBJ_ID
 #include "boost/utility/obj_id.hpp"
 #include "boost/utility/trace_scope.hpp"
@@ -96,87 +97,16 @@ class shared_count_visitor_abs
         virtual
     ~shared_count_visitor_abs(void)
     {}
-    
       template
-      < template
-          < typename //Element
-          , typename //Allocator with default value
-          >
-        class Container
-      , typename Element
-      , typename VisitorSequence
-      , typename Allocator
+      < typename FieldOther
       >
       void
     visit_field
-      ( fields_visitor::container_extern::single
-        < Container
-        , Element
-        , VisitorSequence
-        , Allocator
-        >& a_field
+      ( FieldOther& a_field_other
       )
     {
-        visit_with_iterator(a_field);
-    }
-    
-      template
-      < typename VisitorSequence 
-        //^ Sequence of fields_visitor's for use as arg to ../registrar_heirarchy.hpp.
-      , template
-          < typename //Element
-          , typename //Allocator
-          >
-          class Single //the modified stl container
-      , typename Element
-      >
-      void
-    visit_field
-      ( Single
-        < Element
-        , fields_visitor::container_intern::allocator 
-          < Element
-          , VisitorSequence 
-            //^ enables iteration over Single's data, if != empty_registrar
-            //with specialization of prox_indirect, as in:
-            //   prox_indirect_registrar_heirarchy.hpp
-          >
-        >& a_field
-      )
-    {
-        visit_with_iterator(a_field);
-    }
-      
-      template
-      < typename Container
-      >
-      void
-    visit_with_iterator
-      ( Container& a_container
-      )
-    {
-          typedef typename fields_visitor::field_iterator_of
-          < shared_count_visitor_abs
-          , Container
-          > 
-        iter_type;
-        iter_type a_iter(&a_container);
-        for(; !a_iter.empty(); a_iter.increment())
-        {
-            a_iter.accept(*this);
-        }
-    }
-    
-      template
-      < typename Referent
-      >
-      void
-    visit_field
-      ( shared_storage_<Referent,sp_counted_accepting>& a_field
-      )
-    {
-        field_type& l_count=a_field.count_prox_mut();
-        visit_field(l_count);
+        typedef typename is_smart_ptr<FieldOther>::type is_smart_ptr_type;
+        visit_other(a_field_other, is_smart_ptr_type());
     }
     
       void
@@ -201,6 +131,40 @@ class shared_count_visitor_abs
     
  private:    
  
+      template
+      < typename Container
+      >
+      void
+    visit_other
+      ( Container& a_container
+      , mpl::false_
+      )
+    {
+          typedef typename fields_visitor::field_iterator_of
+          < shared_count_visitor_abs
+          , Container
+          > 
+        iter_type;
+        iter_type a_iter(&a_container);
+        for(; !a_iter.empty(); a_iter.increment())
+        {
+            a_iter.accept(*this);
+        }
+    }
+    
+      template
+      < typename Referent
+      >
+      void
+    visit_other
+      ( shared_storage_<Referent,sp_counted_accepting>& a_field
+      , mpl::true_
+      )
+    {
+        field_type& l_count=a_field.count_prox_mut();
+        visit_field(l_count);
+    }
+    
         virtual
       void
     visit_count(field_type& a_field)
@@ -233,6 +197,14 @@ sp_counted_impl_hook<Referent,sp_counted_accepting>::
 }//exit boost namespace
 //----------------------------------------
 //ChangeLog:
+//  2005-06-24: Larry Evans
+//    WHAT:
+//      a) added overloaded 2 arg method, visit_other, with 2nd arg
+//         used to resolve ambiguity.
+//      b) renamed visit_with_iterator to visit_field which calls 
+//           visit_other with 2nd arg = result of is_smart_ptr.
+//    WHY:
+//      Solve problem mentioned in previous log entry.
 //  2005-06-23: Larry Evans
 //    WHAT:
 //      Added:
@@ -258,7 +230,7 @@ sp_counted_impl_hook<Referent,sp_counted_accepting>::
 //         template<class P1,..,class P4, class T>void visit_field
 //         ( smart_ptr<P1,..,P4>::to<T>&)
 //
-//      because of the non-deduced context of <P1,..,P4>::to<T> eliminates that
+//      because of the non-deduced context of <P1,..,P4>::to<T> elimintates that
 //      visit_field as a candidate for overload resolution, AFAICT.
 //  2005-06-17: Larry Evans
 //    WHAT:
