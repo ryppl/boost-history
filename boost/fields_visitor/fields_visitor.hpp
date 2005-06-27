@@ -14,8 +14,13 @@
  *    in a "record".  See Terminology under namespace fields_visitor
  *    for definition of these terms.
  */
-#include "boost/rangelib/range.hpp"
-//^ from http://www.torjo.com/code/rangelib15.zip on 2004-11-09
+#define TORJO_RANGE
+#ifdef TORJO_RANGE
+  #include "boost/rangelib/range.hpp"
+  //^ from http://www.torjo.com/code/rangelib15.zip on 2004-11-09
+#else
+  #include <boost/range/iterator_range.hpp>
+#endif
 #include <boost/type_traits/is_base_and_derived.hpp>
 #include <vector>
 #include <map>
@@ -180,10 +185,29 @@ namespace detail
     std::vector<offset_type>
   field_offsets_type
   ;
+#ifdef TORJO_RANGE
       typedef
     rangelib:: crange<detail::field_offsets_type const>
   offsets_iterator
   ;
+#else
+  struct offsets_iterator
+    : public iterator_range<detail::field_offsets_type::const_iterator>
+  {
+      typedef iterator_range<detail::field_offsets_type::const_iterator> super_type;
+      offsets_iterator(detail::field_offsets_type const& a_field_offsets)
+        : super_type(a_field_offsets.begin(), a_field_offsets.end())
+      {}
+      
+        super_type::value_type
+      operator*(void)const
+      {
+          return super_type::front();
+      }
+      
+      //void operator++(void) ?
+  };
+#endif
   template
     < typename SelectedField
     >
@@ -1273,6 +1297,11 @@ template<typename FieldsVisitor > \
 
 //////////////////////////////////////////////////////////////////////////////
 // ChangeLog:
+//   2005-06-26: Larry Evans
+//     WHAT:
+//       Tried using boost/range/range_iterator.hpp
+//     RESULT:
+//       Abandoned because found no easy way to implement operator++.
 //   2004-10-25: Larry Evans
 //     WHAT:
 //       Copied and renamed from ../managed_ptr/prox_children.hpp
