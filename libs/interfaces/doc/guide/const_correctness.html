@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>const-correctness</TITLE>
+    <LINK REL='stylesheet' HREF='../../../../boost.css'>
+        <LINK REL='stylesheet' HREF='../theme/interfaces.css'>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+<H1 CLASS='title'><CODE>const</CODE>-correctness</H1>
+<HR CLASS='banner'>
+
+<!-- End Banner -->
+
+<!-- <DL>
+  <DT><A href='#const_view'>Class Template <CODE>const_view</CODE></A></DT>
+  <DT><A href='#instance_size'>Invocation Efficiency</A></DT>
+</DL> -->
+
+<P>
+    Objects declared <CODE>const</CODE> cannot be bound to ordinary interface instances; otherwise, a violation of <CODE>const</CODE>-correctness would occur when a non-<CODE>const</CODE> member function was called. In order to allow the use of interfaces with <CODE>const</CODE> objects, Boost.Interfaces provides the <I>interface adapter</I> <A HREF='../classes/const_view.html'><CODE>const_view</CODE></A>, which takes an interface as a template parameter and yields an interface which can be bound to <CODE>const</CODE> objects and whose non-const functions are disabled. <I>See</I> <A HREF='../classes/const_view.html#example'>Example</A>.
+</P>
+
+<!-- Begin Footer -->
+
+<HR>
+<P STYLE='margin-top:2em' CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+13 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan Turkanis, 2005. Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>

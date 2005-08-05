@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Smart Interface Pointers</TITLE>
+    <LINK REL='stylesheet' HREF='../../../../boost.css'>
+        <LINK REL='stylesheet' HREF='../theme/interfaces.css'>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+<H1 CLASS='title'>Smart Interface Pointers</H1>
+<HR CLASS='banner'>
+
+<!-- End Banner -->
+
+<DL class='page-index'>
+  <DT><A href='#definition'>Definition</A></DT>
+  <DT><A href='#templates'>Library Templates</A>
+    <DL class='page-index'>
+      <DT><A href='#manual_ptr'><CODE>manual_ptr</CODE></A></DT>
+      <DT><A href='#shared_ptr'><CODE>shared_ptr</CODE></A></DT>
+      <DT><A href='#unique_ptr'><CODE>unique_ptr</CODE></A></DT>
+    </DL>
+  </DT>
+</DL>
+
+<A NAME='definition'></A>
+<H2>Definition</H2>
+
+<P>
+    Smart interface pointers are similar to ordinary smart pointers with the following difference: while an ordinary smart pointer manages an object of a type specified as a template parameter, a smart interface pointer manages an object of any type implementing an interface specified as a template parameter. As a result, a single smart interface pointer can manage objects of completely unrelated types.
+</P>
+
+<A NAME='templates'></A>
+<H2>Library Templates</H2>
+
+<P>Boost.Interfaces includes three smart reference templates: <A HREF='../classes/manual_ptr.html'><CODE>manual_ptr</CODE></A>, <A HREF='../classes/unique_ptr.html'><CODE>unique_ptr</CODE></A> and <A HREF='../classes/unique_ptr.html'><CODE>shared_ptr</CODE></A>.
+
+<A NAME='manual_ptr'></A>
+<H4><CODE>manual_ptr</CODE></H4>
+
+<P>
+    The class template <A HREF='../classes/manual_ptr.html'><CODE>manual_ptr</CODE></A> is a smart interface pointer which supports manual resource management. Objects managed by instances of <CODE>manual_ptr</CODE> are never freed automatically; instead, <CODE>manual_ptr</CODE> allows the programmer to <CODE>delete</CODE> the bound object using the member function <A HREF='../classes/manual_ptr.html#manual_ptr_free'><CODE>free</CODE></A>.
+</P>
+
+<A NAME='shared_ptr'></A>
+<H4><CODE>shared_ptr</CODE></H4>
+
+<P>
+    The class template <A HREF='../classes/shared_ptr.html'><CODE>shared_ptr</CODE></A> is a reference-counted smart interface pointer patterned on the template <A HREF='http://www.boost.org/libs/smart_ptr/shared_ptr.htm' TARGET='_top'><CODE>boost::shared_ptr</CODE></A>.
+</P>
+
+<A NAME='unique_ptr'></A>
+<H4><CODE>unique_ptr</CODE></H4>
+
+<P>
+    The class template <A HREF='../classes/unique_ptr.html'><CODE>unique_ptr</CODE></A> is a smart interface pointer patterned on the template <CODE>move_ptr</CODE> introduced in <A HREF='../bibliography.html#hinnant1'>[Hinnant1]</A> as a safe replacement for <CODE>std::auto_ptr</CODE>. It has the following characteristics:
+</P>
+<UL>
+    <LI><I>Exclusive ownership</I>. An object may be managed by at most one instance of <CODE>unique_ptr</CODE> type at any given time.
+    <LI><I>Passable to / returnable from functions</I>. Instances of <CODE>unique_ptr</CODE> may be passed to and returned from functions, transfering ownership from the caller to the function in the first case, and from the function to the caller in the second.
+    <LI><I>No implicit transfer of ownership from an lvalue.</I> An lvalue instance of a <CODE>unique_ptr</CODE> may neither be assigned to nor be used to initialize a second instance of a specialization of the template.
+</UL>
+<P>
+    Ownership may be transfered from an lvalue of type <CODE>unique_ptr</CODE> using the function template <A HREF='../functions/move.html'><CODE>move</CODE></A>.
+</P>
+
+<!-- Begin Footer -->
+
+<HR>
+<P STYLE='margin-top:2em' CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+13 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan Turkanis, 2005. Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>

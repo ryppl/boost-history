@@ -1,0 +1,163 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Delegation</TITLE>
+    <LINK REL='stylesheet' HREF='../../../../boost.css'>
+        <LINK REL='stylesheet' HREF='../theme/interfaces.css'>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+<H1 CLASS='title'>Delegation</H1>
+<HR CLASS='banner'>
+
+<!-- End Banner -->
+
+<DL class='page-index'>
+  <DT><A href='#motivation'>Motivation</A></DT>
+  <DT><A href='#delegating'>Class Template <CODE>delegating</CODE></A></DT>
+  <DT><A href='#aggregation'>Aggregation</A></DT>
+</DL>
+
+<A NAME='motivation'></A>
+<H2>Motivation</H2>
+
+<P>
+    Frequently one wishes to define a class with a collection of member functions whose implementations are borrowed from an existing class. The most straightforward way to achieve this implementation reuse in C++ is through public inheritance:
+</P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>class</SPAN> PreExisting {
+<SPAN CLASS='keyword'>public</SPAN>:
+    <SPAN CLASS='keyword'>void</SPAN> foo() { <SPAN CLASS='omitted'>...</SPAN> }
+    <SPAN CLASS='keyword'>void</SPAN> bar() { <SPAN CLASS='omitted'>...</SPAN> }
+    <SPAN CLASS='keyword'>void</SPAN> baz() { <SPAN CLASS='omitted'>...</SPAN> }
+};
+
+<SPAN CLASS='keyword'>class</SPAN> NewClass : <SPAN CLASS='keyword'>public</SPAN> PreExisting {
+    <SPAN CLASS='comment'>// Implementation of foo, bar and baz inherited from PreExisting</SPAN>
+    <SPAN CLASS='omitted'>...</SPAN>
+};</PRE>
+
+<P>Sometimes, however, public inheritance may not be adequate, for several reasons:</P>
+<UL>
+<LI>The pre-existing class may have no <CODE>public</CODE> or <CODE>protected</CODE> constructors.
+<LI>The definition of the pre-existing class may not be available; its instances may be obtainable at runtime only as pointers to a base class with virtual functions.
+<LI>It may be necessary to be able to replace the object to which function calls are forwarded at runtime.
+</UL>
+
+<P>Even when inheritance is possible, however, it may not be dersirable. For instance:</P>
+<UL>
+    <LI>Inheritance leads to tight coupling.
+    <LI>One may want to expose some public function of the pre-existing class, but not others.
+</UL>
+
+<P>
+    An early version of C++ contained a delegation facility to address this problem. The following example is adapted from <A HREF='../bibliography.html#stroustrup'>[Stroustrup]</A>, p. 272:
+</P>
+    
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>class</SPAN> PreExisting { <SPAN CLASS='comment'>/* As above */</SPAN> };
+
+<SPAN CLASS='keyword'>class</SPAN> NewClass : *p {
+<SPAN CLASS='keyword'>public</SPAN>:
+    NewClass() : p(<SPAN CLASS='keyword'>new</SPAN> PreExisting) { }
+<SPAN CLASS='keyword'>private</SPAN>:
+    PreExisting* p;
+};
+
+<SPAN CLASS='keyword'>void</SPAN> f(NewClass* q)
+{
+    q->bar(); <SPAN CLASS='comment'>// meaning q->p->bar()</SPAN>
+}</PRE>
+
+<!-- <PRE CLASS='broken_ie'><SPAN CLASS='keyword'>class</SPAN> B { <SPAN CLASS='keyword'>int</SPAN> b; <SPAN CLASS='keyword'>void</SPAN> f(); };
+<SPAN CLASS='keyword'>class</SPAN> C : *p { B* p; <SPAN CLASS='keyword'>int</SPAN> c; };
+
+<SPAN CLASS='keyword'>void</SPAN> f(C* q)
+{
+    q->f(); <SPAN CLASS='comment'>// meaning q->p->f()</SPAN>
+}</PRE> -->
+
+<P>
+    Here, calls of member functions of <CODE>B</CODE> through an instance of <CODE>C</CODE> are automatically forwarded to <CODE>p</CODE>, which is known as the <I>delegate</I>. Unfortunately, this language construct was found to be a source of bugs and confusion an was removed. <I>See</I> <A HREF='../bibliography.html#stroustrup'>[Stroustrup]</A>, <I>pp</I> 272-73.
+</P>
+<P>
+    In the current language, one solution is to redeclare the desired functions in the new class and to implement them by forwarding to an instance of the pre-existing class. For example:
+</P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>class</SPAN> PreExisting { <SPAN CLASS='comment'>/* As above */</SPAN> };
+
+<SPAN CLASS='keyword'>class</SPAN> NewClass {
+<SPAN CLASS='keyword'>public</SPAN>:
+    NewClass() : p(<SPAN CLASS='keyword'>new</SPAN> PreExisting) { }
+    <SPAN CLASS='keyword'>void</SPAN> foo() { p->foo(); }
+    <SPAN CLASS='keyword'>void</SPAN> bar() { p->bar(); }
+    <SPAN CLASS='keyword'>void</SPAN> baz() { p->baz(); }
+<SPAN CLASS='keyword'>private</SPAN>:
+    PreExisting* p;
+};</PRE>
+
+<A NAME='delegating'></A>
+<H2>Class Template <CODE>delegating</CODE></H2>
+
+<P>
+    Boost.Interfaces provides an alternative solution: the class template <A href='../classes/delegating.html'><CODE>delegating</CODE></A> can be used to automatically forward interface function calls to an object specified at runtime.
+<P>
+<P>For example, using <A href='../classes/delegating.html'><CODE>delegating</CODE></A>, we can write:</P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>class</SPAN> PreExisting { <SPAN CLASS='comment'>/* As above */</SPAN> };
+
+<SPAN CLASS='comment'>// Pseudocode</SPAN>
+<SPAN CLASS='keyword'>interface</SPAN> <A CLASS='documented' HREF='../examples/ipreexisting.html'>IPreExisting</A> {
+    <SPAN CLASS='keyword'>void</SPAN> foo();
+    <SPAN CLASS='keyword'>void</SPAN> bar();
+    <SPAN CLASS='keyword'>void</SPAN> baz();
+};
+
+<SPAN CLASS='keyword'>class</SPAN> NewClass : <SPAN CLASS='keyword'>public</SPAN> delegating&lt;IPreExisting&gt; {
+<SPAN CLASS='keyword'>public</SPAN>:
+    NewClass() : p(<SPAN CLASS='keyword'>new</SPAN> PreExisting) 
+    { 
+        delegating&lt;IPreExisting&gt;::set(p);
+    }    
+    <SPAN CLASS='comment'>// Inherits implementation of IPreExisting</SPAN>
+<SPAN CLASS='keyword'>private</SPAN>:
+    PreExisting* p;
+};</PRE>
+
+<P>Note that this example is very similar to the example from Stroustrup. The differences are:<P>
+<UL>
+    <LI>We must define an interface consisting of the functions to be forwarded.
+    <LI>The delegate is specified with the member function <A HREF='../classes/delegating.html#set'><CODE>set</CODE></A> rather than in the base class list.
+</UL>
+
+<P>
+    Furthermore, the delegate is not restricted to having a predetermined type. In the above example, we could add member pointers to various types implementing <CODE>IPreExisting</CODE> and switch between them at runtime. The template <A href='../classes/delegating.html'><CODE>delegating</CODE></A> therefore provides a form of <I>dynamic inheritance</I>. 
+</P>
+
+<P>
+    If the interface consisting of the functions to be forwarded is not needed for any other purpose, the solution using <A href='../classes/delegating.html'><CODE>delegating</CODE></A> may involve the same amount of work as the immediately preceding solution. But if the interface already exists, or if we need to use objects of unrelated types as delegates, using <A href='../classes/delegating.html'><CODE>delegating</CODE></A> can be much simpler.
+</P>
+
+<A NAME='aggregation'></A>
+<H2>Aggregation</H2>
+
+<P>
+    In the future, Boost.Interfaces may provide support for COM-style aggregation, a form of delegation in which the delegate has direct access to the delegating object. <I>See</I> <A HREF='../future.html#aggregation'>Future Directions: Aggregation</A>.
+</P>
+
+<!-- Begin Footer -->
+
+<HR>
+<P STYLE='margin-top:2em' CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+13 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan Turkanis, 2005. Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>

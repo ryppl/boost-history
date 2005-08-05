@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Implementation</TITLE>
+    <LINK REL='stylesheet' HREF='../../../../boost.css'>
+        <LINK REL='stylesheet' HREF='../theme/interfaces.css'>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+<H1 CLASS='title'>Implementation</H1>
+<HR CLASS='banner'>
+
+<!-- End Banner -->
+
+<P>
+    Interfaces have the following binary layout:<SUP><A CLASS='footnote_ref' HREF='#note_1' NAME='note_1_ref'>[1]</A></SUP>
+</P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>struct</SPAN> IBar {
+    <SPAN CLASS='keyword'>typedef</SPAN> <SPAN CLASS='keyword'>void</SPAN> (*funtion)();
+    <SPAN CLASS='keyword'>void</SPAN>*      pv;     <SPAN CLASS='comment'>// pointer to bound object</SPAN>
+    funtion*   table;  <SPAN CLASS='comment'>// pointer into function table</SPAN>
+};</PRE>
+
+<P>
+    When an interface instance is bound to an object, the pointer <CODE>pv</CODE> points to the bound object and the pointer <CODE>table</CODE> points into an array of function pointers with static storage duration. The array contains a function pointer for each member function of the interface; the signature of a function in the array is the same as the signature of the corresponding interface member function except that it has an additional leading parameter of type <CODE>void*</CODE>.
+</P>
+
+<P>The function corresponding to an interface member function with the signature <CODE>result f(arg1, ..., argn)</CODE> is implemented roughly as follows, where <CODE>T</CODE> is the static type of the object at the point it was bound to the interface instance:</P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>void</SPAN> f_impl(<SPAN CLASS='keyword'>void</SPAN>* pv, arg1 a1, <SPAN CLASS='omitted'>...</SPAN>, argn an)
+{
+    <SPAN CLASS='keyword'>static_cast</SPAN>&lt;T*&gt;(pv)->f(a1, <SPAN CLASS='omitted'>...</SPAN>, an);
+}</PRE>
+
+<P>The invocation of an interface member function:
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>int</SPAN> main()
+{
+    IBar b = <SPAN CLASS='omitted'>...</SPAN>;
+    b.foo(a1, <SPAN CLASS='omitted'>...</SPAN>, an);
+}</PRE>
+
+<P>can be represented roughly as follows, where <I><CODE>offset</CODE></I> is a compile-time constant:</P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>int</SPAN> main()
+{
+    IBar b = <SPAN CLASS='omitted'>...</SPAN>;
+    (*b.table[<I>offset</I>])(b.pv, a1, <SPAN CLASS='omitted'>...</SPAN>, an);
+}</PRE>
+
+<!-- Begin Footnotes -->
+
+<HR>
+
+<P>
+    <A CLASS='footnote_ref' NAME='note_1' HREF='#note_1_ref'><SUP>[1]</SUP></A>Assuming the Empty Base Optimization (EBO) is applied. This optimization is not required by the standard, but is required for the current implementation to work. Two implementations which did not depend on the EBO for correctness were considered, but both had shortcomings in areas other than standard conformance.
+</P>
+
+<!-- End Footnotes -->
+
+<!-- Begin Footer -->
+
+<HR>
+<P STYLE='margin-top:2em' CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+13 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan Turkanis, 2005. Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>

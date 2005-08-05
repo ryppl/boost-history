@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Performance</TITLE>
+    <LINK REL='stylesheet' HREF='../../../../boost.css'>
+        <LINK REL='stylesheet' HREF='../theme/interfaces.css'>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+<H1 CLASS='title'>Performance</H1>
+<HR CLASS='banner'>
+
+<!-- End Banner -->
+
+<DL class='page-index'>
+  <DT><A href='#runtime'>Runtime Performance</A>
+    <DL class='page-index'>
+      <DT><A href='#instance_size'>Instance Size</A></DT>
+      <DT><A href='#invocation'>Invocation Efficiency</A></DT>
+      <!-- <DT><A href='#code_size'>Code Size</A></DT> -->
+    </DL>
+  </DT>
+  <DT><A href='#compile_time'>Compile-Time Performance</A>
+    <DL class='page-index'>
+      <DT><A href='#compile_time_preprocessor'>Preprocessor Metaprogramming</A></DT>
+      <DT><A href='#compile_time_tmp'>Template Metaprogramming</A></DT>
+      <DT><A href='#compile_time_improvements'>Possible Improvements</A></DT>
+    </DL>
+  </DT>
+</DL>
+
+<A NAME='runtime'></A>
+<H2>Runtime Performance</H2>
+
+<A NAME='instance_size'></A>
+<H4>Instance Size</H4>
+
+<P>
+    Each interface instance has the size of a struct containing two <CODE>void</CODE> pointers.<SUP><A CLASS='footnote_ref' HREF='#note_1' NAME='note_1_ref'>[1]</A></SUP> The same is true for the smart interface pointers <A HREF='../classes/manual_ptr.html'><CODE>manual_ptr</CODE></A> and <A HREF='../classes/unique_ptr.html'><CODE>unique_ptr</CODE></A>, and for the smart reference <A HREF='../classes/unique_obj.html'><CODE>unique_obj</CODE></A>. Instances of  <A HREF='../classes/shared_ptr.html'><CODE>shared_ptr</CODE></A> and <A HREF='../classes/shared_obj.html'><CODE>shared_obj</CODE></A> are slightly larger, because of the use of <CODE>shared_count</CODE>, but still of fixed size. This contrasts sharply with classes inheriting from abstract base classes, whose instances, in many C++ implementations, may contain several vtable pointers to handle multiple inheritance.
+</P>
+
+<A NAME='invocation'></A>
+<H4>Invocation Efficiency</H4>
+
+<P>
+    Invocation of a function through an interface instance involves a lookup in an array of function pointers and a call through a function pointer. The body of the function which is called indirectly conatins an invocation of the appropriate member function of the bound object. This second invocation is potentially inlinable.
+</P>
+<P>
+    Code using interfaces can be significantly faster than code using abstract classes, for the following reason. Within the body of a class member function which implements an interface member function, calls to other member functions of the same class may be eligible for inlining even if they also implement interface member functions. By contrast, within the implementation of a member function declared in an abstract class, calls to other functions declared in the base class use virtual function dispatch by default. The program <A HREF='../../test/hfront/hfront-test.cpp'><CODE>hfront-test.cpp</CODE></A> in the directory <A HREF='../../test/hfront/'><CODE>&lt;libs/interfaces/test/hfront&gt;</CODE></A> illustrates that this can result in a significant performance difference when the indirect calls are made in an inner loop: in some cases code using interfaces executes nearly ten times as fast as similar code using virtual functions.<A CLASS='footnote_ref' NAME='note_2_ref' HREF='#note_2'><SUP>[2]</SUP></A> These result suggest that it may be feasible to use indirect calls through interface instances in some cases where the use of virtual functions would be prohibitively expensive.<A CLASS='footnote_ref' NAME='note_3_ref' HREF='#note_3'><SUP>[3]</SUP></A>
+</P>
+
+<A NAME='compile_time'></A>
+<H2>Compile-Time Performance</H2>
+
+<P>
+    Boost.Interfaces uses preprocessor metaprogramming to construct C++ class definitions from IDL macros and template metaprogramming to construct interface function tables from these C++ class definitions. Both of these constructions require a significant amount of processing; as a result, compiling IDL interface definitions is significantly slower than compiling the defintions of abstract classes. 
+</P>
+
+<A NAME='compile_time_preprocessor'></A>
+<H4>Preprocessor Metaprogramming</H4>
+
+<P>
+    Boost.Interfaces makes heavy use of the The Boost Preprocessor Metaprogramming library (<I>see</I> <A HREF='../bibliography.html#karvonen'>[Karvonen]</A>). Preliminary measurements involving the <A HREF='../testing.html'>regression tests</A> indicate that preprocessor metaprogramming represents a relatively small percentage of total compilation time. Preprocessing time can still make a significant difference with a large project, however, especially with a slow preprocessor such as EDG.
+</P>
+
+<A NAME='compile_time_tmp'></A>
+<H4>Template Metaprogramming</H4>
+
+<P>
+    The construction of an interface function table is an iterative process with length roughly equal to the total number of functions in the interface, including inherited functions, plus the total size of the inheritance graph. It is therefore an <CODE>O(N)</CODE> construction a with a relatively small <CODE>N</CODE> in most cases. Nonetheless, since each step requires a significant number of template instantiations, the overall cost can be high.
+</P>
+
+<A NAME='compile_time_improvements'></A>
+<H4>Possible Improvements</H4>
+
+<P>
+    A certain amount of additional compiation time may be acceptable if there are gains in other areas. It remains to be seen what effect the additional compilation time will have on real-world projects. In any case, there are several ways that compilation times might be improved:
+</P>
+<OL>
+    <LI>People knowledgeable in preprocessor and template metaprogramming may be able to suggest improvements to the current implementation.
+    <LI>The <A HREF='../future.html#template_idl'>template-based IDL</A> may turn out to offer better performance than the macro-based IDL.
+    <LI>The syntax of the macro-based IDL could be modified to allow the definition of an interface in a single macro invocation.<A CLASS='footnote_ref' NAME='note_4_ref' HREF='#note_4'><SUP>[4]</SUP></A> While this would put more demands on the preprocessor, it would greatly reduce the amount of template metaprogramming required. Whether overall compilation times would improve is not known; the resulting syntax would almost certainly be less readable, however.
+    <LI>Some of the library headers could be preprocessed before being included in the distribution. The most significant improvement would involve the headers <A HREF='../../../../boost/interfaces/detail/invoker.hpp'><CODE>&lt;boost/interfaces/detail/invoker.hpp&gt;</CODE></A> and <A HREF='../../../../boost/interfaces/detail/function_traits.hpp'><CODE>&lt;boost/interfaces/detail/function_traits.hpp&gt;</CODE></A>.
+    <LI>An IDL compiler could be provided to generate C++ class definitions from <A HREF='pseudocode.html'>pseudocode</A> definitions. This would eliminate the need for C++ metaprogramming alost entirely, but would make the library less accessible.
+</OL>
+
+<!-- Begin Footnotes -->
+
+<HR>
+<P>
+    <A CLASS='footnote_ref' NAME='note_1' HREF='#note_1_ref'><SUP>[1]</SUP></A><I>See</I> <A HREF='../guide/implementation.html#note_1'>Implementation</A>, note 1.
+</P>
+<P>
+    <A CLASS='footnote_ref' NAME='note_2' HREF='#note_2_ref'><SUP>[2]</SUP></A>This program originally appeared in the <I>C/C++ Users Journal</I>, together with sample output showing execution times. <I>See</I> <A HREF='../bibliography.html#diggins2'>[Diggins2]</A>
+</P>
+<P>
+    <A CLASS='footnote_ref' NAME='note_3' HREF='#note_3_ref'><SUP>[3]</SUP></A>In some cases the performance penalty associated with virtual functions can be negated by explicitly qualifying the intra-object calls to disable virtual function dispatch. However, when a class hierarchy has been designed around the use of virtual functions, disabling virtual function dispatch may yield the wrong semantics. Furthermore, disabling virtual function dispatch is often impossible: the desired functionality may be accessible only through a <CODE>public</CODE> non-<CODE>virtual</CODE> member function which invokes a <CODE>private</CODE> <CODE>virtual</CODE> function.
+</P>
+<P>
+    <A CLASS='footnote_ref' NAME='note_4' HREF='#note_4_ref'><SUP>[4]</SUP></A><I>See</I> <A HREF='../bibliography.html#abrahams'>[Abrahams]</A>.
+</P>
+
+<!-- End Footnotes -->
+
+<!-- Begin Footer -->
+
+<HR>
+<P STYLE='margin-top:2em' CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+13 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan Turkanis, 2005. Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>

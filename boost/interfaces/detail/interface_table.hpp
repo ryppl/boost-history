@@ -63,18 +63,18 @@ struct typer_holder {
 //------------------Definition of interface_table-----------------------------//
 
 // The equivalent of a virtual function table.
-template<typename Initializer>
+template<typename Metadata>
 class interface_table {
 public:
     template<typename X>
     interface_table(boost::mpl::identity<X>)
     {
-        Initializer::template initialize<X>(functions_ + offset::initial::value);
+        Metadata::template initialize<X>(functions_ + offset::initial::value);
     }
 BOOST_IDL_PRIVATE:
     BOOST_IDL_BEFRIEND_TEMPLATE_STRUCT(table_holder, 2, T)
     BOOST_IDL_BEFRIEND_TEMPLATE_STRUCT(interface_table_impl, 1, T)
-    fn_ptr functions_[Initializer::size + offset::initial::value];
+    fn_ptr functions_[Metadata::size + offset::initial::value];
 };
 
 //------------------Definition of table_holder--------------------------------//
@@ -98,8 +98,8 @@ struct interface_table_impl {
     template<typename X>
     static const fn_ptr* initialize_table(const X& x)
     {
-        typedef typename Interface::interface_initializer  initializer;
-        typedef interface_table<initializer>               table;
+        typedef typename Interface::interface_metadata  metadata;
+        typedef interface_table<metadata>               table;
         table_holder<table, X>::table_.functions_[0] = 0;
         table_holder<table, X>::table_.functions_[1] =
             reinterpret_cast<fn_ptr>(&thrower_holder<X>::throw_);
@@ -111,8 +111,8 @@ struct interface_table_impl {
     template<typename X>
     static const fn_ptr* initialize_deleter(const X& x)
     {
-        typedef typename Interface::interface_initializer  initializer;
-        typedef interface_table<initializer>               table;
+        typedef typename Interface::interface_metadata  metadata;
+        typedef interface_table<metadata>               table;
         table_holder<table, X>::table_.functions_[0] =
             reinterpret_cast<fn_ptr>(&deleter_holder<X>::delete_);
         table_holder<table, X>::table_.functions_[1] =

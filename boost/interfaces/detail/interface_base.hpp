@@ -11,6 +11,8 @@
 # pragma once
 #endif
 
+#include <stdexcept>
+#include <utility>          // pair.
 #include <boost/config.hpp> // BOOST_MSVC.
 #include <boost/interfaces/detail/constants.hpp>
 #include <boost/interfaces/detail/empty_base.hpp>
@@ -23,12 +25,11 @@
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/range_c.hpp>
 #include <boost/mpl/transform_view.hpp>
 
 #include <boost/mpl/size.hpp>
-#include <boost/static_assert.hpp>
-#include <boost/type_traits/is_base_and_derived.hpp>
 #include <boost/interfaces/detail/proxy.hpp>
 
 #ifdef BOOST_MSVC
@@ -48,26 +49,30 @@ struct sequence_from_index {
             >                                          type;
 };
 
-template<typename Base>
-struct null_generator : Base {
-    typedef Base interface_advice;
-    struct interface_initializer {
-        static const int size = 0;
-        template<typename T>
-        static void initialize(fn_ptr*) { }
-    };
-    template<typename T>
-    struct interface_implemented : mpl::true_ { };
-};
-
 template<typename Advice>
-struct generator_from_advice {
+struct null_generator {
     template< typename Derived, 
               typename Offset = mpl::int_<0>, 
               typename Flags = flags::default_, 
               typename Base = empty_base >
     struct apply {
-        typedef null_generator<Advice> type;
+        struct type : Advice {
+            struct interface_metadata {
+                typedef Derived         derived_type;
+                typedef Offset          offset_type;
+                typedef Flags           flags_type;
+                typedef Advice          base_type;
+                typedef mpl::vector0<>  signatures;
+                typedef mpl::true_      implements;
+                static const int size = 0;
+                struct proxy { };
+                template<typename X>
+                static void initialize(fn_ptr* table) { }
+                std::pair<const char*, fn_ptr>
+                lookup(int n, fn_ptr* table)
+                { throw std::logic_error("no such function"); }
+            };
+        };
     };
 };
 
@@ -99,7 +104,7 @@ struct interface_base {
             typedef typename 
                     mpl::fold<
                         generators, 
-                        generator_from_advice<impl_type>,
+                        null_generator<impl_type>,
                         generate
                     >::type                                generator;
             typedef typename 
@@ -146,22 +151,22 @@ struct interface_base {
                         Base
                     >::type                          base_type;
             struct type : base_type {
-                typedef superinterfaces interface_extends;
-                struct proxy_idl_
-                    : proxy_base<interface_extends>::type
-                    { };
-                struct interface_initializer : base_type::interface_initializer {
-                    typedef typename base_type::interface_initializer base;
-                    static const int size = base::size + 1;
-                    template<typename T>
-                    static void initialize(fn_ptr* fns)
+                typedef typename base_type::interface_metadata base_metadata;
+                struct interface_metadata : base_metadata {
+                    static const int size = base_metadata::size + 1;
+                    typedef superinterfaces base_list;
+                    struct proxy
+                        : boost::interfaces::detail::proxy<base_list>::type
+                        { };
+                    template<typename X>
+                    static void initialize(fn_ptr* table)
                     {
                         static const int offset = Offset::value - 1;
-                        *(fns + offset) = 
+                        *(table + offset) = 
                             reinterpret_cast<fn_ptr>(
                                 offset + offset::initial::value
                             );
-                        base::template initialize<T>(fns);
+                        base_metadata::template initialize<X>(table);
                     }
                 };
             };

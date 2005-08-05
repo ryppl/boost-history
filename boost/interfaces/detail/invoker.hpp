@@ -41,21 +41,7 @@
 
 namespace boost { namespace interfaces { namespace detail {
 
-//------------------Declations of helper templates----------------------------//
-
-template< typename Interface, typename Offset, typename Signature, 
-          int Arity = function_arity<Signature>::value >
-struct null_invoker;
-
-template< typename Interface, typename Offset, typename Signature, 
-          typename Names, typename Advice, int Arity >
-struct basic_invoker;
-
-template< typename Interface, typename Offset, typename Signature, 
-          typename Names, typename Advice, int Arity >
-struct transforming_invoker;
-
-//------------------Derfintion of invoker-------------------------------------//
+//------------------Declarataion of invoker-----------------------------------//
 
 //
 // Template Parameters:
@@ -64,40 +50,45 @@ struct transforming_invoker;
 //      invoked.
 //   Signature - The signature of the function to be invoked, represented as a
 //      function type.
-//   Names - A type with static member functions funtion_name and param_names()
-//      returning const char* and const char**.
 //   Advice - A Model of the concept Advice.
 //    
-template< typename Interface, typename Offset, 
-          typename Signature, typename Names, 
+template< typename Interface, typename Offset, typename Signature,
           typename Category = 
               typename advice_category<
-                  typename Interface::interface_advice
+                  typename Interface::interface_metadata::base_type
               >::type >
 struct invoker;
 
-template< typename Interface, typename Offset, 
-          typename Signature, typename Names >
-struct invoker<Interface, Offset, Signature, Names, null_advice_tag>
-    : null_invoker< Interface, Offset, Signature, 
-                    function_arity<Signature>::value >
+//------------------Declarations of helper templates--------------------------//
+
+template< typename Interface, typename Offset, typename Signature,
+          int Arity = function_arity<Signature>::value >
+struct null_invoker;
+
+template< typename Interface, typename Offset, typename Signature,
+          int Arity = function_arity<Signature>::value >
+struct basic_invoker;
+
+template< typename Interface, typename Offset, typename Signature,
+          int Arity = function_arity<Signature>::value >
+struct transforming_invoker;
+
+//------------------Partial specializations of invoker------------------------//
+
+template<typename Interface, typename Offset, typename Signature>
+struct invoker<Interface, Offset, Signature, null_advice_tag>
+    : null_invoker<Interface, Offset, Signature>
     { };
 
-template< typename Interface, typename Offset, 
-          typename Signature, typename Names >
-struct invoker<Interface, Offset, Signature, Names, basic_advice_tag>
-    : basic_invoker< Interface, Offset, Signature, Names,
-                     typename Interface::interface_advice,
-                     function_arity<Signature>::value >
-    { };
-
-template< typename Interface, typename Offset, 
-          typename Signature, typename Names >
-struct invoker<Interface, Offset, Signature, Names, transforming_advice_tag>
-    : transforming_invoker< Interface, Offset, Signature, Names,
-                            typename Interface::interface_advice,
-                            function_arity<Signature>::value >
-    { };
+//template<typename Interface, typename Offset, typename Signature>
+//struct invoker<Interface, Offset, Signature, basic_advice_tag>
+//    : basic_invoker<Interface, Offset, Signature>
+//    { };
+//
+//template<typename Interface, typename Offset, typename Signature>
+//struct invoker<Interface, Offset, Signature, transforming_advice_tag>
+//    : transforming_invoker<Interface, Offset, Signature>
+//    { };
 
 //----------------------------------------------------------------------------//
 
@@ -133,15 +124,14 @@ struct invoker<Interface, Offset, Signature, Names, transforming_advice_tag>
 #define BOOST_PP_LOCAL_MACRO(n) \
     template<typename Interface, typename Offset, typename Signature> \
     struct null_invoker<Interface, Offset, Signature, n> { \
+      typedef typename Interface::interface_metadata::derived_type derived; \
       typedef typename add_void_pointer<Signature>::type  function_type; \
       static typename function_result<Signature>::type \
-      execute( const void* pv \
-               BOOST_IDL_INVOKER_PARAMS(Signature, n) ) \
+      invoke( const void* pv \
+              BOOST_IDL_INVOKER_PARAMS(Signature, n) ) \
       { \
-        const Interface* self = \
-            static_cast<Interface*>(const_cast<void*>(pv)); \
-        const void* pointer = \
-          access::get_interface_pointer(*self); \
+        const derived* self = static_cast<derived*>(const_cast<void*>(pv)); \
+        const void* pointer = access::get_interface_pointer(*self); \
         const function_type* f = \
             reinterpret_cast<const function_type*>( \
                 access::get_interface_table(*self) + Offset::value \
@@ -153,6 +143,7 @@ struct invoker<Interface, Offset, Signature, Names, transforming_advice_tag>
     /**/
 #define BOOST_PP_LOCAL_LIMITS (0, BOOST_IDL_FUNCTION_TRAITS_MAX_ARITY)
 #include BOOST_PP_LOCAL_ITERATE()
+#undef BOOST_PP_LOCAL_MACRO
           
 //------Local iteration defining specializations of basic_invoker-------------//
 
@@ -202,7 +193,8 @@ struct invoker<Interface, Offset, Signature, Names, transforming_advice_tag>
     }; \
     /**/
 #define BOOST_PP_LOCAL_LIMITS (0, BOOST_IDL_FUNCTION_TRAITS_MAX_ARITY)
-#include BOOST_PP_LOCAL_ITERATE()
+//#include BOOST_PP_LOCAL_ITERATE()
+#undef BOOST_PP_LOCAL_MACRO
           
 //------Local iteration defining specializations of transforming_invoker------//
 
@@ -254,7 +246,8 @@ struct invoker<Interface, Offset, Signature, Names, transforming_advice_tag>
     }; \
     /**/
 #define BOOST_PP_LOCAL_LIMITS (0, BOOST_IDL_FUNCTION_TRAITS_MAX_ARITY)
-#include BOOST_PP_LOCAL_ITERATE()
+//#include BOOST_PP_LOCAL_ITERATE()
+#undef BOOST_PP_LOCAL_MACRO
 
 } } } // End namespaces detail, interfaces, boost.
 

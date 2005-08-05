@@ -45,9 +45,9 @@ struct offset_of_impl {
     struct add_table_size {
         template<typename T1, typename T2>
         struct apply {
-            typedef typename mpl::deref<T2>::type             base;
-            typedef typename base::interface_initializer      initializer;
-            typedef mpl::int_<T1::value + initializer::size>  type;
+            typedef typename mpl::deref<T2>::type          base;
+            typedef typename base::interface_metadata      metadata;
+            typedef mpl::int_<T1::value + metadata::size>  type;
         };
     };
 
@@ -58,7 +58,8 @@ struct offset_of_impl {
 
     template<typename Subinterface, typename Superinterface>
     struct apply {
-        typedef typename Subinterface::interface_extends        superinterfaces;
+        typedef typename Subinterface::interface_metadata       submetadata;
+        typedef typename submetadata::base_list                 superinterfaces;
         typedef typename
                 mpl::iter_fold_if<
                     superinterfaces,

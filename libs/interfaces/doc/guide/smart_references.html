@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Smart References</TITLE>
+    <LINK REL='stylesheet' HREF='../../../../boost.css'>
+        <LINK REL='stylesheet' HREF='../theme/interfaces.css'>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+<H1 CLASS='title'>Smart References</H1>
+<HR CLASS='banner'>
+
+<!-- End Banner -->
+
+<DL class='page-index'>
+  <DT><A href='#definition'>Definition</A></DT>
+  <DT><A href='#templates'>Library Templates</A>
+    <DL class='page-index'>
+      <DT><A href='#shared_obj'><CODE>shared_obj</CODE></A></DT>
+      <DT><A href='#unique_obj'><CODE>unique_obj</CODE></A></DT>
+    </DL>
+  </DT>
+</DL>
+
+<A NAME='definition'></A>
+<H2>Definition</H2>
+
+<P>
+    Smart references, like <A HREF='smart_pointers.html'>Smart Interface Pointers</A>, are class templates parameterized by an interface whose instances are capable of managing any object whose type implements the interface. They differ from smart pointers in two ways
+</P>
+<UL>
+    <LI>The member functions of the managed object are accessed using the “dot” operator instead of <CODE>operator*</CODE> or <CODE>operator-></CODE>, and
+    <LI>The usual smart pointer member functions, such as <A HREF='../functions/get.html'><CODE>get</CODE></A>, <A HREF='../functions/reset.html'><CODE>reset</CODE></A> and <A HREF='../classes/unique_obj.html#unique_obj_release'><CODE>release</CODE></A>, are implemented as non-member function to avoid clashing with member functions of the interface.
+</UL>
+
+<A NAME='templates'></A>
+<H2>Library Templates</H2>
+
+<P>Boost.Interfaces includes two smart reference templates: <A HREF='../classes/unique_obj.html'><CODE>unique_obj</CODE></A> and <A HREF='../classes/unique_obj.html'><CODE>shared_obj</CODE></A>.
+
+<A NAME='shared_obj'></A>
+<H4><CODE>shared_obj</CODE></H4>
+
+<P>
+    The class template <A HREF='../classes/shared_obj.html'><CODE>shared_obj</CODE></A> is a reference-counted smart reference template patterned on the template <A HREF='http://www.boost.org/libs/smart_ptr/shared_ptr.htm'  TARGET='_top'><CODE>boost::shared_ptr</CODE></A>.
+</P>
+
+<A NAME='unique_obj'></A>
+<H4><CODE>unique_obj</CODE></H4>
+
+<P>
+    The class template <A HREF='../classes/unique_obj.html'><CODE>unique_obj</CODE></A> is a smart reference template patterned on the template <CODE>move_ptr</CODE> introduced in <A HREF='../bibliography.html#hinnant1'>[Hinnant1]</A> as a safe replacement for <CODE>std::auto_ptr</CODE>. It has the following characteristics:
+</P>
+<UL>
+    <LI><I>Exclusive ownership</I>. An object may be managed by at most one instance of <CODE>unique_obj</CODE> type at any given time.
+    <LI><I>Passable to / returnable from functions</I>. Instances of <CODE>unique_obj</CODE> may be passed to and returned from functions, transfering ownership from the caller to the function in the first case, and from the function to the caller in the second.
+    <LI><I>No implicit transfer of ownership from an lvalue.</I> An lvalue instance of a <CODE>unique_obj</CODE> may neither be assigned to nor be used to initialize a second instance of a specialization of the template.
+</UL>
+<P>
+    Ownership may be transfered from an lvalue of type <CODE>unique_obj</CODE> using the function template <A HREF='../functions/move.html'><CODE>move</CODE></A>.
+</P>
+
+<!-- Begin Footer -->
+
+<HR>
+<P STYLE='margin-top:2em' CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+13 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan Turkanis, 2005. Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>

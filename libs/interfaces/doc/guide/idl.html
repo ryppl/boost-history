@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Interface Definition Language (IDL)</TITLE>
+    <LINK REL='stylesheet' HREF='../../../../boost.css'>
+        <LINK REL='stylesheet' HREF='../theme/interfaces.css'>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+<H1 CLASS='title'>Interface Definition Language (IDL)</H1>
+<HR CLASS='banner'>
+
+<!-- End Banner -->
+
+<DL class='page-index'>
+  <DT><A href='#overview'>Overview</A></DT>
+  <DT><A href='#examples'>Examples</A>
+    <DL class='page-index'>
+      <DT><A href='#examplei'>Simple Interface Declarations</A></DT>
+      <DT><A href='#exampleii'>Derived Interfaces</A></DT>
+      <DT><A href='#exampleiii'>Interface Templates</A></DT>
+      <DT><A href='#exampleiv'>Protecting Exposed Commas</A></DT>
+    </DL>
+  </DT>
+</DL>
+
+<A NAME='overview'></A>
+<H2>Overview</H2>
+
+<P>Interfaces are defined using five families of macros:</P>
+
+<UL>
+    <LI><A HREF='../macros/begin.html'><CODE>BOOST_IDL_BEGINxxx</CODE></A> &#8212; begins an interface definition
+    <LI><A HREF='../macros/end.html'><CODE>BOOST_IDL_ENDxxx</CODE></A> &#8212; ends an interface definition
+    <LI><A HREF='../macros/extends.html'><CODE>BOOST_IDL_EXTENDS</CODE></A> &#8212; declares a base interface
+    <LI><A HREF='../macros/fnz.html'><CODE>BOOST_IDL_FN<I>z</I></CODE></A> &#8212; declares a non-<CODE>const</CODE> member function of arity <CODE><I>z</I></CODE>
+    <LI><A HREF='../macros/const_fnz.html'><CODE>BOOST_IDL_CONST_FN<I>z</I></CODE></A> &#8212; declares a <CODE>const</CODE> member function of arity <CODE><I>z</I></CODE>
+</UL>
+
+<A NAME='examples'></A>
+<H2>Examples</H2>
+
+<A NAME='examplei'></A>
+<H4>Example I: Simple interface declarations.</H4>
+
+<P>
+    The definition of an interface <CODE>name</CODE> which is not a template and which does not derive from any other interface begins with <CODE><A HREF='../macros/begin.html#begin'>BOOST_IDL_BEGIN</A>(<I>name</I>)</CODE> and ends with <CODE><A HREF='../macros/end.html#end'>BOOST_IDL_END</A>(<I>name</I>)</CODE>. Between the invocations of <CODE>BOOST_IDL_BEGIN</CODE> and <CODE>BOOST_IDL_END</CODE>, the macros <A HREF='../macros/fnz.html'><CODE>BOOST_IDL_FN<I>z</I></CODE></A> and <A HREF='../macros/const_fnz.html'><CODE>BOOST_IDL_CONST_FN<I>z</I></CODE></A> can be used to declare zero or more member functions.
+</P>
+
+<P>For example, the following sequence of macro invocations</P>
+
+<PRE CLASS='broken_ie'><A CLASS='documented' HREF='../macros/begin.html#begin'>BOOST_IDL_BEGIN</A>(IPoint)
+    <A CLASS='documented' HREF='../macros/const_fnz.html#const_fnz'>BOOST_IDL_CONST_FN0</A>(x, <SPAN CLASS='keyword'>long</SPAN>)
+    <A CLASS='documented' HREF='../macros/const_fnz.html#const_fnz'>BOOST_IDL_CONST_FN0</A>(y, <SPAN CLASS='keyword'>long</SPAN>)
+    <A CLASS='documented' HREF='../macros/fnz.html#fnz'>BOOST_IDL_FN1</A>(x, <SPAN CLASS='keyword'>void</SPAN>, <SPAN CLASS='keyword'>long</SPAN>)
+    <A CLASS='documented' HREF='../macros/fnz.html#fnz'>BOOST_IDL_FN1</A>(y, <SPAN CLASS='keyword'>void</SPAN>, <SPAN CLASS='keyword'>long</SPAN>)
+<A CLASS='documented' HREF='../macros/end.html#end'>BOOST_IDL_END</A>(IPoint)</PRE>
+
+<P>is equivalent to the <A HREF='../guide/pseudocode.html'>pseudocode</A></P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>interface</SPAN> IPoint {
+    <SPAN CLASS='keyword'>long</SPAN> x() <SPAN CLASS='keyword'>const</SPAN>;
+    <SPAN CLASS='keyword'>long</SPAN> y() <SPAN CLASS='keyword'>const</SPAN>;
+    <SPAN CLASS='keyword'>void</SPAN> x(<SPAN CLASS='keyword'>long</SPAN>);
+    <SPAN CLASS='keyword'>void</SPAN> y(<SPAN CLASS='keyword'>long</SPAN>);
+}</PRE>
+
+<A NAME='exampleii'></A>
+<H4>Example II: Derived interfaces.</H4>
+
+<P>An interfaces may be declared to derived from an interface <CODE>base</CODE> using <CODE><A HREF='../macros/extends.html'>BOOST_IDL_EXTENDS</A>(<I>base</I>)</CODE>. For example, the following sequence of macro invocations</P>
+
+<PRE CLASS='broken_ie'><A CLASS='documented' HREF='../macros/begin.html#begin'>BOOST_IDL_BEGIN</A>(ICircle)
+    <A CLASS='documented' HREF='../macros/extends.html#extends'>BOOST_IDL_EXTENDS</A>(IPoint)
+    <A CLASS='documented' HREF='../macros/const_fnz.html#const_fnz'>BOOST_IDL_CONST_FN0</A>(diameter, <SPAN CLASS='keyword'>long</SPAN>)
+    <A CLASS='documented' HREF='../macros/fnz.html#fnz'>BOOST_IDL_FN1</A>(diameter, <SPAN CLASS='keyword'>void</SPAN>, <SPAN CLASS='keyword'>long</SPAN>)
+<A CLASS='documented' HREF='../macros/end.html#end'>BOOST_IDL_END</A>(ICircle)</PRE>
+
+<P>is equivlaent to the <A HREF='../guide/pseudocode.html'>pseudocode</A></P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>interface</SPAN> ICircle : IPoint {
+    <SPAN CLASS='keyword'>long</SPAN> diameter() <SPAN CLASS='keyword'>const</SPAN>;
+    <SPAN CLASS='keyword'>void</SPAN> diameter(<SPAN CLASS='keyword'>long</SPAN>);
+}</PRE>
+
+<A NAME='exampleiii'></A>
+<H4>Example III: Interface templates.</H4>
+
+<P>
+    An interface template <CODE>name</CODE> having template arity <CODE>arity</CODE> may be defined using the macros <CODE><A HREF='../macros/begin.html#begin_template'>BOOST_IDL_BEGIN_TEMPLATE</A>(<I>name</I>, <I>arity</I>)</CODE> and <CODE><A HREF='../macros/end.html#end_template'>BOOST_IDL_END_TEMPLATE</A>(<I>name</I>, <I>arity</I>)</CODE>, or using the convenience macros <CODE><A HREF='../macros/begin.html#beginz'>BOOST_IDL_BEGIN<I>z</I></A>(<I>name</I>)</CODE> and <CODE><A HREF='../macros/end.html#endz'>BOOST_IDL_END<I>z</I></A>(<I>name</I>)</CODE>, which have the template arity <CODE><I>z</I></CODE> hard-wired into the macro name. The keyword <CODE>template</CODE> and the template parameter list enclosed in angle brackets must precede the invocation of <A HREF='../macros/begin.html#begin_template'><CODE>BOOST_IDL_BEGIN_TEMPLATE</CODE></A> or <A HREF='../macros/begin.html#beginz'><CODE>BOOST_IDL_BEGIN<I>z</I></CODE></A>.
+</P>
+<P>For example, the following sequence of macro invocations</P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> T&gt;
+<A CLASS='documented' HREF='../macros/begin.html#begin_template'>BOOST_IDL_BEGIN_TEMPLATE</A>(IStack, 1)
+    <A CLASS='documented' HREF='../macros/const_fnz.html#const_fnz'>BOOST_IDL_CONST_FN0</A>(empty, <SPAN CLASS='keyword'>bool</SPAN>)
+    <A CLASS='documented' HREF='../macros/fnz.html#fnz'>BOOST_IDL_FN1</A>(push, <SPAN CLASS='keyword'>void</SPAN>, <SPAN CLASS='keyword'>const</SPAN> T&)
+    <A CLASS='documented' HREF='../macros/fnz.html#fnz'>BOOST_IDL_FN0</A>(pop, <SPAN CLASS='keyword'>void</SPAN>)
+    <A CLASS='documented' HREF='../macros/fnz.html#fnz'>BOOST_IDL_FN0</A>(top, T&)
+    <A CLASS='documented' HREF='../macros/const_fnz.html#const_fnz'>BOOST_IDL_CONST_FN0</A>(top, <SPAN CLASS='keyword'>const</SPAN> T&)
+<A CLASS='documented' HREF='../macros/end.html#end_template'>BOOST_IDL_END_TEMPLATE</A>(IStack, 1)</PRE>
+
+<P>is equivalent to the <A HREF='../guide/pseudocode.html'>pseudocode</A></P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> T&gt;
+<SPAN CLASS='keyword'>interface</SPAN> IStack {
+    <SPAN CLASS='keyword'>bool</SPAN> empty() <SPAN CLASS='keyword'>const</SPAN>;
+    <SPAN CLASS='keyword'>void</SPAN> push(<SPAN CLASS='keyword'>const</SPAN> T&);
+    <SPAN CLASS='keyword'>void</SPAN> pop();
+    T& top();
+    <SPAN CLASS='keyword'>const</SPAN> T& top() <SPAN CLASS='keyword'>const</SPAN>;
+};</PRE>
+
+<P>It could also be rendered using the convenience macros, as follows:</P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> T&gt;
+<A CLASS='documented' HREF='../macros/begin.html#beginz'>BOOST_IDL_BEGIN1</A>(IStack)
+    <A CLASS='documented' HREF='../macros/const_fnz.html#const_fnz'>BOOST_IDL_CONST_FN0</A>(empty, <SPAN CLASS='keyword'>bool</SPAN>)
+    <A CLASS='documented' HREF='../macros/fnz.html#fnz'>BOOST_IDL_FN1</A>(push, <SPAN CLASS='keyword'>void</SPAN>, <SPAN CLASS='keyword'>const</SPAN> T&)
+    <A CLASS='documented' HREF='../macros/fnz.html#fnz'>BOOST_IDL_FN0</A>(pop, <SPAN CLASS='keyword'>void</SPAN>)
+    <A CLASS='documented' HREF='../macros/fnz.html#fnz'>BOOST_IDL_FN0</A>(top, T&)
+    <A CLASS='documented' HREF='../macros/const_fnz.html#const_fnz'>BOOST_IDL_CONST_FN0</A>(top, <SPAN CLASS='keyword'>const</SPAN> T&)
+<A CLASS='documented' HREF='../macros/end.html#endz'>BOOST_IDL_END1</A>(IStack)</PRE>
+
+<A NAME='exampleiv'></A>
+<H4>Example IV: Protecting exposed commas.</H4>
+
+<P>
+    Type expressions containing unprotected commas can confuse the preprocessor; this is a particular problem when defining interface templates. In most such cases, the macro <A HREF='../macros/protect.html'><CODE>BOOST_IDL_PROTECT</CODE></A> can be used to insert an extra set of parentheses. For example, the following <A HREF='../guide/pseudocode.html'>pseudocode</A> definition:
+</P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Ch, <SPAN CLASS='keyword'>typename</SPAN> Tr, <SPAN CLASS='keyword'>typename</SPAN> Alloc&gt;
+<SPAN CLASS='keyword'>interface</SPAN> INamed {
+    std::basic_string&lt;Ch, Tr, Alloc&gt; name() <SPAN CLASS='keyword'>const</SPAN>;
+};</PRE>
+
+<P>can be rendered correctly in the IDL as follows:
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Ch, <SPAN CLASS='keyword'>typename</SPAN> Tr, <SPAN CLASS='keyword'>typename</SPAN> Alloc&gt;
+<A CLASS='documented' HREF='../macros/begin.html#beginz'>BOOST_IDL_BEGIN3</A>(INamed)
+    <A CLASS='documented' HREF='../macros/const_fnz.html#const_fnz'>BOOST_IDL_CONST_FN0</A>(
+        name, 
+        <A CLASS='documented' HREF='../macros/protect.html'>BOOST_IDL_PROTECT</A>((std::basic_string&lt;Ch, Tr, Alloc&gt;))
+    )
+<A CLASS='documented' HREF='../macros/end.html#endz'>BOOST_IDL_END3</A>(INamed)</PRE> 
+
+<P><I>See</I> <A HREF='../macros/protect.html'><CODE>BOOST_IDL_PROTECT</CODE></A> for a more detailed explanation and some caveats.</P>
+
+<!-- Begin Footer -->
+
+<HR>
+<P STYLE='margin-top:2em' CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+13 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan Turkanis, 2005. Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>

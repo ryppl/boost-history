@@ -39,10 +39,6 @@
 #define BOOST_IDL_COMMA_IF_ARGS(args) \
     BOOST_PP_COMMA_IF(BOOST_PP_ARRAY_SIZE(args))
     /**/
-     
-#define BOOST_IDL_FN_IMPL_NAME(name) \
-    BOOST_PP_CAT(name, BOOST_PP_CAT(_function_impl_, __LINE__)) \
-    /**/
 
 //
 // Macro: BOOST_IDL_FN_IMPL_CORE(name, result, args)
@@ -67,7 +63,7 @@
   /**/
 #define BOOST_IDL_FN_IMPL_NO_ADVICE(name, result, args) \
   template<typename Category, typename Dummy2_> \
-  struct BOOST_IDL_FN_IMPL_NAME(name) { \
+  struct impl { \
     typedef result signature(BOOST_IDL_NAMED_PARAM_LIST(args)); \
     typedef ::boost::interfaces::detail::null_invoker< \
               DDD_, OOO_, signature \
@@ -84,7 +80,7 @@
   /**/
 #define BOOST_IDL_FN_IMPL_HAS_ADVICE(name, result, args) \
   template<typename Category_, typename Dummy2_> \
-  struct BOOST_IDL_FN_IMPL_NAME(name) { \
+  struct impl { \
     typedef result signature(BOOST_IDL_NAMED_PARAM_LIST(args)); \
     struct names { \
       static const char* function_name() { return BOOST_PP_STRINGIZE(name); } \

@@ -24,8 +24,8 @@ namespace detail {
 template<typename Subinterface, typename Superinterface>
 struct is_base_and_derived_impl
     : boost::is_base_and_derived< 
-          typename Superinterface::proxy_idl_,
-          typename Subinterface::proxy_idl_
+          typename Superinterface::interface_metadata::proxy,
+          typename Subinterface::interface_metadata::proxy
       >
     { };
 

@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Pseudocode</TITLE>
+    <LINK REL='stylesheet' HREF='../../../../boost.css'>
+        <LINK REL='stylesheet' HREF='../theme/interfaces.css'>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+<H1 CLASS='title'>Pseudocode</H1>
+<HR CLASS='banner'>
+
+<!-- End Banner -->
+
+<DL class='page-index'>
+  <DT><A href='#overview'>Overview</A></DT>
+  <DT><A href='#examples'>Examples</A>
+    <DL class='page-index'>
+      <DT><A href='#examplei'>Simple Interface Declarations</A></DT>
+      <DT><A href='#exampleii'>Derived Interfaces</A></DT>
+      <DT><A href='#exampleiii'>Interface Templates</A></DT>
+    </DL>
+  </DT>
+  <DT><A href='#grammar'>Grammar</A></DT>
+</DL>
+
+<A NAME='overview'></A>
+<H2>Overview</H2>
+
+<P>
+    The macro based <A HREF='idl.html'>Interface Definition Language</A> (IDL) can be more difficult to read than ordinary C++ class definitions. Therefore, we occassionally describe interfaces using pseudocode which is closer to C++ class definitions.
+</P>
+
+<A NAME='examples'></A>
+<H2>Examples</H2>
+
+<A NAME='examplei'></A>
+<H4>Example I: Simple interface declarations.</H4>
+
+<P>An interface which is not a template and which does not derive from any other interface can be written as follows:</P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>interface</SPAN> <A CLASS='documented' HREF='../examples/ipoint.html'>IPoint</A> {
+    <SPAN CLASS='keyword'>long</SPAN> x() <SPAN CLASS='keyword'>const</SPAN>;
+    <SPAN CLASS='keyword'>long</SPAN> y() <SPAN CLASS='keyword'>const</SPAN>;
+    <SPAN CLASS='keyword'>void</SPAN> x(<SPAN CLASS='keyword'>long</SPAN>);
+    <SPAN CLASS='keyword'>void</SPAN> y(<SPAN CLASS='keyword'>long</SPAN>);
+};</PRE>
+
+<P>Note that overloading is permitted, and that member functions may be declared <CODE>const</CODE>. They may not be templates, however, nor may they be declared <CODE>static</CODE>, <CODE>virtual</CODE> or <CODE>volatile</CODE>:<A CLASS='footnote_ref' NAME='note_1_ref' HREF='#note_1'><SUP>[1]</SUP></A></P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>interface</SPAN> IBad {
+    <SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> T&gt;
+    <SPAN CLASS='keyword'>void</SPAN> foo(<SPAN CLASS='keyword'>const</SPAN> T&);  <SPAN CLASS='comment'>// Error</SPAN>
+    <SPAN CLASS='keyword'>virtual</SPAN> <SPAN CLASS='keyword'>void</SPAN> foo();  <SPAN CLASS='comment'>// Error</SPAN>
+    <SPAN CLASS='keyword'>void</SPAN> foo() <SPAN CLASS='keyword'>volatile</SPAN>; <SPAN CLASS='comment'>// Error</SPAN>
+};</PRE>
+
+<A NAME='exampleii'></A>
+<H4>Example II: Derived interfaces.</H4>
+
+<P>Interfaces may be declared to derived from other interfaces, just as classes may be declared to derived from other classes:</P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>interface</SPAN> <A CLASS='documented' HREF='../examples/icircle.html'>ICircle</A> : IPoint {
+    <SPAN CLASS='keyword'>long</SPAN> diameter() <SPAN CLASS='keyword'>const</SPAN>;
+    <SPAN CLASS='keyword'>void</SPAN> diameter(<SPAN CLASS='keyword'>long</SPAN>);
+}</PRE>
+
+<P>Multiple inheritance is allowed. The order in which base interfaces are specified is significant. <I>See</I> <A HREF='../macros/extends.html#extends'>BOOST_IDL_EXTENDS</A>.</P>
+
+<A NAME='exampleiii'></A>
+<H4>Example III: Interface templates.</H4>
+
+<P>Interfaces may be templates:</P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> T&gt;
+<SPAN CLASS='keyword'>interface</SPAN> <A CLASS='documented' HREF='../examples/istack.html'>IStack</A> {
+    <SPAN CLASS='keyword'>bool</SPAN> empty() <SPAN CLASS='keyword'>const</SPAN>;
+    <SPAN CLASS='keyword'>void</SPAN> push(<SPAN CLASS='keyword'>const</SPAN> T&);
+    <SPAN CLASS='keyword'>void</SPAN> pop();
+    T& top();
+    <SPAN CLASS='keyword'>const</SPAN> T& top() <SPAN CLASS='keyword'>const</SPAN>;
+};</PRE>
+
+<A NAME='grammar'></A>
+<H2>Grammar</H2>
+
+<P>Coming soon.</P>
+
+<!-- Begin Footnotes -->
+
+<HR STYLE='margin-top:1em'>
+
+<P>
+    <A CLASS='footnote_ref' NAME='note_1' HREF='#note_1_ref'><SUP>[1]</SUP></A>Support for <CODE>volatile</CODE> member functions is possible but would require twice as many macros for declaring functions.
+</P>
+
+<!-- End Footnotes -->
+
+<!-- Begin Footer -->
+
+<HR>
+<P STYLE='margin-top:2em' CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+13 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan Turkanis, 2005. Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>
