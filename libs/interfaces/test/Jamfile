@@ -1,0 +1,94 @@
+# Boost Interfaces test Jamfile
+
+# (C) Copyright Jonathan Turkanis 2004
+# Distributed under the Boost Software License, Version 1.0. (See accompanying 
+# file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt.)
+
+subproject libs/interfaces/test ;
+
+# bring in rules for testing
+import testing ;
+
+# Make tests run by default.
+DEPENDS all : test ;
+
+template test
+    : # sources
+        <lib>../../../libs/test/build/boost_unit_test_framework
+    : # build requirements
+    : # build variants
+    ;
+
+{
+    # look in BOOST_ROOT for sources first, just in this Jamfile
+    local SEARCH_SOURCE = $(BOOST_ROOT) $(SEARCH_SOURCE) ;
+
+    test-suite "interfaces"
+        : [ run libs/interfaces/test/assign_zero_test.cpp                          <template>test ]
+          [ run libs/interfaces/test/const_derived_to_base_test1.cpp               <template>test ]
+          [ run libs/interfaces/test/const_derived_to_base_test2.cpp               <template>test ]
+          [ run libs/interfaces/test/const_view_test.cpp                           <template>test ]
+          [ run libs/interfaces/test/core_test1.cpp                                <template>test ]
+          [ run libs/interfaces/test/core_test2.cpp                                <template>test ]
+          [ run libs/interfaces/test/delegation_test.cpp                           <template>test ]
+          [ run libs/interfaces/test/derived_to_base_test1.cpp                     <template>test ]
+          [ run libs/interfaces/test/derived_to_base_test2.cpp                     <template>test ]
+          [ compile libs/interfaces/test/is_base_and_derived_test.cpp                             ]
+          [ compile libs/interfaces/test/extract_test.cpp                                         ]
+          [ compile-fail libs/interfaces/test/fail_ambiguity_test1.cpp                            ]
+          [ compile-fail libs/interfaces/test/fail_ambiguity_test2.cpp                            ]
+          [ compile-fail libs/interfaces/test/fail_assign_zero_test1.cpp                          ]
+          [ compile-fail libs/interfaces/test/fail_assign_zero_test2.cpp                          ]
+          [ compile-fail libs/interfaces/test/fail_assign_zero_test3.cpp                          ]
+          [ compile-fail libs/interfaces/test/fail_const_view_test2.cpp                           ]
+          [ compile-fail libs/interfaces/test/fail_const_view_test2.cpp                           ]
+          [ compile-fail libs/interfaces/test/fail_delegation_test.cpp                            ]
+          [ compile-fail libs/interfaces/test/fail_fixed_view_test.cpp                            ]
+          [ run libs/interfaces/test/fixed_derived_to_base_test.cpp                <template>test ]
+          [ run libs/interfaces/test/fixed_view_test.cpp                           <template>test ]
+          [ compile libs/interfaces/test/implements_test.cpp                                      ]
+          [ compile libs/interfaces/test/is_interface_test.cpp									  ]
+          [ compile libs/interfaces/test/offset_of_test.cpp							              ]
+          [ run libs/interfaces/test/pass_by_value_test.cpp                        <template>test ]
+          [ run libs/interfaces/test/return_by_value_test.cpp                      <template>test ]
+          [ compile libs/interfaces/test/sizeof_test.cpp                                          ]
+          [ run libs/interfaces/test/shared_ptr/sp_assignment_test.cpp             <template>test ]
+          [ run libs/interfaces/test/shared_ptr/sp_construction_test.cpp           <template>test ]
+          [ run libs/interfaces/test/shared_ptr/sp_deleter_test.cpp                <template>test ]
+          [ run libs/interfaces/test/shared_ptr/sp_deref_test.cpp                  <template>test ]
+          [ compile-fail libs/interfaces/test/shared_ptr/sp_fail_assign_test.cpp                  ]
+          [ run libs/interfaces/test/shared_ptr/sp_is_empty_test.cpp               <template>test ]
+          [ run libs/interfaces/test/shared_ptr/sp_source_sink_test.cpp            <template>test ]
+          [ run libs/interfaces/test/shared_ptr/sp_use_count_test.cpp              <template>test ]
+          [ run libs/interfaces/test/shared_obj/so_assignment_test.cpp             <template>test ]
+          [ run libs/interfaces/test/shared_obj/so_construction_test.cpp           <template>test ]
+          [ run libs/interfaces/test/shared_obj/so_deleter_test.cpp                <template>test ]
+          [ run libs/interfaces/test/shared_obj/so_deref_test.cpp                  <template>test ]
+          [ compile-fail libs/interfaces/test/shared_obj/so_fail_assign_test.cpp                  ]
+          [ run libs/interfaces/test/shared_obj/so_is_empty_test.cpp               <template>test ]
+          [ run libs/interfaces/test/shared_obj/so_source_sink_test.cpp            <template>test ]
+          [ run libs/interfaces/test/shared_obj/so_use_count_test.cpp              <template>test ]
+          [ run libs/interfaces/test/unique_ptr/up_assignment_test.cpp             <template>test ]
+          [ run libs/interfaces/test/unique_ptr/up_construction_test.cpp           <template>test ]
+          [ run libs/interfaces/test/unique_ptr/up_deref_test.cpp                  <template>test ]
+          [ compile-fail libs/interfaces/test/unique_ptr/up_fail_assign_test.cpp                  ]
+          [ compile-fail libs/interfaces/test/unique_ptr/up_fail_move_test1.cpp                   ]
+          [ compile-fail libs/interfaces/test/unique_ptr/up_fail_move_test2.cpp                   ]
+          [ compile-fail libs/interfaces/test/unique_ptr/up_fail_move_test3.cpp                   ]
+          [ run libs/interfaces/test/unique_ptr/up_is_empty_test.cpp               <template>test ]
+          [ run libs/interfaces/test/unique_ptr/up_move_test.cpp                   <template>test ]
+          [ run libs/interfaces/test/unique_ptr/up_release_test.cpp                <template>test ]
+          [ run libs/interfaces/test/unique_ptr/up_source_sink_test.cpp            <template>test ]
+          [ run libs/interfaces/test/unique_obj/uo_assignment_test.cpp             <template>test ]
+          [ run libs/interfaces/test/unique_obj/uo_construction_test.cpp           <template>test ]
+          [ run libs/interfaces/test/unique_obj/uo_deref_test.cpp                  <template>test ]
+          [ compile-fail libs/interfaces/test/unique_obj/uo_fail_assign_test.cpp                  ]
+          [ compile-fail libs/interfaces/test/unique_obj/uo_fail_move_test1.cpp                   ]
+          [ compile-fail libs/interfaces/test/unique_obj/uo_fail_move_test2.cpp                   ]
+          [ compile-fail libs/interfaces/test/unique_obj/uo_fail_move_test3.cpp                   ]
+          [ run libs/interfaces/test/unique_obj/uo_is_empty_test.cpp               <template>test ]
+          [ run libs/interfaces/test/unique_obj/uo_move_test.cpp                   <template>test ]
+          [ run libs/interfaces/test/unique_obj/uo_release_test.cpp                <template>test ]
+          [ run libs/interfaces/test/unique_obj/uo_source_sink_test.cpp            <template>test ]
+        ;
+} 

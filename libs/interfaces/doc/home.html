@@ -1,0 +1,281 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Boost.Interfaces</TITLE>
+    <LINK REL='stylesheet' HREF='../../../boost.css'>
+    <LINK REL='stylesheet' HREF='theme/interfaces.css'>
+    <STYLE> 
+        TD, TH { background-color: #eeeeee } 
+        TD.dark { font-weight:bold; black; background-color: #bbbbbb; } 
+    </STYLE>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+    <H1 CLASS='title'>Boost.Interfaces</H1>
+    <HR CLASS='banner'>
+
+<!-- End Banner -->
+
+<H2>Disclaimer</H2>
+
+<P>Not a <A HREF='http://www.boost.org' TARGET='_top'>Boost</A> library</P>
+
+<A NAME='overview'></A>
+<H2>Overview</H2>
+
+<A NAME='definition'></A>
+<H4>Definition</H4>
+
+<P>
+    Boost.Interfaces provides a macro-based <A HREF='guide/idl.html'>Interface Definition Language</A> (IDL) which can be used to define C++ class types called <I>interfaces</I>. An interface is a lightweight value type associated with a set of named function signatures. An interface instance can be bound at runtime to any object which implements the interface, i.e., to any object of a type with accessible non-static member functions having the same name and signature as the set of functions associated with the interface. The functions of the bound object can then be invoked through the interface instance using the “dot” operator. Binding is completely <I>non-intrusive</I>: the object's type need not declare any virtual functions or derive from any particluar base class.
+</P>
+
+<P>
+    Interfaces were described in a September 2004 <I>C/C++ Users Journal</I> article by Christopher Diggins (<A HREF='bibliography.html#diggins2'>[Diggins2]</A>)
+</P>
+
+<A NAME='conventions'></A>
+<H4>Conventions</H4>
+
+<UL>
+    <LI>All documented classes and functions are in namespace <CODE>boost::interfaces</CODE> unless otherwise indicated.
+    <LI>The names of example interfaces begin with the letter <CODE>I</CODE> followed by a capital letter. 
+    <LI>The names of example classes which are not interfaces begin with a single capital letter.
+</UL>
+
+<A NAME='applications'></A>
+<H4>Applications</H4>
+
+<P>Current applications of Boost.Interfaces include:</P>
+
+<UL>
+    <LI>Non-intrusive dynamic polymorphism &#8212; interfaces can often be used in place of abstract base classes, and are sometimes much faster (<I>see</I> <A HREF='guide/performance.html'>Performance</A>).
+    <LI>Dynamic inheritance &#8212; allows function calls to be forwarded automatically to an object specified at runtime (<I>see</I> <A HREF='guide/delegation.html'>Delegation</A>).
+    <LI><A HREF='guide/smart_pointers.html'>Smart Interface Pointers</A> &#8212; smart pointers which can manage the lifetime of any object whose type implements a given interface.
+    <LI><A HREF='guide/smart_references.html'>Smart References</A> &#8212; like smart interface pointers, but the managed object is accessed using the “dot” operator.
+    <LI>The <A HREF='http://www.ootl.org/' TARGET='_top'>Object Oriented Template Library</A>, a project in the initial stages of development, by Christopher Diggins (<A HREF='bibliography.html#ootl'>[Diggins3]</A>).
+</UL>
+
+<P>Planned future applications include:</P>
+
+<UL>
+    <LI>Runtime reflection &#8212; will allow an interface's functions to be enumerated and looked up by name at runtime
+    <LI>Aspect Oriented Programming as described in a August 2004 <I>Dr. Dobb's Journal</I> article by Christopher Diggins (<A HREF='bibliography.html#diggins1'>[Diggins1]</A>).
+    <!-- <LI>NETL (pronounced <I>Any Template Library</I>, or <I>< !-- “ -- >Nettle< !-- ” -- ></I>) &#8212; a policy-based smart reference framework generalizing <A HREF='http://www.boost.org/libs/any'><CODE>boost::any</CODE></A>.
+    <LI>NESTL (pronounced <I>Any STL</I>, or <I>Nestle< !-- ” -- ></I>) &#8212; the application of the Any Template Library to the STL, yielding STL-compatible containers and iterators offering a combination of static and dynamic polymorhpism. -->
+</UL>
+
+<P>Possible future applications include:</P>
+<UL>
+    <LI>Integration with component architectures such as COM and CORBA.
+    <LI>Boost.Names &#8212; by abstracting the various uses of identifiers in C++ into preprocessor generated types called <I>names</I>, C++ classes and functions can be constructed in a straigtforward manner using template metaprogramming.
+</UL>
+
+<P><I>See</I> <A HREF='future.html'>Future Directions</A>.</P>
+
+<A NAME='examples'></A>
+<H4>Examples</H4>
+
+<P>
+    The following interface defintion uses <A HREF='guide/pseudocode.html'>pseudocode</A> instead of the macro-based <A HREF='guide/idl.html'>IDL</A>.
+</P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>interface</SPAN> <A CLASS='documented' HREF='examples/ianimal.html'>IAnimal</A> {
+    <SPAN CLASS='keyword'>void</SPAN> speak();
+};</PRE>
+
+<P>Given this definition, we can define a class which implements <CODE>IAnimal</CODE> as follows:</P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>class</SPAN> Dog {
+    <SPAN CLASS='keyword'>void</SPAN> speak() { std::cout << <SPAN CLASS='numeric_literal'>"Wooof\n"</SPAN>; }
+};</PRE>
+
+<P>
+    We can construct an instance of <CODE>IAnimal</CODE> bound to an instance of <CODE>Dog</CODE> and invoke the <CODE>Dog</CODE>'s member function <CODE>speak()</CODE> as follows:
+</P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>int</SPAN> main()
+{
+    Dog d;
+    IAnimal a = d;
+    a.speak(); <SPAN CLASS='comment'>// Prints "wooof"</SPAN>
+}</PRE>
+
+<P>We could also define an empty instance of <CODE>IAnmial</CODE> and then bind it to an instance of <CODE>Dog</CODE>:</P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>int</SPAN> main()
+{
+    Dog d;
+    IAnimal a;
+    a = d;
+    a.speak(); <SPAN CLASS='comment'>// Prints "wooof"</SPAN>
+}</PRE>
+
+<P>After binding an object to an interface instance, we can retrieve the object using the function template <A HREF='functions/extract.hpp'><CODE>extract</CODE></A>:</P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>int</SPAN> main()
+{
+    Dog d;
+    IAnimal a = d;
+    Dog&amp; d2 = extract&lt;Dog&gt;(a);
+}</PRE>
+
+<P>
+    An extraction will succeed only if the static type of the object, at the point it was bound to the interface instance, is the same as or derived from the target type; otherwise, <A HREF='functions/extract.hpp'><CODE>extract</CODE></A> will throw an exception of type <A HREF='functions/extract.html#bad_extract'><CODE>bad_extract</CODE></A>.
+</P>
+
+<P>Next, we can cause the interface instance to become unbound from the object by assigning <CODE>0</CODE> to it:</P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>int</SPAN> main()
+{
+    Dog d;
+    IAnimal a = d;
+    a.speak(); <SPAN CLASS='comment'>// Prints "wooof"</SPAN>
+    a = <SPAN CLASS='numeric_literal'>0</SPAN>;    
+    a.speak(); <SPAN CLASS='comment'>// Undefined behavior: a is empty</SPAN>
+}</PRE>
+
+<P>See <A HREF='future.html#qualifiers'>Future Directions: Qualifiers</A> for a description of a checked interface type which would throw an exception in the above example.</P>
+
+<P>
+    Interface instances may also be passed to and returned from functions:
+</P>
+
+<PRE CLASS='broken_ie'>IAnimal source()
+{
+    <SPAN CLASS='keyword'>static</SPAN> Dog d;
+    <SPAN CLASS='keyword'>return</SPAN> IAnimal(d);
+}
+
+<SPAN CLASS='keyword'>void</SPAN> sink(IAnimal a)
+{
+    a.speak();
+}
+
+<SPAN CLASS='keyword'>int</SPAN> main()
+{   
+    IAnimal a = source();
+    a.speak(); <SPAN CLASS='comment'>// Prints "wooof"</SPAN>
+    Dog d;
+    sink(d);   <SPAN CLASS='comment'>// Prints "wooof"</SPAN>
+}</PRE>
+
+<P>
+    Finally, interface instances do not manage the lifetimes of their bound objects:
+</P>
+
+<PRE CLASS='broken_ie'>
+
+<SPAN CLASS='keyword'>int</SPAN> main()
+{   
+    IAnimal outer; 
+    {
+        Dog d;
+        outer = d;
+    }
+    outer.speak(); <SPAN CLASS='comment'>// Undefined behavior</SPAN>
+
+}</PRE>
+
+<P>
+    To manage the lifetime of the bound object, use a <A HREF='guide/smart_pointers.html'>Smart Interface Pointer</A> or <A HREF='guide/smart_references.html'>Smart Reference</A>.
+</P>
+
+<A NAME='issues'></A>
+<H4>Known Issues</H4>
+
+<P>There are several problems with the current implementation:</P>
+<UL>
+    <LI>Compile-time performance is poor with GCC and EDG-based compilers. The situation is somewhat better with VC7.1, but there is still much room for improvement. It is hoped that people knowledgeable in preprocessor and template metaprogramming will examine the current implementation and suggest improvements. <I>See</I> <A HREF='guide/performance.html#compile_time'>Compile-Time Performance</A>.
+    <LI>The function template <A HREF='functions/extract.html'><CODE>extract</CODE></A> currently allows silent violation of <CODE>const</CODE>-correctness. This will be corrected in a subsequent version as part of the general treatment of Qualifiers.  <I>See</I> <A HREF='future.html#qualifiers'>Future Directions: Qualifiers</A>. 
+    <LI>The metafunction <A HREF='classes/implements.html'><CODE>implements</CODE></A> does not work correctly on VC7.1. <I>See</I> <A HREF='testing.html#note_1'>Testing</A>, note 1.
+    <LI>Access control for delegates is not enforced properly on Comeau 4.3.3. <I>See</I> <A HREF='testing.html#note_2'>Testing</A>, note 2.
+</UL>
+
+<A NAME='dependencies'></A>
+<H2>Dependencies</H2>
+
+<P>The core implementation of Boost.Interfaces depends on</P>
+<UL>
+<LI>
+    The Boost Preprocessor Metaprogramming library; <I>see</I> <A HREF='bibliography.html#karvonen'>[Karvonen]</A>
+</LI>
+<LI>
+    The Boost Metaprogramming library; <I>see</I> <A HREF='bibliography.html#gurtovoy'>[Gurtovoy]</A>
+</LI>
+<LI>
+    The Boost Type Traits library; <I>see</I> <A HREF='bibliography.html#maddock'>[Maddock]</A>
+</LI>
+</UL>
+
+<P>
+    The implementation of the templates <A HREF='classes/shared_ptr.html'><CODE>shared_ptr</CODE></A> and <A HREF='classes/shared_obj.html'><CODE>shared_obj</CODE></A> uses depends on the Boost Smart Pointers library; <I>see</I> <A HREF='bibliography.html#colvin'>[Colvin]</A>.
+</P>
+
+<A NAME='acknowledgments'></A>
+<H2>Acknowledgments</H2>
+
+<UL>
+<LI>
+    The library was inspired by and based on the work of Christopher Diggins. <I>See</I> <A HREF='bibliography.html#diggins2'>[Diggins2]</A>
+</LI>
+<LI>
+    David Abrahams provided the code &#8212; reproduced in <A HREF='bibliography.html#diggins2'>[Diggins2]</A> &#8212; which inspired the current implementation. He also suggested the idea of a macro-based IDL, although the author was unaware of this suggestion until most of the present library was complete. <I>See</I> <A HREF='bibliography.html#abrahams'>[Abrahams]</A>.
+</LI>
+<LI>
+    Pavel Vo&#382;en&iacute;lek suggested the technique used to implement the function <A HREF='functions/extract.html'><CODE>extract</CODE></A>. <I>See</I> <A HREF='bibliography.html#vozenilik'>[Vozenilek]</A>
+</LI>
+<LI>
+    The name of the function <A HREF='functions/extract.html'><CODE>extract</CODE></A> was borrowed from Alexander Nasonov's Dynamic Any library. <I>See</I> <A HREF='bibliography.html#nasonov'>[Nasonov]</A>
+</LI>
+<LI>
+    The design of the smart interface pointers and references is based on the <A HREF='http://www.boost.org/libs/smart_ptr/' TARGET="_top">Boost Smart Pointers library</A>, by Greg Colvin, Beman Dawes, Peter Dimov, and Darin Adler. <I>See</I> <A HREF='bibliography.html#colvin'>[Colvin]</A>.
+</LI>
+<LI>
+    The design of the templates <A HREF='classes/unique_ptr.html'><CODE>unique_ptr</CODE></A> and <A HREF='classes/unique_obj.html'><CODE>unique_obj</CODE></A> is based on work of Howard Hinnant, Peter Dimov and David Abrahams. <I>See</I> <A HREF='bibliography.html#hinnant1'>[Hinnant1]</A>.
+</LI>
+<LI>
+    The implementation of <A HREF='classes/unique_ptr.html'><CODE>unique_ptr</CODE></A> and <A HREF='classes/unique_obj.html'><CODE>unique_obj</CODE></A> is based on work of Rani Sharoni (<A HREF='bibliography.html#sharoni'>[Sharoni]</A>) and Daniel Wallin (<A HREF='bibliography.html#wallin'>[Wallin]</A>)</A>. 
+</LI>
+<LI>
+    The name <A HREF='classes/unique_ptr.html'><CODE>unique_ptr</CODE></A> was suggested by Howard Hinnant</A>. <I>See</I> <A HREF='bibliography.html#hinnant2'>[Hinnant2]</A>.
+</LI>
+<LI>
+    The template <A HREF='classes/manual_ptr.html'><CODE>manual_ptr</CODE></A> was suggested by Christopher Diggins.
+</LI>
+<LI>
+    The implementation of <A HREF='../../../boost/interfaces/detail/function_traits.hpp'><CODE>&lt;boost/interfaces/detail/function_traits.hpp&gt;</CODE></A> was improved based on suggestions by Tobias Schwinger. <I>See</I> <A HREF='bibliography.html#schwinger'>[Schwinger]</A>. 
+</LI>
+<LI>
+    Christopher Digins, Daniel James, Pavel Vo&#382;en&iacute;lek, Eric Legrand and David Barrett-Lennard provided much useful criticism.
+</LI>
+</UL>
+
+<P>If I forgot to mention you, please let me know!</P>
+
+<A NAME='contact'></A>
+<H2>Contact</H2>
+
+<UL>
+    <LI>You may contact the author, Jonathan Turkanis, at <A HREF='mailto:turkanis@kangaroologic.com'>turkanis@kangaroologic.com</A>.
+    <LI>You may contact Christopher Diggins at <A HREF='mailto:cdiggins@videotron.ca'>cdiggins@videotron.ca</A>.
+</UL>
+
+<!-- Begin Footer -->
+
+<HR>
+
+<P STYLE='margin-top:2em' CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+13 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan Turkanis, 2005. Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>

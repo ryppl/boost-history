@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Testing</TITLE>
+    <LINK REL='stylesheet' HREF='../../../boost.css'>
+    <LINK REL='stylesheet' HREF='theme/interfaces.css'>
+    <STYLE> 
+        TD, TH { background-color: #eeeeee } 
+        TD.dark { font-weight:bold; color: black; background-color: #bbbbbb; } 
+        A.test { color:black; text-decoration:none }
+        A.test::visited { color:black }
+    </STYLE>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+<H1 CLASS='title'>Testing</H1>
+<HR CLASS='banner'>
+
+<!-- End Banner -->
+
+<DL class='page-index'>
+  <DT><A href='#overview'>Overview</A></DT>
+  <DT><A href='#jamfile'>Jamfile</A>
+  <DT><A href='#platforms'>Supported Platforms</A>
+</DL>
+
+<HR>
+
+<A NAME='overview'></A>
+<H2>Overview</H2>
+
+<P> 
+    The library comes with sixty-four regression tests, in the directory <A HREF='../test'><CODE>&lt;libs/interfaces/test&gt;</CODE></A> and its subdirectories, intended to test all documented features of the library. The regression tests may be run using <A HREF='http://www.boost.org/tools/build/jam_src/index.html' TARGET="_top">Boost.Jam</A> or compiled and run individual. In the latter case, the preprocessor symbol <CODE>BOOST_IDL_INCLUDE_UNIT_TEST_FRAMEWORK</CODE> should be defined.
+</P>
+
+<A NAME='jamfile'></A>
+<H2>Jamfile</H2>
+
+<DT><A HREF='../test/Jamfile'><CODE>&lt;libs/interfaces/test/Jamfile&gt;</CODE></A></DT>
+
+<A NAME='platforms'></A>
+<H2>Supported Platforms</H2>
+
+<P>Boost.Interfaces makes extensive use of template metaprogramming and therefore requires a highly conforming compiler. The required language features are partial class template specialization, template template parameters, SFINAE and function types.</P>
+
+<P>Currently, only these compilers are fully supported:</P>
+
+<UL>
+    <LI>Microsoft Visual C++, versions 7.1<A CLASS='footnote_ref' NAME='note_1_ref' HREF='#note_1'><SUP>[1]</SUP></A> and 8.0 (beta)
+    <LI>GCC 3.4.<I>x</I>
+    <LI>Intel 8.0 for Windows
+    <LI>Comeau 4.3.3<A CLASS='footnote_ref' NAME='note_2_ref' HREF='#note_2'><SUP>[2]</SUP></A>
+</UL>
+
+<P>Most of the library should work on other recent EDG-based compilers, however.</P>
+
+<!-- Begin Footnotes -->
+
+<HR>
+
+<P>
+    <A CLASS='footnote_ref' NAME='note_1' HREF='#note_1_ref'><SUP>[1]</SUP></A>VC7.1 fails <A HREF='../test/implements_test.cpp'><CODE>implements_test.cpp</CODE></A> and fails to compile some of the other tests with debug information enabled (<CODE>/Zi</CODE> or <CODE>/ZI</CODE>).
+</P>
+
+<P>
+    <A CLASS='footnote_ref' NAME='note_2' HREF='#note_2_ref'><SUP>[2]</SUP></A>Comeau 4.3.3 compiles <A HREF='../test/fail_delegation_test.cpp'><CODE>fail_delegation_test.cpp</CODE></A>, which is intended to cause a compiler error.
+</P>
+
+<!-- End Footnotes -->
+
+
+<!-- Begin Footer -->
+
+<HR>
+<P CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+13 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan D. Turkanis, 2005</P>
+<P CLASS='copyright'> 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>

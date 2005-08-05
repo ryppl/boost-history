@@ -1,0 +1,335 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+    <TITLE>Future Directions</TITLE>
+    <LINK REL='stylesheet' HREF='../../../boost.css'>
+        <LINK REL='stylesheet' HREF='theme/interfaces.css'>
+</HEAD>
+<BODY>
+
+<!-- Begin Banner -->
+
+<H1 CLASS='title'>Future Directions</H1>
+<HR CLASS='banner'>
+
+<!-- End Banner -->
+
+<DL class='page-index'>
+    
+    <DT><A href='#aop'>Aspect Oriented Programming</A></DT>
+    <DT><A href='#reflection'>Runtime Reflection</A></DT>
+    <DT><A href='#operators'>Operator Overloading</A></DT>
+    <DT><A href='#self_referential'>Self-Referential Interfaces</A></DT>
+    <DT><A href='#template_idl'>A Template-Based IDL</A></DT>
+    <DT><A href='#names'>Boost.Names</A></DT>
+    <DT><A href='#aggregation'>Aggregation</A></DT>
+    <DT><A href='#redirection'>Generalized Function Call Redirection</A></DT>
+    <DT><A href='#non_member_functions'>Non-Member Functions</A></DT>
+    <DT><A href='#com_corba'>COM and CORBA Integration</A></DT>
+    <DT><A href='#qualifiers'>Qualifiers</A>
+ 		<!--<DL class='page-index'>
+			<DT><A href='#description'>Additional Qualifiers</A></DT>
+			<DT><A href='#description'>Interaction of Qualifiers</A></DT>
+			<DT><A href='#description'>Casting</A></DT>
+		</DL> -->
+	</DT>
+</DL>
+
+<A NAME='aop'></A>
+<H2>Aspect Oriented Programming</H2>
+
+<P>
+    A future release of Boost.Interfaces will include support for Aspect-Oriented Programming (AOP), as described in a August 2004 <I>Dr. Dobb's Journal</I> article by Christopher Diggins.<A CLASS='footnote_ref' NAME='note_1_ref' HREF='#note_1'><SUP>[1]</SUP></A> 
+</P>
+<P>Aspect-Oriented Programming with interfaces involves three concepts: advice, pointcuts and crosscutting.</P>
+<P>
+    A model of the concept <I>Advice</I> is a class types implementing functionality which is otherwise hard to localize using traditional constructs. For example, such a class might implement thread synchronization, logging or contract checking. 
+    A model of Advice has five or six member functions which can be inserted into the body of a given function at well defined point, such as prior to execution of the body, after execution of the body or upon an exception being thrown. 
+</P>
+<P>
+    A <I>poincut</I> represents the subset of the member functions of a class to which a model of Advice is to be applied. For our purposes, a pointcut is just an interface. An <I>aspect</I> is a pair consisting of a pointcut and a model of Advice.
+</P>
+<P>
+    Crosscutting is the process of inserting calls to the member functions of models of Advice into the member functions of a given class. It is accomplished using the class template <CODE>crosscut</CODE>. An application of crosscutting looks as follows:
+</P>
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>typedef</SPAN> crosscut&lt; 
+            MyClass,
+            aspect&lt;Pointcut1, Advice1&gt;,
+            aspect&lt;Pointcut2, Advice2&gt;,
+            <SPAN CLASS='omitted'>...</SPAN> ,
+            aspect&lt;PointcutN, AdviceN&gt;
+        &gt; MyCrosscutClass;</PRE>
+      
+<P>
+    The class <CODE>MyCrosscutClass</CODE> can be used as a drop-in replacement for <CODE>MyClass</CODE>, with added functionality provided by the classes <CODE>Advice1</CODE> through <CODE>AdviceN</CODE>.<A CLASS='footnote_ref' NAME='note_2_ref' HREF='#note_2'><SUP>[2]</SUP></A>
+</P>
+
+<!-- <PRE CLASS='broken_ie'><SPAN CLASS='keyword'>class</SPAN> Advice {
+
+    <SPAN CLASS='comment'>// Called before the body of a function is executed</SPAN>
+    <SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Advice, <SPAN CLASS='keyword'>typename</SPAN> Tuple&amp;gt;
+    void before( Tuple&amp; args, <SPAN CLASS='keyword'>const</SPAN> <SPAN CLASS='keyword'>char</SPAN>* fn_name, 
+                 <SPAN CLASS='keyword'>int</SPAN> arity, <SPAN CLASS='keyword'>const</SPAN> <SPAN CLASS='keyword'>char</SPAN>* param_names[] ) 
+    { <SPAN CLASS='omitted'>...</SPAN> }
+
+    <SPAN CLASS='comment'>// Called after the body of a function is executed,</SPAN>
+    <SPAN CLASS='comment'>// unless an exception is thrown</SPAN>
+    <SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Advice, <SPAN CLASS='keyword'>typename</SPAN> Tuple&amp;gt;
+    void after( Tuple&amp; args, <SPAN CLASS='keyword'>const</SPAN> <SPAN CLASS='keyword'>char</SPAN>* fn_name, 
+                <SPAN CLASS='keyword'>int</SPAN> arity, <SPAN CLASS='keyword'>const</SPAN> <SPAN CLASS='keyword'>char</SPAN>* param_names[] ) 
+    { <SPAN CLASS='omitted'>...</SPAN> }
+
+    <SPAN CLASS='comment'>// Called after the body of a function is executed,</SPAN>
+    <SPAN CLASS='comment'>// even if an exception is thrown</SPAN>
+    <SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Advice, <SPAN CLASS='keyword'>typename</SPAN> Tuple&amp;gt;
+    void finally( Tuple&amp; args, <SPAN CLASS='keyword'>const</SPAN> <SPAN CLASS='keyword'>char</SPAN>* fn_name, 
+                  <SPAN CLASS='keyword'>int</SPAN> arity, <SPAN CLASS='keyword'>const</SPAN> <SPAN CLASS='keyword'>char</SPAN>* param_names[] ) 
+    { <SPAN CLASS='omitted'>...</SPAN> }
+
+    <SPAN CLASS='comment'>// Called if a standard exception is thrown</SPAN>
+    <SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Advice, <SPAN CLASS='keyword'>typename</SPAN> Tuple&amp;gt;
+    void error( std::exception&, Tuple&amp; args, 
+                <SPAN CLASS='keyword'>const</SPAN> <SPAN CLASS='keyword'>char</SPAN>* fn_name, <SPAN CLASS='keyword'>int</SPAN> arity, 
+                <SPAN CLASS='keyword'>const</SPAN> <SPAN CLASS='keyword'>char</SPAN>* param_names[] ) 
+    { <SPAN CLASS='omitted'>...</SPAN> }
+
+    <SPAN CLASS='comment'>// Called after begin, for functions returning void;</SPAN>
+    <SPAN CLASS='comment'>// offers an opportunity to abort execution</SPAN>
+    <SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Advice, <SPAN CLASS='keyword'>typename</SPAN> Tuple&amp;gt;
+    bool cancel( Tuple&amp; args, <SPAN CLASS='keyword'>const</SPAN> <SPAN CLASS='keyword'>char</SPAN>* fn_name, 
+                 <SPAN CLASS='keyword'>int</SPAN> arity, <SPAN CLASS='keyword'>const</SPAN> <SPAN CLASS='keyword'>char</SPAN>* param_names[] )
+    { <SPAN CLASS='omitted'>...</SPAN> }
+
+    <SPAN CLASS='comment'>// Transforms the return value</SPAN>
+    <SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Advice, <SPAN CLASS='keyword'>typename</SPAN> Result, <SPAN CLASS='keyword'>typename</SPAN> Tuple&amp;gt;
+    Result transform( <SPAN CLASS='keyword'>const</SPAN> Result& result, Tuple&amp; args, 
+                      <SPAN CLASS='keyword'>const</SPAN> <SPAN CLASS='keyword'>char</SPAN>* fn_name, <SPAN CLASS='keyword'>int</SPAN> arity, 
+                      <SPAN CLASS='keyword'>const</SPAN> <SPAN CLASS='keyword'>char</SPAN>* param_names[] )
+    { <SPAN CLASS='omitted'>...</SPAN> }
+};</PRE>
+ -->
+
+<A NAME='reflection'></A>
+<H2>Runtime Reflection</H2>
+
+<P>A future release of Boost.Interfaces will allow an interface's functions to be enumerated and looked up by name at runtime. The precise syntax had not been determined yet, but a possible application might look as follows:</P> 
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> Interface&gt;
+<SPAN CLASS='keyword'>void</SPAN> f(Interface&amp; i)
+{
+   boost::function&lt;<SPAN CLASS='keyword'>void</SPAN>(<SPAN CLASS='keyword'>int</SPAN>)&gt; f;
+   if (f = find_function&lt;<SPAN CLASS='keyword'>void</SPAN>(<SPAN CLASS='keyword'>int</SPAN>)&gt;(i, <SPAN CLASS='numeric_literal'>"foo"</SPAN>))
+       f(<SPAN CLASS='numeric_literal'>3</SPAN>);
+}</PRE>
+
+<A NAME='operators'></A>
+<H2>Operator Overloading</H2>
+
+<P>A future release of Boost.Interfaces will allow an interface definition to contain overloaded operators. For example:</P> 
+
+<PRE CLASS='broken_ie'><SPAN CLASS='comment'>// Pseudocode</SPAN>
+<SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> T&gt;
+<SPAN CLASS='keyword'>interface</SPAN> IArray {
+    std::size_t size() <SPAN CLASS='keyword'>const</SPAN>;
+    <SPAN CLASS='keyword'>bool</SPAN> empty() <SPAN CLASS='keyword'>const</SPAN>;
+    T&amp; <SPAN CLASS='keyword'>operator</SPAN>[] (std::size_t);
+    <SPAN CLASS='keyword'>const</SPAN> T&amp; <SPAN CLASS='keyword'>operator</SPAN>[] (std::size_t) <SPAN CLASS='keyword'>const</SPAN>;
+    <SPAN CLASS='comment'>...</SPAN>
+};</PRE>
+
+<P>Once operator overloading is introduced, it may be necessary to replace some of the existing interface operators, such as the safe bool conversion and the assignment operator, with non-member functions.</P> 
+
+<A NAME='self_referential'></A>
+<H2>Self-Referential Interfaces</H2>
+
+<P>With the introduction of operator overloading comes the need for interfaces which appear in the parameter types or return types of their own member functions:</P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='comment'>// Pseudocode</SPAN>
+<SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> T&gt;
+<SPAN CLASS='keyword'>interface</SPAN> IForwardIterator {
+    T&amp; <SPAN CLASS='keyword'>operator</SPAN>*() <SPAN CLASS='keyword'>const</SPAN>;
+    T* <SPAN CLASS='keyword'>operator</SPAN>-&gt;() <SPAN CLASS='keyword'>const</SPAN>;
+    IForwardIterator& <SPAN CLASS='keyword'>operator</SPAN>++();
+    IForwardIterator <SPAN CLASS='keyword'>operator</SPAN>++(<SPAN CLASS='keyword'>int</SPAN>);
+    <SPAN CLASS='keyword'>bool</SPAN> <SPAN CLASS='keyword'>operator</SPAN>==(<SPAN CLASS='keyword'>const</SPAN> IForwardIterator&amp;) <SPAN CLASS='keyword'>const</SPAN>;
+    <SPAN CLASS='keyword'>bool</SPAN> <SPAN CLASS='keyword'>operator!</SPAN>=(<SPAN CLASS='keyword'>const</SPAN> IForwardIterator&amp;) <SPAN CLASS='keyword'>const</SPAN>;
+};</PRE>
+
+<P>
+    Interface member functions which involve the interface itself as part of a parameter type can be implemented using an extension of the technique used to implement <A HREF='functions/extract.html'><CODE>extract</CODE></A>. Interface member functions which involve the interface as part of the return type present some challenging implementation issues; it is likely that they cannot be implemented in full generality.
+</P>
+
+<A NAME='template_idl'></A>
+<H2>A Template-Based IDL</H2>
+
+<P>
+    It is possible to implement a template-based IDL in which use of the preprocessor is confined to defining special class types called <I>Names</I> which represent C++ identifiers. With such an IDL, an interface definition would consist of a sequence of Name delclarations followed by a <CODE>typedef</CODE> or class definition constructed from Names, functions types and library templates <CODE>interface</CODE>, <CODE>function</CODE> and <CODE>extends</CODE>. For example, the following definition</CODE>
+</P>
+
+<PRE CLASS='broken_ie'>BOOST_IDL_NAME(name)
+BOOST_IDL_NAME(rank)
+BOOST_IDL_NAME(serial_number)
+
+<SPAN CLASS='keyword'>typedef</SPAN> interface&lt;
+            extends&lt;IPerson&gt;,
+            function&lt;name, <SPAN CLASS='keyword'>const</SPAN> <SPAN CLASS='keyword'>char</SPAN>*()&gt; <SPAN CLASS='keyword'>const</SPAN>,
+            function&lt;rank, <SPAN CLASS='keyword'>const</SPAN> <SPAN CLASS='keyword'>char</SPAN>*()&gt; <SPAN CLASS='keyword'>const</SPAN>,
+            function&lt;serial_number, <SPAN CLASS='keyword'>long</SPAN>()&gt; <SPAN CLASS='keyword'>const</SPAN>
+        &gt; IPrisonerOfWar;</PRE>
+
+<P>would be equivalent to the following <A HREF='guide/pseudocode.html'>pseudocode:</A></P>
+<PRE CLASS='broken_ie'><SPAN CLASS='keyword'>interface</SPAN> IPrisonerOfWar : IPerson {
+    <SPAN CLASS='keyword'>const</SPAN> <SPAN CLASS='keyword'>char</SPAN>* name() <SPAN CLASS='keyword'>const</SPAN>;
+    <SPAN CLASS='keyword'>const</SPAN> <SPAN CLASS='keyword'>char</SPAN>* rank() <SPAN CLASS='keyword'>const</SPAN>;
+    <SPAN CLASS='keyword'>long</SPAN> serial_number() <SPAN CLASS='keyword'>const</SPAN>;
+};</PRE>
+
+<P>
+    This IDL has not yet been implemented, so it is not known how well it will work in practice. It might, for example, lead to internal errors on one or more of the currently supported compilers, or increase compile times unacceptably. On the other hand, it might perform better than the current IDL.
+</P>
+
+<A NAME='names'></A>
+<H2>Boost.Names</H2>
+
+<P>
+    Once we have introduced Names, we can use them to generate much more than just interfaces. We might develop an entire library which allows more or less arbitrary classes and functions to be assembled using templates.<A CLASS='footnote_ref' NAME='note_3_ref' HREF='#note_3'><SUP>[3]</SUP></A> For example, one might be able to write a scope guard as follows:
+</P>
+<PRE CLASS='broken_ie'>BOOST_IDL_NAME(close)
+
+<SPAN CLASS='keyword'>void</SPAN> f()
+{
+     vector&lt;Window&gt; vec = ... ;
+     scope_guard<
+         for_each< _2, _1, call_member<_2, close> >
+     > g(v);
+     <SPAN CLASS='omitted'>...</SPAN>
+     <SPAN CLASS='comment'>// All the Windows in vec are closed at end of block</SPAN>
+}</PRE>
+
+<A NAME='aggregation'></A>
+<H2>Aggregation</H2>
+
+<P>
+    One of the problems with the delegation facility that was briefly a part of C++ was that the delegate had no way to access the delegating object.<A CLASS='footnote_ref' NAME='note_4_ref' HREF='#note_4'><SUP>[4]</SUP></A> This can be addressed by introducing COM-style aggregation, in which the delegate receives, at the beginning of each function argument list, a pointer or reference to the delegating object. An example might look as follows:
+</P>
+<PRE CLASS='broken_ie'><SPAN CLASS='comment'>// Pseudocode:</SPAN>
+<SPAN CLASS='keyword'>interface</SPAN> IConnection {
+    <SPAN CLASS='keyword'>void</SPAN> open();
+    <SPAN CLASS='keyword'>void</SPAN> close();
+};
+
+<SPAN CLASS='keyword'>template</SPAN>&lt;<SPAN CLASS='keyword'>typename</SPAN> T&gt;
+<SPAN CLASS='keyword'>struct</SPAN> Connection {
+    <SPAN CLASS='keyword'>void</SPAN> open(T&amp; t) { <SPAN CLASS='comment'>/* uses t's user name and password */</SPAN> }
+    <SPAN CLASS='keyword'>void</SPAN> close(T&amp; t) { <SPAN CLASS='comment'>/* ... */</SPAN> }
+};
+
+<SPAN CLASS='keyword'>struct</SPAN> AggregatingConnection 
+    : aggregating&lt;IConnection, AggregatingConnection&gt;
+{  
+    AggregatingConnection()
+        : c(new Connection&lt;AggregatingConnection&gt;)
+    {
+        aggregating&lt;IConnection, AggregatingConnection&gt;::set(c);
+    }
+    std::string user_name() <SPAN CLASS='keyword'>const</SPAN>;
+    std::string password() <SPAN CLASS='keyword'>const</SPAN>;
+
+    <SPAN CLASS='comment'>// Inherits implementation of IConnection</SPAN>
+
+    Connection&lt;AggregatingConnection&gt;* c;
+};</PRE>
+
+<A NAME='redirection'></A>
+<H2>Generalized Function Call Redirection</H2>
+
+<P>
+    There is no reason, in principle, that the names and signatures of the member function of an interface and the member function of a class implementing the interface should match. In general, all that is needed is a set of rules indicating which functions of the bound object should be associated with which interface functions, and how the argument list of an interface function should be transformed before it is forwarded. The IDL therefore might be expanded to include declarations such as the following:
+</P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='comment'>// Pseudocode</SPAN>
+<SPAN CLASS='keyword'>interface</SPAN> IIncrementable {
+    <SPAN CLASS='keyword'>void</SPAN> inc() = <SPAN CLASS='keyword'>operator</SPAN>++();
+    <SPAN CLASS='keyword'>void</SPAN> advance(<SPAN CLASS='keyword'>int</SPAN> n) = <SPAN CLASS='keyword'>operator</SPAN>+=(n);
+};</PRE>
+
+<A NAME='non_member_functions'></A>
+<H2>Non-Member Functions</H2>
+
+<P>
+   Once we relax the requirement that the names and signatures of the member function of an interface and the member function of a class implementing the interface should match, there is nothing to prevent binding interface member functions to non-member functions involving the bound object:<A CLASS='footnote_ref' NAME='note_5_ref' HREF='#note_5'><SUP>[5]</SUP></A>
+</P>
+
+<PRE CLASS='broken_ie'><SPAN CLASS='comment'>// Pseudocode</SPAN>
+<SPAN CLASS='keyword'>interface</SPAN> IPrintable {
+    <SPAN CLASS='keyword'>free</SPAN> <SPAN CLASS='keyword'>void</SPAN> print(std::ostream&, IPrintable);
+};
+
+<SPAN CLASS='keyword'>void</SPAN> print(std::ostream& out, <SPAN CLASS='keyword'>int</SPAN> i) { out << i; }
+
+<SPAN CLASS='keyword'>int</SPAN> main()
+{
+    <SPAN CLASS='keyword'>int</SPAN> i = <SPAN CLASS='numeric_literal'></SPAN>5;
+    IPrintable p = i;
+    p.print(std::cout); <SPAN CLASS='comment'>// executes std::cout << i</SPAN>
+}
+
+</PRE>
+
+<A NAME='com_corba'></A>
+<H2>COM and CORBA Integration</H2>
+
+<P>
+    Several people have requested integration with component architectures such as COM and CORBA. This seems like a reasonable request, but it is not yet clear what type of integration would be useful or what implementation issues might arise.
+</P>
+
+<A NAME='qualifiers'></A>
+<H2>Qualifiers</H2>
+
+<P>
+    A more uniform treatment of interface qualifiers such as <I>const</I> and <I>fixed</I> is needed. It must be possible to mix qualifiers freely to produce, for instance, a <I>const</I> <I>fixed</I> view of an interface. In addition, several new qualifiers may be added, such as <I>strict</I>, to force an exact match in function signatures between an interface an the type of the bound object, and <I>checked</I>, to cause an exception to be thrown if a user attempts to invoke a function through an empty interface instance. Finally, a facility analagous to <CODE>const_cast</CODE> should be added.
+</P>
+
+<!-- Begin Footnotes -->
+
+<HR STYLE='margin-top:1em'>
+
+<P>
+    <A CLASS='footnote_ref' NAME='note_1' HREF='#note_1_ref'><SUP>[1]</SUP></A><I>See</I> <A HREF='bibliography.html#diggins1'>[Diggins1]</A>. Previous versions of Boost.Interfaces included AOP support. It is not included in this release becuase the author has not had time to update the AOP machinery to conform to the most recent ABI changes.
+</P>
+
+<P>
+    <A CLASS='footnote_ref' NAME='note_2' HREF='#note_2_ref'><SUP>[2]</SUP></A>The Forwarding Problem causes some compliciations. <I>See</I> <A HREF='bibliography.html#dimov'>[Dimov]</A>.
+</P>
+
+<P>
+    <A CLASS='footnote_ref' NAME='note_3' HREF='#note_3_ref'><SUP>[3]</SUP></A>There are some serious challenges, such as name hiding and access control, which have not yet been fully explored.
+</P>
+
+<P>
+    <A CLASS='footnote_ref' NAME='note_4' HREF='#note_4_ref'><SUP>[4]</SUP></A><I>See</I> <A HREF='bibliography.html#diggins1'>[Stroustrup]</A>, <I>pp</I> 272-73.
+</P>
+
+<P>
+    <A CLASS='footnote_ref' NAME='note_5' HREF='#note_5_ref'><SUP>[5]</SUP></A>This was suggested by Pavel Vo&#382;en&iacute;lek, in a private communication, and by Dave Harris. The example is adapted from an example of Harris. <I>See</I> <A HREF='bibliography.html#harris'>[Harris]</A>
+</P>
+
+<!-- End Footnotes -->
+
+
+<!-- Begin Footer -->
+
+<HR>
+<P CLASS='copyright'>Revised
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+13 Jan, 2005
+<!--webbot bot="Timestamp" endspan i-checksum="38504" -->
+</P>
+
+<P CLASS='copyright'>&copy; Copyright Jonathan D. Turkanis, 2005</P>
+<P CLASS='copyright'> 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at <A HREF='http://www.boost.org/LICENSE_1_0.txt'>http://www.boost.org/LICENSE_1_0.txt</A>)
+</P>
+
+<!-- End Footer -->
+
+</BODY>
