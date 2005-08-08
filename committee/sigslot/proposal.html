@@ -11,7 +11,7 @@
 <br><b>Project</b>: Programming Language C++, Library Working Group
 <br><b>Authors</b>: Murray Cumming &lt;<tt>murrayc -at- murrayc.com</tt>&gt;
 <br>&nbsp;&nbsp;&nbsp;Douglas Gregor &lt;<tt>doug.gregor -at- gmail.com</tt>&gt;
-<br>&nbsp;&nbsp;&nbsp;Carl Hygard &lt;<tt>cjnygard -at-
+<br>&nbsp;&nbsp;&nbsp;Carl Nygard &lt;<tt>cjnygard -at-
 verizon.net</tt>&gt;
 <br><b>Reply-to</b>: One of us
 
@@ -23,6 +23,76 @@ Multi-target callbacks in general, uses, etc. We should have a simple
 example, maybe with some kind of diagram that shows the signal/slot
 connections in a small GUI application.
 
+<spew>
+<p>The Publisher/Subscriber idiom is well known in OOP circles for
+its ability to allow communication between objects without inducing
+tight coupling between said objects.  This idiom is also generally
+known as a Callback system, and has been implemented in various
+flavors by many different libraries.  This TR2 Proposal describes an
+implementation for a type-safe Publisher/Subscriber library.</p>
+
+<p>One example where this idiom is well suited is in the design of a GUI
+library.  The GUI library provides widgets on screen for user
+interaction.  In order for a library client to respond to user input,
+it must have some way of receiving and acting on user-generated GUI
+events.</p>
+
+<p>Many possibilities exist, for example one could require user
+code to derive each widget to specialize the behavior.  For
+example:</p>
+
+<pre><code>
+class TextWidget;
+
+class MyDateEntry : public TextWidget {
+  // override the text entry function
+  void TextEntry(char c) {
+    if(c == SPECIAL_CHAR){
+      // Do something special
+	}else{ 
+      TextWidget::TextEntry()
+    }
+  }
+
+  // Many other overrides
+};
+</code></pre>
+
+<p>This method introduces tight coupling between the client code and
+the GUI widget classes.  As such, it becomes very brittle, and further
+development of the GUI is strongly confined by existing implementation
+details.</p>
+
+<p>In contrast, Publisher/Subscriber system provides the GUI library a
+way to communicate with the GUI library client without inducing strong
+coupling.  The Publisher/Subscriber library provides a way to abstract
+the events to the basic function signature, and allows any client to
+subscribe to a Publisher as long as they meet the function signature
+requirements.  Through the use of an intelligent Subscriber proxy
+object, ptr-to-function, ptr-to-member-function, and function-object
+are all opaque to the Publisher/Subscriber mechanism.  For example:</p>
+
+<pre><code>
+class TextWidget;
+
+class MyDateEntry {
+  void TextEntry(char c) {
+    // do special stuff here
+  }
+
+  void Init() {
+    TextWidget* widg = GrabOrCreateWidget();
+    widg->text_entry_signal()->
+        connect(std::subscriber(*this, &MyDateEntry::TextEntry));
+  }
+};
+</code></pre>
+
+<p>This design reduces the amount of coupling between
+<code>TextWidget</code> and <code>MyDateEntry</code> classes and limits
+it to the definition of the <code>TextWidget::*_signal()</code>
+Publisher objects defined by <code>TextWidget</code>.</p> </spew>
+
 <h3>Coalescing return values</h3>
 Talk about Accumulators.
 
@@ -30,8 +100,168 @@ Talk about Accumulators.
 Talk about trackable, why we want it, etc. 
 
 <h3>Existing practice</h3>
+<p>There have been a number of implementations of a Signal/Slot
+library, notably the Callback library by Rich Hickey, Qt's addition of
+signal/slot as C++ "keywords", <code>libsigc++2</code> by Murray
+Cumming and Martin Schulze, Boost.Signals by Douglas Gregor.  We'll
+summarize best existing practice by looking at
+<code>libsigc++2</code>, Boost.Signals, as well as look at the
+commonalities with .NET delegates, and the <code>tr1::function</code>
+class.</p>
+<p><code>libsigc++2</code> and Boost.Signals are implemented very
+similarly, having both grown out of the earlier
+<code>libsigc++1.2</code> library written by Karl Nelson and Tero
+Pulkkinen.  The major concepts of these two libraries are:</p>
+
+<ul>
+<li><code>signal<></code> object which acts as a publisher to
+provide messages (really function calls) to a list of subscribers
+(<code>slot<></code> objects)
+</li>
+<li><code>slot<></code> object which provides an interface to a function,
+whether it be a member function, ptr-to-function, or function object.
+The <code>slot<></code> provides the abstraction to the basic
+function signature -- return value and argument list.
+</li>
+<li><code>connection</code> object which represents a signal/slot
+registration, allowing the programmer to disconnect a
+<code>slot<></code> from a <code>signal<></code>
+</li>
+<li><code>trackable</code> base class, which provides the mechanism
+for automatic signal/slot disconnection when the object is destructed.
+</li>
+</ul>
 <h4>libsigc++</h4>
+
+<h5><code>sigc::signal&lt;R,Arg1,Arg2,...,ArgN&gt;</code></h5>
+
+<code>signal<></code> object is templatized in terms of a return value
+type R, and an arbitrary number of argument types
+<code>Arg1..N</code>.  The <code>signal<></code> object provides
+facilities to:</p>
+
+<ul>
+<li><code>connect()</code> a <code>slot<></code> object</li>
+<li><code>emit(Arg1,Arg2,...,ArgN)</code> a signal to each of it's
+connected <code>slot<></code> objects</li>
+<li>note the return value of the last slot, or marshall all return
+values into a container, and return the result(s) back to the caller
+of <code>emit()</code></li>
+<li><code>make_slot()</code> provides a <code>slot<></code> object
+suitable for connection to another <code>signal<></code> to provide
+signal-to-signal connection.</li>
+<li>provide access to the list of slots, for slot reordering</li>
+</ul>
+
+<h5><code>sigc::slot&lt;R,Arg1,Arg2,...,ArgN&gt;</code></h5>
+
+<code>slot<></code> object is templatized in terms of a return value
+type R, and an arbitrary number of argument types
+<code>Arg1..N</code>.  The <code>slot<></code> object provides
+facilities to:</p>
+
+<ul>
+<li>encapsulate a function call to either a ptr-to-function using
+<code>sigc::ptr_fun()</code>, or ptr-to-member-function, or function
+object using <code>sigc::mem_fun()</code></li>
+<li>pass the arguments <code>Arg1..N</code> to the function it is wrapping</li>
+<li>pass the return value of the function back to the caller</li>
+</ul>
+
+<h5><code>sigc::connection</code></h5>
+
+<code>connection</code> object encapsulates an existing signal/slot
+connection.  The <code>connection</code> provides facilities to:</p>
+
+<ul>
+<li><code>disconnect()</code> the <code>slot<></code> object from the
+<code>signal<></code></li>
+<li>temporarily </code>block()</code> the <code>signal<></code> from
+calling the <code>slot<></code></li>
+<li></code>unblock()</code> the <code>slot<></code> to resume
+calling the <code>slot<></code></li>
+<li>check whether a <code>connection</code> is really connected or not</li>
+</ul>
+
+<h5><code>sigc::trackable</code></h5>
+
+<code>trackable</code> object provides a base class for objects which
+either contain <code>signal<></code> objects or are connected via
+<code>slot<></code> objects.  The <code>trackable</code> object
+provides facilities to:</p>
+
+<ul>
+<li>automatically disconnect associated <code>signal<></code> or
+<code>slot<></code> objects upon destruction.</li>
+<li>check whether a <code>connection</code> is really connected or not</li>
+</ul>
+
+
 <h4>Boost.Signals</h4>
+
+<h5><code>boost::signals::signal&lt;R (Arg1,Arg2,...,ArgN)&gt;</code></h5>
+
+<code>signal<></code> object is templatized in terms of a function
+signature with an arbitrary number of argument types
+<code>Arg1..N</code>.  The <code>signal<></code> object provides
+facilities to:</p>
+
+<ul>
+<li><code>connect()</code> a <code>slot<></code> object</li>
+<li><code>operator()(Arg1,Arg2,...,ArgN)</code> to emit a signal to
+  each of it's connected <code>slot<></code> objects</li>
+<li>note the return value of the last slot, or marshall all return
+values into a container, and return the result(s) back to the caller
+of <code>operator()()</code></li>
+<li>signals can be connected to other signals (directly)</li>
+<li>group <code>slot<></code> objects in logical groups for ordering
+<code>slot<></code calls</li>
+</ul>
+
+<h5><code>boost::signals::slot&lt;R (Arg1,Arg2,...,ArgN)&gt;</code></h5>
+
+<code>slot<></code> object is templatized in terms of a function
+signature with an arbitrary number of argument types
+<code>Arg1..N</code>.  The <code>slot<></code> object is generally
+invisible to the user, but provides facilities to:</p>
+
+<ul>
+<li>encapsulate a function call to either a ptr-to-function or
+function object.  If using a ptr-to-member-function,
+<code>boost::bind</code> must be used to bind the class object to the
+ptr-to-member-function</li>
+<li>pass the arguments <code>Arg1..N</code> to the function it is wrapping</li>
+<li>pass the return value of the function back to the caller</li>
+</ul>
+
+<h5><code>boost::signals::connection</code></h5>
+
+<code>connection</code> object encapsulates an existing signal/slot
+connection.  The <code>connection</code> provides facilities to:</p>
+
+<ul>
+<li><code>disconnect()</code> the <code>slot<></code> object from the
+<code>signal<></code></li>
+<li>temporarily </code>block()</code> the <code>signal<></code> from
+calling the <code>slot<></code></li>
+<li></code>unblock()</code> the <code>slot<></code> to resume
+calling the <code>slot<></code></li>
+<li>check whether a <code>connection</code> is really connected or not</li>
+</ul>
+
+<h5><code>boost::signals::trackable</code></h5>
+
+<code>trackable</code> object provides a base class for objects which
+either contain <code>signal<></code> objects or are connected via
+<code>slot<></code> objects.  The <code>trackable</code> object
+provides facilities to:</p>
+
+<ul>
+<li>automatically disconnect associated <code>signal<></code> or
+<code>slot<></code> objects upon destruction.</li>
+</ul>
+
+
 <h4>.NET delegates</h4>
 <h4><code>tr1::function</code></h4>
 
@@ -41,6 +271,30 @@ Very little to say here, probably.
 <h2>Proposed text</h2>
 
 
+<h2>Unresolved Issues</h2>
+
+<h3>Number of Arguments</h3>
+
+<p>The number of arguments allowed to a signal will be fixed to some
+arbitrary number.  Given that someone somewhere will find that limit
+inadequate, no matter what limit is chosen, some easy mechanism might
+be chosen to allow the user to define a signal/slot combination with
+the desired number of arguments.</p>
+<p><code>libsigc++2</code> provides
+this capability in the form of m4 macros which can be processed into a
+header file form.</p>
+<p>Boost.Signals implements the signal/slot objects in
+terms of preprocessor macros, allowing easy customization.</p>
+
+<h3><code>Slot<></code> Grouping</h3>
+
+<p>Boost.Signals provides a mechanism for grouping slots in some
+logical orderly fashion.  It has been shown in the Boost.Signals
+implementation that this feature causes pain in the implementation,
+and the author has expressed a desire to drop this feature from the
+TR2 proposal.  Perhaps there is a way to build a grouping mechanism in
+"user space" code, utilizing a signal-to-signal connection capability
+as is provided in <code>libsigc++2</code>.</p>
 
 <h2>References</h2>
 
@@ -48,5 +302,15 @@ Very little to say here, probably.
 
 <hr>
 <address>dgregor</address>
-<!-- hhmts start -->Last modified: Tue Jul 26 15:43:05 EST 2005 <!-- hhmts end -->
+<!-- hhmts start -->Last modified: Tue Jul 26 15:43:05 EST 2005 <!-- -->
+<!--hhmts end -->
+<br><br>
+<address>cjnygard</address>
+<!-- hhmts start -->Last modified: Tue Aug 2 13:06:14 EST 2005<br>
+<pre>* added Existing Practice for libsigc++2 and Boost.Signals, with some commentary
+* added section for Unresolved Issues, with entries for number of args and grouping
+* added <spew> to Motivation, expecting rough treatment editorially
+</pre>
+<!-- hhmts end -->
+<br><br>
 </body> </html>
