@@ -44,12 +44,17 @@
 //  - Nov 2004: Christoph Ludwig found that the implementation did not work with
 //              template types and gcc-3.4 or VC7.1, fix due to Christoph Ludwig
 //              and John Maddock.
+//  - Dec 2004: Added new config macro BOOST_NO_IS_ABSTRACT which causes the template
+//              to degrade gracefully, rather than trash the compiler (John Maddock).
 //
 
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/detail/yes_no_type.hpp>
 #include <boost/type_traits/is_class.hpp>
 #include "boost/type_traits/detail/ice_and.hpp"
+#ifdef BOOST_NO_IS_ABSTRACT
+#include <boost/type_traits/is_polymorphic.hpp>
+#endif
 // should be the last #include
 #include "boost/type_traits/detail/bool_trait_def.hpp"
 
@@ -57,8 +62,9 @@
 namespace boost {
 namespace detail{
 
+#ifndef BOOST_NO_IS_ABSTRACT
 template<class T>
-struct is_abstract_imp
+struct is_abstract_imp2
 {
    // Deduction fails if T is void, function type, 
    // reference type (14.8.2/2)or an abstract class type 
@@ -72,26 +78,57 @@ struct is_abstract_imp
    // T must be a complete type, further if T is a template then
    // it must be instantiated in order for us to get the right answer:
    //
-   BOOST_STATIC_ASSERT(sizeof(T));
+   BOOST_STATIC_ASSERT(sizeof(T) != 0);
 
    // GCC2 won't even parse this template if we embed the computation
    // of s1 in the computation of value.
 #ifdef __GNUC__
-   BOOST_STATIC_CONSTANT(unsigned, s1 = sizeof(is_abstract_imp<T>::template check_sig<T>(0)));
+   BOOST_STATIC_CONSTANT(unsigned, s1 = sizeof(is_abstract_imp2<T>::template check_sig<T>(0)));
 #else
    BOOST_STATIC_CONSTANT(unsigned, s1 = sizeof(check_sig<T>(0)));
 #endif
     
    BOOST_STATIC_CONSTANT(bool, value = 
-      (::boost::type_traits::ice_and<
-         ::boost::is_class<T>::value,
-         (s1 == sizeof(type_traits::yes_type))
-      >::value));
+      (s1 == sizeof(type_traits::yes_type)));
 };
 
+template <bool v>
+struct is_abstract_select
+{
+   template <class T>
+   struct rebind
+   {
+      typedef is_abstract_imp2<T> type;
+   };
+};
+template <>
+struct is_abstract_select<false>
+{
+   template <class T>
+   struct rebind
+   {
+      typedef false_type type;
+   };
+};
+
+template <class T>
+struct is_abstract_imp
+{
+   typedef is_abstract_select< ::boost::is_class<T>::value> selector;
+   typedef typename selector::template rebind<T> binder;
+   typedef typename binder::type type;
+
+   BOOST_STATIC_CONSTANT(bool, value = type::value);
+};
+
+#endif
 }
 
+#ifndef BOOST_NO_IS_ABSTRACT
 BOOST_TT_AUX_BOOL_TRAIT_DEF1(is_abstract,T,::boost::detail::is_abstract_imp<T>::value)
+#else
+BOOST_TT_AUX_BOOL_TRAIT_DEF1(is_abstract,T,::boost::detail::is_polymorphic_imp<T>::value)
+#endif
 
 } // namespace boost
 
