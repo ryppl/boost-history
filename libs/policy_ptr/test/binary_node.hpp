@@ -116,6 +116,10 @@ namespace binary_node
         binary_container<SpTypes,contains_one>
       my_type
       ;
+          typedef
+        typename SpTypes::collector
+      collector_type
+      ;
           typedef 
         typename SpTypes::template source<my_type>::type
       src_type
@@ -265,6 +269,10 @@ namespace binary_node
         binary_container<SpTypes,contains_two>
       my_type
       ;
+          typedef
+        typename SpTypes::collector
+      collector_type
+      ;
           typedef 
         typename SpTypes::template source<my_type>::type
       src_type
@@ -355,6 +363,12 @@ namespace binary_node
 }//exit binary_node namespace   
 //---------------------------
 //ChangeLog:
+//  2005-08-15 Larry Evans
+//    WHAT:
+//      Added typedef ... collector_type to binary_container templates.
+//    WHY:
+//      To enable change mentioned in ChangeLog for this date in
+//      std_ptr_binary_node_test.cpp.
 //  2005-06-17 Larry Evans
 //    WHAT:
 //      added counter_con()const

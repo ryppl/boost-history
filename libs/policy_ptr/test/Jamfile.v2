@@ -13,7 +13,7 @@
 #      The required modification can be done by executing the following
 #      command:
   
-#        python preprocess.py all $(BOOST_ROOT) vector_c.cpp
+#        python preprocess.py all $BOOST_ROOT vector_c.cpp
 #  
 #      in libs/mpl/preprocessed *after* replacing:
 #  
@@ -27,10 +27,9 @@
 #      systems, the files:
 
 #        libs/mpl/preprocessed/preprocess.py
-#        libs/mpl/preprocessed/preprocess
 
 #      should also be copied from the sandbox to the corresponding
-#      files below your $(BOOST_ROOT) *before* implementing the steps
+#      files below your $BOOST_ROOT *before* implementing the steps
 #      described under SOLUTION:
 
 #    TESTED:
@@ -39,9 +38,11 @@
 #      tested are in subdirectories:
 
 #        gcc
-#        plain
 
 #      The only operating system tested is linux/debian.
+
+#      The only test was running this Jamfile.v2 with target:
+#        std_ptr_binary_node_test.
 
 #-----------------------------------------------------------------
 
@@ -93,20 +94,8 @@ run-utf std_ptr_binary_node_test
     ../src/detail/collector_sp_counted_tagged.cpp
     ../../utility/build//debug
     ../../io/filters/build//mout
-  #2005-06-23
-  #  Added tests for container_two (stl-like containers).  Tests
-  #  for container_two pass; however, there's a serious problem
-  #  mentioned in ChangeLog to shared_count_hook_sp_counted_accepting.hpp.
-  #2005-06-17
-  #  Test for add_spid_tests<std_shared_graph_tagged>
-  #  for cycle_{1,2}_external
-  #  still fails (despite the "shared_count_hook*" changes which
-  #  corrected the order of release and tag zeroing).  In addition,
-  #  std_shared_graph_accepting for TestId=1:std_numeral=1
-  #  (i.e. simple_cycle_1_external_sp and std_shared_graph_accepting)
-  #  now fails.
-  #2005-06-13
-  #  Test fails for add_spid_tests<std_shared_graph_tagged>
-  #  for cycle_{1,2}_external
+  #2005-08-16
+  #  All tests pass after making change described in
+  #  2005-08-15 ChangeLog of std_ptr_binary_node_test.cpp.
   ;
 

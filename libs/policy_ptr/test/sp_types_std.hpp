@@ -84,6 +84,15 @@ namespace boost
           ;
       };
       
+        struct
+      collector
+      {
+              static
+            void
+          collect(void)
+          {}
+      };
+      
   };//end sp_types_std<std_shared_dag> specialization
   
 #ifdef SHARED_GRAPH  
@@ -146,6 +155,13 @@ namespace boost
           ;
       };
       
+          typedef
+        policy_ptr::detail::collector
+        < policy_ptr::detail::sp_counted_accepting
+        >
+      collector
+      ;
+      
   };//end sp_types_std<std_shared_graph_accepting> specialization
   
     template
@@ -195,12 +211,26 @@ namespace boost
           ;
       };
       
+          typedef
+        policy_ptr::detail::collector
+        < policy_ptr::detail::sp_counted_tagged
+        >
+      collector
+      ;
+      
   };//end sp_types_std<std_shared_graph_tagged> specialization
   
 #endif //SHARED_GRAPH
 }//exit boost namespace    
 //----------------------------------------
 //ChangeLog:
+//  2005-08-15: Larry Evans
+//    WHAT:
+//      Added nested collector typedef/struct to 
+//      sp_types_std.
+//    WHY:
+//      To enable change mentioned in ChangeLog for this date in
+//      binary_node.hpp.
 //  2005-06-15: Larry Evans
 //    WHAT:
 //      Renamed include files from:

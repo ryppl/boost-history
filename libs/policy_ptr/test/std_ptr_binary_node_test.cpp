@@ -30,6 +30,10 @@ struct sp_node
       >
     type
     ;
+        typedef
+      typename SpTypes::collector
+    collector
+    ;
 };
 
     typedef 
@@ -95,9 +99,7 @@ namespace boost
     test_ops
     {
             typedef
-          policy_ptr::detail::collector
-          < policy_ptr::detail::sp_counted_accepting
-          >
+          typename BinaryNode::collector_type
         collector_type
         ;
             typedef
@@ -153,6 +155,34 @@ namespace boost
         }
     };
     
+      char const*const
+    test_names
+      [ num_tests ]
+    =
+    { "simple_list     "
+    , "cycle_1_external"
+    , "cycle_2_external"
+    };
+    
+      char const*const
+    multiplicity_names
+      [ binary_node::contains_two+1 ]
+    =
+    { "one"
+    , "two"
+    };
+    
+      char const*const
+    sp_names
+      [ num_sp ]
+    =
+    { "dag               "
+  #ifdef SHARED_GRAPH
+    , "graph_precise     "
+    , "graph_conservative"
+  #endif
+    };
+    
       bool const
     expect_pass
       [ num_tests ]
@@ -184,7 +214,7 @@ namespace boost
         , //std_shared_graph_accepting
           true
         , //std_shared_graph_tagged
-          false
+          true
         }
       , //contains_two
         { //std_shared_dag
@@ -202,7 +232,7 @@ namespace boost
         , //std_shared_graph_accepting
           true
         , //std_shared_graph_tagged
-          false
+          true
         }
       , //contains_two
         { //std_shared_dag
@@ -226,9 +256,9 @@ namespace boost
         sp_std_numerals const sp_id=BinaryNode::our_std_numeral;
         binary_node::member_multiplicity const multip_id=BinaryNode::our_multiplicity;
         mout()
-          <<":TestId="<<TestId
-          <<":std_numeral="<<sp_id
-          <<":multiplicity="<<multip_id
+          <<":TestId="<<test_names[TestId]
+          <<":std_numeral="<<sp_names[sp_id]
+          <<":multiplicity="<<multiplicity_names[multip_id]
           <<"\n";
         ++mout();
         test<BinaryNode,test_ops>::vec[TestId](); 
@@ -281,11 +311,11 @@ struct add_test
 };
 
   template
-  < binary_node::member_multiplicity Multip=binary_node::contains_two
+  < binary_node::member_multiplicity Multip=binary_node::contains_one
   , class TestIds=mpl::vector_c
     < binary_node_graph_tests::test_ids
-   // , binary_node_graph_tests::simple_list
-   // , binary_node_graph_tests::cycle_1_external
+    , binary_node_graph_tests::simple_list
+    , binary_node_graph_tests::cycle_1_external
     , binary_node_graph_tests::cycle_2_external
     >
   >
@@ -300,7 +330,6 @@ struct add_tests
       void
     add_spid(void)const
     {
-        //my_tests->add(BOOST_TEST_CASE((&simple_test<sp_node<sp_types_std<SpId>,Multip> >)));
         add_test<SpId,Multip> test_adder(my_tests);
         mpl::for_each<TestIds>(test_adder);
     }
@@ -317,14 +346,30 @@ void always_fail(void)
 butf::test_suite* init_unit_test_suite(int argc, char* argv[])
 {
     butf::test_suite* tests = BOOST_TEST_SUITE("std_binary_node tests");
-    add_tests<> test_adder(tests);
-    test_adder.add_spid<std_shared_graph_accepting>();
+    {
+        add_tests<binary_node::contains_one> test_adder(tests);
+        test_adder.add_spid<std_shared_graph_accepting>();
+        test_adder.add_spid<std_shared_graph_tagged>();
+    }
+    {
+        add_tests<binary_node::contains_two> test_adder(tests);
+        test_adder.add_spid<std_shared_graph_accepting>();
+        test_adder.add_spid<std_shared_graph_tagged>();
+    }
 //    tests->add(BOOST_TEST_CASE(always_fail));
 
     return tests;
 }
 //--------------------------------
 //ChangeLog:
+//  2005-08-15 Larry Evans
+//    WHAT:
+//      1) replaced test_ops<...>::collector_type definition with one
+//         which depends on BinaryNode (instead of being hardcoded as
+//         collector<sp_counted_accepting> ).
+//    WHY:
+//      1) To allow cycle test for sp_counted_tagged smart pointers to 
+//         pass.
 //  2005-06-22 Larry Evans
 //    WHAT:
 //      1) added expect_pass elements for multiplicity=contains_two.
@@ -340,4 +385,3 @@ butf::test_suite* init_unit_test_suite(int argc, char* argv[])
 //    WHY:
 //      1) Less typing and consequent "clutter".
 //      2) dfs_printer interface changed.
-
