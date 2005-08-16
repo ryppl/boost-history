@@ -11,6 +11,15 @@
 # $Date$
 # $Revision$
 
+# ChangeLog:
+#   2005-08-16 Larry Evans
+#     WHAT:
+#       replaced definition of cpp with contents of preprocess.cmd.
+#     WHY:
+#       to enable use on non-windows os's (hopefully).  
+#     TESTED:
+#       on linux, but not on windows.
+
 import shutil
 import os.path
 import os
@@ -18,9 +27,8 @@ import sys
 
 def process( file, boost_root, dst_dir, mode ):
     file_path = "%s.hpp" % os.path.splitext( file )[0]
-    cpp = os.path.join(".","preprocess")
-
-    os.system( "%s %s %s %s %s" % ( cpp, boost_root, mode, file, file_path ) )
+    cpp = "gcc -E -C -I%s \"-D BOOST_USER_CONFIG=<%s/libs/mpl/preprocessed/include/%s/user.hpp>\" -D BOOST_MPL_CFG_NO_OWN_PP_PRIMITIVES %s >%s" % ( boost_root, boost_root, mode, file, file_path )
+    os.system( cpp )
     os.rename( file_path, "%s.tmp" % file_path )
     os.system( "python pp.py %s.tmp %s" % ( file_path, file_path ) )
     os.remove( "%s.tmp" % file_path )
