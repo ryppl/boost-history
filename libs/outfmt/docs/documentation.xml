@@ -1,0 +1,939 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<?xml-stylesheet href = "http://mscl/xslt/docs/document.xsl" type = "text/xsl"?>
+
+<d:document para-format = "none" hastoc = "display" title  = "Output Formatters"
+   xmlns:d = "http://www.softwave.net/XML/Document"
+   xmlns   = "http://www.softwave.net/XML/HyperText"
+   xmlns:c = "http://www.softwave.net/XML/CodeListing"
+>
+   <d:note>Save As: Web Page, HTML Only; encoding: Western European (ISO)</d:note>
+
+   <d:copyright year = "2003">
+      <d:author name = "Reece H. Dunn" email = "msclrhd@hotmail.com"/>
+   </d:copyright>
+
+   <d:section title = "Introduction">
+      <d:section title = "The Problem">
+         <paragraph>
+            The C++ Input/Output library provides a mechanism for customizing the way a class is represented
+            on a linear text stream. There are output operations for the basic data types as well as for
+            <code>std::complex</code> and other data types in the standard library.
+         </paragraph><paragraph>
+            Having said that, there are no output operations for any of the STL container types. There is a
+            reason for this: how do we represent the list? Different applications would want different ways
+            for the list to be represented, so there is no easy way to specify a default format. What if you
+            need to output a sub-list? Or have the same format across different container types? Or have
+            different formatting for different objects that have the same container type?
+         </paragraph>
+      </d:section><d:section title = "The Solution">
+         <paragraph>
+            Designing a library that can cope with these problems, as well as others not considered here,
+            while remaining efficient is no easy task. There are other attempts to solve these sorts of
+            problems.
+         </paragraph><paragraph>
+            The motivation behind using manipulators is that they are already designed into the C++ I/O
+            library and require little overhead in the output process. They also give the user maximum
+            choice in <i>how</i> the data being outputted is formatted.
+         </paragraph>
+      </d:section><d:section title = "Definitions">
+         <d:section title = "ForwardIterator" id = "def-fwditer">
+            <paragraph>
+               A type indicating a forward iterator as defined by C++98, that supports the following
+               operations:
+               <table border = "1">
+                  <tr><td><code>a != b</code></td><td>compare two iterators for inequality</td></tr>
+                  <tr><td><code>++i</code>   </td><td>move to the next item               </td></tr>
+                  <tr><td><code>*i</code>    </td><td>access the item data                </td></tr>
+               </table>
+            </paragraph>
+         </d:section><d:section title = "Container" id = "def-container">
+            <paragraph>
+               A container type that has the following:
+               <table border = "1">
+                  <tr>
+                     <td valign = "top"><code>typename Container::iterator</code></td>
+                     <td valign = "top">an iterator that is a ForwardIterator type</td>
+                  </tr><tr>
+                     <td valign = "top"><code>typename Container::iterator Container::begin()</code></td>
+                     <td valign = "top">returns the first element in the container</td>
+                  </tr><tr>
+                     <td valign = "top"><code>typename Container::iterator Container::end()</code></td>
+                     <td valign = "top">returns "one-past-the-end" for the container type</td>
+                  </tr>
+               </table>
+            </paragraph>
+         </d:section><d:section title = "Output Facilities" id = "def-output">
+            <paragraph>
+               The type is capable of being outputted to a standard ostream:
+               <c:code indent = "true">
+                  <c:line>std::basic_ostream&lt; CharT, Traits &gt; &amp; operator&lt;&lt;</c:line>
+                  <c:block open = "(" close = ");">
+                     <c:line>std::basic_ostream&lt; CharT, Traits &gt; &amp; os,</c:line>
+                     <c:line>const T &amp; type</c:line>
+                  </c:block>
+               </c:code>
+            </paragraph>
+         </d:section><d:section title = "Markers" id = "def-markers">
+            <paragraph>
+               A sequence of characters used between data items. There are three markers
+               currently used by this library: open sequence; close sequence; and separator. 
+            </paragraph>
+         </d:section>
+      </d:section><d:section title = "Portability">
+         <paragraph>
+            The code has been succesfully tested on:
+            <list>
+               <li>
+                  MS VC++ 6.0, 7.0 and 7.1
+                  <note>
+                     C-style arrays are only supported within type deduction for MS VC 7.1.
+                  </note>
+               </li>
+               <li>Borland C++Compiler 5.5.1 and 5.6.4</li>
+               <li>GNU G++ 3.x (under the i686-pc-cygwin environment)</li>
+               <li>
+                  GNU G++ 2.95.3-5 (under the i686-pc-cygwin environment)
+                  <note>
+                     Type deduction does not work, but the rest of the library does.
+                  </note>
+               </li>
+               <li>Intel 7.1</li>
+            </list>
+         </paragraph><paragraph>
+            Most of the code will now work on MSVC 6.0. Thanks to Jonathan Turkanis for his
+            help porting the code.
+         </paragraph>
+      </d:section>
+   </d:section><d:section title = "Standard Container Output">
+      <paragraph><table cellpadding = "0">
+         <tr><td>include:  </td><td><link href = "../../../boost/outfmt/stl_io.hpp">boost/outfmt/stl_io.hpp</link></td></tr>
+         <tr><td>examples: </td><td><link href = "../examples/stl_io.cpp">libs/outfmt/examples/stl_io.cpp</link></td></tr>
+      </table></paragraph>
+      
+      <paragraph>
+         This is a helper file that provides output semantics for the standard library
+         containers.
+      </paragraph><example>
+         <c:code indent = "true">
+            <c:line>std::list&lt; char &gt; l;</c:line>
+            <c:comment>...</c:comment>
+            <c:line>std::cout &lt;&lt; l;
+               <c:comment>output: [ A, B, C ]</c:comment>
+            </c:line>
+         </c:code>
+      </example><paragraph>
+         supported standard containers and types:
+         <table border = "1">
+            <tr>
+               <td><code>std::pair     </code></td>
+               <td><code>std::map      </code></td>
+               <td><code>std::multimap </code></td>
+            </tr><tr>
+               <td><code>std::vector   </code></td>
+               <td><code>std::set      </code></td>
+               <td><code>std::multiset </code></td>
+            </tr><tr>
+               <td><code>std::list          </code></td>
+               <td><code>std::hash_map      </code></td>
+               <td><code>std::hash_multimap </code></td>
+            </tr><tr>
+               <td><code>std::slist         </code></td>
+               <td><code>std::hash_set      </code></td>
+               <td><code>std::hash_multiset </code></td>
+            </tr><tr>
+               <td><code>std::deque  </code></td>
+            </tr>
+         </table>
+      </paragraph>
+   </d:section><d:section title = "Output Manipulators">
+      <d:section title = "boost::io::formatlist" id = "formatlist">
+         <paragraph><table cellpadding = "0">
+            <tr><td>include:  </td><td><link href = "../../../boost/outfmt/formatlist.hpp">boost/outfmt/formatlist.hpp</link></td></tr>
+            <tr><td>examples: </td><td><link href = "../examples/basic-facilities.cpp">libs/outfmt/examples/basic-facilities.cpp</link></td></tr>
+         </table></paragraph>
+
+         <d:section title = "Range Output">
+            <c:code indent = "true">
+               <c:line>boost::io::formatlist</c:line>
+               <c:block open = "(" close = ");">
+                  <c:line>ForwardIterator first,</c:line>
+                  <c:line>ForwardIterator last</c:line>
+               </c:block>
+            </c:code><paragraph>
+               This manipulator will format the list specified by the range
+               [first, last). It requires that the elements contained in the
+               sequence have output facilities (i.e. define operator&lt;&lt;
+               on a std::basic_ostream&lt; CharT, Traits &gt;).
+            </paragraph><example>
+               <c:code indent = "true">
+                  <c:line>std::vector&lt; int &gt; v;</c:line>
+                  <c:comment>...</c:comment>
+                  <c:line>std::cout &lt;&lt; boost::io::formatlist( v );
+                     <c:comment>output: [ 3, 6, 9, 12 ]</c:comment>
+                  </c:line>
+               </c:code>
+            </example><paragraph>
+               The manipulator conforms to the format object generator guidelines in
+               section <d:ref section = "fo-gen"/>.
+            </paragraph>
+         </d:section><d:section title = "Container Output">
+            <c:code indent = "true">
+               <c:line>boost::io::formatlist</c:line>
+               <c:block open = "(" close = ");">
+                  <c:line>Container &amp; c</c:line>
+               </c:block>
+            </c:code><paragraph>
+               This is a variant of the boost::io::formatlist manipulator that
+               takes a sequential container as its argument. It outputs the range
+               [begin(), end()), and requires that the elements in the sequence
+               have output facilities.
+            </paragraph><example>
+               <c:code indent = "true">
+                  <c:line>int i[ 4 ] = { 1, 2, 3, 4 };</c:line>
+                  <c:line>std::cout &lt;&lt; boost::io::formatlist( i, i + 4 );
+                     <c:comment>output: [ 1, 2, 3, 4 ]</c:comment>
+                  </c:line>
+               </c:code>
+            </example><paragraph>
+               The manipulator conforms to the format object generator guidelines
+               in section <d:ref section = "fo-gen"/>.
+            </paragraph>
+         </d:section>
+      </d:section><d:section title = "boost::io::formatob" id = "formatob">
+         <paragraph><table cellpadding = "0">
+            <tr><td>include: </td><td><link href = "../../../boost/outfmt/formatob.hpp">boost/outfmt/formatob.hpp</link></td></tr>
+         </table></paragraph>
+
+         <d:section title = "Form">
+            <c:code indent = "true">
+               <c:line>boost::io::formatob</c:line>
+               <c:block open = "(" close = ");">
+                  <c:line>const T &amp; ob</c:line>
+               </c:block>
+            </c:code><paragraph>
+               The manipulator conforms to the format object generator guidelines
+               in section <d:ref section = "fo-gen"/>.
+            </paragraph>
+         </d:section><d:section title = "Automatic Type Deduction">
+            <paragraph><table cellpadding = "0">
+               <tr>
+                  <td rowspan = "2" valign = "top">examples: </td>
+                  <td><link href = "../examples/output-2D.cpp">libs/outfmt/examples/output-2D.cpp</link></td>
+               </tr><tr>
+                  <td><link href = "../examples/output-3D.cpp">libs/outfmt/examples/output-3D.cpp</link></td>
+               </tr>
+            </table></paragraph>
+
+            <paragraph>
+               The library is capable of deducing the type being output, including
+               complex nested types. The library uses this type information to
+               produce an outputter that can format that type.
+            </paragraph><note>
+               Type deduction is not present on <code>boost::io::formatobout</code>,
+               since the format structure is provided by the user.
+            </note>
+         </d:section>
+      </d:section>
+   </d:section><d:section title = "Formatting Options" id = "fmtopt">
+      <paragraph><table cellpadding = "0">
+         <tr>
+            <td rowspan = "2" valign = "top">examples: </td>
+            <td><link href = "../examples/format-options.cpp">libs/outfmt/examples/format-options.cpp</link></td>
+         </tr><tr>
+            <td><link href = "../examples/formatter.cpp">libs/outfmt/examples/formatter.cpp</link></td>
+         </tr>
+      </table></paragraph>
+
+      <paragraph>
+         The formatting facilities are included indirectly when you include other
+         files in the library. They are used in the implementation of the output
+         facilities of the library, including <code>boost::io::formatlist</code>.
+      </paragraph><paragraph>
+         These facilities control what is output at the start of a sequence, as a
+         separator between elements and at the end of the sequence.
+      </paragraph>
+      
+      <d:section title = "Format Traits" id = "fmt-traits">
+         <paragraph>
+            The format traits contain the default values for pair types
+            (<code>boost::io::detail::pair_traits</code>) and sequence types
+            (<code>boost::io::detail::format_traits</code>). These have the
+            following form:
+         </paragraph><c:code indent = "true">
+            <c:line>template&lt; typename CharT &gt;</c:line>
+            <c:line>struct format_traits</c:line>
+            <c:block open = "{" close = "};">
+               <c:line>static const CharT open_default = <c:impl>implemenation defined</c:impl>;</c:line>
+               <c:line>static const CharT close_default = <c:impl>implemenation defined</c:impl>;</c:line>
+               <c:line>static const CharT separator_default = <c:impl>implemenation defined</c:impl>;</c:line>
+            </c:block>
+         </c:code><paragraph>
+            <code>boost::io::detail::pair_traits</code> provides the default formatting:
+            <c:code indent = "true"><c:line>( ..., ... )</c:line></c:code>
+         </paragraph><paragraph>
+            <code>boost::io::detail::format_traits</code> defaults the default formatting:
+            <c:code indent = "true"><c:line>[ ..., ... ]</c:line></c:code>
+         </paragraph><paragraph>
+            Both are defined for <code>char</code>, <code>wchar_t</code>, <code>char *</code>
+            and <code>wchar_t *</code>. If partial template specialisation is supported,
+            it is also specialized for <code>std::basic_string</code>, otherwise
+            <code>std::string</code> and <code>std::wstring</code> are supported.
+         </paragraph>
+      </d:section><d:section title = "Open/Close Formatter">
+         <d:section title = "boost::io::openclose_formatter_t">
+            <c:code indent = "true">
+               <c:list>template</c:list>
+               <c:block open = "&lt;" close = "&gt;">
+                  <c:line>typename FormatType,</c:line>
+                  <c:line>class ReferenceType,</c:line>
+                  <c:line>class FormatTraits = boost::io::detail::format_traits&lt; FormatType &gt;</c:line>
+               </c:block>
+               <c:line>class openclose_formatter_t;</c:line>
+            </c:code><paragraph>
+               <code>boost::io::openclose_formatter_t</code> defines the formatting
+               facilities for wrapping around a output type. It defines the following
+               types:
+               <table border = "1">
+                  <tr>
+                     <td valign = "top"><code>format_type</code></td>
+                     <td>the character/string type used in the formatting</td>
+                  </tr><tr>
+                     <td valign = "top"><code>traits_type</code></td>
+                     <td>a format traits class defined in section <d:ref section = "fmt-traits"/></td>
+                  </tr>
+               </table>
+            </paragraph><paragraph>
+               The ReferenceType parameter is used to specify the return type on the
+               format( ... ) function, allowing further access to the derived object.
+               This allows you to apply formatting onto a manipulator, like the example
+               in section <d:ref section = "ocfmt-format"/>.
+            </paragraph>
+            <d:section title = "open">
+               <c:code indent = "true">
+                  <c:line>typename openclose_formatter_t::format_type
+                     openclose_formatter_t::open() const;
+                  </c:line>
+               </c:code><paragraph>
+                  Returns the current value for the formatting at the start of the
+                  output type.
+               </paragraph>
+            </d:section><d:section title = "close">
+               <c:code indent = "true">
+                  <c:line>typename openclose_formatter_t::format_type
+                     openclose_formatter_t::close() const;
+                  </c:line>
+               </c:code><paragraph>
+                  Returns the current value for the formatting at the end of the output type.
+               </paragraph>
+            </d:section><d:section title = "format" id = "ocfmt-format">
+               <c:code indent = "true">
+                  <c:line>ReferenceType &amp; openclose_formatter_t::format</c:line>
+                  <c:block open = "(" close = ");">
+                     <c:line>format_type o,</c:line>
+                     <c:line>format_type c</c:line>
+                  </c:block>
+               </c:code><paragraph>
+                  Sets the values for the opening and closing formatting.
+               </paragraph><example>
+                  <c:code indent = "true">
+                     <c:line>std::vector&lt; int &gt; v;</c:line>
+                     <c:comment>...</c:comment>
+                     <c:line>std::cout &lt;&lt; boost::io::formatlist( v ).format( "[ ", " )" );
+                        <c:comment>output: [ 3, 12 )</c:comment>
+                     </c:line>
+                  </c:code>
+               </example>
+
+               <c:code indent = "true">
+                  <c:line>template&lt; typename RT2, class FormatTraits2 &gt;</c:line>
+                  <c:line>ReferenceType &amp; openclose_formatter_t::format</c:line>
+                  <c:block open = "(" close = ");">
+                     <c:line>const openclose_formatter_t&lt; FormatType, RT2, FormatTraits2 &gt; &amp; fmt</c:line>
+                  </c:block>
+               </c:code><paragraph>
+                  Copies the values of the opening and closing formatting from one
+                  formatter to another, requiring only that they have the same FormatType.
+               </paragraph><paragraph>
+                  See <d:ref section = "ocfmt"/> for an example of this.
+               </paragraph>
+            </d:section>
+         </d:section><d:section title = "boost::io::openclose_formatter" id = "ocfmt">
+            <c:code indent = "true">
+               <c:line>template</c:line>
+               <c:block open = "&lt;" close = "&gt;">
+                  <c:line>typename FormatType,</c:line>
+                  <c:line>class FormatTraits = boost::io::detail::format_traits&lt; FormatType &gt;</c:line>
+               </c:block>
+               <c:line>class openclose_formatter;</c:line>
+            </c:code><paragraph>
+               <code>boost::io::openclose_formatter</code> is the usable end of
+               this formatter. The user can create an object of this type, set
+               special formatting to it, and then reuse it across different output
+               operations.
+            </paragraph><example>
+               <c:code indent = "true">
+                  <c:line>boost::io::openclose_formatter&lt; char * &gt; fmt( "| ", " |" );</c:line>
+                  <c:line>int i[ 4 ] = { 1, 2, 3, 4 };</c:line>
+                  <c:line>std::cout &lt;&lt; boost::io::formatlist( i, i + 2 ).format( fmt );
+                     <c:comment>output: | 1, 2 |</c:comment>
+                  </c:line>
+               </c:code>
+            </example>
+            <d:section title = "Constructors">
+               <c:code indent = "true"><c:line>openclose_formatter();</c:line></c:code>
+               <paragraph>
+                  Creates a <code>boost::io::openclose_formatter</code> object
+                  with default formatting.
+               </paragraph>
+
+               <c:code indent = "true"><c:line>openclose_formatter( format_type o, format_type c );</c:line></c:code>
+               <paragraph>
+                  Creates a <code>boost::io::openclose_formatter</code> object
+                  with custom formatting.
+               </paragraph>
+
+               <c:code indent = "true">
+                  <c:line>template&lt; typename RT2, class FormatTraits2 &gt;</c:line>
+                  <c:line>openclose_formatter</c:line>
+                  <c:block open = "(" close = ");">
+                     <c:line>const openclose_formatter_t&lt; FormatType, RT2, FormatTraits2 &gt; &amp; fmt</c:line>
+                  </c:block>
+               </c:code>
+               <paragraph>
+                  Creates a <code>boost::io::openclose_formatter</code> object
+                  with formatting inherited from <code>fmt</code>.
+               </paragraph>
+            </d:section>
+         </d:section>
+      </d:section><d:section title = "Formatter">
+         <d:section title = "boost::io::formatter_t">
+            <paragraph>
+               <code>boost::io::formatter_t</code> inherits from
+               <code>boost::io::openclose_formatter_t</code>, extending
+               <code>boost::io::openclose_formatter_t</code>'s capabilities to
+               include separators.
+            </paragraph>
+            <d:section title = "separator">
+               <c:code indent = "true"><c:line>typename openclose_formatter_t::format_type
+                  openclose_formatter_t::separator() const;</c:line>
+               </c:code>
+               <paragraph>
+                  Returns the current value for the formatting inbetween items in
+                  the sequence.
+               </paragraph>
+            </d:section><d:section title = "format">
+               <c:code indent = "true">
+                  <c:line>ReferenceType &amp; formatter_t::format(
+                     format_type o, format_type c, format_type s );</c:line>
+               </c:code><paragraph>
+                  Sets the values for the opening, closing and separator formatting.
+               </paragraph>
+
+               <c:code indent = "true">
+                  <c:line>ReferenceType &amp; formatter_t::format(
+                     format_type o, format_type c );</c:line>
+               </c:code><paragraph>
+                  Sets the values for the opening and closing formatting.
+               </paragraph>
+
+               <c:code indent = "true"><c:line>ReferenceType &amp; formatter_t::format( format_type s );</c:line></c:code>
+               <paragraph>
+                  Sets the value for the separator.
+               </paragraph>
+
+               <c:code indent = "true">
+                  <c:line>template&lt; typename RT2, class FormatTraits2 &gt;</c:line>
+                  <c:line>ReferenceType &amp; formatter_t::format</c:line>
+                  <c:block open = "(" close = ");">
+                     <c:line>const openclose_formatter_t&lt; FormatType, RT2, FormatTraits2 &gt; &amp; fmt</c:line>
+                  </c:block>
+               </c:code><paragraph>
+                  Copies the values of the opening and closing formatting from an
+                  <code>openclose_formatter</code> to a formatter object, requiring
+                  only that they have the same FormatType.
+               </paragraph>
+
+               <c:code indent = "true">
+                  <c:line>template&lt; typename RT2, class FormatTraits2 &gt;</c:line>
+                  <c:line>ReferenceType &amp; formatter_t::format</c:line>
+                  <c:block open = "(" close = ");">
+                     <c:line>const formatter_t&lt; FormatType, RT2, FormatTraits2 &gt; &amp; fmt</c:line>
+                  </c:block>
+               </c:code><paragraph>
+                  Copies the values of the opening, closing and separator
+                  formatting from one formatter to another, requiring only
+                  that they have the same FormatType.
+               </paragraph>
+            </d:section>
+         </d:section><d:section title = "boost::io::formatter">
+            <paragraph>
+               <code>boost::io::formatter</code> is the usable end of this
+               formatter. The user can create an object of this type, set
+               special formatting to it, and then reuse it across different
+               output operations.
+            </paragraph><example>
+               <c:code indent = "true">
+                  <c:line>boost::io::formatter&lt; char * &gt; fmt( "| ", " |", " : " );</c:line>
+                  <c:line>int i[ 4 ] = { 1, 2, 3, 4 };</c:line>
+                  <c:line>std::cout &lt;&lt; boost::io::formatlist( i, i + 2 ).format( fmt );
+                     <c:comment>output: | 1 : 2 |</c:comment>
+                  </c:line>
+               </c:code>
+            </example><d:section title = "Constructors">
+               <c:code indent = "true"><c:line>formatter()</c:line></c:code>
+               <paragraph>
+                  Creates a <code>boost::io::formatter</code> object with default formatting.
+               </paragraph>
+
+               <c:code indent = "true">
+                  <c:line>formatter</c:line>
+                  <c:block open = "(" close = ");">
+                     <c:line>format_type o,</c:line>
+                     <c:line>format_type c,</c:line>
+                     <c:line>format_type s = traits_type::separator_default</c:line>
+                  </c:block>
+               </c:code><paragraph>
+                  Creates a <code>boost::io::formatter</code> object with custom formatting.
+               </paragraph>
+
+               <c:code indent = "true"><c:line>formatter( format_type s )</c:line></c:code>
+               <paragraph>
+                  Creates a <code>boost::io::formatter</code> object with custom
+                  formatting for the separator only.
+               </paragraph>
+               
+               <c:code indent = "true">
+                  <c:line>template&lt; typename RT2, class FormatTraits2 &gt;</c:line>
+                  <c:line>formatter</c:line>
+                  <c:block open = "(" close = ");">
+                     <c:line>const openclose_formatter_t&lt; FormatType, RT2, FormatTraits2 &gt; &amp; fmt,</c:line>
+                     <c:line>format_type s = traits_type::separator_default</c:line>
+                  </c:block>
+               </c:code><paragraph>
+                  Creates a <code>boost::io::formatter</code> object with formatting
+                  inherited from fmt and providing optional separator formatting.
+               </paragraph>
+
+               <c:code indent = "true">
+                  <c:line>template&lt; typename RT2, class FormatTraits2 &gt;</c:line>
+                  <c:line>formatter</c:line>
+                  <c:block open = "(" close = ");">
+                     <c:line>const formatter_t&lt; FormatType, RT2, FormatTraits2 &gt; &amp; fmt</c:line>
+                  </c:block>
+               </c:code><paragraph>
+                  Creates a <code>boost::io::formatter</code> object with formatting
+                  inherited from fmt.
+               </paragraph>
+            </d:section>
+         </d:section>
+      </d:section>
+   </d:section><d:section title = "Format Objects: Outputters">
+      <d:section title = "Requirements">
+         <d:section title = "Format Objects">
+            <d:section title = "Funtion Object">
+               <paragraph>
+                  An outputter is required to have function object semantics by defining:
+               </paragraph>
+
+               <c:code indent = "true">
+                  <c:line>template&lt; typename T, class OutputStream &gt;</c:line>
+                  <c:line>inline OutputStream &amp; operator()( OutputStream &amp; os, const T &amp; value ) const</c:line>
+                  <c:block open = "(" close = ");">
+                     <c:comment>...</c:comment>
+                     <c:line>return( os );</c:line>
+                  </c:block>
+               </c:code>
+
+               <paragraph>
+                  T is the type being outputted using this outputter.
+               </paragraph><note>
+                  The type T here is a standin for the actual type being used. For
+                  example, the outputter can be implemented to accept
+                  <code>std::complex&lt; T &gt;</code>, allowing complex types to be
+                  formatted.
+               </note><paragraph>
+                  OutputStream is the stream type. This is not
+                  <code>std::basic_ostream&lt; CharT, Traits &gt;</code> here to
+                  simplify the implementation of the operator (it is easier to type!).
+                  If you want to use <code>std::basic_ostream&lt; CharT, Traits &gt;</code>
+                  instead, you can.
+               </paragraph><paragraph>
+                  The operator is const because the outputter is not modified. For
+                  state-based formatting that requires modification of the data,
+                  like position information, there is a special outputter. See
+                  <code>libs/outfmt/examples/john-torjo.cpp</code> for an example of this.
+               </paragraph>
+            </d:section><d:section title = "Formatting">
+               <paragraph>
+                  In order to be chained (when forming complex outputters for nested types),
+                  the outputter must define the type <code>format_type</code> to be the string
+                  or character type to be used for markers.
+               </paragraph><paragraph>
+                  In order to allow the user to customise the markers, an outputter should
+                  inherit from a formatter. See section <d:ref section = "fmtopt"/> for more
+                  information on formatters.
+                  <note>
+                     Formatters define the type <code>format_type</code>.
+                  </note>
+               </paragraph>
+            </d:section>
+         </d:section><d:section title = "Format Object Generators" id = "fo-gen">
+            <d:section title = "Requirements">
+               <d:section title = "name">
+                  <paragraph>
+                     This is the default format object generator. It uses the
+                     <code>char *</code> format type, and the default sub-element
+                     outputter used by the outputter.
+                  </paragraph>
+               </d:section><d:section title = "name-ex">
+                  <paragraph>
+                     This generator allows the format type to be specified via function
+                     template syntax:
+                     <c:code indent = "true">
+                        <c:line>nameex&lt; type &gt;( ... )</c:line>
+                     </c:code>
+                  </paragraph><example>
+                     <c:code indent = "true">
+                        <c:line>std::string s = "Hello IO World!";</c:line>
+                        <c:line>std::cout &lt;&lt; boost::io::formatlistex&lt; char &gt;( s );</c:line>
+                     </c:code>
+                  </example><paragraph>
+                     It uses the default sub-element outputter used by the outputter.
+                  </paragraph>
+               </d:section><d:section title = "name-out">
+                  <paragraph>
+                     This generator allows you to specify the sub-element outputter used
+                     by the outputter, allowing you to nest formatting for complex types.
+                     It will inherit the format type of the sub-element outputter.
+                  </paragraph><paragraph>
+                     The generator takes an additional parameter: an outputter object.
+                  </paragraph>
+               </d:section>
+            </d:section>
+         </d:section>
+      </d:section><d:section title = "Simple Type Outputters">
+         <d:section title = "boost::io::basic_output">
+            <paragraph>
+               <code>boost::io::basic_output</code> is used as a generic outputter,
+               providing no specific formatting.
+            </paragraph>
+            <d:section title = "boost::io::basicfmt">
+               <paragraph>
+                  This generator function creates a <code>boost::io::basic_output</code>
+                  object. It does not meets the requirements specified in section
+                  <d:ref section = "fo-gen"/>: it does not have any variants.
+               </paragraph>
+            </d:section>
+         </d:section><d:section title = "boost::io::wrapped_output">
+            <paragraph>
+               <code>boost::io::wrapped_output</code> inherits its formatting from
+               <code>boost::io::openclose_formatter_t</code>, allowing specific
+               formatting to be added around a type. This would be useful for things
+               like outputting a complex type as XML data.
+            </paragraph>
+            <d:section title = "boost::io::wrappedfmt">
+               <paragraph>
+                  This generator function creates a <code>boost::io::wrapped_output</code>
+                  object. It meets the requirements specified in section <d:ref section = "fo-gen"/>.
+               </paragraph>
+            </d:section>
+         </d:section>
+      </d:section><d:section title = "N-ary Type Outputters">
+         <d:section title = "boost::io::pair_output">
+            <paragraph><table cellpadding = "0">
+               <tr>
+                  <td rowspan = "2" valign = "top">examples: </td>
+                  <td><link href = "../examples/pair_output.cpp">libs/outfmt/examples/pair_output.cpp</link></td>
+               </tr><tr>
+                  <td><link href = "../examples/boost_output.cpp">libs/outfmt/examples/boost_output.cpp</link></td>
+               </tr>
+            </table></paragraph>
+
+            <paragraph>
+               <code>boost::io::pair_output</code> inherits its formatting from
+               <code>boost::io::formatter_t</code>, providing output of
+               <code>std::pair</code>, <code>std::complex</code>,
+               <code>boost::numeric::interval</code>, <code>boost::rational</code>
+               and <code>boost::compressed_pair</code> types.
+            </paragraph>
+            <d:section title = "boost::io::pairfmt">
+               <paragraph>
+                  This generator function creates a <code>boost::io::pair_output</code>
+                  object. It meets the requirements specified in section <d:ref section = "fo-gen"/>.
+               </paragraph>
+
+               <c:code indent = "true">
+                  <c:line>boost::io::pairfmtout</c:line>
+                  <c:block open = "(" close = ");">
+                     <c:line>const Outputter &amp; out</c:line>
+                  </c:block>
+               </c:code>
+               <paragraph>
+                  In this case, both types are outputted using the same outputter.
+               </paragraph>
+
+               <c:code indent = "true">
+                  <c:line>boost::io::pairfmtout</c:line>
+                  <c:block open = "(" close = ");">
+                     <c:line>const Outputter1 &amp; out1,</c:line>
+                     <c:line>const Outputter2 &amp; out2</c:line>
+                  </c:block>
+               </c:code>
+
+               <paragraph>
+                  In this case, each type is outputted using its own outputter,
+                  allowing specialist formatting for each type.
+               </paragraph>
+            </d:section>
+         </d:section><d:section title = "boost::io::static_nary_output">
+            <paragraph><table cellpadding = "0">
+               <tr>
+                  <td>examples: </td>
+                  <td><link href = "../examples/boost_output.cpp">libs/outfmt/examples/boost_output.cpp</link></td>
+               </tr>
+            </table></paragraph>
+
+            <paragraph>
+               <code>boost::io::static_nary_output</code> inherits its formatting
+               from <code>boost::io::formatter_t</code>, providing output of
+               <code>boost::math::quaternion</code> and
+               <code>boost::math::octonion</code> types.
+            </paragraph>
+            <d:section title = "boost::io::naryfmt">
+               <paragraph>
+                  This generator function creates a <code>boost::io::static_nary_output</code>
+                  object. It meets the requirements specified in section <d:ref section = "fo-gen"/>.
+               </paragraph>
+            </d:section>
+         </d:section>
+      </d:section><d:section title = "Sequence Outputters">
+         <d:section title = "boost::io::detail::list_output">
+            <paragraph>
+               <code>boost::io::detail::list_output</code> is a helper class,
+               inheriting its formatting from <code>boost::io::formatter_t</code>.
+               It is used to output sequential lists of the form [first, last).
+            </paragraph><paragraph>
+               <code>boost::io::detail::list_output</code> is not technically a format
+               object, since it has the function operator:
+            </paragraph>
+
+            <c:code indent = "true">
+               <c:line>template&lt; typename ForwardIterator, class OutputStream &gt;</c:line>
+               <c:line>inline OutputStream &amp; operator()</c:line>
+               <c:block open = "(" close = ");">
+                  <c:line>OutputStream &amp; os,</c:line>
+                  <c:line>ForwardIterator first,</c:line>
+                  <c:line>ForwardIterator last</c:line>
+               </c:block>
+            </c:code>
+            <paragraph>
+               The class is used to help the implementations of
+               <code>boost::io::array_output</code>, <code>boost::io::container_output</code>
+               and <code>boost::io::formatlist_t</code>.
+            </paragraph>
+         </d:section><d:section title = "boost::io::array_output">
+            <paragraph><table cellpadding = "0">
+               <tr>
+                  <td rowspan = "2" valign = "top">examples: </td>
+                  <td><link href = "../examples/output-2D.cpp">libs/outfmt/examples/output-2D.cpp</link></td>
+               </tr><tr>
+                  <td><link href = "../examples/output-3D.cpp">libs/outfmt/examples/output-3D.cpp</link></td>
+               </tr>
+            </table></paragraph>
+
+            <paragraph>
+               <code>boost::io::array_output</code> inherits its functionality from
+               <code>boost::io::detail::list_output</code>, supporting the output of
+               C-style arrays of the form <code>const T *</code>.
+            </paragraph><paragraph>
+               To facilitate the output of arrays, it defines two special function operators:
+            </paragraph>
+
+            <c:code indent = "true"><c:line>operator()( long len );</c:line></c:code>
+            <paragraph>
+               Specify the range [0, len) to be outputted.
+            </paragraph>
+
+            <c:code indent = "true"><c:line>operator()( long off, long len );</c:line></c:code>
+            <paragraph>
+               Specify the range [off, off + len) to be outputted.
+            </paragraph>
+            <d:section title = "boost::io::arrayfmt">
+               <paragraph>
+                  This generator function creates a <code>boost::io::array_output</code>
+                  object. It meets the requirements specified in section <d:ref section = "fo-gen"/>.
+                  Each form has three sub-variants:
+               </paragraph>
+
+               <c:code indent = "true"><c:line>boost::io::arrayfmt( long off, long len )</c:line></c:code>
+               <paragraph>
+                  Construct an array formatter for the range [off, off + len).
+               </paragraph>
+
+               <c:code indent = "true"><c:line>boost::io::arrayfmt( long len )</c:line></c:code>
+               <paragraph>
+                  Construct an array formatter for the range [0, len).
+               </paragraph>
+
+               <c:code indent = "true"><c:line>boost::io::arrayfmt()</c:line></c:code>
+               <paragraph>
+                  Constructs an array formatter, no range specified.
+               </paragraph>
+            </d:section>
+         </d:section><d:section title = "boost::io::container_output">
+            <paragraph><table cellpadding = "0">
+               <tr>
+                  <td rowspan = "2" valign = "top">examples: </td>
+                  <td><link href = "../examples/output-2D.cpp">libs/outfmt/examples/output-2D.cpp</link></td>
+               </tr>
+            </table></paragraph>
+
+            <paragraph>
+               <code>boost::io::container_output</code> inherits its functionality
+               from <code>boost::io::detail::list_output</code>, supporting the
+               output of containers as defined in section <d:ref section = "def-container"/>.
+            </paragraph>
+            <d:section title = "boost::io::containerfmt">
+               <paragraph>
+                  This generator function creates a <code>boost::io::container_output</code>
+                  object. It meets the requirements specified in section <d:ref section = "fo-gen"/>.
+               </paragraph>
+            </d:section>
+         </d:section>
+      </d:section><d:section title = "Output Manipulators">
+         <d:section title = "boost::io::formatlist_t">
+            <paragraph>
+               <code>boost::io::formatlist_t</code> is the class that is used to implement
+               the <code>boost::io::formatlist</code> manipulators. It is a hybrid between
+               a format object and a manipulator. See section <d:ref section = "formatlist"/>
+               for more details.
+            </paragraph>
+         </d:section><d:section title = "boost::io::formatob_t">
+            <paragraph>
+               <code>boost::io::formatob_t</code> is the class that is used to implement
+               the <code>boost::io::formatob</code> manipulators. It is a hybrid between
+               a format object and a manipulator, that inherits it's output capabilities
+               from another outputter. See section <d:ref section = "formatob"/> for more details.
+            </paragraph>
+         </d:section>
+      </d:section><d:section title = "State Outputters">
+         <paragraph><table cellpadding = "0">
+            <tr>
+               <td rowspan = "2" valign = "top">examples: </td>
+               <td><link href = "../examples/john-torjo.cpp">libs/outfmt/examples/john-torjo.cpp</link></td>
+            </tr>
+         </table></paragraph>
+
+         <d:section title = "boost::io::state_output">
+            <paragraph>
+               <code>boost::io::state_output</code> does not inherit from a formatter class,
+               and as such is not a standard format object.
+            </paragraph>
+            <d:section title = "State Objects">
+               <paragraph>
+                  A state object is a type of function object that has the form:
+               </paragraph>
+
+               <c:code indent = "true">
+                  <c:line>template&lt; class OutputStream &gt;</c:line>
+                  <c:line>inline OutputStream &amp; operator()</c:line>
+                  <c:block open = "(" close = ");">
+                     <c:line>OutputStream &amp; os</c:line>
+                  </c:block>
+               </c:code>
+
+               <paragraph>
+                  A state object should only output state information to the stream.
+               </paragraph>
+            </d:section><d:section title = "boost::io::statefmt">
+               <paragraph>
+                  This generator function creates a <code>boost::io::state_output</code>
+                  object. It meets the requirements specified in section
+                  <d:ref section = "fo-gen"/>, but has slightly different semantics.
+               </paragraph>
+
+               <c:code indent = "true">
+                  <c:line>statefmt&lt; StateObject, bool pre &gt;()</c:line>
+               </c:code>
+               <paragraph>
+                  This version takes a state object and specifies whether the state object
+                  is outputted before (<code>pre = true</code>) or after
+                  (<code>pre = false</code>) the outputter hosted by
+                  <code>boost::io::state_output</code>.
+               </paragraph>
+
+               <c:code indent = "true">
+                  <c:line>statefmtex&lt; FormatType, StateObject, bool pre &gt;()</c:line>
+               </c:code>
+               <paragraph>
+                  This version allows the user to specify the format type used by the
+                  outputters.
+               </paragraph>
+
+               <c:code indent = "true">
+                  <c:line>statefmt&lt; StateObject, bool pre &gt;( const Outputter &amp; o )</c:line>
+               </c:code>
+               <paragraph>
+                  This version controls the outputter used to format the data type.
+               </paragraph>
+            </d:section>
+         </d:section>
+      </d:section>
+   </d:section><d:section title = "Future Directions">
+      <d:section title = "Tutorials">
+         <paragraph><list>
+            <li>
+               How to create a Format Object to support a new data type.
+            </li><li>
+               How to create a Format Object Adaptor to leverage formatting.
+            </li><li>
+               How to extend the type deduction mechanism to support a new type within the
+               automatic type decuction system.
+            </li>
+         </list></paragraph>
+      </d:section><d:section title = "Position/Context Information">
+         <paragraph>
+            Add support for context information, including the length of the sub-list being
+            outputted and the current position within that sub-list. Other information may
+            be added at a future date.
+         </paragraph><paragraph>
+            How would this interact with <code>boost::io::state_output</code>?
+         </paragraph>
+      </d:section><d:section title = "Additional Format Objects">
+         <paragraph>
+            first_output: output p.first <i>only</i>; second_output: output p.second <i>only</i>.
+         </paragraph>
+      </d:section><d:section title = "Advanced Data Types">
+         <paragraph>
+            Support for non-sequential types, e.g. trees and graphs.
+         </paragraph>
+      </d:section>
+   </d:section><d:section title = "Acknowledgements">
+      <paragraph>
+         This library was designed and implemented by Reece H. Dunn.
+      </paragraph><paragraph>
+         The output functors were based on a comment in the "IO for STL containers" thread on the
+         boost developers mailing list.
+      </paragraph><paragraph>
+         Special thanks to:
+         <list type = "[#]">
+            <li title = "Martin Henson">
+               For giving me a reason to create the library in the first place!
+            </li><li title = "Paul A. Bristow">
+               For his comments and suggestions, especially getting me to think about supporting
+               nD constructs :-). Also, for the MSCV 7.1 tests.
+            </li><li title = "Terje Sletteb&#xF8;">
+               For his feedback on standard/boost issues in my code.
+            </li><li title = "Gennadiy Rozental">
+               For issues relating to the documentation.
+            </li><li title = "John Torjo">
+               For feedback, ideas and comments, especially for getting me to consider outputter
+               deduction :-).
+            </li><li title = "Jonathan Turkanis">
+               For his excellent work on revamping the outputter/type deduction system, help
+               porting the library to broken compilers (VC6), Intel 7.1 support and much more!
+            </li>
+         </list>
+      </paragraph>
+   </d:section>
+</d:document>

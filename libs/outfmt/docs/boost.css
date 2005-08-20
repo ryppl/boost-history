@@ -1,0 +1,184 @@
+BODY {
+	MARGIN: 0px
+}
+TD {
+	MARGIN: 0px
+}
+TH {
+	MARGIN: 0px
+}
+H1 {
+	MARGIN-BOTTOM: 1pc
+}
+H2 {
+	MARGIN-BOTTOM: 1pc
+}
+H3 {
+	MARGIN-BOTTOM: 1pc
+}
+H1 {
+	TEXT-ALIGN: center
+}
+H2 {
+	TEXT-ALIGN: center
+}
+H1 {
+	FONT-SIZE: 2pc; FONT-FAMILY: "Times New Roman"
+}
+A:link {
+	TEXT-DECORATION: none
+}
+A:visited {
+	TEXT-DECORATION: none
+}
+A:hover {
+	TEXT-DECORATION: none
+}
+A:active {
+	TEXT-DECORATION: none
+}
+
+@media Screen    
+{
+BODY {
+	FONT: 10pt Verdana
+}
+TD {
+	FONT: 10pt Verdana
+}
+TH {
+	FONT: 10pt Verdana
+}
+H2 {
+	FONT: 10pt Verdana
+}
+H3 {
+	FONT: 10pt Verdana
+}
+H1 {
+	COLOR: black
+}
+H2 {
+	COLOR: black
+}
+H3 {
+	COLOR: black
+}
+A:link {
+	COLOR: blue
+}
+A:visited {
+	COLOR: blue
+}
+A:hover {
+	COLOR: teal
+}
+A:active {
+	COLOR: teal
+}
+TH {
+	FONT-WEIGHT: bold
+}
+BODY {
+	BACKGROUND: white; MARGIN: 1px; COLOR: black
+}
+HR {
+	COLOR: black
+}
+.link {
+	CURSOR: hand; COLOR: #00bbff
+}
+.code {
+	FONT-SIZE: 10pt; FONT-FAMILY: Lucida Console
+}
+.cpp-keyword {
+	FONT-WEIGHT: bold
+}
+.cpp-ns {
+	FONT-WEIGHT: bold
+}
+cpp-pp {
+	FONT-WEIGHT: bold
+}
+.cpp-comment {
+	COLOR: magenta
+}
+.cpp-pp {
+	COLOR: olive
+}
+.cpp-symbol {
+	COLOR: black
+}
+.cpp-keyword {
+	COLOR: steelblue
+}
+.cpp-ns {
+	COLOR: coral
+}
+.cpp-string {
+	COLOR: deeppink
+}
+.cpp-character {
+	COLOR: deeppink
+}
+.cpp-number {
+	COLOR: darkseagreen
+}
+
+}
+
+@media Print    
+{
+BODY {
+	FONT: 12pt "Times New Roman"
+}
+TD {
+	FONT: 12pt "Times New Roman"
+}
+TH {
+	FONT: 12pt "Times New Roman"
+}
+H2 {
+	FONT: 12pt "Times New Roman"
+}
+H3 {
+	FONT: 12pt "Times New Roman"
+}
+A:link {
+	BACKGROUND: white; COLOR: black
+}
+A:visited {
+	BACKGROUND: white; COLOR: black
+}
+A:hover {
+	BACKGROUND: white; COLOR: black
+}
+A:active {
+	BACKGROUND: white; COLOR: black
+}
+BODY {
+	BACKGROUND: white; COLOR: black
+}
+.link {
+	BACKGROUND: white; COLOR: black
+}
+HR {
+	BACKGROUND: white; COLOR: black
+}
+TD {
+	BACKGROUND: white; COLOR: black
+}
+TH {
+	BACKGROUND: white; COLOR: black
+}
+H1 {
+	FONT-WEIGHT: bold
+}
+H2 {
+	FONT-WEIGHT: bold
+}
+H3 {
+	FONT-WEIGHT: bold
+}
+
+}

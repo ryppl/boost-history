@@ -1,0 +1,2714 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML xmlns:msxsl = "urn:schemas-microsoft-com:xslt" xmlns:mml = 
+"http://www.w3.org/1998/Math/MathML" xmlns:svg = "http://www.w3.org/2000/svg" 
+xmlns:tm = "http://www.softwave.net/XML/Timed" xmlns:t = 
+"urn:schemas-microsoft-com:time"><HEAD><TITLE>Output Formatters</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1"><LINK 
+href="boost.css" type=text/css rel=stylesheet>
+<META content="MSHTML 6.00.2800.1170" name=GENERATOR></HEAD>
+<BODY style="LEFT: 1px; POSITION: absolute; TOP: 0px" scroll=auto>
+<HR>
+
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD style="TEXT-ALIGN: left" vAlign=top width="30%"></TD>
+    <TD 
+    style="FONT-WEIGHT: bold; FONT-SIZE: 2pc; FONT-FAMILY: Times New Roman; TEXT-ALIGN: center" 
+    vAlign=top width="39%">Output Formatters</TD>
+    <TD style="TEXT-ALIGN: right" vAlign=top width="30%"></TD></TR></TBODY></TABLE>
+<HR>
+
+<TABLE id=toc.page cellSpacing=0 cellPadding=0 width="100%" border=0 
+xmlns:d="http://www.softwave.net/XML/Document">
+  <TBODY>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD width="1%">1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=19><NOBR><A href="#IDARAP0">Introduction</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">1.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=17><NOBR><A href="#IDATAP0">The Problem</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">1.2. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=17><NOBR><A href="#IDA0AP0">The Solution</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">1.3. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=17><NOBR><A href="#IDABBP0">Definitions</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">1.3.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=15><NOBR><A 
+  href="#def-fwditer">ForwardIterator</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">1.3.2. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=15><NOBR><A href="#def-container">Container</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">1.3.3. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=15><NOBR><A href="#def-output">Output 
+  Facilities</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">1.3.4. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=15><NOBR><A href="#def-markers">Markers</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">1.4. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=17><NOBR><A href="#IDADDP0">Portability</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD width="1%">2. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=19><NOBR><A href="#IDAQDP0">Standard Container 
+      Output</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD width="1%">3. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=19><NOBR><A href="#IDANFP0">Output 
+  Manipulators</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">3.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=17><NOBR><A 
+    href="#formatlist">boost::io::formatlist</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">3.1.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=15><NOBR><A href="#IDABGP0">Range Output</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">3.1.2. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=15><NOBR><A href="#IDAZGP0">Container Output</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">3.2. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=17><NOBR><A 
+  href="#formatob">boost::io::formatob</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">3.2.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=15><NOBR><A href="#IDA1HP0">Form</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">3.2.2. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=15><NOBR><A href="#IDAMYP0">Automatic Type 
+    Deduction</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD width="1%">4. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=19><NOBR><A href="#fmtopt">Formatting Options</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">4.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=17><NOBR><A href="#fmt-traits">Format Traits</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">4.2. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=17><NOBR><A href="#IDAV1P0">Open/Close 
+  Formatter</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">4.2.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=15><NOBR><A 
+      href="#IDAX1P0">boost::io::openclose_formatter_t</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">4.2.1.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=13><NOBR><A href="#IDA02P0">open</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">4.2.1.2. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=13><NOBR><A href="#IDAA3P0">close</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">4.2.1.3. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=13><NOBR><A href="#ocfmt-format">format</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">4.2.2. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=15><NOBR><A 
+      href="#ocfmt">boost::io::openclose_formatter</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">4.2.2.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=13><NOBR><A href="#IDA54P0">Constructors</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">4.3. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=17><NOBR><A href="#IDA35P0">Formatter</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">4.3.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=15><NOBR><A 
+    href="#IDACQF5">boost::io::formatter_t</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">4.3.1.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=13><NOBR><A href="#IDALQF5">separator</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">4.3.1.2. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=13><NOBR><A href="#IDARQF5">format</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">4.3.2. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=15><NOBR><A 
+  href="#IDAURF5">boost::io::formatter</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">4.3.2.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=13><NOBR><A href="#IDABSF5">Constructors</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD width="1%">5. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=19><NOBR><A href="#IDAXTF5">Format Objects: 
+      Outputters</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=17><NOBR><A href="#IDAZTF5">Requirements</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.1.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=15><NOBR><A href="#IDA1TF5">Format Objects</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.1.1.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=13><NOBR><A href="#IDA3TF5">Funtion Object</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.1.1.2. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=13><NOBR><A href="#IDAYUF5">Formatting</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.1.2. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=15><NOBR><A href="#fo-gen">Format Object 
+    Generators</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.1.2.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=13><NOBR><A href="#IDAKVF5">Requirements</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.1.2.1.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=11><NOBR><A href="#IDAMVF5">name</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.1.2.1.2. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=11><NOBR><A href="#IDASVF5">name-ex</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.1.2.1.3. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=11><NOBR><A href="#IDA5VF5">name-out</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.2. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=17><NOBR><A href="#IDADWF5">Simple Type 
+    Outputters</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.2.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=15><NOBR><A 
+    href="#IDAFWF5">boost::io::basic_output</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.2.1.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=13><NOBR><A 
+  href="#IDAKWF5">boost::io::basicfmt</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.2.2. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=15><NOBR><A 
+      href="#IDATWF5">boost::io::wrapped_output</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.2.2.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=13><NOBR><A 
+  href="#IDA0WF5">boost::io::wrappedfmt</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.3. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=17><NOBR><A href="#IDADXF5">N-ary Type 
+  Outputters</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.3.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=15><NOBR><A 
+    href="#IDAFXF5">boost::io::pair_output</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.3.1.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=13><NOBR><A 
+href="#IDAKQB5">boost::io::pairfmt</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.3.2. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=15><NOBR><A 
+      href="#IDAERB5">boost::io::static_nary_output</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.3.2.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=13><NOBR><A 
+href="#IDAYRB5">boost::io::naryfmt</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.4. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=17><NOBR><A href="#IDABSB5">Sequence 
+  Outputters</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.4.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=15><NOBR><A 
+      href="#IDADSB5">boost::io::detail::list_output</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.4.2. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=15><NOBR><A 
+    href="#IDA5SB5">boost::io::array_output</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.4.2.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=13><NOBR><A 
+  href="#IDACUB5">boost::io::arrayfmt</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.4.3. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=15><NOBR><A 
+      href="#IDAXUB5">boost::io::container_output</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.4.3.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=13><NOBR><A 
+    href="#IDANVB5">boost::io::containerfmt</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.5. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=17><NOBR><A href="#IDAWVB5">Output 
+  Manipulators</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.5.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=15><NOBR><A 
+    href="#IDAYVB5">boost::io::formatlist_t</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.5.2. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=15><NOBR><A 
+  href="#IDACWB5">boost::io::formatob_t</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.6. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=17><NOBR><A href="#IDAMWB5">State Outputters</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.6.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=15><NOBR><A 
+    href="#IDA0WB5">boost::io::state_output</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.6.1.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=13><NOBR><A href="#IDA5WB5">State Objects</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">5.6.1.2. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=13><NOBR><A 
+  href="#IDALXB5">boost::io::statefmt</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD width="1%">6. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=19><NOBR><A href="#IDAKQ34">Future Directions</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">6.1. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=17><NOBR><A href="#IDAMQ34">Tutorials</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">6.2. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=17><NOBR><A href="#IDATQ34">Position/Context 
+      Information</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">6.3. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=17><NOBR><A href="#IDA0Q34">Additional Format 
+      Objects</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD></TD>
+    <TD></TD>
+    <TD width="1%">6.4. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=17><NOBR><A href="#IDACR34">Advanced Data 
+  Types</A></NOBR></TD></TR>
+  <TR xmlns:i="http://www.softwave.net/XML/Interface" 
+  xmlns:c="http://www.softwave.net/XML/CodeListing" 
+  xmlns:ht="http://www.softwave.net/XML/HyperText">
+    <TD width="1%">7. </TD>
+    <TD width="1%">&nbsp;</TD>
+    <TD colSpan=19><NOBR><A href="#IDAFR34">Acknowledgements</A></NOBR></TD></TR>
+  <TR>
+    <TD colSpan=21>
+      <HR>
+    </TD></TR></TBODY></TABLE>
+<DIV id=sec.1.page xmlns:d="http://www.softwave.net/XML/Document" 
+xmlns:i="http://www.softwave.net/XML/Interface" 
+xmlns:c="http://www.softwave.net/XML/CodeListing" 
+xmlns:ht="http://www.softwave.net/XML/HyperText">
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tdouter vAlign=center align=right>
+      <DIV 
+      style="FONT-WEIGHT: bold; FONT-SIZE: 3pc; FONT-FAMILY: 'Times New Roman'">1</DIV></TD>
+    <TD align=middle colSpan=2><A name=IDARAP0></A>
+      <DIV style="FONT-WEIGHT: bold">
+      <HR>
+      Introduction
+      <HR>
+      </DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDATAP0></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">1.1. The 
+    Problem</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">The C++ Input/Output library provides a 
+      mechanism for customizing the way a class is represented on a linear text 
+      stream. There are output operations for the basic data types as well as 
+      for<CODE> std::complex</CODE> and other data types in the standard 
+      library.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Having said that, there are no output 
+      operations for any of the STL container types. There is a reason for this: 
+      how do we represent the list? Different applications would want different 
+      ways for the list to be represented, so there is no easy way to specify a 
+      default format. What if you need to output a sub-list? Or have the same 
+      format across different container types? Or have different formatting for 
+      different objects that have the same container type?</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDA0AP0></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">1.2. The 
+    Solution</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Designing a library that can cope with 
+      these problems, as well as others not considered here, while remaining 
+      efficient is no easy task. There are other attempts to solve these sorts 
+      of problems.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">The motivation behind using manipulators 
+      is that they are already designed into the C++ I/O library and require 
+      little overhead in the output process. They also give the user maximum 
+      choice in<SPAN style="FONT-STYLE: italic"> how</SPAN> the data being 
+      outputted is formatted.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDABBP0></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">1.3. 
+    Definitions</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=def-fwditer></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">1.3.1. 
+      ForwardIterator</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">A type indicating a forward iterator as 
+      defined by C++98, that supports the following operations:
+      <TABLE cellPadding=3 border=1>
+        <TBODY>
+        <TR>
+          <TD><CODE>a != b</CODE></TD>
+          <TD>compare two iterators for inequality</TD></TR>
+        <TR>
+          <TD><CODE>++i</CODE></TD>
+          <TD>move to the next item</TD></TR>
+        <TR>
+          <TD><CODE>*i</CODE></TD>
+          <TD>access the item data</TD></TR></TBODY></TABLE></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=def-container></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">1.3.2. 
+    Container</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">A container type that has the following:
+      <TABLE cellPadding=3 border=1>
+        <TBODY>
+        <TR>
+          <TD vAlign=top><CODE>typename Container::iterator</CODE></TD>
+          <TD vAlign=top>an iterator that is a ForwardIterator type</TD></TR>
+        <TR>
+          <TD vAlign=top><CODE>typename Container::iterator 
+            Container::begin()</CODE></TD>
+          <TD vAlign=top>returns the first element in the container</TD></TR>
+        <TR>
+          <TD vAlign=top><CODE>typename Container::iterator 
+            Container::end()</CODE></TD>
+          <TD vAlign=top>returns "one-past-the-end" for the container 
+        type</TD></TR></TBODY></TABLE></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=def-output></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">1.3.3. Output 
+      Facilities</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">The type is capable of being outputted to 
+      a standard ostream:
+      <DIV class=code style="MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>std::basic_ostream&lt; CharT, Traits &gt; &amp; 
+operator&lt;&lt;</DIV>
+      <DIV>(</DIV>
+      <DIV style="MARGIN-LEFT: 1.5pc">
+      <DIV>std::basic_ostream&lt; CharT, Traits &gt; &amp; os,</DIV>
+      <DIV>const T &amp; type</DIV></DIV>
+      <DIV>);</DIV></DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=def-markers></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">1.3.4. Markers</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">A sequence of characters used between data 
+      items. There are three markers currently used by this library: open 
+      sequence; close sequence; and separator.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDADDP0></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">1.4. 
+    Portability</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">The code has been succesfully tested on:
+      <OL style="MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px">
+        <LI>
+        <DIV class=bodytext>MSVC 7.0 and MSVC 7.1</DIV>
+        <LI>
+        <DIV class=bodytext>Borland C++Compiler 5.5.1 and 5.6.4</DIV>
+        <LI>
+        <DIV class=bodytext>GNU G++ 3.x (under the i686-pc-cygwin 
+        environment)</DIV>
+        <LI>
+        <DIV class=bodytext>GNU G++ 2.95.3-5 (under the i686-pc-cygwin 
+        environment)<SPAN class=bodytext><SPAN style="FONT-WEIGHT: bold"> [Note: 
+        </SPAN>Type deduction does not work, but the rest of the library 
+        does.<SPAN style="FONT-WEIGHT: bold">]</SPAN></SPAN></DIV>
+        <LI>
+        <DIV class=bodytext>Intel 7.1</DIV></LI></OL></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Most of the code will now work on MSVC 
+      6.0. Thanks to Jonathan Turkanis for his help porting the code.</DIV></TD>
+    <TD class=tdouter></TD></TR></TBODY></TABLE></DIV>
+<DIV id=sec.2.page xmlns:d="http://www.softwave.net/XML/Document" 
+xmlns:i="http://www.softwave.net/XML/Interface" 
+xmlns:c="http://www.softwave.net/XML/CodeListing" 
+xmlns:ht="http://www.softwave.net/XML/HyperText">
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tdouter vAlign=center align=right>
+      <DIV 
+      style="FONT-WEIGHT: bold; FONT-SIZE: 3pc; FONT-FAMILY: 'Times New Roman'">2</DIV></TD>
+    <TD align=middle colSpan=2><A name=IDAQDP0></A>
+      <DIV style="FONT-WEIGHT: bold">
+      <HR>
+      Standard Container Output
+      <HR>
+      </DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">
+      <TABLE cellPadding=0>
+        <TBODY>
+        <TR>
+          <TD>include:</TD>
+          <TD><A 
+        href="../../../boost/outfmt/stl_io.hpp">boost/outfmt/stl_io.hpp</A></TD></TR>
+        <TR>
+          <TD>examples:</TD>
+          <TD><A 
+          href="../examples/stl_io.cpp">libs/outfmt/examples/stl_io.cpp</A></TD></TR></TBODY></TABLE></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">This is a helper file that provides output 
+      semantics for the standard library containers.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc"><SPAN 
+      style="FONT-WEIGHT: bold">[Example:</SPAN>
+      <DIV class=code style="MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>std::list&lt; char &gt; l;</DIV>
+      <DIV class=cpp-comment>// ...</DIV>
+      <DIV>std::cout &lt;&lt; l;<SPAN class=cpp-comment> // output: [ A, B, C 
+      ]</SPAN></DIV></DIV><SPAN style="FONT-WEIGHT: bold">]</SPAN></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">supported standard containers and types:
+      <TABLE cellPadding=3 border=1>
+        <TBODY>
+        <TR>
+          <TD><CODE>std::pair</CODE></TD>
+          <TD><CODE>std::map</CODE></TD>
+          <TD><CODE>std::multimap</CODE></TD></TR>
+        <TR>
+          <TD><CODE>std::vector</CODE></TD>
+          <TD><CODE>std::set</CODE></TD>
+          <TD><CODE>std::multiset</CODE></TD></TR>
+        <TR>
+          <TD><CODE>std::list</CODE></TD>
+          <TD><CODE>std::hash_map</CODE></TD>
+          <TD><CODE>std::hash_multimap</CODE></TD></TR>
+        <TR>
+          <TD><CODE>std::slist</CODE></TD>
+          <TD><CODE>std::hash_set</CODE></TD>
+          <TD><CODE>std::hash_multiset</CODE></TD></TR>
+        <TR>
+          <TD><CODE>std::deque</CODE></TD></TR></TBODY></TABLE></DIV></TD>
+    <TD class=tdouter></TD></TR></TBODY></TABLE></DIV>
+<DIV id=sec.3.page xmlns:d="http://www.softwave.net/XML/Document" 
+xmlns:i="http://www.softwave.net/XML/Interface" 
+xmlns:c="http://www.softwave.net/XML/CodeListing" 
+xmlns:ht="http://www.softwave.net/XML/HyperText">
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tdouter vAlign=center align=right>
+      <DIV 
+      style="FONT-WEIGHT: bold; FONT-SIZE: 3pc; FONT-FAMILY: 'Times New Roman'">3</DIV></TD>
+    <TD align=middle colSpan=2><A name=IDANFP0></A>
+      <DIV style="FONT-WEIGHT: bold">
+      <HR>
+      Output Manipulators
+      <HR>
+      </DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=formatlist></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">3.1. 
+      boost::io::formatlist</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">
+      <TABLE cellPadding=0>
+        <TBODY>
+        <TR>
+          <TD>include:</TD>
+          <TD><A 
+            href="../../../boost/outfmt/formatlist.hpp">boost/outfmt/formatlist.hpp</A></TD></TR>
+        <TR>
+          <TD>examples:</TD>
+          <TD><A 
+            href="../examples/basic-facilities.cpp">libs/outfmt/examples/basic-facilities.cpp</A></TD></TR></TBODY></TABLE></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDABGP0></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">3.1.1. Range 
+      Output</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>boost::io::formatlist</DIV>
+      <DIV>(</DIV>
+      <DIV style="MARGIN-LEFT: 1.5pc">
+      <DIV>ForwardIterator first,</DIV>
+      <DIV>ForwardIterator last</DIV></DIV>
+      <DIV>);</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">This manipulator will format the list 
+      specified by the range [first, last). It requires that the elements 
+      contained in the sequence have output facilities (i.e. define 
+      operator&lt;&lt; on a std::basic_ostream&lt; CharT, Traits &gt;).</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc"><SPAN 
+      style="FONT-WEIGHT: bold">[Example:</SPAN>
+      <DIV class=code style="MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>std::vector&lt; int &gt; v;</DIV>
+      <DIV class=cpp-comment>// ...</DIV>
+      <DIV>std::cout &lt;&lt; boost::io::formatlist( v );<SPAN 
+      class=cpp-comment> // output: [ 3, 6, 9, 12 ]</SPAN></DIV></DIV><SPAN 
+      style="FONT-WEIGHT: bold">]</SPAN></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">The manipulator conforms to the format 
+      object generator guidelines in section [<A 
+      href="#fo-gen">5.1.2.</A>].</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDAZGP0></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">3.1.2. Container 
+      Output</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>boost::io::formatlist</DIV>
+      <DIV>(</DIV>
+      <DIV style="MARGIN-LEFT: 1.5pc">
+      <DIV>Container &amp; c</DIV></DIV>
+      <DIV>);</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">This is a variant of the 
+      boost::io::formatlist manipulator that takes a sequential container as its 
+      argument. It outputs the range [begin(), end()), and requires that the 
+      elements in the sequence have output facilities.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc"><SPAN 
+      style="FONT-WEIGHT: bold">[Example:</SPAN>
+      <DIV class=code style="MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>int i[ 4 ] = { 1, 2, 3, 4 };</DIV>
+      <DIV>std::cout &lt;&lt; boost::io::formatlist( i, i + 4 );<SPAN 
+      class=cpp-comment> // output: [ 1, 2, 3, 4 ]</SPAN></DIV></DIV><SPAN 
+      style="FONT-WEIGHT: bold">]</SPAN></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">The manipulator conforms to the format 
+      object generator guidelines in section [<A 
+      href="#fo-gen">5.1.2.</A>].</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=formatob></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">3.2. 
+      boost::io::formatob</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">
+      <TABLE cellPadding=0>
+        <TBODY>
+        <TR>
+          <TD>include:</TD>
+          <TD><A 
+            href="../../../boost/outfmt/formatob.hpp">boost/outfmt/formatob.hpp</A></TD></TR></TBODY></TABLE></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDA1HP0></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">3.2.1. Form</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>boost::io::formatob</DIV>
+      <DIV>(</DIV>
+      <DIV style="MARGIN-LEFT: 1.5pc">
+      <DIV>const T &amp; ob</DIV></DIV>
+      <DIV>);</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">The manipulator conforms to the format 
+      object generator guidelines in section [<A 
+      href="#fo-gen">5.1.2.</A>].</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDAMYP0></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">3.2.2. Automatic Type 
+      Deduction</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">
+      <TABLE cellPadding=0>
+        <TBODY>
+        <TR>
+          <TD vAlign=top rowSpan=2>examples:</TD>
+          <TD><A 
+            href="../examples/output-2D.cpp">libs/outfmt/examples/output-2D.cpp</A></TD></TR>
+        <TR>
+          <TD><A 
+            href="../examples/output-3D.cpp">libs/outfmt/examples/output-3D.cpp</A></TD></TR></TBODY></TABLE></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">The library is capable of deducing the 
+      type being output, including complex nested types. The library uses this 
+      type information to produce an outputter that can format that 
+    type.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc"><SPAN 
+      style="FONT-WEIGHT: bold">[Note:</SPAN> Type deduction is not present 
+      on<CODE> boost::io::formatobout</CODE>, since the format structure is 
+      provided by the user.<SPAN style="FONT-WEIGHT: bold">]</SPAN></DIV></TD>
+    <TD class=tdouter></TD></TR></TBODY></TABLE></DIV>
+<DIV id=sec.4.page xmlns:d="http://www.softwave.net/XML/Document" 
+xmlns:i="http://www.softwave.net/XML/Interface" 
+xmlns:c="http://www.softwave.net/XML/CodeListing" 
+xmlns:ht="http://www.softwave.net/XML/HyperText">
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tdouter vAlign=center align=right>
+      <DIV 
+      style="FONT-WEIGHT: bold; FONT-SIZE: 3pc; FONT-FAMILY: 'Times New Roman'">4</DIV></TD>
+    <TD align=middle colSpan=2><A name=fmtopt></A>
+      <DIV style="FONT-WEIGHT: bold">
+      <HR>
+      Formatting Options
+      <HR>
+      </DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">
+      <TABLE cellPadding=0>
+        <TBODY>
+        <TR>
+          <TD vAlign=top rowSpan=2>examples:</TD>
+          <TD><A 
+            href="../examples/format-options.cpp">libs/outfmt/examples/format-options.cpp</A></TD></TR>
+        <TR>
+          <TD><A 
+            href="../examples/formatter.cpp">libs/outfmt/examples/formatter.cpp</A></TD></TR></TBODY></TABLE></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">The formatting facilities are included 
+      indirectly when you include other files in the library. They are used in 
+      the implementation of the output facilities of the library, 
+      including<CODE> boost::io::formatlist</CODE>.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">These facilities control what is output at 
+      the start of a sequence, as a separator between elements and at the end of 
+      the sequence.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=fmt-traits></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">4.1. Format 
+    Traits</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">The format traits contain the default 
+      values for pair types (<CODE> boost::io::detail::pair_traits</CODE> ) and 
+      sequence types (<CODE> boost::io::detail::format_traits</CODE> ). These 
+      have the following form:</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>template&lt; typename CharT &gt;</DIV>
+      <DIV>struct format_traits</DIV>
+      <DIV>{</DIV>
+      <DIV style="MARGIN-LEFT: 1.5pc">
+      <DIV>static const CharT open_default =<SPAN style="FONT-WEIGHT: bold"> 
+      implemenation defined</SPAN>;</DIV>
+      <DIV>static const CharT close_default =<SPAN style="FONT-WEIGHT: bold"> 
+      implemenation defined</SPAN>;</DIV>
+      <DIV>static const CharT separator_default =<SPAN 
+      style="FONT-WEIGHT: bold"> implemenation defined</SPAN>;</DIV></DIV>
+      <DIV>};</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV 
+      style="MARGIN-BOTTOM: 1pc"><CODE>boost::io::detail::pair_traits</CODE> 
+      provides the default formatting:
+      <DIV class=code style="MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>( ..., ... )</DIV></DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV 
+      style="MARGIN-BOTTOM: 1pc"><CODE>boost::io::detail::format_traits</CODE> 
+      defaults the default formatting:
+      <DIV class=code style="MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>[ ..., ... ]</DIV></DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Both are defined for<CODE> 
+      char</CODE>,<CODE> wchar_t</CODE>,<CODE> char *</CODE> and<CODE> wchar_t 
+      *</CODE>. If partial template specialisation is supported, it is also 
+      specialized for<CODE> std::basic_string</CODE>, otherwise<CODE> 
+      std::string</CODE> and<CODE> std::wstring</CODE> are supported.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDAV1P0></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">4.2. Open/Close 
+      Formatter</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDAX1P0></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">4.2.1. 
+      boost::io::openclose_formatter_t</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left"><LIST>template</LIST>
+      <DIV>&lt;</DIV>
+      <DIV style="MARGIN-LEFT: 1.5pc">
+      <DIV>typename FormatType,</DIV>
+      <DIV>class ReferenceType,</DIV>
+      <DIV>class FormatTraits = boost::io::detail::format_traits&lt; FormatType 
+      &gt;</DIV></DIV>
+      <DIV>&gt;</DIV>
+      <DIV>class openclose_formatter_t;</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV 
+      style="MARGIN-BOTTOM: 1pc"><CODE>boost::io::openclose_formatter_t</CODE> 
+      defines the formatting facilities for wrapping around a output type. It 
+      defines the following types:
+      <TABLE cellPadding=3 border=1>
+        <TBODY>
+        <TR>
+          <TD vAlign=top><CODE>format_type</CODE></TD>
+          <TD>the character/string type used in the formatting</TD></TR>
+        <TR>
+          <TD vAlign=top><CODE>traits_type</CODE></TD>
+          <TD>a format traits class defined in section [<A 
+            href="#fmt-traits">4.1.</A>]</TD></TR></TBODY></TABLE></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">The ReferenceType parameter is used to 
+      specify the return type on the format( ... ) function, allowing further 
+      access to the derived object. This allows you to apply formatting onto a 
+      manipulator, like the example in section [<A 
+      href="#ocfmt-format">4.2.1.3.</A>].</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDA02P0></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">4.2.1.1. open</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>typename openclose_formatter_t::format_type 
+      openclose_formatter_t::open() const;</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Returns the current value for the 
+      formatting at the start of the output type.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDAA3P0></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">4.2.1.2. close</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>typename openclose_formatter_t::format_type 
+      openclose_formatter_t::close() const;</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Returns the current value for the 
+      formatting at the end of the output type.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=ocfmt-format></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">4.2.1.3. 
+format</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>ReferenceType &amp; openclose_formatter_t::format</DIV>
+      <DIV>(</DIV>
+      <DIV style="MARGIN-LEFT: 1.5pc">
+      <DIV>format_type o,</DIV>
+      <DIV>format_type c</DIV></DIV>
+      <DIV>);</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Sets the values for the opening and 
+      closing formatting.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc"><SPAN 
+      style="FONT-WEIGHT: bold">[Example:</SPAN>
+      <DIV class=code style="MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>std::vector&lt; int &gt; v;</DIV>
+      <DIV class=cpp-comment>// ...</DIV>
+      <DIV>std::cout &lt;&lt; boost::io::formatlist( v ).format( "[ ", " )" 
+      );<SPAN class=cpp-comment> // output: [ 3, 12 )</SPAN></DIV></DIV><SPAN 
+      style="FONT-WEIGHT: bold">]</SPAN></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>template&lt; typename RT2, class FormatTraits2 &gt;</DIV>
+      <DIV>ReferenceType &amp; openclose_formatter_t::format</DIV>
+      <DIV>(</DIV>
+      <DIV style="MARGIN-LEFT: 1.5pc">
+      <DIV>const openclose_formatter_t&lt; FormatType, RT2, FormatTraits2 &gt; 
+      &amp; fmt</DIV></DIV>
+      <DIV>);</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Copies the values of the opening and 
+      closing formatting from one formatter to another, requiring only that they 
+      have the same FormatType.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">See [<A href="#ocfmt">4.2.2.</A>] for an 
+      example of this.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=ocfmt></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">4.2.2. 
+      boost::io::openclose_formatter</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>template</DIV>
+      <DIV>&lt;</DIV>
+      <DIV style="MARGIN-LEFT: 1.5pc">
+      <DIV>typename FormatType,</DIV>
+      <DIV>class FormatTraits = boost::io::detail::format_traits&lt; FormatType 
+      &gt;</DIV></DIV>
+      <DIV>&gt;</DIV>
+      <DIV>class openclose_formatter;</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV 
+      style="MARGIN-BOTTOM: 1pc"><CODE>boost::io::openclose_formatter</CODE> is 
+      the usable end of this formatter. The user can create an object of this 
+      type, set special formatting to it, and then reuse it across different 
+      output operations.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc"><SPAN 
+      style="FONT-WEIGHT: bold">[Example:</SPAN>
+      <DIV class=code style="MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>boost::io::openclose_formatter&lt; char * &gt; fmt( "| ", " |" 
+      );</DIV>
+      <DIV>int i[ 4 ] = { 1, 2, 3, 4 };</DIV>
+      <DIV>std::cout &lt;&lt; boost::io::formatlist( i, i + 2 ).format( fmt 
+      );<SPAN class=cpp-comment> // output: | 1, 2 |</SPAN></DIV></DIV><SPAN 
+      style="FONT-WEIGHT: bold">]</SPAN></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDA54P0></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">4.2.2.1. 
+      Constructors</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>openclose_formatter();</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Creates a<CODE> 
+      boost::io::openclose_formatter</CODE> object with default 
+    formatting.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>openclose_formatter( format_type o, format_type c );</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Creates a<CODE> 
+      boost::io::openclose_formatter</CODE> object with custom 
+    formatting.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>template&lt; typename RT2, class FormatTraits2 &gt;</DIV>
+      <DIV>openclose_formatter</DIV>
+      <DIV>(</DIV>
+      <DIV style="MARGIN-LEFT: 1.5pc">
+      <DIV>const openclose_formatter_t&lt; FormatType, RT2, FormatTraits2 &gt; 
+      &amp; fmt</DIV></DIV>
+      <DIV>);</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Creates a<CODE> 
+      boost::io::openclose_formatter</CODE> object with formatting inherited 
+      from<CODE> fmt</CODE>.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDA35P0></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">4.3. Formatter</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDACQF5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">4.3.1. 
+      boost::io::formatter_t</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc"><CODE>boost::io::formatter_t</CODE> 
+      inherits from<CODE> boost::io::openclose_formatter_t</CODE>, 
+      extending<CODE> boost::io::openclose_formatter_t</CODE>'s capabilities to 
+      include separators.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDALQF5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">4.3.1.1. 
+    separator</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>typename openclose_formatter_t::format_type 
+      openclose_formatter_t::separator() const;</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Returns the current value for the 
+      formatting inbetween items in the sequence.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDARQF5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">4.3.1.2. 
+format</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>ReferenceType &amp; formatter_t::format( format_type o, format_type 
+      c, format_type s );</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Sets the values for the opening, closing 
+      and separator formatting.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>ReferenceType &amp; formatter_t::format( format_type o, format_type c 
+      );</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Sets the values for the opening and 
+      closing formatting.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>ReferenceType &amp; formatter_t::format( format_type s 
+    );</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Sets the value for the separator.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>template&lt; typename RT2, class FormatTraits2 &gt;</DIV>
+      <DIV>ReferenceType &amp; formatter_t::format</DIV>
+      <DIV>(</DIV>
+      <DIV style="MARGIN-LEFT: 1.5pc">
+      <DIV>const openclose_formatter_t&lt; FormatType, RT2, FormatTraits2 &gt; 
+      &amp; fmt</DIV></DIV>
+      <DIV>);</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Copies the values of the opening and 
+      closing formatting from an<CODE> openclose_formatter</CODE> to a formatter 
+      object, requiring only that they have the same FormatType.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>template&lt; typename RT2, class FormatTraits2 &gt;</DIV>
+      <DIV>ReferenceType &amp; formatter_t::format</DIV>
+      <DIV>(</DIV>
+      <DIV style="MARGIN-LEFT: 1.5pc">
+      <DIV>const formatter_t&lt; FormatType, RT2, FormatTraits2 &gt; &amp; 
+      fmt</DIV></DIV>
+      <DIV>);</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Copies the values of the opening, closing 
+      and separator formatting from one formatter to another, requiring only 
+      that they have the same FormatType.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDAURF5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">4.3.2. 
+      boost::io::formatter</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc"><CODE>boost::io::formatter</CODE> is the 
+      usable end of this formatter. The user can create an object of this type, 
+      set special formatting to it, and then reuse it across different output 
+      operations.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc"><SPAN 
+      style="FONT-WEIGHT: bold">[Example:</SPAN>
+      <DIV class=code style="MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>boost::io::formatter&lt; char * &gt; fmt( "| ", " |", " : " );</DIV>
+      <DIV>int i[ 4 ] = { 1, 2, 3, 4 };</DIV>
+      <DIV>std::cout &lt;&lt; boost::io::formatlist( i, i + 2 ).format( fmt 
+      );<SPAN class=cpp-comment> // output: | 1 : 2 |</SPAN></DIV></DIV><SPAN 
+      style="FONT-WEIGHT: bold">]</SPAN></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDABSF5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">4.3.2.1. 
+      Constructors</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>formatter()</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Creates a<CODE> 
+      boost::io::formatter</CODE> object with default formatting.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>formatter</DIV>
+      <DIV>(</DIV>
+      <DIV style="MARGIN-LEFT: 1.5pc">
+      <DIV>format_type o,</DIV>
+      <DIV>format_type c,</DIV>
+      <DIV>format_type s = traits_type::separator_default</DIV></DIV>
+      <DIV>);</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Creates a<CODE> 
+      boost::io::formatter</CODE> object with custom formatting.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>formatter( format_type s )</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Creates a<CODE> 
+      boost::io::formatter</CODE> object with custom formatting for the 
+      separator only.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>template&lt; typename RT2, class FormatTraits2 &gt;</DIV>
+      <DIV>formatter</DIV>
+      <DIV>(</DIV>
+      <DIV style="MARGIN-LEFT: 1.5pc">
+      <DIV>const openclose_formatter_t&lt; FormatType, RT2, FormatTraits2 &gt; 
+      &amp; fmt,</DIV>
+      <DIV>format_type s = traits_type::separator_default</DIV></DIV>
+      <DIV>);</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Creates a<CODE> 
+      boost::io::formatter</CODE> object with formatting inherited from fmt and 
+      providing optional separator formatting.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>template&lt; typename RT2, class FormatTraits2 &gt;</DIV>
+      <DIV>formatter</DIV>
+      <DIV>(</DIV>
+      <DIV style="MARGIN-LEFT: 1.5pc">
+      <DIV>const formatter_t&lt; FormatType, RT2, FormatTraits2 &gt; &amp; 
+      fmt</DIV></DIV>
+      <DIV>);</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Creates a<CODE> 
+      boost::io::formatter</CODE> object with formatting inherited from 
+      fmt.</DIV></TD>
+    <TD class=tdouter></TD></TR></TBODY></TABLE></DIV>
+<DIV id=sec.5.page xmlns:d="http://www.softwave.net/XML/Document" 
+xmlns:i="http://www.softwave.net/XML/Interface" 
+xmlns:c="http://www.softwave.net/XML/CodeListing" 
+xmlns:ht="http://www.softwave.net/XML/HyperText">
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tdouter vAlign=center align=right>
+      <DIV 
+      style="FONT-WEIGHT: bold; FONT-SIZE: 3pc; FONT-FAMILY: 'Times New Roman'">5</DIV></TD>
+    <TD align=middle colSpan=2><A name=IDAXTF5></A>
+      <DIV style="FONT-WEIGHT: bold">
+      <HR>
+      Format Objects: Outputters
+      <HR>
+      </DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDAZTF5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.1. 
+    Requirements</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDA1TF5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.1.1. Format 
+      Objects</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDA3TF5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.1.1.1. Funtion 
+      Object</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">An outputter is required to have function 
+      object semantics by defining:</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>template&lt; typename T, class OutputStream &gt;</DIV>
+      <DIV>inline OutputStream &amp; operator()( OutputStream &amp; os, const T 
+      &amp; value ) const</DIV>
+      <DIV>(</DIV>
+      <DIV style="MARGIN-LEFT: 1.5pc">
+      <DIV class=cpp-comment>// ...</DIV>
+      <DIV>return( os );</DIV></DIV>
+      <DIV>);</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">T is the type being outputted using this 
+      outputter.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc"><SPAN 
+      style="FONT-WEIGHT: bold">[Note:</SPAN> The type T here is a standin for 
+      the actual type being used. For example, the outputter can be implemented 
+      to accept<CODE> std::complex&lt; T &gt;</CODE>, allowing complex types to 
+      be formatted.<SPAN style="FONT-WEIGHT: bold">]</SPAN></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">OutputStream is the stream type. This is 
+      not<CODE> std::basic_ostream&lt; CharT, Traits &gt;</CODE> here to 
+      simplify the implementation of the operator (it is easier to type!). If 
+      you want to use<CODE> std::basic_ostream&lt; CharT, Traits &gt;</CODE> 
+      instead, you can.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">The operator is const because the 
+      outputter is not modified. For state-based formatting that requires 
+      modification of the data, like position information, there is a special 
+      outputter. See<CODE> libs/outfmt/examples/john-torjo.cpp</CODE> for an example 
+      of this.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDAYUF5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.1.1.2. 
+      Formatting</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">In order to be chained (when forming 
+      complex outputters for nested types), the outputter must define the 
+      type<CODE> format_type</CODE> to be the string or character type to be 
+      used for markers.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">In order to allow the user to customise 
+      the markers, an outputter should inherit from a formatter. See section [<A 
+      href="#fmtopt">4.</A>] for more information on formatters.<SPAN 
+      class=bodytext><SPAN style="FONT-WEIGHT: bold"> [Note: </SPAN>Formatters 
+      define the type<CODE> format_type</CODE>.<SPAN 
+      style="FONT-WEIGHT: bold">]</SPAN></SPAN></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=fo-gen></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.1.2. Format Object 
+      Generators</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDAKVF5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.1.2.1. 
+      Requirements</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDAMVF5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.1.2.1.1. 
+name</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">This is the default format object 
+      generator. It uses the<CODE> char *</CODE> format type, and the default 
+      sub-element outputter used by the outputter.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDASVF5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.1.2.1.2. 
+    name-ex</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">This generator allows the format type to 
+      be specified via function template syntax:
+      <DIV class=code style="MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>nameex&lt; type &gt;( ... )</DIV></DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc"><SPAN 
+      style="FONT-WEIGHT: bold">[Example:</SPAN>
+      <DIV class=code style="MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>std::string s = "Hello IO World!";</DIV>
+      <DIV>std::cout &lt;&lt; boost::io::formatlistex&lt; char &gt;( s 
+      );</DIV></DIV><SPAN style="FONT-WEIGHT: bold">]</SPAN></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">It uses the default sub-element outputter 
+      used by the outputter.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDA5VF5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.1.2.1.3. 
+      name-out</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">This generator allows you to specify the 
+      sub-element outputter used by the outputter, allowing you to nest 
+      formatting for complex types. It will inherit the format type of the 
+      sub-element outputter.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">The generator takes an additional 
+      parameter: an outputter object.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDADWF5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.2. Simple Type 
+      Outputters</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDAFWF5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.2.1. 
+      boost::io::basic_output</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc"><CODE>boost::io::basic_output</CODE> is 
+      used as a generic outputter, providing no specific formatting.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDAKWF5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.2.1.1. 
+      boost::io::basicfmt</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">This generator function creates a<CODE> 
+      boost::io::basic_output</CODE> object. It does not meets the requirements 
+      specified in section [<A href="#fo-gen">5.1.2.</A>]: it does not have any 
+      variants.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDATWF5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.2.2. 
+      boost::io::wrapped_output</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc"><CODE>boost::io::wrapped_output</CODE> 
+      inherits its formatting from<CODE> 
+      boost::io::openclose_formatter_t</CODE>, allowing specific formatting to 
+      be added around a type. This would be useful for things like outputting a 
+      complex type as XML data.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDA0WF5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.2.2.1. 
+      boost::io::wrappedfmt</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">This generator function creates a<CODE> 
+      boost::io::wrapped_output</CODE> object. It meets the requirements 
+      specified in section [<A href="#fo-gen">5.1.2.</A>].</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDADXF5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.3. N-ary Type 
+      Outputters</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDAFXF5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.3.1. 
+      boost::io::pair_output</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">
+      <TABLE cellPadding=0>
+        <TBODY>
+        <TR>
+          <TD vAlign=top rowSpan=2>examples:</TD>
+          <TD><A 
+            href="../examples/pair_output.cpp">libs/outfmt/examples/pair_output.cpp</A></TD></TR>
+        <TR>
+          <TD><A 
+            href="../examples/boost_output.cpp">libs/outfmt/examples/boost_output.cpp</A></TD></TR></TBODY></TABLE></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc"><CODE>boost::io::pair_output</CODE> 
+      inherits its formatting from<CODE> boost::io::formatter_t</CODE>, 
+      providing output of<CODE> std::pair</CODE>,<CODE> 
+      std::complex</CODE>,<CODE> boost::numeric::interval</CODE>,<CODE> 
+      boost::rational</CODE> and<CODE> boost::compressed_pair</CODE> 
+    types.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDAKQB5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.3.1.1. 
+      boost::io::pairfmt</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">This generator function creates a<CODE> 
+      boost::io::pair_output</CODE> object. It meets the requirements specified 
+      in section [<A href="#fo-gen">5.1.2.</A>].</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>boost::io::pairfmtout</DIV>
+      <DIV>(</DIV>
+      <DIV style="MARGIN-LEFT: 1.5pc">
+      <DIV>const Outputter &amp; out</DIV></DIV>
+      <DIV>);</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">In this case, both types are outputted 
+      using the same outputter.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>boost::io::pairfmtout</DIV>
+      <DIV>(</DIV>
+      <DIV style="MARGIN-LEFT: 1.5pc">
+      <DIV>const Outputter1 &amp; out1,</DIV>
+      <DIV>const Outputter2 &amp; out2</DIV></DIV>
+      <DIV>);</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">In this case, each type is outputted using 
+      its own outputter, allowing specialist formatting for each type.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDAERB5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.3.2. 
+      boost::io::static_nary_output</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">
+      <TABLE cellPadding=0>
+        <TBODY>
+        <TR>
+          <TD>examples:</TD>
+          <TD><A 
+            href="../examples/boost_output.cpp">libs/outfmt/examples/boost_output.cpp</A></TD></TR></TBODY></TABLE></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc"><CODE>boost::io::static_nary_output</CODE> 
+      inherits its formatting from<CODE> boost::io::formatter_t</CODE>, 
+      providing output of<CODE> boost::math::quaternion</CODE> and<CODE> 
+      boost::math::octonion</CODE> types.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDAYRB5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.3.2.1. 
+      boost::io::naryfmt</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">This generator function creates a<CODE> 
+      boost::io::static_nary_output</CODE> object. It meets the requirements 
+      specified in section [<A href="#fo-gen">5.1.2.</A>].</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDABSB5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.4. Sequence 
+      Outputters</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDADSB5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.4.1. 
+      boost::io::detail::list_output</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV 
+      style="MARGIN-BOTTOM: 1pc"><CODE>boost::io::detail::list_output</CODE> is 
+      a helper class, inheriting its formatting from<CODE> 
+      boost::io::formatter_t</CODE>. It is used to output sequential lists of 
+      the form [first, last).</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV 
+      style="MARGIN-BOTTOM: 1pc"><CODE>boost::io::detail::list_output</CODE> is 
+      not technically a format object, since it has the function 
+    operator:</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>template&lt; typename ForwardIterator, class OutputStream &gt;</DIV>
+      <DIV>inline OutputStream &amp; operator()</DIV>
+      <DIV>(</DIV>
+      <DIV style="MARGIN-LEFT: 1.5pc">
+      <DIV>OutputStream &amp; os,</DIV>
+      <DIV>ForwardIterator first,</DIV>
+      <DIV>ForwardIterator last</DIV></DIV>
+      <DIV>);</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">The class is used to help the 
+      implementations of<CODE> boost::io::array_output</CODE>,<CODE> 
+      boost::io::container_output</CODE> and<CODE> 
+      boost::io::formatlist_t</CODE>.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDA5SB5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.4.2. 
+      boost::io::array_output</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">
+      <TABLE cellPadding=0>
+        <TBODY>
+        <TR>
+          <TD vAlign=top rowSpan=2>examples:</TD>
+          <TD><A 
+            href="../examples/output-2D.cpp">libs/outfmt/examples/output-2D.cpp</A></TD></TR>
+        <TR>
+          <TD><A 
+            href="../examples/output-3D.cpp">libs/outfmt/examples/output-3D.cpp</A></TD></TR></TBODY></TABLE></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc"><CODE>boost::io::array_output</CODE> 
+      inherits its functionality from<CODE> 
+      boost::io::detail::list_output</CODE>, supporting the output of C-style 
+      arrays of the form<CODE> const T *</CODE>.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">To facilitate the output of arrays, it 
+      defines two special function operators:</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>operator()( long len );</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Specify the range [0, len) to be 
+      outputted.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>operator()( long off, long len );</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Specify the range [off, off + len) to be 
+      outputted.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDACUB5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.4.2.1. 
+      boost::io::arrayfmt</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">This generator function creates a<CODE> 
+      boost::io::array_output</CODE> object. It meets the requirements specified 
+      in section [<A href="#fo-gen">5.1.2.</A>]. Each form has three 
+      sub-variants:</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>boost::io::arrayfmt( long off, long len )</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Construct an array formatter for the range 
+      [off, off + len).</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>boost::io::arrayfmt( long len )</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Construct an array formatter for the range 
+      [0, len).</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>boost::io::arrayfmt()</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Constructs an array formatter, no range 
+      specified.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDAXUB5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.4.3. 
+      boost::io::container_output</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">
+      <TABLE cellPadding=0>
+        <TBODY>
+        <TR>
+          <TD vAlign=top rowSpan=2>examples:</TD>
+          <TD><A 
+            href="../examples/output-2D.cpp">libs/outfmt/examples/output-2D.cpp</A></TD></TR></TBODY></TABLE></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc"><CODE>boost::io::container_output</CODE> 
+      inherits its functionality from<CODE> 
+      boost::io::detail::list_output</CODE>, supporting the output of containers 
+      as defined in section [<A href="#def-container">1.3.2.</A>].</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDANVB5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.4.3.1. 
+      boost::io::containerfmt</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">This generator function creates a<CODE> 
+      boost::io::container_output</CODE> object. It meets the requirements 
+      specified in section [<A href="#fo-gen">5.1.2.</A>].</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDAWVB5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.5. Output 
+      Manipulators</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDAYVB5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.5.1. 
+      boost::io::formatlist_t</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc"><CODE>boost::io::formatlist_t</CODE> is 
+      the class that is used to implement the<CODE> boost::io::formatlist</CODE> 
+      manipulators. It is a hybrid between a format object and a manipulator. 
+      See section [<A href="#formatlist">3.1.</A>] for more details.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDACWB5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.5.2. 
+      boost::io::formatob_t</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc"><CODE>boost::io::formatob_t</CODE> is the 
+      class that is used to implement the<CODE> boost::io::formatob</CODE> 
+      manipulators. It is a hybrid between a format object and a manipulator, 
+      that inherits it's output capabilities from another outputter. See section 
+      [<A href="#formatob">3.2.</A>] for more details.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDAMWB5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.6. State 
+      Outputters</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">
+      <TABLE cellPadding=0>
+        <TBODY>
+        <TR>
+          <TD vAlign=top rowSpan=2>examples:</TD>
+          <TD><A 
+            href="../examples/john-torjo.cpp">libs/outfmt/examples/john-torjo.cpp</A></TD></TR></TBODY></TABLE></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDA0WB5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.6.1. 
+      boost::io::state_output</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc"><CODE>boost::io::state_output</CODE> does 
+      not inherit from a formatter class, and as such is not a standard format 
+      object.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDA5WB5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.6.1.1. State 
+      Objects</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">A state object is a type of function 
+      object that has the form:</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>template&lt; class OutputStream &gt;</DIV>
+      <DIV>inline OutputStream &amp; operator()</DIV>
+      <DIV>(</DIV>
+      <DIV style="MARGIN-LEFT: 1.5pc">
+      <DIV>OutputStream &amp; os</DIV></DIV>
+      <DIV>);</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">A state object should only output state 
+      information to the stream.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDALXB5></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">5.6.1.2. 
+      boost::io::statefmt</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">This generator function creates a<CODE> 
+      boost::io::state_output</CODE> object. It meets the requirements specified 
+      in section [<A href="#fo-gen">5.1.2.</A>], but has slightly different 
+      semantics.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>statefmt&lt; StateObject, bool pre &gt;()</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">This version takes a state object and 
+      specifies whether the state object is outputted before (<CODE> pre = 
+      true</CODE> ) or after (<CODE> pre = false</CODE> ) the outputter hosted 
+      by<CODE> boost::io::state_output</CODE>.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>statefmtex&lt; FormatType, StateObject, bool pre 
+&gt;()</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">This version allows the user to specify 
+      the format type used by the outputters.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV class=code 
+      style="MARGIN-BOTTOM: 1pc; MARGIN-LEFT: 1.5pc; TEXT-ALIGN: left">
+      <DIV>statefmt&lt; StateObject, bool pre &gt;( const Outputter &amp; o 
+      )</DIV></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">This version controls the outputter used 
+      to format the data type.</DIV></TD>
+    <TD class=tdouter></TD></TR></TBODY></TABLE></DIV>
+<DIV id=sec.6.page xmlns:d="http://www.softwave.net/XML/Document" 
+xmlns:i="http://www.softwave.net/XML/Interface" 
+xmlns:c="http://www.softwave.net/XML/CodeListing" 
+xmlns:ht="http://www.softwave.net/XML/HyperText">
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tdouter vAlign=center align=right>
+      <DIV 
+      style="FONT-WEIGHT: bold; FONT-SIZE: 3pc; FONT-FAMILY: 'Times New Roman'">6</DIV></TD>
+    <TD align=middle colSpan=2><A name=IDAKQ34></A>
+      <DIV style="FONT-WEIGHT: bold">
+      <HR>
+      Future Directions
+      <HR>
+      </DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDAMQ34></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">6.1. Tutorials</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">
+      <OL style="MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px">
+        <LI>
+        <DIV class=bodytext>How to create a Format Object to support a new data 
+        type.</DIV>
+        <LI>
+        <DIV class=bodytext>How to create a Format Object Adaptor to leverage 
+        formatting.</DIV>
+        <LI>
+        <DIV class=bodytext>How to extend the type deduction mechanism to 
+        support a new type within the automatic type decuction 
+      system.</DIV></LI></OL></DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDATQ34></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">6.2. Position/Context 
+      Information</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Add support for context information, 
+      including the length of the sub-list being outputted and the current 
+      position within that sub-list. Other information may be added at a future 
+      date.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">How would this interact with<CODE> 
+      boost::io::state_output</CODE>?</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDA0Q34></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">6.3. Additional Format 
+      Objects</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">first_output: output p.first<SPAN 
+      style="FONT-STYLE: italic"> only</SPAN>; second_output: output 
+      p.second<SPAN style="FONT-STYLE: italic"> only</SPAN>.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=center align=right></TD>
+    <TD colSpan=2><A name=IDACR34></A>
+      <DIV style="FONT-WEIGHT: bold; MARGIN-BOTTOM: 1pc">6.4. Advanced Data 
+      Types</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Support for non-sequential types, e.g. 
+      trees and graphs.</DIV></TD>
+    <TD class=tdouter></TD></TR></TBODY></TABLE></DIV>
+<DIV id=sec.7.page xmlns:d="http://www.softwave.net/XML/Document" 
+xmlns:i="http://www.softwave.net/XML/Interface" 
+xmlns:c="http://www.softwave.net/XML/CodeListing" 
+xmlns:ht="http://www.softwave.net/XML/HyperText">
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD class=tdouter vAlign=center align=right>
+      <DIV 
+      style="FONT-WEIGHT: bold; FONT-SIZE: 3pc; FONT-FAMILY: 'Times New Roman'">7</DIV></TD>
+    <TD align=middle colSpan=2><A name=IDAFR34></A>
+      <DIV style="FONT-WEIGHT: bold">
+      <HR>
+      Acknowledgements
+      <HR>
+      </DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">This library was designed and implemented 
+      by Reece H. Dunn.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">The output functors were based on a 
+      comment in the "IO for STL containers" thread on the boost developers 
+      mailing list.</DIV></TD>
+    <TD class=tdouter></TD></TR>
+  <TR>
+    <TD class=tdouter vAlign=top align=right></TD>
+    <TD class=bodytext vAlign=top colSpan=2>
+      <DIV style="MARGIN-BOTTOM: 1pc">Special thanks to:
+      <TABLE cellSpacing=0 cellPadding=0 border=0>
+        <TBODY>
+        <TR>
+          <TD width=12></TD>
+          <TD vAlign=top align=right>[1]</TD>
+          <TD width=12></TD>
+          <TD>
+            <DIV class=bodytext><SPAN style="FONT-WEIGHT: bold">Martin 
+            Henson</SPAN>: For giving me a reason to create the library in the 
+            first place!</DIV></TD></TR>
+        <TR>
+          <TD width=12></TD>
+          <TD vAlign=top align=right>[2]</TD>
+          <TD width=12></TD>
+          <TD>
+            <DIV class=bodytext><SPAN style="FONT-WEIGHT: bold">Paul A. 
+            Bristow</SPAN>: For his comments and suggestions, especially getting 
+            me to think about supporting nD constructs :-). Also, for the MSCV 
+            7.1 tests.</DIV></TD></TR>
+        <TR>
+          <TD width=12></TD>
+          <TD vAlign=top align=right>[3]</TD>
+          <TD width=12></TD>
+          <TD>
+            <DIV class=bodytext><SPAN style="FONT-WEIGHT: bold">Terje 
+            Slettebø</SPAN>: For his feedback on standard/boost issues in my 
+            code.</DIV></TD></TR>
+        <TR>
+          <TD width=12></TD>
+          <TD vAlign=top align=right>[4]</TD>
+          <TD width=12></TD>
+          <TD>
+            <DIV class=bodytext><SPAN style="FONT-WEIGHT: bold">Gennadiy 
+            Rozental</SPAN>: For issues relating to the 
+        documentation.</DIV></TD></TR>
+        <TR>
+          <TD width=12></TD>
+          <TD vAlign=top align=right>[5]</TD>
+          <TD width=12></TD>
+          <TD>
+            <DIV class=bodytext><SPAN style="FONT-WEIGHT: bold">John 
+            Torjo</SPAN>: For feedback, ideas and comments, especially for 
+            getting me to consider outputter deduction :-).</DIV></TD></TR>
+        <TR>
+          <TD width=12></TD>
+          <TD vAlign=top align=right>[6]</TD>
+          <TD width=12></TD>
+          <TD>
+            <DIV class=bodytext><SPAN style="FONT-WEIGHT: bold">Jonathan 
+            Turkanis</SPAN>: For his excellent work on revamping the 
+            outputter/type deduction system, help porting the library to broken 
+            compilers (VC6), Intel 7.1 support and much 
+      more!</DIV></TD></TR></TBODY></TABLE></DIV></TD>
+    <TD class=tdouter></TD></TR></TBODY></TABLE></DIV>
+<HR xmlns:d="http://www.softwave.net/XML/Document">
+
+<DIV style="TEXT-ALIGN: right" xmlns:d="http://www.softwave.net/XML/Document">
+<DIV>Copyright © 2003&nbsp;<A href="mailto:msclrhd@hotmail.com">Reece H. 
+Dunn</A></DIV></DIV></BODY></HTML>

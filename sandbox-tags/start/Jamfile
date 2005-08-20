@@ -1,0 +1,4 @@
+project-root ;
+subinclude libs/numeric/bindings/amos ;
+subinclude libs/numeric/bindings/blas ;
+subinclude libs/numeric/bindings/lapack ;

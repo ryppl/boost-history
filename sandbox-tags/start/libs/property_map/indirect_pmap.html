@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>indirect_pmap</title>
+  </head>
+  <body>
+    <h1><img src="../../c++boost.gif" alt="C++ Boost" width="277" height="86" /><br />indirect_pmap</h1>
+    <p>This function object essentially wraps the underlying property map's subscript, [], or <tt>get</tt> functionality within the () operator.  If the property map's value type is <tt>bool</tt>, then this functor becomes an <a href="http://www.sgi.com/tech/stl/AdaptablePredicate.html">Adaptable Predicate</a> that can be used in functions that take one as input.</p>
+
+    <h3>Where Defined</h3>
+    <p><a href="../../boost/pending/indirect_cmp.hpp"><tt>boost/indirect_cmp.hpp</tt></a></p>
+
+    <h3>Template Parameters</h3>
+    <table border="1">
+      <tr>
+        <th>Parameter</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+      <tr valign="top">
+        <td><tt>ReadablePropertyMap</tt></td>
+        <td>The type of the external property map whose key type <tt>K</tt> is the argument type of this function and whose value type <tt>V</tt> is the return type of this function.</td>
+        <td> </td>
+      </tr>
+    </table>
+
+    <h3>Models</h3>
+    <ul>
+      <li><a href="http://www.sgi.com/tech/stl/AdaptableUnaryFunction.html">Adaptable Unary Function</a></li>
+    </ul>
+
+    <h3>Type Requirements</h3>
+    <ul>
+      <li>ReadablePropertyMap is a model of <a href="./ReadablePropertyMap.html">Readable Property Map</a></li>
+      <li><tt>K</tt> is the type of <tt>indirect_pmap</tt>'s arguments.</li>
+      <li><tt>V</tt> is <tt>indirect_pmap</tt>'s return type.</li>
+    </ul>
+
+    <h3>Public Base Classes</h3>
+    <p>None.</p>
+
+    <h3>Members</h3>
+    <table border="1">
+      <tr>
+        <th>Member</th>
+        <th>Where Defined</th>
+        <th>Description</th>
+      </tr>
+      <tr valign="top">
+        <td><tt>argument_type</tt></td>
+        <td><a href="http://www.sgi.com/tech/stl/AdaptableUnaryFunction.html">Adaptable Unary Function</a></td>
+        <td>The type of the argument: <tt>K</tt></td>
+      </tr>
+      <tr valign="top">
+        <td><tt>result_type</tt></td>
+        <td><a href="http://www.sgi.com/tech/stl/AdaptableUnaryFunction.html">Adaptable Unary Function</a></td>
+        <td>The type of the result: <tt>V</tt></td>
+      </tr>
+      <tr valign="top">
+        <td>
+<pre>indirect_pmap(
+    const ReadablePropertyMap&amp; df)</pre>
+        </td>
+        <td><pre>indirect_pmap</pre></td>
+        <td><p>The constructor.</p></td>
+      </tr>
+      <tr valign="top">
+        <td><tt>result_typ operator()(const argument_type&amp; x)</tt></td>
+        <td><a href="http://www.sgi.com/tech/stl/UnaryFunction.html">Unary Function</a></td>
+        <td>The function call operator.  The return value is <tt>get(df, x)</tt>.</td>
+      </tr>
+    </table>
+
+    <h3>Non-Member Functions</h3>
+    <table border="1">
+      <tr>
+        <th>Function</th>
+        <th>Description</th>
+      </tr>
+      <tr valign="top">
+        <td>
+<pre>template &lt;typename ReadablePropertyMap&gt;
+  indirect_pmap&lt;ReadablePropertyMap&gt;
+  make_indirect_pmap(ReadablePropertyMap pmap)</pre>
+        </td>
+        <td>Constructs and returns a new <tt>indirect_pmap</tt> function object whose <tt>()</tt> operator takes in a <tt>K</tt> argument <tt>x</tt> and returns <tt>get(pmap, x)</tt>.</td>
+      </tr>
+    </table>
+
+    <h3>Example</h3>
+    <p>See <a href="./indirect_pmap.cpp"><tt>indirect_pmap.cpp</tt></a> for an example of using the <tt>indirect_pmap</tt> function object.</p>
+
+    <hr />
+    <table border="0">
+      <tr valign="top">
+        <td>Copyright &copy; 2004</td>
+        <td><a href="../../people/jeremy_siek.htm">Jeremy Siek</a>, Univ. of Notre Dame (<a href="mailto:jsiek@lsc.nd.edu">jsiek@lsc.nd.edu</a>)<br /><a href="http://www.lsc.nd.edu/~llee1">Lie-Quan Lee</a>, Univ. of Notre Dame (<a href="mailto:llee1@lsc.nd.edu">llee1@lsc.nd.edu</a>)<br /><a href="http://www.lsc.nd.edu/~lums">Andrew Lumsdaine</a>, Univ. of Notre Dame (<a href="mailto:lums@lsc.nd.edu">lums@lsc.nd.edu</a>)</td>
+      </tr>
+    </table>
+
+    <p>Use, modification, and distribution are subject to the Boost Software License, Version 1.0 at <a href="../../LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</a></p>
+  </body>
+</html>
+
