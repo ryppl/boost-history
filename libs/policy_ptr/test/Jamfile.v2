@@ -99,3 +99,14 @@ run-utf std_ptr_binary_node_test
   #  2005-08-15 ChangeLog of std_ptr_binary_node_test.cpp.
   ;
 
+run-utf wartens_sparse_matrix_test
+  : ../src/detail/sp_counted_accepting.cpp
+    ../../utility/build//debug
+    ../../io/filters/build//mout
+  ;
+
+compile iterator_range_test.cpp
+  ;
+
+compile iter_range_test.cpp
+  ;
