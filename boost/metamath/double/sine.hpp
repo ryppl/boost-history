@@ -56,6 +56,12 @@ namespace boost { namespace metamath {
 
     }  // namespace aux
 
+    template<typename Angle>
+    struct sine_double :
+      detail::times_double_double<Angle,typename detail::sine_series<Angle,mpl::int_<0>,mpl::int_<13> >::type >
+    {
+    };
+
     template<typename Tag>
     struct sine_impl;
 
@@ -63,7 +69,7 @@ namespace boost { namespace metamath {
     struct sine_impl<double_c_tag>
     {
         template<typename Angle>
-        struct apply : detail::round<detail::times_double_double<Angle,typename detail::sine_series<Angle,mpl::int_<0>,mpl::int_<13> >::type > >::type
+        struct apply : detail::round<sine_double<Angle> >::type
         {
         };
     };
@@ -72,7 +78,7 @@ namespace boost { namespace metamath {
     struct sine_impl<mpl::integral_c_tag>
     {
         template<typename Angle>
-        struct apply : detail::round<detail::times_double_double<Angle,typename detail::sine_series<integral_to_double<Angle>,mpl::int_<0>,mpl::int_<13> >::type > >::type
+        struct apply : detail::round<sine_double<integral_to_double<Angle> >::type
         {
         };
     };
