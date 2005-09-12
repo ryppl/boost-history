@@ -55,7 +55,7 @@ namespace boost { namespace metamath {
         struct pow {
             BOOST_STATIC_CONSTANT(bool,sign=Exponent<0);
             BOOST_STATIC_CONSTANT(boost::uint16_t,unsigned_exponent=sign?-Exponent:Exponent);
-            typedef typename pow_impl<unsigned_exponent>::apply<T>::type positive_pow;
+            typedef typename pow_impl<unsigned_exponent>::template apply<T>::type positive_pow;
             typedef typename mpl::eval_if<
                 mpl::bool_<sign>,
                 divides_double_double<typename integral_c_to_double<int,1>::type,positive_pow>,
