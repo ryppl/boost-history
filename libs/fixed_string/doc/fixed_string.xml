@@ -8,68 +8,80 @@
    last-revision = "$Date$"
    xmlns:xi = "http://www.w3.org/2003/XInclude"
 >
-   <title>Fixed Capacity Strings</title>
+<title>Fixed Capacity Strings</title>
 
-   <libraryinfo>
-      <author><firstname>Reece</firstname><surname>Dunn</surname></author>
-      <copyright><year>2004</year><holder>Reece H. Dunn</holder></copyright>
-      <legalnotice><para>
-         Distributed under the Boost Software License, Version 1.0.
-         (See accompanying file LICENSE_1_0.txt or copy at
-         <ulink url = "http://www.boost.org/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</ulink>)
-      </para></legalnotice>
-      <librarypurpose>
-         Provide buffer overrun protected character arrays as a safe migration path from C-style
-         code. Allow basic_string/STL operations on the strings for interoperability between
-         C-style and C++-style strings.
-      </librarypurpose>
-      <librarycategory name = "category:string-text"/>
-   </libraryinfo>
+<libraryinfo>
+   <author><firstname>Reece</firstname><surname>Dunn</surname></author>
+   <copyright><year>2004</year><holder>Reece H. Dunn</holder></copyright>
+   <legalnotice><para>
+      Distributed under the Boost Software License, Version 1.0.
+      (See accompanying file LICENSE_1_0.txt or copy at
+      <ulink url = "http://www.boost.org/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</ulink>)
+   </para></legalnotice>
+   <librarypurpose>
+      Provide buffer overrun protected character arrays as a safe migration
+      path from C-style code. Allow basic_string/STL operations on the strings
+      for interoperability between C-style and C++-style strings.
+   </librarypurpose>
+   <librarycategory name = "category:string-text"/>
+</libraryinfo>
 
-   <section id = "fixedstr.background"><title>Background</title>
-      <para>
-         There is a lot of C code, and even C++ code, that uses character buffers and the C string functions,
-         for various reasons: updating legacy C code; wanting to keep executable size down without linking to
-         a large dynamic library; or wanting to tune performance by keeping the strings on the stack. The
-         problem with using this approach is that this can be potentially unsafe due to buffer overrun.
-         Consider the following simple example:
-      </para>
+<section id = "fixedstr.background"><title>Background</title>
+<para>
+   There is a lot of C (and even C++) code, that uses character buffers and
+   the C-style string functions for various reasons: updating legacy C code,
+   wanting to keep executable size down without linking to a large dynamic
+   library or wanting to tune performance by keeping the strings on the
+   stack. The problem with using this approach is that this can be
+   potentially unsafe due to buffer overrun. Consider the following simple
+   example:
+</para>
 <programlisting>
    char str[ 5 ];
    strcpy( str, "buffer overrun" );
    std::cout &lt;&lt; str &lt;&lt; '\n';
 </programlisting>
-      <para>
-         The simple solution is to use the <code>strn</code> variants of the string functions, specifying the
-         size of the buffer:
-      </para>
+<para>
+   The simple solution is to use the <code>strn</code> variants of the string
+   functions, specifying the size of the buffer:
+</para>
 <programlisting>
    char str[ 5 ];
    strncpy( str, "this is safer", 5 ); // #1
    std::cout &lt;&lt; str &lt;&lt; '\n';
    strncpy( str, "unsafe usage", 15 ); // #2
 </programlisting>
-      <para>
-         but there is still no guarantee that <code>str</code> is null-terminated or that the number of characters
-         to copy provided is less than or equal to the length of the buffer (see #2 in the above).
-      </para><para>
-         Microsoft supply a <code>&lt;strsafe.h&gt;</code> header file in the
-         <ulink url = "http://www.microsoft.com/msdownload/platformsdk/sdkupdate/">PlatformSDK</ulink>
-         that supports buffer-safe string functions, but these are MS/Windows specific and are also fairly large
-         inlined functions. These, like the <code>strn</code> library functions do not prevent the user specifying
-         a size larger than the destination buffer.
-      </para><para>
-         The standard library string allocates its own buffer so it protects against potential buffer attacks,
-         but this may not be a viable option in a given situation (e.g. on an embedded system where space is a
-         premium). It is also time consuming to port existing C code that uses character buffers to use C++-style
-         strings.
-      </para>
-      <section id = "fixedstr.solution"><title>The Solution</title>
-         <para>
-            The boost::fixed_string class is aimed at solving the problem outlined above and is designed to be a
-            direct replacement for character buffers, operating as a fixed-capacity string. The class can be used
-            like this:
-         </para>
+<para>
+   but there is still no guarantee that <code>str</code> is null-terminated
+   or that the number of characters to copy provided is less than or equal
+   to the length of the buffer (see #2 in the above).
+</para><para>
+   Microsoft supply a <code>&lt;strsafe.h&gt;</code> header file in the
+   <ulink url = "http://www.microsoft.com/msdownload/platformsdk/sdkupdate/">PlatformSDK</ulink>
+   that supports buffer-safe string functions, but these are Microsoft/Windows
+   specific and are also fairly large inlined functions. These, like the
+   <code>strn</code> library functions do not prevent the user specifying
+   a size larger than the destination buffer.
+</para><para>
+   Microsoft have also submitted save variants of the various C API functions,
+   including the string functions. However, these have not yet been
+   standardized and are only (currently) available on the Microsoft Visual C++
+   8.0 compiler.
+</para><para>
+   The standard library string allocates its own buffer so it protects
+   against potential buffer attacks, but this may not be a viable option in
+   a given situation (e.g. on an embedded system where space is a premium).
+   It is also time consuming to port existing C code that uses character
+   buffers to use C++-style strings.
+</para>
+
+<section id = "fixedstr.solution"><title>The Solution</title>
+<para>
+   The <code>boost::fixed_string</code> class is aimed at solving the problem
+   outlined above and is designed to be a direct replacement for character
+   buffers, operating as a fixed-capacity string. The class can be used
+   like this:
+</para>
 <programlisting>
    #include &lt;boost/fixed_string/fsstring.hpp&gt; // safe C-style string functions
 
@@ -79,41 +91,41 @@
    strcpy( str, "buffer safe!" );
    std::cout &lt;&lt; "\"" &lt;&lt; str &lt;&lt; "\"\n"; // output: "buffe"
 </programlisting>
-      </section>
-   </section><section id = "fixedstr.design"><title>The Design</title>
-      <section id = "fixedstr.requirements"><title>Requirements</title>
-         <itemizedlist>
-            <listitem><para>
-               The <code>boost::fixed_string</code> class should be a direct replacement for <code>char[ n ]</code>
-               constructs. This is to make it easier to update existing code that uses C-style strings.
-            </para></listitem>
-            <listitem><para>
-               The operations on boost::fixed_string should be protected against buffer overrun. This will make
-               programs that use the class safer and more resiliant to malicious users.
-            </para></listitem>
-            <listitem><para>
-               You should be able to operate on variable-capacity <code>boost::fixed_string</code>. This is to
-               make it easy to update existing code and allow you to keep functions in a static or dynamic
-               library (i.e. there is no need to replace the functions with template versions).
-            </para></listitem>
-            <listitem>
-               <para>
-                  The <code>boost::fixed_string</code> class should implement the <code>std::basic_string</code>
-                  interface. (See C++98[21.3] for the <code>std::basic_string</code> interface).
-                  <emphasis role = "bold">[Note:</emphasis>
-                     I am aware that this interface is flawed, but it is part of the standard and as such outlines
-                     how a C++ string behaves.
-                  <emphasis role = "bold">]</emphasis>
-               </para><para>
-                  The motivation behind this is to allow integration with STL code and provide a small learning
-                  curve for programmers familiar with std::string.
-               </para>
-            </listitem>
-         </itemizedlist>
-      </section><section id = "fixedstr.basic_string_impl"><title>boost::detail::basic_string_impl</title>
-         <para>
-            header: <code>&lt;boost/fixed_string/detail/basic_string_impl.hpp&gt;</code>
-         </para>
+</section>
+
+</section><section id = "fixedstr.design"><title>The Design</title>
+
+<section id = "fixedstr.requirements"><title>Requirements</title>
+<itemizedlist>
+   <listitem><para>
+      The <code>boost::fixed_string</code> class should be a direct replacement
+      for <code>char[ n ]</code> constructs. This is to make it easier to update
+      existing code that uses C-style strings.
+   </para></listitem>
+   <listitem><para>
+      The operations on <code>boost::fixed_string</code> should be protected
+      against buffer overrun. This will make programs that use the class safer
+      and more resiliant to malicious users.
+   </para></listitem>
+   <listitem><para>
+      You should be able to operate on variable-capacity
+      <code>boost::fixed_string</code>. This is to make it easy to update
+      existing code and allow you to keep functions in a static or dynamic
+      library (i.e. there is no need to replace the functions with template
+      versions).
+   </para></listitem>
+   <listitem><para>
+         The <code>boost::fixed_string</code> class should implement the
+         <code>std::basic_string</code> interface. (See C++98[21.3] for
+         the <code>std::basic_string</code> interface). The motivation behind
+         this is to allow integration with STL code and provide a small
+         learning curve for programmers familiar with std::string.
+   </para></listitem>
+</itemizedlist>
+</section><section id = "fixedstr.basic_string_impl"><title>boost::detail::basic_string_impl</title>
+<para>
+   header: <code>&lt;boost/fixed_string/detail/basic_string_impl.hpp&gt;</code>
+</para>
 <synopsis>
    namespace boost { namespace detail {
    {
@@ -522,4 +534,7 @@
 </programlisting>
       </section>
    </section>
+
+<xi:include href="autodoc.boostbook"/>
+
 </library>

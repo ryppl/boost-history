@@ -1,4 +1,8 @@
 project boost/fixed_string ;
-import boostbook : boostbook ;
+
+import toolset ;
+toolset.using doxygen ;
 
 boostbook fixed_string : fixed_string.xml ;
+
+doxygen autodoc : [ glob ../../../boost/fixed_string/*.hpp ] ;
