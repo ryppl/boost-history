@@ -223,7 +223,7 @@ public:
 
    void swap_( fixed_string_impl & fsi )
    {
-      size_type ml = min_( len, fsi.len );
+      size_type ml = (std::min)( len, fsi.len );
       size_type i  = 0;
 
       for( ; i < ml; ++i )
@@ -233,7 +233,7 @@ public:
 
       if( len > fsi.len ) // copy remainder of this into fsi
       {
-         ml = min_( len, fsi.cap );
+         ml = (std::min)( len, fsi.cap );
          for( ; i < ml; ++i )
          {
             fsi.str[ i ] = str[ i ];
@@ -244,7 +244,7 @@ public:
       }
       else // copy remainder of fsi into this
       {
-         ml = min_( fsi.len, cap );
+         ml = (std::min)( fsi.len, cap );
          for( ; i < ml; ++i )
          {
             str[ i ] = fsi.str[ i ];

@@ -52,11 +52,6 @@
 namespace boost{ namespace detail
 {
 
-inline size_t min_( size_t a, size_t b )
-{
-   return ( a < b ) ? a : b;
-}
-
 struct noerror_string_policy
 {
    static void out_of_range()
@@ -280,7 +275,7 @@ public:
       {
          ErrorPolicy::out_of_range();
       }
-      return assign( s.data() + pos, min_( n, s.size() - pos ));
+      return assign( s.data() + pos, (std::min)( n, s.size() - pos ));
    }
 
    string_type & assign( const char_type * s, size_type n )
@@ -339,7 +334,7 @@ public:
       {
          ErrorPolicy::out_of_range();
       }
-      return append( s.c_str() + pos, min_( n, sz - pos ));
+      return append( s.c_str() + pos, (std::min)( n, sz - pos ));
    }
 
    string_type & append( const char_type * s, size_type n )
@@ -435,7 +430,7 @@ public:
 
    string_type & erase( size_type pos = 0, size_type n = npos )
    {
-      return replace( pos, min_( n, size() - pos ), 0, value_type());
+      return replace( pos, (std::min)( n, size() - pos ), 0, value_type());
    }
 
    iterator erase( iterator pos )
@@ -463,7 +458,7 @@ public:
       {
          ErrorPolicy::out_of_range();
       }
-      return( replace( pos1, n1, s.offset( pos2 ), min_( n2, s.length() - pos2 )));
+      return( replace( pos1, n1, s.offset( pos2 ), (std::min)( n2, s.length() - pos2 )));
    }
 
    string_type & replace( size_type d, size_type n1, const char_type * s1, size_type n2 )
@@ -640,7 +635,7 @@ public:
       {
          ErrorPolicy::out_of_range();
       }
-      n = min_( n, size() - pos );
+      n = (std::min)( n, size() - pos );
       traits_type::copy( s, offset( pos ), n );
       s[ n ] = char_type();
       return( n );
@@ -723,7 +718,7 @@ public:
          return npos;
       }
 
-      pos = min_( pos, length() - n );
+      pos = (std::min)( pos, length() - n );
 
       if( n == 0 )
       {
@@ -814,7 +809,7 @@ public:
    {
       if( !empty() && n > 0 )
       {
-         pos = min_( pos, length() - 1 );
+         pos = (std::min)( pos, length() - 1 );
          for( const_iterator i( begin() + pos );; --i )
          {
             if( traits_type::find( s, n, *i ) != 0 )
@@ -880,7 +875,7 @@ public:
    {
       if( !empty())
       {
-         pos = min_( pos, size() - 1 );
+         pos = (std::min)( pos, size() - 1 );
          for( const_iterator i( begin() + pos );; --i )
          {
             if( traits_type::find( s, n, *i ) == 0 )
@@ -930,7 +925,7 @@ public:
       {
          ErrorPolicy::out_of_range();
       }
-      return compare( pos1, n1, s.data() + pos2, min_( n2, s.size() - pos2 ));
+      return compare( pos1, n1, s.data() + pos2, (std::min)( n2, s.size() - pos2 ));
    }
 
    int compare( const char_type * s ) const
@@ -944,8 +939,8 @@ public:
       {
          ErrorPolicy::out_of_range();
       }
-      n1 = min_( size() - pos1, n1 );
-      const int res = traits_type::compare( data() + pos1, s, min_( n1, n2 ));
+      n1 = (std::min)( size() - pos1, n1 );
+      const int res = traits_type::compare( data() + pos1, s, (std::min)( n1, n2 ));
       return ( res != 0 || n2 == npos ) ? res : int( n1 - n2 );
    }
 
