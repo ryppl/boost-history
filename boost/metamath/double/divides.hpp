@@ -7,6 +7,7 @@
 
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/divides.hpp>
+#include <boost/mpl/apply.hpp>
 #include <boost/metamath/double/double.hpp>
 #include <boost/metamath/double/integral_to_double.hpp>
 #include <boost/metamath/double/detail/normalize.hpp>

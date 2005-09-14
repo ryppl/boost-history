@@ -14,8 +14,9 @@
 namespace boost { namespace metamath {
     namespace detail {
         template<typename N1,typename N2>
-        struct minus_double_double {
-            typedef typename plus_double_double<N1,mpl::negate<N2> >::type type;
+        struct minus_double_double :
+        plus_double_double<N1,mpl::negate<N2> >::type
+        {
         };
 
     } //namespace detail

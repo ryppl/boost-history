@@ -7,6 +7,7 @@
 
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/plus.hpp>
+#include <boost/mpl/apply.hpp>
 #include <boost/metamath/double/double.hpp>
 #include <boost/metamath/double/integral_to_double.hpp>
 #include <boost/metamath/double/detail/additive.hpp>
@@ -122,34 +123,6 @@ namespace boost { namespace metamath {
                 >,N1,N2
             >::type
         {};
-/*            BOOST_STATIC_CONSTANT(boost::int16_t,exp_diff=(N1::exponent-N2::exponent));
-            BOOST_STATIC_CONSTANT(boost::int16_t,exponent=(exp_diff<0?N2::exponent:N1::exponent));
-            typedef detail::shift_mantissa<typename N1::mantissa,(exp_diff<0?exp_diff:0)> mantissa1;
-            typedef detail::shift_mantissa<typename N2::mantissa,(exp_diff<0?0:-exp_diff)> mantissa2;
-            BOOST_STATIC_CONSTANT(bool,sign=(mpl::if_<
-                detail::less_mantissa<mantissa1,mantissa2>,
-                mpl::bool_<N2::sign>,
-                mpl::bool_<N1::sign>
-            >::type::value));
-
-            typedef typename mpl::if_<
-                detail::less_mantissa<mantissa1,mantissa2>,
-                mantissa1,
-                mantissa2
-            >::type least_mantissa;
-
-            typedef typename  mpl::if_<
-                detail::less_mantissa<mantissa1,mantissa2>,
-                mantissa2,
-                mantissa1
-            >::type greatest_mantissa;
-            BOOST_STATIC_CONSTANT(bool,equal_sign=(N1::sign==N2::sign));
-            typedef typename mpl::eval_if<
-                mpl::bool_<equal_sign>,
-                detail::add_double<greatest_mantissa,least_mantissa,exponent,sign>,
-                detail::sub_double<greatest_mantissa,least_mantissa,exponent,sign>
-            >::type type;
-        };*/
 
     } //namespace detail
 }} //namespace boost::metamath

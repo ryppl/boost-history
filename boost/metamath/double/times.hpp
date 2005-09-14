@@ -7,6 +7,7 @@
 
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/times.hpp>
+#include <boost/mpl/apply.hpp>
 #include <boost/metamath/double/double.hpp>
 #include <boost/metamath/double/detail/normalize.hpp>
 #include <boost/metamath/double/limits.hpp>
