@@ -3,8 +3,8 @@
 // Use, modification and distribution is subject to the Boost Software
 // License, Version 1.0. (http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_METAMATH_DOUBLE_EXPONENT_HPP
-#define BOOST_METAMATH_DOUBLE_EXPONENT_HPP
+#ifndef BOOST_METAMATH_DOUBLE_EXPONENTIAL_HPP
+#define BOOST_METAMATH_DOUBLE_EXPONENTIAL_HPP
 
 #include <boost/metamath/double.hpp>
 #include <boost/metamath/double/times.hpp>
@@ -29,13 +29,13 @@ namespace boost { namespace metamath {
           , typename I
           , typename SeriesCount
         >
-        struct exponent_series
+        struct exponential_series
         {
          private:
              typedef typename mpl::eval_if<
                                  mpl::equal_to<mpl::plus<mpl::int_<1>,I>,SeriesCount>
                                , meta::one
-                               , exponent_series<Arg,mpl::plus<mpl::int_<1>,I>,SeriesCount>
+                               , exponential_series<Arg,mpl::plus<mpl::int_<1>,I>,SeriesCount>
                              >::type
                     next_term;
 
@@ -50,25 +50,25 @@ namespace boost { namespace metamath {
     }  // namespace detail
 
     template<typename Arg>
-    struct exponent_double :
-      detail::exponent_series<Arg,mpl::int_<1>,mpl::int_<14> >
+    struct exponential_double :
+      detail::exponential_series<Arg,mpl::int_<1>,mpl::int_<14> >
     {
     };
 
     template<typename Tag>
-    struct exponent_impl;
+    struct exponential_impl;
 
     template <>
-    struct exponent_impl<double_c_tag>
+    struct exponential_impl<double_c_tag>
     {
         template<typename Arg>
-        struct apply : detail::round<typename detail::exponent_series<Arg,mpl::int_<1>,mpl::int_<18> >::type >::type
+        struct apply : detail::round<typename detail::exponential_series<Arg,mpl::int_<1>,mpl::int_<18> >::type >::type
         {
         };
     };
 
     template <>
-    struct exponent_impl<mpl::integral_c_tag>
+    struct exponential_impl<mpl::integral_c_tag>
     {
         template<typename Arg>
         struct apply : detail::round<detail::power_double_int<meta::e,Arg> >::type
@@ -78,4 +78,4 @@ namespace boost { namespace metamath {
 
 }}  //namespace boost::metamath
 
-#endif // BOOST_METAMATH_DOUBLE_EXP_HPP
+#endif // BOOST_METAMATH_DOUBLE_EXPONENTIAL_HPP
