@@ -5,4 +5,4 @@ import testing ;
 
 DEPENDS all : test ;
 
-run converter.cpp <lib>../../build/langbinding : : : <include>$(BOOST_ROOT) ;
+run converter.cpp <lib>../../build/langbinding : : : <sysinclude>$(BOOST_ROOT) ;

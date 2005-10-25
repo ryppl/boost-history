@@ -5,7 +5,7 @@ import testing ;
 
 DEPENDS all : test ;
 
-#template classes-test <lib>../../build/langbinding : <include>$(BOOST_ROOT) ;
+#template classes-test <lib>../../build/langbinding : <sysinclude>$(BOOST_ROOT) ;
 
-run inheritance.cpp <lib>../../build/langbinding : : : <include>$(BOOST_ROOT) ;
-run holder.cpp <lib>../../build/langbinding : : : <include>$(BOOST_ROOT) ;
+run inheritance.cpp <lib>../../build/langbinding : : : <sysinclude>$(BOOST_ROOT) ;
+run holder.cpp <lib>../../build/langbinding : : : <sysinclude>$(BOOST_ROOT) ;
