@@ -11,10 +11,10 @@ sources =
 
 dll langbinding 
     : $(sources)
-    : <include>$(BOOST_ROOT) 
+    : <sysinclude>$(BOOST_ROOT) 
     ;
 
 lib langbinding 
     : $(sources)
-    : <include>$(BOOST_ROOT) 
+    : <sysinclude>$(BOOST_ROOT) 
     ;
