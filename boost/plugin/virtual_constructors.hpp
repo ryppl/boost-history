@@ -6,24 +6,33 @@
 #ifndef BOOST_VIRTUAL_CONSTRUCTORS_VP_2004_08_05
 #define BOOST_VIRTUAL_CONSTRUCTORS_VP_2004_08_05
 
+#include <boost/config.hpp>
 #include <boost/mpl/list.hpp>
-
 #include <boost/shared_ptr.hpp>
 #include <boost/any.hpp>
+
 #include <string>
 #include <map>
 
+#include <boost/plugin/config.hpp>
+
+///////////////////////////////////////////////////////////////////////////////
 namespace boost { namespace plugin {
 
-    typedef shared_ptr<
-        std::map<std::string, boost::any>& ()> dll_handle;
+    ///////////////////////////////////////////////////////////////////////////
+    typedef std::map<std::string, boost::any> exported_plugins_type;
+    typedef exported_plugins_type& (BOOST_PLUGIN_API *get_plugins_list_type)();
+    typedef exported_plugins_type& (BOOST_PLUGIN_API get_plugins_list_np)();
+    typedef shared_ptr<get_plugins_list_np> dll_handle;
 
-    template<class BasePlugin>
-    struct virtual_constructors {
-        typedef mpl::list<mpl::list<> > type;
+    ///////////////////////////////////////////////////////////////////////////
+    template<typename BasePlugin>
+    struct virtual_constructors 
+    {
+        typedef boost::mpl::list<boost::mpl::list<> > type;
     };
 
-}}
-
+///////////////////////////////////////////////////////////////////////////////
+}}  // namespace boost::plugin
 
 #endif

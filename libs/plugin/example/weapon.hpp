@@ -2,8 +2,8 @@
 #ifndef WEAPON_HPP
 #define WEAPON_HPP
 
-#include <boost/plugin/virtual_constructors.hpp>
 #include <string>
+#include <boost/plugin/virtual_constructors.hpp>
 
 class Weapon {
 public:
@@ -12,13 +12,17 @@ public:
 };
 
 namespace boost { namespace plugin {
-template<>
-struct virtual_constructors<Weapon> {
-    typedef mpl::list<mpl::list<std::string>,
-                      mpl::list<std::string, int>    
-    > type;
 
-};
+    template<>
+    struct virtual_constructors<Weapon> 
+    {
+        typedef mpl::list<
+            mpl::list<std::string>,
+            mpl::list<std::string, int>,
+            mpl::list<std::string, int, int>    
+        > type;
+    };
+
 }}
 
 #endif

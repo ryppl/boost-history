@@ -11,23 +11,20 @@
 
 #include <iostream>
 
-namespace boost { namespace plugin {
+namespace boost { namespace plugin { namespace detail {
 
     ///////////////////////////////////////////////////////////////////////////
-    namespace detail 
+    struct dll_handle_holder 
     {
-        struct dll_handle_holder 
-        {
-            dll_handle_holder(dll_handle dll) 
-            :   m_dll(dll) {}
-            
-            ~dll_handle_holder()
-            {}
+        dll_handle_holder(dll_handle dll) 
+        :   m_dll(dll) {}
+        
+        ~dll_handle_holder()
+        {}
 
-        private:
-            dll_handle m_dll;
-        };
-    }
+    private:
+        dll_handle m_dll;
+    };
     
     ///////////////////////////////////////////////////////////////////////////
     template<typename Wrapped, typename Parameters>
@@ -35,7 +32,7 @@ namespace boost { namespace plugin {
 
     template<typename Wrapped>
     struct plugin_wrapper<Wrapped, boost::mpl::list<> > 
-    :   public detail::dll_handle_holder, 
+    :   public dll_handle_holder, 
         public Wrapped 
     {
         plugin_wrapper(dll_handle dll) 
@@ -45,7 +42,7 @@ namespace boost { namespace plugin {
 
     template<typename Wrapped, typename A1>
     struct plugin_wrapper<Wrapped, boost::mpl::list<A1> > 
-    :   public detail::dll_handle_holder, 
+    :   public dll_handle_holder, 
         public Wrapped 
     {        
         plugin_wrapper(dll_handle dll, A1 a1) 
@@ -56,7 +53,7 @@ namespace boost { namespace plugin {
 
     template<typename Wrapped, typename A1, typename A2>
     struct plugin_wrapper<Wrapped, boost::mpl::list<A1, A2> > 
-    :   public detail::dll_handle_holder, 
+    :   public dll_handle_holder, 
         public Wrapped 
     {        
         plugin_wrapper(dll_handle dll, A1 a1, A2 a2)
@@ -65,6 +62,15 @@ namespace boost { namespace plugin {
         {}
     };
 
-}}
+///////////////////////////////////////////////////////////////////////////////
+//
+//  Bring in the remaining plugin_wrapper definitions for parameter 
+//  counts greater 2
+//
+///////////////////////////////////////////////////////////////////////////////
+#include <boost/plugin/detail/plugin_wrapper_impl.hpp>
+
+///////////////////////////////////////////////////////////////////////////////
+}}} // namespace boost::plugin::detail
 
 #endif

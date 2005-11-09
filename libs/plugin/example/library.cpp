@@ -1,25 +1,33 @@
 
-#include <boost/plugin/concrete_factory.hpp>
-using namespace boost::plugin;
 
 #include <boost/any.hpp>
 #include <map>
 #include <utility>
 
-#include "weapon.hpp"
-
 #include <boost/plugin/export_plugin.hpp>
 
-class Missile : public Weapon {
+#include "weapon.hpp"
+
+class Missile 
+:   public Weapon 
+{
 public:
-    Missile(const std::string& s, int i = 10) {
+    Missile(std::string const& s, int i = 10) : name(s)
+    {
         std::cout << "Created missile '" << s << "'\n";
         std::cout << "Fuel load is " << i << "\n";
-        
     }
-    virtual void fire() { std::cout << "Fire!\n"; }
+    Missile(std::string const& s, int i, int j) : name(s)
+    {
+        std::cout << "Created missile '" << s << "'\n";
+        std::cout << "Fuel load is " << i << "\n";
+        std::cout << "Speed is " << j << "\n";
+    }
+
+    void fire() { std::cout << "Fire " << name << "!\n"; }
+    
+    std::string name;
 };
 
-BOOST_EXPORT_PLUGIN(Weapon, Missile, "Missile");
-BOOST_EXPORT_PLUGIN_LIST();
-
+BOOST_PLUGIN_EXPORT(Weapon, Missile, "Missile");
+BOOST_PLUGIN_EXPORT_LIST();

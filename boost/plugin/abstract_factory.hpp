@@ -10,57 +10,70 @@
 #include <boost/mpl/list.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include "virtual_constructors.hpp"
+#include <boost/plugin/virtual_constructors.hpp>
 
 namespace boost { namespace plugin {
 
-    struct empty_abstract_factory_item {
-        void create(int*******);
-    };
-
-    /** A template class, which is given the base type of plugin and a set
-        of constructor parameter types and defines the appropriate virtual
-        'create' function.
-    */
-    template<class BasePlugin, class Parameters> 
-    struct abstract_factory_item_N {    
-    };
-
-    template<class BasePlugin>
-    struct abstract_factory_item_N<BasePlugin, mpl::list<> > {
-        virtual BasePlugin* create(dll_handle dll) = 0;
-    };
-
-    template<class BasePlugin, class A1>
-    struct abstract_factory_item_N<BasePlugin, mpl::list<A1> > {
-        virtual BasePlugin* create(dll_handle dll, A1 a1) = 0;
-    };
-
-    template<class BasePlugin, class A1, class A2>
-    struct abstract_factory_item_N<BasePlugin, mpl::list<A1, A2> > {
-        virtual BasePlugin* create(dll_handle dll, A1 a1, A2 a2) = 0;
-    };
-    
-
-    template<class BasePlugin, class Base, class Parameters> 
-    struct abstract_factory_item : 
-        public Base, 
-        public abstract_factory_item_N<BasePlugin, Parameters> 
+    namespace detail
     {
-        using Base::create;
-        using abstract_factory_item_N<BasePlugin, Parameters>::create;
-    };
+        struct abstract_factory_item_base 
+        {
+            void create(int*******);
+        };
 
-    using namespace mpl::placeholders;
+        /** A template class, which is given the base type of plugin and a set
+            of constructor parameter types and defines the appropriate virtual
+            'create' function.
+        */
+        template<typename BasePlugin, typename Base, typename Parameters> 
+        struct abstract_factory_item;
 
+        template<typename BasePlugin, typename Base>
+        struct abstract_factory_item<BasePlugin, Base, boost::mpl::list<> > 
+        :   public Base
+        {
+            using Base::create;
+            virtual BasePlugin* create(dll_handle dll) = 0;
+        };
+
+        template<typename BasePlugin, typename Base, typename A1>
+        struct abstract_factory_item<BasePlugin, Base, boost::mpl::list<A1> > 
+        :   public Base
+        {
+            using Base::create;
+            virtual BasePlugin* create(dll_handle dll, A1 a1) = 0;
+        };
+
+        template<typename BasePlugin, typename Base, typename A1, typename A2>
+        struct abstract_factory_item<BasePlugin, Base, boost::mpl::list<A1, A2> > 
+        :   public Base
+        {
+            using Base::create;
+            virtual BasePlugin* create(dll_handle dll, A1 a1, A2 a2) = 0;
+        };
+    
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    //  Bring in the remaining abstract_factory_item definitions for parameter 
+    //  counts greater 2
+    //
+    ///////////////////////////////////////////////////////////////////////////
+    #include <boost/plugin/detail/abstract_factory_impl.hpp>
+
+    ///////////////////////////////////////////////////////////////////////////
+    }   // namespace detail
+    
+    ///////////////////////////////////////////////////////////////////////////
     template<class BasePlugin>
     struct abstract_factory :
-        public mpl::inherit_linearly<
-        typename virtual_constructors<BasePlugin>::type,
-        abstract_factory_item<BasePlugin, _, _>,
-        empty_abstract_factory_item>::type
+        public boost::mpl::inherit_linearly<
+            typename virtual_constructors<BasePlugin>::type,
+            detail::abstract_factory_item<BasePlugin, 
+                boost::mpl::placeholders::_, boost::mpl::placeholders::_>,
+            detail::abstract_factory_item_base
+        >::type
     {
-    };    
+    };  
 
 }}
 
