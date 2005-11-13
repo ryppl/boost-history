@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_xml_parser", "test_xml
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_registry_parser", "test_registry_parser.vcproj", "{3A27B48F-B815-4EC9-AC99-E9C003300EDA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sandbox", "sandbox.vcproj", "{85FA9AEF-966B-4D93-9431-F507754B0431}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -43,6 +45,10 @@ Global
 		{3A27B48F-B815-4EC9-AC99-E9C003300EDA}.Debug|Win32.Build.0 = Debug|Win32
 		{3A27B48F-B815-4EC9-AC99-E9C003300EDA}.Release|Win32.ActiveCfg = Release|Win32
 		{3A27B48F-B815-4EC9-AC99-E9C003300EDA}.Release|Win32.Build.0 = Release|Win32
+		{85FA9AEF-966B-4D93-9431-F507754B0431}.Debug|Win32.ActiveCfg = Debug|Win32
+		{85FA9AEF-966B-4D93-9431-F507754B0431}.Debug|Win32.Build.0 = Debug|Win32
+		{85FA9AEF-966B-4D93-9431-F507754B0431}.Release|Win32.ActiveCfg = Release|Win32
+		{85FA9AEF-966B-4D93-9431-F507754B0431}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
