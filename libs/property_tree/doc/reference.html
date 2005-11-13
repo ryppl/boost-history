@@ -1,0 +1,1783 @@
+﻿<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <title>Property Tree Library Reference</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body link="#0000ff" vlink="#800080">
+    <table border="0" cellpadding="7" cellspacing="0" width="100%" summary="header">
+        <tr>
+            <td valign="top" width="300">
+                <h3>
+                    <a href="../../../index.htm">
+                        <img height="86" width="277" alt="C++ Boost" src="../../../boost.png" border="0">
+                    </a>
+                </h3>
+            </td>
+            <td valign="top">
+                <h1 align="center">
+                    Property Tree Library</h1>
+                <h2 align="center">
+                    Reference</h2>
+            </td>
+        </tr>
+    </table>
+    <hr>
+    <dl>
+        <dt class="index">Header <a href="#header_property_tree/ptree.hpp">property_tree/ptree.hpp</a></dt>
+        <dt class="index1">class <a href="#ptree_traits">ptree_traits</a></dt>
+        <dt class="index1">class <a href="#ptree_error">ptree_error</a></dt>
+        <dt class="index1">class <a href="#ptree_bad_path">ptree_bad_path</a></dt>
+        <dt class="index1">class <a href="#ptree_bad_data">ptree_bad_data</a></dt>
+        <dt class="index1">typedefs <a href="#ptree">ptree and wptree</a></dt>
+        <dt class="index1">class <a href="#basic_ptree">basic_ptree</a></dt>
+        <dt class="index2">typedef <a href="#basic_ptree::char_type">basic_ptree::char_type</a></dt>
+        <dt class="index2">typedef <a href="#basic_ptree::traits_type">basic_ptree::traits_type</a></dt>
+        <dt class="index2">typedef <a href="#basic_ptree::key_type">basic_ptree::key_type</a></dt>
+        <dt class="index2">typedef <a href="#basic_ptree::data_type">basic_ptree::data_type</a></dt>
+        <dt class="index2">typedef <a href="#basic_ptree::value_type">basic_ptree::value_type</a></dt>
+        <dt class="index2">typedef <a href="#basic_ptree::size_type">basic_ptree::size_type</a></dt>
+        <dt class="index2">typedef <a href="#basic_ptree::iterators">basic_ptree::iterator</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::basic_ptree">basic_ptree::basic_ptree</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::~basic_ptree">basic_ptree::~basic_ptree</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::begin">basic_ptree::begin</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::end">basic_ptree::end</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::rbegin">basic_ptree::rbegin</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::rend">basic_ptree::rend</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::size">basic_ptree::size</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::empty">basic_ptree::empty</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::data">basic_ptree::data</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::front">basic_ptree::front</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::back">basic_ptree::back</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::operator=">basic_ptree::operator =</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::operator==">basic_ptree::operator ==</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::operator!=">basic_ptree::operator !=</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::find">basic_ptree::find</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::count">basic_ptree::count</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::clear">basic_ptree::clear</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::insert">basic_ptree::insert</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::erase">basic_ptree::erase</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::push_front">basic_ptree::push_front</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::push_back">basic_ptree::push_back</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::pop_front">basic_ptree::pop_front</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::pop_back">basic_ptree::pop_back</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::swap">basic_ptree::swap</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::reverse">basic_ptree::reverse</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::sort">basic_ptree::sort</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::get_child">basic_ptree::get_child</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::get_child_b">basic_ptree::get_child_b</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::get_child_d">basic_ptree::get_child_d</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::put_child">basic_ptree::put_child</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::get_own">basic_ptree::get_own</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::get_own_b">basic_ptree::get_own_b</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::get_own_d">basic_ptree::get_own_d</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::get">basic_ptree::get</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::get_b">basic_ptree::get_b</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::get_d">basic_ptree::get_d</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::put_own">basic_ptree::put_own</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::put">basic_ptree::put</a></dt>
+        <p>
+        </p>
+        <dt class="index">Header <a href="#header_property_tree/xml_parser.hpp">property_tree/xml_parser.hpp</a></dt>
+        <dt class="index1">function <a href="#xml_parser::read_xml">read_xml</a></dt>
+        <dt class="index1">function <a href="#xml_parser::write_xml">write_xml</a></dt>
+        <dt class="index1">class <a href="#xml_parser::xml_parser_error">xml_parser_error</a></dt>
+        <p>
+        </p>
+        <dt class="index">Header <a href="#header_property_tree/ini_parser.hpp">property_tree/ini_parser.hpp</a></dt>
+        <dt class="index1">function <a href="#ini_parser::read_ini">read_ini</a></dt>
+        <dt class="index1">function <a href="#ini_parser::write_ini">write_ini</a></dt>
+        <dt class="index1">class <a href="#ini_parser::ini_parser_error">ini_parser_error</a></dt>
+        <p>
+        </p>
+        <dt class="index">Header <a href="#header_property_tree/info_parser.hpp">property_tree/info_parser.hpp</a></dt>
+        <dt class="index1">function <a href="#info_parser::read_info">read_info</a></dt>
+        <dt class="index1">function <a href="#info_parser::write_info">write_info</a></dt>
+        <dt class="index1">class <a href="#info_parser::info_parser_error">info_parser_error</a></dt>
+        <p>
+        </p>
+        <dt class="index">Header <a href="#header_property_tree/cmdline_parser.hpp">property_tree/cmdline_parser.hpp</a></dt>
+        <dt class="index1">function <a href="#cmdline_parser::read_cmdline">read_cmdline</a></dt>
+        <p>
+        </p>
+        <dt class="index">Header <a href="#header_property_tree/registry_parser.hpp">property_tree/registry_parser.hpp</a></dt>
+        <dt class="index1">function <a href="#registry_parser::read_registry">read_registry</a></dt>
+        <dt class="index1">function <a href="#registry_parser::write_registry">write_registry</a></dt>
+        <dt class="index1">function <a href="#registry_parser::translate">translate</a></dt>
+        <dt class="index1">class <a href="#registry_parser::registry_parser_error">registry_parser_error</a></dt>
+        <p>
+        </p>
+        <dt class="index">Header <a href="#header_property_tree/file_parser_error.hpp">property_tree/file_parser_error.hpp</a></dt>
+        <dt class="index1">class <a href="#file_parser_error">file_parser_error</a></dt>
+    </dl>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h2>
+        <a name="header_property_tree/ptree.hpp"></a>Header property_tree/ptree.hpp
+    </h2>
+    <p>
+        This header contains definition of <code>basic_ptree</code> class template and supporting definitions.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="ptree_traits"></a>ptree_traits class
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+template&lt;class Ch&gt; struct ptree_traits;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Predicate implementing default key comparison policy for property tree. Compares keys without case sensitivity using global locale. See <a href="#basic_ptree::traits_type">basic_ptree::traits_type</a>.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="ptree_error"></a>ptree_error class
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+class ptree_error;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Base class for all property tree errors. Derives from <code>std::runtime_error</code>. Call member function <code>what</code> to get human readable message associated with the error.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="ptree_bad_path"></a>ptree_bad_path class
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+class ptree_bad_path;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Error indicating that specified path does not exist. Derives from <a href="reference.html#ptree_error"><code>ptree_error</code></a>.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="ptree_bad_data"></a>ptree_bad_data class
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+class ptree_bad_data;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Error indicating that translation from given value to property tree data string (or vice versa) failed. Derives from <a href="reference.html#ptree_error"><code>ptree_error</code></a>.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="ptree"></a>ptree and wptree typedefs
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+typedef basic_ptree&lt;char&gt; ptree;
+typedef basic_ptree&lt;wchar_t&gt; wptree;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Predefined property tree types.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree"></a>basic_ptree class
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+template&lt;class Ch, class Tr&gt; class basic_ptree;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Class implementing property tree.</p>
+    <h4>
+        Parameters</h4>
+    <dl>
+        <dt class="parameter">Ch</dt>
+        <dd>
+            Character type of keys and data in property tree. See <a href="#basic_ptree::char_type">char_type</a>.</dd>
+        <dt class="parameter">Tr</dt>
+        <dd>
+            Key comparison policy. See <a href="#basic_ptree::traits_type">traits_type</a>.</dd>
+    </dl>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::char_type"></a>basic_ptree::char_type
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>typedef Ch char_type;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Character type used by property tree. Equal to <code>Ch</code> parameter of <code>basic_ptree</code> class template.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::traits_type"></a>basic_ptree::traits_type
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>typedef Tr traits_type;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Policy type used by property tree to compare keys. Equal to <code>Tr</code> parameter of <code>basic_ptree</code> class template. If <code>tr</code> is object of type <code>traits_type</code> and <code>k1</code>, <code>k2</code> are objects of type <code>key_type</code> then <code>tr(k1, k2)</code> must be a well formed expression, which evaluates to true if the first parameter is less than the second, to false otherwise.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::key_type"></a>basic_ptree::key_type
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>typedef std::basic_string&lt;Ch&gt; key_type;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Type used to store property tree keys.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::data_type"></a>basic_ptree::data_type
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>typedef std::basic_string&lt;Ch&gt; data_type;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Type used to store property tree data.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::value_type"></a>basic_ptree::value_type
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>typedef std::pair&lt;key_type, basic_ptree&gt; value_type;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Property tree stores a sequence of values of this type. First element of the pair is key, the second is child property tree stored under that key.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::size_type"></a>basic_ptree::size_type
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>typedef <i>implementation-defined</i> size_type;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Type that can be used to store size of stored sequence.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::iterators"></a>basic_ptree::iterator
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+typedef <i>implementation-defined</i> iterator;
+typedef <i>implementation-defined</i> const_iterator;
+typedef <i>implementation-defined</i> reverse_iterator;
+typedef <i>implementation-defined</i> const_reverse_iterator;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        A family of bidirectional iterators on the stored sequence.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::basic_ptree"></a>basic_ptree::basic_ptree
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+basic_ptree();
+explicit basic_ptree(const data_type &amp;data);
+basic_ptree(const basic_ptree &amp;rhs);</pre>
+    <h4>
+        Description</h4>
+    <p>
+        The first constructor creates empty property tree. The second one creates property tree with given data. The third one is a copy constructor.</p>
+    <dl>
+        <dt class="parameter">data</dt>
+        <dd>
+            Data to be assigned to created property tree data</dd>
+        <dt class="parameter">rhs</dt>
+        <dd>
+            Property tree to be copied</dd>
+    </dl>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::~basic_ptree"></a>basic_ptree::~basic_ptree
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+~basic_ptree();</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Destroys the tree. Deletes all the children recursively.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::begin"></a>basic_ptree::begin
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+iterator begin();
+const_iterator begin() const;</pre>
+    <h4>
+        Return value</h4>
+    <p>
+        Iterator pointing to first element of direct children sequence.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::end"></a>basic_ptree::end
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+iterator end();
+const_iterator end() const;</pre>
+    <h4>
+        Return value</h4>
+    <p>
+        Iterator pointing to one after last element of direct children sequence.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::rbegin"></a>basic_ptree::rbegin
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+reverse_iterator rbegin();
+const_reverse_iterator rbegin() const;</pre>
+    <h4>
+        Return value</h4>
+    <p>
+        Iterator pointing to first element of reversed direct children sequence.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::rend"></a>basic_ptree::rend
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+reverse_iterator end();
+const_reverse_iterator end() const;</pre>
+    <h4>
+        Return value</h4>
+    <p>
+        Iterator pointing to one after last element of reversed direct children sequence.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::size"></a>basic_ptree::size
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+size_type size() const;</pre>
+    <h4>
+        Return value</h4>
+    <p>
+        Number of direct children of property tree.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::empty"></a>basic_ptree::empty
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+bool empty() const;</pre>
+    <h4>
+        Return value</h4>
+    <p>
+        true if property tree is empty, false otherwise.</p>
+    <h4>
+        Note</h4>
+    <p>
+        It may be potentially faster to execute <code>empty()</code> instead of <code>size() == 0</code>.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::data"></a>basic_ptree::data
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+data_type &amp;data();
+const data_type &amp;data() const;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Returns a reference to data of property tree. Both const and non-const versions are provided. Non-const version can be used to modify the data, for example: <code>data() = "new data";</code>
+    </p>
+    <h4>
+        Return value</h4>
+    <p>
+        Reference to data of property tree.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::front"></a>basic_ptree::front
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+value_type &amp;front();
+const value_type &amp;front() const;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Returns reference to first element in direct children sequence. Both const and non-const versions are provided. Invokes undefined behaviour if property tree is empty.</p>
+    <h4>
+        Return value</h4>
+    <p>
+        Reference to first element in direct children sequence.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::back"></a>basic_ptree::back
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+value_type &amp;back();
+const value_type &amp;back() const;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Returns reference to last element in direct children sequence. Both const and non-const versions are provided. Invokes undefined behaviour if property tree is empty.</p>
+    <h4>
+        Return value</h4>
+    <p>
+        Reference to last element in direct children sequence.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::operator="></a>basic_ptree::operator =
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+basic_ptree &amp;operator =(const basic_ptree &amp;rhs);</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Assignment operator. Replaces current contents of property tree with contents of another property tree.</p>
+    <h4>
+        Parameters</h4>
+    <dl>
+        <dt class="parameter">rhs</dt>
+        <dd>
+            Property tree to be copied</dd>
+    </dl>
+    <h4>
+        Return value</h4>
+    <p>
+        Reference to property tree.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::operator=="></a>basic_ptree::operator ==
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+bool operator ==(const basic_ptree &amp;rhs) const;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Tests if property tree is equal to another property tree. Property trees are considered equal if they have equal data and equal children, which are stored in equal sequence under equal keys. Equality of keys is tested with a predicate supplied as a basic_ptree template parameter.</p>
+    <h4>
+        Parameters</h4>
+    <dl>
+        <dt class="parameter">rhs</dt>
+        <dd>
+            Property tree to be tested with</dd>
+    </dl>
+    <h4>
+        Return value</h4>
+    <p>
+        true if equal, false otherwise.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::operator!="></a>basic_ptree::operator !=
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+bool operator !=(const basic_ptree &amp;rhs) const;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Tests if property tree is not equal to another property tree. See <a href="reference.html#basic_ptree::operator==">basic_ptree::operator ==</a>.</p>
+    <h4>
+        Parameters</h4>
+    <dl>
+        <dt class="parameter">rhs</dt>
+        <dd>
+            Property tree to be tested with</dd>
+    </dl>
+    <h4>
+        Return value</h4>
+    <p>
+        true if not equal, false otherwise.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::find"></a>basic_ptree::find
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+iterator find(const key_type &amp;key);
+const_iterator find(const key_type &amp;key) const;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Finds direct child of the node stored under specified key. Time complexity is <i>O(log n)</i>. Keys equivalence is tested with a predicate supplied as basic_ptree template parameter. If child is not found, returns <code>end()</code>. Both const and non-const versions are provided. To find non-direct children use <a href="reference.html#basic_ptree::get_child"><code>get_child</code></a> function.</p>
+    <h4>
+        Parameters</h4>
+    <dl>
+        <dt class="parameter">key</dt>
+        <dd>
+            Key to search</dd>
+    </dl>
+    <h4>
+        Return value</h4>
+    <p>
+        Iterator pointing at the found sequence element, or <code>end()</code> if no such element exists.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::count"></a>basic_ptree::count
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+size_type count(const key_type &amp;key);</pre>
+    <h4>
+        Parameters</h4>
+    <dl>
+        <dt class="parameter">key</dt>
+        <dd>
+            Key to count</dd>
+    </dl>
+    <h4>
+        Return value</h4>
+    <p>
+        Number of direct children with given key name. Keys equivalence is tested with a predicate supplied as basic_ptree template parameter.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::clear"></a>basic_ptree::clear
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+void clear();</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Recursively deletes all children of property tree. Sets data of property tree to empty string.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::insert"></a>basic_ptree::insert
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+iterator insert(iterator where, const value_type &amp;value);
+template&lt;class It&gt; void insert(iterator where, It first, It last);</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Inserts a new direct child or range of children into property tree. Time complexity is <i>O(m log n)</i>, where m is number of inserted children, n is number of existing children.</p>
+    <h4>
+        Parameters</h4>
+    <dl>
+        <dt class="parameter">where</dt>
+        <dd>
+            Iterator pointing at the position where new element will be inserted. Passing <code>begin()</code> will insert at the front of the list. Passing <code>end()</code> will insert at the back. Any other valid iterator will insert in the appropriate place in the middle.</dd>
+        <dt class="parameter">value</dt>
+        <dd>
+            Value to be inserted. A copy of second element of the pair is made before putting it in property tree</dd>
+        <dt class="parameter">first</dt>
+        <dd>
+            Iterator designating first element of range to be inserted into the property tree</dd>
+        <dt class="parameter">last</dt>
+        <dd>
+            Iterator designating one after last element of range to be inserted into the property tree</dd>
+    </dl>
+    <h4>
+        Return value</h4>
+    <p>
+        In the first version iterator pointing to newly inserted element of the sequence.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::erase"></a>basic_ptree::erase
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+iterator erase(iterator where);
+size_type erase(const key_type &amp;key);
+template&lt;class It&gt; iterator erase(It first, It last);</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Erases a direct child or a range of children from property tree.</p>
+    <h4>
+        Parameters</h4>
+    <dl>
+        <dt class="parameter">where</dt>
+        <dd>
+            Iterator designating child to erase.</dd>
+        <dt class="parameter">key</dt>
+        <dd>
+            Key designating a child or children to erase.</dd>
+        <dt class="parameter">first</dt>
+        <dd>
+            Iterator designating first element of range to be erased.</dd>
+        <dt class="parameter">last</dt>
+        <dd>
+            Iterator designating one after last element of range to be erased.</dd>
+    </dl>
+    <h4>
+        Return value</h4>
+    <p>
+        In the first version iterator pointing to element after the erased element, or <code>end()</code> if there is no such element. In the second version number of elements that have been erased. In the third version, iterator pointing to element after the erased range, or <code>end()</code> if there is no such element.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::push_front"></a>basic_ptree::push_front
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+iterator push_front(const value_type &amp;value);</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Inserts a new direct child at the front of sequence. Equivalent to <code>insert(begin(), value)</code>.</p>
+    <h4>
+        Parameters</h4>
+    <dl>
+        <dt class="parameter">value</dt>
+        <dd>
+            Value to be inserted.</dd>
+    </dl>
+    <h4>
+        Return value</h4>
+    <p>
+        Iterator pointing to newly inserted element of the sequence.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::push_back"></a>basic_ptree::push_back
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+iterator push_back(const value_type &amp;value);</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Inserts a new direct child at the back of sequence. Equivalent to <code>insert(end(), value)</code>.</p>
+    <h4>
+        Parameters</h4>
+    <dl>
+        <dt class="parameter">value</dt>
+        <dd>
+            Value to be inserted.</dd>
+    </dl>
+    <h4>
+        Return value</h4>
+    <p>
+        Iterator pointing to newly inserted element of the sequence.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::pop_front"></a>basic_ptree::pop_front
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+iterator pop_front();</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Erases first direct child in the sequence. Invokes undefined behaviour if the sequence is empty. Equivalent to <code>erase(begin())</code>.</p>
+    <h4>
+        Return value</h4>
+    <p>
+        Iterator pointing to element after the erased element, or <code>end()</code> if there is no such element.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::pop_back"></a>basic_ptree::pop_back
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+iterator pop_back();</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Erases last direct child in the sequence. Invokes undefined behaviour if the sequence is empty. Equivalent to <code>erase(boost::prior(end()))</code>.</p>
+    <h4>
+        Return value</h4>
+    <p>
+        Iterator pointing to element after the erased element, which is always equal to <code>end()</code>.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::swap"></a>basic_ptree::swap
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+void swap(basic_ptree &amp;rhs);</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Swaps contents of property tree with contents of another property tree. Time complexity is <i>O(1)</i>.</p>
+    <h4>
+        Parameters</h4>
+    <dl>
+        <dt class="parameter">rhs</dt>
+        <dd>
+            Property tree to swap with.</dd>
+    </dl>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::reverse"></a>basic_ptree::reverse
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+void reverse();</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Reverses order of direct children in property tree.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::sort"></a>basic_ptree::sort
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+template&lt;class SortTr&gt; void sort(SortTr tr);</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Sorts direct children of property tree in ascending order. If <code>tr</code> is object of type <code>SortTr</code> and <code>v1</code>, <code>v2</code> are objects of type <code>value_type</code> then <code>tr(v1, v2)</code> must be a well formed expression, which evaluates to true if the first parameter is less than the second, to false otherwise.</p>
+    <h4>
+        Parameters</h4>
+    <dl>
+        <dt class="parameter">SortTr</dt>
+        <dd>
+            Binary predicate comparing values of type <a href="#basic_ptree::value_type">value_type</a>.</dd>
+        <dt class="parameter">tr</dt>
+        <dd>
+            Instance of <code>SortTr</code> used for comparisions during sort.</dd>
+    </dl>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::get_child"></a>basic_ptree::get_child
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+// Default separator
+basic_ptree *get_child(const key_type &amp;path);
+const basic_ptree *get_child(const key_type &amp;path) const;
+
+// Custom separator
+basic_ptree *get_child(Ch separator, const key_type &amp;path);
+const basic_ptree *get_child(Ch separator, const key_type &amp;path) const;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Traverses the tree using given path and retrieves a child stored there. Path is a sequence of keys separated with zero or more special 'separator' characters. This function will retrieve indirect children if path contains at least one separator. First 2 versions assume separator to be dot character (<code>'.'</code>).</p>
+    <p>
+        Throws <a href="reference.html#ptree_bad_path"><code>ptree_bad_path</code></a> if child property tree cannot be located.</p>
+    <h4>
+        Parameters</h4>
+    <dl>
+        <dt class="parameter">separator</dt>
+        <dd>
+            Separator character.</dd>
+        <dt class="parameter">path</dt>
+        <dd>
+            Path to child property tree. Contains a sequence of one or more keys separated with separator characters.</dd>
+    </dl>
+    <h4>
+        Return value</h4>
+    <p>
+        Pointer to child property tree. Return value is always a pointer to a valid property tree object (this function throws in case of error).</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::get_child_b"></a>basic_ptree::get_child_b
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+// Default separator
+bool get_child_b(const key_type &amp;path, basic_ptree **result);
+bool get_child_b(const key_type &amp;path, const basic_ptree **result) const;
+
+// Custom separator
+bool get_child_b(Ch separator, const key_type &amp;path, basic_ptree **result);
+bool get_child_b(Ch separator, const key_type &amp;path, const basic_ptree **result) const;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Traverses the tree using given path and retrieves a child stored there. Path is a sequence of keys separated with zero or more special 'separator' characters. This function will retrieve indirect children if path contains at least one separator. First 2 versions assume separator to be dot character (<code>'.'</code>).</p>
+    <p>
+        If the child is found, the function sets <code>result</code> pointer to point at it, and returns true. Otherwise it does not modify the <code>result</code> pointer and returns false.</p>
+    <h4>
+        Parameters</h4>
+    <dl>
+        <dt class="parameter">separator</dt>
+        <dd>
+            Separator character.</dd>
+        <dt class="parameter">path</dt>
+        <dd>
+            Path to child property tree. Contains sequence of one or more keys separated with separator characters.</dd>
+        <dt class="parameter">result</dt>
+        <dd>
+            Pointer to result pointer. Can be NULL, in which case the result is discarded.</dd>
+    </dl>
+    <h4>
+        Return value</h4>
+    <p>
+        true if child was found, false otherwise.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::get_child_d"></a>basic_ptree::get_child_d
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+// Default separator
+basic_ptree *get_child_d(const key_type &amp;path, basic_ptree *default_value, bool *was_found);
+const basic_ptree *get_child_d(const key_type &amp;path, const basic_ptree *default_value, bool *was_found) const;
+
+// Custom separator
+basic_ptree *get_child_d(Ch separator, const key_type &amp;path, basic_ptree *default_value, bool *was_found);
+const basic_ptree *get_child_d(Ch separator, const key_type &amp;path, const basic_ptree *default_value, bool *was_found) const;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Traverses the tree using given path and retrieves a child stored there. Path is a sequence of keys separated with zero or more special 'separator' characters. This function will retrieve indirect children if path contains at least one separator. First 2 versions assume separator to be dot character (<code>'.'</code>).</p>
+    <p>
+        If the child is found, the function returns a pointer to it. Otherwise it returns <code>default_value</code>. In both cases, <code>was_found</code> pointer receives true if the child was found, false otherwise.</p>
+    <h4>
+        Parameters</h4>
+    <dl>
+        <dt class="parameter">separator</dt>
+        <dd>
+            Separator character.</dd>
+        <dt class="parameter">path</dt>
+        <dd>
+            Path to child property tree. Contains sequence of one or more keys separated with separator characters.</dd>
+        <dt class="parameter">default_value</dt>
+        <dd>
+            Value to be returned when child is not found. Can be NULL.</dd>
+        <dt class="parameter">was_found</dt>
+        <dd>
+            Pointer to bool value which receives outcome of the traversal: true if succeeded, false if failed. Can be NULL, in which case the outcome is discarded.</dd>
+    </dl>
+    <h4>
+        Return value</h4>
+    <p>
+        Pointer to child property tree. Return value is always a pointer to a valid property tree if traversal succeeded.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::put_child"></a>basic_ptree::put_child
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+// Default separator
+basic_ptree *put_child(const key_type &amp;path, basic_ptree *value);
+
+// Custom separator
+basic_ptree *put_child(Ch separator, const key_type &amp;path, basic_ptree *value);</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Traverses the tree using given path and inserts a new child at the back of found sequence. During traversal the function inserts any elements of the path that are missing. Path is a sequence of keys separated with zero or more special 'separator' characters. First version assumes separator to be dot character (<code>'.'</code>).</p>
+    <p>
+        For example, if <code>path</code> is "key1.key2.key3", the function will find child designated by "key1.key2" path and insert new element with key "key3" at the back of sequence. If either "key1" or "key1.key2" does not exist, it will insert them as well. If there are no missing path elements, it is equivalent to calling <code>get_child("key1.key2")-&gt;push_back(std::make_pair("key3", *value))</code>. In any case it is also equivalent to calling <code>put_child("key1", NULL)-&gt;put_child("key2", NULL)-&gt;put_child("key3", value)</code>.</p>
+    <p>
+        This function is a complement to <a href="reference.html#basic_ptree::get_child">get_child</a>. If <code>put_child(path, value)</code> was called, <code>get_child(path)</code> will return a pointer to element inserted by <code>put_child</code>.</p>
+    <h4>
+        Parameters</h4>
+    <dl>
+        <dt class="parameter">separator</dt>
+        <dd>
+            Separator character.</dd>
+        <dt class="parameter">path</dt>
+        <dd>
+            Path to child property tree. Contains sequence of one or more keys separated with separator characters.</dd>
+        <dt class="parameter">value</dt>
+        <dd>
+            Property tree to be inserted. Can be NULL in which case empty property tree is inserted.</dd>
+    </dl>
+    <h4>
+        Return value</h4>
+    <p>
+        Pointer to inserted property tree. Return value is always a pointer to a valid property tree.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::get_own"></a>basic_ptree::get_own
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+template&lt;class Type&gt; Type get_own() const;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Extracts value stored in property tree data and translates it to <code>Type</code> using <code>operator &gt;&gt;</code>. If data cannot be translated, throws <a href="reference.html#ptree_bad_data"><code>ptree_bad_data</code></a> exception.</p>
+    <h4>
+        Return value</h4>
+    <p>
+        Extracted value.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::get_own_b"></a>basic_ptree::get_own_b
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+template&lt;class Type&gt; bool get_own_b(Type *result) const;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Extracts value stored in property tree data and translates it to <code>Type</code> using <code>operator &gt;&gt;</code>. Result of translation is stored in value pointed by <code>result</code> parameter. Returns true if extraction succeeds, false otherwise.</p>
+    <h4>
+        Parameters</h4>
+    <dl>
+        <dt class="parameter">result</dt>
+        <dd>
+            Pointer to value to receive result of extraction. Can be NULL, in which case extraction result is discarded.</dd>
+    </dl>
+    <h4>
+        Return value</h4>
+    <p>
+        true if extraction succeeded, false otherwise.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::get_own_d"></a>basic_ptree::get_own_d
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+template&lt;class Type&gt; Type get_own_d(const Type &amp;default_value, bool *was_found) const;
+template&lt;class CharType&gt; std::basic_string&lt;CharType&gt; get_own_d(const CharType *default_value, bool *was_found) const;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Extracts value stored in property tree data and translates it to <code>Type</code> using <code>operator &gt;&gt;</code>. If extraction succeeds, returns translated value. Otherwise, returns <code>default_value</code>. In both cases, bool pointed by <code>was_found</code> receives true if extraction succeeded, false otherwise. The second version ensures that string object is returned even if <code>default_value</code> is pointer to char.</p>
+    <h4>
+        Parameters</h4>
+    <dl>
+        <dt class="parameter">default_value</dt>
+        <dd>
+            Value to be returned if extraction fails.</dd>
+        <dt class="parameter">was_found</dt>
+        <dd>
+            Pointer to bool that receives true if extraction succeeded, false otherwise. Can be NULL, in which case the outcome is discarded.</dd>
+    </dl>
+    <h4>
+        Return value</h4>
+    <p>
+        Extracted value or <code>default_value</code> if extraction failed.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::get"></a>basic_ptree::get
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+// Default separator
+template&lt;class Type&gt; Type get(const key_type &amp;path) const;
+
+// Custom separator
+template&lt;class Type&gt; Type get(Ch separator, const key_type &amp;path) const;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Traverses the tree, extracts value stored in child property tree data, and translates it to <code>Type</code> using <code>operator &gt;&gt;</code>. See <a href="reference.html#basic_ptree::get_child"><code>get_child</code></a> for description of how child is obtained from <code>path</code>. If child does not exist, throws <a href="reference.html#ptree_bad_path"><code>ptree_bad_path</code></a> exception. If data cannot be translated, throws <a href="reference.html#ptree_bad_data"><code>ptree_bad_data</code></a> exception.</p>
+    <h4>
+        Parameters</h4>
+    <dl>
+        <dt class="parameter">separator</dt>
+        <dd>
+            Separator character.</dd>
+        <dt class="parameter">path</dt>
+        <dd>
+            Path to child property tree. Contains a sequence of one or more keys separated with separator characters.</dd>
+    </dl>
+    <h4>
+        Return value</h4>
+    <p>
+        Extracted value.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::get_b"></a>basic_ptree::get_b
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+// Default separator
+template&lt;class Type&gt; bool get_b(Ch separator, const key_type &amp;path, Type *result) const;
+
+// Custom separator
+template&lt;class Type&gt; bool get_b(const key_type &amp;path, Type *result) const;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Traverses the tree, extracts value stored in child property tree data, and translates it to <code>Type</code> using <code>operator &gt;&gt;</code>. See <a href="reference.html#basic_ptree::get_child"><code>get_child</code></a> for description of how child is obtained from <code>path</code>. If the child is found and translation of its data to <code>Type</code> succeeds, the function stores the translated data in location pointed by <code>result</code> and returns true. Otherwise it does not modify the <code>result</code>, and returns false.</p>
+    <h4>
+        Parameters</h4>
+    <dl>
+        <dt class="parameter">separator</dt>
+        <dd>
+            Separator character.</dd>
+        <dt class="parameter">path</dt>
+        <dd>
+            Path to child property tree. Contains sequence of one or more keys separated with separator characters.</dd>
+        <dt class="parameter">result</dt>
+        <dd>
+            Pointer to result value. Can be NULL, in which case the result is discarded.</dd>
+    </dl>
+    <h4>
+        Return value</h4>
+    <p>
+        true if child was found and translation succeeded, false otherwise.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::get_d"></a>basic_ptree::get_d
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+// Default separator
+template&lt;class Type&gt; Type get_d(const key_type &amp;path, const Type &amp;default_value, bool *was_found) const;
+template&lt;class CharType&gt; std::basic_string&lt;CharType&gt; get_d(const key_type &amp;path, const CharType *default_value, bool *was_found) const;
+
+// Custom separator
+template&lt;class Type&gt; Type get_d(Ch separator, const key_type &amp;path, const Type &amp;default_value, bool *was_found) const;
+template&lt;class CharType&gt; std::basic_string&lt;CharType&gt; get_d(Ch separator, const key_type &amp;path, const CharType *default_value, bool *was_found) const;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Traverses the tree, extracts value stored in child property tree data, and translates it to <code>Type</code> using <code>operator &gt;&gt;</code>. See <a href="reference.html#basic_ptree::get_child"><code>get_child</code></a> for description of how child is obtained from <code>path</code>. If child is found and translation of its data to <code>Type</code> succeeds, the function returns the translated value and <code>was_found</code> receives true. Otherwise it returns <code>default_value</code> and <code>was_found</code> receives false. The second version ensures that string object is returned even if <code>default_value</code> is pointer to char.</p>
+    <h4>
+        Parameters</h4>
+    <dl>
+        <dt class="parameter">separator</dt>
+        <dd>
+            Separator character.</dd>
+        <dt class="parameter">path</dt>
+        <dd>
+            Path to child property tree. Contains sequence of one or more keys separated with separator characters.</dd>
+        <dt class="parameter">default_value</dt>
+        <dd>
+            Value to be returned when child is not found or translation fails.</dd>
+        <dt class="parameter">was_found</dt>
+        <dd>
+            Pointer to bool value which receives outcome of the operation: true if child was found and translation succeeded, false otherwise. Can be NULL, in which case the outcome is discarded.</dd>
+    </dl>
+    <h4>
+        Return value</h4>
+    <p>
+        Extracted value or <code>default_value</code> if operation failed.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::put_own"></a>basic_ptree::put_own
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+template&lt;class Type&gt; void put_own(const Type &amp;value);</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Translates <code>value</code> from <code>Type</code> into string using <code>operator &lt;&lt;</code>, and puts it into property tree data. If data cannot be translated, throws <a href="reference.html#ptree_bad_data"><code>ptree_bad_data</code></a> exception. This function is a complement to <a href="reference.html#basic_ptree::get_own"><code>get_own</code></a>.</p>
+    <h4>
+        Parameters</h4>
+    <dl>
+        <dt class="parameter">value</dt>
+        <dd>
+            Value to be put in property tree data.</dd>
+    </dl>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::put"></a>basic_ptree::put
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+// Default separator
+template&lt;class Type&gt; basic_ptree *put(const key_type &amp;path, const Type &amp;value);
+
+// Custom separator
+template&lt;class Type&gt; basic_ptree *put(Ch separator, const key_type &amp;path, const Type &amp;value);</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Traverses the tree using given path and inserts a new child at the back of found sequence. Then translates <code>value</code> from <code>Type</code> into a string using <code>operator &lt;&lt;</code>, and puts it in new child data. During traversal the function inserts any elements of the path that are missing. If data cannot be translated, throws <a href="reference.html#ptree_bad_data"><code>ptree_bad_data</code></a> exception. Path is a sequence of keys separated with zero or more special 'separator' characters. First version assumes separator to be dot character (<code>'.'</code>).</p>
+    <p>
+        The function is a complement to <a href="reference.html#basic_ptree::get"><code>get</code></a>. It is equivalent to calling <code>put_child(path, NULL)->put_own(value)</code>.</p>
+    <h4>
+        Parameters</h4>
+    <dl>
+        <dt class="parameter">separator</dt>
+        <dd>
+            Separator character.</dd>
+        <dt class="parameter">path</dt>
+        <dd>
+            Path to child property tree. Contains a sequence of one or more keys separated with separator characters.</dd>
+        <dt class="parameter">value</dt>
+        <dd>
+            Value to be inserted.</dd>
+    </dl>
+    <h4>
+        Return value</h4>
+    <p>
+        Pointer to property tree where the value was inserted. It is either a newly inserted property tree, or an existing one, if it was there before.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <hr>
+    <h2>
+        <a name="header_property_tree/xml_parser.hpp"></a>Header property_tree/xml_parser.hpp
+    </h2>
+    <p>
+        This header contains definitions of XML format reading and writing functions.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="xml_parser::read_xml"></a>read_xml
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+template&lt;class Ptree&gt;
+void read_xml(std::basic_istream&lt;typename Ptree::char_type&gt; &amp;stream,
+              Ptree &amp;pt,
+              int flags = 0,
+              const std::string &amp;filename = "");
+
+template&lt;class Ptree&gt;
+void read_xml(const std::string &amp;filename,
+              Ptree &amp;pt,
+              int flags = 0,
+              const std::locale &amp;loc = std::locale());</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Reads XML from a file or stream and translates it to property tree. Clears existing contents of property tree. In case of error throws <a href="reference.html#xml_parser::xml_parser_error">xml_parser_error</a>, and leaves property tree unmodified. See <a href="index.html#xml_parser">XML parser</a>.
+        <h4>
+            Parameters</h4>
+        <dl>
+            <dt class="parameter">Ptree</dt>
+            <dd>
+                Type of property tree to populate with data.</dd>
+            <dt class="parameter">stream</dt>
+            <dd>
+                Stream to read data from.</dd>
+            <dt class="parameter">pt</dt>
+            <dd>
+                Property tree to populate.
+            </dd>
+            <dt class="parameter">flags</dt>
+            <dd>
+                Flags controlling behaviour of the parser. The following flags are supported:
+                <dl>
+                    <dt><code>no_concat_text</code></dt>
+                    <dd>
+                        Prevents concatenation of text nodes into data strings of property tree. Puts them in separate &lt;xmltext&gt; nodes instead.</dd>
+                    <dt><code>no_comments</code></dt>
+                    <dd>
+                        Skips XML comments.</dd>
+                </dl>
+            </dd>
+            <dt class="parameter">filename</dt>
+            <dd>
+                In the second function, name of file to read. In the first function an optional filename to include in error messages.</dd>
+            <dt class="parameter">loc</dt>
+            <dd>
+                In the second function, locale to use for reading from file. The first function uses locale of the supplied stream.</dd>
+        </dl>
+        <!-- =================================================================== -->
+        <!---->
+        <!---->
+        <h3 class="separating-header">
+            <a name="xml_parser::write_xml"></a>write_xml
+        </h3>
+        <h4>
+            Synopsis</h4>
+        <pre>
+template&lt;class Ptree&gt;
+void write_xml(std::basic_ostream&lt;typename Ptree::char_type&gt; &amp;stream, 
+               const Ptree &amp;pt,
+               const std::string &amp;filename = "");
+
+template&lt;class Ptree&gt;
+void write_xml(const std::string &amp;filename,
+               const Ptree &amp;pt,
+               const std::locale &amp;loc = std::locale());</pre>
+        <h4>
+            Description</h4>
+        <p>
+            Translates property tree to XML and writes it to a file or stream. In case of error throws <a href="reference.html#xml_parser::xml_parser_error">xml_parser_error</a>. See <a href="index.html#xml_parser">XML parser</a>.
+            <h4>
+                Parameters</h4>
+            <dl>
+                <dt class="parameter">Ptree</dt>
+                <dd>
+                    Type of property tree to get data from.</dd>
+                <dt class="parameter">stream</dt>
+                <dd>
+                    Stream to write data to.</dd>
+                <dt class="parameter">pt</dt>
+                <dd>
+                    Property tree to translate.</dd>
+                <dt class="parameter">filename</dt>
+                <dd>
+                    In the second function, name of file to write. In the first function an optional filename to include in error messages.</dd>
+                <dt class="parameter">loc</dt>
+                <dd>
+                    In the second function, locale to use for writing to file. The first function uses locale of the supplied stream.</dd>
+            </dl>
+            <!-- =================================================================== -->
+            <!---->
+            <!---->
+            <h3 class="separating-header">
+                <a name="xml_parser::xml_parser_error"></a>xml_parser_error class
+            </h3>
+            <h4>
+                Synopsis</h4>
+            <pre>
+class xml_parser_error;</pre>
+            <h4>
+                Description</h4>
+            <p>
+                Error indicating that reading or writing of XML data failed. Derives from <a href="reference.html#file_parser_error">file_parser_error</a>.
+                <!-- =================================================================== -->
+                <!---->
+                <!---->
+                <hr>
+                <h2>
+                    <a name="header_property_tree/ini_parser.hpp"></a>Header property_tree/ini_parser.hpp
+                </h2>
+                <p>
+                    This header contains definitions of INI format reading and writing functions.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="ini_parser::read_ini"></a>read_ini
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+template&lt;class Ptree&gt;
+void read_ini(std::basic_istream&lt;typename Ptree::char_type&gt; &amp;stream,
+              Ptree &amp;pt,
+              const std::string &amp;filename = "");
+
+template&lt;class Ptree&gt;
+void read_ini(const std::string &amp;filename,
+              Ptree &amp;pt,
+              const std::locale &amp;loc = std::locale());</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Reads INI from a file or stream and translates it to property tree. Clears existing contents of property tree. In case of error throws <a href="reference.html#ini_parser::ini_parser_error">ini_parser_error</a>, and leaves property tree unmodified. See <a href="index.html#ini_parser">INI parser</a>.
+        <h4>
+            Parameters</h4>
+        <dl>
+            <dt class="parameter">Ptree</dt>
+            <dd>
+                Type of property tree to populate with data.</dd>
+            <dt class="parameter">stream</dt>
+            <dd>
+                Stream to read data from.</dd>
+            <dt class="parameter">pt</dt>
+            <dd>
+                Property tree to populate.
+            </dd>
+            <dt class="parameter">filename</dt>
+            <dd>
+                In the second function, name of file to read. In the first function an optional filename to include in error messages.</dd>
+            <dt class="parameter">loc</dt>
+            <dd>
+                In the second function, locale to use for reading from file. The first function uses locale of the supplied stream.</dd>
+        </dl>
+        <!-- =================================================================== -->
+        <!---->
+        <!---->
+        <h3 class="separating-header">
+            <a name="ini_parser::write_ini"></a>write_ini
+        </h3>
+        <h4>
+            Synopsis</h4>
+        <pre>
+template&lt;class Ptree&gt;
+void write_ini(std::basic_ostream&lt;typename Ptree::char_type&gt; &amp;stream, 
+               const Ptree &amp;pt,
+               const std::string &amp;filename = "");
+
+template&lt;class Ptree&gt;
+void write_ini(const std::string &amp;filename,
+               const Ptree &amp;pt,
+               const std::locale &amp;loc = std::locale());</pre>
+        <h4>
+            Description</h4>
+        <p>
+            Translates property tree to INI and writes it to a file or stream. In case of error throws <a href="reference.html#ini_parser::ini_parser_error">ini_parser_error</a>. See <a href="index.html#ini_parser">INI parser</a>.
+            <h4>
+                Parameters</h4>
+            <dl>
+                <dt class="parameter">Ptree</dt>
+                <dd>
+                    Type of property tree to get data from.</dd>
+                <dt class="parameter">stream</dt>
+                <dd>
+                    Stream to write data to.</dd>
+                <dt class="parameter">pt</dt>
+                <dd>
+                    Property tree to translate.</dd>
+                <dt class="parameter">filename</dt>
+                <dd>
+                    In the second function, name of file to write. In the first function an optional filename to include in error messages.</dd>
+                <dt class="parameter">loc</dt>
+                <dd>
+                    In the second function, locale to use for writing to file. The first function uses locale of the supplied stream.</dd>
+            </dl>
+            <!-- =================================================================== -->
+            <!---->
+            <!---->
+            <h3 class="separating-header">
+                <a name="ini_parser::ini_parser_error"></a>ini_parser_error class
+            </h3>
+            <h4>
+                Synopsis</h4>
+            <pre>
+class ini_parser_error;</pre>
+            <h4>
+                Description</h4>
+            <p>
+                Error indicating that reading or writing of INI data failed. Derives from <a href="reference.html#file_parser_error">file_parser_error</a>.
+                <!-- =================================================================== -->
+                <!---->
+                <!---->
+                <hr>
+                <h2>
+                    <a name="header_property_tree/info_parser.hpp"></a>Header property_tree/info_parser.hpp
+                </h2>
+                <p>
+                    This header contains definitions of INFO format reading and writing functions.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="info_parser::read_info"></a>read_info
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+template&lt;class Ptree&gt;
+void read_info(std::basic_istream&lt;typename Ptree::char_type&gt; &amp;stream,
+               Ptree &amp;pt,
+               const std::string &amp;filename = "");
+
+template&lt;class Ptree&gt;
+void read_info(const std::string &amp;filename,
+               Ptree &amp;pt,
+               const std::locale &amp;loc = std::locale());</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Reads INFO from a file or stream and translates it to property tree. Clears existing contents of property tree. In case of error throws <a href="reference.html#info_parser::info_parser_error">info_parser_error</a>, and leaves property tree unmodified. See <a href="index.html#info_parser">INFO parser</a>.
+        <h4>
+            Parameters</h4>
+        <dl>
+            <dt class="parameter">Ptree</dt>
+            <dd>
+                Type of property tree to populate with data.</dd>
+            <dt class="parameter">stream</dt>
+            <dd>
+                Stream to read data from.</dd>
+            <dt class="parameter">pt</dt>
+            <dd>
+                Property tree to populate.
+            </dd>
+            <dt class="parameter">filename</dt>
+            <dd>
+                In the second function, name of file to read. In the first function an optional filename to include in error messages.</dd>
+            <dt class="parameter">loc</dt>
+            <dd>
+                In the second function, locale to use for reading from file. The first function uses locale of the supplied stream.</dd>
+        </dl>
+        <!-- =================================================================== -->
+        <!---->
+        <!---->
+        <h3 class="separating-header">
+            <a name="info_parser::write_info"></a>write_info
+        </h3>
+        <h4>
+            Synopsis</h4>
+        <pre>
+template&lt;class Ptree&gt;
+void write_info(std::basic_ostream&lt;typename Ptree::char_type&gt; &amp;stream, 
+               const Ptree &amp;pt,
+               const std::string &amp;filename = "");
+
+template&lt;class Ptree&gt;
+void write_info(const std::string &amp;filename,
+               const Ptree &amp;pt,
+               const std::locale &amp;loc = std::locale());</pre>
+        <h4>
+            Description</h4>
+        <p>
+            Translates property tree to INFO and writes it to a file or stream. In case of error throws <a href="reference.html#info_parser::info_parser_error">info_parser_error</a>. See <a href="index.html#info_parser">INFO parser</a>.
+            <h4>
+                Parameters</h4>
+            <dl>
+                <dt class="parameter">Ptree</dt>
+                <dd>
+                    Type of property tree to get data from.</dd>
+                <dt class="parameter">stream</dt>
+                <dd>
+                    Stream to write data to.</dd>
+                <dt class="parameter">pt</dt>
+                <dd>
+                    Property tree to translate.</dd>
+                <dt class="parameter">filename</dt>
+                <dd>
+                    In the second function, name of file to write. In the first function an optional filename to include in error messages.</dd>
+                <dt class="parameter">loc</dt>
+                <dd>
+                    In the second function, locale to use for writing to file. The first function uses locale of the supplied stream.</dd>
+            </dl>
+            <!-- =================================================================== -->
+            <!---->
+            <!---->
+            <h3 class="separating-header">
+                <a name="info_parser::info_parser_error"></a>info_parser_error class
+            </h3>
+            <h4>
+                Synopsis</h4>
+            <pre>
+class info_parser_error;</pre>
+            <h4>
+                Description</h4>
+            <p>
+                Error indicating that reading or writing of INFO data failed. Derives from <a href="reference.html#file_parser_error">file_parser_error</a></p>
+    .
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <hr>
+    <h2>
+        <a name="header_property_tree/cmdline_parser.hpp"></a>Header property_tree/cmdline_parser.hpp
+    </h2>
+    <p>
+        This header contains definition of command line reading function.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="cmdline_parser::read_cmdline"></a>read_cmdline
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+template&lt;class Ptree&gt;
+void read_cmdline(int argc, 
+                  typename Ptree::char_type *argv[], 
+                  const std::basic_string&lt;typename Ptree::char_type&gt; &amp;metachars,
+                  Ptree &amp;pt);</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Reads data from command line and translates it to property tree. Clears existing contents of property tree. In case of error leaves property tree unmodified. See <a href="index.html#cmdline_parser">cmdline parser</a>.
+        <h4>
+            Parameters</h4>
+        <dl>
+            <dt class="parameter">Ptree</dt>
+            <dd>
+                Type of property tree to populate with data.</dd>
+            <dt class="parameter">argc</dt>
+            <dd>
+                Number of arguments in argv array.</dd>
+            <dt class="parameter">argv</dt>
+            <dd>
+                Array of arguments.</dd>
+            <dt class="parameter">metachars</dt>
+            <dd>
+                String containing metacharacters (typically a dash or slash character) that are used to distinguish between options and verbatim arguments. Can be empty string.</dd>
+            <dt class="parameter">pt</dt>
+            <dd>
+                Property tree to populate</dd>
+        </dl>
+        <!-- =================================================================== -->
+        <!---->
+        <!---->
+        <hr>
+        <h2>
+            <a name="header_property_tree/registry_parser.hpp"></a>Header property_tree/registry_parser.hpp
+        </h2>
+        <p>
+            This header contains definitions of windows registry reading and writing functions. This header works only on a Windows machine.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="registry_parser::read_registry"></a>read_registry
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+template&lt;class Ptree&gt;
+void read_registry(HKEY root,
+                   std::basic_string&lt;typename Ptree::char_type&gt; &amp;key,
+                   Ptree &amp;pt);</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Reads data from registry and translates it to property tree. Clears existing contents of property tree. In case of error throws <a href="reference.html#registry_parser::registry_parser_error">registry_parser_error</a>, and leaves property tree unmodified. See <a href="index.html#registry_parser">registry parser</a>.
+        <h4>
+            Parameters</h4>
+        <dl>
+            <dt class="parameter">Ptree</dt>
+            <dd>
+                Type of property tree to populate with data.</dd>
+            <dt class="parameter">root</dt>
+            <dd>
+                Handle to open registry key that serves as a root for the operation.</dd>
+            <dt class="parameter">key</dt>
+            <dd>
+                Path to the key to read. The key must be a subkey of root.</dd>
+            <dt class="parameter">pt</dt>
+            <dd>
+                Property tree to populate</dd>
+        </dl>
+        <!-- =================================================================== -->
+        <!---->
+        <!---->
+        <h3 class="separating-header">
+            <a name="registry_parser::write_registry"></a>write_registry
+        </h3>
+        <h4>
+            Synopsis</h4>
+        <pre>
+template&lt;class Ptree&gt;
+void write_registry(HKEY root,
+                    std::basic_string&lt;typename Ptree::char_type&gt; &amp;key, 
+                    const Ptree &amp;pt);</pre>
+        <h4>
+            Description</h4>
+        <p>
+            Translates property tree to registry and writes it to a file or stream. In case of error throws <a href="reference.html#registry_parser::registry_parser_error">registry_parser_error</a>. See <a href="index.html#registry_parser">registry parser</a>.
+            <h4>
+                Parameters</h4>
+            <dl>
+                <dt class="parameter">Ptree</dt>
+                <dd>
+                    Type of property tree to get data from.</dd>
+                <dt class="parameter">root</dt>
+                <dd>
+                    Handle to open registry key that serves as a root for the operation.</dd>
+                <dt class="parameter">key</dt>
+                <dd>
+                    Name of key to write. Must be a subkey of root.</dd>
+                <dt class="parameter">pt</dt>
+                <dd>
+                    Property tree to translate.</dd>
+            </dl>
+            <!-- =================================================================== -->
+            <!---->
+            <!---->
+            <h3 class="separating-header">
+                <a name="registry_parser::translate"></a>translate
+            </h3>
+            <h4>
+                Synopsis</h4>
+            <pre>
+template&lt;class Ch&gt;
+std::basic_string&lt;Ch&gt; translate(DWORD type, 
+                                const std::vector&lt;BYTE&gt; &amp;data);
+
+template&lt;class Ch&gt;
+std::vector&lt;BYTE&gt; translate(DWORD type, 
+                            const std::basic_string&lt;Ch&gt; &amp;s);</pre>
+            <h4>
+                Description</h4>
+            <p>
+                Translates registry value of given type from property tree data string to binary array (in form of std::vector&lt;BYTE&gt;), and vice versa. The returned array is suitable for passing to Windows registry functions. In case of failure throws <a href="reference.html#registry_parser::registry_parser_error">registry_parser_error</a>. Typical usage is to translate textual representation of registry binary data into binary form:
+                <pre>std::vector&lt;BYTE&gt; deadbeef = translate&lt;char&gt;(REG_BINARY, "DE AD BE EF");</pre>
+                <h4>
+                    Parameters</h4>
+                <dl>
+                    <dt class="parameter">Ch</dt>
+                    <dd>
+                        Character type of string.</dd>
+                    <dt class="parameter">type</dt>
+                    <dd>
+                        Windows registry value type to translate to or from.</dd>
+                    <dt class="parameter">data</dt>
+                    <dd>
+                        Binary data to translate to string.</dd>
+                    <dt class="parameter">s</dt>
+                    <dd>
+                        String to translate to binary data.</dd>
+                </dl>
+                <!-- =================================================================== -->
+                <!---->
+                <!---->
+                <h3 class="separating-header">
+                    <a name="registry_parser::registry_parser_error"></a>registry_parser_error class
+                </h3>
+                <h4>
+                    Synopsis</h4>
+                <pre>
+class registry_parser_error;</pre>
+                <h4>
+                    Description</h4>
+                <p>
+                    Error indicating that reading/writing or translation of registry data failed. Derives from <a href="reference.html#ptree_error">ptree_error</a>.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <hr>
+    <h2>
+        <a name="header_property_tree/file_parser_error.hpp"></a>Header property_tree/file_parser_error.hpp
+    </h2>
+    <p>
+        This header contains definition of file_parser_error class.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="file_parser_error"></a>file_parser_error
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+class file_parser_error;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Base class for all file parser errors. Derives from <a href="#ptree_error">ptree_error</a>. Stores error message, filename and line. These can be accessed using member functions <code>message</code>, <code>filename</code> and <code>line</code>. Use <code>what</code> function to get preformatted error message containing both filename and line.</p>
+    <hr>
+    <p>
+        Revised
+        <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+        05 November, 2005
+        <!--webbot bot="Timestamp" endspan i-checksum="39359" -->
+    </p>
+    <p>
+        <i>&copy; Copyright Marcin Kalicinski 2005. All Rights Reserved. </i>
+    </p>
+</body>
+</html>

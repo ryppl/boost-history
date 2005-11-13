@@ -1,0 +1,764 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <title>Property Tree Library Documentation</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body link="#0000ff" vlink="#800080">
+    <table border="0" cellpadding="7" cellspacing="0" width="100%" summary="header">
+        <tr>
+            <td valign="top" width="300">
+                <h3>
+                    <a href="../../../index.htm">
+                        <img height="86" width="277" alt="C++ Boost" src="../../../boost.png" border="0">
+                    </a>
+                </h3>
+            </td>
+            <td valign="top">
+                <h1 align="center">
+                    Property Tree Library</h1>
+                <h2 align="center">
+                    Documentation</h2>
+            </td>
+        </tr>
+    </table>
+    <hr>
+    <dl>
+        <dt class="index"><a href="#what_is_a_property_tree">What is property tree?</a> </dt>
+        <dt class="index"><a href="#five_minute_tutorial">Five minute tutorial</a> </dt>
+        <dt class="index"><a href="#property_tree_as_a_container">Property tree as a container</a></dt>
+        <dt class="index"><a href="#synopsis">Synopsis</a> </dt>
+        <dt class="index"><a href="#how_to_populate_property_tree">How to populate property tree?</a></dt>
+        <dt class="index2"><a href="#xml_parser">XML parser</a></dt>
+        <dt class="index2"><a href="#ini_parser">INI parser</a></dt>
+        <dt class="index2"><a href="#info_parser">INFO parser</a></dt>
+        <dt class="index2"><a href="#cmdline_parser">Command line parser</a></dt>
+        <dt class="index2"><a href="#registry_parser">Windows registry parser</a></dt>
+        <dt class="index2"><a href="#environment_parser">System environment parser</a></dt>
+        <dt class="index"><a href="#how_to_access_data_in_property_tree">How to access data in property tree?</a></dt>
+        <dt class="index2"><a href="#the_three_ways_of_getting_data">Three ways of getting data</a></dt>
+        <dt class="index2"><a href="#the_one_way_of_putting_data">One way of putting data</a></dt>
+        <dt class="index"><a href="#compatibility">Compatibility</a> </dt>
+        <dt class="index"><a href="#future_development">Future development</a> </dt>
+        <dt class="index"><a href="#rationale">Rationale</a> </dt>
+        <dt class="index"><a href="reference.html">Reference</a> </dt>
+    </dl>
+    <h2>
+        <a name="what_is_a_property_tree"></a>What is property tree?
+    </h2>
+    <p>
+        Property tree is a <i>recursive</i> data structure that stores a single data string, and an ordered list of (key, value) pairs, where value is a <i>property tree itself</i>. It therefore forms a tree, hence the name. It is a versatile structure that can store in uniform way data coming from various sources, such as XML or INI files, as well as windows registry, program command line etc. The correspondence between a data source (here XML file) and property tree is illustrated in the following diagram:</p>
+    <center>
+        <img src="ptree.png" alt="Property tree" /></center>
+    <p>
+        Each node of property tree may be conceptually treated as the following structure (note that due to recursive nature of the tree, nodes <i>are</i> property trees):
+    </p>
+    <pre>
+struct ptree
+{
+    string data;                      // data associated with the node
+    list&lt; pair&lt;string, ptree&gt; &gt;;      // ordered list of named children
+};</pre>
+    <p>
+        Property tree interface is similar to the interface of a standard C++ container. It supports iterators, insertion, erasing, searching etc. One can think of it as a sort of Document Object Model, which is minimalistic, not bound to any specific file format, designed to be easy to use, and comes as Boost-compatible, headers only C++ library. Many software projects develop a similar tool at some point of their lifetime, and property tree long ago originated the same way. I hope the library can save many from reinventing the wheel.
+    </p>
+    <h2>
+        <a name="five_minute_tutorial"></a>Five minute tutorial
+    </h2>
+    <p>
+        Suppose we are writing a logging system for some application, and need to read log configuration from a file when program starts. The file with log configuration looks like that:
+    </p>
+    <pre>&lt;debug>
+    &lt;filename>debug.log&lt;/filename&gt;
+    &lt;modules&gt;
+        &lt;module>Finance&lt;/module&gt;
+        &lt;module>Admin&lt;/module&gt;
+        &lt;module>HR&lt;/module&gt;
+    &lt;/modules&gt;
+    &lt;level&gt;2&lt;/level&gt;
+&lt;/debug&gt;</pre>
+    It contains log filename, list of modules where logging is enabled, and debug level value. To store logging configuration in the program we created <code>debug_settings</code> structure:
+    <pre>struct debug_settings
+{
+    std::string m_file;          // log filename
+    int m_level;                 // debug level
+    std::set&lt;string&gt; m_modules;  // modules where logging is enabled
+    void load(const std::string &amp;filename);
+    void save(const std::string &amp;filename);
+};</pre>
+    All that needs to be done now is to write implementations of <code>load()</code> and <code>save()</code> member functions. Let's first deal with <code>load()</code>. It contains just 7 lines of code, although it does all the necessary things, including error handling:
+    <pre>// Loads debug_settings structure from specified XML file
+void debug_settings::load(const std::string &amp;filename)
+{
+
+    /* Create empty property tree object */     
+    using boost::property_tree::ptree;
+    ptree pt;
+
+    /* Load XML file and put its contents in property tree. 
+       No namespace qualification is needed, because of Koenig 
+       lookup on the second argument. If reading fails, exception
+       is thrown. */
+    read_xml(filename, pt);
+
+    /* Get log filename and store it in m_file variable. Note 
+       that we specify a path to the value using notation where 
+       keys are separated with dots (different separator may be 
+       used if keys themselves contain dots). If debug.filename 
+       key is not found, exception is thrown. */     
+    m_file = pt.get&lt;std::string&gt;("debug.filename");
+    
+    /* Get debug level and store it in m_level variable. This is 
+       another version of get method: if debug.level key is not 
+       found, it will return default value (specified by second 
+       parameter) instead of throwing. The third parameter is a 
+       pointer to bool that optionally receives result of the get 
+       (i.e. succeeded or failed). Type of the value extracted is 
+       determined by type of second parameter, so we can simply 
+       write get_d(...) instead of get_d&lt;int&gt;(...). */     
+    m_level = pt.get_d("debug.level", 0, NULL);
+
+    /* Iterate over debug.modules section and store all found 
+       modules in m_modules set. get_child() function returns a 
+       pointer to child at specified path; if there is no such 
+       child, it throws. Property tree iterator can be used in 
+       the same way as standard containers iterators. Category 
+       is bidirectional_iterator. */
+    BOOST_FOREACH(ptree::value_type &amp;v, *pt.get_child("debug.modules"))
+        m_modules.insert(v.second.data());
+
+}
+</pre>
+    <p>
+        Now <code>save()</code> function. It is also 7 lines of code:
+    </p>
+    <pre>// Saves debug_settings structure to specified XML file
+void debug_settings::save(const std::string &amp;filename)
+{
+
+    /* Create empty property tree object */     
+    using boost::property_tree::ptree;
+    ptree pt;
+
+    /* Put log filename in property tree. */
+    pt.put("debug.filename", m_file);
+
+    /* Put debug level in property tree. */
+    pt.put("debug.level", m_level);
+
+    /* Iterate over modules in set and put them in property 
+       tree. Note that put function places new key at the
+       end of list of keys. This is fine in most of the
+       situations. If you want to place item at some other
+       place (i.e. at front or somewhere in the middle),
+       this can be achieved using combination of insert 
+       and put_own functions */
+    BOOST_FOREACH(const std::string &amp;name, m_modules)
+        pt.put("debug.modules.module", name);
+    
+    /* Write property tree to XML file */
+    write_xml(filename, pt);
+
+}</pre>
+    <p>
+        The full program <a href="../examples/debug_settings.cpp">debug_settings.cpp</a> is included in examples directory.</p>
+    <h2>
+        <a name="property_tree_as_a_container"></a>Property tree as a container
+    </h2>
+    <p>
+        Standard containers implement a concept of sequence. What is the sequence in case of property tree? It is a list of <i>immediate</i> children of given ptree. So, iterating over a ptree will only reveal one level in hierarchy, not the whole tree. There is no iterator to iterate over all the nodes in tree, but it is not needed, so don't worry. The actual type of values stored by property tree is <a href="reference.html#basic_ptree::value_type">value_type</a>. Property tree provides bidirectional <a href="reference.html#basic_ptree::iterators">iterator</a>, both normal and reverse, to allow iteration over its elements.</p>
+    <p>
+        The sequence is <i>not</i> ordered by key. It is an important fact, and many mistakes can be avoided by keeping it in mind. The order of sequence is determined by the place where elements were inserted, like in <code>std::list</code>. That's why there are <a href="reference.html#basic_ptree::push_back">push_back</a>, <a href="reference.html#basic_ptree::push_front">push_front</a> and <a href="reference.html#basic_ptree::insert">insert</a> functions. But <a href="reference.html#basic_ptree::find">find</a> function, which is searching for elements by name, has time complexity <i>O(log n)</i> like in <code>std::map</code> - there is an additional indexing data structure inside property tree that allows fast searches. The implication of property tree not being sorted is that you cannot use algorithms that require sorted range, like for example <code>std::binary_search</code>.</p>
+    <p>
+        Property tree allows multiple elements to have equivalent keys, and <code>find</code> member function will always return first of them. It is tempting to use <code>std::lower_bound</code> and <code>std::upper_bound</code> algorithms to find range that encompasses all elements with equivalent keys, but it is a mistake - the sequence is not sorted by key and such a range probably does not even exist! You need to sort the sequence first, using <a href="reference.html#basic_ptree::sort">sort</a> member function (though by doing so you lose original ordering of the elements). Note that <code>std::sort</code> cannot be used, because it requires random access iterators, and property tree only provides bidirectional.</p>
+    <h2>
+        <a name="synopsis"></a>Synopsis
+    </h2>
+    <p>
+        Central component of the library is <code>basic_ptree</code> class template. Instances of this class are property trees. It is parametrized on character type and key comparison policy; <code>ptree</code> and <code>wptree</code> are typedefs of <code>basic_ptree&lt;char&gt;</code> and <code>basic_ptree&lt;wchar_t&gt;</code> respectively. The default policy implemented by <code>ptree_traits</code> is <i>case-insensitive</i> comparison of keys. As you can see below, property tree is basically a somewhat simplified standard container (the closest being std::list), plus a bunch of extra member functions. These functions allow easy and effective access to the data stored in property tree. They are various variants of <a href="reference.html#basic_ptree::get"><code>get</code></a>, <a href="reference.html#basic_ptree::put"><code>put</code></a>, <a href="reference.html#basic_ptree::get_own"><code>get_own</code></a>, <a href="reference.html#basic_ptree::put_own"><code>put_own</code></a>, <a href="reference.html#basic_ptree::get_child"><code>get_child</code></a>, <a href="reference.html#basic_ptree::put_child"><code>put_child</code></a>. Additionally, there is <a href="reference.html#basic_ptree::data"><code>data</code></a> function to access the data string directly.
+    </p>
+    <pre>
+#include &lt;boost/property_tree/ptree.hpp&gt;
+
+namespace boost { namespace property_tree 
+{
+
+template&lt;class Ch&gt; struct <a href="reference.html#ptree_traits">ptree_traits</a>;
+
+class <a href="reference.html#ptree_error">ptree_error</a>;
+class <a href="reference.html#ptree_bad_path">ptree_bad_path</a>;
+class <a href="reference.html#ptree_bad_data">ptree_bad_data</a>;
+
+template&lt;class Ch, class Tr = ptree_traits&lt;Ch> >
+class <a href="reference.html#basic_ptree">basic_ptree</a>
+{
+
+public:
+
+    // Basic types
+    typedef Ch <a href="reference.html#basic_ptree::char_type">char_type</a>;
+    typedef Tr <a href="reference.html#basic_ptree::traits_type">traits_type</a>;
+    typedef std::basic_string&lt;Ch&gt; <a href="reference.html#basic_ptree::key_type">key_type</a>;
+    typedef std::basic_string&lt;Ch&gt; <a href="reference.html#basic_ptree::data_type">data_type</a>;
+    
+    // Container-related types
+    typedef std::pair&lt;const key_type, basic_ptree&lt;Ch, Tr&gt; &gt; <a href="reference.html#basic_ptree::value_type">value_type</a>;
+    typedef <i>implementation-defined</i> <a href="reference.html#basic_ptree::size_type">size_type</a>;
+    typedef <i>implementation-defined</i> <a href="reference.html#basic_ptree::iterators">iterator</a>;
+    typedef <i>implementation-defined</i> <a href="reference.html#basic_ptree::iterators">reverse_iterator</a>;
+    typedef <i>implementation-defined</i> <a href="reference.html#basic_ptree::iterators">const_iterator</a>;
+    typedef <i>implementation-defined</i> <a href="reference.html#basic_ptree::iterators">const_reverse_iterator</a>;
+    
+    ///////////////////////////////////////////////////////////////////////////
+    // Construction &amp; destruction
+
+    <a href="reference.html#basic_ptree::basic_ptree">basic_ptree</a>();
+    explicit <a href="reference.html#basic_ptree::basic_ptree">basic_ptree</a>(const std::basic_string&lt;Ch&gt; &amp;data);
+    <a href="reference.html#basic_ptree::basic_ptree">basic_ptree</a>(const basic_ptree&lt;Ch, Tr&gt; &amp;rhs);
+    <a href="reference.html#basic_ptree::~basic_ptree">~basic_ptree</a>();
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Iterator access
+
+    iterator <a href="reference.html#basic_ptree::begin">begin</a>();
+    const_iterator <a href="reference.html#basic_ptree::begin">begin</a>() const;
+    iterator <a href="reference.html#basic_ptree::end">end</a>();
+    const_iterator <a href="reference.html#basic_ptree::end">end</a>() const;
+    reverse_iterator <a href="reference.html#basic_ptree::rbegin">rbegin</a>();
+    const_reverse_iterator <a href="reference.html#basic_ptree::rbegin">rbegin</a>() const;
+    reverse_iterator <a href="reference.html#basic_ptree::rend">rend</a>();
+    const_reverse_iterator <a href="reference.html#basic_ptree::rend">rend</a>() const;
+    
+    ///////////////////////////////////////////////////////////////////////////
+    // Data access
+
+    size_type <a href="reference.html#basic_ptree::size">size</a>() const;
+    bool <a href="reference.html#basic_ptree::empty">empty</a>() const;
+    data_type &amp;<a href="reference.html#basic_ptree::data">data</a>();
+    const data_type &amp;<a href="reference.html#basic_ptree::data">data</a>() const;
+    value_type &amp;<a href="reference.html#basic_ptree::front">front</a>();
+    const value_type &amp;<a href="reference.html#basic_ptree::front">front</a>() const;
+    value_type &amp;<a href="reference.html#basic_ptree::back">back</a>();
+    const value_type &amp;<a href="reference.html#basic_ptree::back">back</a>() const;
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Operators
+
+    basic_ptree&lt;Ch, Tr&gt; &amp;<a href="reference.html#basic_ptree::operator=">operator =</a>(const basic_ptree&lt;Ch, Tr&gt; &amp;rhs);
+    bool <a href="reference.html#basic_ptree::operator==">operator ==</a>(const basic_ptree&lt;Ch, Tr&gt; &amp;rhs) const;
+    bool <a href="reference.html#basic_ptree::operator!=">operator !=</a>(const basic_ptree&lt;Ch, Tr&gt; &amp;rhs) const;
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Standard container operations
+
+    iterator <a href="reference.html#basic_ptree::find">find</a>(const key_type &amp;key);
+    const_iterator <a href="reference.html#basic_ptree::find">find</a>(const key_type &amp;key) const;
+
+    size_type <a href="reference.html#basic_ptree::count">count</a>(const key_type &amp;key) const;
+    
+    void <a href="reference.html#basic_ptree::clear">clear</a>();
+
+    iterator <a href="reference.html#basic_ptree::insert">insert</a>(iterator where, const value_type &amp;value);
+    template&lt;class It&gt; void <a href="reference.html#basic_ptree::insert">insert</a>(iterator where, It first, It last);
+
+    iterator <a href="reference.html#basic_ptree::erase">erase</a>(iterator where);
+    size_type <a href="reference.html#basic_ptree::erase">erase</a>(const key_type &amp;key);
+    template&lt;class It&gt; iterator <a href="reference.html#basic_ptree::erase">erase</a>(It first, It last);
+
+    iterator <a href="reference.html#basic_ptree::push_front">push_front</a>(const value_type &amp;value);
+    iterator <a href="reference.html#basic_ptree::push_back">push_back</a>(const value_type &amp;value);
+
+    void <a href="reference.html#basic_ptree::pop_front">pop_front</a>();
+    void <a href="reference.html#basic_ptree::pop_back">pop_back</a>();
+
+    void <a href="reference.html#basic_ptree::swap">swap</a>(basic_ptree&lt;Ch, Tr&gt; &amp;rhs);
+    
+    void <a href="reference.html#basic_ptree::reverse">reverse</a>();
+    template&lt;class SortTr&gt; void <a href="reference.html#basic_ptree::sort">sort</a>(SortTr tr);
+
+	///////////////////////////////////////////////////////////////////////////
+    // Ptree-specific operations
+
+    // Get child ptree with custom separator
+    basic_ptree&lt;Ch, Tr&gt; *<a href="reference.html#basic_ptree::get_child">get_child</a>(Ch separator, const key_type &amp;path);
+    const basic_ptree&lt;Ch, Tr&gt; *<a href="reference.html#basic_ptree::get_child">get_child</a>(Ch separator, const key_type &amp;path) const;
+    bool <a href="reference.html#basic_ptree::get_child_b">get_child_b</a>(Ch separator, const key_type &amp;path, basic_ptree&lt;Ch, Tr&gt; **result);
+    bool <a href="reference.html#basic_ptree::get_child_b">get_child_b</a>(Ch separator, const key_type &amp;path, const basic_ptree&lt;Ch, Tr&gt; **result) const;
+    basic_ptree&lt;Ch, Tr&gt; *<a href="reference.html#basic_ptree::get_child_d">get_child_d</a>(Ch separator, const key_type &amp;path, basic_ptree&lt;Ch, Tr&gt; *default_value, bool *was_found);
+    const basic_ptree&lt;Ch, Tr&gt; *<a href="reference.html#basic_ptree::get_child_d">get_child_d</a>(Ch separator, const key_type &amp;path, const basic_ptree&lt;Ch, Tr&gt; *default_value, bool *was_found) const;
+
+    // Get child ptree with default separator
+    basic_ptree&lt;Ch, Tr&gt; *<a href="reference.html#basic_ptree::get_child">get_child</a>(const key_type &amp;path);
+    const basic_ptree&lt;Ch, Tr&gt; *<a href="reference.html#basic_ptree::get_child">get_child</a>(const key_type &amp;path) const;
+    bool <a href="reference.html#basic_ptree::get_child_b">get_child_b</a>(const key_type &amp;path, basic_ptree&lt;Ch, Tr&gt; **result);
+    bool <a href="reference.html#basic_ptree::get_child_b">get_child_b</a>(const key_type &amp;path, const basic_ptree&lt;Ch, Tr&gt; **result) const;
+    basic_ptree&lt;Ch, Tr&gt; *<a href="reference.html#basic_ptree::get_child_d">get_child_d</a>(const key_type &amp;path, basic_ptree&lt;Ch, Tr&gt; *default_value, bool *was_found);
+    const basic_ptree&lt;Ch, Tr&gt; *<a href="reference.html#basic_ptree::get_child_d">get_child_d</a>(const key_type &amp;path, const basic_ptree&lt;Ch, Tr&gt; *default_value, bool *was_found) const;
+
+    // Put child ptree with custom separator
+    basic_ptree&lt;Ch, Tr&gt; *<a href="reference.html#basic_ptree::put_child">put_child</a>(Ch separator, const key_type &amp;path, basic_ptree&lt;Ch, Tr&gt; *value);
+
+    // Put child ptree with default separator
+    basic_ptree&lt;Ch, Tr&gt; *<a href="reference.html#basic_ptree::put_child">put_child</a>(const key_type &amp;path, basic_ptree&lt;Ch, Tr&gt; *value);
+
+    // Get value from data of ptree
+    template&lt;class Type&gt; Type <a href="reference.html#basic_ptree::get_own">get_own</a>() const;
+    template&lt;class Type&gt; bool <a href="reference.html#basic_ptree::get_own_b">get_own_b</a>(Type *result) const;
+    template&lt;class Type&gt; Type <a href="reference.html#basic_ptree::get_own_d">get_own_d</a>(const Type &amp;default_value, bool *was_found) const;
+    template&lt;class CharType&gt; std::basic_string&lt;CharType&gt; <a href="reference.html#basic_ptree::get_own_d">get_own_d</a>(const CharType *default_value, bool *was_found) const;
+
+    // Get value from data of child ptree (custom path separator)
+    template&lt;class Type&gt; Type <a href="reference.html#basic_ptree::get">get</a>(Ch separator, const key_type &amp;path) const;
+    template&lt;class Type&gt; bool <a href="reference.html#basic_ptree::get_b">get_b</a>(Ch separator, const key_type &amp;path, Type *result) const;
+    template&lt;class Type&gt; Type <a href="reference.html#basic_ptree::get_d">get_d</a>(Ch separator, const key_type &amp;path, const Type &amp;default_value, bool *was_found) const;
+    template&lt;class CharType&gt; std::basic_string&lt;CharType&gt; <a href="reference.html#basic_ptree::get_d">get_d</a>(Ch separator, const key_type &amp;path, const CharType *default_value, bool *was_found) const;
+
+    // Get value from data of child ptree (default path separator)
+    template&lt;class Type&gt; Type <a href="reference.html#basic_ptree::get">get</a>(const key_type &amp;path) const;
+    template&lt;class Type&gt; bool <a href="reference.html#basic_ptree::get_b">get_b</a>(const key_type &amp;path, Type *result) const;
+    template&lt;class Type&gt; Type <a href="reference.html#basic_ptree::get_d">get_d</a>(const key_type &amp;path, const Type &amp;default_value, bool *was_found) const;
+    template&lt;class CharType&gt; std::basic_string&lt;CharType&gt; <a href="reference.html#basic_ptree::get_d">get_d</a>(const key_type &amp;path, const CharType *default_value, bool *was_found) const;
+
+    // Put value in data of ptree
+    template&lt;class Type&gt; void <a href="reference.html#basic_ptree::put_own">put_own</a>(const Type &amp;value);
+
+    // Put value in data of child ptree (custom path separator)
+    template&lt;class Type&gt; basic_ptree&lt;Ch, Tr&gt; *<a href="reference.html#basic_ptree::put">put</a>(Ch separator, const key_type &amp;path, const Type &amp;value);
+
+    // Put value in data of child ptree (default path separator)
+    template&lt;class Type&gt; basic_ptree&lt;Ch, Tr&gt; *<a href="reference.html#basic_ptree::put">put</a>(const key_type &amp;path, const Type &amp;value);
+
+};
+
+typedef basic_ptree&lt;char&gt; <a href="reference.html#ptree">ptree</a>;
+typedef basic_ptree&lt;wchar_t&gt; <a href="reference.html#ptree">wptree</a>;
+
+} } // namespace</pre>
+    <h2>
+        <a name="how_to_populate_property_tree"></a>How to populate property tree
+    </h2>
+    <p>
+        Property tree can be populated using its member functions. For details see <a href="#how_to_access_data_in_property_tree">here</a>. In many cases though, property trees will be populated by reading data from external source, such as file, command line, system environment, registry (on Windows) etc. To help with that, the library supplies a set of <i>parsers</i>, which are just functions that read data from the source and put it in the tree. In addition to read function, parsers usually also supply write function, which allows them to translate property tree back into the format in question. Parser functions use public interface of property tree, so support for new formats/sources can be added by the user, if needed.</p>
+    <p>
+        Property tree is a minimalistic data structure. It has just one data string associated with each node of the tree. Some of the data storage formats are more complicated though. For example, XML can have unlimited number of named attributes associated with each node. Additionally, there are various types of XML nodes, such as comments, declarations etc. Other formats have other peculiarities. Clearly, it is not straightforward how a data format should be translated into a property tree.</p>
+    <p>
+        The adopted solution is to add special keys in property tree that hold the extra information. In case of XML, attributes of each key are stored as subkeys of a special key called <code>&lt;xmlattr&gt;</code> (the angle brackets are necessary to avoid collision with normal XML keys). For example this XML:</p>
+    <pre>&lt;a href="index.html"&gt;&lt;b&gt;Index&lt;/b&gt;&lt;/a&gt;</pre>
+    <p>
+        will be stored as the following tree:</p>
+    <pre>
+a                          ;'a' key (no data)
+{
+    &lt;xmlattr&gt;		       ;special &lt;xmlattr&gt; subkey (no data)
+    {
+        href "index.html"  ;'href' attribute and its value
+    }
+    b "Index"              ;'b' key and its data
+}</pre>
+    <p>
+        Of course, different ways of storing extra information are possible. This one has been chosen because it allows easy access and iteration on the data. For example, to retrieve <code>href</code> attribute from key <code>a</code>, one would just write <code>get&lt;type&gt;("a.&lt;xmlattr&gt;.href")</code>.</p>
+    <p>
+        Different parsers have slightly different interfaces, but there are some common rules. In general, functions of parser "foobar" have names <code>read_foobar</code>, and <code>write_foobar</code>. In case of file parsers, there are usually two versions of these functions, one taking C++ stream and the other a filename as a first parameter. The second parameter is reference to property tree. There can be further parameters, if parser needs extra information. Both read and write function do not return any value. To signal error, they throw appropriate exception derived from <a href="reference.html#ptree_error">ptree_error</a>, or in case of file parsers from <a href="reference.html#file_parser_error">file_parser_error</a>.
+        <h3>
+            <a name="xml_parser"></a>XML parser
+        </h3>
+        <p>
+            XML is industry standard for storing information in textual form. Unfortunately, there is no XML parser in Boost as of the time of this writing. So, a custom parser was created. It only supports a core subset of XML standard. For example, declarations and entity references are not supported. The parser is built with Spirit, and bases on XML grammar sample by Daniel Nuffer. As a reinforcement to it, a parser based on TinyXML is also provided. To enable it define <code>BOOST_PROPERTY_TREE_XML_PARSER_TINYXML</code> before including xml_parser.hpp file. TinyXML library has to be obtained separately.
+        </p>
+    <p>
+        How XML is translated to property tree (<code>read_xml</code>):</p>
+    <ul>
+        <li>Attributes of each XML key are stored in a subkey with name <code>&lt;xmlattr&gt;</code>. Each subkey of xmlattr is one attribute. If xmlattr subkey does not exist or is empty, there are no attributes.</li>
+        <li>XML comments are stored in keys named <code>&lt;xmlcomment&gt;</code>, unless a flag is specified that disables parsing of comments. </li>
+        <li>Data of XML node may be stored in two ways, depending on the <code>flags</code> parameter setting. The default way is to have all data nodes concatenated and put in data string of appropriate property tree key. The other way is to have them put in separate subkeys named <code>&lt;xmltext&gt;</code> each.</li>
+    </ul>
+    <p>
+        Translation of property tree back into XML (<code>write_xml</code>) assumes the same structure as outlined above. That means, for example, that if you want to have attributes, you need to create <code>&lt;xmlattr&gt;</code> subkey and put them there. With appropriate flags setting, reading an XML file and writing it back will not change the contents (but may change formatting), unless XML file uses some unsupported constructs.</p>
+    <h4>
+        Synopsis</h4>
+    <pre>
+#include &lt;boost/property_tree/xml_parser.hpp&gt;
+
+namespace boost { namespace property_tree { namespace xml_parser
+{
+
+class <a href="reference.html#xml_parser::xml_parser_error">xml_parser_error</a>;
+
+template&lt;class Ptree&gt;
+void <a href="reference.html#xml_parser::read_xml">read_xml</a>(std::basic_istream&lt;typename Ptree::char_type> &amp;stream,
+              Ptree &amp;pt,
+              int flags = 0,
+              const std::string &amp;filename = "");
+
+template&lt;class Ptree&gt;
+void <a href="reference.html#xml_parser::read_xml">read_xml</a>(std::string &amp;filename,
+              Ptree &amp;pt,
+              int flags = 0,
+              const std::locale &amp;loc = std::locale());
+
+template&lt;class Ptree&gt;
+void <a href="reference.html#xml_parser::write_xml">write_xml</a>(std::basic_ostream&lt;typename Ptree::char_type&gt; &amp;stream, 
+               const Ptree &amp;pt,
+               const std::string &amp;filename = "");
+
+template&lt;class Ptree&gt;
+void <a href="reference.html#xml_parser::write_xml">write_xml</a>(const std::string &amp;filename,
+               const Ptree &amp;pt,
+               const std::locale &amp;loc = std::locale());
+
+} } } // namespace</pre>
+    <h3>
+        <a name="ini_parser"></a>INI parser
+    </h3>
+    <p>
+        INI format was once widely used in the world of Windows. It is now deprecated, but is still used by a surprisingly large number of applications. The reason is probably its simplicity. Contrary to XML, this format is actually less rich than property tree. Because of that, there is no translation needed when reading from it. On the other hand, not every property tree can be represented as INI file. In order to be able to do that, it cannot have keys with data on root level, it cannot be deeper than two levels, and there cannot be duplicate keys on any level. If these conditions are not met, writing will fail.
+    </p>
+    <p>
+        INI parser does not use windows functions to read and write the file. It uses a fast and small handcrafted parser. Not that I think anybody would like to parse gigabytes of INI files. But thanks to that it is portable and can be used even on non-windows systems.</p>
+    <h4>
+        Synopsis</h4>
+    <pre>
+#include &lt;boost/property_tree/ini_parser.hpp&gt;
+
+namespace boost { namespace property_tree { namespace ini_parser
+{
+
+class <a href="reference.html#ini_parser::ini_parser_error">ini_parser_error</a>;
+    
+template&lt;class Ptree&gt;
+void <a href="reference.html#ini_parser::read_ini">read_ini</a>(std::basic_istream&lt;typename Ptree::char_type&gt; &amp;stream, 
+              Ptree &amp;pt, 
+              const std::string &amp;filename = "");
+
+template&lt;class Ptree&gt;
+void <a href="reference.html#ini_parser::read_ini">read_ini</a>(const std::string &amp;filename, 
+              Ptree &amp;pt,
+              const std::locale &amp;loc = std::locale());
+
+template&lt;class Ptree&gt;
+void <a href="reference.html#ini_parser::write_ini">write_ini</a>(std::basic_ostream&lt;typename Ptree::char_type&gt; &amp;stream, 
+               const Ptree &amp;pt,
+               const std::string &amp;filename = "");
+
+template&lt;class Ptree&gt;
+void <a href="reference.html#ini_parser::write_ini">write_ini</a>(const std::string &amp;filename,
+               const Ptree &amp;pt,
+               const std::locale &amp;loc = std::locale());
+
+} } } // namespace</pre>
+    <h3>
+        <a name="info_parser"></a>INFO parser
+    </h3>
+    <p>
+        INFO is a file format created by myself at the time when I was working on property tree library. It is included here for completeness, although I do not suspect many people will use it. At the very least, it can be used for visualising property trees, because it is very intuitive and easy to read by humans. Some property tree examples in this documentation are written in this file format, and I think they do not need any extra explanation to be understandable. The format has some advantages:</p>
+    <ul>
+        <li>simplicity: just a "key value" string is a valid INFO,</li>
+        <li>efficiency: the hand-crafted parser is extremely fast and small,</li>
+        <li>corresponds to property tree structure: what can be written in INFO, can be stored in property tree, and vice versa,</li>
+        <li>easy on programmers: has #include, curly brackets for nesting, C character escape sequences.</li>
+    </ul>
+    <p>
+        And a disadvantage: it is just yet another file format. An example INFO file illustrating the constructs follows:
+    </p>
+    <pre>
+; A comment
+key1 value1   ; Another comment
+key2 "value with special characters in it {};#\n\t\"\0"
+{
+    subkey "value split "\
+           "over"\
+           "many lines"
+    {
+        a_key_without_value
+        another_key_without_value ""
+        "a key with special characters in it {};#\n\t\"\0"
+        "" value    ; Empty key with a value
+        "" ""       ; Empty key with empty value!
+    }
+}
+#include "file.info"    ; included file</pre>
+    <h4>
+        Synopsis</h4>
+    <pre>
+#include &lt;boost/property_tree/info_parser.hpp&gt;
+
+namespace boost { namespace property_tree { namespace info_parser
+{
+
+class <a href="reference.html#info_parser::info_parser_error">info_parser_error</a>;
+    
+template&lt;class Ptree&gt;
+void <a href="reference.html#info_parser::read_info">read_info</a>(std::basic_istream&lt;typename Ptree::char_type&gt; &amp;stream, 
+               Ptree &amp;pt, 
+               const std::string &amp;filename = "");
+
+template&lt;class Ptree&gt;
+void <a href="reference.html#info_parser::read_info">read_info</a>(const std::string &amp;filename, 
+               Ptree &amp;pt,
+               const std::locale &amp;loc = std::locale());
+
+template&lt;class Ptree&gt;
+void <a href="reference.html#info_parser::write_info">write_info</a>(std::basic_ostream&lt;typename Ptree::char_type&gt; &amp;stream,
+                const Ptree &amp;pt,
+                const std::string &amp;filename = "");
+
+template&lt;class Ptree&gt;
+void <a href="reference.html#info_parser::write_info">write_info</a>(const std::string &amp;filename,
+                const Ptree &amp;pt,
+                const std::locale &amp;loc = std::locale());
+
+} } } // namespace</pre>
+    <h3>
+        <a name="cmdline_parser"></a>Command line parser
+    </h3>
+    <p>
+        This is a very simple parser that converts command line parameters (in form of standard <code>argc</code> and <code>argv</code> arguments) into property tree. There is no write function. The parser recognizes two types of command line parameters. The first type are parameters starting with a "metacharacter", for example a dash or slash. All other parameters are of second type. For each parameter of either type, there is a property tree node created. For parameters of the first type, node key is a character immediately following the metacharacter. Node data is rest of the parameter text. For parameters of the second type, node key is empty, and node data contains text of the parameter verbatim. For example, the following command line:</p>
+    <pre>someprogram.exe -c -I/usr/include/stuff -Lm file1.cc file2.cc</pre>
+    <p>
+        will result in this tree:</p>
+    <pre>
+"" someprogram.exe          ; empty key
+c                           ; empty data
+I "/usr/include/stuff"
+L "m"
+"" file1.cc                 ; empty key
+"" file2.cc                 ; empty key</pre>
+    <p>
+        This is all very basic parsing, but might be useful if your program only uses very simple command line. For example, to get integer value associated with option "N" (in form "-Nxx" or "/Nxx" or "-nxx" or "/nxx") you would just write:</p>
+    <pre>
+boost::property_tree::ptree pt;
+read_cmdline(argc, argv, "-/", pt);
+int n = pt.<a href="reference.html#basic_ptree::get_d">get_d</a>("N", 0, NULL);      // default to 0 if -Nxx or /Nxx not specified on command line</pre>
+    <h4>
+        Synopsis</h4>
+    <pre>
+#include &lt;boost/property_tree/cmdline_parser.hpp&gt;
+
+namespace boost { namespace property_tree { namespace cmdline_parser
+{
+
+template&lt;class Ptree&gt;
+void <a href="reference.html#cmdline_parser::read_cmdline">read_cmdline</a>(int argc, 
+                  typename Ptree::char_type *argv[], 
+                  const std::basic_string&lt;typename Ptree::char_type&gt; &amp;metachars,
+                  Ptree &amp;pt);
+
+} } } // namespace</pre>
+    <h3>
+        <a name="registry_parser"></a>Windows registry parser
+    </h3>
+    <p>
+        This parser supports reading and writing data from windows registry. There is only a subset of registry functionality implemented, because property tree is not intended to replace registry API. For example, access rights are not supported, as well as some exotic value formats. Registry is a rich data source, providing hierarchy of keys, each of whose can have any number of named and typed values attached to it. Because of that, like in XML, some translation is necessary.</p>
+    <p>
+        Note: this parser will only work on a Windows system because it uses Windows API to access the registry. You will need to link with advapi32.lib. Minimalist version of Windows header file is included by registry_parser.hpp. If you want to include windows header on your own, do it before including registry_parser.hpp.
+    </p>
+    <p>
+        How registry key is translated to property tree (<code>read_registry</code>):</p>
+    <ul>
+        <li>Values of each registry key are stored in a subkey with name <code>\values</code>. The preceding backslash is there to prevent name clashes with regular keys. Each subkey of \values is one registry value. If \values subkey does not exist or is empty, there are no values attached to that key.</li>
+        <li>Types of values of each registry key are stored in a subkey with name <code>\types</code>. These subkeys contain an integer equal to type of data stored in its corresponding entry in \values (correspondence is by name, not position).</li>
+        <li>So called "default value", is translated directly to key data and is always assumed to be of type REG_SZ.</li>
+        <li>REG_BINARY values are translated to textual format before putting in property tree. The format is the same as the one displayed by regedit application: a series of hexadecimal numbers representing bytes, separated with spaces. To translate from this format to binary data, or vice versa, use <a href="reference.html#registry_parser::translate"><code>translate</code></a> function.</li>
+        <li>Supported value types are: REG_NONE, REG_SZ, REG_EXPAND_SZ, REG_DWORD, REG_QWORD, REG_BINARY.</li>
+    </ul>
+    <p>
+        Translation of property tree back into registry (<code>write_registry</code>) assumes the same structure as outlined above. That means if you want to have named values, you need to create <code>\values</code> and <code>\types</code> subkeys, and put them there. Also, you have to convert all REG_BINARY values to textual format.</p>
+    <p>
+        For example, when you read registry key <code>HKEY_CURRENT_USER\Software\Microsoft\Notepad</code>, under Windows XP, you will get property tree containing Notepad font settings (among other things):</p>
+    <pre>
+Notepad
+{
+    \values
+    {
+        lfFaceName	Courier
+        lfItalic    0
+        lfWeight    190
+    }
+    \types
+    {
+        lfFaceName  1		; REG_SZ
+        lfItalic    4		; REG_DWORD
+        lfWeight    4		; REG_DWORD
+    }
+}</pre>
+    <h4>
+        Synopsis</h4>
+    <pre>
+#include &lt;boost/property_tree/registry_parser.hpp&gt;
+
+namespace boost { namespace property_tree { namespace registry_parser
+{
+
+class <a href="reference.html#registry_parser::registry_parser_error">registry_parser_error</a>;
+    
+template&lt;class Ptree&gt;
+void <a href="reference.html#registry_parser::read_registry">read_registry</a>(HKEY root, 
+                   const std::basic_string&lt;typename Ptree::char_type&gt; &amp;key, 
+                   Ptree &amp;pt);
+
+template&lt;class Ptree&gt;
+void <a href="reference.html#registry_parser::write_registry">write_registry</a>(HKEY root,
+                    const std::basic_string&lt;typename Ptree::char_type&gt; &amp;key, 
+                    Ptree &amp;pt);
+
+template&lt;class Ch&gt;
+std::basic_string&lt;Ch&gt; <a href="reference.html#registry_parser::translate">translate</a>(DWORD type, 
+                                const std::vector&lt;BYTE&gt; &amp;data);
+
+template&lt;class Ch&gt;
+std::vector&lt;BYTE&gt; <a href="reference.html#registry_parser::translate">translate</a>(DWORD type, 
+                            const std::basic_string&lt;Ch&gt; &amp;s);
+
+} } } // namespace</pre>
+    <h3>
+        <a name="environment_parser"></a>System environment parser
+    </h3>
+    <p>
+        This parser is not yet implemented.</p>
+    <h2>
+        <a name="how_to_access_data_in_property_tree"></a>How to access data in property tree
+    </h2>
+    <p>
+        Property tree resembles (almost is) a standard container with value type of <code>pair&lt;string, ptree&gt;</code>. It has usual member functions, such as insert, push_back, find, erase etc. These can of course be used to populate and access the tree. For example the following code adds key "pi" with data (almost) equal to mathematical pi value:</p>
+    <pre>ptree pt;
+pt.push_back(ptree::value_type("pi", ptree("3.14159")));</pre>
+    <p>
+        To find the value of pi we might do the following:</p>
+    <pre>ptree::const_iterator it = pt.find("pi");
+double pi = boost::lexical_cast&lt;double&gt;(it->second.data());</pre>
+    <p>
+        This looks quite cumbersome, and would be even more so if pi value was not stored so near the top of the tree, and we cared just a little bit more about errors. Fortunately, there is another, correct way of doing it:</p>
+    <pre>ptree pt;
+pt.put("pi", 3.14159);                // put double
+double pi = pt.get&lt;double&gt;("pi");     // get double</pre>
+    <p>
+        It doesn't get simpler than that. Basically, we have 2 families of member functions, get and put, which allow intuitive access to data stored in the tree (direct children or not).</p>
+    <h3>
+        <a name="the_three_ways_of_getting_data"></a>Three ways of getting data
+    </h3>
+    <p>
+        There are three versions of get: <a href="reference.html#basic_ptree::get"><code>get</code></a>, <a href="reference.html#basic_ptree::get_b"><code>get_b</code></a> and <a href="reference.html#basic_ptree::get_d"><code>get_d</code></a>, which differ mostly by failure handling strategy. All versions take path specifier, which determines in which key to search for a value. It can be a single key, or a path to key, where path elements are separated with a special character (a <code>'.'</code> if not specified differently). For example <code>debug.logging.errorlevel</code> might be a valid path with dot as a separator.
+    </p>
+    <ol>
+        <li>The throwing version (<code>get</code>):
+            <pre>ptree pt;
+/* ... */
+float v = pt.get&lt;float&gt;("a.path.to.float.value");</pre>
+            <p>
+                This call locates the proper node in the tree and tries to translate its data string to a float value. If that fails, exception is thrown. If path does not exist, it will be <a href="reference.html#ptree_bad_path"><code>ptree_bad_path</code></a> exception. If value could not be translated, it will be <a href="reference.html#ptree_bad_data"><code>ptree_bad_data</code></a>. Both of them derive from <a href="reference.html#ptree_error"><code>ptree_error</code></a> to make common handling possible.
+            </p>
+        </li>
+        <li>The default-value version (<code>get_d</code>):
+            <pre>ptree pt;
+/* ... */
+float v = pt.get_d("a.path.to.float.value", -1.f, NULL);</pre>
+            <p>
+                It will do the same as above, but if it fails, it will return the default value specified by second parameter (here <code>-1.f</code>) instead of throwing. This is very useful in common situations where one wants to allow omitting of some keys. The third parameter can be passed a pointer to bool. It will be set to true if operation succeeds (i.e. default value is not used), and to false otherwise. Passing NULL is allowed. Note that type specification needed in throwing version is normally not necessary here, because type is determined by the default value parameter.
+            </p>
+        </li>
+        <li>The return-bool version (<code>get_b</code>):
+            <pre>ptree pt;
+/* ... */
+float v;
+if (pt.get_b("a.path.to.float.value", &amp;v))
+{
+    /* ... */
+}</pre>
+            <p>
+                Again it works the same way, but if it fails, it uses its return value of type bool to tell about success or failure. The extracted value is placed in address given by second parameter (NULL is allowed). It is useful when some action is necessary depending on fact whether the value was correctly extracted or not. As above, type specification is normally not necessary, because it is determined by type of result pointer. This version of get can be also used to test for presence of specific key:
+            </p>
+            <pre>bool ok = get_b&lt;ptree::data_type&gt;("a.path.to.value", NULL)</pre>
+            <p>
+                or to test if key exists and can be translated to specific type:
+            </p>
+            <pre>bool ok = get_b&lt;the_type&gt;("a.path.to.value", NULL)</pre>
+        </li>
+    </ol>
+    <p>
+        To retrieve value from <i>this</i> tree (not some subkey), use <a href="reference.html#basic_ptree::get_own"><code>get_own</code></a>, <a href="reference.html#basic_ptree::get_own_b"><code>get_own_b</code></a> and <a href="reference.html#basic_ptree::get_own_d"><code>get_own_d</code></a>. They have identical semantics to get functions, except they don't take the path parameter.</p>
+    <p>
+        To use separator character other than default <code>'.'</code>, each of the get versions has another form, which takes an additional parameter in front of path. This parameter of type <code>char/wchar_t</code> specifies the separating character. This is a lifesaving device for those who may have dots in their keys:
+    </p>
+    <pre>pt.get&lt;float&gt;('/', "p.a.t.h/t.o/v.a.l.u.e");
+pt.get_d('/', "p.a.t.h/t.o/v.a.l.u.e", 0, NULL);
+pt.get_b&lt;std::string&gt;('/', "p.a.t.h/t.o/v.a.l.u.e", NULL);</pre>
+    <p>
+        More information on three ways of getting is in the <a href="#rationale">rationale</a>.
+    </p>
+    <h3>
+        <a name="the_one_way_of_putting_data"></a>One way of putting data
+    </h3>
+    <p>
+        To complement <code>get</code>, there is a <a href="reference.html#basic_ptree::put"><code>put</code></a> function. Contrary to <code>get</code>, it has only one variant. The reason is, there is no need to handle <code>put</code> failures so often. It will only fail if translation from supplied value to string does, or system runs out of memory. In the former case, <code>put</code> will throw <a href="reference.html#ptree_bad_data"><code>ptree_bad_data</code></a>. Sample usage of <code>put</code> might look like that:</p>
+    <pre>
+ptree pt;
+pt.put("a.path.to.float.value", 3.14f)</pre>
+    <p>
+        Calling <code>put</code> will insert new value at specified path, so that <code>get</code>, which specifies the same path, will retrieve it. Put will insert any missing path elements during path traversal. For example, calling <code>put("key1.key2.key3", 3.14f)</code> on an empty tree will insert three new children: <code>key1</code>, <code>key1.key2</code> and <code>key1.key2.key3</code>. The last one will receive a string <code>"3.14"</code> as data, while the two former ones will have empty data strings.</p>
+    <p>
+        Similarly to <code>get_own</code>, there is also a <a href="reference.html#basic_ptree::put_own"><code>put_own</code></a> function. It does the same for <i>this</i> property tree what <code>put</code> does for its children. Thus, it does not require path.</p>
+    <h2>
+        <a name="compatibility"></a>Compatibility
+    </h2>
+    <p>
+        Property tree requires partial class template specialization support. There has been no attempt to workaround that, although this may be possible. Visual C++ 7.0 or earlier, and gcc 2.x do not support it, so the library will not work with them.
+    </p>
+    <p>
+        Property tree has been tested (regressions successfully compiled and run) with the following compilers:</p>
+    <ul>
+        <li>Visual C++ 8.0</li>
+        <li>gcc 3.4.2 (MinGW)</li>
+        <li>gcc 3.3.5 (Linux)</li>
+        <li>gcc 3.4.4 (Linux)</li>
+    </ul>
+    <h2>
+        <a name="future_development"></a>Future development
+    </h2>
+    <ul>
+        <li>More parsers: JSON, YAML, environment strings.</li>
+        <li>More robust XML parser.</li>
+        <li>Mathematical relations: ptree difference, union, intersection. Useful for finding configuration file changes etc.</li>
+    </ul>
+    <h2>
+        <a name="rationale"></a>Rationale
+    </h2>
+    <ol>
+        <li>
+            <h4>
+                Why are there 3 versions of get? Couldn't we do with just one?</h4>
+            <p>
+                The three versions that are implemented reflect experience gathered during several of years of usage of property tree in several different applications. During that time I tried hard to come up with one, proper form of get function and failed. I know of these three basic patterns of usage:
+            </p>
+            <ul>
+                <li><i>Just get the data and I do not care if it cannot be done.</i> This is used when we are sure that data exists. Or in homework assignments. Or when tomorrow is final deadline for your project.</li>
+                <li><i>Get the data and revert to default value when it cannot be done.</i> Used when you want to allow omitting of the key in question. Implemented by some similar tools (windows INI file access functions).</li>
+                <li><i>Get the data, but I care more if you succeeded than I do for the data itself.</i> Used when you want to vary control flow depending on get success/failure. Or to check for presence of a key.</li>
+            </ul>
+            <p>
+            </p>
+        </li>
+        <li>
+            <h4>
+                Why is there get, get_b, get_d instead of just single overloaded get?</h4>
+            <p>
+                First of all, get, get_b, and get_d <i>are already overloaded</i> (path separators). Adding more overloading leads to imminent ambiguities. I tried hard and spent lots of time to cram all the variety into one name. Try as hard as you want, it doesn't work. The second reason is having one name with so many different forms is not very readable. You don't know if this particular invocation of get returns bool, throws, or both. Briefly, even if it compiles it may be silently doing completely different thing than you think.</p>
+        </li>
+        <li>
+            <h4>
+                Why separator character comes before the path and not after as one would expect?</h4>
+            <p>
+                It helps with overload resolution in some cases.</p>
+        </li>
+    </ol>
+    <hr>
+    <p>
+        Revised
+        <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->
+        05 November, 2005
+        <!--webbot bot="Timestamp" endspan i-checksum="39359" -->
+    </p>
+    <p>
+        <i>&copy; Copyright Marcin Kalicinski 2005. All Rights Reserved. </i>
+    </p>
+</body>
+</html>

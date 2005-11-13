@@ -1,0 +1,78 @@
+H1
+{
+    FONT-SIZE: 200%;
+    COLOR: #000000;
+}
+H2
+{
+    FONT-SIZE: 150%;
+}
+H3
+{
+    FONT-SIZE: 125%;
+}
+H4
+{
+    FONT-SIZE: 108%;
+}
+BODY
+{
+    FONT-SIZE: 100%;
+    BACKGROUND-COLOR: #ffffff;
+}
+PRE
+{
+    MARGIN-LEFT: 2em;
+    FONT-FAMILY: Courier,
+                 monospace;
+}
+CODE
+{
+    FONT-FAMILY: Courier,
+                 monospace;
+}
+CODE.as_pre
+{
+    white-space: pre;
+}
+.index
+{
+    TEXT-ALIGN: left;
+}
+.index1
+{
+    MARGIN-LEFT: 1em;
+    TEXT-ALIGN: left;
+}
+.index2
+{
+    MARGIN-LEFT: 2em;
+    TEXT-ALIGN: left;
+}
+.page-index
+{
+    TEXT-ALIGN: left;
+}
+.definition
+{
+    TEXT-ALIGN: left;
+}
+.footnote
+{
+    FONT-SIZE: 66%;
+    VERTICAL-ALIGN: super;
+    TEXT-DECORATION: none;
+}
+.function-semantics
+{
+    CLEAR: left;
+}
+.separating-header
+{
+    COLOR: #000000;
+    BACKGROUND-COLOR: #e8e8e8;
+}
+.parameter
+{
+    FONT-STYLE: italic;
+}
