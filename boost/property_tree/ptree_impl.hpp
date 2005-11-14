@@ -596,22 +596,13 @@ namespace boost { namespace property_tree
     basic_ptree<Ch, Tr> *
         basic_ptree<Ch, Tr>::get_child_d(Ch separator, 
                                          const key_type &path, 
-                                         basic_ptree<Ch, Tr> *default_value, 
-                                         bool *was_found)
+                                         basic_ptree<Ch, Tr> *default_value)
     {
         basic_ptree<Ch, Tr> *result;
         if (get_child_b(separator, path, &result))
-        {
-            if (was_found)
-                *was_found = true;
             return result;
-        }
         else
-        {
-            if (was_found)
-                *was_found = false;
             return default_value;
-        }
     }
 
     // Get child ptree with custom separator
@@ -619,12 +610,11 @@ namespace boost { namespace property_tree
     const basic_ptree<Ch, Tr> *
         basic_ptree<Ch, Tr>::get_child_d(Ch separator, 
                                          const key_type &path, 
-                                         const basic_ptree<Ch, Tr> *default_value, 
-                                         bool *was_found) const
+                                         const basic_ptree<Ch, Tr> *default_value) const
     {
         basic_ptree<Ch, Tr> *nc_this = const_cast<basic_ptree<Ch, Tr> *>(this);
         basic_ptree<Ch, Tr> *nc_default_value = const_cast<basic_ptree<Ch, Tr> *>(default_value);
-        return nc_this->get_child_d(separator, path, nc_default_value, was_found);
+        return nc_this->get_child_d(separator, path, nc_default_value);
     }
 
     // Get child ptree with default separator
@@ -663,20 +653,18 @@ namespace boost { namespace property_tree
     template<class Ch, class Tr>
     basic_ptree<Ch, Tr> *
         basic_ptree<Ch, Tr>::get_child_d(const key_type &path, 
-                                         basic_ptree<Ch, Tr> *default_value, 
-                                         bool *was_found)
+                                         basic_ptree<Ch, Tr> *default_value)
     {
-        return get_child_d(Ch('.'), path, default_value, was_found);
+        return get_child_d(Ch('.'), path, default_value);
     }
     
     // Get child ptree with default separator
     template<class Ch, class Tr>
     const basic_ptree<Ch, Tr> *
         basic_ptree<Ch, Tr>::get_child_d(const key_type &path, 
-                                         const basic_ptree<Ch, Tr> *default_value, 
-                                         bool *was_found) const
+                                         const basic_ptree<Ch, Tr> *default_value) const
     {
-        return get_child_d(Ch('.'), path, default_value, was_found);
+        return get_child_d(Ch('.'), path, default_value);
     }
     
     // Put child ptree with custom separator
@@ -747,33 +735,23 @@ namespace boost { namespace property_tree
     // Get value from data of ptree
     template<class Ch, class Tr>
     template<class Type>
-    Type basic_ptree<Ch, Tr>::get_own_d(const Type &default_value, 
-                                        bool *was_found) const
+    Type basic_ptree<Ch, Tr>::get_own_d(const Type &default_value) const
     {
         Type tmp;
         if (get_own_b(&tmp))
-        {
-            if (was_found)
-                *was_found = true;
             return tmp;
-        }
         else
-        {
-            if (was_found)
-                *was_found = false;
             return default_value;
-        }
     }
 
     // Get value from data of ptree
     template<class Ch, class Tr>
     template<class CharType>
     std::basic_string<CharType> 
-        basic_ptree<Ch, Tr>::get_own_d(const CharType *default_value, 
-                                       bool *was_found) const
+        basic_ptree<Ch, Tr>::get_own_d(const CharType *default_value) const
     {
         BOOST_STATIC_ASSERT((boost::is_same<Ch, CharType>::value == true));
-        return get_own_d(std::basic_string<CharType>(default_value), was_found);
+        return get_own_d(std::basic_string<CharType>(default_value));
     }
 
     // Get value from data of child ptree (custom path separator)
@@ -806,19 +784,14 @@ namespace boost { namespace property_tree
     template<class Type>
     Type basic_ptree<Ch, Tr>::get_d(Ch separator,
                                     const key_type &path, 
-                                    const Type &default_value, 
-                                    bool *was_found) const
+                                    const Type &default_value) const
     {
         BOOST_STATIC_ASSERT(!boost::is_pointer<Type>::value);
         const basic_ptree<Ch, Tr> *child;
         if (get_child_b(separator, path, &child))
-            return child->get_own_d(default_value, was_found);
+            return child->get_own_d(default_value);
         else
-        {
-            if (was_found)
-                *was_found = false;
             return default_value;
-        }
     }
 
     // Get value from data of child ptree (custom path separator)
@@ -827,11 +800,10 @@ namespace boost { namespace property_tree
     std::basic_string<CharType> 
         basic_ptree<Ch, Tr>::get_d(Ch separator,
                                    const key_type &path, 
-                                   const CharType *default_value, 
-                                   bool *was_found) const
+                                   const CharType *default_value) const
     {
         BOOST_STATIC_ASSERT((boost::is_same<Ch, CharType>::value == true));
-        return get_d(separator, path, std::basic_string<CharType>(default_value), was_found);
+        return get_d(separator, path, std::basic_string<CharType>(default_value));
     }
 
     // Get value from data of child ptree (default path separator)
@@ -855,10 +827,9 @@ namespace boost { namespace property_tree
     template<class Ch, class Tr>
     template<class Type>
     Type basic_ptree<Ch, Tr>::get_d(const key_type &path, 
-                                    const Type &default_value, 
-                                    bool *was_found) const
+                                    const Type &default_value) const
     {
-        return get_d(Ch('.'), path, default_value, was_found);
+        return get_d(Ch('.'), path, default_value);
     }
 
     // Get value from data of child ptree (default path separator)
@@ -866,10 +837,9 @@ namespace boost { namespace property_tree
     template<class CharType>
     std::basic_string<CharType> 
         basic_ptree<Ch, Tr>::get_d(const key_type &path, 
-                                   const CharType *default_value, 
-                                   bool *was_found) const
+                                   const CharType *default_value) const
     {
-        return get_d(Ch('.'), path, default_value, was_found);
+        return get_d(Ch('.'), path, default_value);
     }
 
     // Put value in data of ptree

@@ -131,16 +131,16 @@ namespace boost { namespace property_tree
         const basic_ptree<Ch, Tr> *get_child(Ch separator, const key_type &path) const;
         bool get_child_b(Ch separator, const key_type &path, basic_ptree<Ch, Tr> **result);
         bool get_child_b(Ch separator, const key_type &path, const basic_ptree<Ch, Tr> **result) const;
-        basic_ptree<Ch, Tr> *get_child_d(Ch separator, const key_type &path, basic_ptree<Ch, Tr> *default_value, bool *was_found);
-        const basic_ptree<Ch, Tr> *get_child_d(Ch separator, const key_type &path, const basic_ptree<Ch, Tr> *default_value, bool *was_found) const;
+        basic_ptree<Ch, Tr> *get_child_d(Ch separator, const key_type &path, basic_ptree<Ch, Tr> *default_value);
+        const basic_ptree<Ch, Tr> *get_child_d(Ch separator, const key_type &path, const basic_ptree<Ch, Tr> *default_value) const;
 
         // Get child ptree with default separator
         basic_ptree<Ch, Tr> *get_child(const key_type &path);
         const basic_ptree<Ch, Tr> *get_child(const key_type &path) const;
         bool get_child_b(const key_type &path, basic_ptree<Ch, Tr> **result);
         bool get_child_b(const key_type &path, const basic_ptree<Ch, Tr> **result) const;
-        basic_ptree<Ch, Tr> *get_child_d(const key_type &path, basic_ptree<Ch, Tr> *default_value, bool *was_found);
-        const basic_ptree<Ch, Tr> *get_child_d(const key_type &path, const basic_ptree<Ch, Tr> *default_value, bool *was_found) const;
+        basic_ptree<Ch, Tr> *get_child_d(const key_type &path, basic_ptree<Ch, Tr> *default_value);
+        const basic_ptree<Ch, Tr> *get_child_d(const key_type &path, const basic_ptree<Ch, Tr> *default_value) const;
 
         // Put child ptree with custom separator
         basic_ptree<Ch, Tr> *put_child(Ch separator, const key_type &path, basic_ptree<Ch, Tr> *value);
@@ -151,20 +151,20 @@ namespace boost { namespace property_tree
         // Get value from data of ptree
         template<class Type> Type get_own() const;
         template<class Type> bool get_own_b(Type *result) const;
-        template<class Type> Type get_own_d(const Type &default_value, bool *was_found) const;
-        template<class CharType> std::basic_string<CharType> get_own_d(const CharType *default_value, bool *was_found) const;
+        template<class Type> Type get_own_d(const Type &default_value) const;
+        template<class CharType> std::basic_string<CharType> get_own_d(const CharType *default_value) const;
 
         // Get value from data of child ptree (custom path separator)
         template<class Type> Type get(Ch separator, const key_type &path) const;
         template<class Type> bool get_b(Ch separator, const key_type &path, Type *result) const;
-        template<class Type> Type get_d(Ch separator, const key_type &path, const Type &default_value, bool *was_found = NULL) const;
-        template<class CharType> std::basic_string<CharType> get_d(Ch separator, const key_type &path, const CharType *default_value, bool *was_found = NULL) const;
+        template<class Type> Type get_d(Ch separator, const key_type &path, const Type &default_value) const;
+        template<class CharType> std::basic_string<CharType> get_d(Ch separator, const key_type &path, const CharType *default_value) const;
 
         // Get value from data of child ptree (default path separator)
         template<class Type> Type get(const key_type &path) const;
         template<class Type> bool get_b(const key_type &path, Type *result) const;
-        template<class Type> Type get_d(const key_type &path, const Type &default_value, bool *was_found = NULL) const;
-        template<class CharType> std::basic_string<CharType> get_d(const key_type &path, const CharType *default_value, bool *was_found = NULL) const;
+        template<class Type> Type get_d(const key_type &path, const Type &default_value) const;
+        template<class CharType> std::basic_string<CharType> get_d(const key_type &path, const CharType *default_value) const;
 
         // Put value in data of ptree
         template<class Type> void put_own(const Type &value);

@@ -123,12 +123,12 @@ void test_insertion(PTREE *)
     BOOST_CHECK(PTREE::debug_get_instances_count() == 11);
     
     // Check contents
-    BOOST_CHECK(pt.get_d(T("key1"), T(""), NULL) == T("data1"));
-    BOOST_CHECK(pt.get_d(T("key2"), T(""), NULL) == T("data2"));
-    BOOST_CHECK(pt.get_d(T("key1.key3"), T(""), NULL) == T("data3"));
-    BOOST_CHECK(pt.get_d(T("key1.key4"), T(""), NULL) == T("data4"));
-    BOOST_CHECK(pt.get_d(T("key2.key3"), T(""), NULL) == T("data3"));
-    BOOST_CHECK(pt.get_d(T("key2.key4"), T(""), NULL) == T("data4"));
+    BOOST_CHECK(pt.get_d(T("key1"), T("")) == T("data1"));
+    BOOST_CHECK(pt.get_d(T("key2"), T("")) == T("data2"));
+    BOOST_CHECK(pt.get_d(T("key1.key3"), T("")) == T("data3"));
+    BOOST_CHECK(pt.get_d(T("key1.key4"), T("")) == T("data4"));
+    BOOST_CHECK(pt.get_d(T("key2.key3"), T("")) == T("data3"));
+    BOOST_CHECK(pt.get_d(T("key2.key4"), T("")) == T("data4"));
 
     // Check sequence
     PTREE::iterator it = it2;
@@ -417,18 +417,18 @@ void test_case(PTREE *)
     if (typeid(PTREE::traits_type) == typeid(boost::property_tree::ptree_traits<CHTYPE>))
     {
         BOOST_CHECK(PTREE::debug_get_instances_count() == 7);
-        BOOST_CHECK(pt.get_d(T("key1"), T(""), NULL) == T("data1"));
-        BOOST_CHECK(pt.get_d(T("key2"), T(""), NULL) == T(""));
-        BOOST_CHECK(pt.get_d(T("key1.key3"), T(""), NULL) == T(""));
-        BOOST_CHECK(pt.get_d(T("KEY1.key4"), T(""), NULL) == T("data4"));
+        BOOST_CHECK(pt.get_d(T("key1"), T("")) == T("data1"));
+        BOOST_CHECK(pt.get_d(T("key2"), T("")) == T(""));
+        BOOST_CHECK(pt.get_d(T("key1.key3"), T("")) == T(""));
+        BOOST_CHECK(pt.get_d(T("KEY1.key4"), T("")) == T("data4"));
     }
     else
     {
         BOOST_CHECK(PTREE::debug_get_instances_count() == 5);
-        BOOST_CHECK(pt.get_d(T("key1"), T("1"), NULL) == pt.get_d(T("KEY1"), T("2"), NULL));
-        BOOST_CHECK(pt.get_d(T("key2"), T("1"), NULL) == pt.get_d(T("KEY2"), T("2"), NULL));
-        BOOST_CHECK(pt.get_d(T("key1.key3"), T("1"), NULL) == pt.get_d(T("KEY1.KEY3"), T("2"), NULL));
-        BOOST_CHECK(pt.get_d(T("key1.key4"), T("1"), NULL) == pt.get_d(T("KEY1.KEY4"), T("2"), NULL));
+        BOOST_CHECK(pt.get_d(T("key1"), T("1")) == pt.get_d(T("KEY1"), T("2")));
+        BOOST_CHECK(pt.get_d(T("key2"), T("1")) == pt.get_d(T("KEY2"), T("2")));
+        BOOST_CHECK(pt.get_d(T("key1.key3"), T("1")) == pt.get_d(T("KEY1.KEY3"), T("2")));
+        BOOST_CHECK(pt.get_d(T("key1.key4"), T("1")) == pt.get_d(T("KEY1.KEY4"), T("2")));
     }
 
     // Do more insertions
@@ -569,7 +569,6 @@ void test_get_put(PTREE *)
 {
     
     typedef std::basic_string<CHTYPE> str_t;
-    bool flag;
 
     // Temporary storage
     int tmp_int;
@@ -593,7 +592,7 @@ void test_get_put(PTREE *)
     BOOST_CHECK(PTREE::debug_get_instances_count() == 17);
 
     // Check if const char * version returns std::string
-    BOOST_CHECK(typeid(pt.get_own_d(T(""), NULL)) == typeid(str_t));
+    BOOST_CHECK(typeid(pt.get_own_d(T(""))) == typeid(str_t));
     
     // Do extractions via get (throwing version)
     BOOST_CHECK(pt.get<int>(T("k1")) == 1);                             // get as int
@@ -624,24 +623,15 @@ void test_get_put(PTREE *)
     BOOST_CHECK(tmp_bool == true);
 
     // Do extractions via get (default value version)
-    BOOST_CHECK(pt.get_d(T("k1"), 0, &flag) == 1);              // get as int
-    BOOST_CHECK(flag);
-    BOOST_CHECK(pt.get_d(T("k1"), 0L, &flag) == 1);             // get as long
-    BOOST_CHECK(flag);
-    BOOST_CHECK(pt.get_d(T("k2.k"), 0.0, &flag) == 2.5);        // get as double
-    BOOST_CHECK(flag);
-    BOOST_CHECK(pt.get_d(T("k2.k"), 0.0f, &flag) == 2.5f);      // get as float
-    BOOST_CHECK(flag);
-    BOOST_CHECK(pt.get_d(T("k3.k.k"), str_t(), &flag) == str_t(T("ala ma kota")));    // get as string
-    BOOST_CHECK(flag);
-    BOOST_CHECK(pt.get_d(T("k3.k.k"), T(""), &flag) == T("ala ma kota"));             // get as const char *
-    BOOST_CHECK(flag);
-    BOOST_CHECK(pt.get_d(T("k4.k.k.k"), CHTYPE('\0'), &flag) == CHTYPE('c'));         // get as char
-    BOOST_CHECK(flag);
-    BOOST_CHECK(pt.get_d(T("k5.k.k.k.f"), true, &flag) == false);                     // get as bool
-    BOOST_CHECK(flag);
-    BOOST_CHECK(pt.get_d(T("k5.k.k.k.t"), false, &flag) == true);                     // get as bool
-    BOOST_CHECK(flag);
+    BOOST_CHECK(pt.get_d(T("k1"), 0) == 1);              // get as int
+    BOOST_CHECK(pt.get_d(T("k1"), 0L) == 1);             // get as long
+    BOOST_CHECK(pt.get_d(T("k2.k"), 0.0) == 2.5);        // get as double
+    BOOST_CHECK(pt.get_d(T("k2.k"), 0.0f) == 2.5f);      // get as float
+    BOOST_CHECK(pt.get_d(T("k3.k.k"), str_t()) == str_t(T("ala ma kota")));    // get as string
+    BOOST_CHECK(pt.get_d(T("k3.k.k"), T("")) == T("ala ma kota"));             // get as const char *
+    BOOST_CHECK(pt.get_d(T("k4.k.k.k"), CHTYPE('\0')) == CHTYPE('c'));         // get as char
+    BOOST_CHECK(pt.get_d(T("k5.k.k.k.f"), true) == false);                     // get as bool
+    BOOST_CHECK(pt.get_d(T("k5.k.k.k.t"), false) == true);                     // get as bool
 
     // Do insertions via put_own
     pt1->put_own(short(1));                     // put as short
@@ -680,24 +670,15 @@ void test_get_put(PTREE *)
     BOOST_CHECK(tmp_bool == true);
 
     // Do extractions via get_own (default value version)
-    BOOST_CHECK(pt1->get_own_d(0, &flag) == 1);              // get as int
-    BOOST_CHECK(flag);
-    BOOST_CHECK(pt1->get_own_d(0L, &flag) == 1);             // get as long
-    BOOST_CHECK(flag);
-    BOOST_CHECK(pt2->get_own_d(0.0, &flag) == 2.5);          // get as double
-    BOOST_CHECK(flag);
-    BOOST_CHECK(pt2->get_own_d(0.0f, &flag) == 2.5f);        // get as float
-    BOOST_CHECK(flag);
-    BOOST_CHECK(pt3->get_own_d(str_t(), &flag) == str_t(T("ala ma kota")));    // get as string
-    BOOST_CHECK(flag);
-    BOOST_CHECK(pt3->get_own_d(T(""), &flag) == T("ala ma kota"));             // get as const char *
-    BOOST_CHECK(flag);
-    BOOST_CHECK(pt4->get_own_d(CHTYPE('\0'), &flag) == CHTYPE('c'));           // get as char
-    BOOST_CHECK(flag);
-    BOOST_CHECK(pt5->get_own_d(true, &flag) == false);                         // get as bool
-    BOOST_CHECK(flag);
-    BOOST_CHECK(pt6->get_own_d(false, &flag) == true);                         // get as bool
-    BOOST_CHECK(flag);
+    BOOST_CHECK(pt1->get_own_d(0) == 1);              // get as int
+    BOOST_CHECK(pt1->get_own_d(0L) == 1);             // get as long
+    BOOST_CHECK(pt2->get_own_d(0.0) == 2.5);          // get as double
+    BOOST_CHECK(pt2->get_own_d(0.0f) == 2.5f);        // get as float
+    BOOST_CHECK(pt3->get_own_d(str_t()) == str_t(T("ala ma kota")));    // get as string
+    BOOST_CHECK(pt3->get_own_d(T("")) == T("ala ma kota"));             // get as const char *
+    BOOST_CHECK(pt4->get_own_d(CHTYPE('\0')) == CHTYPE('c'));           // get as char
+    BOOST_CHECK(pt5->get_own_d(true) == false);                         // get as bool
+    BOOST_CHECK(pt6->get_own_d(false) == true);                         // get as bool
 
     // Do incorrect extractions (throwing version)
     try 
@@ -727,11 +708,9 @@ void test_get_put(PTREE *)
     BOOST_CHECK(pt.get_b(T("k4.k.k.k"), &tmp_int) == false);
 
     // Do incorrect extractions (default value version)
-    BOOST_CHECK(pt.get_d(T("k2.k"), -7, &flag) == -7);
-    BOOST_CHECK(!flag);
-    BOOST_CHECK(pt.get_d(T("k3.k.k"), -7, &flag) == -7);
-    BOOST_CHECK(!flag);
-    BOOST_CHECK(pt.get_d(T("k4.k.k.k"), -7, NULL) == -7);
+    BOOST_CHECK(pt.get_d(T("k2.k"), -7) == -7);
+    BOOST_CHECK(pt.get_d(T("k3.k.k"), -7) == -7);
+    BOOST_CHECK(pt.get_d(T("k4.k.k.k"), -7) == -7);
 
 }
 
@@ -784,19 +763,12 @@ void test_get_child_put_child(PTREE *)
     BOOST_CHECK(*tmp == pt);
 
     // Do correct extractions via get_child (default value version)
-    bool flag;
-    BOOST_CHECK(pt1.get_child_d(T("k1"), NULL, &flag) != NULL);
-    BOOST_CHECK(flag);
-    BOOST_CHECK(pt1.get_child_d(T("k2.k"), NULL, &flag) != NULL);
-    BOOST_CHECK(flag);
-    BOOST_CHECK(*pt2.get_child_d(T("k1"), NULL, &flag) == pt);
-    BOOST_CHECK(flag);
-    BOOST_CHECK(*pt2.get_child_d(T("k2.k"), NULL, &flag) == pt);
-    BOOST_CHECK(flag);
-    BOOST_CHECK(*pt3.get_child_d(T("k1"), &pt1, &flag) == pt);
-    BOOST_CHECK(flag);
-    BOOST_CHECK(*pt3.get_child_d(T("k2.k"), &pt1, &flag) == pt);
-    BOOST_CHECK(flag);
+    BOOST_CHECK(pt1.get_child_d(T("k1"), NULL) != NULL);
+    BOOST_CHECK(pt1.get_child_d(T("k2.k"), NULL) != NULL);
+    BOOST_CHECK(*pt2.get_child_d(T("k1"), NULL) == pt);
+    BOOST_CHECK(*pt2.get_child_d(T("k2.k"), NULL) == pt);
+    BOOST_CHECK(*pt3.get_child_d(T("k1"), &pt1) == pt);
+    BOOST_CHECK(*pt3.get_child_d(T("k2.k"), &pt1) == pt);
 
     // Do incorrect extractions via get_child (throwing version)
     try 
@@ -816,9 +788,7 @@ void test_get_child_put_child(PTREE *)
     BOOST_CHECK(tmp == &pt1);
 
     // Do incorrect extractions via get_child (default value version)
-    flag = true;
-    BOOST_CHECK(pt.get_child_d(T("k2.k.bogus.path"), &pt3, &flag) == &pt3);
-    BOOST_CHECK(!flag);
+    BOOST_CHECK(pt.get_child_d(T("k2.k.bogus.path"), &pt3) == &pt3);
 
 }
 
@@ -841,18 +811,18 @@ void test_path_separator(PTREE *)
     BOOST_CHECK(PTREE::debug_get_instances_count() == 13);
 
     // Do correct extractions
-    BOOST_CHECK(pt.get_d(T("key1"), 0, NULL) == 1);
-    BOOST_CHECK(pt.get_d(T("key2.key"), 0, NULL) == 2);
-    BOOST_CHECK(pt.get_d(T("key3.key.key"), 0, NULL) == 3);
-    BOOST_CHECK(pt.get_d(CHTYPE('/'), T("key4"), 0, NULL) == 4);
-    BOOST_CHECK(pt.get_d(CHTYPE('/'), T("key5/key"), 0, NULL) == 5);
-    BOOST_CHECK(pt.get_d(CHTYPE('/'), T("key6/key/key"), 0, NULL) == 6);
+    BOOST_CHECK(pt.get_d(T("key1"), 0) == 1);
+    BOOST_CHECK(pt.get_d(T("key2.key"), 0) == 2);
+    BOOST_CHECK(pt.get_d(T("key3.key.key"), 0) == 3);
+    BOOST_CHECK(pt.get_d(CHTYPE('/'), T("key4"), 0) == 4);
+    BOOST_CHECK(pt.get_d(CHTYPE('/'), T("key5/key"), 0) == 5);
+    BOOST_CHECK(pt.get_d(CHTYPE('/'), T("key6/key/key"), 0) == 6);
 
     // Do incorrect extractions
-    BOOST_CHECK(pt.get_d(T("key2/key"), 0, NULL) == 0);
-    BOOST_CHECK(pt.get_d(T("key3/key/key"), 0, NULL) == 0);
-    BOOST_CHECK(pt.get_d(CHTYPE('/'), T("key5.key"), 0, NULL) == 0);
-    BOOST_CHECK(pt.get_d(CHTYPE('/'), T("key6.key.key"), 0, NULL) == 0);
+    BOOST_CHECK(pt.get_d(T("key2/key"), 0) == 0);
+    BOOST_CHECK(pt.get_d(T("key3/key/key"), 0) == 0);
+    BOOST_CHECK(pt.get_d(CHTYPE('/'), T("key5.key"), 0) == 0);
+    BOOST_CHECK(pt.get_d(CHTYPE('/'), T("key6.key.key"), 0) == 0);
 
 }
 
