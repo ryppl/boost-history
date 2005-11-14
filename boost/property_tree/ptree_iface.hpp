@@ -11,6 +11,7 @@
 #define BOOST_PROPERTY_TREE_PTREE_IFACE_HPP_INCLUDED
 
 #include <boost/config.hpp>
+#include <boost/optional.hpp>
 #include <string>
 #include <list>
 #include <map>
@@ -148,6 +149,8 @@ namespace boost { namespace property_tree
         bool get_child_b(Ch separator, const key_type &path, const basic_ptree<Ch, Tr> **result) const;
         basic_ptree<Ch, Tr> *get_child_d(Ch separator, const key_type &path, basic_ptree<Ch, Tr> *default_value);
         const basic_ptree<Ch, Tr> *get_child_d(Ch separator, const key_type &path, const basic_ptree<Ch, Tr> *default_value) const;
+        optional<basic_ptree<Ch, Tr> *> get_child_o(Ch separator, const key_type &path);
+        optional<const basic_ptree<Ch, Tr> *> get_child_o(Ch separator, const key_type &path) const;
 
         // Get child ptree with default separator
         basic_ptree<Ch, Tr> *get_child(const key_type &path);
@@ -156,6 +159,8 @@ namespace boost { namespace property_tree
         bool get_child_b(const key_type &path, const basic_ptree<Ch, Tr> **result) const;
         basic_ptree<Ch, Tr> *get_child_d(const key_type &path, basic_ptree<Ch, Tr> *default_value);
         const basic_ptree<Ch, Tr> *get_child_d(const key_type &path, const basic_ptree<Ch, Tr> *default_value) const;
+        optional<basic_ptree<Ch, Tr> *> get_child_o(const key_type &path);
+        optional<const basic_ptree<Ch, Tr> *> get_child_o(const key_type &path) const;
 
         // Put child ptree with custom separator
         basic_ptree<Ch, Tr> *put_child(Ch separator, const key_type &path, basic_ptree<Ch, Tr> *value);
@@ -168,18 +173,21 @@ namespace boost { namespace property_tree
         template<class Type> bool get_own_b(Type *result, const std::locale &loc = std::locale()) const;
         template<class Type> Type get_own_d(const Type &default_value, const std::locale &loc = std::locale()) const;
         template<class CharType> std::basic_string<CharType> get_own_d(const CharType *default_value, const std::locale &loc = std::locale()) const;
+        template<class Type> optional<Type> get_own_o(const std::locale &loc = std::locale()) const;
 
         // Get value from data of child ptree (custom path separator)
         template<class Type> Type get(Ch separator, const key_type &path, const std::locale &loc = std::locale()) const;
         template<class Type> bool get_b(Ch separator, const key_type &path, Type *result, const std::locale &loc = std::locale()) const;
         template<class Type> Type get_d(Ch separator, const key_type &path, const Type &default_value, const std::locale &loc = std::locale()) const;
         template<class CharType> std::basic_string<CharType> get_d(Ch separator, const key_type &path, const CharType *default_value, const std::locale &loc = std::locale()) const;
+        template<class Type> optional<Type> get_o(Ch separator, const key_type &path, const std::locale &loc = std::locale()) const;
 
         // Get value from data of child ptree (default path separator)
         template<class Type> Type get(const key_type &path, const std::locale &loc = std::locale()) const;
         template<class Type> bool get_b(const key_type &path, Type *result, const std::locale &loc = std::locale()) const;
         template<class Type> Type get_d(const key_type &path, const Type &default_value, const std::locale &loc = std::locale()) const;
         template<class CharType> std::basic_string<CharType> get_d(const key_type &path, const CharType *default_value, const std::locale &loc = std::locale()) const;
+        template<class Type> optional<Type> get_o(const key_type &path, const std::locale &loc = std::locale()) const;
 
         // Put value in data of ptree
         template<class Type> void put_own(const Type &value, const std::locale &loc = std::locale());

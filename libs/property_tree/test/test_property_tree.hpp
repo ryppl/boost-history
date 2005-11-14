@@ -578,6 +578,13 @@ void test_get_put(PTREE *)
     str_t tmp_string;
     CHTYPE tmp_char;
     bool tmp_bool;
+    boost::optional<int> opt_int;
+    boost::optional<long> opt_long;
+    boost::optional<double> opt_double;
+    boost::optional<float> opt_float;
+    boost::optional<str_t> opt_string;
+    boost::optional<CHTYPE> opt_char;
+    boost::optional<bool> opt_bool;
     
     // Do insertions via put
     PTREE pt;
@@ -633,6 +640,24 @@ void test_get_put(PTREE *)
     BOOST_CHECK(pt.get_d(T("k5.k.k.k.f"), true) == false);                     // get as bool
     BOOST_CHECK(pt.get_d(T("k5.k.k.k.t"), false) == true);                     // get as bool
 
+    // Do extractions via get (optional version)
+    opt_int = pt.get_o<int>(T("k1"));                   // get as int
+    BOOST_CHECK(opt_int && *opt_int == 1);
+    opt_long = pt.get_o<long>(T("k1"));                 // get as long
+    BOOST_CHECK(opt_long && *opt_long == 1);
+    opt_double = pt.get_o<double>(T("k2.k"));           // get as double
+    BOOST_CHECK(opt_double && *opt_double == 2.5);
+    opt_float = pt.get_o<float>(T("k2.k"));             // get as float
+    BOOST_CHECK(opt_float && *opt_float == 2.5f);
+    opt_string = pt.get_o<str_t>(T("k3.k.k"));          // get as string
+    BOOST_CHECK(opt_string && *opt_string == str_t(T("ala ma kota")));
+    opt_char = pt.get_o<CHTYPE>(T("k4.k.k.k"));         // get as char
+    BOOST_CHECK(opt_char && *opt_char == CHTYPE('c'));
+    opt_bool = pt.get_o<bool>(T("k5.k.k.k.f"));         // get as bool
+    BOOST_CHECK(opt_bool && *opt_bool == false);
+    opt_bool = pt.get_o<bool>(T("k5.k.k.k.t"));         // get as bool
+    BOOST_CHECK(opt_bool && *opt_bool == true);
+
     // Do insertions via put_own
     pt1->put_own(short(1));                     // put as short
     pt2->put_own(2.5f);                         // put as float
@@ -680,6 +705,24 @@ void test_get_put(PTREE *)
     BOOST_CHECK(pt5->get_own_d(true) == false);                         // get as bool
     BOOST_CHECK(pt6->get_own_d(false) == true);                         // get as bool
 
+    // Do extractions via get_own (optional version)
+    opt_int = pt1->get_own_o<int>();                    // get as int
+    BOOST_CHECK(opt_int && *opt_int == 1);
+    opt_long = pt1->get_own_o<long>();                  // get as long
+    BOOST_CHECK(opt_long && *opt_long == 1);
+    opt_double = pt2->get_own_o<double>();              // get as double
+    BOOST_CHECK(opt_double && *opt_double == 2.5);
+    opt_float = pt2->get_own_o<float>();                // get as float
+    BOOST_CHECK(opt_float && *opt_float == 2.5f);
+    opt_string = pt3->get_own_o<str_t>();               // get as string
+    BOOST_CHECK(opt_string && *opt_string == str_t(T("ala ma kota")));
+    opt_char = pt4->get_own_o<CHTYPE>();                // get as char
+    BOOST_CHECK(opt_char && *opt_char == CHTYPE('c'));
+    opt_bool = pt5->get_own_o<bool>();                  // get as bool
+    BOOST_CHECK(opt_bool && *opt_bool == false);
+    opt_bool = pt6->get_own_o<bool>();                  // get as bool
+    BOOST_CHECK(opt_bool && *opt_bool == true);
+
     // Do incorrect extractions (throwing version)
     try 
     { 
@@ -712,6 +755,11 @@ void test_get_put(PTREE *)
     BOOST_CHECK(pt.get_d(T("k3.k.k"), -7) == -7);
     BOOST_CHECK(pt.get_d(T("k4.k.k.k"), -7) == -7);
 
+    // Do incorrect extractions (optional version)
+    BOOST_CHECK(!pt.get_o<int>(T("k2.k")));
+    BOOST_CHECK(!pt.get_o<int>(T("k3.k.k")));
+    BOOST_CHECK(!pt.get_o<int>(T("k4.k.k.k")));
+
 }
 
 void test_get_child_put_child(PTREE *)
@@ -727,28 +775,23 @@ void test_get_child_put_child(PTREE *)
     pt1.put_child(T("k2.k"), NULL);
     pt2.put_child(T("k1"), &pt);
     pt2.put_child(T("k2.k"), &pt);
-    pt3.put_child(T("k1"), &pt);
-    pt3.put_child(T("k2.k"), &pt);
 
     // Const references to test const versions of methods
-    const PTREE &cpt1 = pt1, &cpt2 = pt2, &cpt3 = pt3;
+    const PTREE &cpt1 = pt1, &cpt2 = pt2;
 
     // Do correct extractions via get_child (throwing version)
     BOOST_CHECK(pt1.get_child(T("k1"))->empty());
     BOOST_CHECK(pt1.get_child(T("k2.k"))->empty());
     BOOST_CHECK(*pt2.get_child(T("k1")) == pt);
     BOOST_CHECK(*pt2.get_child(T("k2.k")) == pt);
-    BOOST_CHECK(*pt3.get_child(T("k1")) == pt);
-    BOOST_CHECK(*pt3.get_child(T("k2.k")) == pt);
     BOOST_CHECK(cpt1.get_child(T("k1"))->empty());
     BOOST_CHECK(cpt1.get_child(T("k2.k"))->empty());
     BOOST_CHECK(*cpt2.get_child(T("k1")) == pt);
     BOOST_CHECK(*cpt2.get_child(T("k2.k")) == pt);
-    BOOST_CHECK(*cpt3.get_child(T("k1")) == pt);
-    BOOST_CHECK(*cpt3.get_child(T("k2.k")) == pt);
 
     // Do correct extractions via get_child (return bool version)
     PTREE *tmp;
+    const PTREE *ctmp;
     BOOST_CHECK(pt1.get_child_b(T("k1"), &tmp) == true);
     BOOST_CHECK(tmp->empty());
     BOOST_CHECK(pt1.get_child_b(T("k2.k"), &tmp) == true);
@@ -757,19 +800,45 @@ void test_get_child_put_child(PTREE *)
     BOOST_CHECK(*tmp == pt);
     BOOST_CHECK(pt2.get_child_b(T("k2.k"), &tmp) == true);
     BOOST_CHECK(*tmp == pt);
-    BOOST_CHECK(pt3.get_child_b(T("k1"), &tmp) == true);
-    BOOST_CHECK(*tmp == pt);
-    BOOST_CHECK(pt3.get_child_b(T("k2.k"), &tmp) == true);
-    BOOST_CHECK(*tmp == pt);
+    BOOST_CHECK(cpt1.get_child_b(T("k1"), &ctmp) == true);
+    BOOST_CHECK(ctmp->empty());
+    BOOST_CHECK(cpt1.get_child_b(T("k2.k"), &ctmp) == true);
+    BOOST_CHECK(ctmp->empty());
+    BOOST_CHECK(cpt2.get_child_b(T("k1"), &ctmp) == true);
+    BOOST_CHECK(*ctmp == pt);
+    BOOST_CHECK(cpt2.get_child_b(T("k2.k"), &ctmp) == true);
+    BOOST_CHECK(*ctmp == pt);
 
     // Do correct extractions via get_child (default value version)
     BOOST_CHECK(pt1.get_child_d(T("k1"), NULL) != NULL);
     BOOST_CHECK(pt1.get_child_d(T("k2.k"), NULL) != NULL);
     BOOST_CHECK(*pt2.get_child_d(T("k1"), NULL) == pt);
     BOOST_CHECK(*pt2.get_child_d(T("k2.k"), NULL) == pt);
-    BOOST_CHECK(*pt3.get_child_d(T("k1"), &pt1) == pt);
-    BOOST_CHECK(*pt3.get_child_d(T("k2.k"), &pt1) == pt);
+    BOOST_CHECK(cpt1.get_child_d(T("k1"), NULL) != NULL);
+    BOOST_CHECK(cpt1.get_child_d(T("k2.k"), NULL) != NULL);
+    BOOST_CHECK(*cpt2.get_child_d(T("k1"), NULL) == pt);
+    BOOST_CHECK(*cpt2.get_child_d(T("k2.k"), NULL) == pt);
 
+    // Do correct extractions via get_child (optional version)
+    boost::optional<PTREE *> opt;
+    boost::optional<const PTREE *> copt;
+    opt = pt1.get_child_o(T("k1"));
+    BOOST_CHECK(opt);
+    opt = pt1.get_child_o(T("k2.k"));
+    BOOST_CHECK(opt);
+    opt = pt2.get_child_o(T("k1"));
+    BOOST_CHECK(opt && **opt == pt);
+    opt = pt2.get_child_o(T("k2.k"));
+    BOOST_CHECK(opt && **opt == pt);
+    copt = cpt1.get_child_o(T("k1"));
+    BOOST_CHECK(copt);
+    copt = cpt1.get_child_o(T("k2.k"));
+    BOOST_CHECK(copt);
+    copt = cpt2.get_child_o(T("k1"));
+    BOOST_CHECK(copt && **copt == pt);
+    copt = cpt2.get_child_o(T("k2.k"));
+    BOOST_CHECK(copt && **copt == pt);
+    
     // Do incorrect extractions via get_child (throwing version)
     try 
     { 
@@ -789,6 +858,9 @@ void test_get_child_put_child(PTREE *)
 
     // Do incorrect extractions via get_child (default value version)
     BOOST_CHECK(pt.get_child_d(T("k2.k.bogus.path"), &pt3) == &pt3);
+
+    // Do incorrect extractions via get_child (optional version)
+    BOOST_CHECK(!pt.get_child_o(T("k2.k.bogus.path")));
 
 }
 
@@ -850,24 +922,31 @@ void test_precision(PTREE *)
 void test_locale(PTREE *)
 {
     
-    // Test if english and french locales work
-    std::string locale = setlocale(LC_ALL, NULL);
-    if (!setlocale(LC_ALL, "english"))
-        std::cerr << "setlocale(LC_ALL, \"english\") failed, skipping locale tests\n";
-    if (!setlocale(LC_ALL, "french"))
-        std::cerr << "setlocale(LC_ALL, \"french\") failed, skipping locale tests\n";
-    setlocale(LC_ALL, locale.c_str());
+    try
+    {
+    
+        // Write strings in english and french locales
+        PTREE pt;
+        std::locale loc_english("english");
+        std::locale loc_french("french");
+        pt.put(T("english"), 1.234, loc_english);
+        pt.put(T("french"), 1.234, loc_french);
 
-    // Write strings in english and french locales
-    PTREE pt;
-    std::locale loc_english("english");
-    std::locale loc_french("french");
-    pt.put(T("english"), 1.234, loc_english);
-    pt.put(T("french"), 1.234, loc_french);
+        // Test contents
+        BOOST_CHECK(pt.get<PTREE::data_type>(T("english")) == T("1.234"));
+        BOOST_CHECK(pt.get<PTREE::data_type>(T("french")) == T("1,234"));
 
-    // Test contents
-    BOOST_CHECK(pt.get<PTREE::data_type>(T("english")) == T("1.234"));
-    BOOST_CHECK(pt.get<PTREE::data_type>(T("french")) == T("1,234"));
+    }
+    catch (boost::property_tree::ptree_error &)
+    {
+        throw;
+    }
+    catch (std::runtime_error &e)
+    {
+        std::cerr << "\"english\" and/or \"french\" locale not supported by the platform. "
+                     "Skipping locale tests (caught std::runtime_error with message " << 
+                     e.what() << ").\n";
+    }
 
 }
 

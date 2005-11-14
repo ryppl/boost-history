@@ -631,6 +631,30 @@ namespace boost { namespace property_tree
         return nc_this->get_child_d(separator, path, nc_default_value);
     }
 
+    // Get child ptree with custom separator
+    template<class Ch, class Tr>
+    optional<basic_ptree<Ch, Tr> *> 
+        basic_ptree<Ch, Tr>::get_child_o(Ch separator, const key_type &path)
+    {
+        basic_ptree<Ch, Tr> *tmp;
+        if (get_child_b(separator, path, &tmp))
+            return optional<basic_ptree<Ch, Tr> *>(tmp);
+        else
+            return optional<basic_ptree<Ch, Tr> *>();
+    }
+
+    // Get child ptree with custom separator
+    template<class Ch, class Tr>
+    optional<const basic_ptree<Ch, Tr> *> 
+        basic_ptree<Ch, Tr>::get_child_o(Ch separator, const key_type &path) const
+    {
+        const basic_ptree<Ch, Tr> *tmp;
+        if (get_child_b(separator, path, &tmp))
+            return optional<const basic_ptree<Ch, Tr> *>(tmp);
+        else
+            return optional<const basic_ptree<Ch, Tr> *>();
+    }
+
     // Get child ptree with default separator
     template<class Ch, class Tr>
     basic_ptree<Ch, Tr> *
@@ -681,6 +705,22 @@ namespace boost { namespace property_tree
         return get_child_d(Ch('.'), path, default_value);
     }
     
+    // Get child ptree with default separator
+    template<class Ch, class Tr>
+    optional<basic_ptree<Ch, Tr> *> 
+        basic_ptree<Ch, Tr>::get_child_o(const key_type &path)
+    {
+        return get_child_o(Ch('.'), path);
+    }
+
+    // Get child ptree with default separator
+    template<class Ch, class Tr>
+    optional<const basic_ptree<Ch, Tr> *> 
+        basic_ptree<Ch, Tr>::get_child_o(const key_type &path) const
+    {
+        return get_child_o(Ch('.'), path);
+    }
+
     // Put child ptree with custom separator
     template<class Ch, class Tr>
     basic_ptree<Ch, Tr> *
@@ -771,6 +811,19 @@ namespace boost { namespace property_tree
         return get_own_d(std::basic_string<CharType>(default_value), loc);
     }
 
+    // Get value from data of ptree
+    template<class Ch, class Tr>
+    template<class Type>
+    optional<Type> 
+        basic_ptree<Ch, Tr>::get_own_o(const std::locale &loc) const
+    {
+        Type tmp;
+        if (get_own_b(&tmp, loc))
+            return optional<Type>(tmp);
+        else
+            return optional<Type>();
+    }
+
     // Get value from data of child ptree (custom path separator)
     template<class Ch, class Tr>
     template<class Type>
@@ -778,7 +831,6 @@ namespace boost { namespace property_tree
                                   const key_type &path,
                                   const std::locale &loc) const
     {
-        BOOST_STATIC_ASSERT(!boost::is_pointer<Type>::value);
         return get_child(separator, path)->get_own<Type>(loc);
     }
 
@@ -790,7 +842,6 @@ namespace boost { namespace property_tree
                                     Type *result, 
                                     const std::locale &loc) const
     {
-        BOOST_STATIC_ASSERT(!boost::is_pointer<Type>::value);
         const basic_ptree<Ch, Tr> *child;
         if (get_child_b(separator, path, &child))
             return child->get_own_b(result, loc);
@@ -806,10 +857,9 @@ namespace boost { namespace property_tree
                                     const Type &default_value, 
                                     const std::locale &loc) const
     {
-        BOOST_STATIC_ASSERT(!boost::is_pointer<Type>::value);
-        const basic_ptree<Ch, Tr> *child;
-        if (get_child_b(separator, path, &child))
-            return child->get_own_d(default_value, loc);
+        Type tmp;
+        if (get_b(separator, path, &tmp, loc))
+            return tmp;
         else
             return default_value;
     }
@@ -825,6 +875,21 @@ namespace boost { namespace property_tree
     {
         BOOST_STATIC_ASSERT((boost::is_same<Ch, CharType>::value == true));
         return get_d(separator, path, std::basic_string<CharType>(default_value), loc);
+    }
+
+    // Get value from data of child ptree (custom path separator)
+    template<class Ch, class Tr>
+    template<class Type>
+    optional<Type> 
+        basic_ptree<Ch, Tr>::get_o(Ch separator,
+                                   const key_type &path, 
+                                   const std::locale &loc) const
+    {
+        Type tmp;
+        if (get_b(separator, path, &tmp, loc))
+            return optional<Type>(tmp);
+        else
+            return optional<Type>();
     }
 
     // Get value from data of child ptree (default path separator)
@@ -865,6 +930,16 @@ namespace boost { namespace property_tree
                                    const std::locale &loc) const
     {
         return get_d(Ch('.'), path, default_value, loc);
+    }
+
+    // Get value from data of child ptree (default path separator)
+    template<class Ch, class Tr>
+    template<class Type>
+    optional<Type> 
+        basic_ptree<Ch, Tr>::get_o(const key_type &path, 
+                                   const std::locale &loc) const
+    {
+        return get_o<Type>(Ch('.'), path, loc);
     }
 
     // Put value in data of ptree
