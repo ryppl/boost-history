@@ -75,6 +75,64 @@ namespace boost { namespace property_tree
     }
 
     ////////////////////////////////////////////////////////////////////////////
+    // Extractor and inserter
+
+    template<class Ch, class Type>
+    struct ptree_extractor
+    {
+        bool operator()(const std::basic_string<Ch> &data, 
+                        Type &extracted,
+                        const std::locale &loc) const
+        {
+            std::basic_istringstream<Ch> stream(data);
+            stream.imbue(loc);
+            stream >> extracted >> std::ws;
+            return stream.eof() && !stream.fail() && !stream.bad();
+        }
+    };
+
+    template<class Ch>
+    struct ptree_extractor<Ch, std::basic_string<Ch> >
+    {
+        bool operator()(const std::basic_string<Ch> &data, 
+                        std::basic_string<Ch> &extracted,
+                        const std::locale &loc) const
+        {
+            extracted = data;
+            return true;
+        }
+    };
+
+    template<class Ch, class Type>
+    struct ptree_inserter
+    {
+        bool operator()(std::basic_string<Ch> &data, 
+                        const Type &to_insert,
+                        const std::locale &loc) const
+        {
+            typedef typename detail::array_to_pointer_decay<Type>::type Type2;
+            std::basic_ostringstream<Ch> stream;
+            stream.imbue(loc);
+            if (std::numeric_limits<Type2>::is_specialized)
+                stream.precision(std::numeric_limits<Type2>::digits10 + 1);
+            stream << to_insert;
+            data = stream.str();
+            return !stream.fail() && !stream.bad();
+        }
+    };
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Impl
+
+    template<class Ch, class Tr>
+    struct basic_ptree<Ch, Tr>::impl
+    {
+        data_type m_data;
+        container_type m_container;
+        index_type m_index;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     // Traits
 
     template<class Ch>
@@ -95,48 +153,6 @@ namespace boost { namespace property_tree
                                const std::basic_string<Ch> &key2) const
         {
             return std::lexicographical_compare(key1.begin(), key1.end(), key2.begin(), key2.end(), *this);
-        }
-    };
-
-    ////////////////////////////////////////////////////////////////////////////
-    // Extractor and inserter
-
-    template<class Ch, class Type>
-    struct ptree_extractor
-    {
-        bool operator()(const std::basic_string<Ch> &data, 
-                        Type &extracted) const
-        {
-            std::basic_istringstream<Ch> stream(data);
-            stream >> extracted >> std::ws;
-            return stream.eof() && !stream.fail() && !stream.bad();
-        }
-    };
-
-    template<class Ch>
-    struct ptree_extractor<Ch, std::basic_string<Ch> >
-    {
-        bool operator()(const std::basic_string<Ch> &data, 
-                        std::basic_string<Ch> &extracted) const
-        {
-            extracted = data;
-            return true;
-        }
-    };
-
-    template<class Ch, class Type>
-    struct ptree_inserter
-    {
-        bool operator()(std::basic_string<Ch> &data, 
-                        const Type &to_insert) const
-        {
-            typedef typename detail::array_to_pointer_decay<Type>::type Type2;
-            std::basic_ostringstream<Ch> stream;
-            if (std::numeric_limits<Type2>::is_specialized)
-                stream.precision(std::numeric_limits<Type2>::digits10 + 1);
-            stream << to_insert;
-            data = stream.str();
-            return !stream.fail() && !stream.bad();
         }
     };
 
@@ -165,15 +181,13 @@ namespace boost { namespace property_tree
     };
 
     ///////////////////////////////////////////////////////////////////////////
-    // Impl
+    // Empty ptree helper
 
-    template<class Ch, class Tr>
-    struct basic_ptree<Ch, Tr>::impl
+    template<class Ptree> const Ptree *empty_ptree()
     {
-        data_type m_data;
-        container_type m_container;
-        index_type m_index;
-    };
+        static Ptree pt;
+        return &pt;
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     // Construction & destruction
@@ -705,10 +719,10 @@ namespace boost { namespace property_tree
     // Get value from data of ptree
     template<class Ch, class Tr>
     template<class Type>
-    Type basic_ptree<Ch, Tr>::get_own() const
+    Type basic_ptree<Ch, Tr>::get_own(const std::locale &loc) const
     {
         Type tmp;
-        if (get_own_b(&tmp))
+        if (get_own_b(&tmp, loc))
             return tmp;
         else
             throw ptree_bad_data(std::string("conversion of data into type '") + 
@@ -718,11 +732,12 @@ namespace boost { namespace property_tree
     // Get value from data of ptree
     template<class Ch, class Tr>
     template<class Type>
-    bool basic_ptree<Ch, Tr>::get_own_b(Type *result) const
+    bool basic_ptree<Ch, Tr>::get_own_b(Type *result, 
+                                        const std::locale &loc) const
     {
         BOOST_STATIC_ASSERT(boost::is_pointer<Type>::value == false);
         Type tmp;
-        if (ptree_extractor<Ch, Type>()(m_impl->m_data, tmp))
+        if (ptree_extractor<Ch, Type>()(m_impl->m_data, tmp, loc))
         {
             if (result)
                 *result = tmp;
@@ -735,10 +750,11 @@ namespace boost { namespace property_tree
     // Get value from data of ptree
     template<class Ch, class Tr>
     template<class Type>
-    Type basic_ptree<Ch, Tr>::get_own_d(const Type &default_value) const
+    Type basic_ptree<Ch, Tr>::get_own_d(const Type &default_value, 
+                                        const std::locale &loc) const
     {
         Type tmp;
-        if (get_own_b(&tmp))
+        if (get_own_b(&tmp, loc))
             return tmp;
         else
             return default_value;
@@ -748,20 +764,22 @@ namespace boost { namespace property_tree
     template<class Ch, class Tr>
     template<class CharType>
     std::basic_string<CharType> 
-        basic_ptree<Ch, Tr>::get_own_d(const CharType *default_value) const
+        basic_ptree<Ch, Tr>::get_own_d(const CharType *default_value, 
+                                       const std::locale &loc) const
     {
         BOOST_STATIC_ASSERT((boost::is_same<Ch, CharType>::value == true));
-        return get_own_d(std::basic_string<CharType>(default_value));
+        return get_own_d(std::basic_string<CharType>(default_value), loc);
     }
 
     // Get value from data of child ptree (custom path separator)
     template<class Ch, class Tr>
     template<class Type>
     Type basic_ptree<Ch, Tr>::get(Ch separator,
-                                  const key_type &path) const
+                                  const key_type &path,
+                                  const std::locale &loc) const
     {
         BOOST_STATIC_ASSERT(!boost::is_pointer<Type>::value);
-        return get_child(separator, path)->get_own<Type>();
+        return get_child(separator, path)->get_own<Type>(loc);
     }
 
     // Get value from data of child ptree (custom path separator)
@@ -769,12 +787,13 @@ namespace boost { namespace property_tree
     template<class Type>
     bool basic_ptree<Ch, Tr>::get_b(Ch separator,
                                     const key_type &path, 
-                                    Type *result) const
+                                    Type *result, 
+                                    const std::locale &loc) const
     {
         BOOST_STATIC_ASSERT(!boost::is_pointer<Type>::value);
         const basic_ptree<Ch, Tr> *child;
         if (get_child_b(separator, path, &child))
-            return child->get_own_b(result);
+            return child->get_own_b(result, loc);
         else
             return false;
     }
@@ -784,12 +803,13 @@ namespace boost { namespace property_tree
     template<class Type>
     Type basic_ptree<Ch, Tr>::get_d(Ch separator,
                                     const key_type &path, 
-                                    const Type &default_value) const
+                                    const Type &default_value, 
+                                    const std::locale &loc) const
     {
         BOOST_STATIC_ASSERT(!boost::is_pointer<Type>::value);
         const basic_ptree<Ch, Tr> *child;
         if (get_child_b(separator, path, &child))
-            return child->get_own_d(default_value);
+            return child->get_own_d(default_value, loc);
         else
             return default_value;
     }
@@ -800,36 +820,40 @@ namespace boost { namespace property_tree
     std::basic_string<CharType> 
         basic_ptree<Ch, Tr>::get_d(Ch separator,
                                    const key_type &path, 
-                                   const CharType *default_value) const
+                                   const CharType *default_value,
+                                   const std::locale &loc) const
     {
         BOOST_STATIC_ASSERT((boost::is_same<Ch, CharType>::value == true));
-        return get_d(separator, path, std::basic_string<CharType>(default_value));
+        return get_d(separator, path, std::basic_string<CharType>(default_value), loc);
     }
 
     // Get value from data of child ptree (default path separator)
     template<class Ch, class Tr>
     template<class Type>
-    Type basic_ptree<Ch, Tr>::get(const key_type &path) const
+    Type basic_ptree<Ch, Tr>::get(const key_type &path,
+                                  const std::locale &loc) const
     {
-        return get<Type>(Ch('.'), path);
+        return get<Type>(Ch('.'), path, loc);
     }
 
     // Get value from data of child ptree (default path separator)
     template<class Ch, class Tr>
     template<class Type>
     bool basic_ptree<Ch, Tr>::get_b(const key_type &path, 
-                                    Type *result) const
+                                    Type *result,
+                                    const std::locale &loc) const
     {
-        return get_b(Ch('.'), path, result);
+        return get_b(Ch('.'), path, result, loc);
     }
 
     // Get value from data of child ptree (default path separator)
     template<class Ch, class Tr>
     template<class Type>
     Type basic_ptree<Ch, Tr>::get_d(const key_type &path, 
-                                    const Type &default_value) const
+                                    const Type &default_value,
+                                    const std::locale &loc) const
     {
-        return get_d(Ch('.'), path, default_value);
+        return get_d(Ch('.'), path, default_value, loc);
     }
 
     // Get value from data of child ptree (default path separator)
@@ -837,20 +861,21 @@ namespace boost { namespace property_tree
     template<class CharType>
     std::basic_string<CharType> 
         basic_ptree<Ch, Tr>::get_d(const key_type &path, 
-                                   const CharType *default_value) const
+                                   const CharType *default_value,
+                                   const std::locale &loc) const
     {
-        return get_d(Ch('.'), path, default_value);
+        return get_d(Ch('.'), path, default_value, loc);
     }
 
     // Put value in data of ptree
     template<class Ch, class Tr>
     template<class Type> 
-    void basic_ptree<Ch, Tr>::put_own(const Type &value)
+    void basic_ptree<Ch, Tr>::put_own(const Type &value, const std::locale &loc)
     {
         using namespace boost;
         BOOST_STATIC_ASSERT((is_pointer<Type>::value == false || 
                              is_same<Ch, typename remove_const<typename remove_pointer<Type>::type>::type>::value == true));
-        ptree_inserter<Ch, Type>()(m_impl->m_data, value);
+        ptree_inserter<Ch, Type>()(m_impl->m_data, value, loc);
     }
 
     // Put value in data of child ptree (custom path separator)
@@ -859,10 +884,11 @@ namespace boost { namespace property_tree
     basic_ptree<Ch, Tr> *
         basic_ptree<Ch, Tr>::put(Ch separator,
                                  const key_type &path, 
-                                 const Type &value)
+                                 const Type &value,
+                                 const std::locale &loc)
     {
         basic_ptree<Ch, Tr> *child = put_child(separator, path, NULL);
-        child->put_own(value);
+        child->put_own(value, loc);
         return child;
     }
 
@@ -871,9 +897,10 @@ namespace boost { namespace property_tree
     template<class Type> 
     basic_ptree<Ch, Tr> *
         basic_ptree<Ch, Tr>::put(const key_type &path, 
-                                 const Type &value)
+                                 const Type &value,
+                                 const std::locale &loc)
     {
-        return put(Ch('.'), path, value);
+        return put(Ch('.'), path, value, loc);
     }
 
     ////////////////////////////////////////////////////////////////////////////

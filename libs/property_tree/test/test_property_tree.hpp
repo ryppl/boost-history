@@ -847,6 +847,30 @@ void test_precision(PTREE *)
 
 }
 
+void test_locale(PTREE *)
+{
+    
+    // Test if english and french locales work
+    std::string locale = setlocale(LC_ALL, NULL);
+    if (!setlocale(LC_ALL, "english"))
+        std::cerr << "setlocale(LC_ALL, \"english\") failed, skipping locale tests\n";
+    if (!setlocale(LC_ALL, "french"))
+        std::cerr << "setlocale(LC_ALL, \"french\") failed, skipping locale tests\n";
+    setlocale(LC_ALL, locale.c_str());
+
+    // Write strings in english and french locales
+    PTREE pt;
+    std::locale loc_english("english");
+    std::locale loc_french("french");
+    pt.put(T("english"), 1.234, loc_english);
+    pt.put(T("french"), 1.234, loc_french);
+
+    // Test contents
+    BOOST_CHECK(pt.get<PTREE::data_type>(T("english")) == T("1.234"));
+    BOOST_CHECK(pt.get<PTREE::data_type>(T("french")) == T("1,234"));
+
+}
+
 void test_leaks(PTREE *)
 {
     BOOST_CHECK(PTREE::debug_get_instances_count() == 0);
