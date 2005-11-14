@@ -489,12 +489,12 @@ namespace boost { namespace property_tree { namespace registry_parser
         }
 
         // Create values
-        const Ptree *values = pt.get_child_d(detail::widen<Ch>("\\values"), NULL, NULL);
-        const Ptree *types = pt.get_child_d(detail::widen<Ch>("\\types"), NULL, NULL);
+        const Ptree *values = pt.get_child_d(detail::widen<Ch>("\\values"), NULL);
+        const Ptree *types = pt.get_child_d(detail::widen<Ch>("\\types"), NULL);
         if (values)
             for (typename Ptree::const_iterator it = values->begin(); it != values->end(); ++it)
             {
-                DWORD type = types ? types->get_d(it->first, REG_SZ, NULL) : REG_SZ;
+                DWORD type = types ? types->get_d(it->first, REG_SZ) : REG_SZ;
                 std::vector<BYTE> data = translate<Ch>(type, it->second.data());
                 reg_set_value_ex<Ch>(rk.handle(), it->first.c_str(), type, 
                                      data.empty() ? NULL : &data.front(), 
