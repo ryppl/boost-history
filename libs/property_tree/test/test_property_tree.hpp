@@ -927,8 +927,8 @@ void test_locale(PTREE *)
     
         // Write strings in english and french locales
         PTREE pt;
-        std::locale loc_english("english");
-        std::locale loc_french("french");
+        std::locale loc_english("en_GB");
+        std::locale loc_french("fr_FR");
         pt.put(T("english"), 1.234, loc_english);
         pt.put(T("french"), 1.234, loc_french);
 
@@ -943,7 +943,7 @@ void test_locale(PTREE *)
     }
     catch (std::runtime_error &e)
     {
-        std::cerr << "\"english\" and/or \"french\" locale not supported by the platform. "
+        std::cerr << "\"en_GB\" and/or \"fr_FR\" locale not supported by the platform. "
                      "Skipping locale tests (caught std::runtime_error with message " << 
                      e.what() << ").\n";
     }
