@@ -111,12 +111,10 @@ void debug_settings::load(const std::string &amp;filename)
     /* Get debug level and store it in m_level variable. This is 
        another version of get method: if debug.level key is not 
        found, it will return default value (specified by second 
-       parameter) instead of throwing. The third parameter is a 
-       pointer to bool that optionally receives result of the get 
-       (i.e. succeeded or failed). Type of the value extracted is 
-       determined by type of second parameter, so we can simply 
+       parameter) instead of throwing. Type of the value extracted 
+       is determined by type of second parameter, so we can simply 
        write get_d(...) instead of get_d&lt;int&gt;(...). */     
-    m_level = pt.get_d("debug.level", 0, NULL);
+    m_level = pt.get_d("debug.level", 0);
 
     /* Iterate over debug.modules section and store all found 
        modules in m_modules set. get_child() function returns a 
