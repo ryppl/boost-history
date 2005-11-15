@@ -692,7 +692,7 @@ boost::optional&lt;float&gt; v = pt.get_o&lt;float&gt;("a.path.to.float.value");
         </li>
     </ol>
     <p>
-        To retrieve value from <i>this</i> tree (not some subkey), use <a href="reference.html#basic_ptree::get_own"><code>get_own</code></a>, <a href="reference.html#basic_ptree::get_own_b"><code>get_own_b</code></a>, <a href="reference.html#basic_ptree::get_own_d"><code>get_own_d</code></a>, and <a href="reference.html#basic_ptree::get_own_o"><code>get_own_o</code></a>. They have identical semantics to get functions, except they don't take the path parameter.</p>
+        To retrieve value from <i>this</i> tree (not some subkey), use <a href="reference.html#basic_ptree::get_own"><code>get_own</code></a>, <a href="reference.html#basic_ptree::get_own_b"><code>get_own_b</code></a>, <a href="reference.html#basic_ptree::get_own_d"><code>get_own_d</code></a>, and <a href="reference.html#basic_ptree::get_own_o"><code>get_own_o</code></a>. They have identical semantics to get functions, except they don't take the path parameter. Don't call <code>get</code> with empty path to do that, it will try to extract contents of subkey with empty name.</p>
     <p>
         To use separator character other than default <code>'.'</code>, each of the get versions has another form, which takes an additional parameter in front of path. This parameter of type <code>char/wchar_t</code> specifies the separating character. This is a lifesaving device for those who may have dots in their keys:
     </p>
