@@ -135,8 +135,6 @@ namespace boost { namespace property_tree
         void swap(basic_ptree<Ch, Tr> &rhs);
 
         void reverse();
-        
-        void sort();
         template<class SortTr> void sort(SortTr tr);
 
         ///////////////////////////////////////////////////////////////////////////

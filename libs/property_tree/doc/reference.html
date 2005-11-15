@@ -1,4 +1,4 @@
-﻿<html>
+<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <title>Property Tree Library Reference</title>
@@ -27,6 +27,7 @@
         <dt class="index">Header <a href="#header_property_tree/ptree.hpp">property_tree/ptree.hpp</a></dt>
         <dt class="index1">class <a href="#ptree_traits">ptree_traits</a></dt>
         <dt class="index1">class <a href="#iptree_traits">iptree_traits</a></dt>
+        <dt class="index1">function <a href="#empty_ptree">empty_ptree</a></dt>
         <dt class="index1">class <a href="#ptree_error">ptree_error</a></dt>
         <dt class="index1">class <a href="#ptree_bad_path">ptree_bad_path</a></dt>
         <dt class="index1">class <a href="#ptree_bad_data">ptree_bad_data</a></dt>
@@ -68,13 +69,16 @@
         <dt class="index2">function <a href="#basic_ptree::get_child">basic_ptree::get_child</a></dt>
         <dt class="index2">function <a href="#basic_ptree::get_child_b">basic_ptree::get_child_b</a></dt>
         <dt class="index2">function <a href="#basic_ptree::get_child_d">basic_ptree::get_child_d</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::get_child_o">basic_ptree::get_child_o</a></dt>
         <dt class="index2">function <a href="#basic_ptree::put_child">basic_ptree::put_child</a></dt>
         <dt class="index2">function <a href="#basic_ptree::get_own">basic_ptree::get_own</a></dt>
         <dt class="index2">function <a href="#basic_ptree::get_own_b">basic_ptree::get_own_b</a></dt>
         <dt class="index2">function <a href="#basic_ptree::get_own_d">basic_ptree::get_own_d</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::get_own_o">basic_ptree::get_own_o</a></dt>
         <dt class="index2">function <a href="#basic_ptree::get">basic_ptree::get</a></dt>
         <dt class="index2">function <a href="#basic_ptree::get_b">basic_ptree::get_b</a></dt>
         <dt class="index2">function <a href="#basic_ptree::get_d">basic_ptree::get_d</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::get_o">basic_ptree::get_o</a></dt>
         <dt class="index2">function <a href="#basic_ptree::put_own">basic_ptree::put_own</a></dt>
         <dt class="index2">function <a href="#basic_ptree::put">basic_ptree::put</a></dt>
         <p>
@@ -147,6 +151,20 @@ template&lt;class Ch&gt; struct iptree_traits;</pre>
         Description</h4>
     <p>
         Predicate implementing default key comparison policy for case-insensitive property tree. Compares keys without case sensitivity using global locale. See <a href="#basic_ptree::traits_type">basic_ptree::traits_type</a>.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="empty_ptree"></a>empty_ptree function
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+template&lt;class Ptree&gt; const Ptree *empty_ptree();</pre>
+    <h4>
+        Return value</h4>
+    <p>
+        Pointer to empty property tree. Can be used as a default value of <a href="#basic_ptree::get_child_d"><code>get_child_d</code></a>. See <a href="../examples/empty_ptree_trick.cpp">empty_ptree_trick.cpp</a> for example of usage.</p>
     <!-- =================================================================== -->
     <!---->
     <!---->
@@ -985,6 +1003,42 @@ const basic_ptree *get_child_d(Ch separator, const key_type &amp;path, const bas
     <!---->
     <!---->
     <h3 class="separating-header">
+        <a name="basic_ptree::get_child_o"></a>basic_ptree::get_child_o
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+// Default separator
+boost::optional&lt;basic_ptree *&gt; get_child_o(const key_type &amp;path);
+boost::optional&lt;const basic_ptree *&gt; get_child_o(const key_type &amp;path) const;
+
+// Custom separator
+boost::optional&lt;basic_ptree *&gt; get_child_o(Ch separator, const key_type &amp;path);
+boost::optional&lt;const basic_ptree *&gt; get_child_o(Ch separator, const key_type &amp;path) const;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Traverses the tree using given path and retrieves a child stored there. Path is a sequence of keys separated with zero or more special 'separator' characters. This function will retrieve indirect children if path contains at least one separator. First 2 versions assume separator to be dot character (<code>'.'</code>).</p>
+    <p>
+        If the child is found, the function returns <code>boost::optional</code> initialized with a pointer to it. Otherwise it returns uninitialized <code>boost::optional</code>.</p>
+    <h4>
+        Parameters</h4>
+    <dl>
+        <dt class="parameter">separator</dt>
+        <dd>
+            Separator character.</dd>
+        <dt class="parameter">path</dt>
+        <dd>
+            Path to child property tree. Contains sequence of one or more keys separated with separator characters.</dd>
+    </dl>
+    <h4>
+        Return value</h4>
+    <p>
+        <code>boost::optional</code> initialized with pointer to property tree if traversal succeeded, otherwise uninitialized <code>boost::optional</code>.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
         <a name="basic_ptree::put_child"></a>basic_ptree::put_child
     </h3>
     <h4>
@@ -1106,6 +1160,31 @@ template&lt;class CharType&gt; std::basic_string&lt;CharType&gt; get_own_d(const
     <!---->
     <!---->
     <h3 class="separating-header">
+        <a name="basic_ptree::get_own_o"></a>basic_ptree::get_own_o
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+template&lt;class Type&gt; boost::optional&lt;Type&gt; get_own_o(const std::locale &amp;loc = std::locale()) const;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Extracts value stored in property tree data and translates it to <code>Type</code> using <code>operator &gt;&gt;</code>. If extraction succeeds, returns <code>boost::optional</code> initialized with translated value. Otherwise, returns uninitialized <code>boost::optional</code>.</p>
+    <h4>
+        Parameters</h4>
+    <dl>
+        <dt class="parameter">loc</dt>
+        <dd>
+            Locale to use. If not specified, defaults to global locale.</dd>
+    </dl>
+    <h4>
+        Return value</h4>
+    <p>
+        <code>boost::optional</code> initialized with extracted value, or uninitialized if extraction failed.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
         <a name="basic_ptree::get"></a>basic_ptree::get
     </h3>
     <h4>
@@ -1215,6 +1294,41 @@ template&lt;class CharType&gt; std::basic_string&lt;CharType&gt; get_d(Ch separa
         Return value</h4>
     <p>
         Extracted value or <code>default_value</code> if operation failed.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="basic_ptree::get_o"></a>basic_ptree::get_o
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+// Default separator
+template&lt;class Type&gt; boost::optional&lt;Type&gt; get_o(const key_type &amp;path, const std::locale &amp;loc = std::locale()) const;
+
+// Custom separator
+template&lt;class Type&gt; boost::optional&lt;Type&gt; get_o(Ch separator, const key_type &amp;path, const std::locale &amp;loc = std::locale()) const;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Traverses the tree, extracts value stored in child property tree data, and translates it to <code>Type</code> using <code>operator &gt;&gt;</code>. See <a href="reference.html#basic_ptree::get_child"><code>get_child</code></a> for description of how child is obtained from <code>path</code>. If child is found and translation of its data to <code>Type</code> succeeds, the function returns <code>boost::optional</code> initialized with the translated value. Otherwise it returns uninitialized <code>boost::optional</code>.</p>
+    <h4>
+        Parameters</h4>
+    <dl>
+        <dt class="parameter">separator</dt>
+        <dd>
+            Separator character.</dd>
+        <dt class="parameter">path</dt>
+        <dd>
+            Path to child property tree. Contains sequence of one or more keys separated with separator characters.</dd>
+        <dt class="parameter">loc</dt>
+        <dd>
+            Locale to use. If not specified, defaults to global locale.</dd>
+    </dl>
+    <h4>
+        Return value</h4>
+    <p>
+        <code>boost::optional</code> initialized with extracted value, uninitialized if extraction failed.</p>
     <!-- =================================================================== -->
     <!---->
     <!---->
