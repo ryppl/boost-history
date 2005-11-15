@@ -1,7 +1,7 @@
 CC=g++
 CFLAGSREL=-Wall -pedantic -ftemplate-depth-255 -O3
 CFLAGSDBG=-Wall -pedantic -ftemplate-depth-255
-INCLUDE=-I../../../.. -I../../../../../boost
+INCLUDE=-I../../../../../boost -I../../../..
 
 all: test
 
