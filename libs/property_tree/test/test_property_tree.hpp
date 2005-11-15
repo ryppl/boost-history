@@ -927,8 +927,13 @@ void test_locale(PTREE *)
     
         // Write strings in english and french locales
         PTREE pt;
+#ifdef BOOST_WINDOWS
+        std::locale loc_english("english");
+        std::locale loc_french("french");
+#else
         std::locale loc_english("en_GB");
         std::locale loc_french("fr_FR");
+#endif
         pt.put(T("english"), 1.234, loc_english);
         pt.put(T("french"), 1.234, loc_french);
 

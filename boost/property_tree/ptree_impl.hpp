@@ -183,7 +183,7 @@ namespace boost { namespace property_tree
     ///////////////////////////////////////////////////////////////////////////
     // Empty ptree helper
 
-    template<class Ptree> const Ptree *empty_ptree()
+    template<class Ptree> inline const Ptree *empty_ptree()
     {
         static Ptree pt;
         return &pt;
