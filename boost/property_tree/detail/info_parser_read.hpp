@@ -11,8 +11,8 @@
 #define BOOST_PROPERTY_TREE_INFO_PARSER_READ_HPP_INCLUDED
 
 #include "boost/property_tree/ptree.hpp"
-#include "boost/property_tree/info_parser_error.hpp"
-#include "boost/property_tree/info_parser_chconv.hpp"
+#include "boost/property_tree/detail/info_parser_error.hpp"
+#include "boost/property_tree/detail/info_parser_utils.hpp"
 #include <iterator>
 #include <string>
 #include <stack>

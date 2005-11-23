@@ -7,8 +7,8 @@
 //
 // For more information, see www.boost.org
 // ----------------------------------------------------------------------------
-#ifndef BOOST_PROPERTY_TREE_PTREE_IMPL_HPP_INCLUDED
-#define BOOST_PROPERTY_TREE_PTREE_IMPL_HPP_INCLUDED
+#ifndef BOOST_PROPERTY_TREE_PTREE_IMPLEMENTATION_HPP_INCLUDED
+#define BOOST_PROPERTY_TREE_PTREE_IMPLEMENTATION_HPP_INCLUDED
 
 #include <sstream>
 #include <locale>

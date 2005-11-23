@@ -7,21 +7,22 @@
 //
 // For more information, see www.boost.org
 // ----------------------------------------------------------------------------
-#ifndef BOOST_PROPERTY_TREE_INFO_PARSER_ERROR_HPP_INCLUDED
-#define BOOST_PROPERTY_TREE_INFO_PARSER_ERROR_HPP_INCLUDED
+#ifndef BOOST_PROPERTY_TREE_XML_PARSER_ERROR_HPP_INCLUDED
+#define BOOST_PROPERTY_TREE_XML_PARSER_ERROR_HPP_INCLUDED
 
-#include <boost/property_tree/file_parser_error.hpp>
+#include <boost/property_tree/detail/file_parser_error.hpp>
 #include <string>
 
-namespace boost { namespace property_tree { namespace info_parser
+namespace boost { namespace property_tree { namespace xml_parser
 {
 
-    class info_parser_error: public file_parser_error
+    //! Xml parser error
+    class xml_parser_error: public file_parser_error
     {
     public:
-        info_parser_error(const std::string &message, 
-                          const std::string &filename, 
-                          unsigned long line): 
+        xml_parser_error(const std::string &message, 
+                         const std::string &filename, 
+                         unsigned long line): 
             file_parser_error(message, filename, line)
         { 
         }

@@ -44,7 +44,7 @@
 				MinimalRebuild="true"
 				ExceptionHandling="2"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				TreatWChar_tAsBuiltInType="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -124,7 +124,7 @@
 				WholeProgramOptimization="false"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				ExceptionHandling="2"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
 				TreatWChar_tAsBuiltInType="true"
 				UsePrecompiledHeader="0"
@@ -179,32 +179,72 @@
 	<References>
 	</References>
 	<Files>
+		<Filter
+			Name="detail"
+			>
+			<File
+				RelativePath="..\..\..\..\boost\property_tree\detail\file_parser_error.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\property_tree\detail\info_parser_error.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\property_tree\detail\info_parser_read.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\property_tree\detail\info_parser_utils.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\property_tree\detail\info_parser_write.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\property_tree\detail\ptree_implementation.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\property_tree\detail\ptree_interface.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\property_tree\detail\ptree_utils.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\property_tree\detail\xml_parser_error.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\property_tree\detail\xml_parser_flags.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\property_tree\detail\xml_parser_read_spirit.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\property_tree\detail\xml_parser_read_tinyxml.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\property_tree\detail\xml_parser_utils.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\property_tree\detail\xml_parser_write.hpp"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath="..\..\..\..\boost\property_tree\cmdline_parser.hpp"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\..\boost\property_tree\file_parser_error.hpp"
-			>
-		</File>
-		<File
 			RelativePath="..\..\..\..\boost\property_tree\info_parser.hpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\..\boost\property_tree\info_parser_chconv.hpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\..\boost\property_tree\info_parser_error.hpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\..\boost\property_tree\info_parser_read.hpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\..\boost\property_tree\info_parser_write.hpp"
 			>
 		</File>
 		<File
@@ -213,18 +253,6 @@
 		</File>
 		<File
 			RelativePath="..\..\..\..\boost\property_tree\ptree.hpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\..\boost\property_tree\ptree_iface.hpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\..\boost\property_tree\ptree_impl.hpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\..\boost\property_tree\ptree_utils.hpp"
 			>
 		</File>
 		<File
@@ -237,30 +265,6 @@
 		</File>
 		<File
 			RelativePath="..\..\..\..\boost\property_tree\xml_parser.hpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\..\boost\property_tree\xml_parser_error.hpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\..\boost\property_tree\xml_parser_flags.hpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\..\boost\property_tree\xml_parser_read_spirit.hpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\..\boost\property_tree\xml_parser_read_tinyxml.hpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\..\boost\property_tree\xml_parser_utils.hpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\..\boost\property_tree\xml_parser_write.hpp"
 			>
 		</File>
 	</Files>

@@ -8,6 +8,10 @@
 // For more information, see www.boost.org
 // ----------------------------------------------------------------------------
 
+#include "test_utils.hpp"
+#include <boost/property_tree/ini_parser.hpp>
+#include <sstream>
+
 ///////////////////////////////////////////////////////////////////////////////
 // Test data
 
@@ -55,22 +59,6 @@ const char *error_data_3 =
     "[Section1]\n"
     "Key1=Data1\n"
     "=Data2\n";                // No key
-
-#define BOOST_PROPERTY_TREE_DEBUG           // Enable ptree debugging
-#include <boost/property_tree/ptree.hpp>
-
-// Do not deprecate insecure CRT calls
-#if (defined(BOOST_MSVC) && (BOOST_MSVC >= 1400))
-#   define _CRT_SECURE_NO_DEPRECATE
-#endif
-
-// Enable ptree debugging
-#define BOOST_PROPERTY_TREE_DEBUG           
-
-#include <boost/test/minimal.hpp>
-#include <boost/property_tree/ini_parser.hpp>
-#include "test_utils.hpp"
-#include <sstream>
 
 struct ReadFunc
 {

@@ -11,15 +11,15 @@
 #define BOOST_PROPERTY_TREE_XML_PARSER_HPP_INCLUDED
 
 #include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/xml_parser_write.hpp>
-#include <boost/property_tree/xml_parser_error.hpp>
-#include <boost/property_tree/xml_parser_flags.hpp>
+#include <boost/property_tree/detail/xml_parser_write.hpp>
+#include <boost/property_tree/detail/xml_parser_error.hpp>
+#include <boost/property_tree/detail/xml_parser_flags.hpp>
 
 // Include proper parser
 #ifdef BOOST_PROPERTY_TREE_XML_PARSER_TINYXML
-#include <boost/property_tree/xml_parser_read_tinyxml.hpp>
+#include <boost/property_tree/detail/xml_parser_read_tinyxml.hpp>
 #else
-#include <boost/property_tree/xml_parser_read_spirit.hpp>
+#include <boost/property_tree/detail/xml_parser_read_spirit.hpp>
 #endif
 
 #include <fstream>

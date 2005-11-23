@@ -60,7 +60,7 @@
 #endif
 
 #include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/ptree_utils.hpp>
+#include <boost/property_tree/detail/ptree_utils.hpp>
 #include <boost/cstdint.hpp>                // for 64 bit int
 #include <sstream>
 #include <iomanip>

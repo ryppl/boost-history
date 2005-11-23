@@ -7,8 +7,8 @@
 //
 // For more information, see www.boost.org
 // ----------------------------------------------------------------------------
-#ifndef BOOST_PROPERTY_TREE_PTREE_IFACE_HPP_INCLUDED
-#define BOOST_PROPERTY_TREE_PTREE_IFACE_HPP_INCLUDED
+#ifndef BOOST_PROPERTY_TREE_PTREE_INTERFACE_HPP_INCLUDED
+#define BOOST_PROPERTY_TREE_PTREE_INTERFACE_HPP_INCLUDED
 
 #include <boost/config.hpp>
 #include <boost/optional.hpp>

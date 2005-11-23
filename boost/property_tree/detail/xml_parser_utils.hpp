@@ -10,8 +10,8 @@
 #ifndef BOOST_PROPERTY_TREE_XML_PARSER_UTILS_HPP_INCLUDED
 #define BOOST_PROPERTY_TREE_XML_PARSER_UTILS_HPP_INCLUDED
 
-#include <boost/property_tree/ptree_utils.hpp>
-#include <boost/property_tree/xml_parser_error.hpp>
+#include <boost/property_tree/detail/ptree_utils.hpp>
+#include <boost/property_tree/detail/xml_parser_error.hpp>
 #include <string>
 #include <algorithm>
 #include <locale>

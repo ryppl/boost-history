@@ -11,9 +11,9 @@
 #define BOOST_PROPERTY_TREE_XML_PARSER_READ_TINYXML_HPP_INCLUDED
 
 #include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/xml_parser_error.hpp>
-#include <boost/property_tree/xml_parser_flags.hpp>
-#include <boost/property_tree/xml_parser_utils.hpp>
+#include <boost/property_tree/detail/xml_parser_error.hpp>
+#include <boost/property_tree/detail/xml_parser_flags.hpp>
+#include <boost/property_tree/detail/xml_parser_utils.hpp>
 
 #define TIXML_USE_STL
 #include <tinyxml.h>

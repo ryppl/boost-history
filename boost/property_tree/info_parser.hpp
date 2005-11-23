@@ -11,9 +11,9 @@
 #define BOOST_PROPERTY_TREE_INFO_PARSER_HPP_INCLUDED
 
 #include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/info_parser_error.hpp>
-#include <boost/property_tree/info_parser_read.hpp>
-#include <boost/property_tree/info_parser_write.hpp>
+#include <boost/property_tree/detail/info_parser_error.hpp>
+#include <boost/property_tree/detail/info_parser_read.hpp>
+#include <boost/property_tree/detail/info_parser_write.hpp>
 #include <istream>
 
 namespace boost { namespace property_tree { namespace info_parser

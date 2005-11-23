@@ -19,7 +19,7 @@
 #endif
 
 #include <boost/test/minimal.hpp>
-#include <boost/property_tree/ptree_utils.hpp>
+#include <boost/property_tree/detail/ptree_utils.hpp>
 #include <fstream>
 
 template<class Ptree>

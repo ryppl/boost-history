@@ -8,16 +8,13 @@
 // For more information, see www.boost.org
 // ----------------------------------------------------------------------------
 
-#define BOOST_PROPERTY_TREE_DEBUG           // Enable ptree debugging
-#include <boost/property_tree/ptree.hpp>
-
-// Do not deprecate insecure CRT calls
-#if (defined(BOOST_MSVC) && (BOOST_MSVC >= 1400))
-#   define _CRT_SECURE_NO_DEPRECATE
-#endif
+#include "test_utils.hpp"
 
 // Only test registry parser if we have windows platform
 #ifdef BOOST_WINDOWS
+
+#include <boost/property_tree/registry_parser.hpp>
+#include <boost/property_tree/info_parser.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 // Test data
@@ -46,11 +43,6 @@ const char *data_1 =
     "    REG_EXPAND_SZ 2\n"
     "  }\n"
     "}\n";
-
-#include <boost/test/minimal.hpp>
-#include <boost/property_tree/registry_parser.hpp>
-#include <boost/property_tree/info_parser.hpp>
-#include "test_utils.hpp"
 
 template<class Ptree>
 void test_registry_parser()

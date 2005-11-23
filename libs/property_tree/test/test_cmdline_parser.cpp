@@ -8,17 +8,8 @@
 // For more information, see www.boost.org
 // ----------------------------------------------------------------------------
 
-#define BOOST_PROPERTY_TREE_DEBUG           // Enable ptree debugging
-#include <boost/property_tree/ptree.hpp>
-
-// Do not deprecate insecure CRT calls
-#if (defined(BOOST_MSVC) && (BOOST_MSVC >= 1400))
-#   define _CRT_SECURE_NO_DEPRECATE
-#endif
-
-#include <boost/test/minimal.hpp>
-#include <boost/property_tree/cmdline_parser.hpp>
 #include "test_utils.hpp"
+#include <boost/property_tree/cmdline_parser.hpp>
 
 void test_cmdline_parser()
 {

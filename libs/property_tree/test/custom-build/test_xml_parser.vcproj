@@ -44,7 +44,7 @@
 				MinimalRebuild="true"
 				ExceptionHandling="2"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				TreatWChar_tAsBuiltInType="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -124,7 +124,7 @@
 				WholeProgramOptimization="false"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				ExceptionHandling="2"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				BufferSecurityCheck="false"
 				TreatWChar_tAsBuiltInType="true"
 				UsePrecompiledHeader="0"
@@ -179,6 +179,10 @@
 	<References>
 	</References>
 	<Files>
+		<File
+			RelativePath="..\test_xml_parser_common.hpp"
+			>
+		</File>
 		<File
 			RelativePath="..\test_xml_parser_spirit.cpp"
 			>

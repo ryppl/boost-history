@@ -11,7 +11,7 @@
 #define BOOST_PROPERTY_TREE_CMDLINE_PARSER_HPP_INCLUDED
 
 #include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/ptree_utils.hpp>
+#include <boost/property_tree/detail/ptree_utils.hpp>
 
 namespace boost { namespace property_tree { namespace cmdline_parser
 {

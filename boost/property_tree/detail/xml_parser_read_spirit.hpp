@@ -16,9 +16,9 @@
 //#define BOOST_SPIRIT_DEBUG
 
 #include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/xml_parser_error.hpp>
-#include <boost/property_tree/xml_parser_flags.hpp>
-#include <boost/property_tree/xml_parser_utils.hpp>
+#include <boost/property_tree/detail/xml_parser_error.hpp>
+#include <boost/property_tree/detail/xml_parser_flags.hpp>
+#include <boost/property_tree/detail/xml_parser_utils.hpp>
 #include <boost/spirit.hpp>
 #include <boost/spirit/iterator/position_iterator.hpp>
 #include <string>

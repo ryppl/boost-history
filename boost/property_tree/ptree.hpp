@@ -10,7 +10,7 @@
 #ifndef BOOST_PROPERTY_TREE_PTREE_HPP_INCLUDED
 #define BOOST_PROPERTY_TREE_PTREE_HPP_INCLUDED
 
-#include <boost/property_tree/ptree_iface.hpp>
-#include <boost/property_tree/ptree_impl.hpp>
+#include <boost/property_tree/detail/ptree_interface.hpp>
+#include <boost/property_tree/detail/ptree_implementation.hpp>
 
 #endif                                                
