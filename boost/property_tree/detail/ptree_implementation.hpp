@@ -7,8 +7,8 @@
 //
 // For more information, see www.boost.org
 // ----------------------------------------------------------------------------
-#ifndef BOOST_PROPERTY_TREE_PTREE_IMPLEMENTATION_HPP_INCLUDED
-#define BOOST_PROPERTY_TREE_PTREE_IMPLEMENTATION_HPP_INCLUDED
+#ifndef BOOST_PROPERTY_TREE_DETAIL_PTREE_IMPLEMENTATION_HPP_INCLUDED
+#define BOOST_PROPERTY_TREE_DETAIL_PTREE_IMPLEMENTATION_HPP_INCLUDED
 
 #include <sstream>
 #include <locale>
@@ -179,15 +179,6 @@ namespace boost { namespace property_tree
         ptree_bad_path(const std::string &what): ptree_error(what) { }
         ~ptree_bad_path() throw() { }
     };
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Empty ptree helper
-
-    template<class Ptree> inline const Ptree *empty_ptree()
-    {
-        static Ptree pt;
-        return &pt;
-    }
 
     ///////////////////////////////////////////////////////////////////////////
     // Construction & destruction
@@ -999,6 +990,22 @@ namespace boost { namespace property_tree
         basic_ptree<Ch, Tr>::debug_mutex;
 
 #endif
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Free functions
+
+    template<class Ptree> 
+    inline const Ptree *empty_ptree()
+    {
+        static Ptree pt;
+        return &pt;
+    }
+
+    template<class Ch, class Tr>
+    inline void swap(basic_ptree<Ch, Tr> &pt1, basic_ptree<Ch, Tr> &pt2)
+    {
+        pt1.swap(pt2);
+    }
 
 } }
 

@@ -7,8 +7,8 @@
 //
 // For more information, see www.boost.org
 // ----------------------------------------------------------------------------
-#ifndef BOOST_PROPERTY_TREE_PTREE_INTERFACE_HPP_INCLUDED
-#define BOOST_PROPERTY_TREE_PTREE_INTERFACE_HPP_INCLUDED
+#ifndef BOOST_PROPERTY_TREE_DETAIL_PTREE_INTERFACE_HPP_INCLUDED
+#define BOOST_PROPERTY_TREE_DETAIL_PTREE_INTERFACE_HPP_INCLUDED
 
 #include <boost/config.hpp>
 #include <boost/optional.hpp>
@@ -18,30 +18,14 @@
 #include <utility>          // For std::pair
 #include <locale>
 
+#include "boost/property_tree/detail/ptree_fwd.hpp"
+
 #ifdef BOOST_PROPERTY_TREE_DEBUG
 #   include <boost/detail/lightweight_mutex.hpp>   // For syncing debug instances counter
 #endif
 
 namespace boost { namespace property_tree
 {
-
-    ////////////////////////////////////////////////////////////////////////////
-    // Traits
-
-    template<class Ch> struct ptree_traits;
-    template<class Ch> struct iptree_traits;
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Errors
-
-    class ptree_error;
-    class bad_ptree_data;
-    class bad_ptree_path;
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Empty ptree helper
-
-    template<class Ptree> const Ptree *empty_ptree();
 
     ///////////////////////////////////////////////////////////////////////////
     // basic_ptree class template
@@ -215,16 +199,6 @@ namespace boost { namespace property_tree
 #endif
 
     };
-
-    ////////////////////////////////////////////////////////////////////////////
-    // Typedefs
-
-    typedef basic_ptree<char, ptree_traits<char> > ptree;       // case sensitive, narrow char
-    typedef basic_ptree<char, iptree_traits<char> > iptree;     // case insensitive, narrow char
-#ifndef BOOST_NO_CWCHAR
-    typedef basic_ptree<wchar_t, ptree_traits<wchar_t> > wptree;    // case sensitive, wide char
-    typedef basic_ptree<wchar_t, iptree_traits<wchar_t> > wiptree;  // case insensitive, wide char
-#endif
 
 } }
 

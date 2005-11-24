@@ -311,9 +311,27 @@ void test_swap(PTREE *)
     BOOST_CHECK(pt1.get_child(T("key1"))->size() == 2);
     BOOST_CHECK(pt2.size() == 0);
 
-    // Swap
-    pt2.swap(pt1);
+    // Swap using member function
+    pt1.swap(pt2);
     
+    // Check counts
+    BOOST_CHECK(PTREE::debug_get_instances_count() == 6);
+    BOOST_CHECK(pt2.size() == 2);
+    BOOST_CHECK(pt2.get_child(T("key1"))->size() == 2);
+    BOOST_CHECK(pt1.size() == 0);
+
+    // Swap using free function
+    swap(pt1, pt2);
+
+    // Check counts
+    BOOST_CHECK(PTREE::debug_get_instances_count() == 6);
+    BOOST_CHECK(pt1.size() == 2);
+    BOOST_CHECK(pt1.get_child(T("key1"))->size() == 2);
+    BOOST_CHECK(pt2.size() == 0);
+
+    // Swap using std algorithm
+    std::swap(pt1, pt2);
+
     // Check counts
     BOOST_CHECK(PTREE::debug_get_instances_count() == 6);
     BOOST_CHECK(pt2.size() == 2);

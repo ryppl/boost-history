@@ -10,8 +10,8 @@
 // 
 // For more information, see www.boost.org
 // ----------------------------------------------------------------------------
-#ifndef BOOST_PROPERTY_TREE_XML_PARSER_READ_SPIRIT_HPP_INCLUDED
-#define BOOST_PROPERTY_TREE_XML_PARSER_READ_SPIRIT_HPP_INCLUDED
+#ifndef BOOST_PROPERTY_TREE_DETAIL_XML_PARSER_READ_SPIRIT_HPP_INCLUDED
+#define BOOST_PROPERTY_TREE_DETAIL_XML_PARSER_READ_SPIRIT_HPP_INCLUDED
 
 //#define BOOST_SPIRIT_DEBUG
 
