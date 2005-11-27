@@ -40,7 +40,7 @@ namespace boost { namespace property_tree
         typedef Ch char_type;
         typedef Tr traits_type;
         typedef std::basic_string<Ch> key_type;
-        typedef std::basic_string<Ch> data_type;
+        typedef typename Tr::data_type data_type;
         
         // Container-related types
         typedef std::pair<key_type, basic_ptree<Ch, Tr> > value_type;

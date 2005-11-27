@@ -34,7 +34,7 @@ namespace boost { namespace property_tree { namespace xml_parser
     void read_xml(std::basic_istream<typename Ptree::char_type> &stream,
                   Ptree &pt,
                   int flags = 0,
-                  const std::string &filename = "")
+                  const std::string &filename = std::string())
     {
         BOOST_ASSERT(validate_flags(flags));
         read_xml_internal(stream, pt, flags, filename);

@@ -54,9 +54,6 @@
 namespace boost { namespace property_tree
 {
 
-    ////////////////////////////////////////////////////////////////////////////
-    // Details
-
     namespace detail
     {
         
@@ -72,54 +69,66 @@ namespace boost { namespace property_tree
             typedef const T *type;
         };
 
+        ////////////////////////////////////////////////////////////////////////////
+        // Extractor and inserter
+
+        template<class Ch, class Type>
+        struct extractor
+        {
+            inline bool operator()(const std::basic_string<Ch> &data, 
+                                   Type &extracted,
+                                   const std::locale &loc) const
+            {
+                std::basic_istringstream<Ch> stream(data);
+                stream.imbue(loc);
+                stream >> extracted >> std::ws;
+                return stream.eof() && !stream.fail() && !stream.bad();
+            }
+        };
+
+        template<class Ch>
+        struct extractor<Ch, std::basic_string<Ch> >
+        {
+            inline bool operator()(const std::basic_string<Ch> &data, 
+                                   std::basic_string<Ch> &extracted,
+                                   const std::locale &loc) const
+            {
+                extracted = data;
+                return true;
+            }
+        };
+
+        template<class Ch, class Type>
+        struct inserter
+        {
+            inline bool operator()(std::basic_string<Ch> &data, 
+                                   const Type &to_insert,
+                                   const std::locale &loc) const
+            {
+                typedef typename detail::array_to_pointer_decay<Type>::type Type2;
+                std::basic_ostringstream<Ch> stream;
+                stream.imbue(loc);
+                if (std::numeric_limits<Type2>::is_specialized)
+                    stream.precision(std::numeric_limits<Type2>::digits10 + 1);
+                stream << to_insert;
+                data = stream.str();
+                return !stream.fail() && !stream.bad();
+            }
+        };
+
+        template<class Ch>
+        struct inserter<Ch, std::basic_string<Ch> >
+        {
+            inline bool operator()(std::basic_string<Ch> &data, 
+                                   const std::basic_string<Ch> &to_insert,
+                                   const std::locale &loc) const
+            {
+                data = to_insert;
+                return true;
+            }
+        };
+
     }
-
-    ////////////////////////////////////////////////////////////////////////////
-    // Extractor and inserter
-
-    template<class Ch, class Type>
-    struct ptree_extractor
-    {
-        bool operator()(const std::basic_string<Ch> &data, 
-                        Type &extracted,
-                        const std::locale &loc) const
-        {
-            std::basic_istringstream<Ch> stream(data);
-            stream.imbue(loc);
-            stream >> extracted >> std::ws;
-            return stream.eof() && !stream.fail() && !stream.bad();
-        }
-    };
-
-    template<class Ch>
-    struct ptree_extractor<Ch, std::basic_string<Ch> >
-    {
-        bool operator()(const std::basic_string<Ch> &data, 
-                        std::basic_string<Ch> &extracted,
-                        const std::locale &loc) const
-        {
-            extracted = data;
-            return true;
-        }
-    };
-
-    template<class Ch, class Type>
-    struct ptree_inserter
-    {
-        bool operator()(std::basic_string<Ch> &data, 
-                        const Type &to_insert,
-                        const std::locale &loc) const
-        {
-            typedef typename detail::array_to_pointer_decay<Type>::type Type2;
-            std::basic_ostringstream<Ch> stream;
-            stream.imbue(loc);
-            if (std::numeric_limits<Type2>::is_specialized)
-                stream.precision(std::numeric_limits<Type2>::digits10 + 1);
-            stream << to_insert;
-            data = stream.str();
-            return !stream.fail() && !stream.bad();
-        }
-    };
 
     ///////////////////////////////////////////////////////////////////////////
     // Impl
@@ -136,15 +145,29 @@ namespace boost { namespace property_tree
     // Traits
 
     template<class Ch>
-    struct ptree_traits: public std::less<std::basic_string<Ch> >
+    struct ptree_traits
     {
+        typedef std::basic_string<Ch> data_type;
+        template<class Type>
+        struct extractor: public detail::extractor<Ch, Type> { };
+        template<class Type>
+        struct inserter: public detail::inserter<Ch, Type> { };
+        inline bool operator()(const std::basic_string<Ch> &key1, 
+                               const std::basic_string<Ch> &key2) const
+        {
+            return key1 < key2;
+        }
     };
 
     template<class Ch>
-    struct iptree_traits: 
-        public std::binary_function<std::basic_string<Ch>, std::basic_string<Ch>, bool>
+    struct iptree_traits
     {
         std::locale loc;
+        typedef std::basic_string<Ch> data_type;
+        template<class Type>
+        struct extractor: public detail::extractor<Ch, Type> { };
+        template<class Type>
+        struct inserter: public detail::inserter<Ch, Type> { };
         inline bool operator()(Ch c1, Ch c2) const      // Helper for comparing characters
         {
             return std::toupper(c1, loc) < std::toupper(c2, loc);
@@ -191,7 +214,7 @@ namespace boost { namespace property_tree
     }
 
     template<class Ch, class Tr>
-    basic_ptree<Ch, Tr>::basic_ptree(const std::basic_string<Ch> &rhs)
+    basic_ptree<Ch, Tr>::basic_ptree(const data_type &rhs)
     {
         std::auto_ptr<impl> tmp(new impl);
         tmp->m_data = rhs;
@@ -768,7 +791,7 @@ namespace boost { namespace property_tree
     {
         BOOST_STATIC_ASSERT(boost::is_pointer<Type>::value == false);
         Type tmp;
-        if (ptree_extractor<Ch, Type>()(m_impl->m_data, tmp, loc))
+        if (typename traits_type::template extractor<Type>()(m_impl->m_data, tmp, loc))
         {
             if (result)
                 *result = tmp;
@@ -941,7 +964,7 @@ namespace boost { namespace property_tree
         using namespace boost;
         BOOST_STATIC_ASSERT((is_pointer<Type>::value == false || 
                              is_same<Ch, typename remove_const<typename remove_pointer<Type>::type>::type>::value == true));
-        ptree_inserter<Ch, Type>()(m_impl->m_data, value, loc);
+        typename traits_type::template inserter<Type>()(m_impl->m_data, value, loc);
     }
 
     // Put value in data of child ptree (custom path separator)

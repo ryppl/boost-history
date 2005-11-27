@@ -23,7 +23,7 @@ namespace boost { namespace property_tree { namespace info_parser
     template<class Ptree>
     void read_info(std::basic_istream<typename Ptree::char_type> &stream, 
                    Ptree &pt, 
-                   const std::string &filename = "")
+                   const std::string &filename = std::string())
     {
         Ptree local;
         read_info_internal(stream, local, filename, 0);

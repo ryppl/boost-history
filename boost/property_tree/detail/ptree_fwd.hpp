@@ -18,6 +18,7 @@ namespace boost { namespace property_tree
     ////////////////////////////////////////////////////////////////////////////
     // Traits
 
+    template<class Ch, class Data, class Ex, class Ins> struct ptree_traits_base;
     template<class Ch> struct ptree_traits;
     template<class Ch> struct iptree_traits;
 
