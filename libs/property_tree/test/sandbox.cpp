@@ -1,7 +1,4 @@
-#include <boost/optional.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/info_parser.hpp>
-
+#define BOOST_SPIRIT_DEBUG
 #include <boost/spirit.hpp>
 
 void f(const char *s)
@@ -23,9 +20,9 @@ void f(const char *s)
     rule<> escape_seq = '\\' >> chset_p("abfnrtv\"\'\\");
     
     // String
-    rule<> pure_string = +(anychar_p - ' ' - '\t' - '"' - '\\');
+    rule<> pure_string = +(anychar_p - ' ' - '\t' - '"' - '\\' - '\n');
     rule<> string = !ws_no_eol >> +(pure_string | escape_seq) >> !ws_no_eol;
-    rule<> quoted_string = open_quote >> +(pure_string | escape_seq) >> close_quote;
+    rule<> quoted_string = open_quote >> +(pure_string | ' ' | '\t' | escape_seq) >> close_quote;
     
     // Key
     rule<> empty_key = open_quote >> close_quote;
@@ -43,13 +40,104 @@ void f(const char *s)
     // Main
     rule<> key_and_value = key >> value >> !ws;
     rule<> entry = key_and_value >> !(open_brace >> *entry >> close_brace);
-    rule<> info = *entry;
+    rule<> info = *(entry | ws);
 
+    BOOST_SPIRIT_DEBUG_NODE(ws);
+    BOOST_SPIRIT_DEBUG_NODE(ws_no_eol);
+    BOOST_SPIRIT_DEBUG_NODE(eol);
+    BOOST_SPIRIT_DEBUG_NODE(open_brace);
+    BOOST_SPIRIT_DEBUG_NODE(close_brace);
+    BOOST_SPIRIT_DEBUG_NODE(open_quote);
+    BOOST_SPIRIT_DEBUG_NODE(close_quote);
+    BOOST_SPIRIT_DEBUG_NODE(continue_marker);
+    BOOST_SPIRIT_DEBUG_NODE(escape_seq);
+    BOOST_SPIRIT_DEBUG_NODE(pure_string);
+    BOOST_SPIRIT_DEBUG_NODE(string);
+    BOOST_SPIRIT_DEBUG_NODE(quoted_string);
+    BOOST_SPIRIT_DEBUG_NODE(empty_key);
+    BOOST_SPIRIT_DEBUG_NODE(simple_key);
+    BOOST_SPIRIT_DEBUG_NODE(quoted_key);
+    BOOST_SPIRIT_DEBUG_NODE(key);
+    BOOST_SPIRIT_DEBUG_NODE(empty_value);
+    BOOST_SPIRIT_DEBUG_NODE(simple_value);
+    BOOST_SPIRIT_DEBUG_NODE(quoted_value);
+    BOOST_SPIRIT_DEBUG_NODE(multiline_value);
+    BOOST_SPIRIT_DEBUG_NODE(value);
+    BOOST_SPIRIT_DEBUG_NODE(key_and_value);
+    BOOST_SPIRIT_DEBUG_NODE(entry);
+    BOOST_SPIRIT_DEBUG_NODE(info);
+    
     parse_info<const char *> pi = parse(s, info);
+    std::cout << "Hit: " << pi.hit << "  Full: " << pi.full << "\n";
     
 }
 
 int main()
 {
-    f("\"key\n");
+const char *ok_data_1 = 
+    "\n"
+    "key1 data1\n"
+    "{\n"
+    "\tkey data\n"
+    "}\n"
+    "key2 \"data2  \" {\n"
+    "\tkey data\n"
+    "}\n"
+    "key3 \"data\"\n"
+    "\t \"3\" {\n"
+    "\tkey data\n"
+    "}\n"
+    "\n"
+    "\"key4\" data4\n"
+    "{\n"
+    "\tkey data\n"
+    "}\n"
+    "\"key.5\" \"data.5\" { \n"
+    "\tkey data \n"
+    "}\n"
+    "\"key6\" \"data\"\n"
+    "\t   \"6\" {\n"
+    "\tkey data\n"
+    "}\n"
+    "   \n"
+    "key1 data1\n"
+    "{\n"
+    "\tkey data\n"
+    "}\n"
+    "key2 \"data2  \" {\n"
+    "\tkey data\n"
+    "}\n"
+    "key3 \"data\"\n"
+    "\t \"3\" {\n"
+    "\tkey data\n"
+    "}\n"
+    "\n"
+    "\"key4\" data4\n"
+    "{\n"
+    "\tkey data\n"
+    "}\n"
+    "\"key.5\" \"data.5\" {\n"
+    "\tkey data\n"
+    "}\n"
+    "\"key6\" \"data\"\n"
+    "\t   \"6\" {\n"
+    "\tkey data\n"
+    "}\n"
+    "\\\\key\\t7 data7\\n\\\"data7\\\"\n"
+    "{\n"
+    "\tkey data\n"
+    "}\n"
+    "\"\\\\key\\t8\" \"data8\\n\\\"data8\\\"\"\n"
+    "{\n"
+    "\tkey data\n"
+    "}\n"
+    "\n";
+const char *ok_data_3 = 
+    "key1\n"
+    "key2\n"
+    "key3\n"
+    "key4\n";
+const char *error_data_2 = 
+    "key \"data with bad escape: \\q\"\n";      // Bad escape
+    f(error_data_2);
 }

@@ -248,6 +248,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\examples\info_grammar_spirit.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\..\..\boost\property_tree\info_parser.hpp"
 			>
 		</File>
@@ -265,10 +269,6 @@
 		</File>
 		<File
 			RelativePath="..\..\..\..\boost\property_tree\registry_parser.hpp"
-			>
-		</File>
-		<File
-			RelativePath="..\sandbox.cpp"
 			>
 		</File>
 		<File
