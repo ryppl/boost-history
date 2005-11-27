@@ -973,6 +973,33 @@ void test_locale(PTREE *)
 
 }
 
+void test_custom_traits(PTREE *)
+{
+
+    // Property_tree with boost::any as data type
+    typedef boost::property_tree::basic_ptree<CHTYPE, MyTraits<CHTYPE> > my_ptree;
+    my_ptree pt;
+
+    // Put/get int value
+    pt.put(T("int value"), 3);
+    int int_value = pt.get<int>(T("int value"));
+    BOOST_CHECK(int_value == 3);
+
+    // Put/get string value
+    pt.put<std::basic_string<CHTYPE> >(T("string value"), T("foo bar"));
+    std::basic_string<CHTYPE> string_value = pt.get<std::basic_string<CHTYPE> >(T("string value"));
+    BOOST_CHECK(string_value == T("foo bar"));
+
+    // Put/get list<int> value
+    int list_data[] = { 1, 2, 3, 4, 5 };
+    pt.put<std::list<int> >(T("list value"), std::list<int>(list_data, list_data + sizeof(list_data) / sizeof(*list_data)));
+    std::list<int> list_value = pt.get<std::list<int> >(T("list value"));
+    BOOST_CHECK(list_value.size() == 5);
+    BOOST_CHECK(list_value.front() == 1);
+    BOOST_CHECK(list_value.back() == 5);
+
+}
+
 void test_leaks(PTREE *)
 {
     BOOST_CHECK(PTREE::debug_get_instances_count() == 0);

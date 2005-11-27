@@ -136,7 +136,7 @@ template&lt;class Ch&gt; struct ptree_traits;</pre>
     <h4>
         Description</h4>
     <p>
-        Predicate implementing default key comparison policy for case-sensitive property tree. See <a href="#basic_ptree::traits_type">basic_ptree::traits_type</a>.</p>
+        Predicate implementing default policy for case-sensitive property tree. See <a href="#basic_ptree::traits_type">basic_ptree::traits_type</a>.</p>
     <!-- =================================================================== -->
     <!---->
     <!---->
@@ -150,7 +150,7 @@ template&lt;class Ch&gt; struct iptree_traits;</pre>
     <h4>
         Description</h4>
     <p>
-        Predicate implementing default key comparison policy for case-insensitive property tree. Compares keys without case sensitivity using global locale. See <a href="#basic_ptree::traits_type">basic_ptree::traits_type</a>.</p>
+        Predicate implementing default policy for case-insensitive property tree. Compares keys without case sensitivity using global locale. See <a href="#basic_ptree::traits_type">basic_ptree::traits_type</a>.</p>
     <!-- =================================================================== -->
     <!---->
     <!---->
@@ -272,8 +272,17 @@ template&lt;class Ch, class Tr&gt; class basic_ptree;</pre>
     <pre>typedef Tr traits_type;</pre>
     <h4>
         Description</h4>
-    <p>
-        Policy type used by property tree to compare keys. Equal to <code>Tr</code> parameter of <code>basic_ptree</code> class template. If <code>tr</code> is object of type <code>traits_type</code> and <code>k1</code>, <code>k2</code> are objects of type <code>key_type</code> then <code>tr(k1, k2)</code> must be a well formed expression, which evaluates to true if the first parameter is less than the second, to false otherwise.</p>
+    <p>Policy type used to configure property tree. Equal to <code>Tr</code> parameter of <code>basic_ptree</code> class template. This type is responsible for:
+		<ul>
+			<li>key comparison policy</li>
+			<li>type of data stored by property_tree</li>
+			<li>inserter and extractor predicates used to get and put typed data from the tree</li>
+		</ul>
+		If <code>tr</code> is object of type <code>traits_type</code> and <code>k1</code>, <code>k2</code> are objects of type <code>key_type</code> then <code>tr(k1, k2)</code> must be a well formed expression, which evaluates to true if the first parameter is less than the second, to false otherwise. Additionally, <code>traits_type::data_type</code> must define a data type of property tree, and <code>traits_type::extractor</code>,  <code>traits_type::inserter</code> must define predicates used for extraction and insertion property tree data.
+	</p>
+	<p>
+		Customizing property tree traits is an advanced feature. Typically, predefined policies <a href="#ptree_traits">ptree_traits</a> and <a href="#iptree_traits">iptree_traits</a> are used. See <a href="../examples/custom_data_type.cpp">custom_data_type.cpp</a> for a compilable example of policy customization.
+	</p>
     <!-- =================================================================== -->
     <!---->
     <!---->

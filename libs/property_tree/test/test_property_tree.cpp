@@ -8,6 +8,8 @@
 // For more information, see www.boost.org
 // ----------------------------------------------------------------------------
 #include "test_utils.hpp"
+#include <boost/any.hpp>
+#include <list>
 #include <cmath>
 
 template<class Ptree>
@@ -28,6 +30,54 @@ struct SortPredRev
     {
         return !(v1.first < v2.first);
     }
+};
+
+template<class Type>
+struct MyExtractor
+{
+    inline bool operator()(const boost::any &data, 
+                           Type &extracted,
+                           const std::locale &loc) const
+    {
+        extracted = boost::any_cast<Type>(data);
+        return true;    // Success
+    }
+};
+
+template<class Type>
+struct MyInserter
+{
+    inline bool operator()(boost::any &data, 
+                           const Type &to_insert,
+                           const std::locale &loc) const
+    {
+        data = to_insert;
+        return true;    // Success
+    }
+};
+
+template<class Ch>
+struct MyTraits
+{
+
+    // Data type to be used by ptree
+    typedef boost::any data_type;
+    
+    // Extractor to be used by ptree
+    template<class Type>
+    struct extractor: public MyExtractor<Type> { }; 
+
+    // Inserter to be used by ptree
+    template<class Type>
+    struct inserter: public MyInserter<Type> { };
+
+    // Key comparison function
+    inline bool operator()(const std::basic_string<Ch> &key1, 
+                           const std::basic_string<Ch> &key2) const
+    {
+        return key1 < key2;
+    }
+
 };
 
 // Include char tests, case sensitive
@@ -95,6 +145,7 @@ int test_main(int, char *[])
         test_path_separator(pt);
         test_precision(pt);
         test_locale(pt);
+        test_custom_traits(pt);
         test_leaks(pt);                  // must be a final test
     }
 
@@ -119,6 +170,7 @@ int test_main(int, char *[])
         test_path_separator(pt);
         test_precision(pt);
         test_locale(pt);
+        test_custom_traits(pt);
         test_leaks(pt);                  // must be a final test
     }
 #endif
@@ -143,6 +195,7 @@ int test_main(int, char *[])
         test_path_separator(pt);
         test_precision(pt);
         test_locale(pt);
+        //test_custom_traits(pt);        // test identical to ptree version
         test_leaks(pt);                  // must be a final test
     }
 
@@ -167,6 +220,7 @@ int test_main(int, char *[])
         test_path_separator(pt);
         test_precision(pt);
         test_locale(pt);
+        //test_custom_traits(pt);        // test identical to wptree version
         test_leaks(pt);                  // must be a final test
     }
 #endif
