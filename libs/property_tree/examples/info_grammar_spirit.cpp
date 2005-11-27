@@ -9,19 +9,17 @@
 // ----------------------------------------------------------------------------
 
 /* This is grammar of INFO file format written in form of boost::spirit rules.
-   For simplicity, this grammar does not support comments and #include directive.
+   For simplicity, it does not support comments and #include directive.
    Anyway, both of these should be probably handled by some sort of preprocessor - 
-   including them in main grammar would complicate it beyond grokking.
+   including them in the main grammar would complicate it beyond grokking. 
    
-   The reason why this grammar looks rather complicated is because it strives to parse
-   the whitespace correctly - again this should probably be delegated to a preprocessor.   
-   Another quirk is the file must end with a newline character for this grammar to work 
-   correctly - this is not required by property_tree library INFO parser.
-
+   The grammar strives to parse the whitespace correctly - again this should probably be 
+   delegated to a preprocessor. A quirk is the file must end with a newline character 
+   for the grammar to work - this is not required by property_tree library INFO parser. 
    Note that INFO parser included in property_tree library does not use Spirit.
 */
 
-//#define BOOST_SPIRIT_DEBUG
+//#define BOOST_SPIRIT_DEBUG        // uncomment to enable debug output
 #include <boost/spirit.hpp>
 
 void parse(const char *s)
