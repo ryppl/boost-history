@@ -13,6 +13,7 @@
 # include "jam.h"
 # include "lists.h"
 # include "execcmd.h"
+# include "debug.h"
 # include <errno.h>
 # include <assert.h>
 # include <ctype.h>
@@ -23,6 +24,9 @@
 # define WIN32_LEAN_AND_MEAN
 # include <windows.h>		/* do the ugly deed */
 # include <process.h>
+# if !defined( __BORLANDC__ )
+# include <tlhelp32.h>
+# endif
 
 # if !defined( __BORLANDC__ ) && !defined( OS_OS2 )
 # define wait my_wait
@@ -149,6 +153,9 @@ string_to_args( const char*  string )
     if (!line)
         return 0;
 
+    if ( DEBUG_PROFILE )
+        profile_memory( src_len+1 );
+
     /* allocate the argv array.
      *   element 0: stores the path to the executable
      *   element 1: stores the command-line arguments to the executable
@@ -160,6 +167,9 @@ string_to_args( const char*  string )
         free( line );
         return 0;
     }
+
+    if ( DEBUG_PROFILE )
+        profile_memory( 3 * sizeof(char*) );
     
     /* Strip quotes from the first command-line argument and find
      * where it ends.  Quotes are illegal in Win32 pathnames, so we
@@ -279,6 +289,8 @@ process_del( char*  command )
               line = (char*)malloc( len+4+1 );
               if (!line)
                 return 1;
+              if ( DEBUG_PROFILE )
+                  profile_memory( len+4+1 );
                 
               strncpy( line, "del ", 4 );
               strncpy( line+4, q, len );
@@ -572,6 +584,8 @@ execcmd(
   
         /* SVA - allocate 64 other just to be safe */
         cmdtab[ slot ].tempfile = malloc( strlen( tempdir ) + 64 );
+        if ( DEBUG_PROFILE )
+            profile_memory( strlen( tempdir ) + 64 );
   
         procID = GetCurrentProcessId();
   
@@ -905,6 +919,107 @@ check_process_exit(
     return result;
 }
 
+static double
+running_time(HANDLE process)
+{
+    FILETIME creation, exit, kernel, user, current;
+    if (GetProcessTimes(process, &creation, &exit, &kernel, &user))
+    {
+        /* Compute the elapsed time */
+        GetSystemTimeAsFileTime(&current);
+        {
+            double delta = filetime_seconds(
+                add_FILETIME( current, negate_FILETIME(creation) )
+                );
+            return delta;
+        }
+    }
+    return 0.0;
+}
+
+/* it's just stupidly silly that one has to do this! */
+typedef struct PROCESS_BASIC_INFORMATION__ {
+    LONG ExitStatus;
+    PVOID PebBaseAddress;
+    ULONG AffinityMask;
+    LONG BasePriority;
+    ULONG UniqueProcessId;
+    ULONG InheritedFromUniqueProcessId;
+    } PROCESS_BASIC_INFORMATION_;
+typedef LONG (__stdcall * NtQueryInformationProcess__)(
+    HANDLE ProcessHandle,
+    LONG ProcessInformationClass,
+    PVOID ProcessInformation,
+    ULONG ProcessInformationLength,
+    PULONG ReturnLength);
+static NtQueryInformationProcess__ NtQueryInformationProcess_ = NULL;
+static HMODULE NTDLL_ = NULL;
+DWORD get_process_id(HANDLE process)
+{
+    PROCESS_BASIC_INFORMATION_ pinfo;
+    if ( ! NtQueryInformationProcess_ )
+    {
+        if ( ! NTDLL_ )
+        {
+            NTDLL_ = GetModuleHandleA("ntdll");
+        }
+        if ( NTDLL_ )
+        {
+            NtQueryInformationProcess_
+                = (NtQueryInformationProcess__)GetProcAddress( NTDLL_,"NtQueryInformationProcess" );
+        }
+    }
+    if ( NtQueryInformationProcess_ )
+    {
+        LONG r = (*NtQueryInformationProcess_)(
+            process,/* ProcessBasicInformation == */ 0,&pinfo,sizeof(PROCESS_BASIC_INFORMATION_),NULL);
+        return pinfo.UniqueProcessId;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+/* not really optimal, or efficient, but it's easier this way, and it's not
+like we are going to be killing thousands, or even tens or processes. */
+static void
+kill_all(DWORD pid, HANDLE process)
+{
+    HANDLE process_snapshot_h = INVALID_HANDLE_VALUE;
+    if ( !pid )
+    {
+        pid = get_process_id(process);
+    }
+    process_snapshot_h = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS,0);
+    
+    if (INVALID_HANDLE_VALUE != process_snapshot_h)
+    {
+        BOOL ok = TRUE;
+        PROCESSENTRY32 pinfo;
+        pinfo.dwSize = sizeof(PROCESSENTRY32);
+        for (
+            ok = Process32First(process_snapshot_h,&pinfo);
+            TRUE == ok;
+            ok = Process32Next(process_snapshot_h,&pinfo) )
+        {
+            if (pinfo.th32ParentProcessID == pid)
+            {
+                /* found a child, recurse to kill it and anything else below it */
+                HANDLE ph = OpenProcess(PROCESS_ALL_ACCESS,FALSE,pinfo.th32ProcessID);
+                if (NULL != ph)
+                {
+                    kill_all(pinfo.th32ProcessID,ph);
+                    CloseHandle(ph);
+                }
+            }
+        }
+        CloseHandle(process_snapshot_h);
+    }
+    /* now that the children are all dead, kill the root */
+    TerminateProcess(process,-2);
+}
+
 static int
 my_wait( int *status )
 {
@@ -938,10 +1053,35 @@ my_wait( int *status )
 	    return -1;
 	}
     
-	waitcode = WaitForMultipleObjects( num_active,
-                                       active_handles,
-                                       FALSE,
-                                       INFINITE );
+    if ( globs.timeout > 0 )
+    {
+        /* with a timeout we wait for a finish or a timeout, we check every second
+         to see if something timed out */
+        for (waitcode = WAIT_TIMEOUT; waitcode == WAIT_TIMEOUT;)
+        {
+            waitcode = WaitForMultipleObjects( num_active, active_handles, FALSE, 1*1000 /* 1 second */ );
+            if ( waitcode == WAIT_TIMEOUT )
+            {
+                /* check if any jobs have surpassed the maximum run time. */
+                for ( i = 0; i < num_active; ++i )
+                {
+                    double t = running_time(active_handles[i]);
+                    if ( t > (double)globs.timeout )
+                    {
+                        /* we have a "runaway" job, kill it */
+                        kill_all(0,active_handles[i]);
+                        /* indicate the job "finished" so we query its status below */
+                        waitcode = WAIT_ABANDONED_0+i;
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        /* no timeout, so just wait indefinately for something to finish */
+        waitcode = WaitForMultipleObjects( num_active, active_handles, FALSE, INFINITE );
+    }
 	if ( waitcode != WAIT_FAILED )
     {
 	    if ( waitcode >= WAIT_ABANDONED_0

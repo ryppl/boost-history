@@ -469,9 +469,6 @@ init_unit_test_suite( int /*argc*/, char* /*argv*/[] )
 // History :
 //
 // $Log$
-// Revision 1.13.2.1  2005/09/07 08:16:45  schoepflin
-// Merged fix for dependent name lookup problem to RC branch.
-//
 // Revision 1.14  2005/08/12 14:15:13  schoepflin
 // Fixed dependent name lookup issue.
 //

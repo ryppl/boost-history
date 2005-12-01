@@ -121,6 +121,8 @@
 # include "make.h"
 # include "strings.h"
 # include "expand.h"
+# include "debug.h"
+# include "filesys.h"
 
 /* Macintosh is "special" */
 
@@ -144,7 +146,8 @@ struct globs globs = {
 # else
 	{ 0, 1 }, 		/* debug ... */
 # endif
-	0			/* output commands, not run them */
+	0,			/* output commands, not run them */
+    0 /* action timeout */
 } ;
 
 /* Symbols to be defined as true for use in Jambase */
@@ -220,26 +223,9 @@ int  main( int argc, char **argv, char **arg_environ )
     InitGraf(&qd.thePort);
 # endif
 
-#ifdef HAVE_PYTHON
-    Py_Initialize();
-
-    {
-        static PyMethodDef BjamMethods[] = {
-            {"call", bjam_call, METH_VARARGS,
-             "Call the specified bjam rule."},
-            {"import_rule", bjam_import_rule, METH_VARARGS,
-             "Imports Python callable to bjam."},
-            {NULL, NULL, 0, NULL}
-        };
-
-        Py_InitModule("bjam", BjamMethods);
-    }
-
-#endif
-
     argc--, argv++;
 
-	if( getoptions( argc, argv, "-:d:j:f:gs:t:ano:qv", optv ) < 0 )
+	if( getoptions( argc, argv, "-:l:d:j:f:gs:t:ano:qv", optv ) < 0 )
     {
         printf( "\nusage: %s [ options ] targets...\n\n", progname );
 
@@ -248,6 +234,7 @@ int  main( int argc, char **argv, char **arg_environ )
         printf( "-fx     Read x instead of Jambase.\n" );
 	    /* printf( "-g      Build from newest sources first.\n" ); */
         printf( "-jx     Run up to x shell commands concurrently.\n" );
+        printf( "-lx     Limit actions to x number of seconds after which they are stopped.\n" );
         printf( "-n      Don't actually execute the updating actions.\n" );
         printf( "-ox     Write the updating actions to file x.\n" );
 		printf( "-q      Quit quickly as soon as a target fails.\n" );
@@ -290,6 +277,9 @@ int  main( int argc, char **argv, char **arg_environ )
 	if( ( s = getoptval( optv, 'g', 0 ) ) )
 	    globs.newestfirst = 1;
 
+    if( ( s = getoptval( optv, 'l', 0 ) ) )
+        globs.timeout = atoi( s );
+
     /* Turn on/off debugging */
 
     for( n = 0; s = getoptval( optv, 'd', n ); n++ )
@@ -319,6 +309,28 @@ int  main( int argc, char **argv, char **arg_environ )
             globs.debug[i--] = 1;
     }
 
+    { PROFILE_ENTER(MAIN);
+
+    #ifdef HAVE_PYTHON
+    {
+        PROFILE_ENTER(MAIN_PYTHON);
+        Py_Initialize();
+    
+        {
+            static PyMethodDef BjamMethods[] = {
+                {"call", bjam_call, METH_VARARGS,
+                 "Call the specified bjam rule."},
+                {"import_rule", bjam_import_rule, METH_VARARGS,
+                 "Imports Python callable to bjam."},
+                {NULL, NULL, 0, NULL}
+            };
+    
+            Py_InitModule("bjam", BjamMethods);
+        }
+        PROFILE_EXIT(MAIN_PYTHON);
+    }
+    #endif
+    
 #ifndef NDEBUG
     run_unit_tests();
 #endif
@@ -344,16 +356,11 @@ int  main( int argc, char **argv, char **arg_environ )
     }
 
  
-    {
-   /* Pleace don't change the following line. The 'bump_version.py' script
-       expect a specific format of it. */
-    char  *major_version = "03", *minor_version = "01", *changenum = "11";
     var_set( "JAM_VERSION",
-             list_new( list_new( list_new( L0, newstr( major_version ) ), 
-                                 newstr( minor_version ) ), 
-                       newstr( changenum ) ),
+             list_new( list_new( list_new( L0, newstr( VERSION_MAJOR_SYM ) ), 
+                                 newstr( VERSION_MINOR_SYM ) ), 
+                       newstr( VERSION_PATCH_SYM ) ),
              VAR_SET );
-    }
 
     /* And JAMUNAME */
 # ifdef unix
@@ -424,7 +431,7 @@ int  main( int argc, char **argv, char **arg_environ )
     {
         if ( arg_v[n][0] == '-' )
         {
-            char *f = "-:d:j:f:gs:t:ano:qv";
+            char *f = "-:l:d:j:f:gs:t:ano:qv";
             for( ; *f; f++ ) if( *f == arg_v[n][1] ) break;
             if ( f[1] == ':' && arg_v[n][2] == '\0' ) { ++n; }
         }
@@ -468,6 +475,8 @@ int  main( int argc, char **argv, char **arg_environ )
     /* Now make target */
 
     {
+        PROFILE_ENTER(MAIN_MAKE);
+        
         LIST* targets = targets_to_update();
         if ( !targets )
         {
@@ -478,6 +487,8 @@ int  main( int argc, char **argv, char **arg_environ )
             int targets_count = list_length(targets);
             const char **targets2 = (const char **)malloc(targets_count * sizeof(char *));
             int n = 0;
+            if ( DEBUG_PROFILE )
+                profile_memory( targets_count * sizeof(char *) );
             for ( ; targets; targets = list_next(targets) )
             {
                 targets2[n++] = targets->string;
@@ -485,9 +496,13 @@ int  main( int argc, char **argv, char **arg_environ )
             status |= make( targets_count, targets2, anyhow );       
             free(targets);
         }
+        
+        PROFILE_EXIT(MAIN_MAKE);
     }
 
 
+    PROFILE_EXIT(MAIN); }
+    
     if ( DEBUG_PROFILE )
         profile_dump();
 
@@ -497,6 +512,7 @@ int  main( int argc, char **argv, char **arg_environ )
     donerules();
     donestamps();
     donestr();
+    file_done();
 
     /* close cmdout */
 

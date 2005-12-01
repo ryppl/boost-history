@@ -312,10 +312,9 @@ echo ###
 set YYACC_SOURCES=yyacc.c
 set MKJAMBASE_SOURCES=mkjambase.c
 set BJAM_SOURCES=
-set BJAM_SOURCES=%BJAM_SOURCES% command.c compile.c execnt.c execunix.c execvms.c expand.c
-set BJAM_SOURCES=%BJAM_SOURCES% filent.c fileos2.c fileunix.c filevms.c glob.c hash.c
+set BJAM_SOURCES=%BJAM_SOURCES% command.c compile.c debug.c execnt.c expand.c filent.c glob.c hash.c
 set BJAM_SOURCES=%BJAM_SOURCES% hdrmacro.c headers.c jam.c jambase.c jamgram.c lists.c make.c make1.c
-set BJAM_SOURCES=%BJAM_SOURCES% newstr.c option.c parse.c pathunix.c pathvms.c regexp.c
+set BJAM_SOURCES=%BJAM_SOURCES% newstr.c option.c parse.c pathunix.c regexp.c
 set BJAM_SOURCES=%BJAM_SOURCES% rules.c scan.c search.c subst.c timestamp.c variable.c modules.c
 set BJAM_SOURCES=%BJAM_SOURCES% strings.c filesys.c builtins.c pwd.c class.c w32_getreg.c native.c
 set BJAM_SOURCES=%BJAM_SOURCES% modules/set.c modules/path.c modules/regex.c 
@@ -382,7 +381,7 @@ rename y.tab.h jamgram.h
 @if "_%BJAM_UPDATE%_" == "_update_" goto Skip_Clean
 .\bootstrap\jam0 -f build.jam --toolset=%BOOST_JAM_TOOLSET% "--toolset-root=%BOOST_JAM_TOOLSET_ROOT% " clean
 :Skip_Clean
-.\bootstrap\jam0 -f build.jam --toolset=%BOOST_JAM_TOOLSET% "--toolset-root=%BOOST_JAM_TOOLSET_ROOT% " %1 %2 %3 %4 %5 %6 %7 %8 %9
+.\bootstrap\jam0 -f build.jam --toolset=%BOOST_JAM_TOOLSET% "--toolset-root=%BOOST_JAM_TOOLSET_ROOT% " %*
 :Skip_Jam
 
 :Finish

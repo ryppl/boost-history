@@ -9,9 +9,9 @@
 # include "execcmd.h"
 # include <errno.h>
 # include <time.h>
+# include <unistd.h> /* needed for vfork(), _exit() prototypes */
 
 #if defined(sun) || defined(__sun) || defined(linux)
-#include <unistd.h> /* need to include unistd.h on sun for the vfork prototype*/
 #include <wait.h>
 #endif
 
@@ -255,7 +255,11 @@ my_wait( int *status )
 	static HANDLE *active_handles = 0;
 
 	if (!active_handles)
+    {
 	    active_handles = (HANDLE *)malloc(globs.jobs * sizeof(HANDLE) );
+        if ( DEBUG_PROFILE )
+            profile_memory( globs.jobs * sizeof(HANDLE) );
+    }
 
 	/* first see if any non-waited-for processes are dead,
 	 * and return if so.

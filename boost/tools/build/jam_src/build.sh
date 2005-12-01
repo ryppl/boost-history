@@ -30,7 +30,7 @@ error_exit ()
     echo "###"
     echo "### Toolsets supported by this script are:"
     echo "###     acc, como, darwin, gcc, intel-linux, kcc, kylix, mipspro,"
-    echo "###     sunpro, tru64cxx, vacpp"
+    echo "###     sunpro, tru64cxx, vacpp, mingw(msys)"
     echo "###"
     echo "### A special toolset; cc, is available which is used as a fallback"
     echo "### when a more specific toolset is not found and the cc command is"
@@ -61,7 +61,10 @@ test_uname ()
 # Try and guess the toolset to bootstrap the build with...
 Guess_Toolset ()
 {
-    if test_uname Darwin ; then BOOST_JAM_TOOLSET=darwin
+    if test -r /mingw/bin/gcc ; then
+        BOOST_JAM_TOOLSET=mingw
+        BOOST_JAM_TOOLSET_ROOT=/mingw/
+    elif test_uname Darwin ; then BOOST_JAM_TOOLSET=darwin
     elif test_uname IRIX ; then BOOST_JAM_TOOLSET=mipspro
     elif test_uname IRIX64 ; then BOOST_JAM_TOOLSET=mipspro
     elif test_uname OSF1 ; then BOOST_JAM_TOOLSET=tru64cxx
@@ -116,6 +119,13 @@ BOOST_JAM_OPT_JAM="-o bootstrap/jam0"
 BOOST_JAM_OPT_MKJAMBASE="-o bootstrap/mkjambase0"
 BOOST_JAM_OPT_YYACC="-o bootstrap/yyacc0"
 case $BOOST_JAM_TOOLSET in
+    mingw)
+    if test -r ${BOOST_JAM_TOOLSET_ROOT}bin/gcc ; then
+        export PATH=${BOOST_JAM_TOOLSET_ROOT}bin:$PATH
+    fi
+    BOOST_JAM_CC="gcc -DNT"
+    ;;
+    
     gcc)
     BOOST_JAM_CC=gcc
     ;;
@@ -174,11 +184,12 @@ case $BOOST_JAM_TOOLSET in
     ;;
     
     sunpro)
-    if test -r /opt/SUNWspro/bin/cc ; then
+    if test -z "${BOOST_JAM_TOOLSET_ROOT}" -a -r /opt/SUNWspro/bin/cc ; then
         BOOST_JAM_TOOLSET_ROOT=/opt/SUNWspro/
     fi
-    if test -r $BOOST_JAM_TOOLSET_ROOTbin/cc ; then
-        export PATH=$BOOST_JAM_TOOLSET_ROOTbin:$PATH
+    if test -r "${BOOST_JAM_TOOLSET_ROOT}bin/cc" ; then
+        PATH=${BOOST_JAM_TOOLSET_ROOT}bin:${PATH}
+        export PATH
     fi
     BOOST_JAM_CC=cc
     ;;
@@ -215,14 +226,14 @@ echo "###"
 YYACC_SOURCES="yyacc.c"
 MKJAMBASE_SOURCES="mkjambase.c"
 BJAM_SOURCES="\
- command.c compile.c execnt.c execunix.c execvms.c expand.c\
- filent.c fileos2.c fileunix.c filevms.c glob.c hash.c\
+ command.c compile.c debug.c execunix.c expand.c fileunix.c glob.c hash.c\
  hdrmacro.c headers.c jam.c jambase.c jamgram.c lists.c make.c make1.c\
  newstr.c option.c parse.c pathunix.c pathvms.c regexp.c\
  rules.c scan.c search.c subst.c timestamp.c variable.c modules.c\
- strings.c filesys.c builtins.c pwd.c class.c native.c modules/set.c\
- modules/path.c modules/regex.c modules/property-set.c\
- modules/sequence.c modules/order.c"
+ strings.c filesys.c builtins.c pwd.c class.c native.c w32_getreg.c\
+ modules/set.c modules/path.c modules/regex.c modules/property-set.c\
+ modules/sequence.c modules/order.c\
+ execnt.c filent.c"
 
 BJAM_UPDATE=
 if test "$1" = "--update" -o "$2" = "--update" -o "$3" = "--update" -o "$4" = "--update"  ; then
