@@ -1,0 +1,32 @@
+#Acknowlegements:
+#  Parts of following were mimicked from:
+#    */libs/variant/doc/Jamfile.v2
+#
+
+project boost/doc ;
+import boostbook : boostbook ;
+import toolset ;
+toolset.using doxygen ;
+
+boostbook users_guide
+    : 
+        users_guide.xml 
+    :
+
+    ;
+
+doxygen reference
+    : 
+      [ glob ../../../boost/fields_visitor/fields_visitor.hpp ]
+      [ glob ../../../boost/fields_visitor/registrar_heirarchy.hpp ]
+      [ glob ../../../boost/fields_visitor/empty_registrar.hpp ]
+    :
+      <doxygen:param>HIDE_UNDOC_MEMBERS=YES
+      <doxygen:param>EXTRACT_PRIVATE=YES
+      <doxygen:param>EXTRACT_STATIC=YES
+      <doxygen:param>ENABLE_PREPROCESSING=YES
+      <doxygen:param>MACRO_EXPANSION=YES
+      <doxygen:param>EXPAND_ONLY_PREDEF=YES
+      <doxygen:param>SEARCH_INCLUDES=YES
+      <doxygen:param>REPEAT_BRIEF=NO
+    ;

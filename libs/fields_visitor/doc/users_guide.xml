@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+  "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd"
+ [ 
+   <!ENTITY logic.such_that	"<emphasis>SUCH_THAT</emphasis>">  <!-- LOGIC: ???  -->
+   <!ENTITY logic.implies	"&rArr;">
+   <!ENTITY logic.forall "&forall;">
+   <!ENTITY logic.forsome "&exist;">
+   <!ENTITY logic.equiv "&equiv;">
+   <!ENTITY meta_type_name "typename">
+   <!ENTITY meta_type	"<xref linkend='notation.meta_type'/>&nbsp;">
+   <!ENTITY is_base_of "<xref linkend='notation.is_base_of'/>&nbsp;"> 
+   <!ENTITY containing_record	"<xref linkend='participant.containing_record'/>&nbsp;">
+   <!ENTITY selected_field	"<xref linkend='participant.selected_field'/>&nbsp;">
+   <!ENTITY fields_visitor	"<xref linkend='participant.fields_visitor'/>&nbsp;">
+   <!ENTITY new_line	"<para/>">
+ ]
+>
+<library 
+ name="fields_visitor" 
+ dirname="fields_visitor" 
+ id="fields_visitor" 
+ last-revision="$Date$" 
+ xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+<title>boost/fields_visitor User's Guide</title>
+<section id="synop" xreflabel="synopsis">
+<title>Synopsis</title> 
+
+<para>The boost/fields_visitor library enables user defined
+<xref linkend="participant.fields_visitor"/>'s to
+visit
+<xref linkend="participant.selected_field"/>'s
+of any instance of a
+<xref linkend="participant.containing_record"/>
+class.
+</para>
+
+</section>
+
+<section id="notation" xreflabel="notation">
+<title>Notation</title>
+
+<para>The <code>fields_visitor</code> library requires close cooperation
+between three
+<ulink
+url="http://hillside.net/patterns/writing/GOFtemplate.htm">participants</ulink>,
+which are actually sets of classes in the program.  These three sets of classes are:
+<orderedlist>
+<listitem><code>containing_record</code></listitem>
+<listitem><code>selected_field</code></listitem>
+<listitem><code>fields_visitor</code></listitem>
+</orderedlist>
+<para></para>which were already briefly described in the <xref
+linkend="synop"/>.  To accurately describe this cooperation and define
+these participants, a semi-formal notation will be used.  This
+notation is similar to that described 
+<ulink url="http://en.wikipedia.org/wiki/First-order_predicate_calculus"> here </ulink>.
+</para>
+
+<glosslist>
+
+<glossentry id="notation.class_set_names">
+<glossterm>predefined class set names</glossterm>
+<glossdef>
+
+<glosslist>
+<glossentry id="notation.meta_type">
+<glossterm>&meta_type_name;</glossterm>
+<glossdef>
+
+<para><emphasis>&meta_type_name;</emphasis> is the set of
+<code>types</code>, fundamental or otherwise, in a program.
+</para>
+
+</glossdef>
+</glossentry>
+
+</glosslist>
+
+</glossdef>
+</glossentry>
+
+<glossentry id="notation.nl_assertion" xreflabel="nl_assertion">
+<glossterm>nl_assertion[<replaceable>description</replaceable>]</glossterm>
+<glossdef>
+
+<para>Sometimes, there no easy way to describe a predicate in formal terms.
+In such cases, a <code>nl_assertion</code> is used where the natural language
+statement between '[' and ']' state the assertion.  For example:
+<informalexample>
+  nl_assertion
+  [ 'int' is a fundamental type in c++.
+  ]
+</informalexample>
+Simple asserts something obvious in natural language.
+</para>
+
+</glossdef>
+</glossentry>
+
+<glossentry id="notation.is_base_of">
+<glossterm>is_base_of</glossterm>
+<glossdef>
+
+<para>
+<programlisting>
+  is_base_of(&meta_type; <replaceable>BaseType</replaceable>, &meta_type; <replaceable>DerivedType</replaceable>)
+  &logic.equiv;
+  {
+    <ulink url="http://www.boost.org/doc/html/boost_typetraits/reference.html#boost_typetraits.is_base_of">boost::is_base_of</ulink>&lt;<replaceable>BaseType</replaceable>, <replaceable>DerivedType</replaceable> &gt;::value
+  }
+</programlisting>
+&new_line;
+</para>
+
+</glossdef>
+</glossentry>
+
+<glossentry id="notation.convertable_to">
+<glossterm>convertable_to</glossterm>
+<glossdef>
+
+<para>
+<programlisting>
+  convertable_to(&meta_type; <replaceable>FromType</replaceable>, &meta_type; <replaceable>ToType</replaceable>)
+  &logic.equiv;
+  {
+    nl_assertion
+    [
+       <replaceable>FromType</replaceable> 
+       is implicitly convertable to 
+       <replaceable>ToType</replaceable>.
+    ]
+  }
+</programlisting>
+&new_line;
+In other words, a function:
+<programlisting>
+  void f(<replaceable>ToType</replaceable>&amp; a_arg)
+</programlisting>
+can be called with argument of type, <replaceable>FromType</replaceable>&amp;.
+</para>
+
+</glossdef>
+</glossentry>
+
+<glossentry id="notation.program_contains" xreflabel="program_contains">
+<glossterm>program_contains[<replaceable>code</replaceable>]</glossterm>
+<glossdef>
+
+<para>This means the program "under discussion" contains the
+"entity" named by the code between '[' and ']'.
+For example:
+<informalexample>
+  program_contains[ C::f(int) ]
+</informalexample>
+Means the program under discussion contains a declaration:
+<programlisting>
+  class C
+  {
+  ...
+    <replaceable>ReturnType</replaceable> f(int)
+  ...
+  };
+</programlisting>
+where <replaceable>ReturnType</replaceable> stands for
+any return type,
+</para>
+
+</glossdef>
+</glossentry>
+
+</glosslist>
+</section><!-- notation -->
+
+<section id="participants" xreflabel="participant">
+<title>Design Pattern Participants</title>
+
+<para>The <code>fields_visitor</code> library requires close cooperation
+between  three "class types" or 
+<ulink
+url="http://hillside.net/patterns/writing/GOFtemplate.htm">participants</ulink>:
+</para>
+
+<glosslist>
+<glossentry id="participant.containing_record">
+<glossterm>containing_record</glossterm>
+<glossdef>
+
+<para>
+<equation id="def.containing_record">
+<title><code>containing_record</code> definition</title>
+<programlisting>
+is_containing_record(&meta_type;<replaceable>GivenRecord</replaceable>)
+&logic.equiv;
+&logic.forsome;(&meta_type; <replaceable>SomeVisitor</replaceable>)
+{
+  <xref linkend="notation.program_contains"/>[<classname alt="boost::fields_visitor::selected_fields_description_of">selected_fields_description_of</classname>&lt;<replaceable>SomeVisitor</replaceable>,<replaceable>GivenRecord</replaceable>&gt;]
+}
+</programlisting>
+</equation>
+</para>
+
+</glossdef>
+</glossentry>
+<glossentry id="participant.selected_field">
+<glossterm>selected_field</glossterm>
+<glossdef>
+
+<para>The following subterms are used to define
+<code>selected_field</code>:
+<glosslist>
+<title>subterms in <code>selected_field</code>&nbsp;definition</title>
+
+<glossentry id="participant.selected_field.cond.has_registrar_super">
+<glossterm>has_registrar_super</glossterm>
+<glossdef>
+<informalequation>
+<programlisting>
+has_registrar_super(&meta_type;<replaceable>SomeFieldType</replaceable>, &meta_type; <replaceable>SomeVisitorType</replaceable>)
+&logic.equiv;
+{
+  <xref linkend="notation.is_base_of"/>(<replaceable>SomeFieldType</replaceable>, <classname alt="boost::fields_visitor::field_registrar">field_registrar</classname>&lt;SomeVisitorType&gt;)
+}
+</programlisting>
+</informalequation>
+</glossdef>
+</glossentry>
+
+<glossentry id="participant.selected_field.cond.ctors_pass_this_to_registrar_supers">
+<glossterm>ctors_pass_this_to_registrar_supers</glossterm>
+<glossdef>
+<informalequation>
+<programlisting>
+ctors_pass_this_to_registrar_supers(&meta_type; <replaceable>SomeFieldType</replaceable>)
+&logic.equiv;
+{
+  &logic.forall;(&nbsp;&meta_type; <replaceable>SomeVisitorType</replaceable>&nbsp;
+  &logic.such_that;&nbsp;has_registrar_super(SomeFieldType,SomeVisitorType)&nbsp;)
+  {
+    <xref linkend="notation.nl_assertion"/>
+    [
+      all <replaceable>SomeFieldType</replaceable> CTOR's pass 
+      <replaceable>SomeFieldType</replaceable>* <code>this</code>
+      to the field_registrar&lt;SomeVisitorType&gt; supertype CTOR.
+    ]
+  }
+}
+</programlisting>
+</informalequation>
+</glossdef>
+</glossentry>
+
+</glosslist>
+
+</para>
+
+<para>The definition of <code>selected_field</code> is then:
+<equation><title><code>selected_field</code> definition</title>
+<programlisting>
+is_selected_field(&meta_type;<replaceable>GivenField</replaceable>)
+&logic.equiv;
+&logic.forsome;(&meta_type; <replaceable>SomeVisitor</replaceable>)
+{
+  <xref linkend="participant.selected_field.cond.has_registrar_super"/>(<replaceable>GivenField</replaceable>,<replaceable>SomeVisitor</replaceable>)
+&and;
+  <xref linkend="participant.selected_field.cond.ctors_pass_this_to_registrar_supers"/>(<replaceable>GivenField</replaceable>)
+}
+</programlisting>
+</equation>
+</para>
+
+</glossdef>
+</glossentry>
+
+<glossentry id="participant.fields_visitor">
+<glossterm>fields_visitor</glossterm>
+<glossdef>
+
+<para></para>
+<remark>
+The following is a numbered list of alternative definitions of
+the <code>fields_visitor</code>&nbsp;set of classes.  I'm not sure
+which one is better.  The more formal one is harder to read but
+also harder to misinterpret.
+</remark>
+<orderedlist>
+
+<listitem>semi-formal description:
+<equation><title>is_fields_visitor definition</title>
+<programlisting>
+is_fields_visitor(&meta_type;<replaceable>GivenVisitorType</replaceable>)
+&logic.equiv;
+&logic.forall;(&selected_field;<replaceable>SomeFieldType</replaceable>&nbsp;
+&logic.such_that; field_accepts_visitor(SomeFieldType,GivenVisitorType)&nbsp;)
+{
+    &logic.forsome;(&meta_type;<replaceable>SomeFieldSuperType</replaceable>&nbsp;)
+    {
+        <xref linkend="notation.convertable_to"/>(<replaceable>SomeFieldType</replaceable>, <replaceable>SomeFieldSuperType</replaceable>&nbsp;)   
+      &and;
+        <xref linkend="notation.program_contains"/>[<code>GivenVisitorType::visit_field(<replaceable>SomeFieldSuperType</replaceable>&amp;)</code>]
+    }
+    
+}
+</programlisting>
+</equation>
+</listitem>
+
+<listitem>informal description:
+<programlisting>
+Some &meta_type;,<replaceable>GivenVisitorType</replaceable>, is a
+<code>fields_visitor</code>&nbsp; participant if:
+  &logic.forall;&nbsp;<xref linkend="participant.selected_field"/>'s,&nbsp;<replaceable>SomeFieldType</replaceable>,
+&logic.such_that; field_accepts_visitor(SomeFieldType,GivenVisitorType),
+&logic.forsome;&nbsp; a unary member function, <code>visit_field</code>, of
+<code>GivenVisitorType</code>, which accepts an instance of
+<replaceable>SomeFieldType</replaceable> as its argument.
+
+</programlisting>
+</listitem>
+
+</orderedlist>
+<para>
+</para>
+
+</glossdef>
+
+</glossentry>
+
+</glosslist>
+</section>
+
+<section id="semantics">
+<title>Semantics</title>
+</section><!--semantics-->
+
+<section><title>source code</title>
+
+<para>This section was produced with doxygen; however, the links to
+the .hpp files are wrong.  I've no idea how to fix it.  In addition,
+although I put doxygen comments in several places, not all show up on
+the generated .html files.
+</para>
+
+<xi:include href="reference.boostbook"/>
+
+</section><!--source code-->
+
+<section><title>Bibliography</title>
+<bibliography><title>------------</title>
+</bibliography>
+</section><!--Bibliography-->
+
+</library>
