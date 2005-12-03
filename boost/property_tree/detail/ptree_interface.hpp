@@ -18,7 +18,7 @@
 #include <utility>          // For std::pair
 #include <locale>
 
-#include "boost/property_tree/detail/ptree_fwd.hpp"
+#include "boost/property_tree/ptree_fwd.hpp"
 
 #ifdef BOOST_PROPERTY_TREE_DEBUG
 #   include <boost/detail/lightweight_mutex.hpp>   // For syncing debug instances counter

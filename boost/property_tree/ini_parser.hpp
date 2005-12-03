@@ -46,7 +46,7 @@ namespace boost { namespace property_tree { namespace ini_parser
 
         Ptree local;
         unsigned long line_no = 0;
-        Ptree *section = NULL;
+        Ptree *section = 0;
         Str line;
 
         // For all lines

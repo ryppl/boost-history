@@ -278,7 +278,7 @@ template&lt;class Ch, class Tr&gt; class basic_ptree;</pre>
 			<li>type of data stored by property_tree</li>
 			<li>inserter and extractor predicates used to get and put typed data from the tree</li>
 		</ul>
-		If <code>tr</code> is object of type <code>traits_type</code> and <code>k1</code>, <code>k2</code> are objects of type <code>key_type</code> then <code>tr(k1, k2)</code> must be a well formed expression, which evaluates to true if the first parameter is less than the second, to false otherwise. Additionally, <code>traits_type::data_type</code> must define a data type of property tree, and <code>traits_type::extractor</code>,  <code>traits_type::inserter</code> must define predicates used for extraction and insertion property tree data.
+		If <code>tr</code> is object of type <code>traits_type</code> and <code>k1</code>, <code>k2</code> are objects of type <code>key_type</code> then <code>tr(k1, k2)</code> must be a well formed expression, which evaluates to true if the first parameter is less than the second, to false otherwise. Additionally, <code>traits_type::data_type</code> must define a data type of property tree, and <code>traits_type::extractor</code>,  <code>traits_type::inserter</code> must define predicates used for extraction and insertion of property tree data.
 	</p>
 	<p>
 		Customizing property tree traits is an advanced feature. Typically, predefined policies <a href="#ptree_traits">ptree_traits</a> and <a href="#iptree_traits">iptree_traits</a> are used. See <a href="../examples/custom_data_type.cpp">custom_data_type.cpp</a> for a compilable example of policy customization.
@@ -990,7 +990,8 @@ const basic_ptree *get_child_d(Ch separator, const key_type &amp;path, const bas
     <p>
         If the child is found, the function returns a pointer to it. Otherwise it returns <code>default_value</code>.</p>
 	<p>
-		One use of default value is to return a pointer to empty property tree if the required one is not found. In many cases, the subsequent code using the return value can be then made simpler.</p>
+		One use of default value is to return a pointer to empty property tree if the required one is not found. In many cases, the subsequent code using the return value can be then made simpler. See <a href="reference.html#empty_ptree"><code>empty_ptree</code></a>.
+	</p>
     <h4>
         Parameters</h4>
     <dl>

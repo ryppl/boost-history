@@ -26,7 +26,8 @@ namespace boost { namespace property_tree { namespace info_parser
         typename std::basic_string<Ch>::const_iterator e = s.end();
         while (b != e)
         {
-            if (*b == Ch('\a')) result += Ch('\\'), result += Ch('a');
+            if (*b == Ch('\0')) result += Ch('\\'), result += Ch('0');
+            else if (*b == Ch('\a')) result += Ch('\\'), result += Ch('a');
             else if (*b == Ch('\b')) result += Ch('\\'), result += Ch('b');
             else if (*b == Ch('\f')) result += Ch('\\'), result += Ch('f');
             else if (*b == Ch('\n')) result += Ch('\\'), result += Ch('n');

@@ -49,7 +49,7 @@
     <p>
         Property tree is a <i>recursive</i> data structure that stores a single data string, and an ordered list of (key, value) pairs, where value is a <i>property tree itself</i>. It therefore forms a tree, hence the name. It is a versatile structure that can store in uniform way data coming from various sources, such as XML or INI files, as well as windows registry, program command line etc. The correspondence between a data source (here XML file) and property tree is illustrated in the following diagram:</p>
     <center>
-        <img src="ptree.png" alt="Property tree" /></center>
+        <img src="ptree.png" height="339" width="800" alt="Property tree" /></center>
     <p>
         Each node of property tree may be conceptually treated as the following structure (note that due to recursive nature of the tree, nodes <i>are</i> property trees):
     </p>
@@ -65,9 +65,13 @@ struct ptree
     <h2>
         <a name="five_minute_tutorial"></a>Five minute tutorial
     </h2>
-    <p>
-        Suppose we are writing a logging system for some application, and need to read log configuration from a file when program starts. The file with log configuration looks like that:
-    </p>
+		<p>
+			<i>
+			This tutorial uses XML file format. Note that the library is not specifically bound to XML, and any other supported format (such as INI or windows registry) could be used as well. XML was chosen because author thinks wide range of people is familiar with it.</i>
+		</p>
+		<p>
+			Suppose we are writing a logging system for some application, and need to read log configuration from a file when program starts. The file with log configuration looks like that:
+		</p>
     <pre>&lt;debug>
     &lt;filename>debug.log&lt;/filename&gt;
     &lt;modules&gt;
@@ -173,7 +177,7 @@ void debug_settings::save(const std::string &amp;filename)
         <a name="synopsis"></a>Synopsis
     </h2>
     <p>
-        Central component of the library is <code>basic_ptree</code> class template. Instances of this class are property trees. It is parametrized on character type and key comparison policy; <code>ptree</code> and <code>wptree</code> are typedefs of <code>basic_ptree&lt;char&gt;</code> and <code>basic_ptree&lt;wchar_t&gt;</code> respectively. The default policy implemented by <code>ptree_traits</code> is <i>case-insensitive</i> comparison of keys. As you can see below, property tree is basically a somewhat simplified standard container (the closest being std::list), plus a bunch of extra member functions. These functions allow easy and effective access to the data stored in property tree. They are various variants of <a href="reference.html#basic_ptree::get"><code>get</code></a>, <a href="reference.html#basic_ptree::put"><code>put</code></a>, <a href="reference.html#basic_ptree::get_own"><code>get_own</code></a>, <a href="reference.html#basic_ptree::put_own"><code>put_own</code></a>, <a href="reference.html#basic_ptree::get_child"><code>get_child</code></a>, <a href="reference.html#basic_ptree::put_child"><code>put_child</code></a>. Additionally, there is <a href="reference.html#basic_ptree::data"><code>data</code></a> function to access the data string directly.
+        Central component of the library is <code>basic_ptree</code> class template. Instances of this class are property trees. It is parametrized on character type and key comparison policy; <code>ptree</code>, <code>wptree</code>, <code>iptree</code> and <code>wiptree</code> are typedefs of <code>basic_ptree</code> using predefined combinations of template parameters. As you can see below, property tree is basically a somewhat simplified standard container (the closest being std::list), plus a bunch of extra member functions. These functions allow easy and effective access to the data stored in property tree. They are various variants of <a href="reference.html#basic_ptree::get"><code>get</code></a>, <a href="reference.html#basic_ptree::put"><code>put</code></a>, <a href="reference.html#basic_ptree::get_own"><code>get_own</code></a>, <a href="reference.html#basic_ptree::put_own"><code>put_own</code></a>, <a href="reference.html#basic_ptree::get_child"><code>get_child</code></a>, <a href="reference.html#basic_ptree::put_child"><code>put_child</code></a>. Additionally, there is <a href="reference.html#basic_ptree::data"><code>data</code></a> function to access node data directly.
     </p>
     <pre>
 #include &lt;boost/property_tree/ptree.hpp&gt;
@@ -182,6 +186,7 @@ namespace boost { namespace property_tree
 {
 
 template&lt;class Ch&gt; struct <a href="reference.html#ptree_traits">ptree_traits</a>;
+template&lt;class Ch&gt; struct <a href="reference.html#iptree_traits">iptree_traits</a>;
 
 class <a href="reference.html#ptree_error">ptree_error</a>;
 class <a href="reference.html#ptree_bad_path">ptree_bad_path</a>;

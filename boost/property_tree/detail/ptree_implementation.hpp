@@ -180,7 +180,7 @@ namespace boost { namespace property_tree
     };
 
     ///////////////////////////////////////////////////////////////////////////
-    // Errors
+    // Exceptions
 
     class ptree_error: public std::runtime_error
     {

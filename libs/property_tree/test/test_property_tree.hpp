@@ -62,7 +62,7 @@ void test_constructor_destructor_assignment(PTREE *)
     
     {
 
-        // Test contructor from string
+        // Test constructor from string
         PTREE pt(T("data"));
         BOOST_CHECK(pt.data() == T("data"));
         
@@ -173,7 +173,7 @@ void test_erasing(PTREE *)
     BOOST_CHECK(n == 2);
     BOOST_CHECK(PTREE::debug_get_instances_count() == 6);
 
-    // Test erase with no destroy
+    // Test one more erase
     n = pt.erase(T("key2"));
     BOOST_CHECK(n == 1);
     BOOST_CHECK(PTREE::debug_get_instances_count() == 5);
@@ -930,7 +930,8 @@ void test_precision(PTREE *)
     real pi2 = pt.get_own<real>();
     
     // Test if precision is "good enough", i.e. if stream precision increase worked
-    real error = std::abs(pi - pi2) *
+    using namespace std;
+    real error = abs(pi - pi2) *
         std::pow(real(std::numeric_limits<real>::radix), 
                  real(std::numeric_limits<real>::digits));
     BOOST_CHECK(error < 100);

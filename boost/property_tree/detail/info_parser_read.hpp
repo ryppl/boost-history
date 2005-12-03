@@ -36,6 +36,7 @@ namespace boost { namespace property_tree { namespace info_parser
                 ++b;
                 if (b == e)
                     throw info_parser_error("character expected after backslash", "", 0);
+                else if (*b == Ch('0')) result += Ch('\0');
                 else if (*b == Ch('a')) result += Ch('\a');
                 else if (*b == Ch('b')) result += Ch('\b');
                 else if (*b == Ch('f')) result += Ch('\f');
@@ -60,7 +61,8 @@ namespace boost { namespace property_tree { namespace info_parser
     template<class Ch>
     void skip_whitespace(const Ch *&text)
     {
-        while (std::isspace(*text))
+        using namespace std;
+        while (isspace(*text))
             ++text;
     }
     
@@ -68,9 +70,10 @@ namespace boost { namespace property_tree { namespace info_parser
     template<class Ch>
     std::basic_string<Ch> read_word(const Ch *&text)
     {
+        using namespace std;
         skip_whitespace(text);
         const Ch *start = text;
-        while (!std::isspace(*text) && *text != Ch(';') && *text != Ch('\0'))
+        while (!isspace(*text) && *text != Ch(';') && *text != Ch('\0'))
             ++text;
         return expand_escapes(start, text);
     }
@@ -79,11 +82,12 @@ namespace boost { namespace property_tree { namespace info_parser
     template<class Ch>
     std::basic_string<Ch> read_line(const Ch *&text)
     {
+        using namespace std;
         skip_whitespace(text);
         const Ch *start = text;
         while (*text != Ch('\0') && *text != Ch(';'))
             ++text;
-        while (text > start && std::isspace(*(text - 1)))
+        while (text > start && isspace(*(text - 1)))
             --text;
         return expand_escapes(start, text);
     }

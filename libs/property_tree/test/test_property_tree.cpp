@@ -195,7 +195,7 @@ int test_main(int, char *[])
         test_path_separator(pt);
         test_precision(pt);
         test_locale(pt);
-        //test_custom_traits(pt);        // test identical to ptree version
+        //test_custom_traits(pt);        // test identical to ptree version, no need to execute
         test_leaks(pt);                  // must be a final test
     }
 
@@ -220,7 +220,7 @@ int test_main(int, char *[])
         test_path_separator(pt);
         test_precision(pt);
         test_locale(pt);
-        //test_custom_traits(pt);        // test identical to wptree version
+        //test_custom_traits(pt);        // test identical to wptree version, no need to execute
         test_leaks(pt);                  // must be a final test
     }
 #endif
