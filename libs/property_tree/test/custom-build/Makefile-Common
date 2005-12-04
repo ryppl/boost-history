@@ -1,45 +1,43 @@
-INCLUDE=-I../../../../../boost -I../../../..
+CCINCLUDE=-I../../../../../boost -I../../../..
 
 all: test
 
-clean:
-	rm *_dbg
-	rm *_rel
+-include Makefile
 
 test: build
-	./test_ptree_dbg 
-	./test_ptree_rel
-	./test_cmdline_dbg 
-	./test_cmdline_rel
-	./test_ini_dbg 
-	./test_ini_rel
-	./test_info_dbg 
-	./test_info_rel
-	./test_xml_dbg 
-	./test_xml_rel
+	./ptree_dbg.exe 
+	./ptree_rel.exe
+	./cmdline_dbg.exe 
+	./cmdline_rel.exe
+	./ini_dbg.exe 
+	./ini_rel.exe
+	./info_dbg.exe 
+	./info_rel.exe
+	./xml_dbg.exe 
+	./xml_rel.exe
 
 build: debug release
 
-debug: test_ptree_dbg test_cmdline_dbg test_ini_dbg  test_info_dbg test_xml_dbg
-release: test_ptree_rel test_cmdline_rel test_ini_rel test_info_rel test_xml_rel
+debug: ptree_dbg.exe cmdline_dbg.exe ini_dbg.exe  info_dbg.exe xml_dbg.exe
+release: ptree_rel.exe cmdline_rel.exe ini_rel.exe info_rel.exe xml_rel.exe
 
-test_ptree_dbg: ../test_property_tree.cpp
-	$(CC) $(CFLAGSDBG) $(INCLUDE) $< -o $@
-test_ptree_rel: ../test_property_tree.cpp
-	$(CC) $(CFLAGSREL) $(INCLUDE) $< -o $@
-test_cmdline_dbg: ../test_cmdline_parser.cpp
-	$(CC) $(CFLAGSDBG) $(INCLUDE) $< -o $@
-test_cmdline_rel: ../test_cmdline_parser.cpp
-	$(CC) $(CFLAGSREL) $(INCLUDE) $< -o $@
-test_ini_dbg: ../test_ini_parser.cpp
-	$(CC) $(CFLAGSDBG) $(INCLUDE) $< -o $@
-test_ini_rel: ../test_ini_parser.cpp
-	$(CC) $(CFLAGSREL) $(INCLUDE) $< -o $@
-test_info_dbg: ../test_info_parser.cpp
-	$(CC) $(CFLAGSDBG) $(INCLUDE) $< -o $@
-test_info_rel: ../test_info_parser.cpp
-	$(CC) $(CFLAGSREL) $(INCLUDE) $< -o $@
-test_xml_dbg: ../test_xml_parser_spirit.cpp
-	$(CC) $(CFLAGSDBG) $(INCLUDE) $< -o $@
-test_xml_rel: ../test_xml_parser_spirit.cpp
-	$(CC) $(CFLAGSREL) $(INCLUDE) $< -o $@
+ptree_dbg.exe: ../test_property_tree.cpp
+	$(CC) $(CFLAGSDBG) $(CCINCLUDE) $(EXTINCLUDE) $< -o $@ $(EXTLIBS) 
+ptree_rel.exe: ../test_property_tree.cpp
+	$(CC) $(CFLAGSREL) $(CCINCLUDE) $(EXTINCLUDE) $< -o $@ $(EXTLIBS) 
+cmdline_dbg.exe: ../test_cmdline_parser.cpp
+	$(CC) $(CFLAGSDBG) $(CCINCLUDE) $(EXTINCLUDE) $< -o $@ $(EXTLIBS) 
+cmdline_rel.exe: ../test_cmdline_parser.cpp
+	$(CC) $(CFLAGSREL) $(CCINCLUDE) $(EXTINCLUDE) $< -o $@ $(EXTLIBS) 
+ini_dbg.exe: ../test_ini_parser.cpp
+	$(CC) $(CFLAGSDBG) $(CCINCLUDE) $(EXTINCLUDE) $< -o $@ $(EXTLIBS) 
+ini_rel.exe: ../test_ini_parser.cpp
+	$(CC) $(CFLAGSREL) $(CCINCLUDE) $(EXTINCLUDE) $< -o $@ $(EXTLIBS) 
+info_dbg.exe: ../test_info_parser.cpp
+	$(CC) $(CFLAGSDBG) $(CCINCLUDE) $(EXTINCLUDE) $< -o $@ $(EXTLIBS) 
+info_rel.exe: ../test_info_parser.cpp
+	$(CC) $(CFLAGSREL) $(CCINCLUDE) $(EXTINCLUDE) $< -o $@ $(EXTLIBS) 
+xml_dbg.exe: ../test_xml_parser_spirit.cpp
+	$(CC) $(CFLAGSDBG) $(CCINCLUDE) $(EXTINCLUDE) $< -o $@ $(EXTLIBS) 
+xml_rel.exe: ../test_xml_parser_spirit.cpp
+	$(CC) $(CFLAGSREL) $(CCINCLUDE) $(EXTINCLUDE) $< -o $@ $(EXTLIBS) 
