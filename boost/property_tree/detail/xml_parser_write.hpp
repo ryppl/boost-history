@@ -130,12 +130,15 @@ namespace boost { namespace property_tree { namespace xml_parser
 
     template<class Ptree>
     void write_xml_internal(std::basic_ostream<typename Ptree::char_type> &stream, 
-                            const Ptree &pt)
+                            const Ptree &pt,
+                            const std::string &filename)
     {
         typedef typename Ptree::char_type Ch;
         typedef typename std::basic_string<Ch> Str;
         stream << detail::widen<Ch>("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
         write_xml_element(stream, Str(), pt, -1);
+        if (!stream)
+            throw xml_parser_error("write error", filename, 0);
     }
 
 } } }

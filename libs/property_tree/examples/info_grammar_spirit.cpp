@@ -38,7 +38,7 @@ void parse(const char *s)
     rule<> open_quote = !ws_no_eol >> '\"';
     rule<> close_quote = '\"' >> !ws_no_eol;
     rule<> continue_marker = '\\' >> eol;
-    rule<> escape_seq = '\\' >> chset_p("abfnrtv\"\'\\");
+    rule<> escape_seq = '\\' >> chset_p("0abfnrtv\"\'\\");
     
     // String
     rule<> pure_string = +(anychar_p - ' ' - '\t' - '"' - '\\' - '\n');

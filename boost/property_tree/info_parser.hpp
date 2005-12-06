@@ -22,11 +22,10 @@ namespace boost { namespace property_tree { namespace info_parser
     // Read info from stream
     template<class Ptree>
     void read_info(std::basic_istream<typename Ptree::char_type> &stream, 
-                   Ptree &pt, 
-                   const std::string &filename = std::string())
+                   Ptree &pt)
     {
         Ptree local;
-        read_info_internal(stream, local, filename, 0);
+        read_info_internal(stream, local, std::string(), 0);
         pt.swap(local);
     }
 
@@ -38,18 +37,19 @@ namespace boost { namespace property_tree { namespace info_parser
     {
         std::basic_ifstream<typename Ptree::char_type> stream(filename.c_str());
         if (!stream)
-            throw info_parser_error("cannot open file", filename, 0);
+            throw info_parser_error("cannot open file for reading", filename, 0);
         stream.imbue(loc);
-        read_info(stream, pt, filename);
+        Ptree local;
+        read_info_internal(stream, local, filename, 0);
+        pt.swap(local);
     }
 
     // Write info to stream
     template<class Ptree>
     void write_info(std::basic_ostream<typename Ptree::char_type> &stream, 
-                    const Ptree &pt,
-                    const std::string &filename = "")
+                    const Ptree &pt)
     {
-        write_info_internal(stream, pt, filename);
+        write_info_internal(stream, pt, std::string());
     }
 
     // Write info to file
@@ -60,9 +60,9 @@ namespace boost { namespace property_tree { namespace info_parser
     {
         std::basic_ofstream<typename Ptree::char_type> stream(filename.c_str());
         if (!stream)
-            throw info_parser_error("cannot open file", filename, 0);
+            throw info_parser_error("cannot open file for writing", filename, 0);
         stream.imbue(loc);
-        write_info(stream, pt, filename);
+        write_info_internal(stream, pt, filename);
     }
 
 } } }

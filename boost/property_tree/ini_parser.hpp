@@ -22,6 +22,13 @@
 namespace boost { namespace property_tree { namespace ini_parser
 {
 
+    static const int skip_ini_validity_check = 1;     // Skip check if ptree is a valid ini
+
+    inline bool validate_flags(int flags)
+    {
+        return (flags & ~skip_ini_validity_check) == 0;
+    }
+
     //! Ini parser error
     class ini_parser_error: public file_parser_error
     {
@@ -37,8 +44,7 @@ namespace boost { namespace property_tree { namespace ini_parser
     //! Read ini from stream
     template<class Ptree>
     void read_ini(std::basic_istream<typename Ptree::char_type> &stream, 
-                  Ptree &pt, 
-                  const std::string &filename = std::string())
+                  Ptree &pt)
     {
 
         typedef typename Ptree::char_type Ch;
@@ -57,7 +63,7 @@ namespace boost { namespace property_tree { namespace ini_parser
             ++line_no;
             std::getline(stream, line);
             if (!stream.good() && !stream.eof())
-                throw ini_parser_error("read error", filename, line_no);
+                throw ini_parser_error("read error", "", line_no);
 
             // If line is non-empty
             line = detail::trim(line, stream.getloc());
@@ -73,25 +79,25 @@ namespace boost { namespace property_tree { namespace ini_parser
                 {
                     typename Str::size_type end = line.find(Ch(']'));
                     if (end == Str::npos)
-                        throw ini_parser_error("unmatched '['", filename, line_no);
+                        throw ini_parser_error("unmatched '['", "", line_no);
                     Str key = detail::trim(line.substr(1, end - 1), stream.getloc());
                     if (local.find(key) != local.end())
-                        throw ini_parser_error("duplicate section name", filename, line_no);
+                        throw ini_parser_error("duplicate section name", "", line_no);
                     section = &local.push_back(std::make_pair(key, Ptree()))->second;
                 }
                 else
                 {
                     if (!section)
-                        throw ini_parser_error("section expected", filename, line_no);
+                        throw ini_parser_error("section expected", "", line_no);
                     typename Str::size_type eqpos = line.find(Ch('='));
                     if (eqpos == Str::npos)
-                        throw ini_parser_error("'=' character not found in line", filename, line_no);
+                        throw ini_parser_error("'=' character not found in line", "", line_no);
                     if (eqpos == 0)
-                        throw ini_parser_error("key expected", filename, line_no);
+                        throw ini_parser_error("key expected", "", line_no);
                     Str key = detail::trim(line.substr(0, eqpos), stream.getloc());
                     Str data = detail::trim(line.substr(eqpos + 1, Str::npos), stream.getloc());
                     if (section->find(key) != section->end())
-                        throw ini_parser_error("duplicate key name", filename, line_no);
+                        throw ini_parser_error("duplicate key name", "", line_no);
                     section->push_back(std::make_pair(key, Ptree(data)));
                 }
             }
@@ -112,34 +118,49 @@ namespace boost { namespace property_tree { namespace ini_parser
         if (!stream)
             throw ini_parser_error("cannot open file", filename, 0);
         stream.imbue(loc);
-        read_ini(stream, pt, filename);
+        try {
+            read_ini(stream, pt);
+        }
+        catch (ini_parser_error &e) {
+            throw ini_parser_error(e.message(), filename, e.line());
+        }
     }
 
     //! Write ini to stream
     template<class Ptree>
     void write_ini(std::basic_ostream<typename Ptree::char_type> &stream, 
-                   const Ptree &pt, 
-                   const std::string &filename = "")
+                   const Ptree &pt,
+                   int flags = 0)
     {
 
         typedef typename Ptree::char_type Ch;
         typedef std::basic_string<Ch> Str;
 
+        BOOST_ASSERT(validate_flags(flags));
+        
+        // Verify if ptree is not too rich to be saved as ini
+        if (!(flags & skip_ini_validity_check))
+            for (typename Ptree::const_iterator it = pt.begin(); it != pt.end(); ++it)
+            {
+                if (!it->second.data().empty())
+                    throw ini_parser_error("ptree has data on root level keys", "", 0);
+                if (pt.count(it->first) > 1)
+                    throw ini_parser_error("duplicate section name", "", 0);
+                for (typename Ptree::const_iterator it2 = it->second.begin(); it2 != it->second.end(); ++it2)
+                {
+                    if (!it2->second.empty())
+                        throw ini_parser_error("ptree is too deep", "", 0);
+                    if (it->second.count(it2->first) > 1)
+                        throw ini_parser_error("duplicate key name", "", 0);
+                }
+            }
+
+        // Write ini
         for (typename Ptree::const_iterator it = pt.begin(); it != pt.end(); ++it)
         {
-            if (!it->second.data().empty())
-                throw ini_parser_error("ptree has data on root level keys", filename, 0);
-            if (pt.count(it->first) > 1)
-                throw ini_parser_error("duplicate section name", filename, 0);
             stream << Ch('[') << it->first << Ch(']') << Ch('\n');
             for (typename Ptree::const_iterator it2 = it->second.begin(); it2 != it->second.end(); ++it2)
-            {
-                if (!it2->second.empty())
-                    throw ini_parser_error("ptree is too deep", filename, 0);
-                if (it->second.count(it2->first) > 1)
-                    throw ini_parser_error("duplicate key name", filename, 0);
                 stream << it2->first << Ch('=') << it2->second.data() << Ch('\n');
-            }
         }
 
     }
@@ -148,13 +169,19 @@ namespace boost { namespace property_tree { namespace ini_parser
     template<class Ptree>
     void write_ini(const std::string &filename,
                    const Ptree &pt,
+                   int flags = 0,
                    const std::locale &loc = std::locale())
     {
         std::basic_ofstream<typename Ptree::char_type> stream(filename.c_str());
         if (!stream)
             throw ini_parser_error("cannot open file", filename, 0);
         stream.imbue(loc);
-        write_ini(stream, pt, filename);
+        try {
+            write_ini(stream, pt, flags);
+        }
+        catch (ini_parser_error &e) {
+            throw ini_parser_error(e.message(), filename, e.line());
+        }
     }
 
 } } }

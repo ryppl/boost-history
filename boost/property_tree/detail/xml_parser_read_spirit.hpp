@@ -691,14 +691,16 @@ namespace boost { namespace property_tree { namespace xml_parser
                            const std::string &filename)
     {
 
-        typedef typename Ptree::char_type char_t;
-        typedef boost::spirit::position_iterator<typename std::vector<char_t>::const_iterator> It;
+        typedef typename Ptree::char_type Ch;
+        typedef boost::spirit::position_iterator<typename std::vector<Ch>::const_iterator> It;
+
+        BOOST_ASSERT(validate_flags(flags));
 
         // Load data into vector
-        std::vector<char_t> v(std::istreambuf_iterator<char_t>(stream.rdbuf()),
-                              std::istreambuf_iterator<char_t>());
+        std::vector<Ch> v(std::istreambuf_iterator<Ch>(stream.rdbuf()),
+                          std::istreambuf_iterator<Ch>());
         if (!stream.good())
-            throw xml_parser_error("read error", "", 0);
+            throw xml_parser_error("read error", filename, 0);
         
         // Initialize iterators
         It begin(v.begin(), v.end());

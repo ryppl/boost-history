@@ -60,7 +60,7 @@ namespace boost { namespace property_tree { namespace xml_parser
         TiXmlDocument doc;
         stream >> doc;
         if (!stream.good())
-            throw xml_parser_error("read error", "", 0);
+            throw xml_parser_error("read error", filename, 0);
         if (doc.Error())
             throw xml_parser_error(doc.ErrorDesc(), filename, doc.ErrorRow());
 

@@ -218,13 +218,13 @@ namespace boost { namespace property_tree { namespace info_parser
                     std::basic_string<Ch> directive = read_word(text);
                     if (directive == convert_chtype<Ch, char>("include"))     // #include
                     {
-                        if (include_depth > 16)
+                        if (include_depth > 100)
                             throw info_parser_error("include depth too large, probably recursive include", "", 0);
                         std::basic_string<Ch> s = read_string(text, NULL);
                         std::string inc_name = convert_chtype<char, Ch>(s.c_str());
                         std::basic_ifstream<Ch> inc_stream(inc_name.c_str());
                         if (!inc_stream.good())
-                            throw info_parser_error("cannot open include file", "", 0);
+                            throw info_parser_error("cannot open include file " + inc_name, "", 0);
                         read_info_internal(inc_stream, *stack.top(), inc_name, include_depth + 1);
                     }
                     else    // Unknown directive

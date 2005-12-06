@@ -112,7 +112,7 @@
         <dt class="index1">class <a href="#registry_parser::registry_parser_error">registry_parser_error</a></dt>
         <p>
         </p>
-        <dt class="index">Header <a href="#header_property_tree/file_parser_error.hpp">property_tree/file_parser_error.hpp</a></dt>
+        <dt class="index">Header <a href="#header_property_tree/detail/file_parser_error.hpp">property_tree/detail/file_parser_error.hpp</a></dt>
         <dt class="index1">class <a href="#file_parser_error">file_parser_error</a></dt>
     </dl>
     <!-- =================================================================== -->
@@ -1424,8 +1424,7 @@ template&lt;class Type&gt; basic_ptree *put(Ch separator, const key_type &amp;pa
 template&lt;class Ptree&gt;
 void read_xml(std::basic_istream&lt;typename Ptree::char_type&gt; &amp;stream,
               Ptree &amp;pt,
-              int flags = 0,
-              const std::string &amp;filename = "");
+              int flags = 0);
 
 template&lt;class Ptree&gt;
 void read_xml(const std::string &amp;filename,
@@ -1463,7 +1462,7 @@ void read_xml(const std::string &amp;filename,
             </dd>
             <dt class="parameter">filename</dt>
             <dd>
-                In the second function, name of file to read. In the first function an optional filename to include in error messages.</dd>
+                Name of file to read.</dd>
             <dt class="parameter">loc</dt>
             <dd>
                 In the second function, locale to use for reading from file. The first function uses locale of the supplied stream.</dd>
@@ -1479,8 +1478,7 @@ void read_xml(const std::string &amp;filename,
         <pre>
 template&lt;class Ptree&gt;
 void write_xml(std::basic_ostream&lt;typename Ptree::char_type&gt; &amp;stream, 
-               const Ptree &amp;pt,
-               const std::string &amp;filename = "");
+               const Ptree &amp;pt);
 
 template&lt;class Ptree&gt;
 void write_xml(const std::string &amp;filename,
@@ -1504,7 +1502,7 @@ void write_xml(const std::string &amp;filename,
                     Property tree to translate.</dd>
                 <dt class="parameter">filename</dt>
                 <dd>
-                    In the second function, name of file to write. In the first function an optional filename to include in error messages.</dd>
+                    Name of file to write.</dd>
                 <dt class="parameter">loc</dt>
                 <dd>
                     In the second function, locale to use for writing to file. The first function uses locale of the supplied stream.</dd>
@@ -1543,8 +1541,7 @@ class xml_parser_error;</pre>
     <pre>
 template&lt;class Ptree&gt;
 void read_ini(std::basic_istream&lt;typename Ptree::char_type&gt; &amp;stream,
-              Ptree &amp;pt,
-              const std::string &amp;filename = "");
+              Ptree &amp;pt);
 
 template&lt;class Ptree&gt;
 void read_ini(const std::string &amp;filename,
@@ -1569,7 +1566,7 @@ void read_ini(const std::string &amp;filename,
             </dd>
             <dt class="parameter">filename</dt>
             <dd>
-                In the second function, name of file to read. In the first function an optional filename to include in error messages.</dd>
+                Name of file to read.</dd>
             <dt class="parameter">loc</dt>
             <dd>
                 In the second function, locale to use for reading from file. The first function uses locale of the supplied stream.</dd>
@@ -1586,11 +1583,12 @@ void read_ini(const std::string &amp;filename,
 template&lt;class Ptree&gt;
 void write_ini(std::basic_ostream&lt;typename Ptree::char_type&gt; &amp;stream, 
                const Ptree &amp;pt,
-               const std::string &amp;filename = "");
+			   int flags = 0);
 
 template&lt;class Ptree&gt;
 void write_ini(const std::string &amp;filename,
                const Ptree &amp;pt,
+               int flags = 0,
                const std::locale &amp;loc = std::locale());</pre>
         <h4>
             Description</h4>
@@ -1608,9 +1606,19 @@ void write_ini(const std::string &amp;filename,
                 <dt class="parameter">pt</dt>
                 <dd>
                     Property tree to translate.</dd>
-                <dt class="parameter">filename</dt>
+				<dt class="parameter">flags</dt>
+				<dd>
+					Flags controlling behaviour of the write. The following flags are supported:
+					<dl>
+						<dt><code>skip_ini_validity_check</code></dt>
+						<dd>
+							Skip check whether property tree can be represented as INI file before writing. This may speed up writing, but if property tree is too rich, some data will be lost.
+						</dd>
+					</dl>
+				</dd>
+				<dt class="parameter">filename</dt>
                 <dd>
-                    In the second function, name of file to write. In the first function an optional filename to include in error messages.</dd>
+                    Name of file to write.</dd>
                 <dt class="parameter">loc</dt>
                 <dd>
                     In the second function, locale to use for writing to file. The first function uses locale of the supplied stream.</dd>
@@ -1649,8 +1657,7 @@ class ini_parser_error;</pre>
     <pre>
 template&lt;class Ptree&gt;
 void read_info(std::basic_istream&lt;typename Ptree::char_type&gt; &amp;stream,
-               Ptree &amp;pt,
-               const std::string &amp;filename = "");
+               Ptree &amp;pt);
 
 template&lt;class Ptree&gt;
 void read_info(const std::string &amp;filename,
@@ -1675,7 +1682,7 @@ void read_info(const std::string &amp;filename,
             </dd>
             <dt class="parameter">filename</dt>
             <dd>
-                In the second function, name of file to read. In the first function an optional filename to include in error messages.</dd>
+                Name of file to read.</dd>
             <dt class="parameter">loc</dt>
             <dd>
                 In the second function, locale to use for reading from file. The first function uses locale of the supplied stream.</dd>
@@ -1691,13 +1698,12 @@ void read_info(const std::string &amp;filename,
         <pre>
 template&lt;class Ptree&gt;
 void write_info(std::basic_ostream&lt;typename Ptree::char_type&gt; &amp;stream, 
-               const Ptree &amp;pt,
-               const std::string &amp;filename = "");
+                const Ptree &amp;pt);
 
 template&lt;class Ptree&gt;
 void write_info(const std::string &amp;filename,
-               const Ptree &amp;pt,
-               const std::locale &amp;loc = std::locale());</pre>
+                const Ptree &amp;pt,
+                const std::locale &amp;loc = std::locale());</pre>
         <h4>
             Description</h4>
         <p>
@@ -1716,7 +1722,7 @@ void write_info(const std::string &amp;filename,
                     Property tree to translate.</dd>
                 <dt class="parameter">filename</dt>
                 <dd>
-                    In the second function, name of file to write. In the first function an optional filename to include in error messages.</dd>
+                    Name of file to write.</dd>
                 <dt class="parameter">loc</dt>
                 <dd>
                     In the second function, locale to use for writing to file. The first function uses locale of the supplied stream.</dd>
@@ -1876,8 +1882,9 @@ std::vector&lt;BYTE&gt; translate(DWORD type,
             <h4>
                 Description</h4>
             <p>
-                Translates registry value of given type from property tree data string to binary array (in form of std::vector&lt;BYTE&gt;), and vice versa. The returned array is suitable for passing to Windows registry functions. In case of failure throws <a href="reference.html#registry_parser::registry_parser_error">registry_parser_error</a>. Typical usage is to translate textual representation of registry binary data into binary form:
+                Translates registry value of given type from property tree data string to binary array (in form of <code>std::vector&lt;BYTE&gt;</code>), or vice versa. The returned array is suitable for passing to Windows registry functions. In case of failure throws <a href="reference.html#registry_parser::registry_parser_error">registry_parser_error</a>. Typical usage is to translate textual representation of registry binary data into binary form:</p>
                 <pre>std::vector&lt;BYTE&gt; deadbeef = translate&lt;char&gt;(REG_BINARY, "DE AD BE EF");</pre>
+				<p>This function is not limited to REG_BINARY type, but can translate all types supported by registry_parser.</p>
                 <h4>
                     Parameters</h4>
                 <dl>
@@ -1913,7 +1920,7 @@ class registry_parser_error;</pre>
     <!---->
     <hr>
     <h2>
-        <a name="header_property_tree/file_parser_error.hpp"></a>Header property_tree/file_parser_error.hpp
+        <a name="header_property_tree/detail/file_parser_error.hpp"></a>Header property_tree/detail/file_parser_error.hpp
     </h2>
     <p>
         This header contains definition of file_parser_error class.</p>

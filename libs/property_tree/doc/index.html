@@ -370,8 +370,8 @@ a                          ;'a' key (no data)
     <p>
         Of course, different ways of storing extra information are possible. This one has been chosen because it allows easy access and iteration on the data. For example, to retrieve <code>href</code> attribute from key <code>a</code>, one would just write <code>get&lt;type&gt;("a.&lt;xmlattr&gt;.href")</code>.</p>
     <p>
-        Different parsers have slightly different interfaces, but there are some common rules. In general, functions of parser "foobar" have names <code>read_foobar</code>, and <code>write_foobar</code>. In case of file parsers, there are usually two versions of these functions, one taking C++ stream and the other a filename as a first parameter. The second parameter is reference to property tree. There can be further parameters, if parser needs extra information. Both read and write function do not return any value. To signal error, they throw appropriate exception derived from <a href="reference.html#ptree_error">ptree_error</a>, or in case of file parsers from <a href="reference.html#file_parser_error">file_parser_error</a>.
-        <h3>
+        Different parsers have slightly different interfaces, but there are some common rules. In general, functions of parser "foobar" have names <code>read_foobar</code>, and <code>write_foobar</code>. In case of file parsers, there are usually two versions of these functions, one taking C++ stream and the other a filename as a first parameter. The second parameter is reference to property tree. There can be further parameters, if parser needs extra information. Both read and write function do not return any value. To signal error, they throw appropriate exception derived from <a href="reference.html#ptree_error"><code>ptree_error</code></a>, or in case of file parsers from <a href="reference.html#file_parser_error"><code>file_parser_error</code></a> (which in turn derives from <code>ptree_error</code>).
+		<h3>
             <a name="xml_parser"></a>XML parser
         </h3>
         <p>
@@ -399,8 +399,7 @@ class <a href="reference.html#xml_parser::xml_parser_error">xml_parser_error</a>
 template&lt;class Ptree&gt;
 void <a href="reference.html#xml_parser::read_xml">read_xml</a>(std::basic_istream&lt;typename Ptree::char_type> &amp;stream,
               Ptree &amp;pt,
-              int flags = 0,
-              const std::string &amp;filename = "");
+              int flags = 0);
 
 template&lt;class Ptree&gt;
 void <a href="reference.html#xml_parser::read_xml">read_xml</a>(std::string &amp;filename,
@@ -410,8 +409,7 @@ void <a href="reference.html#xml_parser::read_xml">read_xml</a>(std::string &amp
 
 template&lt;class Ptree&gt;
 void <a href="reference.html#xml_parser::write_xml">write_xml</a>(std::basic_ostream&lt;typename Ptree::char_type&gt; &amp;stream, 
-               const Ptree &amp;pt,
-               const std::string &amp;filename = "");
+               const Ptree &amp;pt);
 
 template&lt;class Ptree&gt;
 void <a href="reference.html#xml_parser::write_xml">write_xml</a>(const std::string &amp;filename,
@@ -423,7 +421,7 @@ void <a href="reference.html#xml_parser::write_xml">write_xml</a>(const std::str
         <a name="ini_parser"></a>INI parser
     </h3>
     <p>
-        INI format was once widely used in the world of Windows. It is now deprecated, but is still used by a surprisingly large number of applications. The reason is probably its simplicity. Contrary to XML, this format is actually less rich than property tree. Because of that, there is no translation needed when reading from it. On the other hand, not every property tree can be represented as INI file. In order to be able to do that, it cannot have keys with data on root level, it cannot be deeper than two levels, and there cannot be duplicate keys on any level. If these conditions are not met, writing will fail.
+        INI format was once widely used in the world of Windows. It is now deprecated, but is still used by a surprisingly large number of applications. The reason is probably its simplicity. Contrary to XML, this format is actually less rich than property tree. Because of that, there is no translation needed when reading from it. On the other hand, not every property tree can be represented as INI file. In order to be able to do that, it cannot have keys with data on root level, it cannot be deeper than two levels, and there cannot be duplicate keys on any level. If these conditions are not met, writing will fail. Write function by default does check that, and throws in case there is a problem. Because the check can take a fairly significant amount of time (<i>O(n log n)</i>), there is an option to disable it by using <code>flags</code> parameter.
     </p>
     <p>
         INI parser does not use windows functions to read and write the file. It uses a fast and small handcrafted parser. Not that I think anybody would like to parse gigabytes of INI files. But thanks to that it is portable and can be used even on non-windows systems.</p>
@@ -439,8 +437,7 @@ class <a href="reference.html#ini_parser::ini_parser_error">ini_parser_error</a>
     
 template&lt;class Ptree&gt;
 void <a href="reference.html#ini_parser::read_ini">read_ini</a>(std::basic_istream&lt;typename Ptree::char_type&gt; &amp;stream, 
-              Ptree &amp;pt, 
-              const std::string &amp;filename = "");
+              Ptree &amp;pt);
 
 template&lt;class Ptree&gt;
 void <a href="reference.html#ini_parser::read_ini">read_ini</a>(const std::string &amp;filename, 
@@ -450,11 +447,12 @@ void <a href="reference.html#ini_parser::read_ini">read_ini</a>(const std::strin
 template&lt;class Ptree&gt;
 void <a href="reference.html#ini_parser::write_ini">write_ini</a>(std::basic_ostream&lt;typename Ptree::char_type&gt; &amp;stream, 
                const Ptree &amp;pt,
-               const std::string &amp;filename = "");
+			   int flags = 0);
 
 template&lt;class Ptree&gt;
 void <a href="reference.html#ini_parser::write_ini">write_ini</a>(const std::string &amp;filename,
                const Ptree &amp;pt,
+			   int flags = 0,
                const std::locale &amp;loc = std::locale());
 
 } } } // namespace</pre>
@@ -501,8 +499,7 @@ class <a href="reference.html#info_parser::info_parser_error">info_parser_error<
     
 template&lt;class Ptree&gt;
 void <a href="reference.html#info_parser::read_info">read_info</a>(std::basic_istream&lt;typename Ptree::char_type&gt; &amp;stream, 
-               Ptree &amp;pt, 
-               const std::string &amp;filename = "");
+               Ptree &amp;pt);
 
 template&lt;class Ptree&gt;
 void <a href="reference.html#info_parser::read_info">read_info</a>(const std::string &amp;filename, 
@@ -511,8 +508,7 @@ void <a href="reference.html#info_parser::read_info">read_info</a>(const std::st
 
 template&lt;class Ptree&gt;
 void <a href="reference.html#info_parser::write_info">write_info</a>(std::basic_ostream&lt;typename Ptree::char_type&gt; &amp;stream,
-                const Ptree &amp;pt,
-                const std::string &amp;filename = "");
+                const Ptree &amp;pt);
 
 template&lt;class Ptree&gt;
 void <a href="reference.html#info_parser::write_info">write_info</a>(const std::string &amp;filename,
@@ -536,7 +532,7 @@ L "m"
 "" file1.cc                 ; empty key
 "" file2.cc                 ; empty key</pre>
     <p>
-        This is all very basic parsing, but might be useful if your program only uses very simple command line. For example, to get integer value associated with option "N" (in form "-Nxx" or "/Nxx" or "-nxx" or "/nxx") you would just write:</p>
+        This is all very basic parsing, but might be useful if your program only uses very simple command line. For example, to get integer value associated with option "N" (in form "-Nxx" or "/Nxx") you would just write:</p>
     <pre>
 boost::property_tree::ptree pt;
 read_cmdline(argc, argv, "-/", pt);
@@ -560,7 +556,7 @@ void <a href="reference.html#cmdline_parser::read_cmdline">read_cmdline</a>(int 
         <a name="registry_parser"></a>Windows registry parser
     </h3>
     <p>
-        This parser supports reading and writing data from windows registry. There is only a subset of registry functionality implemented, because property tree is not intended to replace registry API. For example, access rights are not supported, as well as some exotic value formats. Registry is a rich data source, providing hierarchy of keys, each of whose can have any number of named and typed values attached to it. Because of that, like in XML, some translation is necessary.</p>
+        This parser supports reading and writing data from windows registry. There is only a subset of registry functionality implemented, because property tree is not intended to replace registry API. For example, access rights are not supported, as well as some exotic value formats. Registry is a rich data source, providing hierarchy of keys, each of whose can have any number of named and typed values attached to it. Because of that - like in XML - some translation is necessary.</p>
     <p>
         Note: this parser will only work on a Windows system because it uses Windows API to access the registry. You will need to link with advapi32.lib. Minimalist version of Windows header file is included by registry_parser.hpp. If you want to include windows header on your own, do it before including registry_parser.hpp.
     </p>
@@ -570,11 +566,11 @@ void <a href="reference.html#cmdline_parser::read_cmdline">read_cmdline</a>(int 
         <li>Values of each registry key are stored in a subkey with name <code>\values</code>. The preceding backslash is there to prevent name clashes with regular keys. Each subkey of \values is one registry value. If \values subkey does not exist or is empty, there are no values attached to that key.</li>
         <li>Types of values of each registry key are stored in a subkey with name <code>\types</code>. These subkeys contain an integer equal to type of data stored in its corresponding entry in \values (correspondence is by name, not position).</li>
         <li>So called "default value", is translated directly to key data and is always assumed to be of type REG_SZ.</li>
-        <li>REG_BINARY values are translated to textual format before putting in property tree. The format is the same as the one displayed by regedit application: a series of hexadecimal numbers representing bytes, separated with spaces. To translate from this format to binary data, or vice versa, use <a href="reference.html#registry_parser::translate"><code>translate</code></a> function.</li>
+        <li>REG_BINARY values are translated to textual format before placing in property tree. The format is the same as the one displayed by regedit application: a series of two-digit hexadecimal numbers representing bytes separated with spaces. To translate from this format to binary data, or vice versa, use <a href="reference.html#registry_parser::translate"><code>translate</code></a> function.</li>
         <li>Supported value types are: REG_NONE, REG_SZ, REG_EXPAND_SZ, REG_DWORD, REG_QWORD, REG_BINARY.</li>
     </ul>
     <p>
-        Translation of property tree back into registry (<code>write_registry</code>) assumes the same structure as outlined above. That means if you want to have named values, you need to create <code>\values</code> and <code>\types</code> subkeys, and put them there. Also, you have to convert all REG_BINARY values to textual format.</p>
+        Translation of property tree back into registry (<code>write_registry</code>) assumes the same structure as outlined above. That means if you want to have named values, you need to create <code>\values</code> and <code>\types</code> subkeys, and put them there. Also, you have to convert all REG_BINARY values to textual format. Passing "normal" property tree (i.e. not containing <code>\types</code> and <code>\values</code> keys) to the write function will put all data in "default value" section of each key. This is fine, especially if you intend to read this data using property tree, but is probably not a standard way of storing things in the registry.</p>
     <p>
         For example, when you read registry key <code>HKEY_CURRENT_USER\Software\Microsoft\Notepad</code>, under Windows XP, you will get property tree containing Notepad font settings (among other things):</p>
     <pre>
@@ -715,14 +711,17 @@ pt.get_o&lt;std::string&gt;('/', "p.a.t.h/t.o/v.a.l.u.e");</pre>
 ptree pt;
 pt.put("a.path.to.float.value", 3.14f);</pre>
     <p>
-        Calling <code>put</code> will insert new value at specified path, so that <code>get</code>, which specifies the same path, will retrieve it. Put will insert any missing path elements during path traversal. For example, calling <code>put("key1.key2.key3", 3.14f)</code> on an empty tree will insert three new children: <code>key1</code>, <code>key1.key2</code> and <code>key1.key2.key3</code>. The last one will receive a string <code>"3.14"</code> as data, while the two former ones will have empty data strings. <code>Put</code> always inserts the new keys at the back of the existing sequence.</p>
+        Calling <code>put</code> will insert new value at specified path, so that <code>get</code>, which specifies the same path, will retrieve it. Put will insert any missing path elements during path traversal. For example, calling <code>put("key1.key2.key3", 3.14f)</code> on an empty tree will insert three new children: <code>key1</code>, <code>key1.key2</code> and <code>key1.key2.key3</code>. The last one will receive a string <code>"3.14"</code> as data, while the two former ones will have empty data strings. <code>Put</code> always inserts new keys at the backs of the existing sequences.</p>
     <p>
-        Similarly to <code>get_own</code>, there is also a <a href="reference.html#basic_ptree::put_own"><code>put_own</code></a> function. It does the same for <i>this</i> property tree what <code>put</code> does for its children. Thus, it does not require path.</p>
+        Similarly to <code>get_own</code>, there is also a <a href="reference.html#basic_ptree::put_own"><code>put_own</code></a> function. It does the same for <i>this</i> property tree what <code>put</code> does for its children. Thus, it does not require path:</p>
+    <pre>
+ptree pt;
+pt.put_own(3.14f);</pre>
     <h2>
         <a name="compatibility"></a>Compatibility
     </h2>
     <p>
-        Property tree requires partial class template specialization support. There has been no attempt to workaround that, although this may be possible. Visual C++ 7.0 or earlier, and gcc 2.x do not support it, so the library will not work with them.
+        Property tree uses partial class template specialization. There has been no attempt to workaround that, although this may be possible. Visual C++ 7.0 or earlier, and gcc 2.x do not support it, so the library will (most probably) not work with them.
     </p>
     <p>
         Property tree has been tested (regressions successfully compiled and run) with the following compilers:</p>
@@ -731,6 +730,7 @@ pt.put("a.path.to.float.value", 3.14f);</pre>
         <li>gcc 3.4.2 (MinGW)</li>
         <li>gcc 3.3.5 (Linux)</li>
         <li>gcc 3.4.4 (Linux)</li>
+        <li>Intel C++ 9.0 (Linux)</li>
     </ul>
     <h2>
         <a name="future_development"></a>Future development
@@ -746,12 +746,12 @@ pt.put("a.path.to.float.value", 3.14f);</pre>
     <ol>
         <li>
             <h4>
-                Why are there 4 versions of get? Couldn't we do with just one?</h4>
+                Why are there 4 versions of get? Couldn't there be just one?</h4>
             <p>
                 Three of the four versions that are implemented reflect experience gathered during several of years of usage of property tree in several different applications (the fourth, boost::optional version was suggested by Pavel Vozenilek). During that time I tried hard to come up with one, proper form of get function and failed. I know of these three basic patterns of usage:
             </p>
             <ul>
-                <li><i>Just get the data and I do not care if it cannot be done.</i> This is used when we are sure that data exists. Or in homework assignments. Or when tomorrow is final deadline for your project.</li>
+                <li><i>Just get the data and I do not care if it cannot be done.</i> This is used when we are fairly sure that data exists. Or in homework assignments. Or when tomorrow is final deadline for your project.</li>
                 <li><i>Get the data and revert to default value when it cannot be done.</i> Used when you want to allow omitting of the key in question. Implemented by some similar tools (windows INI file access functions).</li>
                 <li><i>Get the data, but I care more if you succeeded than I do for the data itself.</i> Used when you want to vary control flow depending on get success/failure. Or to check for presence of a key.</li>
             </ul>

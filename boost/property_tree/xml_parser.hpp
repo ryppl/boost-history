@@ -33,11 +33,9 @@ namespace boost { namespace property_tree { namespace xml_parser
     template<class Ptree>
     void read_xml(std::basic_istream<typename Ptree::char_type> &stream,
                   Ptree &pt,
-                  int flags = 0,
-                  const std::string &filename = std::string())
+                  int flags = 0)
     {
-        BOOST_ASSERT(validate_flags(flags));
-        read_xml_internal(stream, pt, flags, filename);
+        read_xml_internal(stream, pt, flags, std::string());
     }
 
     // Read XML from file
@@ -52,18 +50,15 @@ namespace boost { namespace property_tree { namespace xml_parser
         if (!stream)
             throw xml_parser_error("cannot open file", filename, 0);
         stream.imbue(loc);
-        read_xml(stream, pt, flags, filename);
+        read_xml_internal(stream, pt, flags, filename);
     }
 
     // Write XML to stream
     template<class Ptree>
     void write_xml(std::basic_ostream<typename Ptree::char_type> &stream, 
-                   const Ptree &pt,
-                   const std::string &filename = "")
+                   const Ptree &pt)
     {
-        write_xml_internal(stream, pt);
-        if (!stream.good())
-            throw xml_parser_error("write error", filename, 0);
+        write_xml_internal(stream, pt, std::string());
     }
 
     // Write XML to file
@@ -76,7 +71,7 @@ namespace boost { namespace property_tree { namespace xml_parser
         if (!stream)
             throw xml_parser_error("cannot open file", filename, 0);
         stream.imbue(loc);
-        write_xml(stream, pt, filename);
+        write_xml_internal(stream, pt, filename);
     }
 
 } } }
