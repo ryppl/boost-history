@@ -124,7 +124,7 @@ struct field_iterator_of
     fields_visitor_type
     ;
         typedef
-      rangelib::crange
+      iter_range
       < Container
         < Element
         , Allocator
@@ -169,7 +169,7 @@ struct field_iterator_of
       bool
     empty(void)const
     { 
-        return !(m_iter.operator bool());
+        return m_iter.empty();
     }
     
 private:
@@ -182,6 +182,12 @@ private:
 }//exit boost namespace
 //////////////////////////////////////////////////////////////////////////////
 // ChangeLog:
+//   2005-08-17: Larry Evans
+//     WHAT:
+//       replaced rangelib::crange with new iter_range.
+//       and made corresponding change to empty (by using iter_type::empty).
+//     WHY:
+//       ease transition to using boost::range::iterator_range.
 //   2004-11-14: Larry Evans
 //     WHAT:
 //       copied and renamed from ../../managed_ptr/stlcont_prox_extern

@@ -14,13 +14,7 @@
  *    in a "record".  See Terminology under namespace fields_visitor
  *    for definition of these terms.
  */
-#define TORJO_RANGE
-#ifdef TORJO_RANGE
-  #include "boost/rangelib/range.hpp"
-  //^ from http://www.torjo.com/code/rangelib15.zip on 2004-11-09
-#else
-  #include <boost/range/iterator_range.hpp>
-#endif
+#include "boost/fields_visitor/iter_range.hpp"
 #include <boost/type_traits/is_base_and_derived.hpp>
 #include <vector>
 #include <map>
@@ -29,65 +23,69 @@
 #endif
 namespace boost
 {
+/**@brief
+ *  Enables "visiting" "selected fields" of instances of a "record" class.
+ *
+ *  Terminology:
+ *    record - a aggregate containing "field"s.
+ *    field - an instance variable forming part of a "record".
+ */
 namespace fields_visitor
- /**@brief
-  *  Enables "visiting" "selected fields" of instances of a "record" class.
-  *
-  *  Terminology:
-  *    record - a aggregate containing "field"s.
-  *    field - an instance variable forming part of a "record".
-  */
 {
-      typedef 
-    void
-  record_top_type
    /**@brief
     *  A more meaningful name than simply void.
     *  Void is used since the record's selected fields are
     *  accessed simply by using offsets from the
     *  start of the record.
     */
+      typedef 
+    void
+  record_top_type
   ;
   
 namespace detail
 {
+   /**@brief A convenience function to convert T* to char* for any T.
+    */
       inline
     char*
   cp_cast(void* vp)
-   /**@brief
-    *  A convenience function to convert T* to char* for any T.
-    */
   { 
       return static_cast<char*>(vp);
   } 
+   /**@brief A convenience function to convert T const* to char const* for any T.
+    */
       inline
     char const*
   cp_cast(void const* vp)
-   /**@brief
-    *  A convenience function to convert T const* to char const* for any T.
-    */
   { 
       return static_cast<char const*>(vp);
-  } 
+  }
+   
+   /** 
+    *  @brief
+    *   offset from start of record to beginning of field.
+    */
       typedef
     std::size_t
   offset_type
   ;
-      inline
-    offset_type
-  offset_from_to(void const* a_from, void const* a_to)
+  
    /**@brief
     *  A convenience function to calculate the offset, a_from - a_to.
     */
+      inline
+    offset_type
+  offset_from_to(void const* a_from, void const* a_to)
   { 
       offset_type l_offs= cp_cast(a_from) - cp_cast(a_to);
       return l_offs;
   }
   
-  struct mem_buffer
    /**@brief
     *  Simple memory buffer.
     */
+  struct mem_buffer
   {
    public:
           typedef
@@ -135,14 +133,25 @@ namespace detail
           return m_size;
       } 
    private:
+      /**@brief
+       *  buffer size.
+       */
         std::size_t
       m_size
       ;
+      /**@brief
+       *  buffer memory.
+       */
         char*
       m_buffer
       ;
   };//end mem_buffer struct
     
+  /**@brief
+   *  Buffer where "dummy" record is to be built while
+   *  the descriptor for that record type is also being
+   *  built.  See names_builder<FieldsVisitor>::build_materials.
+   */
   struct build_buffer
     : public mem_buffer
   {
@@ -152,14 +161,15 @@ namespace detail
         , c_tail_end(c_tail_start+a_size)
       {
       }
+      
+      /**@brief
+        * Is a_field within this mem_buffer?
+        */
         template
         < typename Field
         >
         bool
       contains(Field const* a_field)
-      /**@brief
-        * Is a_field within this mem_buffer?
-        */
       { 
           char const*const c_fld_start = cp_cast(a_field);
           bool r =(c_tail_start <= c_fld_start) && (c_fld_start < c_tail_end);
@@ -170,44 +180,35 @@ namespace detail
           return r;
       } 
    private:
+   
+      /**@brief
+       *  Start of remaining part of Record memory which may contain 
+       *  fields not already processed by contains(Field*).
+       */
         char const*
       c_tail_start
-      //Start of remaining part of Record memory which may contain 
-      //fields not already processed by contains(Field*).
       ;
+      
+      /**@brief
+       *  End of Record memory+1.
+       */
         char const*const
       c_tail_end
-      //End of Record memory+1.
       ;
+      
   };//end build_buffer struct
           
+  /**@brief
+   *  Vector of offsets for a particular type of field.
+   */
       typedef
     std::vector<offset_type>
   field_offsets_type
   ;
-#ifdef TORJO_RANGE
       typedef
-    rangelib:: crange<detail::field_offsets_type const>
+    iter_range<detail::field_offsets_type const>
   offsets_iterator
   ;
-#else
-  struct offsets_iterator
-    : public iterator_range<detail::field_offsets_type::const_iterator>
-  {
-      typedef iterator_range<detail::field_offsets_type::const_iterator> super_type;
-      offsets_iterator(detail::field_offsets_type const& a_field_offsets)
-        : super_type(a_field_offsets.begin(), a_field_offsets.end())
-      {}
-      
-        super_type::value_type
-      operator*(void)const
-      {
-          return super_type::front();
-      }
-      
-      //void operator++(void) ?
-  };
-#endif
   template
     < typename SelectedField
     >
@@ -249,7 +250,7 @@ namespace detail
       operator++
       ;
         using super_type::
-      operator bool
+      empty
       ;
    private:
         char*const
@@ -339,7 +340,7 @@ struct names_descriptor
     };//end field_iterator_acceptor_abs struct
     
     class maker_iterator_acceptor_abs
-     /**
+     /**@class maker_iterator_acceptor_abs
       * @brief Abstract class for creating field_iterator_acceptor_abs*
       *  which iterates over all fields of a particular type in a record.
       *
@@ -504,7 +505,7 @@ struct selected_fields_description_of
   *   selected_fields_descriptor is defined in
   *   names_descriptor<FieldsVisitor>.
   *
-  *   This default value, null, indicates Record has no 
+  *   The default value, null, indicates Record has no 
   *   selected fields.
   *
   *   The class method, ptr(), returns the default value which
@@ -555,10 +556,6 @@ names_builder
     maker_iterator_acceptor_abs
     ;
 
-    template
-      < typename SelectedField
-      >
-    struct field_iterator_acceptor_typed
      /**@brief
       *  A  field_iterator_acceptor_abs implemented by
       *  a offset_field_iterator<SelectedField>.
@@ -569,6 +566,10 @@ names_builder
       *  of this template, field_iterator_acceptor_typed<value_type>, there must
       *  be a method, FieldsVisitor::visit_field(value_type&).
       */
+    template
+      < typename SelectedField
+      >
+    struct field_iterator_acceptor_typed
       : public field_iterator_acceptor_abs
       , private detail::offset_field_iterator<SelectedField>
     {
@@ -613,39 +614,40 @@ names_builder
           bool
         empty(void)const
         { 
-            return !super_type::operator bool();
+            return super_type::empty();
         } 
     };//end field_iterator_acceptor_typed template
     
+    /**@brief
+     *  Simply a convenience class to hold all 
+     *  build materials for building a 
+     *  selected_fields_descriptor for some "record"
+     *  i.e. some type.
+     */
     struct build_materials
-    /**@class build_materials
-      * @brief
-      *  Simply a convenience class to hold all 
-      *  build materials for building a 
-      *  selected_fields_descriptor for some "record"
-      *  i.e. some type.
-      */
     {
      public:
-          selected_fields_descriptor*
-        m_descriptor
           /**@brief 
            * The descriptor being built.
            */
+          selected_fields_descriptor*
+        m_descriptor
         ;
-          detail::build_buffer*
-        m_buffer
           /**@brief 
            * memory where "dummy" record, described by m_descriptor
            * is being created.
            */
+          detail::build_buffer*
+        m_buffer
         ;
-          maker_iterator_acceptor_abs const*
-        m_record_maker
           /**@brief 
            * The ONLY purpose is to prevent m_descriptor from indicating
            * the record it describes contains itself.
+           * See field_registrar::CTOR comments about local variable:
+           *   desc_record_is_this_field
            */
+          maker_iterator_acceptor_abs const*
+        m_record_maker
         ;
      public:
         build_materials(void)
@@ -698,6 +700,10 @@ names_builder
       struct 
     maker_iterator_acceptor_typed
     : public maker_iterator_acceptor_abs
+    /**@brief
+     *  Singleton class which creates field_iterator_acceptor_abs*
+     *  for a given SelectedField in a containing record.
+     */
     {
             typedef
           field_iterator_acceptor_typed<SelectedField>
@@ -707,10 +713,14 @@ names_builder
         make_field_iter_from_record_offsets
           ( record_top_type* a_record
           , detail::field_offsets_type const& a_field_offsets
-          , detail::mem_buffer& a_buffer
+          , detail::mem_buffer& a_buffer 
           )const
        /**@brief 
-        * Create iterator over SelectedField's in a_record.
+        *  Create iterator over SelectedField's in a_record.
+        *
+        * @arg @c a_record = the record containing SelectedFields
+        * @arg @c a_field_offsets = location of SelectedFields in a_record
+        * @arg @c a_buffer = memory where iterator is created (by placement new).
         */
         {
 //            assert(iter_size() <= a_buffer.size() );
@@ -737,9 +747,12 @@ names_builder
   
 };//end names_builder<FieldsVisitor> template
 
-/**@brief If building a descriptor, insert:
- *    maker_iterator_acceptor_abs
- *  for CTOR arg type into this descriptor.
+/**
+ *  @arg @c FieldsVisitor a fields visitor.
+ *  @brief 
+ *    CTOR registers @c SelectedField into the 
+ *    current descriptor, if any.
+ *
  */
 template
   < typename FieldsVisitor
@@ -749,15 +762,30 @@ struct field_registrar
     template
       < typename SelectedField
       >
+   /**
+    * @brief
+    *  Register @c SelectedField into the 
+    *  current descriptor, if any.
+    * @arg @c SelectedField* @c a_selected_field = the field to be registred.
+    *
+    * If building a  descriptor:
+    *
+    *   boost::fields_visitor::names_builder::build_materials::m_descriptor
+    *
+    * register the 
+    *
+    *   boost::fields_visitor::names_descriptor::maker_iterator_acceptor_abs
+    *
+    * for the given @c SelectedField (type of CTOR arg) in the descriptor for 
+    * the Record currently being constructed in a:
+    *
+    *   boost::fields_visitor::descriptor_builder &lt; FieldsVisitor,Record &gt;
+    *
+    * instantiation.
+    */
     field_registrar
       ( SelectedField* a_selected_field
       )
-   /**
-    * If building a descriptor, record the maker_iterator_acceptor_abs
-    * for given SelectedField in the descriptor for the Record
-    * currently being constructed in a
-    * descriptor_builder<FieldsVisitor,Record> instantiation.
-    */
     {
         typedef names_builder<FieldsVisitor> bldr_ns;
         typename bldr_ns::build_materials& l_materials= bldr_ns::the_materials();
@@ -768,18 +796,22 @@ struct field_registrar
             typename bldr_ns::maker_iterator_acceptor_abs const* the_field_maker 
               = &(bldr_ns::template maker_iterator_acceptor_typed<SelectedField>
                 ::the_singleton());
-            bool record_not_field
-              = l_materials.m_record_maker != the_field_maker; //is record != field
+            bool desc_record_is_this_field
+              = l_materials.m_record_maker == the_field_maker
+                //Is this actually the record being described?
+                ;
           #ifdef CONTAINER_SINGLE_OBJ_ID
             mout()
               <<"***field_registrar.descriptor_is_building\n"
-              <<": record_not_field="<<record_not_field
+              <<": desc_record_is_this_field="<<desc_record_is_this_field
               <<": record_maker="<<(void*)l_materials.m_record_maker
               <<": field_maker="<<(void*)the_field_maker
               <<": obj_id="<<a_selected_field->id_get()
               <<"\n";
           #endif
-            if(record_not_field)
+            if(!desc_record_is_this_field)
+            //This test prevents descriptor indicating the record
+            //contains itself.
             {
                 bool record_contains_field
                   = l_materials.m_buffer
@@ -805,8 +837,16 @@ struct field_registrar
   < typename FieldsVisitor
   , typename Record
   , bool IsRecordFieldSelector
+    /**@brief
+     *  Is Record derived from field_registrar, i.e. is Record
+     *  actually a field in some other record?
+     */
   >
 struct record_iter_maker_is_selector
+/**@brief
+ *  static the_maker returns the singleton maker_iterator_acceptor_typed
+ *  for given Record and FieldsVisitor.
+ */
 {
     typedef names_builder<FieldsVisitor> bldr_ns;
     typedef typename bldr_ns::maker_iterator_acceptor_abs maker_type;
@@ -829,6 +869,9 @@ struct record_iter_maker_is_selector
   , Record
   , false
   >
+/**@brief
+ *  A specialization returning null for maker_iterator_acceptor_abs*
+ */
 {
     typedef names_builder<FieldsVisitor> bldr_ns;
     typedef typename bldr_ns::maker_iterator_acceptor_abs maker_type;
@@ -850,6 +893,16 @@ struct record_iter_maker
     , Record
     , is_base_and_derived<field_registrar<FieldsVisitor>,Record>::value
     >
+/**@brief
+ *  If Record is also a "field", provide its maker_iterator_acceptor
+ *  as result of superclass the_maker static function.
+ *  If Record is not a "field", returns 0 as result of superclass the_maker.
+ *  
+ *  The *only* reason for this class is to handle the case where
+ *  the "Record" currently being "described" by descriptor_builder
+ *  is also a "field" (i.e. has field_registrar superclass).  See
+ *  comments under descriptor_builder::CTOR for further explanation.
+ */
 {
 };
 
@@ -897,7 +950,13 @@ struct descriptor_builder
         detail::build_buffer parent_mem(sizeof(Record));
         typename bldr_ns::maker_iterator_acceptor_abs const* the_maker
           = record_iter_maker<FieldsVisitor,Record>::the_maker();
-        bldr_ns::the_materials().set_desc_buf(this,&parent_mem,the_maker);
+        bldr_ns::the_materials().set_desc_buf
+          ( this
+          , &parent_mem
+          , the_maker 
+            //To prevent descriptor indicating Record contains itself.
+            //See build_materials::m_record_maker comments.
+          );
         Record* a_record = builder_new<Record>::make(parent_mem.start_mut());
         a_record->~Record();
         bldr_ns::the_materials().reset(); 
@@ -950,7 +1009,7 @@ names_iterator
     {
      public:
             typedef
-          rangelib::crange<selected_fields_descriptor const>
+          iter_range<selected_fields_descriptor const>
         iter_type
         ;
             typedef
@@ -1009,13 +1068,13 @@ names_iterator
         { 
             iter_type mt(m_iter);
             std::size_t n=0;
-            for(;!mt; ++mt,++n);
+            for(;!mt.empty(); ++mt,++n);
             return n;
         } 
           bool
         empty(void)const
         { 
-            return !m_iter;
+            return m_iter.empty();
         } 
      private:
           record_top_type*
@@ -1066,11 +1125,11 @@ names_iterator
             } 
               std::size_t
             size(void)const
-             /**@class field_iterator_acceptor_fwd
-              * @pre-conditions
-              *  neither this->increment or some derived class increment
-              *  is executing.
-              */
+            /**@pre
+             *  neither increment or some derived class increment
+             *  is executing.
+             *
+             */
             { 
                 std::size_t r = 0;
                 if(!empty())
@@ -1273,7 +1332,7 @@ struct field_iterator_of
 }//exit fields_visitor namespace
 }//exit boost namespace
 
-/**@def SELECTED_FIELDS_DESCRIPTION_OF_RECORD_VISITOR(RECORD,VISITOR)
+/**@def SELECTED_FIELDS_DESCRIPTION_OF_RECORD(RECORD,VISITOR)
  * @brief
  *  Invoking this macro in global namespace causes calculation of the 
  *  selected_fields_descriptor of RECORD for field visitor, VISITOR, and 
@@ -1297,6 +1356,11 @@ template<typename FieldsVisitor > \
 
 //////////////////////////////////////////////////////////////////////////////
 // ChangeLog:
+//   2005-08-17: Larry Evans
+//     WHAT:
+//       Replaced rangelib::crange with new iter_range.
+//     WHY:
+//       Ease transition to using boost::iterator_range.
 //   2005-06-26: Larry Evans
 //     WHAT:
 //       Tried using boost/range/range_iterator.hpp

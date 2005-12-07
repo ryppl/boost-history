@@ -56,7 +56,7 @@ struct field_iterator_of
     alloc_type
     ;
         typedef
-      rangelib::crange
+      iter_range
       < Single
         < Element
         , alloc_type
@@ -99,7 +99,7 @@ struct field_iterator_of
       bool
     empty(void)const
     { 
-        return !(m_iter.operator bool());
+        return m_iter.empty();
     }
     
 private:
