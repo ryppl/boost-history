@@ -100,8 +100,23 @@ namespace boost
           ;
       };
       
+        struct
+      collector
+      {
+              static
+            void
+          collect(void)
+          {}
+      };
+      
   };//end sp_types_noop
   
 }//exit boost namespace    
-
+//ChangeLog:
+//  2005-12-07 Larry Evans
+//    WHAT:
+//      Added sp_types_noop::collector
+//    WHY:
+//      To enable change mentioned in ChangeLog on 2005-08-15
+//      in binary_node.hpp.
 #endif //include guard
