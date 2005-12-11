@@ -3,5 +3,15 @@
 # Defaults to finding the boost installation in the same directory as
 # the directory containing this file.
 BOOST ?= $(.boost-build-file:D)/../boost ;
-BOOST_ROOT = $(.boost-build-file:D) $(BOOST) ;
-boost-build $(BOOST)/tools/build/v1 ;
+
+if --v2 in $(ARGV)
+{
+    JAMFILE = [Bb]uild.jam [Jj]amfile.v2 ;
+    BOOST_ROOT = $(BOOST) ;
+    boost-build $(BOOST)/tools/build/v2 ;
+}
+else
+{
+    BOOST_ROOT = $(.boost-build-file:D) $(BOOST) ;
+    boost-build $(BOOST)/tools/build/v1 ;
+}    
