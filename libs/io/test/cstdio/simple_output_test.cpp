@@ -7,11 +7,11 @@
 //  See <http://www.boost.org/libs/io/> for the library's home page.
 
 //  Revision History
-//   13 Dec 2005  Initial version (Daryle Walker)
+//   18 Dec 2005  Initial version (Daryle Walker)
 
 #include <boost/io/cstdio/simple_output.hpp>  // for iputc, iputs
 
-#include <boost/test/auto_unit_test.hpp>  // for BOOST_AUTO_UNIT_TEST, etc.
+#include <boost/test/unit_test.hpp>  // for BOOST_AUTO_TEST_CASE, etc.
 
 #include <sstream>    // for std::ostringstream
 #include <string>     // for std::string

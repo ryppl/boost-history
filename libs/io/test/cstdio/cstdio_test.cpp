@@ -7,13 +7,13 @@
 //  See <http://www.boost.org/libs/io/> for the library's home page.
 
 //  Revision History
-//   12 Dec 2005  Initial version (Daryle Walker)
+//   18 Dec 2005  Initial version (Daryle Walker)
 
-#define BOOST_AUTO_TEST_MAIN  "cstdio extensions test"
+#define BOOST_TEST_MAIN  "cstdio extensions test"
 
 #include <boost/io/cstdio.hpp>  // for ???
 
-#include <boost/test/auto_unit_test.hpp>  // for BOOST_AUTO_UNIT_TEST, etc.
+#include <boost/test/unit_test.hpp>  // for BOOST_AUTO_TEST_CASE, etc.
 
 // Put other Boost headers here
 
