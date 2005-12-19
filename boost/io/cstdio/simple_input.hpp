@@ -95,11 +95,13 @@ boost::io::cstdio::iungetc
 //  C-string reading function definition  ------------------------------------//
 
 /** Receives a null-terminated string from an input stream, unformatted.  It
-    works by calling <code><var>i</var>.get( <var>s</var>, <var>n</var> )<code>,
-    so it will append a null terminator after the copied characters.  If \c get
-    ended by encountering a newline character, that character will be extracted
-    from the stream and copied into the string before the null terminator.  (If
-    newline handling is done, it has an effect of resetting \c gcount to 1.)
+    works by calling <code><var>i</var>.get( <var>s</var>, <var>n</var>
+    )</code>, so it will append a null terminator after the copied characters.
+    If \c get ended by encountering a newline character, that character will be
+    extracted from the stream and copied into the string before the null
+    terminator.  (If newline handling is done, it has an effect of resetting
+    \c gcount to 1.)
+
 
     \param s  The buffer to store the characters read.
     \param n  The size of the buffer.  The buffer size has to account for the
