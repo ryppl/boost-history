@@ -13,13 +13,15 @@ test: build
 	./ini_rel.exe
 	./info_dbg.exe 
 	./info_rel.exe
+	./json_dbg.exe 
+	./json_rel.exe
 	./xml_dbg.exe 
 	./xml_rel.exe
 
 build: debug release
 
-debug: ptree_dbg.exe cmdline_dbg.exe ini_dbg.exe  info_dbg.exe xml_dbg.exe
-release: ptree_rel.exe cmdline_rel.exe ini_rel.exe info_rel.exe xml_rel.exe
+debug: ptree_dbg.exe cmdline_dbg.exe ini_dbg.exe info_dbg.exe json_dbg.exe xml_dbg.exe
+release: ptree_rel.exe cmdline_rel.exe ini_rel.exe info_rel.exe json_rel.exe xml_rel.exe
 
 ptree_dbg.exe: ../test_property_tree.cpp
 	$(CC) $(CFLAGSDBG) $(CCINCLUDE) $(EXTINCLUDE) $< -o $@ $(EXTLIBS) 
@@ -36,6 +38,10 @@ ini_rel.exe: ../test_ini_parser.cpp
 info_dbg.exe: ../test_info_parser.cpp
 	$(CC) $(CFLAGSDBG) $(CCINCLUDE) $(EXTINCLUDE) $< -o $@ $(EXTLIBS) 
 info_rel.exe: ../test_info_parser.cpp
+	$(CC) $(CFLAGSREL) $(CCINCLUDE) $(EXTINCLUDE) $< -o $@ $(EXTLIBS) 
+json_dbg.exe: ../test_json_parser.cpp
+	$(CC) $(CFLAGSDBG) $(CCINCLUDE) $(EXTINCLUDE) $< -o $@ $(EXTLIBS) 
+json_rel.exe: ../test_json_parser.cpp
 	$(CC) $(CFLAGSREL) $(CCINCLUDE) $(EXTINCLUDE) $< -o $@ $(EXTLIBS) 
 xml_dbg.exe: ../test_xml_parser_spirit.cpp
 	$(CC) $(CFLAGSDBG) $(CCINCLUDE) $(EXTINCLUDE) $< -o $@ $(EXTLIBS) 

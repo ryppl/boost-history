@@ -95,6 +95,12 @@
         <dt class="index1">class <a href="#ini_parser::ini_parser_error">ini_parser_error</a></dt>
         <p>
         </p>
+        <dt class="index">Header <a href="#header_property_tree/json_parser.hpp">property_tree/json_parser.hpp</a></dt>
+        <dt class="index1">function <a href="#json_parser::read_json">read_json</a></dt>
+        <dt class="index1">function <a href="#json_parser::write_json">write_json</a></dt>
+        <dt class="index1">class <a href="#json_parser::json_parser_error">json_parser_error</a></dt>
+        <p>
+        </p>
         <dt class="index">Header <a href="#header_property_tree/info_parser.hpp">property_tree/info_parser.hpp</a></dt>
         <dt class="index1">function <a href="#info_parser::read_info">read_info</a></dt>
         <dt class="index1">function <a href="#info_parser::write_info">write_info</a></dt>
@@ -321,7 +327,7 @@ template&lt;class Ch, class Tr&gt; class basic_ptree;</pre>
     <h4>
         Description</h4>
     <p>
-        Property tree stores a sequence of values of this type. First element of the pair is key, the second is child property tree stored under that key.</p>
+        Property tree stores a sequence of values of this type. First element of the pair is key, the second is child property tree stored at this key.</p>
     <!-- =================================================================== -->
     <!---->
     <!---->
@@ -334,7 +340,7 @@ template&lt;class Ch, class Tr&gt; class basic_ptree;</pre>
     <h4>
         Description</h4>
     <p>
-        Type that can be used to store size of stored sequence.</p>
+        Type that can be used to hold size of stored sequence.</p>
     <!-- =================================================================== -->
     <!---->
     <!---->
@@ -578,7 +584,7 @@ bool operator ==(const basic_ptree &amp;rhs) const;</pre>
     <h4>
         Description</h4>
     <p>
-        Tests if property tree is equal to another property tree. Property trees are considered equal if they have equal data and equal children, which are stored in equal sequence under equal keys. Equality of keys is tested with a predicate supplied as a basic_ptree template parameter.</p>
+        Tests if property tree is equal to another property tree. Property trees are considered equal if they have equal data and equal children, which are stored in equal sequence at equal keys. Equality of keys is tested with a predicate supplied as a basic_ptree template parameter.</p>
     <h4>
         Parameters</h4>
     <dl>
@@ -629,7 +635,7 @@ const_iterator find(const key_type &amp;key) const;</pre>
     <h4>
         Description</h4>
     <p>
-        Finds direct child of the node stored under specified key. Time complexity is <i>O(log n)</i>. Keys equivalence is tested with a predicate supplied as basic_ptree template parameter. If child is not found, returns <code>end()</code>. Both const and non-const versions are provided. To find non-direct children use <a href="reference.html#basic_ptree::get_child"><code>get_child</code></a> function.</p>
+        Finds direct child of the node stored at specified key. Time complexity is <i>O(log n)</i>. Keys equivalence is tested with a predicate supplied as basic_ptree template parameter. If child is not found, returns <code>end()</code>. Both const and non-const versions are provided. To find non-direct children use <a href="reference.html#basic_ptree::get_child"><code>get_child</code></a> function.</p>
     <h4>
         Parameters</h4>
     <dl>
@@ -913,7 +919,7 @@ const basic_ptree *get_child(Ch separator, const key_type &amp;path) const;</pre
     <p>
         Traverses the tree using given path and retrieves a child stored there. Path is a sequence of keys separated with zero or more special 'separator' characters. This function will retrieve indirect children if path contains at least one separator. First 2 versions assume separator to be dot character (<code>'.'</code>).</p>
     <p>
-        Throws <a href="reference.html#ptree_bad_path"><code>ptree_bad_path</code></a> if child property tree cannot be located. If you want non-throwing failure handling, use <a href="reference.html#basic_ptree::get_child_b"><code>get_child_b</code></a> or <a href="reference.html#basic_ptree::get_child_d"><code>get_child_d</code></a>.</p>
+        Throws <a href="reference.html#ptree_bad_path"><code>ptree_bad_path</code></a> if child property tree cannot be located. If you want non-throwing failure handling, use <a href="reference.html#basic_ptree::get_child_b"><code>get_child_b</code></a>, <a href="reference.html#basic_ptree::get_child_d"><code>get_child_d</code></a> or <a href="reference.html#basic_ptree::get_child_o"><code>get_child_o</code></a>.</p>
     <h4>
         Parameters</h4>
     <dl>
@@ -1062,11 +1068,11 @@ basic_ptree *put_child(Ch separator, const key_type &amp;path, basic_ptree *valu
     <h4>
         Description</h4>
     <p>
-        Traverses the tree using given path and inserts a new child at the back of found sequence. During traversal the function inserts any elements of the path that are missing. Path is a sequence of keys separated with zero or more special 'separator' characters. First version assumes separator to be dot character (<code>'.'</code>).</p>
+        Traverses the tree using given path, and inserts a new key, or replaces existing one. If any of the intermediate keys specified by path does not exist, it is inserted, with empty data and no children, at the back of existing sequence. Path is a sequence of keys separated with zero or more special 'separator' characters. First version assumes separator to be dot character (<code>'.'</code>).</p>
     <p>
-        For example, if <code>path</code> is "key1.key2.key3", the function will find child designated by "key1.key2" path and insert new element with key "key3" at the back of sequence. If either "key1" or "key1.key2" does not exist, it will insert them as well. If there are no missing path elements, it is equivalent to calling <code>get_child("key1.key2")-&gt;push_back(std::make_pair("key3", *value))</code>. In any case it is also equivalent to calling <code>put_child("key1", NULL)-&gt;put_child("key2", NULL)-&gt;put_child("key3", value)</code>.</p>
-    <p>
-        This function is a complement to <a href="reference.html#basic_ptree::get_child"><code>get_child</code></a>. If <code>put_child(path, value)</code> was called, <code>get_child(path)</code> will return a pointer to element inserted by <code>put_child</code>.</p>
+        For example, if <code>path</code> is "key1.key2.key3", the function will find a child designated by "key1.key2" path. This child will be checked for presence of "key3" subkey. If it exists, it will be replaced with the one specified by <code>value</code> parameter. If it does not exist, "key3" will be added at the back of existing sequence (if any). If either "key1" or "key1.key2" do not exist, the function will insert them as well.</p>
+        <p>Passing <code>value</code> equal to NULL has special meaning. If key designated by <code>path</code> exists, the function will leave it unchanged. If it does not exist, empty one will be inserted. Thus, calling <code>put_child("key1.key2.key3", value)</code> is equivalent to <code>put_child("key1", NULL)-&gt;put_child("key2", NULL)-&gt;put_child("key3", value)</code>.</p>
+    <p>This function is a complement to <a href="reference.html#basic_ptree::get_child"><code>get_child</code></a>. If <code>put_child(path, value)</code> was called, <code>get_child(path)</code> will return a pointer to element inserted by <code>put_child</code>.</p>
     <h4>
         Parameters</h4>
     <dl>
@@ -1078,12 +1084,12 @@ basic_ptree *put_child(Ch separator, const key_type &amp;path, basic_ptree *valu
             Path to child property tree. Contains sequence of one or more keys separated with separator characters.</dd>
         <dt class="parameter">value</dt>
         <dd>
-            Property tree to be inserted. Can be NULL in which case empty property tree is inserted.</dd>
+            Property tree to be inserted. Invokes special behavior if equal to NULL. In this case the function will not modify property tree if it already exists at <code>path</code>. If no property tree exists there, an empty one will be inserted, (as if <code>value</code> pointed to empty ptree).</dd>
     </dl>
     <h4>
         Return value</h4>
     <p>
-        Pointer to inserted property tree. Return value is always a pointer to a valid property tree.</p>
+        Pointer to inserted or replaced property tree. Return value is always a pointer to a valid property tree.</p>
     <!-- =================================================================== -->
     <!---->
     <!---->
@@ -1380,9 +1386,9 @@ template&lt;class Type&gt; basic_ptree *put(Ch separator, const key_type &amp;pa
     <h4>
         Description</h4>
     <p>
-        Traverses the tree using given path and inserts a new child at the back of found sequence. Then translates <code>value</code> from <code>Type</code> into a string using <code>operator &lt;&lt;</code>, and puts it in new child data. During traversal the function inserts any elements of the path that are missing. If data cannot be translated, throws <a href="reference.html#ptree_bad_data"><code>ptree_bad_data</code></a> exception. Path is a sequence of keys separated with zero or more special 'separator' characters. First version assumes separator to be dot character (<code>'.'</code>).</p>
+        Traverses the tree using given path, and inserts a new key, or replaces existing one. If any of the intermediate keys specified by path does not exist, it is inserted, with empty data and no children, at the back of existing sequence. Once the key specified by path is located, the function translates <code>value</code> from <code>Type</code> into a string using <code>operator &lt;&lt;</code>, and puts it in its data. During traversal the function inserts any elements of the path that are missing. If value cannot be translated, throws <a href="reference.html#ptree_bad_data"><code>ptree_bad_data</code></a> exception. Path is a sequence of keys separated with zero or more special 'separator' characters. First version assumes separator to be dot character (<code>'.'</code>).</p>
     <p>
-        The function is a complement to <a href="reference.html#basic_ptree::get"><code>get</code></a>. It is equivalent to calling <code>put_child(path, NULL)->put_own(value, loc)</code>.</p>
+        The function is a complement to <a href="reference.html#basic_ptree::get"><code>get</code></a>. If <code>put(path, value)</code> was called, executing <code>get&lt;type&gt;(path)</code> will retrieve the value previously inserted by put. Also, calling <code>put(path, value, loc)</code> is equivalent to <code>put_child(path, NULL)->put_own(value, loc)</code>.</p>
     <h4>
         Parameters</h4>
     <dl>
@@ -1637,6 +1643,110 @@ class ini_parser_error;</pre>
                 Description</h4>
             <p>
                 Error indicating that reading or writing of INI data failed. Derives from <a href="reference.html#file_parser_error">file_parser_error</a>.
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <hr>
+    <h2>
+        <a name="header_property_tree/json_parser.hpp"></a>Header property_tree/json_parser.hpp
+    </h2>
+    <p>
+        This header contains definitions of JSON format reading and writing functions.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
+        <a name="json_parser::read_json"></a>read_json
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>
+template&lt;class Ptree&gt;
+void read_json(std::basic_istream&lt;typename Ptree::char_type&gt; &amp;stream,
+               Ptree &amp;pt);
+
+template&lt;class Ptree&gt;
+void read_json(const std::string &amp;filename,
+               Ptree &amp;pt,
+               const std::locale &amp;loc = std::locale());</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Reads JSON from a file or stream and translates it to property tree. Clears existing contents of property tree. In case of error throws <a href="reference.html#json_parser::json_parser_error">json_parser_error</a>, and leaves property tree unmodified. See <a href="index.html#json_parser">JSON parser</a>.
+        <h4>
+            Parameters</h4>
+        <dl>
+            <dt class="parameter">Ptree</dt>
+            <dd>
+                Type of property tree to populate with data.</dd>
+            <dt class="parameter">stream</dt>
+            <dd>
+                Stream to read data from.</dd>
+            <dt class="parameter">pt</dt>
+            <dd>
+                Property tree to populate.
+            </dd>
+            <dt class="parameter">filename</dt>
+            <dd>
+                Name of file to read.</dd>
+            <dt class="parameter">loc</dt>
+            <dd>
+                In the second function, locale to use for reading from file. The first function uses locale of the supplied stream.</dd>
+        </dl>
+        <!-- =================================================================== -->
+        <!---->
+        <!---->
+        <h3 class="separating-header">
+            <a name="json_parser::write_json"></a>write_json
+        </h3>
+        <h4>
+            Synopsis</h4>
+        <pre>
+template&lt;class Ptree&gt;
+void write_json(std::basic_ostream&lt;typename Ptree::char_type&gt; &amp;stream, 
+                const Ptree &amp;pt);
+
+template&lt;class Ptree&gt;
+void write_json(const std::string &amp;filename,
+                const Ptree &amp;pt,
+                const std::locale &amp;loc = std::locale());</pre>
+        <h4>
+            Description</h4>
+        <p>
+            Translates property tree to JSON and writes it to a file or stream. In case of error throws <a href="reference.html#json_parser::json_parser_error">json_parser_error</a>. See <a href="index.html#json_parser">JSON parser</a>.
+            <h4>
+                Parameters</h4>
+            <dl>
+                <dt class="parameter">Ptree</dt>
+                <dd>
+                    Type of property tree to get data from.</dd>
+                <dt class="parameter">stream</dt>
+                <dd>
+                    Stream to write data to.</dd>
+                <dt class="parameter">pt</dt>
+                <dd>
+                    Property tree to translate.</dd>
+                <dt class="parameter">filename</dt>
+                <dd>
+                    Name of file to write.</dd>
+                <dt class="parameter">loc</dt>
+                <dd>
+                    In the second function, locale to use for writing to file. The first function uses locale of the supplied stream.</dd>
+            </dl>
+            <!-- =================================================================== -->
+            <!---->
+            <!---->
+            <h3 class="separating-header">
+                <a name="json_parser::json_parser_error"></a>json_parser_error class
+            </h3>
+            <h4>
+                Synopsis</h4>
+            <pre>
+class json_parser_error;</pre>
+            <h4>
+                Description</h4>
+            <p>
+                Error indicating that reading or writing of JSON data failed. Derives from <a href="reference.html#file_parser_error">file_parser_error</a>.
                 <!-- =================================================================== -->
                 <!---->
                 <!---->

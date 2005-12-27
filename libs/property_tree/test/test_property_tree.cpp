@@ -28,7 +28,7 @@ struct SortPredRev
     bool operator()(const typename Ptree::value_type &v1,
                     const typename Ptree::value_type &v2) const
     {
-        return !(v1.first < v2.first);
+        return v1.first > v2.first;
     }
 };
 

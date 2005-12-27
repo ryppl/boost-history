@@ -145,10 +145,10 @@ namespace boost { namespace property_tree
         optional<const basic_ptree<Ch, Tr> *> get_child_o(const key_type &path) const;
 
         // Put child ptree with custom separator
-        basic_ptree<Ch, Tr> *put_child(Ch separator, const key_type &path, basic_ptree<Ch, Tr> *value);
+        basic_ptree<Ch, Tr> *put_child(Ch separator, const key_type &path, const basic_ptree<Ch, Tr> *value);
 
         // Put child ptree with default separator
-        basic_ptree<Ch, Tr> *put_child(const key_type &path, basic_ptree<Ch, Tr> *value);
+        basic_ptree<Ch, Tr> *put_child(const key_type &path, const basic_ptree<Ch, Tr> *value);
 
         // Get value from data of ptree
         template<class Type> Type get_own(const std::locale &loc = std::locale()) const;

@@ -72,11 +72,14 @@ namespace boost { namespace property_tree { namespace info_parser
             {
                 std::basic_string<Ch> data = create_escapes(pt.data());
                 if (is_simple_data(data))
-                    stream << Ch(' ') << data;
+                    stream << Ch(' ') << data << Ch('\n');
                 else
-                    stream << Ch(' ') << Ch('\"') << data << Ch('\"');
+                    stream << Ch(' ') << Ch('\"') << data << Ch('\"') << Ch('\n');
             }
-            stream << Ch('\n');
+            else if (pt.empty())
+                stream << Ch(' ') << Ch('\"') << Ch('\"') << Ch('\n');
+            else
+                stream << Ch('\n');
         }
         
         // Write keys

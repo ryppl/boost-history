@@ -10,96 +10,88 @@
 
 #include "test_utils.hpp"
 #include <boost/property_tree/cmdline_parser.hpp>
+#include <vector>
+#include <string>
 
+namespace
+{
+    
+    // Test arguments
+    char *argv[] = 
+    {
+        "c:\\program.exe",
+        "-Isrc/include1",
+        "   file2.cc   ",
+        "/L    src/lib1",
+        "-Lsrc/lib2",
+        "/ooutput",
+        "file1.cc",
+        "-g",
+        "-",
+        "/",
+        " /Isrc/include2 ",
+        "   file3.cc   ",
+        "-I  src/include3   "
+    };
+
+    // Test arguments count
+    const int argc = sizeof(argv) / sizeof(*argv);
+
+}
+
+template<class Ptree>
 void test_cmdline_parser()
 {
 
     using namespace boost::property_tree;
+    typedef typename Ptree::char_type Ch;
+    typedef std::basic_string<Ch> Str;
 
-    int argc = 5;
-    char *argv[5] = {
-        "c:\\someexe.exe",
-        "-Isrc/include",
-        " -L    src/lib  ",
-        "file1.cc",
-        "   file2.cc   "
-    };
+    // Prepare arguments of proper char type
+    std::vector<Ch *> p;
+    std::vector<Str> strings;
+    strings.reserve(argc);
+    for (int i = 0; i < argc; ++i)
+    {
+        strings.push_back(detail::widen<Ch>(argv[i]));
+        p.push_back(const_cast<Ch *>(strings.back().c_str()));
+    }
 
-    ptree pt1;
-    read_cmdline<ptree>(argc, argv, "-", pt1);
+    Ptree pt1;
+    read_cmdline<Ptree>(argc, &p.front(), detail::widen<Ch>("-/"), pt1);
 
     // Check total sizes
-    BOOST_CHECK(total_size(pt1) == 6);
-    BOOST_CHECK(total_data_size(pt1) == 48);
-    BOOST_CHECK(total_keys_size(pt1) == 2);
+    //std::cerr << total_size(pt1) << " " << total_data_size(pt1) << " " << total_keys_size(pt1) << "\n";
+    BOOST_CHECK(total_size(pt1) == 21);
+    BOOST_CHECK(total_data_size(pt1) == 138);
+    BOOST_CHECK(total_keys_size(pt1) == 6);
         
-    ptree pt2;
-    read_cmdline<ptree>(argc, argv, "/", pt2);
+    Ptree pt2;
+    read_cmdline<Ptree>(argc, &p.front(), detail::widen<Ch>("-"), pt2);
 
     // Check total sizes
-    BOOST_CHECK(total_size(pt2) == 6);
-    BOOST_CHECK(total_data_size(pt2) == 56);
-    BOOST_CHECK(total_keys_size(pt2) == 0);
+    //std::cerr << total_size(pt2) << " " << total_data_size(pt2) << " " << total_keys_size(pt2) << "\n";
+    BOOST_CHECK(total_size(pt2) == 19);
+    BOOST_CHECK(total_data_size(pt2) == 139);
+    BOOST_CHECK(total_keys_size(pt2) == 4);
         
-    ptree pt3;
-    read_cmdline<ptree>(argc, argv, "-/", pt3);
+    Ptree pt3;
+    read_cmdline<Ptree>(argc, &p.front(), detail::widen<Ch>("/"), pt3);
 
     // Check total sizes
-    BOOST_CHECK(total_size(pt3) == 6);
-    BOOST_CHECK(total_data_size(pt3) == 48);
-    BOOST_CHECK(total_keys_size(pt3) == 2);
+    //std::cerr << total_size(pt3) << " " << total_data_size(pt3) << " " << total_keys_size(pt3) << "\n";
+    BOOST_CHECK(total_size(pt3) == 19);
+    BOOST_CHECK(total_data_size(pt3) == 157);
+    BOOST_CHECK(total_keys_size(pt3) == 4);
 
 }
-
-#ifndef BOOST_NO_CWCHAR    
-
-void test_wcmdline_parser()
-{
-
-    using namespace boost::property_tree;
-
-    int argc = 5;
-    wchar_t *argv[5] = {
-        L"c:\\someexe.exe",
-        L"-Isrc/include",
-        L" -L    src/lib  ",
-        L"file1.cc",
-        L"   file2.cc   "
-    };
-
-    wptree pt1;
-    read_cmdline<wptree>(argc, argv, L"-", pt1);
-
-    // Check total sizes
-    BOOST_CHECK(total_size(pt1) == 6);
-    BOOST_CHECK(total_data_size(pt1) == 48);
-    BOOST_CHECK(total_keys_size(pt1) == 2);
-        
-    wptree pt2;
-    read_cmdline<wptree>(argc, argv, L"/", pt2);
-
-    // Check total sizes
-    BOOST_CHECK(total_size(pt2) == 6);
-    BOOST_CHECK(total_data_size(pt2) == 56);
-    BOOST_CHECK(total_keys_size(pt2) == 0);
-
-    wptree pt3;
-    read_cmdline<wptree>(argc, argv, L"-/", pt3);
-
-    // Check total sizes
-    BOOST_CHECK(total_size(pt3) == 6);
-    BOOST_CHECK(total_data_size(pt3) == 48);
-    BOOST_CHECK(total_keys_size(pt3) == 2);
-
-}
-
-#endif
 
 int test_main(int argc, char *argv[])
 {
-    test_cmdline_parser();
+    using namespace boost::property_tree;
+    test_cmdline_parser<ptree>();
 #ifndef BOOST_NO_CWCHAR    
-    test_wcmdline_parser();
+    test_cmdline_parser<wptree>();
 #endif
     return 0;
 }

@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="sandbox"
-	ProjectGUID="{85FA9AEF-966B-4D93-9431-F507754B0431}"
+	Name="test_json_parser"
+	ProjectGUID="{CDDC4697-F51B-4B9A-A029-C2EB5271848F}"
 	RootNamespace="test_property_tree"
 	Keyword="Win32Proj"
 	>
@@ -179,116 +179,8 @@
 	<References>
 	</References>
 	<Files>
-		<Filter
-			Name="detail"
-			>
-			<File
-				RelativePath="..\..\..\..\boost\property_tree\detail\file_parser_error.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\property_tree\detail\info_parser_error.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\property_tree\detail\info_parser_read.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\property_tree\detail\info_parser_utils.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\property_tree\detail\info_parser_write.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\property_tree\detail\json_parser_error.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\property_tree\detail\json_parser_read.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\property_tree\detail\json_parser_write.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\property_tree\detail\ptree_fwd.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\property_tree\detail\ptree_implementation.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\property_tree\detail\ptree_interface.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\property_tree\detail\ptree_utils.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\property_tree\detail\xml_parser_error.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\property_tree\detail\xml_parser_flags.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\property_tree\detail\xml_parser_read_spirit.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\property_tree\detail\xml_parser_read_tinyxml.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\property_tree\detail\xml_parser_utils.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\property_tree\detail\xml_parser_write.hpp"
-				>
-			</File>
-		</Filter>
 		<File
-			RelativePath="..\..\..\..\boost\property_tree\cmdline_parser.hpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\..\boost\property_tree\info_parser.hpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\..\boost\property_tree\ini_parser.hpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\..\boost\property_tree\json_parser.hpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\..\boost\property_tree\ptree.hpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\..\boost\property_tree\ptree_fwd.hpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\..\boost\property_tree\registry_parser.hpp"
-			>
-		</File>
-		<File
-			RelativePath="..\sandbox.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\..\boost\property_tree\xml_parser.hpp"
+			RelativePath="..\test_json_parser.cpp"
 			>
 		</File>
 	</Files>

@@ -95,13 +95,16 @@ const char *ok_data_2 =
     "";
 
 const char *ok_data_3 = 
-    "key1\n"
-    "key2\n"
-    "key3\n"
-    "key4\n";
+    "key1 \"\"\n"
+    "key2 \"\"\n"
+    "key3 \"\"\n"
+    "key4 \"\"\n";
 
 const char *ok_data_4 = 
-    "key1 data data data";
+    "key1 data key2 data";
+
+const char *ok_data_5 = 
+    "key { key \"\" key \"\" }\n";
 
 const char *error_data_1 = 
     ";Test file for info_parser\n"
@@ -170,7 +173,13 @@ void test_info_parser()
     generic_parser_test_ok<Ptree, ReadFunc, WriteFunc>
     (
         ReadFunc(), WriteFunc(), ok_data_4, NULL, 
-        "testok4.info", NULL, "testok4out.info", 2, 14, 4
+        "testok4.info", NULL, "testok4out.info", 3, 8, 8
+    );
+
+    generic_parser_test_ok<Ptree, ReadFunc, WriteFunc>
+    (
+        ReadFunc(), WriteFunc(), ok_data_5, NULL, 
+        "testok5.info", NULL, "testok5out.info", 4, 0, 9
     );
 
     generic_parser_test_error<ptree, ReadFunc, WriteFunc, info_parser_error>

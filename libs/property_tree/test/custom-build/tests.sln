@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+# Visual C++ Express 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_property_tree", "test_property_tree.vcproj", "{DB0C18AA-BBA4-4DBF-A76E-92B642E45A74}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_ini_parser", "test_ini_parser.vcproj", "{20D5FE87-9284-4B1A-8505-7B913474C4AA}"
@@ -14,6 +14,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_registry_parser", "test_registry_parser.vcproj", "{3A27B48F-B815-4EC9-AC99-E9C003300EDA}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sandbox", "sandbox.vcproj", "{85FA9AEF-966B-4D93-9431-F507754B0431}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_json_parser", "test_json_parser.vcproj", "{CDDC4697-F51B-4B9A-A029-C2EB5271848F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +51,10 @@ Global
 		{85FA9AEF-966B-4D93-9431-F507754B0431}.Debug|Win32.Build.0 = Debug|Win32
 		{85FA9AEF-966B-4D93-9431-F507754B0431}.Release|Win32.ActiveCfg = Release|Win32
 		{85FA9AEF-966B-4D93-9431-F507754B0431}.Release|Win32.Build.0 = Release|Win32
+		{CDDC4697-F51B-4B9A-A029-C2EB5271848F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CDDC4697-F51B-4B9A-A029-C2EB5271848F}.Debug|Win32.Build.0 = Debug|Win32
+		{CDDC4697-F51B-4B9A-A029-C2EB5271848F}.Release|Win32.ActiveCfg = Release|Win32
+		{CDDC4697-F51B-4B9A-A029-C2EB5271848F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

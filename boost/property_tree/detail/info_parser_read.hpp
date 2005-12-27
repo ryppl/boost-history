@@ -163,7 +163,7 @@ namespace boost { namespace property_tree { namespace info_parser
         else
         {
             *need_more_lines = false;
-            return read_line(text);
+            return read_word(text);
         }
     }
 

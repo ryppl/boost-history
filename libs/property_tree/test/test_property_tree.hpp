@@ -63,39 +63,41 @@ void test_constructor_destructor_assignment(PTREE *)
     {
 
         // Test constructor from string
-        PTREE pt(T("data"));
-        BOOST_CHECK(pt.data() == T("data"));
-        
-        PTREE pt1;
-        BOOST_CHECK(PTREE::debug_get_instances_count() == 2);
+        PTREE pt1(T("data"));
+        BOOST_CHECK(pt1.data() == T("data"));
+        BOOST_CHECK(PTREE::debug_get_instances_count() == 1);
 
         // Do insertions
-        PTREE *tmp1 = pt1.put(T("key1"), T(""));
-        PTREE *tmp2 = pt1.put(T("key2"), T(""));
-        tmp1->put(T("key3"), T(""));
-        tmp2->put(T("key4"), T(""));
-        BOOST_CHECK(PTREE::debug_get_instances_count() == 6);
+        PTREE *tmp1 = pt1.put(T("key1"), T("data1"));
+        PTREE *tmp2 = pt1.put(T("key2"), T("data2"));
+        tmp1->put(T("key3"), T("data3"));
+        tmp2->put(T("key4"), T("data4"));
+        BOOST_CHECK(PTREE::debug_get_instances_count() == 5);
 
         // Make a copy using copy constructor
         PTREE *pt2 = new PTREE(pt1);
-        BOOST_CHECK(PTREE::debug_get_instances_count() == 11);
+        BOOST_CHECK(*pt2 == pt1);
+        BOOST_CHECK(PTREE::debug_get_instances_count() == 10);
 
         // Make a copy using = operator
         PTREE *pt3 = new PTREE;
         *pt3 = *pt2;
-        BOOST_CHECK(PTREE::debug_get_instances_count() == 16);
+        BOOST_CHECK(*pt3 == *pt2);
+        BOOST_CHECK(PTREE::debug_get_instances_count() == 15);
 
         // Test self assignment
         pt1 = pt1;
-        BOOST_CHECK(PTREE::debug_get_instances_count() == 16);
+        BOOST_CHECK(pt1 == *pt2);
+        BOOST_CHECK(pt1 == *pt3);
+        BOOST_CHECK(PTREE::debug_get_instances_count() == 15);
 
         // Destroy
         delete pt2;
-        BOOST_CHECK(PTREE::debug_get_instances_count() == 11);
+        BOOST_CHECK(PTREE::debug_get_instances_count() == 10);
 
         // Destroy
         delete pt3;
-        BOOST_CHECK(PTREE::debug_get_instances_count() == 6);
+        BOOST_CHECK(PTREE::debug_get_instances_count() == 5);
     
     }
 
@@ -479,11 +481,11 @@ void test_comparison(PTREE *)
 {
     
     // Prepare original
-    PTREE pt_orig;
-    pt_orig.put(T("key1"), T(""));
-    pt_orig.put(T("key1.key3"), T(""));
-    pt_orig.put(T("key1.key4"), T(""));
-    pt_orig.put(T("key2"), T(""));
+    PTREE pt_orig(T("data"));
+    pt_orig.put(T("key1"), T("data1"));
+    pt_orig.put(T("key1.key3"), T("data2"));
+    pt_orig.put(T("key1.key4"), T("data3"));
+    pt_orig.put(T("key2"), T("data4"));
 
     // Test originals
     {
@@ -501,7 +503,7 @@ void test_comparison(PTREE *)
         PTREE pt1(pt_orig);
         PTREE pt2(pt_orig);
         pt1.pop_back();
-        pt1.put(T("KEY2"), T(""));
+        pt1.put(T("KEY2"), T("data4"));
         BOOST_CHECK(pt1 == pt2);
         BOOST_CHECK(pt2 == pt1);
         BOOST_CHECK(!(pt1 != pt2));
@@ -520,7 +522,7 @@ void test_comparison(PTREE *)
         BOOST_CHECK(!(pt2 != pt1));
     }
 
-    // Test modified copies (modified data)
+    // Test modified copies (modified root data)
     {
         PTREE pt1(pt_orig);
         PTREE pt2(pt_orig);
@@ -778,6 +780,17 @@ void test_get_put(PTREE *)
     BOOST_CHECK(!pt.get_o<int>(T("k3.k.k")));
     BOOST_CHECK(!pt.get_o<int>(T("k4.k.k.k")));
 
+    // Test multiple puts with the same key
+    {
+        PTREE pt;
+        pt.put(T("key"), 1);
+        BOOST_CHECK(pt.get<int>(T("key")) == 1);
+        BOOST_CHECK(pt.size() == 1);
+        pt.put(T("key"), 2);
+        BOOST_CHECK(pt.get<int>(T("key")) == 2);
+        BOOST_CHECK(pt.size() == 1);
+    }
+
 }
 
 void test_get_child_put_child(PTREE *)
@@ -879,6 +892,17 @@ void test_get_child_put_child(PTREE *)
 
     // Do incorrect extractions via get_child (optional version)
     BOOST_CHECK(!pt.get_child_o(T("k2.k.bogus.path")));
+
+    // Test multiple puts with the same key
+    {
+        PTREE pt, tmp1(T("data1")), tmp2(T("data2"));
+        pt.put_child(T("key"), &tmp1);
+        BOOST_CHECK(*pt.get_child(T("key")) == tmp1);
+        BOOST_CHECK(pt.size() == 1);
+        pt.put_child(T("key"), &tmp2);
+        BOOST_CHECK(*pt.get_child(T("key")) == tmp2);
+        BOOST_CHECK(pt.size() == 1);
+    }
 
 }
 

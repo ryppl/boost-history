@@ -153,11 +153,19 @@ void generic_parser_test_ok(ReadFunc rf,
                                                         test_data_1, test_data_2, 
                                                         filename_1, filename_2, filename_out);
 
+        // Determine total sizes
+        typename Ptree::size_type actual_total_size = ::total_size(pt);
+        typename Ptree::size_type actual_data_size = ::total_data_size(pt);
+        typename Ptree::size_type actual_keys_size = ::total_keys_size(pt);
+        if (actual_total_size != total_size ||
+            actual_data_size != total_data_size ||
+            actual_keys_size != total_keys_size)
+            std::cerr << "Sizes: " << (unsigned)::total_size(pt) << ", " << (unsigned)::total_data_size(pt) << ", " << (unsigned)::total_keys_size(pt) << "\n";
+
         // Check total sizes
-        //std::cerr << (unsigned)::total_size(pt) << " " << (unsigned)::total_data_size(pt) << " " << (unsigned)::total_keys_size(pt) << "\n";
-        BOOST_CHECK(::total_size(pt) == total_size);
-        BOOST_CHECK(::total_data_size(pt) == total_data_size);
-        BOOST_CHECK(::total_keys_size(pt) == total_keys_size);
+        BOOST_CHECK(actual_total_size == total_size);
+        BOOST_CHECK(actual_data_size == total_data_size);
+        BOOST_CHECK(actual_keys_size == total_keys_size);
 
     }
     catch (std::runtime_error &e)

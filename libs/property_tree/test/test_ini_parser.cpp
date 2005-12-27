@@ -179,16 +179,17 @@ int test_main(int argc, char *argv[])
     // Test duplicate sections
     {
         ptree pt;
-        pt.put_child("section", NULL);
-        pt.put_child("section", NULL);
+        pt.push_back(std::make_pair("section", ptree()));
+        pt.push_back(std::make_pair("section", ptree()));
         test_erroneous_write(pt);
     }
 
     // Test duplicate keys
     {
         ptree pt;
-        pt.put_child("section.key", NULL);
-        pt.put_child("section.key", NULL);
+        ptree *child = pt.put_child("section", NULL);
+        child->push_back(std::make_pair("key", ptree()));
+        child->push_back(std::make_pair("key", ptree()));
         test_erroneous_write(pt);
     }
 

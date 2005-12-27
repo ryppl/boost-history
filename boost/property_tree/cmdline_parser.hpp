@@ -36,15 +36,26 @@ namespace boost { namespace property_tree { namespace cmdline_parser
                 if (metachars.find(text[0]) != Str::npos)
                 {
                     if (text.size() == 1)
-                        local.push_back(std::make_pair(text, Ptree()));
+                    {
+                        Ptree *child = local.put(text, Str());
+                        child->push_back(std::make_pair(Str(), Ptree(child->data())));
+                    }
                     else if (text.size() == 2)
-                        local.push_back(std::make_pair(text.substr(1, 1), Ptree()));
+                    {
+                        Ptree *child = local.put(text.substr(1, 1), Str());
+                        child->push_back(std::make_pair(Str(), Ptree(child->data())));
+                    }
                     else
-                        local.push_back(std::make_pair(text.substr(1, 1), 
-                            Ptree(detail::trim<Ch>(text.substr(2, Str::npos)))));
+                    {
+                        Ptree *child = local.put(text.substr(1, 1), text.substr(2, Str::npos));
+                        child->push_back(std::make_pair(Str(), Ptree(child->data())));
+                    }
                 }
                 else
-                    local.push_back(std::make_pair(Str(), Ptree(text)));
+                {
+                    Ptree *child = local.put(Str(), text);
+                    child->push_back(std::make_pair(Str(), Ptree(child->data())));
+                }
         }
 
         // Swap local and pt

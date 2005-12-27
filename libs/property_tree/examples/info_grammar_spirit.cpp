@@ -9,89 +9,69 @@
 // ----------------------------------------------------------------------------
 
 /* This is grammar of INFO file format written in form of boost::spirit rules.
-   For simplicity, it does not support comments and #include directive.
-   Anyway, both of these should be probably handled by some sort of preprocessor - 
-   including them in the main grammar would complicate it beyond grokking. 
-   
-   The grammar strives to parse the whitespace correctly - again this should probably be 
-   delegated to a preprocessor. A quirk is the file must end with a newline character 
-   for the grammar to work - this is not required by property_tree library INFO parser. 
-   Note that INFO parser included in property_tree library does not use Spirit.
+   For simplicity, it does not parse #include directive. Note that INFO parser 
+   included in property_tree library does not use Spirit.
 */
 
 //#define BOOST_SPIRIT_DEBUG        // uncomment to enable debug output
 #include <boost/spirit.hpp>
 
-void parse(const char *s)
+struct info_grammar: public boost::spirit::grammar<info_grammar>
+{
+    
+    template<class Scanner>
+    struct definition
+    {
+        
+        boost::spirit::rule<typename boost::spirit::lexeme_scanner<Scanner>::type> chr, qchr, escape_seq;
+        boost::spirit::rule<Scanner> string, qstring, cstring, key, value, entry, info;
+
+        definition(const info_grammar &self)
+        {
+
+            using namespace boost::spirit;
+
+            escape_seq = chset_p("0abfnrtv\"\'\\");
+            chr = (anychar_p - space_p - '\\' - '{' - '}' - '#' - '"') | ('\\' >> escape_seq);
+            qchr = (anychar_p - '"' - '\n' - '\\') | ('\\' >> escape_seq);
+            string = lexeme_d[+chr];
+            qstring = lexeme_d['"' >> *qchr >> '"'];
+            cstring = lexeme_d['"' >> *qchr >> '"' >> '\\'];
+            key = string | qstring;
+            value = string | qstring | (+cstring >> qstring) | eps_p;
+            entry = key >> value >> !('{' >> *entry >> '}');
+            info = *entry >> end_p;
+
+            // Debug nodes
+            BOOST_SPIRIT_DEBUG_NODE(escape_seq);
+            BOOST_SPIRIT_DEBUG_NODE(chr);
+            BOOST_SPIRIT_DEBUG_NODE(qchr);
+            BOOST_SPIRIT_DEBUG_NODE(string);
+            BOOST_SPIRIT_DEBUG_NODE(qstring);
+            BOOST_SPIRIT_DEBUG_NODE(key);
+            BOOST_SPIRIT_DEBUG_NODE(value);
+            BOOST_SPIRIT_DEBUG_NODE(entry);
+            BOOST_SPIRIT_DEBUG_NODE(info);
+
+        }
+
+        const boost::spirit::rule<Scanner> &start() const
+        {
+            return info;
+        }
+
+    };
+};
+
+void info_parse(const char *s)
 {
 
     using namespace boost::spirit;
 
-    // Whitespace
-    rule<> ws = +(ch_p(' ') | '\t' | '\n');
-    rule<> ws_no_eol = +(ch_p(' ') | '\t');
-    rule<> eol = !ws_no_eol >> '\n' >> !ws_no_eol;
-    
-    // Utils
-    rule<> open_brace = !ws >> '{' >> !ws;
-    rule<> close_brace = !ws >> '}' >> !ws;
-    rule<> open_quote = !ws_no_eol >> '\"';
-    rule<> close_quote = '\"' >> !ws_no_eol;
-    rule<> continue_marker = '\\' >> eol;
-    rule<> escape_seq = '\\' >> chset_p("0abfnrtv\"\'\\");
-    
-    // String
-    rule<> pure_string = +(anychar_p - ' ' - '\t' - '"' - '\\' - '\n');
-    rule<> string = !ws_no_eol >> +(pure_string | escape_seq) >> !ws_no_eol;
-    rule<> quoted_string = open_quote >> +(pure_string | ' ' | '\t' | escape_seq) >> close_quote;
-    
-    // Key
-    rule<> empty_key = open_quote >> close_quote;
-    rule<> simple_key = string;
-    rule<> quoted_key = quoted_string;
-    rule<> key = empty_key | simple_key | quoted_key;
-    
-    // Value
-    rule<> empty_value = (eps_p | (open_quote >> close_quote)) >> +eol;
-    rule<> simple_value = string >> +eol;
-    rule<> quoted_value = quoted_string;
-    rule<> multiline_value = +(quoted_string >> continue_marker) >> quoted_string;
-    rule<> value = empty_value | simple_value | quoted_value | multiline_value;
-
-    // Main
-    rule<> key_and_value = key >> value >> !ws;
-    rule<> entry = key_and_value >> !(open_brace >> *entry >> close_brace);
-    rule<> info = *(entry | ws);
-
-    // Debug nodes
-    BOOST_SPIRIT_DEBUG_NODE(ws);
-    BOOST_SPIRIT_DEBUG_NODE(ws_no_eol);
-    BOOST_SPIRIT_DEBUG_NODE(eol);
-    BOOST_SPIRIT_DEBUG_NODE(open_brace);
-    BOOST_SPIRIT_DEBUG_NODE(close_brace);
-    BOOST_SPIRIT_DEBUG_NODE(open_quote);
-    BOOST_SPIRIT_DEBUG_NODE(close_quote);
-    BOOST_SPIRIT_DEBUG_NODE(continue_marker);
-    BOOST_SPIRIT_DEBUG_NODE(escape_seq);
-    BOOST_SPIRIT_DEBUG_NODE(pure_string);
-    BOOST_SPIRIT_DEBUG_NODE(string);
-    BOOST_SPIRIT_DEBUG_NODE(quoted_string);
-    BOOST_SPIRIT_DEBUG_NODE(empty_key);
-    BOOST_SPIRIT_DEBUG_NODE(simple_key);
-    BOOST_SPIRIT_DEBUG_NODE(quoted_key);
-    BOOST_SPIRIT_DEBUG_NODE(key);
-    BOOST_SPIRIT_DEBUG_NODE(empty_value);
-    BOOST_SPIRIT_DEBUG_NODE(simple_value);
-    BOOST_SPIRIT_DEBUG_NODE(quoted_value);
-    BOOST_SPIRIT_DEBUG_NODE(multiline_value);
-    BOOST_SPIRIT_DEBUG_NODE(value);
-    BOOST_SPIRIT_DEBUG_NODE(key_and_value);
-    BOOST_SPIRIT_DEBUG_NODE(entry);
-    BOOST_SPIRIT_DEBUG_NODE(info);
-    
     // Parse and display result
-    parse_info<const char *> pi = parse(s, info);
-    std::cout << "Parse result: " << (pi.full ? "Success" : "Failure") << "\n";
+    info_grammar g;
+    parse_info<const char *> pi = parse(s, g, space_p | comment_p(";"));
+    std::cout << "Parse result: " << (pi.hit ? "Success" : "Failure") << "\n";
     
 }
 
@@ -166,7 +146,7 @@ int main()
         "key4\n";
 
     // Parse sample data
-    parse(data1);
-    parse(data2);
+    info_parse(data1);
+    info_parse(data2);
 
 }

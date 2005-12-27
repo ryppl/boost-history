@@ -31,6 +31,7 @@
         <dt class="index"><a href="#how_to_populate_property_tree">How to populate property tree?</a></dt>
         <dt class="index2"><a href="#xml_parser">XML parser</a></dt>
         <dt class="index2"><a href="#ini_parser">INI parser</a></dt>
+        <dt class="index2"><a href="#json_parser">JSON parser</a></dt>
         <dt class="index2"><a href="#info_parser">INFO parser</a></dt>
         <dt class="index2"><a href="#cmdline_parser">Command line parser</a></dt>
         <dt class="index2"><a href="#registry_parser">Windows registry parser</a></dt>
@@ -47,7 +48,7 @@
         <a name="what_is_a_property_tree"></a>What is property tree?
     </h2>
     <p>
-        Property tree is a <i>recursive</i> data structure that stores a single data string, and an ordered list of (key, value) pairs, where value is a <i>property tree itself</i>. It therefore forms a tree, hence the name. It is a versatile structure that can store in uniform way data coming from various sources, such as XML or INI files, as well as windows registry, program command line etc. The correspondence between a data source (here XML file) and property tree is illustrated in the following diagram:</p>
+        Property tree is a <i>recursive</i> data structure that stores a single data string, and an ordered list of (key, value) pairs, where value is a <i>property tree itself</i>. It therefore forms a tree, hence the name. It is a versatile structure that can store in uniform way data coming from various sources, such as XML, INI or JSON files, as well as windows registry, program command line etc. The correspondence between a data source (here XML file) and property tree is illustrated in the following diagram:</p>
     <center>
         <img src="ptree.png" height="339" width="800" alt="Property tree" /></center>
     <p>
@@ -60,14 +61,14 @@ struct ptree
     list&lt; pair&lt;string, ptree&gt; &gt;;      // ordered list of named children
 };</pre>
     <p>
-        Property tree interface is similar to the interface of a standard C++ container. It supports iterators, insertion, erasing, searching etc. One can think of it as a sort of Document Object Model, which is minimalistic, not bound to any specific file format, designed to be easy to use, and comes as Boost-compatible, headers only C++ library. Many software projects develop a similar tool at some point of their lifetime, and property tree long ago originated the same way. I hope the library can save many from reinventing the wheel.
+        Property tree interface is similar to the interface of a standard C++ container. It supports iterators, insertion, erasing, searching etc. One can think of it as a sort of Document Object Model, which is minimalistic, not bound to any specific file format, designed to be easy to use, and comes as Boost-compatible, headers only C++ library. Many software projects develop a similar tool at some point of their lifetime, and property tree originated the same way. I hope the library can save many from reinventing the wheel.
     </p>
     <h2>
         <a name="five_minute_tutorial"></a>Five minute tutorial
     </h2>
 		<p>
 			<i>
-			This tutorial uses XML file format. Note that the library is not specifically bound to XML, and any other supported format (such as INI or windows registry) could be used as well. XML was chosen because author thinks wide range of people is familiar with it.</i>
+			This tutorial uses XML file format. Note that the library is not specifically bound to XML, and any other supported format (such as INI or JSON) could be used as well. XML was chosen because author thinks that wide range of people is familiar with it.</i>
 		</p>
 		<p>
 			Suppose we are writing a logging system for some application, and need to read log configuration from a file when program starts. The file with log configuration looks like that:
@@ -352,7 +353,7 @@ typedef basic_ptree&lt;wchar_t&gt; <a href="reference.html#ptree">wptree</a>;
     <p>
         Property tree can be populated using its member functions. For details see <a href="#how_to_access_data_in_property_tree">here</a>. In many cases though, property trees will be populated by reading data from external source, such as file, command line, system environment, registry (on Windows) etc. To help with that, the library supplies a set of <i>parsers</i>, which are just functions that read data from the source and put it in the tree. In addition to read function, parsers usually also supply write function, which allows them to translate property tree back into the format in question. Parser functions use public interface of property tree, so support for new formats/sources can be added by the user, if needed.</p>
     <p>
-        Property tree is a minimalistic data structure. It has just one data string associated with each node of the tree. Some of the data storage formats are more complicated though. For example, XML can have unlimited number of named attributes associated with each node. Additionally, there are various types of XML nodes, such as comments, declarations etc. Other formats have other peculiarities. Clearly, it is not straightforward how a data format should be translated into a property tree.</p>
+        Property tree is a minimalistic data structure. It has just one data string associated with each node of the tree. Some of the data storage formats are more complicated though. For example, XML can have unlimited number of named attributes associated with each node. Additionally, there are various types of XML nodes, such as comments, declarations etc. Other formats have different peculiarities. Clearly, it is not straightforward how a data format should be translated into a property tree.</p>
     <p>
         The adopted solution is to add special keys in property tree that hold the extra information. In case of XML, attributes of each key are stored as subkeys of a special key called <code>&lt;xmlattr&gt;</code> (the angle brackets are necessary to avoid collision with normal XML keys). For example this XML:</p>
     <pre>&lt;a href="index.html"&gt;&lt;b&gt;Index&lt;/b&gt;&lt;/a&gt;</pre>
@@ -361,7 +362,7 @@ typedef basic_ptree&lt;wchar_t&gt; <a href="reference.html#ptree">wptree</a>;
     <pre>
 a                          ;'a' key (no data)
 {
-    &lt;xmlattr&gt;		       ;special &lt;xmlattr&gt; subkey (no data)
+    &lt;xmlattr&gt;		      ;special &lt;xmlattr&gt; subkey (no data)
     {
         href "index.html"  ;'href' attribute and its value
     }
@@ -421,7 +422,7 @@ void <a href="reference.html#xml_parser::write_xml">write_xml</a>(const std::str
         <a name="ini_parser"></a>INI parser
     </h3>
     <p>
-        INI format was once widely used in the world of Windows. It is now deprecated, but is still used by a surprisingly large number of applications. The reason is probably its simplicity. Contrary to XML, this format is actually less rich than property tree. Because of that, there is no translation needed when reading from it. On the other hand, not every property tree can be represented as INI file. In order to be able to do that, it cannot have keys with data on root level, it cannot be deeper than two levels, and there cannot be duplicate keys on any level. If these conditions are not met, writing will fail. Write function by default does check that, and throws in case there is a problem. Because the check can take a fairly significant amount of time (<i>O(n log n)</i>), there is an option to disable it by using <code>flags</code> parameter.
+        INI format was once widely used in the world of Windows. It is now deprecated, but is still used by a surprisingly large number of applications. The reason is probably its simplicity. Contrary to XML, this format is actually less rich than property tree. Because of that, there is no translation needed when reading from it. On the other hand, not every property tree can be represented as INI file - it cannot have keys with data on root level, it cannot be deeper than two levels, and there cannot be duplicate keys on any level. If these conditions are not met, writing will fail. Write function by default does check that, and throws in case there is a problem. Because the check can take a fairly significant amount of time (<i>O(n log n)</i>), there is an option to disable it by using <code>flags</code> parameter.
     </p>
     <p>
         INI parser does not use windows functions to read and write the file. It uses a fast and small handcrafted parser. Not that I think anybody would like to parse gigabytes of INI files. But thanks to that it is portable and can be used even on non-windows systems.</p>
@@ -447,46 +448,137 @@ void <a href="reference.html#ini_parser::read_ini">read_ini</a>(const std::strin
 template&lt;class Ptree&gt;
 void <a href="reference.html#ini_parser::write_ini">write_ini</a>(std::basic_ostream&lt;typename Ptree::char_type&gt; &amp;stream, 
                const Ptree &amp;pt,
-			   int flags = 0);
+               int flags = 0);
 
 template&lt;class Ptree&gt;
 void <a href="reference.html#ini_parser::write_ini">write_ini</a>(const std::string &amp;filename,
                const Ptree &amp;pt,
-			   int flags = 0,
+               int flags = 0,
                const std::locale &amp;loc = std::locale());
+
+} } } // namespace</pre>
+    <h3>
+        <a name="json_parser"></a>JSON parser
+    </h3>
+    <p>
+        JSON stands for JavaScript Object Notation, and is a data interchange format which is a subset of Javascript language. It is considerably simpler than XML, is usually more concise, easier to read by humans, and easier to parse by machines. Its use is currently nowhere as wide as XML, but if you think XML is bloated, this may be the format for you.</p>
+        <p>JSON structure is slightly different from property tree. The differences and the way they are dealt with are summarized below:</p>
+        <ul>
+            <li>JSON contains 'objects' and 'arrays' - objects are collections of name-value pairs, while arrays contain only values. During parse, items of JSON arrays are translated into ptree keys with <i>empty</i> names. Objects are translated into named keys. During write, any ptree key containing only unnamed subkeys will be rendered as JSON array.</li>
+            <li>A JSON element cannot simultaneously have child items and data. Only one of these may be present. As a result, if property tree contains keys that have both subkeys and non-empty data, writing will fail.</li>
+            <li>JSON data can be a string, a numeric value, or one of literals "null", "true" and "false". During parse, any of the above is copied verbatim into ptree data string. This causes some type information to be lost, because if resulting ptree is written back into JSON format, it will only contain strings.</li>
+        </ul>
+        <p>For example this JSON:</p>
+        <pre>
+{
+    "menu": 
+    {
+        "foo": true,
+        "value": 102.3E+06,
+        "popup": 
+        [
+            {"value": "New", "onclick": "CreateNewDoc()"},
+            {"value": "Open", "onclick": "OpenDoc()"},
+        ]
+    }
+}</pre>
+        <p>will be translated into the following property tree:</p>
+        <pre>
+menu
+{
+    foo true
+    value 102.3E+06
+    popup
+    {
+        ""
+        {
+            value New
+            onclick CreateNewDoc()
+        }
+        ""
+        {
+            value Open
+            onclick OpenDoc()
+        }
+    }
+}</pre>
+    <h4>
+        Synopsis</h4>
+    <pre>
+#include &lt;boost/property_tree/json_parser.hpp&gt;
+
+namespace boost { namespace property_tree { namespace json_parser
+{
+
+class <a href="reference.html#json_parser::json_parser_error">json_parser_error</a>;
+    
+template&lt;class Ptree&gt;
+void <a href="reference.html#json_parser::read_json">read_json</a>(std::basic_istream&lt;typename Ptree::char_type&gt; &amp;stream, 
+               Ptree &amp;pt);
+
+template&lt;class Ptree&gt;
+void <a href="reference.html#json_parser::read_json">read_json</a>(const std::string &amp;filename, 
+               Ptree &amp;pt,
+               const std::locale &amp;loc = std::locale());
+
+template&lt;class Ptree&gt;
+void <a href="reference.html#json_parser::write_json">write_json</a>(std::basic_ostream&lt;typename Ptree::char_type&gt; &amp;stream, 
+                const Ptree &amp;pt);
+
+template&lt;class Ptree&gt;
+void <a href="reference.html#json_parser::write_json">write_json</a>(const std::string &amp;filename,
+                const Ptree &amp;pt,
+                const std::locale &amp;loc = std::locale());
 
 } } } // namespace</pre>
     <h3>
         <a name="info_parser"></a>INFO parser
     </h3>
     <p>
-        INFO is a file format created by myself at the time when I was working on property tree library. It is included here for completeness, although I do not suspect many people will use it. At the very least, it can be used for visualising property trees, because it is very intuitive and easy to read by humans. Some property tree examples in this documentation are written in this file format, and I think they do not need any extra explanation to be understandable. The format has some advantages:</p>
+        INFO is a file format created by myself at the time when I was working on property tree library. It is included here for completeness, although I do not suspect many people will use it. At the very least, it can be used for visualising property trees, because it is very intuitive and easy to read by humans. Some property tree examples in this documentation are written in this format, and I think they do not need any extra explanation to be understandable. The format has some advantages:</p>
     <ul>
         <li>simplicity: just a "key value" string is a valid INFO,</li>
-        <li>efficiency: the hand-crafted parser is extremely fast and small,</li>
+        <li>efficiency: the hand-crafted parser is fast and small,</li>
         <li>corresponds to property tree structure: what can be written in INFO, can be stored in property tree, and vice versa,</li>
         <li>easy on programmers: has #include, curly brackets for nesting, C character escape sequences.</li>
     </ul>
     <p>
-        And a disadvantage: it is just yet another file format. An example INFO file illustrating the constructs follows. For formal grammar see <a href="../examples/info_grammar_spirit.cpp">info_grammar_spirit.cpp</a> example file.
-    </p>
+        And a disadvantage: it is just yet another file format. For formal grammar see <a href="../examples/info_grammar_spirit.cpp">info_grammar_spirit.cpp</a> example file. Usually, INFO looks similar to this:</p>
+        <pre>
+key1 value1
+key2
+{
+    key3 value3
+    {
+        key4 "value4 with spaces"
+    }
+    key5 value5
+}</pre>
+    <p>
+        Additionally, it supports comments, #includes, C escape sequences, multiline values. Quite unrealistic file using all of these might look like this:</p>
     <pre>
 ; A comment
 key1 value1   ; Another comment
 key2 "value with special characters in it {};#\n\t\"\0"
 {
     subkey "value split "\
-           "over"\
-           "many lines"
+           "over three"\
+           "lines"
     {
-        a_key_without_value
-        another_key_without_value ""
-        "a key with special characters in it {};#\n\t\"\0"
+        a_key_without_value ""
+        "a key with special characters in it {};#\n\t\"\0" ""
         "" value    ; Empty key with a value
         "" ""       ; Empty key with empty value!
     }
 }
 #include "file.info"    ; included file</pre>
+        <p>INFO format may be also regarded as JSON with simplified semantics and relaxed syntax:</p>
+        <ul>
+            <li>Does not support arrays, only objects</li>
+            <li>Does not support numeric values or literals (true, false, null), all data must be strings</li>
+            <li>If string does not contain whitespace or special characters, double quotes can be omitted</li>
+            <li>Whitespace is used instead of ':' and ',' characters: <code>"a":"b", "c":"d" -> a b c d</code></li>
+        </ul>
     <h4>
         Synopsis</h4>
     <pre>
@@ -565,7 +657,7 @@ void <a href="reference.html#cmdline_parser::read_cmdline">read_cmdline</a>(int 
     <ul>
         <li>Values of each registry key are stored in a subkey with name <code>\values</code>. The preceding backslash is there to prevent name clashes with regular keys. Each subkey of \values is one registry value. If \values subkey does not exist or is empty, there are no values attached to that key.</li>
         <li>Types of values of each registry key are stored in a subkey with name <code>\types</code>. These subkeys contain an integer equal to type of data stored in its corresponding entry in \values (correspondence is by name, not position).</li>
-        <li>So called "default value", is translated directly to key data and is always assumed to be of type REG_SZ.</li>
+        <li>So called "default value" (value attached to key itself), is translated directly to key data and is always assumed to be of type REG_SZ.</li>
         <li>REG_BINARY values are translated to textual format before placing in property tree. The format is the same as the one displayed by regedit application: a series of two-digit hexadecimal numbers representing bytes separated with spaces. To translate from this format to binary data, or vice versa, use <a href="reference.html#registry_parser::translate"><code>translate</code></a> function.</li>
         <li>Supported value types are: REG_NONE, REG_SZ, REG_EXPAND_SZ, REG_DWORD, REG_QWORD, REG_BINARY.</li>
     </ul>
@@ -640,7 +732,7 @@ double pi = boost::lexical_cast&lt;double&gt;(it->second.data());</pre>
 pt.put("pi", 3.14159);                // put double
 double pi = pt.get&lt;double&gt;("pi");     // get double</pre>
     <p>
-        It doesn't get simpler than that. Basically, we have 2 families of member functions, get and put, which allow intuitive access to data stored in the tree (direct children or not).</p>
+        It doesn't get simpler than that. Basically, there are 2 families of member functions, get and put, which allow intuitive access to data stored in the tree (direct children or not).</p>
     <h3>
         <a name="the_four_ways_of_getting_data"></a>Four ways of getting data
     </h3>
@@ -736,7 +828,7 @@ pt.put_own(3.14f);</pre>
         <a name="future_development"></a>Future development
     </h2>
     <ul>
-        <li>More parsers: JSON, YAML, environment strings.</li>
+        <li>More parsers: YAML, environment strings.</li>
         <li>More robust XML parser.</li>
         <li>Mathematical relations: ptree difference, union, intersection. Useful for finding configuration file changes etc.</li>
     </ul>
@@ -751,7 +843,7 @@ pt.put_own(3.14f);</pre>
                 Three of the four versions that are implemented reflect experience gathered during several of years of usage of property tree in several different applications (the fourth, boost::optional version was suggested by Pavel Vozenilek). During that time I tried hard to come up with one, proper form of get function and failed. I know of these three basic patterns of usage:
             </p>
             <ul>
-                <li><i>Just get the data and I do not care if it cannot be done.</i> This is used when we are fairly sure that data exists. Or in homework assignments. Or when tomorrow is final deadline for your project.</li>
+                <li><i>Just get the data and I do not care if it cannot be done.</i> This is used when programmer is fairly sure that data exists. Or in homework assignments. Or when tomorrow is final deadline for your project.</li>
                 <li><i>Get the data and revert to default value when it cannot be done.</i> Used when you want to allow omitting of the key in question. Implemented by some similar tools (windows INI file access functions).</li>
                 <li><i>Get the data, but I care more if you succeeded than I do for the data itself.</i> Used when you want to vary control flow depending on get success/failure. Or to check for presence of a key.</li>
             </ul>

@@ -367,6 +367,7 @@ namespace boost { namespace property_tree
         if (&rhs != this)
         {
             clear();
+            data() = rhs.data();
             insert(end(), rhs.begin(), rhs.end());
         }
         return *this;
@@ -430,9 +431,9 @@ namespace boost { namespace property_tree
     template<class Ch, class Tr>
     void basic_ptree<Ch, Tr>::clear()
     {
-        m_impl->m_data.clear();
-        m_impl->m_index.clear();
+        m_impl->m_data = data_type();
         m_impl->m_container.clear();
+        m_impl->m_index.clear();
     }
 
     template<class Ch, class Tr>
@@ -740,15 +741,20 @@ namespace boost { namespace property_tree
     basic_ptree<Ch, Tr> *
         basic_ptree<Ch, Tr>::put_child(Ch separator, 
                                        const key_type &path, 
-                                       basic_ptree<Ch, Tr> *value)
+                                       const basic_ptree<Ch, Tr> *value)
     {
         typename key_type::size_type n = path.find(separator);
         if (n == key_type::npos)
         {
-            if (value)
-                return &push_back(value_type(path, *value))->second;
+            iterator it = find(path);
+            if (it == end())
+                return &push_back(value_type(path, value ? *value : basic_ptree<Ch, Tr>()))->second;
             else
-                return &push_back(value_type(path, basic_ptree<Ch, Tr>()))->second;
+            {
+                if (value)
+                    it->second = *value;
+                return &it->second;
+            }
         }
         else
         {
@@ -765,7 +771,7 @@ namespace boost { namespace property_tree
     template<class Ch, class Tr>
     basic_ptree<Ch, Tr> *
         basic_ptree<Ch, Tr>::put_child(const key_type &path,
-                                       basic_ptree<Ch, Tr> *value)
+                                       const basic_ptree<Ch, Tr> *value)
     {
         return put_child(Ch('.'), path, value);
     }
