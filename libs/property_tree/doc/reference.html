@@ -705,7 +705,7 @@ template&lt;class It&gt; void insert(iterator where, It first, It last);</pre>
             Iterator pointing at the position where new element will be inserted. Passing <code>begin()</code> will insert at the front of the list. Passing <code>end()</code> will insert at the back. Any other valid iterator will insert in the appropriate place in the middle.</dd>
         <dt class="parameter">value</dt>
         <dd>
-            Value to be inserted. A copy of second element of the pair is made before putting it in property tree</dd>
+            Value to be inserted. A copy of the pair is made before putting it in property tree</dd>
         <dt class="parameter">first</dt>
         <dd>
             Iterator designating first element of range to be inserted into the property tree</dd>
@@ -1103,7 +1103,7 @@ template&lt;class Type&gt; Type get_own(const std::locale &amp;loc = std::locale
     <h4>
         Description</h4>
     <p>
-        Extracts value stored in property tree data and translates it to <code>Type</code> using <code>operator &gt;&gt;</code>. If data cannot be translated, throws <a href="reference.html#ptree_bad_data"><code>ptree_bad_data</code></a> exception.</p>
+        Extracts value stored in property tree data and translates it to <code>Type</code> using <code>operator &gt;&gt;</code>. If data cannot be translated, throws <a href="reference.html#ptree_bad_data"><code>ptree_bad_data</code></a> exception. If you want non-throwing failure handling, use <a href="reference.html#basic_ptree::get_own_b"><code>get_own_b</code></a>, <a href="reference.html#basic_ptree::get_own_d"><code>get_own_d</code></a> or <a href="reference.html#basic_ptree::get_own_o"><code>get_own_o</code></a>.</p>
     <h4>
         Parameters</h4>
     <dl>
@@ -1214,7 +1214,7 @@ template&lt;class Type&gt; Type get(Ch separator, const key_type &amp;path, cons
     <h4>
         Description</h4>
     <p>
-        Traverses the tree, extracts value stored in child property tree data, and translates it to <code>Type</code> using <code>operator &gt;&gt;</code>. See <a href="reference.html#basic_ptree::get_child"><code>get_child</code></a> for description of how child is obtained from <code>path</code>. If child does not exist, throws <a href="reference.html#ptree_bad_path"><code>ptree_bad_path</code></a> exception. If data cannot be translated, throws <a href="reference.html#ptree_bad_data"><code>ptree_bad_data</code></a> exception.</p>
+        Traverses the tree, extracts value stored in child property tree data, and translates it to <code>Type</code> using <code>operator &gt;&gt;</code>. See <a href="reference.html#basic_ptree::get_child"><code>get_child</code></a> for description of how child is obtained from <code>path</code>. If child does not exist, throws <a href="reference.html#ptree_bad_path"><code>ptree_bad_path</code></a> exception. If data cannot be translated, throws <a href="reference.html#ptree_bad_data"><code>ptree_bad_data</code></a> exception. If you want non-throwing failure handling, use <a href="reference.html#basic_ptree::get_b"><code>get_b</code></a>, <a href="reference.html#basic_ptree::get_d"><code>get_d</code></a> or <a href="reference.html#basic_ptree::get_o"><code>get_o</code></a>.</p>
     <h4>
         Parameters</h4>
     <dl>

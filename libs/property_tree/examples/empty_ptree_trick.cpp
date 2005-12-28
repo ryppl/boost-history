@@ -16,7 +16,8 @@
 
 using namespace boost::property_tree;
 
-// Process settings using empty ptree trick
+// Process settings using empty ptree trick. Note that it is considerably simpler 
+// than version which does not use the "trick"
 void process_settings(const std::string &filename)
 {
     ptree pt;
@@ -28,7 +29,7 @@ void process_settings(const std::string &filename)
     std::cout << "        Setting 3 is " << settings->get_d("setting3", "default") << std::endl;
 }
 
-// Process settings not using empty ptree trick
+// Process settings not using empty ptree trick. This one must duplicate much of the code.
 void process_settings_without_trick(const std::string &filename)
 {
     ptree pt;

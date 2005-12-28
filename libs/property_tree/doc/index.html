@@ -173,7 +173,7 @@ void debug_settings::save(const std::string &amp;filename)
     <p>
         The sequence is <i>not</i> ordered by key. It is an important fact, and many mistakes can be avoided by keeping it in mind. The order of sequence is determined by the place where elements were inserted, like in <code>std::list</code>. That's why there are <a href="reference.html#basic_ptree::push_back">push_back</a>, <a href="reference.html#basic_ptree::push_front">push_front</a> and <a href="reference.html#basic_ptree::insert">insert</a> functions. But <a href="reference.html#basic_ptree::find">find</a> function, which is searching for elements by name, has time complexity <i>O(log n)</i> like in <code>std::map</code> - there is an additional indexing data structure inside property tree that allows fast searches. The implication of property tree not being sorted is that you cannot use algorithms that require sorted range, like for example <code>std::binary_search</code>.</p>
     <p>
-        Property tree allows multiple elements to have equivalent keys, and <code>find</code> member function will always return first of them. It is tempting to use <code>std::lower_bound</code> and <code>std::upper_bound</code> algorithms to find range that encompasses all elements with equivalent keys, but it is a mistake - the sequence is not sorted by key and such a range probably does not even exist! You need to sort the sequence first, using <a href="reference.html#basic_ptree::sort">sort</a> member function (though by doing so you lose original ordering of the elements). Note that <code>std::sort</code> cannot be used, because it requires random access iterators, and property tree only provides bidirectional.</p>
+        Property tree allows multiple elements to have equivalent keys, and <code>find</code> member function will always return the first of them. It is tempting to use <code>std::lower_bound</code> and <code>std::upper_bound</code> algorithms to find range that encompasses all elements with equivalent keys, but it is a mistake - the sequence is not sorted by key and such a range probably does not even exist! You need to sort the sequence first, using <a href="reference.html#basic_ptree::sort">sort</a> member function (though by doing so you lose original ordering of the elements). Note that <code>std::sort</code> cannot be used, because it requires random access iterators, and property tree only provides bidirectional.</p>
     <h2>
         <a name="synopsis"></a>Synopsis
     </h2>
@@ -464,7 +464,7 @@ void <a href="reference.html#ini_parser::write_ini">write_ini</a>(const std::str
         JSON stands for JavaScript Object Notation, and is a data interchange format which is a subset of Javascript language. It is considerably simpler than XML, is usually more concise, easier to read by humans, and easier to parse by machines. Its use is currently nowhere as wide as XML, but if you think XML is bloated, this may be the format for you.</p>
         <p>JSON structure is slightly different from property tree. The differences and the way they are dealt with are summarized below:</p>
         <ul>
-            <li>JSON contains 'objects' and 'arrays' - objects are collections of name-value pairs, while arrays contain only values. During parse, items of JSON arrays are translated into ptree keys with <i>empty</i> names. Objects are translated into named keys. During write, any ptree key containing only unnamed subkeys will be rendered as JSON array.</li>
+            <li>JSON contains 'objects' and 'arrays' - objects are collections of name-value pairs, while arrays contain only values. During parse, items of JSON arrays are translated into ptree keys with <i>empty</i> names. Members of objects are translated into named keys. During write, any ptree key containing only unnamed subkeys will be rendered as JSON array.</li>
             <li>A JSON element cannot simultaneously have child items and data. Only one of these may be present. As a result, if property tree contains keys that have both subkeys and non-empty data, writing will fail.</li>
             <li>JSON data can be a string, a numeric value, or one of literals "null", "true" and "false". During parse, any of the above is copied verbatim into ptree data string. This causes some type information to be lost, because if resulting ptree is written back into JSON format, it will only contain strings.</li>
         </ul>
@@ -474,6 +474,7 @@ void <a href="reference.html#ini_parser::write_ini">write_ini</a>(const std::str
     "menu": 
     {
         "foo": true,
+        "bar": "true",
         "value": 102.3E+06,
         "popup": 
         [
@@ -487,6 +488,7 @@ void <a href="reference.html#ini_parser::write_ini">write_ini</a>(const std::str
 menu
 {
     foo true
+    bar true
     value 102.3E+06
     popup
     {
@@ -611,24 +613,48 @@ void <a href="reference.html#info_parser::write_info">write_info</a>(const std::
     <h3>
         <a name="cmdline_parser"></a>Command line parser
     </h3>
-    <p>
-        This is a very simple parser that converts command line parameters (in form of standard <code>argc</code> and <code>argv</code> arguments) into property tree. There is no write function. The parser recognizes two types of command line parameters. The first type are parameters starting with a "metacharacter", for example a dash or slash. All other parameters are of second type. For each parameter of either type, there is a property tree node created. For parameters of the first type, node key is a character immediately following the metacharacter. Node data is rest of the parameter text. For parameters of the second type, node key is empty, and node data contains text of the parameter verbatim. For example, the following command line:</p>
-    <pre>someprogram.exe -c -I/usr/include/stuff -Lm file1.cc file2.cc</pre>
-    <p>
-        will result in this tree:</p>
+	<p>This is a simple parser that converts command line parameters (in form of standard <code>argc</code> and <code>argv</code> arguments) into property tree. There is no write function. The parser correctly recognizes most of the standard command line styles, both from Unix and Windows worlds.</p>
+		<p>During parse, parameters are converted to ptree keys and grouped by their prefix, if any. Grouping means that they are inserted as children of a key representing appropriate group. Prefix is a single character that comes directly after so called "metacharacter", which is usually a dash '-' (on Unix) or a slash '/' (on Windows). For example, parameter <code>-I/usr/include/foobar</code> has prefix <code>I</code> after metacharacter '-'. Parameters that do not start with a metacharacter (like e.g. source files given to gcc), are inserted as children of special, <i>unnamed</i> group. Additionally, data of each group contains value of <i>last</i> parameter assigned to that group. For example, this command line:</p>
+		<pre>
+myprogram.exe -c -I/usr/include -Lm -I/home/mammamia/stuff foo.c bar.c -g</pre>
+        <p>will result in this property tree being created:</p>
+		<pre>
+"" bar.c                    ;"unnamed" group
+{
+    "" myprogram.exe        ;first argument is name of program
+    "" foo.c
+    "" bar.c
+}
+c                           ;no data
+{
+    "" ""                   ;no value associated with 'c' option
+}
+I /home/mammamia/stuff
+{
+    "" /usr/include
+    "" /home/mammamia/stuff
+}
+L m
+{
+    "" m
+}</pre>
+        <p>Metacharacters can be specified as a parameter to read function. This code will parse command line using both dash and slash as metachatacters:</p>
+        <pre>
+ptree pt;
+<a href="reference.html#cmdline_parser::read_cmdline">read_cmdline</a>(argc, argv, "-/", pt);
+</pre>
+        <p>Once the command line is parsed into a ptree, the power of get/get_child/get_own interface can be used to conveniently extract the values of options needed. In the simplest case, user only needs to query key with name of option to get its value. For example:</p>
+        <pre>
+int n = pt.<a href="reference.html#basic_ptree::get_d">get_d</a>("N", 0);      // default to 0 if -Nxx or /Nxx not specified on command line</pre>
+<p>or</p>
+        <pre>
+std::string n = pt.<a href="reference.html#basic_ptree::get">get</a>&lt;std::string&gt;("N");   // throw if -Nxx or /Nxx not specified on command line</pre>
+<p>If there is more than one instance of 'N' in command line, they can be accessed like that:</p>
     <pre>
-"" someprogram.exe          ; empty key
-c                           ; empty data
-I "/usr/include/stuff"
-L "m"
-"" file1.cc                 ; empty key
-"" file2.cc                 ; empty key</pre>
-    <p>
-        This is all very basic parsing, but might be useful if your program only uses very simple command line. For example, to get integer value associated with option "N" (in form "-Nxx" or "/Nxx") you would just write:</p>
-    <pre>
-boost::property_tree::ptree pt;
-read_cmdline(argc, argv, "-/", pt);
-int n = pt.<a href="reference.html#basic_ptree::get_d">get_d</a>("N", 0, NULL);      // default to 0 if -Nxx or /Nxx not specified on command line</pre>
+std::vector&lt;int&gt; v;
+BOOST_FOREACH(ptree::const_iterator it, pt.get_child_d("N", empty_ptree()))
+    v.push_back(it-&gt;second.get_own&lt;int&gt;());
+        </pre>
     <h4>
         Synopsis</h4>
     <pre>

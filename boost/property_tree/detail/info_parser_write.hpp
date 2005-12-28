@@ -52,8 +52,11 @@ namespace boost { namespace property_tree { namespace info_parser
     template<class Ch>
     bool is_simple_data(const std::basic_string<Ch> &data)
     {
-        const static std::basic_string<Ch> chars = convert_chtype<Ch, char>(" \t{};\n\"");
-        return data.find_first_of(chars) == data.npos;
+        const static std::basic_string<Ch> chars = convert_chtype<Ch, char>("\t{};\n\"");
+        if (data.empty())
+            return true;
+        else
+            return data[0] != Ch(' ') && data[data.size() - 1] != Ch(' ') && data.find_first_of(chars) == data.npos;
     }
 
     template<class Ptree>
