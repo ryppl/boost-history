@@ -32,7 +32,7 @@ using namespace boost::shmem;
 
 //We will work with wide characters for shared memory objects
 //Alias <integer, 64 element per chunk> node allocator type
-typedef private_node_pool
+typedef private_node_allocator
    <int, 64, wnamed_shared_object::segment_manager> priv_node_allocator_t;
 
 //Alias list types
