@@ -251,7 +251,7 @@ bool test_buffer_overflow()
 }
 
 int main ()
-{/*
+{
    if(!test_priority_order()){ 
       return -1;
    }
@@ -259,7 +259,7 @@ int main ()
    if(!test_serialize_db()){ 
       return -1;
    }
-*/
+
    if(!test_buffer_overflow()){ 
       return -1;
    }
