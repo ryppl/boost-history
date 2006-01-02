@@ -1,0 +1,302 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Shmem architecture and internals</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="prev" href="shared_message_queue.html" title=" Process-shared message queue">
+<link rel="next" href="open_issues.html" title=" Open Issues">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="boost.png (6897 bytes)" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="shared_message_queue.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="open_issues.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="shmem.architecture"></a> Shmem architecture and internals</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="architecture.html#shmem.basic_guidelines"> Basic guidelines</a></span></dt>
+<dt><span class="section"><a href="architecture.html#shmem.architecture_memory_algorithm"> The memory algorithm</a></span></dt>
+<dt><span class="section"><a href="architecture.html#shmem.architecture_segment_manager"> The segment manager</a></span></dt>
+<dt><span class="section"><a href="architecture.html#shmem.architecture_front_end"> Shmem front-ends</a></span></dt>
+<dt><span class="section"><a href="architecture.html#shmem.architecture_allocators"> Shmem allocators</a></span></dt>
+<dt><span class="section"><a href="architecture.html#shmem.architecture_containers"> Shmem containers</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.basic_guidelines"></a> Basic guidelines</h3></div></div></div>
+<p>
+When building Shmem architecture, I took some basic guidelines that can be
+resumed in these points:</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+Shmem should be portable at least in UNIX and Windows systems. That means
+   I've tried to unify not only interfaces but also behaviour. This is why
+   Shmem does not support (for the moment) the file-like (unlink, etc..) behaviour 
+   of Unix shared memory or supposes no fixed address mappings.
+</li>
+<li>
+Shmem inter-process synchronization primitives should be equal to thread 
+   synchronization primitives. That's why Shmem synchronization primitives 
+   are based in Boost Thread's interface.
+</li>
+<li>
+Shmem architecture should be modular, customizable but efficient. That's why
+   I took templates approach and I made memory algorithms, index types, mutex
+   types and other classes templatizable.
+</li>
+<li>
+Shmem architecture should allow the same concurrency as thread based programming.
+   This is why there are different mutual exclusion levels so that a process can 
+   concurrently allocate raw memory when expanding a shared memory vector while another
+   process can be safely searching a named object.
+</li>
+<li>
+Shmem containers know nothing about Shmem. All specific behaviour is contained
+   in the STL-like allocators. That allows STL vendors to slightly modify 
+   (or better said, generalize) their standard container implementations and obtain
+   a fully std::allocator and boost::shmem::allocator compatible container. This also
+   make Shmem containers compatible with standard algorithms.
+</li>
+</ul></div>
+<p>
+Shmem is built above 3 basic classes: a <span class="bold"><strong>memory algorithm</strong></span> a <span class="bold"><strong>segment manager</strong></span> and
+an <span class="bold"><strong>front-end</strong></span>:</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.architecture_memory_algorithm"></a> The memory algorithm</h3></div></div></div>
+<p>
+The <span class="bold"><strong>memory algorithm</strong></span> is an object that is placed in the first bytes of a 
+shared memory/memory mapped file segment. The <span class="bold"><strong>memory algorithm</strong></span> can return 
+portions of that segment to users marking them as used and the user can return those
+portions to the memory manager so that the memory manager mark them as free
+again. There is an exception though, some bytes after the memory algorithm
+object end, are reserved and can't be used for this dynamic allocation.
+This "reserved" zone will be used to place other additional objects
+in a known place.</p>
+<p>
+To sum up, a <span class="bold"><strong>memory algorithm</strong></span> has the same mission as malloc/free of
+standard C library, but it just can returns portions of the segment
+where it is placed. The layout of a memory segment would be:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="identifier">Layout</span><span class="identifier"> of</span><span class="identifier"> the</span><span class="identifier"> memory</span><span class="identifier"> segment</span><span class="special">:</span><span class="identifier">
+ ____________</span><span class="identifier"> __________</span><span class="identifier"> ____________________________________________</span><span class="special">  
+|</span><span class="special">            |</span><span class="special">          |</span><span class="special">                                            |</span><span class="special"> 
+|</span><span class="identifier">   memory</span><span class="special">   |</span><span class="identifier"> reserved</span><span class="special"> |</span><span class="identifier">  The</span><span class="identifier"> memory</span><span class="identifier"> algorithm</span><span class="identifier"> will</span><span class="keyword"> return</span><span class="identifier"> portions</span><span class="special"> |</span><span class="special"> 
+|</span><span class="identifier"> algorithm</span><span class="special">  |</span><span class="special">          |</span><span class="identifier">  of</span><span class="identifier"> the</span><span class="identifier"> rest</span><span class="identifier"> of</span><span class="identifier"> the</span><span class="identifier"> segment</span><span class="special">.</span><span class="special">               |</span><span class="special"> 
+|</span><span class="identifier">____________</span><span class="special">|</span><span class="identifier">__________</span><span class="special">|</span><span class="identifier">____________________________________________</span><span class="special">|</span> 
+</code></pre>
+<p>
+The memory algorithm takes care of memory synchronizations, just like malloc/free
+guarantees that two threads can call malloc/free at the same time. This is usually
+achieved placing a process-shared mutex as a member of the memory algorithm.Take 
+in care that the memory algorithm knows <span class="bold"><strong>nothing</strong></span> about the segment (if it is
+shared memory, a shared memory file, etc.). For the memory algorithm the segment 
+is just a fixed size memory buffer.</p>
+<p>
+The <span class="bold"><strong>memory manager</strong></span> is also a configuration point for the rest of the Shmem 
+framework since it defines two basic types as member typedefs:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="keyword">typedef</span><span class="comment"> /*implementation dependant*/</span><span class="identifier"> void_pointer</span><span class="special">;</span><span class="keyword">
+typedef</span><span class="comment"> /*implementation dependant*/</span><span class="identifier"> mutex_family</span><span class="special">;</span></code></pre>
+<p>
+The <code class="computeroutput"><span class="identifier">void_pointer</span></code> typedef defines the pointer type that will be used in the Shmem
+framework (segment manager, allocators, containers). If the memory algorithm is ready
+to be placed in a shared memory/mapped file mapped in different base addresses, this
+pointer type will be defined as offset_ptr&lt;void&gt; or a similar relative pointer. 
+If the memory algorithm will be used just with fixed address shared 
+memory/memory mapped file, void_pointer can be defined as <code class="computeroutput"><span class="keyword">void</span><span class="special">*</span></code>.</p>
+<p>
+The rest of the interface of a Shmem <span class="bold"><strong>memory manager</strong></span> is described in 
+<a href="customizing_boost_shmem.html#shmem.custom_shmem_alloc" title=" Writing a new shared memory allocation algorithm">Writing a new shared memory allocation algorithm</a> 
+section. As memory algorithm examples, you can see the implementations
+<a href="../../../../../boost/shmem/mem_algo/simple_seq_fit.hpp" target="_top">boost::shmem::simple_seq_fit</a> or
+<a href="../../../../../boost/shmem/mem_algo/seq_fit.hpp" target="_top">boost::shmem::seq_fit</a> classes.</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.architecture_segment_manager"></a> The segment manager</h3></div></div></div>
+<p>
+The <span class="bold"><strong>segment manager</strong></span>, is an object also placed in the first bytes of the
+memory segment (shared memory, memory mapped file), that offers more sofisticated 
+services built above the <span class="bold"><strong>memory algorithm</strong></span>. How can <span class="bold"><strong>both</strong></span> the segment manager 
+and memory algorithm be placed in the beginning of the segment? That's 
+because the segment manager <span class="bold"><strong>owns</strong></span> the memory algorithm: The
+truth is that the memory algorithm is <span class="bold"><strong>embedded</strong></span> in the segment manager:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="identifier">The</span><span class="identifier"> layout</span><span class="identifier"> of</span><span class="identifier"> segment</span><span class="identifier"> manager</span><span class="special">:</span><span class="identifier">
+ _______</span><span class="identifier"> _________________</span><span class="special">
+|</span><span class="special">       |</span><span class="special">         |</span><span class="special">       |</span><span class="special">
+|</span><span class="identifier"> some</span><span class="special">  |</span><span class="identifier"> memory</span><span class="special">  |</span><span class="identifier"> other</span><span class="special"> |&lt;-</span><span class="identifier"> The</span><span class="identifier"> memory</span><span class="identifier"> algorithm</span><span class="identifier"> considers</span><span class="special"> 
+|</span><span class="identifier">members</span><span class="special">|</span><span class="identifier">algorithm</span><span class="special">|</span><span class="identifier">members</span><span class="special">|</span><span class="string">   "other members"</span><span class="identifier"> as</span><span class="identifier"> reserved</span><span class="identifier"> memory</span><span class="special">,</span><span class="identifier"> so</span><span class="special">
+|</span><span class="identifier">_______</span><span class="special">|</span><span class="identifier">_________</span><span class="special">|</span><span class="identifier">_______</span><span class="special">|</span><span class="identifier">   it</span><span class="identifier"> does</span><span class="keyword"> not</span><span class="identifier"> use</span><span class="identifier"> it</span><span class="keyword"> for</span><span class="identifier"> dynamic</span><span class="identifier"> allocation</span><span class="special">.</span><span class="special">
+|</span><span class="identifier">_________________________</span><span class="special">|</span><span class="identifier">____________________________________________</span><span class="special">
+|</span><span class="special">                         |</span><span class="special">                                            |</span><span class="special">
+|</span><span class="identifier">    segment</span><span class="identifier"> manager</span><span class="special">      |</span><span class="identifier">  The</span><span class="identifier"> memory</span><span class="identifier"> algorithm</span><span class="identifier"> will</span><span class="keyword"> return</span><span class="identifier"> portions</span><span class="special"> |</span><span class="special">
+|</span><span class="special">                         |</span><span class="identifier">  of</span><span class="identifier"> the</span><span class="identifier"> rest</span><span class="identifier"> of</span><span class="identifier"> the</span><span class="identifier"> segment</span><span class="special">.</span><span class="special">               |</span><span class="special">
+|</span><span class="identifier">_________________________</span><span class="special">|</span><span class="identifier">____________________________________________</span><span class="special">|</span></code></pre>
+<p>
+The segment manager initializes the memory algorithm and tells the memory 
+manager that it should not use the memory where the rest of the 
+segment manager's member are placed for dynamic allocations. The 
+other members of the <span class="bold"><strong>segment manager</strong></span> are <span class="bold"><strong>a recursive mutex</strong></span>
+(described by the memory algorithm's <span class="bold"><strong>mutex_family</strong></span> typedef member),
+and <span class="bold"><strong>two indexes (maps)</strong></span>: one to make named allocations, and another one to 
+make "unique instance" allocations.</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+The first index is a map with a c-string (the name of the named object) 
+   as a key and a structure with information of the dynamically allocated object
+   (the most importants being the address and the size of the object).
+</li>
+<li>
+The second index is used to implement "unique instances" 
+   and is basically the same as the first index, 
+   but the name of the object comes from a <code class="computeroutput"><span class="keyword">typeid</span><span class="special">(</span><span class="identifier">T</span><span class="special">).</span><span class="identifier">name</span><span class="special">()</span></code> operation.
+</li>
+</ul></div>
+<p>
+The memory needed to store [name, object information] pairs in the index is 
+allocated also via the <span class="bold"><strong>memory algorithm</strong></span>, so we can tell that internal indexes
+are just like ordinary user objects built in the segment.</p>
+<p>
+As seen, the segment manager knows <span class="bold"><strong>nothing</strong></span> about shared memory/memory mapped files. 
+The segment segment manager itself does not allocate portions of the segment, 
+it just asks the <span class="bold"><strong>memory algorithm</strong></span> to allocate the needed memory from the rest 
+of the segment. The <span class="bold"><strong>segment manager</strong></span> is a class built above the memory algorithm 
+that offers named object construction, unique instance constructions, and many
+other services.</p>
+<p>
+The <span class="bold"><strong>segment manager</strong></span> is implemented in Shmem in 
+<a href="../../../../../boost/shmem/detail/segment_manager.hpp" target="_top">boost::shmem::detail::segment_manager</a>
+class.</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="identifier"> CharType</span><span class="special"> 
+        ,</span><span class="keyword">class</span><span class="identifier"> MemoryAlgorithm</span><span class="special">
+        ,</span><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="identifier"> IndexConfig</span><span class="special">&gt;</span><span class="keyword"> class</span><span class="identifier"> IndexType</span><span class="special">&gt;</span><span class="keyword">
+class</span><span class="identifier"> segment_manager</span><span class="special">;</span></code></pre>
+<p>
+As seen, the segment manager is quite generic: we can specify the char type to be
+used to identify named objects, we can specify the memory algorithm that will
+control dynamically the portions of the memory segment, and we can specify 
+also the index type that will store the [name, object information] mapping.
+We can construct our own index types as explained in
+<a href="customizing_boost_shmem.html#shmem.custom_indexes" title=" Building custom indexes">Building custom indexes</a> section.</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.architecture_front_end"></a> Shmem front-ends</h3></div></div></div>
+<p>
+The Shmem front-ends are classes that construct the shared memory/memory mapped file, 
+place there the segment manager and forward the user requests to the segment manager. 
+For example, <span class="bold"><strong>boost::shmem::basic_named_shared_object&lt;...&gt;</strong></span> is a Shmem front-end
+that works with shared memory. <span class="bold"><strong>boost::shmem::basic_named_mfile_object&lt;...&gt;</strong></span></p>
+<p>
+Basically, the interface of a Shmem front-end is the same as the <span class="bold"><strong>segment manager</strong></span>
+but they also offer functions to open, create, open_or_create or shared 
+memory/memory-mapped files segments, initialize all needed resources 
+and they store a pointer to the segment manager. Shmem front-ends are not built in
+shared memory or memory mapped files.</p>
+<p>
+Apart from this, front-ends offer specific functions: front-ends for memory mapped files
+offer functions to flush memory contents to the file, heap memory front-ends offer
+functions to expand the memory, etc...</p>
+<p>
+Most of the functions of Shmem front-ends can be shared between all front-ends, since
+many times they just forward the functions to the segment manager. Because of this,
+in Shmem all front-ends derive from a common class that implements memory-independent
+(shared memory, memory mapped files) functions:
+<a href="../../../../../boost/shmem/detail/named_object_impl.hpp" target="_top">boost::shmem::detail::basic_named_object_impl</a></p>
+<p>
+Deriving from this class, Shmem implements several front-ends, for different memory backends:</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<a href="../../../../../boost/shmem/named_shared_object.hpp" target="_top">boost::shmem::basic_named_shared_object</a> (for shared memory),
+</li>
+<li>
+<a href="../../../../../boost/shmem/named_mfile_object.hpp" target="_top">boost::shmem::basic_named_mfile_object</a> (for memory mapped files),
+</li>
+<li>
+<a href="../../../../../boost/shmem/named_heap_object.hpp" target="_top">boost::shmem::basic_named_heap_object</a> (for heap allocated memory),
+</li>
+<li>
+<a href="../../../../../boost/shmem/named_user_object.hpp" target="_top">boost::shmem::basic_named_user_object</a> (for user provided memory buffer),
+</li>
+</ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.architecture_allocators"></a> Shmem allocators</h3></div></div></div>
+<p>
+The Shmem STL-like allocators are fairly simple and follow the usual C++ allocator
+approach. Normally, allocators for STL containers are based above new/delete operators
+and above those, they implement pools, arenas and other allocation tricks.</p>
+<p>
+In Shmem allocators, the approach is similar, but all allocators are based on the
+<span class="bold"><strong>segment manager</strong></span>. The segment manager is the only one that provides from simple
+memory allocation to named object creations. Shmem allocators always store a pointer
+to the segment manager, so that they can obtain memory from the segment or share
+a common pool between allocators.</p>
+<p>
+As you can imagine, the member pointers of the allocator are not a raw pointers, but
+pointer types defined by the <code class="computeroutput"><span class="identifier">segment_manager</span><span class="special">::</span><span class="identifier">void_pointer</span></code> type. Apart from this,
+the <code class="computeroutput"><span class="identifier">pointer</span></code> typedef of Shmem allocators is also of the same type of
+<code class="computeroutput"><span class="identifier">segment_manager</span><span class="special">::</span><span class="identifier">void_pointer</span></code>.</p>
+<p>
+This means that if our allocation algorithm defines <code class="computeroutput"><span class="identifier">void_pointer</span></code> as 
+<code class="computeroutput"><span class="identifier">offset_ptr</span><span class="special">&lt;</span><span class="keyword">void</span><span class="special">&gt;</span></code>, <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">allocator</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> will store an <code class="computeroutput"><span class="identifier">offset_ptr</span><span class="special">&lt;</span><span class="identifier">segment_manager</span><span class="special">&gt;</span></code>
+to point to the segment manager and the <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">allocator</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">pointer</span></code> type will
+be <code class="computeroutput"><span class="identifier">offset_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>. This way, Shmem allocators can be placed in the same memory as
+the segment manager, that is, shared memory, memory mapped files, etc...</p>
+<p>
+Shmem implements basically two allocator approaches: normal and pooled. The pool is
+implemented in <a href="../../../../../boost/shmem/allocators/detail/node_pool.hpp" target="_top">boost::shmem::named_shared_object</a>,</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.architecture_containers"></a> Shmem containers</h3></div></div></div>
+<p>
+Shmem containers are basically common STL containers: they can even use
+STL allocators. Basically a Shmem container has the same implementation as
+the STL container, but with these little details:</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+Shmem STL containers don't assume that memory allocated with 
+   an allocator can be deallocated with other allocator of 
+   the same type. They always compare allocators with <code class="computeroutput"><span class="keyword">operator</span><span class="special">==()</span></code>
+   to know if this is possible. If allocators are equal Shmem containers optimize
+   swapping and similar operations, if not, they use alternative approaches.
+</li>
+<li>
+The pointers of the internal structures of the Shmem containers are of the 
+   same type the <code class="computeroutput"><span class="identifier">pointer</span></code> type defined by the allocator of the container.
+</li>
+<li>
+All objects are constructed-destroyed via allocator::construct and 
+   allocator::destroy functions.
+</li>
+</ul></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2005 -2006 Ion Gaztañaga</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="shared_message_queue.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="open_issues.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

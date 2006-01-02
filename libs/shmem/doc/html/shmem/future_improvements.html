@@ -1,0 +1,129 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Future Improvements...</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="prev" href="open_issues.html" title=" Open Issues">
+<link rel="next" href="thanks_to.html" title=" Thanks to...">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="boost.png (6897 bytes)" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="open_issues.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="thanks_to.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="shmem.future_improvements"></a> Future Improvements...</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="future_improvements.html#shmem.win32_sync"> Win32 synchronization is too basic</a></span></dt>
+<dt><span class="section"><a href="future_improvements.html#shmem.default_algorithm"> Default allocation algorithm can be improved</a></span></dt>
+<dt><span class="section"><a href="future_improvements.html#shmem.future_objectnames"> Use of wide character names on Shmem basic resources</a></span></dt>
+<dt><span class="section"><a href="future_improvements.html#shmem.future_security"> Security attributes</a></span></dt>
+<dt><span class="section"><a href="future_improvements.html#shmem.future_ipc"> Future inter-process communications</a></span></dt>
+<dt><span class="section"><a href="future_improvements.html#shmem.future_containers"> Unordered associative containers and other containers</a></span></dt>
+</dl></div>
+<p>
+There are some Shmem features that I would like to implement and
+some Shmem code that can be much better. Let's see some ideas:</p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.win32_sync"></a> Win32 synchronization is too basic</h3></div></div></div>
+<p>
+Win32 version of shared mutexes and shared conditions are based on
+"spin and wait" atomic instructions. This leads to poor performance
+and does not manage any memory synchronization (memory model) or 
+priority inversions. We would need very serious help from threading 
+experts on this. And I'm not sure that 
+this can be achieved in user-level software. Posix based implementations
+use PTHREAD_PROCESS_SHARED attribute to place mutexes in shared memory, so
+there are no such problems. I'm not aware of any implementation that 
+simulates PTHREAD_PROCESS_SHARED attribute for Win32. We should be able
+to construct these primitives in memory mapped files, so that we can 
+get filesystem persistence just like with POSIX primitives.</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.default_algorithm"></a> Default allocation algorithm can be improved</h3></div></div></div>
+<p>
+The default memory management algorithm used by Shmem to manage the
+fixed size memory segment is a "first fit" algorithm. This could be changed
+to a "best fit" algorithm to try to minimize fragmentation, but this would 
+hurt performance if a list is used to mantain the free memory portions.
+This can be solved with a tree-like free memory management, so that we can
+search the best portion in logarithmic time. And we have to implement the
+tree inside the given segment wasting minimum space. This seems complicated, 
+but with the help of an intrusive tree implementation this can be achieved.</p>
+<p>
+Suggestions and help from memory management experts are welcome!</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.future_objectnames"></a> Use of wide character names on Shmem basic resources</h3></div></div></div>
+<p>
+Currently Shmem only allows <span class="bold"><strong>char</strong></span> based names for basic synchronizationobjects. 
+However, several operating systems use <span class="bold"><strong>wchar_t</strong></span> names for resources 
+(mapped files, for example). 
+In the future Shmem should try to present a portable narrow/wide char interface.
+To do this, it would be useful to have a boost wstring &lt;-&gt; string conversion 
+utilities to translate resource names (escaping needed characters
+that can conflict with OS names) in a portable way. It would be interesting also 
+the use of <span class="bold"><strong>boost::filesystem</strong></span> paths to avoid operating system specific issues.</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.future_security"></a> Security attributes</h3></div></div></div>
+<p>
+Shmem does not define security attributes for shared memory and synchronization
+objects. Standard C++ also ignores security attributes with files so adding
+security attributes would require some serious work.</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.future_ipc"></a> Future inter-process communications</h3></div></div></div>
+<p>
+Shmem offers a process-shared message queue based on Shmem primitives
+like mutexes and conditions. I would want to develop more mechanisms, like
+stream-oriented named fifo so that we can use it with a iostream-interface
+wrapper (we can imitate Unix pipes).</p>
+<p>
+C++ needs more complex mechanisms and it would be nice to have a stream and
+datagram oriented PF_UNIX-like mechanism in C++. And for very fast inter-process 
+remote calls Solaris doors is an interesting alternative to implement
+for C++. But the work to implement PF_UNIX-like sockets and doors would
+be huge. Any network expert volunteer?</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.future_containers"></a> Unordered associative containers and other containers</h3></div></div></div>
+<p>
+We should be able to construct boost::unordered_xxx family in shared memory,
+so that there is no code duplication in boost. So Shmem should cooperate with
+boost container developers instead of duplicating effort writing it's own containers.</p>
+<p>
+A very interesting project is making <span class="bold"><strong>multi_index</strong></span> ready for shared memory. This
+could be a good basis for memory mapped data-bases. The work to achieve this, 
+however, can be huge. It would be interesting a collaboration with <span class="bold"><strong>Intrusive</strong></span> library
+to achieve shared memory intrusive containers.</p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2005 -2006 Ion Gaztañaga</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="open_issues.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="thanks_to.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

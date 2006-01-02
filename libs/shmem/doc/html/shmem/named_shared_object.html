@@ -1,0 +1,519 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Named shared memory object allocation</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="prev" href="offset_ptr.html" title=" A shared memory pointer: offset_ptr">
+<link rel="next" href="stl_allocators.html" title=" Shmem STL compatible allocators">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="boost.png (6897 bytes)" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="offset_ptr.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="stl_allocators.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="shmem.named_shared_object"></a> Named shared memory object allocation</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="named_shared_object.html#shmem.named_shared_object_int"> The interface</a></span></dt>
+<dt><span class="section"><a href="named_shared_object.html#shmem.common_named_shared_objects"> Common named shared object classes</a></span></dt>
+<dt><span class="section"><a href="named_shared_object.html#shmem.allocate_deallocate"> Allocating fragments of a shared memory segment</a></span></dt>
+<dt><span class="section"><a href="named_shared_object.html#shmem.segment_offset"> Obtaining offsets to identify data</a></span></dt>
+<dt><span class="section"><a href="named_shared_object.html#shmem.allocation_types"> Object construction function family</a></span></dt>
+<dt><span class="section"><a href="named_shared_object.html#shmem.anonymous"> Anonymous instance construction</a></span></dt>
+<dt><span class="section"><a href="named_shared_object.html#shmem.unique"> Unique instance construction</a></span></dt>
+<dt><span class="section"><a href="named_shared_object.html#shmem.index_types"> Index types for name/object mappings</a></span></dt>
+</dl></div>
+<p>
+The most useful feature of Shmem is the ability to treat a shared memory
+segment like a memory pool where you can allocate/deallocate fragments or
+construct/destroy objects just like you can do with malloc/free or new/delete.
+This way, several processes can share memory buffers to implement fast 
+inter-process communication and create named objects that can be found 
+using that name.</p>
+<p>
+When creating objects in shared memory, however, there are two problems, 
+the explicit constructor call needed and the problem when other 
+process has to find the created object in shared memory.</p>
+<p>
+Shmem solves this with the front-end <span class="bold"><strong>basic_named_shared_object</strong></span>. It offers
+a simple interface to construct objects in shared 
+memory associated with a string. All constructions and 
+destructions are atomic so that two processes can't create 
+two objects associated with the same name.</p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.named_shared_object_int"></a> The interface</h3></div></div></div>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="keyword">template</span><span class="special">
+      &lt;</span><span class="keyword">
+         class</span><span class="identifier"> CharType</span><span class="special">,</span><span class="keyword"> 
+         class</span><span class="identifier"> MemoryAlgorithm</span><span class="special">,</span><span class="keyword"> 
+         template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="identifier"> IndexConfig</span><span class="special">&gt;</span><span class="keyword"> class</span><span class="identifier"> IndexType</span><span class="special">
+      &gt;</span><span class="keyword">
+class</span><span class="identifier"> basic_named_shared_object</span><span class="special">
+{</span><span class="comment">
+   /*...*/</span><span class="keyword">
+public</span><span class="special">:</span><span class="keyword"> 
+   typedef</span><span class="comment"> /*...*/</span><span class="identifier">                                    segment_manager</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="identifier"> CharType</span><span class="identifier">                                   char_t</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="keyword"> typename</span><span class="identifier"> MemoryAlgorithm</span><span class="special">::</span><span class="identifier">void_pointer</span><span class="identifier">     void_pointer</span><span class="special">;</span><span class="comment">
+
+   /*!Returns the  memory base address in this process. Never throws.*/</span><span class="keyword">
+   void</span><span class="special"> *</span><span class="identifier">   get_base</span><span class="special">   ()</span><span class="keyword"> const</span><span class="special">;</span><span class="comment">
+
+   /*!Returns the size of memory segment. Never throws.*/</span><span class="identifier">
+   std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier">   get_size</span><span class="special">   ()</span><span class="keyword"> const</span><span class="special">;</span><span class="comment">
+
+   /*!Returns a pointer to the segment manager. Never throws.*/</span><span class="identifier">
+   segment_manager</span><span class="special"> *</span><span class="identifier">get_segment_manager</span><span class="special">()</span><span class="keyword"> const</span><span class="special">;</span><span class="comment">
+
+   /*!Transforms an absolute address into an offset from base address. 
+      The address must belong to the memory segment. Never throws.*/</span><span class="identifier">
+   std</span><span class="special">::</span><span class="identifier">ptrdiff_t</span><span class="identifier"> get_offset_from_address</span><span class="special">   (</span><span class="keyword">const</span><span class="keyword"> void</span><span class="special"> *</span><span class="identifier">ptr</span><span class="special">)</span><span class="keyword"> const</span><span class="special">;</span><span class="comment">
+
+   /*!Transforms previously obtained offset into an absolute address in the 
+      process space of the current process. Never throws.*/</span><span class="keyword">
+   void</span><span class="special"> *</span><span class="identifier">    get_address_from_offset</span><span class="special"> (</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ptrdiff_t</span><span class="identifier"> offset</span><span class="special">)</span><span class="keyword"> const</span><span class="special">;</span><span class="comment">
+
+   /*!Searches for nbytes of free memory in the segment, marks the
+      memory as used and return the pointer to the memory. If no 
+      memory is available throws a boost::shmem::bad_alloc exception*/</span><span class="keyword">
+   void</span><span class="special">*</span><span class="identifier"> allocate</span><span class="special">             (</span><span class="identifier">size_t</span><span class="identifier"> nbytes</span><span class="special">);</span><span class="comment">
+
+   /*!Searches for nbytes of free memory in the segment, marks the 
+      memory as used and return the pointer to the memory. If no memory 
+      is available return 0. Never throws.*/</span><span class="keyword">
+   void</span><span class="special">*</span><span class="identifier"> allocate</span><span class="special">             (</span><span class="identifier">size_t</span><span class="identifier"> nbytes</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">nothrow_t</span><span class="special"> &amp;</span><span class="identifier">nothrow</span><span class="special">);</span><span class="comment">
+
+   /*!Marks previously allocated memory as free. Never throws.*/</span><span class="keyword">
+   void</span><span class="identifier">  deallocate</span><span class="special">           (</span><span class="keyword">void</span><span class="special"> *</span><span class="identifier">addr</span><span class="special">);</span><span class="comment">
+
+   /*!Creates shared memory from file. Never throws.*/</span><span class="keyword">
+   template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="identifier"> CharT</span><span class="special">&gt;</span><span class="keyword"> 
+   bool</span><span class="identifier"> create_from_file</span><span class="special"> (</span><span class="keyword">const</span><span class="identifier"> CharT</span><span class="special"> *</span><span class="identifier">filename</span><span class="special">,</span><span class="keyword"> const</span><span class="keyword"> char</span><span class="special"> *</span><span class="identifier">mem_name</span><span class="special">,</span><span class="keyword"> 
+                          const</span><span class="keyword"> void</span><span class="special"> *</span><span class="identifier">addr</span><span class="special"> =</span><span class="number"> 0</span><span class="special">);</span><span class="comment">
+
+   /*!Creates shared memory from an istream. Never throws.*/</span><span class="keyword">
+   bool</span><span class="identifier"> create_from_istream</span><span class="special"> (</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">istream</span><span class="special"> &amp;</span><span class="identifier">instream</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> size</span><span class="special">,</span><span class="keyword">
+                             const</span><span class="keyword"> char</span><span class="special"> *</span><span class="identifier">mem_name</span><span class="special">,</span><span class="keyword"> const</span><span class="keyword"> void</span><span class="special"> *</span><span class="identifier">addr</span><span class="special"> =</span><span class="number"> 0</span><span class="special">);</span><span class="comment">
+
+   /*!Saves shared memory to a file. Never throws.*/</span><span class="keyword">
+   template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="identifier"> CharT</span><span class="special">&gt;</span><span class="keyword"> 
+   bool</span><span class="identifier"> save_to_file</span><span class="special"> (</span><span class="keyword">const</span><span class="identifier"> CharT</span><span class="special"> *</span><span class="identifier">filename</span><span class="special">);</span><span class="comment">
+
+   /*!Saves memory to a std::ostream. Never throws.*/</span><span class="keyword">
+   bool</span><span class="identifier"> save_to_ostream</span><span class="special"> (</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special"> &amp;</span><span class="identifier">outstream</span><span class="special">)</span><span class="comment">
+
+   /*!Constructor. Allocates basic resources. Never throws.*/</span><span class="identifier">
+   basic_named_shared_object</span><span class="special">(){}</span><span class="comment">
+
+   /*!Destructor. Calls close. Never throws.*/</span><span class="special">
+   ~</span><span class="identifier">basic_named_shared_object</span><span class="special">();</span><span class="comment">
+
+   /*!Creates shared memory, and places segment manager there. Never throws.*/</span><span class="keyword">
+   bool</span><span class="identifier">  create</span><span class="special">   (</span><span class="keyword">const</span><span class="keyword"> char</span><span class="special"> *</span><span class="identifier">name</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> size</span><span class="special">,</span><span class="keyword"> const</span><span class="keyword"> void</span><span class="special"> *</span><span class="identifier">addr</span><span class="special"> =</span><span class="number"> 0</span><span class="special">);</span><span class="comment">
+ 
+   /*!Connects to a created share memory and its segment manager. Never throws.*/</span><span class="keyword">
+   bool</span><span class="identifier">  open</span><span class="special">     (</span><span class="keyword">const</span><span class="keyword"> char</span><span class="special">*</span><span class="identifier"> name</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> size</span><span class="special">,</span><span class="keyword"> const</span><span class="keyword"> void</span><span class="special"> *</span><span class="identifier">addr</span><span class="special"> =</span><span class="number"> 0</span><span class="special">);</span><span class="comment">
+
+   /*!Frees resources and unmaps memory. Never throws.*/</span><span class="keyword">
+   void</span><span class="identifier"> close</span><span class="special">();</span><span class="comment">
+
+   /*!Tries to find the address of a previous named allocation. Returns a memory
+      buffer and the object count. If not found returned pointer is 0.
+      Never throws.*/</span><span class="keyword">
+   template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> T</span><span class="special">&gt;</span><span class="identifier">
+   std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">*,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;</span><span class="identifier"> find</span><span class="special">  (</span><span class="identifier">char_ptr_holder_t</span><span class="identifier"> name</span><span class="special">);</span><span class="comment">
+
+   /*!Creates a named object or array in shared memory.*/</span><span class="keyword">
+   template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> T</span><span class="special">&gt;</span><span class="keyword">
+   typename</span><span class="identifier"> named_object_algo_t</span><span class="special">::</span><span class="keyword">template</span><span class="identifier"> construct_proxy</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span><span class="keyword"> true</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="identifier">
+      construct</span><span class="special">(</span><span class="identifier">char_ptr_holder_t</span><span class="identifier"> name</span><span class="special">);</span><span class="comment">
+
+   /*!Finds or creates a named object or array in shared memory.*/</span><span class="keyword">
+   template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> T</span><span class="special">&gt;</span><span class="keyword">
+   typename</span><span class="identifier"> named_object_algo_t</span><span class="special">::</span><span class="keyword">template</span><span class="identifier"> find_construct_proxy</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span><span class="keyword"> true</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="identifier">
+      find_or_construct</span><span class="special">(</span><span class="identifier">char_ptr_holder_t</span><span class="identifier"> name</span><span class="special">);</span><span class="comment">
+
+   /*!Creates a named object or array in shared memory.*/</span><span class="keyword">
+   template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> T</span><span class="special">&gt;</span><span class="keyword">
+   typename</span><span class="identifier"> named_object_algo_t</span><span class="special">::</span><span class="keyword">template</span><span class="identifier"> construct_proxy</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span><span class="keyword"> false</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="identifier">
+      construct</span><span class="special">(</span><span class="identifier">char_ptr_holder_t</span><span class="identifier"> name</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">nothrow_t</span><span class="identifier"> nothrow</span><span class="special">);</span><span class="comment">
+
+   /*!Finds or creates a named object or array in shared memory.*/</span><span class="keyword">
+   template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> T</span><span class="special">&gt;</span><span class="keyword">
+   typename</span><span class="identifier"> named_object_algo_t</span><span class="special">::</span><span class="keyword">template</span><span class="identifier"> find_construct_proxy</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span><span class="keyword"> false</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="identifier">
+      find_or_construct</span><span class="special">(</span><span class="identifier">char_ptr_holder_t</span><span class="identifier"> name</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">nothrow_t</span><span class="identifier"> nothrow</span><span class="special">);</span><span class="comment">
+
+   /*!Creates a named array from iterators in shared memory .*/</span><span class="keyword">
+   template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> T</span><span class="special">&gt;</span><span class="keyword">
+   typename</span><span class="identifier"> named_object_algo_t</span><span class="special">::</span><span class="keyword">template</span><span class="identifier"> construct_iter_proxy</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span><span class="keyword"> true</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="identifier">
+      construct_it</span><span class="special">(</span><span class="identifier">char_ptr_holder_t</span><span class="identifier"> name</span><span class="special">);</span><span class="comment">
+
+   /*!Finds or creates a named array from iterators in shared memory.*/</span><span class="keyword">
+   template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> T</span><span class="special">&gt;</span><span class="keyword">
+   typename</span><span class="identifier"> named_object_algo_t</span><span class="special">::</span><span class="keyword">template</span><span class="identifier"> find_construct_iter_proxy</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span><span class="keyword"> true</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="identifier">
+      find_or_construct_it</span><span class="special">(</span><span class="identifier">char_ptr_holder_t</span><span class="identifier"> name</span><span class="special">);</span><span class="comment">
+
+   /*!Creates a named array from iterators in shared memory.*/</span><span class="keyword">
+   template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> T</span><span class="special">&gt;</span><span class="keyword">
+   typename</span><span class="identifier"> named_object_algo_t</span><span class="special">::</span><span class="keyword">template</span><span class="identifier"> construct_iter_proxy</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span><span class="keyword"> false</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="identifier">
+      construct_it</span><span class="special">(</span><span class="identifier">char_ptr_holder_t</span><span class="identifier"> name</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">nothrow_t</span><span class="identifier"> nothrow</span><span class="special">);</span><span class="comment">
+
+   /*!Finds or creates a named array from iterators in shared memory.*/</span><span class="keyword">
+   template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> T</span><span class="special">&gt;</span><span class="keyword">
+   typename</span><span class="identifier"> named_object_algo_t</span><span class="special">::</span><span class="keyword">template</span><span class="identifier"> find_construct_iter_proxy</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span><span class="keyword"> false</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="identifier">
+      find_or_construct_it</span><span class="special">(</span><span class="identifier">char_ptr_holder_t</span><span class="identifier"> name</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">nothrow_t</span><span class="identifier"> nothrow</span><span class="special">);</span><span class="comment">
+
+   /*!Calls a functor and guarantees that no new construction, search or
+      destruction will be executed by any process while executing the object
+      function call. If the functor throws, this function throws.*/</span><span class="keyword">
+   template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> Func</span><span class="special">&gt;</span><span class="keyword">
+   void</span><span class="identifier"> atomic_func</span><span class="special">(</span><span class="identifier">Func</span><span class="special"> &amp;</span><span class="identifier">f</span><span class="special">);</span><span class="comment">
+
+   /*!Destroys a named shared memory object or array.*/</span><span class="keyword">
+   template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> T</span><span class="special">&gt;</span><span class="keyword">
+   bool</span><span class="identifier"> destroy</span><span class="special">(</span><span class="keyword">const</span><span class="identifier"> CharType</span><span class="special"> *</span><span class="identifier">name</span><span class="special">);</span><span class="comment">
+
+   /*!Destroys an anonymous shared memory object or array.*/</span><span class="keyword">
+   template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> T</span><span class="special">&gt;</span><span class="keyword">
+   bool</span><span class="identifier"> destroy</span><span class="special">(</span><span class="keyword">const</span><span class="identifier"> detail</span><span class="special">::</span><span class="identifier">anonymous_instance_t</span><span class="special"> *,</span><span class="keyword"> const</span><span class="keyword"> void</span><span class="special"> *</span><span class="identifier">object</span><span class="special">);</span><span class="comment">
+
+   /*!Destroys the unique instance of type T of the shared memory segment.*/</span><span class="keyword">
+   template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> T</span><span class="special">&gt;</span><span class="keyword">
+   bool</span><span class="identifier"> destroy</span><span class="special">(</span><span class="keyword">const</span><span class="identifier"> detail</span><span class="special">::</span><span class="identifier">unique_instance_t</span><span class="special"> *);</span><span class="comment">
+
+   /*!Destroys the object (named, anonymous, or unique)of type T.*/</span><span class="keyword">
+   template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> T</span><span class="special">&gt;</span><span class="keyword">
+   bool</span><span class="identifier"> destroy_ptr</span><span class="special">(</span><span class="keyword">const</span><span class="identifier"> T</span><span class="special"> *</span><span class="identifier">name</span><span class="special">);</span><span class="comment">
+
+   /*!Preallocates needed index resources to optimize the 
+      creation of "num" named objects in the shared memory segment.
+      Can throw boost::shmem::bad_alloc if there is no enough memory.*/</span><span class="keyword">
+   void</span><span class="identifier"> reserve_named_objects</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> num</span><span class="special">);</span><span class="comment">
+
+   /*!Preallocates needed index resources to optimize the 
+      creation of "num" unique objects in the shared memory segment.
+      Can throw boost::shmem::bad_alloc if there is no enough memory.*/</span><span class="keyword">
+   void</span><span class="identifier"> reserve_unique_objects</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> num</span><span class="special">);</span><span class="comment">
+
+   //. . .
+</span><span class="special">};</span></code></pre>
+<p>
+The close() call does not destroy the shared memory segment, it just unmaps it from the
+process' address space. When all processes connected to the shared memory segment
+execute the close call, the shared memory segment is destroyed.</p>
+<p>
+This class can be customized with the following parameters:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="keyword">class</span><span class="identifier"> CharType</span><span class="special">,</span><span class="keyword"> 
+class</span><span class="identifier"> MemoryAlgorithm</span><span class="special">,</span><span class="keyword"> 
+template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="identifier"> IndexConfig</span><span class="special">&gt;</span><span class="keyword"> class</span><span class="identifier"> IndexType</span></code></pre>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<span class="bold"><strong>CharType</strong></span> is the type of the character that will be used to identify
+  the created named objects (for example, <span class="bold"><strong>char</strong></span> or <span class="bold"><strong>wchar_t</strong></span>)
+</li>
+<li>
+<span class="bold"><strong>MemoryAlgorithm</strong></span> is the shared memory segment management algorithm 
+   (for example simple sequential fit). The typedefs of memory algorithm 
+   also define the synchronization type (<code class="computeroutput"><span class="identifier">MemoryAlgorithm</span><span class="special">::</span><span class="identifier">mutex_family</span></code>)
+   and pointer type (<code class="computeroutput"><span class="identifier">MemoryAlgorithm</span><span class="special">::</span><span class="identifier">void_pointer</span></code>) to be used in all 
+   classes based on basic_named_shared_object (STL allocators, for example).
+   See <a href="customizing_boost_shmem.html#shmem.custom_shmem_alloc" title=" Writing a new shared memory allocation algorithm">Writing a new shared memory allocation
+   algorithm</a> for details about memory algorithms.
+</li>
+<li>
+<span class="bold"><strong>IndexType</strong></span> is the type of index that will be used to store the name-object association 
+   (for example, a map, a hash-map, or an ordered vector)
+</li>
+</ul></div>
+<p>
+This way, we can use char or wchar_t to name the shared memory 
+objects, we can plug new shared memory allocation algorithms, and
+use the index type that is best suited to our needs.</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.common_named_shared_objects"></a> Common named shared object classes</h3></div></div></div>
+<p>
+As seen, <span class="bold"><strong>basic_named_shared_object</strong></span> offers a great variety of customization. But
+for the average user, a common, default shared memory named object creation is needed.
+Because of this, Shmem defines the most common named shared object specializations:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">/*!Defines the named shared object allocation with a c-string as 
+   a key, the simple sequential fit algorithm (with process-shared mutexes)
+   as memory management algorithm and flat_map as a index.
+   This class allows the shared memory to be mapped in different base 
+   in different processes*/</span><span class="keyword">
+typedef</span><span class="identifier"> 
+   basic_named_shared_object</span><span class="special"> &lt;</span><span class="keyword">char</span><span class="special">
+                             ,</span><span class="identifier">simple_seq_fit</span><span class="special">&lt;</span><span class="identifier">shared_mutex_family</span><span class="special">,</span><span class="identifier"> offset_ptr</span><span class="special">&lt;</span><span class="keyword">void</span><span class="special">&gt;</span><span class="special"> &gt;</span><span class="special">
+                             ,</span><span class="identifier">flat_map_index</span><span class="special">&gt;</span><span class="identifier">  
+   named_shared_object</span><span class="special">;</span><span class="comment">
+
+/*!Defines the named shared object allocation with a wchar_t string as 
+   a key, the simple sequential fit algorithm (with process-shared mutexes) 
+   as memory management algorithm and flat_map as a index
+   This class allows the shared memory to be mapped in different base 
+   in different processes*/</span><span class="keyword">
+typedef</span><span class="identifier"> 
+   basic_named_shared_object</span><span class="special"> &lt;</span><span class="keyword">wchar_t</span><span class="special">
+                             ,</span><span class="identifier">simple_seq_fit</span><span class="special">&lt;</span><span class="identifier">shared_mutex_family</span><span class="special">,</span><span class="identifier"> offset_ptr</span><span class="special">&lt;</span><span class="keyword">void</span><span class="special">&gt;</span><span class="special"> &gt;</span><span class="special">
+                             ,</span><span class="identifier">flat_map_index</span><span class="special">&gt;</span><span class="identifier">  
+   wnamed_shared_object</span><span class="special">;</span><span class="comment">
+
+/*!Defines the named shared object allocation with a c-string as 
+   a key, the simple sequential fit algorithm (with process-shared mutexes)
+   as memory management algorithm and flat_map as a index.
+   This class only works if shared memory is mapped to the same address
+   in different processes*/</span><span class="keyword">
+typedef</span><span class="identifier"> 
+   basic_named_shared_object</span><span class="special"> &lt;</span><span class="keyword">char</span><span class="special">
+                             ,</span><span class="identifier">simple_seq_fit</span><span class="special">&lt;</span><span class="identifier">shared_mutex_family</span><span class="special">,</span><span class="keyword"> void</span><span class="special"> *&gt;</span><span class="special">
+                             ,</span><span class="identifier">flat_map_index</span><span class="special">&gt;</span><span class="identifier">  
+   fixed_named_shared_object</span><span class="special">;</span><span class="comment">
+
+/*!Defines the named shared object allocation with a wchar_t string as 
+   a key, the simple sequential fit algorithm (with process-shared mutexes) 
+   as memory management algorithm and flat_map as a index
+   This class only works if shared memory is mapped to the same address
+   in different processes*/</span><span class="keyword">
+typedef</span><span class="identifier"> 
+   basic_named_shared_object</span><span class="special"> &lt;</span><span class="keyword">wchar_t</span><span class="special">
+                             ,</span><span class="identifier">simple_seq_fit</span><span class="special">&lt;</span><span class="identifier">shared_mutex_family</span><span class="special">,</span><span class="keyword"> void</span><span class="special"> *&gt;</span><span class="special">
+                             ,</span><span class="identifier">flat_map_index</span><span class="special">&gt;</span><span class="identifier">  
+   wfixed_named_shared_object</span><span class="special">;</span></code></pre>
+<p>
+named_shared_object allocates objects in shared memory asociated with a c-string and
+wnamed_shared_object allocates objects in shared memory asociated with a wchar_t null
+terminated string. Both define the pointer type as <code class="computeroutput"><span class="identifier">offset_ptr</span><span class="special">&lt;</span><span class="keyword">void</span><span class="special">&gt;</span></code> so they can be
+used to map the shared memory at different base addresses in different processes.
+<span class="bold"><strong>fixed_named_shared_object</strong></span> and <span class="bold"><strong>wfixed_named_shared_object</strong></span> are the counterparts
+for fixed shared memory mapping, since they define the pointer type as <code class="computeroutput"><span class="keyword">void</span><span class="special">*</span></code></p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.allocate_deallocate"></a> Allocating fragments of a shared memory segment</h3></div></div></div>
+<p>
+If a basic raw-byte allocation is needed from a shared memory segment, for
+example, to implement top-level inter-process communications, this class
+offers <span class="bold"><strong>allocate</strong></span> and <span class="bold"><strong>deallocate</strong></span> functions. The allocation function
+comes with throwing and no throwing versions. Throwing version throws 
+boost::shmem::bad_alloc if there is no more memory and the non-throwing
+version returns 0 pointer.</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">//Front-end that allocates portions of a shared memory segment
+//with the default shared memory segment management algorithm
+</span><span class="identifier">named_shared_object</span><span class="identifier"> shmalloc</span><span class="special">;</span><span class="comment">
+
+//Create the segment and initialize resources
+</span><span class="identifier">shmalloc</span><span class="special">.</span><span class="identifier">create</span><span class="special">(</span><span class="string">"/MySegment"</span><span class="special">,</span><span class="number"> 65536</span><span class="special">);</span><span class="keyword">
+
+void</span><span class="special">*</span><span class="identifier"> ptr</span><span class="special">;</span><span class="comment">
+
+//Allocate 100 bytes of memory from segment, throwing version
+</span><span class="identifier">ptr</span><span class="special"> =</span><span class="identifier"> shmalloc</span><span class="special">.</span><span class="identifier">allocate</span><span class="special">(</span><span class="number">100</span><span class="special">);</span><span class="comment">
+
+//Deallocate it
+</span><span class="identifier">shmalloc</span><span class="special">.</span><span class="identifier">deallocate</span><span class="special">(</span><span class="identifier">ptr</span><span class="special">);</span><span class="comment">
+
+//Non throwing version
+</span><span class="identifier">ptr</span><span class="special"> =</span><span class="identifier"> shmalloc</span><span class="special">.</span><span class="identifier">allocate</span><span class="special">(</span><span class="number">100</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">nothrow</span><span class="special">);</span><span class="comment">
+
+//Deallocate it
+</span><span class="identifier">shmalloc</span><span class="special">.</span><span class="identifier">deallocate</span><span class="special">(</span><span class="identifier">ptr</span><span class="special">);</span></code></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.segment_offset"></a> Obtaining offsets to identify data</h3></div></div></div>
+<p>
+The class also offers conversions between absolute addresses that belong to 
+the segment and the offset of that address regarding to the base mapping address 
+of the segment, so that offsets can be used as keys between processes
+to identify shared memory buffers.</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">//Process A obtains the offset of the address
+</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ptrdiff_t</span><span class="identifier"> offset</span><span class="special"> =</span><span class="identifier"> segment</span><span class="special">.</span><span class="identifier">get_offset_from_address</span><span class="special">(</span><span class="identifier">processA_address</span><span class="special">);</span><span class="comment">
+//Process A sends this address using IPC
+//
+//Process B obtains the address of the offset (which can be 
+//different if segments were mapped with different base addresses)
+</span><span class="keyword">void</span><span class="special"> *</span><span class="identifier"> processB_address</span><span class="special"> =</span><span class="identifier"> segment</span><span class="special">.</span><span class="identifier">get_address_from_offset</span><span class="special">(</span><span class="identifier">offset</span><span class="special">);</span></code></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.allocation_types"></a> Object construction function family</h3></div></div></div>
+<p>
+When constructing objects in shared memory associated with a name, the user has a varied
+function family to "construct" or "construct if not found" objects. Shmem can construct
+a single object or an array of objects. The array can be constructed with the same 
+parameters for all objects or we can define each parameter from a list of iterators:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">/*!Allocates and constructs an object of type MyType (throwing version) */</span><span class="identifier">
+MyType</span><span class="special"> *</span><span class="identifier">ptr</span><span class="special"> =</span><span class="identifier"> named_shared_object</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;(</span><span class="string">"Name"</span><span class="special">)</span><span class="special"> (</span><span class="identifier">par1</span><span class="special">,</span><span class="identifier"> par2</span><span class="special">...);</span><span class="comment">
+
+/*!Allocates and constructs an array of objects of type MyType (throwing version) 
+  Each object receives the same parameters (par1, par2, ...)*/</span><span class="identifier">
+MyType</span><span class="special"> *</span><span class="identifier">ptr</span><span class="special"> =</span><span class="identifier"> named_shared_object</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;(</span><span class="string">"Name"</span><span class="special">)[</span><span class="identifier">count</span><span class="special">](</span><span class="identifier">par1</span><span class="special">,</span><span class="identifier"> par2</span><span class="special">...);</span><span class="comment">
+
+/*!Tries to find a previously created object. If not present, allocates 
+   and constructs an object of type MyType (throwing version) */</span><span class="identifier">
+MyType</span><span class="special"> *</span><span class="identifier">ptr</span><span class="special"> =</span><span class="identifier"> named_shared_object</span><span class="special">.</span><span class="identifier">find_or_construct</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;(</span><span class="string">"Name"</span><span class="special">)</span><span class="special"> (</span><span class="identifier">par1</span><span class="special">,</span><span class="identifier"> par2</span><span class="special">...);</span><span class="comment">
+
+/*!Tries to find a previously created object. If not present, allocates and 
+   constructs an array of objects of type MyType (throwing version). Each object 
+   receives the same parameters (par1, par2, ...)*/</span><span class="identifier">
+MyType</span><span class="special"> *</span><span class="identifier">ptr</span><span class="special"> =</span><span class="identifier"> named_shared_object</span><span class="special">.</span><span class="identifier">find_or_construct</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;(</span><span class="string">"Name"</span><span class="special">)[</span><span class="identifier">count</span><span class="special">](</span><span class="identifier">par1</span><span class="special">,</span><span class="identifier"> par2</span><span class="special">...);</span><span class="comment">
+
+/*!Allocates and constructs an array of objects of type MyType (throwing version) 
+  Each object receives parameters returned with the expression (*it1++, *it2++,... )*/</span><span class="identifier">
+MyType</span><span class="special"> *</span><span class="identifier">ptr</span><span class="special"> =</span><span class="identifier"> named_shared_object</span><span class="special">.</span><span class="identifier">construct_it</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;(</span><span class="string">"Name"</span><span class="special">)[</span><span class="identifier">count</span><span class="special">](</span><span class="identifier">it1</span><span class="special">,</span><span class="identifier"> it2</span><span class="special">...);</span><span class="comment">
+
+/*!Tries to find a previously created object. If not present, allocates and constructs 
+   an array of objects of type MyType (throwing version).  Each object receives  
+   parameters returned with the expression (*it1++, *it2++,... ) */</span><span class="identifier">
+MyType</span><span class="special"> *</span><span class="identifier">ptr</span><span class="special"> =</span><span class="identifier"> named_shared_object</span><span class="special">.</span><span class="identifier">find_or_construct_it</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;(</span><span class="string">"Name"</span><span class="special">)[</span><span class="identifier">count</span><span class="special">](</span><span class="identifier">it1</span><span class="special">,</span><span class="identifier"> it2</span><span class="special">...);</span><span class="comment">
+
+/*!Tries to find a previously created object. Returns a pointer to the object and the 
+   count (if it is not an array, returns 1). If not present, the returned pointer is 0*/</span><span class="identifier">
+std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special"> *,</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;</span><span class="identifier"> ret</span><span class="special"> =</span><span class="identifier"> named_shared_object</span><span class="special">.</span><span class="identifier">find</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;(</span><span class="string">"Name"</span><span class="special">);</span><span class="comment">
+
+/*!Destroys the created object, returns false if not present*/</span><span class="keyword">
+bool</span><span class="identifier"> destroyed</span><span class="special"> =</span><span class="identifier"> named_shared_object</span><span class="special">.</span><span class="identifier">destroy</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;(</span><span class="string">"Name"</span><span class="special">);</span><span class="comment">
+
+/*!Destroys the created object via pointer*/</span><span class="identifier">
+named_shared_object</span><span class="special">.</span><span class="identifier">destroy_ptr</span><span class="special">(</span><span class="identifier">ptr</span><span class="special">);</span></code></pre>
+<p>
+All these functions have a non-throwing version, that 
+is invoked with an additional parameter std::nothrow. 
+For example, for simple object construction:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">/*!Allocates and constructs an object of type MyType (no throwing version) */</span><span class="identifier">
+MyType</span><span class="special"> *</span><span class="identifier">ptr</span><span class="special"> =</span><span class="identifier"> named_shared_object</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;(</span><span class="string">"Name"</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">nothrow</span><span class="special">)</span><span class="special"> (</span><span class="identifier">par1</span><span class="special">,</span><span class="identifier"> par2</span><span class="special">...);</span></code></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.anonymous"></a> Anonymous instance construction</h3></div></div></div>
+<p>
+Sometimes, the user doesn't want to create objects associated with a name. For this purpose,
+Shmem can create anonymous objects in shared memory. All named object construction functions
+are available to construct anonymous objects. To allocate an anonymous objects, the user
+must use "boost::shmem::anonymous_instance" object instead of a name:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="identifier">MyType</span><span class="special"> *</span><span class="identifier">ptr</span><span class="special"> =</span><span class="identifier"> named_shared_object</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;(</span><span class="identifier">anonymous_instance</span><span class="special">)</span><span class="special"> (</span><span class="identifier">par1</span><span class="special">,</span><span class="identifier"> par2</span><span class="special">...);</span><span class="comment">
+// Other construct variants can also be used (including non-throwing ones)
+//We can only destroy the anonymous object via pointer
+</span><span class="identifier">named_shared_object</span><span class="special">.</span><span class="identifier">destroy_ptr</span><span class="special">(</span><span class="identifier">ptr</span><span class="special">);</span></code></pre>
+<p>
+Find functions have no sense here, since many anonymous objects can be created in
+the same memory segment. We can only destroy the anonymous object via pointer.</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.unique"></a> Unique instance construction</h3></div></div></div>
+<p>
+Sometimes, the user wants to emulate a singleton in shared memory. Obviously, 
+as shared memory is constructed at run-time, the user must construct and destroy
+this object explicitly. But how can the user be sure that the object is the only
+object of its type in the shared memory segment? This can be emulated using
+a named object and checking if it is present before trying to create one, but
+all processes must agree in the object's name, that can also conflict with
+other existing names.</p>
+<p>
+To solve this, Shmem offers a "unique object" creation in shared memory.
+Only one instance of a class can be created in a shared memory segment using this service,
+so it makes easier the emulation of singleton-like objects across processes, for example,
+to design pooled, shared memory allocators. The object can be searched using the type 
+of the class as a key.</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">// Construct
+</span><span class="identifier">MyType</span><span class="special"> *</span><span class="identifier">ptr</span><span class="special"> =</span><span class="identifier"> named_shared_object</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;(</span><span class="identifier">unique_instance</span><span class="special">)</span><span class="special"> (</span><span class="identifier">par1</span><span class="special">,</span><span class="identifier"> par2</span><span class="special">...);</span><span class="comment">
+// Find it
+</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special"> *,</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;</span><span class="identifier"> ret</span><span class="special"> =</span><span class="identifier"> named_shared_object</span><span class="special">.</span><span class="identifier">find</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;(</span><span class="identifier">unique_instance</span><span class="special">);</span><span class="comment">
+// Destroy it
+</span><span class="identifier">named_shared_object</span><span class="special">.</span><span class="identifier">destroy</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;(</span><span class="identifier">unique_instance</span><span class="special">);</span><span class="comment">
+// Other construct and find variants can also be used (including non-throwing ones)
+</span></code></pre>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">// We can also destroy the unique object via pointer
+</span><span class="identifier">MyType</span><span class="special"> *</span><span class="identifier">ptr</span><span class="special"> =</span><span class="identifier"> named_shared_object</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;(</span><span class="identifier">unique_instance</span><span class="special">)</span><span class="special"> (</span><span class="identifier">par1</span><span class="special">,</span><span class="identifier"> par2</span><span class="special">...);</span><span class="identifier">
+named_shared_object</span><span class="special">.</span><span class="identifier">destroy_ptr</span><span class="special">(</span><span class="identifier">ptr</span><span class="special">);</span></code></pre>
+<p>
+The find function obtains a pointer to the only object of type T that can be created
+using this unique_instance mechanism.</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.index_types"></a> Index types for name/object mappings</h3></div></div></div>
+<p>
+As seen, basic_named_shared_object, when creating named objects, stores the name/object
+relation in an index. The index is a map with the name of the object as a key and
+a pointer to the object as the mapped type. The default specializations, <span class="bold"><strong>named_shared_object</strong></span> 
+and <span class="bold"><strong>wnamed_shared_object</strong></span>, use <span class="bold"><strong>flat_map_index</strong></span> as the index type.</p>
+<p>
+Each index has its own characteristics, like search-time, insertion time, deletion time, 
+memory use, and memory allocation patterns. Shmem offers 3 index types right now:</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<span class="bold"><strong>boost::shmem::flat_map_index</strong></span>: Based on boost::shmem::flat_map, an ordered 
+   vector similar to Loki library's AssocVector class, offers great search time and
+   minimum memory use. But the vector must be reallocated when is full, so all data
+   must be copied to the new buffer. Ideal when insertions are mainly in initialization
+   time and in run-time we just need searches.
+</li>
+<li>
+<span class="bold"><strong>boost::shmem::map_index</strong></span>: Based on boost::shmem::map, a shared memory version of std::map.
+   Since it's a node based container, it has no reallocations, the tree must be just 
+   rebalanced somtimes. Offers equilibrated insertion/deletion/search times with
+   a little more overhead per node comparing to <span class="bold"><strong>boost::shmem::flat_map_index</strong></span>. Ideal
+   when searches/insertions/deletions are in random order.
+</li>
+<li>
+<span class="bold"><strong>boost::shmem::null_index</strong></span>: This index is for people using basic_named_shared_object
+   just for raw memory buffer allocations and they don't make use of named/unique 
+   allocations. This class is just empty and saves some space and compilation time.
+</li>
+</ul></div>
+<p>
+To create a <span class="bold"><strong>basic_named_shared_object</strong></span> using <span class="bold"><strong>boost::shmem::map</strong></span> as the index type we
+just must specify <span class="bold"><strong>boost::shmem::map_index</strong></span> as template parameter:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">//This front-end can allocate objects with:
+// -&gt; a wchar_t string as key
+// -&gt; boost::shmem::simple_seq_fit with process-shared mutexes 
+//       as memory allocation algorithm.
+// -&gt; boost::shmem::map&lt;...&gt; as the index to store name/object mappings
+</span><span class="keyword">typedef</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">basic_named_shared_object</span><span class="special">
+         &lt;</span><span class="keyword">  wchar_t</span><span class="special">
+         ,</span><span class="identifier">  boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">simple_seq_fit</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">shared_mutex_family</span><span class="special">,</span><span class="identifier"> offset_ptr</span><span class="special">&lt;</span><span class="keyword">void</span><span class="special">&gt;</span><span class="special"> &gt;</span><span class="special">
+         ,</span><span class="identifier">  boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">map_index</span><span class="special">
+         &gt;</span><span class="identifier">  my_named_shared_object</span><span class="special">;</span></code></pre>
+<p>
+Shmem plans to offer an <span class="bold"><strong>unordered_map</strong></span> based index as soon as this container is included
+in Boost. If these indexes are not enough for you, you can define your own index type.
+To know how to do this, go to <a href="customizing_boost_shmem.html#shmem.custom_indexes" title=" Building custom indexes">Building custom indexes</a> section.</p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2005 -2006 Ion Gaztañaga</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="offset_ptr.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="stl_allocators.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,681 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Reference</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="prev" href="references.html" title=" References and interesting links">
+<link rel="next" href="../id294977-bb.html" title="Class template allocator&lt;void, SegmentManager&gt;">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="boost.png (6897 bytes)" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="references.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="../id294977-bb.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="shmem.reference"></a>Reference</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="reference.html#id294958">Header &lt;boost/shmem/allocators/allocator.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id295565">Header &lt;boost/shmem/allocators/cached_node_allocator.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id296837">Header &lt;boost/shmem/allocators/detail/node_pool.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id296863">Header &lt;boost/shmem/allocators/node_allocator.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id298421">Header &lt;boost/shmem/allocators/private_node_allocator.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id299510">Header &lt;boost/shmem/exceptions.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id299701">Header &lt;boost/shmem/indexes/flat_map_index.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id299954">Header &lt;boost/shmem/indexes/map_index.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id300254">Header &lt;boost/shmem/indexes/null_map_index.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id300342">Header &lt;boost/shmem/indexes/unordered_map_index.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id300644">Header &lt;boost/shmem/ipc/shared_message_queue.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id301761">Header &lt;boost/shmem/mem_algo/basic_seq_fit.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id302224">Header &lt;boost/shmem/mem_algo/basic_simple_seq_fit.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id302753">Header &lt;boost/shmem/mem_algo/multi_seq_fit.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id302869">Header &lt;boost/shmem/mem_algo/multi_simple_seq_fit.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id303027">Header &lt;boost/shmem/mem_algo/seq_fit.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id303143">Header &lt;boost/shmem/mem_algo/simple_seq_fit.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id303260">Header &lt;boost/shmem/mmapped_file.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id303706">Header &lt;boost/shmem/named_heap_object.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id304214">Header &lt;boost/shmem/named_mfile_object.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id304533">Header &lt;boost/shmem/named_shared_object.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id305017">Header &lt;boost/shmem/named_user_object.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id305248">Header &lt;boost/shmem/offset_ptr.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id308046">Header &lt;boost/shmem/shared_memory.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id309108">Header &lt;boost/shmem/shmem_fwd.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id309429">Header &lt;boost/shmem/streams/bufferstream.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id311092">Header &lt;boost/shmem/streams/vectorstream.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id312864">Header &lt;boost/shmem/sync/lock.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id313633">Header &lt;boost/shmem/sync/named_mutex.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id313974">Header &lt;boost/shmem/sync/named_semaphore.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id314344">Header &lt;boost/shmem/sync/null_mutex.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id314617">Header &lt;boost/shmem/sync/read_write_lock.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id317353">Header &lt;boost/shmem/sync/shared_barrier.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id317481">Header &lt;boost/shmem/sync/shared_condition.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id317956">Header &lt;boost/shmem/sync/shared_mutex.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id318510">Header &lt;boost/shmem/sync/shared_mutex_family.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id318783">Header &lt;boost/shmem/sync/shared_read_write_mutex.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id320032">Header &lt;boost/shmem/sync/shared_recursive_mutex.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#id320672">Header &lt;boost/shmem/sync/xtime.hpp&gt;</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id294958"></a>Header &lt;<a href="../../../../../boost/shmem/allocators/allocator.hpp" target="_top">boost/shmem/allocators/allocator.hpp</a>&gt;</h3></div></div></div>
+<p>Describes an allocator that allocates portions of fixed size memory buffer (shared memory, mapped file...)</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> SegmentManager&gt; <span class="bold"><strong>class</strong></span> <a href="../id294977-bb.html" title="Class template allocator&lt;void, SegmentManager&gt;">allocator</a>&lt;<span class="bold"><strong>void</strong></span>, SegmentManager&gt;;
+
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> SegmentManager&gt; <span class="bold"><strong>class</strong></span> <a href="../allocator.html" title="Class template allocator">allocator</a>;
+
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> SegmentManager&gt; 
+      <span class="bold"><strong>struct</strong></span> <a href="../id234232-bb.html" title="Struct template allocator&lt;T, SegmentManager &gt;&gt;">allocator</a>&lt;T, SegmentManager &gt;&gt;;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> SegmentManager&gt; 
+      <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../id295003.html" title="Function template operator=="><span class="bold"><strong>operator</strong></span>==</a>(<span class="bold"><strong>const</strong></span> <a href="../allocator.html" title="Class template allocator">allocator</a>&lt; T, SegmentManager &gt; &amp;, 
+                      <span class="bold"><strong>const</strong></span> <a href="../allocator.html" title="Class template allocator">allocator</a>&lt; T, SegmentManager &gt; &amp;);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> SegmentManager&gt; 
+      <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../id295059.html" title="Function template operator!="><span class="bold"><strong>operator</strong></span>!=</a>(<span class="bold"><strong>const</strong></span> <a href="../allocator.html" title="Class template allocator">allocator</a>&lt; T, SegmentManager &gt; &amp;, 
+                      <span class="bold"><strong>const</strong></span> <a href="../allocator.html" title="Class template allocator">allocator</a>&lt; T, SegmentManager &gt; &amp;);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> A&gt; 
+      <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../id295115.html" title="Function template operator=="><span class="bold"><strong>operator</strong></span>==</a>(<span class="bold"><strong>const</strong></span> <a href="../cached_node_allocator.html" title="Class template cached_node_allocator">cached_node_allocator</a>&lt; T, A &gt; &amp;, 
+                      <span class="bold"><strong>const</strong></span> <a href="../cached_node_allocator.html" title="Class template cached_node_allocator">cached_node_allocator</a>&lt; T, A &gt; &amp;);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> A&gt; 
+      <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../id295171.html" title="Function template operator!="><span class="bold"><strong>operator</strong></span>!=</a>(<span class="bold"><strong>const</strong></span> <a href="../cached_node_allocator.html" title="Class template cached_node_allocator">cached_node_allocator</a>&lt; T, A &gt; &amp;, 
+                      <span class="bold"><strong>const</strong></span> <a href="../cached_node_allocator.html" title="Class template cached_node_allocator">cached_node_allocator</a>&lt; T, A &gt; &amp;);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, std::size_t N, <span class="bold"><strong>typename</strong></span> A&gt; 
+      <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../id295232.html" title="Function template operator=="><span class="bold"><strong>operator</strong></span>==</a>(<span class="bold"><strong>const</strong></span> <a href="../node_allocator.html" title="Class template node_allocator">node_allocator</a>&lt; T, N, A &gt; &amp;, 
+                      <span class="bold"><strong>const</strong></span> <a href="../node_allocator.html" title="Class template node_allocator">node_allocator</a>&lt; T, N, A &gt; &amp;);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, std::size_t N, <span class="bold"><strong>typename</strong></span> A&gt; 
+      <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../id295314.html" title="Function template operator!="><span class="bold"><strong>operator</strong></span>!=</a>(<span class="bold"><strong>const</strong></span> <a href="../node_allocator.html" title="Class template node_allocator">node_allocator</a>&lt; T, N, A &gt; &amp;, 
+                      <span class="bold"><strong>const</strong></span> <a href="../node_allocator.html" title="Class template node_allocator">node_allocator</a>&lt; T, N, A &gt; &amp;);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, std::size_t N, <span class="bold"><strong>typename</strong></span> A&gt; 
+      <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../id295396.html" title="Function template operator=="><span class="bold"><strong>operator</strong></span>==</a>(<span class="bold"><strong>const</strong></span> <a href="../private_node_allocator.html" title="Class template private_node_allocator">private_node_allocator</a>&lt; T, N, A &gt; &amp;, 
+                      <span class="bold"><strong>const</strong></span> <a href="../private_node_allocator.html" title="Class template private_node_allocator">private_node_allocator</a>&lt; T, N, A &gt; &amp;);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, std::size_t N, <span class="bold"><strong>typename</strong></span> A&gt; 
+      <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../id295478.html" title="Function template operator!="><span class="bold"><strong>operator</strong></span>!=</a>(<span class="bold"><strong>const</strong></span> <a href="../private_node_allocator.html" title="Class template private_node_allocator">private_node_allocator</a>&lt; T, N, A &gt; &amp;, 
+                      <span class="bold"><strong>const</strong></span> <a href="../private_node_allocator.html" title="Class template private_node_allocator">private_node_allocator</a>&lt; T, N, A &gt; &amp;);
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id295565"></a>Header &lt;<a href="../../../../../boost/shmem/allocators/cached_node_allocator.hpp" target="_top">boost/shmem/allocators/cached_node_allocator.hpp</a>&gt;</h3></div></div></div>
+<p>Describes cached_cached_node_allocator pooled shared memory STL compatible allocator</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> SegmentManager&gt; 
+      <span class="bold"><strong>class</strong></span> <a href="../id295589-bb.html" title="Class template cached_node_allocator&lt;void, SegmentManager&gt;">cached_node_allocator</a>&lt;<span class="bold"><strong>void</strong></span>, SegmentManager&gt;;
+
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> SegmentManager&gt; <span class="bold"><strong>class</strong></span> <a href="../cached_node_allocator.html" title="Class template cached_node_allocator">cached_node_allocator</a>;
+
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> SegmentManager&gt; 
+      <span class="bold"><strong>struct</strong></span> <a href="../id296616-bb.html" title="Struct template cached_node_allocator&lt;T, SegmentManager &gt;&gt;">cached_node_allocator</a>&lt;T, SegmentManager &gt;&gt;;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> A&gt; 
+      <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../id296687.html" title="Function template operator=="><span class="bold"><strong>operator</strong></span>==</a>(<span class="bold"><strong>const</strong></span> <a href="../cached_node_allocator.html" title="Class template cached_node_allocator">cached_node_allocator</a>&lt; T, A &gt; &amp;, 
+                      <span class="bold"><strong>const</strong></span> <a href="../cached_node_allocator.html" title="Class template cached_node_allocator">cached_node_allocator</a>&lt; T, A &gt; &amp;);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> A&gt; 
+      <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../id296760.html" title="Function template operator!="><span class="bold"><strong>operator</strong></span>!=</a>(<span class="bold"><strong>const</strong></span> <a href="../cached_node_allocator.html" title="Class template cached_node_allocator">cached_node_allocator</a>&lt; T, A &gt; &amp;, 
+                      <span class="bold"><strong>const</strong></span> <a href="../cached_node_allocator.html" title="Class template cached_node_allocator">cached_node_allocator</a>&lt; T, A &gt; &amp;);
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id296837"></a>Header &lt;<a href="../../../../../boost/shmem/allocators/detail/node_pool.hpp" target="_top">boost/shmem/allocators/detail/node_pool.hpp</a>&gt;</h3></div></div></div>
+<p>Describes the real pool allocator shared by many shmem pool allocators</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id296863"></a>Header &lt;<a href="../../../../../boost/shmem/allocators/node_allocator.hpp" target="_top">boost/shmem/allocators/node_allocator.hpp</a>&gt;</h3></div></div></div>
+<p>Describes node_allocator pooled shared memory STL compatible allocator</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>template</strong></span>&lt;std::size_t N, <span class="bold"><strong>typename</strong></span> SegmentManager&gt; 
+      <span class="bold"><strong>class</strong></span> <a href="../id296887-bb.html" title="Class template node_allocator&lt;void, N, SegmentManager&gt;">node_allocator</a>&lt;<span class="bold"><strong>void</strong></span>, N, SegmentManager&gt;;
+
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, std::size_t N, <span class="bold"><strong>typename</strong></span> SegmentManager&gt; 
+      <span class="bold"><strong>class</strong></span> <a href="../node_allocator.html" title="Class template node_allocator">node_allocator</a>;
+
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, std::size_t N, <span class="bold"><strong>typename</strong></span> A&gt; 
+      <span class="bold"><strong>struct</strong></span> <a href="../id297858-bb.html" title="Struct template node_allocator&lt;T, N, A &gt;&gt;">node_allocator</a>&lt;T, N, A &gt;&gt;;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> A&gt; 
+      <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../id297941.html" title="Function template operator=="><span class="bold"><strong>operator</strong></span>==</a>(<span class="bold"><strong>const</strong></span> <a href="../cached_node_allocator.html" title="Class template cached_node_allocator">cached_node_allocator</a>&lt; T, A &gt; &amp;, 
+                      <span class="bold"><strong>const</strong></span> <a href="../cached_node_allocator.html" title="Class template cached_node_allocator">cached_node_allocator</a>&lt; T, A &gt; &amp;);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> A&gt; 
+      <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../id298014.html" title="Function template operator!="><span class="bold"><strong>operator</strong></span>!=</a>(<span class="bold"><strong>const</strong></span> <a href="../cached_node_allocator.html" title="Class template cached_node_allocator">cached_node_allocator</a>&lt; T, A &gt; &amp;, 
+                      <span class="bold"><strong>const</strong></span> <a href="../cached_node_allocator.html" title="Class template cached_node_allocator">cached_node_allocator</a>&lt; T, A &gt; &amp;);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, std::size_t N, <span class="bold"><strong>typename</strong></span> A&gt; 
+      <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../id298087.html" title="Function template operator=="><span class="bold"><strong>operator</strong></span>==</a>(<span class="bold"><strong>const</strong></span> <a href="../node_allocator.html" title="Class template node_allocator">node_allocator</a>&lt; T, N, A &gt; &amp;, 
+                      <span class="bold"><strong>const</strong></span> <a href="../node_allocator.html" title="Class template node_allocator">node_allocator</a>&lt; T, N, A &gt; &amp;);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, std::size_t N, <span class="bold"><strong>typename</strong></span> A&gt; 
+      <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../id298169.html" title="Function template operator!="><span class="bold"><strong>operator</strong></span>!=</a>(<span class="bold"><strong>const</strong></span> <a href="../node_allocator.html" title="Class template node_allocator">node_allocator</a>&lt; T, N, A &gt; &amp;, 
+                      <span class="bold"><strong>const</strong></span> <a href="../node_allocator.html" title="Class template node_allocator">node_allocator</a>&lt; T, N, A &gt; &amp;);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, std::size_t N, <span class="bold"><strong>typename</strong></span> A&gt; 
+      <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../id298252.html" title="Function template operator=="><span class="bold"><strong>operator</strong></span>==</a>(<span class="bold"><strong>const</strong></span> <a href="../private_node_allocator.html" title="Class template private_node_allocator">private_node_allocator</a>&lt; T, N, A &gt; &amp;, 
+                      <span class="bold"><strong>const</strong></span> <a href="../private_node_allocator.html" title="Class template private_node_allocator">private_node_allocator</a>&lt; T, N, A &gt; &amp;);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, std::size_t N, <span class="bold"><strong>typename</strong></span> A&gt; 
+      <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../id298334.html" title="Function template operator!="><span class="bold"><strong>operator</strong></span>!=</a>(<span class="bold"><strong>const</strong></span> <a href="../private_node_allocator.html" title="Class template private_node_allocator">private_node_allocator</a>&lt; T, N, A &gt; &amp;, 
+                      <span class="bold"><strong>const</strong></span> <a href="../private_node_allocator.html" title="Class template private_node_allocator">private_node_allocator</a>&lt; T, N, A &gt; &amp;);
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id298421"></a>Header &lt;<a href="../../../../../boost/shmem/allocators/private_node_allocator.hpp" target="_top">boost/shmem/allocators/private_node_allocator.hpp</a>&gt;</h3></div></div></div>
+<p>Describes private_node_allocator pooled shared memory STL compatible allocator</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>template</strong></span>&lt;std::size_t N, <span class="bold"><strong>typename</strong></span> SegmentManager&gt; 
+      <span class="bold"><strong>class</strong></span> <a href="../id298444-bb.html" title="Class template private_node_allocator&lt;void, N, SegmentManager&gt;">private_node_allocator</a>&lt;<span class="bold"><strong>void</strong></span>, N, SegmentManager&gt;;
+
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, std::size_t N, <span class="bold"><strong>typename</strong></span> SegmentManager&gt; 
+      <span class="bold"><strong>class</strong></span> <a href="../private_node_allocator.html" title="Class template private_node_allocator">private_node_allocator</a>;
+
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, std::size_t N, <span class="bold"><strong>typename</strong></span> A&gt; 
+      <span class="bold"><strong>struct</strong></span> <a href="../id299257-bb.html" title="Struct template private_node_allocator&lt;T, N, A &gt;&gt;">private_node_allocator</a>&lt;T, N, A &gt;&gt;;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, std::size_t N, <span class="bold"><strong>typename</strong></span> A&gt; 
+      <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../id299340.html" title="Function template operator=="><span class="bold"><strong>operator</strong></span>==</a>(<span class="bold"><strong>const</strong></span> <a href="../private_node_allocator.html" title="Class template private_node_allocator">private_node_allocator</a>&lt; T, N, A &gt; &amp;, 
+                      <span class="bold"><strong>const</strong></span> <a href="../private_node_allocator.html" title="Class template private_node_allocator">private_node_allocator</a>&lt; T, N, A &gt; &amp;);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, std::size_t N, <span class="bold"><strong>typename</strong></span> A&gt; 
+      <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../id299423.html" title="Function template operator!="><span class="bold"><strong>operator</strong></span>!=</a>(<span class="bold"><strong>const</strong></span> <a href="../private_node_allocator.html" title="Class template private_node_allocator">private_node_allocator</a>&lt; T, N, A &gt; &amp;, 
+                      <span class="bold"><strong>const</strong></span> <a href="../private_node_allocator.html" title="Class template private_node_allocator">private_node_allocator</a>&lt; T, N, A &gt; &amp;);
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id299510"></a>Header &lt;<a href="../../../../../boost/shmem/exceptions.hpp" target="_top">boost/shmem/exceptions.hpp</a>&gt;</h3></div></div></div>
+<p>Describes exceptions thrown by shmem classes</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>class</strong></span> <a href="../lock_exception.html" title="Class lock_exception">lock_exception</a>;
+    <span class="bold"><strong>class</strong></span> <a href="../sem_exception.html" title="Class sem_exception">sem_exception</a>;
+    <span class="bold"><strong>class</strong></span> <a href="../process_resource_exception.html" title="Class process_resource_exception">process_resource_exception</a>;
+    <span class="bold"><strong>class</strong></span> <a href="../bad_alloc.html" title="Class bad_alloc">bad_alloc</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id299701"></a>Header &lt;<a href="../../../../../boost/shmem/indexes/flat_map_index.hpp" target="_top">boost/shmem/indexes/flat_map_index.hpp</a>&gt;</h3></div></div></div>
+<p>Describes index adaptor of boost::map container, to use it as name/shared memory index</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MapConfig&gt; <span class="bold"><strong>struct</strong></span> <a href="../flat_map_index_aux.html" title="Struct template flat_map_index_aux">flat_map_index_aux</a>;
+
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MapConfig&gt; <span class="bold"><strong>class</strong></span> <a href="../flat_map_index.html" title="Class template flat_map_index">flat_map_index</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id299954"></a>Header &lt;<a href="../../../../../boost/shmem/indexes/map_index.hpp" target="_top">boost/shmem/indexes/map_index.hpp</a>&gt;</h3></div></div></div>
+<p>Describes index adaptor of boost::map container, to use it as name/shared memory index</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MapConfig&gt; <span class="bold"><strong>struct</strong></span> <a href="../map_index_aux.html" title="Struct template map_index_aux">map_index_aux</a>;
+
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MapConfig&gt; <span class="bold"><strong>class</strong></span> <a href="../map_index.html" title="Class template map_index">map_index</a>;
+
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MapConfig&gt; <span class="bold"><strong>struct</strong></span> <a href="../id300191-bb.html" title="Struct template map_index&lt;MapConfig &gt;&gt;">map_index</a>&lt;MapConfig &gt;&gt;;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id300254"></a>Header &lt;<a href="../../../../../boost/shmem/indexes/null_map_index.hpp" target="_top">boost/shmem/indexes/null_map_index.hpp</a>&gt;</h3></div></div></div>
+<p>Describes a null index adaptor, so that if we don't want to construct named objects, we can use this null index type to save resources.</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MapConfig&gt; <span class="bold"><strong>class</strong></span> <a href="../null_index.html" title="Class template null_index">null_index</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id300342"></a>Header &lt;<a href="../../../../../boost/shmem/indexes/unordered_map_index.hpp" target="_top">boost/shmem/indexes/unordered_map_index.hpp</a>&gt;</h3></div></div></div>
+<p>Describes index adaptor of boost::unordered_map container, to use it as name/shared memory index</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MapConfig&gt; <span class="bold"><strong>struct</strong></span> <a href="../unordered_map_index_aux.html" title="Struct template unordered_map_index_aux">unordered_map_index_aux</a>;
+
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MapConfig&gt; <span class="bold"><strong>class</strong></span> <a href="../unordered_map_index.html" title="Class template unordered_map_index">unordered_map_index</a>;
+
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MapConfig&gt; <span class="bold"><strong>struct</strong></span> <a href="../id300581-bb.html" title="Struct template unordered_map_index&lt;MapConfig &gt;&gt;">unordered_map_index</a>&lt;MapConfig &gt;&gt;;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id300644"></a>Header &lt;<a href="../../../../../boost/shmem/ipc/shared_message_queue.hpp" target="_top">boost/shmem/ipc/shared_message_queue.hpp</a>&gt;</h3></div></div></div>
+<p>Describes inter-process message queue. This class allows sending messages between processes and allows blocking non-blockin and timed sending and receiving.</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>class</strong></span> <a href="../shared_message_queue.html" title="Class shared_message_queue">shared_message_queue</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id301761"></a>Header &lt;<a href="../../../../../boost/shmem/mem_algo/basic_seq_fit.hpp" target="_top">boost/shmem/mem_algo/basic_seq_fit.hpp</a>&gt;</h3></div></div></div>
+<p>Describes sequential fit algorithm used to allocate objects in shared memory. This class is intended as a base class for single segment and multi-segment implementations.</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MutexFamily, <span class="bold"><strong>typename</strong></span> VoidPointer&gt; <span class="bold"><strong>class</strong></span> <a href="../basic_seq_fit.html" title="Class template basic_seq_fit">basic_seq_fit</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id302224"></a>Header &lt;<a href="../../../../../boost/shmem/mem_algo/basic_simple_seq_fit.hpp" target="_top">boost/shmem/mem_algo/basic_simple_seq_fit.hpp</a>&gt;</h3></div></div></div>
+<p>Describes sequential fit algorithm used to allocate objects in shared memory. This class is intended as a base class for single segment and multi-segment implementations.</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MutexFamily, <span class="bold"><strong>typename</strong></span> VoidPointer&gt; 
+      <span class="bold"><strong>class</strong></span> <a href="../basic_simple_seq_fit.html" title="Class template basic_simple_seq_fit">basic_simple_seq_fit</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id302753"></a>Header &lt;<a href="../../../../../boost/shmem/mem_algo/multi_seq_fit.hpp" target="_top">boost/shmem/mem_algo/multi_seq_fit.hpp</a>&gt;</h3></div></div></div>
+<p>Describes sequential fit algorithm used to allocate objects in shared memory.</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MutexFamily, <span class="bold"><strong>typename</strong></span> VoidPtr&gt; <span class="bold"><strong>class</strong></span> <a href="../multi_seq_fit.html" title="Class template multi_seq_fit">multi_seq_fit</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id302869"></a>Header &lt;<a href="../../../../../boost/shmem/mem_algo/multi_simple_seq_fit.hpp" target="_top">boost/shmem/mem_algo/multi_simple_seq_fit.hpp</a>&gt;</h3></div></div></div>
+<p>Describes sequential fit algorithm used to allocate objects in shared memory.</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MutexFamily, <span class="bold"><strong>typename</strong></span> VoidPtr&gt; <span class="bold"><strong>class</strong></span> <a href="../multi_simple_seq_fit.html" title="Class template multi_simple_seq_fit">multi_simple_seq_fit</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id303027"></a>Header &lt;<a href="../../../../../boost/shmem/mem_algo/seq_fit.hpp" target="_top">boost/shmem/mem_algo/seq_fit.hpp</a>&gt;</h3></div></div></div>
+<p>Describes sequential fit algorithm used to allocate objects in shared memory.</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MutexFamily, <span class="bold"><strong>typename</strong></span> VoidPointer&gt; <span class="bold"><strong>class</strong></span> <a href="../seq_fit.html" title="Class template seq_fit">seq_fit</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id303143"></a>Header &lt;<a href="../../../../../boost/shmem/mem_algo/simple_seq_fit.hpp" target="_top">boost/shmem/mem_algo/simple_seq_fit.hpp</a>&gt;</h3></div></div></div>
+<p>Describes sequential fit algorithm used to allocate objects in shared memory.</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MutexFamily, <span class="bold"><strong>typename</strong></span> VoidPointer&gt; <span class="bold"><strong>class</strong></span> <a href="../simple_seq_fit.html" title="Class template simple_seq_fit">simple_seq_fit</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id303260"></a>Header &lt;<a href="../../../../../boost/shmem/mmapped_file.hpp" target="_top">boost/shmem/mmapped_file.hpp</a>&gt;</h3></div></div></div>
+<p>Describes mmapped_file class</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>class</strong></span> <a href="../mmapped_file.html" title="Class mmapped_file">mmapped_file</a>;
+    <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id303659"></a>swap(<a href="../mmapped_file.html" title="Class mmapped_file">mmapped_file</a> &amp; x, <a href="../mmapped_file.html" title="Class mmapped_file">mmapped_file</a> &amp; y);
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id303706"></a>Header &lt;<a href="../../../../../boost/shmem/named_heap_object.hpp" target="_top">boost/shmem/named_heap_object.hpp</a>&gt;</h3></div></div></div>
+<p>Describes a named heap memory allocation user class.</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> CharType, <span class="bold"><strong>typename</strong></span> AllocationAlgorithm, 
+             <span class="bold"><strong>template</strong></span>&lt; <span class="bold"><strong>class</strong></span> IndexConfig &gt; <span class="bold"><strong>class</strong></span> IndexType&gt; 
+      <span class="bold"><strong>class</strong></span> <a href="../basic_named_heap_object.html" title="Class template basic_named_heap_object">basic_named_heap_object</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id304214"></a>Header &lt;<a href="../../../../../boost/shmem/named_mfile_object.hpp" target="_top">boost/shmem/named_mfile_object.hpp</a>&gt;</h3></div></div></div>
+<p>Describes a named shared memory object allocation user class.</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> CharType, <span class="bold"><strong>typename</strong></span> AllocationAlgorithm, 
+             <span class="bold"><strong>template</strong></span>&lt; <span class="bold"><strong>class</strong></span> IndexConfig &gt; <span class="bold"><strong>class</strong></span> IndexType&gt; 
+      <span class="bold"><strong>class</strong></span> <a href="../basic_named_mfile_object.html" title="Class template basic_named_mfile_object">basic_named_mfile_object</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id304533"></a>Header &lt;<a href="../../../../../boost/shmem/named_shared_object.hpp" target="_top">boost/shmem/named_shared_object.hpp</a>&gt;</h3></div></div></div>
+<p>Describes a named shared memory object allocation user class.</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> CharType, <span class="bold"><strong>typename</strong></span> AllocationAlgorithm, 
+             <span class="bold"><strong>template</strong></span>&lt; <span class="bold"><strong>class</strong></span> IndexConfig &gt; <span class="bold"><strong>class</strong></span> IndexType&gt; 
+      <span class="bold"><strong>class</strong></span> <a href="../basic_named_shared_object.html" title="Class template basic_named_shared_object">basic_named_shared_object</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id305017"></a>Header &lt;<a href="../../../../../boost/shmem/named_user_object.hpp" target="_top">boost/shmem/named_user_object.hpp</a>&gt;</h3></div></div></div>
+<p>Describes a named user memory allocation user class.</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> CharType, <span class="bold"><strong>typename</strong></span> AllocationAlgorithm, 
+             <span class="bold"><strong>template</strong></span>&lt; <span class="bold"><strong>class</strong></span> IndexConfig &gt; <span class="bold"><strong>class</strong></span> IndexType&gt; 
+      <span class="bold"><strong>class</strong></span> <a href="../basic_named_user_object.html" title="Class template basic_named_user_object">basic_named_user_object</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id305248"></a>Header &lt;<a href="../../../../../boost/shmem/offset_ptr.hpp" target="_top">boost/shmem/offset_ptr.hpp</a>&gt;</h3></div></div></div>
+<p>Describes a smart pointer that stores the offset between this pointer and target pointee, called offset_ptr. This file defines some variations of this pointer.</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> PointedType, <span class="bold"><strong>typename</strong></span> RootPtr&gt; 
+    <span class="bold"><strong>struct</strong></span> <a href="../id305267-bb.html" title="Struct template offset_ptr&lt;PointedType, RootPtr &gt;&gt;">offset_ptr</a>&lt;PointedType, RootPtr &gt;&gt;;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> PointedType, <span class="bold"><strong>typename</strong></span> RootPtr&gt; 
+    <span class="bold"><strong>struct</strong></span> <a href="../id305316-bb.html" title="Struct template offset_ptr&lt;PointedType, RootPtr &gt;&gt;">offset_ptr</a>&lt;PointedType, RootPtr &gt;&gt;;
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> R&gt; 
+    <span class="type">T *</span> <a href="../get_pointer.html" title="Function template get_pointer">get_pointer</a>(<a href="../offset_ptr.html" title="Class template offset_ptr">boost::shmem::offset_ptr</a>&lt; T, R &gt; <span class="bold"><strong>const</strong></span> &amp;);
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> U, <span class="bold"><strong>typename</strong></span> R&gt; 
+    <span class="type"><a href="../offset_ptr.html" title="Class template offset_ptr">boost::shmem::offset_ptr</a>&lt; T, R &gt;</span> 
+    <a href="../static_pointer_cast.html" title="Function template static_pointer_cast">static_pointer_cast</a>(<a href="../offset_ptr.html" title="Class template offset_ptr">boost::shmem::offset_ptr</a>&lt; U, R &gt; <span class="bold"><strong>const</strong></span> &amp;);
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> U, <span class="bold"><strong>typename</strong></span> R&gt; 
+    <span class="type"><a href="../offset_ptr.html" title="Class template offset_ptr">boost::shmem::offset_ptr</a>&lt; T, R &gt;</span> 
+    <a href="../const_pointer_cast.html" title="Function template const_pointer_cast">const_pointer_cast</a>(<a href="../offset_ptr.html" title="Class template offset_ptr">boost::shmem::offset_ptr</a>&lt; U, R &gt; <span class="bold"><strong>const</strong></span> &amp;);
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> U, <span class="bold"><strong>typename</strong></span> R&gt; 
+    <span class="type"><a href="../offset_ptr.html" title="Class template offset_ptr">boost::shmem::offset_ptr</a>&lt; T, R &gt;</span> 
+    <a href="../dynamic_pointer_cast.html" title="Function template dynamic_pointer_cast">dynamic_pointer_cast</a>(<a href="../offset_ptr.html" title="Class template offset_ptr">boost::shmem::offset_ptr</a>&lt; U, R &gt; <span class="bold"><strong>const</strong></span> &amp;);
+  <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> U, <span class="bold"><strong>typename</strong></span> R&gt; 
+    <span class="type"><a href="../offset_ptr.html" title="Class template offset_ptr">boost::shmem::offset_ptr</a>&lt; T, R &gt;</span> 
+    <a href="../reinterpret_pointer_cast.html" title="Function template reinterpret_pointer_cast">reinterpret_pointer_cast</a>(<a href="../offset_ptr.html" title="Class template offset_ptr">boost::shmem::offset_ptr</a>&lt; U, R &gt; <span class="bold"><strong>const</strong></span> &amp;);
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>class</strong></span> <a href="../full_offset_ptr.html" title="Class full_offset_ptr">full_offset_ptr</a>;
+    <span class="bold"><strong>class</strong></span> <a href="../offset_1_null_ptr.html" title="Class offset_1_null_ptr">offset_1_null_ptr</a>;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> PointedType, <span class="bold"><strong>typename</strong></span> RootPtr&gt; <span class="bold"><strong>class</strong></span> <a href="../offset_ptr.html" title="Class template offset_ptr">offset_ptr</a>;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T1, <span class="bold"><strong>typename</strong></span> R1, <span class="bold"><strong>typename</strong></span> T2, <span class="bold"><strong>typename</strong></span> R2&gt; 
+      <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../id306835.html" title="Function template operator=="><span class="bold"><strong>operator</strong></span>==</a>(<span class="bold"><strong>const</strong></span> <a href="../offset_ptr.html" title="Class template offset_ptr">offset_ptr</a>&lt; T1, R1 &gt; &amp;, 
+                      <span class="bold"><strong>const</strong></span> <a href="../offset_ptr.html" title="Class template offset_ptr">offset_ptr</a>&lt; T2, R2 &gt; &amp;);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T1, <span class="bold"><strong>typename</strong></span> R1, <span class="bold"><strong>typename</strong></span> T2, <span class="bold"><strong>typename</strong></span> R2&gt; 
+      <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../id306920.html" title="Function template operator!="><span class="bold"><strong>operator</strong></span>!=</a>(<span class="bold"><strong>const</strong></span> <a href="../offset_ptr.html" title="Class template offset_ptr">offset_ptr</a>&lt; T1, R1 &gt; &amp;, 
+                      <span class="bold"><strong>const</strong></span> <a href="../offset_ptr.html" title="Class template offset_ptr">offset_ptr</a>&lt; T2, R2 &gt; &amp;);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T1, <span class="bold"><strong>typename</strong></span> R1, <span class="bold"><strong>typename</strong></span> T2, <span class="bold"><strong>typename</strong></span> R2&gt; 
+      <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../id307005.html" title="Function template operator&lt;"><span class="bold"><strong>operator</strong></span>&lt;</a>(<span class="bold"><strong>const</strong></span> <a href="../offset_ptr.html" title="Class template offset_ptr">offset_ptr</a>&lt; T1, R1 &gt; &amp;, 
+                     <span class="bold"><strong>const</strong></span> <a href="../offset_ptr.html" title="Class template offset_ptr">offset_ptr</a>&lt; T2, R2 &gt; &amp;);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T1, <span class="bold"><strong>typename</strong></span> R1, <span class="bold"><strong>typename</strong></span> T2, <span class="bold"><strong>typename</strong></span> R2&gt; 
+      <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../id307090.html" title="Function template operator&lt;="><span class="bold"><strong>operator</strong></span>&lt;=</a>(<span class="bold"><strong>const</strong></span> <a href="../offset_ptr.html" title="Class template offset_ptr">offset_ptr</a>&lt; T1, R1 &gt; &amp;, 
+                      <span class="bold"><strong>const</strong></span> <a href="../offset_ptr.html" title="Class template offset_ptr">offset_ptr</a>&lt; T2, R2 &gt; &amp;);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T1, <span class="bold"><strong>typename</strong></span> R1, <span class="bold"><strong>typename</strong></span> T2, <span class="bold"><strong>typename</strong></span> R2&gt; 
+      <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../id307175.html" title="Function template operator&gt;"><span class="bold"><strong>operator</strong></span>&gt;</a>(<span class="bold"><strong>const</strong></span> <a href="../offset_ptr.html" title="Class template offset_ptr">offset_ptr</a>&lt; T1, R1 &gt; &amp;, 
+                     <span class="bold"><strong>const</strong></span> <a href="../offset_ptr.html" title="Class template offset_ptr">offset_ptr</a>&lt; T2, R2 &gt; &amp;);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T1, <span class="bold"><strong>typename</strong></span> R1, <span class="bold"><strong>typename</strong></span> T2, <span class="bold"><strong>typename</strong></span> R2&gt; 
+      <span class="type"><span class="bold"><strong>bool</strong></span></span> <a href="../id307260.html" title="Function template operator&gt;="><span class="bold"><strong>operator</strong></span>&gt;=</a>(<span class="bold"><strong>const</strong></span> <a href="../offset_ptr.html" title="Class template offset_ptr">offset_ptr</a>&lt; T1, R1 &gt; &amp;, 
+                      <span class="bold"><strong>const</strong></span> <a href="../offset_ptr.html" title="Class template offset_ptr">offset_ptr</a>&lt; T2, R2 &gt; &amp;);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> E, <span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> Y, <span class="bold"><strong>typename</strong></span> R&gt; 
+      <span class="type">std::basic_ostream&lt; E, T &gt; &amp;</span> 
+      <a href="../id307345.html" title="Function template operator&lt;&lt;"><span class="bold"><strong>operator</strong></span>&lt;&lt;</a>(std::basic_ostream&lt; E, T &gt; &amp;, <a href="../offset_ptr.html" title="Class template offset_ptr">offset_ptr</a>&lt; Y, R &gt; <span class="bold"><strong>const</strong></span> &amp;);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> E, <span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> Y, <span class="bold"><strong>typename</strong></span> R&gt; 
+      <span class="type">std::basic_istream&lt; E, T &gt; &amp;</span> 
+      <a href="../id307424.html" title="Function template operator&gt;&gt;"><span class="bold"><strong>operator</strong></span>&gt;&gt;</a>(std::basic_istream&lt; E, T &gt; &amp;, <a href="../offset_ptr.html" title="Class template offset_ptr">offset_ptr</a>&lt; Y, R &gt; &amp;);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> R&gt; 
+      <span class="type"><a href="../offset_ptr.html" title="Class template offset_ptr">offset_ptr</a>&lt; T, R &gt;</span> <a href="../id307503.html" title="Function template operator+"><span class="bold"><strong>operator</strong></span>+</a>(std::ptrdiff_t, <span class="bold"><strong>const</strong></span> <a href="../offset_ptr.html" title="Class template offset_ptr">offset_ptr</a>&lt; T, R &gt; &amp;);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> R, <span class="bold"><strong>typename</strong></span> T2, <span class="bold"><strong>typename</strong></span> R2&gt; 
+      <span class="type">std::ptrdiff_t</span> 
+      <a href="../id307574.html" title="Function template operator-"><span class="bold"><strong>operator</strong></span>-</a>(<span class="bold"><strong>const</strong></span> <a href="../offset_ptr.html" title="Class template offset_ptr">offset_ptr</a>&lt; T, R &gt; &amp;, <span class="bold"><strong>const</strong></span> <a href="../offset_ptr.html" title="Class template offset_ptr">offset_ptr</a>&lt; T2, R2 &gt; &amp;);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> T, <span class="bold"><strong>typename</strong></span> R&gt; 
+      <span class="type"><span class="bold"><strong>void</strong></span></span> <a href="../id307658.html" title="Function template swap">swap</a>(<a href="../offset_ptr.html" title="Class template offset_ptr">boost::shmem::offset_ptr</a>&lt; T, R &gt; &amp;, 
+                <a href="../offset_ptr.html" title="Class template offset_ptr">boost::shmem::offset_ptr</a>&lt; T, R &gt; &amp;);
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id308046"></a>Header &lt;<a href="../../../../../boost/shmem/shared_memory.hpp" target="_top">boost/shmem/shared_memory.hpp</a>&gt;</h3></div></div></div>
+<p>Describes shared_memory class</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>class</strong></span> <a href="../shared_memory.html" title="Class shared_memory">shared_memory</a>;
+    <span class="type"><span class="bold"><strong>void</strong></span></span> <a name="id309061"></a>swap(<a href="../shared_memory.html" title="Class shared_memory">shared_memory</a> &amp; x, <a href="../shared_memory.html" title="Class shared_memory">shared_memory</a> &amp; y);
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id309108"></a>Header &lt;<a href="../../../../../boost/shmem/shmem_fwd.hpp" target="_top">boost/shmem/shmem_fwd.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>typedef</strong></span> <a href="../basic_named_user_object.html" title="Class template basic_named_user_object">basic_named_user_object</a>&lt; <span class="bold"><strong>char</strong></span>, <a href="../simple_seq_fit.html" title="Class template simple_seq_fit">simple_seq_fit</a>&lt; <a href="../null_mutex_family.html" title="Struct null_mutex_family">null_mutex_family</a> &gt;, <a href="../flat_map_index.html" title="Class template flat_map_index">flat_map_index</a> &gt; named_user_object;
+    <span class="bold"><strong>typedef</strong></span> <a href="../basic_named_user_object.html" title="Class template basic_named_user_object">basic_named_user_object</a>&lt; <span class="bold"><strong>wchar_t</strong></span>, <a href="../simple_seq_fit.html" title="Class template simple_seq_fit">simple_seq_fit</a>&lt; <a href="../null_mutex_family.html" title="Struct null_mutex_family">null_mutex_family</a> &gt;, <a href="../flat_map_index.html" title="Class template flat_map_index">flat_map_index</a> &gt; wnamed_user_object;
+    <span class="bold"><strong>typedef</strong></span> <a href="../basic_named_shared_object.html" title="Class template basic_named_shared_object">basic_named_shared_object</a>&lt; <span class="bold"><strong>char</strong></span>, <a href="../simple_seq_fit.html" title="Class template simple_seq_fit">simple_seq_fit</a>&lt; <a href="../shared_mutex_family.html" title="Struct shared_mutex_family">shared_mutex_family</a> &gt;, <a href="../flat_map_index.html" title="Class template flat_map_index">flat_map_index</a> &gt; named_shared_object;
+    <span class="bold"><strong>typedef</strong></span> <a href="../basic_named_shared_object.html" title="Class template basic_named_shared_object">basic_named_shared_object</a>&lt; <span class="bold"><strong>wchar_t</strong></span>, <a href="../simple_seq_fit.html" title="Class template simple_seq_fit">simple_seq_fit</a>&lt; <a href="../shared_mutex_family.html" title="Struct shared_mutex_family">shared_mutex_family</a> &gt;, <a href="../flat_map_index.html" title="Class template flat_map_index">flat_map_index</a> &gt; wnamed_shared_object;
+    <span class="bold"><strong>typedef</strong></span> <a href="../basic_named_shared_object.html" title="Class template basic_named_shared_object">basic_named_shared_object</a>&lt; <span class="bold"><strong>char</strong></span>, <a href="../simple_seq_fit.html" title="Class template simple_seq_fit">simple_seq_fit</a>&lt; <a href="../shared_mutex_family.html" title="Struct shared_mutex_family">shared_mutex_family</a>, <span class="bold"><strong>void</strong></span> * &gt;, <a href="../flat_map_index.html" title="Class template flat_map_index">flat_map_index</a> &gt; fixed_named_shared_object;
+    <span class="bold"><strong>typedef</strong></span> <a href="../basic_named_shared_object.html" title="Class template basic_named_shared_object">basic_named_shared_object</a>&lt; <span class="bold"><strong>wchar_t</strong></span>, <a href="../simple_seq_fit.html" title="Class template simple_seq_fit">simple_seq_fit</a>&lt; <a href="../shared_mutex_family.html" title="Struct shared_mutex_family">shared_mutex_family</a>, <span class="bold"><strong>void</strong></span> * &gt;, <a href="../flat_map_index.html" title="Class template flat_map_index">flat_map_index</a> &gt; wfixed_named_shared_object;
+    <span class="bold"><strong>typedef</strong></span> <a href="../basic_named_heap_object.html" title="Class template basic_named_heap_object">basic_named_heap_object</a>&lt; <span class="bold"><strong>char</strong></span>, <a href="../simple_seq_fit.html" title="Class template simple_seq_fit">simple_seq_fit</a>&lt; <a href="../null_mutex_family.html" title="Struct null_mutex_family">null_mutex_family</a> &gt;, <a href="../flat_map_index.html" title="Class template flat_map_index">flat_map_index</a> &gt; named_heap_object;
+    <span class="bold"><strong>typedef</strong></span> <a href="../basic_named_heap_object.html" title="Class template basic_named_heap_object">basic_named_heap_object</a>&lt; <span class="bold"><strong>wchar_t</strong></span>, <a href="../simple_seq_fit.html" title="Class template simple_seq_fit">simple_seq_fit</a>&lt; <a href="../null_mutex_family.html" title="Struct null_mutex_family">null_mutex_family</a> &gt;, <a href="../flat_map_index.html" title="Class template flat_map_index">flat_map_index</a> &gt; wnamed_heap_object;
+    <span class="bold"><strong>typedef</strong></span> <a href="../basic_named_mfile_object.html" title="Class template basic_named_mfile_object">basic_named_mfile_object</a>&lt; <span class="bold"><strong>char</strong></span>, <a href="../simple_seq_fit.html" title="Class template simple_seq_fit">simple_seq_fit</a>&lt; <a href="../shared_mutex_family.html" title="Struct shared_mutex_family">shared_mutex_family</a> &gt;, <a href="../flat_map_index.html" title="Class template flat_map_index">flat_map_index</a> &gt; named_mfile_object;
+    <span class="bold"><strong>typedef</strong></span> <a href="../basic_named_mfile_object.html" title="Class template basic_named_mfile_object">basic_named_mfile_object</a>&lt; <span class="bold"><strong>wchar_t</strong></span>, <a href="../simple_seq_fit.html" title="Class template simple_seq_fit">simple_seq_fit</a>&lt; <a href="../shared_mutex_family.html" title="Struct shared_mutex_family">shared_mutex_family</a> &gt;, <a href="../flat_map_index.html" title="Class template flat_map_index">flat_map_index</a> &gt; wnamed_mfile_object;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id309429"></a>Header &lt;<a href="../../../../../boost/shmem/streams/bufferstream.hpp" target="_top">boost/shmem/streams/bufferstream.hpp</a>&gt;</h3></div></div></div>
+<p>This file defines basic_bufferbuf, basic_ibufferstream, basic_obufferstream, and basic_bufferstream classes. These classes represent streamsbufs and streams whose sources or destinations are fixed size character buffers.</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> CharT, <span class="bold"><strong>typename</strong></span> CharTraits = std::char_traits&lt;CharT&gt; &gt; 
+      <span class="bold"><strong>class</strong></span> <a href="../basic_bufferbuf.html" title="Class template basic_bufferbuf">basic_bufferbuf</a>;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> CharT, <span class="bold"><strong>typename</strong></span> CharTraits = std::char_traits&lt;CharT&gt; &gt; 
+      <span class="bold"><strong>class</strong></span> <a href="../basic_ibufferstream.html" title="Class template basic_ibufferstream">basic_ibufferstream</a>;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> CharT, <span class="bold"><strong>typename</strong></span> CharTraits = std::char_traits&lt;CharT&gt; &gt; 
+      <span class="bold"><strong>class</strong></span> <a href="../basic_obufferstream.html" title="Class template basic_obufferstream">basic_obufferstream</a>;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> CharT, <span class="bold"><strong>typename</strong></span> CharTraits = std::char_traits&lt;CharT&gt; &gt; 
+      <span class="bold"><strong>class</strong></span> <a href="../basic_bufferstream.html" title="Class template basic_bufferstream">basic_bufferstream</a>;
+
+    <span class="bold"><strong>typedef</strong></span> <a href="../basic_bufferbuf.html" title="Class template basic_bufferbuf">basic_bufferbuf</a>&lt; <span class="bold"><strong>char</strong></span> &gt; bufferbuf;
+    <span class="bold"><strong>typedef</strong></span> <a href="../basic_bufferstream.html" title="Class template basic_bufferstream">basic_bufferstream</a>&lt; <span class="bold"><strong>char</strong></span> &gt; bufferstream;
+    <span class="bold"><strong>typedef</strong></span> <a href="../basic_ibufferstream.html" title="Class template basic_ibufferstream">basic_ibufferstream</a>&lt; <span class="bold"><strong>char</strong></span> &gt; ibufferstream;
+    <span class="bold"><strong>typedef</strong></span> <a href="../basic_obufferstream.html" title="Class template basic_obufferstream">basic_obufferstream</a>&lt; <span class="bold"><strong>char</strong></span> &gt; obufferstream;
+    <span class="bold"><strong>typedef</strong></span> <a href="../basic_bufferbuf.html" title="Class template basic_bufferbuf">basic_bufferbuf</a>&lt; <span class="bold"><strong>wchar_t</strong></span> &gt; wbufferbuf;
+    <span class="bold"><strong>typedef</strong></span> <a href="../basic_bufferstream.html" title="Class template basic_bufferstream">basic_bufferstream</a>&lt; <span class="bold"><strong>wchar_t</strong></span> &gt; wbufferstream;
+    <span class="bold"><strong>typedef</strong></span> <a href="../basic_ibufferstream.html" title="Class template basic_ibufferstream">basic_ibufferstream</a>&lt; <span class="bold"><strong>wchar_t</strong></span> &gt; wibufferstream;
+    <span class="bold"><strong>typedef</strong></span> <a href="../basic_obufferstream.html" title="Class template basic_obufferstream">basic_obufferstream</a>&lt; <span class="bold"><strong>wchar_t</strong></span> &gt; wobufferstream;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id311092"></a>Header &lt;<a href="../../../../../boost/shmem/streams/vectorstream.hpp" target="_top">boost/shmem/streams/vectorstream.hpp</a>&gt;</h3></div></div></div>
+<p>This file defines basic_vectorbuf, basic_ivectorstream, basic_ovectorstream, and basic_vectorstreamclasses. These classes represent streamsbufs and streams whose sources or destinations are STL-like vectors that can be swapped with external vectors to avoid unnecessary allocations/copies.</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> CharVector, 
+             <span class="bold"><strong>typename</strong></span> CharTraits = std::char_traits&lt;<span class="bold"><strong>typename</strong></span> CharVector::value_type&gt; &gt; 
+      <span class="bold"><strong>class</strong></span> <a href="../basic_vectorbuf.html" title="Class template basic_vectorbuf">basic_vectorbuf</a>;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> CharVector, 
+             <span class="bold"><strong>typename</strong></span> CharTraits = std::char_traits&lt;<span class="bold"><strong>typename</strong></span> CharVector::value_type&gt; &gt; 
+      <span class="bold"><strong>class</strong></span> <a href="../basic_ivectorstream.html" title="Class template basic_ivectorstream">basic_ivectorstream</a>;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> CharVector, 
+             <span class="bold"><strong>typename</strong></span> CharTraits = std::char_traits&lt;<span class="bold"><strong>typename</strong></span> CharVector::value_type&gt; &gt; 
+      <span class="bold"><strong>class</strong></span> <a href="../basic_ovectorstream.html" title="Class template basic_ovectorstream">basic_ovectorstream</a>;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> CharVector, 
+             <span class="bold"><strong>typename</strong></span> CharTraits = std::char_traits&lt;<span class="bold"><strong>typename</strong></span> CharVector::value_type&gt; &gt; 
+      <span class="bold"><strong>class</strong></span> <a href="../basic_vectorstream.html" title="Class template basic_vectorstream">basic_vectorstream</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id312864"></a>Header &lt;<a href="../../../../../boost/shmem/sync/lock.hpp" target="_top">boost/shmem/sync/lock.hpp</a>&gt;</h3></div></div></div>
+<p>Describes the scoped_lock and scoped_try_lock classes needed to use shared mutex familiy synchronization objects</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Mutex&gt; <span class="bold"><strong>class</strong></span> <a href="../lock_ops.html" title="Class template lock_ops">lock_ops</a>;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Mutex&gt; <span class="bold"><strong>class</strong></span> <a href="../scoped_lock.html" title="Class template scoped_lock">scoped_lock</a>;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> TryMutex&gt; <span class="bold"><strong>class</strong></span> <a href="../scoped_try_lock.html" title="Class template scoped_try_lock">scoped_try_lock</a>;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> TimedMutex&gt; <span class="bold"><strong>class</strong></span> <a href="../scoped_timed_lock.html" title="Class template scoped_timed_lock">scoped_timed_lock</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id313633"></a>Header &lt;<a href="../../../../../boost/shmem/sync/named_mutex.hpp" target="_top">boost/shmem/sync/named_mutex.hpp</a>&gt;</h3></div></div></div>
+<p>Describes a named mutex class for inter-process synchronization</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>class</strong></span> <a href="../named_mutex.html" title="Class named_mutex">named_mutex</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id313974"></a>Header &lt;<a href="../../../../../boost/shmem/sync/named_semaphore.hpp" target="_top">boost/shmem/sync/named_semaphore.hpp</a>&gt;</h3></div></div></div>
+<p>Describes a named semaphore class for inter-process synchronization</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>class</strong></span> <a href="../named_semaphore.html" title="Class named_semaphore">named_semaphore</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id314344"></a>Header &lt;<a href="../../../../../boost/shmem/sync/null_mutex.hpp" target="_top">boost/shmem/sync/null_mutex.hpp</a>&gt;</h3></div></div></div>
+<p>Describes null_mutex classes</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>class</strong></span> <a href="../null_mutex.html" title="Class null_mutex">null_mutex</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id314617"></a>Header &lt;<a href="../../../../../boost/shmem/sync/read_write_lock.hpp" target="_top">boost/shmem/sync/read_write_lock.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Mutex&gt; <span class="bold"><strong>class</strong></span> <a href="../read_write_lock_ops.html" title="Class template read_write_lock_ops">read_write_lock_ops</a>;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> ReadWriteMutex&gt; <span class="bold"><strong>class</strong></span> <a href="../scoped_read_write_lock.html" title="Class template scoped_read_write_lock">scoped_read_write_lock</a>;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> ReadWriteMutex&gt; <span class="bold"><strong>class</strong></span> <a href="../scoped_read_lock.html" title="Class template scoped_read_lock">scoped_read_lock</a>;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> ReadWriteMutex&gt; <span class="bold"><strong>class</strong></span> <a href="../scoped_write_lock.html" title="Class template scoped_write_lock">scoped_write_lock</a>;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> TryReadWriteMutex&gt; <span class="bold"><strong>class</strong></span> <a href="../scoped_try_read_write_lock.html" title="Class template scoped_try_read_write_lock">scoped_try_read_write_lock</a>;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> TryReadWriteMutex&gt; <span class="bold"><strong>class</strong></span> <a href="../scoped_try_read_lock.html" title="Class template scoped_try_read_lock">scoped_try_read_lock</a>;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> TryReadWriteMutex&gt; <span class="bold"><strong>class</strong></span> <a href="../scoped_try_write_lock.html" title="Class template scoped_try_write_lock">scoped_try_write_lock</a>;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> TimedReadWriteMutex&gt; <span class="bold"><strong>class</strong></span> <a href="../id316366.html" title="Class template scoped_timed_read_write_lock">scoped_timed_read_write_lock</a>;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> TimedReadWriteMutex&gt; <span class="bold"><strong>class</strong></span> <a href="../scoped_timed_read_lock.html" title="Class template scoped_timed_read_lock">scoped_timed_read_lock</a>;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> TimedReadWriteMutex&gt; <span class="bold"><strong>class</strong></span> <a href="../scoped_timed_write_lock.html" title="Class template scoped_timed_write_lock">scoped_timed_write_lock</a>;
+    <span class="bold"><strong>namespace</strong></span> read_write_lock_state {
+
+      <span class="bold"><strong>enum</strong></span> <a name="id317303"></a>read_write_lock_state_enum { unlocked = 0, read_locked = 1, write_locked = 2 };
+    }
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id317353"></a>Header &lt;<a href="../../../../../boost/shmem/sync/shared_barrier.hpp" target="_top">boost/shmem/sync/shared_barrier.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>class</strong></span> <a href="../shared_barrier.html" title="Class shared_barrier">shared_barrier</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id317481"></a>Header &lt;<a href="../../../../../boost/shmem/sync/shared_condition.hpp" target="_top">boost/shmem/sync/shared_condition.hpp</a>&gt;</h3></div></div></div>
+<p>Describes process-shared variables condition class</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>class</strong></span> <a href="../shared_condition.html" title="Class shared_condition">shared_condition</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id317956"></a>Header &lt;<a href="../../../../../boost/shmem/sync/shared_mutex.hpp" target="_top">boost/shmem/sync/shared_mutex.hpp</a>&gt;</h3></div></div></div>
+<p>Describes shared_mutex and shared_try_mutex classes</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>class</strong></span> <a href="../shared_mutex.html" title="Class shared_mutex">shared_mutex</a>;
+    <span class="bold"><strong>class</strong></span> <a href="../shared_try_mutex.html" title="Class shared_try_mutex">shared_try_mutex</a>;
+    <span class="bold"><strong>class</strong></span> <a href="../shared_timed_mutex.html" title="Class shared_timed_mutex">shared_timed_mutex</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id318510"></a>Header &lt;<a href="../../../../../boost/shmem/sync/shared_mutex_family.hpp" target="_top">boost/shmem/sync/shared_mutex_family.hpp</a>&gt;</h3></div></div></div>
+<p>Describes a shared mutex family fit algorithm used to allocate objects in shared memory.</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>struct</strong></span> <a href="../shared_mutex_family.html" title="Struct shared_mutex_family">shared_mutex_family</a>;
+    <span class="bold"><strong>struct</strong></span> <a href="../null_mutex_family.html" title="Struct null_mutex_family">null_mutex_family</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id318783"></a>Header &lt;<a href="../../../../../boost/shmem/sync/shared_read_write_mutex.hpp" target="_top">boost/shmem/sync/shared_read_write_mutex.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>class</strong></span> <a href="../shared_read_write_mutex.html" title="Class shared_read_write_mutex">shared_read_write_mutex</a>;
+    <span class="bold"><strong>class</strong></span> <a href="../id319080.html" title="Class shared_try_read_write_mutex">shared_try_read_write_mutex</a>;
+    <span class="bold"><strong>class</strong></span> <a href="../id319472.html" title="Class shared_timed_read_write_mutex">shared_timed_read_write_mutex</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id320032"></a>Header &lt;<a href="../../../../../boost/shmem/sync/shared_recursive_mutex.hpp" target="_top">boost/shmem/sync/shared_recursive_mutex.hpp</a>&gt;</h3></div></div></div>
+<p>Describes shared_recursive_mutex and shared_recursive_try_mutex classes</p>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>class</strong></span> <a href="../shared_recursive_mutex.html" title="Class shared_recursive_mutex">shared_recursive_mutex</a>;
+    <span class="bold"><strong>class</strong></span> <a href="../shared_recursive_try_mutex.html" title="Class shared_recursive_try_mutex">shared_recursive_try_mutex</a>;
+    <span class="bold"><strong>class</strong></span> <a href="../id320423.html" title="Class shared_recursive_timed_mutex">shared_recursive_timed_mutex</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id320672"></a>Header &lt;<a href="../../../../../boost/shmem/sync/xtime.hpp" target="_top">boost/shmem/sync/xtime.hpp</a>&gt;</h3></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> shmem {
+    <span class="bold"><strong>struct</strong></span> <a href="../xtime.html" title="Struct xtime">xtime</a>;
+
+    <span class="bold"><strong>enum</strong></span> <a name="id320916"></a>xtime_clock_types { TIME_UTC = 1 };
+    <span class="type"><span class="bold"><strong>int</strong></span></span> <a name="xtime_get"></a>xtime_get(<span class="bold"><strong>struct</strong></span> xtime * xtp, <span class="bold"><strong>int</strong></span> clock_type);
+    <span class="type"><span class="bold"><strong>void</strong></span></span> <a href="../xtime_to_timespec.html" title="Function xtime_to_timespec">xtime_to_timespec</a>(<span class="bold"><strong>const</strong></span> xtime &amp;, timespec &amp;);
+  }
+}</pre>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2005 -2006 Ion Gaztañaga</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="references.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="../id294977-bb.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

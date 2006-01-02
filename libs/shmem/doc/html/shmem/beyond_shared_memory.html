@@ -1,0 +1,481 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Beyond shared memory</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="prev" href="customizing_boost_shmem.html" title=" Customizing Shmem">
+<link rel="next" href="streams.html" title=" Direct iostream formatting: vectorstream and bufferstream">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="boost.png (6897 bytes)" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="customizing_boost_shmem.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="streams.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="shmem.beyond_shared_memory"></a> Beyond shared memory</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="beyond_shared_memory.html#shmem.user_buffer_shmem"> Constructing all Shmem objects in a user provided buffer</a></span></dt>
+<dt><span class="section"><a href="beyond_shared_memory.html#shmem.heap_buffer_shmem"> Shmem machinery in heap memory</a></span></dt>
+<dt><span class="section"><a href="beyond_shared_memory.html#shmem.memory_mapped_shmem"> Shmem with memory-mapped files</a></span></dt>
+</dl></div>
+<p>
+Shmem offers shared memory management, and allows placing STL compatible 
+containers and allocators. It offers raw memory allocation and
+anonymous and named object creation.</p>
+<p>
+Shared memory management is mainly a fixed size buffer management, so several
+Shmem services could be reused to use other non-shared memory fixed size buffers. 
+These services include STL compatible containers, STL compatible allocators, named object creation, etc...</p>
+<p>
+Applications for Shmem services using non-shared memory buffers:</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+Create and use STL compatible containers and allocators, in systems with no dynamic memory
+</li>
+<li>
+Build complex, easily serializable databases in a single buffer:<div class="itemizedlist"><ul type="circle">
+<li>
+To share data between threads
+</li>
+<li>
+To save and load information from/to files.
+</li>
+</ul></div>
+</li>
+<li>
+Duplicate information (containers, allocators, etc...) just copying the contents of one buffer to another one.
+</li>
+<li>
+Send complex information and objects/databases using serial/inter-process/network communications.
+</li>
+<li>
+Data persistence through memory-mapped files.
+</li>
+</ul></div>
+<p>
+To help with this management, Shmem provides some useful classes, 
+with the same functionality as <span class="bold"><strong>basic_named_shared_object</strong></span>:</p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.user_buffer_shmem"></a> Constructing all Shmem objects in a user provided buffer</h3></div></div></div>
+<p>
+Sometimes, the user wants to create simple objects, STL compatible containers, STL compatible
+strings and more, all in a single buffer. This buffer could be a big static buffer, 
+a memory-mapped auxiliary device or any other user buffer.</p>
+<p>
+This would allow a easy serialization, since we just have copy the buffer to duplicate
+all the objects created in the original buffer, and this includes complex objects like
+maps, lists or any user classes. Shmem offers classes to handle user provided buffers
+that allow the same functionality as shared memory classes:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">//Named object creation front-end
+//All objects are constructed in a a user provided buffer
+</span><span class="keyword">template</span><span class="special"> &lt;</span><span class="keyword">
+            class</span><span class="identifier"> CharType</span><span class="special">,</span><span class="keyword"> 
+            class</span><span class="identifier"> MemoryAlgorithm</span><span class="special">,</span><span class="keyword"> 
+            template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="identifier"> IndexConfig</span><span class="special">&gt;</span><span class="keyword"> class</span><span class="identifier"> IndexType</span><span class="special">
+         &gt;</span><span class="keyword">
+class</span><span class="identifier"> basic_named_user_object</span><span class="special">;</span><span class="comment">
+
+//Named object creation front-end
+//All objects are constructed in a a user provided buffer
+//   Names are c-strings, 
+//   Default memory management algorithm(simple_seq_fit with no mutexes)
+//   Name-object mappings are stored in the default index type (flat_map)
+</span><span class="keyword">typedef</span><span class="identifier"> basic_named_user_object</span><span class="special"> &lt;</span><span class="keyword"> 
+   char</span><span class="special">,</span><span class="identifier"> 
+   simple_seq_fit</span><span class="special">&lt;</span><span class="identifier">null_mutex_family</span><span class="special">&gt;,</span><span class="identifier"> offset_ptr</span><span class="special">&lt;</span><span class="keyword">void</span><span class="special">&gt;</span><span class="special"> ,</span><span class="identifier">
+   flat_map_index</span><span class="special">
+   &gt;</span><span class="identifier">  named_user_object</span><span class="special">;</span><span class="comment">
+
+//Named object creation front-end
+//All objects are constructed in a a user provided buffer
+//   Names are wide-strings, 
+//   Default memory management algorithm(simple_seq_fit with no mutexes)
+//   Name-object mappings are stored in the default index type (flat_map)
+</span><span class="keyword">typedef</span><span class="identifier"> basic_named_user_object</span><span class="special">&lt;</span><span class="keyword"> 
+   wchar_t</span><span class="special">,</span><span class="identifier"> 
+   simple_seq_fit</span><span class="special">&lt;</span><span class="identifier">null_mutex_family</span><span class="special">,</span><span class="identifier"> offset_ptr</span><span class="special">&lt;</span><span class="keyword">void</span><span class="special">&gt;</span><span class="special"> &gt;,</span><span class="identifier">
+   flat_map_index</span><span class="special">
+   &gt;</span><span class="identifier">  wnamed_user_object</span><span class="special">;</span></code></pre>
+<p>
+Let's see an example of the use of these classes:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">//Create the user memory who will store all objects
+</span><span class="keyword">const</span><span class="keyword"> int</span><span class="identifier"> memsize</span><span class="special"> =</span><span class="number"> 65536</span><span class="special">;</span><span class="keyword">
+static</span><span class="keyword"> char</span><span class="identifier"> static_buffer</span><span class="special"> [</span><span class="identifier">memsize</span><span class="special">];</span><span class="comment">
+
+//Named (wide-string) new capable user mem front-end
+</span><span class="identifier">wnamed_user_object</span><span class="identifier"> objects_in_user_memory</span><span class="special">;</span><span class="comment">
+
+//Initialize the static buffer and initialize resources
+</span><span class="identifier">objects_in_user_memory</span><span class="special">.</span><span class="identifier">create</span><span class="special">(</span><span class="identifier">static_buffer</span><span class="special">,</span><span class="identifier"> memsize</span><span class="special">);</span><span class="comment">
+
+//We optimize resources to create 100 named objects in the static buffer
+</span><span class="identifier">objects_in_user_memory</span><span class="special">.</span><span class="identifier">reserve_named_objects</span><span class="special">(</span><span class="number">100</span><span class="special">);</span><span class="comment">
+
+//Alias &lt;integer, 64 element per chunk&gt; node allocator type
+//This allocator will allocate memory inside the static buffer
+</span><span class="keyword">typedef</span><span class="identifier"> wnamed_user_object</span><span class="special">::</span><span class="identifier">node_allocator_type</span><span class="special">
+   &lt;</span><span class="keyword">int</span><span class="special">,</span><span class="number"> 64</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="identifier"> node_allocator_t</span><span class="special">;</span><span class="comment">
+
+//Alias a STL compatible list to be constructed in the static buffer
+</span><span class="keyword">typedef</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="identifier"> node_allocator_t</span><span class="special">&gt;</span><span class="identifier">    MyBufferList</span><span class="special">;</span><span class="comment">
+
+//The list must be initialized with the allocator
+</span><span class="identifier">MyBufferList</span><span class="special"> *</span><span class="identifier">list</span><span class="special"> =</span><span class="identifier"> objects_in_user_memory</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="identifier">MyBufferList</span><span class="special">&gt;(</span><span class="identifier">L</span><span class="string">"MyList"</span><span class="special">)</span><span class="special">
+                        (</span><span class="identifier">objects_in_user_memory</span><span class="special">.</span><span class="identifier">get_segment_manager</span><span class="special">());</span><span class="comment">
+
+//All objects created with objects_in_user_memory will be stored in the static_buffer!
+
+//Destroy the whole list from the static buffer
+</span><span class="identifier">objects_in_user_memory</span><span class="special">.</span><span class="identifier">destroy</span><span class="special">&lt;</span><span class="identifier">MyBufferList</span><span class="special">&gt;(</span><span class="identifier">L</span><span class="string">"MyList"</span><span class="special">);</span></code></pre>
+<p>
+Shmem STL compatible allocators can also be used to place STL 
+compatible containers in the user segment.</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.heap_buffer_shmem"></a> Shmem machinery in heap memory</h3></div></div></div>
+<p>
+The use of heap memory (new/delete) to obtain a buffer where the user wants to store all 
+his data is very common, so Shmem provides some specialized 
+classes that work exclusively with heap memory.</p>
+<p>
+These are the classes:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">//Named object creation front-end
+//All objects are constructed in a single buffer allocated via new[]
+</span><span class="keyword">template</span><span class="special"> &lt;</span><span class="keyword">
+            class</span><span class="identifier"> CharType</span><span class="special">,</span><span class="keyword"> 
+            class</span><span class="identifier"> MemoryAlgorithm</span><span class="special">,</span><span class="keyword"> 
+            template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="identifier"> IndexConfig</span><span class="special">&gt;</span><span class="keyword"> class</span><span class="identifier"> IndexType</span><span class="special">
+         &gt;</span><span class="keyword">
+class</span><span class="identifier"> basic_named_heap_object</span><span class="special">;</span><span class="comment">
+
+//Named object creation front-end
+//All objects are constructed in a single buffer allocated via new[]
+//   Names are c-strings, 
+//   Default memory management algorithm(simple_seq_fit with no mutexes)
+//   Name-object mappings are stored in the default index type (flat_map)
+</span><span class="keyword">typedef</span><span class="identifier"> basic_named_heap_object</span><span class="special"> &lt;</span><span class="keyword"> 
+   char</span><span class="special">,</span><span class="identifier"> 
+   simple_seq_fit</span><span class="special">&lt;</span><span class="identifier">null_mutex_family</span><span class="special">,</span><span class="keyword"> void</span><span class="special">*&gt;,</span><span class="identifier">
+   flat_map_index</span><span class="special">
+   &gt;</span><span class="identifier">  named_heap_object</span><span class="special">;</span><span class="comment">
+
+//Named object creation front-end
+//All objects are constructed in a single buffer allocated via new[]
+//   Names are wide-strings, 
+//   Default memory management algorithm(simple_seq_fit with no mutexes)
+//   Name-object mappings are stored in the default index type (flat_map)
+</span><span class="keyword">typedef</span><span class="identifier"> basic_named_heap_object</span><span class="special">&lt;</span><span class="keyword"> 
+   wchar_t</span><span class="special">,</span><span class="identifier"> 
+   simple_seq_fit</span><span class="special">&lt;</span><span class="identifier">null_mutex_family</span><span class="special">,</span><span class="keyword"> void</span><span class="special">*&gt;,</span><span class="identifier">
+   flat_map_index</span><span class="special">
+   &gt;</span><span class="identifier">  wnamed_heap_object</span><span class="special">;</span></code></pre>
+<p>
+and the use is exactly the same as before, except that memory is created by the front-end 
+itself using dynamic (new/delete) memory:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">//Create the heap memory who will store all objects
+</span><span class="keyword">const</span><span class="keyword"> int</span><span class="identifier"> memsize</span><span class="special"> =</span><span class="number"> 65536</span><span class="special">;</span><span class="comment">
+
+//Named new capable heap mem front-end
+</span><span class="identifier">wnamed_heap_object</span><span class="identifier"> objects_in_heap_memory</span><span class="special">;</span><span class="comment">
+
+//Create a dynamic buffer of size "memsize" and initialize resources
+</span><span class="identifier">objects_in_heap_memory</span><span class="special">.</span><span class="identifier">create</span><span class="special">(</span><span class="identifier">memsize</span><span class="special">);</span><span class="comment">
+
+//We optimize resources to create 100 named objects in the dynamic buffer
+</span><span class="identifier">objects_in_heap_memory</span><span class="special">.</span><span class="identifier">reserve_named_objects</span><span class="special">(</span><span class="number">100</span><span class="special">);</span><span class="comment">
+
+//Alias &lt;integer, 64 element per chunk&gt; node allocator type
+//This allocator will allocate memory inside the dynamic buffer
+</span><span class="keyword">typedef</span><span class="identifier"> wnamed_heap_object</span><span class="special">::</span><span class="identifier">node_allocator_type</span><span class="special">
+   &lt;</span><span class="keyword">int</span><span class="special">,</span><span class="number"> 64</span><span class="special"> &gt;::</span><span class="identifier">type</span><span class="identifier"> node_allocator_t</span><span class="special">;</span><span class="comment">
+
+//Alias a STL compatible list to be constructed in the dynamic buffer
+</span><span class="keyword">typedef</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="identifier"> node_allocator_t</span><span class="special">&gt;</span><span class="identifier">    MyHeapList</span><span class="special">;</span><span class="comment">
+
+//The list must be initialized with the allocator
+//since it has no default constructor
+</span><span class="identifier">MyHeapList</span><span class="special"> *</span><span class="identifier">heaplist</span><span class="special"> =</span><span class="identifier"> objects_in_heap_memory</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="identifier">MyHeapList</span><span class="special">&gt;(</span><span class="identifier">L</span><span class="string">"MyList"</span><span class="special">)</span><span class="special">
+                        (</span><span class="identifier">objects_in_heap_memory</span><span class="special">.</span><span class="identifier">get_segment_manager</span><span class="special">());</span><span class="comment">
+
+//All objects created with objects_in_user_memory will be stored in the static_buffer!
+
+//Destroy the whole list from the dynamic buffer
+</span><span class="identifier">objects_in_heap_memory</span><span class="special">.</span><span class="identifier">destroy</span><span class="special">&lt;</span><span class="identifier">MyHeapList</span><span class="special">&gt;(</span><span class="identifier">L</span><span class="string">"MyList"</span><span class="special">);</span></code></pre>
+<p><span class="bold"><strong>basic_named_heap_object</strong></span> also offers a <code class="computeroutput"><span class="identifier">grow</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> extra_bytes</span><span class="special">)</span></code> function that
+tries to resize internal heap memory so that we have room for more objects. 
+But <span class="bold"><strong>be careful</strong></span>, if memory is reallocated, the old buffer will be copied into 
+the new one so all the objects will be binary-copied to the new buffer. 
+To be able to use this function, all pointers constructed in the heap buffer that
+point to objects in the heap buffer must be offset pointers and all objects should be
+binary copiable. Otherwise, the result is undefined. Here is an example:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="preprocessor">#include</span><span class="special"> &lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">shmem</span><span class="special">/</span><span class="identifier">containers</span><span class="special">/</span><span class="identifier">list</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span><span class="preprocessor">
+#include</span><span class="special"> &lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">shmem</span><span class="special">/</span><span class="identifier">named_heap_object</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span><span class="preprocessor">
+#include</span><span class="special"> &lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">shmem</span><span class="special">/</span><span class="identifier">allocators</span><span class="special">/</span><span class="identifier">allocator</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span><span class="preprocessor">
+#include</span><span class="special"> &lt;</span><span class="identifier">cstddef</span><span class="special">&gt;</span><span class="keyword">
+
+using</span><span class="keyword"> namespace</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">;</span><span class="keyword">
+typedef</span><span class="identifier"> list</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="identifier"> allocator</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="identifier"> named_heap_object</span><span class="special">::</span><span class="identifier">segment_manager</span><span class="special">&gt;</span><span class="special"> &gt;</span><span class="identifier"> MyList</span><span class="special">;</span><span class="keyword">
+
+int</span><span class="identifier"> main</span><span class="special"> ()</span><span class="special">
+{</span><span class="identifier">
+   named_heap_object</span><span class="identifier"> heap_memory</span><span class="special">;</span><span class="comment">
+
+   //We will create a buffer of 1000 bytes to store a list
+</span><span class="identifier">   heap_memory</span><span class="special">.</span><span class="identifier">create</span><span class="special">(</span><span class="number">1000</span><span class="special">);</span><span class="identifier">
+   MyList</span><span class="special"> *</span><span class="identifier"> mylist</span><span class="special"> =</span><span class="identifier"> heap_memory</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="identifier">MyList</span><span class="special">&gt;(</span><span class="string">"MyList"</span><span class="special">)</span><span class="special">
+                        (</span><span class="identifier">heap_memory</span><span class="special">.</span><span class="identifier">get_segment_manager</span><span class="special">());</span><span class="comment">
+
+   //Obtain offset, that identifies the list in the buffer
+</span><span class="identifier">   std</span><span class="special">::</span><span class="identifier">ptrdiff_t</span><span class="identifier"> list_offset</span><span class="special"> =</span><span class="identifier"> heap_memory</span><span class="special">.</span><span class="identifier">get_offset_from_address</span><span class="special">(</span><span class="identifier">mylist</span><span class="special">);</span><span class="comment">
+
+   //Fill list until there is no more memory in the buffer
+</span><span class="keyword">   try</span><span class="special">{</span><span class="keyword">
+      while</span><span class="special">(</span><span class="number">1</span><span class="special">)</span><span class="special"> {</span><span class="identifier">
+         mylist</span><span class="special">-&gt;</span><span class="identifier">insert</span><span class="special">(</span><span class="identifier">mylist</span><span class="special">-&gt;</span><span class="identifier">begin</span><span class="special">(),</span><span class="number"> 0</span><span class="special">);</span><span class="special">
+      }</span><span class="special">
+   }</span><span class="keyword">
+   catch</span><span class="special">(</span><span class="keyword">const</span><span class="identifier"> bad_alloc</span><span class="special"> &amp;){</span><span class="comment">
+      //memory is full
+</span><span class="special">   }</span><span class="comment">
+   //Let's obtain the size of the list
+</span><span class="identifier">   std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> old_size</span><span class="special"> =</span><span class="identifier"> mylist</span><span class="special">-&gt;</span><span class="identifier">size</span><span class="special">();</span><span class="comment">
+
+   //To make the list bigger, let's increase the heap buffer
+   //in 1000 bytes more.
+</span><span class="identifier">   heap_memory</span><span class="special">.</span><span class="identifier">grow</span><span class="special">(</span><span class="number">1000</span><span class="special">);</span><span class="comment">
+
+   //If memory has been reallocated, the old pointer is invalid, so
+   //use previously obtained offset to find the new pointer.
+</span><span class="identifier">   mylist</span><span class="special"> =</span><span class="keyword"> static_cast</span><span class="special">&lt;</span><span class="identifier">MyList</span><span class="special"> *&gt;</span><span class="special">
+               (</span><span class="identifier">heap_memory</span><span class="special">.</span><span class="identifier">get_address_from_offset</span><span class="special">(</span><span class="identifier">list_offset</span><span class="special">));</span><span class="comment">
+   
+   //Fill list until there is no more memory in the buffer
+</span><span class="keyword">   try</span><span class="special">{</span><span class="keyword">
+      while</span><span class="special">(</span><span class="number">1</span><span class="special">)</span><span class="special"> {</span><span class="identifier">
+         mylist</span><span class="special">-&gt;</span><span class="identifier">insert</span><span class="special">(</span><span class="identifier">mylist</span><span class="special">-&gt;</span><span class="identifier">begin</span><span class="special">(),</span><span class="number"> 0</span><span class="special">);</span><span class="special">
+      }</span><span class="special">
+   }</span><span class="keyword">
+   catch</span><span class="special">(</span><span class="keyword">const</span><span class="identifier"> bad_alloc</span><span class="special"> &amp;){</span><span class="comment">
+      //memory is full
+</span><span class="special">   }</span><span class="comment">
+
+   //Let's obtain the new size of the list      
+</span><span class="identifier">   std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> new_size</span><span class="special"> =</span><span class="identifier"> mylist</span><span class="special">-&gt;</span><span class="identifier">size</span><span class="special">();</span><span class="identifier">
+
+   assert</span><span class="special">(</span><span class="identifier">new_size</span><span class="special"> &gt;</span><span class="identifier"> old_size</span><span class="special">);</span><span class="comment">
+
+   //Destroy list
+</span><span class="identifier">   heap_memory</span><span class="special">.</span><span class="identifier">destroy_ptr</span><span class="special">(</span><span class="identifier">mylist</span><span class="special">);</span><span class="keyword">
+
+   return</span><span class="number"> 0</span><span class="special">;</span><span class="special">
+}</span></code></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.memory_mapped_shmem"></a> Shmem with memory-mapped files</h3></div></div></div>
+<p>
+One of the most useful things in operating systems are memory-mapped files, since the
+OS user works directly in memory with a big file whose contents are too big to fit in 
+memory, and the OS automatically loads, dumps, and synchronizes to memory the current
+file contents.</p>
+<p>
+Shmem can directly work with memory mapped files, so that all objects, containers and 
+other Shmem resources get automatic data persistence support:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">//Named object creation front-end
+//All objects are constructed in the memory-mapped file
+</span><span class="keyword">template</span><span class="special"> &lt;</span><span class="keyword">
+            class</span><span class="identifier"> CharType</span><span class="special">,</span><span class="keyword"> 
+            class</span><span class="identifier"> MemoryAlgorithm</span><span class="special">,</span><span class="keyword"> 
+            template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="identifier"> IndexConfig</span><span class="special">&gt;</span><span class="keyword"> class</span><span class="identifier"> IndexType</span><span class="special">
+         &gt;</span><span class="keyword">
+class</span><span class="identifier"> basic_named_mfile_object</span><span class="special">;</span><span class="comment">
+
+//Named object creation front-end
+//All objects are constructed in the memory-mapped file
+//   Names are c-strings, 
+//   Default memory management algorithm(simple_seq_fit with no mutexes)
+//   Name-object mappings are stored in the default index type (flat_map)
+</span><span class="keyword">typedef</span><span class="identifier"> basic_named_mfile_object</span><span class="special"> &lt;</span><span class="keyword"> 
+   char</span><span class="special">,</span><span class="identifier"> 
+   simple_seq_fit</span><span class="special">&lt;</span><span class="identifier">shared_mutex_family</span><span class="special">,</span><span class="identifier"> offset_ptr</span><span class="special">&lt;</span><span class="keyword">void</span><span class="special">&gt;</span><span class="special"> &gt;,</span><span class="identifier">
+   flat_map_index</span><span class="special">
+   &gt;</span><span class="identifier">  named_mfile_object</span><span class="special">;</span><span class="comment">
+
+//Named object creation front-end
+//All objects are constructed in the memory-mapped file
+//   Names are wide-strings, 
+//   Default memory management algorithm(simple_seq_fit with no mutexes)
+//   Name-object mappings are stored in the default index type (flat_map)
+</span><span class="keyword">typedef</span><span class="identifier"> basic_named_mfile_object</span><span class="special">&lt;</span><span class="keyword"> 
+   wchar_t</span><span class="special">,</span><span class="identifier"> 
+   simple_seq_fit</span><span class="special">&lt;</span><span class="identifier">shared_mutex_family</span><span class="special">,</span><span class="identifier"> offset_ptr</span><span class="special">&lt;</span><span class="keyword">void</span><span class="special">&gt;</span><span class="special"> &gt;,</span><span class="identifier">
+   flat_map_index</span><span class="special">
+   &gt;</span><span class="identifier">  wnamed_mfile_object</span><span class="special">;</span></code></pre>
+<p>
+We can use any Shmem container, allocator, named object creation, etc... And we have a 
+<span class="bold"><strong>flush()</strong></span> function to make sure data is dumped to the file:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="preprocessor">#include</span><span class="special"> &lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">shmem</span><span class="special">/</span><span class="identifier">named_mfile_object</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span><span class="preprocessor">
+#include</span><span class="special"> &lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">shmem</span><span class="special">/</span><span class="identifier">allocator</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span><span class="preprocessor">
+#include</span><span class="special"> &lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">shmem</span><span class="special">/</span><span class="identifier">containers</span><span class="special">/</span><span class="identifier">vector</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span><span class="keyword">
+
+using</span><span class="keyword"> namespace</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">;</span><span class="keyword">
+
+int</span><span class="identifier"> main</span><span class="special"> ()</span><span class="special">
+{</span><span class="comment">
+   //STL compatible allocator object for memory-mapped file
+</span><span class="keyword">   typedef</span><span class="identifier"> allocator</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="identifier"> named_mfile_object</span><span class="special">::</span><span class="identifier">segment_manager</span><span class="special">&gt;</span><span class="identifier"> allocator_int_t</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="identifier"> allocator_int_t</span><span class="special"> &gt;</span><span class="identifier"> MyVect</span><span class="special">;</span><span class="keyword">
+
+   const</span><span class="keyword"> int</span><span class="identifier"> filesize</span><span class="special"> =</span><span class="number"> 65536</span><span class="special">;</span><span class="keyword">
+   const</span><span class="keyword"> char</span><span class="special"> *</span><span class="keyword">const</span><span class="identifier"> fileName</span><span class="special"> =</span><span class="string"> "MyMappedFile"</span><span class="special">;</span><span class="comment">
+
+   //Named allocate capable memory mapped file front-end
+</span><span class="identifier">   named_mfile_object</span><span class="identifier"> mapped_file</span><span class="special">;</span><span class="comment">
+
+   //Create memory-mapped file and initialize Shmem machinery
+</span><span class="keyword">   if</span><span class="special">(!</span><span class="identifier">mapped_file</span><span class="special">.</span><span class="identifier">create</span><span class="special">(</span><span class="identifier">fileName</span><span class="special">,</span><span class="identifier"> filesize</span><span class="special">)){</span><span class="keyword">
+      return</span><span class="keyword"> false</span><span class="special">;</span><span class="special">
+   }</span><span class="comment">
+
+   //Construct the STL compatible allocator with the memory management algorithm
+</span><span class="keyword">   const</span><span class="identifier"> allocator_int_t</span><span class="identifier"> myallocator</span><span class="special"> (</span><span class="identifier">mapped_file</span><span class="special">.</span><span class="identifier">get_segment_manager</span><span class="special">());</span><span class="comment">
+
+   //Construct vector
+</span><span class="identifier">   MyVect</span><span class="special"> *</span><span class="identifier">mfile_vect</span><span class="special"> =</span><span class="identifier"> mapped_file</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="identifier">MyVect</span><span class="special">&gt;</span><span class="special"> (</span><span class="string">"MyVector"</span><span class="special">)</span><span class="special"> (</span><span class="identifier">myallocator</span><span class="special">);</span><span class="comment">
+
+   //Test that vector can be found via name
+</span><span class="keyword">   if</span><span class="special">(</span><span class="identifier">mfile_vect</span><span class="special"> !=</span><span class="identifier"> mapped_file</span><span class="special">.</span><span class="identifier">find</span><span class="special">&lt;</span><span class="identifier">MyVect</span><span class="special">&gt;(</span><span class="string">"MyVector"</span><span class="special">).</span><span class="identifier">first</span><span class="special">)</span><span class="keyword">
+      return</span><span class="special"> -</span><span class="number">1</span><span class="special">;</span><span class="comment">
+
+   //Destroy and check it is not present
+</span><span class="identifier">   mapped_file</span><span class="special">.</span><span class="identifier">destroy</span><span class="special">&lt;</span><span class="identifier">MyVect</span><span class="special">&gt;</span><span class="special"> (</span><span class="string">"MyVector"</span><span class="special">);</span><span class="keyword">
+   if</span><span class="special">(</span><span class="number">0</span><span class="special"> !=</span><span class="identifier"> mapped_file</span><span class="special">.</span><span class="identifier">find</span><span class="special">&lt;</span><span class="identifier">MyVect</span><span class="special">&gt;(</span><span class="string">"MyVector"</span><span class="special">).</span><span class="identifier">first</span><span class="special">)</span><span class="keyword">
+      return</span><span class="special"> -</span><span class="number">1</span><span class="special">;</span><span class="comment">
+
+   //Construct another vector in the memory-mapped file
+</span><span class="identifier">   mfile_vect</span><span class="special"> =</span><span class="identifier"> mapped_file</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="identifier">MyVect</span><span class="special">&gt;</span><span class="special"> (</span><span class="string">"MyVector"</span><span class="special">)</span><span class="special"> (</span><span class="identifier">myallocator</span><span class="special">);</span><span class="comment">
+   
+   //Flush cached data from memory-mapped file to disk
+</span><span class="identifier">   mapped_file</span><span class="special">.</span><span class="identifier">flush</span><span class="special">();</span><span class="comment">
+
+   //Close mapped file
+</span><span class="identifier">   mapped_file</span><span class="special">.</span><span class="identifier">close</span><span class="special">();</span><span class="comment">
+
+   //Map preexisting file again in memory
+</span><span class="keyword">   if</span><span class="special">(!</span><span class="identifier">mapped_file</span><span class="special">.</span><span class="identifier">open</span><span class="special">(</span><span class="identifier">fileName</span><span class="special">)){</span><span class="keyword">
+      return</span><span class="special"> -</span><span class="number">1</span><span class="special">;</span><span class="special">
+   }</span><span class="comment">
+
+   //Check vector is still there
+</span><span class="identifier">   mfile_vect</span><span class="special"> =</span><span class="identifier"> mapped_file</span><span class="special">.</span><span class="identifier">find</span><span class="special">&lt;</span><span class="identifier">MyVect</span><span class="special">&gt;(</span><span class="string">"MyVector"</span><span class="special">).</span><span class="identifier">first</span><span class="special">;</span><span class="keyword">
+   if</span><span class="special">(!</span><span class="identifier">mfile_vect</span><span class="special">)</span><span class="keyword">
+      return</span><span class="special"> -</span><span class="number">1</span><span class="special">;</span><span class="comment">
+
+   //Destroy and check it is not present
+</span><span class="identifier">   mapped_file</span><span class="special">.</span><span class="identifier">destroy_ptr</span><span class="special">(</span><span class="identifier">mfile_vect</span><span class="special">);</span><span class="keyword">
+   if</span><span class="special">(</span><span class="number">0</span><span class="special"> !=</span><span class="identifier"> mapped_file</span><span class="special">.</span><span class="identifier">find</span><span class="special">&lt;</span><span class="identifier">MyVect</span><span class="special">&gt;(</span><span class="string">"MyVector"</span><span class="special">).</span><span class="identifier">first</span><span class="special">)</span><span class="keyword">
+      return</span><span class="special"> -</span><span class="number">1</span><span class="special">;</span><span class="keyword">
+   return</span><span class="number"> 0</span><span class="special">;</span><span class="special">
+}</span></code></pre>
+<p><span class="bold"><strong>basic_named_mfile_object</strong></span> also offers a <code class="computeroutput"><span class="identifier">grow</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> extra_bytes</span><span class="special">)</span></code> function that
+tries to resize the mapped file so that we have room for more objects. 
+But <span class="bold"><strong>be careful</strong></span>, the file can be remapped in another base
+address. To be able to use this function, all pointers constructed in the mapped file that
+point to objects in the mapped file must be offset pointers. <span class="bold"><strong>If <code class="computeroutput"><span class="identifier">grow</span><span class="special">()</span></code> fails, </strong></span><span class="bold"><strong>the mapping can't be recovered</strong></span> and the file mapping will be closed. You will need 
+to call <span class="bold"><strong>open()</strong></span> again to open it with the old size. Here the same example as with
+basic_named_heap_object, but using memory mapped files:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="preprocessor">#include</span><span class="special"> &lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">shmem</span><span class="special">/</span><span class="identifier">containers</span><span class="special">/</span><span class="identifier">list</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span><span class="preprocessor">
+#include</span><span class="special"> &lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">shmem</span><span class="special">/</span><span class="identifier">named_mfile_object</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span><span class="preprocessor">
+#include</span><span class="special"> &lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">shmem</span><span class="special">/</span><span class="identifier">allocators</span><span class="special">/</span><span class="identifier">allocator</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span><span class="preprocessor">
+#include</span><span class="special"> &lt;</span><span class="identifier">cstddef</span><span class="special">&gt;</span><span class="keyword">
+
+using</span><span class="keyword"> namespace</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">;</span><span class="keyword">
+typedef</span><span class="identifier"> list</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="identifier"> allocator</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="identifier"> named_mfile_object</span><span class="special">::</span><span class="identifier">segment_manager</span><span class="special">&gt;</span><span class="special"> &gt;</span><span class="identifier"> MyList</span><span class="special">;</span><span class="keyword">
+
+int</span><span class="identifier"> main</span><span class="special"> ()</span><span class="special">
+{</span><span class="identifier">
+   named_mfile_object</span><span class="identifier"> mfile_memory</span><span class="special">;</span><span class="comment">
+
+   //We will create a mapped file of 1000 bytes to store a list
+</span><span class="identifier">   mfile_memory</span><span class="special">.</span><span class="identifier">create</span><span class="special">(</span><span class="string">"./mapped_file"</span><span class="special">,</span><span class="number"> 1000</span><span class="special">);</span><span class="identifier">
+   MyList</span><span class="special"> *</span><span class="identifier"> mylist</span><span class="special"> =</span><span class="identifier"> mfile_memory</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="identifier">MyList</span><span class="special">&gt;(</span><span class="string">"MyList"</span><span class="special">)</span><span class="special">
+                        (</span><span class="identifier">mfile_memory</span><span class="special">.</span><span class="identifier">get_segment_manager</span><span class="special">());</span><span class="comment">
+
+   //Obtain offset, that identifies the list in the buffer
+</span><span class="identifier">   std</span><span class="special">::</span><span class="identifier">ptrdiff_t</span><span class="identifier"> list_offset</span><span class="special"> =</span><span class="identifier"> mfile_memory</span><span class="special">.</span><span class="identifier">get_offset_from_address</span><span class="special">(</span><span class="identifier">mylist</span><span class="special">);</span><span class="comment">
+
+   //Fill list until there is no more room in the file
+</span><span class="keyword">   try</span><span class="special">{</span><span class="keyword">
+      while</span><span class="special">(</span><span class="number">1</span><span class="special">)</span><span class="special"> {</span><span class="identifier">
+         mylist</span><span class="special">-&gt;</span><span class="identifier">insert</span><span class="special">(</span><span class="identifier">mylist</span><span class="special">-&gt;</span><span class="identifier">begin</span><span class="special">(),</span><span class="number"> 0</span><span class="special">);</span><span class="special">
+      }</span><span class="special">
+   }</span><span class="keyword">
+   catch</span><span class="special">(</span><span class="keyword">const</span><span class="identifier"> bad_alloc</span><span class="special"> &amp;){</span><span class="comment">
+      //mapped file is full
+</span><span class="special">   }</span><span class="comment">
+   //Let's obtain the size of the list
+</span><span class="identifier">   std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> old_size</span><span class="special"> =</span><span class="identifier"> mylist</span><span class="special">-&gt;</span><span class="identifier">size</span><span class="special">();</span><span class="comment">
+
+   //To make the list bigger, let's increase the mapped file
+   //in 1000 bytes more.
+</span><span class="identifier">   mfile_memory</span><span class="special">.</span><span class="identifier">grow</span><span class="special">(</span><span class="number">1000</span><span class="special">);</span><span class="comment">
+
+   //If mapping address has changed, the old pointer is invalid,
+   //so use previously obtained offset to find the new pointer.
+</span><span class="identifier">   mylist</span><span class="special"> =</span><span class="keyword"> static_cast</span><span class="special">&lt;</span><span class="identifier">MyList</span><span class="special"> *&gt;</span><span class="special">
+               (</span><span class="identifier">mfile_memory</span><span class="special">.</span><span class="identifier">get_address_from_offset</span><span class="special">(</span><span class="identifier">list_offset</span><span class="special">));</span><span class="comment">
+   
+   //Fill list until there is no more room in the file
+</span><span class="keyword">   try</span><span class="special">{</span><span class="keyword">
+      while</span><span class="special">(</span><span class="number">1</span><span class="special">)</span><span class="special"> {</span><span class="identifier">
+         mylist</span><span class="special">-&gt;</span><span class="identifier">insert</span><span class="special">(</span><span class="identifier">mylist</span><span class="special">-&gt;</span><span class="identifier">begin</span><span class="special">(),</span><span class="number"> 0</span><span class="special">);</span><span class="special">
+      }</span><span class="special">
+   }</span><span class="keyword">
+   catch</span><span class="special">(</span><span class="keyword">const</span><span class="identifier"> bad_alloc</span><span class="special"> &amp;){</span><span class="comment">
+      //mapped file is full
+</span><span class="special">   }</span><span class="comment">
+
+   //Let's obtain the new size of the list      
+</span><span class="identifier">   std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> new_size</span><span class="special"> =</span><span class="identifier"> mylist</span><span class="special">-&gt;</span><span class="identifier">size</span><span class="special">();</span><span class="identifier">
+
+   assert</span><span class="special">(</span><span class="identifier">new_size</span><span class="special"> &gt;</span><span class="identifier"> old_size</span><span class="special">);</span><span class="comment">
+
+   //Destroy list
+</span><span class="identifier">   mfile_memory</span><span class="special">.</span><span class="identifier">destroy_ptr</span><span class="special">(</span><span class="identifier">mylist</span><span class="special">);</span><span class="keyword">
+
+   return</span><span class="number"> 0</span><span class="special">;</span><span class="special">
+}</span></code></pre>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2005 -2006 Ion Gaztañaga</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="customizing_boost_shmem.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="streams.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

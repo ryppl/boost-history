@@ -1,0 +1,285 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Chapter 1. Shmem 2006-01-02</title>
+<link rel="stylesheet" href="boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
+<link rel="start" href="index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="next" href="shmem/quick_guide.html" title=" Quick Guide for the Impatient">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="boost.png (6897 bytes)" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.htm">Home</a></td>
+<td align="center"><a href="libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="shmem/quick_guide.html"><img src="images/next.png" alt="Next"></a></div>
+<div class="chapter" lang="en">
+<div class="titlepage"><div>
+<div><h2 class="title">
+<a name="shmem"></a>Chapter 1. Shmem 2006-01-02</h2></div>
+<div><div class="author"><h3 class="author">
+<span class="firstname">Ion</span> <span class="surname">Gaztañaga</span>
+</h3></div></div>
+<div><p class="copyright">Copyright © 2005 -2006 Ion Gaztañaga</p></div>
+<div><div class="legalnotice">
+<a name="id379780"></a><p>
+        Distributed under the Boost Software License, Version 1.0.
+         (See accompanying file LICENSE_1_0.txt or copy at
+         <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">
+            http://www.boost.org/LICENSE_1_0.txt
+         </a>)
+    
+      </p>
+</div></div>
+</div></div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt><span class="section"><a href="index.html#shmem.intro"> Introduction</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index.html#shmem.disclaimer"> Disclaimer: Shmem is NOT a Boost library</a></span></dt>
+<dt><span class="section"><a href="index.html#shmem.introduction"> Introduction</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="shmem/quick_guide.html"> Quick Guide for the Impatient</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="shmem/quick_guide.html#shmem.qg_memory_pool"> Using shared memory as a pool of unnamed memory blocks</a></span></dt>
+<dt><span class="section"><a href="shmem/quick_guide.html#shmem.qg_named_shmem"> Creating named shared memory objects</a></span></dt>
+<dt><span class="section"><a href="shmem/quick_guide.html#shmem.qg_offset_ptr"> Using an offset smart pointer for shared memory</a></span></dt>
+<dt><span class="section"><a href="shmem/quick_guide.html#shmem.qg_shmem_container"> Creating vectors in shared memory with different base addresses</a></span></dt>
+<dt><span class="section"><a href="shmem/quick_guide.html#shmem.qg_mapping"> Using STL containers and mapping the memory at a fixed address</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="shmem/limitations.html"> Current limitations</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="shmem/limitations.html#shmem.growing_limitation"> Memory growth Limitation</a></span></dt>
+<dt><span class="section"><a href="shmem/limitations.html#shmem.stl_limitation"> Problems with most STL implementations</a></span></dt>
+<dt><span class="section"><a href="shmem/limitations.html#shmem.offset_pointer"> Offset pointers instead of raw pointers</a></span></dt>
+<dt><span class="section"><a href="shmem/limitations.html#shmem.references_forbidden"> References forbidden</a></span></dt>
+<dt><span class="section"><a href="shmem/limitations.html#shmem.virtuality_limitation"> Virtuality forbidden</a></span></dt>
+<dt><span class="section"><a href="shmem/limitations.html#shmem.statics_warning"> Be careful with static class members</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="shmem/rationale.html"> Rationale</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="shmem/rationale.html#shmem.rationale_mutex"> Rationale for process-shared mutexes and condition variables</a></span></dt>
+<dt><span class="section"><a href="shmem/rationale.html#shmem.rationale_containers"> Rationale for process-shared STL compatible containers</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="shmem/concepts.html"> Concepts and definitions</a></span></dt>
+<dt><span class="section"><a href="shmem/oswrappers.html"> Basic Shmem classes</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="shmem/oswrappers.html#shmem.shared_memory"> Shared memory</a></span></dt>
+<dt><span class="section"><a href="shmem/oswrappers.html#shmem.mmapped_file"> Memory mapped file</a></span></dt>
+<dt><span class="section"><a href="shmem/oswrappers.html#shmem.shared_mutex"> Process-shared mutexes</a></span></dt>
+<dt><span class="section"><a href="shmem/oswrappers.html#shmem.shared_condition"> Process-shared condition variables</a></span></dt>
+<dt><span class="section"><a href="shmem/oswrappers.html#shmem.named_semaphore"> Named semaphore</a></span></dt>
+<dt><span class="section"><a href="shmem/oswrappers.html#shmem.named_mutex"> Named mutex</a></span></dt>
+<dt><span class="section"><a href="shmem/oswrappers.html#shmem.shared_barrier"> Process-shared barrier</a></span></dt>
+<dt><span class="section"><a href="shmem/oswrappers.html#shmem.shared_read_write_mutex"> Process-shared read/write mutexes</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="shmem/offset_ptr.html"> A shared memory pointer: offset_ptr</a></span></dt>
+<dt><span class="section"><a href="shmem/named_shared_object.html"> Named shared memory object allocation</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="shmem/named_shared_object.html#shmem.named_shared_object_int"> The interface</a></span></dt>
+<dt><span class="section"><a href="shmem/named_shared_object.html#shmem.common_named_shared_objects"> Common named shared object classes</a></span></dt>
+<dt><span class="section"><a href="shmem/named_shared_object.html#shmem.allocate_deallocate"> Allocating fragments of a shared memory segment</a></span></dt>
+<dt><span class="section"><a href="shmem/named_shared_object.html#shmem.segment_offset"> Obtaining offsets to identify data</a></span></dt>
+<dt><span class="section"><a href="shmem/named_shared_object.html#shmem.allocation_types"> Object construction function family</a></span></dt>
+<dt><span class="section"><a href="shmem/named_shared_object.html#shmem.anonymous"> Anonymous instance construction</a></span></dt>
+<dt><span class="section"><a href="shmem/named_shared_object.html#shmem.unique"> Unique instance construction</a></span></dt>
+<dt><span class="section"><a href="shmem/named_shared_object.html#shmem.index_types"> Index types for name/object mappings</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="shmem/stl_allocators.html"> Shmem STL compatible allocators</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="shmem/stl_allocators.html#shmem.allocator_introduction"> Introduction to Shmem STL compatible allocators</a></span></dt>
+<dt><span class="section"><a href="shmem/stl_allocators.html#shmem.allocator"> boost::shmem::allocator: The shared memory STL compatible allocator</a></span></dt>
+<dt><span class="section"><a href="shmem/stl_allocators.html#shmem.node_allocator"> boost::shmem::node_allocator: a simple segregated storage between processes</a></span></dt>
+<dt><span class="section"><a href="shmem/stl_allocators.html#shmem.private_allocator"> boost::shmem::private_allocator: a private segregated storage</a></span></dt>
+<dt><span class="section"><a href="shmem/stl_allocators.html#shmem.cached_node_allocator"> boost::shmem::cached_node_allocator: caching nodes to avoid overhead</a></span></dt>
+<dt><span class="section"><a href="shmem/stl_allocators.html#shmem.allocator_swapping"> Swapping Shmem STL compatible allocators</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="shmem/containers_explained.html"> Shmem and containers in shared memory</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="shmem/containers_explained.html#shmem.stl_container_requirements"> Container requirements for Shmem allocators</a></span></dt>
+<dt><span class="section"><a href="shmem/containers_explained.html#shmem.containers"> STL containers in shared memory</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="shmem/customizing_boost_shmem.html"> Customizing Shmem</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="shmem/customizing_boost_shmem.html#shmem.custom_shmem_alloc"> Writing a new shared memory allocation algorithm</a></span></dt>
+<dt><span class="section"><a href="shmem/customizing_boost_shmem.html#shmem.custom_allocators"> Building custom STL compatible allocators for Shmem</a></span></dt>
+<dt><span class="section"><a href="shmem/customizing_boost_shmem.html#shmem.custom_indexes"> Building custom indexes</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="shmem/beyond_shared_memory.html"> Beyond shared memory</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="shmem/beyond_shared_memory.html#shmem.user_buffer_shmem"> Constructing all Shmem objects in a user provided buffer</a></span></dt>
+<dt><span class="section"><a href="shmem/beyond_shared_memory.html#shmem.heap_buffer_shmem"> Shmem machinery in heap memory</a></span></dt>
+<dt><span class="section"><a href="shmem/beyond_shared_memory.html#shmem.memory_mapped_shmem"> Shmem with memory-mapped files</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="shmem/streams.html"> Direct iostream formatting: vectorstream and bufferstream</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="shmem/streams.html#shmem.vectorstream"> Formatting directly in your character vector: vectorstream</a></span></dt>
+<dt><span class="section"><a href="shmem/streams.html#shmem.bufferstream"> Formatting directly in your character buffer: bufferstream</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="shmem/shared_message_queue.html"> Process-shared message queue</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="shmem/shared_message_queue.html#shmem.shared_message_queue_int"> The interface</a></span></dt>
+<dt><span class="section"><a href="shmem/shared_message_queue.html#shmem.shared_message_queue_ex"> Example: Serializing a database through the message queue</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="shmem/architecture.html"> Shmem architecture and internals</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="shmem/architecture.html#shmem.basic_guidelines"> Basic guidelines</a></span></dt>
+<dt><span class="section"><a href="shmem/architecture.html#shmem.architecture_memory_algorithm"> The memory algorithm</a></span></dt>
+<dt><span class="section"><a href="shmem/architecture.html#shmem.architecture_segment_manager"> The segment manager</a></span></dt>
+<dt><span class="section"><a href="shmem/architecture.html#shmem.architecture_front_end"> Shmem front-ends</a></span></dt>
+<dt><span class="section"><a href="shmem/architecture.html#shmem.architecture_allocators"> Shmem allocators</a></span></dt>
+<dt><span class="section"><a href="shmem/architecture.html#shmem.architecture_containers"> Shmem containers</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="shmem/open_issues.html"> Open Issues</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="shmem/open_issues.html#shmem.open_names"> Class names</a></span></dt>
+<dt><span class="section"><a href="shmem/open_issues.html#shmem.open_objectnames"> Names of Shmem basic resources</a></span></dt>
+<dt><span class="section"><a href="shmem/open_issues.html#shmem.open_time"> Time management should be changed</a></span></dt>
+<dt><span class="section"><a href="shmem/open_issues.html#shmem.open_sync"> Interface of synchronization primitives and Boost Thread</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="shmem/future_improvements.html"> Future Improvements...</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="shmem/future_improvements.html#shmem.win32_sync"> Win32 synchronization is too basic</a></span></dt>
+<dt><span class="section"><a href="shmem/future_improvements.html#shmem.default_algorithm"> Default allocation algorithm can be improved</a></span></dt>
+<dt><span class="section"><a href="shmem/future_improvements.html#shmem.future_objectnames"> Use of wide character names on Shmem basic resources</a></span></dt>
+<dt><span class="section"><a href="shmem/future_improvements.html#shmem.future_security"> Security attributes</a></span></dt>
+<dt><span class="section"><a href="shmem/future_improvements.html#shmem.future_ipc"> Future inter-process communications</a></span></dt>
+<dt><span class="section"><a href="shmem/future_improvements.html#shmem.future_containers"> Unordered associative containers and other containers</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="shmem/thanks_to.html"> Thanks to...</a></span></dt>
+<dt><span class="section"><a href="shmem/references.html"> References and interesting links</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="shmem/references.html#shmem.references_books"> Books</a></span></dt>
+<dt><span class="section"><a href="shmem/references.html#shmem.references_links"> Links</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="shmem/reference.html">Reference</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="shmem/reference.html#id294958">Header &lt;boost/shmem/allocators/allocator.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id295565">Header &lt;boost/shmem/allocators/cached_node_allocator.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id296837">Header &lt;boost/shmem/allocators/detail/node_pool.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id296863">Header &lt;boost/shmem/allocators/node_allocator.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id298421">Header &lt;boost/shmem/allocators/private_node_allocator.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id299510">Header &lt;boost/shmem/exceptions.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id299701">Header &lt;boost/shmem/indexes/flat_map_index.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id299954">Header &lt;boost/shmem/indexes/map_index.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id300254">Header &lt;boost/shmem/indexes/null_map_index.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id300342">Header &lt;boost/shmem/indexes/unordered_map_index.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id300644">Header &lt;boost/shmem/ipc/shared_message_queue.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id301761">Header &lt;boost/shmem/mem_algo/basic_seq_fit.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id302224">Header &lt;boost/shmem/mem_algo/basic_simple_seq_fit.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id302753">Header &lt;boost/shmem/mem_algo/multi_seq_fit.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id302869">Header &lt;boost/shmem/mem_algo/multi_simple_seq_fit.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id303027">Header &lt;boost/shmem/mem_algo/seq_fit.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id303143">Header &lt;boost/shmem/mem_algo/simple_seq_fit.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id303260">Header &lt;boost/shmem/mmapped_file.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id303706">Header &lt;boost/shmem/named_heap_object.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id304214">Header &lt;boost/shmem/named_mfile_object.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id304533">Header &lt;boost/shmem/named_shared_object.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id305017">Header &lt;boost/shmem/named_user_object.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id305248">Header &lt;boost/shmem/offset_ptr.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id308046">Header &lt;boost/shmem/shared_memory.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id309108">Header &lt;boost/shmem/shmem_fwd.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id309429">Header &lt;boost/shmem/streams/bufferstream.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id311092">Header &lt;boost/shmem/streams/vectorstream.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id312864">Header &lt;boost/shmem/sync/lock.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id313633">Header &lt;boost/shmem/sync/named_mutex.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id313974">Header &lt;boost/shmem/sync/named_semaphore.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id314344">Header &lt;boost/shmem/sync/null_mutex.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id314617">Header &lt;boost/shmem/sync/read_write_lock.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id317353">Header &lt;boost/shmem/sync/shared_barrier.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id317481">Header &lt;boost/shmem/sync/shared_condition.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id317956">Header &lt;boost/shmem/sync/shared_mutex.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id318510">Header &lt;boost/shmem/sync/shared_mutex_family.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id318783">Header &lt;boost/shmem/sync/shared_read_write_mutex.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id320032">Header &lt;boost/shmem/sync/shared_recursive_mutex.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id320672">Header &lt;boost/shmem/sync/xtime.hpp&gt;</a></span></dt>
+</dl></dd>
+</dl>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="shmem.intro"></a> Introduction</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="index.html#shmem.disclaimer"> Disclaimer: Shmem is NOT a Boost library</a></span></dt>
+<dt><span class="section"><a href="index.html#shmem.introduction"> Introduction</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.disclaimer"></a> Disclaimer: Shmem is NOT a Boost library</h3></div></div></div>
+<p>
+The Shmem library is being developed under Boost libraries conditions since a
+Boost review process will possibly be requested in a near future, to check if 
+this library is good enough to be part of Boost libraries.</p>
+<p>
+Shmem classes are contained in boost::shmem namespace but this namespace is 
+not reserved in Boost for this library, although this library is being 
+developed and improved by Boost mailing list members.</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.introduction"></a> Introduction</h3></div></div></div>
+<p>
+The Shmem Library simplifies the use of shared memory and provides 
+some STL compatible allocators that allow shared memory STL container 
+placement. It also offers helper classes, such as offset pointers, 
+process shared mutexes, condition variables, and named semaphores.</p>
+<p>
+Library user can apply all STL algorithms and utilities with 
+created shared memory objects. Shmem also wants to present 
+a portable implementation, unifying UNIX and Windows shared 
+memory object creation, providing simple wrapper classes.</p>
+<p>
+Shmem offers the following to the user:</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<a href="shmem/oswrappers.html" title=" Basic Shmem classes">Portable synchronization 
+   primitives</a> for shared memory, including shared 
+   mutexes and shared condition variables.
+</li>
+<li>
+<a href="shmem/named_shared_object.html#shmem.allocate_deallocate" title=" Allocating fragments of a shared memory segment">Dynamic allocation</a> of portions of a shared memory segment.
+</li>
+<li>
+<a href="shmem/named_shared_object.html" title=" Named shared memory object allocation">Named allocation in shared memory.</a> Shmem can create objects in shared memory 
+   and associate it with a c-string offering a similar mechanism to a named
+   new/delete. Created object can be found by other processes using Shmem framework.
+</li>
+<li>
+<a href="shmem/offset_ptr.html" title=" A shared memory pointer: offset_ptr">Offset pointers</a> that can be safely placed in shared memory to point to 
+   another object of the same shared memory segment even if the memory is mapped 
+   to a different address.
+</li>
+<li>
+<a href="shmem/stl_allocators.html" title=" Shmem STL compatible allocators">STL compatible shared memory allocators</a> 
+   so that STL containers can be placed in shared memory. Shmem also offers 
+   a pooled node allocator to save and optimize shared memory allocation in 
+   node containers.
+</li>
+<li>
+<a href="shmem/containers_explained.html#shmem.containers" title=" STL containers in shared memory">STL compatible containers</a> for systems with STL 
+   implementations that cannot deal with shared memory. The user can map shared 
+   memory to different addresses and use STL compatible containers and algorithms. 
+   Useful to store common data or implement shared memory databases. These 
+   containers also show how STL compatible containers can make use of shared 
+   memory STL compatible allocators to place such containers in the shared 
+   memory. Shmem also offers the basic_string pseudo-container to use 
+   full-powered C++ strings in shared memory.
+</li>
+</ul></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><small><p>Last revised: January 02, 2006 at 00:00:00 GMT</p></small></td>
+<td align="right"><small></small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="shmem/quick_guide.html"><img src="images/next.png" alt="Next"></a></div>
+</body>
+</html>

@@ -1,0 +1,426 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Quick Guide for the Impatient</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="prev" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="next" href="limitations.html" title=" Current limitations">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="boost.png (6897 bytes)" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="limitations.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="shmem.quick_guide"></a> Quick Guide for the Impatient</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="quick_guide.html#shmem.qg_memory_pool"> Using shared memory as a pool of unnamed memory blocks</a></span></dt>
+<dt><span class="section"><a href="quick_guide.html#shmem.qg_named_shmem"> Creating named shared memory objects</a></span></dt>
+<dt><span class="section"><a href="quick_guide.html#shmem.qg_offset_ptr"> Using an offset smart pointer for shared memory</a></span></dt>
+<dt><span class="section"><a href="quick_guide.html#shmem.qg_shmem_container"> Creating vectors in shared memory with different base addresses</a></span></dt>
+<dt><span class="section"><a href="quick_guide.html#shmem.qg_mapping"> Using STL containers and mapping the memory at a fixed address</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.qg_memory_pool"></a> Using shared memory as a pool of unnamed memory blocks</h3></div></div></div>
+<p>
+You can just allocate a portion of a shared memory segment, copy the 
+message to that buffer, send the offset of that portion of shared 
+memory to another process, and you are done. Let's see the example:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="preprocessor">#include</span><span class="special"> &lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">shmem</span><span class="special">/</span><span class="identifier">named_shared_object</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span><span class="preprocessor">
+#include</span><span class="special"> &lt;</span><span class="identifier">cstddef</span><span class="special">&gt;</span><span class="keyword">
+
+int</span><span class="identifier"> main</span><span class="special"> ()</span><span class="special">
+{</span><span class="keyword">
+   using</span><span class="keyword"> namespace</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">;</span><span class="comment">
+
+   //A shared memory front-end that is able to 
+   //allocate raw memory buffers from a shared memory segment
+</span><span class="identifier">   named_shared_object</span><span class="identifier"> segment</span><span class="special">;</span><span class="comment">
+
+   //Create the shared memory segment and initialize needed resources
+</span><span class="keyword">   if</span><span class="special">(!</span><span class="identifier">segment</span><span class="special">.</span><span class="identifier">create</span><span class="special">(</span><span class="string">"/MySharedMemory"</span><span class="special">,</span><span class="comment">  //segment name
+</span><span class="number">                     65536</span><span class="special">)){</span><span class="comment">            //segment size in bytes
+</span><span class="keyword">      return</span><span class="special"> -</span><span class="number">1</span><span class="special">;</span><span class="special">
+   }</span><span class="comment">
+
+   //Allocate a portion of the segment
+</span><span class="keyword">   void</span><span class="special"> *</span><span class="identifier"> shptr</span><span class="special">   =</span><span class="identifier"> segment</span><span class="special">.</span><span class="identifier">allocate</span><span class="special">(</span><span class="number">1024</span><span class="comment">/*bytes to allocate*/</span><span class="special">);</span><span class="comment">
+
+   //An offset from the base address can identify any byte of the shared 
+   //memory segment even if it is mapped in different base addresses
+</span><span class="identifier">   std</span><span class="special">::</span><span class="identifier">ptrdiff_t</span><span class="identifier"> offset</span><span class="special"> =</span><span class="identifier"> segment</span><span class="special">.</span><span class="identifier">get_offset_from_address</span><span class="special">(</span><span class="identifier">shptr</span><span class="special">);</span><span class="special">
+   (</span><span class="keyword">void</span><span class="special">)</span><span class="identifier">offset</span><span class="special">;</span><span class="comment">
+   // Copy message to buffer
+   // . . .
+   // Send offset to other process
+   // . . .
+   // Wait response from other process
+   // . . .
+
+   //Deallocate the portion previously allocated
+</span><span class="identifier">   segment</span><span class="special">.</span><span class="identifier">deallocate</span><span class="special">(</span><span class="identifier">shptr</span><span class="special">);</span><span class="keyword">
+   return</span><span class="number"> 0</span><span class="special">;</span><span class="special">
+}</span></code></pre>
+<p>
+In receiver process one just could write the following lines:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="preprocessor">#include</span><span class="special"> &lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">shmem</span><span class="special">/</span><span class="identifier">named_shared_object</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span><span class="preprocessor">
+#include</span><span class="special"> &lt;</span><span class="identifier">cstddef</span><span class="special">&gt;</span><span class="keyword">
+
+int</span><span class="identifier"> main</span><span class="special"> ()</span><span class="special">
+{</span><span class="keyword">
+   using</span><span class="keyword"> namespace</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">;</span><span class="comment">
+
+   //A shared memory front-end that is able to 
+   //allocate raw memory buffers from a shared memory segment
+</span><span class="identifier">   named_shared_object</span><span class="identifier"> segment</span><span class="special">;</span><span class="comment">
+
+   //Connect to the shared memory segment and initialize needed resources
+</span><span class="keyword">   if</span><span class="special">(!</span><span class="identifier">segment</span><span class="special">.</span><span class="identifier">open</span><span class="special">(</span><span class="string">"/MySharedMemory"</span><span class="special">)){</span><span class="comment">  //segment name
+</span><span class="keyword">      return</span><span class="special"> -</span><span class="number">1</span><span class="special">;</span><span class="special">
+   }</span><span class="comment">
+
+   //An offset from the base address can identify any byte of the shared 
+   //memory segment even if it is mapped in different base addresses
+</span><span class="identifier">   std</span><span class="special">::</span><span class="identifier">ptrdiff_t</span><span class="identifier"> offset</span><span class="special"> =</span><span class="number"> 0</span><span class="special">;</span><span class="comment">
+
+   //Wait offset msg from the other process and put it in
+   //"offset" local variable
+   //Get buffer local address from offset
+</span><span class="keyword">   void</span><span class="special"> *</span><span class="identifier">msg</span><span class="special"> =</span><span class="identifier"> segment</span><span class="special">.</span><span class="identifier">get_address_from_offset</span><span class="special">(</span><span class="identifier">offset</span><span class="special">);</span><span class="special">
+   (</span><span class="keyword">void</span><span class="special">)</span><span class="identifier">msg</span><span class="special">;</span><span class="comment">
+   //Do anything with msg
+   //. . .
+   //Send ack to sender process
+</span><span class="keyword">   return</span><span class="number"> 0</span><span class="special">;</span><span class="special">
+}</span></code></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.qg_named_shmem"></a> Creating named shared memory objects</h3></div></div></div>
+<p>
+You want to create objects in a shared memory segment, giving a string name to them so that 
+any other process can find, use and delete them from the segment when the objects are not 
+needed anymore. Just write this code in one process:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="preprocessor">#include</span><span class="special"> &lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">shmem</span><span class="special">/</span><span class="identifier">named_shared_object</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span><span class="keyword">
+
+int</span><span class="identifier"> main</span><span class="special"> ()</span><span class="special">
+{</span><span class="keyword">
+   using</span><span class="keyword"> namespace</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">,</span><span class="keyword"> int</span><span class="special">&gt;</span><span class="identifier"> MyType</span><span class="special">;</span><span class="comment">
+
+   //A shared memory front-end that is able to construct 
+   //objects associated with a c-string
+</span><span class="identifier">   named_shared_object</span><span class="identifier"> segment</span><span class="special">;</span><span class="comment">
+
+   //Create the shared memory segment and initialize resources
+</span><span class="keyword">   if</span><span class="special">(!</span><span class="identifier">segment</span><span class="special">.</span><span class="identifier">create</span><span class="special">(</span><span class="string">"/MySharedMemory"</span><span class="special">,</span><span class="comment">  //segment name
+</span><span class="number">                      65536</span><span class="special">)){</span><span class="comment">            //segment size in bytes
+</span><span class="keyword">      return</span><span class="special"> -</span><span class="number">1</span><span class="special">;</span><span class="special">
+   }</span><span class="comment">
+                  
+
+   //Create an object of MyType initialized to {0.0, 0}
+</span><span class="identifier">   MyType</span><span class="special"> *</span><span class="identifier">instance</span><span class="special"> =</span><span class="identifier"> segment</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;</span><span class="special">
+      (</span><span class="string">"MyType instance"</span><span class="special">)</span><span class="comment">  /*name of the object*/</span><span class="special">
+      (</span><span class="number">0.0</span><span class="comment">                 /*ctor first argument*/</span><span class="special">,</span><span class="number">
+       0</span><span class="comment">                   /*ctor second argument*/</span><span class="special">);</span><span class="comment">    
+
+   //Create an array of 10 elements of MyType initialized to {0.0, 0}
+</span><span class="identifier">   MyType</span><span class="special"> *</span><span class="identifier">array</span><span class="special"> =</span><span class="identifier"> segment</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;</span><span class="special">
+      (</span><span class="string">"MyType array"</span><span class="special">)</span><span class="comment">     /*name of the object*/</span><span class="special">
+      [</span><span class="number">10</span><span class="special">]</span><span class="comment">                 /*number of elements*/</span><span class="special">
+      (</span><span class="number">0.0</span><span class="comment">                 /*ctor first argument*/</span><span class="special">,</span><span class="number">
+       0</span><span class="comment">                   /*ctor second argument*/</span><span class="special">);</span><span class="keyword">    
+   return</span><span class="number"> 0</span><span class="special">;</span><span class="special">
+}</span></code></pre>
+<p>
+In other process, while the first process is alive, execute the following:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="preprocessor">#include</span><span class="special"> &lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">shmem</span><span class="special">/</span><span class="identifier">named_shared_object</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span><span class="preprocessor">
+#include</span><span class="special"> &lt;</span><span class="identifier">cstddef</span><span class="special">&gt;</span><span class="preprocessor">
+#include</span><span class="special"> &lt;</span><span class="identifier">assert</span><span class="special">.</span><span class="identifier">h</span><span class="special">&gt;</span><span class="keyword">
+
+int</span><span class="identifier"> main</span><span class="special"> ()</span><span class="special">
+{</span><span class="keyword">
+   using</span><span class="keyword"> namespace</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">,</span><span class="keyword"> int</span><span class="special">&gt;</span><span class="identifier"> MyType</span><span class="special">;</span><span class="comment">
+
+   //A shared memory front-end that is able to construct 
+   //objects associated with a c-string
+</span><span class="identifier">   named_shared_object</span><span class="identifier"> segment</span><span class="special">;</span><span class="comment">
+
+   //Connect to the shared memory segment and initialize resources
+</span><span class="keyword">   if</span><span class="special">(!</span><span class="identifier">segment</span><span class="special">.</span><span class="identifier">open</span><span class="special">(</span><span class="string">"/MySharedMemory"</span><span class="special">)){</span><span class="keyword">
+      return</span><span class="special"> -</span><span class="number">1</span><span class="special">;</span><span class="special">
+   }</span><span class="comment">
+
+   //Find the array and object
+</span><span class="identifier">   std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">*,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;</span><span class="identifier"> res</span><span class="special">;</span><span class="identifier">
+   res</span><span class="special"> =</span><span class="identifier"> segment</span><span class="special">.</span><span class="identifier">find</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;</span><span class="special"> (</span><span class="string">"MyType array"</span><span class="special">);</span><span class="identifier">   
+
+   std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> array_len</span><span class="special">   =</span><span class="identifier"> res</span><span class="special">.</span><span class="identifier">second</span><span class="special">;</span><span class="comment">
+   //Length should be 10
+</span><span class="identifier">   assert</span><span class="special">(</span><span class="identifier">array_len</span><span class="special"> ==</span><span class="number"> 10</span><span class="special">);</span><span class="comment">
+
+   //Find the array and the object
+</span><span class="identifier">   res</span><span class="special"> =</span><span class="identifier"> segment</span><span class="special">.</span><span class="identifier">find</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;</span><span class="special"> (</span><span class="string">"MyType instance"</span><span class="special">);</span><span class="identifier">   
+
+   std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> len</span><span class="special">   =</span><span class="identifier"> res</span><span class="special">.</span><span class="identifier">second</span><span class="special">;</span><span class="comment">
+
+   //Length should be 1
+</span><span class="identifier">   assert</span><span class="special">(</span><span class="identifier">len</span><span class="special"> ==</span><span class="number"> 1</span><span class="special">);</span><span class="comment">
+
+   //Use data
+   // . . . 
+
+   //We're done, delete array from memory
+</span><span class="identifier">   segment</span><span class="special">.</span><span class="identifier">destroy</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;(</span><span class="string">"MyType array"</span><span class="special">);</span><span class="comment">
+
+   //We're done, delete object from memory
+</span><span class="identifier">   segment</span><span class="special">.</span><span class="identifier">destroy</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;(</span><span class="string">"MyType instance"</span><span class="special">);</span><span class="keyword">
+   return</span><span class="number"> 0</span><span class="special">;</span><span class="special">
+}</span></code></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.qg_offset_ptr"></a> Using an offset smart pointer for shared memory</h3></div></div></div>
+<p>
+Shmem offers offset_ptr smart pointer family 
+as an offset pointer that stores the distance between the address of 
+the offset pointer itself and the address of the pointed object.  
+When this pointer is placed in a shared memory segment, it 
+can point safely objects stored in the same shared 
+memory segment, even if the segment is mapped in 
+different base addresses in different processes.</p>
+<p>
+This allows placing objects with pointer members 
+in shared memory. For example, if we want to create 
+a linked list in shared memory:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="preprocessor">#include</span><span class="special"> &lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">shmem</span><span class="special">/</span><span class="identifier">named_shared_object</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span><span class="preprocessor">
+#include</span><span class="special"> &lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">shmem</span><span class="special">/</span><span class="identifier">offset_ptr</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span><span class="keyword">
+
+using</span><span class="keyword"> namespace</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">;</span><span class="comment">
+
+//Shared memory linked list node
+</span><span class="keyword">struct</span><span class="identifier"> list_node</span><span class="special">
+{</span><span class="identifier">
+   offset_ptr</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&gt;</span><span class="identifier"> next</span><span class="special">;</span><span class="keyword">
+   int</span><span class="identifier">                   value</span><span class="special">;</span><span class="special">
+};</span><span class="keyword">
+
+int</span><span class="identifier"> main</span><span class="special"> ()</span><span class="special">
+{</span><span class="comment">
+   //Create shared memory
+</span><span class="identifier">   named_shared_object</span><span class="identifier"> segment</span><span class="special">;</span><span class="identifier">
+   segment</span><span class="special">.</span><span class="identifier">create</span><span class="special">(</span><span class="string">"/MySharedMemory"</span><span class="special">,//</span><span class="identifier">segment</span><span class="identifier"> name</span><span class="number">
+                  65536</span><span class="special">);</span><span class="comment">           //segment size in bytes
+
+   //Create linked list with 10 nodes in shared memory
+</span><span class="identifier">   offset_ptr</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&gt;</span><span class="identifier"> prev</span><span class="special"> =</span><span class="number"> 0</span><span class="special">,</span><span class="identifier"> current</span><span class="special">,</span><span class="identifier"> first</span><span class="special">;</span><span class="keyword">
+
+   int</span><span class="identifier"> i</span><span class="special">;</span><span class="keyword">
+   for</span><span class="special">(</span><span class="identifier">i</span><span class="special"> =</span><span class="number"> 0</span><span class="special">;</span><span class="identifier"> i</span><span class="special"> &lt;</span><span class="number"> 10</span><span class="special">;</span><span class="special"> ++</span><span class="identifier">i</span><span class="special">,</span><span class="identifier"> prev</span><span class="special"> =</span><span class="identifier"> current</span><span class="special">){</span><span class="identifier">
+      current</span><span class="special"> =</span><span class="keyword"> static_cast</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">*&gt;(</span><span class="identifier">segment</span><span class="special">.</span><span class="identifier">allocate</span><span class="special">(</span><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">list_node</span><span class="special">)));</span><span class="identifier">
+      current</span><span class="special">-&gt;</span><span class="identifier">value</span><span class="special"> =</span><span class="identifier"> i</span><span class="special">;</span><span class="identifier">
+      current</span><span class="special">-&gt;</span><span class="identifier">next</span><span class="special">  =</span><span class="number"> 0</span><span class="special">;</span><span class="keyword">
+
+      if</span><span class="special">(!</span><span class="identifier">prev</span><span class="special">)</span><span class="identifier">
+         first</span><span class="special"> =</span><span class="identifier"> current</span><span class="special">;</span><span class="keyword">
+      else</span><span class="identifier">
+         prev</span><span class="special">-&gt;</span><span class="identifier">next</span><span class="special"> =</span><span class="identifier"> current</span><span class="special">;</span><span class="special">
+   }</span><span class="comment">
+
+   //Communicate list to other processes
+   //. . .
+   //When done, destroy list
+</span><span class="keyword">   for</span><span class="special">(</span><span class="identifier">current</span><span class="special"> =</span><span class="identifier"> first</span><span class="special">;</span><span class="identifier"> current</span><span class="special">;</span><span class="comment"> /**/</span><span class="special">){</span><span class="identifier">
+      prev</span><span class="special"> =</span><span class="identifier"> current</span><span class="special">;</span><span class="identifier">
+      current</span><span class="special"> =</span><span class="identifier"> current</span><span class="special">-&gt;</span><span class="identifier">next</span><span class="identifier">
+      segment</span><span class="special">.</span><span class="identifier">deallocate</span><span class="special">(</span><span class="identifier">prev</span><span class="special">.</span><span class="identifier">get</span><span class="special">());</span><span class="special">
+   }</span><span class="keyword">
+   return</span><span class="number"> 0</span><span class="special">;</span><span class="special">
+}</span></code></pre>
+<p>
+To help with basic data structures, Shmem offers containers like vector, list, map,
+so you can avoid these manual data structures just like with standard containers.</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.qg_shmem_container"></a> Creating vectors in shared memory with different base addresses</h3></div></div></div>
+<p>
+To place STL-compatible containers in shared memory, Shmem allocators
+define allocator&lt;T&gt;::pointer typedef as offset_ptr&lt;T&gt;, instead of T*.
+Although the use of smart pointers is allowed by the standard, 
+current STL implementations can't handle Shmem shared memory STL 
+compatible allocators.</p>
+<p>
+Until STL implementations fix this and for older STL owners, 
+Shmem provides STL compatible containers. 
+All these containers can be safely placed 
+in shared memory. For this, we need to obtain STL compatible 
+shared memory allocators and pass them to the Shmem containers
+in constructors:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="preprocessor">#include</span><span class="special"> &lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">shmem</span><span class="special">/</span><span class="identifier">containers</span><span class="special">/</span><span class="identifier">vector</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span><span class="preprocessor">
+#include</span><span class="special"> &lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">shmem</span><span class="special">/</span><span class="identifier">named_shared_object</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span><span class="preprocessor">
+#include</span><span class="special"> &lt;</span><span class="identifier">algorithm</span><span class="special">&gt;</span><span class="keyword">
+
+int</span><span class="identifier"> main</span><span class="special"> ()</span><span class="special">
+{</span><span class="keyword">
+   using</span><span class="keyword"> namespace</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">;</span><span class="comment">
+
+   //Shared memory front-end that is able to construct objects
+   //associated with a c-string
+</span><span class="identifier">   named_shared_object</span><span class="identifier"> segment</span><span class="special">;</span><span class="comment">
+
+   //Create the memory segment and initialize resources
+</span><span class="keyword">   if</span><span class="special">(!</span><span class="identifier">segment</span><span class="special">.</span><span class="identifier">create</span><span class="special">(</span><span class="string">"/MySharedMemory"</span><span class="special">,</span><span class="comment">  //segment name
+</span><span class="number">                      65536</span><span class="special">)){</span><span class="comment">            //segment size in bytes
+</span><span class="keyword">      return</span><span class="special"> -</span><span class="number">1</span><span class="special">;</span><span class="special">
+   }</span><span class="comment">
+
+   //Alias an STL compatible allocator of ints that allocates ints from the segment
+</span><span class="keyword">   typedef</span><span class="identifier"> allocator</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="identifier"> named_shared_object</span><span class="special">::</span><span class="identifier">segment_manager</span><span class="special">&gt;</span><span class="identifier"> ShmemAllocator</span><span class="special">;</span><span class="comment">
+
+   //Alias a vector that uses the previous STL compatible allocator
+</span><span class="keyword">   typedef</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="identifier"> ShmemAllocator</span><span class="special">&gt;</span><span class="identifier"> MyVector</span><span class="special">;</span><span class="keyword">
+
+   int</span><span class="identifier"> initVal</span><span class="special">[]</span><span class="special"> =</span><span class="special"> {</span><span class="number">0</span><span class="special">,</span><span class="number"> 1</span><span class="special">,</span><span class="number"> 2</span><span class="special">,</span><span class="number"> 3</span><span class="special">,</span><span class="number"> 4</span><span class="special">,</span><span class="number"> 5</span><span class="special">,</span><span class="number"> 6</span><span class="special"> };</span><span class="keyword">
+   const</span><span class="keyword"> int</span><span class="special"> *</span><span class="identifier">begVal</span><span class="special">    =</span><span class="identifier"> initVal</span><span class="special">;</span><span class="keyword">
+   const</span><span class="keyword"> int</span><span class="special"> *</span><span class="identifier">endVal</span><span class="special">    =</span><span class="identifier"> initVal</span><span class="special"> +</span><span class="keyword"> sizeof</span><span class="special">(</span><span class="identifier">initVal</span><span class="special">)/</span><span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">initVal</span><span class="special">[</span><span class="number">0</span><span class="special">]);</span><span class="comment">
+
+   //Initialize the STL compatible allocator
+</span><span class="keyword">   const</span><span class="identifier"> ShmemAllocator</span><span class="identifier"> alloc_inst</span><span class="special"> (</span><span class="identifier">segment</span><span class="special">.</span><span class="identifier">get_segment_manager</span><span class="special">());</span><span class="comment">
+
+   //Construct the vector in the shared memory segment with the STL compatible allocator 
+   //from a range of iterators
+</span><span class="identifier">   MyVector</span><span class="special"> *</span><span class="identifier">myvector</span><span class="special"> =</span><span class="identifier"> 
+      segment</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="identifier">MyVector</span><span class="special">&gt;</span><span class="special">
+        (</span><span class="string">"MyVector"</span><span class="special">)/*</span><span class="identifier">object</span><span class="identifier"> name</span><span class="special">*/</span><span class="special">
+        (</span><span class="identifier">begVal</span><span class="comment">     /*first ctor parameter*/</span><span class="special">,</span><span class="identifier">
+         endVal</span><span class="comment">     /*second ctor parameter*/</span><span class="special">,</span><span class="identifier"> 
+         alloc_inst</span><span class="comment"> /*third ctor parameter*/</span><span class="special">);</span><span class="comment"> 
+
+   //Use vector as your want
+</span><span class="identifier">   std</span><span class="special">::</span><span class="identifier">sort</span><span class="special">(</span><span class="identifier">myvector</span><span class="special">-&gt;</span><span class="identifier">rbegin</span><span class="special">(),</span><span class="identifier"> myvector</span><span class="special">-&gt;</span><span class="identifier">rend</span><span class="special">());</span><span class="comment">
+   // . . .
+   //When done, destroy and delete vector from the segment
+</span><span class="identifier">   segment</span><span class="special">.</span><span class="identifier">destroy</span><span class="special">&lt;</span><span class="identifier">MyVector</span><span class="special">&gt;(</span><span class="string">"MyVector"</span><span class="special">);</span><span class="keyword">
+   return</span><span class="number"> 0</span><span class="special">;</span><span class="special">
+}</span></code></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.qg_mapping"></a> Using STL containers and mapping the memory at a fixed address</h3></div></div></div>
+<p>
+By default, Shmem maps the shared memory in an address chosen by the operating system, 
+but you can change this. If your STL implementation is not compatible with Shmem STL 
+compatible allocators or if you prefer to use raw pointers instead of offset ones 
+to obtain better performance (a offset pointer assignment needs a couple of arithmetic operations)
+and forget about managing offset_ptr-s, you can specify the mapping address. To do this, 
+you just have to create the shared memory passing the desired address in one process and 
+use a Shmem STL compatible allocator with a raw pointer as allocator::pointer typedef.</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="preprocessor">#include</span><span class="special"> &lt;</span><span class="identifier">vector</span><span class="special">&gt;</span><span class="preprocessor">
+#include</span><span class="special"> &lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">shmem</span><span class="special">/</span><span class="identifier">named_shared_object</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span><span class="keyword">
+
+int</span><span class="identifier"> main</span><span class="special"> ()</span><span class="special">
+{</span><span class="keyword">
+   using</span><span class="keyword"> namespace</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">;</span><span class="comment">
+   //Shared memory front-end that is able to construct objects
+   //associated with a c-string
+</span><span class="identifier">   fixed_named_shared_object</span><span class="identifier"> segment</span><span class="special">;</span><span class="comment">
+
+   //Create the memory segment at the specified address and initialize resources
+</span><span class="identifier">   segment</span><span class="special">.</span><span class="identifier">create</span><span class="special">(</span><span class="string">"/MySharedMemory"</span><span class="special">,</span><span class="comment">  //segment name
+</span><span class="number">                  65536</span><span class="special">,</span><span class="comment">              //segment size in bytes
+</span><span class="special">                  (</span><span class="keyword">void</span><span class="special">*)</span><span class="number">0x03000000</span><span class="special">);</span><span class="comment"> //mapping address
+
+   //Alias an STL compatible allocator of ints that allocates ints from the segment
+   //and that defines allocator::pointer as "int *". This allocator will be compatible
+   //with most STL implementations.
+</span><span class="keyword">   typedef</span><span class="identifier"> allocator</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="identifier"> fixed_named_shared_object</span><span class="special">::</span><span class="identifier">segment_manager</span><span class="special">&gt;</span><span class="identifier"> 
+      ShmemAllocator</span><span class="special">;</span><span class="comment">
+
+   //Alias a vector that uses the previous STL-like allocator
+</span><span class="keyword">   typedef</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="identifier"> ShmemAllocator</span><span class="special">&gt;</span><span class="identifier"> MyVector</span><span class="special">;</span><span class="comment">
+
+   //Initialize shared memory STL-compatible allocator
+</span><span class="keyword">   const</span><span class="identifier"> ShmemAllocator</span><span class="identifier"> alloc_inst</span><span class="special"> (</span><span class="identifier">segment</span><span class="special">.</span><span class="identifier">get_segment_manager</span><span class="special">());</span><span class="comment">
+
+   //Initialize vector
+</span><span class="identifier">   MyVector</span><span class="special"> *</span><span class="identifier">myvector</span><span class="special"> =</span><span class="identifier"> 
+      segment</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="identifier">MyVector</span><span class="special">&gt;(</span><span class="string">"MyVector"</span><span class="special">)</span><span class="comment"> //object name
+</span><span class="special">                                 (</span><span class="identifier">alloc_inst</span><span class="special">);//</span><span class="identifier">first</span><span class="identifier"> ctor</span><span class="identifier"> parameter</span><span class="special"> 
+   (</span><span class="keyword">void</span><span class="special">)</span><span class="identifier">myvector</span><span class="special">;</span><span class="keyword">
+   return</span><span class="number"> 0</span><span class="special">;</span><span class="special">
+}</span></code></pre>
+<p>
+Other process can open the segment and map it in the same 
+address. The container can be found using the Shmem 
+framework.</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="preprocessor">#include</span><span class="special"> &lt;</span><span class="identifier">vector</span><span class="special">&gt;</span><span class="preprocessor">
+#include</span><span class="special"> &lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">shmem</span><span class="special">/</span><span class="identifier">named_shared_object</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span><span class="keyword">
+
+int</span><span class="identifier"> main</span><span class="special"> ()</span><span class="special">
+{</span><span class="keyword">
+   using</span><span class="keyword"> namespace</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">;</span><span class="comment">
+    //Shared memory front-end that is able to construct objects
+   //associated with a c-string
+</span><span class="identifier">   fixed_named_shared_object</span><span class="identifier"> segment</span><span class="special">;</span><span class="comment">
+
+   //Open the memory segment at the specified address and initialize resources
+</span><span class="keyword">   if</span><span class="special">(!</span><span class="identifier">segment</span><span class="special">.</span><span class="identifier">open</span><span class="special">(</span><span class="string">"/MySharedMemory"</span><span class="special">,</span><span class="comment">    //segment name
+</span><span class="special">                    (</span><span class="keyword">void</span><span class="special">*)</span><span class="number">0x03000000</span><span class="special">)){</span><span class="comment">  //mapping address
+</span><span class="keyword">      return</span><span class="special"> -</span><span class="number">1</span><span class="special">;</span><span class="special">
+   }</span><span class="comment">
+
+   //Alias an STL compatible allocator of ints that allocates ints from the segment
+   //and that defines allocator::pointer as "int *". This allocator will be compatible
+   //with most STL implementations.
+</span><span class="keyword">   typedef</span><span class="identifier"> allocator</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="identifier"> fixed_named_shared_object</span><span class="special">::</span><span class="identifier">segment_manager</span><span class="special">&gt;</span><span class="identifier"> 
+      ShmemAllocator</span><span class="special">;</span><span class="comment">
+
+   //Alias a vector that uses the previous STL-like allocator
+</span><span class="keyword">   typedef</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="identifier"> ShmemAllocator</span><span class="special">&gt;</span><span class="identifier"> MyVector</span><span class="special">;</span><span class="comment">
+
+   //Find the vector using the c-string name
+</span><span class="identifier">   MyVector</span><span class="special"> *</span><span class="identifier">myvector</span><span class="special"> =</span><span class="identifier"> segment</span><span class="special">.</span><span class="identifier">find</span><span class="special">&lt;</span><span class="identifier">MyVector</span><span class="special">&gt;(</span><span class="string">"MyVector"</span><span class="special">).</span><span class="identifier">first</span><span class="special">;</span><span class="comment">
+
+   //Use vector as you want
+</span><span class="identifier">   std</span><span class="special">::</span><span class="identifier">sort</span><span class="special">(</span><span class="identifier">myvector</span><span class="special">-&gt;</span><span class="identifier">rbegin</span><span class="special">(),</span><span class="identifier"> myvector</span><span class="special">-&gt;</span><span class="identifier">rend</span><span class="special">());</span><span class="comment">
+   // . . .
+
+   //When done, destroy and delete vector
+</span><span class="identifier">   segment</span><span class="special">.</span><span class="identifier">destroy</span><span class="special">&lt;</span><span class="identifier">MyVector</span><span class="special">&gt;(</span><span class="string">"MyVector"</span><span class="special">);</span><span class="special">
+}</span></code></pre>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2005 -2006 Ion Gaztañaga</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="limitations.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Open Issues</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="prev" href="architecture.html" title=" Shmem architecture and internals">
+<link rel="next" href="future_improvements.html" title=" Future Improvements...">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="boost.png (6897 bytes)" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="architecture.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="future_improvements.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="shmem.open_issues"></a> Open Issues</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="open_issues.html#shmem.open_names"> Class names</a></span></dt>
+<dt><span class="section"><a href="open_issues.html#shmem.open_objectnames"> Names of Shmem basic resources</a></span></dt>
+<dt><span class="section"><a href="open_issues.html#shmem.open_time"> Time management should be changed</a></span></dt>
+<dt><span class="section"><a href="open_issues.html#shmem.open_sync"> Interface of synchronization primitives and Boost Thread</a></span></dt>
+</dl></div>
+<p>
+In this section open design issues are described. These should be closed
+during the review process. Some issues are related to (perhaps) soon to be 
+changed Boost Thread interface, so those will require consensus with Boost
+Threads's mantainers and users.</p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.open_names"></a> Class names</h3></div></div></div>
+<p>
+Name suggestions for class names are also welcome if people find the current 
+ones don't express well their functionality.</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.open_objectnames"></a> Names of Shmem basic resources</h3></div></div></div>
+<p>
+Currently Shmem does not guarantee their own namespace for all named basic Shmem 
+objects (shared_memory, mmapped_file, named_semaphore...), so that we can't create
+a named semaphore and a shared memory called "MyName".</p>
+<p>
+If this approach is considered harmful, during the review process we should
+reach an agreement about naming conventions.</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.open_time"></a> Time management should be changed</h3></div></div></div>
+<p>
+Shmem implements the same interface as Boost Thread with timed methods
+in synchronization primitives, like mutexes and condition variables.
+Boost Thread uses boost::xtime functions and since in single threaded
+processes we can't use Boost Thread headers, Shmem duplicates these
+functions with boost::shmem::xtime.</p>
+<p>
+However, boost::xtime was supossed to be a temporary solution until
+a general Boost time framework was developed. Shmem should follow
+Boost Thread's path and there are two ways to solve this:</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+Don't forbid using xtime with single threaded processes.
+</li>
+<li>
+Port timed functions from Boost Thread and Shmem to Boost Date_Time
+  if Date_Time provides the needed resolution for real-time programming.
+</li>
+</ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.open_sync"></a> Interface of synchronization primitives and Boost Thread</h3></div></div></div>
+<p>
+Shmem mutexes and conditions implements the same interface as Boost Thread,
+but this interface has some restrictions:</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+Boost Thread's scoped locks can't be used with Shmem, leading to duplication.
+</li>
+<li>
+Boost Thread's read_write_mutex implementation seems to hurt performance and
+  some have requested a simpler implementation.
+</li>
+<li>
+The process-shared message queue should have the same interface as a
+  future thread-shared message queue Boost Thread could have.
+</li>
+</ul></div>
+<p>
+Some personal suggestions about improving mutex and condition's interface:</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+Implement public lock(), unlock(), etc... functions for mutexes. Using
+  scoped_locks should be optional. This can convert scoped_locks in general
+  locking classes that can lock any <span class="bold"><strong>lockable</strong></span> object. Some standard proposals
+  seem to go this route.
+</li>
+<li>
+Implement read_write_mutex using with a simpler interface, without scheduling
+  issues (just like POSIX standard). This will help performance and we can
+  implement read_write_mutex using efficient atomic primitives.
+</li>
+<li>
+Design a simple message queue interface that can be used for both inter-thread
+  and inter-process communications.
+</li>
+</ul></div>
+<p>
+All these issues require coordination with Boost Thread users and developers.</p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2005 -2006 Ion Gaztañaga</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="architecture.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="future_improvements.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

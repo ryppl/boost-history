@@ -1,0 +1,335 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Process-shared message queue</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="prev" href="streams.html" title=" Direct iostream formatting: vectorstream and bufferstream">
+<link rel="next" href="architecture.html" title=" Shmem architecture and internals">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="boost.png (6897 bytes)" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="streams.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="architecture.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="shmem.shared_message_queue"></a> Process-shared message queue</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="shared_message_queue.html#shmem.shared_message_queue_int"> The interface</a></span></dt>
+<dt><span class="section"><a href="shared_message_queue.html#shmem.shared_message_queue_ex"> Example: Serializing a database through the message queue</a></span></dt>
+</dl></div>
+<p>
+Built above Shmem operating system wrappers, shared_message_queue class 
+offers a classic, priority-capable inter-process message queue. Using this 
+queue, two threads from different processes, can send/receive 
+messages with many send/receive strategies, like blocking, non-blocking
+or timed.</p>
+<p>
+We can send messages with different priorities and higher priority messages will 
+be always received before lower priority ones.</p>
+<p>
+The implementation of this class shows how Shmem primitives can be used to
+construct more complex inter-process communication mechanism, like queues,
+pipes, etc...</p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.shared_message_queue_int"></a> The interface</h3></div></div></div>
+<p>
+The interface provides functions to create, open or create, or only open the queue.
+It also provices 3 send and receive functions: blocking, non-blocking and timed, and
+some functions to obtain the message queue's parameters like the maximum number of 
+messages in the queue and the maximum size of any message.</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">/*!A class that allows sending messages between processes.*/</span><span class="keyword">
+class</span><span class="identifier"> shared_message_queue</span><span class="special">
+{</span><span class="keyword">
+ public</span><span class="special">:</span><span class="comment">
+   /*!Result types when sending or receiving messages*/</span><span class="keyword">
+   enum</span><span class="identifier"> result_t</span><span class="special">  {</span><span class="identifier"> 
+                  ok</span><span class="special">,</span><span class="identifier"> 
+                  internal_error</span><span class="special">,</span><span class="identifier"> 
+                  empty</span><span class="special">,</span><span class="identifier"> 
+                  full</span><span class="special">,</span><span class="identifier"> 
+                  too_small_buffer</span><span class="special">,</span><span class="identifier"> 
+                  timeout</span><span class="special">,</span><span class="identifier">  
+                  too_big_buffer</span><span class="special">,</span><span class="special"> 
+                  };</span><span class="comment">
+
+   /*!Constructor. Never throws*/</span><span class="identifier">
+   shared_message_queue</span><span class="special">();</span><span class="comment">
+
+   /*!Destructor. Calls close. Never throws*/</span><span class="special">
+   ~</span><span class="identifier">shared_message_queue</span><span class="special">();</span><span class="comment"> 
+
+   /*!Creates a process shared message queue with name "name". For this message queue,
+      the maximum number of messages will be "max_num_msg" and the maximum message size
+      will be "max_msg_size". If queue was previously created or there are no free 
+      resources, the function returns false. Never throws*/</span><span class="keyword">
+   bool</span><span class="identifier"> create</span><span class="special">(</span><span class="keyword">const</span><span class="keyword"> char</span><span class="special"> *</span><span class="identifier">name</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> max_num_msg</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> max_msg_size</span><span class="special">);</span><span class="comment">
+
+   /*!Opens or creates a process shared message queue with name "name". 
+      If the queue is created, the maximum number of messages will be "max_num_msg" 
+      and the maximum message size will be "max_msg_size". If queue was previously 
+      created the queue will be opened and "max_num_msg" and "max_msg_size" parameters
+      are ignored. If there are no free resources, the function returns false. Never throws*/</span><span class="keyword">
+   bool</span><span class="identifier"> open_or_create</span><span class="special">(</span><span class="keyword">const</span><span class="keyword"> char</span><span class="special"> *</span><span class="identifier">name</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> max_num_msg</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> max_msg_size</span><span class="special">);</span><span class="comment">
+
+   /*!Opens a previously created process shared message queue with name "name". 
+      If the was not previously created or there are no free resources, the 
+      function returns false. Never throws*/</span><span class="keyword">
+   bool</span><span class="identifier"> open</span><span class="special">(</span><span class="keyword">const</span><span class="keyword"> char</span><span class="special"> *</span><span class="identifier">name</span><span class="special">);</span><span class="comment">
+
+   /*!Sends a message stored in buffer "buffer" with size "buffer_size" in the 
+      message queue with priority "priority". If the message queue is full
+      the sender is blocked. Returns "ok" if message is placed in the message
+      queue, "internal_error" if message queue is corrupted, or "too_big_buffer"
+      if parameter "buffer_size" is bigger than the maximum message size allowed
+      in the queue. Never throws*/</span><span class="identifier">
+   result_t</span><span class="identifier"> send</span><span class="special">    (</span><span class="keyword">const</span><span class="keyword"> void</span><span class="special"> *</span><span class="identifier">buffer</span><span class="special">,</span><span class="identifier">     std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> buffer_size</span><span class="special">,</span><span class="keyword"> 
+                     unsigned</span><span class="keyword"> int</span><span class="identifier"> priority</span><span class="special">);</span><span class="comment">
+
+   /*!Sends a message stored in buffer "buffer" with size "buffer_size" in the 
+      message queue with priority "priority". If the message queue is full
+      the sender is not blocked. Returns "ok" if message is placed in the message
+      queue, "internal_error" if message queue is corrupted, "too_big_buffer"
+      if parameter "buffer_size" is bigger than the maximum message size allowed
+      in the queue and "full" if message queue is full and message can't be
+      placed there. Never throws*/</span><span class="identifier">
+   result_t</span><span class="identifier"> try_send</span><span class="special">    (</span><span class="keyword">const</span><span class="keyword"> void</span><span class="special"> *</span><span class="identifier">buffer</span><span class="special">,</span><span class="identifier">     std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> buffer_size</span><span class="special">,</span><span class="keyword"> 
+                         unsigned</span><span class="keyword"> int</span><span class="identifier"> priority</span><span class="special">);</span><span class="comment">
+
+   /*!Sends a message stored in buffer "buffer" with size "buffer_size" in the 
+      message queue with priority "priority". If the message queue is full
+      the sender is retries until time "xt" is reached. Returns "ok" if message 
+      is placed in the message queue, "internal_error" if message queue is corrupted, 
+      "too_big_buffer" if parameter "buffer_size" is bigger than the maximum message 
+      size allowed in the queue and "timeout" if message can't be placed and time 
+      "xt" is reached. Never throws*/</span><span class="identifier">
+   result_t</span><span class="identifier"> timed_send</span><span class="special">    (</span><span class="keyword">const</span><span class="keyword"> void</span><span class="special"> *</span><span class="identifier">buffer</span><span class="special">,</span><span class="identifier">     std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> buffer_size</span><span class="special">,</span><span class="keyword"> 
+                           unsigned</span><span class="keyword"> int</span><span class="identifier"> priority</span><span class="special">,</span><span class="keyword">  const</span><span class="identifier"> xtime</span><span class="special"> &amp;</span><span class="identifier">xt</span><span class="special">);</span><span class="comment">
+
+   /*!Receives a message from the message queue. The message is stored in buffer 
+      "buffer", which has size "buffer_size". The received message has size 
+      "recvd_size" and priority "priority". If the message queue is empty
+      the receiver is blocked. Returns "ok" if a message is received from the 
+      message queue, "internal_error" if message queue is corrupted, or 
+      "too_small_buffer" if parameter "buffer_size" is smaller than the maximum 
+      message size allowed in the queue. Never throws*/</span><span class="identifier">
+   result_t</span><span class="identifier"> receive</span><span class="special"> (</span><span class="keyword">void</span><span class="special"> *</span><span class="identifier">buffer</span><span class="special">,</span><span class="identifier">           std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> buffer_size</span><span class="special">,</span><span class="identifier"> 
+                     std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special"> &amp;</span><span class="identifier">recvd_size</span><span class="special">,</span><span class="keyword">unsigned</span><span class="keyword"> int</span><span class="special"> &amp;</span><span class="identifier">priority</span><span class="special">);</span><span class="comment">
+
+   /*!Receives a message from the message queue. The message is stored in buffer 
+      "buffer", which has size "buffer_size". The received message has size 
+      "recvd_size" and priority "priority". If the message queue is empty
+      the receiver is not blocked. Returns "ok" if a message is received from the 
+      message queue, "internal_error" if message queue is corrupted, 
+      "too_small_buffer" if parameter "buffer_size" is smaller than the maximum 
+      message size allowed in the queue or "empty" is message queue is empty. 
+      Never throws*/</span><span class="identifier">
+   result_t</span><span class="identifier"> try_receive</span><span class="special"> (</span><span class="keyword">void</span><span class="special"> *</span><span class="identifier">buffer</span><span class="special">,</span><span class="identifier">           std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> buffer_size</span><span class="special">,</span><span class="identifier"> 
+                         std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special"> &amp;</span><span class="identifier">recvd_size</span><span class="special">,</span><span class="keyword">unsigned</span><span class="keyword"> int</span><span class="special"> &amp;</span><span class="identifier">priority</span><span class="special">);</span><span class="comment">
+
+   /*!Receives a message from the message queue. The message is stored in buffer 
+      "buffer", which has size "buffer_size". The received message has size 
+      "recvd_size" and priority "priority". If the message queue is empty
+      the receiver retries until time "xt" is reached. Returns "ok" if a message is
+      received from the message queue, "internal_error" if message queue is 
+      corrupted, "too_small_buffer" if parameter "buffer_size" is smaller than the 
+      maximum message size allowed in the queue or "timeout" is message queue is 
+      empty. Never throws*/</span><span class="identifier">
+   result_t</span><span class="identifier"> timed_receive</span><span class="special"> (</span><span class="keyword">void</span><span class="special"> *</span><span class="identifier">buffer</span><span class="special">,</span><span class="identifier">           std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> buffer_size</span><span class="special">,</span><span class="identifier"> 
+                           std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special"> &amp;</span><span class="identifier">recvd_size</span><span class="special">,</span><span class="keyword">unsigned</span><span class="keyword"> int</span><span class="special"> &amp;</span><span class="identifier">priority</span><span class="special">,</span><span class="keyword">
+                           const</span><span class="identifier"> xtime</span><span class="special"> &amp;</span><span class="identifier">xt</span><span class="special">);</span><span class="comment">
+
+   /*!Closes the message queue and frees resources. A new message queu can be opened
+      after close() is called. Never throws*/</span><span class="keyword">
+   void</span><span class="identifier"> close</span><span class="special">();</span><span class="comment">
+
+   /*!Returns the maximum number of messages allowed by the queue. The message
+      queue must be opened or created previously. Otherwise, returns 0. 
+      Never throws*/</span><span class="identifier">
+   std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> get_max_num_msg</span><span class="special">()</span><span class="keyword"> const</span><span class="special">;</span><span class="comment">
+
+   /*!Returns the maximum size of message allowed by the queue. The message
+      queue must be opened or created previously. Otherwise, returns 0. 
+      Never throws*/</span><span class="identifier">
+   std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> get_max_msg_size</span><span class="special">()</span><span class="keyword"> const</span><span class="special">;</span><span class="special">
+};</span></code></pre>
+<p>
+The message queue is destroyed when the last process connected to the queue closes
+the connection calling <span class="bold"><strong>close()</strong></span>.</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.shared_message_queue_ex"></a> Example: Serializing a database through the message queue</h3></div></div></div>
+<p>
+The following example shows how a message queue can be used to serialize a whole
+database constructed in a buffer using Shmem machinery, so that the database
+is duplicated in another buffer:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">//This test creates a in memory data-base using Shmem machinery and 
+//serializes it through a message queue. Then rebuilds the data-base in 
+//another buffer and checks it against the original data-base
+</span><span class="keyword">bool</span><span class="identifier"> test_serialize_db</span><span class="special">()</span><span class="special">
+{</span><span class="comment">
+   //Shared memory queues
+</span><span class="identifier">   shared_message_queue</span><span class="identifier"> mq1</span><span class="special">,</span><span class="identifier"> mq2</span><span class="special">;</span><span class="comment">
+
+   //Typedef data to create a Shmem map   
+</span><span class="keyword">   typedef</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="keyword">const</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;</span><span class="identifier"> MyPair</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">less</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;</span><span class="identifier">   MyLess</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="identifier"> node_allocator</span><span class="special">&lt;</span><span class="identifier">MyPair</span><span class="special">,</span><span class="number"> 64</span><span class="special">,</span><span class="identifier"> named_user_object</span><span class="special">::</span><span class="identifier">segment_manager</span><span class="special">&gt;</span><span class="identifier"> 
+      node_allocator_t</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="identifier"> map</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">,</span><span class="identifier"> 
+               std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">,</span><span class="identifier"> 
+               std</span><span class="special">::</span><span class="identifier">less</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;,</span><span class="identifier"> 
+               node_allocator_t</span><span class="special">&gt;</span><span class="identifier">
+               MyMap</span><span class="special">;</span><span class="comment">
+
+   //Some constants
+</span><span class="keyword">   const</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> BufferSize</span><span class="special">  =</span><span class="number"> 4096</span><span class="special">;</span><span class="keyword">
+   const</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> MaxMsgSize</span><span class="special">  =</span><span class="number"> 100</span><span class="special">;</span><span class="comment">
+
+   //Allocate two memory buffers from heap using vector&lt;char&gt;
+</span><span class="identifier">   std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;</span><span class="identifier"> buffer1</span><span class="special">(</span><span class="identifier">BufferSize</span><span class="special">,</span><span class="number"> 0</span><span class="special">),</span><span class="identifier"> buffer2</span><span class="special">(</span><span class="identifier">BufferSize</span><span class="special">,</span><span class="number"> 0</span><span class="special">);</span><span class="comment">
+
+   //Create the message-queue
+</span><span class="keyword">   if</span><span class="special">(!</span><span class="identifier">mq1</span><span class="special">.</span><span class="identifier">create</span><span class="special">(</span><span class="string">"message_queue"</span><span class="special">,</span><span class="number"> 1</span><span class="special">,</span><span class="identifier"> MaxMsgSize</span><span class="special">)){</span><span class="keyword">
+      return</span><span class="keyword"> false</span><span class="special">;</span><span class="special">
+   }</span><span class="comment">
+
+   //Open previously created message-queue simulating other process
+</span><span class="keyword">   if</span><span class="special">(!</span><span class="identifier">mq2</span><span class="special">.</span><span class="identifier">open</span><span class="special">(</span><span class="string">"message_queue"</span><span class="special">)){</span><span class="keyword">
+      return</span><span class="keyword"> false</span><span class="special">;</span><span class="special">
+   }</span><span class="comment">
+
+   //Shmem machinery to manage previously allocated buffer1 and buffer2
+</span><span class="identifier">   named_user_object</span><span class="identifier"> db1</span><span class="special">,</span><span class="identifier"> db2</span><span class="special">;</span><span class="comment">      
+
+   //Create Shmem machinery in the first buffer
+</span><span class="keyword">   if</span><span class="special">(!</span><span class="identifier">db1</span><span class="special">.</span><span class="identifier">create</span><span class="special">(&amp;</span><span class="identifier">buffer1</span><span class="special">[</span><span class="number">0</span><span class="special">],</span><span class="identifier"> buffer1</span><span class="special">.</span><span class="identifier">size</span><span class="special">())){</span><span class="keyword">
+      return</span><span class="keyword"> false</span><span class="special">;</span><span class="special">
+   }</span><span class="comment">
+
+   //Construct the map in the first buffer
+</span><span class="identifier">   MyMap</span><span class="special"> *</span><span class="identifier">map1</span><span class="special"> =</span><span class="identifier"> db1</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="identifier">MyMap</span><span class="special">&gt;(</span><span class="string">"MyMap"</span><span class="special">)</span><span class="special">
+                                     (</span><span class="identifier">MyLess</span><span class="special">(),</span><span class="identifier"> 
+                                      db1</span><span class="special">.</span><span class="identifier">get_segment_manager</span><span class="special">());</span><span class="keyword">
+   if</span><span class="special">(!</span><span class="identifier">map1</span><span class="special">)</span><span class="keyword">
+      return</span><span class="keyword"> false</span><span class="special">;</span><span class="comment">
+
+   //Fill map1 until is full 
+</span><span class="keyword">   try</span><span class="special">{</span><span class="identifier">
+      std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> i</span><span class="special"> =</span><span class="number"> 0</span><span class="special">;</span><span class="keyword">
+      while</span><span class="special">(</span><span class="number">1</span><span class="special">){</span><span class="special">
+         (*</span><span class="identifier">map1</span><span class="special">)[</span><span class="identifier">i</span><span class="special">]</span><span class="special"> =</span><span class="identifier"> i</span><span class="special">;</span><span class="special">
+         ++</span><span class="identifier">i</span><span class="special">;</span><span class="special">
+      }</span><span class="special">
+   }</span><span class="keyword">
+   catch</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">bad_alloc</span><span class="special"> &amp;){}</span><span class="comment">
+
+   //Data control data sending through the message queue
+</span><span class="identifier">   std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> sent</span><span class="special"> =</span><span class="number"> 0</span><span class="special">;</span><span class="identifier">
+   std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> recvd</span><span class="special"> =</span><span class="number"> 0</span><span class="special">;</span><span class="identifier">
+   std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> total_recvd</span><span class="special"> =</span><span class="number"> 0</span><span class="special">;</span><span class="keyword">
+   unsigned</span><span class="keyword"> int</span><span class="identifier"> priority</span><span class="special">;</span><span class="comment">
+
+   //Send whole first buffer through the mq1, read it 
+   //through mq2 to the second buffer
+</span><span class="keyword">   while</span><span class="special">(</span><span class="number">1</span><span class="special">){</span><span class="comment">
+      //Send a fragment of buffer1 through mq1
+</span><span class="identifier">      std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> bytes_to_send</span><span class="special"> =</span><span class="identifier"> MaxMsgSize</span><span class="special"> &lt;</span><span class="special"> (</span><span class="identifier">BufferSize</span><span class="special"> -</span><span class="identifier"> sent</span><span class="special">)</span><span class="special"> ?</span><span class="identifier"> 
+                                    MaxMsgSize</span><span class="special"> :</span><span class="special"> (</span><span class="identifier">BufferSize</span><span class="special"> -</span><span class="identifier"> sent</span><span class="special">);</span><span class="keyword">
+      switch</span><span class="special">(</span><span class="identifier">mq1</span><span class="special">.</span><span class="identifier">send</span><span class="special">(&amp;</span><span class="identifier">buffer1</span><span class="special">[</span><span class="identifier">sent</span><span class="special">],</span><span class="identifier"> bytes_to_send</span><span class="special">,</span><span class="number"> 0</span><span class="special">)){</span><span class="keyword">
+         case</span><span class="identifier"> shared_message_queue</span><span class="special">::</span><span class="identifier">ok</span><span class="special">:</span><span class="identifier">
+            sent</span><span class="special"> +=</span><span class="identifier"> bytes_to_send</span><span class="special">;</span><span class="keyword">         
+         break</span><span class="special">;</span><span class="keyword">
+
+         default</span><span class="special">:</span><span class="keyword">
+            return</span><span class="keyword"> false</span><span class="special">;</span><span class="special">
+      }</span><span class="comment">
+      //Receive the fragment through mq2 to buffer2
+</span><span class="keyword">      switch</span><span class="special">(</span><span class="identifier">mq2</span><span class="special">.</span><span class="identifier">receive</span><span class="special">(&amp;</span><span class="identifier">buffer2</span><span class="special">[</span><span class="identifier">total_recvd</span><span class="special">],</span><span class="identifier"> BufferSize</span><span class="special"> -</span><span class="identifier"> recvd</span><span class="special">,</span><span class="identifier"> 
+                        recvd</span><span class="special">,</span><span class="identifier">                 priority</span><span class="special">)){</span><span class="keyword">   
+         case</span><span class="identifier"> shared_message_queue</span><span class="special">::</span><span class="identifier">ok</span><span class="special">:</span><span class="identifier">
+            total_recvd</span><span class="special"> +=</span><span class="identifier"> recvd</span><span class="special">;</span><span class="keyword"> 
+         break</span><span class="special">;</span><span class="keyword">
+
+         default</span><span class="special">:</span><span class="keyword">
+            return</span><span class="keyword"> false</span><span class="special">;</span><span class="special">
+      }</span><span class="comment">
+
+      //Check if we have received all the buffer
+</span><span class="keyword">      if</span><span class="special">(</span><span class="identifier">total_recvd</span><span class="special"> ==</span><span class="identifier"> BufferSize</span><span class="special">){</span><span class="keyword">
+         break</span><span class="special">;</span><span class="special">
+      }</span><span class="special">
+   }</span><span class="comment">
+   
+   //We don't need message queues anymore
+</span><span class="identifier">   mq1</span><span class="special">.</span><span class="identifier">close</span><span class="special">();</span><span class="identifier">
+   mq2</span><span class="special">.</span><span class="identifier">close</span><span class="special">();</span><span class="comment">
+    
+   //The second buffer will contain a copy of the buffer1 
+   //map so let's open Shmem machinery in the second buffer  
+</span><span class="keyword">   if</span><span class="special">(!</span><span class="identifier">db2</span><span class="special">.</span><span class="identifier">open</span><span class="special">(&amp;</span><span class="identifier">buffer2</span><span class="special">[</span><span class="number">0</span><span class="special">],</span><span class="identifier"> BufferSize</span><span class="special">)){</span><span class="keyword">
+      return</span><span class="keyword"> false</span><span class="special">;</span><span class="special">
+   }</span><span class="comment">
+
+   //Let's find the map
+</span><span class="identifier">   std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">MyMap</span><span class="special"> *,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;</span><span class="identifier"> ret</span><span class="special"> =</span><span class="identifier"> db2</span><span class="special">.</span><span class="identifier">find</span><span class="special">&lt;</span><span class="identifier">MyMap</span><span class="special">&gt;(</span><span class="string">"MyMap"</span><span class="special">);</span><span class="identifier">
+   MyMap</span><span class="special"> *</span><span class="identifier">map2</span><span class="special"> =</span><span class="identifier"> ret</span><span class="special">.</span><span class="identifier">first</span><span class="special">;</span><span class="comment">
+
+   //Check if we have found it
+</span><span class="keyword">   if</span><span class="special">(!</span><span class="identifier">map2</span><span class="special">){</span><span class="keyword">
+      return</span><span class="keyword"> false</span><span class="special">;</span><span class="special">
+   }</span><span class="comment">
+
+   //Check if it is a single variable (not an array)
+</span><span class="keyword">   if</span><span class="special">(</span><span class="identifier">ret</span><span class="special">.</span><span class="identifier">second</span><span class="special"> !=</span><span class="number"> 1</span><span class="special">){</span><span class="keyword">
+      return</span><span class="keyword"> false</span><span class="special">;</span><span class="special">
+   }</span><span class="comment">
+
+   //Now let's compare size
+</span><span class="keyword">   if</span><span class="special">(</span><span class="identifier">map1</span><span class="special">-&gt;</span><span class="identifier">size</span><span class="special">()</span><span class="special"> !=</span><span class="identifier"> map2</span><span class="special">-&gt;</span><span class="identifier">size</span><span class="special">()){</span><span class="keyword">
+      return</span><span class="keyword"> false</span><span class="special">;</span><span class="special">
+   }</span><span class="comment">
+
+   //Now let's compare all db values
+</span><span class="keyword">   for</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> i</span><span class="special"> =</span><span class="number"> 0</span><span class="special">,</span><span class="identifier"> num_elements</span><span class="special"> =</span><span class="identifier"> map1</span><span class="special">-&gt;</span><span class="identifier">size</span><span class="special">();</span><span class="identifier"> i</span><span class="special"> &lt;</span><span class="identifier"> num_elements</span><span class="special">;</span><span class="special"> ++</span><span class="identifier">i</span><span class="special">){</span><span class="keyword">
+      if</span><span class="special">((*</span><span class="identifier">map1</span><span class="special">)[</span><span class="identifier">i</span><span class="special">]</span><span class="special"> !=</span><span class="special"> (*</span><span class="identifier">map2</span><span class="special">)[</span><span class="identifier">i</span><span class="special">]){</span><span class="keyword">
+         return</span><span class="keyword"> false</span><span class="special">;</span><span class="special">
+      }</span><span class="special">
+   }</span><span class="comment">
+   
+   //Destroy maps from db-s
+</span><span class="identifier">   db1</span><span class="special">.</span><span class="identifier">destroy_ptr</span><span class="special">(</span><span class="identifier">map1</span><span class="special">);</span><span class="identifier">
+   db2</span><span class="special">.</span><span class="identifier">destroy_ptr</span><span class="special">(</span><span class="identifier">map2</span><span class="special">);</span><span class="identifier">
+
+   db1</span><span class="special">.</span><span class="identifier">close</span><span class="special">();</span><span class="identifier">
+   db2</span><span class="special">.</span><span class="identifier">close</span><span class="special">();</span><span class="keyword">
+
+   return</span><span class="keyword"> true</span><span class="special">;</span><span class="special">
+}</span></code></pre>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2005 -2006 Ion Gaztañaga</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="streams.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="architecture.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

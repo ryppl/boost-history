@@ -1,0 +1,95 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Rationale</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="prev" href="limitations.html" title=" Current limitations">
+<link rel="next" href="concepts.html" title=" Concepts and definitions">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="boost.png (6897 bytes)" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="limitations.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="concepts.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="shmem.rationale"></a> Rationale</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="rationale.html#shmem.rationale_mutex"> Rationale for process-shared mutexes and condition variables</a></span></dt>
+<dt><span class="section"><a href="rationale.html#shmem.rationale_containers"> Rationale for process-shared STL compatible containers</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.rationale_mutex"></a> Rationale for process-shared mutexes and condition variables</h3></div></div></div>
+<p>
+A shared memory segment is not itself very useful to share data between processes 
+without synchronization primitives like mutexes and and condition variables. Following
+Boost.Thread's interface, Shmem defines process-shared mutexes and condition variables.</p>
+<p>
+This interface follows Boost.Thread's mutex and condition variables' rationale, so 
+that the constructors of shared_mutex and shared_condition can throw if the 
+construction of the resource fails, and mutexes are used mainly with scoped locks.</p>
+<p>
+However, currently it's not possible to reuse Boost Threads utilities like scoped 
+locks and time functions (xtime time structure, functions to obtain time, etc...)
+because Boost.Thread checks in headers if those headers are included in a 
+multithreaded build. This is logical since Boost.Thread has no sense without
+multithreaded builds, but with Shmem two single-threaded processes can use
+process-shared mutexes, so Boost.Thread locks and utilities don't allow this.</p>
+<p>
+Because of this, Shmem reproduces the needed scoped locks and time structures from
+Boost.Thread in the boost::shmem namespace. In the future, it would be logical to
+share utilities and locks between Boost.Thread or Shmem or even to move 
+process-shared mutex synchronization objects from Shmem to Boost.Thread.</p>
+<p>
+If Boost.Thread's model changes or C++ standarized mutex and condition variables
+are published, process-shared mutex and condition variable should follow this change.</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.rationale_containers"></a> Rationale for process-shared STL compatible containers</h3></div></div></div>
+<p>
+One the most important features of Shmem are the shared-memory STL compatible containers.
+To make this possible, Shmem makes use of standard allocator interface, so that
+Shmem STL compatible allocators define allocator::pointer as an offset pointer.</p>
+<p>
+The standard allows allocator::pointer to be a smart pointer but allows 
+implementations to ignore this and suppose allocator::pointer is equal to T*.
+Most implementations tested don't support smart allocator::pointer approach, 
+because in practice, all STL compatible allocators (like Boost.Pool) use T* as 
+pointer typedef.</p>
+<p>
+For this reason, Shmem offers implementations of STL containers that can be placed
+in shared memory. This implementations show how a STL compatible container can easily
+be modified to use it in shared memory.</p>
+<p>
+The allocator::pointer typedef is a type that provides a pointer to the type of 
+object managed by the allocator. But the container can use internally pointers
+not related to objects allocated with a STL compatible allocator, because the standard
+says nothing about members. However, to place a container in shared memory, 
+mapped in different base addresses across several processes, all member pointers 
+of a containers must be offset pointers. This is why Shmem offers a wide-range of
+containers that can be safely placed in shared memory.</p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2005 -2006 Ion Gaztañaga</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="limitations.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="concepts.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

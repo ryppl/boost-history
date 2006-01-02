@@ -1,0 +1,162 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Current limitations</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="prev" href="quick_guide.html" title=" Quick Guide for the Impatient">
+<link rel="next" href="rationale.html" title=" Rationale">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="boost.png (6897 bytes)" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="quick_guide.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="rationale.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="shmem.limitations"></a> Current limitations</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="limitations.html#shmem.growing_limitation"> Memory growth Limitation</a></span></dt>
+<dt><span class="section"><a href="limitations.html#shmem.stl_limitation"> Problems with most STL implementations</a></span></dt>
+<dt><span class="section"><a href="limitations.html#shmem.offset_pointer"> Offset pointers instead of raw pointers</a></span></dt>
+<dt><span class="section"><a href="limitations.html#shmem.references_forbidden"> References forbidden</a></span></dt>
+<dt><span class="section"><a href="limitations.html#shmem.virtuality_limitation"> Virtuality forbidden</a></span></dt>
+<dt><span class="section"><a href="limitations.html#shmem.statics_warning"> Be careful with static class members</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.growing_limitation"></a> Memory growth Limitation</h3></div></div></div>
+<p>
+Shmem wants to be portable across multiple operating systems
+so that it can not count with an operating systems that maps shared
+memory to the same base address in all processes in the system,
+although it provides a way to map the shared memory in the same
+base address.</p>
+<p>
+However, without this capability, it is quite complicated to
+design a growing shared memory allocator, one that allocates
+new shared memory segments when a segment is full of objects.
+To achieve this, it would be necessary to maintain a map with the
+base address for each process in the shared memory, and a correct
+design would be difficult. For this reason, this first version of
+this library will be limited to a shared memory segment, and its
+size must be calculated beforehand by the user. If there is no more
+memory, an exception will be thrown. This is very performance
+friendly, but it is also a limiting factor. In near future, there
+is a plan to add growing capacity to the allocator.</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.stl_limitation"></a> Problems with most STL implementations</h3></div></div></div>
+<p>
+Since Shmem does not count with same mapping address in
+different processes for the same shared memory segment, it
+must use a new, offset containing smart pointer. Many STL 
+container implementations, suppose that
+allocator::pointer type is a raw pointer, so they do not
+allow Shmem allocators to be used in those containers. Currently, I 
+am not aware of any STL implementation that works with this smart 
+pointer approach. Dinkumware STL from Visual .NET 2003 is very
+close, but fails in some instantiations. libstdc++ and STLPort
+use directly raw pointers in containers, and they don't pay 
+attention to this allocator::pointer type. This is likely 
+to change soon, as soon as containers start using allocators 
+with pointer types different from T*.</p>
+<p>
+To solve this, Shmem provides some STL compliant
+containers, that are ready to use with shared memory. 
+These implementations, valid for both normal 
+(std::)allocator and shared memory allocator, 
+implement the techniques described in the
+<a href="containers_explained.html#shmem.stl_container_requirements" title=" Container requirements for Shmem allocators">"Container requirements for Shmem allocators"</a>
+section.</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.offset_pointer"></a> Offset pointers instead of raw pointers</h3></div></div></div>
+<p>
+When placing objects in shared memory and mapping
+that memory in different segments in different processes,
+raw pointers are a problem since they are only valid for
+the process that placed them there. To solve this, Shmem offers
+an offset pointer that can be used instead of a raw pointer.</p>
+<p>
+But user classes containing raw pointers (or Boost smart pointers, that 
+internally own a raw pointer) can't be safely placed in shared memory. 
+These pointers must be replaced with offset pointers, and these
+pointers must point only to objects placed in the same memory
+segment if you want to use these shared objects from different processes.</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.references_forbidden"></a> References forbidden</h3></div></div></div>
+<p>
+References suffer from the same problem as pointers 
+(mainly because they are implemented as pointers).
+However, it is not possible to create a fully workable 
+smart reference currently in C++(for example,
+"operator dot" can't be overloaded). Because of this,
+if the user wants to put an object in shared memory, 
+the object can't have any member (smart or not) reference.</p>
+<p>
+References will only work if memory is mapped in the same
+base address in all processes sharing a memory segment.</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.virtuality_limitation"></a> Virtuality forbidden</h3></div></div></div>
+<p>
+This is not an specific problem of Shmem, it is a problem
+for all shared memory object placing mechanisms.
+The virtual table pointer and the virtual table
+are in the address space of the process
+that constructs the object, so if we place a class
+with virtual function or inheritance, the virtual
+function pointer placed in shared memory will be
+invalid for other processes.</p>
+<p>
+This problem would be very difficult to solve, since each process needs a 
+different virtual table pointer and the object that contains tha pointer
+is shared accross many processes.The virtual table pointer is the most 
+common mechanism to implement virtual functions but it's implementation 
+defined and can't be easily overwriten. Maybe even compiler help is needed 
+for this. So Shmem does not have any plan to support virtual function and 
+virtual inheritance in shared memory.</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.statics_warning"></a> Be careful with static class members</h3></div></div></div>
+<p>
+Static members of classes are global objects shared by 
+all instances of the class. Because of this, static
+members are implemented as global variables in processes.</p>
+<p>
+When constructing a class with static members, each process
+has its own copy of the static member, so updating a static
+member in one process does not change the value the other 
+process has. So be careful with these classes. Static members
+are not dangerous if they are just constant variables initialized
+when the process starts, but they don't change at all (for example,
+when used like enums).</p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2005 -2006 Ion Gaztañaga</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="quick_guide.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="rationale.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

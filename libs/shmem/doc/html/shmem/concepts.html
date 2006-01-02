@@ -1,0 +1,77 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Concepts and definitions</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="prev" href="rationale.html" title=" Rationale">
+<link rel="next" href="oswrappers.html" title=" Basic Shmem classes">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="boost.png (6897 bytes)" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="rationale.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="oswrappers.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="shmem.concepts"></a> Concepts and definitions</h2></div></div></div>
+<p>
+Shmem uses some concepts that can be confusing: algorithm, allocator, memory, etc...
+This section tries to clarify how these concepts are used in Shmem:</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+An <span class="bold"><strong>memory algorithm</strong></span> is an object that takes control of one (or more) big memory 
+segments and returns portions from them. The memory algorithm is built in the same
+memory it controls (for example, in shared memory, if the memory algorithm returns
+portions of shared memory).
+</li>
+<li>
+A <span class="bold"><strong>segment manager</strong></span> is an object that <span class="bold"><strong>contains</strong></span> a memory algorithm and offers
+additional higher level services, like named allocations. The segment manager
+is an object constructed in the same memory it manages. For example, if a segment
+manager offers shared memory named allocations, the segment manager itself is
+constructed in the shared memory.
+</li>
+<li>
+An <span class="bold"><strong>allocator</strong></span> is a class that follows the STL-allocator interface and is
+used to allocate memory portions for STL-like containers. In Shmem, an allocator
+usually contains a pointer to a <span class="bold"><strong>segment manager</strong></span>, which is the one that
+really implements the memory allocation. The <span class="bold"><strong>allocator</strong></span> can implement more
+complex strategies, like node pooling, using the services the <span class="bold"><strong>segment manager</strong></span>
+offers. In Shmem, an allocator can be placed in the same memory as the <span class="bold"><strong>segment manager</strong></span>,
+that is, it can be placed in shared memory or memory mapped files.
+</li>
+<li>
+A <span class="bold"><strong>front-end</strong></span> is a class that constructs/destroys the memory to be used (for 
+example, shared memory) and places the <span class="bold"><strong>segment manager</strong></span> there. It also <span class="bold"><strong>forwards</strong></span> all
+user requests to the <span class="bold"><strong>segment manager</strong></span> (allocations, named allocations...).
+The front-end is just an ordinary class that is not constructed in the same 
+memory type of the <span class="bold"><strong>segment manager</strong></span>, it's just a proxy to the segment manager.
+</li>
+<li>
+A <span class="bold"><strong>container</strong></span> in Shmem has the same meaning as STL containers. The difference is
+that a Shmem <span class="bold"><strong>container</strong></span> is ready to be constructed in the same memory type as
+the <span class="bold"><strong>segment manager</strong></span> (shared memory, memory mapped files...)
+</li>
+</ul></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2005 -2006 Ion Gaztañaga</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="rationale.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="oswrappers.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

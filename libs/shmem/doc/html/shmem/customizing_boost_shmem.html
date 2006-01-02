@@ -1,0 +1,519 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Customizing Shmem</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="prev" href="containers_explained.html" title=" Shmem and containers in shared memory">
+<link rel="next" href="beyond_shared_memory.html" title=" Beyond shared memory">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="boost.png (6897 bytes)" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="containers_explained.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="beyond_shared_memory.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="shmem.customizing_boost_shmem"></a> Customizing Shmem</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="customizing_boost_shmem.html#shmem.custom_shmem_alloc"> Writing a new shared memory allocation algorithm</a></span></dt>
+<dt><span class="section"><a href="customizing_boost_shmem.html#shmem.custom_allocators"> Building custom STL compatible allocators for Shmem</a></span></dt>
+<dt><span class="section"><a href="customizing_boost_shmem.html#shmem.custom_indexes"> Building custom indexes</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.custom_shmem_alloc"></a> Writing a new shared memory allocation algorithm</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="customizing_boost_shmem.html#shmem.simple_seq_fit"> simple_seq_fit: Default shared memory management algorithm</a></span></dt>
+<dt><span class="section"><a href="customizing_boost_shmem.html#shmem.custom_alloc_algo"> How to implement you own algorithm</a></span></dt>
+</dl></div>
+<p>
+Shmem by default, uses a simple, space-friendly allocation algorithm implemented
+by the class simple_seq_fit:</p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="shmem.simple_seq_fit"></a> simple_seq_fit: Default shared memory management algorithm</h4></div></div></div>
+<p>
+The algorithm is a variation of sequential fit using singly 
+linked list of free memory buffers. The algorithm is based 
+on the article about shared memory titled 
+<a href="http://home.earthlink.net/~joshwalker1/writing/SharedMemory.html" target="_top"><span class="emphasis"><em>"Taming Shared Memory"</em></span></a>. 
+The algorithm is as follows:</p>
+<p>
+The shared memory is divided in blocks of free shared memory, 
+each one with some control data and several bytes of memory 
+ready to be used. The control data contains a pointer (in 
+our case offset_ptr) to the next free block and the size of 
+the block. The allocator consists of a singly linked list 
+of free blocks, ordered by address. The last block, points 
+always to the first block:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="identifier">simple_seq_fit</span><span class="identifier">  extra</span><span class="identifier">    free_block</span><span class="number">  1</span><span class="identifier">         free_block</span><span class="number">  2</span><span class="identifier">         free_block</span><span class="number">  3</span><span class="identifier">    
+                header</span><span class="identifier">   block_ctrl</span><span class="identifier">    usr</span><span class="identifier">     block_ctrl</span><span class="identifier">    usr</span><span class="identifier">     block_ctrl</span><span class="identifier">    usr</span><span class="identifier">
+ ____________</span><span class="identifier">   _____</span><span class="identifier">   ___________________</span><span class="identifier">   ___________________</span><span class="identifier">   ___________________</span><span class="special"> 
+|</span><span class="special">            |</span><span class="special"> |</span><span class="special">     |</span><span class="special"> |</span><span class="special">             |</span><span class="special">     |</span><span class="special"> |</span><span class="special">             |</span><span class="special">     |</span><span class="special"> |</span><span class="special">             |</span><span class="special">     |</span><span class="special">
+|</span><span class="identifier"> free</span><span class="special"> |</span><span class="identifier"> ctrl</span><span class="special">|</span><span class="special"> |</span><span class="identifier">extra</span><span class="special">|</span><span class="special"> |</span><span class="identifier"> next</span><span class="special"> |</span><span class="identifier"> size</span><span class="special"> |</span><span class="identifier"> mem</span><span class="special"> |</span><span class="special"> |</span><span class="identifier"> next</span><span class="special"> |</span><span class="identifier"> size</span><span class="special"> |</span><span class="identifier"> mem</span><span class="special"> |</span><span class="special"> |</span><span class="identifier"> next</span><span class="special"> |</span><span class="identifier"> size</span><span class="special"> |</span><span class="identifier"> mem</span><span class="special"> |</span><span class="special">
+|</span><span class="identifier">____________</span><span class="special">|</span><span class="special"> |</span><span class="identifier">_____</span><span class="special">|</span><span class="special"> |</span><span class="identifier">_____________</span><span class="special">|</span><span class="identifier">_____</span><span class="special">|</span><span class="special"> |</span><span class="identifier">_____________</span><span class="special">|</span><span class="identifier">_____</span><span class="special">|</span><span class="special"> |</span><span class="identifier">_____________</span><span class="special">|</span><span class="identifier">_____</span><span class="special">|</span><span class="special">
+      |</span><span class="special">                 |</span><span class="special">   |</span><span class="special">                 |</span><span class="special">    |</span><span class="special">                 |</span><span class="special">  |</span><span class="special">               
+      |</span><span class="identifier">__</span><span class="special">&gt;</span><span class="identifier">__</span><span class="special">&gt;</span><span class="identifier">__</span><span class="special">&gt;</span><span class="identifier">__</span><span class="special">&gt;</span><span class="identifier"> _</span><span class="special">&gt;</span><span class="identifier"> _</span><span class="special">|</span><span class="special">   |</span><span class="identifier">__</span><span class="special">&gt;</span><span class="identifier">__</span><span class="special">&gt;</span><span class="identifier">__</span><span class="special">&gt;</span><span class="identifier">__</span><span class="special">&gt;</span><span class="identifier">__</span><span class="special">&gt;</span><span class="identifier">__</span><span class="special">|</span><span class="special">    |</span><span class="identifier">__</span><span class="special">&gt;</span><span class="identifier">__</span><span class="special">&gt;</span><span class="identifier">__</span><span class="special">&gt;</span><span class="identifier">__</span><span class="special">&gt;</span><span class="identifier">__</span><span class="special">&gt;</span><span class="identifier">__</span><span class="special">|</span><span class="special">  |</span><span class="special">              
+                        |</span><span class="special">                                               |</span><span class="special"> 
+                        |</span><span class="identifier">_</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">|</span></code></pre>
+<p>
+When a user requests N bytes of memory, the allocator 
+traverses the free block list looking for a block large 
+enough. If the "mem" part of the block has the same 
+size as the requested memory, we erase the block from 
+the list and return a pointer to the "mem" part of the 
+block. If the "mem" part size is bigger than needed, 
+we split the block in two blocks, one of the requested 
+size and the other with remaining size. Now, we take 
+the block with the exact size, erase it from list and 
+give it to the user.</p>
+<p>
+When the user deallocates a block, we traverse the list (remember 
+that the list is ordered), and search its place depending on 
+the block address. Once found, we try to merge the block with 
+adjacent blocks if possible.</p>
+<p>
+To ease implementation, the size of the free memory block 
+is measured in multiples of "basic_size" bytes.  The basic 
+size will be the size of the control block aligned to 
+machine most restrictive alignment.</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">/*!This class implements the simple sequential fit algorithm with a simply
+   linked list of free buffers.*/</span><span class="keyword">
+template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="identifier"> MutexFamily</span><span class="special">,</span><span class="keyword"> class</span><span class="identifier"> VoidPointer</span><span class="special">&gt;</span><span class="keyword">
+class</span><span class="identifier"> simple_seq_fit</span><span class="special"> :</span><span class="keyword"> private</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">noncopyable</span><span class="special">
+{</span><span class="keyword">
+ private</span><span class="special">:</span><span class="comment">
+
+   /*!Block control stucture*/</span><span class="keyword">
+   struct</span><span class="identifier"> block_ctrl</span><span class="special">
+   {</span><span class="comment">
+      /*!Offset pointer to the next block. This pointer
+         can't be null, since it's a diff pointer.*/</span><span class="identifier">
+      offset_ptr</span><span class="special">&lt;</span><span class="identifier">block_ctrl</span><span class="special">,</span><span class="identifier"> offset_1_null_ptr</span><span class="special">&gt;</span><span class="identifier">    next</span><span class="special">;</span><span class="comment">
+      /*!This block's memory size (including block_ctrl 
+         header) in BasicSize units*/</span><span class="identifier">
+      std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier">                                  size</span><span class="special">;</span><span class="special">
+   };</span><span class="comment">
+
+   /*...*/</span><span class="keyword">  
+
+ public</span><span class="special">:</span><span class="comment">
+   /*!Shared mutex family used for the rest of the shmem framework*/</span><span class="keyword">
+   typedef</span><span class="identifier"> MutexFamily</span><span class="identifier">                          mutex_family</span><span class="special">;</span><span class="comment">
+   /*!the pointer type to be used for the rest of the shmem framework*/</span><span class="keyword">
+   typedef</span><span class="identifier"> VoidPointer</span><span class="identifier">                          void_pointer</span><span class="special">;</span><span class="keyword">
+
+ public</span><span class="special">:</span><span class="comment">
+   /*!Constructor. "size" is the total size of the fixed size memory segment, 
+      "extra_hdr_bytes" indicates the extra bytes after the sizeof(simple_seq_fit)
+      that the allocator should not use at all.*/</span><span class="identifier">
+   simple_seq_fit</span><span class="special">           (</span><span class="identifier">size_t</span><span class="identifier"> size</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> extra_hdr_bytes</span><span class="special">);</span><span class="comment">
+   /*!Obtains the minimium size needed by the algorithm*/</span><span class="keyword">
+   static</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> get_min_size</span><span class="special"> (</span><span class="identifier">size_t</span><span class="identifier"> extra_hdr_bytes</span><span class="special">);</span><span class="comment">
+   /*!Allocates bytes, returns 0 if there is not more memory*/</span><span class="keyword">
+   void</span><span class="special">*</span><span class="identifier"> allocate</span><span class="special">            (</span><span class="identifier">size_t</span><span class="identifier"> nbytes</span><span class="special">);</span><span class="comment">
+   /*!Deallocates previously allocated bytes*/</span><span class="keyword">
+   void</span><span class="identifier">   deallocate</span><span class="special">          (</span><span class="keyword">void</span><span class="special"> *</span><span class="identifier">adr</span><span class="special">);</span><span class="comment">
+   /*!Returns the size of the memory segment*/</span><span class="identifier">
+   std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> get_size</span><span class="special">()</span><span class="keyword">  const</span><span class="special">;</span><span class="comment">
+   /*!Increases managed memory in extra_size bytes more*/</span><span class="keyword">
+   void</span><span class="identifier"> grow</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> extra_size</span><span class="special">);</span><span class="comment">
+   /*...*/</span><span class="special">  
+};</span></code></pre>
+<p>
+Let's explain these structs:</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<span class="bold"><strong>simple_seq_fit</strong></span> is the main control block of the allocator.
+</li>
+<li>
+The <span class="bold"><strong>extra_hdr_bytes</strong></span> memory comes just after simple_seq_fit object. 
+  This memory will be used by other classes to write more control 
+  data at fixed position.
+</li>
+<li>
+<span class="bold"><strong>block_ctrl</strong></span> is the structure which controls a free block 
+  in memory. It contains the size of the free block (in aligned 
+  sizeof (block_ctrl) units, called basic_size, as we've 
+  said before) and an offset pointer to the next free block 
+  in the shared memory segment. The number of bytes returned 
+  by the allocator will be multiple of basic_size bytes to 
+  maintain the alignment requirements.
+</li>
+</ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="shmem.custom_alloc_algo"></a> How to implement you own algorithm</h4></div></div></div>
+<p>
+If the default algorithm does not satisfy user requirements, 
+it's easy to provide different algorithms like bitmapping or 
+more advanced segregated lists to meet requirements. The characteristics
+of your own algorithm:</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+It shouldn't have any virtual function or virtual inheritance or
+  any indirect base class with virtual function or inheritance.
+</li>
+<li>
+I has to implement the same public functions and typedefs of 
+simple_seq_fit:
+</li>
+</ul></div>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="keyword">typedef</span><span class="comment"> /* . . . */</span><span class="identifier"> mutex_family</span><span class="special">;</span></code></pre>
+<p>
+The class must specify a structure containing typedefs for 
+different mutex types to be used in the Shmem 
+framework. For example the defined</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="keyword">struct</span><span class="identifier"> shared_mutex_family</span><span class="special">
+{</span><span class="keyword">
+   typedef</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">shared_mutex</span><span class="identifier">                 mutex_t</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">shared_try_mutex</span><span class="identifier">             try_mutex_t</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">shared_timed_mutex</span><span class="identifier">           timed_mutex_t</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">shared_recursive_mutex</span><span class="identifier">       recursive_mutex_t</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">shared_recursive_try_mutex</span><span class="identifier">   recursive_try_mutex_t</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">shared_recursive_timed_mutex</span><span class="identifier"> recursive_timed_mutex_t</span><span class="special">;</span><span class="special">
+};</span></code></pre>
+<p>
+defines all mutex types using boost::shmem mutex types. The 
+user can specify the desired mutex family.</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="keyword">typedef</span><span class="identifier"> shared_mutex_family</span><span class="identifier"> mutex_family</span><span class="special">;</span></code></pre>
+<p>
+The new algorithm (let's call it <span class="bold"><strong>my_algorithm</strong></span>) must implement the all the functions
+that boost::shmem::simple_seq_fit class offers:</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+The <span class="bold"><strong>my_algorithm</strong></span> constructor must take 2 arguments: <div class="itemizedlist"><ul type="circle">
+<li>
+<span class="bold"><strong>size</strong></span> indicates the total size of the managed memory segment, and
+     the <span class="bold"><strong>my_algorithm</strong></span> object will be always constructed a at offset 0 
+     of the memory segment.
+</li>
+<li>
+The <span class="bold"><strong>extra_hdr_bytes</strong></span> parameter indicates the number of bytes after
+     the offset sizeof(<span class="bold"><strong>my_algorithm</strong></span>) that <span class="bold"><strong>my_algorithm</strong></span> can't use at all. This extra
+     bytes will be used to store additional data that should not be overwritten.
+     So, <span class="bold"><strong>my_algorithm</strong></span> will be placed at offset 0 of the memory segment, and will
+     manage the <span class="bold"><strong>[sizeof(my_algorithm) + extra_hdr_bytes, size)</strong></span> range of the 
+     segment.
+</li>
+</ul></div>
+</li>
+<li>
+The <span class="bold"><strong>get_min_size()</strong></span> function should return the minimum space the algorithm 
+  needs to be valid with the passed <span class="bold"><strong>extra_hdr_bytes</strong></span> parameter. This function will 
+  be used to check if the memory segment is big enough to place the algorithm there.
+</li>
+<li>
+The <span class="bold"><strong>allocate()</strong></span> function must return 0 if there is no more available memory. 
+  The memory returned by <span class="bold"><strong>my_algorithm</strong></span>
+  must be aligned to the most restrictive memory alingment of the system, for example,
+  to the value returned by <span class="bold"><strong>boost::alignment_of&lt;boost::detail::max_align&gt;::value</strong></span>.
+</li>
+<li>
+The <span class="bold"><strong>deallocate()</strong></span> function must make the returned buffer 
+  available for new allocations.
+</li>
+<li>
+The <span class="bold"><strong>size()</strong></span> function will return the passed <span class="bold"><strong>size</strong></span> parameter in the constructor. 
+  So, <span class="bold"><strong>my_algorithm</strong></span> should store the size internally.
+</li>
+<li>
+The <span class="bold"><strong>grow()</strong></span> function will expand the managed memory by <span class="bold"><strong>my_algorithm</strong></span> in <span class="bold"><strong>extra_size</strong></span> 
+  bytes. So <span class="bold"><strong>size()</strong></span> function should return the updated size,
+  and the new managed memory range will be: <span class="bold"><strong>[sizeof(my_algorithm) + extra_hdr_bytes, old_size + extra_size)</strong></span>
+</li>
+</ul></div>
+<p>
+That's it. Now we can create new front-ends that use our new algorithm:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">//Front-end to allocate named (c-string) objects
+//using special algorithm
+</span><span class="identifier">basic_named_shared_object</span><span class="special">&lt;</span><span class="keyword"> 
+                           char</span><span class="special">,</span><span class="identifier"> 
+                           my_algorithm</span><span class="special">,</span><span class="identifier">
+                           flat_map_index</span><span class="special">
+                         &gt;</span><span class="identifier">  
+   my_named_shared_object</span><span class="special">;</span></code></pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.custom_allocators"></a> Building custom STL compatible allocators for Shmem</h3></div></div></div>
+<p>
+If provided STL-like allocators don't satisfy user needs, the user 
+can use another STL compatible allocator and use basic shared 
+memory allocation functions and named shared memory functions. 
+The user can this way implement more suitable allocation 
+schemes on top of basic shared memory allocation schemes, 
+just like more complex allocators are built on top of 
+new/delete functions.</p>
+<p>
+When using a shared memory front-end, the <span class="bold"><strong>get_segment_manager()</strong></span> 
+function returns a pointer to the segment manager.With this pointer,
+the raw memory and named shared memory allocation functions can be 
+called directly:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">//A named shared memory object creation fron-end
+</span><span class="identifier">named_shared_object</span><span class="identifier"> segment</span><span class="special">;</span><span class="comment">
+
+//Create the shared memory segment and initialize resources
+</span><span class="identifier">segment</span><span class="special">.</span><span class="identifier">create</span><span class="special">(</span><span class="string">"/MySharedMemory"</span><span class="special">,//</span><span class="identifier">segment</span><span class="identifier"> name</span><span class="number">
+               65536</span><span class="special">);</span><span class="comment">           //segment size in bytes
+               
+//Obtain the segment manager
+</span><span class="identifier">named_shared_object</span><span class="special">::</span><span class="identifier">segment_manager</span><span class="special"> *</span><span class="identifier">segment_mngr</span><span class="special"> 
+   =</span><span class="identifier"> segment</span><span class="special">.</span><span class="identifier">get_segment_manager</span><span class="special">();</span><span class="comment">
+
+//With the segment manager, now we have access to all allocation functions
+</span><span class="identifier">segment_mngr</span><span class="special">-&gt;</span><span class="identifier">deallocate</span><span class="special">(</span><span class="identifier">segment_mngr</span><span class="special">-&gt;</span><span class="identifier">allocate</span><span class="special">(</span><span class="number">32</span><span class="special">));</span><span class="identifier">
+segment_mngr</span><span class="special">-&gt;</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="string">"My_Int"</span><span class="special">)[</span><span class="number">32</span><span class="special">](</span><span class="number">0</span><span class="special">);</span><span class="identifier">
+segment_mngr</span><span class="special">-&gt;</span><span class="identifier">destroy</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span><span class="string">"My_Int"</span><span class="special">);</span><span class="comment">
+
+//Initialize the custom, shared memory STL compatible 
+//allocator with the segment manager
+</span><span class="identifier">MySTLAllocator</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span><span class="identifier"> stl_alloc</span><span class="special">(</span><span class="identifier">segment_mngr</span><span class="special">);</span><span class="comment">
+
+//Alias a new vector type that uses the custom STL compatible allocator
+</span><span class="keyword">typedef</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="identifier"> MySTLAllocator</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span><span class="special"> &gt;</span><span class="identifier"> MyVect</span><span class="special">;</span><span class="comment">
+
+//Construct the vector in shared memory with allocator as constructor parameter
+</span><span class="identifier">segment</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="identifier">MyVect</span><span class="special">&gt;(</span><span class="string">"MyVect_instance"</span><span class="special">)(</span><span class="identifier">stl_alloc</span><span class="special">);</span></code></pre>
+<p>
+The user can create another STL compatible allocator that uses this pointer to access
+to all shared memory named/raw object management functions. Shmem STL compatible
+allocators are based on this approach. <span class="bold"><strong>Remember</strong></span> that shared memory STL-like allocators
+should define their <span class="bold"><strong>pointer</strong></span> typedef as an offset pointer so that STL-like containers
+can be placed in shared memory.</p>
+<p>
+If the user wants to optimize further allocator usage in Shmem node containers, he can 
+change the common allocator::construct function from:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="keyword">void</span><span class="identifier"> construct</span><span class="special">(</span><span class="identifier">pointer</span><span class="identifier"> _Ptr</span><span class="special">,</span><span class="keyword"> const</span><span class="identifier"> value_type</span><span class="special"> &amp;</span><span class="identifier">value</span><span class="special">);</span></code></pre>
+<p>
+to this one:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="identifier"> Convertible</span><span class="special">&gt;</span><span class="keyword">
+void</span><span class="identifier"> construct</span><span class="special">(</span><span class="identifier">pointer</span><span class="identifier"> ptr</span><span class="special">,</span><span class="keyword"> const</span><span class="identifier"> Convertible</span><span class="special"> &amp;</span><span class="identifier">value</span><span class="special">)</span></code></pre>
+<p>
+and define a specialization of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">has_convertible_construct</span><span class="special">&lt;...&gt;</span></code> 
+defined in <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">shmem</span><span class="special">/</span><span class="identifier">detail</span><span class="special">/</span><span class="identifier">utilities</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code> file:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="keyword">namespace</span><span class="identifier"> boost</span><span class="special">{</span><span class="keyword"> namespace</span><span class="identifier"> shmem</span><span class="special">{</span><span class="keyword"> 
+
+template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="identifier"> T</span><span class="special">,</span><span class="keyword"> class</span><span class="identifier"> SegmentManager</span><span class="special">&gt;</span><span class="keyword">
+struct</span><span class="identifier"> has_convertible_construct</span><span class="special">
+   &lt;</span><span class="identifier">my_allocator</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span><span class="identifier"> SegmentManager</span><span class="special">&gt;</span><span class="special"> &gt;</span><span class="special">
+{</span><span class="keyword">
+   enum</span><span class="special"> {</span><span class="identifier">   value</span><span class="special"> =</span><span class="keyword"> true</span><span class="special"> };</span><span class="special">
+};</span><span class="special">
+
+}}</span><span class="comment"> //namespace boost{ namespace shmem{ 
+</span></code></pre>
+<p>
+Using this optimization, Shmem node containers will just store one allocator instance
+instead of 2, because nodes could be constructed from the value type directly.</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.custom_indexes"></a> Building custom indexes</h3></div></div></div>
+<p>
+The named shared memory object allocation algorithm uses a name/buffer index to
+speed up object searching and creation. Default specializations of 
+basic_named_shared_object, use boost::shmem::flat_map as index.</p>
+<p>
+However, the index type can be chosen via template parameter, so that
+the user can define its own index type if he needs that. To construct
+a new index type, the user must create a class with the following guidelines:</p>
+<div class="itemizedlist"><ul type="disc"><li>
+The interface of the index must follow the common public interface of std::map
+  and future std::unordered_map including public typedefs. 
+  The value_type typedef can be of type:
+</li></ul></div>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">key_type</span><span class="special">,</span><span class="identifier"> mapped_type</span><span class="special">&gt;</span> 
+</code></pre>
+<p>
+or</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="keyword">const</span><span class="identifier"> key_type</span><span class="special">,</span><span class="identifier"> mapped_type</span><span class="special">&gt;</span></code></pre>
+<p>
+so that ordered arrays or deques can be used as index types. 
+Some known classes following this basic interface are boost::unordered_map, 
+boost::shmem::flat_map and boost::shmem::map.</p>
+<div class="itemizedlist"><ul type="disc"><li>
+The class must be a class template taking only a traits struct of this type:
+</li></ul></div>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="keyword">struct</span><span class="identifier"> index_traits</span><span class="special">
+{</span><span class="keyword">
+   typedef</span><span class="comment"> /*...*/</span><span class="identifier">   key_type</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="comment"> /*...*/</span><span class="identifier">   mapped_type</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="comment"> /*...*/</span><span class="identifier">   segment_manager</span><span class="special">;</span><span class="special">
+};</span></code></pre>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="keyword">template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> IndexTraits</span><span class="special">&gt;</span><span class="keyword">
+class</span><span class="identifier"> my_index_type</span><span class="special">;</span></code></pre>
+<p>
+The key_type typedef of the passed index_traits will be a instantiation of the following class:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">/*!The key of the the named allocation information index. Stores a to
+   a null string and the length of the string to speed up sorting*/</span><span class="keyword">
+template</span><span class="special">&lt;...&gt;</span><span class="keyword">
+struct</span><span class="identifier"> index_key</span><span class="special">
+{</span><span class="keyword">
+   typedef</span><span class="comment"> /*...*/</span><span class="identifier">                              char_type</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="comment"> /*...*/</span><span class="identifier">                              const_char_ptr_t</span><span class="special">;</span><span class="comment">
+
+   //Offset pointer to the object's name
+</span><span class="identifier">   const_char_ptr_t</span><span class="identifier">                             mp_str</span><span class="special">;</span><span class="comment">
+
+   //Length of the name buffer (null NOT included)
+</span><span class="identifier">   std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier">                                  m_len</span><span class="special">;</span><span class="comment">
+
+   /*!Constructor of the key*/</span><span class="identifier">
+   index_key</span><span class="special"> (</span><span class="keyword">const</span><span class="identifier"> CharT</span><span class="special"> *</span><span class="identifier">name</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> length</span><span class="special">);</span><span class="comment">
+
+   /*!Less than function for index ordering*/</span><span class="keyword">
+   bool</span><span class="keyword"> operator</span><span class="special"> &lt;</span><span class="special"> (</span><span class="keyword">const</span><span class="identifier"> index_key</span><span class="special"> &amp;</span><span class="identifier"> right</span><span class="special">)</span><span class="keyword"> const</span><span class="special">;</span><span class="comment">
+
+   /*!Equal to function for index ordering*/</span><span class="keyword">
+   bool</span><span class="keyword"> operator</span><span class="special"> ==</span><span class="special"> (</span><span class="keyword">const</span><span class="identifier"> index_key</span><span class="special"> &amp;</span><span class="identifier"> right</span><span class="special">)</span><span class="keyword"> const</span><span class="special">;</span><span class="special">
+};</span></code></pre>
+<p>
+The mapped_type is not directly modified by the customized index but it is needed to 
+define the index type. The <span class="bold"><strong>segment_manager</strong></span> will be the type of the segment manager
+that provides memory allocation.</p>
+<div class="itemizedlist"><ul type="disc"><li>
+The constructor of the customized index type must take a pointer to segment_manager
+  as constructor argument:
+</li></ul></div>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="identifier">constructor</span><span class="special">(</span><span class="identifier">segment_manager</span><span class="special"> *</span><span class="identifier">alloc</span><span class="special">);</span></code></pre>
+<div class="itemizedlist"><ul type="disc"><li>
+The index must provide a memory reservation function, that optimizes the index if the 
+  user knows the number of elements to be inserted in the index:
+</li></ul></div>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="keyword">void</span><span class="identifier"> reserve</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> n</span><span class="special">);</span></code></pre>
+<p>
+For example, the default index type flat_map_index based in boost::shmem::flat_map 
+is just defined as:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="keyword">namespace</span><span class="identifier"> boost</span><span class="special"> {</span><span class="keyword"> namespace</span><span class="identifier"> shmem</span><span class="special"> {</span><span class="keyword"> namespace</span><span class="identifier"> detail</span><span class="special"> {</span><span class="comment">
+
+/*!Helper class to define typedefs from IndexTraits*/</span><span class="keyword">
+template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> MapConfig</span><span class="special">&gt;</span><span class="keyword">
+struct</span><span class="identifier"> flat_map_index_aux</span><span class="special">
+{</span><span class="keyword">
+   typedef</span><span class="keyword"> typename</span><span class="identifier"> MapConfig</span><span class="special">::</span><span class="identifier">key_type</span><span class="identifier">                  key_type</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="keyword"> typename</span><span class="identifier"> MapConfig</span><span class="special">::</span><span class="identifier">mapped_type</span><span class="identifier">               mapped_type</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="keyword"> typename</span><span class="identifier"> MapConfig</span><span class="special">::</span><span class="identifier">segment_manager</span><span class="identifier">           segment_manager</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">less</span><span class="special">&lt;</span><span class="identifier">key_type</span><span class="special">&gt;</span><span class="identifier">                           key_less</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">key_type</span><span class="special">,</span><span class="identifier"> mapped_type</span><span class="special">&gt;</span><span class="identifier">              value_type</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">allocator</span><span class="special">
+            &lt;</span><span class="identifier">value_type</span><span class="special">,</span><span class="identifier"> segment_manager</span><span class="special">&gt;</span><span class="identifier">                allocator_type</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">flat_map</span><span class="special">&lt;</span><span class="identifier">key_type</span><span class="special">,</span><span class="identifier">  mapped_type</span><span class="special">,</span><span class="identifier">
+                                 key_less</span><span class="special">,</span><span class="identifier"> allocator_type</span><span class="special">&gt;</span><span class="identifier">   index_t</span><span class="special">;</span><span class="special">
+};</span><span class="comment">
+
+/*!Index type based in flat_map. Just derives from flat_map and
+   defines the interface needed by the shared named object creation class*/</span><span class="keyword">
+template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> MapConfig</span><span class="special">&gt;</span><span class="keyword">
+class</span><span class="identifier"> flat_map_index</span><span class="comment">
+   //Derive class from map specialization
+</span><span class="special">   :</span><span class="keyword"> public</span><span class="identifier"> flat_map_index_aux</span><span class="special">&lt;</span><span class="identifier">MapConfig</span><span class="special">&gt;::</span><span class="identifier">index_t</span><span class="special">
+{</span><span class="keyword">
+   typedef</span><span class="identifier"> flat_map_index_aux</span><span class="special">&lt;</span><span class="identifier">MapConfig</span><span class="special">&gt;</span><span class="identifier">        index_aux</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="keyword"> typename</span><span class="identifier"> index_aux</span><span class="special">::</span><span class="identifier">index_t</span><span class="identifier">          base_type</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="keyword"> typename</span><span class="identifier"> index_aux</span><span class="special">::</span><span class="identifier">segment_manager</span><span class="identifier">  segment_manager</span><span class="special">;</span><span class="keyword">
+
+public</span><span class="special">:</span><span class="comment">
+   /*!Constructor. Takes a pointer to the memory
+      allocation algorithm. Can throw*/</span><span class="identifier">
+   flat_map_index</span><span class="special">(</span><span class="identifier">segment_manager</span><span class="special"> *</span><span class="identifier">segment_mngr</span><span class="special">)</span><span class="special">
+      :</span><span class="identifier"> base_type</span><span class="special">(</span><span class="keyword">typename</span><span class="identifier"> index_aux</span><span class="special">::</span><span class="identifier">key_less</span><span class="special">(),</span><span class="identifier">
+                  segment_mngr</span><span class="special">){}</span><span class="comment">
+
+   /*!This reserves memory to optimize the insertion of n
+      elements in the index*/</span><span class="keyword">
+   void</span><span class="identifier"> reserve</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> n</span><span class="special">)</span><span class="special">
+      {</span><span class="identifier">  base_type</span><span class="special">::</span><span class="identifier">reserve</span><span class="special">(</span><span class="identifier">n</span><span class="special">);</span><span class="special">  }</span><span class="special">
+};</span><span class="special">
+
+}}}</span><span class="comment">   //namespace boost { namespace shmem { namespace detail {
+</span></code></pre>
+<p>
+If the user is defining a node container based index (a container whose iterators 
+are not invalidated when inserting or erasing other elements), Shmem can optimize
+named object destruction when destructing via pointer. Shmem can store an iterator
+next to the object and this way, instead of using the name of the object to erase 
+the index entry, it uses the iterator, which is a faster way. So if you are creating
+a new node container based index (for example, a tree), you should define an
+specialization of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">is_node_index</span><span class="special">&lt;...&gt;</span></code> defined in 
+<code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">shmem</span><span class="special">/</span><span class="identifier">detail</span><span class="special">/</span><span class="identifier">utilities</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">/*!Trait classes to detect if an index is a node
+   index. This allows more efficient operations
+   when deallocating named objects.*/</span><span class="keyword">
+template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="identifier"> MapConfig</span><span class="special">&gt;</span><span class="keyword">
+struct</span><span class="identifier"> is_node_index</span><span class="special">
+   &lt;</span><span class="identifier">my_index</span><span class="special">&lt;</span><span class="identifier">MapConfig</span><span class="special">&gt;</span><span class="special"> &gt;</span><span class="special">
+{</span><span class="keyword">
+   enum</span><span class="special"> {</span><span class="identifier">   value</span><span class="special"> =</span><span class="keyword"> true</span><span class="special"> };</span><span class="special">
+};</span></code></pre>
+<p>
+Shmem also defines other index types:</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<span class="bold"><strong>boost:shmem::unordered_map_index</strong></span>, uses <span class="bold"><strong>boost::unordered_map</strong></span> as index type.
+</li>
+<li>
+<span class="bold"><strong>boost::map_index</strong></span> uses <span class="bold"><strong>boost::shmem::map</strong></span> as index type.
+</li>
+<li>
+<span class="bold"><strong>boost::null_index</strong></span> that uses an dummy index type if the user just needs
+  anonymous allocations and want's to save some space and class instantations.
+</li>
+</ul></div>
+<p>
+To define a new front-end that uses the new index:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">/*!Defines the named shared object allocation with a c-string as 
+   a key, the simple sequential fit algorithm (with process-shared mutexes)
+   as raw shared memory management algorithm and a custom index*/</span><span class="keyword">
+typedef</span><span class="identifier"> 
+   basic_named_shared_object</span><span class="special"> &lt;</span><span class="keyword"> 
+                              char</span><span class="special">,</span><span class="identifier"> 
+                              simple_seq_fit</span><span class="special">&lt;</span><span class="identifier">shared_mutex_family</span><span class="special">&gt;,</span><span class="identifier">
+                              my_index_type</span><span class="special">
+                             &gt;</span><span class="identifier">  
+   my_named_shared_object</span><span class="special">;</span></code></pre>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2005 -2006 Ion Gaztañaga</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="containers_explained.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="beyond_shared_memory.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

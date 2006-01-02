@@ -1,0 +1,137 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> A shared memory pointer: offset_ptr</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="prev" href="oswrappers.html" title=" Basic Shmem classes">
+<link rel="next" href="named_shared_object.html" title=" Named shared memory object allocation">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="boost.png (6897 bytes)" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="oswrappers.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="named_shared_object.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="shmem.offset_ptr"></a> A shared memory pointer: offset_ptr</h2></div></div></div>
+<p>
+As said, Shmem does not count with same address shared memory 
+mapping. Because of that, raw pointers stored in shared memory may become 
+invalid. To solve this we can use offsets instead absolute addresses 
+to point to an object in the same shared memory segment.</p>
+<p>
+The smart pointer offset_ptr wraps all the background operations 
+needed to offer a pointer-like interface. The class interface is 
+inspired in Boost Smart Pointers and stores the offset between 
+the pointee's address and the "this" pointer (the address of the
+offset_ptr itself). One of the big problems of 
+offset_ptr is the representation of NULL pointer. Null pointer 
+can't be safely represented like an offset, since the 0 address 
+is always out of the shared memory segment. Some implementations choose 
+0 offset as a null pointer but this is not valid for many uses, 
+since many times nodes from STL containers point to themselves (the 
+end node in an empty container, for example), and 0 offset value 
+is needed.</p>
+<p>
+offset_ptr offers a templatized basic implementation that allows 
+different flavours of offset pointers.</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="keyword">template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> PointedType</span><span class="special">,</span><span class="keyword"> class</span><span class="identifier"> RootPtr</span><span class="special"> =</span><span class="identifier"> offset_1_null_ptr</span><span class="special">&gt;</span><span class="keyword">
+class</span><span class="identifier"> offset_ptr</span><span class="special">;</span></code></pre>
+<p>
+The default implementation considers offset==1 as null pointer.
+This implies that the pointer can not point the byte pointed by
+(reinterpret_cast&lt;char&gt;(&amp;offset_ptr))+1
+because this byte is considered as the null value. The pointer
+will contain only a std::ptrdiff_t value. This default 
+implementation is activated using offset_1_null_ptr type in
+the second template parameter.</p>
+<p>
+To obtain a full range addressing, an additional member is needed
+so the size of the pointer grows to sizeof(std::ptrdiff_t) + sizeof(bool).
+The bool member indicates if the pointer is null or not. This implementation
+is activated using full_offset_ptr in the second template parameter.</p>
+<p>
+The offset_ptr class offers all pointer-like operations and
+random_access_iterator typedefs, so it can be used in STL 
+algorithms requiring random access and detected via traits:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="keyword">template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> PointedType</span><span class="special">,</span><span class="keyword"> class</span><span class="identifier"> RootPtr</span><span class="special">&gt;</span><span class="keyword">
+class</span><span class="identifier"> offset_ptr</span><span class="special"> :</span><span class="keyword"> public</span><span class="identifier"> RootPtr</span><span class="special">
+{</span><span class="comment">
+   //. . .
+</span><span class="keyword"> public</span><span class="special">:</span><span class="comment">   //Public Functions 
+</span><span class="keyword">   typedef</span><span class="comment">     /*...*/</span><span class="identifier">     pointer</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="comment">     /*...*/</span><span class="identifier">     reference</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="comment">     /*...*/</span><span class="identifier">     value_type</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="comment">     /*...*/</span><span class="identifier">     difference_type</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="comment">     /*...*/</span><span class="identifier">     iterator_category</span><span class="special">;</span><span class="comment">
+
+   /*! Default Constructor */</span><span class="identifier">
+   offset_ptr</span><span class="special">(){</span><span class="special"> }</span><span class="comment">
+
+   /*!   Ctor from raw pointer (allows "0" pointer conversion) */</span><span class="identifier">
+   offset_ptr</span><span class="special">(</span><span class="identifier">pointer</span><span class="identifier"> ptr</span><span class="special">)</span><span class="special"> {</span><span class="keyword">  this</span><span class="special">-&gt;</span><span class="identifier">set_offset</span><span class="special">(</span><span class="identifier">ptr</span><span class="special">);</span><span class="special"> }</span><span class="comment">
+
+   /*!   Ctor from other offset_ptr */</span><span class="identifier">
+   offset_ptr</span><span class="special">(</span><span class="keyword">const</span><span class="identifier"> offset_ptr</span><span class="special">&amp;</span><span class="identifier"> ptr</span><span class="special">);</span><span class="comment">
+
+   /*!   Ctor from other offset_ptr. If pointers of pointee types 
+         are convertible, offset_ptrs will be convertibles. */</span><span class="keyword">
+   template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="identifier"> T2</span><span class="special">&gt;</span><span class="identifier">
+   offset_ptr</span><span class="special">(</span><span class="keyword">const</span><span class="identifier"> offset_ptr</span><span class="special">&lt;</span><span class="identifier">T2</span><span class="special">&gt;&amp;</span><span class="identifier"> ptr</span><span class="special">);</span><span class="comment">
+
+   /*!   Obtains raw pointer from offset. */</span><span class="identifier">
+   pointer</span><span class="identifier"> get</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span><span class="comment">
+
+   /*!   Pointer-like -&gt; operator. It can return 0 pointer */</span><span class="identifier">
+   pointer</span><span class="keyword"> operator</span><span class="special">-&gt;()</span><span class="keyword"> const</span><span class="special">;</span><span class="comment">
+
+   /*!   Derefencing operator, if it is a null offset_ptr behaviour 
+         is undefined. */</span><span class="identifier">
+   reference</span><span class="keyword"> operator</span><span class="special">*</span><span class="special"> ()</span><span class="keyword"> const</span><span class="special">;</span><span class="comment">
+
+   /*!   Indexing operator. */</span><span class="identifier">
+   reference</span><span class="keyword"> operator</span><span class="special">[](</span><span class="identifier">ptrdiff_t</span><span class="identifier"> idx</span><span class="special">)</span><span class="keyword"> const</span><span class="special">;</span><span class="comment">
+
+   /*!   Assignment from pointer (saves extra conversion). */</span><span class="identifier">
+   offset_ptr</span><span class="special">&amp;</span><span class="keyword"> operator</span><span class="special">=</span><span class="special"> (</span><span class="identifier">const_pointer</span><span class="identifier"> from</span><span class="special">);</span><span class="comment">
+
+   /*!   Assignment from other offset_ptr. */</span><span class="identifier">
+   offset_ptr</span><span class="special">&amp;</span><span class="keyword"> operator</span><span class="special">=</span><span class="special"> (</span><span class="keyword">const</span><span class="identifier"> offset_ptr</span><span class="special"> &amp;</span><span class="identifier"> pt</span><span class="special">);</span><span class="comment">
+
+   /*!   Assignment from related offset_ptr. If pointers of pointee types 
+         are assignable, offset_ptrs will be assignable. */</span><span class="keyword">
+   template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> T2</span><span class="special">&gt;</span><span class="identifier">
+   offset_ptr</span><span class="special">&amp;</span><span class="keyword"> operator</span><span class="special">=</span><span class="special"> (</span><span class="keyword">const</span><span class="identifier"> offset_ptr</span><span class="special">&lt;</span><span class="identifier">T2</span><span class="special">&gt;</span><span class="special"> &amp;</span><span class="identifier"> pt</span><span class="special">);</span><span class="comment">
+
+   /*!   safe bool conversion operator*/</span><span class="keyword">
+   operator</span><span class="identifier"> unspecified_bool_type</span><span class="special">()</span><span class="keyword"> const</span><span class="special">;</span><span class="comment">
+
+   /*!   Not operator. Not needed in theory, but improves portability */</span><span class="keyword">
+   bool</span><span class="keyword"> operator</span><span class="special">!</span><span class="special"> ()</span><span class="keyword"> const</span><span class="special">;</span><span class="comment">
+
+   //. . . Pointer Arithmetic and Comparison 
+</span><span class="special">};</span></code></pre>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2005 -2006 Ion Gaztañaga</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="oswrappers.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="named_shared_object.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

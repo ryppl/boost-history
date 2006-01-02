@@ -1,0 +1,566 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Basic Shmem classes</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="prev" href="concepts.html" title=" Concepts and definitions">
+<link rel="next" href="offset_ptr.html" title=" A shared memory pointer: offset_ptr">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="boost.png (6897 bytes)" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="concepts.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="offset_ptr.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="shmem.oswrappers"></a> Basic Shmem classes</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="oswrappers.html#shmem.shared_memory"> Shared memory</a></span></dt>
+<dt><span class="section"><a href="oswrappers.html#shmem.mmapped_file"> Memory mapped file</a></span></dt>
+<dt><span class="section"><a href="oswrappers.html#shmem.shared_mutex"> Process-shared mutexes</a></span></dt>
+<dt><span class="section"><a href="oswrappers.html#shmem.shared_condition"> Process-shared condition variables</a></span></dt>
+<dt><span class="section"><a href="oswrappers.html#shmem.named_semaphore"> Named semaphore</a></span></dt>
+<dt><span class="section"><a href="oswrappers.html#shmem.named_mutex"> Named mutex</a></span></dt>
+<dt><span class="section"><a href="oswrappers.html#shmem.shared_barrier"> Process-shared barrier</a></span></dt>
+<dt><span class="section"><a href="oswrappers.html#shmem.shared_read_write_mutex"> Process-shared read/write mutexes</a></span></dt>
+</dl></div>
+<p>
+These classes provide basic operating system resources to build higher
+level inter-process communications. In named objects, like shared memory,
+memory-mapped files, and named semaphore and mutex, the semantic of the
+name used to construct the object is operating system dependant. All basic
+objects in Shmem share the same namespace, so a we can't create a named mutex
+called "MyObject" and shared memory called also "MyObject". The user should 
+choose separate names for both objects.</p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.shared_memory"></a> Shared memory</h3></div></div></div>
+<p>
+This class allows the creation, connection and destruction 
+of a shared memory segment.</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">/*!A class that wraps basic shared memory management*/</span><span class="keyword">
+class</span><span class="identifier"> shared_memory</span><span class="special"> :</span><span class="keyword"> private</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">noncopyable</span><span class="special">
+{</span><span class="keyword">
+public</span><span class="special">:</span><span class="keyword">
+
+   class</span><span class="identifier"> segment_info_t</span><span class="special">
+   {</span><span class="keyword">
+    public</span><span class="special">:</span><span class="comment">
+      /*!Returns pointer to the shared memory fragment
+         the user can overwrite*/</span><span class="keyword">
+      void</span><span class="special"> *</span><span class="identifier">      get_user_ptr</span><span class="special">()</span><span class="keyword"> const</span><span class="special">;</span><span class="comment">
+      /*!Returns the size of the shared memory fragment
+         the user can overwrite*/</span><span class="identifier">
+      std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> get_user_size</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span><span class="special">
+   };</span><span class="comment">
+
+   /*!Initializes members. Does not throw*/</span><span class="identifier">
+   shared_memory</span><span class="special">();</span><span class="comment">
+
+   /*!Calls close. Does not throw*/</span><span class="special">
+   ~</span><span class="identifier">shared_memory</span><span class="special">();</span><span class="comment">
+
+   /*!Creates a shared memory segment with name "name", with size "size".
+      User can specify the mapping address. Never throws.*/</span><span class="keyword">
+   bool</span><span class="identifier"> create</span><span class="special">(</span><span class="keyword">const</span><span class="keyword"> char</span><span class="special"> *</span><span class="identifier">name</span><span class="special">,</span><span class="identifier">          std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> size</span><span class="special">,</span><span class="keyword"> 
+               const</span><span class="keyword"> void</span><span class="special"> *</span><span class="identifier">addr</span><span class="special"> =</span><span class="number"> 0</span><span class="special">);</span><span class="comment">
+
+   /*!Creates a shared memory segment with name "name", with size "size".
+      User can also specify the mapping address in "addr". Never throws.
+      It also executes the functor "func" atomically if the segment is created.
+      Functor has must have the following signature:
+
+      bool operator()(const segment_info_t * info, bool created) const
+      
+      "info" is an initialized segment info structure, and "created" 
+      must be "true". If the functor returns "false", an error is supposed
+      and segment will be closed. The functor must not throw.
+      */</span><span class="keyword">
+   template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> Func</span><span class="special">&gt;</span><span class="keyword">
+   bool</span><span class="identifier"> create_with_func</span><span class="special">(</span><span class="keyword">const</span><span class="keyword"> char</span><span class="special"> *</span><span class="identifier">name</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> size</span><span class="special">,</span><span class="identifier"> Func</span><span class="identifier"> func</span><span class="special">,</span><span class="keyword">
+                         const</span><span class="keyword"> void</span><span class="special"> *</span><span class="identifier">addr</span><span class="special"> =</span><span class="number"> 0</span><span class="special">);</span><span class="comment">
+
+   /*!Opens previously created shared memory segment with name "name". 
+      If the memory segment was not previously created, 
+      the function return false. User can specify the mapping address. 
+      Never throws.*/</span><span class="keyword">
+   bool</span><span class="identifier"> open</span><span class="special">(</span><span class="keyword">const</span><span class="keyword"> char</span><span class="special"> *</span><span class="identifier">name</span><span class="special">,</span><span class="keyword"> const</span><span class="keyword"> void</span><span class="special"> *</span><span class="identifier">addr</span><span class="special"> =</span><span class="number"> 0</span><span class="special">);</span><span class="comment">
+
+   /*!Opens previously created shared memory segment with name "name". 
+      If the memory segment was not previously created, 
+      the function returns "false". User can specify the mapping address. 
+      Never throws.
+      It also executes the functor "func" atomically if the segment is opened.
+      Functor has must have the following signature:
+
+      bool operator()(const segment_info_t * info, bool created) const
+      
+      "info" is an initialized segment info structure, and "created" 
+      must be "false". If the functor returns "false", an error is supposed
+      and segment will be closed. The functor must not throw.*/</span><span class="keyword">
+   template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> Func</span><span class="special">&gt;</span><span class="keyword">
+   bool</span><span class="identifier"> open_with_func</span><span class="special">(</span><span class="keyword">const</span><span class="keyword"> char</span><span class="special"> *</span><span class="identifier">name</span><span class="special">,</span><span class="identifier"> Func</span><span class="identifier"> func</span><span class="special">,</span><span class="keyword">
+                     const</span><span class="keyword"> void</span><span class="special"> *</span><span class="identifier">addr</span><span class="special"> =</span><span class="number"> 0</span><span class="special">);</span><span class="comment">
+
+   /*!Creates a shared memory segment with name "name", and size "size" if
+      the shared memory was not previously created. If it was previously 
+      created it tries to open it. User can specify the mapping address.
+      Never throws.*/</span><span class="keyword">
+   bool</span><span class="identifier"> open_or_create</span><span class="special">(</span><span class="keyword">const</span><span class="keyword"> char</span><span class="special"> *</span><span class="identifier">name</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> size</span><span class="special">,</span><span class="keyword"> const</span><span class="keyword"> void</span><span class="special"> *</span><span class="identifier">addr</span><span class="special"> =</span><span class="number"> 0</span><span class="special">);</span><span class="comment">
+
+   /*!Creates a shared memory segment with name "name", and size "size" if
+      the shared memory was not previously created. If it was previously 
+      created it tries to open it. User can specify the mapping address.
+      Never throws.
+      It also executes the functor "func" atomically if the segment is 
+      created or opened. Functor has must have the following signature:
+
+      bool operator()(const segment_info_t * info, bool created) const
+      
+      "info" is an initialized segment info structure, and "created" 
+      will be "true" if the segment was created or "false" if the segment was
+      opened. If the functor returns "false", an error is supposed
+      and segment will be closed. The functor must not throw.*/</span><span class="keyword">
+   template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> Func</span><span class="special">&gt;</span><span class="keyword">
+   bool</span><span class="identifier"> open_or_create_with_func</span><span class="special">(</span><span class="keyword">const</span><span class="keyword"> char</span><span class="special"> *</span><span class="identifier">name</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> size</span><span class="special">,</span><span class="identifier"> 
+                                 Func</span><span class="identifier"> func</span><span class="special">,</span><span class="keyword">        const</span><span class="keyword"> void</span><span class="special"> *</span><span class="identifier">addr</span><span class="special"> =</span><span class="number"> 0</span><span class="special">);</span><span class="comment">
+
+   /*!Returns the size of the shared memory segment. Never throws.*/</span><span class="identifier">
+   std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> get_size</span><span class="special">()</span><span class="keyword">  const</span><span class="special">;</span><span class="comment">
+
+   /*!Returns shared memory segment's base address for this process. 
+      Never throws.*/</span><span class="keyword">
+   void</span><span class="special">*</span><span class="identifier"> get_base</span><span class="special">()</span><span class="keyword">  const</span><span class="special">;</span><span class="comment">
+
+   /*!Unmaps shared memory from process' address space. Never throws.*/</span><span class="keyword">
+   void</span><span class="identifier"> close</span><span class="special">();</span><span class="comment">
+
+   /*!Unmaps shared memory from process' address space . Never throws.
+      It also executes the functor "func" atomically.
+      Functor has must have the following signature:
+
+      void operator()(const segment_info_t * info, bool last) const
+      
+      "info" is an initialized segment info structure, and "last" 
+      indicates if this unmapping is the last unmapping so that
+      there will be no no other processes attached to the segment.
+      The functor must not throw.*/</span><span class="keyword">
+   template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> Func</span><span class="special">&gt;</span><span class="keyword">
+   void</span><span class="identifier"> close_with_func</span><span class="special">(</span><span class="identifier">Func</span><span class="identifier"> func</span><span class="special">);</span><span class="special">
+};</span></code></pre>
+<p>
+The create function takes 3 parameters. The first one 
+is the name of the shared memory we want to create, 
+the second is the size of the shared memory, and the last 
+the mapping address. The function returns false if the shared memory exists 
+previously or the mapping can be achieved.</p>
+<p>
+Caution: If you specify the mapping address, (for example, 0x30000000)
+this does not mean that you can start to write that in that address! shared_memory
+stores some metadata in the first bytes of the segment, so please get the address
+you can overwrite calling get_base() function. The "size" argument passed when
+constructing the segment represents the size the user needs. The real segment
+size will be bigger to store the metadata.</p>
+<p>
+The open function opens a previously 
+created shared memory segment. The open_or_create 
+function opens the segment if it was previously 
+created or creates it otherwise.</p>
+<p>
+All creation, opening and closing functions are atomic. This means that two processes
+can concurrently try to open_or_create a segment. One will create the segment and other
+will connect. The xxx_with_func functions will also execute the functor atomically.</p>
+<p>
+The xxx_with_with_func versions are really useful to execute logic atomically so that
+we can implement higher level IPC mechanisms like message queues with atomic 
+initializations.</p>
+<p>
+The close() call does not destroy the shared memory segment, it just unmaps it from the
+process' address space. When all processes connected to the shared memory segment
+execute the close call, the shared memory segment is destroyed.</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.mmapped_file"></a> Memory mapped file</h3></div></div></div>
+<p>
+This class allows portable memory-mapping files so that we can work with files
+just like memory. We can map a file to the address-space of the process and 
+achieve automatic persistence for data written in memory.</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">/*!A class that wraps basic file-mapping management*/</span><span class="keyword">
+class</span><span class="identifier"> mmapped_file</span><span class="special"> :</span><span class="keyword"> private</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">noncopyable</span><span class="special">
+{</span><span class="keyword">
+ public</span><span class="special">:</span><span class="keyword">
+   typedef</span><span class="keyword"> enum</span><span class="special"> {</span><span class="identifier"> 
+                  ro_mode</span><span class="special"> =</span><span class="number"> 0x01</span><span class="special">,</span><span class="identifier"> rw_mode</span><span class="special"> =</span><span class="number"> 0x02</span><span class="special">,</span><span class="identifier"> access_mode_mask</span><span class="special"> =</span><span class="number"> 0xff</span><span class="special"> 
+                }</span><span class="identifier">    accessmode</span><span class="special">;</span><span class="comment">
+
+   /*!Initializes members. Does not throw*/</span><span class="identifier">
+   mmapped_file</span><span class="special">();</span><span class="comment">
+
+   /*!Calls close. Does not throw*/</span><span class="special">
+   ~</span><span class="identifier">mmapped_file</span><span class="special">();</span><span class="comment">
+
+   /*!Opens a file mapping of file "filename", starting in offset 
+      "file_offset", and the mapping's size will be "size". The mapping 
+      can be opened as read-only "ro_mode" or read-write "rw_mode. 
+      Never throws.*/</span><span class="keyword">
+   bool</span><span class="identifier"> open</span><span class="special">(</span><span class="keyword">const</span><span class="keyword"> char</span><span class="special"> *</span><span class="identifier">filename</span><span class="special">,</span><span class="identifier">  fileoff_t</span><span class="identifier"> file_offset</span><span class="special">,</span><span class="identifier"> 
+             std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> size</span><span class="special">,</span><span class="identifier">      accessmode</span><span class="identifier"> mode</span><span class="special">);</span><span class="comment">
+
+   /*!Closes a previously opened mode file mapping. Never throws.*/</span><span class="keyword">
+   void</span><span class="identifier"> close</span><span class="special">();</span><span class="comment">
+
+   /*!Returns if file mapping is open. Never throws.*/</span><span class="keyword">
+   bool</span><span class="identifier">     is_open</span><span class="special">()</span><span class="keyword">  const</span><span class="special">;</span><span class="comment">
+
+   /*!Returns the size of the file mapping. Never throws.*/</span><span class="identifier">
+   std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> get_size</span><span class="special">()</span><span class="keyword"> const</span><span class="special">;</span><span class="comment">
+
+   /*!Returns the base address of the file mapping. Never throws.*/</span><span class="keyword">
+   void</span><span class="special">*</span><span class="identifier"> get_base</span><span class="special">()</span><span class="keyword"> const</span><span class="special">;</span><span class="comment">
+
+   /*!Returns the file offset of the file mapping from the beginning of the file.
+      Never throws.*/</span><span class="identifier">
+   fileoff_t</span><span class="identifier"> get_file_offset</span><span class="special">()</span><span class="keyword"> const</span><span class="special">;</span><span class="comment">
+
+   /*!Flushes to the disk a byte range within the mapped file. 
+      Never throws*/</span><span class="keyword">
+   bool</span><span class="identifier"> flush</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> mapping_offset</span><span class="special"> =</span><span class="number"> 0</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> numbytes</span><span class="special"> =</span><span class="number"> 0</span><span class="special">);</span><span class="special">
+};</span></code></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.shared_mutex"></a> Process-shared mutexes</h3></div></div></div>
+<p>
+Shmem process shared mutexes follow the basic guidelines of Boost Thread Mutexes. 
+Mutexes can't be used without a scoped_lock and for that reason, Shmem provides 
+lock classes similar to Boost Thread ones. In the future it would be interesting 
+to unify both locks under the same library. The same happens with xtime structure
+and functions. The reason for this duplication is that Boost Threads checks for multithreaded
+builds when including headers, and emits a compilation error when a single threaded
+process includes xtime or scoped_lock classes. Since Shmem can be used between
+single threaded processes, that functionality is replicated in Shmem. If Shmem
+is reviewed and accepted, this scoped lock and xtime structs could be independized
+from multithreaded builds so that the same locks and xtime could beused by 
+Boost.Thread and Shmem.</p>
+<p>
+shared_mutex wraps a mutex that can be placed in shared memory and used to 
+mutually exclude different process and threads. shared_try_mutex, wraps the 
+same mutex functionality with additional try_lock mechanism to avoid blocking 
+if the mutex is already blocked by another process.</p>
+<p>
+shared_recursive_mutex wraps a mutex that can be placed in shared 
+memory and used to mutually exclude different process and threads 
+and that can be blocked several times by the same process/thread. 
+shared_recursive_try_mutex and shared_recursive_timed_mutex, wraps the 
+same mutex functionality with additional try_lock and timed_lock mechanisms 
+to avoid blocking if the mutex is already blocked by another process.
+The recursive mutexes can be locked by the same thread several times.</p>
+<p>
+All mutexes have the same interface, taken from Boost Threads library:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">/*!Wraps a mutex that can be placed in shared memory and can be 
+   shared between processes. Allows lock trying*/</span><span class="keyword">
+class</span><span class="identifier"> shared_try_mutex</span><span class="special"> :</span><span class="keyword"> private</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">noncopyable</span><span class="special">
+{</span><span class="keyword">
+ public</span><span class="special">:</span><span class="comment">
+
+   /*!Creates mutex resources, throws process_resource_error
+      if there are available resources */</span><span class="identifier">
+   shared_try_mutex</span><span class="special">();</span><span class="comment">
+
+   /*!Destructs resources, does not throw */</span><span class="special">
+  ~</span><span class="identifier">shared_try_mutex</span><span class="special">();</span><span class="comment">
+
+   // Friend classes.. .
+</span><span class="keyword"> private</span><span class="special">:</span><span class="comment">
+   /*!Locks mutex, sleeps when mutex is already locked.
+      Throws process_lock_error if a severe error is found*/</span><span class="keyword">
+   void</span><span class="identifier"> do_lock</span><span class="special">(</span><span class="keyword">void</span><span class="special">);</span><span class="comment">
+
+   /*! Tries to lock the mutex, returns false when mutex 
+      is already locked, returns true when success.
+      Throws process_lock_error if a severe error is found*/</span><span class="keyword">
+   bool</span><span class="identifier"> do_trylock</span><span class="special">(</span><span class="keyword">void</span><span class="special">);</span><span class="comment">
+
+   /*! Unlocks the mutex */</span><span class="keyword">
+   void</span><span class="identifier"> do_unlock</span><span class="special">(</span><span class="keyword">void</span><span class="special">);</span><span class="comment">
+   // . . .
+</span><span class="special">};</span></code></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.shared_condition"></a> Process-shared condition variables</h3></div></div></div>
+<p>
+Similar to boost thread conditions, shared_condition class provides 
+a way to signal and wait for events, but between processes. This 
+shared_condition can be placed in shared memory to construct more 
+complex inter-process communication mechanisms, like message queues.</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="keyword">class</span><span class="identifier"> shared_condition</span><span class="special">:</span><span class="keyword"> private</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">noncopyable</span><span class="special">
+{</span><span class="keyword">
+ public</span><span class="special">:</span><span class="comment">
+   /*!Constructs a shared_condition*/</span><span class="identifier">
+   shared_condition</span><span class="special">();</span><span class="comment">
+
+   /*!Destroys *this*/</span><span class="special">
+  ~</span><span class="identifier">shared_condition</span><span class="special">();</span><span class="comment">
+
+   /*!If there is a thread waiting on *this, change that 
+      thread's state to ready. Otherwise there is no effect.*/</span><span class="keyword">
+   void</span><span class="identifier"> notify_one</span><span class="special">();</span><span class="comment">
+
+   /*!Change the state of all threads waiting on *this to ready.
+      If there are no waiting threads, notify_all() has no effect.*/</span><span class="keyword">
+   void</span><span class="identifier"> notify_all</span><span class="special">();</span><span class="comment">
+
+   /*!Releases the lock on the mutex object associated with lock, blocks 
+      the current thread of execution until readied by a call to 
+      this-&gt;notify_one() or this-&gt;notify_all(), and then reacquires the lock.*/</span><span class="keyword">
+   template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> L</span><span class="special">&gt;</span><span class="keyword">
+   void</span><span class="identifier"> wait</span><span class="special">(</span><span class="identifier">L</span><span class="special">&amp;</span><span class="identifier"> lock</span><span class="special">);</span><span class="comment">
+
+   /*!The same as: while (!pred()) wait(lock)*/</span><span class="keyword">
+   template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> L</span><span class="special">,</span><span class="keyword"> class</span><span class="identifier"> Pr</span><span class="special">&gt;</span><span class="keyword">
+   void</span><span class="identifier"> wait</span><span class="special">(</span><span class="identifier">L</span><span class="special">&amp;</span><span class="identifier"> lock</span><span class="special">,</span><span class="identifier"> Pr</span><span class="identifier"> pred</span><span class="special">);</span><span class="comment">
+
+   /*!Releases the lock on the mutex object associated with lock, blocks 
+      the current thread of execution until readied by a call to 
+      this-&gt;notify_one() or this-&gt;notify_all(), or until time xt is reached, 
+      and then reacquires the lock.
+      Returns: false if time xt is reached, otherwise true.*/</span><span class="keyword">
+   template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> L</span><span class="special">&gt;</span><span class="keyword">
+   bool</span><span class="identifier"> timed_wait</span><span class="special">(</span><span class="identifier">L</span><span class="special">&amp;</span><span class="identifier"> lock</span><span class="special">,</span><span class="keyword"> const</span><span class="identifier"> xtime</span><span class="special">&amp;</span><span class="identifier"> xt</span><span class="special">);</span><span class="comment">
+
+   /*!The same as:   while (!pred()) { 
+                        if (!timed_wait(lock, xt)) return false; 
+                     } return true;*/</span><span class="keyword">
+   template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> L</span><span class="special">,</span><span class="keyword"> class</span><span class="identifier"> Pr</span><span class="special">&gt;</span><span class="keyword">
+   bool</span><span class="identifier"> timed_wait</span><span class="special">(</span><span class="identifier">L</span><span class="special">&amp;</span><span class="identifier"> lock</span><span class="special">,</span><span class="keyword"> const</span><span class="identifier"> xtime</span><span class="special">&amp;</span><span class="identifier"> xt</span><span class="special">,</span><span class="identifier"> Pr</span><span class="identifier"> pred</span><span class="special">);</span><span class="comment">
+   // . . .
+</span><span class="special">};</span></code></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.named_semaphore"></a> Named semaphore</h3></div></div></div>
+<p>
+Not necessary for shmem management but very useful to synchronize 
+different processes and send very efficient acknowledgements. 
+It can also guarantee atomicity for object creation and initialization.</p>
+<p>
+named_semaphore can't be placed in shared memory, each process must have 
+its own named_semaphore instance.</p>
+<p>
+
+   /*!A semaphore with a global name, so it can be found from different 
+      processes. Allows several resource sharing patterns and efficient 
+      acknowledgment mechanisms.*/
+   class named_semaphore : private boost::noncopyable
+   {
+   public:
+      <span class="emphasis"><em>*!Initializes member variables. Does not throw*</em></span>
+      named_semaphore();</p>
+<pre class="programlisting"><code class="literal"><span class="comment">/*!Calls close(). Does not throw*/</span><span class="special">
+~</span><span class="identifier">named_semaphore</span><span class="special">();</span><span class="comment">
+
+/*!Creates a global semaphore with a name, and an initial count. 
+   It will return an false if the semaphore is already created. 
+   Does not throw*/</span><span class="keyword">
+bool</span><span class="identifier"> create</span><span class="special">(</span><span class="keyword">const</span><span class="keyword"> char</span><span class="special"> *</span><span class="identifier">name</span><span class="special">,</span><span class="keyword"> int</span><span class="identifier"> initialCount</span><span class="special">);</span><span class="comment">
+
+/*!Opens or creates a global semaphore with a name, and an initial count. 
+   If the semaphore is created, this call is equivalent to create(). 
+   If the semaphore is already created, this call is equivalent to open()
+   and initialCount is ignored. Does not throw*/</span><span class="keyword">
+bool</span><span class="identifier"> open_or_create</span><span class="special">(</span><span class="keyword">const</span><span class="keyword"> char</span><span class="special"> *</span><span class="identifier">name</span><span class="special">,</span><span class="keyword"> int</span><span class="identifier"> initialCount</span><span class="special">);</span><span class="comment">
+
+/*!Opens a global semaphore with a name if that semaphore is previously.
+   created. If it is not previously created this function return false.
+   Does not throw*/</span><span class="keyword">
+bool</span><span class="identifier"> open</span><span class="special">(</span><span class="keyword">const</span><span class="keyword"> char</span><span class="special"> *</span><span class="identifier">name</span><span class="special">);</span><span class="comment">
+
+/*!Frees system resources. Does not throw*/</span><span class="keyword">
+void</span><span class="identifier"> close</span><span class="special">();</span><span class="comment">
+
+/*!Increments semaphore count. If there is any waiting process, wakes
+   up the process. If there is an error throws sem_exception*/</span><span class="keyword">
+void</span><span class="identifier"> post</span><span class="special">();</span><span class="comment">
+
+/*!Waits for the semaphore to the posted if count is 0. 
+   If there is an error throws sem_exception*/</span><span class="keyword">
+void</span><span class="identifier"> wait</span><span class="special">();</span><span class="comment">
+
+/*!Waits for the semaphore to the posted if count is 0 or until
+   timeout expires. Returns true if wait was ok, false if timeout
+   expires. If there is an error throws sem_exception*/</span><span class="keyword">
+bool</span><span class="identifier"> timed_wait</span><span class="special">(</span><span class="keyword">const</span><span class="identifier"> xtime</span><span class="special">&amp;</span><span class="identifier"> xt</span><span class="special">);</span><span class="comment">
+
+/*!Tries to wait for the semaphore to the posted if count is 0 or until
+   timeout expires. Returns true if wait was ok, false if wait was not
+   successful. If there is an error throws sem_exception*/</span><span class="keyword">
+bool</span><span class="identifier"> try_wait</span><span class="special">();</span><span class="comment">
+//. . .
+</span></code></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.named_mutex"></a> Named mutex</h3></div></div></div>
+<p>
+Not necessary for shmem management but very useful to synchronize 
+different processes without creating a shared memory segment and 
+constructing there a shared_mutex. named_mutex can't be placed in shared memory, each process must have 
+its own named_mutex instance.</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">/*!A mutex with a global name, so it can be found from different 
+   processes. This mutex can't be placed in shared memory, and
+   each process should have it's own mutex.*/</span><span class="keyword">
+class</span><span class="identifier"> named_mutex</span><span class="special"> :</span><span class="keyword"> private</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">noncopyable</span><span class="special">
+{</span><span class="keyword">
+public</span><span class="special">:</span><span class="comment">
+   /*!Initializes member variables. Does not throw*/</span><span class="identifier">
+   named_mutex</span><span class="special">();</span><span class="comment">
+
+   /*!Calls close(). Does not throw*/</span><span class="special">
+   ~</span><span class="identifier">named_mutex</span><span class="special">();</span><span class="comment">
+
+   /*!Creates a global mutex with a name. 
+      It will return an false if the mutex is already created. 
+      Does not throw*/</span><span class="keyword">
+   bool</span><span class="identifier"> create</span><span class="special">(</span><span class="keyword">const</span><span class="keyword"> char</span><span class="special"> *</span><span class="identifier">name</span><span class="special">);</span><span class="comment">
+
+   /*!Opens or creates a global mutex with a name. 
+      If the mutex is created, this call is equivalent to create(). 
+      If the mutex is already created, this call is equivalent to open(). 
+      Does not throw*/</span><span class="keyword">
+   bool</span><span class="identifier"> open_or_create</span><span class="special">(</span><span class="keyword">const</span><span class="keyword"> char</span><span class="special"> *</span><span class="identifier">name</span><span class="special">);</span><span class="comment">
+
+   /*!Opens a global mutex with a name if that mutex is previously.
+      created. If it is not previously created this function return false.
+      Does not throw*/</span><span class="keyword">
+   bool</span><span class="identifier"> open</span><span class="special">(</span><span class="keyword">const</span><span class="keyword"> char</span><span class="special"> *</span><span class="identifier">name</span><span class="special">);</span><span class="comment">
+
+   /*!Closes the mutex. Does not throw*/</span><span class="keyword">
+   void</span><span class="identifier"> close</span><span class="special">();</span><span class="comment">
+
+   /*!Unlocks a previously locked mutex.*/</span><span class="keyword">
+   void</span><span class="identifier"> unlock</span><span class="special">();</span><span class="comment">
+
+   /*!Locks mutex, sleeps when mutex is already locked.
+      Throws process_resource_exception if a severe error is found*/</span><span class="keyword">
+   void</span><span class="identifier"> lock</span><span class="special">();</span><span class="comment">
+
+   /*! Tries to lock the mutex, returns false when mutex 
+      is already locked, returns true when success.
+      Throws process_resource_exception if a severe error is found*/</span><span class="keyword">
+   bool</span><span class="identifier"> try_lock</span><span class="special">();</span><span class="comment">
+
+   /*! Tries to lock the mutex until time xt,
+      Returns false when timeout expires, returns true when locks.
+      Throws process_resource_exception if a severe error is found*/</span><span class="keyword">
+   bool</span><span class="identifier"> timed_lock</span><span class="special">(</span><span class="keyword">const</span><span class="identifier"> xtime</span><span class="special">&amp;</span><span class="identifier"> xt</span><span class="special">);</span><span class="special">
+.</span><span class="special"> .</span><span class="special"> .</span><span class="special">
+};</span></code></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.shared_barrier"></a> Process-shared barrier</h3></div></div></div>
+<p>
+Similar to boost barrier, shared_barrier is a synchronization primitive 
+used to cause a set of threads from different processes to wait until they 
+each perform a certain function or each reach a particular point in their 
+execution. It has the same interface as boost::threads</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">/*!An object of class shared_barrier is a synchronization primitive that 
+   can be placed in shared memory used to cause a set of threads from 
+   different processes to wait until they each perform a certain 
+   function or each reach a particular point in their execution.*/</span><span class="keyword">
+class</span><span class="identifier"> shared_barrier</span><span class="special">
+{</span><span class="keyword">
+ public</span><span class="special">:</span><span class="comment">
+   /*!Constructs a barrier object that will cause count threads 
+      to block on a call to wait(). */</span><span class="identifier">
+   shared_barrier</span><span class="special">(</span><span class="keyword">unsigned</span><span class="keyword"> int</span><span class="identifier"> count</span><span class="special">);</span><span class="comment">
+
+   /*!Destroys *this. If threads are still executing their wait() 
+      operations, the behavior for these threads is undefined.*/</span><span class="special">
+   ~</span><span class="identifier">shared_barrier</span><span class="special">(){};</span><span class="comment">
+
+   /*!Effects: Wait until N threads call wait(), where N equals the count 
+      provided to the constructor for the barrier object.
+      Note that if the barrier is destroyed before wait() can return, 
+      the behavior is undefined.
+      Returns: Exactly one of the N threads will receive a return value 
+      of true, the others will receive a value of false. Precisely which 
+      thread receives the return value of true will be implementation-defined. 
+      Applications can use this value to designate one thread as a leader that 
+      will take a certain action, and the other threads emerging from the barrier 
+      can wait for that action to take place.*/</span><span class="keyword">
+   bool</span><span class="identifier"> wait</span><span class="special">();</span><span class="comment">
+   //. . .
+</span><span class="special">};</span></code></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.shared_read_write_mutex"></a> Process-shared read/write mutexes</h3></div></div></div>
+<p>
+These read_write_mutexes, follow the same interface as Boost Thread 
+read_write_mutexes and offer the same functionality but between threads
+of different processes.</p>
+<p>
+Shmem has adapted Boost.Thread read/write locks to offer shared memory
+versions of Boost.Thread read/write locks: shared_read_write_mutex, 
+shared_read_write_try_mutex and shared_read_write_timed_mutex classes</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="keyword">class</span><span class="identifier"> shared_read_write_mutex</span><span class="special">
+{</span><span class="keyword">
+ public</span><span class="special">:</span><span class="comment">
+   /*!Effects: Constructs a read_write_mutex object with a scheduling policy. 
+      Postconditions: *this is in an unlocked state.*/</span><span class="identifier">
+   shared_read_write_mutex</span><span class="special">
+      (</span><span class="identifier">read_write_scheduling_policy</span><span class="special">::</span><span class="identifier">read_write_scheduling_policy_enum</span><span class="identifier"> sp</span><span class="special">)</span><span class="special"> 
+      :</span><span class="identifier"> m_impl</span><span class="special">(</span><span class="identifier">sp</span><span class="special">)</span><span class="special"> {</span><span class="special"> }</span><span class="comment">
+
+   /*!Effects: Destroys a read_write_mutex object.
+      Requires: *this is in an unlocked state.
+      Notes: Danger: Destruction of a locked mutex is a serious programming 
+      error resulting in undefined behavior such as a program crash.*/</span><span class="special">
+   ~</span><span class="identifier">shared_read_write_mutex</span><span class="special">()</span><span class="special"> {</span><span class="special"> }</span><span class="comment">
+
+   /*!Returns the scheduling policy used by this shared_read_write_mutex.*/</span><span class="identifier">
+   read_write_scheduling_policy</span><span class="special">::</span><span class="identifier">read_write_scheduling_policy_enum</span><span class="identifier"> policy</span><span class="special">()</span><span class="keyword"> const</span><span class="special"> 
+      {</span><span class="keyword"> return</span><span class="identifier"> m_impl</span><span class="special">.</span><span class="identifier">m_sp</span><span class="special">;</span><span class="special"> }</span><span class="keyword">
+
+   friend</span><span class="keyword"> class</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">read_write_lock_ops</span><span class="special">&lt;</span><span class="identifier">shared_read_write_mutex</span><span class="special">&gt;;</span><span class="keyword">
+   typedef</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">scoped_read_write_lock</span><span class="special">
+      &lt;</span><span class="identifier">shared_read_write_mutex</span><span class="special">&gt;;</span><span class="identifier"> scoped_read_write_lock</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">scoped_read_lock</span><span class="special">
+      &lt;</span><span class="identifier">shared_read_write_mutex</span><span class="special">&gt;;</span><span class="identifier"> scoped_read_lock</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">scoped_write_lock</span><span class="special">
+      &lt;</span><span class="identifier">shared_read_write_mutex</span><span class="special">&gt;;</span><span class="identifier"> scoped_write_lock</span><span class="special">;</span><span class="comment">
+   //. . .
+</span><span class="special">};</span></code></pre>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2005 -2006 Ion Gaztañaga</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="concepts.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="offset_ptr.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

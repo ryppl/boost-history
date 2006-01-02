@@ -1,0 +1,373 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Shmem STL compatible allocators</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="prev" href="named_shared_object.html" title=" Named shared memory object allocation">
+<link rel="next" href="containers_explained.html" title=" Shmem and containers in shared memory">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="boost.png (6897 bytes)" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="named_shared_object.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="containers_explained.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="shmem.stl_allocators"></a> Shmem STL compatible allocators</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="stl_allocators.html#shmem.allocator_introduction"> Introduction to Shmem STL compatible allocators</a></span></dt>
+<dt><span class="section"><a href="stl_allocators.html#shmem.allocator"> boost::shmem::allocator: The shared memory STL compatible allocator</a></span></dt>
+<dt><span class="section"><a href="stl_allocators.html#shmem.node_allocator"> boost::shmem::node_allocator: a simple segregated storage between processes</a></span></dt>
+<dt><span class="section"><a href="stl_allocators.html#shmem.private_allocator"> boost::shmem::private_allocator: a private segregated storage</a></span></dt>
+<dt><span class="section"><a href="stl_allocators.html#shmem.cached_node_allocator"> boost::shmem::cached_node_allocator: caching nodes to avoid overhead</a></span></dt>
+<dt><span class="section"><a href="stl_allocators.html#shmem.allocator_swapping"> Swapping Shmem STL compatible allocators</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.allocator_introduction"></a> Introduction to Shmem STL compatible allocators</h3></div></div></div>
+<p>
+As seen, Shmem offers raw memory allocation and object construction in shared memory, but
+one of the first user requests is the use of containers in shared memory. To achieve this, Boost 
+Shmem makes use of previous shared memory allocation algorithms to build 2 common memory allocation
+schemes: variable size object allocation and fixed size object allocation (segregated storage),
+implemented in these allocators:</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<span class="bold"><strong>boost::shmem::allocator</strong></span> offers general purpose allocation within a fixed size memory segment.
+</li>
+<li>
+<span class="bold"><strong>boost::shmem::node_allocator</strong></span> offers a segregated storage allocation scheme sharing a common
+  pool between all instances of the class node_allocator placed in the same fixed size memory 
+  segment, so memory usage is optimized.
+</li>
+<li>
+<span class="bold"><strong>boost::shmem::private_allocator</strong></span> offers a segregated storage allocation scheme where
+  each private_allocator owns its own pool. This allocator offers faster allocation
+  than node_allocator since it avoids synchronization between threads/processes but imposes 
+  a higher memory usage. Take in care that the standard does not recommend this private
+  per allocator pool.
+</li>
+<li>
+<span class="bold"><strong>boost::shmem::cached_node_allocator</strong></span> offers a segregated storage allocation scheme between
+  node_allocator and private_allocator. This allocator caches some nodes from the common
+  the common pool and stores them privately so that these are quickly available
+  without the synchronization overhead for future allocations.
+</li>
+</ul></div>
+<p>
+Shmem STL compatible allocators are configurable via template types so that the can use different 
+allocation algorithms and pointer types. And when used offset_ptr as pointer type, the user 
+can place these allocators in shared memory mapped in different base addresses in several processes.</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.allocator"></a> boost::shmem::allocator: The shared memory STL compatible allocator</h3></div></div></div>
+<p>
+The <span class="bold"><strong>boost::shmem::allocator</strong></span> class defines a STL compatible allocator class that 
+uses the shared memory management algorithm from the segment to allocate and deallocate memory. 
+This allocator is templatized with the allocated type, the type pointer, 
+and the allocation algorithm.</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="keyword">namespace</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special"> {</span><span class="comment">
+
+/*!An STL compatible allocator that uses a segment manager as 
+   memory source. The internal pointer type will of the same type (raw, smart) as
+   "typename SegmentManager::void_pointer" type. This allows
+   placing the allocator in shared memory, memory mapped-files, etc...*/</span><span class="keyword">
+template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="identifier"> T</span><span class="special">,</span><span class="keyword"> class</span><span class="identifier"> SegmentManager</span><span class="special">&gt;</span><span class="keyword">
+class</span><span class="identifier"> allocator</span><span class="special"> 
+{</span><span class="keyword">
+   public</span><span class="special">:</span><span class="comment">
+
+   /*!Returns the segment manager. Never throws*/</span><span class="identifier">
+   segment_manager</span><span class="special">*</span><span class="identifier"> get_segment_manager</span><span class="special">()</span><span class="keyword">const</span><span class="special">
+      {</span><span class="keyword">  using</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">get_pointer</span><span class="special">;</span><span class="keyword">  return</span><span class="identifier">  get_pointer</span><span class="special">(</span><span class="identifier">mp_mngr</span><span class="special">);</span><span class="special">   }</span><span class="comment">
+
+   /*!Constructor from the segment manager. Never throws*/</span><span class="identifier">
+   allocator</span><span class="special">(</span><span class="identifier">segment_manager</span><span class="special"> *</span><span class="identifier">segment_mngr</span><span class="special">)</span><span class="special"> 
+      :</span><span class="identifier"> mp_mngr</span><span class="special">(</span><span class="identifier">segment_mngr</span><span class="special">)</span><span class="special"> {</span><span class="special"> }</span><span class="comment">
+
+   //The rest of the interface is the same of std::allocator
+</span><span class="special">};</span><span class="special">
+
+}}</span><span class="comment"> //      namespace boost::shmem {
+</span></code></pre>
+<p>
+The class <span class="bold"><strong>allocator</strong></span> must be always initialized with the allocation
+algorithm obtained from the segment where you want <span class="bold"><strong>boost::shmem::allocator</strong></span> 
+to allocate memory.</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">//Alias allocator type with
+//    T=int
+//    SegmentManager = named_shared_object::segment_manager
+</span><span class="keyword">typedef</span><span class="identifier"> allocator</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="identifier"> named_shared_object</span><span class="special">::</span><span class="identifier">segment_manager</span><span class="special">&gt;</span><span class="identifier"> Allocator</span><span class="special">;</span><span class="comment">
+
+//Initialize allocator with the segment manager
+</span><span class="identifier">Allocator</span><span class="identifier"> alloc_inst</span><span class="special"> (</span><span class="identifier">segment</span><span class="special">.</span><span class="identifier">get_segment_manager</span><span class="special">());</span></code></pre>
+<p>
+The allocator just provides the needed typedefs and forwards 
+all allocation and deallocation requests to the memory allocation
+algorithm passed in the constructor.</p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.node_allocator"></a> boost::shmem::node_allocator: a simple segregated storage between processes</h3></div></div></div>
+<p>
+As seen in the shared memory default algorithm, memory algorithms waste 
+some space in management information for each allocation. Sometimes, 
+usually for small objects, this is not acceptable. Usually shared 
+memory allocators become fragmented under some allocation and 
+deallocation schemes, reducing their performance. When allocating 
+many objects of the same type, a simple segregated storage becomes 
+a fast and space-friendly allocator, as explained in Boost Pool library.</p>
+<p>
+To build normal node allocators, usually a global, thread shared singleton
+pool is used for each node size. This is not possible if you try to share 
+a node allocator between processes. To achieve this sharing, the <span class="bold"><strong>node_allocator</strong></span> 
+uses a unique name to identify the pool shared by all this node_allocators. In the
+initialization, a <span class="bold"><strong>node_allocator</strong></span> object searches this unique object in the segment.
+If it is not preset, it builds one.  This way, all <span class="bold"><strong>node_allocator</strong></span> objects built
+inside a memory segment share a unique memory pool.</p>
+<p>
+The common segregated storage is not only shared between node_allocators of the
+same type, but it is also  shared between all node_allocators that allocate objects 
+of the same size, for example, <span class="bold"><strong>node_allocator&lt;uint32&gt;</strong></span> and <span class="bold"><strong>node_allocator&lt;float32&gt;</strong></span>. 
+This saves a lot of memory but also imposes an synchronization overhead for each 
+node allocation.</p>
+<p>
+The common segregated storage, dynamically created using the unique name explained before,
+integrates a reference count so that a node_allocator can know if any other node_allocator 
+is attached to the same common segregated storage to allow an ordered common segregated 
+storage destruction when the last node_allocator is destroyed.</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">/*!An STL node allocator that uses a segment manager as memory 
+   source. The internal pointer type will of the same type (raw, smart) as
+   "typename SegmentManager::void_pointer" type. This allows
+   placing the allocator in shared memory, memory mapped-files, etc...
+   This node allocator shares a segregated storage between all instances 
+   of node_allocator with equal sizeof(T) placed in the same segment 
+   group.*/</span><span class="keyword">
+template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="identifier"> T</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> N</span><span class="special">,</span><span class="keyword"> class</span><span class="identifier"> SegmentManager</span><span class="special">&gt;</span><span class="keyword">
+class</span><span class="identifier"> node_allocator</span><span class="special">
+{</span><span class="keyword">
+ public</span><span class="special">:</span><span class="comment">
+
+   //No default constructor
+
+   /*!Constructor from a segment manager.
+      Can throw boost::shmem::bad_alloc*/</span><span class="identifier">
+   node_allocator</span><span class="special">(</span><span class="identifier">SegmentManager</span><span class="special"> *</span><span class="identifier">segment_mngr</span><span class="special">);</span><span class="comment">
+
+   /*!Returns a pointer to the segment manager. Never throws*/</span><span class="identifier">
+   SegmentManager</span><span class="special"> *</span><span class="identifier">get_segment_manager</span><span class="special">()</span><span class="keyword"> const</span><span class="special">;</span><span class="comment">
+
+   /*...*/
+   //The rest is the same interface as std::allocator
+   /*...*/</span></code></pre>
+<p>
+The <span class="bold"><strong>node_allocator</strong></span> must be always initialized with the allocation
+algorithm obtained from the segment 
+where you want <span class="bold"><strong>node_allocator</strong></span> to allocate memory</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">//Alias allocator type with
+//    T=int
+//    N=64
+//    SegmentManager = named_shared_object::segment_manager
+</span><span class="keyword">typedef</span><span class="identifier"> node_allocator</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="number"> 64</span><span class="special">,</span><span class="identifier"> named_shared_object</span><span class="special">::</span><span class="identifier">segment_manager</span><span class="special">&gt;</span><span class="identifier"> NodeAllocator</span><span class="special">;</span><span class="comment">
+
+//Initialize allocator instance with the named algorithm
+</span><span class="identifier">NodeAllocator</span><span class="identifier"> alloc_inst</span><span class="special"> (</span><span class="identifier">segment</span><span class="special">.</span><span class="identifier">get_segment_manager</span><span class="special">());</span></code></pre>
+<p>
+All STL compatible containers that want to use this allocation scheme 
+must be constructed with an initialized node_allocator so 
+that they can allocate the values with the node allocator:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="identifier">MyIntList</span><span class="identifier"> mylist</span><span class="special">(</span><span class="identifier">alloc_inst</span><span class="special">);</span><span class="keyword">
+for</span><span class="special">(</span><span class="keyword">int</span><span class="identifier"> i</span><span class="special"> =</span><span class="number"> 0</span><span class="special">;</span><span class="keyword"> true</span><span class="special">;</span><span class="special"> ++</span><span class="identifier">i</span><span class="special">){</span><span class="identifier">
+   mylist</span><span class="special">.</span><span class="identifier">insert</span><span class="special">(</span><span class="identifier">mylist</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span><span class="number"> 3</span><span class="special">);</span><span class="special">
+}</span>  
+</code></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.private_allocator"></a> boost::shmem::private_allocator: a private segregated storage</h3></div></div></div>
+<p>
+As said, the node_allocator shares a common segregated storage between 
+node_allocators that allocate objects of the same size and this optimizes
+memory usage. However, it needs a named_shared memory algorithm to use
+the unique instance service so that this sharing can be possible. Also
+imposes a synchronization overhead per node allocation because of this share.
+Sometimes, the named object algorithm is not available (for example, when
+building index types for the named object algorithm itself) or the 
+synchronization overhead is not acceptable.</p>
+<p>
+So <span class="bold"><strong>private_allocator</strong></span> uses the same segregated storage as node_allocator,
+but each <span class="bold"><strong>private_allocator</strong></span> has its own segregated storage. No synchronization
+is used when allocating nodes, so there is far less overhead for an operation
+that usually involves just a few pointer operations when allocating and 
+deallocating a node.</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">/*!An STL node allocator that uses a segment manager as memory 
+   source. The internal pointer type will of the same type (raw, smart) as
+   "typename SegmentManager::void_pointer" type. This allows
+   placing the allocator in shared memory, memory mapped-files, etc...
+   This allocator has its own node pool.*/</span><span class="keyword">
+template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="identifier"> T</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> N</span><span class="special">,</span><span class="keyword"> class</span><span class="identifier"> SegmentManager</span><span class="special">&gt;</span><span class="keyword">
+class</span><span class="identifier"> private_node_allocator</span><span class="special">
+{</span><span class="keyword">
+ public</span><span class="special">:</span><span class="comment">
+
+   //No default constructor
+
+   /*!Constructor from a segment manager. Never throws*/</span><span class="identifier">
+   private_allocator</span><span class="special">(</span><span class="identifier">SegmentManager</span><span class="special"> *</span><span class="identifier">segment_mngr</span><span class="special">);</span><span class="comment">
+
+   /*!Returns a pointer to the segment manager. Never throws*/</span><span class="identifier">
+   SegmentManager</span><span class="special"> *</span><span class="identifier">get_segment_manager</span><span class="special">()</span><span class="keyword"> const</span><span class="special">;</span><span class="comment">
+
+   /*...*/
+   //The rest is the same interface as std::allocator
+   /*...*/</span></code></pre>
+<p>
+Any <span class="bold"><strong>private_allocator</strong></span> must be initialized with a pointer 
+to the segment manager of the semgment from you want <span class="bold"><strong>private_allocator</strong></span> 
+to allocate memory:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">//Alias allocator type with
+//    T=int
+//    N=64
+//    SegmentManager = named_shared_object::segment_manager
+</span><span class="keyword">typedef</span><span class="identifier"> private_allocator</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="number"> 64</span><span class="special">,</span><span class="identifier"> named_shared_object</span><span class="special">::</span><span class="identifier">segment_manager</span><span class="special">&gt;</span><span class="identifier"> 
+   PrivateNodeAllocator</span><span class="special">;</span><span class="comment">
+
+//Initialize allocator instance with algorithm
+</span><span class="identifier">PrivateNodeAllocator</span><span class="identifier"> alloc_inst</span><span class="special"> (</span><span class="identifier">segment</span><span class="special">.</span><span class="identifier">get_segment_manager</span><span class="special">());</span></code></pre>
+<p>
+All STL compatible containers that want to use this allocation scheme 
+must be constructed with an initialized private_allocator so 
+that they can allocate the values with the private node allocator:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="identifier">MyIntList</span><span class="identifier"> mylist</span><span class="special">(</span><span class="identifier">alloc_inst</span><span class="special">);</span><span class="keyword">
+for</span><span class="special">(</span><span class="keyword">int</span><span class="identifier"> i</span><span class="special"> =</span><span class="number"> 0</span><span class="special">;</span><span class="keyword"> true</span><span class="special">;</span><span class="special"> ++</span><span class="identifier">i</span><span class="special">){</span><span class="identifier">
+   mylist</span><span class="special">.</span><span class="identifier">insert</span><span class="special">(</span><span class="identifier">mylist</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span><span class="number"> 3</span><span class="special">);</span><span class="special">
+}</span>  
+</code></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.cached_node_allocator"></a> boost::shmem::cached_node_allocator: caching nodes to avoid overhead</h3></div></div></div>
+<p>
+The total node sharing of <span class="bold"><strong>boost::shmem::node_allocator</strong></span> can impose a high overhead for some 
+applications and the no synchronization overhead of <span class="bold"><strong>boost::shmem::private_allocator</strong></span>
+can impose a unacceptable memory waste for other applications.</p>
+<p>
+To solve this, Shmem offers an allocator, <span class="bold"><strong>boost::shmem::cached_node_allocator</strong></span>, that 
+allocates nodes from the common pool but caches some of them privately so that following 
+allocations have no synchronization overhead. When the cache is full, the allocator 
+returns some cached nodes to the common pool, so that they are available to other 
+allocators.</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">/*!An STL node allocator that uses a shared memory management algorithm as memory 
+   source and a templatized Ptr as pointer type. Allows placing STL containers in 
+   shared memory if Ptr is an offset pointer. This node allocator shares a segregated
+   storage between all instances of cached_node_allocator with equal sizeof(T) placed
+   in the same fixed size memory segment. But also caches some nodes privately to
+   avoid some synchronization overhead.*/</span><span class="keyword">
+
+template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="identifier"> T</span><span class="special">,</span><span class="keyword"> class</span><span class="identifier"> SegmentManager</span><span class="special">&gt;</span><span class="keyword">
+class</span><span class="identifier"> cached_node_allocator</span><span class="special">
+{</span><span class="keyword">
+ public</span><span class="special">:</span><span class="comment">
+
+   //No default constructor
+
+   /*!Constructor from a segment manager. Never throws*/</span><span class="identifier">
+   cached_node_allocator</span><span class="special">(</span><span class="identifier">AllocAlgo_t</span><span class="special"> *</span><span class="identifier">segment_mngr</span><span class="special">);</span><span class="comment">
+
+   /*!Returns a pointer to the segment manager. Never throws*/</span><span class="identifier">
+   SegmentManager</span><span class="special"> *</span><span class="identifier">get_segment_manager</span><span class="special">()</span><span class="keyword"> const</span><span class="special">;</span><span class="comment">
+
+   /*!Sets the new max cached nodes value. This can provoke deallocations
+      if "newmax" is less than current cached nodes. Never throws*/</span><span class="keyword">
+   void</span><span class="identifier"> set_max_cached_nodes</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> newmax</span><span class="special">);</span><span class="comment">
+
+   /*!Returns the max cached nodes parameter. Never throws*/</span><span class="identifier">
+   std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> get_max_cached_nodes</span><span class="special">()</span><span class="keyword"> const</span><span class="special">;</span><span class="comment">
+
+   /*...*/
+   //The rest is the same interface as std::allocator
+   /*...*/</span></code></pre>
+<p>
+Any <span class="bold"><strong>cached_node_allocator</strong></span> must be initialized with a pointer to a named shared
+shared memory allocation algorithm:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">//Alias allocator type with
+//    T=int
+//    SegmentManager = named_shared_object::segment_manager
+</span><span class="keyword">typedef</span><span class="identifier"> cached_node_allocator</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="identifier"> named_shared_object</span><span class="special">::</span><span class="identifier">segment_manager</span><span class="special">&gt;</span><span class="identifier"> 
+   CachedNodeAllocator</span><span class="special">;</span><span class="comment">
+
+//Initialize allocator instance with algorithm
+</span><span class="identifier">CachedNodeAllocator</span><span class="identifier"> alloc_inst</span><span class="special"> (</span><span class="identifier">segment</span><span class="special">.</span><span class="identifier">get_segment_manager</span><span class="special">());</span></code></pre>
+<p>
+All STL compatible containers that want to use this allocation scheme 
+must be constructed with an initialized cached_node_allocator so 
+that they can allocate the values with the cached_node_allocator:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">//Change cache size as desired (for example 100 nodes)
+</span><span class="identifier">alloc_inst</span><span class="special">.</span><span class="identifier">set_max_cached_nodes</span><span class="special">(</span><span class="number">100</span><span class="special">);</span><span class="comment">
+
+//Initialize container
+</span><span class="identifier">MyIntList</span><span class="identifier"> mylist</span><span class="special">(</span><span class="identifier">alloc_inst</span><span class="special">);</span><span class="keyword">
+for</span><span class="special">(</span><span class="keyword">int</span><span class="identifier"> i</span><span class="special"> =</span><span class="number"> 0</span><span class="special">;</span><span class="keyword"> true</span><span class="special">;</span><span class="special"> ++</span><span class="identifier">i</span><span class="special">){</span><span class="identifier">
+   mylist</span><span class="special">.</span><span class="identifier">insert</span><span class="special">(</span><span class="identifier">mylist</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span><span class="number"> 3</span><span class="special">);</span><span class="special">
+}</span>  
+</code></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.allocator_swapping"></a> Swapping Shmem STL compatible allocators</h3></div></div></div>
+<p>
+When swapping STL containers, there is an active discussion on what to do with 
+the allocators. Some STL implementations, for example Dinkumware from Visual .NET 2003,
+make a deep swap of the whole container through a temporary when allocators are not equal.
+The <a href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2004/n1599.html" target="_top">proposed resolution</a>
+to container swapping is that allocators should be swapped in a non-throwing way.</p>
+<p>
+Unfortunately, this approach is not valid with shared memory. Using heap allocators, if
+Group1 of node allocators share a common segregated storage, and Group2 share another common
+segregated storage, a simple pointer swapping is needed to swap an allocator of Group1 and another
+allocator of Group2. But when the user wants to swap two shared memory allocators, each one
+placed in a different shared memory segment, this is not possible. As generally shared memory
+is mapped in different addresses in each process, a pointer placed in one segment can't point
+to any object placed in other shared memory segment, since in each process, the distance between
+the segments is different. However, if both shared memory allocators are in the same segment,
+a non-throwing swap is possible, just like heap allocators.</p>
+<p>
+Until a final resolution is achieved. Shmem STL compatible allocators implement a non-throwing
+swap function that swaps internal pointers. If an allocator placed in a shared memory segment is
+swapped with other placed in a different shared memory segment, the result is undefined. But a 
+crash is quite sure.</p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2005 -2006 Ion Gaztañaga</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="named_shared_object.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="containers_explained.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
