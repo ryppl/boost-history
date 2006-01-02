@@ -1,7 +1,7 @@
 [library Shmem
-    [version 2005-12-30]
+    [version 2006-01-02]
     [authors [Gazta&ntilde;aga, Ion]]
-    [copyright 2005 Ion Gazta&ntilde;aga]
+    [copyright 2005-2006 Ion Gazta&ntilde;aga]
     [purpose Shared memory utilities]
     [license
          Distributed under the Boost Software License, Version 1.0.
@@ -2044,7 +2044,7 @@ deallocating a node.
       placing the allocator in shared memory, memory mapped-files, etc...
       This allocator has its own node pool.*/
    template<class T, std::size_t N, class SegmentManager>
-   class private_node_pool
+   class private_node_allocator
    {
     public:
 
@@ -2110,7 +2110,7 @@ allocators.
       in the same fixed size memory segment. But also caches some nodes privately to
       avoid some synchronization overhead.*/
 
-   template<class T, std::size_t N, class Ptr, class SegmentManager>
+   template<class T, class SegmentManager>
    class cached_node_allocator
    {
     public:
@@ -2141,9 +2141,8 @@ shared memory allocation algorithm:
 
    //Alias allocator type with
    //    T=int
-   //    N=64
    //    SegmentManager = named_shared_object::segment_manager
-   typedef cached_node_allocator<int, 64, named_shared_object::segment_manager> 
+   typedef cached_node_allocator<int, named_shared_object::segment_manager> 
       CachedNodeAllocator;
 
    //Initialize allocator instance with algorithm
