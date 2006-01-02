@@ -208,10 +208,6 @@ class offset_ptr : public RootPtr
    offset_ptr operator+ (std::ptrdiff_t offset) const   
       {  return offset_ptr(this->get()+offset);   }
 
-  /*!std::ptrdiff_t + offset_ptr. Never throws.*/
-   friend offset_ptr operator+ (std::ptrdiff_t offset, const offset_ptr &ptr)   
-      {  return offset_ptr(offset + ptr.get());   }
-
    /*!offset_ptr - std::ptrdiff_t. Never throws.*/
    offset_ptr operator- (std::ptrdiff_t offset) const   
       {  return offset_ptr(this->get()-offset);   }
@@ -300,7 +296,7 @@ inline std::basic_istream<E, T> & operator>>
 
 /*!std::ptrdiff_t + offset_ptr  */
 template<class T, class R>
-inline offset_ptr<T,R> operator+(std::ptrdiff_t diff, offset_ptr<T,R>& right)
+inline offset_ptr<T,R> operator+(std::ptrdiff_t diff, const offset_ptr<T,R>& right)
    {  return right + diff;  }
 
 /*!offset_ptr - offset_ptr  */

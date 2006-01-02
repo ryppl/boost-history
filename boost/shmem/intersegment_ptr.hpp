@@ -674,14 +674,6 @@ class intersegment_ptr : public PT
       return result;
    }
 
-   /*!std::ptrdiff_t + intersegment_ptr. Never throws.*/
-   friend intersegment_ptr operator+ (std::ptrdiff_t idx, const intersegment_ptr &ptr)   
-   {  
-      intersegment_ptr result (ptr);
-      result.inc_offset(idx*sizeof(T));
-      return result;
-   }
-
    /*!intersegment_ptr - std::ptrdiff_t. Never throws.*/
    intersegment_ptr operator- (std::ptrdiff_t idx) const   
    {  
@@ -797,7 +789,7 @@ inline std::basic_istream<E, T> & operator>>
 /*!std::ptrdiff_t + intersegment_ptr. 
    The result is another pointer of the same segment */
 template<class T, class PT>
-inline intersegment_ptr<T, PT> operator+(std::ptrdiff_t diff, intersegment_ptr<T, PT>& right)
+inline intersegment_ptr<T, PT> operator+(std::ptrdiff_t diff, const intersegment_ptr<T, PT>& right)
 {  return right + diff;  }
 
 /*!intersegment_ptr - intersegment_ptr. 

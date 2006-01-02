@@ -32,17 +32,17 @@
 #include <cstddef>
 
 /*!\file
-   Describes private_node_pool pooled shared memory STL compatible allocator 
+   Describes private_node_allocator pooled shared memory STL compatible allocator 
 */
 
 namespace boost {
 
 namespace shmem {
 
-/*!private_node_pool for void, only typedefs
+/*!private_node_allocator for void, only typedefs
    since we can't allocate void objects*/
 template<std::size_t N, class SegmentManager>
-class  private_node_pool<void, N, SegmentManager>
+class  private_node_allocator<void, N, SegmentManager>
 {
  public:
    typedef typename SegmentManager::void_pointer pointer;
@@ -54,7 +54,7 @@ class  private_node_pool<void, N, SegmentManager>
    template<class T2>
    struct rebind
    {  
-      typedef private_node_pool<T2, N, SegmentManager>   other;
+      typedef private_node_allocator<T2, N, SegmentManager>   other;
    };
 };
 
@@ -64,7 +64,7 @@ class  private_node_pool<void, N, SegmentManager>
    placing the allocator in shared memory, memory mapped-files, etc...
    This allocator has its own node pool.*/
 template<class T, std::size_t N, class SegmentManager>
-class private_node_pool
+class private_node_allocator
 {
    private:
    typedef typename SegmentManager::void_pointer         void_pointer;
@@ -77,7 +77,7 @@ class private_node_pool
       <void_pointer, segment_manager>::type              segment_mngr_ptr_t;
    typedef typename SegmentManager::
       mutex_family::mutex_t                              mutex_t;
-   typedef private_node_pool
+   typedef private_node_allocator
       <T, N, SegmentManager>                             self_t;
 
    public:
@@ -96,16 +96,16 @@ class private_node_pool
    template<class T2>
    struct rebind
    {  
-      typedef private_node_pool<T2, N, SegmentManager>   other;
+      typedef private_node_allocator<T2, N, SegmentManager>   other;
    };
 
-   /*!Not assignable from related private_node_pool*/
+   /*!Not assignable from related private_node_allocator*/
    template<class T2, std::size_t N2, class MemoryAlgorithm2>
-   private_node_pool& operator=
-      (const private_node_pool<T2, N2, MemoryAlgorithm2>&);
+   private_node_allocator& operator=
+      (const private_node_allocator<T2, N2, MemoryAlgorithm2>&);
 
-   /*!Not assignable from other private_node_pool*/
-   private_node_pool& operator=(const private_node_pool&);
+   /*!Not assignable from other private_node_allocator*/
+   private_node_allocator& operator=(const private_node_allocator&);
 
    void priv_initialize()
    {
@@ -136,21 +136,21 @@ class private_node_pool
  public:
 
    /*!Constructor from a segment manager.*/
-   private_node_pool(segment_manager *segment_mngr)
+   private_node_allocator(segment_manager *segment_mngr)
       : mp_segment_mngr(segment_mngr), mp_node_pool(0){}
 
-   /*!Copy constructor from other private_node_pool. Never throws*/
-   private_node_pool(const private_node_pool &other)
+   /*!Copy constructor from other private_node_allocator. Never throws*/
+   private_node_allocator(const private_node_allocator &other)
       : mp_segment_mngr(other.get_segment_manager()), mp_node_pool(0){}
 
-   /*!Copy constructor from related private_node_pool. Never throws.*/
+   /*!Copy constructor from related private_node_allocator. Never throws.*/
    template<class T2>
-   private_node_pool
-      (const private_node_pool<T2, N, SegmentManager> &other)
+   private_node_allocator
+      (const private_node_allocator<T2, N, SegmentManager> &other)
       : mp_segment_mngr(other.get_segment_manager()), mp_node_pool(0){}
 
    /*!Destructor, frees all used memory. Never throws*/
-   ~private_node_pool() 
+   ~private_node_allocator() 
       {  if(mp_node_pool)  priv_free();  }
 
    /*!Returns the segment manager. Never throws*/
@@ -231,16 +231,16 @@ class private_node_pool
    void_pointer            mp_node_pool;
 };
 
-/*!Equality test for same type of private_node_pool*/
+/*!Equality test for same type of private_node_allocator*/
 template<class T, std::size_t N, class A> inline
-bool operator==(const private_node_pool<T, N, A> &alloc1, 
-                const private_node_pool<T, N, A> &alloc2)
+bool operator==(const private_node_allocator<T, N, A> &alloc1, 
+                const private_node_allocator<T, N, A> &alloc2)
 {  return &alloc1 == &alloc2; }
 
-/*!Inequality test for same type of private_node_pool*/
+/*!Inequality test for same type of private_node_allocator*/
 template<class T, std::size_t N, class A> inline
-bool operator!=(const private_node_pool<T, N, A> &alloc1, 
-                const private_node_pool<T, N, A> &alloc2)
+bool operator!=(const private_node_allocator<T, N, A> &alloc1, 
+                const private_node_allocator<T, N, A> &alloc2)
 {  
    return &alloc1 != &alloc2;
 }
@@ -250,7 +250,7 @@ bool operator!=(const private_node_pool<T, N, A> &alloc1,
    storing less allocator instances in containers.*/
 template<class T, std::size_t N, class A>
 struct has_convertible_construct
-   <boost::shmem::private_node_pool<T, N, A> >
+   <boost::shmem::private_node_allocator<T, N, A> >
 {
    enum {   value = true };
 };

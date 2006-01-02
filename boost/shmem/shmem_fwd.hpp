@@ -72,7 +72,7 @@ template<class T, std::size_t N, class AllocAlgo>
 class node_allocator;
 
 template<class T, std::size_t N, class AllocAlgo>
-class private_node_pool;
+class private_node_allocator;
 
 template<class T, class AllocAlgo>
 class cached_node_allocator;

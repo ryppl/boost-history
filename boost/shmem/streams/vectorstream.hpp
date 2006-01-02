@@ -328,7 +328,7 @@ class basic_vectorbuf
       bool in  = false;
       bool out = false;
          
-      const std::ios_base::open_mode inout = 
+      const std::ios_base::openmode inout = 
          std::ios_base::in | std::ios_base::out;
 
       if((mode & inout) == inout) {

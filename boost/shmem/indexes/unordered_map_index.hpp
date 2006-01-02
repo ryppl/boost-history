@@ -31,12 +31,7 @@ struct unordered_map_index_aux
    typedef typename MapConfig::mapped_type               mapped_type;
    typedef std::equal_to<key_type>                       key_equal;
    typedef std::pair<const key_type, mapped_type>        value_type;
-/*
-   typedef allocator
-            <value_type,
-             typename MapConfig::segment_manager>     allocator_type;
-*/
-   typedef private_node_pool
+   typedef private_node_allocator
             <value_type,
                64,
                typename MapConfig::segment_manager>     allocator_type;
