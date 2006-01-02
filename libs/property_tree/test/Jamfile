@@ -12,6 +12,7 @@ DEPENDS all : property_tree ;
          [ run test_info_parser.cpp ]
          [ run test_cmdline_parser.cpp ]
          [ run test_ini_parser.cpp ]
+         [ run test_json_parser.cpp ]
          [ run test_xml_parser_spirit.cpp ]
     ;
 }

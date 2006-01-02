@@ -343,8 +343,10 @@ public:
 
 };
 
-typedef basic_ptree&lt;char&gt; <a href="reference.html#ptree">ptree</a>;
-typedef basic_ptree&lt;wchar_t&gt; <a href="reference.html#ptree">wptree</a>;
+typedef basic_ptree&lt;char, ptree_traits&lt;char&gt; &gt; <a href="reference.html#ptree">ptree</a>;
+typedef basic_ptree&lt;char, iptree_traits&lt;char&gt; &gt; <a href="reference.html#ptree">iptree</a>;
+typedef basic_ptree&lt;wchar_t, ptree_traits&lt;wchar_t&gt; &gt; <a href="reference.html#ptree">wptree</a>;
+typedef basic_ptree&lt;wchar_t, iptree_traits&lt;wchar_t&gt; &gt; <a href="reference.html#ptree">wiptree</a>;
 
 } } // namespace</pre>
     <h2>

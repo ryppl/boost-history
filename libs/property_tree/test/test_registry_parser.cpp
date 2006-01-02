@@ -92,10 +92,10 @@ int test_main(int argc, char *argv[])
 {
     using namespace boost::property_tree;
     test_registry_parser<ptree>();
-    test_registry_parser<iptree>();
+    //test_registry_parser<iptree>();
 #ifndef BOOST_NO_CWCHAR
-    test_registry_parser<wptree>();
-    test_registry_parser<wiptree>();
+    //test_registry_parser<wptree>();
+    //test_registry_parser<wiptree>();
 #endif
     return 0;
 }

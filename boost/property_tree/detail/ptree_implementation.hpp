@@ -21,6 +21,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/utility.hpp>        // for boost::prior
+#include <boost/property_tree/detail/ptree_utils.hpp>
 
 //////////////////////////////////////////////////////////////////////////////
 // Debug macros
@@ -574,7 +575,7 @@ namespace boost { namespace property_tree
         if (get_child_b(separator, path, &result))
             return result;
         else
-            throw ptree_bad_path("invalid path");
+            throw ptree_bad_path("key \"" + detail::narrow(path.c_str()) + "\" does not exist");
     }
 
     // Get child ptree with custom separator

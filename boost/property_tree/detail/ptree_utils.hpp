@@ -31,6 +31,23 @@ namespace boost { namespace property_tree { namespace detail
         return result;
     }
 
+    // Naively convert string to narrow character type
+    template<class Ch>
+    std::string narrow(const Ch *text)
+    {
+        std::locale loc;
+        std::string result;
+        while (*text)
+        {
+            if (*text < 0 || *text > (std::numeric_limits<char>::max)())
+                result += '*';
+            else
+                result += char(*text);
+            ++text;
+        }
+        return result;
+    }
+
     // Remove trailing and leading spaces
     template<class Ch>
     std::basic_string<Ch> trim(const std::basic_string<Ch> &s, 

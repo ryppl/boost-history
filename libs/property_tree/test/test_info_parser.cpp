@@ -106,6 +106,12 @@ const char *ok_data_4 =
 const char *ok_data_5 = 
     "key { key \"\" key \"\" }\n";
 
+const char *ok_data_6 = 
+    "\"key with spaces\" \"data with spaces\"\n"
+    "\"key with spaces\" \"multiline data\"\\\n"
+    "\"cont\"\\\n" 
+    "\"cont\"";
+
 const char *error_data_1 = 
     ";Test file for info_parser\n"
     "#include \"bogus_file\"\n";                // Nonexistent include file
@@ -180,6 +186,12 @@ void test_info_parser()
     (
         ReadFunc(), WriteFunc(), ok_data_5, NULL, 
         "testok5.info", NULL, "testok5out.info", 4, 0, 9
+    );
+
+    generic_parser_test_ok<Ptree, ReadFunc, WriteFunc>
+    (
+        ReadFunc(), WriteFunc(), ok_data_6, NULL, 
+        "testok6.info", NULL, "testok6out.info", 3, 38, 30
     );
 
     generic_parser_test_error<ptree, ReadFunc, WriteFunc, info_parser_error>
