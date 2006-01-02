@@ -1,0 +1,81 @@
+#  Boost string_algo library documentation Jamfile  ---------------------------------
+#
+#  Copyright Pavol Droba 2002-2003. Use, modification and
+#  distribution is subject to the Boost Software License, Version
+#  1.0. (See accompanying file LICENSE_1_0.txt or copy at
+#  http://www.boost.org/LICENSE_1_0.txt)
+#
+#  See http://www.boost.org for updates, documentation, and revision history.
+
+project boost/shmem/doc ;
+
+import boostbook : boostbook ;
+using quickbook ;
+import doxygen : doxygen ;
+
+boostbook shmem
+:
+   shmem.xml
+   shmem.doxygen
+:
+   <xsl:param>boost.root=../../../..
+;
+
+doxygen shmem.doxygen
+:
+   ../../../boost/shmem/exceptions.hpp
+   ../../../boost/shmem/mmapped_file.hpp
+   ../../../boost/shmem/named_heap_object.hpp
+   ../../../boost/shmem/named_mfile_object.hpp
+   ../../../boost/shmem/named_shared_object.hpp
+   ../../../boost/shmem/named_user_object.hpp
+   ../../../boost/shmem/offset_ptr.hpp
+   ../../../boost/shmem/shared_memory.hpp
+   ../../../boost/shmem/shmem_fwd.hpp
+   # allocators
+   ../../../boost/shmem/allocators/allocator.hpp
+   ../../../boost/shmem/allocators/cached_node_allocator.hpp
+   ../../../boost/shmem/allocators/node_allocator.hpp
+   ../../../boost/shmem/allocators/private_node_allocator.hpp
+   ../../../boost/shmem/allocators/detail/node_pool.hpp
+   # indexes
+   ../../../boost/shmem/indexes/flat_map_index.hpp
+   ../../../boost/shmem/indexes/map_index.hpp
+   ../../../boost/shmem/indexes/null_map_index.hpp
+   ../../../boost/shmem/indexes/unordered_map_index.hpp
+   # ipc
+   ../../../boost/shmem/ipc/shared_message_queue.hpp
+   # mem_algo
+   ../../../boost/shmem/mem_algo/basic_seq_fit.hpp
+   ../../../boost/shmem/mem_algo/basic_simple_seq_fit.hpp
+   ../../../boost/shmem/mem_algo/multi_seq_fit.hpp
+   ../../../boost/shmem/mem_algo/multi_simple_seq_fit.hpp
+   ../../../boost/shmem/mem_algo/seq_fit.hpp
+   ../../../boost/shmem/mem_algo/simple_seq_fit.hpp
+   # streams
+   ../../../boost/shmem/streams/bufferstream.hpp
+   ../../../boost/shmem/streams/vectorstream.hpp
+   # sync
+   ../../../boost/shmem/sync/shared_mutex_family.hpp
+   ../../../boost/shmem/sync/lock.hpp
+   ../../../boost/shmem/sync/named_semaphore.hpp
+   ../../../boost/shmem/sync/named_mutex.hpp
+   ../../../boost/shmem/sync/null_mutex.hpp
+   ../../../boost/shmem/sync/shared_condition.hpp
+   ../../../boost/shmem/sync/shared_mutex.hpp
+   ../../../boost/shmem/sync/shared_recursive_mutex.hpp
+   ../../../boost/shmem/sync/xtime.hpp
+   ../../../boost/shmem/sync/shared_read_write_mutex.hpp
+   ../../../boost/shmem/sync/shared_barrier.hpp
+   ../../../boost/shmem/sync/read_write_lock.hpp
+:
+    <doxygen:param>HIDE_SCOPE_NAMES=YES
+    <doxygen:param>HIDE_UNDOC_MEMBERS=YES
+    <doxygen:param>EXTRACT_ALL=NO
+    <doxygen:param>EXTRACT_PRIVATE=NO
+    <doxygen:param>ENABLE_PREPROCESSING=YES
+    <doxygen:param>MACRO_EXPANSION=YES
+    <doxygen:param>EXPAND_ONLY_PREDEF=YES
+    <doxygen:param>SEARCH_INCLUDES=YES
+;
+

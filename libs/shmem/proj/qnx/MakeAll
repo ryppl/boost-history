@@ -1,0 +1,39 @@
+
+ifndef CC
+CC=g++
+endif
+
+BOOST_ROOT=../../../..
+
+SHMEM_CPP := $(wildcard ../../src/*.cpp)
+SHMEM_OBJ := $(patsubst ../../src/%.cpp, lib_%.o, $(SHMEM_CPP))
+
+SHMEMTEST_CPP := $(wildcard ../../test/*.cpp)
+SHMEMTEST_OUT := $(patsubst ../../test/%.cpp, ../../bin/qnx/test_%.out, $(SHMEMTEST_CPP))
+
+SHMEMEXAMPLE_CPP := $(wildcard ../../example/*.cpp)
+SHMEMEXAMPLE_OUT := $(patsubst ../../example/%.cpp, ../../bin/qnx/doc_%.out, $(SHMEMEXAMPLE_CPP))
+
+SHMEMDOC_CPP := $(wildcard ../../doc/code/*.cpp)
+SHMEMDOC_OUT := $(patsubst ../../doc/code/%.cpp, ../../bin/qnx/doc_%.out, $(SHMEMDOC_CPP))
+
+.PHONY: createdir clean
+ 
+all: createdir $(SHMEMEXAMPLE_OUT) $(SHMEMTEST_OUT)
+	@cd .
+
+createdir:
+	@mkdir -p ../../bin/qnx
+
+../../bin/qnx/test_%.out: ../../test/%.cpp 
+	$(CC) $< -Wall -lboost_thread-gcc-mt-s -I$(BOOST_ROOT) -o $@
+
+../../bin/qnx/ex_%.out: ../../example/%.cpp 
+	$(CC) $< -Wall -lboost_thread-gcc-mt-s -I$(BOOST_ROOT) -o $@
+
+../../bin/qnx/doc_%.out: ../../example/%.cpp 
+	$(CC) $< -Wall -lboost_thread-gcc-mt-s -I$(BOOST_ROOT) -o $@
+
+clean:
+	rm -f *.o
+	rm -f ../../bin/qnx/*

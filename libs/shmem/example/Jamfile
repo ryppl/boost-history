@@ -1,0 +1,33 @@
+# Boost serialization Library Build Jamfile
+#  (C) Copyright Ion Gazta�ga 2004.
+#  Use, modification, and distribution are subject to the
+#  Boost Software License, Version 1.0. (See accompanying file
+#  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#
+#  See http://www.boost.org/libs/shmem for the library home page.
+
+subproject libs/shmem/example ;
+
+rule demo-shmem-build ( demo-name )
+{
+    exe $(demo-name)
+        : # sources
+            $(demo-name).cpp
+          #  <lib>../build/boost_shmem
+        : # requirements
+            <include>$(BOOST_ROOT)  
+            <sysinclude>$(BOOST_ROOT)
+        : # default build
+            release
+            <runtime-link>static
+    ;
+}
+
+demo-shmem-build process_a_example ;
+demo-shmem-build process_a_fixed_example ;
+demo-shmem-build process_b_example ;
+demo-shmem-build process_b_fixed_example ;
+demo-shmem-build alloc_example ;
+demo-shmem-build named_alloc_example ;
+
+
