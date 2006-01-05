@@ -13,6 +13,7 @@
 
 #include <boost/config.hpp>
 #include <boost/any.hpp>
+#include <boost/function.hpp>
 
 #include <boost/plugin/virtual_constructors.hpp>
 #include <boost/plugin/abstract_factory.hpp>
@@ -28,9 +29,13 @@ namespace boost { namespace plugin {
         std::pair<abstract_factory<BasePlugin> *, dll_handle>
         get_abstract_factory(dll const& d, std::string const &class_name)
         {
-            boost::shared_ptr<get_plugins_list_np> f = 
-                d.get<get_plugins_list_type>("boost_exported_plugins_list");    
-            exported_plugins_type& e = (*f)();
+            typedef typename remove_pointer<get_plugins_list_type>::type PointedType;
+            typedef boost::function<void (get_plugins_list_type)> DeleterType;
+            
+            std::pair<get_plugins_list_type, DeleterType> f = 
+                d.get<get_plugins_list_type, DeleterType>("boost_exported_plugins_list");    
+
+            exported_plugins_type& e = (*f.first)();
             
             typename exported_plugins_type::iterator it = e.find(class_name);                
             if (it != e.end()) {
@@ -42,7 +47,7 @@ namespace boost { namespace plugin {
                 }
                 
                 abstract_factory<BasePlugin> *w = *xw;
-                return make_pair(w, f);
+                return make_pair(w, boost::shared_ptr<PointedType>(f.first, f.second));
             } 
             else {
                 BOOST_PLUGIN_OSSTREAM str;

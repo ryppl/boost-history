@@ -19,7 +19,7 @@ namespace boost { namespace plugin { namespace detail {
         dll_handle_holder(dll_handle dll) 
         :   m_dll(dll) {}
         
-        ~dll_handle_holder()
+        virtual ~dll_handle_holder()
         {}
 
     private:

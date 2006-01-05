@@ -48,27 +48,80 @@ namespace boost { namespace plugin {
     class dll 
     {
     public:
-        dll() {} // TODO: should remove this or make non-public
+        dll() : dll_handle(NULL) {} // TODO: should remove this or make non-public
         
         dll(dll const& rhs) 
         :   dll_name(rhs.dll_name), dll_handle(NULL)
         {
-            if (!dll_name.empty()) {
-                dll_handle = LoadLibrary(dll_name.c_str());
-                if (!dll_handle) {
-                    BOOST_PLUGIN_OSSTREAM str;
-                    str << "Boost.Plugin: Could not open shared library '" 
-                        << dll_name << "'";
-                    
-                    throw std::logic_error(BOOST_PLUGIN_OSSTREAM_GETSTRING(str));
-                }
-            }
+            if (!dll_name.empty())
+                LoadLibrary();
         }
 
         dll(std::string const& name) 
         :   dll_name(name), dll_handle(NULL)
         {
-            dll_handle = LoadLibrary(dll_name.c_str());
+            LoadLibrary();
+        }
+        
+        dll &operator=(dll const& rhs)
+        {
+            if (this != &rhs) {
+            //  free any existing dll_handle
+                FreeLibrary();
+
+            //  load the library for this instance of the dll class
+                dll_name = rhs.dll_name;
+                LoadLibrary();
+            }
+            return *this;
+        }
+        
+        ~dll() 
+        { 
+            FreeLibrary(); 
+        }
+        
+        std::string get_name() const { return dll_name; }
+        
+        template<typename SymbolType, typename Deleter>
+        std::pair<SymbolType, Deleter> 
+        get(std::string const& symbol_name) const
+        {
+            BOOST_STATIC_ASSERT(boost::is_pointer<SymbolType>::value);
+            typedef typename remove_pointer<SymbolType>::type PointedType;
+            
+            // Open the library. Yes, we do it on every access to 
+            // a symbol, the LoadLibrary function increases the refcnt of the dll
+            // so in the end the dll class holds one refcnt and so does every 
+            // symbol.
+            HMODULE handle = ::LoadLibrary(dll_name.c_str());
+            if (!handle) {
+                BOOST_PLUGIN_OSSTREAM str;
+                str << "Boost.Plugin: Could not open shared library '" 
+                    << dll_name << "'";
+                
+                throw std::logic_error(BOOST_PLUGIN_OSSTREAM_GETSTRING(str));
+            }
+            BOOST_ASSERT(handle == dll_handle);
+                    
+            // Cast the to right type.
+            SymbolType address = (SymbolType)GetProcAddress(dll_handle, symbol_name.c_str());
+            if (NULL == address) 
+            {
+                BOOST_PLUGIN_OSSTREAM str;
+                str << "Boost.Plugin: Unable to locate the exported symbol name '" 
+                    << symbol_name << "' in the shared library '" 
+                    << dll_name << "'";
+                    
+                throw std::logic_error(BOOST_PLUGIN_OSSTREAM_GETSTRING(str));
+            }
+            return std::make_pair(address, detail::free_dll(handle));
+        }        
+
+    protected:
+        void LoadLibrary()
+        {
+            dll_handle = ::LoadLibrary(dll_name.c_str());
             if (!dll_handle) {
                 BOOST_PLUGIN_OSSTREAM str;
                 str << "Boost.Plugin: Could not open shared library '" 
@@ -78,52 +131,12 @@ namespace boost { namespace plugin {
             }
         }
         
-        ~dll() 
-        { 
+        void FreeLibrary()
+        {
             if (NULL != dll_handle) 
-                FreeLibrary(dll_handle); 
-            dll_handle = NULL;
+                ::FreeLibrary(dll_handle); 
         }
         
-        std::string get_name() const { return dll_name; }
-        
-        template<typename SymbolType>
-        boost::shared_ptr<typename boost::remove_pointer<SymbolType>::type> 
-        get (std::string const& symbol_name) const
-        {
-            BOOST_STATIC_ASSERT(boost::is_pointer<SymbolType>::value);
-            typedef typename remove_pointer<SymbolType>::type PointedType;
-            
-        // Open the library. Yes, we do it on every access to 
-        // a symbol, the LoadLibrary function increases the refcnt of the dll
-        // so in the end the dll class holds one refcnt and so does every 
-        // symbol.
-        HMODULE handle = LoadLibrary (dll_name.c_str());
-
-            BOOST_ASSERT(handle == dll_handle);
-            if (!handle) {
-                BOOST_PLUGIN_OSSTREAM str;
-                str << "Boost.Plugin: Could not open shared library '" 
-                    << dll_name << "'";
-                
-                throw std::logic_error(BOOST_PLUGIN_OSSTREAM_GETSTRING(str));
-            }
-                        
-        // Cast the to right type.
-        SymbolType address = 
-            (SymbolType)GetProcAddress(dll_handle, symbol_name.c_str());
-
-            if (NULL == address) {
-                BOOST_PLUGIN_OSSTREAM str;
-                str << "Boost.Plugin: Unable to locate the exported symbol name '" 
-                    << symbol_name << "' in the shared library '" 
-                    << dll_name << "'";
-                    
-                throw std::logic_error(BOOST_PLUGIN_OSSTREAM_GETSTRING(str));
-            }
-            return boost::shared_ptr<PointedType>(address, detail::free_dll(handle));
-        }        
-
     private:
         std::string dll_name;
         HMODULE dll_handle;
@@ -133,3 +146,4 @@ namespace boost { namespace plugin {
 }}
 
 #endif
+

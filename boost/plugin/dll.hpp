@@ -8,6 +8,12 @@
 
 #include <boost/config.hpp>
 
+#ifndef BOOST_WINDOWS
+# ifndef  BOOST_HAS_DLOPEN
+#  define BOOST_HAS_DLOPEN 1
+# endif
+#endif
+
 #if defined(BOOST_WINDOWS)
 #include <boost/plugin/detail/dll_windows.hpp>
 #elif defined(BOOST_HAS_DLOPEN)
