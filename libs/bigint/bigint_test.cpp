@@ -399,4 +399,16 @@ int main() {
     assert(i4.fail());
   }
 
+  // Tests given by Weipeng Liu
+  {
+    bigint i = 1001;
+    bigint j = 10000;
+    assert(i<j);
+  }
+  {
+    bigint i = 1;
+    bigint j = -1;
+    assert(i*j == -1);
+  }
+
 }

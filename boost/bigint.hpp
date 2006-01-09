@@ -16,6 +16,7 @@
 #include "boost/bigint/bigint_base.hpp"
 #include "boost/config.hpp"
 #include "boost/operators.hpp"
+#include "boost/utility.hpp"
 #include <algorithm>
 #include <functional>
 #include <vector>
@@ -176,6 +177,12 @@ class bigint : public boost::detail::bigint::bigint_base<bigint>, // for op>>
     int carry = 0;
     for(buffer_t::iterator i = buffer.begin();
 	i != buffer.end(); ++i) {
+
+      // Do not carry -1 if it's the sign bit
+      if (*i == -1 &&
+          std::find_if(boost::next(i), buffer.end(),
+            std::bind2nd(std::not_equal_to<int>(), 0)) == buffer.end())
+        break;
 
       int new_carry = floor_div((carry + *i),radix);
       *i = floor_mod((carry + *i),radix);
@@ -472,9 +479,17 @@ public:
       return true;
     else if(buffer.back() >= 0 && other.buffer.back() < 0)
       return false;
-    else if(buffer.back() < other.buffer.back())
-      return true;
-    else return false;      
+    else if(buffer.back() >= 0 && other.buffer.back() >=0) {
+      if(buffer.size() < other.buffer.size()) return true;
+      else return false;
+    } else if(buffer.back() < 0 && other.buffer.back() < 0) {
+      if(buffer.size() < other.buffer.size()) return false;
+      else return true;
+    }
+    else {
+      assert(0); // Can't get here
+      return false;
+    }
   }
 
   bool operator==(bigint const& other) const {
@@ -500,7 +515,12 @@ public:
 
   bigint& operator*=(bigint const& other) {
     buffer_t term(buffer.size());
-    buffer_t partial_sum(buffer.size()+other.buffer.size(),0);
+    buffer_t partial_sum(buffer.size()+other.buffer.size()+1,0);
+#if 0
+    // carry() may call push_back.  Prevent iterator invalidation.
+    partial_sum.reserve(partial_sum.size()+1);
+#endif
+
     buffer_t::iterator shift = partial_sum.begin();
     buffer_t::const_iterator m = other.buffer.begin();
     while(m != other.buffer.end()) {
