@@ -179,7 +179,7 @@ class bigint : public boost::detail::bigint::bigint_base<bigint>, // for op>>
 	i != buffer.end(); ++i) {
 
       // Do not carry -1 if it's the sign bit
-      if (*i == -1 &&
+      if (*i + carry == -1 && 
           std::find_if(boost::next(i), buffer.end(),
             std::bind2nd(std::not_equal_to<int>(), 0)) == buffer.end())
         break;
