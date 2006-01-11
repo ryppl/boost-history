@@ -2,13 +2,30 @@
 <!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
   "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd"
  [ 
-   <!ENTITY logic.such_that	"<emphasis>SUCH_THAT</emphasis>">  <!-- LOGIC: ???  -->
-   <!ENTITY logic.implies	"&rArr;">
-   <!ENTITY logic.forall "&forall;">
-   <!ENTITY logic.forsome "&exist;">
-   <!ENTITY logic.equiv "&equiv;">
-   <!ENTITY meta_type_name "typename">
-   <!ENTITY meta_type	"<xref linkend='notation.meta_type'/>&nbsp;">
+   <!ENTITY ebnf.repdelim.name "^">
+   <!ENTITY ebnf.repdelim.ref "<link linkend='ebnf.repdelim.simp'>&ebnf.repdelim.name;</link>" >
+   <!ENTITY logic.the_program "program under consideration">
+   <!ENTITY logic.implies	"=>">
+   <!ENTITY logic.forall "&and;<subscript>/</subscript>">
+   <!ENTITY logic.forsome "&or;<subscript>/</subscript>">
+   <!ENTITY logic.defined_as ":=">
+   <!ENTITY logic.member_of.const "&isin;<subscript>constant</subscript>">
+   <!ENTITY logic.member_of.varbl "&isin;<subscript>variable</subscript>">
+   <!ENTITY logic.body_open  "(">
+   <!ENTITY logic.body_close ")">
+   <!ENTITY logic.informal.open.name  "informal{">
+   <!ENTITY logic.informal.close.name "}">
+   <!ENTITY logic.informal.open.ref  "<xref linkend='formula.atomic.informal.assertion'/>">
+   <!ENTITY logic.mpl.open.name  "mpl{">
+   <!ENTITY logic.mpl.close.name "}">
+   <!ENTITY logic.mpl.open.ref  "<xref linkend='formula.atomic.mpl.assertion'/>">
+   <!ENTITY meta_type.text "typename">
+   <!ENTITY meta_type.sort "<type><emphasis>&meta_type.text;<subscript>sort</subscript></emphasis></type>">
+   <!ENTITY meta_type.ref	"<xref linkend='notation.meta_type'/>">
+   <!ENTITY meta_meth.text "methods">
+   <!ENTITY meta_meth.sort "<type><emphasis>&meta_meth.text;<subscript>sort</subscript></emphasis></type>">
+   <!ENTITY meta_meth.ref "<xref linkend='notation.meta_meth'/>">
+   <!ENTITY cxxgram	"http://www.open-std.org/jtc1/sc22/open/n2356/gram.html">
    <!ENTITY is_base_of "<xref linkend='notation.is_base_of'/>&nbsp;"> 
    <!ENTITY containing_record	"<xref linkend='participant.containing_record'/>&nbsp;">
    <!ENTITY selected_field	"<xref linkend='participant.selected_field'/>&nbsp;">
@@ -36,80 +53,580 @@ of any instance of a
 class.
 </para>
 
-</section>
+</section><!-- synop -->
 
 <section id="notation" xreflabel="notation">
 <title>Notation</title>
 
-<para>The <code>fields_visitor</code> library requires close cooperation
+<para>The <replaceable>fields_visitor</replaceable> library requires close cooperation
 between three
-<ulink
-url="http://hillside.net/patterns/writing/GOFtemplate.htm">participants</ulink>,
-which are actually sets of classes in the program.  These three sets of classes are:
-<orderedlist>
-<listitem><code>containing_record</code></listitem>
-<listitem><code>selected_field</code></listitem>
-<listitem><code>fields_visitor</code></listitem>
-</orderedlist>
-<para></para>which were already briefly described in the <xref
-linkend="synop"/>.  To accurately describe this cooperation and define
-these participants, a semi-formal notation will be used.  This
-notation is similar to that described 
-<ulink url="http://en.wikipedia.org/wiki/First-order_predicate_calculus"> here </ulink>.
+participants<xref linkend="cit:part:05"/>
+which are actually sets of classes in the &logic.the_program;.
+These three sets of classes are:
 </para>
+<orderedlist id="notation.participants" xreflabel="participants">
+<listitem><replaceable>containing_record</replaceable></listitem>
+<listitem><replaceable>selected_field</replaceable></listitem>
+<listitem><replaceable>fields_visitor</replaceable></listitem>
+</orderedlist>
+&new_line;
+
+<para>which were already briefly described in the <xref
+linkend="synop"/>.  To accurately describe this cooperation and define
+these participants, a semi-formal notation, based on 'first-order
+logic'<xref linkend="cit:foldoc_fol:95"/>, will be used.  The
+following glossary describes this semi-formal notation.  The
+notation's syntax is partly expressed with <link
+linkend="cit:w3c_ebnf:04">Extended Backus-Naur Form(EBNF)</link>.  In
+addition, binary &ebnf.repdelim.name; expressions, such as:
+</para>
+
+<programlisting>
+  'a' &ebnf.repdelim.name; 'b'
+</programlisting>
+
+<para>
+represent 0 or more occurences of 'a' separated by 'b'.  For exammple:
+</para>
+
+<programlisting>
+  [a-z]+ &ebnf.repdelim.name; ','
+</programlisting>
+
+<para>represents any sequence (including 0 length) of character
+strings composed of one or more lowercase letters and delimited by
+commas.  The following would be an instance of this sequence:
+</para>
+
+<programlisting>
+  a , b , ab , abc
+</programlisting>
+
+<para>Expressions using &ebnf.repdelim.name; satisfy the following equality:
+</para>
+
+<equation id="ebnf.repdelim.simp"><title>Simplification of &ebnf.repdelim.name; expression</title>
+  e_1 &ebnf.repdelim.name; e_2 == ( e_1 ( e_2 e_1 )*)? 
+</equation>
+
+<para>where e_1 and e_2 are arbitrary 
+<link linkend="cit:w3c_ebnf:04">EBNF expressions</link>.
+</para>
+&new_line;
 
 <glosslist>
 
-<glossentry id="notation.class_set_names">
-<glossterm>predefined class set names</glossterm>
+<glossentry id="notation.the_program" xreflabel="&logic.the_program;">
+<glossterm>&logic.the_program;</glossterm>
 <glossdef>
+<para>The logical formula's describing the cooperation between the
+<xref linkend="notation.participants"/> only pertain to some given
+program. The program is termed the "&logic.the_program;".
+</para>
+<para>To better illustrate the meaning of the remaining glossary
+terms, the following instance of a "&logic.the_program;" will be used:
+</para>
+<example id="notation.the_program_instance">
+<title>Example Program</title>
+<programlisting>
+  struct A
+  {
+      int f(A const&amp;, float);
+  };
+  template&lt;typename Barg&gt;
+  struct B
+  {
+      void g(B const&amp;);
+      template&lt;typename Carg&gt;
+      struct C
+      {
+          Barg&amp; h(Carg&amp;);
+      };
+          
+  };
+  struct D
+  {};
+  typedef B&lt;A&gt; b_a_t;
+  typedef b_a_t::C&lt;D&gt; b_a_t_c_d_t;
+</programlisting>
+</example>
+</glossdef>
+</glossentry>
+
+<glossentry id="notation.sorts">
+<glossterm>universe of discourse</glossterm>
+<glossdef>
+<para>The <ulink
+url="http://www.earlham.edu/~peters/courses/logsys/glossary.htm#universe">universe
+of discourse</ulink> contains two "types" or  
+<ulink
+url="http://planetmath.org/encyclopedia/Logic.html">sorts</ulink>
+contained in <xref linkend="notation.the_program"/>:
+</para>
 
 <glosslist>
 <glossentry id="notation.meta_type">
-<glossterm>&meta_type_name;</glossterm>
+<glossterm>&meta_type.sort;</glossterm>
 <glossdef>
 
-<para><emphasis>&meta_type_name;</emphasis> is the set of
-<code>types</code>, fundamental or otherwise, in a program.
+<itemizedlist>
+<listitem>description:
+<para><emphasis>&meta_type.sort;</emphasis> is the set of
+<replaceable>types</replaceable>, fundamental or otherwise, in
+<xref linkend="notation.the_program"/>.</para>
+</listitem>
+
+<listitem>member syntax:
+<para>The syntax of &meta_type.sort;
+members is given by:</para>
+<productionset>
+<production id="ebnf.type_name.prod">
+<lhs id="ebnf.type_name.lhs">&meta_type.text;<subscript>constant</subscript></lhs>
+<rhs>
+  <nonterminal def="&cxxgram;#gram.lex">
+    identifier
+  </nonterminal> 
+| <nonterminal def="&cxxgram;#gram.temp">
+    template-id
+  </nonterminal>
+</rhs>
+</production>
+</productionset>
+<para>Where the <replaceable>identifier</replaceable> has been previously defined
+as either a <replaceable>class</replaceable> or <replaceable>struct</replaceable>.
+</para>
+<para>
+This production is the same as <ulink
+url="http://www.open-std.org/jtc1/sc22/open/n2356/gram.html#gram.class"
+>class-name</ulink>, except for the name of the <replaceable>lhs</replaceable>.
+</para>
+</listitem>
+
+<listitem>examples:
+<equation id="notation.typename.example">
+<title>&meta_type.sort; value for <xref
+linkend="notation.the_program_instance"/>
+</title>
+&meta_type.sort; =
+<programlisting>
+  { A
+  , B&lt;A&gt;
+  , B&lt;A&gt;::C&lt;D&gt;
+  , D
+  }
+</programlisting>
+</equation>
+</listitem>
+</itemizedlist>
+
+</glossdef>
+
+</glossentry><!--notation.meta_type-->
+
+<glossentry id="notation.meta_meth">
+<glossterm>&meta_meth.sort;</glossterm>
+<glossdef>
+
+<itemizedlist>
+
+<listitem>description
+<para><emphasis>&meta_meth.sort;</emphasis> is the set of
+<ulink url="http://www.open-std.org/jtc1/sc22/open/n2356/class.html#class.mfct.nonstatic">nonstatic member functions</ulink>, including the method name and argument types, in
+<xref linkend="notation.the_program"/>.
+</para>
+</listitem>
+
+<listitem>member syntax:
+<para>The syntax of &meta_meth.sort;
+members is given by:</para>
+<productionset>
+<production id="ebnf.meth_name.prod">
+<lhs id="ebnf.meth_name.lhs">&meta_meth.text;<subscript>constant</subscript></lhs>
+<rhs>
+  <nonterminal def="#ebnf.type_name.prod"/>
+::<nonterminal def="&cxxgram;#gram.lex">function_id</nonterminal> ( <nonterminal def="&cxxgram;#gram.dcl.decl">parameter-declaration-clause</nonterminal> )
+</rhs>
+</production>
+</productionset>
+<para>Where the <replaceable>function_id</replaceable> has been previously declared
+as a <replaceable>member function</replaceable> of the class designated by the 
+<replaceable>&meta_type.text; <subscript>constant</subscript></replaceable>
+to the left of the '::' token.
+</para>
+</listitem>
+
+<listitem>examples:
+<equation>
+<title>&meta_meth.sort; value for <xref
+linkend="notation.the_program_instance"/>
+</title>
+&meta_meth.sort; =
+<programlisting>
+  { A::f(A const&amp;, float)
+  , B&lt;A&gt;::g(B&lt;A&gt; const&amp;)
+  , B&lt;A&gt;::C&lt;D&gt;::h(D&amp;)
+  }
+</programlisting>
+</equation>
+</listitem>
+
+</itemizedlist>
+
+</glossdef>
+</glossentry><!--notation.meta_meth-->
+
+</glosslist>
+
+</glossdef>
+</glossentry><!--notation.universe_of_discourse-->
+
+<glossentry id="notation.quantifiers">
+<glossterm>Quantifiers</glossterm>
+<glossdef>
+<itemizedlist>
+<listitem>description:
+<para>These are the standard quantifiers in <xref linkend="cit:foldoc_fol:95"/>,
+</para>
+</listitem>
+<listitem>syntax:
+<productionset>
+<production id="ebnf.quantifier.prod">
+<lhs id="ebnf.quantifier.lhs">quantifier</lhs>
+<rhs>'&logic.forall;' | '&logic.forsome;'
+</rhs>
+</production>
+</productionset>
+<para>where &logic.forall; is the universal quantifier( more
+commonly designated as &forall; ) and &logic.forsome; is the
+existential quantifier (more commonly designated as &exist; ).
+</para>
+</listitem>
+</itemizedlist>
+</glossdef>
+</glossentry>
+
+<glossentry id="notation.atomic_formula">
+<glossterm>atomic formula</glossterm>
+<glossdef>
+<para>Atomic formulas are the basis for an inductive definition of
+formulas.  The following lists the types of atomic formulas:
 </para>
 
+<orderedlist>
+
+<listitem id="formula.atomic.predicate.assertion">
+<replaceable id="formula.atomic.predicate.nonterminal">predicate.assertion</replaceable>:
+<para>A predicate.assertion atomic formula is as described in
+<xref linkend="cit:foldoc_fol:95"/> or <xref
+linkend="cit:wiki_fopc:05"/>,
+where the predicates are defined as described
+<link linkend="notation.predicate_definition">here</link>.
+</para>
+</listitem>
+
+<listitem id="formula.atomic.isin.assertion">
+<replaceable id="formula.atomic.isin.nonterminal">isin.assertion</replaceable>:
+<para>An isin.assertion atomic formula conforms to the following scheme:
+</para>
+<programlisting>
+  <replaceable>e-constant</replaceable> &logic.member_of.const; <replaceable>E-Sort</replaceable>
+</programlisting>
+<para>which simply states that the program entity named by e-constant,
+is in the <link linkend="notation.sorts">sort</link>,
+<replaceable>E-Sort</replaceable>, where:
+</para>
+<table frame='all'>
+<title>atomic formulas composed of &logic.member_of.const;</title>
+<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+<thead>
+<row>
+<entry>if E-Sort is:&nbsp;&nbsp;&nbsp;&nbsp;</entry>
+<entry>then e-constant is a:</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>&meta_type.ref;</entry>
+<entry><xref linkend="ebnf.type_name.prod" endterm="ebnf.type_name.lhs"/></entry>
+</row>
+<row>
+<entry>&meta_meth.ref;</entry>
+<entry><xref linkend="ebnf.meth_name.prod" endterm="ebnf.meth_name.lhs"/></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+&new_line;
+</listitem>
+&new_line;
+
+<listitem id="formula.atomic.mpl.assertion" xreflabel="&logic.mpl.open.name;">
+<replaceable id="formula.atomic.mpl.nonterminal">mpl.assertion</replaceable>:
+&logic.mpl.open.name;<replaceable>c++ mpl code</replaceable>&logic.mpl.close.name;
+
+<para><replaceable>c++ mpl code</replaceable> represents some <ulink
+url="http://www.boost.org/libs/mpl/doc/index.html">c++ mpl
+code</ulink> returning a boolean value.
+</para>
+</listitem>
+
+<listitem id="formula.atomic.informal.assertion" xreflabel="&logic.informal.open.name;">
+<replaceable id="formula.atomic.informal.nonterminal">informal.assertion</replaceable>: 
+&logic.informal.open.name;<replaceable>description</replaceable>&logic.informal.close.name;
+
+<para>Sometimes, there no easy way to describe a predicate in formal
+terms.  In such cases, a <replaceable>natural language assertion</replaceable> is
+used where the natural language occurs between the
+'&logic.informal.open.name;' and '&logic.informal.close.name;' delimiters.  For
+example:
+</para>
+
+<informalexample>
+  &logic.informal.open.name; 
+    'int' is a fundamental type in c++.
+  &logic.informal.close.name;
+</informalexample>
+<para>
+simply asserts something obvious in natural language.
+</para>
+
+</listitem>
+
+</orderedlist>
+
+<para>Letting the above "labels" (the tokens before the ':' and after
+the numbers in the above numbered list), represent nonterminals in a
+grammar, then the nonterminal, atomic_formula, is defined as:
+</para>
+
+<productionset>
+<production id="ebnf.atomic.prod">
+<lhs id="ebnf.atomic.lhs">atomic_formula</lhs>
+<rhs>
+&nbsp;
+  <nonterminal>
+  <xref 
+    linkend="formula.atomic.predicate.assertion"
+    endterm="formula.atomic.predicate.nonterminal"
+  />
+  </nonterminal>
+<sbr/>
+| <nonterminal>
+  <xref 
+    linkend="formula.atomic.isin.assertion"
+    endterm="formula.atomic.isin.nonterminal"
+  />
+  </nonterminal>
+<sbr/>
+| <nonterminal>
+  <xref 
+    linkend="formula.atomic.mpl.assertion"
+    endterm="formula.atomic.mpl.nonterminal"
+  />
+  </nonterminal>
+<sbr/>
+| <nonterminal>
+  <xref 
+    linkend="formula.atomic.informal.assertion"
+    endterm="formula.atomic.informal.nonterminal"
+  />
+  </nonterminal>
+</rhs>
+</production>
+</productionset>
+
+</glossdef>
+</glossentry>
+
+<glossentry id="notation.formula">
+<glossterm>formula</glossterm>
+<glossdef>
+
+<itemizedlist>
+
+<listitem>description:
+<para>This is the "well formed formula" of
+<xref linkend="cit:wiki_fopc:05"/> or <xref linkend="cit:foldoc_fol:95"/>.
+</para>
+</listitem>
+
+<listitem>syntax:
+<productionset>
+<production id="ebnf.infix.binary.prod">
+<lhs>infix.binary</lhs>
+<rhs>
+&nbsp;  '&and;'
+<sbr/>| '&or;'
+<sbr/>| '&logic.implies;'
+</rhs>
+</production>
+<production id="ebnf.formula.prod">
+<lhs id="ebnf.formula.lhs">formula</lhs>
+<rhs>
+&nbsp;  <nonterminal def="#ebnf.atomic.prod"/>
+<sbr/>| <nonterminal def="#ebnf.formula.prod"/>
+&nbsp;  <nonterminal def="#ebnf.infix.binary.prod"/>
+&nbsp;  <nonterminal def="#ebnf.formula.prod"/>
+<sbr/>| <nonterminal def="#ebnf.quantifier.prod"/>
+&nbsp;  <nonterminal def="#ebnf.formal_args.prod"/>
+        '(' <nonterminal def="#ebnf.formula.prod"/> ')'
+</rhs>
+</production>
+</productionset>
+</listitem>
+
+</itemizedlist>
+
+</glossdef>
+</glossentry>
+
+<glossentry id="notation.predicate_definition">
+<glossterm>predicate definition</glossterm>
+<glossdef>
+
+<itemizedlist>
+<listitem>description:
+<para>The predicates used in formulas are defined with the
+<replaceable>&logic.defined_as;</replaceable> operator.
+</para>
+</listitem>
+<listitem>syntax:
+<productionset>
+<production id="ebnf.predicate.prod">
+<lhs id="ebnf.predicate.lhs">predicate_definition</lhs>
+<rhs>
+  <nonterminal def="&cxxgram;#gram.lex">
+    identifier
+  </nonterminal>
+&nbsp;<nonterminal def="#ebnf.formal_args.prod"/>
+  '&logic.defined_as;'
+  <nonterminal>formula</nonterminal>
+</rhs>
+</production>
+</productionset>
+
+</listitem>
+
+</itemizedlist>
+
+</glossdef>
+</glossentry>
+
+<glossentry id="notation.variable_declaration">
+<glossterm>variable declaration</glossterm>
+<glossdef>
+
+<itemizedlist>
+
+<listitem>description:
+
+<para>Because there's more than one <link
+linkend="notation.sorts">sort</link>, the variables used as formal
+arguments to the quantifiers of <xref linkend="cit:foldoc_fol:95"/>
+and predicate definitions must be "decorated" with their "sort" in a
+"declaration".
+</para>
+
+</listitem>
+<listitem>syntax:
+<productionset>
+<production id="ebnf.declaration.prod">
+<lhs id="ebnf.declaration.lhs">variable_declaration</lhs>
+<rhs>
+  <nonterminal def="&cxxgram;#gram.lex">
+    identifier
+  </nonterminal>
+  '&logic.member_of.varbl;' 
+  ( '&meta_type.ref;'
+  | '&meta_meth.ref;'
+  )
+</rhs>
+</production>
+</productionset>
+</listitem>
+<listitem>examples:
+<orderedlist>
+<listitem>In <xref linkend="ebnf.predicate.prod" endterm="ebnf.predicate.lhs"/>:
+<programlisting>
+  AlwaysTruePredicate
+  ( var_1 &logic.member_of.varbl; &meta_type.ref;
+  , var_2 &logic.member_of.varbl; &meta_type.ref;
+  )
+  &logic.defined_as;
+  ( true
+  )
+</programlisting>
+</listitem>
+<listitem>In Quantified formula:
+<programlisting>
+  &logic.forall;
+  ( var_1 &logic.member_of.varbl; &meta_type.ref;
+  , var_2 &logic.member_of.varbl; &meta_type.ref;
+  )
+  ( true
+  )
+</programlisting>
+</listitem>
+</orderedlist>
+</listitem>
+</itemizedlist>
+</glossdef>
+</glossentry>
+
+<glossentry id="notation.formal_arguments">
+<glossterm>formal arguments</glossterm>
+<glossdef>
+<itemizedlist>
+<listitem>description:
+
+<para>This is simply a parenthesized list of <link
+linkend="ebnf.declaration.prod">variable declarations</link> delimited
+by commas.
+</para>
+
+</listitem>
+<listitem>syntax:
+<productionset>
+<production id="ebnf.formal_args.prod">
+<lhs id="ebnf.formal_args.lhs">formal_args</lhs>
+<rhs>'(' <nonterminal def="#ebnf.declaration.prod"/> &nbsp; &ebnf.repdelim.ref; ','  ')' 
+</rhs>
+</production>
+</productionset>
+</listitem>
+</itemizedlist>
 </glossdef>
 </glossentry>
 
 </glosslist>
 
-</glossdef>
-</glossentry>
+</section> <!-- notation -->
 
-<glossentry id="notation.nl_assertion" xreflabel="nl_assertion">
-<glossterm>nl_assertion[<replaceable>description</replaceable>]</glossterm>
-<glossdef>
-
-<para>Sometimes, there no easy way to describe a predicate in formal terms.
-In such cases, a <code>nl_assertion</code> is used where the natural language
-statement between '[' and ']' state the assertion.  For example:
-<informalexample>
-  nl_assertion
-  [ 'int' is a fundamental type in c++.
-  ]
-</informalexample>
-Simple asserts something obvious in natural language.
+<section id="predicate_defs.utility">
+<title>Utility Predicate definitions</title>
+<para>The predicates defined in this section simplify the definition
+of predicates in following sections.
 </para>
 
-</glossdef>
-</glossentry>
-
+<glosslist>
 <glossentry id="notation.is_base_of">
 <glossterm>is_base_of</glossterm>
 <glossdef>
 
 <para>
 <programlisting>
-  is_base_of(&meta_type; <replaceable>BaseType</replaceable>, &meta_type; <replaceable>DerivedType</replaceable>)
-  &logic.equiv;
-  {
-    <ulink url="http://www.boost.org/doc/html/boost_typetraits/reference.html#boost_typetraits.is_base_of">boost::is_base_of</ulink>&lt;<replaceable>BaseType</replaceable>, <replaceable>DerivedType</replaceable> &gt;::value
-  }
+is_base_of
+  ( <replaceable>Base</replaceable> &logic.member_of.varbl;  &meta_type.ref;
+  , <replaceable>Derived</replaceable> &logic.member_of.varbl; &meta_type.ref; 
+  )
+&logic.defined_as;
+&logic.body_open;
+  &logic.mpl.open.ref;
+  <ulink
+  url="http://www.boost.org/doc/html/boost_typetraits/reference.html#boost_typetraits.is_base_of">boost::is_base_of</ulink>&lt;<replaceable>Base</replaceable>,
+  <replaceable>Derived</replaceable> &gt;::value
+  &logic.mpl.close.name;
+&logic.body_close;
 </programlisting>
 &new_line;
 </para>
@@ -123,61 +640,37 @@ Simple asserts something obvious in natural language.
 
 <para>
 <programlisting>
-  convertable_to(&meta_type; <replaceable>FromType</replaceable>, &meta_type; <replaceable>ToType</replaceable>)
-  &logic.equiv;
-  {
-    nl_assertion
-    [
-       <replaceable>FromType</replaceable> 
-       is implicitly convertable to 
-       <replaceable>ToType</replaceable>.
-    ]
-  }
+convertable_to
+  ( <replaceable>From</replaceable> &logic.member_of.varbl; &meta_type.ref;
+  , <replaceable>To</replaceable> &logic.member_of.varbl; &meta_type.ref; 
+  )
+&logic.defined_as;
+&logic.body_open;
+  &logic.informal.open.ref;
+    <replaceable>From</replaceable> 
+     is implicitly convertable to 
+     <replaceable>To</replaceable>.
+   &logic.informal.close.name;
+&logic.body_close;
 </programlisting>
 &new_line;
 In other words, a function:
 <programlisting>
-  void f(<replaceable>ToType</replaceable>&amp; a_arg)
+  void f(<replaceable>To</replaceable>&amp; a_arg)
 </programlisting>
-can be called with argument of type, <replaceable>FromType</replaceable>&amp;.
-</para>
-
-</glossdef>
-</glossentry>
-
-<glossentry id="notation.program_contains" xreflabel="program_contains">
-<glossterm>program_contains[<replaceable>code</replaceable>]</glossterm>
-<glossdef>
-
-<para>This means the program "under discussion" contains the
-"entity" named by the code between '[' and ']'.
-For example:
-<informalexample>
-  program_contains[ C::f(int) ]
-</informalexample>
-Means the program under discussion contains a declaration:
-<programlisting>
-  class C
-  {
-  ...
-    <replaceable>ReturnType</replaceable> f(int)
-  ...
-  };
-</programlisting>
-where <replaceable>ReturnType</replaceable> stands for
-any return type,
+can be called with argument of type, <replaceable>From</replaceable>&amp;.
 </para>
 
 </glossdef>
 </glossentry>
 
 </glosslist>
-</section><!-- notation -->
+</section><!-- predicate_defs.utility  -->
 
 <section id="participants" xreflabel="participant">
 <title>Design Pattern Participants</title>
 
-<para>The <code>fields_visitor</code> library requires close cooperation
+<para>The <replaceable>fields_visitor</replaceable> library requires close cooperation
 between  three "class types" or 
 <ulink
 url="http://hillside.net/patterns/writing/GOFtemplate.htm">participants</ulink>:
@@ -188,18 +681,128 @@ url="http://hillside.net/patterns/writing/GOFtemplate.htm">participants</ulink>:
 <glossterm>containing_record</glossterm>
 <glossdef>
 
-<para>
-<equation id="def.containing_record">
-<title><code>containing_record</code> definition</title>
+<section id="participant.containing_record.defs">
+<title>predicates used in the <replaceable>containing_record</replaceable>&nbsp;definition</title>
+<equation 
+  id="participant.containing_record.has_registrar_super"
+  xreflabel="has_registrar_super"
+>
+
 <programlisting>
-is_containing_record(&meta_type;<replaceable>GivenRecord</replaceable>)
-&logic.equiv;
-&logic.forsome;(&meta_type; <replaceable>SomeVisitor</replaceable>)
-{
-  <xref linkend="notation.program_contains"/>[<classname alt="boost::fields_visitor::selected_fields_description_of">selected_fields_description_of</classname>&lt;<replaceable>SomeVisitor</replaceable>,<replaceable>GivenRecord</replaceable>&gt;]
-}
+has_valid_descriptor(<replaceable>SomeVisitor</replaceable> &logic.member_of.varbl; &meta_type.ref;, <replaceable>SomeRecord</replaceable> &logic.member_of.varbl; &meta_type.ref;)
+&logic.defined_as;
+&logic.body_open;
+    <xref linkend="notation.is_base_of"/>
+    (&nbsp;<classname alt="boost::fields_visitor::descriptor_builder">descriptor_builder</classname>&lt;<replaceable>SomeVisitor</replaceable>,<replaceable>SomeRecord</replaceable>&gt;
+    ,&nbsp;<classname alt="boost::fields_visitor::selected_fields_description_of">selected_fields_description_of</classname>&lt;<replaceable>SomeVisitor</replaceable>,<replaceable>SomeRecord</replaceable>&gt;
+    )
+&logic.body_close;
 </programlisting>
 </equation>
+
+<para>The only purpose of the
+<replaceable>descriptor_builder</replaceable> used in the
+<replaceable>has_valid_descriptor</replaceable> definition is to
+create a "descriptor" for <replaceable>SomeRecord</replaceable> which
+allows visitation of the <xref
+linkend="participant.selected_field"/>'s within
+<replaceable>SomeRecord</replaceable> by a <xref
+linkend="participant.fields_visitor"/>,
+<replaceable>SomeVisitor</replaceable>.  However, this "descriptor"
+(actually a <classname
+alt="boost::fields_visitor::names_descriptor::selected_fields_descriptor">selected_fields_descriptor</classname>),
+is created <emphasis id="lazy_descriptor">"lazily"</emphasis>,
+i.e. only when the
+<methodname>
+descriptor_builder&lt;SomeVisitor,SomeRecord&gt;::ptr(void) </methodname>
+<literal>static</literal> function is called (usually by the
+<replaceable>SomeVisitor</replaceable>::<methodname>visit_field</methodname>(<replaceable>SomeSelectedField</replaceable>&amp;)
+method for some field,
+<replaceable>SomeSelectedField</replaceable>(or supertype thereof), within <replaceable>SomeRecord</replaceable>.
+</para>
+
+<para>The <link linkend="lazy_descriptor">laziness</link> mentioned in
+the previous paragraph is caused by a <literal>local static</literal>
+instance of <classname
+alt="boost::fields_visitor::descriptor_builder"> descriptor_builder </classname>
+within the
+<methodname> descriptor_builder&lt;SomeVisitor,SomeRecord&gt;::ptr(void)
+</methodname>
+function.  The <replaceable>descriptor_builder</replaceable>
+constructor references global variables via,
+<methodname>names_builder&lt;FieldsVisitor&gt;::the_materials()</methodname>,
+as do instances of <xref linkend="participant.selected_field"/>(in the
+<literal>field_registrar</literal> superclass of each
+<literal>selected_field</literal>).
+
+<important>This reference of global variables makes the use of these
+two participants:
+<orderedlist>
+<listitem><xref linkend="participant.containing_record"/></listitem>
+<listitem><xref linkend="participant.selected_field"/></listitem>
+</orderedlist>
+<emphasis>thread unsafe</emphasis>.
+</important>
+
+This coordination between these two participants to build the <classname
+alt="boost::fields_visitor::names_descriptor::selected_fields_descriptor">selected_fields_descriptor</classname>'s
+is basicly that described in <xref linkend="cit:detl:92"/>.  However,
+in that article the "selected_fields_descriptor" was called an "RCMap"
+and the "selected_field"'s were all smart pointers, Ptr&lt;T&gt;, for some
+T, and the "global variable" was a function pointer, PtrAny::Ctor (see
+Figure 4 of<xref linkend="cit:detl:92"/>).
+</para>
+
+</section><!-- predicates used in the containing_record definition -->
+
+<para>Using the above <link
+linkend="participant.containing_record.defs">definitions</link>, the
+definition of <replaceable>containing_record</replaceable> is then the
+members of &meta_type.ref; satisfying the predicate:
+</para>
+
+<equation id="def.containing_record">
+<title><replaceable>containing_record</replaceable> definition</title>
+<programlisting>
+is_containing_record(<replaceable>GivenRecord</replaceable>&logic.member_of.varbl; &meta_type.ref;)
+&logic.defined_as;
+&logic.forsome;(<replaceable>SomeVisitor</replaceable>&logic.member_of.varbl; &meta_type.ref;)
+&logic.body_open;
+    has_valid_descriptor(<replaceable>SomeVisitor</replaceable>, <replaceable>GivenRecord</replaceable>)
+&logic.body_close;
+</programlisting>
+</equation>
+
+<para>The simplest way to make <replaceable>GivenRecord</replaceable>
+a <replaceable>containing_record</replaceable> is to include the following
+statement in <ulink
+url="http://www.open-std.org/jtc1/sc22/open/n2356/basic.html">global
+scope</ulink>:
+</para>
+
+<remark>REMARK: Would 'file scope' instead of 'global scope' be any
+more accurate?  However, I found no definition of 'file scope' in the
+standard I have. -Larry Evans@2006-01-05
+</remark>
+
+<programlisting>
+    <macroname>SELECTED_FIELDS_DESCRIPTION_OF_RECORD</macroname>(<replaceable>GivenRecord</replaceable>)
+</programlisting>
+
+<para>In effect, the above macro invokation makes the
+following formula true:
+</para>
+<programlisting>
+&logic.forall;(<replaceable>SomeVisitor</replaceable>&logic.member_of.varbl; &meta_type.ref;)
+&logic.body_open;
+    has_valid_descriptor(<replaceable>SomeVisitor</replaceable>, <replaceable>GivenRecord</replaceable>)
+&logic.body_close;
+</programlisting>
+
+<para>In other words, instead of the existential quantifier,
+&logic.forsome;, after &logic.defined_as; in <xref
+linkend="def.containing_record"/>, the univeral quantifier,
+&logic.forall;, becomes valid.
 </para>
 
 </glossdef>
@@ -208,67 +811,61 @@ is_containing_record(&meta_type;<replaceable>GivenRecord</replaceable>)
 <glossterm>selected_field</glossterm>
 <glossdef>
 
-<para>The following subterms are used to define
-<code>selected_field</code>:
-<glosslist>
-<title>subterms in <code>selected_field</code>&nbsp;definition</title>
+<section>
+<title>predicates used in the <replaceable>selected_field</replaceable>&nbsp;definition</title>
+<equation 
+  id="participant.selected_field.cond.has_registrar_super"
+  xreflabel="has_registrar_super"
+>
 
-<glossentry id="participant.selected_field.cond.has_registrar_super">
-<glossterm>has_registrar_super</glossterm>
-<glossdef>
-<informalequation>
 <programlisting>
-has_registrar_super(&meta_type;<replaceable>SomeFieldType</replaceable>, &meta_type; <replaceable>SomeVisitorType</replaceable>)
-&logic.equiv;
-{
-  <xref linkend="notation.is_base_of"/>(<replaceable>SomeFieldType</replaceable>, <classname alt="boost::fields_visitor::field_registrar">field_registrar</classname>&lt;SomeVisitorType&gt;)
-}
+has_registrar_super(<replaceable>SomeField</replaceable> &logic.member_of.varbl; &meta_type.ref;, <replaceable>SomeVisitor</replaceable> &logic.member_of.varbl; &meta_type.ref;)
+&logic.defined_as;
+&logic.body_open;
+  <xref linkend="notation.is_base_of"/>(<replaceable>SomeField</replaceable>, <classname alt="boost::fields_visitor::field_registrar">field_registrar</classname>&lt;SomeVisitor&gt;)
+&logic.body_close;
 </programlisting>
-</informalequation>
-</glossdef>
-</glossentry>
+</equation>
 
-<glossentry id="participant.selected_field.cond.ctors_pass_this_to_registrar_supers">
-<glossterm>ctors_pass_this_to_registrar_supers</glossterm>
-<glossdef>
-<informalequation>
+<equation
+  id="participant.selected_field.cond.ctors_pass_this_to_registrar_supers"
+  xreflabel="ctors_pass_this_to_registrar_supers"
+>
 <programlisting>
-ctors_pass_this_to_registrar_supers(&meta_type; <replaceable>SomeFieldType</replaceable>)
-&logic.equiv;
-{
-  &logic.forall;(&nbsp;&meta_type; <replaceable>SomeVisitorType</replaceable>&nbsp;
-  &logic.such_that;&nbsp;has_registrar_super(SomeFieldType,SomeVisitorType)&nbsp;)
-  {
-    <xref linkend="notation.nl_assertion"/>
-    [
-      all <replaceable>SomeFieldType</replaceable> CTOR's pass 
-      <replaceable>SomeFieldType</replaceable>* <code>this</code>
-      to the field_registrar&lt;SomeVisitorType&gt; supertype CTOR.
-    ]
-  }
-}
+ctors_pass_this_to_registrar_supers(<replaceable>SomeField</replaceable> &logic.member_of.varbl; &meta_type.ref;)
+&logic.defined_as;
+&logic.body_open;
+  &logic.forall;(<replaceable>SomeVisitor</replaceable> &logic.member_of.varbl; &meta_type.ref;)
+  &logic.body_open;
+    has_registrar_super(SomeField,SomeVisitor)
+  &logic.implies;
+    &logic.informal.open.ref;
+      all <replaceable>SomeField</replaceable> CTOR's pass 
+      <replaceable>SomeField</replaceable>* <replaceable>this</replaceable>
+      to the field_registrar&lt;SomeVisitor&gt; supertype CTOR.
+    &logic.informal.close.name;
+  &logic.body_close;
+&logic.body_close;
 </programlisting>
-</informalequation>
-</glossdef>
-</glossentry>
+</equation>
+</section><!-- predicates used in the selected_field definition -->
 
-</glosslist>
-
+<para>The definition of <replaceable>selected_field</replaceable> is
+then the members of &meta_type.ref; satisfying the predicate:
 </para>
-
-<para>The definition of <code>selected_field</code> is then:
-<equation><title><code>selected_field</code> definition</title>
+<equation><title><replaceable>selected_field</replaceable> definition</title>
 <programlisting>
-is_selected_field(&meta_type;<replaceable>GivenField</replaceable>)
-&logic.equiv;
-&logic.forsome;(&meta_type; <replaceable>SomeVisitor</replaceable>)
-{
+is_selected_field(<replaceable>GivenField</replaceable> &logic.member_of.varbl; &meta_type.ref;)
+&logic.defined_as;
+&logic.forsome;(<replaceable>SomeVisitor</replaceable> &logic.member_of.varbl; &meta_type.ref;)
+&logic.body_open;
   <xref linkend="participant.selected_field.cond.has_registrar_super"/>(<replaceable>GivenField</replaceable>,<replaceable>SomeVisitor</replaceable>)
 &and;
   <xref linkend="participant.selected_field.cond.ctors_pass_this_to_registrar_supers"/>(<replaceable>GivenField</replaceable>)
-}
+&logic.body_close;
 </programlisting>
 </equation>
+<para>
 </para>
 
 </glossdef>
@@ -278,51 +875,80 @@ is_selected_field(&meta_type;<replaceable>GivenField</replaceable>)
 <glossterm>fields_visitor</glossterm>
 <glossdef>
 
-<para></para>
-<remark>
-The following is a numbered list of alternative definitions of
-the <code>fields_visitor</code>&nbsp;set of classes.  I'm not sure
-which one is better.  The more formal one is harder to read but
-also harder to misinterpret.
-</remark>
-<orderedlist>
+<section>
+<title>predicates used in the
+<replaceable>fields_visitor</replaceable>&nbsp;definition</title>
 
-<listitem>semi-formal description:
-<equation><title>is_fields_visitor definition</title>
+<equation
+  id="participant.fields_visitor.cond.field_accepts_visitor"
+  xreflabel="field_accepts_visitor"
+>
 <programlisting>
-is_fields_visitor(&meta_type;<replaceable>GivenVisitorType</replaceable>)
-&logic.equiv;
-&logic.forall;(&selected_field;<replaceable>SomeFieldType</replaceable>&nbsp;
-&logic.such_that; field_accepts_visitor(SomeFieldType,GivenVisitorType)&nbsp;)
-{
-    &logic.forsome;(&meta_type;<replaceable>SomeFieldSuperType</replaceable>&nbsp;)
-    {
-        <xref linkend="notation.convertable_to"/>(<replaceable>SomeFieldType</replaceable>, <replaceable>SomeFieldSuperType</replaceable>&nbsp;)   
-      &and;
-        <xref linkend="notation.program_contains"/>[<code>GivenVisitorType::visit_field(<replaceable>SomeFieldSuperType</replaceable>&amp;)</code>]
-    }
-    
-}
+field_accepts_visitor
+  ( <replaceable>SomeField</replaceable> &logic.member_of.varbl; &meta_type.ref;
+  , <replaceable>SomeVisitor</replaceable> &logic.member_of.varbl; &meta_type.ref;
+  )
+&logic.defined_as;
+&logic.body_open;
+  <replaceable>SomeField</replaceable>::accept(<replaceable>SomeVisitor</replaceable>&amp;) &logic.member_of.const; &meta_meth.ref;
+&logic.body_close;
 </programlisting>
 </equation>
-</listitem>
 
-<listitem>informal description:
+<equation
+  id="participant.fields_visitor.cond.visitor_visits_field"
+  xreflabel="visitor_visits_field"
+>
 <programlisting>
-Some &meta_type;,<replaceable>GivenVisitorType</replaceable>, is a
-<code>fields_visitor</code>&nbsp; participant if:
-  &logic.forall;&nbsp;<xref linkend="participant.selected_field"/>'s,&nbsp;<replaceable>SomeFieldType</replaceable>,
-&logic.such_that; field_accepts_visitor(SomeFieldType,GivenVisitorType),
-&logic.forsome;&nbsp; a unary member function, <code>visit_field</code>, of
-<code>GivenVisitorType</code>, which accepts an instance of
-<replaceable>SomeFieldType</replaceable> as its argument.
-
+visitor_visits_field
+  ( <replaceable>SomeVisitor</replaceable> &logic.member_of.varbl; &meta_type.ref;
+  , <replaceable>SomeField</replaceable> &logic.member_of.varbl; &meta_type.ref;
+  )
+&logic.defined_as;
+&logic.body_open;
+  <replaceable>SomeVisitor</replaceable>::visit_field(<replaceable>SomeField</replaceable>&amp;) &logic.member_of.const; &meta_meth.ref;
+&logic.body_close;
 </programlisting>
-</listitem>
+</equation>
 
-</orderedlist>
-<para>
+</section><!-- predicates used in fields_visitor definition -->
+
+<para>The definition of <replaceable>fields_visitor</replaceable> is
+then the members of &meta_type.ref; satisfying the predicate:
 </para>
+<equation><title>is_fields_visitor definition</title>
+<programlisting>
+is_fields_visitor(<replaceable>GivenVisitor</replaceable> &logic.member_of.varbl; &meta_type.ref;)
+&logic.defined_as;
+&logic.forall;(<replaceable>SomeField</replaceable> &logic.member_of.varbl; &meta_type.ref;)
+&logic.body_open;
+   ( is_selected_field(<replaceable>SomeField</replaceable>)
+   &and; field_accepts_visitor(<replaceable>SomeField</replaceable>,<replaceable>GivenVisitor</replaceable>)
+   )
+&logic.implies;
+   &logic.forsome;(<replaceable>SomeFieldSuper</replaceable> &logic.member_of.varbl; &meta_type.ref;)
+   &logic.body_open; visitor_visits_field(<replaceable>GivenVisitor</replaceable>,<replaceable>SomeFieldSuper</replaceable>)
+   &and; <xref linkend="notation.convertable_to"/>(<replaceable>SomeField</replaceable>, <replaceable>SomeFieldSuper</replaceable>&nbsp;)   
+   &logic.body_close;
+&logic.body_close;
+</programlisting>
+</equation>
+
+<para>
+In other words:
+</para>
+<blockquote id="participant.fields_visitor.informal"><para>
+Some &meta_type.ref;&nbsp;,<replaceable>GivenVisitor</replaceable>, is a
+<replaceable>fields_visitor</replaceable>&nbsp; participant if
+for all&nbsp;<xref
+linkend="participant.selected_field"/>'s,&nbsp;<replaceable>SomeField</replaceable>, 
+such that field_accepts_visitor(<replaceable>SomeField</replaceable>,<replaceable>GivenVisitor</replaceable>),
+there exists a unary member function, <replaceable>visit_field</replaceable>, of
+<replaceable>GivenVisitor</replaceable>, which accepts an argument of type,
+<replaceable>SomeField&amp;</replaceable>.
+
+</para></blockquote>
+<para></para>
 
 </glossdef>
 
@@ -343,12 +969,95 @@ although I put doxygen comments in several places, not all show up on
 the generated .html files.
 </para>
 
-<xi:include href="reference.boostbook"/>
+<xi:include href="doxyref/autodoc.boostbook"/>
 
 </section><!--source code-->
 
 <section><title>Bibliography</title>
 <bibliography><title>------------</title>
+
+<biblioentry id="cit:detl:92">
+  <abbrev>Detl92</abbrev>
+  <author>
+    <firstname>David L.</firstname>
+    <surname>Detlefs</surname>
+  </author>
+  <title>Garbage collection and runtime typing as a C++ library</title>
+  <confgroup>
+    <conftitle>USENIX C++ Conference</conftitle>
+    <confdates>August, 1992</confdates>
+    <address>Portland, Oregon</address>
+  </confgroup>
+</biblioentry>
+
+<biblioentry id="cit:eden:01">
+  <abbrev>Eden01</abbrev>
+  <author>
+    <firstname>Amnon H.</firstname>
+    <surname>Eden</surname>
+  </author>
+  <title>Formal Specification of Object-Oriented Design</title>
+  <confgroup>
+    <conftitle>CSME-MDE 2001</conftitle>
+    <confdates>21-22 Nov, 2001</confdates>
+    <address>Montreal, Canada</address>
+  </confgroup>
+  <pubdate>2001</pubdate>
+  <bibliomisc>
+    <ulink url="http://www.eden-study.org/articles/2001/csme.pdf"/>
+  </bibliomisc>
+</biblioentry>
+
+<biblioentry id="cit:foldoc_fol:95">
+  <abbrev>FdFol95</abbrev>
+  <title>first-order logic from FOLDOC</title>
+  <orgname>foldoc.org</orgname>
+  <pubdate>1995</pubdate>
+  <bibliomisc>
+    <ulink url="http://foldoc.org/foldoc.cgi?first+order+logic"/>
+  </bibliomisc>
+</biblioentry>
+
+<biblioentry id="cit:part:05">
+  <abbrev>HILL05</abbrev>
+  <title>Hillside.net - Writing - GOF template</title>
+  <orgname>Hillside.net</orgname>
+  <pubdate>2005</pubdate>
+  <bibliomisc>
+    <ulink url="http://hillside.net/patterns/writing/GOFtemplate.htm"/>
+  </bibliomisc>
+</biblioentry>
+
+<biblioentry id="cit:wiki_fopc:05">
+  <abbrev>WikiFopc05</abbrev>
+  <title>First-order logic from WIKIPEDIA</title>
+  <orgname>en.wikipedia.org</orgname>
+  <pubdate>2005</pubdate>
+  <bibliomisc>
+    <ulink url="http://en.wikipedia.org/wiki/First-order_predicate_calculus"/>
+  </bibliomisc>
+</biblioentry>
+
+<biblioentry id="cit:foldoc_uod:05">
+  <abbrev>FdUod95</abbrev>
+  <title>universe of discourse from FOLDOC</title>
+  <orgname>foldoc.org</orgname>
+  <pubdate>2005</pubdate>
+  <bibliomisc>
+    <ulink url="http://foldoc.org/foldoc.cgi?universe+of+discourse"/>
+  </bibliomisc>
+</biblioentry>
+
+<biblioentry id="cit:w3c_ebnf:04">
+  <abbrev>W3C_EBNF04</abbrev>
+  <title>Extended Backus-Naur Form</title>
+  <orgname>www.w3.org</orgname>
+  <pubdate>2004</pubdate>
+  <bibliomisc>
+    <ulink url="http://www.w3.org/TR/REC-xml/#sec-notation"/>
+  </bibliomisc>
+</biblioentry>
+
 </bibliography>
 </section><!--Bibliography-->
 
