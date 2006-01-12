@@ -1,0 +1,208 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Performance of Shmem</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
+<link rel="prev" href="architecture.html" title=" Shmem architecture and internals">
+<link rel="next" href="open_issues.html" title=" Open Issues">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="boost.png (6897 bytes)" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="architecture.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="open_issues.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="shmem.performance"></a> Performance of Shmem</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="performance.html#shmem.performance_allocations"> Performance of memory allocations</a></span></dt>
+<dt><span class="section"><a href="performance.html#shmem.performance_named_allocation"> Performance of named allocations</a></span></dt>
+</dl></div>
+<p>
+This section tries to explain the performance characteristics of Shmem, so that
+you can optimize Shmem usage if you need more performance.</p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.performance_allocations"></a> Performance of memory allocations</h3></div></div></div>
+<p>
+You can have two types of raw memory allocations in Shmem:</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+Explicit: The user calls <code class="computeroutput"><span class="identifier">allocate</span><span class="special">()</span></code> and  <code class="computeroutput"><span class="identifier">deallocate</span><span class="special">()</span></code> funcions of
+   named_shared_object/named_mfile_object... front-end classes. This call is 
+   translated to a <code class="computeroutput"><span class="identifier">MemoryAlgorithm</span><span class="special">::</span><span class="identifier">allocate</span><span class="special">()</span></code> function, which means that you 
+   will need just the time that the memory algorithm associated with the front-end
+   needs to allocate data.
+</li>
+<li>
+Implicit: You are using boost::shmem::allocator&lt;&gt; in shared memory containers.
+   This allocator calls the same <code class="computeroutput"><span class="identifier">MemoryAlgorithm</span><span class="special">::</span><span class="identifier">allocate</span><span class="special">()</span></code> than the explicit
+   method, <span class="bold"><strong>every</strong></span> time a vector/string has to reallocate its buffer, or <span class="bold"><strong>every</strong></span>
+   time you insert an object in a node container.
+</li>
+</ul></div>
+<p>
+If you need see that allocation is a bottleneck in your application, you have
+these alternatives:</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+If you mainly use map/set associative containers, try using flat_map family instead
+   of map if you mainly do searches and the insertion/removal is mainly done in an 
+   initialization phase. The overhead is now when the ordered vector has to
+   reallocate its storage and copy data. You can also call the <code class="computeroutput"><span class="identifier">reserve</span><span class="special">()</span></code> method
+   of these containers when you know beforehand how much data you will insert.
+   However in these containers iterators are invalidated in insertions so this
+   substitution is only effective in some applications.
+</li>
+<li>
+Use a Shmem pooled allocator for node containers, because pooled allocators
+   call <code class="computeroutput"><span class="identifier">allocate</span><span class="special">()</span></code> only when the pool runs out of nodes. This is pretty
+   efficient (much more than the current default general-purpose algorithm)
+   and this can save a lot of memory. See 
+   <a href="stl_allocators.html" title=" Shmem STL compatible allocators">Shmem STL compatible allocators</a> to compare
+   the Shmem node allocators and their trade-offs.
+</li>
+<li>
+Write your own memory algorithm. If you have experience with memory allocation
+   and an algorithm is better suited than the default for your application
+   you can specify it in all Shmem front-ends. See the section
+   <a href="customizing_boost_shmem.html#shmem.custom_shmem_alloc" title=" Writing a new shared memory allocation algorithm">Writing a new shared memory allocation algorithm</a>
+   to know how to do this. If you think its better than the default one for
+   general-purpose applications, be polite and donate it to Shmem to make it default!
+</li>
+</ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.performance_named_allocation"></a> Performance of named allocations</h3></div></div></div>
+<p>
+Shmem allows the same paralelism as two threads writing to common data, except when
+the user creates/searches named/unique objects. The steps when creating a named object
+are these:</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+Lock a recursive mutex (so that you can make named allocations inside the 
+   constructor of the object to be created).
+</li>
+<li>
+Try to insert the [name pointer, object information] in the name/object index.
+   This lookup has to assure that the name has not been used before.
+   This is achieved calling <code class="computeroutput"><span class="identifier">insert</span><span class="special">()</span></code> function in the index. So the time this
+   requires is dependent on the index type (ordered vector, tree, hash...).
+   This can require a call to the memory algorithm allocation function if
+   the index has to be reallocated, it's a node allocator, uses pooled allocations...
+</li>
+<li>
+Allocate a single buffer to hold the name of the object, the object itself,
+   and meta-data for destruction (number of objects, etc...).
+</li>
+<li>
+Call the constructors of the object being created. If it's an array, one
+   construtor per array element.
+</li>
+<li>
+Unlock the recursive mutex.
+</li>
+</ul></div>
+<p>
+The steps when destroying a named object using the name (<code class="computeroutput"><span class="identifier">destroy</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="identifier">name</span><span class="special">)</span></code>) are these:</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+Lock a recursive mutex .
+</li>
+<li>
+Search in the index the pointer to that named object. Copy information and
+   erase data. This is done using <code class="computeroutput"><span class="identifier">find</span><span class="special">(</span><span class="keyword">const</span><span class="identifier"> key_type</span><span class="special"> &amp;)</span></code> and <code class="computeroutput"><span class="identifier">erase</span><span class="special">(</span><span class="identifier">iterator</span><span class="special">)</span></code>
+   members of the index. This can require element reordering if the index is a
+   balanced tree, an ordered vector...
+</li>
+<li>
+Call the destructor of the object (many if it's an array).
+</li>
+<li>
+Deallocate the memory using the allocation algorithm.
+</li>
+<li>
+Unlock the recursive mutex.
+</li>
+</ul></div>
+<p>
+The steps when destroying a named object using the pointer (<code class="computeroutput"><span class="identifier">destroy_ptr</span><span class="special">(</span><span class="identifier">T</span><span class="special"> *</span><span class="identifier">ptr</span><span class="special">)</span></code>)
+are these:</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+Lock a recursive mutex .
+</li>
+<li>
+Depending on the index type, this can be different:<div class="itemizedlist"><ul type="circle">
+<li>
+If the index is a node index, (marked with boost::shmem::is_node_index
+      specialization): Take the iterator stored near the object and call
+      <code class="computeroutput"><span class="identifier">erase</span><span class="special">(</span><span class="identifier">iterator</span><span class="special">)</span></code>. This can require element reordering if the index is a
+      balanced tree, an ordered vector...
+</li>
+<li>
+If it's not an node index: Take the name stored near the object and erase
+      the index entry calling `erase(const key &amp;). This can require element reordering if the index is a
+      balanced tree, an ordered vector...
+</li>
+</ul></div>
+</li>
+<li>
+Call the destructor of the object (many if it's an array).
+</li>
+<li>
+Deallocate the memory using the allocation algorithm.
+</li>
+<li>
+Unlock the recursive mutex.
+</li>
+</ul></div>
+<p>
+If you see that you the performance is not good enough you have these alternatives:</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+Maybe the problem is that the lock time is too big and hurts paralelism.
+   Try to reduce the number of named objects in the global index and if your
+   application serves several clients try to build a new segment for each one
+   instead of using a global common one.
+</li>
+<li>
+Write your own memory algorithm. See the section
+   <a href="customizing_boost_shmem.html#shmem.custom_shmem_alloc" title=" Writing a new shared memory allocation algorithm">Writing a new shared memory allocation algorithm</a>
+   to know how to do this.
+</li>
+<li>
+Use another Shmem index type if you feel the default one is not fast enough.
+   If you are not still satisfied, write your own index type. See 
+   <a href="customizing_boost_shmem.html#shmem.custom_indexes" title=" Building custom indexes">Building custom indexes</a> for this.
+</li>
+<li>
+Destruction via pointer is at least as fast as using name and can be faster.
+   So if your problem is that you make at lot of named destructions, try to use
+   the pointer. If the index is a node index you can save some time.
+</li>
+</ul></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2005 - 2006 Ion Gaztañaga</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="architecture.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="open_issues.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
