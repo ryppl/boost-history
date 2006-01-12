@@ -284,7 +284,7 @@ class vector : private detail::vector_alloc_holder<A>
       this->m_end    = this->m_start + n;
       this->m_finish = this->m_start;
       this->priv_uninitialized_fill_n(this->m_start, n, value, *this);
-      this->m_finish = this->m_start + n;
+      this->m_finish = this->m_end;
    }
 
    //Copy constructor
@@ -295,7 +295,7 @@ class vector : private detail::vector_alloc_holder<A>
       this->m_end    = this->m_start + x.size();
       this->m_finish = this->m_start;
       this->priv_uninitialized_copy(x.m_start, x.m_finish, this->m_start, *this); 
-      this->m_finish = x.m_finish;
+      this->m_finish = this->m_end;
    }
 
    //Construct from iterator range
