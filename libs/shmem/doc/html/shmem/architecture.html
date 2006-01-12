@@ -4,10 +4,10 @@
 <title> Shmem architecture and internals</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
-<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
-<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
 <link rel="prev" href="shared_message_queue.html" title=" Process-shared message queue">
-<link rel="next" href="open_issues.html" title=" Open Issues">
+<link rel="next" href="performance.html" title=" Performance of Shmem">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%">
@@ -20,7 +20,7 @@
 </table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="shared_message_queue.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="open_issues.html"><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p" href="shared_message_queue.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="performance.html"><img src="../images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
@@ -101,7 +101,7 @@ where it is placed. The layout of a memory segment would be:</p>
 <p>
 The memory algorithm takes care of memory synchronizations, just like malloc/free
 guarantees that two threads can call malloc/free at the same time. This is usually
-achieved placing a process-shared mutex as a member of the memory algorithm.Take 
+achieved placing a process-shared mutex as a member of the memory algorithm. Take 
 in care that the memory algorithm knows <span class="bold"><strong>nothing</strong></span> about the segment (if it is
 shared memory, a shared memory file, etc.). For the memory algorithm the segment 
 is just a fixed size memory buffer.</p>
@@ -157,7 +157,7 @@ and <span class="bold"><strong>two indexes (maps)</strong></span>: one to make n
 make "unique instance" allocations.</p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-The first index is a map with a c-string (the name of the named object) 
+The first index is a map with a pointer to a c-string (the name of the named object) 
    as a key and a structure with information of the dynamically allocated object
    (the most importants being the address and the size of the object).
 </li>
@@ -168,9 +168,12 @@ The second index is used to implement "unique instances"
 </li>
 </ul></div>
 <p>
-The memory needed to store [name, object information] pairs in the index is 
+The memory needed to store [name pointer, object information] pairs in the index is 
 allocated also via the <span class="bold"><strong>memory algorithm</strong></span>, so we can tell that internal indexes
-are just like ordinary user objects built in the segment.</p>
+are just like ordinary user objects built in the segment. The rest of the memory
+to store the name of the object, the object itself, and meta-data for 
+destruction/deallocation is allocated using the <span class="bold"><strong>memory algorithm</strong></span> in a single
+<code class="computeroutput"><span class="identifier">allocate</span><span class="special">()</span></code> call.</p>
 <p>
 As seen, the segment manager knows <span class="bold"><strong>nothing</strong></span> about shared memory/memory mapped files. 
 The segment segment manager itself does not allocate portions of the segment, 
@@ -191,7 +194,7 @@ class</span><span class="identifier"> segment_manager</span><span class="special
 As seen, the segment manager is quite generic: we can specify the char type to be
 used to identify named objects, we can specify the memory algorithm that will
 control dynamically the portions of the memory segment, and we can specify 
-also the index type that will store the [name, object information] mapping.
+also the index type that will store the [name pointer, object information] mapping.
 We can construct our own index types as explained in
 <a href="customizing_boost_shmem.html#shmem.custom_indexes" title=" Building custom indexes">Building custom indexes</a> section.</p>
 </div>
@@ -202,10 +205,11 @@ We can construct our own index types as explained in
 The Shmem front-ends are classes that construct the shared memory/memory mapped file, 
 place there the segment manager and forward the user requests to the segment manager. 
 For example, <span class="bold"><strong>boost::shmem::basic_named_shared_object&lt;...&gt;</strong></span> is a Shmem front-end
-that works with shared memory. <span class="bold"><strong>boost::shmem::basic_named_mfile_object&lt;...&gt;</strong></span></p>
+that works with shared memory. <span class="bold"><strong>boost::shmem::basic_named_mfile_object&lt;...&gt;</strong></span> works
+with memory mapped files, etc...</p>
 <p>
 Basically, the interface of a Shmem front-end is the same as the <span class="bold"><strong>segment manager</strong></span>
-but they also offer functions to open, create, open_or_create or shared 
+but it also offers functions to open, create, open_or_create or shared 
 memory/memory-mapped files segments, initialize all needed resources 
 and they store a pointer to the segment manager. Shmem front-ends are not built in
 shared memory or memory mapped files.</p>
@@ -261,16 +265,17 @@ to point to the segment manager and the <code class="computeroutput"><span class
 be <code class="computeroutput"><span class="identifier">offset_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>. This way, Shmem allocators can be placed in the same memory as
 the segment manager, that is, shared memory, memory mapped files, etc...</p>
 <p>
-Shmem implements basically two allocator approaches: normal and pooled. The pool is
-implemented in <a href="../../../../../boost/shmem/allocators/detail/node_pool.hpp" target="_top">boost::shmem::named_shared_object</a>,</p>
+Shmem implements basically two allocator approaches: normal and pooled. All pooled
+allocators share most of the implementation. This common implementation is in 
+<a href="../../../../../boost/shmem/allocators/detail/node_pool.hpp" target="_top">boost::shmem::detail::private_node_pool
+and boost::shmem::detail::node_pool</a> classes.</p>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="shmem.architecture_containers"></a> Shmem containers</h3></div></div></div>
 <p>
-Shmem containers are basically common STL containers: they can even use
-STL allocators. Basically a Shmem container has the same implementation as
-the STL container, but with these little details:</p>
+Shmem containers are standard conforming counterparts of STL containers in boost::shmem
+namespace, but with these little details:</p>
 <div class="itemizedlist"><ul type="disc">
 <li>
 Shmem STL containers don't assume that memory allocated with 
@@ -292,11 +297,11 @@ All objects are constructed-destroyed via allocator::construct and
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><small>Copyright © 2005 -2006 Ion Gaztañaga</small></td>
+<td align="right"><small>Copyright © 2005 - 2006 Ion Gaztañaga</small></td>
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="shared_message_queue.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="open_issues.html"><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p" href="shared_message_queue.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="performance.html"><img src="../images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

@@ -4,8 +4,8 @@
 <title> Shmem and containers in shared memory</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
-<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
-<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
 <link rel="prev" href="stl_allocators.html" title=" Shmem STL compatible allocators">
 <link rel="next" href="customizing_boost_shmem.html" title=" Customizing Shmem">
 </head>
@@ -28,6 +28,7 @@
 <div class="toc"><dl>
 <dt><span class="section"><a href="containers_explained.html#shmem.stl_container_requirements"> Container requirements for Shmem allocators</a></span></dt>
 <dt><span class="section"><a href="containers_explained.html#shmem.containers"> STL containers in shared memory</a></span></dt>
+<dt><span class="section"><a href="containers_explained.html#shmem.where_allocate"> Where is this being allocated?</a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
@@ -185,10 +186,104 @@ int</span><span class="identifier"> main</span><span class="special"> ()</span><
 These containers also show how easy is to create/modify 
 an existing container making possible to place it in shared memory.</p>
 </div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shmem.where_allocate"></a> Where is this being allocated?</h3></div></div></div>
+<p>
+Shmem containers are placed in shared memory/memory mapped files, etc... using two 
+mechanisms <span class="bold"><strong>at the same time</strong></span>:</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+Shmem construct&lt;&gt;, find_or_construct&lt;&gt;... functions. These functions place a c++
+  object in the shared memory/memory mapped file. But this places only the object,
+  but <span class="bold"><strong>not</strong></span> the memory that this object may allocate dynamically.
+</li>
+<li>
+Shared memory allocators. These allow allocating shared memory/memory mapped file
+  portions so that containers can allocate dynamically fragments of memory to store
+  new inserted elements.
+</li>
+</ul></div>
+<p>
+This means that to place <span class="bold"><strong>any</strong></span> Shmem container (including Shmem strings) in 
+shared memory/memory mapped file all containers <span class="bold"><strong>must</strong></span>:</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+Define their template allocator parameter to a shared memory one.
+</li>
+<li>
+Every container constructor must take a shared memory allocator as parameter.
+</li>
+<li>
+You must use construct&lt;&gt;/find_or_construct&lt;&gt;... functions to place the container
+  in shared memory.
+</li>
+</ul></div>
+<p>
+If you do the first two points but you don't use construct&lt;&gt;/find_or_construct&lt;&gt; 
+you are creating a container placed <span class="bold"><strong>only</strong></span> in your process but that allocates memory 
+for contained types from shared memory/memory mapped file.</p>
+<p>
+Let's see an example:</p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="preprocessor">#include</span><span class="special"> &lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">shmem</span><span class="special">/</span><span class="identifier">named_shared_object</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span><span class="preprocessor">
+#include</span><span class="special"> &lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">shmem</span><span class="special">/</span><span class="identifier">containers</span><span class="special">/</span><span class="identifier">vector</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span><span class="preprocessor">
+#include</span><span class="special"> &lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">shmem</span><span class="special">/</span><span class="identifier">containers</span><span class="special">/</span><span class="identifier">string</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span><span class="preprocessor">
+#include</span><span class="special"> &lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">shmem</span><span class="special">/</span><span class="identifier">allocators</span><span class="special">/</span><span class="identifier">allocator</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span><span class="keyword">
+
+int</span><span class="identifier"> main</span><span class="special"> ()</span><span class="special">
+{</span><span class="keyword">
+   using</span><span class="keyword"> namespace</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">;</span><span class="comment">
+   //Typedefs
+</span><span class="keyword">   typedef</span><span class="identifier"> allocator</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">,</span><span class="identifier"> named_shared_object</span><span class="special">::</span><span class="identifier">segment_manager</span><span class="special">&gt;</span><span class="identifier"> 
+      CharAllocator</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="identifier"> basic_string</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">char_traits</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">&gt;,</span><span class="identifier"> CharAllocator</span><span class="special">&gt;</span><span class="identifier">
+      MyShmString</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="identifier"> allocator</span><span class="special">&lt;</span><span class="identifier">MyShmString</span><span class="special">,</span><span class="identifier"> named_shared_object</span><span class="special">::</span><span class="identifier">segment_manager</span><span class="special">&gt;</span><span class="identifier">
+      StringAllocator</span><span class="special">;</span><span class="keyword">      
+   typedef</span><span class="identifier"> vector</span><span class="special">&lt;</span><span class="identifier">MyShmString</span><span class="special">,</span><span class="identifier"> StringAllocator</span><span class="special">&gt;</span><span class="identifier">
+      MyShmStringVector</span><span class="special">;</span><span class="comment">
+
+   //Open shared memory
+</span><span class="identifier">   named_shared_object</span><span class="identifier"> shm</span><span class="special">;</span><span class="identifier">
+   shm</span><span class="special">.</span><span class="identifier">create</span><span class="special">(</span><span class="string">"myshm"</span><span class="special">,</span><span class="number"> 10000</span><span class="special">);</span><span class="comment">
+
+   //Create allocators
+</span><span class="identifier">   CharAllocator</span><span class="identifier">     charallocator</span><span class="special">  (</span><span class="identifier">shm</span><span class="special">.</span><span class="identifier">get_segment_manager</span><span class="special">());</span><span class="identifier">
+   StringAllocator</span><span class="identifier">   stringallocator</span><span class="special">(</span><span class="identifier">shm</span><span class="special">.</span><span class="identifier">get_segment_manager</span><span class="special">());</span><span class="comment">
+
+   //This string is in only in this process (the pointer pointing to the
+   //buffer that will hold the text is not in shared memory). 
+   //But the buffer that will hold "this is my text" is allocated from 
+   //shared memory
+</span><span class="identifier">   MyShmString</span><span class="identifier"> mystring</span><span class="special">(</span><span class="identifier">charallocator</span><span class="special">);</span><span class="identifier">
+   mystring</span><span class="special"> =</span><span class="string"> "this is my text"</span><span class="special">;</span><span class="comment">
+
+   //This vector is in only in this process (the pointer pointing to the
+   //buffer that will hold the MyShmString-s is not in shared memory). 
+   //But the buffer that will hold 10 MyShmString-s is allocated from 
+   //shared memory using StringAllocator. Since strings use a shared 
+   //memory allocator (CharAllocator) the 10 buffers that hold 
+   //"this is my text" text are also in shared memory.
+</span><span class="identifier">   MyShmStringVector</span><span class="identifier"> myvector</span><span class="special">(</span><span class="identifier">stringallocator</span><span class="special">);</span><span class="identifier">
+   myvector</span><span class="special">.</span><span class="identifier">insert</span><span class="special">(</span><span class="identifier">myvector</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span><span class="number"> 10</span><span class="special">,</span><span class="identifier"> mystring</span><span class="special">);</span><span class="comment">
+
+   //This vector is fully constructed in shared memory. All pointers
+   //and buffers are constructed in the same shared memory segment
+   //This vector can be safely accessed from other processes.
+</span><span class="identifier">   MyShmStringVector</span><span class="special"> *</span><span class="identifier">myshmvector</span><span class="special"> =</span><span class="identifier"> 
+      shm</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="identifier">MyShmStringVector</span><span class="special">&gt;(</span><span class="string">"myshmvector"</span><span class="special">)(</span><span class="identifier">stringallocator</span><span class="special">);</span><span class="identifier">
+   myshmvector</span><span class="special">-&gt;</span><span class="identifier">insert</span><span class="special">(</span><span class="identifier">myshmvector</span><span class="special">-&gt;</span><span class="identifier">begin</span><span class="special">(),</span><span class="number"> 10</span><span class="special">,</span><span class="identifier"> mystring</span><span class="special">);</span><span class="comment">
+
+   //Destroy vector. This will free all strings that the vector contains
+</span><span class="identifier">   shm</span><span class="special">.</span><span class="identifier">destroy_ptr</span><span class="special">(</span><span class="identifier">myshmvector</span><span class="special">);</span><span class="keyword">
+   return</span><span class="number"> 0</span><span class="special">;</span><span class="special">
+}</span></code></pre>
+</div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><small>Copyright © 2005 -2006 Ion Gaztañaga</small></td>
+<td align="right"><small>Copyright © 2005 - 2006 Ion Gaztañaga</small></td>
 </tr></table>
 <hr>
 <div class="spirit-nav">

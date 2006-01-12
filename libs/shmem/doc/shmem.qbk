@@ -1,7 +1,7 @@
 [library Shmem
-    [version 2006-01-02]
+    [version 2006-01-12]
     [authors [Gazta&ntilde;aga, Ion]]
-    [copyright 2005-2006 Ion Gazta&ntilde;aga]
+    [copyright 2005- 2006 Ion Gazta&ntilde;aga]
     [purpose Shared memory utilities]
     [license
          Distributed under the Boost Software License, Version 1.0.
@@ -1553,11 +1553,15 @@ This class can be customized with the following parameters:
 
 * *MemoryAlgorithm* is the shared memory segment management algorithm 
    (for example simple sequential fit). The typedefs of memory algorithm 
-   also define the synchronization type (`MemoryAlgorithm::mutex_family`)
-   and pointer type (`MemoryAlgorithm::void_pointer`) to be used in all 
-   classes based on basic_named_shared_object (STL allocators, for example).
-   See [link shmem.custom_shmem_alloc Writing a new shared memory allocation
-   algorithm] for details about memory algorithms.
+   also define:
+   *The synchronization type (`MemoryAlgorithm::mutex_family`) to use 
+    in the all basic_named_shared_object allocation operations.
+
+   *The Pointer type (`MemoryAlgorithm::void_pointer`) to be used in all 
+    classes based on basic_named_shared_object (STL allocators, for example).
+
+   *See [link shmem.custom_shmem_alloc Writing a new shared memory allocation
+    algorithm] for details about memory algorithms.
      
 * *IndexType* is the type of index that will be used to store the name-object association 
    (for example, a map, a hash-map, or an ordered vector)
@@ -1795,6 +1799,32 @@ using this unique_instance mechanism.
 
 [endsect]
 
+[section:synchronization Synchronization guarantees]
+
+One of the features of named/anonymous/unique allocations/searches/destructions is that
+they are *atomic*. Named allocations use the synchronization scheme defined by the
+template parameter MemoryAlgorithm::mutex_family. So that two processes can call:
+
+[c++]
+
+   MyType *ptr = named_shared_object.find_or_construct<MyType>("Name")[count](par1, par2...);
+   
+at the same time, but only one process will create the object and the other will 
+obtain a pointer to the created object.
+
+Raw allocation using `allocate()` can be called also safely while executing 
+named/anonymous/unique allocations, just like when programming a multithreaded 
+application inserting an object in a mutex-protected map does not block other threads
+from calling new[] while the map thread is searching the place where it has to insert the
+new object. The synchronization does happen when once the map finds the correct place
+it has to allocate raw memory to insert the value.
+
+This means that if we create a lot of named objects, while doing a new creatio/search
+we only block other creation/searches from other processes but we don't block another 
+process if that process is inserting elements in a shared memory vector.
+
+[endsect]
+
 [section:index_types Index types for name/object mappings]
 
 As seen, basic_named_shared_object, when creating named objects, stores the name/object
@@ -1862,14 +1892,14 @@ implemented in these allocators:
   pool between all instances of the class node_allocator placed in the same fixed size memory 
   segment, so memory usage is optimized.
 
-* *boost::shmem::private_allocator* offers a segregated storage allocation scheme where
-  each private_allocator owns its own pool. This allocator offers faster allocation
+* *boost::shmem::private_node_allocator* offers a segregated storage allocation scheme where
+  each private_node_allocator owns its own pool. This allocator offers faster allocation
   than node_allocator since it avoids synchronization between threads/processes but imposes 
   a higher memory usage. Take in care that the standard does not recommend this private
   per allocator pool.
 
 * *boost::shmem::cached_node_allocator* offers a segregated storage allocation scheme between
-  node_allocator and private_allocator. This allocator caches some nodes from the common
+  node_allocator and private_node_allocator. This allocator caches some nodes from the common
   the common pool and stores them privately so that these are quickly available
   without the synchronization overhead for future allocations.
 
@@ -2019,7 +2049,7 @@ that they can allocate the values with the node allocator:
 
 [endsect]
 
-[section:private_allocator boost::shmem::private_allocator: a private segregated storage]
+[section:private_node_allocator boost::shmem::private_node_allocator: a private segregated storage]
 
 As said, the node_allocator shares a common segregated storage between 
 node_allocators that allocate objects of the same size and this optimizes
@@ -2030,8 +2060,8 @@ Sometimes, the named object algorithm is not available (for example, when
 building index types for the named object algorithm itself) or the 
 synchronization overhead is not acceptable.
 
-So *private_allocator* uses the same segregated storage as node_allocator,
-but each *private_allocator* has its own segregated storage. No synchronization
+So *private_node_allocator* uses the same segregated storage as node_allocator,
+but each *private_node_allocator* has its own segregated storage. No synchronization
 is used when allocating nodes, so there is far less overhead for an operation
 that usually involves just a few pointer operations when allocating and 
 deallocating a node.
@@ -2051,7 +2081,7 @@ deallocating a node.
       //No default constructor
 
       /*!Constructor from a segment manager. Never throws*/
-      private_allocator(SegmentManager *segment_mngr);
+      private_node_allocator(SegmentManager *segment_mngr);
 
       /*!Returns a pointer to the segment manager. Never throws*/
       SegmentManager *get_segment_manager() const;
@@ -2060,8 +2090,8 @@ deallocating a node.
       //The rest is the same interface as std::allocator
       /*...*/
 
-Any *private_allocator* must be initialized with a pointer 
-to the segment manager of the semgment from you want *private_allocator* 
+Any *private_node_allocator* must be initialized with a pointer 
+to the segment manager of the semgment from you want *private_node_allocator* 
 to allocate memory:
 
 [c++]
@@ -2070,14 +2100,14 @@ to allocate memory:
    //    T=int
    //    N=64
    //    SegmentManager = named_shared_object::segment_manager
-   typedef private_allocator<int, 64, named_shared_object::segment_manager> 
+   typedef private_node_allocator<int, 64, named_shared_object::segment_manager> 
       PrivateNodeAllocator;
 
    //Initialize allocator instance with algorithm
    PrivateNodeAllocator alloc_inst (segment.get_segment_manager());
 
 All STL compatible containers that want to use this allocation scheme 
-must be constructed with an initialized private_allocator so 
+must be constructed with an initialized private_node_allocator so 
 that they can allocate the values with the private node allocator:
 
 [c++]
@@ -2092,7 +2122,7 @@ that they can allocate the values with the private node allocator:
 [section:cached_node_allocator boost::shmem::cached_node_allocator: caching nodes to avoid overhead]
 
 The total node sharing of *boost::shmem::node_allocator* can impose a high overhead for some 
-applications and the no synchronization overhead of *boost::shmem::private_allocator*
+applications and the no synchronization overhead of *boost::shmem::private_node_allocator*
 can impose a unacceptable memory waste for other applications.
 
 To solve this, Shmem offers an allocator, *boost::shmem::cached_node_allocator*, that 
@@ -2340,6 +2370,95 @@ an existing container making possible to place it in shared memory.
 
 [endsect]
 
+[section:where_allocate Where is this being allocated?]
+
+Shmem containers are placed in shared memory/memory mapped files, etc... using two 
+mechanisms *at the same time*:
+
+* Shmem construct<>, find_or_construct<>... functions. These functions place a c++
+  object in the shared memory/memory mapped file. But this places only the object,
+  but *not* the memory that this object may allocate dynamically.
+
+* Shared memory allocators. These allow allocating shared memory/memory mapped file
+  portions so that containers can allocate dynamically fragments of memory to store
+  new inserted elements.
+
+This means that to place *any* Shmem container (including Shmem strings) in 
+shared memory/memory mapped file all containers *must*:
+
+* Define their template allocator parameter to a shared memory one.
+
+* Every container constructor must take a shared memory allocator as parameter.
+
+* You must use construct<>/find_or_construct<>... functions to place the container
+  in shared memory.
+
+If you do the first two points but you don't use construct<>/find_or_construct<> 
+you are creating a container placed *only* in your process but that allocates memory 
+for contained types from shared memory/memory mapped file.
+
+Let's see an example:
+
+[/doc_where_allocate.cpp]
+
+[c++]
+
+   #include <boost/shmem/named_shared_object.hpp>
+   #include <boost/shmem/containers/vector.hpp>
+   #include <boost/shmem/containers/string.hpp>
+   #include <boost/shmem/allocators/allocator.hpp>
+
+   int main ()
+   {
+      using namespace boost::shmem;
+      //Typedefs
+      typedef allocator<char, named_shared_object::segment_manager> 
+         CharAllocator;
+      typedef basic_string<char, std::char_traits<char>, CharAllocator>
+         MyShmString;
+      typedef allocator<MyShmString, named_shared_object::segment_manager>
+         StringAllocator;      
+      typedef vector<MyShmString, StringAllocator>
+         MyShmStringVector;
+
+      //Open shared memory
+      named_shared_object shm;
+      shm.create("myshm", 10000);
+
+      //Create allocators
+      CharAllocator     charallocator  (shm.get_segment_manager());
+      StringAllocator   stringallocator(shm.get_segment_manager());
+
+      //This string is in only in this process (the pointer pointing to the
+      //buffer that will hold the text is not in shared memory). 
+      //But the buffer that will hold "this is my text" is allocated from 
+      //shared memory
+      MyShmString mystring(charallocator);
+      mystring = "this is my text";
+
+      //This vector is in only in this process (the pointer pointing to the
+      //buffer that will hold the MyShmString-s is not in shared memory). 
+      //But the buffer that will hold 10 MyShmString-s is allocated from 
+      //shared memory using StringAllocator. Since strings use a shared 
+      //memory allocator (CharAllocator) the 10 buffers that hold 
+      //"this is my text" text are also in shared memory.
+      MyShmStringVector myvector(stringallocator);
+      myvector.insert(myvector.begin(), 10, mystring);
+
+      //This vector is fully constructed in shared memory. All pointers
+      //and buffers are constructed in the same shared memory segment
+      //This vector can be safely accessed from other processes.
+      MyShmStringVector *myshmvector = 
+         shm.construct<MyShmStringVector>("myshmvector")(stringallocator);
+      myshmvector->insert(myshmvector->begin(), 10, mystring);
+
+      //Destroy vector. This will free all strings that the vector contains
+      shm.destroy_ptr(myshmvector);
+      return 0;
+   }
+
+[endsect]
+
 [endsect]
 
 
@@ -2476,14 +2595,33 @@ of your own algorithm:
   any indirect base class with virtual function or inheritance.
 
 * I has to implement the same public functions and typedefs of 
-simple_seq_fit:
+simple_seq_fit.
+
+Let's see the public typedefs to define:
 
 [c++]
 
+   typedef /* . . . */ void_pointer;
    typedef /* . . . */ mutex_family;
 
-The class must specify a structure containing typedefs for 
-different mutex types to be used in the Shmem 
+The `void_pointer` typedef specifies the pointer type to be used in 
+the Shmem framework that uses the algorithm. For example, if we define
+
+[c++]
+
+   typedef void * void_pointer;
+
+all Shmem framework using this algorithm will use raw pointers as members.
+But if we define:
+
+[c++]
+
+   typedef offset_ptr<void> void_pointer;
+
+then all Shmem framework will use relative pointers.
+
+The `mutex_family` is an structure containing typedefs 
+for different mutex types to be used in the Shmem 
 framework. For example the defined
 
 [c++]
@@ -2528,16 +2666,23 @@ that boost::shmem::simple_seq_fit class offers:
   The memory returned by *my_algorithm*
   must be aligned to the most restrictive memory alingment of the system, for example,
   to the value returned by *boost::alignment_of<boost::detail::max_align>::value*.
+  This function should be executed with the synchronization capabilities offered
+  by `typename mutex_family::mutex_t` mutex. That means, that if we define 
+  `typedef shared_mutex_family mutex_family;` then this function should offer
+  the same synchronization as if it was surrounded by a shared_mutex lock/unlock.
+  Normally, this is implemented using a member mutex_family::mutex_t, but it could
+  be done using atomic instructions or lock free algorithms.
 
-* The *deallocate()* function must make the returned buffer 
-  available for new allocations.
+* The *deallocate()* function must make the returned buffer available for new 
+  allocations. This function should offer the same synchronization as `allocate()`.
 
 * The *size()* function will return the passed *size* parameter in the constructor. 
   So, *my_algorithm* should store the size internally.
 
 * The *grow()* function will expand the managed memory by *my_algorithm* in *extra_size* 
   bytes. So *size()* function should return the updated size,
-  and the new managed memory range will be: *[sizeof(my_algorithm) + extra_hdr_bytes, old_size + extra_size)*
+  and the new managed memory range will be: *[sizeof(my_algorithm) + extra_hdr_bytes, old_size + extra_size)*.
+  This function should offer the same synchronization as `allocate()`.
 
 That's it. Now we can create new front-ends that use our new algorithm:
 
@@ -2545,11 +2690,9 @@ That's it. Now we can create new front-ends that use our new algorithm:
 
    //Front-end to allocate named (c-string) objects
    //using special algorithm
-   basic_named_shared_object< 
-                              char, 
-                              my_algorithm,
-                              flat_map_index
-                            >  
+   basic_named_shared_object<char, 
+                            ,my_algorithm
+                            ,flat_map_index>  
       my_named_shared_object;
 
 [endsect]
@@ -2567,7 +2710,7 @@ just like more complex allocators are built on top of
 new/delete functions.
 
 When using a shared memory front-end, the *get_segment_manager()* 
-function returns a pointer to the segment manager.With this pointer,
+function returns a pointer to the segment manager. With this pointer,
 the raw memory and named shared memory allocation functions can be 
 called directly:
 
@@ -2602,8 +2745,10 @@ called directly:
 The user can create another STL compatible allocator that uses this pointer to access
 to all shared memory named/raw object management functions. Shmem STL compatible
 allocators are based on this approach. *Remember* that shared memory STL-like allocators
-should define their *pointer* typedef as an offset pointer so that STL-like containers
-can be placed in shared memory.
+should define their *pointer* typedef as the same pointer family as 
+segment_manager::void_pointer typedef. This means that if segment_manager::void_pointer is
+offset_ptr<void> the MySTLAllocator<int> should define pointer as offset_ptr<int>. The
+reason for this is that allocators are placed in shared memory.
 
 If the user wants to optimize further allocator usage in Shmem node containers, he can 
 change the common allocator::construct function from:
@@ -4103,7 +4248,7 @@ where it is placed. The layout of a memory segment would be:
 
 The memory algorithm takes care of memory synchronizations, just like malloc/free
 guarantees that two threads can call malloc/free at the same time. This is usually
-achieved placing a process-shared mutex as a member of the memory algorithm.Take 
+achieved placing a process-shared mutex as a member of the memory algorithm. Take 
 in care that the memory algorithm knows *nothing* about the segment (if it is
 shared memory, a shared memory file, etc.). For the memory algorithm the segment 
 is just a fixed size memory buffer.
@@ -4165,7 +4310,7 @@ other members of the *segment manager* are *a recursive mutex*
 and *two indexes (maps)*: one to make named allocations, and another one to 
 make "unique instance" allocations. 
 
-*  The first index is a map with a c-string (the name of the named object) 
+*  The first index is a map with a pointer to a c-string (the name of the named object) 
    as a key and a structure with information of the dynamically allocated object
    (the most importants being the address and the size of the object). 
 
@@ -4173,9 +4318,12 @@ make "unique instance" allocations.
    and is basically the same as the first index, 
    but the name of the object comes from a `typeid(T).name()` operation.
 
-The memory needed to store [name, object information] pairs in the index is 
+The memory needed to store [name pointer, object information] pairs in the index is 
 allocated also via the *memory algorithm*, so we can tell that internal indexes
-are just like ordinary user objects built in the segment.
+are just like ordinary user objects built in the segment. The rest of the memory
+to store the name of the object, the object itself, and meta-data for 
+destruction/deallocation is allocated using the *memory algorithm* in a single
+`allocate()` call.
 
 As seen, the segment manager knows *nothing* about shared memory/memory mapped files. 
 The segment segment manager itself does not allocate portions of the segment, 
@@ -4198,7 +4346,7 @@ class.
 As seen, the segment manager is quite generic: we can specify the char type to be
 used to identify named objects, we can specify the memory algorithm that will
 control dynamically the portions of the memory segment, and we can specify 
-also the index type that will store the [name, object information] mapping.
+also the index type that will store the [name pointer, object information] mapping.
 We can construct our own index types as explained in
 [link shmem.custom_indexes Building custom indexes] section.
 
@@ -4209,10 +4357,11 @@ We can construct our own index types as explained in
 The Shmem front-ends are classes that construct the shared memory/memory mapped file, 
 place there the segment manager and forward the user requests to the segment manager. 
 For example, *boost::shmem::basic_named_shared_object<...>* is a Shmem front-end
-that works with shared memory. *boost::shmem::basic_named_mfile_object<...>*
+that works with shared memory. *boost::shmem::basic_named_mfile_object<...>* works
+with memory mapped files, etc...
 
 Basically, the interface of a Shmem front-end is the same as the *segment manager*
-but they also offer functions to open, create, open_or_create or shared 
+but it also offers functions to open, create, open_or_create or shared 
 memory/memory-mapped files segments, initialize all needed resources 
 and they store a pointer to the segment manager. Shmem front-ends are not built in
 shared memory or memory mapped files.
@@ -4260,16 +4409,17 @@ to point to the segment manager and the `boost::shmem::allocator<T>::pointer` ty
 be `offset_ptr<T>`. This way, Shmem allocators can be placed in the same memory as
 the segment manager, that is, shared memory, memory mapped files, etc...
 
-Shmem implements basically two allocator approaches: normal and pooled. The pool is
-implemented in [@../../../../boost/shmem/allocators/detail/node_pool.hpp boost::shmem::named_shared_object],
+Shmem implements basically two allocator approaches: normal and pooled. All pooled
+allocators share most of the implementation. This common implementation is in 
+[@../../../../boost/shmem/allocators/detail/node_pool.hpp boost::shmem::detail::private_node_pool
+and boost::shmem::detail::node_pool] classes.
 
 [endsect]
 
 [section:architecture_containers Shmem containers]
 
-Shmem containers are basically common STL containers: they can even use
-STL allocators. Basically a Shmem container has the same implementation as
-the STL container, but with these little details:
+Shmem containers are standard conforming counterparts of STL containers in boost::shmem
+namespace, but with these little details:
 
 *  Shmem STL containers don't assume that memory allocated with 
    an allocator can be deallocated with other allocator of 
@@ -4283,6 +4433,137 @@ the STL container, but with these little details:
 *  All objects are constructed-destroyed via allocator::construct and 
    allocator::destroy functions.
 
+[endsect]
+
+[endsect]
+
+[section:performance Performance of Shmem]
+
+This section tries to explain the performance characteristics of Shmem, so that
+you can optimize Shmem usage if you need more performance.
+
+[section:performance_allocations Performance of memory allocations]
+
+You can have two types of raw memory allocations in Shmem:
+
+*  Explicit: The user calls `allocate()` and  `deallocate()` funcions of
+   named_shared_object/named_mfile_object... front-end classes. This call is 
+   translated to a `MemoryAlgorithm::allocate()` function, which means that you 
+   will need just the time that the memory algorithm associated with the front-end
+   needs to allocate data. 
+
+*  Implicit: You are using boost::shmem::allocator<> in shared memory containers.
+   This allocator calls the same `MemoryAlgorithm::allocate()` than the explicit
+   method, *every* time a vector/string has to reallocate its buffer, or *every*
+   time you insert an object in a node container.
+
+If you need see that allocation is a bottleneck in your application, you have
+these alternatives:
+
+*  If you mainly use map/set associative containers, try using flat_map family instead
+   of map if you mainly do searches and the insertion/removal is mainly done in an 
+   initialization phase. The overhead is now when the ordered vector has to
+   reallocate its storage and copy data. You can also call the `reserve()` method
+   of these containers when you know beforehand how much data you will insert.
+   However in these containers iterators are invalidated in insertions so this
+   substitution is only effective in some applications.
+  
+*  Use a Shmem pooled allocator for node containers, because pooled allocators
+   call `allocate()` only when the pool runs out of nodes. This is pretty
+   efficient (much more than the current default general-purpose algorithm)
+   and this can save a lot of memory. See 
+   [link shmem.stl_allocators Shmem STL compatible allocators] to compare
+   the Shmem node allocators and their trade-offs.
+
+*  Write your own memory algorithm. If you have experience with memory allocation
+   and an algorithm is better suited than the default for your application
+   you can specify it in all Shmem front-ends. See the section
+   [link shmem.custom_shmem_alloc Writing a new shared memory allocation algorithm]
+   to know how to do this. If you think its better than the default one for
+   general-purpose applications, be polite and donate it to Shmem to make it default!
+
+[endsect]
+
+[section:performance_named_allocation Performance of named allocations]
+
+Shmem allows the same paralelism as two threads writing to common data, except when
+the user creates/searches named/unique objects. The steps when creating a named object
+are these:
+
+*  Lock a recursive mutex (so that you can make named allocations inside the 
+   constructor of the object to be created).
+
+*  Try to insert the [name pointer, object information] in the name/object index.
+   This lookup has to assure that the name has not been used before.
+   This is achieved calling `insert()` function in the index. So the time this
+   requires is dependent on the index type (ordered vector, tree, hash...).
+   This can require a call to the memory algorithm allocation function if
+   the index has to be reallocated, it's a node allocator, uses pooled allocations...
+
+*  Allocate a single buffer to hold the name of the object, the object itself,
+   and meta-data for destruction (number of objects, etc...).
+
+*  Call the constructors of the object being created. If it's an array, one
+   construtor per array element.
+
+*  Unlock the recursive mutex.
+
+The steps when destroying a named object using the name (`destroy<T>(name)`) are these:
+
+*  Lock a recursive mutex .
+
+*  Search in the index the pointer to that named object. Copy information and
+   erase data. This is done using `find(const key_type &)` and `erase(iterator)`
+   members of the index. This can require element reordering if the index is a
+   balanced tree, an ordered vector...
+
+*  Call the destructor of the object (many if it's an array).
+
+*  Deallocate the memory using the allocation algorithm.
+
+*  Unlock the recursive mutex.
+
+The steps when destroying a named object using the pointer (`destroy_ptr(T *ptr)`)
+are these:
+
+*  Lock a recursive mutex .
+
+*  Depending on the index type, this can be different:
+
+   *  If the index is a node index, (marked with boost::shmem::is_node_index
+      specialization): Take the iterator stored near the object and call
+      `erase(iterator)`. This can require element reordering if the index is a
+      balanced tree, an ordered vector...
+
+   *  If it's not an node index: Take the name stored near the object and erase
+      the index entry calling `erase(const key &). This can require element reordering if the index is a
+      balanced tree, an ordered vector...
+      
+*  Call the destructor of the object (many if it's an array).
+
+*  Deallocate the memory using the allocation algorithm.
+
+*  Unlock the recursive mutex.
+
+If you see that you the performance is not good enough you have these alternatives:
+
+*  Maybe the problem is that the lock time is too big and hurts paralelism.
+   Try to reduce the number of named objects in the global index and if your
+   application serves several clients try to build a new segment for each one
+   instead of using a global common one.
+
+*  Write your own memory algorithm. See the section
+   [link shmem.custom_shmem_alloc Writing a new shared memory allocation algorithm]
+   to know how to do this.
+
+*  Use another Shmem index type if you feel the default one is not fast enough.
+   If you are not still satisfied, write your own index type. See 
+   [link shmem.custom_indexes Building custom indexes] for this.
+
+*  Destruction via pointer is at least as fast as using name and can be faster.
+   So if your problem is that you make at lot of named destructions, try to use
+   the pointer. If the index is a node index you can save some time.
+   
 [endsect]
 
 [endsect]
@@ -4497,13 +4778,11 @@ allocators and containers, I've used to design Shmem.
 
 * Current STL allocator issues: [*['"Effective STL"]], [*Scott Meyers]
 
-* My C++ bible: [*['"Thinking in C++, Volume 1 & 2"]], [*Bruce Eckel]
+* My C++ bible: [*['"Thinking in C++, Volume 1 & 2"]], [*Bruce Eckel and Chuck Allison]
 
 * The book every C++ programmer should read: [*['"Inside the C++ Object Model"]], [*Stanley B. Lippman]
 
 * A must-read: [*['"ISO/IEC TR 18015: Technical Report on C++ Performance"]], [*ISO WG21-SC22 members.]
-
-
 
 [endsect]
 

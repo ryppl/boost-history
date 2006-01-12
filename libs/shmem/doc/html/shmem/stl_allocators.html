@@ -4,8 +4,8 @@
 <title> Shmem STL compatible allocators</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
-<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
-<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-02">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
 <link rel="prev" href="named_shared_object.html" title=" Named shared memory object allocation">
 <link rel="next" href="containers_explained.html" title=" Shmem and containers in shared memory">
 </head>
@@ -29,7 +29,7 @@
 <dt><span class="section"><a href="stl_allocators.html#shmem.allocator_introduction"> Introduction to Shmem STL compatible allocators</a></span></dt>
 <dt><span class="section"><a href="stl_allocators.html#shmem.allocator"> boost::shmem::allocator: The shared memory STL compatible allocator</a></span></dt>
 <dt><span class="section"><a href="stl_allocators.html#shmem.node_allocator"> boost::shmem::node_allocator: a simple segregated storage between processes</a></span></dt>
-<dt><span class="section"><a href="stl_allocators.html#shmem.private_allocator"> boost::shmem::private_allocator: a private segregated storage</a></span></dt>
+<dt><span class="section"><a href="stl_allocators.html#shmem.private_node_allocator"> boost::shmem::private_node_allocator: a private segregated storage</a></span></dt>
 <dt><span class="section"><a href="stl_allocators.html#shmem.cached_node_allocator"> boost::shmem::cached_node_allocator: caching nodes to avoid overhead</a></span></dt>
 <dt><span class="section"><a href="stl_allocators.html#shmem.allocator_swapping"> Swapping Shmem STL compatible allocators</a></span></dt>
 </dl></div>
@@ -52,15 +52,15 @@ implemented in these allocators:</p>
   segment, so memory usage is optimized.
 </li>
 <li>
-<span class="bold"><strong>boost::shmem::private_allocator</strong></span> offers a segregated storage allocation scheme where
-  each private_allocator owns its own pool. This allocator offers faster allocation
+<span class="bold"><strong>boost::shmem::private_node_allocator</strong></span> offers a segregated storage allocation scheme where
+  each private_node_allocator owns its own pool. This allocator offers faster allocation
   than node_allocator since it avoids synchronization between threads/processes but imposes 
   a higher memory usage. Take in care that the standard does not recommend this private
   per allocator pool.
 </li>
 <li>
 <span class="bold"><strong>boost::shmem::cached_node_allocator</strong></span> offers a segregated storage allocation scheme between
-  node_allocator and private_allocator. This allocator caches some nodes from the common
+  node_allocator and private_node_allocator. This allocator caches some nodes from the common
   the common pool and stores them privately so that these are quickly available
   without the synchronization overhead for future allocations.
 </li>
@@ -201,7 +201,7 @@ for</span><span class="special">(</span><span class="keyword">int</span><span cl
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="shmem.private_allocator"></a> boost::shmem::private_allocator: a private segregated storage</h3></div></div></div>
+<a name="shmem.private_node_allocator"></a> boost::shmem::private_node_allocator: a private segregated storage</h3></div></div></div>
 <p>
 As said, the node_allocator shares a common segregated storage between 
 node_allocators that allocate objects of the same size and this optimizes
@@ -212,8 +212,8 @@ Sometimes, the named object algorithm is not available (for example, when
 building index types for the named object algorithm itself) or the 
 synchronization overhead is not acceptable.</p>
 <p>
-So <span class="bold"><strong>private_allocator</strong></span> uses the same segregated storage as node_allocator,
-but each <span class="bold"><strong>private_allocator</strong></span> has its own segregated storage. No synchronization
+So <span class="bold"><strong>private_node_allocator</strong></span> uses the same segregated storage as node_allocator,
+but each <span class="bold"><strong>private_node_allocator</strong></span> has its own segregated storage. No synchronization
 is used when allocating nodes, so there is far less overhead for an operation
 that usually involves just a few pointer operations when allocating and 
 deallocating a node.</p>
@@ -231,7 +231,7 @@ class</span><span class="identifier"> private_node_allocator</span><span class="
    //No default constructor
 
    /*!Constructor from a segment manager. Never throws*/</span><span class="identifier">
-   private_allocator</span><span class="special">(</span><span class="identifier">SegmentManager</span><span class="special"> *</span><span class="identifier">segment_mngr</span><span class="special">);</span><span class="comment">
+   private_node_allocator</span><span class="special">(</span><span class="identifier">SegmentManager</span><span class="special"> *</span><span class="identifier">segment_mngr</span><span class="special">);</span><span class="comment">
 
    /*!Returns a pointer to the segment manager. Never throws*/</span><span class="identifier">
    SegmentManager</span><span class="special"> *</span><span class="identifier">get_segment_manager</span><span class="special">()</span><span class="keyword"> const</span><span class="special">;</span><span class="comment">
@@ -240,22 +240,22 @@ class</span><span class="identifier"> private_node_allocator</span><span class="
    //The rest is the same interface as std::allocator
    /*...*/</span></code></pre>
 <p>
-Any <span class="bold"><strong>private_allocator</strong></span> must be initialized with a pointer 
-to the segment manager of the semgment from you want <span class="bold"><strong>private_allocator</strong></span> 
+Any <span class="bold"><strong>private_node_allocator</strong></span> must be initialized with a pointer 
+to the segment manager of the semgment from you want <span class="bold"><strong>private_node_allocator</strong></span> 
 to allocate memory:</p>
 <p></p>
 <pre class="programlisting"><code class="literal"><span class="comment">//Alias allocator type with
 //    T=int
 //    N=64
 //    SegmentManager = named_shared_object::segment_manager
-</span><span class="keyword">typedef</span><span class="identifier"> private_allocator</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="number"> 64</span><span class="special">,</span><span class="identifier"> named_shared_object</span><span class="special">::</span><span class="identifier">segment_manager</span><span class="special">&gt;</span><span class="identifier"> 
+</span><span class="keyword">typedef</span><span class="identifier"> private_node_allocator</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="number"> 64</span><span class="special">,</span><span class="identifier"> named_shared_object</span><span class="special">::</span><span class="identifier">segment_manager</span><span class="special">&gt;</span><span class="identifier"> 
    PrivateNodeAllocator</span><span class="special">;</span><span class="comment">
 
 //Initialize allocator instance with algorithm
 </span><span class="identifier">PrivateNodeAllocator</span><span class="identifier"> alloc_inst</span><span class="special"> (</span><span class="identifier">segment</span><span class="special">.</span><span class="identifier">get_segment_manager</span><span class="special">());</span></code></pre>
 <p>
 All STL compatible containers that want to use this allocation scheme 
-must be constructed with an initialized private_allocator so 
+must be constructed with an initialized private_node_allocator so 
 that they can allocate the values with the private node allocator:</p>
 <p></p>
 <pre class="programlisting"><code class="literal"><span class="identifier">MyIntList</span><span class="identifier"> mylist</span><span class="special">(</span><span class="identifier">alloc_inst</span><span class="special">);</span><span class="keyword">
@@ -269,7 +269,7 @@ for</span><span class="special">(</span><span class="keyword">int</span><span cl
 <a name="shmem.cached_node_allocator"></a> boost::shmem::cached_node_allocator: caching nodes to avoid overhead</h3></div></div></div>
 <p>
 The total node sharing of <span class="bold"><strong>boost::shmem::node_allocator</strong></span> can impose a high overhead for some 
-applications and the no synchronization overhead of <span class="bold"><strong>boost::shmem::private_allocator</strong></span>
+applications and the no synchronization overhead of <span class="bold"><strong>boost::shmem::private_node_allocator</strong></span>
 can impose a unacceptable memory waste for other applications.</p>
 <p>
 To solve this, Shmem offers an allocator, <span class="bold"><strong>boost::shmem::cached_node_allocator</strong></span>, that 
@@ -363,7 +363,7 @@ crash is quite sure.</p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><small>Copyright © 2005 -2006 Ion Gaztañaga</small></td>
+<td align="right"><small>Copyright © 2005 - 2006 Ion Gaztañaga</small></td>
 </tr></table>
 <hr>
 <div class="spirit-nav">
