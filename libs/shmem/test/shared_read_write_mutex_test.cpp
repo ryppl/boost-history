@@ -18,14 +18,11 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#if defined(_MSC_VER) && (_MSC_VER == 1310)
-#pragma warning (disable : 4275)
-#pragma warning (disable : 4251)
-#endif
 #include <boost/thread/thread.hpp>
 #include <boost/thread/xtime.hpp>
 #include <boost/shmem/sync/xtime.hpp>
 #include <boost/shmem/sync/shared_read_write_mutex.hpp>
+//#include <boost/shmem/sync/shared_read_write_lock.hpp>
 #include <iostream>
 //#include <cassert>
 #include <assert.h>
@@ -322,6 +319,13 @@ void test_timed_read_write_mutex(RW &rw)
 }
 
 } // namespace
+
+#include <boost/shared_ptr.hpp>
+
+boost::shared_ptr<int> return_shared_ptr()
+{
+   return boost::shared_ptr<int>();
+}
 
 int main ()
 {
