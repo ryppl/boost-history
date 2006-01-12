@@ -73,7 +73,8 @@ class shared_mutex : private boost::noncopyable
    typedef boost::shmem::scoped_lock<shared_mutex> scoped_lock;
    friend class shared_recursive_mutex;
    friend class shared_condition;
- private:
+
+   public:
 
    /*!Locks mutex, sleeps when mutex is already locked.
       Throws process_resource_exception if a severe error is found*/
@@ -82,6 +83,7 @@ class shared_mutex : private boost::noncopyable
    /*! Unlocks the mutex */
    void do_unlock(void);
    
+   private:
    //For compatibility with thread locks
    typedef char cv_state;
 
@@ -115,7 +117,7 @@ class shared_try_mutex : private boost::noncopyable
    friend class shared_recursive_try_mutex;
    friend class shared_condition;
 
- private:
+   public:
    /*!Locks mutex, sleeps when mutex is already locked.
       Throws process_resource_exception if a severe error is found*/
    void do_lock(void);
@@ -128,6 +130,7 @@ class shared_try_mutex : private boost::noncopyable
    /*! Unlocks the mutex */
    void do_unlock(void);
 
+   private:
    //For compatibility with thread locks
    typedef char cv_state;
 
@@ -156,14 +159,14 @@ public:
    shared_timed_mutex();
   ~shared_timed_mutex();
 
- private:
-   //For compatibility with thread locks
-   typedef char cv_state;
-
    void do_lock();
    bool do_trylock();
    bool do_timedlock(const xtime& xt);
    void do_unlock();
+
+   private:
+   //For compatibility with thread locks
+   typedef char cv_state;
 
    #if (defined BOOST_WINDOWS) && !(defined BOOST_DISABLE_WIN32)
    volatile long m_s;
