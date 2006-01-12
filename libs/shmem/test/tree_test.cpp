@@ -7,7 +7,7 @@
 // See http://www.boost.org/libs/shmem for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
-/*
+
 #include <algorithm>
 #include <memory>
 #include <vector>
@@ -232,22 +232,7 @@ int main ()
 
    return 0;
 }
-*/
-
-#include <boost/shmem/offset_ptr.hpp>
-#include <boost/shmem/containers/map.hpp>
-
-//#include <map>
 
 
-int main(int argc, char* argv[])
-{
-  typedef boost::shmem::multimap<int,int> mt;
-  //typedef std::multimap<int,int> mt;
-
-  mt m;
-
-  m.insert(std::make_pair(1,2));
-}
 
 
