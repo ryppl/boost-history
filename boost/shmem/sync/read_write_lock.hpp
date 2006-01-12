@@ -27,8 +27,8 @@
 // about the suitability of this software for any purpose.
 // It is provided "as is" without express or implied warranty.
 
-#ifndef BOOST_SHMEM_READ_WRITE_LOCK_HPP
-#define BOOST_SHMEM_READ_WRITE_LOCK_HPP
+#ifndef BOOST_SHMEM_DETAIL_READ_WRITE_LOCK_HPP
+#define BOOST_SHMEM_DETAIL_READ_WRITE_LOCK_HPP
 
 #if (defined _MSC_VER) && (_MSC_VER >= 1200)
 #  pragma once
