@@ -103,6 +103,9 @@
 				RelativePath="..\..\..\..\boost\shmem\intersegment_ptr.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\boost\shmem\smart_ptr\intrusive_ptr.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\boost\shmem\offset_ptr.hpp">
 			</File>
 		</Filter>

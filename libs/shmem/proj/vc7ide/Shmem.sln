@@ -159,6 +159,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "doc_bufferstream", "doc_buf
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "doc_where_allocate", "doc_where_allocate.vcproj", "{58CCE183-6092-48FE-A4F7-BA0D3A792606}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "intrusive_ptr_test", "intrusive_ptr_test.vcproj", "{5821C383-6092-12FE-A877-BA0D33467694}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -325,6 +333,14 @@ Global
 		{58C1B183-9026-4E12-00F2-001200540065}.Debug.Build.0 = Debug|Win32
 		{58C1B183-9026-4E12-00F2-001200540065}.Release.ActiveCfg = Release|Win32
 		{58C1B183-9026-4E12-00F2-001200540065}.Release.Build.0 = Release|Win32
+		{58CCE183-6092-48FE-A4F7-BA0D3A792606}.Debug.ActiveCfg = Debug|Win32
+		{58CCE183-6092-48FE-A4F7-BA0D3A792606}.Debug.Build.0 = Debug|Win32
+		{58CCE183-6092-48FE-A4F7-BA0D3A792606}.Release.ActiveCfg = Release|Win32
+		{58CCE183-6092-48FE-A4F7-BA0D3A792606}.Release.Build.0 = Release|Win32
+		{5821C383-6092-12FE-A877-BA0D33467694}.Debug.ActiveCfg = Debug|Win32
+		{5821C383-6092-12FE-A877-BA0D33467694}.Debug.Build.0 = Debug|Win32
+		{5821C383-6092-12FE-A877-BA0D33467694}.Release.ActiveCfg = Release|Win32
+		{5821C383-6092-12FE-A877-BA0D33467694}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
