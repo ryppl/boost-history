@@ -1,3 +1,12 @@
+// ----------------------------------------------------------------------------
+// Copyright (C) 2006 Marcin Kalicinski
+//
+// Distributed under the Boost Software License, Version 1.0. 
+// (See accompanying file LICENSE_1_0.txt or copy at 
+// http://www.boost.org/LICENSE_1_0.txt)
+//
+// For more information, see www.boost.org
+// ----------------------------------------------------------------------------
 #ifndef BOOST_PROFILER_DETAIL_MSVC_SEMAPHORE_HPP_INCLUDED
 #define BOOST_PROFILER_DETAIL_MSVC_SEMAPHORE_HPP_INCLUDED
 
@@ -49,15 +58,15 @@ namespace boost { namespace profiler { namespace detail
 
     typedef volatile LONG semaphore_t;
     
-    inline void acquire_semaphore(semaphore_t *semaphore)
+    inline void acquire_semaphore(semaphore_t &semaphore)
     {
-        while (InterlockedCompareExchange(semaphore, 0, 1) == 0)
+        while (InterlockedCompareExchange(&semaphore, 0, 1) == 0)
             Sleep(0);
     }
 
-    inline void release_semaphore(semaphore_t *semaphore)
+    inline void release_semaphore(semaphore_t &semaphore)
     {
-        InterlockedExchange(semaphore, 1);
+        InterlockedExchange(&semaphore, 1);
     }
 
 } } }
