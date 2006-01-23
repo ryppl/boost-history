@@ -178,11 +178,47 @@
 			Name="detail"
 			>
 			<File
+				RelativePath="..\..\..\..\boost\profiler\detail\context.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\profiler\detail\context_dump.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\profiler\detail\dummy_semaphore.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\profiler\detail\entry.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\profiler\detail\iterator.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\profiler\detail\macros.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\profiler\detail\point.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\profiler\detail\report.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\boost\profiler\detail\scoped_semaphore.hpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\..\boost\profiler\detail\semaphore.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\profiler\detail\startstop.hpp"
 				>
 			</File>
 			<File
@@ -193,10 +229,6 @@
 				Name="msvc"
 				>
 				<File
-					RelativePath="..\..\..\..\boost\profiler\detail\msvc\semaphore.hpp"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\..\boost\profiler\detail\msvc\timer.hpp"
 					>
 				</File>
@@ -205,21 +237,29 @@
 				Name="portable"
 				>
 				<File
-					RelativePath="..\..\..\..\boost\profiler\detail\portable\dummy_semaphore.hpp"
+					RelativePath="..\..\..\..\boost\profiler\detail\portable\timer.hpp"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="windows"
+				>
 				<File
-					RelativePath="..\..\..\..\boost\profiler\detail\portable\timer.hpp"
+					RelativePath="..\..\..\..\boost\profiler\detail\windows\semaphore.hpp"
 					>
 				</File>
 			</Filter>
 		</Filter>
 		<File
-			RelativePath="..\..\..\..\boost\profiler\profiler.hpp"
+			RelativePath="..\..\..\..\boost\profiler.hpp"
 			>
 		</File>
 		<File
 			RelativePath=".\test.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\test2.cpp"
 			>
 		</File>
 	</Files>

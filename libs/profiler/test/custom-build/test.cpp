@@ -1,20 +1,35 @@
-#include <boost/foreach.hpp>
-#include <boost/property_tree/info_parser.hpp>
-#include <boost/profiler/profiler.hpp>
+#define _SCL_SECURE_NO_DEPRECATE
+#include <boost/profiler.hpp>
 #include <iostream>
+#include <cmath>
 
-boost::profiler::context ctx1("ctx1");
-boost::profiler::context ctx2("ctx2");
+namespace
+{
+    boost::profiler::context ctx1("ctx1");
+    boost::profiler::context ctx2("ctx2");
+}
+
+inline void busy_delay(double seconds)
+{
+    using namespace boost::profiler;
+    tick_t t = boost::profiler::ticks();
+    const timer_metrics &tm = get_timer_metrics();
+    tick_t n = t + static_cast<tick_t>(floor(seconds * tm.ticks_per_second + 0.5));
+    while (boost::profiler::ticks() < n)
+        ;
+}
 
 int fact(int n)
 {
-    BOOST_PROFILER_SCOPED("factb()");
+    BOOST_PROFILER_SCOPE("factb()");
     BOOST_PROFILER_POINT(p1, "fact()");
-    BOOST_PROFILER_START(p1);
+    BOOST_PROFILER_START_P(p1);
     int r = n > 1 ? n * fact(n - 1) : 1;
-    BOOST_PROFILER_STOP(p1);
+    BOOST_PROFILER_STOP();
     return r;
 }
+
+extern int fact2(int);
 
 void delay(boost::profiler::tick_t d)
 {
@@ -23,46 +38,24 @@ void delay(boost::profiler::tick_t d)
         ;
 }
 
-char a[10000000];
-
 int main()
 {
-    /*
+    fact2(10);
     fact(10);
-    for (int i = 0; i < 100; ++i)
     {
-        PROFILER_BLOCK("loopb");
-        PROFILER_POINT(p1, "loop");
-        PROFILER_START(p1);
-        if (i == 25)
-            PROFILER_SET_CURRENT_CONTEXT(ctx1);
-        if (i == 50)
-            PROFILER_SET_CURRENT_CONTEXT(PROFILER_GET_DEFAULT_CONTEXT());
-        delay(10);
-        PROFILER_STOP(p1);
+        BOOST_PROFILER_SCOPE("bd");     
+        busy_delay(1);
+        BOOST_PROFILER_START("bd2");
+        busy_delay(1);
+        BOOST_PROFILER_START("bd3");
+        busy_delay(1);
+        BOOST_PROFILER_STOP();
+        busy_delay(1);
+        BOOST_PROFILER_STOP();
     }
-    */
-
-    {
-        BOOST_PROFILER_SCOPED("whole");
-        for (int i = 0; i < 10000; ++i)
-        {
-            a[i] = i;
-            BOOST_PROFILER_SCOPED("loop");
-        }
-    }
-    a[657] = 3;
-    {
-        BOOST_PROFILER_SCOPED("whole2");
-        for (int i = 0; i < 10000; ++i)
-        {
-            a[i] = i;
-        }
-    }
-
-    boost::property_tree::ptree pt;
-    boost::profiler::default_context()->dump(pt);
-    ctx1.dump(pt);
-    ctx2.dump(pt);
-    boost::property_tree::write_info(std::cout, pt);
+    boost::profiler::iterator b = boost::profiler::default_context().begin();
+    boost::profiler::iterator e = boost::profiler::default_context().end();
+    for (; b != e; ++b)
+        std::cout << b->name << "\n";
+    std::cout << boost::profiler::default_context();
 }

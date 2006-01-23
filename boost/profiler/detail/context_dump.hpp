@@ -1,13 +1,13 @@
 #ifndef BOOST_PROFILER_DETAIL_CONTEXT_DUMP_HPP_INCLUDED
 #define BOOST_PROFILER_DETAIL_CONTEXT_DUMP_HPP_INCLUDED
 
-#include <boost/profiler/detail/point.hpp>
-#include <boost/profiler/detail/entry.hpp>
+#include <boost/profiler/detail/report.hpp>
 #include <boost/profiler/detail/context.hpp>
 #include <boost/profiler/detail/timer.hpp>
 #include <boost/profiler/detail/semaphore.hpp>
 #include <boost/format.hpp>
 #include <boost/foreach.hpp>
+#include <string>
 #include <limits>
 #include <vector>
 #include <ostream>
@@ -15,15 +15,15 @@
 namespace boost { namespace profiler { namespace detail
 {
 
-    struct entry_pred
+    struct report_pred
     {
-        bool operator ()(const entry *e1, const entry *e2) const
+        bool operator ()(const report &r1, const report &r2) const
         {
-            return double(e1->total) / e1->count < double(e2->total) / e2->count;
+            return r1.total_time > r2.total_time;
         }
     };
 
-    std::pair<double, std::string> unitize(double x, const std::string &unit)
+    inline std::pair<double, std::string> unitize(double x, const std::string &unit)
     {
         if (x < 999.5e-18)
             return std::make_pair(0.0, unit);
@@ -53,7 +53,7 @@ namespace boost { namespace profiler { namespace detail
             return std::make_pair(x, unit);
     }
 
-    std::string stringize(double x, const std::string &unit, unsigned width, bool approx = false)
+    inline std::string stringize(double x, const std::string &unit, unsigned width, bool approx)
     {
         std::pair<double, std::string> u = unitize(x, unit);
         std::string result;
@@ -72,87 +72,79 @@ namespace boost { namespace profiler { namespace detail
     }
 
     template<class Ch> 
-    void context::dump(std::basic_ostream<Ch> &stream)
+    inline void context::dump(std::basic_ostream<Ch> &stream)
     {
         
         const timer_metrics &tm = get_timer_metrics();
         
         scoped_semaphore sem(point_semaphore());
         
-        std::vector<entry *> entries;
-        BOOST_FOREACH(entry &e, m_entries)
-            if (e.count > 0)         
-                entries.push_back(&e);
-        std::sort(entries.begin(), entries.end(), entry_pred());
+        std::vector<report> reports;
+        for (iterator it = begin(); it != end(); ++it)
+            if (it->hit_count > 0)
+                reports.push_back(*it);
+        std::sort(reports.begin(), reports.end(), report_pred());
 
         stream << "Profiling results for context \"" << m_name << "\":\n\n";
         
-        double total = !entries.empty() ? double(m_latest - m_earliest) / tm.ticks_per_second : 0;
+        double total = !reports.empty() ? double(m_latest - m_earliest) / tm.ticks_per_second : 0;
         double resolution = 1.0 / tm.ticks_per_second;
         double latency = 1.0 / tm.reports_per_second;
         double increment = double(tm.min_clock_step) / tm.ticks_per_second;
         boost::format fmt("  Total profiling time:     %s\n  Clock resolution:         %s (%s)\n  Clock latency:            %s\n  Smallest clock increment: %s %s\n\n");
-        fmt % stringize(total, "s", 0)
-            % stringize(resolution, "s/tick", 0)
-            % stringize(double(tm.ticks_per_second), "Hz", 0)
-            % stringize(latency, "s", 0)
-            % stringize(increment, "s", 0)
+        fmt % stringize(total, "s", 0, false)
+            % stringize(resolution, "s/tick", 0, false)
+            % stringize(double(tm.ticks_per_second), "Hz", 0, false)
+            % stringize(latency, "s", 0, false)
+            % stringize(increment, "s", 0, false)
             % (tm.clock_step_cpu_limited ? "(CPU bound)" : "(not CPU bound)");
         stream << fmt;
 
-        if (entries.empty())
+        if (reports.empty())
         {
             stream << "  No profiler entries recorded.\n";
         }
         else
         {
         
-            const size_t min_name_length = 8;
-            size_t maxlen = min_name_length;
-            BOOST_FOREACH(entry *e, entries)
-                maxlen = (std::max)(strlen(e->p->m_name), maxlen);
+            size_t max_len = 6;
+            BOOST_FOREACH(const report &r, reports)
+                max_len = (std::max)(strlen(r.name), max_len);
 
-            stream << boost::format("   #%sName    Total      Avg      Exc   ExcAvg   Hitcount  Location\n") % std::string(maxlen - 2, ' ');
-            stream << boost::format("  %s\n") % std::string(65 + maxlen, '=');
+            stream << boost::format("   #%sName    Total      Avg      Exc   ExcAvg   Hitcount  Location\n") % std::string(max_len - 2, ' ');
+            stream << boost::format("  %s\n") % std::string(65 + max_len, '=');
 
-            int n = 1;
-            BOOST_FOREACH(entry *e, entries)
+            size_t index = 1;
+            BOOST_FOREACH(const report &r, reports)
             {
                 
-                BOOST_ASSERT(e->count > 0);
-                
-                std::string name(e->p->m_name);
-                if (name.size() < maxlen)
-                    name = std::string(maxlen - name.size(), ' ') + name; 
-                
-                double total = double(e->total) / tm.ticks_per_second;
-                double avg = total / e->count;
-                double total_exc = double(e->total_exclusive) / tm.ticks_per_second;
-                double avg_exc = total_exc / e->count;
+                std::string name(r.name);
+                if (name.size() < max_len)
+                    name = std::string(max_len - name.size(), ' ') + name; 
                 
                 double approx_threshold = 10.0 * (std::max)((std::max)(resolution, latency), increment);
-                bool approx = avg < approx_threshold;
-                bool approx_exc = avg_exc <  approx_threshold;
+                bool approx = r.average_time < approx_threshold;
+                bool approx_exc = r.average_exclusive_time <  approx_threshold;
 
-                boost::format fmt("%4d. %s  %s  %s  %s  %s %9dx  %s:%d");
-                fmt % n 
+                boost::format fmt("%4d. %s  %s  %s  %s  %s %9dx  %s(%d)");
+                fmt % index 
                     % name 
-                    % stringize(total, "s", 7, approx)
-                    % stringize(avg, "s", 7, approx)
-                    % stringize(total_exc, "s", 7, approx_exc)
-                    % stringize(avg_exc, "s", 7, approx_exc)
-                    % e->count
-                    % e->p->m_file
-                    % e->p->m_line;
+                    % stringize(r.total_time, "s", 7, approx)
+                    % stringize(r.average_time, "s", 7, approx)
+                    % stringize(r.total_exclusive_time, "s", 7, approx_exc)
+                    % stringize(r.average_exclusive_time, "s", 7, approx_exc)
+                    % r.hit_count
+                    % r.file
+                    % r.line;
                 stream << fmt << "\n";
-                ++n;
+                ++index;
             }
         }
 
     }
 
     template<class Ch>
-    std::basic_ostream<Ch> &operator <<(std::basic_ostream<Ch> &stream, context &c)
+    inline std::basic_ostream<Ch> &operator <<(std::basic_ostream<Ch> &stream, context &c)
     {
         c.dump(stream);
         return stream;

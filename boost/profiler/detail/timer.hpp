@@ -22,7 +22,7 @@ namespace boost { namespace profiler { namespace detail
         bool clock_step_cpu_limited;
     };
     
-    const timer_metrics &get_timer_metrics()
+    inline const timer_metrics &get_timer_metrics()
     {
         static bool done;
         static timer_metrics tm;

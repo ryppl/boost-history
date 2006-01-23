@@ -5,8 +5,8 @@
 
 #if !defined(BOOST_HAS_THREADS)
     #include <boost/profiler/detail/dummy_semaphore.hpp>
-#elif defined(BOOST_WINDOWS) && defined(BOOST_MSVC)
-    #include <boost/profiler/detail/msvc/semaphore.hpp>
+#elif defined(BOOST_WINDOWS)
+    #include <boost/profiler/detail/windows/semaphore.hpp>
 #else
     #error Your platform is not currently supported
 #endif
