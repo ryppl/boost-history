@@ -7,10 +7,8 @@
 //
 // For more information, see www.boost.org
 // ----------------------------------------------------------------------------
-#ifndef BOOST_PROFILER_DETAIL_MSVC_DUMMY_SEMAPHORE_HPP_INCLUDED
-#define BOOST_PROFILER_DETAIL_MSVC_DUMMY_SEMAPHORE_HPP_INCLUDED
-
-#include <windows.h>
+#ifndef BOOST_PROFILER_DETAIL_DUMMY_SEMAPHORE_HPP_INCLUDED
+#define BOOST_PROFILER_DETAIL_DUMMY_SEMAPHORE_HPP_INCLUDED
 
 namespace boost { namespace profiler { namespace detail 
 {

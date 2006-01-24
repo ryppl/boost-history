@@ -1,0 +1,15 @@
+CCINCLUDE=-I../../../../../boost -I../../../..
+
+all: build
+
+-include Makefile
+
+build: debug release
+
+debug: test_dbg.exe
+release: test_rel.exe
+
+test_dbg.exe: test.cpp test2.cpp
+	$(CC) $(CFLAGSDBG) $(CCINCLUDE) $+ -o $@
+test_rel.exe: test.cpp test2.cpp
+	$(CC) $(CFLAGSREL) $(CCINCLUDE) $+ -o $@ 

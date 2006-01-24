@@ -7,6 +7,8 @@
 
 #if defined(BOOST_WINDOWS) && defined(BOOST_MSVC)
     #include <boost/profiler/detail/msvc/timer.hpp>
+#elif defined(__GNUC__) && defined(__i386__)
+    #include <boost/profiler/detail/gcc-i586/timer.hpp>
 #else
     #include <boost/profiler/detail/portable/timer.hpp>
 #endif
