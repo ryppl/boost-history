@@ -62,21 +62,21 @@ namespace detail
       return static_cast<char const*>(vp);
   }
    
+      typedef
+    std::size_t
+  offset_type
    /** 
     *  @brief
     *   offset from start of record to beginning of field.
     */
-      typedef
-    std::size_t
-  offset_type
   ;
   
-   /**@brief
-    *  A convenience function to calculate the offset, a_from - a_to.
-    */
       inline
     offset_type
   offset_from_to(void const* a_from, void const* a_to)
+   /**@brief
+    *  A convenience function to calculate the offset, a_from - a_to.
+    */
   { 
       offset_type l_offs= cp_cast(a_from) - cp_cast(a_to);
       return l_offs;
@@ -198,12 +198,12 @@ namespace detail
       
   };//end build_buffer struct
           
-  /**@brief
-   *  Vector of offsets for a particular type of field.
-   */
       typedef
     std::vector<offset_type>
   field_offsets_type
+  /**@brief
+   *  Vector of offsets for a particular type of field.
+   */
   ;
       typedef
     iter_range<detail::field_offsets_type const>
@@ -274,8 +274,7 @@ template
   >
 struct names_descriptor
 {
-    class field_iterator_acceptor_abs
-    /**@class field_iterator_acceptor_abs
+    /**
      * @brief
      *   An abstract "iterator-acceptor" over selected
      *   record fields.
@@ -290,47 +289,48 @@ struct names_descriptor
      *   of this class will be specialized on the
      *   type of record.
      */
+    class field_iterator_acceptor_abs
     {
      public:
             virtual
         ~field_iterator_acceptor_abs(void)
         {}
-            virtual
-          void
-        accept(FieldsVisitor& a_visitor)const
         /**
          * @brief apply a_visitor to current field.
          */
-        =0
-        ;
             virtual
           void
-        increment(void)
+        accept_visitor(FieldsVisitor& a_visitor)const
+        =0
+        ;
         /**
          * @brief 
          *  Go to the next field.
          */     
+            virtual
+          void
+        increment(void)
          =0
          ;
             
-            virtual
-          std::size_t
-        size(void)const
         /**
          * @brief
          *  Indicates number of elements accessible
          *  by this iterator.
          */
+            virtual
+          std::size_t
+        size(void)const
         =0
         ;
-            virtual
-          bool
-        empty(void)const
         /**
          * @brief
          *  Indicates whether no more increments
          *  are valid and accept is undefined.
          */
+            virtual
+          bool
+        empty(void)const
         =0
         ;
           void
@@ -339,17 +339,19 @@ struct names_descriptor
         } 
     };//end field_iterator_acceptor_abs struct
     
+    /**@brief Abstract class for creating field_iterator_acceptor_abs*
+     *  which iterates over all fields of a particular type in a record.
+     *
+     *  IOW, there a 1-to-1 correspondence between the selected field
+     *  types in a record and the number of maker_iterator_acceptor_abs* in
+     *  that record's selected_fields_descriptor (see below).
+     */
     class maker_iterator_acceptor_abs
-     /**@class maker_iterator_acceptor_abs
-      * @brief Abstract class for creating field_iterator_acceptor_abs*
-      *  which iterates over all fields of a particular type in a record.
-      *
-      *  IOW, there a 1-to-1 correspondence between the selected field
-      *  types in a record and the number of maker_iterator_acceptor_abs* in
-      *  that record's selected_fields_descriptor (see below).
-      */
     {
      public:
+            virtual
+        ~maker_iterator_acceptor_abs(void)
+        {}   
          /**
           * @brief Return field_iterator_acceptor_abs for a_record at a_field_offsets.
           * 
@@ -434,14 +436,14 @@ struct names_descriptor
             static selected_fields_descriptor const a_desc;
             return a_desc;
         }
+         /**@brief 
+          *  Append a_maker at a_offset
+          */
           void
         append_maker_at
           ( maker_iterator_acceptor_abs const* a_maker
           , typename offsets_type::value_type a_offset
           )
-         /**@brief 
-          *  Append a_maker at a_offset
-          */
         { 
             offsets_type& a_offsets = super_type::operator[](a_maker);
             a_offsets.push_back(a_offset);
@@ -464,11 +466,11 @@ struct names_descriptor
         { 
             return m_iter_max_size;
         } 
-          std::size_t
-        num_offsets(void)const
         /**@brief
          *  return sum of sizes of values in map.
          */    
+          std::size_t
+        num_offsets(void)const
         {
             std::size_t l_total=0; 
             typedef typename super_type::const_iterator iter_type;
@@ -481,49 +483,49 @@ struct names_descriptor
             return l_total;
         }
      private:
-          std::size_t
-        m_iter_max_size
         /**@brief
           * maximum size of iterators created by
           * maker_iterator_acceptor_abs's in the map.
           */   
+          std::size_t
+        m_iter_max_size
         ;
     };//end selected_fields_descriptor struct
      
 };//end names_descriptor
 
+/**
+  * @brief
+  *   A Default (i.e. a general template ) singleton class template 
+  *   for accessing the selected_fields_descriptor* for Record.
+  *   selected_fields_descriptor is defined in
+  *   names_descriptor<FieldsVisitor>.
+  *
+  */
 template
   < typename FieldsVisitor
   , typename Record
   >
 struct selected_fields_description_of
-/**
-  * @class selected_fields_description_of
-  * @brief
-  *   Default (i.e. a general template ) definition of class template 
-  *   for accessing the selected_fields_descriptor* for Record.
-  *   selected_fields_descriptor is defined in
-  *   names_descriptor<FieldsVisitor>.
-  *
-  *   The default value, null, indicates Record has no 
-  *   selected fields.
-  *
-  *   The class method, ptr(), returns the default value which
-  *   can be overridden by defining specializations for Record
-  *   with an invokation of macro:
-  *
-  *     SELECTED_FIELDS_DESCRIPTION_OF_RECORD_VISITOR
-  *
-  *   which is defined below.
-  */
 {
  public:
+   /**
+    *   The class method, ptr(), returns the default value, for
+    *   selected_fields_descriptor*.  The default value, null,
+    *   indicates the Record contains *no* selected fields.
+    *   The default value can be overridden by defining specializations 
+    *   of this class for Record with the macro invokation:
+    *
+    *     SELECTED_FIELDS_DESCRIPTION_OF_RECORD_VISITOR(Record)
+    *
+    *   This macro is defined below.
+    */
         static
       typename names_descriptor<FieldsVisitor>
         ::selected_fields_descriptor const*
     ptr(void)
     { 
-        return 0 /** default value is null, i.e. no children.*/;
+        return 0;
     } 
 };//end selected_fields_description_of<FieldsVisitor,Record> template
     
@@ -593,7 +595,7 @@ names_builder
           : super_type(a_record,a_field_offsets)
         {}
           void
-        accept(FieldsVisitor& a_visitor)const
+        accept_visitor(FieldsVisitor& a_visitor)const
         { 
             value_type& l_val = this->super_type::current();
             a_visitor.visit_field(l_val);
@@ -1114,9 +1116,9 @@ names_iterator
             {
             }
               void
-            accept(FieldsVisitor& a_visitor)const
+            accept_visitor(FieldsVisitor& a_visitor)const
             {
-                m_piter->accept(a_visitor);
+                m_piter->accept_visitor(a_visitor);
             } 
               void
             increment(void)
@@ -1191,9 +1193,9 @@ names_iterator
             first_non_empty();
         } 
           void
-        accept(FieldsVisitor& a_visitor)const
+        accept_visitor(FieldsVisitor& a_visitor)const
         { 
-            m_iter.accept(a_visitor);
+            m_iter.accept_visitor(a_visitor);
         } 
           void
         increment(void)

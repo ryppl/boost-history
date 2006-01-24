@@ -148,7 +148,7 @@ struct field_iterator_of
     {
     }
       void
-    accept(fields_visitor_type& a_visitor)const
+    accept_visitor(fields_visitor_type& a_visitor)const
     { 
         Element& a_elem = *m_iter;
         a_visitor.visit_field(a_elem);
