@@ -3,12 +3,14 @@
 
 #include <boost/config.hpp>
 
-#if !defined(BOOST_HAS_THREADS)
+#if !defined(BOOST_PROFILER_MULTITHREADED)
+    #include <boost/profiler/detail/dummy_semaphore.hpp>
+#elif !defined(BOOST_HAS_THREADS)
     #include <boost/profiler/detail/dummy_semaphore.hpp>
 #elif defined(BOOST_WINDOWS)
     #include <boost/profiler/detail/windows/semaphore.hpp>
 #else
-    #error Your platform is not currently supported
+    #error Your platform does not currently support multithreaded profiling
 #endif
 
 namespace boost { namespace profiler { namespace detail

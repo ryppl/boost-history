@@ -11,7 +11,12 @@
 #define BOOST_PROFILER_DETAIL_GCC_I586_TIMER_HPP_INCLUDED
 
 #include <boost/cstdint.hpp>
+#include <sys/time.h>
 #include <ctime>
+
+#ifndef BOOST_HAS_GETTIMEOFDAY
+    #error gettimeofday() required
+#endif
 
 namespace boost { namespace profiler { namespace detail 
 {
@@ -30,13 +35,18 @@ namespace boost { namespace profiler { namespace detail
         static tick_t result;
         if (result == 0)
         {
-            std::clock_t time1 = std::clock();
+            timeval tv1, tv2;
+            gettimeofday(&tv1, 0);
             tick_t ticks1 = ticks();
-            while (std::clock() < time1 + CLOCKS_PER_SEC / 2)       // wait about 1/2 sec
+            clock_t time = clock();
+            while (clock() <= time + CLOCKS_PER_SEC / 8)
                 ;
-            std::clock_t time2 = std::clock();
+            gettimeofday(&tv2, 0);
             tick_t ticks2 = ticks();
-            result = (ticks2 - ticks1) * CLOCKS_PER_SEC / (time2 - time1);
+            time_t dsec =  tv2.tv_sec - tv1.tv_sec;
+            suseconds_t dusec = tv2.tv_usec - tv1.tv_usec;
+            double dt = double(dsec) + double(dusec) / 1000000.0;
+            result = static_cast<tick_t>((ticks2 - ticks1) / dt);
         }
         return result;
     }
