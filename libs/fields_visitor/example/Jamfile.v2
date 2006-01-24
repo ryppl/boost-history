@@ -1,0 +1,14 @@
+project
+  : requirements
+  : default-build debug
+  ;
+
+{
+  run-output visit_each_record_field_traversal_test
+    : visit_each_record_field_traversal_test.cpp
+      ../../../libs/io/filters/build//mout
+    ;
+  run-output simple_record_field_traversal_test
+    : simple_record_field_traversal_test.cpp
+    ;
+}
