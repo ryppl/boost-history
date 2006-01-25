@@ -16,6 +16,7 @@ namespace boost { namespace profiler { namespace detail
 
     inline tick_t ticks_per_second()
     {
+        
         static tick_t result;
         if (result == 0)
         {
