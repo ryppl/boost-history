@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <limits>
 
-#if defined(BOOST_WINDOWS) && defined(BOOST_MSVC)
+#if defined(BOOST_WINDOWS) && defined(_MSC_VER)
     #include <boost/profiler/detail/msvc/timer.hpp>
 #elif defined(__GNUC__) && defined(__i386__)
     #include <boost/profiler/detail/gcc-i586/timer.hpp>

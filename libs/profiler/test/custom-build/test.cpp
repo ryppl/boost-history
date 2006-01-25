@@ -43,7 +43,7 @@ void delay(boost::profiler::tick_t d)
 int main()
 {
     fact2(10);
-    //fact(10);
+    fact(10);
     {
         BOOST_PROFILER_SCOPE("bd");     
         busy_delay(1);
@@ -56,7 +56,7 @@ int main()
         BOOST_PROFILER_STOP();
     }
     
-    std::ofstream s("c:\\a.txt");
+    std::ofstream s("out.txt");
     s << boost::profiler::current_context();
 
 }
