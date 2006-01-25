@@ -119,7 +119,7 @@ namespace boost { namespace profiler { namespace detail
             BOOST_FOREACH(const report &r, reports)
                 max_len = (std::max)(strlen(r.name), max_len);
 
-            stream << boost::format("   #%sName    Total      Avg      Exc   ExcAvg  Total%%    Exc%% ExcSum%%  Hitcount  Location\n") % std::string(max_len - 2, ' ');
+            stream << boost::format("   #%sNAME   TOTAL  AVGTOT   EXCLS  AVGEXC  TOTAL%%  EXCLS%% EXCSUM%%   HITCOUNT  LOCATION\n") % std::string(max_len - 2, ' ');
             stream << boost::format("  %s\n") % std::string(80 + max_len, '=');
 
             size_t index = 1;
@@ -137,7 +137,7 @@ namespace boost { namespace profiler { namespace detail
 
                 total_exclusive_time_sum += r.total_exclusive_time_fraction;
 
-                boost::format fmt("%4d. %s  %s  %s  %s  %s  %5.1f%%  %5.1f%%  %5.1f%% %9dx  %s(%d)");
+                boost::format fmt("%4d. %s %s %s %s %s  %5.1f%%  %5.1f%%  %5.1f%% %9dx  %s(%d)");
                 fmt % index 
                     % name 
                     % stringize(r.total_time, "s", 7, approx)
