@@ -3,6 +3,7 @@
 
 #include <boost/profiler/detail/report.hpp>
 #include <boost/profiler/detail/context.hpp>
+#include <boost/profiler/detail/iterator.hpp>
 #include <boost/profiler/detail/timer.hpp>
 #include <boost/profiler/detail/semaphore.hpp>
 #include <boost/format.hpp>
@@ -72,7 +73,7 @@ namespace boost { namespace profiler { namespace detail
     }
 
     template<class Ch> 
-    inline void context::dump(std::basic_ostream<Ch> &stream)
+    inline void context::dump(std::basic_ostream<Ch> &stream) const
     {
         
         const timer_metrics &tm = get_timer_metrics();
@@ -91,13 +92,20 @@ namespace boost { namespace profiler { namespace detail
         double resolution = 1.0 / tm.ticks_per_second;
         double latency = 1.0 / tm.reports_per_second;
         double increment = double(tm.min_clock_step) / tm.ticks_per_second;
-        boost::format fmt("  Total profiling time:     %s\n  Clock resolution:         %s (%s)\n  Clock latency:            %s\n  Smallest clock increment: %s %s\n\n");
+        boost::format fmt("  Total profiling time:                %s\n"
+                          "  Clock resolution:                    %s (%s)\n"
+                          "  Clock latency:                       %s\n"
+                          "  Smallest measured clock increment:   %s %s\n"
+                          "  Method used to obtain time:          %s\n"
+                          "  Method used to synchronize profiler: %s\n\n");
         fmt % stringize(total, "s", 0, false)
             % stringize(resolution, "s/tick", 0, false)
             % stringize(double(tm.ticks_per_second), "Hz", 0, false)
             % stringize(latency, "s", 0, false)
             % stringize(increment, "s", 0, false)
-            % (tm.clock_step_cpu_limited ? "(CPU bound)" : "(not CPU bound)");
+            % (tm.clock_step_cpu_limited ? "(CPU bound)" : "(not CPU bound)")
+            % detail::ticks_method_description
+            % detail::semaphore_method_description;
         stream << fmt;
 
         if (reports.empty())
@@ -111,10 +119,11 @@ namespace boost { namespace profiler { namespace detail
             BOOST_FOREACH(const report &r, reports)
                 max_len = (std::max)(strlen(r.name), max_len);
 
-            stream << boost::format("   #%sName    Total      Avg      Exc   ExcAvg   Hitcount  Location\n") % std::string(max_len - 2, ' ');
-            stream << boost::format("  %s\n") % std::string(65 + max_len, '=');
+            stream << boost::format("   #%sName    Total      Avg      Exc   ExcAvg  Total%%    Exc%% ExcSum%%  Hitcount  Location\n") % std::string(max_len - 2, ' ');
+            stream << boost::format("  %s\n") % std::string(80 + max_len, '=');
 
             size_t index = 1;
+            double total_exclusive_time_sum = 0;
             BOOST_FOREACH(const report &r, reports)
             {
                 
@@ -126,13 +135,18 @@ namespace boost { namespace profiler { namespace detail
                 bool approx = r.average_time < approx_threshold;
                 bool approx_exc = r.average_exclusive_time <  approx_threshold;
 
-                boost::format fmt("%4d. %s  %s  %s  %s  %s %9dx  %s(%d)");
+                total_exclusive_time_sum += r.total_exclusive_time_fraction;
+
+                boost::format fmt("%4d. %s  %s  %s  %s  %s  %5.1f%%  %5.1f%%  %5.1f%% %9dx  %s(%d)");
                 fmt % index 
                     % name 
                     % stringize(r.total_time, "s", 7, approx)
                     % stringize(r.average_time, "s", 7, approx)
                     % stringize(r.total_exclusive_time, "s", 7, approx_exc)
                     % stringize(r.average_exclusive_time, "s", 7, approx_exc)
+                    % (r.total_time_fraction * 100)
+                    % (r.total_exclusive_time_fraction * 100)
+                    % (total_exclusive_time_sum * 100)
                     % r.hit_count
                     % r.file
                     % r.line;

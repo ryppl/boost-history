@@ -3,7 +3,6 @@
 
 #include <boost/profiler/detail/semaphore.hpp>
 #include <boost/profiler/detail/timer.hpp>
-#include <boost/profiler/detail/iterator.hpp>
 #include <vector>
 #include <ostream>
 
@@ -12,16 +11,19 @@ namespace boost { namespace profiler { namespace detail
 
     struct entry;
     class point;
+    class iterator;
     
     class context
     {
+        friend class iterator;
         friend void start(point &, context &);
         friend void stop();
     public:
         context(const char *name);
-        iterator begin();
-        iterator end();
-        template<class Ch> void dump(std::basic_ostream<Ch> &stream);
+        iterator begin() const;
+        iterator end() const;
+        double total_profiling_time() const;
+        template<class Ch> void dump(std::basic_ostream<Ch> &stream) const;
     private:
         const char *m_name;
         tick_t m_earliest, m_latest;
@@ -35,14 +37,13 @@ namespace boost { namespace profiler { namespace detail
     {
     }
 
-    inline iterator context::begin()
+    inline double context::total_profiling_time() const
     {
-        return iterator(m_entries, 0);
-    }
-
-    inline iterator context::end()
-    {
-        return iterator(m_entries, m_entries.size());
+        const timer_metrics &tm = get_timer_metrics();
+        if (m_latest == (std::numeric_limits<tick_t>::max)())
+            return 0;
+        else
+            return double(m_latest - m_earliest) / tm.ticks_per_second;
     }
 
     inline context &default_context()

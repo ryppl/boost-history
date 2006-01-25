@@ -1,6 +1,7 @@
-#define _SCL_SECURE_NO_DEPRECATE
+//#define _SCL_SECURE_NO_DEPRECATE
+//#define BOOST_PROFILER_DISABLE
 #include <boost/profiler.hpp>
-#include <iostream>
+//#include <iostream>
 
 int fact2(int n)
 {

@@ -1,12 +1,14 @@
-#define _SCL_SECURE_NO_DEPRECATE
+//#define BOOST_PROFILER_DISABLE
+//#define _SCL_SECURE_NO_DEPRECATE
 #include <boost/profiler.hpp>
 #include <iostream>
+#include <fstream>
 #include <cmath>
 
 namespace
 {
-    boost::profiler::context ctx1("ctx1");
-    boost::profiler::context ctx2("ctx2");
+    boost::profiler::detail::context ctx1("ctx1");
+    boost::profiler::detail::context ctx2("ctx2");
 }
 
 inline void busy_delay(double seconds)
@@ -41,7 +43,7 @@ void delay(boost::profiler::tick_t d)
 int main()
 {
     fact2(10);
-    fact(10);
+    //fact(10);
     {
         BOOST_PROFILER_SCOPE("bd");     
         busy_delay(1);
@@ -53,9 +55,8 @@ int main()
         busy_delay(1);
         BOOST_PROFILER_STOP();
     }
-    boost::profiler::iterator b = boost::profiler::default_context().begin();
-    boost::profiler::iterator e = boost::profiler::default_context().end();
-    for (; b != e; ++b)
-        std::cout << b->name << "\n";
-    std::cout << boost::profiler::default_context();
+    
+    std::ofstream s("c:\\a.txt");
+    s << boost::profiler::current_context();
+
 }

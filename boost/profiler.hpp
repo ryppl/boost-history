@@ -3,6 +3,7 @@
 
 #include <boost/profiler/detail/context.hpp>
 #include <boost/profiler/detail/context_dump.hpp>
+#include <boost/profiler/detail/context_iterators.hpp>
 #include <boost/profiler/detail/macros.hpp>
 
 #endif

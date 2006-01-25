@@ -7,6 +7,7 @@ namespace boost { namespace profiler { namespace detail
 {
 
     typedef std::clock_t tick_t;
+    static const char *ticks_method_description = "std::clock()";
     
     inline tick_t ticks()
     {

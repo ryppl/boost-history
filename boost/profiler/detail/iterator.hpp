@@ -1,6 +1,7 @@
 #ifndef BOOST_PROFILER_DETAIL_ITERATOR_HPP_INCLUDED
 #define BOOST_PROFILER_DETAIL_ITERATOR_HPP_INCLUDED
 
+#include <boost/profiler/detail/context.hpp>
 #include <boost/profiler/detail/report.hpp>
 #include <boost/profiler/detail/entry.hpp>
 #include <boost/iterator/iterator_facade.hpp>
@@ -21,50 +22,49 @@ namespace boost { namespace profiler { namespace detail
     public:
         iterator();
     private:
-        iterator(const std::vector<entry> &entries, std::vector<entry>::size_type index);
+        iterator(const context &c, size_t index);
         void increment();
         bool equal(const iterator &rhs) const;
         report dereference() const;
         void skip();
-        const std::vector<entry> *m_entries;
-        std::vector<entry>::size_type m_index;
+        const context *m_context;
+        size_t m_index;
     };
     
     inline iterator::iterator():
-        m_entries(0)
+        m_context(0)
     {
     }
 
-    inline iterator::iterator(const std::vector<entry> &entries, 
-             std::vector<entry>::size_type index):
-       m_entries(&entries), m_index(index)
+    inline iterator::iterator(const context &c, size_t index):
+       m_context(&c), m_index(index)
     {
         skip();
     }
 
     inline void iterator::increment()
     {
-        BOOST_ASSERT(m_entries && m_index < m_entries->size());
+        BOOST_ASSERT(m_context && m_index < m_context->m_entries.size());
         ++m_index;
         skip();
     }
 
     inline bool iterator::equal(const iterator &rhs) const
     {
-        BOOST_ASSERT(m_entries && m_entries == rhs.m_entries);
+        BOOST_ASSERT(m_context && m_context == rhs.m_context);
         return m_index == rhs.m_index;
     }
 
     inline report iterator::dereference() const
     {
-        BOOST_ASSERT(m_entries && m_index < m_entries->size());
-        const entry &e = (*m_entries)[m_index];
-        return report(e);
+        BOOST_ASSERT(m_context && m_index < m_context->m_entries.size());
+        const entry &e = m_context->m_entries[m_index];
+        return report(e, m_context->total_profiling_time());
     }
 
     inline void iterator::skip()
     {
-        while (m_index < m_entries->size() && !(*m_entries)[m_index].p)
+        while (m_index < m_context->m_entries.size() && !m_context->m_entries[m_index].p)
             ++m_index;
     }
 

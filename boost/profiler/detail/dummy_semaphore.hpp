@@ -14,6 +14,7 @@ namespace boost { namespace profiler { namespace detail
 {
 
     typedef int semaphore_t;
+    static const char *semaphore_method_description = "no synchronization (not thread safe)";
     
     inline void acquire_semaphore(semaphore_t &semaphore)
     {
