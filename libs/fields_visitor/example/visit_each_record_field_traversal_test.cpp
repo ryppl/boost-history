@@ -2,7 +2,7 @@
 #include <boost/mpl/vector_c.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/empty_base.hpp>
-#include <boost/mpl/arg.hpp>
+#include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/for_each.hpp>
 #include "boost/fields_visitor/fields_visitor.hpp"
 #include "boost/io/filters/mout.hpp"
@@ -10,11 +10,16 @@
 namespace boost {
   template<typename Visitor, typename Record>
   void visit_each(Visitor& a_visitor,Record& a_record, int)
+  /**@brief visit_each using Visitor::visit_fields instead of
+   *  explicit user coding of calls to:
+   *    visit_each(a_visitor,a_record.<some_field>)
+   *  for some subobject, <some_field>, of a_record.
+   */
   {
     mout()<<"visit_each::record_number="<<a_record.field_number()<<"\n";
-    a_visitor(a_record);
+    a_visitor(a_record); //visit the record.
     ++mout();
-    a_visitor.visit_fields(a_record);
+    a_visitor.visit_fields(a_record); //visit the record's fields.
     --mout();
   }
 }
@@ -53,19 +58,24 @@ visit_general_field
     }
 
       template
-      < typename CurrentField
+      < typename CurrentRecord
       >
       void
-    visit_fields(CurrentField& a_field)
+    visit_fields(CurrentRecord& a_record)
     {
             typedef 
-          typename boost::fields_visitor::field_iterator_of<CrtcVisitor,CurrentField> 
+          typename boost::fields_visitor::field_iterator_of<CrtcVisitor,CurrentRecord> 
         iter_type;
-        iter_type a_iter(&a_field);
+        iter_type a_iter(&a_record);
         CrtcVisitor& a_visitor=static_cast<CrtcVisitor&>(*this);
         for(; !a_iter.empty(); a_iter.increment())
         {
-            a_iter.accept_visitor(a_visitor);
+            //a_iter is currently at some field, a_field, of a_record.
+            //Assume the type of a_field, is  CurrentField.
+            //The following accept_visitor call forwards the call to 
+            //  a_visitor.CrtcVisitor::visit_field(CurrentField&)
+            //with a_field as the argument.
+            a_iter.accept_visitor(a_visitor); 
         }
     }
       template
@@ -89,6 +99,11 @@ visit_specific_field
 /**@brief
  *  Adds (to VisitOtherFields) ability to visit 
  *  _specifically_ a field with id=FieldId::value
+ *
+ *  This avoids the need to specialize visit_each for each different
+ *  host (i.e. the Record template parameter to visit_each).
+ *  Instead, for each host, there's a partial specialization of this 
+ *  template on the 2nd template argument, FieldId.
  */
 {
         using
@@ -116,16 +131,15 @@ visited_indices_type
 //indices of fields visited specificly
 ;
 
+using namespace boost::mpl::placeholders;
+
   struct
 visit_all_fields
   : public
     boost::mpl::fold
     < visited_indices_type
     , visit_general_field<visit_all_fields>
-    , visit_specific_field
-      < boost::mpl::arg<1>
-      , boost::mpl::arg<2>
-      >
+    , visit_specific_field< _1, _2>
     >::type
 {
 };
@@ -135,7 +149,17 @@ visit_all_fields
   >
   struct
 fields
+/**@brief
+ *  Just a "generic" field of a "generic" record type.
+ *  The template arg is just used to distinguish it from other
+ *  "generic" fields.
+ */
   : public boost::fields_visitor::field_registrar<visit_all_fields>
+    //^_IF_, for some Record, a descriptor is being built, then
+    //field_registrar registers the offset of this with respect to
+    //start of Record in that Record's descriptor (Pls see in source
+    //comments in boost/fields_visitor/fields_visitor.hpp for further
+    //details).
 {
         typedef
       boost::fields_visitor::field_registrar<visit_all_fields>
@@ -198,10 +222,7 @@ record
       boost::mpl::fold
       < contained_indices_type
       , boost::mpl::empty_base
-      , inherit_left
-        < boost::mpl::arg<1>
-        , boost::mpl::arg<2>
-        >
+      , inherit_left< _1, _2>
       >::type
     fields_type
     //type of tuple of contained fields
