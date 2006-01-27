@@ -45,12 +45,19 @@ struct Ctor0Arg
 
    self_t& operator++()       {  return *this;  }
    self_t  operator++(int)    {  return *this;  }
-   void operator()(T *mem) const {  if(!is_trivial)  new(mem)T;  }
-
-#if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564))
-private:
-    char dummy_; // BCB would by default use 8 B for empty structure
-#endif
+   static inline void construct(T *mem, boost::mpl::false_)
+   { new(mem)T;  }
+   static inline void construct(T *mem, boost::mpl::true_)
+   {}
+   void operator()(T *mem) const 
+   {
+      typedef boost::mpl::bool_<is_trivial> Result;
+      Ctor0Arg<T>::construct(mem, Result());
+   }
+   #if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x564))
+   private:
+   char dummy_; // BCB would by default use 8 B for empty structure
+   #endif
 };
 
 #ifndef BOOST_SHMEM_MAX_CONSTRUCTOR_PARAMETERS
@@ -58,15 +65,16 @@ private:
 #endif
 
 ////////////////////////////////////////////////////////////////
-//       What the macro should generate (n == 2):
-//      template<class T, bool param_or_it, class P1, class P2>
-//      struct Ctor2Arg
+//    What the macro should generate (n == 2):
+//
+//    template<class T, bool param_or_it, class P1, class P2>
+//    struct Ctor2Arg
 //    {
 //       enum { is_trivial = false };
 //       typedef Ctor2Arg self_t;
 //
 //       void do_increment(boost::mpl::false_)
-//          { ++m_p1; ++m_p2;  }
+//       { ++m_p1; ++m_p2;  }
 //
 //       void do_increment(boost::mpl::true_){}
 //
@@ -83,7 +91,7 @@ private:
 //          : p1((P1 &)p_1), p2((P2 &)p_2) {}
 //
 //       void operator()(T* mem) const 
-//          {  new (mem) T(m_p1, m_p2); }
+//       {  new (mem) T(m_p1, m_p2); }
 //    private:
 //       P1 &m_p1; P2 &m_p2;
 //    };
@@ -228,7 +236,7 @@ class named_proxy
    //////////////////////////////////////////////////////////////////////////
 
    //This operator allows --> named_new("Name")[3]; <-- syntax
-   const named_proxy &operator [](std::size_t num) const
+   const named_proxy &operator[](std::size_t num) const
       {  m_num *= num; return *this;  }
 };
 
