@@ -26,15 +26,14 @@ namespace boost { namespace shmem {
 template <class MapConfig>
 struct flat_map_index_aux
 {
-   typedef typename MapConfig::key_type                  key_type;
-   typedef typename MapConfig::mapped_type               mapped_type;
-   typedef typename MapConfig::segment_manager           segment_manager;
-   typedef std::less<key_type>                           key_less;
-   typedef std::pair<key_type, mapped_type>              value_type;
-   typedef boost::shmem::allocator
-            <value_type, segment_manager>                allocator_type;
-   typedef boost::shmem::flat_map<key_type,  mapped_type,
-                                  key_less, allocator_type>   index_t;
+   typedef typename MapConfig::key_type            key_type;
+   typedef typename MapConfig::mapped_type         mapped_type;
+   typedef typename MapConfig::segment_manager     segment_manager;
+   typedef std::less<key_type>                     key_less;
+   typedef std::pair<key_type, mapped_type>        value_type;
+   typedef allocator<value_type, segment_manager>  allocator_type;
+   typedef flat_map<key_type,  mapped_type,
+                    key_less, allocator_type>      index_t;
 };
 
 /*!Index type based in flat_map. Just derives from flat_map and
@@ -48,17 +47,18 @@ class flat_map_index
    typedef typename index_aux::index_t          base_type;
    typedef typename index_aux::segment_manager  segment_manager;
 
- public:
-   /*!Constructor. Takes a pointer to the memory
-      allocation algorithm. Can throw*/
+   public:
+   /*!Constructor. Takes a pointer to the
+      segment manager. Can throw*/
    flat_map_index(segment_manager *segment_mngr)
       : base_type(typename index_aux::key_less(),
-                  segment_mngr){}
+                  typename index_aux::allocator_type(segment_mngr))
+   {}
 
    /*!This reserves memory to optimize the insertion of n
       elements in the index*/
    void reserve(std::size_t n)
-      {  base_type::reserve(n);  }
+   {  base_type::reserve(n);  }
 };
 
 }}   //namespace boost { namespace shmem

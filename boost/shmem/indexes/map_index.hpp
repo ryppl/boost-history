@@ -51,8 +51,8 @@ class map_index
    typedef typename MapConfig::segment_manager  segment_manager;
 
  public:
-   /*!Constructor. Takes a pointer to the memory 
-      allocation algorithm. Can throw*/
+   /*!Constructor. Takes a pointer to the
+      segment manager. Can throw*/
    map_index(segment_manager *segment_mngr)
       : base_type(typename index_aux::key_less(),
                   segment_mngr){}
