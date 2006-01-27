@@ -4,8 +4,8 @@
 <title> Basic Shmem classes</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
-<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
-<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 0.9">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 0.9">
 <link rel="prev" href="concepts.html" title=" Concepts and definitions">
 <link rel="next" href="offset_ptr.html" title=" A shared memory pointer: offset_ptr">
 </head>
@@ -39,7 +39,7 @@
 These classes provide basic operating system resources to build higher
 level inter-process communications. In named objects, like shared memory,
 memory-mapped files, and named semaphore and mutex, the semantic of the
-name used to construct the object is operating system dependant. All basic
+name used to construct the object is operating system dependent. All basic
 objects in Shmem share the same namespace, so a we can't create a named mutex
 called "MyObject" and shared memory called also "MyObject". The user should 
 choose separate names for both objects.</p>
@@ -253,7 +253,7 @@ and functions. The reason for this duplication is that Boost Threads checks for 
 builds when including headers, and emits a compilation error when a single threaded
 process includes xtime or scoped_lock classes. Since Shmem can be used between
 single threaded processes, that functionality is replicated in Shmem. If Shmem
-is reviewed and accepted, this scoped lock and xtime structs could be independized
+is reviewed and accepted, this scoped lock and xtime structs could be independent
 from multithreaded builds so that the same locks and xtime could beused by 
 Boost.Thread and Shmem.</p>
 <p>
@@ -363,57 +363,57 @@ It can also guarantee atomicity for object creation and initialization.</p>
 <p>
 named_semaphore can't be placed in shared memory, each process must have 
 its own named_semaphore instance.</p>
-<p>
+<p></p>
+<pre class="programlisting"><code class="literal"><span class="comment">/*!A semaphore with a global name, so it can be found from different 
+   processes. Allows several resource sharing patterns and efficient 
+   acknowledgment mechanisms.*/</span><span class="keyword">
+class</span><span class="identifier"> named_semaphore</span><span class="special"> :</span><span class="keyword"> private</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">noncopyable</span><span class="special">
+{</span><span class="keyword">
+public</span><span class="special">:</span><span class="comment">
+   /*!Initializes member variables. Does not throw*/</span><span class="identifier">
+   named_semaphore</span><span class="special">();</span><span class="comment">
 
-   /*!A semaphore with a global name, so it can be found from different 
-      processes. Allows several resource sharing patterns and efficient 
-      acknowledgment mechanisms.*/
-   class named_semaphore : private boost::noncopyable
-   {
-   public:
-      <span class="emphasis"><em>*!Initializes member variables. Does not throw*</em></span>
-      named_semaphore();</p>
-<pre class="programlisting"><code class="literal"><span class="comment">/*!Calls close(). Does not throw*/</span><span class="special">
-~</span><span class="identifier">named_semaphore</span><span class="special">();</span><span class="comment">
+   /*!Calls close(). Does not throw*/</span><span class="special">
+   ~</span><span class="identifier">named_semaphore</span><span class="special">();</span><span class="comment">
 
-/*!Creates a global semaphore with a name, and an initial count. 
-   It will return an false if the semaphore is already created. 
-   Does not throw*/</span><span class="keyword">
-bool</span><span class="identifier"> create</span><span class="special">(</span><span class="keyword">const</span><span class="keyword"> char</span><span class="special"> *</span><span class="identifier">name</span><span class="special">,</span><span class="keyword"> int</span><span class="identifier"> initialCount</span><span class="special">);</span><span class="comment">
+   /*!Creates a global semaphore with a name, and an initial count. 
+      It will return an false if the semaphore is already created. 
+      Does not throw*/</span><span class="keyword">
+   bool</span><span class="identifier"> create</span><span class="special">(</span><span class="keyword">const</span><span class="keyword"> char</span><span class="special"> *</span><span class="identifier">name</span><span class="special">,</span><span class="keyword"> int</span><span class="identifier"> initialCount</span><span class="special">);</span><span class="comment">
 
-/*!Opens or creates a global semaphore with a name, and an initial count. 
-   If the semaphore is created, this call is equivalent to create(). 
-   If the semaphore is already created, this call is equivalent to open()
-   and initialCount is ignored. Does not throw*/</span><span class="keyword">
-bool</span><span class="identifier"> open_or_create</span><span class="special">(</span><span class="keyword">const</span><span class="keyword"> char</span><span class="special"> *</span><span class="identifier">name</span><span class="special">,</span><span class="keyword"> int</span><span class="identifier"> initialCount</span><span class="special">);</span><span class="comment">
+   /*!Opens or creates a global semaphore with a name, and an initial count. 
+      If the semaphore is created, this call is equivalent to create(). 
+      If the semaphore is already created, this call is equivalent to open()
+      and initialCount is ignored. Does not throw*/</span><span class="keyword">
+   bool</span><span class="identifier"> open_or_create</span><span class="special">(</span><span class="keyword">const</span><span class="keyword"> char</span><span class="special"> *</span><span class="identifier">name</span><span class="special">,</span><span class="keyword"> int</span><span class="identifier"> initialCount</span><span class="special">);</span><span class="comment">
 
-/*!Opens a global semaphore with a name if that semaphore is previously.
-   created. If it is not previously created this function return false.
-   Does not throw*/</span><span class="keyword">
-bool</span><span class="identifier"> open</span><span class="special">(</span><span class="keyword">const</span><span class="keyword"> char</span><span class="special"> *</span><span class="identifier">name</span><span class="special">);</span><span class="comment">
+   /*!Opens a global semaphore with a name if that semaphore is previously.
+      created. If it is not previously created this function return false.
+      Does not throw*/</span><span class="keyword">
+   bool</span><span class="identifier"> open</span><span class="special">(</span><span class="keyword">const</span><span class="keyword"> char</span><span class="special"> *</span><span class="identifier">name</span><span class="special">);</span><span class="comment">
 
-/*!Frees system resources. Does not throw*/</span><span class="keyword">
-void</span><span class="identifier"> close</span><span class="special">();</span><span class="comment">
+   /*!Frees system resources. Does not throw*/</span><span class="keyword">
+   void</span><span class="identifier"> close</span><span class="special">();</span><span class="comment">
 
-/*!Increments semaphore count. If there is any waiting process, wakes
-   up the process. If there is an error throws sem_exception*/</span><span class="keyword">
-void</span><span class="identifier"> post</span><span class="special">();</span><span class="comment">
+   /*!Increments semaphore count. If there is any waiting process, wakes
+      up the process. If there is an error throws sem_exception*/</span><span class="keyword">
+   void</span><span class="identifier"> post</span><span class="special">();</span><span class="comment">
 
-/*!Waits for the semaphore to the posted if count is 0. 
-   If there is an error throws sem_exception*/</span><span class="keyword">
-void</span><span class="identifier"> wait</span><span class="special">();</span><span class="comment">
+   /*!Waits for the semaphore to the posted if count is 0. 
+      If there is an error throws sem_exception*/</span><span class="keyword">
+   void</span><span class="identifier"> wait</span><span class="special">();</span><span class="comment">
 
-/*!Waits for the semaphore to the posted if count is 0 or until
-   timeout expires. Returns true if wait was ok, false if timeout
-   expires. If there is an error throws sem_exception*/</span><span class="keyword">
-bool</span><span class="identifier"> timed_wait</span><span class="special">(</span><span class="keyword">const</span><span class="identifier"> xtime</span><span class="special">&amp;</span><span class="identifier"> xt</span><span class="special">);</span><span class="comment">
+   /*!Waits for the semaphore to the posted if count is 0 or until
+      timeout expires. Returns true if wait was ok, false if timeout
+      expires. If there is an error throws sem_exception*/</span><span class="keyword">
+   bool</span><span class="identifier"> timed_wait</span><span class="special">(</span><span class="keyword">const</span><span class="identifier"> xtime</span><span class="special">&amp;</span><span class="identifier"> xt</span><span class="special">);</span><span class="comment">
 
-/*!Tries to wait for the semaphore to the posted if count is 0 or until
-   timeout expires. Returns true if wait was ok, false if wait was not
-   successful. If there is an error throws sem_exception*/</span><span class="keyword">
-bool</span><span class="identifier"> try_wait</span><span class="special">();</span><span class="comment">
-//. . .
-</span></code></pre>
+   /*!Tries to wait for the semaphore to the posted if count is 0 or until
+      timeout expires. Returns true if wait was ok, false if wait was not
+      successful. If there is an error throws sem_exception*/</span><span class="keyword">
+   bool</span><span class="identifier"> try_wait</span><span class="special">();</span><span class="comment">
+   //. . .
+</span><span class="special">};</span></code></pre>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">

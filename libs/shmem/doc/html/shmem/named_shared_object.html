@@ -4,8 +4,8 @@
 <title> Named shared memory object allocation</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
-<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
-<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 0.9">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 0.9">
 <link rel="prev" href="offset_ptr.html" title=" A shared memory pointer: offset_ptr">
 <link rel="next" href="stl_allocators.html" title=" Shmem STL compatible allocators">
 </head>
@@ -322,8 +322,8 @@ If a basic raw-byte allocation is needed from a shared memory segment, for
 example, to implement top-level inter-process communications, this class
 offers <span class="bold"><strong>allocate</strong></span> and <span class="bold"><strong>deallocate</strong></span> functions. The allocation function
 comes with throwing and no throwing versions. Throwing version throws 
-boost::shmem::bad_alloc if there is no more memory and the non-throwing
-version returns 0 pointer.</p>
+boost::shmem::bad_alloc (which derives from std::bad_alloc)if there is no
+more memory and the non-throwing version returns 0 pointer.</p>
 <p></p>
 <pre class="programlisting"><code class="literal"><span class="comment">//Front-end that allocates portions of a shared memory segment
 //with the default shared memory segment management algorithm
@@ -424,7 +424,7 @@ are available to construct anonymous objects. To allocate an anonymous objects, 
 must use "boost::shmem::anonymous_instance" object instead of a name:</p>
 <p></p>
 <pre class="programlisting"><code class="literal"><span class="identifier">MyType</span><span class="special"> *</span><span class="identifier">ptr</span><span class="special"> =</span><span class="identifier"> named_shared_object</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;(</span><span class="identifier">anonymous_instance</span><span class="special">)</span><span class="special"> (</span><span class="identifier">par1</span><span class="special">,</span><span class="identifier"> par2</span><span class="special">...);</span><span class="comment">
-// Other construct variants can also be used (including non-throwing ones)
+//Other construct variants can also be used (including non-throwing ones)
 //We can only destroy the anonymous object via pointer
 </span><span class="identifier">named_shared_object</span><span class="special">.</span><span class="identifier">destroy_ptr</span><span class="special">(</span><span class="identifier">ptr</span><span class="special">);</span></code></pre>
 <p>
@@ -485,7 +485,7 @@ from calling new[] while the map thread is searching the place where it has to i
 new object. The synchronization does happen when once the map finds the correct place
 it has to allocate raw memory to insert the value.</p>
 <p>
-This means that if we create a lot of named objects, while doing a new creatio/search
+This means that if we create a lot of named objects, while doing a new creation/search
 we only block other creation/searches from other processes but we don't block another 
 process if that process is inserting elements in a shared memory vector.</p>
 </div>
@@ -509,11 +509,11 @@ memory use, and memory allocation patterns. Shmem offers 3 index types right now
    time and in run-time we just need searches.
 </li>
 <li>
-<span class="bold"><strong>boost::shmem::map_index</strong></span>: Based on boost::shmem::map, a shared memory version of std::map.
-   Since it's a node based container, it has no reallocations, the tree must be just 
-   rebalanced somtimes. Offers equilibrated insertion/deletion/search times with
-   a little more overhead per node comparing to <span class="bold"><strong>boost::shmem::flat_map_index</strong></span>. Ideal
-   when searches/insertions/deletions are in random order.
+<span class="bold"><strong>boost::shmem::map_index</strong></span>: Based on boost::shmem::map, a shared memory version of
+   std::map. Since it's a node based container, it has no reallocations, the tree
+   must be just    rebalanced sometimes. Offers equilibrated insertion/deletion/search
+   times with more overhead per node comparing to <span class="bold"><strong>boost::shmem::flat_map_index</strong></span>.
+   Ideal when searches/insertions/deletions are in random order.
 </li>
 <li>
 <span class="bold"><strong>boost::shmem::null_index</strong></span>: This index is for people using basic_named_shared_object

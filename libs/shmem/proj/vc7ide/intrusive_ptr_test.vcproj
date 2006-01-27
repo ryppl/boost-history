@@ -35,7 +35,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="winmm.lib"
-				OutputFile="$(OutDir)/intersegment_ptr_test_d.exe"
+				OutputFile="$(OutDir)/intrusive_ptr_test_d.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="C:\Boost\lib;../../Bin/Win32"
 				GenerateDebugInformation="TRUE"

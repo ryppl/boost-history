@@ -4,8 +4,8 @@
 <title> Future Improvements...</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
-<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
-<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 0.9">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 0.9">
 <link rel="prev" href="open_issues.html" title=" Open Issues">
 <link rel="next" href="thanks_to.html" title=" Thanks to...">
 </head>
@@ -42,8 +42,8 @@ some Shmem code that can be much better. Let's see some ideas:</p>
 <p>
 Win32 version of shared mutexes and shared conditions are based on
 "spin and wait" atomic instructions. This leads to poor performance
-and does not manage any memory synchronization (memory model) or 
-priority inversions. We would need very serious help from threading 
+and does not manage any issues like priority inversions. 
+We would need very serious help from threading 
 experts on this. And I'm not sure that 
 this can be achieved in user-level software. Posix based implementations
 use PTHREAD_PROCESS_SHARED attribute to place mutexes in shared memory, so
@@ -71,7 +71,7 @@ Suggestions and help from memory management experts are welcome!</p>
 <div class="titlepage"><div><div><h3 class="title">
 <a name="shmem.future_objectnames"></a> Use of wide character names on Shmem basic resources</h3></div></div></div>
 <p>
-Currently Shmem only allows <span class="bold"><strong>char</strong></span> based names for basic synchronizationobjects. 
+Currently Shmem only allows <span class="bold"><strong>char</strong></span> based names for basic synchronization objects. 
 However, several operating systems use <span class="bold"><strong>wchar_t</strong></span> names for resources 
 (mapped files, for example). 
 In the future Shmem should try to present a portable narrow/wide char interface.
@@ -111,7 +111,7 @@ We should be able to construct boost::unordered_xxx family in shared memory,
 so that there is no code duplication in boost. So Shmem should cooperate with
 boost container developers instead of duplicating effort writing it's own containers.</p>
 <p>
-A very interesting project is making <span class="bold"><strong>multi_index</strong></span> ready for shared memory. This
+A very interesting project is making <span class="bold"><strong>boost::multi_index</strong></span> ready for shared memory. This
 could be a good basis for memory mapped data-bases. The work to achieve this, 
 however, can be huge. It would be interesting a collaboration with <span class="bold"><strong>Intrusive</strong></span> library
 to achieve shared memory intrusive containers.</p>

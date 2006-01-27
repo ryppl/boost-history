@@ -4,8 +4,8 @@
 <title> Shmem architecture and internals</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
-<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
-<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 0.9">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 0.9">
 <link rel="prev" href="shared_message_queue.html" title=" Process-shared message queue">
 <link rel="next" href="performance.html" title=" Performance of Shmem">
 </head>
@@ -109,8 +109,8 @@ is just a fixed size memory buffer.</p>
 The <span class="bold"><strong>memory manager</strong></span> is also a configuration point for the rest of the Shmem 
 framework since it defines two basic types as member typedefs:</p>
 <p></p>
-<pre class="programlisting"><code class="literal"><span class="keyword">typedef</span><span class="comment"> /*implementation dependant*/</span><span class="identifier"> void_pointer</span><span class="special">;</span><span class="keyword">
-typedef</span><span class="comment"> /*implementation dependant*/</span><span class="identifier"> mutex_family</span><span class="special">;</span></code></pre>
+<pre class="programlisting"><code class="literal"><span class="keyword">typedef</span><span class="comment"> /*implementation dependent*/</span><span class="identifier"> void_pointer</span><span class="special">;</span><span class="keyword">
+typedef</span><span class="comment"> /*implementation dependent*/</span><span class="identifier"> mutex_family</span><span class="special">;</span></code></pre>
 <p>
 The <code class="computeroutput"><span class="identifier">void_pointer</span></code> typedef defines the pointer type that will be used in the Shmem
 framework (segment manager, allocators, containers). If the memory algorithm is ready

@@ -29,15 +29,18 @@
 /*                                                               */
 /*****************************************************************/
 
-//Explicit instantiation to detect compilation errors
-template class boost::shmem::slist<int, std::allocator<int> >;
-
 using namespace boost::shmem;
+
+//Explicit instantiation to detect compilation errors
+template class slist<int, std::allocator<int> >;
 
 //We will work with narrow characters for shared memory objects
 //Alias <integer, 64 element per chunk> node allocator type
 typedef node_allocator<int, 64, named_shared_object::segment_manager>
    shmem_node_allocator_t;
+
+//Explicit instantiation to detect compilation errors
+template class slist<int, shmem_node_allocator_t>;
 
 //Alias slist types
 typedef slist<int, shmem_node_allocator_t>   MyShmSlist;
@@ -152,7 +155,3 @@ int main ()
    delete stdlist;
    return 0;
 }
-
-
-
-

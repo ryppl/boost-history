@@ -4,8 +4,8 @@
 <title> Shmem and containers in shared memory</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
-<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
-<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 0.9">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 0.9">
 <link rel="prev" href="stl_allocators.html" title=" Shmem STL compatible allocators">
 <link rel="next" href="customizing_boost_shmem.html" title=" Customizing Shmem">
 </head>
@@ -35,7 +35,7 @@
 <a name="shmem.stl_container_requirements"></a> Container requirements for Shmem allocators</h3></div></div></div>
 <p>
 Shmem STL compatible allocators offer a STL compatible allocator interface and 
-if they define their internal <span class="bold"><strong>pointer</strong></span> typedef as offset_ptr&lt;T&gt;, they can 
+if they define their internal <span class="bold"><strong>pointer</strong></span> typedef as a relative pointer, they can 
 be used to place STL containers in shared memory.</p>
 <p>
 However, as Scott Meyers mentions in his Effective STL 
@@ -259,7 +259,7 @@ int</span><span class="identifier"> main</span><span class="special"> ()</span><
 </span><span class="identifier">   MyShmString</span><span class="identifier"> mystring</span><span class="special">(</span><span class="identifier">charallocator</span><span class="special">);</span><span class="identifier">
    mystring</span><span class="special"> =</span><span class="string"> "this is my text"</span><span class="special">;</span><span class="comment">
 
-   //This vector is in only in this process (the pointer pointing to the
+   //This vector is only in this process (the pointer pointing to the
    //buffer that will hold the MyShmString-s is not in shared memory). 
    //But the buffer that will hold 10 MyShmString-s is allocated from 
    //shared memory using StringAllocator. Since strings use a shared 

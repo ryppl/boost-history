@@ -27,7 +27,7 @@ import testing ;
              <threading>multi
              <define>BOOST_ALL_NO_LIB=1
          : ## default build ##
-            release
+            debug
      ;
 
      test-suite "shmem"
@@ -38,7 +38,7 @@ import testing ;
            [ run data_test.cpp                     <template>boost_shmem_test_dll ]
            [ run deque_test.cpp                    <template>boost_shmem_test_dll ]
            [ run flat_tree_test.cpp                <template>boost_shmem_test_dll ]
-           [ run intersegment_ptr_test.cpp         <template>boost_shmem_test_dll ]
+           #[ run intersegment_ptr_test.cpp         <template>boost_shmem_test_dll ]
            [ run list_test.cpp                     <template>boost_shmem_test_dll ]
            [ run mmapped_file_test.cpp             <template>boost_shmem_test_dll ]
            [ run node_allocator_test.cpp           <template>boost_shmem_test_dll ]
@@ -47,11 +47,12 @@ import testing ;
            [ run shared_barrier_test.cpp           <template>boost_shmem_test_dll ]
            [ run shared_condition_test.cpp         <template>boost_shmem_test_dll ]
            [ run shared_message_queue_test.cpp     <template>boost_shmem_test_dll ]
-#           [ run shared_read_write_mutex_test.cpp  <template>boost_shmem_test_dll ]
+           #[ run shared_read_write_mutex_test.cpp  <template>boost_shmem_test_dll ]
            [ run slist_test.cpp                    <template>boost_shmem_test_dll ]
            [ run string_test.cpp                   <template>boost_shmem_test_dll ]
            [ run tree_test.cpp                     <template>boost_shmem_test_dll ]
            [ run user_buffer_test.cpp              <template>boost_shmem_test_dll ]
            [ run vectorstream_test.cpp             <template>boost_shmem_test_dll ]
+           [ run intrusive_ptr_test.cpp            <template>boost_shmem_test_dll ]
      ;
 }

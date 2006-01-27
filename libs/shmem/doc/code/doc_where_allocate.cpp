@@ -31,7 +31,7 @@
       MyShmString mystring(charallocator);
       mystring = "this is my text";
 
-      //This vector is in only in this process (the pointer pointing to the
+      //This vector is only in this process (the pointer pointing to the
       //buffer that will hold the MyShmString-s is not in shared memory). 
       //But the buffer that will hold 10 MyShmString-s is allocated from 
       //shared memory using StringAllocator. Since strings use a shared 

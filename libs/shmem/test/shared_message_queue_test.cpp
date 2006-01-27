@@ -31,7 +31,7 @@
 using namespace boost::shmem;
 
 //This test inserts messages with different priority and marks them with a 
-//time-stamp to check if receiver obtains highges priority messages first and
+//time-stamp to check if receiver obtains highgest priority messages first and
 //messages with same priority are received in fifo order
 bool test_priority_order()
 {
@@ -218,7 +218,7 @@ bool test_serialize_db()
 }
 
 static const int MsgSize = 10;
-static const int NumMsg  = 100000;
+static const int NumMsg  = 10000;
 static boost::shmem::shared_message_queue s_message_queue;
 static char msgsend [10];
 static char msgrecv [10];

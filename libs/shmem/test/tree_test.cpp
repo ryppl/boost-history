@@ -81,7 +81,9 @@ int main ()
    my_named_shared_object segment;
 
    //Create shared memory
-   segment.create(shMemName, memsize);
+   if(!segment.create(shMemName, memsize)){
+      return -1;
+   }
 
    segment.reserve_named_objects(100);
 

@@ -1,5 +1,5 @@
 [library Shmem
-    [version 2006-01-12]
+    [version 0.9]
     [authors [Gazta&ntilde;aga, Ion]]
     [copyright 2005- 2006 Ion Gazta&ntilde;aga]
     [purpose Shared memory utilities]
@@ -38,7 +38,7 @@ some STL compatible allocators that allow shared memory STL container
 placement. It also offers helper classes, such as offset pointers, 
 process shared mutexes, condition variables, and named semaphores.
 
-Library user can apply all STL algorithms and utilities with 
+Library users can apply all STL algorithms and utilities with 
 created shared memory objects. Shmem also wants to present 
 a portable implementation, unifying UNIX and Windows shared 
 memory object creation, providing simple wrapper classes. 
@@ -175,7 +175,7 @@ In receiver process one just could write the following lines:
 
 You want to create objects in a shared memory segment, giving a string name to them so that 
 any other process can find, use and delete them from the segment when the objects are not 
-needed anymore. Just write this code in one process:
+needed anymore. Just write in one process:
 
 [/ shmem_doc_name_allocA ]
 [c++]
@@ -271,7 +271,7 @@ In other process, while the first process is alive, execute the following:
 Shmem offers offset_ptr smart pointer family 
 as an offset pointer that stores the distance between the address of 
 the offset pointer itself and the address of the pointed object.  
-When this pointer is placed in a shared memory segment, it 
+When offset_ptr is placed in a shared memory segment, it 
 can point safely objects stored in the same shared 
 memory segment, even if the segment is mapped in 
 different base addresses in different processes.
@@ -336,15 +336,15 @@ so you can avoid these manual data structures just like with standard containers
 [section:qg_shmem_container Creating vectors in shared memory with different base addresses]
 
 To place STL-compatible containers in shared memory, Shmem allocators
-define allocator<T>::pointer typedef as offset_ptr<T>, instead of T*.
+define allocator<T>::pointer typedef as a relative pointer type, instead of T*.
 Although the use of smart pointers is allowed by the standard, 
 current STL implementations can't handle Shmem shared memory STL 
 compatible allocators. 
 
 Until STL implementations fix this and for older STL owners, 
 Shmem provides STL compatible containers. 
-All these containers can be safely placed 
-in shared memory. For this, we need to obtain STL compatible 
+All Shmem containers can be safely placed 
+in shared memory, if we obtain STL compatible 
 shared memory allocators and pass them to the Shmem containers
 in constructors:
       
@@ -508,14 +508,12 @@ base address.
 However, without this capability, it is quite complicated to
 design a growing shared memory allocator, one that allocates
 new shared memory segments when a segment is full of objects.
-To achieve this, it would be necessary to maintain a map with the
-base address for each process in the shared memory, and a correct
-design would be difficult. For this reason, this first version of
-this library will be limited to a shared memory segment, and its
-size must be calculated beforehand by the user. If there is no more
+For this reason, this first version of this library will be
+limited to a shared memory segment, and its size must be
+calculated beforehand by the user. If there is no more
 memory, an exception will be thrown. This is very performance
 friendly, but it is also a limiting factor. In near future, there
-is a plan to add growing capacity to the allocator.
+is a plan to add growing capacity to Shmem.
 
 [endsect]
 
@@ -714,7 +712,7 @@ the *segment manager* (shared memory, memory mapped files...)
 These classes provide basic operating system resources to build higher
 level inter-process communications. In named objects, like shared memory,
 memory-mapped files, and named semaphore and mutex, the semantic of the
-name used to construct the object is operating system dependant. All basic
+name used to construct the object is operating system dependent. All basic
 objects in Shmem share the same namespace, so a we can't create a named mutex
 called "MyObject" and shared memory called also "MyObject". The user should 
 choose separate names for both objects.
@@ -933,7 +931,7 @@ and functions. The reason for this duplication is that Boost Threads checks for 
 builds when including headers, and emits a compilation error when a single threaded
 process includes xtime or scoped_lock classes. Since Shmem can be used between
 single threaded processes, that functionality is replicated in Shmem. If Shmem
-is reviewed and accepted, this scoped lock and xtime structs could be independized
+is reviewed and accepted, this scoped lock and xtime structs could be independent
 from multithreaded builds so that the same locks and xtime could beused by 
 Boost.Thread and Shmem.     
 
@@ -1049,6 +1047,7 @@ named_semaphore can't be placed in shared memory, each process must have
 its own named_semaphore instance.
 
 [c++]
+
    /*!A semaphore with a global name, so it can be found from different 
       processes. Allows several resource sharing patterns and efficient 
       acknowledgment mechanisms.*/
@@ -1639,8 +1638,8 @@ If a basic raw-byte allocation is needed from a shared memory segment, for
 example, to implement top-level inter-process communications, this class
 offers *allocate* and *deallocate* functions. The allocation function
 comes with throwing and no throwing versions. Throwing version throws 
-boost::shmem::bad_alloc if there is no more memory and the non-throwing
-version returns 0 pointer.
+boost::shmem::bad_alloc (which derives from std::bad_alloc)if there is no
+more memory and the non-throwing version returns 0 pointer.
 
 [c++]
 
@@ -1752,7 +1751,7 @@ must use "boost::shmem::anonymous_instance" object instead of a name:
 [c++]
 
    MyType *ptr = named_shared_object.construct<MyType>(anonymous_instance) (par1, par2...);
-   // Other construct variants can also be used (including non-throwing ones)
+   //Other construct variants can also be used (including non-throwing ones)
    //We can only destroy the anonymous object via pointer
    named_shared_object.destroy_ptr(ptr);
 
@@ -1819,7 +1818,7 @@ from calling new[] while the map thread is searching the place where it has to i
 new object. The synchronization does happen when once the map finds the correct place
 it has to allocate raw memory to insert the value.
 
-This means that if we create a lot of named objects, while doing a new creatio/search
+This means that if we create a lot of named objects, while doing a new creation/search
 we only block other creation/searches from other processes but we don't block another 
 process if that process is inserting elements in a shared memory vector.
 
@@ -1841,11 +1840,11 @@ memory use, and memory allocation patterns. Shmem offers 3 index types right now
    must be copied to the new buffer. Ideal when insertions are mainly in initialization
    time and in run-time we just need searches.
 
-* *boost::shmem::map_index*: Based on boost::shmem::map, a shared memory version of std::map.
-   Since it's a node based container, it has no reallocations, the tree must be just 
-   rebalanced somtimes. Offers equilibrated insertion/deletion/search times with
-   a little more overhead per node comparing to *boost::shmem::flat_map_index*. Ideal
-   when searches/insertions/deletions are in random order.
+* *boost::shmem::map_index*: Based on boost::shmem::map, a shared memory version of
+   std::map. Since it's a node based container, it has no reallocations, the tree
+   must be just    rebalanced sometimes. Offers equilibrated insertion/deletion/search
+   times with more overhead per node comparing to *boost::shmem::flat_map_index*.
+   Ideal when searches/insertions/deletions are in random order.
 
 * *boost::shmem::null_index*: This index is for people using basic_named_shared_object
    just for raw memory buffer allocations and they don't make use of named/unique 
@@ -1886,7 +1885,7 @@ Shmem makes use of previous shared memory allocation algorithms to build 2 commo
 schemes: variable size object allocation and fixed size object allocation (segregated storage),
 implemented in these allocators: 
 
-* *boost::shmem::allocator* offers general purpose allocation within a fixed size memory segment.
+* *boost::shmem::allocator* offers general purpose, variable size allocation.
 
 * *boost::shmem::node_allocator* offers a segregated storage allocation scheme sharing a common
   pool between all instances of the class node_allocator placed in the same fixed size memory 
@@ -1904,9 +1903,11 @@ implemented in these allocators:
   without the synchronization overhead for future allocations.
 
 
-Shmem STL compatible allocators are configurable via template types so that the can use different 
-allocation algorithms and pointer types. And when used offset_ptr as pointer type, the user 
-can place these allocators in shared memory mapped in different base addresses in several processes.
+Shmem STL compatible allocators are configurable via template parameters. The Shmem allocators
+define their `pointer` typedef based on the `void_pointer` typedef of the segment manager
+passed as template argument. When this `segment_manager::void_pointer` is a relative pointer, 
+the user can place these allocators in shared memory mapped in different base addresses in
+several processes.
 
 [endsect]
 
@@ -1914,8 +1915,7 @@ can place these allocators in shared memory mapped in different base addresses i
 
 The *boost::shmem::allocator* class defines a STL compatible allocator class that 
 uses the shared memory management algorithm from the segment to allocate and deallocate memory. 
-This allocator is templatized with the allocated type, the type pointer, 
-and the allocation algorithm.
+This allocator is templatized with the allocated type, and the segment manager.
 
 [c++]
 
@@ -1931,12 +1931,10 @@ and the allocation algorithm.
       public:
 
       /*!Returns the segment manager. Never throws*/
-      segment_manager* get_segment_manager()const
-         {  using boost::get_pointer;  return  get_pointer(mp_mngr);   }
+      segment_manager* get_segment_manager() const;
 
       /*!Constructor from the segment manager. Never throws*/
-      allocator(segment_manager *segment_mngr) 
-         : mp_mngr(segment_mngr) { }
+      allocator(segment_manager *segment_mngr);
 
       //The rest of the interface is the same of std::allocator
    };
@@ -1958,9 +1956,8 @@ to allocate memory.
    //Initialize allocator with the segment manager
    Allocator alloc_inst (segment.get_segment_manager());
 
-The allocator just provides the needed typedefs and forwards 
-all allocation and deallocation requests to the memory allocation
-algorithm passed in the constructor.
+The allocator just provides the needed typedefs and forwards all allocation
+and deallocation requests to the segment manager passed in the constructor.
 
 [endsect]
 
@@ -2002,7 +1999,8 @@ storage destruction when the last node_allocator is destroyed.
       placing the allocator in shared memory, memory mapped-files, etc...
       This node allocator shares a segregated storage between all instances 
       of node_allocator with equal sizeof(T) placed in the same segment 
-      group.*/
+      group. N is the number of nodes allocated at once when the allocator
+      needs runs out of nodes*/*/
    template<class T, std::size_t N, class SegmentManager>
    class node_allocator
    {
@@ -2021,9 +2019,8 @@ storage destruction when the last node_allocator is destroyed.
       //The rest is the same interface as std::allocator
       /*...*/
 
-The *node_allocator* must be always initialized with the allocation
-algorithm obtained from the segment 
-where you want *node_allocator* to allocate memory
+The *node_allocator* must be always initialized with the segment 
+manager obtained from the segment where you want *node_allocator* to allocate memory.
 
 [c++]
 
@@ -2033,7 +2030,7 @@ where you want *node_allocator* to allocate memory
    //    SegmentManager = named_shared_object::segment_manager
    typedef node_allocator<int, 64, named_shared_object::segment_manager> NodeAllocator;
 
-   //Initialize allocator instance with the named algorithm
+   //Initialize allocator instance with the segment manager
    NodeAllocator alloc_inst (segment.get_segment_manager());
 
 All STL compatible containers that want to use this allocation scheme 
@@ -2043,9 +2040,8 @@ that they can allocate the values with the node allocator:
 [c++]
 
    MyIntList mylist(alloc_inst);
-   for(int i = 0; true; ++i){
-      mylist.insert(mylist.begin(), 3);
-   }  
+   mylist.insert(mylist.begin(), 3);
+
 
 [endsect]
 
@@ -2056,8 +2052,8 @@ node_allocators that allocate objects of the same size and this optimizes
 memory usage. However, it needs a named_shared memory algorithm to use
 the unique instance service so that this sharing can be possible. Also
 imposes a synchronization overhead per node allocation because of this share.
-Sometimes, the named object algorithm is not available (for example, when
-building index types for the named object algorithm itself) or the 
+Sometimes, the named object service is not available (for example, when
+building index types for the named object service itself) or the 
 synchronization overhead is not acceptable.
 
 So *private_node_allocator* uses the same segregated storage as node_allocator,
@@ -2072,7 +2068,8 @@ deallocating a node.
       source. The internal pointer type will of the same type (raw, smart) as
       "typename SegmentManager::void_pointer" type. This allows
       placing the allocator in shared memory, memory mapped-files, etc...
-      This allocator has its own node pool.*/
+      This allocator has its own node pool. N is the number of nodes allocated 
+      at once when the allocator needs runs out of nodes*/*/
    template<class T, std::size_t N, class SegmentManager>
    class private_node_allocator
    {
@@ -2103,7 +2100,7 @@ to allocate memory:
    typedef private_node_allocator<int, 64, named_shared_object::segment_manager> 
       PrivateNodeAllocator;
 
-   //Initialize allocator instance with algorithm
+   //Initialize allocator instance with the segment manager
    PrivateNodeAllocator alloc_inst (segment.get_segment_manager());
 
 All STL compatible containers that want to use this allocation scheme 
@@ -2113,9 +2110,7 @@ that they can allocate the values with the private node allocator:
 [c++]
 
    MyIntList mylist(alloc_inst);
-   for(int i = 0; true; ++i){
-      mylist.insert(mylist.begin(), 3);
-   }  
+   mylist.insert(mylist.begin(), 3);
 
 [endsect]
 
@@ -2189,9 +2184,7 @@ that they can allocate the values with the cached_node_allocator:
 
    //Initialize container
    MyIntList mylist(alloc_inst);
-   for(int i = 0; true; ++i){
-      mylist.insert(mylist.begin(), 3);
-   }  
+   mylist.insert(mylist.begin(), 3);
 
 [endsect]
 
@@ -2228,7 +2221,7 @@ crash is quite sure.
 [section:stl_container_requirements Container requirements for Shmem allocators]
 
 Shmem STL compatible allocators offer a STL compatible allocator interface and 
-if they define their internal *pointer* typedef as offset_ptr<T>, they can 
+if they define their internal *pointer* typedef as a relative pointer, they can 
 be used to place STL containers in shared memory.
 
 However, as Scott Meyers mentions in his Effective STL 
@@ -2436,7 +2429,7 @@ Let's see an example:
       MyShmString mystring(charallocator);
       mystring = "this is my text";
 
-      //This vector is in only in this process (the pointer pointing to the
+      //This vector is only in this process (the pointer pointing to the
       //buffer that will hold the MyShmString-s is not in shared memory). 
       //But the buffer that will hold 10 MyShmString-s is allocated from 
       //shared memory using StringAllocator. Since strings use a shared 
@@ -2654,9 +2647,9 @@ that boost::shmem::simple_seq_fit class offers:
    * The *extra_hdr_bytes* parameter indicates the number of bytes after
      the offset sizeof(*my_algorithm*) that *my_algorithm* can't use at all. This extra
      bytes will be used to store additional data that should not be overwritten.
-     So, *my_algorithm* will be placed at offset 0 of the memory segment, and will
-     manage the *[sizeof(my_algorithm) + extra_hdr_bytes, size)* range of the 
-     segment.
+     So, *my_algorithm* will be placed at address XXX of the memory segment, and will
+     manage the *[XXX + sizeof(my_algorithm) + extra_hdr_bytes, XXX + size)* range of
+     the segment.
 
 * The *get_min_size()* function should return the minimum space the algorithm 
   needs to be valid with the passed *extra_hdr_bytes* parameter. This function will 
@@ -2664,7 +2657,7 @@ that boost::shmem::simple_seq_fit class offers:
 
 * The *allocate()* function must return 0 if there is no more available memory. 
   The memory returned by *my_algorithm*
-  must be aligned to the most restrictive memory alingment of the system, for example,
+  must be aligned to the most restrictive memory alignment of the system, for example,
   to the value returned by *boost::alignment_of<boost::detail::max_align>::value*.
   This function should be executed with the synchronization capabilities offered
   by `typename mutex_family::mutex_t` mutex. That means, that if we define 
@@ -2681,7 +2674,8 @@ that boost::shmem::simple_seq_fit class offers:
 
 * The *grow()* function will expand the managed memory by *my_algorithm* in *extra_size* 
   bytes. So *size()* function should return the updated size,
-  and the new managed memory range will be: *[sizeof(my_algorithm) + extra_hdr_bytes, old_size + extra_size)*.
+  and the new managed memory range will be (if the address where the algorithm is
+  constructed is XXX): *[XXX + sizeof(my_algorithm) + extra_hdr_bytes, XXX + old_size + extra_size)*.
   This function should offer the same synchronization as `allocate()`.
 
 That's it. Now we can create new front-ends that use our new algorithm:
@@ -2748,14 +2742,15 @@ allocators are based on this approach. *Remember* that shared memory STL-like al
 should define their *pointer* typedef as the same pointer family as 
 segment_manager::void_pointer typedef. This means that if segment_manager::void_pointer is
 offset_ptr<void> the MySTLAllocator<int> should define pointer as offset_ptr<int>. The
-reason for this is that allocators are placed in shared memory.
+reason for this is that allocators are members of containers, and if want to put
+the container in shared memory, the allocator should be ready for that.
 
 If the user wants to optimize further allocator usage in Shmem node containers, he can 
 change the common allocator::construct function from:
 
 [c++]
 
-   void construct(pointer _Ptr, const value_type &value);
+   void construct(pointer ptr, const value_type &value);
 
 to this one:
 
@@ -2843,7 +2838,7 @@ The key_type typedef of the passed index_traits will be a instantiation of the f
       typedef /*...*/                              char_type;
       typedef /*...*/                              const_char_ptr_t;
 
-      //Offset pointer to the object's name
+      //Pointer to the object's name
       const_char_ptr_t                             mp_str;
 
       //Length of the name buffer (null NOT included)
@@ -2882,21 +2877,20 @@ is just defined as:
 
 [c++]
 
-   namespace boost { namespace shmem { namespace detail {
+   namespace boost { namespace shmem {
 
    /*!Helper class to define typedefs from IndexTraits*/
    template <class MapConfig>
    struct flat_map_index_aux
    {
-      typedef typename MapConfig::key_type                  key_type;
-      typedef typename MapConfig::mapped_type               mapped_type;
-      typedef typename MapConfig::segment_manager           segment_manager;
-      typedef std::less<key_type>                           key_less;
-      typedef std::pair<key_type, mapped_type>              value_type;
-      typedef boost::shmem::allocator
-               <value_type, segment_manager>                allocator_type;
-      typedef boost::shmem::flat_map<key_type,  mapped_type,
-                                    key_less, allocator_type>   index_t;
+      typedef typename MapConfig::key_type            key_type;
+      typedef typename MapConfig::mapped_type         mapped_type;
+      typedef typename MapConfig::segment_manager     segment_manager;
+      typedef std::less<key_type>                     key_less;
+      typedef std::pair<key_type, mapped_type>        value_type;
+      typedef allocator<value_type, segment_manager>  allocator_type;
+      typedef flat_map<key_type, mapped_type,
+                       key_less, allocator_type>      index_t;
    };
 
    /*!Index type based in flat_map. Just derives from flat_map and
@@ -2910,20 +2904,21 @@ is just defined as:
       typedef typename index_aux::index_t          base_type;
       typedef typename index_aux::segment_manager  segment_manager;
 
-   public:
-      /*!Constructor. Takes a pointer to the memory
-         allocation algorithm. Can throw*/
+      public:
+      /*!Constructor. Takes a pointer to the
+         segment manager. Can throw*/
       flat_map_index(segment_manager *segment_mngr)
          : base_type(typename index_aux::key_less(),
-                     segment_mngr){}
+                     typename index_aux::allocator_type(segment_mngr))
+      {}
 
       /*!This reserves memory to optimize the insertion of n
          elements in the index*/
       void reserve(std::size_t n)
-         {  base_type::reserve(n);  }
+      {  base_type::reserve(n);  }
    };
 
-   }}}   //namespace boost { namespace shmem { namespace detail {
+   }}   //namespace boost { namespace shmem
 
 If the user is defining a node container based index (a container whose iterators 
 are not invalidated when inserting or erasing other elements), Shmem can optimize
@@ -2947,8 +2942,6 @@ specialization of `boost::shmem::is_node_index<...>` defined in
    };
 
 Shmem also defines other index types:
-
-* [*boost:shmem::unordered_map_index], uses *boost::unordered_map* as index type.
 
 * [*boost::map_index] uses *boost::shmem::map* as index type.
 
@@ -3883,6 +3876,376 @@ buffers.
 
 [endsect]
 
+[section:shmem_smart_ptr Shmem ownership smart pointers]
+
+C++ users know the importance of ownership smart pointers when dealing with resources.
+Boost offers a wide range of such type of pointers: `intrusive_ptr<>`,
+`scoped_ptr<>`, `shared_ptr<>`...
+
+When building complex shared memory/memory mapped files structures, programmers
+would like to use also the advantages of these smart pointers. The problem is that
+Boost and C++ TR1 smart pointers are not ready to be used for shared memory. The cause 
+is that those smart pointers contain raw pointers and they use virtual functions,
+something that is not possible if you want to place your data in shared memory.
+The virtual function limitation makes even impossible to achieve the same level of
+functionality of Boost and TR1 with Shmem smart pointers. 
+
+Shmem ownership smart pointers are mainly "smart pointers contaning smart pointers",
+so we can specify the pointer type they contain.
+
+[section:intrusive_ptr Intrusive pointer]
+
+`boost::shmem::intrusive_ptr<>` is the generalization of `boost::intrusive_ptr<>`
+to allow non-raw pointers as intrusive pointer members. As the known 
+`boost::intrusive_ptr` we must specify the pointee type but we also must also specify 
+the pointer type to be stored in the intrusive_ptr:
+
+[c++]
+
+   /*!The intrusive_ptr class template stores a pointer to an object
+      with an embedded reference count. intrusive_ptr is parameterized on
+      T (the type of the object pointed to) and VoidPointer(a void pointer type 
+      that defines the type of pointer that intrusive_ptr will store).
+      intrusive_ptr<T, void *> defines a class with a T* member whereas
+      intrusive_ptr<T, offset_ptr<void> > defines a class with a offset_ptr<T> member.
+      Relies on unqualified calls to:
+       
+      void intrusive_ptr_add_ref(T * p);
+      void intrusive_ptr_release(T * p);
+
+      with (p != 0)
+
+      The object is responsible for destroying itself.*/
+   template<class T, class VoidPointer>
+   class intrusive_ptr
+   {
+      public:
+      /*!Provides the type of the internal stored pointer.*/
+      typedef typename detail::pointer_to_other<VP, T>::type pointer;
+      /*!Provides the type of the stored pointer.*/
+      typedef T element_type;
+
+      /*!Constructor. Initializes internal pointer to 0. Does not throw*/
+      intrusive_ptr();
+
+      /*!Constructor. Copies pointer and if "p" is not zero and 
+         "add_ref" is true calls intrusive_ptr_add_ref(get_pointer(p)).
+         Does not throw*/
+      intrusive_ptr(const pointer &p, bool add_ref = true);
+
+      /*!Copy constructor. Copies the internal pointer and if "p" is not
+         zero calls intrusive_ptr_add_ref(get_pointer(p)). Does not throw*/
+      intrusive_ptr(intrusive_ptr const & rhs);
+
+      /*!Constructor from related. Copies the internal pointer and if "p" is not
+         zero calls intrusive_ptr_add_ref(get_pointer(p)). Does not throw*/
+      template<class U> intrusive_ptr (intrusive_ptr<U, VP> const & rhs);
+
+      /*!Destructor. If internal pointer is not 0, calls
+         intrusive_ptr_release(get_pointer(m_ptr)). Does not throw*/
+      ~intrusive_ptr();
+
+      /*!Assignment operator. Equivalent to intrusive_ptr(r).swap(*this). 
+         Does not throw*/
+      intrusive_ptr & operator=(intrusive_ptr const & rhs);
+
+      /*!Assignment from related. Equivalent to intrusive_ptr(r).swap(*this). 
+         Does not throw*/
+      template<class U> intrusive_ptr & operator= (intrusive_ptr<U, VP> const & rhs);
+
+      /*!Assignment from pointer. Equivalent to intrusive_ptr(r).swap(*this). 
+         Does not throw*/
+      intrusive_ptr & operator=(pointer rhs);
+      
+      /*!Returns a reference to the internal pointer. Does not throw*/
+      pointer &get();
+
+      /*!Returns a reference to the internal pointer. Does not throw*/
+      const pointer &get() const;
+
+      /*!Returns *get(). Does not throw*/
+      T & operator*() const;
+
+      /*!Returns *get(). Does not throw*/
+      const pointer &operator->() const;
+
+      /*!Returns get(). Does not throw*/
+      pointer &operator->();
+
+      operator unspecified_bool_type () const;
+
+      /*!Not operator. Does not throw*/
+      bool operator! () const;
+
+      /*!Exchanges the contents of the two smart pointers. Does not throw*/
+      void swap(intrusive_ptr & rhs);
+   };
+
+So `boost::shmem::intrusive_ptr<MyClass, void*>` is equivalent to 
+`boost::instrusive_ptr<MyClass>`. But if we want to place the intrusive_ptr in 
+shared memory we must specify a relative pointer type like 
+`boost::shmem::intrusive_ptr<MyClass, boost::shmem::offset_ptr<void> >`
+
+[c++]
+
+   #include <boost/shmem/named_shared_object.hpp>
+   #include <boost/shmem/smart_ptr/intrusive_ptr.hpp>
+
+   using namespace boost::shmem;
+
+   namespace N {
+
+   //A class that has an internal reference count
+   class reference_counted_class
+   {
+      private:
+      //Non-copyable
+      reference_counted_class(const reference_counted_class  &);
+      //Non-assignable
+      reference_counted_class & operator=(const reference_counted_class &);
+      //A typedef to save typing
+      typedef named_shared_object::segment_manager segment_manager;
+      //This is the reference count
+      unsigned int m_use_count;
+      //The segment manager allows deletion from shared memory segment
+      offset_ptr<segment_manager> mp_segment_manager;
+   
+      public:
+      //Constructor
+      reference_counted_class(segment_manager *s_mngr)
+      : m_use_count(0), mp_segment_manager(s_mngr){}
+      //Destructor
+      ~reference_counted_class(){}
+
+      public:
+      //Returns the reference count
+      unsigned int use_count() const
+      {  return m_use_count;   }
+      //Adds a reference
+      inline friend void intrusive_ptr_add_ref(reference_counted_class * p)
+      {  ++p->m_use_count; }
+      //Releases a reference
+      inline friend void intrusive_ptr_release(reference_counted_class * p)
+      {  if(--p->m_use_count == 0)  p->mp_segment_manager->destroy_ptr(p); }
+   };
+
+   }  //namespace N {
+
+   //A class that has an intrusive pointer to reference_counted_class
+   class intrusive_ptr_owner
+   {
+      typedef intrusive_ptr<N::reference_counted_class, 
+                            offset_ptr<void> > intrusive_ptr_t;
+      intrusive_ptr_t m_intrusive_ptr;
+
+      public:
+      //Takes a pointer to the reference counted class
+      intrusive_ptr_owner(N::reference_counted_class *ptr) 
+         : m_intrusive_ptr(ptr){}
+   };
+
+   int main ()
+   {
+      //Create shared memory
+      named_shared_object shmem;
+      shmem.create("my_shmem", 10000);
+      //Create the unique reference counted object in shared memory
+      N::reference_counted_class *ref_counted = 
+         shmem.construct<N::reference_counted_class>
+            ("ref_counted")(shmem.get_segment_manager());
+      //Create an array of ten intrusive pointer owners in shared memory
+      intrusive_ptr_owner *intrusive_owner_array = 
+         shmem.construct<intrusive_ptr_owner>
+            (anonymous_instance)[10](ref_counted);
+      //Now test that reference count is ten
+      if(ref_counted->use_count() != 10)
+         return -1;
+
+      //Now destroy the array of intrusive pointer owners
+      //This should destroy every intrusive_ptr and because of
+      //that reference_counted_class will be destroyed
+      shmem.destroy_ptr(intrusive_owner_array);
+
+      //Now the reference counted object should have been destroyed
+      if(shmem.find<intrusive_ptr_owner>("ref_counted").first)
+         return -1;
+      //Success!
+      return 0;
+   }
+
+[endsect]
+
+[section:scoped_ptr Scoped pointer]
+
+`boost::shmem::scoped_ptr<>` is the big brother of `boost::scoped_ptr<>`, which
+adds a custom deleter to specify how the pointer passed to the scoped_ptr must be destroyed.
+Also, the `pointer` typedef of the deleter will specify the pointer type stored by scoped_ptr.
+
+[c++]
+
+   /*!scoped_ptr stores a pointer to a dynamically allocated object. 
+      The object pointed to is guaranteed to be deleted, either on destruction
+      of the scoped_ptr, or via an explicit reset. The user can avoid this
+      deletion using release().
+      scoped_ptr is parameterized on T (the type of the object pointed to) and 
+      Deleter (the functor to be executed to delete the internal pointer).
+      The internal pointer will be of the same pointer type as typename 
+      Deleter::pointer type (that is, if typename Deleter::pointer is 
+      offset_ptr<void>, the internal pointer will be offset_ptr<T>).*/
+   template<class T, class Deleter>
+   class scoped_ptr
+   {
+      public:
+
+      /*!Provides the type of the stored pointer.*/
+      typedef T element_type;
+
+      /*!Provides the type of the internal stored pointer.*/
+      typedef typename detail::pointer_to_other
+               <typename Deleter::pointer, T>::type pointer;
+
+      /*!Constructs a scoped_ptr, storing a copy of p(which can be 0) and d.
+         Does not throw.*/
+      explicit scoped_ptr(const pointer &p = 0, const Deleter &d = Deleter());
+
+      /*!If the stored pointer is not 0, destroys the object pointed to by the stored pointer. 
+         calling the operator() of the stored deleter.*/
+      ~scoped_ptr();
+
+      /*!Deletes the object pointed to by the stored pointer and then
+         stores a copy of p. Never throws*/
+      void reset(const pointer &p = 0);
+
+      /*!Deletes the object pointed to by the stored pointer and then
+         stores a copy of p and a copy of d.*/
+      void reset(const pointer &p, const Deleter &d);
+
+      /*!Assigns internal pointer as 0 and returns previous pointer. This will
+         avoid deletion on destructor*/
+      pointer release():
+
+      /*!Returns a reference to the object pointed to by the stored pointer.
+         Never throws.*/
+      reference operator*() const;
+
+      /*!Returns the internal stored pointer. Never throws*/
+      pointer &operator->();
+
+      /*!Returns the internal stored pointer. Never throws.*/
+      const pointer &operator->() const;
+
+      /*!Returns the stored pointer. Never throws.*/
+      pointer & get();
+
+      /*!Returns the stored pointer. Never throws.*/
+      const pointer & get() const;
+
+      /*!Returns true if the stored pointer is 0. Never throws.*/
+      bool operator! () const;
+
+      /*!Exchanges the internal pointer and deleter with other scoped_ptr
+         Never throws.*/
+      void swap(scoped_ptr & b);
+   };
+   
+`scoped_ptr<>` comes handy to implement *rollbacks* with exceptions: if an exception 
+is thrown or we call `return` in the scope of `scoped_ptr<>` the deleter is
+automatically called so that *the deleter can be considered as a rollback* function.
+If all goes well, we call `release()` member function to avoid rollback when
+the `scoped_ptr` goes out of scope.
+
+[c++]
+
+   #include <boost/shmem/named_shared_object.hpp>
+   #include <boost/shmem/smart_ptr/scoped_ptr.hpp>
+
+   using namespace boost::shmem;
+
+   class my_class
+   {};
+
+   class my_exception
+   {};
+
+   //A functor that destroys the shared memory object
+   template<class T>
+   class deleter
+   {
+      private:
+      //A typedef to save typing
+      typedef named_shared_object::segment_manager segment_manager;
+      //This deleter is created in the stack, not in shared memory,
+      //so we can use raw pointers
+      segment_manager *mp_segment_manager;
+   
+      public:
+      //This typedef will specify the pointer type that
+      //scoped_ptr will store
+      typedef T *pointer;
+      //Constructor
+      deleter(segment_manager *s_mngr)
+      : mp_segment_manager(s_mngr){}
+
+      void operator()(pointer object_to_delete)
+      {  mp_segment_manager->destroy_ptr(object_to_delete);  }
+   };
+
+   int main ()
+   {
+      //Create shared memory
+      named_shared_object shmem;
+      shmem.create("my_shmem", 10000);
+
+      //In the first try, there will be no exceptions
+      //in the second try we will throw an exception
+      for(int i = 0; i < 2; ++i){
+         //Create an object in shared memory
+         my_class * my_object = shmem.construct<my_class>("my_object")();
+         
+         //Since the next shared memory allocation can throw
+         //assign it to a scoped_ptr so that if an exception occurs
+         //we destroy the object automatically
+         deleter<my_class> d(shmem.get_segment_manager());
+
+         try{
+            scoped_ptr<my_class, deleter<my_class> > s_ptr(my_object, d);
+            //Let's emulate a exception capable operation
+            //In the second try, throw an exception
+            if(i == 1){
+               throw(my_exception());
+            }
+            //If we have passed the dangerous zone
+            //we can release the scoped pointer
+            //to avoid destruction
+            s_ptr.release();
+         }
+         catch(const my_exception &){}
+
+         //Here, scoped_ptr is destroyed
+         //so it we haven't thrown an exception
+         //the object should be there, otherwise, destroyed
+         if(i == 0){
+            //Make sure the object is alive
+            if(!shmem.find<my_class>("my_object").first){
+               return -1;
+            }
+            //Now we can use it and delete it manually
+            shmem.destroy<my_class>("my_object");
+         }
+         else{
+            //Make sure the object has been deleted
+            if(shmem.find<my_class>("my_object").first){
+               return -1;
+            }
+         }
+      }
+      return 0;
+   }
+
+[endsect]
+
+
+[endsect]
 
 [section:shared_message_queue Process-shared message queue]
 
@@ -4258,8 +4621,8 @@ framework since it defines two basic types as member typedefs:
 
 [c++]
 
-   typedef /*implementation dependant*/ void_pointer;
-   typedef /*implementation dependant*/ mutex_family;
+   typedef /*implementation dependent*/ void_pointer;
+   typedef /*implementation dependent*/ mutex_family;
 
 
 The `void_pointer` typedef defines the pointer type that will be used in the Shmem
@@ -4452,18 +4815,18 @@ You can have two types of raw memory allocations in Shmem:
    will need just the time that the memory algorithm associated with the front-end
    needs to allocate data. 
 
-*  Implicit: You are using boost::shmem::allocator<> in shared memory containers.
-   This allocator calls the same `MemoryAlgorithm::allocate()` than the explicit
-   method, *every* time a vector/string has to reallocate its buffer, or *every*
+*  Implicit: For example, you are using boost::shmem::allocator<> in shared memory
+   containers. This allocator calls the same `MemoryAlgorithm::allocate()` than the
+   explicit method, *every* time a vector/string has to reallocate its buffer, or *every*
    time you insert an object in a node container.
 
-If you need see that allocation is a bottleneck in your application, you have
+If you see that allocation is a bottleneck in your application, you have
 these alternatives:
 
-*  If you mainly use map/set associative containers, try using flat_map family instead
-   of map if you mainly do searches and the insertion/removal is mainly done in an 
-   initialization phase. The overhead is now when the ordered vector has to
-   reallocate its storage and copy data. You can also call the `reserve()` method
+*  If you use map/set associative containers, try using flat_map family instead
+   of map family if you mainly do searches and the insertion/removal is mainly done
+   in an initialization phase. The overhead is now when the ordered vector has to
+   reallocate its storage and move data. You can also call the `reserve()` method
    of these containers when you know beforehand how much data you will insert.
    However in these containers iterators are invalidated in insertions so this
    substitution is only effective in some applications.
@@ -4512,7 +4875,7 @@ The steps when destroying a named object using the name (`destroy<T>(name)`) are
 
 *  Lock a recursive mutex .
 
-*  Search in the index the pointer to that named object. Copy information and
+*  Search in the index the data associated to that name. Copy information and
    erase data. This is done using `find(const key_type &)` and `erase(iterator)`
    members of the index. This can require element reordering if the index is a
    balanced tree, an ordered vector...
@@ -4547,7 +4910,7 @@ are these:
 
 If you see that you the performance is not good enough you have these alternatives:
 
-*  Maybe the problem is that the lock time is too big and hurts paralelism.
+*  Maybe the problem is that the lock time is too big and it hurts paralelism.
    Try to reduce the number of named objects in the global index and if your
    application serves several clients try to build a new segment for each one
    instead of using a global common one.
@@ -4651,8 +5014,8 @@ some Shmem code that can be much better. Let's see some ideas:
 
 Win32 version of shared mutexes and shared conditions are based on
 "spin and wait" atomic instructions. This leads to poor performance
-and does not manage any memory synchronization (memory model) or 
-priority inversions. We would need very serious help from threading 
+and does not manage any issues like priority inversions. 
+We would need very serious help from threading 
 experts on this. And I'm not sure that 
 this can be achieved in user-level software. Posix based implementations
 use PTHREAD_PROCESS_SHARED attribute to place mutexes in shared memory, so
@@ -4680,7 +5043,7 @@ Suggestions and help from memory management experts are welcome!
 
 [section:future_objectnames Use of wide character names on Shmem basic resources]
 
-Currently Shmem only allows *char* based names for basic synchronizationobjects. 
+Currently Shmem only allows *char* based names for basic synchronization objects. 
 However, several operating systems use *wchar_t* names for resources 
 (mapped files, for example). 
 In the future Shmem should try to present a portable narrow/wide char interface.
@@ -4720,7 +5083,7 @@ We should be able to construct boost::unordered_xxx family in shared memory,
 so that there is no code duplication in boost. So Shmem should cooperate with
 boost container developers instead of duplicating effort writing it's own containers.
 
-A very interesting project is making *multi_index* ready for shared memory. This
+A very interesting project is making *boost::multi_index* ready for shared memory. This
 could be a good basis for memory mapped data-bases. The work to achieve this, 
 however, can be huge. It would be interesting a collaboration with *Intrusive* library
 to achieve shared memory intrusive containers.
@@ -4740,7 +5103,7 @@ thank them:
 * Thanks to [*Francis Andre] and [*Anders Hybertz] for their ideas and suggestions. 
   Many of them are not implemented yet but I hope to include them when library gets some stability.
 
-* Thanks to [*Phil Endecott], [*Rene Rivera], [*Harold Pirtle] and [*Kim Barrett] for their bug fixes and library testing.
+* Thanks to [*Hiang Swee Chiang], [*Phil Endecott], [*Rene Rivera], [*Harold Pirtle] and [*Kim Barrett] for their bug fixes and library testing.
 
 * Thanks to [*Martin Adrian] who suggested the use of Shmem framework for user defined buffers.
 

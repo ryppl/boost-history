@@ -9,8 +9,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <boost/shmem/smart_ptr/intrusive_ptr.hpp>
 #include <boost/shmem/offset_ptr.hpp>
+#include <boost/shmem/smart_ptr/intrusive_ptr.hpp>
 #include <boost/shmem/named_shared_object.hpp>
 
 #include <boost/detail/lightweight_test.hpp>
@@ -69,15 +69,15 @@ class base
 #if !defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)
 
    inline friend void intrusive_ptr_add_ref
-      (const boost::shmem::offset_ptr<base> &p)
+      (base * p)
    {
       ++p->use_count_;
    }
 
    inline friend void intrusive_ptr_release
-      (const boost::shmem::offset_ptr<base> &p)
+      (base * p)
    {
-      if(--p->use_count_ == 0) delete p.get();
+      if(--p->use_count_ == 0) delete p;
    }
 
 #else
@@ -139,7 +139,7 @@ void f(X &)
 
 void test()
 {
-   typedef boost::shmem::basic_intrusive_ptr<X, VP>::element_type T;
+   typedef boost::shmem::intrusive_ptr<X, VP>::element_type T;
    T t;
    f(t);
 }
@@ -151,20 +151,19 @@ namespace n_constructors
 
 void default_constructor()
 {
-   boost::shmem::basic_intrusive_ptr<X, VP> px;
+   boost::shmem::intrusive_ptr<X, VP> px;
    BOOST_TEST(px.get() == 0);
-   //BOOST_TEST(boost::shmem::offset_ptr<X>(0) == boost::shmem::offset_ptr<X>(0));
 }
 
 void pointer_constructor()
 {
    {
-      boost::shmem::basic_intrusive_ptr<X, VP> px(0);
+      boost::shmem::intrusive_ptr<X, VP> px(0);
       BOOST_TEST(px.get() == 0);
    }
 
    {
-      boost::shmem::basic_intrusive_ptr<X, VP> px(0, false);
+      boost::shmem::intrusive_ptr<X, VP> px(0, false);
       BOOST_TEST(px.get() == 0);
    }
 
@@ -172,7 +171,7 @@ void pointer_constructor()
       boost::shmem::offset_ptr<X> p = new X;
       BOOST_TEST(p->use_count() == 0);
 
-      boost::shmem::basic_intrusive_ptr<X, VP> px(p);
+      boost::shmem::intrusive_ptr<X, VP> px(p);
       BOOST_TEST(px.get() == p);
       BOOST_TEST(px->use_count() == 1);
    }
@@ -184,10 +183,10 @@ void pointer_constructor()
 #if defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)
       using boost::intrusive_ptr_add_ref;
 #endif
-      intrusive_ptr_add_ref(p);
+      intrusive_ptr_add_ref(get_pointer(p));
       BOOST_TEST(p->use_count() == 1);
 
-      boost::shmem::basic_intrusive_ptr<X, VP> px(p, false);
+      boost::shmem::intrusive_ptr<X, VP> px(p, false);
       BOOST_TEST(px.get() == p);
       BOOST_TEST(px->use_count() == 1);
    }
@@ -196,50 +195,50 @@ void pointer_constructor()
 void copy_constructor()
 {
    {
-      boost::shmem::basic_intrusive_ptr<X, VP> px;
-      boost::shmem::basic_intrusive_ptr<X, VP> px2(px);
+      boost::shmem::intrusive_ptr<X, VP> px;
+      boost::shmem::intrusive_ptr<X, VP> px2(px);
       BOOST_TEST(px2.get() == px.get());
    }
 
    {
-      boost::shmem::basic_intrusive_ptr<Y, VP> py;
-      boost::shmem::basic_intrusive_ptr<X, VP> px(py);
+      boost::shmem::intrusive_ptr<Y, VP> py;
+      boost::shmem::intrusive_ptr<X, VP> px(py);
       BOOST_TEST(px.get() == py.get());
    }
 
    {
-      boost::shmem::basic_intrusive_ptr<X, VP> px(0);
-      boost::shmem::basic_intrusive_ptr<X, VP> px2(px);
+      boost::shmem::intrusive_ptr<X, VP> px(0);
+      boost::shmem::intrusive_ptr<X, VP> px2(px);
       BOOST_TEST(px2.get() == px.get());
    }
 
    {
-      boost::shmem::basic_intrusive_ptr<Y, VP> py(0);
-      boost::shmem::basic_intrusive_ptr<X, VP> px(py);
+      boost::shmem::intrusive_ptr<Y, VP> py(0);
+      boost::shmem::intrusive_ptr<X, VP> px(py);
       BOOST_TEST(px.get() == py.get());
    }
 
    {
-      boost::shmem::basic_intrusive_ptr<X, VP> px(0, false);
-      boost::shmem::basic_intrusive_ptr<X, VP> px2(px);
+      boost::shmem::intrusive_ptr<X, VP> px(0, false);
+      boost::shmem::intrusive_ptr<X, VP> px2(px);
       BOOST_TEST(px2.get() == px.get());
    }
 
    {
-      boost::shmem::basic_intrusive_ptr<Y, VP> py(0, false);
-      boost::shmem::basic_intrusive_ptr<X, VP> px(py);
+      boost::shmem::intrusive_ptr<Y, VP> py(0, false);
+      boost::shmem::intrusive_ptr<X, VP> px(py);
       BOOST_TEST(px.get() == py.get());
    }
 
    {
-      boost::shmem::basic_intrusive_ptr<X, VP> px(new X);
-      boost::shmem::basic_intrusive_ptr<X, VP> px2(px);
+      boost::shmem::intrusive_ptr<X, VP> px(new X);
+      boost::shmem::intrusive_ptr<X, VP> px2(px);
       BOOST_TEST(px2.get() == px.get());
    }
 
    {
-      boost::shmem::basic_intrusive_ptr<Y, VP> py(new Y);
-      boost::shmem::basic_intrusive_ptr<X, VP> px(py);
+      boost::shmem::intrusive_ptr<Y, VP> py(new Y);
+      boost::shmem::intrusive_ptr<X, VP> px(py);
       BOOST_TEST(px.get() == py.get());
    }
 }
@@ -258,11 +257,11 @@ namespace n_destructor
 
 void test()
 {
-   boost::shmem::basic_intrusive_ptr<X, VP> px(new X);
+   boost::shmem::intrusive_ptr<X, VP> px(new X);
    BOOST_TEST(px->use_count() == 1);
 
    {
-      boost::shmem::basic_intrusive_ptr<X, VP> px2(px);
+      boost::shmem::intrusive_ptr<X, VP> px2(px);
       BOOST_TEST(px->use_count() == 2);
    }
 
@@ -301,7 +300,7 @@ namespace n_access
 void test()
 {
    {
-      boost::shmem::basic_intrusive_ptr<X, VP> px;
+      boost::shmem::intrusive_ptr<X, VP> px;
       BOOST_TEST(px? false: true);
       BOOST_TEST(!px);
 
@@ -313,7 +312,7 @@ void test()
    }
 
    {
-      boost::shmem::basic_intrusive_ptr<X, VP> px(0);
+      boost::shmem::intrusive_ptr<X, VP> px(0);
       BOOST_TEST(px? false: true);
       BOOST_TEST(!px);
 
@@ -325,17 +324,15 @@ void test()
    }
 
    {
-      boost::shmem::basic_intrusive_ptr<X, VP> px
+#if defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)
+      using boost::get_pointer;
+#endif
+      boost::shmem::intrusive_ptr<X, VP> px
          (boost::shmem::offset_ptr<X>(new X));
       BOOST_TEST(px? true: false);
       BOOST_TEST(!!px);
-      //iGBOOST_TEST(&*px == px.get());
+      BOOST_TEST(&*px == get_pointer(px.get()));
       BOOST_TEST(px.operator ->() == px.get());
-
-#if defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)
-      using boost::get_pointer;
-#endif
-
       BOOST_TEST(get_pointer(px) == px.get());
    }
 }
@@ -348,8 +345,8 @@ namespace n_swap
 void test()
 {
    {
-      boost::shmem::basic_intrusive_ptr<X, VP> px;
-      boost::shmem::basic_intrusive_ptr<X, VP> px2;
+      boost::shmem::intrusive_ptr<X, VP> px;
+      boost::shmem::intrusive_ptr<X, VP> px2;
 
       px.swap(px2);
 
@@ -365,9 +362,9 @@ void test()
 
    {
       boost::shmem::offset_ptr<X> p = new X;
-      boost::shmem::basic_intrusive_ptr<X, VP> px;
-      boost::shmem::basic_intrusive_ptr<X, VP> px2(p);
-      boost::shmem::basic_intrusive_ptr<X, VP> px3(px2);
+      boost::shmem::intrusive_ptr<X, VP> px;
+      boost::shmem::intrusive_ptr<X, VP> px2(p);
+      boost::shmem::intrusive_ptr<X, VP> px3(px2);
 
       px.swap(px2);
 
@@ -390,9 +387,9 @@ void test()
    {
       boost::shmem::offset_ptr<X> p1 = new X;
       boost::shmem::offset_ptr<X> p2 = new X;
-      boost::shmem::basic_intrusive_ptr<X, VP> px(p1);
-      boost::shmem::basic_intrusive_ptr<X, VP> px2(p2);
-      boost::shmem::basic_intrusive_ptr<X, VP> px3(px2);
+      boost::shmem::intrusive_ptr<X, VP> px(p1);
+      boost::shmem::intrusive_ptr<X, VP> px2(p2);
+      boost::shmem::intrusive_ptr<X, VP> px3(px2);
 
       px.swap(px2);
 
@@ -421,16 +418,16 @@ namespace n_comparison
 {
 
 template<class T, class U, class VP>
-void test2(boost::shmem::basic_intrusive_ptr<T, VP> const & p,
-           boost::shmem::basic_intrusive_ptr<U, VP> const & q)
+void test2(boost::shmem::intrusive_ptr<T, VP> const & p,
+           boost::shmem::intrusive_ptr<U, VP> const & q)
 {
    BOOST_TEST((p == q) == (p.get() == q.get()));
    BOOST_TEST((p != q) == (p.get() != q.get()));
 }
 
 template<class T, class VP>
-void test3(boost::shmem::basic_intrusive_ptr<T, VP> const & p,
-           boost::shmem::basic_intrusive_ptr<T, VP> const & q)
+void test3(boost::shmem::intrusive_ptr<T, VP> const & p,
+           boost::shmem::intrusive_ptr<T, VP> const & q)
 {
    BOOST_TEST((p == q) == (p.get() == q.get()));
    BOOST_TEST((p.get() == q) == (p.get() == q.get()));
@@ -447,39 +444,39 @@ void test3(boost::shmem::basic_intrusive_ptr<T, VP> const & p,
 void test()
 {
    {
-      boost::shmem::basic_intrusive_ptr<X, VP> px;
+      boost::shmem::intrusive_ptr<X, VP> px;
       test3(px, px);
 
-      boost::shmem::basic_intrusive_ptr<X, VP> px2;
+      boost::shmem::intrusive_ptr<X, VP> px2;
       test3(px, px2);
 
-      boost::shmem::basic_intrusive_ptr<X, VP> px3(px);
+      boost::shmem::intrusive_ptr<X, VP> px3(px);
       test3(px3, px3);
       test3(px, px3);
    }
 
    {
-      boost::shmem::basic_intrusive_ptr<X, VP> px;
+      boost::shmem::intrusive_ptr<X, VP> px;
 
-      boost::shmem::basic_intrusive_ptr<X, VP> px2(new X);
+      boost::shmem::intrusive_ptr<X, VP> px2(new X);
       test3(px, px2);
       test3(px2, px2);
 
-      boost::shmem::basic_intrusive_ptr<X, VP> px3(new X);
+      boost::shmem::intrusive_ptr<X, VP> px3(new X);
       test3(px2, px3);
 
-      boost::shmem::basic_intrusive_ptr<X, VP> px4(px2);
+      boost::shmem::intrusive_ptr<X, VP> px4(px2);
       test3(px2, px4);
       test3(px4, px4);
    }
 
    {
-      boost::shmem::basic_intrusive_ptr<X, VP> px(new X);
+      boost::shmem::intrusive_ptr<X, VP> px(new X);
 
-      boost::shmem::basic_intrusive_ptr<Y, VP> py(new Y);
+      boost::shmem::intrusive_ptr<Y, VP> py(new Y);
       test2(px, py);
 
-      boost::shmem::basic_intrusive_ptr<X, VP> px2(py);
+      boost::shmem::intrusive_ptr<X, VP> px2(py);
       test2(px2, py);
       test3(px, px2);
       test3(px2, px2);
@@ -511,13 +508,13 @@ namespace n_transitive
 
 struct X: public N::base
 {
-   boost::shmem::basic_intrusive_ptr<X, VP> next;
+   boost::shmem::intrusive_ptr<X, VP> next;
 };
 
 void test()
 {
-   boost::shmem::basic_intrusive_ptr<X, VP> p(new X);
-   p->next = boost::shmem::basic_intrusive_ptr<X, VP>(new X);
+   boost::shmem::intrusive_ptr<X, VP> p(new X);
+   p->next = boost::shmem::intrusive_ptr<X, VP>(new X);
    BOOST_TEST(!p->next->next);
    p = p->next;
    BOOST_TEST(!p->next);
@@ -543,7 +540,7 @@ class foo: public N::base
 
    private:
 
-   boost::shmem::basic_intrusive_ptr<foo, VP> m_self;
+   boost::shmem::intrusive_ptr<foo, VP> m_self;
 }; 
 
 void test()
@@ -571,4 +568,3 @@ int main()
 
    return boost::report_errors();
 }
-

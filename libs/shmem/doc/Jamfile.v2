@@ -11,7 +11,7 @@ project boost/shmem/doc ;
 
 import boostbook : boostbook ;
 using quickbook ;
-import doxygen : doxygen ;
+#import doxygen : doxygen ;
 
 boostbook shmem
 :
@@ -68,6 +68,8 @@ doxygen shmem.doxygen
    ../../../boost/shmem/sync/shared_read_write_mutex.hpp
    ../../../boost/shmem/sync/shared_barrier.hpp
    ../../../boost/shmem/sync/read_write_lock.hpp
+   ../../../boost/shmem/smart_ptr/intrusive_ptr.hpp
+   ../../../boost/shmem/smart_ptr/scoped_ptr.hpp
 :
     <doxygen:param>HIDE_SCOPE_NAMES=YES
     <doxygen:param>HIDE_UNDOC_MEMBERS=YES
@@ -78,4 +80,3 @@ doxygen shmem.doxygen
     <doxygen:param>EXPAND_ONLY_PREDEF=YES
     <doxygen:param>SEARCH_INCLUDES=YES
 ;
-

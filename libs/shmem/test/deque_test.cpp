@@ -20,13 +20,13 @@
 #include <boost/shmem/indexes/flat_map_index.hpp>
 #include "printcontainer.hpp"
 
-/*****************************************************************/
-/*                                                               */
-/*  This example repeats the same operations with std::deque and */
-/*  shmem_deque using the node allocator                         */
-/*  and compares the values of both containers                   */
-/*                                                               */
-/*****************************************************************/
+//***************************************************************//
+//                                                               //
+//  This example repeats the same operations with std::deque and //
+//  shmem_deque using the node allocator                         //
+//  and compares the values of both containers                   //
+//                                                               //
+//***************************************************************//
 
 //Explicit instantiation to detect compilation errors
 template class boost::shmem::deque<int, std::allocator<int> >;
@@ -34,6 +34,7 @@ template class boost::shmem::deque<int, std::allocator<int> >;
 using namespace boost::shmem;
 
 //Customize named_shared_object class
+
 typedef basic_named_shared_object
    <char,
     simple_seq_fit<shared_mutex_family>,
@@ -137,7 +138,3 @@ int main ()
 
    return 0;
 }
-
-
-
-

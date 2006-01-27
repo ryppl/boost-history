@@ -4,9 +4,9 @@
 <title> Quick Guide for the Impatient</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
-<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
-<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
-<link rel="prev" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 0.9">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 0.9">
+<link rel="prev" href="../index.html" title="Chapter 1. Shmem 0.9">
 <link rel="next" href="limitations.html" title=" Current limitations">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -115,7 +115,7 @@ int</span><span class="identifier"> main</span><span class="special"> ()</span><
 <p>
 You want to create objects in a shared memory segment, giving a string name to them so that 
 any other process can find, use and delete them from the segment when the objects are not 
-needed anymore. Just write this code in one process:</p>
+needed anymore. Just write in one process:</p>
 <p></p>
 <pre class="programlisting"><code class="literal"><span class="preprocessor">#include</span><span class="special"> &lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">shmem</span><span class="special">/</span><span class="identifier">named_shared_object</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span><span class="keyword">
 
@@ -204,7 +204,7 @@ int</span><span class="identifier"> main</span><span class="special"> ()</span><
 Shmem offers offset_ptr smart pointer family 
 as an offset pointer that stores the distance between the address of 
 the offset pointer itself and the address of the pointed object.  
-When this pointer is placed in a shared memory segment, it 
+When offset_ptr is placed in a shared memory segment, it 
 can point safely objects stored in the same shared 
 memory segment, even if the segment is mapped in 
 different base addresses in different processes.</p>
@@ -266,15 +266,15 @@ so you can avoid these manual data structures just like with standard containers
 <a name="shmem.qg_shmem_container"></a> Creating vectors in shared memory with different base addresses</h3></div></div></div>
 <p>
 To place STL-compatible containers in shared memory, Shmem allocators
-define allocator&lt;T&gt;::pointer typedef as offset_ptr&lt;T&gt;, instead of T*.
+define allocator&lt;T&gt;::pointer typedef as a relative pointer type, instead of T*.
 Although the use of smart pointers is allowed by the standard, 
 current STL implementations can't handle Shmem shared memory STL 
 compatible allocators.</p>
 <p>
 Until STL implementations fix this and for older STL owners, 
 Shmem provides STL compatible containers. 
-All these containers can be safely placed 
-in shared memory. For this, we need to obtain STL compatible 
+All Shmem containers can be safely placed 
+in shared memory, if we obtain STL compatible 
 shared memory allocators and pass them to the Shmem containers
 in constructors:</p>
 <p></p>

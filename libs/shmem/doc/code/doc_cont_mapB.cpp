@@ -32,4 +32,5 @@
 
       //When done, destroy and delete vector
       segment.destroy<MyVector>("MyVector");
+      return 0;
    }

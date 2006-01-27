@@ -144,7 +144,6 @@ int main ()
                            (segment.get_segment_manager());
 
    shmlist->swap(*shmlist2);
-//   segment.destroy<boost::shmem::ptr>(shmlist2);   
    segment.destroy<MyShmList>(L"MyVect2");
 
    //Allocators must be destroyed before shared memory is unmapped

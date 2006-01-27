@@ -4,8 +4,8 @@
 <title> Performance of Shmem</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
-<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
-<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 0.9">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 0.9">
 <link rel="prev" href="architecture.html" title=" Shmem architecture and internals">
 <link rel="next" href="open_issues.html" title=" Open Issues">
 </head>
@@ -46,21 +46,21 @@ Explicit: The user calls <code class="computeroutput"><span class="identifier">a
    needs to allocate data.
 </li>
 <li>
-Implicit: You are using boost::shmem::allocator&lt;&gt; in shared memory containers.
-   This allocator calls the same <code class="computeroutput"><span class="identifier">MemoryAlgorithm</span><span class="special">::</span><span class="identifier">allocate</span><span class="special">()</span></code> than the explicit
-   method, <span class="bold"><strong>every</strong></span> time a vector/string has to reallocate its buffer, or <span class="bold"><strong>every</strong></span>
+Implicit: For example, you are using boost::shmem::allocator&lt;&gt; in shared memory
+   containers. This allocator calls the same <code class="computeroutput"><span class="identifier">MemoryAlgorithm</span><span class="special">::</span><span class="identifier">allocate</span><span class="special">()</span></code> than the
+   explicit method, <span class="bold"><strong>every</strong></span> time a vector/string has to reallocate its buffer, or <span class="bold"><strong>every</strong></span>
    time you insert an object in a node container.
 </li>
 </ul></div>
 <p>
-If you need see that allocation is a bottleneck in your application, you have
+If you see that allocation is a bottleneck in your application, you have
 these alternatives:</p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-If you mainly use map/set associative containers, try using flat_map family instead
-   of map if you mainly do searches and the insertion/removal is mainly done in an 
-   initialization phase. The overhead is now when the ordered vector has to
-   reallocate its storage and copy data. You can also call the <code class="computeroutput"><span class="identifier">reserve</span><span class="special">()</span></code> method
+If you use map/set associative containers, try using flat_map family instead
+   of map family if you mainly do searches and the insertion/removal is mainly done
+   in an initialization phase. The overhead is now when the ordered vector has to
+   reallocate its storage and move data. You can also call the <code class="computeroutput"><span class="identifier">reserve</span><span class="special">()</span></code> method
    of these containers when you know beforehand how much data you will insert.
    However in these containers iterators are invalidated in insertions so this
    substitution is only effective in some applications.
@@ -122,7 +122,7 @@ The steps when destroying a named object using the name (<code class="computerou
 Lock a recursive mutex .
 </li>
 <li>
-Search in the index the pointer to that named object. Copy information and
+Search in the index the data associated to that name. Copy information and
    erase data. This is done using <code class="computeroutput"><span class="identifier">find</span><span class="special">(</span><span class="keyword">const</span><span class="identifier"> key_type</span><span class="special"> &amp;)</span></code> and <code class="computeroutput"><span class="identifier">erase</span><span class="special">(</span><span class="identifier">iterator</span><span class="special">)</span></code>
    members of the index. This can require element reordering if the index is a
    balanced tree, an ordered vector...
@@ -173,7 +173,7 @@ Unlock the recursive mutex.
 If you see that you the performance is not good enough you have these alternatives:</p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-Maybe the problem is that the lock time is too big and hurts paralelism.
+Maybe the problem is that the lock time is too big and it hurts paralelism.
    Try to reduce the number of named objects in the global index and if your
    application serves several clients try to build a new segment for each one
    instead of using a global common one.

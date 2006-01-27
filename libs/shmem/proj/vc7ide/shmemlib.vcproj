@@ -100,6 +100,9 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
+				RelativePath="..\..\..\..\boost\shmem\smart_ptr\enable_shared_from_this.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\boost\shmem\intersegment_ptr.hpp">
 			</File>
 			<File
@@ -108,13 +111,38 @@
 			<File
 				RelativePath="..\..\..\..\boost\shmem\offset_ptr.hpp">
 			</File>
+			<File
+				RelativePath="..\..\..\..\boost\shmem\smart_ptr\scoped_ptr.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\shmem\smart_ptr\shared_ptr.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\shmem\smart_ptr\weak_ptr.hpp">
+			</File>
+			<Filter
+				Name="detail"
+				Filter="">
+				<File
+					RelativePath="..\..\..\..\boost\shmem\smart_ptr\detail\shared_count.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\shmem\smart_ptr\detail\sp_counted_base.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\shmem\smart_ptr\detail\sp_counted_base_pt.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\shmem\smart_ptr\detail\sp_counted_base_w32.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\shmem\smart_ptr\detail\sp_counted_impl.hpp">
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Containers"
 			Filter="">
-			<File
-				RelativePath="..\..\..\..\boost\shmem\containers\container_fwd.hpp">
-			</File>
 			<File
 				RelativePath="..\..\..\..\boost\shmem\containers\deque.hpp">
 			</File>

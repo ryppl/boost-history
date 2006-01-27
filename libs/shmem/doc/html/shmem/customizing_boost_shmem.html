@@ -4,8 +4,8 @@
 <title> Customizing Shmem</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
-<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
-<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 0.9">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 0.9">
 <link rel="prev" href="containers_explained.html" title=" Shmem and containers in shared memory">
 <link rel="next" href="beyond_shared_memory.html" title=" Beyond shared memory">
 </head>
@@ -224,9 +224,9 @@ The <span class="bold"><strong>my_algorithm</strong></span> constructor must tak
 The <span class="bold"><strong>extra_hdr_bytes</strong></span> parameter indicates the number of bytes after
      the offset sizeof(<span class="bold"><strong>my_algorithm</strong></span>) that <span class="bold"><strong>my_algorithm</strong></span> can't use at all. This extra
      bytes will be used to store additional data that should not be overwritten.
-     So, <span class="bold"><strong>my_algorithm</strong></span> will be placed at offset 0 of the memory segment, and will
-     manage the <span class="bold"><strong>[sizeof(my_algorithm) + extra_hdr_bytes, size)</strong></span> range of the 
-     segment.
+     So, <span class="bold"><strong>my_algorithm</strong></span> will be placed at address XXX of the memory segment, and will
+     manage the <span class="bold"><strong>[XXX + sizeof(my_algorithm) + extra_hdr_bytes, XXX + size)</strong></span> range of
+     the segment.
 </li>
 </ul></div>
 </li>
@@ -238,7 +238,7 @@ The <span class="bold"><strong>get_min_size()</strong></span> function should re
 <li>
 The <span class="bold"><strong>allocate()</strong></span> function must return 0 if there is no more available memory. 
   The memory returned by <span class="bold"><strong>my_algorithm</strong></span>
-  must be aligned to the most restrictive memory alingment of the system, for example,
+  must be aligned to the most restrictive memory alignment of the system, for example,
   to the value returned by <span class="bold"><strong>boost::alignment_of&lt;boost::detail::max_align&gt;::value</strong></span>.
   This function should be executed with the synchronization capabilities offered
   by <code class="computeroutput"><span class="keyword">typename</span><span class="identifier"> mutex_family</span><span class="special">::</span><span class="identifier">mutex_t</span></code> mutex. That means, that if we define 
@@ -258,7 +258,8 @@ The <span class="bold"><strong>size()</strong></span> function will return the p
 <li>
 The <span class="bold"><strong>grow()</strong></span> function will expand the managed memory by <span class="bold"><strong>my_algorithm</strong></span> in <span class="bold"><strong>extra_size</strong></span> 
   bytes. So <span class="bold"><strong>size()</strong></span> function should return the updated size,
-  and the new managed memory range will be: <span class="bold"><strong>[sizeof(my_algorithm) + extra_hdr_bytes, old_size + extra_size)</strong></span>.
+  and the new managed memory range will be (if the address where the algorithm is
+  constructed is XXX): <span class="bold"><strong>[XXX + sizeof(my_algorithm) + extra_hdr_bytes, XXX + old_size + extra_size)</strong></span>.
   This function should offer the same synchronization as <code class="computeroutput"><span class="identifier">allocate</span><span class="special">()</span></code>.
 </li>
 </ul></div>
@@ -322,12 +323,13 @@ allocators are based on this approach. <span class="bold"><strong>Remember</stro
 should define their <span class="bold"><strong>pointer</strong></span> typedef as the same pointer family as 
 segment_manager::void_pointer typedef. This means that if segment_manager::void_pointer is
 offset_ptr&lt;void&gt; the MySTLAllocator&lt;int&gt; should define pointer as offset_ptr&lt;int&gt;. The
-reason for this is that allocators are placed in shared memory.</p>
+reason for this is that allocators are members of containers, and if want to put
+the container in shared memory, the allocator should be ready for that.</p>
 <p>
 If the user wants to optimize further allocator usage in Shmem node containers, he can 
 change the common allocator::construct function from:</p>
 <p></p>
-<pre class="programlisting"><code class="literal"><span class="keyword">void</span><span class="identifier"> construct</span><span class="special">(</span><span class="identifier">pointer</span><span class="identifier"> _Ptr</span><span class="special">,</span><span class="keyword"> const</span><span class="identifier"> value_type</span><span class="special"> &amp;</span><span class="identifier">value</span><span class="special">);</span></code></pre>
+<pre class="programlisting"><code class="literal"><span class="keyword">void</span><span class="identifier"> construct</span><span class="special">(</span><span class="identifier">pointer</span><span class="identifier"> ptr</span><span class="special">,</span><span class="keyword"> const</span><span class="identifier"> value_type</span><span class="special"> &amp;</span><span class="identifier">value</span><span class="special">);</span></code></pre>
 <p>
 to this one:</p>
 <p></p>
@@ -403,7 +405,7 @@ struct</span><span class="identifier"> index_key</span><span class="special">
    typedef</span><span class="comment"> /*...*/</span><span class="identifier">                              char_type</span><span class="special">;</span><span class="keyword">
    typedef</span><span class="comment"> /*...*/</span><span class="identifier">                              const_char_ptr_t</span><span class="special">;</span><span class="comment">
 
-   //Offset pointer to the object's name
+   //Pointer to the object's name
 </span><span class="identifier">   const_char_ptr_t</span><span class="identifier">                             mp_str</span><span class="special">;</span><span class="comment">
 
    //Length of the name buffer (null NOT included)
@@ -438,21 +440,20 @@ The index must provide a memory reservation function, that optimizes the index i
 For example, the default index type flat_map_index based in boost::shmem::flat_map 
 is just defined as:</p>
 <p></p>
-<pre class="programlisting"><code class="literal"><span class="keyword">namespace</span><span class="identifier"> boost</span><span class="special"> {</span><span class="keyword"> namespace</span><span class="identifier"> shmem</span><span class="special"> {</span><span class="keyword"> namespace</span><span class="identifier"> detail</span><span class="special"> {</span><span class="comment">
+<pre class="programlisting"><code class="literal"><span class="keyword">namespace</span><span class="identifier"> boost</span><span class="special"> {</span><span class="keyword"> namespace</span><span class="identifier"> shmem</span><span class="special"> {</span><span class="comment">
 
 /*!Helper class to define typedefs from IndexTraits*/</span><span class="keyword">
 template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> MapConfig</span><span class="special">&gt;</span><span class="keyword">
 struct</span><span class="identifier"> flat_map_index_aux</span><span class="special">
 {</span><span class="keyword">
-   typedef</span><span class="keyword"> typename</span><span class="identifier"> MapConfig</span><span class="special">::</span><span class="identifier">key_type</span><span class="identifier">                  key_type</span><span class="special">;</span><span class="keyword">
-   typedef</span><span class="keyword"> typename</span><span class="identifier"> MapConfig</span><span class="special">::</span><span class="identifier">mapped_type</span><span class="identifier">               mapped_type</span><span class="special">;</span><span class="keyword">
-   typedef</span><span class="keyword"> typename</span><span class="identifier"> MapConfig</span><span class="special">::</span><span class="identifier">segment_manager</span><span class="identifier">           segment_manager</span><span class="special">;</span><span class="keyword">
-   typedef</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">less</span><span class="special">&lt;</span><span class="identifier">key_type</span><span class="special">&gt;</span><span class="identifier">                           key_less</span><span class="special">;</span><span class="keyword">
-   typedef</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">key_type</span><span class="special">,</span><span class="identifier"> mapped_type</span><span class="special">&gt;</span><span class="identifier">              value_type</span><span class="special">;</span><span class="keyword">
-   typedef</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">allocator</span><span class="special">
-            &lt;</span><span class="identifier">value_type</span><span class="special">,</span><span class="identifier"> segment_manager</span><span class="special">&gt;</span><span class="identifier">                allocator_type</span><span class="special">;</span><span class="keyword">
-   typedef</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">flat_map</span><span class="special">&lt;</span><span class="identifier">key_type</span><span class="special">,</span><span class="identifier">  mapped_type</span><span class="special">,</span><span class="identifier">
-                                 key_less</span><span class="special">,</span><span class="identifier"> allocator_type</span><span class="special">&gt;</span><span class="identifier">   index_t</span><span class="special">;</span><span class="special">
+   typedef</span><span class="keyword"> typename</span><span class="identifier"> MapConfig</span><span class="special">::</span><span class="identifier">key_type</span><span class="identifier">            key_type</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="keyword"> typename</span><span class="identifier"> MapConfig</span><span class="special">::</span><span class="identifier">mapped_type</span><span class="identifier">         mapped_type</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="keyword"> typename</span><span class="identifier"> MapConfig</span><span class="special">::</span><span class="identifier">segment_manager</span><span class="identifier">     segment_manager</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">less</span><span class="special">&lt;</span><span class="identifier">key_type</span><span class="special">&gt;</span><span class="identifier">                     key_less</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">key_type</span><span class="special">,</span><span class="identifier"> mapped_type</span><span class="special">&gt;</span><span class="identifier">        value_type</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="identifier"> allocator</span><span class="special">&lt;</span><span class="identifier">value_type</span><span class="special">,</span><span class="identifier"> segment_manager</span><span class="special">&gt;</span><span class="identifier">  allocator_type</span><span class="special">;</span><span class="keyword">
+   typedef</span><span class="identifier"> flat_map</span><span class="special">&lt;</span><span class="identifier">key_type</span><span class="special">,</span><span class="identifier"> mapped_type</span><span class="special">,</span><span class="identifier">
+                    key_less</span><span class="special">,</span><span class="identifier"> allocator_type</span><span class="special">&gt;</span><span class="identifier">      index_t</span><span class="special">;</span><span class="special">
 };</span><span class="comment">
 
 /*!Index type based in flat_map. Just derives from flat_map and
@@ -466,20 +467,21 @@ class</span><span class="identifier"> flat_map_index</span><span class="comment"
    typedef</span><span class="keyword"> typename</span><span class="identifier"> index_aux</span><span class="special">::</span><span class="identifier">index_t</span><span class="identifier">          base_type</span><span class="special">;</span><span class="keyword">
    typedef</span><span class="keyword"> typename</span><span class="identifier"> index_aux</span><span class="special">::</span><span class="identifier">segment_manager</span><span class="identifier">  segment_manager</span><span class="special">;</span><span class="keyword">
 
-public</span><span class="special">:</span><span class="comment">
-   /*!Constructor. Takes a pointer to the memory
-      allocation algorithm. Can throw*/</span><span class="identifier">
+   public</span><span class="special">:</span><span class="comment">
+   /*!Constructor. Takes a pointer to the
+      segment manager. Can throw*/</span><span class="identifier">
    flat_map_index</span><span class="special">(</span><span class="identifier">segment_manager</span><span class="special"> *</span><span class="identifier">segment_mngr</span><span class="special">)</span><span class="special">
-      :</span><span class="identifier"> base_type</span><span class="special">(</span><span class="keyword">typename</span><span class="identifier"> index_aux</span><span class="special">::</span><span class="identifier">key_less</span><span class="special">(),</span><span class="identifier">
-                  segment_mngr</span><span class="special">){}</span><span class="comment">
+      :</span><span class="identifier"> base_type</span><span class="special">(</span><span class="keyword">typename</span><span class="identifier"> index_aux</span><span class="special">::</span><span class="identifier">key_less</span><span class="special">(),</span><span class="keyword">
+                  typename</span><span class="identifier"> index_aux</span><span class="special">::</span><span class="identifier">allocator_type</span><span class="special">(</span><span class="identifier">segment_mngr</span><span class="special">))</span><span class="special">
+   {}</span><span class="comment">
 
    /*!This reserves memory to optimize the insertion of n
       elements in the index*/</span><span class="keyword">
    void</span><span class="identifier"> reserve</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> n</span><span class="special">)</span><span class="special">
-      {</span><span class="identifier">  base_type</span><span class="special">::</span><span class="identifier">reserve</span><span class="special">(</span><span class="identifier">n</span><span class="special">);</span><span class="special">  }</span><span class="special">
+   {</span><span class="identifier">  base_type</span><span class="special">::</span><span class="identifier">reserve</span><span class="special">(</span><span class="identifier">n</span><span class="special">);</span><span class="special">  }</span><span class="special">
 };</span><span class="special">
 
-}}}</span><span class="comment">   //namespace boost { namespace shmem { namespace detail {
+}}</span><span class="comment">   //namespace boost { namespace shmem
 </span></code></pre>
 <p>
 If the user is defining a node container based index (a container whose iterators 
@@ -503,9 +505,6 @@ struct</span><span class="identifier"> is_node_index</span><span class="special"
 <p>
 Shmem also defines other index types:</p>
 <div class="itemizedlist"><ul type="disc">
-<li>
-<span class="bold"><strong>boost:shmem::unordered_map_index</strong></span>, uses <span class="bold"><strong>boost::unordered_map</strong></span> as index type.
-</li>
 <li>
 <span class="bold"><strong>boost::map_index</strong></span> uses <span class="bold"><strong>boost::shmem::map</strong></span> as index type.
 </li>

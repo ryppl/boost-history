@@ -4,8 +4,8 @@
 <title> Shmem STL compatible allocators</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
-<link rel="start" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
-<link rel="up" href="../index.html" title="Chapter 1. Shmem 2006-01-12">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 0.9">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 0.9">
 <link rel="prev" href="named_shared_object.html" title=" Named shared memory object allocation">
 <link rel="next" href="containers_explained.html" title=" Shmem and containers in shared memory">
 </head>
@@ -44,7 +44,7 @@ schemes: variable size object allocation and fixed size object allocation (segre
 implemented in these allocators:</p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-<span class="bold"><strong>boost::shmem::allocator</strong></span> offers general purpose allocation within a fixed size memory segment.
+<span class="bold"><strong>boost::shmem::allocator</strong></span> offers general purpose, variable size allocation.
 </li>
 <li>
 <span class="bold"><strong>boost::shmem::node_allocator</strong></span> offers a segregated storage allocation scheme sharing a common
@@ -66,9 +66,11 @@ implemented in these allocators:</p>
 </li>
 </ul></div>
 <p>
-Shmem STL compatible allocators are configurable via template types so that the can use different 
-allocation algorithms and pointer types. And when used offset_ptr as pointer type, the user 
-can place these allocators in shared memory mapped in different base addresses in several processes.</p>
+Shmem STL compatible allocators are configurable via template parameters. The Shmem allocators
+define their <code class="computeroutput"><span class="identifier">pointer</span></code> typedef based on the <code class="computeroutput"><span class="identifier">void_pointer</span></code> typedef of the segment manager
+passed as template argument. When this <code class="computeroutput"><span class="identifier">segment_manager</span><span class="special">::</span><span class="identifier">void_pointer</span></code> is a relative pointer, 
+the user can place these allocators in shared memory mapped in different base addresses in
+several processes.</p>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
@@ -76,8 +78,7 @@ can place these allocators in shared memory mapped in different base addresses i
 <p>
 The <span class="bold"><strong>boost::shmem::allocator</strong></span> class defines a STL compatible allocator class that 
 uses the shared memory management algorithm from the segment to allocate and deallocate memory. 
-This allocator is templatized with the allocated type, the type pointer, 
-and the allocation algorithm.</p>
+This allocator is templatized with the allocated type, and the segment manager.</p>
 <p></p>
 <pre class="programlisting"><code class="literal"><span class="keyword">namespace</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special"> {</span><span class="comment">
 
@@ -91,12 +92,10 @@ class</span><span class="identifier"> allocator</span><span class="special">
    public</span><span class="special">:</span><span class="comment">
 
    /*!Returns the segment manager. Never throws*/</span><span class="identifier">
-   segment_manager</span><span class="special">*</span><span class="identifier"> get_segment_manager</span><span class="special">()</span><span class="keyword">const</span><span class="special">
-      {</span><span class="keyword">  using</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">get_pointer</span><span class="special">;</span><span class="keyword">  return</span><span class="identifier">  get_pointer</span><span class="special">(</span><span class="identifier">mp_mngr</span><span class="special">);</span><span class="special">   }</span><span class="comment">
+   segment_manager</span><span class="special">*</span><span class="identifier"> get_segment_manager</span><span class="special">()</span><span class="keyword"> const</span><span class="special">;</span><span class="comment">
 
    /*!Constructor from the segment manager. Never throws*/</span><span class="identifier">
-   allocator</span><span class="special">(</span><span class="identifier">segment_manager</span><span class="special"> *</span><span class="identifier">segment_mngr</span><span class="special">)</span><span class="special"> 
-      :</span><span class="identifier"> mp_mngr</span><span class="special">(</span><span class="identifier">segment_mngr</span><span class="special">)</span><span class="special"> {</span><span class="special"> }</span><span class="comment">
+   allocator</span><span class="special">(</span><span class="identifier">segment_manager</span><span class="special"> *</span><span class="identifier">segment_mngr</span><span class="special">);</span><span class="comment">
 
    //The rest of the interface is the same of std::allocator
 </span><span class="special">};</span><span class="special">
@@ -116,9 +115,8 @@ to allocate memory.</p>
 //Initialize allocator with the segment manager
 </span><span class="identifier">Allocator</span><span class="identifier"> alloc_inst</span><span class="special"> (</span><span class="identifier">segment</span><span class="special">.</span><span class="identifier">get_segment_manager</span><span class="special">());</span></code></pre>
 <p>
-The allocator just provides the needed typedefs and forwards 
-all allocation and deallocation requests to the memory allocation
-algorithm passed in the constructor.</p>
+The allocator just provides the needed typedefs and forwards all allocation
+and deallocation requests to the segment manager passed in the constructor.</p>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
@@ -157,7 +155,8 @@ storage destruction when the last node_allocator is destroyed.</p>
    placing the allocator in shared memory, memory mapped-files, etc...
    This node allocator shares a segregated storage between all instances 
    of node_allocator with equal sizeof(T) placed in the same segment 
-   group.*/</span><span class="keyword">
+   group. N is the number of nodes allocated at once when the allocator
+   needs runs out of nodes*/</span><span class="special">*/</span><span class="keyword">
 template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="identifier"> T</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> N</span><span class="special">,</span><span class="keyword"> class</span><span class="identifier"> SegmentManager</span><span class="special">&gt;</span><span class="keyword">
 class</span><span class="identifier"> node_allocator</span><span class="special">
 {</span><span class="keyword">
@@ -176,9 +175,8 @@ class</span><span class="identifier"> node_allocator</span><span class="special"
    //The rest is the same interface as std::allocator
    /*...*/</span></code></pre>
 <p>
-The <span class="bold"><strong>node_allocator</strong></span> must be always initialized with the allocation
-algorithm obtained from the segment 
-where you want <span class="bold"><strong>node_allocator</strong></span> to allocate memory</p>
+The <span class="bold"><strong>node_allocator</strong></span> must be always initialized with the segment 
+manager obtained from the segment where you want <span class="bold"><strong>node_allocator</strong></span> to allocate memory.</p>
 <p></p>
 <pre class="programlisting"><code class="literal"><span class="comment">//Alias allocator type with
 //    T=int
@@ -186,18 +184,15 @@ where you want <span class="bold"><strong>node_allocator</strong></span> to allo
 //    SegmentManager = named_shared_object::segment_manager
 </span><span class="keyword">typedef</span><span class="identifier"> node_allocator</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="number"> 64</span><span class="special">,</span><span class="identifier"> named_shared_object</span><span class="special">::</span><span class="identifier">segment_manager</span><span class="special">&gt;</span><span class="identifier"> NodeAllocator</span><span class="special">;</span><span class="comment">
 
-//Initialize allocator instance with the named algorithm
+//Initialize allocator instance with the segment manager
 </span><span class="identifier">NodeAllocator</span><span class="identifier"> alloc_inst</span><span class="special"> (</span><span class="identifier">segment</span><span class="special">.</span><span class="identifier">get_segment_manager</span><span class="special">());</span></code></pre>
 <p>
 All STL compatible containers that want to use this allocation scheme 
 must be constructed with an initialized node_allocator so 
 that they can allocate the values with the node allocator:</p>
 <p></p>
-<pre class="programlisting"><code class="literal"><span class="identifier">MyIntList</span><span class="identifier"> mylist</span><span class="special">(</span><span class="identifier">alloc_inst</span><span class="special">);</span><span class="keyword">
-for</span><span class="special">(</span><span class="keyword">int</span><span class="identifier"> i</span><span class="special"> =</span><span class="number"> 0</span><span class="special">;</span><span class="keyword"> true</span><span class="special">;</span><span class="special"> ++</span><span class="identifier">i</span><span class="special">){</span><span class="identifier">
-   mylist</span><span class="special">.</span><span class="identifier">insert</span><span class="special">(</span><span class="identifier">mylist</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span><span class="number"> 3</span><span class="special">);</span><span class="special">
-}</span>  
-</code></pre>
+<pre class="programlisting"><code class="literal"><span class="identifier">MyIntList</span><span class="identifier"> mylist</span><span class="special">(</span><span class="identifier">alloc_inst</span><span class="special">);</span><span class="identifier">
+mylist</span><span class="special">.</span><span class="identifier">insert</span><span class="special">(</span><span class="identifier">mylist</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span><span class="number"> 3</span><span class="special">);</span></code></pre>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
@@ -208,8 +203,8 @@ node_allocators that allocate objects of the same size and this optimizes
 memory usage. However, it needs a named_shared memory algorithm to use
 the unique instance service so that this sharing can be possible. Also
 imposes a synchronization overhead per node allocation because of this share.
-Sometimes, the named object algorithm is not available (for example, when
-building index types for the named object algorithm itself) or the 
+Sometimes, the named object service is not available (for example, when
+building index types for the named object service itself) or the 
 synchronization overhead is not acceptable.</p>
 <p>
 So <span class="bold"><strong>private_node_allocator</strong></span> uses the same segregated storage as node_allocator,
@@ -222,7 +217,8 @@ deallocating a node.</p>
    source. The internal pointer type will of the same type (raw, smart) as
    "typename SegmentManager::void_pointer" type. This allows
    placing the allocator in shared memory, memory mapped-files, etc...
-   This allocator has its own node pool.*/</span><span class="keyword">
+   This allocator has its own node pool. N is the number of nodes allocated 
+   at once when the allocator needs runs out of nodes*/</span><span class="special">*/</span><span class="keyword">
 template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="identifier"> T</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> N</span><span class="special">,</span><span class="keyword"> class</span><span class="identifier"> SegmentManager</span><span class="special">&gt;</span><span class="keyword">
 class</span><span class="identifier"> private_node_allocator</span><span class="special">
 {</span><span class="keyword">
@@ -251,18 +247,15 @@ to allocate memory:</p>
 </span><span class="keyword">typedef</span><span class="identifier"> private_node_allocator</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span><span class="number"> 64</span><span class="special">,</span><span class="identifier"> named_shared_object</span><span class="special">::</span><span class="identifier">segment_manager</span><span class="special">&gt;</span><span class="identifier"> 
    PrivateNodeAllocator</span><span class="special">;</span><span class="comment">
 
-//Initialize allocator instance with algorithm
+//Initialize allocator instance with the segment manager
 </span><span class="identifier">PrivateNodeAllocator</span><span class="identifier"> alloc_inst</span><span class="special"> (</span><span class="identifier">segment</span><span class="special">.</span><span class="identifier">get_segment_manager</span><span class="special">());</span></code></pre>
 <p>
 All STL compatible containers that want to use this allocation scheme 
 must be constructed with an initialized private_node_allocator so 
 that they can allocate the values with the private node allocator:</p>
 <p></p>
-<pre class="programlisting"><code class="literal"><span class="identifier">MyIntList</span><span class="identifier"> mylist</span><span class="special">(</span><span class="identifier">alloc_inst</span><span class="special">);</span><span class="keyword">
-for</span><span class="special">(</span><span class="keyword">int</span><span class="identifier"> i</span><span class="special"> =</span><span class="number"> 0</span><span class="special">;</span><span class="keyword"> true</span><span class="special">;</span><span class="special"> ++</span><span class="identifier">i</span><span class="special">){</span><span class="identifier">
-   mylist</span><span class="special">.</span><span class="identifier">insert</span><span class="special">(</span><span class="identifier">mylist</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span><span class="number"> 3</span><span class="special">);</span><span class="special">
-}</span>  
-</code></pre>
+<pre class="programlisting"><code class="literal"><span class="identifier">MyIntList</span><span class="identifier"> mylist</span><span class="special">(</span><span class="identifier">alloc_inst</span><span class="special">);</span><span class="identifier">
+mylist</span><span class="special">.</span><span class="identifier">insert</span><span class="special">(</span><span class="identifier">mylist</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span><span class="number"> 3</span><span class="special">);</span></code></pre>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
@@ -329,11 +322,8 @@ that they can allocate the values with the cached_node_allocator:</p>
 </span><span class="identifier">alloc_inst</span><span class="special">.</span><span class="identifier">set_max_cached_nodes</span><span class="special">(</span><span class="number">100</span><span class="special">);</span><span class="comment">
 
 //Initialize container
-</span><span class="identifier">MyIntList</span><span class="identifier"> mylist</span><span class="special">(</span><span class="identifier">alloc_inst</span><span class="special">);</span><span class="keyword">
-for</span><span class="special">(</span><span class="keyword">int</span><span class="identifier"> i</span><span class="special"> =</span><span class="number"> 0</span><span class="special">;</span><span class="keyword"> true</span><span class="special">;</span><span class="special"> ++</span><span class="identifier">i</span><span class="special">){</span><span class="identifier">
-   mylist</span><span class="special">.</span><span class="identifier">insert</span><span class="special">(</span><span class="identifier">mylist</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span><span class="number"> 3</span><span class="special">);</span><span class="special">
-}</span>  
-</code></pre>
+</span><span class="identifier">MyIntList</span><span class="identifier"> mylist</span><span class="special">(</span><span class="identifier">alloc_inst</span><span class="special">);</span><span class="identifier">
+mylist</span><span class="special">.</span><span class="identifier">insert</span><span class="special">(</span><span class="identifier">mylist</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span><span class="number"> 3</span><span class="special">);</span></code></pre>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">

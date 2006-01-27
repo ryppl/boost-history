@@ -27,14 +27,14 @@ typedef allocator<char, named_shared_object::segment_manager> ShmemAllocatorChar
 typedef basic_string<char, std::char_traits<char>, ShmemAllocatorChar> ShmString;
 typedef allocator<ShmString, named_shared_object::segment_manager> ShmemVectorAllocator;
 typedef vector<ShmString, ShmemVectorAllocator> ShmStringVector;
-//template class vector<ShmString, ShmemVectorAllocator>;
+template class vector<ShmString, ShmemVectorAllocator>;
 
 //Explicit instantiation of a std::vector of std::strings
 typedef std::allocator<char>  StdAllocatorChar;
 typedef std::basic_string<char, std::char_traits<char>, StdAllocatorChar> StdString;
 typedef std::allocator<StdString> StdVectorAllocator;
 typedef vector<StdString, StdVectorAllocator> StdStringVector;
-//template class vector<StdString, StdVectorAllocator>;
+template class vector<StdString, StdVectorAllocator>;
 
 struct StringEqual
 {
@@ -62,8 +62,11 @@ int main ()
 
    //Create shared memory
    named_shared_object segment;
-   segment.create("/MySharedMemory",//segment name
-                  65536);           //segment size in bytes
+   
+   if(!segment.create("/MySharedMemory",//segment name
+                      65536)){           //segment size in bytes
+      return -1;
+   }
    
    ShmemAllocatorChar shmallocator (segment.get_segment_manager());
 
