@@ -26,7 +26,7 @@
  */
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztañaga 2005. Distributed under the Boost
+// (C) Copyright Ion Gaztañaga 2005-2006. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -34,7 +34,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 //
-// This file comes from SGI's stl_vector.h file. Modified by Ion Gaztañaga 2004.
+// This file comes from SGI's stl_vector.h file. Modified by Ion Gaztañaga.
 // Renaming, isolating and porting to generic algorithms. Pointer typedef 
 // set to allocator::pointer to allow placing it in shared memory.
 //
@@ -50,7 +50,8 @@
 #include <boost/shmem/detail/workaround.hpp>
 #include <boost/shmem/detail/config_begin.hpp>
 #include <boost/shmem/detail/utilities.hpp>
-#include <boost/shmem/containers/container_fwd.hpp>
+#include <boost/shmem/shmem_fwd.hpp>
+#include <boost/shmem/smart_ptr/scoped_ptr.hpp>
 #include <boost/iterator.hpp>
 #include <boost/iterator/reverse_iterator.hpp>
 #include <cstddef>
@@ -104,6 +105,7 @@ class vector : private detail::vector_alloc_holder<A>
 {
    typedef vector<T, A>                   self_t;
    typedef detail::vector_alloc_holder<A> base_t;
+   typedef detail::scoped_array_deallocator<A> dealloc_t;
  public:
    //STL container typedefs
    typedef T                              value_type;
@@ -475,12 +477,12 @@ class vector : private detail::vector_alloc_holder<A>
    {
       allocator_type &this_al = *this, &other_al = x;
       //Just swap pointers
-      detail::swap_function(this->m_start, x.m_start);
-      detail::swap_function(this->m_finish, x.m_finish);
-      detail::swap_function(this->m_end, x.m_end);
+      detail::swap(this->m_start, x.m_start);
+      detail::swap(this->m_finish, x.m_finish);
+      detail::swap(this->m_end, x.m_end);
 
       if (this_al != other_al){
-         detail::swap_function(this_al, other_al);
+         detail::swap(this_al, other_al);
       }
    }
 
@@ -539,8 +541,8 @@ class vector : private detail::vector_alloc_holder<A>
             size_type old_size   = size();        
             size_type len        = old_size + ((old_size/2 > n) ? old_size/2 : n);
             pointer new_start    = this->allocate(len, 0);
-            detail::scoped_array_deallocator<allocator_type> 
-               scoped_alloc (*this, new_start, len);
+
+            scoped_ptr<T, dealloc_t> scoped_alloc(new_start, dealloc_t(*this, len));
             pointer new_finish   = new_start;
             //Initialize [begin(), position) old buffer to the start of the new buffer
             new_finish = this->priv_uninitialized_copy(this->m_start, position.get_ptr(), 
@@ -638,8 +640,8 @@ class vector : private detail::vector_alloc_holder<A>
       size_type n = 0;
       n = std::distance(first, last);
       this->m_start = this->allocate(n, 0);
-      detail::scoped_array_deallocator<allocator_type> 
-         scoped_alloc (*this, this->m_start, n);
+
+      scoped_ptr<T, dealloc_t> scoped_alloc(this->m_start, dealloc_t(*this, n));
       this->m_end = this->m_start + n;
       this->m_finish = this->priv_uninitialized_copy(first, last, this->m_start, *this);
       scoped_alloc.release();
@@ -687,8 +689,7 @@ class vector : private detail::vector_alloc_holder<A>
             const size_type old_size = size();
             const size_type len = old_size + ((old_size/2 > n) ? old_size/2 : n);
             pointer new_start = this->allocate(len, 0);
-            detail::scoped_array_deallocator<allocator_type> 
-               scoped_alloc (*this, new_start, len);
+            scoped_ptr<T, dealloc_t> scoped_alloc(new_start, dealloc_t(*this, len));
             pointer new_finish = new_start;
             BOOST_TRY{
                //Initialize with [begin(), position) old buffer 
@@ -819,8 +820,7 @@ class vector : private detail::vector_alloc_holder<A>
    {
       //Allocate and initialize integer vector buffer
       this->m_start  = this->allocate(n, 0);
-      detail::scoped_array_deallocator<allocator_type> 
-         scoped_alloc (*this, this->m_start, n);
+      scoped_ptr<T, dealloc_t> scoped_alloc(this->m_start, dealloc_t(*this, n));
       this->m_end    = this->m_start + n; 
       this->m_finish = this->m_start;
       this->priv_uninitialized_fill_n(this->m_start, n, value, *this);
@@ -853,8 +853,7 @@ class vector : private detail::vector_alloc_holder<A>
    {
       //Allocate n element buffer and initialize from range
       pointer result = this->allocate(n, 0);
-      detail::scoped_array_deallocator<allocator_type> 
-         scoped_alloc (*this, result, n);
+      scoped_ptr<T, dealloc_t> scoped_alloc(result, dealloc_t(*this, n));
       this->priv_uninitialized_copy(first, last, result, *this);
       scoped_alloc.release();
       return result;

@@ -139,18 +139,22 @@ class rb_tree_alloc_base
 
    typedef typename boost::detail::allocator::
          rebind_to<Alloc, typename node_val_t::
-                    basic_node_pointer>::type               node_ptr_allocator_t;
-   typedef typename node_ptr_allocator_t::pointer           node_ptr_ptr_t;
+                    basic_node_pointer>::type               basic_node_ptr_allocator_t;
+   typedef typename basic_node_ptr_allocator_t::pointer     basic_node_ptr_ptr_t;
+   typedef typename basic_node_ptr_allocator_t::value_type  basic_node_ptr_t;
+
+   typedef detail::scoped_deallocator<node_allocator_t>     NodeDeallocator;
+   typedef detail::scoped_destructor <basic_node_ptr_allocator_t> BasicPtrDestructor;
 
    rb_tree_alloc_base(const value_allocator_t& a)
       :  node_allocator_t(a), 
-         node_ptr_allocator_t(a), 
+         basic_node_ptr_allocator_t(a), 
          value_allocator_t(a)
       {  this->initialize_when_empty();   }
    
    rb_tree_alloc_base(const rb_tree_alloc_base &x)
       :  node_allocator_t(x), 
-         node_ptr_allocator_t(x), 
+         basic_node_ptr_allocator_t(x), 
          value_allocator_t(x)
    {
       if (!x.m_header->parent()){
@@ -164,26 +168,26 @@ class rb_tree_alloc_base
    node_pointer allocate_and_construct_node(value_cref_t x)
    {
       node_pointer p = node_allocator_t::allocate(1);
-      detail::scoped_deallocator<node_allocator_t> node_deallocator(*this, p);
+      scoped_ptr<node_val_t, NodeDeallocator>node_deallocator(p, *this);
 
-      node_ptr_ptr_t pleft(node_ptr_allocator_t::address(p->left())), 
-         pright(node_ptr_allocator_t::address(p->right())),
-         pparent(node_ptr_allocator_t::address(p->parent()));
+      basic_node_ptr_ptr_t pleft(basic_node_ptr_allocator_t::address(p->left())), 
+         pright(basic_node_ptr_allocator_t::address(p->right())),
+         pparent(basic_node_ptr_allocator_t::address(p->parent()));
 
       //Make sure destructors are called before memory is freed
       //if an exception is thrown
       {
-         node_ptr_allocator_t::construct(pleft, node_pointer());
-         detail::scoped_destructor<node_ptr_allocator_t> 
-            left_destroy(*this, pleft);
+         basic_node_ptr_allocator_t::construct(pleft, basic_node_ptr_t());
+         scoped_ptr<basic_node_ptr_t, BasicPtrDestructor>
+            left_destroy(pleft, *this);
 
-         node_ptr_allocator_t::construct(pright, node_pointer());
-         detail::scoped_destructor<node_ptr_allocator_t> 
-            right_destroy(*this, pright);
+         basic_node_ptr_allocator_t::construct(pright, basic_node_ptr_t());
+         scoped_ptr<basic_node_ptr_t, BasicPtrDestructor>
+            right_destroy(pright, *this);
 
-         node_ptr_allocator_t::construct(pparent, node_pointer());
-         detail::scoped_destructor<node_ptr_allocator_t> 
-            parent_destroy(*this, pparent);
+         basic_node_ptr_allocator_t::construct(pparent, basic_node_ptr_t());
+         scoped_ptr<basic_node_ptr_t, BasicPtrDestructor>
+            parent_destroy(pparent, *this);
          value_allocator_t::construct(value_allocator_t::address(p->value()), x);
 
          left_destroy.release();
@@ -208,37 +212,37 @@ class rb_tree_alloc_base
       node_allocator_t& this_alloc  = static_cast<node_allocator_t&>(*this);
       node_allocator_t& other_alloc = static_cast<node_allocator_t&>(x);
       if (this_alloc != other_alloc){
-         detail::swap_function(static_cast<value_allocator_t&>(*this), 
+         detail::swap(static_cast<value_allocator_t&>(*this), 
                                static_cast<value_allocator_t&>(x));
-         detail::swap_function(static_cast<node_ptr_allocator_t&>(*this), 
-                               static_cast<node_ptr_allocator_t&>(x));
-         detail::swap_function(this_alloc, other_alloc);
+         detail::swap(static_cast<basic_node_ptr_allocator_t&>(*this), 
+                               static_cast<basic_node_ptr_allocator_t&>(x));
+         detail::swap(this_alloc, other_alloc);
       }
-      detail::swap_function(this->m_header, x.m_header);     
+      detail::swap(this->m_header, x.m_header);     
    }
 
    private:
    void initialize_when_empty()
    {
       this->m_header = node_allocator_t::allocate(1); 
-      detail::scoped_deallocator<node_allocator_t> node_deallocator(*this, this->m_header);
+      scoped_ptr<node_val_t, NodeDeallocator>node_deallocator(this->m_header, *this);
 
-      node_ptr_ptr_t pleft(node_ptr_allocator_t::address(this->m_header->left())), 
-         pright(node_ptr_allocator_t::address(this->m_header->right())),
-         pparent(node_ptr_allocator_t::address(this->m_header->parent()));
+      basic_node_ptr_ptr_t pleft(basic_node_ptr_allocator_t::address(this->m_header->left())), 
+         pright(basic_node_ptr_allocator_t::address(this->m_header->right())),
+         pparent(basic_node_ptr_allocator_t::address(this->m_header->parent()));
 
       //Make sure destructors are called before memory is freed
       //if an exception is thrown
       {
-         node_ptr_allocator_t::construct(pleft, node_pointer());
-         detail::scoped_destructor<node_ptr_allocator_t> 
-            left_destroy(*this, pleft);
+         basic_node_ptr_allocator_t::construct(pleft, basic_node_ptr_t());
+         scoped_ptr<basic_node_ptr_t, BasicPtrDestructor>
+            left_destroy(pleft, *this);
 
-         node_ptr_allocator_t::construct(pright, node_pointer());
-         detail::scoped_destructor<node_ptr_allocator_t> 
-            right_destroy(*this, pright);
+         basic_node_ptr_allocator_t::construct(pright, basic_node_ptr_t());
+         scoped_ptr<basic_node_ptr_t, BasicPtrDestructor>
+            right_destroy(pleft, *this);
 
-         node_ptr_allocator_t::construct(pparent, node_pointer());
+         basic_node_ptr_allocator_t::construct(pparent, basic_node_ptr_t());
 
          left_destroy.release();
          right_destroy.release();
@@ -257,9 +261,9 @@ class rb_tree_alloc_base
    void uninitialize_when_empty()
    {
       //Destructors must not throw
-      node_ptr_allocator_t::destroy(node_ptr_allocator_t::address(this->m_header->left()));
-      node_ptr_allocator_t::destroy(node_ptr_allocator_t::address(this->m_header->right()));
-      node_ptr_allocator_t::destroy(node_ptr_allocator_t::address(this->m_header->parent()));
+      basic_node_ptr_allocator_t::destroy(basic_node_ptr_allocator_t::address(this->m_header->left()));
+      basic_node_ptr_allocator_t::destroy(basic_node_ptr_allocator_t::address(this->m_header->right()));
+      basic_node_ptr_allocator_t::destroy(basic_node_ptr_allocator_t::address(this->m_header->parent()));
       //m_color is POD so we don't need to destroy it
       //m_value was not constructed so we don't need to destroy it
       node_allocator_t::deallocate(this->m_header, 1);
@@ -291,8 +295,12 @@ class rb_tree_alloc_base<T, Alloc, true>
 
    typedef typename boost::detail::allocator::
          rebind_to<Alloc, typename node_val_t::
-                    basic_node_pointer>::type               node_ptr_allocator_t;
-   typedef typename node_ptr_allocator_t::pointer        node_ptr_ptr_t;
+                    basic_node_pointer>::type               basic_node_ptr_allocator_t;
+   typedef typename basic_node_ptr_allocator_t::pointer     basic_node_ptr_ptr_t;
+   typedef typename basic_node_ptr_allocator_t::value_type  basic_node_ptr_t;
+
+   typedef detail::scoped_deallocator<node_allocator_t>  NodeDeallocator;
+   typedef detail::scoped_destructor <basic_node_ptr_allocator_t> BasicPtrDestructor;
 
    rb_tree_alloc_base(const value_allocator_t& a)
       :  node_allocator_t(a)
@@ -309,7 +317,7 @@ class rb_tree_alloc_base<T, Alloc, true>
       node_pointer allocate_and_construct_node(const Convertible &x)
    {
       node_pointer p = node_allocator_t::allocate(1);
-      detail::scoped_deallocator<node_allocator_t> node_deallocator(*this, p);
+      scoped_ptr<node_val_t, NodeDeallocator>node_deallocator(p, *this);
       node_allocator_t::construct(p, x);      
       node_deallocator.release();
       return p;
@@ -329,9 +337,9 @@ class rb_tree_alloc_base<T, Alloc, true>
       node_allocator_t& this_alloc  = static_cast<node_allocator_t&>(*this);
       node_allocator_t& other_alloc = static_cast<node_allocator_t&>(x);
       if (this_alloc != other_alloc){
-         detail::swap_function(this_alloc, other_alloc);
+         detail::swap(this_alloc, other_alloc);
       }
-      detail::swap_function(this->m_header, x.m_header);     
+      detail::swap(this->m_header, x.m_header);     
    }
 
    private:
@@ -341,24 +349,24 @@ class rb_tree_alloc_base<T, Alloc, true>
 
       //If the pointer type a has trivial constructor we can avoid this
       if(!boost::has_trivial_constructor<node_pointer>::value){
-         node_ptr_allocator_t node_ptr_allocator(*this);
-         detail::scoped_deallocator<node_allocator_t> node_deallocator(*this, this->m_header);
-         node_ptr_ptr_t pleft(node_ptr_allocator.address(this->m_header->left())), 
+         basic_node_ptr_allocator_t node_ptr_allocator(*this);
+         scoped_ptr<node_val_t, NodeDeallocator>node_deallocator(this->m_header, *this);
+         basic_node_ptr_ptr_t pleft(node_ptr_allocator.address(this->m_header->left())), 
             pright(node_ptr_allocator.address(this->m_header->right())),
             pparent(node_ptr_allocator.address(this->m_header->parent()));
 
          //Make sure destructors are called before memory is freed
          //if an exception is thrown
          {
-            node_ptr_allocator.construct(pleft, node_pointer());
-            detail::scoped_destructor<node_ptr_allocator_t> 
-               left_destroy(node_ptr_allocator, pleft);
+            node_ptr_allocator.construct(pleft, basic_node_ptr_t());
+            scoped_ptr<basic_node_ptr_t, BasicPtrDestructor>
+               left_destroy(pleft, node_ptr_allocator);
 
-            node_ptr_allocator.construct(pright, node_pointer());
-            detail::scoped_destructor<node_ptr_allocator_t> 
-               right_destroy(node_ptr_allocator, pright);
+            node_ptr_allocator.construct(pright, basic_node_ptr_t());
+            scoped_ptr<basic_node_ptr_t, BasicPtrDestructor>
+               right_destroy(pright, node_ptr_allocator);
 
-            node_ptr_allocator.construct(pparent, node_pointer());
+            node_ptr_allocator.construct(pparent, basic_node_ptr_t());
 
             left_destroy.release();
             right_destroy.release();
@@ -379,7 +387,7 @@ class rb_tree_alloc_base<T, Alloc, true>
    {
       //If the pointer type a has trivial destructor we can avoid this
       if(!boost::has_trivial_destructor<node_pointer>::value){
-         node_ptr_allocator_t node_ptr_allocator(*this);
+         basic_node_ptr_allocator_t node_ptr_allocator(*this);
          //Destructors must not throw
          node_ptr_allocator.destroy(node_ptr_allocator.address(this->m_header->left()));
          node_ptr_allocator.destroy(node_ptr_allocator.address(this->m_header->right()));
@@ -517,8 +525,8 @@ class rb_tree
 
    void swap(rb_tree& t) 
    {
-      std::swap(this->m_data.m_node_count, t.m_data.m_node_count);
-      swap_function(this->get_compare(), t.get_compare());
+      detail::swap(this->m_data.m_node_count, t.m_data.m_node_count);
+      detail::swap(this->get_compare(), t.get_compare());
       base_t::swap(t);
    }
     

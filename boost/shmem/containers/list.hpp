@@ -50,7 +50,7 @@
 #include <boost/detail/workaround.hpp>
 #include <boost/config.hpp>
 #include <boost/shmem/detail/workaround.hpp>
-#include <boost/shmem/containers/container_fwd.hpp>
+#include <boost/shmem/shmem_fwd.hpp>
 #include <boost/shmem/containers/vector.hpp>
 #include <boost/iterator.hpp>
 #include <boost/iterator/reverse_iterator.hpp>
@@ -89,7 +89,7 @@ struct shmem_list_node_base
    {
       pointer tmp = head;
       do {
-         detail::swap_function(tmp->m_next, tmp->m_prev);
+         detail::swap(tmp->m_next, tmp->m_prev);
          tmp = tmp->m_prev;     // Old next node is now prev.
       } while (tmp != head);
    }
@@ -129,12 +129,15 @@ struct shmem_list_alloc
                   type::pointer >::type,
       public A
 {
+   typedef shmem_list_node<A>                         Node;
    typedef typename boost::detail::allocator::
-      rebind_to<A, shmem_list_node<A> >::type      NodeAlloc;
+      rebind_to<A, shmem_list_node<A> >::type         NodeAlloc;
    typedef typename boost::detail::allocator::
       rebind_to<A, typename NodeAlloc::pointer>::type PtrAlloc;
    typedef A                                          ValAlloc;
    typedef typename NodeAlloc::pointer                NodePtr;
+   typedef detail::scoped_deallocator<NodeAlloc>      Deallocator;
+   typedef detail::scoped_destructor<PtrAlloc>        PtrDestructor;
 
    enum {   
       node_has_trivial_destructor =  
@@ -161,7 +164,7 @@ struct shmem_list_alloc
 		m_node = NodeAlloc::allocate(1);
 
       if(!boost::has_trivial_constructor<NodePtr>::value){
-         detail::scoped_deallocator<NodeAlloc> node_deallocator(*this, m_node);
+         scoped_ptr<Node, Deallocator>node_deallocator(m_node, *this);
          //Make sure destructors are called before memory is freed
          //if an exception is thrown
          {
@@ -169,7 +172,7 @@ struct shmem_list_alloc
             NodePtrPtr  pnext(PtrAlloc::address(m_node->m_next)), 
                pprev(PtrAlloc::address(m_node->m_prev));
 		      PtrAlloc::construct(pnext, m_node);
-            detail::scoped_destructor<PtrAlloc> next_destroy(*this, pnext);
+            scoped_ptr<NodePtr, PtrDestructor> next_destroy(pnext, *this);
 		      PtrAlloc::construct(pprev, m_node);
             next_destroy.release();
          }
@@ -194,7 +197,7 @@ struct shmem_list_alloc
    NodePtr create_node(NodePtr next, NodePtr prev, const Convertible& x)
    {
       NodePtr p = NodeAlloc::allocate(1);
-      detail::scoped_deallocator<NodeAlloc> node_deallocator(*this, p);
+      scoped_ptr<Node, Deallocator>node_deallocator(m_node, *this);
 
       //Make sure destructors are called before memory is freed
       //if an exception is thrown
@@ -204,10 +207,11 @@ struct shmem_list_alloc
             NodePtrPtr  pnext(PtrAlloc::address(p->m_next)), 
                pprev(PtrAlloc::address(p->m_prev));
             PtrAlloc::construct(pnext, next);
-            detail::scoped_destructor<PtrAlloc> next_destroy(*this, pnext);
+            scoped_ptr<NodePtr, PtrDestructor> next_destroy(pnext, *this);
 
             PtrAlloc::construct(pprev, prev);
-            detail::scoped_destructor<PtrAlloc> prev_destroy(*this, pprev);
+
+            scoped_ptr<NodePtr, PtrDestructor> prev_destroy(pprev, *this);
          
             ValAlloc::construct(ValAlloc::address(p->m_data), x);
 
@@ -236,14 +240,14 @@ struct shmem_list_alloc
    {
       if (static_cast<NodeAlloc&>(*this) != 
           static_cast<NodeAlloc&>(x)){
-            detail::swap_function(static_cast<NodeAlloc&>(*this), 
+            detail::swap(static_cast<NodeAlloc&>(*this), 
                                   static_cast<NodeAlloc&>(x));
-            detail::swap_function(static_cast<PtrAlloc&>(*this), 
+            detail::swap(static_cast<PtrAlloc&>(*this), 
                                   static_cast<PtrAlloc&>(x));
-            detail::swap_function(static_cast<ValAlloc&>(*this), 
+            detail::swap(static_cast<ValAlloc&>(*this), 
                                   static_cast<ValAlloc&>(x));
       }
-      detail::swap_function(this->m_node, x.m_node);      
+      detail::swap(this->m_node, x.m_node);      
    }
 
  protected:
@@ -255,13 +259,15 @@ struct shmem_list_alloc<T, A, true>
    :  public boost::detail::allocator::
          rebind_to<A, shmem_list_node<A> >::type
 {
-   typedef shmem_list_node<A>                      Node;
+   typedef shmem_list_node<A>                         Node;
    typedef typename boost::detail::allocator::
-      rebind_to<A, shmem_list_node<A> >::type      NodeAlloc;
+      rebind_to<A, shmem_list_node<A> >::type         NodeAlloc;
    typedef typename boost::detail::allocator::
       rebind_to<A, typename NodeAlloc::pointer>::type PtrAlloc;
    typedef A                                          ValAlloc;
    typedef typename NodeAlloc::pointer                NodePtr;
+   typedef detail::scoped_deallocator<NodeAlloc>      Deallocator;
+   typedef detail::scoped_destructor<PtrAlloc>         PtrDestructor;
 
    enum {   
       node_has_trivial_destructor =  
@@ -287,7 +293,7 @@ struct shmem_list_alloc<T, A, true>
    NodePtr create_node(NodePtr next, NodePtr prev, const Convertible& x)
    {
       NodePtr p = NodeAlloc::allocate(1);
-      detail::scoped_deallocator<NodeAlloc> node_deallocator(*this, p);
+      scoped_ptr<Node, Deallocator>node_deallocator(p, *this);
       NodeAlloc::construct(p, x);
       node_deallocator.release();
       p->m_next = next;
@@ -308,9 +314,9 @@ struct shmem_list_alloc<T, A, true>
       NodeAlloc& this_alloc = static_cast<NodeAlloc&>(*this);
       NodeAlloc& other_alloc = static_cast<NodeAlloc&>(x);
       if (this_alloc != other_alloc){
-         detail::swap_function(this_alloc, other_alloc);
+         detail::swap(this_alloc, other_alloc);
       }
-      detail::swap_function(this->m_node, x.m_node);     
+      detail::swap(this->m_node, x.m_node);     
    }
 
  protected:
@@ -323,7 +329,7 @@ struct shmem_list_alloc<T, A, true>
       m_node = NodeAlloc::allocate(1);
       if(!boost::has_trivial_constructor<NodePtr>::value){
          typedef typename PtrAlloc::pointer NodePtrPtr;
-         detail::scoped_deallocator<NodeAlloc> node_deallocator(*this, m_node);
+         scoped_ptr<Node, Deallocator>node_deallocator(m_node, *this);
          PtrAlloc ptr_alloc(*this);
          NodePtrPtr  pnext(ptr_alloc.address(m_node->m_next)), 
             pprev(ptr_alloc.address(m_node->m_prev));
@@ -332,7 +338,7 @@ struct shmem_list_alloc<T, A, true>
          //if an exception is thrown
          {
             ptr_alloc.construct(pnext, m_node);
-            detail::scoped_destructor<PtrAlloc> next_destroy(ptr_alloc, pnext);
+            scoped_ptr<NodePtr, PtrDestructor> next_destroy(pnext, ptr_alloc);
 
             ptr_alloc.construct(pprev, m_node);
             next_destroy.release();

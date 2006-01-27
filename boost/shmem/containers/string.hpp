@@ -43,7 +43,7 @@
 #include <boost/detail/workaround.hpp>
 #include <boost/config.hpp>
 #include <boost/shmem/detail/workaround.hpp>
-#include <boost/shmem/containers/container_fwd.hpp>
+#include <boost/shmem/shmem_fwd.hpp>
 #include <boost/shmem/detail/utilities.hpp>
 #include <boost/type_traits/is_integral.hpp>
 #include <functional>
@@ -678,13 +678,12 @@ class basic_string : private basic_string_base<Alloc>
 
    basic_string& assign(size_type n, CharT c)
    {
-      using boost::get_pointer;
       if (n <= size()) {
-         Traits::assign(get_pointer(this->m_start), n, c);
+         Traits::assign(detail::get_pointer(this->m_start), n, c);
          erase(this->m_start + n, this->m_finish);
       }
       else {
-         Traits::assign(get_pointer(this->m_start), size(), c);
+         Traits::assign(detail::get_pointer(this->m_start), size(), c);
          append(n - size(), c);
       }
       return *this;
@@ -703,14 +702,13 @@ class basic_string : private basic_string_base<Alloc>
 
    basic_string& assign(const CharT* f, const CharT* l)
    {
-      using boost::get_pointer;
       const std::ptrdiff_t n = l - f;
       if (static_cast<size_type>(n) <= size()) {
-         Traits::copy(get_pointer(this->m_start), f, n);
+         Traits::copy(detail::get_pointer(this->m_start), f, n);
          erase(this->m_start + n, this->m_finish);
       }
       else {
-         Traits::copy(get_pointer(this->m_start), f, size());
+         Traits::copy(detail::get_pointer(this->m_start), f, size());
          append(f + size(), l);
       }
       return *this;
@@ -807,7 +805,6 @@ class basic_string : private basic_string_base<Alloc>
 
    void insert(iterator position, std::size_t n, CharT c)
    {
-      using boost::get_pointer;
       if (n != 0) {
          if (size_type(this->m_end_of_storage - this->m_finish) >= n + 1) {
             const size_type elems_after = this->m_finish - position;
@@ -817,10 +814,10 @@ class basic_string : private basic_string_base<Alloc>
                                        this->m_finish + 1,
                                        this->m_finish + 1, *this);
                this->m_finish += n;
-               Traits::move(get_pointer(position + n),
-                            get_pointer(position), 
+               Traits::move(detail::get_pointer(position + n),
+                            detail::get_pointer(position), 
                             (elems_after - n) + 1);
-               Traits::assign(get_pointer(position), n, c);
+               Traits::assign(detail::get_pointer(position), n, c);
             }
             else {
                priv_uninitialized_fill_n
@@ -836,7 +833,7 @@ class basic_string : private basic_string_base<Alloc>
                   this->m_finish = old_finish;
                }
                BOOST_CATCH_END
-               Traits::assign(get_pointer(position), elems_after + 1, c);
+               Traits::assign(detail::get_pointer(position), elems_after + 1, c);
             }
          }
          else {
@@ -903,8 +900,9 @@ class basic_string : private basic_string_base<Alloc>
                priv_uninitialized_copy((this->m_finish - n) + 1, this->m_finish + 1,
                                  this->m_finish + 1, *this);
                this->m_finish += n;
-               Traits::move(get_pointer(position + n),
-                            get_pointer(position), (elems_after - n) + 1);
+               Traits::move(detail::get_pointer(position + n),
+                            detail::get_pointer(position),
+                            (elems_after - n) + 1);
                this->priv_copy(first, last, position);
             }
             else {
@@ -976,11 +974,12 @@ class basic_string : private basic_string_base<Alloc>
 
    iterator priv_insert_aux(iterator p, CharT c)
    {
-      using boost::get_pointer;
       iterator new_pos = p;
       if (this->m_finish + 1 < this->m_end_of_storage) {
          this->priv_construct_null(this->m_finish + 1);
-         Traits::move(get_pointer(p + 1), get_pointer(p), this->m_finish - p);
+         Traits::move(detail::get_pointer(p + 1),
+                      detail::get_pointer(p),
+                      this->m_finish - p);
          Traits::assign(*p, c);
          ++this->m_finish;
       }
@@ -1028,11 +1027,10 @@ class basic_string : private basic_string_base<Alloc>
 
    iterator erase(iterator position) 
    {
-      using boost::get_pointer;
       // The move includes the terminating null.
-      Traits::move(get_pointer(position), 
-                   get_pointer(position + 1), 
-                  this->m_finish - position);
+      Traits::move(detail::get_pointer(position), 
+                   detail::get_pointer(position + 1), 
+                   this->m_finish - position);
       this->destroy(this->m_finish);
       --this->m_finish;
       return position;
@@ -1040,10 +1038,9 @@ class basic_string : private basic_string_base<Alloc>
 
    iterator erase(iterator first, iterator last) 
    {
-      using boost::get_pointer;
       if (first != last) { // The move includes the terminating null.
-         Traits::move(get_pointer(first), 
-                      get_pointer(last), 
+         Traits::move(detail::get_pointer(first), 
+                      detail::get_pointer(last), 
                       (this->m_finish - last) + 1);
          const iterator new_finish = this->m_finish - (last - first);
          this->destroy(new_finish + 1, this->m_finish + 1);
@@ -1131,14 +1128,13 @@ class basic_string : private basic_string_base<Alloc>
    basic_string& replace(iterator first, iterator last, 
                          size_type n, CharT c)
    {
-      using boost::get_pointer;
       const size_type len = static_cast<size_type>(last - first);
       if (len >= n) {
-         Traits::assign(get_pointer(first), n, c);
+         Traits::assign(detail::get_pointer(first), n, c);
          erase(first + n, last);
       }
       else {
-         Traits::assign(get_pointer(first), len, c);
+         Traits::assign(detail::get_pointer(first), len, c);
          insert(last, n - len, c);
       }
       return *this;
@@ -1213,32 +1209,31 @@ class basic_string : private basic_string_base<Alloc>
 
    size_type copy(CharT* s, size_type n, size_type pos = 0) const 
    {
-      using boost::get_pointer;
       if (pos > size())
-      this->throw_out_of_range();
+         this->throw_out_of_range();
       const size_type len = std::min(n, size() - pos);
-      Traits::copy(s, get_pointer(this->m_start + pos), len);
+      Traits::copy(s, detail::get_pointer(this->m_start + pos), len);
       return len;
    }
 
    void swap(basic_string& s) 
    {
-      detail::swap_function(this->m_start, s.m_start);
-      detail::swap_function(this->m_finish, s.m_finish);
-      detail::swap_function(this->m_end_of_storage, s.m_end_of_storage);
+      detail::swap(this->m_start, s.m_start);
+      detail::swap(this->m_finish, s.m_finish);
+      detail::swap(this->m_end_of_storage, s.m_end_of_storage);
       allocator_type & this_al = *this, &s_al = s;
       if(this_al != s_al){
-         detail::swap_function(this_al, s_al);
+         detail::swap(this_al, s_al);
       }
    }
 
  public:                         // Conversion to C string.
 
    const CharT* c_str() const 
-      { using boost::get_pointer;   return get_pointer(this->m_start); }
+      {  return detail::get_pointer(this->m_start); }
 
    const CharT* data()  const 
-      { using boost::get_pointer;   return get_pointer(this->m_start); }
+      {  return detail::get_pointer(this->m_start); }
 
  public:                         // find.
 
@@ -1250,13 +1245,12 @@ class basic_string : private basic_string_base<Alloc>
 
    size_type find(const CharT* s, size_type pos, size_type n) const
    {
-      using boost::get_pointer;
       if (pos + n > size())
          return npos;
       else {
          const const_iterator result =
-            search(get_pointer(this->m_start + pos), 
-                   get_pointer(this->m_finish), 
+            search(detail::get_pointer(this->m_start + pos), 
+                   detail::get_pointer(this->m_finish), 
                    s, s + n, Eq_traits<Traits>());
          return result != this->m_finish ? result - begin() : npos;
       }
@@ -1499,11 +1493,10 @@ public:                        // Helper function for compare.
    static int s_compare(const_pointer f1, const_pointer l1,
                         const_pointer f2, const_pointer l2) 
    {
-      using boost::get_pointer;
       const std::ptrdiff_t n1 = l1 - f1;
       const std::ptrdiff_t n2 = l2 - f2;
-      const int cmp = Traits::compare(get_pointer(f1), 
-                                      get_pointer(f2), 
+      const int cmp = Traits::compare(detail::get_pointer(f1), 
+                                      detail::get_pointer(f2), 
                                       std::min(n1, n2));
       return cmp != 0 ? cmp : (n1 < n2 ? -1 : (n1 > n2 ? 1 : 0));
    }

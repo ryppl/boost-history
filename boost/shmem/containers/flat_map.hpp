@@ -50,7 +50,7 @@
 
 #include <boost/shmem/detail/workaround.hpp>
 #include <boost/shmem/detail/config_begin.hpp>
-#include <boost/shmem/containers/container_fwd.hpp>
+#include <boost/shmem/shmem_fwd.hpp>
 #include <utility>
 #include <functional>
 #include <memory>

@@ -79,9 +79,9 @@ struct rb_tree_node_base
 template <class NodeBase>
 class rb_tree_algo
 {
-   typedef  typename NodeBase::basic_node_pointer node_pointer;
+   typedef  typename NodeBase::basic_node_pointer basic_node_pointer;
    public:
-   static node_pointer next_node(node_pointer node)
+   static basic_node_pointer next_node(basic_node_pointer node)
    {
       if (node->right()) {
          node = node->right();
@@ -90,7 +90,7 @@ class rb_tree_algo
          }
       }
       else{
-         node_pointer y = node->parent();
+         basic_node_pointer y = node->parent();
          while (node == y->right()) {
             node = y;
             y = y->parent();
@@ -101,21 +101,21 @@ class rb_tree_algo
       return node;
    }
 
-   static node_pointer previous_node(node_pointer node)
+   static basic_node_pointer previous_node(basic_node_pointer node)
    {
       if (node->color() == NodeBase::red_color &&
          node->parent()->parent() == node){
          node = node->right();
       }
       else if (node->left()) {
-         node_pointer y = node->left();
+         basic_node_pointer y = node->left();
          while (y->right()){
             y = y->right();
          }
          node = y;
       }
       else{
-         node_pointer y = node->parent();
+         basic_node_pointer y = node->parent();
          while (node == y->left()) {
             node = y;
             y = y->parent();
@@ -125,12 +125,12 @@ class rb_tree_algo
       return node;
    }
 
-   static bool is_header (const node_pointer p)
+   static bool is_header (const basic_node_pointer p)
    {
       return p->color() == NodeBase::red_color && p->parent()->parent() == p;
    }
 
-   static node_pointer minimum_node(node_pointer x)
+   static basic_node_pointer minimum_node(basic_node_pointer x)
    {
       while (x->left()){
          x = x->left();
@@ -138,7 +138,7 @@ class rb_tree_algo
       return x;
    }
 
-   static node_pointer maximum_node(node_pointer x)
+   static basic_node_pointer maximum_node(basic_node_pointer x)
    {
       while (x->right()){
          x = x->right();
@@ -146,7 +146,9 @@ class rb_tree_algo
       return x;
    }
 
-   static void replace_own (const node_pointer &header, const node_pointer &own, const node_pointer &p)
+   static void replace_own (const basic_node_pointer &header, 
+                            const basic_node_pointer &own, 
+                            const basic_node_pointer &p)
    {
       if (header->parent() == own)
          header->parent() = p;
@@ -156,9 +158,9 @@ class rb_tree_algo
          own->parent()->right() = p;
    }
 
-   static void rotate_left(const node_pointer &header, node_pointer x)
+   static void rotate_left(const basic_node_pointer &header, basic_node_pointer x)
    {
-      node_pointer y = x->right();
+      basic_node_pointer y = x->right();
       x->right() = y->left();
       if (y->left() !=0)
          y->left()->parent() = x;
@@ -168,9 +170,9 @@ class rb_tree_algo
       x->parent() = y;
    }
 
-   static void rotate_right(const node_pointer &header, node_pointer x)
+   static void rotate_right(const basic_node_pointer &header, basic_node_pointer x)
    {
-      node_pointer y = x->left();
+      basic_node_pointer y = x->left();
       x->left() = y->right();
       if (y->right())
          y->right()->parent() = x;
@@ -180,12 +182,12 @@ class rb_tree_algo
       x->parent() = y;
    }
 
-   static void rebalance(const node_pointer &header, node_pointer x)
+   static void rebalance(const basic_node_pointer &header, basic_node_pointer x)
    {
       x->color() = NodeBase::red_color;
       while (x != header->parent() && x->parent()->color() == NodeBase::red_color) {
          if (x->parent() == x->parent()->parent()->left()) {
-            node_pointer y = x->parent()->parent()->right();
+            basic_node_pointer y = x->parent()->parent()->right();
             if (y && y->color() == NodeBase::red_color) {
                x->parent()->color() = NodeBase::black_color;
                y->color() = NodeBase::black_color;
@@ -203,7 +205,7 @@ class rb_tree_algo
             }
          }
          else{
-            node_pointer y = x->parent()->parent()->left();
+            basic_node_pointer y = x->parent()->parent()->left();
             if (y && y->color() == NodeBase::red_color) {
                x->parent()->color() = NodeBase::black_color;
                y->color() = NodeBase::black_color;
@@ -224,14 +226,15 @@ class rb_tree_algo
       header->parent()->color() = NodeBase::black_color;
    }
 
-   static node_pointer erase_node (const node_pointer &header, node_pointer z)
+   static basic_node_pointer erase_node 
+            (const basic_node_pointer &header, basic_node_pointer z)
    {
-      node_pointer& root      = header->parent();
-      node_pointer& leftmost  = header->left();
-      node_pointer& rightmost = header->right();
-      node_pointer y = z;
-      node_pointer x = 0;
-      node_pointer x_parent = 0;
+      basic_node_pointer& root      = header->parent();
+      basic_node_pointer& leftmost  = header->left();
+      basic_node_pointer& rightmost = header->right();
+      basic_node_pointer y = z;
+      basic_node_pointer x = 0;
+      basic_node_pointer x_parent = 0;
       if (!y->left())     // z has at most one non-null child. y == z.
          x = y->right();     // x might be null.
       else
@@ -286,7 +289,7 @@ class rb_tree_algo
       if (y->color() != NodeBase::red_color) { 
          while (x != root && (!x || x->color() == NodeBase::black_color))
             if (x == x_parent->left()) {
-               node_pointer w = x_parent->right();
+               basic_node_pointer w = x_parent->right();
                if (w->color() == NodeBase::red_color) {
                   w->color() = NodeBase::black_color;
                   x_parent->color() = NodeBase::red_color;
@@ -320,7 +323,7 @@ class rb_tree_algo
             } 
             else{
                // same as above, with mp_right <-> mp_left.
-               node_pointer w = x_parent->left();
+               basic_node_pointer w = x_parent->left();
                if (w->color() == NodeBase::red_color) {
                   w->color() = NodeBase::black_color;
                   x_parent->color() = NodeBase::red_color;
@@ -358,8 +361,8 @@ class rb_tree_algo
       return y;
    }
 
-   static node_pointer link_and_rebalance
-      (node_pointer header, bool link_left, node_pointer y, node_pointer z)
+   static basic_node_pointer link_and_rebalance
+      (basic_node_pointer header, bool link_left, basic_node_pointer y, basic_node_pointer z)
    {
       if (link_left) {
          y->left() = z;               // also makes header->left() = z 
@@ -383,14 +386,14 @@ class rb_tree_algo
       return z;
    }
 
-   static void clear(node_pointer header)
+   static void clear(basic_node_pointer header)
    {
       header->left()    = header;
       header->right()   = header;
       header->parent()  = 0;
    }
 
-   static bool empty(const node_pointer &header)  { return !header->parent(); }
+   static bool empty(const basic_node_pointer &header)  { return !header->parent(); }
 };
 
 /*!Basic red-black tree functions that only need 

@@ -55,7 +55,7 @@
 #include <boost/shmem/detail/workaround.hpp>
 #include <boost/shmem/detail/config_begin.hpp>
 #include <boost/shmem/detail/utilities.hpp>
-#include <boost/shmem/containers/container_fwd.hpp>
+#include <boost/shmem/shmem_fwd.hpp>
 #include <boost/iterator.hpp>
 #include <boost/iterator/reverse_iterator.hpp>
 #include <cstddef>
