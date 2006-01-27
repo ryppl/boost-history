@@ -18,10 +18,11 @@
 #include <boost/shmem/detail/workaround.hpp>
 #include <boost/shmem/detail/config_begin.hpp>
 #include <boost/shmem/shmem_fwd.hpp>
+#include <boost/shmem/detail/utilities.hpp>
 #include <boost/utility/addressof.hpp>
-#include <boost/get_pointer.hpp>
 #include <boost/assert.hpp>
 #include <boost/shmem/allocators/detail/node_pool.hpp>
+#include <boost/shmem/detail/workaround.hpp>
 #include <boost/shmem/exceptions.hpp>
 #include <memory>
 #include <algorithm>
@@ -35,25 +36,6 @@
 namespace boost {
 
 namespace shmem {
-
-/*!cached_node_allocator for void, only typedefs
-   since we can't allocate void objects*/
-template<class SegmentManager>
-class cached_node_allocator<void, SegmentManager>
-{
- public:
-   typedef typename SegmentManager::void_pointer    pointer;
-   typedef typename detail::
-      pointer_to_other<pointer, const void>::type        const_pointer;
-   typedef void                                          value_type;
-
-   /*!Obtains an allocator of other type*/
-   template<class T2>
-   struct rebind
-   {  
-      typedef cached_node_allocator<T2, SegmentManager>   other;
-   };
-};
 
 /*!An STL node allocator that uses a segment manager as memory 
    source. The internal pointer type will of the same type (raw, smart) as
@@ -70,10 +52,10 @@ class cached_node_allocator
  
    typedef typename SegmentManager::void_pointer          void_pointer;
    typedef typename detail::
-      pointer_to_other<void_pointer, const void>::type         cvoid_pointer;
+      pointer_to_other<void_pointer, const void>::type    cvoid_pointer;
    typedef SegmentManager                                 segment_manager;
    typedef typename detail::
-      pointer_to_other<void_pointer, char>::type               char_pointer;
+      pointer_to_other<void_pointer, char>::type          char_pointer;
    typedef typename SegmentManager::mutex_family::mutex_t mutex_t;
    typedef cached_node_allocator<T, SegmentManager>       self_t;
    enum { DEFAULT_MAX_CACHED_NODES = 64 };
@@ -85,8 +67,10 @@ class cached_node_allocator
    typedef typename detail::
       pointer_to_other<void_pointer, const T>::type      const_pointer;
    typedef T                                             value_type;
-   typedef T &                                           reference;
-   typedef const T &                                     const_reference;
+   typedef typename workaround::random_it
+                     <value_type>::reference             reference;
+   typedef typename workaround::random_it
+                     <value_type>::const_reference       const_reference;
    typedef std::size_t                                   size_type;
    typedef std::ptrdiff_t                                difference_type;
 
@@ -156,15 +140,14 @@ class cached_node_allocator
 
    /*!Returns a pointer to the node pool. Never throws*/
    void* get_node_pool() const
-      {  using boost::get_pointer; return  get_pointer(mp_node_pool);   }
+      {  return detail::get_pointer(mp_node_pool);   }
 
    /*!Returns the segment manager. Never throws*/
    segment_manager* get_segment_manager()const
    {  
-      using boost::get_pointer;
       typedef detail::shared_node_pool
                <SegmentManager, mutex_t, sizeof(T), NumAlloc>   node_pool_t;
-      node_pool_t *node_pool = static_cast<node_pool_t*>(get_pointer(mp_node_pool));
+      node_pool_t *node_pool = static_cast<node_pool_t*>(detail::get_pointer(mp_node_pool));
       return node_pool->get_segment_manager();  
    }
 
@@ -192,11 +175,11 @@ class cached_node_allocator
    Throws if T(const Convertible &) throws*/
    template<class Convertible>
    void construct(pointer ptr, const Convertible &value)
-   {  using boost::get_pointer;  new(get_pointer(ptr)) value_type(value);  }
+      {  new(detail::get_pointer(ptr)) value_type(value);  }
 
    /*!Destroys object. Throws if object's destructor throws*/
    void destroy(pointer ptr)
-   {  BOOST_ASSERT(ptr != 0); (*ptr).~value_type(); }
+      {  BOOST_ASSERT(ptr != 0); (*ptr).~value_type(); }
 
    /*!Returns the number of elements that could be allocated. Never throws*/
    size_type max_size() const
@@ -206,7 +189,6 @@ class cached_node_allocator
       Throws boost::shmem::bad_alloc if there is no enough memory*/
    pointer allocate(size_type count, cvoid_pointer hint = 0)
    {  
-      using boost::get_pointer;
       typedef detail::shared_node_pool
                <SegmentManager, mutex_t, sizeof(T), NumAlloc>   node_pool_t;
       
@@ -216,17 +198,17 @@ class cached_node_allocator
          //If don't have any cached node, we have to get a null
          //terminated linked list of n nodes from the pool
          if(!mp_cached){
-            node_pool_t *node_pool = static_cast<node_pool_t*>(get_pointer(mp_node_pool));
+            node_pool_t *node_pool = static_cast<node_pool_t*>(detail::get_pointer(mp_node_pool));
             mp_cached = detail::char_ptr_cast(node_pool->allocate_nodes(m_max_cached_nodes/2));
             m_cached_nodes = m_max_cached_nodes/2;
          }
          //Get the first node
-         ret = get_pointer(mp_cached);
-         mp_cached = node_pool_t::next_node(get_pointer(mp_cached));
+         ret = detail::get_pointer(mp_cached);
+         mp_cached = node_pool_t::next_node(detail::get_pointer(mp_cached));
          --m_cached_nodes;
       }
       else{
-         node_pool_t *node_pool = static_cast<node_pool_t*>(get_pointer(mp_node_pool));
+         node_pool_t *node_pool = static_cast<node_pool_t*>(detail::get_pointer(mp_node_pool));
          ret = node_pool->allocate(count);
       }   
       return pointer(static_cast<T*>(ret));
@@ -235,7 +217,6 @@ class cached_node_allocator
    /*!Deallocate allocated memory. Never throws*/
    void deallocate(pointer ptr, size_type count)
    {
-      using boost::get_pointer;
       typedef detail::shared_node_pool
                <SegmentManager, mutex_t, sizeof(T), NumAlloc>   node_pool_t;
 
@@ -248,14 +229,15 @@ class cached_node_allocator
             //in a single, efficient multi node deallocation.
             priv_deallocate_n_nodes(m_cached_nodes - m_max_cached_nodes/2);
          }
-         char *node = detail::char_ptr_cast(get_pointer(ptr));         
-         node_pool_t::next_node(get_pointer(node)) = mp_cached;
+         char *node = detail::char_ptr_cast(detail::get_pointer(ptr));         
+         node_pool_t::next_node(detail::get_pointer(node)) = mp_cached;
          mp_cached        = node;
          ++m_cached_nodes;
       }
       else{
-         node_pool_t *node_pool = static_cast<node_pool_t*>(get_pointer(mp_node_pool));
-         node_pool->deallocate(get_pointer(ptr), count);
+         node_pool_t *node_pool = static_cast<node_pool_t*>
+            (detail::get_pointer(mp_node_pool));
+         node_pool->deallocate(detail::get_pointer(ptr), count);
       }
    }
 
@@ -263,11 +245,10 @@ class cached_node_allocator
       different shared memory segments, the result is undefined.*/
    friend void swap(self_t &alloc1, self_t &alloc2)
    {
-      using std::swap;
-      swap(alloc1.mp_node_pool,       alloc2.mp_node_pool);
-      swap(alloc1.mp_cached,          alloc2.mp_cached);
-      swap(alloc1.m_cached_nodes,     alloc2.m_cached_nodes);
-      swap(alloc1.m_max_cached_nodes, alloc2.m_max_cached_nodes);
+      detail::swap(alloc1.mp_node_pool,       alloc2.mp_node_pool);
+      detail::swap(alloc1.mp_cached,          alloc2.mp_cached);
+      detail::swap(alloc1.m_cached_nodes,     alloc2.m_cached_nodes);
+      detail::swap(alloc1.m_max_cached_nodes, alloc2.m_max_cached_nodes);
    }
 
    void clear_cache()
@@ -304,11 +285,11 @@ class cached_node_allocator
    /*!Frees all cached nodes. Never throws*/
    void priv_deallocate_all_cached_nodes()
    {
-      using boost::get_pointer;
       typedef detail::shared_node_pool
                <SegmentManager, mutex_t, sizeof(T), NumAlloc>   node_pool_t;
-      node_pool_t *node_pool = static_cast<node_pool_t*>(get_pointer(mp_node_pool));
-      node_pool->deallocate_nodes(get_pointer(mp_cached));
+      node_pool_t *node_pool = static_cast<node_pool_t*>
+         (detail::get_pointer(mp_node_pool));
+      node_pool->deallocate_nodes(detail::get_pointer(mp_cached));
       mp_cached = 0;
    }
 
@@ -325,10 +306,10 @@ class cached_node_allocator
    {
       //Check n
       if(n==0) return;   
-      using boost::get_pointer;
       typedef detail::shared_node_pool
                <SegmentManager, mutex_t, sizeof(T), NumAlloc>   node_pool_t;
-      node_pool_t *node_pool = static_cast<node_pool_t*>(get_pointer(mp_node_pool));
+      node_pool_t *node_pool = static_cast<node_pool_t*>
+         (detail::get_pointer(mp_node_pool));
 
       //Create a new linked list of n nodes ending in null
       //taking the first n bytes of cached nodes list
@@ -336,13 +317,13 @@ class cached_node_allocator
       char_pointer head = mp_cached, prev;
       while(n--){ 
          prev = mp_cached;   
-         mp_cached = node_pool_t::next_node(get_pointer(mp_cached));
+         mp_cached = node_pool_t::next_node(detail::get_pointer(mp_cached));
       }
 
-      node_pool_t::next_node(get_pointer(prev)) = 0;      
+      node_pool_t::next_node(detail::get_pointer(prev)) = 0;      
 
       //Deallocate all new linked list at once
-      node_pool->deallocate_nodes(get_pointer(head));
+      node_pool->deallocate_nodes(detail::get_pointer(head));
    }   
 
    /*!Initialization function, creates an executes atomically the 
@@ -386,13 +367,13 @@ class cached_node_allocator
       object. Never throws*/
    void priv_destroy_if_last_link()
    {
-      using boost::get_pointer;
       typedef detail::shared_node_pool
                <SegmentManager, mutex_t,sizeof(T), NumAlloc>   node_pool_t;
       //Get segment manager
       segment_manager *segment_mngr = this->get_segment_manager();
       //Get pool pointer
-      node_pool_t  *node_pool = static_cast<node_pool_t*>(get_pointer(mp_node_pool));
+      node_pool_t  *node_pool = static_cast<node_pool_t*>
+         (detail::get_pointer(mp_node_pool));
       //Execute destruction functor atomically
       destroy_if_last_link_func func(segment_mngr, node_pool);
       segment_mngr->atomic_func(func);

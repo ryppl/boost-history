@@ -19,12 +19,12 @@
 #include <boost/shmem/detail/config_begin.hpp>
 #include <boost/shmem/shmem_fwd.hpp>
 #include <boost/utility/addressof.hpp>
-#include <boost/get_pointer.hpp>
 #include <boost/detail/workaround.hpp>
 #include <boost/config.hpp>
 #include <boost/assert.hpp>
 #include <boost/shmem/detail/segment_manager.hpp>
 #include <boost/shmem/detail/utilities.hpp>
+#include <boost/shmem/detail/workaround.hpp>
 #include <boost/shmem/allocators/detail/node_pool.hpp>
 #include <boost/shmem/exceptions.hpp>
 #include <memory>
@@ -40,32 +40,14 @@ namespace boost {
 
 namespace shmem {
 
-/*!node_allocator for void, only typedefs
-   since we can't allocate void objects*/
-template<std::size_t N, class SegmentManager>
-class node_allocator<void, N, SegmentManager>
-{
- public:
-   typedef typename SegmentManager::void_pointer    pointer;
-   typedef typename detail::
-      pointer_to_other<pointer, const void>::type        const_pointer;
-   typedef void                                          value_type;
-
-   /*!Obtains an allocator of other type*/
-   template<class T2>
-   struct rebind
-   {  
-      typedef node_allocator<T2, N, SegmentManager> other;
-   };
-};
-
 /*!An STL node allocator that uses a segment manager as memory 
    source. The internal pointer type will of the same type (raw, smart) as
    "typename SegmentManager::void_pointer" type. This allows
    placing the allocator in shared memory, memory mapped-files, etc...
    This node allocator shares a segregated storage between all instances 
    of node_allocator with equal sizeof(T) placed in the same segment 
-   group.*/
+   group. N is the number of nodes allocated at once when the allocator
+   needs runs out of nodes*/
 template<class T, std::size_t N, class SegmentManager>
 class node_allocator
 {
@@ -88,8 +70,10 @@ class node_allocator
    typedef typename detail::
       pointer_to_other<void_pointer, const T>::type      const_pointer;
    typedef T                                             value_type;
-   typedef T &                                           reference;
-   typedef const T &                                     const_reference;
+   typedef typename workaround::random_it
+                     <value_type>::reference             reference;
+   typedef typename workaround::random_it
+                     <value_type>::const_reference       const_reference;
    typedef std::size_t                                   size_type;
    typedef std::ptrdiff_t                                difference_type;
 
@@ -144,15 +128,15 @@ class node_allocator
 
    /*!Returns a pointer to the node pool. Never throws*/
    void* get_node_pool() const
-      {  using boost::get_pointer;  return get_pointer(mp_node_pool);   }
+      {  return detail::get_pointer(mp_node_pool);   }
 
    /*!Returns the segment manager. Never throws*/
    segment_manager* get_segment_manager()const
    {  
-      using boost::get_pointer;
       typedef detail::shared_node_pool
                <SegmentManager, mutex_t, sizeof(T), N>   node_pool_t;
-      node_pool_t *node_pool  = static_cast<node_pool_t*>(get_pointer(mp_node_pool));
+      node_pool_t *node_pool  = static_cast<node_pool_t*>
+         (detail::get_pointer(mp_node_pool));
       return node_pool->get_segment_manager();
    }
 
@@ -168,7 +152,7 @@ class node_allocator
    Throws if T(const Convertible &) throws*/
    template<class Convertible>
    void construct(pointer ptr, const Convertible &value)
-      {  using boost::get_pointer;  new(get_pointer(ptr)) value_type(value);  }
+      {  new(detail::get_pointer(ptr)) value_type(value);  }
 
    /*!Destroys object. Throws if object's destructor throws*/
    void destroy(pointer ptr)
@@ -182,21 +166,21 @@ class node_allocator
       Throws boost::shmem::bad_alloc if there is no enough memory*/
    pointer allocate(size_type count, cvoid_pointer = 0)
    {  
-      using boost::get_pointer;
       typedef detail::shared_node_pool
                <SegmentManager, mutex_t, sizeof(T), N>   node_pool_t;
-      node_pool_t *node_pool  = static_cast<node_pool_t*>(get_pointer(mp_node_pool));
+      node_pool_t *node_pool  = static_cast<node_pool_t*>
+         (detail::get_pointer(mp_node_pool));
       return pointer(static_cast<T*>(node_pool->allocate(count)));
    }
 
    /*!Deallocate allocated memory. Never throws*/
    void deallocate(pointer ptr, size_type count)
    {
-      using boost::get_pointer;
       typedef detail::shared_node_pool
                <SegmentManager, mutex_t, sizeof(T), N>   node_pool_t;
-      node_pool_t *node_pool  = static_cast<node_pool_t*>(get_pointer(mp_node_pool));
-      node_pool->deallocate(get_pointer(ptr), count);
+      node_pool_t *node_pool  = static_cast<node_pool_t*>
+         (detail::get_pointer(mp_node_pool));
+      node_pool->deallocate(detail::get_pointer(ptr), count);
    }
 
    /*!Swaps allocators. Does not throw. If each allocator is placed in a
@@ -275,13 +259,13 @@ class node_allocator
       object. Never throws*/
    void priv_destroy_if_last_link()
    {
-      using boost::get_pointer;
       typedef detail::shared_node_pool
                <SegmentManager, mutex_t,sizeof(T), N>   node_pool_t;
       //Get segment manager
       segment_manager *named_segment_mngr = this->get_segment_manager();
       //Get node pool pointer
-      node_pool_t  *node_pool = static_cast<node_pool_t*>(get_pointer(mp_node_pool));
+      node_pool_t  *node_pool = static_cast<node_pool_t*>
+         (detail::get_pointer(mp_node_pool));
       //Execute destruction functor atomically
       destroy_if_last_link_func func(named_segment_mngr, node_pool);
       named_segment_mngr->atomic_func(func);

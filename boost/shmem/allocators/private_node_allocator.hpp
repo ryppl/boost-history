@@ -19,13 +19,13 @@
 #include <boost/shmem/detail/config_begin.hpp>
 #include <boost/shmem/shmem_fwd.hpp>
 #include <boost/utility/addressof.hpp>
-#include <boost/get_pointer.hpp>
 #include <boost/detail/workaround.hpp>
 #include <boost/config.hpp>
 #include <boost/assert.hpp>
 #include <boost/shmem/allocators/detail/node_pool.hpp>
 #include <boost/shmem/exceptions.hpp>
 #include <boost/shmem/detail/utilities.hpp>
+#include <boost/shmem/detail/workaround.hpp>
 #include <memory>
 #include <algorithm>
 #include <stdio.h>
@@ -39,30 +39,12 @@ namespace boost {
 
 namespace shmem {
 
-/*!private_node_allocator for void, only typedefs
-   since we can't allocate void objects*/
-template<std::size_t N, class SegmentManager>
-class  private_node_allocator<void, N, SegmentManager>
-{
- public:
-   typedef typename SegmentManager::void_pointer pointer;
-   typedef typename detail::
-      pointer_to_other<pointer, const void>::type     const_pointer;
-   typedef void                                       value_type;
-
-   /*!Obtains an allocator of other type*/
-   template<class T2>
-   struct rebind
-   {  
-      typedef private_node_allocator<T2, N, SegmentManager>   other;
-   };
-};
-
 /*!An STL node allocator that uses a segment manager as memory 
    source. The internal pointer type will of the same type (raw, smart) as
    "typename SegmentManager::void_pointer" type. This allows
    placing the allocator in shared memory, memory mapped-files, etc...
-   This allocator has its own node pool.*/
+   This allocator has its own node pool. N is the number of nodes allocated 
+   at once when the allocator needs runs out of nodes*/
 template<class T, std::size_t N, class SegmentManager>
 class private_node_allocator
 {
@@ -87,8 +69,10 @@ class private_node_allocator
    typedef typename detail::
       pointer_to_other<void_pointer, const T>::type      const_pointer;
    typedef T                                             value_type;
-   typedef T &                                           reference;
-   typedef const T &                                     const_reference;
+   typedef typename workaround::random_it
+                     <value_type>::reference             reference;
+   typedef typename workaround::random_it
+                     <value_type>::const_reference       const_reference;
    typedef std::size_t                                   size_type;
    typedef std::ptrdiff_t                                difference_type;
 
@@ -109,24 +93,23 @@ class private_node_allocator
 
    void priv_initialize()
    {
-      using boost::get_pointer;
       typedef detail::private_node_pool
                <SegmentManager, sizeof(T), N>   priv_node_pool_t;
       void * ptr = mp_segment_mngr->allocate(sizeof(priv_node_pool_t));
       //This does not throw
-      new(ptr)priv_node_pool_t(get_pointer(mp_segment_mngr));
+      new(ptr)priv_node_pool_t(detail::get_pointer(mp_segment_mngr));
       //Construction ok, don't free memory
       mp_node_pool = ptr;
    }
 
    void priv_free()
    {
-      using boost::get_pointer;
       //-------------------------------------------------------------
       typedef detail::private_node_pool
                   <SegmentManager, sizeof(T), N>   priv_node_pool_t;
       //-------------------------------------------------------------
-      priv_node_pool_t *pnode_pool     = static_cast<priv_node_pool_t*>(get_pointer(mp_node_pool));
+      priv_node_pool_t *pnode_pool     = static_cast<priv_node_pool_t*>
+                                          (detail::get_pointer(mp_node_pool));
       segment_manager  &segment_mngr   = *mp_segment_mngr;
       //This never throws
       pnode_pool->~priv_node_pool_t();
@@ -155,7 +138,7 @@ class private_node_allocator
 
    /*!Returns the segment manager. Never throws*/
    segment_manager* get_segment_manager()const
-      {  using boost::get_pointer;  return get_pointer(mp_segment_mngr);  }
+      {  return detail::get_pointer(mp_segment_mngr);  }
 
    /*!Return address of mutable value. Never throws*/
    pointer address(reference value) const
@@ -169,7 +152,7 @@ class private_node_allocator
    Throws if T(const Convertible &) throws*/
    template<class Convertible>
    void construct(pointer ptr, const Convertible &value)
-      {  using boost::get_pointer;  new(get_pointer(ptr)) value_type(value);  }
+      {  new(detail::get_pointer(ptr)) value_type(value);  }
 
    /*!Destroys object. Throws if object's destructor throws*/
    void destroy(pointer ptr)
@@ -184,27 +167,27 @@ class private_node_allocator
       Throws boost::shmem::bad_alloc if there is no enough memory*/
    pointer allocate(size_type count, cvoid_pointer hint = 0)
    {  
-      using boost::get_pointer;
       //----------------------------------------------------------
       typedef detail::private_node_pool
                   <SegmentManager, sizeof(T), N>   priv_node_pool_t;
       //----------------------------------------------------------
       if(!mp_node_pool)   priv_initialize();
-      priv_node_pool_t *node_pool  = static_cast<priv_node_pool_t*>(get_pointer(mp_node_pool));
+      priv_node_pool_t *node_pool  = static_cast<priv_node_pool_t*>
+                                       (detail::get_pointer(mp_node_pool));
       return pointer(static_cast<value_type*>(node_pool->allocate(count)));
    }
 
    /*!Deallocate allocated memory. Never throws*/
    void deallocate(pointer ptr, size_type count)
    {
-      using boost::get_pointer;
       //----------------------------------------------------------
       typedef detail::private_node_pool
                   <SegmentManager, sizeof(T), N>   priv_node_pool_t;
       //----------------------------------------------------------
       if(!mp_node_pool)   priv_initialize();
-      priv_node_pool_t *node_pool  = static_cast<priv_node_pool_t*>(get_pointer(mp_node_pool));
-      node_pool->deallocate(get_pointer(ptr), count);
+      priv_node_pool_t *node_pool = static_cast<priv_node_pool_t*>(
+                                       detail::get_pointer(mp_node_pool));
+      node_pool->deallocate(detail::get_pointer(ptr), count);
    }
 
    /*!Swaps allocators. Does not throw. If each allocator is placed in a

@@ -19,12 +19,13 @@
 #include <boost/shmem/detail/config_begin.hpp>
 #include <boost/shmem/shmem_fwd.hpp>
 #include <boost/utility/addressof.hpp>
-#include <boost/get_pointer.hpp>
 #include <boost/assert.hpp>
 #include <boost/shmem/detail/utilities.hpp>
+#include <boost/shmem/detail/workaround.hpp>
 #include <boost/shmem/exceptions.hpp>
 #include <memory>
 #include <algorithm>
+#include <cstddef>
 #include <stdexcept>
 
 /*!\file
@@ -35,25 +36,6 @@
 namespace boost {
 
 namespace shmem {
-
-/*!allocator specialization for void*/
-template<class SegmentManager>
-class  allocator<void, SegmentManager>
-{
- public:
-   typedef void                                       value_type;
-   typedef typename SegmentManager::void_pointer      pointer;
-   typedef typename detail::
-      pointer_to_other<pointer, const void>::type     const_pointer;
-
-   /*!Obtains an allocator of other type*/
-   template<class T2>
-   struct rebind
-   {   
-     public:
-      typedef allocator<T2, SegmentManager>      other;
-   };
-};
 
 /*!An STL compatible allocator that uses a segment manager as 
    memory source. The internal pointer type will of the same type (raw, smart) as
@@ -96,10 +78,12 @@ class allocator
       <cvoid_ptr, T>::type                               pointer;
    typedef typename detail::
       pointer_to_other<pointer, const T>::type           const_pointer;
-   typedef value_type &                                  reference;
-   typedef const value_type &                            const_reference;
-   typedef typename std::allocator<T>::size_type         size_type;
-   typedef typename std::allocator<T>::difference_type   difference_type;
+   typedef typename workaround::random_it
+                     <value_type>::reference             reference;
+   typedef typename workaround::random_it
+                     <value_type>::const_reference       const_reference;
+   typedef std::size_t                                   size_type;
+   typedef std::ptrdiff_t                                difference_type;
 
    /*!Obtains an allocator of other type*/
    template<class T2>
@@ -110,7 +94,7 @@ class allocator
 
    /*!Returns the segment manager. Never throws*/
    segment_manager* get_segment_manager()const
-      {  using boost::get_pointer;  return  get_pointer(mp_mngr);   }
+      {  return detail::get_pointer(mp_mngr);   }
 
    /*!Returns address of mutable object. Never throws*/
    pointer address(reference value) const
@@ -140,13 +124,13 @@ class allocator
 
    /*!Deallocates memory previously allocated. Never throws*/
    void deallocate(pointer ptr, size_type)
-      {  using boost::get_pointer; mp_mngr->deallocate(get_pointer(ptr));  }
+      {  mp_mngr->deallocate(detail::get_pointer(ptr));  }
 
    /*!Construct object, calling constructor. 
       Throws if T(const Convertible &) throws*/
    template<class Convertible>
    void construct(pointer ptr, const Convertible &value)
-      {  using boost::get_pointer;  new(get_pointer(ptr)) value_type(value);  }
+      {  new(detail::get_pointer(ptr)) value_type(value);  }
 
    /*!Destroys object. Throws if object's destructor throws*/
    void destroy(pointer ptr)
@@ -160,7 +144,7 @@ class allocator
       different memory segments, the result is undefined.*/
    friend void swap(self_t &alloc1, self_t &alloc2)
    {
-      detail::swap_function(alloc1.mp_mngr, alloc2.mp_mngr);
+      detail::swap(alloc1.mp_mngr, alloc2.mp_mngr);
    }
 };
 
