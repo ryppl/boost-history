@@ -25,13 +25,16 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/alignment_of.hpp>
 #include <boost/mpl/bool.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/shmem/detail/named_proxy.hpp>
 #include <boost/shmem/detail/utilities.hpp>
 #include <boost/shmem/detail/multi_segment_services.hpp>
 #include <boost/shmem/offset_ptr.hpp>
 #include <boost/shmem/indexes/flat_map_index.hpp>
 #include <boost/shmem/exceptions.hpp>
-
+#include <boost/shmem/smart_ptr/scoped_ptr.hpp>
+#include <boost/aligned_storage.hpp>
+#include <boost/type_traits/alignment_of.hpp>
 #include <stddef.h>
 
 #include <string>
@@ -40,7 +43,6 @@
 #include <cstddef>
 #include <typeinfo>
 #include <exception>
-
 
 /*!\file
    Describes the object placed in a memory segment that provides
@@ -100,10 +102,12 @@ struct index_key
    /*!Less than function for index ordering*/
    bool operator < (const index_key & right) const
    {
+      detail::get_pointer(mp_str);
       return (m_len < right.m_len) || 
                (m_len == right.m_len && 
                std::char_traits<char_type>::compare 
-                  (get_pointer(mp_str), get_pointer(right.mp_str), m_len) < 0);
+                  (detail::get_pointer(mp_str),
+                   detail::get_pointer(right.mp_str), m_len) < 0);
    }
 
    /*!Equal to function for index ordering*/
@@ -111,7 +115,8 @@ struct index_key
    {
       return   m_len == right.m_len && 
                std::char_traits<char_type>::compare 
-                  (get_pointer(mp_str), get_pointer(right.mp_str), m_len) == 0;
+                  (detail::get_pointer(mp_str),
+                   detail::get_pointer(right.mp_str), m_len) == 0;
    }
 };
 
@@ -129,29 +134,32 @@ struct index_data
 template<class T>
 struct alloc_info_t
 {
-   private:
-   static std::size_t offset()
-   {
-      //gcc issues a warning if we use 0 address so we use sizeof(data_t)
-      const alloc_info_t * const addr = (alloc_info_t*)(sizeof(alloc_info_t));
-      return reinterpret_cast<const char*>(&(addr->m_data)) - 
-               reinterpret_cast<const char*>(addr);
-   }
-
    public:
-
    enum {   anonymous_type = 0, named_type = 1, unique_type = 2   };
-
    std::size_t          m_sizeof_type;
    std::size_t          m_num;
    std::size_t          m_allocation_type;
-   T                    m_data;
+
+   static std::size_t get_offset()
+   {  return ct_rounded_size<sizeof(alloc_info_t<T>), sizeof(T)>::value;  }
 
    static T *get_data_from_info(const void *info)
-      {  return reinterpret_cast<T*>(detail::char_ptr_cast(info) + offset());  }
+   {  
+      return reinterpret_cast<T*>
+               (detail::char_ptr_cast(info) + get_offset());
+   }
 
    static alloc_info_t *get_info_from_data(const void *data)
-      {  return reinterpret_cast<alloc_info_t*>(detail::char_ptr_cast(data) - offset()); }
+   {  
+      return reinterpret_cast<alloc_info_t*>
+               (detail::char_ptr_cast(data) - get_offset());
+   }
+
+   inline T* get_data() const
+   {
+      return reinterpret_cast<T*>
+               (detail::char_ptr_cast(this) + get_offset());   
+   }
 };
 
 template <class CharType, class It, bool NodeIndex>
@@ -167,9 +175,9 @@ struct alloc_name_t
              char_ptr_cast(&((alloc_name_t*)sizeof(alloc_name_t))->m_it);
    }
    CharType *get_name()
-      {  return &m_name; }
+   {  return &m_name; }
    It &get_it()
-      {  return m_it; }
+   {  return m_it; }
 };
 
 template <class CharType, class It>
@@ -178,11 +186,11 @@ struct alloc_name_t<CharType, It, false>
    CharType m_name;
 
    static std::size_t get_name_offset()
-      {  return 0;   }
+   {  return 0;   }
    CharType *get_name()
-      {  return &m_name; }
+   {  return &m_name; }
    It &get_it()
-      {  static It m_it;   return m_it; }
+   {  static It m_it;   return m_it; }
 };
 
 template <class InpPtr, class OutPtr>
@@ -192,21 +200,21 @@ template <class OutPtr>
 struct get_construct_name<OutPtr, OutPtr>
 {
    static const OutPtr *get(const OutPtr *name) 
-      {  return name;   }
+   {  return name;   }
 };
 
 template <class OutPtr>
 struct get_construct_name<anonymous_instance_t, OutPtr>
 {
    static const OutPtr *get(const anonymous_instance_t *name) 
-      {  return reinterpret_cast<const OutPtr *>(0);   }
+   {  return reinterpret_cast<const OutPtr *>(0);   }
 };
 
 template <class OutPtr>
 struct get_construct_name<unique_instance_t, OutPtr>
 {
    static const OutPtr *get(const unique_instance_t *name)
-      {  return reinterpret_cast<const OutPtr *>(-1);   }
+   {  return reinterpret_cast<const OutPtr *>(-1);   }
 };
 
 /*!
@@ -255,6 +263,18 @@ class segment_manager : private MemoryAlgorithm
 
    typedef  IndexType<index_config<CharType> >                 named_index_t;
    typedef  IndexType<index_config<char> >                     unique_index_t;
+
+   struct raw_deleter_t
+   {
+      typedef void * pointer;
+
+      raw_deleter_t(segment_manager &mngr)
+         : m_mngr(mngr){}
+      void operator()(pointer p)
+         {  m_mngr.deallocate(p);      }
+      private:
+      segment_manager &m_mngr;
+   };
 
  public:
    class char_ptr_holder_t
@@ -309,17 +329,17 @@ class segment_manager : private MemoryAlgorithm
 
    /*!Constructor. Can throw*/
    segment_manager(std::size_t size )
-   : MemoryAlgorithm(size, get_reserved_bytes()),
-     m_header(get_this_pointer())
-   {(void) anonymous_instance;   (void) unique_instance;   }
+      :  MemoryAlgorithm(size, get_reserved_bytes()),
+         m_header(get_this_pointer())
+   {  (void) anonymous_instance;   (void) unique_instance;   }
 
    /*!Returns the size of the memory segment*/
    std::size_t get_size() const
-      {  return MemoryAlgorithm::get_size();  }
+   {  return MemoryAlgorithm::get_size();  }
 
    /*!Obtains the minimum size needed by the segment manager*/
    static size_t get_min_size ()
-      {  return MemoryAlgorithm::get_min_size(sizeof(segment_manager)-sizeof(MemoryAlgorithm));  }
+   {  return MemoryAlgorithm::get_min_size(sizeof(segment_manager)-sizeof(MemoryAlgorithm));  }
 
    /*!Tries to find a previous named allocation address. Returns a memory
       buffer and the object count. */
@@ -338,61 +358,61 @@ class segment_manager : private MemoryAlgorithm
 
    template <class T>
    std::pair<T*, std::size_t> find  (const unique_instance_t* name)
-      {  return priv_generic_find<T, char> (name, m_header.m_unique_index); }
+   {  return priv_generic_find<T, char> (name, m_header.m_unique_index); }
 
    /*!Returns throwing "construct" proxy object*/
    template <class T>
    typename construct_proxy<T, true>::type      
       construct(char_ptr_holder_t name)
-      {  return typename construct_proxy<T, true>::type (name, this);  }
+   {  return typename construct_proxy<T, true>::type (name, this);  }
 
    /*!Returns throwing "search or construct" proxy object*/
    template <class T>
    typename find_construct_proxy<T, true>::type find_or_construct(char_ptr_holder_t name)
-      {  return typename find_construct_proxy<T, true>::type(name, this);  }
+   {  return typename find_construct_proxy<T, true>::type(name, this);  }
 
    /*!Returns no throwing "construct" proxy object*/
    template <class T>
    typename construct_proxy<T, false>::type     
       construct(char_ptr_holder_t name, std::nothrow_t nothrow)
-      {  return typename construct_proxy<T, false>::type (name, this);  }
+   {  return typename construct_proxy<T, false>::type (name, this);  }
 
    /*!Returns no throwing "search or construct" proxy object*/
    template <class T>
    typename find_construct_proxy<T, false>::type   
       find_or_construct(char_ptr_holder_t name, std::nothrow_t nothrow)
-      {  return typename find_construct_proxy<T, false>::type  (name, this);  }
+   {  return typename find_construct_proxy<T, false>::type  (name, this);  }
 
    /*!Returns throwing "construct from iterators" proxy object*/
    template <class T>
    typename construct_iter_proxy<T, true>::type     
       construct_it(char_ptr_holder_t name)
-      {  return typename construct_iter_proxy<T, true>::type (name, this);  }
+   {  return typename construct_iter_proxy<T, true>::type (name, this);  }
 
    /*!Returns throwing "search or construct from iterators" proxy object*/
    template <class T>
    typename find_construct_iter_proxy<T, true>::type   
       find_or_construct_it(char_ptr_holder_t name)
-      {  return typename find_construct_iter_proxy<T, true>::type(name, this);  }
+   {  return typename find_construct_iter_proxy<T, true>::type(name, this);  }
 
    /*!Returns no throwing "construct from iterators" proxy object*/
    template <class T>
    typename construct_iter_proxy<T, false>::type   
       construct_it(char_ptr_holder_t name, std::nothrow_t nothrow)
-      {  return typename construct_iter_proxy<T, false>::type (name, this);  }
+   {  return typename construct_iter_proxy<T, false>::type (name, this);  }
 
    /*!Returns no throwing "search or construct from iterators" proxy object*/
    template <class T>
    typename find_construct_iter_proxy<T, false>::type 
       find_or_construct_it(char_ptr_holder_t name, std::nothrow_t nothrow)
-      {  return typename find_construct_iter_proxy<T, false>::type  (name, this);  }
+   {  return typename find_construct_iter_proxy<T, false>::type  (name, this);  }
 
    /*!Calls object function blocking recursive mutex and guarantees that 
       no new named_alloc or destroy will be executed by any process while 
       executing the object function call*/
    template <class Func>
    void atomic_func(Func &f)
-      {  boost::shmem::scoped_lock<rmutex> guard(m_header);  f();  }
+   {  boost::shmem::scoped_lock<rmutex> guard(m_header);  f();  }
 
    /*!Calls the destructor and makes an unique deallocate*/
    template <class T>
@@ -412,32 +432,12 @@ class segment_manager : private MemoryAlgorithm
    template <class T>
    bool destroy_ptr(const T *ptr)
    {
-      typedef alloc_info_t<T>  ctrl_data_t;
-      
-      ctrl_data_t * ctrl_data = ctrl_data_t::get_info_from_data(ptr);
-      
-      switch(ctrl_data->m_allocation_type){
-         case ctrl_data_t::anonymous_type:
-            return this->priv_generic_anonymous_destroy<T>(ptr);
-         break;
-
-         case ctrl_data_t::named_type:
-            return this->priv_generic_named_destroy<T, CharType>
-               (ctrl_data, m_header.m_named_index);
-         break;
-
-         case ctrl_data_t::unique_type:
-            return this->priv_generic_named_destroy<T, char>
-               (ctrl_data, m_header.m_unique_index);
-         break;
-
-         default:
-            //This type is unknown, bad pointer passed to this function!
-            assert(0);
-            return false;
-         break;
-      }
-      return false;
+      //Allow void pointer deletion instantiation to be able to
+      //construct void shared_ptrs
+      //If we call the destroy_ptr(const void *), the function will return 0
+      typedef typename boost::mpl::if_c<boost::is_same<T, void>::value,
+                                       char, T>::type data_t;
+      return priv_destroy_ptr((const data_t*)ptr);
    }
 
    /*!Allocates nbytes bytes. This function is only used in 
@@ -453,16 +453,16 @@ class segment_manager : private MemoryAlgorithm
    /*!Allocates nbytes bytes. This function is only used in 
       single-segment management. Never throws*/
    void*  allocate (std::size_t nbytes, std::nothrow_t)
-      {  return MemoryAlgorithm::allocate(nbytes);   }
+   {  return MemoryAlgorithm::allocate(nbytes);   }
 
    /*!Deallocates the bytes allocated with allocate() pointed by addr*/
    void   deallocate          (void *addr)
-      {  MemoryAlgorithm::deallocate(addr);   }
+   {  MemoryAlgorithm::deallocate(addr);   }
 
    /*!Increases managed memory in extra_size bytes more. This only works
       with single-segment management*/
    void grow(std::size_t extra_size)
-      {  MemoryAlgorithm::grow(extra_size);   }
+   {  MemoryAlgorithm::grow(extra_size);   }
 
    /*!Generic named/anonymous new function. Offers all the possibilities, 
       such as throwing, search before creating, and the constructor is 
@@ -512,6 +512,36 @@ class segment_manager : private MemoryAlgorithm
 
  private:
 
+   template <class T>
+   bool priv_destroy_ptr(const T *ptr)
+   {
+      typedef alloc_info_t<T>  ctrl_data_t;
+      
+      ctrl_data_t * ctrl_data = ctrl_data_t::get_info_from_data(ptr);
+      
+      switch(ctrl_data->m_allocation_type){
+         case ctrl_data_t::anonymous_type:
+            return this->priv_generic_anonymous_destroy<T>(ptr);
+         break;
+
+         case ctrl_data_t::named_type:
+            return this->priv_generic_named_destroy<T, CharType>
+               (ctrl_data, m_header.m_named_index);
+         break;
+
+         case ctrl_data_t::unique_type:
+            return this->priv_generic_named_destroy<T, char>
+               (ctrl_data, m_header.m_unique_index);
+         break;
+
+         default:
+            //This type is unknown, bad pointer passed to this function!
+            assert(0);
+            return false;
+         break;
+      }
+      return false;
+   }
    template <class T, class CharT>
    std::pair<T*, std::size_t> priv_generic_find 
       (const CharT* name, 
@@ -533,8 +563,8 @@ class segment_manager : private MemoryAlgorithm
 
       //If found, assign values
       if(it != index.end()){
-         ctrl_data_t *ctrl_data = 
-            reinterpret_cast<ctrl_data_t*>(get_pointer(it->second.m_ptr));
+         ctrl_data_t *ctrl_data = reinterpret_cast<ctrl_data_t*>
+                                    (detail::get_pointer(it->second.m_ptr));
          //Check if sizeof is correct!
          if(sizeof(T) != ctrl_data->m_sizeof_type){
             //The template parameter T is not correct!
@@ -543,7 +573,7 @@ class segment_manager : private MemoryAlgorithm
             ret_num  = 0;
          }
          else{
-            ret_ptr  = &ctrl_data->m_data;
+            ret_ptr  = ctrl_data->get_data();
             ret_num  = ctrl_data->m_num;
          }
       }
@@ -622,8 +652,8 @@ class segment_manager : private MemoryAlgorithm
 
       //Get total size of data port and total allocation size
       std::size_t datasize  = detail::get_rounded_size
-                                 (sizeof(ctrl_data_t)+sizeof(T)*(data->m_num-1), 
-                                 boost::alignment_of<alloc_name_t>::value);
+                                 (ctrl_data_t::get_offset() + sizeof(T)*data->m_num,
+                                  boost::alignment_of<alloc_name_t>::value);
       alloc_name_t *alloc_name = reinterpret_cast<alloc_name_t*>
                                     (char_ptr_cast(data)+datasize);
       if(NodeIndex){
@@ -633,14 +663,14 @@ class segment_manager : private MemoryAlgorithm
                   (alloc_name->get_it(), index);
       }
       else{
-         //If not using node indexes, we must use the name to fin
+         //If not using node indexes, we must use the name to find
          return this->priv_generic_named_destroy<T, CharT>
                   (alloc_name->get_name(), index);
       }
    }
 
    template <class T, class CharT>
-   bool priv_generic_named_destroy(typename index_traits<CharT>::index_it it, 
+   bool priv_generic_named_destroy(const typename index_traits<CharT>::index_it &it,
                                    typename index_traits<CharT>::index_type &index)
    {
       //-------------------------------
@@ -650,7 +680,7 @@ class segment_manager : private MemoryAlgorithm
    }
 
    template <class T, class CharT>
-   bool priv_generic_named_destroy_impl(typename index_traits<CharT>::index_it it, 
+   bool priv_generic_named_destroy_impl(const typename index_traits<CharT>::index_it &it,
                                         typename index_traits<CharT>::index_type &index)
    {
       typedef typename index_traits<CharT>::index_type   index_t;
@@ -659,8 +689,9 @@ class segment_manager : private MemoryAlgorithm
       typedef alloc_info_t<T>                            ctrl_data_t; 
 
       //Get allocation parameters
-      void *memory            = get_pointer(it->second.m_ptr);
-      char *stored_name       = detail::char_ptr_cast(get_pointer(it->first.mp_str));
+      void *memory            = detail::get_pointer(it->second.m_ptr);
+      char *stored_name       = detail::char_ptr_cast
+                                 (detail::get_pointer(it->first.mp_str));
       //Check if the distance between the name pointer and the memory pointer 
       //is correct (this can detect incorrect T type in destruction)
       ctrl_data_t *ctrl_data  = reinterpret_cast<ctrl_data_t *>(memory);
@@ -678,7 +709,7 @@ class segment_manager : private MemoryAlgorithm
 
       //Get total size of data port and total allocation size
       std::size_t datasize  = detail::get_rounded_size
-                                 (sizeof(ctrl_data_t)+sizeof(T)*(num-1), 
+                                 (ctrl_data_t::get_offset() + sizeof(T)*num, 
                                   boost::alignment_of<alloc_name_t>::value);
 
       //Check if the distance between the name pointer and the memory pointer 
@@ -712,7 +743,7 @@ class segment_manager : private MemoryAlgorithm
    void priv_array_destroy(const void * memory, T *objects, std::size_t count)
    {
       //Build scoped ptr to avoid leaks with destructor exception
-      scoped_shm_ptr<MemoryAlgorithm> scoped_ptr((void*)memory, *this);
+      boost::shmem::scoped_ptr<void, raw_deleter_t> mem((void*)memory, *this);
 
       //Call destructors in reverse order, if one throws catch it and
       //continue destroying ignoring further exceptions. 
@@ -792,7 +823,6 @@ class segment_manager : private MemoryAlgorithm
       //-------------------------------
       boost::shmem::scoped_lock<rmutex> guard(m_header);
       //-------------------------------
-
       //Insert the node. This can throw.
       //First, we want to know if the key is already present before
       //we allocate any memory, and if the key is not present, we 
@@ -803,18 +833,18 @@ class segment_manager : private MemoryAlgorithm
       //quite inefficient in container implementations 
       //(they re-test if the position is correct), I've chosen
       //to insert the node, do an ugly un-const cast and modify
-      //the key (which is an offset pointer) to an equivalent one
+      //the key (which is a smart pointer) to an equivalent one
       std::size_t namelen  = std::char_traits<CharT>::length(name);      
       index_ib insert_ret = index.insert(value_type(key_type (name, namelen), 
                                                     mapped_type(0)));
       index_it it = insert_ret.first;
-      bool found  = !insert_ret.second;
 
       //If found and this is find or construct, return data
       //else return null
-      if(found){
+      if(!insert_ret.second){
          return try2find ? 
-                  ctrl_data_t::get_data_from_info(get_pointer(it->second.m_ptr)): 
+                  ctrl_data_t::get_data_from_info
+                     (detail::get_pointer(it->second.m_ptr)): 
                   0;
       }
       //Initialize the node value_eraser to erase inserted node
@@ -826,7 +856,7 @@ class segment_manager : private MemoryAlgorithm
 
       //Get total size of data port and total allocation size
       std::size_t datasize  = detail::get_rounded_size
-                                 (sizeof(ctrl_data_t)+sizeof(T)*(num-1), 
+                                 (ctrl_data_t::get_offset() + sizeof(T)*num, 
                                   boost::alignment_of<alloc_name_t>::value);
       std::size_t allocsize =  datasize + alloc_name_t::get_name_offset() + (namelen+1)*sizeof(CharT);
 
@@ -868,16 +898,16 @@ class segment_manager : private MemoryAlgorithm
       //Avoid constructions if constructor is trivial
       if(!CtorFunc::is_trivial){
          //Build scoped ptr to avoid leaks with constructor exception
-         scoped_shm_ptr<MemoryAlgorithm> scoped_ptr(buffer_ptr, *this);
+         boost::shmem::scoped_ptr<void, raw_deleter_t> mem(buffer_ptr, *this);
 
          //Construct array, this can throw
          this->priv_array_construct<CtorFunc>
             (ctrl_data_t::get_data_from_info(buffer_ptr), num, ctor);
 
          //All constructors successful, we don't want to release memory
-         scoped_ptr.release();
+         mem.release();
       }
-      //Release node value_eraser since allocation was successful
+      //Release node value_eraser since construction was successful
       value_eraser.release();
       return ctrl_data_t::get_data_from_info(buffer_ptr);
    }
@@ -892,7 +922,7 @@ class segment_manager : private MemoryAlgorithm
       //-------------------------------
       boost::shmem::scoped_lock<rmutex> guard(m_header);
       //-------------------------------
-      std::size_t allocsize = sizeof(ctrl_data_t)+sizeof(T)*(num-1);      
+      std::size_t allocsize = ctrl_data_t::get_offset() + sizeof(T)*num;      
 
       //Allocate memory
       void *ptr_struct = this->allocate(allocsize, std::nothrow_t());
@@ -908,7 +938,7 @@ class segment_manager : private MemoryAlgorithm
       }
 
       //Build scoped ptr to avoid leaks with constructor exception
-      scoped_shm_ptr<MemoryAlgorithm> scoped_ptr(ptr_struct, *this);
+      boost::shmem::scoped_ptr<void, raw_deleter_t> mem(ptr_struct, *this);
       T* ptr = ctrl_data_t::get_data_from_info(ptr_struct);
       ctrl_data_t *ctrl_data = reinterpret_cast<ctrl_data_t*>(ptr_struct);
 
@@ -923,7 +953,7 @@ class segment_manager : private MemoryAlgorithm
       }
 
       //All constructors successful, we don't want erase memory
-      scoped_ptr.release();
+      mem.release();
       return ptr;
    }
 
@@ -931,7 +961,7 @@ class segment_manager : private MemoryAlgorithm
 
    /*!Returns the this pointer*/ 
    segment_manager *get_this_pointer()
-      {  return this;  }
+   {  return this;  }
 
    std::size_t get_reserved_bytes()
    {
