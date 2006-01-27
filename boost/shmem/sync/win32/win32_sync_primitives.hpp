@@ -116,6 +116,13 @@ extern "C" __declspec(dllimport) void * __stdcall OpenFileMappingA (unsigned lon
 extern "C" __declspec(dllimport) void * __stdcall CreateFileA (const char *, unsigned long, unsigned long, struct _SECURITY_ATTRIBUTES*, unsigned long, unsigned long, void *);
 extern "C" __declspec(dllimport) void __stdcall GetSystemInfo (struct _SYSTEM_INFO *);
 extern "C" __declspec(dllimport) int __stdcall FlushViewOfFile (void *, size_t);
+extern "C" __declspec(dllimport) int __stdcall GetFileSizeEx (void *, __int64 *size);
+/*
+BOOL GetFileSizeEx(
+  HANDLE hFile,
+  PLARGE_INTEGER lpFileSize
+);
+*/
 
 #endif   //#if !defined( BOOST_USE_WINDOWS_H )
 static inline long exchange_and_add(long volatile* addend, long value)
@@ -212,7 +219,6 @@ static inline int flush_view_of_file(void *base_addr, std::size_t numbytes)
 {
    return FlushViewOfFile(base_addr, numbytes);
 }
-
 
 }  //namespace boost 
 }  //namespace shmem
