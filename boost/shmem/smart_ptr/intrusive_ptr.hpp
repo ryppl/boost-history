@@ -1,5 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 //
+// This file is the adaptation for Shmem of boost/intrusive_ptr.hpp
+//
 // (C) Copyright Peter Dimov 2001, 2002
 // (C) Copyright Ion Gaztañaga 2006. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
@@ -12,6 +14,9 @@
 #ifndef BOOST_SHMEM_INTRUSIVE_PTR_HPP_INCLUDED
 #define BOOST_SHMEM_INTRUSIVE_PTR_HPP_INCLUDED
 
+/*!\file
+   Describes an intrusive ownership pointer.
+*/
 
 #include <boost/config.hpp>
 
@@ -32,191 +37,221 @@
 namespace boost {
 namespace shmem {
 
-//
-//  basic_intrusive_ptr
-//
-//  A smart pointer that uses intrusive reference counting.
-//
-//  Relies on unqualified calls to
-//  
-//      void intrusive_ptr_add_ref(T * p);
-//      void intrusive_ptr_release(T * p);
-//
-//          (p != 0)
-//
-//  The object is responsible for destroying itself.
-//
+/*!The intrusive_ptr class template stores a pointer to an object
+   with an embedded reference count. intrusive_ptr is parameterized on
+   T (the type of the object pointed to) and VoidPointer(a void pointer type 
+   that defines the type of pointer that intrusive_ptr will store).
+   intrusive_ptr<T, void *> defines a class with a T* member whereas
+   intrusive_ptr<T, offset_ptr<void> > defines a class with a offset_ptr<T> member.
+   Relies on unqualified calls to:
+    
+     void intrusive_ptr_add_ref(T * p);
+     void intrusive_ptr_release(T * p);
 
+     with (p != 0)
+
+   The object is responsible for destroying itself.*/
 template<class T, class VoidPointer>
-class basic_intrusive_ptr
+class intrusive_ptr
 {
-   private:
-
-   typedef VoidPointer VP;
-   typedef basic_intrusive_ptr this_type;
-
-public:
-   typedef typename detail::pointer_to_other<VP, T>::type pointer;
-
+   public:
+   /*!Provides the type of the internal stored pointer.*/
+   typedef typename detail::pointer_to_other<VoidPointer, T>::type pointer;
+   /*!Provides the type of the stored pointer.*/
    typedef T element_type;
 
-   basic_intrusive_ptr(): p_(0)
+   private:
+   typedef VoidPointer VP;
+   typedef intrusive_ptr this_type;
+   typedef pointer this_type::*unspecified_bool_type;
+   
+   public:
+   /*!Constructor. Initializes internal pointer to 0. Does not throw*/
+   intrusive_ptr(): m_ptr(0)
    {}
 
-   basic_intrusive_ptr(const pointer &p, bool add_ref = true): p_(p)
+   /*!Constructor. Copies pointer and if "p" is not zero and 
+      "add_ref" is true calls intrusive_ptr_add_ref(get_pointer(p)).
+      Does not throw*/
+   intrusive_ptr(const pointer &p, bool add_ref = true): m_ptr(p)
    {
-      if(p_ != 0 && add_ref) intrusive_ptr_add_ref(p_);
+      if(m_ptr != 0 && add_ref) intrusive_ptr_add_ref(detail::get_pointer(m_ptr));
    }
 
-   template<class U> basic_intrusive_ptr
-      (basic_intrusive_ptr<U, VP> const & rhs)
-      :  p_(rhs.get())
+   /*!Copy constructor. Copies the internal pointer and if "p" is not
+      zero calls intrusive_ptr_add_ref(get_pointer(p)). Does not throw*/
+   intrusive_ptr(intrusive_ptr const & rhs)
+      :  m_ptr(rhs.m_ptr)
    {
-      if(p_ != 0) intrusive_ptr_add_ref(p_);
+      if(m_ptr != 0) intrusive_ptr_add_ref(detail::get_pointer(m_ptr));
    }
 
-   basic_intrusive_ptr(basic_intrusive_ptr const & rhs)
-      :  p_(rhs.p_)
+   /*!Constructor from related. Copies the internal pointer and if "p" is not
+      zero calls intrusive_ptr_add_ref(get_pointer(p)). Does not throw*/
+   template<class U> intrusive_ptr
+      (intrusive_ptr<U, VP> const & rhs)
+      :  m_ptr(rhs.get())
    {
-      if(p_ != 0) intrusive_ptr_add_ref(p_);
+      if(m_ptr != 0) intrusive_ptr_add_ref(detail::get_pointer(m_ptr));
    }
 
-   ~basic_intrusive_ptr()
+   /*!Destructor. If internal pointer is not 0, calls
+      intrusive_ptr_release(get_pointer(m_ptr)). Does not throw*/
+   ~intrusive_ptr()
    {
-      if(p_ != 0) intrusive_ptr_release(p_);
+      if(m_ptr != 0) intrusive_ptr_release(detail::get_pointer(m_ptr));
    }
 
-   template<class U> basic_intrusive_ptr & operator=
-      (basic_intrusive_ptr<U, VP> const & rhs)
-   {
-      this_type(rhs).swap(*this);
-      return *this;
-   }
-
-   basic_intrusive_ptr & operator=(basic_intrusive_ptr const & rhs)
-   {
-      this_type(rhs).swap(*this);
-      return *this;
-   }
-
-   basic_intrusive_ptr & operator=(pointer rhs)
+   /*!Assignment operator. Equivalent to intrusive_ptr(r).swap(*this). 
+      Does not throw*/
+   intrusive_ptr & operator=(intrusive_ptr const & rhs)
    {
       this_type(rhs).swap(*this);
       return *this;
    }
 
+   /*!Assignment from related. Equivalent to intrusive_ptr(r).swap(*this). 
+      Does not throw*/
+   template<class U> intrusive_ptr & operator=
+      (intrusive_ptr<U, VP> const & rhs)
+   {
+      this_type(rhs).swap(*this);
+      return *this;
+   }
+
+   /*!Assignment from pointer. Equivalent to intrusive_ptr(r).swap(*this). 
+      Does not throw*/
+   intrusive_ptr & operator=(pointer rhs)
+   {
+      this_type(rhs).swap(*this);
+      return *this;
+   }
+   
+   /*!Returns a reference to the internal pointer. Does not throw*/
    pointer &get()
-      {  return p_;  }
+      {  return m_ptr;  }
 
+   /*!Returns a reference to the internal pointer. Does not throw*/
    const pointer &get() const
-      {  return p_;  }
+      {  return m_ptr;  }
 
+   /*!Returns *get(). Does not throw*/
    T & operator*() const
-      {  return *p_; }
+      {  return *m_ptr; }
 
+   /*!Returns *get(). Does not throw*/
    const pointer &operator->() const
-      {  return p_;  }
+      {  return m_ptr;  }
 
+   /*!Returns get(). Does not throw*/
    pointer &operator->()
-      {  return p_;  }
+      {  return m_ptr;  }
 
-   typedef pointer this_type::*unspecified_bool_type;
-
+   /*!Conversion to boolean. Does not throw*/
    operator unspecified_bool_type () const
-      {  return p_ == 0? 0: &this_type::p_;  }
+      {  return m_ptr == 0? 0: &this_type::m_ptr;  }
 
-   // operator! is a Borland-specific workaround
+   /*!Not operator. Does not throw*/
    bool operator! () const
-      {  return p_ == 0;   }
+      {  return m_ptr == 0;   }
 
-   void swap(basic_intrusive_ptr & rhs)
-   {
-      using std::swap;
-      swap(p_, rhs.p_);
-   }
+   /*!Exchanges the contents of the two smart pointers. Does not throw*/
+   void swap(intrusive_ptr & rhs)
+   {  detail::swap(m_ptr, rhs.m_ptr);  }
 
-private:
-
-   pointer p_;
+   private:
+   pointer m_ptr;
 };
 
-template<class T, class U, class VP>
-inline bool operator==(basic_intrusive_ptr<T, VP> const & a, 
-                       basic_intrusive_ptr<U, VP> const & b)
-   {  return a.get() == b.get(); }
+/*Returns a.get() == b.get(). Does not throw*/
+template<class T, class U, class VP> inline
+bool operator==(intrusive_ptr<T, VP> const & a, 
+                intrusive_ptr<U, VP> const & b)
+{  return a.get() == b.get(); }
 
-template<class T, class U, class VP>
-inline bool operator!=(basic_intrusive_ptr<T, VP> const & a,
-                       basic_intrusive_ptr<U, VP> const & b)
-   {  return a.get() != b.get(); }
+/*Returns a.get() != b.get(). Does not throw*/
+template<class T, class U, class VP> inline
+bool operator!=(intrusive_ptr<T, VP> const & a,
+                intrusive_ptr<U, VP> const & b)
+{  return a.get() != b.get(); }
 
-template<class T, class VP>
-inline bool operator==(basic_intrusive_ptr<T, VP> const & a,
-                       const typename basic_intrusive_ptr<T, VP>::pointer &b)
-   {  return a.get() == b; }
+/*Returns a.get() == b. Does not throw*/
+template<class T, class VP> inline
+bool operator==(intrusive_ptr<T, VP> const & a,
+                       const typename intrusive_ptr<T, VP>::pointer &b)
+{  return a.get() == b; }
 
-template<class T, class VP>
-inline bool operator!=(basic_intrusive_ptr<T, VP> const & a,
-                       const typename basic_intrusive_ptr<T, VP>::pointer &b)
-   {  return a.get() != b; }
+/*Returns a.get() != b. Does not throw*/
+template<class T, class VP> inline
+bool operator!=(intrusive_ptr<T, VP> const & a,
+                const typename intrusive_ptr<T, VP>::pointer &b)
+{  return a.get() != b; }
 
-template<class T, class VP>
-inline bool operator==(const typename basic_intrusive_ptr<T, VP>::pointer &a,
-                       basic_intrusive_ptr<T, VP> const & b)
+/*Returns a == b.get(). Does not throw*/
+template<class T, class VP> inline
+bool operator==(const typename intrusive_ptr<T, VP>::pointer &a,
+                intrusive_ptr<T, VP> const & b)
    {  return a == b.get(); }
 
-template<class T, class VP>
-inline bool operator!=(const typename basic_intrusive_ptr<T, VP>::pointer &a,
-                       basic_intrusive_ptr<T, VP> const & b)
-   {  return a != b.get(); }
+/*Returns a != b.get(). Does not throw*/
+template<class T, class VP> inline
+bool operator!=(const typename intrusive_ptr<T, VP>::pointer &a,
+                       intrusive_ptr<T, VP> const & b)
+{  return a != b.get(); }
 
-template<class T, class VP>
-inline bool operator<
-   (basic_intrusive_ptr<T, VP> const & a, 
-    basic_intrusive_ptr<T, VP> const & b)
+/*Returns a.get() < b.get(). Does not throw*/
+template<class T, class VP> inline
+bool operator<(intrusive_ptr<T, VP> const & a, 
+               intrusive_ptr<T, VP> const & b)
 {  
-   return std::less<typename basic_intrusive_ptr<T, VP>::pointer>()
+   return std::less<typename intrusive_ptr<T, VP>::pointer>()
       (a.get(), b.get());   
 }
 
-template<class T, class VP>
-void swap(basic_intrusive_ptr<T, VP> & lhs,
-          basic_intrusive_ptr<T, VP> & rhs)
-   {  lhs.swap(rhs); }
-
-// mem_fn support
-template<class T, class VP>
-typename basic_intrusive_ptr<T, VP>::pointer
-   get_pointer(basic_intrusive_ptr<T, VP> const & p)
-   {  return p.get();   }
-
-template<class T, class U, class VP>
-basic_intrusive_ptr<T, VP> static_pointer_cast
-   (basic_intrusive_ptr<U, VP> const & p)
-   {  return do_static_cast<U>(p.get());  }
-
-template<class T, class U, class VP>
-basic_intrusive_ptr<T, VP> const_pointer_cast
-   (basic_intrusive_ptr<U, VP> const & p)
-   {  return do_const_cast<U>(p.get());   }
-
-template<class T, class U, class VP>
-basic_intrusive_ptr<T, VP> dynamic_pointer_cast
-   (basic_intrusive_ptr<U, VP> const & p)
-   {  return do_dynamic_cast<U>(p.get()); }
-
-template<class T, class U, class VP>
-basic_intrusive_ptr<T, VP>reinterpret_pointer_cast
-   (basic_intrusive_ptr<U, VP> const & p)
-   {  return do_reinterpret_cast<U>(p.get());   }
+/*!Exchanges the contents of the two intrusive_ptrs. Does not throw*/
+template<class T, class VP> inline
+void swap(intrusive_ptr<T, VP> & lhs,
+          intrusive_ptr<T, VP> & rhs)
+{  lhs.swap(rhs); }
 
 // operator<<
 template<class E, class T, class Y, class VP>
-std::basic_ostream<E, T> & operator<< 
-   (std::basic_ostream<E, T> & os, basic_intrusive_ptr<Y, VP> const & p)
+inline std::basic_ostream<E, T> & operator<< 
+   (std::basic_ostream<E, T> & os, intrusive_ptr<Y, VP> const & p)
    {  os << p.get(); return os;  }
 
+/*Returns p.get(). Does not throw*/
+template<class T, class VP>
+inline typename boost::shmem::intrusive_ptr<T, VP>::pointer
+   get_pointer(intrusive_ptr<T, VP> p)
+   {  return p.get();   }
+
+/*Emulates static cast operator. Does not throw*/
+template<class T, class U, class VP>
+inline boost::shmem::intrusive_ptr<T, VP> static_pointer_cast
+   (boost::shmem::intrusive_ptr<U, VP> const & p)
+   {  return do_static_cast<U>(p.get());  }
+
+/*Emulates const cast operator. Does not throw*/
+template<class T, class U, class VP>
+inline boost::shmem::intrusive_ptr<T, VP> const_pointer_cast
+   (boost::shmem::intrusive_ptr<U, VP> const & p)
+   {  return do_const_cast<U>(p.get());   }
+
+/*Emulates dynamic cast operator. Does not throw*/
+template<class T, class U, class VP>
+inline boost::shmem::intrusive_ptr<T, VP> dynamic_pointer_cast
+   (boost::shmem::intrusive_ptr<U, VP> const & p)
+   {  return do_dynamic_cast<U>(p.get()); }
+
+/*Emulates reinterpret cast operator. Does not throw*/
+template<class T, class U, class VP>
+inline boost::shmem::intrusive_ptr<T, VP>reinterpret_pointer_cast
+   (boost::shmem::intrusive_ptr<U, VP> const & p)
+   {  return do_reinterpret_cast<U>(p.get());   }
+
 } // namespace shmem
+
 } // namespace boost
 
 #ifdef BOOST_MSVC
