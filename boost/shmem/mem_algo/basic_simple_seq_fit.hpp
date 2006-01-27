@@ -18,9 +18,8 @@
 #include <boost/shmem/detail/workaround.hpp>
 #include <boost/shmem/detail/config_begin.hpp>
 #include <boost/shmem/shmem_fwd.hpp>
-#include <boost/get_pointer.hpp>
-#include <boost/noncopyable.hpp>
 #include <boost/shmem/offset_ptr.hpp>
+#include <boost/noncopyable.hpp>
 #include <boost/shmem/sync/shared_mutex.hpp>
 #include <boost/shmem/exceptions.hpp>
 #include <boost/shmem/detail/utilities.hpp>
@@ -257,20 +256,18 @@ template<class MutexFamily, class VoidPointer>
 void* basic_simple_seq_fit<MutexFamily, VoidPointer>::
    priv_allocate(std::size_t nbytes)
 {
-   using boost::get_pointer;
-
    if(!nbytes) return 0;
 
    //Number of units to request (including block_ctrl header)
    std::size_t nunits = (nbytes+BasicSize-1)/BasicSize + 1;
 
    //Get first two free memory blocks
-   block_ctrl *prev  = get_pointer(m_header.mp_free);
-   block_ctrl *block = get_pointer(prev->m_next);
+   block_ctrl *prev  = detail::get_pointer(m_header.mp_free);
+   block_ctrl *block = detail::get_pointer(prev->m_next);
    bool found = false;
 
    //Check available blocks for requested memory size
-   block_ctrl * header_free = get_pointer(m_header.mp_free);
+   block_ctrl * header_free = detail::get_pointer(m_header.mp_free);
    do{
       if (block->m_size > nunits){
          //This block is bigger than needed, split it in 
@@ -301,7 +298,7 @@ void* basic_simple_seq_fit<MutexFamily, VoidPointer>::
       }
       //Bad luck, let's check next block
       prev  = block;
-      block = get_pointer(block->m_next);
+      block = detail::get_pointer(block->m_next);
    }
    while(prev != header_free);
    
@@ -321,7 +318,6 @@ void basic_simple_seq_fit<MutexFamily, VoidPointer>::deallocate(void* addr)
 template<class MutexFamily, class VoidPointer>
 void basic_simple_seq_fit<MutexFamily, VoidPointer>::priv_deallocate(void* addr)
 {
-   using boost::get_pointer;
    if(!addr)   return;
 
    //Let's get free block list. List is always sorted
@@ -344,15 +340,18 @@ void basic_simple_seq_fit<MutexFamily, VoidPointer>::priv_deallocate(void* addr)
    m_header.m_allocated -= BasicSize*block->m_size;   
 
    //Let's find the previous block of the block to deallocate
-   //Remember pos >= get_pointer(pos->m_next) indicates that pos is the last block
+   //Remember pos >= detail::get_pointer(pos->m_next) indicates
+   //that pos is the last block
    block_ctrl_ptr pos_next = pos->m_next;
    while(block > pos && !(block < pos_next || pos  >= pos_next)){
        pos = pos_next, pos_next = pos->m_next;
    }
  
    //Try to combine with upper block
-   if ((detail::char_ptr_cast(get_pointer(block)) + BasicSize*block->m_size) == 
-        detail::char_ptr_cast(get_pointer(pos_next))){
+   if ((detail::char_ptr_cast(detail::get_pointer(block))
+            + BasicSize*block->m_size) == 
+        detail::char_ptr_cast(detail::get_pointer(pos_next))){
+
       block->m_size += pos_next->m_size;
       block->m_next  = pos_next->m_next;
    }
@@ -360,8 +359,9 @@ void basic_simple_seq_fit<MutexFamily, VoidPointer>::priv_deallocate(void* addr)
       block->m_next = pos->m_next;
    }
    //Try to combine with lower block
-   if ((detail::char_ptr_cast(get_pointer(pos)) + BasicSize*pos->m_size) == 
-        detail::char_ptr_cast(get_pointer(block))){
+   if ((detail::char_ptr_cast(detail::get_pointer(pos))
+            + BasicSize*pos->m_size) == 
+        detail::char_ptr_cast(detail::get_pointer(block))){
       pos->m_size += block->m_size;
       pos->m_next = block->m_next;
    }

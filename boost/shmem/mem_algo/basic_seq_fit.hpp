@@ -18,7 +18,6 @@
 #include <boost/shmem/detail/workaround.hpp>
 #include <boost/shmem/detail/config_begin.hpp>
 #include <boost/shmem/shmem_fwd.hpp>
-#include <boost/get_pointer.hpp>
 #include <boost/shmem/offset_ptr.hpp>
 #include <boost/shmem/sync/shared_mutex.hpp>
 #include <boost/shmem/detail/utilities.hpp>
@@ -27,7 +26,6 @@
 #include <boost/shmem/detail/multi_segment_services.hpp>
 #include <boost/shmem/exceptions.hpp>
 #include <boost/noncopyable.hpp>
-#include <boost/get_pointer.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_void.hpp>
 
@@ -144,7 +142,7 @@ inline void basic_seq_fit<MutexFamily, VoidPointer>::grow(std::size_t extra_size
    block_ctrl* current   = reinterpret_cast<block_ctrl*>(&m_header.mp_first[0]);
    block_ctrl* null      = reinterpret_cast<block_ctrl*>(&m_header.mp_first[0]);
 
-   while(get_pointer(current->m_next) != null){
+   while(detail::get_pointer(current->m_next) != null){
       current = current->m_next.get();
    }
    this->merge(current, new_block, 0);
@@ -198,16 +196,16 @@ inline void* basic_seq_fit<MutexFamily, VoidPointer>::allocate(std::size_t nbyte
 template<class MutexFamily, class VoidPointer>
 void* basic_seq_fit<MutexFamily, VoidPointer>::priv_allocate(std::size_t nbytes)
 {
-   using boost::get_pointer;
    nbytes               = detail::get_rounded_size(nbytes, BasicSize);
    std::size_t nblocks  = nbytes/BasicSize;
 
    //Traverse the linked list, starting with first element
    block_ctrl *current  = reinterpret_cast<block_ctrl*>(&m_header.mp_first[0]);
    block_ctrl *null     = reinterpret_cast<block_ctrl*>(&m_header.mp_first[0]);
-   block_ctrl *next     = get_pointer(current->m_next);
+   block_ctrl *next     = detail::get_pointer(current->m_next);
       
-   for(;next != null; current = next, next = get_pointer(current->m_next)){
+   for(;next != null;
+        current = next, next = detail::get_pointer(current->m_next)){
       if(current->m_size >= nblocks && current->m_free == true){
          this->split(current, nblocks);
          assert((detail::char_ptr_cast(current) - detail::char_ptr_cast(this))
@@ -230,7 +228,6 @@ void* basic_seq_fit<MutexFamily, VoidPointer>::priv_allocate(std::size_t nbytes)
 template<class MutexFamily, class VoidPointer>
 void basic_seq_fit<MutexFamily, VoidPointer>::deallocate(void* addr)
 {
-   using boost::get_pointer;
    //-----------------------
    boost::shmem::scoped_lock<mutex> guard(m_header);
    //-----------------------
@@ -250,14 +247,16 @@ void basic_seq_fit<MutexFamily, VoidPointer>::deallocate(void* addr)
    block_ctrl_ptr end   = reinterpret_cast<block_ctrl*>(&m_header.mp_first[m_header.m_size]);
 
    //yet more sanity checks
-   if(free->m_free  != false    ||          //region if free
-      get_pointer(free->m_prev) >= free ||  //previous element not previous
-      free->m_next  >= end      ||          //next is beyond the end
-      free->m_size  >= m_header.m_size/BasicSize     || //size region greater than whole
-      free->m_size  == 0        ){          //no size at all
+   if(free->m_free  != false    ||                 //region if free
+      detail::get_pointer(free->m_prev) >= free || //previous element not previous
+      free->m_next  >= end      ||                 //next is beyond the end
+      free->m_size  >= m_header.m_size/BasicSize ||//size region greater than whole
+      free->m_size  == 0        ){                 //no size at all
       return;
    }
-   this->merge(get_pointer(free->m_prev), free, get_pointer(free->m_next));
+   this->merge(detail::get_pointer(free->m_prev), 
+               free, 
+               detail::get_pointer(free->m_next));
 }
 
 /*
@@ -350,7 +349,7 @@ void basic_seq_fit<MutexFamily, VoidPointer>::merge
          current->m_next  = next->m_next;
          temp           = next->m_next;
 
-         if(get_pointer(temp) != null){ 
+         if(detail::get_pointer(temp) != null){ 
             temp->m_prev  = current; 
          }
       }
@@ -366,7 +365,7 @@ void basic_seq_fit<MutexFamily, VoidPointer>::merge
          prev->m_next  = next->m_next;
          temp        = next->m_next;
 
-         if(get_pointer(temp) != null){ 
+         if(detail::get_pointer(temp) != null){ 
             temp->m_prev  = prev; 
          }
       }
