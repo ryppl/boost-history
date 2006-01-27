@@ -29,7 +29,7 @@ inline T do_static_cast_impl(const U &r, const boost::false_type)
 }
 
 template<class T, class U> 
-inline T do_static_cast_impl(const U r, const boost::true_type)
+inline T do_static_cast_impl(const U &r, const boost::true_type)
 {  
    return static_cast<T>(r);  
 }
@@ -41,7 +41,7 @@ inline T do_dynamic_cast_impl(const U &r, const boost::false_type)
 }
 
 template<class T, class U> 
-inline T do_dynamic_cast_impl(const U r, const boost::true_type)
+inline T do_dynamic_cast_impl(const U &r, const boost::true_type)
 {  
    return dynamic_cast<T>(r);  
 }
@@ -53,7 +53,7 @@ inline T do_reinterpret_cast_impl(const U &r, const boost::false_type)
 }
 
 template<class T, class U> 
-inline T do_reinterpret_cast_impl(const U r, const boost::true_type)
+inline T do_reinterpret_cast_impl(const U &r, const boost::true_type)
 {  
    return reinterpret_cast<T>(r);  
 }
@@ -65,7 +65,7 @@ inline T do_const_cast_impl(const U &r, const boost::false_type)
 }
 
 template<class T, class U> 
-inline T do_const_cast_impl(const U r, const boost::true_type)
+inline T do_const_cast_impl(const U &r, const boost::true_type)
 {  
    return const_cast<T>(r);  
 }
