@@ -43,13 +43,14 @@
 #include <string>    // char traits            
 #include <cstddef>   // ptrdiff_t
 #include <assert.h>
+#include <boost/shmem/shmem_fwd.hpp>
 
 namespace boost {  namespace shmem {
 
 /*!A streambuf class that controls the transmission of elements to and from
    a basic_xbufferstream. The elements are transmitted from a to a fixed
    size buffer*/
-template <class CharT, class CharTraits = std::char_traits<CharT> >
+template <class CharT, class CharTraits>
 class basic_bufferbuf 
    : public std::basic_streambuf<CharT, CharTraits>
 {
@@ -330,8 +331,8 @@ class basic_bufferbuf
 
 /*!A basic_istream class that uses a fixed size character buffer
    as it's formatting buffer.*/
-template <class CharT, class CharTraits = std::char_traits<CharT> >
-class basic_ibufferstream 
+template <class CharT, class CharTraits>
+class basic_ibufferstream
 : public std::basic_istream<CharT, CharTraits>
 {
    public:                         // Typedefs
@@ -382,8 +383,8 @@ class basic_ibufferstream
 
 /*!A basic_ostream class that uses a fixed size character buffer
    as it's formatting buffer.*/
-template <class CharT, class CharTraits = std::char_traits<CharT> >
-class basic_obufferstream 
+template <class CharT, class CharTraits>
+class basic_obufferstream
    : public std::basic_ostream<CharT, CharTraits>
 {
    public:
@@ -435,7 +436,7 @@ class basic_obufferstream
 
 /*!A basic_iostream class that uses a fixed size character buffer
    as it's formatting buffer.*/
-template <class CharT, class CharTraits = std::char_traits<CharT> >
+template <class CharT, class CharTraits>
 class basic_bufferstream 
 : public std::basic_iostream<CharT, CharTraits>
 

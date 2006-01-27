@@ -43,7 +43,7 @@
 #include <ostream>
 #include <string>    // char traits            
 #include <cstddef>   // ptrdiff_t
-//#include <vector>
+#include <boost/shmem/shmem_fwd.hpp>
 #include <assert.h>
 
 namespace boost {  namespace shmem {
@@ -53,9 +53,8 @@ namespace boost {  namespace shmem {
    It holds a character vector specified by CharVector template parameter
    as its formatting buffer. The vector must have contiguous storage, like 
    std::vector, boost::shmem::vector or boost::shmem::basic_string*/
-template <class CharVector, class CharTraits = 
-          std::char_traits<typename CharVector::value_type> >
-class basic_vectorbuf 
+template <class CharVector, class CharTraits>
+class basic_vectorbuf
    : public std::basic_streambuf<typename CharVector::value_type, CharTraits>
 {
    public:
@@ -422,9 +421,8 @@ class basic_vectorbuf
    template parameter as it's formatting buffer. The vector must have
    contiguous storage, like std::vector, boost::shmem::vector or
    boost::shmem::basic_string*/
-template <class CharVector, class CharTraits = 
-          std::char_traits<typename CharVector::value_type> >
-class basic_ivectorstream 
+template <class CharVector, class CharTraits>
+class basic_ivectorstream
 : public std::basic_istream<typename CharVector::value_type, CharTraits>
 {
    public:
@@ -486,9 +484,8 @@ class basic_ivectorstream
    template parameter as it's formatting buffer. The vector must have
    contiguous storage, like std::vector, boost::shmem::vector or
    boost::shmem::basic_string*/
-template <class CharVector, class CharTraits = 
-          std::char_traits<typename CharVector::value_type> >
-class basic_ovectorstream 
+template <class CharVector, class CharTraits>
+class basic_ovectorstream
    : public std::basic_ostream<typename CharVector::value_type, CharTraits>
 {
    public:
@@ -550,9 +547,8 @@ class basic_ovectorstream
    template parameter as it's formatting buffer. The vector must have
    contiguous storage, like std::vector, boost::shmem::vector or
    boost::shmem::basic_string*/
-template <class CharVector, class CharTraits = 
-          std::char_traits<typename CharVector::value_type> >
-class basic_vectorstream 
+template <class CharVector, class CharTraits>
+class basic_vectorstream
 : public std::basic_iostream<typename CharVector::value_type, CharTraits>
 
 {
