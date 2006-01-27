@@ -76,6 +76,28 @@ template<> struct random_it<const void>
    typedef empty_type         iterator_category;
 };
 
+template<> struct random_it<volatile void>
+{
+   typedef volatile void *       pointer;
+   typedef const volatile void * const_pointer;
+   typedef empty_type&           reference;
+   typedef const empty_type&     const_reference;
+   typedef volatile void         value_type;
+   typedef empty_type            difference_type;
+   typedef empty_type            iterator_category;
+};
+
+template<> struct random_it<const volatile void>
+{
+   typedef const volatile void *    pointer;
+   typedef const volatile void *    const_pointer;
+   typedef const empty_type &       reference;
+   typedef const empty_type &       const_reference;
+   typedef const volatile void      value_type;
+   typedef empty_type               difference_type;
+   typedef empty_type               iterator_category;
+};
+
 }  //namespace workaround
 
 }  //namespace shmem {
