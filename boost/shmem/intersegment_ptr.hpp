@@ -583,7 +583,7 @@ class intersegment_ptr : public PT
 
    /*!Constructor from other pointer. Never throws.*/
    template <class U>
-   intersegment_ptr(U *ptr) {  base_t::set_from_pointer(pointer(ptr)); }
+   intersegment_ptr(U *ptr){  base_t::set_from_pointer(pointer(ptr)); }
 
    /*!Constructor from other intersegment_ptr */
    intersegment_ptr(const intersegment_ptr& ptr) 
@@ -593,7 +593,7 @@ class intersegment_ptr : public PT
       convertible, intersegment_ptrs will be convertibles. Never throws.*/
    template<class T2>
    intersegment_ptr(const intersegment_ptr<T2, PT> &ptr) 
-      {  base_t::set_from_other(ptr); }
+   {  pointer p(ptr.get());   (void)p; base_t::set_from_other(ptr); }
 
    /*!Emulates static_cast operator. Never throws.  */
    template<class U>
@@ -617,54 +617,57 @@ class intersegment_ptr : public PT
    /*!Emulates const_cast operator. Never throws.*/
    template<class U>
    intersegment_ptr(const intersegment_ptr<U, PT> &r, detail::const_cast_tag)
-      //{  base_t::set_from_pointer(const_cast<T*>(r.get())); }
-      {  
-//         (void)const_cast<T*>((U*)0);  
-         pointer a = const_cast<pointer>((U*)0);
-//         (void)const_cast<T*>((U*)0);  
-         base_t::set_from_other(r); 
-      }
+   {  base_t::set_from_pointer(const_cast<T*>(r.get())); }
+/*
+   {  
+      //Make sure const conversion is correct
+      pointer p = const_cast<pointer>((U*)0); (void)p;
+      base_t::set_from_other(r); 
+   }*/
 
    /*!Emulates dynamic_cast operator. Never throws.*/
    template<class U>
    intersegment_ptr(const intersegment_ptr<U, PT> &r, detail::dynamic_cast_tag)
-      {  base_t::set_from_pointer(dynamic_cast<T*>(r.get())); }
+   {  base_t::set_from_pointer(dynamic_cast<T*>(r.get())); }
 
    /*!Emulates reinterpret_cast operator. Never throws.*/
    template<class U>
    intersegment_ptr(const intersegment_ptr<U, PT> &r, detail::reinterpret_cast_tag)
-      {  base_t::set_from_pointer(reinterpret_cast<T*>(r.get())); }
+   {  base_t::set_from_pointer(reinterpret_cast<T*>(r.get())); }
 
    /*!Obtains raw pointer from offset. Never throws.*/
    pointer get()const
-      {  return (pointer)base_t::get_pointer();   }
+   {  return (pointer)base_t::get_pointer();   }
 
    /*!Pointer-like -> operator. It can return 0 pointer. Never throws.*/
    pointer operator->() const           
-      {  return self_t::get(); }
+   {  return self_t::get(); }
 
    /*!Dereferencing operator, if it is a null intersegment_ptr behavior 
          is undefined. Never throws.*/
    reference operator* () const           
-      {  return *(self_t::get());   }
+   {  return *(self_t::get());   }
 
    /*!Indexing operator. Never throws.*/
    reference operator[](std::ptrdiff_t idx) const   
-      {  return self_t::get()[idx];  }
+   {  return self_t::get()[idx];  }
 
    /*!Assignment from pointer (saves extra conversion). Never throws.*/
    intersegment_ptr& operator= (pointer from)
-      {  base_t::set_from_pointer(from); return *this;  }
+   {  base_t::set_from_pointer(from); return *this;  }
 
    /*!Assignment from other intersegment_ptr. Never throws.*/
    intersegment_ptr& operator= (const intersegment_ptr &ptr)
-      {  base_t::set_from_other(ptr);  return *this;  }
+   {  base_t::set_from_other(ptr);  return *this;  }
 
    /*!Assignment from related intersegment_ptr. If pointers of pointee types 
          are assignable, intersegment_ptrs will be assignable. Never throws.*/
    template <class T2>
    intersegment_ptr& operator= (const intersegment_ptr<T2, PT> & ptr)
-      {  base_t::set_from_other(ptr); return *this;   }
+   {  
+      pointer p(ptr.get());   (void)p; 
+      base_t::set_from_other(ptr); return *this;   
+   }
  
    /*!intersegment_ptr + std::ptrdiff_t. Never throws.*/
    intersegment_ptr operator+ (std::ptrdiff_t idx) const   
@@ -684,127 +687,170 @@ class intersegment_ptr : public PT
 
    /*!intersegment_ptr += std::ptrdiff_t. Never throws.*/
    intersegment_ptr &operator+= (std::ptrdiff_t offset)
-      {  base_t::inc_offset(offset*sizeof(T));  return *this;  }
+   {  base_t::inc_offset(offset*sizeof(T));  return *this;  }
 
    /*!intersegment_ptr -= std::ptrdiff_t. Never throws.*/
    intersegment_ptr &operator-= (std::ptrdiff_t offset)
-      {  base_t::dec_offset(offset*sizeof(T));  return *this;  }
+   {  base_t::dec_offset(offset*sizeof(T));  return *this;  }
 
    /*!++intersegment_ptr. Never throws.*/
    intersegment_ptr& operator++ (void)
-      {  base_t::inc_offset(sizeof(T));   return *this;  }
+   {  base_t::inc_offset(sizeof(T));   return *this;  }
  
    /*!intersegment_ptr++. Never throws.*/
    intersegment_ptr operator++ (int)
-      {  intersegment_ptr temp(*this); ++*this; return temp; }
+   {  intersegment_ptr temp(*this); ++*this; return temp; }
 
    /*!--intersegment_ptr. Never throws.*/
    intersegment_ptr& operator-- (void)
-      {  base_t::dec_offset(sizeof(T));   return *this;  }
+   {  base_t::dec_offset(sizeof(T));   return *this;  }
 
    /*!intersegment_ptr--. Never throws.*/
    intersegment_ptr operator-- (int)
-      {  intersegment_ptr temp(*this); --*this; return temp; }
+   {  intersegment_ptr temp(*this); --*this; return temp; }
 
    /*!Safe bool conversion operator. Never throws.*/
    operator unspecified_bool_type() const  
-      {  return base_t::is_null()? 0 : &self_t::unspecified_bool_type_func;   }
+   {  return base_t::is_null()? 0 : &self_t::unspecified_bool_type_func;   }
 
    /*!Not operator. Not needed in theory, but improves portability. 
       Never throws.*/
    bool operator! () const
-      {  return base_t::is_null();   }
+   {  return base_t::is_null();   }
 
    /*!Swaps two intersegment_ptr-s. More efficient than std::swap.
       Never throws.*/
    void swap(intersegment_ptr &other)
-      {  base_t::swap(other);   }
-
-   /*!Compares the equality of two intersegment_ptr-s.
-      Never throws.*/
-   bool equal(const intersegment_ptr &other) const
-      {  return base_t::equal(other);   }
-
-   /*!Returns true if *this is less than other.
-      This only works with two basic_intersegment_ptr pointing
-      to the same segment group. Otherwise undefined. Never throws*/
-   bool less(const intersegment_ptr &other) const
-      {  return base_t::less(other);   }
+   {  base_t::swap(other);   }
 
    /*!Calculates the distance between two intersegment_ptr-s.
       This only works with two basic_intersegment_ptr pointing
       to the same segment. Otherwise undefined*/
-   bool diff(const intersegment_ptr &other) const
-      {  return base_t::less(other);   }
+   template <class T2>
+   bool _diff(const intersegment_ptr<T2, PT> &other) const
+   {  return base_t::less(other);   }
+
+   /*!Returns true if both point to the same object*/
+   template <class T2>
+   bool _equal(const intersegment_ptr<T2, PT> &other) const
+   {  return base_t::equal(other);   }
+
+   /*!Returns true if *this is less than other.
+      This only works with two basic_intersegment_ptr pointing
+      to the same segment group. Otherwise undefined. Never throws*/
+   template <class T2>
+   bool _less(const intersegment_ptr<T2, PT> &other) const
+   {  return base_t::less(other);   }
 };
 
-/*!intersegment_ptr<T1> == intersegment_ptr<T2, PT>. Never throws.*/
-template<class T1, class T2, class PT>
-inline bool operator== (const intersegment_ptr<T1, PT> &pt1, 
-                        const intersegment_ptr<T2, PT> &pt2)
-{  return pt1.equal(pt2);  }
+/*!Compares the equality of two intersegment_ptr-s.
+   Never throws.*/
+template <class T1, class T2, class PT1> inline
+bool operator ==(const intersegment_ptr<T1, PT1> &left,
+                 const intersegment_ptr<T2, PT1> &right)
+{  
+   //Make sure both pointers can be compared
+   bool e = typename intersegment_ptr<T1, PT1>::pointer(0) ==
+            typename intersegment_ptr<T2, PT1>::pointer(0);
+   (void)e;
+   return left._equal(right);   
+}
 
-/*!intersegment_ptr<T1> != intersegment_ptr<T2, PT>. Never throws.*/
-template<class T1, class T2, class PT>
-inline bool operator!= (const intersegment_ptr<T1, PT> &pt1, 
-                        const intersegment_ptr<T2, PT> &pt2)
-{  return !pt1.equal(pt2);  }
+/*!Returns true if *this is less than other.
+   This only works with two basic_intersegment_ptr pointing
+   to the same segment group. Otherwise undefined. Never throws*/
+template <class T1, class T2, class PT1> inline
+bool operator <(const intersegment_ptr<T1, PT1> &left,
+                const intersegment_ptr<T2, PT1> &right)
+{  
+   //Make sure both pointers can be compared
+   bool e = typename intersegment_ptr<T1, PT1>::pointer(0) <
+            typename intersegment_ptr<T2, PT1>::pointer(0);
+   (void)e;
+   return left._less(right);   
+}
 
-/*!intersegment_ptr<T1> < intersegment_ptr<T2, PT>. Never throws.*/
-template<class T1, class T2, class PT>
-inline bool operator< (const intersegment_ptr<T1, PT> &pt1, 
-                       const intersegment_ptr<T2, PT> &pt2)
-{  return pt1.less(pt2);   }
+template<class T1, class T2, class PT> inline
+bool operator!= (const intersegment_ptr<T1, PT> &pt1, 
+                 const intersegment_ptr<T2, PT> &pt2)
+{  return !(pt1 ==pt2);  }
 
 /*!intersegment_ptr<T1> <= intersegment_ptr<T2, PT>. Never throws.*/
-template<class T1, class T2, class PT>
-inline bool operator<= (const intersegment_ptr<T1, PT> &pt1, 
-                        const intersegment_ptr<T2, PT> &pt2)
+template<class T1, class T2, class PT> inline
+bool operator<= (const intersegment_ptr<T1, PT> &pt1, 
+                 const intersegment_ptr<T2, PT> &pt2)
 {  return !(pt1 > pt2);  }
 
 /*!intersegment_ptr<T1> > intersegment_ptr<T2, PT>. Never throws.*/
-template<class T1, class T2, class PT>
-inline bool operator> (const intersegment_ptr<T1, PT> &pt1, 
+template<class T1, class T2, class PT> inline
+bool operator> (const intersegment_ptr<T1, PT> &pt1, 
                        const intersegment_ptr<T2, PT> &pt2)
 {  return (pt2 < pt1);  }
 
 /*!intersegment_ptr<T1> >= intersegment_ptr<T2, PT>. Never throws.*/
-template<class T1, class T2, class PT>
-inline bool operator>= (const intersegment_ptr<T1, PT> &pt1, 
-                        const intersegment_ptr<T2, PT> &pt2)
+template<class T1, class T2, class PT> inline
+bool operator>= (const intersegment_ptr<T1, PT> &pt1, 
+                 const intersegment_ptr<T2, PT> &pt2)
 {  return !(pt1 < pt2);  }
 
 /*!operator<< */
-template<class E, class T, class U, class PT> 
-inline std::basic_ostream<E, T> & operator<< 
+template<class E, class T, class U, class PT> inline
+std::basic_ostream<E, T> & operator<< 
    (std::basic_ostream<E, T> & os, const intersegment_ptr<U, PT> & p)
 {  return os << p.get();   }
 
 /*!operator>> */
-template<class E, class T, class U, class PT> 
-inline std::basic_istream<E, T> & operator>> 
+template<class E, class T, class U, class PT> inline
+std::basic_istream<E, T> & operator>> 
    (std::basic_istream<E, T> & os, intersegment_ptr<U, PT> & p)
 {  U * tmp; return os >> tmp; p = tmp;   }
 
 /*!std::ptrdiff_t + intersegment_ptr. 
    The result is another pointer of the same segment */
-template<class T, class PT>
-inline intersegment_ptr<T, PT> operator+(std::ptrdiff_t diff, const intersegment_ptr<T, PT>& right)
+template<class T, class PT> inline
+intersegment_ptr<T, PT> operator+
+   (std::ptrdiff_t diff, const intersegment_ptr<T, PT>& right)
 {  return right + diff;  }
 
 /*!intersegment_ptr - intersegment_ptr. 
    This only works with two intersegment_ptr-s that point to the
    same segment*/
-template <class T, class T2, class PT>
-inline std::ptrdiff_t operator- (const intersegment_ptr<T, PT> &pt, 
+template <class T, class T2, class PT> inline
+std::ptrdiff_t operator- (const intersegment_ptr<T, PT> &pt, 
                           const intersegment_ptr<T2,PT> &pt2)
-   {  return pt.diff(pt2);  }
+   {  return pt._diff(pt2);  }
 
 /*! swap specialization */
-template<class T, class PT>
-inline void swap (boost::shmem::intersegment_ptr<T, PT> &pt, 
-                  boost::shmem::intersegment_ptr<T, PT> &pt2)
+template<class T, class PT> inline
+void swap (boost::shmem::intersegment_ptr<T, PT> &pt, 
+           boost::shmem::intersegment_ptr<T, PT> &pt2)
 {  pt.swap(pt2);  }
+
+/*!get_pointer() enables boost::mem_fn to recognize intersegment_ptr. 
+   Never throws.*/
+template<class T, class PT> inline
+T * get_pointer(boost::shmem::intersegment_ptr<T, PT> const & p)
+{  return p.get();   }
+
+/*!Simulation of static_cast between pointers. Never throws.*/
+template<class T, class U, class PT> inline 
+boost::shmem::intersegment_ptr<T, PT> static_pointer_cast(const boost::shmem::intersegment_ptr<U, PT> &r)
+{  return boost::shmem::intersegment_ptr<T, PT>(r, boost::shmem::detail::static_cast_tag());  }
+
+/*!Simulation of const_cast between pointers. Never throws.*/
+template<class T, class U, class PT> inline 
+boost::shmem::intersegment_ptr<T, PT> const_pointer_cast(const boost::shmem::intersegment_ptr<U, PT> &r)
+{  return boost::shmem::intersegment_ptr<T, PT>(r, boost::shmem::detail::const_cast_tag());  }
+
+/*!Simulation of dynamic_cast between pointers. Never throws.*/
+template<class T, class U, class PT> inline 
+boost::shmem::intersegment_ptr<T, PT> dynamic_pointer_cast(const boost::shmem::intersegment_ptr<U, PT> &r)
+{  return boost::shmem::intersegment_ptr<T, PT>(r, boost::shmem::detail::dynamic_cast_tag());  }
+
+/*!Simulation of reinterpret_cast between pointers. Never throws.*/
+template<class T, class U, class PT> inline
+boost::shmem::intersegment_ptr<T, PT> reinterpret_pointer_cast(const boost::shmem::intersegment_ptr<U, PT> &r)
+{  return boost::shmem::intersegment_ptr<T, PT>(r, boost::shmem::detail::reinterpret_cast_tag());  }
 
 /*!Trait class to detect if an smart pointer has 
    multi-segment addressing capabilities.*/
@@ -817,31 +863,6 @@ struct is_multisegment_ptr
 
 }  //namespace shmem {
 
-/*!get_pointer() enables boost::mem_fn to recognize intersegment_ptr. 
-   Never throws.*/
-template<class T, class PT>
-inline T * get_pointer(boost::shmem::intersegment_ptr<T, PT> const & p)
-   {  return p.get();   }
-
-/*!Simulation of static_cast between pointers. Never throws.*/
-template<class T, class U, class PT> 
-inline boost::shmem::intersegment_ptr<T, PT> static_pointer_cast(const boost::shmem::intersegment_ptr<U, PT> &r)
-   {  return boost::shmem::intersegment_ptr<T, PT>(r, boost::shmem::detail::static_cast_tag());  }
-
-/*!Simulation of const_cast between pointers. Never throws.*/
-template<class T, class U, class PT> 
-inline boost::shmem::intersegment_ptr<T, PT> const_pointer_cast(const boost::shmem::intersegment_ptr<U, PT> &r)
-   {  return boost::shmem::intersegment_ptr<T, PT>(r, boost::shmem::detail::const_cast_tag());  }
-
-/*!Simulation of dynamic_cast between pointers. Never throws.*/
-template<class T, class U, class PT> 
-inline boost::shmem::intersegment_ptr<T, PT> dynamic_pointer_cast(const boost::shmem::intersegment_ptr<U, PT> &r)
-   {  return boost::shmem::intersegment_ptr<T, PT>(r, boost::shmem::detail::dynamic_cast_tag());  }
-
-/*!Simulation of reinterpret_cast between pointers. Never throws.*/
-template<class T, class U, class PT> 
-inline boost::shmem::intersegment_ptr<T, PT> reinterpret_pointer_cast(const boost::shmem::intersegment_ptr<U, PT> &r)
-   {  return boost::shmem::intersegment_ptr<T, PT>(r, boost::shmem::detail::reinterpret_cast_tag());  }
 
 /*!has_trivial_constructor<> == true_type specialization for optimizations*/
 template <class T, class PT>

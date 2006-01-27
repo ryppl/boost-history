@@ -151,7 +151,7 @@ class offset_ptr : public RootPtr
       convertible, offset_ptrs will be convertibles. Never throws.*/
    template<class T2>
    offset_ptr(const offset_ptr<T2, RootPtr> &ptr) 
-      {  this->set_offset(ptr.get());   }
+   {  pointer p(ptr.get());  (void)p; this->set_offset(ptr.get());   }
 
    /*!Emulates static_cast operator. Never throws.  */
    template<class Y>
@@ -192,11 +192,11 @@ class offset_ptr : public RootPtr
 
    /*!Assignment from pointer (saves extra conversion). Never throws.*/
    offset_ptr& operator= (pointer from)
-      {  pointer p(from);  (void)p; this->set_offset(from); return *this;  }
+      {  this->set_offset(from); return *this;  }
 
    /*!Assignment from other offset_ptr. Never throws.*/
    offset_ptr& operator= (const offset_ptr & pt)
-      {  this->set_offset(pt.get());  return *this;  }
+      {  pointer p(pt.get());  (void)p; this->set_offset(pt.get());  return *this;  }
 
    /*!Assignment from related offset_ptr. If pointers of pointee types 
          are assignable, offset_ptrs will be assignable. Never throws.*/
@@ -314,8 +314,6 @@ inline void swap (boost::shmem::offset_ptr<T, R> &pt,
    pt2 = ptr;
 }
 
-}  //namespace shmem {
-
 /*!get_pointer() enables boost::mem_fn to recognize offset_ptr. 
    Never throws.*/
 template<class T, class R>
@@ -341,6 +339,8 @@ inline boost::shmem::offset_ptr<T, R> dynamic_pointer_cast(boost::shmem::offset_
 template<class T, class U, class R> 
 inline boost::shmem::offset_ptr<T, R> reinterpret_pointer_cast(boost::shmem::offset_ptr<U, R> const & r)
    {  return boost::shmem::offset_ptr<T, R>(r, boost::shmem::detail::reinterpret_cast_tag());  }
+
+}  //namespace shmem {
 
 /*!has_trivial_constructor<> == true_type specialization for optimizations*/
 template <class PointedType, class RootPtr>

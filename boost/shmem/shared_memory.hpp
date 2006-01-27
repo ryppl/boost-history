@@ -304,12 +304,12 @@ inline void*    shared_memory::get_base()  const
 
 inline void shared_memory::swap(shared_memory &other)
 {
-   detail::swap_function(this->m_shmHnd, other.m_shmHnd);
-   detail::swap_function(this->mp_info, other.mp_info);
-   detail::swap_function(this->mp_info, other.mp_info);
+   detail::swap(this->m_shmHnd, other.m_shmHnd);
+   detail::swap(this->mp_info, other.mp_info);
+   detail::swap(this->mp_info, other.mp_info);
    #if (defined BOOST_WINDOWS) && !(defined BOOST_DISABLE_WIN32)
    #else
-   detail::swap_function(this->m_name,    other.m_name);
+   detail::swap(this->m_name,    other.m_name);
    #endif   //#if (defined BOOST_WINDOWS) && !(defined BOOST_DISABLE_WIN32)
 }
 

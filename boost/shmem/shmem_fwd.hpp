@@ -25,6 +25,26 @@
 #  include <cstddef>
 #endif
 
+//////////////////////////////////////////////////////////////////////////////
+//                        Standard predeclarations
+//////////////////////////////////////////////////////////////////////////////
+
+namespace std {
+
+template <class T>
+class allocator;
+
+template <class T>
+struct less;
+
+template <class T1, class T2>
+struct pair;
+
+template <class CharType> 
+struct char_traits;
+
+}  //namespace std {
+
 namespace boost { namespace shmem {
 
 //////////////////////////////////////////////////////////////////////////////
@@ -122,6 +142,7 @@ class multi_simple_seq_fit;
 
 template<class IndexConfig> class flat_map_index;
 template<class IndexConfig> class map_index;
+template<class IndexConfig> class null_index;
 
 //////////////////////////////////////////////////////////////////////////////
 //                  Named object creation front-ends
@@ -225,7 +246,139 @@ class lock_exception;
 class process_resource_exception;
 class bad_alloc;
 
-}  }  //namespace boost { namespace shmem {
+//////////////////////////////////////////////////////////////////////////////
+//                               Streams
+//////////////////////////////////////////////////////////////////////////////
+
+//bufferstream
+template <class CharT, class CharTraits = std::char_traits<CharT> >
+class basic_bufferbuf;
+
+template <class CharT, class CharTraits = std::char_traits<CharT> >
+class basic_ibufferstream;
+
+template <class CharT, class CharTraits = std::char_traits<CharT> >
+class basic_obufferstream;
+
+template <class CharT, class CharTraits = std::char_traits<CharT> >
+class basic_bufferstream;
+
+//vectorstream
+template <class CharVector, class CharTraits = 
+          std::char_traits<typename CharVector::value_type> >
+class basic_vectorbuf;
+
+template <class CharVector, class CharTraits = 
+          std::char_traits<typename CharVector::value_type> >
+class basic_ivectorstream;
+
+template <class CharVector, class CharTraits = 
+          std::char_traits<typename CharVector::value_type> >
+class basic_ovectorstream;
+
+template <class CharVector, class CharTraits = 
+          std::char_traits<typename CharVector::value_type> >
+class basic_vectorstream;
+
+//////////////////////////////////////////////////////////////////////////////
+//                             Smart pointers
+//////////////////////////////////////////////////////////////////////////////
+
+template<class T, class Deleter>
+class scoped_ptr;
+
+template<class T, class VoidPointer>
+class intrusive_ptr;
+
+//////////////////////////////////////////////////////////////////////////////
+//                                  IPC
+//////////////////////////////////////////////////////////////////////////////
+
+class shared_message_queue;
+
+//////////////////////////////////////////////////////////////////////////////
+//                             Containers
+//////////////////////////////////////////////////////////////////////////////
+
+//vector class
+template <class T, 
+          class A = std::allocator<T> >
+class vector;
+
+//list class
+template <class T, 
+          class A = std::allocator<T> >
+class list;
+
+//slist class
+template <class T, 
+          class Alloc = std::allocator<T> >
+class slist;
+
+//set class
+template <class T, 
+          class Pred = std::less<T>,
+          class Alloc = std::allocator<T> >
+class set;
+
+//multiset class
+template <class T, 
+          class Pred = std::less<T>,
+          class Alloc = std::allocator<T> >
+class multiset;
+
+//map class
+template <class Key, 
+          class T, 
+          class Pred = std::less<Key>,
+          class Alloc = std::allocator<std::pair<const Key, T> > >
+class map;
+
+//multimap class
+template <class Key, 
+          class T, 
+          class Pred = std::less<Key>,
+          class Alloc   = std::allocator<std::pair<const Key, T> > >
+class multimap;
+
+//flat_set class
+template <class T, 
+          class Pred = std::less<T>,
+          class Alloc = std::allocator<T> >
+class flat_set;
+
+//flat_multiset class
+template <class T, 
+          class Pred = std::less<T>,
+          class Alloc = std::allocator<T> >
+class flat_multiset;
+
+//flat_map class
+template <class Key, 
+          class T, 
+          class Pred = std::less<Key>,
+          class Alloc = std::allocator<std::pair<Key, T> > >
+class flat_map;
+
+//flat_multimap class
+template <class Key, 
+          class T, 
+          class Pred = std::less<Key>,
+          class Alloc   = std::allocator<std::pair<Key, T> > >
+class flat_multimap;
+
+//basic_string class
+template <
+          class CharT, 
+          class Traits  = std::char_traits<CharT>, 
+          class Alloc   = std::allocator<CharT> 
+         > 
+class basic_string;
+
+//string class
+typedef basic_string<char, std::char_traits<char>, std::allocator<char> > string;
+
+}}  //namespace boost { namespace shmem {
 
 #include <boost/shmem/detail/config_end.hpp>
 

@@ -105,15 +105,15 @@ class mmapped_file : private boost::noncopyable
 
 inline void swap(mmapped_file &x, mmapped_file &y)
 {
-   detail::swap_function(x.m_base, y.m_base);
-   detail::swap_function(x.m_size, y.m_size);
-   detail::swap_function(x.m_file_offset, y.m_file_offset);
+   detail::swap(x.m_base, y.m_base);
+   detail::swap(x.m_size, y.m_size);
+   detail::swap(x.m_file_offset, y.m_file_offset);
    #if (defined BOOST_WINDOWS) && !(defined BOOST_DISABLE_WIN32)
-   detail::swap_function(x.m_fileMappingHnd,    y.m_fileMappingHnd);
-   detail::swap_function(x.m_fileHnd,    y.m_fileHnd);
-   detail::swap_function(x.m_extra_offset,    y.m_extra_offset);
+   detail::swap(x.m_fileMappingHnd,    y.m_fileMappingHnd);
+   detail::swap(x.m_fileHnd,    y.m_fileHnd);
+   detail::swap(x.m_extra_offset,    y.m_extra_offset);
    #else
-   detail::swap_function(x.m_fileHnd,    y.m_fileHnd);
+   detail::swap(x.m_fileHnd,    y.m_fileHnd);
    #endif   //#if (defined BOOST_WINDOWS) && !(defined BOOST_DISABLE_WIN32)
 }
 
