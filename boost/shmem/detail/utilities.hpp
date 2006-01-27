@@ -20,109 +20,81 @@
 #include <boost/detail/no_exceptions_support.hpp>
 #include <boost/type_traits/has_nothrow_destructor.hpp>
 #include <boost/noncopyable.hpp>
+#include <boost/call_traits.hpp>
 #include <algorithm>
 #include <functional>
 #include <utility>
 
 namespace boost { namespace shmem { namespace detail {
 
-/*!This class liberates shared memory pointer in destructor and it 
-   useful to avoid memory leaks when exceptions are thrown*/
+/*!Overload for smart pointers to avoid ADL problems with get_pointer*/
+template<class Ptr>
+inline typename Ptr::value_type *get_pointer(const Ptr &ptr)
+   {  using boost::get_pointer;  return get_pointer(ptr);   }
 
-template <class shmem_alloc_type>
-class scoped_shm_ptr
+/*!Overload for raw pointers to avoid ADL problems with get_pointer*/
+template<class T>
+inline T *get_pointer(T *ptr)
+   {  return ptr; }
+
+/*!To avoid ADL problems with swap*/
+template <class T>
+inline void swap(T& x, T& y)
 {
-private:
-   scoped_shm_ptr(scoped_shm_ptr&);
-   scoped_shm_ptr();
-   void *               mp_ptr;
-   shmem_alloc_type    &m_shmem_alloc;   
+   using std::swap;
+   swap(x, y);
+}
 
-public:
-
-   /*!Constructor, takes the pointer to liberate and a reference to 
-      the shared memory allocator*/
-   scoped_shm_ptr(void * p, shmem_alloc_type &shmalloc)
-      : mp_ptr(p), m_shmem_alloc(shmalloc){}
-
-   /*!Destructor, liberates shared memory pointer if it's not null*/
-   ~scoped_shm_ptr()
-      {  if(mp_ptr) m_shmem_alloc.deallocate(mp_ptr);  }
-
-   /*!Reassigns the pointer to liberate in destructor*/
-   void reset(void * p = 0)
-      {  if(mp_ptr) m_shmem_alloc.deallocate(mp_ptr);  mp_ptr = p;  }
-
-   /*!Returns the pointer to liberate in destructor*/
-   void * get() const
-      {  return mp_ptr;  }
-
-   /*!Sets the pointer to liberate to 0 and return previous pointer*/
-   void *release()
-      {  void *temp = mp_ptr; mp_ptr = 0; return temp;  }
-};
-
+/*!A deleter for scoped_ptr that deallocates the memory
+   allocated for an object using a STL allocator.*/
 template <class Allocator>
 struct scoped_deallocator
 {
    typedef typename Allocator::pointer pointer;
 
-   Allocator& alloc_;
-   pointer ptr_;
+   Allocator& m_alloc;
 
-   scoped_deallocator(Allocator& a, pointer p)
-         : alloc_(a), ptr_(p) {}
+   scoped_deallocator(Allocator& a)
+         : m_alloc(a) {}
 
-   ~scoped_deallocator() 
-      {  if (ptr_) alloc_.deallocate(ptr_, 1);  }
+   void operator()(pointer ptr)
+      {  if (ptr) m_alloc.deallocate(ptr, 1);  }
 
-   void release()
-      {  ptr_ = 0;  }
 };
 
+/*!A deleter for scoped_ptr that deallocates the memory
+   allocated for an array of objects using a STL allocator.*/
 template <class Allocator>
 struct scoped_array_deallocator
 {
    typedef typename Allocator::pointer pointer;
 
-   Allocator& alloc_;
-   pointer ptr_;
-   std::size_t length_;
+   scoped_array_deallocator(Allocator& a, std::size_t length)
+         : m_alloc(a), m_length(length) {}
 
-   scoped_array_deallocator(Allocator& a, pointer p, std::size_t length)
-         : alloc_(a), ptr_(p), length_(length) {}
+   void operator()(pointer &ptr)
+      {  m_alloc.deallocate(ptr, m_length);  }
 
-  ~scoped_array_deallocator() 
-      {  if (ptr_) alloc_.deallocate(ptr_, length_);  }
-
-   void release()
-      {  ptr_ = 0;  }
+   private:
+   Allocator&  m_alloc;
+   std::size_t m_length;
 };
 
+/*!A deleter for scoped_ptr that destroys
+   an object using a STL allocator.*/
 template <class Allocator>
 struct scoped_destructor
 {
    typedef typename Allocator::pointer pointer;
 
-   Allocator& alloc_;
-   pointer ptr_;
+   Allocator& m_alloc;
 
-   scoped_destructor(Allocator& a, pointer p)
-         : alloc_(a), ptr_(p) {}
+   scoped_destructor(Allocator& a)
+         : m_alloc(a){}
 
-   ~scoped_destructor() 
-      {  if (ptr_) alloc_.destroy(ptr_);  }
-
-   void release()
-      {  ptr_ = 0;  }
+   void operator()(pointer &ptr)
+      {  m_alloc.destroy(ptr);  }
 };
-
-template <class T>
-void swap_function(T& x, T& y)
-{
-   using std::swap;
-   swap(x, y);
-}
 
 /*!Forces a cast from any pointer to char * pointer*/
 template<class T>
@@ -146,7 +118,7 @@ struct select1st
       {  return x.first;   }
 };
 
-// identity is an extensions: it is not part of the standard.
+// identity is an extension: it is not part of the standard.
 template <class T>
 struct identity 
    : public std::unary_function<T,T> 
@@ -242,6 +214,30 @@ struct is_multisegment_ptr
    enum {   value = false };
 };
 
+
+/*!A Shmem shared pointer deleter that uses the segment manager's 
+   destroy_ptr function to destroy the shared resource.*/
+template<class SegmentManager>
+class shared_ptr_deleter
+{
+   public:
+   typedef typename SegmentManager::void_pointer      pointer;
+
+   private:
+   typedef typename detail::pointer_to_other
+      <pointer, SegmentManager>::type   segment_manager_pointer;
+
+   segment_manager_pointer mp_deleter;
+
+   public:
+   shared_ptr_deleter(const segment_manager_pointer &pdeleter)
+      :  mp_deleter(pdeleter)
+   {}
+
+   template<class Ptr>
+   void operator()(const Ptr &p)
+   {  mp_deleter->destroy_ptr(detail::get_pointer(p));   }
+};
 
 }}   //namespace boost { namespace shmem { 
 
