@@ -2,7 +2,7 @@
 #include <boost/mpl/vector_c.hpp>
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/empty_base.hpp>
-#include <boost/mpl/arg.hpp>
+#include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/for_each.hpp>
 #include "boost/fields_visitor/fields_visitor.hpp"
 #include <iostream>
@@ -99,6 +99,8 @@ visited_indices_type
 //indices of fields visited specificly
 ;
 
+using namespace boost::mpl::placeholders;
+
   struct
 visit_all_fields
   : public
@@ -106,8 +108,8 @@ visit_all_fields
     < visited_indices_type
     , visit_general_field
     , visit_specific_field
-      < boost::mpl::arg<1>
-      , boost::mpl::arg<2>
+      < _1
+      , _2
       >
     >::type
 {
@@ -196,8 +198,8 @@ record
       , boost::mpl::empty_base
       , inherit_left
         < boost::mpl::integral_c<visitability_numerals,Visitability>
-        , boost::mpl::arg<1>
-        , boost::mpl::arg<2>
+        , _1
+        , _2
         >
       >::type
     fields_type
