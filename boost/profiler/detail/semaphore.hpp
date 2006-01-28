@@ -46,6 +46,12 @@ namespace boost { namespace profiler { namespace detail
         return semaphore;
     }
     
+    inline semaphore_t &context_semaphore()
+    {
+        static semaphore_t semaphore(1);
+        return semaphore;
+    }
+
 } } }
 
 #endif

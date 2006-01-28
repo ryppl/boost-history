@@ -31,6 +31,8 @@ namespace boost { namespace profiler { namespace detail
         size_t m_index;
         long m_depth;
         context *m_context;
+        point(const point &);
+        point &operator =(const point &);
     };
     
     inline point::point(const char *name, const char *file, long line):

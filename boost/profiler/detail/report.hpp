@@ -22,11 +22,20 @@ namespace boost { namespace profiler { namespace detail
         double total_time_fraction;
         double total_exclusive_time_fraction;
         boost::uint64_t hit_count;
+        bool is_total_approx;
+        bool is_total_exclusive_approx;
     };
 
     inline report::report(const entry &e, double total_profiling_time)
     {
+        
         const timer_metrics &tm = get_timer_metrics();
+        
+        double resolution = 1.0 / tm.ticks_per_second;
+        double latency = 1.0 / tm.reports_per_second;
+        double increment = double(tm.min_clock_step) / tm.ticks_per_second;
+        double approx_threshold = 10.0 * (std::max)((std::max)(resolution, latency), increment);
+        
         name = e.p->m_name;
         file = e.p->m_file;
         line = e.p->m_line;
@@ -37,6 +46,9 @@ namespace boost { namespace profiler { namespace detail
         total_time_fraction = (total_profiling_time > 0) ? total_time / total_profiling_time : 0;
         total_exclusive_time_fraction = (total_profiling_time > 0) ? total_exclusive_time / total_profiling_time : 0;
         hit_count = e.count;
+        is_total_approx = average_time < approx_threshold;
+        is_total_exclusive_approx = average_exclusive_time <  approx_threshold;
+
     }
     
 } } }
