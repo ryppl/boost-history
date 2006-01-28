@@ -450,8 +450,8 @@ const_reverse_iterator rbegin() const;</pre>
     <h4>
         Synopsis</h4>
     <pre>
-reverse_iterator end();
-const_reverse_iterator end() const;</pre>
+reverse_iterator rend();
+const_reverse_iterator rend() const;</pre>
     <h4>
         Return value</h4>
     <p>
@@ -635,7 +635,7 @@ const_iterator find(const key_type &amp;key) const;</pre>
     <h4>
         Description</h4>
     <p>
-        Finds direct child of the node stored at specified key. Time complexity is <i>O(log n)</i>. Keys equivalence is tested with a predicate supplied as basic_ptree template parameter. If child is not found, returns <code>end()</code>. Both const and non-const versions are provided. To find non-direct children use <a href="reference.html#basic_ptree::get_child"><code>get_child</code></a> function.</p>
+        Finds direct child stored at specified key. If there is more than one child with the same key, the first one is returned. Time complexity is <i>O(log n)</i>. Keys equivalence is tested with a predicate supplied as basic_ptree template parameter. If child is not found, returns <code>end()</code>. Both const and non-const versions are provided. To find non-direct children use <a href="reference.html#basic_ptree::get_child"><code>get_child</code></a> function.</p>
     <h4>
         Parameters</h4>
     <dl>
@@ -646,7 +646,7 @@ const_iterator find(const key_type &amp;key) const;</pre>
     <h4>
         Return value</h4>
     <p>
-        Iterator pointing at the found sequence element, or <code>end()</code> if no such element exists.</p>
+        Iterator pointing to the found sequence element, or <code>end()</code> if no such element exists.</p>
     <!-- =================================================================== -->
     <!---->
     <!---->
@@ -705,7 +705,7 @@ template&lt;class It&gt; void insert(iterator where, It first, It last);</pre>
             Iterator pointing at the position where new element will be inserted. Passing <code>begin()</code> will insert at the front of the list. Passing <code>end()</code> will insert at the back. Any other valid iterator will insert in the appropriate place in the middle.</dd>
         <dt class="parameter">value</dt>
         <dd>
-            Value to be inserted. A copy of the pair is made before putting it in property tree</dd>
+            Value to be inserted.</dd>
         <dt class="parameter">first</dt>
         <dd>
             Iterator designating first element of range to be inserted into the property tree</dd>
@@ -919,7 +919,7 @@ const basic_ptree *get_child(Ch separator, const key_type &amp;path) const;</pre
     <p>
         Traverses the tree using given path and retrieves a child stored there. Path is a sequence of keys separated with zero or more special 'separator' characters. This function will retrieve indirect children if path contains at least one separator. First 2 versions assume separator to be dot character (<code>'.'</code>).</p>
     <p>
-        Throws <a href="reference.html#ptree_bad_path"><code>ptree_bad_path</code></a> if child property tree cannot be located. If you want non-throwing failure handling, use <a href="reference.html#basic_ptree::get_child_b"><code>get_child_b</code></a>, <a href="reference.html#basic_ptree::get_child_d"><code>get_child_d</code></a> or <a href="reference.html#basic_ptree::get_child_o"><code>get_child_o</code></a>.</p>
+        Throws <a href="reference.html#ptree_bad_path"><code>ptree_bad_path</code></a> if child property tree cannot be located. If you want non-throwing failure handling, use <a href="reference.html#basic_ptree::get_child_b"><code>get_child_b</code></a>, <a href="reference.html#basic_ptree::get_child_d"><code>get_child_d</code></a> or <a href="reference.html#basic_ptree::get_child_o"><code>get_child_o</code></a>. If you want to access data stored in one of the children, use <a href="reference.html#basic_ptree::get"><code>get</code></a>, <a href="reference.html#basic_ptree::get_b"><code>get_b</code></a>, <a href="reference.html#basic_ptree::get_d"><code>get_d</code></a> or <a href="reference.html#basic_ptree::get_o"><code>get_o</code></a>.</p>
     <h4>
         Parameters</h4>
     <dl>
