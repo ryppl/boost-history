@@ -184,10 +184,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\boost\profiler\detail\context_dump.hpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\..\boost\profiler\detail\context_iterators.hpp"
 				>
 			</File>
