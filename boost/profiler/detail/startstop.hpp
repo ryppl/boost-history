@@ -81,7 +81,7 @@ namespace boost { namespace profiler { namespace detail
                 e.start_exclusive = t;
             }
         }
-        ++e.count;
+        ++e.hit_count;
     }
     
 } } }

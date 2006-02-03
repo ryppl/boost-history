@@ -14,10 +14,10 @@ namespace boost { namespace profiler { namespace detail
         tick_t total;
         tick_t start_exclusive;
         tick_t total_exclusive;
-        boost::uint64_t count;
+        boost::uint64_t hit_count;
         const point *p;
         entry(): 
-            total(0), total_exclusive(0), count(0), p(0)
+            total(0), total_exclusive(0), hit_count(0), p(0)
         {
         }
     };

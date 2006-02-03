@@ -12,8 +12,9 @@
 #include <limits>
 #include <vector>
 #include <ostream>
+#include <fstream>
 
-namespace boost { namespace profiler { namespace detail
+namespace boost { namespace profiler
 {
 
     static const int c_ordinal = 0x1;
@@ -31,7 +32,12 @@ namespace boost { namespace profiler { namespace detail
     static const int c_full = c_ordinal | c_name | c_total | c_average_total | c_exclusive | c_average_exclusive | c_total_percent | c_exclusive_percent | c_exclusive_percent_sum | c_hitcount | c_location;
     static const int c_medium = c_ordinal | c_name | c_total | c_average_total | c_exclusive | c_average_exclusive | c_total_percent | c_exclusive_percent | c_exclusive_percent_sum | c_hitcount;
     static const int c_short = c_ordinal | c_name | c_total | c_average_total | c_exclusive | c_average_exclusive | c_total_percent | c_hitcount;
-    static const int c_none = 0x0;
+    static const int c_none = 0;
+
+} }
+
+namespace boost { namespace profiler { namespace detail
+{
 
     class report_pred
     {
@@ -121,7 +127,7 @@ namespace boost { namespace profiler { namespace detail
             return result;
     }
 
-    inline void dump_system(std::ostream &stream)
+    inline void dump_system_to_stream(std::ostream &stream)
     {
         const timer_metrics &tm = get_timer_metrics();
         double resolution = 1.0 / tm.ticks_per_second;
@@ -142,12 +148,11 @@ namespace boost { namespace profiler { namespace detail
         stream << fmt;
     }
     
-    inline void dump(std::ostream &stream, 
-                     const context &c, 
-                     int columns = c_short, 
-                     int sort_by = c_total)
+    inline void dump_context_to_stream(std::ostream &stream, const context &c, 
+                                       int columns, int sort_by)
     {
         
+        // Gather reports
         std::vector<report> reports;
         {
             scoped_semaphore sem(point_semaphore());
@@ -156,25 +161,30 @@ namespace boost { namespace profiler { namespace detail
                     reports.push_back(*it);
         }
         
+        // Sort reports
         if (sort_by)
         {
             report_pred rp(sort_by);
             std::sort(reports.begin(), reports.end(), rp);
         }
 
+        // Output context name and total profiling time
         boost::format fmt("Profiling results for context \"%s\", profiling time %s\n\n");
         fmt % c.name() % stringize(c.total_profiling_time(), "s", 0, false);
         stream << fmt;
         
+        // Output table header, underline and all reports in sorted order
         if (!reports.empty())
         {
         
-            size_t max_len = 6;
+            // Determine 'name' column width
+            size_t max_len = 6;     // 'name' column at least 6 chars wide
             BOOST_FOREACH(const report &r, reports)
-                max_len = (std::max)(strlen(r.name), max_len);
+                max_len = (std::max)(r.name.size(), max_len);
 
+            // Output header row
             if (columns & c_ordinal)                stream << "   ##";
-            if (columns & c_name)                   stream << std::string(max_len - 3, ' ') << "NAME";
+            if (columns & c_name)                   stream << " NAME" << std::string(max_len - 4, ' ');
             if (columns & c_total)                  stream << "   TOTAL";
             if (columns & c_average_total)          stream << "  AVGTOT";
             if (columns & c_exclusive)              stream << "   EXCLS";
@@ -186,6 +196,7 @@ namespace boost { namespace profiler { namespace detail
             if (columns & c_location)               stream << "  LOCATION";
             stream << std::endl;
             
+            // Output header underline
             if (columns & c_ordinal)                stream << "  ===";
             if (columns & c_name)                   stream << std::string(max_len - 3, '=') << "====";
             if (columns & c_total)                  stream << "========";
@@ -199,13 +210,14 @@ namespace boost { namespace profiler { namespace detail
             if (columns & c_location)               stream << "==========";
             stream << std::endl;
 
+            // Output reports
             size_t ordinal = 1;
             double total_exclusive_time_sum = 0;
             BOOST_FOREACH(const report &r, reports)
             {
                 std::string name(r.name);
-                if (name.size() < max_len)
-                    name = std::string(max_len - name.size(), ' ') + name; 
+                if (name.size() < max_len)      // Pad name with spaces up to max_len
+                    name = name + std::string(max_len - name.size(), ' '); 
                 total_exclusive_time_sum += r.total_exclusive_time_fraction;
                 if (columns & c_ordinal)                stream << boost::format("%4d.") % ordinal;
                 if (columns & c_name)                   stream << " " << name;
@@ -229,19 +241,33 @@ namespace boost { namespace profiler { namespace detail
 
     }
 
-    inline void dump(std::ostream &stream, 
-                     int columns = c_short, 
-                     int sort_by = c_total)
+    inline void dump_all_to_stream(std::ostream &stream, int columns, int sort_by) 
     {
-        dump_system(stream);
+        dump_system_to_stream(stream);
         scoped_semaphore sem(context_semaphore());
         std::list<context *> &cl = contexts_list();
         BOOST_FOREACH(const context *c, cl)
             if (c->total_profiling_time() > 0)
             {
                 stream << std::endl;
-                dump(stream, *c, columns, sort_by);
+                dump_context_to_stream(stream, *c, columns, sort_by);
             }
+    }
+
+    inline void dump_all_to_file(const std::string &filename, int columns, int sort_by)
+    {
+        std::ofstream stream(filename.c_str());
+        dump_all_to_stream(stream, columns, sort_by);
+    }
+
+    inline void dump_all_to_dest(std::ostream &stream, int columns, int sort_by)
+    {
+        dump_all_to_stream(stream, columns, sort_by);
+    }
+
+    inline void dump_all_to_dest(const std::string &filename, int columns, int sort_by)
+    {
+        dump_all_to_file(filename, columns, sort_by);
     }
 
 } } }

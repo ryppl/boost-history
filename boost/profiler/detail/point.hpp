@@ -29,7 +29,7 @@ namespace boost { namespace profiler { namespace detail
         const char *m_file;
         long m_line;
         size_t m_index;
-        long m_depth;
+        size_t m_depth;
         context *m_context;
         point(const point &);
         point &operator =(const point &);

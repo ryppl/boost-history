@@ -97,11 +97,4 @@ namespace boost { namespace profiler { namespace detail
 
 } } }
 
-namespace boost { namespace profiler
-{
-    using detail::context;
-    using detail::default_context;
-    using detail::current_context;
-} }
-
 #endif
