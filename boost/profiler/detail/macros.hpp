@@ -22,8 +22,8 @@
     #define BOOST_PROFILER_GET_CONTEXT()
     #define BOOST_PROFILER_SET_CONTEXT(Context)
     #define BOOST_PROFILER_GET_DEFAULT_CONTEXT()
-    #define BOOST_PROFILER_DUMP(Dest)
     #define BOOST_PROFILER_DUMP_EX(Dest, Columns, OrderBy)
+    #define BOOST_PROFILER_DUMP(Dest)
 #else
     #define BOOST_PROFILER_POINT(Point, Name) static ::boost::profiler::detail::point Point(Name, __FILE__, __LINE__)
     #define BOOST_PROFILER_START_PC(Point, Context) ::boost::profiler::detail::start((Point), (Context))
