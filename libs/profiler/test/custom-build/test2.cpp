@@ -3,7 +3,7 @@
 #include <boost/profiler.hpp>
 //#include <iostream>
 
-extern boost::profiler::detail::context ctx1;
+BOOST_PROFILER_EXTERN_CONTEXT(ctx1);
 
 int fact2(int n)
 {
