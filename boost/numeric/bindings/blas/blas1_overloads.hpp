@@ -55,8 +55,8 @@ namespace boost { namespace numeric { namespace bindings { namespace blas { name
   // copy
   inline void copy(const int& n, const float*     x, const int& incx, float*     y, const int& incy) { BLAS_SCOPY( &n, x, &incx, y, &incy ) ; }
   inline void copy(const int& n, const double*    x, const int& incx, double*    y, const int& incy) { BLAS_DCOPY( &n, x, &incx, y, &incy ) ; }
-  inline void copy(const int& n, const complex_f* x, const int& incx, complex_f* y, const int& incy) { BLAS_CCOPY( &n, x, &incx, y, &incy ) ; }
-  inline void copy(const int& n, const complex_d* x, const int& incx, complex_d* y, const int& incy) { BLAS_ZCOPY( &n, x, &incx, y, &incy ) ; }
+  inline void copy(const int& n, const complex_f* x, const int& incx, complex_f* y, const int& incy) { BLAS_CCOPY( &n, complex_ptr(x), &incx, complex_ptr(y), &incy ) ; }
+  inline void copy(const int& n, const complex_d* x, const int& incx, complex_d* y, const int& incy) { BLAS_ZCOPY( &n, complex_ptr(x), &incx, complex_ptr(y), &incy ) ; }
 }}}}}
 
 #endif // BOOST_NUMERIC_BINDINGS_BLAS_BLAS1_OVERLOADS_HPP
