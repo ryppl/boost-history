@@ -266,7 +266,7 @@ template&lt;class Ch, class Tr&gt; class basic_ptree;</pre>
     <h4>
         Description</h4>
     <p>
-        Character type used by property tree. Equal to <code>Ch</code> parameter of <code>basic_ptree</code> class template.</p>
+        Character type used by keys and data of property tree. Equal to <code>Ch</code> parameter of <code>basic_ptree</code> class template.</p>
     <!-- =================================================================== -->
     <!---->
     <!---->
@@ -310,11 +310,11 @@ template&lt;class Ch, class Tr&gt; class basic_ptree;</pre>
     </h3>
     <h4>
         Synopsis</h4>
-    <pre>typedef std::basic_string&lt;Ch&gt; data_type;</pre>
+    <pre>typedef typename Tr::data_type data_type;</pre>
     <h4>
         Description</h4>
     <p>
-        Type used to store property tree data.</p>
+        Type used to store property tree data. <code>Tr</code> is policy class passed as template parameter to property tree. <code>data_type</code> defaults to <code>std::basic_string&lt;Ch&gt</code>, unless using custom property tree traits.</p>
     <!-- =================================================================== -->
     <!---->
     <!---->
@@ -483,7 +483,7 @@ bool empty() const;</pre>
     <h4>
         Return value</h4>
     <p>
-        true if property tree is empty, false otherwise.</p>
+        true if property tree has no children, false otherwise.</p>
     <h4>
         Note</h4>
     <p>
@@ -681,7 +681,7 @@ void clear();</pre>
     <h4>
         Description</h4>
     <p>
-        Recursively deletes all children of property tree. Sets data of property tree to empty string.</p>
+        Recursively deletes all children of property tree and clears data of property tree.</p>
     <!-- =================================================================== -->
     <!---->
     <!---->
