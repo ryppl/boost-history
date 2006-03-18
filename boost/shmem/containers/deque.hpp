@@ -63,6 +63,7 @@
 #include <memory>
 #include <algorithm>
 #include <stdexcept>
+#include <boost/detail/allocator_utilities.hpp>
 #include <boost/detail/no_exceptions_support.hpp>
 
 
