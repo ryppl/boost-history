@@ -578,7 +578,7 @@ void shared_read_write_mutex_impl<Mutex>::do_read_unlock()
    if (m_state > 0)
       --m_state;
    else //not read-locked
-      throw lock_error();
+      throw lock_exception();
 
    if (m_state == 0)
       do_unlock_scheduling_impl();
@@ -596,7 +596,7 @@ void shared_read_write_mutex_impl<Mutex>::do_write_unlock()
       m_state = 0;
    else
       // Trying to release a reader-locked or unlocked mutex???
-      throw lock_error();
+      throw lock_exception();
 
    do_unlock_scheduling_impl();
 
@@ -621,7 +621,7 @@ bool shared_read_write_mutex_impl<Mutex>::do_demote_to_read_lock_impl()
    }
    else{
       //Lock is read-locked or unlocked can't be demoted
-      throw lock_error();
+      throw lock_exception();
       return false;
    }
 }
@@ -676,11 +676,11 @@ void shared_read_write_mutex_impl<Mutex>::do_promote_to_write_lock()
    }
    else if (m_state <= 0){
       //Lock is write-locked or unlocked can't be promoted
-      throw lock_error();
+      throw lock_exception();
    }
    else if (m_state_waiting_promotion){
       //Someone else is already trying to promote. Avoid deadlock by throwing exception.
-      throw lock_error();
+      throw lock_exception();
    }
    else{
       ++m_num_waiting_writers;
@@ -724,7 +724,7 @@ bool shared_read_write_mutex_impl<Mutex>::do_try_promote_to_write_lock()
       }
       else if (m_state <= 0){
          //Lock is write-locked or unlocked can't be promoted
-         throw lock_error();
+         throw lock_exception();
       }
       else if (m_state_waiting_promotion){
          //Someone else is already trying to promote. Avoid deadlock by returning false.
@@ -756,7 +756,7 @@ bool shared_read_write_mutex_impl<Mutex>::
       }
       else if (m_state <= 0){
          //Lock is not read-locked and can't be promoted
-         throw lock_error();
+         throw lock_exception();
       }
       else if (m_state_waiting_promotion){
          //Someone else is already trying to promote. Avoid deadlock by returning false.
