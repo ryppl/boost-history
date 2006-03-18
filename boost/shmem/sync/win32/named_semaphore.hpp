@@ -89,7 +89,7 @@ inline bool named_semaphore::timed_wait(const xtime &xt)
       int milliseconds;
       to_duration(xt, milliseconds);
 
-      unsigned long res = wait_for_single_object(mp_sem, infinite_time);
+      unsigned long res = wait_for_single_object(mp_sem, milliseconds);
 
       if (res == wait_timeout)
       {
