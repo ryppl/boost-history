@@ -26,8 +26,7 @@
 
 #include <unistd.h>     //close
 #include <string>       //std::string
-#include <pthread.h>    //sem_* family, SEM_VALUE_MAX
-#include <boost/shmem/sync/posix/pthread_helpers.hpp>
+#include <semaphore.h>  //pthread_* family
 #include <boost/shmem/shared_memory.hpp>   //for shared_memory
 
 #endif   //#if (defined BOOST_WINDOWS) && !(defined BOOST_DISABLE_WIN32)
@@ -92,8 +91,8 @@ class named_mutex : private boost::noncopyable
    #if (defined BOOST_WINDOWS) && !(defined BOOST_DISABLE_WIN32)
    void*          mp_mut;
    #else    //#if (defined BOOST_WINDOWS) && !(defined BOOST_DISABLE_WIN32)
-   sem_t *        mp_mut;
-   shared_memory  m_shmem;
+   sem_t * mp_mut;
+   shared_memory     m_shmem;
    #endif   //#if (defined BOOST_WINDOWS) && !(defined BOOST_DISABLE_WIN32)
 };
 
