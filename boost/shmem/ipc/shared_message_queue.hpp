@@ -508,7 +508,7 @@ inline shared_message_queue::result_t
 inline shared_message_queue::result_t 
    shared_message_queue::try_receive(void *buffer,              std::size_t buffer_size, 
                                      std::size_t &recvd_size,   unsigned int &priority)
-   {  return this->receive(blocking, buffer, buffer_size, recvd_size, priority); }
+   {  return this->receive(non_blocking, buffer, buffer_size, recvd_size, priority); }
 
 inline shared_message_queue::result_t 
    shared_message_queue::timed_receive(void *buffer,              std::size_t buffer_size, 
