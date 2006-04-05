@@ -166,12 +166,17 @@ inline bool named_semaphore::timed_wait(const xtime &xt)
       xtime_to_timespec(xt, tspec);
 
       int res = sem_timedwait(mp_sem, &tspec);
-      assert(res == 0 || errno == ETIMEDOUT);
 
+      if (result == 0){
+         return true;
+      }
+      if (result > 0){
+         //buggy glibc, copy the returned error code to errno
+         errno = result;
+      }
       if (errno == ETIMEDOUT)
          return false;
    }
-   return true;
 }
 
 }  //namespace shmem {
