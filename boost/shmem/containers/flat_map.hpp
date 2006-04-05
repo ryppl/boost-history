@@ -446,6 +446,9 @@ class flat_multimap
       equal_range(const key_type& x) const 
       {  return m_flat_tree.equal_range(x);   }
 
+   void reserve(size_type count)       
+      { m_flat_tree.reserve(count);   }
+
    template <class K1, class T1, class C1, class A1>
    friend bool operator== (const flat_multimap<K1, T1, C1, A1>& x,
                            const flat_multimap<K1, T1, C1, A1>& y);

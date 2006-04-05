@@ -422,6 +422,9 @@ class flat_multiset
       equal_range(const key_type& x) 
       {  return m_flat_tree.equal_range(x); }
 
+   void reserve(size_type count)       
+      { m_flat_tree.reserve(count);   }
+
    template <class K1, class C1, class A1>
    friend bool operator== (const flat_multiset<K1,C1,A1>&,
                            const flat_multiset<K1,C1,A1>&);
