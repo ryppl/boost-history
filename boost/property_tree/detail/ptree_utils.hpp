@@ -54,13 +54,14 @@ namespace boost { namespace property_tree { namespace detail
                                const std::locale &loc = std::locale())
     {
         typename std::basic_string<Ch>::const_iterator first = s.begin();
-        while (first != s.end() && std::isspace(*first, loc)) 
+        typename std::basic_string<Ch>::const_iterator end = s.end();
+        while (first != end && std::isspace(*first, loc)) 
             ++first;
-        if (first == s.end())
+        if (first == end)
             return std::basic_string<Ch>();
-        typename std::basic_string<Ch>::const_iterator last = s.end();
+        typename std::basic_string<Ch>::const_iterator last = end;
         do --last; while (std::isspace(*last, loc)); 
-        if (first != s.begin() || last + 1 != s.end())
+        if (first != s.begin() || last + 1 != end)
             return std::basic_string<Ch>(first, last + 1);
         else
             return s;

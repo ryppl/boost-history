@@ -47,20 +47,18 @@ void debug_settings::load(const std::string &filename)
     /* Get debug level and store it in m_level variable. This is 
        another version of get method: if debug.level key is not 
        found, it will return default value (specified by second 
-       parameter) instead of throwing. The third parameter is a 
-       pointer to bool that optionally receives result of the get. 
-       Type of the value extracted is determined by type of second 
-       parameter, so we can simply write get(...) instead of 
-       get<int>(...). */     
-    m_level = pt.get_d("debug.level", 0, NULL);
+       parameter) instead of throwing. Type of the value extracted 
+       is determined by type of second parameter, so we can simply 
+       write get(...) instead of get<int>(...). */     
+    m_level = pt.get("debug.level", 0);
 
     /* Iterate over debug.modules section and store all found 
        modules in m_modules set. get_child() function returns a 
-       pointer to child at specified path; if there is no such 
+       reference to child at specified path; if there is no such 
        child, it throws. Property tree iterator can be used in 
        the same way as standard containers iterators. Category 
        is bidirectional_iterator. */
-    BOOST_FOREACH(ptree::value_type &v, *pt.get_child("debug.modules"))
+    BOOST_FOREACH(ptree::value_type &v, pt.get_child("debug.modules"))
         m_modules.insert(v.second.data());
 
 }
@@ -86,7 +84,7 @@ void debug_settings::save(const std::string &filename)
        this can be achieved using combination of insert 
        and put_own functions */
     BOOST_FOREACH(const std::string &name, m_modules)
-        pt.put("debug.modules.module", name);
+        pt.put("debug.modules.module", name, true);
     
     /* Write property tree to XML file */
     write_xml(filename, pt);

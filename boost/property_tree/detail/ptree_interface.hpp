@@ -30,20 +30,20 @@ namespace boost { namespace property_tree
     ///////////////////////////////////////////////////////////////////////////
     // basic_ptree class template
 
-    template<class Ch, class Tr = ptree_traits<Ch> >
+    template<class Tr>
     class basic_ptree
     {
 
     public:
 
         // Basic types
-        typedef Ch char_type;
         typedef Tr traits_type;
-        typedef std::basic_string<Ch> key_type;
-        typedef typename Tr::data_type data_type;
+        typedef typename traits_type::char_type char_type;
+        typedef typename traits_type::key_type key_type;
+        typedef typename traits_type::data_type data_type;
         
         // Container-related types
-        typedef std::pair<key_type, basic_ptree<Ch, Tr> > value_type;
+        typedef std::pair<key_type, basic_ptree<Tr> > value_type;
         typedef std::list<value_type> container_type;
         typedef typename container_type::size_type size_type;
         typedef typename container_type::iterator iterator;
@@ -56,7 +56,7 @@ namespace boost { namespace property_tree
 
         basic_ptree();
         explicit basic_ptree(const data_type &data);
-        basic_ptree(const basic_ptree<Ch, Tr> &rhs);
+        basic_ptree(const basic_ptree<Tr> &rhs);
         ~basic_ptree();
 
         ///////////////////////////////////////////////////////////////////////////
@@ -88,10 +88,10 @@ namespace boost { namespace property_tree
         ///////////////////////////////////////////////////////////////////////////
         // Operators
 
-        basic_ptree<Ch, Tr> &operator =(const basic_ptree<Ch, Tr> &rhs);
+        basic_ptree<Tr> &operator =(const basic_ptree<Tr> &rhs);
 
-        bool operator ==(const basic_ptree<Ch, Tr> &rhs) const;
-        bool operator !=(const basic_ptree<Ch, Tr> &rhs) const;
+        bool operator ==(const basic_ptree<Tr> &rhs) const;
+        bool operator !=(const basic_ptree<Tr> &rhs) const;
 
         ///////////////////////////////////////////////////////////////////////////
         // Container operations
@@ -116,7 +116,7 @@ namespace boost { namespace property_tree
         void pop_front();
         void pop_back();
 
-        void swap(basic_ptree<Ch, Tr> &rhs);
+        void swap(basic_ptree<Tr> &rhs);
 
         void reverse();
         template<class SortTr> void sort(SortTr tr);
@@ -125,60 +125,53 @@ namespace boost { namespace property_tree
         // ptree operations
 
         // Get child ptree with custom separator
-        basic_ptree<Ch, Tr> *get_child(Ch separator, const key_type &path);
-        const basic_ptree<Ch, Tr> *get_child(Ch separator, const key_type &path) const;
-        bool get_child_b(Ch separator, const key_type &path, basic_ptree<Ch, Tr> **result);
-        bool get_child_b(Ch separator, const key_type &path, const basic_ptree<Ch, Tr> **result) const;
-        basic_ptree<Ch, Tr> *get_child_d(Ch separator, const key_type &path, basic_ptree<Ch, Tr> *default_value);
-        const basic_ptree<Ch, Tr> *get_child_d(Ch separator, const key_type &path, const basic_ptree<Ch, Tr> *default_value) const;
-        optional<basic_ptree<Ch, Tr> *> get_child_o(Ch separator, const key_type &path);
-        optional<const basic_ptree<Ch, Tr> *> get_child_o(Ch separator, const key_type &path) const;
+        basic_ptree<Tr> &get_child(char_type separator, const key_type &path);
+        const basic_ptree<Tr> &get_child(char_type separator, const key_type &path) const;
+        basic_ptree<Tr> &get_child(char_type separator, const key_type &path, basic_ptree<Tr> &default_value);
+        const basic_ptree<Tr> &get_child(char_type separator, const key_type &path, const basic_ptree<Tr> &default_value) const;
+        optional<basic_ptree<Tr> &> get_child_optional(char_type separator, const key_type &path);
+        optional<const basic_ptree<Tr> &> get_child_optional(char_type separator, const key_type &path) const;
 
         // Get child ptree with default separator
-        basic_ptree<Ch, Tr> *get_child(const key_type &path);
-        const basic_ptree<Ch, Tr> *get_child(const key_type &path) const;
-        bool get_child_b(const key_type &path, basic_ptree<Ch, Tr> **result);
-        bool get_child_b(const key_type &path, const basic_ptree<Ch, Tr> **result) const;
-        basic_ptree<Ch, Tr> *get_child_d(const key_type &path, basic_ptree<Ch, Tr> *default_value);
-        const basic_ptree<Ch, Tr> *get_child_d(const key_type &path, const basic_ptree<Ch, Tr> *default_value) const;
-        optional<basic_ptree<Ch, Tr> *> get_child_o(const key_type &path);
-        optional<const basic_ptree<Ch, Tr> *> get_child_o(const key_type &path) const;
+        basic_ptree<Tr> &get_child(const key_type &path);
+        const basic_ptree<Tr> &get_child(const key_type &path) const;
+        basic_ptree<Tr> &get_child(const key_type &path, basic_ptree<Tr> &default_value);
+        const basic_ptree<Tr> &get_child(const key_type &path, const basic_ptree<Tr> &default_value) const;
+        optional<basic_ptree<Tr> &> get_child_optional(const key_type &path);
+        optional<const basic_ptree<Tr> &> get_child_optional(const key_type &path) const;
 
         // Put child ptree with custom separator
-        basic_ptree<Ch, Tr> *put_child(Ch separator, const key_type &path, const basic_ptree<Ch, Tr> *value);
+        basic_ptree<Tr> &put_child(char_type separator, const key_type &path, const basic_ptree<Tr> &value, bool do_not_replace = false);
 
         // Put child ptree with default separator
-        basic_ptree<Ch, Tr> *put_child(const key_type &path, const basic_ptree<Ch, Tr> *value);
+        basic_ptree<Tr> &put_child(const key_type &path, const basic_ptree<Tr> &value, bool do_not_replace = false);
 
         // Get value from data of ptree
         template<class Type> Type get_own(const std::locale &loc = std::locale()) const;
-        template<class Type> bool get_own_b(Type *result, const std::locale &loc = std::locale()) const;
-        template<class Type> Type get_own_d(const Type &default_value, const std::locale &loc = std::locale()) const;
-        template<class CharType> std::basic_string<CharType> get_own_d(const CharType *default_value, const std::locale &loc = std::locale()) const;
-        template<class Type> optional<Type> get_own_o(const std::locale &loc = std::locale()) const;
+        template<class Type> Type get_own(const Type &default_value, const std::locale &loc = std::locale()) const;
+        template<class CharType> std::basic_string<CharType> get_own(const CharType *default_value, const std::locale &loc = std::locale()) const;
+        template<class Type> optional<Type> get_own_optional(const std::locale &loc = std::locale()) const;
 
         // Get value from data of child ptree (custom path separator)
-        template<class Type> Type get(Ch separator, const key_type &path, const std::locale &loc = std::locale()) const;
-        template<class Type> bool get_b(Ch separator, const key_type &path, Type *result, const std::locale &loc = std::locale()) const;
-        template<class Type> Type get_d(Ch separator, const key_type &path, const Type &default_value, const std::locale &loc = std::locale()) const;
-        template<class CharType> std::basic_string<CharType> get_d(Ch separator, const key_type &path, const CharType *default_value, const std::locale &loc = std::locale()) const;
-        template<class Type> optional<Type> get_o(Ch separator, const key_type &path, const std::locale &loc = std::locale()) const;
+        template<class Type> Type get(char_type separator, const key_type &path, const std::locale &loc = std::locale()) const;
+        template<class Type> Type get(char_type separator, const key_type &path, const Type &default_value, const std::locale &loc = std::locale()) const;
+        template<class CharType> std::basic_string<CharType> get(char_type separator, const key_type &path, const CharType *default_value, const std::locale &loc = std::locale()) const;
+        template<class Type> optional<Type> get_optional(char_type separator, const key_type &path, const std::locale &loc = std::locale()) const;
 
         // Get value from data of child ptree (default path separator)
         template<class Type> Type get(const key_type &path, const std::locale &loc = std::locale()) const;
-        template<class Type> bool get_b(const key_type &path, Type *result, const std::locale &loc = std::locale()) const;
-        template<class Type> Type get_d(const key_type &path, const Type &default_value, const std::locale &loc = std::locale()) const;
-        template<class CharType> std::basic_string<CharType> get_d(const key_type &path, const CharType *default_value, const std::locale &loc = std::locale()) const;
-        template<class Type> optional<Type> get_o(const key_type &path, const std::locale &loc = std::locale()) const;
+        template<class Type> Type get(const key_type &path, const Type &default_value, const std::locale &loc = std::locale()) const;
+        template<class CharType> std::basic_string<CharType> get(const key_type &path, const CharType *default_value, const std::locale &loc = std::locale()) const;
+        template<class Type> optional<Type> get_optional(const key_type &path, const std::locale &loc = std::locale()) const;
 
         // Put value in data of ptree
         template<class Type> void put_own(const Type &value, const std::locale &loc = std::locale());
 
         // Put value in data of child ptree (custom path separator)
-        template<class Type> basic_ptree<Ch, Tr> *put(Ch separator, const key_type &path, const Type &value, const std::locale &loc = std::locale());
+        template<class Type> basic_ptree<Tr> &put(char_type separator, const key_type &path, const Type &value, bool do_not_replace = false, const std::locale &loc = std::locale());
 
         // Put value in data of child ptree (default path separator)
-        template<class Type> basic_ptree<Ch, Tr> *put(const key_type &path, const Type &value, const std::locale &loc = std::locale());
+        template<class Type> basic_ptree<Tr> &put(const key_type &path, const Type &value, bool do_not_replace = false, const std::locale &loc = std::locale());
 
     private:
 

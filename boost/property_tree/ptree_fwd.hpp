@@ -31,23 +31,23 @@ namespace boost { namespace property_tree
     ///////////////////////////////////////////////////////////////////////////
     // basic_ptree class template
 
-    template<class Ch, class Tr> class basic_ptree;
+    template<class Tr> class basic_ptree;
 
     ////////////////////////////////////////////////////////////////////////////
     // Typedefs
 
-    typedef basic_ptree<char, ptree_traits<char> > ptree;       // case sensitive, narrow char
-    typedef basic_ptree<char, iptree_traits<char> > iptree;     // case insensitive, narrow char
+    typedef basic_ptree<ptree_traits<char> > ptree;       // case sensitive, narrow char
+    typedef basic_ptree<iptree_traits<char> > iptree;     // case insensitive, narrow char
 #ifndef BOOST_NO_CWCHAR
-    typedef basic_ptree<wchar_t, ptree_traits<wchar_t> > wptree;    // case sensitive, wide char
-    typedef basic_ptree<wchar_t, iptree_traits<wchar_t> > wiptree;  // case insensitive, wide char
+    typedef basic_ptree<ptree_traits<wchar_t> > wptree;    // case sensitive, wide char
+    typedef basic_ptree<iptree_traits<wchar_t> > wiptree;  // case insensitive, wide char
 #endif
 
     ///////////////////////////////////////////////////////////////////////////
     // Free functions
 
-    template<class Ch, class Tr> void swap(basic_ptree<Ch, Tr> &pt1, basic_ptree<Ch, Tr> &pt2);
-    template<class Ptree> const Ptree *empty_ptree();
+    template<class Tr> void swap(basic_ptree<Tr> &pt1, basic_ptree<Tr> &pt2);
+    template<class Ptree> const Ptree &empty_ptree();
 
 } }
 

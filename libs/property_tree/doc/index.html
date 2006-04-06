@@ -22,6 +22,8 @@
             </td>
         </tr>
     </table>
+    
+    <h2>Warning: these docs are out of date. They need to catch up with latest developments of the library. Download rev4 of the library (that corresponds to these docs) from boost vault.</h2>
     <hr>
     <dl>
         <dt class="index"><a href="#what_is_a_property_tree">What is property tree?</a> </dt>
@@ -653,9 +655,9 @@ int n = pt.<a href="reference.html#basic_ptree::get_d">get_d</a>("N", 0);      /
 std::string n = pt.<a href="reference.html#basic_ptree::get">get</a>&lt;std::string&gt;("N");   // throw if -Nxx or /Nxx not specified on command line</pre>
 <p>If there is more than one instance of 'N' in command line, they can be accessed like that:</p>
     <pre>
-std::vector&lt;int&gt; v;
-BOOST_FOREACH(ptree::const_iterator it, pt.get_child_d("N", empty_ptree()))
-    v.push_back(it-&gt;second.get_own&lt;int&gt;());
+std::vector&lt;int&gt; vec;
+BOOST_FOREACH(const ptree::value_type &v, pt.get_child_d("N", empty_ptree()))
+    vec.push_back(v.second.get_own&lt;int&gt;());
         </pre>
     <h4>
         Synopsis</h4>

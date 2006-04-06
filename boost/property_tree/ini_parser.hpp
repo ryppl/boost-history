@@ -140,13 +140,13 @@ namespace boost { namespace property_tree { namespace ini_parser
         
         // Verify if ptree is not too rich to be saved as ini
         if (!(flags & skip_ini_validity_check))
-            for (typename Ptree::const_iterator it = pt.begin(); it != pt.end(); ++it)
+            for (typename Ptree::const_iterator it = pt.begin(), end = pt.end(); it != end; ++it)
             {
                 if (!it->second.data().empty())
                     throw ini_parser_error("ptree has data on root level keys", "", 0);
                 if (pt.count(it->first) > 1)
                     throw ini_parser_error("duplicate section name", "", 0);
-                for (typename Ptree::const_iterator it2 = it->second.begin(); it2 != it->second.end(); ++it2)
+                for (typename Ptree::const_iterator it2 = it->second.begin(), end2 = it->second.end(); it2 != end2; ++it2)
                 {
                     if (!it2->second.empty())
                         throw ini_parser_error("ptree is too deep", "", 0);
@@ -156,11 +156,11 @@ namespace boost { namespace property_tree { namespace ini_parser
             }
 
         // Write ini
-        for (typename Ptree::const_iterator it = pt.begin(); it != pt.end(); ++it)
+        for (typename Ptree::const_iterator it = pt.begin(), end = pt.end(); it != end; ++it)
         {
             stream << Ch('[') << it->first << Ch(']') << Ch('\n');
-            for (typename Ptree::const_iterator it2 = it->second.begin(); it2 != it->second.end(); ++it2)
-                stream << it2->first << Ch('=') << it2->second.data() << Ch('\n');
+            for (typename Ptree::const_iterator it2 = it->second.begin(), end2 = it->second.end(); it2 != end2; ++it2)
+                stream << it2->first << Ch('=') << it2->second.template get_own<std::basic_string<Ch> >() << Ch('\n');
         }
 
     }

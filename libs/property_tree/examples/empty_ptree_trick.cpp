@@ -22,11 +22,11 @@ void process_settings(const std::string &filename)
 {
     ptree pt;
     read_info(filename, pt);    
-    const ptree *settings = pt.get_child_d("settings", empty_ptree<ptree>());
+    const ptree &settings = pt.get_child("settings", empty_ptree<ptree>());
     std::cout << "\n    Processing " << filename << std::endl;
-    std::cout << "        Setting 1 is " << settings->get_d("setting1", 0) << std::endl;
-    std::cout << "        Setting 2 is " << settings->get_d("setting2", 0.0) << std::endl;
-    std::cout << "        Setting 3 is " << settings->get_d("setting3", "default") << std::endl;
+    std::cout << "        Setting 1 is " << settings.get("setting1", 0) << std::endl;
+    std::cout << "        Setting 2 is " << settings.get("setting2", 0.0) << std::endl;
+    std::cout << "        Setting 3 is " << settings.get("setting3", "default") << std::endl;
 }
 
 // Process settings not using empty ptree trick. This one must duplicate much of the code.
@@ -34,13 +34,12 @@ void process_settings_without_trick(const std::string &filename)
 {
     ptree pt;
     read_info(filename, pt);    
-    ptree *settings;
-    if (pt.get_child_b("settings", &settings))
+    if (boost::optional<ptree &> settings = pt.get_child_optional("settings"))
     {
         std::cout << "\n    Processing " << filename << std::endl;
-        std::cout << "        Setting 1 is " << settings->get_d("setting1", 0) << std::endl;
-        std::cout << "        Setting 2 is " << settings->get_d("setting2", 0.0) << std::endl;
-        std::cout << "        Setting 3 is " << settings->get_d("setting3", "default") << std::endl;
+        std::cout << "        Setting 1 is " << settings.get().get("setting1", 0) << std::endl;
+        std::cout << "        Setting 2 is " << settings.get().get("setting2", 0.0) << std::endl;
+        std::cout << "        Setting 3 is " << settings.get().get("setting3", "default") << std::endl;
     }
     else
     {

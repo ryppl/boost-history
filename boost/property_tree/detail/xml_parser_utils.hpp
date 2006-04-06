@@ -25,8 +25,9 @@ namespace boost { namespace property_tree { namespace xml_parser
         std::basic_string<Ch> r;
         std::locale loc;
         bool space = false;
+        typename std::basic_string<Ch>::const_iterator end = s.end();
         for (typename std::basic_string<Ch>::const_iterator it = s.begin();
-             it != s.end(); ++it)
+             it != end; ++it)
         {
             if (isspace(*it, loc) || *it == Ch('\n'))
             {
@@ -44,7 +45,8 @@ namespace boost { namespace property_tree { namespace xml_parser
     {
         typedef typename std::basic_string<Ch> Str;
         Str r;
-        for (typename Str::const_iterator it = s.begin(); it != s.end(); ++it)
+        typename Str::const_iterator end = s.end();
+        for (typename Str::const_iterator it = s.begin(); it != end; ++it)
         {
             switch (*it)
             {
@@ -62,12 +64,13 @@ namespace boost { namespace property_tree { namespace xml_parser
     {
         typedef typename std::basic_string<Ch> Str;
         Str r;
-        for (typename Str::const_iterator it = s.begin(); it != s.end(); ++it)
+        typename Str::const_iterator end = s.end();
+        for (typename Str::const_iterator it = s.begin(); it != end; ++it)
         {
             if (*it == Ch('&'))
             {
-                typename Str::const_iterator semicolon = std::find(it + 1, s.end(), Ch(';'));
-                if (semicolon == s.end())
+                typename Str::const_iterator semicolon = std::find(it + 1, end, Ch(';'));
+                if (semicolon == end)
                     throw xml_parser_error("invalid character entity", "", 0);
                 Str ent(it + 1, semicolon);
                 if (ent == detail::widen<Ch>("lt")) r += Ch('<');

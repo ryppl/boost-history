@@ -58,7 +58,7 @@ namespace boost { namespace property_tree { namespace xml_parser
 
         // Find if elements present
         bool has_elements = false;
-        for (It it = pt.begin(); it != pt.end(); ++it)
+        for (It it = pt.begin(), end = pt.end(); it != end; ++it)
             if (it->first != xmlattr<Ch>() &&
                 it->first != xmltext<Ch>())
             {
@@ -85,11 +85,10 @@ namespace boost { namespace property_tree { namespace xml_parser
                 stream << Ch('<') << key;
 
                 // Write attributes
-                const Ptree *attribs;
-                if (pt.get_child_b(xmlattr<Ch>(), &attribs))
-                    for (It it = attribs->begin(); it != attribs->end(); ++it)
+                if (optional<const Ptree &> attribs = pt.get_child_optional(xmlattr<Ch>()))
+                    for (It it = attribs.get().begin(); it != attribs.get().end(); ++it)
                         stream << Ch(' ') << it->first << Ch('=') << 
-                                  Ch('"') << it->second.data() << Ch('"');
+                                  Ch('"') << it->second.template get_own<std::basic_string<Ch> >() << Ch('"');
 
                 // Write closing brace
                 stream << Ch('>');
@@ -102,7 +101,7 @@ namespace boost { namespace property_tree { namespace xml_parser
             
             // Write data text, if present
             if (!pt.data().empty())
-                write_xml_text(stream, pt.data(), indent + 1, has_elements);
+                write_xml_text(stream, pt.template get_own<std::basic_string<Ch> >(), indent + 1, has_elements);
             
             // Write elements, comments and texts
             for (It it = pt.begin(); it != pt.end(); ++it)
@@ -110,9 +109,9 @@ namespace boost { namespace property_tree { namespace xml_parser
                 if (it->first == xmlattr<Ch>())
                     continue;
                 else if (it->first == xmlcomment<Ch>())
-                    write_xml_comment(stream, it->second.data(), indent + 1);
+                    write_xml_comment(stream, it->second.template get_own<std::basic_string<Ch> >(), indent + 1);
                 else if (it->first == xmltext<Ch>())
-                    write_xml_text(stream, it->second.data(), indent + 1, has_elements);
+                    write_xml_text(stream, it->second.template get_own<std::basic_string<Ch> >(), indent + 1, has_elements);
                 else
                     write_xml_element(stream, it->first, it->second, indent + 1);
             }

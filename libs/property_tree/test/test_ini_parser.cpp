@@ -165,7 +165,7 @@ int test_main(int argc, char *argv[])
     // Test too deep ptrees
     {
         ptree pt;
-        pt.put_child("section.key.bogus", NULL);
+        pt.put_child("section.key.bogus", empty_ptree<ptree>());
         test_erroneous_write(pt);
     }
 
@@ -187,9 +187,9 @@ int test_main(int argc, char *argv[])
     // Test duplicate keys
     {
         ptree pt;
-        ptree *child = pt.put_child("section", NULL);
-        child->push_back(std::make_pair("key", ptree()));
-        child->push_back(std::make_pair("key", ptree()));
+        ptree &child = pt.put_child("section", empty_ptree<ptree>());
+        child.push_back(std::make_pair("key", ptree()));
+        child.push_back(std::make_pair("key", ptree()));
         test_erroneous_write(pt);
     }
 

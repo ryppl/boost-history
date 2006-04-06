@@ -60,9 +60,15 @@ template<class Ch>
 struct MyTraits
 {
 
+    // Character type to be used by ptree keys
+    typedef Ch char_type;
+
+    // Key type to be used by ptree
+    typedef std::basic_string<Ch> key_type;
+    
     // Data type to be used by ptree
     typedef boost::any data_type;
-    
+
     // Extractor to be used by ptree
     template<class Type>
     struct extractor: public MyExtractor<Type> { }; 

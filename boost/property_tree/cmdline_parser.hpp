@@ -37,24 +37,24 @@ namespace boost { namespace property_tree { namespace cmdline_parser
                 {
                     if (text.size() == 1)
                     {
-                        Ptree *child = local.put(text, Str());
-                        child->push_back(std::make_pair(Str(), Ptree(child->data())));
+                        Ptree &child = local.put(text, Str());
+                        child.push_back(std::make_pair(Str(), Ptree(child.data())));
                     }
                     else if (text.size() == 2)
                     {
-                        Ptree *child = local.put(text.substr(1, 1), Str());
-                        child->push_back(std::make_pair(Str(), Ptree(child->data())));
+                        Ptree &child = local.put(text.substr(1, 1), Str());
+                        child.push_back(std::make_pair(Str(), Ptree(child.data())));
                     }
                     else
                     {
-                        Ptree *child = local.put(text.substr(1, 1), text.substr(2, Str::npos));
-                        child->push_back(std::make_pair(Str(), Ptree(child->data())));
+                        Ptree &child = local.put(text.substr(1, 1), text.substr(2, Str::npos));
+                        child.push_back(std::make_pair(Str(), Ptree(child.data())));
                     }
                 }
                 else
                 {
-                    Ptree *child = local.put(Str(), text);
-                    child->push_back(std::make_pair(Str(), Ptree(child->data())));
+                    Ptree &child = local.put(Str(), text);
+                    child.push_back(std::make_pair(Str(), Ptree(child.data())));
                 }
         }
 

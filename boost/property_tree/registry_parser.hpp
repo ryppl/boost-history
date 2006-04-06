@@ -129,7 +129,8 @@ namespace boost { namespace property_tree { namespace registry_parser
                 {
                     Stream stream;
                     stream << std::hex << std::setfill(Ch('0'));
-                    for (std::vector<BYTE>::const_iterator it = data.begin(); it != data.end(); ++it)
+                    for (std::vector<BYTE>::const_iterator it = data.begin(), end = data.end(); 
+                         it != end; ++it)
                         stream << std::setw(2) << static_cast<int>(*it) << Ch(' ');
                     value = stream.str();
                     value.resize(value.size() - 1); // remove final space
@@ -489,21 +490,20 @@ namespace boost { namespace property_tree { namespace registry_parser
         }
 
         // Create values
-        const Ptree *values = pt.get_child_d(detail::widen<Ch>("\\values"), NULL);
-        const Ptree *types = pt.get_child_d(detail::widen<Ch>("\\types"), NULL);
-        if (values)
-            for (typename Ptree::const_iterator it = values->begin(); it != values->end(); ++it)
-            {
-                DWORD type = types ? types->get_d(it->first, REG_SZ) : REG_SZ;
-                std::vector<BYTE> data = translate<Ch>(type, it->second.data());
-                reg_set_value_ex<Ch>(rk.handle(), it->first.c_str(), type, 
-                                     data.empty() ? NULL : &data.front(), 
-                                     static_cast<DWORD>(data.size()));
-            }
+        const Ptree &values = pt.get_child(detail::widen<Ch>("\\values"), empty_ptree<Ptree>());
+        const Ptree &types = pt.get_child(detail::widen<Ch>("\\types"), empty_ptree<Ptree>());
+        for (typename Ptree::const_iterator it = values.begin(), end = values.end(); it != end; ++it)
+        {
+            DWORD type = types.get(it->first, REG_SZ);
+            std::vector<BYTE> data = translate<Ch>(type, it->second.data());
+            reg_set_value_ex<Ch>(rk.handle(), it->first.c_str(), type, 
+                                 data.empty() ? NULL : &data.front(), 
+                                 static_cast<DWORD>(data.size()));
+        }
 
         // Create subkeys
-        for (typename Ptree::const_iterator it = pt.begin(); it != pt.end(); ++it)
-            if (&it->second != values && &it->second != types)
+        for (typename Ptree::const_iterator it = pt.begin(), end = pt.end(); it != end; ++it)
+            if (&it->second != &values && &it->second != &types)
                 write_registry(rk.handle(), it->first, it->second);
 
     }

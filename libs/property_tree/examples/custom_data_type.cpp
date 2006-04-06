@@ -9,6 +9,10 @@
 // ----------------------------------------------------------------------------
 
 #include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/info_parser.hpp>
+#include <boost/property_tree/ini_parser.hpp>
+#include <boost/property_tree/json_parser.hpp>
+#include <boost/property_tree/xml_parser.hpp>
 #include <boost/any.hpp>
 #include <list>
 #include <string>
@@ -45,6 +49,12 @@ template<class Ch>
 struct my_traits
 {
 
+    // Character type to be used by ptree keys
+    typedef Ch char_type;
+
+    // Key type to be used by ptree
+    typedef std::basic_string<Ch> key_type;
+    
     // Data type to be used by ptree
     typedef boost::any data_type;
     
@@ -57,8 +67,8 @@ struct my_traits
     struct inserter: public my_inserter<Type> { };
 
     // Key comparison function
-    inline bool operator()(const std::basic_string<Ch> &key1, 
-                           const std::basic_string<Ch> &key2) const
+    inline bool operator()(const key_type &key1, 
+                           const key_type &key2) const
     {
         return key1 < key2;
     }
@@ -69,7 +79,7 @@ int main()
 {
     
     // Property_tree with boost::any as data type
-    typedef boost::property_tree::basic_ptree<char, my_traits<char> > my_ptree;
+    typedef boost::property_tree::basic_ptree<my_traits<char> > my_ptree;
     my_ptree pt;
 
     // Put/get int value
@@ -91,10 +101,23 @@ int main()
         std::cout << *it << ' ';
     std::cout << '\n';
 
-    // Note: parsers will not work with my_ptree type: 
-    // they require that data type of ptree is string
-    /*
-    boost::property_tree::write_info("test.info", pt);      // Error!
-    */
+    // Note: parsers will work with my_ptree type, but only if 
+    // type contained in boost::any is string. Otherwise,
+    // they will throw bad_any_cast, as will be the case here.
+    // The reason is that obviously parsers only work with string data. 
+    // You will need to provide extractor/inserter that can always 
+    // succesfully convert from/to basic_string
+    
+    // This section tests if parsers compile and throw only expected exceptions
+    std::istringstream istr;
+    std::ostringstream ostr;
+    try { boost::property_tree::write_info(ostr, pt); } catch (boost::bad_any_cast &) { }
+    try { boost::property_tree::read_info(istr, pt); } catch (...) { }
+    try { boost::property_tree::write_ini(ostr, pt); } catch (boost::bad_any_cast &) { }
+    try { boost::property_tree::read_ini(istr, pt); } catch (...) { }
+    try { boost::property_tree::write_json(ostr, pt); } catch (boost::bad_any_cast &) { }
+    try { boost::property_tree::read_json(istr, pt); } catch (...) { }
+    try { boost::property_tree::write_xml(ostr, pt); } catch (boost::bad_any_cast &) { }
+    try { boost::property_tree::read_xml(istr, pt); } catch (...) { }
 
 }
