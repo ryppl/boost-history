@@ -1,6 +1,7 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Property Tree Library Reference</title>
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
@@ -33,8 +34,8 @@
         <dt class="index1">class <a href="#ptree_bad_data">ptree_bad_data</a></dt>
         <dt class="index1">typedefs <a href="#ptree">ptree, iptree, wptree, wiptree</a></dt>
         <dt class="index1">class <a href="#basic_ptree">basic_ptree</a></dt>
-        <dt class="index2">typedef <a href="#basic_ptree::char_type">basic_ptree::char_type</a></dt>
         <dt class="index2">typedef <a href="#basic_ptree::traits_type">basic_ptree::traits_type</a></dt>
+        <dt class="index2">typedef <a href="#basic_ptree::char_type">basic_ptree::char_type</a></dt>
         <dt class="index2">typedef <a href="#basic_ptree::key_type">basic_ptree::key_type</a></dt>
         <dt class="index2">typedef <a href="#basic_ptree::data_type">basic_ptree::data_type</a></dt>
         <dt class="index2">typedef <a href="#basic_ptree::value_type">basic_ptree::value_type</a></dt>
@@ -67,18 +68,15 @@
         <dt class="index2">function <a href="#basic_ptree::reverse">basic_ptree::reverse</a></dt>
         <dt class="index2">function <a href="#basic_ptree::sort">basic_ptree::sort</a></dt>
         <dt class="index2">function <a href="#basic_ptree::get_child">basic_ptree::get_child</a></dt>
-        <dt class="index2">function <a href="#basic_ptree::get_child_b">basic_ptree::get_child_b</a></dt>
-        <dt class="index2">function <a href="#basic_ptree::get_child_d">basic_ptree::get_child_d</a></dt>
-        <dt class="index2">function <a href="#basic_ptree::get_child_o">basic_ptree::get_child_o</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::get_child default">basic_ptree::get_child (default-value version)</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::get_child_optional">basic_ptree::get_child_optional</a></dt>
         <dt class="index2">function <a href="#basic_ptree::put_child">basic_ptree::put_child</a></dt>
         <dt class="index2">function <a href="#basic_ptree::get_own">basic_ptree::get_own</a></dt>
-        <dt class="index2">function <a href="#basic_ptree::get_own_b">basic_ptree::get_own_b</a></dt>
-        <dt class="index2">function <a href="#basic_ptree::get_own_d">basic_ptree::get_own_d</a></dt>
-        <dt class="index2">function <a href="#basic_ptree::get_own_o">basic_ptree::get_own_o</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::get_own default">basic_ptree::get_own (default-value version)</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::get_own_optional">basic_ptree::get_own_optional</a></dt>
         <dt class="index2">function <a href="#basic_ptree::get">basic_ptree::get</a></dt>
-        <dt class="index2">function <a href="#basic_ptree::get_b">basic_ptree::get_b</a></dt>
-        <dt class="index2">function <a href="#basic_ptree::get_d">basic_ptree::get_d</a></dt>
-        <dt class="index2">function <a href="#basic_ptree::get_o">basic_ptree::get_o</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::get default">basic_ptree::get (default-value version)</a></dt>
+        <dt class="index2">function <a href="#basic_ptree::get_optional">basic_ptree::get_optional</a></dt>
         <dt class="index2">function <a href="#basic_ptree::put_own">basic_ptree::put_own</a></dt>
         <dt class="index2">function <a href="#basic_ptree::put">basic_ptree::put</a></dt>
         <p>
@@ -166,11 +164,11 @@ template&lt;class Ch&gt; struct iptree_traits;</pre>
     <h4>
         Synopsis</h4>
     <pre>
-template&lt;class Ptree&gt; const Ptree *empty_ptree();</pre>
+template&lt;class Ptree&gt; const Ptree &amp;empty_ptree();</pre>
     <h4>
         Return value</h4>
     <p>
-        Pointer to empty property tree. Can be used as a default value of <a href="#basic_ptree::get_child_d"><code>get_child_d</code></a>. See <a href="../examples/empty_ptree_trick.cpp">empty_ptree_trick.cpp</a> for example of usage.</p>
+        Reference to empty property tree. Can be used as a default value of <a href="#basic_ptree::get_child"><code>get_child</code></a>. See <a href="../examples/empty_ptree_trick.cpp">empty_ptree_trick.cpp</a> for example of usage.</p>
     <!-- =================================================================== -->
     <!---->
     <!---->
@@ -222,14 +220,14 @@ class ptree_bad_data;</pre>
     <h4>
         Synopsis</h4>
     <pre>
-typedef basic_ptree&lt;char, ptree_traits&lt;char&gt; &gt; ptree;
-typedef basic_ptree&lt;char, iptree_traits&lt;char&gt; &gt; iptree;
-typedef basic_ptree&lt;wchar_t, ptree_traits&lt;wchar_t&gt; &gt; wptree;
-typedef basic_ptree&lt;wchar_t, iptree_traits&lt;wchar_t&gt; &gt; wiptree;</pre>
+typedef basic_ptree&lt;ptree_traits&lt;char&gt; &gt; ptree;
+typedef basic_ptree&lt;iptree_traits&lt;char&gt; &gt; iptree;
+typedef basic_ptree&lt;ptree_traits&lt;wchar_t&gt; &gt; wptree;
+typedef basic_ptree&lt;iptree_traits&lt;wchar_t&gt; &gt; wiptree;</pre>
     <h4>
         Description</h4>
     <p>
-        Predefined property tree types. Wide character versions are defined only if your platform supports <code>wchar_t</code>.</p>
+        Predefined property tree types. <em>i</em>-prefixed versions use case-insensitive keys. Wide character versions are defined only if your platform supports <code>wchar_t</code>.</p>
     <!-- =================================================================== -->
     <!---->
     <!---->
@@ -239,7 +237,7 @@ typedef basic_ptree&lt;wchar_t, iptree_traits&lt;wchar_t&gt; &gt; wiptree;</pre>
     <h4>
         Synopsis</h4>
     <pre>
-template&lt;class Ch, class Tr&gt; class basic_ptree;</pre>
+template&lt;class Tr&gt; class basic_ptree;</pre>
     <h4>
         Description</h4>
     <p>
@@ -247,26 +245,10 @@ template&lt;class Ch, class Tr&gt; class basic_ptree;</pre>
     <h4>
         Parameters</h4>
     <dl>
-        <dt class="parameter">Ch</dt>
-        <dd>
-            Character type of keys and data in property tree. See <a href="#basic_ptree::char_type">char_type</a>.</dd>
         <dt class="parameter">Tr</dt>
         <dd>
-            Key comparison policy. See <a href="#basic_ptree::traits_type">traits_type</a>.</dd>
+            Policy type. Can be used to customize key type, data type, key comparison policy etc. See <a href="#basic_ptree::traits_type">traits_type</a>.</dd>
     </dl>
-    <!-- =================================================================== -->
-    <!---->
-    <!---->
-    <h3 class="separating-header">
-        <a name="basic_ptree::char_type"></a>basic_ptree::char_type
-    </h3>
-    <h4>
-        Synopsis</h4>
-    <pre>typedef Ch char_type;</pre>
-    <h4>
-        Description</h4>
-    <p>
-        Character type used by keys and data of property tree. Equal to <code>Ch</code> parameter of <code>basic_ptree</code> class template.</p>
     <!-- =================================================================== -->
     <!---->
     <!---->
@@ -293,11 +275,24 @@ template&lt;class Ch, class Tr&gt; class basic_ptree;</pre>
     <!---->
     <!---->
     <h3 class="separating-header">
+        <a name="basic_ptree::char_type"></a>basic_ptree::char_type
+    </h3>
+    <h4>
+        Synopsis</h4>
+    <pre>typedef traits_type::char_type char_type;</pre>
+    <h4>
+        Description</h4>
+    <p>
+        Character type used by keys and data of property tree. Equal to <code>Ch</code> parameter of <code>basic_ptree</code> class template.</p>
+    <!-- =================================================================== -->
+    <!---->
+    <!---->
+    <h3 class="separating-header">
         <a name="basic_ptree::key_type"></a>basic_ptree::key_type
     </h3>
     <h4>
         Synopsis</h4>
-    <pre>typedef std::basic_string&lt;Ch&gt; key_type;</pre>
+    <pre>typedef typename traits_type::key_type key_type;</pre>
     <h4>
         Description</h4>
     <p>
@@ -310,7 +305,7 @@ template&lt;class Ch, class Tr&gt; class basic_ptree;</pre>
     </h3>
     <h4>
         Synopsis</h4>
-    <pre>typedef typename Tr::data_type data_type;</pre>
+    <pre>typedef typename traits_type::data_type data_type;</pre>
     <h4>
         Description</h4>
     <p>
@@ -667,7 +662,7 @@ size_type count(const key_type &amp;key);</pre>
     <h4>
         Return value</h4>
     <p>
-        Number of direct children with given key name. Keys equivalence is tested with a predicate supplied as basic_ptree template parameter.</p>
+        Number of direct children with given key. Keys equivalence is tested with a predicate supplied as basic_ptree template parameter.</p>
     <!-- =================================================================== -->
     <!---->
     <!---->
@@ -716,7 +711,7 @@ template&lt;class It&gt; void insert(iterator where, It first, It last);</pre>
     <h4>
         Return value</h4>
     <p>
-        In the first version iterator pointing to newly inserted element of the sequence.</p>
+        In the first version, iterator pointing to newly inserted element of the sequence.</p>
     <!-- =================================================================== -->
     <!---->
     <!---->
@@ -752,7 +747,7 @@ template&lt;class It&gt; iterator erase(It first, It last);</pre>
     <h4>
         Return value</h4>
     <p>
-        In the first version iterator pointing to element after the erased element, or <code>end()</code> if there is no such element. In the second version number of elements that have been erased. In the third version, iterator pointing to element after the erased range, or <code>end()</code> if there is no such element.</p>
+        In the first version, iterator pointing to element after the erased element, or <code>end()</code> if there is no such element. In the second version, number of elements that have been erased. In the third version, iterator pointing to element after the erased range, or <code>end()</code> if there is no such element.</p>
     <!-- =================================================================== -->
     <!---->
     <!---->
@@ -907,19 +902,19 @@ template&lt;class SortTr&gt; void sort(SortTr tr);</pre>
     <h4>
         Synopsis</h4>
     <pre>
-// Default separator
-basic_ptree *get_child(const key_type &amp;path);
-const basic_ptree *get_child(const key_type &amp;path) const;
+// Throwing version, default separator
+basic_ptree &amp;get_child(const key_type &amp;path);
+const basic_ptree &amp;get_child(const key_type &amp;path) const;
 
-// Custom separator
-basic_ptree *get_child(Ch separator, const key_type &amp;path);
-const basic_ptree *get_child(Ch separator, const key_type &amp;path) const;</pre>
+// Throwing version, custom separator
+basic_ptree &amp;get_child(Ch separator, const key_type &amp;path);
+const basic_ptree &amp;get_child(Ch separator, const key_type &amp;path) const;</pre>
     <h4>
         Description</h4>
     <p>
         Traverses the tree using given path and retrieves a child stored there. Path is a sequence of keys separated with zero or more special 'separator' characters. This function will retrieve indirect children if path contains at least one separator. First 2 versions assume separator to be dot character (<code>'.'</code>).</p>
     <p>
-        Throws <a href="reference.html#ptree_bad_path"><code>ptree_bad_path</code></a> if child property tree cannot be located. If you want non-throwing failure handling, use <a href="reference.html#basic_ptree::get_child_b"><code>get_child_b</code></a>, <a href="reference.html#basic_ptree::get_child_d"><code>get_child_d</code></a> or <a href="reference.html#basic_ptree::get_child_o"><code>get_child_o</code></a>. If you want to access data stored in one of the children, use <a href="reference.html#basic_ptree::get"><code>get</code></a>, <a href="reference.html#basic_ptree::get_b"><code>get_b</code></a>, <a href="reference.html#basic_ptree::get_d"><code>get_d</code></a> or <a href="reference.html#basic_ptree::get_o"><code>get_o</code></a>.</p>
+        Throws <a href="reference.html#ptree_bad_path"><code>ptree_bad_path</code></a> if child property tree cannot be located. If you want non-throwing failure handling, use <a href="reference.html#basic_ptree::get_child default"><code>get_child (default-value version)</code></a> or <a href="reference.html#basic_ptree::get_child_optional"><code>get_child_optional</code></a>. If you want to access data stored in one of the children, use <a href="reference.html#basic_ptree::get"><code>get</code></a>, <a href="reference.html#basic_ptree::get default"><code>get (default-value version)</code></a>, or <a href="reference.html#basic_ptree::get_optional"><code>get_optional</code></a>.</p>
     <h4>
         Parameters</h4>
     <dl>
@@ -933,70 +928,31 @@ const basic_ptree *get_child(Ch separator, const key_type &amp;path) const;</pre
     <h4>
         Return value</h4>
     <p>
-        Pointer to child property tree. Return value is always a pointer to a valid property tree object (this function throws in case of error).</p>
+        Reference to child property tree.</p>
     <!-- =================================================================== -->
     <!---->
     <!---->
     <h3 class="separating-header">
-        <a name="basic_ptree::get_child_b"></a>basic_ptree::get_child_b
+        <a name="basic_ptree::get_child default"></a>basic_ptree::get_child (default-value version)
     </h3>
     <h4>
         Synopsis</h4>
     <pre>
-// Default separator
-bool get_child_b(const key_type &amp;path, basic_ptree **result);
-bool get_child_b(const key_type &amp;path, const basic_ptree **result) const;
+// Default-value version, default separator
+basic_ptree &amp;get_child(const key_type &amp;path, basic_ptree &amp;default_value);
+const basic_ptree &amp;get_child(const key_type &amp;path, const basic_ptree &amp;default_value) const;
 
-// Custom separator
-bool get_child_b(Ch separator, const key_type &amp;path, basic_ptree **result);
-bool get_child_b(Ch separator, const key_type &amp;path, const basic_ptree **result) const;</pre>
+// Default-value version, custom separator
+basic_ptree &amp;get_child(Ch separator, const key_type &amp;path, basic_ptree &amp;default_value);
+const basic_ptree &amp;get_child(Ch separator, const key_type &amp;path, const basic_ptree &amp;default_value) const;</pre>
     <h4>
         Description</h4>
     <p>
         Traverses the tree using given path and retrieves a child stored there. Path is a sequence of keys separated with zero or more special 'separator' characters. This function will retrieve indirect children if path contains at least one separator. First 2 versions assume separator to be dot character (<code>'.'</code>).</p>
     <p>
-        If the child is found, the function sets <code>result</code> pointer to point at it, and returns true. Otherwise it does not modify the <code>result</code> pointer and returns false.</p>
-    <h4>
-        Parameters</h4>
-    <dl>
-        <dt class="parameter">separator</dt>
-        <dd>
-            Separator character.</dd>
-        <dt class="parameter">path</dt>
-        <dd>
-            Path to child property tree. Contains sequence of one or more keys separated with separator characters.</dd>
-        <dt class="parameter">result</dt>
-        <dd>
-            Pointer to result pointer. Can be NULL, in which case the result is discarded.</dd>
-    </dl>
-    <h4>
-        Return value</h4>
-    <p>
-        true if child was found, false otherwise.</p>
-    <!-- =================================================================== -->
-    <!---->
-    <!---->
-    <h3 class="separating-header">
-        <a name="basic_ptree::get_child_d"></a>basic_ptree::get_child_d
-    </h3>
-    <h4>
-        Synopsis</h4>
-    <pre>
-// Default separator
-basic_ptree *get_child_d(const key_type &amp;path, basic_ptree *default_value);
-const basic_ptree *get_child_d(const key_type &amp;path, const basic_ptree *default_value) const;
-
-// Custom separator
-basic_ptree *get_child_d(Ch separator, const key_type &amp;path, basic_ptree *default_value);
-const basic_ptree *get_child_d(Ch separator, const key_type &amp;path, const basic_ptree *default_value) const;</pre>
-    <h4>
-        Description</h4>
-    <p>
-        Traverses the tree using given path and retrieves a child stored there. Path is a sequence of keys separated with zero or more special 'separator' characters. This function will retrieve indirect children if path contains at least one separator. First 2 versions assume separator to be dot character (<code>'.'</code>).</p>
-    <p>
-        If the child is found, the function returns a pointer to it. Otherwise it returns <code>default_value</code>.</p>
+        If the child is found, the function returns a reference to it. Otherwise it returns <code>default_value</code>.</p>
 	<p>
-		One use of default value is to return a pointer to empty property tree if the required one is not found. In many cases, the subsequent code using the return value can be then made simpler. See <a href="reference.html#empty_ptree"><code>empty_ptree</code></a>.
+		One use of default value is to return a reference to empty property tree if the required one is not found. In many cases, the subsequent code using the return value can be then made simpler. See <a href="reference.html#empty_ptree"><code>empty_ptree</code></a>.
 	</p>
     <h4>
         Parameters</h4>
@@ -1009,34 +965,34 @@ const basic_ptree *get_child_d(Ch separator, const key_type &amp;path, const bas
             Path to child property tree. Contains sequence of one or more keys separated with separator characters.</dd>
         <dt class="parameter">default_value</dt>
         <dd>
-            Value to be returned when child is not found. Can be NULL.</dd>
+            Value to be returned when child is not found.</dd>
     </dl>
     <h4>
         Return value</h4>
     <p>
-        Pointer to child property tree. Return value is always a pointer to a valid property tree if traversal succeeded.</p>
+        Reference to child property tree, or <code>default_value</code>.</p>
     <!-- =================================================================== -->
     <!---->
     <!---->
     <h3 class="separating-header">
-        <a name="basic_ptree::get_child_o"></a>basic_ptree::get_child_o
+        <a name="basic_ptree::get_child_optional"></a>basic_ptree::get_child_optional
     </h3>
     <h4>
         Synopsis</h4>
     <pre>
 // Default separator
-boost::optional&lt;basic_ptree *&gt; get_child_o(const key_type &amp;path);
-boost::optional&lt;const basic_ptree *&gt; get_child_o(const key_type &amp;path) const;
+boost::optional&lt;basic_ptree &amp;&gt; get_child_optional(const key_type &amp;path);
+boost::optional&lt;const basic_ptree &amp;&gt; get_child_optional(const key_type &amp;path) const;
 
 // Custom separator
-boost::optional&lt;basic_ptree *&gt; get_child_o(Ch separator, const key_type &amp;path);
-boost::optional&lt;const basic_ptree *&gt; get_child_o(Ch separator, const key_type &amp;path) const;</pre>
+boost::optional&lt;basic_ptree &amp;&gt; get_child_optional(Ch separator, const key_type &amp;path);
+boost::optional&lt;const basic_ptree &amp;&gt; get_child_optional(Ch separator, const key_type &amp;path) const;</pre>
     <h4>
         Description</h4>
     <p>
         Traverses the tree using given path and retrieves a child stored there. Path is a sequence of keys separated with zero or more special 'separator' characters. This function will retrieve indirect children if path contains at least one separator. First 2 versions assume separator to be dot character (<code>'.'</code>).</p>
     <p>
-        If the child is found, the function returns <code>boost::optional</code> initialized with a pointer to it. Otherwise it returns uninitialized <code>boost::optional</code>.</p>
+        If the child is found, the function returns <code>boost::optional</code> initialized with a reference to it. Otherwise it returns uninitialized <code>boost::optional</code>.</p>
     <h4>
         Parameters</h4>
     <dl>
@@ -1050,7 +1006,7 @@ boost::optional&lt;const basic_ptree *&gt; get_child_o(Ch separator, const key_t
     <h4>
         Return value</h4>
     <p>
-        <code>boost::optional</code> initialized with pointer to property tree if traversal succeeded, otherwise uninitialized <code>boost::optional</code>.</p>
+        <code>boost::optional</code> initialized with reference to property tree if traversal succeeded, otherwise uninitialized <code>boost::optional</code>.</p>
     <!-- =================================================================== -->
     <!---->
     <!---->
@@ -1061,18 +1017,18 @@ boost::optional&lt;const basic_ptree *&gt; get_child_o(Ch separator, const key_t
         Synopsis</h4>
     <pre>
 // Default separator
-basic_ptree *put_child(const key_type &amp;path, basic_ptree *value);
+basic_ptree &amp;put_child(const key_type &amp;path, basic_ptree &amp;value, bool do_not_replace = false);
 
 // Custom separator
-basic_ptree *put_child(Ch separator, const key_type &amp;path, basic_ptree *value);</pre>
+basic_ptree &amp;put_child(Ch separator, const key_type &amp;path, basic_ptree &amp;value, bool do_not_replace = false);</pre>
     <h4>
         Description</h4>
     <p>
         Traverses the tree using given path, and inserts a new key, or replaces existing one. If any of the intermediate keys specified by path does not exist, it is inserted, with empty data and no children, at the back of existing sequence. Path is a sequence of keys separated with zero or more special 'separator' characters. First version assumes separator to be dot character (<code>'.'</code>).</p>
     <p>
         For example, if <code>path</code> is "key1.key2.key3", the function will find a child designated by "key1.key2" path. This child will be checked for presence of "key3" subkey. If it exists, it will be replaced with the one specified by <code>value</code> parameter. If it does not exist, "key3" will be added at the back of existing sequence (if any). If either "key1" or "key1.key2" do not exist, the function will insert them as well.</p>
-        <p>Passing <code>value</code> equal to NULL has special meaning. If key designated by <code>path</code> exists, the function will leave it unchanged. If it does not exist, empty one will be inserted. Thus, calling <code>put_child("key1.key2.key3", value)</code> is equivalent to <code>put_child("key1", NULL)-&gt;put_child("key2", NULL)-&gt;put_child("key3", value)</code>.</p>
-    <p>This function is a complement to <a href="reference.html#basic_ptree::get_child"><code>get_child</code></a>. If <code>put_child(path, value)</code> was called, <code>get_child(path)</code> will return a pointer to element inserted by <code>put_child</code>.</p>
+        <p>Passing <code>do_not_replace</code> flag equal to <code>true</code> makes the function always insert a new key, even if there already exists key with the same name.</p>
+    <p>This function is a complement to <a href="reference.html#basic_ptree::get_child"><code>get_child</code></a>. If <code>put_child(path, value)</code> was called, <code>get_child(path)</code> will return a reference to element inserted/replaced by <code>put_child</code>.</p>
     <h4>
         Parameters</h4>
     <dl>
@@ -1084,12 +1040,15 @@ basic_ptree *put_child(Ch separator, const key_type &amp;path, basic_ptree *valu
             Path to child property tree. Contains sequence of one or more keys separated with separator characters.</dd>
         <dt class="parameter">value</dt>
         <dd>
-            Property tree to be inserted. Invokes special behavior if equal to NULL. In this case the function will not modify property tree if it already exists at <code>path</code>. If no property tree exists there, an empty one will be inserted, (as if <code>value</code> pointed to empty ptree).</dd>
+            Property tree to be inserted.</dd>
+        <dt class="parameter">do_not_replace</dt>
+        <dd>
+            If set to true, causes function to always insert a new key, even if there already exists key with the same name.</dd>
     </dl>
     <h4>
         Return value</h4>
     <p>
-        Pointer to inserted or replaced property tree. Return value is always a pointer to a valid property tree.</p>
+        Reference to inserted or replaced property tree.</p>
     <!-- =================================================================== -->
     <!---->
     <!---->
@@ -1103,7 +1062,7 @@ template&lt;class Type&gt; Type get_own(const std::locale &amp;loc = std::locale
     <h4>
         Description</h4>
     <p>
-        Extracts value stored in property tree data and translates it to <code>Type</code> using <code>operator &gt;&gt;</code>. If data cannot be translated, throws <a href="reference.html#ptree_bad_data"><code>ptree_bad_data</code></a> exception. If you want non-throwing failure handling, use <a href="reference.html#basic_ptree::get_own_b"><code>get_own_b</code></a>, <a href="reference.html#basic_ptree::get_own_d"><code>get_own_d</code></a> or <a href="reference.html#basic_ptree::get_own_o"><code>get_own_o</code></a>.</p>
+        Extracts value stored in property tree data and translates it to <code>Type</code> using <code>operator &gt;&gt;</code>. If data cannot be translated, throws <a href="reference.html#ptree_bad_data"><code>ptree_bad_data</code></a> exception. If you want non-throwing failure handling, use <a href="reference.html#basic_ptree::get_own default"><code>get_own (default-value version)</code></a> or <a href="reference.html#basic_ptree::get_own_optional"><code>get_own_optional</code></a>.</p>
     <h4>
         Parameters</h4>
     <dl>
@@ -1119,41 +1078,13 @@ template&lt;class Type&gt; Type get_own(const std::locale &amp;loc = std::locale
     <!---->
     <!---->
     <h3 class="separating-header">
-        <a name="basic_ptree::get_own_b"></a>basic_ptree::get_own_b
+        <a name="basic_ptree::get_own default"></a>basic_ptree::get_own (default-value version)
     </h3>
     <h4>
         Synopsis</h4>
     <pre>
-template&lt;class Type&gt; bool get_own_b(Type *result, const std::locale &amp;loc = std::locale()) const;</pre>
-    <h4>
-        Description</h4>
-    <p>
-        Extracts value stored in property tree data and translates it to <code>Type</code> using <code>operator &gt;&gt;</code>. Result of translation is stored in value pointed by <code>result</code> parameter. Returns true if extraction succeeds, false otherwise.</p>
-    <h4>
-        Parameters</h4>
-    <dl>
-        <dt class="parameter">result</dt>
-        <dd>
-            Pointer to value to receive result of extraction. Can be NULL, in which case extraction result is discarded.</dd>
-        <dt class="parameter">loc</dt>
-        <dd>
-            Locale to use. If not specified, defaults to global locale.</dd>
-    </dl>
-    <h4>
-        Return value</h4>
-    <p>
-        true if extraction succeeded, false otherwise.</p>
-    <!-- =================================================================== -->
-    <!---->
-    <!---->
-    <h3 class="separating-header">
-        <a name="basic_ptree::get_own_d"></a>basic_ptree::get_own_d
-    </h3>
-    <h4>
-        Synopsis</h4>
-    <pre>
-template&lt;class Type&gt; Type get_own_d(const Type &amp;default_value, const std::locale &amp;loc = std::locale()) const;
-template&lt;class CharType&gt; std::basic_string&lt;CharType&gt; get_own_d(const CharType *default_value, const std::locale &amp;loc = std::locale()) const;</pre>
+template&lt;class Type&gt; Type get_own(const Type &amp;default_value, const std::locale &amp;loc = std::locale()) const;
+template&lt;class CharType&gt; std::basic_string&lt;CharType&gt; get_own(const CharType *default_value, const std::locale &amp;loc = std::locale()) const;</pre>
     <h4>
         Description</h4>
     <p>
@@ -1176,12 +1107,12 @@ template&lt;class CharType&gt; std::basic_string&lt;CharType&gt; get_own_d(const
     <!---->
     <!---->
     <h3 class="separating-header">
-        <a name="basic_ptree::get_own_o"></a>basic_ptree::get_own_o
+        <a name="basic_ptree::get_own_optional"></a>basic_ptree::get_own_optional
     </h3>
     <h4>
         Synopsis</h4>
     <pre>
-template&lt;class Type&gt; boost::optional&lt;Type&gt; get_own_o(const std::locale &amp;loc = std::locale()) const;</pre>
+template&lt;class Type&gt; boost::optional&lt;Type&gt; get_own_optional(const std::locale &amp;loc = std::locale()) const;</pre>
     <h4>
         Description</h4>
     <p>
@@ -1214,7 +1145,7 @@ template&lt;class Type&gt; Type get(Ch separator, const key_type &amp;path, cons
     <h4>
         Description</h4>
     <p>
-        Traverses the tree, extracts value stored in child property tree data, and translates it to <code>Type</code> using <code>operator &gt;&gt;</code>. See <a href="reference.html#basic_ptree::get_child"><code>get_child</code></a> for description of how child is obtained from <code>path</code>. If child does not exist, throws <a href="reference.html#ptree_bad_path"><code>ptree_bad_path</code></a> exception. If data cannot be translated, throws <a href="reference.html#ptree_bad_data"><code>ptree_bad_data</code></a> exception. If you want non-throwing failure handling, use <a href="reference.html#basic_ptree::get_b"><code>get_b</code></a>, <a href="reference.html#basic_ptree::get_d"><code>get_d</code></a> or <a href="reference.html#basic_ptree::get_o"><code>get_o</code></a>.</p>
+        Traverses the tree, extracts value stored in child property tree data, and translates it to <code>Type</code> using <code>operator &gt;&gt;</code>. See <a href="reference.html#basic_ptree::get_child"><code>get_child</code></a> for description of how child is obtained from <code>path</code>. If child does not exist, throws <a href="reference.html#ptree_bad_path"><code>ptree_bad_path</code></a> exception. If data cannot be translated, throws <a href="reference.html#ptree_bad_data"><code>ptree_bad_data</code></a> exception. If you want non-throwing failure handling, use <a href="reference.html#basic_ptree::get default"><code>get (default_value version)</code></a> or <a href="reference.html#basic_ptree::get_optional"><code>get_optional</code></a>.</p>
     <h4>
         Parameters</h4>
     <dl>
@@ -1236,56 +1167,18 @@ template&lt;class Type&gt; Type get(Ch separator, const key_type &amp;path, cons
     <!---->
     <!---->
     <h3 class="separating-header">
-        <a name="basic_ptree::get_b"></a>basic_ptree::get_b
+        <a name="basic_ptree::get default"></a>basic_ptree::get (default-value version)
     </h3>
     <h4>
         Synopsis</h4>
     <pre>
 // Default separator
-template&lt;class Type&gt; bool get_b(Ch separator, const key_type &amp;path, Type *result, const std::locale &amp;loc = std::locale()) const;
+template&lt;class Type&gt; Type get(const key_type &amp;path, const Type &amp;default_value, const std::locale &amp;loc = std::locale()) const;
+template&lt;class CharType&gt; std::basic_string&lt;CharType&gt; get(const key_type &amp;path, const CharType *default_value, const std::locale &amp;loc = std::locale()) const;
 
 // Custom separator
-template&lt;class Type&gt; bool get_b(const key_type &amp;path, Type *result, const std::locale &amp;loc = std::locale()) const;</pre>
-    <h4>
-        Description</h4>
-    <p>
-        Traverses the tree, extracts value stored in child property tree data, and translates it to <code>Type</code> using <code>operator &gt;&gt;</code>. See <a href="reference.html#basic_ptree::get_child"><code>get_child</code></a> for description of how child is obtained from <code>path</code>. If the child is found and translation of its data to <code>Type</code> succeeds, the function stores the translated data in location pointed by <code>result</code> and returns true. Otherwise it does not modify the <code>result</code>, and returns false.</p>
-    <h4>
-        Parameters</h4>
-    <dl>
-        <dt class="parameter">separator</dt>
-        <dd>
-            Separator character.</dd>
-        <dt class="parameter">path</dt>
-        <dd>
-            Path to child property tree. Contains sequence of one or more keys separated with separator characters.</dd>
-        <dt class="parameter">result</dt>
-        <dd>
-            Pointer to result value. Can be NULL, in which case the result is discarded.</dd>
-        <dt class="parameter">loc</dt>
-        <dd>
-            Locale to use. If not specified, defaults to global locale.</dd>
-    </dl>
-    <h4>
-        Return value</h4>
-    <p>
-        true if child was found and translation succeeded, false otherwise.</p>
-    <!-- =================================================================== -->
-    <!---->
-    <!---->
-    <h3 class="separating-header">
-        <a name="basic_ptree::get_d"></a>basic_ptree::get_d
-    </h3>
-    <h4>
-        Synopsis</h4>
-    <pre>
-// Default separator
-template&lt;class Type&gt; Type get_d(const key_type &amp;path, const Type &amp;default_value, const std::locale &amp;loc = std::locale()) const;
-template&lt;class CharType&gt; std::basic_string&lt;CharType&gt; get_d(const key_type &amp;path, const CharType *default_value, const std::locale &amp;loc = std::locale()) const;
-
-// Custom separator
-template&lt;class Type&gt; Type get_d(Ch separator, const key_type &amp;path, const Type &amp;default_value, const std::locale &amp;loc = std::locale()) const;
-template&lt;class CharType&gt; std::basic_string&lt;CharType&gt; get_d(Ch separator, const key_type &amp;path, const CharType *default_value, const std::locale &amp;loc = std::locale()) const;</pre>
+template&lt;class Type&gt; Type get(Ch separator, const key_type &amp;path, const Type &amp;default_value, const std::locale &amp;loc = std::locale()) const;
+template&lt;class CharType&gt; std::basic_string&lt;CharType&gt; get(Ch separator, const key_type &amp;path, const CharType *default_value, const std::locale &amp;loc = std::locale()) const;</pre>
     <h4>
         Description</h4>
     <p>
@@ -1314,16 +1207,16 @@ template&lt;class CharType&gt; std::basic_string&lt;CharType&gt; get_d(Ch separa
     <!---->
     <!---->
     <h3 class="separating-header">
-        <a name="basic_ptree::get_o"></a>basic_ptree::get_o
+        <a name="basic_ptree::get_optional"></a>basic_ptree::get_optional
     </h3>
     <h4>
         Synopsis</h4>
     <pre>
 // Default separator
-template&lt;class Type&gt; boost::optional&lt;Type&gt; get_o(const key_type &amp;path, const std::locale &amp;loc = std::locale()) const;
+template&lt;class Type&gt; boost::optional&lt;Type&gt; get_optional(const key_type &amp;path, const std::locale &amp;loc = std::locale()) const;
 
 // Custom separator
-template&lt;class Type&gt; boost::optional&lt;Type&gt; get_o(Ch separator, const key_type &amp;path, const std::locale &amp;loc = std::locale()) const;</pre>
+template&lt;class Type&gt; boost::optional&lt;Type&gt; get_optional(Ch separator, const key_type &amp;path, const std::locale &amp;loc = std::locale()) const;</pre>
     <h4>
         Description</h4>
     <p>
@@ -1379,16 +1272,17 @@ template&lt;class Type&gt; void put_own(const Type &amp;value, const std::locale
         Synopsis</h4>
     <pre>
 // Default separator
-template&lt;class Type&gt; basic_ptree *put(const key_type &amp;path, const Type &amp;value, const std::locale &amp;loc = std::locale());
+template&lt;class Type&gt; basic_ptree &amp;put(const key_type &amp;path, const Type &amp;value, bool do_not_replace = false, const std::locale &amp;loc = std::locale());
 
 // Custom separator
-template&lt;class Type&gt; basic_ptree *put(Ch separator, const key_type &amp;path, const Type &amp;value, const std::locale &amp;loc = std::locale());</pre>
+template&lt;class Type&gt; basic_ptree &amp;put(Ch separator, const key_type &amp;path, const Type &amp;value, bool do_not_replace = false, const std::locale &amp;loc = std::locale());</pre>
     <h4>
         Description</h4>
     <p>
-        Traverses the tree using given path, and inserts a new key, or replaces existing one. If any of the intermediate keys specified by path does not exist, it is inserted, with empty data and no children, at the back of existing sequence. Once the key specified by path is located, the function translates <code>value</code> from <code>Type</code> into a string using <code>operator &lt;&lt;</code>, and puts it in its data. During traversal the function inserts any elements of the path that are missing. If value cannot be translated, throws <a href="reference.html#ptree_bad_data"><code>ptree_bad_data</code></a> exception. Path is a sequence of keys separated with zero or more special 'separator' characters. First version assumes separator to be dot character (<code>'.'</code>).</p>
+        Traverses the tree using given path, and inserts a new key, or replaces existing one. Once the key specified by path is located or created, the function translates <code>value</code> from <code>Type</code> into a string using <code>operator &lt;&lt;</code>, and puts it in its data. During traversal the function inserts any elements of the path that are missing. If value cannot be translated, throws <a href="reference.html#ptree_bad_data"><code>ptree_bad_data</code></a> exception. Path is a sequence of keys separated with zero or more special 'separator' characters. First version assumes separator to be dot character (<code>'.'</code>).</p>
+        <p>Passing <code>do_not_replace</code> flag equal to <code>true</code> makes the function always insert a new key, even if there already exists key with the same name.</p>
     <p>
-        The function is a complement to <a href="reference.html#basic_ptree::get"><code>get</code></a>. If <code>put(path, value)</code> was called, executing <code>get&lt;type&gt;(path)</code> will retrieve the value previously inserted by put. Also, calling <code>put(path, value, loc)</code> is equivalent to <code>put_child(path, NULL)->put_own(value, loc)</code>.</p>
+        The function is a complement to <a href="reference.html#basic_ptree::get"><code>get</code></a>. If <code>put(path, value)</code> was called, executing <code>get&lt;type&gt;(path)</code> will retrieve the value previously replaced/created by put. </p>
     <h4>
         Parameters</h4>
     <dl>
@@ -1401,6 +1295,9 @@ template&lt;class Type&gt; basic_ptree *put(Ch separator, const key_type &amp;pa
         <dt class="parameter">value</dt>
         <dd>
             Value to be inserted.</dd>
+        <dt class="parameter">do_not_replace</dt>
+        <dd>
+            If set to true, causes function to always insert a new key, even if there already exists key with the same name.</dd>
         <dt class="parameter">loc</dt>
         <dd>
             Locale to use. If not specified, defaults to global locale.</dd>

@@ -1,6 +1,7 @@
-﻿<html>
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Property Tree Library Documentation</title>
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
@@ -39,7 +40,7 @@
         <dt class="index2"><a href="#registry_parser">Windows registry parser</a></dt>
         <dt class="index2"><a href="#environment_parser">System environment parser</a></dt>
         <dt class="index"><a href="#how_to_access_data_in_property_tree">How to access data in property tree?</a></dt>
-        <dt class="index2"><a href="#the_four_ways_of_getting_data">Four ways of getting data</a></dt>
+        <dt class="index2"><a href="#the_three_ways_of_getting_data">Three ways of getting data</a></dt>
         <dt class="index2"><a href="#the_one_way_of_putting_data">One way of putting data</a></dt>
         <dt class="index"><a href="#compatibility">Compatibility</a> </dt>
         <dt class="index"><a href="#future_development">Future development</a> </dt>
@@ -98,42 +99,41 @@ struct ptree
 void debug_settings::load(const std::string &amp;filename)
 {
 
-    /* Create empty property tree object */     
+    // Create empty property tree object
     using boost::property_tree::ptree;
     ptree pt;
 
-    /* Load XML file and put its contents in property tree. 
-       No namespace qualification is needed, because of Koenig 
-       lookup on the second argument. If reading fails, exception
-       is thrown. */
+    // Load XML file and put its contents in property tree. 
+    // No namespace qualification is needed, because of Koenig 
+    // lookup on the second argument. If reading fails, exception
+    // is thrown.
     read_xml(filename, pt);
 
-    /* Get log filename and store it in m_file variable. Note 
-       that we specify a path to the value using notation where 
-       keys are separated with dots (different separator may be 
-       used if keys themselves contain dots). If debug.filename 
-       key is not found, exception is thrown. */     
+    // Get filename and store it in m_file variable. Note that 
+    // we specify a path to the value using notation where keys 
+    // are separated with dots (different separator may be used 
+    // if keys themselves contain dots). If debug.filename key is 
+    // not found, exception is thrown.
     m_file = pt.get&lt;std::string&gt;("debug.filename");
     
-    /* Get debug level and store it in m_level variable. This is 
-       another version of get method: if debug.level key is not 
-       found, it will return default value (specified by second 
-       parameter) instead of throwing. Type of the value extracted 
-       is determined by type of second parameter, so we can simply 
-       write get_d(...) instead of get_d&lt;int&gt;(...). */     
-    m_level = pt.get_d("debug.level", 0);
+    // Get debug level and store it in m_level variable. This is 
+    // another version of get method: if debug.level key is not 
+    // found, it will return default value (specified by second 
+    // parameter) instead of throwing. Type of the value extracted 
+    // is determined by type of second parameter, so we can simply 
+    // write get(...) instead of get&lt;int&gt;(...).
+    m_level = pt.get("debug.level", 0);
 
-    /* Iterate over debug.modules section and store all found 
-       modules in m_modules set. get_child() function returns a 
-       pointer to child at specified path; if there is no such 
-       child, it throws. Property tree iterator can be used in 
-       the same way as standard containers iterators. Category 
-       is bidirectional_iterator. */
-    BOOST_FOREACH(ptree::value_type &amp;v, *pt.get_child("debug.modules"))
+    // Iterate over debug.modules section and store all found 
+    // modules in m_modules set. get_child() function returns a 
+    // reference to child at specified path; if there is no such 
+    // child, it throws. Property tree iterator can be used in 
+    // the same way as standard container iterator. Category 
+    // is bidirectional_iterator.
+    BOOST_FOREACH(ptree::value_type &amp;v, pt.get_child("debug.modules"))
         m_modules.insert(v.second.data());
 
-}
-</pre>
+}</pre>
     <p>
         Now <code>save()</code> function. It is also 7 lines of code:
     </p>
@@ -141,27 +141,27 @@ void debug_settings::load(const std::string &amp;filename)
 void debug_settings::save(const std::string &amp;filename)
 {
 
-    /* Create empty property tree object */     
+    // Create empty property tree object
     using boost::property_tree::ptree;
     ptree pt;
 
-    /* Put log filename in property tree. */
+    // Put log filename in property tree
     pt.put("debug.filename", m_file);
 
-    /* Put debug level in property tree. */
+    // Put debug level in property tree
     pt.put("debug.level", m_level);
 
-    /* Iterate over modules in set and put them in property 
-       tree. Note that put function places new key at the
-       end of list of keys. This is fine in most of the
-       situations. If you want to place item at some other
-       place (i.e. at front or somewhere in the middle),
-       this can be achieved using combination of insert 
-       and put_own functions */
+    // Iterate over modules in set and put them in property 
+    // tree. Note that put function places new key at the
+    // end of list of keys. This is fine in most of the
+    // situations. If you want to place item at some other
+    // place (i.e. at front or somewhere in the middle),
+    // this can be achieved using combination of insert 
+    // and put_own functions
     BOOST_FOREACH(const std::string &amp;name, m_modules)
-        pt.put("debug.modules.module", name);
+        pt.put("debug.modules.module", name, true);
     
-    /* Write property tree to XML file */
+    // Write property tree to XML file
     write_xml(filename, pt);
 
 }</pre>
@@ -195,22 +195,22 @@ class <a href="reference.html#ptree_error">ptree_error</a>;
 class <a href="reference.html#ptree_bad_path">ptree_bad_path</a>;
 class <a href="reference.html#ptree_bad_data">ptree_bad_data</a>;
 
-template&lt;class Ptree&gt; const Ptree *<a href="reference.html#empty_ptree">empty_ptree</a>();
+template&lt;class Ptree&gt; const Ptree &amp;<a href="reference.html#empty_ptree">empty_ptree</a>();
 
-template&lt;class Ch, class Tr = ptree_traits&lt;Ch> >
+template&lt;class Tr&gt;
 class <a href="reference.html#basic_ptree">basic_ptree</a>
 {
 
 public:
 
     // Basic types
-    typedef Ch <a href="reference.html#basic_ptree::char_type">char_type</a>;
     typedef Tr <a href="reference.html#basic_ptree::traits_type">traits_type</a>;
-    typedef std::basic_string&lt;Ch&gt; <a href="reference.html#basic_ptree::key_type">key_type</a>;
-    typedef std::basic_string&lt;Ch&gt; <a href="reference.html#basic_ptree::data_type">data_type</a>;
+    typedef typename traits_type::char_type <a href="reference.html#basic_ptree::char_type">char_type</a>;
+    typedef typename traits_type::key_type <a href="reference.html#basic_ptree::key_type">key_type</a>;
+    typedef typename traits_type::data_type <a href="reference.html#basic_ptree::data_type">data_type</a>;
     
     // Container-related types
-    typedef std::pair&lt;const key_type, basic_ptree&lt;Ch, Tr&gt; &gt; <a href="reference.html#basic_ptree::value_type">value_type</a>;
+    typedef std::pair&lt;const key_type, basic_ptree&lt;Tr&gt; &gt; <a href="reference.html#basic_ptree::value_type">value_type</a>;
     typedef <i>implementation-defined</i> <a href="reference.html#basic_ptree::size_type">size_type</a>;
     typedef <i>implementation-defined</i> <a href="reference.html#basic_ptree::iterators">iterator</a>;
     typedef <i>implementation-defined</i> <a href="reference.html#basic_ptree::iterators">reverse_iterator</a>;
@@ -221,8 +221,8 @@ public:
     // Construction &amp; destruction
 
     <a href="reference.html#basic_ptree::basic_ptree">basic_ptree</a>();
-    explicit <a href="reference.html#basic_ptree::basic_ptree">basic_ptree</a>(const std::basic_string&lt;Ch&gt; &amp;data);
-    <a href="reference.html#basic_ptree::basic_ptree">basic_ptree</a>(const basic_ptree&lt;Ch, Tr&gt; &amp;rhs);
+    explicit <a href="reference.html#basic_ptree::basic_ptree">basic_ptree</a>(const data_type &amp;data);
+    <a href="reference.html#basic_ptree::basic_ptree">basic_ptree</a>(const basic_ptree&lt;Tr&gt; &amp;rhs);
     <a href="reference.html#basic_ptree::~basic_ptree">~basic_ptree</a>();
 
     ///////////////////////////////////////////////////////////////////////////
@@ -252,9 +252,9 @@ public:
     ///////////////////////////////////////////////////////////////////////////
     // Operators
 
-    basic_ptree&lt;Ch, Tr&gt; &amp;<a href="reference.html#basic_ptree::operator=">operator =</a>(const basic_ptree&lt;Ch, Tr&gt; &amp;rhs);
-    bool <a href="reference.html#basic_ptree::operator==">operator ==</a>(const basic_ptree&lt;Ch, Tr&gt; &amp;rhs) const;
-    bool <a href="reference.html#basic_ptree::operator!=">operator !=</a>(const basic_ptree&lt;Ch, Tr&gt; &amp;rhs) const;
+    basic_ptree&lt;Tr&gt; &amp;<a href="reference.html#basic_ptree::operator=">operator =</a>(const basic_ptree&lt;Tr&gt; &amp;rhs);
+    bool <a href="reference.html#basic_ptree::operator==">operator ==</a>(const basic_ptree&lt;Tr&gt; &amp;rhs) const;
+    bool <a href="reference.html#basic_ptree::operator!=">operator !=</a>(const basic_ptree&lt;Tr&gt; &amp;rhs) const;
 
     ///////////////////////////////////////////////////////////////////////////
     // Standard container operations
@@ -279,7 +279,7 @@ public:
     void <a href="reference.html#basic_ptree::pop_front">pop_front</a>();
     void <a href="reference.html#basic_ptree::pop_back">pop_back</a>();
 
-    void <a href="reference.html#basic_ptree::swap">swap</a>(basic_ptree&lt;Ch, Tr&gt; &amp;rhs);
+    void <a href="reference.html#basic_ptree::swap">swap</a>(basic_ptree&lt;Tr&gt; &amp;rhs);
     
     void <a href="reference.html#basic_ptree::reverse">reverse</a>();
     template&lt;class SortTr&gt; void <a href="reference.html#basic_ptree::sort">sort</a>(SortTr tr);
@@ -288,60 +288,53 @@ public:
     // Ptree-specific operations
 
     // Get child ptree with custom separator
-    basic_ptree&lt;Ch, Tr&gt; *<a href="reference.html#basic_ptree::get_child">get_child</a>(Ch separator, const key_type &amp;path);
-    const basic_ptree&lt;Ch, Tr&gt; *<a href="reference.html#basic_ptree::get_child">get_child</a>(Ch separator, const key_type &amp;path) const;
-    bool <a href="reference.html#basic_ptree::get_child_b">get_child_b</a>(Ch separator, const key_type &amp;path, basic_ptree&lt;Ch, Tr&gt; **result);
-    bool <a href="reference.html#basic_ptree::get_child_b">get_child_b</a>(Ch separator, const key_type &amp;path, const basic_ptree&lt;Ch, Tr&gt; **result) const;
-    basic_ptree&lt;Ch, Tr&gt; *<a href="reference.html#basic_ptree::get_child_d">get_child_d</a>(Ch separator, const key_type &amp;path, basic_ptree&lt;Ch, Tr&gt; *default_value);
-    const basic_ptree&lt;Ch, Tr&gt; *<a href="reference.html#basic_ptree::get_child_d">get_child_d</a>(Ch separator, const key_type &amp;path, const basic_ptree&lt;Ch, Tr&gt; *default_value) const;
-    optional&lt;basic_ptree&lt;Ch, Tr&gt; *&gt; <a href="reference.html#basic_ptree::get_child_o">get_child_o</a>(Ch separator, const key_type &path);
-    optional&lt;const basic_ptree&lt;Ch, Tr&gt; *&gt; <a href="reference.html#basic_ptree::get_child_o">get_child_o</a>(Ch separator, const key_type &path) const;
+    basic_ptree&lt;Tr&gt; &amp;<a href="reference.html#basic_ptree::get_child">get_child</a>(Ch separator, const key_type &amp;path);
+    const basic_ptree&lt;Tr&gt; &amp;<a href="reference.html#basic_ptree::get_child">get_child</a>(Ch separator, const key_type &amp;path) const;
+    basic_ptree&lt;Tr&gt; &amp;<a href="reference.html#basic_ptree::get_child default">get_child</a>(Ch separator, const key_type &amp;path, basic_ptree&lt;Tr&gt; &amp;default_value);
+    const basic_ptree&lt;Tr&gt; &amp;<a href="reference.html#basic_ptree::get_child default">get_child</a>(Ch separator, const key_type &amp;path, const basic_ptree&lt;Tr&gt; &amp;default_value) const;
+    optional&lt;basic_ptree&lt;Tr&gt; &amp;&gt; <a href="reference.html#basic_ptree::get_child_optional">get_child_optional</a>(Ch separator, const key_type &amp;path);
+    optional&lt;const basic_ptree&lt;Tr&gt; &amp;&gt; <a href="reference.html#basic_ptree::get_child_optional">get_child_optional</a>(Ch separator, const key_type &amp;path) const;
 
     // Get child ptree with default separator
-    basic_ptree&lt;Ch, Tr&gt; *<a href="reference.html#basic_ptree::get_child">get_child</a>(const key_type &amp;path);
-    const basic_ptree&lt;Ch, Tr&gt; *<a href="reference.html#basic_ptree::get_child">get_child</a>(const key_type &amp;path) const;
-    bool <a href="reference.html#basic_ptree::get_child_b">get_child_b</a>(const key_type &amp;path, basic_ptree&lt;Ch, Tr&gt; **result);
-    bool <a href="reference.html#basic_ptree::get_child_b">get_child_b</a>(const key_type &amp;path, const basic_ptree&lt;Ch, Tr&gt; **result) const;
-    basic_ptree&lt;Ch, Tr&gt; *<a href="reference.html#basic_ptree::get_child_d">get_child_d</a>(const key_type &amp;path, basic_ptree&lt;Ch, Tr&gt; *default_value);
-    const basic_ptree&lt;Ch, Tr&gt; *<a href="reference.html#basic_ptree::get_child_d">get_child_d</a>(const key_type &amp;path, const basic_ptree&lt;Ch, Tr&gt; *default_value) const;
-    optional&lt;basic_ptree&lt;Ch, Tr&gt; *&gt; <a href="reference.html#basic_ptree::get_child_o">get_child_o</a>(const key_type &path);
-    optional&lt;const basic_ptree&lt;Ch, Tr&gt; *&gt; <a href="reference.html#basic_ptree::get_child_o">get_child_o</a>(const key_type &path) const;
+    basic_ptree&lt;Tr&gt; &amp;<a href="reference.html#basic_ptree::get_child">get_child</a>(const key_type &amp;path);
+    const basic_ptree&lt;Tr&gt; &amp;<a href="reference.html#basic_ptree::get_child">get_child</a>(const key_type &amp;path) const;
+    basic_ptree&lt;Tr&gt; &amp;<a href="reference.html#basic_ptree::get_child default">get_child</a>(const key_type &amp;path, basic_ptree&lt;Tr&gt; &amp;default_value);
+    const basic_ptree&lt;Tr&gt; &amp;<a href="reference.html#basic_ptree::get_child default">get_child</a>(const key_type &amp;path, const basic_ptree&lt;Tr&gt; &amp;default_value) const;
+    optional&lt;basic_ptree&lt;Tr&gt; &amp;&gt; <a href="reference.html#basic_ptree::get_child_optional">get_child_optional</a>(const key_type &amp;path);
+    optional&lt;const basic_ptree&lt;Tr&gt; &amp;&gt; <a href="reference.html#basic_ptree::get_child_optional">get_child_optional</a>(const key_type &amp;path) const;
 
     // Put child ptree with custom separator
-    basic_ptree&lt;Ch, Tr&gt; *<a href="reference.html#basic_ptree::put_child">put_child</a>(Ch separator, const key_type &amp;path, basic_ptree&lt;Ch, Tr&gt; *value);
+    basic_ptree&lt;Tr&gt; &amp;<a href="reference.html#basic_ptree::put_child">put_child</a>(Ch separator, const key_type &amp;path, basic_ptree&lt;Tr&gt; &amp;value, bool do_not_replace = false);
 
     // Put child ptree with default separator
-    basic_ptree&lt;Ch, Tr&gt; *<a href="reference.html#basic_ptree::put_child">put_child</a>(const key_type &amp;path, basic_ptree&lt;Ch, Tr&gt; *value);
+    basic_ptree&lt;Tr&gt; &amp;<a href="reference.html#basic_ptree::put_child">put_child</a>(const key_type &amp;path, basic_ptree&lt;Tr&gt; &amp;value, bool do_not_replace = false);
 
     // Get value from data of ptree
     template&lt;class Type&gt; Type <a href="reference.html#basic_ptree::get_own">get_own</a>(std::locale &amp;loc = std::locale()) const;
-    template&lt;class Type&gt; bool <a href="reference.html#basic_ptree::get_own_b">get_own_b</a>(Type *result, std::locale &amp;loc = std::locale()) const;
-    template&lt;class Type&gt; Type <a href="reference.html#basic_ptree::get_own_d">get_own_d</a>(const Type &amp;default_value, std::locale &amp;loc = std::locale()) const;
-    template&lt;class CharType&gt; std::basic_string&lt;CharType&gt; <a href="reference.html#basic_ptree::get_own_d">get_own_d</a>(const CharType *default_value, std::locale &amp;loc = std::locale()) const;
-    template&lt;class Type&gt; optional&lt;Type&gt; <a href="reference.html#basic_ptree::get_own_o">get_own_o</a>(std::locale &amp;loc = std::locale()) const;
+    template&lt;class Type&gt; Type <a href="reference.html#basic_ptree::get_own default">get_own</a>(const Type &amp;default_value, std::locale &amp;loc = std::locale()) const;
+    template&lt;class CharType&gt; std::basic_string&lt;CharType&gt; <a href="reference.html#basic_ptree::get_own default">get_own</a>(const CharType *default_value, std::locale &amp;loc = std::locale()) const;
+    template&lt;class Type&gt; optional&lt;Type&gt; <a href="reference.html#basic_ptree::get_own_optional">get_own_optional</a>(std::locale &amp;loc = std::locale()) const;
 
     // Get value from data of child ptree (custom path separator)
     template&lt;class Type&gt; Type <a href="reference.html#basic_ptree::get">get</a>(Ch separator, const key_type &amp;path, std::locale &amp;loc = std::locale()) const;
-    template&lt;class Type&gt; bool <a href="reference.html#basic_ptree::get_b">get_b</a>(Ch separator, const key_type &amp;path, Type *result, std::locale &amp;loc = std::locale()) const;
-    template&lt;class Type&gt; Type <a href="reference.html#basic_ptree::get_d">get_d</a>(Ch separator, const key_type &amp;path, const Type &amp;default_value, std::locale &amp;loc = std::locale()) const;
-    template&lt;class CharType&gt; std::basic_string&lt;CharType&gt; <a href="reference.html#basic_ptree::get_d">get_d</a>(Ch separator, const key_type &amp;path, const CharType *default_value, std::locale &amp;loc = std::locale()) const;
-    template&lt;class Type&gt; optional&lt;Type&gt; <a href="reference.html#basic_ptree::get_o">get_o</a>(Ch separator, const key_type &amp;path, std::locale &amp;loc = std::locale()) const;
+    template&lt;class Type&gt; Type <a href="reference.html#basic_ptree::get default">get</a>(Ch separator, const key_type &amp;path, const Type &amp;default_value, std::locale &amp;loc = std::locale()) const;
+    template&lt;class CharType&gt; std::basic_string&lt;CharType&gt; <a href="reference.html#basic_ptree::get default">get</a>(Ch separator, const key_type &amp;path, const CharType *default_value, std::locale &amp;loc = std::locale()) const;
+    template&lt;class Type&gt; optional&lt;Type&gt; <a href="reference.html#basic_ptree::get_optional">get_optional</a>(Ch separator, const key_type &amp;path, std::locale &amp;loc = std::locale()) const;
 
     // Get value from data of child ptree (default path separator)
     template&lt;class Type&gt; Type <a href="reference.html#basic_ptree::get">get</a>(const key_type &amp;path, std::locale &amp;loc = std::locale()) const;
-    template&lt;class Type&gt; bool <a href="reference.html#basic_ptree::get_b">get_b</a>(const key_type &amp;path, Type *result, std::locale &amp;loc = std::locale()) const;
-    template&lt;class Type&gt; Type <a href="reference.html#basic_ptree::get_d">get_d</a>(const key_type &amp;path, const Type &amp;default_value, std::locale &amp;loc = std::locale()) const;
-    template&lt;class CharType&gt; std::basic_string&lt;CharType&gt; <a href="reference.html#basic_ptree::get_d">get_d</a>(const key_type &amp;path, const CharType *default_value, std::locale &amp;loc = std::locale()) const;
-    template&lt;class Type&gt; optional&lt;Type&gt; <a href="reference.html#basic_ptree::get_o">get_o</a>(const key_type &amp;path, std::locale &amp;loc = std::locale()) const;
+    template&lt;class Type&gt; Type <a href="reference.html#basic_ptree::get default">get</a>(const key_type &amp;path, const Type &amp;default_value, std::locale &amp;loc = std::locale()) const;
+    template&lt;class CharType&gt; std::basic_string&lt;CharType&gt; <a href="reference.html#basic_ptree::get default">get</a>(const key_type &amp;path, const CharType *default_value, std::locale &amp;loc = std::locale()) const;
+    template&lt;class Type&gt; optional&lt;Type&gt; <a href="reference.html#basic_ptree::get_optional">get_optional</a>(const key_type &amp;path, std::locale &amp;loc = std::locale()) const;
 
     // Put value in data of ptree
     template&lt;class Type&gt; void <a href="reference.html#basic_ptree::put_own">put_own</a>(const Type &amp;value, std::locale &amp;loc = std::locale());
 
     // Put value in data of child ptree (custom path separator)
-    template&lt;class Type&gt; basic_ptree&lt;Ch, Tr&gt; *<a href="reference.html#basic_ptree::put">put</a>(Ch separator, const key_type &amp;path, const Type &amp;value, std::locale &amp;loc = std::locale());
+    template&lt;class Type&gt; basic_ptree&lt;Tr&gt; &amp;<a href="reference.html#basic_ptree::put">put</a>(Ch separator, const key_type &amp;path, const Type &amp;value, bool do_not_replace = false, std::locale &amp;loc = std::locale());
 
     // Put value in data of child ptree (default path separator)
-    template&lt;class Type&gt; basic_ptree&lt;Ch, Tr&gt; *<a href="reference.html#basic_ptree::put">put</a>(const key_type &amp;path, const Type &amp;value, std::locale &amp;loc = std::locale());
+    template&lt;class Type&gt; basic_ptree&lt;Tr&gt; &amp;<a href="reference.html#basic_ptree::put">put</a>(const key_type &amp;path, const Type &amp;value, bool do_not_replace = false, std::locale &amp;loc = std::locale());
 
 };
 
@@ -649,14 +642,14 @@ ptree pt;
 </pre>
         <p>Once the command line is parsed into a ptree, the power of get/get_child/get_own interface can be used to conveniently extract the values of options needed. In the simplest case, user only needs to query key with name of option to get its value. For example:</p>
         <pre>
-int n = pt.<a href="reference.html#basic_ptree::get_d">get_d</a>("N", 0);      // default to 0 if -Nxx or /Nxx not specified on command line</pre>
+int n = pt.<a href="reference.html#basic_ptree::get default">get</a>("N", 0);      // default to 0 if -Nxx or /Nxx not specified on command line</pre>
 <p>or</p>
         <pre>
 std::string n = pt.<a href="reference.html#basic_ptree::get">get</a>&lt;std::string&gt;("N");   // throw if -Nxx or /Nxx not specified on command line</pre>
 <p>If there is more than one instance of 'N' in command line, they can be accessed like that:</p>
     <pre>
 std::vector&lt;int&gt; vec;
-BOOST_FOREACH(const ptree::value_type &v, pt.get_child_d("N", empty_ptree()))
+BOOST_FOREACH(const ptree::value_type &amp;v, pt.get_child("N", empty_ptree()))
     vec.push_back(v.second.get_own&lt;int&gt;());
         </pre>
     <h4>
@@ -764,10 +757,10 @@ double pi = pt.get&lt;double&gt;("pi");     // get double</pre>
     <p>
         It doesn't get simpler than that. Basically, there are 2 families of member functions, get and put, which allow intuitive access to data stored in the tree (direct children or not).</p>
     <h3>
-        <a name="the_four_ways_of_getting_data"></a>Four ways of getting data
+        <a name="the_three_ways_of_getting_data"></a>Three ways of getting data
     </h3>
     <p>
-        There are four versions of get: <a href="reference.html#basic_ptree::get"><code>get</code></a>, <a href="reference.html#basic_ptree::get_b"><code>get_b</code></a>, <a href="reference.html#basic_ptree::get_d"><code>get_d</code></a>, and <a href="reference.html#basic_ptree::get_o"><code>get_o</code></a>, which differ by failure handling strategy. All versions take path specifier, which determines in which key to search for a value. It can be a single key, or a path to key, where path elements are separated with a special character (a <code>'.'</code> if not specified differently). For example <code>debug.logging.errorlevel</code> might be a valid path with dot as a separator.
+        There are three versions of get: <a href="reference.html#basic_ptree::get"><code>get</code></a>, <a href="reference.html#basic_ptree::get default"><code>get (default-value version)</code></a>, and <a href="reference.html#basic_ptree::get_optional"><code>get_optional</code></a>, which differ by failure handling strategy. All versions take path specifier, which determines in which key to search for a value. It can be a single key, or a path to key, where path elements are separated with a special character (a <code>'.'</code> if not specified differently). For example <code>debug.logging.errorlevel</code> might be a valid path with dot as a separator.
     </p>
     <ol>
         <li>The throwing version (<code>get</code>):
@@ -778,57 +771,36 @@ float v = pt.get&lt;float&gt;("a.path.to.float.value");</pre>
                 This call locates the proper node in the tree and tries to translate its data string to a float value. If that fails, exception is thrown. If path does not exist, it will be <a href="reference.html#ptree_bad_path"><code>ptree_bad_path</code></a> exception. If value could not be translated, it will be <a href="reference.html#ptree_bad_data"><code>ptree_bad_data</code></a>. Both of them derive from <a href="reference.html#ptree_error"><code>ptree_error</code></a> to make common handling possible.
             </p>
         </li>
-        <li>The default-value version (<code>get_d</code>):
+        <li>The default-value version (<code>get</code>):
             <pre>ptree pt;
 /* ... */
-float v = pt.get_d("a.path.to.float.value", -1.f);</pre>
+float v = pt.get("a.path.to.float.value", -1.f);</pre>
             <p>
                 It will do the same as above, but if it fails, it will return the default value specified by second parameter (here <code>-1.f</code>) instead of throwing. This is very useful in common situations where one wants to allow omitting of some keys. Note that type specification needed in throwing version is normally not necessary here, because type is determined by the default value parameter.
             </p>
         </li>
-        <li>The return-bool version (<code>get_b</code>):
-            <pre>ptree pt;
-/* ... */
-float v;
-if (pt.get_b("a.path.to.float.value", &amp;v))
-{
-    /* ... */
-}</pre>
-            <p>
-                Again it works the same way, but if it fails, it uses its return value of type bool to tell about success or failure. The extracted value is placed in address given by second parameter (NULL is allowed). It is useful when some action is necessary depending on fact whether the value was correctly extracted or not. As above, type specification is normally not necessary, because it is determined by type of result pointer. This version of get can be also used to test for presence of specific key:
-            </p>
-            <pre>bool ok = get_b&lt;ptree::data_type&gt;("a.path.to.value", NULL)</pre>
-            <p>
-                or to test if key exists and can be translated to specific type:
-            </p>
-            <pre>bool ok = get_b&lt;the_type&gt;("a.path.to.value", NULL)</pre>
-        </li>
-        <li>The optional version (<code>get_o</code>):
+        <li>The optional version (<code>get_optional</code>):
             <pre>
 ptree pt;
 /* ... */
-boost::optional&lt;float&gt; v = pt.get_o&lt;float&gt;("a.path.to.float.value");</pre>
+boost::optional&lt;float&gt; v = pt.get_optional&lt;float&gt;("a.path.to.float.value");</pre>
             <p>
                 This version uses <code>boost::optional</code> class to handle extraction failure. On successful extraction, it will return <code>boost::optional</code> initialized with extracted value. Otherwise, it will return uninitialized <code>boost::optional</code>.
         </li>
     </ol>
     <p>
-        To retrieve value from <i>this</i> tree (not some subkey), use <a href="reference.html#basic_ptree::get_own"><code>get_own</code></a>, <a href="reference.html#basic_ptree::get_own_b"><code>get_own_b</code></a>, <a href="reference.html#basic_ptree::get_own_d"><code>get_own_d</code></a>, and <a href="reference.html#basic_ptree::get_own_o"><code>get_own_o</code></a>. They have identical semantics to get functions, except they don't take the path parameter. Don't call <code>get</code> with empty path to do that, it will try to extract contents of subkey with empty name.</p>
+        To retrieve value from <i>this</i> tree (not some subkey), use <a href="reference.html#basic_ptree::get_own"><code>get_own</code></a>, <a href="reference.html#basic_ptree::get_own default"><code>get_own (default-value version)</code></a>, and <a href="reference.html#basic_ptree::get_own_optional"><code>get_own_optional</code></a>. They have identical semantics to get functions, except they don't take the path parameter. Don't call <code>get</code> with empty path to do that, it will try to extract contents of subkey with empty name.</p>
     <p>
         To use separator character other than default <code>'.'</code>, each of the get versions has another form, which takes an additional parameter in front of path. This parameter of type <code>char/wchar_t</code> specifies the separating character. This is a lifesaving device for those who may have dots in their keys:
     </p>
     <pre>pt.get&lt;float&gt;('/', "p.a.t.h/t.o/v.a.l.u.e");
-pt.get_d('/', "p.a.t.h/t.o/v.a.l.u.e", 0, NULL);
-pt.get_b&lt;std::string&gt;('/', "p.a.t.h/t.o/v.a.l.u.e", NULL);
-pt.get_o&lt;std::string&gt;('/', "p.a.t.h/t.o/v.a.l.u.e");</pre>
-    <p>
-        More information on four ways of getting is in the <a href="#rationale">rationale</a>.
-    </p>
+pt.get('/', "p.a.t.h/t.o/v.a.l.u.e", 0, NULL);
+pt.get_optional&lt;std::string&gt;('/', "p.a.t.h/t.o/v.a.l.u.e");</pre>
     <h3>
         <a name="the_one_way_of_putting_data"></a>One way of putting data
     </h3>
     <p>
-        To complement <code>get</code>, there is a <a href="reference.html#basic_ptree::put"><code>put</code></a> function. Contrary to <code>get</code>, it has only one variant. The reason is, there is no need to handle <code>put</code> failures so often. It will only fail if translation from supplied value to string does, or system runs out of memory. In the former case, <code>put</code> will throw <a href="reference.html#ptree_bad_data"><code>ptree_bad_data</code></a>. Sample usage of <code>put</code> might look like that:</p>
+        To complement <code>get</code>, there is a <a href="reference.html#basic_ptree::put"><code>put</code></a> function. Contrary to <code>get</code>, it has only one variant. The reason is, there is no need to handle <code>put</code> failures so often (normally, <code>put</code> will only fail if translation from supplied value to <code>data_type</code> does, or system runs out of memory. In the former case, <code>put</code> will throw <a href="reference.html#ptree_bad_data"><code>ptree_bad_data</code></a>). Sample usage of <code>put</code> might look like that:</p>
     <pre>
 ptree pt;
 pt.put("a.path.to.float.value", 3.14f);</pre>
@@ -868,9 +840,9 @@ pt.put_own(3.14f);</pre>
     <ol>
         <li>
             <h4>
-                Why are there 4 versions of get? Couldn't there be just one?</h4>
+                Why are there 3 versions of get? Couldn't there be just one?</h4>
             <p>
-                Three of the four versions that are implemented reflect experience gathered during several of years of usage of property tree in several different applications (the fourth, boost::optional version was suggested by Pavel Vozenilek). During that time I tried hard to come up with one, proper form of get function and failed. I know of these three basic patterns of usage:
+                The three versions that are implemented reflect experience gathered during several of years of usage of property tree in several different applications. During that time I tried hard to come up with one, proper form of get function, and failed. I know of these three basic patterns of usage:
             </p>
             <ul>
                 <li><i>Just get the data and I do not care if it cannot be done.</i> This is used when programmer is fairly sure that data exists. Or in homework assignments. Or when tomorrow is final deadline for your project.</li>
@@ -879,12 +851,6 @@ pt.put_own(3.14f);</pre>
             </ul>
             <p>
             </p>
-        </li>
-        <li>
-            <h4>
-                Why is there get, get_b, get_d, get_o instead of just single overloaded get?</h4>
-            <p>
-                First of all, get, get_b, get_d, and get_o <i>are already overloaded</i> (path separators). Adding more overloading leads to imminent ambiguities. I tried hard and spent lots of time to cram all the variety into one name. Try as hard as you want, it doesn't work. The second reason is having one name with so many different forms is not very readable. You don't know if this particular invocation of get returns bool, throws, or both. Briefly, even if it compiles it may be silently doing completely different thing than you think.</p>
         </li>
         <li>
             <h4>
