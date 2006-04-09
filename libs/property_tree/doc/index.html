@@ -646,7 +646,7 @@ ptree pt;
 int n = pt.<a href="reference.html#basic_ptree::get default">get</a>("N", 0);      // default to 0 if -Nxx or /Nxx not specified on command line</pre>
 <p>or</p>
         <pre>
-std::string n = pt.<a href="reference.html#basic_ptree::get">get</a>&lt;std::string&gt;("N");   // throw if -Nxx or /Nxx not specified on command line</pre>
+int n = pt.<a href="reference.html#basic_ptree::get">get</a>&lt;int&gt;("N");   // throw if -Nxx or /Nxx not specified on command line</pre>
 <p>If there is more than one instance of 'N' in command line, they can be accessed like that:</p>
     <pre>
 // Copy values of all -N arguments to vector
@@ -660,6 +660,10 @@ int first_n = pt.get("N.0", default_n_value);
 int second_n = pt.get("N.1", default_n_value);
 /* ... */
 int tenth_n = pt.get("N.9", default_n_value);</pre>
+        <p>If you want to know how many -N's were specified:</p>
+    <pre>
+// Count -N parameters
+size_t count = pt.get_child("N", empty_ptree&lt;ptree&gt;()).size();</pre>
         <p>First argument, argv[0], normally contains path to executable, which is rarely used for arguments parsing. To skip it, invoke the parser like that:
         <pre>
 // Skip program path
