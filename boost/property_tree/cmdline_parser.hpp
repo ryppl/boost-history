@@ -12,7 +12,6 @@
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/detail/ptree_utils.hpp>
-#include <cstdio>   // For sprintf
 
 namespace boost { namespace property_tree { namespace cmdline_parser
 {

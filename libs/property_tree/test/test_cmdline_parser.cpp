@@ -62,14 +62,14 @@ void test_cmdline_parser()
     read_cmdline<Ptree>(argc, &p.front(), detail::widen<Ch>("-/"), pt1);
 
     // Check indices
-    BOOST_CHECK(pt1.get_optional<Str>(detail::widen<Ch>("L.0")).get() == detail::widen<Ch>("src/lib1"));
-    BOOST_CHECK(pt1.get_optional<Str>(detail::widen<Ch>("L.1")).get() == detail::widen<Ch>("src/lib2"));
-    BOOST_CHECK(!pt1.get_optional<Str>(detail::widen<Ch>("L.2")));
-    BOOST_CHECK(pt1.get_optional<Str>(detail::widen<Ch>(".0")).get() == detail::widen<Ch>("c:\\program.exe"));
-    BOOST_CHECK(pt1.get_optional<Str>(detail::widen<Ch>(".1")).get() == detail::widen<Ch>("file2.cc"));
-    BOOST_CHECK(pt1.get_optional<Str>(detail::widen<Ch>(".2")).get() == detail::widen<Ch>("file1.cc"));
-    BOOST_CHECK(pt1.get_optional<Str>(detail::widen<Ch>(".3")).get() == detail::widen<Ch>("file3.cc"));
-    BOOST_CHECK(!pt1.get_optional<Str>(detail::widen<Ch>(".4")));
+    BOOST_CHECK(pt1.template get_optional<Str>(detail::widen<Ch>("L.0")).get() == detail::widen<Ch>("src/lib1"));
+    BOOST_CHECK(pt1.template get_optional<Str>(detail::widen<Ch>("L.1")).get() == detail::widen<Ch>("src/lib2"));
+    BOOST_CHECK(!pt1.template get_optional<Str>(detail::widen<Ch>("L.2")));
+    BOOST_CHECK(pt1.template get_optional<Str>(detail::widen<Ch>(".0")).get() == detail::widen<Ch>("c:\\program.exe"));
+    BOOST_CHECK(pt1.template get_optional<Str>(detail::widen<Ch>(".1")).get() == detail::widen<Ch>("file2.cc"));
+    BOOST_CHECK(pt1.template get_optional<Str>(detail::widen<Ch>(".2")).get() == detail::widen<Ch>("file1.cc"));
+    BOOST_CHECK(pt1.template get_optional<Str>(detail::widen<Ch>(".3")).get() == detail::widen<Ch>("file3.cc"));
+    BOOST_CHECK(!pt1.template get_optional<Str>(detail::widen<Ch>(".4")));
 
     // Check total sizes
     //std::cerr << total_size(pt1) << " " << total_data_size(pt1) << " " << total_keys_size(pt1) << "\n";
@@ -81,8 +81,8 @@ void test_cmdline_parser()
     read_cmdline<Ptree>(argc, &p.front(), detail::widen<Ch>("-"), pt2);
 
     // Check indices
-    BOOST_CHECK(pt2.get_optional<Str>(detail::widen<Ch>("L.0")).get() == detail::widen<Ch>("src/lib2"));
-    BOOST_CHECK(!pt2.get_optional<Str>(detail::widen<Ch>("L.1")));
+    BOOST_CHECK(pt2.template get_optional<Str>(detail::widen<Ch>("L.0")).get() == detail::widen<Ch>("src/lib2"));
+    BOOST_CHECK(!pt2.template get_optional<Str>(detail::widen<Ch>("L.1")));
 
     // Check total sizes
     //std::cerr << total_size(pt2) << " " << total_data_size(pt2) << " " << total_keys_size(pt2) << "\n";
@@ -94,8 +94,8 @@ void test_cmdline_parser()
     read_cmdline<Ptree>(argc, &p.front(), detail::widen<Ch>("/"), pt3);
 
     // Check indices
-    BOOST_CHECK(pt3.get_optional<Str>(detail::widen<Ch>("L.0")).get() == detail::widen<Ch>("src/lib1"));
-    BOOST_CHECK(!pt3.get_optional<Str>(detail::widen<Ch>("L.1")));
+    BOOST_CHECK(pt3.template get_optional<Str>(detail::widen<Ch>("L.0")).get() == detail::widen<Ch>("src/lib1"));
+    BOOST_CHECK(!pt3.template get_optional<Str>(detail::widen<Ch>("L.1")));
 
     // Check total sizes
     //std::cerr << total_size(pt3) << " " << total_data_size(pt3) << " " << total_keys_size(pt3) << "\n";
