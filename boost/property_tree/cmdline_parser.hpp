@@ -12,6 +12,7 @@
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/detail/ptree_utils.hpp>
+#include <cstdio>   // For sprintf
 
 namespace boost { namespace property_tree { namespace cmdline_parser
 {
@@ -38,23 +39,35 @@ namespace boost { namespace property_tree { namespace cmdline_parser
                     if (text.size() == 1)
                     {
                         Ptree &child = local.put(text, Str());
-                        child.push_back(std::make_pair(Str(), Ptree(child.data())));
+                        Str key; 
+                        if (child.size() < 10) 
+                            key.push_back(typename Ptree::char_type('0' + child.size()));
+                        child.push_back(std::make_pair(key, Ptree(child.data())));
                     }
                     else if (text.size() == 2)
                     {
                         Ptree &child = local.put(text.substr(1, 1), Str());
-                        child.push_back(std::make_pair(Str(), Ptree(child.data())));
+                        Str key; 
+                        if (child.size() < 10) 
+                            key.push_back(typename Ptree::char_type('0' + child.size()));
+                        child.push_back(std::make_pair(key, Ptree(child.data())));
                     }
                     else
                     {
-                        Ptree &child = local.put(text.substr(1, 1), text.substr(2, Str::npos));
-                        child.push_back(std::make_pair(Str(), Ptree(child.data())));
+                        Ptree &child = local.put(text.substr(1, 1), detail::trim<Ch>(text.substr(2, Str::npos)));
+                        Str key; 
+                        if (child.size() < 10) 
+                            key.push_back(typename Ptree::char_type('0' + child.size()));
+                        child.push_back(std::make_pair(key, Ptree(child.data())));
                     }
                 }
                 else
                 {
-                    Ptree &child = local.put(Str(), text);
-                    child.push_back(std::make_pair(Str(), Ptree(child.data())));
+                    Ptree &child = local.put(Str(), detail::trim<Ch>(text));
+                    Str key; 
+                    if (child.size() < 10) 
+                        key.push_back(typename Ptree::char_type('0' + child.size()));
+                    child.push_back(std::make_pair(key, Ptree(child.data())));
                 }
         }
 

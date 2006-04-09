@@ -610,7 +610,7 @@ void <a href="reference.html#info_parser::write_info">write_info</a>(const std::
     <h3>
         <a name="cmdline_parser"></a>Command line parser
     </h3>
-	<p>This is a simple parser that converts command line parameters (in form of standard <code>argc</code> and <code>argv</code> arguments) into property tree. There is no write function. The parser correctly recognizes most of the standard command line styles, both from Unix and Windows worlds.</p>
+	<p>This is a simple parser that converts command line parameters (in form of standard <code>argc</code> and <code>argv</code> arguments) into property tree. There is no write function. The parser correctly recognizes simple command line styles, both from Unix and Windows worlds.</p>
 		<p>During parse, parameters are converted to ptree keys and grouped by their prefix, if any. Grouping means that they are inserted as children of a key representing appropriate group. Prefix is a single character that comes directly after so called "metacharacter", which is usually a dash '-' (on Unix) or a slash '/' (on Windows). For example, parameter <code>-I/usr/include/foobar</code> has prefix <code>I</code> after metacharacter '-'. Parameters that do not start with a metacharacter (like e.g. source files given to gcc), are inserted as children of special, <i>unnamed</i> group. Additionally, data of each group contains value of <i>last</i> parameter assigned to that group. For example, this command line:</p>
 		<pre>
 myprogram.exe -c -I/usr/include -Lm -I/home/mammamia/stuff foo.c bar.c -g</pre>
@@ -618,23 +618,24 @@ myprogram.exe -c -I/usr/include -Lm -I/home/mammamia/stuff foo.c bar.c -g</pre>
 		<pre>
 "" bar.c                    ;"unnamed" group
 {
-    "" myprogram.exe        ;first argument is name of program
-    "" foo.c
-    "" bar.c
+    "0" myprogram.exe        ;first argument is name of program
+    "1" foo.c
+    "2" bar.c
 }
 c                           ;no data
 {
-    "" ""                   ;no value associated with 'c' option
+    "0" ""                  ;no value associated with 'c' option
 }
 I /home/mammamia/stuff
 {
-    "" /usr/include
-    "" /home/mammamia/stuff
+    "0" /usr/include
+    "1" /home/mammamia/stuff
 }
 L m
 {
-    "" m
+    "0" m
 }</pre>
+        <p>Within each group, parameters are numbered, starting from zero.</p>
         <p>Metacharacters can be specified as a parameter to read function. This code will parse command line using both dash and slash as metachatacters:</p>
         <pre>
 ptree pt;
@@ -648,10 +649,21 @@ int n = pt.<a href="reference.html#basic_ptree::get default">get</a>("N", 0);   
 std::string n = pt.<a href="reference.html#basic_ptree::get">get</a>&lt;std::string&gt;("N");   // throw if -Nxx or /Nxx not specified on command line</pre>
 <p>If there is more than one instance of 'N' in command line, they can be accessed like that:</p>
     <pre>
+// Copy values of all -N arguments to vector
 std::vector&lt;int&gt; vec;
 BOOST_FOREACH(const ptree::value_type &amp;v, pt.get_child("N", empty_ptree()))
-    vec.push_back(v.second.get_own&lt;int&gt;());
-        </pre>
+    vec.push_back(v.second.get_own&lt;int&gt;());</pre>
+        <p>or, like that:</p>
+    <pre>
+// Use numbering to access specific instances of parameter -N
+int first_n = pt.get("N.0", default_n_value);
+int second_n = pt.get("N.1", default_n_value);
+/* ... */
+int tenth_n = pt.get("N.9", default_n_value);</pre>
+        <p>First argument, argv[0], normally contains path to executable, which is rarely used for arguments parsing. To skip it, invoke the parser like that:
+        <pre>
+// Skip program path
+read_cmdline(argc - 1, argv + 1, "-", pt)</pre></p>
     <h4>
         Synopsis</h4>
     <pre>

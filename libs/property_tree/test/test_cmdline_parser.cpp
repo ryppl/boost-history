@@ -10,6 +10,7 @@
 
 #include "test_utils.hpp"
 #include <boost/property_tree/cmdline_parser.hpp>
+#include <boost/property_tree/info_parser.hpp>
 #include <vector>
 #include <string>
 
@@ -60,29 +61,47 @@ void test_cmdline_parser()
     Ptree pt1;
     read_cmdline<Ptree>(argc, &p.front(), detail::widen<Ch>("-/"), pt1);
 
+    // Check indices
+    BOOST_CHECK(pt1.get_optional<Str>(detail::widen<Ch>("L.0")).get() == detail::widen<Ch>("src/lib1"));
+    BOOST_CHECK(pt1.get_optional<Str>(detail::widen<Ch>("L.1")).get() == detail::widen<Ch>("src/lib2"));
+    BOOST_CHECK(!pt1.get_optional<Str>(detail::widen<Ch>("L.2")));
+    BOOST_CHECK(pt1.get_optional<Str>(detail::widen<Ch>(".0")).get() == detail::widen<Ch>("c:\\program.exe"));
+    BOOST_CHECK(pt1.get_optional<Str>(detail::widen<Ch>(".1")).get() == detail::widen<Ch>("file2.cc"));
+    BOOST_CHECK(pt1.get_optional<Str>(detail::widen<Ch>(".2")).get() == detail::widen<Ch>("file1.cc"));
+    BOOST_CHECK(pt1.get_optional<Str>(detail::widen<Ch>(".3")).get() == detail::widen<Ch>("file3.cc"));
+    BOOST_CHECK(!pt1.get_optional<Str>(detail::widen<Ch>(".4")));
+
     // Check total sizes
     //std::cerr << total_size(pt1) << " " << total_data_size(pt1) << " " << total_keys_size(pt1) << "\n";
     BOOST_CHECK(total_size(pt1) == 21);
-    BOOST_CHECK(total_data_size(pt1) == 138);
-    BOOST_CHECK(total_keys_size(pt1) == 6);
+    BOOST_CHECK(total_data_size(pt1) == 130);
+    BOOST_CHECK(total_keys_size(pt1) == 19);
         
     Ptree pt2;
     read_cmdline<Ptree>(argc, &p.front(), detail::widen<Ch>("-"), pt2);
 
+    // Check indices
+    BOOST_CHECK(pt2.get_optional<Str>(detail::widen<Ch>("L.0")).get() == detail::widen<Ch>("src/lib2"));
+    BOOST_CHECK(!pt2.get_optional<Str>(detail::widen<Ch>("L.1")));
+
     // Check total sizes
     //std::cerr << total_size(pt2) << " " << total_data_size(pt2) << " " << total_keys_size(pt2) << "\n";
     BOOST_CHECK(total_size(pt2) == 19);
-    BOOST_CHECK(total_data_size(pt2) == 139);
-    BOOST_CHECK(total_keys_size(pt2) == 4);
+    BOOST_CHECK(total_data_size(pt2) == 135);
+    BOOST_CHECK(total_keys_size(pt2) == 17);
         
     Ptree pt3;
     read_cmdline<Ptree>(argc, &p.front(), detail::widen<Ch>("/"), pt3);
 
+    // Check indices
+    BOOST_CHECK(pt3.get_optional<Str>(detail::widen<Ch>("L.0")).get() == detail::widen<Ch>("src/lib1"));
+    BOOST_CHECK(!pt3.get_optional<Str>(detail::widen<Ch>("L.1")));
+
     // Check total sizes
     //std::cerr << total_size(pt3) << " " << total_data_size(pt3) << " " << total_keys_size(pt3) << "\n";
     BOOST_CHECK(total_size(pt3) == 19);
-    BOOST_CHECK(total_data_size(pt3) == 157);
-    BOOST_CHECK(total_keys_size(pt3) == 4);
+    BOOST_CHECK(total_data_size(pt3) == 149);
+    BOOST_CHECK(total_keys_size(pt3) == 17);
 
 }
 
