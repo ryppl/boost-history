@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1250"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="8.00"
 	Name="sandbox"
 	ProjectGUID="{85FA9AEF-966B-4D93-9431-F507754B0431}"
 	RootNamespace="test_property_tree"
