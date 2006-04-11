@@ -127,29 +127,11 @@ namespace boost { namespace profiler { namespace detail
             return result;
     }
 
-    inline void dump_system_to_stream(std::ostream &stream)
-    {
-        const timer_metrics &tm = get_timer_metrics();
-        double resolution = 1.0 / tm.ticks_per_second;
-        double latency = 1.0 / tm.reports_per_second;
-        double increment = double(tm.min_clock_step) / tm.ticks_per_second;
-        boost::format fmt("Clock resolution:                    %s (%s)\n"
-                          "Clock latency:                       %s\n"
-                          "Smallest measured clock increment:   %s %s\n"
-                          "Method used to obtain time:          %s\n"
-                          "Method used to synchronize profiler: %s\n");
-        fmt % stringize(resolution, "s/tick", 0, false)
-            % stringize(double(tm.ticks_per_second), "Hz", 0, false)
-            % stringize(latency, "s", 0, false)
-            % stringize(increment, "s", 0, false)
-            % (tm.clock_step_cpu_limited ? "(CPU bound)" : "(not CPU bound)")
-            % detail::ticks_method_description
-            % detail::semaphore_method_description;
-        stream << fmt;
-    }
-    
-    inline void dump_context_to_stream(std::ostream &stream, const context &c, 
-                                       int columns, int sort_by)
+    ///////////////////////////////////////////////////////////////////////////
+    // Dump context
+
+    inline void dump_context_to_stream(const context &c, std::ostream &stream, 
+                                       int columns, int sort_by, int limit)
     {
         
         // Gather reports
@@ -167,6 +149,10 @@ namespace boost { namespace profiler { namespace detail
             report_pred rp(sort_by);
             std::sort(reports.begin(), reports.end(), rp);
         }
+
+        // Disard all reports above limit; cannot use resize because report is not default constructible
+        if (limit > 0 && reports.size() > unsigned(limit))
+            reports.erase(reports.begin() + limit, reports.end());
 
         // Output context name and total profiling time
         boost::format fmt("Profiling results for context \"%s\", profiling time %s\n\n");
@@ -241,33 +227,70 @@ namespace boost { namespace profiler { namespace detail
 
     }
 
-    inline void dump_all_to_stream(std::ostream &stream, int columns, int sort_by) 
+    ///////////////////////////////////////////////////////////////////////////
+    // Dump system
+
+    inline void dump_system_to_dest(std::ostream &stream)
     {
-        dump_system_to_stream(stream);
+        const timer_metrics &tm = get_timer_metrics();
+        double resolution = 1.0 / tm.ticks_per_second;
+        double latency = 1.0 / tm.reports_per_second;
+        double increment = double(tm.min_clock_step) / tm.ticks_per_second;
+        boost::format fmt("Clock resolution:                    %s (%s)\n"
+                          "Clock latency:                       %s\n"
+                          "Smallest measured clock increment:   %s %s\n"
+                          "Method used to obtain time:          %s\n"
+                          "Method used to synchronize profiler: %s\n");
+        fmt % stringize(resolution, "s/tick", 0, false)
+            % stringize(double(tm.ticks_per_second), "Hz", 0, false)
+            % stringize(latency, "s", 0, false)
+            % stringize(increment, "s", 0, false)
+            % (tm.clock_step_cpu_limited ? "(CPU bound)" : "(not CPU bound)")
+            % detail::ticks_method_description
+            % detail::semaphore_method_description;
+        stream << fmt;
+    }
+    
+    inline void dump_system_to_dest(const std::string &filename)
+    {
+        std::ofstream stream(filename.c_str());
+        dump_system_to_dest(stream);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Dump context
+
+    inline void dump_context_to_dest(context &c, std::ostream &stream, int columns, int sort_by, int limit)
+    {
+        dump_context_to_stream(c, stream, columns, sort_by, limit);
+    }
+
+    inline void dump_context_to_dest(context &c, const std::string &filename, int columns, int sort_by, int limit)
+    {
+        std::ofstream stream(filename.c_str());
+        dump_context_to_stream(c, stream, columns, sort_by, limit);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Dump all
+
+    inline void dump_all_to_dest(std::ostream &stream, int columns, int sort_by, int limit)
+    {
+        dump_system_to_dest(stream);
+        stream << std::endl;
         scoped_semaphore sem(context_semaphore());
-        std::list<context *> &cl = contexts_list();
-        BOOST_FOREACH(const context *c, cl)
+        BOOST_FOREACH(context *c, all_contexts())
             if (c->total_profiling_time() > 0)
             {
+                dump_context_to_stream(*c, stream, columns, sort_by, limit);
                 stream << std::endl;
-                dump_context_to_stream(stream, *c, columns, sort_by);
             }
     }
 
-    inline void dump_all_to_file(const std::string &filename, int columns, int sort_by)
+    inline void dump_all_to_dest(const std::string &filename, int columns, int sort_by, int limit)
     {
         std::ofstream stream(filename.c_str());
-        dump_all_to_stream(stream, columns, sort_by);
-    }
-
-    inline void dump_all_to_dest(std::ostream &stream, int columns, int sort_by)
-    {
-        dump_all_to_stream(stream, columns, sort_by);
-    }
-
-    inline void dump_all_to_dest(const std::string &filename, int columns, int sort_by)
-    {
-        dump_all_to_file(filename, columns, sort_by);
+        dump_all_to_dest(stream, columns, sort_by, limit);
     }
 
 } } }

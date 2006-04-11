@@ -15,7 +15,7 @@ namespace boost { namespace profiler { namespace detail
     class context;
     class iterator;
     
-    inline std::list<context *> &contexts_list()
+    inline std::list<context *> &all_contexts()
     {
         static std::list<context *> cl;
         return cl;
@@ -47,15 +47,13 @@ namespace boost { namespace profiler { namespace detail
         m_latest((std::numeric_limits<tick_t>::max)())
     {
         scoped_semaphore sem(context_semaphore());
-        std::list<context *> &cs = contexts_list();
-        cs.push_back(this);
+        all_contexts().push_back(this);
     }
 
     inline context::~context()
     {
         scoped_semaphore sem(context_semaphore());
-        std::list<context *> &cl = contexts_list();
-        cl.remove(this);
+        all_contexts().remove(this);
     }
 
     inline const char *context::name() const
