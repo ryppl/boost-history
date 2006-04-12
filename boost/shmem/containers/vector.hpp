@@ -280,24 +280,29 @@ class vector : private detail::vector_alloc_holder<A>
           const allocator_type& a = allocator_type()) 
       : base_t(a)
    {
-      //If there is an exception, the base class will
-      //deallocate the memory
-      this->m_start  = this->allocate(n, 0);
-      this->m_end    = this->m_start + n;
-      this->m_finish = this->m_start;
-      this->priv_uninitialized_fill_n(this->m_start, n, value, *this);
-      this->m_finish = this->m_end;
+      if(n){
+         //If there is an exception, the base class will
+         //deallocate the memory
+         this->m_start  = this->allocate(n, 0);
+         this->m_end    = this->m_start + n;
+         this->m_finish = this->m_start;
+         this->priv_uninitialized_fill_n(this->m_start, n, value, *this);
+         this->m_finish = this->m_end;
+      }
    }
 
    //Copy constructor
    vector(const vector<T, A>& x) 
       : base_t(x.get_allocator())
    {
-      this->m_start  = this->allocate(x.size(), 0);
-      this->m_end    = this->m_start + x.size();
-      this->m_finish = this->m_start;
-      this->priv_uninitialized_copy(x.m_start, x.m_finish, this->m_start, *this); 
-      this->m_finish = this->m_end;
+      size_type n = x.size();
+      if(n){
+         this->m_start  = this->allocate(x.size(), 0);
+         this->m_end    = this->m_start + x.size();
+         this->m_finish = this->m_start;
+         this->priv_uninitialized_copy(x.m_start, x.m_finish, this->m_start, *this); 
+         this->m_finish = this->m_end;
+      }
    }
 
    //Construct from iterator range
