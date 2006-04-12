@@ -422,6 +422,9 @@ class flat_multiset
       equal_range(const key_type& x) 
       {  return m_flat_tree.equal_range(x); }
 
+   size_type capacity() const           
+      { return m_flat_tree.capacity(); }
+
    void reserve(size_type count)       
       { m_flat_tree.reserve(count);   }
 

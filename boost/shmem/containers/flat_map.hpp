@@ -446,6 +446,9 @@ class flat_multimap
       equal_range(const key_type& x) const 
       {  return m_flat_tree.equal_range(x);   }
 
+   size_type capacity() const           
+      { return m_flat_tree.capacity(); }
+
    void reserve(size_type count)       
       { m_flat_tree.reserve(count);   }
 
