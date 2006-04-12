@@ -1,5 +1,5 @@
 [library Shmem
-    [version 0.9]
+    [version 0.91]
     [authors [Gazta&ntilde;aga, Ion]]
     [copyright 2005- 2006 Ion Gazta&ntilde;aga]
     [purpose Shared memory utilities]
@@ -5103,7 +5103,9 @@ thank them:
 * Thanks to [*Francis Andre] and [*Anders Hybertz] for their ideas and suggestions. 
   Many of them are not implemented yet but I hope to include them when library gets some stability.
 
-* Thanks to [*Hiang Swee Chiang], [*Phil Endecott], [*Rene Rivera], [*Harold Pirtle] and [*Kim Barrett] for their bug fixes and library testing.
+* Thanks to [*Hiang Swee Chiang], [*Phil Endecott], [*Rene Rivera],
+  [*Harold Pirtle], [*Paul Ryan], [*Shumin Wu], [*Michal Wozniak] and
+  [*Kim Barrett] for their bug fixes and library testing.
 
 * Thanks to [*Martin Adrian] who suggested the use of Shmem framework for user defined buffers.
 

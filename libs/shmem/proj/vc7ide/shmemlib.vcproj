@@ -217,7 +217,7 @@
 				RelativePath="..\..\..\..\boost\shmem\sync\lock.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\boost\shmem\mmapped_file.hpp">
+				RelativePath="..\..\..\..\boost\shmem\mapped_file.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\boost\shmem\sync\named_mutex.hpp">
@@ -227,9 +227,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\boost\shmem\sync\null_mutex.hpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\shmem\sync\read_write_lock.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\boost\shmem\sync\shared_barrier.hpp">
@@ -242,6 +239,9 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\boost\shmem\sync\shared_mutex.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\shmem\sync\shared_read_write_lock.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\boost\shmem\sync\shared_read_write_mutex.hpp">
@@ -339,7 +339,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Allocation front-ends"
+			Name="Front-ends"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
@@ -372,9 +372,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\boost\shmem\detail\generic_cast.hpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\shmem\detail\multi_segment_creator.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\boost\shmem\detail\named_object_impl.hpp">
