@@ -167,12 +167,12 @@ inline bool named_semaphore::timed_wait(const xtime &xt)
 
       int res = sem_timedwait(mp_sem, &tspec);
 
-      if (result == 0){
+      if (res == 0){
          return true;
       }
-      if (result > 0){
+      if (res > 0){
          //buggy glibc, copy the returned error code to errno
-         errno = result;
+         errno = res;
       }
       if (errno == ETIMEDOUT)
          return false;
