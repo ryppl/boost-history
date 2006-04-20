@@ -711,7 +711,6 @@ class vector : private detail::vector_alloc_holder<A>
             }
             BOOST_CATCH(...){
                this->priv_destroy_range(new_start, new_finish);
-               this->deallocate(new_start, len);
                BOOST_RETHROW
             }
             BOOST_CATCH_END
