@@ -107,11 +107,18 @@ class flat_tree
          return Compare::operator()(key_extract(lhs), key_extract(rhs)); 
       }
 
+      const Compare &get_comp() const
+         {  return *this;  }
+      
+      Compare &get_comp()
+         {  return *this;  }
+/*
       const Compare &get_key_compare() const
          {  return *this;  }
       
       Compare &get_key_compare()
          {  return *this;  }
+*/
    };
 
  private:
@@ -173,7 +180,7 @@ class flat_tree
  public:    
    // accessors:
    Compare key_comp() const 
-      { return this->m_data.get_key_compare(); }
+      { return this->m_data.get_comp(); }
 
    allocator_type get_allocator() const 
       { return this->m_data.m_vect.get_allocator(); }
@@ -224,12 +231,17 @@ class flat_tree
  public:
    // insert/erase
    std::pair<iterator,bool> insert_unique(const value_type& val)
+   {  return this->priv_insert_unique(this->begin(), this->end(), val); }
+
+   // insert/erase
+   std::pair<iterator,bool> priv_insert_unique
+      (iterator beg, iterator end, const value_type& val)
    {
       bool found = true;
       const value_compare &value_comp  = this->m_data;
-      iterator i = this->lower_bound(KeyOfValue()(val));
+      iterator i = this->priv_lower_bound(beg, end, KeyOfValue()(val));
 
-      if (i == this->end() || value_comp(val, *i)){
+      if (i == end || value_comp(val, *i)){
          i = this->m_data.m_vect.insert(i, val);
          found = false;
       }
@@ -238,47 +250,121 @@ class flat_tree
 
    iterator insert_equal(const value_type& val)
    {
-      iterator i = this->lower_bound(KeyOfValue()(val));
+      iterator i = this->upper_bound(KeyOfValue()(val));
       i = this->m_data.m_vect.insert(i, val);
       return i;
    }
 
    iterator insert_unique(iterator pos, const value_type& val)
    {
+/* old code
       const value_compare &value_comp = this->m_data;
-      if (pos != this->end() && value_comp(*pos, val) && 
-            (pos == this->end() - 1 ||
-               !value_comp(val, pos[1]) &&
-                  value_comp(pos[1], val))){
-            return this->m_data.m_vect.insert(pos, val);
+
+      if (pos != this->end() && value_comp(*pos, val)){
+         if(++pos == this->end() ||
+               !value_comp(*pos, val)){
+            if(value_comp(val, *pos))
+               return this->m_data.m_vect.insert(pos, val);
+            else
+               return pos;
+         }
       }
       return insert_unique(val).first;
+*/
+   /* N1780
+      To insert val at pos:
+      if pos == end || val <= *pos
+         if pos == begin || val >= *(pos-1)
+            insert val before pos
+         else
+            insert val before upper_bound(val)
+      else if pos+1 == end || val <= *(pos+1)
+         insert val after pos
+      else
+         insert val before lower_bound(val)
+  */
+
+      const value_compare &value_comp = this->m_data;
+
+      if(pos == this->end() || value_comp(val, *pos)){
+         if(pos != this->begin() && !value_comp(val, pos[-1])){
+            if(value_comp(pos[-1], val)){
+               return this->m_data.m_vect.insert(pos, val);
+            }
+            else{
+               return pos;
+            }
+         }
+         return this->priv_insert_unique(this->begin(), pos, val).first;
+      }
+      /* Works, but increases code complexity
+      //Next check
+      else if (value_comp(*pos, val) && !value_comp(pos[1], val)){
+         if(value_comp(val, pos[1])){
+            return this->m_data.m_vect.insert(pos+1, val);
+         }
+         else{
+            return pos;
+         }
+      }*/
+      else{
+         //[... pos ... val ... ]
+         //The hint is before the insertion position, so insert it
+         //in the remaining range
+         return this->priv_insert_unique(pos, this->end(), val).first;
+      }
    }
 
    iterator insert_equal(iterator pos, const value_type& val)
    {
+   /* N1780
+      To insert val at pos:
+      if pos == end || val <= *pos
+         if pos == begin || val >= *(pos-1)
+            insert val before pos
+         else
+            insert val before upper_bound(val)
+      else if pos+1 == end || val <= *(pos+1)
+         insert val after pos
+      else
+         insert val before lower_bound(val)
+   */
       const value_compare &value_comp = this->m_data;
 
-      if (pos != this->end() && value_comp(*pos, val) && 
-            (pos == this->end() - 1 ||
-               !value_comp(val, pos[1]))){
+      if(pos == this->end() || !value_comp(*pos, val)){
+         if (pos == this->begin() || !value_comp(val, pos[-1])){
             return this->m_data.m_vect.insert(pos, val);
+         }
+         else{
+            return this->m_data.m_vect.insert
+//               (this->upper_bound(KeyOfValue()(val)), val);
+               (this->priv_upper_bound(this->begin(), pos, KeyOfValue()(val)), val);
+         }
       }
-      return insert_equal(val);
+      /*Works, but increases code complexity
+      else if (++pos == this->end() || !value_comp(*pos, val)){
+         return this->m_data.m_vect.insert(pos, val);
+      }
+      */
+      else{
+         return this->m_data.m_vect.insert
+            //(this->lower_bound(KeyOfValue()(val)), val);
+            (this->priv_lower_bound(pos, this->end(), KeyOfValue()(val)), val);
+      }
    }
 
    template <class InIt>
    void insert_unique(InIt first, InIt last)
    {
       for ( ; first != last; ++first)
-         insert_unique(*first);
+         this->insert_unique(*first);
    }
 
    template <class InIt>
    void insert_equal(InIt first, InIt last)
    {
       for ( ; first != last; ++first)
-         insert_equal(*first);
+         this->insert_equal(*first);
    }
 
    iterator erase(const_iterator position)
@@ -304,7 +390,7 @@ class flat_tree
    // set operations:
    iterator find(const key_type& k)
    {
-      const Compare &key_comp = this->m_data.get_key_compare();
+      const Compare &key_comp = this->m_data.get_comp();
       iterator i = this->lower_bound(k);
 
       if (i != this->end() && key_comp(k, KeyOfValue()(*i))){  
@@ -315,7 +401,7 @@ class flat_tree
 
    const_iterator find(const key_type& k) const
    {
-      const Compare &key_comp = this->m_data.get_key_compare();
+      const Compare &key_comp = this->m_data.get_comp();
       const_iterator i = this->lower_bound(k);
 
       if (i != this->end() && key_comp(k, KeyOfValue()(*i))){  
@@ -373,7 +459,7 @@ class flat_tree
    RanIt priv_lower_bound(RanIt first, RanIt last,
                           const key_type & key) const
    {
-      const Compare &key_comp = this->m_data.get_key_compare();
+      const Compare &key_comp = this->m_data.get_comp();
       KeyOfValue key_extract;
       difference_type len = last - first, half;
       RanIt middle;
@@ -384,8 +470,8 @@ class flat_tree
          middle += half;
 
          if (key_comp(key_extract(*middle), key)) {
+            ++middle;
             first = middle;
-            ++first;
             len = len - half - 1;
          }
          else
@@ -398,7 +484,7 @@ class flat_tree
    RanIt priv_upper_bound(RanIt first, RanIt last,
                           const key_type & key) const
    {
-      const Compare &key_comp = this->m_data.get_key_compare();
+      const Compare &key_comp = this->m_data.get_comp();
       KeyOfValue key_extract;
       difference_type len = last - first, half;
       RanIt middle;
@@ -412,8 +498,7 @@ class flat_tree
             len = half;
          }
          else{
-            first = middle;
-            ++first;
+            first = ++middle;
             len = len - half - 1;  
          }
       }
@@ -424,7 +509,7 @@ class flat_tree
    std::pair<RanIt, RanIt>
       priv_equal_range(RanIt first, RanIt last, const key_type& key) const
    {
-      const Compare &key_comp = this->m_data.get_key_compare();
+      const Compare &key_comp = this->m_data.get_comp();
       KeyOfValue key_extract;
       difference_type len = last - first, half;
       RanIt middle, left, right;
@@ -465,21 +550,21 @@ class flat_tree
    {
       size_type len = static_cast<size_type>(std::distance(first, last));
       this->reserve(this->size()+len);
-      priv_insert_equal(first, last, std::input_iterator_tag());
+      this->priv_insert_equal(first, last, std::input_iterator_tag());
    }
 
    template <class InIt>
    void priv_insert_unique(InIt first, InIt last, std::input_iterator_tag)
    {
       for ( ; first != last; ++first)
-         insert_unique(*first);
+         this->insert_unique(*first);
    }
 
    template <class InIt>
    void priv_insert_equal(InIt first, InIt last, std::input_iterator_tag)
    {
       for ( ; first != last; ++first)
-         insert_equal(*first);
+         this->insert_equal(*first);
    }
 };
 
