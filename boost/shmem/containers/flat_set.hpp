@@ -400,7 +400,7 @@ class flat_multiset
       { return m_flat_tree.find(x); }
 
    size_type count(const key_type& x) const 
-      {  return m_flat_tree.find(x) == m_flat_tree.end() ? 0 : 1;  }
+      { return m_flat_tree.count(x); }
 
    const_iterator lower_bound(const key_type& x) const 
       {  return m_flat_tree.lower_bound(x); }
