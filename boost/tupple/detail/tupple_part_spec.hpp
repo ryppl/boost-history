@@ -36,7 +36,7 @@ namespace boost
 
 
 
-    struct tuple < null_type, null_type, null_type, null_type, null_type,
+    template<> struct tuple < null_type, null_type, null_type, null_type, null_type,
           null_type, null_type, null_type, null_type, null_type >
     {
       int size( ) const
