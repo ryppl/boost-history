@@ -36,7 +36,7 @@ public: // make class abstract via pure-virtual destructor "trick"
     virtual ~dynamic_visitor_base() = 0;
 };
 
-dynamic_visitor_base::~dynamic_visitor_base()
+inline dynamic_visitor_base::~dynamic_visitor_base()
 {
 }
 
