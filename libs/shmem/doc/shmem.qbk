@@ -1,5 +1,5 @@
 [library Shmem
-    [version 0.91]
+    [version 0.92]
     [authors [Gazta&ntilde;aga, Ion]]
     [copyright 2005- 2006 Ion Gazta&ntilde;aga]
     [purpose Shared memory utilities]
@@ -1521,6 +1521,21 @@ two objects associated with the same name.
       template <class T>
       bool destroy_ptr(const T *name);
 
+      /*!Returns the name of an object created with construct/find_or_construct
+         functions. Does not throw*/
+      template<class T>
+      const char *get_instance_name(const T *ptr);
+
+      /*!Returns is the the name of an object created with construct/find_or_construct
+         functions. Does not throw*/
+      template<class T>
+      instance_type get_instance_type(const T *ptr);
+
+      /*!Returns the length of the object created construct/find_or_construct
+         functions. Does not throw*/
+      template<class T>
+      std::size_t get_instance_length(const T *ptr);
+
       /*!Preallocates needed index resources to optimize the 
          creation of "num" named objects in the shared memory segment.
          Can throw boost::shmem::bad_alloc if there is no enough memory.*/
@@ -1736,8 +1751,17 @@ For example, for simple object construction:
 
 [c++]
 
-   /*!Allocates and constructs an object of type MyType (no throwing version) */
+   //Allocates and constructs an object of type MyType (no throwing version)
    MyType *ptr = named_shared_object.construct<MyType>("Name", std::nothrow) (par1, par2...);
+
+   //Check object's name
+   assert(strcmp(segment.get_instance_name(ptr), "Name") == 0);
+
+   //Check object's type
+   assert(segment.get_instance_type(ptr) == boost::shmem::named_type);
+
+   //Check object's length
+   assert(segment.get_instance_length(ptr) == 1);
 
 [endsect]
 
@@ -1752,6 +1776,13 @@ must use "boost::shmem::anonymous_instance" object instead of a name:
 
    MyType *ptr = named_shared_object.construct<MyType>(anonymous_instance) (par1, par2...);
    //Other construct variants can also be used (including non-throwing ones)
+
+   //Check object's type
+   assert(segment.get_instance_type(ptr) == boost::shmem::anonymous_type);
+
+   //Check object's length
+   assert(segment.get_instance_length(ptr) == 1);
+
    //We can only destroy the anonymous object via pointer
    named_shared_object.destroy_ptr(ptr);
 
@@ -1779,12 +1810,20 @@ of the class as a key.
 [c++]
 
    // Construct
+   // Other construct and find variants can also be used (including non-throwing ones)
    MyType *ptr = named_shared_object.construct<MyType>(unique_instance) (par1, par2...);
+
+   //Check object's type
+   assert(segment.get_instance_type(ptr) == boost::shmem::unique_type);
+
+   //Check object's length
+   assert(segment.get_instance_length(ptr) == 1);
+
    // Find it
    std::pair<MyType *,std::size_t> ret = named_shared_object.find<MyType>(unique_instance);
+
    // Destroy it
    named_shared_object.destroy<MyType>(unique_instance);
-   // Other construct and find variants can also be used (including non-throwing ones)
 
 [c++]
 
@@ -5104,8 +5143,8 @@ thank them:
   Many of them are not implemented yet but I hope to include them when library gets some stability.
 
 * Thanks to [*Hiang Swee Chiang], [*Phil Endecott], [*Rene Rivera],
-  [*Harold Pirtle], [*Paul Ryan], [*Shumin Wu], [*Michal Wozniak] and
-  [*Kim Barrett] for their bug fixes and library testing.
+  [*Harold Pirtle], [*Paul Ryan], [*Shumin Wu], [*Michal Wozniak], [*Peter Johnson]
+  and [*Kim Barrett] for their bug fixes and library testing.
 
 * Thanks to [*Martin Adrian] who suggested the use of Shmem framework for user defined buffers.
 
@@ -5125,6 +5164,21 @@ thank them:
   many and great advices.
 
 * And finally, thank you to all Boosters. *Long live to C++!*
+
+[endsect]
+
+[section:changes Changes...]
+
+[section:changes_shmem_00_92 Changes in Shmem 0.92...]
+
+* Solved bugs in flat_xxx insert functions.
+* Solved ambiguous windows native function calls with some header orderings.
+* Changed named_mutex to support scoped_lock.
+* Added missing <exceptions.hpp> include in named_mutex.
+* Added get_instance_type, get_instance_length and get_instance_name functions 
+  to front-ends.
+
+[endsect]
 
 [endsect]
 

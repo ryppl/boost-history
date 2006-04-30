@@ -1,10 +1,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Chapter 1. Shmem 0.91</title>
+<title>Chapter 1. Shmem 0.92</title>
 <link rel="stylesheet" href="boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
-<link rel="start" href="index.html" title="Chapter 1. Shmem 0.91">
+<link rel="start" href="index.html" title="Chapter 1. Shmem 0.92">
 <link rel="next" href="shmem/quick_guide.html" title=" Quick Guide for the Impatient">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -21,7 +21,7 @@
 <div class="chapter" lang="en">
 <div class="titlepage"><div>
 <div><h2 class="title">
-<a name="shmem"></a>Chapter 1. Shmem 0.91</h2></div>
+<a name="shmem"></a>Chapter 1. Shmem 0.92</h2></div>
 <div><div class="author"><h3 class="author">
 <span class="firstname">Ion</span> <span class="surname">Gaztañaga</span>
 </h3></div></div>
@@ -165,6 +165,8 @@
 <dt><span class="section"><a href="shmem/future_improvements.html#shmem.future_containers"> Unordered associative containers and other containers</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="shmem/thanks_to.html"> Thanks to...</a></span></dt>
+<dt><span class="section"><a href="shmem/changes.html"> Changes...</a></span></dt>
+<dd><dl><dt><span class="section"><a href="shmem/changes.html#shmem.changes_shmem_00_92"> Changes in Shmem 0.92...</a></span></dt></dl></dd>
 <dt><span class="section"><a href="shmem/references.html"> References and interesting links</a></span></dt>
 <dd><dl>
 <dt><span class="section"><a href="shmem/references.html#shmem.references_books"> Books</a></span></dt>
@@ -172,47 +174,47 @@
 </dl></dd>
 <dt><span class="section"><a href="shmem/reference.html">Reference</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="shmem/reference.html#id303562">Header &lt;boost/shmem/allocators/allocator.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id303998">Header &lt;boost/shmem/allocators/cached_node_allocator.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id305196">Header &lt;boost/shmem/allocators/detail/node_pool.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id305222">Header &lt;boost/shmem/allocators/node_allocator.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id306684">Header &lt;boost/shmem/allocators/private_node_allocator.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id307677">Header &lt;boost/shmem/exceptions.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id307869">Header &lt;boost/shmem/indexes/flat_map_index.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id308121">Header &lt;boost/shmem/indexes/map_index.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id308420">Header &lt;boost/shmem/indexes/null_map_index.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id308509">Header &lt;boost/shmem/indexes/unordered_map_index.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id308810">Header &lt;boost/shmem/ipc/shared_message_queue.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id309926">Header &lt;boost/shmem/mem_algo/basic_seq_fit.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id310393">Header &lt;boost/shmem/mem_algo/basic_simple_seq_fit.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id310922">Header &lt;boost/shmem/mem_algo/multi_seq_fit.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id311038">Header &lt;boost/shmem/mem_algo/multi_simple_seq_fit.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id311196">Header &lt;boost/shmem/mem_algo/seq_fit.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id311312">Header &lt;boost/shmem/mem_algo/simple_seq_fit.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id311428">Header &lt;boost/shmem/mmapped_file.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id311875">Header &lt;boost/shmem/named_heap_object.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id312383">Header &lt;boost/shmem/named_mfile_object.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id312702">Header &lt;boost/shmem/named_shared_object.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id313186">Header &lt;boost/shmem/named_user_object.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id313417">Header &lt;boost/shmem/offset_ptr.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id316216">Header &lt;boost/shmem/shared_memory.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id317278">Header &lt;boost/shmem/shmem_fwd.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id317618">Header &lt;boost/shmem/smart_ptr/intrusive_ptr.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id319069">Header &lt;boost/shmem/smart_ptr/scoped_ptr.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id319768">Header &lt;boost/shmem/streams/bufferstream.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id321418">Header &lt;boost/shmem/streams/vectorstream.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id323176">Header &lt;boost/shmem/sync/lock.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id323988">Header &lt;boost/shmem/sync/named_mutex.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id324329">Header &lt;boost/shmem/sync/named_semaphore.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id324699">Header &lt;boost/shmem/sync/null_mutex.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id324972">Header &lt;boost/shmem/sync/read_write_lock.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id327708">Header &lt;boost/shmem/sync/shared_barrier.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id327836">Header &lt;boost/shmem/sync/shared_condition.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id328316">Header &lt;boost/shmem/sync/shared_mutex.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id328851">Header &lt;boost/shmem/sync/shared_mutex_family.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id329124">Header &lt;boost/shmem/sync/shared_read_write_mutex.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id330373">Header &lt;boost/shmem/sync/shared_recursive_mutex.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="shmem/reference.html#id331013">Header &lt;boost/shmem/sync/xtime.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id304300">Header &lt;boost/shmem/allocators/allocator.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id304888">Header &lt;boost/shmem/allocators/cached_node_allocator.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id306086">Header &lt;boost/shmem/allocators/detail/node_pool.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id306112">Header &lt;boost/shmem/allocators/node_allocator.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id307575">Header &lt;boost/shmem/allocators/private_node_allocator.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id308569">Header &lt;boost/shmem/exceptions.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id308760">Header &lt;boost/shmem/indexes/flat_map_index.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id309012">Header &lt;boost/shmem/indexes/map_index.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id309312">Header &lt;boost/shmem/indexes/null_map_index.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id309400">Header &lt;boost/shmem/indexes/unordered_map_index.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id309702">Header &lt;boost/shmem/ipc/shared_message_queue.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id310810">Header &lt;boost/shmem/mem_algo/basic_seq_fit.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id311276">Header &lt;boost/shmem/mem_algo/basic_simple_seq_fit.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id311804">Header &lt;boost/shmem/mem_algo/multi_seq_fit.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id311921">Header &lt;boost/shmem/mem_algo/multi_simple_seq_fit.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id312078">Header &lt;boost/shmem/mem_algo/seq_fit.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id312194">Header &lt;boost/shmem/mem_algo/simple_seq_fit.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id312311">Header &lt;boost/shmem/mmapped_file.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id312758">Header &lt;boost/shmem/named_heap_object.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id313266">Header &lt;boost/shmem/named_mfile_object.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id313584">Header &lt;boost/shmem/named_shared_object.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id314068">Header &lt;boost/shmem/named_user_object.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id314300">Header &lt;boost/shmem/offset_ptr.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id317099">Header &lt;boost/shmem/shared_memory.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id318161">Header &lt;boost/shmem/shmem_fwd.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id318501">Header &lt;boost/shmem/smart_ptr/intrusive_ptr.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id319952">Header &lt;boost/shmem/smart_ptr/scoped_ptr.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id320650">Header &lt;boost/shmem/streams/bufferstream.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id322301">Header &lt;boost/shmem/streams/vectorstream.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id324059">Header &lt;boost/shmem/sync/lock.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id324871">Header &lt;boost/shmem/sync/named_mutex.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id325291">Header &lt;boost/shmem/sync/named_semaphore.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id325661">Header &lt;boost/shmem/sync/null_mutex.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id325952">Header &lt;boost/shmem/sync/read_write_lock.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id328688">Header &lt;boost/shmem/sync/shared_barrier.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id328816">Header &lt;boost/shmem/sync/shared_condition.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id329296">Header &lt;boost/shmem/sync/shared_mutex.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id329831">Header &lt;boost/shmem/sync/shared_mutex_family.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id330104">Header &lt;boost/shmem/sync/shared_read_write_mutex.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id331353">Header &lt;boost/shmem/sync/shared_recursive_mutex.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="shmem/reference.html#id331993">Header &lt;boost/shmem/sync/xtime.hpp&gt;</a></span></dt>
 </dl></dd>
 </dl>
 </div>
@@ -290,7 +292,7 @@ Shmem offers the following to the user:</p>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><small><p>Last revised: January 28, 2006 at 17:34:30 GMT</p></small></td>
+<td align="left"><small><p>Last revised: April 29, 2006 at 22:00:00 GMT</p></small></td>
 <td align="right"><small></small></td>
 </tr></table>
 <hr>

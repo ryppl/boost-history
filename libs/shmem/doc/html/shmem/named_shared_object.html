@@ -4,8 +4,8 @@
 <title> Named shared memory object allocation</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.67.0">
-<link rel="start" href="../index.html" title="Chapter 1. Shmem 0.91">
-<link rel="up" href="../index.html" title="Chapter 1. Shmem 0.91">
+<link rel="start" href="../index.html" title="Chapter 1. Shmem 0.92">
+<link rel="up" href="../index.html" title="Chapter 1. Shmem 0.92">
 <link rel="prev" href="offset_ptr.html" title=" A shared memory pointer: offset_ptr">
 <link rel="next" href="stl_allocators.html" title=" Shmem STL compatible allocators">
 </head>
@@ -199,6 +199,21 @@ public</span><span class="special">:</span><span class="keyword">
    /*!Destroys the object (named, anonymous, or unique)of type T.*/</span><span class="keyword">
    template</span><span class="special"> &lt;</span><span class="keyword">class</span><span class="identifier"> T</span><span class="special">&gt;</span><span class="keyword">
    bool</span><span class="identifier"> destroy_ptr</span><span class="special">(</span><span class="keyword">const</span><span class="identifier"> T</span><span class="special"> *</span><span class="identifier">name</span><span class="special">);</span><span class="comment">
+
+   /*!Returns the name of an object created with construct/find_or_construct
+      functions. Does not throw*/</span><span class="keyword">
+   template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="identifier"> T</span><span class="special">&gt;</span><span class="keyword">
+   const</span><span class="keyword"> char</span><span class="special"> *</span><span class="identifier">get_instance_name</span><span class="special">(</span><span class="keyword">const</span><span class="identifier"> T</span><span class="special"> *</span><span class="identifier">ptr</span><span class="special">);</span><span class="comment">
+
+   /*!Returns is the the name of an object created with construct/find_or_construct
+      functions. Does not throw*/</span><span class="keyword">
+   template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="identifier"> T</span><span class="special">&gt;</span><span class="identifier">
+   instance_type</span><span class="identifier"> get_instance_type</span><span class="special">(</span><span class="keyword">const</span><span class="identifier"> T</span><span class="special"> *</span><span class="identifier">ptr</span><span class="special">);</span><span class="comment">
+
+   /*!Returns the length of the object created construct/find_or_construct
+      functions. Does not throw*/</span><span class="keyword">
+   template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="identifier"> T</span><span class="special">&gt;</span><span class="identifier">
+   std</span><span class="special">::</span><span class="identifier">size_t</span><span class="identifier"> get_instance_length</span><span class="special">(</span><span class="keyword">const</span><span class="identifier"> T</span><span class="special"> *</span><span class="identifier">ptr</span><span class="special">);</span><span class="comment">
 
    /*!Preallocates needed index resources to optimize the 
       creation of "num" named objects in the shared memory segment.
@@ -411,8 +426,17 @@ All these functions have a non-throwing version, that
 is invoked with an additional parameter std::nothrow. 
 For example, for simple object construction:</p>
 <p></p>
-<pre class="programlisting"><code class="literal"><span class="comment">/*!Allocates and constructs an object of type MyType (no throwing version) */</span><span class="identifier">
-MyType</span><span class="special"> *</span><span class="identifier">ptr</span><span class="special"> =</span><span class="identifier"> named_shared_object</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;(</span><span class="string">"Name"</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">nothrow</span><span class="special">)</span><span class="special"> (</span><span class="identifier">par1</span><span class="special">,</span><span class="identifier"> par2</span><span class="special">...);</span></code></pre>
+<pre class="programlisting"><code class="literal"><span class="comment">//Allocates and constructs an object of type MyType (no throwing version)
+</span><span class="identifier">MyType</span><span class="special"> *</span><span class="identifier">ptr</span><span class="special"> =</span><span class="identifier"> named_shared_object</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;(</span><span class="string">"Name"</span><span class="special">,</span><span class="identifier"> std</span><span class="special">::</span><span class="identifier">nothrow</span><span class="special">)</span><span class="special"> (</span><span class="identifier">par1</span><span class="special">,</span><span class="identifier"> par2</span><span class="special">...);</span><span class="comment">
+
+//Check object's name
+</span><span class="identifier">assert</span><span class="special">(</span><span class="identifier">strcmp</span><span class="special">(</span><span class="identifier">segment</span><span class="special">.</span><span class="identifier">get_instance_name</span><span class="special">(</span><span class="identifier">ptr</span><span class="special">),</span><span class="string"> "Name"</span><span class="special">)</span><span class="special"> ==</span><span class="number"> 0</span><span class="special">);</span><span class="comment">
+
+//Check object's type
+</span><span class="identifier">assert</span><span class="special">(</span><span class="identifier">segment</span><span class="special">.</span><span class="identifier">get_instance_type</span><span class="special">(</span><span class="identifier">ptr</span><span class="special">)</span><span class="special"> ==</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">named_type</span><span class="special">);</span><span class="comment">
+
+//Check object's length
+</span><span class="identifier">assert</span><span class="special">(</span><span class="identifier">segment</span><span class="special">.</span><span class="identifier">get_instance_length</span><span class="special">(</span><span class="identifier">ptr</span><span class="special">)</span><span class="special"> ==</span><span class="number"> 1</span><span class="special">);</span></code></pre>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
@@ -425,6 +449,13 @@ must use "boost::shmem::anonymous_instance" object instead of a name:</p>
 <p></p>
 <pre class="programlisting"><code class="literal"><span class="identifier">MyType</span><span class="special"> *</span><span class="identifier">ptr</span><span class="special"> =</span><span class="identifier"> named_shared_object</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;(</span><span class="identifier">anonymous_instance</span><span class="special">)</span><span class="special"> (</span><span class="identifier">par1</span><span class="special">,</span><span class="identifier"> par2</span><span class="special">...);</span><span class="comment">
 //Other construct variants can also be used (including non-throwing ones)
+
+//Check object's type
+</span><span class="identifier">assert</span><span class="special">(</span><span class="identifier">segment</span><span class="special">.</span><span class="identifier">get_instance_type</span><span class="special">(</span><span class="identifier">ptr</span><span class="special">)</span><span class="special"> ==</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">anonymous_type</span><span class="special">);</span><span class="comment">
+
+//Check object's length
+</span><span class="identifier">assert</span><span class="special">(</span><span class="identifier">segment</span><span class="special">.</span><span class="identifier">get_instance_length</span><span class="special">(</span><span class="identifier">ptr</span><span class="special">)</span><span class="special"> ==</span><span class="number"> 1</span><span class="special">);</span><span class="comment">
+
 //We can only destroy the anonymous object via pointer
 </span><span class="identifier">named_shared_object</span><span class="special">.</span><span class="identifier">destroy_ptr</span><span class="special">(</span><span class="identifier">ptr</span><span class="special">);</span></code></pre>
 <p>
@@ -450,13 +481,20 @@ to design pooled, shared memory allocators. The object can be searched using the
 of the class as a key.</p>
 <p></p>
 <pre class="programlisting"><code class="literal"><span class="comment">// Construct
+// Other construct and find variants can also be used (including non-throwing ones)
 </span><span class="identifier">MyType</span><span class="special"> *</span><span class="identifier">ptr</span><span class="special"> =</span><span class="identifier"> named_shared_object</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;(</span><span class="identifier">unique_instance</span><span class="special">)</span><span class="special"> (</span><span class="identifier">par1</span><span class="special">,</span><span class="identifier"> par2</span><span class="special">...);</span><span class="comment">
+
+//Check object's type
+</span><span class="identifier">assert</span><span class="special">(</span><span class="identifier">segment</span><span class="special">.</span><span class="identifier">get_instance_type</span><span class="special">(</span><span class="identifier">ptr</span><span class="special">)</span><span class="special"> ==</span><span class="identifier"> boost</span><span class="special">::</span><span class="identifier">shmem</span><span class="special">::</span><span class="identifier">unique_type</span><span class="special">);</span><span class="comment">
+
+//Check object's length
+</span><span class="identifier">assert</span><span class="special">(</span><span class="identifier">segment</span><span class="special">.</span><span class="identifier">get_instance_length</span><span class="special">(</span><span class="identifier">ptr</span><span class="special">)</span><span class="special"> ==</span><span class="number"> 1</span><span class="special">);</span><span class="comment">
+
 // Find it
 </span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special"> *,</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">&gt;</span><span class="identifier"> ret</span><span class="special"> =</span><span class="identifier"> named_shared_object</span><span class="special">.</span><span class="identifier">find</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;(</span><span class="identifier">unique_instance</span><span class="special">);</span><span class="comment">
+
 // Destroy it
-</span><span class="identifier">named_shared_object</span><span class="special">.</span><span class="identifier">destroy</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;(</span><span class="identifier">unique_instance</span><span class="special">);</span><span class="comment">
-// Other construct and find variants can also be used (including non-throwing ones)
-</span></code></pre>
+</span><span class="identifier">named_shared_object</span><span class="special">.</span><span class="identifier">destroy</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;(</span><span class="identifier">unique_instance</span><span class="special">);</span></code></pre>
 <p></p>
 <pre class="programlisting"><code class="literal"><span class="comment">// We can also destroy the unique object via pointer
 </span><span class="identifier">MyType</span><span class="special"> *</span><span class="identifier">ptr</span><span class="special"> =</span><span class="identifier"> named_shared_object</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="identifier">MyType</span><span class="special">&gt;(</span><span class="identifier">unique_instance</span><span class="special">)</span><span class="special"> (</span><span class="identifier">par1</span><span class="special">,</span><span class="identifier"> par2</span><span class="special">...);</span><span class="identifier">
