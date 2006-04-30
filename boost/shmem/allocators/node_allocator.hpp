@@ -151,11 +151,11 @@ class node_allocator
    /*!Construct object, calling constructor. 
    Throws if T(const Convertible &) throws*/
    template<class Convertible>
-   void construct(pointer ptr, const Convertible &value)
+   void construct(const pointer &ptr, const Convertible &value)
       {  new(detail::get_pointer(ptr)) value_type(value);  }
 
    /*!Destroys object. Throws if object's destructor throws*/
-   void destroy(pointer ptr)
+   void destroy(const pointer &ptr)
       {  BOOST_ASSERT(ptr != 0); (*ptr).~value_type();  }
 
    /*!Returns the number of elements that could be allocated. Never throws*/
@@ -174,7 +174,7 @@ class node_allocator
    }
 
    /*!Deallocate allocated memory. Never throws*/
-   void deallocate(pointer ptr, size_type count)
+   void deallocate(const pointer &ptr, size_type count)
    {
       typedef detail::shared_node_pool
                <SegmentManager, mutex_t, sizeof(T), N>   node_pool_t;
