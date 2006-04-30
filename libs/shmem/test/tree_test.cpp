@@ -194,6 +194,9 @@ int main ()
       stdmultiset->insert(i);
    }
 
+   if(!CheckEqual(shmset, stdset)) return -1;
+   if(!CheckEqual(shmmultiset, stdmultiset)) return -1;
+
    for(i = 0; i < max; ++i){
       shmset->insert(shmset->begin(), i);
       stdset->insert(stdset->begin(), i);
@@ -217,6 +220,7 @@ int main ()
       if(!CheckEqual(shmmultiset, stdmultiset)) return -1;
    }
 
+   //Compare count with std containers
    for(i = 0; i < max; ++i){
       if(shmset->count(i) != stdset->count(i)){
          return -1;
@@ -227,6 +231,20 @@ int main ()
       }
    }
 
+   //Now do count exercise
+   shmset->clear();
+   shmmultiset->clear();
+
+   for(int j = 0; j < 3; ++j)
+   for(int i = 0; i < 100; ++i){
+      shmset->insert(i);
+      shmmultiset->insert(i);
+      if(shmset->count(i) != 1)
+         return 1;
+      if(shmmultiset->count(i) != (j+1))
+         return 1;
+   }
+
    segment.destroy<MyShmSet>("MyShmSet");
    delete stdset;
    segment.destroy_ptr(shmmultiset);
@@ -234,7 +252,4 @@ int main ()
 
    return 0;
 }
-
-
-
 

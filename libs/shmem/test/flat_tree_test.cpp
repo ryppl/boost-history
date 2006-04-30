@@ -97,7 +97,6 @@ int main ()
 
    MyStdMultiSet *stdmultiset = new MyStdMultiSet;
 
-
    int i, j;
    for(i = 0; i < max; ++i){
       shmset->insert(i);
@@ -176,6 +175,39 @@ int main ()
    }
    if(!CheckEqual(shmset, stdset)) return -1;
    if(!CheckEqual(shmmultiset, stdmultiset)) return -1;
+
+   for(i = 0; i < max; ++i){
+      shmset->insert(shmset->begin(), i);
+      stdset->insert(stdset->begin(), i);
+      shmmultiset->insert(shmmultiset->begin(), i);
+      stdmultiset->insert(stdmultiset->begin(), i);
+      if(!CheckEqual(shmset, stdset)) return -1;
+      if(!CheckEqual(shmmultiset, stdmultiset)) return -1;
+
+      shmset->insert(shmset->end(), i);
+      stdset->insert(stdset->end(), i);
+      shmmultiset->insert(shmmultiset->end(), i);
+      stdmultiset->insert(stdmultiset->end(), i);
+      if(!CheckEqual(shmset, stdset)) return -1;
+      if(!CheckEqual(shmmultiset, stdmultiset)) return -1;
+
+      shmset->insert(shmset->lower_bound(i), i);
+      stdset->insert(stdset->lower_bound(i), i);
+      shmmultiset->insert(shmmultiset->lower_bound(i), i);
+      stdmultiset->insert(stdmultiset->lower_bound(i), i);
+      if(!CheckEqual(shmset, stdset)) return -1;
+      if(!CheckEqual(shmmultiset, stdmultiset)) return -1;
+   }
+
+   for(i = 0; i < max; ++i){
+      if(shmset->count(i) != stdset->count(i)){
+         return -1;
+      }
+
+      if(shmmultiset->count(i) != stdmultiset->count(i)){
+         return -1;
+      }
+   }
 
    segment.destroy<MyShmSet>("MyShmSet");
    delete stdset;

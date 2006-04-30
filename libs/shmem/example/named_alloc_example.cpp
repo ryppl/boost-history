@@ -10,6 +10,7 @@
 
 #include <boost/shmem/named_shared_object.hpp>
 #include <cstddef>
+#include <boost/shmem/sync/named_mutex.hpp>
 
 int main ()
 {
@@ -50,14 +51,18 @@ int main ()
 
    //Find the array and object
    std::pair<MyType*, std::size_t> res;
-   res = segment.find<MyType> ("MyType array");   
+   res = segment.find<MyType> ("MyType array");
 
    std::size_t array_len   = res.second;
    //Length should be 1
    assert(array_len == 10);
 
    //Find the array and the object
-   res = segment.find<MyType> ("MyType instance");   
+   res = segment.find<MyType> ("MyType instance"); 
+
+   segment.get_instance_name  (res.first);
+   segment.get_instance_length(res.first);
+   segment.get_instance_type  (res.first);
 
    std::size_t len   = res.second;
 

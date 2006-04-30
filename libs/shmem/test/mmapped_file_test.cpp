@@ -16,7 +16,6 @@ using namespace boost::shmem;
 
 int main ()
 {
-
    {
       const int memsize = 65536;
       const char *const fileName = "MyMappedFile";
@@ -101,3 +100,25 @@ int main ()
    }
    return 0;
 }
+
+
+/*
+#include <boost/shmem/containers/map.hpp>
+#include <boost/shmem/named_shared_object.hpp>
+#include <boost/shmem/allocators/allocator.hpp>
+#include <windows.h>
+using namespace boost::shmem;
+
+int main()
+{
+   named_shared_object segment;
+   segment.create("aaa", 1000);
+
+   typedef 
+	boost::shmem::map<long,long,std::less<long>,boost::shmem::allocator<std::pair<const long,long>, 
+		boost::shmem::named_shared_object::segment_manager> > map_t;
+   segment.construct<map_t>("aaaaa");
+
+   return 0;
+}
+*/
