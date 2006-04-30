@@ -123,17 +123,17 @@ class allocator
       {  return pointer((value_type*)mp_mngr->allocate(count*sizeof(value_type)));  }
 
    /*!Deallocates memory previously allocated. Never throws*/
-   void deallocate(pointer ptr, size_type)
+   void deallocate(const pointer &ptr, size_type)
       {  mp_mngr->deallocate(detail::get_pointer(ptr));  }
 
    /*!Construct object, calling constructor. 
       Throws if T(const Convertible &) throws*/
    template<class Convertible>
-   void construct(pointer ptr, const Convertible &value)
+   void construct(const pointer &ptr, const Convertible &value)
       {  new(detail::get_pointer(ptr)) value_type(value);  }
 
    /*!Destroys object. Throws if object's destructor throws*/
-   void destroy(pointer ptr)
+   void destroy(const pointer &ptr)
       {  BOOST_ASSERT(ptr != 0); (*ptr).~value_type();  }
 
    /*!Returns the number of elements that could be allocated. Never throws*/
