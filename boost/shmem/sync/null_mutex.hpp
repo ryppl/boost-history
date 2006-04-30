@@ -49,6 +49,8 @@ class null_mutex
       scoped_lock;
    typedef boost::shmem::scoped_try_lock<null_mutex>   
       scoped_try_lock;
+   typedef boost::shmem::scoped_timed_lock<null_mutex>   
+      scoped_timed_lock;
    friend class shared_condition;
  private:
 
