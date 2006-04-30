@@ -477,6 +477,24 @@ class basic_named_object_impl
    bool destroy_ptr(const T *ptr)
       {  return mp_header->destroy_ptr<T>(ptr); }
 
+   /*!Returns the name of an object created with construct/find_or_construct
+      functions. Does not throw*/
+   template<class T>
+   const char *get_instance_name(const T *ptr)
+   {  return mp_header->get_instance_name(ptr);   }
+
+   /*!Returns is the the name of an object created with construct/find_or_construct
+      functions. Does not throw*/
+   template<class T>
+   instance_type get_instance_type(const T *ptr)
+   {  return mp_header->get_instance_type(ptr); }
+
+   /*!Returns the length of the object created construct/find_or_construct
+      functions. Does not throw*/
+   template<class T>
+   std::size_t get_instance_length(const T *ptr)
+   {  return mp_header->get_instance_length(ptr); }
+
    /*!Preallocates needed index resources to optimize the 
       creation of "num" named objects in the  memory segment.
       Can throw boost::shmem::bad_alloc if there is no enough memory.*/

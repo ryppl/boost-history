@@ -50,7 +50,12 @@
    multi-segment allocations.
 */
 
-namespace boost{  namespace shmem{  namespace detail{
+namespace boost{  namespace shmem{
+
+/*!An integer that describes the type of the instance constructed in memory*/
+enum instance_type {   anonymous_type = 0, named_type = 1, unique_type = 2   };
+
+namespace detail{
 
 /*!
    This struct indicates an anonymous object creation allocation
@@ -486,6 +491,66 @@ class segment_manager : private MemoryAlgorithm
          return this->priv_generic_named_construct<CharType, T, CtorFunc>
                   (ctrl_data_t::named_type, name, num, try2find, dothrow, ctor, m_header.m_named_index);
       }
+   }
+
+   /*!Returns the name of an object created with construct/find_or_construct
+      functions. Does not throw*/
+   template<class T>
+   const char *get_instance_name(const T *ptr)
+   {
+      switch(this->get_instance_type(ptr)){
+         case named_type:
+         //Correct, continue
+         break;
+
+         case unique_type:
+         case anonymous_type:
+            return 0;
+         break;
+         
+         default:
+         //Passed pointer is not correct
+         assert(0);
+         return 0;
+      }
+
+      typedef typename index_traits<CharType>::index_type   index_t;
+      typedef typename index_traits<CharType>::key_type     key_type;
+      typedef typename index_traits<CharType>::index_it     index_it;
+      typedef detail::alloc_info_t<T>                       ctrl_data_t;
+      const bool NodeIndex = is_node_index<index_t>::value;   //change this
+      typedef detail::alloc_name_t
+         <CharType, index_it, NodeIndex>                    alloc_name_t;
+      
+      ctrl_data_t * ctrl_data = ctrl_data_t::get_info_from_data(ptr);
+
+      //Get total size of data port and total allocation size
+      std::size_t datasize  = detail::get_rounded_size
+               (ctrl_data_t::get_offset() + sizeof(T)*ctrl_data->m_num,
+                                  boost::alignment_of<alloc_name_t>::value);
+      alloc_name_t *alloc_name = reinterpret_cast<alloc_name_t*>
+                                    (char_ptr_cast(ctrl_data)+datasize);
+      return alloc_name->get_name();
+   }
+
+   /*!Returns is the the name of an object created with construct/find_or_construct
+      functions. Does not throw*/
+   template<class T>
+   instance_type get_instance_type(const T *ptr)
+   {
+      typedef detail::alloc_info_t<T>  ctrl_data_t;
+            ctrl_data_t * ctrl_data = ctrl_data_t::get_info_from_data(ptr);
+      return static_cast<instance_type>(ctrl_data->m_allocation_type);
+   }
+
+   /*!Returns the length of the object created construct/find_or_construct
+      functions. Does not throw*/
+   template<class T>
+   std::size_t get_instance_length(const T *ptr)
+   {
+      typedef detail::alloc_info_t<T>  ctrl_data_t;
+            ctrl_data_t * ctrl_data = ctrl_data_t::get_info_from_data(ptr);
+      return ctrl_data->m_num;
    }
 
    /*!Preallocates needed index resources to optimize the 
