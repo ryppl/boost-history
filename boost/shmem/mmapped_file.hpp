@@ -198,7 +198,7 @@ inline bool mmapped_file::open(const char *filename, fileoff_t file_offset,
 
    //We can't map any file_offset so we have to obtain system's 
    //memory granularity
-   system_info_t info;
+   SHMEM_SYSTEM_INFO info;
    get_system_info(&info);
    granularity = info.dwAllocationGranularity;
 
