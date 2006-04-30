@@ -36,11 +36,11 @@ namespace detail {
 
             case open_or_create:
                if(created){
-                 if(sem_init(mp_sem, 1, 1) == 0){
+                 if(sem_init(mp_mut, 1, 1) == 0){
                      return true;
                   }
                   else{
-                     mp_sem = 0;
+                     mp_mut = 0;
                      return false;
                   }
                }
@@ -170,7 +170,7 @@ inline bool named_mutex::timed_lock(const xtime &xt)
       timespec tspec;
       xtime_to_timespec(xt, tspec);
 
-      int res = sem_timedwait((mp_mut, &tspec);
+      int res = sem_timedwait(mp_mut, &tspec);
       assert(res == 0 || errno == ETIMEDOUT);
 
       if(!(res == 0 || errno == ETIMEDOUT)){
