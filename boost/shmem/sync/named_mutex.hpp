@@ -18,6 +18,7 @@
 #include <boost/shmem/detail/workaround.hpp>
 #include <boost/shmem/detail/config_begin.hpp>
 #include <boost/noncopyable.hpp>
+#include <boost/shmem/exceptions.hpp>
 
 #if (defined BOOST_WINDOWS) && !(defined BOOST_DISABLE_WIN32)
 #  include <boost/shmem/sync/win32/win32_sync_primitives.hpp>
@@ -87,7 +88,30 @@ class named_mutex : private boost::noncopyable
       Throws process_resource_exception if a severe error is found*/
    bool timed_lock(const xtime& xt);
 
- private:
+   private:
+   friend class boost::shmem::lock_ops<named_mutex>;
+   typedef boost::shmem::scoped_lock<named_mutex> 
+      scoped_lock;
+   typedef boost::shmem::scoped_try_lock<named_mutex>   
+      scoped_try_lock;
+   typedef boost::shmem::scoped_timed_lock<named_mutex>   
+      scoped_timed_lock;
+
+   //This allows using named_mutex with scoped_lock
+   typedef char cv_state;
+   
+   void do_lock()
+   {  this->lock();  }
+
+   bool do_trylock()
+   {  return this->try_lock();  }
+
+   bool do_timedlock(const xtime& xt)
+   {  return this->timed_lock(xt);  }
+
+   void do_unlock()
+   {  this->unlock();  }
+
    #if (defined BOOST_WINDOWS) && !(defined BOOST_DISABLE_WIN32)
    void*          mp_mut;
    #else    //#if (defined BOOST_WINDOWS) && !(defined BOOST_DISABLE_WIN32)
