@@ -325,21 +325,22 @@ inline shared_memory::GlobalNamedScopedMutex::GlobalNamedScopedMutex()
    
 inline bool shared_memory::GlobalNamedScopedMutex::acquire()
 {  
-   m_mut = create_mutex("/boost_shmem_shm_global_mutex");  
+   m_mut = detail::create_mutex("/boost_shmem_shm_global_mutex");  
    if(m_mut == 0)
       return false;
-   m_acquired = wait_for_single_object(m_mut, infinite_time) == wait_object_0; 
+   m_acquired = detail::wait_for_single_object
+      (m_mut, detail::infinite_time) == detail::wait_object_0; 
    return m_acquired;  
 }
 
 inline shared_memory::GlobalNamedScopedMutex::~GlobalNamedScopedMutex()
 {
    if(m_acquired){
-      release_mutex(m_mut);
+      detail::release_mutex(m_mut);
    }
 
    if(m_mut){
-      close_handle(m_mut);
+      detail::close_handle(m_mut);
    }
 }
 
@@ -353,7 +354,7 @@ inline bool shared_memory::priv_create(const char *name,   size_t size,
 {
    if(m_shmHnd)   return false;
 
-   unsigned long flProtect = page_readwrite;
+   unsigned long flProtect = detail::page_readwrite;
    bool created   = true;
 
    GlobalNamedScopedMutex mut;
@@ -364,14 +365,16 @@ inline bool shared_memory::priv_create(const char *name,   size_t size,
    size += segment_info_size;
 
    //Create new shared memory
-   m_shmHnd = create_file_mapping( invalid_handle, // handle to file to map
-                                    flProtect, // protection for mapping object
-                                    0,          // high-order 32 bits of object size
-                                    (unsigned long)size,// low-order 32 bits of object size
-                                    name );     // name of file-mapping object
+   m_shmHnd = detail::create_file_mapping(
+                     detail::invalid_handle, // handle to file to map
+                     flProtect, // protection for mapping object
+                     0,          // high-order 32 bits of object size
+                     (unsigned long)size,// low-order 32 bits of object size
+                     name );     // name of file-mapping object
                                  
    //Check if was already created
-   if( m_shmHnd != 0  &&  get_last_error() == error_already_exists ) { 
+   if( m_shmHnd != 0  &&  detail::get_last_error() 
+       == detail::error_already_exists ) { 
       if(createonly){
          this->priv_close_handles();
          return false;
@@ -380,12 +383,13 @@ inline bool shared_memory::priv_create(const char *name,   size_t size,
          created = false;
          //Map into process address space
          mp_info = reinterpret_cast<segment_info_t*> (
-                      map_view_of_file_ex( m_shmHnd, // file-mapping object to map into address space
-                                 file_map_all_access,
-                                 0,    // high-order 32 bits of file offset
-                                 0,    // low-order 32 bits of file offset
-                                 segment_info_size,    // number of bytes to map
-                                 (void*)addr)// suggested starting address for mapped view
+                      detail::map_view_of_file_ex(
+                           m_shmHnd, // file-mapping object to map into address space
+                           detail::file_map_all_access,
+                           0,    // high-order 32 bits of file offset
+                           0,    // low-order 32 bits of file offset
+                           segment_info_size,    // number of bytes to map
+                           (void*)addr)// suggested starting address for mapped view
                   );
          if(!mp_info){
             this->priv_close_handles();
@@ -396,7 +400,7 @@ inline bool shared_memory::priv_create(const char *name,   size_t size,
          size   = reinterpret_cast<segment_info_t *>(mp_info)->real_size;
 
          //Unmap the memory to remap it
-         unmap_view_of_file(mp_info);
+         detail::unmap_view_of_file(mp_info);
       }
    }
    else if(!m_shmHnd){
@@ -409,12 +413,13 @@ inline bool shared_memory::priv_create(const char *name,   size_t size,
 
    //Map into process address space
    mp_info = reinterpret_cast<segment_info_t*> (
-            map_view_of_file_ex( m_shmHnd, // file-mapping object to map into address space
-                              file_map_all_access,
-                              0,    // high-order 32 bits of file offset
-                              0,    // low-order 32 bits of file offset
-                              size, // number of bytes to map
-                              (void*)(addr))// suggested starting address for mapped view
+            detail::map_view_of_file_ex(
+                  m_shmHnd, // file-mapping object to map into address space
+                  detail::file_map_all_access,
+                  0,    // high-order 32 bits of file offset
+                  0,    // low-order 32 bits of file offset
+                  size, // number of bytes to map
+                  (void*)(addr))// suggested starting address for mapped view
             );
    if(!mp_info){
       this->priv_close_handles();
@@ -440,7 +445,7 @@ inline bool shared_memory::priv_open(const char *name,   const void *addr,   Fun
 {
    if(m_shmHnd)   return false;
 
-   unsigned long dwDesiredAccess = file_map_write;
+   unsigned long dwDesiredAccess = detail::file_map_write;
 
    GlobalNamedScopedMutex mut;
    if(!mut.acquire()){
@@ -448,7 +453,7 @@ inline bool shared_memory::priv_open(const char *name,   const void *addr,   Fun
    }
 
    //Open existing shared memory
-   m_shmHnd = open_file_mapping(dwDesiredAccess, name );
+   m_shmHnd = detail::open_file_mapping(dwDesiredAccess, name );
 
    if(!m_shmHnd){
       this->priv_close_handles();
@@ -457,8 +462,8 @@ inline bool shared_memory::priv_open(const char *name,   const void *addr,   Fun
 
    //Map into process address space
    mp_info = reinterpret_cast<segment_info_t*> (
-            map_view_of_file_ex( m_shmHnd, // file-mapping object to map into address space
-                             file_map_all_access,
+            detail::map_view_of_file_ex( m_shmHnd, // file-mapping object to map into address space
+                             detail::file_map_all_access,
                              0,    // high-order 32 bits of file offset
                              0,    // low-order 32 bits of file offset
                              segment_info_size,    // number of bytes to map
@@ -473,12 +478,12 @@ inline bool shared_memory::priv_open(const char *name,   const void *addr,   Fun
    std::size_t size = mp_info->real_size;
 
    //Unmap the memory to remap it
-   unmap_view_of_file(mp_info);
+   detail::unmap_view_of_file(mp_info);
    
    //Map into process address space
    mp_info = reinterpret_cast<segment_info_t*> (
-            map_view_of_file_ex( m_shmHnd, // file-mapping object to map into address space
-                             file_map_all_access,
+            detail::map_view_of_file_ex( m_shmHnd, // file-mapping object to map into address space
+                             detail::file_map_all_access,
                              0,    // high-order 32 bits of file offset
                              0,    // low-order 32 bits of file offset
                              size,    // number of bytes to map
@@ -513,12 +518,12 @@ inline void shared_memory::priv_close_with_func(Func func)
 inline void shared_memory::priv_close_handles()
 {
    if(mp_info){
-      unmap_view_of_file(mp_info);
+      detail::unmap_view_of_file(mp_info);
       mp_info = 0;
    }
 
    if(m_shmHnd){
-      close_handle(m_shmHnd);
+      detail::close_handle(m_shmHnd);
       m_shmHnd = 0;
    }
 }

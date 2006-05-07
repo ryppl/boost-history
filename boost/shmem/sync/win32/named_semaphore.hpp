@@ -25,9 +25,9 @@ inline bool named_semaphore::create(const char *name, int initialCount)
 {
    if(mp_sem)
       return false;
-   mp_sem = create_semaphore(initialCount, name);
-   if(get_last_error() == error_already_exists){
-      close_handle(mp_sem);
+   mp_sem = detail::create_semaphore(initialCount, name);
+   if(detail::get_last_error() == detail::error_already_exists){
+      detail::close_handle(mp_sem);
       return false;
    }
    return true;
@@ -37,7 +37,7 @@ inline bool named_semaphore::open_or_create(const char *name, int initialCount)
 {
    if(mp_sem)
       return false;
-   mp_sem = create_semaphore(initialCount, name);
+   mp_sem = detail::create_semaphore(initialCount, name);
 
    if(!mp_sem){
       return false;
@@ -50,14 +50,14 @@ inline bool named_semaphore::open(const char *name)
    if(mp_sem)
       return false;
 
-   mp_sem = open_semaphore(name);
+   mp_sem = detail::open_semaphore(name);
    return mp_sem != 0;
 }
 
 inline void named_semaphore::close()
 {
    if(mp_sem){
-      bool success = close_handle(mp_sem) == 1;
+      bool success = detail::close_handle(mp_sem) == 1;
       assert(success == true);
       mp_sem = 0;
    }
@@ -65,21 +65,23 @@ inline void named_semaphore::close()
 
 inline void named_semaphore::post()
 {
-   if(release_semaphore(mp_sem, 1, 0) != 1){
+   if(detail::release_semaphore(mp_sem, 1, 0) != 1){
       throw sem_exception();
    }
 }
 
 inline void named_semaphore::wait()
 {
-   if(wait_for_single_object(mp_sem, infinite_time) != wait_object_0){
+   if(detail::wait_for_single_object(mp_sem, detail::infinite_time) 
+         != detail::wait_object_0){
       throw sem_exception();
    }
 }
 
 inline bool named_semaphore::try_wait()
 {
-   return wait_for_single_object(mp_sem, 0) == wait_object_0;
+   return detail::wait_for_single_object(mp_sem, 0) 
+            == detail::wait_object_0;
 }
 
 inline bool named_semaphore::timed_wait(const xtime &xt)
@@ -89,16 +91,16 @@ inline bool named_semaphore::timed_wait(const xtime &xt)
       int milliseconds;
       to_duration(xt, milliseconds);
 
-      unsigned long res = wait_for_single_object(mp_sem, milliseconds);
+      unsigned long res = detail::wait_for_single_object(mp_sem, milliseconds);
 
-      if (res == wait_timeout)
+      if (res == detail::wait_timeout)
       {
          xtime cur;
          xtime_get(&cur, TIME_UTC);
          if (xt > cur)
                continue;
       }
-      return res == wait_object_0;
+      return res == detail::wait_object_0;
    }
 }
 

@@ -25,13 +25,13 @@ inline bool named_mutex::create(const char *name)
 {
    if(mp_mut)
       return false;
-   mp_mut = create_mutex(name);
+   mp_mut = detail::create_mutex(name);
 
    if(!mp_mut){
       return false;
    }
-   else if(get_last_error() == error_already_exists){
-      close_handle(mp_mut);
+   else if(detail::get_last_error() == detail::error_already_exists){
+      detail::close_handle(mp_mut);
       return false;
    }
    return true;
@@ -41,7 +41,7 @@ inline bool named_mutex::open_or_create(const char *name)
 {
    if(mp_mut)
       return false;
-   mp_mut = create_mutex(name);
+   mp_mut = detail::create_mutex(name);
 
    if(!mp_mut){
       return false;
@@ -54,14 +54,14 @@ inline bool named_mutex::open(const char *name)
    if(mp_mut)
       return false;
 
-   mp_mut = create_mutex(name);
+   mp_mut = detail::create_mutex(name);
    return mp_mut != 0;
 }
 
 inline void named_mutex::close()
 {
    if(mp_mut){
-      bool success = close_handle(mp_mut) == 1;
+      bool success = detail::close_handle(mp_mut) == 1;
       assert(success == true);
       mp_mut = 0;
    }
@@ -69,21 +69,22 @@ inline void named_mutex::close()
 
 inline void named_mutex::unlock()
 {
-   if(release_mutex(mp_mut) != 1){
+   if(detail::release_mutex(mp_mut) != 1){
       throw lock_exception();
    }
 }
 
 inline void named_mutex::lock()
 {
-   if(wait_for_single_object(mp_mut, infinite_time) != wait_object_0){
+   if(detail::wait_for_single_object
+      (mp_mut, detail::infinite_time) != detail::wait_object_0){
       throw lock_exception();
    }
 }
 
 inline bool named_mutex::try_lock()
 {
-   return wait_for_single_object(mp_mut, 0) == wait_object_0;
+   return detail::wait_for_single_object(mp_mut, 0) == detail::wait_object_0;
 }
 
 inline bool named_mutex::timed_lock(const xtime &xt)
@@ -93,16 +94,17 @@ inline bool named_mutex::timed_lock(const xtime &xt)
       int milliseconds;
       to_duration(xt, milliseconds);
 
-      unsigned long res = wait_for_single_object(mp_mut, infinite_time);
+      unsigned long res = 
+         detail::wait_for_single_object(mp_mut, detail::infinite_time);
 
-      if (res == wait_timeout)
+      if (res == detail::wait_timeout)
       {
          xtime cur;
          xtime_get(&cur, TIME_UTC);
          if (xt > cur)
                continue;
       }
-      return res == wait_object_0;
+      return res == detail::wait_object_0;
    }
 }
 

@@ -38,7 +38,7 @@ inline static void do_lock_func(volatile long &m_s)
             break;
       }
       // relinquish current timeslice
-      sched_yield();
+      detail::sched_yield();
    }while (true);
 }
 
@@ -77,7 +77,7 @@ inline static bool do_timedlock_func(volatile long &m_s, const xtime& xt)
          return false;
       }
       // relinquish current time slice
-      sched_yield();
+      detail::sched_yield();
    }while (true);
 
    return true;

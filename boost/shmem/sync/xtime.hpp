@@ -83,8 +83,8 @@ inline int xtime_get(struct xtime* xtp, int clock_type)
 {
     if (clock_type == TIME_UTC){
       #if (defined BOOST_WINDOWS) && !(defined BOOST_DISABLE_WIN32)
-        SHMEM_FILETIME ft;
-        get_system_time_as_file_time(&ft);
+        detail::shmem_filetime ft;
+        detail::get_system_time_as_file_time(&ft);
         static const boost::uint64_t timespec_to_filetime_offset =
             (boost::uint64_t)(116444736000000000);
         

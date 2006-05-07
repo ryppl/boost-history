@@ -140,7 +140,7 @@ inline void*    mmapped_file::get_base()  const
 #if (defined BOOST_WINDOWS) && !(defined BOOST_DISABLE_WIN32)
 
 inline mmapped_file::mmapped_file() 
-   : m_fileMappingHnd(0), m_fileHnd(invalid_handle), m_base(0)
+   : m_fileMappingHnd(0), m_fileHnd(detail::invalid_handle), m_base(0)
 {}
 
 inline bool mmapped_file::open(const char *filename, fileoff_t file_offset, 
@@ -162,30 +162,30 @@ inline bool mmapped_file::open(const char *filename, fileoff_t file_offset,
 
    //Set accesses
    if (mode == rw_mode){
-      file_access       |= generic_read | generic_write;
-      file_map_access   |= page_readwrite;
-      map_access        |= file_map_write;
+      file_access       |= detail::generic_read | detail::generic_write;
+      file_map_access   |= detail::page_readwrite;
+      map_access        |= detail::file_map_write;
    }
    else if (mode == ro_mode){
-      file_access       |= generic_read;
-      file_map_access   |= page_readonly;
-      map_access        |= file_map_read;
+      file_access       |= detail::generic_read;
+      file_map_access   |= detail::page_readonly;
+      map_access        |= detail::file_map_read;
    }
 
-   file_creation_flags = open_existing;
+   file_creation_flags = detail::open_existing;
 
    //Open file using windows API since we need the handle
-   this->m_fileHnd = create_file(filename, 
+   this->m_fileHnd = detail::create_file(filename, 
                                  file_access, 
                                  file_creation_flags);
    //Check for error
-   if(this->m_fileHnd == invalid_handle){
+   if(this->m_fileHnd == detail::invalid_handle){
       this->close();
       return false;
    }
 
    //Create file mapping
-   this->m_fileMappingHnd = create_file_mapping(this->m_fileHnd, 
+   this->m_fileMappingHnd = detail::create_file_mapping(this->m_fileHnd, 
                                                file_map_access,
                                                0, 
                                                0, 
@@ -198,8 +198,8 @@ inline bool mmapped_file::open(const char *filename, fileoff_t file_offset,
 
    //We can't map any file_offset so we have to obtain system's 
    //memory granularity
-   SHMEM_SYSTEM_INFO info;
-   get_system_info(&info);
+   detail::shmem_system_info info;
+   detail::get_system_info(&info);
    granularity = info.dwAllocationGranularity;
 
    //Now we calculate valid offsets
@@ -214,7 +214,7 @@ inline bool mmapped_file::open(const char *filename, fileoff_t file_offset,
    m_size   = size;
 
    //Map file with new offsets and size
-   m_base = map_view_of_file_ex(this->m_fileMappingHnd, 
+   m_base = detail::map_view_of_file_ex(this->m_fileMappingHnd, 
                                 map_access, 
                                 foffset_high,
                                 foffset_low, 
@@ -244,31 +244,31 @@ inline bool mmapped_file::flush(std::size_t mapping_offset, std::size_t numbytes
       numbytes = m_size-mapping_offset;
    }
    //Flush it all
-   return 1 == flush_view_of_file(reinterpret_cast<char*>(m_base)+mapping_offset, 
+   return 1 == detail::flush_view_of_file(reinterpret_cast<char*>(m_base)+mapping_offset, 
                                   static_cast<std::size_t>(numbytes));
 }
 
 inline bool mmapped_file::is_open() const
 {
-   return m_fileHnd != invalid_handle;
+   return m_fileHnd != detail::invalid_handle;
 }
 
 inline void mmapped_file::close()
 {
    if(m_base){
       this->flush();
-      unmap_view_of_file(reinterpret_cast<char*>(m_base) - m_extra_offset);
+      detail::unmap_view_of_file(reinterpret_cast<char*>(m_base) - m_extra_offset);
       m_base = 0;
    }
 
    if(m_fileMappingHnd){
-      close_handle(m_fileMappingHnd);
+      detail::close_handle(m_fileMappingHnd);
       m_fileMappingHnd = 0;
    }
 
    if(m_fileHnd){
-      close_handle(m_fileHnd);
-      m_fileHnd = invalid_handle;
+      detail::close_handle(m_fileHnd);
+      m_fileHnd = detail::invalid_handle;
    }
 }
 

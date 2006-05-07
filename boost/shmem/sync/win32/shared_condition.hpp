@@ -45,7 +45,7 @@ inline void shared_condition::notify(long command)
    m_enter_mut.do_lock();
 
    //Return if there are no waiters
-   if(!exchange_and_add(&m_num_waiters, 0)) { 
+   if(!detail::exchange_and_add(&m_num_waiters, 0)) { 
       m_enter_mut.do_unlock();
       return;
    }
@@ -108,8 +108,8 @@ inline bool shared_condition::do_timed_wait(bool tout_enabled,
    while(1){
       //The thread sleeps/spins until a condition commands a notification
       //Notification occurred, we will lock the checking mutex so that
-      while(exchange_and_add(&m_command, 0) == SLEEP){
-         sched_yield();
+      while(detail::exchange_and_add(&m_command, 0) == SLEEP){
+         detail::sched_yield();
 
          //Check for timeout
          if(tout_enabled){

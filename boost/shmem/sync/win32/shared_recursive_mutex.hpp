@@ -35,7 +35,7 @@ inline shared_recursive_mutex::~shared_recursive_mutex(){}
 
 inline void shared_recursive_mutex::do_lock()
 {
-   unsigned long pNumber = current_thread_id();
+   unsigned long pNumber = detail::current_thread_id();
    if(pNumber == m_nOwner){
       m_nLockCount++;
    }
@@ -48,7 +48,7 @@ inline void shared_recursive_mutex::do_lock()
 
 inline void shared_recursive_mutex::do_unlock()
 {
-   unsigned long pNumber = current_thread_id();
+   unsigned long pNumber = detail::current_thread_id();
    assert(pNumber == m_nOwner);
    m_nLockCount--;
    if(m_nLockCount == 0){
@@ -64,7 +64,7 @@ inline shared_recursive_try_mutex::~shared_recursive_try_mutex(){}
 
 inline void shared_recursive_try_mutex::do_lock()
 {
-   unsigned long pNumber = current_thread_id();
+   unsigned long pNumber = detail::current_thread_id();
    if(pNumber == m_nOwner){
       m_nLockCount++;
    }
@@ -77,7 +77,7 @@ inline void shared_recursive_try_mutex::do_lock()
 
 inline bool shared_recursive_try_mutex::do_trylock()
 {
-   unsigned long pNumber = current_thread_id();
+   unsigned long pNumber = detail::current_thread_id();
    if(pNumber == m_nOwner) {  // we own it
       m_nLockCount++;
       return true;
@@ -92,7 +92,7 @@ inline bool shared_recursive_try_mutex::do_trylock()
 
 inline void shared_recursive_try_mutex::do_unlock()
 {
-   unsigned long pNumber = current_thread_id();
+   unsigned long pNumber = detail::current_thread_id();
    assert(pNumber == m_nOwner);
    m_nLockCount--;
    if(m_nLockCount == 0){
@@ -108,7 +108,7 @@ inline shared_recursive_timed_mutex::~shared_recursive_timed_mutex(){}
 
 inline void shared_recursive_timed_mutex::do_lock()
 {
-   unsigned long pNumber = current_thread_id();
+   unsigned long pNumber = detail::current_thread_id();
    if(pNumber == m_nOwner){
       m_nLockCount++;
    }
@@ -121,7 +121,7 @@ inline void shared_recursive_timed_mutex::do_lock()
 
 inline bool shared_recursive_timed_mutex::do_trylock()
 {
-   unsigned long pNumber = current_thread_id();
+   unsigned long pNumber = detail::current_thread_id();
    if(pNumber == m_nOwner) {  // we own it
       m_nLockCount++;
       return true;
@@ -136,7 +136,7 @@ inline bool shared_recursive_timed_mutex::do_trylock()
 
 inline bool shared_recursive_timed_mutex::do_timedlock(const xtime &xt)
 {
-   unsigned long pNumber = current_thread_id();
+   unsigned long pNumber = detail::current_thread_id();
    if(pNumber == m_nOwner) {  // we own it
       m_nLockCount++;
       return true;
@@ -151,7 +151,7 @@ inline bool shared_recursive_timed_mutex::do_timedlock(const xtime &xt)
 
 inline void shared_recursive_timed_mutex::do_unlock()
 {
-   unsigned long pNumber = current_thread_id();
+   unsigned long pNumber = detail::current_thread_id();
    assert(pNumber == m_nOwner);
    m_nLockCount--;
    if(m_nLockCount == 0){
