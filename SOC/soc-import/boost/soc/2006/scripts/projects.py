@@ -6,7 +6,7 @@
 projects = [
     ('mincut-maxflow','stephan.diederich','gregor'),
     ('concurrency','matthew.calabrese','dave'),
-    ('process','julio-manuel.vidal','jeff.garland'),
+    ('process','jmmv','jeff.garland'),
     ('tree', 'bernhard.reiter', 'rene'),
     ('tr1-math', 'xiaogang.zhang', 'john.maddock'),
     ('graph', 'zampelli', 'jeremy.siek'),
