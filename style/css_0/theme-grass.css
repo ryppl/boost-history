@@ -1,0 +1,42 @@
+/*
+  Copyright 2005-2006 Redshift Software, Inc.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
+*/
+
+/* Bright sky-blue/orange links. */
+@import url(links-grass.css);
+
+/* We put the base header background on the body. */
+body {
+  background: #FFFFFF url(header-grass-bg.png) repeat-x top left;
+}
+
+/* Heading, title and logo. */
+#heading * {
+  color: #FFFFFF;
+}
+#heading {
+  background: url(header-grass-fg.png) no-repeat top left;
+  border: none;
+  border-bottom: #000000 solid 1px;
+}
+#heading-logo {
+  width: 236px;
+  height: 55px;
+  margin: 18px 0px 0px 24px;
+}
+
+/* Search box */
+#sidebar #search #search-text #q {
+  background-color: #6B9D68;
+  color: #FFFFFF;
+  font-weight: bold;
+  padding: 1px;
+}
+
+/* Markers on sidebar menus. */
+#sidebar #menu ul li h4 a {
+  border-left-color: #6B9D68;
+  border-right-color: #6B9D68;
+}
