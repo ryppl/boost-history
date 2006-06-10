@@ -20,6 +20,7 @@
 
 #if (defined BOOST_WINDOWS) && !(defined BOOST_DISABLE_WIN32)
 #  include <stddef.h>
+#  include <stdarg.h>
 #  include <boost/detail/interlocked.hpp>
 #else
 # error "This file can only be included in Windows OS"
@@ -30,10 +31,9 @@
 namespace boost {
 namespace shmem {
 namespace detail{
-
 //Some used constants
 static const unsigned long infinite_time        = 0xFFFFFFFF;
-static void *              invalid_handle       = (void*)(-1);
+static void *              invalid_handle_value = (void*)(-1);
 static const unsigned long error_already_exists = 183L;
 static const unsigned long error_file_not_found = 2u;
 
@@ -77,7 +77,6 @@ static const unsigned long format_message_max_width_mask
 static const unsigned long lang_neutral         = (unsigned long)0x00;
 static const unsigned long sublang_default      = (unsigned long)0x01;
 static const unsigned long invalid_file_size    = (unsigned long)0xFFFFFFFF;
-static       void * const  invalid_handle_value = (void*)(long*)-1;
 static const unsigned long create_new        = 1;
 static const unsigned long create_always     = 2;
 static const unsigned long open_existing     = 3;
@@ -123,10 +122,9 @@ struct shmem_system_info {
 };
 
 //Some windows API declarations
-extern "C" __declspec(dllimport) long __stdcall InterlockedExchangeAdd(long volatile *, long);
 extern "C" __declspec(dllimport) unsigned long __stdcall GetCurrentThreadId();
 extern "C" __declspec(dllimport) void __stdcall Sleep(unsigned long);
-extern "C" __declspec(dllimport) unsigned int __stdcall GetLastError();
+extern "C" __declspec(dllimport) unsigned long __stdcall GetLastError();
 extern "C" __declspec(dllimport) int __stdcall CloseHandle(void*);
 extern "C" __declspec(dllimport) void __stdcall GetSystemTimeAsFileTime(shmem_filetime*);
 extern "C" __declspec(dllimport) void * __stdcall CreateMutexA(shmem_security_attributes*, int, const char *);
@@ -150,6 +148,10 @@ extern "C" __declspec(dllimport) unsigned long __stdcall FormatMessageA
    unsigned long dwLanguageId,   char *lpBuffer,         unsigned long nSize, 
    va_list *Arguments);
 extern "C" __declspec(dllimport) void *__stdcall LocalFree (void *);
+extern "C" __declspec(dllimport) long __stdcall InterlockedIncrement( long volatile * );
+extern "C" __declspec(dllimport) long __stdcall InterlockedDecrement( long volatile * );
+extern "C" __declspec(dllimport) long __stdcall InterlockedCompareExchange( long volatile *, long, long );
+extern "C" __declspec(dllimport) long __stdcall InterlockedExchangeAdd(long volatile *, long);
 
 }}} //namespace boost {  namespace shmem {  namespace detail{
 
@@ -189,7 +191,7 @@ static inline unsigned long current_thread_id()
 static inline unsigned int close_handle(void* handle)
 {  return CloseHandle(handle);   }
 
-static inline int get_last_error()
+static inline unsigned long get_last_error()
 {  return GetLastError();  }
 
 static inline void get_system_time_as_file_time(shmem_filetime *filetime)
@@ -246,8 +248,17 @@ static inline bool get_file_size(void *handle, __int64 &size)
    return true;
 }
 
+static inline long interlocked_increment(long volatile *addr)
+{  return InterlockedIncrement(addr);  }
+
+static inline long interlocked_decrement(long volatile *addr)
+{  return InterlockedDecrement(addr);  }
+
+static inline long interlocked_compare_exchange(long volatile *addr, long val1, long val2)
+{  return InterlockedCompareExchange(addr, val1, val2);  }
+
 }}}  //namespace detail {  namespace shmem  {   namespace boost  {
 
 #include <boost/shmem/detail/config_end.hpp>
 
-#endif BOOST_SHMEM_WIN32_SYNC_PRIMITIVES_HPP
+#endif //#ifdef BOOST_SHMEM_WIN32_SYNC_PRIMITIVES_HPP
