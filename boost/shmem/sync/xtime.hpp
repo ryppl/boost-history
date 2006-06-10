@@ -86,7 +86,7 @@ inline int xtime_get(struct xtime* xtp, int clock_type)
         detail::shmem_filetime ft;
         detail::get_system_time_as_file_time(&ft);
         static const boost::uint64_t timespec_to_filetime_offset =
-            (boost::uint64_t)(116444736000000000);
+            (boost::uint64_t)(116444736000000000LL);
         
         const boost::uint64_t ft64 =
             (static_cast<boost::uint64_t>(ft.dwHighDateTime) << 32)

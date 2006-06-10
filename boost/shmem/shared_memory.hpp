@@ -366,15 +366,14 @@ inline bool shared_memory::priv_create(const char *name,   size_t size,
 
    //Create new shared memory
    m_shmHnd = detail::create_file_mapping(
-                     detail::invalid_handle, // handle to file to map
+                     detail::invalid_handle_value, // handle to file to map
                      flProtect, // protection for mapping object
                      0,          // high-order 32 bits of object size
                      (unsigned long)size,// low-order 32 bits of object size
                      name );     // name of file-mapping object
                                  
    //Check if was already created
-   if( m_shmHnd != 0  &&  detail::get_last_error() 
-       == detail::error_already_exists ) { 
+   if(m_shmHnd && detail::get_last_error() == detail::error_already_exists) { 
       if(createonly){
          this->priv_close_handles();
          return false;

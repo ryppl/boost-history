@@ -140,7 +140,7 @@ inline void*    mmapped_file::get_base()  const
 #if (defined BOOST_WINDOWS) && !(defined BOOST_DISABLE_WIN32)
 
 inline mmapped_file::mmapped_file() 
-   : m_fileMappingHnd(0), m_fileHnd(detail::invalid_handle), m_base(0)
+   : m_fileMappingHnd(0), m_fileHnd(detail::invalid_handle_value), m_base(0)
 {}
 
 inline bool mmapped_file::open(const char *filename, fileoff_t file_offset, 
@@ -179,7 +179,7 @@ inline bool mmapped_file::open(const char *filename, fileoff_t file_offset,
                                  file_access, 
                                  file_creation_flags);
    //Check for error
-   if(this->m_fileHnd == detail::invalid_handle){
+   if(this->m_fileHnd == detail::invalid_handle_value){
       this->close();
       return false;
    }
@@ -250,7 +250,7 @@ inline bool mmapped_file::flush(std::size_t mapping_offset, std::size_t numbytes
 
 inline bool mmapped_file::is_open() const
 {
-   return m_fileHnd != detail::invalid_handle;
+   return m_fileHnd != detail::invalid_handle_value;
 }
 
 inline void mmapped_file::close()
@@ -268,7 +268,7 @@ inline void mmapped_file::close()
 
    if(m_fileHnd){
       detail::close_handle(m_fileHnd);
-      m_fileHnd = detail::invalid_handle;
+      m_fileHnd = detail::invalid_handle_value;
    }
 }
 

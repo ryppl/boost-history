@@ -27,7 +27,7 @@
 //  formulation
 //
 
-#include <boost/detail/interlocked.hpp>
+#include <boost/shmem/sync/win32/win32_sync_primitives.hpp>
 #include <typeinfo>
 
 namespace boost {
@@ -70,7 +70,8 @@ public:
 */
     void add_ref_copy()
     {
-        BOOST_INTERLOCKED_INCREMENT( &use_count_ );
+        interlocked_increment( &use_count_ );
+        //BOOST_INTERLOCKED_INCREMENT( &use_count_ );
     }
 
     bool add_ref_lock() // true on success
@@ -79,12 +80,15 @@ public:
         {
             long tmp = static_cast< long const volatile& >( use_count_ );
             if( tmp == 0 ) return false;
-            if( BOOST_INTERLOCKED_COMPARE_EXCHANGE( &use_count_, tmp + 1, tmp ) == tmp ) return true;
+            if( interlocked_compare_exchange( &use_count_, tmp + 1, tmp ) == tmp ) return true;
+//            if( BOOST_INTERLOCKED_COMPARE_EXCHANGE( &use_count_, tmp + 1, tmp ) == tmp ) return true;
         }
     }
 
     bool ref_release() // nothrow
-       { return BOOST_INTERLOCKED_DECREMENT( &use_count_ ) == 0;  }
+       { return interlocked_decrement( &use_count_ ) == 0;  }
+
+//       { return BOOST_INTERLOCKED_DECREMENT( &use_count_ ) == 0;  }
 
 /*
     void release() // nothrow
@@ -96,10 +100,12 @@ public:
     }
 */
    void weak_add_ref() // nothrow
-   { BOOST_INTERLOCKED_INCREMENT( &weak_count_ ); }
+   { interlocked_increment( &weak_count_ ); }
+//   { BOOST_INTERLOCKED_INCREMENT( &weak_count_ ); }
 
    bool weak_release() // nothrow
-   { return BOOST_INTERLOCKED_DECREMENT( &weak_count_ ) == 0; }
+   { return interlocked_decrement( &weak_count_ ) == 0; }
+//   { return BOOST_INTERLOCKED_DECREMENT( &weak_count_ ) == 0; }
 
    long use_count() const // nothrow
    { return static_cast<long const volatile &>( use_count_ ); }

@@ -20,6 +20,19 @@
 
 #include <boost/shmem/detail/config_begin.hpp>
 
+//Predeclaration of pointer casts
+namespace boost
+{
+   template<class T, class U>
+   T static_pointer_cast(const U &r);
+   template<class T, class U>
+   T const_pointer_cast(const U &r);
+   template<class T, class U>
+   T dynamic_pointer_cast(const U &r);
+   template<class T, class U>
+   T reinterpret_pointer_cast(const U &r);
+}  //namespace boost
+
 namespace boost { namespace shmem { namespace detail {
 
 template<class T, class U> 
