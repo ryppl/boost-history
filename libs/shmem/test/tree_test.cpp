@@ -241,7 +241,7 @@ int main ()
       shmmultiset->insert(i);
       if(shmset->count(i) != 1)
          return 1;
-      if(shmmultiset->count(i) != (j+1))
+      if((int)shmmultiset->count(i) != (j+1))
          return 1;
    }
 

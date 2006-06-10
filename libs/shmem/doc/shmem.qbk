@@ -1,5 +1,5 @@
 [library Shmem
-    [version 0.92]
+    [version 0.93]
     [authors [Gazta&ntilde;aga, Ion]]
     [copyright 2005- 2006 Ion Gazta&ntilde;aga]
     [purpose Shared memory utilities]
@@ -21,13 +21,32 @@
 
 [section:disclaimer Disclaimer: Shmem is NOT a Boost library]
 
-The Shmem library is being developed under Boost libraries conditions since a
-Boost review process will possibly be requested in a near future, to check if 
-this library is good enough to be part of Boost libraries.
+The Shmem library was accepted into Boost but several deep changes were
+requested. This new Boost library was named Boost.Interprocess and it's still
+under development to meet all the requirements.
+
+Boost.Interprocess will feature many breaking changes, improvements and
+new features so Shmem is in a bug-fix state and it won't get new features.
 
 Shmem classes are contained in boost::shmem namespace but this namespace is 
-not reserved in Boost for this library, although this library is being 
-developed and improved by Boost mailing list members.
+not reserved in Boost for this library.
+  
+[endsect]
+
+[section:platforms Supported platforms]
+
+Shmem needs a ISO C++ conforming compiler and it has being tested in these platforms:
+
+* Visual C++ 7.1 with Windows XP
+* MinGW > 3.4 with Windows XP
+* GCC > 3.4 / Linux (2.6 Kernel)
+
+Any ISO conforming compiler should not have problems to compile Shmem. UNIX systems
+must follow POSIX.1 1996 standard and must support the following options:
+
+* _POSIX_SHARED_MEMORY_OBJECTS (Posix shared memory).
+* _POSIX_SEMAPHORES (Posix semaphores).
+* _POSIX_THREAD_PROCESS_SHARED (process-shared synchronization objects).
   
 [endsect]
 
@@ -5148,6 +5167,8 @@ thank them:
 
 * Thanks to [*Martin Adrian] who suggested the use of Shmem framework for user defined buffers.
 
+* Thanks to [*Jan Stetka] for his bug-fixes and MinGW port help.
+
 * Thanks to [*Synge Todo] for his boostbook-doxygen patch to improve Shmem documentation.
 
 * Thanks to [*Olaf Krzikalla] for his Intrusive library. I have taken some ideas to 
@@ -5168,6 +5189,13 @@ thank them:
 [endsect]
 
 [section:changes Changes...]
+
+[section:changes_shmem_00_93 Changes in Shmem 0.93...]
+
+* MinGW port.
+* Added missing stdarg.h include in Win32 predeclarations.
+
+[endsect]
 
 [section:changes_shmem_00_92 Changes in Shmem 0.92...]
 
@@ -5212,7 +5240,6 @@ allocators and containers, I've used to design Shmem.
 * A design for instantiating C++ objects in shared memory: [@http://www.cs.ubc.ca/local/reading/proceedings/cascon94/htm/english/abs/hon.htm ['"Using objects in shared memory for C++ application"] ].
 
 * A shared memory allocator and relative pointer: [@http://home.earthlink.net/~joshwalker1/writing/SharedMemory.html ['"Taming Shared Memory"] ].
-
 
 [endsect]
 

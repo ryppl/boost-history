@@ -32,6 +32,7 @@ import testing ;
            [ run doc_cont.cpp                      <template>boost_shmem_test_dll ]
            [ run doc_cont_mapA.cpp                 <template>boost_shmem_test_dll ]
            [ run doc_cont_mapB.cpp                 <template>boost_shmem_test_dll ]
+           [ run doc_intrusive.cpp                 <template>boost_shmem_test_dll ]
            [ run doc_ipc_messageA.cpp              <template>boost_shmem_test_dll ]
            [ run doc_ipc_messageB.cpp              <template>boost_shmem_test_dll ]
            [ run doc_named_allocA.cpp              <template>boost_shmem_test_dll ]
@@ -39,6 +40,8 @@ import testing ;
            [ run doc_named_heap_object.cpp         <template>boost_shmem_test_dll ]
            [ run doc_named_mfile_object.cpp        <template>boost_shmem_test_dll ]
            [ run doc_offset_ptr.cpp                <template>boost_shmem_test_dll ]
+           [ run doc_scoped_ptr.cpp                <template>boost_shmem_test_dll ]
            [ run doc_vectorstream.cpp              <template>boost_shmem_test_dll ]
+           [ run doc_where_allocate.cpp            <template>boost_shmem_test_dll ]
      ;
 }
