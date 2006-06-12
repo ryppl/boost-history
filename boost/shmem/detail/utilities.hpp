@@ -39,7 +39,7 @@ inline T *get_pointer(T *ptr)
 
 /*!To avoid ADL problems with swap*/
 template <class T>
-inline void swap(T& x, T& y)
+inline void do_swap(T& x, T& y)
 {
    using std::swap;
    swap(x, y);

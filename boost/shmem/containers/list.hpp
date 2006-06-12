@@ -89,7 +89,7 @@ struct shmem_list_node_base
    {
       pointer tmp = head;
       do {
-         detail::swap(tmp->m_next, tmp->m_prev);
+         detail::do_swap(tmp->m_next, tmp->m_prev);
          tmp = tmp->m_prev;     // Old next node is now prev.
       } while (tmp != head);
    }
@@ -240,14 +240,14 @@ struct shmem_list_alloc
    {
       if (static_cast<NodeAlloc&>(*this) != 
           static_cast<NodeAlloc&>(x)){
-            detail::swap(static_cast<NodeAlloc&>(*this), 
+            detail::do_swap(static_cast<NodeAlloc&>(*this), 
                                   static_cast<NodeAlloc&>(x));
-            detail::swap(static_cast<PtrAlloc&>(*this), 
+            detail::do_swap(static_cast<PtrAlloc&>(*this), 
                                   static_cast<PtrAlloc&>(x));
-            detail::swap(static_cast<ValAlloc&>(*this), 
+            detail::do_swap(static_cast<ValAlloc&>(*this), 
                                   static_cast<ValAlloc&>(x));
       }
-      detail::swap(this->m_node, x.m_node);      
+      detail::do_swap(this->m_node, x.m_node);      
    }
 
  protected:
@@ -314,9 +314,9 @@ struct shmem_list_alloc<T, A, true>
       NodeAlloc& this_alloc = static_cast<NodeAlloc&>(*this);
       NodeAlloc& other_alloc = static_cast<NodeAlloc&>(x);
       if (this_alloc != other_alloc){
-         detail::swap(this_alloc, other_alloc);
+         detail::do_swap(this_alloc, other_alloc);
       }
-      detail::swap(this->m_node, x.m_node);     
+      detail::do_swap(this->m_node, x.m_node);     
    }
 
  protected:

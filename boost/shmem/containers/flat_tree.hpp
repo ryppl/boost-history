@@ -225,7 +225,7 @@ class flat_tree
       myvect.swap(othervect);
       value_compare& mycomp    = this->m_data;
       value_compare& othercomp = other.m_data;
-      detail::swap(mycomp, othercomp);
+      detail::do_swap(mycomp, othercomp);
    }
     
  public:
@@ -535,7 +535,7 @@ class flat_tree
          }
       }
       return std::pair<RanIt, RanIt>(first, first);
-   }
+   }        
 
    template <class FwdIt>
    void priv_insert_unique(FwdIt first, FwdIt last, std::forward_iterator_tag)

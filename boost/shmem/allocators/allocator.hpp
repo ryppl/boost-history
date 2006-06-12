@@ -144,7 +144,7 @@ class allocator
       different memory segments, the result is undefined.*/
    friend void swap(self_t &alloc1, self_t &alloc2)
    {
-      detail::swap(alloc1.mp_mngr, alloc2.mp_mngr);
+      detail::do_swap(alloc1.mp_mngr, alloc2.mp_mngr);
    }
 };
 

@@ -168,7 +168,7 @@ class shared_count
    }
 
    void swap(shared_count & r) // nothrow
-   {  detail::swap(m_px, r.m_px);   detail::swap(m_pi, r.m_pi);   }
+   {  detail::do_swap(m_px, r.m_px);   detail::do_swap(m_pi, r.m_pi);   }
 
    long use_count() const // nothrow
    {  return m_pi != 0? m_pi->use_count(): 0;  }
@@ -279,7 +279,7 @@ class weak_count
    }
 
    void swap(weak_count & r) // nothrow
-   {  detail::swap(m_px, r.m_px);  detail::swap(m_pi, r.m_pi);   }
+   {  detail::do_swap(m_px, r.m_px);  detail::do_swap(m_pi, r.m_pi);   }
 
    long use_count() const // nothrow
    {  return m_pi != 0? m_pi->use_count() : 0;   }

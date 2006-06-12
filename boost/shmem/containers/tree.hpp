@@ -212,13 +212,13 @@ class rb_tree_alloc_base
       node_allocator_t& this_alloc  = static_cast<node_allocator_t&>(*this);
       node_allocator_t& other_alloc = static_cast<node_allocator_t&>(x);
       if (this_alloc != other_alloc){
-         detail::swap(static_cast<value_allocator_t&>(*this), 
+         detail::do_swap(static_cast<value_allocator_t&>(*this), 
                                static_cast<value_allocator_t&>(x));
-         detail::swap(static_cast<basic_node_ptr_allocator_t&>(*this), 
+         detail::do_swap(static_cast<basic_node_ptr_allocator_t&>(*this), 
                                static_cast<basic_node_ptr_allocator_t&>(x));
-         detail::swap(this_alloc, other_alloc);
+         detail::do_swap(this_alloc, other_alloc);
       }
-      detail::swap(this->m_header, x.m_header);     
+      detail::do_swap(this->m_header, x.m_header);     
    }
 
    private:
@@ -337,9 +337,9 @@ class rb_tree_alloc_base<T, Alloc, true>
       node_allocator_t& this_alloc  = static_cast<node_allocator_t&>(*this);
       node_allocator_t& other_alloc = static_cast<node_allocator_t&>(x);
       if (this_alloc != other_alloc){
-         detail::swap(this_alloc, other_alloc);
+         detail::do_swap(this_alloc, other_alloc);
       }
-      detail::swap(this->m_header, x.m_header);     
+      detail::do_swap(this->m_header, x.m_header);     
    }
 
    private:
@@ -525,8 +525,8 @@ class rb_tree
 
    void swap(rb_tree& t) 
    {
-      detail::swap(this->m_data.m_node_count, t.m_data.m_node_count);
-      detail::swap(this->get_compare(), t.get_compare());
+      detail::do_swap(this->m_data.m_node_count, t.m_data.m_node_count);
+      detail::do_swap(this->get_compare(), t.get_compare());
       base_t::swap(t);
    }
     

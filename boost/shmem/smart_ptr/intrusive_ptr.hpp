@@ -157,7 +157,7 @@ class intrusive_ptr
 
    /*!Exchanges the contents of the two smart pointers. Does not throw*/
    void swap(intrusive_ptr & rhs)
-   {  detail::swap(m_ptr, rhs.m_ptr);  }
+   {  detail::do_swap(m_ptr, rhs.m_ptr);  }
 
    private:
    pointer m_ptr;

@@ -115,7 +115,7 @@ class scoped_ptr  // noncopyable
    /*!Exchanges the internal pointer and deleter with other scoped_ptr
       Never throws.*/
    void swap(scoped_ptr & b) // never throws
-      {  detail::swap<Deleter>(*this, b); detail::swap(m_ptr, b.m_ptr); }
+      {  detail::do_swap<Deleter>(*this, b); detail::do_swap(m_ptr, b.m_ptr); }
 
    private:
    pointer m_ptr;

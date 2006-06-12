@@ -569,7 +569,8 @@ class basic_string : private basic_string_base<Alloc>
 	   BOOST_TRY{
          //Try to build objects
 	      for (; first != last; ++dest, ++first){
-		      al.construct(dest, *first);
+		      //*dest = *first;
+            al.construct(dest, *first);
          }
       }
 	   BOOST_CATCH(...){
@@ -1218,12 +1219,12 @@ class basic_string : private basic_string_base<Alloc>
 
    void swap(basic_string& s) 
    {
-      detail::swap(this->m_start, s.m_start);
-      detail::swap(this->m_finish, s.m_finish);
-      detail::swap(this->m_end_of_storage, s.m_end_of_storage);
+      detail::do_swap(this->m_start, s.m_start);
+      detail::do_swap(this->m_finish, s.m_finish);
+      detail::do_swap(this->m_end_of_storage, s.m_end_of_storage);
       allocator_type & this_al = *this, &s_al = s;
       if(this_al != s_al){
-         detail::swap(this_al, s_al);
+         detail::do_swap(this_al, s_al);
       }
    }
 

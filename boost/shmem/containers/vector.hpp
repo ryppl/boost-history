@@ -482,12 +482,12 @@ class vector : private detail::vector_alloc_holder<A>
    {
       allocator_type &this_al = *this, &other_al = x;
       //Just swap pointers
-      detail::swap(this->m_start, x.m_start);
-      detail::swap(this->m_finish, x.m_finish);
-      detail::swap(this->m_end, x.m_end);
+      detail::do_swap(this->m_start, x.m_start);
+      detail::do_swap(this->m_finish, x.m_finish);
+      detail::do_swap(this->m_end, x.m_end);
 
       if (this_al != other_al){
-         detail::swap(this_al, other_al);
+         detail::do_swap(this_al, other_al);
       }
    }
 

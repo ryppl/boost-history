@@ -245,10 +245,10 @@ class cached_node_allocator
       different shared memory segments, the result is undefined.*/
    friend void swap(self_t &alloc1, self_t &alloc2)
    {
-      detail::swap(alloc1.mp_node_pool,       alloc2.mp_node_pool);
-      detail::swap(alloc1.mp_cached,          alloc2.mp_cached);
-      detail::swap(alloc1.m_cached_nodes,     alloc2.m_cached_nodes);
-      detail::swap(alloc1.m_max_cached_nodes, alloc2.m_max_cached_nodes);
+      detail::do_swap(alloc1.mp_node_pool,       alloc2.mp_node_pool);
+      detail::do_swap(alloc1.mp_cached,          alloc2.mp_cached);
+      detail::do_swap(alloc1.m_cached_nodes,     alloc2.m_cached_nodes);
+      detail::do_swap(alloc1.m_max_cached_nodes, alloc2.m_max_cached_nodes);
    }
 
    void clear_cache()

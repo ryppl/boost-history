@@ -112,7 +112,7 @@ class weak_ptr
    {  this_type().swap(*this);   }
 
    void swap(this_type & other) // never throws
-   {  detail::swap(m_pn, other.m_pn);   }
+   {  detail::do_swap(m_pn, other.m_pn);   }
 
    template<class Y> bool _internal_less(weak_ptr<Y, A, D> const & rhs) const
    {  return m_pn < rhs.m_pn;  }
