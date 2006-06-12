@@ -28,16 +28,20 @@ static char * strip (char * src) {
 int
 Driver::
 execute (int args, const char ** argv) {
+	if (args == 1) 
+		return 0;
 	vector<string> includes;
 	vector<string> files;
 	char buffer[1024];
 	// scan the argument list for includes to add in
-	for (int i=0; i<args; i++) {
+	
+	for (int i=1; i<args; i++) {
+		cout << "processing arg " << argv[i] << endl;
 		strncpy (buffer, argv[i], sizeof (buffer));
 		// options:
 		// -I<include> or -I <include>
 		// we won't be very smart about the .map file searching for now.
-		if (strncmp(buffer, "-I", 2)) {
+		if (!strncmp(buffer, "-I", 2)) {
 			// see if the path is longer than this, or if not.
 			char * p = strip (buffer);
 			if (strlen(p) > 2) {
@@ -48,6 +52,7 @@ execute (int args, const char ** argv) {
 				continue;
 			}
 		} else {
+			cout <<"  filename: " << buffer << endl;
 			files.push_back(buffer);
 		}
 	}
@@ -56,6 +61,7 @@ execute (int args, const char ** argv) {
 	for (vec_iter_t file = files.begin (); 
 	     file != files.end ();
 	     ++file) {
+	    cout << "processing file " << *file << endl;
 		ifstream f(file->c_str());
 		string instring;
 		f.unsetf(ios::skipws);
@@ -81,6 +87,7 @@ execute (int args, const char ** argv) {
 			ofstream source(source_n.c_str());
 			OutputDelegate del (header, source);
 			
+// 			Generator g(instring.c_str(),del);
 			Generator g(ctx,del);
 			vector<string> namespaces = g.execute ();
 			cout << "The following entries are going to the mapfile:" << endl;

@@ -1,8 +1,13 @@
 # Invoke STLFilt to clean up what we're getting here.
 CXX = gfilt
 
-CXXFLAGS += -I/usr/local/src/boost_1_33_1 -I.
+CXXFLAGS += -I/usr/local/src/boost -I.
+LDFLAGS += -L/usr/local/lib
 
-mfront:  driver/driver.o main.o parser/parse.o
-	$(CXX) -o mfront $^
+
+mfront.bin:  driver/driver.o main.o parser/parse.o
+	$(CXX) -o mfront.bin $^ $(LDFLAGS) -lboost_filesystem -lboost_wave
+
+clean:
+	$(RM) driver/driver.o main.o parser/parse.o
 

@@ -1,7 +1,7 @@
 #ifndef INCLUDE_GENERATOR_H
 #define INCLUDE_GENERATOR_H
 
-#include "driver/output.h"
+#include "../driver/output.h"
 #include <boost/wave.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -18,10 +18,12 @@ typedef boost::wave::context<std::string::iterator, lex_iter_t>  context_t;
 
 class Generator {
 	context_t& c;
+// 	const char *t;
 	OutputDelegate& d;
+
 public:
 	Generator (context_t& ctx, OutputDelegate& del) : c(ctx), d(del) {}
-	
+// 	Generator (const char *text, OutputDelegate & del) : t(text), d(del) {}
 	// returns a list of the modules defined (in part or whole) int
 	// this file.
 	std::vector<std::string>  execute ();

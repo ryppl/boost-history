@@ -1,2 +1,2 @@
-exe mfront : ./driver/driver.cpp ./main.cpp ./parser/parse.cpp ;
+exe mfront : ./driver/driver.cpp ./main.cpp ./parser/parse.cpp : <lib>filesystem <lib>wave ;
 

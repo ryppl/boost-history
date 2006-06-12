@@ -1,9 +1,3 @@
-/*
-Open questions:
-1. How do I pass parameters into decl_grammar (& the OutputDelegate)?
-2. This grammar now takes in a scanner that does cpp lexing for us.
-*/
-
 #define BOOST_SPIRIT_DEBUG
 #include <boost/spirit/core.hpp>
 #include <boost/spirit/iterator.hpp>
@@ -21,35 +15,23 @@ Open questions:
 #include <sys/stat.h>
 #include <sys/mman.h>
 
-#include "parser/generator.h"
+#include "generator.h"
+#include "decl_grammar.h"
 
 using namespace std;
 using namespace boost::spirit;
 using namespace boost::wave;
 
-struct decl_grammar : public grammar<decl_grammar> {
+struct skip_parser : public grammar <skip_parser> {
 	template<typename ScannerT>
 	struct definition {
-		rule<ScannerT>  decl, var_decl, type_decl, id, semi;
-		
-		definition (decl_grammar const& self) {
-
-			// these are obviously insufficient for production use, but that'll
-			// come later.
-			
-			id = ch_p(T_IDENTIFIER);
-			semi = ch_p(T_SEMICOLON);
-			
-			var_decl = id >> id >> semi;
-			
-			// completely ignoring typedef and function defs right now.
-			type_decl = ( ch_p(T_STRUCT)  | ch_p(T_CLASS) ) >> id 
-						>> semi;
-			
-			decl = *(var_decl | type_decl);
+		rule<ScannerT> skip;
+		definition (skip_parser const& self) {
+			skip = ( ch_p(T_SPACE) | ch_p(T_NEWLINE) | ch_p(T_SPACE2) );
 		}
-		rule<ScannerT> const& start () { return var_decl; }
+		rule<ScannerT> const& start () { return skip; }
 	};
+
 };
 
 static std::vector<std::string> execute (context_t&, OutputDelegate&);
@@ -65,7 +47,8 @@ std::vector<std::string>
 execute (context_t& ctx, OutputDelegate& del) {
 	std::vector<std::string>  result;
 	decl_grammar g;
-	if (parse (ctx.begin (), ctx.end (), g, space_p).full) {
+	skip_parser s;
+	if (parse (ctx.begin (), ctx.end (), g, s).hit) {
 		puts ("parsed");
 	} else {
 		puts ("not parsed.");
