@@ -1,0 +1,100 @@
+Boost.Process
+Important information regarding this source tree
+
+Copyright (c) 2005, 2006 Julio M. Merino Vidal <jmmv84@gmail.com>
+
+
+Introduction
+============
+
+Boost.Process is a project that aims to develop a portable and free
+process management library for the C++ language.  It is being designed
+in a way that will permit the eventual integration into the Boost
+libraries.  See http://www.boost.org/ for more information.
+
+This directory contains Boost.Process' source code and documentation.
+The rest of this document describes how to build them.
+
+This code is distributed under the terms of the Boost Software License
+version 1.0.  See the accompanying LICENSE_1_0.txt file for more
+details.
+
+
+Acknowledgements
+================
+
+This project is possible thanks to the Google Summer of Code 2006
+program.
+
+This project is being developed under the guidance of Jeff Garland,
+who is mentor assigned to review the project under the terms of the
+Google Summer of Code 2006 program.
+
+
+Configuring the build system
+============================
+
+This section contains a quick overview on how to set up the Boost.Build
+build system.  It is NOT meant to replace the official documentation,
+which is much more complete than this and which you should read in case
+of doubt.
+
+WARNING: You should use a Boost source tree checked out from the CVS.
+A formal release may not work at all with this code.
+
+Before you can build Boost.Process, you must first configure your
+environment to meet the following requirements:
+
+1) Have an up-to-date bjam utility in your PATH.  As said above, this
+   needs to come from a CVS build.
+
+2) Set BOOST_BUILD_PATH to point to the directory containing the
+   Boost.Build v2 infrastructure files.  This can be found in the
+   'tools/build/v2' subdirectory of the Boost source tree distribution.
+
+You also need to configure Boost.Build v2 and BoostBook to be able to
+build the files in this distribution.  Please consult their respective
+documentation on how to do this.  As an example, consider this sample
+user-config.jam file, which can be placed in your home directory:
+
+----- cut here -----
+# Configure the toolset.
+import toolset : using ;
+using darwin ;
+
+# Configure BoostBook.
+using boostbook
+  : /usr/pkg/share/xsl/docbook
+  : /usr/pkg/share/xml/docbook/4.2
+  ;
+using xsltproc : /usr/pkg/bin/xsltproc ;
+
+# Use a prebuilt and safely-stored QuickBook binary.
+using quickbook : /Volumes/Projects/boost/local/bin/quickbook ;
+----- cut here -----
+
+
+The build.sh script
+===================
+
+The build.sh script in this directory is provided to ease the build
+and maintenance of Boost.Process.  It is just a frontend to bjam, the
+standard Boost build utility.
+
+Before using this script, you must follow the guidelines provided in
+the previous section.
+
+This script has to be run from Boost.Process' top directory (where this
+text file lives).  It takes a single argument that tells it what to do;
+possible values are listed below:
+
+* clean: Cleans up all generated files, leaving the tree as it came
+  from the Subversion repository.
+
+* doc: Build the documentation files.  The results will be left in
+  libs/process/doc/html/.  Be aware that the generated documentation
+  will not be rendered appropriately if viewed outside a Boost source
+  tree (as is this case).
+
+If you have made your way until here, thanks for your interest in
+Boost.Process!
