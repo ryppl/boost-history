@@ -158,10 +158,10 @@ int main ()
 
    #if !BOOST_WORKAROUND(BOOST_DINKUMWARE_STDLIB, == 1)
    for(i = 0, j = static_cast<int>(shmset->size()); i < j; ++i){
-      shmset->erase(aux_vect[i]);
-      stdset->erase(aux_vect[i]);
-      shmmultiset->erase(aux_vect[i]);
-      stdmultiset->erase(aux_vect[i]);
+      shmset->erase(i);
+      stdset->erase(i);
+      shmmultiset->erase(i);
+      stdmultiset->erase(i);
    }
    if(!CheckEqual(shmset, stdset)) return -1;
    if(!CheckEqual(shmmultiset, stdmultiset)) return -1;
