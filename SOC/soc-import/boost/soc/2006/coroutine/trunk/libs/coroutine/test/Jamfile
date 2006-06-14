@@ -1,0 +1,21 @@
+subproject libs/coroutine/test ;
+                                                                                
+import testing ;                                                                
+                                                                                
+project boost : $(BOOST_ROOT) ;                                                 
+                                                                                
+
+template unit_test
+	: <lib>../build/boost_coroutine
+	: <include>../../..
+	  <threading>multi
+	;
+
+run any.cpp <template>unit_test ;
+run create.cpp <template>unit_test ;
+run invoke.cpp <template>unit_test ;
+run meta.cpp <template>unit_test ;
+run optional.cpp <template>unit_test ;
+run yield.cpp <template>unit_test ;
+run yield_to.cpp <template>unit_test ;
+run yield_to2.cpp <template>unit_test ;

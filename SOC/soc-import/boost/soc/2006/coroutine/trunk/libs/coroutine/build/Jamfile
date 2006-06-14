@@ -1,0 +1,19 @@
+subproject libs/coroutine/build ;
+
+if $(UNIX) && ( $(OS) = LINUX )
+{
+	target_specific_sources =
+	  swapcontext.s
+	  ;
+}
+
+local sources =
+	coroutine.cpp
+	$(target_specific_sources)
+	;
+
+lib boost_coroutine
+	: ../src/$(sources)
+	:
+	;
+	
