@@ -1,0 +1,54 @@
+[/
+ / Boost.Process
+ / Introduction chapter.
+ /
+ / Copyright (c) 2006 Julio M. Merino Vidal.
+ /
+ / Use, modification, and distribution is subject to the Boost Software
+ / License, Version 1.0.  (See accompanying file LICENSE_1_0.txt or copy
+ / at http://www.boost.org/LICENSE_1_0.txt.)
+ /]
+
+[/ ---------------------------------------------------------------------- ]
+
+[section Introduction]
+
+C++ is a very powerful object oriented programming language.  Part of its
+power comes from the two major libraries it includes: the STL and the
+iostreams library.  These respectively allow to manipulate data collections
+and file streams in a very easy and consistent way, speeding up application
+development a lot.
+
+Unfortunately, and unlike the Java and .NET platforms __mdash__ both of
+which provide a huge set of classes and functionality in their standard
+APIs __mdashnospc__, C++ does not provide operating system abstraction
+layers in the standard.  Developers have to directly call the underlying
+platform to achieve many trivial tasks such as directory iteration, child
+process management, IPC or network communication.  This is bad because the
+libraries included in the operating system (such as the POSIX libc or the
+MFC) do not integrate well with C++: they are not object oriented and are
+not developed following good C++ practices.  As a result, applications
+using them become difficult to maintain, are unportable and grow fragile
+custom classes to interact with low-level details.
+
+Boost has already addressed this area by providing some libraries that
+abstract common operating system functionality in a portable way, aiming
+at the eventual inclusion in the C++ standard.  Examples of such libraries
+include [@http://www.boost.org/libs/filesystem Boost.Filesystem] and
+[@http://www.boost.org/libs/threads Boost.Thread].
+
+Unfortunately, there are many subsystems for which no abstraction exists
+yet. One of these is process management.  Many applications (specially in
+the Unix world) need to interact with other programs either because they
+are front-ends or simply because they need to take advantage of their
+functionality.  This fact can make developers choose some language other
+than C++ that eases process interaction, simply because they do not want to
+deal with low-level operating system details.
+
+This is where Boost.Process enters the game.  The Boost Process library
+provides a framework to manage processes and communicate with them.  This
+framework is flexible enough to handle operating system specific
+functionality while remaining portable enough to be used in applications
+that need to run in different operating systems.
+
+[endsect]
