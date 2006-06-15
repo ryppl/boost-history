@@ -105,7 +105,7 @@ execute (int args, const char ** argv) {
 			ofstream source(source_n.c_str());
 			OutputDelegate del (header, source);
 			
-// 			Generator g(instring.c_str(),del);
+			cout << "Processing file " << *file << endl;
 			::Generator g(ctx,del);
 			vector<string> namespaces = g.execute ();
 			cout << "The following entries are going to the mapfile:" << endl;
@@ -117,19 +117,24 @@ execute (int args, const char ** argv) {
 			cout << "-done processing " << *file << endl;
 		} 
 		catch (wave::cpplexer::lexing_exception& e) {
-			cout << *file
+			cout << *file 
 			     << ": " << e.description ()
 			     << endl;
 			return 1;
 		}
 		catch (wave::macro_handling_exception& e) {
-			cout << *file << ": macro expansion failed: "
+			cout << *file 
+			     << "(" << e.file_name() << " " 
+			     << e.line_no() <<":" << e.column_no() << ")"
+			     << ": macro expansion failed: "
 			     << e.get_related_name () 
 			     << endl;
 			return 1;
 		}
 		catch (wave::preprocess_exception& e) {
 			cout << *file 
+			     << "(" << e.file_name() << " " 
+			     << e.line_no() <<":" << e.column_no() << ")"			
 			     << ": " << e.description ()
 			     << endl;
 			 return 1;

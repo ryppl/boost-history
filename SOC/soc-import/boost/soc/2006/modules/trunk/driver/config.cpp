@@ -17,6 +17,7 @@ system_include_paths () {
 		s_sys_inc_paths.push_back ("/usr/include");
 		s_sys_inc_paths.push_back ("/usr/include/c++/4.0.0");
 		s_sys_inc_paths.push_back ("/usr/include/c++/4.0.0/powerpc-apple-darwin8");
+		s_sys_inc_paths.push_back ("/usr/lib/gcc/powerpc-apple-darwin8/4.0.1/include");
 	}
 	return s_sys_inc_paths;
 }

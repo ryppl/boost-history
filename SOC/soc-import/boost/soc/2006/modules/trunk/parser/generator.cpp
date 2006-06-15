@@ -1,22 +1,9 @@
 #define BOOST_SPIRIT_DEBUG
-#include <boost/spirit/core.hpp>
-#include <boost/spirit/iterator.hpp>
-#include <boost/spirit/symbols.hpp>
-#include <boost/spirit/utility.hpp>
-#include <boost/wave/token_ids.hpp>
-#include <boost/wave/grammars/cpp_grammar_gen.hpp>
-#include <boost/wave/util/pattern_parser.hpp>
-#include <boost/wave/cpp_exceptions.hpp>
+#include "generator.h"
+#include "decl_grammar.h"
 
 #include <iostream>
 #include <fstream>
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/mman.h>
-
-#include "generator.h"
-#include "decl_grammar.h"
 
 using namespace std;
 using namespace boost::spirit;
