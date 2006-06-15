@@ -1,7 +1,12 @@
-#include "../parser/generator.h"
+#include <boost/wave/cpp_exceptions.hpp>
+#include <boost/wave/cpplexer/cpplexer_exceptions.hpp>
+#include "parser/generator.h"
 #include "driver.h"
+#include "config.h"
 #include "output.h"
 
+using namespace boost;
+using namespace boost::wave;
 using namespace std;
 
 static string replace_suffix (string src, const char * suffix) {
@@ -25,18 +30,30 @@ static char * strip (char * src) {
 	return p;
 }
 
+static
+ostream& operator<<(ostream& o, const vector<string>& v) {
+	typedef vector<string>::const_iterator  vec_iter_t;
+	
+	for (vec_iter_t it = v.begin ();
+	     it != v.end ();
+	     ++it) {
+		o << " " << *it << endl;
+	}
+	
+	return o;
+}
+
 int
 Driver::
 execute (int args, const char ** argv) {
 	if (args == 1) 
 		return 0;
-	vector<string> includes;
+	vector<string> local_includes;
 	vector<string> files;
 	char buffer[1024];
 	// scan the argument list for includes to add in
-	
+	// eventually replace this with boost::program_options 
 	for (int i=1; i<args; i++) {
-		cout << "processing arg " << argv[i] << endl;
 		strncpy (buffer, argv[i], sizeof (buffer));
 		// options:
 		// -I<include> or -I <include>
@@ -45,23 +62,22 @@ execute (int args, const char ** argv) {
 			// see if the path is longer than this, or if not.
 			char * p = strip (buffer);
 			if (strlen(p) > 2) {
-				includes.push_back (string (p+2));
+				local_includes.push_back (string (p+2));
 			} else if (i+1 < args) {
 				strncpy(buffer, argv[++i], sizeof (buffer));
-				includes.push_back (strip(buffer));
+				local_includes.push_back (strip(buffer));
 				continue;
 			}
 		} else {
-			cout <<"  filename: " << buffer << endl;
 			files.push_back(buffer);
 		}
 	}
 
-	typedef vector<string>::iterator  vec_iter_t;
+	typedef vector<string>::const_iterator  vec_iter_t;
+	
 	for (vec_iter_t file = files.begin (); 
 	     file != files.end ();
 	     ++file) {
-	    cout << "processing file " << *file << endl;
 		ifstream f(file->c_str());
 		string instring;
 		f.unsetf(ios::skipws);
@@ -70,12 +86,14 @@ execute (int args, const char ** argv) {
 		                  istreambuf_iterator<char>());
 		                  
 		context_t ctx (instring.begin (), instring.end (), file->c_str());
-		               
-		for (vec_iter_t include = includes.begin ();
-		     include != includes.end ();
-		     ++include)
-			ctx.add_include_path(include->c_str());
-		
+
+		::configure_context(ctx);
+	     
+		for (vec_iter_t it= local_includes.begin ();
+		     it != local_includes.end ();
+		     ++it)
+			ctx.add_include_path(it->c_str());
+
 		// calculate header and generated filename names.
 		// upon successful generation, put them the .map file.
 
@@ -88,7 +106,7 @@ execute (int args, const char ** argv) {
 			OutputDelegate del (header, source);
 			
 // 			Generator g(instring.c_str(),del);
-			Generator g(ctx,del);
+			::Generator g(ctx,del);
 			vector<string> namespaces = g.execute ();
 			cout << "The following entries are going to the mapfile:" << endl;
 			for (vec_iter_t map = namespaces.begin ();
@@ -97,8 +115,27 @@ execute (int args, const char ** argv) {
 				cout << *map << ": " << header_n << " " << source_n << ";\n" ;
 			}
 			cout << "-done processing " << *file << endl;
-		} catch (...) {
-			cout << "failed processing " << *file << ". sorry." << endl;
+		} 
+		catch (wave::cpplexer::lexing_exception& e) {
+			cout << *file
+			     << ": " << e.description ()
+			     << endl;
+			return 1;
+		}
+		catch (wave::macro_handling_exception& e) {
+			cout << *file << ": macro expansion failed: "
+			     << e.get_related_name () 
+			     << endl;
+			return 1;
+		}
+		catch (wave::preprocess_exception& e) {
+			cout << *file 
+			     << ": " << e.description ()
+			     << endl;
+			 return 1;
+		}
+		catch (std::exception& e) {
+			cout << *file << ": " << e.what () << endl;
 			return 1;
 		}
 		

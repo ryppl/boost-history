@@ -34,7 +34,7 @@ add (const path& path) {
 	boost::regex dotmap("^.*\\.map$");
 	for (; it != end; ++it) {
 //		if (it->leaf().find_last_of(".map") > 0) {
-		if (boost:regex_match (it->leaf(), reg)) {
+		if (boost::regex_match (it->leaf(), dotmap)) {
 			try {
 				m_maps.push_back(shared_ptr<Map>(new Map(*it)));
 			} catch (std::exception & e) {
@@ -91,8 +91,13 @@ struct mapfile_grammar : public grammar<mapfile_grammar> {
 
 // (create) is currently ignored.
 Map::
-Map (const path & mapfile, bool create = false)	: m_file (mapfile) {
+Map (const path & mapfile, bool create)	: m_file (mapfile) {
 	// setup a wave context
 	// run the grammar on it the skip_parser from the wave example should
 	// be fine here.
+}
+
+Map::
+~Map () {
+	
 }
