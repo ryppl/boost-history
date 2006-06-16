@@ -64,7 +64,8 @@ processes a piece of cake.  In this regard, the
 is used to simplify the overall design and implementation and to remain
 consistent with other Boost libraries.  Of special interest are its
 [@http://boost.org/libs/iostreams/doc/classes/file_descriptor.html file
-descriptors classes].
+descriptors classes].  [/ XXX It may not be really necessary to use this
+library as long as integration with C++ Iostreams is accurate. ]
 
 [endsect]
 
@@ -113,6 +114,9 @@ child (e.g. because it is redirected to a file on disk).
 
 * Disconnected operation: The parent process forgets about the existence of
   its child process, which can continue to exist even when the parent dies.
+
+The [@http://asio.sourceforge.net/ Boost Asio library] is used to manage
+all asynchronous events that arise while managing processes.
 
 [endsect]
 
