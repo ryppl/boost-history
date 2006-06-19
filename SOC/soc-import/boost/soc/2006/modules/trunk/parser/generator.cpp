@@ -15,6 +15,7 @@ struct skip_parser : public grammar <skip_parser> {
 		rule<ScannerT> skip;
 		definition (skip_parser const& self) {
 			skip = ( ch_p(T_SPACE) | ch_p(T_NEWLINE) | ch_p(T_SPACE2) );
+			BOOST_SPIRIT_DEBUG_RULE(skip);
 		}
 		rule<ScannerT> const& start () { return skip; }
 	};

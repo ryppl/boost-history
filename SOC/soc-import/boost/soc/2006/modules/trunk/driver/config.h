@@ -27,8 +27,9 @@ void configure_context (Context& c) {
 	c.set_language (enable_variadics(c.get_language()));
 	c.set_language (language_support (support_option_convert_trigraphs 
 	                                  | c.get_language()));
-	c.set_language (language_support (support_option_no_character_validation 
-	                                  | c.get_language()));
+	
+// 	c.set_language (language_support (support_option_no_character_validation 
+// 	                                  | c.get_language()));
 	
 	// add in all the system include paths.
 	for (vec_iter_t it = config::system_include_paths().begin();
@@ -41,17 +42,17 @@ void configure_context (Context& c) {
 	for (map_iter_t it = config::macros().begin();
 	     it != config::macros().end();
 	     ++it) {
-// 	    try {
+	    try {
 			if (it->second.length ())
 				c.add_macro_definition( str(boost::format("%s=%s") 
 										 % it->first % it->second), 
 										 true);
 			else
 				c.add_macro_definition( it->first, true );
-// 		} catch (...) {
-// 			std::cout << "Failed adding macro definition " 
-// 			          << it->first << "=" << it->second << std::endl;
-// 		}
+		} catch (...) {
+			std::cout << "Failed adding macro definition " 
+			          << it->first << "=" << it->second << std::endl;
+		}
 	}
 }
 
