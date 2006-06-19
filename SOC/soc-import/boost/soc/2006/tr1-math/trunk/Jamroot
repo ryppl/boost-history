@@ -1,5 +1,0 @@
-project tr1-math
-    : default-build release
-    : build-dir bin.v2
-    ;
-build-project hello ;
