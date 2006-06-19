@@ -1,3 +1,0 @@
-# edit to point to your BOOST_BUILD_PATH:
-
-boost-build tools/build/v2 ;
