@@ -1,12 +1,15 @@
+#include "driver.h"
+#include <boost/filesystem/operations.hpp>
 #include <boost/wave/cpp_exceptions.hpp>
 #include <boost/wave/cpplexer/cpplexer_exceptions.hpp>
 #include "parser/generator.h"
-#include "driver.h"
 #include "config.h"
 #include "output.h"
+#include "../map/map.h"
 
 using namespace boost;
 using namespace boost::wave;
+using namespace boost::filesystem;
 using namespace std;
 
 static string replace_suffix (string src, const char * suffix) {
@@ -78,6 +81,8 @@ execute (int args, const char ** argv) {
 	for (vec_iter_t file = files.begin (); 
 	     file != files.end ();
 	     ++file) {
+		MapManager maps(path(file->c_str()));
+
 		ifstream f(file->c_str());
 		string instring;
 		f.unsetf(ios::skipws);
@@ -108,11 +113,13 @@ execute (int args, const char ** argv) {
 			cout << "Processing file " << *file << endl;
 			::Generator g(ctx,del);
 			vector<string> namespaces = g.execute ();
+			del.emit ();
 			cout << "The following entries are going to the mapfile:" << endl;
 			for (vec_iter_t map = namespaces.begin ();
 			     map != namespaces.end ();
 			     ++map) {
 				cout << *map << ": " << header_n << " " << source_n << ";\n" ;
+				maps.put(*map, path(header_n));
 			}
 			cout << "-done processing " << *file << endl;
 		} 

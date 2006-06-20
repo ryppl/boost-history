@@ -13,7 +13,7 @@
 #include <boost/wave/cpp_exceptions.hpp>
 
 #include "actions.h"
-
+#include "lexpolicies.h"
 
 using namespace boost::spirit;
 using namespace boost::wave;
@@ -68,6 +68,11 @@ n(token_id tk) {
 	return nomatch_token(tk);
 }
 
+// just a little debugging support for decl_grammar
+void
+break_here (context_iter_t ,context_iter_t ) {
+	std::cout << "internal break" << std::endl;
+}
 
 /*
 The grammar here's based on two sources:
@@ -78,6 +83,8 @@ For #2, I'll  mention the function names as appropriate.
 */
 
 struct decl_grammar : public grammar<decl_grammar> {
+	// iterator splicing engine.
+
 	template<typename ScannerT>
 	struct definition {
 		rule<ScannerT>  skip_semi, skip_block, //skip, import_stmt,
@@ -85,15 +92,15 @@ struct decl_grammar : public grammar<decl_grammar> {
 		
 		definition (decl_grammar const& self) {
 			
-			skip_semi =
-			 *(n(T_SEMICOLON)) >> t(T_SEMICOLON);
+			skip_semi 
+			    =     *(n(T_SEMICOLON)) >> t(T_SEMICOLON)
+			    ;
 			 
-			skip_block =
-			 *(n(T_LEFTBRACE)) >> t(T_LEFTBRACE) 
-			 // this line makes it recurse into shit.
-			 >> *(t(T_LEFTBRACE) | skip_block)
-			 >> t(T_RIGHTBRACE);
-			
+			skip_block 
+			    = t(T_LEFTBRACE) 
+			      >> t(T_RIGHTBRACE)
+			    ;
+
 /*			skip 
 			 =
 			  // extern "C" {...};
@@ -105,18 +112,22 @@ struct decl_grammar : public grammar<decl_grammar> {
 			 ;*/
 
 			export_stmt 
-			 = 
-			 t(T_EXPORT) >> t(T_NAMESPACE) >> t(T_IDENTIFIER)
-			 >> skip_block ; 
+			    = t(T_EXPORT) 
+			      >> t(T_NAMESPACE) 
+			      >> t(T_IDENTIFIER)
+			      >> skip_block 
+			    ; 
 
 			// for right now, accept all of C++, we'll exclude what we want
 			// to handle seperately.
-			translation_unit = 
-			   *( export_stmt[ &print ] ) ; 
+			translation_unit 
+			    = *( export_stmt[ &print ] ) 
+			      >> t(T_EOF)
+			    ; 
 			
 			
-			BOOST_SPIRIT_DEBUG_RULE(export_stmt);
-			BOOST_SPIRIT_DEBUG_RULE(skip_block);
+// 			BOOST_SPIRIT_DEBUG_RULE(export_stmt);
+// 			BOOST_SPIRIT_DEBUG_RULE(skip_block);
 		}		
 		rule<ScannerT> const& start () { return translation_unit; }
 	};
