@@ -1,0 +1,7 @@
+import testing ;
+
+test-suite "tree_test"
+     :
+     [ run test01.cpp ]
+     ;
+

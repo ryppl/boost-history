@@ -1,0 +1,74 @@
+[/
+ / Boost.Tree
+ / Main documentation file.
+ /
+ / Copyright (c) 2006 Bernhard Reiter.
+ /
+ / Use, modification, and distribution is subject to the Boost Software
+ / License, Version 1.0.  (See accompanying file LICENSE_1_0.txt or copy
+ / at http://www.boost.org/LICENSE_1_0.txt.)
+ /]
+
+[/ ---------------------------------------------------------------------- ]
+
+[library Boost.Tree
+    [version 1.1]
+    [authors [Reiter, Bernhard]]
+    [copyright 2006 Bernhard Reiter]
+    [purpose Generic tree component]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        <ulink url="http://www.boost.org/LICENSE_1_0.txt">
+            http://www.boost.org/LICENSE_1_0.txt
+        </ulink>)
+    ]
+    [last-revision $Date: 2005-12-04 17:26:48 $]
+]
+
+[section Introduction]
+
+Only some text copied from the blog atm, for test purposes. Need to refine when there's some more code.
+
+[h2 Grand Unified Treeory]
+
+Talking about the STL makes many people think of containers and iterators and functors and templatized algorithms and... Luckily, an important number of operations dealing with trees require actually traversal of the tree in a specified way (like preorder, postorder, inorder etc.), which goes over nodes in a well-defined, linear way. This has lead developers of existing tree implementations to provide iterators for the mentioned kinds of traversal, which I consider a reasonable approach to this problem.
+
+[h2 Arboretum]
+
+This pushes abstraction quite far for tree structures as used for mapping things like filesystems, xml files etc. (sometimes called forest). These kinds of tree should offer easy ways of appending child nodes (up to a number initially unknown) to a given parent nodes, deletion etc. This suggests implementations similiar to those of STL containers like lists or vectors, where we also need to account for an initially unknown number of objects.
+
+
+Technically speaking, there is a correspondence between forests and binary trees (whose nodes have two child nodes at most) by viewing the "left" of the binary tree's children as the first child of the forest's node and the binary tree node's right child as the forest node's next sibling. This is an important property of trees; however, we should not overestimate its importance as the proven equivalence of binary trees and forests does not give us any information about its applicability in terms of efficiency depending on different implementations. For a more practical point of view, we should rather consider the range of applications for binary trees apart from their use as forest implementation; among them is the vast field of binary search trees (BSTs) used for (sortable) data allowing storage and retrieval of information (which in this case is not necessarily of a tree-like structure, of course).
+
+
+For their practical importance, BSTs have been the subject of extensive research focussing on improving efficiency, yielding a number of specialisations that are mainly trying to keep the maximum distance of the leaf nodes (the ones without any further children) from the root node low, as this distance roughly translates to the maximum lookup (and insertion) time. (Called Self-balancing BSTs; among them AVL trees, B-trees, Red-Black trees and many more.)
+
+[h2 Divide and Rule]
+
+SBBSTs like the latter are, regardless of their equivalence to forests, significantly different in their application. Importantly, while in the case of forests, we might want a new node to be created as the jth child of a given existing node, we would want our SBBST to decide for us where exactly to put a value passed to it (and therefore creating a node in the suitable position).
+
+
+I believe we can therefore view SBBSTs as adapters to "simple" binary trees just like stacks and queues are sequence adapters to containers like vectors, deques or lists in case of the STL. If we want our adapters to work as generically as the STL's adapters do, our trees have to provide a well-defined set of types and functions that the adapters will use.
+
+
+If we take a closer look at SBBSTs, we will see that most obviously functions for the insertion of a new node both as left and as right child of a given node are required; furthermore, the SBBST decides where to put a new node depending on other nodes' "values" (i.e. the user-provided data that is stored in them), so we will also need functions for access of a node's data as well as for "navigating" to its left and right child. This is again reminiscent of iterators; but this time, iterators are not suitable, as we have two possible directions that cannot be viewed as "anti-parallel", i.e. if we call our "navigation type" position, then (`position.go_left()).go_right()`
+(or even `(position--)++,` to illustrate this more drastically) will not be equal to `position`, as opposed to an (bidirectional) iterator's desired behavior, `((iterator--)++) == iterator`.
+
+[h2 Bottom Line]
+
+These considerations are far from complete; there are for example still exotic things like ternary trees with "middle" children and, even more importantly, a wide range of implementation possibilities for binary trees (and, consequently, forests). Relationship between classes and algorithms is still vague, but I hope and intend to clarify these things in the near future a little, with some illustrative code starting to appear within the next couple of days...
+
+To sum up for the moment what I believe to have found:
+
+# We want to re-use the STL's principles for linear structures, read: use iterators (and related concepts) for access to forests, viewing nodes as containers of their children and iterators' `operator*` providing direct access to the node's value; Consequently, the objects that are to be our iterators have to provide a container's functions (insertion, deletion) at the same time. (Cf. containerator posting)
+# Depending on its implementation, not every forest will be able to provide relevant traversal methods of equally good time complexity. While for some important ways of traversal we will perhaps have to put up with e.g. `operator++` complexity > O(1) (unlike STL container iterators), for some cases it will be better to remove the costly feature entirely, particularly if another implementation can provide it more efficiently (though possibly not offering another feature provided by the first implementation); this could lead to a set of characterisic standard implementations, much like `vector` and `list` are for STL containers.
+Note that providing binary tree access methods might be especially hard to achieve without adding otherwise unnecessary information; so not every forest will be equally easy to use as a binary tree.
+# Binary tree nodes should be accessed via a position object providing methods as mentioned above, making their role roughly equivalent to an iterator's.
+# We might extend the binary concept to n-ary by introducing template `goto_nth()` members (and specialisations).
+Note that this is not superseded by forests as they serve another purpose, namely insertion of (almost) arbitrarily many child nodes to a node; but for e.g. ternary search trees (TSTs), it would be desirable to provide links to three child nodes serving different roles (essentially as in the case of BSTs, where the fact that we have two children relates to the fact a less-than comparison can have two different results, `true` or `false`).
+
+[endsect]
+
+
+
