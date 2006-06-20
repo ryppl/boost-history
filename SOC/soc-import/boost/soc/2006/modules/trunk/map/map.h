@@ -20,7 +20,7 @@ public:
 	/// origin's the file we're compiling now.
 	MapManager (const boost::filesystem::path& origin);
 	
-	// adds the directory, and scans for any mapfiles within.
+	/// adds the directory, and scans for any mapfiles within.
 	void add (const boost::filesystem::path& path);
 	
 	std::list<boost::filesystem::path> lookup (const std::string& module_name);

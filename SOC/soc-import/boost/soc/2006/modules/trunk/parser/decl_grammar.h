@@ -38,11 +38,6 @@ private:
 	token_id   m_id;
 };
 
-match_token
-t(token_id tk) {
-	return match_token(tk);
-}
-
 struct nomatch_token : public parser<nomatch_token> {
 	typedef nomatch_token self_t;
 	
@@ -52,16 +47,27 @@ struct nomatch_token : public parser<nomatch_token> {
 	typename parser_result<self_t, ScannerT>::type
 	parse (ScannerT const& scan) const {
 		typename ScannerT::iterator_t save = scan.first;
+		int len = 0;
 		if (!scan.at_end ()) {
 			++scan;
+			++len;
 			if (*save == m_id)
 				return scan.no_match ();
 		} 
-		return scan.create_match (1, nil_t(), save, scan.first);
+		// I wonder if zero-length matches are legal...
+		return scan.create_match (len, nil_t(), save, scan.first);
 	}
 private:
 	token_id   m_id;
 };
+
+//
+// t(FOO) matches FOO
+// n(FOO) matches anything but FOO.
+match_token
+t(token_id tk) {
+	return match_token(tk);
+}
 
 nomatch_token
 n(token_id tk) {
@@ -88,7 +94,7 @@ struct decl_grammar : public grammar<decl_grammar> {
 	template<typename ScannerT>
 	struct definition {
 		rule<ScannerT>  skip_semi, skip_block, //skip, import_stmt,
-		                export_stmt, translation_unit;
+		                export_stmt, translation_unit, inner_block;
 		
 		definition (decl_grammar const& self) {
 			
@@ -98,7 +104,12 @@ struct decl_grammar : public grammar<decl_grammar> {
 			 
 			skip_block 
 			    = t(T_LEFTBRACE) 
+			      >> *inner_block
 			      >> t(T_RIGHTBRACE)
+			    ;
+
+			inner_block
+			    = +(skip_block | n(T_RIGHTBRACE))
 			    ;
 
 /*			skip 
@@ -126,8 +137,8 @@ struct decl_grammar : public grammar<decl_grammar> {
 			    ; 
 			
 			
-// 			BOOST_SPIRIT_DEBUG_RULE(export_stmt);
-// 			BOOST_SPIRIT_DEBUG_RULE(skip_block);
+			BOOST_SPIRIT_DEBUG_RULE(export_stmt);
+			BOOST_SPIRIT_DEBUG_RULE(skip_block);
 		}		
 		rule<ScannerT> const& start () { return translation_unit; }
 	};

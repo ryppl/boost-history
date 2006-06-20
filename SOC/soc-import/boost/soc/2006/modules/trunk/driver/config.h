@@ -10,10 +10,15 @@
 #include <boost/wave/cpp_context.hpp>
 #include <boost/wave/language_support.hpp>
 
+class MapManager;
+
 struct config {
 	static const std::map<std::string, std::string>& macros ();
 	static const std::vector<std::string>&  system_include_paths ();
 };
+
+
+void configure_mapmanager (MapManager& map);
 
 template<class Context>
 void configure_context (Context& c) {

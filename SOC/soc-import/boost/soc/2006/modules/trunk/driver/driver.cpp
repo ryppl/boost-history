@@ -81,8 +81,9 @@ execute (int args, const char ** argv) {
 	for (vec_iter_t file = files.begin (); 
 	     file != files.end ();
 	     ++file) {
-		MapManager maps(path(file->c_str()));
 
+		MapManager maps(path(file->c_str()));
+		
 		ifstream f(file->c_str());
 		string instring;
 		f.unsetf(ios::skipws);
@@ -93,6 +94,7 @@ execute (int args, const char ** argv) {
 		context_t ctx (instring.begin (), instring.end (), file->c_str());
 
 		::configure_context(ctx);
+		::configure_mapmanager(maps);
 	     
 		for (vec_iter_t it= local_includes.begin ();
 		     it != local_includes.end ();

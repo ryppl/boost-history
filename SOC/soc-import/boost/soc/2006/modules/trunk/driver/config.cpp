@@ -1,11 +1,17 @@
 #include "driver/config.h"
+#include "map/map.h"
+
+#include <boost/filesystem/path.hpp>
 
 using namespace std;
+using namespace boost::filesystem;
 
 // clearly set up for Mac OS X 10.4.6: gcc 4.0.0
 //  this'll have to get converted into a script that probes
 //  the C preprocessor and GCC installation for include paths
 //  and macros.
+//
+// Other platforms, e.g. VC, can be hardcoded as selections.
 
 static vector<string> s_sys_inc_paths;
 static map<string,string> s_macros;
@@ -22,6 +28,23 @@ system_include_paths () {
 	return s_sys_inc_paths;
 }
 
+void
+configure_mapmanager (MapManager& map) {
+	const vector<string>& s = config::system_include_paths ();
+	for (vector<string>::const_iterator it = s.begin ();
+	     it != s.end ();
+	     ++it) {
+		map.add(path(*it));
+	}
+	map.add (path ("."));
+}
+
+/*
+1. touch foo.cpp
+2. cpp -dM foo.cpp
+3. sed/gawk/perl your way to this.
+Godspeed.
+*/
 const map<string,string>&
 config::
 macros () {

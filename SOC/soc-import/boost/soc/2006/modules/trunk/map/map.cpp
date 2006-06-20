@@ -1,3 +1,5 @@
+#define BOOST_SPIRIT_DEBUG
+
 #include "map.h"
 
 #include <iostream>
@@ -53,11 +55,18 @@ public:
 	}
 };
 
+#pragma mark -
+
+//
+// Some actions operating on Map
+//
+
 struct setmodule_action {
 	void act (Map& ref, const string value) const {
 		ref.set_modname(value);
 	}
-	void act (Map& ref, const char *f, const char *e) const {
+	template<class Iter>
+	void act (Map& ref, const Iter& f, const Iter& e) const {
 		ref.set_modname(string(f,e));
 	}
 };
@@ -71,7 +80,9 @@ struct addfile_action {
 	void act (Map& ref, const string value) const {
 		ref.add_filename (value);
 	}
-	void act (Map& ref, const char *f, const char *e) const {
+
+	template<class Iter>
+	void act (Map& ref, const Iter& f, const Iter& e) const {
 		ref.add_filename (string(f,e));
 	}
 };
@@ -80,6 +91,11 @@ inline ref_value_actor<Map, addfile_action>
 addfile (Map& ref) {
 	return ref_value_actor<Map, addfile_action>(ref);
 }
+
+#pragma mark -
+//
+// MapManager Implementation.
+// 
 
 MapManager::
 MapManager (const path& origin) {
@@ -96,10 +112,12 @@ void
 MapManager::
 add (const path& path) {
 	// scan path for .map files, add them in.
+	cout << "[mm] scanning " << path << endl;
 	directory_iterator end, it(path);
 	for (; it != end; ++it) {
 		if (ends_with(it->leaf(),".map") > 0) {
 			try {
+				cout << "  found " << *it << endl;
 				m_maps.push_back(shared_ptr<Map>(new Map(*it)));
 			} catch (std::exception & e) {
 				cout << "failed to load mapfile " << *it << ":" 
@@ -132,6 +150,11 @@ put (const string& module_name,
 	m_localmap->add (module_name, filename);
 }
 
+#pragma mark -
+//
+// Map implementation
+//
+
 // a grammar for the mapfile.
 struct mapfile_grammar : public grammar<mapfile_grammar> {
 	mutable Map & m;	
@@ -157,7 +180,8 @@ struct mapfile_grammar : public grammar<mapfile_grammar> {
 			module = str_p("module");
 			
 			name_element 
-			  = alpha_p >> *(alnum_p | ch_p('_'))
+			  = alpha_p 
+			    >> *(alnum_p | ch_p('_'))
 			  ;
 			  
 			partition_name 
@@ -169,22 +193,29 @@ struct mapfile_grammar : public grammar<mapfile_grammar> {
 			module_name 
 			  = name_element 
 			    >> *(str_p("::") >> name_element)
-			    >> !partition_name
+//			    >> !partition_name
 			  ;
 			            
-			filename = lexeme_d[ *(~ch_p(' ')) ];
+			filename = *(alnum_p | ch_p('_') | '.' | '-');
 			
 			module_decl 
-			  = module 
+			  = str_p("module")
 			    >> module_name [setmodule(s.m)]
 			    >> ":" 
-			    >> *filename [addfile(s.m)]
+			    >> !filename [addfile(s.m)]
+			    >> *(blank_p >> filename [addfile(s.m)] )
 			    >> ch_p(';')
 			  ;
 			  
 			mapfile 
 			  = *module_decl >> end_p
 			  ;
+			
+			BOOST_SPIRIT_DEBUG_RULE(mapfile);
+			BOOST_SPIRIT_DEBUG_RULE(module_decl);
+			BOOST_SPIRIT_DEBUG_RULE(filename);
+			BOOST_SPIRIT_DEBUG_RULE(module_name);
+			BOOST_SPIRIT_DEBUG_RULE(name_element);
 		}
 		rule<ScannerT> const& start () { return mapfile; }
 	};
@@ -208,8 +239,20 @@ Map (const path & mapfile, bool create)
 	                 (istreambuf_iterator<char>()));
 	
 	mapfile_grammar g(*this);
-	if (parse(instring.c_str(), g, space_p).full) {
+	if (parse(instring.begin (), instring.end (), g, space_p).full) {
 		cout << "[map] done parsing " << mapfile << endl;
+		// if it's really done, let's see what's inside.
+		for (vecmap_t::iterator it = m_map.begin ();
+		     it != m_map.end ();
+		     ++it) {
+			cout << " " << it->first << ": ";
+			for (list<path>::iterator i = it->second.begin ();
+			     i != it->second.end ();
+			     ++i) {
+				cout << *i << " ";    
+			}
+			cout << endl;
+		}
 	} else {
 		cout << "! [map] failed parsing " << mapfile << endl;
 	}
