@@ -22,10 +22,10 @@ struct skip_parser : public grammar <skip_parser> {
 
 };
 
-static std::vector<std::string> execute (context_t&, OutputDelegate&);
+static vector<string> execute (context_t&, OutputDelegate&);
 
-std::vector<std::string>
-Generator::
+vector<string>
+SourceGenerator::
 execute() {
 	return ::execute(c,d);
 }
@@ -33,13 +33,13 @@ execute() {
 static
 std::vector<std::string>
 execute (context_t& ctx, OutputDelegate& del) {
-	std::vector<std::string>  result;
-	decl_grammar g;
+	std::vector<std::string> retval;
+	decl_grammar g (del);
 	skip_parser s;
 	if (parse (ctx.begin (), ctx.end (), g, s).hit) {
 		puts ("parsed");
 	} else {
 		puts ("not parsed.");
 	}
-	return result;
+	return g.m_ids;
 }

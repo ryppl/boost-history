@@ -4,7 +4,7 @@ CXX = gfilt
 CXXFLAGS += -g -I/usr/local/src/boost -I.
 LDFLAGS += -L/usr/local/lib
 
-OBJECTS =  driver/config.o driver/output.o driver/driver.o main.o parser/generator.o map/map.o 
+OBJECTS =  driver/config.o driver/output.o driver/driver.o main.o parser/generator.o parser/actions.o map/map.o 
 
 mfront.bin: $(OBJECTS)
 	$(CXX) -o mfront.bin $^ $(LDFLAGS) -lboost_filesystem -lboost_wave -lboost_regex

@@ -4,12 +4,12 @@
 #include "../driver/output.h"
 #include "lexpolicies.h"
 
-class Generator {
+class SourceGenerator {
 	context_t& c;
 	OutputDelegate& d;
 
 public:
-	Generator (context_t& ctx, OutputDelegate& del) : c(ctx), d(del) {}
+	SourceGenerator (context_t& ctx, OutputDelegate& del) : c(ctx), d(del) {}
 
 	// returns a list of the modules defined (in part or whole) int
 	// this file.

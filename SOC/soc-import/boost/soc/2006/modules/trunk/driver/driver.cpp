@@ -113,7 +113,7 @@ execute (int args, const char ** argv) {
 			OutputDelegate del (header, source);
 			
 			cout << "Processing file " << *file << endl;
-			::Generator g(ctx,del);
+			SourceGenerator g(ctx,del);
 			vector<string> namespaces = g.execute ();
 			del.emit ();
 			cout << "The following entries are going to the mapfile:" << endl;
@@ -122,6 +122,7 @@ execute (int args, const char ** argv) {
 			     ++map) {
 				cout << *map << ": " << header_n << " " << source_n << ";\n" ;
 				maps.put(*map, path(header_n));
+				maps.put(*map, path(source_n));
 			}
 			cout << "-done processing " << *file << endl;
 		} 

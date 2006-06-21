@@ -15,70 +15,8 @@
 #include "actions.h"
 #include "lexpolicies.h"
 
-using namespace boost::spirit;
+// using namespace boost::spirit;
 using namespace boost::wave;
-
-struct match_token : public parser<match_token> {
-	typedef match_token self_t;
-	
-	match_token (token_id id) : m_id(id) {}
-	
-	template<typename ScannerT>
-	typename parser_result<self_t, ScannerT>::type
-	parse (ScannerT const& scan) const {
-		if (!scan.at_end ()) {
-			typename ScannerT::iterator_t save = scan.first;
-			++scan;
-			if (*save == m_id)
-				return scan.create_match (1, nil_t(), save, scan.first);
-		} 
-		return scan.no_match ();
-	}
-private:
-	token_id   m_id;
-};
-
-struct nomatch_token : public parser<nomatch_token> {
-	typedef nomatch_token self_t;
-	
-	nomatch_token (token_id id) : m_id(id) {}
-	
-	template<typename ScannerT>
-	typename parser_result<self_t, ScannerT>::type
-	parse (ScannerT const& scan) const {
-		typename ScannerT::iterator_t save = scan.first;
-		int len = 0;
-		if (!scan.at_end ()) {
-			++scan;
-			++len;
-			if (*save == m_id)
-				return scan.no_match ();
-		} 
-		// I wonder if zero-length matches are legal...
-		return scan.create_match (len, nil_t(), save, scan.first);
-	}
-private:
-	token_id   m_id;
-};
-
-//
-// t(FOO) matches FOO
-// n(FOO) matches anything but FOO.
-match_token
-t(token_id tk) {
-	return match_token(tk);
-}
-
-nomatch_token
-n(token_id tk) {
-	return nomatch_token(tk);
-}
-
-// just a little debugging support for decl_grammar
-void
-break_here (context_iter_t ,context_iter_t ) {
-	std::cout << "internal break" << std::endl;
-}
 
 /*
 The grammar here's based on two sources:
@@ -88,12 +26,16 @@ The grammar here's based on two sources:
 For #2, I'll  mention the function names as appropriate.
 */
 
-struct decl_grammar : public grammar<decl_grammar> {
+struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
 	// iterator splicing engine.
-
+	mutable std::vector<std::string> m_ids;
+	mutable OutputDelegate& m_del;
+	
+	decl_grammar (OutputDelegate& del) : m_del(del) {}
+	
 	template<typename ScannerT>
 	struct definition {
-		rule<ScannerT>  skip_semi, skip_block, //skip, import_stmt,
+		boost::spirit::rule<ScannerT>  skip_semi, skip_block, skip, import_stmt,
 		                export_stmt, translation_unit, inner_block;
 		
 		definition (decl_grammar const& self) {
@@ -112,27 +54,35 @@ struct decl_grammar : public grammar<decl_grammar> {
 			    = +(skip_block | n(T_RIGHTBRACE))
 			    ;
 
-/*			skip 
-			 =
-			  // extern "C" {...};
-			  (ch_p(T_EXTERN) >> ch_p(T_IDENTIFIER) >> skip_block >> skip_semi)
-			  // anything related to templates
-			 |(!ch_p(T_EXPORT) >> ch_p(T_TEMPLATE) >> !skip_block >> skip_semi)
-			  // declarations
-			 |( (~ch_p(T_IMPORT) & ~ch_p(T_EXPORT)) >> !skip_block >> skip_semi)
-			 ;*/
+			skip 
+			 =  // extern "C" {...};
+			    ( t(T_EXTERN) 
+			      >> t(T_STRINGLIT) 
+			      >> skip_block 
+			      >> skip_semi)
+			     // anything related to templates
+			 |  (n(T_EXPORT) 
+			      >> t(T_TEMPLATE) 
+			      >> !skip_block 
+			      >> skip_semi)
+			  // declarations (fixme- won't work for function defs)
+//			 |  ( (n(T_IMPORT) & n(T_EXPORT)) >> !skip_block >> skip_semi)
+			 ;
 
 			export_stmt 
-			    = t(T_EXPORT) 
+			    = t(T_EXPORT)
 			      >> t(T_NAMESPACE) 
-			      >> t(T_IDENTIFIER)
-			      >> skip_block 
+			      >> t(T_IDENTIFIER) [ save_as(self.m_ids) ]
+			                         [ decl_module(self.m_del) ]
+			      // this we'll have to break down for public and private
+			      // sections, later.
+			      >> skip_block [ finish_decl(self.m_del) ]
 			    ; 
 
 			// for right now, accept all of C++, we'll exclude what we want
 			// to handle seperately.
 			translation_unit 
-			    = *( export_stmt[ &print ] ) 
+			    = *( export_stmt[ &print ] | skip[ &print ]) 
 			      >> t(T_EOF)
 			    ; 
 			
@@ -140,10 +90,9 @@ struct decl_grammar : public grammar<decl_grammar> {
 			BOOST_SPIRIT_DEBUG_RULE(export_stmt);
 			BOOST_SPIRIT_DEBUG_RULE(skip_block);
 		}		
-		rule<ScannerT> const& start () { return translation_unit; }
+		boost::spirit::rule<ScannerT> const& start () { return translation_unit; }
 	};
 };
-
 
 
 #endif

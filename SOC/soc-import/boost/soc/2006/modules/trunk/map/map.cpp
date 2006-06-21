@@ -272,6 +272,7 @@ Map::
 		     ++it) {
 			string buffer ("module ");
 			buffer.append (it->first);
+			buffer.append (": ");
 			for (list<path>::iterator pi = it->second.begin ();
 			     pi != it->second.end ();
 			     ++pi) {
