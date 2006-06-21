@@ -44,13 +44,14 @@ struct node_with_previous_sibling {
 	node_with_previous_sibling* m_previous_sibling;
 };
 
-
-struct node_with_first_child {
+class node_with_first_child {
+public:
 	node_with_first_child() : m_first_child(0) {}
 	node_with_first_child* first_child() 
 	{
 		return m_first_child;
 	}
+	
  private:
 	node_with_first_child* m_first_child;
 };

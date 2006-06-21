@@ -26,7 +26,7 @@
 //	is another node's child, or, for reduced overhead, a child of an object of 
 //	parental_type which in turn is the part of class node that is responsible
 //	for storing children. 
-//	We'll go for 3.
+//	So we'd like 3, but for simplicity, we'll stick to 1 for the moment.
 	
 
 /** @brief A generic %tree container.
@@ -49,24 +49,23 @@ class tree
 
 	// TODO: inactivate if corresponding traversal tags are missing
 	// via enable_if? (need to look into MPL/concepts)
-	typedef sibling_iter<node_type> sibling_iterator;
-	typedef sibling_iter<node_type const> sibling_const_iterator;
+	typedef sibling_iter<node_type, allocator_type> sibling_iterator;
+	typedef sibling_iter<node_type const, allocator_type> sibling_const_iterator;
 	//other iterators...
 
-	tree (T const & value = T(), Alloc const & alloc = Alloc()) 
-		: m_alloc(alloc), m_soil(node_type::parental_type())
-	{
-		node_type::create_child(m_soil, value, m_alloc);
-	}
+//	tree (T const & value = T(), Alloc const & alloc = Alloc()) 
+//		: m_alloc(alloc), m_soil(node_type::parental_type())
+//	{
+//		node_type::create_child(root(), value, m_alloc);
+//	}
 	
 //	~tree()
 //	{
-//		node_type::destroy_child(m_soil.first_child, m_alloc);
 //	}
 	
 	sibling_iterator root()
 	{
-		return sibling_iterator(m_soil.first_child());
+		//return sibling_iterator(m_soil.first_child());
 	}
 	
 private:
