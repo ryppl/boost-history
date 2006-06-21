@@ -43,19 +43,15 @@ namespace boost { namespace coroutines { namespace detail {
       swap_context(ucontext_context_impl_base& from, 
 		   const ucontext_context_impl_base& to,
 		   default_hint) {
-	BOOST_ASSERT(to.m_good);
-	from.m_good = true;
 	int  error = ::swapcontext(&from.m_ctx, &to.m_ctx); 
 	if(error != 0) {
-	  to.m_good = false;
-	  from.m_good = false;
 	  throw swap_error();
 	}
       }
 
     protected:
       ::ucontext_t m_ctx;
-    }
+    };
 
     class ucontext_context_impl :
       public ucontext_context_impl_base,
@@ -81,17 +77,18 @@ namespace boost { namespace coroutines { namespace detail {
       template<typename Functor>
       explicit
       ucontext_context_impl(Functor& cb, ssize_t stack_size) :
-      m_stack(detail::alloc_stack(stack_size == -1? default_stack_size: stack_size)) {
+      m_stack(alloc_stack(stack_size == -1? default_stack_size: stack_size)) {
 	stack_size = stack_size == -1? default_stack_size: stack_size;
 	int error = ::getcontext(&m_ctx);
 	BOOST_ASSERT(error == 0);
+	(void)error;
 	m_ctx.uc_stack.ss_sp = m_stack;
 	m_ctx.uc_stack.ss_size = stack_size;
 	BOOST_ASSERT(m_stack);
 	m_ctx.uc_link = 0;
 	typedef void cb_type(Functor*);
 	typedef void (*ctx_main)();
-	cb_type * cb_ptr = &detail::trampoline<Functor>; 
+	cb_type * cb_ptr = &trampoline<Functor>; 
 
 	//makecontext can't fail.
 	::makecontext(&m_ctx,
@@ -102,7 +99,7 @@ namespace boost { namespace coroutines { namespace detail {
       
       ~ucontext_context_impl() {
 	if(m_stack)
-	  detail::free_stack(m_stack, m_ctx.uc_stack.ss_size);
+	  free_stack(m_stack, m_ctx.uc_stack.ss_size);
       }
 
     private:

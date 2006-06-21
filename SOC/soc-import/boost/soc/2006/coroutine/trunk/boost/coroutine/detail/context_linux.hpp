@@ -4,7 +4,7 @@
 #ifndef BOOST_COROUTINE_CONTEXT_LINUX_HPP_20060601
 #define BOOST_COROUTINE_CONTEXT_LINUX_HPP_20060601
 
-#if defined(__GNUC__) && defined(__i386__) 
+#if defined(__GNUC__) && defined(__i386__) && !defined(BOOST_COROUTINE_NO_ASM)
 #include <cstdlib>
 #include <boost/coroutine/detail/posix_utility.hpp>
 #include <boost/coroutine/detail/swap_context.hpp>
