@@ -41,53 +41,62 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
 		definition (decl_grammar const& self) {
 			
 			skip_semi 
-			    =     *(n(T_SEMICOLON)) >> t(T_SEMICOLON)
+			    =     *(~ch_p(T_SEMICOLON)) >> ch_p(T_SEMICOLON)
 			    ;
 			 
 			skip_block 
-			    = t(T_LEFTBRACE) 
+			    = ch_p(T_LEFTBRACE) 
 			      >> *inner_block
-			      >> t(T_RIGHTBRACE)
+			      >> ch_p(T_RIGHTBRACE)
 			    ;
 
 			inner_block
-			    = +(skip_block | n(T_RIGHTBRACE))
+			    = +(skip_block | ~ch_p(T_RIGHTBRACE))
 			    ;
 
 			skip 
 			 =  // extern "C" {...};
-			    ( t(T_EXTERN) 
-			      >> t(T_STRINGLIT) 
+			    ( ch_p(T_EXTERN) 
+			      >> ch_p(T_STRINGLIT) 
 			      >> skip_block 
 			      >> skip_semi)
 			     // anything related to templates
-			 |  (n(T_EXPORT) 
-			      >> t(T_TEMPLATE) 
+			 |  (!ch_p(T_EXPORT) 
+			      >> ch_p(T_TEMPLATE) 
 			      >> !skip_block 
 			      >> skip_semi)
 			  // declarations (fixme- won't work for function defs)
-//			 |  ( (n(T_IMPORT) & n(T_EXPORT)) >> !skip_block >> skip_semi)
+//			 |  ( (~ch_p(T_IMPORT) & ~ch_p(T_EXPORT)) >> !skip_block >> skip_semi)
 			 ;
 
 			export_stmt 
-			    = t(T_EXPORT)
-			      >> t(T_NAMESPACE) 
-			      >> t(T_IDENTIFIER) [ save_as(self.m_ids) ]
+			    = ch_p(T_EXPORT)
+			      >> ch_p(T_NAMESPACE) 
+			      >> ch_p(T_IDENTIFIER) [ save_as(self.m_ids) ]
 			                         [ decl_module(self.m_del) ]
 			      // this we'll have to break down for public and private
 			      // sections, later.
 			      >> skip_block [ finish_decl(self.m_del) ]
 			    ; 
 
-			// for right now, accept all of C++, we'll exclude what we want
-			// to handle seperately.
+			import_stmt
+			    = ch_p(T_IMPORT)
+			      >> ch_p(T_NAMESPACE)
+			      >> ch_p(T_IDENTIFIER) [ import_module(self.m_del) ]
+			      >> ch_p(T_SEMICOLON)
+			    ;
+
 			translation_unit 
-			    = *( export_stmt[ &print ] | skip[ &print ]) 
-			      >> t(T_EOF)
+			    = *(export_stmt [ &print ]
+			        | import_stmt 
+			        | skip [ &print ] [emit(self.m_del)]
+			        ) 
+			      >> ch_p(T_EOF)
 			    ; 
 			
 			
 			BOOST_SPIRIT_DEBUG_RULE(export_stmt);
+			BOOST_SPIRIT_DEBUG_RULE(import_stmt);
 			BOOST_SPIRIT_DEBUG_RULE(skip_block);
 		}		
 		boost::spirit::rule<ScannerT> const& start () { return translation_unit; }

@@ -13,6 +13,8 @@
 #include <stack>
 #include <boost/shared_ptr.hpp>
 
+#include "../map/map.h"
+
 //
 // Two functions:
 // 1. Keeps the output streams open for the generated text
@@ -26,6 +28,8 @@ class OutputDelegate {
 	
 	std::ostream&  m_header;
 	std::ostream&  m_source;
+
+	MapManager & m_map;
 
 	struct Emitter {
 		virtual ~Emitter () {}
@@ -46,31 +50,35 @@ class OutputDelegate {
 	std::stack<Context> m_dest;
 	
 	bool m_emitted;
+	void check ();
 	
+	// not implemented.
+	OutputDelegate ();
+	OutputDelegate (const OutputDelegate& other);
 public:
-	OutputDelegate (std::ostream& h, std::ostream& s)
-	 : m_header(h), m_source(s), m_emitted(false) {
-	 	m_dest.push (out_none);
-	 }
+	OutputDelegate (std::ostream& h, std::ostream& s, MapManager& m);
+
+	~OutputDelegate ();
 
 	void push_source () {
-		assert (!m_emitted);
+		check ();
 		m_dest.push (out_source);
 	}
 	
 	void push_header () {
-		assert (!m_emitted);
+		check ();
 		m_dest.push (out_header);
 	}
 	
 	void pop () {
-		assert (!m_emitted);
+		check ();
 		m_dest.pop ();
 	}
 
-	void include (std::string include) {
-		assert (!m_emitted);
-		m_includes.insert(include);
+	// we'll do the module name lookup.
+	void include_module (std::string module) {
+		check ();
+		m_includes.insert(module);
 	}
 
 	void out (context_iter_t start, context_iter_t end);

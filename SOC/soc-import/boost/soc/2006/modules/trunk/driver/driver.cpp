@@ -110,7 +110,7 @@ execute (int args, const char ** argv) {
 			
 			ofstream header(header_n.c_str());
 			ofstream source(source_n.c_str());
-			OutputDelegate del (header, source);
+			OutputDelegate del (header, source, maps);
 			
 			cout << "Processing file " << *file << endl;
 			SourceGenerator g(ctx,del);

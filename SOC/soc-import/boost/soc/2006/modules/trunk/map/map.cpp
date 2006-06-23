@@ -1,5 +1,4 @@
-#define BOOST_SPIRIT_DEBUG
-
+#include "config.h"
 #include "map.h"
 
 #include <iostream>
@@ -38,15 +37,22 @@ class Map {
 public:
 	Map (const path & mapfile, bool create = false);
 	~Map ();
+	
+	string name() {
+		return m_path.native_file_string ();
+	}
+	
 	void add (const string & module_name, const path & filename) {
 		m_map[module_name].push_back(filename);
 	}
 	
 	void set_modname (const string& module) {
+		cout << name() << ": set_modname(" << module << ")" << endl;
 		m_curmodule = module;
 	}
 	
 	void add_filename (const string& p) {
+		cout << name() << ": add_filename(" << p << ")" << endl;
 		m_map[m_curmodule].push_back (path(p));
 	}
 	
@@ -132,13 +138,22 @@ MapManager::
 lookup (const string& module_name) {
 	list<path> p;
 	typedef std::list<boost::shared_ptr<Map> > map_t;
-	if ( (p = m_localmap->lookup (module_name)).size ())
+	cout << "[MM::lookup] " << module_name <<": ";
+	if ( (p = m_localmap->lookup (module_name)).size ()) {
+		cout << "locally found " << p.size () << endl;
 		return p;
+	}
+	cout << endl;
 	for (map_t::reverse_iterator it = m_maps.rbegin ();
 	     it != m_maps.rend ();
 	     ++it) {
-		if ( (p= (*it)->lookup(module_name)).size ())
+	    cout <<"  trying " << (*it)->name() << ": ";
+		if ( (p= (*it)->lookup(module_name)).size ()) {
+			cout << "found " << p.size () << endl;
 			return p;
+		} else {
+			cout << "none found" << endl;
+		}
 	}
 	return p;
 }
@@ -192,18 +207,20 @@ struct mapfile_grammar : public grammar<mapfile_grammar> {
 			  
 			module_name 
 			  = name_element 
-			    >> *(str_p("::") >> name_element)
+			    >> *( str_p("::") 
+			          >> name_element)
 //			    >> !partition_name
 			  ;
 			            
-			filename = *(alnum_p | ch_p('_') | '.' | '-');
+			filename 
+			  = lexeme_d [+(alnum_p | ch_p('_') | ch_p('.')) ]
+			  ;
 			
 			module_decl 
 			  = str_p("module")
 			    >> module_name [setmodule(s.m)]
-			    >> ":" 
-			    >> !filename [addfile(s.m)]
-			    >> *(blank_p >> filename [addfile(s.m)] )
+			    >> ch_p(':')
+			    >> *filename [addfile(s.m)]
 			    >> ch_p(';')
 			  ;
 			  
@@ -270,17 +287,19 @@ Map::
 		for (vecmap_t::iterator it = m_map.begin ();
 		     it != m_map.end ();
 		     ++it) {
-			string buffer ("module ");
-			buffer.append (it->first);
-			buffer.append (": ");
-			for (list<path>::iterator pi = it->second.begin ();
-			     pi != it->second.end ();
-			     ++pi) {
-				buffer.append (pi->native_file_string ());
-				buffer.append (" ");
+		    if (it->second.size ()) {
+				string buffer ("module ");
+				buffer.append (it->first);
+				buffer.append (": ");
+				for (list<path>::iterator pi = it->second.begin ();
+					 pi != it->second.end ();
+					 ++pi) {
+					buffer.append (pi->native_file_string ());
+					buffer.append (" ");
+				}
+				buffer.append (";\n");
+				m_file << buffer;
 			}
-			buffer.append (";\n");
-			m_file << buffer;
 		}
 		m_file.close ();
 	}

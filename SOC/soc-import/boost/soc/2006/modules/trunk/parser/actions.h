@@ -32,7 +32,7 @@ using namespace boost::wave;
 void print (const context_t::iterator_type  & start, 
             const context_t::iterator_type  & end);
 
-
+/*
 struct match_token : public parser<match_token> {
 	typedef match_token self_t;
 	
@@ -75,7 +75,7 @@ struct nomatch_single : public parser<nomatch_single> {
 private:
 	token_id   m_id;
 };	
-/*
+
 struct nomatch_token : public parser<nomatch_token> {
 	typedef nomatch_token self_t;
 	
@@ -103,14 +103,14 @@ struct nomatch_token : public parser<nomatch_token> {
 private:
 	vector<token_id>   m_ids;
 };
-*/
+
 //
 // t(FOO) matches FOO
 // n(FOO) matches anything but FOO.
 match_token    t(token_id tk);
 nomatch_single  n(token_id tk);
 //nomatch_token  n(token_id t1, token_id t2);
-
+*/
 // just a little debugging support for decl_grammar
 void break_here (context_iter_t ,context_iter_t );
 
@@ -141,13 +141,41 @@ struct finish_decl_action {
 		ref.out (string ("/* finish_decl_action { */"));
 		ref.out (start, end);
 		ref.out (string ("/* } finish_decl_action*/ "));
+		ref.pop ();
+	}
+};
+
+struct emit_action {
+	template<typename T, typename ValueT>
+	void act (T& ref, ValueT const& value) const {
+		// we want the iterated range!
+		throw value;
+	}
+	template<typename T, typename IterT>
+	void act (T& ref, IterT const& start, IterT const& end) const {
+		ref.out (start, end);
+	}	
+};
+
+
+struct import_module_action {
+	template< typename T, typename ValueT>
+	void act (T& ref, ValueT const& value) const {
+		string s(value.get_value ().begin (), value.get_value().end ());
+		ref.include_module (s);
+	}
+	template<typename T, typename IterT>
+	void act (T& ref, IterT const& start, IterT const& end) const {
+		string s(start->get_value ().begin (), start->get_value().end ());
+		ref.include_module (s);
 	}
 };
 
 struct save_token_action {
 	template<typename Container, typename Value>
 	void act (Container& ref, Value const& value) const {
-		ref.push_back (value.get_value());
+		string s(value.get_value ().begin (), value.get_value().end ());
+		ref.push_back (s);
 	}
 	template<typename Container, typename Iter>
 	void act (Container& ref, Iter const& start, Iter const& end) const {
@@ -157,9 +185,13 @@ struct save_token_action {
 };
 
 ref_value_actor<vector<string>, save_token_action>
-save_as (vector<string>& value) {
-	return ref_value_actor<vector<string>, save_token_action>(value);
-}
+save_as (vector<string>& value);
+
+ref_value_actor<OutputDelegate, import_module_action>
+import_module (OutputDelegate& del);
+
+ref_value_actor<OutputDelegate, emit_action>
+emit (OutputDelegate& del);
 
 ref_value_actor<OutputDelegate,decl_module_action>
 decl_module( OutputDelegate& del );
