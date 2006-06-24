@@ -1,0 +1,3 @@
+exe connected_components
+: main.cpp ;
+	
