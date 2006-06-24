@@ -1,0 +1,14 @@
+[library Boost.Graph
+    [version 1.0]
+    [authors [Diederich, Stephan]]
+    [copyright 2006 Diederich, Stephan]
+    [purpose Use example]
+    [license Distributed under the Boost Software License, Version 1.0. ]
+]
+
+[section Example]
+
+[h2 This is easy!]
+This HTML was generated using [*Quickbook] \n
+
+[endsect]
