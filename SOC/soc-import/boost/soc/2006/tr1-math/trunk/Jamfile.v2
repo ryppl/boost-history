@@ -1,5 +1,11 @@
+path-constant top : . ;
+local boost-root = $(top)/../.. ;
+
 project tr1-math
+    : requirements <include>$(boost-root)
     : default-build release
     : build-dir bin.v2
     ;
+
 build-project hello ;
+build-project libs/tr1-math/doc ;
