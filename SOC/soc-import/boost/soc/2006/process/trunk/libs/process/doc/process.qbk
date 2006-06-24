@@ -38,5 +38,6 @@
 
 [include process_intro.qbk]
 [include process_features.qbk]
+[include process_concepts.qbk]
 [include process_design.qbk]
 [include process_ack.qbk]
