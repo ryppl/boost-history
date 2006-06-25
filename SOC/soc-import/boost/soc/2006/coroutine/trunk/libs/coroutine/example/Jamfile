@@ -4,7 +4,7 @@ project boost : $(BOOST_ROOT) ;
                                                                               
 template example
 	: <lib>../build/boost_coroutine
-	: <include>../../..
+	: <include>../../.. <include>$(BOOST_ROOT)
 	;
 
 exe banana : banana.cpp <template>example ;

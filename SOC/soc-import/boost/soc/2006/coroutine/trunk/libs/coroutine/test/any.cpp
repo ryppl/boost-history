@@ -4,6 +4,7 @@
 #include <iostream>
 #include <boost/assert.hpp>
 #include <boost/any.hpp>
+#include <boost/test/unit_test.hpp>
 #include <boost/coroutine/coroutine.hpp>
 
 namespace coroutines = boost::coroutines;
@@ -25,11 +26,20 @@ boost::any coro_body(coroutine_type self)  {
   return fifth_type();  
 }
 
-int main() {
+void test_any() {
   coroutine_type coro(coro_body);
-  BOOST_ASSERT(coro().type() == typeid(first_type));
-  BOOST_ASSERT(coro().type() == typeid(second_type));
-  BOOST_ASSERT(coro().type() == typeid(third_type));
-  BOOST_ASSERT(coro().type() == typeid(fourth_type));
-  BOOST_ASSERT(coro().type() == typeid(fifth_type));
+  BOOST_CHECK(coro().type() == typeid(first_type));
+  BOOST_CHECK(coro().type() == typeid(second_type));
+  BOOST_CHECK(coro().type() == typeid(third_type));
+  BOOST_CHECK(coro().type() == typeid(fourth_type));
+  BOOST_CHECK(coro().type() == typeid(fifth_type));
+}
+
+boost::unit_test::test_suite* init_unit_test_suite( int argc, char* argv[] )
+{
+    boost::unit_test::test_suite *test = BOOST_TEST_SUITE("any coroutine test");
+
+    test->add(BOOST_TEST_CASE(&test_any));
+
+    return test;
 }

@@ -1,0 +1,27 @@
+# (C) Copyright 2006: Eric Niebler
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+# bring in rules for testing
+import testing ;
+
+project
+    : requirements
+      <library>/boost/test//boost_unit_test_framework
+      <library>../build//boost_coroutine
+      <link>static
+      <include>../../..
+      <threading>multi
+    ;
+
+test-suite "coroutine"
+    :
+      [ run any.cpp ]
+      [ run create.cpp ]
+      [ run invoke.cpp ]
+      [ run meta.cpp ]
+      [ run optional.cpp ]
+      [ run yield.cpp ]
+      [ run yield_to.cpp ]
+      [ run yield_to2.cpp ]
+   ;

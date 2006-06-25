@@ -1,0 +1,22 @@
+project
+  : source-location ../src
+  ;
+
+import os ;
+
+if [ os.name ] = LINUX
+{
+        TARGET_SPECIFIC_SOURCES =
+          swapcontext.s
+          ;
+}
+
+SOURCES =
+        coroutine.cpp
+        $(TARGET_SPECIFIC_SOURCES)
+        ;
+
+lib boost_coroutine
+        : $(SOURCES)
+        :
+        ;
