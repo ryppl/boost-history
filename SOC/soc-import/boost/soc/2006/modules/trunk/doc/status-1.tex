@@ -1,0 +1,126 @@
+\documentclass[leqno,fleqn, twocolumn]{article}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage[pdftex,%
+        bookmarks=true,%
+        colorlinks=false,%
+        pdftitle={Status Report},%
+        pdfauthor={H. Lally Singh},%
+        linkbordercolor={.01 .01 .01},%
+        anchorcolor={.5 .5 .5},%
+        citebordercolor={0 0 0},%
+        pdfborder={0 0 0 [3]}]{hyperref}
+%\usepackage[sort]{cite}
+\usepackage{url}
+
+\begin{document}
+\title{Status Report}
+\author{H. Lally Singh}
+\date{June 26, 2006}
+\maketitle
+
+\section{Project Overview}
+The \texttt{mfront} binary converts source using the \href{http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2006/n1964.pdf}{Modular C++} language into regular C++.  The conversion consists of:
+\begin{enumerate}
+\item Preprocessing the source file, to make sure all possible Modular C++ language constructs are transformed before the C++ compiler encounters them.
+\item Creating header files for Modular C++ source, exposing the public sections of the modules in regular C++.
+\item Generating compilable source files in C++, containing the private section of the module, as well as implementations of non-inline public code.
+\item Keeping track of which modules are declared in which header files.
+\item Converting Modular C++ language constructs into semantically equivalent C++.
+\end{enumerate}
+
+\texttt{mfront} generates \texttt{.map} files for each Modular C++ file it encounters.  These files have the following format:
+\begin{verbatim}
+module Simple: simple_gen.h simple_gen.cpp;
+\end{verbatim}
+
+Each Modular C++ file can declare multiple modules as needed (including partitions and inner modules).  The example we give above is what would come from a file named \texttt{simple.cpp}, declaring a module named \texttt{Simple}.  The \texttt{\_gen} suffix is added to denote machine-generated source.
+
+
+\section{Overall Plan}
+First we develop the ability to manage the relationships between modules and their generated source.  Next we work on getting the transformation engine together.  
+
+Then we iterate, doing a bit of each in each iteration:
+\begin{enumerate}
+\item Accept more normal C++ to pass through to the compiler.
+\item Accept and transform more Modular C++ constructs.
+\item Document any useful commentary on implementing Modular C++.
+\end{enumerate}
+
+
+\section{Current Status}
+Finding, reading, and generating \texttt{.map} files is operational.  The mapfile syntax is incredibly simple, and is defined inline as a Spirit grammar in \href{https://boost-consulting.com:8443/trac/soc/browser/boost/soc/2006/modules/trunk/map/map.cpp?rev=406}{\texttt{map/map.cpp}}.  It uses Wave to allow \texttt{\#includes} between .map files (it's expected that library vendors would likely want to aggregate or specialize their .map files differently).  
+
+The \href{http://2006.planet-soc.com/node/326}{Iterator Slicing} technique is operational, and already implements a small set of language transformations.
+
+Specifically, this file (\texttt{simple\_export.cpp}):
+
+\begin{verbatim}
+import namespace example;
+export namespace Foo {
+blah { }
+}
+\end{verbatim}
+
+Generates:
+\begin{enumerate}
+\item \texttt{simple\_export.map}
+
+\begin{verbatim}
+module Foo: simple_export_gen.h
+ simple_export_gen.cpp ;
+\end{verbatim}
+\item \texttt{simple\_export\_gen.cpp}
+
+\begin{verbatim}
+#include "simple.h"
+\end{verbatim}
+\item \texttt{simple\_export\_gen.h}
+
+\begin{verbatim}
+#include "simple.h"
+
+namespace Foo 
+{
+blah { }
+}
+\end{verbatim}
+\end{enumerate}
+
+By the lameness of the examples, you can tell they're authentic :-).  The module name is mapped properly to the header file and the \texttt{export} declaration is properly transformed. 
+
+Little normal C++ text is currently allowed, but that's coming next (see next section).
+
+Incidentally, the Wave preprocessor's fully configured to accept our host environment, fully duplicating the predefined macros and values of a \texttt{gcc} build.  That also leads into a Current Issue, and a bit of a Design Decision.
+
+\section{Remaining Work}
+Plenty of work remains.  First we need to accept the rest of C++'s top-level language constructs (e.g. those that would be at the same nesting depth as a Modular C++ construct).  Thankfully, we have to advantages:
+\begin{enumerate}
+\item Hartmut just added a half-complete C++ Spirit grammar as a Wave example (!) to Boost CVS.
+\item \texttt{mfront} only needs to recognize a C++ language construct well enough to know:
+	\begin{enumerate}
+	\item It's length, so know where to start scanning for the next construct.
+	\item That it's not a Modular C++ construct.
+	\end{enumerate}
+\end{enumerate}
+
+\subsection{Execution Plan}
+I expect spending most of this phase's time going through Hartmut's example grammar, simplifying and importing it into \texttt{mfront}.  Next I'll start modularizing some boost source, to serve as good test cases.  I'll iterate on more complex test cases and continue to add more Modular C++ constructs.
+
+Right now, the main concern is accepting traditional C++.  Once that's done, I'll start specific planning \& work on the Modular C++ constructs.
+
+\section{Current Issues}
+The largest one is the preprocessor configuration.  To process files that contain any nontrivial \texttt{\#includes}, we need to define plenty of macros and the \texttt{\#include} paths themselves.  The current version (\href{https://boost-consulting.com:8443/trac/soc/browser/boost/soc/2006/modules/trunk/driver/config.cpp?rev=386}{\texttt{driver/config.cpp}}) is based on two parts:
+\begin{enumerate}
+\item \texttt{\#include} a bunch of files, and keep adding the paths of any dependent source files the preprocessor can't find.
+\item \texttt{cpp -dM} outputs all the hardwired \texttt{\#define} statements. 
+\end{enumerate}
+These are obviously specific to my build environment (Mac OS X 10.4), but a script to generate a configuration for other systems shouldn't be hard to construct.. Later :-)
+
+
+\section{Design Decisions}
+The biggest open question is what to do with the source file generated.  It's fully preprocessed C++, and it seems a shame to waste disk space saving such a large text file.  I'd personally prefer to directly invoke the C++ compiler on the generated source, so that \texttt{mfront} simply generates a \texttt{.o} file for the Modular C++ file given, looking more like a compiler.  Unfortunately, that requires configuration for the compiler, which adds unnecessary complexity.
+
+We can leave the generated source files on disk, letting the user worry about compiling them, or we can invoke the compiler ourselves.  Not really a big deal either way, but a nice add-in to have.
+
+\end{document}
