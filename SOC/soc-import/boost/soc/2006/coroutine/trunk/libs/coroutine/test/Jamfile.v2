@@ -1,17 +1,26 @@
 # (C) Copyright 2006: Eric Niebler
-# Distributed under the Boost Software License, Version 1.0.
-# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+# Distributed under the Boost Software License, Version 1.0
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt
 
 # bring in rules for testing
 import testing ;
+import os ;
+
+if [ os.name ] = WINDOWS
+{
+        TARGET_SPECIFIC_DEFINE =
+          "_WIN32_WINNT=0x0400"
+          ;
+}
 
 project
     : requirements
-      <library>/boost/test//boost_unit_test_framework
-      <library>../build//boost_coroutine
-      <link>static
-      <include>../../..
-      <threading>multi
+#      	<library>/boost/test//boost_unit_test_framework
+      	<library>../build//boost_coroutine
+      	<link>static
+	<define>"_WIN32_WINNT=0x0400" #$(TARGET_SPECIFIC_DEFINE)
+      	<include>../../..
+      	<threading>multi
     ;
 
 test-suite "coroutine"
@@ -25,3 +34,4 @@ test-suite "coroutine"
       [ run yield_to.cpp ]
       [ run yield_to2.cpp ]
    ;
+

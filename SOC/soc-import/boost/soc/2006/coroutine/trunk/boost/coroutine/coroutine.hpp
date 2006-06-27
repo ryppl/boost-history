@@ -137,27 +137,18 @@ namespace boost { namespace coroutines {
 	   arg)));
       }
 
-#if 0 
-	yield_result_type yield
-      (BOOST_PP_ENUM
+#ifdef NO_VCPP80_WORKAROUND 
+    yield_result_type yield
+    (BOOST_PP_ENUM
        (BOOST_COROUTINE_ARG_MAX,
 	BOOST_COROUTINE_param_with_default_vc8,
 	BOOST_DEDUCED_TYPENAME yield_traits::arg)) {
       return yield_impl
 	(result_slot_type(BOOST_PP_ENUM_PARAMS
-	  (BOOST_COROUTINE_ARG_MAX, 
-	   arg)));
-      }
-#else
-    typedef typename call_traits<typename yield_traits::arg0_type>::param_type call_arg0_type;
-	typedef typename call_traits<typename yield_traits::arg1_type>::param_type call_arg1_type;
-	yield_result_type yield(
-		call_arg0_type arg0 = yield_traits::arg0_type(),
-		call_arg1_type arg1 = yield_traits::arg1_type()) {
-			return yield_impl(result_slot_type(arg0, arg1));
-		}
-#endif
-
+			  (BOOST_COROUTINE_ARG_MAX, 
+			   arg)));
+    }
+    
     template<typename Target>
     yield_result_type yield_to
     (Target& target
@@ -171,7 +162,29 @@ namespace boost { namespace coroutines {
 	  (BOOST_COROUTINE_ARG_MAX, 
 	   arg)));
       }
+#else
 
+    typedef typename call_traits<typename yield_traits::arg0_type>::param_type yield_call_arg0_type;
+    typedef typename call_traits<typename yield_traits::arg1_type>::param_type yield_call_arg1_type;
+
+    yield_result_type yield
+    (yield_call_arg0_type arg0 = yield_traits::arg0_type(),
+     yield_call_arg1_type arg1 = yield_traits::arg1_type()) {
+      return yield_impl(result_slot_type(arg0, arg1));
+    }
+
+    typedef typename call_traits<arg0_type>::param_type call_arg0_type;
+    typedef typename call_traits<arg1_type>::param_type call_arg1_type;
+
+    template<typename Target>
+    yield_result_type yield_to
+    (Target& target, 
+     typename Target::call_arg0_type arg0 = Target::arg0_type(),
+     typename Target::call_arg1_type arg1 =  Target::arg1_type()) {
+      typedef typename Target::arg_slot_type type;
+      return yield_to_impl(target, type(arg0, arg1));
+    }
+#endif
 
 #   undef  BOOST_COROUTINE_param_with_default
 

@@ -3,11 +3,14 @@ subproject libs/coroutine/test;
 import testing ;                                                                
                                                                                 
 project boost : $(BOOST_ROOT) ;                                                 
-                                                                                
+         
+                                                                       
 template unit_test
 	: <lib>../build/boost_coroutine
           <lib>@boost/libs/test/build/boost_unit_test_framework
-	: <include>../../..
+	  
+	: 
+	  <include>../../..
 	  <threading>multi
 	;
 
