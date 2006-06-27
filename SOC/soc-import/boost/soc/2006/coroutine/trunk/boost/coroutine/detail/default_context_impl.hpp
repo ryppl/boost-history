@@ -10,7 +10,7 @@
    - ContextImpl must have constructor with the following signature:
    
      template<typename Functor>
-     ContextImpl(Functor f, ssize_t stack_size);
+     ContextImpl(Functor f, std::ptrdiff_t stack_size);
 	 
      Preconditions:
      f is a generic function object (support for function pointers
@@ -81,6 +81,11 @@ namespace boost { namespace coroutines { namespace detail {
 #include <boost/coroutine/detail/context_posix.hpp>
 namespace boost { namespace coroutines { namespace detail {
   typedef posix::context_impl default_context_impl;
+} } }
+#elif defined(BOOST_WINDOWS)
+#include <boost/coroutine/detail/context_windows.hpp>
+namespace boost { namespace coroutines { namespace detail {
+  typedef windows::context_impl default_context_impl;
 } } }
 
 #else 

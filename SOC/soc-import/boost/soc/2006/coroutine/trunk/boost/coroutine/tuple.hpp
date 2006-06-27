@@ -84,7 +84,7 @@ namespace boost { namespace coroutines {
    = boost::tuples::null_type BOOST_PP_INTERCEPT)>
   struct tuple : tuple_tag {
   private:
-    /* this is a pure compile type type */
+    /* this is a pure compile time type */
     tuple();
     tuple(const tuple&);
     void operator=(const tuple&);

@@ -61,22 +61,14 @@ namespace boost { namespace coroutines { namespace detail {
 
       enum {default_stack_size = 8192};
 
-      /**
-       * Create an empty context. 
-       * An empty context cannot be restored from,
-       * but can be saved in.
-       */
-      ucontext_context_impl() :
-	m_stack(0) {}
-
-
+    
       /**
        * Create a context that on restore inovkes Functor on
        *  a new stack. The stack size can be optionally specified.
        */
       template<typename Functor>
       explicit
-      ucontext_context_impl(Functor& cb, ssize_t stack_size) :
+	ucontext_context_impl(Functor& cb, std::ptrdiff_t stack_size) :
       m_stack(alloc_stack(stack_size == -1? default_stack_size: stack_size)) {
 	stack_size = stack_size == -1? default_stack_size: stack_size;
 	int error = ::getcontext(&m_ctx);
@@ -118,7 +110,7 @@ namespace boost { namespace coroutines { namespace detail {
  * Eventually it will be implemented, but for now just throw an error.
  * Most posix systems are at least SuSv2 compliant anyway.
  */
-#error No context implementation for this system
+#error No context implementation for this POSIX system.
 
 #endif
 #endif

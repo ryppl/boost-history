@@ -3,6 +3,10 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #ifndef BOOST_COROUTINE_COROUTINE_IMPL_HPP_20060601
 #define BOOST_COROUTINE_COROUTINE_IMPL_HPP_20060601
+#pragma warning (push)
+#pragma warning (disable: 4355) //this used in base member initializer
+#include <cstddef>
+
 #include <algorithm> //for swap
 #include <boost/intrusive_ptr.hpp>
 #include <boost/mpl/eval_if.hpp>
@@ -10,8 +14,9 @@
 #include <boost/coroutine/detail/argument_unpacker.hpp>
 #include <boost/coroutine/detail/swap_context.hpp>
 namespace boost { namespace coroutines { namespace detail {
+	
 
-  const ssize_t default_stack_size = -1;
+	const std::ptrdiff_t default_stack_size = -1;
 
   template<typename ContextImpl>
   class context_base : public ContextImpl {
@@ -23,7 +28,7 @@ namespace boost { namespace coroutines { namespace detail {
     typedef void deleter_type(const type*);
     
     template<typename Derived>
-    context_base(Derived& derived, ssize_t stack_size) :
+	context_base(Derived& derived, std::ptrdiff_t stack_size) :
       context_impl(derived, stack_size),
       m_counter(0),
       m_deleter(&deleter<Derived>),
@@ -47,7 +52,7 @@ namespace boost { namespace coroutines { namespace detail {
       return !count();
     }
 
-    size_t count() const {
+	std::size_t count() const {
       return m_counter;
     }
       
@@ -222,7 +227,7 @@ namespace boost { namespace coroutines { namespace detail {
             
     typedef typename context_impl::context_impl_base ctx_type;
     ctx_type m_caller;
-    mutable size_t m_counter;
+	mutable std::size_t m_counter;
     deleter_type * m_deleter;
     context_state m_state;
     context_exit_state m_exit_state;
@@ -257,7 +262,7 @@ namespace boost { namespace coroutines { namespace detail {
     typedef boost::intrusive_ptr<type> pointer;
   
     template<typename DerivedType>
-    coroutine_impl(DerivedType * this_, ssize_t stack_size) :
+	coroutine_impl(DerivedType * this_, std::ptrdiff_t stack_size) :
       context_base(*this_, stack_size),
 	m_arg(0),
 	m_result(0){}
@@ -272,8 +277,8 @@ namespace boost { namespace coroutines { namespace detail {
     } 
 
     template<typename Functor>
-    static inline
-    pointer create(Functor, ssize_t);
+	static inline	
+	pointer create(Functor, std::ptrdiff_t);
 
     void bind_args(arg_slot_type* arg) {
       m_arg = arg;
@@ -298,8 +303,9 @@ namespace boost { namespace coroutines { namespace detail {
     typedef coroutine_impl<CoroutineType, ContextImpl> super_type;
 
     typedef FunctorType functor_type;
-    coroutine_impl_wrapper(functor_type f, ssize_t stack_size) :
-      super_type(this, stack_size),
+	coroutine_impl_wrapper(functor_type f, std::ptrdiff_t stack_size) :
+
+		super_type(this, stack_size),
       m_fun(f){}
 
     void operator()() {
@@ -352,8 +358,8 @@ namespace boost { namespace coroutines { namespace detail {
       coroutine_type self (coroutine_accessor::construct<coroutine_type, type>(this));
       cancel_count c(this); //this must be after the previous line.
       detail::unpack_ex
-	<typename coroutine_type::arg_slot_traits>
-	(m_fun, self, this->args());
+	/*<typename coroutine_type::arg_slot_traits>*/
+	(m_fun, self, this->args(), (typename coroutine_type::arg_slot_traits*)0);
     }
 
     template<typename ResultType>
@@ -362,9 +368,11 @@ namespace boost { namespace coroutines { namespace detail {
       BOOST_ASSERT(this->count() > 0);
       coroutine_type self = coroutine_accessor::construct<coroutine_type, type>(this);
       cancel_count c(this); //this must be after the previous line.
+	  typedef typename coroutine_type::arg_slot_traits traits;
+	  
       this->result() = detail::unpack_ex
-	<typename coroutine_type::arg_slot_traits>
-	(m_fun, self, this->args());
+	/*<traits>*/
+	(m_fun, self, this->args(), (traits*)0);
     }
   
     FunctorType m_fun;
@@ -376,10 +384,11 @@ namespace boost { namespace coroutines { namespace detail {
   typename 
   coroutine_impl<CoroutineType, ContextImpl>::pointer
   coroutine_impl<CoroutineType, ContextImpl>::
-  create(Functor f, ssize_t stack_size = default_stack_size) {
+  create(Functor f, std::ptrdiff_t stack_size = default_stack_size) {
     return new coroutine_impl_wrapper<Functor, CoroutineType, ContextImpl>
       (f, stack_size);      
   }
 
 } } }
+#pragma warning(pop)
 #endif

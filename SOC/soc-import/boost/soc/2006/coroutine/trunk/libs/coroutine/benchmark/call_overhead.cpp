@@ -86,7 +86,7 @@ double test(F f, int n) {
 int main() {
 
   int iterations = 1000*10*10*10*10;
-#if 1
+#if 0
   function_type function_foo(foo);
   function_type function_foo_struct = foo_struct();
   function_type function_ol_foo(ol_foo);
@@ -118,6 +118,6 @@ int main() {
   foo_struct_coro t;
   coroutine_type coro_foo_struct  (t);
   cout << setw(50) << "Call to coroutine of function object: " 
-       << setw(16) << right  << noshowpoint << test(coro_foo_struct, iterations) << endl;
+    << setw(16) << right  << noshowpoint << test(coro_foo_struct, iterations) << endl;
 #endif
 }

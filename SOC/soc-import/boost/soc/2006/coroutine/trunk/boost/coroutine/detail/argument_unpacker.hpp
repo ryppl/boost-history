@@ -94,7 +94,7 @@ namespace boost { namespace coroutines { namespace detail {
   inline
   typename unpacker_ex_n<Traits, Traits::length>::
   template result<Functor, First, Tuple>::type 
-  unpack_ex(Functor f, First arg0, Tuple& parms) {
+  unpack_ex(Functor f, First arg0, Tuple& parms, Traits*) {
     return unpacker_ex_n<Traits, Traits::length>()
       (f, arg0, parms);
   }

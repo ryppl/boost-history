@@ -11,6 +11,7 @@
  * only on posix systems.
  */
 #include <cerrno>
+#include <cstddeff>
 #include <cstdlib>
 #include <iostream>
 /**
@@ -25,12 +26,12 @@ namespace boost { namespace coroutines { namespace detail { namespace posix {
        * NOTE: the SuSv3 documentation explictly
        */
       inline
-      void* alloc_stack(size_t size) {
+	void* alloc_stack(std::size_t size) {
 	return std::malloc(size);
       }
 
       inline
-      void free_stack(void* stack, size_t size) {
+	void free_stack(void* stack, std::size_t size) {
 	delete [] (char*)stack;
       }
 
@@ -87,7 +88,7 @@ namespace boost { namespace coroutines { namespace detail { namespace posix {
 namespace boost { namespace coroutines { namespace detail { namespace posix {
       inline 
       void * 
-      alloc_stack_mmap(size_t size) {
+	  alloc_stack_mmap(std::size_t size) {
 	void * stack = ::mmap(NULL,
 	 		size,
 			PROT_EXEC|PROT_READ|PROT_WRITE,
@@ -103,7 +104,7 @@ namespace boost { namespace coroutines { namespace detail { namespace posix {
       }
 
       inline
-      void free_stack_mmap(void* stack, size_t size) {
+	void free_stack_mmap(void* stack, std::size_t size) {
 	::munmap(stack, size);
       }
 } } } }

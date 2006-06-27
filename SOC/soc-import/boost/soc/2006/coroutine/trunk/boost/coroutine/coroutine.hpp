@@ -5,7 +5,7 @@
 #define BOOST_COROUTINE_COROUTINE_HPP_20060512
 //this must be defined before including tuple_packer.hpp
 #define BOOST_COROUTINE_ARG_MAX 10
-
+#include <cstddef>
 #include <boost/preprocessor/repetition.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -60,7 +60,7 @@ namespace boost { namespace coroutines {
     template<typename Functor>
     explicit 
     coroutine (Functor f, 
-	       ssize_t stack_size = detail::default_stack_size,
+		   std::ptrdiff_t stack_size = detail::default_stack_size,
 	       typename boost::enable_if<detail::is_callable<Functor> >
 	       ::type * = 0
 	       ) :
@@ -113,7 +113,14 @@ namespace boost { namespace coroutines {
 #   undef BOOST_COROUTINE_generate_argument_n_type
    
 #   define BOOST_COROUTINE_param_with_default(z, n, type_prefix)    \
-    typename call_traits                                          \
+    BOOST_DEDUCED_TYPENAME call_traits                                          \
+    <BOOST_PP_CAT(BOOST_PP_CAT(type_prefix, n), _type)>::param_type       \
+    BOOST_PP_CAT(arg, n) =                                        \
+    BOOST_PP_CAT(BOOST_PP_CAT(type_prefix, n), _type)()                   \
+/**/
+
+#   define BOOST_COROUTINE_param_with_default_vc8(z, n, type_prefix)    \
+    /*BOOST_DEDUCED_TYPENAME*/ call_traits                                          \
     <BOOST_PP_CAT(BOOST_PP_CAT(type_prefix, n), _type)>::param_type       \
     BOOST_PP_CAT(arg, n) =                                        \
     BOOST_PP_CAT(BOOST_PP_CAT(type_prefix, n), _type)()                   \
@@ -130,16 +137,26 @@ namespace boost { namespace coroutines {
 	   arg)));
       }
 
-    yield_result_type yield
+#if 0 
+	yield_result_type yield
       (BOOST_PP_ENUM
        (BOOST_COROUTINE_ARG_MAX,
-	BOOST_COROUTINE_param_with_default,
-	typename yield_traits::arg)) {
+	BOOST_COROUTINE_param_with_default_vc8,
+	BOOST_DEDUCED_TYPENAME yield_traits::arg)) {
       return yield_impl
 	(result_slot_type(BOOST_PP_ENUM_PARAMS
 	  (BOOST_COROUTINE_ARG_MAX, 
 	   arg)));
       }
+#else
+    typedef typename call_traits<typename yield_traits::arg0_type>::param_type call_arg0_type;
+	typedef typename call_traits<typename yield_traits::arg1_type>::param_type call_arg1_type;
+	yield_result_type yield(
+		call_arg0_type arg0 = yield_traits::arg0_type(),
+		call_arg1_type arg1 = yield_traits::arg1_type()) {
+			return yield_impl(result_slot_type(arg0, arg1));
+		}
+#endif
 
     template<typename Target>
     yield_result_type yield_to

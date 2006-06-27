@@ -1,4 +1,4 @@
-subproject libs/coroutine/test ;
+subproject libs/coroutine/test;
                                                                                 
 import testing ;                                                                
                                                                                 

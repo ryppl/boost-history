@@ -42,8 +42,9 @@ swapcontext_stack:
 	popl  %ebx		
 	popl  %ebp
 	add   $4, %esp
+//	popl %ecx
 	jmp   *%ecx
-	
+	ud2	
   .global swapcontext_stack2,	
   .type swapcontext_stack2, @function
   .align 1<<4
@@ -73,7 +74,9 @@ swapcontext_stack2:
 	popl  %ebx		
 	popl  %ebp
 	add   $4, %esp
+//	popl %ecx
 	jmp   *%ecx
+	ud2
 
 swapcontext_stack3:
 	movl  16(%edx), %ecx	
@@ -88,7 +91,9 @@ swapcontext_stack3:
 	popl  %ebx		
 	popl  %ebp
 	add   $4, %esp
+//	popl  %ecx
 	jmp   *%ecx
+	ud2
 
 swapcontext_stack_orig:
 	pushl %ebp	

@@ -6,25 +6,27 @@
 
 #if defined(__GNUC__) && defined(__i386__) && !defined(BOOST_COROUTINE_NO_ASM)
 #include <cstdlib>
+#include <cstddef>
 #include <boost/coroutine/detail/posix_utility.hpp>
 #include <boost/coroutine/detail/swap_context.hpp>
 
 /*
  * Defining BOOST_COROUTINE_INLINE_ASM will enable the inlin3
  * assembler verwsion of swapcontext_stack.
- * The inline asm, with all required clobber flags, is no faster
- * than the out-of-line function, but is quite unsafe in the face of
- * optimizations.
+ * The inline asm, with all required clobber flags, usually no faster
+ * than the out-of-line function, and it is not yet clear if
+ * it is always reliable (i.e. if the compiler always saves the correct
+ * registers). FIXME: it is currently missing MMX and XMM registers in
+ * the clobber list.
  */
-//#define BOOST_COROUTINE_INLINE_ASM
 
 /* 
- * Defining BOOST_COROUTINE_SEPARATE_CALL_SITE will enable separate 
- * invoke, yield and yield_to swap_context functions. These can give on P4 
- * a 50% performance increase at the cost of a slightly higher
- * instruction cache use.
+ * Defining BOOST_COROUTINE_NO_SEPARATE_CALL_SITES will disable separate 
+ * invoke, yield and yield_to swap_context functions. Separate calls sites
+ * increase performance by 25% at least on P4 for invoke+yield back
+ * at the cost of a slightly higher instruction cache use and are enabled by
+ * default.
  */
-#define BOOST_COROUTINE_SEPARATE_CALL_SITE
 
 
 #ifndef BOOST_COROUTINE_INLINE_ASM
@@ -33,6 +35,7 @@ extern "C" void swapcontext_stack2 (void***, void**) throw()  __attribute((regpa
 extern "C" void swapcontext_stack3 (void***, void**) throw()  __attribute((regparm(2)));
 #else
 
+#if 0
 void 
 inline
 swapcontext_stack(void***from_sp, void**to_sp) throw() {
@@ -69,7 +72,47 @@ swapcontext_stack(void***from_sp, void**to_sp) throw() {
    );
   
 }
+#else
+typedef   void (*fun_type)(void***from_sp, void**to_sp) 
+  __attribute((regparm(2)));
 
+fun_type get_swapper();//  __attribute__((pure));
+
+inline 
+fun_type get_swapper(){
+  fun_type ptr;
+  asm volatile("mov $0f, %[result]"
+	       "\n\t jmp 1f"
+	       "\n0:"
+	       //"\n\t movl 16(%%edx), %%ecx"
+	       "\n\t pushl %%ebp"
+	       "\n\t pushl %%ebx"
+	       "\n\t pushl %%esi"
+	       "\n\t pushl %%edi"
+	       "\n\t movl %%esp, (%%eax)"
+	       "\n\t movl %%edx, %%esp"
+	       "\n\t popl %%edi"
+	       "\n\t popl %%esi"
+	       "\n\t popl %%ebx"
+	       "\n\t popl %%ebp"
+	       "\n\t popl %%ecx"
+	       "\n\t jmp *%%ecx"
+	       "\n1:"
+	       :
+	       [result] "=g" (ptr) 
+	       :       
+	       );
+  return ptr;
+};
+
+
+void 
+inline
+swapcontext_stack(void***from_sp, void**to_sp) throw() {
+  fun_type ptr = get_swapper();
+  ptr(from_sp, to_sp);
+}
+#endif
 void 
 inline
 swapcontext_stack2(void***from_sp, void**to_sp) throw() {
@@ -108,7 +151,7 @@ namespace boost { namespace coroutines { namespace detail {
 	swapcontext_stack(&from.m_sp, to.m_sp);
       }
 
-#ifdef BOOST_COROUTINE_SEPARATE_CALL_SITE
+#ifndef BOOST_COROUTINE_NO_SEPARATE_CALL_SITES
       friend 
       void 
       swap_context(ia32_gcc_context_impl_base& from, 
@@ -145,7 +188,7 @@ namespace boost { namespace coroutines { namespace detail {
        *  a new stack. The stack size can be optionally specified.
        */
       template<typename Functor>
-      ia32_gcc_context_impl(Functor& cb, ssize_t stack_size = -1) :
+	  ia32_gcc_context_impl(Functor& cb, std::ptrdiff_t stack_size = -1) :
 	m_stack_size(stack_size == -1? default_stack_size: stack_size),
 	m_stack(posix::alloc_stack(m_stack_size)) {
 	m_sp = ((void**)m_stack + m_stack_size),
@@ -173,7 +216,7 @@ namespace boost { namespace coroutines { namespace detail {
       }
 
     private:
-      ssize_t m_stack_size;
+	  std::ptrdiff_t m_stack_size;
       void * m_stack;
     };
     
