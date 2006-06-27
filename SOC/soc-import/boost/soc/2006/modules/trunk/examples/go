@@ -1,7 +1,0 @@
-#!/bin/bash
-BIN=../bin/darwin-3.2/debug/mfront
-FILES="simple_export.map simple_export_gen.h simple_export_gen.cpp"
-rm -f $FILES
-$BIN simple_export.cpp
-ucat $FILES
-
