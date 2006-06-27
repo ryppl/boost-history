@@ -1,0 +1,5 @@
+#!/bin/bash
+FILES="simple_export.map simple_export_gen.h simple_export_gen.cpp"
+rm -f $FILES
+gdb ../mfront.bin 
+

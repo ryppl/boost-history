@@ -1,4 +1,4 @@
-#include "config.h"
+#include "setup.h"
 #include "generator.h"
 #include "decl_grammar.h"
 
@@ -36,6 +36,8 @@ execute (context_t& ctx, OutputDelegate& del) {
 	std::vector<std::string> retval;
 	decl_grammar g (del);
 	skip_parser s;
+	// default to emit in the source code.
+	del.push_source ();
 	if (parse (ctx.begin (), ctx.end (), g, s).hit) {
 		puts ("parsed");
 	} else {

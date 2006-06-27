@@ -1,0 +1,15 @@
+BOOST_ROOT = /usr/local/src/boost ;
+
+exe mfront : 
+	driver/config.cpp
+	driver/driver.cpp
+	driver/output.cpp
+	main.cpp
+	map/map.cpp
+	parser/actions.cpp
+	parser/generator.cpp
+	$(BOOST_ROOT)//filesystem
+	$(BOOST_ROOT)//wave
+	$(BOOST_ROOT)//regex
+	: <include>. <include>/usr/local/src/boost
+	;

@@ -5,7 +5,7 @@
 #include "parser/generator.h"
 #include "config.h"
 #include "output.h"
-#include "../map/map.h"
+#include "map/map.h"
 
 using namespace boost;
 using namespace boost::wave;

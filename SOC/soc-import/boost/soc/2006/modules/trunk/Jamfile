@@ -1,2 +1,0 @@
-exe mfront : ./driver/driver.cpp ./main.cpp ./parser/generator.cpp : <lib>filesystem <lib>wave ;
-

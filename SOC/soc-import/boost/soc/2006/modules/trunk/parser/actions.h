@@ -119,13 +119,13 @@ struct decl_module_action {
 	template<typename T, typename ValueT>
 	void act (T& ref, ValueT const& value) const {
 		ref.push_header ();
-		ref.out ((format ("\nnamespace %s /*act[1]*/") % value.get_value ()).str ());
+		ref.out ((format ("\nnamespace %s ") % value.get_value ()).str ());
 	}
 
 	template<typename T, typename IterT>
 	void act (T& ref, IterT const& start, IterT const& end) const {
 		ref.push_header ();
-		ref.out ((format ("\nnamespace %s /*act[2]*/") % start->get_value()).str ());
+		ref.out ((format ("\nnamespace %s ") % start->get_value()).str ());
 	}
 };
 
@@ -138,9 +138,7 @@ struct finish_decl_action {
 	
 	template<typename T, typename IterT>
 	void act (T& ref, IterT const& start, IterT const& end) const {
-		ref.out (string ("/* finish_decl_action { */"));
 		ref.out (start, end);
-		ref.out (string ("/* } finish_decl_action*/ "));
 		ref.pop ();
 	}
 };
