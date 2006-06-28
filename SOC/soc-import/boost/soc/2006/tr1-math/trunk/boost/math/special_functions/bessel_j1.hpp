@@ -1,0 +1,152 @@
+//  (C) Copyright Xiaogang Zhang 2006.
+//  Use, modification and distribution are subject to the
+//  Boost Software License, Version 1.0. (See accompanying file
+//  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef BOOST_MATH_BESSEL_J1_HPP
+#define BOOST_MATH_BESSEL_J1_HPP
+
+#include <boost/math/constants/constants.hpp>
+//#include <boost/math/tools/polynomial.hpp>
+#include <boost/math/tools/rational.hpp>
+#include <boost/assert.hpp>
+
+// Bessel function of the first kind of order one
+
+namespace boost { namespace math {
+
+template <typename T>
+T bessel_j1(T x)
+{
+    static const T P1[] = {
+        -1.4258509801366645672e+11L,
+         6.6781041261492395835e+09L,
+        -1.1548696764841276794e+08L,
+         9.8062904098958257677e+05L,
+        -4.4615792982775076130e+03L,
+         1.0650724020080236441e+01L,
+        -1.0767857011487300348E-02L,
+    };
+    static const T Q1[] = {
+         4.1868604460820175290e+12L,
+         4.2091902282580133541e+10L,
+         2.0228375140097033958e+08L,
+         5.9117614494174794095e+05L,
+         1.0742272239517380498e+03L,
+         1.0L,
+         0.0L,
+    };
+/*
+    static const T P2[] = {
+        -1.8319397969392084011e+03L,
+        -1.2254078161378989535e+04L,
+        -7.2879702464464618998e+03L,
+         1.0341910641583726701e+04L,
+         1.1725046279757103576e+04L,
+         4.4176707025325087628e+03L,
+         4.8591703355916499363e+01L,
+         7.4321196680624245801e+02L,
+    };
+    static const T Q2[] = {
+        -3.5783478026152301072e+05L,
+         2.4599102262586308984e+05L,
+        -8.4055062591169562211e+04L,
+         1.8680990008359188352e+04L,
+        -2.9458766545509337327e+03L,
+         3.3307310774649071172e+02L,
+        -2.5258076240801555057e+01L,
+         1.0L,
+    };
+*/
+    static const T PC[] = {
+        -4.4357578167941278571e+06L,
+        -9.9422465050776411957e+06L,
+        -6.6033732483649391093e+06L,
+        -1.5235293511811373833e+06L,
+        -1.0982405543459346727e+05L,
+        -1.6116166443246101165e+03L,
+         0.0L,
+    };
+    static const T QC[] = {
+        -4.4357578167941278568e+06L,
+        -9.9341243899345856590e+06L,
+        -6.5853394797230870728e+06L,
+        -1.5118095066341608816e+06L,
+        -1.0726385991103820119e+05L,
+        -1.4550094401904961825e+03L,
+         1.0L,
+    };
+    static const T PS[] = {
+         3.3220913409857223519e+04L,
+         8.5145160675335701966e+04L,
+         6.6178836581270835179e+04L,
+         1.8494262873223866797e+04L,
+         1.7063754290207680021e+03L,
+         3.5265133846636032186e+01L,
+         0.0L,
+    };
+    static const T QS[] = {
+         7.0871281941028743574e+05L,
+         1.8194580422439972989e+06L,
+         1.4194606696037208929e+06L,
+         4.0029443582266975117e+05L,
+         3.7890229745772202641e+04L,
+         8.6383677696049909675e+02L,
+         1.0L,
+    };
+    static const T x1  =  3.8317059702075123156e+00L,
+                   x2  =  7.0155866698156187535e+00L,
+                   x11 =  9.810e+02L,
+                   x12 = -3.2527979248768438556E-04L,
+                   x21 =  1.7960e+03L,
+                   x22 = -3.8330184381246462950E-05L
+    ;
+    T value, factor, r, rc, rs, w;
+
+    using namespace boost::math::tools;
+    using namespace boost::math::constants;
+
+    w = std::abs(x);                    // odd function
+    if (x == 0)
+    {
+        return static_cast<T>(0);
+    }
+    if (w <= 4.0)                       // x in (0, 4]
+    {
+        T y = x * x;
+        BOOST_ASSERT(sizeof(P1) == sizeof(Q1));
+        r = evaluate_rational(P1, Q1, y, sizeof(P1)/sizeof(P1[0]));
+        factor = x * (w + x1) * ((w - x11/256.0L) - x12);
+        value = factor * r;
+    }
+    else if (w <= 8.0)                  // x in (4, 8]
+    {
+        return 0;
+/*
+a little complication here
+        T y = x * x;
+        BOOST_ASSERT(sizeof(P2) == sizeof(Q2));
+        r = evaluate_rational(P2, Q2, y, sizeof(P2)/sizeof(P2[0]));
+        factor = x * (w + x2) * ((w - x21/256.0L) - x22);
+        value = factor * r;
+*/
+    }
+    else                                // x \in (8, \infty)
+    {
+        T y = 8.0L / w;
+        T y2 = y * y;
+        T z = w - 0.75L * pi<T>();
+        BOOST_ASSERT(sizeof(PC) == sizeof(QC));
+        BOOST_ASSERT(sizeof(PS) == sizeof(QS));
+        rc = evaluate_rational(PC, QC, y2, sizeof(PC)/sizeof(PC[0]));
+        rs = evaluate_rational(PS, QS, y2, sizeof(PS)/sizeof(PS[0]));
+        factor = sqrt(2.0L / (x * pi<T>()));
+        value = factor * (rc * cos(z) - y * rs * sin(z));
+    }
+    
+    return value;
+}
+
+}} // namespaces
+
+#endif // BOOST_MATH_BESSEL_J1_HPP
