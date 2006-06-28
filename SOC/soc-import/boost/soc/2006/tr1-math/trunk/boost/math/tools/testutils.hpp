@@ -27,7 +27,7 @@ void print_test_result(const test_result<T>& result,
     T eps = pow(T(2), 1 - boost::math::tools::digits(worst[0]));
     cout.precision(10);
     cout << func_name << "(" << type_name
-         << "): Max = " << result.stat.max()/eps
+         << "): Max = " << (result.stat.max)()/eps
          << "  RMS Mean = " << result.stat.rms()/eps << endl
          << "  Worst case at row " << row << ": {";
     for(unsigned i = 0; i < worst.size(); i++)
@@ -40,7 +40,13 @@ void print_test_result(const test_result<T>& result,
 
 // T must be a 2D boost::array here, we assumed it
 // define a short replacement to save some efforts
-#define TVT T::value_type::value_type
+template <class T>
+struct compute_value_type
+{
+   typedef typename T::value_type vt;
+   typedef typename vt::value_type type;
+};
+#define TVT compute_value_type<T>::type
 
 template <class T>
 void test_univariate(const T& data,
