@@ -22,12 +22,14 @@
 #include "../type_traits/has_parallel_safe_assign.hpp"
 #include "../detail/is_of_iterator_category.hpp"
 
+#include "copy/copy_fwd.hpp"
+
 namespace boost
 {
 namespace act
 {
 
-BOOST_ACT_DETAIL_MAKE_ALGO_IMPL( ((typename),SourceIteratorType)
+BOOST_ACT_DETAIL_IMPLEMENT_ALGO( ((typename),SourceIteratorType)
                                  ((typename),TargetIteratorType)
                                , (TargetIteratorType)
                                , copy

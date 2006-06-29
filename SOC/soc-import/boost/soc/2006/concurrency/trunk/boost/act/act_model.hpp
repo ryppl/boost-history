@@ -28,6 +28,8 @@ namespace boost
 namespace act
 {
 
+struct active_impl_constructor_tag {};
+
 struct act_model
   : detail::act_model_base
 {

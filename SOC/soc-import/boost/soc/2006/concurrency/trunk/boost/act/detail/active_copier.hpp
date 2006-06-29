@@ -20,15 +20,15 @@ template< typename ResultType, typename Enabler = void >
 struct active_copier
 {
   template< typename SourceType >
-  ResultType operator ()( SourceType const& source ) const
+  ResultType operator ()( SourceType const* source ) const
   {
-    return source;
+    return *source;
   }
 
   template< typename SourceType >
-  ResultType operator ()( SourceType& source ) const
+  ResultType operator ()( SourceType* source ) const
   {
-    return source;
+    return *source;
   }
 };
 
@@ -42,12 +42,12 @@ struct active_copier< ResultType
                     >
 {
   template< typename SourceType >
-  ResultType operator ()( SourceType const& source ) const
+  ResultType operator ()( SourceType const* source ) const
   {
   }
 
   template< typename SourceType >
-  ResultType operator ()( SourceType& source ) const
+  ResultType operator ()( SourceType* source ) const
   {
   }
 

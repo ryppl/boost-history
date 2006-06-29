@@ -8,7 +8,7 @@
 
 #include "../../../config/openmp.hpp"
 
-#ifndef boost_SUPPORTS_OPENMP
+#ifndef BOOST_SUPPORTS_OPENMP
 #include "../../serial_algo_model/detail/serial_basic_for.hpp"
 #endif
 
@@ -19,7 +19,7 @@ namespace act
 namespace detail
 {
 
-#ifdef boost_SUPPORTS_OPENMP
+#ifdef BOOST_SUPPORTS_OPENMP
 
 #define BOOST_ACT_DETAIL_PARALLEL_UNARY_FOR_HEADER( comp_name, op_name )       \
 template< typename AssignIntegerType                                           \

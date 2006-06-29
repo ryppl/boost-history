@@ -9,6 +9,7 @@
 #include <boost/preprocessor/repetition/enum_trailing_params.hpp>
 #include <boost/mpl/deque.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
+#include <boost/preprocessor/repetition/enum_trailing_binary_params.hpp>
 #include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/arithmetic/dec.hpp>
@@ -19,7 +20,7 @@
 
 #include "detail/enabler_dummy.hpp"
 
-#include "algorithm/detail/make_algo.hpp"
+#include "algorithm/algorithm_fwd.hpp"
 
 namespace boost
 {
@@ -92,126 +93,6 @@ BOOST_PP_REPEAT( BOOST_PP_DEC( BOOST_ACT_MAX_ACTIVE_CALL_PARAMS )
                , BOOST_ACT_DETAIL_ACTIVE_QUEUE_FUNCTION_DECL
                , BOOST_PP_NIL
                )
-
-BOOST_ACT_DETAIL_MAKE_ALGO_DECL( ((typename),IteratorType)
-                                 ((typename),FunctionType)
-                               , (FunctionType)
-                               , for_each
-                               , ((IteratorType),begin)
-                                 ((IteratorType),end)
-                                 ((FunctionType),function)
-                               )
-
-template< typename AlgoModel >
-struct for_each_safe_random_impl;
-
-template< typename AlgoModel >
-struct for_each_safe_forward_impl;
-
-BOOST_ACT_DETAIL_MAKE_ALGO_DECL( ((typename),SourceIteratorType)
-                                 ((typename),TargetIteratorType)
-                               , (TargetIteratorType)
-                               , copy
-                               , ((SourceIteratorType),source_begin)
-                                 ((SourceIteratorType),source_end)
-                                 ((TargetIteratorType),target_begin)
-                               )
-
-template< typename AlgoModel >
-struct copy_safe_random_impl;
-
-template< typename AlgoModel >
-struct copy_safe_forward_impl;
-
-BOOST_ACT_DETAIL_MAKE_ALGO_DECL( ((typename),IteratorType)
-                                 ((typename),ValueType)
-                               , (IteratorType)
-                               , find
-                               , ((IteratorType),begin)
-                                 ((IteratorType),end)
-                                 ((ValueType const&),value)
-                               )
-
-BOOST_ACT_DETAIL_MAKE_ALGO_DECL( ((typename),IteratorType)
-                                 ((typename),PredicateType)
-                               , (IteratorType)
-                               , find_if
-                               , ((IteratorType),begin)
-                                 ((IteratorType),end)
-                                 ((PredicateType),predicate)
-                               )
-
-template< typename AlgoModel >
-struct find_if_safe_random_impl;
-
-template< typename AlgoModel >
-struct find_if_safe_forward_impl;
-
-BOOST_ACT_DETAIL_MAKE_ALGO_DECL( ((typename),IteratorType)
-                                 ((typename),FunctionType)
-                               , (void)
-                               , generate
-                               , ((IteratorType),begin)
-                                 ((IteratorType),end)
-                                 ((FunctionType),function)
-                               )
-
-BOOST_ACT_DETAIL_MAKE_ALGO_DECL( ((typename),IteratorType)
-                                 ((typename),ValueType)
-                               , (void)
-                               , fill
-                               , ((IteratorType),begin)
-                                 ((IteratorType),end)
-                                 ((ValueType const&),value)
-                               )
-
-//ToDo: Come up with a way to handle overloaded algorithms
-
-/*
-BOOST_ACT_DETAIL_MAKE_ALGO_DECL( ((typename),IteratorType1)
-                                 ((typename),IteratorType2)
-                               , (IteratorType1)
-                               , find_end
-                               , ((IteratorType1),begin1)
-                                 ((IteratorType1),end1)
-                                 ((IteratorType2),begin2)
-                                 ((IteratorType2),end2)
-                               )
-
-BOOST_ACT_DETAIL_MAKE_ALGO_DECL( ((typename),IteratorType1)
-                                 ((typename),IteratorType2)
-                                 ((typename),PredicateType)
-                               , (IteratorType1)
-                               , find_end
-                               , ((IteratorType1),begin1)
-                                 ((IteratorType1),end1)
-                                 ((IteratorType2),begin2)
-                                 ((IteratorType2),end2)
-                                 ((PredicateType),predicate)
-                               )
-
-BOOST_ACT_DETAIL_MAKE_ALGO_DECL( ((typename),IteratorType1)
-                                 ((typename),IteratorType2)
-                               , (IteratorType1)
-                               , find_first_of
-                               , ((IteratorType1),begin1)
-                                 ((IteratorType1),end1)
-                                 ((IteratorType2),begin2)
-                                 ((IteratorType2),end2)
-                               )
-
-BOOST_ACT_DETAIL_MAKE_ALGO_DECL( ((typename),IteratorType1)
-                                 ((typename),IteratorType2)
-                                 ((typename),PredicateType)
-                               , (IteratorType1)
-                               , find_first_of
-                               , ((IteratorType1),begin1)
-                                 ((IteratorType1),end1)
-                                 ((IteratorType2),begin2)
-                                 ((IteratorType2),end2)
-                                 ((PredicateType),predicate)
-                               )
-*/
 }
 }
 

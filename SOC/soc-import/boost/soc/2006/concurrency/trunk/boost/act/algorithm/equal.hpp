@@ -21,6 +21,8 @@
 
 #include "../detail/is_of_iterator_category.hpp"
 
+#include "algorithm_fwd.hpp"
+
 // ToDo: Rewrite to minimize iterator and function copies
 
 namespace boost
@@ -37,7 +39,7 @@ template< typename IteratorType, typename FunctionType, typename ActModel >
 struct equal_linear;
 
 }
-
+/*
 template< typename ActModel, typename IteratorType, typename FunctionType >
 typename ::boost::enable_if
 <
@@ -124,7 +126,7 @@ for_each( IteratorType const& curr, IteratorType IteratorType const& end
 {
   return for_each< default_act_model >( curr, end, function );
 }
-
+*/
 namespace detail
 {
 

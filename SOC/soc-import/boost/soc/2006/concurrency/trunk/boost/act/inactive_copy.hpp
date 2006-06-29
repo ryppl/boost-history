@@ -13,17 +13,7 @@ namespace act
 namespace detail
 {
 
-template< typename Type >
-struct is_actve_or_active_ref
-  : ::boost::mpl::or_< 
-{
-};
 
-}
-
-
-template< typename Type >
-typename 
 
 }
 }

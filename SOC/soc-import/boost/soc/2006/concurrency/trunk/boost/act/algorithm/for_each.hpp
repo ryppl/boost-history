@@ -8,7 +8,7 @@
 
 #include "detail/make_algo.hpp"
 
-#include "../act_fwd.hpp"
+#include "for_each/for_each_fwd.hpp"
 
 #include "for_each/detail/for_each_impl.hpp"
 
@@ -26,7 +26,7 @@ namespace boost
 namespace act
 {
 
-BOOST_ACT_DETAIL_MAKE_ALGO_IMPL( ((typename),IteratorType)
+BOOST_ACT_DETAIL_IMPLEMENT_ALGO( ((typename),IteratorType)
                                  ((typename),FunctionType)
                                , (FunctionType)
                                , for_each

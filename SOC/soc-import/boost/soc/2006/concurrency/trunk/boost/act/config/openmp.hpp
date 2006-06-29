@@ -7,7 +7,7 @@
 #define BOOST_ACT_CONFIG_OPENMP_HPP
 
 #ifdef _OPENMP
-#define boost_SUPPORTS_OPENMP
+#define BOOST_SUPPORTS_OPENMP
 #endif
 
 #endif

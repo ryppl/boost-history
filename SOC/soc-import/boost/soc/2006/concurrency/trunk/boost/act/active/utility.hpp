@@ -110,12 +110,12 @@ struct BOOST_PP_CAT(BOOST_PP_CAT(BOOST_PP_CAT(detail_,name),id),struct)        \
           >                                                                    \
   typename ::boost::act::detail::type_from_function_params                     \
     < void ret, TargetType >::type                                             \
-  operator ()( TargetType& target                                              \
+  operator ()( TargetType& inactive_this                                       \
                BOOST_PP_ENUM_TRAILING_BINARY_PARAMS( num, Param, & arg )       \
              ) const                                                           \
   {                                                                            \
     return BOOST_PP_CAT(BOOST_PP_CAT(BOOST_PP_CAT(detail_,name),id),_impl)     \
-             ( target BOOST_PP_ENUM_TRAILING_PARAMS( num, arg ) );             \
+             ( inactive_this BOOST_PP_ENUM_TRAILING_PARAMS( num, arg ) );      \
   }                                                                            \
 };                                                                             \
                                                                                \
@@ -144,7 +144,7 @@ static                                                                         \
 typename ::boost::act::detail::type_from_function_params                       \
   < void ret, TargetType >::type                                               \
 BOOST_PP_CAT(BOOST_PP_CAT(BOOST_PP_CAT(detail_,name),id),_impl)                \
-( TargetType& target                                                           \
+( TargetType* const inactive_this                                              \
   BOOST_PP_ENUM_TRAILING( num, BOOST_ACT_DETAIL_FUN_PARAM, params )            \
 ) 
 

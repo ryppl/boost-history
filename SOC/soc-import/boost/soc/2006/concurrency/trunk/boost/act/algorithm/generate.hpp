@@ -3,17 +3,18 @@
 //  Distributed under the New BSD License
 //  (See accompanying file ACT_BSD_LICENSE.txt)
 
-
 #ifndef BOOST_ACT_ALGORITHM_GENERATE_HPP
 #define BOOST_ACT_ALGORITHM_GENERATE_HPP
 
 #include "detail/make_algo.hpp"
 
-#include "../act_fwd.hpp"
+#include "algorithm_fwd.hpp"
 
 #include "../parallel_safe.hpp"
 
 #include "for_each.hpp"
+
+#include "generate/generate_fwd.hpp"
 
 namespace boost
 {
@@ -50,7 +51,7 @@ make_safe_generator( FunctionType function_init )
 
 }
 
-BOOST_ACT_DETAIL_MAKE_ALGO_IMPL( ((typename),IteratorType)
+BOOST_ACT_DETAIL_IMPLEMENT_ALGO( ((typename),IteratorType)
                                  ((typename),FunctionType)
                                , (void)
                                , generate

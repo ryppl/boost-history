@@ -9,7 +9,7 @@
 
 #include "detail/make_algo.hpp"
 
-#include "../act_fwd.hpp"
+#include "fill/fill_fwd.hpp"
 
 #include "../parallel_safe.hpp"
 
@@ -49,7 +49,7 @@ make_safe_filler( SourceType const& source )
 
 }
 
-BOOST_ACT_DETAIL_MAKE_ALGO_IMPL( ((typename),IteratorType)
+BOOST_ACT_DETAIL_IMPLEMENT_ALGO( ((typename),IteratorType)
                                  ((typename),ValueType)
                                , (void)
                                , fill

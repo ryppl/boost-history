@@ -11,7 +11,11 @@
 
 #include "../parallel_safe.hpp"
 
+#include "algorithm_fwd.hpp"
+
 #include "find_if.hpp"
+
+#include "find/find_fwd.hpp"
 
 namespace boost
 {
@@ -47,7 +51,7 @@ safe_equal_to< LeftType > make_safe_equal_to( LeftType const& left_init )
 
 }
 
-BOOST_ACT_DETAIL_MAKE_ALGO_IMPL( ((typename),IteratorType)
+BOOST_ACT_DETAIL_IMPLEMENT_ALGO( ((typename),IteratorType)
                                  ((typename),ValueType)
                                , (IteratorType)
                                , find

@@ -6,7 +6,7 @@
 #ifndef BOOST_ACT_COMMON_ACT_MODELS_HPP
 #define BOOST_ACT_COMMON_ACT_MODELS_HPP
 
-#include "common_act_models/asynchronous_act_model.hpp"
-#include "common_act_models/synchronous_act_model.hpp"
+#include "common_act_models/immediate_act_model.hpp"
+#include "common_act_models/concurrent_act_model.hpp"
 
 #endif

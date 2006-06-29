@@ -47,12 +47,12 @@ typename ::boost::enable_if                                                    \
 ::type                                                                         \
 queued_function_caller                                                         \
 (                                                                              \
-  ObjectType& target                                                           \
+  ObjectType* const inactive_this                                              \
 , FunctionType& function                                                       \
 , TupleType const& args                                                        \
 )                                                                              \
 {                                                                              \
-  return function( target                                                      \
+  return function( inactive_this                                               \
                    BOOST_PP_CAT( BOOST_PP_ENUM_TRAILING_, z )                  \
                    (                                                           \
                      num_params                                                \
@@ -79,12 +79,12 @@ typename ::boost::enable_if                                                    \
 ::type                                                                         \
 queued_function_caller                                                         \
 (                                                                              \
-  ObjectType& target                                                           \
+  ObjectType* const inactive_this                                              \
 , FunctionType& function                                                       \
 , TupleType const& args                                                        \
 )                                                                              \
 {                                                                              \
-  function( target                                                             \
+  function( inactive_this                                                      \
             BOOST_PP_CAT( BOOST_PP_ENUM_TRAILING_, z )                         \
             (                                                                  \
               num_params                                                       \

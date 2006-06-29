@@ -24,7 +24,7 @@
 #include "detail_fwd.hpp"
 #include "tie.hpp"
 #include "result_type.hpp"
-#include "../action.hpp"
+//#include "../action/action_no_default.hpp"
 
 
 #include "../config/max_active_call_params.hpp"
@@ -48,6 +48,30 @@ private:
   ChildType const& derived() const
   {
     return static_cast< ChildType const& >( *this );
+  }
+private:
+  class active_object_destroyer
+  {
+  public:
+    active_object_destroyer( ChildType const& target_init )
+      : target_m( target_init )
+    {
+    }
+  public:
+    // ToDo: Make version which accounts for void
+    //       (use metafunction which yields dummy type)
+    void operator ()( RepresentedType const& target ) const
+    {
+      target_m.~ChildType();
+    }
+  private:
+    // ToDo: Make version which accounts for void
+    ChildType const volatile& target_m;
+  };
+protected:
+  action< void, ActModel > destroy() const
+  {
+    return queue_function( active_object_destroyer( derived() ) );
   }
 protected:
 #define BOOST_ACT_DETAIL_ACTIVE_QUEUE_FUNC( z, num_params, dummy )             \
@@ -94,7 +118,8 @@ BOOST_PP_REPEAT( BOOST_ACT_MAX_ACTIVE_CALL_PARAMS
 };
 
 #define BOOST_ACT_DETAIL_PROMOTE_ACTIVE_MEMBERS( active_helper_base )          \
-using active_helper_base::queue_function;
+using active_helper_base::queue_function;                                      \
+using active_helper_base::destroy;
 
 }
 }
@@ -103,7 +128,5 @@ using active_helper_base::queue_function;
 #include "../type_traits/is_act_model.hpp"
 
 #include "active_call_enablers.hpp"
-
-#include "../config/default_act_model.hpp"
 
 #endif

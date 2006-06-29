@@ -8,7 +8,7 @@
 
 #include "detail/make_algo.hpp"
 
-#include "../act_fwd.hpp"
+#include "find_if/find_if_fwd.hpp"
 
 #include "find_if/detail/find_if_impl.hpp"
 
@@ -27,7 +27,7 @@ namespace boost
 namespace act
 {
 
-BOOST_ACT_DETAIL_MAKE_ALGO_IMPL( ((typename),IteratorType)
+BOOST_ACT_DETAIL_IMPLEMENT_ALGO( ((typename),IteratorType)
                                  ((typename),PredicateType)
                                , (IteratorType)
                                , find_if

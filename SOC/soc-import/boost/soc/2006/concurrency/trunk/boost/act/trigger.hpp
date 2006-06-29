@@ -12,19 +12,25 @@
 
 #include <boost/thread/condition.hpp>
 
+#include "detail/unspecified_bool.hpp"
+
 // ToDo: Check safety of using unsigned int volatile
 namespace boost
 {
 namespace act
 {
 
+// ToDo: Rewrite with OpenMP optimized atomic implementation
+// ToDo: Add event implementation
 class trigger
   : ::boost::noncopyable
 {
+private:
+  struct unspecified_bool_tag;
 public:
   explicit trigger( bool initial_state = false )
+    : value_m( initial_state )
   {
-    value_m = initial_state;
   }
 public:
   trigger& operator =( bool value )
@@ -36,36 +42,39 @@ public:
 public:
   void reset( bool value )
   {
-    // ToDo: Possibly rewrite to avoid ordering problems
-    if( value )
+    mutex::scoped_lock lock( mutex_m );
+
+    if( value && !value_m )
       condition_m.notify_all();
 
-    value_m = value; // PORTABILIY NOTE: Assumes atomic write
+    value_m = value;
   }
 
   void wait() const
   {
-    if( !value_m ) // PORTABILIY NOTE: Assumes atomic read
-    {
-      ::boost::mutex::scoped_lock lock( mutex_m );
+    mutex::scoped_lock lock( mutex_m );
 
-      if( !value_m )
-        condition_m.wait( lock );
-    }
+    if( !value_m )
+      condition_m.wait( lock );
   }
 
-  operator bool() const // ToDo: Change return
+  operator BOOST_ACT_DETAIL_UNSPECIFIED_BOOL((unspecified_bool_tag))() const
   {
-    return check();
-  }
-
-  bool check() const
-  {
-    return value_m != 0;
+    return   check()
+           ? BOOST_ACT_DETAIL_UNSPECIFIED_TRUE((unspecified_bool_tag))
+           : BOOST_ACT_DETAIL_UNSPECIFIED_FALSE((unspecified_bool_tag));
   }
 private:
-  ::boost::condition condition_m;
-  unsigned int volatile value_m;
+  bool check() const
+  {
+    // Note: Aggressive locking.
+    mutex::scoped_lock lock( mutex_m );
+    return value_m;
+  }
+private:
+  mutable mutex mutex_m;
+  mutable condition condition_m;
+  mutable bool value_m;
 };
 
 }

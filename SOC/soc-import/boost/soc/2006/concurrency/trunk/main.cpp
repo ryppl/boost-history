@@ -12,11 +12,14 @@
 
 #include "boost/act/common_act_models/immediate_act_model.hpp"
 #include "boost/act/common_algo_models/parallel_algo_model.hpp"
+#include "boost/act/common_act_models/concurrent_act_model.hpp"
 
 #include "boost/act/active/queue_function.hpp"
 
 #include <iostream>
 #include <fstream>
+
+#include <windows.h>
 
 struct a
 {
@@ -24,6 +27,19 @@ struct a
   a()
     : value( 10 )
   {
+  }
+};
+
+struct b
+{
+  b( int )
+  {
+    ::std::cout << "Constructing b" << ::std::endl;
+  }
+
+  ~b()
+  {
+    ::std::cout << "Destroying b" << ::std::endl;
   }
 };
 
@@ -37,18 +53,18 @@ BOOST_ACT_ACTIVE_INTERFACE_SPEC( ::a )
 public:
   BOOST_ACT_MEM_FUN( (int), mem_test, ((int),left) ((int),right) )
   {
-    target.value *= left + right;
+    inactive_this->value *= left + right;
 
-    ::std::cout << "mem_test Called: " << target.value << ::std::endl;
+    ::std::cout << "mem_test Called: " << inactive_this->value << ::std::endl;
 
-    return target.value;
+    return inactive_this->value;
   }
 
-  BOOST_ACT_CONST_MEM_FUN( (int), mem_test2, BOOST_ACT_NO_PARAMS )
+  BOOST_ACT_CONST_MEM_FUN( (int), mem_test2, ((),()) )
   {
-    ::std::cout << "mem_test2 Called: " << target.value << ::std::endl;
+    ::std::cout << "mem_test2 Called: " << inactive_this->value << ::std::endl;
 
-    return target.value;
+    return inactive_this->value;
   }
 };
 
@@ -59,7 +75,7 @@ struct a_function
 {
   typedef void result_type;
 
-  void operator ()( a& ) const
+  void operator ()( a* ) const
   {
     ::std::cout << "a_function called!" << ::std::endl;
   }
@@ -144,7 +160,7 @@ int main()
   // Copy active_test asynchronously
   action< a > const test3 = active_test;
 
-  // Call "fart" in active_test's thread (asynchronous to call-site)
+  // Call "mem_test" in active_test's thread (asynchronous to call-site)
   action< int > const mem_test = active_test.mem_test( 1, 4 );
 
   // Wait for above function to complete execution
@@ -157,11 +173,13 @@ int main()
   wee.wait();
 
   // queue a_function on the result of the copy operation (test3) asynchronously
-   test3->queue_function( a_function() );
+  test3->queue_function( a_function() );
 
-  // call fart on the result of test3
+  // call mem_test on the result of test3
   test3->mem_test( 2, 6 );
 
-  // call pee on the result of test3
+  // call mem_test2 on the result of test3
   test3->mem_test2();
+
+  BOOST_ACTIVE_M((b),(concurrent_act_model)) concurrent_b( 4 );
 }

@@ -13,7 +13,7 @@
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/empty_base.hpp>
 
-#include "../action.hpp"
+//#include "../action/action_no_default.hpp"
 #include "../type_traits/is_act_model.hpp"
 #include "../type_traits/is_active.hpp"
 #include "../type_traits/remove_active.hpp"

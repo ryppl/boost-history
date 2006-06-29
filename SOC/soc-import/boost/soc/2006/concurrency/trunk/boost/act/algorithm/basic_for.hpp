@@ -45,10 +45,20 @@ public:
   {
   }
 public:
-  // ToDo: Make compatible with Boost.Lambda
   template< typename FunctionType >
   FunctionType
   operator []( FunctionType function ) const
+  {
+    return AlgoModel::basic_for_impl( assign_m
+                                    , comparison_m
+                                    , operation_m
+                                    , function
+                                    );
+  }
+
+  template< typename FunctionType >
+  FunctionType
+  operator ()( FunctionType function ) const
   {
     return AlgoModel::basic_for_impl( assign_m
                                     , comparison_m
@@ -145,10 +155,6 @@ struct modeled_basic_for_type
 
 struct basic_for_type
 {
-  basic_for_type()
-  {
-  }
-
   template< typename AssignType
           , typename ComparisonType
           , typename OperationType
@@ -221,7 +227,7 @@ struct basic_for_type
 
 }
 
-detail::basic_for_type const basic_for;
+detail::basic_for_type const basic_for = detail::basic_for_type();
 
 }
 }

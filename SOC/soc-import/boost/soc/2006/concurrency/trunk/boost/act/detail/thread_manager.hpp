@@ -25,16 +25,17 @@ namespace detail
 class thread_manager_impl
 {
 private:
-  typedef ::boost::mutex mutex_type;
+  typedef mutex mutex_type;
+  typedef try_mutex try_mutex_type;
   typedef mutex_type::scoped_lock scoped_lock_type;
-  typedef ::boost::thread thread_type;
+  typedef try_mutex_type::scoped_try_lock scoped_try_lock_type;
+  typedef thread thread_type;
 private:
-  typedef ::boost::ptr_deque< ::boost::thread* > thread_handle_container_type;
+  typedef ::std::deque< thread_type* > thread_handle_container_type;
   typedef thread_handle_container_type::iterator iterator_type;
 public:
   thread_manager_impl()
     : curr_thread_container_m( thread_containers_m )
-    , is_waiting_m( false )
   {
   }
 public:
@@ -56,14 +57,20 @@ public:
 private:
   struct thread_joiner
   {
-    void operator ()( thread_type& target_thread ) const
+    void operator ()( thread_type* target_thread ) const
     {
-      target_thread.join();
+      target_thread->join();
+      delete target_thread;
+      target_thread = 0;
     }
   };
 public:
   ~thread_manager_impl()
   {
+    scoped_try_lock_type const destroyer_lock( is_being_destroyed_mutex_m
+                                             , true
+                                             );
+
     for(;;)
     {
       thread_handle_container_type* closing_thread_container;
@@ -71,23 +78,18 @@ public:
       {
         scoped_lock_type const lock( mutex_m );
 
-        is_waiting_m = true;
-
         if( curr_thread_container_m->empty() )
           return;
 
         closing_thread_container = swap_thread_containers();
-      }
 
       ::std::for_each( closing_thread_container->begin()
                      , closing_thread_container->end()
                      , thread_joiner()
                      );
 
-      closing_thread_container->clear();
-
-      // Note: Block here for portability
-      is_waiting_m = false;
+        closing_thread_container->clear();
+      }
     }
   }
 public:
@@ -102,7 +104,15 @@ public:
 
     scoped_lock_type const lock( mutex_m );
 
-    curr_thread_container_m->push_back( new_thread );
+    try
+    {
+      curr_thread_container_m->push_back( new_thread );
+    }
+    catch( ... )
+    {
+      delete new_thread;
+      throw;
+    }
 
     iterator_type handle_iterator = curr_thread_container_m->end();
     --handle_iterator;
@@ -112,23 +122,29 @@ public:
 
   void remove_thread( handle const& thread_to_remove )
   {
-    void* thread_to_close;
+    scoped_try_lock_type const destroyer_lock( is_being_destroyed_mutex_m );
 
+    if( destroyer_lock )
     {
-      scoped_lock_type const lock( mutex_m );
+      thread_type* const removed_thread = *thread_to_remove.iterator_m;
 
-      if( is_waiting_m )
-        return;
+      {
+        // ToDo: Somehow safely check before locking
+        scoped_lock_type const lock( mutex_m );
 
-      ::std::swap( *thread_to_remove.iterator_m
-                 , curr_thread_container_m->back()
-                 );
+        iterator_type last_iterator = curr_thread_container_m->end();
 
-      thread_to_close = curr_thread_container_m->back();
-      curr_thread_container_m->pop_back();
+        --last_iterator;
+
+        ::std::iter_swap( thread_to_remove.iterator_m
+                        , last_iterator
+                        );
+
+        curr_thread_container_m->pop_back();
+      }
+
+      delete removed_thread;
     }
-
-    CloseHandle( thread_to_close );
   }
 private:
   // Returns a pointer to the closing thread containers
@@ -146,11 +162,10 @@ private:
     }
   }
 private:
-  // ToDo: Use fast allocator
   thread_handle_container_type thread_containers_m[2];
   thread_handle_container_type* curr_thread_container_m;
   mutex_type mutex_m;
-  bool volatile is_waiting_m; // NOTE: THIS IS NOT PORTABLE, CHANGE
+  try_mutex_type is_being_destroyed_mutex_m;
 };
 
 class thread_manager_type

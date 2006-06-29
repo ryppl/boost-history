@@ -12,6 +12,7 @@
 #include <boost/mpl/apply.hpp>
 
 #include <boost/mpl/always.hpp>
+
 namespace boost
 {
 namespace act
