@@ -32,7 +32,8 @@ void configure_context (Context& c) {
 	c.set_language (enable_variadics(c.get_language()));
 	c.set_language (language_support (support_option_convert_trigraphs 
 	                                  | c.get_language()));
-	
+	c.set_language (language_support (~support_option_emit_line_directives
+				                      & c.get_language()));
 // 	c.set_language (language_support (support_option_no_character_validation 
 // 	                                  | c.get_language()));
 	

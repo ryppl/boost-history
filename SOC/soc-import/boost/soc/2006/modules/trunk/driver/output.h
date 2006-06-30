@@ -75,6 +75,20 @@ public:
 		m_dest.pop ();
 	}
 
+	//
+	// the next two replace the topmost element with either header or source.
+	void swap_header () {
+		check ();
+		pop ();
+		push_header ();
+	}
+	
+	void swap_source () {
+		check ();
+		pop ();
+		push_source ();
+	}
+	
 	// we'll do the module name lookup.
 	void include_module (std::string module) {
 		check ();

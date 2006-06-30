@@ -33,6 +33,7 @@ static char * strip (char * src) {
 	return p;
 }
 
+/*
 static
 ostream& operator<<(ostream& o, const vector<string>& v) {
 	typedef vector<string>::const_iterator  vec_iter_t;
@@ -45,7 +46,7 @@ ostream& operator<<(ostream& o, const vector<string>& v) {
 	
 	return o;
 }
-
+*/
 int
 Driver::
 execute (int args, const char ** argv) {

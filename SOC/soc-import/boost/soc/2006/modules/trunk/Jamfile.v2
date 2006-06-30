@@ -11,5 +11,5 @@ exe mfront :
 	$(BOOST_ROOT)//filesystem
 	$(BOOST_ROOT)//wave
 	$(BOOST_ROOT)//regex
-	: <include>. <include>/usr/local/src/boost
+	: <include>. <include>/usr/local/src/spirit <include>/usr/local/src/boost
 	;
