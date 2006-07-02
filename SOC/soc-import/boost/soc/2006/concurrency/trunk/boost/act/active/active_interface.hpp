@@ -29,7 +29,7 @@ struct active_details
 template< typename ActiveDetails >                                             \
 class active_interface< type, ActiveDetails > 
 
-template< typename Type, typename ActiveDetails >
+template< typename Type, typename ActiveDetails, typename Enabler >
 class active_interface
 {
 };

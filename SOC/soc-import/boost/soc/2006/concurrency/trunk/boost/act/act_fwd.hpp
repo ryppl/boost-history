@@ -47,7 +47,7 @@ template< typename RepresentedType = void
         >
 class action;
 
-template< typename Type, typename ActiveDetails >
+template< typename Type, typename ActiveDetails, typename Enabler = void >
 class active_interface;
 
 #define BOOST_ACT_DETAIL_ACTIVE_QUEUE_FUNCTION_DECL( z, num_params, dummy )    \
