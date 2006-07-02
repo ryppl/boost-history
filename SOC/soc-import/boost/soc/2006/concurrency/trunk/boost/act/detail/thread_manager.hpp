@@ -36,6 +36,7 @@ private:
 public:
   thread_manager_impl()
     : curr_thread_container_m( thread_containers_m )
+    , closing_thread_container_m( thread_containers_m + 1 )
   {
   }
 public:
@@ -61,7 +62,6 @@ private:
     {
       target_thread->join();
       delete target_thread;
-      target_thread = 0;
     }
   };
 public:
@@ -73,23 +73,19 @@ public:
 
     for(;;)
     {
-      thread_handle_container_type* closing_thread_container;
+      scoped_lock_type const lock( mutex_m );
 
-      {
-        scoped_lock_type const lock( mutex_m );
+      if( curr_thread_container_m->empty() )
+        return;
 
-        if( curr_thread_container_m->empty() )
-          return;
+      swap_thread_containers();
 
-        closing_thread_container = swap_thread_containers();
+      ::std::for_each( closing_thread_container_m->begin()
+                     , closing_thread_container_m->end()
+                     , thread_joiner()
+                     );
 
-        ::std::for_each( closing_thread_container->begin()
-                       , closing_thread_container->end()
-                       , thread_joiner()
-                       );
-
-        closing_thread_container->clear();
-      }
+      closing_thread_container_m->clear();
     }
   }
 public:
@@ -130,34 +126,25 @@ public:
 
       thread_type* const removed_thread = *target_iterator;
 
+      // ToDo: Potentially try/catch
       {
         scoped_lock_type const lock( mutex_m );
 
         curr_thread_container_m->erase( target_iterator );
       }
 
-      // ToDo: Potentially try/catch
       delete removed_thread;
     }
   }
 private:
-  // Returns a pointer to the closing thread containers
-  thread_handle_container_type* swap_thread_containers()
+  void swap_thread_containers()
   {
-    if( curr_thread_container_m == thread_containers_m )
-    {
-      curr_thread_container_m = thread_containers_m + 1;
-      return thread_containers_m;
-    }
-    else
-    {
-      curr_thread_container_m = thread_containers_m;
-      return thread_containers_m + 1;
-    }
+    ::std::swap( curr_thread_container_m, closing_thread_container_m );
   }
 private:
   thread_handle_container_type thread_containers_m[2];
-  thread_handle_container_type* curr_thread_container_m;
+  thread_handle_container_type* curr_thread_container_m,
+                              * closing_thread_container_m;
   mutex_type mutex_m;
   try_mutex_type is_being_destroyed_mutex_m;
 };
