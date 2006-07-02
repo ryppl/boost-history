@@ -8,6 +8,6 @@
 
 #include "../act_fwd.hpp"
 
-#include "../common_act_models/immediate_act_model.hpp"
+#include "../common_act_models/concurrent_act_model.hpp"
 
 #endif

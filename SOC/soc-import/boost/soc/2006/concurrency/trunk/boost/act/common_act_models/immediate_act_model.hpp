@@ -71,6 +71,11 @@ struct immediate_act_model
       : base_type( target, function_package )
     {
     }
+
+    ~active_impl()
+    {
+      this->destroy_object();
+    }
   public:
     typename base_type::inactive_value_type inactive_value() const
     {

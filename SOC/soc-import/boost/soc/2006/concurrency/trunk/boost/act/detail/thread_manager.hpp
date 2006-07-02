@@ -12,7 +12,7 @@
 
 #include <boost/ptr_container/ptr_deque.hpp>
 
-#include <vector>
+#include <list>
 #include <algorithm>
 
 namespace boost
@@ -31,7 +31,7 @@ private:
   typedef try_mutex_type::scoped_try_lock scoped_try_lock_type;
   typedef thread thread_type;
 private:
-  typedef ::std::deque< thread_type* > thread_handle_container_type;
+  typedef ::std::list< thread_type* > thread_handle_container_type;
   typedef thread_handle_container_type::iterator iterator_type;
 public:
   thread_manager_impl()
@@ -83,10 +83,10 @@ public:
 
         closing_thread_container = swap_thread_containers();
 
-      ::std::for_each( closing_thread_container->begin()
-                     , closing_thread_container->end()
-                     , thread_joiner()
-                     );
+        ::std::for_each( closing_thread_container->begin()
+                       , closing_thread_container->end()
+                       , thread_joiner()
+                       );
 
         closing_thread_container->clear();
       }
@@ -126,23 +126,17 @@ public:
 
     if( destroyer_lock )
     {
-      thread_type* const removed_thread = *thread_to_remove.iterator_m;
+      iterator_type const& target_iterator = thread_to_remove.iterator_m;
+
+      thread_type* const removed_thread = *target_iterator;
 
       {
-        // ToDo: Somehow safely check before locking
         scoped_lock_type const lock( mutex_m );
 
-        iterator_type last_iterator = curr_thread_container_m->end();
-
-        --last_iterator;
-
-        ::std::iter_swap( thread_to_remove.iterator_m
-                        , last_iterator
-                        );
-
-        curr_thread_container_m->pop_back();
+        curr_thread_container_m->erase( target_iterator );
       }
 
+      // ToDo: Potentially try/catch
       delete removed_thread;
     }
   }

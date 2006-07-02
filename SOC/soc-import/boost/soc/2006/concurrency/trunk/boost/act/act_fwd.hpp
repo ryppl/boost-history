@@ -33,7 +33,7 @@ struct immediate_act_model;
 struct lazy_act_model;
 struct concurrent_act_model;
 
-typedef immediate_act_model default_act_model;
+typedef concurrent_act_model default_act_model;
 
 struct parallel_safe;
 

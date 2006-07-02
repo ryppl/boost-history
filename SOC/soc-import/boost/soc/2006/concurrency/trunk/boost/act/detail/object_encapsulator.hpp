@@ -69,6 +69,10 @@ struct call_void_unary_function_package_function
   }
 };
 
+struct no_object_encapsulator_construction
+{
+};
+
 // ToDo: Handle empty types via inheritance
 template< typename StoredObjectType, typename Enabler = void >
 class object_encapsulator
@@ -77,9 +81,8 @@ public:
   // ToDo: Optimize function return
   typedef StoredObjectType inactive_value_type;
 public:
-  ~object_encapsulator()
+  object_encapsulator( no_object_encapsulator_construction )
   {
-    stored_object().~StoredObjectType();
   }
 
   template< typename FunctionPackageType >
@@ -125,6 +128,16 @@ public:
   {
     return *reinterpret_cast< StoredObjectType* >( &stored_object_m );
   }
+
+  void destroy_object() const
+  {
+    stored_object().~StoredObjectType();
+  }
+public:
+  void* raw_object_pointer() const
+  {
+    return &stored_object_m;
+  }
 private:
   mutable raw_stored_object stored_object_m;
 };
@@ -138,6 +151,10 @@ class object_encapsulator< StoredObjectType
 public:
   typedef StoredObjectType inactive_value_type;
 public:
+  object_encapsulator( no_object_encapsulator_construction )
+  {
+  }
+
   template< typename FunctionPackageType >
   object_encapsulator( FunctionPackageType const& function_package )
   {
@@ -172,6 +189,15 @@ public:
   {
     static dummy_stored_object_type dummy;
     return dummy;
+  }
+
+  void* raw_object_pointer() const
+  {
+    return &stored_object();
+  }
+
+  void destroy_object() const
+  {
   }
 private:
 };

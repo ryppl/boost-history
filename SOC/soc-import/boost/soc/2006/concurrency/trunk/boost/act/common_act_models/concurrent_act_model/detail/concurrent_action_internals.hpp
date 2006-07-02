@@ -27,8 +27,8 @@ class concurrent_action_internals
   : noncopyable
 {
 private:
-    typedef BOOST_ACTIVE_M_T((ResultType),(concurrent_act_model))
-              active_object_type;
+    typedef typename add_active< ResultType, concurrent_act_model >
+              ::type active_object_type;
 public:
   concurrent_action_internals()
     : active_object_m( active_impl_constructor_tag()
@@ -42,7 +42,7 @@ public:
     completion_trigger_m.wait();
   }
 
-  void set_trigger() const
+  void set_trigger()
   {
     completion_trigger_m = true;
   }
@@ -79,6 +79,11 @@ public:
   ) const
   {
     active_object_m.impl().queue_function( internals, function_package );
+  }
+
+  void* raw_object_storage() const
+  {
+    return active_object_m.impl().raw_object_storage();
   }
 private:
   trigger completion_trigger_m;

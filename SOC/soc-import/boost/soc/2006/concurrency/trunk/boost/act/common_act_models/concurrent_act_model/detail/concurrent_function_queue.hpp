@@ -9,17 +9,18 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition.hpp>
 #include <boost/function.hpp>
-#include <boost/type_traits/alignment_of.hpp>
-#include <boost/type_traits/aligned_storage.hpp>
 #include <boost/type_traits/has_trivial_destructor.hpp>
 #include <boost/type_traits/is_void.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/mpl/or.hpp>
+#include <boost/mpl/identity.hpp>
 
 #include <deque>
 #include <algorithm>
 
 #include "../../../detail/thread_manager.hpp"
 #include "../../../detail/execute_if.hpp"
+#include "../../../detail/object_encapsulator.hpp"
 
 #include "concurrent_active_thread.hpp"
 #include "concurrent_action_function.hpp"
@@ -34,41 +35,68 @@ namespace detail
 {
 
 template< typename Type, typename Enabler = void >
-struct uninitialized_storage_type
-  : aligned_storage
-    <
-      sizeof( Type )
-    , alignment_of< Type >::value
-    >
+class concurrent_execute_function
 {
+public:
+  explicit concurrent_execute_function( void* target_init )
+    : target_m( static_cast< Type* >( target_init ) )
+  {
+  }
+public:
+  template< typename FunctionType >
+  void operator ()( FunctionType& function ) const
+  {
+    function( target_m );
+  }
+private:
+  Type* const target_m;
 };
 
 template< typename Type >
-struct uninitialized_storage_type< Type
+class concurrent_execute_function< Type
                                  , typename enable_if< is_void< Type > >::type
                                  >
 {
-  struct type
+public:
+  explicit concurrent_execute_function( void* dummy_target_init )
   {
-  };
+  }
+public:
+  template< typename FunctionType >
+  void operator ()( FunctionType& function ) const
+  {
+    function();
+  }
+};
+
+template< typename Type >
+struct concurrent_function_type
+  : mpl::eval_if< is_void< Type >
+                , mpl::identity< function< void () > >
+                , mpl::identity< function< void ( Type* const ) > >
+                >
+{
 };
 
 // Note: Should only be dynamically allocated with new
 // ToDo: Template for queue policy and thread manager
 template< typename RepresentedType >
 class concurrent_function_queue
+  : object_encapsulator< RepresentedType >
 {
 private:
   typedef mutex mutex_type;
   typedef mutex_type::scoped_lock scoped_lock_type;
-  typedef function< void ( RepresentedType* const ) > function_type;
+public:
+  typedef typename concurrent_function_type< RepresentedType >
+            ::type function_type;
   // ToDo: Use fast allocator
   typedef ::std::deque< function_type > container_type;
-public: // ToDo: Change to private when friend is fixed
-  typedef function< void( RepresentedType* ) > function_type;
 public:
   concurrent_function_queue()
-    : queueable_queue_m( &function_queues_m[0] )
+    : object_encapsulator< RepresentedType >
+        ( no_object_encapsulator_construction() )
+    , queueable_queue_m( &function_queues_m[0] )
     , dequeueable_queue_m( &function_queues_m[1] )
     , functions_queued_m( false )
     , thread_created_m( false )
@@ -78,13 +106,19 @@ public:
 public:
   template< typename FunctionPackage >
   explicit concurrent_function_queue( FunctionPackage const& function_package )
-    : functions_queued_m( false )
+    : object_encapsulator< RepresentedType >
+        ( no_object_encapsulator_construction() )
+    , queueable_queue_m( &function_queues_m[0] )
+    , dequeueable_queue_m( &function_queues_m[1] )
+    , functions_queued_m( false )
+    , thread_created_m( false )
+    , object_destroyed_m( false )
   {
     typedef typename FunctionPackage::stored_function_type stored_function_type;
 
     stored_function_type stored_function = function_package.store_function();
 
-    queued_function_caller( &object_storage_m, stored_function );
+    queued_function_caller( this->raw_object_pointer(), stored_function );
   }
 public:
   // Note: Only called from the active object's internal thread
@@ -103,22 +137,6 @@ public:
     return thread_handle_m;
   }
 private:
-  class execute_function
-  {
-  public:
-    explicit execute_function( void* object_storage_init )
-      : object_storage_m
-          ( static_cast< RepresentedType* >( object_storage_init ) )
-    {
-    }
-  public:
-    void operator ()( function_type& function ) const
-    {
-      function( object_storage_m );
-    }
-  private:
-    RepresentedType* const object_storage_m;
-  };
 public:
   // Note: Only called from the active object's internal thread
   void process_queue() const
@@ -126,7 +144,8 @@ public:
     swap_function_queues();
 
     ::std::for_each( dequeueable_queue_m->begin(), dequeueable_queue_m->end()
-                   , execute_function( &object_storage_m )
+                   , concurrent_execute_function< RepresentedType >
+                       ( this->raw_object_pointer() )
                    );
 
     dequeueable_queue_m->clear();
@@ -144,6 +163,11 @@ public: // ToDo: Change to private when friend is fixed
     {
     }
   public:
+    void operator ()() const
+    {
+      is_complete_m = true;
+    }
+
     void operator ()( RepresentedType const* target ) const
     {
       target->~RepresentedType();
@@ -220,7 +244,9 @@ public:
     if( thread_is_created() )
       queue_destruction_impl::execute( *this, object_destroyed_m );
     else
-      execute_if< has_trivial_destructor< RepresentedType >
+      execute_if< mpl::or_< is_void< RepresentedType >
+                          , has_trivial_destructor< RepresentedType >
+                          >
                 , delete_self
                 , queue_destruction_impl
                 >
@@ -232,7 +258,6 @@ public: // ToDo: Change to private when friend is fixed
   template< typename FunctionType >
   void raw_queue_function( FunctionType function ) const
   {
-    {
     scoped_lock_type const scoped_lock( mutex_m );
 
     try_create_thread();
@@ -242,20 +267,18 @@ public: // ToDo: Change to private when friend is fixed
     functions_queued_m = true;
 
     queue_condition_m.notify_one();
-    }
   }
 public:
   // ToDo: Change to placement construct (use in_place_factory)
   void* raw_object_storage() const
   {
-    return &object_storage_m;
+    return this->raw_object_pointer();
   }
 private:
   // Note: Only called by process_queue
   //       Swaps once functions are queued, waits if necessary
   void swap_function_queues() const
   {
-    {
     scoped_lock_type scoped_lock( mutex_m );
 
     if( !functions_queued_m )
@@ -264,7 +287,6 @@ private:
     ::std::swap( queueable_queue_m, dequeueable_queue_m );
 
     functions_queued_m = false;
-    }
   }
 private:
   // Note: Only call when locked
@@ -280,11 +302,7 @@ private:
     }
   }
 private:
-  typedef typename uninitialized_storage_type< RepresentedType >::type
-          object_storage_type;
-private:
   mutable mutex_type mutex_m;
-  mutable object_storage_type object_storage_m;
   mutable container_type function_queues_m[2];
   mutable container_type* queueable_queue_m,
                         * dequeueable_queue_m;

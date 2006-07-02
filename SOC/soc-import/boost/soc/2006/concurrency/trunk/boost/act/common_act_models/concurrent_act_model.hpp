@@ -170,7 +170,7 @@ public:
   public:
     void* raw_object_storage() const
     {
-      return function_queue_m.raw_object_storage();
+      return function_queue_m->raw_object_storage();
     }
   public:/*
     // ToDo: Change return type for void
@@ -193,7 +193,7 @@ public:
     typedef detail::concurrent_action_internals< ResultType > internals_type;
     typedef shared_ptr< internals_type > shared_internals_type;
   private:
-    typedef BOOST_ACTIVE_M_T((ResultType),(concurrent_act_model))
+    typedef typename add_active< ResultType, concurrent_act_model >::type
               active_object_type;
   public:
     // ToDo: Possibly rewrite to eliminate extra copy of internal function
@@ -202,6 +202,7 @@ public:
     action_impl( FunctionPackageType const& function )
       : internals_m( new internals_type )
     {
+      internals_m->queue_function( internals_m, function );
     }
   public:
     template< typename ActiveImplType

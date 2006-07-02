@@ -86,6 +86,7 @@ public:
 public:
   void operator ()() const
   {
+    // ToDo: Initialize internals directly
     result_type const result = base::function_m();
 
     // ToDo: Move this to the base
@@ -93,7 +94,7 @@ public:
 
     if( internals )
     {
-      internals->value = result;
+      new ( internals->raw_object_storage() ) result_type( result );
 
       internals->set_trigger();
     }
@@ -102,6 +103,7 @@ public:
   template< typename TargetType >
   void operator ()( TargetType* const target ) const
   {
+    // ToDo: Initialize internals directly
     result_type const result = base::function_m( target );
 
     // ToDo: Move this to the base
@@ -109,7 +111,7 @@ public:
 
     if( internals )
     {
-      internals->value = result;
+      new ( internals->raw_object_storage() ) result_type( result );
 
       internals->set_trigger();
     }
@@ -146,7 +148,7 @@ public:
     shared_internals_type const internals( base::action_internals_m );
 
     if( internals )
-      internals->completion_trigger->set_trigger();
+      internals->set_trigger();
   }
 
   template< typename TargetType >

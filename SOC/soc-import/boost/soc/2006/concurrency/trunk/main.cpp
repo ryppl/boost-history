@@ -19,8 +19,6 @@
 #include <iostream>
 #include <fstream>
 
-#include <windows.h>
-
 struct a
 {
   int value;
@@ -110,12 +108,6 @@ int main()
                                , val
                                );
 
-  // Runs for_each serially but asynchronously with respect to the call-site
-  action<> test( as_function( for_each[ serial_algo_model() ] )
-               , array_test + 0, array_test + 10
-               , complex_function()
-               );
-
   // Runs for_each either serially or in parallel dependent on the default model
   action<> default_for_call( as_function( for_each() )
                            , array_test + 0, array_test + 10
@@ -130,7 +122,7 @@ int main()
               << array_test[4] << ::std::endl;
 
   // Forces the call to complete
-  test.wait();
+  default_for_call.wait();
 
   // Reliable results
   ::std::cout << array_test[5] << ::std::endl
