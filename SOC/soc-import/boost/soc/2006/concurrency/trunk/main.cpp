@@ -17,7 +17,6 @@
 #include "boost/act/active/queue_function.hpp"
 
 #include <iostream>
-#include <fstream>
 
 struct a
 {
@@ -25,6 +24,17 @@ struct a
   a()
     : value( 10 )
   {
+  }
+
+  a( a const& source )
+    : value( source.value )
+  {
+    ::std::cout << "Copying a" << ::std::endl;
+  }
+
+  ~a()
+  {
+    ::std::cout << "Destroying a" << ::std::endl;
   }
 };
 
@@ -149,8 +159,11 @@ int main()
                 , a_function()
                 );
 
+  
   // Copy active_test asynchronously
   action< a > const test3 = active_test;
+
+  test3.wait();
 
   // Call "mem_test" in active_test's thread (asynchronous to call-site)
   action< int > const mem_test = active_test.mem_test( 1, 4 );

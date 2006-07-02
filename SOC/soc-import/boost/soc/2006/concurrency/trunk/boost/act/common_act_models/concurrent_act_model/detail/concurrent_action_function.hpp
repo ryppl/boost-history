@@ -90,7 +90,7 @@ public:
     result_type const result = base::function_m();
 
     // ToDo: Move this to the base
-    shared_internals_type const internals( base::action_internals_m );
+    shared_internals_type const internals = base::action_internals_m.lock();
 
     if( internals )
     {
@@ -107,7 +107,7 @@ public:
     result_type const result = base::function_m( target );
 
     // ToDo: Move this to the base
-    shared_internals_type const internals( base::action_internals_m );
+    shared_internals_type const internals = base::action_internals_m.lock();
 
     if( internals )
     {
@@ -145,7 +145,7 @@ public:
     base::function_m();
 
     // ToDo: Move this to the base
-    shared_internals_type const internals( base::action_internals_m );
+    shared_internals_type const internals =  base::action_internals_m.lock();
 
     if( internals )
       internals->set_trigger();
@@ -157,7 +157,7 @@ public:
     base::function_m( target );
 
     // ToDo: Move this to the base
-    shared_internals_type const internals( base::action_internals_m );
+    shared_internals_type const internals = base::action_internals_m.lock();
 
     if( internals )
       internals->set_trigger();
