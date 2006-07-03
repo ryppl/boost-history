@@ -13,9 +13,10 @@ using testing ;
 
 project :
     : requirements
-      # XXX These two paths are incorrect.
+      # XXX These paths are incorrect.
       <include>../../../../boost
       <include>../../..
+      <library>../../../../boost//unit_test_framework
     ;
 
 test-suite process :
