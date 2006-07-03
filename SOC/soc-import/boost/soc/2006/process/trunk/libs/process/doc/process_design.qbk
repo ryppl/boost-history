@@ -16,6 +16,9 @@
 This section contains a list of design decisions that were taken into
 account when implementing this library.
 
+[/ XXX I guess that most of the text below, if not all, could simply go
+into the Features chapter if properly reworded...]
+
 [blurb [*Important note regarding the text below]: Please keep in mind that
 this library is under heavy development.  Although all the notes here speak
 as if the code already exists, it really does not. ]  [/ XXX Remove when
