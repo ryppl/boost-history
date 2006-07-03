@@ -26,20 +26,39 @@ library. ]  [/ XXX Remove when the library is functional enough. ]
 
 [/ ---------------------------------------------------------------------- ]
 
+[section Process management]
+
+The basic goal behind the Boost Process library is to provide an
+abstraction layer over the operating system that allows the programmer to
+manage running processes and start new ones.  Despite this generic design,
+the library currently focuses on child process management only.
+
+In order to achieve this goal, data representing processes is clearly split
+in two blocks: one is always attached to the running process (handled
+internally by the system) and one is only meaningful during child process
+startup.
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
 [section Child process management]
 
-The first and most important goal of Boost Process is to let the programmer
-painlessly launch external applications and control them during their
-lifetime.  Traditionally, this has been a boring and hard task in C and C++
-because there are many details to take into account: create the new
-process, launch the new binary, set up pipes to communicate with it, wait
-for its termination, inspect its exit status, etc.
+Within generic process management, the most important feature of
+Boost.Process is the ability to painlessly launch external applications and
+control them during their lifetime.  Traditionally, this has been a boring
+and hard task in C and C++ because there are many details to take into
+account: create the new process, launch the new binary, set up pipes to
+communicate with it, wait for its termination, inspect its exit status,
+etc.
 
 To make things worse, each major operating system has its own API to manage
 child processes.  Writing an application that deals with both is time
 consuming and often drives away the developer from his original goal
 __mdash__ not related at all to interaction with the underlying operating
-system.
+system.  Boost.Process provides an abstraction to handle all these details
+on behalf of the developer but also lets him bypass it to access the full
+power of the operating system his application is running on.
 
 [endsect]
 
@@ -47,15 +66,15 @@ system.
 
 [section Input/output redirection]
 
-In almost all use cases, an application launching a child process wants to
-communicate with it by means of data transfers.  This IPC happens at the
-level of file descriptors and typically involves the standard input
-(__stdin__), the standard output (__stdout__) and the standard error output
-(__stderr__).  If the operating system supports it, other unnamed data
-streams can be redirected.  [/ XXX I am not sure yet if Windows supports
-this feature and how.  If it does and is compatible with POSIX semantics
-such that a proper abstraction layer can be implemented, this last sentence
-ought to be modified. ]
+An application launching a child process generally wants to communicate
+with it by means of data transfers.  This IPC happens at the level of file
+descriptors and typically involves the standard input (__stdin__), the
+standard output (__stdout__) and the standard error output (__stderr__).
+If the operating system supports it, other unnamed data streams can be
+redirected.  [/ XXX I am not sure yet if Windows supports this feature and
+how.  If it does and is compatible with POSIX semantics such that a proper
+abstraction layer can be implemented, this last sentence ought to be
+modified. ]
 
 In order to properly integrate with the standard C++ Iostreams library,
 this IPC is modelled after C++ streams, making interaction with child
@@ -138,6 +157,18 @@ code is running under.  However, it is a fact that each operating system
 provides specific and useful features that are not portable to others;
 developers must not be banned using them, if they need to.  Therefore, the
 library provides a non-portable way to access these features.
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
+[section Templated design]
+
+Boost.Process is architected around a set of abstract concepts that are
+implemented in the form of C++ templates.  These templates allow the
+developer to replace any part of the library with custom implementations of
+their respective concepts.  This comes helpful if there is need for extreme
+efficiency or highly OS-specific functionality.
 
 [endsect]
 
