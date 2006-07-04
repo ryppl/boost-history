@@ -81,8 +81,8 @@ namespace boost {
             // and the parent map
             tVertexIterator vi,v_end;
             tOutEdgeIterator ei, e_end;
-            for (tie(vi, v_end) = vertices(m_g); vi!= v_end; ++vi){
-              if(*vi!=m_source && *vi!=m_sink) //TODO remove this if
+            for (tie(vi, v_end) = vertices(m_g); vi != v_end; ++vi){
+              if(*vi != m_source && *vi != m_sink) //TODO remove this if
                 set_tree(*vi,tColorTraits::gray());
               set_parent(*vi,tGraphTraits::null_vertex());
               for (tie(ei, e_end) = out_edges(*vi, m_g); ei != e_end; ++ei) {
@@ -90,8 +90,8 @@ namespace boost {
               }
             }
             //init the search trees with the two terminals
-            m_tree_map[m_source]=tColorTraits::white();
-            m_tree_map[m_sink]=tColorTraits::black();
+            m_tree_map[m_source] = tColorTraits::white();
+            m_tree_map[m_sink] = tColorTraits::black();
 //             set_tree(m_source,tColorTraits::white()); //TODO: remove me for 2 lines above
 //             set_tree(m_sink,tColorTraits::black());
           }
@@ -100,7 +100,7 @@ namespace boost {
           tEdgeVal max_flow(){
             while(true){
               tVertex end_of_path,beginning_of_path; 
-              tie(end_of_path,beginning_of_path)=grow(); //find a path from source to sink, the returning pair is the link
+              tie(end_of_path,beginning_of_path) = grow(); //find a path from source to sink, the returning pair is the link
               if( end_of_path == tGraphTraits::null_vertex())
                 break; //we're finished, no path was found
               augment(end_of_path,beginning_of_path); //augment that path
@@ -117,20 +117,20 @@ namespace boost {
           * the second tVertex is the beginning of the path found in the sink-tree
           */
           std::pair<tVertex,tVertex> grow(){
-            tVertex current_node=get_next_active_node();//get first vertex from active list and remove it
-            while(current_node!=tGraphTraits::null_vertex()){ //if there is one
-              if(get_tree(current_node)==tColorTraits::white()){ 
+            tVertex current_node = get_next_active_node();//get first vertex from active list and remove it
+            while(current_node != tGraphTraits::null_vertex()){ //if there is one
+              if(get_tree(current_node) == tColorTraits::white()){ 
                 //source tree growing
                 tOutEdgeIterator ei,e_end;
-                for(tie(ei,e_end)=out_edges(current_node,m_g);ei!=e_end;++ei){
+                for(tie(ei,e_end) = out_edges(current_node,m_g);ei != e_end;++ei){
                   if(m_res_cap_map[*ei]>0){
-                    const tVertex& other_node=target(*ei,m_g);
-                    if(get_tree(other_node)==tColorTraits::gray()){ //it's a free node
+                    const tVertex& other_node = target(*ei,m_g);
+                    if(get_tree(other_node) == tColorTraits::gray()){ //it's a free node
                       set_tree(other_node,get_tree(current_node)); //aquire other node to our search tree
                       set_parent(other_node,current_node);
                       add_active_node(other_node);
                     }
-                    else if(get_tree(other_node)!=get_tree(current_node)){ 
+                    else if(get_tree(other_node) != get_tree(current_node)){ 
                     //kewl, we found a path from one to the other search tree
                       return std::make_pair(current_node,other_node);
                     }
@@ -139,26 +139,26 @@ namespace boost {
               } //source-tree-growing
               else{
                 //sink-tree growing
-                assert(get_tree(current_node)==tColorTraits::black()); 
+                assert(get_tree(current_node) == tColorTraits::black()); 
                 tOutEdgeIterator ei,e_end;
-                for(tie(ei,e_end)=out_edges(current_node,m_g);ei!=e_end;++ei){
+                for(tie(ei,e_end) = out_edges(current_node,m_g);ei != e_end;++ei){
                   //get the edge back to me
-                  tEdge rev_edge=m_rev_edge_map[*ei];
+                  tEdge rev_edge = m_rev_edge_map[*ei];
                   if(m_res_cap_map[rev_edge]>0){
-                    const tVertex& other_node=source(rev_edge,m_g);
-                    if(get_tree(other_node)==tColorTraits::gray()){ //it's a free node
+                    const tVertex& other_node = source(rev_edge,m_g);
+                    if(get_tree(other_node) == tColorTraits::gray()){ //it's a free node
                       set_tree(other_node, tColorTraits::black()); //aquire other node to our search tree
                       set_parent(other_node,current_node);
                       add_active_node(other_node);
                     }
-                    else if(get_tree(other_node)==tColorTraits::white()){ 
+                    else if(get_tree(other_node) == tColorTraits::white()){ 
                     //kewl, we found a path from one to the other search tree
                       return std::make_pair(other_node,current_node);
                     }
                   }
                 }//for all out-edges                 
               }//sink-tree growing
-              current_node=get_next_active_node(); //get next active node
+              current_node = get_next_active_node(); //get next active node
             } //while active_nodes not empty
             return std::make_pair(tGraphTraits::null_vertex(),tGraphTraits::null_vertex()); //no active nodes anymore and no path found, we're done
           }
@@ -170,27 +170,27 @@ namespace boost {
           */
           void augment(const tVertex& end_of_path,const tVertex& beginning_of_path){
             assert(m_orphans.empty());
-            const tEdgeVal bottleneck=find_bottleneck(end_of_path,beginning_of_path);
+            const tEdgeVal bottleneck = find_bottleneck(end_of_path,beginning_of_path);
             //now we push the found flow through the path
             //for each edge we saturate we have to look for the verts that belong to that edge, they become orphans
             //first the connecting edge
             process_edge(end_of_path,beginning_of_path,bottleneck);
-            tVertex current_node=end_of_path;
+            tVertex current_node = end_of_path;
             //now back to the sink
-            while(current_node!=m_source){
-              tVertex pred=get_parent(current_node);
+            while(current_node != m_source){
+              tVertex pred = get_parent(current_node);
               process_edge(pred,current_node,bottleneck);
-              current_node=pred;
+              current_node = pred;
             }
             //then go forward in the sink-tree
-            current_node=beginning_of_path;
-            while(current_node!=m_sink){
-              tVertex pred=get_parent(current_node);
+            current_node = beginning_of_path;
+            while(current_node != m_sink){
+              tVertex pred = get_parent(current_node);
               process_edge(current_node,pred,bottleneck);
-              current_node=pred;
+              current_node = pred;
             }
             //and add it to the max-flow
-            m_flow+=bottleneck;
+            m_flow += bottleneck;
           }
 
           /**
@@ -199,31 +199,31 @@ namespace boost {
           */
           void adopt(){
             while(!m_orphans.empty()){
-              tVertex current_node=m_orphans.front(); //get the first orphan
+              tVertex current_node = m_orphans.front(); //get the first orphan
               m_orphans.pop();
-              if(get_tree(current_node)==tColorTraits::white()){ 
+              if(get_tree(current_node) == tColorTraits::white()){ 
                 //we're in the source-tree
                 //first check its neighbors
                 tOutEdgeIterator ei,e_end;
-                bool parent_found=false;
-                for(tie(ei,e_end)=out_edges(current_node,m_g);ei!=e_end;++ei){
-                  tEdge current_edge=m_rev_edge_map[*ei];
-                  assert(target(current_edge,m_g)==current_node); //we should be the target of this edge
-                  tVertex other_node=source(current_edge,m_g);
-                  if(get_tree(other_node)==tColorTraits::white() && m_res_cap_map[current_edge]>0 && has_source_connect(current_node)){
+                bool parent_found = false;
+                for(tie(ei,e_end) = out_edges(current_node,m_g);ei != e_end;++ei){
+                  tEdge current_edge = m_rev_edge_map[*ei];
+                  assert(target(current_edge,m_g) == current_node); //we should be the target of this edge
+                  tVertex other_node = source(current_edge,m_g);
+                  if(get_tree(other_node) == tColorTraits::white() && m_res_cap_map[current_edge]>0 && has_source_connect(current_node)){
                     set_parent(current_node,other_node);
-                    parent_found=true;
+                    parent_found = true;
                     break;
                   }
                 }
                 if(!parent_found){
-                  for(tie(ei,e_end)=out_edges(current_node,m_g);ei!=e_end;++ei){
-                    tEdge current_edge=m_rev_edge_map[*ei];
-                    tVertex other_node=source(current_edge,m_g);
-                    if(get_tree(other_node)==tColorTraits::white() && m_res_cap_map[current_edge]>0 ){
+                  for(tie(ei,e_end) = out_edges(current_node,m_g);ei != e_end;++ei){
+                    tEdge current_edge = m_rev_edge_map[*ei];
+                    tVertex other_node = source(current_edge,m_g);
+                    if(get_tree(other_node) == tColorTraits::white() && m_res_cap_map[current_edge]>0 ){
                       add_active_node(other_node);                    
                     }
-                    if(get_parent(other_node)==current_node){
+                    if(get_parent(other_node) == current_node){
                       set_parent(other_node,tGraphTraits::null_vertex());
                       m_orphans.push(other_node);
                     }
@@ -234,28 +234,28 @@ namespace boost {
               }//source-tree-adoption
               else{
                 //now we should be in the sink-tree, check that...
-                assert(get_tree(current_node)==tColorTraits::black());
+                assert(get_tree(current_node) == tColorTraits::black());
                 //first check its neighbors
                 tOutEdgeIterator ei,e_end;
-                bool parent_found=false;
-                for(tie(ei,e_end)=out_edges(current_node,m_g);ei!=e_end;++ei){
-                  const tEdge& current_edge=*ei;
-                  assert(source(current_edge,m_g)==current_node); //we should be the source of this edge
-                  const tVertex& other_node=target(current_edge,m_g);
-                  if(get_tree(other_node)==tColorTraits::black() && m_res_cap_map[current_edge]>0 && has_sink_connect(current_node)){
+                bool parent_found = false;
+                for(tie(ei,e_end) = out_edges(current_node,m_g);ei != e_end;++ei){
+                  const tEdge& current_edge = *ei;
+                  assert(source(current_edge,m_g) == current_node); //we should be the source of this edge
+                  const tVertex& other_node = target(current_edge,m_g);
+                  if(get_tree(other_node) == tColorTraits::black() && m_res_cap_map[current_edge]>0 && has_sink_connect(current_node)){
                     set_parent(current_node,other_node);
-                    parent_found=true;
+                    parent_found = true;
                     break;
                   }
                 }
                 if(!parent_found){
-                  for(tie(ei,e_end)=out_edges(current_node,m_g);ei!=e_end;++ei){
-                    const tEdge& current_edge=*ei;
-                    const tVertex& other_node=target(current_edge,m_g);
-                    if(get_tree(other_node)==tColorTraits::black() && m_res_cap_map[current_edge]>0 ){
+                  for(tie(ei,e_end) = out_edges(current_node,m_g);ei != e_end;++ei){
+                    const tEdge& current_edge = *ei;
+                    const tVertex& other_node = target(current_edge,m_g);
+                    if(get_tree(other_node) == tColorTraits::black() && m_res_cap_map[current_edge]>0 ){
                       add_active_node(other_node);
                     }
-                    if(get_parent(other_node)==current_node){
+                    if(get_parent(other_node) == current_node){
                         set_parent(other_node,tGraphTraits::null_vertex());
                         m_orphans.push(other_node);
                     }
@@ -274,10 +274,10 @@ namespace boost {
           */	
           inline tVertex get_next_active_node(){
             while(!m_active_nodes.empty()){
-              tVertex v=m_active_nodes.front();
+              tVertex v = m_active_nodes.front();
               m_active_nodes.pop();
               if(m_active_override[v]){
-                m_active_override[v]=false;
+                m_active_override[v] = false;
               }
               else{
                 return v;
@@ -289,14 +289,14 @@ namespace boost {
           * adds v as an active vertex, and reset the non-active-override flag if set
           */		
           inline void add_active_node(const tVertex& v){
-            m_active_override[v]=false;
+            m_active_override[v] = false;
             m_active_nodes.push(v);
           }
           /**
           * removes a vertex from the queue of active nodes by setting an override flag
           */		
           inline void remove_active_node(const tVertex& v){
-            m_active_override[v]=true;
+            m_active_override[v] = true;
           }
           /**
           * returns the search tree of v; tColorValue::white() for source tree, black() for no sink tree, gray() for no tree
@@ -308,8 +308,8 @@ namespace boost {
           * sets search tree of v; tColorValue::white() for source tree, black() for no sink tree, gray() for no tree
           */		
           inline void set_tree(const tVertex& v, tColorValue t){
-            assert(v!=m_source && v!=m_sink);
-            m_tree_map[v]=t;
+            assert(v != m_source && v != m_sink);
+            m_tree_map[v] = t;
           }
           /**
           * returns parent vertex of v; TODO: switch to edges here
@@ -321,7 +321,7 @@ namespace boost {
           * sets parent vertex of v; TODO: switch to edges here
           */		
           inline void set_parent(const tVertex& v, const tVertex& parent){
-            m_pre_map[v]=parent;
+            m_pre_map[v] = parent;
           }
           /**
           * returns the bottleneck of a s->t path (end_of_path is last vertex in source-tree, begin_of_path is first vertex in sink-tree)
@@ -329,26 +329,26 @@ namespace boost {
           inline tEdgeVal find_bottleneck(const tVertex& end_of_path,const tVertex& begin_of_path) const{
             BOOST_USING_STD_MIN();
             tEdge e; bool has_edge;
-            tie(e,has_edge)=edge(end_of_path,begin_of_path,m_g); //this edge must exist, otherwise path would have not been found
+            tie(e,has_edge) = edge(end_of_path,begin_of_path,m_g); //this edge must exist, otherwise path would have not been found
             assert(has_edge);
-            tEdgeVal minimum_cap=m_res_cap_map[e];
-            tVertex current_node=end_of_path;
+            tEdgeVal minimum_cap = m_res_cap_map[e];
+            tVertex current_node = end_of_path;
             //first go back in the source tree
-            while(current_node!=m_source){
-              tVertex pred=get_parent(current_node);
-              tie(e,has_edge)=edge(pred,current_node,m_g);
+            while(current_node != m_source){
+              tVertex pred = get_parent(current_node);
+              tie(e,has_edge) = edge(pred,current_node,m_g);
               assert(has_edge);
-              minimum_cap= min BOOST_PREVENT_MACRO_SUBSTITUTION(minimum_cap,m_res_cap_map[e]);
-              current_node=pred;
+              minimum_cap = min BOOST_PREVENT_MACRO_SUBSTITUTION(minimum_cap,m_res_cap_map[e]);
+              current_node = pred;
             }
             //then go forward in the sink-tree
-            current_node=begin_of_path;
-            while(current_node!=m_sink){
-              tVertex pred=get_parent(current_node);
-              tie(e,has_edge)=edge(current_node,pred,m_g);
+            current_node = begin_of_path;
+            while(current_node != m_sink){
+              tVertex pred = get_parent(current_node);
+              tie(e,has_edge) = edge(current_node,pred,m_g);
               assert(has_edge);
-              minimum_cap= min BOOST_PREVENT_MACRO_SUBSTITUTION(minimum_cap,m_res_cap_map[e]);
-              current_node=pred;
+              minimum_cap = min BOOST_PREVENT_MACRO_SUBSTITUTION(minimum_cap,m_res_cap_map[e]);
+              current_node = pred;
             }
             return minimum_cap;
           }
@@ -358,20 +358,20 @@ namespace boost {
           inline void process_edge(tVertex source_vertex, tVertex target_vertex, tEdgeVal bottleneck){
             tEdge current_edge;
             bool has_edge;
-            tie(current_edge,has_edge)=edge(source_vertex,target_vertex,m_g);
+            tie(current_edge,has_edge) = edge(source_vertex,target_vertex,m_g);
             assert(has_edge); //this edge MUST be there (otherwise there would be no path)
-            m_res_cap_map[current_edge]-=bottleneck;
-            assert(m_res_cap_map[current_edge]>=0);
-            if(m_res_cap_map[current_edge]==0){
-              tColorValue source_color=get_tree(source_vertex);
-              tColorValue target_color=get_tree(target_vertex);
-              if(source_color==target_color){
-                if(source_color==tColorTraits::white()){
+            m_res_cap_map[current_edge] -= bottleneck;
+            assert(m_res_cap_map[current_edge] >= 0);
+            if(m_res_cap_map[current_edge] == 0){
+              tColorValue source_color = get_tree(source_vertex);
+              tColorValue target_color = get_tree(target_vertex);
+              if(source_color == target_color){
+                if(source_color == tColorTraits::white()){
                   set_parent(target_vertex,tGraphTraits::null_vertex());
                   m_orphans.push(target_vertex);
                 }
                 else{
-                  assert(source_color==tColorTraits::black()) ; //now both of them have to be in the sink tree
+                  assert(source_color == tColorTraits::black()) ; //now both of them have to be in the sink tree
                   set_parent(source_vertex,tGraphTraits::null_vertex());
                   m_orphans.push(source_vertex);
                 }
@@ -382,12 +382,12 @@ namespace boost {
           * returns true if we found a valid path back to the source TODO: use depth-first-search and store in nodes with timestamp
           */			
           inline bool has_sink_connect(const tVertex& v) const{
-            tVertex parent=get_parent(v);
-            while(parent!=tGraphTraits::null_vertex()){
-              if(parent==m_sink)
+            tVertex parent = get_parent(v);
+            while(parent != tGraphTraits::null_vertex()){
+              if(parent == m_sink)
                 return true;
               else
-                parent=get_parent(parent);
+                parent = get_parent(parent);
             }
             return false;
           }
@@ -395,12 +395,12 @@ namespace boost {
           * returns true if we found a valid path to the sink TODO: use depth-first-search and store in nodes with timestamp
           */			
           inline bool has_source_connect(const tVertex& v) const{
-            tVertex parent=get_parent(v);
-            while(parent!=tGraphTraits::null_vertex()){
-              if(parent==m_source)
+            tVertex parent = get_parent(v);
+            while(parent != tGraphTraits::null_vertex()){
+              if(parent == m_source)
                 return true;
               else
-                parent=get_parent(parent);
+                parent = get_parent(parent);
             }
             return false;
           }          
