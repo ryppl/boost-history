@@ -23,4 +23,5 @@ test-suite process :
     [ compile all_test.cpp : : ]
     [ compile forward_decls_test.cpp : : ]
     [ run command_line_test.cpp : : : ]
+    [ run attributes_test.cpp : : : ]
     ;

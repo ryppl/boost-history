@@ -12,6 +12,7 @@
 #if !defined(BOOST_PROCESS_HPP)
 #define BOOST_PROCESS_HPP
 
+#include <boost/process/attributes.hpp>
 #include <boost/process/basic_attributes.hpp>
 #include <boost/process/basic_child.hpp>
 #include <boost/process/basic_launcher.hpp>
