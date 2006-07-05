@@ -16,46 +16,68 @@
 #include <vector>
 
 namespace boost {
-    namespace process {
+namespace process {
 
-        class command_line {
-        public:
-            typedef std::vector< std::string > arguments_vector;
+// ------------------------------------------------------------------------
 
-        private:
-            std::string m_executable;
-            arguments_vector m_arguments;
+class command_line {
+public:
+    typedef std::vector< std::string > arguments_vector;
 
-        public:
-            explicit
-            command_line(const std::string& executable) :
-                m_executable(executable)
-            {
-            }
+private:
+    std::string m_executable;
+    arguments_vector m_arguments;
 
-            command_line&
-            argument(const std::string& argument)
-            {
-                m_arguments.push_back(argument);
-                return *this;
-            }
+public:
+    explicit command_line(const std::string& executable);
 
-            const arguments_vector&
-            get_arguments(void)
-                const
-            {
-                return m_arguments;
-            }
+    command_line& argument(const std::string& argument);
 
-            const std::string&
-            get_executable(void)
-                const
-            {
-                return m_executable;
-            }
-        };
+    const arguments_vector& get_arguments(void) const;
+    const std::string& get_executable(void) const;
+};
 
-    } // namespace process
+// ------------------------------------------------------------------------
+
+inline
+command_line::command_line(const std::string& executable) :
+    m_executable(executable)
+{
+}
+
+// ------------------------------------------------------------------------
+
+inline
+command_line&
+command_line::argument(const std::string& argument)
+{
+    m_arguments.push_back(argument);
+    return *this;
+}
+
+// ------------------------------------------------------------------------
+
+inline
+const command_line::arguments_vector&
+command_line::get_arguments(void)
+    const
+{
+    return m_arguments;
+}
+
+// ------------------------------------------------------------------------
+
+inline
+const std::string&
+command_line::get_executable(void)
+    const
+{
+    return m_executable;
+}
+
+// ------------------------------------------------------------------------
+
+} // namespace process
 } // namespace boost
 
 #endif // !defined(BOOST_PROCESS_COMMAND_LINE_HPP)
