@@ -27,6 +27,7 @@ namespace boost {
             arguments_vector m_arguments;
 
         public:
+            explicit
             command_line(const std::string& executable) :
                 m_executable(executable)
             {
