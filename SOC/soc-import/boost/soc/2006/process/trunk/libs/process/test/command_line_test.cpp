@@ -9,9 +9,6 @@
 // at http://www.boost.org/LICENSE_1_0.txt.)
 //
 
-#include <cstdlib>
-#include <iostream>
-
 #include <boost/process/command_line.hpp>
 #include <boost/test/unit_test.hpp>
 
