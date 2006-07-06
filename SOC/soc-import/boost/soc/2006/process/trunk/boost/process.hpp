@@ -15,10 +15,10 @@
 #include <boost/process/attributes.hpp>
 #include <boost/process/basic_attributes.hpp>
 #include <boost/process/basic_child.hpp>
-#include <boost/process/basic_launcher.hpp>
 #include <boost/process/basic_process.hpp>
 #include <boost/process/command_line.hpp>
 #include <boost/process/forward_decls.hpp>
+#include <boost/process/launcher.hpp>
 #include <boost/process/status.hpp>
 
 #endif // !defined(BOOST_PROCESS_HPP)

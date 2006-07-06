@@ -22,18 +22,16 @@ namespace boost {
         class basic_child;
 
         template< class Attributes >
-        class basic_launcher;
-
-        template< class Attributes >
         class basic_process;
 
         class command_line;
+
+        class launcher;
 
         class status;
 
         typedef basic_attributes< command_line > attributes;
         typedef basic_child< attributes > child;
-        typedef basic_launcher< attributes > launcher;
         typedef basic_process< attributes > process;
 
     } // namespace process
