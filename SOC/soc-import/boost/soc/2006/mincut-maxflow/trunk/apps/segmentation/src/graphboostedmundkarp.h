@@ -46,7 +46,7 @@ public:
 
 	
 		virtual void add_edge(int source, int dest, tPrecision cap, tPrecision rev_cap){
-			add_boost_edge(m_graph,source,dest,cap,rev_cap);
+			add_boost_edge(m_graph,source,dest,cap,0);
 		}
 	 
 		virtual void add_tedge(int node, tPrecision toSource, tPrecision toSink){

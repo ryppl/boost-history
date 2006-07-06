@@ -20,7 +20,7 @@
 
 #include <stdio.h>
 #include "graph.h"
-
+#include <iostream>
 /*
 	special constants for node->parent
 */
@@ -509,6 +509,8 @@ Graph::flowtype Graph::maxflow()
 Graph::termtype Graph::what_segment(node_id i) const
 {
 	if (((node*)i)->parent && !((node*)i)->is_sink) return SOURCE;
+   else if(!((node*)i)->is_sink)
+     std::cout << i << std::endl;     
 	return SINK;
 }
 

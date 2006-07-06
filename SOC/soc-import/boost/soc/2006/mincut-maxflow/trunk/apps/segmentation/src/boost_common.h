@@ -50,7 +50,7 @@ void add_boost_edge(TGraph& g, int source, int dest, tPrecision cap, tPrecision 
 	tie(e2,succ2)=boost::add_edge( vertex(dest,g),vertex(source,g),g);
 	assert(succ1 && succ2);
 	capMap[e1] = cap;
-	capMap[e2] = 0;
+	capMap[e2] = rev_cap;
 	revedgeMap[e1] = e2;
 	revedgeMap[e2] = e1;
 }

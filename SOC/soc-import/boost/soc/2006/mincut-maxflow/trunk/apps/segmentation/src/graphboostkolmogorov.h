@@ -62,10 +62,11 @@ public:
 		virtual eSegment what_segment(int f_node) const {
         if(m_segment[f_node]==boost::white_color)
           return GraphBase::SOURCE;
-//         if(m_segment[f_node]==boost::black_color)
-//           return GraphBase::SINK;        
-//         assert(0);
-        return GraphBase::SINK;
+        else if(m_segment[f_node]==boost::black_color)
+          return GraphBase::SINK;
+    
+        std::cerr << "node: " << f_node <<  " unknown segment: " << m_segment[f_node] <<std::endl;
+//         exit(0);
       }
         
 	private:

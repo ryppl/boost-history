@@ -155,12 +155,14 @@
     </splitheadersource>
     <references>
       <pcs>Qt</pcs>
+      <pcs>Boost</pcs>
     </references>
   </kdevcppsupport>
   <kdevfileview>
     <tree>
       <hidepatterns>*.o,*.lo,CVS</hidepatterns>
       <hidenonprojectfiles>false</hidenonprojectfiles>
+      <showvcsfields>false</showvcsfields>
     </tree>
     <groups>
       <hidenonprojectfiles>false</hidenonprojectfiles>
