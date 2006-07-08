@@ -28,7 +28,7 @@
 #    include <fcntl.h>        //O_CREAT, O_*... 
 #    include <sys/mman.h>     //mmap
 #    include <unistd.h>       //ftruncate, close
-#    include <semaphore.h>  //sem_t* family, SEM_VALUE_MAX
+#    include <semaphore.h>  //sem_t* family, SEM_VALUE_MAX, SEM_FAILED
 #    include <string>         //std::string
 #    include <sys/stat.h>     //mode_t, S_IRWXG, S_IRWXO, S_IRWXU,
 #  else
@@ -536,7 +536,7 @@ inline bool shared_memory::GlobalNamedScopedMutex::acquire()
 {  
    mode_t mode = S_IRWXG | S_IRWXO | S_IRWXU;
    m_sem = sem_open("/boost_shmem_shm_global_mutex", O_CREAT, mode, 1);
-   if(m_sem == ((sem_t*)-1))
+   if(m_sem == SEM_FAILED)
       return false;
    m_acquired = sem_wait(m_sem) == 0; 
    return m_acquired;  
