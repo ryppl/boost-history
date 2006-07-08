@@ -19,7 +19,11 @@ namespace process {
 
 // ------------------------------------------------------------------------
 
+// id_t: Process identifier internal to the OS.
 typedef DWORD id_t;
+
+// desc_t: Descriptor number used to manage OS's data streams.
+typedef int desc_t;
 
 // ------------------------------------------------------------------------
 
