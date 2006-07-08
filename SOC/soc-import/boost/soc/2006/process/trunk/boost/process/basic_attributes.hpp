@@ -82,9 +82,9 @@ basic_attributes< Command_Line >::get_work_directory(void)
 } // namespace boost
 
 #if defined(BOOST_PROCESS_WIN32_API)
-#   include <boost/process/win32/basic_attributes.hpp>
+#   include <boost/process/basic_attributes_win32.hpp>
 #else
-#   include <boost/process/posix/basic_attributes.hpp>
+#   include <boost/process/basic_attributes_posix.hpp>
 #endif
 
 #endif // !defined(BOOST_PROCESS_BASIC_ATTRIBUTES_HPP)

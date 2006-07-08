@@ -15,9 +15,9 @@
 #include <boost/process/config.hpp>
 
 #if defined(BOOST_PROCESS_WIN32_API)
-#   include <boost/process/win32/types.hpp>
+#   include <boost/process/types_win32.hpp>
 #else
-#   include <boost/process/posix/types.hpp>
+#   include <boost/process/types_posix.hpp>
 #endif
 
 #endif // !defined(BOOST_PROCESS_TYPES_HPP)
