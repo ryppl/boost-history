@@ -22,8 +22,9 @@ namespace boost {
             id_t m_id;
             Attributes m_attributes;
 
-            basic_process(const id_t& id) :
-                m_id(id)
+            basic_process(const id_t& id, const Attributes& a) :
+                m_id(id),
+                m_attributes(a)
             {
             };
 
