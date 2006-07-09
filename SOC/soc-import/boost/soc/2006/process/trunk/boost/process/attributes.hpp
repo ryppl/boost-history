@@ -16,11 +16,15 @@
 #include <boost/process/command_line.hpp>
 
 namespace boost {
-    namespace process {
+namespace process {
 
-        typedef basic_attributes< command_line > attributes;
+// ------------------------------------------------------------------------
 
-    } // namespace process
+typedef basic_attributes< command_line > attributes;
+
+// ------------------------------------------------------------------------
+
+} // namespace process
 } // namespace boost
 
 #endif // !defined(BOOST_PROCESS_ATTRIBUTES_HPP)
