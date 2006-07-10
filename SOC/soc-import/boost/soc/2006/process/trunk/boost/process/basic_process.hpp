@@ -24,6 +24,7 @@ class basic_process {
     id_t m_id;
     Attributes m_attributes;
 
+protected:
     basic_process(const id_t& id, const Attributes& a);
 
 public:

@@ -12,15 +12,10 @@
 #if !defined(BOOST_PROCESS_STATUS_HPP)
 #define BOOST_PROCESS_STATUS_HPP
 
-namespace boost {
-    namespace process {
-
-        class status {
-
-        public:
-        };
-
-    } // namespace process
-} // namespace boost
+#if defined(BOOST_PROCESS_WIN32_API)
+#   include <boost/process/status_win32.hpp>
+#else
+#   include <boost/process/status_posix.hpp>
+#endif
 
 #endif // !defined(BOOST_PROCESS_STATUS_HPP)
