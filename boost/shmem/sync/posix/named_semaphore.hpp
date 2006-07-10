@@ -31,7 +31,7 @@ namespace detail {
          mp_sem = reinterpret_cast<sem_t *>(info->get_user_ptr());
          switch(m_create){
             case open_only:   
-               mp_sem = reinterpret_cast<sem_t *>(info->get_user_ptr());
+               return true;
             break;
 
             case open_or_create:
@@ -47,7 +47,13 @@ namespace detail {
             break;
 
             case create_only:
-               return true;
+               if(sem_init(mp_sem, 1, m_initialCount) == 0){
+                  return true;
+               }
+               else{
+                  mp_sem = 0;
+                  return false;
+               }
             break;
          
             default:
