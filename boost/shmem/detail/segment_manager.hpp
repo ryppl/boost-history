@@ -695,7 +695,6 @@ class segment_manager : private MemoryAlgorithm
       //If not found, return false
       if(it == index.end()){
          //This name is not present in the index, wrong pointer or name!
-         assert(0);
          return false;
       }
       return this->priv_generic_named_destroy_impl<T, CharT>(it, index);
