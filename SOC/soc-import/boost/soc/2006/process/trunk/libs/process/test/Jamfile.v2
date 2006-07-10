@@ -23,20 +23,20 @@ exe helpers
     ;
 
 test-suite process :
-    [ compile include_attributes.cpp : : ]
-    [ compile include_basic_attributes.cpp : : ]
-    [ compile include_basic_child.cpp : : ]
-    [ compile include_basic_process.cpp : : ]
-    [ compile include_child.cpp : : ]
-    [ compile include_command_line.cpp : : ]
-    [ compile include_detail_pipe.cpp : : ]
-    [ compile include_detail_systembuf.cpp : : ]
-    [ compile include_exceptions.cpp : : ]
+    [ compile include_attributes_test.cpp : : ]
+    [ compile include_basic_attributes_test.cpp : : ]
+    [ compile include_basic_child_test.cpp : : ]
+    [ compile include_basic_process_test.cpp : : ]
+    [ compile include_child_test.cpp : : ]
+    [ compile include_command_line_test.cpp : : ]
+    [ compile include_detail_pipe_test.cpp : : ]
+    [ compile include_detail_systembuf_test.cpp : : ]
+    [ compile include_exceptions_test.cpp : : ]
     [ compile include_forward_decls_test.cpp : : ]
-    [ compile include_launcher.cpp : : ]
-    [ compile include_status.cpp : : ]
-    [ compile include_top.cpp : : ]
-    [ compile include_types.cpp : : ]
+    [ compile include_launcher_test.cpp : : ]
+    [ compile include_status_test.cpp : : ]
+    [ compile include_top_test.cpp : : ]
+    [ compile include_types_test.cpp : : ]
 
     [ run command_line_test.cpp
         : <library>../../../../boost//unit_test_framework
