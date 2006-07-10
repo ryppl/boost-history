@@ -9,11 +9,11 @@
 // at http://www.boost.org/LICENSE_1_0.txt.)
 //
 
-#include <istream>
-#include <ostream>
+#include <iostream>
 
 #include <boost/process/detail/pipe.hpp>
 #include <boost/process/detail/systembuf.hpp>
+#include <boost/process/launcher.hpp> // XXX For STDIN/STDOUT.
 #include <boost/test/unit_test.hpp>
 
 namespace bp = ::boost::process;
@@ -33,12 +33,52 @@ test_read_and_write(void)
 
     // XXX This assumes that the pipe's buffer is big enough to accept
     // the data written without blocking!
-    wend << "Test message" << std::endl;
+    wend << "1Test 1message" << std::endl;
     std::string tmp;
     rend >> tmp;
-    BOOST_CHECK(tmp == "Test");
+    BOOST_CHECK(tmp == "1Test");
     rend >> tmp;
-    BOOST_CHECK(tmp == "message");
+    BOOST_CHECK(tmp == "1message");
+}
+
+// ------------------------------------------------------------------------
+
+static void
+test_remap_read(void)
+{
+    bpd::pipe p;
+    bpd::systembuf wbuf(p.get_write_end());
+    std::ostream wend(&wbuf);
+    p.remap_read_end(bp::STDIN);
+
+    // XXX This assumes that the pipe's buffer is big enough to accept
+    // the data written without blocking!
+    wend << "2Test 2message" << std::endl;
+    std::string tmp;
+    std::cin >> tmp;
+    BOOST_CHECK(tmp == "2Test");
+    std::cin >> tmp;
+    BOOST_CHECK(tmp == "2message");
+}
+
+// ------------------------------------------------------------------------
+
+static void
+test_remap_write(void)
+{
+    bpd::pipe p;
+    bpd::systembuf rbuf(p.get_read_end());
+    std::istream rend(&rbuf);
+    p.remap_write_end(bp::STDOUT);
+
+    // XXX This assumes that the pipe's buffer is big enough to accept
+    // the data written without blocking!
+    std::cout << "3Test 3message" << std::endl;
+    std::string tmp;
+    rend >> tmp;
+    BOOST_CHECK(tmp == "3Test");
+    rend >> tmp;
+    BOOST_CHECK(tmp == "3message");
 }
 
 // ------------------------------------------------------------------------
@@ -49,6 +89,8 @@ init_unit_test_suite(int argc, char* argv[])
     but::test_suite* test = BOOST_TEST_SUITE("detail::pipe test suite");
 
     test->add(BOOST_TEST_CASE(&test_read_and_write));
+    test->add(BOOST_TEST_CASE(&test_remap_read));
+    test->add(BOOST_TEST_CASE(&test_remap_write));
 
     return test;
 }

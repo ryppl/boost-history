@@ -45,6 +45,9 @@ public:
 
     desc_t get_read_end(void) const;
     desc_t get_write_end(void) const;
+
+    void remap_read_end(desc_t d);
+    void remap_write_end(desc_t d);
 };
 
 // ------------------------------------------------------------------------
@@ -119,6 +122,32 @@ pipe::get_write_end(void)
 {
     BOOST_ASSERT(m_write_open);
     return m_write_end;
+}
+
+// ------------------------------------------------------------------------
+
+inline
+void
+pipe::remap_read_end(desc_t d)
+{
+    BOOST_ASSERT(m_read_open);
+    ::close(d);
+    ::dup2(m_read_end, d);
+    ::close(m_read_end);
+    m_read_end = d;
+}
+
+// ------------------------------------------------------------------------
+
+inline
+void
+pipe::remap_write_end(desc_t d)
+{
+    BOOST_ASSERT(m_write_open);
+    ::close(d);
+    ::dup2(m_write_end, d);
+    ::close(m_write_end);
+    m_write_end = d;
 }
 
 // ------------------------------------------------------------------------
