@@ -3,6 +3,7 @@
 #define INCLUDE_MAP_H
 
 #include <list>
+#include <set>
 #include <string>
 #include <boost/shared_ptr.hpp>
 #include <boost/filesystem/path.hpp>
@@ -23,7 +24,7 @@ public:
 	/// adds the directory, and scans for any mapfiles within.
 	void add (const boost::filesystem::path& path);
 	
-	std::list<boost::filesystem::path> lookup (const std::string& module_name);
+	std::set<boost::filesystem::path> lookup (const std::string& module_name);
 	void put (const std::string& module_name, 
 	          const boost::filesystem::path& filename);
 };

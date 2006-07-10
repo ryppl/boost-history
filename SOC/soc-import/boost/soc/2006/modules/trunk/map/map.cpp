@@ -13,7 +13,8 @@
 #include <boost/spirit/actor.hpp>
 #include <boost/wave.hpp>
 #include <boost/wave/util/pattern_parser.hpp>
-
+#include <map>
+#include <set>
 
 using namespace std;
 using namespace boost;
@@ -24,9 +25,7 @@ using namespace boost::filesystem;
 /// A single mapfile.
 class Map {
 	
-	// this'll get extended to vector<path> in phase II, when we
-	// do module partitions.
-	typedef map<string, list<path> >  vecmap_t;
+	typedef map<string, set<path> >  vecmap_t;
 	
 	vecmap_t m_map;
 	const path m_path;
@@ -43,20 +42,18 @@ public:
 	}
 	
 	void add (const string & module_name, const path & filename) {
-		m_map[module_name].push_back(filename);
+		m_map[module_name].insert(filename);
 	}
 	
 	void set_modname (const string& module) {
-		cout << name() << ": set_modname(" << module << ")" << endl;
 		m_curmodule = module;
 	}
 	
 	void add_filename (const string& p) {
-		cout << name() << ": add_filename(" << p << ")" << endl;
-		m_map[m_curmodule].push_back (path(p));
+		m_map[m_curmodule].insert (path(p));
 	}
 	
-	list<path> lookup (const string& module_name) { 
+	set<path> lookup (const string& module_name) { 
 		return m_map[module_name];
 	}
 };
@@ -118,12 +115,10 @@ void
 MapManager::
 add (const path& path) {
 	// scan path for .map files, add them in.
-	cout << "[mm] scanning " << path << endl;
 	directory_iterator end, it(path);
 	for (; it != end; ++it) {
 		if (ends_with(it->leaf(),".map") > 0) {
 			try {
-				cout << "  found " << *it << endl;
 				m_maps.push_back(shared_ptr<Map>(new Map(*it)));
 			} catch (std::exception & e) {
 				cout << "failed to load mapfile " << *it << ":" 
@@ -133,26 +128,26 @@ add (const path& path) {
 	}
 }
 
-list<path>
+set<path>
 MapManager::
 lookup (const string& module_name) {
-	list<path> p;
+	set<path> p;
 	typedef std::list<boost::shared_ptr<Map> > map_t;
-	cout << "[MM::lookup] " << module_name <<": ";
+// 	cout << "[MM::lookup] " << module_name <<": ";
 	if ( (p = m_localmap->lookup (module_name)).size ()) {
-		cout << "locally found " << p.size () << endl;
+// 		cout << "locally found " << p.size () << endl;
 		return p;
 	}
-	cout << endl;
+// 	cout << endl;
 	for (map_t::reverse_iterator it = m_maps.rbegin ();
 	     it != m_maps.rend ();
 	     ++it) {
-	    cout <<"  trying " << (*it)->name() << ": ";
+// 	    cout <<"  trying " << (*it)->name() << ": ";
 		if ( (p= (*it)->lookup(module_name)).size ()) {
-			cout << "found " << p.size () << endl;
+// 			cout << "found " << p.size () << endl;
 			return p;
 		} else {
-			cout << "none found" << endl;
+// 			cout << "none found" << endl;
 		}
 	}
 	return p;
@@ -257,19 +252,19 @@ Map (const path & mapfile, bool create)
 	
 	mapfile_grammar g(*this);
 	if (parse(instring.begin (), instring.end (), g, space_p).full) {
-		cout << "[map] done parsing " << mapfile << endl;
+// 		cout << "[map] done parsing " << mapfile << endl;
 		// if it's really done, let's see what's inside.
-		for (vecmap_t::iterator it = m_map.begin ();
+/*		for (vecmap_t::iterator it = m_map.begin ();
 		     it != m_map.end ();
 		     ++it) {
 			cout << " " << it->first << ": ";
-			for (list<path>::iterator i = it->second.begin ();
+			for (set<path>::iterator i = it->second.begin ();
 			     i != it->second.end ();
 			     ++i) {
 				cout << *i << " ";    
 			}
 			cout << endl;
-		}
+		} */
 	} else {
 		cout << "! [map] failed parsing " << mapfile << endl;
 	}
@@ -291,7 +286,7 @@ Map::
 				string buffer ("module ");
 				buffer.append (it->first);
 				buffer.append (": ");
-				for (list<path>::iterator pi = it->second.begin ();
+				for (set<path>::iterator pi = it->second.begin ();
 					 pi != it->second.end ();
 					 ++pi) {
 					buffer.append (pi->native_file_string ());

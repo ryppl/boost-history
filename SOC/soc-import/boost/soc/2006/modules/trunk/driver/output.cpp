@@ -1,143 +1,241 @@
 #include "output.h"
+#include "output_priv.h"
 #include <set>
 #include <boost/format.hpp>
 #include <boost/bind.hpp>
 #include <boost/algorithm/string.hpp>
+#include <stdio.h>
 
 using namespace std;
 using namespace boost;
 using namespace boost::filesystem;
 
-typedef pair<context_iter_t, context_iter_t>  range_t;
+#pragma mark -
 
-class OutputDelegate::RangeEmitter : public OutputDelegate::Emitter {
-	range_t m_range;
-public:
-	RangeEmitter (range_t r) : m_range(r) {}
-	void operator()(ostream& s) {
-		for (; m_range.first != m_range.second; ++m_range.first) {
-			s << m_range.first->get_value ();
-		}
-	}
-};
-
-class OutputDelegate::StringEmitter : public OutputDelegate::Emitter {
-	string m_text;
-public:
-	StringEmitter (string s) : m_text(s) {}
-	void operator()(ostream& s) {
-		s << m_text << "\n";
-	}
-};
-
+//
+//  this is how I debug bad values of 'this'.  Sometimes hard to track
+// down with templates or lambda functions.
+//  _List is designed to be callable from gdb.  Only reason check() calls
+// it is to make sure the linker doesn't kill it off.
 static std::set<OutputDelegate *> s_delegates;
 
-bool find (OutputDelegate *d) {
+
+static bool _Find (OutputDelegate *d) {
 	return s_delegates.count (d) > 0;
 }
 
-void add (OutputDelegate *d) {
-	if (find (d)) {
+static void _Add (OutputDelegate *d) {
+	if (_Find (d)) {
 		cerr << "WARNING: multiple constructions of OutputDelegate" << endl;
 	} else {
 		s_delegates.insert (d);
 	}
 }
 
-void remove (OutputDelegate *d) {
-	if (!find (d)) {
+static void _Remove (OutputDelegate *d) {
+	if (!_Find (d)) {
 		cerr << "WARNING: multiple destructions of OutputDelegate" << endl;
 	} else {
 		s_delegates.erase (d);
 	}
 }
 
+static void _List (void) {
+	std::set<OutputDelegate*>::iterator it;
+	fprintf (stderr, "_List: %d instances.\n", s_delegates.size ());
+	for (it = s_delegates.begin (); it != s_delegates.end (); ++it) {
+		fprintf (stderr, "Instance at 0x%08x\n", *it);
+	}
+	fflush (stderr);
+}
+
+#pragma mark -
+
 void
 OutputDelegate::
 check () {
-	if (!find(this)) {
+	if (!_Find(this)) {
+		_List ();
 		throw "Invalid instance!";
-	} else if (m_emitted) {
+	} else if (m_impl->m_emitted) {
 		throw "Already emitted!";
 	}
 }
 
 OutputDelegate::
 OutputDelegate (std::ostream& h, std::ostream& s, MapManager& m)
- : m_header(h), m_source(s), m_map(m), m_emitted(false) {
-	add (this);
-	m_dest.push (out_none);
+: m_impl (new Context (h, s, m)) {
+	_Add (this);
+	m_impl->m_mode.push(Context::out_external);
  }
 
 OutputDelegate::
 ~OutputDelegate () {
-	remove (this);
+	_Remove (this);
+	delete m_impl;
 }
+
+/*
+	//
+	// Older API
+	void push_source () {
+		check ();
+		m_mode.push (out_source);
+	}
+	
+	void push_header () {
+		check ();
+		m_mode.push (out_header);
+	}
+	
+	void pop () {
+		check ();
+		m_mode.pop ();
+	}
+
+	//
+	// the next two replace the topmost element with either header or source.
+	void swap_header () {
+		check ();
+		pop ();
+		push_header ();
+	}
+	
+	void swap_source () {
+		check ();
+		pop ();
+		push_source ();
+	}
+	
+*/
+void 
+OutputDelegate::
+import_module (std::string & name) {
+	include_module(name);
+}
+
+// by default, we're in private mode, like a class.
+
+void 
+OutputDelegate::
+begin_module (std::string & name) {
+	Context::Emitter_sp p ( new Context::StringEmitter (
+	    (format ("\n// module %s\nnamespace %s {\n") % name % name).str ()
+	));
+	m_impl->put_header (p);
+	m_impl->put_source (p);
+	// go_public will clobber the top of the stack, so we'll add a new level first.
+	m_impl->m_mode.push(Context::out_none);
+	go_private ();
+}
+
+void 
+OutputDelegate::
+end_module () {
+	// close off any private sections.
+	m_impl->close_private ();
+	// close off the namespace %s {
+	m_impl->put_header (m_impl->m_close_bracket);
+	m_impl->put_source (m_impl->m_close_bracket);
+}
+
+
+void 
+OutputDelegate::
+go_public () {
+	m_impl->close_private ();
+	// makes you miss pascal's with (x) {..} statements...
+	m_impl->m_mode.pop();
+	m_impl->m_mode.push(Context::out_public);
+}
+
+void 
+OutputDelegate::
+go_private () {
+	if (m_impl->m_mode.top () != Context::out_private) {
+		m_impl->m_mode.pop();
+		m_impl->m_mode.push(Context::out_private);
+		// open up a private namespace for the private code.
+		m_impl->put ((format ("\nnamespace private_%d {\n") % (m_impl->m_priv_cnt++)).str ());
+		m_impl->m_in_priv_ns = true;
+	}
+}
+
+#pragma mark -
 
 void
 OutputDelegate::
 out (context_iter_t start, context_iter_t end)  {
-	typedef boost::shared_ptr<Emitter> p;
-	// the text is all enqueued for later emission, after
-	// we have a final list of #include directives to emit.
-	if (m_dest.top () == out_header)
-		m_header_text.push_back (p (new RangeEmitter(make_pair(start,end))));
-	else if (m_dest.top () == out_source)
-		m_source_text.push_back (p (new RangeEmitter(make_pair(start,end))));
-	// other text is ignored.
+	check ();
+	m_impl->put(new Context::RangeEmitter(std::make_pair(start,end)));
+}
+
+void
+OutputDelegate::
+out (token_t text)  {
+	check ();
+	token_t::string_type t = text.get_value ();
+	out (std::string(t.begin (), t.end ()));
 }
 
 void
 OutputDelegate::
 out (string text) {
-	typedef boost::shared_ptr<Emitter> p;
-	if (m_dest.top () == out_header)
-		m_header_text.push_back (p (new StringEmitter (text)));
-	else if (m_dest.top () == out_source)
-		m_source_text.push_back (p (new StringEmitter (text)));
-	// again, other text is ignored.
+	check ();
+	m_impl->put(new Context::StringEmitter (text));
 }
 
 void
 OutputDelegate::
+include_module (std::string module) {
+	check ();
+	m_impl->m_includes.insert(module);
+}
+
+
+
+void
+OutputDelegate::
 emit () {
+	if (m_impl->m_emitted) {
+		throw "Already emitted!";
+	}
+	
 	// first, generate our include text.
 	string include_text;
-	for (set<string>::iterator it = m_includes.begin ();
-	     it != m_includes.end ();
+	for (set<string>::iterator it = m_impl->m_includes.begin ();
+	     it != m_impl->m_includes.end ();
 	     ++it) {
 		// lookup the module name
-		list<path>  names = m_map.lookup(*it);
-		for (list<path>::iterator n = names.begin ();
+		set<path>  names = m_impl->m_map.lookup(*it);
+		for (set<path>::iterator n = names.begin ();
 		     n != names.end ();
 		     ++n) {
 			if (ends_with(n->leaf(), ".h"))
 				include_text.append ((format("#include \"%s\"\n") % n->leaf ()).str());	
-//			else
-//				include_text.append ((format("// ignoring \"%s\"\n") % n->leaf ()).str());
 		}
 	}
 	include_text.append ("\n");
 
-	typedef std::vector< boost::shared_ptr<Emitter> >::iterator iter_t;
+	typedef std::vector< boost::shared_ptr<Context::Emitter> >::iterator iter_t;
 	
 	//
 	// Now, the header.	
 	// TODO: an #ifdef pair probably required.
-	m_header << include_text;
-	for (iter_t it= m_header_text.begin (); it != m_header_text.end (); ++it)
-		(**it)(m_header);
+	m_impl->header << include_text;
+	for (iter_t it= m_impl->m_header_text.begin (); it != m_impl->m_header_text.end (); ++it)
+		(**it)(m_impl->header);
 	// failed attempt at using some of boost's functional abilities...
 // 	for_each (m_header_text.begin (), m_header_text.end (),
 // 	          bind<void> (*_1, m_header)); //_1(m_header));
 	
 	//
 	// Finally, the source.
-	m_source << include_text;
-	for (iter_t it= m_source_text.begin (); it != m_source_text.end (); ++it)
-		(**it)(m_source);
+	m_impl->source << include_text;
+	for (iter_t it= m_impl->m_source_text.begin (); it != m_impl->m_source_text.end (); ++it)
+		(**it)(m_impl->source);
 // 	for_each (m_source_text.begin (), m_source_text.end (),
 // 	          bind<void>(Emitter::operator(), _1, m_source));
 
-	m_emitted = true;
+	m_impl->m_emitted = true;
 }

@@ -37,11 +37,11 @@ execute (context_t& ctx, OutputDelegate& del) {
 	decl_grammar g (del);
 	skip_parser s;
 	// default to emit in the source code.
-	del.push_source ();
+//	del.push_source ();
 	if (parse (ctx.begin (), ctx.end (), g, s).hit) {
-		puts ("parsed");
+		cout << "parsed" << endl;
 	} else {
-		puts ("not parsed.");
+		cout << "not parsed." << endl;
 	}
 	return g.m_ids;
 }

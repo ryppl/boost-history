@@ -1,7 +1,7 @@
 # Invoke STLFilt to clean up what we're getting here.
 CXX = gfilt
 
-CXXFLAGS += -g -I/usr/local/src/boost -I.
+CXXFLAGS += -g -I. -I/usr/local/src/spirit -I/usr/local/src/boost
 LDFLAGS += -L/usr/local/lib
 
 OBJECTS =  driver/config.o driver/output.o driver/driver.o main.o parser/generator.o parser/actions.o map/map.o 

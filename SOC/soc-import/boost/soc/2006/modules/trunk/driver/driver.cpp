@@ -112,20 +112,24 @@ execute (int args, const char ** argv) {
 			ofstream header(header_n.c_str());
 			ofstream source(source_n.c_str());
 			OutputDelegate del (header, source, maps);
-			
-			cout << "Processing file " << *file << endl;
+			header << "// " << header_n << endl;
+			source << "// " << source_n << endl;
+			cout << "Processing file " << *file << "...";
 			SourceGenerator g(ctx,del);
 			vector<string> namespaces = g.execute ();
 			del.emit ();
-			cout << "The following entries are going to the mapfile:" << endl;
 			for (vec_iter_t map = namespaces.begin ();
 			     map != namespaces.end ();
 			     ++map) {
-				cout << *map << ": " << header_n << " " << source_n << ";\n" ;
 				maps.put(*map, path(header_n));
 				maps.put(*map, path(source_n));
 			}
-			cout << "-done processing " << *file << endl;
+			
+			// compilers seem happier with a newline as the last char.
+			// well, at least some sort of whitespace as the last line (off by 1 bugs in
+			// lexers aren't as infrequent as they should be).
+			header << endl;
+			source << endl;
 		} 
 		catch (wave::cpplexer::lexing_exception& e) {
 			cout << *file 
