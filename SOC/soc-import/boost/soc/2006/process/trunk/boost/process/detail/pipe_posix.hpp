@@ -17,6 +17,7 @@
 #include <cerrno>
 
 #include <boost/assert.hpp>
+#include <boost/noncopyable.hpp>
 #include <boost/process/exceptions.hpp>
 #include <boost/process/types.hpp>
 #include <boost/throw_exception.hpp>
@@ -27,7 +28,8 @@ namespace detail {
 
 // ------------------------------------------------------------------------
 
-class pipe
+class pipe :
+    public boost::noncopyable
 {
     bool m_read_open;
     desc_t m_read_end;
