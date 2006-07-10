@@ -16,7 +16,6 @@ project :
       # XXX These paths are incorrect.
       <include>../../../../boost
       <include>../../..
-      <library>../../../../boost//unit_test_framework
     ;
 
 exe helpers
@@ -26,9 +25,26 @@ exe helpers
 test-suite process :
     [ compile all_test.cpp : : ]
     [ compile forward_decls_test.cpp : : ]
-    [ run command_line_test.cpp : : : ]
-    [ run attributes_test.cpp : : : ]
-    [ run systembuf_test.cpp : : : ]
-    [ run pipe_test.cpp : : : ]
-    [ run child_test.cpp : helpers : : ]
+
+    [ run command_line_test.cpp
+        : <library>../../../../boost//unit_test_framework
+        : : ]
+
+    [ run attributes_test.cpp
+        : <library>../../../../boost//unit_test_framework
+        : : ]
+
+    [ run systembuf_test.cpp
+        : <library>../../../../boost//unit_test_framework
+        : : ]
+
+    [ run pipe_test.cpp
+        : <library>../../../../boost//unit_test_framework
+        : : ]
+
+    [ run child_test.cpp
+        : <library>../../../../boost//unit_test_framework
+          helpers
+        : : ]
+
     ;
