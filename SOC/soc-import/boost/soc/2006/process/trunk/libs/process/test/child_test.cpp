@@ -19,6 +19,8 @@
 // XXX Extremely ugly way to determine helpers' path...
 #if defined(__APPLE__)
 #   define HELPERS_PATH "./bin/darwin/debug/helpers"
+#else
+#   define HELPERS_PATH "./bin/gcc/debug/helpers"
 #endif
 
 namespace bp = ::boost::process;
