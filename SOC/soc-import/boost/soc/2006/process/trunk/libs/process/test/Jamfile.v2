@@ -39,24 +39,33 @@ test-suite process :
     [ compile include_types_test.cpp : : ]
 
     [ run command_line_test.cpp
+        :
+        :
         : <library>../../../../boost//unit_test_framework
-        : : ]
+        ]
 
     [ run attributes_test.cpp
+        :
+        :
         : <library>../../../../boost//unit_test_framework
-        : : ]
+        ]
 
     [ run systembuf_test.cpp
+        :
+        :
         : <library>../../../../boost//unit_test_framework
-        : : ]
+        ]
 
     [ run pipe_test.cpp
+        :
+        :
         : <library>../../../../boost//unit_test_framework
-        : : ]
+        ]
 
     [ run child_test.cpp
+        : helpers
+        : 
         : <library>../../../../boost//unit_test_framework
-          helpers
-        : : ]
+        ]
 
     ;
