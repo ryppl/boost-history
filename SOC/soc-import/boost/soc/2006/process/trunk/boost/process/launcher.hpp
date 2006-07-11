@@ -80,7 +80,7 @@ public:
     void set_environment(const std::string& var, const std::string& value);
     void unset_environment(const std::string& var);
 
-    template< class Command_Line, class Attributes >
+    template< class Attributes >
     basic_child< Attributes > start(const Attributes& attrs);
 };
 

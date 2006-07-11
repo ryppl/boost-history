@@ -36,7 +36,7 @@ test_exit(const std::string& codename, int codenum)
     bp::attributes a(cl);
 
     bp::launcher l;
-    bp::child c = l.start<bp::command_line, bp::attributes>(a);
+    bp::child c = l.start<bp::attributes>(a);
 
     bp::status s = c.wait();
     BOOST_REQUIRE(s.exited());
@@ -70,7 +70,7 @@ test_input(void)
 
     bp::launcher l;
     l.input(bp::STDIN).output(bp::STDOUT);
-    bp::child c = l.start<bp::command_line, bp::attributes>(a);
+    bp::child c = l.start<bp::attributes>(a);
 
     boost::weak_ptr< bp::postream > stin = c.get_input(bp::STDIN);
     boost::weak_ptr< bp::pistream > stout = c.get_output(bp::STDOUT);
@@ -105,7 +105,7 @@ test_output(bp::desc_t desc,
 
     bp::launcher l;
     l.output(desc);
-    bp::child c = l.start<bp::command_line, bp::attributes>(a);
+    bp::child c = l.start<bp::attributes>(a);
 
     boost::weak_ptr< bp::pistream > st = c.get_output(desc);
     boost::shared_ptr< bp::pistream > is;

@@ -29,7 +29,7 @@ namespace process {
 
 // ------------------------------------------------------------------------
 
-template< class Command_Line, class Attributes >
+template< class Attributes >
 inline
 basic_child< Attributes >
 launcher::start(const Attributes& a)
@@ -77,22 +77,23 @@ launcher::start(const Attributes& a)
             ::dup2(p.second, p.first);
         }
 
-        const Command_Line& cl = a.get_command_line();
-        size_t nargs = cl.get_arguments().size();
+        size_t nargs = a.get_command_line().get_arguments().size();
         char* args[nargs + 2];
+        const std::string& executable = a.get_command_line().get_executable();
 
         {
-            std::string::size_type pos = cl.get_executable().rfind('/');
-            if (pos == cl.get_executable().size())
+            std::string::size_type pos = executable.rfind('/');
+            if (pos == executable.size())
                 pos = 0;
-            args[0] = std::strdup(cl.get_executable().substr(pos).c_str());
+            args[0] = std::strdup(executable.substr(pos).c_str());
         }
 
         for (size_t i = 0; i < nargs; i++)
-            args[i + 1] = std::strdup(cl.get_arguments()[i].c_str());
+            args[i + 1] = std::strdup
+                (a.get_command_line().get_arguments()[i].c_str());
         args[nargs + 1] = NULL;
 
-        ::execvp(cl.get_executable().c_str(), args);
+        ::execvp(executable.c_str(), args);
 
         for (size_t i = 0; i <= nargs; i++)
             delete [] args[i];
