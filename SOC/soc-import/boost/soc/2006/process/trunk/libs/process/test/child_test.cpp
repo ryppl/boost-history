@@ -9,6 +9,7 @@
 // at http://www.boost.org/LICENSE_1_0.txt.)
 //
 
+#include <cstring> // XXX For EXIT_* codes; should be hidden by the library.
 #include <string>
 
 #include <boost/process/child.hpp>
@@ -25,39 +26,6 @@
 
 namespace bp = ::boost::process;
 namespace but = ::boost::unit_test;
-
-// ------------------------------------------------------------------------
-
-void
-test_exit(const std::string& codename, int codenum)
-{
-    bp::command_line cl(HELPERS_PATH);
-    cl.argument("exit-" + codename);
-    bp::attributes a(cl);
-
-    bp::launcher l;
-    bp::child c = l.start<bp::attributes>(a);
-
-    bp::status s = c.wait();
-    BOOST_REQUIRE(s.exited());
-    BOOST_CHECK_EQUAL(s.exit_status(), codenum);
-}
-
-// ------------------------------------------------------------------------
-
-void
-test_exit_failure(void)
-{
-    test_exit("failure", EXIT_FAILURE);
-}
-
-// ------------------------------------------------------------------------
-
-void
-test_exit_success(void)
-{
-    test_exit("success", EXIT_SUCCESS);
-}
 
 // ------------------------------------------------------------------------
 
@@ -158,8 +126,6 @@ init_unit_test_suite(int argc, char* argv[])
 {
     but::test_suite* test = BOOST_TEST_SUITE("child test suite");
 
-    test->add(BOOST_TEST_CASE(&test_exit_success), 0, 10);
-    test->add(BOOST_TEST_CASE(&test_exit_failure), 0, 10);
     test->add(BOOST_TEST_CASE(&test_stdout_pass), 0, 10);
     test->add(BOOST_TEST_CASE(&test_stdout_fail), 1, 10);
     test->add(BOOST_TEST_CASE(&test_stderr_pass), 0, 10);

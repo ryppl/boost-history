@@ -82,4 +82,10 @@ test-suite process :
         : <library>../../../../boost//unit_test_framework
         ]
 
+    [ run status_test.cpp
+        : helpers
+        : 
+        : <library>../../../../boost//unit_test_framework
+        ]
+
     ;
