@@ -31,7 +31,7 @@ test_command_line(void)
     bp::command_line cl("program");
     bp::attributes a(cl);
     const bp::command_line& rcl = a.get_command_line();
-    BOOST_CHECK(rcl.get_executable() == "program");
+    BOOST_CHECK_EQUAL(rcl.get_executable(), "program");
 }
 
 // ------------------------------------------------------------------------
@@ -51,7 +51,7 @@ test_default_work_directory(void)
     delete buf;
 #endif
 
-    BOOST_CHECK(a.get_work_directory() == curdir);
+    BOOST_CHECK_EQUAL(a.get_work_directory(), curdir);
 }
 
 // ------------------------------------------------------------------------
@@ -61,7 +61,7 @@ test_explicit_work_directory(void)
 {
     bp::command_line cl("program");
     bp::attributes a(cl, "/work/directory");
-    BOOST_CHECK(a.get_work_directory() == "/work/directory");
+    BOOST_CHECK_EQUAL(a.get_work_directory(), "/work/directory");
 }
 
 // ------------------------------------------------------------------------

@@ -36,9 +36,9 @@ test_read_and_write(void)
     wend << "1Test 1message" << std::endl;
     std::string tmp;
     rend >> tmp;
-    BOOST_CHECK(tmp == "1Test");
+    BOOST_CHECK_EQUAL(tmp, "1Test");
     rend >> tmp;
-    BOOST_CHECK(tmp == "1message");
+    BOOST_CHECK_EQUAL(tmp, "1message");
 }
 
 // ------------------------------------------------------------------------
@@ -56,9 +56,9 @@ test_remap_read(void)
     wend << "2Test 2message" << std::endl;
     std::string tmp;
     std::cin >> tmp;
-    BOOST_CHECK(tmp == "2Test");
+    BOOST_CHECK_EQUAL(tmp, "2Test");
     std::cin >> tmp;
-    BOOST_CHECK(tmp == "2message");
+    BOOST_CHECK_EQUAL(tmp, "2message");
 }
 
 // ------------------------------------------------------------------------
@@ -76,9 +76,9 @@ test_remap_write(void)
     std::cout << "3Test 3message" << std::endl;
     std::string tmp;
     rend >> tmp;
-    BOOST_CHECK(tmp == "3Test");
+    BOOST_CHECK_EQUAL(tmp, "3Test");
     rend >> tmp;
-    BOOST_CHECK(tmp == "3message");
+    BOOST_CHECK_EQUAL(tmp, "3message");
 }
 
 // ------------------------------------------------------------------------

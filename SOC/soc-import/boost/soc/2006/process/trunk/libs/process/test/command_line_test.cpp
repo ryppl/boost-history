@@ -23,10 +23,11 @@ test_arguments_addition(void)
     bp::command_line cl("program");
     cl.argument("first").argument("second").argument("third");
     bp::command_line::arguments_vector args = cl.get_arguments();
-    BOOST_CHECK(args.size() == 3);
-    BOOST_CHECK(args[0] == "first");
-    BOOST_CHECK(args[1] == "second");
-    BOOST_CHECK(args[2] == "third");
+    BOOST_REQUIRE_EQUAL(args.size(),
+        static_cast<bp::command_line::arguments_vector::size_type>(3));
+    BOOST_CHECK_EQUAL(args[0], "first");
+    BOOST_CHECK_EQUAL(args[1], "second");
+    BOOST_CHECK_EQUAL(args[2], "third");
 }
 
 // ------------------------------------------------------------------------
@@ -36,7 +37,8 @@ test_arguments_empty(void)
 {
     bp::command_line cl("program");
     bp::command_line::arguments_vector args = cl.get_arguments();
-    BOOST_CHECK(args.size() == 0);
+    BOOST_CHECK_EQUAL(args.size(),
+        static_cast<bp::command_line::arguments_vector::size_type>(0));
 }
 
 // ------------------------------------------------------------------------
@@ -45,7 +47,7 @@ static void
 test_executable(void)
 {
     bp::command_line cl("program");
-    BOOST_CHECK(cl.get_executable() == "program");
+    BOOST_CHECK_EQUAL(cl.get_executable(), "program");
 }
 
 // ------------------------------------------------------------------------

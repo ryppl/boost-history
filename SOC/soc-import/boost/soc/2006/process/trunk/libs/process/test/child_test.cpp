@@ -56,7 +56,7 @@ test_input(void)
 
     bp::status s = c.wait();
     BOOST_REQUIRE(s.exited());
-    BOOST_CHECK(s.exit_status() == EXIT_SUCCESS);
+    BOOST_CHECK_EQUAL(s.exit_status(), EXIT_SUCCESS);
 }
 
 // ------------------------------------------------------------------------
@@ -84,7 +84,7 @@ test_output(bp::desc_t desc,
 
     bp::status s = c.wait();
     BOOST_REQUIRE(s.exited());
-    BOOST_CHECK(s.exit_status() == EXIT_SUCCESS);
+    BOOST_CHECK_EQUAL(s.exit_status(), EXIT_SUCCESS);
 }
 
 // ------------------------------------------------------------------------
