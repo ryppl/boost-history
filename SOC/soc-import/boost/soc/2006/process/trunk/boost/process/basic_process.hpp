@@ -20,7 +20,8 @@ namespace process {
 // ------------------------------------------------------------------------
 
 template< class Attributes >
-class basic_process {
+class basic_process
+{
     id_t m_id;
     Attributes m_attributes;
 

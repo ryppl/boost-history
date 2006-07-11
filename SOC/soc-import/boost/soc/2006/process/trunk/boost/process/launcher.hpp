@@ -40,7 +40,8 @@ class launcher
     input_set m_input_set;
     output_set m_output_set;
 
-    class environment_entry {
+    class environment_entry
+    {
         bool m_set;
         std::string m_value;
 

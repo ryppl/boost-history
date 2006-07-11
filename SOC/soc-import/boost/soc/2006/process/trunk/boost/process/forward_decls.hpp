@@ -13,32 +13,36 @@
 #define BOOST_PROCESS_FORWARD_DECLS_HPP
 
 namespace boost {
-    namespace process {
+namespace process {
 
-        template< class Command_Line >
-        class basic_attributes;
+// ------------------------------------------------------------------------
 
-        template< class Attributes >
-        class basic_child;
+template< class Command_Line >
+class basic_attributes;
 
-        template< class Attributes >
-        class basic_process;
+template< class Attributes >
+class basic_child;
 
-        class command_line;
+template< class Attributes >
+class basic_process;
 
-        class launcher;
+class command_line;
 
-        class pistream;
+class launcher;
 
-        class postream;
+class pistream;
 
-        class status;
+class postream;
 
-        typedef basic_attributes< command_line > attributes;
-        typedef basic_child< attributes > child;
-        typedef basic_process< attributes > process;
+class status;
 
-    } // namespace process
+typedef basic_attributes< command_line > attributes;
+typedef basic_child< attributes > child;
+typedef basic_process< attributes > process;
+
+// ------------------------------------------------------------------------
+
+} // namespace process
 } // namespace boost
 
 #endif // !defined(BOOST_PROCESS_FORWARD_DECLS_HPP)

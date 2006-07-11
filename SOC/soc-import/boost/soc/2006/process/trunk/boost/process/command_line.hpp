@@ -20,7 +20,8 @@ namespace process {
 
 // ------------------------------------------------------------------------
 
-class command_line {
+class command_line
+{
 public:
     typedef std::vector< std::string > arguments_vector;
 
