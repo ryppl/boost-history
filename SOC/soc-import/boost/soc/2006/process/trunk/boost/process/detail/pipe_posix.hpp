@@ -73,7 +73,6 @@ pipe::pipe(void)
 inline
 pipe::~pipe(void)
 {
-    BOOST_ASSERT(m_read_open or m_write_open);
     if (m_read_open)
         ::close(m_read_end);
     if (m_write_open)
@@ -86,7 +85,7 @@ inline
 void
 pipe::close_read_end(void)
 {
-    BOOST_ASSERT(m_read_open and m_write_open);
+    BOOST_ASSERT(m_read_open);
     ::close(m_read_end);
     m_read_open = false;
 }
@@ -97,7 +96,7 @@ inline
 void
 pipe::close_write_end(void)
 {
-    BOOST_ASSERT(m_read_open and m_write_open);
+    BOOST_ASSERT(m_write_open);
     ::close(m_write_end);
     m_write_open = false;
 }

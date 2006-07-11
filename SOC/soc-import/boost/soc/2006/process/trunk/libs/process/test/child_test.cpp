@@ -72,14 +72,15 @@ test_input(void)
     l.input(bp::STDIN).output(bp::STDOUT);
     bp::child c = l.start<bp::command_line, bp::attributes>(a);
 
-    boost::weak_ptr< std::ostream > stin = c.get_input(bp::STDIN);
-    boost::weak_ptr< std::istream > stout = c.get_output(bp::STDOUT);
+    boost::weak_ptr< bp::postream > stin = c.get_input(bp::STDIN);
+    boost::weak_ptr< bp::pistream > stout = c.get_output(bp::STDOUT);
 
-    boost::shared_ptr< std::ostream > os;
+    boost::shared_ptr< bp::postream > os;
     BOOST_REQUIRE(os = stin.lock());
     (*os) << "message-to-process" << std::endl;
+    (*os).close();
 
-    boost::shared_ptr< std::istream > is;
+    boost::shared_ptr< bp::pistream > is;
     BOOST_REQUIRE(is = stout.lock());
     std::string word;
     (*is) >> word;
@@ -106,8 +107,8 @@ test_output(bp::desc_t desc,
     l.output(desc);
     bp::child c = l.start<bp::command_line, bp::attributes>(a);
 
-    boost::weak_ptr< std::istream > st = c.get_output(desc);
-    boost::shared_ptr< std::istream > is;
+    boost::weak_ptr< bp::pistream > st = c.get_output(desc);
+    boost::shared_ptr< bp::pistream > is;
     BOOST_REQUIRE(is = st.lock());
     std::string word;
     (*is) >> word;

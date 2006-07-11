@@ -34,6 +34,8 @@ test-suite process :
     [ compile include_exceptions_test.cpp : : ]
     [ compile include_forward_decls_test.cpp : : ]
     [ compile include_launcher_test.cpp : : ]
+    [ compile include_pistream_test.cpp : : ]
+    [ compile include_postream_test.cpp : : ]
     [ compile include_status_test.cpp : : ]
     [ compile include_top_test.cpp : : ]
     [ compile include_types_test.cpp : : ]
@@ -57,6 +59,18 @@ test-suite process :
         ]
 
     [ run pipe_test.cpp
+        :
+        :
+        : <library>../../../../boost//unit_test_framework
+        ]
+
+    [ run pistream_test.cpp
+        :
+        :
+        : <library>../../../../boost//unit_test_framework
+        ]
+
+    [ run postream_test.cpp
         :
         :
         : <library>../../../../boost//unit_test_framework

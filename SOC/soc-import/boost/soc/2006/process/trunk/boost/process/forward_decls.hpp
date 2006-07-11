@@ -28,6 +28,10 @@ namespace boost {
 
         class launcher;
 
+        class pistream;
+
+        class postream;
+
         class status;
 
         typedef basic_attributes< command_line > attributes;
