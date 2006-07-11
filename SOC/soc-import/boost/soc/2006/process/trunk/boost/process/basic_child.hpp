@@ -21,7 +21,6 @@
 #include <boost/process/postream.hpp>
 #include <boost/process/status.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
 
 namespace boost {
 namespace process {
@@ -41,8 +40,8 @@ public:
     id_t get_id(void) const { return basic_process< Attributes >::get_id(); }
 
     // XXX Should these two be constant?
-    boost::weak_ptr< postream > get_input(desc_t desc);
-    boost::weak_ptr< pistream > get_output(desc_t desc);
+    postream& get_input(desc_t desc);
+    pistream& get_output(desc_t desc);
 
 private:
     typedef std::map< desc_t, boost::shared_ptr< postream > > input_map;
@@ -95,24 +94,24 @@ basic_child< Attributes >::wait(void)
 
 template< class Attributes >
 inline
-boost::weak_ptr< postream >
+postream&
 basic_child< Attributes >::get_input(desc_t desc)
 {
     input_map::const_iterator iter = m_input_map.find(desc);
     BOOST_ASSERT(iter != m_input_map.end());
-    return boost::weak_ptr< postream >((*iter).second);
+    return *((*iter).second);
 }
 
 // ------------------------------------------------------------------------
 
 template< class Attributes >
 inline
-boost::weak_ptr< pistream >
+pistream&
 basic_child< Attributes >::get_output(desc_t desc)
 {
     output_map::const_iterator iter = m_output_map.find(desc);
     BOOST_ASSERT(iter != m_output_map.end());
-    return boost::weak_ptr< pistream >((*iter).second);
+    return *((*iter).second);
 }
 
 // ------------------------------------------------------------------------

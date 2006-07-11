@@ -40,18 +40,14 @@ test_input(void)
     l.input(bp::STDIN).output(bp::STDOUT);
     bp::child c = l.start<bp::attributes>(a);
 
-    boost::weak_ptr< bp::postream > stin = c.get_input(bp::STDIN);
-    boost::weak_ptr< bp::pistream > stout = c.get_output(bp::STDOUT);
+    bp::postream& os = c.get_input(bp::STDIN);
+    bp::pistream& is = c.get_output(bp::STDOUT);
 
-    boost::shared_ptr< bp::postream > os;
-    BOOST_REQUIRE(os = stin.lock());
-    (*os) << "message-to-process" << std::endl;
-    (*os).close();
+    os << "message-to-process" << std::endl;
+    os.close();
 
-    boost::shared_ptr< bp::pistream > is;
-    BOOST_REQUIRE(is = stout.lock());
     std::string word;
-    (*is) >> word;
+    is >> word;
     BOOST_CHECK_EQUAL(word, "message-to-process");
 
     bp::status s = c.wait();
@@ -75,11 +71,9 @@ test_output(bp::desc_t desc,
     l.output(desc);
     bp::child c = l.start<bp::attributes>(a);
 
-    boost::weak_ptr< bp::pistream > st = c.get_output(desc);
-    boost::shared_ptr< bp::pistream > is;
-    BOOST_REQUIRE(is = st.lock());
+    bp::pistream& is = c.get_output(desc);
     std::string word;
-    (*is) >> word;
+    is >> word;
     BOOST_CHECK_EQUAL(word, expmsg);
 
     bp::status s = c.wait();
