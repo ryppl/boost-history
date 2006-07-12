@@ -13,7 +13,6 @@
 #define BOOST_PROCESS_BASIC_CHILD_HPP
 
 #include <map>
-#include <set>
 
 #include <boost/assert.hpp>
 #include <boost/process/basic_process.hpp>
