@@ -64,12 +64,11 @@ test_input(void)
 
 void
 test_output(bp::desc_t desc,
-            const std::string& outname,
             const std::string& realmsg,
             const std::string& expmsg)
 {
     bp::command_line cl(HELPERS_PATH);
-    cl.argument("echo-" + outname).argument(realmsg);
+    cl.argument("echo-one").argument(desc).argument(realmsg);
     bp::attributes a(cl);
 
     bp::launcher l;
@@ -91,7 +90,7 @@ test_output(bp::desc_t desc,
 static void
 test_stderr_fail(void)
 {
-    test_output(bp::STDERR, "stderr", "message-stderr", "fail-stderr");
+    test_output(bp::STDERR, "message-stderr", "fail-stderr");
 }
 
 // ------------------------------------------------------------------------
@@ -99,7 +98,7 @@ test_stderr_fail(void)
 static void
 test_stderr_pass(void)
 {
-    test_output(bp::STDERR, "stderr", "message-stderr", "message-stderr");
+    test_output(bp::STDERR, "message-stderr", "message-stderr");
 }
 
 // ------------------------------------------------------------------------
@@ -107,7 +106,7 @@ test_stderr_pass(void)
 static void
 test_stdout_fail(void)
 {
-    test_output(bp::STDOUT, "stdout", "message-stdout", "fail-stdout");
+    test_output(bp::STDOUT, "message-stdout", "fail-stdout");
 }
 
 // ------------------------------------------------------------------------
@@ -115,7 +114,65 @@ test_stdout_fail(void)
 static void
 test_stdout_pass(void)
 {
-    test_output(bp::STDOUT, "stdout", "message-stdout", "message-stdout");
+    test_output(bp::STDOUT, "message-stdout", "message-stdout");
+}
+
+// ------------------------------------------------------------------------
+
+void
+test_merge(bp::desc_t desc1,
+           bp::desc_t desc2,
+           const std::string& msg)
+{
+    bp::command_line cl(HELPERS_PATH);
+    cl.argument("echo-two").argument(desc1).argument(desc2).argument(msg);
+    bp::attributes a(cl);
+
+    bp::launcher l;
+    l.output(desc1);
+    l.merge(desc2, desc1);
+    bp::child c = l.start<bp::attributes>(a);
+
+    bp::pistream& is = c.get_output(desc1);
+    bp::desc_t dtmp;
+    std::string word;
+    is >> dtmp;
+    BOOST_CHECK_EQUAL(dtmp, desc1);
+    is >> word;
+    BOOST_CHECK_EQUAL(word, msg);
+    is >> dtmp;
+    BOOST_CHECK_EQUAL(dtmp, desc2);
+    is >> word;
+    BOOST_CHECK_EQUAL(word, msg);
+
+    bp::status s = c.wait();
+    BOOST_REQUIRE(s.exited());
+    BOOST_CHECK_EQUAL(s.exit_status(), EXIT_SUCCESS);
+}
+
+// ------------------------------------------------------------------------
+
+static void
+test_merge_out_err(void)
+{
+    test_merge(bp::STDOUT, bp::STDERR, "message");
+}
+
+// ------------------------------------------------------------------------
+
+static void
+test_merge_err_out(void)
+{
+    test_merge(bp::STDERR, bp::STDOUT, "message");
+}
+
+// ------------------------------------------------------------------------
+
+static void
+test_merge_non_std(void)
+{
+    test_merge(4, 5, "message");
+    test_merge(10, 20, "message");
 }
 
 // ------------------------------------------------------------------------
@@ -188,6 +245,9 @@ init_unit_test_suite(int argc, char* argv[])
     test->add(BOOST_TEST_CASE(&test_stdout_fail), 1, 10);
     test->add(BOOST_TEST_CASE(&test_stderr_pass), 0, 10);
     test->add(BOOST_TEST_CASE(&test_stderr_fail), 1, 10);
+    test->add(BOOST_TEST_CASE(&test_merge_out_err), 0, 10);
+    test->add(BOOST_TEST_CASE(&test_merge_err_out), 0, 10);
+    test->add(BOOST_TEST_CASE(&test_merge_non_std), 0, 10);
     test->add(BOOST_TEST_CASE(&test_input), 0, 10);
     test->add(BOOST_TEST_CASE(&test_default_work_directory), 0, 10);
     test->add(BOOST_TEST_CASE(&test_explicit_work_directory), 0, 10);

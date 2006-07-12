@@ -13,11 +13,13 @@
 #include <string>
 
 #include <boost/filesystem/operations.hpp>
+#include <boost/process/detail/systembuf.hpp>
 
 namespace bfs = ::boost::filesystem;
+namespace bpd = ::boost::process::detail;
 
-int h_echo_stderr(int, char*[]);
-int h_echo_stdout(int, char*[]);
+int h_echo_one(int, char*[]);
+int h_echo_two(int, char*[]);
 int h_exit_failure(int, char*[]);
 int h_exit_success(int, char*[]);
 int h_pwd(int, char*[]);
@@ -29,8 +31,8 @@ struct helper {
     int m_min_argc;
     const char* m_syntax;
 } helpers[] = {
-    { "echo-stderr", h_echo_stderr, 2, "message" },
-    { "echo-stdout", h_echo_stdout, 2, "message" },
+    { "echo-one", h_echo_one, 3, "desc message" },
+    { "echo-two", h_echo_two, 4, "desc1 desc2 message" },
     { "exit-failure", h_exit_failure, 1, "" },
     { "exit-success", h_exit_success, 1, "" },
     { "pwd", h_pwd, 1, "" },
@@ -41,18 +43,35 @@ struct helper {
 // ------------------------------------------------------------------------
 
 int
-h_echo_stderr(int argc, char* argv[])
+h_echo_one(int argc, char* argv[])
 {
-    std::cerr << argv[1] << std::endl;
+    int desc = std::atoi(argv[1]);
+
+    bpd::systembuf buf(desc);
+    std::ostream os(&buf);
+    os << argv[2] << std::endl;
+
     return EXIT_SUCCESS;
 }
 
 // ------------------------------------------------------------------------
 
 int
-h_echo_stdout(int argc, char* argv[])
+h_echo_two(int argc, char* argv[])
 {
-    std::cout << argv[1] << std::endl;
+    int desc1 = std::atoi(argv[1]);
+    int desc2 = std::atoi(argv[2]);
+
+    bpd::systembuf buf1(desc1);
+    std::ostream os1(&buf1);
+    os1 << argv[1] << " " << argv[3] << std::endl;
+    os1.flush();
+
+    bpd::systembuf buf2(desc2);
+    std::ostream os2(&buf2);
+    os2 << argv[2] << " " << argv[3] << std::endl;
+    os2.flush();
+
     return EXIT_SUCCESS;
 }
 
