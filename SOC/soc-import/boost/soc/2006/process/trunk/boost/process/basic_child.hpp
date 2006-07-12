@@ -33,8 +33,6 @@ class basic_child :
 public:
     status wait(void);
 
-    id_t get_id(void) const { return basic_process< Attributes >::get_id(); }
-
     // XXX Should these two be constant?
     postream& get_input(desc_t desc);
     pistream& get_output(desc_t desc);
@@ -83,7 +81,7 @@ status
 basic_child< Attributes >::wait(void)
 {
     int s;
-    ::waitpid(get_id(), &s, 0);
+    ::waitpid(basic_child< Attributes >::get_id(), &s, 0);
     return status(s);
 }
 
