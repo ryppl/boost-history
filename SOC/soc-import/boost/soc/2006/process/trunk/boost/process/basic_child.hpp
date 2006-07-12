@@ -27,9 +27,6 @@ namespace process {
 
 // ------------------------------------------------------------------------
 
-// XXX This should be inside basic_child.
-typedef std::map< desc_t, detail::shared_pipe > pipe_map;
-
 template< class Attributes >
 class basic_child : 
     public basic_process< Attributes >
@@ -51,6 +48,7 @@ private:
     output_map m_output_map;
 
     friend class launcher;
+    typedef std::map< desc_t, detail::shared_pipe > pipe_map;
     basic_child(id_t id, const Attributes& attrs,
                 const pipe_map& inpipes, const pipe_map& outpipes);
 };

@@ -35,15 +35,19 @@ inline
 basic_child< Attributes >
 launcher::start(const Attributes& a)
 {
+    typedef typename basic_child< Attributes >::pipe_map pipe_map;
+
     pipe_map inpipes;
     for (input_set::const_iterator iter = m_input_set.begin();
          iter != m_input_set.end(); iter++)
-        inpipes.insert(pipe_map::value_type(*iter, detail::shared_pipe()));
+        inpipes.insert
+            (typename pipe_map::value_type(*iter, detail::shared_pipe()));
 
     pipe_map outpipes;
     for (output_set::const_iterator iter = m_output_set.begin();
          iter != m_output_set.end(); iter++)
-        outpipes.insert(pipe_map::value_type(*iter, detail::shared_pipe()));
+        outpipes.insert
+            (typename pipe_map::value_type(*iter, detail::shared_pipe()));
 
     id_t pid = ::fork();
     if (pid == -1) {
@@ -51,7 +55,7 @@ launcher::start(const Attributes& a)
             (system_error("boost::process::launcher::start",
                           "fork(2) failed", errno));
     } else if (pid == 0) {
-        for (pipe_map::iterator iter = inpipes.begin();
+        for (typename pipe_map::iterator iter = inpipes.begin();
              iter != inpipes.end(); iter++) {
             desc_t d = (*iter).first;
             detail::shared_pipe p = (*iter).second;
@@ -61,7 +65,7 @@ launcher::start(const Attributes& a)
                 p->remap_read_end(d);
         }
 
-        for (pipe_map::iterator iter = outpipes.begin();
+        for (typename pipe_map::iterator iter = outpipes.begin();
              iter != outpipes.end(); iter++) {
             desc_t d = (*iter).first;
             detail::shared_pipe p = (*iter).second;
@@ -113,11 +117,11 @@ launcher::start(const Attributes& a)
         ::write(STDERR, "\n", 1);
         ::exit(EXIT_FAILURE);
     } else {
-        for (pipe_map::iterator iter = inpipes.begin();
+        for (typename pipe_map::iterator iter = inpipes.begin();
              iter != inpipes.end(); iter++)
             (*iter).second->close_read_end();
 
-        for (pipe_map::iterator iter = outpipes.begin();
+        for (typename pipe_map::iterator iter = outpipes.begin();
              iter != outpipes.end(); iter++)
             (*iter).second->close_write_end();
     }
