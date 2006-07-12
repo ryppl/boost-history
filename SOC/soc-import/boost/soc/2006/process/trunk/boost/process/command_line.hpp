@@ -12,6 +12,7 @@
 #if !defined(BOOST_PROCESS_COMMAND_LINE_HPP)
 #define BOOST_PROCESS_COMMAND_LINE_HPP
 
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -32,7 +33,8 @@ private:
 public:
     explicit command_line(const std::string& executable);
 
-    command_line& argument(const std::string& argument);
+    template< typename T >
+    command_line& argument(const T& argument);
 
     const arguments_vector& get_arguments(void) const;
     const std::string& get_executable(void) const;
@@ -48,11 +50,14 @@ command_line::command_line(const std::string& executable) :
 
 // ------------------------------------------------------------------------
 
+template< typename T >
 inline
 command_line&
-command_line::argument(const std::string& argument)
+command_line::argument(const T& argument)
 {
-    m_arguments.push_back(argument);
+    std::ostringstream tmp;
+    tmp << argument;
+    m_arguments.push_back(tmp.str());
     return *this;
 }
 

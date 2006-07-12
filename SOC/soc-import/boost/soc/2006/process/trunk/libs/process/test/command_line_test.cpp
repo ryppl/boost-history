@@ -9,6 +9,8 @@
 // at http://www.boost.org/LICENSE_1_0.txt.)
 //
 
+#include <cstdlib>
+
 #include <boost/process/command_line.hpp>
 #include <boost/test/unit_test.hpp>
 
@@ -44,6 +46,20 @@ test_arguments_empty(void)
 // ------------------------------------------------------------------------
 
 static void
+test_arguments_types(void)
+{
+    bp::command_line cl("program");
+    cl.argument("string").argument(123L);
+    bp::command_line::arguments_vector args = cl.get_arguments();
+    BOOST_REQUIRE_EQUAL(args.size(),
+        static_cast<bp::command_line::arguments_vector::size_type>(2));
+    BOOST_CHECK_EQUAL(args[0], "string");
+    BOOST_CHECK_EQUAL(std::atol(args[1].c_str()), 123L);
+}
+
+// ------------------------------------------------------------------------
+
+static void
 test_executable(void)
 {
     bp::command_line cl("program");
@@ -60,6 +76,7 @@ init_unit_test_suite(int argc, char* argv[])
     test->add(BOOST_TEST_CASE(&test_executable));
     test->add(BOOST_TEST_CASE(&test_arguments_empty));
     test->add(BOOST_TEST_CASE(&test_arguments_addition));
+    test->add(BOOST_TEST_CASE(&test_arguments_types));
 
     return test;
 }
