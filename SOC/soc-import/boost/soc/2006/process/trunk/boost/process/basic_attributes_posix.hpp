@@ -32,7 +32,10 @@ basic_attributes< Command_Line >::get_current_directory(void)
 {
     const char* buf = getcwd(NULL, 0);
     if (buf == NULL)
-        ; // XXX Handle this.
+        boost::throw_exception
+            (system_error
+             ("boost::process::basic_attributes::get_current_directory",
+              "getcwd(2) failed", errno));
     std::string curdir(buf);
     delete buf;
     return curdir;
