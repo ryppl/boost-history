@@ -9,10 +9,15 @@
 // at http://www.boost.org/LICENSE_1_0.txt.)
 //
  
-#if !defined(BOOST_PROCESS_POSIX_BASIC_ATTRIBUTES_HPP)
-#define BOOST_PROCESS_POSIX_BASIC_ATTRIBUTES_HPP
+#if !defined(BOOST_PROCESS_BASIC_ATTRIBUTES_POSIX_HPP)
+#define BOOST_PROCESS_BASIC_ATTRIBUTES_POSIX_HPP
 
 #include <unistd.h>
+
+#include <cerrno>
+
+#include <boost/process/exceptions.hpp>
+#include <boost/throw_exception.hpp>
 
 namespace boost {
 namespace process {
@@ -42,7 +47,9 @@ basic_attributes< Command_Line >::setup(void)
 {
     if (m_work_directory.length() > 0) {
         if (chdir(m_work_directory.c_str()) == -1)
-            ; // XXX Handle this.
+            boost::throw_exception
+                (system_error("boost::process::basic_attributes::setup",
+                              "chdir(2) failed", errno));
     }
 }
 
@@ -51,4 +58,4 @@ basic_attributes< Command_Line >::setup(void)
 } // namespace process
 } // namespace boost
 
-#endif // !defined(BOOST_POSIX_PROCESS_BASIC_ATTRIBUTES_HPP)
+#endif // !defined(BOOST_PROCESS_BASIC_ATTRIBUTES_POSIX_HPP)

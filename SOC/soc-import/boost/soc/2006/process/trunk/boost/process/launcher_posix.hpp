@@ -19,6 +19,7 @@
 
 #include <boost/process/basic_child.hpp>
 #include <boost/process/detail/systembuf.hpp>
+#include <boost/process/exceptions.hpp>
 
 namespace std {
     using ::strdup;
@@ -77,6 +78,14 @@ launcher::start(const Attributes& a)
             ::dup2(p.second, p.first);
         }
 
+        try {
+            a.setup();
+        } catch (const system_error& e) {
+            ::write(STDERR, e.what(), std::strlen(e.what()));
+            ::write(STDERR, "\n", 1);
+            ::exit(EXIT_FAILURE);
+        }
+
         size_t nargs = a.get_command_line().get_arguments().size();
         char* args[nargs + 2];
         const std::string& executable = a.get_command_line().get_executable();
@@ -94,10 +103,14 @@ launcher::start(const Attributes& a)
         args[nargs + 1] = NULL;
 
         ::execvp(executable.c_str(), args);
+        system_error e("boost::process::launcher::start",
+                       "execvp(2) failed", errno);
 
         for (size_t i = 0; i <= nargs; i++)
             delete [] args[i];
 
+        ::write(STDERR, e.what(), std::strlen(e.what()));
+        ::write(STDERR, "\n", 1);
         ::exit(EXIT_FAILURE);
     } else {
         for (pipe_map::iterator iter = inpipes.begin();

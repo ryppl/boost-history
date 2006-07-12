@@ -19,6 +19,8 @@
 namespace boost {
 namespace process {
 
+class launcher;
+
 // ------------------------------------------------------------------------
 
 template< class Command_Line >
@@ -30,6 +32,7 @@ class basic_attributes
     std::string get_current_directory(void) const;
 
 protected:
+    friend class launcher;
     void setup(void) const;
 
 public:

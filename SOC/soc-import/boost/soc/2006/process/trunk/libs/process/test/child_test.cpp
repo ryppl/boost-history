@@ -12,6 +12,8 @@
 #include <cstring> // XXX For EXIT_* codes; should be hidden by the library.
 #include <string>
 
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
 #include <boost/process/child.hpp>
 #include <boost/process/types.hpp>
 #include <boost/process/launcher.hpp>
@@ -19,11 +21,14 @@
 
 // XXX Extremely ugly way to determine helpers' path...
 #if defined(__APPLE__)
-#   define HELPERS_PATH "./bin/darwin/debug/helpers"
+#   define HELPERS_PATH \
+        (bfs::initial_path() / "./bin/darwin/debug/helpers").string()
 #else
-#   define HELPERS_PATH "./bin/gcc/debug/helpers"
+#   define HELPERS_PATH \
+        (bfs::initial_path() / "./bin/gcc/debug/helpers").string()
 #endif
 
+namespace bfs = ::boost::filesystem;
 namespace bp = ::boost::process;
 namespace but = ::boost::unit_test;
 
@@ -115,16 +120,77 @@ test_stdout_pass(void)
 
 // ------------------------------------------------------------------------
 
+static void
+test_default_work_directory(void)
+{
+    bp::command_line cl(HELPERS_PATH);
+    cl.argument("pwd");
+    bp::attributes a(cl);
+
+    bp::launcher l;
+    l.output(bp::STDOUT);
+    bp::child c = l.start<bp::attributes>(a);
+
+    bp::pistream& is = c.get_output(bp::STDOUT);
+    std::string dir;
+    is >> dir;
+
+    bp::status s = c.wait();
+    BOOST_REQUIRE(s.exited());
+    BOOST_REQUIRE_EQUAL(s.exit_status(), EXIT_SUCCESS);
+
+    BOOST_CHECK_EQUAL(dir, a.get_work_directory());
+}
+
+// ------------------------------------------------------------------------
+
+static void
+test_explicit_work_directory(void)
+{
+    bfs::path wdir = bfs::current_path() / "test.dir";
+
+    bp::command_line cl(HELPERS_PATH);
+    cl.argument("pwd");
+    bp::attributes a(cl, wdir.string());
+
+    BOOST_REQUIRE_NO_THROW(bfs::create_directory(wdir));
+    try {
+        bp::launcher l;
+        l.output(bp::STDOUT);
+        bp::child c = l.start<bp::attributes>(a);
+
+        bp::pistream& is = c.get_output(bp::STDOUT);
+        std::string dir;
+        is >> dir;
+
+        bp::status s = c.wait();
+        BOOST_CHECK_NO_THROW(bfs::remove_all(wdir));
+        BOOST_REQUIRE(s.exited());
+        BOOST_REQUIRE_EQUAL(s.exit_status(), EXIT_SUCCESS);
+
+        BOOST_CHECK_EQUAL(dir, a.get_work_directory());
+    } catch(...) {
+        BOOST_CHECK_NO_THROW(bfs::remove_all(wdir));
+        throw;
+    }
+}
+
+// ------------------------------------------------------------------------
+
 but::test_suite *
 init_unit_test_suite(int argc, char* argv[])
 {
     but::test_suite* test = BOOST_TEST_SUITE("child test suite");
+
+    bfs::initial_path();
 
     test->add(BOOST_TEST_CASE(&test_stdout_pass), 0, 10);
     test->add(BOOST_TEST_CASE(&test_stdout_fail), 1, 10);
     test->add(BOOST_TEST_CASE(&test_stderr_pass), 0, 10);
     test->add(BOOST_TEST_CASE(&test_stderr_fail), 1, 10);
     test->add(BOOST_TEST_CASE(&test_input), 0, 10);
+    test->add(BOOST_TEST_CASE(&test_default_work_directory), 0, 10);
+    test->add(BOOST_TEST_CASE(&test_explicit_work_directory), 0, 10);
 
     return test;
 }

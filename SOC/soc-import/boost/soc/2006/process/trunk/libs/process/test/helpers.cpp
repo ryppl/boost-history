@@ -12,10 +12,15 @@
 #include <iostream>
 #include <string>
 
+#include <boost/filesystem/operations.hpp>
+
+namespace bfs = ::boost::filesystem;
+
 int h_echo_stderr(int, char*[]);
 int h_echo_stdout(int, char*[]);
 int h_exit_failure(int, char*[]);
 int h_exit_success(int, char*[]);
+int h_pwd(int, char*[]);
 int h_stdin_to_stdout(int, char*[]);
 
 struct helper {
@@ -28,6 +33,7 @@ struct helper {
     { "echo-stdout", h_echo_stdout, 2, "message" },
     { "exit-failure", h_exit_failure, 1, "" },
     { "exit-success", h_exit_success, 1, "" },
+    { "pwd", h_pwd, 1, "" },
     { "stdin-to-stdout", h_stdin_to_stdout, 1, "" },
     { NULL, NULL }
 };
@@ -63,6 +69,15 @@ h_exit_failure(int argc, char* argv[])
 int
 h_exit_success(int argc, char* argv[])
 {
+    return EXIT_SUCCESS;
+}
+
+// ------------------------------------------------------------------------
+
+int
+h_pwd(int argc, char* argv[])
+{
+    std::cout << bfs::current_path().string() << std::endl;
     return EXIT_SUCCESS;
 }
 

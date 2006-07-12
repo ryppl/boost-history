@@ -20,6 +20,7 @@ project :
 
 exe helpers
     : helpers.cpp
+    : <library>../../../../boost//filesystem
     ;
 
 test-suite process :
@@ -80,6 +81,7 @@ test-suite process :
         : helpers
         : 
         : <library>../../../../boost//unit_test_framework
+          <library>../../../../boost//filesystem
         ]
 
     [ run status_test.cpp
