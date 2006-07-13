@@ -33,9 +33,8 @@ class basic_child :
 public:
     status wait(void);
 
-    // XXX Should these two be constant?
-    postream& get_input(desc_t desc);
-    pistream& get_output(desc_t desc);
+    postream& get_input(desc_t desc) const;
+    pistream& get_output(desc_t desc) const;
 
 private:
     typedef std::map< desc_t, boost::shared_ptr< postream > > input_map;
@@ -91,6 +90,7 @@ template< class Attributes >
 inline
 postream&
 basic_child< Attributes >::get_input(desc_t desc)
+    const
 {
     input_map::const_iterator iter = m_input_map.find(desc);
     BOOST_ASSERT(iter != m_input_map.end());
@@ -103,6 +103,7 @@ template< class Attributes >
 inline
 pistream&
 basic_child< Attributes >::get_output(desc_t desc)
+    const
 {
     output_map::const_iterator iter = m_output_map.find(desc);
     BOOST_ASSERT(iter != m_output_map.end());
