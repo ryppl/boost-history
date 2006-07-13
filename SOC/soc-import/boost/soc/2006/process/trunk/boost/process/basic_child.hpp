@@ -76,18 +76,6 @@ basic_child< Attributes >::basic_child(id_t id,
 
 template< class Attributes >
 inline
-status
-basic_child< Attributes >::wait(void)
-{
-    int s;
-    ::waitpid(basic_child< Attributes >::get_id(), &s, 0);
-    return status(s);
-}
-
-// ------------------------------------------------------------------------
-
-template< class Attributes >
-inline
 postream&
 basic_child< Attributes >::get_input(desc_t desc)
     const
@@ -114,5 +102,11 @@ basic_child< Attributes >::get_output(desc_t desc)
 
 } // namespace process
 } // namespace boost
+
+#if defined(BOOST_PROCESS_WIN32_API)
+#   include <boost/process/basic_child_win32.hpp>
+#else
+#   include <boost/process/basic_child_posix.hpp>
+#endif
 
 #endif // !defined(BOOST_PROCESS_BASIC_CHILD_HPP)
