@@ -21,6 +21,7 @@
 #include <boost/process/launcher.hpp>
 #include <boost/process/pistream.hpp>
 #include <boost/process/postream.hpp>
+#include <boost/process/standard_launcher.hpp>
 #include <boost/process/status.hpp>
 
 #endif // !defined(BOOST_PROCESS_HPP)

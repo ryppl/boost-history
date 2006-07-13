@@ -34,6 +34,8 @@ class pistream;
 
 class postream;
 
+class standard_launcher;
+
 class status;
 
 typedef basic_attributes< command_line > attributes;
