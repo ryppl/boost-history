@@ -234,6 +234,89 @@ test_explicit_work_directory(void)
 
 // ------------------------------------------------------------------------
 
+static void
+test_unset_environment(void)
+{
+    bp::command_line cl(HELPERS_PATH);
+    cl.argument("query-env").argument("TO_BE_UNSET");
+    bp::attributes a(cl);
+
+#if defined(BOOST_PROCESS_WIN32_API)
+#   error "Unimplemented."
+#else
+    BOOST_REQUIRE(::setenv("TO_BE_UNSET", "test", 1) != -1);
+    BOOST_REQUIRE(::getenv("TO_BE_UNSET") != NULL);
+#endif
+
+    bp::launcher l;
+    l.output(bp::STDOUT);
+    l.unset_environment("TO_BE_UNSET");
+    bp::child c = l.start<bp::attributes>(a);
+
+    bp::pistream& is = c.get_output(bp::STDOUT);
+    std::string status;
+    is >> status;
+
+    bp::status s = c.wait();
+    BOOST_REQUIRE(s.exited());
+    BOOST_REQUIRE_EQUAL(s.exit_status(), EXIT_SUCCESS);
+
+    BOOST_CHECK_EQUAL(status, "undefined");
+}
+
+// ------------------------------------------------------------------------
+
+static void
+test_set_environment(const std::string& value)
+{
+    bp::command_line cl(HELPERS_PATH);
+    cl.argument("query-env").argument("TO_BE_SET");
+    bp::attributes a(cl);
+
+#if defined(BOOST_PROCESS_WIN32_API)
+#   error "Unimplemented."
+#else
+    ::unsetenv("TO_BE_SET");
+    BOOST_REQUIRE(::getenv("TO_BE_SET") == NULL);
+#endif
+
+    bp::launcher l;
+    l.output(bp::STDOUT);
+    l.set_environment("TO_BE_SET", value);
+    bp::child c = l.start<bp::attributes>(a);
+
+    bp::pistream& is = c.get_output(bp::STDOUT);
+    std::string status;
+    is >> status;
+    std::string gotval;
+    is >> gotval;
+
+    bp::status s = c.wait();
+    BOOST_REQUIRE(s.exited());
+    BOOST_REQUIRE_EQUAL(s.exit_status(), EXIT_SUCCESS);
+
+    BOOST_CHECK_EQUAL(status, "defined");
+    BOOST_CHECK_EQUAL(gotval, "'" + value + "'");
+}
+
+// ------------------------------------------------------------------------
+
+static void
+test_set_environment_empty(void)
+{
+    test_set_environment("");
+}
+
+// ------------------------------------------------------------------------
+
+static void
+test_set_environment_non_empty(void)
+{
+    test_set_environment("some-value");
+}
+
+// ------------------------------------------------------------------------
+
 but::test_suite *
 init_unit_test_suite(int argc, char* argv[])
 {
@@ -251,6 +334,9 @@ init_unit_test_suite(int argc, char* argv[])
     test->add(BOOST_TEST_CASE(&test_input), 0, 10);
     test->add(BOOST_TEST_CASE(&test_default_work_directory), 0, 10);
     test->add(BOOST_TEST_CASE(&test_explicit_work_directory), 0, 10);
+    test->add(BOOST_TEST_CASE(&test_unset_environment), 0, 10);
+    test->add(BOOST_TEST_CASE(&test_set_environment_empty), 0, 10);
+    test->add(BOOST_TEST_CASE(&test_set_environment_non_empty), 0, 10);
 
     return test;
 }

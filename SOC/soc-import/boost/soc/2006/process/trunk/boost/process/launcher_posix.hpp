@@ -15,14 +15,18 @@
 #include <unistd.h>
 
 #include <cerrno>
+#include <cstdlib>
 #include <cstring>
 
 #include <boost/process/basic_child.hpp>
 #include <boost/process/detail/systembuf.hpp>
 #include <boost/process/exceptions.hpp>
 
+// XXX I guess this is incorrect, specially in a header file.
 namespace std {
+    using ::setenv;
     using ::strdup;
+    using ::unsetenv;
 };
 
 namespace boost {
@@ -80,6 +84,24 @@ launcher::start(const Attributes& a)
             const std::pair< desc_t, desc_t >& p = (*iter);
             ::close(p.first);
             ::dup2(p.second, p.first);
+        }
+
+        for (environment_map::const_iterator iter = m_environment.begin();
+             iter != m_environment.end(); iter++) {
+            const std::string& var = (*iter).first;
+            const environment_entry& ee = (*iter).second;
+
+            if (ee.is_set()) {
+                int res = std::setenv(var.c_str(), ee.get_value().c_str(), 1);
+                if (res == -1) {
+                    system_error e("boost::process::launcher::start",
+                                   "setenv(2) failed", errno);
+                    ::write(STDERR, e.what(), std::strlen(e.what()));
+                    ::write(STDERR, "\n", 1);
+                    ::exit(EXIT_FAILURE);
+                }
+            } else
+                std::unsetenv(var.c_str());
         }
 
         try {

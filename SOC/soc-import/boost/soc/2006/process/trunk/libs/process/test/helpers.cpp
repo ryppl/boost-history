@@ -9,6 +9,7 @@
 // at http://www.boost.org/LICENSE_1_0.txt.)
 //
 
+#include <cstdlib>
 #include <iostream>
 #include <string>
 
@@ -23,6 +24,7 @@ int h_echo_two(int, char*[]);
 int h_exit_failure(int, char*[]);
 int h_exit_success(int, char*[]);
 int h_pwd(int, char*[]);
+int h_query_env(int, char*[]);
 int h_stdin_to_stdout(int, char*[]);
 
 struct helper {
@@ -36,6 +38,7 @@ struct helper {
     { "exit-failure", h_exit_failure, 1, "" },
     { "exit-success", h_exit_success, 1, "" },
     { "pwd", h_pwd, 1, "" },
+    { "query-env", h_query_env, 2, "variable" },
     { "stdin-to-stdout", h_stdin_to_stdout, 1, "" },
     { NULL, NULL }
 };
@@ -97,6 +100,26 @@ int
 h_pwd(int argc, char* argv[])
 {
     std::cout << bfs::current_path().string() << std::endl;
+    return EXIT_SUCCESS;
+}
+
+// ------------------------------------------------------------------------
+
+int
+h_query_env(int argc, char* argv[])
+{
+#if defined(BOOST_PROCESS_WIN32_API)
+#   error "Unimplemented."
+#else
+    const char* value = ::getenv(argv[1]);
+    if (value == NULL)
+        std::cout << "undefined" << std::endl;
+    else {
+        std::cout << "defined" << std::endl;
+        std::cout << "'" << value << "'" << std::endl;
+    }
+#endif
+
     return EXIT_SUCCESS;
 }
 
