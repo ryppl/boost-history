@@ -15,6 +15,11 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+#include <cerrno>
+
+#include <boost/process/exceptions.hpp>
+#include <boost/throw_exception.hpp>
+
 namespace boost {
 namespace process {
 
@@ -26,7 +31,10 @@ status
 basic_child< Attributes >::wait(void)
 {
     int s;
-    ::waitpid(basic_child< Attributes >::get_id(), &s, 0);
+    if (::waitpid(basic_child< Attributes >::get_id(), &s, 0) == -1)
+        boost::throw_exception
+            (system_error("boost::process::basic_child::wait",
+                          "waitpid(2) failed", errno));
     return status(s);
 }
 
