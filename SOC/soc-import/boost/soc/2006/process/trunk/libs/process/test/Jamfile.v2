@@ -37,6 +37,7 @@ test-suite process :
     [ compile include_launcher_test.cpp : : ]
     [ compile include_pistream_test.cpp : : ]
     [ compile include_postream_test.cpp : : ]
+    [ compile include_standard_launcher_test.cpp : : ]
     [ compile include_status_test.cpp : : ]
     [ compile include_top_test.cpp : : ]
     [ compile include_types_test.cpp : : ]
