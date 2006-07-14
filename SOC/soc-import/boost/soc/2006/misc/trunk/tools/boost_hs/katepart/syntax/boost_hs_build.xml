@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE language SYSTEM "language.dtd">
+<language
+
+name="build"
+version="0.1.0"
+kateversion="2.4"
+section="boost::hs"
+extensions="*.v2"
+mimetype="allFiles"
+author="Matias Capeletto, matias.capeletto@gmail.com"
+license="Distributed under the Boost Software License, Version 1.0.
+http://www.boost.org/LICENSE_1_0.txt"
+
+>
+
+<highlighting>
+
+<list name="keywords" >
+
+    <item> actions </item>
+    <item> return </item>
+    <item> while </item>
+    <item> for </item>
+    <item> in </item>
+    <item> if </item>
+    <item> else </item>
+
+</list>
+
+<list name="parameters" >
+
+    <item> echo </item>
+    <item> requirements </item>
+    <item> glob </item>
+    <item> sources </item>
+
+</list>
+
+<list name="rules" >
+
+    <item> obj </item>
+    <item> using </item>
+    <item> lib </item>
+    <item> explicit </item>
+    <item> install </item>
+    <item> alias </item>
+    <item> project </item>
+    <item> exe </item>
+    <item> import </item>
+    <item> xml </item>
+    <item> standalone </item>
+
+    <item> boostbook </item>
+    <item> doxygen </item>
+    <item> fop </item>
+    <item> quickbook </item>
+    <item> testing </item>
+    <item> python </item>
+    <item> xsltproc </item>
+
+    <item> bcb </item>
+    <item> como </item>
+    <item> cw </item>
+    <item> osx </item>
+    <item> dmc </item>
+    <item> edg </item>
+    <item> gcc </item>
+    <item> il </item>
+    <item> iw </item>
+    <item> kcc </item>
+    <item> bck </item>
+    <item> mgw </item>
+    <item> mgw </item>
+    <item> mp </item>
+    <item> vc </item>
+    <item> sw </item>
+    <item> tru </item>
+    <item> xlc </item>
+    <item> vc </item>
+
+    <item> run </item>
+    <item> compile </item>
+    <item> link </item>
+
+</list>
+
+<list name="features">
+
+    <item> variant </item>
+    <item> link </item>
+    <item> source </item>
+    <item> library </item>
+    <item> dependency </item>
+    <item> use </item>
+    <item> cflags </item>
+    <item> cxxflags </item>
+    <item> linkflags </item>
+    <item> warnings </item>
+    <item> build </item>
+    <item> include </item>
+    <item> define </item>
+    <item> optimization </item>
+    <item> threading </item>
+    <item> compileflags </item>
+    <item> conditional </item>
+    <item> name </item>
+    <item> search </item>
+    <item> file </item>
+    <item> location </item>
+    <item> inlining </item>
+    <item> profiling </item>
+    <item> toolset </item>
+
+</list>
+
+<!-- Contexts -->
+
+<contexts>
+
+<context name="main" attribute="normal" lineEndContext="#stay">
+
+    <DetectSpaces />
+    <IncludeRules context="string finder" />
+    <IncludeRules context="file finder" />
+    <IncludeRules context="variable finder" />
+    <IncludeRules context="number finder" />
+    <IncludeRules context="comment finder" />
+    <IncludeRules context="keyword finder" />
+    <IncludeRules context="features finder" />
+    <IncludeRules context="rules finder" />
+    <IncludeRules context="parameters finder" />
+    <IncludeRules context="region finder" />
+    <IncludeRules context="symbol finder" />
+
+</context>
+
+<!-- Strings -->
+
+<context name="string finder" attribute="symbol" >
+    <DetectChar char="&quot;" attribute="symbol" context="string"/>
+</context>
+
+<context name="string" attribute="string" >
+    <DetectChar char="&quot;" attribute="symbol" context="#pop"/>
+</context>
+
+<!-- Variables and function calls -->
+
+<context name="variable finder" attribute="symbol" >
+    <Detect2Chars char="$" char1="(" attribute="symbol" context="variable"/>
+    <DetectChar char="@" attribute="symbol" context="function call"/>
+</context>
+
+<context name="variable" attribute="variable" >
+    <DetectChar char=")" attribute="symbol" context="#pop"/>
+</context>
+
+<context name="function call" attribute="variable" >
+    <DetectChar char=" " attribute="symbol" context="#pop"/>
+</context>
+
+<!-- Comments -->
+
+<context name="comment finder" attribute="comment" >
+    <DetectChar char="#" attribute="comment" context="comment"/>
+</context>
+
+<context name="comment" attribute="comment" lineEndContext="#pop">
+</context>
+
+<!-- Keywords -->
+
+<context name="keyword finder" attribute="keyword" >
+    <keyword attribute="keyword" context="#stay" String="keywords" />
+</context>
+
+<!-- features -->
+
+<context name="features finder" attribute="keyword" >
+    <DetectChar char="&lt;" attribute="symbol" context="look for features"/>
+</context>
+
+<context name="look for features" attribute="features" >
+    <keyword attribute="features" context="close feature" String="features" />
+    <StringDetect attribute="features" context="close feature" String="install-dependencies" />
+    <StringDetect attribute="features" context="close feature" String="install-type" />
+    <StringDetect attribute="features" context="close feature" String="debug-symbols" />
+    <StringDetect attribute="features" context="close feature" String="runtime-debugging" />
+    <StringDetect attribute="features" context="close feature" String="testing.launcher" />
+    <StringDetect attribute="features" context="close feature" String="warnings-as-errors" />
+    <StringDetect attribute="features" context="close feature" String="dll-path" />
+    <StringDetect attribute="features" context="close feature" String="hardcode-dll-paths" />
+    <StringDetect attribute="features" context="close feature" String="xsl:param" />
+    <DetectIdentifier attribute="features" context="#pop" lookAhead="true" />
+</context>
+
+<context name="close feature" attribute="symbol" >
+    <DetectChar char="&gt;" attribute="symbol" context="#pop#pop" />
+</context>
+
+<!-- parameters -->
+
+<context name="parameters finder" attribute="keyword" >
+    <keyword attribute="parameter" context="#stay" String="parameters" />
+    <StringDetect attribute="features" context="close feature" String="default-build" />
+    <StringDetect attribute="features" context="close feature" String="usage-requirements" />
+</context>
+
+<!-- rules -->
+
+<context name="rules finder" attribute="keyword" >
+    <keyword attribute="rule" context="#stay" String="rules" />
+    <StringDetect attribute="features" context="#stay" String="unit-test" />
+    <StringDetect attribute="features" context="#stay" String="test-suite" />
+</context>
+
+
+<!-- regions -->
+
+<context name="region finder" attribute="structure" >
+    <DetectChar char="{" attribute="structure" context="#stay" beginRegion="{region}" />
+    <DetectChar char="}" attribute="structure" context="#stay" endRegion="{region}" />
+    <DetectChar char="[" attribute="structure" context="#stay" beginRegion="[region]" />
+    <DetectChar char="]" attribute="structure" context="#stay" endRegion="[region]" />
+</context>
+
+<!-- symbols -->
+
+<context name="symbol finder" attribute="symbol" >
+    <AnyChar attribute="symbol" context="#stay" String=":;(),/&lt;!=&gt;|"/>
+</context>
+
+<!-- file paths -->
+
+<context name="file finder" attribute="file" >
+    <RegExpr attribute="file" context="#stay" minimal="true" String="\b[\w/]+\.(qbk|hpp|cpp)\b" />
+</context>
+
+<!-- Detect number literals -->
+
+<context attribute="Float" name="number finder">
+
+    <Float attribute="Float" context="#stay">
+        <AnyChar String="fF" attribute="Float" context="#stay"/>
+    </Float>
+
+    <HlCOct attribute="Octal" context="#stay"/>
+
+    <HlCHex attribute="Hex" context="#stay"/>
+
+    <Int attribute="Decimal" context="#stay">
+
+        <StringDetect attribute="Decimal" context="#stay" String="ULL" insensitive="TRUE"/>
+        <StringDetect attribute="Decimal" context="#stay" String="LUL" insensitive="TRUE"/>
+        <StringDetect attribute="Decimal" context="#stay" String="LLU" insensitive="TRUE"/>
+        <StringDetect attribute="Decimal" context="#stay" String="UL" insensitive="TRUE"/>
+        <StringDetect attribute="Decimal" context="#stay" String="LU" insensitive="TRUE"/>
+        <StringDetect attribute="Decimal" context="#stay" String="LL" insensitive="TRUE"/>
+        <StringDetect attribute="Decimal" context="#stay" String="U" insensitive="TRUE"/>
+        <StringDetect attribute="Decimal" context="#stay" String="L" insensitive="TRUE"/>
+
+    </Int>
+
+</context>
+
+</contexts>
+
+<!--
+    This section defines the colors and format of each type of string parsed
+    Try to use defaults so the user can change it as he wished
+    -->
+
+<itemDatas>
+
+    <itemData name="normal" defStyleNum="dsNormal" />
+    <itemData name="string" defStyleNum="dsString" />
+    <itemData name="variable" defStyleNum="dsOthers" />
+    <itemData name="symbol" color="#5555FF" defStyleNum="dsNormal" />
+    <itemData name="structure" color="#5555FF" defStyleNum="dsNormal" />
+    <itemData name="keyword" defStyleNum="dsKeyword" />
+    <itemData name="compiler" defStyleNum="dsKeyword" />
+    <itemData name="rule" defStyleNum="dsKeyword" />
+    <itemData name="parameter" defStyleNum="dsKeyword" />
+    <itemData name="tools" defStyleNum="dsKeyword" />
+    <itemData name="features" defStyleNum="dsOthers" />
+    <itemData name="comment" defStyleNum="dsComment" />
+    <itemData name="Decimal" defStyleNum="dsDecVal" />
+    <itemData name="Octal" defStyleNum="dsBaseN" />
+    <itemData name="Hex" defStyleNum="dsBaseN" />
+    <itemData name="Float" defStyleNum="dsFloat" />
+    <itemData name="file" defStyleNum="dsOthers" />
+
+</itemDatas>
+
+</highlighting>
+
+<!-- Last Part, Give acces to some tools, for example comment/uncomment in edit menu -->
+
+<general>
+
+    <comments>
+
+        <comment name="singleLine" start="#" />
+
+    </comments>
+
+    <keywords casesensitive="1" />
+
+</general>
+
+</language>
+
+<!--
+
+Aknowelegments
+=================================================
+
+
+
+Version history
+=================================================
+
+[ 0.1.0 ] Initial beta.
+
+Known bugs
+=================================================
+
+
+-->
