@@ -578,6 +578,10 @@ inline bool shared_memory::priv_create(const char *name, size_t size,
    }
 
    size += segment_info_size;
+   int flags = MAP_SHARED;
+   if(addr){
+      flags |= MAP_FIXED;
+   }
 
    m_shmHnd = shm_open( name,    // memory name
                         oflag,   // read/write access
@@ -600,7 +604,7 @@ inline bool shared_memory::priv_create(const char *name, size_t size,
 
       //Map the segment_info_t structure to obtain the real size of the segment
       mp_info = reinterpret_cast<segment_info_t*> (
-                mmap((void*)addr, segment_info_size, prot, MAP_SHARED, m_shmHnd, 0)
+                mmap((void*)addr, segment_info_size, prot, flags, m_shmHnd, 0)
                 );
       if(mp_info == MAP_FAILED){
          this->priv_close_handles();
@@ -627,7 +631,7 @@ inline bool shared_memory::priv_create(const char *name, size_t size,
    m_name = name;
  
    mp_info = reinterpret_cast<segment_info_t*> (
-               mmap((void*)addr, size, prot, MAP_SHARED, m_shmHnd, 0)
+               mmap((void*)addr, size, prot, flags, m_shmHnd, 0)
              );
    if(mp_info == MAP_FAILED){
       this->priv_close_handles();
@@ -672,6 +676,11 @@ inline bool shared_memory::priv_open(const char *name, const void *addr, Func fu
       return false;
    }
 
+   int flags = MAP_SHARED;
+   if(addr){
+      flags |= MAP_FIXED;
+   }
+
    m_shmHnd = shm_open( name,    // memory name
                         oflag,   // read/write access
                         S_IRWXO | S_IRWXG | S_IRWXU);   // permissions
@@ -683,7 +692,7 @@ inline bool shared_memory::priv_open(const char *name, const void *addr, Func fu
    m_name = name;
 
    mp_info = reinterpret_cast<segment_info_t*> (
-               mmap((void*)addr, segment_info_size, prot, MAP_SHARED, m_shmHnd, 0)
+               mmap((void*)addr, segment_info_size, prot, flags, m_shmHnd, 0)
              );
 
    if(mp_info == MAP_FAILED){
@@ -698,7 +707,7 @@ inline bool shared_memory::priv_open(const char *name, const void *addr, Func fu
    munmap(mp_info, segment_info_size);
 
    mp_info = reinterpret_cast<segment_info_t*> (
-               mmap((void*)addr, size, prot, MAP_SHARED, m_shmHnd, 0)
+               mmap((void*)addr, size, prot, flags, m_shmHnd, 0)
              );
 
    if(mp_info == MAP_FAILED){
