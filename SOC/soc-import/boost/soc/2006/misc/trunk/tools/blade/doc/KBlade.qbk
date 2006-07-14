@@ -1,0 +1,116 @@
+[/ QuickBook Document version 1.3 ]
+
+[/
+Boost.blade
+Copyright 2006 Matias Capeletto
+Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or copy at
+http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[/ Components home pages ]
+
+[def __KUBUNTU_HOME_PAGE__ http://www.kubuntu.org/]
+[def __KDE_HOME_PAGE__ http://www.kde.org/]
+[def __KONQUEROR_HOME_PAGE__ http://www.konqueror.org/]
+[def __KDEVELOP_HOME_PAGE__ http://www.kdevelop.org/]
+[def __KATE_HOME_PAGE__ http://kate.kde.org/]
+[def __BOOST_HS_HOME_PAGE__ http://none]
+[def __FIREFOX_HOME_PAGE__ http://www.mozilla.com/firefox/]
+
+[/ Small logos ]
+
+[def __KUBUNTU_LOGO_SMALL__ [@http://www.kubuntu.org/ [$http://matias.capeletto.googlepages.com/kubuntu.logo.small.png]]]
+[def __KDE_LOGO_SMALL__ [@http://www.kde.org/ [$http://matias.capeletto.googlepages.com/kde.logo.small.png]]]
+[def __KONQUEROR_LOGO_SMALL__ [@http://www.konqueror.org/ [$http://matias.capeletto.googlepages.com/konqueror.logo.small.png]]]
+[def __KDEVELOP_LOGO_SMALL__ [@http://www.kdevelop.org/ [$http://matias.capeletto.googlepages.com/kdevelop.logo.small.png]]]
+[def __KATE_LOGO_SMALL__ [@http://kate.kde.org/ [$http://matias.capeletto.googlepages.com/kate.logo.small.png]]]
+[def __BOOST_HS_LOGO_SMALL__ [@__BOOST_HS_HOME_PAGE__ [$http://matias.capeletto.googlepages.com/boost.hs.logo.small.png]]]
+[def __FIREFOX_LOGO_SMALL__ [@http://www.mozilla.com/firefox/ [$http://matias.capeletto.googlepages.com/firefox.logo.small.png]]]
+
+
+[/ Components names ]
+
+[def __KUBUNTU__ [@http://www.kubuntu.org/ [*Kubuntu]]]
+[def __KDE__ [@http://www.kde.org/ [*KDE]]]
+[def __KONQUEROR__ [@http://www.konqueror.org/ [*Konqueror]]]
+[def __KDEVELOP__ [@http://www.kdevelop.org/ [*KDevelop]]]
+[def __KATE__ [@http://kate.kde.org/ [*Kate]]]
+[def __BOOST_HS__ [@__BOOST_HS_HOME_PAGE__ [*Boost::hs]]]
+[def __FIREFOX__ [@http://www.mozilla.com/firefox/ [*Firefox]]]
+
+
+[/ Component descriptions ]
+
+[def __KUBUNTU_DESCRIPTION__ Kubuntu is a user friendly operating system
+based on KDE, the K Desktop Environment. With a predictable 6 month
+release cycle and part of the Ubuntu project, Kubuntu is the GNU/Linux
+distribution for everyone.
+]
+
+[def __KDE_DESCRIPTION__ KDE is a powerful Free Software graphical desktop
+environment for Linux and Unix workstations. It combines ease of use,
+contemporary functionality, and outstanding graphical design with the
+technological superiority of the Unix operating system.
+]
+
+[def __KONQUEROR_DESCRIPTION__ Konqueror is the file manager for the K Desktop
+Environment. It supports basic file management on local UNIX filesystems, from
+simple cut/copy and paste operations to advanced remote and local network file
+browsing.
+]
+
+[def __FIREFOX_DESCRIPTION__ Mozilla Firefox is a free, open source,
+cross-platform, graphical web browser developed by the Mozilla Corporation and
+hundreds of volunteers.
+]
+
+[def __KDEVELOP_DESCRIPTION__ KDevelop is an integrated development environment.
+It have full project management, a syntax-highlighting editor, an internal debugger,
+a full-featured classbrowser with classtools, CVS support, an integrated
+HTML-based helpsystem offering manuals and class-references, and extensive
+search mechanisms to browse sources and documentation.
+]
+
+[def __KATE_DESCRIPTION__ Kate is a multi document editor, based on a rewritten
+version of the kwrite editing widget of KDE, offering all the features of that
+plus a bunch of its own. It offers a syntax highlighting engine, extensible via
+XML files, and code folding capabilities.
+]
+
+[def __BOOST_HS_DESCRIPTION__ Missing]
+
+
+[def __KUBUNTU_LICENSE__ ['GPL License]]
+[def __KDE_LICENSE__ ['GPL License]]
+[def __KONQUEROR_LICENSE__ ['GPL License]]
+[def __FIREFOX_LICENSE__ ['BSD License]]
+[def __KDEVELOP_LICENSE__ ['GPL License]]
+[def __KATE_LICENSE__ ['GPL License]]
+[def __BOOST_HS_LICENSE__ ['Boost Software License]]
+
+[section KBlade ['- The Open Source Katana]]
+
+__KBLADE_LOGO_SMALL__
+
+[*K]DE [*B]oost [*L]ibraries [*A]dvanced [*D]evelopment [*E]nvironment \n
+['- The Open Source Katana] \n
+
+KBlade is a full open source integrated development environment for KDE. It is based on Blade that is composed of the
+best tools for software building.
+
+__PACKAGE__ [@www.kblade.deb.is.not.finished.como Download KBlade.deb for kubuntu]
+
+[table Components
+[[]                              [Name]                                                ]
+[[__BOOST_BLADE_LOGO_SMALL__]    [__BOOST_BLADE__    \n__BOOST_BLADE_DESCRIPTION__    \n__BOOST_BLADE_LICENSE__]    ]
+[[__KUBUNTU_LOGO_SMALL__]        [__KUBUNTU__        \n__KUBUNTU_DESCRIPTION__        \n__KUBUNTU_LICENSE__]        ]
+[[__KDE_LOGO_SMALL__]            [__KDE__            \n__KDE_DESCRIPTION__            \n__KDE_LICENSE__]            ]
+[[__KONQUEROR_LOGO_SMALL__]      [__KONQUEROR__      \n__KONQUEROR_DESCRIPTION__      \n__KONQUEROR_LICENSE__]      ]
+[[__FIREFOX_LOGO_SMALL__]        [__FIREFOX__        \n__FIREFOX_DESCRIPTION__        \n__FIREFOX_LICENSE__]        ]
+[[__KDEVELOP_LOGO_SMALL__]       [__KDEVELOP__       \n__KDEVELOP_DESCRIPTION__       \n__KDEVELOP_LICENSE__]       ]
+[[__KATE_LOGO_SMALL__]           [__KATE__           \n__KATE_DESCRIPTION__           \n__KATE_LICENSE__]           ]
+[[__BOOST_HS_LOGO_SMALL__]       [__BOOST_HS__       \n__BOOST_HS_DESCRIPTION__       \n__BOOST_HS_LICENSE__]       ]
+]
+
+[endsect]

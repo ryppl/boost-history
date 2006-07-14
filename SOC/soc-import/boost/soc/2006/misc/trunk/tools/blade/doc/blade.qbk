@@ -1,0 +1,363 @@
+[library Boost.Blade - The Open Source Sword
+    [quickbook 1.3]
+    [authors [Capeletto, Matias]]
+    [copyright 2006 Matias Capeletto]
+    [category tool]
+    [id blade]
+    [dirname blade]
+    [purpose
+        Boost.Blade [*B]oost [*L]ibraries [*A]dvanced [*D]evelopment [*E]nvironment
+    ]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+]
+
+[/ QuickBook Document version 1.3 ]
+
+[/
+Boost.blade
+Copyright 2006 Matias Capeletto
+Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or copy at
+http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[/ Components home pages ]
+
+[def __BOOST_LIBRARIES_HOME_PAGE__ http://www.boost.org/]
+[def __GCC_HOME_PAGE__ http://gcc.gnu.org/]
+[def __BOOST_BUILD_HOME_PAGE__ http://engineering.meta-comm.com/resources/cs-win32_metacomm/doc/html/bbv2.html]
+[def __BOOST_WAVE_HOME_PAGE__ http://www.boost.org/libs/wave/index.html]
+[def __BOOST_TEST_HOME_PAGE__ http://www.boost.org/libs/test/doc/index.html]
+[def __DOXYGEN_HOME_PAGE__ http://www.stack.nl/~dimitri/doxygen/]
+[def __BOOST_QUICKBOOK_HOME_PAGE__ http://engineering.meta-comm.com/resources/cs-win32_metacomm/doc/html/quickbook.html]
+[def __BOOST_MPL_HOME_PAGE__ http://www.boost.org/libs/mpl/doc/index.html]
+[def __GDB_HOME_PAGE__ http://www.gnu.org/software/gdb/]
+[def __DDD_HOME_PAGE__ http://www.gnu.org/software/ddd/]
+[def __PYTHON_HOME_PAGE__ http://www.python.org/]
+[def __BOOST_PYTHON_HOME_PAGE__ http://www.boost.org/libs/python/doc/index.html]
+[def __SUBVERSION_HOME_PAGE__ http://subversion.tigris.org/]
+[def __TRAC_HOME_PAGE__ http://www.edgewall.com/trac/]
+
+[/ Big logos ]
+
+[def __BOOST_BLADE_LOGO__ [$http://matias.capeletto.googlepages.com/boost.blade.logo.png]]
+
+[/ Small logos ]
+
+[def __BOOST_BLADE_LOGO_SMALL__ [$http://matias.capeletto.googlepages.com/boost.blade.logo.small.png]]
+[def __BOOST_LIBRARIES_LOGO_SMALL__ [@http://www.boost.org/ [$http://matias.capeletto.googlepages.com/boostlibraries.logo.small.png]]]
+
+[def __GCC_LOGO_SMALL__ [@http://gcc.gnu.org/ [$http://matias.capeletto.googlepages.com/gcc.logo.small.png]]]
+[def __BOOST_BUILD_LOGO_SMALL__ [@http://engineering.meta-comm.com/resources/cs-win32_metacomm/doc/html/bbv2.html [$http://matias.capeletto.googlepages.com/boost.build.logo.small.png]]]
+[def __BOOST_WAVE_LOGO_SMALL__ [@http://www.boost.org/libs/wave/index.html [$http://matias.capeletto.googlepages.com/boost.wave.logo.small.png]]]
+[def __BOOST_TEST_LOGO_SMALL__ [@http://www.boost.org/libs/test/doc/index.html [$http://matias.capeletto.googlepages.com/boost.test.logo.small.png]]]
+[def __DOXYGEN_LOGO_SMALL__ [@http://www.stack.nl/~dimitri/doxygen/ [$http://matias.capeletto.googlepages.com/doxygen.logo.small.png]]]
+[def __BOOST_QUICKBOOK_LOGO_SMALL__ [@http://engineering.meta-comm.com/resources/cs-win32_metacomm/doc/html/quickbook.html [$http://matias.capeletto.googlepages.com/boost.Quickbook.logo.small.png]]]
+
+[def __GDB_LOGO_SMALL__ [@http://www.gnu.org/software/gdb/ [$http://matias.capeletto.googlepages.com/gdb.logo.small.png]]]
+[def __DDD_LOGO_SMALL__ [@http://www.gnu.org/software/ddd/ [$http://matias.capeletto.googlepages.com/ddd.logo.small.png]]]
+
+[def __BOOST_MPL_LOGO_SMALL__ [@http://www.boost.org/libs/mpl/doc/index.html [$http://matias.capeletto.googlepages.com/boost.mpl.logo.small.png]]]
+
+[def __PYTHON_LOGO_SMALL__ [@http://www.python.org/ [$http://matias.capeletto.googlepages.com/python.logo.small.png]]]
+[def __BOOST_PYTHON_LOGO_SMALL__ [@http://www.boost.org/libs/python/doc/index.html [$http://matias.capeletto.googlepages.com/boost.python.logo.small.png]]]
+
+[def __SUBVERSION_LOGO_SMALL__ [@http://subversion.tigris.org/ [$http://matias.capeletto.googlepages.com/subversion.logo.small.png]]]
+[def __TRAC_LOGO_SMALL__ [@http://www.edgewall.com/trac/ [$http://matias.capeletto.googlepages.com/trac.logo.small.png]]]
+
+[def __KBLADE_LOGO_SMALL__ [link boost_blade___the_open_source_sword.integrated_blade.kblade_____the_open_source_katana_ [$http://matias.capeletto.googlepages.com/KBlade.logo.small.png]]]
+[def __JBLADE_LOGO_SMALL__ [link boost_blade___the_open_source_sword.integrated_blade.jblade_____the_open_source_javeline_ [$http://matias.capeletto.googlepages.com/jblade.logo.small.png]]]
+[def __MACBLADE_LOGO_SMALL__ [link boost_blade___the_open_source_sword.integrated_blade.macblade_____the_open_source_mace_ [$http://matias.capeletto.googlepages.com/macblade.logo.small.png]]]
+[def __BLADEMACS_LOGO_SMALL__ [link boost_blade___the_open_source_sword.integrated_blade.blademacs_____the_open_source_bow_ [$http://matias.capeletto.googlepages.com/blademacs.logo.small.png]]]
+[def __VISUAL_BLADE_LOGO_SMALL__ [link boost_blade___the_open_source_sword.integrated_blade.visual_blade_____the_open_source_viking_battle_axe_ [$http://matias.capeletto.googlepages.com/visualblade.logo.small.png]]]
+[def __WINBLADE_LOGO_SMALL__ [link boost_blade___the_open_source_sword.integrated_blade.winblade_____the_open_source_whisp_ [$http://matias.capeletto.googlepages.com/winblade.logo.small.png]]]
+
+
+[/ Icons ]
+
+[def __NOTE__ [$images/note.png]]
+[def __ALERT__ [$images/caution.png]]
+[def __DETAIL__ [$images/note.png]]
+[def __TIP__ [$images/tip.png]]
+[def __QUESTION_MARK__ [$images/question.png]]
+[def __PACKAGE__ [$images/package.png]]
+[def __HELP_WANTED__ [$images/helpwanted.png]]
+
+[/ Components names ]
+
+[def __BOOST_BLADE__ [@http://www.boost.org/ [*Blade]]]
+[def __BOOST_LIBRARIES__ [@http://www.boost.org/ [*Boost Libraries]]]
+[def __GCC__ [@http://gcc.gnu.org/ [*GCC]]]
+[def __BOOST_BUILD__ [@http://engineering.meta-comm.com/resources/cs-win32_metacomm/doc/html/bbv2.html [*Boost.Build]]]
+[def __BOOST_WAVE__ [@http://www.boost.org/libs/wave/index.html [*Boost.Wave]]]
+[def __BOOST_TEST__ [@http://www.boost.org/libs/test/doc/index.html [*Boost.Test]]]
+[def __DOXYGEN__ [@http://www.stack.nl/~dimitri/doxygen/ [*Doxygen]]]
+[def __BOOST_QUICKBOOK__ [@http://engineering.meta-comm.com/resources/cs-win32_metacomm/doc/html/quickbook.html [*Boost.Quickbook]]]
+[def __BOOST_MPL__ [@http://www.boost.org/libs/mpl/doc/index.html [*Boost.MPL]]]
+[def __GDB__ [@http://www.gnu.org/software/gdb/ [*GDB]]]
+[def __DDD__ [@http://www.gnu.org/software/ddd/ [*DDD]]]
+[def __PYTHON__ [@http://www.python.org/ [*Python]]]
+[def __BOOST_PYTHON__ [@http://www.boost.org/libs/python/doc/index.html [*Boost.Python]]]
+[def __SUBVERSION__ [@http://subversion.tigris.org/ [*Subversion]]]
+[def __TRAC__ [@http://www.edgewall.com/trac/ [*Trac]]]
+
+
+[def __KBLADE__ [link boost_blade___the_open_source_sword.integrated_blade.kblade_____the_open_source_katana_ [*KBlade]]]
+[def __JBLADE__ [link boost_blade___the_open_source_sword.integrated_blade.jblade_____the_open_source_javeline_ [*JBlade]]]
+[def __MACBLADE__ [link boost_blade___the_open_source_sword.integrated_blade.macblade_____the_open_source_mace_ [*MacBlade]]]
+[def __BLADEMACS__ [link boost_blade___the_open_source_sword.integrated_blade.blademacs_____the_open_source_bow_ [*BLADEmacs]]]
+[def __VISUAL_BLADE__ [link boost_blade___the_open_source_sword.integrated_blade.visual_blade_____the_open_source_viking_battle_axe_ [*Visual Blade]]]
+[def __WINBLADE__ [link boost_blade___the_open_source_sword.integrated_blade.winblade_____the_open_source_whisp_ [*Winblade]]]
+
+
+[/ Component descriptions ]
+
+[def __BOOST_BLADE_DESCRIPTION__ [*B]oost [*L]ibraries [*A]dvanced [*D]evelopment [*E]nvironment \n
+['- The Open Source Sword]\n
+Blade is a full open source development environment composed of the best tools for software
+building.
+]
+
+[def __BOOST_LIBRARIES_DESCRIPTION__ Boost provides free peer-reviewed
+portable C++ source libraries. They emphasize libraries that work well with
+the C++ Standard Library. Boost libraries are intended to be widely useful,
+and usable across a broad spectrum of applications. They aim to establish
+'existing practice' and provide reference implementations.
+]
+
+[def __GCC_DESCRIPTION__ The GNU Compiler Collection includes front ends for C,
+C++, Objective-C, Fortran, Java, and Ada, as well as libraries for these
+languages (libstdc++, libgcj,...).
+]
+
+[def __BOOST_BUILD_DESCRIPTION__ Boost.Build is a system for large project
+software construction, which is simple to use and powerfull. Boost.Build V2 is an
+onging project to rewrite Boost.Build, improving design and making it more extensible.
+The distinguishing features are: simple and high level target description language,
+variant builds, portability, multi-project builds and extensibility.
+]
+
+[def __BOOST_WAVE_DESCRIPTION__ The Wave C++ preprocessor library uses the Spirit
+parser construction library to implement a C++ lexer with ISO/ANSI Standards
+conformant preprocessing capabilities. So the main goals for the Wave project are:
+full conformance with the C++ standard, maximal usage of STL and/or Boost libraries,
+straightforward extendability for the implementation of additional features and
+building a flexible library for different C++ lexing and preprocessing needs.
+]
+
+[def __BOOST_TEST_DESCRIPTION__ The Boost Test Library provides a matched set of
+components for writing test programs, organizing tests in to simple test cases and
+test suites, and controlling their runtime execution.
+]
+
+[def __DOXYGEN_DESCRIPTION__ Doxygen is a documentation system for C++, C, Java,
+Objective-C, Python, IDL (Corba and Microsoft flavors) and to some extent PHP, C#,
+and D. It is developed under Linux and Mac OS X, but is set-up to be highly portable.
+As a result, it runs on most other Unix flavors as well. Furthermore, executables
+for Windows are available.
+]
+
+[def __BOOST_QUICKBOOK_DESCRIPTION__ QuickBook is a WikiWiki style documentation tool
+geared towards C++ documentation using simple rules and markup for simple formatting
+tasks. QuickBook extends the WikiWiki concept. Like the WikiWiki, QuickBook documents
+are simple text files. A single QuickBook document can generate a fully linked set of
+nice HTML and PostScript/PDF documents complete with images and syntax-colorized
+source code.
+]
+
+[def __BOOST_MPL_DESCRIPTION__ The Boost.MPL library is a general-purpose, high-level
+C++ template metaprogramming framework of compile-time algorithms, sequences and
+metafunctions. It provides a conceptual foundation and an extensive set of powerful
+and coherent tools that make doing explict metaprogramming in C++ as easy and enjoyable
+as possible within the current language.
+]
+
+[def __GDB_DESCRIPTION__ The GNU Debugger, usually called just GDB, is the standard
+debugger for the GNU software system. It is a portable debugger that runs on many
+Unix-like systems and works for many programming languages, including C, C++, and
+FORTRAN.
+]
+
+[def __DDD_DESCRIPTION__ GNU DDD is a graphical front-end for command-line debuggers
+such as GDB, DBX, WDB, Ladebug, JDB, XDB, the Perl debugger, the bash debugger, or
+the Python debugger. Besides usual front-end features such as viewing source texts,
+DDD has become famous through its interactive graphical data display, where data
+structures are displayed as graphs.
+]
+
+[def __PYTHON_DESCRIPTION__ Python is a dynamic object-oriented programming language
+that can be used for many kinds of software development. It offers strong support
+for integration with other languages and tools, comes with extensive standard libraries,
+and can be learned in a few days.
+]
+
+[def __BOOST_PYTHON_DESCRIPTION__ Boost.Python version 2 is a C++ library which
+enables seamless interoperability between C++ and the Python programming language.
+The new version has been rewritten from the ground up, with a more convenient and
+flexible interface, and many new capabilities.
+]
+
+[def __SUBVERSION_DESCRIPTION__ Subversion is an open source application used for
+revision control. It is sometimes known as svn in reference to the name of its command
+line interface. Subversion is designed specifically to be a modern replacement for CVS
+and shares a number of the same key developers.
+]
+
+[def __TRAC_DESCRIPTION__ Trac is an enhanced wiki and issue tracking system for software
+development projects. Trac uses a minimalistic approach to web-based software project
+management. Their mission is to help developers write great software while staying out of
+the way. Trac should impose as little as possible on a team’s established development process
+and policies.
+]
+
+[def __KBLADE_DESCRIPTION__ The open source Katana]
+[def __JBLADE_DESCRIPTION__ The open source Javelin]
+[def __MACBLADE_DESCRIPTION__ The open source Mace]
+[def __BLADEMACS_DESCRIPTION__ The open source Bow]
+[def __VISUAL_BLADE_DESCRIPTION__ The open source Viking Blate-Axe]
+[def __WINBLADE_DESCRIPTION__ The open source Whisp]
+
+[/ License ]
+
+[def __BOOST_BLADE_LICENSE__ ['Boost Software License]]
+[def __BOOST_LIBRARIES_LICENSE__ ['Boost Software License]]
+[def __GCC_LICENSE__ ['GPL License]]
+[def __BOOST_BUILD_LICENSE__ ['Boost Software License]]
+[def __BOOST_WAVE_LICENSE__ ['Boost Software License]]
+[def __BOOST_TEST_LICENSE__ ['Boost Software License]]
+[def __DOXYGEN_LICENSE__ ['GPL License]]
+[def __BOOST_QUICKBOOK_LICENSE__ ['Boost Software License]]
+[def __BOOST_MPL_LICENSE__ ['Boost Software License]]
+[def __GDB_LICENSE__ ['GPL License]]
+[def __DDD_LICENSE__ ['GPL License]]
+[def __PYTHON_LICENSE__ ['Python License]]
+[def __BOOST_PYTHON_LICENSE__ ['Boost Software License]]
+[def __SUBVERSION_LICENSE__ ['BSD License]]
+[def __TRAC_LICENSE__ ['GPL License]]
+
+[def __KBLADE_LICENSE__ ['Boost Software License]]
+[def __JBLADE_LICENSE__ ['Boost Software License]]
+[def __MACBLADE_LICENSE__ ['Boost Software License]]
+[def __BLADEMACS_LICENSE__ ['Boost Software License]]
+[def __VISUAL_BLADE_LICENSE__ ['Boost Software License]]
+[def __WINBLADE_LICENSE__ ['Boost Software License]]
+
+[section Blade ['- The Open Source Sword]]
+
+[/ Components Rows ]
+
+[*B]oost [*L]ibraries [*A]dvanced [*D]evelopment [*E]nvironment \n
+['- The Open Source Sword] \n
+
+Blade is a full open source development environment composed of the best tools for software
+building.
+
+__BOOST_BLADE_LOGO__
+
+[table Components
+[[]                              [Name]                                                ]
+[[__BOOST_LIBRARIES_LOGO_SMALL__][__BOOST_LIBRARIES__\n__BOOST_LIBRARIES_DESCRIPTION__\n__BOOST_LIBRARIES_LICENSE__]]
+[[__BOOST_BUILD_LOGO_SMALL__]    [__BOOST_BUILD__    \n__BOOST_BUILD_DESCRIPTION__    \n__BOOST_BUILD_LICENSE__]    ]
+[[__GCC_LOGO_SMALL__]            [__GCC__            \n__GCC_DESCRIPTION__            \n__GCC_LICENSE__]            ]
+[[__BOOST_WAVE_LOGO_SMALL__]     [__BOOST_WAVE__     \n__BOOST_WAVE_DESCRIPTION__     \n__BOOST_WAVE_LICENSE__]     ]
+[[__BOOST_TEST_LOGO_SMALL__]     [__BOOST_TEST__     \n__BOOST_TEST_DESCRIPTION__     \n__BOOST_TEST_LICENSE__]     ]
+[[__GDB_LOGO_SMALL__]            [__GDB__            \n__GDB_DESCRIPTION__            \n__GDB_LICENSE__]            ]
+[[__DDD_LOGO_SMALL__]            [__DDD__            \n__DDD_DESCRIPTION__            \n__DDD_LICENSE__]            ]
+[[__DOXYGEN_LOGO_SMALL__]        [__DOXYGEN__        \n__DOXYGEN_DESCRIPTION__        \n__DOXYGEN_LICENSE__]        ]
+[[__BOOST_QUICKBOOK_LOGO_SMALL__][__BOOST_QUICKBOOK__\n__BOOST_QUICKBOOK_DESCRIPTION__\n__BOOST_QUICKBOOK_LICENSE__]]
+[[__BOOST_MPL_LOGO_SMALL__]      [__BOOST_MPL__      \n__BOOST_MPL_DESCRIPTION__      \n__BOOST_MPL_LICENSE__]      ]
+[[__PYTHON_LOGO_SMALL__]         [__PYTHON__         \n__PYTHON_DESCRIPTION__         \n__PYTHON_LICENSE__]         ]
+[[__BOOST_PYTHON_LOGO_SMALL__]   [__BOOST_PYTHON__   \n__BOOST_PYTHON_DESCRIPTION__   \n__BOOST_PYTHON_LICENSE__]   ]
+[[__SUBVERSION_LOGO_SMALL__]     [__SUBVERSION__     \n__SUBVERSION_DESCRIPTION__     \n__SUBVERSION_LICENSE__]     ]
+[[__TRAC_LOGO_SMALL__]           [__TRAC__           \n__TRAC_DESCRIPTION__           \n__TRAC_LICENSE__]           ]
+]
+
+[endsect]
+
+[section Lincense Issues]
+
+Code produced using Blade Tools are derivative works derived from the input used
+in their production, so they are not affected by their licenses.\n
+Code produced using used Blade Code Base is subject to the Boost Software License:
+\n
+[blurb [*Boost Software License - Version 1.0 - August 17th, 2003]\n
+Permission is hereby granted, free of charge, to any person or organization
+obtaining a copy of the software and accompanying documentation covered by
+this license (the "Software") to use, reproduce, display, distribute,
+execute, and transmit the Software, and to prepare derivative works of the
+Software, and to permit third-parties to whom the Software is furnished to
+do so, all subject to the following:
+\n
+The copyright notices in the Software and this entire statement, including
+the above license grant, this restriction and the following disclaimer,
+must be included in all copies of the Software, in whole or in part, and
+all derivative works of the Software, unless such copies or derivative
+works are solely in the form of machine-executable object code generated by
+a source language processor.
+\n
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT
+SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
+FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+]
+\n
+[endsect]
+
+[section Integrated Blade]
+
+[section Table of contents]
+
+__BOOST_BLADE_LOGO__
+
+[table Components
+[[]                              [Name]                                                ]
+[[__KBLADE_LOGO_SMALL__]         [__KBLADE__           \n__KBLADE_DESCRIPTION__           \n__KBLADE_LICENSE__]      ]
+[[__JBLADE_LOGO_SMALL__]         [__JBLADE__           \n__JBLADE_DESCRIPTION__           \n__JBLADE_LICENSE__]      ]
+[[__MACBLADE_LOGO_SMALL__]       [__MACBLADE__         \n__MACBLADE_DESCRIPTION__         \n__MACBLADE_LICENSE__]    ]
+[[__BLADEMACS_LOGO_SMALL__]      [__BLADEMACS__        \n__BLADEMACS_DESCRIPTION__        \n__BLADEMACS_LICENSE__]   ]
+[[__VISUAL_BLADE_LOGO_SMALL__]   [__VISUAL_BLADE__     \n__VISUAL_BLADE_DESCRIPTION__     \n__VISUAL_BLADE_LICENSE__]]
+[[__WINBLADE_LOGO_SMALL__]       [__WINBLADE__         \n__WINBLADE_DESCRIPTION__         \n__WINBLADE_LICENSE__]    ]
+]
+
+[endsect]
+
+[include KBlade.qbk]
+[include JBlade.qbk]
+[include MacBlade.qbk]
+[include blademacs.qbk]
+[include VisualBlade.qbk]
+[include Winblade.qbk]
+
+[endsect]
+
+[section Acknowledgements]
+
+Just before the Google SoC 2006 starts I spent almost a month learning the
+subtle details needed to a successful install and an efficient usage of tools
+like build, svn, gdb, doxygen and Quickbook. If this document had exist by
+that time I surely would install and run everything easier and what is more,
+I would grasp the relations between this awesome tools.
+
+I started to write this document while I was developing Boost.Bimap. At
+first __BOOST_BLADE__ was __KBLADE__ because that was the platform I was using.
+In several chats, Lally Singh (that was developing the Module C++ project
+for SoC too) convince me that the separation of a portable open source core
+and the different IDEs was the correct direction. Thanks Lally for being
+my friend during the SoC.
+
+A lot of thanks to my Mentor during the SoC, Joaquin Lopez Muñoz that
+give me the freedom to develop Blade and boost::hs parallel to Boost.Bimap
+and Boost.MRU.
+
+Thanks to Google to put up such an amazing project as SoC is.
+
+Finally, thanks to my family that have been there for me always.
+
+[endsect]
