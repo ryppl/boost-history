@@ -1,0 +1,179 @@
+// Boost.bimap
+//
+// (C) Copyright 2006 Matias Capeletto
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
+// See http://www.boost.org/libs/{{ library name }}  for the library home page.
+
+
+#ifndef BOOST_BIMAP_TEST_TEST_RELATION_HPP
+#define BOOST_BIMAP_TEST_TEST_RELATION_HPP
+
+// Boost.Test
+#include <boost/test/minimal.hpp>
+
+// Boost.MPL
+#include <boost/mpl/assert.hpp>
+#include <boost/type_traits/is_same.hpp>
+
+// Boost.Bimap
+#include <boost/bimap/detail/test/check_metadata.hpp>
+#include <boost/bimap/tagged/tagged.hpp>
+
+// Boost.Bimap.Relation
+#include <boost/bimap/relation/relation.hpp>
+#include <boost/bimap/relation/member_at.hpp>
+#include <boost/bimap/relation/support/get.hpp>
+#include <boost/bimap/relation/support/pair_by.hpp>
+#include <boost/bimap/relation/support/pair_type_by.hpp>
+#include <boost/bimap/relation/support/value_type_of.hpp>
+#include <boost/bimap/relation/support/member_with_tag.hpp>
+#include <boost/bimap/relation/support/is_tag_of_member_at.hpp>
+
+/*
+namespace static_test {
+
+using namespace boost::bimap::relation::member_at;
+using namespace boost::bimap::relation;
+using namespace boost::bimap::tagged;
+
+template< class Relation, class LeftData, class RightData >
+struct untagged_test
+{
+    BOOST_BIMAP_CHECK_METADATA(Relation,left_value_type ,LeftData );
+    BOOST_BIMAP_CHECK_METADATA(Relation,right_value_type,RightData);
+
+    BOOST_BIMAP_CHECK_METADATA(Relation,left_tag ,left );
+    BOOST_BIMAP_CHECK_METADATA(Relation,right_tag,right);
+
+    typedef tagged<LeftData ,left > desired_tagged_left_type;
+    BOOST_BIMAP_CHECK_METADATA(Relation,tagged_left_type ,desired_tagged_left_type );
+
+    typedef tagged<RightData,right> desired_tagged_right_type;
+    BOOST_BIMAP_CHECK_METADATA(Relation,tagged_right_type,desired_tagged_right_type);
+};
+
+template< class Relation, class LeftData, class RightData, class LeftTag, class RightTag >
+struct tagged_test
+{
+    BOOST_BIMAP_CHECK_METADATA(Relation,left_value_type ,left_data);
+    BOOST_BIMAP_CHECK_METADATA(Relation,right_value_type,right_data);
+
+    BOOST_BIMAP_CHECK_METADATA(Relation,left_tag ,left_tag  );
+    BOOST_BIMAP_CHECK_METADATA(Relation,right_tag,right_tag );
+
+    typedef tagged<left_data ,left_tag > desired_tagged_left_type;
+    BOOST_BIMAP_CHECK_METADATA(Relation,tagged_left_type,desired_tagged_left_type);
+
+    typedef tagged<right_data,right_tag> desired_tagged_right_type;
+    BOOST_BIMAP_CHECK_METADATA(Relation,tagged_right_type,desired_tagged_right_type);
+};
+
+} // namespace static_test
+*/
+
+template< class Relation >
+void test_relation_with_default_tags(Relation & rel,
+    const typename Relation::left_value_type  & lv,
+    const typename Relation::right_value_type & rv)
+{
+
+    using namespace boost::bimap::relation::support;
+    using namespace boost::bimap::relation;
+    using namespace boost::bimap::tagged;
+
+    // It must work with normal tags
+
+    BOOST_CHECK( pair_by<member_at::left >(rel).first  == lv );
+    BOOST_CHECK( pair_by<member_at::left >(rel).second == rv );
+
+    BOOST_CHECK( pair_by<member_at::right>(rel).first  == rv );
+    BOOST_CHECK( pair_by<member_at::right>(rel).second == lv );
+
+    BOOST_CHECK( get<member_at::left >(rel) == rel.left  );
+    BOOST_CHECK( get<member_at::right>(rel) == rel.right );
+
+    BOOST_CHECK( get<member_at::left >(pair_by<member_at::left >(rel)) == rel.left  );
+    BOOST_CHECK( get<member_at::right>(pair_by<member_at::left >(rel)) == rel.right );
+
+    BOOST_CHECK( get<member_at::left >(pair_by<member_at::right>(rel)) == rel.left  );
+    BOOST_CHECK( get<member_at::right>(pair_by<member_at::right>(rel)) == rel.right );
+
+}
+
+template< class Relation, class LeftTag, class RightTag >
+void test_relation_with_user_tags(Relation & rel,
+                   const typename Relation::left_value_type  & lv,
+                   const typename Relation::right_value_type & rv)
+{
+
+    using namespace boost::bimap::relation::support;
+    using namespace boost::bimap::relation;
+    using namespace boost::bimap::tagged;
+
+    // And with users ones
+
+    BOOST_CHECK( pair_by<LeftTag >(rel).first   == lv );
+    BOOST_CHECK( pair_by<LeftTag >(rel).second  == rv );
+
+    BOOST_CHECK( pair_by<RightTag>(rel).first   == rv );
+    BOOST_CHECK( pair_by<RightTag>(rel).second  == lv );
+
+    BOOST_CHECK( get<LeftTag >(rel) == rel.left  );
+    BOOST_CHECK( get<RightTag>(rel) == rel.right );
+
+    BOOST_CHECK( get<LeftTag >(pair_by<LeftTag >(rel)) == rel.left  );
+    BOOST_CHECK( get<RightTag>(pair_by<LeftTag >(rel)) == rel.right );
+
+    BOOST_CHECK( get<LeftTag >(pair_by<RightTag>(rel)) == rel.left  );
+    BOOST_CHECK( get<RightTag>(pair_by<RightTag>(rel)) == rel.right );
+
+}
+
+struct  left_user_tag {};
+struct right_user_tag {};
+
+template< class RelationBuilder, class LeftData, class RightData >
+void test_relation(const LeftData & lv, const RightData & rv)
+{
+    using namespace boost::bimap::relation::support;
+    using namespace boost::bimap::relation;
+    using namespace boost::bimap::tagged;
+
+    // Untagged test
+    {
+        typedef typename RelationBuilder::template build
+        <
+            LeftData,
+            RightData
+
+        >::type rel_type;
+
+        rel_type rel( lv, rv );
+
+        test_relation_with_default_tags( rel, lv, rv);
+    }
+
+    // Tagged test
+    {
+        typedef typename RelationBuilder::template build
+        <
+            tagged<LeftData , left_user_tag  >,
+            tagged<RightData, right_user_tag >
+
+        >::type rel_type;
+
+        rel_type rel( lv, rv );
+
+        test_relation_with_default_tags(rel, lv, rv );
+        test_relation_with_user_tags
+        <
+            rel_type,
+            left_user_tag,right_user_tag
+
+        >(rel,lv,rv);
+    }
+}
+
+#endif // BOOST_BIMAP_TEST_TEST_RELATION_HPP

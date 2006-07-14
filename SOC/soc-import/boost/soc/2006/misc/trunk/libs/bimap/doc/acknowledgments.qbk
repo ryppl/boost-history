@@ -1,0 +1,59 @@
+[/license
+
+    Boost.Bimap
+    Matias Capeletto 2006
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[/ QuickBook Document version 1.3 ]
+
+[section Acknowledgments]
+
+This library was develop in the context of the Google SoC 2006. I first want to
+thank my mentor, Joaquin, for his friendship during this project. He not only
+help me go through the process of creating this library, he did his best so we
+could have a great time doing it. Also, Boost.Bimap would be impossible to exist
+if Boost.MultiIndex, Joaquin master piece did not exist. Thanks a lot!
+
+__GOOGLE_SOC_2006__
+
+I want to thank Google for this amazing ['boost] to the open source community and
+to Boost mentors to trust in my proposal in the first place. Next in the list are
+my colleagues from SoC that help me not to get bored during the longs hours of coding.
+
+Special acknowlegments to the developpers of the boost libraries that Boost.Bimap has
+abused. See [link boost_bimap.rationale.dependencies dependencies] for a complete list.
+
+I want to thank to the open source developers that write the tools I used
+during this project. The library was code using Blade, a full open source development
+environment composed in my opinion of the best tools for software building. The list
+name is infinity, so I give a general huge thanks here.
+
+__BOOST_BLADE_LOGO__
+
+The icons in the toc of the main page are from
+[@http://www.kde-look.org/kde-look.org kde-look.org]. I want to thank they effort to
+make the open source world a beatiful place. When I found some time I will look for
+each name of the authors, please forgive me to omit them for the moment.
+
+Finally, thanks to my family that have to see me all day in home during the SoC. Special
+thanks to my brother Agustin, future famous novelist (at this time he is 19 years),
+that patiently read every word of this docs and while correcting they, bark at me
+for my bad English writing. I have learn a lot of his sermons. I want to thank my
+dog, Mafalda, too for barking all day from my window and being such a good
+company.
+
+[h2 Boost.Bimap Team]
+
+From Argentina... Matias and Mafalda and from Spain... Joaquin and Hector
+
+__MATIAS_PHOTO__
+__MAFALDA_PHOTO__
+__JOAQUIN_PHOTO__
+__HECTOR_PHOTO__
+
+Lucikly the distance helps to avoid team members from eating each others.
+
+[endsect]

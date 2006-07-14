@@ -1,0 +1,101 @@
+[/license
+
+    Boost.Bimap
+    Matias Capeletto 2006
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[/ QuickBook Document version 1.3 ]
+
+[section Introduction]
+
+Boost.Bimap is an associative container where both types
+can be used as key. You can think a `bimap<Ka,Kb>` as a merge of
+a `std::map<Ka,Kb>` and a `std::map<Kb,Ka>`.
+
+There is a library in Boost that already allows the creation of this kind
+of container: Boost.MultiIndex. It offers great flexibility and lets you
+construct almost any container that you may dream about. The framework is
+very clean. You may want to read the tutorial of this library to learn the
+power that has been achieved. \n
+But generality comes with a price, if you want to use this library you will
+have to be willing to sit in front of you PC and read some very interesting
+docs. The learning curve is not that bad, but many people will refuse to
+experience the benefits of this library (space,time,less error-prone) because
+of it. There is another mayor drawback: the interface that results may not be
+the best for each specialization. People may end up wrapping a B.MI container
+in his own class, every time they want to use it.
+
+Both problems have been faced in this library for one of the most useful container
+types that can be created using B.MI: a bidirectional map.\n
+The learning curve of a misc is zero if you know how to use standard containers.
+A big effort was put in mapping the naming scheme of the stl in Boost.Bimap.
+The library is designed to match the stl common containers. It takes the orthogonal
+algorithm stl approach to define small frameworks that unify the specialized
+containers. Boost.MultiIndex is the core of the bimap container. It is an amazing
+library that will continue to grow. Hopefully Boost.Bimap will grow along with it.
+
+['MISC] - [*M]ulti [*I]ndex [*S]pecialized [*C]ontainers
+
+[:[' Lets be generic, construct frameworks, describe the world
+     in an unified way...] \n
+  [' No!, it is better to be specialized, designed easy to use
+     components, offer plug an play objects...] \n
+  [*Why not to grab the best of both worlds?]]
+
+__MI_FRAMEWORK__
+
+[h2 How to use this document]
+
+There is a lot of information in Boost.Bimap documentation. Althought it may be
+a very good idea to read it all, this documentation is intended for different
+type of programmers.
+
+[variablelist
+[[I have to finished this today, I just want a bidirectional map!][
+If your boss is going to kill you if the project is not finished by the end of the day, just
+read the [link boost_bimap.one_minute_tutorial one minute tutorial]. If you
+have an stl background I swear that you will be testing a bimap in less than
+ten minutes.
+]]
+[[I am a serious programmer and want to learn Boost.Bimap][
+Boost.Bimap has a lot to offer if you can spend some time reading this docs.
+You have to read [link boost_bimap.the_tutorial The tutorial] and skim some
+of the [link boost_bimap.examples Examples]. The best way to read this docs is in
+order. Just press the ['next] arrow at the right bottom corner when you
+finished each page. Stop when you reach the reference section, you may want
+to read some specific part of it later to see a function signature or to look
+for a specific metafunction.
+]]
+[[I just love C++, I want to see Boost.Bimap guts...][
+If you are a library developper, these documents are the best place to learn
+how Boost.Bimap is implemented. It is very recomendable that you first learn
+to use the library as if you were the second type of programmer.
+This library was developped in the Google SoC 2006, and the mentor and the
+ student generate a lot of documents in the building process. The rationale
+section is huge and you will find there a lot of information. There is a history
+section for people that find it useful. Finally, in the reference, every entity of
+the library is documented and you can even browse the source code from it.
+]]
+]
+
+[note
+If while reading the docs you get obfuscated at some point, please send me an email
+to ['matias {dot} capeletto {at} gmail {dot} com] telling me which type of programmer
+you are and the section that needs to be better. Please use the following notation
+for the title: ['\[boost\]\[bimap\] Your problem], it will help me to spot it easily.
+I will try to use your advice to make this docs better. Thanks and Enjoy!
+]
+
+[important
+If you find a bug or if you would like to see an additional feature to
+the library please use boost standard ways to deal with this kind of issues and do
+not e-mail me directly. Boost has a very good system to
+[@http://www.boost.org/more/bugs.htm track bugs] and
+[@http://www.boost.org/more/requesting_new_features.htm features requests].
+Using it is the best way of getting this kind of thing done as soon as possible.
+]
+
+[endsect]

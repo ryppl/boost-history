@@ -1,0 +1,118 @@
+[/license
+
+    Boost.Bimap
+    Matias Capeletto 2006
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[/ QuickBook Document version 1.3 ]
+
+[section One minute tutorial]
+
+[h2 What is a bimap?]
+
+The following code creates an empty bimap container:
+
+    typedef bimap<A,B> bm_type;
+    bm_type bm;
+
+Given this code, the following is the complete description of the resulting bimap.
+
+* `bm.left` is signature compatible with `std::map<A,B>`
+* `bm.right` is signature compatible with `std::map<B,A>`
+* `bm` is signature compatible with `std::set< relation<A,B> >`
+
+__SIMPLE_BIMAP__
+
+The `relation` class is a generalization of `std::pair`. The two values are named
+left and right to express the symmetry of this type.
+
+That is pretty much what you have to know to start using the bidirectional map.
+You must add the following two lines too:
+
+    #include <boost/bimap/bimap.hpp>
+    using namespace bimap;
+
+[h2 A simple example]
+
+This is a very small example of how to build and use a bimap. If you continue reading
+you will learn how to enchance your bidirectional maps to generate more powerful,
+scalable and readable code.
+
+    #include <iostream>
+
+    #include <boost/bimap/bimap.hpp>
+
+    int main()
+    {
+        using namespace bimap;
+
+        typedef bimap<std::string,int> results_bimap;
+        typedef results_bimap::relation position;
+
+        // Unlikily this results are not real...
+
+        results_bimap results;
+        results.insert( position("Argentina"    ,1) );
+        results.insert( position("Spain"        ,2) );
+        results.insert( position("Germany"      ,3) );
+        results.insert( position("France"       ,4) );
+
+        std::cout << "Countries names ordered by their final position:"
+                  << std::endl;
+
+        for( results_bimap::right_iterator i    = results.right.begin(),
+                                           iend = results.right.end() ;
+             i != iend; ++i )
+        {
+            std::cout << i->first << ") " << i->second << std::endl;
+        }
+
+        std::cout << std::endl
+                  << "Countries names ordered alfabetically along with"
+                     "their final position:"
+                  << std::endl;
+
+        for( results_bimap::left_iterator  i    = results.left.begin(),
+                                           iend = results.left.end() ;
+             i != iend; ++i )
+        {
+            std::cout << i->first << " ends " << i->second << "º" << std::endl;
+        }
+
+    }
+
+The output of this program will look like:
+[blurb
+[^
+Countries names ordered by their final position:\n
+1) Argentina\n
+2) Spain\n
+3) Germany\n
+4) France\n
+\n
+Countries names ordered alfabetically along with their final position:\n
+Argentina ends 1º\n
+France ends 4º\n
+Germany ends 3º\n
+Spain ends 2º\n
+]
+]
+
+[h2 Continuing the journey]
+
+You can look at any standard library documentation for function sigantures or read the
+[link boost_bimap.reference reference] section of this docs.
+
+[caution
+Just be aware that a bidirectional map is only signature compatible. Some functions
+may end in a diferent result, for example when inserting a pair in the `left` map where the
+second value conflict with a stored relation in the container. Finally the functions may be
+slower in a bimap because of the duplicated constrains. It is very recommendable that you read
+[link boost_bimap.the_tutorial the complete tutorial] as soon as possible if you are
+going to use a bimap in a serious project.
+]
+
+[endsect]

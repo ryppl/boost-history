@@ -1,0 +1,75 @@
+[/license
+
+    Boost.Bimap
+    Matias Capeletto 2006
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[/ QuickBook Document version 1.3 ]
+
+[section Dependencies]
+
+Boost.Bimap is built on top of several boost libraries. The rationale behind
+this desition is to mantain the boost code base small reusing existent code.
+The libraries used are very mature and has been tested extensibily. This makes
+this library easy to port since all the hard work has been done. The glue in
+that orchest everithing is Boost.MPL and ovbiously Boost.MultiIndex has been
+abused by this library.
+
+[table Boost Libraries used by Boost.Bimap
+[[Name][Description][author]]
+
+[[ multi_index ][
+Containers with multiple STL-compatible access interfaces]
+[Joaquín M López Muñoz]]
+
+[[ MPL ][
+Template metaprogramming framework of compile-time algorithms, sequences and metafunction classes]
+[Aleksey Gurtovoy]]
+
+[[ type_traits ][
+Templates for fundamental properties of types.]
+[John Maddock, Steve Cleary]]
+
+[[ enable_if ][
+Selective inclusion of function template overloads]
+[Jaakko Järvi, Jeremiah Willcock, Andrew Lumsdaine]]
+
+[[ Iterators ][
+Iterator construction framework, adaptors, concepts, and more.]
+[Dave Abrahams, Jeremy Siek, Thomas Witt]]
+
+[[ call_traits ][
+Defines types for passing parameters.]
+[John Maddock, Howard Hinnant]]
+
+[[ Operators ][
+Templates ease arithmetic classes and iterators]
+[Dave Abrahams\n Jeremy Siek]]
+
+[[ Serialization ][
+Serialization for persistence and marshalling]
+[Robert Ramey]]
+
+[[ static_assert ][
+Static assertions (compile time assertions).]
+[John Maddock]]
+
+[[ Test ][
+Support for simple program testing, full unit testing, and for program execution monitoring.]
+[Gennadiy Rozental]]
+
+[[ Assign ][
+Filling containers with constant or generated data has never been easier.]
+[Thorsten Ottosen]]
+
+[[ Hash ][
+A TR1 hash function object that can be extended to hash user defined types]
+[Daniel James]]
+
+]
+
+
+[endsect]

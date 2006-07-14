@@ -1,0 +1,36 @@
+# Boost.Bimap
+#
+# (C) Copyright 2006: Matias Capeletto
+# Distributed under the Boost Software License, Version 1.0.
+# See accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt
+
+# bring in rules for testing
+import testing ;
+
+test-suite "utility_test"
+    :
+    [ run test_mutant.cpp ]
+    [ run test_structured_pair.cpp ]
+    [ run test_tagged.cpp ]
+    [ run test_mutant_relation.cpp ]
+    #[ run test_standard_relation.cpp ]
+    #[ run test_relation.cpp ]
+    ;
+
+#test-suite "container_adaptor_test"
+#    :
+#    [ run test_container_adaptor.cpp ]
+#    ;
+
+#test-suite "bimap_helper_test"
+#    :
+#    [ run test_collection.cpp ]
+#    ;
+
+#test-suite "bimap_test"
+#    :
+#    [ run test_bimap_basic.cpp ]
+#    ;
+
+
