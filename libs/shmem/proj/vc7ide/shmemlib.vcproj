@@ -217,7 +217,7 @@
 				RelativePath="..\..\..\..\boost\shmem\sync\lock.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\boost\shmem\mapped_file.hpp">
+				RelativePath="..\..\..\..\boost\shmem\mmapped_file.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\boost\shmem\sync\named_mutex.hpp">
