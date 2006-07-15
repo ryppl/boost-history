@@ -27,6 +27,8 @@
 #include <boost/bimap/relation/support/member_with_tag.hpp>
 #include <boost/bimap/relation/support/is_tag_of_member_at.hpp>
 
+// Bimap Test Utilities
+#include "test_relation.hpp"
 
 BOOST_BIMAP_TEST_STATIC_FUNCTION( untagged_static_test )
 {
@@ -53,71 +55,25 @@ BOOST_BIMAP_TEST_STATIC_FUNCTION( untagged_static_test )
 
 }
 
-BOOST_BIMAP_TEST_STATIC_FUNCTION( tagged_static_test)
+
+struct standard_relation_builder
 {
-    using namespace boost::bimap::relation::member_at;
-    using namespace boost::bimap::relation;
-    using namespace boost::bimap::tagged;
+    template< class LeftType, class RightType >
+    struct build
+    {
+        typedef boost::bimap::relation::standard_relation<LeftType,RightType> type;
+    };
+};
 
-    struct left_data  {};
-    struct right_data {};
-
-    struct left_tag   {};
-    struct right_tag  {};
-
-    typedef standard_relation< tagged<left_data,left_tag>, tagged<right_data,right_tag> > rel;
-
-    BOOST_BIMAP_CHECK_METADATA(rel,left_value_type ,left_data);
-    BOOST_BIMAP_CHECK_METADATA(rel,right_value_type,right_data);
-
-    BOOST_BIMAP_CHECK_METADATA(rel,left_tag ,left_tag  );
-    BOOST_BIMAP_CHECK_METADATA(rel,right_tag,right_tag );
-
-    typedef tagged<left_data ,left_tag > desired_tagged_left_type;
-    BOOST_BIMAP_CHECK_METADATA(rel,tagged_left_type,desired_tagged_left_type);
-
-    typedef tagged<right_data,right_tag> desired_tagged_right_type;
-    BOOST_BIMAP_CHECK_METADATA(rel,tagged_right_type,desired_tagged_right_type);
-}
-
-
-void test_basic_access()
+void test_standard_relation()
 {
-    using namespace boost::bimap::relation;
+    test_relation< standard_relation_builder, char  , double >( 'l', 2.5 );
+    test_relation< standard_relation_builder, double, char   >( 2.5, 'r' );
 
-    standard_relation< int, double > rel( 100, 2.5 );
+    test_relation< standard_relation_builder, int   , int    >(  1 ,   2 );
 
-    BOOST_CHECK( rel.left  == 100 );
-    BOOST_CHECK( rel.right == 2.5 );
+    test_relation< standard_relation_builder, std::string, int * >( "left value", 0 );
 }
-
-
-void test_views()
-{
-    using namespace boost::bimap::relation::support;
-    using namespace boost::bimap::relation;
-
-    typedef standard_relation< int, double >        rel_type;
-
-    rel_type rel( 100, 2.5 );
-
-    BOOST_CHECK( pair_by<member_at::left >(rel).first == 100 );
-    BOOST_CHECK( pair_by<member_at::left >(rel).second == 2.5 );
-
-    BOOST_CHECK( pair_by<member_at::right >(rel).first == 2.5 );
-    BOOST_CHECK( pair_by<member_at::right >(rel).second == 100 );
-
-    // If mutant is not used, the following checks have to be stripped
-
-    BOOST_CHECK( &pair_by<member_at::left >(rel).first  == &rel.left  );
-    BOOST_CHECK( &pair_by<member_at::left >(rel).second == &rel.right );
-
-    BOOST_CHECK( &pair_by<member_at::right>(rel).first  == &rel.right );
-    BOOST_CHECK( &pair_by<member_at::right>(rel).second == &rel.left  );
-
-
-}
-
 
 int test_main( int, char* [] )
 {
@@ -128,12 +84,10 @@ int test_main( int, char* [] )
     // Test metadata correctness with tagged relation version
     BOOST_BIMAP_CALL_TEST_STATIC_FUNCTION( untagged_static_test );
 
-    // Test basic accessors
-    test_basic_access();
-
-    // Test relation mutation property
-    test_views();
+    // Test basic
+    test_standard_relation();
 
     return 0;
 }
+
 

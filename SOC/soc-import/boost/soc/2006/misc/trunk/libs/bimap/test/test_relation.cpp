@@ -27,6 +27,8 @@
 #include <boost/bimap/relation/support/member_with_tag.hpp>
 #include <boost/bimap/relation/support/is_tag_of_member_at.hpp>
 
+// Bimap Test Utilities
+#include "test_relation.hpp"
 
 BOOST_BIMAP_TEST_STATIC_FUNCTION( untagged_static_test )
 {
@@ -80,111 +82,25 @@ BOOST_BIMAP_TEST_STATIC_FUNCTION( tagged_static_test)
     BOOST_BIMAP_CHECK_METADATA(rel,tagged_right_type,desired_tagged_right_type);
 }
 
-
-void test_basic_access()
+struct relation_builder
 {
-    using namespace boost::bimap::relation;
+    template< class LeftType, class RightType >
+    struct build
+    {
+        typedef typename boost::bimap::relation::select_relation<LeftType,RightType>::type type;
+    };
+};
 
-    select_relation< int, double >::type rel( 100, 2.5 );
-
-    BOOST_CHECK( rel.left  == 100 );
-    BOOST_CHECK( rel.right == 2.5 );
-}
-
-
-void test_views()
+void test_best_relation()
 {
-    using namespace boost::bimap::relation::support;
-    using namespace boost::bimap::relation;
+    test_relation< relation_builder, char  , double >( 'l', 2.5 );
 
-    typedef select_relation< int, double >::type rel_type;
+    test_relation< relation_builder, double, char   >( 2.5, 'r' );
 
-    rel_type rel( 100, 2.5 );
+    test_relation< relation_builder, int   , int    >(  1 ,   2 );
 
-    BOOST_CHECK( pair_by<member_at::left >(rel).first == 100 );
-    BOOST_CHECK( pair_by<member_at::left >(rel).second == 2.5 );
-
-    BOOST_CHECK( pair_by<member_at::right >(rel).first == 2.5 );
-    BOOST_CHECK( pair_by<member_at::right >(rel).second == 100 );
-
-    BOOST_CHECK( &pair_by<member_at::left >(rel).first  == &rel.left  );
-    BOOST_CHECK( &pair_by<member_at::left >(rel).second == &rel.right );
-
-    BOOST_CHECK( &pair_by<member_at::right>(rel).first  == &rel.right );
-    BOOST_CHECK( &pair_by<member_at::right>(rel).second == &rel.left  );
-
-    BOOST_CHECK( get<member_at::left >(rel) == rel.left  );
-    BOOST_CHECK( get<member_at::right>(rel) == rel.right );
-
-    BOOST_CHECK( get<member_at::left >(pair_by<member_at::left>(rel)) == rel.left  );
-    BOOST_CHECK( get<member_at::right>(pair_by<member_at::left>(rel)) == rel.right );
-
-    BOOST_CHECK( get<member_at::left >(pair_by<member_at::right>(rel)) == rel.left  );
-    BOOST_CHECK( get<member_at::right>(pair_by<member_at::right>(rel)) == rel.right );
-
+    test_relation< relation_builder, std::string, int * >( "left value", 0 );
 }
-
-struct my_left  {};
-struct my_right {};
-
-void test_tagged()
-{
-    using namespace boost::bimap::relation::support;
-    using namespace boost::bimap::relation;
-    using namespace boost::bimap::tagged;
-
-    typedef select_relation< tagged<int, my_left>, tagged<double, my_right> >::type rel_type;
-
-    rel_type rel( 100, 2.5 );
-
-    // It must work with normal tags
-
-    BOOST_CHECK( pair_by<member_at::left >(rel).first == 100 );
-    BOOST_CHECK( pair_by<member_at::left >(rel).second == 2.5 );
-
-    BOOST_CHECK( pair_by<member_at::right >(rel).first == 2.5 );
-    BOOST_CHECK( pair_by<member_at::right >(rel).second == 100 );
-
-    BOOST_CHECK( &pair_by<member_at::left >(rel).first  == &rel.left  );
-    BOOST_CHECK( &pair_by<member_at::left >(rel).second == &rel.right );
-
-    BOOST_CHECK( &pair_by<member_at::right>(rel).first  == &rel.right );
-    BOOST_CHECK( &pair_by<member_at::right>(rel).second == &rel.left  );
-
-    BOOST_CHECK( get<member_at::left >(rel) == rel.left  );
-    BOOST_CHECK( get<member_at::right>(rel) == rel.right );
-
-    BOOST_CHECK( get<member_at::left >(pair_by<member_at::left>(rel)) == rel.left  );
-    BOOST_CHECK( get<member_at::right>(pair_by<member_at::left>(rel)) == rel.right );
-
-    BOOST_CHECK( get<member_at::left >(pair_by<member_at::right>(rel)) == rel.left  );
-    BOOST_CHECK( get<member_at::right>(pair_by<member_at::right>(rel)) == rel.right );
-
-    // And with users ones
-
-    BOOST_CHECK( pair_by<my_left >(rel).first == 100 );
-    BOOST_CHECK( pair_by<my_left >(rel).second == 2.5 );
-
-    BOOST_CHECK( pair_by<my_right >(rel).first == 2.5 );
-    BOOST_CHECK( pair_by<my_right >(rel).second == 100 );
-
-    BOOST_CHECK( &pair_by<my_left >(rel).first  == &rel.left  );
-    BOOST_CHECK( &pair_by<my_left >(rel).second == &rel.right );
-
-    BOOST_CHECK( &pair_by<my_right>(rel).first  == &rel.right );
-    BOOST_CHECK( &pair_by<my_right>(rel).second == &rel.left  );
-
-    BOOST_CHECK( get<my_left >(rel) == rel.left  );
-    BOOST_CHECK( get<my_right>(rel) == rel.right );
-
-    BOOST_CHECK( get<my_left >(pair_by<my_left>(rel)) == rel.left  );
-    BOOST_CHECK( get<my_right>(pair_by<my_left>(rel)) == rel.right );
-
-    BOOST_CHECK( get<my_left >(pair_by<my_right>(rel)) == rel.left  );
-    BOOST_CHECK( get<my_right>(pair_by<my_right>(rel)) == rel.right );
-
-}
-
 
 int test_main( int, char* [] )
 {
@@ -195,11 +111,8 @@ int test_main( int, char* [] )
     // Test metadata correctness with tagged relation version
     BOOST_BIMAP_CALL_TEST_STATIC_FUNCTION( untagged_static_test );
 
-    // Test basic accessors
-    test_basic_access();
-
-    // Test relation mutation property
-    test_views();
+    // Test basic
+    test_best_relation();
 
     return 0;
 }

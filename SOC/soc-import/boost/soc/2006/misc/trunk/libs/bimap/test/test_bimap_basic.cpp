@@ -43,19 +43,21 @@ template< class Container, class Data >
 void test_container(Container & c, const Data & d)
 {
     std::size_t dn = d.size();
+
     assert( dn > 2 );
 
     c.clear();
 
     BOOST_CHECK( c.size() == 0 );
     BOOST_CHECK( c.empty() );
-
+/*
     c.insert(d.begin(),d.end());
 
     BOOST_CHECK( c.size() == dn );
+
     BOOST_CHECK( c.size() <= c.max_size() );
     BOOST_CHECK( ! c.empty() );
-/*
+
     c.erase( c.begin() );
 
     BOOST_CHECK( c.size() == dn - 1 );
@@ -66,12 +68,16 @@ void test_container(Container & c, const Data & d)
 
     c.erase( c.begin(), c.end() );
 */
-    c.clear();
-
     BOOST_CHECK( c.empty() );
 
     c.insert( d.front() );
+
+    BOOST_CHECK( c.size() == 1 );
+
     c.insert( c.begin(), d.back() );
+
+    BOOST_CHECK( c.size() == 2 );
+
 }
 
 /*
@@ -201,10 +207,10 @@ void test_bimap()
         data.push_back( bm::relation(4,0.4) );
 
         std::list< bm::relation::left_pair > left_data;
-        data.push_back( bm::relation::left_pair(1,0.1) );
-        data.push_back( bm::relation::left_pair(2,0.2) );
-        data.push_back( bm::relation::left_pair(3,0.3) );
-        data.push_back( bm::relation::left_pair(4,0.4) );
+        left_data.push_back( bm::relation::left_pair(1,0.1) );
+        left_data.push_back( bm::relation::left_pair(2,0.2) );
+        left_data.push_back( bm::relation::left_pair(3,0.3) );
+        left_data.push_back( bm::relation::left_pair(4,0.4) );
 /*
         std::list< bm::relation::right_pair > right_data;
         data.push_back( bm::relation::right_pair(1,0.1) );
@@ -216,6 +222,7 @@ void test_bimap()
 
         test_container(b,data);
         test_container(b.left,left_data);
+
 /*
         test_this_unknown_bimap(aBimap,data.begin(),data.end());
         test_this_ordered_bimap(aBimap,data.begin(),data.end());

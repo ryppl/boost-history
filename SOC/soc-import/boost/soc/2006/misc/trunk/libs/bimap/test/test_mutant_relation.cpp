@@ -27,7 +27,7 @@
 #include <boost/bimap/relation/support/member_with_tag.hpp>
 #include <boost/bimap/relation/support/is_tag_of_member_at.hpp>
 
-
+// Bimap Test Utilities
 #include "test_relation.hpp"
 
 BOOST_BIMAP_TEST_STATIC_FUNCTION( untagged_static_test )
@@ -91,10 +91,11 @@ struct mutant_relation_builder
     };
 };
 
-void test_mutant()
+void test_mutant_relation()
 {
     test_relation< mutant_relation_builder, char  , double >( 'l', 2.5 );
     test_relation< mutant_relation_builder, double, char   >( 2.5, 'r' );
+
     test_relation< mutant_relation_builder, int   , int    >(  1 ,   2 );
 
     test_relation< mutant_relation_builder, std::string, int * >( "left value", 0 );
@@ -110,7 +111,7 @@ int test_main( int, char* [] )
     BOOST_BIMAP_CALL_TEST_STATIC_FUNCTION( untagged_static_test );
 
     // Test basic
-    test_mutant();
+    test_mutant_relation();
 
     return 0;
 }

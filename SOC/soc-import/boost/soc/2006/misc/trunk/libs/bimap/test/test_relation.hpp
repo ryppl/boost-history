@@ -31,6 +31,8 @@
 #include <boost/bimap/relation/support/member_with_tag.hpp>
 #include <boost/bimap/relation/support/is_tag_of_member_at.hpp>
 
+
+
 /*
 namespace static_test {
 
@@ -174,6 +176,36 @@ void test_relation(const LeftData & lv, const RightData & rv)
 
         >(rel,lv,rv);
     }
+
+    // Default Constructor, Constructor from views and some operators
+    {
+
+        typedef typename RelationBuilder::template build
+        <
+            tagged<LeftData , left_user_tag  >,
+            tagged<RightData, right_user_tag >
+
+        >::type rel_type;
+
+        typedef typename pair_type_by< left_user_tag,rel_type>::type  left_pair;
+        typedef typename pair_type_by<right_user_tag,rel_type>::type right_pair;
+
+        rel_type rel_from_left (  left_pair(lv,rv) );
+        rel_type rel_from_right( right_pair(rv,lv) );
+
+        BOOST_CHECK( rel_from_left == rel_from_right  );
+        BOOST_CHECK( rel_from_left == rel_type(lv,rv) );
+
+        rel_type rel;
+
+        BOOST_CHECK( rel != rel_from_left );
+
+        rel = rel_from_left;
+
+        BOOST_CHECK( rel == rel_from_left );
+
+    }
+
 }
 
 #endif // BOOST_BIMAP_TEST_TEST_RELATION_HPP
