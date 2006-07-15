@@ -7,9 +7,11 @@
 // See http://www.boost.org/libs/test for the library home page.
 
 // std
-#include <list>
+#include <set>
+#include <map>
 #include <cstddef>
 #include <cassert>
+#include <algorithm>
 
 // Boost.Test
 #include <boost/test/minimal.hpp>
@@ -43,14 +45,13 @@ template< class Container, class Data >
 void test_container(Container & c, const Data & d)
 {
     std::size_t dn = d.size();
-
     assert( dn > 2 );
 
     c.clear();
 
     BOOST_CHECK( c.size() == 0 );
     BOOST_CHECK( c.empty() );
-/*
+
     c.insert(d.begin(),d.end());
 
     BOOST_CHECK( c.size() == dn );
@@ -62,23 +63,107 @@ void test_container(Container & c, const Data & d)
 
     BOOST_CHECK( c.size() == dn - 1 );
 
-    c.insert( d.front() );
+    c.insert( *d.begin() );
 
     BOOST_CHECK( c.size() == dn );
 
     c.erase( c.begin(), c.end() );
-*/
+
     BOOST_CHECK( c.empty() );
 
-    c.insert( d.front() );
+    c.insert( *d.begin() );
 
     BOOST_CHECK( c.size() == 1 );
 
-    c.insert( c.begin(), d.back() );
+    c.insert( c.begin(), *(++d.begin()) );
 
     BOOST_CHECK( c.size() == 2 );
 
+    BOOST_CHECK( c.begin() != c.end() );
+
 }
+
+template< class Container, class Data >
+void test_pair_associative_container(Container & c, const Data & d)
+{
+    std::size_t dn = d.size();
+    assert( dn > 2 );
+
+    c.clear();
+    c.insert(d.begin(),d.end());
+
+    for( typename Data::const_iterator di = d.begin(), de = d.end();
+         di != de; ++di )
+    {
+        BOOST_CHECK( c.find(di->first) != c.end() );
+    }
+
+    typename Data::const_iterator da =   d.begin();
+    typename Data::const_iterator db = ++d.begin();
+
+    c.erase(da->first);
+
+    BOOST_CHECK( c.size() == dn-1 );
+
+    BOOST_CHECK( c.count(da->first) == 0 );
+    BOOST_CHECK( c.count(db->first) == 1 );
+
+    BOOST_CHECK( c.find(da->first) == c.end() );
+    BOOST_CHECK( c.find(db->first) != c.end() );
+
+    BOOST_CHECK( c.equal_range(db->first).first != c.end() );
+
+    c.clear();
+
+    BOOST_CHECK( c.equal_range(da->first).first == c.end() );
+}
+
+template< class Container, class Data >
+void test_pair_ordered_associative_container_equality(Container & c, const Data & d)
+{
+    BOOST_CHECK( std::equal( c. begin(), c. end(), d. begin() ) );
+
+    // TODO
+    // Reverse iterators still need to be worked out
+    // BOOST_CHECK( std::equal( c.rbegin(), c.rend(), d.rbegin() ) );
+
+    BOOST_CHECK( c.lower_bound( d.begin()->first ) ==   c.begin() );
+    BOOST_CHECK( c.upper_bound( d.begin()->first ) == ++c.begin() );
+}
+
+template< class Container, class Data >
+void test_pair_ordered_associative_container(Container & c, const Data & d)
+{
+    std::size_t dn = d.size();
+    assert( dn > 2 );
+
+    c.clear();
+    c.insert(d.begin(),d.end());
+
+    for( typename Container::const_iterator ci = c.begin(), ce = c.end();
+         ci != ce; ++ci )
+    {
+        typename Data::const_iterator di = d.find(ci->first);
+        BOOST_CHECK( di != d.end() );
+        BOOST_CHECK( ! c.key_comp()(di->first,ci->first) );
+
+        // TODO
+        // value_comp() need to be reworked to return a wrapper around the one
+        // given by multi_index
+        // BOOST_CHECK( c.value_comp()(*ci,*di) );
+    }
+
+    test_pair_ordered_associative_container_equality(c, d);
+
+    const Container & cr = c;
+
+    test_pair_ordered_associative_container_equality(cr, d);
+
+}
+
+
+
+
 
 /*
 template< class bm, class IterData >
@@ -200,17 +285,27 @@ void test_bimap()
     {
         typedef bimap<int,double> bm;
 
-        std::list< bm::relation > data;
-        data.push_back( bm::relation(1,0.1) );
-        data.push_back( bm::relation(2,0.2) );
-        data.push_back( bm::relation(3,0.3) );
-        data.push_back( bm::relation(4,0.4) );
 
-        std::list< bm::relation::left_pair > left_data;
-        left_data.push_back( bm::relation::left_pair(1,0.1) );
-        left_data.push_back( bm::relation::left_pair(2,0.2) );
-        left_data.push_back( bm::relation::left_pair(3,0.3) );
-        left_data.push_back( bm::relation::left_pair(4,0.4) );
+        std::set< bm::relation > data;
+        data.insert( bm::relation(1,0.1) );
+        data.insert( bm::relation(2,0.2) );
+        data.insert( bm::relation(3,0.3) );
+        data.insert( bm::relation(4,0.4) );
+
+        typedef std::map<int,double> left_data_type;
+        left_data_type left_data;
+        left_data.insert( left_data_type::value_type(1,0.1) );
+        left_data.insert( left_data_type::value_type(2,0.2) );
+        left_data.insert( left_data_type::value_type(3,0.3) );
+        left_data.insert( left_data_type::value_type(4,0.4) );
+
+        typedef std::map<double,int> right_data_type;
+        right_data_type right_data;
+        right_data.insert( right_data_type::value_type(0.1,1) );
+        right_data.insert( right_data_type::value_type(0.2,2) );
+        right_data.insert( right_data_type::value_type(0.3,3) );
+        right_data.insert( right_data_type::value_type(0.4,4) );
+
 /*
         std::list< bm::relation::right_pair > right_data;
         data.push_back( bm::relation::right_pair(1,0.1) );
@@ -221,7 +316,18 @@ void test_bimap()
         bm b;
 
         test_container(b,data);
-        test_container(b.left,left_data);
+
+        // TODO
+        // A value convertion is needed here
+        // test_associative_container(b,data);
+
+        test_container(b.left , left_data);
+        test_pair_associative_container(b.left, left_data);
+        test_pair_ordered_associative_container(b.left, left_data);
+
+        test_container(b.right,right_data);
+        test_pair_associative_container(b.right, right_data);
+        test_pair_ordered_associative_container(b.right, right_data);
 
 /*
         test_this_unknown_bimap(aBimap,data.begin(),data.end());
