@@ -25,6 +25,8 @@
 #include <boost/bimap/tagged/support/tag_of.hpp>
 #include <boost/bimap/tagged/support/value_type_of.hpp>
 
+#include <boost/bimap/relation/structured_pair.hpp>
+
 namespace boost {
 namespace bimap {
 namespace relation {
@@ -39,24 +41,41 @@ See also standard_relation, mutant_relation.
                                                            **/
 
 template< class TA, class TB >
-class standard_relation : public symmetrical_base<TA,TB>
+class standard_relation :
+
+    public symmetrical_base<TA,TB>,
+
+    totally_ordered<
+        standard_relation<TA,TB>,
+    totally_ordered<
+        structured_pair<TA,TB,normal_layout>,
+    totally_ordered<
+        structured_pair<TB,TA,mirror_layout>,
+    totally_ordered<
+        standard_pair_view<TA,TB,normal_layout>,
+    totally_ordered<
+        standard_pair_view<TB,TA,mirror_layout>,
+    totally_ordered<
+        const_standard_pair_view<TA,TB,normal_layout>,
+    totally_ordered<
+        const_standard_pair_view<TB,TA,mirror_layout>
+
+    > > > > > > >
 {
     public:
 
     //@{
         /// A signature compatible std::pair that is a view of the relation.
 
-        typedef standard_pair_view<TA,TB,normal_layout> left_pair ;
-        typedef standard_pair_view<TB,TA,mirror_layout> right_pair;
+        typedef structured_pair<TA,TB,normal_layout> left_pair ;
+        typedef structured_pair<TB,TA,mirror_layout> right_pair;
 
-        typedef left_pair  left_pair_reference ;
-        typedef right_pair right_pair_reference;
+        typedef standard_pair_view<TA,TB,normal_layout> left_pair_reference ;
+        typedef standard_pair_view<TB,TA,mirror_layout> right_pair_reference;
 
-        typedef const_standard_pair_view<TA,TB,normal_layout> const_left_pair ;
-        typedef const_standard_pair_view<TB,TA,mirror_layout> const_right_pair;
+        typedef const_standard_pair_view<TA,TB,normal_layout> const_left_pair_reference ;
+        typedef const_standard_pair_view<TB,TA,mirror_layout> const_right_pair_reference;
 
-        typedef const_left_pair  const_left_pair_reference ;
-        typedef const_right_pair const_right_pair_reference;
     //@}
 
 
@@ -70,8 +89,10 @@ class standard_relation : public symmetrical_base<TA,TB>
 
     standard_relation() {}
 
-    standard_relation(const typename standard_relation::left_value_type & l,
-                      const typename standard_relation::right_value_type & r) :
+    standard_relation(typename boost::call_traits<
+                          typename standard_relation::left_value_type >::param_type l,
+                      typename boost::call_traits<
+                          typename standard_relation::right_value_type>::param_type r) :
         left (l),
         right(r)
     {}
@@ -81,6 +102,130 @@ class standard_relation : public symmetrical_base<TA,TB>
         left (rel.left),
         right(rel.right)
     {}
+
+    // Allow to create relations from views
+
+    standard_relation(const left_pair & lp) :
+
+        left ( lp.first  ),
+        right( lp.second )
+    {}
+
+    standard_relation(const right_pair & rp) :
+
+        left ( rp.second ),
+        right( rp.first  )
+    {}
+
+
+    // Operators
+
+    standard_relation& operator=(const standard_relation & rel)
+    {
+        left  = rel.left ;
+        right = rel.right;
+        return *this;
+    }
+
+    standard_relation& operator=(const left_pair & p)
+    {
+        left  = p.first ;
+        right = p.second;
+        return *this;
+    }
+
+    standard_relation& operator=(const right_pair & p)
+    {
+        left  = p.second;
+        right = p.first ;
+        return *this;
+    }
+
+    // Operators required by Boost.Operators
+
+    bool operator==(const standard_relation & rel) const
+    {
+        return ( ( left  == rel.left  ) &&
+                 ( right == rel.right ) );
+    }
+
+    bool operator<(const standard_relation & rel) const
+    {
+        return ( ( left  < rel.left  ) &&
+                 ( right < rel.right ) );
+    }
+
+    bool operator==(const left_pair & p) const
+    {
+        return ( ( left  == p.first  ) &&
+                 ( right == p.second ) );
+    }
+
+    bool operator<(const left_pair & p) const
+    {
+        return ( ( left   < p.first   ) &&
+                 ( right  < p.second  ) );
+    }
+
+    bool operator==(const right_pair & p) const
+    {
+        return ( ( left  == p.second  ) &&
+                 ( right == p.first   ) );
+    }
+
+    bool operator<(const right_pair & p) const
+    {
+        return ( ( left   < p.second  ) &&
+                 ( right  < p.first   ) );
+    }
+
+    bool operator==(const left_pair_reference & p) const
+    {
+        return ( ( left  == p.first  ) &&
+                 ( right == p.second ) );
+    }
+
+    bool operator<(const left_pair_reference & p) const
+    {
+        return ( ( left   < p.first   ) &&
+                 ( right  < p.second  ) );
+    }
+
+    bool operator==(const right_pair_reference & p) const
+    {
+        return ( ( left  == p.second  ) &&
+                 ( right == p.first   ) );
+    }
+
+    bool operator<(const right_pair_reference & p) const
+    {
+        return ( ( left   < p.second  ) &&
+                 ( right  < p.first   ) );
+    }
+
+    bool operator==(const const_left_pair_reference & p) const
+    {
+        return ( ( left  == p.first  ) &&
+                 ( right == p.second ) );
+    }
+
+    bool operator<(const const_left_pair_reference & p) const
+    {
+        return ( ( left   < p.first   ) &&
+                 ( right  < p.second  ) );
+    }
+
+    bool operator==(const const_right_pair_reference & p) const
+    {
+        return ( ( left  == p.second  ) &&
+                 ( right == p.first   ) );
+    }
+
+    bool operator<(const const_right_pair_reference & p) const
+    {
+        return ( ( left   < p.second  ) &&
+                 ( right  < p.first   ) );
+    }
 
     // The following functions are redundant if you only consider this class.
     // They are included to make easier the construction of the get and the
@@ -107,23 +252,23 @@ class standard_relation : public symmetrical_base<TA,TB>
         return right;
     }
 
-    left_pair get_left_pair()
+    left_pair_reference get_left_pair()
     {
-        return left_pair(*this);
+        return left_pair_reference(*this);
     }
-    const_left_pair get_left_pair() const
+    const_left_pair_reference get_left_pair() const
     {
-        return const_left_pair(*this);
-    }
-
-    right_pair get_right_pair()
-    {
-        return right_pair(*this);
+        return const_left_pair_reference(*this);
     }
 
-    const_right_pair get_right_pair() const
+    right_pair_reference get_right_pair()
     {
-        return const_right_pair(*this);
+        return right_pair_reference(*this);
+    }
+
+    const_right_pair_reference get_right_pair() const
+    {
+        return const_right_pair_reference(*this);
     }
 };
 

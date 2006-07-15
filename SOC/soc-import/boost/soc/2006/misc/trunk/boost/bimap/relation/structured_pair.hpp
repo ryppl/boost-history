@@ -171,11 +171,11 @@ class structured_pair :
 
         : structured_pair::storage_(x,y) {}
 
-    structured_pair(typename boost::call_traits< structured_pair >::param_type p)
+    structured_pair(const structured_pair & p)
 
         : structured_pair::storage_(p.first,p.second) {}
 
-    structured_pair& operator=(typename boost::call_traits< structured_pair >::param_type p)
+    structured_pair& operator=(const structured_pair & p)
     {
         structured_pair::first = p.first;
         structured_pair::second = p.second;
@@ -184,25 +184,25 @@ class structured_pair :
 
     // Operators required by Boost.Operators
 
-    bool operator==(typename boost::call_traits< structured_pair >::param_type p)
+    bool operator==(const structured_pair & p) const
     {
         return ( ( structured_pair::first  == p.first  ) &&
                  ( structured_pair::second == p.second ) );
     }
 
-    bool operator<(typename boost::call_traits< structured_pair >::param_type p)
+    bool operator<(const structured_pair & p) const
     {
         return ( ( structured_pair::first  < p.first  ) &&
                  ( structured_pair::second < p.second ) );
     }
 
-    bool operator==(typename boost::call_traits< mirror_pair_type >::param_type p)
+    bool operator==(const mirror_pair_type & p) const
     {
         return ( ( structured_pair::first  == p.first  ) &&
                  ( structured_pair::second == p.second ) );
     }
 
-    bool operator<(typename boost::call_traits< mirror_pair_type >::param_type p)
+    bool operator<(const mirror_pair_type & p) const
     {
         return ( ( structured_pair::first  < p.first  ) &&
                  ( structured_pair::second < p.second ) );

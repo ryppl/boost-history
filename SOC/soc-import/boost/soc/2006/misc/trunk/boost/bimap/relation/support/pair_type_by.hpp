@@ -56,15 +56,6 @@ BOOST_BIMAP_SYMMETRIC_METADATA_ACCESS_BUILDER
     right_pair_reference
 );
 
-// Implementation of const pair type by metafunction
-
-BOOST_BIMAP_SYMMETRIC_METADATA_ACCESS_BUILDER
-(
-    const_pair_type_by,
-    const_left_pair,
-    const_right_pair
-);
-
 // Implementation of const pair reference type by metafunction
 
 BOOST_BIMAP_SYMMETRIC_METADATA_ACCESS_BUILDER

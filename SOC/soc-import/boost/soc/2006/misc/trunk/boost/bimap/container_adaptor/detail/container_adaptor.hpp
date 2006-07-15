@@ -165,20 +165,27 @@ class container_adaptor
     size_type max_size() const                { return base().max_size();     }
     bool empty() const                        { return base().empty();        }
 
-    void erase(iterator pos)
+    iterator erase(iterator pos)
     {
-        base().erase(functor<iterator_to_base>()(pos));
-    }
-
-    void erase(iterator first, iterator last)
-    {
-        base().erase(
-            functor<iterator_to_base>()(first),
-            functor<iterator_to_base>()(last)
+        return functor<iterator_from_base>()(
+            base().erase(functor<iterator_to_base>()(pos))
         );
     }
 
-    void clear()                              { base().clear();               }
+    iterator erase(iterator first, iterator last)
+    {
+        return functor<iterator_from_base>()(
+            base().erase(
+                functor<iterator_to_base>()(first),
+                functor<iterator_to_base>()(last)
+            )
+        );
+    }
+
+    void clear()
+    {
+        base().clear();
+    }
 
     template <class InputIterator>
     void insert(InputIterator iterBegin, InputIterator iterEnd)

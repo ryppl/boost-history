@@ -99,6 +99,21 @@ class associative_container_adaptor :
         return associative_container_adaptor::base().erase(k);
     }
 
+    // As we redefine erase, the other overloads need to be manually routed
+
+    typename associative_container_adaptor::iterator erase(
+        typename associative_container_adaptor::iterator pos)
+    {
+        return associative_container_adaptor::container_adaptor_::erase(pos);
+    }
+
+    typename associative_container_adaptor::iterator erase(
+        typename associative_container_adaptor::iterator first,
+        typename associative_container_adaptor::iterator last)
+    {
+        return associative_container_adaptor::container_adaptor_::erase(first,last);
+    }
+
     typename this_type::size_type
         count(const typename this_type::key_type& k)
     {

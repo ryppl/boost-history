@@ -14,6 +14,8 @@
 #define BOOST_BIMAP_RELATION_MUTANT_RELATION_HPP
 
 #include <boost/mpl/list.hpp>
+#include <boost/operators.hpp>
+#include <boost/call_traits.hpp>
 
 // Boost.Bimap
 #include <boost/bimap/tagged/tagged.hpp>
@@ -62,7 +64,15 @@ class mutant_relation :
             structured_pair< TA, TB, normal_layout >,
             structured_pair< TB, TA, mirror_layout >
         >
-    >
+    >,
+    totally_ordered<
+        mutant_relation<TA,TB>,
+    totally_ordered<
+        structured_pair<TA,TB,normal_layout>,
+    totally_ordered<
+        structured_pair<TB,TA,mirror_layout>
+
+    > > >
 {
     public:
 
@@ -75,11 +85,8 @@ class mutant_relation :
         typedef left_pair  & left_pair_reference ;
         typedef right_pair & right_pair_reference;
 
-        typedef const left_pair  const_left_pair ;
-        typedef const right_pair const_right_pair;
-
-        typedef const_left_pair  & const_left_pair_reference ;
-        typedef const_right_pair & const_right_pair_reference;
+        typedef const left_pair  & const_left_pair_reference ;
+        typedef const right_pair & const_right_pair_reference;
     //@}
 
     //@{
@@ -92,8 +99,10 @@ class mutant_relation :
 
     mutant_relation() {}
 
-    mutant_relation(const typename mutant_relation::left_value_type & l,
-                    const typename mutant_relation::right_value_type & r) :
+    mutant_relation(typename boost::call_traits<
+                        typename mutant_relation::left_value_type >::param_type l,
+                    typename boost::call_traits<
+                        typename mutant_relation::right_value_type>::param_type r) :
         left (l),
         right(r)
     {}
@@ -103,6 +112,82 @@ class mutant_relation :
         left (rel.left),
         right(rel.right)
     {}
+
+    // Allow to create relations from views
+
+    mutant_relation(const left_pair & lp) :
+
+        left ( lp.first  ),
+        right( lp.second )
+    {}
+
+    mutant_relation(const right_pair & rp) :
+
+        left ( rp.second ),
+        right( rp.first  )
+    {}
+
+
+    // Operators
+
+    mutant_relation& operator=(const mutant_relation & rel)
+    {
+        left  = rel.left ;
+        right = rel.right;
+        return *this;
+    }
+
+    mutant_relation& operator=(const left_pair & p)
+    {
+        left  = p.first ;
+        right = p.second;
+        return *this;
+    }
+
+    mutant_relation& operator=(const right_pair & p)
+    {
+        left  = p.second;
+        right = p.first ;
+        return *this;
+    }
+
+    // Operators required by Boost.Operators
+
+    bool operator==(const mutant_relation & rel) const
+    {
+        return ( ( left  == rel.left  ) &&
+                 ( right == rel.right ) );
+    }
+
+    bool operator<(const mutant_relation & rel) const
+    {
+        return ( ( left  < rel.left  ) &&
+                 ( right < rel.right ) );
+    }
+
+    bool operator==(const left_pair & p) const
+    {
+        return ( ( left  == p.first  ) &&
+                 ( right == p.second ) );
+    }
+
+    bool operator<(const left_pair & p) const
+    {
+        return ( ( left   < p.first   ) &&
+                 ( right  < p.second  ) );
+    }
+
+    bool operator==(const right_pair & p) const
+    {
+        return ( ( left  == p.second  ) &&
+                 ( right == p.first   ) );
+    }
+
+    bool operator<(const right_pair & p) const
+    {
+        return ( ( left   < p.second  ) &&
+                 ( right  < p.first   ) );
+    }
 
     // The following functions are redundant if you only consider this class.
     // They are included to make easier the construction of the get and the
