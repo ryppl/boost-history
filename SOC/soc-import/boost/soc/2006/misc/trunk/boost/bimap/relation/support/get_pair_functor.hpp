@@ -35,13 +35,13 @@ template< class Tag, class Relation >
 struct GetPairFunctor
 {
     typename result_of::pair_by<Tag,Relation>::type
-    operator()( Relation & r )
+    operator()( Relation & r ) const
     {
         return pair_by<Tag>(r);
     }
 
     typename result_of::pair_by<Tag,const Relation>::type
-    operator()( const Relation & r )
+    operator()( const Relation & r ) const
     {
         return pair_by<Tag>(r);
     }

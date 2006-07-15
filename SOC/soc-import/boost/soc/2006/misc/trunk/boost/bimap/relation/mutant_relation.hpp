@@ -127,7 +127,6 @@ class mutant_relation :
         right( rp.first  )
     {}
 
-
     // Operators
 
     mutant_relation& operator=(const mutant_relation & rel)

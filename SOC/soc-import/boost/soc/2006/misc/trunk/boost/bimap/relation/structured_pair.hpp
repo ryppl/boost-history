@@ -13,12 +13,15 @@
 #ifndef BOOST_BIMAP_RELATION_STRUCTURED_PAIR_HPP
 #define BOOST_BIMAP_RELATION_STRUCTURED_PAIR_HPP
 
+#include <utility>
+
 #include <boost/call_traits.hpp>
 #include <boost/operators.hpp>
 #include <boost/bimap/detail/safe_enabler.hpp>
 #include <boost/bimap/detail/debug/static_error.hpp>
 #include <boost/bimap/relation/pair_layout.hpp>
 #include <boost/bimap/relation/symmetrical_base.hpp>
+#include <boost/bimap/tagged/support/value_type_of.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_same.hpp>
 
@@ -151,9 +154,25 @@ class structured_pair :
 
     totally_ordered<
         structured_pair<FirstType,SecondType,
-                        mirror_layout>
+                        mirror_layout>,
 
-                        > >
+    totally_ordered<
+        std::pair
+        <
+            typename tagged::support::value_type_of<FirstType >::type,
+            typename tagged::support::value_type_of<SecondType>::type
+
+        >,
+
+    boost::totally_ordered<
+        std::pair
+        <
+            const typename tagged::support::value_type_of<FirstType >::type,
+            typename tagged::support::value_type_of<SecondType>::type
+
+        >
+
+    > > > >
 {
     public:
 
@@ -208,6 +227,72 @@ class structured_pair :
                  ( structured_pair::second < p.second ) );
     }
 
+    // Interaction with std::pair
+
+    typedef std::pair
+    <
+        typename structured_pair::first_type,
+        typename structured_pair::second_type
+
+    > std_pair;
+
+    typedef std::pair
+    <
+        const typename structured_pair::first_type,
+        typename structured_pair::second_type
+
+    > std_map_pair;
+
+    structured_pair(const std_pair & p)
+    {
+        structured_pair::first  = p.first;
+        structured_pair::second = p.second;
+    }
+
+    structured_pair& operator=(const std_pair & p)
+    {
+        structured_pair::first  = p.first;
+        structured_pair::second = p.second;
+        return *this;
+    }
+
+    bool operator==(const std_pair & p) const
+    {
+        return ( ( structured_pair::first  == p.first  ) &&
+                 ( structured_pair::second == p.second ) );
+    }
+
+    bool operator<(const std_pair & p) const
+    {
+        return ( ( structured_pair::first  < p.first  ) &&
+                 ( structured_pair::second < p.second ) );
+    }
+
+
+    structured_pair(const std_map_pair & p)
+    {
+        structured_pair::first  = p.first;
+        structured_pair::second = p.second;
+    }
+
+    structured_pair& operator=(const std_map_pair & p)
+    {
+        structured_pair::first  = p.first;
+        structured_pair::second = p.second;
+        return *this;
+    }
+
+    bool operator==(const std_map_pair & p) const
+    {
+        return ( ( structured_pair::first  == p.first  ) &&
+                 ( structured_pair::second == p.second ) );
+    }
+
+    bool operator<(const std_map_pair & p) const
+    {
+        return ( ( structured_pair::first  < p.first  ) &&
+                 ( structured_pair::second < p.second ) );
+    }
 };
 
 } // namespace relation

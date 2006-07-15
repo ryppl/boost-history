@@ -138,34 +138,6 @@ class ordered_associative_container_adaptor :
 
     public:
 
-    typename this_type::iterator begin()
-    {
-        return this_type::template functor<
-            typename this_type::iterator_from_base
-        >()                                         ( this_type::base().begin() );
-    }
-
-    typename this_type::iterator end()
-    {
-        return this_type::template functor<
-            typename this_type::iterator_from_base
-        >()                                         ( this_type::base().end() );
-    }
-
-    typename this_type::const_iterator begin() const
-    {
-        return this_type::template functor<
-            typename this_type::iterator_from_base
-        >()                                         ( this_type::base().begin() );
-    }
-
-    typename this_type::const_iterator end() const
-    {
-        return this_type::template functor<
-            typename this_type::iterator_from_base
-        >()                                         ( this_type::base().end() );
-    }
-
     reverse_iterator rbegin()
     {
         return this_type::template functor<

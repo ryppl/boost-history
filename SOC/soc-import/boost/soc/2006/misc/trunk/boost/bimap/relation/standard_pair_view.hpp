@@ -13,10 +13,13 @@
 #ifndef BOOST_BIMAP_RELATION_STANDARD_PAIR_VIEW_HPP
 #define BOOST_BIMAP_RELATION_STANDARD_PAIR_VIEW_HPP
 
+#include <utility>
+
 #include <boost/call_traits.hpp>
 #include <boost/operators.hpp>
 #include <boost/bimap/relation/pair_layout.hpp>
 #include <boost/bimap/relation/symmetrical_base.hpp>
+#include <boost/bimap/tagged/support/value_type_of.hpp>
 
 namespace boost {
 namespace bimap {
@@ -153,15 +156,32 @@ See also standard_relation, const_standard_pair_view.
 
 template< class FirstType, class SecondType, class Layout >
 class standard_pair_view :
+
     public reference_binder_finder<FirstType,SecondType,Layout>::type,
 
     boost::totally_ordered<
         standard_pair_view<FirstType,SecondType,normal_layout>,
 
     boost::totally_ordered<
-        standard_pair_view<FirstType,SecondType,mirror_layout>
+        standard_pair_view<FirstType,SecondType,mirror_layout>,
 
-    > >
+    boost::totally_ordered<
+        std::pair
+        <
+            typename tagged::support::value_type_of<FirstType >::type,
+            typename tagged::support::value_type_of<SecondType>::type
+
+        >,
+
+    boost::totally_ordered<
+        std::pair
+        <
+            const typename tagged::support::value_type_of<FirstType >::type,
+            typename tagged::support::value_type_of<SecondType>::type
+
+        >
+
+    > > > >
 {
     public:
 
@@ -208,6 +228,45 @@ class standard_pair_view :
                  ( standard_pair_view::second < p.second ) );
     }
 
+    // Interaction with std::pair
+
+    typedef std::pair
+    <
+        typename standard_pair_view::first_type,
+        typename standard_pair_view::second_type
+
+    > std_pair;
+
+    typedef std::pair
+    <
+        const typename standard_pair_view::first_type,
+        typename standard_pair_view::second_type
+
+    > std_map_pair;
+
+    bool operator==(const std_pair & p) const
+    {
+        return ( ( standard_pair_view::first  == p.first  ) &&
+                 ( standard_pair_view::second == p.second ) );
+    }
+
+    bool operator<(const std_pair & p) const
+    {
+        return ( ( standard_pair_view::first  < p.first  ) &&
+                 ( standard_pair_view::second < p.second ) );
+    }
+
+    bool operator==(const std_map_pair & p) const
+    {
+        return ( ( standard_pair_view::first  == p.first  ) &&
+                 ( standard_pair_view::second == p.second ) );
+    }
+
+    bool operator<(const std_map_pair & p) const
+    {
+        return ( ( standard_pair_view::first  < p.first  ) &&
+                 ( standard_pair_view::second < p.second ) );
+    }
 };
 
 } // namespace relation

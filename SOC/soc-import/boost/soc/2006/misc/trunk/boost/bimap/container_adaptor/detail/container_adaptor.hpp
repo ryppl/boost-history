@@ -165,6 +165,27 @@ class container_adaptor
     size_type max_size() const                { return base().max_size();     }
     bool empty() const                        { return base().empty();        }
 
+    iterator begin()
+    {
+        return functor<iterator_from_base>()( base().begin() );
+    }
+
+    iterator end()
+    {
+        return functor<iterator_from_base>()( base().end() );
+    }
+
+    const_iterator begin() const
+    {
+        return functor<iterator_from_base>()( base().begin() );
+    }
+
+    const_iterator end() const
+    {
+        return functor<iterator_from_base>()( base().end() );
+    }
+
+
     iterator erase(iterator pos)
     {
         return functor<iterator_from_base>()(
@@ -190,18 +211,31 @@ class container_adaptor
     template <class InputIterator>
     void insert(InputIterator iterBegin, InputIterator iterEnd)
     {
-        typedef transform_iterator
-        <
-            value_to_base,
-            InputIterator,
-            const typename Base::value_type &
 
-        > value_to_base_iterator;
+        // This is may be the correct way to do it, but i have to work a little
+        // bit more on it to make it work. There are problems with (*)
+        /*
+            typedef transform_iterator
+            <
+                value_to_base,
+                InputIterator,
+                const typename Base::value_type & (*)
 
-        base().insert(
-            value_to_base_iterator(iterBegin, functor<value_to_base>()),
-            value_to_base_iterator(iterEnd  , functor<value_to_base>())
-        );
+            > value_to_base_iterator;
+
+            base().insert(
+                value_to_base_iterator(iterBegin, functor<value_to_base>()),
+                value_to_base_iterator(iterEnd  , functor<value_to_base>())
+            );
+        */
+
+        // Go simpler for now
+
+        for( ; iterBegin != iterEnd ; ++iterBegin )
+        {
+            base().insert( functor<value_to_base>()(*iterBegin) );
+        }
+
     }
 
     std::pair<iterator, bool> insert(const value_type& x)
