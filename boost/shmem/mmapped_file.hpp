@@ -303,11 +303,6 @@ inline bool mmapped_file::open(const char *filename, fileoff_t file_offset,
       return false;
    }
 
-   int flags = MAP_SHARED;
-   if(addr){
-      flags |= MAP_FIXED;
-   }
-
    //Open file and get handle
    m_fileHnd = ::open( filename,    // filename
                     oflag,   // read/write access
@@ -318,12 +313,17 @@ inline bool mmapped_file::open(const char *filename, fileoff_t file_offset,
    }
 
    //Map it to the address space
-   m_base   = mmap64(address, size, prot, flags, m_fileHnd, file_offset);
+   m_base   = mmap64(address, size, prot, MAP_SHARED, m_fileHnd, file_offset);
    m_file_offset = file_offset;
    m_size   = size;
 
    //Check if mapping was successful
    if(m_base == MAP_FAILED){
+      this->close();
+      return false;
+   }
+
+   if(address && (m_base != (void*)address)){
       this->close();
       return false;
    }
