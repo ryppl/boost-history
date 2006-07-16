@@ -16,6 +16,12 @@ project :
       # XXX These paths are incorrect.
       <include>../../../../boost
       <include>../../..
+
+      # XXX Workaround to fix build problems under Windows.
+      <define>BOOST_ALL_NO_LIB
+      <define>BOOST_FILESYSTEM_STATIC_LINK
+      <link>static
+      <runtime-link>static
     ;
 
 exe helpers
