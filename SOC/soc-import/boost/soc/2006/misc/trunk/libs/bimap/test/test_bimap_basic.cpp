@@ -161,89 +161,7 @@ void test_pair_ordered_associative_container(Container & c, const Data & d)
 
 }
 
-
-
-
-
 /*
-template< class bm, class IterData >
-void test_this_unknown_bimap(bm & b, IterData start, IterData final)
-{
-    b.clear();
-
-    BOOST_CHECK( b.empty() )
-    BOOST_CHECK( b.size() == 0 );
-
-    b.insert(start,final);
-
-    BOOST_CHECK( b.size() == count(start,final) )
-    BOOST_CHECK( b.max_size() >= b.size() );
-    BOOST_CHECK( ! b.empty() )
-
-    b.clear();
-    for( IterData iter = start; iter != final; ++iter )
-    {
-        b.insert( *iter );
-    }
-
-    BOOST_CHECK( b.size() == count(start,final) )
-    BOOST_CHECK( ! b.empty() )
-
-    iterator find(const key_type& k)
-
-    size_type count(const key_type& k)
-    
-    const_iterator find(const key_type& k) const
-
-    iterator insert(iterator pos, const value_type& x)
-
-    void erase(iterator pos)
-
-    size_type erase(const key_type& k)
-
-    void erase(iterator first, iterator last)
-
-
-
-    std::pair<iterator, iterator> equal_range(const key_type& k)
-    std::pair<const_iterator, const_iterator> equal_range(const key_type& k) const
-
-}
-
-template< class BimapType, class IterData >
-void test_this_ordered_bimap(BimapType & bm, IterData start, IterData final)
-{
-    iterator begin()
-
-    iterator end()
-
-    const_iterator begin() const
-
-    const_iterator end() const
-
-    reverse_iterator rbegin()
-
-    reverse_iterator rend()
-
-    const_reverse_iterator rbegin() const
-
-    const_reverse_iterator rend() const
-
-    key_compare key_comp() const
-
-    value_compare value_comp() const
-
-    iterator lower_bound(const key_type& k)
-
-    const_iterator lower_bound(const key_type& k) const
-
-    iterator upper_bound(const key_type& k)
-
-    const_iterator upper_bound(const key_type& k) const
-
-
-}
-
 template< class BimapType, class IterData >
 void test_this_unordered_bimap(BimapType & bm, IterData start, IterData final)
 {
@@ -277,20 +195,23 @@ void test_this_unordered_bimap(BimapType & bm, IterData start, IterData final)
 
 }
 */
+
+struct  left_tag {};
+struct right_tag {};
+
 void test_bimap()
 {
     using namespace boost::bimap;
 
     // Easy first test, two POD data types with out custom configuration
     {
-        typedef bimap<int,double> bm;
+        typedef std::pair<int,double> std_pair;
 
-
-        std::set< bm::relation > data;
-        data.insert( bm::relation(1,0.1) );
-        data.insert( bm::relation(2,0.2) );
-        data.insert( bm::relation(3,0.3) );
-        data.insert( bm::relation(4,0.4) );
+        std::set< std_pair > data;
+        data.insert( std_pair(1,0.1) );
+        data.insert( std_pair(2,0.2) );
+        data.insert( std_pair(3,0.3) );
+        data.insert( std_pair(4,0.4) );
 
         typedef std::map<int,double> left_data_type;
         left_data_type left_data;
@@ -306,34 +227,52 @@ void test_bimap()
         right_data.insert( right_data_type::value_type(0.3,3) );
         right_data.insert( right_data_type::value_type(0.4,4) );
 
-/*
-        std::list< bm::relation::right_pair > right_data;
-        data.push_back( bm::relation::right_pair(1,0.1) );
-        data.push_back( bm::relation::right_pair(2,0.2) );
-        data.push_back( bm::relation::right_pair(3,0.3) );
-        data.push_back( bm::relation::right_pair(4,0.4) );
-*/
-        bm b;
+        // Untagged simple bimap
+        {
+            typedef bimap<int,double> bm;
 
-        test_container(b,data);
+            bm b;
 
-        // TODO
-        // A value convertion is needed here
-        // test_associative_container(b,data);
+            test_container(b,data);
 
-        test_container(b.left , left_data);
-        test_pair_associative_container(b.left, left_data);
-        test_pair_ordered_associative_container(b.left, left_data);
+            // TODO
+            // A value convertion is needed here
+            // test_associative_container(b,data);
 
-        test_container(b.right,right_data);
-        test_pair_associative_container(b.right, right_data);
-        test_pair_ordered_associative_container(b.right, right_data);
+            test_container(b.left , left_data);
+            test_pair_associative_container(b.left, left_data);
+            test_pair_ordered_associative_container(b.left, left_data);
 
-/*
-        test_this_unknown_bimap(aBimap,data.begin(),data.end());
-        test_this_ordered_bimap(aBimap,data.begin(),data.end());
-*/
+            test_container(b.right,right_data);
+            test_pair_associative_container(b.right, right_data);
+            test_pair_ordered_associative_container(b.right, right_data);
+        }
+
+        // Tagged simple bimap
+        {
+            using namespace boost::bimap::tags;
+
+            typedef bimap< tagged<int,left_tag>, tagged<double,right_tag> > bm;
+
+            bm b;
+
+            test_container(b,data);
+
+            // TODO
+            // A value convertion is needed here
+            // test_associative_container(b,data);
+
+            test_container(b.left , left_data);
+            test_pair_associative_container(b.left, left_data);
+            test_pair_ordered_associative_container(b.left, left_data);
+
+            test_container(b.right,right_data);
+            test_pair_associative_container(b.right, right_data);
+            test_pair_ordered_associative_container(b.right, right_data);
+        }
+
     }
+
 
 }
 

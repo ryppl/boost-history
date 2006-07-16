@@ -20,22 +20,22 @@
 // Boost.Bimap
 #include <boost/bimap/detail/test/check_metadata.hpp>
 
-// Boost.Bimap.Tagged
-#include <boost/bimap/tagged/tagged.hpp>
-#include <boost/bimap/tagged/support/default_tagged.hpp>
-#include <boost/bimap/tagged/support/is_tagged.hpp>
-#include <boost/bimap/tagged/support/overwrite_tagged.hpp>
-#include <boost/bimap/tagged/support/tag_of.hpp>
-#include <boost/bimap/tagged/support/value_type_of.hpp>
-#include <boost/bimap/tagged/support/apply_to_value_type.hpp>
+// Boost.Bimap.Tags
+#include <boost/bimap/tags/tagged.hpp>
+#include <boost/bimap/tags/support/default_tagged.hpp>
+#include <boost/bimap/tags/support/is_tagged.hpp>
+#include <boost/bimap/tags/support/overwrite_tagged.hpp>
+#include <boost/bimap/tags/support/tag_of.hpp>
+#include <boost/bimap/tags/support/value_type_of.hpp>
+#include <boost/bimap/tags/support/apply_to_value_type.hpp>
 
 
 
 
 BOOST_BIMAP_TEST_STATIC_FUNCTION( test_metafunctions )
 {
-    using namespace boost::bimap::tagged::support;
-    using namespace boost::bimap::tagged;
+    using namespace boost::bimap::tags::support;
+    using namespace boost::bimap::tags;
     using namespace boost::mpl::placeholders;
     using namespace boost;
     struct tag      {};
@@ -56,8 +56,8 @@ struct data  {};
 void test_function()
 {
 
-    using namespace boost::bimap::tagged::support;
-    using namespace boost::bimap::tagged;
+    using namespace boost::bimap::tags::support;
+    using namespace boost::bimap::tags;
     using boost::is_same;
 
     typedef tagged< data, tag_a > data_a;

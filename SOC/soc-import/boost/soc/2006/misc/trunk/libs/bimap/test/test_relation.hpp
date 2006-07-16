@@ -19,7 +19,7 @@
 
 // Boost.Bimap
 #include <boost/bimap/detail/test/check_metadata.hpp>
-#include <boost/bimap/tagged/tagged.hpp>
+#include <boost/bimap/tags/tagged.hpp>
 
 // Boost.Bimap.Relation
 #include <boost/bimap/relation/relation.hpp>
@@ -38,7 +38,7 @@ namespace static_test {
 
 using namespace boost::bimap::relation::member_at;
 using namespace boost::bimap::relation;
-using namespace boost::bimap::tagged;
+using namespace boost::bimap::tags;
 
 template< class Relation, class LeftData, class RightData >
 struct untagged_test
@@ -83,7 +83,7 @@ void test_relation_with_default_tags(Relation & rel,
 
     using namespace boost::bimap::relation::support;
     using namespace boost::bimap::relation;
-    using namespace boost::bimap::tagged;
+    using namespace boost::bimap::tags;
 
     // It must work with normal tags
 
@@ -112,7 +112,7 @@ void test_relation_with_user_tags(Relation & rel,
 
     using namespace boost::bimap::relation::support;
     using namespace boost::bimap::relation;
-    using namespace boost::bimap::tagged;
+    using namespace boost::bimap::tags;
 
     // And with users ones
 
@@ -141,7 +141,7 @@ void test_relation(const LeftData & lv, const RightData & rv)
 {
     using namespace boost::bimap::relation::support;
     using namespace boost::bimap::relation;
-    using namespace boost::bimap::tagged;
+    using namespace boost::bimap::tags;
 
     // Untagged test
     {

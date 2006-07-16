@@ -15,7 +15,7 @@
 
 // Boost.Bimap
 #include <boost/bimap/detail/test/check_metadata.hpp>
-#include <boost/bimap/tagged/tagged.hpp>
+#include <boost/bimap/tags/tagged.hpp>
 
 // Boost.Bimap.Relation
 #include <boost/bimap/relation/standard_relation.hpp>
@@ -34,7 +34,7 @@ BOOST_BIMAP_TEST_STATIC_FUNCTION( untagged_static_test )
 {
     using namespace boost::bimap::relation::member_at;
     using namespace boost::bimap::relation;
-    using namespace boost::bimap::tagged;
+    using namespace boost::bimap::tags;
 
     struct left_data  {};
     struct right_data {};
