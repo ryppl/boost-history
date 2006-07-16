@@ -9,8 +9,23 @@
 // at http://www.boost.org/LICENSE_1_0.txt.)
 //
 
+#include <boost/process/config.hpp>
+
+#if defined(BOOST_PROCESS_WIN32_API)
+extern "C" {
+#   include <windows.h>
+}
+#elif defined(BOOST_PROCESS_POSIX_API)
+extern "C" {
+#   include <unistd.h>
+}
+#else
+#   error "Unsupported platform."
+#endif
+
 #include <string>
 
+#include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/process/attributes.hpp>
 #include <boost/test/unit_test.hpp>
@@ -18,6 +33,22 @@
 namespace bfs = ::boost::filesystem;
 namespace bp = ::boost::process;
 namespace but = ::boost::unit_test;
+
+// ------------------------------------------------------------------------
+
+namespace boost {
+namespace process {
+
+class launcher {
+public:
+    void setup(const attributes& a)
+    {
+        a.setup();
+    }
+};
+
+} // namespace process
+} // namespace boost
 
 // ------------------------------------------------------------------------
 
@@ -53,6 +84,37 @@ test_explicit_work_directory(void)
 
 // ------------------------------------------------------------------------
 
+static void
+test_setup(void)
+{
+    bp::command_line cl("program");
+
+    bp::attributes a1(cl, "non-existent");
+    BOOST_CHECK_THROW(bp::launcher().setup(a1), bp::system_error);
+
+    bfs::path testdir = bfs::current_path() / "test-dir";
+    BOOST_REQUIRE(bfs::create_directory(testdir));
+    try {
+        bp::attributes a2(cl, testdir.string());
+        bp::launcher().setup(a2);
+        BOOST_CHECK_EQUAL(bfs::current_path(), testdir);
+
+        const char* initial = bfs::initial_path().string().c_str();
+#if defined(BOOST_PROCESS_WIN32_API)
+        BOOST_CHECK(::SetCurrentDirectory(TEXT(initial)) != 0);
+#elif defined(BOOST_PROCESS_POSIX_API)
+        BOOST_CHECK(::chdir(initial) != -1);
+#endif
+
+        bfs::remove(testdir);
+    } catch (...) {
+        bfs::remove(testdir);
+        throw;
+    }
+}
+
+// ------------------------------------------------------------------------
+
 but::test_suite *
 init_unit_test_suite(int argc, char* argv[])
 {
@@ -63,6 +125,7 @@ init_unit_test_suite(int argc, char* argv[])
     test->add(BOOST_TEST_CASE(&test_command_line));
     test->add(BOOST_TEST_CASE(&test_default_work_directory));
     test->add(BOOST_TEST_CASE(&test_explicit_work_directory));
+    test->add(BOOST_TEST_CASE(&test_setup));
 
     return test;
 }
