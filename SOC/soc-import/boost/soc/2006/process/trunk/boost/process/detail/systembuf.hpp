@@ -44,7 +44,7 @@ public:
 #if defined(BOOST_PROCESS_WIN32_API)
     typedef HANDLE handle_type;
     typedef DWORD size_type;
-    typedef unsigned long ssize_type;
+    typedef long ssize_type;
 #else
     typedef int handle_type;
     typedef size_t size_type;
@@ -95,7 +95,7 @@ systembuf::underflow(void)
     bool ok;
 #if defined(BOOST_PROCESS_WIN32_API)
     DWORD cnt;
-    BOOL res = ::ReadFile(m_hfile, m_read_buf.get(), m_bufsize, &cnt, NULL);
+    BOOL res = ::ReadFile(m_handle, m_read_buf.get(), m_bufsize, &cnt, NULL);
     ok = (res && cnt > 0);
 #else
     ssize_type cnt = ::read(m_handle, m_read_buf.get(), m_bufsize);
@@ -136,9 +136,8 @@ systembuf::sync(void)
 
     bool ok;
 #if defined(BOOST_PROCESS_WIN32_API)
-    DWORD cnt = pptr() - pbase();
     DWORD rcnt;
-    BOOL res = ::WriteFile(m_hfile, pbase(), cnt, &rcnt, NULL);
+    BOOL res = ::WriteFile(m_handle, pbase(), cnt, &rcnt, NULL);
     ok = (res && rcnt == cnt);
 #else
     ok = ::write(m_handle, pbase(), cnt) == cnt;
