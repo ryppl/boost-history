@@ -13,20 +13,12 @@
 #include <string>
 
 #include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
 #include <boost/process/child.hpp>
 #include <boost/process/types.hpp>
 #include <boost/process/launcher.hpp>
 #include <boost/test/unit_test.hpp>
 
-// XXX Extremely ugly way to determine helpers' path...
-#if defined(__APPLE__)
-#   define HELPERS_PATH \
-        (bfs::initial_path() / "./bin/darwin/debug/helpers").string()
-#else
-#   define HELPERS_PATH \
-        (bfs::initial_path() / "./bin/gcc/debug/helpers").string()
-#endif
+#include "misc.hpp"
 
 namespace bfs = ::boost::filesystem;
 namespace bp = ::boost::process;
@@ -37,7 +29,7 @@ namespace but = ::boost::unit_test;
 void
 test_input(void)
 {
-    bp::command_line cl(HELPERS_PATH);
+    bp::command_line cl(get_helpers_path());
     cl.argument("stdin-to-stdout");
     bp::attributes a(cl);
 
@@ -67,7 +59,7 @@ test_output(bp::desc_t desc,
             const std::string& realmsg,
             const std::string& expmsg)
 {
-    bp::command_line cl(HELPERS_PATH);
+    bp::command_line cl(get_helpers_path());
     cl.argument("echo-one").argument(desc).argument(realmsg);
     bp::attributes a(cl);
 
@@ -124,7 +116,7 @@ test_merge(bp::desc_t desc1,
            bp::desc_t desc2,
            const std::string& msg)
 {
-    bp::command_line cl(HELPERS_PATH);
+    bp::command_line cl(get_helpers_path());
     cl.argument("echo-two").argument(desc1).argument(desc2).argument(msg);
     bp::attributes a(cl);
 
@@ -180,7 +172,7 @@ test_merge_non_std(void)
 static void
 test_default_work_directory(void)
 {
-    bp::command_line cl(HELPERS_PATH);
+    bp::command_line cl(get_helpers_path());
     cl.argument("pwd");
     bp::attributes a(cl);
 
@@ -206,7 +198,7 @@ test_explicit_work_directory(void)
 {
     bfs::path wdir = bfs::current_path() / "test.dir";
 
-    bp::command_line cl(HELPERS_PATH);
+    bp::command_line cl(get_helpers_path());
     cl.argument("pwd");
     bp::attributes a(cl, wdir.string());
 
@@ -237,7 +229,7 @@ test_explicit_work_directory(void)
 static void
 test_unset_environment(void)
 {
-    bp::command_line cl(HELPERS_PATH);
+    bp::command_line cl(get_helpers_path());
     cl.argument("query-env").argument("TO_BE_UNSET");
     bp::attributes a(cl);
 
@@ -269,7 +261,7 @@ test_unset_environment(void)
 static void
 test_set_environment(const std::string& value)
 {
-    bp::command_line cl(HELPERS_PATH);
+    bp::command_line cl(get_helpers_path());
     cl.argument("query-env").argument("TO_BE_SET");
     bp::attributes a(cl);
 
@@ -320,9 +312,9 @@ test_set_environment_non_empty(void)
 but::test_suite *
 init_unit_test_suite(int argc, char* argv[])
 {
-    but::test_suite* test = BOOST_TEST_SUITE("child test suite");
-
     bfs::initial_path();
+
+    but::test_suite* test = BOOST_TEST_SUITE("child test suite");
 
     test->add(BOOST_TEST_CASE(&test_stdout_pass), 0, 10);
     test->add(BOOST_TEST_CASE(&test_stdout_fail), 1, 10);

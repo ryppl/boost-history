@@ -12,19 +12,16 @@
 #include <cstring> // XXX For EXIT_* codes; should be hidden by the library.
 #include <string>
 
+#include <boost/filesystem/operations.hpp>
 #include <boost/process/child.hpp>
 #include <boost/process/types.hpp>
 #include <boost/process/standard_launcher.hpp>
 #include <boost/process/status.hpp>
 #include <boost/test/unit_test.hpp>
 
-// XXX Extremely ugly way to determine helpers' path...
-#if defined(__APPLE__)
-#   define HELPERS_PATH "./bin/darwin/debug/helpers"
-#else
-#   define HELPERS_PATH "./bin/gcc/debug/helpers"
-#endif
+#include "misc.hpp"
 
+namespace bfs = ::boost::filesystem;
 namespace bp = ::boost::process;
 namespace but = ::boost::unit_test;
 
@@ -33,7 +30,7 @@ namespace but = ::boost::unit_test;
 void
 test_input(void)
 {
-    bp::command_line cl(HELPERS_PATH);
+    bp::command_line cl(get_helpers_path());
     cl.argument("stdin-to-stdout");
     bp::attributes a(cl);
 
@@ -59,7 +56,7 @@ test_input(void)
 void
 test_output(void)
 {
-    bp::command_line cl(HELPERS_PATH);
+    bp::command_line cl(get_helpers_path());
     cl.argument("echo-two").argument(bp::STDOUT).argument(bp::STDERR).
         argument("message-to-process");
     bp::attributes a(cl);
@@ -88,6 +85,8 @@ test_output(void)
 but::test_suite *
 init_unit_test_suite(int argc, char* argv[])
 {
+    bfs::initial_path();
+
     but::test_suite* test = BOOST_TEST_SUITE("standard_launcher test suite");
 
     test->add(BOOST_TEST_CASE(&test_input), 0, 10);
