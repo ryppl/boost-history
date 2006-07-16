@@ -12,11 +12,15 @@
 #if !defined(BOOST_PROCESS_DETAIL_SYSTEMBUF_HPP)
 #define BOOST_PROCESS_DETAIL_SYSTEMBUF_HPP
 
+#include <boost/process/config.hpp>
+
 extern "C" {
 #if defined(BOOST_PROCESS_WIN32_API)
 #   include <windows.h>
-#else
+#elif defined(BOOST_PROCESS_POSIX_API)
 #   include <unistd.h>
+#else
+#   error "Unknown platform."
 #endif
 }
 
