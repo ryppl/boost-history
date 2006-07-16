@@ -25,8 +25,8 @@
 #include <boost/bimap/relation/relation.hpp>
 #include <boost/bimap/relation/member_at.hpp>
 
-// Boost.Bimap.Tagged
-#include <boost/bimap/tagged/support/apply_to_value_type.hpp>
+// Boost.Bimap.Tags
+#include <boost/bimap/tags/support/apply_to_value_type.hpp>
 
 // Boost.Bimap
 #include <boost/bimap/detail/manage_bimap_key.hpp>
@@ -87,7 +87,7 @@ struct bimap_core
 
     typedef typename relation::select_relation
     <
-        typename tagged::support::apply_to_value_type
+        typename tags::support::apply_to_value_type
         <
             get_value_type<_>,
             left_tagged_key_type

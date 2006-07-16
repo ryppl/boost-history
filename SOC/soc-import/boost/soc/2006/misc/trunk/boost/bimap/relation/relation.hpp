@@ -19,7 +19,7 @@
 // Boost.Bimap
 #include <boost/bimap/relation/mutant_relation.hpp>
 #include <boost/bimap/relation/standard_relation.hpp>
-#include <boost/bimap/tagged/support/value_type_of.hpp>
+#include <boost/bimap/tags/support/value_type_of.hpp>
 
 namespace boost {
 namespace bimap {
@@ -59,8 +59,8 @@ struct is_mutant_idiom_supported_for
 {
     // I have to build the two views and see if they are the correct size
 
-    static const int sAB = (  sizeof( typename tagged::support::value_type_of<TA>::type ) +
-                              sizeof( typename tagged::support::value_type_of<TB>::type )   );
+    static const int sAB = (  sizeof( typename tags::support::value_type_of<TA>::type ) +
+                              sizeof( typename tags::support::value_type_of<TB>::type )   );
 
     static const bool mutant_is_supported =
         ( sizeof( structured_pair<TA,TB,normal_layout> ) == sAB ) &&

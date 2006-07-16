@@ -14,9 +14,11 @@
 #define BOOST_BIMAP_RELATION_SYMMETRICAL_BASE_HPP
 
 // Boost.Bimap
-#include <boost/bimap/tagged/tagged.hpp>
+#include <boost/bimap/tags/tagged.hpp>
+#include <boost/bimap/tas/support/default_tagged.hpp>
+
 #include <boost/bimap/relation/member_at.hpp>
-#include <boost/bimap/tagged/support/default_tagged.hpp>
+
 
 namespace boost {
 namespace bimap {
@@ -32,14 +34,14 @@ class symmetrical_base
 {
     public:
 
-    typedef typename tagged::support::default_tagged
+    typedef typename tags::support::default_tagged
     <
         TA,
         member_at::left
 
     >::type tagged_left_type;
 
-    typedef typename tagged::support::default_tagged
+    typedef typename tags::support::default_tagged
     <
         TB,
         member_at::right

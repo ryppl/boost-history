@@ -7,62 +7,62 @@
 //
 // See http://www.boost.org/libs/bimap for library home page.
 
-/// \file tagged/support/overwrite_tagged.hpp
-/// \brief Hard tagging
+/// \file tags/support/default_tagged.hpp
+/// \brief Weak tagging
 
-#ifndef BOOST_BIMAP_TAGGED_SUPPORT_OVERWRITE_TAGGED_HPP
-#define BOOST_BIMAP_TAGGED_SUPPORT_OVERWRITE_TAGGED_HPP
+#ifndef BOOST_BIMAP_TAGS_SUPPORT_DEFAULT_TAGGED_HPP
+#define BOOST_BIMAP_TAGS_SUPPORT_DEFAULT_TAGGED_HPP
 
-#include <boost/bimap/tagged/tagged.hpp>
+#include <boost/bimap/tags/tagged.hpp>
 
-/** \struct boost::bimap::tagged::support::overwrite_tagged
-\brief Hard tagging metafunction
+/** \struct boost::bimap::tags::support::default_tagged
+\brief Weak tagging metafunction
 
 \code
 template< class Type, class Tag >
-struct overwrite_tagged
+struct default_tagged
 {
     typedef {TaggedType} type;
 };
 \endcode
 
 If the type is not tagged, this metafunction returns a tagged type with the
-passed tag. If it is tagged it returns a new tagged type with the tag replaced
-by the one passed as a parameter.
+default tag. If it is tagged, the returns the type unchanged.
 
-See also tagged, default_tagged.
+See also tagged, overwrite_tagged.
                                                                                 **/
 
 #ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 namespace boost {
 namespace bimap {
-namespace tagged {
+namespace tags {
 namespace support {
 
 
-// Change the tag
+// Default Tagging
+// A metafunction that create a tagged type with a default tag value.
 
-template< class Type, class NewTag >
-struct overwrite_tagged
+template< class Type, class DefaultTag >
+struct default_tagged
 {
-    typedef tagged<Type,NewTag> type;
+    typedef tagged<Type,DefaultTag> type;
 };
 
 template< class Type, class OldTag, class NewTag >
-struct overwrite_tagged< tagged< Type, OldTag >, NewTag >
+struct default_tagged< tagged< Type, OldTag >, NewTag >
 {
-    typedef tagged<Type,NewTag> type;
+    typedef tagged<Type,OldTag> type;
 };
 
-
 } // namespace support
-} // namespace tagged
+} // namespace tags
 } // namespace bimap
 } // namespace boost
 
 #endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
-#endif // BOOST_BIMAP_TAGGED_SUPPORT_OVERWRITE_TAGGED_HPP
+#endif // BOOST_BIMAP_TAGS_SUPPORT_DEFAULT_TAGGED_HPP
+
 
 

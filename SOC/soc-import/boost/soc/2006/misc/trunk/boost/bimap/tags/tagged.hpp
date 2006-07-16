@@ -7,11 +7,11 @@
 //
 // See http://www.boost.org/libs/bimap for library home page.
 
-/// \file tagged/tagged.hpp
+/// \file tags/tagged.hpp
 /// \brief Defines the tagged class
 
-#ifndef BOOST_BIMAP_TAGGED_TAGGED_HPP
-#define BOOST_BIMAP_TAGGED_TAGGED_HPP
+#ifndef BOOST_BIMAP_TAGS_TAGGED_HPP
+#define BOOST_BIMAP_TAGS_TAGGED_HPP
 
 namespace boost {
 namespace bimap {
@@ -43,7 +43,7 @@ writer can enjoy the coding too.
 
                                                                             **/
 
-namespace tagged {
+namespace tags {
 
 /// \brief The tag holder
 /**
@@ -79,11 +79,11 @@ struct tagged
     typedef Tag tag;
 };
 
-} // namespace tagged
+} // namespace tags
 } // namespace bimap
 } // namespace boost
 
-/** \namespace boost::bimap::tagged::support
+/** \namespace boost::bimap::tags::support
 \brief Metafunctions to work with tagged types.
 
 This metafunctions aims to make easier the manage of tagged types. They are all mpl
@@ -95,7 +95,7 @@ and apply_to_value_type is a higher order metafunction that allow the user to ch
 the type of a TaggedType.
                                                                                     **/
 
-#endif // BOOST_BIMAP_TAGGED_TAGGED_HPP
+#endif // BOOST_BIMAP_TAGS_TAGGED_HPP
 
 
 

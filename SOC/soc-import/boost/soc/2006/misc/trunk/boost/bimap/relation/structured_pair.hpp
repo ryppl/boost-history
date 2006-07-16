@@ -21,7 +21,7 @@
 #include <boost/bimap/detail/debug/static_error.hpp>
 #include <boost/bimap/relation/pair_layout.hpp>
 #include <boost/bimap/relation/symmetrical_base.hpp>
-#include <boost/bimap/tagged/support/value_type_of.hpp>
+#include <boost/bimap/tags/support/value_type_of.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_same.hpp>
 
@@ -159,16 +159,16 @@ class structured_pair :
     totally_ordered<
         std::pair
         <
-            typename tagged::support::value_type_of<FirstType >::type,
-            typename tagged::support::value_type_of<SecondType>::type
+            typename tags::support::value_type_of<FirstType >::type,
+            typename tags::support::value_type_of<SecondType>::type
 
         >,
 
     boost::totally_ordered<
         std::pair
         <
-            const typename tagged::support::value_type_of<FirstType >::type,
-            typename tagged::support::value_type_of<SecondType>::type
+            const typename tags::support::value_type_of<FirstType >::type,
+            typename tags::support::value_type_of<SecondType>::type
 
         >
 

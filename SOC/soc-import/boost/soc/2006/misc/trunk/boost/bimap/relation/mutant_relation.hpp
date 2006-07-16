@@ -18,12 +18,12 @@
 #include <boost/call_traits.hpp>
 
 // Boost.Bimap
-#include <boost/bimap/tagged/tagged.hpp>
-#include <boost/bimap/relation/member_at.hpp>
-#include <boost/bimap/tagged/support/default_tagged.hpp>
-#include <boost/bimap/tagged/support/tag_of.hpp>
-#include <boost/bimap/tagged/support/value_type_of.hpp>
+#include <boost/bimap/tags/tagged.hpp>
+#include <boost/bimap/tags/support/default_tagged.hpp>
+#include <boost/bimap/tags/support/tag_of.hpp>
+#include <boost/bimap/tags/support/value_type_of.hpp>
 
+#include <boost/bimap/relation/member_at.hpp>
 #include <boost/bimap/relation/detail/mutant.hpp>
 #include <boost/bimap/relation/structured_pair.hpp>
 
@@ -125,6 +125,22 @@ class mutant_relation :
 
         left ( rp.second ),
         right( rp.first  )
+    {}
+
+    // Allow to create a relation from a std pair
+    // This allows to better integration with the stl
+
+    typedef std::pair
+    <
+        typename mutant_relation::left_value_type,
+        typename mutant_relation::right_value_type
+
+    > std_pair;
+
+    mutant_relation(const std_pair & p) :
+
+        left ( p.first  ),
+        right( p.second )
     {}
 
     // Operators

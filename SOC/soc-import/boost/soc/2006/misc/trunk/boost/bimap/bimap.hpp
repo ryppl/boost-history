@@ -77,7 +77,7 @@ From a user point of view the best way to use this reference is to:
     - Understand the relation class. (boost::bimap::relation)
     - Read the bimap class documentation. (boost::bimap)
     - If user tags will be used, it is not necesary but it may be good to
-      skim the tagged reference. (boost::bimap::tagged)
+      skim the tagged reference. (boost::bimap::tags)
 
 \section GuideForTheDevelopper Guide for the developper
 
@@ -86,7 +86,7 @@ important. After getting a good understanding of the library from a user
 perspective the next step will be:
 
     - Understand the mutant idiom. (boost::bimap::mutant)
-    - Understand the tagged idiom. (boost::bimap::tagged)
+    - Understand the tagged idiom. (boost::bimap::tags)
     - Understand the internals of the relation class (boost::bimap::relation)
     - Read the container_adaptor toolbox docs (boost::bimap::container_adaptor)
     - Understand the internals of the bimap class. (boost::bimap and boost::bimap::detail)
@@ -102,7 +102,7 @@ perspective the next step will be:
 \brief The relation
                                                                         **/
 
-/** \defgroup tagged_group tagged idiom
+/** \defgroup tags_group tagged idiom
 \brief The tagged idiom
                                                                         **/
 
@@ -112,6 +112,7 @@ perspective the next step will be:
 
 // Boost.Bimap
 #include <boost/bimap/detail/bimap_core.hpp>
+#include <boost/bimap/tags/tagged.hpp>
 
 /// \brief The namespace where all the boost libraries lives.
 
@@ -121,10 +122,7 @@ namespace boost {
 /**
 All the entities in the library are defined in this namespace.
                                                                     **/
-
 namespace bimap {
-
-using namespace relation;
 
 /// \brief The bimap class is the entry point to the library.
 /**

@@ -7,15 +7,15 @@
 //
 // See http://www.boost.org/libs/bimap for library home page.
 
-/// \file tagged/support/value_type_of.hpp
+/// \file tags/support/value_type_of.hpp
 /// \brief Consistent way to access the value type of a tagged or untagged type.
 
-#ifndef BOOST_BIMAP_TAGGED_SUPPORT_VALUE_TYPE_OF_HPP
-#define BOOST_BIMAP_TAGGED_SUPPORT_VALUE_TYPE_OF_HPP
+#ifndef BOOST_BIMAP_TAGS_SUPPORT_VALUE_TYPE_OF_HPP
+#define BOOST_BIMAP_TAGS_SUPPORT_VALUE_TYPE_OF_HPP
 
-#include <boost/bimap/tagged/tagged.hpp>
+#include <boost/bimap/tags/tagged.hpp>
 
-/** \struct boost::bimap::tagged::support::value_type_of
+/** \struct boost::bimap::tags::support::value_type_of
 \brief Metafunction to work with tagged and untagged type uniformly
 
 \code
@@ -38,7 +38,7 @@ See also tagged, tag_of.
 
 namespace boost {
 namespace bimap {
-namespace tagged {
+namespace tags {
 namespace support {
 
 
@@ -58,12 +58,12 @@ struct value_type_of< tagged< Type, Tag > >
 
 
 } // namespace support
-} // namespace tagged
+} // namespace tags
 } // namespace bimap
 } // namespace boost
 
 #endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
-#endif // BOOST_BIMAP_TAGGED_SUPPORT_VALUE_TYPE_OF_HPP
+#endif // BOOST_BIMAP_TAGS_SUPPORT_VALUE_TYPE_OF_HPP
 
 

@@ -19,7 +19,7 @@
 #include <boost/operators.hpp>
 #include <boost/bimap/relation/pair_layout.hpp>
 #include <boost/bimap/relation/symmetrical_base.hpp>
-#include <boost/bimap/tagged/support/value_type_of.hpp>
+#include <boost/bimap/tags/support/value_type_of.hpp>
 
 namespace boost {
 namespace bimap {
@@ -168,16 +168,16 @@ class standard_pair_view :
     boost::totally_ordered<
         std::pair
         <
-            typename tagged::support::value_type_of<FirstType >::type,
-            typename tagged::support::value_type_of<SecondType>::type
+            typename tags::support::value_type_of<FirstType >::type,
+            typename tags::support::value_type_of<SecondType>::type
 
         >,
 
     boost::totally_ordered<
         std::pair
         <
-            const typename tagged::support::value_type_of<FirstType >::type,
-            typename tagged::support::value_type_of<SecondType>::type
+            const typename tags::support::value_type_of<FirstType >::type,
+            typename tags::support::value_type_of<SecondType>::type
 
         >
 

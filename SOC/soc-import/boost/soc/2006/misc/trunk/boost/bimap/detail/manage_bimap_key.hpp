@@ -14,10 +14,10 @@
 #define BOOST_BIMAP_DETAIL_MANAGE_BIMAP_KEY_HPP
 
 
-// Boost.Bimap.Tagged
-#include <boost/bimap/tagged/support/value_type_of.hpp>
-#include <boost/bimap/tagged/support/default_tagged.hpp>
-#include <boost/bimap/tagged/support/apply_to_value_type.hpp>
+// Boost.Bimap.Tags
+#include <boost/bimap/tags/support/value_type_of.hpp>
+#include <boost/bimap/tags/support/default_tagged.hpp>
+#include <boost/bimap/tags/support/apply_to_value_type.hpp>
 
 // Boost.MPL
 #include <boost/mpl/if.hpp>
@@ -34,7 +34,7 @@ namespace detail {
 // In detail, we are free to import same namespaces to augment the
 // readability of the code. No one is supposed to use this namespace.
 
-using namespace tagged::support;
+using namespace tags::support;
 using namespace collection::support;
 using namespace collection;
 using namespace mpl::placeholders;

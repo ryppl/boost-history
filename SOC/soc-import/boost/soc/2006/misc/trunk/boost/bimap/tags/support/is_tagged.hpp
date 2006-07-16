@@ -7,15 +7,15 @@
 //
 // See http://www.boost.org/libs/bimap for library home page.
 
-/// \file tagged/support/is_tagged.hpp
+/// \file tags/support/is_tagged.hpp
 /// \brief type_traits extension
 
-#ifndef BOOST_BIMAP_TAGGED_SUPPORT_IS_TAGGED_HPP
-#define BOOST_BIMAP_TAGGED_SUPPORT_IS_TAGGED_HPP
+#ifndef BOOST_BIMAP_TAGS_SUPPORT_IS_TAGGED_HPP
+#define BOOST_BIMAP_TAGS_SUPPORT_IS_TAGGED_HPP
 
-#include <boost/bimap/tagged/tagged.hpp>
+#include <boost/bimap/tags/tagged.hpp>
 
-/** \struct boost::bimap::tagged::support::is_tagged
+/** \struct boost::bimap::tags::support::is_tagged
 \brief Type trait to check if a type is tagged.
 
 \code
@@ -33,7 +33,7 @@ See also tagged.
 
 namespace boost {
 namespace bimap {
-namespace tagged {
+namespace tags {
 namespace support {
 
 
@@ -56,11 +56,11 @@ struct is_tagged< tagged< Type, Tag > >
 
 
 } // namespace support
-} // namespace tagged
+} // namespace tags
 } // namespace bimap
 } // namespace boost
 
 #endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
-#endif // BOOST_BIMAP_TAGGED_SUPPORT_IS_TAGGED_HPP
+#endif // BOOST_BIMAP_TAGS_SUPPORT_IS_TAGGED_HPP
 

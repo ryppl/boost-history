@@ -7,16 +7,16 @@
 //
 // See http://www.boost.org/libs/bimap for library home page.
 
-/// \file tagged/support/tag_of.hpp
+/// \file tags/support/tag_of.hpp
 /// \brief Safe way to acces the tag of a type
 
-#ifndef BOOST_BIMAP_TAGGED_SUPPORT_TAG_OF_HPP
-#define BOOST_BIMAP_TAGGED_SUPPORT_TAG_OF_HPP
+#ifndef BOOST_BIMAP_TAGS_SUPPORT_TAG_OF_HPP
+#define BOOST_BIMAP_TAGS_SUPPORT_TAG_OF_HPP
 
-#include <boost/bimap/tagged/tagged.hpp>
+#include <boost/bimap/tags/tagged.hpp>
 #include <boost/bimap/detail/debug/static_error.hpp>
 
-/** \struct boost::bimap::tagged::support::tag_of
+/** \struct boost::bimap::tags::support::tag_of
 \brief Metafunction to obtain the tag of a type.
 
 \code
@@ -40,7 +40,7 @@ See also tagged, value_type_of.
 
 namespace boost {
 namespace bimap {
-namespace tagged {
+namespace tags {
 namespace support {
 
 
@@ -60,11 +60,11 @@ struct tag_of< tagged< Type, Tag > >
 
 
 } // namespace support
-} // namespace tagged
+} // namespace tags
 } // namespace bimap
 } // namespace boost
 
 #endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
-#endif // BOOST_BIMAP_TAGGED_SUPPORT_TAG_OF_HPP
+#endif // BOOST_BIMAP_TAGS_SUPPORT_TAG_OF_HPP
 

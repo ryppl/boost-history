@@ -14,17 +14,15 @@
 #define BOOST_BIMAP_RELATION_STANDARD_RELATION_HPP
 
 // Boost.Bimap
-#include <boost/bimap/tagged/tagged.hpp>
+#include <boost/bimap/tags/tagged.hpp>
+#include <boost/bimap/tags/support/default_tagged.hpp>
+#include <boost/bimap/tags/support/tag_of.hpp>
+#include <boost/bimap/tags/support/value_type_of.hpp>
+
 #include <boost/bimap/relation/member_at.hpp>
 #include <boost/bimap/relation/symmetrical_base.hpp>
-
 #include <boost/bimap/relation/standard_pair_view.hpp>
 #include <boost/bimap/relation/const_standard_pair_view.hpp>
-
-#include <boost/bimap/tagged/support/default_tagged.hpp>
-#include <boost/bimap/tagged/support/tag_of.hpp>
-#include <boost/bimap/tagged/support/value_type_of.hpp>
-
 #include <boost/bimap/relation/structured_pair.hpp>
 
 namespace boost {
@@ -117,6 +115,21 @@ class standard_relation :
         right( rp.first  )
     {}
 
+    // Allow to create a relation from a std pair
+    // This allows to better integration with the stl
+
+    typedef std::pair
+    <
+        typename standard_relation::left_value_type,
+        typename standard_relation::right_value_type
+
+    > std_pair;
+
+    standard_relation(const std_pair & p) :
+
+        left ( p.first  ),
+        right( p.second )
+    {}
 
     // Operators
 
