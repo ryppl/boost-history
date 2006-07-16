@@ -196,6 +196,39 @@ void test_this_unordered_bimap(BimapType & bm, IterData start, IterData final)
 }
 */
 
+
+template< class Container, class Data, class LeftData, class RightData >
+
+void test_set_set_bimap(              Container & c,
+
+                                      const Data & d,
+
+                        const LeftData & ld,    const RightData & rd)
+{
+    using namespace boost::bimap;
+
+    test_container(c,d);
+
+    // TODO
+    // A value convertion is needed here
+    // test_associative_container(b,data);
+
+    BOOST_CHECK( &c.left  == &map_by<member_at::left >(c) );
+    BOOST_CHECK( &c.right == &map_by<member_at::right>(c) );
+
+    test_container(c.left , ld);
+    test_pair_associative_container(c.left, ld);
+    test_pair_ordered_associative_container(c.left, ld);
+
+    test_container(c.right, rd);
+    test_pair_associative_container(c.right, rd);
+    test_pair_ordered_associative_container(c.right, rd);
+
+}
+
+
+
+
 struct  left_tag {};
 struct right_tag {};
 
@@ -233,42 +266,17 @@ void test_bimap()
 
             bm b;
 
-            test_container(b,data);
-
-            // TODO
-            // A value convertion is needed here
-            // test_associative_container(b,data);
-
-            test_container(b.left , left_data);
-            test_pair_associative_container(b.left, left_data);
-            test_pair_ordered_associative_container(b.left, left_data);
-
-            test_container(b.right,right_data);
-            test_pair_associative_container(b.right, right_data);
-            test_pair_ordered_associative_container(b.right, right_data);
+            test_set_set_bimap(b,data,left_data,right_data);
         }
 
         // Tagged simple bimap
         {
-            using namespace boost::bimap::tags;
 
             typedef bimap< tagged<int,left_tag>, tagged<double,right_tag> > bm;
 
             bm b;
 
-            test_container(b,data);
-
-            // TODO
-            // A value convertion is needed here
-            // test_associative_container(b,data);
-
-            test_container(b.left , left_data);
-            test_pair_associative_container(b.left, left_data);
-            test_pair_ordered_associative_container(b.left, left_data);
-
-            test_container(b.right,right_data);
-            test_pair_associative_container(b.right, right_data);
-            test_pair_ordered_associative_container(b.right, right_data);
+            test_set_set_bimap(b,data,left_data,right_data);
         }
 
     }
