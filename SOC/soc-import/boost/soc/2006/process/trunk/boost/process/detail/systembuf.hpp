@@ -28,7 +28,6 @@ extern "C" {
 
 #include <boost/assert.hpp>
 #include <boost/noncopyable.hpp>
-#include <boost/process/types.hpp>
 #include <boost/scoped_array.hpp>
 
 namespace boost {
