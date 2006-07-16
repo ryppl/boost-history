@@ -9,6 +9,12 @@
 // at http://www.boost.org/LICENSE_1_0.txt.)
 //
 
+#include <boost/process/config.hpp>
+
+#if defined(BOOST_PROCESS_WIN32_API)
+#   include <windows.h>
+#endif
+
 #include <cstdlib>
 #include <iostream>
 #include <string>
@@ -109,7 +115,14 @@ int
 h_query_env(int argc, char* argv[])
 {
 #if defined(BOOST_PROCESS_WIN32_API)
-#   error "Unimplemented."
+    TCHAR buf[1024];
+    DWORD res = GetEnvironmentVariable(TEXT(argv[1]), (LPTSTR) &buf, sizeof(buf));
+    if (res == 0)
+        std::cout << "undefined" << std::endl;
+    else {
+        std::cout << "defined" << std::endl;
+        std::cout << "'" << buf << "'" << std::endl;
+    }
 #else
     const char* value = ::getenv(argv[1]);
     if (value == NULL)
