@@ -112,7 +112,25 @@ perspective the next step will be:
 
 // Boost.Bimap
 #include <boost/bimap/detail/bimap_core.hpp>
+
+// Include basic tools for user commodity
 #include <boost/bimap/tags/tagged.hpp>
+#include <boost/bimap/support/map_by.hpp>
+#include <boost/bimap/relation/member_at.hpp>
+#include <boost/bimap/relation/support/get.hpp>
+
+// Bring the most used namespaces directly to the user main namespace
+namespace boost {
+namespace bimap {
+
+using namespace boost::bimap::collection;
+using namespace boost::bimap::support;
+using namespace boost::bimap::tags;
+using namespace boost::bimap::relation::support;
+using namespace boost::bimap::relation;
+
+} // namespace bimap
+} // namespace boost
 
 /// \brief The namespace where all the boost libraries lives.
 
