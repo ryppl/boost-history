@@ -37,7 +37,8 @@ test_default_work_directory(void)
 {
     bp::command_line cl("program");
     bp::attributes a(cl);
-    BOOST_CHECK_EQUAL(a.get_work_directory(), bfs::current_path().string());
+    BOOST_CHECK(bfs::equivalent(a.get_work_directory(),
+                                bfs::current_path().string()));
 }
 
 // ------------------------------------------------------------------------

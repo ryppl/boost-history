@@ -12,9 +12,25 @@
 #if !defined(BOOST_PROCESS_BASIC_ATTRIBUTES_HPP)
 #define BOOST_PROCESS_BASIC_ATTRIBUTES_HPP
 
+#include <boost/process/config.hpp>
+
+#if defined(BOOST_PROCESS_WIN32_API)
+extern "C" {
+#   include <windows.h>
+}
+#elif defined(BOOST_PROCESS_POSIX_API)
+extern "C" {
+#   include <unistd.h>
+}
+#   include <cerrno>
+#else
+#   error "Unsupported platform."
+#endif
+
 #include <string>
 
-#include <boost/process/config.hpp>
+#include <boost/process/exceptions.hpp>
+#include <boost/throw_exception.hpp>
 
 namespace boost {
 namespace process {
@@ -28,8 +44,6 @@ class basic_attributes
 {
     Command_Line m_command_line;
     std::string m_work_directory;
-
-    std::string get_current_directory(void) const;
 
 protected:
     friend class launcher;
@@ -52,10 +66,31 @@ basic_attributes< Command_Line >::basic_attributes
     (const Command_Line& cl, const std::string& work_directory) :
     m_command_line(cl)
 {
-    if (work_directory == "")
-        m_work_directory = get_current_directory();
-    else
+    if (work_directory == "") {
+#if defined(BOOST_PROCESS_WIN32_API)
+        DWORD length = ::GetCurrentDirectory(0, NULL);
+        TCHAR* buf = new TCHAR[length * sizeof(TCHAR)];
+        if (::GetCurrentDirectory(length, buf) == 0) {
+            delete buf;
+            boost::throw_exception
+                (system_error
+                 ("boost::process::basic_attributes::basic_attributes",
+                  "GetCurrentDirectory failed", ::GetLastError()));
+        }
+        m_work_directory = buf;
+        delete buf;
+#else
+        const char* buf = ::getcwd(NULL, 0);
+        if (buf == NULL)
+            boost::throw_exception
+                (system_error
+                 ("boost::process::basic_attributes::basic_attributes",
+                  "getcwd(2) failed", errno));
+        m_work_directory = buf;
+#endif
+    } else
         m_work_directory = work_directory;
+    BOOST_ASSERT(!m_work_directory.empty());
 }
 
 // ------------------------------------------------------------------------
@@ -81,13 +116,30 @@ basic_attributes< Command_Line >::get_work_directory(void)
 
 // ------------------------------------------------------------------------
 
+template< class Command_Line >
+inline void
+basic_attributes< Command_Line >::setup(void)
+    const
+{
+    if (m_work_directory.length() > 0) {
+#if defined(BOOST_PROCESS_WIN32_API)
+        if (::SetCurrentDirectory(TEXT(m_work_directory.c_str())) == 0)
+            boost::throw_exception
+                (system_error
+                 ("boost::process::basic_attributes::basic_attributes",
+                  "SetCurrentDirectory failed", ::GetLastError()));
+#else
+        if (chdir(m_work_directory.c_str()) == -1)
+            boost::throw_exception
+                (system_error("boost::process::basic_attributes::setup",
+                              "chdir(2) failed", errno));
+#endif
+    }
+}
+
+// ------------------------------------------------------------------------
+
 } // namespace process
 } // namespace boost
-
-#if defined(BOOST_PROCESS_WIN32_API)
-#   include <boost/process/basic_attributes_win32.hpp>
-#else
-#   include <boost/process/basic_attributes_posix.hpp>
-#endif
 
 #endif // !defined(BOOST_PROCESS_BASIC_ATTRIBUTES_HPP)
