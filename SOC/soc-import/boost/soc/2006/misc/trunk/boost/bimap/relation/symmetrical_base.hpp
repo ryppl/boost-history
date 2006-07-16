@@ -15,7 +15,7 @@
 
 // Boost.Bimap
 #include <boost/bimap/tags/tagged.hpp>
-#include <boost/bimap/tas/support/default_tagged.hpp>
+#include <boost/bimap/tags/support/default_tagged.hpp>
 
 #include <boost/bimap/relation/member_at.hpp>
 
