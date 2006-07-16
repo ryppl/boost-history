@@ -31,7 +31,7 @@ status
 basic_child< Attributes >::wait(void)
 {
     int s;
-    if (::waitpid(basic_child< Attributes >::get_id(), &s, 0) == -1)
+    if (::waitpid(basic_child< Attributes >::get_handle(), &s, 0) == -1)
         boost::throw_exception
             (system_error("boost::process::basic_child::wait",
                           "waitpid(2) failed", errno));

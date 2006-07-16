@@ -14,7 +14,6 @@
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/process/child.hpp>
-#include <boost/process/types.hpp>
 #include <boost/process/standard_launcher.hpp>
 #include <boost/process/status.hpp>
 #include <boost/test/unit_test.hpp>
@@ -64,7 +63,7 @@ test_output(void)
     bp::child c = bp::standard_launcher().start<bp::attributes>(a);
 
     bp::pistream& is = c.get_output(bp::STDOUT);
-    bp::desc_t dtmp;
+    int dtmp;
     std::string word;
     is >> dtmp;
     BOOST_CHECK_EQUAL(dtmp, bp::STDOUT);

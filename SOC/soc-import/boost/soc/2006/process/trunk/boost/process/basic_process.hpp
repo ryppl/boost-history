@@ -12,7 +12,16 @@
 #if !defined(BOOST_PROCESS_BASIC_PROCESS_HPP)
 #define BOOST_PROCESS_BASIC_PROCESS_HPP
 
-#include <boost/process/types.hpp>
+#include <boost/process/config.hpp>
+
+#if defined(BOOST_PROCESS_WIN32_API)
+extern "C" {
+#   include <windows.h>
+}
+#elif defined(BOOST_PROCESS_POSIX_API)
+#else
+#   error "Unsupported platform."
+#endif
 
 namespace boost {
 namespace process {
@@ -22,24 +31,31 @@ namespace process {
 template< class Attributes >
 class basic_process
 {
-    id_t m_id;
-    Attributes m_attributes;
+public:
+#if defined(BOOST_PROCESS_WIN32_API)
+    typedef HANDLE handle_type;
+#elif defined(BOOST_PROCESS_POSIX_API)
+    typedef pid_t handle_type;
+#endif
+
+    const Attributes& get_attributes(void) const;
+    handle_type get_handle(void) const;
 
 protected:
-    basic_process(const id_t& id, const Attributes& a);
+    basic_process(const handle_type& h, const Attributes& a);
 
-public:
-    const Attributes& get_attributes(void) const;
-    id_t get_id(void) const;
+private:
+    handle_type m_handle;
+    Attributes m_attributes;
 };
 
 // ------------------------------------------------------------------------
 
 template< class Attributes >
 inline
-basic_process< Attributes >::basic_process(const id_t& id,
+basic_process< Attributes >::basic_process(const handle_type& h,
                                            const Attributes& a) :
-    m_id(id),
+    m_handle(h),
     m_attributes(a)
 {
 }
@@ -59,11 +75,11 @@ basic_process< Attributes >::get_attributes(void)
 
 template< class Attributes >
 inline
-id_t
-basic_process< Attributes >::get_id(void)
+typename basic_process< Attributes >::handle_type
+basic_process< Attributes >::get_handle(void)
     const
 {
-    return m_id;
+    return m_handle;
 }
 
 // ------------------------------------------------------------------------

@@ -14,7 +14,6 @@
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/process/child.hpp>
-#include <boost/process/types.hpp>
 #include <boost/process/launcher.hpp>
 #include <boost/test/unit_test.hpp>
 
@@ -55,7 +54,7 @@ test_input(void)
 // ------------------------------------------------------------------------
 
 void
-test_output(bp::desc_t desc,
+test_output(int desc,
             const std::string& realmsg,
             const std::string& expmsg)
 {
@@ -112,8 +111,8 @@ test_stdout_pass(void)
 // ------------------------------------------------------------------------
 
 void
-test_merge(bp::desc_t desc1,
-           bp::desc_t desc2,
+test_merge(int desc1,
+           int desc2,
            const std::string& msg)
 {
     bp::command_line cl(get_helpers_path());
@@ -126,7 +125,7 @@ test_merge(bp::desc_t desc1,
     bp::child c = l.start<bp::attributes>(a);
 
     bp::pistream& is = c.get_output(desc1);
-    bp::desc_t dtmp;
+    int dtmp;
     std::string word;
     is >> dtmp;
     BOOST_CHECK_EQUAL(dtmp, desc1);

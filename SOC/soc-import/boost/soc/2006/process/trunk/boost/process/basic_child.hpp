@@ -31,21 +31,23 @@ class basic_child :
     public basic_process< Attributes >
 {
 public:
+    typedef typename basic_process< Attributes >::handle_type handle_type;
+
     status wait(void);
 
-    postream& get_input(desc_t desc) const;
-    pistream& get_output(desc_t desc) const;
+    postream& get_input(int desc) const;
+    pistream& get_output(int desc) const;
 
 private:
-    typedef std::map< desc_t, boost::shared_ptr< postream > > input_map;
-    typedef std::map< desc_t, boost::shared_ptr< pistream > > output_map;
+    typedef std::map< int, boost::shared_ptr< postream > > input_map;
+    typedef std::map< int, boost::shared_ptr< pistream > > output_map;
 
     input_map m_input_map;
     output_map m_output_map;
 
     friend class launcher;
-    typedef std::map< desc_t, detail::shared_pipe > pipe_map;
-    basic_child(id_t id, const Attributes& attrs,
+    typedef std::map< int, detail::shared_pipe > pipe_map;
+    basic_child(const handle_type& h, const Attributes& attrs,
                 const pipe_map& inpipes, const pipe_map& outpipes);
 };
 
@@ -53,11 +55,11 @@ private:
 
 template< class Attributes >
 inline
-basic_child< Attributes >::basic_child(id_t id,
+basic_child< Attributes >::basic_child(const handle_type& h,
                                        const Attributes& attrs,
                                        const pipe_map& inpipes,
                                        const pipe_map& outpipes) :
-    basic_process< Attributes >(id, attrs)
+    basic_process< Attributes >(h, attrs)
 {
     for (pipe_map::const_iterator iter = inpipes.begin();
          iter != inpipes.end(); iter++) {
@@ -77,7 +79,7 @@ basic_child< Attributes >::basic_child(id_t id,
 template< class Attributes >
 inline
 postream&
-basic_child< Attributes >::get_input(desc_t desc)
+basic_child< Attributes >::get_input(int desc)
     const
 {
     input_map::const_iterator iter = m_input_map.find(desc);
@@ -90,7 +92,7 @@ basic_child< Attributes >::get_input(desc_t desc)
 template< class Attributes >
 inline
 pistream&
-basic_child< Attributes >::get_output(desc_t desc)
+basic_child< Attributes >::get_output(int desc)
     const
 {
     output_map::const_iterator iter = m_output_map.find(desc);

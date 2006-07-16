@@ -53,7 +53,7 @@ launcher::start(const Attributes& a)
         outpipes.insert
             (typename pipe_map::value_type(*iter, detail::shared_pipe()));
 
-    id_t pid = ::fork();
+    pid_t pid = ::fork();
     if (pid == -1) {
         boost::throw_exception
             (system_error("boost::process::launcher::start",
@@ -61,7 +61,7 @@ launcher::start(const Attributes& a)
     } else if (pid == 0) {
         for (typename pipe_map::iterator iter = inpipes.begin();
              iter != inpipes.end(); iter++) {
-            desc_t d = (*iter).first;
+            int d = (*iter).first;
             detail::shared_pipe p = (*iter).second;
 
             p->close_write_end();
@@ -71,7 +71,7 @@ launcher::start(const Attributes& a)
 
         for (typename pipe_map::iterator iter = outpipes.begin();
              iter != outpipes.end(); iter++) {
-            desc_t d = (*iter).first;
+            int d = (*iter).first;
             detail::shared_pipe p = (*iter).second;
 
             p->close_read_end();
@@ -81,7 +81,7 @@ launcher::start(const Attributes& a)
 
         for (merge_set::const_iterator iter = m_merge_set.begin();
              iter != m_merge_set.end(); iter++) {
-            const std::pair< desc_t, desc_t >& p = (*iter);
+            const std::pair< int, int >& p = (*iter);
             ::close(p.first);
             ::dup2(p.second, p.first);
         }

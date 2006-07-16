@@ -46,7 +46,6 @@ test-suite process :
     [ compile include_standard_launcher_test.cpp : : ]
     [ compile include_status_test.cpp : : ]
     [ compile include_top_test.cpp : : ]
-    [ compile include_types_test.cpp : : ]
 
     [ run command_line_test.cpp
         :

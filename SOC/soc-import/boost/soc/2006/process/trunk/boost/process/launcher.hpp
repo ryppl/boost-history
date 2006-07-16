@@ -18,7 +18,6 @@
 
 #include <boost/assert.hpp>
 #include <boost/process/basic_child.hpp>
-#include <boost/process/types.hpp>
 
 namespace boost {
 namespace process {
@@ -26,15 +25,15 @@ namespace process {
 // ------------------------------------------------------------------------
 
 // XXX Shouldn't be here, nor be named like this.
-static const desc_t STDIN = 0;
-static const desc_t STDOUT = 1;
-static const desc_t STDERR = 2;
+static const int STDIN = 0;
+static const int STDOUT = 1;
+static const int STDERR = 2;
 
 class launcher
 {
-    typedef std::set< std::pair< desc_t, desc_t > > merge_set;
-    typedef std::set< desc_t > input_set;
-    typedef std::set< desc_t > output_set;
+    typedef std::set< std::pair< int, int > > merge_set;
+    typedef std::set< int > input_set;
+    typedef std::set< int > output_set;
 
     merge_set m_merge_set;
     input_set m_input_set;
@@ -73,9 +72,9 @@ class launcher
     environment_map m_environment;
 
 public:
-    launcher& input(desc_t desc);
-    launcher& output(desc_t desc);
-    launcher& merge(desc_t from, desc_t to);
+    launcher& input(int desc);
+    launcher& output(int desc);
+    launcher& merge(int from, int to);
 
     void set_environment(const std::string& var, const std::string& value);
     void unset_environment(const std::string& var);
@@ -88,7 +87,7 @@ public:
 
 inline
 launcher&
-launcher::input(desc_t desc)
+launcher::input(int desc)
 {
     m_input_set.insert(desc);
     return *this;
@@ -98,7 +97,7 @@ launcher::input(desc_t desc)
 
 inline
 launcher&
-launcher::output(desc_t desc)
+launcher::output(int desc)
 {
     m_output_set.insert(desc);
     return *this;
@@ -108,9 +107,9 @@ launcher::output(desc_t desc)
 
 inline
 launcher&
-launcher::merge(desc_t src, desc_t dest)
+launcher::merge(int src, int dest)
 {
-    m_merge_set.insert(std::pair< desc_t, desc_t >(src, dest));
+    m_merge_set.insert(std::pair< int, int >(src, dest));
     return *this;
 }
 
