@@ -9,11 +9,21 @@
 // at http://www.boost.org/LICENSE_1_0.txt.)
 //
 
+#include <boost/process/config.hpp>
+
+#if defined(BOOST_PROCESS_WIN32_API)
+#elif defined(BOOST_PROCESS_POSIX_API)
+extern "C" {
+#   include <unistd.h>
+}
+#else
+#   error "Unsupported platform."
+#endif
+
 #include <iostream>
 
 #include <boost/process/detail/pipe.hpp>
 #include <boost/process/detail/systembuf.hpp>
-#include <boost/process/launcher.hpp> // XXX For STDIN/STDOUT.
 #include <boost/test/unit_test.hpp>
 
 namespace bp = ::boost::process;
@@ -43,13 +53,14 @@ test_read_and_write(void)
 
 // ------------------------------------------------------------------------
 
+#if defined(BOOST_PROCESS_POSIX_API)
 static void
 test_remap_read(void)
 {
     bpd::pipe p;
     bpd::systembuf wbuf(p.get_write_end());
     std::ostream wend(&wbuf);
-    p.remap_read_end(bp::STDIN);
+    p.remap_read_end(STDIN_FILENO);
 
     // XXX This assumes that the pipe's buffer is big enough to accept
     // the data written without blocking!
@@ -60,16 +71,18 @@ test_remap_read(void)
     std::cin >> tmp;
     BOOST_CHECK_EQUAL(tmp, "2message");
 }
+#endif
 
 // ------------------------------------------------------------------------
 
+#if defined(BOOST_PROCESS_POSIX_API)
 static void
 test_remap_write(void)
 {
     bpd::pipe p;
     bpd::systembuf rbuf(p.get_read_end());
     std::istream rend(&rbuf);
-    p.remap_write_end(bp::STDOUT);
+    p.remap_write_end(STDOUT_FILENO);
 
     // XXX This assumes that the pipe's buffer is big enough to accept
     // the data written without blocking!
@@ -80,6 +93,7 @@ test_remap_write(void)
     rend >> tmp;
     BOOST_CHECK_EQUAL(tmp, "3message");
 }
+#endif
 
 // ------------------------------------------------------------------------
 
@@ -89,8 +103,11 @@ init_unit_test_suite(int argc, char* argv[])
     but::test_suite* test = BOOST_TEST_SUITE("detail::pipe test suite");
 
     test->add(BOOST_TEST_CASE(&test_read_and_write));
+
+#if defined(BOOST_PROCESS_POSIX_API)
     test->add(BOOST_TEST_CASE(&test_remap_read));
     test->add(BOOST_TEST_CASE(&test_remap_write));
+#endif
 
     return test;
 }
