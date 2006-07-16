@@ -83,7 +83,7 @@ pipe::pipe(void)
 #if defined(BOOST_PROCESS_WIN32_API)
     SECURITY_ATTRIBUTES sa;
 
-    ZeroMemory(sa, sizeof(sa));
+    ZeroMemory(&sa, sizeof(sa));
     sa.nLength = sizeof(sa);
     sa.lpSecurityDescriptor = NULL;
     sa.bInheritHandle = TRUE;

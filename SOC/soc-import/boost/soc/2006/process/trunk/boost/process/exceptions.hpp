@@ -87,12 +87,15 @@ system_error::what(void)
         m_message = std::string(std::runtime_error::what()) + ": ";
 
 #if defined(BOOST_PROCESS_WIN32_API)
-        TCHAR* msg;
+        TCHAR* msg = NULL;
         if (::FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |
                             FORMAT_MESSAGE_ALLOCATE_BUFFER,
-                            NULL, m_sys_err, 0, &msg, 0, NULL) == 0)
+                            NULL, m_sys_err, 0,
+                            reinterpret_cast<LPTSTR>(&msg),
+                            0, NULL) == 0)
             m_message += "Unexpected error in FormatMessage";
         else {
+            BOOST_ASSERT(msg != NULL);
             m_message += msg;
             LocalFree(msg);
         }
