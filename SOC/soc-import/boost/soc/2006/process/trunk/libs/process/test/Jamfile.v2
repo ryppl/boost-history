@@ -58,6 +58,7 @@ test-suite process :
         :
         :
         : <library>../../../../boost//unit_test_framework
+          <library>../../../../boost//filesystem
         ]
 
     [ run systembuf_test.cpp

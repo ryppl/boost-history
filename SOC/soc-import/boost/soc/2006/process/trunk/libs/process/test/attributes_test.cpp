@@ -11,15 +11,11 @@
 
 #include <string>
 
+#include <boost/filesystem/operations.hpp>
 #include <boost/process/attributes.hpp>
 #include <boost/test/unit_test.hpp>
 
-#if defined(BOOST_PROCESS_WIN32_API)
-#   include <windows.h>
-#else
-#   include <unistd.h>
-#endif
-
+namespace bfs = ::boost::filesystem;
 namespace bp = ::boost::process;
 namespace but = ::boost::unit_test;
 
@@ -41,17 +37,7 @@ test_default_work_directory(void)
 {
     bp::command_line cl("program");
     bp::attributes a(cl);
-
-#if defined(BOOST_PROCESS_WIN32_API)
-    std::string curdir = "";
-#else
-    const char* buf = getcwd(NULL, 0);
-    BOOST_CHECK(buf != NULL);
-    std::string curdir = buf;
-    delete buf;
-#endif
-
-    BOOST_CHECK_EQUAL(a.get_work_directory(), curdir);
+    BOOST_CHECK_EQUAL(a.get_work_directory(), bfs::current_path().string());
 }
 
 // ------------------------------------------------------------------------
@@ -69,6 +55,8 @@ test_explicit_work_directory(void)
 but::test_suite *
 init_unit_test_suite(int argc, char* argv[])
 {
+    bfs::initial_path();
+
     but::test_suite* test = BOOST_TEST_SUITE("attributes test suite");
 
     test->add(BOOST_TEST_CASE(&test_command_line));
