@@ -13,18 +13,13 @@
 #ifndef BOOST_BIMAP_CONTAINER_ADAPTOR_DETAIL_FUNCTOR_BAG_HPP
 #define BOOST_BIMAP_CONTAINER_ADAPTOR_DETAIL_FUNCTOR_BAG_HPP
 
-#include <boost/mpl/deref.hpp>
-#include <boost/mpl/next.hpp>
-#include <boost/mpl/begin.hpp>
-#include <boost/mpl/end.hpp>
-#include <boost/mpl/equal.hpp>
+#include <boost/mpl/placeholders.hpp>
 
-#include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/add_reference.hpp>
-
-#include <boost/static_assert.hpp>
 #include <boost/type_traits/is_base_of.hpp>
-#include <boost/type_traits/is_same.hpp>
+
+#include <boost/mpl/inherit_linearly.hpp>
+#include <boost/mpl/inherit.hpp>
 
 namespace boost {
 namespace bimap {
@@ -39,41 +34,23 @@ Nathan C. Myers.\n
 See it at \link http://www.cantrip.org/emptyopt.html
                                                                                     **/
 
-struct checker {};
-
-template< class IterBegin, class IterEnd, class Enable = void >
-struct BaseExpander;
-
-template< class IterBegin, class IterEnd >
-struct BaseExpander
-<
-    IterBegin, IterEnd,
-    typename enable_if< is_same<IterBegin,IterEnd> >::type
->
-
-{};
-
-template< class IterBegin, class IterEnd >
-struct BaseExpander
-<
-    IterBegin, IterEnd,
-    typename enable_if< mpl::not_< is_same<IterBegin,IterEnd> > >::type
->
- :
-    public mpl::deref<IterBegin>::type,
-    public BaseExpander< typename mpl::next<IterBegin>::type, IterEnd >
-
-{};
-
-
-
 template < class Data, class FunctorList >
 struct DataWithFunctorBag :
-    BaseExpander
-    <
-        typename mpl::begin<FunctorList>::type,
-        typename mpl::end<FunctorList>::type
-    >
+
+    public mpl::inherit_linearly<
+
+        FunctorList,
+        mpl::if_< is_base_of< mpl::_2, mpl::_1 >,
+        //   {
+                 mpl::_1,
+        //   }
+        //   else
+        //   {
+                 mpl::inherit< mpl::_1, mpl::_2 >
+        //   }
+        >
+
+    >::type
 {
     Data data;
     DataWithFunctorBag() {}

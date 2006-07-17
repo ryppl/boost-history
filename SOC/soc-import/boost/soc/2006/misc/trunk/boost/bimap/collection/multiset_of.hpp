@@ -123,7 +123,7 @@ BOOST_BIMAP_REGISTER_KEY_TYPE_1CP
 (
     support::is_multiset_of,  /* --------> */ multi_index::ordered_non_unique,
     KeyType,
-    typename KeyType::key_comp
+    typename KeyType::key_compare
 );
 
 

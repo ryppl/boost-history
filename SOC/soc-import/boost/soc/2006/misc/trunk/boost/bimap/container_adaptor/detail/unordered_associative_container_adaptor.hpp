@@ -158,7 +158,7 @@ class unordered_associative_container_adaptor :
 
     typename this_type::size_type bucket_size(typename this_type::size_type n) const
     {
-        return typename this_type::base().bucket_size(n);
+        return this_type::base().bucket_size(n);
     }
 
     typename this_type::size_type bucket(const typename this_type::key_type& k) const
@@ -182,7 +182,7 @@ class unordered_associative_container_adaptor :
 
     local_iterator       end(typename this_type::size_type n)
     {
-        return this_type::dwfb.template functor<
+        return this_type::template functor<
             local_iterator_from_base
         >()                          ( this_type::base().end(n) );
     }
@@ -214,6 +214,28 @@ class unordered_associative_container_adaptor :
     void rehash(typename this_type::size_type n)
     {
         return this_type::base().rehash(n);
+    }
+
+    // We have redefined end and begin so we have to manually route the old ones
+
+    typename this_type::iterator begin()
+    {
+        return this_type::container_adaptor_::begin();
+    }
+
+    typename this_type::iterator end()
+    {
+        return this_type::container_adaptor_::end();
+    }
+
+    typename this_type::const_iterator begin() const
+    {
+        return this_type::container_adaptor_::begin();
+    }
+
+    typename this_type::const_iterator end() const
+    {
+        return this_type::container_adaptor_::end();
     }
 
 };

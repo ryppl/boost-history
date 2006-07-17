@@ -118,6 +118,7 @@ perspective the next step will be:
 #include <boost/bimap/support/map_by.hpp>
 #include <boost/bimap/relation/member_at.hpp>
 #include <boost/bimap/relation/support/get.hpp>
+#include <boost/bimap/relation/support/pair_by.hpp>
 
 // Bring the most used namespaces directly to the user main namespace
 namespace boost {

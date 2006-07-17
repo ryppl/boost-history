@@ -131,7 +131,9 @@ struct local_iterator_type_by
     <
         relation::support::GetPairFunctor<Tag,typename BimapCore::relation>,
         typename core_local_iterator_type_by<Tag,BimapCore>::type,
-        typename relation::support::pair_type_by<Tag,typename BimapCore::relation>::type &
+
+        // Due to the multiIndex core the "const" is forced
+        const typename relation::support::pair_type_by<Tag,typename BimapCore::relation>::type &
 
     > type;
 };

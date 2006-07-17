@@ -45,7 +45,7 @@ class multiset_view
     public:
 
     multiset_view() {}
-    multiset_view(typename multiset_view::base_type & c) : multiset_view::set_adaptor_(c) {}
+    multiset_view(typename multiset_view::base_type & c) : multiset_view::multiset_adaptor_(c) {}
 
 };
 

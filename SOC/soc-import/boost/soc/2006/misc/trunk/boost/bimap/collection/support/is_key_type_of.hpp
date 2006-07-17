@@ -41,7 +41,7 @@ namespace bimap {
 namespace collection {
 namespace support {
 
-template< class Type, class Enable = detail::safe_enabler >
+template< class Type, class Enable = void > // why it is not working with detail::safe_enabler?
 struct is_key_type_of
 {
     BOOST_BIMAP_MPL_BOOL_RESULT(false);

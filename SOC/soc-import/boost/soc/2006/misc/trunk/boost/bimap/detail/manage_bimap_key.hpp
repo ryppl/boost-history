@@ -76,7 +76,7 @@ struct manage_bimap_key
 
     typedef typename
 
-       if_< is_key_type_of< typename tagged_key_type::value_type >,
+       if_< typename is_key_type_of< typename tagged_key_type::value_type >::type,
     // {
             // The type is
             tagged_key_type,

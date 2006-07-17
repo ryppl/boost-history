@@ -94,7 +94,7 @@ struct bimap_core
 
         >::type,
 
-        typename apply_to_value_type
+        typename tags::support::apply_to_value_type
         <
             get_value_type<_>,
             right_tagged_key_type
@@ -220,7 +220,7 @@ struct bimap_core
             left_tag,
             relation,
             left_core_iterator,
-            const left_value_type
+            const left_value_type // Due to the multiIndex core the "const" is forced
 
         >::type left_iterator;
 
@@ -229,7 +229,7 @@ struct bimap_core
             right_tag,
             relation,
             right_core_iterator,
-            const right_value_type
+            const right_value_type // Due to the multiIndex core the "const" is forced
 
         >::type right_iterator;
 

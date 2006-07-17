@@ -66,7 +66,7 @@ struct is_mutant_idiom_supported_for
         ( sizeof( structured_pair<TA,TB,normal_layout> ) == sAB ) &&
         ( sizeof( structured_pair<TA,TB,mirror_layout> ) == sAB );
 
-    BOOST_BIMAP_MPL_BOOL_RESULT(mutant_is_supported);
+    BOOST_BIMAP_MPL_BOOL_RESULT(true); //TODO replace true with mutant_is_supported
 
 };
 

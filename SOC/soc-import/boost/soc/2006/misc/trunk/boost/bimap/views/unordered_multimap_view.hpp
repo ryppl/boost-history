@@ -36,7 +36,7 @@ See also const_unordered_multimap_view.
 template< class Tag, class BimapType >
 class unordered_multimap_view
 :
-    public container_adaptor::unordered_map_adaptor
+    public container_adaptor::unordered_multimap_adaptor
     <
         typename BimapType::core_type::template index<Tag>::type,
 
@@ -107,7 +107,7 @@ class const_unordered_multimap_view
 
     const_unordered_multimap_view() {}
     const_unordered_multimap_view(typename const_unordered_multimap_view::base_type & c)
-        : const_unordered_multimap_view::const_unordered_multimap_adaptor_(c) {}
+        : const_unordered_multimap_view::unordered_multimap_adaptor_(c) {}
 
 };
 

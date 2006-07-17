@@ -64,8 +64,6 @@ class weak_associative_container_adaptor :
     public:
 
     typedef KeyType key_type;
-    typedef typename Base::key_compare key_compare;
-    typedef typename Base::value_compare value_compare;
 
     // ACCESS -----------------------------------------------------------------
 
