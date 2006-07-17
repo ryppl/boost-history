@@ -8,6 +8,8 @@
 
 #include <vector>
 #include <boost/assert.hpp>
+#include <boost/math/tools/rational.hpp>
+#include <boost/math/tools/real_cast.hpp>
 
 namespace boost{ namespace math{ namespace tools{
 
@@ -31,7 +33,19 @@ public:
    {
       m_data.push_back(point);
    }
+   
    // copy:
+   polynomial(const polynomial& p)
+      : m_data(p.m_data) { }
+
+   template <class U>
+   polynomial(const polynomial<U>& p)
+   {
+      for(unsigned i = 0; i < p.size(); ++i)
+      {
+         m_data.push_back(boost::math::tools::real_cast<T>(p[i]));
+      }
+   }
 
    // access:
    size_type size()const { return m_data.size(); }
@@ -43,6 +57,10 @@ public:
    const value_type& operator[](size_type i)const
    {
       return m_data[i];
+   }
+   T evaluate(T z)const
+   {
+      return boost::math::tools::evaluate_polynomial(&m_data[0], z, m_data.size());;
    }
 
    // operators:
@@ -115,24 +133,6 @@ public:
             m_data.push_back(t[j]);
       }
       return *this;
-   }
-
-   // evaluation:
-   template <class U>
-   U evaluate(const U& z)
-   {
-      size_type n = m_data.size();
-      BOOST_ASSERT(n);
-      U s = m_data[n - 1];
-
-      // note default size_type is unsigned long, so
-      // can't use i >= 0 as stopping condition here
-      for(size_type i = n - 2; i != size_type(-1); i--)
-      {
-         s *= z;
-         s += m_data[i];
-      }
-      return s;
    }
 
 private:
@@ -224,12 +224,8 @@ std::basic_ostream<charT, traits>& operator << (std::basic_ostream<charT, traits
    return os;
 }
 
-template <class T, class U>
-U evaluate_polynomial(polynomial<T>& p, const U& z)
-{
-   return p.evaluate(z);
-}
-
 }}} // namespaces
 
 #endif // BOOST_MATH_TOOLS_POLYNOMIAL_HPP
+
+

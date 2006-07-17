@@ -8,15 +8,39 @@
 
 namespace boost{ namespace math{ namespace tools{
 
+template <class T, class U>
+U evaluate_polynomial(const T* poly, U z, std::size_t count)
+{
+   U sum = static_cast<U>(poly[count - 1]);
+   for(int i = static_cast<int>(count) - 2; i >= 0; --i)
+   {
+      sum *= z;
+      sum += static_cast<U>(poly[i]);
+   }
+   return sum;
+}
+
+template <class T, class U>
+inline U evaluate_even_polynomial(const T* poly, U z, std::size_t count)
+{
+   return evaluate_polynomial(poly, z*z, count);
+}
+
+template <class T, class U>
+inline U evaluate_odd_polynomial(const T* poly, U z, std::size_t count)
+{
+   return poly[0] + z * evaluate_polynomial(poly+1, z*z, count-1);
+}
+
 template <class T, class U, class V>
-V evaluate_rational(const T* num, const U* denom, V z, unsigned count)
+V evaluate_rational(const T* num, const U* denom, V z, std::size_t count)
 {
    V s1, s2;
-   if(z <= 100)
+   if(z <= 1)
    {
       s1 = num[count-1];
       s2 = denom[count-1];
-      for(int i = count - 2; i >= 0; --i)
+      for(int i = (int)count - 2; i >= 0; --i)
       {
          s1 *= z;
          s2 *= z;

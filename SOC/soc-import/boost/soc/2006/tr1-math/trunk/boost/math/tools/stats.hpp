@@ -17,8 +17,8 @@ class stats
 {
 public:
    stats() 
-      : m_min(tools::max_value(T())),
-        m_max(-tools::max_value(T())),
+      : m_min(tools::max_value<T>()),
+        m_max(-tools::max_value<T>()),
         m_total(0),
         m_squared_total(0),
         m_count(0)
@@ -61,6 +61,17 @@ public:
       using namespace std;
 
       return sqrt(m_squared_total / static_cast<T>(m_count));
+   }
+   stats& operator+=(const stats& s)
+   {
+      if(s.m_min < m_min)
+         m_min = s.m_min;
+      if(s.m_max > m_max)
+         m_max = s.m_max;
+      m_total += s.m_total;
+      m_squared_total += s.m_squared_total;
+      m_count += s.m_count;
+      return *this;
    }
 private:
    T m_min, m_max, m_total, m_squared_total;

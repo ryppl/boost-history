@@ -24,7 +24,7 @@ void print_test_result(const test_result<T>& result,
                        const char* type_name,
                        const char* func_name)
 {
-    T eps = pow(T(2), 1 - boost::math::tools::digits(worst[0]));
+    T eps = pow(T(2), 1 - digits<T>());
     cout.precision(10);
     cout << func_name << "(" << type_name
          << "): Max = " << (result.stat.max)()/eps
