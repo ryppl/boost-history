@@ -105,21 +105,19 @@ T bessel_y1(T x)
 
     if (x < 0)
     {
-        error_exit("boost::math::bessel_y1",
-                   "bessel_y1.hpp",
-                   "domain error, argument must be non-negative");
+        domain_error<T>("boost::math::bessel_y1",
+                        "domain error, argument must be non-negative");
     }
     if (x == 0)
     {
-        if (numeric_limits<T>::has_infinity)
+        if (std::numeric_limits<T>::has_infinity)
         {
-            return -numeric_limits<T>::infinity();
+            return -std::numeric_limits<T>::infinity();
         }
         else
         {
-            error_exit("boost::math::bessel_y1",
-                       "bessel_y1.hpp",
-                       "infinity occurred but not supported");
+            domain_error<T>("boost::math::bessel_y1",
+                            "infinity occurred but not supported");
         }
     }
     if (x <= 4.0)                       // x in (0, 4]
