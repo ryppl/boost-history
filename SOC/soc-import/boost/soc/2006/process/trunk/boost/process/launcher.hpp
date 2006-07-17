@@ -12,12 +12,11 @@
 #if !defined(BOOST_PROCESS_LAUNCHER_HPP)
 #define BOOST_PROCESS_LAUNCHER_HPP
 
-#include <map>
 #include <set>
 #include <utility>
 
-#include <boost/assert.hpp>
 #include <boost/process/basic_child.hpp>
+#include <boost/process/detail/environment.hpp>
 
 namespace boost {
 namespace process {
@@ -39,37 +38,7 @@ class launcher
     input_set m_input_set;
     output_set m_output_set;
 
-    class environment_entry
-    {
-        bool m_set;
-        std::string m_value;
-
-    public:
-        explicit
-        environment_entry(bool setit, const std::string& value = "") :
-            m_set(setit),
-            m_value(value)
-        {
-        }
-
-        bool
-        is_set(void)
-            const
-        {
-            return m_set;
-        }
-
-        const std::string&
-        get_value(void)
-            const
-        {
-            BOOST_ASSERT(m_set);
-            return m_value;
-        }
-    };
-    typedef std::map< std::string, environment_entry > environment_map;
-
-    environment_map m_environment;
+    detail::environment m_environment;
 
 public:
     launcher& input(int desc);
@@ -117,12 +86,9 @@ launcher::merge(int src, int dest)
 
 inline
 void
-launcher::set_environment(const std::string& var,
-                                const std::string& value)
+launcher::set_environment(const std::string& var, const std::string& value)
 {
-    BOOST_ASSERT(not var.empty());
-    m_environment.insert
-        (environment_map::value_type(var, environment_entry(true, value)));
+    m_environment.set(var, value);
 }
 
 // ------------------------------------------------------------------------
@@ -131,9 +97,7 @@ inline
 void
 launcher::unset_environment(const std::string& var)
 {
-    BOOST_ASSERT(not var.empty());
-    m_environment.insert
-        (environment_map::value_type(var, environment_entry(false)));
+    m_environment.unset(var);
 }
 
 // ------------------------------------------------------------------------

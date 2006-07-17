@@ -36,6 +36,7 @@ test-suite process :
     [ compile include_basic_process_test.cpp : : ]
     [ compile include_child_test.cpp : : ]
     [ compile include_command_line_test.cpp : : ]
+    [ compile include_detail_environment_test.cpp : : ]
     [ compile include_detail_pipe_test.cpp : : ]
     [ compile include_detail_systembuf_test.cpp : : ]
     [ compile include_exceptions_test.cpp : : ]
@@ -58,6 +59,12 @@ test-suite process :
         :
         : <library>../../../../boost//unit_test_framework
           <library>../../../../boost//filesystem
+        ]
+
+    [ run environment_test.cpp
+        :
+        :
+        : <library>../../../../boost//unit_test_framework
         ]
 
     [ run systembuf_test.cpp
