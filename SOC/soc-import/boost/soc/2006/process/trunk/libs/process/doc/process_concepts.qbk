@@ -19,6 +19,28 @@ behind them and are later specified as concepts to be used in templates.
 
 [/ ---------------------------------------------------------------------- ]
 
+[section Handle]
+
+A ''handle'' is an operating system entity that identifies one of its
+objects, such as a file or a process.  Handles are used by user space
+programs to tell the operating system the object they are referring to.
+
+Given the low-level interactions of Boost.Process with the operating
+system, the library lets the user access these handles, should he need them
+to call operating system services directly.
+
+It is important to note that handles are object-specific.  An operating
+system may use different data types to identify each of its objects.  For
+example, POSIX systems refer to files through an `int` value while
+processes are referred to by `pid_t` values.  Contrarywise, Win32 uses a
+single `HANDLE` type to describe any object.  Therefore, Boost.Process
+abstracts these handles in each class where it makes sense using types
+named `handle_type`.
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
 [section Process]
 
 Generally speaking, a process is the execution context of a program.  The
