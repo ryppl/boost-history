@@ -33,39 +33,31 @@
 #include <boost/bimap/views/unordered_multimap_view.hpp>
 
 #include <boost/bimap/bimap.hpp>
-
-template< class BimapType, class IterData >
-void test_data_insertion(BimapType & b, IterData start, IterData final)
-{
-    b.insert(start,final);
-}
-
+#include <boost/bimap/collection/multiset_of.hpp>
+#include <boost/bimap/collection/unordered_set_of.hpp>
+#include <boost/bimap/collection/unordered_multiset_of.hpp>
 
 template< class Container, class Data >
 void test_container(Container & c, const Data & d)
 {
-    std::size_t dn = d.size();
-    assert( dn > 2 );
+    assert( d.size() > 2 );
 
     c.clear();
 
     BOOST_CHECK( c.size() == 0 );
     BOOST_CHECK( c.empty() );
 
-    c.insert(d.begin(),d.end());
+    c.insert( *d.begin());
+    c.insert(++d.begin(),d.end());
 
-    BOOST_CHECK( c.size() == dn );
+    BOOST_CHECK( c.size() == d.size() );
 
     BOOST_CHECK( c.size() <= c.max_size() );
     BOOST_CHECK( ! c.empty() );
 
     c.erase( c.begin() );
 
-    BOOST_CHECK( c.size() == dn - 1 );
-
-    c.insert( *d.begin() );
-
-    BOOST_CHECK( c.size() == dn );
+    BOOST_CHECK( c.size() == d.size() - 1 );
 
     c.erase( c.begin(), c.end() );
 
@@ -86,8 +78,7 @@ void test_container(Container & c, const Data & d)
 template< class Container, class Data >
 void test_pair_associative_container(Container & c, const Data & d)
 {
-    std::size_t dn = d.size();
-    assert( dn > 2 );
+    assert( d.size() > 2 );
 
     c.clear();
     c.insert(d.begin(),d.end());
@@ -103,7 +94,7 @@ void test_pair_associative_container(Container & c, const Data & d)
 
     c.erase(da->first);
 
-    BOOST_CHECK( c.size() == dn-1 );
+    BOOST_CHECK( c.size() == d.size()-1 );
 
     BOOST_CHECK( c.count(da->first) == 0 );
     BOOST_CHECK( c.count(db->first) == 1 );
@@ -134,8 +125,7 @@ void test_pair_ordered_associative_container_equality(Container & c, const Data 
 template< class Container, class Data >
 void test_pair_ordered_associative_container(Container & c, const Data & d)
 {
-    std::size_t dn = d.size();
-    assert( dn > 2 );
+    assert( d.size() > 2 );
 
     c.clear();
     c.insert(d.begin(),d.end());
@@ -161,73 +151,160 @@ void test_pair_ordered_associative_container(Container & c, const Data & d)
 
 }
 
-/*
-template< class BimapType, class IterData >
-void test_this_unordered_bimap(BimapType & bm, IterData start, IterData final)
+
+template< class Container, class Data >
+void test_pair_unordered_associative_container(Container & c, const Data & d)
 {
+    c.clear();
+    c.insert( d.begin(), d.end() );
 
-    size_type bucket_count() const
+    BOOST_CHECK( c.bucket_count() * c.max_load_factor() >= d.size() );
+    BOOST_CHECK( c.max_bucket_count() >= c.bucket_count() );
 
-    size_type max_bucket_count() const
+    for( typename Data::const_iterator di = d.begin(), de = d.end() ;
+         di != de ; ++di )
+    {
+        // non const
+        {
+            typename Container::size_type nb = c.bucket(c.find(di->first)->first);
+            BOOST_CHECK( c.begin(nb) != c.end(nb) );
+        }
 
-    size_type bucket_size(size_type n) const
+        // const
+        {
+            const Container & const_c = c;
 
-    size_type bucket(const key_type& k) const
+            BOOST_CHECK( const_c.bucket_size(const_c.bucket(di->first)) == 1 );
 
-    local_iterator       begin(size_type n)
+            typename Container::size_type nb = const_c.bucket(const_c.find(di->first)->first);
+            BOOST_CHECK( const_c.begin(nb) != const_c.end(nb) );
+        }
+    }
 
-    const_local_iterator begin(size_type n) const
 
-    local_iterator       end(size_type n)
+    BOOST_CHECK( c.load_factor() < c.max_load_factor() );
 
-    const_local_iterator end(size_type n) const
+    c.max_load_factor(0.75);
 
-    float load_factor() const
+    BOOST_CHECK( c.max_load_factor() == 0.75 );
 
-    float max_load_factor() const
-
-    void max_load_factor(float z)
-
-    void rehash(size_type n)
-
-    BOOST_CHECK( it != d.end() );
-    BOOST_CHECK( it->second == "rose" );
-
+    c.rehash(10);
 }
-*/
 
 
-template< class Container, class Data, class LeftData, class RightData >
+template< class Container, class Data >
+void test_unique_container(Container & c, Data & d)
+{
+    c.clear();
+    c.insert(d.begin(),d.end());
+    c.insert(*d.begin());
+    BOOST_CHECK( c.size() == d.size() );
+}
 
-void test_set_set_bimap(              Container & c,
+template< class Container, class Data >
+void test_non_unique_container(Container & c, Data & d)
+{
+    c.clear();
+    c.insert(d.begin(),d.end());
+    c.insert(*d.begin());
+    BOOST_CHECK( c.size() == (d.size()+1) );
+}
 
-                                      const Data & d,
 
-                        const LeftData & ld,    const RightData & rd)
+template< class Bimap, class Data, class LeftData, class RightData >
+void test_basic_bimap(Bimap & b,
+                      const Data & d,
+                      const LeftData & ld, const RightData & rd)
 {
     using namespace boost::bimap;
 
-    test_container(c,d);
+    test_container(b,d);
 
-    // TODO
-    // A value convertion is needed here
-    // test_associative_container(b,data);
+    BOOST_CHECK( &b.left  == &map_by<member_at::left >(b) );
+    BOOST_CHECK( &b.right == &map_by<member_at::right>(b) );
 
-    BOOST_CHECK( &c.left  == &map_by<member_at::left >(c) );
-    BOOST_CHECK( &c.right == &map_by<member_at::right>(c) );
+    test_container(b.left , ld);
+    test_container(b.right, rd);
+}
 
-    test_container(c.left , ld);
-    test_pair_associative_container(c.left, ld);
-    test_pair_ordered_associative_container(c.left, ld);
+template< class LeftTag, class RightTag, class Bimap, class Data >
+void test_tagged_bimap(Bimap & b,
+                       const Data & d)
+{
+    using namespace boost::bimap;
 
-    test_container(c.right, rd);
-    test_pair_associative_container(c.right, rd);
-    test_pair_ordered_associative_container(c.right, rd);
+    BOOST_CHECK( &b.left  == &map_by<LeftTag >(b) );
+    BOOST_CHECK( &b.right == &map_by<RightTag>(b) );
 
+    b.clear();
+    b.insert( *d.begin() );
+
+    BOOST_CHECK( pair_by<LeftTag >( *b.begin() ) == *map_by<LeftTag >(b).begin() );
+    BOOST_CHECK( pair_by<RightTag>( *b.begin() ) == *map_by<RightTag>(b).begin() );
+
+    BOOST_CHECK( get<LeftTag >(*b.begin()) == get<LeftTag >(*map_by<RightTag>(b).begin()));
+    BOOST_CHECK( get<RightTag>(*b.begin()) == get<RightTag>(*map_by<LeftTag >(b).begin()));
 }
 
 
+template< class Bimap, class Data, class LeftData, class RightData >
+void test_set_set_bimap(Bimap & b,
+                        const Data & d,
+                        const LeftData & ld, const RightData & rd)
+{
+    using namespace boost::bimap;
 
+    test_basic_bimap(b,d,ld,rd);
+
+    test_pair_associative_container(b.left, ld);
+    test_pair_ordered_associative_container(b.left, ld);
+    test_unique_container(b.left, ld);
+
+    test_pair_associative_container(b.right, rd);
+    test_pair_ordered_associative_container(b.right, rd);
+    test_unique_container(b.right, rd);
+}
+
+
+template< class Bimap, class Data, class LeftData, class RightData >
+void test_multiset_multiset_bimap(Bimap & b,
+                                  const Data & d,
+                                  const LeftData & ld, const RightData & rd)
+{
+    using namespace boost::bimap;
+
+    test_basic_bimap(b,d,ld,rd);
+
+    test_pair_associative_container(b.left, ld);
+    test_pair_ordered_associative_container(b.left, ld);
+    test_non_unique_container(b.left, ld);
+
+    test_pair_associative_container(b.right, rd);
+    test_pair_ordered_associative_container(b.right, rd);
+    test_non_unique_container(b.right, rd);
+}
+
+template< class Bimap, class Data, class LeftData, class RightData >
+void test_unordered_set_unordered_multiset_bimap(Bimap & b,
+                                                 const Data & d,
+                                                 const LeftData & ld,
+                                                 const RightData & rd)
+{
+    using namespace boost::bimap;
+
+    test_basic_bimap(b,d,ld,rd);
+
+    test_pair_associative_container(b.left, ld);
+    test_pair_unordered_associative_container(b.left, ld);
+    test_unique_container(b.left, ld);
+
+    test_pair_associative_container(b.right, rd);
+    test_pair_unordered_associative_container(b.right, rd);
+
+    // Caution, this side is a non unique container, but the other side is a
+    // unique container so, the overall bimap is a unique one.
+    test_unique_container(b.right, rd);
+}
 
 struct  left_tag {};
 struct right_tag {};
@@ -271,14 +348,62 @@ void test_bimap()
 
         // Tagged simple bimap
         {
-
             typedef bimap< tagged<int,left_tag>, tagged<double,right_tag> > bm;
 
             bm b;
 
             test_set_set_bimap(b,data,left_data,right_data);
+            test_tagged_bimap<left_tag,right_tag>(b,data);
+
         }
 
+        // Untagged non-basic bimap
+        {
+            typedef bimap< multiset_of<int>, multiset_of<double> > bm;
+
+            bm b;
+
+            test_multiset_multiset_bimap(b,data,left_data,right_data);
+        }
+
+        // Tagged non-basic bimap
+        {
+            typedef bimap
+            <
+                tagged< multiset_of<int>   , left_tag  >,
+                tagged< multiset_of<double>, right_tag >
+
+            > bm;
+
+            bm b;
+
+            test_multiset_multiset_bimap(b,data,left_data,right_data);
+            test_tagged_bimap<left_tag,right_tag>(b,data);
+        }
+
+        // Untagged non-basic bimap
+        {
+            typedef bimap< unordered_set_of<int>, unordered_multiset_of<double> > bm;
+
+            bm b;
+
+            test_unordered_set_unordered_multiset_bimap(b,data,left_data,right_data);
+        }
+
+        // Tagged non-basic bimap
+        {
+            typedef bimap
+            <
+                tagged< unordered_set_of<int>        , left_tag  >,
+                tagged< unordered_multiset_of<double>, right_tag >
+
+            > bm;
+
+            bm b;
+
+            test_unordered_set_unordered_multiset_bimap(b,data,left_data,right_data);
+            test_tagged_bimap<left_tag,right_tag>(b,data);
+        }
     }
 
 
