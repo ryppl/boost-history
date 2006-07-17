@@ -21,7 +21,7 @@ void test_spots(T, const char* type_name)
     // function values calculated on http://functions.wolfram.com/
     #define SC_(x) static_cast<T>(BOOST_JOIN(x, L))
     static const boost::array<boost::array<T, 2>, 10> data = {
-        SC_(0), -boost::math::tools::numeric_limits<T>::infinity(),
+        SC_(0), -std::numeric_limits<T>::infinity(),
         SC_(1), SC_(0.08825696421567695798292676602351516282782),
         SC_(2), SC_(0.5103756726497451195966065927271578732681),
         SC_(4), SC_(-0.01694073932506499190363513444715321824049),
