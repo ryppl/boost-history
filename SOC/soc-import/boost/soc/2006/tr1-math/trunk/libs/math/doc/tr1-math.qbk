@@ -1,4 +1,4 @@
-[library Math Toolkit
+[library TR1-Math
     [quickbook 1.3]
     [copyright 2006 Xiaogang Zhang]
     [purpose Various Special Functions and Numerical Tools]
