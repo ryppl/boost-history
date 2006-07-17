@@ -17,7 +17,7 @@ namespace boost { namespace math { namespace tools {
 
 using namespace std;
 
-template <class T, class Seq>
+template <typename T, typename Seq>
 void print_test_result(const test_result<T>& result, 
                        const Seq& worst,
                        int row,
@@ -40,7 +40,7 @@ void print_test_result(const test_result<T>& result,
 
 // T must be a 2D boost::array here, we assumed it
 // define a short replacement to save some efforts
-template <class T>
+template <typename T>
 struct compute_value_type
 {
    typedef typename T::value_type vt;
@@ -48,7 +48,7 @@ struct compute_value_type
 };
 #define TVT compute_value_type<T>::type
 
-template <class T>
+template <typename T>
 void test_univariate(const T& data,
                      const char* type_name,
                      const char* func_name,
@@ -72,7 +72,7 @@ void test_univariate(const T& data,
     cout << endl;
 }
 
-template <class T>
+template <typename T>
 void test_bivariate(const T& data,
                     const char* type_name,
                     const char* func_name,
