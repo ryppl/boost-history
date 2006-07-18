@@ -12,17 +12,20 @@
     <absoluteprojectpath>false</absoluteprojectpath>
     <description/>
     <defaultencoding/>
-    <versioncontrol>kdevsubversion</versioncontrol>
+    <versioncontrol/>
   </general>
   <kdevcustomproject>
     <run>
-      <mainprogram>bin/gcc/debug/threading-multi/segmentation</mainprogram>
+      <mainprogram>bin/gcc/debug/segmentation</mainprogram>
       <directoryradio>build</directoryradio>
       <customdirectory>/</customdirectory>
       <programargs/>
       <terminal>false</terminal>
       <autocompile>true</autocompile>
-      <envvars/>
+      <envvars>
+        <envvar value="profile" name="CPUPROFILE" />
+        <envvar value="500" name="PROFILEFREQUENCY" />
+      </envvars>
     </run>
     <build>
       <buildtool>make</buildtool>
@@ -40,6 +43,7 @@
       <environments>
         <default>
           <envvar value="/home/diederich/src/boost_1_33_1" name="BOOST_ROOT" />
+          <envvar value="optimization=speed" name="gaga" />
         </default>
       </environments>
     </make>
@@ -155,7 +159,6 @@
     </splitheadersource>
     <references>
       <pcs>Qt</pcs>
-      <pcs>Boost</pcs>
     </references>
   </kdevcppsupport>
   <kdevfileview>

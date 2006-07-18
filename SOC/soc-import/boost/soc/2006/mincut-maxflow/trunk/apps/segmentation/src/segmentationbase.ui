@@ -247,12 +247,11 @@
     <property name="name">
         <cstring>menubar</cstring>
     </property>
-    <item text="&amp;File" name="fileMenu">
+    <item text="&amp;File" name="File">
         <action name="fileOpenImageAction"/>
         <action name="fileOpenMaskAction"/>
         <action name="fileNewMaskAction"/>
-        <action name="fileSaveAction"/>
-        <action name="fileSaveAsAction"/>
+        <action name="fileSaveAsActionss"/>
         <separator/>
         <action name="fileExitAction"/>
     </item>
@@ -307,30 +306,13 @@
     </action>
     <action>
         <property name="name">
-            <cstring>fileSaveAction</cstring>
-        </property>
-        <property name="iconSet">
-            <iconset>image3</iconset>
+            <cstring>fileSaveAsActionss</cstring>
         </property>
         <property name="text">
-            <string>Save</string>
+            <string>Save Image &amp;As...</string>
         </property>
         <property name="menuText">
-            <string>&amp;Save</string>
-        </property>
-        <property name="accel">
-            <string>S</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>fileSaveAsAction</cstring>
-        </property>
-        <property name="text">
-            <string>Save As</string>
-        </property>
-        <property name="menuText">
-            <string>Save &amp;As...</string>
+            <string>Save Image &amp;As...</string>
         </property>
         <property name="accel">
             <string></string>
@@ -341,7 +323,7 @@
             <cstring>filePrintAction</cstring>
         </property>
         <property name="iconSet">
-            <iconset>image4</iconset>
+            <iconset>image3</iconset>
         </property>
         <property name="text">
             <string>Print</string>
@@ -372,7 +354,7 @@
             <cstring>editUndoAction</cstring>
         </property>
         <property name="iconSet">
-            <iconset>image5</iconset>
+            <iconset>image4</iconset>
         </property>
         <property name="text">
             <string>Undo</string>
@@ -389,7 +371,7 @@
             <cstring>editRedoAction</cstring>
         </property>
         <property name="iconSet">
-            <iconset>image6</iconset>
+            <iconset>image5</iconset>
         </property>
         <property name="text">
             <string>Redo</string>
@@ -406,7 +388,7 @@
             <cstring>editCutAction</cstring>
         </property>
         <property name="iconSet">
-            <iconset>image7</iconset>
+            <iconset>image6</iconset>
         </property>
         <property name="text">
             <string>Cut</string>
@@ -423,7 +405,7 @@
             <cstring>editCopyAction</cstring>
         </property>
         <property name="iconSet">
-            <iconset>image8</iconset>
+            <iconset>image7</iconset>
         </property>
         <property name="text">
             <string>Copy</string>
@@ -440,7 +422,7 @@
             <cstring>editPasteAction</cstring>
         </property>
         <property name="iconSet">
-            <iconset>image9</iconset>
+            <iconset>image8</iconset>
         </property>
         <property name="text">
             <string>Paste</string>
@@ -457,7 +439,7 @@
             <cstring>editFindAction</cstring>
         </property>
         <property name="iconSet">
-            <iconset>image10</iconset>
+            <iconset>image9</iconset>
         </property>
         <property name="text">
             <string>Find</string>
@@ -545,27 +527,24 @@
         <data format="PNG" length="231">89504e470d0a1a0a0000000d4948445200000016000000160806000000c4b46c3b000000ae49444154388db594510ec3200c436db45371b6691fd3cee66bb18f5135a219235af04f442b5e2c03a124ec50d942dd09be4537d45a9b5d4be2f85f1243e06393d748126d53661d9e854a624ac6633c40cff8576e51280010406b0d00dab104b9c69d19e887774201f64ebc7c8f342fc678b0ce553cc76b752e37e368d69edc8c2df4f58c01ef8f4f7533fe176a1e482ef4e2380b6ac0b9d0d36a57161430833e130aacdef62f9acd8ab4793cea0d051970cdbc4f01b20000000049454e44ae426082</data>
     </image>
     <image name="image3">
-        <data format="PNG" length="230">89504e470d0a1a0a0000000d4948445200000016000000160806000000c4b46c3b000000ad49444154388dd595310e842010453f8686c482f3d0ccc58c85f16234731e0b922d770b3386150d62d084d7100cbe7cc6411433e309340038e7be35a5ccacb44ce6691d8711f0de178988687b878800005da590093abfe418132c3efdb2cd25a9904d6c82850936791e4b81b59452ce4be2bb644bb14f7695c712b7274e6a3c4f69ebe488bbe1547cb6b09477db6d18cb45fb5dde3ed2f18feae89bb4d76eed8995dc79b5ae2766567fe2dafc0045362bc8717a5b490000000049454e44ae426082</data>
-    </image>
-    <image name="image4">
         <data format="PNG" length="709">89504e470d0a1a0a0000000d4948445200000016000000160806000000c4b46c3b0000028c49444154388d8d95af7bdb301086dfec0938319bc530b061350c2cf458cb5a18b83f6181a363a3851debd8020b1dd6b01a0adacc62772c03b21de7d7b38a28962eef7dbaef2c4fcab2e4d268db762f22a4697ab46e6600a82a0021049224c1393719c74d2f52011121cff30174ba371280f7fe2ce62a18a0aaaa33d8692255c539f779f02580999d25e8e753f8972bdcbd990dc1ce399c7347f5eeeb2f2267f5bdaa5855499284b66d1191c1a8f1b874fccf28c6ccce3a620ced935d32f7aae25ecd25a5e375553dea90ff82ebba663e9f9365d955786fe476bb2584b01749c8b274a8f5115855f7de7baa5d851482880c80d3b957dad62d6559d284869b9b9b7d5114a4693a99f46f9eaaeeabca13ea063580cb4a019ca408020e7ced797fdfd13435aac6623167b55a45c5bdd2e2ee0e97a6a81a9872668b1920946c79e32f4b5bb2fcc8a9aa1da8e1808ff70f7ee933d3086d78f8fa40324baeaaec4745c54f7ee0f1ecd8f1222f14fe9e97f699ba0e1846e33dd3d0049e9eeeafba7b3a5252ee5852221414dcdede9248466b35cf2fbf092190ce52a606785fc77e340311628e9848041c2e56dc14c4f1cdbe738f27b38c1d1598916659dcefdc99b6758d1789f53463f0cd4174b13b89335001e29a00de1a8c7887f8aa1a3c7174edd62f580fc486a650a229b19d87c8a173a4f7743414658a80b5a33f6827761c688028d8e98ec3aca53b677f36f27cc9176ca47210abf1d1baf908eafab00eda01bb72ce663356aba7a8d87bdf5b0562100408d139b388915e951d601c6a8e1922b05eafc9b26c329dcfe7bc6ddef8b3d9a06ac4fb47386a3e193dcb01399cb3eba6f57a4d9ee71380e195aeeb7afffabaa1e9be5f8a76a61c9c397c3540b58dbf83912f731e1f1f592c16c325f40f010f7cb0f1b5c3040000000049454e44ae426082</data>
     </image>
-    <image name="image5">
+    <image name="image4">
         <data format="PNG" length="212">89504e470d0a1a0a0000000d4948445200000016000000160806000000c4b46c3b0000009b49444154388ded943b0e80200c865be3a91889c7320e8463998ebd164e68417949184cfcc7b67c6de803991946681a42fdc152734bb052e49eecd600e845a3b4a19f0aa5c83187ce1230967c1f541cc363602931ede47ce5b73ff64112caac31059509d7edb23d362f86a6803965a7e22db408ae6d5a33b8075eb52025b8f75b73d9b0e7bad14e4e4e82ec49d74aa7a0009d15e7f4bdebf6834f1d172546d17f21be920000000049454e44ae426082</data>
     </image>
-    <image name="image6">
+    <image name="image5">
         <data format="PNG" length="204">89504e470d0a1a0a0000000d4948445200000016000000160806000000c4b46c3b0000009349444154388ded943d0e80200c46a9f1548cc4631907c2b148c75e0b27b0226083b2f12d24d03efa0740446a849621d409e65af30df418f6a36c4c64400a063e155a639038d52ed01a433c4b11a3bfa02d47be72bb3ca854e3987e2b5d2203255829d3aee6b522fd04cee1bf82df1add05964c4f023b2b73928e64758e9d55ca6cf20791eb560ade90daeb930ae67f3cc10f9d5ba746085c06e1e50000000049454e44ae426082</data>
     </image>
-    <image name="image7">
+    <image name="image6">
         <data format="PNG" length="214">89504e470d0a1a0a0000000d4948445200000016000000160806000000c4b46c3b0000009d49444154388dcdd4410e80200c04c0d6f8aa9e7936e7fd169e9a20222ca0d15e4c340eeda64101c81bb5b53e9a591a794fc32bf51f988981826b10005d8219600af6f2aed918444494d9e31c64a7f8762bbccb91ccc98c63ca9f8fc08e79b76631310774ee8a9880701a1f080a04ede1b7700d2d0f68e155b88732f80566d15e0ded3193ed145c566bba7df4e7bceb5664d5bb221f77366fea129aa903bb2561adb1d6f6e70000000049454e44ae426082</data>
     </image>
-    <image name="image8">
+    <image name="image7">
         <data format="PNG" length="268">89504e470d0a1a0a0000000d4948445200000016000000160806000000c4b46c3b000000d349444154388db595b10e83300c44cf88af8a18d9f91936d485aa7fd5d99fd5eb5099461093109493bc70c9f3c94984a82a5aa86b4205200078b64055a51a4ca6d922520deff7109335230911e155f806f652d7c2b751a412ffbeada700d531d9ac60c62bc887e33f5d78f75f24878a1bee3dd3302c08e17d48b681491e2a96e74d531aeede0a8379be79f3dc01f8005810c28b3696a25b71e6db9c4d21bca93acaadc4a943b546b7137baa4e9c6bde2c716769bc8a13e72a569f7bff763fab679c53f58caf6c2a511178ff088af6b4fa997e01dfa4987b8b9435470000000049454e44ae426082</data>
     </image>
-    <image name="image9">
+    <image name="image8">
         <data format="PNG" length="293">89504e470d0a1a0a0000000d4948445200000016000000160806000000c4b46c3b000000ec49444154388db5954d0e83201085df989e6a1237bd96c44583d7eaa6c95c6bba402dc850d0d29798093ff3cd13044944f00fddbe0d32b31efb44845ac0b439b62000a0512f159056b1a1156ab53759f9044001c03f3c0007c0c3cd6e07c52ee3b6353f764e00f438495ef50de59133780c1e420883219e51396ffd2a7c3289476e04a77906f83318bfdeb9986ab02b5f89a9d6cd2bc3dd9c27d94a37cf5ce3a313d5a988235aa03a6587275be3129c68c9a071c1005f54e44ecd8e6bae2d7837c7477817c756d19f1d5b058996be6bdccdb1a5ddc07ad16bf9f17a568057aafdf3989f85ebfdbbaae0ab7a030d36e3e74e2086d10000000049454e44ae426082</data>
     </image>
-    <image name="image10">
+    <image name="image9">
         <data format="PNG" length="658">89504e470d0a1a0a0000000d4948445200000016000000160806000000c4b46c3b0000025949444154388db59521931b3910469fb7027a98c42c2838cb6cb686031d689685f95d86816b66c385033dcc0305354c62dd6c021c576d2e97f3a672fb21a94bf5f449ad6e2dfabee723f4f02154e0d3db4929654e299173a69a01e04488311263a4699ac51f8373ce737f3ee36360bdfb0c4eaef194185ecfa494d86c36b3f7fe5df045dff7e49ce7979717369f3b365f760098196a8a6154abf4df8e4836b6dbedbb9c3fa8eadc9f7bbaafcfb4db0e33c392a0690963a0f642c98576db41f00cc3f0aeab784829e16364d37500485e525266b2814946c43cd247ac56e2a6654c8952ca7c1f3c4db49b35866105d298487e4443219330293408960d4490e0c839df776caa38ef2856c8cd44594f8813ac188e0878521d51a76020ae619aa6bbe04f00550d11401503304372a4b1404e3dda26c063a50202d755ffed180cccae49b3db181a13f278a6b4198280292660b52022f7c1c107524a985e81560dc3c896b05031c0ca35a65529a51263bc0f8e3192fb0b5a15b37a051443cc43126aadfc3808354f0404e7dc3b1c87b008de33bcbea2802a80923853dc8813a1944a29151b126ddbe28327e73cabea6f9fdd03c06ab5c215a8c7338d298d35f8658344871804035e2f3c3d3df1f8f8b84863e2743ab1dfefc939ff2b7c716b9baa3a0fc3c09812e2049a6b82ac54c4a0eb3a4208b7529e8fc72387c301e71cbbdd8ed56af553a92ffed98f4b2973ce995a2b2282f7fe96ac5ffa434a69fee19aaeeb7edafc17f09f4a55e7d3e9c4e17060b95cf2fcfccc7abd5efc35f8a6cbe532eff77ba66962bbddfebde3b72aa5cc87c30155fd7fc16ff5617fde773b427a020f23b15a0000000049454e44ae426082</data>
     </image>
 </images>
@@ -583,13 +562,7 @@
         <slot>fileOpenImage()</slot>
     </connection>
     <connection>
-        <sender>fileSaveAction</sender>
-        <signal>activated()</signal>
-        <receiver>SegmentationBase</receiver>
-        <slot>fileSave()</slot>
-    </connection>
-    <connection>
-        <sender>fileSaveAsAction</sender>
+        <sender>fileSaveAsActionss</sender>
         <signal>activated()</signal>
         <receiver>SegmentationBase</receiver>
         <slot>fileSaveAs()</slot>
@@ -673,6 +646,9 @@
         <slot>fileNewMask()</slot>
     </connection>
 </connections>
+<includes>
+    <include location="local" impldecl="in implementation">segmentationbase.ui.h</include>
+</includes>
 <slots>
     <slot>fileNew()</slot>
     <slot>fileOpenImage()</slot>

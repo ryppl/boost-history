@@ -13,7 +13,7 @@ int main(int argc, char* argv[]){
 	{
 		cout << "No images given on commandline. Using defaults " <<endl;
  		mw->loadImages("data/images/lena.png","data/trimaps/lena.png");
-//       mw->loadImages("data/images/testImage.png","data/images/testImage.png");      
+//       mw->loadImages("data/images/testImage50.png","data/trimaps/testImage50.png");      
 	}
 	else
 	{

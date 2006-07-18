@@ -100,6 +100,34 @@ void Segmentation::fileOpenMask()
 	}
 }
 
+void Segmentation::fileSaveAs()
+{
+  if(!m_segmentedImage.isNull()){  
+    QString s = QFileDialog::getSaveFileName (
+        "data/segmented",
+    "Images (*.png)",
+    this,
+    "save file dialog",
+    "Where to save?" );
+    if(s.isNull())
+      return;
+    else{
+      if(s.right(4).lower().compare(".png")){ 
+        //there is no png extension, so add one
+        s.append(".png");
+      }
+      if(!m_segmentedImage.save(s,"PNG")){
+        mp_logEdit->append(QString("ERROR saving segmented image to ")+s);		
+      }
+      else{
+        mp_logEdit->append(QString("Saved segmented image to ")+s);		
+      }
+    }
+  }
+  else
+    mp_logEdit->append(QString("ERROR. No segmented image to save yet!"));
+}
+
 void Segmentation::loadImages( std::string fcr_imageFileName, std::string fcr_maskFileName )
 {
 	mp_logEdit->append("Loading images...");

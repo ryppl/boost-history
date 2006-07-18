@@ -20,6 +20,7 @@
 #include <string>
 #include <boost/graph/kolmogorov_max_flow.hpp>
 #include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/adjacency_matrix.hpp>
 #include <boost/graph/graph_utility.hpp>
 #include <boost_common.h>
 /**
@@ -27,27 +28,45 @@
 */
 class GraphBoostKolmogorov: public GraphBase
 {
-	typedef adjacency_list_traits < vecS, vecS, directedS > Traits;
-	typedef adjacency_list < listS, vecS, directedS,
-	property < vertex_index_t, long>,
+  typedef adjacency_list_traits < vecS, vecS, directedS > tListTraits;
+  typedef adjacency_list< vecS, vecS, directedS,
+	property < vertex_index_t, long,
+   property < vertex_predecessor_t, tListTraits::edge_descriptor,
+   property < vertex_color_t, boost::default_color_type,
+   property < vertex_distance_t, long> > > >,
 	property < edge_capacity_t, GraphBase::tPrecision,
 	property < edge_residual_capacity_t, GraphBase::tPrecision,
-	property < edge_reverse_t, Traits::edge_descriptor > > > > tMyGraph;
-
+   property < edge_reverse_t, tListTraits::edge_descriptor > > > > tMyListGraph;
+   
+   typedef adjacency_matrix_traits< directedS > tMatrixTraits;
+   typedef adjacency_matrix< directedS,
+   property < vertex_index_t, long,
+   property < vertex_predecessor_t, tMatrixTraits::edge_descriptor,
+   property < vertex_color_t, boost::default_color_type,
+   property < vertex_distance_t, long> > > >,
+   property < edge_capacity_t, GraphBase::tPrecision,
+   property < edge_residual_capacity_t, GraphBase::tPrecision,
+   property < edge_reverse_t, tMatrixTraits::edge_descriptor > > > > tMyMatrixGraph;
+   
    typedef std::vector<boost::default_color_type> tColorMap;
+   typedef std::vector<long> tDistanceMap;
 	
 public:
-	GraphBoostKolmogorov(unsigned int f_numberOfVertices)
-		:m_graph(f_numberOfVertices+2),m_capacity(get(edge_capacity, m_graph)),m_reverse_edge(get(edge_reverse,m_graph)),
-   m_source_vertex(vertex(f_numberOfVertices,m_graph)),m_sink_vertex(vertex(f_numberOfVertices+1,m_graph)),m_segment(f_numberOfVertices){ //add source and terminal as last 2 verts
-		}
+	GraphBoostKolmogorov(unsigned int f_numberOfPixels)
+      :m_graph(f_numberOfPixels+2),//add source and terminal as last 2 verts
+   m_source_vertex(vertex(f_numberOfPixels,m_graph)),
+   m_sink_vertex(vertex(f_numberOfPixels+1,m_graph)),
+   m_segment(f_numberOfPixels+2),
+   m_distance(f_numberOfPixels+2){}
 
 		~GraphBoostKolmogorov(){
 		};
 
 	
 		virtual void add_edge(int source, int dest, tPrecision cap, tPrecision rev_cap){
-			add_boost_edge(m_graph,source,dest,cap,rev_cap);
+        add_boost_edge(m_graph,source,dest,cap,rev_cap);        
+// 			add_boost_edge(m_graph,source,dest,cap,0);
+//          add_boost_edge(m_graph,dest,source,rev_cap,0);
 		}
 	 
 		virtual void add_tedge(int node, tPrecision toSource, tPrecision toSink){	
@@ -55,27 +74,24 @@ public:
 		}
 			
 		virtual tPrecision maxflow(){  
-        GraphBase::tPrecision flow=kolmogorov_max_flow(m_graph,get(edge_capacity,m_graph),get(edge_residual_capacity,m_graph),get(edge_reverse,m_graph), &m_segment[0],m_source_vertex, m_sink_vertex);
+        GraphBase::tPrecision flow = kolmogorov_max_flow(m_graph,m_source_vertex, m_sink_vertex,color_map(&m_segment[0]));
+        //, .distance_map(&m_distance[0]))));
 			return flow;
 		}
 		
 		virtual eSegment what_segment(int f_node) const {
-        if(m_segment[f_node]==boost::white_color)
+        if(m_segment[f_node] == boost::white_color)
           return GraphBase::SOURCE;
-        else if(m_segment[f_node]==boost::black_color)
-          return GraphBase::SINK;
-    
-        std::cerr << "node: " << f_node <<  " unknown segment: " << m_segment[f_node] <<std::endl;
-//         exit(0);
+        return GraphBase::SINK;
       }
         
 	private:
-		tMyGraph m_graph;
-		property_map<tMyGraph,edge_capacity_t>::type  m_capacity;
-		property_map<tMyGraph,edge_reverse_t>::type  m_reverse_edge;
-		graph_traits<tMyGraph>::vertex_descriptor m_source_vertex;
-		graph_traits<tMyGraph>::vertex_descriptor m_sink_vertex;
+     typedef tMyListGraph tMyGraph;
+      tMyGraph m_graph;
+      graph_traits<tMyGraph>::vertex_descriptor m_source_vertex;
+      graph_traits<tMyGraph>::vertex_descriptor m_sink_vertex;
 		//a vector to hold the segment of each vertex
 		tColorMap m_segment;		
+      tDistanceMap m_distance;
 };
 #endif

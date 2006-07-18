@@ -14,6 +14,7 @@
 
 #include <graphbase.h>
 #include <iostream>
+#include <fstream>
 #include <external/kolmo_maxflow/adjacency_list/graph.h>
 /**
 	@author Stephan Diederich <S.Diederich@gmx.de>
@@ -23,8 +24,11 @@ class GraphKolmogorov : public GraphBase
 public:
 	GraphKolmogorov(unsigned int f_numberOfVertices):GraphBase(){
 		m_nodeMap=new Graph::node_id[f_numberOfVertices];
-		for(unsigned int i=0;i<f_numberOfVertices;++i)
+//       std::ofstream of("nodes.log");
+      for(unsigned int i=0;i<f_numberOfVertices;++i){
 			m_nodeMap[i]=m_graph.add_node();
+//          of << i << std::hex << m_nodeMap[i] << std::dec <<std::endl;
+      }
 	};
 
 	~GraphKolmogorov(){

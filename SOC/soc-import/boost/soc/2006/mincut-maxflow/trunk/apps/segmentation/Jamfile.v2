@@ -1,6 +1,10 @@
-
+	
+lib gprofiler
+	: 
+	: <name>profiler
+;
 exe segmentation
 	: src/main.cpp src/segmentationbase.ui src/segmentation.cpp src/segmentation.h src/graphcut.cpp src/external/kolmo_maxflow/adjacency_list/graph.cpp src/external/kolmo_maxflow/adjacency_list/maxflow.cpp src/external/freeimpl/freegraph.cpp
-	: <library>/qt//qt <threading>multi <include>./src 
+	: <library>/qt//qt <include>./src 
 ;
 	

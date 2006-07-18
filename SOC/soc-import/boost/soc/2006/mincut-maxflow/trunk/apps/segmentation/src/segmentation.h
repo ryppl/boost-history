@@ -39,7 +39,8 @@ protected:
 	virtual void fileOpenImage();
 	virtual void fileOpenMask();
 	virtual void fileNewMask();
-
+   virtual void fileSaveAs();
+   
 	virtual void mousePressEvent(QMouseEvent* e);
 	virtual void mouseReleaseEvent(QMouseEvent* e);
 	virtual void mouseMoveEvent(QMouseEvent* e);
