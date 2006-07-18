@@ -115,13 +115,13 @@ class mutant_relation :
 
     // Allow to create relations from views
 
-    mutant_relation(const left_pair & lp) :
+    explicit mutant_relation(const left_pair & lp) :
 
         left ( lp.first  ),
         right( lp.second )
     {}
 
-    mutant_relation(const right_pair & rp) :
+    explicit mutant_relation(const right_pair & rp) :
 
         left ( rp.second ),
         right( rp.first  )
@@ -137,7 +137,7 @@ class mutant_relation :
 
     > std_pair;
 
-    mutant_relation(const std_pair & p) :
+    explicit mutant_relation(const std_pair & p) :
 
         left ( p.first  ),
         right( p.second )

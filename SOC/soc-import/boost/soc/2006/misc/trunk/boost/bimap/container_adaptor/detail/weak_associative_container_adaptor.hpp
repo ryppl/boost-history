@@ -43,6 +43,8 @@ template
     class ValueToBaseConverter      = use_default,
     class ValueFromBaseConverter    = use_default,
 
+    class KeyToBaseConverter        = use_default,
+
     class FunctorsFromDerivedClasses = mpl::list<>
 >
 class weak_associative_container_adaptor :
@@ -56,7 +58,27 @@ class weak_associative_container_adaptor :
         IteratorToBaseConverter, IteratorFromBaseConverter,
         ValueToBaseConverter   , ValueFromBaseConverter,
 
-        FunctorsFromDerivedClasses
+        typename mpl::copy<
+
+            mpl::list
+            <
+                typename mpl::if_< is_same< KeyToBaseConverter, use_default >,
+                // {
+                        key_to_base_identity
+                        <
+                            typename Base::key_type, KeyType
+                        >,
+                // }
+                // else
+                // {
+                        KeyToBaseConverter
+                // }
+
+                >::type
+            >,
+            mpl::front_inserter< FunctorsFromDerivedClasses >
+
+        >::type
     >
 {
     // MetaData -------------------------------------------------------------
@@ -64,6 +86,23 @@ class weak_associative_container_adaptor :
     public:
 
     typedef KeyType key_type;
+
+    protected:
+
+    typedef typename mpl::if_< is_same< KeyToBaseConverter, use_default >,
+    // {
+            key_to_base_identity
+            <
+                typename Base::key_type, KeyType
+            >,
+    // }
+    // else
+    // {
+            KeyToBaseConverter
+    // }
+
+    >::type key_to_base;
+
 
     // ACCESS -----------------------------------------------------------------
 
@@ -85,6 +124,8 @@ class weak_associative_container_adaptor :
 
         IteratorToBaseConverter, IteratorFromBaseConverter,
         ValueToBaseConverter   , ValueFromBaseConverter,
+
+        KeyToBaseConverter,
 
         FunctorsFromDerivedClasses
 

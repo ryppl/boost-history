@@ -34,7 +34,8 @@ template
     class IteratorFromBaseConverter        = use_default,
     class ReverseIteratorFromBaseConverter = use_default,
     class ValueToBaseConverter             = use_default,
-    class ValueFromBaseConverter           = use_default
+    class ValueFromBaseConverter           = use_default,
+    class KeyToBaseConverter               = use_default
 >
 class multiset_adaptor :
 
@@ -48,7 +49,8 @@ class multiset_adaptor :
 
         IteratorToBaseConverter, IteratorFromBaseConverter,
         ReverseIteratorFromBaseConverter,
-        ValueToBaseConverter, ValueFromBaseConverter
+        ValueToBaseConverter, ValueFromBaseConverter,
+        KeyToBaseConverter
     >
 {
 
@@ -71,7 +73,8 @@ class multiset_adaptor :
 
         IteratorToBaseConverter, IteratorFromBaseConverter,
         ReverseIteratorFromBaseConverter,
-        ValueToBaseConverter, ValueFromBaseConverter
+        ValueToBaseConverter, ValueFromBaseConverter,
+        KeyToBaseConverter
 
     > multiset_adaptor_;
 

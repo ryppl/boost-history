@@ -42,6 +42,7 @@ template
     class IteratorFromBaseConverter = use_default,
     class ValueToBaseConverter      = use_default,
     class ValueFromBaseConverter    = use_default,
+    class KeyToBaseConverter        = use_default,
 
     class FunctorsFromDerivedClasses = mpl::list<>
 >
@@ -57,6 +58,8 @@ class associative_container_adaptor :
 
         IteratorToBaseConverter, IteratorFromBaseConverter,
         ValueToBaseConverter   , ValueFromBaseConverter,
+
+        KeyToBaseConverter,
 
         FunctorsFromDerivedClasses
     >
@@ -85,6 +88,8 @@ class associative_container_adaptor :
         IteratorToBaseConverter, IteratorFromBaseConverter,
         ValueToBaseConverter   , ValueFromBaseConverter,
 
+        KeyToBaseConverter,
+
         FunctorsFromDerivedClasses
 
     > associative_container_adaptor_;
@@ -96,7 +101,10 @@ class associative_container_adaptor :
     typename this_type::size_type
         erase(const typename this_type::key_type& k)
     {
-        return associative_container_adaptor::base().erase(k);
+        return associative_container_adaptor::base().erase
+        (
+            this_type::template functor<typename this_type::key_to_base>()(k)
+        );
     }
 
     // As we redefine erase, the other overloads need to be manually routed
@@ -117,23 +125,33 @@ class associative_container_adaptor :
     typename this_type::size_type
         count(const typename this_type::key_type& k)
     {
-        return this_type::base().count(k);
+        return this_type::base().count(
+            this_type::template functor<typename this_type::key_to_base>()(k)
+        );
     }
 
     typename this_type::iterator
         find(const typename this_type::key_type& k)
     {
         return this_type::template functor<
-            typename this_type::iterator_from_base
-        >()                                         ( this_type::base().find(k) );
+            typename this_type::iterator_from_base>()
+        (
+            this_type::base().find(
+                this_type::template functor<typename this_type::key_to_base>()(k)
+            )
+        );
     }
 
     typename this_type::const_iterator
         find(const typename this_type::key_type& k) const
     {
         return this_type::template functor<
-            typename this_type::iterator_from_base
-        >()                                         ( this_type::base().find(k) );
+            typename this_type::iterator_from_base>()
+        (
+            this_type::base().find(
+                this_type::template functor<typename this_type::key_to_base>()(k)
+            )
+        );
     }
 
     std::pair
@@ -148,7 +166,10 @@ class associative_container_adaptor :
             typename Base::iterator,
             typename Base::iterator
 
-        > r(this_type::base().equal_range(k));
+        > r( this_type::base().equal_range(
+                this_type::template functor<typename this_type::key_to_base>()(k)
+            )
+        );
 
         return std::pair
         <
@@ -176,7 +197,10 @@ class associative_container_adaptor :
             typename Base::const_iterator,
             typename Base::const_iterator
 
-        > r(this_type::base().equal_range(k));
+        > r( this_type::base().equal_range(
+                this_type::template functor<typename this_type::key_to_base>()(k)
+            )
+        );
 
         return std::pair
         <

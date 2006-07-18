@@ -243,7 +243,7 @@ class structured_pair :
 
     > std_map_pair;
 
-    structured_pair(const std_pair & p)
+    explicit structured_pair(const std_pair & p)
     {
         structured_pair::first  = p.first;
         structured_pair::second = p.second;
@@ -268,8 +268,7 @@ class structured_pair :
                  ( structured_pair::second < p.second ) );
     }
 
-
-    structured_pair(const std_map_pair & p)
+    explicit structured_pair(const std_map_pair & p)
     {
         structured_pair::first  = p.first;
         structured_pair::second = p.second;

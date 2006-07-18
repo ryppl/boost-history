@@ -39,7 +39,13 @@ class multiset_view
         typename IndexType::iterator,
         typename IndexType::const_iterator,
         typename IndexType::reverse_iterator,
-        typename IndexType::const_reverse_iterator
+        typename IndexType::const_reverse_iterator,
+        container_adaptor::use_default,
+        container_adaptor::use_default,
+        container_adaptor::use_default,
+        container_adaptor::use_default,
+        container_adaptor::use_default,
+        typename IndexType::key_from_value
     >
 {
     public:
@@ -67,7 +73,13 @@ class const_multiset_view
         typename IndexType::iterator,
         typename IndexType::const_iterator,
         typename IndexType::reverse_iterator,
-        typename IndexType::const_reverse_iterator
+        typename IndexType::const_reverse_iterator,
+        container_adaptor::use_default,
+        container_adaptor::use_default,
+        container_adaptor::use_default,
+        container_adaptor::use_default,
+        container_adaptor::use_default,
+        typename IndexType::key_from_value
     >
 {
     public:

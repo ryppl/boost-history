@@ -38,7 +38,13 @@ class unordered_set_view
         typename IndexType::iterator,
         typename IndexType::const_iterator,
         typename IndexType::local_iterator,
-        typename IndexType::const_local_iterator
+        typename IndexType::const_local_iterator,
+        container_adaptor::use_default,
+        container_adaptor::use_default,
+        container_adaptor::use_default,
+        container_adaptor::use_default,
+        container_adaptor::use_default,
+        typename IndexType::key_from_value
     >
 {
     public:
@@ -68,7 +74,13 @@ class const_unordered_set_view
         typename IndexType::iterator,
         typename IndexType::const_iterator,
         typename IndexType::local_iterator,
-        typename IndexType::const_local_iterator
+        typename IndexType::const_local_iterator,
+        container_adaptor::use_default,
+        container_adaptor::use_default,
+        container_adaptor::use_default,
+        container_adaptor::use_default,
+        container_adaptor::use_default,
+        typename IndexType::key_from_value
     >
 {
     public:

@@ -212,6 +212,7 @@ class container_adaptor
     void insert(InputIterator iterBegin, InputIterator iterEnd)
     {
 
+        // TODO
         // This is may be the correct way to do it, but i have to work a little
         // bit more on it to make it work. There are problems with (*)
         /*
@@ -233,7 +234,7 @@ class container_adaptor
 
         for( ; iterBegin != iterEnd ; ++iterBegin )
         {
-            base().insert( functor<value_to_base>()(*iterBegin) );
+            base().insert( functor<value_to_base>()(value_type(*iterBegin)) );
         }
 
     }

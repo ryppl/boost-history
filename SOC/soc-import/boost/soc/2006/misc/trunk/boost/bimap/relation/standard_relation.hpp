@@ -103,13 +103,13 @@ class standard_relation :
 
     // Allow to create relations from views
 
-    standard_relation(const left_pair & lp) :
+    explicit standard_relation(const left_pair & lp) :
 
         left ( lp.first  ),
         right( lp.second )
     {}
 
-    standard_relation(const right_pair & rp) :
+    explicit standard_relation(const right_pair & rp) :
 
         left ( rp.second ),
         right( rp.first  )
@@ -125,7 +125,7 @@ class standard_relation :
 
     > std_pair;
 
-    standard_relation(const std_pair & p) :
+    explicit standard_relation(const std_pair & p) :
 
         left ( p.first  ),
         right( p.second )

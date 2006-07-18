@@ -69,7 +69,6 @@ class map_view
                 typename this_type::value_type( k, typename this_type::data_type() )
                 ) ).first ) ).second;
     }
-
 };
 
 /// \brief Constant view of a side of a bimap that is signature compatible with std::map.

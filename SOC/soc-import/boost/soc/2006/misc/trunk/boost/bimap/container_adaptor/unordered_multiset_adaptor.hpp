@@ -34,7 +34,8 @@ template
     class IteratorFromBaseConverter      = use_default,
     class LocalIteratorFromBaseConverter = use_default,
     class ValueToBaseConverter           = use_default,
-    class ValueFromBaseConverter         = use_default
+    class ValueFromBaseConverter         = use_default,
+    class KeyToBaseConverter             = use_default
 >
 class unordered_multiset_adaptor :
 
@@ -48,7 +49,8 @@ class unordered_multiset_adaptor :
 
         IteratorToBaseConverter, IteratorFromBaseConverter,
         LocalIteratorFromBaseConverter,
-        ValueToBaseConverter, ValueFromBaseConverter
+        ValueToBaseConverter, ValueFromBaseConverter,
+        KeyToBaseConverter
     >
 {
 
@@ -71,7 +73,8 @@ class unordered_multiset_adaptor :
 
         IteratorToBaseConverter, IteratorFromBaseConverter,
         LocalIteratorFromBaseConverter,
-        ValueToBaseConverter, ValueFromBaseConverter
+        ValueToBaseConverter, ValueFromBaseConverter,
+        KeyToBaseConverter
 
     > unordered_multiset_adaptor_;
 

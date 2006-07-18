@@ -14,6 +14,8 @@
 #define BOOST_BIMAP_CONTAINER_ADAPTOR_DETAIL_ORDERED_ASSOCIATIVE_CONTAINER_ADAPTOR_HPP
 
 #include <boost/bimap/container_adaptor/detail/associative_container_adaptor.hpp>
+#include <boost/bimap/container_adaptor/detail/value_comparison_adaptor.hpp>
+#include <boost/bimap/container_adaptor/detail/key_comparison_adaptor.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/list.hpp>
 #include <boost/mpl/copy.hpp>
@@ -42,6 +44,7 @@ template
     class ReverseIteratorFromBaseConverter = use_default,
     class ValueToBaseConverter             = use_default,
     class ValueFromBaseConverter           = use_default,
+    class KeyToBaseConverter               = use_default,
 
     class FunctorsFromDerivedClasses = mpl::list<>
 >
@@ -57,6 +60,8 @@ class ordered_associative_container_adaptor :
 
         IteratorToBaseConverter, IteratorFromBaseConverter,
         ValueToBaseConverter   , ValueFromBaseConverter,
+
+        KeyToBaseConverter,
 
         typename mpl::copy<
 
@@ -88,8 +93,20 @@ class ordered_associative_container_adaptor :
 
     public:
 
-    typedef typename Base::key_compare key_compare;
-    typedef typename Base::value_compare value_compare;
+    typedef key_comparison_adaptor
+    <
+        typename Base::key_compare,
+        typename this_type::key_type,
+        typename this_type::key_to_base
+
+    > key_compare;
+
+    typedef value_comparison_adaptor
+    <
+        typename Base::value_compare,
+        typename this_type::value_type
+
+    > value_compare;
 
     typedef ReverseIterator      reverse_iterator;
     typedef ConstReverseIterator const_reverse_iterator;
@@ -130,6 +147,8 @@ class ordered_associative_container_adaptor :
         ReverseIteratorFromBaseConverter,
         ValueToBaseConverter, ValueFromBaseConverter,
 
+        KeyToBaseConverter,
+
         FunctorsFromDerivedClasses
 
     > ordered_associative_container_adaptor_;
@@ -167,44 +186,57 @@ class ordered_associative_container_adaptor :
         >()                            ( this_type::base().rend() );
     }
 
-
     key_compare key_comp() const
     {
-        return this_type::base().key_comp();
+        return key_compare(
+            this_type::base().key_comp(),
+            this_type::template functor<typename this_type::key_to_base>()
+        );
     }
 
     value_compare value_comp() const
     {
-        return this_type::base().value_comp();
+        return value_compare( this_type::base().value_comp() );
     }
 
     typename this_type::iterator lower_bound(const typename this_type::key_type& k)
     {
        return this_type::template functor<
-            typename this_type::iterator_from_base
-        >()                                         ( this_type::base().lower_bound(k) );
+            typename this_type::iterator_from_base>()(
+                this_type::base().lower_bound(
+                    this_type::template functor<typename this_type::key_to_base>()(k)
+                )
+            );
     }
 
     typename this_type::const_iterator lower_bound(const typename this_type::key_type& k) const
     {
        return this_type::template functor<
-            typename this_type::iterator_from_base
-        >()                                         ( this_type::base().lower_bound(k) );
-
+            typename this_type::iterator_from_base>()(
+                this_type::base().lower_bound(
+                    this_type::template functor<typename this_type::key_to_base>()(k)
+                )
+            );
     }
 
     typename this_type::iterator upper_bound(const typename this_type::key_type& k)
     {
        return this_type::template functor<
-            typename this_type::iterator_from_base
-        >()                                         ( this_type::base().upper_bound(k) );
+            typename this_type::iterator_from_base>()(
+                this_type::base().upper_bound(
+                    this_type::template functor<typename this_type::key_to_base>()(k)
+                )
+            );
     }
 
     typename this_type::const_iterator upper_bound(const typename this_type::key_type& k) const
     {
         return this_type::template functor<
-            typename this_type::iterator_from_base
-        >()                                         ( this_type::base().upper_bound(k) );
+            typename this_type::iterator_from_base>()(
+                this_type::base().upper_bound(
+                    this_type::template functor<typename this_type::key_to_base>()(k)
+                )
+            );
     }
 
 };

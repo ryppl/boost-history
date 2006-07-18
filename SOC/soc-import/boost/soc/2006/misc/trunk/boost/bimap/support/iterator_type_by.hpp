@@ -91,20 +91,61 @@ BOOST_BIMAP_SYMMETRIC_METADATA_ACCESS_BUILDER
     right_const_iterator
 );
 
+
 // Implementation of reverse iterator type by metafunction
 
-template< class Tag, class Bimap >
+BOOST_BIMAP_SYMMETRIC_STATIC_ACCESS_BUILDER
+(
+    core_reverse_iterator_type_by,
+    BimapCore,
+
+    typedef typename BimapCore::core_type::template index<typename BimapCore::left_tag>
+        ::type::reverse_iterator type,
+
+    typedef typename BimapCore::core_type::template index<typename BimapCore::right_tag>
+        ::type::reverse_iterator type
+);
+
+template< class Tag, class BimapCore >
 struct reverse_iterator_type_by
 {
-    typedef reverse_iterator< typename iterator_type_by<Tag,Bimap>::type > type;
+
+    typedef transform_iterator
+    <
+        relation::support::GetPairFunctor<Tag,typename BimapCore::relation>,
+        typename core_reverse_iterator_type_by<Tag,BimapCore>::type,
+
+        // Due to the multiIndex core the "const" is forced
+        const typename relation::support::pair_type_by<Tag,typename BimapCore::relation>::type &
+
+    > type;
 };
 
 // Implementation of const reverse iterator type by metafunction
 
-template< class Tag, class Bimap >
+BOOST_BIMAP_SYMMETRIC_STATIC_ACCESS_BUILDER
+(
+    core_const_reverse_iterator_type_by,
+    BimapCore,
+
+    typedef typename BimapCore::core_type::template index<typename BimapCore::left_tag>
+        ::type::const_reverse_iterator type,
+
+    typedef typename BimapCore::core_type::template index<typename BimapCore::right_tag>
+        ::type::const_reverse_iterator type
+);
+
+template< class Tag, class BimapCore >
 struct const_reverse_iterator_type_by
 {
-    typedef reverse_iterator< typename const_iterator_type_by<Tag,Bimap>::type > type;
+
+    typedef transform_iterator
+    <
+        relation::support::GetPairFunctor<Tag,typename BimapCore::relation>,
+        typename core_const_reverse_iterator_type_by<Tag,BimapCore>::type,
+        const typename relation::support::pair_type_by<Tag,typename BimapCore::relation>::type &
+
+    > type;
 };
 
 

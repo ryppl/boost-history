@@ -34,7 +34,8 @@ template
     class IteratorFromBaseConverter        = use_default,
     class ReverseIteratorFromBaseConverter = use_default,
     class ValueToBaseConverter             = use_default,
-    class ValueFromBaseConverter           = use_default
+    class ValueFromBaseConverter           = use_default,
+    class KeyToBaseConverter               = use_default
 >
 class multimap_adaptor :
 
@@ -48,7 +49,8 @@ class multimap_adaptor :
 
         IteratorToBaseConverter, IteratorFromBaseConverter,
         ReverseIteratorFromBaseConverter,
-        ValueToBaseConverter, ValueFromBaseConverter
+        ValueToBaseConverter, ValueFromBaseConverter,
+        KeyToBaseConverter
     >
 {
     // MetaData -------------------------------------------------------------
@@ -76,7 +78,8 @@ class multimap_adaptor :
 
         IteratorToBaseConverter, IteratorFromBaseConverter,
         ReverseIteratorFromBaseConverter,
-        ValueToBaseConverter, ValueFromBaseConverter
+        ValueToBaseConverter, ValueFromBaseConverter,
+        KeyToBaseConverter
 
     > multimap_adaptor_;
 

@@ -31,7 +31,8 @@ multi_index bimap core so it can be used as a std::set.
 See also const_set_view.
                                                                                     **/
 
-template< class IndexType >
+template< class IndexType
+ >
 class set_view
 :
     public container_adaptor::set_adaptor
@@ -40,14 +41,19 @@ class set_view
         typename IndexType::iterator,
         typename IndexType::const_iterator,
         typename IndexType::reverse_iterator,
-        typename IndexType::const_reverse_iterator
+        typename IndexType::const_reverse_iterator,
+        container_adaptor::use_default,
+        container_adaptor::use_default,
+        container_adaptor::use_default,
+        container_adaptor::use_default,
+        container_adaptor::use_default,
+        typename IndexType::key_from_value
     >
 {
     public:
 
     set_view() {}
     set_view(typename set_view::base_type & c) : set_view::set_adaptor_(c) {}
-
 };
 
 /// \brief Constant view of a bimap that is signature compatible with std::set.
@@ -69,7 +75,13 @@ class const_set_view
         typename IndexType::iterator,
         typename IndexType::const_iterator,
         typename IndexType::reverse_iterator,
-        typename IndexType::const_reverse_iterator
+        typename IndexType::const_reverse_iterator,
+        container_adaptor::use_default,
+        container_adaptor::use_default,
+        container_adaptor::use_default,
+        container_adaptor::use_default,
+        container_adaptor::use_default,
+        typename IndexType::key_from_value
     >
 {
     public:

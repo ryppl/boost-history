@@ -97,11 +97,6 @@ struct iterator_from_base_identity<BaseIterator,Iterator,BaseIterator,Iterator>
 template< class BaseValue, class Value >
 struct value_to_base_identity
 {
-    BaseValue operator()(Value & val) const
-    {
-        return BaseValue(val);
-    }
-
     BaseValue operator()(const Value & val) const
     {
         return BaseValue(val);
@@ -111,11 +106,6 @@ struct value_to_base_identity
 template< class Value >
 struct value_to_base_identity< Value, Value >
 {
-    Value & operator()(Value & val) const
-    {
-        return val;
-    }
-
     const Value & operator()(const Value & val) const
     {
         return val;
@@ -127,11 +117,6 @@ struct value_to_base_identity< Value, Value >
 template< class BaseValue, class Value >
 struct value_from_base_identity
 {
-    Value operator()(BaseValue & val) const
-    {
-        return Value(val);
-    }
-
     Value operator()(const BaseValue & val) const
     {
         return Value(val);
@@ -150,6 +135,26 @@ struct value_from_base_identity<Value,Value>
     const Value & operator()(const Value & val) const
     {
         return val;
+    }
+};
+
+/// \brief Value to base identity converter used by default in container adaptors.
+
+template< class BaseKey, class Key >
+struct key_to_base_identity
+{
+    BaseKey operator()(const Key & k) const
+    {
+        return BaseKey(k);
+    }
+};
+
+template< class Key >
+struct key_to_base_identity< Key, Key >
+{
+    const Key & operator()(const Key & k) const
+    {
+        return k;
     }
 };
 

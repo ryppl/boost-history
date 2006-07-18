@@ -34,7 +34,8 @@ template
     class IteratorFromBaseConverter      = use_default,
     class LocalIteratorFromBaseConverter = use_default,
     class ValueToBaseConverter           = use_default,
-    class ValueFromBaseConverter         = use_default
+    class ValueFromBaseConverter         = use_default,
+    class KeyToBaseConverter             = use_default
 >
 class unordered_multimap_adaptor :
 
@@ -48,7 +49,8 @@ class unordered_multimap_adaptor :
 
         IteratorToBaseConverter, IteratorFromBaseConverter,
         LocalIteratorFromBaseConverter,
-        ValueToBaseConverter, ValueFromBaseConverter
+        ValueToBaseConverter, ValueFromBaseConverter,
+        KeyToBaseConverter
     >
 {
     // MetaData -------------------------------------------------------------
@@ -76,7 +78,8 @@ class unordered_multimap_adaptor :
 
         IteratorToBaseConverter, IteratorFromBaseConverter,
         LocalIteratorFromBaseConverter,
-        ValueToBaseConverter, ValueFromBaseConverter
+        ValueToBaseConverter, ValueFromBaseConverter,
+        KeyToBaseConverter
 
     > unordered_multimap_adaptor_;
 

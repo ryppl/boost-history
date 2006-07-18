@@ -43,8 +43,9 @@ template
     class LocalIteratorFromBaseConverter = use_default,
     class ValueToBaseConverter           = use_default,
     class ValueFromBaseConverter         = use_default,
+    class KeyToBaseConverter             = use_default,
 
-    class FunctorsFromDerivedClasses = mpl::list<>
+    class FunctorsFromDerivedClasses     = mpl::list<>
 
 >
 class unordered_associative_container_adaptor :
@@ -59,6 +60,8 @@ class unordered_associative_container_adaptor :
 
         IteratorToBaseConverter, IteratorFromBaseConverter,
         ValueToBaseConverter   , ValueFromBaseConverter,
+
+        KeyToBaseConverter,
 
         typename mpl::copy<
 
@@ -136,6 +139,8 @@ class unordered_associative_container_adaptor :
         LocalIteratorFromBaseConverter,
         ValueToBaseConverter   , ValueFromBaseConverter,
 
+        KeyToBaseConverter,
+
         FunctorsFromDerivedClasses
 
     > unordered_associative_container_adaptor_;
@@ -163,7 +168,9 @@ class unordered_associative_container_adaptor :
 
     typename this_type::size_type bucket(const typename this_type::key_type& k) const
     {
-        return this_type::base().bucket(k);
+        return this_type::base().bucket(
+            this_type::template functor<typename this_type::key_to_base>()(k)
+        );
     }
 
     local_iterator       begin(typename this_type::size_type n)
