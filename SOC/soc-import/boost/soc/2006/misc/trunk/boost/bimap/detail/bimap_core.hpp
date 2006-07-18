@@ -15,7 +15,12 @@
 
 // Boost.MPL
 #include <boost/mpl/placeholders.hpp>
+#include <boost/mpl/push_front.hpp>
+#include <boost/mpl/if.hpp>
+
 #include <boost/type_traits/add_const.hpp>
+#include <boost/type_traits/is_same.hpp>
+
 
 // Boost.MultiIndex
 #include <boost/multi_index_container.hpp>
@@ -159,7 +164,7 @@ struct bimap_core
 
     // Use type hiding to get better symbol names
 
-    struct core_indices :
+    struct basic_core_indices :
 
         multi_index::indexed_by
         <
@@ -182,6 +187,69 @@ struct bimap_core
         >
 
     {};
+
+    // The multi index core can have two or three indices depending on the set
+    // type of the relation. If it is based either on the left or on the right,
+    // then only two indices are needed. But the set type of the relation
+    // can be completely diferent from the onew used for the sides in wich case
+    // we have to add yet another index to the core.
+
+    typedef typename mpl::if_<
+        is_same< typename parameters::set_type_of_relation, collection::left_based >,
+    // {
+            left_tagged_key_type,
+    // }
+    /* else */ typename mpl::if_<
+            is_same< typename parameters::set_type_of_relation, collection::right_based >,
+    // {
+            right_tagged_key_type,
+    // }
+    // else
+    // {
+            tags::tagged
+            <
+                typename parameters::set_type_of_relation::template bind_to
+                <
+                    relation
+
+                >::type,
+                collection::independent_index_tag
+            >
+    // }
+        >::type
+
+    >::type tagged_set_of_relation_type;
+
+    protected:
+
+    typedef typename tagged_set_of_relation_type::tag relation_set_tag;
+
+    private:
+
+    typedef typename mpl::if_<
+
+        is_same< relation_set_tag, collection::independent_index_tag >,
+    // {
+            typename mpl::push_front
+            <
+                basic_core_indices,
+
+                typename collection::support::compute_index_type
+                <
+                    typename tagged_set_of_relation_type::value_type,
+                    multi_index::identity<relation>,
+                    collection::independent_index_tag
+
+                >::type
+
+            >::type,
+    // }
+    // else
+    // {
+            basic_core_indices
+    // }
+
+    >::type core_indices;
 
     // Define the core using compute_index_type to translate the
     // set type to an multi index specification
@@ -257,11 +325,14 @@ struct bimap_core
 
     //@}
 
-    // Relation set view metadata
+    // Relation set view
 
-    typedef left_tag relation_set_tag;
-    typedef left_key_type set_type_of;
-    typedef left_index relation_index;
+    typedef typename collection::support::compute_set_view_type
+    <
+        typename tagged_set_of_relation_type::value_type,
+        typename core_type::template index< relation_set_tag >::type
+
+    >::type relation_set;
 
     public:
 

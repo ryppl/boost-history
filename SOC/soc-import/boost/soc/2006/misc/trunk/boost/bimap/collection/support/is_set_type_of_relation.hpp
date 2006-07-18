@@ -60,6 +60,7 @@ struct is_set_type_of_relation
     BOOST_BIMAP_MPL_BOOL_RESULT(true);
 };
 
+
 } // namespace support
 } // namespace collection
 } // namespace bimap

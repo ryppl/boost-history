@@ -222,15 +222,8 @@ template
 class bimap
 :
     public bimap::detail::bimap_core<KeyTypeA,KeyTypeB,AP1,AP2,AP3>,
-    public collection::support::compute_set_view_type
-    <
-        typename bimap::detail::bimap_core<KeyTypeA,KeyTypeB,AP1,AP2,AP3>
-            ::set_type_of,
+    public bimap::detail::bimap_core<KeyTypeA,KeyTypeB,AP1,AP2,AP3>::relation_set
 
-        typename bimap::detail::bimap_core<KeyTypeA,KeyTypeB,AP1,AP2,AP3>
-            ::relation_index
-
-    >::type
 {
     private:
 
@@ -239,13 +232,6 @@ class bimap
     public:
 
     // metadata --------------------------------------------------------
-
-    typedef typename collection::support::compute_set_view_type
-    <
-        typename bimap::set_type_of,
-        typename bimap::relation_index
-
-    >::type set_type;
 
     /*
     // The rest is computed in the core, because it is quite difficult to
@@ -285,7 +271,8 @@ class bimap
 
     bimap() :
 
-        set_type (core.get<typename bimap::relation_set_tag   >()),
+        bimap::relation_set( core.get<typename bimap::relation_set_tag   >() ),
+
         left     (core.get<typename bimap::left_tag           >()),
         right    (core.get<typename bimap::right_tag          >())
 

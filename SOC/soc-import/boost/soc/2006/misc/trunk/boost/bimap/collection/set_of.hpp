@@ -162,7 +162,7 @@ struct set_of_relation : public set_type_of_relation_tag
     typedef KeyCompare key_compare;
 
     /*
-        template<class Relation,class DefaultKeyCompare = use_default >
+        template<class Relation>
         struct bind_to
         {
             typedef -UNDEFINED- type;

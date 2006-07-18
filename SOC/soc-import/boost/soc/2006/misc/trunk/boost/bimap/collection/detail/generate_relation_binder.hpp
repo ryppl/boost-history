@@ -14,6 +14,7 @@
 #define BOOST_BIMAP_COLLECTION_DETAIL_GENERATE_RELATION_BINDER_HPP
 
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/apply.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/bimap/collection/key_type_of_tag.hpp>
 
@@ -25,20 +26,18 @@
         CP1                                                                   \
     )                                                                         \
                                                                               \
-    template<class Relation,class DefaultParameter1 = use_default >           \
+    template<class Relation>                                                  \
     struct bind_to                                                            \
     {                                                                         \
         typedef typename mpl::if_                                             \
         <                                                                     \
-            is_same<DefaultParameter1,use_default>,                           \
-            typename mpl::if_                                                 \
+            is_same<CP1,use_default>,                                         \
+            SET_TYPE_OF<Relation>,                                            \
+            SET_TYPE_OF                                                       \
             <                                                                 \
-                is_same<CP1,use_default>,                                     \
-                SET_TYPE_OF<Relation>,                                        \
-                SET_TYPE_OF<Relation,CP1>                                     \
-                                                                              \
-            >::type,                                                          \
-            SET_TYPE_OF<Relation,DefaultParameter1>                           \
+                Relation,                                                     \
+                typename mpl::apply<CP1,Relation>::type                       \
+            >                                                                 \
                                                                               \
         >::type type;                                                         \
                                                                               \
@@ -65,34 +64,22 @@
     {                                                                         \
         typedef typename mpl::if_                                             \
         <                                                                     \
-            is_same<DefaultParameter1,use_default>,                           \
-                                                                              \
+            is_same<CP1,use_default>,                                         \
+            SET_TYPE_OF<Relation>,                                            \
             typename mpl::if_                                                 \
             <                                                                 \
-                is_same<CP1,use_default>,                                     \
-                SET_TYPE_OF<Relation>,                                        \
-                typename mpl::if_                                             \
+                is_same<CP2,use_default>,                                     \
+                SET_TYPE_OF                                                   \
                 <                                                             \
-                    is_same<CP2,use_default>,                                 \
-                    SET_TYPE_OF<Relation,CP1>,                                \
-                    SET_TYPE_OF<Relation,CP1,CP2>                             \
-                                                                              \
-                >::type                                                       \
-                                                                              \
-            >::type,                                                          \
-                                                                              \
-            typename mpl::if_                                                 \
-            <                                                                 \
-                is_same<DefaultParameter2,use_default>,                       \
-                typename mpl::if_                                             \
+                    Relation,                                                 \
+                    typename mpl::apply<CP1,Relation>::type                   \
+                >,                                                            \
+                SET_TYPE_OF                                                   \
                 <                                                             \
-                    is_same<CP2,use_default>,                                 \
-                    SET_TYPE_OF<Relation,DefaultParameter1>,                  \
-                    SET_TYPE_OF<Relation,DefaultParameter1,CP2>               \
-                                                                              \
-                >::type,                                                      \
-                                                                              \
-                SET_TYPE_OF<Relation,DefaultParameter1,DefaultParameter2>     \
+                    Relation,                                                 \
+                    typename mpl::apply<CP1,Relation>::type,                  \
+                    typename mpl::apply<CP2,Relation>::type                   \
+                >                                                             \
                                                                               \
             >::type                                                           \
                                                                               \

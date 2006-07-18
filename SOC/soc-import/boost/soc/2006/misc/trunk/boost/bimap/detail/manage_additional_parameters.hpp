@@ -69,7 +69,7 @@ struct manage_additional_parameters
 
     struct case_NNN
     {
-        typedef collection::set_type_based_on_left set_type_of_relation;
+        typedef collection::left_based set_type_of_relation;
         typedef std::allocator<void> allocator;
     };
 
@@ -80,7 +80,7 @@ struct manage_additional_parameters
 
     struct case_ANN
     {
-        typedef collection::set_type_based_on_left set_type_of_relation;
+        typedef collection::left_based set_type_of_relation;
         typedef AP1 allocator;
     };
 
@@ -113,7 +113,7 @@ struct manage_additional_parameters
 
     struct case_HNN
     {
-        typedef collection::set_type_based_on_left set_type_of_relation;
+        typedef collection::left_based set_type_of_relation;
         typedef std::allocator<void> allocator;
     };
 
@@ -135,7 +135,7 @@ struct manage_additional_parameters
 
     struct case_HAN
     {
-        typedef collection::set_type_based_on_left set_type_of_relation;
+        typedef collection::left_based set_type_of_relation;
         typedef AP2 allocator;
     };
 
