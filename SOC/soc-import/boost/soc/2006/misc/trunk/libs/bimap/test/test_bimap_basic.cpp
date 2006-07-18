@@ -16,6 +16,9 @@
 // Boost.Test
 #include <boost/test/minimal.hpp>
 
+// std
+#include <functional>
+
 // Boost.Bimap
 #include <boost/bimap/detail/manage_bimap_key.hpp>
 #include <boost/bimap/detail/manage_additional_parameters.hpp>
@@ -445,6 +448,7 @@ struct right_tag {};
 void test_bimap()
 {
     using namespace boost::bimap;
+    using namespace boost::mpl;
 
     // Easy first test, two POD data types with out custom configuration
     {
@@ -536,6 +540,42 @@ void test_bimap()
 
             test_unordered_set_unordered_multiset_bimap(b,data,left_data,right_data);
             test_tagged_bimap<left_tag,right_tag>(b,data);
+        }
+
+        // Untagged simple right-based bimap
+        {
+            typedef bimap<int,double,right_based> bm;
+
+            bm b;
+
+            test_set_set_bimap(b,data,left_data,right_data);
+        }
+
+        // Untagged bimap with changed set type of relation
+        {
+            typedef bimap<int,double,set_of_relation< std::less<_> > > bm;
+
+            bm b;
+
+            test_set_set_bimap(b,data,left_data,right_data);
+        }
+
+        {
+            bimap
+            <
+                multiset_of< int, std::greater<int> >, unordered_set_of<std::string> ,
+                multiset_of_relation< std::less<_> >
+
+            > b;
+        }
+
+        {
+            bimap
+            <
+                set_of< short, std::greater<short> >, unordered_multiset_of<std::string*> ,
+                unordered_set_of_relation<>
+
+            > b;
         }
 
     }
