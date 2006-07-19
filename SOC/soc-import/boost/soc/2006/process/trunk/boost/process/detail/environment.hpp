@@ -16,14 +16,11 @@
 
 #if defined(BOOST_PROCESS_WIN32_API)
 extern "C" {
+#   include <tchar.h>
 #   include <windows.h>
 }
 #elif defined(BOOST_PROCESS_POSIX_API)
-extern "C" {
-#   include <unistd.h>
-}
-#   include <cerrno>
-#   include <cstdlib>
+#   include <cstring>
 #else
 #   error "Unknown platform."
 #endif
@@ -32,8 +29,8 @@ extern "C" {
 #include <string>
 
 #include <boost/assert.hpp>
-#include <boost/noncopyable.hpp>
 #include <boost/process/exceptions.hpp>
+#include <boost/shared_array.hpp>
 #include <boost/throw_exception.hpp>
 
 namespace boost {
@@ -42,47 +39,60 @@ namespace detail {
 
 // ------------------------------------------------------------------------
 
-class environment_entry
+class environment :
+    public std::map< std::string, std::string >
 {
-    bool m_set;
-    std::string m_value;
-
 public:
-    explicit
-    environment_entry(bool setit, const std::string& value = "") :
-        m_set(setit),
-        m_value(value)
-    {
-    }
+    environment(void);
 
-    bool
-    is_set(void)
-        const
-    {
-        return m_set;
-    }
+    void set(const std::string& var, const std::string& value);
+    void unset(const std::string& var);
 
-    const std::string&
-    get_value(void)
-        const
-    {
-        BOOST_ASSERT(m_set);
-        return m_value;
-    }
+    char** envp(void) const;
+#if defined(BOOST_PROCESS_WIN32_API)
+    boost::shared_array< TCHAR > strings(void) const;
+#endif
 };
 
 // ------------------------------------------------------------------------
 
-class environment :
-    public std::map< std::string, environment_entry >,
-    public boost::noncopyable
+inline
+environment::environment(void)
 {
-public:
-    void set(const std::string& var, const std::string& value);
-    void unset(const std::string& var);
+#if defined(BOOST_PROCESS_POSIX_API)
+    extern char** ::environ;
 
-    void setup(void);
-};
+    const char** ptr = environ;
+    while (*ptr != NULL) {
+        std::string str = *ptr;
+        std::string::size_type pos = str.find('=');
+        insert(value_type(str.substr(0, pos),
+                          str.substr(pos + 1, str.length())));
+        ptr++;
+    }
+#elif defined(BOOST_PROCESS_WIN32_API)
+    TCHAR* es = ::GetEnvironmentStrings();
+    if (es == NULL)
+        boost::throw_exception
+            (system_error("boost::process::detail::environment::environment",
+                          "GetEnvironmentStrings failed", ::GetLastError()));
+
+    try {
+        while (*es != '\0') {
+            std::string str = es;
+            std::string::size_type pos = str.find('=');
+            insert(value_type(str.substr(0, pos),
+                              str.substr(pos + 1, str.length())));
+            es += str.length() + 1;
+        }
+    } catch (...) {
+        ::FreeEnvironmentStrings(es);
+        throw;
+    }
+
+    ::FreeEnvironmentStrings(es);
+#endif
+}
 
 // ------------------------------------------------------------------------
 
@@ -90,8 +100,7 @@ inline
 void
 environment::set(const std::string& var, const std::string& value)
 {
-    BOOST_ASSERT(not var.empty());
-    insert(value_type(var, environment_entry(true, value)));
+    insert(value_type(var, value));
 }
 
 // ------------------------------------------------------------------------
@@ -100,33 +109,76 @@ inline
 void
 environment::unset(const std::string& var)
 {
-    BOOST_ASSERT(not var.empty());
-    insert(value_type(var, environment_entry(false)));
+    erase(var);
 }
 
 // ------------------------------------------------------------------------
 
 inline
-void
-environment::setup(void)
+char**
+environment::envp(void)
+    const
 {
-    for (const_iterator iter = begin(); iter != end(); iter++) {
-        const std::string& var = (*iter).first;
-        const environment_entry& e = (*iter).second;
+    char** ep = new char*[size() + 1];
 
-        if (e.is_set()) {
-            int res = ::setenv(var.c_str(), e.get_value().c_str(), 1);
-            if (res == -1) {
-                system_error e("boost::process::launcher::start",
-                               "setenv(2) failed", errno);
-                ::write(STDERR_FILENO, e.what(), std::strlen(e.what()));
-                ::write(STDERR_FILENO, "\n", 1);
-                ::exit(EXIT_FAILURE);
-            }
-        } else
-            ::unsetenv(var.c_str());
+    size_type i = 0;
+    for (const_iterator iter = begin(); iter != end(); iter++) {
+        std::string tmp = (*iter).first + "=" + (*iter).second;
+
+        char* cstr = new char[tmp.length() + 1];
+#if defined(BOOST_PROCESS_POSIX_API)
+        std::strncpy(cstr, tmp.c_str(), tmp.length());
+#elif defined(BOOST_PROCESS_WIN32_API)
+        ::strcpy_s(cstr, tmp.length() + 1, tmp.c_str());
+#endif
+        cstr[tmp.length()] = '\0';
+
+        ep[i++] = cstr;
     }
+
+    ep[i] = NULL;
+
+    return ep;
 }
+
+// ------------------------------------------------------------------------
+
+#if defined(BOOST_PROCESS_WIN32_API)
+inline
+boost::shared_array< TCHAR >
+environment::strings(void)
+    const
+{
+    boost::shared_array< TCHAR > strs(NULL);
+
+    if (size() == 0) {
+        strs.reset(new TCHAR[2]);
+        ::ZeroMemory(strs.get(), sizeof(TCHAR) * 2);
+    } else {
+        std::string::size_type len = sizeof(TCHAR);
+        for (const_iterator iter = begin(); iter != end(); iter++)
+            len += ((*iter).first.length() + 1 + (*iter).second.length() +
+                    1) * sizeof(TCHAR);
+
+        strs.reset(new TCHAR[len]);
+
+        TCHAR* ptr = strs.get();
+        for (const_iterator iter = begin(); iter != end(); iter++) {
+            std::string tmp = (*iter).first + "=" + (*iter).second;
+            _tcscpy_s(ptr, len - (ptr - strs.get()) * sizeof(TCHAR),
+                      TEXT(tmp.c_str()));
+            ptr += (tmp.length() + 1) * sizeof(TCHAR);
+
+            BOOST_ASSERT(static_cast<std::string::size_type>
+                (ptr - strs.get()) * sizeof(TCHAR) < len);
+        }
+        *ptr = '\0';
+    }
+
+    BOOST_ASSERT(strs.get() != NULL);
+    return strs;
+}
+#endif
 
 // ------------------------------------------------------------------------
 

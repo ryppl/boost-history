@@ -88,6 +88,7 @@ inline
 void
 launcher::set_environment(const std::string& var, const std::string& value)
 {
+    BOOST_ASSERT(!var.empty());
     m_environment.set(var, value);
 }
 
@@ -97,6 +98,7 @@ inline
 void
 launcher::unset_environment(const std::string& var)
 {
+    BOOST_ASSERT(!var.empty());
     m_environment.unset(var);
 }
 

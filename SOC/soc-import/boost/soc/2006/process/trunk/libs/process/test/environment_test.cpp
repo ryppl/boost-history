@@ -13,10 +13,10 @@
 
 #if defined(BOOST_PROCESS_WIN32_API)
 extern "C" {
-#   include <windows.h>
+#   include <tchar.h>
 }
+#   include <cstring>
 #elif defined(BOOST_PROCESS_POSIX_API)
-#   include <cstdlib>
 #else
 #   error "Unsupported platform."
 #endif
@@ -30,49 +30,17 @@ namespace but = ::boost::unit_test;
 
 // ------------------------------------------------------------------------
 
-bool
-aux_env_is_set(const std::string& var)
-{
-    const char* val = ::getenv(var.c_str());
-    return val != NULL;
-}
-
-// ------------------------------------------------------------------------
-
-const std::string
-aux_env_get(const std::string& var)
-{
-    const char* val = ::getenv(var.c_str());
-    BOOST_REQUIRE(val != NULL);
-    return val;
-}
-
-// ------------------------------------------------------------------------
-
-void
-aux_env_set(const std::string& var, const std::string& value)
-{
-    int err = ::setenv(var.c_str(), value.c_str(), 1);
-    BOOST_REQUIRE(err != -1);
-    BOOST_REQUIRE(aux_env_is_set(var));
-}
-
-// ------------------------------------------------------------------------
-
 static void
 test_set(void)
 {
     bpd::environment env;
-    BOOST_REQUIRE_EQUAL(env.size(),
-                        static_cast<bpd::environment::size_type>(0));
+    bpd::environment::size_type initialsize = env.size();
     env.set("SOME_VARIABLE", "content");
-    BOOST_REQUIRE_EQUAL(env.size(),
-                        static_cast<bpd::environment::size_type>(1));
+    BOOST_REQUIRE_EQUAL(env.size(), initialsize + 1);
     bpd::environment::const_iterator iter = env.find("SOME_VARIABLE");
     BOOST_REQUIRE(iter != env.end());
     BOOST_REQUIRE_EQUAL((*iter).first, "SOME_VARIABLE");
-    BOOST_REQUIRE((*iter).second.is_set());
-    BOOST_REQUIRE_EQUAL((*iter).second.get_value(), "content");
+    BOOST_REQUIRE_EQUAL((*iter).second, "content");
 }
 
 // ------------------------------------------------------------------------
@@ -81,45 +49,107 @@ static void
 test_unset(void)
 {
     bpd::environment env;
-    BOOST_REQUIRE_EQUAL(env.size(),
-                        static_cast<bpd::environment::size_type>(0));
+    env.set("SOME_VARIABLE", "content");
+    bpd::environment::size_type initialsize = env.size();
     env.unset("SOME_VARIABLE");
-    BOOST_REQUIRE_EQUAL(env.size(),
-                        static_cast<bpd::environment::size_type>(1));
+    BOOST_REQUIRE_EQUAL(env.size(), initialsize - 1);
     bpd::environment::const_iterator iter = env.find("SOME_VARIABLE");
-    BOOST_REQUIRE(iter != env.end());
-    BOOST_REQUIRE_EQUAL((*iter).first, "SOME_VARIABLE");
-    BOOST_REQUIRE(!(*iter).second.is_set());
+    BOOST_REQUIRE(iter == env.end());
 }
 
 // ------------------------------------------------------------------------
 
 static void
-test_setup_set(void)
+test_envp(void)
 {
-    BOOST_REQUIRE(!aux_env_is_set("TO_BE_SET"));
-
     bpd::environment env;
-    env.set("TO_BE_SET", "some-value");
-    env.setup();
+    env.clear();
+    env.set("VAR1", "value1");
+    env.set("VAR2", "value2");
+    env.set("VAR3", "value3");
 
-    BOOST_REQUIRE(aux_env_is_set("TO_BE_SET"));
-    BOOST_REQUIRE_EQUAL(aux_env_get("TO_BE_SET"), "some-value");
+    char** ep = env.envp();
+
+    BOOST_REQUIRE(ep[0] != NULL);
+    BOOST_REQUIRE_EQUAL(std::string(ep[0]), "VAR1=value1");
+    delete [] ep[0];
+
+    BOOST_REQUIRE(ep[1] != NULL);
+    BOOST_REQUIRE_EQUAL(std::string(ep[1]), "VAR2=value2");
+    delete [] ep[1];
+
+    BOOST_REQUIRE(ep[2] != NULL);
+    BOOST_REQUIRE_EQUAL(std::string(ep[2]), "VAR3=value3");
+    delete [] ep[2];
+
+    BOOST_REQUIRE(ep[3] == NULL);
+    delete [] ep;
 }
 
 // ------------------------------------------------------------------------
 
 static void
-test_setup_unset(void)
+test_envp_unsorted(void)
 {
-    aux_env_set("TO_BE_UNSET", "some-value");
-
     bpd::environment env;
-    env.unset("TO_BE_UNSET");
-    env.setup();
+    env.clear();
+    env.set("VAR2", "value2");
+    env.set("VAR1", "value1");
 
-    BOOST_REQUIRE(!aux_env_is_set("TO_BE_UNSET"));
+    char** ep = env.envp();
+
+    BOOST_REQUIRE(ep[0] != NULL);
+    BOOST_REQUIRE_EQUAL(std::string(ep[0]), "VAR1=value1");
+    delete [] ep[0];
+
+    BOOST_REQUIRE(ep[1] != NULL);
+    BOOST_REQUIRE_EQUAL(std::string(ep[1]), "VAR2=value2");
+    delete [] ep[1];
+
+    BOOST_REQUIRE(ep[2] == NULL);
+    delete [] ep;
 }
+
+// ------------------------------------------------------------------------
+
+#if defined(BOOST_PROCESS_WIN32_API)
+static void
+test_strings(void)
+{
+    bpd::environment env;
+    env.clear();
+    env.set("VAR1", "value1");
+    env.set("VAR2", "value2");
+    env.set("VAR3", "value3");
+
+    boost::shared_array< TCHAR > strs = env.strings();
+    BOOST_REQUIRE(strs.get() != NULL);
+
+    TCHAR* expected = TEXT("VAR1=value1\0VAR2=value2\0VAR3=value3\0\0");
+    BOOST_REQUIRE(std::memcmp(strs.get(), expected,
+                              37 * sizeof(TCHAR)) == 0);
+}
+#endif
+
+// ------------------------------------------------------------------------
+
+#if defined(BOOST_PROCESS_WIN32_API)
+static void
+test_strings_unsorted(void)
+{
+    bpd::environment env;
+    env.clear();
+    env.set("VAR2", "value2");
+    env.set("VAR1", "value1");
+
+    boost::shared_array< TCHAR > strs = env.strings();
+    BOOST_REQUIRE(strs.get() != NULL);
+
+    TCHAR* expected = TEXT("VAR1=value1\0VAR2=value2\0\0");
+    BOOST_REQUIRE(std::memcmp(strs.get(), expected,
+                              25 * sizeof(TCHAR)) == 0);
+}
+#endif
 
 // ------------------------------------------------------------------------
 
@@ -130,8 +160,12 @@ init_unit_test_suite(int argc, char* argv[])
 
     test->add(BOOST_TEST_CASE(&test_set));
     test->add(BOOST_TEST_CASE(&test_unset));
-    test->add(BOOST_TEST_CASE(&test_setup_set));
-    test->add(BOOST_TEST_CASE(&test_setup_unset));
+    test->add(BOOST_TEST_CASE(&test_envp));
+    test->add(BOOST_TEST_CASE(&test_envp_unsorted));
+#if defined(BOOST_PROCESS_WIN32_API)
+    test->add(BOOST_TEST_CASE(&test_strings));
+    test->add(BOOST_TEST_CASE(&test_strings_unsorted));
+#endif
 
     return test;
 }
