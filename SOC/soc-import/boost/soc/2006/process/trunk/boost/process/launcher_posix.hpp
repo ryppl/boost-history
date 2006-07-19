@@ -80,7 +80,6 @@ launcher::start(const Attributes& a)
         }
 
         try {
-            m_environment.setup();
             a.setup();
         } catch (const system_error& e) {
             ::write(STDERR, e.what(), std::strlen(e.what()));
@@ -104,12 +103,18 @@ launcher::start(const Attributes& a)
                 (a.get_command_line().get_arguments()[i].c_str());
         args[nargs + 1] = NULL;
 
-        ::execvp(executable.c_str(), args);
+        char** envp = m_environment.envp();
+
+        ::execve(executable.c_str(), args, envp);
         system_error e("boost::process::launcher::start",
                        "execvp(2) failed", errno);
 
         for (size_t i = 0; i <= nargs; i++)
             delete [] args[i];
+
+        for (size_t i = 0; i < m_environment.size(); i++)
+            delete [] envp[i];
+        delete [] envp;
 
         ::write(STDERR, e.what(), std::strlen(e.what()));
         ::write(STDERR, "\n", 1);

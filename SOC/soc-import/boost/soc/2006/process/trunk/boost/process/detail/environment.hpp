@@ -33,6 +33,12 @@ extern "C" {
 #include <boost/shared_array.hpp>
 #include <boost/throw_exception.hpp>
 
+#if defined(BOOST_PROCESS_POSIX_API)
+extern "C" {
+    extern char** environ;
+};
+#endif
+
 namespace boost {
 namespace process {
 namespace detail {
@@ -60,9 +66,7 @@ inline
 environment::environment(void)
 {
 #if defined(BOOST_PROCESS_POSIX_API)
-    extern char** ::environ;
-
-    const char** ptr = environ;
+    char** ptr = ::environ;
     while (*ptr != NULL) {
         std::string str = *ptr;
         std::string::size_type pos = str.find('=');
