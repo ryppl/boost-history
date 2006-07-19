@@ -4,3 +4,4 @@ run bessel_j0_test.cpp ;
 run bessel_j1_test.cpp ;
 run bessel_y0_test.cpp ;
 run bessel_y1_test.cpp ;
+run bessel_yn_test.cpp ;
