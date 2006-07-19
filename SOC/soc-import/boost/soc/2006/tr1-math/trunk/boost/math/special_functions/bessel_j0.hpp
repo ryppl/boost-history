@@ -5,12 +5,15 @@
 
 #ifndef BOOST_MATH_BESSEL_J0_HPP
 #define BOOST_MATH_BESSEL_J0_HPP
+#endif
 
 #include <boost/math/constants/constants.hpp>
 #include <boost/math/tools/rational.hpp>
 #include <boost/assert.hpp>
 
 // Bessel function of the first kind of order zero
+// x <= 8, minimax rational approximations on root-bracketing intervals
+// x > 8, asymptotic approximation in Hart, Computer Approximations, 1968
 
 namespace boost { namespace math {
 
@@ -123,7 +126,7 @@ T bessel_j0(T x)
         factor = (x + x2) * ((x - x21/256.0L) - x22);
         value = factor * r;
     }
-    else                                // x \in (8, \infty)
+    else                                // x in (8, \infty)
     {
         T y = 8.0L / x;
         T y2 = y * y;
@@ -135,10 +138,8 @@ T bessel_j0(T x)
         factor = sqrt(2.0L / (x * pi<T>()));
         value = factor * (rc * cos(z) - y * rs * sin(z));
     }
-    
+
     return value;
 }
 
 }} // namespaces
-
-#endif // BOOST_MATH_BESSEL_J0_HPP

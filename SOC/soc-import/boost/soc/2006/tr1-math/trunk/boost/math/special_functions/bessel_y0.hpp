@@ -5,6 +5,11 @@
 
 #ifndef BOOST_MATH_BESSEL_Y0_HPP
 #define BOOST_MATH_BESSEL_Y0_HPP
+#endif
+
+#ifndef BOOST_MATH_THROW_ON_DOMAIN_ERROR
+#define BOOST_MATH_THROW_ON_DOMAIN_ERROR
+#endif
 
 #include <boost/math/special_functions/bessel_j0.hpp>
 #include <boost/math/constants/constants.hpp>
@@ -13,6 +18,8 @@
 #include <boost/assert.hpp>
 
 // Bessel function of the second kind of order zero
+// x <= 8, minimax rational approximations on root-bracketing intervals
+// x > 8, asymptotic approximation in Hart, Computer Approximations, 1968
 
 namespace boost { namespace math {
 
@@ -122,8 +129,8 @@ T bessel_y0(T x)
 
     if (x < 0)
     {
-        domain_error<T>("boost::math::bessel_y0",
-                        "domain error, argument must be non-negative");
+        domain_error<T>("boost::math::bessel_y0(x)",
+            "domain error, real argument x must be non-negative, complex number not supported");
     }
     if (x == 0)
     {
@@ -133,14 +140,14 @@ T bessel_y0(T x)
         }
         else
         {
-            overflow_error<T>("boost::math::bessel_y0",
+            overflow_error<T>("boost::math::bessel_y0(x)",
                               "infinity occurred but not supported");
         }
     }
     if (x <= 3.0)                       // x in (0, 3]
     {
         T y = x * x;
-        T z = 2.0L * log(x/x1) * boost::math::bessel_j0(x) / pi<T>();
+        T z = 2.0L * log(x/x1) * bessel_j0(x) / pi<T>();
         BOOST_ASSERT(sizeof(P1) == sizeof(Q1));
         r = evaluate_rational(P1, Q1, y, sizeof(P1)/sizeof(P1[0]));
         factor = (x + x1) * ((x - x11/256.0L) - x12);
@@ -149,7 +156,7 @@ T bessel_y0(T x)
     else if (x <= 5.0)                  // x in (3, 5]
     {
         T y = x * x;
-        T z = 2.0L * log(x/x2) * boost::math::bessel_j0(x) / pi<T>();
+        T z = 2.0L * log(x/x2) * bessel_j0(x) / pi<T>();
         BOOST_ASSERT(sizeof(P2) == sizeof(Q2));
         r = evaluate_rational(P2, Q2, y, sizeof(P2)/sizeof(P2[0]));
         factor = (x + x2) * ((x - x21/256.0L) - x22);
@@ -158,13 +165,13 @@ T bessel_y0(T x)
     else if (x <= 8.0)                  // x in (5, 8]
     {
         T y = x * x;
-        T z = 2.0L * log(x/x3) * boost::math::bessel_j0(x) / pi<T>();
+        T z = 2.0L * log(x/x3) * bessel_j0(x) / pi<T>();
         BOOST_ASSERT(sizeof(P3) == sizeof(Q3));
         r = evaluate_rational(P3, Q3, y, sizeof(P3)/sizeof(P3[0]));
         factor = (x + x3) * ((x - x31/256.0L) - x32);
         value = z + factor * r;
     }
-    else                                // x \in (8, \infty)
+    else                                // x in (8, \infty)
     {
         T y = 8.0L / x;
         T y2 = y * y;
@@ -176,10 +183,8 @@ T bessel_y0(T x)
         factor = sqrt(2.0L / (x * pi<T>()));
         value = factor * (rc * sin(z) + y * rs * cos(z));
     }
-    
+
     return value;
 }
 
 }} // namespaces
-
-#endif // BOOST_MATH_BESSEL_Y0_HPP

@@ -5,12 +5,15 @@
 
 #ifndef BOOST_MATH_BESSEL_J1_HPP
 #define BOOST_MATH_BESSEL_J1_HPP
+#endif
 
 #include <boost/math/constants/constants.hpp>
 #include <boost/math/tools/rational.hpp>
 #include <boost/assert.hpp>
 
 // Bessel function of the first kind of order one
+// x <= 8, minimax rational approximations on root-bracketing intervals
+// x > 8, asymptotic approximation in Hart, Computer Approximations, 1968
 
 namespace boost { namespace math {
 
@@ -24,7 +27,7 @@ T bessel_j1(T x)
          9.8062904098958257677e+05L,
         -4.4615792982775076130e+03L,
          1.0650724020080236441e+01L,
-        -1.0767857011487300348E-02L,
+        -1.0767857011487300348e-02L,
     };
     static const T Q1[] = {
          4.1868604460820175290e+12L,
@@ -94,21 +97,21 @@ T bessel_j1(T x)
     static const T x1  =  3.8317059702075123156e+00L,
                    x2  =  7.0155866698156187535e+00L,
                    x11 =  9.810e+02L,
-                   x12 = -3.2527979248768438556E-04L,
+                   x12 = -3.2527979248768438556e-04L,
                    x21 =  1.7960e+03L,
-                   x22 = -3.8330184381246462950E-05L
+                   x22 = -3.8330184381246462950e-05L
     ;
     T value, factor, r, rc, rs, w;
 
     using namespace boost::math::tools;
     using namespace boost::math::constants;
 
-    w = std::abs(x);                    // odd function
+    w = std::abs(x);
     if (x == 0)
     {
         return static_cast<T>(0);
     }
-    if (w <= 4.0)                       // x in (0, 4]
+    if (w <= 4.0)                       // w in (0, 4]
     {
         T y = x * x;
         BOOST_ASSERT(sizeof(P1) == sizeof(Q1));
@@ -116,7 +119,7 @@ T bessel_j1(T x)
         factor = x * (w + x1) * ((w - x11/256.0L) - x12);
         value = factor * r;
     }
-    else if (w <= 8.0)                  // x in (4, 8]
+    else if (w <= 8.0)                  // w in (4, 8]
     {
         T y = x * x;
         BOOST_ASSERT(sizeof(P2) == sizeof(Q2));
@@ -124,7 +127,7 @@ T bessel_j1(T x)
         factor = x * (w + x2) * ((w - x21/256.0L) - x22);
         value = factor * r;
     }
-    else                                // x \in (8, \infty)
+    else                                // w in (8, \infty)
     {
         T y = 8.0L / w;
         T y2 = y * y;
@@ -133,13 +136,15 @@ T bessel_j1(T x)
         BOOST_ASSERT(sizeof(PS) == sizeof(QS));
         rc = evaluate_rational(PC, QC, y2, sizeof(PC)/sizeof(PC[0]));
         rs = evaluate_rational(PS, QS, y2, sizeof(PS)/sizeof(PS[0]));
-        factor = sqrt(2.0L / (x * pi<T>()));
+        factor = sqrt(2.0L / (w * pi<T>()));
+        if (x < 0)
+        {
+            factor *= -1.0L;            // odd function
+        }
         value = factor * (rc * cos(z) - y * rs * sin(z));
     }
-    
+
     return value;
 }
 
 }} // namespaces
-
-#endif // BOOST_MATH_BESSEL_J1_HPP
