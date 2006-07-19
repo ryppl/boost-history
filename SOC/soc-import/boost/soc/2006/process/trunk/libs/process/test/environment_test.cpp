@@ -17,6 +17,7 @@ extern "C" {
 }
 #   include <cstring>
 #elif defined(BOOST_PROCESS_POSIX_API)
+#   include <cstdlib>
 #else
 #   error "Unsupported platform."
 #endif
@@ -27,6 +28,28 @@ extern "C" {
 namespace bp = ::boost::process;
 namespace bpd = ::boost::process::detail;
 namespace but = ::boost::unit_test;
+
+// ------------------------------------------------------------------------
+
+static void
+test_init(void)
+{
+    bpd::environment env1;
+    BOOST_CHECK(env1.find("THIS_SHOULD_NOT_BE_DEFINED") == env1.end());
+
+#if defined(BOOST_PROCESS_POSIX_API)
+    BOOST_REQUIRE(::setenv("THIS_SHOULD_BE_DEFINED", "some-value", 1) == 0);
+#elif defined(BOOST_PROCESS_WIN32_API)
+    BOOST_REQUIRE(::SetEnvironmentVariable(TEXT("THIS_SHOULD_BE_DEFINED"),
+                                           TEXT("some-value")) != 0);
+#endif
+
+    bpd::environment env2;
+    bpd::environment::const_iterator iter =
+        env2.find("THIS_SHOULD_BE_DEFINED");
+    BOOST_CHECK(iter != env2.end());
+    BOOST_CHECK_EQUAL((*iter).second, "some-value");
+}
 
 // ------------------------------------------------------------------------
 
@@ -158,6 +181,7 @@ init_unit_test_suite(int argc, char* argv[])
 {
     but::test_suite* test = BOOST_TEST_SUITE("environment test suite");
 
+    test->add(BOOST_TEST_CASE(&test_init));
     test->add(BOOST_TEST_CASE(&test_set));
     test->add(BOOST_TEST_CASE(&test_unset));
     test->add(BOOST_TEST_CASE(&test_envp));
