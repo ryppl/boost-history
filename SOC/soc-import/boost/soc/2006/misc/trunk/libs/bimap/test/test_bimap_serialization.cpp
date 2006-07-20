@@ -493,162 +493,167 @@ void test_bimap()
     using namespace boost::bimap;
     using namespace boost::mpl;
 
-    typedef std::pair<int,double> std_pair;
-
-    std::set< std_pair > data;
-    data.insert( std_pair(1,0.1) );
-    data.insert( std_pair(2,0.2) );
-    data.insert( std_pair(3,0.3) );
-    data.insert( std_pair(4,0.4) );
-
-    typedef std::map<int,double> left_data_type;
-    left_data_type left_data;
-    left_data.insert( left_data_type::value_type(1,0.1) );
-    left_data.insert( left_data_type::value_type(2,0.2) );
-    left_data.insert( left_data_type::value_type(3,0.3) );
-    left_data.insert( left_data_type::value_type(4,0.4) );
-
-    typedef std::map<double,int> right_data_type;
-    right_data_type right_data;
-    right_data.insert( right_data_type::value_type(0.1,1) );
-    right_data.insert( right_data_type::value_type(0.2,2) );
-    right_data.insert( right_data_type::value_type(0.3,3) );
-    right_data.insert( right_data_type::value_type(0.4,4) );
-
-    // Untagged simple bimap
+    // Easy first test, two POD data types with out custom configuration
     {
-        typedef bimap<int,int> bm;
+        typedef std::pair<int,double> std_pair;
 
-        bm b;
+        std::set< std_pair > data;
+        data.insert( std_pair(1,0.1) );
+        data.insert( std_pair(2,0.2) );
+        data.insert( std_pair(3,0.3) );
+        data.insert( std_pair(4,0.4) );
 
-        b.insert( bm::relation(1,2) );
-        BOOST_CHECK( b.size() == 1 );
+        typedef std::map<int,double> left_data_type;
+        left_data_type left_data;
+        left_data.insert( left_data_type::value_type(1,0.1) );
+        left_data.insert( left_data_type::value_type(2,0.2) );
+        left_data.insert( left_data_type::value_type(3,0.3) );
+        left_data.insert( left_data_type::value_type(4,0.4) );
+
+        typedef std::map<double,int> right_data_type;
+        right_data_type right_data;
+        right_data.insert( right_data_type::value_type(0.1,1) );
+        right_data.insert( right_data_type::value_type(0.2,2) );
+        right_data.insert( right_data_type::value_type(0.3,3) );
+        right_data.insert( right_data_type::value_type(0.4,4) );
+
+        // Untagged simple bimap
+        {
+            typedef bimap<int,int> bm;
+
+            bm b;
+
+            b.insert( bm::relation(1,2) );
+            BOOST_CHECK( b.size() == 1 );
+        }
+
+        // Tagged simple bimap
+        {
+            typedef bimap< tagged<int,left_tag>, tagged<double,right_tag> > bm;
+
+            bm b;
+
+            test_set_set_bimap(b,data,left_data,right_data);
+            test_tagged_bimap<left_tag,right_tag>(b,data);
+
+        }
+
+        // Untagged non-basic bimap
+        {
+            typedef bimap< multiset_of<int>, multiset_of<double> > bm;
+
+            bm b;
+
+            test_multiset_multiset_bimap(b,data,left_data,right_data);
+        }
+
+        // Tagged non-basic bimap
+        {
+            typedef bimap
+            <
+                tagged< multiset_of<int>   , left_tag  >,
+                tagged< multiset_of<double>, right_tag >
+
+            > bm;
+
+            bm b;
+
+            test_multiset_multiset_bimap(b,data,left_data,right_data);
+            test_tagged_bimap<left_tag,right_tag>(b,data);
+        }
+
+        // Untagged non-basic bimap
+        {
+            typedef bimap< unordered_set_of<int>, unordered_multiset_of<double> > bm;
+
+            bm b;
+
+            test_unordered_set_unordered_multiset_bimap(b,data,left_data,right_data);
+        }
+
+        // Tagged non-basic bimap
+        {
+            typedef bimap
+            <
+                tagged< unordered_set_of<int>        , left_tag  >,
+                tagged< unordered_multiset_of<double>, right_tag >
+
+            > bm;
+
+            bm b;
+
+            test_unordered_set_unordered_multiset_bimap(b,data,left_data,right_data);
+            test_tagged_bimap<left_tag,right_tag>(b,data);
+        }
+
+        // Untagged simple right-based bimap
+        {
+            typedef bimap<int,double,right_based> bm;
+
+            bm b;
+
+            test_set_set_bimap(b,data,left_data,right_data);
+        }
+
+        // Untagged bimap with changed set type of relation
+        {
+            typedef bimap<int,double,set_of_relation< std::less<_> > > bm;
+
+            bm b;
+
+            test_set_set_bimap(b,data,left_data,right_data);
+        }
+
+        {
+            bimap
+            <
+                multiset_of< int, std::greater<int> >, unordered_set_of<std::string> ,
+                multiset_of_relation< std::less<_> >
+
+            > b;
+        }
+
+        {
+            bimap
+            <
+                set_of< short, std::greater<short> >, unordered_multiset_of<std::string*> ,
+                unordered_set_of_relation<>
+
+            > b;
+        }
+
+        {
+            bimap
+            <
+                list_of< int >, vector_of< double >
+
+            > b;
+
+            test_sequence_container(b,data);
+            test_sequence_container(b.left , left_data);
+            test_sequence_container(b.right,right_data);
+        }
+
+        {
+            bimap
+            <
+                vector_of< short >, list_of< std::string >,
+                list_of_relation
+
+            > b;
+        }
+
+        {
+            bimap
+            <
+                vector_of< short >, list_of< std::string >,
+                vector_of_relation
+
+            > b;
+        }
+
     }
 
-    // Tagged simple bimap
-    {
-        typedef bimap< tagged<int,left_tag>, tagged<double,right_tag> > bm;
-
-        bm b;
-
-        test_set_set_bimap(b,data,left_data,right_data);
-        test_tagged_bimap<left_tag,right_tag>(b,data);
-
-    }
-
-    // Untagged non-basic bimap
-    {
-        typedef bimap< multiset_of<int>, multiset_of<double> > bm;
-
-        bm b;
-
-        test_multiset_multiset_bimap(b,data,left_data,right_data);
-    }
-
-    // Tagged non-basic bimap
-    {
-        typedef bimap
-        <
-            tagged< multiset_of<int>   , left_tag  >,
-            tagged< multiset_of<double>, right_tag >
-
-        > bm;
-
-        bm b;
-
-        test_multiset_multiset_bimap(b,data,left_data,right_data);
-        test_tagged_bimap<left_tag,right_tag>(b,data);
-    }
-
-    // Untagged non-basic bimap
-    {
-        typedef bimap< unordered_set_of<int>, unordered_multiset_of<double> > bm;
-
-        bm b;
-
-        test_unordered_set_unordered_multiset_bimap(b,data,left_data,right_data);
-    }
-
-    // Tagged non-basic bimap
-    {
-        typedef bimap
-        <
-            tagged< unordered_set_of<int>        , left_tag  >,
-            tagged< unordered_multiset_of<double>, right_tag >
-
-        > bm;
-
-        bm b;
-
-        test_unordered_set_unordered_multiset_bimap(b,data,left_data,right_data);
-        test_tagged_bimap<left_tag,right_tag>(b,data);
-    }
-
-    // Untagged simple right-based bimap
-    {
-        typedef bimap<int,double,right_based> bm;
-
-        bm b;
-
-        test_set_set_bimap(b,data,left_data,right_data);
-    }
-
-    // Untagged bimap with changed set type of relation
-    {
-        typedef bimap<int,double,set_of_relation< std::less<_> > > bm;
-
-        bm b;
-
-        test_set_set_bimap(b,data,left_data,right_data);
-    }
-
-    {
-        bimap
-        <
-            multiset_of< int, std::greater<int> >, unordered_set_of<std::string> ,
-            multiset_of_relation< std::less<_> >
-
-        > b;
-    }
-
-    {
-        bimap
-        <
-            set_of< short, std::greater<short> >, unordered_multiset_of<std::string*> ,
-            unordered_set_of_relation<>
-
-        > b;
-    }
-
-    {
-        bimap
-        <
-            list_of< int >, vector_of< double >
-
-        > b;
-
-        test_sequence_container(b,data);
-        test_sequence_container(b.left , left_data);
-        test_sequence_container(b.right,right_data);
-    }
-
-    {
-        bimap
-        <
-            vector_of< short >, list_of< std::string >,
-            list_of_relation
-
-        > b;
-    }
-
-    {
-        bimap
-        <
-            vector_of< short >, list_of< std::string >,
-            vector_of_relation
-
-        > b;
-    }
 
 }
 

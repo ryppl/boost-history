@@ -10,9 +10,9 @@ import testing ;
 
 test-suite "utility_test"
     :
-    [ run test_tagged.cpp ]
+    [ run test_tagged.cpp                                                     ]
 
-    [ run test_structured_pair.cpp ]
+    [ run test_structured_pair.cpp                                            ]
 
     # Enable this to force the mutant_relation test
     # Warning: it may fail in some standard compliant compilers, because the
@@ -20,31 +20,33 @@ test-suite "utility_test"
     # with struc { TA s; TB f; }; and this is not in the standard.
     # However, most modern compiler support it.
     #
-    # [ run test_mutant.cpp ]
-    # [ run test_mutant_relation.cpp ]
+    # [ run test_mutant.cpp                                                   ]
+    # [ run test_mutant_relation.cpp                                          ]
 
     # Enable this to force the standard_relation test
     # It is not always enabled because if the mutant idiom is supported, then it
     # is not needed and if not, it is tested in test_relation.cpp.
     #
-    # [ run test_standard_relation.cpp ]
+    # [ run test_standard_relation.cpp                                        ]
 
-    [ run test_relation.cpp ]
+    [ run test_relation.cpp                                                   ]
     ;
 
 test-suite "container_adaptor_test"
     :
-    [ run test_container_adaptor.cpp ]
+    [ run test_container_adaptor.cpp                                          ]
     ;
 
 test-suite "bimap_helper_test"
     :
-    [ run test_collection.cpp ]
+    [ run test_collection.cpp                                                 ]
     ;
 
 test-suite "bimap_test"
     :
-    [ run test_bimap_basic.cpp ]
+    [ run test_bimap_basic.cpp                                                ]
+    [ run test_bimap_serialization.cpp
+          /boost/serialization//boost_serialization                           ]
     ;
 
 
