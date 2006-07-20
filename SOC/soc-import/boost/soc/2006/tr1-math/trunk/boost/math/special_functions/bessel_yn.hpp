@@ -16,6 +16,7 @@
 #include <boost/math/tools/error_handling.hpp>
 
 // Bessel function of the second kind of integer order
+// Y_n(z) is the dominant solution, forward recurrence always stable
 
 namespace boost { namespace math {
 
@@ -46,11 +47,11 @@ T bessel_yn(int n, T x)
 
     if (n == 0)
     {
-        return bessel_j0(x);
+        return bessel_y0(x);
     }
     if (n == 1)
     {
-        return bessel_j1(x);
+        return bessel_y1(x);
     }
     if (n < 0)
     {
