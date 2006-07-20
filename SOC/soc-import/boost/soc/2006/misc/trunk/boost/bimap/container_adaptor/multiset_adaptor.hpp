@@ -35,7 +35,9 @@ template
     class ReverseIteratorFromBaseConverter = use_default,
     class ValueToBaseConverter             = use_default,
     class ValueFromBaseConverter           = use_default,
-    class KeyToBaseConverter               = use_default
+    class KeyToBaseConverter               = use_default,
+
+    class FunctorsFromDerivedClasses = mpl::list<>
 >
 class multiset_adaptor :
 
@@ -50,7 +52,9 @@ class multiset_adaptor :
         IteratorToBaseConverter, IteratorFromBaseConverter,
         ReverseIteratorFromBaseConverter,
         ValueToBaseConverter, ValueFromBaseConverter,
-        KeyToBaseConverter
+        KeyToBaseConverter,
+
+        FunctorsFromDerivedClasses
     >
 {
 
@@ -74,7 +78,9 @@ class multiset_adaptor :
         IteratorToBaseConverter, IteratorFromBaseConverter,
         ReverseIteratorFromBaseConverter,
         ValueToBaseConverter, ValueFromBaseConverter,
-        KeyToBaseConverter
+        KeyToBaseConverter,
+
+        FunctorsFromDerivedClasses
 
     > multiset_adaptor_;
 

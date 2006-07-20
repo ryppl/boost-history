@@ -35,7 +35,30 @@ struct key_type_of_tag          {};
 
 struct set_type_of_relation_tag {};
 
-/// \brief Empty struct used to specify defaults parameters.
+/** \struct boost::bimap::collection::use_default
+    \brief Empty struct used to specify defaults parameters.
+                                                                            **/
+
+/** \struct boost::bimap::collection::left_based
+    \brief Tag to indicate that the set of relation will be based on the left side.
+
+This is convenient because the multi index core will be more efficient.
+If possible use this options or the right based one.
+
+See also right_based.
+                                                                            **/
+
+/** \struct boost::bimap::collection::right_based
+    \brief Tag to indicate that the set of relation will be based on the right side.
+
+This is convenient because the multi index core will be more efficient.
+If possible use this options or the right based one.
+
+See also left_based.
+                                                                            **/
+
+
+#ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 struct use_default
 {
@@ -44,13 +67,6 @@ struct use_default
     // There have to be a way were this definition is not necesary:
     template< class T > struct apply { typedef void type; };
 };
-
-//@{
-/// \brief The set of relations will be based on one of the sides.
-/**
-This is convenient because the multi index core will be more efficient.
-If possible use this two options.
-                                                                                **/
 
 struct side_based_tag : set_type_of_relation_tag {};
 
@@ -70,9 +86,9 @@ struct right_based : side_based_tag
     template< class Relation > struct bind_to { typedef void type; };
 };
 
-//@}
-
 struct independent_index_tag    {};
+
+#endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 } // namespace collection
 } // namespace bimap

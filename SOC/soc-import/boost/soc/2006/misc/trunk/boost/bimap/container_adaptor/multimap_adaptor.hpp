@@ -35,7 +35,9 @@ template
     class ReverseIteratorFromBaseConverter = use_default,
     class ValueToBaseConverter             = use_default,
     class ValueFromBaseConverter           = use_default,
-    class KeyToBaseConverter               = use_default
+    class KeyToBaseConverter               = use_default,
+
+    class FunctorsFromDerivedClasses = mpl::list<>
 >
 class multimap_adaptor :
 
@@ -50,7 +52,9 @@ class multimap_adaptor :
         IteratorToBaseConverter, IteratorFromBaseConverter,
         ReverseIteratorFromBaseConverter,
         ValueToBaseConverter, ValueFromBaseConverter,
-        KeyToBaseConverter
+        KeyToBaseConverter,
+
+        FunctorsFromDerivedClasses
     >
 {
     // MetaData -------------------------------------------------------------
@@ -79,7 +83,9 @@ class multimap_adaptor :
         IteratorToBaseConverter, IteratorFromBaseConverter,
         ReverseIteratorFromBaseConverter,
         ValueToBaseConverter, ValueFromBaseConverter,
-        KeyToBaseConverter
+        KeyToBaseConverter,
+
+        FunctorsFromDerivedClasses
 
     > multimap_adaptor_;
 

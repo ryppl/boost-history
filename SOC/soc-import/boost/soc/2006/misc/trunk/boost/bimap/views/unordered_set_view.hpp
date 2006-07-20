@@ -13,7 +13,6 @@
 #ifndef BOOST_BIMAP_VIEWS_UNORDERED_SET_VIEW_HPP
 #define BOOST_BIMAP_VIEWS_UNORDERED_SET_VIEW_HPP
 
-#include <boost/bimap/container_adaptor/support/iterator_facade_converters.hpp>
 #include <boost/bimap/container_adaptor/unordered_set_adaptor.hpp>
 
 namespace boost {

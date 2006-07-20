@@ -18,6 +18,25 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/bimap/collection/key_type_of_tag.hpp>
 
+
+/*///////////////////////////////////////////////////////////////////////////*/
+
+#define BOOST_BIMAP_GENERATE_RELATION_BINDER_0CP(                             \
+                                                                              \
+        SET_TYPE_OF                                                           \
+    )                                                                         \
+                                                                              \
+    template<class Relation>                                                  \
+    struct bind_to                                                            \
+    {                                                                         \
+        typedef SET_TYPE_OF<Relation> type;                                   \
+                                                                              \
+    };
+
+/*///////////////////////////////////////////////////////////////////////////*/
+
+
+
 /*///////////////////////////////////////////////////////////////////////////*/
 
 #define BOOST_BIMAP_GENERATE_RELATION_BINDER_1CP(                             \
@@ -44,6 +63,8 @@
     };
 
 /*///////////////////////////////////////////////////////////////////////////*/
+
+
 
 /*///////////////////////////////////////////////////////////////////////////*/
 

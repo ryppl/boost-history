@@ -18,58 +18,6 @@
 
 This is the complete reference of Boost.Bimap.
 
-2
-\f[
-    \mathcal{O}(I(n))
-\f]
-
-3
-\f[
-    \mathcal{O}(H(n))
-\f]
-
-4
-\f[
-    \mathcal{O}(m*H(n+m))
-\f]
-
-5
-\f[
-    \mathcal{O}(D(n))
-\f]
-
-6
-\f[
-    \mathcal{O}(log(n) + m*D(n))
-\f]
-
-7
-\f[
-    \mathcal{O}(R(n))
-\f]
-
-8
-\f[
-    \mathcal{O}(M(n))
-\f]
-
-9
-\f[
-    \mathcal{O}(log(n))
-\f]
-
-10
-\f[
-    \mathcal{O}(log(n)+count(x))
-\f]
-
-11
-\f[
-    \mathcal{O}(log(n) + count(x,comp))
-\f]
-
-
-
 \section GuideForTheUser Guide for the user
 
 From a user point of view the best way to use this reference is to:
@@ -297,4 +245,3 @@ class bimap
 
 
 #endif // BOOST_BIMAP_BIMAP_HPP
-

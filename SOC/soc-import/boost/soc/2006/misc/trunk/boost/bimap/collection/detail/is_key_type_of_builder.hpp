@@ -20,6 +20,34 @@
 
 /*/////////////////////////////////////////////////////////////////*/
 
+#define BOOST_BIMAP_IS_KEY_TYPE_OF_BUILDER_0CP(                     \
+                                                                    \
+        METAFUNCTION_NAME,                                          \
+        KEY_TYPE                                                    \
+                                                                    \
+    )                                                               \
+                                                                    \
+    namespace support {                                             \
+                                                                    \
+    template< class Type >                                          \
+    struct METAFUNCTION_NAME                                        \
+    {                                                               \
+        BOOST_BIMAP_MPL_BOOL_RESULT(false);                         \
+    };                                                              \
+                                                                    \
+    template<class T1>                                              \
+    struct METAFUNCTION_NAME< KEY_TYPE<T1> >                        \
+    {                                                               \
+        BOOST_BIMAP_MPL_BOOL_RESULT(true);                          \
+    };                                                              \
+                                                                    \
+    } // namespace support
+
+/*/////////////////////////////////////////////////////////////////*/
+
+
+/*/////////////////////////////////////////////////////////////////*/
+
 #define BOOST_BIMAP_IS_KEY_TYPE_OF_BUILDER_1CP(                     \
                                                                     \
         METAFUNCTION_NAME,                                          \

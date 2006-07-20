@@ -103,6 +103,8 @@ struct value_to_base_identity
     }
 };
 
+#ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
+
 template< class Value >
 struct value_to_base_identity< Value, Value >
 {
@@ -111,6 +113,8 @@ struct value_to_base_identity< Value, Value >
         return val;
     }
 };
+
+#endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 /// \brief Value from base identity converter used by default in container adaptors.
 
@@ -123,6 +127,7 @@ struct value_from_base_identity
     }
 };
 
+#ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 template< class Value >
 struct value_from_base_identity<Value,Value>
@@ -138,7 +143,9 @@ struct value_from_base_identity<Value,Value>
     }
 };
 
-/// \brief Value to base identity converter used by default in container adaptors.
+#endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
+
+/// \brief Key to base identity converter used by default in container adaptors.
 
 template< class BaseKey, class Key >
 struct key_to_base_identity
@@ -149,6 +156,8 @@ struct key_to_base_identity
     }
 };
 
+#ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
+
 template< class Key >
 struct key_to_base_identity< Key, Key >
 {
@@ -157,6 +166,8 @@ struct key_to_base_identity< Key, Key >
         return k;
     }
 };
+
+#endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 } // namespace detail
 } // namespace container_adaptor

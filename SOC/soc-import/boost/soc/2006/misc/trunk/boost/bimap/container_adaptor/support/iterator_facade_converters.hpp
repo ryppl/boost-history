@@ -45,6 +45,8 @@ struct iterator_facade_to_base
     }
 };
 
+#ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
+
 template
 <
     class Iterator
@@ -57,6 +59,7 @@ struct iterator_facade_to_base<Iterator,Iterator>
     }
 };
 
+#endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 #undef BOOST_BIMAP_CONTAINER_ADAPTOR_IMPLEMENT_CONVERT_FACADE_FUNCTION
 

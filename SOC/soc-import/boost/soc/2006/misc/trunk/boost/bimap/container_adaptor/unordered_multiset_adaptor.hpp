@@ -35,7 +35,9 @@ template
     class LocalIteratorFromBaseConverter = use_default,
     class ValueToBaseConverter           = use_default,
     class ValueFromBaseConverter         = use_default,
-    class KeyToBaseConverter             = use_default
+    class KeyToBaseConverter             = use_default,
+
+    class FunctorsFromDerivedClasses = mpl::list<>
 >
 class unordered_multiset_adaptor :
 
@@ -50,7 +52,9 @@ class unordered_multiset_adaptor :
         IteratorToBaseConverter, IteratorFromBaseConverter,
         LocalIteratorFromBaseConverter,
         ValueToBaseConverter, ValueFromBaseConverter,
-        KeyToBaseConverter
+        KeyToBaseConverter,
+
+        FunctorsFromDerivedClasses
     >
 {
 
@@ -74,7 +78,9 @@ class unordered_multiset_adaptor :
         IteratorToBaseConverter, IteratorFromBaseConverter,
         LocalIteratorFromBaseConverter,
         ValueToBaseConverter, ValueFromBaseConverter,
-        KeyToBaseConverter
+        KeyToBaseConverter,
+
+        FunctorsFromDerivedClasses
 
     > unordered_multiset_adaptor_;
 

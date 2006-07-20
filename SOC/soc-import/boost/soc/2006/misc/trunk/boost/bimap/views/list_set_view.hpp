@@ -13,9 +13,11 @@
 #ifndef BOOST_BIMAP_VIEWS_MAP_VIEW_HPP
 #define BOOST_BIMAP_VIEWS_MAP_VIEW_HPP
 
+#include <boost/bimap/views/detail/map_view_iterator.hpp>
 #include <boost/bimap/views/detail/to_pair_from_relation.hpp>
 #include <boost/bimap/container_adaptor/support/iterator_facade_converters.hpp>
 #include <boost/bimap/container_adaptor/map_adaptor.hpp>
+#include <boost/bimap/relation/support/pair_by.hpp>
 #include <boost/bimap/support/iterator_type_by.hpp>
 
 namespace boost {
@@ -37,15 +39,15 @@ class map_view
     <
         typename BimapType::core_type::template index<Tag>::type,
 
-        typename bimap::support::iterator_type_by<Tag,BimapType>::type,
-        typename bimap::support::const_iterator_type_by<Tag,BimapType>::type,
-        typename bimap::support::reverse_iterator_type_by<Tag,BimapType>::type,
-        typename bimap::support::const_reverse_iterator_type_by<Tag,BimapType>::type,
+        typename support::iterator_type_by<Tag,BimapType>::type,
+        typename support::const_iterator_type_by<Tag,BimapType>::type,
+        typename support::reverse_iterator_type_by<Tag,BimapType>::type,
+        typename support::const_reverse_iterator_type_by<Tag,BimapType>::type,
 
         container_adaptor::support::iterator_facade_to_base
         <
-            typename bimap::support::iterator_type_by<Tag,BimapType>::type,
-            typename bimap::support::const_iterator_type_by<Tag,BimapType>::type
+            typename support::iterator_type_by<Tag,BimapType>::type,
+            typename support::const_iterator_type_by<Tag,BimapType>::type
         >,
         container_adaptor::use_default, // iterator from base converter
         container_adaptor::use_default, // reverse iterator from base converter

@@ -13,9 +13,7 @@
 #ifndef BOOST_BIMAP_VIEWS_MULTISET_VIEW_HPP
 #define BOOST_BIMAP_VIEWS_MULTISET_VIEW_HPP
 
-#include <boost/bimap/container_adaptor/support/iterator_facade_converters.hpp>
 #include <boost/bimap/container_adaptor/multiset_adaptor.hpp>
-#include <boost/iterator/reverse_iterator.hpp>
 
 namespace boost {
 namespace bimap {

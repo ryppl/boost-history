@@ -8,7 +8,7 @@
 // See http://www.boost.org/libs/bimap for library home page.
 
 /// \file container_adaptor/set_adaptor.hpp
-/// \brief Container adaptor to easily build a std::set signature compatible container.
+/// \brief Container adaptor to easily build a std::set_adaptor signature compatible container.
 
 #ifndef BOOST_BIMAP_CONTAINER_ADAPTOR_SET_ADAPTOR_HPP
 #define BOOST_BIMAP_CONTAINER_ADAPTOR_SET_ADAPTOR_HPP
@@ -19,7 +19,7 @@ namespace boost {
 namespace bimap {
 namespace container_adaptor {
 
-/// \brief Container adaptor to easily build a std::set signature compatible container.
+/// \brief Container adaptor to easily build a std::set_adaptor signature compatible container.
 
 template
 <
@@ -35,9 +35,7 @@ template
     class ReverseIteratorFromBaseConverter = use_default,
     class ValueToBaseConverter             = use_default,
     class ValueFromBaseConverter           = use_default,
-    class KeyToBaseConverter               = use_default,
-
-    class FunctorsFromDerivedClasses = mpl::list<>
+    class KeyToBaseConverter               = use_default
 >
 class set_adaptor :
 
@@ -52,9 +50,7 @@ class set_adaptor :
         IteratorToBaseConverter, IteratorFromBaseConverter,
         ReverseIteratorFromBaseConverter,
         ValueToBaseConverter, ValueFromBaseConverter,
-        KeyToBaseConverter,
-
-        FunctorsFromDerivedClasses
+        KeyToBaseConverter
     >
 {
 
@@ -78,9 +74,7 @@ class set_adaptor :
         IteratorToBaseConverter, IteratorFromBaseConverter,
         ReverseIteratorFromBaseConverter,
         ValueToBaseConverter, ValueFromBaseConverter,
-        KeyToBaseConverter,
-
-        FunctorsFromDerivedClasses
+        KeyToBaseConverter
 
     > set_adaptor_;
 

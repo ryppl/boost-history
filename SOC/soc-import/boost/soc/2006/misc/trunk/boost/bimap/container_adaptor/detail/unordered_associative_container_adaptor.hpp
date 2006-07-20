@@ -16,8 +16,7 @@
 #include <boost/bimap/container_adaptor/detail/associative_container_adaptor.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/list.hpp>
-#include <boost/mpl/copy.hpp>
-#include <boost/mpl/front_inserter.hpp>
+#include <boost/mpl/push_front.hpp>
 
 namespace boost {
 namespace bimap {
@@ -63,26 +62,24 @@ class unordered_associative_container_adaptor :
 
         KeyToBaseConverter,
 
-        typename mpl::copy<
+        typename mpl::push_front<
 
-            mpl::list
-            <
-                typename mpl::if_< is_same< LocalIteratorFromBaseConverter, use_default >,
-                // {
-                        detail::iterator_from_base_identity
-                        <
-                            typename Base::local_iterator                , LocalIterator,
-                            typename Base::const_local_iterator          , ConstLocalIterator
-                        >,
-                // }
-                // else
-                // {
-                        LocalIteratorFromBaseConverter
-                // }
+            FunctorsFromDerivedClasses,
 
-                >::type
-            >,
-            mpl::front_inserter< FunctorsFromDerivedClasses >
+            typename mpl::if_< is_same< LocalIteratorFromBaseConverter, use_default >,
+            // {
+                    detail::iterator_from_base_identity
+                    <
+                        typename Base::local_iterator                , LocalIterator,
+                        typename Base::const_local_iterator          , ConstLocalIterator
+                    >,
+            // }
+            // else
+            // {
+                    LocalIteratorFromBaseConverter
+            // }
+
+            >::type
 
         >::type
     >
@@ -101,6 +98,8 @@ class unordered_associative_container_adaptor :
 
     typedef LocalIterator      local_iterator;
     typedef ConstLocalIterator const_local_iterator;
+
+    protected:
 
     typedef typename mpl::if_< is_same< LocalIteratorFromBaseConverter, use_default >,
         // {

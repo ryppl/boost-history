@@ -13,9 +13,6 @@
 #ifndef BOOST_BIMAP_VIEWS_SET_VIEW_HPP
 #define BOOST_BIMAP_VIEWS_SET_VIEW_HPP
 
-#include <boost/iterator/reverse_iterator.hpp>
-
-#include <boost/bimap/container_adaptor/support/iterator_facade_converters.hpp>
 #include <boost/bimap/container_adaptor/set_adaptor.hpp>
 
 namespace boost {
@@ -31,8 +28,7 @@ multi_index bimap core so it can be used as a std::set.
 See also const_set_view.
                                                                                     **/
 
-template< class IndexType
- >
+template< class IndexType >
 class set_view
 :
     public container_adaptor::set_adaptor

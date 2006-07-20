@@ -13,11 +13,9 @@
 #ifndef BOOST_BIMAP_VIEWS_UNOREDERED_MULTIMAP_VIEW_HPP
 #define BOOST_BIMAP_VIEWS_UNOREDERED_MULTIMAP_VIEW_HPP
 
-#include <boost/bimap/views/detail/map_view_iterator.hpp>
 #include <boost/bimap/views/detail/to_pair_from_relation.hpp>
 #include <boost/bimap/container_adaptor/support/iterator_facade_converters.hpp>
 #include <boost/bimap/container_adaptor/unordered_multimap_adaptor.hpp>
-#include <boost/bimap/relation/support/pair_by.hpp>
 #include <boost/bimap/support/iterator_type_by.hpp>
 
 namespace boost {
@@ -40,16 +38,16 @@ class unordered_multimap_view
     <
         typename BimapType::core_type::template index<Tag>::type,
 
-        typename support::iterator_type_by<Tag,BimapType>::type,
-        typename support::const_iterator_type_by<Tag,BimapType>::type,
+        typename bimap::support::iterator_type_by<Tag,BimapType>::type,
+        typename bimap::support::const_iterator_type_by<Tag,BimapType>::type,
 
-        typename support::local_iterator_type_by<Tag,BimapType>::type,
-        typename support::const_local_iterator_type_by<Tag,BimapType>::type,
+        typename bimap::support::local_iterator_type_by<Tag,BimapType>::type,
+        typename bimap::support::const_local_iterator_type_by<Tag,BimapType>::type,
 
         container_adaptor::support::iterator_facade_to_base
         <
-            typename support::iterator_type_by<Tag,BimapType>::type,
-            typename support::const_iterator_type_by<Tag,BimapType>::type
+            typename bimap::support::iterator_type_by<Tag,BimapType>::type,
+            typename bimap::support::const_iterator_type_by<Tag,BimapType>::type
         >,
         container_adaptor::use_default, // iterator from base converter
         container_adaptor::use_default, // local iterator from base converter
@@ -84,15 +82,15 @@ class const_unordered_multimap_view
     <
         const typename BimapType::core_type::template index<Tag>::type,
 
-        typename support::iterator_type_by<Tag,BimapType>::type,
-        typename support::const_iterator_type_by<Tag,BimapType>::type,
-        typename support::local_iterator_type_by<Tag,BimapType>::type,
-        typename support::const_local_iterator_type_by<Tag,BimapType>::type,
+        typename bimap::support::iterator_type_by<Tag,BimapType>::type,
+        typename bimap::support::const_iterator_type_by<Tag,BimapType>::type,
+        typename bimap::support::local_iterator_type_by<Tag,BimapType>::type,
+        typename bimap::support::const_local_iterator_type_by<Tag,BimapType>::type,
 
         container_adaptor::support::iterator_facade_to_base
         <
-            typename support::iterator_type_by<Tag,BimapType>::type,
-            typename support::const_iterator_type_by<Tag,BimapType>::type
+            typename bimap::support::iterator_type_by<Tag,BimapType>::type,
+            typename bimap::support::const_iterator_type_by<Tag,BimapType>::type
         >,
         container_adaptor::use_default, // iterator from base converter
         container_adaptor::use_default, // local iterator from base converter

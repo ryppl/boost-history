@@ -146,7 +146,7 @@ a metafunction named bind_to that manages the quite complicated
 task of finding the right type of the set for the relation.
 
 \code
-template<class Relation,class DefaultKeyCompare = use_default >
+template<class Relation>
 struct bind_to
 {
     typedef -UNDEFINED- type;
@@ -163,7 +163,7 @@ struct multiset_of_relation : public set_type_of_relation_tag
     typedef KeyCompare key_compare;
 
     /*
-        template<class Relation,class DefaultKeyCompare = use_default >
+        template<class Relation>
         struct bind_to
         {
             typedef -UNDEFINED- type;

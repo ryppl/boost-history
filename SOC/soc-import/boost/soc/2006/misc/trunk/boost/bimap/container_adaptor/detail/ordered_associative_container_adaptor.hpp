@@ -15,11 +15,10 @@
 
 #include <boost/bimap/container_adaptor/detail/associative_container_adaptor.hpp>
 #include <boost/bimap/container_adaptor/detail/value_comparison_adaptor.hpp>
-#include <boost/bimap/container_adaptor/detail/key_comparison_adaptor.hpp>
+#include <boost/bimap/container_adaptor/detail/comparison_adaptor.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/list.hpp>
-#include <boost/mpl/copy.hpp>
-#include <boost/mpl/front_inserter.hpp>
+#include <boost/mpl/push_front.hpp>
 
 namespace boost {
 namespace bimap {
@@ -63,26 +62,24 @@ class ordered_associative_container_adaptor :
 
         KeyToBaseConverter,
 
-        typename mpl::copy<
+        typename mpl::push_front<
 
-            mpl::list
-            <
-                typename mpl::if_< is_same< ReverseIteratorFromBaseConverter, use_default >,
-                // {
-                        detail::iterator_from_base_identity
-                        <
-                            typename Base::reverse_iterator                , ReverseIterator,
-                            typename Base::const_reverse_iterator          , ConstReverseIterator
-                        >,
-                // }
-                // else
-                // {
-                        ReverseIteratorFromBaseConverter
-                // }
+            FunctorsFromDerivedClasses,
 
-                >::type
-            >,
-            mpl::front_inserter< FunctorsFromDerivedClasses >
+            typename mpl::if_< is_same< ReverseIteratorFromBaseConverter, use_default >,
+            // {
+                    detail::iterator_from_base_identity
+                    <
+                        typename Base::reverse_iterator                , ReverseIterator,
+                        typename Base::const_reverse_iterator          , ConstReverseIterator
+                    >,
+            // }
+            // else
+            // {
+                    ReverseIteratorFromBaseConverter
+            // }
+
+            >::type
 
         >::type
     >
@@ -93,7 +90,7 @@ class ordered_associative_container_adaptor :
 
     public:
 
-    typedef key_comparison_adaptor
+    typedef comparison_adaptor
     <
         typename Base::key_compare,
         typename this_type::key_type,
@@ -110,6 +107,8 @@ class ordered_associative_container_adaptor :
 
     typedef ReverseIterator      reverse_iterator;
     typedef ConstReverseIterator const_reverse_iterator;
+
+    protected:
 
     typedef typename mpl::if_< is_same< ReverseIteratorFromBaseConverter, use_default >,
         // {
