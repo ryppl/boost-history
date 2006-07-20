@@ -124,6 +124,7 @@ T bessel_y0(T x)
     ;
     T value, factor, r, rc, rs;
 
+    using namespace std;
     using namespace boost::math::tools;
     using namespace boost::math::constants;
 
