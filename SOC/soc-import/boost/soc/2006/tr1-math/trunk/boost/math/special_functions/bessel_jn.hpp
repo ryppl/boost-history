@@ -13,7 +13,7 @@
 
 // Bessel function of the first kind of integer order
 // J_n(z) is the minimal solution
-// n < abs(z), forward recurrence stable
+// n < abs(z), forward recurrence stable and usable
 // n >= abs(z), forward recurrence unstable, use Miller's algorithm
 
 namespace boost { namespace math {
