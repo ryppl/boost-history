@@ -20,7 +20,7 @@
 #include <boost/type_traits/is_same.hpp>
 
 #include <boost/bimap/detail/mpl/bool_result.hpp>
-#include <boost/bimap/collection/support/is_set_type_of_relation.hpp>
+#include <boost/bimap/detail/is_set_type_of.hpp>
 
 namespace boost {
 namespace bimap {
@@ -69,7 +69,7 @@ struct manage_additional_parameters
 
     struct case_NNN
     {
-        typedef collection::left_based set_type_of_relation;
+        typedef left_based set_type_of_relation;
         typedef std::allocator<void> allocator;
     };
 
@@ -80,7 +80,7 @@ struct manage_additional_parameters
 
     struct case_ANN
     {
-        typedef collection::left_based set_type_of_relation;
+        typedef left_based set_type_of_relation;
         typedef AP1 allocator;
     };
 
@@ -113,7 +113,7 @@ struct manage_additional_parameters
 
     struct case_HNN
     {
-        typedef collection::left_based set_type_of_relation;
+        typedef left_based set_type_of_relation;
         typedef std::allocator<void> allocator;
     };
 
@@ -135,7 +135,7 @@ struct manage_additional_parameters
 
     struct case_HAN
     {
-        typedef collection::left_based set_type_of_relation;
+        typedef left_based set_type_of_relation;
         typedef AP2 allocator;
     };
 
@@ -161,7 +161,7 @@ struct manage_additional_parameters
             is_same<AP2,not_specified>,
             typename mpl::if_
             <
-                collection::support::is_set_type_of_relation<AP1>,
+                detail::is_set_type_of_relation<AP1>,
                 case_SNN, // (3)
                 typename mpl::if_
                 <

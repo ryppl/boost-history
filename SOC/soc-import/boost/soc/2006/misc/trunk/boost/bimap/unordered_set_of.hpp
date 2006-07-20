@@ -7,20 +7,21 @@
 //
 // See http://www.boost.org/libs/bimap for library home page.
 
-/// \file collection/unordered_set_of.hpp
+/// \file unordered_set_of.hpp
 /// \brief Include support for unordered_set constrains for the bimap container
 
-#ifndef BOOST_BIMAP_COLLECTION_UNORDERED_SET_OF_HPP
-#define BOOST_BIMAP_COLLECTION_UNORDERED_SET_OF_HPP
+#ifndef BOOST_BIMAP_UNORDERED_SET_OF_HPP
+#define BOOST_BIMAP_UNORDERED_SET_OF_HPP
 
 #include <functional>
 #include <boost/functional/hash.hpp>
+#include <boost/mpl/placeholders.hpp>
 
-#include <boost/bimap/collection/detail/is_key_type_of_builder.hpp>
-#include <boost/bimap/collection/detail/register_key_type.hpp>
-#include <boost/bimap/collection/detail/view_binder.hpp>
-#include <boost/bimap/collection/detail/generate_relation_binder.hpp>
-#include <boost/bimap/collection/key_type_of_tag.hpp>
+#include <boost/bimap/detail/concept_tags.hpp>
+
+#include <boost/bimap/detail/generate_index_binder.hpp>
+#include <boost/bimap/detail/generate_view_binder.hpp>
+#include <boost/bimap/detail/generate_relation_binder.hpp>
 
 #include <boost/multi_index/hashed_index.hpp>
 
@@ -29,7 +30,6 @@
 
 namespace boost {
 namespace bimap {
-namespace collection {
 
 /// \brief Set Type Specification
 /**
@@ -51,20 +51,19 @@ the following way:
 \code
 using namespace support;
 
-BOOST_STATIC_ASSERT( is_key_type_of< unordered_set_of<Type> >::value );
+BOOST_STATIC_ASSERT( is_set_type_of< unordered_set_of<Type> >::value );
 
 BOOST_STATIC_ASSERT
 (
      is_same
      <
-        compute_index_type
+        unordered_set_of<Type,HashFunctor,EqualKey>::index_bind
         <
-            unordered_set_of<Type,HashFunctor,EqualKey>,
             KeyExtractor,
             Tag
 
-        >::type
-        ,
+        >::type,
+
         hashed_unique< tag<Tag>, KeyExtractor, HashFunctor, EqualKey >
 
     >::value
@@ -80,12 +79,13 @@ BOOST_STATIC_ASSERT
 (
     is_same
     <
-        compute_map_view_type
+        unordered_set_of<Type>::map_view_bind
         <
             member_at::left,
             bimap_with_left_type_as_unordered_set
 
         >::type,
+
         unordered_map_view
         <
             member_at::left,
@@ -97,8 +97,7 @@ BOOST_STATIC_ASSERT
 
 \endcode
 
-See also unordered_set_of_relation, is_unordered_set_of, compute_index_type,
-compute_map_view_type, compute_set_type_view.
+See also unordered_set_of_relation.
                                                                         **/
 
 template
@@ -107,7 +106,7 @@ template
     class HashFunctor   = hash< KeyType >,
     class EqualKey      = std::equal_to< KeyType >
 >
-struct unordered_set_of : public key_type_of_tag
+struct unordered_set_of : public bimap::detail::set_type_of_tag
 {
     /// The type that will be stored in the container
     typedef KeyType         value_type;
@@ -117,36 +116,32 @@ struct unordered_set_of : public key_type_of_tag
 
     /// Functor that compare two value_type objects for equality
     typedef EqualKey        key_equal;
+
+
+    BOOST_BIMAP_GENERATE_INDEX_BINDER_2CP(
+
+        // binds to
+        multi_index::hashed_unique,
+
+        // with
+        hasher,
+        key_equal
+    );
+
+    BOOST_BIMAP_GENERATE_MAP_VIEW_BINDER(
+
+        // binds to
+        views::unordered_map_view
+    );
+
+    BOOST_BIMAP_GENERATE_SET_VIEW_BINDER(
+
+        // binds to
+        views::unordered_set_view
+    );
+
 };
 
-
-BOOST_BIMAP_IS_KEY_TYPE_OF_BUILDER_2CP
-(
-    // template< class Type > class
-    is_unordered_set_of,
-    // evaluates to true if type is a
-    unordered_set_of
-);
-
-
-BOOST_BIMAP_REGISTER_KEY_TYPE_2CP
-(
-    support::is_unordered_set_of, /* --------> */ multi_index::hashed_unique,
-    KeyType,
-    typename KeyType::hasher,
-    typename KeyType::key_equal
-);
-
-
-BOOST_BIMAP_COLLECTION_TO_MAP_VIEW_TYPE
-(
-    is_unordered_set_of, /* binds to */ views::unordered_map_view
-);
-
-BOOST_BIMAP_COLLECTION_TO_SET_VIEW_TYPE
-(
-    is_unordered_set_of, /* binds to */ views::unordered_set_view
-);
 
 /// \brief Set Of Relation Specification
 /**
@@ -169,10 +164,10 @@ See also unordered_set_of, is_set_type_of_relation.
 
 template
 <
-    class HashFunctor   = use_default,
-    class EqualKey      = use_default
+    class HashFunctor   = hash< mpl::_ >,
+    class EqualKey      = std::equal_to< mpl::_ >
 >
-struct unordered_set_of_relation : public set_type_of_relation_tag
+struct unordered_set_of_relation : public bimap::detail::set_type_of_relation_tag
 {
     /// Hash Functor that takes value_type objects
     typedef HashFunctor     hasher;
@@ -180,20 +175,22 @@ struct unordered_set_of_relation : public set_type_of_relation_tag
     /// Functor that compare two value_type objects for equality
     typedef EqualKey        key_equal;
 
-    /*
-        template<class Relation>
-        struct bind_to
-        {
-            typedef -UNDEFINED- type;
-        }
-    */
-    BOOST_BIMAP_GENERATE_RELATION_BINDER_2CP(unordered_set_of,HashFunctor,EqualKey);
+
+    BOOST_BIMAP_GENERATE_RELATION_BINDER_2CP(
+
+        // binds to
+        unordered_set_of,
+
+        // with
+        hasher,
+        key_equal
+    );
 };
 
-} // namespace collection
+
 } // namespace bimap
 } // namespace boost
 
 
-#endif // BOOST_BIMAP_COLLECTION_UNORDERED_SET_OF_HPP
+#endif // BOOST_BIMAP_UNORDERED_SET_OF_HPP
 

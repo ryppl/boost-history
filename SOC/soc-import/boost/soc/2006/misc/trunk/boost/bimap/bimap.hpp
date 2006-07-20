@@ -75,9 +75,10 @@ perspective the next step will be:
 namespace boost {
 namespace bimap {
 
-using namespace boost::bimap::collection;
 using namespace boost::bimap::support;
-using namespace boost::bimap::tags;
+
+using boost::bimap::tags::tagged;
+
 using namespace boost::bimap::relation::support;
 using namespace boost::bimap::relation;
 
@@ -202,13 +203,13 @@ class bimap
 
     ------------------------------------------------------------------*/
 
-    typedef typename collection::support::compute_map_view_type
+    typedef typename bimap::left_set_type::template map_view_bind
     <
         typename bimap::left_tag, typename bimap::bimap_core_
 
     >::type left_map_type;
 
-    typedef typename collection::support::compute_map_view_type
+    typedef typename bimap::right_set_type::template map_view_bind
     <
         typename bimap::right_tag, typename bimap::bimap_core_
 

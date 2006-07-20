@@ -7,39 +7,26 @@
 //
 // See http://www.boost.org/libs/bimap for library home page.
 
-/// \file collection/detail/register_key_type.hpp
-/// \brief Define macros to help building metafunctions
+/// \file detail/generate_index_binder.hpp
+/// \brief Define macros to help building the set type of definitions
 
 
-#ifndef BOOST_BIMAP_DETAIL_REGISTER_KEY_TYPE_HPP
-#define BOOST_BIMAP_DETAIL_REGISTER_KEY_TYPE_HPP
+#ifndef BOOST_BIMAP_DETAIL_GENERATE_INDEX_BINDER_HPP
+#define BOOST_BIMAP_DETAIL_GENERATE_INDEX_BINDER_HPP
 
-#include <boost/utility/enable_if.hpp>
 #include <boost/multi_index/tag.hpp>
-
-#include <boost/bimap/collection/support/compute_index_type.hpp>
-
 
 
 /*///////////////////////////////////////////////////////////////////////////*/
 
-#define BOOST_BIMAP_REGISTER_KEY_TYPE_0CP(                                    \
+#define BOOST_BIMAP_GENERATE_INDEX_BINDER_0CP(                                \
                                                                               \
-    IS_KEY_TYPE_METAFUNCTION,                                                 \
     MULTI_INDEX_TYPE                                                          \
                                                                               \
 )                                                                             \
                                                                               \
-namespace support {                                                           \
-                                                                              \
-template< class KeyType, class KeyExtractor, class Tag >                      \
-struct compute_index_type                                                     \
-<                                                                             \
-    KeyType,                                                                  \
-    KeyExtractor,                                                             \
-    Tag,                                                                      \
-    typename enable_if< IS_KEY_TYPE_METAFUNCTION< KeyType > >::type           \
->                                                                             \
+template< class KeyExtractor, class Tag >                                     \
+struct index_bind                                                             \
 {                                                                             \
     typedef MULTI_INDEX_TYPE                                                  \
     <                                                                         \
@@ -49,7 +36,6 @@ struct compute_index_type                                                     \
     > type;                                                                   \
 };                                                                            \
                                                                               \
-} // namespace support
 
 /*///////////////////////////////////////////////////////////////////////////*/
 
@@ -57,32 +43,15 @@ struct compute_index_type                                                     \
 
 /*///////////////////////////////////////////////////////////////////////////*/
 
-#define BOOST_BIMAP_REGISTER_KEY_TYPE_1CP(                                    \
+#define BOOST_BIMAP_GENERATE_INDEX_BINDER_1CP(                                \
                                                                               \
-    IS_KEY_TYPE_METAFUNCTION,                                                 \
     MULTI_INDEX_TYPE,                                                         \
-    KEY_TYPE_PARAMETER_NAME,                                                  \
     CONFIG_PARAMETER                                                          \
                                                                               \
 )                                                                             \
                                                                               \
-namespace support {                                                           \
-                                                                              \
-template< class KEY_TYPE_PARAMETER_NAME, class KeyExtractor, class Tag >      \
-struct compute_index_type                                                     \
-<                                                                             \
-    KEY_TYPE_PARAMETER_NAME,                                                  \
-    KeyExtractor,                                                             \
-    Tag,                                                                      \
-    typename enable_if                                                        \
-    <                                                                         \
-        IS_KEY_TYPE_METAFUNCTION                                              \
-        <                                                                     \
-            KEY_TYPE_PARAMETER_NAME                                           \
-        >                                                                     \
-                                                                              \
-    >::type                                                                   \
->                                                                             \
+template< class KeyExtractor, class Tag >                                     \
+struct index_bind                                                             \
 {                                                                             \
     typedef MULTI_INDEX_TYPE                                                  \
     <                                                                         \
@@ -92,8 +61,6 @@ struct compute_index_type                                                     \
                                                                               \
     > type;                                                                   \
 };                                                                            \
-                                                                              \
-} // namespace support
 
 /*///////////////////////////////////////////////////////////////////////////*/
 
@@ -102,32 +69,15 @@ struct compute_index_type                                                     \
 
 /*///////////////////////////////////////////////////////////////////////////*/
 
-#define BOOST_BIMAP_REGISTER_KEY_TYPE_2CP(                                    \
+#define BOOST_BIMAP_GENERATE_INDEX_BINDER_2CP(                                \
                                                                               \
-    IS_KEY_TYPE_METAFUNCTION,                                                 \
     MULTI_INDEX_TYPE,                                                         \
-    KEY_TYPE_PARAMETER_NAME,                                                  \
     CONFIG_PARAMETER_1,                                                       \
     CONFIG_PARAMETER_2                                                        \
 )                                                                             \
                                                                               \
-namespace support {                                                           \
-                                                                              \
-template< class KEY_TYPE_PARAMETER_NAME, class KeyExtractor, class Tag >      \
-struct compute_index_type                                                     \
-<                                                                             \
-    KEY_TYPE_PARAMETER_NAME,                                                  \
-    KeyExtractor,                                                             \
-    Tag,                                                                      \
-    typename enable_if                                                        \
-    <                                                                         \
-        IS_KEY_TYPE_METAFUNCTION                                              \
-        <                                                                     \
-            KEY_TYPE_PARAMETER_NAME                                           \
-        >                                                                     \
-                                                                              \
-    >::type                                                                   \
->                                                                             \
+template< class KeyExtractor, class Tag >                                     \
+struct index_bind                                                             \
 {                                                                             \
     typedef MULTI_INDEX_TYPE                                                  \
     <                                                                         \
@@ -139,8 +89,6 @@ struct compute_index_type                                                     \
     > type;                                                                   \
                                                                               \
 };                                                                            \
-                                                                              \
-} // namespace support
 
 /*///////////////////////////////////////////////////////////////////////////*/
 
@@ -150,31 +98,20 @@ struct compute_index_type                                                     \
 
 /*///////////////////////////////////////////////////////////////////////////*/
 
-#define BOOST_BIMAP_REGISTER_KEY_TYPE_0CP_NO_EXTRACTOR(                       \
+#define BOOST_BIMAP_GENERATE_INDEX_BINDER_0CP_NO_EXTRACTOR(                   \
                                                                               \
-    IS_KEY_TYPE_METAFUNCTION,                                                 \
     MULTI_INDEX_TYPE                                                          \
                                                                               \
 )                                                                             \
                                                                               \
-namespace support {                                                           \
-                                                                              \
-template< class KeyType, class KeyExtractor, class Tag >                      \
-struct compute_index_type                                                     \
-<                                                                             \
-    KeyType,                                                                  \
-    KeyExtractor,                                                             \
-    Tag,                                                                      \
-    typename enable_if< IS_KEY_TYPE_METAFUNCTION< KeyType > >::type           \
->                                                                             \
+template< class KeyExtractor, class Tag >                                     \
+struct index_bind                                                             \
 {                                                                             \
     typedef MULTI_INDEX_TYPE< multi_index::tag< Tag > > type;                 \
 };                                                                            \
-                                                                              \
-} // namespace support
 
 /*///////////////////////////////////////////////////////////////////////////*/
 
 
 
-#endif // BOOST_BIMAP_DETAIL_REGISTER_KEY_TYPE_HPP
+#endif // BOOST_BIMAP_DETAIL_GENERATE_INDEX_BINDER_HPP

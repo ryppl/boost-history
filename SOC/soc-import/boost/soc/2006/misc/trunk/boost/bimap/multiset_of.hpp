@@ -7,19 +7,20 @@
 //
 // See http://www.boost.org/libs/bimap for library home page.
 
-/// \file collection/multiset_of.hpp
+/// \file multiset_of.hpp
 /// \brief Include support for multiset constrains for the bimap container
 
-#ifndef BOOST_BIMAP_COLLECTION_MULTISET_OF_HPP
-#define BOOST_BIMAP_COLLECTION_MULTISET_OF_HPP
+#ifndef BOOST_BIMAP_MULTISET_OF_HPP
+#define BOOST_BIMAP_MULTISET_OF_HPP
 
 #include <functional>
+#include <boost/mpl/placeholders.hpp>
 
-#include <boost/bimap/collection/detail/is_key_type_of_builder.hpp>
-#include <boost/bimap/collection/detail/register_key_type.hpp>
-#include <boost/bimap/collection/detail/view_binder.hpp>
-#include <boost/bimap/collection/detail/generate_relation_binder.hpp>
-#include <boost/bimap/collection/key_type_of_tag.hpp>
+#include <boost/bimap/detail/concept_tags.hpp>
+
+#include <boost/bimap/detail/generate_index_binder.hpp>
+#include <boost/bimap/detail/generate_view_binder.hpp>
+#include <boost/bimap/detail/generate_relation_binder.hpp>
 
 #include <boost/multi_index/ordered_index.hpp>
 
@@ -28,7 +29,6 @@
 
 namespace boost {
 namespace bimap {
-namespace collection {
 
 /// \brief Set Type Specification
 /**
@@ -49,7 +49,7 @@ the following way:
 \code
 using namespace support;
 
-BOOST_STATIC_ASSERT( is_key_type_of< multiset_of<Type> >::value );
+BOOST_STATIC_ASSERT( is_set_type_of< multiset_of<Type> >::value );
 
 BOOST_STATIC_ASSERT
 (
@@ -91,8 +91,7 @@ BOOST_STATIC_ASSERT
 
 \endcode
 
-See also multiset_of_relation, is_multiset_of, compute_index_type,
-compute_map_view_type, compute_set_type_view.
+See also multiset_of_relation.
                                                                         **/
 
 template
@@ -100,42 +99,37 @@ template
     class KeyType,
     class KeyCompare = std::less< KeyType >
 >
-struct multiset_of : public key_type_of_tag
+struct multiset_of : public bimap::detail::set_type_of_tag
 {
      /// Type of the object that will be stored in the set
     typedef KeyType value_type;
 
     /// Functor that compare two keys
     typedef KeyCompare key_compare;
+
+
+    BOOST_BIMAP_GENERATE_INDEX_BINDER_1CP(
+
+        // binds to
+        multi_index::ordered_non_unique,
+
+        // with
+        key_compare
+    );
+
+    BOOST_BIMAP_GENERATE_MAP_VIEW_BINDER(
+
+        // binds to
+        views::multimap_view
+    );
+
+    BOOST_BIMAP_GENERATE_SET_VIEW_BINDER(
+
+        // binds to
+        views::multiset_view
+    );
 };
 
-
-BOOST_BIMAP_IS_KEY_TYPE_OF_BUILDER_1CP
-(
-    // template< class Type > class
-    is_multiset_of,
-    // evaluates to true if type is a
-    multiset_of
-);
-
-
-BOOST_BIMAP_REGISTER_KEY_TYPE_1CP
-(
-    support::is_multiset_of,  /* --------> */ multi_index::ordered_non_unique,
-    KeyType,
-    typename KeyType::key_compare
-);
-
-
-BOOST_BIMAP_COLLECTION_TO_MAP_VIEW_TYPE
-(
-    is_multiset_of, /* binds to */ views::multimap_view
-);
-
-BOOST_BIMAP_COLLECTION_TO_SET_VIEW_TYPE
-(
-    is_multiset_of, /* binds to */ views::multiset_view
-);
 
 /// \brief Set Of Relation Specification
 /**
@@ -156,25 +150,26 @@ struct bind_to
 See also multiset_of, is_set_type_of_relation.
                                                                 **/
 
-template< class KeyCompare = use_default >
-struct multiset_of_relation : public set_type_of_relation_tag
+template< class KeyCompare = std::less< mpl::_ > >
+struct multiset_of_relation : public bimap::detail::set_type_of_relation_tag
 {
     /// Functor that compare two keys
     typedef KeyCompare key_compare;
 
-    /*
-        template<class Relation>
-        struct bind_to
-        {
-            typedef -UNDEFINED- type;
-        }
-    */
-    BOOST_BIMAP_GENERATE_RELATION_BINDER_1CP(multiset_of,KeyCompare);
+
+    BOOST_BIMAP_GENERATE_RELATION_BINDER_1CP(
+
+        // binds to
+        multiset_of,
+
+        // with
+        key_compare
+    );
+
 };
 
-} // namespace collection
 } // namespace bimap
 } // namespace boost
 
 
-#endif // BOOST_BIMAP_COLLECTION_MULTISET_OF_HPP
+#endif // BOOST_BIMAP_MULTISET_OF_HPP

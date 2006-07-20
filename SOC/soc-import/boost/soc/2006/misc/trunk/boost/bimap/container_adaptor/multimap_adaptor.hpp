@@ -13,7 +13,7 @@
 #ifndef BOOST_BIMAP_CONTAINER_ADAPTOR_MULTIMAP_ADAPTOR_HPP
 #define BOOST_BIMAP_CONTAINER_ADAPTOR_MULTIMAP_ADAPTOR_HPP
 
-#include <boost/bimap/container_adaptor/detail/associative_container_adaptor.hpp>
+#include <boost/bimap/container_adaptor/detail/ordered_associative_container_adaptor.hpp>
 
 namespace boost {
 namespace bimap {

@@ -40,7 +40,7 @@
 #include <boost/bimap/views/detail/map_view_iterator.hpp>
 #include <boost/bimap/views/detail/set_view_iterator.hpp>
 
-#include <boost/bimap/collection/set_of.hpp>
+#include <boost/bimap/set_of.hpp>
 
 namespace boost {
 namespace bimap {
@@ -62,7 +62,7 @@ See also bimap.
                                                                         **/
 
 
-template< class LeftKeyType, class RightKeyType, class AP1, class AP2, class AP3 >
+template< class LeftSetType, class RightSetType, class AP1, class AP2, class AP3 >
 struct bimap_core
 {
     // Manage bimap key instantiation
@@ -71,17 +71,17 @@ struct bimap_core
 
     typedef typename manage_bimap_key
     <
-        LeftKeyType,
+        LeftSetType,
         relation::member_at::left
 
-    >::type left_tagged_key_type;
+    >::type left_tagged_set_type;
 
     typedef typename manage_bimap_key
     <
-        RightKeyType,
+        RightSetType,
         relation::member_at::right
 
-    >::type right_tagged_key_type;
+    >::type right_tagged_set_type;
 
 
     // Construct the relation type to be used
@@ -95,14 +95,14 @@ struct bimap_core
         typename tags::support::apply_to_value_type
         <
             get_value_type<_>,
-            left_tagged_key_type
+            left_tagged_set_type
 
         >::type,
 
         typename tags::support::apply_to_value_type
         <
             get_value_type<_>,
-            right_tagged_key_type
+            right_tagged_set_type
 
         >::type
 
@@ -117,8 +117,15 @@ struct bimap_core
 
     //@{
 
-        typedef typename relation::left_value_type    left_data_type;
-        typedef typename relation::right_value_type   right_data_type;
+        typedef typename relation::left_value_type     left_key_type;
+        typedef typename relation::right_value_type   right_key_type;
+
+    //@}
+
+    //@{
+
+        typedef typename relation::right_value_type    left_data_type;
+        typedef typename relation:: left_value_type   right_data_type;
 
     //@}
 
@@ -131,8 +138,8 @@ struct bimap_core
 
     //@{
 
-        typedef typename left_tagged_key_type::value_type  left_key_type;
-        typedef typename right_tagged_key_type::value_type right_key_type;
+        typedef typename  left_tagged_set_type::value_type  left_set_type;
+        typedef typename right_tagged_set_type::value_type right_set_type;
 
     //@}
 
@@ -149,7 +156,7 @@ struct bimap_core
     typedef multi_index::member
     <
         relation,
-        left_data_type,
+        left_key_type,
         &relation::left
 
     > left_member_extractor;
@@ -157,7 +164,7 @@ struct bimap_core
     typedef multi_index::member
     <
         relation,
-        right_data_type,
+        right_key_type,
         &relation::right
 
     > right_member_extractor;
@@ -169,17 +176,15 @@ struct bimap_core
         multi_index::indexed_by
         <
 
-            typename collection::support::compute_index_type
+            typename left_set_type::template index_bind
             <
-                left_key_type,
                 left_member_extractor,
                 left_tag
 
             >::type,
 
-            typename collection::support::compute_index_type
+            typename right_set_type::template index_bind
             <
-                right_key_type,
                 right_member_extractor,
                 right_tag
 
@@ -195,14 +200,14 @@ struct bimap_core
     // we have to add yet another index to the core.
 
     typedef typename mpl::if_<
-        is_same< typename parameters::set_type_of_relation, collection::left_based >,
+        is_same< typename parameters::set_type_of_relation, left_based >,
     // {
-            left_tagged_key_type,
+            left_tagged_set_type,
     // }
     /* else */ typename mpl::if_<
-            is_same< typename parameters::set_type_of_relation, collection::right_based >,
+            is_same< typename parameters::set_type_of_relation, right_based >,
     // {
-            right_tagged_key_type,
+            right_tagged_set_type,
     // }
     // else
     // {
@@ -213,7 +218,7 @@ struct bimap_core
                     relation
 
                 >::type,
-                collection::independent_index_tag
+                detail::independent_index_tag
             >
     // }
         >::type
@@ -222,23 +227,23 @@ struct bimap_core
 
     protected:
 
-    typedef typename tagged_set_of_relation_type::tag relation_set_tag;
+    typedef typename tagged_set_of_relation_type::tag           relation_set_tag;
+    typedef typename tagged_set_of_relation_type::value_type    relation_set_type_of;
 
     private:
 
     typedef typename mpl::if_<
 
-        is_same< relation_set_tag, collection::independent_index_tag >,
+        is_same< relation_set_tag, detail::independent_index_tag >,
     // {
             typename mpl::push_front
             <
                 basic_core_indices,
 
-                typename collection::support::compute_index_type
+                typename relation_set_type_of::template index_bind
                 <
-                    typename tagged_set_of_relation_type::value_type,
                     multi_index::identity<relation>,
-                    collection::independent_index_tag
+                    detail::independent_index_tag
 
                 >::type
 
@@ -327,9 +332,8 @@ struct bimap_core
 
     // Relation set view
 
-    typedef typename collection::support::compute_set_view_type
+    typedef typename relation_set_type_of::template set_view_bind
     <
-        typename tagged_set_of_relation_type::value_type,
         typename core_type::template index< relation_set_tag >::type
 
     >::type relation_set;

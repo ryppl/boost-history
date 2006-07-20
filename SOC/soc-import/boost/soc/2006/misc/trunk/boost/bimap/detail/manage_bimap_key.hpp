@@ -15,7 +15,6 @@
 
 
 // Boost.Bimap.Tags
-#include <boost/bimap/tags/support/value_type_of.hpp>
 #include <boost/bimap/tags/support/default_tagged.hpp>
 #include <boost/bimap/tags/support/apply_to_value_type.hpp>
 
@@ -23,8 +22,9 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/placeholders.hpp>
 
-// Boost.Bimap.Collection
-#include <boost/bimap/collection/set_of.hpp>
+#include <boost/bimap/detail/is_set_type_of.hpp>
+
+#include <boost/bimap/set_of.hpp>
 
 
 namespace boost {
@@ -34,17 +34,11 @@ namespace detail {
 // In detail, we are free to import same namespaces to augment the
 // readability of the code. No one is supposed to use this namespace.
 
-using namespace tags::support;
-using namespace collection::support;
-using namespace collection;
-using namespace mpl::placeholders;
-using namespace mpl;
-
 /** \struct boost::bimap::detail::manage_bimap_key
 \brief Metafunction to manage the set types of a bimap.
 
 \code
-template< class KeyType, class DefaultTag >
+template< class SetType, class DefaultTag >
 struct manage_bimap_key
 {
     typedef {TaggedSetType} type;
@@ -60,31 +54,36 @@ See also bimap, bimap_core.
 
 #ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
-template< class KeyType, class DefaultTag >
+template< class SetType, class DefaultTag >
 struct manage_bimap_key
 {
     // First, convert the type to a tagged one with the default tag
 
-    typedef typename default_tagged
+    typedef typename tags::support::default_tagged
     <
-        KeyType, DefaultTag
+        SetType, DefaultTag
 
-    >::type tagged_key_type;
+    >::type tagged_set_type;
 
-    // Then manage plain key types, were the type of the collection
+    // Then manage plain key types, were the set type of the collection
     // is not specified in the instantiation
 
     typedef typename
 
-       if_< typename is_key_type_of< typename tagged_key_type::value_type >::type,
+       mpl::if_< typename is_set_type_of< typename tagged_set_type::value_type >::type,
     // {
             // The type is
-            tagged_key_type,
+            tagged_set_type,
     // }
     // else
     // {
             // Default it to a set
-            typename apply_to_value_type< set_of<_>, tagged_key_type >::type
+            typename tags::support::apply_to_value_type
+            <
+                set_of< mpl::_ >,
+                tagged_set_type
+
+            >::type
     // }
 
     >::type type;

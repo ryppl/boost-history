@@ -7,17 +7,13 @@
 //
 // See http://www.boost.org/libs/bimap for library home page.
 
-/// \file collection/detail/generate_relation_binder.hpp
-/// \brief Define macros to help building metafunctions
+/// \file detail/generate_relation_binder.hpp
+/// \brief Define macros to help building the set type of definitions
 
-#ifndef BOOST_BIMAP_COLLECTION_DETAIL_GENERATE_RELATION_BINDER_HPP
-#define BOOST_BIMAP_COLLECTION_DETAIL_GENERATE_RELATION_BINDER_HPP
+#ifndef BOOST_BIMAP_DETAIL_GENERATE_RELATION_BINDER_HPP
+#define BOOST_BIMAP_DETAIL_GENERATE_RELATION_BINDER_HPP
 
-#include <boost/mpl/if.hpp>
 #include <boost/mpl/apply.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/bimap/collection/key_type_of_tag.hpp>
-
 
 /*///////////////////////////////////////////////////////////////////////////*/
 
@@ -26,7 +22,7 @@
         SET_TYPE_OF                                                           \
     )                                                                         \
                                                                               \
-    template<class Relation>                                                  \
+    template< class Relation >                                                \
     struct bind_to                                                            \
     {                                                                         \
         typedef SET_TYPE_OF<Relation> type;                                   \
@@ -45,20 +41,15 @@
         CP1                                                                   \
     )                                                                         \
                                                                               \
-    template<class Relation>                                                  \
+    template< class Relation >                                                \
     struct bind_to                                                            \
     {                                                                         \
-        typedef typename mpl::if_                                             \
+        typedef SET_TYPE_OF                                                   \
         <                                                                     \
-            is_same<CP1,use_default>,                                         \
-            SET_TYPE_OF<Relation>,                                            \
-            SET_TYPE_OF                                                       \
-            <                                                                 \
-                Relation,                                                     \
-                typename mpl::apply<CP1,Relation>::type                       \
-            >                                                                 \
+            Relation,                                                         \
+            typename mpl::apply<CP1,Relation>::type                           \
                                                                               \
-        >::type type;                                                         \
+        > type;                                                               \
                                                                               \
     };
 
@@ -75,36 +66,16 @@
         CP2                                                                   \
     )                                                                         \
                                                                               \
-    template                                                                  \
-    <                                                                         \
-        class Relation,                                                       \
-        class DefaultParameter1 = use_default,                                \
-        class DefaultParameter2 = use_default                                 \
-    >                                                                         \
+    template< class Relation >                                                \
     struct bind_to                                                            \
     {                                                                         \
-        typedef typename mpl::if_                                             \
+        typedef SET_TYPE_OF                                                   \
         <                                                                     \
-            is_same<CP1,use_default>,                                         \
-            SET_TYPE_OF<Relation>,                                            \
-            typename mpl::if_                                                 \
-            <                                                                 \
-                is_same<CP2,use_default>,                                     \
-                SET_TYPE_OF                                                   \
-                <                                                             \
-                    Relation,                                                 \
-                    typename mpl::apply<CP1,Relation>::type                   \
-                >,                                                            \
-                SET_TYPE_OF                                                   \
-                <                                                             \
-                    Relation,                                                 \
-                    typename mpl::apply<CP1,Relation>::type,                  \
-                    typename mpl::apply<CP2,Relation>::type                   \
-                >                                                             \
+            Relation,                                                         \
+            typename mpl::apply<CP1,Relation>::type,                          \
+            typename mpl::apply<CP2,Relation>::type                           \
                                                                               \
-            >::type                                                           \
-                                                                              \
-        >::type type;                                                         \
+        > type;                                                               \
                                                                               \
     };
 
@@ -112,4 +83,4 @@
 
 
 
-#endif // BOOST_BIMAP_COLLECTION_DETAIL_GENERATE_RELATION_BINDER_HPP
+#endif // BOOST_BIMAP_DETAIL_GENERATE_RELATION_BINDER_HPP
