@@ -65,9 +65,9 @@ T bessel_yn(int n, T x)
 
     prev = bessel_y0(x);
     current = bessel_y1(x);
-    for (int k = 2; k <= n; k++)            // n >= 2
+    for (int k = 1; k < n; k++)            // n >= 2
     {
-        value = 2.0L * (k - 1) * current / x - prev;
+        value = 2.0L * k * current / x - prev;
         prev = current;
         current = value;
     }
