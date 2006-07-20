@@ -30,12 +30,8 @@
 #include <boost/bimap/collection/multiset_of.hpp>
 #include <boost/bimap/collection/unordered_set_of.hpp>
 #include <boost/bimap/collection/unordered_multiset_of.hpp>
-
-BOOST_BIMAP_TEST_STATIC_FUNCTION( static_basic_test )
-{
-
-}
-
+#include <boost/bimap/collection/list_of.hpp>
+#include <boost/bimap/collection/vector_of.hpp>
 
 void basic_test()
 {

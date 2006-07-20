@@ -25,9 +25,22 @@
 #include <boost/bimap/container_adaptor/detail/associative_container_adaptor.hpp>
 #include <boost/bimap/container_adaptor/detail/ordered_associative_container_adaptor.hpp>
 #include <boost/bimap/container_adaptor/detail/unordered_associative_container_adaptor.hpp>
+#include <boost/bimap/container_adaptor/detail/sequence_container_adaptor.hpp>
 
 // Boost.Bimap.Container_adapator
 #include <boost/bimap/container_adaptor/map_adaptor.hpp>
+#include <boost/bimap/container_adaptor/multimap_adaptor.hpp>
+#include <boost/bimap/container_adaptor/unordered_map_adaptor.hpp>
+#include <boost/bimap/container_adaptor/unordered_multimap_adaptor.hpp>
+#include <boost/bimap/container_adaptor/set_adaptor.hpp>
+#include <boost/bimap/container_adaptor/multiset_adaptor.hpp>
+#include <boost/bimap/container_adaptor/unordered_set_adaptor.hpp>
+#include <boost/bimap/container_adaptor/unordered_multiset_adaptor.hpp>
+#include <boost/bimap/container_adaptor/list_adaptor.hpp>
+#include <boost/bimap/container_adaptor/list_map_adaptor.hpp>
+#include <boost/bimap/container_adaptor/vector_adaptor.hpp>
+#include <boost/bimap/container_adaptor/vector_map_adaptor.hpp>
+
 #include <boost/bimap/container_adaptor/support/iterator_facade_converters.hpp>
 
 #include <boost/iterator/iterator_adaptor.hpp>

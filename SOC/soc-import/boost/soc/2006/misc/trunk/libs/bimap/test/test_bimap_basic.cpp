@@ -39,6 +39,8 @@
 #include <boost/bimap/collection/multiset_of.hpp>
 #include <boost/bimap/collection/unordered_set_of.hpp>
 #include <boost/bimap/collection/unordered_multiset_of.hpp>
+#include <boost/bimap/collection/list_of.hpp>
+#include <boost/bimap/collection/vector_of.hpp>
 
 template< class Container, class Data >
 void test_container(Container & c, const Data & d)
@@ -75,6 +77,47 @@ void test_container(Container & c, const Data & d)
     c.insert( c.begin(), value_type(*(++d.begin())) );
 
     BOOST_CHECK( c.size() == 2 );
+
+    BOOST_CHECK( c.begin() != c.end() );
+
+}
+
+template< class Container, class Data >
+void test_sequence_container(Container & c, const Data & d)
+{
+    typedef typename Container::value_type value_type;
+
+    assert( d.size() > 2 );
+
+    c.clear();
+
+    BOOST_CHECK( c.size() == 0 );
+    BOOST_CHECK( c.empty() );
+
+    c.push_front( value_type(*   d.begin() ) );
+    c.push_back ( value_type(*(++d.begin())) );
+
+    BOOST_CHECK( c.front() == *   c.begin()  );
+    BOOST_CHECK( c.back () == *(++c.begin()) );
+
+    BOOST_CHECK( c.size() == 2 );
+
+    BOOST_CHECK( c.size() <= c.max_size() );
+    BOOST_CHECK( ! c.empty() );
+
+    c.erase( c.begin() );
+
+    BOOST_CHECK( c.size() == 1 );
+
+    c.insert( c.begin(), value_type(*(++d.begin())) );
+
+    c.erase( c.begin(), c.end() );
+
+    BOOST_CHECK( c.empty() );
+
+    c.push_front( value_type(*d.begin()) );
+
+    BOOST_CHECK( c.size() == 1 );
 
     BOOST_CHECK( c.begin() != c.end() );
 
@@ -476,11 +519,12 @@ void test_bimap()
 
         // Untagged simple bimap
         {
-            typedef bimap<int,double> bm;
+            typedef bimap<int,int> bm;
 
             bm b;
 
-            test_set_set_bimap(b,data,left_data,right_data);
+            b.insert( bm::relation(1,2) );
+            BOOST_CHECK( b.size() == 1 );
         }
 
         // Tagged simple bimap
@@ -574,6 +618,36 @@ void test_bimap()
             <
                 set_of< short, std::greater<short> >, unordered_multiset_of<std::string*> ,
                 unordered_set_of_relation<>
+
+            > b;
+        }
+
+        {
+            bimap
+            <
+                list_of< int >, vector_of< double >
+
+            > b;
+
+            test_sequence_container(b,data);
+            test_sequence_container(b.left , left_data);
+            test_sequence_container(b.right,right_data);
+        }
+
+        {
+            bimap
+            <
+                vector_of< short >, list_of< std::string >,
+                list_of_relation
+
+            > b;
+        }
+
+        {
+            bimap
+            <
+                vector_of< short >, list_of< std::string >,
+                vector_of_relation
 
             > b;
         }
