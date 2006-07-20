@@ -19,16 +19,28 @@
 // std
 #include <functional>
 
-// bimap container
-#include <boost/bimap/bimap.hpp>
+// Boost.Bimap
+#include <boost/bimap/detail/manage_bimap_key.hpp>
+#include <boost/bimap/detail/manage_additional_parameters.hpp>
+#include <boost/bimap/detail/get_value_type.hpp>
+#include <boost/bimap/detail/bimap_core.hpp>
+#include <boost/bimap/detail/core_iterator_type_of.hpp>
 
-// Set type specifications
-#include <boost/bimap/set_of.hpp>
-#include <boost/bimap/multiset_of.hpp>
-#include <boost/bimap/unordered_set_of.hpp>
-#include <boost/bimap/unordered_multiset_of.hpp>
-#include <boost/bimap/list_of.hpp>
-#include <boost/bimap/vector_of.hpp>
+#include <boost/bimap/support/iterator_type_by.hpp>
+#include <boost/bimap/support/data_type_of.hpp>
+#include <boost/bimap/support/value_type_by.hpp>
+
+#include <boost/bimap/views/map_view.hpp>
+#include <boost/bimap/views/multimap_view.hpp>
+#include <boost/bimap/views/unordered_map_view.hpp>
+#include <boost/bimap/views/unordered_multimap_view.hpp>
+
+#include <boost/bimap/bimap.hpp>
+#include <boost/bimap/collection/multiset_of.hpp>
+#include <boost/bimap/collection/unordered_set_of.hpp>
+#include <boost/bimap/collection/unordered_multiset_of.hpp>
+#include <boost/bimap/collection/list_of.hpp>
+#include <boost/bimap/collection/vector_of.hpp>
 
 template< class Container, class Data >
 void test_container(Container & c, const Data & d)

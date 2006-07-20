@@ -12,20 +12,16 @@
 // std
 #include <utility>
 #include <cstddef>
+#include <map>
+#include <iostream>
 
-// Boost.Static_assert
+// Boost
 #include <boost/static_assert.hpp>
+#include <boost/iterator/iterator_adaptor.hpp>
 
 // Boost.Bimap
 #include <boost/bimap/detail/test/check_metadata.hpp>
 #include <boost/bimap/detail/test/check_size_of_pair.hpp>
-
-#include <boost/bimap/container_adaptor/detail/container_adaptor.hpp>
-#include <boost/bimap/container_adaptor/detail/weak_associative_container_adaptor.hpp>
-#include <boost/bimap/container_adaptor/detail/associative_container_adaptor.hpp>
-#include <boost/bimap/container_adaptor/detail/ordered_associative_container_adaptor.hpp>
-#include <boost/bimap/container_adaptor/detail/unordered_associative_container_adaptor.hpp>
-#include <boost/bimap/container_adaptor/detail/sequence_container_adaptor.hpp>
 
 // Boost.Bimap.Container_adapator
 #include <boost/bimap/container_adaptor/map_adaptor.hpp>
@@ -43,10 +39,10 @@
 
 #include <boost/bimap/container_adaptor/support/iterator_facade_converters.hpp>
 
-#include <boost/iterator/iterator_adaptor.hpp>
 
-#include <map>
-#include <iostream>
+// This is a very simple test, and only aims to see if the user_interface compiles.
+// The real test for container adaptor is in test_bimap_basic.cpp.
+
 
 template< class K, class D >
 class indirect_iterator

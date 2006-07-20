@@ -8,10 +8,13 @@
 # bring in rules for testing
 import testing ;
 
-test-suite "utility_test"
+test-suite "tagged_test"
     :
     [ run test_tagged.cpp                                                     ]
+    ;
 
+test-suite "relation_test"
+    :
     [ run test_structured_pair.cpp                                            ]
 
     # Enable this to force the mutant_relation test
@@ -37,16 +40,20 @@ test-suite "container_adaptor_test"
     [ run test_container_adaptor.cpp                                          ]
     ;
 
-test-suite "bimap_helper_test"
-    :
-    [ run test_collection.cpp                                                 ]
-    ;
-
 test-suite "bimap_test"
     :
+
+    # Check library user interface
+    [ run test_bimap_set_of.cpp                                               ]
+    [ run test_bimap_multiset_of.cpp                                          ]
+    [ run test_bimap_unordered_set_of.cpp                                     ]
+    [ run test_bimap_unordered_multiset_of.cpp                                ]
+    [ run test_bimap_list_of.cpp                                              ]
+    [ run test_bimap_vector_of.cpp                                            ]
+
+    # Test bimap container
     [ run test_bimap_basic.cpp                                                ]
     [ run test_bimap_serialization.cpp
           /boost/serialization//boost_serialization                           ]
     ;
-
 
