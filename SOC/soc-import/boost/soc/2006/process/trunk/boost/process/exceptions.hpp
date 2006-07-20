@@ -14,12 +14,13 @@
 
 #include <boost/process/config.hpp>
 
-#if defined(BOOST_PROCESS_WIN32_API)
+#if defined(BOOST_PROCESS_POSIX_API)
+#   include <cstring>
+#elif defined(BOOST_PROCESS_WIN32_API)
 extern "C" {
 #   include <windows.h>
 }
-#elif defined(BOOST_PROCESS_POSIX_API)
-#   include <cstring>
+#   include <boost/assert.hpp>
 #else
 #   error "Unknown platform."
 #endif
@@ -39,9 +40,9 @@ namespace process {
 class system_error : public std::runtime_error
 {
 public:
-#if defined(BOOST_PROCESS_WIN32_API)
+#if defined(BOOST_PROCESS_POSIX_API)
     typedef DWORD code_type;
-#else
+#elif defined(BOOST_PROCESS_WIN32_API)
     typedef int code_type;
 #endif
 
@@ -86,7 +87,9 @@ system_error::what(void)
     if (m_message.length() == 0) {
         m_message = std::string(std::runtime_error::what()) + ": ";
 
-#if defined(BOOST_PROCESS_WIN32_API)
+#if defined(BOOST_PROCESS_POSIX_API)
+        m_message += std::strerror(m_sys_err);
+#elif defined(BOOST_PROCESS_WIN32_API)
         TCHAR* msg = NULL;
         if (::FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |
                             FORMAT_MESSAGE_ALLOCATE_BUFFER,
@@ -99,8 +102,6 @@ system_error::what(void)
             m_message += msg;
             LocalFree(msg);
         }
-#else
-        m_message += std::strerror(m_sys_err);
 #endif
     }
 
