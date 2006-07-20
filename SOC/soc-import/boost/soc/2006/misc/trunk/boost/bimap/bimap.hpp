@@ -58,6 +58,9 @@ perspective the next step will be:
 #ifndef BOOST_BIMAP_BIMAP_HPP
 #define BOOST_BIMAP_BIMAP_HPP
 
+// Boost
+#include <boost/serialization/nvp.hpp>
+
 // Boost.Bimap
 #include <boost/bimap/detail/bimap_core.hpp>
 
@@ -225,6 +228,18 @@ class bimap
         right    (core.get<typename bimap::right_tag          >())
 
     {}
+
+    // Serialization support
+
+    private:
+
+    friend class boost::serialization::access;
+
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        ar & BOOST_SERIALIZATION_NVP(core);
+    }
 };
 
 } // namespace bimap

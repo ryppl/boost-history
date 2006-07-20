@@ -35,7 +35,6 @@ struct map_view_iterator
     > type;
 };
 
-
 } // namespace detail
 } // namesapce views
 } // namespace bimap

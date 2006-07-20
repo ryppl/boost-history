@@ -16,6 +16,7 @@
 #include <boost/mpl/list.hpp>
 #include <boost/operators.hpp>
 #include <boost/call_traits.hpp>
+#include <boost/serialization/nvp.hpp>
 
 // Boost.Bimap
 #include <boost/bimap/tags/tagged.hpp>
@@ -249,6 +250,18 @@ class mutant_relation :
         return detail::mutate<right_pair>(*this);
     }
 
+    // Serialization support
+
+    private:
+
+    friend class boost::serialization::access;
+
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        ar & BOOST_SERIALIZATION_NVP(left );
+        ar & BOOST_SERIALIZATION_NVP(right);
+    }
 };
 
 } // namespace relation

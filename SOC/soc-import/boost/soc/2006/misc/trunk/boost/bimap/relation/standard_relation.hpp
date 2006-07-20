@@ -13,6 +13,9 @@
 #ifndef BOOST_BIMAP_RELATION_STANDARD_RELATION_HPP
 #define BOOST_BIMAP_RELATION_STANDARD_RELATION_HPP
 
+// Boost
+#include <boost/serialization/nvp.hpp>
+
 // Boost.Bimap
 #include <boost/bimap/tags/tagged.hpp>
 #include <boost/bimap/tags/support/default_tagged.hpp>
@@ -282,6 +285,19 @@ class standard_relation :
     const_right_pair_reference get_right_pair() const
     {
         return const_right_pair_reference(*this);
+    }
+
+    // Serialization support
+
+    private:
+
+    friend class boost::serialization::access;
+
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        ar & BOOST_SERIALIZATION_NVP(left );
+        ar & BOOST_SERIALIZATION_NVP(right);
     }
 };
 
