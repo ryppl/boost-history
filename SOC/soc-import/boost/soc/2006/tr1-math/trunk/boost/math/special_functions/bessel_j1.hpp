@@ -103,10 +103,11 @@ T bessel_j1(T x)
     ;
     T value, factor, r, rc, rs, w;
 
+    using namespace std;
     using namespace boost::math::tools;
     using namespace boost::math::constants;
 
-    w = std::abs(x);
+    w = abs(x);
     if (x == 0)
     {
         return static_cast<T>(0);
