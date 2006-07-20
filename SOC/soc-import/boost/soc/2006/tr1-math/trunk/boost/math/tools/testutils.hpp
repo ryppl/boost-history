@@ -15,8 +15,6 @@
 
 namespace boost { namespace math { namespace tools {
 
-using namespace std;
-
 template <typename T, typename Seq>
 void print_test_result(const test_result<T>& result, 
                        const Seq& worst,
@@ -24,6 +22,8 @@ void print_test_result(const test_result<T>& result,
                        const char* type_name,
                        const char* func_name)
 {
+    using namespace std;
+
     T eps = pow(T(2), 1 - digits<T>());
     cout.precision(10);
     cout << func_name << "(" << type_name
@@ -57,6 +57,7 @@ void test_univariate(const T& data,
     typedef typename TVT value_type;
     test_result<value_type> result;
 
+    using namespace std;
     using namespace boost::lambda;
 
     cout << "Testing " << func_name << " with type " << type_name << endl
@@ -81,6 +82,7 @@ void test_bivariate(const T& data,
     typedef typename TVT value_type;
     test_result<value_type> result;
 
+    using namespace std;
     using namespace boost::lambda;
 
     cout << "Testing " << func_name << " with type " << type_name << endl
