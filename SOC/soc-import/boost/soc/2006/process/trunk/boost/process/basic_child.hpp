@@ -12,10 +12,28 @@
 #if !defined(BOOST_PROCESS_BASIC_CHILD_HPP)
 #define BOOST_PROCESS_BASIC_CHILD_HPP
 
+#include <boost/process/config.hpp>
+
+#if defined(BOOST_PROCESS_POSIX_API)
+extern "C" {
+#   include <sys/types.h>
+#   include <sys/wait.h>
+}
+#   include <cerrno>
+#   include <boost/process/exceptions.hpp>
+#   include <boost/throw_exception.hpp>
+#elif defined(BOOST_PROCESS_WIN32_API)
+#   include <windows.h>
+#else
+#   error "Unsupported platform."
+#endif
+
 #include <map>
 
 #include <boost/assert.hpp>
+#include <boost/optional.hpp>
 #include <boost/process/basic_process.hpp>
+#include <boost/process/detail/pipe.hpp>
 #include <boost/process/pistream.hpp>
 #include <boost/process/postream.hpp>
 #include <boost/process/status.hpp>
@@ -35,43 +53,45 @@ public:
 
     status wait(void);
 
-    postream& get_input(int desc) const;
-    pistream& get_output(int desc) const;
+    postream& get_stdin(void) const;
+    pistream& get_stdout(void) const;
+    pistream& get_stderr(void) const;
 
 private:
-    typedef std::map< int, boost::shared_ptr< postream > > input_map;
-    typedef std::map< int, boost::shared_ptr< pistream > > output_map;
+    boost::optional< detail::shared_pipe > m_pstdin;
+    boost::optional< detail::shared_pipe > m_pstdout;
+    boost::optional< detail::shared_pipe > m_pstderr;
 
-    input_map m_input_map;
-    output_map m_output_map;
+    boost::shared_ptr< postream > m_sstdin;
+    boost::shared_ptr< pistream > m_sstdout;
+    boost::shared_ptr< pistream > m_sstderr;
 
     friend class launcher;
-    typedef std::map< int, detail::shared_pipe > pipe_map;
-    basic_child(const handle_type& h, const Attributes& attrs,
-                const pipe_map& inpipes, const pipe_map& outpipes);
+    basic_child(const handle_type& h,
+                const Attributes& attrs,
+                boost::optional< detail::shared_pipe > m_pstdin,
+                boost::optional< detail::shared_pipe > m_pstdout,
+                boost::optional< detail::shared_pipe > m_pstderr);
 };
 
 // ------------------------------------------------------------------------
 
 template< class Attributes >
 inline
-basic_child< Attributes >::basic_child(const handle_type& h,
-                                       const Attributes& attrs,
-                                       const pipe_map& inpipes,
-                                       const pipe_map& outpipes) :
+basic_child< Attributes >::basic_child
+    (const handle_type& h,
+     const Attributes& attrs,
+     boost::optional< detail::shared_pipe > m_pstdin,
+     boost::optional< detail::shared_pipe > m_pstdout,
+     boost::optional< detail::shared_pipe > m_pstderr) :
     basic_process< Attributes >(h, attrs)
 {
-    for (pipe_map::const_iterator iter = inpipes.begin();
-         iter != inpipes.end(); iter++) {
-        boost::shared_ptr< postream > st(new postream((*iter).second));
-        m_input_map.insert(input_map::value_type((*iter).first, st));
-    }
-
-    for (pipe_map::const_iterator iter = outpipes.begin();
-         iter != outpipes.end(); iter++) {
-        boost::shared_ptr< pistream > st(new pistream((*iter).second));
-        m_output_map.insert(output_map::value_type((*iter).first, st));
-    }
+    if (m_pstdin)
+        m_sstdin.reset(new postream(*m_pstdin));
+    if (m_pstdout)
+        m_sstdout.reset(new pistream(*m_pstdout));
+    if (m_pstderr)
+        m_sstderr.reset(new pistream(*m_pstderr));
 }
 
 // ------------------------------------------------------------------------
@@ -79,12 +99,11 @@ basic_child< Attributes >::basic_child(const handle_type& h,
 template< class Attributes >
 inline
 postream&
-basic_child< Attributes >::get_input(int desc)
+basic_child< Attributes >::get_stdin(void)
     const
 {
-    input_map::const_iterator iter = m_input_map.find(desc);
-    BOOST_ASSERT(iter != m_input_map.end());
-    return *((*iter).second);
+    BOOST_ASSERT(m_sstdin);
+    return *m_sstdin;
 }
 
 // ------------------------------------------------------------------------
@@ -92,23 +111,45 @@ basic_child< Attributes >::get_input(int desc)
 template< class Attributes >
 inline
 pistream&
-basic_child< Attributes >::get_output(int desc)
+basic_child< Attributes >::get_stdout(void)
     const
 {
-    output_map::const_iterator iter = m_output_map.find(desc);
-    BOOST_ASSERT(iter != m_output_map.end());
-    return *((*iter).second);
+    BOOST_ASSERT(m_sstdout);
+    return *m_sstdout;
+}
+
+// ------------------------------------------------------------------------
+
+template< class Attributes >
+inline
+pistream&
+basic_child< Attributes >::get_stderr(void)
+    const
+{
+    BOOST_ASSERT(m_sstderr);
+    return *m_sstderr;
+}
+
+// ------------------------------------------------------------------------
+
+template< class Attributes >
+inline
+status
+basic_child< Attributes >::wait(void)
+{
+#if defined(BOOST_PROCESS_POSIX_API)
+    int s;
+    if (::waitpid(basic_child< Attributes >::get_handle(), &s, 0) == -1)
+        boost::throw_exception
+            (system_error("boost::process::basic_child::wait",
+                          "waitpid(2) failed", errno));
+    return status(s);
+#endif
 }
 
 // ------------------------------------------------------------------------
 
 } // namespace process
 } // namespace boost
-
-#if defined(BOOST_PROCESS_WIN32_API)
-#   include <boost/process/basic_child_win32.hpp>
-#else
-#   include <boost/process/basic_child_posix.hpp>
-#endif
 
 #endif // !defined(BOOST_PROCESS_BASIC_CHILD_HPP)

@@ -9,21 +9,78 @@
 // at http://www.boost.org/LICENSE_1_0.txt.)
 //
  
-#if !defined(BOOST_PROCESS_LAUNCHER_POSIX_HPP)
-#define BOOST_PROCESS_LAUNCHER_POSIX_HPP
+#if !defined(BOOST_PROCESS_POSIX_LAUNCHER_HPP)
+#define BOOST_PROCESS_POSIX_LAUNCHER_HPP
 
 #include <unistd.h>
 
 #include <cerrno>
 #include <cstdlib>
 #include <cstring>
+#include <set>
+#include <utility>
 
 #include <boost/process/basic_child.hpp>
+#include <boost/process/detail/environment.hpp>
 #include <boost/process/detail/systembuf.hpp>
 #include <boost/process/exceptions.hpp>
 
 namespace boost {
 namespace process {
+
+// ------------------------------------------------------------------------
+
+class posix_launcher
+{
+    typedef std::set< std::pair< int, int > > merge_set;
+    typedef std::set< int > input_set;
+    typedef std::set< int > output_set;
+
+    merge_set m_merge_set;
+    input_set m_input_set;
+    output_set m_output_set;
+
+public:
+    launcher& redir_input(int desc);
+    launcher& redir_output(int desc);
+    launcher& merge_outputs(int from, int to);
+
+    template< class Attributes >
+    basic_posix_child< Attributes > start(const Attributes& attrs);
+};
+
+// ------------------------------------------------------------------------
+
+inline
+launcher&
+launcher::redir_input(int desc)
+{
+    BOOST_ASSERT(desc != STDIN_FILENO);
+    m_input_set.insert(desc);
+    return *this;
+}
+
+// ------------------------------------------------------------------------
+
+inline
+launcher&
+launcher::redir_output(int desc)
+{
+    BOOST_ASSERT(desc != STDOUT_FILENO);
+    m_output_set.insert(desc);
+    return *this;
+}
+
+// ------------------------------------------------------------------------
+
+inline
+launcher&
+launcher::merge_outputs(int src, int dest)
+{
+    BOOST_ASSERT(src != STDOUT_FILENO && src != STDERR_FILENO);
+    m_merge_set.insert(std::pair< int, int >(src, dest));
+    return *this;
+}
 
 // ------------------------------------------------------------------------
 
@@ -138,4 +195,4 @@ launcher::start(const Attributes& a)
 } // namespace process
 } // namespace boost
 
-#endif // !defined(BOOST_PROCESS_LAUNCHER_POSIX_HPP)
+#endif // !defined(BOOST_PROCESS_POSIX_LAUNCHER_HPP)

@@ -25,6 +25,9 @@
 namespace bfs = ::boost::filesystem;
 namespace bpd = ::boost::process::detail;
 
+int h_echo_stdout(int, char*[]);
+int h_echo_stderr(int, char*[]);
+int h_echo_stdout_stderr(int, char*[]);
 int h_echo_one(int, char*[]);
 int h_echo_two(int, char*[]);
 int h_exit_failure(int, char*[]);
@@ -39,6 +42,9 @@ struct helper {
     int m_min_argc;
     const char* m_syntax;
 } helpers[] = {
+    { "echo-stdout", h_echo_stdout, 2, "message" },
+    { "echo-stderr", h_echo_stderr, 2, "message" },
+    { "echo-stdout-stderr", h_echo_stdout_stderr, 2, "message" },
     { "echo-one", h_echo_one, 3, "desc message" },
     { "echo-two", h_echo_two, 4, "desc1 desc2 message" },
     { "exit-failure", h_exit_failure, 1, "" },
@@ -48,6 +54,36 @@ struct helper {
     { "stdin-to-stdout", h_stdin_to_stdout, 1, "" },
     { NULL, NULL }
 };
+
+// ------------------------------------------------------------------------
+
+int
+h_echo_stdout(int argc, char* argv[])
+{
+    std::cout << argv[1] << std::endl;
+    return EXIT_SUCCESS;
+}
+
+// ------------------------------------------------------------------------
+
+int
+h_echo_stderr(int argc, char* argv[])
+{
+    std::cerr << argv[1] << std::endl;
+    return EXIT_SUCCESS;
+}
+
+// ------------------------------------------------------------------------
+
+int
+h_echo_stdout_stderr(int argc, char* argv[])
+{
+    std::cout << "stdout " << argv[1] << std::endl;
+    std::cout.flush();
+    std::cerr << "stderr " << argv[1] << std::endl;
+    std::cerr.flush();
+    return EXIT_SUCCESS;
+}
 
 // ------------------------------------------------------------------------
 
