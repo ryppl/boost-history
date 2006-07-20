@@ -154,7 +154,7 @@ T bessel_y0(T x)
         factor = (x + x1) * ((x - x11/256.0L) - x12);
         value = z + factor * r;
     }
-    else if (x <= 5.0)                  // x in (3, 5]
+    else if (x <= 5.5)                  // x in (3, 5.5]
     {
         T y = x * x;
         T z = 2.0L * log(x/x2) * bessel_j0(x) / pi<T>();
@@ -163,7 +163,7 @@ T bessel_y0(T x)
         factor = (x + x2) * ((x - x21/256.0L) - x22);
         value = z + factor * r;
     }
-    else if (x <= 8.0)                  // x in (5, 8]
+    else if (x <= 8.0)                  // x in (5.5, 8]
     {
         T y = x * x;
         T z = 2.0L * log(x/x3) * bessel_j0(x) / pi<T>();
