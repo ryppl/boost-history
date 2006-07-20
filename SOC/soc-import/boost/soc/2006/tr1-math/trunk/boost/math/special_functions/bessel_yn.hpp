@@ -16,7 +16,7 @@
 #include <boost/math/tools/error_handling.hpp>
 
 // Bessel function of the second kind of integer order
-// Y_n(z) is the dominant solution, forward recurrence always stable
+// Y_n(z) is the dominant solution, forward recurrence always OK
 
 namespace boost { namespace math {
 
