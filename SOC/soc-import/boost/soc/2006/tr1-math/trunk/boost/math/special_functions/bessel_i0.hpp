@@ -11,7 +11,8 @@
 #include <boost/assert.hpp>
 
 // Modified Bessel function of the first kind of order zero
-// minimax rational approximations in Blair and Edwards, report AECL-4928, 1974
+// minimax rational approximations on intervals, see
+// Blair and Edwards, Chalk River Report AECL-4928, 1974
 
 namespace boost { namespace math {
 
