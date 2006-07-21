@@ -86,7 +86,7 @@ pipe::pipe(void)
     ZeroMemory(&sa, sizeof(sa));
     sa.nLength = sizeof(sa);
     sa.lpSecurityDescriptor = NULL;
-    sa.bInheritHandle = TRUE;
+    sa.bInheritHandle = FALSE;
 
     if (!::CreatePipe(&m_read_end, &m_write_end, &sa, 0))
         boost::throw_exception

@@ -13,13 +13,17 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/test/unit_test.hpp>
 
+// ------------------------------------------------------------------------
+
 static
 std::string
 get_helpers_path(void)
 {
     boost::filesystem::path hp = boost::filesystem::initial_path();
 
-#if defined(__APPLE__)
+#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+    hp /= "./bin/msvc/debug/link-static/runtime-link-static/helpers.exe";
+#elif defined(__APPLE__)
     hp /= "./bin/darwin/debug/link-static/runtime-link-static/helpers";
 #else
     hp /= "./bin/gcc/debug/link-static/runtime-link-static/helpers";
@@ -28,4 +32,17 @@ get_helpers_path(void)
     BOOST_REQUIRE(boost::filesystem::exists(hp));
 
     return hp.string();
+}
+
+// ------------------------------------------------------------------------
+
+static
+std::istream&
+portable_getline(std::istream& is, std::string& str)
+{
+    std::getline(is, str);
+    std::string::size_type pos = str.rfind('\r');
+    if (pos != -1)
+        str.erase(pos);
+    return is;
 }

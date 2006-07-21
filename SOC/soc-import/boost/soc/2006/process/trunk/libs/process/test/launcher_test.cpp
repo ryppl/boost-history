@@ -172,13 +172,13 @@ test_default_work_directory(void)
 
     bp::pistream& is = c.get_stdout();
     std::string dir;
-    is >> dir;
+    portable_getline(is, dir);
 
     bp::status s = c.wait();
     BOOST_REQUIRE(s.exited());
     BOOST_REQUIRE_EQUAL(s.exit_status(), EXIT_SUCCESS);
 
-    BOOST_CHECK_EQUAL(dir, a.get_work_directory());
+    BOOST_CHECK_EQUAL(bfs::path(dir), bfs::path(a.get_work_directory()));
 }
 
 // ------------------------------------------------------------------------
@@ -199,14 +199,14 @@ test_explicit_work_directory(void)
 
         bp::pistream& is = c.get_stdout();
         std::string dir;
-        is >> dir;
+        portable_getline(is, dir);
 
         bp::status s = c.wait();
         BOOST_CHECK_NO_THROW(bfs::remove_all(wdir));
         BOOST_REQUIRE(s.exited());
         BOOST_REQUIRE_EQUAL(s.exit_status(), EXIT_SUCCESS);
 
-        BOOST_CHECK_EQUAL(dir, a.get_work_directory());
+        BOOST_CHECK_EQUAL(bfs::path(dir), bfs::path(a.get_work_directory()));
     } catch(...) {
         BOOST_CHECK_NO_THROW(bfs::remove_all(wdir));
         throw;
@@ -226,7 +226,9 @@ test_unset_environment(void)
     BOOST_REQUIRE(::setenv("TO_BE_UNSET", "test", 1) != -1);
     BOOST_REQUIRE(::getenv("TO_BE_UNSET") != NULL);
 #elif defined(BOOST_PROCESS_WIN32_API)
-#   error "Unimplemented."
+    BOOST_REQUIRE(::SetEnvironmentVariable("TO_BE_UNSET", "test") != 0);
+    TCHAR buf[5];
+    BOOST_REQUIRE(::GetEnvironmentVariable("TO_BE_UNSET", buf, 5) != 0);
 #endif
 
     bp::launcher l(bp::launcher::REDIR_STDOUT);
@@ -257,7 +259,10 @@ test_set_environment(const std::string& value)
     ::unsetenv("TO_BE_SET");
     BOOST_REQUIRE(::getenv("TO_BE_SET") == NULL);
 #elif defined(BOOST_PROCESS_WIN32_API)
-#   error "Unimplemented."
+    TCHAR buf[5];
+    BOOST_REQUIRE(::GetEnvironmentVariable("TO_BE_SET", buf, 0) == 0 ||
+                  ::SetEnvironmentVariable("TO_BE_SET", NULL) != 0);
+    BOOST_REQUIRE(::GetEnvironmentVariable("TO_BE_SET", buf, 5) == 0);
 #endif
 
     bp::launcher l(bp::launcher::REDIR_STDOUT);
@@ -312,7 +317,9 @@ init_unit_test_suite(int argc, char* argv[])
     test->add(BOOST_TEST_CASE(&test_default_work_directory), 0, 10);
     test->add(BOOST_TEST_CASE(&test_explicit_work_directory), 0, 10);
     test->add(BOOST_TEST_CASE(&test_unset_environment), 0, 10);
+#if defined(BOOST_PROCESS_POSIX_API)
     test->add(BOOST_TEST_CASE(&test_set_environment_empty), 0, 10);
+#endif
     test->add(BOOST_TEST_CASE(&test_set_environment_non_empty), 0, 10);
 
     return test;

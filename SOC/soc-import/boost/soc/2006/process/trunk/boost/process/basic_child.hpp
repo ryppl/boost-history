@@ -58,10 +58,6 @@ public:
     pistream& get_stderr(void) const;
 
 private:
-    boost::optional< detail::shared_pipe > m_pstdin;
-    boost::optional< detail::shared_pipe > m_pstdout;
-    boost::optional< detail::shared_pipe > m_pstderr;
-
     boost::shared_ptr< postream > m_sstdin;
     boost::shared_ptr< pistream > m_sstdout;
     boost::shared_ptr< pistream > m_sstderr;
@@ -69,9 +65,9 @@ private:
     friend class launcher;
     basic_child(const handle_type& h,
                 const Attributes& attrs,
-                boost::optional< detail::shared_pipe > m_pstdin,
-                boost::optional< detail::shared_pipe > m_pstdout,
-                boost::optional< detail::shared_pipe > m_pstderr);
+                boost::optional< detail::shared_pipe > pstdin,
+                boost::optional< detail::shared_pipe > pstdout,
+                boost::optional< detail::shared_pipe > pstderr);
 };
 
 // ------------------------------------------------------------------------
@@ -81,17 +77,17 @@ inline
 basic_child< Attributes >::basic_child
     (const handle_type& h,
      const Attributes& attrs,
-     boost::optional< detail::shared_pipe > m_pstdin,
-     boost::optional< detail::shared_pipe > m_pstdout,
-     boost::optional< detail::shared_pipe > m_pstderr) :
+     boost::optional< detail::shared_pipe > pstdin,
+     boost::optional< detail::shared_pipe > pstdout,
+     boost::optional< detail::shared_pipe > pstderr) :
     basic_process< Attributes >(h, attrs)
 {
-    if (m_pstdin)
-        m_sstdin.reset(new postream(*m_pstdin));
-    if (m_pstdout)
-        m_sstdout.reset(new pistream(*m_pstdout));
-    if (m_pstderr)
-        m_sstderr.reset(new pistream(*m_pstderr));
+    if (pstdin)
+        m_sstdin.reset(new postream(*pstdin));
+    if (pstdout)
+        m_sstdout.reset(new pistream(*pstdout));
+    if (pstderr)
+        m_sstderr.reset(new pistream(*pstderr));
 }
 
 // ------------------------------------------------------------------------
@@ -144,6 +140,15 @@ basic_child< Attributes >::wait(void)
             (system_error("boost::process::basic_child::wait",
                           "waitpid(2) failed", errno));
     return status(s);
+#elif defined(BOOST_PROCESS_WIN32_API)
+    DWORD code;
+    // XXX This loop should go away in favour of a passive wait.
+    do {
+        ::GetExitCodeProcess(basic_child< Attributes >::get_handle(), &code);
+        ::Sleep(500);
+    } while (code == STILL_ACTIVE);
+    ::WaitForSingleObject(basic_child< Attributes >::get_handle(), 0);
+    return status(code);
 #endif
 }
 

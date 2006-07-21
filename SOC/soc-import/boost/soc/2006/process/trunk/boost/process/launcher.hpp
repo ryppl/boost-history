@@ -17,6 +17,7 @@
 #if defined(BOOST_PROCESS_POSIX_API)
 #   include <cstring>
 #elif defined(BOOST_PROCESS_WIN32_API)
+#   include <tchar.h>
 #   include <windows.h>
 #else
 #   error "Unsupported platform."
@@ -26,6 +27,8 @@
 #include <boost/optional.hpp>
 #include <boost/process/basic_child.hpp>
 #include <boost/process/detail/environment.hpp>
+#include <boost/process/exceptions.hpp>
+#include <boost/throw_exception.hpp>
 
 namespace boost {
 namespace process {
@@ -237,7 +240,85 @@ launcher::start_win32(const Attributes& attrs,
                       boost::optional< detail::shared_pipe > pstdout,
                       boost::optional< detail::shared_pipe > pstderr)
 {
-    // TODO
+    STARTUPINFO si;
+    ::ZeroMemory(&si, sizeof(si));
+    si.cb = sizeof(si);
+
+    si.dwFlags = STARTF_USESTDHANDLES;
+
+    if (m_flags & REDIR_STDIN) {
+        BOOST_ASSERT(pstdin);
+        ::DuplicateHandle(::GetCurrentProcess(), (*pstdin)->get_read_end(),
+                          ::GetCurrentProcess(), &si.hStdInput,
+                          0, TRUE, DUPLICATE_SAME_ACCESS);
+        (*pstdin)->close_read_end();
+    } else
+        ::DuplicateHandle(::GetCurrentProcess(),
+                          ::GetStdHandle(STD_INPUT_HANDLE),
+                          ::GetCurrentProcess(), &si.hStdInput,
+                          0, TRUE, DUPLICATE_SAME_ACCESS);
+
+    if (m_flags & REDIR_STDOUT) {
+        BOOST_ASSERT(pstdout);
+        ::DuplicateHandle(::GetCurrentProcess(), (*pstdout)->get_write_end(),
+                          ::GetCurrentProcess(), &si.hStdOutput,
+                          0, TRUE, DUPLICATE_SAME_ACCESS);
+        (*pstdout)->close_write_end();
+    } else
+        ::DuplicateHandle(::GetCurrentProcess(),
+                          ::GetStdHandle(STD_OUTPUT_HANDLE),
+                          ::GetCurrentProcess(), &si.hStdOutput,
+                          0, TRUE, DUPLICATE_SAME_ACCESS);
+
+    if (m_flags & REDIR_STDERR) {
+        BOOST_ASSERT(pstderr);
+        ::DuplicateHandle(::GetCurrentProcess(), (*pstderr)->get_write_end(),
+                          ::GetCurrentProcess(), &si.hStdError,
+                          0, TRUE, DUPLICATE_SAME_ACCESS);
+        (*pstderr)->close_write_end();
+    } else
+        ::DuplicateHandle(::GetCurrentProcess(),
+                          ::GetStdHandle(STD_ERROR_HANDLE),
+                          ::GetCurrentProcess(), &si.hStdError,
+                          0, TRUE, DUPLICATE_SAME_ACCESS);
+
+    if (m_flags & REDIR_STDERR_TO_STDOUT) {
+        ::DuplicateHandle(::GetCurrentProcess(), si.hStdOutput,
+                          ::GetCurrentProcess(), &si.hStdError,
+                          0, TRUE, DUPLICATE_SAME_ACCESS);
+     }
+
+    PROCESS_INFORMATION pi;
+    ::ZeroMemory(&pi, sizeof(pi));
+
+    TCHAR cmdline[1024];
+    ::_tcscpy_s(cmdline, 1024, TEXT(""));
+    size_t nargs = attrs.get_command_line().get_arguments().size();
+    for (size_t i = 0; i < nargs; i++) {
+        ::_tcscat_s(cmdline, 1024,
+            TEXT(attrs.get_command_line().get_arguments()[i].c_str()));
+        ::_tcscat_s(cmdline, 1024, " ");
+    }
+
+    boost::scoped_array< TCHAR > executable
+        (::_tcsdup(TEXT(attrs.get_command_line().get_executable().c_str())));
+    boost::scoped_array< TCHAR > workdir
+        (::_tcsdup(TEXT(attrs.get_work_directory().c_str())));
+    m_environment.set("", attrs.get_work_directory());
+
+    boost::shared_array< TCHAR > env = m_environment.strings();
+    if (!::CreateProcess(executable.get(), cmdline, NULL, NULL, TRUE,
+                         0, env.get(), workdir.get(), &si, &pi)) {
+        boost::throw_exception
+            (system_error("boost::process::launcher::start",
+                          "CreateProcess failed", ::GetLastError()));
+    }
+    ::CloseHandle(si.hStdInput);
+    ::CloseHandle(si.hStdOutput);
+    ::CloseHandle(si.hStdError);
+
+    return basic_child< Attributes >(pi.hProcess, attrs,
+                                     pstdin, pstdout, pstderr);
 }
 #endif
 
