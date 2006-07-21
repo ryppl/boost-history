@@ -117,7 +117,7 @@ T bessel_j1(T x)
         T y = x * x;
         BOOST_ASSERT(sizeof(P1) == sizeof(Q1));
         r = evaluate_rational(P1, Q1, y, sizeof(P1)/sizeof(P1[0]));
-        factor = x * (w + x1) * ((w - x11/256.0L) - x12);
+        factor = w * (w + x1) * ((w - x11/256.0L) - x12);
         value = factor * r;
     }
     else if (w <= 8.0)                  // w in (4, 8]
@@ -125,7 +125,7 @@ T bessel_j1(T x)
         T y = x * x;
         BOOST_ASSERT(sizeof(P2) == sizeof(Q2));
         r = evaluate_rational(P2, Q2, y, sizeof(P2)/sizeof(P2[0]));
-        factor = x * (w + x2) * ((w - x21/256.0L) - x22);
+        factor = w * (w + x2) * ((w - x21/256.0L) - x22);
         value = factor * r;
     }
     else                                // w in (8, \infty)
@@ -138,13 +138,13 @@ T bessel_j1(T x)
         rc = evaluate_rational(PC, QC, y2, sizeof(PC)/sizeof(PC[0]));
         rs = evaluate_rational(PS, QS, y2, sizeof(PS)/sizeof(PS[0]));
         factor = sqrt(2.0L / (w * pi<T>()));
-        if (x < 0)
-        {
-            factor *= -1.0L;            // odd function
-        }
         value = factor * (rc * cos(z) - y * rs * sin(z));
     }
 
+    if (x < 0)
+    {
+        value *= -1.0L;                // odd function
+    }
     return value;
 }
 
