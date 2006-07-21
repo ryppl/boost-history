@@ -41,9 +41,9 @@ class system_error : public std::runtime_error
 {
 public:
 #if defined(BOOST_PROCESS_POSIX_API)
-    typedef DWORD code_type;
-#elif defined(BOOST_PROCESS_WIN32_API)
     typedef int code_type;
+#elif defined(BOOST_PROCESS_WIN32_API)
+    typedef DWORD code_type;
 #endif
 
     system_error(const std::string& who, const std::string& message,
