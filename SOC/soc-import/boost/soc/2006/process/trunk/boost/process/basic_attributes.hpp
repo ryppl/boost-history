@@ -55,7 +55,7 @@ public:
 
     const Command_Line& get_command_line(void) const;
 
-    const std::string& get_work_directory(void);
+    const std::string& get_work_directory(void) const;
 };
 
 // ------------------------------------------------------------------------
@@ -110,6 +110,7 @@ template< class Command_Line >
 inline
 const std::string&
 basic_attributes< Command_Line >::get_work_directory(void)
+    const
 {
     return m_work_directory;
 }
