@@ -17,7 +17,6 @@
 
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/if.hpp>
-#include <boost/iterator/transform_iterator.hpp>
 #include <boost/bimap/container_adaptor/detail/identity_converters.hpp>
 #include <boost/bimap/container_adaptor/use_default.hpp>
 #include <boost/iterator/iterator_traits.hpp>

@@ -37,8 +37,7 @@
 #include <boost/bimap/detail/manage_bimap_key.hpp>
 #include <boost/bimap/detail/manage_additional_parameters.hpp>
 #include <boost/bimap/detail/get_value_type.hpp>
-#include <boost/bimap/views/detail/map_view_iterator.hpp>
-#include <boost/bimap/views/detail/set_view_iterator.hpp>
+#include <boost/bimap/detail/map_view_iterator.hpp>
 
 #include <boost/bimap/set_of.hpp>
 
@@ -288,45 +287,49 @@ struct bimap_core
 
     //@{
 
-        typedef typename views::detail::map_view_iterator
+        typedef bimap::detail::map_view_iterator
         <
             left_tag,
             relation,
             left_core_iterator,
-            const left_value_type // Due to the multiIndex core the "const" is forced
+            typename relation::const_left_pair_reference,
+            const left_value_type
 
-        >::type left_iterator;
+        > left_iterator;
 
-        typedef typename views::detail::map_view_iterator
+        typedef bimap::detail::map_view_iterator
         <
             right_tag,
             relation,
             right_core_iterator,
-            const right_value_type // Due to the multiIndex core the "const" is forced
+            typename relation::const_right_pair_reference,
+            const right_value_type
 
-        >::type right_iterator;
+        > right_iterator;
 
     //@}
 
     //@{
 
-        typedef typename views::detail::map_view_iterator
+        typedef bimap::detail::map_view_iterator
         <
             left_tag,
             relation,
             left_core_const_iterator,
+            typename relation::const_left_pair_reference,
             const left_value_type
 
-        >::type left_const_iterator;
+        > left_const_iterator;
 
-        typedef typename views::detail::map_view_iterator
+        typedef bimap::detail::map_view_iterator
         <
             right_tag,
             relation,
             right_core_const_iterator,
+            typename relation::const_right_pair_reference,
             const right_value_type
 
-        >::type right_const_iterator;
+        > right_const_iterator;
 
     //@}
 

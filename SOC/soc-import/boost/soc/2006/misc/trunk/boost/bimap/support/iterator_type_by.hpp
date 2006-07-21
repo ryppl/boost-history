@@ -15,9 +15,10 @@
 
 #include <boost/bimap/relation/detail/metadata_access_builder.hpp>
 #include <boost/bimap/relation/detail/static_access_builder.hpp>
-#include <boost/iterator/reverse_iterator.hpp>
-#include <boost/iterator/transform_iterator.hpp>
-#include <boost/bimap/relation/support/get_pair_functor.hpp>
+
+#include <boost/bimap/relation/support/pair_type_by.hpp>
+
+#include <boost/bimap/detail/map_view_iterator.hpp>
 
 /** \struct boost::bimap::support::iterator_type_by
 
@@ -73,6 +74,7 @@ namespace boost {
 namespace bimap {
 namespace support {
 
+
 // Implementation of iterator type by metafunction
 
 BOOST_BIMAP_SYMMETRIC_METADATA_ACCESS_BUILDER
@@ -109,14 +111,13 @@ BOOST_BIMAP_SYMMETRIC_STATIC_ACCESS_BUILDER
 template< class Tag, class BimapCore >
 struct reverse_iterator_type_by
 {
-
-    typedef transform_iterator
+    typedef bimap::detail::map_view_iterator
     <
-        relation::support::GetPairFunctor<Tag,typename BimapCore::relation>,
+        Tag,
+        typename BimapCore::relation,
         typename core_reverse_iterator_type_by<Tag,BimapCore>::type,
-
-        // Due to the multiIndex core the "const" is forced
-        const typename relation::support::pair_type_by<Tag,typename BimapCore::relation>::type &
+        typename relation::support::const_pair_reference_type_by<Tag,typename BimapCore::relation>::type,
+        const typename relation::support::pair_type_by<Tag,typename BimapCore::relation>::type
 
     > type;
 };
@@ -139,11 +140,13 @@ template< class Tag, class BimapCore >
 struct const_reverse_iterator_type_by
 {
 
-    typedef transform_iterator
+    typedef bimap::detail::map_view_iterator
     <
-        relation::support::GetPairFunctor<Tag,typename BimapCore::relation>,
+        Tag,
+        typename BimapCore::relation,
         typename core_const_reverse_iterator_type_by<Tag,BimapCore>::type,
-        const typename relation::support::pair_type_by<Tag,typename BimapCore::relation>::type &
+        typename relation::support::const_pair_reference_type_by<Tag,typename BimapCore::relation>::type,
+        const typename relation::support::pair_type_by<Tag,typename BimapCore::relation>::type
 
     > type;
 };
@@ -168,13 +171,13 @@ template< class Tag, class BimapCore >
 struct local_iterator_type_by
 {
 
-    typedef transform_iterator
+    typedef bimap::detail::map_view_iterator
     <
-        relation::support::GetPairFunctor<Tag,typename BimapCore::relation>,
+        Tag,
+        typename BimapCore::relation,
         typename core_local_iterator_type_by<Tag,BimapCore>::type,
-
-        // Due to the multiIndex core the "const" is forced
-        const typename relation::support::pair_type_by<Tag,typename BimapCore::relation>::type &
+        typename relation::support::const_pair_reference_type_by<Tag,typename BimapCore::relation>::type,
+        const typename relation::support::pair_type_by<Tag,typename BimapCore::relation>::type
 
     > type;
 };
@@ -198,11 +201,13 @@ template< class Tag, class BimapCore >
 struct const_local_iterator_type_by
 {
 
-    typedef transform_iterator
+    typedef bimap::detail::map_view_iterator
     <
-        relation::support::GetPairFunctor<Tag,typename BimapCore::relation>,
+        Tag,
+        typename BimapCore::relation,
         typename core_const_local_iterator_type_by<Tag,BimapCore>::type,
-        const typename relation::support::pair_type_by<Tag,typename BimapCore::relation>::type &
+        typename relation::support::const_pair_reference_type_by<Tag,typename BimapCore::relation>::type,
+        const typename relation::support::pair_type_by<Tag,typename BimapCore::relation>::type
 
     > type;
 };

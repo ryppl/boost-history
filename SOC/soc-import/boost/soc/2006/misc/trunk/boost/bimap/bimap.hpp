@@ -230,6 +230,18 @@ class bimap
 
     {}
 
+    template< class InputIterator >
+    bimap(InputIterator first,InputIterator last) :
+
+        bimap::relation_set( core.get<typename bimap::relation_set_tag   >() ),
+
+        core(first,last),
+
+        left     (core.get<typename bimap::left_tag           >()),
+        right    (core.get<typename bimap::right_tag          >())
+
+    {}
+
     // Serialization support
 
     private:
@@ -239,7 +251,7 @@ class bimap
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version)
     {
-        ar & BOOST_SERIALIZATION_NVP(core);
+        ar & serialization::make_nvp("mi_core",core);
     }
 };
 

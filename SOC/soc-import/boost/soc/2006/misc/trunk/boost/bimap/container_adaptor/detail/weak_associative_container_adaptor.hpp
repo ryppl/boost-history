@@ -18,7 +18,6 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/push_front.hpp>
 #include <boost/mpl/list.hpp>
-#include <boost/iterator/transform_iterator.hpp>
 #include <boost/bimap/container_adaptor/detail/identity_converters.hpp>
 #include <boost/bimap/container_adaptor/detail/container_adaptor.hpp>
 #include <boost/bimap/container_adaptor/use_default.hpp>
