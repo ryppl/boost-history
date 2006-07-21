@@ -15,7 +15,7 @@
 
 // ------------------------------------------------------------------------
 
-static
+inline
 std::string
 get_helpers_path(void)
 {
@@ -36,13 +36,13 @@ get_helpers_path(void)
 
 // ------------------------------------------------------------------------
 
-static
+inline
 std::istream&
 portable_getline(std::istream& is, std::string& str)
 {
     std::getline(is, str);
     std::string::size_type pos = str.rfind('\r');
-    if (pos != -1)
+    if (pos != std::string::npos)
         str.erase(pos);
     return is;
 }
