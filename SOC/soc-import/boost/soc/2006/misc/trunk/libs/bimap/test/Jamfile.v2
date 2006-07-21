@@ -56,5 +56,6 @@ test-suite "bimap_test"
     [ run test_bimap_serialization.cpp
           /boost/serialization//boost_serialization                           ]
     [ run test_bimap_assign.cpp                                               ]
+    [ run test_bimap_property_map.cpp                                         ]
     ;
 
