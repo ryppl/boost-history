@@ -53,6 +53,8 @@ namespace boost { namespace property_tree { namespace xml_parser
                 case Ch('<'): r += detail::widen<Ch>("&lt;"); break;
                 case Ch('>'): r += detail::widen<Ch>("&gt;"); break;
                 case Ch('&'): r += detail::widen<Ch>("&amp;"); break;
+                case Ch('"'): r += detail::widen<Ch>("&quot;"); break;
+                case Ch('\''): r += detail::widen<Ch>("&apos;"); break;
                 default: r += *it; break;
             }
         }
@@ -76,6 +78,8 @@ namespace boost { namespace property_tree { namespace xml_parser
                 if (ent == detail::widen<Ch>("lt")) r += Ch('<');
                 else if (ent == detail::widen<Ch>("gt")) r += Ch('>');
                 else if (ent == detail::widen<Ch>("amp")) r += Ch('&');
+                else if (ent == detail::widen<Ch>("quot")) r += Ch('"');
+                else if (ent == detail::widen<Ch>("apos")) r += Ch('\'');
                 else
                     throw xml_parser_error("invalid character entity", "", 0);
                 it = semicolon;

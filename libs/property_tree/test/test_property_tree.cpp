@@ -152,6 +152,7 @@ int test_main(int, char *[])
         test_precision(pt);
         test_locale(pt);
         test_custom_traits(pt);
+        test_empty_size_max_size(pt);
         test_leaks(pt);                  // must be a final test
     }
 
@@ -177,6 +178,7 @@ int test_main(int, char *[])
         test_precision(pt);
         test_locale(pt);
         test_custom_traits(pt);
+        test_empty_size_max_size(pt);
         test_leaks(pt);                  // must be a final test
     }
 #endif
@@ -202,6 +204,7 @@ int test_main(int, char *[])
         test_precision(pt);
         test_locale(pt);
         //test_custom_traits(pt);        // test identical to ptree version, no need to execute
+        test_empty_size_max_size(pt);
         test_leaks(pt);                  // must be a final test
     }
 
@@ -227,6 +230,7 @@ int test_main(int, char *[])
         test_precision(pt);
         test_locale(pt);
         //test_custom_traits(pt);        // test identical to wptree version, no need to execute
+        test_empty_size_max_size(pt);
         test_leaks(pt);                  // must be a final test
     }
 #endif

@@ -1002,6 +1002,26 @@ void test_custom_traits(PTREE *)
 
 }
 
+void test_empty_size_max_size(PTREE *)
+{
+
+    PTREE pt;
+    BOOST_CHECK(pt.max_size());
+    BOOST_CHECK(pt.empty());
+    BOOST_CHECK(pt.size() == 0);
+
+    pt.put(T("test1"), 1);
+    BOOST_CHECK(pt.max_size());
+    BOOST_CHECK(!pt.empty());
+    BOOST_CHECK(pt.size() == 1);
+
+    pt.put(T("test2"), 2);
+    BOOST_CHECK(pt.max_size());
+    BOOST_CHECK(!pt.empty());
+    BOOST_CHECK(pt.size() == 2);
+
+}
+
 void test_leaks(PTREE *)
 {
     BOOST_CHECK(PTREE::debug_get_instances_count() == 0);

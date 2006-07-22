@@ -13,7 +13,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/detail/ptree_utils.hpp>
 #include <boost/property_tree/detail/file_parser_error.hpp>
-#include <istream>
+#include <fstream>
 #include <string>
 #include <sstream>
 #include <stdexcept>

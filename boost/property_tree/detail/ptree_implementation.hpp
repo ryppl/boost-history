@@ -315,6 +315,13 @@ namespace boost { namespace property_tree
     }
 
     template<class Tr>
+    typename basic_ptree<Tr>::size_type 
+        basic_ptree<Tr>::max_size() const
+    {
+        return (std::min)(m_impl->m_container.max_size(), m_impl->m_index.max_size());
+    }
+
+    template<class Tr>
     bool basic_ptree<Tr>::empty() const
     {
         return m_impl->m_index.empty();
