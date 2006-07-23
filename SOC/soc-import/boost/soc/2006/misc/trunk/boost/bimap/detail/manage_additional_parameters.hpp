@@ -30,6 +30,8 @@ namespace detail {
 
 struct not_specified {};
 
+/// \brief Metafunction to check if a given type is a data_hook specification.
+
 template< class Type >
 struct is_data_hook
 {

@@ -45,11 +45,8 @@ class unordered_multimap_view
         typename bimap::support::local_iterator_type_by<Tag,BimapType>::type,
         typename bimap::support::const_local_iterator_type_by<Tag,BimapType>::type,
 
-        container_adaptor::support::iterator_facade_to_base
-        <
-            typename bimap::support::iterator_type_by<Tag,BimapType>::type,
-            typename bimap::support::const_iterator_type_by<Tag,BimapType>::type
-        >,
+        typename bimap::detail::map_view_iterator_to_base<Tag,BimapType>::type,
+
         container_adaptor::use_default, // iterator from base converter
         container_adaptor::use_default, // local iterator from base converter
         container_adaptor::use_default, // value to base converter

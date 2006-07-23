@@ -10,7 +10,7 @@
 #ifndef BOOST_BIMAP_DETAIL_GENERATE_VIEW_BINDER_HPP
 #define BOOST_BIMAP_DETAIL_GENERATE_VIEW_BINDER_HPP
 
-/// \file detail/view_binder.hpp
+/// \file detail/generate_view_binder.hpp
 /// \brief Define macros to help building the set type of definitions
 
 #include <boost/multi_index/tag.hpp>

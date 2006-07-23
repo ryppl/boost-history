@@ -23,6 +23,8 @@ namespace boost {
 namespace bimap {
 namespace detail {
 
+/// \brief Metafunction to compute the iterator_to_base functor needed in map views.
+
 template< class Tag, class BimapType >
 struct map_view_iterator_to_base
 {
@@ -34,6 +36,8 @@ struct map_view_iterator_to_base
     > type;
 };
 
+/// \brief Common base for map views.
+
 template< class Derived, class Tag, class BimapType>
 class map_view_base
 {
@@ -42,12 +46,12 @@ class map_view_base
     public:
 
     bool replace(typename bimap::support::iterator_type_by<Tag,BimapType>::type position,
-                 const typename relation::support::pair_type_by
+                 typename relation::support::pair_type_by
                  <
                      Tag,
                      typename BimapType::relation
 
-                 >::type & x)
+                 >::type const & x)
     {
         return derived().base().replace(
             derived().template functor<iterator_to_base>()(position),

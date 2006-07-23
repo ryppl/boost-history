@@ -50,11 +50,19 @@ class multiset_view
     public bimap::detail::set_view_base< multiset_view< IndexType >, IndexType >
 {
     friend class bimap::detail::set_view_base< multiset_view< IndexType >, IndexType >;
+    typedef multiset_view this_type;
 
     public:
 
     multiset_view() {}
     multiset_view(typename multiset_view::base_type & c) : multiset_view::multiset_adaptor_(c) {}
+
+    template<typename LowerBounder,typename UpperBounder>
+    std::pair<typename this_type::iterator,typename this_type::iterator>
+        range(LowerBounder lower,UpperBounder upper) const
+    {
+        return this->base().range(lower,upper);
+    }
 
 };
 
@@ -85,11 +93,19 @@ class const_multiset_view
         typename IndexType::key_from_value
     >
 {
+    typedef const_multiset_view this_type;
+
     public:
 
     const_multiset_view() {}
     const_multiset_view(typename const_multiset_view::base_type & c) : const_multiset_view::multiset_adaptor_(c) {}
 
+    template<typename LowerBounder,typename UpperBounder>
+    std::pair<typename this_type::iterator,typename this_type::iterator>
+        range(LowerBounder lower,UpperBounder upper) const
+    {
+        return this->base().range(lower,upper);
+    }
 };
 
 

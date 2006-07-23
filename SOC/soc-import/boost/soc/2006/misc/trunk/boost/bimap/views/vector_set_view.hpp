@@ -7,7 +7,7 @@
 //
 // See http://www.boost.org/libs/misc for library home page.
 
-/// \file views/map_view.hpp
+/// \file views/vector_set_view.hpp
 /// \brief View of a side of a bimap that is signature compatible with std::vector.
 
 #ifndef BOOST_BIMAP_VIEWS_VECTOR_SET_VIEW_HPP

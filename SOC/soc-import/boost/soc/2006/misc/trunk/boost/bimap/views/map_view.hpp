@@ -46,7 +46,7 @@ class map_view
         typename bimap::support::reverse_iterator_type_by<Tag,BimapType>::type,
         typename bimap::support::const_reverse_iterator_type_by<Tag,BimapType>::type,
 
-        typename detail::map_view_iterator_to_base<Tag,BimapType>::type,
+        typename bimap::detail::map_view_iterator_to_base<Tag,BimapType>::type,
 
         container_adaptor::use_default, // iterator from base converter
         container_adaptor::use_default, // reverse iterator from base converter
@@ -81,15 +81,30 @@ class map_view
         return this->find(k)->second;
     }
 
-    // Non standard additional functionality
-    /*
     template<typename LowerBounder,typename UpperBounder>
-    std::pair<iterator,iterator> range(
-        LowerBounder lower,UpperBounder upper) const
+    std::pair<typename this_type::iterator,typename this_type::iterator>
+        range(LowerBounder lower,UpperBounder upper) const
     {
+        std::pair<
 
+            typename this_type::base_type::const_iterator,
+            typename this_type::base_type::const_iterator
+
+        > r( this->base().range(lower,upper) );
+
+        return std::pair
+        <
+            typename this_type::const_iterator,
+            typename this_type::const_iterator
+        >(
+            this_type::template functor<
+                typename this_type::iterator_from_base
+            >()                                         ( r.first ),
+            this_type::template functor<
+                typename this_type::iterator_from_base
+            >()                                         ( r.second )
+        );
     }
-    */
 };
 
 /// \brief Constant view of a side of a bimap that is signature compatible with std::map.
@@ -124,10 +139,46 @@ class const_map_view
         relation::support::GetPairFunctor<Tag, typename BimapType::relation >
     >
 {
+    typedef const_map_view this_type;
+
     public:
 
     const_map_view() {}
-    const_map_view(typename const_map_view::base_type & c) : const_map_view::map_adaptor_(c) {}
+    const_map_view(typename this_type::base_type & c) : this_type::map_adaptor_(c) {}
+
+    typename this_type::data_type const &
+        operator[](const typename this_type::key_type & k) const
+    {
+        // TODO
+        // Add index check?
+        return this->find(k)->second;
+    }
+
+    template<typename LowerBounder,typename UpperBounder>
+    std::pair<typename this_type::iterator,typename this_type::iterator>
+        range(LowerBounder lower,UpperBounder upper) const
+    {
+        std::pair<
+
+            typename this_type::base_type::const_iterator,
+            typename this_type::base_type::const_iterator
+
+        > r( this->base().range(lower,upper) );
+
+        return std::pair
+        <
+            typename this_type::const_iterator,
+            typename this_type::const_iterator
+        >(
+            this_type::template functor<
+                typename this_type::iterator_from_base
+            >()                                         ( r.first ),
+            this_type::template functor<
+                typename this_type::iterator_from_base
+            >()                                         ( r.second )
+        );
+    }
+
 };
 
 } // namespace views

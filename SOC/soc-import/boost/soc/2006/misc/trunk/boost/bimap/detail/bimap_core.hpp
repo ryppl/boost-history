@@ -36,7 +36,6 @@
 // Boost.Bimap
 #include <boost/bimap/detail/manage_bimap_key.hpp>
 #include <boost/bimap/detail/manage_additional_parameters.hpp>
-#include <boost/bimap/detail/get_value_type.hpp>
 #include <boost/bimap/detail/map_view_iterator.hpp>
 
 #include <boost/bimap/set_of.hpp>
@@ -52,6 +51,19 @@ namespace detail {
 // readability of the code. No one is supposed to use this namespace.
 
 using namespace mpl::placeholders;
+
+#ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
+
+template< class Type >
+struct get_value_type
+{
+    typedef typename Type::value_type type;
+};
+
+struct independent_index_tag {};
+
+#endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
+
 
 /// \brief Base for the bimap class.
 /**

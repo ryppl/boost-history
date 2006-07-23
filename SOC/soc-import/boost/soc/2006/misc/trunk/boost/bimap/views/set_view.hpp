@@ -50,11 +50,19 @@ class set_view
     public bimap::detail::set_view_base< set_view< IndexType >, IndexType >
 {
     friend class bimap::detail::set_view_base< set_view< IndexType >, IndexType >;
+    typedef set_view this_type;
 
     public:
 
     set_view() {}
     set_view(typename set_view::base_type & c) : set_view::set_adaptor_(c) {}
+
+    template<typename LowerBounder,typename UpperBounder>
+    std::pair<typename this_type::iterator,typename this_type::iterator>
+        range(LowerBounder lower,UpperBounder upper) const
+    {
+        return this->base().range(lower,upper);
+    }
 };
 
 /// \brief Constant view of a bimap that is signature compatible with std::set.
@@ -85,11 +93,19 @@ class const_set_view
         typename IndexType::key_from_value
     >
 {
+    typedef const_set_view this_type;
+
     public:
 
     const_set_view() {}
     const_set_view(typename const_set_view::base_type & c) : const_set_view::set_adaptor_(c) {}
 
+    template<typename LowerBounder,typename UpperBounder>
+    std::pair<typename this_type::iterator,typename this_type::iterator>
+        range(LowerBounder lower,UpperBounder upper) const
+    {
+        return this->base().range(lower,upper);
+    }
 };
 
 

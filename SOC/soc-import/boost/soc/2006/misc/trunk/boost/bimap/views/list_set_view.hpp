@@ -7,8 +7,8 @@
 //
 // See http://www.boost.org/libs/misc for library home page.
 
-/// \file views/map_view.hpp
-/// \brief View of a side of a bimap that is signature compatible with std::map.
+/// \file views/list_set_view.hpp
+/// \brief View of a side of a bimap that is signature compatible with std::list.
 
 #ifndef BOOST_BIMAP_VIEWS_LIST_SET_VIEW_HPP
 #define BOOST_BIMAP_VIEWS_LIST_SET_VIEW_HPP

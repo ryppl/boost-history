@@ -50,6 +50,9 @@ struct normal_reference_binder :
     normal_reference_binder(relation_ & r) :
         first(r.left), second(r.right) {}
 
+    normal_reference_binder(first_type const & f, second_type const & s) :
+        first(f), second(s) {}
+
     typename reference_binder_::left_value_type & get_left()
     {
         return first;
@@ -93,6 +96,9 @@ struct mirror_reference_binder :
 
     mirror_reference_binder(relation_ & r) :
         second(r.left), first(r.right) {}
+
+    mirror_reference_binder(first_type const & f, second_type const & s) :
+        second(s), first(f) {}
 
     typename reference_binder_::left_value_type & get_left()
     {
@@ -165,6 +171,12 @@ class standard_pair_view :
     boost::totally_ordered<
         standard_pair_view<FirstType,SecondType,mirror_layout>,
 
+    totally_ordered<
+        structured_pair<FirstType,SecondType,normal_layout>,
+
+    totally_ordered<
+        structured_pair<FirstType,SecondType,mirror_layout>,
+
     boost::totally_ordered<
         std::pair
         <
@@ -181,7 +193,7 @@ class standard_pair_view :
 
         >
 
-    > > > >
+    > > > > > >
 {
     public:
 
@@ -194,6 +206,10 @@ class standard_pair_view :
 
     standard_pair_view(typename standard_pair_view::relation_ & r) :
         standard_pair_view::reference_binder_(r) {}
+
+    standard_pair_view(typename standard_pair_view::first_type  const & f,
+                       typename standard_pair_view::second_type const & s) :
+        standard_pair_view::reference_binder_(f,s) {}
 
     standard_pair_view& operator=(typename boost::call_traits<standard_pair_view>::param_type p)
     {
@@ -263,6 +279,46 @@ class standard_pair_view :
     }
 
     bool operator<(const std_map_pair & p) const
+    {
+        return ( ( standard_pair_view::first  < p.first  ) &&
+                 ( standard_pair_view::second < p.second ) );
+    }
+
+    // Interaction with structured pair
+
+    operator const structured_pair<FirstType,SecondType,normal_layout> ()
+    {
+        return structured_pair<FirstType,SecondType,normal_layout>(
+            standard_pair_view::first,standard_pair_view::second
+        );
+    }
+
+    operator const structured_pair<FirstType,SecondType,mirror_layout> ()
+    {
+        return structured_pair<FirstType,SecondType,mirror_layout>(
+            standard_pair_view::first,standard_pair_view::second
+        );
+    }
+
+    bool operator==(const structured_pair<FirstType,SecondType,normal_layout> & p) const
+    {
+        return ( ( standard_pair_view::first  == p.first  ) &&
+                 ( standard_pair_view::second == p.second ) );
+    }
+
+    bool operator<(const structured_pair<FirstType,SecondType,normal_layout> & p) const
+    {
+        return ( ( standard_pair_view::first  < p.first  ) &&
+                 ( standard_pair_view::second < p.second ) );
+    }
+
+    bool operator==(const structured_pair<FirstType,SecondType,mirror_layout> & p) const
+    {
+        return ( ( standard_pair_view::first  == p.first  ) &&
+                 ( standard_pair_view::second == p.second ) );
+    }
+
+    bool operator<(const structured_pair<FirstType,SecondType,mirror_layout> & p) const
     {
         return ( ( standard_pair_view::first  < p.first  ) &&
                  ( standard_pair_view::second < p.second ) );

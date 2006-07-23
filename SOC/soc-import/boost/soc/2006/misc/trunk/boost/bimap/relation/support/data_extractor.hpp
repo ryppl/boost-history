@@ -7,70 +7,78 @@
 //
 // See http://www.boost.org/libs/bimap for library home page.
 
-/// \file relation/support/pair_type_by.hpp
-/// \brief pair_type_by<tag,relation> metafunction
+/// \file relation/support/data_extractor.hpp
+/// \brief Data extraction functor.
 
-#ifndef BOOST_BIMAP_RELATION_SUPPORT_PAIR_TYPE_BY_HPP
-#define BOOST_BIMAP_RELATION_SUPPORT_PAIR_TYPE_BY_HPP
+#ifndef BOOST_BIMAP_RELATION_SUPPORT_DATA_EXTRACTOR_HPP
+#define BOOST_BIMAP_RELATION_SUPPORT_DATA_EXTRACTOR_HPP
 
 #include <boost/bimap/relation/detail/metadata_access_builder.hpp>
 
-/** \struct boost::bimap::relation::support::pair_type_by
+/** \struct boost::bimap::relation::support::data_extractor
 
-\brief Metafunction to obtain the view type indexed by one of the sides.
+\brief Data extraction functor.
 
-\code
-
-template< class Tag, class Relation >
-struct pair_type_by
-{
-        typedef {compatible with std::pair} type;
-};
-
-\endcode
-
-See also member_at, pair_by().
 \ingroup relation_group
                                                                     **/
+
+#ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 namespace boost {
 namespace bimap {
 namespace relation {
 namespace support {
 
-// Implementation of pair type by metafunction
+template< class Tag, class Relation >
+struct data_extractor_implementation;
 
-BOOST_BIMAP_SYMMETRIC_METADATA_ACCESS_BUILDER
-(
-    pair_type_by,
-    left_pair,
-    right_pair
-);
+template< class Relation >
+struct data_extractor_implementation< member_at::left, Relation > :
+    public std::unary_function<Relation,typename Relation::left_value_type>
+{
+    typename Relation::left_value_type const & operator()(Relation const & rel) const
+    {
+        return rel.left;
+    }
 
-// Implementation of pair reference type by metafunction
+    typename Relation::left_value_type       & operator()(Relation       & rel) const
+    {
+        return rel.left;
+    }
+};
 
-BOOST_BIMAP_SYMMETRIC_METADATA_ACCESS_BUILDER
-(
-    pair_reference_type_by,
-    left_pair_reference,
-    right_pair_reference
-);
+template< class Relation >
+struct data_extractor_implementation< member_at::right, Relation > :
+    public std::unary_function<Relation,typename Relation::right_value_type>
+{
+    typename Relation::right_value_type const & operator()(Relation const & rel) const
+    {
+        return rel.right;
+    }
 
-// Implementation of const pair reference type by metafunction
+    typename Relation::right_value_type       & operator()(Relation       & rel) const
+    {
+        return rel.right;
+    }
+};
 
-BOOST_BIMAP_SYMMETRIC_METADATA_ACCESS_BUILDER
-(
-    const_pair_reference_type_by,
-    const_left_pair_reference,
-    const_right_pair_reference
-);
+template< class Tag, class Relation >
+struct data_extractor
+{
+    typedef data_extractor_implementation
+    <
+        typename member_with_tag<Tag,Relation>::type,
+        Relation
 
+    > type;
+};
 
 } // namespace support
 } // namespace relation
 } // namespace bimap
 } // namespace boost
 
+#endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
-#endif // BOOST_BIMAP_RELATION_SUPPORT_PAIR_BY_TYPE_HPP
+#endif // BOOST_BIMAP_RELATION_SUPPORT_DATA_EXTRACTOR_HPP
 

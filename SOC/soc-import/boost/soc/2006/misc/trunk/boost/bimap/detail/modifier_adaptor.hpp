@@ -7,20 +7,35 @@
 //
 // See http://www.boost.org/libs/bimap for library home page.
 
-/// \file detail/get_value_type.hpp
-/// \brief Metafunction to obtain the value_type typedef of a type.
+/// \file detail/modifier_adaptor.hpp
+/// \brief A binary to unary functor relation modifier adaptor.
 
-#ifndef BOOST_BIMAP_DETAIL_GET_VALUE_TYPE_HPP
-#define BOOST_BIMAP_DETAIL_GET_VALUE_TYPE_HPP
+#ifndef BOOST_BIMAP_DETAIL_MODIFIER_ADAPTOR_HPP
+#define BOOST_BIMAP_DETAIL_MODIFIER_ADAPTOR_HPP
+
+#include <functional>
 
 namespace boost {
 namespace bimap {
 namespace detail {
 
-template< class Type >
-struct get_value_type
+/// \brief A binary to unary functor relation modifier adaptor.
+
+template< class Modifier, class NewArgument, class FirstExtractor, class SecondExtractor >
+struct relation_modifier_adaptor :
+    public std::unary_function<NewArgument,bool>,
+    Modifier,
+    FirstExtractor,
+    SecondExtractor
 {
-    typedef typename Type::value_type type;
+    relation_modifier_adaptor( Modifier m ) : Modifier(m) {}
+    relation_modifier_adaptor( Modifier m, FirstExtractor fe, SecondExtractor se ) :
+        Modifier(m), FirstExtractor(fe), SecondExtractor(se) {}
+
+    void operator()( NewArgument & x ) const
+    {
+        Modifier::operator()( FirstExtractor::operator()( x ), SecondExtractor::operator()( x ) );
+    }
 };
 
 } // namespace detail
@@ -28,4 +43,4 @@ struct get_value_type
 } // namespace boost
 
 
-#endif // BOOST_BIMAP_DETAIL_GET_VALUE_TYPE_HPP
+#endif // BOOST_BIMAP_DETAIL_MODIFIER_ADAPTOR_HPP

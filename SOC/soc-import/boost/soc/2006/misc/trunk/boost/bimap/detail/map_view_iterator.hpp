@@ -7,39 +7,110 @@
 //
 // See http://www.boost.org/libs/misc for library home page.
 
-/// \file views/detail/map_view_iterator.hpp
+/// \file detail/map_view_iterator.hpp
 /// \brief Iterator adaptors from multi index to bimap.
 
-#ifndef BOOST_BIMAP_VIEWS_DETAIL_MAP_VIEW_ITERATOR_HPP
-#define BOOST_BIMAP_VIEWS_DETAIL_MAP_VIEW_ITERATOR_HPP
+#ifndef BOOST_BIMAP_DETAIL_MAP_VIEW_ITERATOR_HPP
+#define BOOST_BIMAP_DETAIL_MAP_VIEW_ITERATOR_HPP
 
-#include <boost/iterator/transform_iterator.hpp>
+// Boost
+#include <boost/serialization/nvp.hpp>
+#include <boost/type_traits/remove_reference.hpp>
+#include <boost/iterator/detail/enable_if.hpp>
+#include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/bimap/relation/support/get_pair_functor.hpp>
 
 namespace boost {
 namespace bimap {
-namespace views {
 namespace detail {
 
-/// \brief Iterator adaptor from multi index to bimap.
+/** \brief Iterator adaptor from multi index to bimap.
 
-template< class Tag, class Relation, class CoreIterator, class ValueType >
-struct map_view_iterator
-{
-    typedef transform_iterator
+This is class is based on transform iterator from Boost.Iterator that is
+modified to allow serialization. It has been specialized for this
+library, and EBO optimization was applied to the functor.
+
+                                                                      **/
+
+template
+<
+    class Tag, class Relation,
+    class CoreIterator,
+    class Reference,
+    class ValueType
+>
+struct map_view_iterator :
+
+    public iterator_adaptor
     <
-        relation::support::GetPairFunctor<Tag,Relation>,
+        map_view_iterator< Tag, Relation, CoreIterator, Reference, ValueType >,
         CoreIterator,
-        ValueType &
+        typename remove_reference<Reference>::type,
+        boost::use_default,
+        Reference
 
-    > type;
+    >,
+
+    protected relation::support::GetPairFunctor<Tag,Relation>
+
+{
+
+    typedef relation::support::GetPairFunctor<Tag,Relation> get_pair_functor;
+
+    public:
+
+    // The best way will be to pass the correct "value_type" to iterator_adaptor and
+    // to set the "pointer" to Reference*, but iterator_adaptor and iterator_facade
+    // defines "pointer" as value_type* and do not allow this to be changed.
+
+    typedef ValueType value_type;
+
+    map_view_iterator() {}
+
+    map_view_iterator(CoreIterator const& iter)
+      : map_view_iterator::iterator_adaptor_(iter) {}
+
+    // If multi_index change the iterator == const_iterator scheme, this
+    // function have to be rewritted
+
+    map_view_iterator(map_view_iterator const & iter)
+      : map_view_iterator::iterator_adaptor_(iter.base()) {}
+
+    private:
+
+    friend class iterator_core_access;
+
+    typename map_view_iterator::reference dereference() const
+    {
+        return get_pair_functor::operator()(*this->base());
+    }
+
+    // Serialization support
+
+    BOOST_SERIALIZATION_SPLIT_MEMBER();
+
+    friend class boost::serialization::access;
+
+    template<class Archive>
+    void save(Archive & ar, const unsigned int version) const
+    {
+        ar << serialization::make_nvp("mi_iterator",this->base());
+    }
+
+    template<class Archive>
+    void load(Archive & ar, const unsigned int version)
+    {
+        CoreIterator iter;
+        ar >> serialization::make_nvp("mi_iterator",iter);
+        this->base_reference() = iter;
+    }
 };
 
+
 } // namespace detail
-} // namesapce views
 } // namespace bimap
 } // namespace boost
 
-#endif // BOOST_BIMAP_VIEWS_DETAIL_MAP_VIEW_ITERATOR_HPP
+#endif // BOOST_BIMAP_DETAIL_MAP_VIEW_ITERATOR_HPP
 
 

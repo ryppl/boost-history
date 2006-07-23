@@ -36,8 +36,6 @@ struct set_type_of_relation_tag {};
 
 struct side_based_tag : set_type_of_relation_tag {};
 
-struct independent_index_tag {};
-
 } // namespace detail
 
 

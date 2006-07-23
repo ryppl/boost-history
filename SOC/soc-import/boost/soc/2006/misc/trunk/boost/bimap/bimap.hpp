@@ -244,43 +244,6 @@ class bimap
 
     {}
 
-    // set functions
-    /*
-    public:
-
-    bool replace(typename bimap::iterator position, typename bimap::relation const & x)
-    {
-        return this->replace(position,x);
-    }
-
-    template<typename Modifier>
-    bool modify(typename bimap::iterator position, Modifier mod)
-    {
-        return this->modify(
-
-            position,
-
-            boost::bimap::detail::relation_modifier_adaptor
-            <
-                Modifier,
-                typename bimap::relation,
-                typename relation::support::data_extractor
-                <
-                    relation::member_at::left,
-                    typename bimap::relation
-
-                >::type,
-                typename relation::support::data_extractor
-                <
-                    relation::member_at::right,
-                    typename bimap::relation
-
-                >::type
-
-            >(mod)
-        );
-    }
-    */
     // Serialization support
 
     private:
