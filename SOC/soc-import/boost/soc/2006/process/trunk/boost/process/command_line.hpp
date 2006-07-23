@@ -85,7 +85,7 @@ command_line::shell(const std::string& command)
     return cl.argument("sh").argument("-c").argument(command);
 #elif defined(BOOST_PROCESS_WIN32_API)
     TCHAR buf[MAX_PATH];
-    UINT res = ::GetWindowsDirectory(buf, MAX_PATH);
+    UINT res = ::GetSystemDirectory(buf, MAX_PATH);
     if (res == 0)
         boost::throw_exception
             (system_error("boost::process::shell_command_line::"
