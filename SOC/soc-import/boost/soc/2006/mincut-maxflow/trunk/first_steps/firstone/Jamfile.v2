@@ -1,6 +1,0 @@
-exe hello 
-: main.cpp ;
-exe hello2 
-: main.cpp ;
-
-	
