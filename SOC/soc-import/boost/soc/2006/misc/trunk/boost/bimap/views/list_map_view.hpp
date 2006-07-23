@@ -18,6 +18,7 @@
 #include <boost/bimap/container_adaptor/list_map_adaptor.hpp>
 #include <boost/bimap/relation/support/pair_by.hpp>
 #include <boost/bimap/support/iterator_type_by.hpp>
+#include <boost/bimap/detail/map_view_base.hpp>
 
 namespace boost {
 namespace bimap {
@@ -53,7 +54,10 @@ class list_map_view
         container_adaptor::use_default, // value to base converter
 
         relation::support::GetPairFunctor<Tag, typename BimapType::relation >
-    >
+    >,
+
+    public bimap::detail::map_view_base< list_map_view<Tag,BimapType>,Tag,BimapType >
+
 {
     typedef list_map_view this_type;
 

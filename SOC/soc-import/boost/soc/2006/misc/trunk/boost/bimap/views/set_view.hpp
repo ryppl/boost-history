@@ -44,8 +44,12 @@ class set_view
         container_adaptor::use_default,
         container_adaptor::use_default,
         typename IndexType::key_from_value
-    >
+    >,
+
+    public bimap::detail::set_view_base< set_view< IndexType >, IndexType >
 {
+    friend class bimap::detail::set_view_base< set_view< IndexType >, IndexType >;
+
     public:
 
     set_view() {}

@@ -17,6 +17,7 @@
 #include <boost/bimap/container_adaptor/support/iterator_facade_converters.hpp>
 #include <boost/bimap/container_adaptor/unordered_multimap_adaptor.hpp>
 #include <boost/bimap/support/iterator_type_by.hpp>
+#include <boost/bimap/detail/map_view_base.hpp>
 
 namespace boost {
 namespace bimap {
@@ -54,7 +55,10 @@ class unordered_multimap_view
         container_adaptor::use_default, // value to base converter
 
         relation::support::GetPairFunctor<Tag, typename BimapType::relation >
-    >
+    >,
+
+    public bimap::detail::map_view_base< unordered_multimap_view<Tag,BimapType>,Tag,BimapType >
+
 {
     // Interface ------------------------------------------------------------
 
