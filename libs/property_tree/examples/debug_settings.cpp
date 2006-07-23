@@ -82,7 +82,7 @@ void debug_settings::save(const std::string &filename)
     // situations. If you want to place item at some other
     // place (i.e. at front or somewhere in the middle),
     // this can be achieved using combination of insert 
-    // and put_own functions
+    // and put_value functions
     BOOST_FOREACH(const std::string &name, m_modules)
         pt.put("debug.modules.module", name, true);
     

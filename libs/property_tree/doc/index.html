@@ -156,7 +156,7 @@ void debug_settings::save(const std::string &amp;filename)
     // situations. If you want to place item at some other
     // place (i.e. at front or somewhere in the middle),
     // this can be achieved using combination of insert 
-    // and put_own functions
+    // and put_value functions
     BOOST_FOREACH(const std::string &amp;name, m_modules)
         pt.put("debug.modules.module", name, true);
     
@@ -179,7 +179,7 @@ void debug_settings::save(const std::string &amp;filename)
         <a name="synopsis"></a>Synopsis
     </h2>
     <p>
-        Central component of the library is <code>basic_ptree</code> class template. Instances of this class are property trees. It is parametrized on character type and key comparison policy; <code>ptree</code>, <code>wptree</code>, <code>iptree</code> and <code>wiptree</code> are typedefs of <code>basic_ptree</code> using predefined combinations of template parameters. As you can see below, property tree is basically a somewhat simplified standard container (the closest being std::list), plus a bunch of extra member functions. These functions allow easy and effective access to the data stored in property tree. They are various variants of <a href="reference.html#basic_ptree::get"><code>get</code></a>, <a href="reference.html#basic_ptree::put"><code>put</code></a>, <a href="reference.html#basic_ptree::get_own"><code>get_own</code></a>, <a href="reference.html#basic_ptree::put_own"><code>put_own</code></a>, <a href="reference.html#basic_ptree::get_child"><code>get_child</code></a>, <a href="reference.html#basic_ptree::put_child"><code>put_child</code></a>. Additionally, there is <a href="reference.html#basic_ptree::data"><code>data</code></a> function to access node data directly.
+        Central component of the library is <code>basic_ptree</code> class template. Instances of this class are property trees. It is parametrized on character type and key comparison policy; <code>ptree</code>, <code>wptree</code>, <code>iptree</code> and <code>wiptree</code> are typedefs of <code>basic_ptree</code> using predefined combinations of template parameters. As you can see below, property tree is basically a somewhat simplified standard container (the closest being std::list), plus a bunch of extra member functions. These functions allow easy and effective access to the data stored in property tree. They are various variants of <a href="reference.html#basic_ptree::get"><code>get</code></a>, <a href="reference.html#basic_ptree::put"><code>put</code></a>, <a href="reference.html#basic_ptree::get_value"><code>get_value</code></a>, <a href="reference.html#basic_ptree::put_value"><code>put_value</code></a>, <a href="reference.html#basic_ptree::get_child"><code>get_child</code></a>, <a href="reference.html#basic_ptree::put_child"><code>put_child</code></a>. Additionally, there is <a href="reference.html#basic_ptree::data"><code>data</code></a> function to access node data directly.
     </p>
     <pre>
 #include &lt;boost/property_tree/ptree.hpp&gt;
@@ -309,10 +309,10 @@ public:
     basic_ptree&lt;Tr&gt; &amp;<a href="reference.html#basic_ptree::put_child">put_child</a>(const key_type &amp;path, basic_ptree&lt;Tr&gt; &amp;value, bool do_not_replace = false);
 
     // Get value from data of ptree
-    template&lt;class Type&gt; Type <a href="reference.html#basic_ptree::get_own">get_own</a>(std::locale &amp;loc = std::locale()) const;
-    template&lt;class Type&gt; Type <a href="reference.html#basic_ptree::get_own default">get_own</a>(const Type &amp;default_value, std::locale &amp;loc = std::locale()) const;
-    template&lt;class CharType&gt; std::basic_string&lt;CharType&gt; <a href="reference.html#basic_ptree::get_own default">get_own</a>(const CharType *default_value, std::locale &amp;loc = std::locale()) const;
-    template&lt;class Type&gt; optional&lt;Type&gt; <a href="reference.html#basic_ptree::get_own_optional">get_own_optional</a>(std::locale &amp;loc = std::locale()) const;
+    template&lt;class Type&gt; Type <a href="reference.html#basic_ptree::get_value">get_value</a>(std::locale &amp;loc = std::locale()) const;
+    template&lt;class Type&gt; Type <a href="reference.html#basic_ptree::get_value default">get_value</a>(const Type &amp;default_value, std::locale &amp;loc = std::locale()) const;
+    template&lt;class CharType&gt; std::basic_string&lt;CharType&gt; <a href="reference.html#basic_ptree::get_value default">get_value</a>(const CharType *default_value, std::locale &amp;loc = std::locale()) const;
+    template&lt;class Type&gt; optional&lt;Type&gt; <a href="reference.html#basic_ptree::get_value_optional">get_value_optional</a>(std::locale &amp;loc = std::locale()) const;
 
     // Get value from data of child ptree (custom path separator)
     template&lt;class Type&gt; Type <a href="reference.html#basic_ptree::get">get</a>(Ch separator, const key_type &amp;path, std::locale &amp;loc = std::locale()) const;
@@ -327,7 +327,7 @@ public:
     template&lt;class Type&gt; optional&lt;Type&gt; <a href="reference.html#basic_ptree::get_optional">get_optional</a>(const key_type &amp;path, std::locale &amp;loc = std::locale()) const;
 
     // Put value in data of ptree
-    template&lt;class Type&gt; void <a href="reference.html#basic_ptree::put_own">put_own</a>(const Type &amp;value, std::locale &amp;loc = std::locale());
+    template&lt;class Type&gt; void <a href="reference.html#basic_ptree::put_value">put_value</a>(const Type &amp;value, std::locale &amp;loc = std::locale());
 
     // Put value in data of child ptree (custom path separator)
     template&lt;class Type&gt; basic_ptree&lt;Tr&gt; &amp;<a href="reference.html#basic_ptree::put">put</a>(Ch separator, const key_type &amp;path, const Type &amp;value, bool do_not_replace = false, std::locale &amp;loc = std::locale());
@@ -640,7 +640,7 @@ L m
 ptree pt;
 <a href="reference.html#cmdline_parser::read_cmdline">read_cmdline</a>(argc, argv, "-/", pt);
 </pre>
-        <p>Once the command line is parsed into a ptree, the power of get/get_child/get_own interface can be used to conveniently extract the values of options needed. In the simplest case, user only needs to query key with name of option to get its value. For example:</p>
+        <p>Once the command line is parsed into a ptree, the power of get/get_child/get_value interface can be used to conveniently extract the values of options needed. In the simplest case, user only needs to query key with name of option to get its value. For example:</p>
         <pre>
 int n = pt.<a href="reference.html#basic_ptree::get default">get</a>("N", 0);      // default to 0 if -Nxx or /Nxx not specified on command line</pre>
 <p>or</p>
@@ -651,7 +651,7 @@ int n = pt.<a href="reference.html#basic_ptree::get">get</a>&lt;int&gt;("N");   
 // Copy values of all -N arguments to vector
 std::vector&lt;int&gt; vec;
 BOOST_FOREACH(const ptree::value_type &amp;v, pt.get_child("N", empty_ptree()))
-    vec.push_back(v.second.get_own&lt;int&gt;());</pre>
+    vec.push_back(v.second.get_value&lt;int&gt;());</pre>
         <p>or, like that:</p>
     <pre>
 // Use numbering to access specific instances of parameter -N
@@ -804,7 +804,7 @@ boost::optional&lt;float&gt; v = pt.get_optional&lt;float&gt;("a.path.to.float.v
         </li>
     </ol>
     <p>
-        To retrieve value from <i>this</i> tree (not some subkey), use <a href="reference.html#basic_ptree::get_own"><code>get_own</code></a>, <a href="reference.html#basic_ptree::get_own default"><code>get_own (default-value version)</code></a>, and <a href="reference.html#basic_ptree::get_own_optional"><code>get_own_optional</code></a>. They have identical semantics to get functions, except they don't take the path parameter. Don't call <code>get</code> with empty path to do that, it will try to extract contents of subkey with empty name.</p>
+        To retrieve value from <i>this</i> tree (not some subkey), use <a href="reference.html#basic_ptree::get_value"><code>get_value</code></a>, <a href="reference.html#basic_ptree::get_value default"><code>get_value (default-value version)</code></a>, and <a href="reference.html#basic_ptree::get_value_optional"><code>get_value_optional</code></a>. They have identical semantics to get functions, except they don't take the path parameter. Don't call <code>get</code> with empty path to do that, it will try to extract contents of subkey with empty name.</p>
     <p>
         To use separator character other than default <code>'.'</code>, each of the get versions has another form, which takes an additional parameter in front of path. This parameter of type <code>char/wchar_t</code> specifies the separating character. This is a lifesaving device for those who may have dots in their keys:
     </p>
@@ -822,10 +822,10 @@ pt.put("a.path.to.float.value", 3.14f);</pre>
     <p>
         Calling <code>put</code> will insert new value at specified path, so that <code>get</code>, which specifies the same path, will retrieve it. Put will insert any missing path elements during path traversal. For example, calling <code>put("key1.key2.key3", 3.14f)</code> on an empty tree will insert three new children: <code>key1</code>, <code>key1.key2</code> and <code>key1.key2.key3</code>. The last one will receive a string <code>"3.14"</code> as data, while the two former ones will have empty data strings. <code>Put</code> always inserts new keys at the backs of the existing sequences.</p>
     <p>
-        Similarly to <code>get_own</code>, there is also a <a href="reference.html#basic_ptree::put_own"><code>put_own</code></a> function. It does the same for <i>this</i> property tree what <code>put</code> does for its children. Thus, it does not require path:</p>
+        Similarly to <code>get_value</code>, there is also a <a href="reference.html#basic_ptree::put_value"><code>put_value</code></a> function. It does the same for <i>this</i> property tree what <code>put</code> does for its children. Thus, it does not require path:</p>
     <pre>
 ptree pt;
-pt.put_own(3.14f);</pre>
+pt.put_value(3.14f);</pre>
     <h2>
         <a name="compatibility"></a>Compatibility
     </h2>

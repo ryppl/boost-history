@@ -223,10 +223,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\boost\property_tree\detail\ptree_interface.hpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\..\boost\property_tree\detail\ptree_utils.hpp"
 				>
 			</File>

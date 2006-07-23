@@ -613,7 +613,7 @@ void test_get_put(PTREE *)
     BOOST_CHECK(PTREE::debug_get_instances_count() == 17);
 
     // Check if const char * version returns std::string
-    BOOST_CHECK(typeid(pt.get_own(T(""))) == typeid(str_t));
+    BOOST_CHECK(typeid(pt.get_value(T(""))) == typeid(str_t));
     
     // Do extractions via get (throwing version)
     BOOST_CHECK(pt.get<int>(T("k1")) == 1);                             // get as int
@@ -654,51 +654,51 @@ void test_get_put(PTREE *)
     opt_bool = pt.get_optional<bool>(T("k5.k.k.k.t"));         // get as bool
     BOOST_CHECK(opt_bool && *opt_bool == true);
 
-    // Do insertions via put_own
-    pt1.put_own(short(1));                     // put as short
-    pt2.put_own(2.5f);                         // put as float
-    pt3.put_own(str_t(T("ala ma kota")));      // put as string
-    pt4.put_own(CHTYPE('c'));                  // put as character
-    pt5.put_own(false);                        // put as bool
-    pt6.put_own(true);                         // put as bool
+    // Do insertions via put_value
+    pt1.put_value(short(1));                     // put as short
+    pt2.put_value(2.5f);                         // put as float
+    pt3.put_value(str_t(T("ala ma kota")));      // put as string
+    pt4.put_value(CHTYPE('c'));                  // put as character
+    pt5.put_value(false);                        // put as bool
+    pt6.put_value(true);                         // put as bool
 
-    // Do extractions via get_own (throwing version)
-    BOOST_CHECK(pt1.get_own<int>() == 1);                             // get as int
-    BOOST_CHECK(pt1.get_own<long>() == 1);                            // get as long
-    BOOST_CHECK(pt2.get_own<double>() == 2.5);                        // get as double
-    BOOST_CHECK(pt2.get_own<float>() == 2.5f);                        // get as float
-    BOOST_CHECK(pt3.get_own<str_t>() == str_t(T("ala ma kota")));     // get as string
-    BOOST_CHECK(pt4.get_own<CHTYPE>() == CHTYPE('c'));                // get as char
-    BOOST_CHECK(pt5.get_own<bool>() == false);                        // get as bool
-    BOOST_CHECK(pt6.get_own<bool>() == true);                         // get as bool
+    // Do extractions via get_value (throwing version)
+    BOOST_CHECK(pt1.get_value<int>() == 1);                             // get as int
+    BOOST_CHECK(pt1.get_value<long>() == 1);                            // get as long
+    BOOST_CHECK(pt2.get_value<double>() == 2.5);                        // get as double
+    BOOST_CHECK(pt2.get_value<float>() == 2.5f);                        // get as float
+    BOOST_CHECK(pt3.get_value<str_t>() == str_t(T("ala ma kota")));     // get as string
+    BOOST_CHECK(pt4.get_value<CHTYPE>() == CHTYPE('c'));                // get as char
+    BOOST_CHECK(pt5.get_value<bool>() == false);                        // get as bool
+    BOOST_CHECK(pt6.get_value<bool>() == true);                         // get as bool
 
-    // Do extractions via get_own (default value version)
-    BOOST_CHECK(pt1.get_own(0) == 1);              // get as int
-    BOOST_CHECK(pt1.get_own(0L) == 1);             // get as long
-    BOOST_CHECK(pt2.get_own(0.0) == 2.5);          // get as double
-    BOOST_CHECK(pt2.get_own(0.0f) == 2.5f);        // get as float
-    BOOST_CHECK(pt3.get_own(str_t()) == str_t(T("ala ma kota")));    // get as string
-    BOOST_CHECK(pt3.get_own(T("")) == T("ala ma kota"));             // get as const char *
-    BOOST_CHECK(pt4.get_own(CHTYPE('\0')) == CHTYPE('c'));           // get as char
-    BOOST_CHECK(pt5.get_own(true) == false);                         // get as bool
-    BOOST_CHECK(pt6.get_own(false) == true);                         // get as bool
+    // Do extractions via get_value (default value version)
+    BOOST_CHECK(pt1.get_value(0) == 1);              // get as int
+    BOOST_CHECK(pt1.get_value(0L) == 1);             // get as long
+    BOOST_CHECK(pt2.get_value(0.0) == 2.5);          // get as double
+    BOOST_CHECK(pt2.get_value(0.0f) == 2.5f);        // get as float
+    BOOST_CHECK(pt3.get_value(str_t()) == str_t(T("ala ma kota")));    // get as string
+    BOOST_CHECK(pt3.get_value(T("")) == T("ala ma kota"));             // get as const char *
+    BOOST_CHECK(pt4.get_value(CHTYPE('\0')) == CHTYPE('c'));           // get as char
+    BOOST_CHECK(pt5.get_value(true) == false);                         // get as bool
+    BOOST_CHECK(pt6.get_value(false) == true);                         // get as bool
 
-    // Do extractions via get_own (optional version)
-    opt_int = pt1.get_own_optional<int>();                    // get as int
+    // Do extractions via get_value (optional version)
+    opt_int = pt1.get_value_optional<int>();                    // get as int
     BOOST_CHECK(opt_int && *opt_int == 1);
-    opt_long = pt1.get_own_optional<long>();                  // get as long
+    opt_long = pt1.get_value_optional<long>();                  // get as long
     BOOST_CHECK(opt_long && *opt_long == 1);
-    opt_double = pt2.get_own_optional<double>();              // get as double
+    opt_double = pt2.get_value_optional<double>();              // get as double
     BOOST_CHECK(opt_double && *opt_double == 2.5);
-    opt_float = pt2.get_own_optional<float>();                // get as float
+    opt_float = pt2.get_value_optional<float>();                // get as float
     BOOST_CHECK(opt_float && *opt_float == 2.5f);
-    opt_string = pt3.get_own_optional<str_t>();               // get as string
+    opt_string = pt3.get_value_optional<str_t>();               // get as string
     BOOST_CHECK(opt_string && *opt_string == str_t(T("ala ma kota")));
-    opt_char = pt4.get_own_optional<CHTYPE>();                // get as char
+    opt_char = pt4.get_value_optional<CHTYPE>();                // get as char
     BOOST_CHECK(opt_char && *opt_char == CHTYPE('c'));
-    opt_bool = pt5.get_own_optional<bool>();                  // get as bool
+    opt_bool = pt5.get_value_optional<bool>();                  // get as bool
     BOOST_CHECK(opt_bool && *opt_bool == false);
-    opt_bool = pt6.get_own_optional<bool>();                  // get as bool
+    opt_bool = pt6.get_value_optional<bool>();                  // get as bool
     BOOST_CHECK(opt_bool && *opt_bool == true);
 
     // Do incorrect extractions (throwing version)
@@ -927,8 +927,8 @@ void test_precision(PTREE *)
     
     // Put and get
     PTREE pt;
-    pt.put_own(pi);
-    real pi2 = pt.get_own<real>();
+    pt.put_value(pi);
+    real pi2 = pt.get_value<real>();
     
     // Test if precision is "good enough", i.e. if stream precision increase worked
     using namespace std;

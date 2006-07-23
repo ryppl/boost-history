@@ -85,7 +85,7 @@ Ptree get_test_ptree()
     using namespace boost::property_tree;
     typedef typename Ptree::char_type Ch;
     Ptree pt;
-    pt.put_own(detail::widen<Ch>("data0"));
+    pt.put_value(detail::widen<Ch>("data0"));
     pt.put(detail::widen<Ch>("key1"), detail::widen<Ch>("data1"));
     pt.put(detail::widen<Ch>("key1.key"), detail::widen<Ch>("data2"));
     pt.put(detail::widen<Ch>("key2"), detail::widen<Ch>("data3"));
