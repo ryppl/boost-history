@@ -14,6 +14,7 @@
 
 #include <qimage.h>
 #include <graphbase.h>
+#include <fstream>
 #include "models.h"
 
 /**
@@ -60,6 +61,8 @@ public:
 	
 	int maxflowTime() const;
 	
+   void setDumpProblemAsDimacsFile( bool enabled, const std::string& filename);
+   
 private:
 	void createGraph(int f_numberOfPixels,eMode f_mode);
 	
@@ -83,7 +86,9 @@ private:
 	IntensityNeighborHoodFunctor<0> m_neighborhood_model;
 	IntensityHistogram<0> m_similarity_models[2];
 	int m_maxflow_time;
-		
+   bool m_dump_problem_as_dimacs_file;
+   std::string m_dimacs_filename;
+   std::ofstream m_dimacs_file;
 };
 
 #endif

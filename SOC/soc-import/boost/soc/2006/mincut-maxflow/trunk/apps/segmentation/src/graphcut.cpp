@@ -21,7 +21,7 @@
 
 #include <qdatetime.h> 
 
-GraphCut::GraphCut():m_similarity_weight(1),m_neighborhood_weight(1),m_max_sum_edge_links(0), mp_graph(0){
+GraphCut::GraphCut():m_similarity_weight(1),m_neighborhood_weight(1),m_max_sum_edge_links(0), mp_graph(0),m_dump_problem_as_dimacs_file(false),m_dimacs_file(){
 }
 
 GraphCut::~GraphCut(){
@@ -40,6 +40,27 @@ QImage GraphCut::segment( const QImage & fcr_source, const QImage & fcr_trimap, 
 	
 	const int number_of_pixels=fcr_source.height()*fcr_source.width();
 	
+   if(m_dump_problem_as_dimacs_file){
+     m_dimacs_file.open( m_dimacs_filename.c_str() );
+     if( m_dimacs_file.is_open() ){
+       m_dimacs_file << "c Dimacs file generated from an image segmentation problem" <<std::endl;
+       m_dimacs_file << "c Image size: "<< fcr_source.width() << "x" << fcr_source.height() <<std::endl;
+       long number_of_arcs = 
+           number_of_pixels * 2 //source->node->sink connect
+           + 4 * 2 // 4 edges
+           + (fcr_source.width()-2) * 3 * 2 //top and bottom row
+           + (fcr_source.height()-2) * 3 * 2 //right- and leftmost column
+           + (fcr_source.height()-2) *(fcr_source.width()-2)*4; //everything in the middle
+       m_dimacs_file << "p max " << number_of_pixels + 2 /* add 2 for source and sink */ << " " << number_of_arcs <<std::endl;
+       m_dimacs_file << "n " << number_of_pixels +1 << " s"<<std::endl;
+       m_dimacs_file << "n " << number_of_pixels +2 << " t"<<std::endl;
+     }
+     else{
+       std::cerr << "Could not open output file "<< m_dimacs_filename<<". Disabling dimacs output."<<std::endl;
+       m_dump_problem_as_dimacs_file = false;
+     }
+   }
+   
 	createGraph(number_of_pixels,f_mode);
 
 	calculateNeighborhoud4(fcr_source);
@@ -47,7 +68,10 @@ QImage GraphCut::segment( const QImage & fcr_source, const QImage & fcr_trimap, 
 	updateSimilarityModels(fcr_source,fcr_trimap);
 	
 	updateGraphWithSimilarityModels(fcr_source, fcr_trimap);
-
+  
+   if(m_dump_problem_as_dimacs_file){
+     m_dimacs_file.close();
+   }
 	//everything set... ab die post
 	QTime time;
 	time.start();
@@ -96,16 +120,26 @@ void GraphCut::calculateNeighborhoud4(const QImage& fcr_imageToSegment){
 	//the last row/colum are seperatly processed so they dont have to be caught by if-clauses in the big 
 	//loop below	
 	//add edges for the last row
-	const BYTE* pData=fcr_imageToSegment.scanLine(imageHeight-1);
-	for(unsigned int x(0);x<imageWidth-1;++x,++pData){
+	const BYTE* pData = fcr_imageToSegment.scanLine(imageHeight-1);
+	for(unsigned int x = 0; x < imageWidth - 1; ++x, ++pData){
 		tPrecision cost=static_cast<tPrecision>(m_neighborhood_weight*m_neighborhood_model(pData,pData+1));
 		mp_graph->add_edge(x+imageWidth*(imageHeight-1),x+1+imageWidth*(imageHeight-1),cost,cost);
+      if(m_dump_problem_as_dimacs_file){
+        assert(m_dimacs_file.is_open());
+        m_dimacs_file << "a " << x+imageWidth*(imageHeight-1) +1<< " " << x+1+imageWidth*(imageHeight-1) +1<< " " << cost <<std::endl;
+        m_dimacs_file << "a " << x+1+imageWidth*(imageHeight-1) +1<< " " << x+imageWidth*(imageHeight-1) +1<< " " << cost <<std::endl;
+      }
 	}
 	//add edges for the last column
-	pData=fcr_imageToSegment.bits()+(imageWidth-1);
-	for(unsigned int y(0);y<imageHeight-1;++y,pData+=pitch){
+	pData = fcr_imageToSegment.bits()+(imageWidth-1);
+	for(unsigned int y(0); y < imageHeight-1; ++y, pData += pitch){
 		tPrecision cost=static_cast<tPrecision>(m_neighborhood_weight*m_neighborhood_model (pData,pData+pitch));
 		mp_graph->add_edge(imageWidth*y+imageWidth-1,imageWidth*(y+1)+imageWidth-1,cost,cost);
+      if(m_dump_problem_as_dimacs_file){
+        assert(m_dimacs_file.is_open());
+        m_dimacs_file << "a " << imageWidth*y+imageWidth-1 +1<< " " << imageWidth*(y+1)+imageWidth-1 +1<< " " << cost <<std::endl;
+        m_dimacs_file << "a " << imageWidth*(y+1)+imageWidth-1 +1<< " " << imageWidth*y+imageWidth-1 +1<< " " << cost <<std::endl;
+      }      
 	}		
 
 	//add 4 edges for each node (take each pixel and add one to the right and one to the bottom)
@@ -118,14 +152,24 @@ void GraphCut::calculateNeighborhoud4(const QImage& fcr_imageToSegment){
 			tPrecision cost=static_cast<tPrecision>(m_neighborhood_weight*m_neighborhood_model(currentPixel,currentPixel+1));
 			m_max_sum_edge_links=std::max(m_max_sum_edge_links,cost);
 			mp_graph->add_edge(nodeId,nodeId+1,cost,cost);
+         if(m_dump_problem_as_dimacs_file){
+           assert(m_dimacs_file.is_open());
+           m_dimacs_file << "a " << nodeId +1<< " " << nodeId +1 +1<< " " << cost <<std::endl;
+           m_dimacs_file << "a " << nodeId + 1 +1<< " " << nodeId +1<< " " << cost <<std::endl;
+         }                        
 			//and one to the bottom *tamtam*
 			cost=static_cast<tPrecision>(m_neighborhood_weight*m_neighborhood_model (currentPixel,currentPixel+pitch));
 			m_max_sum_edge_links=std::max(m_max_sum_edge_links,cost);
-			mp_graph->add_edge(nodeId,nodeId+imageWidth,cost,cost);
+			mp_graph->add_edge(nodeId, nodeId + imageWidth, cost, cost);
+         if(m_dump_problem_as_dimacs_file){
+           assert(m_dimacs_file.is_open());
+           m_dimacs_file << "a " << nodeId +1<< " " << nodeId + imageWidth +1<< " " << cost << std::endl;
+           m_dimacs_file << "a " << nodeId + imageWidth +1<< " " << nodeId +1<< " " << cost << std::endl;
+         }                        
 		}
 	}
 	m_max_sum_edge_links*=tPrecision(4); //we need only an upper boundary
-	std::cout << "Max sum of edge-links: " << m_max_sum_edge_links << std::endl;	
+// 	std::cout << "Max sum of edge-links: " << m_max_sum_edge_links << std::endl;	
 }
 
 void GraphCut::updateSimilarityModels( const QImage & fcr_imageToSegment, const QImage & fcr_trimap){
@@ -133,7 +177,7 @@ void GraphCut::updateSimilarityModels( const QImage & fcr_imageToSegment, const 
 	//that means we go though the trimap, check it for BG or FG label and give that pixel to the approciate SimilarityModel
 	const unsigned int imageWidth=fcr_imageToSegment.width();
 	const unsigned int imageHeigth=fcr_imageToSegment.height();
-	const unsigned int skip=fcr_imageToSegment.bytesPerLine()-fcr_imageToSegment.width();
+	const unsigned int skip=fcr_imageToSegment.bytesPerLine() - fcr_imageToSegment.width();
 	const BYTE* pDataImage=fcr_imageToSegment.bits();
 	const BYTE* pDataTrimap=fcr_trimap.bits();
 	
@@ -191,6 +235,14 @@ void GraphCut::updateGraphWithSimilarityModels(const QImage& fcr_imageToSegment,
 				maxToSink=std::max(maxToSink,costToSink);
 			}
 			mp_graph->add_tedge(x+y*imageWidth,costToSource,costToSink);
+         if(m_dump_problem_as_dimacs_file){
+           long source = imageHeigth*imageWidth;
+           long sink = source + 1 ;
+           assert(m_dimacs_file.is_open());
+           m_dimacs_file << "a " << source +1 << " " << x+y*imageWidth +1 << " " << costToSource << std::endl;
+           m_dimacs_file << "a " << x+y*imageWidth +1 << " " << sink +1 << " " << costToSink << std::endl;
+         }                        
+         
 			//advance to next pixels
 			++pDataImage; 
 			++pDataTrimap;
@@ -245,4 +297,11 @@ void GraphCut::setSimilarityWeight(const tPrecision& theValue){
 }
 int GraphCut::maxflowTime() const{
 	return m_maxflow_time;
+}
+
+void GraphCut::setDumpProblemAsDimacsFile( bool enabled, const std::string & filename )
+{
+  m_dump_problem_as_dimacs_file = enabled;
+  m_dimacs_filename=filename;
+  
 }

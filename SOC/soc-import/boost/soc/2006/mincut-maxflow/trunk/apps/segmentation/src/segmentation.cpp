@@ -37,7 +37,7 @@ using namespace std;
 // using namespace boost;
 
 Segmentation::Segmentation(QWidget* parent, const char* name, WFlags fl)
-	: SegmentationBase(parent,name,fl),m_huePenalty(15),m_similarityWeight(5),m_neighborhoodWeight(500),m_backgroundDrawingEnabled(false),m_foregroundDrawingEnabled(false)
+  : SegmentationBase(parent,name,fl),m_huePenalty(15),m_similarityWeight(5),m_neighborhoodWeight(500),m_backgroundDrawingEnabled(false),m_foregroundDrawingEnabled(false)
 {
 	connect(mp_buttonSegment,SIGNAL(clicked()),this,SLOT(segment()));
 
@@ -59,8 +59,7 @@ Segmentation::Segmentation(QWidget* parent, const char* name, WFlags fl)
 
 Segmentation::~Segmentation()
 {
-// 	if(mp_graphCut)
-// 		delete mp_graphCut;
+
 }
 
 void Segmentation::fileOpenImage()
@@ -371,6 +370,15 @@ void Segmentation::mouseMoveEvent(QMouseEvent* e){
 // 	else if(m_foregroundDrawingEnabled){
 // 	}
 // 	
+}
+
+void Segmentation::storeProblemAsDimacsFile( bool toggled )
+{
+  if (toggled){
+    m_graphCut.setDumpProblemAsDimacsFile( true, "image.dat");
+  }else{
+    m_graphCut.setDumpProblemAsDimacsFile( false,"");
+  }
 }
 
 

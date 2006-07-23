@@ -260,6 +260,9 @@
         <action name="editRedoAction"/>
         <separator/>
     </item>
+    <item text="Options" name="Options">
+        <action name="optionsStore_problem_as_DIMACSAction"/>
+    </item>
     <item text="&amp;Help" name="helpMenu">
         <action name="helpAboutAction"/>
     </item>
@@ -515,6 +518,20 @@
             <string>NewMask</string>
         </property>
     </action>
+    <action>
+        <property name="name">
+            <cstring>optionsStore_problem_as_DIMACSAction</cstring>
+        </property>
+        <property name="toggleAction">
+            <bool>true</bool>
+        </property>
+        <property name="text">
+            <string>Store problem as DIMACS</string>
+        </property>
+        <property name="menuText">
+            <string>Store problem as DIMACS</string>
+        </property>
+    </action>
 </actions>
 <images>
     <image name="image0">
@@ -645,6 +662,12 @@
         <receiver>SegmentationBase</receiver>
         <slot>fileNewMask()</slot>
     </connection>
+    <connection>
+        <sender>optionsStore_problem_as_DIMACSAction</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>SegmentationBase</receiver>
+        <slot>storeProblemAsDimacsFile(bool)</slot>
+    </connection>
 </connections>
 <includes>
     <include location="local" impldecl="in implementation">segmentationbase.ui.h</include>
@@ -666,7 +689,7 @@
     <slot>helpIndex()</slot>
     <slot>helpContents()</slot>
     <slot>helpAbout()</slot>
-    <slot>tabWidget2_currentChanged( QWidget * )</slot>
+    <slot>storeProblemAsDimacsFile(bool)</slot>
     <slot>fileNewMask()</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>

@@ -44,6 +44,8 @@ protected:
 	virtual void mousePressEvent(QMouseEvent* e);
 	virtual void mouseReleaseEvent(QMouseEvent* e);
 	virtual void mouseMoveEvent(QMouseEvent* e);
+   
+   virtual void storeProblemAsDimacsFile(bool toggled);
 	
 protected slots:
   /*$PROTECTED_SLOTS$*/
@@ -71,7 +73,6 @@ private:
 	QImage m_segmentedImage;
 	QPixmap m_segmentedPixmap;
 	
-	
 	enum eShownPixmap{
 		OrigPixmap,
 		TrimapPixmap,
@@ -82,6 +83,7 @@ private:
 	
 	bool m_backgroundDrawingEnabled;
 	bool m_foregroundDrawingEnabled;
+   
 };
 
 #endif
