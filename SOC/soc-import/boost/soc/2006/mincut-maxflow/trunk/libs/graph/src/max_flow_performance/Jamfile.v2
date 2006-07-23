@@ -1,0 +1,19 @@
+exe boost_kolmo
+	: boost_kolmo.cpp
+;
+
+exe boost_push-relabel
+	: boost_push-relabel.cpp
+;
+
+exe kolmogorov
+  : kolmogorov.cpp external/kolmogorov/graph.cpp external/kolmogorov/maxflow.cpp
+;
+
+#exe h_prf
+#  : external/h_prf/hi_pr.c external/h_prf/parser.c external/h_prf/types.h external/h_prf/timer.c
+#;
+
+exe maxflow_preprocess
+  : maxflow_preprocess.cpp
+;
