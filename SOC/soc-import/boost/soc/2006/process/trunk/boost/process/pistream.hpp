@@ -15,7 +15,7 @@
 #include <istream>
 
 #include <boost/noncopyable.hpp>
-#include <boost/process/detail/pipe.hpp>
+#include <boost/process/detail/file_handle.hpp>
 #include <boost/process/detail/systembuf.hpp>
 
 namespace boost {
@@ -26,11 +26,11 @@ namespace process {
 class pistream :
     public std::istream, boost::noncopyable
 {
-    detail::shared_pipe m_pipe;
+    detail::file_handle m_handle;
     detail::systembuf m_systembuf;
 
 public:
-    explicit pistream(detail::shared_pipe p);
+    explicit pistream(detail::file_handle& fh);
 
     void close(void);
 };
@@ -38,10 +38,10 @@ public:
 // ------------------------------------------------------------------------
 
 inline
-pistream::pistream(detail::shared_pipe p) :
+pistream::pistream(detail::file_handle& fh) :
     std::istream(NULL),
-    m_pipe(p),
-    m_systembuf(p->get_read_end())
+    m_handle(fh),
+    m_systembuf(m_handle.get())
 {
     rdbuf(&m_systembuf);
 }
@@ -52,7 +52,7 @@ inline
 void
 pistream::close(void)
 {
-    m_pipe->close_read_end();
+    m_handle.close();
 }
 
 // ------------------------------------------------------------------------

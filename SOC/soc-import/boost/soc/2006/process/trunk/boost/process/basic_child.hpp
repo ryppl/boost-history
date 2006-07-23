@@ -31,7 +31,6 @@ extern "C" {
 #include <map>
 
 #include <boost/assert.hpp>
-#include <boost/optional.hpp>
 #include <boost/process/basic_process.hpp>
 #include <boost/process/detail/pipe.hpp>
 #include <boost/process/pistream.hpp>
@@ -65,29 +64,28 @@ private:
     friend class launcher;
     basic_child(const handle_type& h,
                 const Attributes& attrs,
-                boost::optional< detail::shared_pipe > pstdin,
-                boost::optional< detail::shared_pipe > pstdout,
-                boost::optional< detail::shared_pipe > pstderr);
+                detail::file_handle& fhstdin,
+                detail::file_handle& fhstdout,
+                detail::file_handle& fhstderr);
 };
 
 // ------------------------------------------------------------------------
 
 template< class Attributes >
 inline
-basic_child< Attributes >::basic_child
-    (const handle_type& h,
-     const Attributes& attrs,
-     boost::optional< detail::shared_pipe > pstdin,
-     boost::optional< detail::shared_pipe > pstdout,
-     boost::optional< detail::shared_pipe > pstderr) :
+basic_child< Attributes >::basic_child(const handle_type& h,
+                                       const Attributes& attrs,
+                                       detail::file_handle& fhstdin,
+                                       detail::file_handle& fhstdout,
+                                       detail::file_handle& fhstderr) :
     basic_process< Attributes >(h, attrs)
 {
-    if (pstdin)
-        m_sstdin.reset(new postream(*pstdin));
-    if (pstdout)
-        m_sstdout.reset(new pistream(*pstdout));
-    if (pstderr)
-        m_sstderr.reset(new pistream(*pstderr));
+    if (fhstdin.is_valid())
+        m_sstdin.reset(new postream(fhstdin));
+    if (fhstdout.is_valid())
+        m_sstdout.reset(new pistream(fhstdout));
+    if (fhstderr.is_valid())
+        m_sstderr.reset(new pistream(fhstderr));
 }
 
 // ------------------------------------------------------------------------

@@ -27,6 +27,7 @@
 #include <boost/optional.hpp>
 #include <boost/process/basic_child.hpp>
 #include <boost/process/detail/environment.hpp>
+#include <boost/process/detail/file_handle.hpp>
 #include <boost/process/exceptions.hpp>
 #include <boost/throw_exception.hpp>
 
@@ -44,16 +45,16 @@ class launcher
     template< class Attributes >
     basic_child< Attributes > start_posix
         (const Attributes& attrs,
-         boost::optional< detail::shared_pipe > pstdin,
-         boost::optional< detail::shared_pipe > pstdout,
-         boost::optional< detail::shared_pipe > pstderr);
+         boost::optional< detail::pipe > pstdin,
+         boost::optional< detail::pipe > pstdout,
+         boost::optional< detail::pipe > pstderr);
 #elif defined(BOOST_PROCESS_WIN32_API)
     template< class Attributes >
     basic_child< Attributes > start_win32
         (const Attributes& attrs,
-         boost::optional< detail::shared_pipe > pstdin,
-         boost::optional< detail::shared_pipe > pstdout,
-         boost::optional< detail::shared_pipe > pstderr);
+         boost::optional< detail::pipe > pstdin,
+         boost::optional< detail::pipe > pstdout,
+         boost::optional< detail::pipe > pstderr);
 #endif
 
 public:
@@ -114,17 +115,17 @@ inline
 basic_child< Attributes >
 launcher::start(const Attributes& attrs)
 {
-    boost::optional< detail::shared_pipe > pstdin;
+    boost::optional< detail::pipe > pstdin;
     if (m_flags & REDIR_STDIN)
-        pstdin = detail::shared_pipe();
+        pstdin = detail::pipe();
 
-    boost::optional< detail::shared_pipe > pstdout;
+    boost::optional< detail::pipe > pstdout;
     if (m_flags & REDIR_STDOUT)
-        pstdout = detail::shared_pipe();
+        pstdout = detail::pipe();
 
-    boost::optional< detail::shared_pipe > pstderr;
+    boost::optional< detail::pipe > pstderr;
     if (m_flags & REDIR_STDERR)
-        pstderr = detail::shared_pipe();
+        pstderr = detail::pipe();
 
 #if defined(BOOST_PROCESS_POSIX_API)
     return start_posix(attrs, pstdin, pstdout, pstderr);
@@ -140,9 +141,9 @@ template< class Attributes >
 inline
 basic_child< Attributes >
 launcher::start_posix(const Attributes& attrs,
-                      boost::optional< detail::shared_pipe > pstdin,
-                      boost::optional< detail::shared_pipe > pstdout,
-                      boost::optional< detail::shared_pipe > pstderr)
+                      boost::optional< detail::pipe > pstdin,
+                      boost::optional< detail::pipe > pstdout,
+                      boost::optional< detail::pipe > pstderr)
 {
     pid_t pid = ::fork();
     if (pid == -1) {
@@ -150,31 +151,35 @@ launcher::start_posix(const Attributes& attrs,
             (system_error("boost::process::launcher::start",
                           "fork(2) failed", errno));
     } else if (pid == 0) {
-        if (m_flags & REDIR_STDIN) {
-            BOOST_ASSERT(pstdin);
-            (*pstdin)->close_write_end();
-            ::close(STDIN_FILENO);
-            (*pstdin)->remap_read_end(STDIN_FILENO);
-        }
-
-        if (m_flags & REDIR_STDOUT) {
-            BOOST_ASSERT(pstdout);
-            (*pstdout)->close_read_end();
-            ::close(STDOUT_FILENO);
-            (*pstdout)->remap_write_end(STDOUT_FILENO);
-        }
-
-        if (m_flags & REDIR_STDERR) {
-            BOOST_ASSERT(pstderr);
-            (*pstderr)->close_read_end();
-            ::close(STDERR_FILENO);
-            (*pstderr)->remap_write_end(STDERR_FILENO);
-        }
-
-        if (m_flags & REDIR_STDERR_TO_STDOUT)
-            ::dup2(STDOUT_FILENO, STDERR_FILENO);
-
         try {
+            // File descriptors that remain open for the child process to
+            // communicate with its parent are disowned from their file
+            // handle objects to ensure that their destructor, if ever
+            // executed, does not close them.
+            if (m_flags & REDIR_STDIN) {
+                pstdin->wend().close();
+                pstdin->rend().posix_remap(STDIN_FILENO);
+                pstdin->rend().disown();
+            }
+
+            if (m_flags & REDIR_STDOUT) {
+                pstdout->rend().close();
+                pstdout->wend().posix_remap(STDOUT_FILENO);
+                pstdout->wend().disown();
+            }
+
+            if (m_flags & REDIR_STDERR) {
+                pstderr->rend().close();
+                pstderr->wend().posix_remap(STDERR_FILENO);
+                pstderr->wend().disown();
+            }
+
+            if (m_flags & REDIR_STDERR_TO_STDOUT) {
+                detail::file_handle errfh = detail::file_handle::posix_dup
+                    (STDOUT_FILENO, STDERR_FILENO);
+                errfh.disown();
+            }
+
             attrs.setup();
         } catch (const system_error& e) {
             ::write(STDERR_FILENO, e.what(), std::strlen(e.what()));
@@ -209,23 +214,34 @@ launcher::start_posix(const Attributes& attrs,
         ::write(STDERR_FILENO, "\n", 1);
         ::exit(EXIT_FAILURE);
      } else {
+        detail::file_handle fhstdin, fhstdout, fhstderr;
+
         if (m_flags & REDIR_STDIN) {
-            BOOST_ASSERT(pstdin);
-            (*pstdin)->close_read_end();
+            pstdin->rend().close();
+            fhstdin = pstdin->wend();
         }
 
         if (m_flags & REDIR_STDOUT) {
-            BOOST_ASSERT(pstdout);
-            (*pstdout)->close_write_end();
+            pstdout->wend().close();
+            fhstdout = pstdout->rend();
         }
 
         if (m_flags & REDIR_STDERR) {
-            BOOST_ASSERT(pstderr);
-            (*pstderr)->close_write_end();
+            pstderr->wend().close();
+            fhstderr = pstderr->rend();
         }
+
+        BOOST_ASSERT(!(m_flags & REDIR_STDIN) || fhstdin.is_valid());
+        BOOST_ASSERT(!(m_flags & REDIR_STDOUT) || fhstdout.is_valid());
+        BOOST_ASSERT(!(m_flags & REDIR_STDERR) || fhstderr.is_valid());
+        return basic_child< Attributes >(pid, attrs, fhstdin, fhstdout,
+                                         fhstderr);
     }
 
-    return basic_child< Attributes >(pid, attrs, pstdin, pstdout, pstderr);
+    // Not reached.
+    BOOST_ASSERT(false);
+    detail::file_handle fhstdin, fhstdout, fhstderr;
+    return basic_child< Attributes >(pid, attrs, fhstdin, fhstdout, fhstderr);
 }
 #endif
 
@@ -236,65 +252,53 @@ template< class Attributes >
 inline
 basic_child< Attributes >
 launcher::start_win32(const Attributes& attrs,
-                      boost::optional< detail::shared_pipe > pstdin,
-                      boost::optional< detail::shared_pipe > pstdout,
-                      boost::optional< detail::shared_pipe > pstderr)
+                      boost::optional< detail::pipe > pstdin,
+                      boost::optional< detail::pipe > pstdout,
+                      boost::optional< detail::pipe > pstderr)
 {
+    detail::file_handle fhstdin, fhstdout, fhstderr;
+    detail::file_handle chstdin, chstdout, chstderr;
+
+    if (m_flags & REDIR_STDIN) {
+        pstdin->rend().set_inheritable(true);
+        chstdin = pstdin->rend();
+        fhstdin = pstdin->wend();
+    } else
+        chstdin = detail::file_handle::win32_std(STD_INPUT_HANDLE, true);
+
+    if (m_flags & REDIR_STDOUT) {
+        pstdout->wend().set_inheritable(true);
+        chstdout = pstdout->wend();
+        fhstdout = pstdout->rend();
+    } else
+        chstdout = detail::file_handle::win32_std(STD_OUTPUT_HANDLE, true);
+
+    if (m_flags & REDIR_STDERR) {
+        pstderr->wend().set_inheritable(true);
+        chstderr = pstderr->wend();
+        fhstderr = pstderr->rend();
+    } else
+        chstderr = detail::file_handle::win32_std(STD_ERROR_HANDLE, true);
+
+    if (m_flags & REDIR_STDERR_TO_STDOUT)
+        chstderr = detail::file_handle::win32_dup(si.hStdOutput, true);
+
     STARTUPINFO si;
     ::ZeroMemory(&si, sizeof(si));
     si.cb = sizeof(si);
-
     si.dwFlags = STARTF_USESTDHANDLES;
-
-    if (m_flags & REDIR_STDIN) {
-        BOOST_ASSERT(pstdin);
-        ::DuplicateHandle(::GetCurrentProcess(), (*pstdin)->get_read_end(),
-                          ::GetCurrentProcess(), &si.hStdInput,
-                          0, TRUE, DUPLICATE_SAME_ACCESS);
-        (*pstdin)->close_read_end();
-    } else
-        ::DuplicateHandle(::GetCurrentProcess(),
-                          ::GetStdHandle(STD_INPUT_HANDLE),
-                          ::GetCurrentProcess(), &si.hStdInput,
-                          0, TRUE, DUPLICATE_SAME_ACCESS);
-
-    if (m_flags & REDIR_STDOUT) {
-        BOOST_ASSERT(pstdout);
-        ::DuplicateHandle(::GetCurrentProcess(), (*pstdout)->get_write_end(),
-                          ::GetCurrentProcess(), &si.hStdOutput,
-                          0, TRUE, DUPLICATE_SAME_ACCESS);
-        (*pstdout)->close_write_end();
-    } else
-        ::DuplicateHandle(::GetCurrentProcess(),
-                          ::GetStdHandle(STD_OUTPUT_HANDLE),
-                          ::GetCurrentProcess(), &si.hStdOutput,
-                          0, TRUE, DUPLICATE_SAME_ACCESS);
-
-    if (m_flags & REDIR_STDERR) {
-        BOOST_ASSERT(pstderr);
-        ::DuplicateHandle(::GetCurrentProcess(), (*pstderr)->get_write_end(),
-                          ::GetCurrentProcess(), &si.hStdError,
-                          0, TRUE, DUPLICATE_SAME_ACCESS);
-        (*pstderr)->close_write_end();
-    } else
-        ::DuplicateHandle(::GetCurrentProcess(),
-                          ::GetStdHandle(STD_ERROR_HANDLE),
-                          ::GetCurrentProcess(), &si.hStdError,
-                          0, TRUE, DUPLICATE_SAME_ACCESS);
-
-    if (m_flags & REDIR_STDERR_TO_STDOUT) {
-        ::DuplicateHandle(::GetCurrentProcess(), si.hStdOutput,
-                          ::GetCurrentProcess(), &si.hStdError,
-                          0, TRUE, DUPLICATE_SAME_ACCESS);
-     }
+    si.hStdInput = chstdin.get();
+    si.hStdOutput = chstdout.get();
+    si.hStdError = chstderr.get();
 
     PROCESS_INFORMATION pi;
     ::ZeroMemory(&pi, sizeof(pi));
 
+    // XXX Remove this 1024 limit.
     TCHAR cmdline[1024];
     ::_tcscpy_s(cmdline, 1024, TEXT(""));
-    size_t nargs = attrs.get_command_line().get_arguments().size();
-    for (size_t i = 0; i < nargs; i++) {
+    SIZE_T nargs = attrs.get_command_line().get_arguments().size();
+    for (SIZE_T i = 0; i < nargs; i++) {
         ::_tcscat_s(cmdline, 1024,
             TEXT(attrs.get_command_line().get_arguments()[i].c_str()));
         ::_tcscat_s(cmdline, 1024, " ");
@@ -313,12 +317,12 @@ launcher::start_win32(const Attributes& attrs,
             (system_error("boost::process::launcher::start",
                           "CreateProcess failed", ::GetLastError()));
     }
-    ::CloseHandle(si.hStdInput);
-    ::CloseHandle(si.hStdOutput);
-    ::CloseHandle(si.hStdError);
 
-    return basic_child< Attributes >(pi.hProcess, attrs,
-                                     pstdin, pstdout, pstderr);
+    BOOST_ASSERT(!(m_flags & REDIR_STDIN) || fhstdin.is_valid());
+    BOOST_ASSERT(!(m_flags & REDIR_STDOUT) || fhstdout.is_valid());
+    BOOST_ASSERT(!(m_flags & REDIR_STDERR) || fhstderr.is_valid());
+    return basic_child< Attributes >(pi.hProcess, attrs, fhstdin,
+                                     fhstdout, fhstderr);
 }
 #endif
 

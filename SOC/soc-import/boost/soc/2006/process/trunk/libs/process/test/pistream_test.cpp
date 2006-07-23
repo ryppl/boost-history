@@ -25,9 +25,9 @@ namespace but = ::boost::unit_test;
 static void
 test_it(void)
 {
-    bpd::shared_pipe p;
-    bp::pistream rend(p);
-    bpd::systembuf wbuf(p->get_write_end());
+    bpd::pipe p;
+    bp::pistream rend(p.rend());
+    bpd::systembuf wbuf(p.wend().get());
     std::ostream wend(&wbuf);
 
     // XXX This assumes that the pipe's buffer is big enough to accept

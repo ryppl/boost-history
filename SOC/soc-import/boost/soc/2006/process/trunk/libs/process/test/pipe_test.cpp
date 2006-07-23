@@ -36,8 +36,8 @@ static void
 test_read_and_write(void)
 {
     bpd::pipe p;
-    bpd::systembuf rbuf(p.get_read_end());
-    bpd::systembuf wbuf(p.get_write_end());
+    bpd::systembuf rbuf(p.rend().get());
+    bpd::systembuf wbuf(p.wend().get());
     std::istream rend(&rbuf);
     std::ostream wend(&wbuf);
 
@@ -58,9 +58,9 @@ static void
 test_remap_read(void)
 {
     bpd::pipe p;
-    bpd::systembuf wbuf(p.get_write_end());
+    bpd::systembuf wbuf(p.wend().get());
     std::ostream wend(&wbuf);
-    p.remap_read_end(STDIN_FILENO);
+    p.rend().posix_remap(STDIN_FILENO);
 
     // XXX This assumes that the pipe's buffer is big enough to accept
     // the data written without blocking!
@@ -80,9 +80,9 @@ static void
 test_remap_write(void)
 {
     bpd::pipe p;
-    bpd::systembuf rbuf(p.get_read_end());
+    bpd::systembuf rbuf(p.rend().get());
     std::istream rend(&rbuf);
-    p.remap_write_end(STDOUT_FILENO);
+    p.wend().posix_remap(STDOUT_FILENO);
 
     // XXX This assumes that the pipe's buffer is big enough to accept
     // the data written without blocking!

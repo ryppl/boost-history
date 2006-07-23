@@ -25,10 +25,10 @@ namespace but = ::boost::unit_test;
 static void
 test_it(void)
 {
-    bpd::shared_pipe p;
-    bpd::systembuf rbuf(p->get_read_end());
+    bpd::pipe p;
+    bpd::systembuf rbuf(p.rend().get());
     std::istream rend(&rbuf);
-    bp::postream wend(p);
+    bp::postream wend(p.wend());
 
     // XXX This assumes that the pipe's buffer is big enough to accept
     // the data written without blocking!

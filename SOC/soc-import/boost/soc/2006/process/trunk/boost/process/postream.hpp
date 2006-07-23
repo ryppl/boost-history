@@ -15,7 +15,7 @@
 #include <ostream>
 
 #include <boost/noncopyable.hpp>
-#include <boost/process/detail/pipe.hpp>
+#include <boost/process/detail/file_handle.hpp>
 #include <boost/process/detail/systembuf.hpp>
 
 namespace boost {
@@ -26,11 +26,11 @@ namespace process {
 class postream :
     public std::ostream, boost::noncopyable
 {
-    detail::shared_pipe m_pipe;
+    detail::file_handle m_handle;
     detail::systembuf m_systembuf;
 
 public:
-    explicit postream(detail::shared_pipe p);
+    explicit postream(detail::file_handle& fh);
 
     void close(void);
 };
@@ -38,10 +38,10 @@ public:
 // ------------------------------------------------------------------------
 
 inline
-postream::postream(detail::shared_pipe p) :
+postream::postream(detail::file_handle& fh) :
     std::ostream(NULL),
-    m_pipe(p),
-    m_systembuf(p->get_write_end())
+    m_handle(fh),
+    m_systembuf(m_handle.get())
 {
     rdbuf(&m_systembuf);
 }
@@ -52,7 +52,7 @@ inline
 void
 postream::close(void)
 {
-    m_pipe->close_write_end();
+    m_handle.close();
 }
 
 // ------------------------------------------------------------------------
