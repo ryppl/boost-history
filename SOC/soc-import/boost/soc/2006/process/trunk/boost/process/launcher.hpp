@@ -187,24 +187,19 @@ launcher::start_posix(const Attributes& attrs,
             ::exit(EXIT_FAILURE);
         }
 
-        size_t nargs = attrs.get_command_line().get_arguments().size();
-        char* args[nargs + 1];
+        std::pair< size_t, char** > args =
+            attrs.get_command_line().posix_argv();
         const std::string& executable =
             attrs.get_command_line().get_executable();
-
-        for (size_t i = 0; i < nargs; i++)
-            args[i] = ::strdup
-                (attrs.get_command_line().get_arguments()[i].c_str());
-        args[nargs] = NULL;
-
         char** envp = m_environment.envp();
 
-        ::execve(executable.c_str(), args, envp);
+        ::execve(executable.c_str(), args.second, envp);
         system_error e("boost::process::launcher::start",
                        "execvp(2) failed", errno);
 
-        for (size_t i = 0; i <= nargs; i++)
-            delete [] args[i];
+        for (size_t i = 0; i < args.first; i++)
+            delete [] args.second[i];
+        delete [] args.second;
 
         for (size_t i = 0; i < m_environment.size(); i++)
             delete [] envp[i];
@@ -293,16 +288,8 @@ launcher::start_win32(const Attributes& attrs,
     PROCESS_INFORMATION pi;
     ::ZeroMemory(&pi, sizeof(pi));
 
-    // XXX Remove this 1024 limit.
-    TCHAR cmdline[1024];
-    ::_tcscpy_s(cmdline, 1024, TEXT(""));
-    SIZE_T nargs = attrs.get_command_line().get_arguments().size();
-    for (SIZE_T i = 0; i < nargs; i++) {
-        ::_tcscat_s(cmdline, 1024,
-            TEXT(attrs.get_command_line().get_arguments()[i].c_str()));
-        ::_tcscat_s(cmdline, 1024, " ");
-    }
-
+    boost::shared_array< TCHAR > cmdline =
+        attrs.get_command_line().win32_cmdline();
     boost::scoped_array< TCHAR > executable
         (::_tcsdup(TEXT(attrs.get_command_line().get_executable().c_str())));
     boost::scoped_array< TCHAR > workdir
@@ -310,7 +297,7 @@ launcher::start_win32(const Attributes& attrs,
     m_environment.set("", attrs.get_work_directory());
 
     boost::shared_array< TCHAR > env = m_environment.strings();
-    if (!::CreateProcess(executable.get(), cmdline, NULL, NULL, TRUE,
+    if (!::CreateProcess(executable.get(), cmdline.get(), NULL, NULL, TRUE,
                          0, env.get(), workdir.get(), &si, &pi)) {
         boost::throw_exception
             (system_error("boost::process::launcher::start",
