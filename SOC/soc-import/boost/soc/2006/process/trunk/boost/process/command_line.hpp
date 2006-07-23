@@ -44,6 +44,13 @@ private:
     std::string m_executable;
     arguments_vector m_arguments;
 
+    friend class launcher;
+#if defined(BOOST_PROCESS_POSIX_API)
+    std::pair< size_t, char ** > posix_argv(void) const;
+#elif defined(BOOST_PROCESS_WIN32_API)
+    boost::shared_array< TCHAR > win32_cmdline(void) const;
+#endif
+
 public:
     explicit command_line(const std::string& executable);
 
@@ -52,12 +59,6 @@ public:
 
     const arguments_vector& get_arguments(void) const;
     const std::string& get_executable(void) const;
-
-#if defined(BOOST_PROCESS_POSIX_API)
-    std::pair< size_t, char ** > posix_argv(void) const;
-#elif defined(BOOST_PROCESS_WIN32_API)
-    boost::shared_array< TCHAR > win32_cmdline(void) const;
-#endif
 };
 
 // ------------------------------------------------------------------------

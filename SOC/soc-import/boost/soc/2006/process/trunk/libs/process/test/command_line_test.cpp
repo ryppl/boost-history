@@ -18,6 +18,27 @@
 namespace bp = ::boost::process;
 namespace but = ::boost::unit_test;
 
+namespace boost {
+namespace process {
+
+class launcher {
+public:
+#if defined(BOOST_PROCESS_POSIX_API)
+    static std::pair< size_t, char ** > posix_argv(const command_line& cl)
+    {
+        return cl.posix_argv();
+    }
+#elif defined(BOOST_PROCESS_WIN32_API)
+    static boost::shared_array< TCHAR > win32_cmdline(const command_line& cl)
+    {
+        return cl.win32_cmdline();
+    }
+#endif
+};
+
+} // namespace process
+} // namespace boost
+
 // ------------------------------------------------------------------------
 
 static void
@@ -76,7 +97,7 @@ test_posix_argv(void)
     bp::command_line cl("program");
     cl.argument("arg1").argument("arg2").argument("arg3");
 
-    std::pair< size_t, char** > args = cl.posix_argv();
+    std::pair< size_t, char** > args = bp::launcher::posix_argv(cl);
     size_t argc = args.first;
     char** argv = args.second;
 
@@ -103,7 +124,7 @@ test_win32_cmdline(void)
     bp::command_line cl("program");
     cl.argument("arg1").argument("arg2").argument("arg3");
 
-    boost::shared_array cmdline< TCHAR > = cl.win32_cmdline();
+    boost::shared_array cmdline< TCHAR > = bp::launcher::win32_cmdline(cl);
     BOOST_REQUIRE(::_tcscmp(cmdline, TEXT("arg1 arg2 arg3")) == 0);
 }
 #endif
