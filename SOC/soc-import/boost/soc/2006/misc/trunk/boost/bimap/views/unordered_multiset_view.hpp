@@ -14,6 +14,7 @@
 #define BOOST_BIMAP_VIEWS_UNORDERED_MULTISET_VIEW_HPP
 
 #include <boost/bimap/container_adaptor/unordered_multiset_adaptor.hpp>
+#include <boost/bimap/detail/set_view_base.hpp>
 
 namespace boost {
 namespace bimap {
@@ -44,8 +45,12 @@ class unordered_multiset_view
         container_adaptor::use_default,
         container_adaptor::use_default,
         typename IndexType::key_from_value
-    >
+    >,
+
+    public bimap::detail::set_view_base< unordered_multiset_view< IndexType >, IndexType >
 {
+    friend class bimap::detail::set_view_base< unordered_multiset_view< IndexType >, IndexType >;
+
     public:
 
     unordered_multiset_view() {}

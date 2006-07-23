@@ -14,6 +14,7 @@
 #define BOOST_BIMAP_VIEWS_SET_VIEW_HPP
 
 #include <boost/bimap/container_adaptor/set_adaptor.hpp>
+#include <boost/bimap/detail/set_view_base.hpp>
 
 namespace boost {
 namespace bimap {
