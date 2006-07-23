@@ -59,5 +59,7 @@ test-suite "bimap_test"
     [ run test_bimap_property_map.cpp                                         ]
 
     [ run test_bimap_modify.cpp                                               ]
+    [ run test_bimap_lambda.cpp                                               ]
+    [ run test_bimap_extra.cpp                                                ]
     ;
 
