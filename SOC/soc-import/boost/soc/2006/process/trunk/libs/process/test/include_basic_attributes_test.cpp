@@ -10,3 +10,13 @@
 //
 
 #include <boost/process/basic_attributes.hpp>
+
+namespace bp = ::boost::process;
+
+// ------------------------------------------------------------------------
+
+void*
+test_it(void)
+{
+    return new bp::basic_attributes< int >(5);
+}

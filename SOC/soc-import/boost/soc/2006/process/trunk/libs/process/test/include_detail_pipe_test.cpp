@@ -10,3 +10,13 @@
 //
 
 #include <boost/process/detail/pipe.hpp>
+
+namespace bpd = ::boost::process::detail;
+
+// ------------------------------------------------------------------------
+
+void*
+test_it(void)
+{
+    return new bpd::pipe();
+}

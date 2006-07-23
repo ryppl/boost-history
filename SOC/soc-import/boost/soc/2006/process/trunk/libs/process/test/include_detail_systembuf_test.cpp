@@ -10,3 +10,15 @@
 //
 
 #include <boost/process/detail/systembuf.hpp>
+
+namespace bpd = ::boost::process::detail;
+
+// ------------------------------------------------------------------------
+
+void*
+test_it(void)
+{
+    bpd::systembuf::handle_type h =
+        static_cast< bpd::systembuf::handle_type >(0);
+    return new bpd::systembuf(h);
+}

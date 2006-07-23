@@ -10,3 +10,36 @@
 //
 
 #include <boost/process/basic_child.hpp>
+
+namespace bp = ::boost::process;
+namespace bpd = ::boost::process::detail;
+
+// ------------------------------------------------------------------------
+
+namespace boost {
+namespace process {
+
+class launcher {
+public:
+    static
+    void*
+    test_it(void)
+    {
+        bp::basic_child< int >::handle_type h =
+            static_cast< bp::basic_child< int >::handle_type >(0);
+        int attrs = 5;
+        bpd::file_handle fh;
+        return new bp::basic_child< int >(h, attrs, fh, fh, fh);
+    }
+};
+
+} // namespace process
+} // namespace boost
+
+// ------------------------------------------------------------------------
+
+void*
+test_it(void)
+{
+    return bp::launcher::test_it();
+}

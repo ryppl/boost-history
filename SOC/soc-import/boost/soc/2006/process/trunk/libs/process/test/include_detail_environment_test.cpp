@@ -10,3 +10,13 @@
 //
 
 #include <boost/process/detail/environment.hpp>
+
+namespace bpd = ::boost::process::detail;
+
+// ------------------------------------------------------------------------
+
+void*
+test_it(void)
+{
+    return new bpd::environment();
+}

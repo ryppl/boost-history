@@ -10,3 +10,14 @@
 //
 
 #include <boost/process/attributes.hpp>
+
+namespace bp = ::boost::process;
+
+// ------------------------------------------------------------------------
+
+void*
+test_it(void)
+{
+    bp::command_line cl("test");
+    return new bp::attributes(cl);
+}

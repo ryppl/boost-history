@@ -10,3 +10,13 @@
 //
 
 #include <boost/process/command_line.hpp>
+
+namespace bp = ::boost::process;
+
+// ------------------------------------------------------------------------
+
+void*
+test_it(void)
+{
+    return new bp::command_line("test");
+}

@@ -10,3 +10,15 @@
 //
 
 #include <boost/process/postream.hpp>
+
+namespace bp = ::boost::process;
+namespace bpd = ::boost::process::detail;
+
+// ------------------------------------------------------------------------
+
+void*
+test_it(void)
+{
+    bpd::file_handle fh;
+    return new bp::postream(fh);
+}

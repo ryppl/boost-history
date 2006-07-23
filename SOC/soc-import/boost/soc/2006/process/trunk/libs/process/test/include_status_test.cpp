@@ -10,3 +10,13 @@
 //
 
 #include <boost/process/status.hpp>
+
+namespace bp = ::boost::process;
+
+// ------------------------------------------------------------------------
+
+void*
+test_it(void)
+{
+    return new bp::status(0);
+}

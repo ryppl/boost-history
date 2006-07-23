@@ -10,3 +10,13 @@
 //
 
 #include <boost/process/detail/file_handle.hpp>
+
+namespace bpd = ::boost::process::detail;
+
+// ------------------------------------------------------------------------
+
+void*
+test_it(void)
+{
+    return new bpd::file_handle();
+}

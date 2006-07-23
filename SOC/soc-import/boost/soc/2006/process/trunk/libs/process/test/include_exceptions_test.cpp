@@ -10,3 +10,13 @@
 //
 
 #include <boost/process/exceptions.hpp>
+
+namespace bp = ::boost::process;
+
+// ------------------------------------------------------------------------
+
+void*
+test_it(void)
+{
+    return new bp::system_error("", "", 0);
+}
