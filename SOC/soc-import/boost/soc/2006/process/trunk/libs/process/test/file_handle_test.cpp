@@ -34,13 +34,28 @@ namespace but = ::boost::unit_test;
 
 // ------------------------------------------------------------------------
 
+static
+bpd::file_handle::handle_type
+get_test_handle(void)
+{
+#if defined(BOOST_PROCESS_POSIX_API)
+    return STDOUT_FILENO;
+#elif defined(BOOST_PROCESS_WIN32_API)
+    HANDLE htest = ::GetStdHandle(STD_OUTPUT_HANDLE);
+    BOOST_REQUIRE(htest != INVALID_HANDLE_VALUE);
+    return htest;
+#endif
+}
+
+// ------------------------------------------------------------------------
+
 static void
 test_construct(void)
 {
     bpd::file_handle fh1;
     BOOST_CHECK(!fh1.is_valid());
 
-    bpd::file_handle fh2(1234);
+    bpd::file_handle fh2(get_test_handle());
     BOOST_CHECK(fh2.is_valid());
     fh2.disown();
 }
@@ -51,7 +66,7 @@ static void
 test_copy(void)
 {
     bpd::file_handle fh1;
-    bpd::file_handle fh2(1234);
+    bpd::file_handle fh2(get_test_handle());
 
     bpd::file_handle fh3(fh2);
     BOOST_REQUIRE(!fh2.is_valid());
@@ -69,8 +84,8 @@ test_copy(void)
 static void
 test_get(void)
 {
-    bpd::file_handle fh1(1234);
-    BOOST_REQUIRE_EQUAL(fh1.get(), 1234);
+    bpd::file_handle fh1(get_test_handle());
+    BOOST_REQUIRE_EQUAL(fh1.get(), get_test_handle());
 }
 
 // ------------------------------------------------------------------------
@@ -153,10 +168,10 @@ test_win32_dup(void)
     BOOST_REQUIRE(!(flags & HANDLE_FLAG_INHERIT));
 
     bpd::file_handle out3 = bpd::file_handle::win32_dup(wend.get(), true);
-    BOOST_REQUIRE(::GetHandleInformation(out2.get(), &flags) != 0);
+    BOOST_REQUIRE(::GetHandleInformation(out3.get(), &flags) != 0);
     BOOST_REQUIRE(flags & HANDLE_FLAG_INHERIT);
 
-    BOOST_REQUIRE(::WriteFile(out.get(), "test-win32-dup", 14, &rcnt,
+    BOOST_REQUIRE(::WriteFile(wend.get(), "test-win32-dup", 14, &rcnt,
                               NULL) != 0);
     BOOST_REQUIRE_EQUAL(rcnt, 14);
     BOOST_REQUIRE(::ReadFile(rend.get(), buf, sizeof(buf), &rcnt, NULL) != 0);
@@ -198,15 +213,14 @@ test_win32_set_inheritable(void)
     bpd::file_handle rend(in);
     bpd::file_handle wend(out);
 
-    DWORD flags, rcnt;
-    char buf[15];
+    DWORD flags;
 
     bpd::file_handle out2 = bpd::file_handle::win32_dup(wend.get(), false);
     BOOST_REQUIRE(::GetHandleInformation(out2.get(), &flags) != 0);
     BOOST_REQUIRE(!(flags & HANDLE_FLAG_INHERIT));
 
     bpd::file_handle out3 = bpd::file_handle::win32_dup(wend.get(), true);
-    BOOST_REQUIRE(::GetHandleInformation(out2.get(), &flags) != 0);
+    BOOST_REQUIRE(::GetHandleInformation(out3.get(), &flags) != 0);
     BOOST_REQUIRE(flags & HANDLE_FLAG_INHERIT);
 }
 #endif

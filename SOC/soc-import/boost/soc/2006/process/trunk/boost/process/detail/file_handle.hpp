@@ -84,12 +84,17 @@ private:
     // assignment operator invalidate the source object.
     mutable handle_type m_handle;
 
-#if defined(BOOST_PROCESS_POSIX_API)
-    static const handle_type INVALID_VALUE = -1;
-#elif defined(BOOST_PROCESS_WIN32_API)
-    static const handle_type INVALID_VALUE = INVALID_HANDLE_VALUE;
-#endif
+    static const handle_type INVALID_VALUE;
 };
+
+// ------------------------------------------------------------------------
+
+#if defined(BOOST_PROCESS_POSIX_API)
+const file_handle::handle_type file_handle::INVALID_VALUE = -1;
+#elif defined(BOOST_PROCESS_WIN32_API)
+const file_handle::handle_type file_handle::INVALID_VALUE =
+    INVALID_HANDLE_VALUE;
+#endif
 
 // ------------------------------------------------------------------------
 

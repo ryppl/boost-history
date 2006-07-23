@@ -259,36 +259,35 @@ launcher::start_win32(const Attributes& attrs,
     detail::file_handle fhstdin, fhstdout, fhstderr;
     detail::file_handle chstdin, chstdout, chstderr;
 
-    if (m_flags & REDIR_STDIN) {
-        pstdin->rend().set_inheritable(true);
-        chstdin = pstdin->rend();
-        fhstdin = pstdin->wend();
-    } else
-        chstdin = detail::file_handle::win32_std(STD_INPUT_HANDLE, true);
-
-    if (m_flags & REDIR_STDOUT) {
-        pstdout->wend().set_inheritable(true);
-        chstdout = pstdout->wend();
-        fhstdout = pstdout->rend();
-    } else
-        chstdout = detail::file_handle::win32_std(STD_OUTPUT_HANDLE, true);
-
-    if (m_flags & REDIR_STDERR) {
-        pstderr->wend().set_inheritable(true);
-        chstderr = pstderr->wend();
-        fhstderr = pstderr->rend();
-    } else
-        chstderr = detail::file_handle::win32_std(STD_ERROR_HANDLE, true);
-
-    if (m_flags & REDIR_STDERR_TO_STDOUT)
-        chstderr = detail::file_handle::win32_dup(si.hStdOutput, true);
-
     STARTUPINFO si;
     ::ZeroMemory(&si, sizeof(si));
     si.cb = sizeof(si);
     si.dwFlags = STARTF_USESTDHANDLES;
+
+    if (m_flags & REDIR_STDIN) {
+        pstdin->rend().win32_set_inheritable(true);
+        chstdin = pstdin->rend();
+        fhstdin = pstdin->wend();
+    } else
+        chstdin = detail::file_handle::win32_std(STD_INPUT_HANDLE, true);
     si.hStdInput = chstdin.get();
+
+    if (m_flags & REDIR_STDOUT) {
+        pstdout->wend().win32_set_inheritable(true);
+        chstdout = pstdout->wend();
+        fhstdout = pstdout->rend();
+    } else
+        chstdout = detail::file_handle::win32_std(STD_OUTPUT_HANDLE, true);
     si.hStdOutput = chstdout.get();
+
+    if (m_flags & REDIR_STDERR) {
+        pstderr->wend().win32_set_inheritable(true);
+        chstderr = pstderr->wend();
+        fhstderr = pstderr->rend();
+    } else
+        chstderr = detail::file_handle::win32_std(STD_ERROR_HANDLE, true);
+    if (m_flags & REDIR_STDERR_TO_STDOUT)
+        chstderr = detail::file_handle::win32_dup(si.hStdOutput, true);
     si.hStdError = chstderr.get();
 
     PROCESS_INFORMATION pi;
