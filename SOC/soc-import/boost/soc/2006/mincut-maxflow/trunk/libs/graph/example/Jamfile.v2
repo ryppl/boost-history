@@ -1,0 +1,8 @@
+
+exe kolmotest
+	: kolmogorov-eg.cpp
+;
+exe push-relabeltest
+	: push-relabel-eg.cpp
+;
+
