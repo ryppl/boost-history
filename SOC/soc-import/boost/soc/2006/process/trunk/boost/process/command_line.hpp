@@ -131,17 +131,17 @@ command_line::win32_cmdline(void)
     const
 {
     SIZE_T length = 0;
-    for (argments_vector::const_iterator iter = m_arguments.first();
+    for (arguments_vector::const_iterator iter = m_arguments.begin();
          iter != m_arguments.end(); iter++)
         length += (*iter).length() + 1;
 
     boost::shared_array< TCHAR > cl(new TCHAR[length]);
-    ::_tcscpy_s(cl.get(), 1024, TEXT(""));
+    ::_tcscpy_s(cl.get(), length, TEXT(""));
 
-    for (argments_vector::const_iterator iter = m_arguments.first();
-         iter != m_arguments.end(); iter++) {
-        ::_tcscat_s(cl, length, TEXT((*iter).c_str()));
-        ::_tcscat_s(cl, length, TEXT(" "));
+    for (arguments_vector::size_type i = 0; i < m_arguments.size(); i++) {
+        ::_tcscat_s(cl.get(), length, TEXT(m_arguments[i].c_str()));
+        if (i != m_arguments.size() - 1)
+            ::_tcscat_s(cl.get(), length, TEXT(" "));
     }
 
     return cl;

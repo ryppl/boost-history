@@ -124,8 +124,8 @@ test_win32_cmdline(void)
     bp::command_line cl("program");
     cl.argument("arg1").argument("arg2").argument("arg3");
 
-    boost::shared_array cmdline< TCHAR > = bp::launcher::win32_cmdline(cl);
-    BOOST_REQUIRE(::_tcscmp(cmdline, TEXT("arg1 arg2 arg3")) == 0);
+    boost::shared_array< TCHAR > cmdline = bp::launcher::win32_cmdline(cl);
+    BOOST_REQUIRE(::_tcscmp(cmdline.get(), TEXT("arg1 arg2 arg3")) == 0);
 }
 #endif
 
