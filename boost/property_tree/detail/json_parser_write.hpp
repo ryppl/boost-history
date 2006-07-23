@@ -71,7 +71,7 @@ namespace boost { namespace property_tree { namespace json_parser
         {
             
             // Write value
-            Str data = create_escapes(pt.template get_own<Str>(), stream.getloc());
+            Str data = create_escapes(pt.template get_value<Str>(), stream.getloc());
             stream << Ch('"') << data << Ch('"');
 
         }
@@ -126,11 +126,11 @@ namespace boost { namespace property_tree { namespace json_parser
         typedef typename std::basic_string<Ch> Str;
 
         // Root ptree cannot have data
-        if (depth == 0 && !pt.template get_own<Str>().empty())
+        if (depth == 0 && !pt.template get_value<Str>().empty())
             return false;
         
         // Ptree cannot have both children and data
-        if (!pt.template get_own<Str>().empty() && !pt.empty())
+        if (!pt.template get_value<Str>().empty() && !pt.empty())
             return false;
 
         // Check children

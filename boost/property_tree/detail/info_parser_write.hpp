@@ -70,7 +70,7 @@ namespace boost { namespace property_tree { namespace info_parser
         {
             if (!pt.data().empty())
             {
-                std::basic_string<Ch> data = create_escapes(pt.template get_own<std::basic_string<Ch> >());
+                std::basic_string<Ch> data = create_escapes(pt.template get_value<std::basic_string<Ch> >());
                 if (is_simple_data(data))
                     stream << Ch(' ') << data << Ch('\n');
                 else

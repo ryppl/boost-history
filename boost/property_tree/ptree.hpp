@@ -148,10 +148,10 @@ namespace boost { namespace property_tree
         basic_ptree<Tr> &put_child(const key_type &path, const basic_ptree<Tr> &value, bool do_not_replace = false);
 
         // Get value from data of ptree
-        template<class Type> Type get_own(const std::locale &loc = std::locale()) const;
-        template<class Type> Type get_own(const Type &default_value, const std::locale &loc = std::locale()) const;
-        template<class CharType> std::basic_string<CharType> get_own(const CharType *default_value, const std::locale &loc = std::locale()) const;
-        template<class Type> optional<Type> get_own_optional(const std::locale &loc = std::locale()) const;
+        template<class Type> Type get_value(const std::locale &loc = std::locale()) const;
+        template<class Type> Type get_value(const Type &default_value, const std::locale &loc = std::locale()) const;
+        template<class CharType> std::basic_string<CharType> get_value(const CharType *default_value, const std::locale &loc = std::locale()) const;
+        template<class Type> optional<Type> get_value_optional(const std::locale &loc = std::locale()) const;
 
         // Get value from data of child ptree (custom path separator)
         template<class Type> Type get(char_type separator, const key_type &path, const std::locale &loc = std::locale()) const;
@@ -166,7 +166,7 @@ namespace boost { namespace property_tree
         template<class Type> optional<Type> get_optional(const key_type &path, const std::locale &loc = std::locale()) const;
 
         // Put value in data of ptree
-        template<class Type> void put_own(const Type &value, const std::locale &loc = std::locale());
+        template<class Type> void put_value(const Type &value, const std::locale &loc = std::locale());
 
         // Put value in data of child ptree (custom path separator)
         template<class Type> basic_ptree<Tr> &put(char_type separator, const key_type &path, const Type &value, bool do_not_replace = false, const std::locale &loc = std::locale());

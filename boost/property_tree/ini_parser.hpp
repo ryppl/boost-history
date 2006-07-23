@@ -160,7 +160,7 @@ namespace boost { namespace property_tree { namespace ini_parser
         {
             stream << Ch('[') << it->first << Ch(']') << Ch('\n');
             for (typename Ptree::const_iterator it2 = it->second.begin(), end2 = it->second.end(); it2 != end2; ++it2)
-                stream << it2->first << Ch('=') << it2->second.template get_own<std::basic_string<Ch> >() << Ch('\n');
+                stream << it2->first << Ch('=') << it2->second.template get_value<std::basic_string<Ch> >() << Ch('\n');
         }
 
     }

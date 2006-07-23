@@ -331,7 +331,7 @@ namespace boost { namespace property_tree { namespace info_parser
                             {
                                 bool need_more_lines;
                                 std::basic_string<Ch> data = read_string(text, &need_more_lines);
-                                last->put_own(last->template get_own<std::basic_string<Ch> >() + data);
+                                last->put_value(last->template get_value<std::basic_string<Ch> >() + data);
                                 state = need_more_lines ? s_data_cont : s_key;
                             }
                             else

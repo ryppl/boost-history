@@ -86,7 +86,7 @@ namespace boost { namespace property_tree { namespace xml_parser
                     if (c.flags & no_concat_text)
                         c.stack.back()->push_back(std::make_pair(xmltext<Ch>(), Ptree(s)));
                     else
-                        c.stack.back()->put_own(c.stack.back()->template get_own<std::basic_string<Ch> >() + s);
+                        c.stack.back()->put_value(c.stack.back()->template get_value<std::basic_string<Ch> >() + s);
                 }
             }
         };
@@ -108,7 +108,7 @@ namespace boost { namespace property_tree { namespace xml_parser
             void operator()(It b, It e) const
             {
                 Ptree &attr = c.stack.back()->get_child(xmlattr<Ch>());
-                attr.back().second.put_own(Str(b + 1, e - 1));
+                attr.back().second.put_value(Str(b + 1, e - 1));
             }
         };
 

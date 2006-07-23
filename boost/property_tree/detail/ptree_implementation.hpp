@@ -765,9 +765,9 @@ namespace boost { namespace property_tree
     // Get value from data of ptree
     template<class Tr>
     template<class Type>
-    Type basic_ptree<Tr>::get_own(const std::locale &loc) const
+    Type basic_ptree<Tr>::get_value(const std::locale &loc) const
     {
-        if (optional<Type> result = get_own_optional<Type>(loc))
+        if (optional<Type> result = get_value_optional<Type>(loc))
             return result.get();
         else
             throw ptree_bad_data(std::string("conversion of data into type '") + 
@@ -777,10 +777,10 @@ namespace boost { namespace property_tree
     // Get value from data of ptree
     template<class Tr>
     template<class Type>
-    Type basic_ptree<Tr>::get_own(const Type &default_value, 
+    Type basic_ptree<Tr>::get_value(const Type &default_value, 
                                       const std::locale &loc) const
     {
-        if (optional<Type> result = get_own_optional<Type>(loc))
+        if (optional<Type> result = get_value_optional<Type>(loc))
             return result.get();
         else
             return default_value;
@@ -790,18 +790,18 @@ namespace boost { namespace property_tree
     template<class Tr>
     template<class CharType>
     std::basic_string<CharType> 
-        basic_ptree<Tr>::get_own(const CharType *default_value, 
+        basic_ptree<Tr>::get_value(const CharType *default_value, 
                                      const std::locale &loc) const
     {
         BOOST_STATIC_ASSERT((boost::is_same<char_type, CharType>::value == true)); // Character types must match
-        return get_own(std::basic_string<CharType>(default_value), loc);
+        return get_value(std::basic_string<CharType>(default_value), loc);
     }
 
     // Get value from data of ptree
     template<class Tr>
     template<class Type>
     optional<Type> 
-        basic_ptree<Tr>::get_own_optional(const std::locale &loc) const
+        basic_ptree<Tr>::get_value_optional(const std::locale &loc) const
     {
         BOOST_STATIC_ASSERT(boost::is_pointer<Type>::value == false);   // Disallow pointer types, they are unsafe
         Type tmp;
@@ -820,7 +820,7 @@ namespace boost { namespace property_tree
                                   const key_type &path,
                                   const std::locale &loc) const
     {
-        return get_child(separator, path).get_own<Type>(loc);
+        return get_child(separator, path).get_value<Type>(loc);
     }
 
     // Get value from data of child ptree (custom path separator)
@@ -859,7 +859,7 @@ namespace boost { namespace property_tree
                                           const std::locale &loc) const
     {
         if (optional<const basic_ptree<Tr> &> child = get_child_optional(separator, path))
-            return child.get().get_own_optional<Type>(loc);
+            return child.get().get_value_optional<Type>(loc);
         else
             return optional<Type>();
     }
@@ -907,7 +907,7 @@ namespace boost { namespace property_tree
     // Put value in data of ptree
     template<class Tr>
     template<class Type> 
-    void basic_ptree<Tr>::put_own(const Type &value, const std::locale &loc)
+    void basic_ptree<Tr>::put_value(const Type &value, const std::locale &loc)
     {
         using namespace boost;
         // Make sure that no pointer other than char_type * is allowed
@@ -930,13 +930,13 @@ namespace boost { namespace property_tree
         if (!do_not_replace &&
             (child = get_child_optional(separator, path)))
         {
-            child.get().put_own(value, loc);
+            child.get().put_value(value, loc);
             return *child;
         }
         else
         {
             basic_ptree<Tr> &child2 = put_child(separator, path, empty_ptree<basic_ptree<Tr> >(), do_not_replace);
-            child2.put_own(value, loc);
+            child2.put_value(value, loc);
             return child2;
         }
     }
