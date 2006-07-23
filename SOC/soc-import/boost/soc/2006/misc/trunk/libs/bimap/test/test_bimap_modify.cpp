@@ -12,11 +12,14 @@
 #include <cstddef>
 #include <cassert>
 #include <algorithm>
-#include <sstream>
-#include <algorithm>
 
 // Boost.Test
 #include <boost/test/minimal.hpp>
+
+// std
+#include <sstream>
+#include <algorithm>
+#include <set>
 
 // Boost
 #include <boost/archive/text_oarchive.hpp>

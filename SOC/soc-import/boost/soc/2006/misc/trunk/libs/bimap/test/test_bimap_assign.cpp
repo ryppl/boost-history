@@ -24,12 +24,12 @@
 // Boost
 #include <boost/assign/list_of.hpp>
 #include <boost/assign/list_inserter.hpp>
-namespace ba =  boost::assign;
 
 // Boost.Bimap
 #include <boost/bimap/bimap.hpp>
 #include <boost/bimap/list_of.hpp>
 
+namespace ba =  boost::assign;
 
 void test_bimap_assign()
 {

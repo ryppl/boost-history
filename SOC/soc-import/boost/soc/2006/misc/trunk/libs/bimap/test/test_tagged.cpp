@@ -38,6 +38,7 @@ BOOST_BIMAP_TEST_STATIC_FUNCTION( test_metafunctions )
     using namespace boost::bimap::tags;
     using namespace boost::mpl::placeholders;
     using namespace boost;
+
     struct tag      {};
     struct value    {};
 
