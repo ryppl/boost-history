@@ -29,6 +29,7 @@ extern "C" {
 
 #include <string>
 
+#include <boost/assert.hpp>
 #include <boost/process/exceptions.hpp>
 #include <boost/throw_exception.hpp>
 
