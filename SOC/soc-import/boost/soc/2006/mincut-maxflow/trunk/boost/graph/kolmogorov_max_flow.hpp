@@ -379,7 +379,7 @@ namespace boost {
               }
               if(get_tree(current_node) == tColorTraits::white()){ 
                 //we're in the source-tree
-                tDistanceVal min_distance = std::numeric_limits< tDistanceVal >::max();
+                tDistanceVal min_distance = (std::numeric_limits< tDistanceVal >::max)();
                 tEdge new_parent_edge;                                
                 tOutEdgeIterator ei,e_end;
                 for(tie(ei, e_end) = out_edges(current_node, m_g); ei != e_end; ++ei){
@@ -395,7 +395,7 @@ namespace boost {
                     }
                   }
                 }
-                if(min_distance != std::numeric_limits< tDistanceVal >::max()){
+                if(min_distance != (std::numeric_limits< tDistanceVal >::max)()){
                   set_edge_to_parent(current_node, new_parent_edge);
                   m_dist_map[current_node] = min_distance + 1;
                   m_time_map[current_node] = m_time;
@@ -425,7 +425,7 @@ namespace boost {
                 assert(get_tree(current_node) == tColorTraits::black());
                 tOutEdgeIterator ei,e_end;
                 tEdge new_parent_edge;
-                tDistanceVal min_distance = std::numeric_limits< tDistanceVal >::max();
+                tDistanceVal min_distance = (std::numeric_limits< tDistanceVal >::max)();
                 for(tie(ei,e_end) = out_edges(current_node,m_g);ei != e_end;++ei){
                   const tEdge out_edge = *ei;
                   const tVertex other_node = target(out_edge, m_g);
@@ -439,7 +439,7 @@ namespace boost {
                     }
                   }
                 }
-                if(min_distance != std::numeric_limits< tDistanceVal >::max()){
+                if(min_distance != (std::numeric_limits< tDistanceVal >::max)()){
                   set_edge_to_parent(current_node, new_parent_edge);
                   m_dist_map[current_node] = min_distance + 1;
                   m_time_map[current_node] = m_time;                          
