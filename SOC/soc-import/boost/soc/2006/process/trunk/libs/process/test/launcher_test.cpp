@@ -301,6 +301,32 @@ test_set_environment_non_empty(void)
 
 // ------------------------------------------------------------------------
 
+static void
+test_shell(void)
+{
+#if defined(BOOST_PROCESS_POSIX_API)
+    bp::command_line cl =
+        bp::command_line::shell("echo test | sed 's,^,LINE-,'");
+#elif defined(BOOST_PROCESS_WIN32_API)
+    bp::command_line cl =
+        bp::command_line::shell("if foo==foo echo LINE-test");
+#endif
+    bp::attributes a(cl);
+    bp::child c = bp::launcher(bp::launcher::REDIR_ALL).
+        start< bp::attributes >(a);
+
+    bp::pistream& is = c.get_stdout();
+    std::string word;
+    is >> word;
+    BOOST_CHECK_EQUAL(word, "LINE-test");
+
+    bp::status s = c.wait();
+    BOOST_REQUIRE(s.exited());
+    BOOST_CHECK_EQUAL(s.exit_status(), EXIT_SUCCESS);
+}
+
+// ------------------------------------------------------------------------
+
 but::test_suite *
 init_unit_test_suite(int argc, char* argv[])
 {
@@ -321,6 +347,7 @@ init_unit_test_suite(int argc, char* argv[])
     test->add(BOOST_TEST_CASE(&test_set_environment_empty), 0, 10);
 #endif
     test->add(BOOST_TEST_CASE(&test_set_environment_non_empty), 0, 10);
+    test->add(BOOST_TEST_CASE(&test_shell), 0, 10);
 
     return test;
 }

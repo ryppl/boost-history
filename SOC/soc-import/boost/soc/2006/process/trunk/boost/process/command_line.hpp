@@ -21,7 +21,10 @@
 #elif defined(BOOST_PROCESS_WIN32_API)
 #   include <tchar.h>
 #   include <windows.h>
+#   include <boost/assert.hpp>
+#   include <boost/process/exceptions.hpp>
 #   include <boost/shared_array.hpp>
+#   include <boost/throw_exception.hpp>
 #else
 #   error "Unsupported platform."
 #endif
@@ -54,6 +57,8 @@ private:
 public:
     explicit command_line(const std::string& executable);
 
+    static command_line shell(const std::string& command);
+
     template< typename T >
     command_line& argument(const T& argument);
 
@@ -67,6 +72,30 @@ inline
 command_line::command_line(const std::string& executable) :
     m_executable(executable)
 {
+}
+
+// ------------------------------------------------------------------------
+
+inline
+command_line
+command_line::shell(const std::string& command)
+{
+#if defined(BOOST_PROCESS_POSIX_API)
+    command_line cl("/bin/sh");
+    return cl.argument("sh").argument("-c").argument(command);
+#elif defined(BOOST_PROCESS_WIN32_API)
+    TCHAR buf[MAX_PATH];
+    UINT res = ::GetWindowsDirectory(buf, MAX_PATH);
+    if (res == 0)
+        boost::throw_exception
+            (system_error("boost::process::shell_command_line::"
+                          "shell_command_line",
+                          "GetWindowsDirectory failed", ::GetLastError()));
+    BOOST_ASSERT(res < MAX_PATH);
+
+    command_line cl(std::string(buf) + "\\cmd.exe");
+    return cl.argument("cmd").argument("/c").argument(command);
+#endif
 }
 
 // ------------------------------------------------------------------------

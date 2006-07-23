@@ -90,6 +90,30 @@ test_executable(void)
 
 // ------------------------------------------------------------------------
 
+static void
+test_shell(void)
+{
+    bp::command_line cl = bp::command_line::shell("test command");
+
+#if defined(BOOST_PROCESS_POSIX_API)
+    BOOST_REQUIRE(cl.get_executable().find("sh") != std::string::npos);
+    BOOST_REQUIRE_EQUAL(cl.get_arguments().size(),
+        static_cast< bp::command_line::arguments_vector::size_type >(3));
+    BOOST_CHECK_EQUAL(cl.get_arguments()[0], "sh");
+    BOOST_CHECK_EQUAL(cl.get_arguments()[1], "-c");
+    BOOST_CHECK_EQUAL(cl.get_arguments()[2], "test command");
+#elif defined(BOOST_PROCESS_WIN32_API)
+    BOOST_REQUIRE(cl.get_executable().find("cmd.exe") != std::string::npos);
+    BOOST_REQUIRE_EQUAL(cl.get_arguments().size(),
+        static_cast< bp::command_line::arguments_vector::size_type >(3));
+    BOOST_CHECK_EQUAL(cl.get_arguments()[0], "cmd");
+    BOOST_CHECK_EQUAL(cl.get_arguments()[1], "/c");
+    BOOST_CHECK_EQUAL(cl.get_arguments()[2], "test command");
+#endif
+}
+
+// ------------------------------------------------------------------------
+
 #if defined(BOOST_PROCESS_POSIX_API)
 static void
 test_posix_argv(void)
@@ -140,6 +164,7 @@ init_unit_test_suite(int argc, char* argv[])
     test->add(BOOST_TEST_CASE(&test_arguments_empty));
     test->add(BOOST_TEST_CASE(&test_arguments_addition));
     test->add(BOOST_TEST_CASE(&test_arguments_types));
+    test->add(BOOST_TEST_CASE(&test_shell));
 
 #if defined(BOOST_PROCESS_POSIX_API)
     test->add(BOOST_TEST_CASE(&test_posix_argv));
