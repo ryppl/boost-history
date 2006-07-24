@@ -9,9 +9,22 @@
 # at http://www.boost.org/LICENSE_1_0.txt.)
 #
 
+using doxygen ;
 using quickbook ;
 
-xml process : process.qbk ;
+doxygen autodoc
+    :
+        ../../../boost/process.hpp
+        [ glob ../../../boost/process/*.hpp ]
+        [ glob ../../../boost/process/detail/*.hpp ]
+    :
+    ;
+
+xml process
+    :
+        process.qbk
+    ;
+
 boostbook standalone
     :
         process

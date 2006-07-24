@@ -40,4 +40,5 @@
 [include process_features.qbk]
 [include process_concepts.qbk]
 [include process_design.qbk]
+[xinclude autodoc.boostbook]
 [include process_ack.qbk]
