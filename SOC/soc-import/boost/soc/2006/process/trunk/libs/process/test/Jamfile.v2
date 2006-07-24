@@ -45,6 +45,7 @@ test-suite process :
     [ compile include_pistream_test.cpp : : ]
     [ compile include_posix_attributes_test.cpp : : ]
     [ compile include_postream_test.cpp : : ]
+    [ compile include_process_test.cpp : : ]
     [ compile include_status_test.cpp : : ]
     [ compile include_top_test.cpp : : ]
 

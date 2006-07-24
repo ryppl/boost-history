@@ -22,6 +22,7 @@
 #include <boost/process/launcher.hpp>
 #include <boost/process/pistream.hpp>
 #include <boost/process/postream.hpp>
+#include <boost/process/process.hpp>
 #include <boost/process/status.hpp>
 
 #if defined(BOOST_PROCESS_POSIX_API)
