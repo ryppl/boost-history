@@ -98,14 +98,14 @@ test-suite process :
 
     [ run launcher_test.cpp
         : helpers
-        : 
+        :
         : <library>../../../../boost//unit_test_framework
           <library>../../../../boost//filesystem
         ]
 
     [ run status_test.cpp
         : helpers
-        : 
+        :
         : <library>../../../../boost//unit_test_framework
           <library>../../../../boost//filesystem
         ]
