@@ -55,7 +55,8 @@ private:
 #endif
 
 public:
-    explicit command_line(const std::string& executable);
+    explicit command_line(const std::string& executable,
+                          const std::string& firstarg = "");
 
     static command_line shell(const std::string& command);
 
@@ -69,9 +70,27 @@ public:
 // ------------------------------------------------------------------------
 
 inline
-command_line::command_line(const std::string& executable) :
+command_line::command_line(const std::string& executable,
+                           const std::string& firstarg) :
     m_executable(executable)
 {
+    if (firstarg.empty()) {
+        std::string::size_type pos;
+
+#if defined(BOOST_PROCESS_POSIX_API)
+        pos = m_executable.rfind('/');
+#elif defined(BOOST_PROCESS_WIN32_API)
+        pos = m_executable.rfind('\\');
+        if (pos == std::string::npos)
+            pos = m_executable.rfind('/');
+#endif
+
+        if (pos == std::string::npos)
+            m_arguments.push_back(m_executable);
+        else
+            m_arguments.push_back(m_executable.substr(pos + 1));
+    } else
+        m_arguments.push_back(firstarg);
 }
 
 // ------------------------------------------------------------------------
@@ -81,8 +100,8 @@ command_line
 command_line::shell(const std::string& command)
 {
 #if defined(BOOST_PROCESS_POSIX_API)
-    command_line cl("/bin/sh");
-    return cl.argument("sh").argument("-c").argument(command);
+    command_line cl("/bin/sh", "sh");
+    return cl.argument("-c").argument(command);
 #elif defined(BOOST_PROCESS_WIN32_API)
     TCHAR buf[MAX_PATH];
     UINT res = ::GetSystemDirectory(buf, MAX_PATH);
@@ -93,8 +112,8 @@ command_line::shell(const std::string& command)
                           "GetWindowsDirectory failed", ::GetLastError()));
     BOOST_ASSERT(res < MAX_PATH);
 
-    command_line cl(std::string(buf) + "\\cmd.exe");
-    return cl.argument("cmd").argument("/c").argument(command);
+    command_line cl(std::string(buf) + "\\cmd.exe", "cmd");
+    return cl.argument("/c").argument(command);
 #endif
 }
 

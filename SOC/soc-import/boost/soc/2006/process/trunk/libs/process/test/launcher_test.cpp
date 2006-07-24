@@ -29,7 +29,7 @@ void
 test_input(void)
 {
     bp::command_line cl(get_helpers_path());
-    cl.argument("helpers").argument("stdin-to-stdout");
+    cl.argument("stdin-to-stdout");
     bp::attributes a;
 
     bp::launcher l(bp::launcher::REDIR_STDIN | bp::launcher::REDIR_STDOUT);
@@ -58,7 +58,6 @@ test_output(bool out,
             const std::string& expmsg)
 {
     bp::command_line cl(get_helpers_path());
-    cl.argument("helpers");
     cl.argument(out ? "echo-stdout" : "echo-stderr").argument(realmsg);
     bp::attributes a;
 
@@ -127,7 +126,7 @@ void
 test_merge(const std::string& msg)
 {
     bp::command_line cl(get_helpers_path());
-    cl.argument("helpers").argument("echo-stdout-stderr").argument(msg);
+    cl.argument("echo-stdout-stderr").argument(msg);
     bp::attributes a;
 
     bp::launcher l(bp::launcher::REDIR_STDOUT |
@@ -164,7 +163,7 @@ static void
 test_default_work_directory(void)
 {
     bp::command_line cl(get_helpers_path());
-    cl.argument("helpers").argument("pwd");
+    cl.argument("pwd");
     bp::attributes a;
 
     bp::launcher l(bp::launcher::REDIR_STDOUT);
@@ -189,7 +188,7 @@ test_explicit_work_directory(void)
     bfs::path wdir = bfs::current_path() / "test.dir";
 
     bp::command_line cl(get_helpers_path());
-    cl.argument("helpers").argument("pwd");
+    cl.argument("pwd");
     bp::attributes a(wdir.string());
 
     BOOST_REQUIRE_NO_THROW(bfs::create_directory(wdir));
@@ -219,7 +218,7 @@ static void
 test_unset_environment(void)
 {
     bp::command_line cl(get_helpers_path());
-    cl.argument("helpers").argument("query-env").argument("TO_BE_UNSET");
+    cl.argument("query-env").argument("TO_BE_UNSET");
     bp::attributes a;
 
 #if defined(BOOST_PROCESS_POSIX_API)
@@ -252,7 +251,7 @@ static void
 test_set_environment(const std::string& value)
 {
     bp::command_line cl(get_helpers_path());
-    cl.argument("helpers").argument("query-env").argument("TO_BE_SET");
+    cl.argument("query-env").argument("TO_BE_SET");
     bp::attributes a;
 
 #if defined(BOOST_PROCESS_POSIX_API)
