@@ -107,8 +107,7 @@ command_line::shell(const std::string& command)
     UINT res = ::GetSystemDirectory(buf, MAX_PATH);
     if (res == 0)
         boost::throw_exception
-            (system_error("boost::process::shell_command_line::"
-                          "shell_command_line",
+            (system_error("boost::process::command_line::shell",
                           "GetWindowsDirectory failed", ::GetLastError()));
     BOOST_ASSERT(res < MAX_PATH);
 
