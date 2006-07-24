@@ -1,1 +1,3 @@
 Just a test of move operation on SVN.
+
+And rev the file.
