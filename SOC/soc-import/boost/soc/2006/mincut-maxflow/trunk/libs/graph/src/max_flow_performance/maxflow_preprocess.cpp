@@ -74,11 +74,15 @@ int main()
     tie(to_sink, is_there) = edge(v, t, g);
     if( is_there ){
       if( get(capacity, to_sink) > get(capacity, from_source) ){ 
-        augmented_flow += get(capacity, from_source);
-        put(capacity, from_source, 0);
+	tCapMapValue to_augment=get(capacity, from_source);
+	capacity[from_source]=0;
+	capacity[to_sink]-=to_augment;
+        augmented_flow += to_augment;
       }else{
-        augmented_flow += get(capacity, to_sink);
-        put(capacity, to_sink, 0);
+	tCapMapValue to_augment=get(capacity, to_sink);	
+	capacity[to_sink]=0;
+	capacity[from_source]-=to_augment;
+        augmented_flow += to_augment;
       }
     }
   }
@@ -88,5 +92,6 @@ int main()
   //remove zero edges (most of them are the reverse edges)
   remove_edge_if(filter, g);
   write_dimacs_max_flow(g, capacity, identity_property_map(),s, t, std::ostream_iterator<std::string>(std::cout,"\n"));
+  std::cerr << "removed " << augmented_flow << " from SOURCE->NODE->SINK connects" <<std::endl;
   return 0;
 }

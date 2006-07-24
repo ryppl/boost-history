@@ -62,16 +62,41 @@ run_ac_test(){
     NUMBER_OF_EDGES=`grep "p max" $datafile | cut -d' ' -f4`
     LOGFILE_LINE="$datafile $NUMBER_OF_NODES $NUMBER_OF_EDGES"
     echo "Kolmogorov..." 
-    LOGFILE_LINE="$LOGFILE_LINE `$KOLMO_EXE < $datafile |tee grep time: |sed 's/time: //'` "
+    LOGFILE_LINE="$LOGFILE_LINE `$KOLMO_EXE < $datafile |grep time: |sed 's/time: //'` "
     echo "Push-Relabel..." 
-    LOGFILE_LINE="$LOGFILE_LINE `$BOOST_PUSH_EXE < $datafile |tee grep time: |sed 's/time: //'` "
+    LOGFILE_LINE="$LOGFILE_LINE `$BOOST_PUSH_EXE < $datafile |grep time: |sed 's/time: //'` "
     echo "Boost::Kolmo..." 
-    LOGFILE_LINE="$LOGFILE_LINE `$BOOST_KOLMO_EXE < $datafile |tee grep time: |sed 's/time: //'` "
+    LOGFILE_LINE="$LOGFILE_LINE `$BOOST_KOLMO_EXE < $datafile |grep time: |sed 's/time: //'` "
     echo "hi_pr" 
-    LOGFILE_LINE="$LOGFILE_LINE `$H_PRF_EXE < $datafile |tee grep time: |sed 's/time: //'` "
+    LOGFILE_LINE="$LOGFILE_LINE `$H_PRF_EXE < $datafile |grep time: |sed 's/time: //'` "
     echo "hi_prw" 
-    LOGFILE_LINE="$LOGFILE_LINE `$H_PRFW_EXE < $datafile |tee grep time: |sed 's/time: //'` "
+    LOGFILE_LINE="$LOGFILE_LINE `$H_PRFW_EXE < $datafile |grep time: |sed 's/time: //'` "
     echo $LOGFILE_LINE >> $AC_LOG
+  done
+}
+
+run_genrmf_test(){
+  GENRMF_DATAFILES=`ls $DATADIR/*_genrmf_*.dat`
+  GENRMF_LOG=results/genrmf.log
+  echo "Running genrmf tests"
+  echo "#filename vertices edges kolmogorov pushrelabel boost_kolmo hi_pr hi_prw" > $GENRMF_LOG
+  for datafile in $GENRMF_DATAFILES
+  do
+    echo "Running tests with $datafile" 
+    NUMBER_OF_NODES=`grep "p max" $datafile | cut -d' ' -f3`
+    NUMBER_OF_EDGES=`grep "p max" $datafile | cut -d' ' -f4`
+    LOGFILE_LINE="$datafile $NUMBER_OF_NODES $NUMBER_OF_EDGES"
+    echo "Kolmogorov..." 
+    LOGFILE_LINE="$LOGFILE_LINE `$KOLMO_EXE < $datafile |grep time: |sed 's/time: //'` "
+    echo "Push-Relabel..." 
+    LOGFILE_LINE="$LOGFILE_LINE `$BOOST_PUSH_EXE < $datafile |grep time: |sed 's/time: //'` "
+    echo "Boost::Kolmo..." 
+    LOGFILE_LINE="$LOGFILE_LINE `$BOOST_KOLMO_EXE < $datafile |grep time: |sed 's/time: //'` "
+    echo "hi_pr" 
+    LOGFILE_LINE="$LOGFILE_LINE `$H_PRF_EXE < $datafile |grep time: |sed 's/time: //'` "
+    echo "hi_prw" 
+    LOGFILE_LINE="$LOGFILE_LINE `$H_PRFW_EXE < $datafile |grep time: |sed 's/time: //'` "
+    echo $LOGFILE_LINE >> $GENRMF_LOG
   done
 }
 
@@ -80,7 +105,9 @@ case $1 in
 
 "AK") run_ak_test ;;
 
-"" ) echo "Usage: generate_test_cases {AC|AK|filename(s)} ";;
+"GENRMF") run_genrmf_test;;
+
+"" ) echo "Usage: generate_test_cases {AC|AK|GENRMF|filename(s)} ";;
 
 *)
 	FILE_LOG=results/file.log
