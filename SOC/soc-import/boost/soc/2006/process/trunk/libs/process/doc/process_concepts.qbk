@@ -100,12 +100,12 @@ also be queried while the process is running.  In other words: these
 attributes belong to the `Process` concept, not just to the `Child` one.
 
 There are some attributes that are common among all the operating systems
-supported by Boost.Process, such as the process' working directory or the
-startup command line.  Unfortunately, the vast majority cannot be
-generalized and need to be kept specific to the operating system the
-library is running under.  For example: POSIX systems have a feature to
-change a process' run directory through the chroot(2) call but Windows
-systems do not have anything similar.
+supported by Boost.Process, such as the process' working directory.
+Unfortunately, the vast majority cannot be generalized and need to be kept
+specific to the operating system the library is running under.  For
+example: POSIX systems have a feature to change a process' run directory
+through the chroot(2) call but Windows systems do not have anything
+similar.
 
 The `Attributes` concept represents a process' attributes as described
 above.  Each `Process` object has one, and only one, `Attributes` object
@@ -113,8 +113,8 @@ associated to it.  While launching a child process, the caller can specify
 the set of attributes it will use.  (This is the reason for this data to
 live in a standalone class.)
 
-This concept is implemented by the `basic_attributes` template and the
-`attributes`, `posix_attributes` and `win32_attributes` classes.
+This concept is implemented by the `attributes`, `posix_attributes` and
+`win32_attributes` classes.
 
 [endsect]
 
@@ -123,18 +123,17 @@ This concept is implemented by the `basic_attributes` template and the
 [section Command line]
 
 As already described, a process is the execution context of a program.
-This program is launched using a command line, a tuple that includes the
-binary to execute and the set of arguments to pass to it.
+This program is launched using a command line: a tuple that includes the
+binary to execute and the set of arguments passed to it.
 
-The command line is an attribute on its own because all the information it
-includes can be queried at run time from any process (assuming correct
-access rights).  In other words: it is not something used exclusively
-during process startup.
+The command line might be seen as an attribute: a running process always
+has a command line and, given correct access rights, it can be queried at
+run time for foreign (non-child) processes.  However, it is not implemented
+as such because it has to be treated differently than attributes.
 
-The `Command_Line` concept represents a process' startup command line and
-is typically wrapped inside the `Attributes` concept.
+The `Command_Line` concept represents a process' startup command line.
 
-This concept is implemented by the `cmdline` class.
+This concept is implemented by the `command_line` class.
 
 [endsect]
 
