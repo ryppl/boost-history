@@ -59,7 +59,7 @@ public:
 #endif
 
     file_handle(void);
-    file_handle(const handle_type& h);
+    file_handle(handle_type h);
     file_handle(const file_handle& fh);
     ~file_handle(void);
 
@@ -69,7 +69,7 @@ public:
     handle_type get(void) const;
 
 #if defined(BOOST_PROCESS_POSIX_API)
-    void posix_remap(const handle_type& h);
+    void posix_remap(handle_type h);
     static file_handle posix_dup(int h1, int h2);
 #elif defined(BOOST_PROCESS_WIN32_API)
     static file_handle win32_dup(HANDLE h, bool inheritable);
@@ -107,7 +107,7 @@ file_handle::file_handle(void) :
 // ------------------------------------------------------------------------
 
 inline
-file_handle::file_handle(const handle_type& h) :
+file_handle::file_handle(handle_type h) :
     m_handle(h)
 {
     BOOST_ASSERT(m_handle != INVALID_VALUE);
@@ -190,7 +190,7 @@ file_handle::get(void)
 #if defined(BOOST_PROCESS_POSIX_API)
 inline
 void
-file_handle::posix_remap(const handle_type& h)
+file_handle::posix_remap(handle_type h)
 {
     BOOST_ASSERT(is_valid());
 

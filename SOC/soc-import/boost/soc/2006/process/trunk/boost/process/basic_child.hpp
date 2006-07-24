@@ -63,7 +63,7 @@ private:
     boost::shared_ptr< pistream > m_sstderr;
 
     friend class launcher;
-    basic_child(const handle_type& h,
+    basic_child(handle_type h,
                 const Command_Line& cl,
                 const Attributes& attrs,
                 detail::file_handle& fhstdin,
@@ -76,7 +76,7 @@ private:
 template< class Command_Line, class Attributes >
 inline
 basic_child< Command_Line, Attributes >::basic_child
-    (const handle_type& h, const Command_Line& cl, const Attributes& attrs,
+    (handle_type h, const Command_Line& cl, const Attributes& attrs,
      detail::file_handle& fhstdin, detail::file_handle& fhstdout,
      detail::file_handle& fhstderr) :
     basic_process< Command_Line, Attributes >(h, cl, attrs)

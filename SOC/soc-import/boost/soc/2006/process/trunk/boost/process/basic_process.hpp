@@ -43,7 +43,7 @@ public:
     handle_type get_handle(void) const;
 
 protected:
-    basic_process(const handle_type& h, const Command_Line& cl,
+    basic_process(handle_type h, const Command_Line& cl,
                   const Attributes& a);
 
 private:
@@ -57,7 +57,7 @@ private:
 template< class Command_Line, class Attributes >
 inline
 basic_process< Command_Line, Attributes >::basic_process
-    (const handle_type& h, const Command_Line& cl, const Attributes& a) :
+    (handle_type h, const Command_Line& cl, const Attributes& a) :
     m_handle(h),
     m_command_line(cl),
     m_attributes(a)
