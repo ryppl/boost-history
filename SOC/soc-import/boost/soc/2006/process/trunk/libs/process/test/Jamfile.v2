@@ -43,6 +43,7 @@ test-suite process :
     [ compile include_forward_decls_test.cpp : : ]
     [ compile include_launcher_test.cpp : : ]
     [ compile include_pistream_test.cpp : : ]
+    [ compile include_posix_attributes_test.cpp : : ]
     [ compile include_postream_test.cpp : : ]
     [ compile include_status_test.cpp : : ]
     [ compile include_top_test.cpp : : ]
@@ -104,6 +105,13 @@ test-suite process :
         ]
 
     [ run status_test.cpp
+        : helpers
+        :
+        : <library>../../../../boost//unit_test_framework
+          <library>../../../../boost//filesystem
+        ]
+
+    [ run posix_attributes_test.cpp
         : helpers
         :
         : <library>../../../../boost//unit_test_framework

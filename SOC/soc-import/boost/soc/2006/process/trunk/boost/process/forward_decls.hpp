@@ -12,6 +12,8 @@
 #if !defined(BOOST_PROCESS_FORWARD_DECLS_HPP)
 #define BOOST_PROCESS_FORWARD_DECLS_HPP
 
+#include <boost/process/config.hpp>
+
 namespace boost {
 namespace process {
 
@@ -37,6 +39,10 @@ class status;
 
 typedef basic_child< command_line, attributes > child;
 typedef basic_process< command_line, attributes > process;
+
+#if defined(BOOST_PROCESS_POSIX_API)
+class posix_attributes;
+#endif
 
 // ------------------------------------------------------------------------
 
