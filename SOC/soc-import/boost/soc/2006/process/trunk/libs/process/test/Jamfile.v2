@@ -31,7 +31,6 @@ exe helpers
 
 test-suite process :
     [ compile include_attributes_test.cpp : : ]
-    [ compile include_basic_attributes_test.cpp : : ]
     [ compile include_basic_child_test.cpp : : ]
     [ compile include_basic_process_test.cpp : : ]
     [ compile include_child_test.cpp : : ]

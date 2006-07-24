@@ -14,13 +14,14 @@
 
 #include <boost/process/attributes.hpp>
 #include <boost/process/basic_child.hpp>
+#include <boost/process/command_line.hpp>
 
 namespace boost {
 namespace process {
 
 // ------------------------------------------------------------------------
 
-typedef basic_child< attributes > child;
+typedef basic_child< command_line, attributes > child;
 
 // ------------------------------------------------------------------------
 

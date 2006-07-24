@@ -13,7 +13,6 @@
 #define BOOST_PROCESS_HPP
 
 #include <boost/process/attributes.hpp>
-#include <boost/process/basic_attributes.hpp>
 #include <boost/process/basic_child.hpp>
 #include <boost/process/basic_process.hpp>
 #include <boost/process/command_line.hpp>

@@ -42,16 +42,18 @@ class launcher
     detail::environment m_environment;
 
 #if defined(BOOST_PROCESS_POSIX_API)
-    template< class Attributes >
-    basic_child< Attributes > start_posix
-        (const Attributes& attrs,
+    template< class Command_Line, class Attributes >
+    basic_child< Command_Line, Attributes > start_posix
+        (const Command_Line& cl,
+         const Attributes& attrs,
          boost::optional< detail::pipe > pstdin,
          boost::optional< detail::pipe > pstdout,
          boost::optional< detail::pipe > pstderr);
 #elif defined(BOOST_PROCESS_WIN32_API)
-    template< class Attributes >
-    basic_child< Attributes > start_win32
-        (const Attributes& attrs,
+    template< class Command_Line, class Attributes >
+    basic_child< Command_Line, Attributes > start_win32
+        (const Command_Line& cl,
+         const Attributes& attrs,
          boost::optional< detail::pipe > pstdin,
          boost::optional< detail::pipe > pstdout,
          boost::optional< detail::pipe > pstderr);
@@ -73,8 +75,9 @@ public:
     void set_environment(const std::string& var, const std::string& value);
     void unset_environment(const std::string& var);
 
-    template< class Attributes >
-    basic_child< Attributes > start(const Attributes& attrs);
+    template< class Command_Line, class Attributes >
+    basic_child< Command_Line, Attributes > start(const Command_Line& cl,
+                                                  const Attributes& attrs);
 };
 
 // ------------------------------------------------------------------------
@@ -110,10 +113,10 @@ launcher::unset_environment(const std::string& var)
 
 // ------------------------------------------------------------------------
 
-template< class Attributes >
+template< class Command_Line, class Attributes >
 inline
-basic_child< Attributes >
-launcher::start(const Attributes& attrs)
+basic_child< Command_Line, Attributes >
+launcher::start(const Command_Line& cl, const Attributes& attrs)
 {
     boost::optional< detail::pipe > pstdin;
     if (m_flags & REDIR_STDIN)
@@ -128,19 +131,19 @@ launcher::start(const Attributes& attrs)
         pstderr = detail::pipe();
 
 #if defined(BOOST_PROCESS_POSIX_API)
-    return start_posix(attrs, pstdin, pstdout, pstderr);
+    return start_posix(cl, attrs, pstdin, pstdout, pstderr);
 #elif defined(BOOST_PROCESS_WIN32_API)
-    return start_win32(attrs, pstdin, pstdout, pstderr);
+    return start_win32(cl, attrs, pstdin, pstdout, pstderr);
 #endif
 }
 
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
-template< class Attributes >
+template< class Command_Line, class Attributes >
 inline
-basic_child< Attributes >
-launcher::start_posix(const Attributes& attrs,
+basic_child< Command_Line, Attributes >
+launcher::start_posix(const Command_Line& cl, const Attributes& attrs,
                       boost::optional< detail::pipe > pstdin,
                       boost::optional< detail::pipe > pstdout,
                       boost::optional< detail::pipe > pstderr)
@@ -187,13 +190,10 @@ launcher::start_posix(const Attributes& attrs,
             ::exit(EXIT_FAILURE);
         }
 
-        std::pair< size_t, char** > args =
-            attrs.get_command_line().posix_argv();
-        const std::string& executable =
-            attrs.get_command_line().get_executable();
+        std::pair< size_t, char** > args = cl.posix_argv();
         char** envp = m_environment.envp();
 
-        ::execve(executable.c_str(), args.second, envp);
+        ::execve(cl.get_executable().c_str(), args.second, envp);
         system_error e("boost::process::launcher::start",
                        "execvp(2) failed", errno);
 
@@ -229,24 +229,25 @@ launcher::start_posix(const Attributes& attrs,
         BOOST_ASSERT(!(m_flags & REDIR_STDIN) || fhstdin.is_valid());
         BOOST_ASSERT(!(m_flags & REDIR_STDOUT) || fhstdout.is_valid());
         BOOST_ASSERT(!(m_flags & REDIR_STDERR) || fhstderr.is_valid());
-        return basic_child< Attributes >(pid, attrs, fhstdin, fhstdout,
-                                         fhstderr);
+        return basic_child< Command_Line, Attributes >
+            (pid, cl, attrs, fhstdin, fhstdout, fhstderr);
     }
 
     // Not reached.
     BOOST_ASSERT(false);
     detail::file_handle fhstdin, fhstdout, fhstderr;
-    return basic_child< Attributes >(pid, attrs, fhstdin, fhstdout, fhstderr);
+    return basic_child< Command_Line, Attributes >
+        (pid, cl, attrs, fhstdin, fhstdout, fhstderr);
 }
 #endif
 
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_WIN32_API)
-template< class Attributes >
+template< class Command_Line, class Attributes >
 inline
-basic_child< Attributes >
-launcher::start_win32(const Attributes& attrs,
+basic_child< Command_Line, Attributes >
+launcher::start_win32(const Command_Line& cl, const Attributes& attrs,
                       boost::optional< detail::pipe > pstdin,
                       boost::optional< detail::pipe > pstdout,
                       boost::optional< detail::pipe > pstderr)
@@ -288,10 +289,9 @@ launcher::start_win32(const Attributes& attrs,
     PROCESS_INFORMATION pi;
     ::ZeroMemory(&pi, sizeof(pi));
 
-    boost::shared_array< TCHAR > cmdline =
-        attrs.get_command_line().win32_cmdline();
+    boost::shared_array< TCHAR > cmdline = cl.win32_cmdline();
     boost::scoped_array< TCHAR > executable
-        (::_tcsdup(TEXT(attrs.get_command_line().get_executable().c_str())));
+        (::_tcsdup(TEXT(cl.get_executable().c_str())));
     boost::scoped_array< TCHAR > workdir
         (::_tcsdup(TEXT(attrs.get_work_directory().c_str())));
     m_environment.set("", attrs.get_work_directory());
@@ -307,8 +307,8 @@ launcher::start_win32(const Attributes& attrs,
     BOOST_ASSERT(!(m_flags & REDIR_STDIN) || fhstdin.is_valid());
     BOOST_ASSERT(!(m_flags & REDIR_STDOUT) || fhstdout.is_valid());
     BOOST_ASSERT(!(m_flags & REDIR_STDERR) || fhstderr.is_valid());
-    return basic_child< Attributes >(pi.hProcess, attrs, fhstdin,
-                                     fhstdout, fhstderr);
+    return basic_child< Command_Line, Attributes >
+        (pi.hProcess, cl, attrs, fhstdin, fhstdout, fhstderr);
 }
 #endif
 

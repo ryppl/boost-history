@@ -30,10 +30,10 @@ test_input(void)
 {
     bp::command_line cl(get_helpers_path());
     cl.argument("helpers").argument("stdin-to-stdout");
-    bp::attributes a(cl);
+    bp::attributes a;
 
     bp::launcher l(bp::launcher::REDIR_STDIN | bp::launcher::REDIR_STDOUT);
-    bp::child c = l.start<bp::attributes>(a);
+    bp::child c = l.start(cl, a);
 
     bp::postream& os = c.get_stdin();
     bp::pistream& is = c.get_stdout();
@@ -60,7 +60,7 @@ test_output(bool out,
     bp::command_line cl(get_helpers_path());
     cl.argument("helpers");
     cl.argument(out ? "echo-stdout" : "echo-stderr").argument(realmsg);
-    bp::attributes a(cl);
+    bp::attributes a;
 
     // XXX WTH the following two lines result in REDIR_* being undefined
     // symbols?!
@@ -72,7 +72,7 @@ test_output(bool out,
     else
         flags = bp::launcher::REDIR_STDERR;
     bp::launcher l(flags);
-    bp::child c = l.start<bp::attributes>(a);
+    bp::child c = l.start(cl, a);
 
     std::string word;
     if (out) {
@@ -128,11 +128,11 @@ test_merge(const std::string& msg)
 {
     bp::command_line cl(get_helpers_path());
     cl.argument("helpers").argument("echo-stdout-stderr").argument(msg);
-    bp::attributes a(cl);
+    bp::attributes a;
 
     bp::launcher l(bp::launcher::REDIR_STDOUT |
                    bp::launcher::REDIR_STDERR_TO_STDOUT);
-    bp::child c = l.start<bp::attributes>(a);
+    bp::child c = l.start(cl, a);
 
     bp::pistream& is = c.get_stdout();
     std::string word;
@@ -165,10 +165,10 @@ test_default_work_directory(void)
 {
     bp::command_line cl(get_helpers_path());
     cl.argument("helpers").argument("pwd");
-    bp::attributes a(cl);
+    bp::attributes a;
 
     bp::launcher l(bp::launcher::REDIR_STDOUT);
-    bp::child c = l.start<bp::attributes>(a);
+    bp::child c = l.start(cl, a);
 
     bp::pistream& is = c.get_stdout();
     std::string dir;
@@ -190,12 +190,12 @@ test_explicit_work_directory(void)
 
     bp::command_line cl(get_helpers_path());
     cl.argument("helpers").argument("pwd");
-    bp::attributes a(cl, wdir.string());
+    bp::attributes a(wdir.string());
 
     BOOST_REQUIRE_NO_THROW(bfs::create_directory(wdir));
     try {
         bp::launcher l(bp::launcher::REDIR_STDOUT);
-        bp::child c = l.start<bp::attributes>(a);
+        bp::child c = l.start(cl, a);
 
         bp::pistream& is = c.get_stdout();
         std::string dir;
@@ -220,7 +220,7 @@ test_unset_environment(void)
 {
     bp::command_line cl(get_helpers_path());
     cl.argument("helpers").argument("query-env").argument("TO_BE_UNSET");
-    bp::attributes a(cl);
+    bp::attributes a;
 
 #if defined(BOOST_PROCESS_POSIX_API)
     BOOST_REQUIRE(::setenv("TO_BE_UNSET", "test", 1) != -1);
@@ -233,7 +233,7 @@ test_unset_environment(void)
 
     bp::launcher l(bp::launcher::REDIR_STDOUT);
     l.unset_environment("TO_BE_UNSET");
-    bp::child c = l.start<bp::attributes>(a);
+    bp::child c = l.start(cl, a);
 
     bp::pistream& is = c.get_stdout();
     std::string status;
@@ -253,7 +253,7 @@ test_set_environment(const std::string& value)
 {
     bp::command_line cl(get_helpers_path());
     cl.argument("helpers").argument("query-env").argument("TO_BE_SET");
-    bp::attributes a(cl);
+    bp::attributes a;
 
 #if defined(BOOST_PROCESS_POSIX_API)
     ::unsetenv("TO_BE_SET");
@@ -267,7 +267,7 @@ test_set_environment(const std::string& value)
 
     bp::launcher l(bp::launcher::REDIR_STDOUT);
     l.set_environment("TO_BE_SET", value);
-    bp::child c = l.start<bp::attributes>(a);
+    bp::child c = l.start(cl, a);
 
     bp::pistream& is = c.get_stdout();
     std::string status;
@@ -311,9 +311,8 @@ test_shell(void)
     bp::command_line cl =
         bp::command_line::shell("if foo==foo echo LINE-test");
 #endif
-    bp::attributes a(cl);
-    bp::child c = bp::launcher(bp::launcher::REDIR_ALL).
-        start< bp::attributes >(a);
+    bp::attributes a;
+    bp::child c = bp::launcher(bp::launcher::REDIR_ALL).start(cl, a);
 
     bp::pistream& is = c.get_stdout();
     std::string word;

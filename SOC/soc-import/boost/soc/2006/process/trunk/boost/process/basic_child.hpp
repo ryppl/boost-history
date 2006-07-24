@@ -43,12 +43,13 @@ namespace process {
 
 // ------------------------------------------------------------------------
 
-template< class Attributes >
+template< class Command_Line, class Attributes >
 class basic_child : 
-    public basic_process< Attributes >
+    public basic_process< Command_Line, Attributes >
 {
 public:
-    typedef typename basic_process< Attributes >::handle_type handle_type;
+    typedef typename basic_process< Command_Line, Attributes >::handle_type
+        handle_type;
 
     status wait(void);
 
@@ -63,6 +64,7 @@ private:
 
     friend class launcher;
     basic_child(const handle_type& h,
+                const Command_Line& cl,
                 const Attributes& attrs,
                 detail::file_handle& fhstdin,
                 detail::file_handle& fhstdout,
@@ -71,14 +73,13 @@ private:
 
 // ------------------------------------------------------------------------
 
-template< class Attributes >
+template< class Command_Line, class Attributes >
 inline
-basic_child< Attributes >::basic_child(const handle_type& h,
-                                       const Attributes& attrs,
-                                       detail::file_handle& fhstdin,
-                                       detail::file_handle& fhstdout,
-                                       detail::file_handle& fhstderr) :
-    basic_process< Attributes >(h, attrs)
+basic_child< Command_Line, Attributes >::basic_child
+    (const handle_type& h, const Command_Line& cl, const Attributes& attrs,
+     detail::file_handle& fhstdin, detail::file_handle& fhstdout,
+     detail::file_handle& fhstderr) :
+    basic_process< Command_Line, Attributes >(h, cl, attrs)
 {
     if (fhstdin.is_valid())
         m_sstdin.reset(new postream(fhstdin));
@@ -90,10 +91,10 @@ basic_child< Attributes >::basic_child(const handle_type& h,
 
 // ------------------------------------------------------------------------
 
-template< class Attributes >
+template< class Command_Line, class Attributes >
 inline
 postream&
-basic_child< Attributes >::get_stdin(void)
+basic_child< Command_Line, Attributes >::get_stdin(void)
     const
 {
     BOOST_ASSERT(m_sstdin);
@@ -102,10 +103,10 @@ basic_child< Attributes >::get_stdin(void)
 
 // ------------------------------------------------------------------------
 
-template< class Attributes >
+template< class Command_Line, class Attributes >
 inline
 pistream&
-basic_child< Attributes >::get_stdout(void)
+basic_child< Command_Line, Attributes >::get_stdout(void)
     const
 {
     BOOST_ASSERT(m_sstdout);
@@ -114,10 +115,10 @@ basic_child< Attributes >::get_stdout(void)
 
 // ------------------------------------------------------------------------
 
-template< class Attributes >
+template< class Command_Line, class Attributes >
 inline
 pistream&
-basic_child< Attributes >::get_stderr(void)
+basic_child< Command_Line, Attributes >::get_stderr(void)
     const
 {
     BOOST_ASSERT(m_sstderr);
@@ -126,14 +127,16 @@ basic_child< Attributes >::get_stderr(void)
 
 // ------------------------------------------------------------------------
 
-template< class Attributes >
+template< class Command_Line, class Attributes >
 inline
 status
-basic_child< Attributes >::wait(void)
+basic_child< Command_Line, Attributes >::wait(void)
 {
+    handle_type h = basic_child< Command_Line, Attributes >::get_handle();
+
 #if defined(BOOST_PROCESS_POSIX_API)
     int s;
-    if (::waitpid(basic_child< Attributes >::get_handle(), &s, 0) == -1)
+    if (::waitpid(h, &s, 0) == -1)
         boost::throw_exception
             (system_error("boost::process::basic_child::wait",
                           "waitpid(2) failed", errno));
@@ -142,10 +145,10 @@ basic_child< Attributes >::wait(void)
     DWORD code;
     // XXX This loop should go away in favour of a passive wait.
     do {
-        ::GetExitCodeProcess(basic_child< Attributes >::get_handle(), &code);
+        ::GetExitCodeProcess(h, &code);
         ::Sleep(500);
     } while (code == STILL_ACTIVE);
-    ::WaitForSingleObject(basic_child< Attributes >::get_handle(), 0);
+    ::WaitForSingleObject(h, 0);
     return status(code);
 #endif
 }

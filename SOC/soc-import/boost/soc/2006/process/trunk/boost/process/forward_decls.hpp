@@ -17,13 +17,12 @@ namespace process {
 
 // ------------------------------------------------------------------------
 
-template< class Command_Line >
-class basic_attributes;
+class attributes;
 
-template< class Attributes >
+template< class Command_Line, class Attributes >
 class basic_child;
 
-template< class Attributes >
+template< class Command_Line, class Attributes >
 class basic_process;
 
 class command_line;
@@ -36,9 +35,8 @@ class postream;
 
 class status;
 
-typedef basic_attributes< command_line > attributes;
-typedef basic_child< attributes > child;
-typedef basic_process< attributes > process;
+typedef basic_child< command_line, attributes > child;
+typedef basic_process< command_line, attributes > process;
 
 // ------------------------------------------------------------------------
 

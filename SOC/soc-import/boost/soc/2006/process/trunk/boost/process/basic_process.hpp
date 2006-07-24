@@ -28,7 +28,7 @@ namespace process {
 
 // ------------------------------------------------------------------------
 
-template< class Attributes >
+template< class Command_Line, class Attributes >
 class basic_process
 {
 public:
@@ -39,33 +39,37 @@ public:
 #endif
 
     const Attributes& get_attributes(void) const;
+    const Command_Line& get_command_line(void) const;
     handle_type get_handle(void) const;
 
 protected:
-    basic_process(const handle_type& h, const Attributes& a);
+    basic_process(const handle_type& h, const Command_Line& cl,
+                  const Attributes& a);
 
 private:
     handle_type m_handle;
+    Command_Line m_command_line;
     Attributes m_attributes;
 };
 
 // ------------------------------------------------------------------------
 
-template< class Attributes >
+template< class Command_Line, class Attributes >
 inline
-basic_process< Attributes >::basic_process(const handle_type& h,
-                                           const Attributes& a) :
+basic_process< Command_Line, Attributes >::basic_process
+    (const handle_type& h, const Command_Line& cl, const Attributes& a) :
     m_handle(h),
+    m_command_line(cl),
     m_attributes(a)
 {
 }
 
 // ------------------------------------------------------------------------
 
-template< class Attributes >
+template< class Command_Line, class Attributes >
 inline
 const Attributes&
-basic_process< Attributes >::get_attributes(void)
+basic_process< Command_Line, Attributes >::get_attributes(void)
     const
 {
     return m_attributes;
@@ -73,10 +77,21 @@ basic_process< Attributes >::get_attributes(void)
 
 // ------------------------------------------------------------------------
 
-template< class Attributes >
+template< class Command_Line, class Attributes >
 inline
-typename basic_process< Attributes >::handle_type
-basic_process< Attributes >::get_handle(void)
+const Command_Line&
+basic_process< Command_Line, Attributes >::get_command_line(void)
+    const
+{
+    return m_command_line;
+}
+
+// ------------------------------------------------------------------------
+
+template< class Command_Line, class Attributes >
+inline
+typename basic_process< Command_Line, Attributes >::handle_type
+basic_process< Command_Line, Attributes >::get_handle(void)
     const
 {
     return m_handle;

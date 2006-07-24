@@ -53,21 +53,9 @@ public:
 // ------------------------------------------------------------------------
 
 static void
-test_command_line(void)
-{
-    bp::command_line cl("program");
-    bp::attributes a(cl);
-    const bp::command_line& rcl = a.get_command_line();
-    BOOST_CHECK_EQUAL(rcl.get_executable(), "program");
-}
-
-// ------------------------------------------------------------------------
-
-static void
 test_default_work_directory(void)
 {
-    bp::command_line cl("program");
-    bp::attributes a(cl);
+    bp::attributes a;
     BOOST_CHECK(bfs::equivalent(a.get_work_directory(),
                                 bfs::current_path().string()));
 }
@@ -77,8 +65,7 @@ test_default_work_directory(void)
 static void
 test_explicit_work_directory(void)
 {
-    bp::command_line cl("program");
-    bp::attributes a(cl, "/work/directory");
+    bp::attributes a("/work/directory");
     BOOST_CHECK_EQUAL(a.get_work_directory(), "/work/directory");
 }
 
@@ -87,15 +74,13 @@ test_explicit_work_directory(void)
 static void
 test_setup(void)
 {
-    bp::command_line cl("program");
-
-    bp::attributes a1(cl, "non-existent");
+    bp::attributes a1("non-existent");
     BOOST_CHECK_THROW(bp::launcher().setup(a1), bp::system_error);
 
     bfs::path testdir = bfs::current_path() / "test-dir";
     BOOST_REQUIRE(bfs::create_directory(testdir));
     try {
-        bp::attributes a2(cl, testdir.string());
+        bp::attributes a2(testdir.string());
         bp::launcher().setup(a2);
         BOOST_CHECK_EQUAL(bfs::current_path(), testdir);
 
@@ -122,7 +107,6 @@ init_unit_test_suite(int argc, char* argv[])
 
     but::test_suite* test = BOOST_TEST_SUITE("attributes test suite");
 
-    test->add(BOOST_TEST_CASE(&test_command_line));
     test->add(BOOST_TEST_CASE(&test_default_work_directory));
     test->add(BOOST_TEST_CASE(&test_explicit_work_directory));
     test->add(BOOST_TEST_CASE(&test_setup));
