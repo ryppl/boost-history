@@ -82,16 +82,8 @@ test_output(bool out,
     cl.argument(out ? "echo-stdout" : "echo-stderr").argument(realmsg);
     bp::attributes a;
 
-    // XXX WTH the following two lines result in REDIR_* being undefined
-    // symbols?!
-    // bp::launcher l(out ? bp::launcher::REDIR_STDOUT :
-    //                      bp::launcher::REDIR_STDERR);
-    int flags;
-    if (out)
-        flags = bp::launcher::REDIR_STDOUT;
-    else
-        flags = bp::launcher::REDIR_STDERR;
-    bp::launcher l(flags);
+    bp::launcher l(out ? (int)bp::launcher::REDIR_STDOUT :
+                         (int)bp::launcher::REDIR_STDERR);
     bp::child c = l.start(cl, a);
 
     std::string word;
