@@ -16,6 +16,8 @@
 #include <boost/bimap/container_adaptor/vector_adaptor.hpp>
 #include <boost/bimap/detail/set_view_base.hpp>
 
+#include <boost/config.hpp>
+
 namespace boost {
 namespace bimap {
 namespace views {
@@ -29,8 +31,7 @@ multi_index bimap core so it can be used as a std::vector.
 See also const_set_view.
                                                                                     **/
 
-template< class IndexType
- >
+template< class IndexType >
 class vector_set_view
 :
     public container_adaptor::vector_adaptor
@@ -42,9 +43,16 @@ class vector_set_view
         typename IndexType::const_reverse_iterator
     >,
 
-    public bimap::detail::set_view_base< vector_set_view< IndexType >, IndexType >
+    public ::boost::bimap::detail::set_view_base< vector_set_view< IndexType >, IndexType >
 {
-    friend class bimap::detail::set_view_base< vector_set_view< IndexType >, IndexType >;
+    #if defined(BOOST_MSVC)
+        typedef ::boost::bimap::detail::set_view_base< vector_set_view< IndexType >, IndexType >
+            friend_set_view_base;
+        friend class friend_set_view_base;
+    #else
+        friend class ::boost::bimap::detail::set_view_base< vector_set_view< IndexType >, IndexType >;
+    #endif
+
 
     public:
 

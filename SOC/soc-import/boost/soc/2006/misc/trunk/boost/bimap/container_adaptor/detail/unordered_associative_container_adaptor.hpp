@@ -167,8 +167,9 @@ class unordered_associative_container_adaptor :
 
     typename this_type::size_type bucket(const typename this_type::key_type& k) const
     {
+        typedef typename this_type::key_to_base key_to_base;
         return this_type::base().bucket(
-            this_type::template functor<typename this_type::key_to_base>()(k)
+            this_type::template functor<key_to_base>()(k)
         );
     }
 

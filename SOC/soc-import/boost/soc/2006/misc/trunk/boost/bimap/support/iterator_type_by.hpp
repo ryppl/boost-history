@@ -111,7 +111,7 @@ BOOST_BIMAP_SYMMETRIC_STATIC_ACCESS_BUILDER
 template< class Tag, class BimapCore >
 struct reverse_iterator_type_by
 {
-    typedef bimap::detail::map_view_iterator
+    typedef ::boost::bimap::detail::map_view_iterator
     <
         Tag,
         typename BimapCore::relation,
@@ -140,7 +140,7 @@ template< class Tag, class BimapCore >
 struct const_reverse_iterator_type_by
 {
 
-    typedef bimap::detail::map_view_iterator
+    typedef ::boost::bimap::detail::map_view_iterator
     <
         Tag,
         typename BimapCore::relation,
@@ -171,7 +171,7 @@ template< class Tag, class BimapCore >
 struct local_iterator_type_by
 {
 
-    typedef bimap::detail::map_view_iterator
+    typedef ::boost::bimap::detail::map_view_iterator
     <
         Tag,
         typename BimapCore::relation,
@@ -201,7 +201,7 @@ template< class Tag, class BimapCore >
 struct const_local_iterator_type_by
 {
 
-    typedef bimap::detail::map_view_iterator
+    typedef ::boost::bimap::detail::map_view_iterator
     <
         Tag,
         typename BimapCore::relation,

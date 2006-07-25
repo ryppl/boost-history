@@ -100,9 +100,10 @@ class associative_container_adaptor :
     typename this_type::size_type
         erase(const typename this_type::key_type& k)
     {
+        typedef typename this_type::key_to_base key_to_base;
         return associative_container_adaptor::base().erase
         (
-            this_type::template functor<typename this_type::key_to_base>()(k)
+            this_type::template functor<key_to_base>()(k)
         );
     }
 
@@ -132,11 +133,11 @@ class associative_container_adaptor :
     typename this_type::iterator
         find(const typename this_type::key_type& k)
     {
-        return this_type::template functor<
-            typename this_type::iterator_from_base>()
+        typedef typename this_type::key_to_base key_to_base;
+        return this_type::template functor<typename this_type::iterator_from_base>()
         (
             this_type::base().find(
-                this_type::template functor<typename this_type::key_to_base>()(k)
+                this_type::template functor<key_to_base>()(k)
             )
         );
     }
@@ -144,11 +145,12 @@ class associative_container_adaptor :
     typename this_type::const_iterator
         find(const typename this_type::key_type& k) const
     {
+        typedef typename this_type::key_to_base key_to_base;
         return this_type::template functor<
             typename this_type::iterator_from_base>()
         (
             this_type::base().find(
-                this_type::template functor<typename this_type::key_to_base>()(k)
+                this_type::template functor<key_to_base>()(k)
             )
         );
     }

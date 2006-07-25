@@ -13,6 +13,17 @@
 #ifndef BOOST_BIMAP_CONTAINER_ADAPTOR_DETAIL_FUNCTOR_BAG_HPP
 #define BOOST_BIMAP_CONTAINER_ADAPTOR_DETAIL_FUNCTOR_BAG_HPP
 
+#include <boost/config.hpp>
+
+#if defined(BOOST_MSVC)
+// This bogus warning will appear when add_const is applied to a
+// const volatile reference because we can't detect const volatile
+// references with MSVC6.
+#   pragma warning(push)
+#   pragma warning(disable:4181)
+// warning C4181: qualifier applied to reference type ignored
+#endif
+
 #include <boost/mpl/placeholders.hpp>
 
 #include <boost/type_traits/add_reference.hpp>
@@ -54,7 +65,7 @@ struct DataWithFunctorBag :
 {
     Data data;
     DataWithFunctorBag() {}
-    DataWithFunctorBag(typename add_reference<Data const>::type d) : data(d) {}
+    DataWithFunctorBag(typename add_reference<Data>::type const d) : data(d) {}
 
     template< class Functor >
     Functor& functor()
@@ -74,6 +85,9 @@ struct DataWithFunctorBag :
 } // namespace bimap
 } // namespace boost
 
+#if defined(BOOST_MSVC)
+#   pragma warning(pop)
+#endif
 
 #endif // BOOST_BIMAP_CONTAINER_ADAPTOR_DETAIL_FUNCTOR_BAG_HPP
 

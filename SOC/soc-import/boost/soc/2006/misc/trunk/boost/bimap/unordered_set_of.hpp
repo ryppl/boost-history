@@ -106,7 +106,7 @@ template
     class HashFunctor   = hash< KeyType >,
     class EqualKey      = std::equal_to< KeyType >
 >
-struct unordered_set_of : public bimap::detail::set_type_of_tag
+struct unordered_set_of : public ::boost::bimap::detail::set_type_of_tag
 {
     /// The type that will be stored in the container
     typedef KeyType         value_type;
@@ -167,7 +167,7 @@ template
     class HashFunctor   = hash< mpl::_ >,
     class EqualKey      = std::equal_to< mpl::_ >
 >
-struct unordered_set_of_relation : public bimap::detail::set_type_of_relation_tag
+struct unordered_set_of_relation : public ::boost::bimap::detail::set_type_of_relation_tag
 {
     /// Hash Functor that takes value_type objects
     typedef HashFunctor     hasher;

@@ -182,27 +182,24 @@ struct bimap_core
 
     // Use type hiding to get better symbol names
 
-    struct basic_core_indices :
+    typedef multi_index::indexed_by
+    <
 
-        multi_index::indexed_by
+        typename left_set_type::template index_bind
         <
+            left_member_extractor,
+            left_tag
 
-            typename left_set_type::template index_bind
-            <
-                left_member_extractor,
-                left_tag
+        >::type,
 
-            >::type,
+        typename right_set_type::template index_bind
+        <
+            right_member_extractor,
+            right_tag
 
-            typename right_set_type::template index_bind
-            <
-                right_member_extractor,
-                right_tag
+        >::type
 
-            >::type
-        >
-
-    {};
+    > basic_core_indices;
 
     // The multi index core can have two or three indices depending on the set
     // type of the relation. If it is based either on the left or on the right,
@@ -229,7 +226,7 @@ struct bimap_core
                     relation
 
                 >::type,
-                detail::independent_index_tag
+                independent_index_tag
             >
     // }
         >::type
@@ -245,7 +242,7 @@ struct bimap_core
 
     typedef typename mpl::if_<
 
-        is_same< relation_set_tag, detail::independent_index_tag >,
+        is_same< relation_set_tag, independent_index_tag >,
     // {
             typename mpl::push_front
             <
@@ -254,7 +251,7 @@ struct bimap_core
                 typename relation_set_type_of::template index_bind
                 <
                     multi_index::identity<relation>,
-                    detail::independent_index_tag
+                    independent_index_tag
 
                 >::type
 
@@ -265,7 +262,9 @@ struct bimap_core
             basic_core_indices
     // }
 
-    >::type core_indices;
+    >::type complete_core_indices;
+
+    struct core_indices : public complete_core_indices {};
 
     // Define the core using compute_index_type to translate the
     // set type to an multi index specification
@@ -284,8 +283,8 @@ struct bimap_core
     // --------------------------------------------------------------------
     public:
 
-    typedef typename core_type::template index<left_tag >::type left_index;
-    typedef typename core_type::template index<right_tag>::type right_index;
+    typedef typename ::boost::multi_index::index<core_type, left_tag>::type  left_index;
+    typedef typename ::boost::multi_index::index<core_type,right_tag>::type right_index;
 
     typedef typename left_index::iterator       left_core_iterator;
     typedef typename left_index::const_iterator left_core_const_iterator;
@@ -299,7 +298,7 @@ struct bimap_core
 
     //@{
 
-        typedef bimap::detail::map_view_iterator
+        typedef ::boost::bimap::detail::map_view_iterator
         <
             left_tag,
             relation,
@@ -309,7 +308,7 @@ struct bimap_core
 
         > left_iterator;
 
-        typedef bimap::detail::map_view_iterator
+        typedef ::boost::bimap::detail::map_view_iterator
         <
             right_tag,
             relation,
@@ -323,7 +322,7 @@ struct bimap_core
 
     //@{
 
-        typedef bimap::detail::map_view_iterator
+        typedef ::boost::bimap::detail::map_view_iterator
         <
             left_tag,
             relation,
@@ -333,7 +332,7 @@ struct bimap_core
 
         > left_const_iterator;
 
-        typedef bimap::detail::map_view_iterator
+        typedef ::boost::bimap::detail::map_view_iterator
         <
             right_tag,
             relation,
@@ -349,7 +348,7 @@ struct bimap_core
 
     typedef typename relation_set_type_of::template set_view_bind
     <
-        typename core_type::template index< relation_set_tag >::type
+        typename boost::multi_index::index<core_type, relation_set_tag >::type
 
     >::type relation_set;
 

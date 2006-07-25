@@ -28,6 +28,8 @@
 #include <boost/bimap/relation/detail/mutant.hpp>
 #include <boost/bimap/relation/structured_pair.hpp>
 
+#include <boost/bimap/relation/detail/totally_ordered_pair.hpp>
+
 namespace boost {
 namespace bimap {
 namespace relation {
@@ -57,25 +59,18 @@ See also select_relation, standard_relation.
 
 template< class TA, class TB >
 class mutant_relation :
-    public symmetrical_base<TA,TB>,
-    public detail::can_mutate_in
-    <
-        mpl::list2
-        <
-            structured_pair< TA, TB, normal_layout >,
-            structured_pair< TB, TA, mirror_layout >
-        >
-    >,
-    totally_ordered<
-        mutant_relation<TA,TB>,
-    totally_ordered<
-        structured_pair<TA,TB,normal_layout>,
-    totally_ordered<
-        structured_pair<TB,TA,mirror_layout>
 
-    > > >
+    public symmetrical_base<TA,TB>
+
 {
     public:
+
+    typedef mpl::list2
+    <
+        structured_pair< TA, TB, normal_layout >,
+        structured_pair< TB, TA, mirror_layout >
+
+    > mutant_views;
 
     //@{
         /// A signature compatible std::pair that is a view of the relation.
@@ -167,43 +162,26 @@ class mutant_relation :
         return *this;
     }
 
-    // Operators required by Boost.Operators
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        left,right,
 
-    bool operator==(const mutant_relation & rel) const
-    {
-        return ( ( left  == rel.left  ) &&
-                 ( right == rel.right ) );
-    }
+        mutant_relation,
+        left,right
+    );
 
-    bool operator<(const mutant_relation & rel) const
-    {
-        return ( ( left  < rel.left  ) &&
-                 ( right < rel.right ) );
-    }
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        left,right,
 
-    bool operator==(const left_pair & p) const
-    {
-        return ( ( left  == p.first  ) &&
-                 ( right == p.second ) );
-    }
+        left_pair,
+        first,second
+    );
 
-    bool operator<(const left_pair & p) const
-    {
-        return ( ( left   < p.first   ) &&
-                 ( right  < p.second  ) );
-    }
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        left,right,
 
-    bool operator==(const right_pair & p) const
-    {
-        return ( ( left  == p.second  ) &&
-                 ( right == p.first   ) );
-    }
-
-    bool operator<(const right_pair & p) const
-    {
-        return ( ( left   < p.second  ) &&
-                 ( right  < p.first   ) );
-    }
+        right_pair,
+        second,first
+    );
 
     // The following functions are redundant if you only consider this class.
     // They are included to make easier the construction of the get and the

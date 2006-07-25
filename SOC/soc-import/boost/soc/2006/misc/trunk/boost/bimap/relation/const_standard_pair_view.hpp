@@ -18,6 +18,8 @@
 #include <boost/bimap/relation/pair_layout.hpp>
 #include <boost/bimap/relation/symmetrical_base.hpp>
 
+#include <boost/bimap/relation/detail/totally_ordered_pair.hpp>
+
 namespace boost {
 namespace bimap {
 namespace relation {
@@ -161,35 +163,8 @@ See also standard_relation, standard_pair_view.
 template< class FirstType, class SecondType, class Layout >
 class const_standard_pair_view :
 
-    public const_reference_binder_finder<FirstType,SecondType,Layout>::type,
+    public const_reference_binder_finder<FirstType,SecondType,Layout>::type
 
-    totally_ordered<
-        const_standard_pair_view<FirstType,SecondType,normal_layout>,
-
-    totally_ordered<
-        const_standard_pair_view<FirstType,SecondType,mirror_layout>,
-
-    totally_ordered<
-        structured_pair<FirstType,SecondType,normal_layout>,
-
-    totally_ordered<
-        structured_pair<FirstType,SecondType,mirror_layout>,
-
-    totally_ordered<
-        std::pair
-        <
-            typename tags::support::value_type_of<FirstType >::type,
-            typename tags::support::value_type_of<SecondType>::type
-        >,
-
-    boost::totally_ordered<
-        std::pair
-        <
-            const typename tags::support::value_type_of<FirstType >::type,
-            typename tags::support::value_type_of<SecondType>::type
-        >
-
-    > > > > > >
 {
     public:
 
@@ -207,38 +182,6 @@ class const_standard_pair_view :
                              typename const_standard_pair_view::second_type const & s) :
         const_standard_pair_view::reference_binder_(f,s) {}
 
-    const_standard_pair_view& operator=(typename boost::call_traits<const_standard_pair_view>::param_type p)
-    {
-        const_standard_pair_view::first = p.first;
-        const_standard_pair_view::second = p.second;
-        return *this;
-    }
-
-    // Operators required by Boost.Operators
-
-    bool operator==(typename boost::call_traits<const_standard_pair_view>::param_type p)
-    {
-        return ( ( const_standard_pair_view::first  == p.first  ) &&
-                 ( const_standard_pair_view::second == p.second ) );
-    }
-
-    bool operator<(typename boost::call_traits<const_standard_pair_view>::param_type p)
-    {
-        return ( ( const_standard_pair_view::first  < p.first  ) &&
-                 ( const_standard_pair_view::second < p.second ) );
-    }
-
-    bool operator==(typename boost::call_traits<mirror_pair_type>::param_type p)
-    {
-        return ( ( const_standard_pair_view::first  == p.first  ) &&
-                 ( const_standard_pair_view::second == p.second ) );
-    }
-
-    bool operator<(typename boost::call_traits<mirror_pair_type>::param_type p)
-    {
-        return ( ( const_standard_pair_view::first  < p.first  ) &&
-                 ( const_standard_pair_view::second < p.second ) );
-    }
 
     // Interaction with std::pair
 
@@ -262,75 +205,76 @@ class const_standard_pair_view :
     explicit const_standard_pair_view(std_map_pair const & p) :
         const_standard_pair_view::reference_binder_(p.first,p.second) {}
 
-    bool operator==(const std_pair & p) const
-    {
-        return ( ( const_standard_pair_view::first  == p.first  ) &&
-                 ( const_standard_pair_view::second == p.second ) );
-    }
-
-    bool operator<(const std_pair & p) const
-    {
-        return ( ( const_standard_pair_view::first  < p.first  ) &&
-                 ( const_standard_pair_view::second < p.second ) );
-    }
-
-    bool operator==(const std_map_pair & p) const
-    {
-        return ( ( const_standard_pair_view::first  == p.first  ) &&
-                 ( const_standard_pair_view::second == p.second ) );
-    }
-
-    bool operator<(const std_map_pair & p) const
-    {
-        return ( ( const_standard_pair_view::first  < p.first  ) &&
-                 ( const_standard_pair_view::second < p.second ) );
-    }
-
     // Interaction with structured pair
 
-    const_standard_pair_view(structured_pair<FirstType,SecondType,normal_layout> const & p) :
+    private:
+
+    typedef structured_pair<FirstType,SecondType,normal_layout> normal_structured_pair;
+    typedef structured_pair<FirstType,SecondType,mirror_layout> mirror_structured_pair;
+
+    public:
+
+    const_standard_pair_view(normal_structured_pair const & p) :
         const_standard_pair_view::reference_binder_(p.first,p.second) {}
 
-    const_standard_pair_view(structured_pair<FirstType,SecondType,mirror_layout> const & p) :
+    const_standard_pair_view(mirror_structured_pair const & p) :
         const_standard_pair_view::reference_binder_(p.first,p.second) {}
 
-    operator const structured_pair<FirstType,SecondType,normal_layout> ()
+    operator const normal_structured_pair ()
     {
-        return structured_pair<FirstType,SecondType,normal_layout>(
+        return normal_structured_pair(
             const_standard_pair_view::first,const_standard_pair_view::second
         );
     }
 
-    operator const structured_pair<FirstType,SecondType,mirror_layout> ()
+    operator const mirror_structured_pair ()
     {
-        return structured_pair<FirstType,SecondType,mirror_layout>(
+        return mirror_structured_pair(
             const_standard_pair_view::first,const_standard_pair_view::second
         );
     }
 
-    bool operator==(const structured_pair<FirstType,SecondType,normal_layout> & p) const
-    {
-        return ( ( const_standard_pair_view::first  == p.first  ) &&
-                 ( const_standard_pair_view::second == p.second ) );
-    }
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        const_standard_pair_view::first, const_standard_pair_view::second,
 
-    bool operator<(const structured_pair<FirstType,SecondType,normal_layout> & p) const
-    {
-        return ( ( const_standard_pair_view::first  < p.first  ) &&
-                 ( const_standard_pair_view::second < p.second ) );
-    }
+        const_standard_pair_view,
+        first,second
+    );
 
-    bool operator==(const structured_pair<FirstType,SecondType,mirror_layout> & p) const
-    {
-        return ( ( const_standard_pair_view::first  == p.first  ) &&
-                 ( const_standard_pair_view::second == p.second ) );
-    }
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        const_standard_pair_view::first, const_standard_pair_view::second,
 
-    bool operator<(const structured_pair<FirstType,SecondType,mirror_layout> & p) const
-    {
-        return ( ( const_standard_pair_view::first  < p.first  ) &&
-                 ( const_standard_pair_view::second < p.second ) );
-    }
+        mirror_pair_type,
+        first,second
+    );
+
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        const_standard_pair_view::first, const_standard_pair_view::second,
+
+        normal_structured_pair,
+        first,second
+    );
+
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        const_standard_pair_view::first, const_standard_pair_view::second,
+
+        mirror_structured_pair,
+        first,second
+    );
+
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        const_standard_pair_view::first, const_standard_pair_view::second,
+
+        std_pair,
+        first,second
+    );
+
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        const_standard_pair_view::first, const_standard_pair_view::second,
+
+        std_map_pair,
+        first,second
+    );
 };
 
 } // namespace relation

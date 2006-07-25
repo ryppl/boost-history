@@ -28,6 +28,8 @@
 #include <boost/bimap/relation/const_standard_pair_view.hpp>
 #include <boost/bimap/relation/structured_pair.hpp>
 
+#include <boost/bimap/relation/detail/totally_ordered_pair.hpp>
+
 namespace boost {
 namespace bimap {
 namespace relation {
@@ -44,24 +46,8 @@ See also standard_relation, mutant_relation.
 template< class TA, class TB >
 class standard_relation :
 
-    public symmetrical_base<TA,TB>,
+    public symmetrical_base<TA,TB>
 
-    totally_ordered<
-        standard_relation<TA,TB>,
-    totally_ordered<
-        structured_pair<TA,TB,normal_layout>,
-    totally_ordered<
-        structured_pair<TB,TA,mirror_layout>,
-    totally_ordered<
-        standard_pair_view<TA,TB,normal_layout>,
-    totally_ordered<
-        standard_pair_view<TB,TA,mirror_layout>,
-    totally_ordered<
-        const_standard_pair_view<TA,TB,normal_layout>,
-    totally_ordered<
-        const_standard_pair_view<TB,TA,mirror_layout>
-
-    > > > > > > >
 {
     public:
 
@@ -157,91 +143,54 @@ class standard_relation :
         return *this;
     }
 
-    // Operators required by Boost.Operators
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        left,right,
 
-    bool operator==(const standard_relation & rel) const
-    {
-        return ( ( left  == rel.left  ) &&
-                 ( right == rel.right ) );
-    }
+        standard_relation,
+        left,right
+    );
 
-    bool operator<(const standard_relation & rel) const
-    {
-        return ( ( left  < rel.left  ) &&
-                 ( right < rel.right ) );
-    }
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        left,right,
 
-    bool operator==(const left_pair & p) const
-    {
-        return ( ( left  == p.first  ) &&
-                 ( right == p.second ) );
-    }
+        left_pair,
+        first,second
+    );
 
-    bool operator<(const left_pair & p) const
-    {
-        return ( ( left   < p.first   ) &&
-                 ( right  < p.second  ) );
-    }
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        left,right,
 
-    bool operator==(const right_pair & p) const
-    {
-        return ( ( left  == p.second  ) &&
-                 ( right == p.first   ) );
-    }
+        right_pair,
+        second,first
+    );
 
-    bool operator<(const right_pair & p) const
-    {
-        return ( ( left   < p.second  ) &&
-                 ( right  < p.first   ) );
-    }
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        left,right,
 
-    bool operator==(const left_pair_reference & p) const
-    {
-        return ( ( left  == p.first  ) &&
-                 ( right == p.second ) );
-    }
+        left_pair_reference,
+        first,second
+    );
 
-    bool operator<(const left_pair_reference & p) const
-    {
-        return ( ( left   < p.first   ) &&
-                 ( right  < p.second  ) );
-    }
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        left,right,
 
-    bool operator==(const right_pair_reference & p) const
-    {
-        return ( ( left  == p.second  ) &&
-                 ( right == p.first   ) );
-    }
+        right_pair_reference,
+        second,first
+    );
 
-    bool operator<(const right_pair_reference & p) const
-    {
-        return ( ( left   < p.second  ) &&
-                 ( right  < p.first   ) );
-    }
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        left,right,
 
-    bool operator==(const const_left_pair_reference & p) const
-    {
-        return ( ( left  == p.first  ) &&
-                 ( right == p.second ) );
-    }
+        const_left_pair_reference,
+        first,second
+    );
 
-    bool operator<(const const_left_pair_reference & p) const
-    {
-        return ( ( left   < p.first   ) &&
-                 ( right  < p.second  ) );
-    }
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        left,right,
 
-    bool operator==(const const_right_pair_reference & p) const
-    {
-        return ( ( left  == p.second  ) &&
-                 ( right == p.first   ) );
-    }
-
-    bool operator<(const const_right_pair_reference & p) const
-    {
-        return ( ( left   < p.second  ) &&
-                 ( right  < p.first   ) );
-    }
+        const_right_pair_reference,
+        second,first
+    );
 
     // The following functions are redundant if you only consider this class.
     // They are included to make easier the construction of the get and the

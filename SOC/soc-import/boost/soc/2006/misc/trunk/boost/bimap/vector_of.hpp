@@ -93,7 +93,7 @@ See also vector_of_relation.
                                                                         **/
 
 template< class Type >
-struct vector_of : public bimap::detail::set_type_of_tag
+struct vector_of : public ::boost::bimap::detail::set_type_of_tag
 {
     /// Type of the object that will be stored in the set
     typedef Type value_type;
@@ -138,7 +138,7 @@ struct bind_to
 See also vector_of, is_set_type_of_relation.
                                                                 **/
 
-struct vector_of_relation : public bimap::detail::set_type_of_relation_tag
+struct vector_of_relation : public ::boost::bimap::detail::set_type_of_relation_tag
 {
     BOOST_BIMAP_GENERATE_RELATION_BINDER_0CP(
 

@@ -25,6 +25,8 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_same.hpp>
 
+#include <boost/bimap/relation/detail/totally_ordered_pair.hpp>
+
 namespace boost {
 namespace bimap {
 namespace relation {
@@ -146,33 +148,8 @@ class structured_pair :
         SecondType,
         Layout
 
-    >::type,
+    >::type
 
-    totally_ordered<
-        structured_pair<FirstType,SecondType,
-                        normal_layout>,
-
-    totally_ordered<
-        structured_pair<FirstType,SecondType,
-                        mirror_layout>,
-
-    totally_ordered<
-        std::pair
-        <
-            typename tags::support::value_type_of<FirstType >::type,
-            typename tags::support::value_type_of<SecondType>::type
-
-        >,
-
-    boost::totally_ordered<
-        std::pair
-        <
-            const typename tags::support::value_type_of<FirstType >::type,
-            typename tags::support::value_type_of<SecondType>::type
-
-        >
-
-    > > > >
 {
     public:
 
@@ -201,34 +178,6 @@ class structured_pair :
         return *this;
     }
 
-    // Operators required by Boost.Operators
-
-    bool operator==(const structured_pair & p) const
-    {
-        return ( ( structured_pair::first  == p.first  ) &&
-                 ( structured_pair::second == p.second ) );
-    }
-
-    bool operator<(const structured_pair & p) const
-    {
-        return ( ( structured_pair::first  < p.first  ) &&
-                 ( structured_pair::second < p.second ) );
-    }
-
-    bool operator==(const mirror_pair_type & p) const
-    {
-        return ( ( structured_pair::first  == p.first  ) &&
-                 ( structured_pair::second == p.second ) );
-    }
-
-    bool operator<(const mirror_pair_type & p) const
-    {
-        return ( ( structured_pair::first  < p.first  ) &&
-                 ( structured_pair::second < p.second ) );
-    }
-
-    // Interaction with std::pair
-
     typedef std::pair
     <
         typename structured_pair::first_type,
@@ -249,29 +198,17 @@ class structured_pair :
         structured_pair::second = p.second;
     }
 
+    explicit structured_pair(const std_map_pair & p)
+    {
+        structured_pair::first  = p.first;
+        structured_pair::second = p.second;
+    }
+
     structured_pair& operator=(const std_pair & p)
     {
         structured_pair::first  = p.first;
         structured_pair::second = p.second;
         return *this;
-    }
-
-    bool operator==(const std_pair & p) const
-    {
-        return ( ( structured_pair::first  == p.first  ) &&
-                 ( structured_pair::second == p.second ) );
-    }
-
-    bool operator<(const std_pair & p) const
-    {
-        return ( ( structured_pair::first  < p.first  ) &&
-                 ( structured_pair::second < p.second ) );
-    }
-
-    explicit structured_pair(const std_map_pair & p)
-    {
-        structured_pair::first  = p.first;
-        structured_pair::second = p.second;
     }
 
     structured_pair& operator=(const std_map_pair & p)
@@ -281,17 +218,33 @@ class structured_pair :
         return *this;
     }
 
-    bool operator==(const std_map_pair & p) const
-    {
-        return ( ( structured_pair::first  == p.first  ) &&
-                 ( structured_pair::second == p.second ) );
-    }
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        structured_pair::first,structured_pair::second,
 
-    bool operator<(const std_map_pair & p) const
-    {
-        return ( ( structured_pair::first  < p.first  ) &&
-                 ( structured_pair::second < p.second ) );
-    }
+        structured_pair,
+        first,second
+    );
+
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        structured_pair::first,structured_pair::second,
+
+        mirror_pair_type,
+        first,second
+    );
+
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        structured_pair::first,structured_pair::second,
+
+        std_pair,
+        first,second
+    );
+
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        structured_pair::first,structured_pair::second,
+
+        std_map_pair,
+        first,second
+    );
 };
 
 } // namespace relation

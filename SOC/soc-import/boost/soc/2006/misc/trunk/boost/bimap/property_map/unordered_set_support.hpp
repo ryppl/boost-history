@@ -23,19 +23,19 @@
 namespace boost {
 
 template< class Tag, class Bimap >
-struct property_traits< bimap::views::unordered_map_view<Tag,Bimap> >
+struct property_traits< ::boost::bimap::views::unordered_map_view<Tag,Bimap> >
 {
-    typedef typename bimap::support::data_type_of<Tag,Bimap>::type value_type;
-    typedef typename bimap::support:: key_type_of<Tag,Bimap>::type   key_type;
+    typedef typename ::boost::bimap::support::data_type_of<Tag,Bimap>::type value_type;
+    typedef typename ::boost::bimap::support:: key_type_of<Tag,Bimap>::type   key_type;
 
     typedef readable_property_map_tag category;
 };
 
 
 template< class Tag, class Bimap >
-const typename bimap::support::data_type_of<Tag,Bimap>::type &
-    get(const bimap::views::unordered_map_view<Tag,Bimap> & m,
-        const typename bimap::support::key_type_of<Tag,Bimap>::type & key)
+const typename ::boost::bimap::support::data_type_of<Tag,Bimap>::type &
+    get(const ::boost::bimap::views::unordered_map_view<Tag,Bimap> & m,
+        const typename ::boost::bimap::support::key_type_of<Tag,Bimap>::type & key)
 {
     return m.find(key)->second;
 }

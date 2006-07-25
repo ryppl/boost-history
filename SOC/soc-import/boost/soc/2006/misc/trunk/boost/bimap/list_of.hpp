@@ -88,7 +88,7 @@ See also list_of_relation.
                                                                         **/
 
 template< class Type >
-struct list_of : public bimap::detail::set_type_of_tag
+struct list_of : public ::boost::bimap::detail::set_type_of_tag
 {
     /// Type of the object that will be stored in the list
     typedef Type value_type;
@@ -133,7 +133,7 @@ struct bind_to
 See also list_of, is_set_type_of_relation.
                                                                 **/
 
-struct list_of_relation : public bimap::detail::set_type_of_relation_tag
+struct list_of_relation : public ::boost::bimap::detail::set_type_of_relation_tag
 {
     BOOST_BIMAP_GENERATE_RELATION_BINDER_0CP(
 

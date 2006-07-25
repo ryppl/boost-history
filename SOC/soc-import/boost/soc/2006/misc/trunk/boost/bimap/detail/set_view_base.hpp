@@ -41,7 +41,7 @@ class set_view_base
 
             position,
 
-            bimap::detail::relation_modifier_adaptor
+            ::boost::bimap::detail::relation_modifier_adaptor
             <
                 Modifier,
                 typename Index::value_type,

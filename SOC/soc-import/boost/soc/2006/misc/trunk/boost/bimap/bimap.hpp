@@ -58,6 +58,8 @@ perspective the next step will be:
 #ifndef BOOST_BIMAP_BIMAP_HPP
 #define BOOST_BIMAP_BIMAP_HPP
 
+#include <boost/config.hpp>
+
 // Boost
 #include <boost/serialization/nvp.hpp>
 
@@ -169,14 +171,14 @@ ones.
 template
 <
     class KeyTypeA, class KeyTypeB,
-    class AP1 = bimap::detail::not_specified,
-    class AP2 = bimap::detail::not_specified,
-    class AP3 = bimap::detail::not_specified
+    class AP1 = ::boost::bimap::detail::not_specified,
+    class AP2 = ::boost::bimap::detail::not_specified,
+    class AP3 = ::boost::bimap::detail::not_specified
 >
 class bimap
 :
-    public bimap::detail::bimap_core<KeyTypeA,KeyTypeB,AP1,AP2,AP3>,
-    public bimap::detail::bimap_core<KeyTypeA,KeyTypeB,AP1,AP2,AP3>::relation_set
+    public ::boost::bimap::detail::bimap_core<KeyTypeA,KeyTypeB,AP1,AP2,AP3>,
+    public ::boost::bimap::detail::bimap_core<KeyTypeA,KeyTypeB,AP1,AP2,AP3>::relation_set
 
 {
     private:
@@ -205,42 +207,58 @@ class bimap
 
     ------------------------------------------------------------------*/
 
-    typedef typename bimap::left_set_type::template map_view_bind
-    <
-        typename bimap::left_tag, typename bimap::bimap_core_
+    #if defined(BOOST_MSVC)
+    typename bimap::left_set_type left_set_type;
+    typedef typename left_set_type
+    #else
+    typedef typename bimap::left_set_type
+    #endif
 
-    >::type left_map_type;
+        ::template map_view_bind
+        <
+            typename bimap::left_tag, typename bimap::bimap_core_
 
-    typedef typename bimap::right_set_type::template map_view_bind
-    <
-        typename bimap::right_tag, typename bimap::bimap_core_
+        >::type left_map_type;
 
-    >::type right_map_type;
+
+    #if defined(BOOST_MSVC)
+    typename bimap::right_set_type right_set_type;
+    typedef typename right_set_type
+    #else
+    typedef typename bimap::right_set_type
+    #endif
+
+        ::template map_view_bind
+        <
+            typename bimap::right_tag, typename bimap::bimap_core_
+
+        >::type right_map_type;
+
 
     /// Left map view
-    typename bimap::left_map_type  left;
+    left_map_type  left;
 
     /// Right map view
-    typename bimap::right_map_type right;
+    right_map_type right;
 
     bimap() :
 
-        bimap::relation_set( core.get<typename bimap::relation_set_tag   >() ),
+        bimap::relation_set(::boost::multi_index::get<typename bimap::relation_set_tag >(core) ),
 
-        left     (core.get<typename bimap::left_tag           >()),
-        right    (core.get<typename bimap::right_tag          >())
+        left     (::boost::multi_index::get<typename bimap::left_tag  >(core)),
+        right    (::boost::multi_index::get<typename bimap::right_tag >(core))
 
     {}
 
     template< class InputIterator >
     bimap(InputIterator first,InputIterator last) :
 
-        bimap::relation_set( core.get<typename bimap::relation_set_tag   >() ),
+        bimap::relation_set(::boost::multi_index::get<typename bimap::relation_set_tag  >(core) ),
 
         core(first,last),
 
-        left     (core.get<typename bimap::left_tag           >()),
-        right    (core.get<typename bimap::right_tag          >())
+        left     (::boost::multi_index::get<typename bimap::left_tag  >(core)),
+        right    (::boost::multi_index::get<typename bimap::right_tag >(core))
 
     {}
 

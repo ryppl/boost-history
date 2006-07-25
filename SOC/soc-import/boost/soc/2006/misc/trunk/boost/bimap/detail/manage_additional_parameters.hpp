@@ -163,7 +163,7 @@ struct manage_additional_parameters
             is_same<AP2,not_specified>,
             typename mpl::if_
             <
-                detail::is_set_type_of_relation<AP1>,
+                is_set_type_of_relation<AP1>,
                 case_SNN, // (3)
                 typename mpl::if_
                 <

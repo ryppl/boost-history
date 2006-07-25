@@ -13,6 +13,8 @@
 #ifndef BOOST_BIMAP_VIEWS_MAP_VIEW_HPP
 #define BOOST_BIMAP_VIEWS_MAP_VIEW_HPP
 
+#include <boost/config.hpp>
+
 #include <boost/bimap/relation/support/get_pair_functor.hpp>
 #include <boost/bimap/container_adaptor/support/iterator_facade_converters.hpp>
 #include <boost/bimap/container_adaptor/map_adaptor.hpp>
@@ -41,12 +43,12 @@ class map_view
     <
         typename BimapType::core_type::template index<Tag>::type,
 
-        typename bimap::support::iterator_type_by<Tag,BimapType>::type,
-        typename bimap::support::const_iterator_type_by<Tag,BimapType>::type,
-        typename bimap::support::reverse_iterator_type_by<Tag,BimapType>::type,
-        typename bimap::support::const_reverse_iterator_type_by<Tag,BimapType>::type,
+        typename ::boost::bimap::support::iterator_type_by<Tag,BimapType>::type,
+        typename ::boost::bimap::support::const_iterator_type_by<Tag,BimapType>::type,
+        typename ::boost::bimap::support::reverse_iterator_type_by<Tag,BimapType>::type,
+        typename ::boost::bimap::support::const_reverse_iterator_type_by<Tag,BimapType>::type,
 
-        typename bimap::detail::map_view_iterator_to_base<Tag,BimapType>::type,
+        typename ::boost::bimap::detail::map_view_iterator_to_base<Tag,BimapType>::type,
 
         container_adaptor::use_default, // iterator from base converter
         container_adaptor::use_default, // reverse iterator from base converter
@@ -55,21 +57,28 @@ class map_view
         relation::support::GetPairFunctor<Tag, typename BimapType::relation >
     >,
 
-    public bimap::detail::map_view_base< map_view<Tag,BimapType>,Tag,BimapType >
+    public ::boost::bimap::detail::map_view_base< map_view<Tag,BimapType>,Tag,BimapType >
 
 {
     typedef map_view this_type;
-    friend class this_type::map_view_base_;
+
+    #if defined(BOOST_MSVC)
+        typedef ::boost::bimap::detail::map_view_base< map_view<Tag,BimapType>,Tag,BimapType >
+            friend_map_view_base;
+        friend class friend_map_view_base;
+    #else
+        friend class ::boost::bimap::detail::map_view_base< map_view<Tag,BimapType>,Tag,BimapType >;
+    #endif
 
     public:
 
     map_view() {}
     map_view(typename this_type::base_type & c) : this_type::map_adaptor_(c) {}
 
-    bimap::detail::operator_bracket_proxy<map_view>
+    ::boost::bimap::detail::operator_bracket_proxy<map_view>
         operator[](const typename this_type::key_type & k)
     {
-        return bimap::detail::operator_bracket_proxy<map_view>(*this,k);
+        return ::boost::bimap::detail::operator_bracket_proxy<map_view>(*this,k);
     }
 
 

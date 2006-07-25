@@ -19,6 +19,8 @@
 #include <boost/bimap/support/iterator_type_by.hpp>
 #include <boost/bimap/detail/map_view_base.hpp>
 
+#include <boost/config.hpp>
+
 namespace boost {
 namespace bimap {
 namespace views {
@@ -39,13 +41,13 @@ class unordered_multimap_view
     <
         typename BimapType::core_type::template index<Tag>::type,
 
-        typename bimap::support::iterator_type_by<Tag,BimapType>::type,
-        typename bimap::support::const_iterator_type_by<Tag,BimapType>::type,
+        typename ::boost::bimap::support::iterator_type_by<Tag,BimapType>::type,
+        typename ::boost::bimap::support::const_iterator_type_by<Tag,BimapType>::type,
 
-        typename bimap::support::local_iterator_type_by<Tag,BimapType>::type,
-        typename bimap::support::const_local_iterator_type_by<Tag,BimapType>::type,
+        typename ::boost::bimap::support::local_iterator_type_by<Tag,BimapType>::type,
+        typename ::boost::bimap::support::const_local_iterator_type_by<Tag,BimapType>::type,
 
-        typename bimap::detail::map_view_iterator_to_base<Tag,BimapType>::type,
+        typename ::boost::bimap::detail::map_view_iterator_to_base<Tag,BimapType>::type,
 
         container_adaptor::use_default, // iterator from base converter
         container_adaptor::use_default, // local iterator from base converter
@@ -54,10 +56,18 @@ class unordered_multimap_view
         relation::support::GetPairFunctor<Tag, typename BimapType::relation >
     >,
 
-    public bimap::detail::map_view_base< unordered_multimap_view<Tag,BimapType>,Tag,BimapType >
+    public ::boost::bimap::detail::map_view_base< unordered_multimap_view<Tag,BimapType>,Tag,BimapType >
 
 {
     // Interface ------------------------------------------------------------
+
+    #if defined(BOOST_MSVC)
+        typedef ::boost::bimap::detail::map_view_base< unordered_multimap_view<Tag,BimapType>,Tag,BimapType >
+            friend_map_view_base;
+        friend class friend_map_view_base;
+    #else
+        friend class ::boost::bimap::detail::map_view_base< unordered_multimap_view<Tag,BimapType>,Tag,BimapType >;
+    #endif
 
     public:
 
@@ -83,15 +93,15 @@ class const_unordered_multimap_view
     <
         const typename BimapType::core_type::template index<Tag>::type,
 
-        typename bimap::support::iterator_type_by<Tag,BimapType>::type,
-        typename bimap::support::const_iterator_type_by<Tag,BimapType>::type,
-        typename bimap::support::local_iterator_type_by<Tag,BimapType>::type,
-        typename bimap::support::const_local_iterator_type_by<Tag,BimapType>::type,
+        typename ::boost::bimap::support::iterator_type_by<Tag,BimapType>::type,
+        typename ::boost::bimap::support::const_iterator_type_by<Tag,BimapType>::type,
+        typename ::boost::bimap::support::local_iterator_type_by<Tag,BimapType>::type,
+        typename ::boost::bimap::support::const_local_iterator_type_by<Tag,BimapType>::type,
 
         container_adaptor::support::iterator_facade_to_base
         <
-            typename bimap::support::iterator_type_by<Tag,BimapType>::type,
-            typename bimap::support::const_iterator_type_by<Tag,BimapType>::type
+            typename ::boost::bimap::support::iterator_type_by<Tag,BimapType>::type,
+            typename ::boost::bimap::support::const_iterator_type_by<Tag,BimapType>::type
         >,
         container_adaptor::use_default, // iterator from base converter
         container_adaptor::use_default, // local iterator from base converter

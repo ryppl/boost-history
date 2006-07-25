@@ -99,7 +99,7 @@ template
     class KeyType,
     class KeyCompare = std::less< KeyType >
 >
-struct set_of : public bimap::detail::set_type_of_tag
+struct set_of : public ::boost::bimap::detail::set_type_of_tag
 {
     /// Type of the object that will be stored in the set
     typedef KeyType value_type;
@@ -152,7 +152,7 @@ See also set_of, is_set_type_of_relation.
                                                                 **/
 
 template< class KeyCompare = std::less< mpl::_ > >
-struct set_of_relation : public bimap::detail::set_type_of_relation_tag
+struct set_of_relation : public ::boost::bimap::detail::set_type_of_relation_tag
 {
     /// Functor that compare two keys
     typedef KeyCompare key_compare;

@@ -13,6 +13,8 @@
 #ifndef BOOST_BIMAP_RELATION_RELATION_HPP
 #define BOOST_BIMAP_RELATION_RELATION_HPP
 
+#include <boost/config.hpp>
+
 #include <boost/mpl/if.hpp>
 #include <boost/bimap/detail/mpl/bool_result.hpp>
 
@@ -20,6 +22,8 @@
 #include <boost/bimap/relation/mutant_relation.hpp>
 #include <boost/bimap/relation/standard_relation.hpp>
 #include <boost/bimap/tags/support/value_type_of.hpp>
+
+#include <cstddef>
 
 namespace boost {
 namespace bimap {
@@ -57,17 +61,54 @@ See also select_relation, mutant_relation, standard_relation.
 template< class TA, class TB >
 struct is_mutant_idiom_supported_for
 {
-    // I have to build the two views and see if they are the correct size
+    #if defined(BOOST_MSVC)
 
-    static const int sAB = (  sizeof( typename tags::support::value_type_of<TA>::type ) +
-                              sizeof( typename tags::support::value_type_of<TB>::type )   );
+        // In MSVC offset of works even for non-POD types. This allow a
+        // strong check of the mutant idiom.
 
-    static const bool mutant_is_supported =
-        ( sizeof( structured_pair<TA,TB,normal_layout> ) == sAB ) &&
-        ( sizeof( structured_pair<TA,TB,mirror_layout> ) == sAB );
+        typedef ::std::size_t offset_type;
+
+        typedef structured_pair<TA,TB,normal_layout> pab;
+        typedef structured_pair<TB,TA,mirror_layout> pba;
+        typedef mutant_relation<TA,TB>               rel;
+
+        static const offset_type rel_left  = offsetof(rel,left);
+        static const offset_type rel_right = offsetof(rel,right);
+
+        static const offset_type pab_left  = offsetof(pab,first);
+        static const offset_type pab_right = offsetof(pab,second);
+
+        static const offset_type pba_left  = offsetof(pba,second);
+        static const offset_type pba_right = offsetof(pba,first);
+
+        static const bool mutant_is_supported =
+
+            (   rel_left  == pab_left  &&
+                rel_right == pab_right &&
+                rel_left  == pba_left  &&
+                rel_right == pba_right     );
+
+    #else
+
+        // This is the base test, supported in any standard compliant compiler. Other
+        // compiler specifics checks can be added above.
+        // It is a strong check based in sizeof. It is pesimistic, if it fails, the
+        // compiler may support the mutant idiom anyway. For compiler that used struct
+        // aligment different from 1 this will probably fail.
+
+        static const int sA = sizeof( typename tags::support::value_type_of<TA>::type );
+        static const int sB = sizeof( typename tags::support::value_type_of<TB>::type );
+        static const int sAB = sA + sB;
+
+        static const bool mutant_is_supported =
+
+            ( sizeof( structured_pair<TA,TB,normal_layout> ) == sAB ) &&
+            ( sizeof( structured_pair<TB,TA,mirror_layout> ) == sAB ) &&
+            ( sizeof( mutant_relation<TA,TB>               ) == sAB ) ;
+
+    #endif
 
     BOOST_BIMAP_MPL_BOOL_RESULT(mutant_is_supported);
-
 };
 
 } // namespace detail

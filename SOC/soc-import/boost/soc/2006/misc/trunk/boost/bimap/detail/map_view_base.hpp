@@ -30,8 +30,8 @@ struct map_view_iterator_to_base
 {
     typedef container_adaptor::support::iterator_facade_to_base
     <
-        typename bimap::support::iterator_type_by<Tag,BimapType>::type,
-        typename bimap::support::const_iterator_type_by<Tag,BimapType>::type
+        typename ::boost::bimap::support::iterator_type_by<Tag,BimapType>::type,
+        typename ::boost::bimap::support::const_iterator_type_by<Tag,BimapType>::type
 
     > type;
 };
@@ -45,7 +45,7 @@ class map_view_base
 
     public:
 
-    bool replace(typename bimap::support::iterator_type_by<Tag,BimapType>::type position,
+    bool replace(typename ::boost::bimap::support::iterator_type_by<Tag,BimapType>::type position,
                  typename relation::support::pair_type_by
                  <
                      Tag,
@@ -60,13 +60,13 @@ class map_view_base
     }
 
     template<typename Modifier>
-    bool modify(typename bimap::support::iterator_type_by<Tag,BimapType>::type position,Modifier mod)
+    bool modify(typename ::boost::bimap::support::iterator_type_by<Tag,BimapType>::type position,Modifier mod)
     {
         return derived().base().modify(
 
             derived().template functor<iterator_to_base>()(position),
 
-            bimap::detail::relation_modifier_adaptor
+            ::boost::bimap::detail::relation_modifier_adaptor
             <
                 Modifier,
                 typename BimapType::relation,

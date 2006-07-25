@@ -13,6 +13,8 @@
 #ifndef BOOST_BIMAP_VIEWS_UNORDERED_SET_VIEW_HPP
 #define BOOST_BIMAP_VIEWS_UNORDERED_SET_VIEW_HPP
 
+#include <boost/config.hpp>
+
 #include <boost/bimap/container_adaptor/unordered_set_adaptor.hpp>
 #include <boost/bimap/detail/set_view_base.hpp>
 
@@ -47,9 +49,15 @@ class unordered_set_view
         typename IndexType::key_from_value
     >,
 
-    public bimap::detail::set_view_base< unordered_set_view< IndexType >, IndexType >
+    public ::boost::bimap::detail::set_view_base< unordered_set_view< IndexType >, IndexType >
 {
-    friend class bimap::detail::set_view_base< unordered_set_view< IndexType >, IndexType >;
+    #if defined(BOOST_MSVC)
+        typedef ::boost::bimap::detail::set_view_base< unordered_set_view< IndexType >, IndexType >
+            friend_set_view_base;
+        friend class friend_set_view_base;
+    #else
+        friend class ::boost::bimap::detail::set_view_base< unordered_set_view< IndexType >, IndexType >;
+    #endif
 
     public:
 
