@@ -33,7 +33,6 @@ public:
 void*
 test_it(void)
 {
-    test< int, int >::handle_type h =
-        static_cast< test< int, int >::handle_type >(0);
+    test< int, int >::handle_type h = (test< int, int >::handle_type)0;
     return new test< int, int >(h, 5, 5);
 }

@@ -26,7 +26,7 @@ public:
     test_it(void)
     {
         bp::basic_child< int, int >::handle_type h =
-            static_cast< bp::basic_child< int, int >::handle_type >(0);
+            (bp::basic_child< int, int >::handle_type)0;
         int cl = 5;
         int attrs = 5;
         bpd::file_handle fh;

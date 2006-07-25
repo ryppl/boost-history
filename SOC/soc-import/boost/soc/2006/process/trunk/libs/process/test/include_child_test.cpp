@@ -27,8 +27,7 @@ public:
     {
         bp::command_line cl("test");
         bp::attributes attrs;
-        bp::child::handle_type h =
-            static_cast< bp::child::handle_type >(0);
+        bp::child::handle_type h = (bp::child::handle_type)0;
         bpd::file_handle fh;
         return new bp::child(h, cl, attrs, fh, fh, fh);
     }

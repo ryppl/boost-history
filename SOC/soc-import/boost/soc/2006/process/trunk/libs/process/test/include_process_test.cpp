@@ -31,8 +31,7 @@ public:
 void*
 test_it(void)
 {
-    test_process::handle_type h =
-        static_cast< test_process::handle_type >(0);
+    test_process::handle_type h = (test_process::handle_type)0;
     bp::command_line cl("test");
     bp::attributes a;
     return new test_process(h, cl, a);
