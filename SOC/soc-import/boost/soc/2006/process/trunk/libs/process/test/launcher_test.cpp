@@ -26,6 +26,27 @@ namespace but = ::boost::unit_test;
 // ------------------------------------------------------------------------
 
 void
+test_flags(void)
+{
+    bp::launcher l1(bp::launcher::REDIR_NONE);
+    BOOST_CHECK_EQUAL(l1.get_flags(), (int)bp::launcher::REDIR_NONE);
+
+    bp::launcher l2(bp::launcher::REDIR_STDIN);
+    BOOST_CHECK_EQUAL(l2.get_flags(), (int)bp::launcher::REDIR_STDIN);
+
+    bp::launcher l3;
+    BOOST_CHECK_EQUAL(l3.get_flags(), (int)bp::launcher::REDIR_ALL);
+
+    bp::launcher l4;
+    l4.set_flags(bp::launcher::REDIR_NONE);
+    BOOST_CHECK_EQUAL(l4.get_flags(), (int)bp::launcher::REDIR_NONE);
+    l4.set_flags(bp::launcher::REDIR_STDOUT);
+    BOOST_CHECK_EQUAL(l4.get_flags(), (int)bp::launcher::REDIR_STDOUT);
+}
+
+// ------------------------------------------------------------------------
+
+void
 test_input(void)
 {
     bp::command_line cl(get_helpers_path());
@@ -332,6 +353,7 @@ init_unit_test_suite(int argc, char* argv[])
 
     but::test_suite* test = BOOST_TEST_SUITE("launcher test suite");
 
+    test->add(BOOST_TEST_CASE(&test_flags), 0, 10);
     test->add(BOOST_TEST_CASE(&test_stdout_pass), 0, 10);
     test->add(BOOST_TEST_CASE(&test_stdout_fail), 1, 10);
     test->add(BOOST_TEST_CASE(&test_stderr_pass), 0, 10);

@@ -59,6 +59,12 @@ class launcher
          boost::optional< detail::pipe > pstderr);
 #endif
 
+protected:
+#if defined(BOOST_PROCESS_POSIX_API)
+    template< class Command_Line, class Attributes >
+    void posix_child_entry(const Command_Line& cl, const Attributes& attrs);
+#endif
+
 public:
     static const int REDIR_NONE = 0;
     static const int REDIR_STDIN = (1 << 0);
@@ -72,6 +78,9 @@ public:
 
     launcher(int flags = REDIR_ALL);
 
+    int get_flags(void) const;
+    void set_flags(int flags);
+
     void set_environment(const std::string& var, const std::string& value);
     void unset_environment(const std::string& var);
 
@@ -84,11 +93,9 @@ public:
 
 inline
 launcher::launcher(int flags) :
-    m_flags(flags)
+    m_flags(REDIR_NONE)
 {
-    BOOST_ASSERT
-        ((m_flags & REDIR_STDERR) || (m_flags & REDIR_STDERR_TO_STDOUT) !=
-         REDIR_STDERR || REDIR_STDERR_TO_STDOUT);
+    set_flags(flags);
 }
 
 // ------------------------------------------------------------------------
@@ -109,6 +116,28 @@ launcher::unset_environment(const std::string& var)
 {
     BOOST_ASSERT(!var.empty());
     m_environment.unset(var);
+}
+
+// ------------------------------------------------------------------------
+
+inline
+int
+launcher::get_flags(void)
+    const
+{
+    return m_flags;
+}
+
+// ------------------------------------------------------------------------
+
+inline
+void
+launcher::set_flags(int flags)
+{
+    BOOST_ASSERT
+        ((flags & REDIR_STDERR) || (flags & REDIR_STDERR_TO_STDOUT) !=
+         REDIR_STDERR || REDIR_STDERR_TO_STDOUT);
+    m_flags = flags;
 }
 
 // ------------------------------------------------------------------------
@@ -143,7 +172,8 @@ launcher::start(const Command_Line& cl, const Attributes& attrs)
 template< class Command_Line, class Attributes >
 inline
 basic_child< Command_Line, Attributes >
-launcher::start_posix(const Command_Line& cl, const Attributes& attrs,
+launcher::start_posix(const Command_Line& cl,
+                      const Attributes& attrs,
                       boost::optional< detail::pipe > pstdin,
                       boost::optional< detail::pipe > pstdout,
                       boost::optional< detail::pipe > pstderr)
@@ -182,33 +212,15 @@ launcher::start_posix(const Command_Line& cl, const Attributes& attrs,
                     (STDOUT_FILENO, STDERR_FILENO);
                 errfh.disown();
             }
-
-            attrs.setup();
         } catch (const system_error& e) {
             ::write(STDERR_FILENO, e.what(), std::strlen(e.what()));
             ::write(STDERR_FILENO, "\n", 1);
             ::exit(EXIT_FAILURE);
         }
 
-        std::pair< size_t, char** > args = cl.posix_argv();
-        char** envp = m_environment.envp();
-
-        ::execve(cl.get_executable().c_str(), args.second, envp);
-        system_error e("boost::process::launcher::start",
-                       "execvp(2) failed", errno);
-
-        for (size_t i = 0; i < args.first; i++)
-            delete [] args.second[i];
-        delete [] args.second;
-
-        for (size_t i = 0; i < m_environment.size(); i++)
-            delete [] envp[i];
-        delete [] envp;
-
-        ::write(STDERR_FILENO, e.what(), std::strlen(e.what()));
-        ::write(STDERR_FILENO, "\n", 1);
-        ::exit(EXIT_FAILURE);
-     } else {
+        posix_child_entry(cl, attrs);
+        BOOST_ASSERT(false); // Not reached.
+    } else {
         detail::file_handle fhstdin, fhstdout, fhstderr;
 
         if (m_flags & REDIR_STDIN) {
@@ -233,11 +245,47 @@ launcher::start_posix(const Command_Line& cl, const Attributes& attrs,
             (pid, cl, attrs, fhstdin, fhstdout, fhstderr);
     }
 
-    // Not reached.
-    BOOST_ASSERT(false);
+    BOOST_ASSERT(false); // Not reached.
     detail::file_handle fhstdin, fhstdout, fhstderr;
     return basic_child< Command_Line, Attributes >
         (pid, cl, attrs, fhstdin, fhstdout, fhstderr);
+}
+#endif
+
+// ------------------------------------------------------------------------
+
+#if defined(BOOST_PROCESS_POSIX_API)
+template< class Command_Line, class Attributes >
+inline
+void
+launcher::posix_child_entry(const Command_Line& cl, const Attributes& attrs)
+{
+    try {
+        attrs.setup();
+    } catch (const system_error& e) {
+        ::write(STDERR_FILENO, e.what(), std::strlen(e.what()));
+        ::write(STDERR_FILENO, "\n", 1);
+        ::exit(EXIT_FAILURE);
+    }
+
+    std::pair< size_t, char** > args = cl.posix_argv();
+    char** envp = m_environment.envp();
+
+    ::execve(cl.get_executable().c_str(), args.second, envp);
+    system_error e("boost::process::launcher::start",
+                   "execvp(2) failed", errno);
+
+    for (size_t i = 0; i < args.first; i++)
+        delete [] args.second[i];
+    delete [] args.second;
+
+    for (size_t i = 0; i < m_environment.size(); i++)
+        delete [] envp[i];
+    delete [] envp;
+
+    ::write(STDERR_FILENO, e.what(), std::strlen(e.what()));
+    ::write(STDERR_FILENO, "\n", 1);
+    ::exit(EXIT_FAILURE);
 }
 #endif
 
