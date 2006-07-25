@@ -22,7 +22,9 @@ class test_process :
     public bp::basic_process< Command_Line, Attributes >
 {
 public:
-    test_process(handle_type h, const Command_Line& cl,
+    test_process(typename
+                 test_process< Command_Line, Attributes >::handle_type h,
+                 const Command_Line& cl,
                  const Attributes& a) :
         bp::basic_process< Command_Line, Attributes >(h, cl, a)
     {
@@ -35,7 +37,7 @@ static void
 test_getters(void)
 {
     test_process< char, int >::handle_type h1 =
-        reinterpret_cast< test_process< char, int >::handle_type >(0);
+        (test_process< char, int >::handle_type)0;
     char cl1 = 'A';
     int attrs1 = 5;
     test_process< char, int > p1(h1, cl1, attrs1);
@@ -44,7 +46,7 @@ test_getters(void)
     BOOST_CHECK_EQUAL(p1.get_attributes(), attrs1);
 
     test_process< char, int >::handle_type h2 =
-        reinterpret_cast< test_process< char, int >::handle_type >(1);
+        (test_process< char, int >::handle_type)1;
     char cl2 = 'B';
     int attrs2 = 6;
     test_process< char, int > p2(h2, cl2, attrs2);
