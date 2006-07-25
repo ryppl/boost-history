@@ -41,7 +41,14 @@ typedef basic_child< command_line, attributes > child;
 typedef basic_process< command_line, attributes > process;
 
 #if defined(BOOST_PROCESS_POSIX_API)
+template< class Command_Line, class Attributes >
+class basic_posix_child;
+
 class posix_attributes;
+
+class posix_launcher;
+
+typedef basic_posix_child< command_line, attributes > posix_child;
 #endif
 
 // ------------------------------------------------------------------------

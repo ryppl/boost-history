@@ -26,7 +26,10 @@
 #include <boost/process/status.hpp>
 
 #if defined(BOOST_PROCESS_POSIX_API)
+#   include <boost/process/basic_posix_child.hpp>
 #   include <boost/process/posix_attributes.hpp>
+#   include <boost/process/posix_child.hpp>
+#   include <boost/process/posix_launcher.hpp>
 #endif
 
 #endif // !defined(BOOST_PROCESS_HPP)

@@ -32,6 +32,7 @@ exe helpers
 test-suite process :
     [ compile include_attributes_test.cpp : : ]
     [ compile include_basic_child_test.cpp : : ]
+    [ compile include_basic_posix_child_test.cpp : : ]
     [ compile include_basic_process_test.cpp : : ]
     [ compile include_child_test.cpp : : ]
     [ compile include_command_line_test.cpp : : ]
@@ -44,6 +45,8 @@ test-suite process :
     [ compile include_launcher_test.cpp : : ]
     [ compile include_pistream_test.cpp : : ]
     [ compile include_posix_attributes_test.cpp : : ]
+    [ compile include_posix_child_test.cpp : : ]
+    [ compile include_posix_launcher_test.cpp : : ]
     [ compile include_postream_test.cpp : : ]
     [ compile include_process_test.cpp : : ]
     [ compile include_status_test.cpp : : ]
@@ -125,6 +128,13 @@ test-suite process :
         ]
 
     [ run posix_attributes_test.cpp
+        : helpers
+        :
+        : <library>../../../../boost//unit_test_framework
+          <library>../../../../boost//filesystem
+        ]
+
+    [ run posix_launcher_test.cpp
         : helpers
         :
         : <library>../../../../boost//unit_test_framework
