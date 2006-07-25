@@ -18,6 +18,7 @@ doxygen autodoc
         [ glob ../../../boost/process/*.hpp ]
         [ glob ../../../boost/process/detail/*.hpp ]
     :
+        <xsl:param>boost.doxygen.detailns=documenteverything
     ;
 
 xml process
