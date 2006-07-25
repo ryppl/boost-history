@@ -50,6 +50,7 @@ public:
                  code_type sys_err);
     virtual ~system_error(void) throw();
 
+    virtual code_type code(void) const throw();
     virtual const char* what(void) const throw();
 
 private:
@@ -79,33 +80,48 @@ system_error::~system_error(void)
 // ------------------------------------------------------------------------
 
 inline
+system_error::code_type
+system_error::code(void)
+    const
+    throw()
+{
+    return m_sys_err;
+}
+
+// ------------------------------------------------------------------------
+
+inline
 const char*
 system_error::what(void)
     const
     throw()
 {
-    if (m_message.length() == 0) {
-        m_message = std::string(std::runtime_error::what()) + ": ";
+    try {
+        if (m_message.length() == 0) {
+            m_message = std::string(std::runtime_error::what()) + ": ";
 
 #if defined(BOOST_PROCESS_POSIX_API)
-        m_message += std::strerror(m_sys_err);
+            m_message += std::strerror(m_sys_err);
 #elif defined(BOOST_PROCESS_WIN32_API)
-        TCHAR* msg = NULL;
-        if (::FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |
-                            FORMAT_MESSAGE_ALLOCATE_BUFFER,
-                            NULL, m_sys_err, 0,
-                            reinterpret_cast<LPTSTR>(&msg),
-                            0, NULL) == 0)
-            m_message += "Unexpected error in FormatMessage";
-        else {
-            BOOST_ASSERT(msg != NULL);
-            m_message += msg;
-            LocalFree(msg);
-        }
+            TCHAR* msg = NULL;
+            if (::FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |
+                                FORMAT_MESSAGE_ALLOCATE_BUFFER,
+                                NULL, m_sys_err, 0,
+                                reinterpret_cast<LPTSTR>(&msg),
+                                0, NULL) == 0)
+                m_message += "Unexpected error in FormatMessage";
+            else {
+                BOOST_ASSERT(msg != NULL);
+                m_message += msg;
+                LocalFree(msg);
+            }
 #endif
-    }
+        }
 
-    return m_message.c_str();
+        return m_message.c_str();
+    } catch (...) {
+        return "Unable to format system_error message";
+    }
 }
 
 // ------------------------------------------------------------------------
