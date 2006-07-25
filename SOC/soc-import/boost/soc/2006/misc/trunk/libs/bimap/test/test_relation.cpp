@@ -6,6 +6,9 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 // See http://www.boost.org/libs/{{ library name }}  for the library home page.
 
+// std
+#include <string>
+
 // Boost.Test
 #include <boost/test/minimal.hpp>
 

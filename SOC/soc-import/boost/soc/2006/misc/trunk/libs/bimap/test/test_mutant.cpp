@@ -49,8 +49,10 @@ struct ReverseStdPairView
 };
 
 
-struct MutantData : public can_mutate_in< boost::mpl::list< StdPairView, ReverseStdPairView > >
+struct MutantData
 {
+    typedef boost::mpl::list< StdPairView, ReverseStdPairView > mutant_views;
+
     MutantData(type_a ap, type_b bp) : a(ap), b(bp) {}
     type_a a;
     type_b b;
@@ -61,32 +63,6 @@ void test_mutant_basic()
 {
 
     // mutant test
-    {
-        typedef mutant< Data, boost::mpl::list< StdPairView, ReverseStdPairView > > mutant_pair;
-
-        BOOST_CHECK( sizeof( mutant_pair ) == sizeof( StdPairView ) );
-
-        mutant_pair m;
-        m.a = value_a;
-        m.b = value_b;
-
-        BOOST_CHECK( mutate<StdPairView>(m).first  == value_a );
-        BOOST_CHECK( mutate<StdPairView>(m).second == value_b );
-        BOOST_CHECK( mutate<ReverseStdPairView>(m).first  == value_b );
-        BOOST_CHECK( mutate<ReverseStdPairView>(m).second == value_a );
-
-        ReverseStdPairView & rpair = mutate<ReverseStdPairView>(m);
-        rpair.first = value_b;
-        rpair.second = value_a;
-
-        BOOST_CHECK( mutate<StdPairView>(m).first  == value_a );
-        BOOST_CHECK( mutate<StdPairView>(m).second == value_b );
-
-        BOOST_CHECK( &mutate<StdPairView>(m).first  == &m.a );
-        BOOST_CHECK( &mutate<StdPairView>(m).second == &m.b );
-    }
-
-    // can_mutate test
     {
         MutantData m(value_a,value_b);
 

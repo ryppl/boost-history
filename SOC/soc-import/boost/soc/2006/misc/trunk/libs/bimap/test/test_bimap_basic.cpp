@@ -12,6 +12,7 @@
 #include <cstddef>
 #include <cassert>
 #include <algorithm>
+#include <string>
 
 // Boost.Test
 #include <boost/test/minimal.hpp>
