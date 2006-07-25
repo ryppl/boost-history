@@ -104,6 +104,12 @@ test-suite process :
         : <library>../../../../boost//unit_test_framework
         ]
 
+    [ run basic_child_test.cpp
+        :
+        :
+        : <library>../../../../boost//unit_test_framework
+        ]
+
     [ run launcher_test.cpp
         : helpers
         :
