@@ -62,6 +62,7 @@ private:
     boost::shared_ptr< pistream > m_sstdout;
     boost::shared_ptr< pistream > m_sstderr;
 
+protected:
     friend class launcher;
     basic_child(handle_type h,
                 const Command_Line& cl,
