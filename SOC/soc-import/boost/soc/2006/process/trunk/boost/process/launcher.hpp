@@ -344,7 +344,7 @@ launcher::start_win32(const Command_Line& cl, const Attributes& attrs,
         (::_tcsdup(TEXT(attrs.get_work_directory().c_str())));
     m_environment.set("", attrs.get_work_directory());
 
-    boost::shared_array< TCHAR > env = m_environment.strings();
+    boost::shared_array< TCHAR > env = m_environment.win32_strings();
     if (!::CreateProcess(executable.get(), cmdline.get(), NULL, NULL, TRUE,
                          0, env.get(), workdir.get(), &si, &pi)) {
         boost::throw_exception

@@ -146,7 +146,7 @@ public:
     //!         the environment's content.  This string is of the form
     //!         var1=value1\\0var2=value2\\0\\0.
     //!
-    boost::shared_array< TCHAR > strings(void) const;
+    boost::shared_array< TCHAR > win32_strings(void) const;
 #endif
 };
 
@@ -240,7 +240,7 @@ environment::envp(void)
 #if defined(BOOST_PROCESS_WIN32_API) || defined(BOOST_PROCESS_DOXYGEN)
 inline
 boost::shared_array< TCHAR >
-environment::strings(void)
+environment::win32_strings(void)
     const
 {
     boost::shared_array< TCHAR > strs(NULL);
