@@ -39,10 +39,10 @@ boostbook standalone
         <dependency>autodoc
         <xsl:param>boost.libraries=$(BOOST_ROOT)/libs/libraries.htm
         <xsl:param>boost.root=.
-        <xsl:param>doc.standalone=true
+        <xsl:param>doc.standalone=1
         <xsl:param>nav.layout=none
         <xsl:param>toc.section.depth=2
-        <xsl:param>section.autolabel=true
+        <xsl:param>section.autolabel=1
         <xsl:param>section.autolabel.max.depth=3
     ;
 
