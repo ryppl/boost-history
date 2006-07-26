@@ -1,6 +1,5 @@
 //
 // Boost.Process
-// Top header that includes everything.
 //
 // Copyright (c) 2006 Julio M. Merino Vidal.
 //
@@ -9,8 +8,19 @@
 // at http://www.boost.org/LICENSE_1_0.txt.)
 //
 
+//!
+//! \file boost/process.hpp
+//!
+//! Convenience header that includes all other Boost.Process public header
+//! files.  It is important to note that those headers that are specific
+//! to a given platform are only included if the library is being used in
+//! that same platform.
+//!
+
 #if !defined(BOOST_PROCESS_HPP)
+/** \cond */
 #define BOOST_PROCESS_HPP
+/** \endcond */
 
 #include <boost/process/config.hpp>
 
