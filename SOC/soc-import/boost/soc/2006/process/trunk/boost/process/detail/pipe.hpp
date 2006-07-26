@@ -1,6 +1,5 @@
 //
 // Boost.Process
-// RAII model for anonymous pipes.
 //
 // Copyright (c) 2006 Julio M. Merino Vidal.
 //
@@ -9,8 +8,17 @@
 // at http://www.boost.org/LICENSE_1_0.txt.)
 //
 
+//!
+//! \file detail/pipe.hpp
+//!
+//! Includes the declaration of the pipe class.  This file is for
+//! internal usage only and must not be included by the library user.
+//!
+
 #if !defined(BOOST_PROCESS_DETAIL_PIPE_HPP)
+/** \cond */
 #define BOOST_PROCESS_DETAIL_PIPE_HPP
+/** \endcond */
 
 #include <boost/process/config.hpp>
 
