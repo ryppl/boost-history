@@ -41,22 +41,31 @@ template
 >
 class unordered_multimap_adaptor :
 
-    public detail::unordered_associative_container_adaptor
+    public ::boost::bimap::container_adaptor::detail::unordered_associative_container_adaptor
     <
         Base,
-
         Iterator, ConstIterator, LocalIterator, ConstLocalIterator,
-
         typename Iterator::value_type::first_type,
-
         IteratorToBaseConverter, IteratorFromBaseConverter,
         LocalIteratorFromBaseConverter,
         ValueToBaseConverter, ValueFromBaseConverter,
         KeyToBaseConverter,
-
         FunctorsFromDerivedClasses
     >
 {
+    typedef ::boost::bimap::container_adaptor::detail::unordered_associative_container_adaptor
+    <
+        Base,
+        Iterator, ConstIterator, LocalIterator, ConstLocalIterator,
+        typename Iterator::value_type::first_type,
+        IteratorToBaseConverter, IteratorFromBaseConverter,
+        LocalIteratorFromBaseConverter,
+        ValueToBaseConverter, ValueFromBaseConverter,
+        KeyToBaseConverter,
+        FunctorsFromDerivedClasses
+
+    > base_;
+
     // MetaData -------------------------------------------------------------
 
     public:
@@ -67,10 +76,8 @@ class unordered_multimap_adaptor :
 
     public:
 
-    unordered_multimap_adaptor() {}
-
     explicit unordered_multimap_adaptor(Base & c) :
-        unordered_multimap_adaptor::unordered_associative_container_adaptor_(c) {}
+        base_(c) {}
 
     protected:
 

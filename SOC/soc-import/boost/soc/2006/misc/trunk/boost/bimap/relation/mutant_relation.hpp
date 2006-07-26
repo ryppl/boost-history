@@ -63,6 +63,8 @@ class mutant_relation :
     public symmetrical_base<TA,TB>
 
 {
+    typedef symmetrical_base<TA,TB> base_;
+
     public:
 
     typedef mpl::list2
@@ -88,17 +90,17 @@ class mutant_relation :
     //@{
 
         /// data, exposed for easy manipulation
-        typename mutant_relation::left_value_type  left;
-        typename mutant_relation::right_value_type right;
+        typename base_::left_value_type  left;
+        typename base_::right_value_type right;
 
     //@}
 
     mutant_relation() {}
 
-    mutant_relation(typename boost::call_traits<
-                        typename mutant_relation::left_value_type >::param_type l,
-                    typename boost::call_traits<
-                        typename mutant_relation::right_value_type>::param_type r) :
+    mutant_relation(typename ::boost::call_traits<
+                        typename base_::left_value_type >::param_type l,
+                    typename ::boost::call_traits<
+                        typename base_::right_value_type>::param_type r) :
         left (l),
         right(r)
     {}
@@ -128,8 +130,8 @@ class mutant_relation :
 
     typedef std::pair
     <
-        typename mutant_relation::left_value_type,
-        typename mutant_relation::right_value_type
+        typename base_::left_value_type,
+        typename base_::right_value_type
 
     > std_pair;
 
@@ -188,51 +190,51 @@ class mutant_relation :
     // pair_by metafunction. Remember that not all compiler supports the mutant
     // idiom.
 
-    typename mutant_relation::left_value_type & get_left()
+    typename base_::left_value_type & get_left()
     {
         return left;
     }
 
-    const typename mutant_relation::left_value_type & get_left() const
+    const typename base_::left_value_type & get_left() const
     {
         return left;
     }
 
-    typename mutant_relation::right_value_type & get_right()
+    typename base_::right_value_type & get_right()
     {
         return right;
     }
 
-    const typename mutant_relation::right_value_type & get_right() const
+    const typename base_::right_value_type & get_right() const
     {
         return right;
     }
 
     left_pair_reference get_left_pair()
     {
-        return detail::mutate<left_pair>(*this);
+        return ::boost::bimap::relation::detail::mutate<left_pair>(*this);
     }
 
     const_left_pair_reference get_left_pair() const
     {
-        return detail::mutate<left_pair>(*this);
+        return ::boost::bimap::relation::detail::mutate<left_pair>(*this);
     }
 
     right_pair_reference get_right_pair()
     {
-        return detail::mutate<right_pair>(*this);
+        return ::boost::bimap::relation::detail::mutate<right_pair>(*this);
     }
 
     const_right_pair_reference get_right_pair() const
     {
-        return detail::mutate<right_pair>(*this);
+        return ::boost::bimap::relation::detail::mutate<right_pair>(*this);
     }
 
     // Serialization support
 
     private:
 
-    friend class boost::serialization::access;
+    friend class ::boost::serialization::access;
 
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version)

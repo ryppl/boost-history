@@ -16,7 +16,8 @@
 #include <boost/bimap/relation/support/member_with_tag.hpp>
 #include <boost/bimap/relation/member_at.hpp>
 #include <boost/call_traits.hpp>
-
+#include <boost/type_traits/is_const.hpp>
+#include <boost/mpl/if.hpp>
 
 /******************************************************************************
                    BIMAP SYMMETRIC ACCESS RESULT OF
@@ -53,19 +54,13 @@ struct NAME
                                                                               \
         >::type value_type;                                                   \
                                                                               \
-        typedef typename call_traits<value_type>::reference type;             \
-    };                                                                        \
+        typedef typename mpl::if_< is_const<SymmetricType>,                   \
                                                                               \
-    template< class Tag, class SymmetricType >                                \
-    struct NAME< Tag, const SymmetricType >                                   \
-    {                                                                         \
-        typedef typename METAFUNCTION_BASE                                    \
-        <                                                                     \
-            Tag,SymmetricType                                                 \
+            typename call_traits<value_type>::const_reference,                \
                                                                               \
-        >::type value_type;                                                   \
+            typename call_traits<value_type>::reference                       \
                                                                               \
-        typedef typename call_traits<value_type>::const_reference type;       \
+        >::type type;                                                         \
     };                                                                        \
                                                                               \
     }
@@ -107,11 +102,11 @@ typename result_of::NAME<Tag,SymmetricType>::type
     template< class TP_SYMMETRIC >                                            \
     typename result_of::NAME                                                  \
     <                                                                         \
-        boost::bimap::relation::member_at::left,TP_SYMMETRIC                  \
+        ::boost::bimap::relation::member_at::left,TP_SYMMETRIC                \
                                                                               \
     >::type                                                                   \
                                                                               \
-        NAME( boost::bimap::relation::member_at::left,                        \
+        NAME( ::boost::bimap::relation::member_at::left,                      \
               TP_SYMMETRIC & PARAMETER_NAME )                                 \
     {                                                                         \
         LEFT_BODY;                                                            \
@@ -120,11 +115,11 @@ typename result_of::NAME<Tag,SymmetricType>::type
     template< class TP_SYMMETRIC >                                            \
     typename result_of::NAME                                                  \
     <                                                                         \
-        boost::bimap::relation::member_at::right,TP_SYMMETRIC                 \
+        ::boost::bimap::relation::member_at::right,TP_SYMMETRIC               \
                                                                               \
     >::type                                                                   \
                                                                               \
-        NAME( boost::bimap::relation::member_at::right,                       \
+        NAME( ::boost::bimap::relation::member_at::right,                     \
               TP_SYMMETRIC & PARAMETER_NAME )                                 \
     {                                                                         \
         RIGHT_BODY;                                                           \
@@ -137,11 +132,11 @@ typename result_of::NAME<Tag,SymmetricType>::type
     template< class TP_SYMMETRIC >                                            \
     typename result_of::NAME                                                  \
     <                                                                         \
-        boost::bimap::relation::member_at::left,const TP_SYMMETRIC            \
+        ::boost::bimap::relation::member_at::left,const TP_SYMMETRIC          \
                                                                               \
     >::type                                                                   \
                                                                               \
-        NAME( boost::bimap::relation::member_at::left,                        \
+        NAME( ::boost::bimap::relation::member_at::left,                      \
               const TP_SYMMETRIC & PARAMETER_NAME )                           \
     {                                                                         \
         LEFT_BODY;                                                            \
@@ -150,11 +145,11 @@ typename result_of::NAME<Tag,SymmetricType>::type
     template< class TP_SYMMETRIC >                                            \
     typename result_of::NAME                                                  \
     <                                                                         \
-        boost::bimap::relation::member_at::right,const TP_SYMMETRIC           \
+        ::boost::bimap::relation::member_at::right,const TP_SYMMETRIC         \
                                                                               \
     >::type                                                                   \
                                                                               \
-        NAME( boost::bimap::relation::member_at::right,                       \
+        NAME( ::boost::bimap::relation::member_at::right,                     \
               const TP_SYMMETRIC & PARAMETER_NAME )                           \
     {                                                                         \
         RIGHT_BODY;                                                           \
@@ -186,7 +181,7 @@ typename result_of::NAME<Tag,SymmetricType>::type
     typename result_of::NAME<Tag,SymmetricType>::type                         \
     NAME( SymmetricType & s )                                                 \
     {                                                                         \
-        typedef typename boost::bimap::relation::support::member_with_tag     \
+        typedef typename ::boost::bimap::relation::support::member_with_tag   \
         <                                                                     \
             Tag,SymmetricType                                                 \
                                                                               \
@@ -199,7 +194,7 @@ typename result_of::NAME<Tag,SymmetricType>::type
     typename result_of::NAME<Tag,const SymmetricType>::type                   \
     NAME( const SymmetricType & s )                                           \
     {                                                                         \
-        typedef typename boost::bimap::relation::support::member_with_tag     \
+        typedef typename ::boost::bimap::relation::support::member_with_tag   \
         <                                                                     \
             Tag,SymmetricType                                                 \
                                                                               \

@@ -72,7 +72,7 @@ class container_adaptor
 
     typedef typename mpl::if_< is_same< IteratorToBaseConverter, use_default >,
         // {
-                detail::iterator_to_base_identity
+                ::boost::bimap::container_adaptor::detail::iterator_to_base_identity
                 <
                     typename Base::iterator                , iterator,
                     typename Base::const_iterator          , const_iterator
@@ -87,7 +87,7 @@ class container_adaptor
 
     typedef typename mpl::if_< is_same< IteratorFromBaseConverter, use_default >,
         // {
-                detail::iterator_from_base_identity
+                ::boost::bimap::container_adaptor::detail::iterator_from_base_identity
                 <
                     typename Base::iterator                , iterator,
                     typename Base::const_iterator          , const_iterator
@@ -102,7 +102,7 @@ class container_adaptor
 
     typedef typename mpl::if_< is_same< ValueToBaseConverter, use_default >,
         // {
-                detail::value_to_base_identity
+                ::boost::bimap::container_adaptor::detail::value_to_base_identity
                 <
                     typename Base::value_type,
                     value_type
@@ -117,7 +117,7 @@ class container_adaptor
 
     typedef typename mpl::if_< is_same< ValueFromBaseConverter, use_default >,
         // {
-                detail::value_from_base_identity
+                ::boost::bimap::container_adaptor::detail::value_from_base_identity
                 <
                     typename Base::value_type,
                     value_type

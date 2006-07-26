@@ -41,22 +41,32 @@ template
 >
 class unordered_map_adaptor :
 
-    public detail::unordered_associative_container_adaptor
+    public ::boost::bimap::container_adaptor::detail::unordered_associative_container_adaptor
     <
         Base,
-
         Iterator, ConstIterator, LocalIterator, ConstLocalIterator,
-
         typename Iterator::value_type::first_type,
-
         IteratorToBaseConverter, IteratorFromBaseConverter,
         LocalIteratorFromBaseConverter,
         ValueToBaseConverter, ValueFromBaseConverter,
         KeyToBaseConverter,
-
         FunctorsFromDerivedClasses
     >
 {
+
+    typedef ::boost::bimap::container_adaptor::detail::unordered_associative_container_adaptor
+    <
+        Base,
+        Iterator, ConstIterator, LocalIterator, ConstLocalIterator,
+        typename Iterator::value_type::first_type,
+        IteratorToBaseConverter, IteratorFromBaseConverter,
+        LocalIteratorFromBaseConverter,
+        ValueToBaseConverter, ValueFromBaseConverter,
+        KeyToBaseConverter,
+        FunctorsFromDerivedClasses
+
+    > base_;
+
     // MetaData -------------------------------------------------------------
 
     public:
@@ -67,10 +77,8 @@ class unordered_map_adaptor :
 
     public:
 
-    unordered_map_adaptor() {}
-
     explicit unordered_map_adaptor(Base & c) :
-        unordered_map_adaptor::unordered_associative_container_adaptor_(c) {}
+        base_(c) {}
 
     protected:
 
@@ -93,7 +101,7 @@ class unordered_map_adaptor :
 
     public:
 
-    data_type& operator[](const typename unordered_map_adaptor::key_type& k)  { return unordered_map_adaptor::base()[k]; }
+    data_type& operator[](const typename base_::key_type& k)  { return this->base()[k]; }
 
 };
 

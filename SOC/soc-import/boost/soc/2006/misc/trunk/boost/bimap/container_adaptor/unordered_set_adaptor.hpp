@@ -41,31 +41,37 @@ template
 >
 class unordered_set_adaptor :
 
-    public detail::unordered_associative_container_adaptor
+    public ::boost::bimap::container_adaptor::detail::unordered_associative_container_adaptor
     <
         Base,
-
         Iterator, ConstIterator, LocalIterator, ConstLocalIterator,
-
         typename Iterator::value_type,
-
         IteratorToBaseConverter, IteratorFromBaseConverter,
         LocalIteratorFromBaseConverter,
         ValueToBaseConverter, ValueFromBaseConverter,
         KeyToBaseConverter,
-
         FunctorsFromDerivedClasses
     >
 {
+    typedef ::boost::bimap::container_adaptor::detail::unordered_associative_container_adaptor
+    <
+        Base,
+        Iterator, ConstIterator, LocalIterator, ConstLocalIterator,
+        typename Iterator::value_type,
+        IteratorToBaseConverter, IteratorFromBaseConverter,
+        LocalIteratorFromBaseConverter,
+        ValueToBaseConverter, ValueFromBaseConverter,
+        KeyToBaseConverter,
+        FunctorsFromDerivedClasses
+
+    > base_;
 
     // Access -----------------------------------------------------------------
 
     public:
 
-    unordered_set_adaptor() {}
-
     explicit unordered_set_adaptor(Base & c) :
-        unordered_set_adaptor::unordered_associative_container_adaptor_(c) {}
+        base_(c) {}
 
     protected:
 

@@ -83,14 +83,14 @@ struct bimap_core
     typedef typename manage_bimap_key
     <
         LeftSetType,
-        ::boost::bimap::relation::member_at::left
+        relation::member_at::left
 
     >::type left_tagged_set_type;
 
     typedef typename manage_bimap_key
     <
         RightSetType,
-        ::boost::bimap::relation::member_at::right
+        relation::member_at::right
 
     >::type right_tagged_set_type;
 
@@ -101,16 +101,16 @@ struct bimap_core
 
     /// \brief Relation type stored by the bimap.
 
-    typedef typename ::boost::bimap::relation::select_relation
+    typedef typename relation::select_relation
     <
-        typename ::boost::bimap::tags::support::apply_to_value_type
+        typename tags::support::apply_to_value_type
         <
             get_value_type<_>,
             left_tagged_set_type
 
         >::type,
 
-        typename ::boost::bimap::tags::support::apply_to_value_type
+        typename tags::support::apply_to_value_type
         <
             get_value_type<_>,
             right_tagged_set_type
@@ -348,7 +348,7 @@ struct bimap_core
 
     typedef typename relation_set_type_of::template set_view_bind
     <
-        typename ::boost::multi_index::index<core_type, relation_set_tag >::type
+        typename boost::multi_index::index<core_type, relation_set_tag >::type
 
     >::type relation_set;
 

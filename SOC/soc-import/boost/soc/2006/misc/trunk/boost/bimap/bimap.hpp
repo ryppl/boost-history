@@ -68,26 +68,6 @@ perspective the next step will be:
 #include <boost/bimap/detail/modifier_adaptor.hpp>
 #include <boost/bimap/relation/support/data_extractor.hpp>
 
-// Include basic tools for user commodity
-#include <boost/bimap/tags/tagged.hpp>
-#include <boost/bimap/support/map_by.hpp>
-#include <boost/bimap/relation/member_at.hpp>
-#include <boost/bimap/relation/support/get.hpp>
-#include <boost/bimap/relation/support/pair_by.hpp>
-
-// Bring the most used namespaces directly to the user main namespace
-namespace boost {
-namespace bimap {
-
-using namespace boost::bimap::support;
-
-using boost::bimap::tags::tagged;
-
-using namespace boost::bimap::relation::support;
-using namespace boost::bimap::relation;
-
-} // namespace bimap
-} // namespace boost
 
 /// \brief The namespace where all the boost libraries lives.
 
@@ -181,9 +161,9 @@ class bimap
     public ::boost::bimap::detail::bimap_core<KeyTypeA,KeyTypeB,AP1,AP2,AP3>::relation_set
 
 {
-    private:
+    typedef typename ::boost::bimap::detail::bimap_core<KeyTypeA,KeyTypeB,AP1,AP2,AP3> base_;
 
-    typename bimap::core_type core;
+    typename base_::core_type core;
 
     public:
 
@@ -208,29 +188,29 @@ class bimap
     ------------------------------------------------------------------*/
 
     #if defined(BOOST_MSVC)
-    typename bimap::left_set_type left_set_type;
+    typename base_::left_set_type left_set_type;
     typedef typename left_set_type
     #else
-    typedef typename bimap::left_set_type
+    typedef typename base_::left_set_type
     #endif
 
         ::template map_view_bind
         <
-            typename bimap::left_tag, typename bimap::bimap_core_
+            typename base_::left_tag, base_
 
         >::type left_map_type;
 
 
     #if defined(BOOST_MSVC)
-    typename bimap::right_set_type right_set_type;
+    typename base_::right_set_type right_set_type;
     typedef typename right_set_type
     #else
-    typedef typename bimap::right_set_type
+    typedef typename base_::right_set_type
     #endif
 
         ::template map_view_bind
         <
-            typename bimap::right_tag, typename bimap::bimap_core_
+            typename base_::right_tag, base_
 
         >::type right_map_type;
 
@@ -243,22 +223,22 @@ class bimap
 
     bimap() :
 
-        bimap::relation_set(::boost::multi_index::get<typename bimap::relation_set_tag >(core) ),
+        base_::relation_set(::boost::multi_index::get<typename base_::relation_set_tag >(core) ),
 
-        left     (::boost::multi_index::get<typename bimap::left_tag  >(core)),
-        right    (::boost::multi_index::get<typename bimap::right_tag >(core))
+        left     (::boost::multi_index::get<typename base_::left_tag  >(core)),
+        right    (::boost::multi_index::get<typename base_::right_tag >(core))
 
     {}
 
     template< class InputIterator >
     bimap(InputIterator first,InputIterator last) :
 
-        bimap::relation_set(::boost::multi_index::get<typename bimap::relation_set_tag  >(core) ),
+        base_::relation_set(::boost::multi_index::get<typename base_::relation_set_tag  >(core) ),
 
         core(first,last),
 
-        left     (::boost::multi_index::get<typename bimap::left_tag  >(core)),
-        right    (::boost::multi_index::get<typename bimap::right_tag >(core))
+        left     (::boost::multi_index::get<typename base_::left_tag  >(core)),
+        right    (::boost::multi_index::get<typename base_::right_tag >(core))
 
     {}
 
@@ -290,6 +270,29 @@ class bimap
 /** \namespace boost::bimap::views::detail
 \brief Bimap views details.
                                                             **/
+
+
+
+// Include basic tools for user commodity
+#include <boost/bimap/tags/tagged.hpp>
+#include <boost/bimap/support/map_by.hpp>
+#include <boost/bimap/relation/member_at.hpp>
+#include <boost/bimap/relation/support/get.hpp>
+#include <boost/bimap/relation/support/pair_by.hpp>
+
+// Bring the most used namespaces directly to the user main namespace
+namespace boost {
+namespace bimap {
+
+using namespace boost::bimap::support;
+
+using boost::bimap::tags::tagged;
+
+using namespace boost::bimap::relation::support;
+using namespace boost::bimap::relation;
+
+} // namespace bimap
+} // namespace boost
 
 
 #endif // BOOST_BIMAP_BIMAP_HPP

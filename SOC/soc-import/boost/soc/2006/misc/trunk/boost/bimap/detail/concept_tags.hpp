@@ -59,7 +59,7 @@ See also left_based.
 
 #ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
-struct left_based : detail::side_based_tag
+struct left_based : ::boost::bimap::detail::side_based_tag
 {
     // TODO
     // I run into troubles if I do not define bind for side based tags.
@@ -67,7 +67,7 @@ struct left_based : detail::side_based_tag
     template< class Relation > struct bind_to { typedef void type; };
 };
 
-struct right_based : detail::side_based_tag
+struct right_based : ::boost::bimap::detail::side_based_tag
 {
     // TODO
     // I run into troubles if I do not define bind for side based tags.

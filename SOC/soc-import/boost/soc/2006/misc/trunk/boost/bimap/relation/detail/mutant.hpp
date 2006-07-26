@@ -13,7 +13,6 @@
 #ifndef BOOST_BIMAP_RELATION_DETAIL_MUTANT_HPP
 #define BOOST_BIMAP_RELATION_DETAIL_MUTANT_HPP
 
-#include <boost/concept_check.hpp>
 #include <boost/bimap/detail/debug/static_error.hpp>
 #include <boost/mpl/contains.hpp>
 #include <boost/mpl/assert.hpp>
@@ -40,7 +39,7 @@ See also mutant, can_mutate_in.
 template< class View, class Type >
 View& mutate( Type & m )
 {
-    BOOST_MPL_ASSERT(( boost::mpl::contains<typename Type::mutant_views,View> ));
+    BOOST_MPL_ASSERT(( ::boost::mpl::contains<typename Type::mutant_views,View> ));
     BOOST_STATIC_ASSERT( sizeof(Type) == sizeof(View) );
     return *reinterpret_cast< View* >(addressof(m));
 }
@@ -48,7 +47,7 @@ View& mutate( Type & m )
 template< class View, class Type >
 const View& mutate( const Type & m )
 {
-    BOOST_MPL_ASSERT(( boost::mpl::contains<typename Type::mutant_views,View> ));
+    BOOST_MPL_ASSERT(( ::boost::mpl::contains<typename Type::mutant_views,View> ));
     BOOST_STATIC_ASSERT( sizeof(Type) == sizeof(View) );
     return *reinterpret_cast< const View* >(addressof(m));
 }

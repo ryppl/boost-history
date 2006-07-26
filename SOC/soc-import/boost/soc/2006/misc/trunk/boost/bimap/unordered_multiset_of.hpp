@@ -165,8 +165,8 @@ See also unordered_multiset_of, is_set_type_of_relation.
 
 template
 <
-    class HashFunctor   = use_default,
-    class EqualKey      = use_default
+    class HashFunctor   = hash< mpl::_ >,
+    class EqualKey      = std::equal_to< mpl::_ >
 >
 struct unordered_multiset_of_relation : public ::boost::bimap::detail::set_type_of_relation_tag
 {

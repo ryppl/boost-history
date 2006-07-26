@@ -116,8 +116,8 @@ struct reverse_iterator_type_by
         Tag,
         typename BimapCore::relation,
         typename core_reverse_iterator_type_by<Tag,BimapCore>::type,
-        typename relation::support::const_pair_reference_type_by<Tag,typename BimapCore::relation>::type,
-        const typename relation::support::pair_type_by<Tag,typename BimapCore::relation>::type
+        typename ::boost::bimap::relation::support::const_pair_reference_type_by<Tag,typename BimapCore::relation>::type,
+        const typename ::boost::bimap::relation::support::pair_type_by<Tag,typename BimapCore::relation>::type
 
     > type;
 };
@@ -145,8 +145,8 @@ struct const_reverse_iterator_type_by
         Tag,
         typename BimapCore::relation,
         typename core_const_reverse_iterator_type_by<Tag,BimapCore>::type,
-        typename relation::support::const_pair_reference_type_by<Tag,typename BimapCore::relation>::type,
-        const typename relation::support::pair_type_by<Tag,typename BimapCore::relation>::type
+        typename ::boost::bimap::relation::support::const_pair_reference_type_by<Tag,typename BimapCore::relation>::type,
+        const typename ::boost::bimap::relation::support::pair_type_by<Tag,typename BimapCore::relation>::type
 
     > type;
 };
@@ -176,8 +176,8 @@ struct local_iterator_type_by
         Tag,
         typename BimapCore::relation,
         typename core_local_iterator_type_by<Tag,BimapCore>::type,
-        typename relation::support::const_pair_reference_type_by<Tag,typename BimapCore::relation>::type,
-        const typename relation::support::pair_type_by<Tag,typename BimapCore::relation>::type
+        typename ::boost::bimap::relation::support::const_pair_reference_type_by<Tag,typename BimapCore::relation>::type,
+        const typename ::boost::bimap::relation::support::pair_type_by<Tag,typename BimapCore::relation>::type
 
     > type;
 };
@@ -206,8 +206,8 @@ struct const_local_iterator_type_by
         Tag,
         typename BimapCore::relation,
         typename core_const_local_iterator_type_by<Tag,BimapCore>::type,
-        typename relation::support::const_pair_reference_type_by<Tag,typename BimapCore::relation>::type,
-        const typename relation::support::pair_type_by<Tag,typename BimapCore::relation>::type
+        typename ::boost::bimap::relation::support::const_pair_reference_type_by<Tag,typename BimapCore::relation>::type,
+        const typename ::boost::bimap::relation::support::pair_type_by<Tag,typename BimapCore::relation>::type
 
     > type;
 };

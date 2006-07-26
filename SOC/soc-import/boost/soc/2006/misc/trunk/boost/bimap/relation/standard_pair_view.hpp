@@ -37,15 +37,18 @@ See also reference_binder_finder, normal_reference_binder.
 
 template< class FirstType, class SecondType >
 struct normal_reference_binder :
+
     public symmetrical_base<FirstType,SecondType>
 {
+    typedef symmetrical_base<FirstType,SecondType> base_;
+
     public:
 
     typedef normal_reference_binder reference_binder_;
     typedef standard_relation<FirstType,SecondType> relation_;
 
-    typedef typename reference_binder_::left_value_type  first_type;
-    typedef typename reference_binder_::right_value_type second_type;
+    typedef typename base_::left_value_type  first_type;
+    typedef typename base_::right_value_type second_type;
 
     first_type  & first;
     second_type & second;
@@ -56,22 +59,22 @@ struct normal_reference_binder :
     normal_reference_binder(first_type const & f, second_type const & s) :
         first(f), second(s) {}
 
-    typename reference_binder_::left_value_type & get_left()
+    typename base_::left_value_type & get_left()
     {
         return first;
     }
 
-    const typename reference_binder_::left_value_type & get_left() const
+    const typename base_::left_value_type & get_left() const
     {
         return first;
     }
 
-    typename reference_binder_::right_value_type & get_right()
+    typename base_::right_value_type & get_right()
     {
         return second;
     }
 
-    const typename reference_binder_::right_value_type & get_right() const
+    const typename base_::right_value_type & get_right() const
     {
         return second;
     }
@@ -83,16 +86,19 @@ See also reference_binder_finder, mirror_reference_binder.
                                                                         **/
 template< class FirstType, class SecondType >
 struct mirror_reference_binder :
+
     public symmetrical_base<SecondType,FirstType>
 {
+
+    typedef symmetrical_base<SecondType,FirstType> base_;
 
     public:
 
     typedef mirror_reference_binder reference_binder_;
     typedef standard_relation<SecondType,FirstType> relation_;
 
-    typedef typename reference_binder_::right_value_type first_type;
-    typedef typename reference_binder_::left_value_type  second_type;
+    typedef typename base_::right_value_type first_type;
+    typedef typename base_::left_value_type  second_type;
 
     second_type & second;
     first_type  & first;
@@ -103,22 +109,22 @@ struct mirror_reference_binder :
     mirror_reference_binder(first_type const & f, second_type const & s) :
         second(s), first(f) {}
 
-    typename reference_binder_::left_value_type & get_left()
+    typename base_::left_value_type & get_left()
     {
         return second;
     }
 
-    const typename reference_binder_::left_value_type & get_left() const
+    const typename base_::left_value_type & get_left() const
     {
         return second;
     }
 
-    typename reference_binder_::right_value_type & get_right()
+    typename base_::right_value_type & get_right()
     {
         return first;
     }
 
-    const typename reference_binder_::right_value_type & get_right() const
+    const typename base_::right_value_type & get_right() const
     {
         return first;
     }
@@ -169,6 +175,8 @@ class standard_pair_view :
     public reference_binder_finder<FirstType,SecondType,Layout>::type
 
 {
+    typedef typename reference_binder_finder<FirstType,SecondType,Layout>::type base_;
+
     public:
 
     typedef standard_pair_view
@@ -178,27 +186,27 @@ class standard_pair_view :
 
     > mirror_pair_type;
 
-    standard_pair_view(typename standard_pair_view::relation_ & r) :
-        standard_pair_view::reference_binder_(r) {}
+    standard_pair_view(typename base_::relation_ & r) :
+        base_(r) {}
 
-    standard_pair_view(typename standard_pair_view::first_type  const & f,
-                       typename standard_pair_view::second_type const & s) :
-        standard_pair_view::reference_binder_(f,s) {}
+    standard_pair_view(typename base_::first_type  const & f,
+                       typename base_::second_type const & s) :
+        base_(f,s) {}
 
 
     // Interaction with std::pair
 
     typedef std::pair
     <
-        typename standard_pair_view::first_type,
-        typename standard_pair_view::second_type
+        typename base_::first_type,
+        typename base_::second_type
 
     > std_pair;
 
     typedef std::pair
     <
-        const typename standard_pair_view::first_type,
-        typename standard_pair_view::second_type
+        const typename base_::first_type,
+        typename base_::second_type
 
     > std_map_pair;
 
@@ -214,54 +222,54 @@ class standard_pair_view :
     operator const normal_structured_pair ()
     {
         return normal_structured_pair(
-            standard_pair_view::first,standard_pair_view::second
+            base_::first, base_::second
         );
     }
 
     operator const mirror_structured_pair ()
     {
         return mirror_structured_pair(
-            standard_pair_view::first,standard_pair_view::second
+            base_::first, base_::second
         );
     }
 
     BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
-        standard_pair_view::first, standard_pair_view::second,
+        base_::first, base_::second,
 
         standard_pair_view,
         first,second
     );
 
     BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
-        standard_pair_view::first, standard_pair_view::second,
+        base_::first, base_::second,
 
         mirror_pair_type,
         first,second
     );
 
     BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
-        standard_pair_view::first, standard_pair_view::second,
+        base_::first, base_::second,
 
         normal_structured_pair,
         first,second
     );
 
     BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
-        standard_pair_view::first, standard_pair_view::second,
+        base_::first, base_::second,
 
         mirror_structured_pair,
         first,second
     );
 
     BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
-        standard_pair_view::first, standard_pair_view::second,
+        base_::first, base_::second,
 
         std_pair,
         first,second
     );
 
     BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
-        standard_pair_view::first, standard_pair_view::second,
+        base_::first, base_::second,
 
         std_map_pair,
         first,second

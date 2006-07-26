@@ -13,6 +13,8 @@
 #ifndef BOOST_BIMAP_RELATION_SUPPORT_PAIR_BY_HPP
 #define BOOST_BIMAP_RELATION_SUPPORT_PAIR_BY_HPP
 
+#include <boost/type_traits/is_const.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/bimap/relation/support/pair_type_by.hpp>
 #include <boost/bimap/relation/detail/access_builder.hpp>
 
@@ -61,22 +63,15 @@ namespace result_of {
 template< class Tag, class Relation >
 struct pair_by
 {
-    typedef typename pair_reference_type_by
-    <
-        Tag,Relation
-
+    typedef typename mpl::if_< is_const<Relation>,
+    // {
+           typename const_pair_reference_type_by< Tag,Relation >::type,
+    // }
+    // else
+    // {
+           typename pair_reference_type_by< Tag,Relation >::type
+    // }
     >::type type;
-};
-
-template< class Tag, class Relation >
-struct pair_by< Tag, const Relation >
-{
-    typedef typename const_pair_reference_type_by
-    <
-        Tag,Relation
-
-    >::type type;
-
 };
 
 } // namespace result_of

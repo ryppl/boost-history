@@ -41,31 +41,38 @@ template
 >
 class multiset_adaptor :
 
-    public detail::ordered_associative_container_adaptor
+    public ::boost::bimap::container_adaptor::detail::ordered_associative_container_adaptor
     <
         Base,
-
         Iterator, ConstIterator, ReverseIterator, ConstReverseIterator,
-
         typename Iterator::value_type,
-
         IteratorToBaseConverter, IteratorFromBaseConverter,
         ReverseIteratorFromBaseConverter,
         ValueToBaseConverter, ValueFromBaseConverter,
         KeyToBaseConverter,
-
         FunctorsFromDerivedClasses
     >
 {
+
+    typedef ::boost::bimap::container_adaptor::detail::ordered_associative_container_adaptor
+    <
+        Base,
+        Iterator, ConstIterator, ReverseIterator, ConstReverseIterator,
+        typename Iterator::value_type,
+        IteratorToBaseConverter, IteratorFromBaseConverter,
+        ReverseIteratorFromBaseConverter,
+        ValueToBaseConverter, ValueFromBaseConverter,
+        KeyToBaseConverter,
+        FunctorsFromDerivedClasses
+
+    > base_;
 
     // Access -----------------------------------------------------------------
 
     public:
 
-    multiset_adaptor() {}
-
     explicit multiset_adaptor(Base & c) :
-        multiset_adaptor::ordered_associative_container_adaptor_(c) {}
+        base_(c) {}
 
     protected:
 

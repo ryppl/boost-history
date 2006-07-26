@@ -26,6 +26,48 @@ namespace bimap {
 namespace container_adaptor {
 namespace detail {
 
+
+template
+<
+    class Base, class Iterator, class ConstIterator,
+    class ReverseIterator, class ConstReverseIterator,
+    class IteratorToBaseConverter, class IteratorFromBaseConverter,
+    class ReverseIteratorFromBaseConverter,
+    class ValueToBaseConverter, class ValueFromBaseConverter,
+    class FunctorsFromDerivedClasses
+>
+struct sequence_container_adaptor_base
+{
+    typedef container_adaptor
+    <
+        Base, Iterator, ConstIterator,
+        IteratorToBaseConverter, IteratorFromBaseConverter,
+        ValueToBaseConverter, ValueFromBaseConverter,
+
+        typename mpl::push_front<
+
+            FunctorsFromDerivedClasses,
+
+            typename mpl::if_< is_same< ReverseIteratorFromBaseConverter, use_default >,
+            // {
+                    iterator_from_base_identity
+                    <
+                        typename Base::reverse_iterator                , ReverseIterator,
+                        typename Base::const_reverse_iterator          , ConstReverseIterator
+                    >,
+            // }
+            // else
+            // {
+                    ReverseIteratorFromBaseConverter
+            // }
+
+            >::type
+
+        >::type
+
+    > type;
+};
+
 /// \brief Container adaptor to build a type that is compliant to the concept of a sequence container.
 
 template
@@ -48,38 +90,27 @@ template
 >
 class sequence_container_adaptor :
 
-    public container_adaptor
+    public sequence_container_adaptor_base
     <
-        Base,
-
-        Iterator, ConstIterator,
-
+        Base, Iterator, ConstIterator,
+        ReverseIterator, ConstReverseIterator,
         IteratorToBaseConverter, IteratorFromBaseConverter,
-        ValueToBaseConverter   , ValueFromBaseConverter,
+        ReverseIteratorFromBaseConverter,
+        ValueToBaseConverter, ValueFromBaseConverter,
+        FunctorsFromDerivedClasses
 
-        typename mpl::push_front<
-
-            FunctorsFromDerivedClasses,
-
-            typename mpl::if_< is_same< ReverseIteratorFromBaseConverter, use_default >,
-            // {
-                    detail::iterator_from_base_identity
-                    <
-                        typename Base::reverse_iterator                , ReverseIterator,
-                        typename Base::const_reverse_iterator          , ConstReverseIterator
-                    >,
-            // }
-            // else
-            // {
-                    ReverseIteratorFromBaseConverter
-            // }
-
-            >::type
-
-        >::type
-    >
+    >::type
 {
-    typedef sequence_container_adaptor this_type;
+    typedef typename sequence_container_adaptor_base
+    <
+        Base, Iterator, ConstIterator,
+        ReverseIterator, ConstReverseIterator,
+        IteratorToBaseConverter, IteratorFromBaseConverter,
+        ReverseIteratorFromBaseConverter,
+        ValueToBaseConverter, ValueFromBaseConverter,
+        FunctorsFromDerivedClasses
+
+    >::type base_;
 
     // MetaData -------------------------------------------------------------
 
@@ -92,7 +123,7 @@ class sequence_container_adaptor :
 
     typedef typename mpl::if_< is_same< ReverseIteratorFromBaseConverter, use_default >,
         // {
-                detail::iterator_from_base_identity
+                iterator_from_base_identity
                 <
                     typename Base::reverse_iterator                , reverse_iterator,
                     typename Base::const_reverse_iterator          , const_reverse_iterator
@@ -111,7 +142,7 @@ class sequence_container_adaptor :
     public:
 
     explicit sequence_container_adaptor(Base & c)
-        : sequence_container_adaptor::container_adaptor_(c) {}
+        : base_(c) {}
 
     protected:
 
@@ -137,134 +168,134 @@ class sequence_container_adaptor :
 
     reverse_iterator rbegin()
     {
-        return this_type::template functor<
+        return this->template functor<
             reverse_iterator_from_base
-        >()                            ( this_type::base().rbegin() );
+        >()                            ( this->base().rbegin() );
 
     }
 
     reverse_iterator rend()
     {
-        return this_type::template functor<
+        return this->template functor<
             reverse_iterator_from_base
-        >()                            ( this_type::base().rend() );
+        >()                            ( this->base().rend() );
     }
 
     const_reverse_iterator rbegin() const
     {
-        return this_type::template functor<
+        return this->template functor<
             reverse_iterator_from_base
-        >()                            ( this_type::base().rbegin() );
+        >()                            ( this->base().rbegin() );
     }
 
     const_reverse_iterator rend() const
     {
-        return this_type::template functor<
+        return this->template functor<
             reverse_iterator_from_base
-        >()                            ( this_type::base().rend() );
+        >()                            ( this->base().rend() );
     }
 
-    void resize(typename this_type::size_type n,
-                const typename this_type::value_type& x = typename this_type::value_type())
+    void resize(typename base_::size_type n,
+                const typename base_::value_type& x = typename base_::value_type())
     {
-        this_type::base().resize(n,
-            this_type::template functor<typename this_type::value_to_base>()(x)
+        this->base().resize(n,
+            this->template functor<typename base_::value_to_base>()(x)
         );
     }
 
-    typename this_type::reference front()
+    typename base_::reference front()
     {
-        return this_type::template functor<
-            typename this_type::value_from_base>()( this_type::base().front() );
+        return this->template functor<
+            typename base_::value_from_base>()( this->base().front() );
     }
 
-    typename this_type::reference back()
+    typename base_::reference back()
     {
-        return this_type::template functor<
-            typename this_type::value_from_base>()( this_type::base().back() );
+        return this->template functor<
+            typename base_::value_from_base>()( this->base().back() );
     }
 
-    typename this_type::const_reference front() const
+    typename base_::const_reference front() const
     {
-        return this_type::template functor<
-            typename this_type::value_from_base>()( this_type::base().front() );
+        return this->template functor<
+            typename base_::value_from_base>()( this->base().front() );
     }
 
-    typename this_type::const_reference back() const
+    typename base_::const_reference back() const
     {
-        return this_type::template functor<
-            typename this_type::value_from_base>()( this_type::base().back() );
+        return this->template functor<
+            typename base_::value_from_base>()( this->base().back() );
     }
 
-    std::pair<typename this_type::iterator,bool>
-        push_front(const typename this_type::value_type& x)
+    std::pair<typename base_::iterator,bool>
+        push_front(const typename base_::value_type& x)
     {
         std::pair< typename Base::iterator, bool > r(
-            this_type::base().push_front(
-                this_type::template functor<typename this_type::value_to_base>()(x)
+            this->base().push_front(
+                this->template functor<typename base_::value_to_base>()(x)
             )
         );
 
-        return std::pair<typename this_type::iterator, bool>(
-            this_type::template functor<typename this_type::iterator_from_base>()(r.first),
+        return std::pair<typename base_::iterator, bool>(
+            this->template functor<typename base_::iterator_from_base>()(r.first),
             r.second
         );
     }
 
     void pop_front()
     {
-        this_type::base().pop_front();
+        this->base().pop_front();
     }
 
-    std::pair<typename this_type::iterator,bool>
-        push_back(const typename this_type::value_type& x)
+    std::pair<typename base_::iterator,bool>
+        push_back(const typename base_::value_type& x)
     {
         std::pair< typename Base::iterator, bool > r(
-            this_type::base().push_back(
-                this_type::template functor<typename this_type::value_to_base>()(x)
+            this->base().push_back(
+                this->template functor<typename base_::value_to_base>()(x)
             )
         );
 
-        return std::pair<typename this_type::iterator, bool>(
-            this_type::template functor<typename this_type::iterator_from_base>()(r.first),
+        return std::pair<typename base_::iterator, bool>(
+            this->template functor<typename base_::iterator_from_base>()(r.first),
             r.second
         );
     }
 
     void pop_back()
     {
-        this_type::base().pop_back();
+        this->base().pop_back();
     }
 
-    std::pair<typename this_type::iterator,bool>
-    insert(typename this_type::iterator position,const typename this_type::value_type& x)
+    std::pair<typename base_::iterator,bool>
+    insert(typename base_::iterator position,const typename base_::value_type& x)
     {
         std::pair< typename Base::iterator, bool > r(
-            this_type::base().insert(
-                this_type::template functor<typename this_type::iterator_to_base>()(position),
-                this_type::template functor<typename this_type::value_to_base   >()(x)
+            this->base().insert(
+                this->template functor<typename base_::iterator_to_base>()(position),
+                this->template functor<typename base_::value_to_base   >()(x)
             )
         );
 
-        return std::pair<typename this_type::iterator, bool>(
-            this_type::template functor<typename this_type::iterator_from_base>()(r.first),
+        return std::pair<typename base_::iterator, bool>(
+            this->template functor<typename base_::iterator_from_base>()(r.first),
             r.second
         );
     }
 
-    void insert(typename this_type::iterator position,
-                typename this_type::size_type m,
-                const typename this_type::value_type& x)
+    void insert(typename base_::iterator position,
+                typename base_::size_type m,
+                const typename base_::value_type& x)
     {
-        this_type::base().insert(
-            this_type::template functor<typename this_type::iterator_to_base>()(position),
+        this->base().insert(
+            this->template functor<typename base_::iterator_to_base>()(position),
             m,
-            this_type::template functor<typename this_type::value_to_base   >()(x)
+            this->template functor<typename base_::value_to_base   >()(x)
         );
     }
 
     template<typename InputIterator>
-    void insert(typename this_type::iterator position,
+    void insert(typename base_::iterator position,
                 InputIterator first,InputIterator last)
     {
         // TODO
@@ -273,9 +304,9 @@ class sequence_container_adaptor :
 
         for( ; first != last ; ++first )
         {
-            this_type::base().insert(
-                this_type::template functor<typename this_type::iterator_to_base>()(position),
-                this_type::template functor<typename this_type::value_to_base   >()(*first)
+            this->base().insert(
+                this->template functor<typename base_::iterator_to_base>()(position),
+                this->template functor<typename base_::value_to_base   >()(*first)
             );
         }
     }

@@ -13,8 +13,6 @@
 #ifndef BOOST_BIMAP_VIEWS_MULTISET_VIEW_HPP
 #define BOOST_BIMAP_VIEWS_MULTISET_VIEW_HPP
 
-#include <boost/config.hpp>
-
 #include <boost/bimap/container_adaptor/multiset_adaptor.hpp>
 #include <boost/bimap/detail/set_view_base.hpp>
 
@@ -34,40 +32,25 @@ See also const_multiset_view.
 template< class IndexType >
 class multiset_view
 :
-    public container_adaptor::multiset_adaptor
-    <
-        IndexType,
-        typename IndexType::iterator,
-        typename IndexType::const_iterator,
-        typename IndexType::reverse_iterator,
-        typename IndexType::const_reverse_iterator,
-        container_adaptor::use_default,
-        container_adaptor::use_default,
-        container_adaptor::use_default,
-        container_adaptor::use_default,
-        container_adaptor::use_default,
-        typename IndexType::key_from_value
-    >,
+    public BOOST_BIMAP_SET_VIEW_CONTAINER_ADAPTOR(
+        multiset_adaptor, reverse_iterator, const_reverse_iterator
+    ),
 
     public ::boost::bimap::detail::set_view_base< multiset_view< IndexType >, IndexType >
 {
-    #if defined(BOOST_MSVC)
-        typedef ::boost::bimap::detail::set_view_base< multiset_view< IndexType >, IndexType >
-            friend_set_view_base;
-        friend class friend_set_view_base;
-    #else
-        friend class ::boost::bimap::detail::set_view_base< multiset_view< IndexType >, IndexType >;
-    #endif
+    BOOST_BIMAP_SET_VIEW_BASE_FRIEND(multiset_view,IndexType);
 
-    typedef multiset_view this_type;
+    typedef BOOST_BIMAP_SET_VIEW_CONTAINER_ADAPTOR(
+        multiset_adaptor, reverse_iterator, const_reverse_iterator
+
+    ) base_;
 
     public:
 
-    multiset_view() {}
-    multiset_view(typename multiset_view::base_type & c) : multiset_view::multiset_adaptor_(c) {}
+    multiset_view(typename base_::base_type & c) : base_(c) {}
 
-    template<typename LowerBounder,typename UpperBounder>
-    std::pair<typename this_type::iterator,typename this_type::iterator>
+    template<typename LowerBounder, typename UpperBounder>
+    std::pair<typename base_::iterator, typename base_::iterator>
         range(LowerBounder lower,UpperBounder upper) const
     {
         return this->base().range(lower,upper);
@@ -87,30 +70,21 @@ See also multiset_view.
 template< class IndexType >
 class const_multiset_view
 :
-    public container_adaptor::multiset_adaptor
-    <
-        const IndexType,
-        typename IndexType::iterator,
-        typename IndexType::const_iterator,
-        typename IndexType::reverse_iterator,
-        typename IndexType::const_reverse_iterator,
-        container_adaptor::use_default,
-        container_adaptor::use_default,
-        container_adaptor::use_default,
-        container_adaptor::use_default,
-        container_adaptor::use_default,
-        typename IndexType::key_from_value
-    >
+    public BOOST_BIMAP_CONST_SET_VIEW_CONTAINER_ADAPTOR(
+        multiset_adaptor, reverse_iterator, const_reverse_iterator
+    )
 {
-    typedef const_multiset_view this_type;
+    typedef BOOST_BIMAP_CONST_SET_VIEW_CONTAINER_ADAPTOR(
+        multiset_adaptor, reverse_iterator, const_reverse_iterator
+
+    ) base_;
 
     public:
 
-    const_multiset_view() {}
-    const_multiset_view(typename const_multiset_view::base_type & c) : const_multiset_view::multiset_adaptor_(c) {}
+    const_multiset_view(typename base_::base_type & c) : base_(c) {}
 
     template<typename LowerBounder,typename UpperBounder>
-    std::pair<typename this_type::iterator,typename this_type::iterator>
+    std::pair<typename base_::iterator, typename base_::iterator>
         range(LowerBounder lower,UpperBounder upper) const
     {
         return this->base().range(lower,upper);

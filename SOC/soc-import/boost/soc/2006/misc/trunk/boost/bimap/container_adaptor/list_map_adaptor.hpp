@@ -7,19 +7,23 @@
 //
 // See http://www.boost.org/libs/bimap for library home page.
 
-/// \file container_adaptor/map_adaptor.hpp
-/// \brief Container adaptor to easily build a std::map signature compatible container.
+/// \file container_adaptor/list_map_adaptor.hpp
+/// \brief Container adaptor.
 
-#ifndef BOOST_BIMAP_CONTAINER_ADAPTOR_MAP_ADAPTOR_HPP
-#define BOOST_BIMAP_CONTAINER_ADAPTOR_MAP_ADAPTOR_HPP
+#ifndef BOOST_BIMAP_CONTAINER_ADAPTOR_LIST_MAP_ADAPTOR_HPP
+#define BOOST_BIMAP_CONTAINER_ADAPTOR_LIST_MAP_ADAPTOR_HPP
 
-#include <boost/bimap/container_adaptor/detail/ordered_associative_container_adaptor.hpp>
+#include <boost/mpl/list.hpp>
+#include <boost/mpl/push_front.hpp>
+
+#include <boost/bimap/container_adaptor/list_adaptor.hpp>
+#include <boost/bimap/container_adaptor/detail/identity_converters.hpp>
 
 namespace boost {
 namespace bimap {
 namespace container_adaptor {
 
-/// \brief Container adaptor to easily build a std::map signature compatible container.
+/// \brief Container adaptor.
 
 template
 <
@@ -35,42 +39,48 @@ template
     class ReverseIteratorFromBaseConverter = use_default,
     class ValueToBaseConverter             = use_default,
     class ValueFromBaseConverter           = use_default,
-    class KeyToBaseConverter               = use_default
+
+    class FunctorsFromDerivedClasses = mpl::list<>
 >
-class map_adaptor :
+class list_map_adaptor :
 
-    public detail::ordered_associative_container_adaptor
+    public list_adaptor
     <
-        Base,
-
-        Iterator, ConstIterator, ReverseIterator, ConstReverseIterator,
-
-        typename Iterator::value_type::first_type,
-
+        Base, Iterator, ConstIterator, ReverseIterator, ConstReverseIterator,
         IteratorToBaseConverter, IteratorFromBaseConverter,
         ReverseIteratorFromBaseConverter,
         ValueToBaseConverter, ValueFromBaseConverter,
-        KeyToBaseConverter
+        FunctorsFromDerivedClasses
     >
 {
+    typedef list_adaptor
+    <
+        Base, Iterator, ConstIterator, ReverseIterator, ConstReverseIterator,
+        IteratorToBaseConverter, IteratorFromBaseConverter,
+        ReverseIteratorFromBaseConverter,
+        ValueToBaseConverter, ValueFromBaseConverter,
+        FunctorsFromDerivedClasses
+
+    > base_;
+
     // MetaData -------------------------------------------------------------
 
     public:
 
+    typedef typename Iterator::value_type::first_type  key_type;
     typedef typename Iterator::value_type::second_type data_type;
+
 
     // Access -----------------------------------------------------------------
 
     public:
 
-    map_adaptor() {}
-
-    explicit map_adaptor(Base & c) :
-        map_adaptor::ordered_associative_container_adaptor_(c) {}
+    explicit list_map_adaptor(Base & c) :
+        base_(c) {}
 
     protected:
 
-    typedef map_adaptor
+    typedef list_map_adaptor
     <
         Base,
 
@@ -79,15 +89,10 @@ class map_adaptor :
         IteratorToBaseConverter, IteratorFromBaseConverter,
         ReverseIteratorFromBaseConverter,
         ValueToBaseConverter, ValueFromBaseConverter,
-        KeyToBaseConverter
 
-    > map_adaptor_;
+        FunctorsFromDerivedClasses
 
-    // Interface --------------------------------------------------------------
-
-    public:
-
-    data_type& operator[](const typename map_adaptor::key_type& k)  { return map_adaptor::base()[k]; }
+    > list_map_adaptor_;
 
 };
 
@@ -113,5 +118,5 @@ bool operator<(const map_view<BimapType,Tag>&, const map_view<BimapType,Tag>&)
 } // namespace boost
 
 
-#endif // BOOST_BIMAP_CONTAINER_ADAPTOR_MAP_ADAPTOR_HPP
+#endif // BOOST_BIMAP_CONTAINER_ADAPTOR_LIST_MAP_ADAPTOR_HPP
 

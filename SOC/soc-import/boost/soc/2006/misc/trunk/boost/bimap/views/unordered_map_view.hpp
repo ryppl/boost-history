@@ -13,13 +13,10 @@
 #ifndef BOOST_BIMAP_VIEWS_UNOREDERED_MAP_VIEW_HPP
 #define BOOST_BIMAP_VIEWS_UNOREDERED_MAP_VIEW_HPP
 
-#include <boost/config.hpp>
-
-#include <boost/bimap/relation/support/get_pair_functor.hpp>
-#include <boost/bimap/container_adaptor/support/iterator_facade_converters.hpp>
 #include <boost/bimap/container_adaptor/unordered_map_adaptor.hpp>
 #include <boost/bimap/support/iterator_type_by.hpp>
 #include <boost/bimap/detail/map_view_base.hpp>
+#include <boost/bimap/detail/operator_bracket_proxy.hpp>
 
 namespace boost {
 namespace bimap {
@@ -38,49 +35,41 @@ See also const_unordered_map_view.
 template< class Tag, class BimapType >
 class unordered_map_view
 :
-    public container_adaptor::unordered_map_adaptor
-    <
-        typename BimapType::core_type::template index<Tag>::type,
-
-        typename ::boost::bimap::support::iterator_type_by<Tag,BimapType>::type,
-        typename ::boost::bimap::support::const_iterator_type_by<Tag,BimapType>::type,
-
-        typename ::boost::bimap::support::local_iterator_type_by<Tag,BimapType>::type,
-        typename ::boost::bimap::support::const_local_iterator_type_by<Tag,BimapType>::type,
-
-        typename ::boost::bimap::detail::map_view_iterator_to_base<Tag,BimapType>::type,
-
-        container_adaptor::use_default, // iterator from base converter
-        container_adaptor::use_default, // local iterator from base converter
-        container_adaptor::use_default, // value to base converter
-
-        relation::support::GetPairFunctor<Tag, typename BimapType::relation >
-    >,
+    public BOOST_BIMAP_MAP_VIEW_CONTAINER_ADAPTOR(
+        unordered_map_adaptor,
+        Tag,BimapType,
+        local_iterator_type_by,const_local_iterator_type_by
+    ),
 
     public ::boost::bimap::detail::map_view_base< unordered_map_view<Tag,BimapType>,Tag,BimapType >
 
 {
-    typedef unordered_map_view this_type;
+    typedef BOOST_BIMAP_MAP_VIEW_CONTAINER_ADAPTOR(
+        unordered_map_adaptor,
+        Tag,BimapType,
+        local_iterator_type_by,const_local_iterator_type_by
 
-    #if defined(BOOST_MSVC)
-        typedef ::boost::bimap::detail::map_view_base< unordered_map_view<Tag,BimapType>,Tag,BimapType >
-            friend_map_view_base;
-        friend class friend_map_view_base;
-    #else
-        friend class ::boost::bimap::detail::map_view_base< unordered_map_view<Tag,BimapType>,Tag,BimapType >;
-    #endif
+    ) base_;
+
+    BOOST_BIMAP_MAP_VIEW_BASE_FRIEND(unordered_map_view,Tag,BimapType);
 
     public:
 
-    unordered_map_view() {}
-    unordered_map_view(typename unordered_map_view::base_type & c)
-        : unordered_map_view::unordered_map_adaptor_(c) {}
+    unordered_map_view(typename base_::base_type & c)
+        : base_(c) {}
 
-    typename this_type::data_type & operator[](const typename this_type::key_type & k)
+    ::boost::bimap::detail::operator_bracket_proxy<unordered_map_view>
+        operator[](const typename base_::key_type & k)
     {
-        return ( * ( ( this_type::base().insert(
-                typename this_type::value_type( k, typename this_type::data_type() )
-                ) ).first ) ).second;
+        return ::boost::bimap::detail::operator_bracket_proxy<unordered_map_view>(*this,k);
+    }
+
+    typename base_::data_type const &
+        operator[](const typename base_::key_type & k) const
+    {
+        // TODO
+        // Add index check?
+        return this->find(k)->second;
     }
 
 };
@@ -97,32 +86,31 @@ See also unordered_map_view.
 template< class Tag, class BimapType >
 class const_unordered_map_view
 :
-    public container_adaptor::unordered_map_adaptor
-    <
-        const typename BimapType::core_type::template index<Tag>::type,
-
-        typename ::boost::bimap::support::iterator_type_by<Tag,BimapType>::type,
-        typename ::boost::bimap::support::const_iterator_type_by<Tag,BimapType>::type,
-        typename ::boost::bimap::support::local_iterator_type_by<Tag,BimapType>::type,
-        typename ::boost::bimap::support::const_local_iterator_type_by<Tag,BimapType>::type,
-
-        container_adaptor::support::iterator_facade_to_base
-        <
-            typename ::boost::bimap::support::iterator_type_by<Tag,BimapType>::type,
-            typename ::boost::bimap::support::const_iterator_type_by<Tag,BimapType>::type
-        >,
-        container_adaptor::use_default, // iterator from base converter
-        container_adaptor::use_default, // local iterator from base converter
-        container_adaptor::use_default, // value to base converter
-
-        relation::support::GetPairFunctor<Tag, typename BimapType::relation >
-    >
+    public BOOST_BIMAP_CONST_MAP_VIEW_CONTAINER_ADAPTOR(
+        unordered_map_adaptor,
+        Tag,BimapType,
+        local_iterator_type_by,const_local_iterator_type_by
+    )
 {
+    typedef BOOST_BIMAP_MAP_VIEW_CONTAINER_ADAPTOR(
+        unordered_map_adaptor,
+        Tag,BimapType,
+        local_iterator_type_by,const_local_iterator_type_by
+
+    ) base_;
+
     public:
 
-    const_unordered_map_view() {}
-    const_unordered_map_view(typename const_unordered_map_view::base_type & c)
-        : const_unordered_map_view::const_unordered_map_adaptor_(c) {}
+    const_unordered_map_view(typename base_::base_type & c)
+        : base_(c) {}
+
+    typename base_::data_type const &
+        operator[](const typename base_::key_type & k) const
+    {
+        // TODO
+        // Add index check?
+        return this->find(k)->second;
+    }
 
 };
 

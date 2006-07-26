@@ -13,6 +13,9 @@
 #ifndef BOOST_BIMAP_DETAIL_MAP_VIEW_BASE_HPP
 #define BOOST_BIMAP_DETAIL_MAP_VIEW_BASE_HPP
 
+#include <boost/config.hpp>
+#include <boost/bimap/relation/support/get_pair_functor.hpp>
+#include <boost/bimap/container_adaptor/support/iterator_facade_converters.hpp>
 #include <boost/bimap/relation/support/data_extractor.hpp>
 #include <boost/bimap/relation/support/opposite_tag.hpp>
 #include <boost/bimap/relation/support/pair_type_by.hpp>
@@ -23,12 +26,68 @@ namespace boost {
 namespace bimap {
 namespace detail {
 
+// The next macro can be converted in a metafunctor to gain code robustness.
+
+/********************************************************************************/
+#define BOOST_BIMAP_MAP_VIEW_CONTAINER_ADAPTOR(                                  \
+    CONTAINER_ADAPTOR, TAG,BIMAP, OTHER_ITER, CONST_OTHER_ITER                   \
+)                                                                                \
+::boost::bimap::container_adaptor::CONTAINER_ADAPTOR                             \
+<                                                                                \
+    typename BIMAP::core_type::template index<TAG>::type,                        \
+    typename ::boost::bimap::support::iterator_type_by<TAG,BIMAP>::type,         \
+    typename ::boost::bimap::support::const_iterator_type_by<TAG,BIMAP>::type,   \
+    typename ::boost::bimap::support::OTHER_ITER<TAG,BIMAP>::type,               \
+    typename ::boost::bimap::support::CONST_OTHER_ITER<TAG,BIMAP>::type,         \
+    typename ::boost::bimap::detail::map_view_iterator_to_base<TAG,BIMAP>::type, \
+    ::boost::bimap::container_adaptor::use_default,                              \
+    ::boost::bimap::container_adaptor::use_default,                              \
+    ::boost::bimap::container_adaptor::use_default,                              \
+    relation::support::GetPairFunctor<TAG, typename BIMAP::relation >            \
+>
+/********************************************************************************/
+
+/********************************************************************************/
+#define BOOST_BIMAP_CONST_MAP_VIEW_CONTAINER_ADAPTOR(                            \
+    CONTAINER_ADAPTOR, TAG,BIMAP, OTHER_ITER, CONST_OTHER_ITER                   \
+)                                                                                \
+::boost::bimap::container_adaptor::CONTAINER_ADAPTOR                             \
+<                                                                                \
+    const typename BIMAP::core_type::template index<TAG>::type,                  \
+    typename ::boost::bimap::support::iterator_type_by<TAG,BIMAP>::type,         \
+    typename ::boost::bimap::support::const_iterator_type_by<TAG,BIMAP>::type,   \
+    typename ::boost::bimap::support::OTHER_ITER<TAG,BIMAP>::type,               \
+    typename ::boost::bimap::support::CONST_OTHER_ITER<TAG,BIMAP>::type,         \
+    typename ::boost::bimap::detail::map_view_iterator_to_base<TAG,BIMAP>::type, \
+    ::boost::bimap::container_adaptor::use_default,                              \
+    ::boost::bimap::container_adaptor::use_default,                              \
+    ::boost::bimap::container_adaptor::use_default,                              \
+    relation::support::GetPairFunctor<TAG, typename BIMAP::relation >            \
+>
+/********************************************************************************/
+
+#if defined(BOOST_MSVC)
+/********************************************************************************/
+#define BOOST_BIMAP_MAP_VIEW_BASE_FRIEND(TYPE,TAG,BIMAP)                         \
+    typedef ::boost::bimap::detail::map_view_base<                               \
+        TYPE<TAG,BIMAP>,TAG,BIMAP > friend_map_view_base;                        \
+    friend class friend_map_view_base;
+/********************************************************************************/
+#else
+/********************************************************************************/
+#define BOOST_BIMAP_MAP_VIEW_BASE_FRIEND(TYPE,TAG,BIMAP)                         \
+    friend class ::boost::bimap::detail::map_view_base<                          \
+        TYPE<TAG,BIMAP>,TAG,BIMAP >;
+/********************************************************************************/
+#endif
+
+
 /// \brief Metafunction to compute the iterator_to_base functor needed in map views.
 
 template< class Tag, class BimapType >
 struct map_view_iterator_to_base
 {
-    typedef container_adaptor::support::iterator_facade_to_base
+    typedef ::boost::bimap::container_adaptor::support::iterator_facade_to_base
     <
         typename ::boost::bimap::support::iterator_type_by<Tag,BimapType>::type,
         typename ::boost::bimap::support::const_iterator_type_by<Tag,BimapType>::type
@@ -46,7 +105,7 @@ class map_view_base
     public:
 
     bool replace(typename ::boost::bimap::support::iterator_type_by<Tag,BimapType>::type position,
-                 typename relation::support::pair_type_by
+                 typename ::boost::bimap::relation::support::pair_type_by
                  <
                      Tag,
                      typename BimapType::relation
@@ -70,15 +129,15 @@ class map_view_base
             <
                 Modifier,
                 typename BimapType::relation,
-                typename relation::support::data_extractor
+                typename ::boost::bimap::relation::support::data_extractor
                 <
                     Tag,
                     typename BimapType::relation
 
                 >::type,
-                typename relation::support::data_extractor
+                typename ::boost::bimap::relation::support::data_extractor
                 <
-                    typename relation::support::opossite_tag<Tag,BimapType>::type,
+                    typename ::boost::bimap::relation::support::opossite_tag<Tag,BimapType>::type,
                     typename BimapType::relation
 
                 >::type
@@ -106,6 +165,36 @@ class map_view_base
     }
 };
 
+// The following macro should we replace by a free function
+
+/*****************************************************************************/
+#define BOOST_BIMAP_MAP_VIEW_RANGE_IMPLEMENTATION(BASE)                       \
+                                                                              \
+template<typename LowerBounder,typename UpperBounder>                         \
+std::pair<typename BASE::iterator,typename BASE::iterator>                    \
+    range(LowerBounder lower,UpperBounder upper) const                        \
+{                                                                             \
+    std::pair<                                                                \
+                                                                              \
+        typename BASE::base_type::const_iterator,                             \
+        typename BASE::base_type::const_iterator                              \
+                                                                              \
+    > r( this->base().range(lower,upper) );                                   \
+                                                                              \
+    return std::pair                                                          \
+    <                                                                         \
+        typename BASE::const_iterator,                                        \
+        typename BASE::const_iterator                                         \
+    >(                                                                        \
+        this->template functor<                                               \
+            typename BASE::iterator_from_base                                 \
+        >()                                         ( r.first ),              \
+        this->template functor<                                               \
+            typename BASE::iterator_from_base                                 \
+        >()                                         ( r.second )              \
+    );                                                                        \
+}
+/*****************************************************************************/
 
 } // namespace detail
 } // namespace bimap

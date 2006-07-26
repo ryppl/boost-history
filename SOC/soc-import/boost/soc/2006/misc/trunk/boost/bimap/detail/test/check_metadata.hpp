@@ -77,7 +77,7 @@
     BOOST_BIMAP_MPL_ASSERT_MSG_ACS                                   \
     (                                                                \
         (                                                            \
-            boost::is_same                                           \
+            ::boost::is_same                                         \
             <                                                        \
                 P_CLASS::P_NAME,                                     \
                 P_CORRECT_TYPE                                       \

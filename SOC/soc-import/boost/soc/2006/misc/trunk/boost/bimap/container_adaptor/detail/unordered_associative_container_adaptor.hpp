@@ -23,6 +23,52 @@ namespace bimap {
 namespace container_adaptor {
 namespace detail {
 
+template
+<
+    class Base, class Iterator, class ConstIterator,
+    class LocalIterator, class ConstLocalIterator,
+    class KeyType,
+    class IteratorToBaseConverter, class IteratorFromBaseConverter,
+    class LocalIteratorFromBaseConverter,
+    class ValueToBaseConverter, class ValueFromBaseConverter,
+    class KeyToBaseConverter,
+    class FunctorsFromDerivedClasses
+>
+struct unordered_associative_container_adaptor_base
+{
+
+    typedef associative_container_adaptor
+    <
+        Base, Iterator, ConstIterator, KeyType,
+        IteratorToBaseConverter, IteratorFromBaseConverter,
+        ValueToBaseConverter   , ValueFromBaseConverter,
+        KeyToBaseConverter,
+
+        typename mpl::push_front<
+
+            FunctorsFromDerivedClasses,
+
+            typename mpl::if_< is_same< LocalIteratorFromBaseConverter, use_default >,
+            // {
+                    iterator_from_base_identity
+                    <
+                        typename Base::local_iterator                , LocalIterator,
+                        typename Base::const_local_iterator          , ConstLocalIterator
+                    >,
+            // }
+            // else
+            // {
+                    LocalIteratorFromBaseConverter
+            // }
+
+            >::type
+
+        >::type
+
+    > type;
+};
+
+
 /// \brief Container adaptor to build a type that is compliant to the concept of an unordered associative container.
 
 template
@@ -49,47 +95,33 @@ template
 >
 class unordered_associative_container_adaptor :
 
-    public associative_container_adaptor
+    public unordered_associative_container_adaptor_base
     <
-        Base,
-
-        Iterator, ConstIterator,
-
+        Base, Iterator, ConstIterator,
+        LocalIterator, ConstLocalIterator,
         KeyType,
-
         IteratorToBaseConverter, IteratorFromBaseConverter,
-        ValueToBaseConverter   , ValueFromBaseConverter,
-
+        LocalIteratorFromBaseConverter,
+        ValueToBaseConverter, ValueFromBaseConverter,
         KeyToBaseConverter,
+        FunctorsFromDerivedClasses
 
-        typename mpl::push_front<
-
-            FunctorsFromDerivedClasses,
-
-            typename mpl::if_< is_same< LocalIteratorFromBaseConverter, use_default >,
-            // {
-                    detail::iterator_from_base_identity
-                    <
-                        typename Base::local_iterator                , LocalIterator,
-                        typename Base::const_local_iterator          , ConstLocalIterator
-                    >,
-            // }
-            // else
-            // {
-                    LocalIteratorFromBaseConverter
-            // }
-
-            >::type
-
-        >::type
-    >
+    >::type
 {
+    typedef typename unordered_associative_container_adaptor_base
+    <
+        Base, Iterator, ConstIterator,
+        LocalIterator, ConstLocalIterator,
+        KeyType,
+        IteratorToBaseConverter, IteratorFromBaseConverter,
+        LocalIteratorFromBaseConverter,
+        ValueToBaseConverter, ValueFromBaseConverter,
+        KeyToBaseConverter,
+        FunctorsFromDerivedClasses
+
+    >::type base_;
 
     // Metadata ---------------------------------------------------------------
-
-    private:
-
-    typedef unordered_associative_container_adaptor this_type;
 
     public:
 
@@ -103,7 +135,7 @@ class unordered_associative_container_adaptor :
 
     typedef typename mpl::if_< is_same< LocalIteratorFromBaseConverter, use_default >,
         // {
-                detail::iterator_from_base_identity
+                iterator_from_base_identity
                 <
                     typename Base::local_iterator                , local_iterator,
                     typename Base::const_local_iterator          , const_local_iterator
@@ -121,7 +153,7 @@ class unordered_associative_container_adaptor :
     public:
 
     explicit unordered_associative_container_adaptor(Base & c)
-        : this_type::associative_container_adaptor_(c) {}
+        : base_(c) {}
 
     protected:
 
@@ -150,99 +182,99 @@ class unordered_associative_container_adaptor :
 
     // bucket interface:
 
-    typename this_type::size_type bucket_count() const
+    typename base_::size_type bucket_count() const
     {
-        return this_type::base().bucket_count();
+        return this->base().bucket_count();
     }
 
-    typename this_type::size_type max_bucket_count() const
+    typename base_::size_type max_bucket_count() const
     {
-        return this_type::base().max_bucket_count();
+        return this->base().max_bucket_count();
     }
 
-    typename this_type::size_type bucket_size(typename this_type::size_type n) const
+    typename base_::size_type bucket_size(typename base_::size_type n) const
     {
-        return this_type::base().bucket_size(n);
+        return this->base().bucket_size(n);
     }
 
-    typename this_type::size_type bucket(const typename this_type::key_type& k) const
+    typename base_::size_type bucket(const typename base_::key_type& k) const
     {
-        typedef typename this_type::key_to_base key_to_base;
-        return this_type::base().bucket(
-            this_type::template functor<key_to_base>()(k)
+        typedef typename base_::key_to_base key_to_base;
+        return this->base().bucket(
+            this->template functor<key_to_base>()(k)
         );
     }
 
-    local_iterator       begin(typename this_type::size_type n)
+    local_iterator       begin(typename base_::size_type n)
     {
-        return this_type::template functor<
+        return this->template functor<
             local_iterator_from_base
-        >()                          ( this_type::base().begin(n) );
+        >()                          ( this->base().begin(n) );
     }
 
-    const_local_iterator begin(typename this_type::size_type n) const
+    const_local_iterator begin(typename base_::size_type n) const
     {
-        return this_type::template functor<
+        return this->template functor<
             local_iterator_from_base
-        >()                          ( this_type::base().begin(n) );
+        >()                          ( this->base().begin(n) );
     }
 
-    local_iterator       end(typename this_type::size_type n)
+    local_iterator       end(typename base_::size_type n)
     {
-        return this_type::template functor<
+        return this->template functor<
             local_iterator_from_base
-        >()                          ( this_type::base().end(n) );
+        >()                          ( this->base().end(n) );
     }
 
-    const_local_iterator end(typename this_type::size_type n) const
+    const_local_iterator end(typename base_::size_type n) const
     {
-        return this_type::template functor<
+        return this->template functor<
             local_iterator_from_base
-        >()                          ( this_type::base().end(n) );
+        >()                          ( this->base().end(n) );
     }
 
     // hash policy
 
     float load_factor() const
     {
-        return this_type::base().load_factor();
+        return this->base().load_factor();
     }
 
     float max_load_factor() const
     {
-        return this_type::base().max_load_factor();
+        return this->base().max_load_factor();
     }
 
     void max_load_factor(float z)
     {
-        return this_type::base().max_load_factor(z);
+        return this->base().max_load_factor(z);
     }
 
-    void rehash(typename this_type::size_type n)
+    void rehash(typename base_::size_type n)
     {
-        return this_type::base().rehash(n);
+        return this->base().rehash(n);
     }
 
     // We have redefined end and begin so we have to manually route the old ones
 
-    typename this_type::iterator begin()
+    typename base_::iterator begin()
     {
-        return this_type::container_adaptor_::begin();
+        return base_::container_adaptor_::begin();
     }
 
-    typename this_type::iterator end()
+    typename base_::iterator end()
     {
-        return this_type::container_adaptor_::end();
+        return base_::container_adaptor_::end();
     }
 
-    typename this_type::const_iterator begin() const
+    typename base_::const_iterator begin() const
     {
-        return this_type::container_adaptor_::begin();
+        return base_::container_adaptor_::begin();
     }
 
-    typename this_type::const_iterator end() const
+    typename base_::const_iterator end() const
     {
-        return this_type::container_adaptor_::end();
+        return base_::container_adaptor_::end();
     }
 
 };

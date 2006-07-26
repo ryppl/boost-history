@@ -13,13 +13,9 @@
 #ifndef BOOST_BIMAP_VIEWS_VECTOR_MAP_VIEW_HPP
 #define BOOST_BIMAP_VIEWS_VECTOR_MAP_VIEW_HPP
 
-#include <boost/bimap/relation/support/get_pair_functor.hpp>
-#include <boost/bimap/container_adaptor/support/iterator_facade_converters.hpp>
 #include <boost/bimap/container_adaptor/vector_map_adaptor.hpp>
 #include <boost/bimap/support/iterator_type_by.hpp>
 #include <boost/bimap/detail/map_view_base.hpp>
-
-#include <boost/config.hpp>
 
 namespace boost {
 namespace bimap {
@@ -36,43 +32,27 @@ See also const_map_view.
 template< class Tag, class BimapType >
 class vector_map_view
 :
-    public container_adaptor::vector_map_adaptor
-    <
-        typename BimapType::core_type::template index<Tag>::type,
-
-        typename ::boost::bimap::support::iterator_type_by<Tag,BimapType>::type,
-        typename ::boost::bimap::support::const_iterator_type_by<Tag,BimapType>::type,
-        typename ::boost::bimap::support::reverse_iterator_type_by<Tag,BimapType>::type,
-        typename ::boost::bimap::support::const_reverse_iterator_type_by<Tag,BimapType>::type,
-
-        typename ::boost::bimap::detail::map_view_iterator_to_base<Tag,BimapType>::type,
-
-        container_adaptor::use_default, // iterator from base converter
-        container_adaptor::use_default, // reverse iterator from base converter
-        container_adaptor::use_default, // value to base converter
-
-        relation::support::GetPairFunctor<Tag, typename BimapType::relation >
-    >,
+    public BOOST_BIMAP_MAP_VIEW_CONTAINER_ADAPTOR(
+        vector_map_adaptor,
+        Tag,BimapType,
+        reverse_iterator_type_by,const_reverse_iterator_type_by
+    ),
 
     public ::boost::bimap::detail::map_view_base< vector_map_view<Tag,BimapType>,Tag,BimapType >
-
 {
-    typedef vector_map_view this_type;
+    typedef BOOST_BIMAP_MAP_VIEW_CONTAINER_ADAPTOR(
+        vector_map_adaptor,
+        Tag,BimapType,
+        reverse_iterator_type_by,const_reverse_iterator_type_by
 
-    #if defined(BOOST_MSVC)
-        typedef ::boost::bimap::detail::map_view_base< vector_map_view<Tag,BimapType>,Tag,BimapType >
-            friend_map_view_base;
-        friend class friend_map_view_base;
-    #else
-        friend class ::boost::bimap::detail::map_view_base< vector_map_view<Tag,BimapType>,Tag,BimapType >;
-    #endif
+    ) base_;
 
+    BOOST_BIMAP_MAP_VIEW_BASE_FRIEND(vector_map_view,Tag,BimapType);
 
     public:
 
-    vector_map_view() {}
-    vector_map_view(typename this_type::base_type & c) :
-        this_type::vector_map_adaptor_(c) {}
+    vector_map_view(typename base_::base_type & c) :
+        base_(c) {}
 
 };
 
@@ -87,32 +67,24 @@ See also map_view.
 template< class Tag, class BimapType >
 class const_vector_map_view
 :
-    public container_adaptor::vector_map_adaptor
-    <
-        const typename BimapType::core_type::template index<Tag>::type,
-
-        typename ::boost::bimap::support::iterator_type_by<Tag,BimapType>::type,
-        typename ::boost::bimap::support::const_iterator_type_by<Tag,BimapType>::type,
-        typename ::boost::bimap::support::reverse_iterator_type_by<Tag,BimapType>::type,
-        typename ::boost::bimap::support::const_reverse_iterator_type_by<Tag,BimapType>::type,
-
-        container_adaptor::support::iterator_facade_to_base
-        <
-            typename ::boost::bimap::support::iterator_type_by<Tag,BimapType>::type,
-            typename ::boost::bimap::support::const_iterator_type_by<Tag,BimapType>::type
-        >,
-        container_adaptor::use_default, // iterator from base converter
-        container_adaptor::use_default, // reverse iterator from base converter
-        container_adaptor::use_default, // value to base converter
-
-        relation::support::GetPairFunctor<Tag, typename BimapType::relation >
-    >
+    public BOOST_BIMAP_CONST_MAP_VIEW_CONTAINER_ADAPTOR(
+        vector_map_adaptor,
+        Tag,BimapType,
+        reverse_iterator_type_by,const_reverse_iterator_type_by
+    )
 {
+    typedef BOOST_BIMAP_CONST_MAP_VIEW_CONTAINER_ADAPTOR(
+        vector_map_adaptor,
+        Tag,BimapType,
+        reverse_iterator_type_by,const_reverse_iterator_type_by
+
+    ) base_;
+
     public:
 
     const_vector_map_view() {}
-    const_vector_map_view(typename const_vector_map_view::base_type & c) :
-        const_vector_map_view::vector_map_adaptor_(c) {}
+    const_vector_map_view(typename base_::base_type & c) :
+        base_(c) {}
 };
 
 } // namespace views

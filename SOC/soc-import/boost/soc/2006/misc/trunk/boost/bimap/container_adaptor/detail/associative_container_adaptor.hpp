@@ -64,14 +64,21 @@ class associative_container_adaptor :
     >
 {
 
-    typedef associative_container_adaptor this_type;
+    typedef weak_associative_container_adaptor
+    <
+        Base, Iterator, ConstIterator, KeyType,
+        IteratorToBaseConverter, IteratorFromBaseConverter,
+        ValueToBaseConverter, ValueFromBaseConverter, KeyToBaseConverter,
+        FunctorsFromDerivedClasses
+
+    > base_;
 
     // ACCESS -----------------------------------------------------------------
 
     public:
 
     explicit associative_container_adaptor(Base & c)
-        : associative_container_adaptor::weak_associative_container_adaptor_(c) {}
+        : base_(c) {}
 
     protected:
 
@@ -97,122 +104,122 @@ class associative_container_adaptor :
 
     public:
 
-    typename this_type::size_type
-        erase(const typename this_type::key_type& k)
+    typename base_::size_type
+        erase(const typename base_::key_type& k)
     {
-        typedef typename this_type::key_to_base key_to_base;
-        return associative_container_adaptor::base().erase
+        typedef typename base_::key_to_base key_to_base;
+        return this->base().erase
         (
-            this_type::template functor<key_to_base>()(k)
+            this->template functor<key_to_base>()(k)
         );
     }
 
     // As we redefine erase, the other overloads need to be manually routed
 
-    typename associative_container_adaptor::iterator erase(
-        typename associative_container_adaptor::iterator pos)
+    typename base_::iterator erase(
+        typename base_::iterator pos)
     {
-        return associative_container_adaptor::container_adaptor_::erase(pos);
+        return base_::container_adaptor_::erase(pos);
     }
 
-    typename associative_container_adaptor::iterator erase(
-        typename associative_container_adaptor::iterator first,
-        typename associative_container_adaptor::iterator last)
+    typename base_::iterator erase(
+        typename base_::iterator first,
+        typename base_::iterator last)
     {
-        return associative_container_adaptor::container_adaptor_::erase(first,last);
+        return base_::container_adaptor_::erase(first,last);
     }
 
-    typename this_type::size_type
-        count(const typename this_type::key_type& k)
+    typename base_::size_type
+        count(const typename base_::key_type& k)
     {
-        return this_type::base().count(
-            this_type::template functor<typename this_type::key_to_base>()(k)
+        return this->base().count(
+            this->template functor<typename base_::key_to_base>()(k)
         );
     }
 
-    typename this_type::iterator
-        find(const typename this_type::key_type& k)
+    typename base_::iterator
+        find(const typename base_::key_type& k)
     {
-        typedef typename this_type::key_to_base key_to_base;
-        return this_type::template functor<typename this_type::iterator_from_base>()
+        typedef typename base_::key_to_base key_to_base;
+        return this->template functor<typename base_::iterator_from_base>()
         (
-            this_type::base().find(
-                this_type::template functor<key_to_base>()(k)
+            this->base().find(
+                this->template functor<key_to_base>()(k)
             )
         );
     }
 
-    typename this_type::const_iterator
-        find(const typename this_type::key_type& k) const
+    typename base_::const_iterator
+        find(const typename base_::key_type& k) const
     {
-        typedef typename this_type::key_to_base key_to_base;
-        return this_type::template functor<
-            typename this_type::iterator_from_base>()
+        typedef typename base_::key_to_base key_to_base;
+        return this->template functor<
+            typename base_::iterator_from_base>()
         (
-            this_type::base().find(
-                this_type::template functor<key_to_base>()(k)
+            this->base().find(
+                this->template functor<key_to_base>()(k)
             )
         );
     }
 
     std::pair
     <
-        typename this_type::iterator,
-        typename this_type::iterator
+        typename base_::iterator,
+        typename base_::iterator
     >
-        equal_range(const typename this_type::key_type& k)
+        equal_range(const typename base_::key_type& k)
     {
         std::pair<
 
             typename Base::iterator,
             typename Base::iterator
 
-        > r( this_type::base().equal_range(
-                this_type::template functor<typename this_type::key_to_base>()(k)
+        > r( this->base().equal_range(
+                this->template functor<typename base_::key_to_base>()(k)
             )
         );
 
         return std::pair
         <
-            typename this_type::iterator,
-            typename this_type::iterator
+            typename base_::iterator,
+            typename base_::iterator
         >(
-            this_type::template functor<
-                typename this_type::iterator_from_base
+            this->template functor<
+                typename base_::iterator_from_base
             >()                                         ( r.first ),
-            this_type::template functor<
-                typename this_type::iterator_from_base
+            this->template functor<
+                typename base_::iterator_from_base
             >()                                         ( r.second )
         );
     }
 
     std::pair
     <
-        typename this_type::const_iterator,
-        typename this_type::const_iterator
+        typename base_::const_iterator,
+        typename base_::const_iterator
     >
-        equal_range(const typename this_type::key_type& k) const
+        equal_range(const typename base_::key_type& k) const
     {
         std::pair<
 
             typename Base::const_iterator,
             typename Base::const_iterator
 
-        > r( this_type::base().equal_range(
-                this_type::template functor<typename this_type::key_to_base>()(k)
+        > r( this->base().equal_range(
+                this->template functor<typename base_::key_to_base>()(k)
             )
         );
 
         return std::pair
         <
-            typename this_type::const_iterator,
-            typename this_type::const_iterator
+            typename base_::const_iterator,
+            typename base_::const_iterator
         >(
-            this_type::template functor<
-                typename this_type::iterator_from_base
+            this->template functor<
+                typename base_::iterator_from_base
             >()                                         ( r.first ),
-            this_type::template functor<
-                typename this_type::iterator_from_base
+            this->template functor<
+                typename base_::iterator_from_base
             >()                                         ( r.second )
         );
     }

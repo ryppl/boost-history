@@ -62,9 +62,9 @@ struct NAME
     struct NAME                                                               \
     <                                                                         \
         Tag, SYMMETRIC_TYPE,                                                  \
-        typename boost::enable_if                                             \
+        typename enable_if                                                    \
         <                                                                     \
-            relation::support::is_tag_of_member_at_left                       \
+            ::boost::bimap::relation::support::is_tag_of_member_at_left       \
             <                                                                 \
                 Tag,                                                          \
                 SYMMETRIC_TYPE                                                \
@@ -80,9 +80,9 @@ struct NAME
     struct NAME                                                               \
     <                                                                         \
         Tag, SYMMETRIC_TYPE,                                                  \
-        typename boost::enable_if                                             \
+        typename enable_if                                                    \
         <                                                                     \
-            relation::support::is_tag_of_member_at_right                      \
+            ::boost::bimap::relation::support::is_tag_of_member_at_right      \
             <                                                                 \
                 Tag,                                                          \
                 SYMMETRIC_TYPE                                                \

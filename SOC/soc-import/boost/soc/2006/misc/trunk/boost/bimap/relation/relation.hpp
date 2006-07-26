@@ -161,14 +161,15 @@ pair_by(), pair_type_by.
 template< class TA, class TB >
 struct select_relation
 {
-    typedef typename mpl::if_< detail::is_mutant_idiom_supported_for<TA,TB> ,
-                       // {
-                              mutant_relation<TA,TB>,
-                       // }
-                       // else
-                       // {
-                              standard_relation<TA,TB>
-                       // }
+    typedef typename mpl::if_<
+        ::boost::bimap::relation::detail::is_mutant_idiom_supported_for<TA,TB> ,
+        // {
+                mutant_relation<TA,TB>,
+        // }
+        // else
+        // {
+                standard_relation<TA,TB>
+        // }
 
     >::type type;
 };

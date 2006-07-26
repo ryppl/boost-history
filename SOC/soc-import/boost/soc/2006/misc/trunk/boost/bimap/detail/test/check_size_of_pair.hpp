@@ -46,9 +46,9 @@ struct is_size_of_pair_correct
 
     >::type maximum_allowed_size;
 
-    typedef typename boost::mpl::less_equal
+    typedef typename ::boost::mpl::less_equal
     <
-        boost::mpl::int_<sizeof(PairType)>,
+        ::boost::mpl::int_<sizeof(PairType)>,
         maximum_allowed_size
 
     >::type type;

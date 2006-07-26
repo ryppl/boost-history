@@ -49,6 +49,8 @@ class standard_relation :
     public symmetrical_base<TA,TB>
 
 {
+    typedef symmetrical_base<TA,TB> base_;
+
     public:
 
     //@{
@@ -69,17 +71,17 @@ class standard_relation :
     //@{
 
         /// data, exposed for easy manipulation
-        typename standard_relation::left_value_type  left;
-        typename standard_relation::right_value_type right;
+        typename base_:: left_value_type  left;
+        typename base_::right_value_type right;
 
     //@}
 
     standard_relation() {}
 
-    standard_relation(typename boost::call_traits<
-                          typename standard_relation::left_value_type >::param_type l,
-                      typename boost::call_traits<
-                          typename standard_relation::right_value_type>::param_type r) :
+    standard_relation(typename ::boost::call_traits<
+                          typename base_:: left_value_type>::param_type l,
+                      typename ::boost::call_traits<
+                          typename base_::right_value_type>::param_type r) :
         left (l),
         right(r)
     {}
@@ -109,8 +111,8 @@ class standard_relation :
 
     typedef std::pair
     <
-        typename standard_relation::left_value_type,
-        typename standard_relation::right_value_type
+        typename base_::left_value_type,
+        typename base_::right_value_type
 
     > std_pair;
 
@@ -197,22 +199,22 @@ class standard_relation :
     // pair_by metafunction. Remember that not all compiler supports the mutant
     // idiom.
 
-    typename standard_relation::left_value_type & get_left()
+    typename base_::left_value_type & get_left()
     {
         return left;
     }
 
-    const typename standard_relation::left_value_type & get_left() const
+    const typename base_::left_value_type & get_left() const
     {
         return left;
     }
 
-    typename standard_relation::right_value_type & get_right()
+    typename base_::right_value_type & get_right()
     {
         return right;
     }
 
-    const typename standard_relation::right_value_type & get_right() const
+    const typename base_::right_value_type & get_right() const
     {
         return right;
     }
@@ -240,7 +242,7 @@ class standard_relation :
 
     private:
 
-    friend class boost::serialization::access;
+    friend class ::boost::serialization::access;
 
     template<class Archive>
     void serialize(Archive & ar, const unsigned int version)

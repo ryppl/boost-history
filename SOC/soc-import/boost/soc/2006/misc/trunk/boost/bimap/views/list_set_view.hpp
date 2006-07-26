@@ -34,31 +34,29 @@ See also const_list_set_view.
 template< class IndexType >
 class list_set_view
 :
-    public container_adaptor::list_adaptor
+    public ::boost::bimap::container_adaptor::list_adaptor
     <
         IndexType,
-        typename IndexType::iterator,
-        typename IndexType::const_iterator,
-        typename IndexType::reverse_iterator,
-        typename IndexType::const_reverse_iterator
+        typename IndexType::iterator,         typename IndexType::const_iterator,
+        typename IndexType::reverse_iterator, typename IndexType::const_reverse_iterator
     >,
 
     public ::boost::bimap::detail::set_view_base< list_set_view< IndexType >, IndexType >
 {
-    #if defined(BOOST_MSVC)
-        typedef ::boost::bimap::detail::set_view_base< list_set_view< IndexType >, IndexType >
-            friend_set_view_base;
-        friend class friend_set_view_base;
-    #else
-        friend class ::boost::bimap::detail::set_view_base< list_set_view< IndexType >, IndexType >;
-    #endif
+    BOOST_BIMAP_SET_VIEW_BASE_FRIEND(list_set_view,IndexType);
 
+    typedef ::boost::bimap::container_adaptor::list_adaptor
+    <
+        IndexType,
+        typename IndexType::iterator,         typename IndexType::const_iterator,
+        typename IndexType::reverse_iterator, typename IndexType::const_reverse_iterator
+
+    > base_;
 
     public:
 
-    list_set_view() {}
-    list_set_view(typename list_set_view::base_type & c) :
-        list_set_view::list_adaptor_(c) {}
+    list_set_view(typename base_::base_type & c) :
+        base_(c) {}
 };
 
 /// \brief Constant view of a bimap that is signature compatible with std::set.
@@ -74,21 +72,25 @@ See also set_view.
 template< class IndexType >
 class const_list_set_view
 :
-    public container_adaptor::list_adaptor
+    public ::boost::bimap::container_adaptor::list_adaptor
     <
         const IndexType,
-        typename IndexType::iterator,
-        typename IndexType::const_iterator,
-        typename IndexType::reverse_iterator,
-        typename IndexType::const_reverse_iterator
+        typename IndexType::iterator,         typename IndexType::const_iterator,
+        typename IndexType::reverse_iterator, typename IndexType::const_reverse_iterator
     >
 {
+    typedef ::boost::bimap::container_adaptor::list_adaptor
+    <
+        const IndexType,
+        typename IndexType::iterator,         typename IndexType::const_iterator,
+        typename IndexType::reverse_iterator, typename IndexType::const_reverse_iterator
+
+    > base_;
+
     public:
 
-    const_list_set_view() {}
-    const_list_set_view(typename const_list_set_view::base_type & c) :
-        const_list_set_view::list_adaptor_(c) {}
-
+    const_list_set_view(typename base_::base_type & c) :
+        base_(c) {}
 };
 
 

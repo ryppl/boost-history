@@ -40,22 +40,27 @@ template
 >
 class vector_adaptor :
 
-    public detail::sequence_container_adaptor
+    public ::boost::bimap::container_adaptor::detail::sequence_container_adaptor
     <
         Base,
-
         Iterator, ConstIterator, ReverseIterator, ConstReverseIterator,
-
         IteratorToBaseConverter, IteratorFromBaseConverter,
         ReverseIteratorFromBaseConverter,
-
         ValueToBaseConverter, ValueFromBaseConverter,
-
         FunctorsFromDerivedClasses
     >
 {
 
-    typedef vector_adaptor this_type;
+    typedef ::boost::bimap::container_adaptor::detail::sequence_container_adaptor
+    <
+        Base,
+        Iterator, ConstIterator, ReverseIterator, ConstReverseIterator,
+        IteratorToBaseConverter, IteratorFromBaseConverter,
+        ReverseIteratorFromBaseConverter,
+        ValueToBaseConverter, ValueFromBaseConverter,
+        FunctorsFromDerivedClasses
+
+    > base_;
 
     // Access -----------------------------------------------------------------
 
@@ -64,7 +69,7 @@ class vector_adaptor :
     vector_adaptor() {}
 
     explicit vector_adaptor(Base & c) :
-        vector_adaptor::sequence_container_adaptor_(c) {}
+        base_(c) {}
 
     protected:
 
@@ -86,47 +91,46 @@ class vector_adaptor :
 
     public:
 
-    typename this_type::size_type capacity() const
+    typename base_::size_type capacity() const
     {
-        return this_type::base().capacity();
+        return this->base().capacity();
     }
 
-    void reserve(typename this_type::size_type m)
+    void reserve(typename base_::size_type m)
     {
-        this_type::base().resize(m);
+        this->base().resize(m);
     }
 
-    void resize(typename this_type::size_type n,
-                const typename this_type::value_type& x =
-                    typename this_type::value_type())
+    void resize(typename base_::size_type n,
+                const typename base_::value_type& x = typename base_::value_type())
     {
-        this_type::base().resize(n,
-            this_type::template functor<typename this_type::value_to_base>()(x)
+        this->base().resize(n,
+            this->template functor<typename base_::value_to_base>()(x)
         );
     }
 
-    typename this_type::const_reference
-        operator[](typename this_type::size_type n) const
+    typename base_::const_reference
+        operator[](typename base_::size_type n) const
     {
-        return this_type::base().operator[](n);
+        return this->base().operator[](n);
     }
 
-    typename this_type::const_reference
-        at(typename this_type::size_type n) const
+    typename base_::const_reference
+        at(typename base_::size_type n) const
     {
-        return this_type::base().at(n);
+        return this->base().at(n);
     }
 
-    typename this_type::reference
-        operator[](typename this_type::size_type n)
+    typename base_::reference
+        operator[](typename base_::size_type n)
     {
-        return this_type::base().operator[](n);
+        return this->base().operator[](n);
     }
 
-    typename this_type::reference
-        at(typename this_type::size_type n)
+    typename base_::reference
+        at(typename base_::size_type n)
     {
-        return this_type::base().at(n);
+        return this->base().at(n);
     }
 };
 

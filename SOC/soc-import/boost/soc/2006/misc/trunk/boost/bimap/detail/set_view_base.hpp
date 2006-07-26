@@ -13,6 +13,7 @@
 #ifndef BOOST_BIMAP_DETAIL_SET_VIEW_BASE_HPP
 #define BOOST_BIMAP_DETAIL_SET_VIEW_BASE_HPP
 
+#include <boost/config.hpp>
 #include <boost/bimap/relation/member_at.hpp>
 #include <boost/bimap/relation/support/data_extractor.hpp>
 #include <boost/bimap/detail/modifier_adaptor.hpp>
@@ -20,6 +21,64 @@
 namespace boost {
 namespace bimap {
 namespace detail {
+
+// The next macro can be converted in a metafunctor to gain code robustness.
+
+/********************************************************************************/
+#define BOOST_BIMAP_SET_VIEW_CONTAINER_ADAPTOR(                                  \
+    CONTAINER_ADAPTOR, OTHER_ITER, CONST_OTHER_ITER                              \
+)                                                                                \
+::boost::bimap::container_adaptor::CONTAINER_ADAPTOR                             \
+<                                                                                \
+    IndexType,                                                                   \
+    typename IndexType::iterator,                                                \
+    typename IndexType::const_iterator,                                          \
+    typename IndexType::OTHER_ITER,                                              \
+    typename IndexType::CONST_OTHER_ITER,                                        \
+    ::boost::bimap::container_adaptor::use_default,                              \
+    ::boost::bimap::container_adaptor::use_default,                              \
+    ::boost::bimap::container_adaptor::use_default,                              \
+    ::boost::bimap::container_adaptor::use_default,                              \
+    ::boost::bimap::container_adaptor::use_default,                              \
+    typename IndexType::key_from_value                                           \
+>
+/********************************************************************************/
+
+/********************************************************************************/
+#define BOOST_BIMAP_CONST_SET_VIEW_CONTAINER_ADAPTOR(                            \
+    CONTAINER_ADAPTOR, OTHER_ITER, CONST_OTHER_ITER                              \
+)                                                                                \
+::boost::bimap::container_adaptor::CONTAINER_ADAPTOR                             \
+<                                                                                \
+    const IndexType,                                                             \
+    typename IndexType::iterator,                                                \
+    typename IndexType::const_iterator,                                          \
+    typename IndexType::OTHER_ITER,                                              \
+    typename IndexType::CONST_OTHER_ITER,                                        \
+    ::boost::bimap::container_adaptor::use_default,                              \
+    ::boost::bimap::container_adaptor::use_default,                              \
+    ::boost::bimap::container_adaptor::use_default,                              \
+    ::boost::bimap::container_adaptor::use_default,                              \
+    ::boost::bimap::container_adaptor::use_default,                              \
+    typename IndexType::key_from_value                                           \
+>
+/********************************************************************************/
+
+#if defined(BOOST_MSVC)
+/********************************************************************************/
+#define BOOST_BIMAP_SET_VIEW_BASE_FRIEND(TYPE,INDEX_TYPE)                        \
+    typedef ::boost::bimap::detail::set_view_base<                               \
+        TYPE< INDEX_TYPE >, INDEX_TYPE > template_class_friend;                  \
+    friend class template_class_friend;
+/********************************************************************************/
+#else
+/********************************************************************************/
+#define BOOST_BIMAP_SET_VIEW_BASE_FRIEND(TYPE,INDEX_TYPE)                        \
+    friend class ::boost::bimap::detail::set_view_base<                          \
+        TYPE< INDEX_TYPE >, INDEX_TYPE >;
+/********************************************************************************/
+#endif
+
 
 /// \brief Common base for set views.
 
@@ -45,15 +104,15 @@ class set_view_base
             <
                 Modifier,
                 typename Index::value_type,
-                typename relation::support::data_extractor
+                typename ::boost::bimap::relation::support::data_extractor
                 <
-                    relation::member_at::left,
+                    ::boost::bimap::relation::member_at::left,
                     typename Index::value_type
 
                 >::type,
-                typename relation::support::data_extractor
+                typename ::boost::bimap::relation::support::data_extractor
                 <
-                    relation::member_at::right,
+                    ::boost::bimap::relation::member_at::right,
                     typename Index::value_type
 
                 >::type

@@ -38,28 +38,32 @@ See also storage_finder, mirror_storage.
                                                                             **/
 
 template< class FirstType, class SecondType >
-struct normal_storage :
+class normal_storage :
     public symmetrical_base<FirstType,SecondType>
 {
+    typedef symmetrical_base<FirstType,SecondType> base_;
+
+    public:
+
     typedef normal_storage storage_;
 
-    typedef typename storage_::left_value_type  first_type;
-    typedef typename storage_::right_value_type second_type;
+    typedef typename base_::left_value_type  first_type;
+    typedef typename base_::right_value_type second_type;
 
     first_type   first;
     second_type  second;
 
     normal_storage() {}
 
-    normal_storage(typename boost::call_traits<first_type >::param_type f,
-                   typename boost::call_traits<second_type>::param_type s)
+    normal_storage(typename ::boost::call_traits<first_type >::param_type f,
+                   typename ::boost::call_traits<second_type>::param_type s)
 
         : first(f), second(s) {}
 
-           typename storage_::left_value_type &  get_left()       { return first;  }
-    const  typename storage_::left_value_type &  get_left() const { return first;  }
-          typename storage_::right_value_type & get_right()       { return second; }
-    const typename storage_::right_value_type & get_right() const { return second; }
+          typename base_:: left_value_type &  get_left()       { return first;  }
+    const typename base_:: left_value_type &  get_left() const { return first;  }
+          typename base_::right_value_type & get_right()       { return second; }
+    const typename base_::right_value_type & get_right() const { return second; }
 };
 
 /// \brief Storage definition of the right view of a mutant relation.
@@ -69,28 +73,32 @@ See also storage_finder, normal_storage.
                                                                             **/
 
 template< class FirstType, class SecondType >
-struct mirror_storage :
+class mirror_storage :
     public symmetrical_base<SecondType,FirstType>
 {
+    typedef symmetrical_base<SecondType,FirstType> base_;
+
+    public:
+
     typedef mirror_storage storage_;
 
-    typedef typename storage_::left_value_type   second_type;
-    typedef typename storage_::right_value_type  first_type;
+    typedef typename base_::left_value_type   second_type;
+    typedef typename base_::right_value_type  first_type;
 
     second_type  second;
     first_type   first;
 
     mirror_storage() {}
 
-    mirror_storage(typename boost::call_traits<first_type  >::param_type f,
-                   typename boost::call_traits<second_type >::param_type s)
+    mirror_storage(typename ::boost::call_traits<first_type  >::param_type f,
+                   typename ::boost::call_traits<second_type >::param_type s)
 
         : second(s), first(f)  {}
 
-           typename storage_::left_value_type &  get_left()       { return second; }
-    const  typename storage_::left_value_type &  get_left() const { return second; }
-          typename storage_::right_value_type & get_right()       { return first;  }
-    const typename storage_::right_value_type & get_right() const { return first;  }
+          typename base_:: left_value_type &  get_left()       { return second; }
+    const typename base_:: left_value_type &  get_left() const { return second; }
+          typename base_::right_value_type & get_right()       { return first;  }
+    const typename base_::right_value_type & get_right() const { return first;  }
 };
 
 /** \struct boost::bimap::relation::storage_finder
@@ -144,13 +152,15 @@ class structured_pair :
 
     public storage_finder
     <
-        FirstType,
-        SecondType,
+        FirstType, SecondType,
+
         Layout
 
     >::type
 
 {
+    typedef typename storage_finder< FirstType, SecondType, Layout >::type base_;
+
     public:
 
     typedef structured_pair
@@ -162,85 +172,85 @@ class structured_pair :
 
     structured_pair() {}
 
-    structured_pair(typename boost::call_traits< typename structured_pair::first_type  >::param_type x,
-                    typename boost::call_traits< typename structured_pair::second_type >::param_type y)
+    structured_pair(typename boost::call_traits< typename base_::first_type  >::param_type x,
+                    typename boost::call_traits< typename base_::second_type >::param_type y)
 
-        : structured_pair::storage_(x,y) {}
+        : base_(x,y) {}
 
     structured_pair(const structured_pair & p)
 
-        : structured_pair::storage_(p.first,p.second) {}
+        : base_(p.first,p.second) {}
 
     structured_pair& operator=(const structured_pair & p)
     {
-        structured_pair::first = p.first;
-        structured_pair::second = p.second;
+        base_::first = p.first;
+        base_::second = p.second;
         return *this;
     }
 
     typedef std::pair
     <
-        typename structured_pair::first_type,
-        typename structured_pair::second_type
+        typename base_::first_type,
+        typename base_::second_type
 
     > std_pair;
 
     typedef std::pair
     <
-        const typename structured_pair::first_type,
-        typename structured_pair::second_type
+        const typename base_::first_type,
+        typename base_::second_type
 
     > std_map_pair;
 
     explicit structured_pair(const std_pair & p)
     {
-        structured_pair::first  = p.first;
-        structured_pair::second = p.second;
+        base_::first  = p.first;
+        base_::second = p.second;
     }
 
     explicit structured_pair(const std_map_pair & p)
     {
-        structured_pair::first  = p.first;
-        structured_pair::second = p.second;
+        base_::first  = p.first;
+        base_::second = p.second;
     }
 
     structured_pair& operator=(const std_pair & p)
     {
-        structured_pair::first  = p.first;
-        structured_pair::second = p.second;
+        base_::first  = p.first;
+        base_::second = p.second;
         return *this;
     }
 
     structured_pair& operator=(const std_map_pair & p)
     {
-        structured_pair::first  = p.first;
-        structured_pair::second = p.second;
+        base_::first  = p.first;
+        base_::second = p.second;
         return *this;
     }
 
     BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
-        structured_pair::first,structured_pair::second,
+        base_::first, base_::second,
 
         structured_pair,
         first,second
     );
 
     BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
-        structured_pair::first,structured_pair::second,
+        base_::first, base_::second,
 
         mirror_pair_type,
         first,second
     );
 
     BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
-        structured_pair::first,structured_pair::second,
+        base_::first, base_::second,
 
         std_pair,
         first,second
     );
 
     BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
-        structured_pair::first,structured_pair::second,
+        base_::first, base_::second,
 
         std_map_pair,
         first,second

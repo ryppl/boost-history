@@ -16,8 +16,6 @@
 #include <boost/bimap/container_adaptor/vector_adaptor.hpp>
 #include <boost/bimap/detail/set_view_base.hpp>
 
-#include <boost/config.hpp>
-
 namespace boost {
 namespace bimap {
 namespace views {
@@ -34,31 +32,29 @@ See also const_set_view.
 template< class IndexType >
 class vector_set_view
 :
-    public container_adaptor::vector_adaptor
+    public ::boost::bimap::container_adaptor::vector_adaptor
     <
         IndexType,
-        typename IndexType::iterator,
-        typename IndexType::const_iterator,
-        typename IndexType::reverse_iterator,
-        typename IndexType::const_reverse_iterator
+        typename IndexType::iterator,         typename IndexType::const_iterator,
+        typename IndexType::reverse_iterator, typename IndexType::const_reverse_iterator
     >,
 
     public ::boost::bimap::detail::set_view_base< vector_set_view< IndexType >, IndexType >
 {
-    #if defined(BOOST_MSVC)
-        typedef ::boost::bimap::detail::set_view_base< vector_set_view< IndexType >, IndexType >
-            friend_set_view_base;
-        friend class friend_set_view_base;
-    #else
-        friend class ::boost::bimap::detail::set_view_base< vector_set_view< IndexType >, IndexType >;
-    #endif
+    BOOST_BIMAP_SET_VIEW_BASE_FRIEND(vector_set_view,IndexType);
 
+    typedef ::boost::bimap::container_adaptor::vector_adaptor
+    <
+        IndexType,
+        typename IndexType::iterator,         typename IndexType::const_iterator,
+        typename IndexType::reverse_iterator, typename IndexType::const_reverse_iterator
+
+    > base_;
 
     public:
 
-    vector_set_view() {}
-    vector_set_view(typename vector_set_view::base_type & c) :
-        vector_set_view::vector_adaptor_(c) {}
+    vector_set_view(typename base_::base_type & c) :
+        base_(c) {}
 };
 
 /// \brief Constant view of a bimap that is signature compatible with std::vector.
@@ -74,20 +70,25 @@ See also set_view.
 template< class IndexType >
 class const_vector_set_view
 :
-    public container_adaptor::vector_adaptor
+    public ::boost::bimap::container_adaptor::vector_adaptor
     <
         const IndexType,
-        typename IndexType::iterator,
-        typename IndexType::const_iterator,
-        typename IndexType::reverse_iterator,
-        typename IndexType::const_reverse_iterator
+        typename IndexType::iterator,         typename IndexType::const_iterator,
+        typename IndexType::reverse_iterator, typename IndexType::const_reverse_iterator
     >
 {
+    typedef ::boost::bimap::container_adaptor::vector_adaptor
+    <
+        const IndexType,
+        typename IndexType::iterator,         typename IndexType::const_iterator,
+        typename IndexType::reverse_iterator, typename IndexType::const_reverse_iterator
+
+    > base_;
+
     public:
 
-    const_vector_set_view() {}
-    const_vector_set_view(typename const_vector_set_view::base_type & c) :
-        const_vector_set_view::vector_adaptor_(c) {}
+    const_vector_set_view(typename base_::base_type & c) :
+        base_(c) {}
 
 };
 

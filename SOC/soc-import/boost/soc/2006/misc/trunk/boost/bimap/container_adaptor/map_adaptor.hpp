@@ -41,22 +41,32 @@ template
 >
 class map_adaptor :
 
-    public detail::ordered_associative_container_adaptor
+    public ::boost::bimap::container_adaptor::detail::ordered_associative_container_adaptor
     <
         Base,
-
         Iterator, ConstIterator, ReverseIterator, ConstReverseIterator,
-
         typename Iterator::value_type::first_type,
-
         IteratorToBaseConverter, IteratorFromBaseConverter,
         ReverseIteratorFromBaseConverter,
         ValueToBaseConverter, ValueFromBaseConverter,
         KeyToBaseConverter,
-
         FunctorsFromDerivedClasses
     >
 {
+
+    typedef ::boost::bimap::container_adaptor::detail::ordered_associative_container_adaptor
+    <
+        Base,
+        Iterator, ConstIterator, ReverseIterator, ConstReverseIterator,
+        typename Iterator::value_type::first_type,
+        IteratorToBaseConverter, IteratorFromBaseConverter,
+        ReverseIteratorFromBaseConverter,
+        ValueToBaseConverter, ValueFromBaseConverter,
+        KeyToBaseConverter,
+        FunctorsFromDerivedClasses
+
+    > base_;
+
     // MetaData -------------------------------------------------------------
 
     public:
@@ -67,14 +77,12 @@ class map_adaptor :
 
     public:
 
-    map_adaptor() {}
-
     explicit map_adaptor(Base & c) :
-        map_adaptor::ordered_associative_container_adaptor_(c) {}
+        base_(c) {}
 
     protected:
 
-    typedef map_adaptor
+    typedef map_adaptor/*
     <
         Base,
 
@@ -87,13 +95,13 @@ class map_adaptor :
 
         FunctorsFromDerivedClasses
 
-    > map_adaptor_;
+    > */map_adaptor_;
 
     // Interface --------------------------------------------------------------
 
     public:
 
-    data_type& operator[](const typename map_adaptor::key_type& k)  { return map_adaptor::base()[k]; }
+    data_type& operator[](const typename base_::key_type& k)  { return this->base()[k]; }
 
 };
 

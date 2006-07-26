@@ -13,8 +13,6 @@
 #ifndef BOOST_BIMAP_VIEWS_UNORDERED_SET_VIEW_HPP
 #define BOOST_BIMAP_VIEWS_UNORDERED_SET_VIEW_HPP
 
-#include <boost/config.hpp>
-
 #include <boost/bimap/container_adaptor/unordered_set_adaptor.hpp>
 #include <boost/bimap/detail/set_view_base.hpp>
 
@@ -34,36 +32,23 @@ See also const_unordered_set_view.
 template< class IndexType >
 class unordered_set_view
 :
-    public container_adaptor::unordered_set_adaptor
-    <
-        IndexType,
-        typename IndexType::iterator,
-        typename IndexType::const_iterator,
-        typename IndexType::local_iterator,
-        typename IndexType::const_local_iterator,
-        container_adaptor::use_default,
-        container_adaptor::use_default,
-        container_adaptor::use_default,
-        container_adaptor::use_default,
-        container_adaptor::use_default,
-        typename IndexType::key_from_value
-    >,
+    public BOOST_BIMAP_SET_VIEW_CONTAINER_ADAPTOR(
+        unordered_set_adaptor, local_iterator, const_local_iterator
+    ),
 
     public ::boost::bimap::detail::set_view_base< unordered_set_view< IndexType >, IndexType >
 {
-    #if defined(BOOST_MSVC)
-        typedef ::boost::bimap::detail::set_view_base< unordered_set_view< IndexType >, IndexType >
-            friend_set_view_base;
-        friend class friend_set_view_base;
-    #else
-        friend class ::boost::bimap::detail::set_view_base< unordered_set_view< IndexType >, IndexType >;
-    #endif
+    BOOST_BIMAP_SET_VIEW_BASE_FRIEND(unordered_set_view,IndexType);
+
+    typedef BOOST_BIMAP_SET_VIEW_CONTAINER_ADAPTOR(
+        unordered_set_adaptor, local_iterator, const_local_iterator
+
+    ) base_;
 
     public:
 
-    unordered_set_view() {}
-    unordered_set_view(typename unordered_set_view::base_type & c)
-        : unordered_set_view::unordered_set_adaptor_(c) {}
+    unordered_set_view(typename base_::base_type & c)
+        : base_(c) {}
 
 };
 
@@ -80,30 +65,20 @@ See also unordered_set_view.
 template< class IndexType >
 class const_unordered_set_view
 :
-    public container_adaptor::unordered_set_adaptor
-    <
-        const IndexType,
-        typename IndexType::iterator,
-        typename IndexType::const_iterator,
-        typename IndexType::local_iterator,
-        typename IndexType::const_local_iterator,
-        container_adaptor::use_default,
-        container_adaptor::use_default,
-        container_adaptor::use_default,
-        container_adaptor::use_default,
-        container_adaptor::use_default,
-        typename IndexType::key_from_value
-    >
+    public BOOST_BIMAP_CONST_SET_VIEW_CONTAINER_ADAPTOR(
+        unordered_set_adaptor, local_iterator, const_local_iterator
+    )
 {
+    typedef BOOST_BIMAP_CONST_SET_VIEW_CONTAINER_ADAPTOR(
+        unordered_set_adaptor, local_iterator, const_local_iterator
+
+    ) base_;
+
     public:
 
-    const_unordered_set_view() {}
-    const_unordered_set_view(typename const_unordered_set_view::base_type & c)
-        : const_unordered_set_view::unordered_set_adaptor_(c) {}
-
+    const_unordered_set_view(typename base_::base_type & c)
+        : base_(c) {}
 };
-
-
 
 
 } // namespace views

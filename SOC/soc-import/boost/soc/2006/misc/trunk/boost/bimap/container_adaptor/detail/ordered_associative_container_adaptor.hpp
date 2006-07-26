@@ -25,6 +25,46 @@ namespace bimap {
 namespace container_adaptor {
 namespace detail {
 
+template
+<
+    class Base, class Iterator, class ConstIterator,
+    class ReverseIterator, class ConstReverseIterator, class KeyType,
+    class IteratorToBaseConverter, class IteratorFromBaseConverter,
+    class ReverseIteratorFromBaseConverter,
+    class ValueToBaseConverter, class ValueFromBaseConverter, class KeyToBaseConverter,
+    class FunctorsFromDerivedClasses
+>
+struct ordered_associative_container_adaptor_base
+{
+    typedef associative_container_adaptor<
+        Base, Iterator, ConstIterator, KeyType,
+        IteratorToBaseConverter, IteratorFromBaseConverter,
+        ValueToBaseConverter, ValueFromBaseConverter, KeyToBaseConverter,
+
+        typename mpl::push_front<
+
+            FunctorsFromDerivedClasses,
+
+            typename mpl::if_< is_same< ReverseIteratorFromBaseConverter, use_default >,
+            // {
+                    iterator_from_base_identity
+                    <
+                        typename Base::reverse_iterator                , ReverseIterator,
+                        typename Base::const_reverse_iterator          , ConstReverseIterator
+                    >,
+            // }
+            // else
+            // {
+                    ReverseIteratorFromBaseConverter
+            // }
+
+            >::type
+
+        >::type
+
+    > type;
+};
+
 /// \brief Container adaptor to build a type that is compliant to the concept of an ordered associative container.
 
 template
@@ -49,59 +89,44 @@ template
 >
 class ordered_associative_container_adaptor :
 
-    public associative_container_adaptor
+    public ordered_associative_container_adaptor_base
     <
-        Base,
-
-        Iterator, ConstIterator,
-
-        KeyType,
-
+        Base, Iterator, ConstIterator,
+        ReverseIterator, ConstReverseIterator, KeyType,
         IteratorToBaseConverter, IteratorFromBaseConverter,
-        ValueToBaseConverter   , ValueFromBaseConverter,
+        ReverseIteratorFromBaseConverter,
+        ValueToBaseConverter, ValueFromBaseConverter, KeyToBaseConverter,
+        FunctorsFromDerivedClasses
 
-        KeyToBaseConverter,
-
-        typename mpl::push_front<
-
-            FunctorsFromDerivedClasses,
-
-            typename mpl::if_< is_same< ReverseIteratorFromBaseConverter, use_default >,
-            // {
-                    detail::iterator_from_base_identity
-                    <
-                        typename Base::reverse_iterator                , ReverseIterator,
-                        typename Base::const_reverse_iterator          , ConstReverseIterator
-                    >,
-            // }
-            // else
-            // {
-                    ReverseIteratorFromBaseConverter
-            // }
-
-            >::type
-
-        >::type
-    >
+    >::type
 {
     // MetaData -------------------------------------------------------------
 
-    typedef ordered_associative_container_adaptor this_type;
+    typedef typename ordered_associative_container_adaptor_base
+    <
+        Base, Iterator, ConstIterator,
+        ReverseIterator, ConstReverseIterator, KeyType,
+        IteratorToBaseConverter, IteratorFromBaseConverter,
+        ReverseIteratorFromBaseConverter,
+        ValueToBaseConverter, ValueFromBaseConverter, KeyToBaseConverter,
+        FunctorsFromDerivedClasses
+
+    >::type base_;
 
     public:
 
     typedef comparison_adaptor
     <
         typename Base::key_compare,
-        typename this_type::key_type,
-        typename this_type::key_to_base
+        typename base_::key_type,
+        typename base_::key_to_base
 
     > key_compare;
 
     typedef value_comparison_adaptor
     <
         typename Base::value_compare,
-        typename this_type::value_type
+        typename base_::value_type
 
     > value_compare;
 
@@ -112,7 +137,7 @@ class ordered_associative_container_adaptor :
 
     typedef typename mpl::if_< is_same< ReverseIteratorFromBaseConverter, use_default >,
         // {
-                detail::iterator_from_base_identity
+                iterator_from_base_identity
                 <
                     typename Base::reverse_iterator                , reverse_iterator,
                     typename Base::const_reverse_iterator          , const_reverse_iterator
@@ -130,7 +155,7 @@ class ordered_associative_container_adaptor :
     public:
 
     explicit ordered_associative_container_adaptor(Base & c)
-        : this_type::associative_container_adaptor_(c) {}
+        : base_(c) {}
 
     protected:
 
@@ -158,82 +183,82 @@ class ordered_associative_container_adaptor :
 
     reverse_iterator rbegin()
     {
-        return this_type::template functor<
+        return this->template functor<
             reverse_iterator_from_base
-        >()                            ( this_type::base().rbegin() );
+        >()                            ( this->base().rbegin() );
 
     }
 
     reverse_iterator rend()
     {
-        return this_type::template functor<
+        return this->template functor<
             reverse_iterator_from_base
-        >()                            ( this_type::base().rend() );
+        >()                            ( this->base().rend() );
     }
 
     const_reverse_iterator rbegin() const
     {
-        return this_type::template functor<
+        return this->template functor<
             reverse_iterator_from_base
-        >()                            ( this_type::base().rbegin() );
+        >()                            ( this->base().rbegin() );
     }
 
     const_reverse_iterator rend() const
     {
-        return this_type::template functor<
+        return this->template functor<
             reverse_iterator_from_base
-        >()                            ( this_type::base().rend() );
+        >()                            ( this->base().rend() );
     }
 
     key_compare key_comp() const
     {
         return key_compare(
-            this_type::base().key_comp(),
-            this_type::template functor<typename this_type::key_to_base>()
+            this->base().key_comp(),
+            this->template functor<typename base_::key_to_base>()
         );
     }
 
     value_compare value_comp() const
     {
-        return value_compare( this_type::base().value_comp() );
+        return value_compare( this->base().value_comp() );
     }
 
-    typename this_type::iterator lower_bound(const typename this_type::key_type& k)
+    typename base_::iterator lower_bound(const typename base_::key_type& k)
     {
-       return this_type::template functor<
-            typename this_type::iterator_from_base>()(
-                this_type::base().lower_bound(
-                    this_type::template functor<typename this_type::key_to_base>()(k)
+       return this->template functor<
+            typename base_::iterator_from_base>()(
+                this->base().lower_bound(
+                    this->template functor<typename base_::key_to_base>()(k)
                 )
             );
     }
 
-    typename this_type::const_iterator lower_bound(const typename this_type::key_type& k) const
+    typename base_::const_iterator lower_bound(const typename base_::key_type& k) const
     {
-       return this_type::template functor<
-            typename this_type::iterator_from_base>()(
-                this_type::base().lower_bound(
-                    this_type::template functor<typename this_type::key_to_base>()(k)
+       return this->template functor<
+            typename base_::iterator_from_base>()(
+                this->base().lower_bound(
+                    this->template functor<typename base_::key_to_base>()(k)
                 )
             );
     }
 
-    typename this_type::iterator upper_bound(const typename this_type::key_type& k)
+    typename base_::iterator upper_bound(const typename base_::key_type& k)
     {
-       return this_type::template functor<
-            typename this_type::iterator_from_base>()(
-                this_type::base().upper_bound(
-                    this_type::template functor<typename this_type::key_to_base>()(k)
+       return this->template functor<
+            typename base_::iterator_from_base>()(
+                this->base().upper_bound(
+                    this->template functor<typename base_::key_to_base>()(k)
                 )
             );
     }
 
-    typename this_type::const_iterator upper_bound(const typename this_type::key_type& k) const
+    typename base_::const_iterator upper_bound(const typename base_::key_type& k) const
     {
-        return this_type::template functor<
-            typename this_type::iterator_from_base>()(
-                this_type::base().upper_bound(
-                    this_type::template functor<typename this_type::key_to_base>()(k)
+        return this->template functor<
+            typename base_::iterator_from_base>()(
+                this->base().upper_bound(
+                    this->template functor<typename base_::key_to_base>()(k)
                 )
             );
     }

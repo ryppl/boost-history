@@ -27,29 +27,17 @@ namespace bimap {
 namespace container_adaptor {
 namespace detail {
 
-/// \brief Container adaptor to build a type that is compliant to the concept of a weak associative container.
 
 template
 <
-    class Base,
-
-    class Iterator,
-    class ConstIterator,
-
-    class KeyType,
-
-    class IteratorToBaseConverter   = use_default,
-    class IteratorFromBaseConverter = use_default,
-    class ValueToBaseConverter      = use_default,
-    class ValueFromBaseConverter    = use_default,
-
-    class KeyToBaseConverter        = use_default,
-
-    class FunctorsFromDerivedClasses = mpl::list<>
+    class Base, class Iterator, class ConstIterator, class KeyType,
+    class IteratorToBaseConverter, class IteratorFromBaseConverter,
+    class ValueToBaseConverter, class ValueFromBaseConverter, class KeyToBaseConverter,
+    class FunctorsFromDerivedClasses
 >
-class weak_associative_container_adaptor :
-
-    public container_adaptor
+struct weak_associative_container_adaptor_base
+{
+    typedef container_adaptor
     <
         Base,
 
@@ -77,9 +65,52 @@ class weak_associative_container_adaptor :
             >::type
 
         >::type
-    >
+
+    > type;
+};
+
+
+/// \brief Container adaptor to build a type that is compliant to the concept of a weak associative container.
+
+template
+<
+    class Base,
+
+    class Iterator,
+    class ConstIterator,
+
+    class KeyType,
+
+    class IteratorToBaseConverter   = use_default,
+    class IteratorFromBaseConverter = use_default,
+    class ValueToBaseConverter      = use_default,
+    class ValueFromBaseConverter    = use_default,
+
+    class KeyToBaseConverter        = use_default,
+
+    class FunctorsFromDerivedClasses = mpl::list<>
+>
+class weak_associative_container_adaptor :
+
+    public weak_associative_container_adaptor_base
+    <
+        Base, Iterator, ConstIterator, KeyType,
+        IteratorToBaseConverter, IteratorFromBaseConverter,
+        ValueToBaseConverter, ValueFromBaseConverter, KeyToBaseConverter,
+        FunctorsFromDerivedClasses
+
+    >::type
 {
     // MetaData -------------------------------------------------------------
+
+    typedef typename weak_associative_container_adaptor_base
+    <
+        Base, Iterator, ConstIterator, KeyType,
+        IteratorToBaseConverter, IteratorFromBaseConverter,
+        ValueToBaseConverter, ValueFromBaseConverter, KeyToBaseConverter,
+        FunctorsFromDerivedClasses
+
+    >::type base_;
 
     public:
 
@@ -107,7 +138,7 @@ class weak_associative_container_adaptor :
     public:
 
     explicit weak_associative_container_adaptor(Base & c)
-        : weak_associative_container_adaptor::container_adaptor_(c) {}
+        : base_(c) {}
 
     protected:
 

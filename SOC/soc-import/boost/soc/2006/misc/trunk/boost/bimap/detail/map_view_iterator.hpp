@@ -24,6 +24,7 @@ namespace boost {
 namespace bimap {
 namespace detail {
 
+
 /** \brief Iterator adaptor from multi index to bimap.
 
 This is class is based on transform iterator from Boost.Iterator that is
@@ -46,16 +47,24 @@ struct map_view_iterator :
         map_view_iterator< Tag, Relation, CoreIterator, Reference, ValueType >,
         CoreIterator,
         typename remove_reference<Reference>::type,
-        boost::use_default,
+        ::boost::use_default,
         Reference
 
     >,
-
-    protected relation::support::GetPairFunctor<Tag,Relation>
+    protected ::boost::bimap::relation::support::GetPairFunctor<Tag,Relation>
 
 {
+    typedef iterator_adaptor
+    <
+        map_view_iterator< Tag, Relation, CoreIterator, Reference, ValueType >,
+        CoreIterator,
+        typename remove_reference<Reference>::type,
+        boost::use_default,
+        Reference
 
-    typedef relation::support::GetPairFunctor<Tag,Relation> get_pair_functor;
+    > base_;
+
+    typedef ::boost::bimap::relation::support::GetPairFunctor<Tag,Relation> get_pair_functor;
 
     public:
 
@@ -68,19 +77,19 @@ struct map_view_iterator :
     map_view_iterator() {}
 
     map_view_iterator(CoreIterator const& iter)
-      : map_view_iterator::iterator_adaptor_(iter) {}
+      : base_(iter) {}
 
     // If multi_index change the iterator == const_iterator scheme, this
     // function have to be rewritted
 
     map_view_iterator(map_view_iterator const & iter)
-      : map_view_iterator::iterator_adaptor_(iter.base()) {}
+      : base_(iter.base()) {}
 
     private:
 
     friend class iterator_core_access;
 
-    typename map_view_iterator::reference dereference() const
+    typename base_::reference dereference() const
     {
         return get_pair_functor::operator()(*this->base());
     }
@@ -89,19 +98,19 @@ struct map_view_iterator :
 
     BOOST_SERIALIZATION_SPLIT_MEMBER();
 
-    friend class boost::serialization::access;
+    friend class ::boost::serialization::access;
 
     template<class Archive>
     void save(Archive & ar, const unsigned int version) const
     {
-        ar << serialization::make_nvp("mi_iterator",this->base());
+        ar << ::boost::serialization::make_nvp("mi_iterator",this->base());
     }
 
     template<class Archive>
     void load(Archive & ar, const unsigned int version)
     {
         CoreIterator iter;
-        ar >> serialization::make_nvp("mi_iterator",iter);
+        ar >> ::boost::serialization::make_nvp("mi_iterator",iter);
         this->base_reference() = iter;
     }
 };
