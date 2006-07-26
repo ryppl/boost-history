@@ -74,10 +74,10 @@ public:
     //! handles regarless of the operating system in which this class is
     //! used.
     //!
-    //! If this class is used in a POSIX system, \a native_system_handle is
+    //! If this class is used in a POSIX system, \a NativeSystemHandle is
     //! an integer type while it is a \a HANDLE in a Win32 system.
     //!
-    typedef native_system_handle handle_type;
+    typedef NativeSystemHandle handle_type;
 #elif defined(BOOST_PROCESS_POSIX_API)
     typedef int handle_type;
 #elif defined(BOOST_PROCESS_WIN32_API)
