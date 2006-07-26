@@ -1,6 +1,6 @@
 //
 // Boost.Process
-// Abstraction for anonymous pipes.
+// RAII model for anonymous pipes.
 //
 // Copyright (c) 2006 Julio M. Merino Vidal.
 //
@@ -27,10 +27,8 @@ extern "C" {
 #   error "Unknown platform."
 #endif
 
-#include <boost/assert.hpp>
 #include <boost/process/detail/file_handle.hpp>
 #include <boost/process/exceptions.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/throw_exception.hpp>
 
 namespace boost {
@@ -39,24 +37,74 @@ namespace detail {
 
 // ------------------------------------------------------------------------
 
-//
-// A pipe is a RAII model for anonymous pipes.  It provides a portable
-// constructor that initializes a new pipe and owns the two file handles
-// associated to it.  These handles can be retrieved and, if copied,
-// removed from the pipe object.
-//
-// A pipe object can be copied following the same semantics as file_handle.
-// That is, copying such an object invalidates the source one.
-//
+//!
+//! \brief Simple RAII model for anonymous pipes.
+//!
+//! The pipe class is a simple RAII model for anonymous pipes.  It
+//! provides a portable constructor that allocates a new %pipe and creates
+//! a pipe object that owns the two file handles associated to it: the
+//! read end and the write end.
+//!
+//! These handles can be retrieved for modification according to
+//! file_handle semantics.  Optionally, their ownership can be transferred
+//! to external \a file_handle objects which comes handy when the two
+//! ends need to be used in different places (i.e. after a POSIX fork()
+//! system call).
+//!
+//! Pipes can be copied following the same semantics as file handles.
+//! In other words, copying a %pipe object invalidates the source one.
+//!
+//! \see file_handle
+//!
 class pipe
 {
+    //!
+    //! \brief The %pipe's read end file handle.
+    //!
     file_handle m_read_end;
+
+    //!
+    //! \brief The %pipe's write end file handle.
+    //!
     file_handle m_write_end;
 
 public:
+    //!
+    //! \brief Creates a new %pipe.
+    //!
+    //! The default pipe constructor allocates a new anonymous %pipe
+    //! and assigns its ownership to the created pipe object.
+    //!
+    //! \throw system_error If the anonymous %pipe creation fails.
+    //!
     pipe(void);
 
+    //!
+    //! \brief Returns the %pipe's read end file handle.
+    //!
+    //! Obtains a reference to the %pipe's read end file handle.  Care
+    //! should be taken to not duplicate the returned object if ownership
+    //! shall remain to the %pipe.
+    //!
+    //! Duplicating the returned object invalidates its corresponding file
+    //! handle in the %pipe.
+    //!
+    //! \return A reference to the %pipe's read end file handle.
+    //!
     file_handle& rend(void);
+
+    //!
+    //! \brief Returns the %pipe's write end file handle.
+    //!
+    //! Obtains a reference to the %pipe's write end file handle.  Care
+    //! should be taken to not duplicate the returned object if ownership
+    //! shall remain to the %pipe.
+    //!
+    //! Duplicating the returned object invalidates its corresponding file
+    //! handle in the %pipe.
+    //!
+    //! \return A reference to the %pipe's write end file handle.
+    //!
     file_handle& wend(void);
 };
 
