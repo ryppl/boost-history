@@ -9,7 +9,6 @@
 
 #include <boost/math/special_functions/bessel_j0.hpp>
 #include <boost/math/special_functions/bessel_j1.hpp>
-#include <boost/math/tools/error_handling.hpp>
 
 // Bessel function of the first kind of integer order
 // J_n(z) is the minimal solution
