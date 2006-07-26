@@ -1,6 +1,5 @@
 //
 // Boost.Process
-// Forward declarations for all public types.
 //
 // Copyright (c) 2006 Julio M. Merino Vidal.
 //
@@ -9,11 +8,23 @@
 // at http://www.boost.org/LICENSE_1_0.txt.)
 //
 
+//!
+//! \file boost/process/forward_decls.hpp
+//!
+//! This header provides forward declarations for all public types
+//! included in the library.  It is interesting to note that those types
+//! that are specific to a given platform are only provided if the library
+//! is being used in that same platform.
+//!
+
 #if !defined(BOOST_PROCESS_FORWARD_DECLS_HPP)
+/** \cond */
 #define BOOST_PROCESS_FORWARD_DECLS_HPP
+/** \endcond */
 
 #include <boost/process/config.hpp>
 
+/** \cond */
 namespace boost {
 namespace process {
 
@@ -55,5 +66,6 @@ typedef basic_posix_child< command_line, attributes > posix_child;
 
 } // namespace process
 } // namespace boost
+/** \endcond */
 
 #endif // !defined(BOOST_PROCESS_FORWARD_DECLS_HPP)
