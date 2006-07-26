@@ -1,6 +1,6 @@
 //
 // Boost.Process
-// Streambuf implementation for system files.
+// std::streambuf implementation for system files.
 //
 // Copyright (c) 2006 Julio M. Merino Vidal.
 //
@@ -14,15 +14,17 @@
 
 #include <boost/process/config.hpp>
 
+#if defined(BOOST_PROCESS_POSIX_API)
 extern "C" {
-#if defined(BOOST_PROCESS_WIN32_API)
-#   include <windows.h>
-#elif defined(BOOST_PROCESS_POSIX_API)
 #   include <unistd.h>
-#else
-#   error "Unknown platform."
-#endif
 }
+#elif defined(BOOST_PROCESS_WIN32_API)
+extern "C" {
+#   include <windows.h>
+}
+#else
+#   error "Unsupported platform."
+#endif
 
 #include <streambuf>
 
@@ -36,31 +38,136 @@ namespace detail {
 
 // ------------------------------------------------------------------------
 
+//!
+//! \brief std::streambuf implementation for system file handles.
+//!
+//! systembuf provides a std::streambuf implementation for system file
+//! handles.  Contrarywise to file_handle, this class does \b not take
+//! ownership of the native file handle; this should be taken care of
+//! somewhere else.
+//!
+//! This class follows the expected semantics of a std::streambuf object.
+//! However, it is not copyable to avoid introducing inconsistences with
+//! the on-disk file and the in-memory buffers.
+//!
 class systembuf :
     public std::streambuf, boost::noncopyable
 {
 public:
-#if defined(BOOST_PROCESS_WIN32_API)
-    typedef HANDLE handle_type;
-    typedef DWORD size_type;
-    typedef long ssize_type;
-#else
+#if defined(BOOST_PROCESS_DOXYGEN)
+    //!
+    //! \brief Opaque name for the native handle type.
+    //!
+    typedef NativeHandleType handle_type;
+#elif defined(BOOST_PROCESS_POSIX_API)
     typedef int handle_type;
-    typedef size_t size_type;
-    typedef ssize_t ssize_type;
+#elif defined(BOOST_PROCESS_WIN32_API)
+    typedef HANDLE handle_type;
 #endif
 
+#if defined(BOOST_PROCESS_DOXYGEN)
+    //!
+    //! \brief Opaque name for the native unsigned size type.
+    //!
+    typedef NativeUnsignedSizeType size_type;
+#elif defined(BOOST_PROCESS_POSIX_API)
+    typedef size_t size_type;
+#elif defined(BOOST_PROCESS_WIN32_API)
+    typedef DWORD size_type;
+#endif
+
+#if defined(BOOST_PROCESS_DOXYGEN)
+    //!
+    //! \brief Opaque name for the native signed size type.
+    //!
+    typedef NativeSignedSizeType ssize_type;
+#elif defined(BOOST_PROCESS_POSIX_API)
+    typedef ssize_t ssize_type;
+#elif defined(BOOST_PROCESS_WIN32_API)
+    typedef long ssize_type;
+#endif
+
+    //!
+    //! \brief Constructs a new systembuf for the given file handle.
+    //!
+    //! This constructor creates a new systembuf object that reads or
+    //! writes data from/to the \a h native file handle.  This handle
+    //! is \b not owned by the created systembuf object; the code
+    //! should take care of it externally.
+    //!
+    //! This class buffers input and output; the buffer size may be
+    //! tuned through the \a bufsize parameter, which defaults to 8192
+    //! bytes.
+    //!
+    //! \see pistream and postream.
+    //!
     explicit systembuf(handle_type h, size_type bufsize = 8192);
 
 private:
+    //!
+    //! \brief Native file handle used by the systembuf object.
+    //!
     handle_type m_handle;
+
+    //!
+    //! \brief Internal buffer size used during read and write operations.
+    //!
     size_type m_bufsize;
+
+    //!
+    //! \brief Internal buffer used during read operations.
+    //!
     boost::scoped_array< char > m_read_buf;
+
+    //!
+    //! \brief Internal buffer used during write operations.
+    //!
     boost::scoped_array< char > m_write_buf;
 
 protected:
+    //!
+    //! \brief Reads new data from the native file handle.
+    //!
+    //! This operation is called by input methods when there are no more
+    //! data in the input buffer.  The function fills the buffer with new
+    //! data, if available.
+    //!
+    //! \pre All input positions are exhausted (gptr() >= egptr()).
+    //! \post The input buffer has new data, if available.
+    //! \returns traits_type::eof() if a read error occurrs or there are
+    //!          no more data to be read.  Otherwise returns
+    //!          traits_type::to_int_type(*gptr()).
+    //!
     virtual int_type underflow(void);
+
+    //!
+    //! \brief Makes room in the write buffer for additional data.
+    //!
+    //! This operation is called by output methods when there is no more
+    //! space in the output buffer to hold a new element.  The function
+    //! first flushes the buffer's contents to disk and then clears it to
+    //! leave room for more characters.  The given \a c character is
+    //! stored at the beginning of the new space.
+    //!
+    //! \pre All output positions are exhausted (pptr() >= epptr()).
+    //! \post The output buffer has more space if no errors occurred
+    //!       during the write to disk.
+    //! \post *(pptr() - 1) is \a c.
+    //! \returns traits_type::eof() if a write error occurrs.  Otherwise
+    //!          returns traits_type::not_eof(c).
+    //!
     virtual int_type overflow(int c);
+
+    //!
+    //! \brief Flushes the output buffer to disk.
+    //!
+    //! Synchronizes the systembuf buffers with the contents of the file
+    //! associated to this object through the native file handle.  The
+    //! output buffer is flushed to disk and cleared to leave new room
+    //! for more data.
+    //!
+    //! \returns 0 on success, -1 if an error occurred.
+    //!
     virtual int sync(void);
 };
 
