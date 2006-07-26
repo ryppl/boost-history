@@ -11,10 +11,14 @@
 
 using testing ;
 
+if ! $(BOOST_ROOT)
+{
+    BOOST_ROOT = [ modules.peek : BOOST_ROOT ] ;
+}
+
 project :
     : requirements
-      # XXX These paths are incorrect.
-      <include>../../../../boost
+      <include>$(BOOST_ROOT)
       <include>../../..
 
       # XXX Workaround to fix build problems under Windows.
@@ -26,7 +30,7 @@ project :
 
 exe helpers
     : helpers.cpp
-    : <library>../../../../boost//filesystem
+    : <library>$(BOOST_ROOT)//filesystem
     ;
 
 test-suite process :
@@ -55,90 +59,90 @@ test-suite process :
     [ run command_line_test.cpp
         :
         :
-        : <library>../../../../boost//unit_test_framework
+        : <library>$(BOOST_ROOT)//unit_test_framework
         ]
 
     [ run attributes_test.cpp
         :
         :
-        : <library>../../../../boost//unit_test_framework
-          <library>../../../../boost//filesystem
+        : <library>$(BOOST_ROOT)//unit_test_framework
+          <library>$(BOOST_ROOT)//filesystem
         ]
 
     [ run environment_test.cpp
         :
         :
-        : <library>../../../../boost//unit_test_framework
+        : <library>$(BOOST_ROOT)//unit_test_framework
         ]
 
     [ run systembuf_test.cpp
         :
         :
-        : <library>../../../../boost//unit_test_framework
+        : <library>$(BOOST_ROOT)//unit_test_framework
         ]
 
     [ run file_handle_test.cpp
         :
         :
-        : <library>../../../../boost//unit_test_framework
+        : <library>$(BOOST_ROOT)//unit_test_framework
         ]
 
     [ run pipe_test.cpp
         :
         :
-        : <library>../../../../boost//unit_test_framework
+        : <library>$(BOOST_ROOT)//unit_test_framework
         ]
 
     [ run pistream_test.cpp
         :
         :
-        : <library>../../../../boost//unit_test_framework
+        : <library>$(BOOST_ROOT)//unit_test_framework
         ]
 
     [ run postream_test.cpp
         :
         :
-        : <library>../../../../boost//unit_test_framework
+        : <library>$(BOOST_ROOT)//unit_test_framework
         ]
 
     [ run basic_process_test.cpp
         :
         :
-        : <library>../../../../boost//unit_test_framework
+        : <library>$(BOOST_ROOT)//unit_test_framework
         ]
 
     [ run basic_child_test.cpp
         :
         :
-        : <library>../../../../boost//unit_test_framework
+        : <library>$(BOOST_ROOT)//unit_test_framework
         ]
 
     [ run launcher_test.cpp
         : helpers
         :
-        : <library>../../../../boost//unit_test_framework
-          <library>../../../../boost//filesystem
+        : <library>$(BOOST_ROOT)//unit_test_framework
+          <library>$(BOOST_ROOT)//filesystem
         ]
 
     [ run status_test.cpp
         : helpers
         :
-        : <library>../../../../boost//unit_test_framework
-          <library>../../../../boost//filesystem
+        : <library>$(BOOST_ROOT)//unit_test_framework
+          <library>$(BOOST_ROOT)//filesystem
         ]
 
     [ run posix_attributes_test.cpp
         : helpers
         :
-        : <library>../../../../boost//unit_test_framework
-          <library>../../../../boost//filesystem
+        : <library>$(BOOST_ROOT)//unit_test_framework
+          <library>$(BOOST_ROOT)//filesystem
         ]
 
     [ run posix_launcher_test.cpp
         : helpers
         :
-        : <library>../../../../boost//unit_test_framework
-          <library>../../../../boost//filesystem
+        : <library>$(BOOST_ROOT)//unit_test_framework
+          <library>$(BOOST_ROOT)//filesystem
         ]
 
     ;
