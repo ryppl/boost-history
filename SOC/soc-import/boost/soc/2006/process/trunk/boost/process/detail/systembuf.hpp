@@ -9,7 +9,7 @@
 //
 
 //!
-//! \file detail/systembuf.hpp
+//! \file boost/process/detail/systembuf.hpp
 //!
 //! Includes the declaration of the systembuf class.  This file is for
 //! internal usage only and must not be included by the library user.

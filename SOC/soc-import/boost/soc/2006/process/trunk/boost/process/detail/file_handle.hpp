@@ -9,7 +9,7 @@
 //
 
 //!
-//! \file detail/file_handle.hpp
+//! \file boost/process/detail/file_handle.hpp
 //!
 //! Includes the declaration of the file_handle class.  This file is for
 //! internal usage only and must not be included by the library user.

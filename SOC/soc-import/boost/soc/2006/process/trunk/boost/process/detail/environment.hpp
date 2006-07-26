@@ -9,7 +9,7 @@
 //
 
 //!
-//! \file detail/environment.hpp
+//! \file boost/process/detail/environment.hpp
 //!
 //! Includes the declaration of the environment class.  This file is for
 //! internal usage only and must not be included by the library user.

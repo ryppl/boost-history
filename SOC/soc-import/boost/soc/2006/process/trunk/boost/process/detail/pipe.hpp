@@ -9,7 +9,7 @@
 //
 
 //!
-//! \file detail/pipe.hpp
+//! \file boost/process/detail/pipe.hpp
 //!
 //! Includes the declaration of the pipe class.  This file is for
 //! internal usage only and must not be included by the library user.
