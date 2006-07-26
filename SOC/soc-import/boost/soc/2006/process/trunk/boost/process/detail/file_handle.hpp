@@ -500,22 +500,13 @@ file_handle::win32_set_inheritable(bool b)
 {
     BOOST_ASSERT(is_valid());
 
-    handle_type hnew;
-    if (::DuplicateHandle(::GetCurrentProcess(), m_handle,
-                          ::GetCurrentProcess(), &hnew,
-                          0, b ? TRUE : FALSE, DUPLICATE_SAME_ACCESS) == 0)
+    if (::SetHandleInformation(m_handle, HANDLE_FLAG_INHERIT,
+                               b ? HANDLE_FLAG_INHERIT : 0) == 0)
         boost::throw_exception
             (system_error("boost::process::detail::file_handle::"
                           "win32_set_inheritable",
-                          "DuplicateHandle failed", ::GetLastError()));
-
-    if (::CloseHandle(m_handle) == 0)
-        boost::throw_exception
-            (system_error("boost::process::detail::file_handle::"
-                          "win32_set_inheritable",
-                          "CloseHandle failed", ::GetLastError()));
-
-    m_handle = hnew;
+                          "SetHandleInformation failed",
+                          ::GetLastError()));
 }
 #endif
 
