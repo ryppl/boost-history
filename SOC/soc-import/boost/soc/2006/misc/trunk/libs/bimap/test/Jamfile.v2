@@ -23,22 +23,18 @@ test-suite "relation_test"
     # with struc { TA s; TB f; }; and this is not in the standard.
     # However, most modern compiler support it.
     #
-    # [ run test_mutant.cpp                                                   ]
-    # [ run test_mutant_relation.cpp                                          ]
+    [ run test_mutant.cpp                                                   ]
+    [ run test_mutant_relation.cpp                                          ]
 
     # Enable this to force the standard_relation test
     # It is not always enabled because if the mutant idiom is supported, then it
     # is not needed and if not, it is tested in test_relation.cpp.
     #
-    # [ run test_standard_relation.cpp                                        ]
+    [ run test_standard_relation.cpp                                        ]
 
     [ run test_relation.cpp                                                   ]
     ;
 
-test-suite "container_adaptor_test"
-    :
-    [ run test_container_adaptor.cpp                                          ]
-    ;
 
 test-suite "bimap_test"
     :
@@ -52,7 +48,9 @@ test-suite "bimap_test"
     [ run test_bimap_vector_of.cpp                                            ]
 
     # Test bimap container
-    [ run test_bimap_basic.cpp                                                ]
+    [ run test_bimap_ordered.cpp                                              ]
+    [ run test_bimap_unordered.cpp                                            ]
+    [ run test_bimap_sequenced.cpp                                            ]
     [ run test_bimap_serialization.cpp
           /boost/serialization//boost_serialization                           ]
     [ run test_bimap_assign.cpp                                               ]

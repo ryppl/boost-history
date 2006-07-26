@@ -26,8 +26,8 @@
 #include <boost/assign/list_inserter.hpp>
 
 // Boost.Bimap
-#include <boost/bimap/bimap.hpp>
 #include <boost/bimap/list_of.hpp>
+#include <boost/bimap/bimap.hpp>
 
 namespace ba =  boost::assign;
 

@@ -15,95 +15,48 @@
 
 // Boost.Test
 #include <boost/test/minimal.hpp>
-
-// std
-#include <sstream>
-#include <algorithm>
-#include <set>
-
-// Boost
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
+#include <boost/assign/list_of.hpp>
 
 // Boost.Bimap
+
+#include <boost/bimap/set_of.hpp>
+#include <boost/bimap/property_map/set_support.hpp>
+
+#include <boost/bimap/unordered_set_of.hpp>
+#include <boost/bimap/property_map/unordered_set_support.hpp>
+
 #include <boost/bimap/bimap.hpp>
 
 
-template< class Bimap, class Archive >
-void save_bimap(const Bimap & b, Archive & ar)
+template <class Map>
+void test_readable_property_map(
+    Map m,
+    typename boost::property_traits<Map>::  key_type const & key,
+    typename boost::property_traits<Map>::value_type const & value
+)
 {
-    using namespace boost::bimap;
+    // TODO Add STATIC_ASSERT( boost::property_traits<Map>::category is readable )
 
-    ar << b;
-
-    typedef typename const_iterator_type_by< member_at::left, Bimap >::type
-        left_const_iterator;
-
-    left_const_iterator left_iter = b.left.begin();
-    ar << const_cast< const left_const_iterator& >(left_iter);
-
-    typename Bimap::const_iterator iter = ++b.begin();
-    ar << const_cast< const typename Bimap::const_iterator& >(iter);
+    BOOST_CHECK( get(m,key) == value );
+    //BOOST_CHECK( m[key]     == value );
 }
 
 
-
-
-void test_bimap_serialization()
+void test_bimap_property_map()
 {
     using namespace boost::bimap;
 
-    typedef bimap<int,double> bm;
+    typedef bimap< set_of<int>, unordered_set_of<double> > bm;
 
-    std::set< bm::relation > data;
-    data.insert( bm::relation(1,0.1) );
-    data.insert( bm::relation(2,0.2) );
-    data.insert( bm::relation(3,0.3) );
-    data.insert( bm::relation(4,0.4) );
+    bm b = boost::assign::list_of< bm::relation >(1,0.1)(2,0.2)(3,0.3);
 
-    std::ostringstream oss;
-
-    // Save it
-    {
-        bm b;
-
-        b.insert(data.begin(),data.end());
-
-        boost::archive::text_oarchive oa(oss);
-
-        save_bimap(b,oa);
-    }
-
-    // Reload it
-    {
-        bm b;
-
-        std::istringstream iss(oss.str());
-        boost::archive::text_iarchive ia(iss);
-
-        ia >> b;
-
-        BOOST_CHECK( std::equal( b.begin(), b.end(), data.begin() ) );
-
-        const_iterator_type_by< member_at::left, bm >::type left_iter;
-
-        ia >> left_iter;
-
-        BOOST_CHECK( left_iter == b.left.begin() );
-
-        bm::const_iterator iter;
-
-        ia >> iter;
-
-        BOOST_CHECK( iter == ++b.begin() );
-    }
-
+    test_readable_property_map(b.left ,  1,0.1);
+    test_readable_property_map(b.right,0.1,  1);
 }
-
 
 int test_main( int, char* [] )
 {
-    test_bimap_serialization();
+    test_bimap_property_map();
     return 0;
 }
 

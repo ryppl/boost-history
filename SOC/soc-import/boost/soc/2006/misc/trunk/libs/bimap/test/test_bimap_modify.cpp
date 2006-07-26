@@ -6,104 +6,59 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 // See http://www.boost.org/libs/test for the library home page.
 
-// std
-#include <set>
-#include <map>
-#include <cstddef>
-#include <cassert>
-#include <algorithm>
-
 // Boost.Test
 #include <boost/test/minimal.hpp>
 
-// std
-#include <sstream>
-#include <algorithm>
-#include <set>
-
-// Boost
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-
 // Boost.Bimap
+#include <boost/bimap/support/lambda.hpp>
 #include <boost/bimap/bimap.hpp>
 
-
-template< class Bimap, class Archive >
-void save_bimap(const Bimap & b, Archive & ar)
-{
-    using namespace boost::bimap;
-
-    ar << b;
-
-    typedef typename const_iterator_type_by< member_at::left, Bimap >::type
-        left_const_iterator;
-
-    left_const_iterator left_iter = b.left.begin();
-    ar << const_cast< const left_const_iterator& >(left_iter);
-
-    typename Bimap::const_iterator iter = ++b.begin();
-    ar << const_cast< const typename Bimap::const_iterator& >(iter);
-}
-
-
-
-
-void test_bimap_serialization()
+void test_bimap_modify()
 {
     using namespace boost::bimap;
 
     typedef bimap<int,double> bm;
 
-    std::set< bm::relation > data;
-    data.insert( bm::relation(1,0.1) );
-    data.insert( bm::relation(2,0.2) );
-    data.insert( bm::relation(3,0.3) );
-    data.insert( bm::relation(4,0.4) );
+    bm b;
+    b.insert( bm::relation(1,0.1) );
 
-    std::ostringstream oss;
+    BOOST_CHECK( b.left[1] == 0.1 );
 
-    // Save it
-    {
-        bm b;
+    b.left.replace( b.left.begin(), bm::relation::left_pair(1,0.15) );
 
-        b.insert(data.begin(),data.end());
+    BOOST_CHECK( b.left[1] == 0.15 );
 
-        boost::archive::text_oarchive oa(oss);
+    b.left .modify( b.left.begin() , _first = 2 );
+    b.left .modify( b.left.begin() , _second = 0.1 );
+    b.right.modify( b.right.begin(), ( _first = 0.1, _second = 1 ) );
 
-        save_bimap(b,oa);
-    }
+    BOOST_CHECK( b.left[1] == 0.1 );
 
-    // Reload it
-    {
-        bm b;
+    b.left [  1] = 0.2;
+    b.right[0.2] =   2;
 
-        std::istringstream iss(oss.str());
-        boost::archive::text_iarchive ia(iss);
+    BOOST_CHECK( b.left[2] == 0.2 );
 
-        ia >> b;
+    BOOST_CHECK( b.size() == 1 );
 
-        BOOST_CHECK( std::equal( b.begin(), b.end(), data.begin() ) );
+    b.replace( b.begin(), bm::relation( 3, 0.3 ) );
 
-        const_iterator_type_by< member_at::left, bm >::type left_iter;
+    BOOST_CHECK( b.left[3] == 0.3 );
 
-        ia >> left_iter;
+    b.modify( b.begin(), ( _left = 2, _right = 0.2 ) );
 
-        BOOST_CHECK( left_iter == b.left.begin() );
+    BOOST_CHECK( b.left[2] == 0.2 );
 
-        bm::const_iterator iter;
+    b.left [  1] = 0.1;
 
-        ia >> iter;
-
-        BOOST_CHECK( iter == ++b.begin() );
-    }
-
+    BOOST_CHECK( b.right[0.1] == 1 );
+    BOOST_CHECK( b.size() == 2 );
 }
 
 
 int test_main( int, char* [] )
 {
-    test_bimap_serialization();
+    test_bimap_modify();
     return 0;
 }
 
