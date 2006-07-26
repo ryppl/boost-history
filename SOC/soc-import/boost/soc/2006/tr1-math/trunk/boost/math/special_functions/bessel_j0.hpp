@@ -13,7 +13,7 @@
 
 // Bessel function of the first kind of order zero
 // x <= 8, minimax rational approximations on root-bracketing intervals
-// x > 8, asymptotic approximation in Hart, Computer Approximations, 1968
+// x > 8, Hankel asymptotic expansion in Hart, Computer Approximations, 1968
 
 namespace boost { namespace math {
 

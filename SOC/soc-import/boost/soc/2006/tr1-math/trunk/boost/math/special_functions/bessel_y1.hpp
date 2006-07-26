@@ -19,7 +19,7 @@
 
 // Bessel function of the second kind of order one
 // x <= 8, minimax rational approximations on root-bracketing intervals
-// x > 8, asymptotic approximation in Hart, Computer Approximations, 1968
+// x > 8, Hankel asymptotic expansion in Hart, Computer Approximations, 1968
 
 namespace boost { namespace math {
 
@@ -98,8 +98,8 @@ T bessel_y1(T x)
          9.0593769594993125859e+01L,
          1.0L,
     };
-    static const T x1  =  2.1971413260310170351e+0L,
-                   x2  =  5.4296810407941351328e+0L,
+    static const T x1  =  2.1971413260310170351e+00L,
+                   x2  =  5.4296810407941351328e+00L,
                    x11 =  5.620e+02L,
                    x12 =  1.8288260310170351490e-03L,
                    x21 =  1.3900e+03L,
