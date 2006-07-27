@@ -436,10 +436,12 @@ file_handle::posix_remap(handle_type h)
             (system_error("boost::process::detail::file_handle::remap",
                           "dup2(2) failed", errno));
 
-    if (::close(m_handle) == -1)
+    if (::close(m_handle) == -1) {
+        ::close(h);
         boost::throw_exception
             (system_error("boost::process::detail::file_handle::remap",
                           "close(2) failed", errno));
+    }
 
     m_handle = h;
 }
