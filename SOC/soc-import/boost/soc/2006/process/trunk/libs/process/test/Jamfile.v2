@@ -40,6 +40,7 @@ test-suite process :
     [ compile include_basic_process_test.cpp : : ]
     [ compile include_child_test.cpp : : ]
     [ compile include_command_line_test.cpp : : ]
+    [ compile include_detail_command_line_ops_test.cpp : : ]
     [ compile include_detail_environment_test.cpp : : ]
     [ compile include_detail_file_handle_test.cpp : : ]
     [ compile include_detail_pipe_test.cpp : : ]
@@ -57,6 +58,12 @@ test-suite process :
     [ compile include_top_test.cpp : : ]
 
     [ run command_line_test.cpp
+        :
+        :
+        : <library>$(BOOST_ROOT)//unit_test_framework
+        ]
+
+    [ run command_line_ops_test.cpp
         :
         :
         : <library>$(BOOST_ROOT)//unit_test_framework

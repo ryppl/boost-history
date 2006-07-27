@@ -9,35 +9,11 @@
 // at http://www.boost.org/LICENSE_1_0.txt.)
 //
 
-#include <cstdlib>
-#include <cstring>
-
 #include <boost/process/command_line.hpp>
 #include <boost/test/unit_test.hpp>
 
 namespace bp = ::boost::process;
 namespace but = ::boost::unit_test;
-
-namespace boost {
-namespace process {
-
-class launcher {
-public:
-#if defined(BOOST_PROCESS_POSIX_API)
-    static std::pair< size_t, char ** > posix_argv(const command_line& cl)
-    {
-        return cl.posix_argv();
-    }
-#elif defined(BOOST_PROCESS_WIN32_API)
-    static boost::shared_array< TCHAR > win32_cmdline(const command_line& cl)
-    {
-        return cl.win32_cmdline();
-    }
-#endif
-};
-
-} // namespace process
-} // namespace boost
 
 // ------------------------------------------------------------------------
 
@@ -137,50 +113,6 @@ test_shell(void)
 
 // ------------------------------------------------------------------------
 
-#if defined(BOOST_PROCESS_POSIX_API)
-static void
-test_posix_argv(void)
-{
-    bp::command_line cl("program");
-    cl.argument("arg1").argument("arg2").argument("arg3");
-
-    std::pair< size_t, char** > args = bp::launcher::posix_argv(cl);
-    size_t argc = args.first;
-    char** argv = args.second;
-
-    BOOST_REQUIRE_EQUAL(argc, static_cast<size_t>(4));
-
-    BOOST_REQUIRE(std::strcmp(argv[0], "program") == 0);
-    BOOST_REQUIRE(std::strcmp(argv[1], "arg1") == 0);
-    BOOST_REQUIRE(std::strcmp(argv[2], "arg2") == 0);
-    BOOST_REQUIRE(std::strcmp(argv[3], "arg3") == 0);
-    BOOST_REQUIRE(argv[4] == NULL);
-
-    delete [] argv[0];
-    delete [] argv[1];
-    delete [] argv[2];
-    delete [] argv[3];
-    delete [] argv;
-}
-#endif
-
-// ------------------------------------------------------------------------
-
-#if defined(BOOST_PROCESS_WIN32_API)
-static void
-test_win32_cmdline(void)
-{
-    bp::command_line cl("program");
-    cl.argument("arg1").argument("arg2").argument("arg3");
-
-    boost::shared_array< TCHAR > cmdline = bp::launcher::win32_cmdline(cl);
-    BOOST_REQUIRE(::_tcscmp(cmdline.get(),
-                            TEXT("program arg1 arg2 arg3")) == 0);
-}
-#endif
-
-// ------------------------------------------------------------------------
-
 but::test_suite *
 init_unit_test_suite(int argc, char* argv[])
 {
@@ -192,12 +124,6 @@ init_unit_test_suite(int argc, char* argv[])
     test->add(BOOST_TEST_CASE(&test_arguments_addition));
     test->add(BOOST_TEST_CASE(&test_arguments_types));
     test->add(BOOST_TEST_CASE(&test_shell));
-
-#if defined(BOOST_PROCESS_POSIX_API)
-    test->add(BOOST_TEST_CASE(&test_posix_argv));
-#elif defined(BOOST_PROCESS_WIN32_API)
-    test->add(BOOST_TEST_CASE(&test_win32_cmdline));
-#endif
 
     return test;
 }

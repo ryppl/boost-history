@@ -22,15 +22,10 @@
 #include <boost/process/config.hpp>
 
 #if defined(BOOST_PROCESS_POSIX_API)
-#   include <cstring>
-#   include <utility>
-#   include <boost/assert.hpp>
 #elif defined(BOOST_PROCESS_WIN32_API)
 #   include <tchar.h>
 #   include <windows.h>
-#   include <boost/assert.hpp>
 #   include <boost/process/exceptions.hpp>
-#   include <boost/shared_array.hpp>
 #   include <boost/throw_exception.hpp>
 #else
 #   error "Unsupported platform."
@@ -39,6 +34,8 @@
 #include <sstream>
 #include <string>
 #include <vector>
+
+#include <boost/assert.hpp>
 
 namespace boost {
 namespace process {
@@ -76,46 +73,6 @@ private:
     //! \brief List of arguments passed to the executable program.
     //!
     arguments_vector m_arguments;
-
-    friend class launcher;
-
-#if defined(BOOST_PROCESS_POSIX_API) || defined(BOOST_PROCESS_DOXYGEN)
-    //!
-    //! \brief Returns the list of arguments in the POSIX format.
-    //!
-    //! Converts the command line's list of arguments to the format
-    //! expected by the execve() system call in the \a envp parameter.
-    //! This is only provided as a convenience operation for the launcher.
-    //!
-    //! This operation is only available in POSIX systems.
-    //!
-    //! \return The first argument of the pair is an integer that indicates
-    //!         how many strings are stored in the second argument.  The
-    //!         second argument is a dynamically allocated vector of
-    //!         dynamically allocated strings holding the arguments to the
-    //!         executable.  The caller is responsible of freeing them.
-    //!
-    std::pair< size_t, char ** > posix_argv(void) const;
-#endif
-
-#if defined(BOOST_PROCESS_WIN32_API) || defined(BOOST_PROCESS_DOXYGEN)
-    //!
-    //! \brief Returns the list of arguments in the Win32 format.
-    //!
-    //! Converts the command line's list of arguments to the format
-    //! expected by the CreateProcess() system call in the \a lpCommandLine
-    //! parameter.  This is only provided as a convenience operation for
-    //! the launcher.
-    //!
-    //! This operation is only available in Win32 systems.
-    //!
-    //! \return A dynamically allocated string holding the command line
-    //!         to be passed to the executable.  It is returned in a
-    //!         shared_array object to ensure its release at the
-    //!         appropriate time.
-    //!
-    boost::shared_array< TCHAR > win32_cmdline(void) const;
-#endif
 
 public:
     //!
@@ -259,52 +216,6 @@ command_line::get_executable(void)
 {
     return m_executable;
 }
-
-// ------------------------------------------------------------------------
-
-#if defined(BOOST_PROCESS_POSIX_API)
-inline
-std::pair< size_t, char** >
-command_line::posix_argv(void)
-    const
-{
-    size_t nargs = m_arguments.size();
-    BOOST_ASSERT(nargs > 0);
-
-    char** argv = new char*[nargs + 1];
-    for (size_t i = 0; i < nargs; i++)
-        argv[i] = ::strdup(m_arguments[i].c_str());
-    argv[nargs] = NULL;
-
-    return std::pair< size_t, char ** >(nargs, argv);
-}
-#endif
-
-// ------------------------------------------------------------------------
-
-#if defined(BOOST_PROCESS_WIN32_API)
-inline
-boost::shared_array< TCHAR >
-command_line::win32_cmdline(void)
-    const
-{
-    SIZE_T length = 0;
-    for (arguments_vector::const_iterator iter = m_arguments.begin();
-         iter != m_arguments.end(); iter++)
-        length += (*iter).length() + 1;
-
-    boost::shared_array< TCHAR > cl(new TCHAR[length]);
-    ::_tcscpy_s(cl.get(), length, TEXT(""));
-
-    for (arguments_vector::size_type i = 0; i < m_arguments.size(); i++) {
-        ::_tcscat_s(cl.get(), length, TEXT(m_arguments[i].c_str()));
-        if (i != m_arguments.size() - 1)
-            ::_tcscat_s(cl.get(), length, TEXT(" "));
-    }
-
-    return cl;
-}
-#endif
 
 // ------------------------------------------------------------------------
 

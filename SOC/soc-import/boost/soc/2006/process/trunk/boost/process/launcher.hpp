@@ -26,6 +26,7 @@
 #include <boost/assert.hpp>
 #include <boost/optional.hpp>
 #include <boost/process/basic_child.hpp>
+#include <boost/process/detail/command_line_ops.hpp>
 #include <boost/process/detail/environment.hpp>
 #include <boost/process/detail/file_handle.hpp>
 #include <boost/process/exceptions.hpp>
@@ -268,7 +269,7 @@ launcher::posix_child_entry(const Command_Line& cl, const Attributes& attrs)
         ::exit(EXIT_FAILURE);
     }
 
-    std::pair< size_t, char** > args = cl.posix_argv();
+    std::pair< size_t, char** > args = detail::command_line_to_posix_argv(cl);
     char** envp = m_environment.envp();
 
     ::execve(cl.get_executable().c_str(), args.second, envp);
@@ -337,7 +338,8 @@ launcher::start_win32(const Command_Line& cl, const Attributes& attrs,
     PROCESS_INFORMATION pi;
     ::ZeroMemory(&pi, sizeof(pi));
 
-    boost::shared_array< TCHAR > cmdline = cl.win32_cmdline();
+    boost::shared_array< TCHAR > cmdline =
+        detail::command_line_to_win32_cmdline(cl);
     boost::scoped_array< TCHAR > executable
         (::_tcsdup(TEXT(cl.get_executable().c_str())));
     boost::scoped_array< TCHAR > workdir
