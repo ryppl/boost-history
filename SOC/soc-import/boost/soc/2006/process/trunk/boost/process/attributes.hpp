@@ -1,6 +1,5 @@
 //
 // Boost.Process
-// Implementation of the Attributes concept.
 //
 // Copyright (c) 2006 Julio M. Merino Vidal.
 //
@@ -9,8 +8,16 @@
 // at http://www.boost.org/LICENSE_1_0.txt.)
 //
 
+//!
+//! \file boost/process/attributes.hpp
+//!
+//! Includes the declaration of the attributes class.
+//!
+
 #if !defined(BOOST_PROCESS_ATTRIBUTES_HPP)
+/** \cond */
 #define BOOST_PROCESS_ATTRIBUTES_HPP
+/** \endcond */
 
 #include <boost/process/config.hpp>
 
@@ -40,17 +47,68 @@ class launcher;
 
 // ------------------------------------------------------------------------
 
+//!
+//! \brief Portable and simple implementation of the Attributes concept.
+//!
+//! This class provides a portable and simple implementation of the
+//! Attributes concept.  It includes the minimum common set of  attributes
+//! that are portable across the different operating systems supported by
+//! the library.
+//!
 class attributes
 {
+    //!
+    //! \brief The process' current work directory.
+    //!
+    //! The work directory is the directory in which the process is
+    //! currently running.  This may be changed during the process'
+    //! lifetime, although its main purpose is to set up a new child
+    //! process.
+    //!
+    //! Ideally this could be of boost::filesystem::path type, but it
+    //! is a regular string to avoid depending on Boost.Filesystem.
+    //!
     std::string m_work_directory;
 
 protected:
     friend class launcher;
+
+    //!
+    //! \brief Sets up the running process according to the attributes.
+    //!
+    //! Sets up the currently running process according to the attributes
+    //! described by this object.  This function is aimed basically at
+    //! POSIX systems which need to modify the current process before
+    //! doing the real execve(2) call.  That is, this function is called
+    //! in between the fork(2) and execve(2) calls, in the newly created
+    //! child process.
+    //!
+    //! This function does not change any object but has a lot of side
+    //! effects in the currently running process because it changes its
+    //! execution context.
+    //!
+    //! The launcher class is allowed to directly call this function.
+    //!
     void setup(void) const;
 
 public:
+    //!
+    //! \brief Creates a new set of attributes.
+    //!
+    //! Creates a new set of attributes that will be presumably used to
+    //! start a new child process.
+    //!
+    //! If \a work_directory is empty, the attributes' work directory is
+    //! set to point to the current working directory.  Otherwise it is
+    //! set to the given path.
+    //!
     explicit attributes(const std::string& work_directory = "");
 
+    //!
+    //! \brief Returns the work directory.
+    //!
+    //! Returns the work directory for an attributes object.
+    //!
     const std::string& get_work_directory(void) const;
 };
 
