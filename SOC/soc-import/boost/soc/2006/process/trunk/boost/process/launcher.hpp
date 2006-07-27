@@ -221,33 +221,30 @@ launcher::start_posix(const Command_Line& cl,
 
         posix_child_entry(cl, attrs);
         BOOST_ASSERT(false); // Not reached.
-    } else {
-        detail::file_handle fhstdin, fhstdout, fhstderr;
-
-        if (m_flags & REDIR_STDIN) {
-            pstdin->rend().close();
-            fhstdin = pstdin->wend();
-        }
-
-        if (m_flags & REDIR_STDOUT) {
-            pstdout->wend().close();
-            fhstdout = pstdout->rend();
-        }
-
-        if (m_flags & REDIR_STDERR) {
-            pstderr->wend().close();
-            fhstderr = pstderr->rend();
-        }
-
-        BOOST_ASSERT(!(m_flags & REDIR_STDIN) || fhstdin.is_valid());
-        BOOST_ASSERT(!(m_flags & REDIR_STDOUT) || fhstdout.is_valid());
-        BOOST_ASSERT(!(m_flags & REDIR_STDERR) || fhstderr.is_valid());
-        return basic_child< Command_Line, Attributes >
-            (pid, cl, attrs, fhstdin, fhstdout, fhstderr);
     }
 
-    BOOST_ASSERT(false); // Not reached.
+    BOOST_ASSERT(pid > 0);
+
     detail::file_handle fhstdin, fhstdout, fhstderr;
+
+    if (m_flags & REDIR_STDIN) {
+        pstdin->rend().close();
+        fhstdin = pstdin->wend();
+    }
+
+    if (m_flags & REDIR_STDOUT) {
+        pstdout->wend().close();
+        fhstdout = pstdout->rend();
+    }
+
+    if (m_flags & REDIR_STDERR) {
+        pstderr->wend().close();
+        fhstderr = pstderr->rend();
+    }
+
+    BOOST_ASSERT(!(m_flags & REDIR_STDIN) || fhstdin.is_valid());
+    BOOST_ASSERT(!(m_flags & REDIR_STDOUT) || fhstdout.is_valid());
+    BOOST_ASSERT(!(m_flags & REDIR_STDERR) || fhstderr.is_valid());
     return basic_child< Command_Line, Attributes >
         (pid, cl, attrs, fhstdin, fhstdout, fhstderr);
 }
