@@ -3,7 +3,7 @@ subproject libs/coroutine/build ;
 if $(UNIX) && ( $(OS) = LINUX )
 {
 	target_specific_sources =
-	  swapcontext.s
+	  swapcontext.c
 	  ;
 }
 

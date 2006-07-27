@@ -16,7 +16,7 @@ int coro_body(coroutine_type self,
   while(parm) {
     std::cout<<"in coroutine, parm: "<<parm<<"\n";
     --parm;
-    parm = self.yield(parm); //_to(other, parm);
+    parm = self.yield(parm); 
   }
   return parm;
 }

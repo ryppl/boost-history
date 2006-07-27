@@ -1,2 +1,2 @@
 #!/bin/sh
-BOOST_ROOT=~/src/boost bjam --v2 -d 
+BOOST_ROOT=~/src/boost bjam --v2 

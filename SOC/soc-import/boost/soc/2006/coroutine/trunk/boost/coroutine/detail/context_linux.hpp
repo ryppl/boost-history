@@ -129,7 +129,7 @@ namespace boost { namespace coroutines { namespace detail {
     template<typename T>
     inline
     void
-    trampoline(T * fun) { //fun in %eax
+    trampoline(T * fun) { 
       (*fun)();
       std::abort();
     }
@@ -193,7 +193,7 @@ namespace boost { namespace coroutines { namespace detail {
 	m_stack(posix::alloc_stack(m_stack_size)) {
 	m_sp = ((void**)m_stack + m_stack_size),
 	BOOST_ASSERT(m_stack);
-	typedef void fun(Functor*);// __attribute((noreturn, regparm(1)));
+	typedef void fun(Functor*);
 	fun * funp = trampoline;
 #ifndef BOOST_COROUTINE_INLINE_ASM
 	*--m_sp = &cb;     // parm 0 of trampoline;

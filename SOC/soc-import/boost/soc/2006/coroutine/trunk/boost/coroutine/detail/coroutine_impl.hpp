@@ -3,8 +3,10 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #ifndef BOOST_COROUTINE_COROUTINE_IMPL_HPP_20060601
 #define BOOST_COROUTINE_COROUTINE_IMPL_HPP_20060601
+#if defined(_MSC_VER)
 #pragma warning (push)
 #pragma warning (disable: 4355) //this used in base member initializer
+#endif 
 #include <cstddef>
 
 #include <algorithm> //for swap
@@ -390,5 +392,7 @@ namespace boost { namespace coroutines { namespace detail {
   }
 
 } } }
+#if defined(_MSC_VER)
 #pragma warning(pop)
+#endif
 #endif

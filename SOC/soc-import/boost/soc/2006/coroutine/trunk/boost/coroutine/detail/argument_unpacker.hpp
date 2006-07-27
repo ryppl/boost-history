@@ -75,7 +75,7 @@ namespace boost { namespace coroutines { namespace detail {
 		  BOOST_COROUTINE_ARGUMENT_UNPACKER_EX, ~);
 
   /**
-   * Inovke function object @p f passing  all 
+   * Inovoke function object @p f passing  all 
    * elements in tuple @p parms as distinct parameters.
    */
   template<typename Traits, typename Functor, typename Tuple>

@@ -32,18 +32,8 @@ namespace boost {namespace coroutines {namespace detail{
       return current != 0 && current != fiber_magic;
     }
 
-    fiber_ptr get_current_fiber() {
-
-      if(!is_fiber()) {
-	fiber_ptr current = ConvertThreadToFiber(0);
-	BOOST_ASSERT(current != 0);
-	(void)current;
-      } 
-      BOOST_ASSERT(is_fiber());
-      return GetCurrentFiber();
-    }
     /*
-     * Posix implementation for the context_impl_base class.
+     * Windows implementation for the context_impl_base class.
      * @note context_impl is not required to be consistent
      * If not initialized it can only be swapped out, not in 
      * (at that point it will be initialized).
@@ -57,38 +47,53 @@ namespace boost {namespace coroutines {namespace detail{
        * but can be saved in.
        */
       fibers_context_impl_base() :
-	m_fixup(is_fiber()),
-	m_ctx(get_current_fiber()) {}
+	m_ctx(0) {}
 	
       /*
        * Free function. Saves the current context in @p from
        * and restores the context in @p to. On windows the from
        * parameter is ignored. The current context is saved on the 
        * current fiber.
+       * Note that if the current thread is not a fiber, it will be
+       * converted to fiber on the fly on call and unconverted before
+       * return. This is expensive. The user should convert the 
+       * current thread to a fiber once on creation for better performance.
+       * Note that we can't leave the thread unconverted on return or else we 
+       * will leak resources on thread destruction. Do the right thing by
+       * default.
        */     
-
-	
       friend 
       void 
-      swap_context(fibers_context_impl_base&, 
+      swap_context(fibers_context_impl_base& from, 
 		   const fibers_context_impl_base& to,
 		   default_hint) {
-	SwitchToFiber(to.m_ctx); 
-      }
-
-      ~fibers_context_impl_base() {
-	if(m_fixup){
+	if(!is_fiber()) {
+	  BOOST_ASSERT(from.m_ctx == 0);
+	  from.m_ctx = ConvertThreadToFiber(0);
+	  BOOST_ASSERT(from.m_ctx != 0);
+	  
+	  SwitchToFiber(to.m_ctx); 
+	  
 	  bool result = ConvertFiberToThread();
 	  BOOST_ASSERT(result);
 	  (void)result;
+	  from.m_ctx = 0;
+	} else {
+	  bool call_from_main = from.m_ctx == 0;
+	  if(call_from_main)
+	    from.m_ctx = GetCurrentFiber();
+	  SwitchToFiber(to.m_ctx); 
+	  if(call_from_main)
+	    from.m_ctx = 0;
 	}
       }
+
+      ~fibers_context_impl_base() {}
     protected:
       explicit
       fibers_context_impl_base(fiber_ptr ctx) :
-	m_fixup(false),
 	m_ctx(ctx) {}
-      bool m_fixup;
+
       fiber_ptr m_ctx;
     };
 

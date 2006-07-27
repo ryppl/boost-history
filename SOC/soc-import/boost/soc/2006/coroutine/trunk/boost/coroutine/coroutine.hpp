@@ -22,6 +22,13 @@
 #include <boost/coroutine/detail/index.hpp>
 #include <boost/coroutine/detail/coroutine_traits.hpp>
 
+#ifdef _MSC_VER
+#define BOOST_COROUTINE_VCPP80_WORKAROUND 
+#else
+
+//for now, define this unconditionally for testing.
+#define BOOST_COROUTINE_VCPP80_WORKAROUND 
+#endif
 namespace boost { namespace coroutines {
 
 
@@ -34,26 +41,26 @@ namespace boost { namespace coroutines {
     typedef Signature signature_type;
     friend class detail::coroutine_accessor;
 
-    typedef typename detail::coroutine_traits<signature_type>
+    typedef BOOST_DEDUCED_TYPENAME detail::coroutine_traits<signature_type>
     ::result_type result_type;
 
-    typedef typename detail::coroutine_traits<signature_type>
+    typedef BOOST_DEDUCED_TYPENAME detail::coroutine_traits<signature_type>
     ::yield_result_type  yield_result_type;
 
-    typedef typename detail::coroutine_traits<signature_type>
+    typedef BOOST_DEDUCED_TYPENAME detail::coroutine_traits<signature_type>
     ::result_slot_type result_slot_type;
 
-    typedef typename detail::coroutine_traits<signature_type>
+    typedef BOOST_DEDUCED_TYPENAME detail::coroutine_traits<signature_type>
     ::result_slot_traits result_slot_traits;
 
-    typedef typename detail::coroutine_traits<signature_type>
+    typedef BOOST_DEDUCED_TYPENAME detail::coroutine_traits<signature_type>
     ::arg_slot_type arg_slot_type;
 
-    typedef typename detail::coroutine_traits<signature_type>
+    typedef BOOST_DEDUCED_TYPENAME detail::coroutine_traits<signature_type>
     ::arg_slot_traits arg_slot_traits;
         
     typedef detail::coroutine_impl<type, context_impl> impl_type;
-    typedef typename impl_type::pointer impl_ptr;  
+    typedef BOOST_DEDUCED_TYPENAME  impl_type::pointer impl_ptr;  
    
     coroutine(): m_pimpl(0) {}
 
@@ -61,7 +68,7 @@ namespace boost { namespace coroutines {
     explicit 
     coroutine (Functor f, 
 		   std::ptrdiff_t stack_size = detail::default_stack_size,
-	       typename boost::enable_if<detail::is_callable<Functor> >
+	       BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_callable<Functor> >
 	       ::type * = 0
 	       ) :
       m_pimpl(impl_type::create(f, stack_size)) {}
@@ -84,8 +91,6 @@ namespace boost { namespace coroutines {
       return *this;
     }
 
-
-    
     friend
     inline 
     void swap(coroutine& lhs, coroutine& rhs) {
@@ -93,7 +98,7 @@ namespace boost { namespace coroutines {
     }
 
 #   define BOOST_COROUTINE_generate_argument_n_type(z, n, traits_type) \
-    typedef typename traits_type ::template at<n>::type                \
+    typedef BOOST_DEDUCED_TYPENAME traits_type ::template at<n>::type                \
     BOOST_PP_CAT(BOOST_PP_CAT(arg, n), _type);                         \
     /**/
 
@@ -113,17 +118,10 @@ namespace boost { namespace coroutines {
 #   undef BOOST_COROUTINE_generate_argument_n_type
    
 #   define BOOST_COROUTINE_param_with_default(z, n, type_prefix)    \
-    BOOST_DEDUCED_TYPENAME call_traits                                          \
-    <BOOST_PP_CAT(BOOST_PP_CAT(type_prefix, n), _type)>::param_type       \
-    BOOST_PP_CAT(arg, n) =                                        \
-    BOOST_PP_CAT(BOOST_PP_CAT(type_prefix, n), _type)()                   \
-/**/
-
-#   define BOOST_COROUTINE_param_with_default_vc8(z, n, type_prefix)    \
-    /*BOOST_DEDUCED_TYPENAME*/ call_traits                                          \
-    <BOOST_PP_CAT(BOOST_PP_CAT(type_prefix, n), _type)>::param_type       \
-    BOOST_PP_CAT(arg, n) =                                        \
-    BOOST_PP_CAT(BOOST_PP_CAT(type_prefix, n), _type)()                   \
+    BOOST_DEDUCED_TYPENAME call_traits                              \
+    <BOOST_PP_CAT(BOOST_PP_CAT(type_prefix, n), _type)>::param_type \
+    BOOST_PP_CAT(arg, n) =                                          \
+    BOOST_PP_CAT(BOOST_PP_CAT(type_prefix, n), _type)()             \
 /**/
 
     result_type operator()
@@ -137,11 +135,11 @@ namespace boost { namespace coroutines {
 	   arg)));
       }
 
-#ifdef NO_VCPP80_WORKAROUND 
+#ifndef BOOST_COROUTINE_VCPP80_WORKAROUND 
     yield_result_type yield
     (BOOST_PP_ENUM
        (BOOST_COROUTINE_ARG_MAX,
-	BOOST_COROUTINE_param_with_default_vc8,
+	BOOST_COROUTINE_param_with_default,
 	BOOST_DEDUCED_TYPENAME yield_traits::arg)) {
       return yield_impl
 	(result_slot_type(BOOST_PP_ENUM_PARAMS
@@ -156,33 +154,88 @@ namespace boost { namespace coroutines {
      (BOOST_COROUTINE_ARG_MAX,
       BOOST_COROUTINE_param_with_default,
       typename Target::arg)) {
-      typedef typename Target::arg_slot_type type;
+      typedef BOOST_DEDUCED_TYPENAME Target::arg_slot_type type;
       return yield_to_impl
 	(target, type(BOOST_PP_ENUM_PARAMS
 	  (BOOST_COROUTINE_ARG_MAX, 
 	   arg)));
       }
 #else
+    
+    
+  private:
+    /* 
+     * VC8.0 can't handle the call_traits meta-invocation inside
+     * a function parameter list (except when it does, see operator()). 
+     * Splitting it in separate typedefs
+     * fixes the problem.
+     */
 
-    typedef typename call_traits<typename yield_traits::arg0_type>::param_type yield_call_arg0_type;
-    typedef typename call_traits<typename yield_traits::arg1_type>::param_type yield_call_arg1_type;
+#define BOOST_COROUTINE_param_typedef(z, n, prefix_tuple)  \
+    typedef BOOST_DEDUCED_TYPENAME                   \
+    call_traits<                                     \
+    BOOST_PP_CAT                                     \
+    (BOOST_PP_CAT                                    \
+     (BOOST_PP_TUPLE_ELEM(2, 0, prefix_tuple), n),   \
+     _type)                                          \
+      >::param_type                                  \
+    BOOST_PP_CAT                                     \
+    (BOOST_PP_CAT                                    \
+     (BOOST_PP_TUPLE_ELEM(2, 1, prefix_tuple), n),   \
+     _type)                                          \
+     /**/;
+    
+    /*
+     * Generate lines like this:
+     * 'typedef typename call_traits<typename yield_traits::argN_type>::param_type yield_call_argN_type;'
+     */
+    BOOST_PP_REPEAT(BOOST_COROUTINE_ARG_MAX, 
+		    BOOST_COROUTINE_param_typedef, 
+		    (BOOST_DEDUCED_TYPENAME yield_traits::arg, yield_call_arg));
 
+    /*
+     * Generate lines like this:
+     * 'typedef typename call_traits<argN_type>::param_type call_argN_type;'
+     */
+    BOOST_PP_REPEAT(BOOST_COROUTINE_ARG_MAX,
+		    BOOST_COROUTINE_param_typedef,
+		    (arg, call_arg));
+
+#undef BOOST_COROUTINE_param_typedef
+  public:
+#undef  BOOST_COROUTINE_param_with_default
+#define BOOST_COROUTINE_param_with_default(z, n, prefix_tuple) \
+    BOOST_PP_CAT(BOOST_PP_CAT                                  \
+		 (BOOST_PP_TUPLE_ELEM(2, 0, prefix_tuple),     \
+		  n), _type)                                   \
+      BOOST_PP_CAT(arg, n) =                                   \
+    BOOST_PP_CAT(BOOST_PP_CAT                                  \
+		 (BOOST_PP_TUPLE_ELEM(2, 1, prefix_tuple),     \
+		  n), _type)()                                 \
+      /**/
+     
     yield_result_type yield
-    (yield_call_arg0_type arg0 = yield_traits::arg0_type(),
-     yield_call_arg1_type arg1 = yield_traits::arg1_type()) {
-      return yield_impl(result_slot_type(arg0, arg1));
+    (BOOST_PP_ENUM(BOOST_COROUTINE_ARG_MAX,
+		   BOOST_COROUTINE_param_with_default,
+		   (yield_call_arg ,
+		    BOOST_DEDUCED_TYPENAME yield_traits::arg))) {
+      return yield_impl
+      (result_slot_type(BOOST_PP_ENUM_PARAMS(BOOST_COROUTINE_ARG_MAX,arg)));
     }
 
-    typedef typename call_traits<arg0_type>::param_type call_arg0_type;
-    typedef typename call_traits<arg1_type>::param_type call_arg1_type;
 
     template<typename Target>
     yield_result_type yield_to
-    (Target& target, 
-     typename Target::call_arg0_type arg0 = Target::arg0_type(),
-     typename Target::call_arg1_type arg1 =  Target::arg1_type()) {
+    (Target& target
+     BOOST_PP_ENUM_TRAILING
+     (BOOST_COROUTINE_ARG_MAX,
+      BOOST_COROUTINE_param_with_default,
+      (BOOST_DEDUCED_TYPENAME Target::call_arg, 
+       BOOST_DEDUCED_TYPENAME Target::arg))) {
       typedef typename Target::arg_slot_type type;
-      return yield_to_impl(target, type(arg0, arg1));
+      return yield_to_impl(target, type
+			   (BOOST_PP_ENUM_PARAMS
+			    (BOOST_COROUTINE_ARG_MAX, arg)));
     }
 #endif
 
@@ -242,14 +295,17 @@ namespace boost { namespace coroutines {
 
     /**
      * @note The use of remove_tuple is very likely to 
-     * prevent NRVO. This might be worked around, but for now 
+     * prevent NRVO. This could be worked around, but for now 
      * leave it as is. For constructors and destructors without
      * side effects the compiler still does a good job.
      * @note The current code requires result type(s) to be 
      * DefaultConstructible. This can be avoided using
      * boost::optional, but it would further prevent NRVO.
      * This can't be proabably avoided without using dirty tricks
-     * (i.e. somehow getting the address of the return frame)
+     * (i.e. somehow getting the address of the return frame).
+     * ... later... just do not bother with NRVO. With simple types
+     * the compiler already does a good job. With complex types
+     * it probably does not matter.
      */
     result_type call_impl(arg_slot_type args) {
       BOOST_ASSERT(m_pimpl);
