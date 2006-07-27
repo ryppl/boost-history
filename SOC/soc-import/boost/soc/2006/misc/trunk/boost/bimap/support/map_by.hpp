@@ -7,20 +7,17 @@
 //
 // See http://www.boost.org/libs/bimap for library home page.
 
-/// \file relation/support/get.hpp
-/// \brief get<tag>(r) function
+/// \file support/map_by.hpp
+/// \brief map_by<tag>(b) function
 
-#ifndef BOOST_BIMAP_RELATION_SUPPORT_GET_HPP
-#define BOOST_BIMAP_RELATION_SUPPORT_GET_HPP
+#ifndef BOOST_BIMAP_SUPPORT_MAP_BY_HPP
+#define BOOST_BIMAP_SUPPORT_MAP_BY_HPP
 
-
-#include <boost/bimap/relation/support/value_type_of.hpp>
+#include <boost/bimap/support/map_type_by.hpp>
 #include <boost/bimap/relation/detail/access_builder.hpp>
-
 
 namespace boost {
 namespace bimap {
-namespace relation {
 namespace support {
 
 // Since it is very error-prone to directly write the hole bunch
@@ -42,8 +39,8 @@ namespace support {
 /*
     namespace result_of {
 
-    template< class Tag, class Relation >
-    struct get<Tag,Relation>;
+    template< class Tag, class Bimap >
+    struct map_by<Tag,Bimap>;
     {
         typedef -UNDEFINED- type;
     };
@@ -54,8 +51,8 @@ namespace support {
 
 BOOST_BIMAP_SYMMETRIC_ACCESS_RESULT_OF_BUILDER
 (
-    get,
-    value_type_of
+    map_by,
+    map_type_by
 );
 
 // Implementation
@@ -63,54 +60,42 @@ BOOST_BIMAP_SYMMETRIC_ACCESS_RESULT_OF_BUILDER
 
 BOOST_BIMAP_SYMMETRIC_ACCESS_IMPLEMENTATION_BUILDER
 (
-    get,
-    Relation,
-    rel,
-    return rel.get_left(),
-    return rel.get_right()
+    map_by,
+    Bimap,
+    b,
+    return b.left,
+    return b.right
 );
 
 // Interface
 // --------------------------------------------------------------------------
 
-/// \brief Gets the value of one of the members in a symmetrical class.
+/// \brief Gets a map view of a bidirectional map
 /**
-\param r is a symmetrical type
-\return Convertible to \c value_type_of<Tag,Relation>::type
-Instead of using \c value_type_of<Tag,Relation>::type this functions use
+Convertible to \c map_type_by<Tag,Bimap>::type
+Instead of using \c map_type_by<Tag,Bimap>::type this functions use
 \b Boost.call_traits to find the best way to return this value. To help
 the user of this function the following metafunction is provided
 \code
 
-namespace result_of {
-
-template< class Tag, class Relation >
-struct get<Tag,Relation>;
-{
-    typedef -UNDEFINED- type;
-};
-
-} // namespace result_of
+template< class Tag, class Bimap >
+struct map_by( Bimap & b );
 
 \endcode
 
 See also member_at, value_type_of.
-\ingroup relation_group
+\ingroup bimap_group
                                                                         **/
 
-template< class Tag, class Relation >
-typename result_of::get<Tag,Relation>::type
-get( Relation & r );
 
 BOOST_BIMAP_SYMMETRIC_ACCESS_INTERFACE_BUILDER
 (
-    get
+    map_by
 );
 
 } // namespace support
-} // namespace relation
 } // namespace bimap
 } // namespace boost
 
-#endif // BOOST_BIMAP_RELATION_SUPPORT_GET_HPP
+#endif // BOOST_BIMAP_SUPPORT_MAP_BY_HPP
 

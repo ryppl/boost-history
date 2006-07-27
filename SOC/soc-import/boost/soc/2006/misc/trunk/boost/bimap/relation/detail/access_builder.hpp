@@ -18,6 +18,9 @@
 #include <boost/call_traits.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/not.hpp>
+#include <boost/utility/enable_if.hpp>
+
 
 /******************************************************************************
                    BIMAP SYMMETRIC ACCESS RESULT OF
@@ -68,6 +71,7 @@ struct NAME
 /*///////////////////////////////////////////////////////////////////////////*/
 
 
+
 /******************************************************************************
                    BIMAP SYMMETRIC ACCESS IMPLEMENTATION
 *******************************************************************************
@@ -82,6 +86,7 @@ typename result_of::NAME<Tag,SymmetricType>::type
 
 ******************************************************************************/
 
+
 /*///////////////////////////////////////////////////////////////////////////*/
 
 #define BOOST_BIMAP_SYMMETRIC_ACCESS_IMPLEMENTATION_BUILDER(                  \
@@ -95,62 +100,64 @@ typename result_of::NAME<Tag,SymmetricType>::type
                                                                               \
     namespace detail {                                                        \
                                                                               \
-    template< class Tag, class TP_SYMMETRIC >                                 \
-    typename result_of::NAME<Tag,TP_SYMMETRIC>::type                          \
-        NAME( Tag, TP_SYMMETRIC & PARAMETER_NAME );                           \
                                                                               \
     template< class TP_SYMMETRIC >                                            \
+    typename enable_if< mpl::not_< is_const<TP_SYMMETRIC> >,                  \
+                                                                              \
     typename result_of::NAME                                                  \
     <                                                                         \
         ::boost::bimap::relation::member_at::left,TP_SYMMETRIC                \
                                                                               \
     >::type                                                                   \
                                                                               \
-        NAME( ::boost::bimap::relation::member_at::left,                      \
-              TP_SYMMETRIC & PARAMETER_NAME )                                 \
+    >::type NAME( ::boost::bimap::relation::member_at::left,                  \
+                  TP_SYMMETRIC & PARAMETER_NAME )                             \
     {                                                                         \
         LEFT_BODY;                                                            \
     }                                                                         \
                                                                               \
     template< class TP_SYMMETRIC >                                            \
+    typename enable_if< mpl::not_< is_const<TP_SYMMETRIC> >,                  \
+                                                                              \
     typename result_of::NAME                                                  \
     <                                                                         \
         ::boost::bimap::relation::member_at::right,TP_SYMMETRIC               \
                                                                               \
     >::type                                                                   \
                                                                               \
-        NAME( ::boost::bimap::relation::member_at::right,                     \
-              TP_SYMMETRIC & PARAMETER_NAME )                                 \
+    >::type NAME( ::boost::bimap::relation::member_at::right,                 \
+                  TP_SYMMETRIC & PARAMETER_NAME )                             \
     {                                                                         \
         RIGHT_BODY;                                                           \
     }                                                                         \
                                                                               \
-    template< class Tag, class TP_SYMMETRIC >                                 \
-    typename result_of::NAME<Tag,const TP_SYMMETRIC>::type                    \
-        NAME( Tag, const TP_SYMMETRIC & PARAMETER_NAME );                     \
                                                                               \
     template< class TP_SYMMETRIC >                                            \
+    typename enable_if< is_const<TP_SYMMETRIC> ,                              \
+                                                                              \
     typename result_of::NAME                                                  \
     <                                                                         \
-        ::boost::bimap::relation::member_at::left,const TP_SYMMETRIC          \
+        ::boost::bimap::relation::member_at::left,TP_SYMMETRIC                \
                                                                               \
     >::type                                                                   \
                                                                               \
-        NAME( ::boost::bimap::relation::member_at::left,                      \
-              const TP_SYMMETRIC & PARAMETER_NAME )                           \
+    >::type NAME( ::boost::bimap::relation::member_at::left,                  \
+                  TP_SYMMETRIC & PARAMETER_NAME )                             \
     {                                                                         \
         LEFT_BODY;                                                            \
     }                                                                         \
                                                                               \
     template< class TP_SYMMETRIC >                                            \
+    typename enable_if< is_const<TP_SYMMETRIC> ,                              \
+                                                                              \
     typename result_of::NAME                                                  \
     <                                                                         \
-        ::boost::bimap::relation::member_at::right,const TP_SYMMETRIC         \
+        ::boost::bimap::relation::member_at::right,TP_SYMMETRIC               \
                                                                               \
     >::type                                                                   \
                                                                               \
-        NAME( ::boost::bimap::relation::member_at::right,                     \
-              const TP_SYMMETRIC & PARAMETER_NAME )                           \
+    >::type NAME( ::boost::bimap::relation::member_at::right,                 \
+                  TP_SYMMETRIC & PARAMETER_NAME )                             \
     {                                                                         \
         RIGHT_BODY;                                                           \
     }                                                                         \
@@ -178,8 +185,11 @@ typename result_of::NAME<Tag,SymmetricType>::type
     )                                                                         \
                                                                               \
     template< class Tag, class SymmetricType >                                \
+    typename enable_if< mpl::not_< is_const<SymmetricType> >,                 \
+                                                                              \
     typename result_of::NAME<Tag,SymmetricType>::type                         \
-    NAME( SymmetricType & s )                                                 \
+                                                                              \
+    >::type NAME( SymmetricType & s )                                         \
     {                                                                         \
         typedef typename ::boost::bimap::relation::support::member_with_tag   \
         <                                                                     \
@@ -191,8 +201,11 @@ typename result_of::NAME<Tag,SymmetricType>::type
     }                                                                         \
                                                                               \
     template< class Tag, class SymmetricType >                                \
-    typename result_of::NAME<Tag,const SymmetricType>::type                   \
-    NAME( const SymmetricType & s )                                           \
+    typename enable_if< is_const<SymmetricType>,                              \
+                                                                              \
+    typename result_of::NAME<Tag,SymmetricType>::type                         \
+                                                                              \
+    >::type NAME( SymmetricType & s )                                         \
     {                                                                         \
         typedef typename ::boost::bimap::relation::support::member_with_tag   \
         <                                                                     \

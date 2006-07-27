@@ -23,6 +23,8 @@ namespace bimap {
 namespace container_adaptor {
 namespace detail {
 
+#ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
+
 template
 <
     class Base, class Iterator, class ConstIterator,
@@ -67,6 +69,8 @@ struct unordered_associative_container_adaptor_base
 
     > type;
 };
+
+#endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 
 /// \brief Container adaptor to build a type that is compliant to the concept of an unordered associative container.

@@ -18,6 +18,9 @@
 #include <boost/mpl/assert.hpp>
 #include <boost/utility.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/type_traits/is_const.hpp>
+#include <boost/mpl/not.hpp>
+#include <boost/utility/enable_if.hpp>
 
 namespace boost {
 namespace bimap {
@@ -36,19 +39,27 @@ compile time that the desired view is supported by the mutant class.
 See also mutant, can_mutate_in.
 \ingroup mutant_group
                                                                             **/
+
+
 template< class View, class Type >
-View& mutate( Type & m )
+typename enable_if< mpl::not_< is_const< Type > >,
+
+View&
+
+>::type mutate( Type & m )
 {
     BOOST_MPL_ASSERT(( ::boost::mpl::contains<typename Type::mutant_views,View> ));
-    BOOST_STATIC_ASSERT( sizeof(Type) == sizeof(View) );
     return *reinterpret_cast< View* >(addressof(m));
 }
 
 template< class View, class Type >
-const View& mutate( const Type & m )
+typename enable_if< is_const< Type >,
+
+const View&
+
+>::type mutate( Type & m )
 {
     BOOST_MPL_ASSERT(( ::boost::mpl::contains<typename Type::mutant_views,View> ));
-    BOOST_STATIC_ASSERT( sizeof(Type) == sizeof(View) );
     return *reinterpret_cast< const View* >(addressof(m));
 }
 

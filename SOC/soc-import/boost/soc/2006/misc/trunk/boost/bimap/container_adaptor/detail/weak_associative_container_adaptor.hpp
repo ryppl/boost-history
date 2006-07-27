@@ -27,6 +27,11 @@ namespace bimap {
 namespace container_adaptor {
 namespace detail {
 
+// This class serves no purpose now, due to internal redesign. It will be eliminated
+// by merging it with associative_contaniner_adaptor.
+
+
+#ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 template
 <
@@ -68,6 +73,8 @@ struct weak_associative_container_adaptor_base
 
     > type;
 };
+
+#endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 
 /// \brief Container adaptor to build a type that is compliant to the concept of a weak associative container.

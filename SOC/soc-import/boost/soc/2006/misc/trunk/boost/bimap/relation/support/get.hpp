@@ -13,10 +13,12 @@
 #ifndef BOOST_BIMAP_RELATION_SUPPORT_GET_HPP
 #define BOOST_BIMAP_RELATION_SUPPORT_GET_HPP
 
-
+#include <boost/bimap/relation/standard_pair_view.hpp>
+#include <boost/bimap/detail/mpl/bool_result.hpp>
 #include <boost/bimap/relation/support/value_type_of.hpp>
 #include <boost/bimap/relation/detail/access_builder.hpp>
 
+//#include <boost/bimap/relation/standard_pair_view.hpp>
 
 namespace boost {
 namespace bimap {
@@ -58,6 +60,8 @@ BOOST_BIMAP_SYMMETRIC_ACCESS_RESULT_OF_BUILDER
     value_type_of
 );
 
+
+
 // Implementation
 // -------------------------------------------------------------------------
 
@@ -69,6 +73,7 @@ BOOST_BIMAP_SYMMETRIC_ACCESS_IMPLEMENTATION_BUILDER
     return rel.get_left(),
     return rel.get_right()
 );
+
 
 // Interface
 // --------------------------------------------------------------------------
@@ -98,14 +103,44 @@ See also member_at, value_type_of.
 \ingroup relation_group
                                                                         **/
 
-template< class Tag, class Relation >
-typename result_of::get<Tag,Relation>::type
-get( Relation & r );
+
+
+template< class Type >
+struct is_standard_pair_view
+{
+    BOOST_BIMAP_MPL_BOOL_RESULT(false)
+};
+
+template< class FirstType, class SecondType, class Layout >
+struct is_standard_pair_view< standard_pair_view<FirstType,SecondType,Layout> >
+{
+    BOOST_BIMAP_MPL_BOOL_RESULT(true)
+};
+
+template< class Tag, class Symmetric >
+typename enable_if< is_standard_pair_view< Symmetric >,
+
+typename result_of::get< Tag, Symmetric >::type
+
+>::type
+get( Symmetric s )
+{
+    typedef typename ::boost::bimap::relation::support::member_with_tag
+    <
+        Tag, Symmetric
+
+    >::type member_at_tag;
+
+    return detail::get(member_at_tag(),s);
+}
+
 
 BOOST_BIMAP_SYMMETRIC_ACCESS_INTERFACE_BUILDER
 (
     get
 );
+
+
 
 } // namespace support
 } // namespace relation

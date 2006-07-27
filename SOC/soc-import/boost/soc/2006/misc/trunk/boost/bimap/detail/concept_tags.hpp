@@ -77,6 +77,7 @@ struct right_based : ::boost::bimap::detail::side_based_tag
 
 #endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
+typedef mpl::_ _relation;
 
 } // namespace bimap
 } // namespace boost

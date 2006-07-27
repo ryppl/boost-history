@@ -23,6 +23,23 @@ namespace bimap {
 namespace relation {
 namespace support {
 
+
+/** \fn boost::bimap::relation::support::pair_by
+
+\brief Gets a pair view of the relation.
+
+\code
+
+template< class Tag, class Relation >
+typename result_of::pair_by<Tag,Relation>::type
+    pair_by( Relation & );
+
+\endcode
+
+\ingroup relation_group
+                                                                        **/
+
+
 #ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 // Since it is very error-prone to directly write the hole bunch
@@ -76,7 +93,6 @@ struct pair_by
 
 } // namespace result_of
 
-#endif // BOOST_BIMAP_DOXIGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 // Implementation
 // -------------------------------------------------------------------------
@@ -90,25 +106,18 @@ BOOST_BIMAP_SYMMETRIC_ACCESS_IMPLEMENTATION_BUILDER
     return rel.get_right_pair()
 );
 
-
-
 // Interface
 // --------------------------------------------------------------------------
-
-/// \brief Gets a pair view of the relation.
-/**
-
-\ingroup relation_group
-                                                                        **/
-
-template< class Tag, class Relation >
-typename result_of::pair_by<Tag,Relation>::type
-pair_by( Relation & );
 
 BOOST_BIMAP_SYMMETRIC_ACCESS_INTERFACE_BUILDER
 (
     pair_by
 );
+
+
+#endif // BOOST_BIMAP_DOXIGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
+
+
 
 } // namespace support
 } // namespace relation
