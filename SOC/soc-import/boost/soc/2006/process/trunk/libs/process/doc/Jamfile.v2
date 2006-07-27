@@ -44,6 +44,7 @@ boostbook standalone
         <xsl:param>toc.section.depth=2
         <xsl:param>section.autolabel=1
         <xsl:param>section.autolabel.max.depth=3
+        <xsl:param>chapter.autolabel=0
     ;
 
 stage html
