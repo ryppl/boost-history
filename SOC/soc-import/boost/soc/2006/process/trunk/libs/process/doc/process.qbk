@@ -36,8 +36,8 @@
 
 [/ ---------------------------------------------------------------------- ]
 
-[include process_intro.qbk]
-[include process_concepts.qbk]
-[include process_design.qbk]
+[include introduction.qbk]
+[include concepts.qbk]
+[include design.qbk]
 [xinclude autodoc.boostbook]
-[include process_ack.qbk]
+[include acknowledgements.qbk]
