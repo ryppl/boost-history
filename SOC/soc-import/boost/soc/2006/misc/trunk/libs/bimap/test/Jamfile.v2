@@ -23,14 +23,14 @@ test-suite "relation_test"
     # with struc { TA s; TB f; }; and this is not in the standard.
     # However, most modern compiler support it.
     #
-    [ run test_mutant.cpp                                                   ]
-    [ run test_mutant_relation.cpp                                          ]
+    #[ run test_mutant.cpp                                                   ]
+    #[ run test_mutant_relation.cpp                                          ]
 
     # Enable this to force the standard_relation test
     # It is not always enabled because if the mutant idiom is supported, then it
     # is not needed and if not, it is tested in test_relation.cpp.
     #
-    [ run test_standard_relation.cpp                                        ]
+    #[ run test_standard_relation.cpp                                        ]
 
     [ run test_relation.cpp                                                   ]
     ;

@@ -340,12 +340,14 @@ another constraints or simple order it differently.
 By default Boost.Bimap will base the set of the relation in the left key
 but the user is allowed to choose between:
 
-* based_in_left_key
-* based_in_right_key
+* left_based
+* right_based
 * set_of_relation<>
 * multiset_of_relation<>
 * unordered_set_of_relation<>
 * unordered_multiset_of_relation<>
+* list_of_relation<>
+* vector_of_relation<>
 
 In the first two cases there are only two indexes in the multi_index_core and
 for this reason are the prefeared option.
@@ -437,5 +439,191 @@ __UNDER_CONSTRUCTION__
 
 [endsect]
 
+[section Relation with other Boost Libraries]
+
+[section Optional Boost Libraries, that plays well with Boost.Bimap]
+
+[table
+[[Name][Description][author][Purpose]]
+
+[[ __BOOST_SERIALIZATION__ ][
+Serialization for persistence and marshalling]
+[Robert Ramey]
+[Serialization support for bimap containers and iterators]]
+
+[[ __BOOST_ASSIGN__ ][
+Filling containers with constant or generated data has never been easier]
+[Thorsten Ottosen]
+[Help to fill a bimap or views of it]]
+
+[[ __BOOST_HASH__ ][
+A TR1 hash function object that can be extended to hash user defined types]
+[Daniel James]
+[Default hashing function]]
+
+[[ __BOOST_LAMBDA__ ][
+Define small unnamed function objects at the actual call site, and more]
+[from Jaakko Järvi, Gary Powell]
+[Functors for modify, range, lower_bound and upper_bound]]
+
+[[ __BOOST_RANGE__ ][
+A new infrastructure for generic algorithms that builds on top of the new
+iterator concepts]
+[Thorsten Ottosen]
+[Range based algorithms]]
+
+[[ __BOOST_PROPERTY_MAP__ ][
+Concepts defining interfaces which map key objects to value objects]
+[Jeremy Siek]
+[Integration with BGL]]
+]
+
+[endsect]
+
+[section Boost.Serialization]
+
+[table
+[[Name][Description][Author][Purpose]]
+[[ __BOOST_SERIALIZATION__ ][
+Serialization for persistence and marshalling]
+[Robert Ramey]
+[Serialization support for bimap containers and iterators]]
+]
+
+[endsect]
+
+[section Boost.Assign]
+
+[table
+[[Name][Description][Author][Purpose]]
+[[ __BOOST_ASSIGN__ ][
+Filling containers with constant or generated data has never been easier]
+[Thorsten Ottosen]
+[Help to fill a bimap or views of it]]
+]
+
+The purpose of this library is to make it easy to fill containers with data by
+overloading operator,() and operator()(). These two operators make it possible
+to construct lists of values that are then copied into a container.\n
+These lists are particularly useful in learning, testing, and prototyping
+situations, but can also be handy otherwise. The library comes with predefined
+operators for the containers of the standard library, but most functionality will
+work with any standard compliant container. The library also makes it possible
+to extend user defined types so for example a member function can be called for
+a list of values instead of its normal arguments.\n
+
+Boost.Assign can be used with bimap containers.
+For example, `list_of` can be used to initialize a bimap in the following way:
+
+    typedef bimap<int,std::string> bm;
+
+    bm b = list_of< bm::relation > (1,"one") (2,"two") (3,"three");
+
+The views of a bimap are signature compatible with their standard counterparts, so
+we can use other Boost.Assign utilities with them. For example:
+
+    bimap< multiset_of<int>, list_of<double> > b;
+
+    // Since it is left_based the main view is a multiset, so we use insert
+
+    insert( b ) (1,0.1) (2,0.2) (3,0.3);
+
+    // The left map view is a multiset, again we use insert
+
+    insert( b.left ) (4,0.4) (5,0.5) (6,0.6) (7,0.7);
+
+    // The right map view is a list so we use push_back here
+    // Note the order of the elements in the list!
+
+    push_back( b.right ) (0.8,8) (0.9,9);
+
+[endsect]
+
+[section Boost.Hash]
+
+[table
+[[Name][Description][Author][Purpose]]
+[[ __BOOST_HASH__ ][
+A TR1 hash function object that can be extended to hash user defined types]
+[Daniel James]
+[Default hashing function]]
+]
+
+[endsect]
+
+[section Boost.Lambda]
+
+[table
+[[Name][Description][Author][Purpose]]
+[[ __BOOST_LAMBDA__ ][
+Define small unnamed function objects at the actual call site, and more]
+[from Jaakko Järvi, Gary Powell]
+[Functors for modify, range, lower_bound and upper_bound]]
+]
+
+
+[endsect]
+
+[section Boost.Range]
+
+[table
+[[Name][Description][Author][Purpose]]
+[[ __BOOST_RANGE__ ][
+A new infrastructure for generic algorithms that builds on top of the new
+iterator concepts]
+[Thorsten Ottosen]
+[Range based algorithms]]
+]
+
+[endsect]
+
+[section Boost.Property_map]
+
+[table
+[[Name][Description][Author][Purpose]]
+[[ __BOOST_PROPERTY_MAP__ ][
+Concepts defining interfaces which map key objects to value objects]
+[Jeremy Siek]
+[Integration with BGL]]
+]
+
+The Boost Property Map Library consists mainly of interface specifications in the form of
+concepts (similar to the iterator concepts in the STL [2]). These interface specifications
+are intended for use by implementors of generic libraries in communicating requirements on
+template parameters to their users. In particular, the Boost Property Map concepts define a
+general purpose interface for mapping key objects to corresponding value objects, thereby
+hiding the details of how the mapping is implemented from algorithms.
+
+The need for the property map interface came from the Boost Graph Library (BGL), which
+contains many examples of algorithms that use the property map concepts to specify their
+interface. For an example, note the ColorMap template parameter of the  breadth_first_search.
+In addition, the BGL contains many examples of concrete types that implement the property map
+interface. The  adjacency_list class implements property maps for accessing objects
+(properties) that are attached to vertices and edges of the graph.
+
+Two of Boost.Bimap map views, the set and unordered_set counterpat are read/write property
+maps. In order to use it you have to include one of the headers:
+
+    #include <boost/bimap/property_map/set_support.hpp>
+    #include <boost/bimap/property_map/unordered_set_support.hpp>
+
+[endsect]
+
+[endsect]
+
+[section Compiler Specifics]
+
+[table
+[[Compiler  ][State                               ]]
+[[GCC 3.4   ][Not yet tested (Will be supported)  ]]
+[[GCC 4.0   ][Supported                           ]]
+[[VS 7.1    ][Supported                           ]]
+[[VS 8      ][Supported                           ]]
+[[CW 8.3    ][On going effort to support it       ]]
+[[Intel C++ ][Not yet tested (Will be supported)  ]]
+[[Comeau C++][Not yet tested (Will be supported)  ]]
+]
+
+[endsect]
 
 [endsect]

@@ -52,6 +52,25 @@
 
 [def __UNDER_CONSTRUCTION__ [$images/under_construction.png]]
 
+[/ Boost Libraries ]
+
+[def __BOOST_MULTI_INDEX__ [@http://www.boost.org/libs/multi_index/doc/index.html [*Boost.MultiIndex]]]
+[def __BOOST_MPL__ [@http://www.boost.org/libs/mpl/doc/index.html [*Boost.MPL]]]
+[def __BOOST_TYPE_TRAITS__ [@http://www.boost.org/doc/html/boost_typetraits.html [*Boost.type_traits]]]
+[def __BOOST_ENABLE_IF__ [@http://www.boost.org/libs/utility/enable_if.html [*Boost.enable_if]]]
+[def __BOOST_ITERATORS__ [@http://www.boost.org/libs/iterator/doc/index.html [*Boost.Iterators]]]
+[def __BOOST_CALL_TRAITS__ [@http://www.boost.org/libs/utility/call_traits.htm [*Boost.call_traits]]]
+[def __BOOST_STATIC_ASSERT__ [@http://www.boost.org/doc/html/boost_staticassert.html [*Boost.static_assert]]]
+
+[def __BOOST_SERIALIZATION__ [@http://www.boost.org/libs/serialization/doc/index.html [*Boost.Serialization]]]
+[def __BOOST_HASH__ [@http://www.boost.org/doc/html/hash.html [*Boost.Hash]]]
+[def __BOOST_ASSIGN__ [@http://www.boost.org/libs/assign/doc/index.html [*Boost.Assign]]]
+[def __BOOST_LAMBDA__ [@http://www.boost.org/doc/html/lambda.html [*Boost.Lambda]]]
+[def __BOOST_PROPERTY_MAP__ [@http://www.boost.org/doc/html/property_map.html [*Boost.Property_map]]]
+[def __BOOST_RANGE__ [@http://www.boost.org/doc/html/range.html [*Boost.Range]]]
+
+[def __BOOST_TEST__ [@http://www.boost.org/libs/test/doc/index.html [*Boost.Test]]]
+
 [/
     Boost.Bimap is not yet a boost library. It is being developed by
     Matias Capeletto with the mentoring of Joaquin Lopez muñoz in the

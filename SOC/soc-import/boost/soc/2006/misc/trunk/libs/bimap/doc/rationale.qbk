@@ -264,11 +264,12 @@ The code follows as close as possible the
 
 [table folders in boost/bimap
 [[name][what is inside?]]
+[[/                     ][user level header files             ]]
 [[tagged/               ][tagged idiom                        ]]
 [[relation/             ][the bimap data                      ]]
-[[container_adaptor/    ][easy way of building new containers ]]
-[[collection/           ][set_type_of idiom                   ]]
-[[views/                ][bimap views containers              ]]
+[[container_adaptor/    ][easy way of adapt containers        ]]
+[[views/                ][bimap views                         ]]
+[[property_map/         ][support for property map concept    ]]
 ]
 
 [table folders in each folder
@@ -290,23 +291,9 @@ that orchest everything is Boost.MPL and obviously Boost.MultiIndex has been
 abused by this library.
 
 
-[/ Boost Libraries ]
-
-[def __BOOST_MULTI_INDEX__ [@http://www.boost.org/libs/multi_index/doc/index.html [*Boost.MultiIndex]]]
-[def __BOOST_MPL__ [@http://www.boost.org/libs/mpl/doc/index.html [*Boost.MPL]]]
-[def __BOOST_TYPE_TRAITS__ [@http://www.boost.org/doc/html/boost_typetraits.html [*Boost.type_traits]]]
-[def __BOOST_ENABLE_IF__ [@http://www.boost.org/libs/utility/enable_if.html [*Boost.enable_if]]]
-[def __BOOST_ITERATORS__ [@http://www.boost.org/libs/iterator/doc/index.html [*Boost.Iterators]]]
-[def __BOOST_CALL_TRAITS__ [@http://www.boost.org/libs/utility/call_traits.htm [*Boost.call_traits]]]
-[def __BOOST_OPERATORS__ [@http://www.boost.org/libs/utility/operators.htm [*Boost.Operators]]]
-[def __BOOST_SERIALIZATION__ [@http://www.boost.org/libs/serialization/doc/index.html [*Boost.Serialization]]]
-[def __BOOST_STATIC_ASSERT__ [@http://www.boost.org/doc/html/boost_staticassert.html [*Boost.static_assert]]]
-[def __BOOST_TEST__ [@http://www.boost.org/libs/test/doc/index.html [*Boost.Test]]]
-[def __BOOST_ASSIGN__ [@http://www.boost.org/libs/assign/doc/index.html [*Boost.Assign]]]
-[def __BOOST_HASH__ [@http://www.boost.org/doc/html/hash.html [*Boost.Hash]]]
 
 
-[table Boost Libraries used by Boost.Bimap
+[table Boost Libraries needed by Boost.Bimap
 [[Name][Description][author]]
 
 [[ __BOOST_MULTI_INDEX__ ][
@@ -333,30 +320,54 @@ Iterator construction framework, adaptors, concepts, and more.]
 Defines types for passing parameters.]
 [John Maddock, Howard Hinnant]]
 
-[[ __BOOST_OPERATORS__ ][
-Templates ease arithmetic classes and iterators]
-[Dave Abrahams\n Jeremy Siek]]
-
-[[ __BOOST_SERIALIZATION__ ][
-Serialization for persistence and marshalling]
-[Robert Ramey]]
-
 [[ __BOOST_STATIC_ASSERT__ ][
 Static assertions (compile time assertions).]
 [John Maddock]]
 
-[[ __BOOST_TEST__ ][
-Support for simple program testing, full unit testing, and for program execution monitoring.]
-[Gennadiy Rozental]]
+]
+
+[table Optional Boost Libraries, that plays well with Boost.Bimap
+[[Name][Description][author][Purpose]]
+
+[[ __BOOST_SERIALIZATION__ ][
+Serialization for persistence and marshalling]
+[Robert Ramey]
+[Serialization support for bimap containers and iterators]]
 
 [[ __BOOST_ASSIGN__ ][
-Filling containers with constant or generated data has never been easier.]
-[Thorsten Ottosen]]
+Filling containers with constant or generated data has never been easier]
+[Thorsten Ottosen]
+[Help to fill a bimap or views of it]]
 
 [[ __BOOST_HASH__ ][
 A TR1 hash function object that can be extended to hash user defined types]
-[Daniel James]]
+[Daniel James]
+[Default hashing function]]
 
+[[ __BOOST_LAMBDA__ ][
+Define small unnamed function objects at the actual call site, and more]
+[from Jaakko Järvi, Gary Powell]
+[Functors for modify, range, lower_bound and upper_bound]]
+
+[[ __BOOST_RANGE__ ][
+A new infrastructure for generic algorithms that builds on top of the new
+iterator concepts]
+[Thorsten Ottosen]
+[Range based algorithms]]
+
+[[ __BOOST_PROPERTY_MAP__ ][
+Concepts defining interfaces which map key objects to value objects]
+[Jeremy Siek]
+[Integration with BGL]]
+]
+
+[table Additional Boost Libraries needed to run the test-suite
+[[Name][Description][author]]
+
+[[ __BOOST_TEST__ ][
+Support for simple program testing, full unit testing, and for program execution monitoring.]
+[Gennadiy Rozental]
+]
 ]
 
 [endsect]

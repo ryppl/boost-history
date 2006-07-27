@@ -131,6 +131,8 @@ void test_relation_with_user_tags(Relation & rel,
     BOOST_CHECK( get<LeftTag >(pair_by<RightTag>(rel)) == rel.left  );
     BOOST_CHECK( get<RightTag>(pair_by<RightTag>(rel)) == rel.right );
 
+    get<RightTag>(pair_by<RightTag>(rel)) = rv;
+
 }
 
 struct  left_user_tag {};
@@ -197,8 +199,6 @@ void test_relation(const LeftData & lv, const RightData & rv)
         BOOST_CHECK( rel_from_left == rel_type(lv,rv) );
 
         rel_type rel;
-
-        BOOST_CHECK( rel != rel_from_left );
 
         rel = rel_from_left;
 
