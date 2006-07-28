@@ -36,31 +36,5 @@ namespace boost { namespace coroutines { namespace detail {
 		  BOOST_COROUTINE_MAKE_TUPLE_GENERATOR, ~);
 #undef BOOST_COROUTINE_MAKE_TUPLE_GENERATOR
 
-#if 0
-  /**
-   * Generic remove tuple for multielements tuples. Identity function.
-   */
-  template<typename Tuple>
-  inline
-  Tuple remove_tuple(const Tuple& t) { 
-    return t;
-  }
- 
-  /**
-   * Overload of @p remove_tuple for single element tuples.
-   * Returns the first (and only) element.
-   */
-  template<typename Elem>
-  inline
-  Elem remove_tuple(const boost::tuple<Elem>& t) {
-    return boost::tuples::get<0>(t);
-  }
-  
-  /**
-   * Overload of @p remove_tuple for nullary tuples.
-   */
-  inline
-  void remove_tuple(boost::tuple<>) {}
-#endif
 } } }
 #endif 

@@ -20,6 +20,7 @@
 #include <boost/coroutine/detail/make_tuple.hpp>
 #include <boost/coroutine/detail/signature.hpp>
 #include <boost/coroutine/detail/index.hpp>
+#include <boost/coroutine/detail/signal.hpp>
 #include <boost/coroutine/detail/coroutine_traits.hpp>
 
 #ifdef _MSC_VER
@@ -30,6 +31,7 @@
 #define BOOST_COROUTINE_VCPP80_WORKAROUND 
 #endif
 namespace boost { namespace coroutines {
+
 
 
   template<typename Signature, 
@@ -170,7 +172,6 @@ namespace boost { namespace coroutines {
      * Splitting it in separate typedefs
      * fixes the problem.
      */
-
 #define BOOST_COROUTINE_param_typedef(z, n, prefix_tuple)  \
     typedef BOOST_DEDUCED_TYPENAME                   \
     call_traits<                                     \
@@ -223,7 +224,6 @@ namespace boost { namespace coroutines {
       (result_slot_type(BOOST_PP_ENUM_PARAMS(BOOST_COROUTINE_ARG_MAX,arg)));
     }
 
-
     template<typename Target>
     yield_result_type yield_to
     (Target& target
@@ -239,11 +239,15 @@ namespace boost { namespace coroutines {
     }
 #endif
 
-#   undef  BOOST_COROUTINE_param_with_default
+#undef  BOOST_COROUTINE_param_with_default
 
     typedef void(coroutine::*bool_type)();
     operator bool_type() const {
       return good()? &coroutine::bool_type_f: 0;
+    }
+
+    bool operator==(const coroutine& rhs) {
+      return m_pimpl == rhs.m_pimpl;
     }
 
     void exit() {
@@ -251,6 +255,21 @@ namespace boost { namespace coroutines {
       m_pimpl->exit();
     }
   private:
+    template<typename Coroutine>
+    friend
+    void detail::signal(Coroutine&);
+
+    template<typename Coroutine>
+    friend
+    void detail::wait(Coroutine&, int n);
+
+    bool signal() {
+      m_pimpl->signal();
+    }
+
+    void wait(int n) {
+      m_pimpl->wait(n);
+    }
 
     /**
      * The second parameter is used to avoid calling this constructor
@@ -294,7 +313,7 @@ namespace boost { namespace coroutines {
     }
 
     /**
-     * @note The use of remove_tuple is very likely to 
+     * @note The use of fix_result is very likely to 
      * prevent NRVO. This could be worked around, but for now 
      * leave it as is. For constructors and destructors without
      * side effects the compiler still does a good job.
@@ -303,7 +322,7 @@ namespace boost { namespace coroutines {
      * boost::optional, but it would further prevent NRVO.
      * This can't be proabably avoided without using dirty tricks
      * (i.e. somehow getting the address of the return frame).
-     * ... later... just do not bother with NRVO. With simple types
+     * ... later... nonsense just do not bother with NRVO. With simple types
      * the compiler already does a good job. With complex types
      * it probably does not matter.
      */

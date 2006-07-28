@@ -17,8 +17,7 @@
 #include <boost/coroutine/detail/swap_context.hpp>
 namespace boost { namespace coroutines { namespace detail {
 	
-
-	const std::ptrdiff_t default_stack_size = -1;
+  const std::ptrdiff_t default_stack_size = -1;
 
   template<typename ContextImpl>
   class context_base : public ContextImpl {
@@ -54,7 +53,7 @@ namespace boost { namespace coroutines { namespace detail {
       return !count();
     }
 
-	std::size_t count() const {
+    std::size_t count() const {
       return m_counter;
     }
       
@@ -63,6 +62,7 @@ namespace boost { namespace coroutines { namespace detail {
      * not running (is delivered sinchrononously).
      * This means that state MUST NOT be busy.
      * It may be ready or waiting.
+     * returns 'ready()'
      */
     bool signal () {
       BOOST_ASSERT(!running() && !exited());
@@ -72,10 +72,17 @@ namespace boost { namespace coroutines { namespace detail {
       return ready();
     }
 
+    /*
+     * Returns true if the context is runnable.
+     */
     bool ready() const {
       return m_state == ctx_ready;
     }
 
+    /*
+     * Returns true if the context is in wait
+     * state.
+     */
     bool waiting() const {
       return m_state == ctx_waiting;
     }
@@ -370,7 +377,7 @@ namespace boost { namespace coroutines { namespace detail {
       BOOST_ASSERT(this->count() > 0);
       coroutine_type self = coroutine_accessor::construct<coroutine_type, type>(this);
       cancel_count c(this); //this must be after the previous line.
-	  typedef typename coroutine_type::arg_slot_traits traits;
+      typedef typename coroutine_type::arg_slot_traits traits;
 	  
       this->result() = detail::unpack_ex
 	/*<traits>*/

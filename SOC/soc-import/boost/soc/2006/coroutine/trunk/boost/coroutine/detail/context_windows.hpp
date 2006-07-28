@@ -37,7 +37,6 @@ namespace boost {namespace coroutines {namespace detail{
      * @note context_impl is not required to be consistent
      * If not initialized it can only be swapped out, not in 
      * (at that point it will be initialized).
-     *
      */
     class fibers_context_impl_base {
     public:
@@ -57,7 +56,7 @@ namespace boost {namespace coroutines {namespace detail{
        * Note that if the current thread is not a fiber, it will be
        * converted to fiber on the fly on call and unconverted before
        * return. This is expensive. The user should convert the 
-       * current thread to a fiber once on creation for better performance.
+       * current thread to a fiber once on thread creation for better performance.
        * Note that we can't leave the thread unconverted on return or else we 
        * will leak resources on thread destruction. Do the right thing by
        * default.
