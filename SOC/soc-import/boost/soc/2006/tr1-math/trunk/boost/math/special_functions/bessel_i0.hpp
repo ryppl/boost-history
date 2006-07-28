@@ -5,7 +5,6 @@
 
 #ifndef BOOST_MATH_BESSEL_I0_HPP
 #define BOOST_MATH_BESSEL_I0_HPP
-#endif
 
 #include <boost/math/tools/rational.hpp>
 #include <boost/assert.hpp>
@@ -105,3 +104,5 @@ T bessel_i0(T x)
 }
 
 }} // namespaces
+
+#endif // BOOST_MATH_BESSEL_I0_HPP

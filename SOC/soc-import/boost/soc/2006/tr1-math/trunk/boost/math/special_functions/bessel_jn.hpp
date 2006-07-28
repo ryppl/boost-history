@@ -5,7 +5,6 @@
 
 #ifndef BOOST_MATH_BESSEL_JN_HPP
 #define BOOST_MATH_BESSEL_JN_HPP
-#endif
 
 #include <boost/math/special_functions/bessel_j0.hpp>
 #include <boost/math/special_functions/bessel_j1.hpp>
@@ -94,3 +93,5 @@ inline T bessel_jn(T n, T x)
 }
 
 }} // namespaces
+
+#endif // BOOST_MATH_BESSEL_JN_HPP
