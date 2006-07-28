@@ -5,7 +5,6 @@
 
 #ifndef BOOST_MATH_BESSEL_Y1_HPP
 #define BOOST_MATH_BESSEL_Y1_HPP
-#endif
 
 #ifndef BOOST_MATH_THROW_ON_DOMAIN_ERROR
 #define BOOST_MATH_THROW_ON_DOMAIN_ERROR
@@ -163,3 +162,5 @@ T bessel_y1(T x)
 }
 
 }} // namespaces
+
+#endif // BOOST_MATH_BESSEL_Y1_HPP

@@ -5,7 +5,6 @@
 
 #ifndef BOOST_MATH_BESSEL_K1_HPP
 #define BOOST_MATH_BESSEL_K1_HPP
-#endif
 
 #ifndef BOOST_MATH_THROW_ON_DOMAIN_ERROR
 #define BOOST_MATH_THROW_ON_DOMAIN_ERROR
@@ -127,3 +126,5 @@ T bessel_k1(T x)
 }
 
 }} // namespaces
+
+#endif // BOOST_MATH_BESSEL_K1_HPP

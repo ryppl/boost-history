@@ -5,7 +5,6 @@
 
 #ifndef BOOST_MATH_BESSEL_YN_HPP
 #define BOOST_MATH_BESSEL_YN_HPP
-#endif
 
 #ifndef BOOST_MATH_THROW_ON_DOMAIN_ERROR
 #define BOOST_MATH_THROW_ON_DOMAIN_ERROR
@@ -83,3 +82,5 @@ inline T bessel_yn(T n, T x)
 }
 
 }} // namespaces
+
+#endif // BOOST_MATH_BESSEL_YN_HPP
