@@ -42,19 +42,30 @@ class launcher
     int m_flags;
     detail::environment m_environment;
 
+    //!
+    //! \brief The process' current work directory.
+    //!
+    //! The work directory is the directory in which the process is
+    //! currently running.  This may be changed during the process'
+    //! lifetime, although its main purpose is to set up a new child
+    //! process.
+    //!
+    //! Ideally this could be of boost::filesystem::path type, but it
+    //! is a regular string to avoid depending on Boost.Filesystem.
+    //!
+    std::string m_work_directory;
+
 #if defined(BOOST_PROCESS_POSIX_API)
-    template< class Command_Line, class Attributes >
-    basic_child< Command_Line, Attributes > start_posix
+    template< class Command_Line >
+    basic_child< Command_Line > start_posix
         (const Command_Line& cl,
-         const Attributes& attrs,
          boost::optional< detail::pipe > pstdin,
          boost::optional< detail::pipe > pstdout,
          boost::optional< detail::pipe > pstderr);
 #elif defined(BOOST_PROCESS_WIN32_API)
-    template< class Command_Line, class Attributes >
-    basic_child< Command_Line, Attributes > start_win32
+    template< class Command_Line >
+    basic_child< Command_Line > start_win32
         (const Command_Line& cl,
-         const Attributes& attrs,
          boost::optional< detail::pipe > pstdin,
          boost::optional< detail::pipe > pstdout,
          boost::optional< detail::pipe > pstderr);
@@ -62,8 +73,8 @@ class launcher
 
 protected:
 #if defined(BOOST_PROCESS_POSIX_API)
-    template< class Command_Line, class Attributes >
-    void posix_child_entry(const Command_Line& cl, const Attributes& attrs);
+    template< class Command_Line >
+    void posix_child_entry(const Command_Line& cl);
 #endif
 
 public:
@@ -85,9 +96,11 @@ public:
     void set_environment(const std::string& var, const std::string& value);
     void unset_environment(const std::string& var);
 
-    template< class Command_Line, class Attributes >
-    basic_child< Command_Line, Attributes > start(const Command_Line& cl,
-                                                  const Attributes& attrs);
+    const std::string& get_work_directory(void) const;
+    void set_work_directory(const std::string& wd);
+
+    template< class Command_Line >
+    basic_child< Command_Line > start(const Command_Line& cl);
 };
 
 // ------------------------------------------------------------------------
@@ -97,6 +110,29 @@ launcher::launcher(int flags) :
     m_flags(REDIR_NONE)
 {
     set_flags(flags);
+
+#if defined(BOOST_PROCESS_POSIX_API)
+    const char* buf = ::getcwd(NULL, 0);
+    if (buf == NULL)
+        boost::throw_exception
+            (system_error
+             ("boost::process::launcher::launcher",
+              "getcwd(2) failed", errno));
+    m_work_directory = buf;
+#elif defined(BOOST_PROCESS_WIN32_API)
+    DWORD length = ::GetCurrentDirectory(0, NULL);
+    TCHAR* buf = new TCHAR[length * sizeof(TCHAR)];
+    if (::GetCurrentDirectory(length, buf) == 0) {
+        delete buf;
+        boost::throw_exception
+            (system_error
+             ("boost::process::launcher::launcher",
+              "GetCurrentDirectory failed", ::GetLastError()));
+    }
+    m_work_directory = buf;
+    delete buf;
+#endif
+    BOOST_ASSERT(!m_work_directory.empty());
 }
 
 // ------------------------------------------------------------------------
@@ -117,6 +153,26 @@ launcher::unset_environment(const std::string& var)
 {
     BOOST_ASSERT(!var.empty());
     m_environment.unset(var);
+}
+
+// ------------------------------------------------------------------------
+
+inline
+const std::string&
+launcher::get_work_directory(void)
+    const
+{
+    return m_work_directory;
+}
+
+// ------------------------------------------------------------------------
+
+inline
+void
+launcher::set_work_directory(const std::string& wd)
+{
+    BOOST_ASSERT(wd.length() > 0);
+    m_work_directory = wd;
 }
 
 // ------------------------------------------------------------------------
@@ -143,10 +199,10 @@ launcher::set_flags(int flags)
 
 // ------------------------------------------------------------------------
 
-template< class Command_Line, class Attributes >
+template< class Command_Line >
 inline
-basic_child< Command_Line, Attributes >
-launcher::start(const Command_Line& cl, const Attributes& attrs)
+basic_child< Command_Line >
+launcher::start(const Command_Line& cl)
 {
     boost::optional< detail::pipe > pstdin;
     if (m_flags & REDIR_STDIN)
@@ -161,20 +217,19 @@ launcher::start(const Command_Line& cl, const Attributes& attrs)
         pstderr = detail::pipe();
 
 #if defined(BOOST_PROCESS_POSIX_API)
-    return start_posix(cl, attrs, pstdin, pstdout, pstderr);
+    return start_posix(cl, pstdin, pstdout, pstderr);
 #elif defined(BOOST_PROCESS_WIN32_API)
-    return start_win32(cl, attrs, pstdin, pstdout, pstderr);
+    return start_win32(cl, pstdin, pstdout, pstderr);
 #endif
 }
 
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
-template< class Command_Line, class Attributes >
+template< class Command_Line >
 inline
-basic_child< Command_Line, Attributes >
+basic_child< Command_Line >
 launcher::start_posix(const Command_Line& cl,
-                      const Attributes& attrs,
                       boost::optional< detail::pipe > pstdin,
                       boost::optional< detail::pipe > pstdout,
                       boost::optional< detail::pipe > pstderr)
@@ -219,7 +274,7 @@ launcher::start_posix(const Command_Line& cl,
             ::exit(EXIT_FAILURE);
         }
 
-        posix_child_entry(cl, attrs);
+        posix_child_entry(cl);
         BOOST_ASSERT(false); // Not reached.
     }
 
@@ -245,21 +300,24 @@ launcher::start_posix(const Command_Line& cl,
     BOOST_ASSERT(!(m_flags & REDIR_STDIN) || fhstdin.is_valid());
     BOOST_ASSERT(!(m_flags & REDIR_STDOUT) || fhstdout.is_valid());
     BOOST_ASSERT(!(m_flags & REDIR_STDERR) || fhstderr.is_valid());
-    return basic_child< Command_Line, Attributes >
-        (pid, cl, attrs, fhstdin, fhstdout, fhstderr);
+    return basic_child< Command_Line >
+        (pid, cl, fhstdin, fhstdout, fhstderr);
 }
 #endif
 
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
-template< class Command_Line, class Attributes >
+template< class Command_Line >
 inline
 void
-launcher::posix_child_entry(const Command_Line& cl, const Attributes& attrs)
+launcher::posix_child_entry(const Command_Line& cl)
 {
     try {
-        attrs.setup();
+        if (chdir(m_work_directory.c_str()) == -1)
+            boost::throw_exception
+                (system_error("boost::process::launcher::posix_child_entry",
+                              "chdir(2) failed", errno));
     } catch (const system_error& e) {
         ::write(STDERR_FILENO, e.what(), std::strlen(e.what()));
         ::write(STDERR_FILENO, "\n", 1);
@@ -290,10 +348,10 @@ launcher::posix_child_entry(const Command_Line& cl, const Attributes& attrs)
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_WIN32_API)
-template< class Command_Line, class Attributes >
+template< class Command_Line >
 inline
-basic_child< Command_Line, Attributes >
-launcher::start_win32(const Command_Line& cl, const Attributes& attrs,
+basic_child< Command_Line >
+launcher::start_win32(const Command_Line& cl,
                       boost::optional< detail::pipe > pstdin,
                       boost::optional< detail::pipe > pstdout,
                       boost::optional< detail::pipe > pstderr)
@@ -340,8 +398,8 @@ launcher::start_win32(const Command_Line& cl, const Attributes& attrs,
     boost::scoped_array< TCHAR > executable
         (::_tcsdup(TEXT(cl.get_executable().c_str())));
     boost::scoped_array< TCHAR > workdir
-        (::_tcsdup(TEXT(attrs.get_work_directory().c_str())));
-    m_environment.set("", attrs.get_work_directory());
+        (::_tcsdup(TEXT(m_work_directory().c_str())));
+    m_environment.set("", m_work_directory());
 
     boost::shared_array< TCHAR > env = m_environment.win32_strings();
     if (!::CreateProcess(executable.get(), cmdline.get(), NULL, NULL, TRUE,
@@ -354,8 +412,8 @@ launcher::start_win32(const Command_Line& cl, const Attributes& attrs,
     BOOST_ASSERT(!(m_flags & REDIR_STDIN) || fhstdin.is_valid());
     BOOST_ASSERT(!(m_flags & REDIR_STDOUT) || fhstdout.is_valid());
     BOOST_ASSERT(!(m_flags & REDIR_STDERR) || fhstderr.is_valid());
-    return basic_child< Command_Line, Attributes >
-        (pi.hProcess, cl, attrs, fhstdin, fhstdout, fhstderr);
+    return basic_child< Command_Line >
+        (pi.hProcess, cl, fhstdin, fhstdout, fhstderr);
 }
 #endif
 

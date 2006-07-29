@@ -85,36 +85,8 @@ Boost.Process services).  The application can directly control the child
 process, send and retrieve data from it and collect its finalization
 status.
 
-This concept is implemented by the `basic_child` template and the
-`child`, `posix_child` and `win32_child` classes.
-
-[endsect]
-
-[/ ---------------------------------------------------------------------- ]
-
-[section Attributes]
-
-A process has multiple attributes that describe its execution status.
-These attributes are set by the parent when it spawns a new child but can
-also be queried while the process is running.  In other words: these
-attributes belong to the `Process` concept, not just to the `Child` one.
-
-There are some attributes that are common among all the operating systems
-supported by Boost.Process, such as the process' working directory.
-Unfortunately, the vast majority cannot be generalized and need to be kept
-specific to the operating system the library is running under.  For
-example: POSIX systems have a feature to change a process' run directory
-through the chroot(2) call but Windows systems do not have anything
-similar.
-
-The `Attributes` concept represents a process' attributes as described
-above.  Each `Process` object has one, and only one, `Attributes` object
-associated to it.  While launching a child process, the caller can specify
-the set of attributes it will use.  (This is the reason for this data to
-live in a standalone class.)
-
-This concept is implemented by the `attributes`, `posix_attributes` and
-`win32_attributes` classes.
+This concept is implemented by the `basic_child` and `basic_posix_child`
+templates and the `child`, `posix_child` and `win32_child` classes.
 
 [endsect]
 
@@ -126,10 +98,9 @@ As already described, a process is the execution context of a program.
 This program is launched using a command line: a tuple that includes the
 binary to execute and the set of arguments passed to it.
 
-The command line might be seen as an attribute: a running process always
-has a command line and, given correct access rights, it can be queried at
-run time for foreign (non-child) processes.  However, it is not implemented
-as such because it has to be treated differently than attributes.
+The command line is thought as a standalone concept because it is important
+enough on its own.  A command line can be constructed in multiple different
+ways so there might be multiple implementations to create one.
 
 The `Command_Line` concept represents a process' startup command line.
 
@@ -148,13 +119,20 @@ attributes that specify internal process details.  And third, it needs
 information that describes how the new process relates to its parent; this
 includes streams for communication among other details.
 
+The attributes mentioned in the previous paragraph refer to all those
+properties that a process carries: its working directory, its security
+credentials, etc.  The launcher may provide means to configure these for
+a new process.
+
 The `Launcher` concept is an abstract representation used to model a
 process' startup procedure.  As said above, a process is something that is
 /already/ in the operating system tables: it cannot exist before the
-system has explicitly started it.
+system has explicitly started it.  Furthermore, by keeping the launcher
+separate from processes, the same execution context can be shared across
+multiple command lines painlessly.
 
-This concept is implemented by the `basic_launcher` template and the
-`launcher`, `posix_launcher` and `win32_launcher` classes.
+This concept is implemented by the `launcher`, `posix_launcher` and
+`win32_launcher` classes.
 
 [endsect]
 

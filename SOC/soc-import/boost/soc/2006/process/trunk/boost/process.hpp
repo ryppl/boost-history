@@ -24,7 +24,6 @@
 
 #include <boost/process/config.hpp>
 
-#include <boost/process/attributes.hpp>
 #include <boost/process/basic_child.hpp>
 #include <boost/process/basic_process.hpp>
 #include <boost/process/command_line.hpp>
@@ -37,7 +36,6 @@
 
 #if defined(BOOST_PROCESS_POSIX_API)
 #   include <boost/process/basic_posix_child.hpp>
-#   include <boost/process/posix_attributes.hpp>
 #   include <boost/process/posix_child.hpp>
 #   include <boost/process/posix_launcher.hpp>
 #endif

@@ -30,12 +30,10 @@ public:
     test_it(void)
     {
         bp::command_line cl("test");
-        bp::attributes attrs;
         bp::posix_child::handle_type h = (bp::posix_child::handle_type)0;
         bpd::file_handle fh;
         bp::posix_child::pipe_map pipes;
-        return new bp::posix_child(h, cl, attrs, fh, fh, fh,
-                                   pipes, pipes);
+        return new bp::posix_child(h, cl, fh, fh, fh, pipes, pipes);
     }
 };
 

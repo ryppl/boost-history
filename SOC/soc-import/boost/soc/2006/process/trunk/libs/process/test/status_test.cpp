@@ -31,8 +31,7 @@ launch_helper(const std::string& name)
 {
     bp::command_line cl(get_helpers_path());
     cl.argument(name);
-    bp::attributes a;
-    return bp::launcher().start(cl, a);
+    return bp::launcher().start(cl);
 }
 
 // ------------------------------------------------------------------------

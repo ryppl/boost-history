@@ -30,12 +30,10 @@ namespace process {
 
 // ------------------------------------------------------------------------
 
-class attributes;
-
-template< class Command_Line, class Attributes >
+template< class Command_Line >
 class basic_child;
 
-template< class Command_Line, class Attributes >
+template< class Command_Line >
 class basic_process;
 
 class command_line;
@@ -48,18 +46,16 @@ class postream;
 
 class status;
 
-typedef basic_child< command_line, attributes > child;
-typedef basic_process< command_line, attributes > process;
+typedef basic_child< command_line > child;
+typedef basic_process< command_line > process;
 
 #if defined(BOOST_PROCESS_POSIX_API)
-template< class Command_Line, class Attributes >
+template< class Command_Line >
 class basic_posix_child;
-
-class posix_attributes;
 
 class posix_launcher;
 
-typedef basic_posix_child< command_line, attributes > posix_child;
+typedef basic_posix_child< command_line > posix_child;
 #endif
 
 // ------------------------------------------------------------------------

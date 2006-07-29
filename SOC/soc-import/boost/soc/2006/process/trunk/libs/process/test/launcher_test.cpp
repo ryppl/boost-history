@@ -51,10 +51,9 @@ test_input(void)
 {
     bp::command_line cl(get_helpers_path());
     cl.argument("stdin-to-stdout");
-    bp::attributes a;
 
     bp::launcher l(bp::launcher::REDIR_STDIN | bp::launcher::REDIR_STDOUT);
-    bp::child c = l.start(cl, a);
+    bp::child c = l.start(cl);
 
     bp::postream& os = c.get_stdin();
     bp::pistream& is = c.get_stdout();
@@ -80,11 +79,10 @@ test_output(bool out,
 {
     bp::command_line cl(get_helpers_path());
     cl.argument(out ? "echo-stdout" : "echo-stderr").argument(realmsg);
-    bp::attributes a;
 
     bp::launcher l(out ? (int)bp::launcher::REDIR_STDOUT :
                          (int)bp::launcher::REDIR_STDERR);
-    bp::child c = l.start(cl, a);
+    bp::child c = l.start(cl);
 
     std::string word;
     if (out) {
@@ -140,11 +138,10 @@ test_merge(const std::string& msg)
 {
     bp::command_line cl(get_helpers_path());
     cl.argument("echo-stdout-stderr").argument(msg);
-    bp::attributes a;
 
     bp::launcher l(bp::launcher::REDIR_STDOUT |
                    bp::launcher::REDIR_STDERR_TO_STDOUT);
-    bp::child c = l.start(cl, a);
+    bp::child c = l.start(cl);
 
     bp::pistream& is = c.get_stdout();
     std::string word;
@@ -177,10 +174,11 @@ test_default_work_directory(void)
 {
     bp::command_line cl(get_helpers_path());
     cl.argument("pwd");
-    bp::attributes a;
 
     bp::launcher l(bp::launcher::REDIR_STDOUT);
-    bp::child c = l.start(cl, a);
+    BOOST_CHECK(bfs::equivalent(l.get_work_directory(),
+                                bfs::current_path().string()));
+    bp::child c = l.start(cl);
 
     bp::pistream& is = c.get_stdout();
     std::string dir;
@@ -190,7 +188,7 @@ test_default_work_directory(void)
     BOOST_REQUIRE(s.exited());
     BOOST_REQUIRE_EQUAL(s.exit_status(), EXIT_SUCCESS);
 
-    BOOST_CHECK_EQUAL(bfs::path(dir), bfs::path(a.get_work_directory()));
+    BOOST_CHECK_EQUAL(bfs::path(dir), bfs::path(l.get_work_directory()));
 }
 
 // ------------------------------------------------------------------------
@@ -202,12 +200,13 @@ test_explicit_work_directory(void)
 
     bp::command_line cl(get_helpers_path());
     cl.argument("pwd");
-    bp::attributes a(wdir.string());
 
     BOOST_REQUIRE_NO_THROW(bfs::create_directory(wdir));
     try {
         bp::launcher l(bp::launcher::REDIR_STDOUT);
-        bp::child c = l.start(cl, a);
+        l.set_work_directory(wdir.string());
+        BOOST_CHECK_EQUAL(l.get_work_directory(), wdir);
+        bp::child c = l.start(cl);
 
         bp::pistream& is = c.get_stdout();
         std::string dir;
@@ -218,7 +217,7 @@ test_explicit_work_directory(void)
         BOOST_REQUIRE(s.exited());
         BOOST_REQUIRE_EQUAL(s.exit_status(), EXIT_SUCCESS);
 
-        BOOST_CHECK_EQUAL(bfs::path(dir), bfs::path(a.get_work_directory()));
+        BOOST_CHECK_EQUAL(bfs::path(dir), bfs::path(l.get_work_directory()));
     } catch(...) {
         BOOST_CHECK_NO_THROW(bfs::remove_all(wdir));
         throw;
@@ -232,7 +231,6 @@ test_unset_environment(void)
 {
     bp::command_line cl(get_helpers_path());
     cl.argument("query-env").argument("TO_BE_UNSET");
-    bp::attributes a;
 
 #if defined(BOOST_PROCESS_POSIX_API)
     BOOST_REQUIRE(::setenv("TO_BE_UNSET", "test", 1) != -1);
@@ -245,7 +243,7 @@ test_unset_environment(void)
 
     bp::launcher l(bp::launcher::REDIR_STDOUT);
     l.unset_environment("TO_BE_UNSET");
-    bp::child c = l.start(cl, a);
+    bp::child c = l.start(cl);
 
     bp::pistream& is = c.get_stdout();
     std::string status;
@@ -265,7 +263,6 @@ test_set_environment(const std::string& value)
 {
     bp::command_line cl(get_helpers_path());
     cl.argument("query-env").argument("TO_BE_SET");
-    bp::attributes a;
 
 #if defined(BOOST_PROCESS_POSIX_API)
     ::unsetenv("TO_BE_SET");
@@ -279,7 +276,7 @@ test_set_environment(const std::string& value)
 
     bp::launcher l(bp::launcher::REDIR_STDOUT);
     l.set_environment("TO_BE_SET", value);
-    bp::child c = l.start(cl, a);
+    bp::child c = l.start(cl);
 
     bp::pistream& is = c.get_stdout();
     std::string status;
@@ -323,8 +320,7 @@ test_shell(void)
     bp::command_line cl =
         bp::command_line::shell("if foo==foo echo LINE-test");
 #endif
-    bp::attributes a;
-    bp::child c = bp::launcher(bp::launcher::REDIR_ALL).start(cl, a);
+    bp::child c = bp::launcher(bp::launcher::REDIR_ALL).start(cl);
 
     bp::pistream& is = c.get_stdout();
     std::string word;

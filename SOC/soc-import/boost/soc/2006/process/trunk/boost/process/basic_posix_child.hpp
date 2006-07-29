@@ -32,13 +32,12 @@ namespace process {
 
 // ------------------------------------------------------------------------
 
-template< class Command_Line, class Attributes >
+template< class Command_Line >
 class basic_posix_child :
-    public basic_child< Command_Line, Attributes >
+    public basic_child< Command_Line >
 {
 public:
-    typedef typename basic_child< Command_Line, Attributes >::handle_type
-        handle_type;
+    typedef typename basic_child< Command_Line >::handle_type handle_type;
 
     postream& get_input(int desc) const;
     pistream& get_output(int desc) const;
@@ -55,7 +54,6 @@ protected:
     typedef std::map< int, detail::pipe > pipe_map;
     basic_posix_child(handle_type h,
                 const Command_Line& cl,
-                const Attributes& attrs,
                 detail::file_handle& fhstdin,
                 detail::file_handle& fhstdout,
                 detail::file_handle& fhstderr,
@@ -65,19 +63,17 @@ protected:
 
 // ------------------------------------------------------------------------
 
-template< class Command_Line, class Attributes >
+template< class Command_Line >
 inline
-basic_posix_child< Command_Line, Attributes >::basic_posix_child
+basic_posix_child< Command_Line >::basic_posix_child
     (handle_type h,
      const Command_Line& cl,
-     const Attributes& attrs,
      detail::file_handle& fhstdin,
      detail::file_handle& fhstdout,
      detail::file_handle& fhstderr,
      pipe_map& inpipes,
      pipe_map& outpipes) :
-    basic_child< Command_Line, Attributes >(h, cl, attrs, fhstdin, fhstdout,
-                                            fhstderr)
+    basic_child< Command_Line >(h, cl, fhstdin, fhstdout, fhstderr)
 {
     for (pipe_map::iterator iter = inpipes.begin();
          iter != inpipes.end(); iter++) {
@@ -96,14 +92,14 @@ basic_posix_child< Command_Line, Attributes >::basic_posix_child
 
 // ------------------------------------------------------------------------
 
-template< class Command_Line, class Attributes >
+template< class Command_Line >
 inline
 postream&
-basic_posix_child< Command_Line, Attributes >::get_input(int desc)
+basic_posix_child< Command_Line >::get_input(int desc)
     const
 {
     if (desc == STDIN_FILENO)
-        return basic_posix_child< Command_Line, Attributes >::get_stdin();
+        return basic_posix_child< Command_Line >::get_stdin();
     else {
         input_map::const_iterator iter = m_input_map.find(desc);
         BOOST_ASSERT(iter != m_input_map.end());
@@ -113,16 +109,16 @@ basic_posix_child< Command_Line, Attributes >::get_input(int desc)
 
 // ------------------------------------------------------------------------
 
-template< class Command_Line, class Attributes >
+template< class Command_Line >
 inline
 pistream&
-basic_posix_child< Command_Line, Attributes >::get_output(int desc)
+basic_posix_child< Command_Line >::get_output(int desc)
     const
 {
     if (desc == STDOUT_FILENO)
-        return basic_posix_child< Command_Line, Attributes >::get_stdout();
+        return basic_posix_child< Command_Line >::get_stdout();
     else if (desc == STDERR_FILENO)
-        return basic_posix_child< Command_Line, Attributes >::get_stderr();
+        return basic_posix_child< Command_Line >::get_stderr();
     else {
         output_map::const_iterator iter = m_output_map.find(desc);
         BOOST_ASSERT(iter != m_output_map.end());

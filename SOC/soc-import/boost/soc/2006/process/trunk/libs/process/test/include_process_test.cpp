@@ -19,9 +19,8 @@ class test_process :
     public bp::process
 {
 public:
-    test_process(handle_type h, const bp::command_line& cl,
-                 const bp::attributes& a) :
-        bp::process(h, cl, a)
+    test_process(handle_type h, const bp::command_line& cl) :
+        bp::process(h, cl)
     {
     }
 };
@@ -33,6 +32,5 @@ test_it(void)
 {
     test_process::handle_type h = (test_process::handle_type)0;
     bp::command_line cl("test");
-    bp::attributes a;
-    return new test_process(h, cl, a);
+    return new test_process(h, cl);
 }

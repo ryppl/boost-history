@@ -25,12 +25,11 @@ public:
     void*
     test_it(void)
     {
-        bp::basic_child< int, int >::handle_type h =
-            (bp::basic_child< int, int >::handle_type)0;
+        bp::basic_child< int >::handle_type h =
+            (bp::basic_child< int >::handle_type)0;
         int cl = 5;
-        int attrs = 5;
         bpd::file_handle fh;
-        return new bp::basic_child< int, int >(h, cl, attrs, fh, fh, fh);
+        return new bp::basic_child< int >(h, cl, fh, fh, fh);
     }
 };
 

@@ -25,18 +25,17 @@ namespace process {
 class launcher
 {
 public:
-    template< class Command_Line, class Attributes >
+    template< class Command_Line >
     static
-    bp::basic_child< Command_Line, Attributes > create_child
-        (typename bp::basic_child< Command_Line, Attributes >::handle_type h,
+    bp::basic_child< Command_Line > create_child
+        (typename bp::basic_child< Command_Line >::handle_type h,
          const Command_Line& cl,
-         const Attributes& attrs,
          detail::file_handle& fhstdin,
          detail::file_handle& fhstdout,
          detail::file_handle& fhstderr)
     {
-        return basic_child< Command_Line, Attributes >
-            (h, cl, attrs, fhstdin, fhstdout, fhstderr);
+        return basic_child< Command_Line >
+            (h, cl, fhstdin, fhstdout, fhstderr);
     }
 };
 
@@ -49,18 +48,15 @@ static
 void
 test_getters(void)
 {
-    bp::basic_child< char, int >::handle_type h =
-        (bp::basic_child< char, int >::handle_type)0;
+    bp::basic_child< char >::handle_type h =
+        (bp::basic_child< char >::handle_type)0;
     char cl = 'A';
-    int attrs = 5;
     bpd::file_handle fhinvalid;
-    bp::basic_child< char, int > c =
-        bp::launcher::create_child(h, cl, attrs,
-                                   fhinvalid, fhinvalid, fhinvalid);
+    bp::basic_child< char > c =
+        bp::launcher::create_child(h, cl, fhinvalid, fhinvalid, fhinvalid);
 
     BOOST_CHECK_EQUAL(c.get_handle(), h);
     BOOST_CHECK_EQUAL(c.get_command_line(), cl);
-    BOOST_CHECK_EQUAL(c.get_attributes(), attrs);
 }
 
 // ------------------------------------------------------------------------
@@ -69,15 +65,13 @@ static
 void
 test_stdin(void)
 {
-    bp::basic_child< char, int >::handle_type h =
-        (bp::basic_child< char, int >::handle_type)0;
+    bp::basic_child< char >::handle_type h =
+        (bp::basic_child< char >::handle_type)0;
     char cl = 'A';
-    int attrs = 5;
     bpd::pipe p;
     bpd::file_handle fhinvalid;
-    bp::basic_child< char, int > c =
-        bp::launcher::create_child(h, cl, attrs,
-                                   p.wend(), fhinvalid, fhinvalid);
+    bp::basic_child< char > c =
+        bp::launcher::create_child(h, cl, p.wend(), fhinvalid, fhinvalid);
 
     bp::postream& os = c.get_stdin();
     os << "test-stdin" << std::endl;
@@ -94,15 +88,13 @@ static
 void
 test_stdout(void)
 {
-    bp::basic_child< char, int >::handle_type h =
-        (bp::basic_child< char, int >::handle_type)0;
+    bp::basic_child< char >::handle_type h =
+        (bp::basic_child< char >::handle_type)0;
     char cl = 'A';
-    int attrs = 5;
     bpd::pipe p;
     bpd::file_handle fhinvalid;
-    bp::basic_child< char, int > c =
-        bp::launcher::create_child(h, cl, attrs,
-                                   fhinvalid, p.rend(), fhinvalid);
+    bp::basic_child< char > c =
+        bp::launcher::create_child(h, cl, fhinvalid, p.rend(), fhinvalid);
 
     bp::postream os(p.wend());
     os << "test-stdout" << std::endl;
@@ -119,15 +111,13 @@ static
 void
 test_stderr(void)
 {
-    bp::basic_child< char, int >::handle_type h =
-        (bp::basic_child< char, int >::handle_type)0;
+    bp::basic_child< char >::handle_type h =
+        (bp::basic_child< char >::handle_type)0;
     char cl = 'A';
-    int attrs = 5;
     bpd::pipe p;
     bpd::file_handle fhinvalid;
-    bp::basic_child< char, int > c =
-        bp::launcher::create_child(h, cl, attrs,
-                                   fhinvalid, fhinvalid, p.rend());
+    bp::basic_child< char > c =
+        bp::launcher::create_child(h, cl, fhinvalid, fhinvalid, p.rend());
 
     bp::postream os(p.wend());
     os << "test-stderr" << std::endl;

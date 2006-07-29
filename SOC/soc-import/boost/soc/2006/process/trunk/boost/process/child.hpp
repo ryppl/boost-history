@@ -12,7 +12,6 @@
 #if !defined(BOOST_PROCESS_CHILD_HPP)
 #define BOOST_PROCESS_CHILD_HPP
 
-#include <boost/process/attributes.hpp>
 #include <boost/process/basic_child.hpp>
 #include <boost/process/command_line.hpp>
 
@@ -21,7 +20,7 @@ namespace process {
 
 // ------------------------------------------------------------------------
 
-typedef basic_child< command_line, attributes > child;
+typedef basic_child< command_line > child;
 
 // ------------------------------------------------------------------------
 

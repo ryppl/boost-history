@@ -40,6 +40,12 @@ class posix_launcher :
     input_set m_input_set;
     output_set m_output_set;
 
+    uid_t m_uid;
+    uid_t m_euid;
+    gid_t m_gid;
+    gid_t m_egid;
+    std::string m_chroot;
+
 public:
     posix_launcher(int flags = launcher::REDIR_ALL);
 
@@ -47,16 +53,32 @@ public:
     posix_launcher& redir_output(int desc);
     posix_launcher& merge_outputs(int from, int to);
 
-    template< class Command_Line, class Attributes >
-    basic_posix_child< Command_Line, Attributes >
-        start(const Command_Line& cl, const Attributes& attrs);
+    uid_t get_uid(void) const;
+    uid_t get_euid(void) const;
+    gid_t get_gid(void) const;
+    gid_t get_egid(void) const;
+    const std::string& get_chroot(void) const;
+
+    posix_launcher& set_uid(uid_t uid);
+    posix_launcher& set_euid(uid_t euid);
+    posix_launcher& set_gid(gid_t gid);
+    posix_launcher& set_egid(gid_t egid);
+    posix_launcher& set_chroot(const std::string& dir);
+
+    template< class Command_Line >
+    basic_posix_child< Command_Line > start(const Command_Line& cl);
 };
 
 // ------------------------------------------------------------------------
 
 inline
 posix_launcher::posix_launcher(int flags) :
-    launcher(flags)
+    launcher(flags),
+    m_uid(::getuid()),
+    m_euid(::geteuid()),
+    m_gid(::getgid()),
+    m_egid(::getegid()),
+    m_chroot("")
 {
     if (flags & REDIR_STDIN)
         redir_input(STDIN_FILENO);
@@ -108,13 +130,113 @@ posix_launcher::merge_outputs(int src, int dest)
 
 // ------------------------------------------------------------------------
 
-template< class Command_Line, class Attributes >
 inline
-basic_posix_child< Command_Line, Attributes >
-posix_launcher::start(const Command_Line& cl, const Attributes& attrs)
+uid_t
+posix_launcher::get_uid(void)
+    const
+{
+    return m_uid;
+}
+
+// ------------------------------------------------------------------------
+
+inline
+uid_t
+posix_launcher::get_euid(void)
+    const
+{
+    return m_euid;
+}
+
+// ------------------------------------------------------------------------
+
+inline
+gid_t
+posix_launcher::get_gid(void)
+    const
+{
+    return m_gid;
+}
+
+// ------------------------------------------------------------------------
+
+inline
+gid_t
+posix_launcher::get_egid(void)
+    const
+{
+    return m_egid;
+}
+
+// ------------------------------------------------------------------------
+
+inline
+const std::string&
+posix_launcher::get_chroot(void)
+    const
+{
+    return m_chroot;
+}
+
+// ------------------------------------------------------------------------
+
+inline
+posix_launcher&
+posix_launcher::set_uid(uid_t uid)
+{
+    m_uid = uid;
+    return *this;
+}
+
+// ------------------------------------------------------------------------
+
+inline
+posix_launcher&
+posix_launcher::set_euid(uid_t euid)
+{
+    m_euid = euid;
+    return *this;
+}
+
+// ------------------------------------------------------------------------
+
+inline
+posix_launcher&
+posix_launcher::set_gid(gid_t gid)
+{
+    m_gid = gid;
+    return *this;
+}
+
+// ------------------------------------------------------------------------
+
+inline
+posix_launcher&
+posix_launcher::set_egid(gid_t egid)
+{
+    m_egid = egid;
+    return *this;
+}
+
+// ------------------------------------------------------------------------
+
+inline
+posix_launcher&
+posix_launcher::set_chroot(const std::string& dir)
+{
+    m_chroot = dir;
+    return *this;
+}
+
+// ------------------------------------------------------------------------
+
+template< class Command_Line >
+inline
+basic_posix_child< Command_Line >
+posix_launcher::start(const Command_Line& cl)
 {
     typedef typename
-        basic_posix_child< Command_Line, Attributes >::pipe_map pipe_map;
+        basic_posix_child< Command_Line >::pipe_map pipe_map;
 
     pipe_map inpipes;
     for (input_set::const_iterator iter = m_input_set.begin();
@@ -162,7 +284,42 @@ posix_launcher::start(const Command_Line& cl, const Attributes& attrs)
             fh.disown();
         }
 
-        posix_child_entry(cl, attrs);
+        if (!m_chroot.empty()) {
+            if (::chroot(m_chroot.c_str()) == -1)
+                boost::throw_exception
+                    (system_error("boost::process::posix_launcher::start",
+                                  "chroot(2) failed", errno));
+        }
+
+        if (m_gid != ::getgid()) {
+            if (::setgid(m_gid) == -1)
+                boost::throw_exception
+                    (system_error("boost::process::posix_launcher::start",
+                                  "setgid(2) failed", errno));
+        }
+
+        if (m_egid != ::getegid()) {
+            if (::setegid(m_egid) == -1)
+                boost::throw_exception
+                    (system_error("boost::process::posix_launcher::start",
+                                  "setegid(2) failed", errno));
+        }
+
+        if (m_uid != ::getuid()) {
+            if (::setuid(m_uid) == -1)
+                boost::throw_exception
+                    (system_error("boost::process::posix_launcher::start",
+                                  "setuid(2) failed", errno));
+        }
+
+        if (m_euid != ::geteuid()) {
+            if (::seteuid(m_euid) == -1)
+                boost::throw_exception
+                    (system_error("boost::process::posix_launcher::start",
+                                  "seteuid(2) failed", errno));
+        }
+
+        posix_child_entry(cl);
         BOOST_ASSERT(false); // Not reached.
     }
 
@@ -205,8 +362,8 @@ posix_launcher::start(const Command_Line& cl, const Attributes& attrs)
     BOOST_ASSERT(!(get_flags() & REDIR_STDIN) || fhstdin.is_valid());
     BOOST_ASSERT(!(get_flags() & REDIR_STDOUT) || fhstdout.is_valid());
     BOOST_ASSERT(!(get_flags() & REDIR_STDERR) || fhstderr.is_valid());
-    return basic_posix_child< Command_Line, Attributes >
-        (pid, cl, attrs, fhstdin, fhstdout, fhstderr, inpipes, outpipes);
+    return basic_posix_child< Command_Line >
+        (pid, cl, fhstdin, fhstdout, fhstderr, inpipes, outpipes);
 }
 
 // ------------------------------------------------------------------------
