@@ -84,11 +84,6 @@ namespace boost { namespace coroutines {
    typename T, 
    = boost::tuples::null_type BOOST_PP_INTERCEPT)>
   struct tuple_traits : tuple_traits_tag {
-  private:
-    /* this is a pure compile time type */
-    tuple_traits();
-    tuple_traits(const tuple_traits&);
-    void operator=(const tuple_traits&);
   public:	
     typedef boost::tuple
     <BOOST_PP_ENUM_PARAMS

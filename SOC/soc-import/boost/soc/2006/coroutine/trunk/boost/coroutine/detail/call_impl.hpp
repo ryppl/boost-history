@@ -26,7 +26,7 @@ namespace boost { namespace coroutines { namespace detail {
       m_coroutine(coroutine){}
 
     typedef BOOST_DEDUCED_TYPENAME                
-    Future::value_type value_type;              
+    Future::tuple_type tuple_type;              
 
     typedef BOOST_DEDUCED_TYPENAME                
     Future::tuple_traits_type tuple_traits_type;              
@@ -56,9 +56,9 @@ namespace boost { namespace coroutines { namespace detail {
        (BOOST_COROUTINE_ARG_MAX,
 	BOOST_COROUTINE_param_with_default,
 	arg)) {
-      m_future = value_type
+      wait_gateway::assign(m_future,tuple_type
 	(BOOST_PP_ENUM_PARAMS
-	 (BOOST_COROUTINE_ARG_MAX, arg));
+	 (BOOST_COROUTINE_ARG_MAX, arg)));
       if(wait_gateway::signal(m_coroutine))
 	m_coroutine();
     }

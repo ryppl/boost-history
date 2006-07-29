@@ -30,6 +30,12 @@ namespace boost { namespace coroutines { namespace detail {
     void mark_wait(Future& f, bool how) {
       f.mark_wait(how);
     }
+
+    template<typename Future, typename Tuple>
+    static
+    void assign(Future& future, const Tuple& tuple) {
+      future.assign(tuple);
+    }
   };
 
 

@@ -3,10 +3,11 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #include <boost/test/unit_test.hpp>
 #include <boost/ref.hpp>
+#include <boost/tuple/tuple_comparison.hpp>
+#include <boost/none.hpp>
+#include <boost/function.hpp>
 #include <boost/coroutine/coroutine.hpp>
 #include <boost/coroutine/future.hpp>
-#include <boost/tuple/tuple_comparison.hpp>
-#include <boost/function.hpp>
 
 
 namespace coroutines = boost::coroutines;
@@ -35,9 +36,15 @@ void coro_body(a_pipe& my_pipe, coroutine_type self)  {
   //= coroutines::call(boost::bind(&a_pipe::listen, my_pipe, _1), self);
   my_pipe.listen(coroutines::make_callback(future, self));
   coroutines::wait(self, future);
-  boost::optional<int> a;
   BOOST_CHECK(future);
-  BOOST_CHECK(*future == boost::make_tuple(1));
+  BOOST_CHECK(*future == 1);
+  future = boost::none;
+  coroutines::wait(self, future);
+  BOOST_CHECK(*future == 2);
+  future = boost::none;
+  coroutines::wait(self, future);
+  BOOST_CHECK(*future == 3);
+  future = boost::none;
   return;  
 }
 
@@ -46,6 +53,8 @@ void test_call() {
   coroutine_type coro(boost::bind(coro_body, boost::ref(my_pipe), _1));
   coro();
   my_pipe.send(1);
+  my_pipe.send(2);
+  my_pipe.send(3);
 		      }
 
 boost::unit_test::test_suite* init_unit_test_suite( int argc, char* argv[] )
