@@ -9,9 +9,9 @@
 //
 
 //!
-//! \file boost/process/basic_child.hpp
+//! \file boost/process/basic_posix_child.hpp
 //!
-//! Includes the declaration of the basic_child template.
+//! Includes the declaration of the basic_posix_child template.
 //!
 
 #if !defined(BOOST_PROCESS_BASIC_POSIX_CHILD_HPP)
