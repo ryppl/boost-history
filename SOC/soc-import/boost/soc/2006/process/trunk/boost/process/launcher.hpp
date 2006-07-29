@@ -130,6 +130,7 @@ launcher::launcher(int flags) :
               "GetCurrentDirectory failed", ::GetLastError()));
     }
     m_work_directory = buf;
+    m_environment.set("", m_work_directory);
     delete buf;
 #endif
     BOOST_ASSERT(!m_work_directory.empty());
@@ -173,6 +174,9 @@ launcher::set_work_directory(const std::string& wd)
 {
     BOOST_ASSERT(wd.length() > 0);
     m_work_directory = wd;
+#if defined(BOOST_PROCESS_WIN32_API)
+    m_environment.set("", m_work_directory);
+#endif
 }
 
 // ------------------------------------------------------------------------
@@ -399,7 +403,6 @@ launcher::start_win32(const Command_Line& cl,
         (::_tcsdup(TEXT(cl.get_executable().c_str())));
     boost::scoped_array< TCHAR > workdir
         (::_tcsdup(TEXT(m_work_directory().c_str())));
-    m_environment.set("", m_work_directory());
 
     boost::shared_array< TCHAR > env = m_environment.win32_strings();
     if (!::CreateProcess(executable.get(), cmdline.get(), NULL, NULL, TRUE,
