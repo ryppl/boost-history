@@ -1,6 +1,5 @@
 //
 // Boost.Process
-// Implementation of the Launcher concept.
 //
 // Copyright (c) 2006 Julio M. Merino Vidal.
 //
@@ -9,8 +8,16 @@
 // at http://www.boost.org/LICENSE_1_0.txt.)
 //
 
+//!
+//! \file boost/process/launcher.hpp
+//!
+//! Includes the declaration of the launcher class.
+//!
+
 #if !defined(BOOST_PROCESS_LAUNCHER_HPP)
+/** \cond */
 #define BOOST_PROCESS_LAUNCHER_HPP
+/** \endcond */
 
 #include <boost/process/config.hpp>
 
@@ -37,20 +44,35 @@ namespace process {
 
 // ------------------------------------------------------------------------
 
+//!
+//! \brief Generic implementation of the Launcher concept.
+//!
+//! The launcher class implements the Launcher concept in an operating
+//! system agnostic way; it allows spawning new child process using a
+//! single and common interface across different systems.
+//!
 class launcher
 {
+    //!
+    //! \brief Bit field that specifies the desired stream redirections.
+    //!
     int m_flags;
+
+    //!
+    //! \brief The process' environment.
+    //!
+    //! Contains the list of environment variables, alongside with their
+    //! values, that will be passed to the spawned child process.
+    //!
     detail::environment m_environment;
 
     //!
-    //! \brief The process' current work directory.
+    //! \brief The process' initial work directory.
     //!
-    //! The work directory is the directory in which the process is
-    //! currently running.  This may be changed during the process'
-    //! lifetime, although its main purpose is to set up a new child
-    //! process.
+    //! The work directory is the directory in which the process starts
+    //! execution.
     //!
-    //! Ideally this could be of boost::filesystem::path type, but it
+    //! Ideally this could be of boost::filesystem::path type but it
     //! is a regular string to avoid depending on Boost.Filesystem.
     //!
     std::string m_work_directory;
@@ -72,12 +94,21 @@ class launcher
 #endif
 
 protected:
-#if defined(BOOST_PROCESS_POSIX_API)
+#if defined(BOOST_PROCESS_POSIX_API) || defined(BOOST_PROCESS_DOXYGEN)
+    //!
+    //! \brief Default startup procedure for a new child process.
+    //!
+    //! This auxiliary function contains part of the code used when
+    //! launching a child process in a POSIX system.  This is meant to be
+    //! executed by the child process after the fork has happened and
+    //! takes care to execute the given command line \a cl.
+    //!
     template< class Command_Line >
     void posix_child_entry(const Command_Line& cl);
 #endif
 
 public:
+    // See the constructor's description for information about these.
     static const int REDIR_NONE = 0;
     static const int REDIR_STDIN = (1 << 0);
     static const int REDIR_STDOUT = (1 << 1);
@@ -88,17 +119,103 @@ public:
     static const int REDIR_ALL_MERGE =
         REDIR_STDIN | REDIR_STDOUT | REDIR_STDERR_TO_STDOUT;
 
+    //!
+    //! \brief Constructs a new launcher with redirections.
+    //!
+    //! Constructs a new launcher object ready to spawn a new child
+    //! process.  The launcher is configured to redirect the data streams
+    //! described by the \a flags bit field.
+    //!
+    //! If \a flags is REDIR_NONE, none of the standard data streams are
+    //! redirected.  They are left untouched so they are generally shared
+    //! with those of the caller.
+    //!
+    //! \a flags can also carry an OR of any of REDIR_STDIN, REDIR_STDOUT
+    //! and REDIR_STDERR.  These tell the launcher to redirect their
+    //! corresponding data streams so that they can later be fetched from
+    //! the child object.  Additionally, the REDIR_STDERR_TO_STDOUT flag
+    //! can be given, which configures the child process to use the same
+    //! output channel for both the standard output and standard error
+    //! flows; be aware that this conflicts with REDIR_STDERR.
+    //!
+    //! At last, two predefined bit sets are provided for simplicity:
+    //! REDIR_ALL redirects all of the three standard flows and
+    //! REDIR_ALL_MERGE does the same thing but redirects the standard
+    //! error to the standard output.
+    //!
+    //! It is important to note that the initial work directory of the
+    //! child processes is set to the currently working directory.  See
+    //! set_work_directory() for more details.
+    //!
     launcher(int flags = REDIR_ALL);
 
+    //!
+    //! \brief Gets the channel redirections.
+    //!
+    //! Returns a bit field indicating the channel redirections for the
+    //! child process.  This function is possibly only useful in child
+    //! classes.
+    //!
     int get_flags(void) const;
+
+    //!
+    //! \brief Sets the channel redirections.
+    //!
+    //! Sets the channel redirections again to match those specified in
+    //! \a flags.  See the constructor documentation for more details.
+    //!
     void set_flags(int flags);
 
+    //!
+    //! \brief Sets the %environment variable \a var to \a value.
+    //!
+    //! Sets the new child's %environment variable \a var to \a value.
+    //! The %environment of the current process is not touched.
+    //!
+    //! If the variable was already defined in the environment, its
+    //! contents are replaced with the ones given in \a val.
+    //!
+    //! Be aware that \a value is allowed to be empty, although this may
+    //! result in different behavior depending on the underlying operating
+    //! system.  Win32 treats a variable with an empty value the same as
+    //! it was undefined.  Contrarywise, POSIX systems consider a variable
+    //! with an empty value to be defined.
+    //!
     void set_environment(const std::string& var, const std::string& value);
+
+    //!
+    //! \brief Unsets the %environment variable \a var.
+    //!
+    //! Unsets the new child's %environment variable \a var.
+    //! The %environment of the current process is not touched.
+    //!
     void unset_environment(const std::string& var);
 
+    //!
+    //! \brief Gets the initial work directory for the new child.
+    //!
+    //! Returns the path to the directory in which the child process will
+    //! start operation.
+    //!
     const std::string& get_work_directory(void) const;
+
+    //!
+    //! \brief Sets the initial work directory for the new child.
+    //!
+    //! Sets the path to the directory in which the child process will
+    //! start operation.
+    //!
     void set_work_directory(const std::string& wd);
 
+    //!
+    //! \brief Starts a new child process.
+    //!
+    //! Given a command line \a cl, starts a new process with all the
+    //! parameters configured in the launcher.  The launcher can be
+    //! reused afterwards to launch other different command lines.
+    //!
+    //! \return A handle to the new child process.
+    //!
     template< class Command_Line >
     basic_child< Command_Line > start(const Command_Line& cl);
 };

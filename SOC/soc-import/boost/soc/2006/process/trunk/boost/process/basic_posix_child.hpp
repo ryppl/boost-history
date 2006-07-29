@@ -1,6 +1,5 @@
 //
 // Boost.Process
-// Implementation of the Child concept.
 //
 // Copyright (c) 2006 Julio M. Merino Vidal.
 //
@@ -9,8 +8,16 @@
 // at http://www.boost.org/LICENSE_1_0.txt.)
 //
 
+//!
+//! \file boost/process/basic_child.hpp
+//!
+//! Includes the declaration of the basic_child template.
+//!
+
 #if !defined(BOOST_PROCESS_BASIC_POSIX_CHILD_HPP)
+/** \cond */
 #define BOOST_PROCESS_BASIC_POSIX_CHILD_HPP
+/** \endcond */
 
 #include <boost/process/config.hpp>
 
@@ -32,26 +39,114 @@ namespace process {
 
 // ------------------------------------------------------------------------
 
+//!
+//! \brief POSIX implementation of the Child concept.
+//!
+//! The basic_posix_child template implements the Child concept in a POSIX
+//! operating system.  This class is templatized on a type that specifies
+//! the class implementing the Command_Line concept, used to represent the
+//! command line used to launch the process.
+//!
+//! A POSIX child differs from a regular child (represented by a
+//! basic_child object) in that it supports more than three communication
+//! channels with its parent.  These channels are identified by regular
+//! file descriptors (integers).
+//!
 template< class Command_Line >
 class basic_posix_child :
     public basic_child< Command_Line >
 {
 public:
+    //!
+    //! \brief Process handle type inherited from basic_process.
+    //!
     typedef typename basic_child< Command_Line >::handle_type handle_type;
 
+    //!
+    //! \brief Gets a reference to the child's input stream \a desc.
+    //!
+    //! Returns a reference to a postream object that represents one of
+    //! the multiple input communication channels with the child process.
+    //! The channel is identified by \a desc as seen from the child's
+    //! point of view.  The parent can use the returned stream to send
+    //! data to the child.
+    //!
+    //! Giving this function the STDIN_FILENO constant (defined in
+    //! cstdlib) is a synonym for the get_stdin() call inherited from
+    //! basic_child.
+    //!
     postream& get_input(int desc) const;
+
+    //!
+    //! \brief Gets a reference to the child's output stream \a desc.
+    //!
+    //! Returns a reference to a pistream object that represents one of
+    //! the multiple output communication channels with the child process.
+    //! The channel is identified by \a desc as seen from the child's
+    //! point of view.  The parent can use the returned stream to retrieve
+    //! data from the child.
+    //!
+    //! Giving this function the STDOUT_FILENO or STDERR_FILENO constants
+    //! (both defined in cstdlib) are synonyms for the get_stdout() and
+    //! get_stderr() calls inherited from basic_child, respectively.
+    //!
     pistream& get_output(int desc) const;
 
 private:
+    //!
+    //! \brief Maps child's file descriptors to postream objects.
+    //!
     typedef std::map< int, boost::shared_ptr< postream > > input_map;
+
+    //!
+    //! \brief Maps child's file descriptors to pistream objects.
+    //!
     typedef std::map< int, boost::shared_ptr< pistream > > output_map;
 
+    //!
+    //! \brief Contains all relationships between child's input file
+    //!        descriptors and their corresponding postream objects.
+    //!
     input_map m_input_map;
+
+    //!
+    //! \brief Contains all relationships between child's output file
+    //!        descriptors and their corresponding pistream objects.
+    //!
     output_map m_output_map;
 
 protected:
     friend class posix_launcher;
+
+    //!
+    //! \brief Maps child's file descriptors to pipe objects.
+    //!
     typedef std::map< int, detail::pipe > pipe_map;
+
+    //!
+    //! \brief Constructs a new POSIX child object representing a just
+    //!        spawned child process.
+    //!
+    //! Creates a new child object that represents the just spawned process
+    //! \a h.  The \a cl command line is assigned to this process and it
+    //! is assummed that its contents are those that were used to launch
+    //! the program's instance.
+    //!
+    //! The \a fhstdin, \a fhstdout and \a fhstderr file handles represent
+    //! the parent's handles used to communicate with the corresponding
+    //! data streams.  They needn't be valid but their availability must
+    //! match the redirections configured by the launcher that spawned this
+    //! process.
+    //!
+    //! The \a inpipes and \a outpipes maps contain additional redirections
+    //! to send and retrieve data to/from the child process.  Note that the
+    //! three standard data flows are not included in these maps because
+    //! they are internally handled by the parent class, basic_child.
+    //!
+    //! This constructor is protected because the library user has no
+    //! business in creating representations of live processes himself;
+    //! the library takes care of that in all cases.
+    //!
     basic_posix_child(handle_type h,
                 const Command_Line& cl,
                 detail::file_handle& fhstdin,

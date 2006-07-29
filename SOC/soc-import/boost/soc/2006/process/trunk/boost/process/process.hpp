@@ -1,6 +1,5 @@
 //
 // Boost.Process
-// Generic instantiation of basic_process.
 //
 // Copyright (c) 2006 Julio M. Merino Vidal.
 //
@@ -9,8 +8,16 @@
 // at http://www.boost.org/LICENSE_1_0.txt.)
 //
 
+//!
+//! \file boost/process/process.hpp
+//!
+//! Includes the declaration of the process class.
+//!
+
 #if !defined(BOOST_PROCESS_PROCESS_HPP)
+/** \cond */
 #define BOOST_PROCESS_PROCESS_HPP
+/** \endcond */
 
 #include <boost/process/basic_process.hpp>
 #include <boost/process/command_line.hpp>
@@ -20,6 +27,13 @@ namespace process {
 
 // ------------------------------------------------------------------------
 
+//!
+//! \brief Generic instantiation of the basic_process template.
+//!
+//! Generic instantiation of the basic_process template.  This relies on
+//! the command_line implementation of the Command_Line concept provided
+//! by the library.
+//!
 typedef basic_process< command_line > process;
 
 // ------------------------------------------------------------------------

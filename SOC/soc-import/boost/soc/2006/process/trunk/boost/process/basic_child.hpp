@@ -1,6 +1,5 @@
 //
 // Boost.Process
-// Implementation of the Child concept.
 //
 // Copyright (c) 2006 Julio M. Merino Vidal.
 //
@@ -9,8 +8,16 @@
 // at http://www.boost.org/LICENSE_1_0.txt.)
 //
 
+//!
+//! \file boost/process/basic_child.hpp
+//!
+//! Includes the declaration of the basic_child template.
+//!
+
 #if !defined(BOOST_PROCESS_BASIC_CHILD_HPP)
+/** \cond */
 #define BOOST_PROCESS_BASIC_CHILD_HPP
+/** \endcond */
 
 #include <boost/process/config.hpp>
 
@@ -43,26 +50,112 @@ namespace process {
 
 // ------------------------------------------------------------------------
 
+//!
+//! \brief Generic implementation of the Child concept.
+//!
+//! The basic_child template implements the Child concept in an operating
+//! system agnostic way.  This class is templatized on a type that
+//! specifies the class implementing the Command_Line concept, used to
+//! represent the command line used to launch the process.
+//!
 template< class Command_Line >
 class basic_child :
     public basic_process< Command_Line >
 {
 public:
+    //!
+    //! \brief Process handle type inherited from basic_process.
+    //!
     typedef typename basic_process< Command_Line >::handle_type handle_type;
 
-    status wait(void);
-
+    //!
+    //! \brief Gets a reference to the child's standard input stream.
+    //!
+    //! Returns a reference to a postream object that represents the
+    //! standard input communication channel with the child process.
+    //!
     postream& get_stdin(void) const;
+
+    //!
+    //! \brief Gets a reference to the child's standard output stream.
+    //!
+    //! Returns a reference to a pistream object that represents the
+    //! standard output communication channel with the child process.
+    //!
     pistream& get_stdout(void) const;
+
+    //!
+    //! \brief Gets a reference to the child's standard error stream.
+    //!
+    //! Returns a reference to a pistream object that represents the
+    //! standard error communication channel with the child process.
+    //!
     pistream& get_stderr(void) const;
 
+    //!
+    //! \brief Blocks and waits for the child process to terminate.
+    //!
+    //! Blocks (if necessary) until the child process terminates execution
+    //! and returns a status object that represents the finalization
+    //! condition.
+    //!
+    //! The child process object ceases to be valid after this call.
+    //!
+    status wait(void);
+
 private:
+    //!
+    //! \brief The standard input stream attached to the child process.
+    //!
+    //! This postream object holds the communication channel with the
+    //! child's process standard input.  It is stored in a pointer because
+    //! this field is only valid when the user requested to redirect this
+    //! data stream.
+    //!
     boost::shared_ptr< postream > m_sstdin;
+
+    //!
+    //! \brief The standard output stream attached to the child process.
+    //!
+    //! This postream object holds the communication channel with the
+    //! child's process standard output.  It is stored in a pointer because
+    //! this field is only valid when the user requested to redirect this
+    //! data stream.
+    //!
     boost::shared_ptr< pistream > m_sstdout;
+
+    //!
+    //! \brief The standard error stream attached to the child process.
+    //!
+    //! This postream object holds the communication channel with the
+    //! child's process standard error.  It is stored in a pointer because
+    //! this field is only valid when the user requested to redirect this
+    //! data stream.
+    //!
     boost::shared_ptr< pistream > m_sstderr;
 
 protected:
     friend class launcher;
+
+    //!
+    //! \brief Constructs a new child object representing a just spawned
+    //!        child process.
+    //!
+    //! Creates a new child object that represents the just spawned process
+    //! \a h.  The \a cl command line is assigned to this process and it
+    //! is assummed that its contents are those that were used to launch
+    //! the program's instance.
+    //!
+    //! The \a fhstdin, \a fhstdout and \a fhstderr file handles represent
+    //! the parent's handles used to communicate with the corresponding
+    //! data streams.  They needn't be valid but their availability must
+    //! match the redirections configured by the launcher that spawned this
+    //! process.
+    //!
+    //! This constructor is protected because the library user has no
+    //! business in creating representations of live processes himself;
+    //! the library takes care of that in all cases.
+    //!
     basic_child(handle_type h,
                 const Command_Line& cl,
                 detail::file_handle& fhstdin,
