@@ -40,7 +40,10 @@ namespace boost { namespace coroutines {
     typedef void (future::*safe_bool)();           \
     void safe_bool_true() {}                       \
     public:                                        \
-    typedef BOOST_PP_IF(n, BOOST_PP_IDENTITY(BOOST_DEDUCED_TYPENAME), BOOST_PP_EMPTY)()    \
+    typedef BOOST_PP_IF                            \
+      (n, BOOST_PP_IDENTITY                        \
+       (BOOST_DEDUCED_TYPENAME),                   \
+       BOOST_PP_EMPTY)()                           \
       super_type::value_type value_type;           \
     future& operator=(const value_type&rhs){       \
       super_type::operator=(rhs);                  \
