@@ -329,7 +329,6 @@ namespace boost { namespace coroutines { namespace detail {
 	status = super_type::ctx_exited_exit;
       } catch (std::exception const& e) {
 	status = super_type::ctx_exited_abnormally;
-	std::cerr<<e.what()<<"\n";
 	tinfo = &typeid(e);
       } catch (...) {
 	status = super_type::ctx_exited_abnormally;

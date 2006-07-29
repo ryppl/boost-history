@@ -4,9 +4,8 @@
 #ifndef BOOST_COROUTINE_DETAIL_COROUTINE_TRAITS_HPP_20060613
 #define BOOST_COROUTINE_DETAIL_COROUTINE_TRAITS_HPP_20060613
 #include <boost/type_traits.hpp>
-#include <boost/coroutine/tuple.hpp>
+#include <boost/coroutine/tuple_traits.hpp>
 #include <boost/coroutine/detail/yield_result_type.hpp>
-
 
 namespace boost { namespace coroutines { namespace detail {
 
@@ -22,24 +21,24 @@ namespace boost { namespace coroutines { namespace detail {
     internal_result_type;
   public:
     typedef typename 
-    boost::mpl::eval_if<is_tuple<internal_result_type>,
+    boost::mpl::eval_if<is_tuple_traits<internal_result_type>,
 			as_tuple<internal_result_type>,
 			boost::mpl::identity<internal_result_type> >
     ::type result_type;
 
     typedef typename 
-    boost::mpl::eval_if<is_tuple<internal_result_type>,
+    boost::mpl::eval_if<is_tuple_traits<internal_result_type>,
 			boost::mpl::identity<internal_result_type>,
 			boost::mpl::if_
 			<boost::is_same<internal_result_type, void>,
-			 tuple<>,
-			 tuple<internal_result_type> > >
+			 tuple_traits<>,
+			 tuple_traits<internal_result_type> > >
     ::type result_slot_traits;
 
     typedef typename result_slot_traits
     ::as_tuple result_slot_type;
     	     
-    typedef  typename detail::make_tuple
+    typedef  typename detail::make_tuple_traits
     <typename detail::signature<Signature>::type >
     ::type arg_slot_traits;
 

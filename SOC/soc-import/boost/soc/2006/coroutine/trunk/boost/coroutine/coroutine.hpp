@@ -3,8 +3,6 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #ifndef BOOST_COROUTINE_COROUTINE_HPP_20060512
 #define BOOST_COROUTINE_COROUTINE_HPP_20060512
-//this must be defined before including tuple_packer.hpp
-#define BOOST_COROUTINE_ARG_MAX 10
 #include <cstddef>
 #include <boost/preprocessor/repetition.hpp>
 #include <boost/tuple/tuple.hpp>
@@ -12,12 +10,12 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/call_traits.hpp>
+#include <boost/coroutine/detail/arg_max.hpp>
 #include <boost/coroutine/detail/coroutine_impl.hpp>
 #include <boost/coroutine/detail/default_context_impl.hpp>
 #include <boost/coroutine/detail/is_callable.hpp>
 #include <boost/coroutine/detail/argument_packer.hpp>
 #include <boost/coroutine/detail/argument_unpacker.hpp>
-#include <boost/coroutine/detail/make_tuple.hpp>
 #include <boost/coroutine/detail/signature.hpp>
 #include <boost/coroutine/detail/index.hpp>
 #include <boost/coroutine/detail/signal.hpp>
@@ -42,6 +40,7 @@ namespace boost { namespace coroutines {
     typedef ContextImpl context_impl;
     typedef Signature signature_type;
     friend class detail::coroutine_accessor;
+    friend class detail::wait_gateway;
 
     typedef BOOST_DEDUCED_TYPENAME detail::coroutine_traits<signature_type>
     ::result_type result_type;
@@ -100,7 +99,7 @@ namespace boost { namespace coroutines {
     }
 
 #   define BOOST_COROUTINE_generate_argument_n_type(z, n, traits_type) \
-    typedef BOOST_DEDUCED_TYPENAME traits_type ::template at<n>::type                \
+    typedef BOOST_DEDUCED_TYPENAME traits_type ::template at<n>::type  \
     BOOST_PP_CAT(BOOST_PP_CAT(arg, n), _type);                         \
     /**/
 
@@ -221,7 +220,8 @@ namespace boost { namespace coroutines {
 		   (yield_call_arg ,
 		    BOOST_DEDUCED_TYPENAME yield_traits::arg))) {
       return yield_impl
-      (result_slot_type(BOOST_PP_ENUM_PARAMS(BOOST_COROUTINE_ARG_MAX,arg)));
+      (result_slot_type
+       (BOOST_PP_ENUM_PARAMS(BOOST_COROUTINE_ARG_MAX,arg)));
     }
 
     template<typename Target>
@@ -233,9 +233,10 @@ namespace boost { namespace coroutines {
       (BOOST_DEDUCED_TYPENAME Target::call_arg, 
        BOOST_DEDUCED_TYPENAME Target::arg))) {
       typedef typename Target::arg_slot_type type;
-      return yield_to_impl(target, type
-			   (BOOST_PP_ENUM_PARAMS
-			    (BOOST_COROUTINE_ARG_MAX, arg)));
+      return yield_to_impl
+	(target, type
+	 (BOOST_PP_ENUM_PARAMS
+	  (BOOST_COROUTINE_ARG_MAX, arg)));
     }
 #endif
 
@@ -255,16 +256,9 @@ namespace boost { namespace coroutines {
       m_pimpl->exit();
     }
   private:
-    template<typename Coroutine>
-    friend
-    void detail::signal(Coroutine&);
-
-    template<typename Coroutine>
-    friend
-    void detail::wait(Coroutine&, int n);
 
     bool signal() {
-      m_pimpl->signal();
+      return m_pimpl->signal();
     }
 
     void wait(int n) {

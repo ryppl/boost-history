@@ -7,6 +7,7 @@
 #include <boost/preprocessor/repetition.hpp>
 #include <boost/utility/result_of.hpp>
 #include <boost/coroutine/detail/index.hpp>
+#include <boost/coroutine/detail/arg_max.hpp>
 
 namespace boost { namespace coroutines { namespace detail {
   template<typename Traits, int Len>

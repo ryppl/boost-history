@@ -3,6 +3,7 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #include <iostream>
 #include <boost/coroutine/coroutine.hpp>
+#include <boost/test/unit_test.hpp>
 
 namespace coroutines = boost::coroutines;
 using coroutines::coroutine;
@@ -17,7 +18,7 @@ typedef coroutine<int()> coroutine_iv_type;
 typedef coroutine<void(int)> coroutine_vi_type;
 
 typedef boost::tuple<my_result, my_result> result_tuple;
-typedef boost::coroutines::tuple<my_result, my_result> result_tuple_tag;
+typedef boost::coroutines::tuple_traits<my_result, my_result> result_tuple_tag;
 typedef coroutine<result_tuple_tag (my_parm)> coroutine_tuple_type;
 
 typedef boost::tuple<my_parm, my_parm> parm_tuple;
@@ -71,12 +72,12 @@ void ref(coroutine_ref_type& self, int& x) {
   self.yield();
 }
 
-int main() {
+void test_create() {
   coroutine <my_result(my_parm)> empty;
   coroutine <my_result(my_parm)> coro(foo);
-  BOOST_ASSERT(!empty);
+  BOOST_CHECK(!empty);
   empty = coro;
-  BOOST_ASSERT(empty);
+  BOOST_CHECK(empty);
 
   coroutine_type coro_functor = coroutine_type(foo_functor());
   my_parm t;
@@ -96,16 +97,20 @@ int main() {
   coroutine_ref_type ref_coro(ref);
   int x = 0;
   ref_coro(x);
-  BOOST_ASSERT(x == 10);
+  BOOST_CHECK(x == 10);
 
   while(coro && coro_functor) {
-    std::cout<<"in main, calling coro\n";
     coro(t);
-    std::cout<<"in main, calling coro_functor\n";
     coro_functor(t);
-    std::cout<<"in main!\n";
   }
-  BOOST_ASSERT(!(coro && coro_functor));
-  std::cout<<"test finished\n";
+  BOOST_CHECK(!(coro && coro_functor));
 }
 
+boost::unit_test::test_suite* init_unit_test_suite( int argc, char* argv[] )
+{
+    boost::unit_test::test_suite *test = BOOST_TEST_SUITE("create coroutine test");
+
+    test->add(BOOST_TEST_CASE(&test_create));
+
+    return test;
+}

@@ -3,17 +3,17 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #ifndef BOOST_COROUTINE_DETAIL_YIELD_RESULT_TYPE_HPP_20060609
 #define BOOST_COROUTINE_DETAIL_YIELD_RESULT_TYPE_HPP_20060609
-#include <boost/coroutine/detail/make_tuple.hpp>
+#include <boost/coroutine/detail/make_tuple_traits.hpp>
 #include <boost/mpl/vector.hpp>
 namespace boost{ namespace coroutines { namespace detail {
     /**
-     * Same as make_tuple, but if
+     * Same as make_tuple_traits, but if
      * @p TypeList is singular, @p type is the single element, and
      * if TypeList is empty, @p type is @p void.
      */
     template<typename TypeList>
     struct yield_result_type {
-      typedef typename make_tuple<TypeList>::type type;
+      typedef typename make_tuple_traits<TypeList>::type type;
     };
     
     template<typename T>

@@ -4,6 +4,7 @@
 #ifndef BOOST_COROUTINE_DETAIL_INDEX_HPP_20060613
 #define BOOST_COROUTINE_DETAIL_INDEX_HPP_20060613
 #include <boost/preprocessor/repetition.hpp>
+#include <boost/coroutine/detail/arg_max.hpp>
 namespace boost { namespace coroutines { namespace detail {
   /* 
    * Workaround for BOOST_PP_ENUM_BINARY_PARAMS, where a token

@@ -1,8 +1,8 @@
 //  (C) Copyright Giovanni P. Deretta 2006. Distributed under the Boost
 //  Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-#ifndef BOOST_COROUTINE_TUPLE_HPP_20060613
-#define BOOST_COROUTINE_TUPLE_HPP_20060613
+#ifndef BOOST_COROUTINE_TUPLE_TRAITS_HPP_20060613
+#define BOOST_COROUTINE_TUPLE_TRAITS_HPP_20060613
 #include <boost/tuple/tuple.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/preprocessor/facilities/intercept.hpp>
@@ -11,6 +11,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/bool.hpp>
+#include <boost/coroutine/detail/arg_max.hpp>
 
 namespace boost { namespace coroutines {
   namespace detail {
@@ -48,7 +49,7 @@ namespace boost { namespace coroutines {
     };
   } /* detail */
 
-  struct tuple_tag {};
+  struct tuple_traits_tag {};
       
   template<typename T>
   struct get_length {
@@ -82,12 +83,12 @@ namespace boost { namespace coroutines {
   (BOOST_COROUTINE_ARG_MAX,
    typename T, 
    = boost::tuples::null_type BOOST_PP_INTERCEPT)>
-  struct tuple : tuple_tag {
+  struct tuple_traits : tuple_traits_tag {
   private:
     /* this is a pure compile time type */
-    tuple();
-    tuple(const tuple&);
-    void operator=(const tuple&);
+    tuple_traits();
+    tuple_traits(const tuple_traits&);
+    void operator=(const tuple_traits&);
   public:	
     typedef boost::tuple
     <BOOST_PP_ENUM_PARAMS
@@ -100,18 +101,18 @@ namespace boost { namespace coroutines {
     struct at : 
       boost::mpl::eval_if_c<
       Index < 
-      boost::tuples::length<typename tuple::internal_type>::value,
-      boost::tuples::element<Index, typename tuple::internal_type>,	
-      boost::mpl::identity<typename tuple::null_type> >{};
+      boost::tuples::length<typename tuple_traits::internal_type>::value,
+      boost::tuples::element<Index, typename tuple_traits::internal_type>,	
+      boost::mpl::identity<typename tuple_traits::null_type> >{};
 
-    typedef typename make_as_tuple<tuple>::type
+    typedef typename make_as_tuple<tuple_traits>::type
     as_tuple;	
 
-    typedef typename make_result_type<tuple>::type as_result;
+    typedef typename make_result_type<tuple_traits>::type as_result;
 
   };
     
   template<typename T>
-  struct is_tuple : boost::is_convertible<T, tuple_tag> {};
+  struct is_tuple_traits : boost::is_convertible<T, tuple_traits_tag> {};
 } }
 #endif

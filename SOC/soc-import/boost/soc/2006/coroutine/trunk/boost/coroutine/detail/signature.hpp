@@ -4,6 +4,7 @@
 #ifndef BOOST_COROUTINE_DETAIL_SIGNATURE_HPP_20060609
 #define BOOST_COROUTINE_DETAIL_SIGNATURE_HPP_20060609
 #include <boost/preprocessor/repetition.hpp>
+#include <boost/coroutine/detail/arg_max.hpp>
 namespace boost{ namespace coroutines{ namespace detail{
   /*
    * Derived from an @p mpl::vector describing

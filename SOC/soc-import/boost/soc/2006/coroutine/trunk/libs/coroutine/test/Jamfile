@@ -29,6 +29,7 @@ test-suite "coroutine"
     [ run yield.cpp <template>unit_test ]
     [ run yield_to.cpp <template>unit_test ]
     [ run yield_to2.cpp <template>unit_test ]
+    [ run test_call.cpp <template>unit_test ]
   ;
 
 }
