@@ -1,0 +1,28 @@
+[/
+ / Boost.Process
+ / Examples chapter.
+ /
+ / Copyright (c) 2006 Julio M. Merino Vidal.
+ /
+ / Use, modification, and distribution is subject to the Boost Software
+ / License, Version 1.0.  (See accompanying file LICENSE_1_0.txt or copy
+ / at http://www.boost.org/LICENSE_1_0.txt.)
+ /]
+
+[/ ---------------------------------------------------------------------- ]
+
+[section Examples]
+
+This chapter contains a list of example programs shipped with the Boost
+Process library.  These little utilities are provided to show generic use
+cases of the library but are not intended to cover every tiny detail.
+Please also note that, being example code, they may not do anything useful
+at all other than showing how to use the library's interface.
+
+* [@../example/generic.cpp Generic example]: This first example shows
+  multiple aspects of the library.  Its main purpose is to illustrate
+  general ideas before one can dive into other more complete examples.
+
+[/ ---------------------------------------------------------------------- ]
+
+[endsect]

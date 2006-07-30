@@ -136,4 +136,6 @@ test-suite process :
           <library>$(BOOST_ROOT)//filesystem
         ]
 
+    [ compile ../example/generic.cpp : : ]
+
     ;

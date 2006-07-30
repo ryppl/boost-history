@@ -39,5 +39,6 @@
 [include introduction.qbk]
 [include concepts.qbk]
 [include design.qbk]
+[include examples.qbk]
 [xinclude autodoc.boostbook]
 [include acknowledgements.qbk]
