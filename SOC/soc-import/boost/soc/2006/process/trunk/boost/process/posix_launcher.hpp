@@ -544,37 +544,7 @@ posix_launcher::start(const Command_Line& cl)
          iter != outpipes.end(); iter++)
         (*iter).second.wend().close();
 
-    detail::file_handle fhstdin, fhstdout, fhstderr;
-
-    if (get_flags() & REDIR_STDIN) {
-        typename pipe_map::iterator iter = inpipes.find(STDIN_FILENO);
-        if (iter != inpipes.end()) {
-            fhstdin = (*iter).second.wend();
-            inpipes.erase(iter);
-        }
-    }
-
-    if (get_flags() & REDIR_STDOUT) {
-        typename pipe_map::iterator iter = outpipes.find(STDOUT_FILENO);
-        if (iter != outpipes.end()) {
-            fhstdout = (*iter).second.rend();
-            outpipes.erase(iter);
-        }
-    }
-
-    if (get_flags() & REDIR_STDERR) {
-        typename pipe_map::iterator iter = outpipes.find(STDERR_FILENO);
-        if (iter != outpipes.end()) {
-            fhstderr = (*iter).second.rend();
-            outpipes.erase(iter);
-        }
-    }
-
-    BOOST_ASSERT(!(get_flags() & REDIR_STDIN) || fhstdin.is_valid());
-    BOOST_ASSERT(!(get_flags() & REDIR_STDOUT) || fhstdout.is_valid());
-    BOOST_ASSERT(!(get_flags() & REDIR_STDERR) || fhstderr.is_valid());
-    return basic_posix_child< Command_Line >
-        (pid, cl, fhstdin, fhstdout, fhstderr, inpipes, outpipes);
+    return basic_posix_child< Command_Line >(pid, cl, inpipes, outpipes);
 }
 
 // ------------------------------------------------------------------------

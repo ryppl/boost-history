@@ -158,9 +158,9 @@ protected:
     //!
     basic_child(handle_type h,
                 const Command_Line& cl,
-                detail::file_handle& fhstdin,
-                detail::file_handle& fhstdout,
-                detail::file_handle& fhstderr);
+                detail::file_handle fhstdin,
+                detail::file_handle fhstdout,
+                detail::file_handle fhstderr);
 };
 
 // ------------------------------------------------------------------------
@@ -168,9 +168,11 @@ protected:
 template< class Command_Line >
 inline
 basic_child< Command_Line >::basic_child
-    (handle_type h, const Command_Line& cl,
-     detail::file_handle& fhstdin, detail::file_handle& fhstdout,
-     detail::file_handle& fhstderr) :
+    (handle_type h,
+     const Command_Line& cl,
+     detail::file_handle fhstdin,
+     detail::file_handle fhstdout,
+     detail::file_handle fhstderr) :
     basic_process< Command_Line >(h, cl)
 {
     if (fhstdin.is_valid())

@@ -124,6 +124,17 @@ protected:
     typedef std::map< int, detail::pipe > pipe_map;
 
     //!
+    //! \brief Searches for a file handle in a %pipe map.
+    //!
+    //! This helper function searches for the \a desc file descriptor
+    //! in the \a pm %pipe map and returns its corresponding file handle.
+    //! If \a out is true, it is assummed that the file handle corresponds
+    //! to a output stream, so the pipe's read end is returned; otherwise
+    //! the write end is returned.
+    //!
+    static detail::file_handle get_handle(pipe_map& pm, int desc, bool out);
+
+    //!
     //! \brief Constructs a new POSIX child object representing a just
     //!        spawned child process.
     //!
@@ -132,16 +143,10 @@ protected:
     //! is assummed that its contents are those that were used to launch
     //! the program's instance.
     //!
-    //! The \a fhstdin, \a fhstdout and \a fhstderr file handles represent
-    //! the parent's handles used to communicate with the corresponding
-    //! data streams.  They needn't be valid but their availability must
-    //! match the redirections configured by the launcher that spawned this
-    //! process.
-    //!
-    //! The \a inpipes and \a outpipes maps contain additional redirections
-    //! to send and retrieve data to/from the child process.  Note that the
-    //! three standard data flows are not included in these maps because
-    //! they are internally handled by the parent class, basic_child.
+    //! The \a inpipes and \a outpipes maps contain the pipes used to
+    //! handle the redirections of the child process.  If the launcher was
+    //! asked to redirect any of the three standard flows, their pipes
+    //! must be present in these maps.
     //!
     //! This constructor is protected because the library user has no
     //! business in creating representations of live processes himself;
@@ -149,9 +154,6 @@ protected:
     //!
     basic_posix_child(handle_type h,
                 const Command_Line& cl,
-                detail::file_handle& fhstdin,
-                detail::file_handle& fhstdout,
-                detail::file_handle& fhstderr,
                 pipe_map& inpipes,
                 pipe_map& outpipes);
 };
@@ -163,12 +165,16 @@ inline
 basic_posix_child< Command_Line >::basic_posix_child
     (handle_type h,
      const Command_Line& cl,
-     detail::file_handle& fhstdin,
-     detail::file_handle& fhstdout,
-     detail::file_handle& fhstderr,
      pipe_map& inpipes,
      pipe_map& outpipes) :
-    basic_child< Command_Line >(h, cl, fhstdin, fhstdout, fhstderr)
+    basic_child< Command_Line >
+        (h, cl,
+         basic_posix_child< Command_Line >::get_handle(inpipes, STDIN_FILENO,
+                                                       false),
+         basic_posix_child< Command_Line >::get_handle(outpipes, STDOUT_FILENO,
+                                                       true),
+         basic_posix_child< Command_Line >::get_handle(outpipes, STDERR_FILENO,
+                                                       true))
 {
     for (pipe_map::iterator iter = inpipes.begin();
          iter != inpipes.end(); iter++) {
@@ -183,6 +189,29 @@ basic_posix_child< Command_Line >::basic_posix_child
         boost::shared_ptr< pistream > st(new pistream((*iter).second.rend()));
         m_output_map.insert(output_map::value_type((*iter).first, st));
     }
+}
+
+// ------------------------------------------------------------------------
+
+template< class Command_Line >
+inline
+detail::file_handle
+basic_posix_child< Command_Line >::get_handle(pipe_map& pm, int desc,
+                                              bool out)
+{
+    detail::file_handle fh;
+
+    typename pipe_map::iterator iter = pm.find(desc);
+    if (iter != pm.end()) {
+        if (out)
+            fh = (*iter).second.rend();
+        else
+            fh = (*iter).second.wend();
+        BOOST_ASSERT(fh.is_valid());
+        pm.erase(iter);
+    }
+
+    return fh;
 }
 
 // ------------------------------------------------------------------------

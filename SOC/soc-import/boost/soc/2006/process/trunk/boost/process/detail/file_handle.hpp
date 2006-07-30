@@ -117,9 +117,9 @@ public:
     //! Ownership of the native file handle is transferred to the new
     //! object, effectively invalidating the source file handle.  This
     //! avoids having two live \a file_handle objects referring to the
-    //! same native file handle.
+    //! same native file handle.  The source file handle need not be
+    //! valid in the name of simplicity.
     //!
-    //! \pre The source file handle is valid.
     //! \post The source file handle is invalid.
     //! \post The new file handle owns the source's native file handle.
     //!
@@ -140,9 +140,9 @@ public:
     //! This assignment operator transfers ownership of the RHS file
     //! handle to the LHS one, effectively invalidating the source file
     //! handle.  This avoids having two live \a file_handle objects
-    //! referring to the same native file handle.
+    //! referring to the same native file handle.  The source file
+    //! handle need not be valid in the name of simplicity.
     //!
-    //! \pre The RHS file handle is valid.
     //! \post The RHS file handle is invalid.
     //! \post The LHS file handle owns RHS' native file handle.
     //! \return A reference to the LHS file handle.
@@ -342,8 +342,6 @@ inline
 file_handle::file_handle(const file_handle& fh) :
     m_handle(fh.m_handle)
 {
-    BOOST_ASSERT(fh.is_valid());
-
     fh.m_handle = INVALID_VALUE;
 }
 
@@ -362,8 +360,6 @@ inline
 file_handle&
 file_handle::operator=(const file_handle& fh)
 {
-    BOOST_ASSERT(fh.is_valid());
-
     m_handle = fh.m_handle;
     fh.m_handle = INVALID_VALUE;
 
