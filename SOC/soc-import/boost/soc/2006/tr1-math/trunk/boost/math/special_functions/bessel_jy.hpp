@@ -11,10 +11,9 @@
 #endif
 
 #define MAX_ITERATION 100000
-#define SIGN(x) ( (x) == 0 ? 0 : ( (x) > 0 ? 1 : -1 ) ) 
+#define SIGN(x) ( (x) == 0 ? 0 : ( (x) > 0 ? 1 : -1 ) )
+#undef min      // avoid msvc macro conflict, gcc has no such problem
 
-#include <boost/math/special_functions/bessel_jn.hpp>
-#include <boost/math/special_functions/bessel_yn.hpp>
 #include <boost/math/special_functions/gamma.hpp>
 #include <boost/math/tools/error_handling.hpp>
 #include <complex>
@@ -211,18 +210,11 @@ int bessel_jy(T v, T x, T* J, T* Y)
     if (v < 0)
     {
         reflect = true;
-        v = -v;
+        v = -v;                             // v is non-negative from here
     }
     n = static_cast<int>(v + 0.5L);
     u = v - n;                              // -1/2 <= u < 1/2
-    if (u == 0)
-    {
-        *J = bessel_jn(n, x);               // v is integer
-        *Y = bessel_yn(n, x);
-        return 0;
-    }
 
-    // v is non-negative and non-integer from here
     if (x < 0)
     {
         domain_error<T>("boost::math::bessel_jy(v, x, &J, &Y)",
