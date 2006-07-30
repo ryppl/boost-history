@@ -12,11 +12,27 @@
 
 namespace boost { namespace math {
 
-inline float bessel_jv(float v, float x)
+template <typename T>
+inline T bessel_jv(T v, T x)
 {
-    float J, Y;
-    bessel_jy<float>(v, x, &J, &Y);
+    T J, Y;
+    bessel_jy(v, x, &J, &Y);
     return J;
+}
+
+inline float cyl_bessel_j(float nu, float x)
+{
+    return bessel_jv<float>(nu, x);
+}
+
+inline double cyl_bessel_j(double nu, double x)
+{
+    return bessel_jv<double>(nu, x);
+}
+
+inline long double cyl_bessel_j(long double nu, long double x)
+{
+    return bessel_jv<long double>(nu, x);
 }
 
 }} // namespaces

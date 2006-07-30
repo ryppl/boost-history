@@ -10,7 +10,8 @@
 #define BOOST_MATH_THROW_ON_DOMAIN_ERROR
 #endif
 
-#define MAX_ITERATION 10000
+#define MAX_ITERATION 100000
+#define SIGN(x) ( (x) == 0 ? 0 : ( (x) > 0 ? 1 : -1 ) ) 
 
 #include <boost/math/special_functions/bessel_jn.hpp>
 #include <boost/math/special_functions/bessel_yn.hpp>
@@ -40,6 +41,12 @@ int temme(T v, T x, T* Y, T* Y1)
         domain_error<T>("boost::math::temme(v, x, &Y, &Y1)",
             "domain error, |v| too large, Temme series converge only for |v| <= 1/2");
     }
+    // |x| <= 2, Temme series converge rapidly
+    // |x| > 2, the larger the |x|, the slower the convergence
+    if (abs(x) > 2)
+    {
+        cout << "Warning: boost::math::temme, convergence may fail for large |x|" << endl;
+    }
 
     a = log(0.5L * x);
     b = exp(v * a);
@@ -48,8 +55,10 @@ int temme(T v, T x, T* Y, T* Y1)
         1.0L : sin(v * pi<T>()) / (v * pi<T>());
     d = abs(sigma) < std::numeric_limits<T>::epsilon() ?
         1.0L : sinh(sigma) / sigma;
-    e = 2.0L * sin(0.5L * v * pi<T>()) * (sin(0.5L * v * pi<T>()) / v);
-    gamma1 = (0.5L / v) * (tgamma(1.0L + v) - tgamma(1.0L - v)) * c;
+    e = abs(v) < std::numeric_limits<T>::epsilon() ? 0.5L*v*pi<T>()*pi<T>()
+        : 2.0L * sin(0.5L * v * pi<T>()) * (sin(0.5L * v * pi<T>()) / v);
+    gamma1 = abs(v) < std::numeric_limits<T>::epsilon() ?
+        -euler<T>() : (0.5L / v) * (tgamma(1.0L + v) - tgamma(1.0L - v)) * c;
     gamma2 = 0.5L * (tgamma(1.0L + v) + tgamma(1.0L - v)) * c;
 
     // initial values
@@ -63,7 +72,7 @@ int temme(T v, T x, T* Y, T* Y1)
     sum1 = h;
 
     // series summation
-    tolerance = 1.0e+02L * std::numeric_limits<T>::epsilon();
+    tolerance = std::numeric_limits<T>::epsilon();
     for (k = 1; k < MAX_ITERATION; k++)
     {
         f = (k * f + p + q) / (k*k - v*v);
@@ -78,7 +87,7 @@ int temme(T v, T x, T* Y, T* Y1)
     }
     if (k >= MAX_ITERATION)
     {
-        // failed to converge warning
+        cout << "Warning: boost::math::temme failed to converge" << endl;
     }
     *Y = -sum;
     *Y1 = -2.0L * sum1 / x;
@@ -87,7 +96,7 @@ int temme(T v, T x, T* Y, T* Y1)
 }
 
 // Evaluate continued fraction fv = J_(v+1) / J_v, see
-// Abramowitz and Stegun, Handbook of Mathematical Functions, 1972
+// Abramowitz and Stegun, Handbook of Mathematical Functions, 1972, 9.1.73
 template <typename T>
 int CF1(T v, T x, T* fv, int* sign)
 {
@@ -96,9 +105,16 @@ int CF1(T v, T x, T* fv, int* sign)
 
     using namespace std;
 
+    // |x| <= |v|, CF1 converges rapidly
+    // |x| > |v|, CF1 needs O(|x|) iterations to converge
+    if (abs(x) > abs(v) && abs(x) > 0.5L * MAX_ITERATION)
+    {
+        cout << "Warning: boost::math::CF1, |x| too large, convergence may fail" << endl;
+    }
+
     // modified Lentz's method, see
     // Lentz, Applied Optics, vol 15, 668 (1976)
-    tolerance = 1.0e+02L * std::numeric_limits<T>::epsilon();
+    tolerance = 2.0L * std::numeric_limits<T>::epsilon();
     tiny = sqrt(std::numeric_limits<T>::min());
     C = f = tiny;                           // b0 = 0, replace with tiny
     D = 0.0L;
@@ -118,7 +134,7 @@ int CF1(T v, T x, T* fv, int* sign)
     }
     if (k >= MAX_ITERATION)
     {
-        // failed to converge warning
+        cout << "Warning: boost::math::CF1 failed to converge" << endl;
     }
     *fv = -f;
     *sign = s;                              // sign of denominator
@@ -133,12 +149,19 @@ int CF2(T v, T x, T* p, T* q)
 {
     using namespace std;
 
-    complex<T> C, D, f, a, b, delta, tiny;
+    complex<T> C, D, f, a, b, delta, tiny, zero(0.0L), one(1.0L);
     int k;
+
+    // |x| >= |v|, CF2 converges rapidly
+    // |x| -> 0, CF2 fails to converge
+    if (abs(x) < 1)
+    {
+        cout << "Warning: boost::math::CF2, |x| too small, convergence may fail" << endl;
+    }
 
     // modified Lentz's method, complex numbers involved, see
     // Lentz, Applied Optics, vol 15, 668 (1976)
-    T tolerance = 1.0e+02L * std::numeric_limits<T>::epsilon();
+    T tolerance = 2.0L * std::numeric_limits<T>::epsilon();
     tiny = sqrt(std::numeric_limits<T>::min());
     C = f = complex<T>(-0.5L/x, 1.0L);
     D = 0.0L;
@@ -152,16 +175,16 @@ int CF2(T v, T x, T* p, T* q)
         b = complex<T>(2.0L*x, 2.0L*k);
         C = b + a / C;
         D = b + a * D;
-        if (C == 0.0L) { C = tiny; }
-        if (D == 0.0L) { D = tiny; }
-        D = 1.0L / D;
+        if (C == zero) { C = tiny; }
+        if (D == zero) { D = tiny; }
+        D = one / D;
         delta = C * D;
         f *= delta;
-        if (abs(delta - 1.0L) < tolerance) { break; }
+        if (abs(delta - one) < tolerance) { break; }
     }
     if (k >= MAX_ITERATION)
     {
-        // failed to converge warning
+        cout << "Warning: boost::math::CF2 failed to converge" << endl;
     }
     *p = real(f);
     *q = imag(f);
@@ -235,7 +258,7 @@ int bessel_jy(T v, T x, T* J, T* Y)
         }
         Yv = prev;
         Yv1 = current;
-        CF1(v, x, &fv, &s);                 // continued fraction
+        CF1(v, x, &fv, &s);                 // continued fraction CF1
         Jv = W / (Yv * fv - Yv1);           // Wronskian relation
     }
     else                                    // x in (2, \infty)
@@ -251,12 +274,12 @@ int bessel_jy(T v, T x, T* J, T* Y)
             prev = current;
             current = next;
         }
+        // can also call CF1() to get fu, not much difference in precision
         fu = prev / current;
-//compare fu to CF1(u, x, &fu, &s)?
-//get rid of s?
-        CF2(u, x, &p, &q);                  // continued fraction
-        gamma = (p - fu) / q;
-        Ju = s * sqrt(W / (q + gamma * (p - fu)));
+        CF2(u, x, &p, &q);                  // continued fraction CF2
+        T t = u / x - fu;                   // t = J'/J
+        gamma = (p - t) / q;
+        Ju = SIGN(current) * sqrt(W / (q + gamma * (p - t)));
         T ratio = (s * init) / current;     // scaling ratio
         Jv = Ju * ratio;                    // normalization
 
@@ -277,7 +300,7 @@ int bessel_jy(T v, T x, T* J, T* Y)
 reflection:
     if (reflect)
     {
-        T z = v * pi<T>();
+        T z = (u + n % 2) * pi<T>();
         *J = cos(z) * Jv - sin(z) * Yv;     // reflection formula
         *Y = sin(z) * Jv + cos(z) * Yv;
     }
