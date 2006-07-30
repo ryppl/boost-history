@@ -56,8 +56,8 @@ this concept does /not/ necessarily have to be a child of the application
 using Boost.Process, which means that the application may not have control
 over it.
 
-This concept is implemented by the `basic_process` template and the
-`process`, `posix_process` and `win32_process` classes.
+This concept is implemented by the [classref boost::process::basic_process]
+template and the [classref boost::process::process] class.
 
 [endsect]
 
@@ -85,8 +85,10 @@ Boost.Process services).  The application can directly control the child
 process, send and retrieve data from it and collect its finalization
 status.
 
-This concept is implemented by the `basic_child` and `basic_posix_child`
-templates and the `child`, `posix_child` and `win32_child` classes.
+This concept is implemented by the [classref boost::process::basic_child]
+and [classref boost::process::basic_posix_child] templates and the
+[classref boost::process::child] and [classref boost::process::posix_child]
+classes.
 
 [endsect]
 
@@ -104,7 +106,8 @@ ways so there might be multiple implementations to create one.
 
 The `Command_Line` concept represents a process' startup command line.
 
-This concept is implemented by the `command_line` class.
+This concept is implemented by the [classref boost::process::command_line]
+class.
 
 [endsect]
 
@@ -131,8 +134,8 @@ system has explicitly started it.  Furthermore, by keeping the launcher
 separate from processes, the same execution context can be shared across
 multiple command lines painlessly.
 
-This concept is implemented by the `launcher`, `posix_launcher` and
-`win32_launcher` classes.
+This concept is implemented by the [classref boost::process::launcher] and
+[classref boost::process::posix_launcher] classes.
 
 [endsect]
 
@@ -153,7 +156,7 @@ it.
 
 The `Status` concept is used to represent a process' exit status.
 
-This concept is implemented by the `status` class.
+This concept is implemented by the [classref boost::process::status] class.
 
 [endsect]
 
