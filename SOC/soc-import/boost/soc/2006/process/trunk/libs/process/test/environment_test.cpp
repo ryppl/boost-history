@@ -145,7 +145,7 @@ test_strings(void)
     env.set("VAR2", "value2");
     env.set("VAR3", "value3");
 
-    boost::shared_array< TCHAR > strs = env.strings();
+    boost::shared_array< TCHAR > strs = env.win32_strings();
     BOOST_REQUIRE(strs.get() != NULL);
 
     TCHAR* expected = TEXT("VAR1=value1\0VAR2=value2\0VAR3=value3\0\0");
@@ -165,7 +165,7 @@ test_strings_unsorted(void)
     env.set("VAR2", "value2");
     env.set("VAR1", "value1");
 
-    boost::shared_array< TCHAR > strs = env.strings();
+    boost::shared_array< TCHAR > strs = env.win32_strings();
     BOOST_REQUIRE(strs.get() != NULL);
 
     TCHAR* expected = TEXT("VAR1=value1\0VAR2=value2\0\0");

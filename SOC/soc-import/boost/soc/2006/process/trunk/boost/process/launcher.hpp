@@ -519,7 +519,7 @@ launcher::start_win32(const Command_Line& cl,
     boost::scoped_array< TCHAR > executable
         (::_tcsdup(TEXT(cl.get_executable().c_str())));
     boost::scoped_array< TCHAR > workdir
-        (::_tcsdup(TEXT(m_work_directory().c_str())));
+        (::_tcsdup(TEXT(m_work_directory.c_str())));
 
     boost::shared_array< TCHAR > env = m_environment.win32_strings();
     if (!::CreateProcess(executable.get(), cmdline.get(), NULL, NULL, TRUE,

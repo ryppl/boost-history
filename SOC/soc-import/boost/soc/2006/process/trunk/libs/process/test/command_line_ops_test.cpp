@@ -13,7 +13,7 @@
 
 #if defined(BOOST_PROCESS_POSIX_API)
 #   include <cstring>
-#elif defined(BOOST_PROCESS_POSIX_API)
+#elif defined(BOOST_PROCESS_WIN32_API)
 #   include <tchar.h>
 #else
 #   error "Unsupported platform."

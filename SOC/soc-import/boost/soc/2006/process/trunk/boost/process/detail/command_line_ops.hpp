@@ -94,21 +94,23 @@ boost::shared_array< TCHAR >
 command_line_to_win32_cmdline(const Command_Line& cl)
 {
     SIZE_T length = 0;
-    for (arguments_vector::const_iterator iter = cl.get_arguments().begin();
+    for (Command_Line::arguments_vector::const_iterator iter =
+         cl.get_arguments().begin();
          iter != cl.get_arguments().end(); iter++)
         length += (*iter).length() + 1;
 
-    boost::shared_array< TCHAR > cl(new TCHAR[length]);
-    ::_tcscpy_s(cl.get(), length, TEXT(""));
+    boost::shared_array< TCHAR > cmdline(new TCHAR[length]);
+    ::_tcscpy_s(cmdline.get(), length, TEXT(""));
 
-    for (arguments_vector::size_type i = 0; i < cl.get_arguments().size();
-         i++) {
-        ::_tcscat_s(cl.get(), length, TEXT(cl.get_arguments()[i].c_str()));
+    for (Command_Line::arguments_vector::size_type i = 0;
+         i < cl.get_arguments().size(); i++) {
+        ::_tcscat_s(cmdline.get(), length,
+                    TEXT(cl.get_arguments()[i].c_str()));
         if (i != cl.get_arguments().size() - 1)
-            ::_tcscat_s(cl.get(), length, TEXT(" "));
+            ::_tcscat_s(cmdline.get(), length, TEXT(" "));
     }
 
-    return cl;
+    return cmdline;
 }
 #endif
 
