@@ -86,7 +86,7 @@ T bessel_jn(int n, T x)
     return value;
 }
 
-template <class T>
+template <typename T>
 inline T bessel_jn(T n, T x)
 {
     return bessel_jn(static_cast<int>(n), x);
