@@ -8,6 +8,7 @@
 
 #include <boost/math/special_functions/bessel_j0.hpp>
 #include <boost/math/special_functions/bessel_j1.hpp>
+#include <boost/math/special_functions/bessel_jy.hpp>
 
 // Bessel function of the first kind of integer order
 // J_n(z) is the minimal solution
@@ -59,27 +60,21 @@ T bessel_jn(int n, T x)
     }
     else                                    // backward recurrence
     {
-        int m = n + sqrt(50.0L * n);        // hard-coded constant, changeable
-        prev = 0.0L;
-        current = 1.0L;
-        for (int k = m; k > 0; k--)
+        T fn; int s;                        // fn = J_(n+1) / J_n
+        // |x| <= n, fast convergence for continued fraction CF1
+        CF1(static_cast<T>(n), x, &fn, &s);
+        // tiny initial value to prevent overflow
+        T init = sqrt(std::numeric_limits<T>::min());
+        prev = fn * init;
+        current = init;
+        for (int k = n; k > 0; k--)
         {
-            if (k == n)
-            {
-                value = current;
-            }
             next = 2.0L * k * current / x - prev;
             prev = current;
             current = next;
         }
-        if (abs(current) > abs(prev))       // normalization
-        {
-            value *= bessel_j0(x) / current;
-        }
-        else
-        {
-            value *= bessel_j1(x) / prev;
-        }
+        T ratio = init / current;           // scaling ratio
+        value = bessel_j0(x) * ratio;       // normalization
     }
     value *= factor;
 
