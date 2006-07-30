@@ -75,7 +75,7 @@ T bessel_yn(int n, T x)
     return value;
 }
 
-template <class T>
+template <typename T>
 inline T bessel_yn(T n, T x)
 {
     return bessel_yn(static_cast<int>(n), x);
