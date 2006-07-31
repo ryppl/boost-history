@@ -15,6 +15,7 @@
 #undef min      // avoid msvc macro conflict, gcc has no such problem
 
 #include <boost/math/special_functions/gamma.hpp>
+#include <boost/math/constants/constants.hpp>
 #include <boost/math/tools/error_handling.hpp>
 #include <complex>
 
@@ -224,7 +225,7 @@ int bessel_jy(T v, T x, T* J, T* Y)
     {
         if (std::numeric_limits<T>::has_infinity)
         {
-            Jv = static_cast<T>(0);
+            Jv = (v == 0) ? static_cast<T>(1) : static_cast<T>(0);
             Yv = -std::numeric_limits<T>::infinity();
             goto reflection;
         }
