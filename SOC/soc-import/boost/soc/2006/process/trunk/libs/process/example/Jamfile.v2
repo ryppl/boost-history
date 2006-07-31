@@ -21,6 +21,11 @@ project
         <include>../../..
     ;
 
+exe command_lines
+    :
+        command_lines.cpp
+    ;
+
 exe generic
     :
         generic.cpp

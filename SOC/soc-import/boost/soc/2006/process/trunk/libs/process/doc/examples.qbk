@@ -23,6 +23,10 @@ at all other than showing how to use the library's interface.
   multiple aspects of the library.  Its main purpose is to illustrate
   general ideas before one can dive into other more complete examples.
 
+* [@../example/command_lines.cpp Command lines]: This example shows
+  multiple ways to construct a command line and why such possibilities are
+  useful.
+
 [/ ---------------------------------------------------------------------- ]
 
 [endsect]
