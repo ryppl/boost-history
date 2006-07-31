@@ -32,7 +32,7 @@ extern "C" {
 #   include <windows.h>
 }
 #else
-#   error "Unknown platform."
+#   error "Unsupported platform."
 #endif
 
 #include <boost/assert.hpp>

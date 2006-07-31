@@ -11,13 +11,13 @@
 
 #include <boost/process/config.hpp>
 
-#if defined(BOOST_PROCESS_WIN32_API)
+#if defined(BOOST_PROCESS_POSIX_API)
+#   include <cstdlib>
+#elif defined(BOOST_PROCESS_WIN32_API)
 extern "C" {
 #   include <tchar.h>
 }
 #   include <cstring>
-#elif defined(BOOST_PROCESS_POSIX_API)
-#   include <cstdlib>
 #else
 #   error "Unsupported platform."
 #endif

@@ -30,7 +30,7 @@ extern "C" {
 }
 #   include <boost/assert.hpp>
 #else
-#   error "Unknown platform."
+#   error "Unsupported platform."
 #endif
 
 #include <stdexcept>

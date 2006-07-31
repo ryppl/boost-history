@@ -11,11 +11,11 @@
 
 #include <boost/process/config.hpp>
 
-#if defined(BOOST_PROCESS_WIN32_API)
-#elif defined(BOOST_PROCESS_POSIX_API)
+#if defined(BOOST_PROCESS_POSIX_API)
 extern "C" {
 #   include <unistd.h>
 }
+#elif defined(BOOST_PROCESS_WIN32_API)
 #else
 #   error "Unsupported platform."
 #endif

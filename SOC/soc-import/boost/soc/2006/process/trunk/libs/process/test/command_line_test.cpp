@@ -24,7 +24,7 @@ test_arguments_addition(void)
     cl.argument("first").argument("second").argument("third");
     bp::command_line::arguments_vector args = cl.get_arguments();
     BOOST_REQUIRE_EQUAL(args.size(),
-        static_cast<bp::command_line::arguments_vector::size_type>(4));
+        static_cast< bp::command_line::arguments_vector::size_type >(4));
     BOOST_CHECK_EQUAL(args[0], "program");
     BOOST_CHECK_EQUAL(args[1], "first");
     BOOST_CHECK_EQUAL(args[2], "second");
@@ -39,7 +39,7 @@ test_arguments_empty(void)
     bp::command_line cl("program");
     bp::command_line::arguments_vector args = cl.get_arguments();
     BOOST_CHECK_EQUAL(args.size(),
-        static_cast<bp::command_line::arguments_vector::size_type>(1));
+        static_cast< bp::command_line::arguments_vector::size_type >(1));
     BOOST_CHECK_EQUAL(args[0], "program");
 }
 
@@ -52,7 +52,7 @@ test_arguments_types(void)
     cl.argument("string").argument(123L);
     bp::command_line::arguments_vector args = cl.get_arguments();
     BOOST_REQUIRE_EQUAL(args.size(),
-        static_cast<bp::command_line::arguments_vector::size_type>(3));
+        static_cast< bp::command_line::arguments_vector::size_type >(3));
     BOOST_CHECK_EQUAL(args[0], "program");
     BOOST_CHECK_EQUAL(args[1], "string");
     BOOST_CHECK_EQUAL(std::atol(args[2].c_str()), 123L);

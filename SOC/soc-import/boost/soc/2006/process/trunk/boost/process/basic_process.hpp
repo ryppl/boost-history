@@ -21,11 +21,11 @@
 
 #include <boost/process/config.hpp>
 
-#if defined(BOOST_PROCESS_WIN32_API)
+#if defined(BOOST_PROCESS_POSIX_API)
+#elif defined(BOOST_PROCESS_WIN32_API)
 extern "C" {
 #   include <windows.h>
 }
-#elif defined(BOOST_PROCESS_POSIX_API)
 #else
 #   error "Unsupported platform."
 #endif

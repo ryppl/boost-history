@@ -271,7 +271,7 @@ environment::win32_strings(void)
                       TEXT(tmp.c_str()));
             ptr += (tmp.length() + 1) * sizeof(TCHAR);
 
-            BOOST_ASSERT(static_cast<std::string::size_type>
+            BOOST_ASSERT(static_cast< std::string::size_type >
                 (ptr - strs.get()) * sizeof(TCHAR) < len);
         }
         *ptr = '\0';

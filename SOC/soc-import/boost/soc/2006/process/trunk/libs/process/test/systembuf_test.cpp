@@ -16,12 +16,14 @@
 #include <boost/process/detail/systembuf.hpp>
 #include <boost/test/unit_test.hpp>
 
-#if defined(BOOST_PROCESS_WIN32_API)
-#   include <windows.h>
-#else
+#if defined(BOOST_PROCESS_POSIX_API)
 #   include <sys/stat.h>
 #   include <fcntl.h>
 #   include <unistd.h>
+#elif defined(BOOST_PROCESS_WIN32_API)
+#   include <windows.h>
+#else
+#   error "Unsupported platform."
 #endif
 
 #include <cstddef>
