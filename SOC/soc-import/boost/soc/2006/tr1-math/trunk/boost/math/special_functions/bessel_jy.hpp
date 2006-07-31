@@ -83,7 +83,7 @@ int temme(T v, T x, T* Y, T* Y1)
         coef *= -0.25L * x * x / k;
         sum += coef * g;
         sum1 += coef * h;
-        if (abs(coef * g) < (1.0L + abs(sum)) * tolerance) { break; }
+        if (abs(coef * g) < abs(sum) * tolerance) { break; }
     }
     if (k >= MAX_ITERATION)
     {
