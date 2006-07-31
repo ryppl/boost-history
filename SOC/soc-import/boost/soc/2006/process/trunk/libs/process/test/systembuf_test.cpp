@@ -24,6 +24,8 @@
 #   include <unistd.h>
 #endif
 
+#include <cstddef>
+
 namespace bp = ::boost::process;
 namespace bpd = ::boost::process::detail;
 namespace but = ::boost::unit_test;
@@ -31,10 +33,10 @@ namespace but = ::boost::unit_test;
 // ------------------------------------------------------------------------
 
 static void
-check_data(std::istream& is, size_t length)
+check_data(std::istream& is, std::size_t length)
 {
     char ch = 'A', chr;
-    size_t cnt = 0;
+    std::size_t cnt = 0;
     while (is >> chr) {
         BOOST_CHECK(ch == chr);
         if (ch == 'Z')
@@ -49,10 +51,10 @@ check_data(std::istream& is, size_t length)
 // ------------------------------------------------------------------------
 
 static void
-write_data(std::ostream& os, size_t length)
+write_data(std::ostream& os, std::size_t length)
 {
     char ch = 'A';
-    for (size_t i = 0; i < length; i++) {
+    for (std::size_t i = 0; i < length; i++) {
         os << ch;
         if (ch == 'Z')
             ch = 'A';
@@ -77,7 +79,7 @@ remove_file(const std::string& name)
 // ------------------------------------------------------------------------
 
 static void
-test_read(size_t length, size_t bufsize)
+test_read(std::size_t length, std::size_t bufsize)
 {
     std::ofstream f("test_read.txt");
     write_data(f, length);
@@ -123,7 +125,7 @@ test_long_read(void)
 // ------------------------------------------------------------------------
 
 static void
-test_write(size_t length, size_t bufsize)
+test_write(std::size_t length, std::size_t bufsize)
 {
 #if defined(BOOST_PROCESS_WIN32_API)
     HANDLE hfile = ::CreateFile(TEXT("test_write.txt"),

@@ -34,6 +34,8 @@
 #   error "Unsupported platform."
 #endif
 
+#include <cstddef>
+
 namespace boost {
 namespace process {
 namespace detail {
@@ -57,18 +59,18 @@ namespace detail {
 //!
 template< class Command_Line >
 inline
-std::pair< size_t, char** >
+std::pair< std::size_t, char** >
 command_line_to_posix_argv(const Command_Line& cl)
 {
-    size_t nargs = cl.get_arguments().size();
+    std::size_t nargs = cl.get_arguments().size();
     BOOST_ASSERT(nargs > 0);
 
     char** argv = new char*[nargs + 1];
-    for (size_t i = 0; i < nargs; i++)
+    for (std::size_t i = 0; i < nargs; i++)
         argv[i] = ::strdup(cl.get_arguments()[i].c_str());
     argv[nargs] = NULL;
 
-    return std::pair< size_t, char ** >(nargs, argv);
+    return std::pair< std::size_t, char ** >(nargs, argv);
 }
 #endif
 
@@ -93,7 +95,7 @@ inline
 boost::shared_array< TCHAR >
 command_line_to_win32_cmdline(const Command_Line& cl)
 {
-    SIZE_T length = 0;
+    std::size_t length = 0;
     for (Command_Line::arguments_vector::const_iterator iter =
          cl.get_arguments().begin();
          iter != cl.get_arguments().end(); iter++)

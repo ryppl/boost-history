@@ -73,28 +73,6 @@ public:
     typedef HANDLE handle_type;
 #endif
 
-#if defined(BOOST_PROCESS_DOXYGEN)
-    //!
-    //! \brief Opaque name for the native unsigned size type.
-    //!
-    typedef NativeUnsignedSizeType size_type;
-#elif defined(BOOST_PROCESS_POSIX_API)
-    typedef size_t size_type;
-#elif defined(BOOST_PROCESS_WIN32_API)
-    typedef DWORD size_type;
-#endif
-
-#if defined(BOOST_PROCESS_DOXYGEN)
-    //!
-    //! \brief Opaque name for the native signed size type.
-    //!
-    typedef NativeSignedSizeType ssize_type;
-#elif defined(BOOST_PROCESS_POSIX_API)
-    typedef ssize_t ssize_type;
-#elif defined(BOOST_PROCESS_WIN32_API)
-    typedef long ssize_type;
-#endif
-
     //!
     //! \brief Constructs a new systembuf for the given file handle.
     //!
@@ -109,7 +87,7 @@ public:
     //!
     //! \see pistream and postream.
     //!
-    explicit systembuf(handle_type h, size_type bufsize = 8192);
+    explicit systembuf(handle_type h, std::size_t bufsize = 8192);
 
 private:
     //!
@@ -120,7 +98,7 @@ private:
     //!
     //! \brief Internal buffer size used during read and write operations.
     //!
-    size_type m_bufsize;
+    std::size_t m_bufsize;
 
     //!
     //! \brief Internal buffer used during read operations.
@@ -182,7 +160,7 @@ protected:
 // ------------------------------------------------------------------------
 
 inline
-systembuf::systembuf(handle_type h, size_type bufsize) :
+systembuf::systembuf(handle_type h, std::size_t bufsize) :
     m_handle(h),
     m_bufsize(bufsize),
     m_read_buf(new char[bufsize]),
@@ -212,7 +190,7 @@ systembuf::underflow(void)
     BOOL res = ::ReadFile(m_handle, m_read_buf.get(), m_bufsize, &cnt, NULL);
     ok = (res && cnt > 0);
 #else
-    ssize_type cnt = ::read(m_handle, m_read_buf.get(), m_bufsize);
+    ssize_t cnt = ::read(m_handle, m_read_buf.get(), m_bufsize);
     ok = (cnt != -1 && cnt != 0);
 #endif
 
@@ -246,7 +224,11 @@ inline
 int
 systembuf::sync(void)
 {
-    ssize_type cnt = pptr() - pbase();
+#if defined(BOOST_PROCESS_WIN32_API)
+    long cnt = pptr() - pbase();
+#else
+    ssize_t cnt = pptr() - pbase();
+#endif
 
     bool ok;
 #if defined(BOOST_PROCESS_WIN32_API)

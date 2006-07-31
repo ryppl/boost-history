@@ -12,6 +12,7 @@
 #include <boost/process/config.hpp>
 
 #if defined(BOOST_PROCESS_POSIX_API)
+#   include <cstddef>
 #   include <cstring>
 #elif defined(BOOST_PROCESS_WIN32_API)
 #   include <tchar.h>
@@ -36,11 +37,12 @@ test_command_line_to_posix_argv(void)
     bp::command_line cl("program");
     cl.argument("arg1").argument("arg2").argument("arg3");
 
-    std::pair< size_t, char** > args = bpd::command_line_to_posix_argv(cl);
-    size_t argc = args.first;
+    std::pair< std::size_t, char** > args =
+        bpd::command_line_to_posix_argv(cl);
+    std::size_t argc = args.first;
     char** argv = args.second;
 
-    BOOST_REQUIRE_EQUAL(argc, static_cast<size_t>(4));
+    BOOST_REQUIRE_EQUAL(argc, static_cast< std::size_t >(4));
 
     BOOST_REQUIRE(std::strcmp(argv[0], "program") == 0);
     BOOST_REQUIRE(std::strcmp(argv[1], "arg1") == 0);

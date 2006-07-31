@@ -22,6 +22,7 @@
 #include <boost/process/config.hpp>
 
 #if defined(BOOST_PROCESS_POSIX_API)
+#   include <cstddef>
 #   include <cstring>
 #elif defined(BOOST_PROCESS_WIN32_API)
 #   include <tchar.h>
@@ -445,18 +446,19 @@ launcher::posix_child_entry(const Command_Line& cl)
         ::exit(EXIT_FAILURE);
     }
 
-    std::pair< size_t, char** > args = detail::command_line_to_posix_argv(cl);
+    std::pair< std::size_t, char** > args =
+        detail::command_line_to_posix_argv(cl);
     char** envp = m_environment.envp();
 
     ::execve(cl.get_executable().c_str(), args.second, envp);
     system_error e("boost::process::launcher::start",
                    "execvp(2) failed", errno);
 
-    for (size_t i = 0; i < args.first; i++)
+    for (std::size_t i = 0; i < args.first; i++)
         delete [] args.second[i];
     delete [] args.second;
 
-    for (size_t i = 0; i < m_environment.size(); i++)
+    for (std::size_t i = 0; i < m_environment.size(); i++)
         delete [] envp[i];
     delete [] envp;
 
