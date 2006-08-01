@@ -27,6 +27,7 @@
 
 #include <boost/process/basic_posix_child.hpp>
 #include <boost/process/detail/environment.hpp>
+#include <boost/process/detail/posix_ops.hpp>
 #include <boost/process/detail/systembuf.hpp>
 #include <boost/process/exceptions.hpp>
 #include <boost/process/launcher.hpp>
@@ -48,12 +49,6 @@ class posix_launcher :
     public launcher
 {
     //!
-    //! \brief Type that represents a list of stream merges (source
-    //!        descriptor - target descriptor).
-    //!
-    typedef std::set< std::pair< int, int > > merge_set;
-
-    //!
     //! \brief Type that represents a list of input streams that will be
     //!        redirected.
     //!
@@ -68,7 +63,7 @@ class posix_launcher :
     //!
     //! \brief List of stream merges (source descriptor - target descriptor).
     //!
-    merge_set m_merge_set;
+    detail::merge_set m_merge_set;
 
     //!
     //! \brief List of input streams that will be redirected.
@@ -81,29 +76,9 @@ class posix_launcher :
     output_set m_output_set;
 
     //!
-    //! \brief UID to set after spawning the new process.
+    //! \brief POSIX-specific properties passed to the new process.
     //!
-    uid_t m_uid;
-
-    //!
-    //! \brief Effective UID to set after spawning the new process.
-    //!
-    uid_t m_euid;
-
-    //!
-    //! \brief GID to set after spawning the new process.
-    //!
-    gid_t m_gid;
-
-    //!
-    //! \brief Effective GID to set after spawning the new process.
-    //!
-    gid_t m_egid;
-
-    //!
-    //! \brief Directory to chroot() to after spawning the new process.
-    //!
-    std::string m_chroot;
+    detail::posix_setup m_setup;
 
 public:
     //!
@@ -284,12 +259,7 @@ public:
 
 inline
 posix_launcher::posix_launcher(int flags) :
-    launcher(flags),
-    m_uid(::getuid()),
-    m_euid(::geteuid()),
-    m_gid(::getgid()),
-    m_egid(::getegid()),
-    m_chroot("")
+    launcher(flags)
 {
     if (flags & REDIR_STDIN)
         redir_input(STDIN_FILENO);
@@ -346,7 +316,7 @@ uid_t
 posix_launcher::get_uid(void)
     const
 {
-    return m_uid;
+    return m_setup.m_uid;
 }
 
 // ------------------------------------------------------------------------
@@ -356,7 +326,7 @@ uid_t
 posix_launcher::get_euid(void)
     const
 {
-    return m_euid;
+    return m_setup.m_euid;
 }
 
 // ------------------------------------------------------------------------
@@ -366,7 +336,7 @@ gid_t
 posix_launcher::get_gid(void)
     const
 {
-    return m_gid;
+    return m_setup.m_gid;
 }
 
 // ------------------------------------------------------------------------
@@ -376,7 +346,7 @@ gid_t
 posix_launcher::get_egid(void)
     const
 {
-    return m_egid;
+    return m_setup.m_egid;
 }
 
 // ------------------------------------------------------------------------
@@ -386,7 +356,7 @@ const std::string&
 posix_launcher::get_chroot(void)
     const
 {
-    return m_chroot;
+    return m_setup.m_chroot;
 }
 
 // ------------------------------------------------------------------------
@@ -395,7 +365,7 @@ inline
 posix_launcher&
 posix_launcher::set_uid(uid_t uid)
 {
-    m_uid = uid;
+    m_setup.m_uid = uid;
     return *this;
 }
 
@@ -405,7 +375,7 @@ inline
 posix_launcher&
 posix_launcher::set_euid(uid_t euid)
 {
-    m_euid = euid;
+    m_setup.m_euid = euid;
     return *this;
 }
 
@@ -415,7 +385,7 @@ inline
 posix_launcher&
 posix_launcher::set_gid(gid_t gid)
 {
-    m_gid = gid;
+    m_setup.m_gid = gid;
     return *this;
 }
 
@@ -425,7 +395,7 @@ inline
 posix_launcher&
 posix_launcher::set_egid(gid_t egid)
 {
-    m_egid = egid;
+    m_setup.m_egid = egid;
     return *this;
 }
 
@@ -435,7 +405,7 @@ inline
 posix_launcher&
 posix_launcher::set_chroot(const std::string& dir)
 {
-    m_chroot = dir;
+    m_setup.m_chroot = dir;
     return *this;
 }
 
@@ -446,103 +416,23 @@ inline
 basic_posix_child< Command_Line >
 posix_launcher::start(const Command_Line& cl)
 {
-    typedef typename
-        basic_posix_child< Command_Line >::pipe_map pipe_map;
-
-    pipe_map inpipes;
+    detail::pipe_map inpipes;
     for (input_set::const_iterator iter = m_input_set.begin();
          iter != m_input_set.end(); iter++)
         inpipes.insert
-            (typename pipe_map::value_type(*iter, detail::pipe()));
+            (detail::pipe_map::value_type(*iter, detail::pipe()));
 
-    pipe_map outpipes;
+    detail::pipe_map outpipes;
     for (output_set::const_iterator iter = m_output_set.begin();
          iter != m_output_set.end(); iter++)
         outpipes.insert
-            (typename pipe_map::value_type(*iter, detail::pipe()));
+            (detail::pipe_map::value_type(*iter, detail::pipe()));
 
-    pid_t pid = ::fork();
-    if (pid == -1) {
-        boost::throw_exception
-            (system_error("boost::process::posix_launcher::start",
-                          "fork(2) failed", errno));
-    } else if (pid == 0) {
-        for (typename pipe_map::iterator iter = inpipes.begin();
-             iter != inpipes.end(); iter++) {
-            int d = (*iter).first;
-            detail::pipe& p = (*iter).second;
+    detail::posix_setup s = m_setup;
+    s.m_work_directory = get_work_directory();
 
-            p.wend().close();
-            if (d != p.rend().get())
-                p.rend().posix_remap(d);
-        }
-
-        for (typename pipe_map::iterator iter = outpipes.begin();
-             iter != outpipes.end(); iter++) {
-            int d = (*iter).first;
-            detail::pipe& p = (*iter).second;
-
-            p.rend().close();
-            if (d != p.wend().get())
-                p.wend().posix_remap(d);
-        }
-
-        for (merge_set::const_iterator iter = m_merge_set.begin();
-             iter != m_merge_set.end(); iter++) {
-            const std::pair< int, int >& p = (*iter);
-            detail::file_handle fh =
-                detail::file_handle::posix_dup(p.second, p.first);
-            fh.disown();
-        }
-
-        if (!m_chroot.empty()) {
-            if (::chroot(m_chroot.c_str()) == -1)
-                boost::throw_exception
-                    (system_error("boost::process::posix_launcher::start",
-                                  "chroot(2) failed", errno));
-        }
-
-        if (m_gid != ::getgid()) {
-            if (::setgid(m_gid) == -1)
-                boost::throw_exception
-                    (system_error("boost::process::posix_launcher::start",
-                                  "setgid(2) failed", errno));
-        }
-
-        if (m_egid != ::getegid()) {
-            if (::setegid(m_egid) == -1)
-                boost::throw_exception
-                    (system_error("boost::process::posix_launcher::start",
-                                  "setegid(2) failed", errno));
-        }
-
-        if (m_uid != ::getuid()) {
-            if (::setuid(m_uid) == -1)
-                boost::throw_exception
-                    (system_error("boost::process::posix_launcher::start",
-                                  "setuid(2) failed", errno));
-        }
-
-        if (m_euid != ::geteuid()) {
-            if (::seteuid(m_euid) == -1)
-                boost::throw_exception
-                    (system_error("boost::process::posix_launcher::start",
-                                  "seteuid(2) failed", errno));
-        }
-
-        posix_child_entry(cl);
-        BOOST_ASSERT(false); // Not reached.
-    }
-
-    BOOST_ASSERT(pid > 0);
-
-    for (typename pipe_map::iterator iter = inpipes.begin();
-         iter != inpipes.end(); iter++)
-        (*iter).second.rend().close();
-
-    for (typename pipe_map::iterator iter = outpipes.begin();
-         iter != outpipes.end(); iter++)
-        (*iter).second.wend().close();
+    pid_t pid = detail::posix_start(cl, posix_launcher::get_environment(),
+                                    inpipes, outpipes, m_merge_set, s);
 
     return basic_posix_child< Command_Line >(pid, cl, inpipes, outpipes);
 }

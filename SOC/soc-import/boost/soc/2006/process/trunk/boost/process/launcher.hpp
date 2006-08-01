@@ -24,15 +24,16 @@
 #if defined(BOOST_PROCESS_POSIX_API)
 #   include <cstddef>
 #   include <cstring>
+#   include <boost/process/detail/posix_ops.hpp>
 #elif defined(BOOST_PROCESS_WIN32_API)
 #   include <tchar.h>
 #   include <windows.h>
+#   include <boost/process/detail/win32_ops.hpp>
 #else
 #   error "Unsupported platform."
 #endif
 
 #include <boost/assert.hpp>
-#include <boost/optional.hpp>
 #include <boost/process/basic_child.hpp>
 #include <boost/process/detail/command_line_ops.hpp>
 #include <boost/process/detail/environment.hpp>
@@ -78,35 +79,13 @@ class launcher
     //!
     std::string m_work_directory;
 
-#if defined(BOOST_PROCESS_POSIX_API)
-    template< class Command_Line >
-    basic_child< Command_Line > start_posix
-        (const Command_Line& cl,
-         boost::optional< detail::pipe > pstdin,
-         boost::optional< detail::pipe > pstdout,
-         boost::optional< detail::pipe > pstderr);
-#elif defined(BOOST_PROCESS_WIN32_API)
-    template< class Command_Line >
-    basic_child< Command_Line > start_win32
-        (const Command_Line& cl,
-         boost::optional< detail::pipe > pstdin,
-         boost::optional< detail::pipe > pstdout,
-         boost::optional< detail::pipe > pstderr);
-#endif
-
 protected:
-#if defined(BOOST_PROCESS_POSIX_API) || defined(BOOST_PROCESS_DOXYGEN)
     //!
-    //! \brief Default startup procedure for a new child process.
+    //! \brief Returns the child's environment.
     //!
-    //! This auxiliary function contains part of the code used when
-    //! launching a child process in a POSIX system.  This is meant to be
-    //! executed by the child process after the fork has happened and
-    //! takes care to execute the given command line \a cl.
+    //! Returns a reference to the child's environment variables.
     //!
-    template< class Command_Line >
-    void posix_child_entry(const Command_Line& cl);
-#endif
+    const detail::environment& get_environment(void) const;
 
 public:
     // See the constructor's description for information about these.
@@ -257,6 +236,16 @@ launcher::launcher(int flags) :
 // ------------------------------------------------------------------------
 
 inline
+const detail::environment&
+launcher::get_environment(void)
+    const
+{
+    return m_environment;
+}
+
+// ------------------------------------------------------------------------
+
+inline
 void
 launcher::set_environment(const std::string& var, const std::string& value)
 {
@@ -326,6 +315,54 @@ inline
 basic_child< Command_Line >
 launcher::start(const Command_Line& cl)
 {
+    typename basic_child< Command_Line >::handle_type ph;
+    detail::file_handle fhstdin, fhstdout, fhstderr;
+
+#if defined(BOOST_PROCESS_POSIX_API)
+    detail::pipe_map inpipes, outpipes;
+    detail::merge_set merges;
+
+    if (m_flags & REDIR_STDIN)
+        inpipes.insert(detail::pipe_map::value_type(STDIN_FILENO,
+                                                    detail::pipe()));
+
+    if (m_flags & REDIR_STDOUT)
+        outpipes.insert(detail::pipe_map::value_type(STDOUT_FILENO,
+                                                     detail::pipe()));
+
+    if (m_flags & REDIR_STDERR)
+        outpipes.insert(detail::pipe_map::value_type(STDERR_FILENO,
+                                                     detail::pipe()));
+
+    if (m_flags & REDIR_STDERR_TO_STDOUT)
+        merges.insert(std::pair< int, int >(STDERR_FILENO, STDOUT_FILENO));
+
+    detail::posix_setup s;
+    s.m_work_directory = m_work_directory;
+
+    ph = detail::posix_start(cl, m_environment, inpipes, outpipes, merges, s);
+
+    if (m_flags & REDIR_STDIN) {
+        detail::pipe_map::iterator iter = inpipes.find(STDIN_FILENO);
+        BOOST_ASSERT(iter != inpipes.end());
+        fhstdin = (*iter).second.wend().disown();
+        BOOST_ASSERT(fhstdin.is_valid());
+    }
+
+    if (m_flags & REDIR_STDOUT) {
+        detail::pipe_map::iterator iter = outpipes.find(STDOUT_FILENO);
+        BOOST_ASSERT(iter != outpipes.end());
+        fhstdout = (*iter).second.rend().disown();
+        BOOST_ASSERT(fhstdout.is_valid());
+    }
+
+    if (m_flags & REDIR_STDERR) {
+        detail::pipe_map::iterator iter = outpipes.find(STDERR_FILENO);
+        BOOST_ASSERT(iter != outpipes.end());
+        fhstderr = (*iter).second.rend().disown();
+        BOOST_ASSERT(fhstderr.is_valid());
+    }
+#elif defined(BOOST_PROCESS_WIN32_API)
     boost::optional< detail::pipe > pstdin;
     if (m_flags & REDIR_STDIN)
         pstdin = detail::pipe();
@@ -338,206 +375,22 @@ launcher::start(const Command_Line& cl)
     if (m_flags & REDIR_STDERR)
         pstderr = detail::pipe();
 
-#if defined(BOOST_PROCESS_POSIX_API)
-    return start_posix(cl, pstdin, pstdout, pstderr);
-#elif defined(BOOST_PROCESS_WIN32_API)
-    return start_win32(cl, pstdin, pstdout, pstderr);
-#endif
-}
-
-// ------------------------------------------------------------------------
-
-#if defined(BOOST_PROCESS_POSIX_API)
-template< class Command_Line >
-inline
-basic_child< Command_Line >
-launcher::start_posix(const Command_Line& cl,
-                      boost::optional< detail::pipe > pstdin,
-                      boost::optional< detail::pipe > pstdout,
-                      boost::optional< detail::pipe > pstderr)
-{
-    pid_t pid = ::fork();
-    if (pid == -1) {
-        boost::throw_exception
-            (system_error("boost::process::launcher::start",
-                          "fork(2) failed", errno));
-    } else if (pid == 0) {
-        try {
-            // File descriptors that remain open for the child process to
-            // communicate with its parent are disowned from their file
-            // handle objects to ensure that their destructor, if ever
-            // executed, does not close them.
-            if (m_flags & REDIR_STDIN) {
-                pstdin->wend().close();
-                pstdin->rend().posix_remap(STDIN_FILENO);
-                pstdin->rend().disown();
-            }
-
-            if (m_flags & REDIR_STDOUT) {
-                pstdout->rend().close();
-                pstdout->wend().posix_remap(STDOUT_FILENO);
-                pstdout->wend().disown();
-            }
-
-            if (m_flags & REDIR_STDERR) {
-                pstderr->rend().close();
-                pstderr->wend().posix_remap(STDERR_FILENO);
-                pstderr->wend().disown();
-            }
-
-            if (m_flags & REDIR_STDERR_TO_STDOUT) {
-                detail::file_handle errfh = detail::file_handle::posix_dup
-                    (STDOUT_FILENO, STDERR_FILENO);
-                errfh.disown();
-            }
-        } catch (const system_error& e) {
-            ::write(STDERR_FILENO, e.what(), std::strlen(e.what()));
-            ::write(STDERR_FILENO, "\n", 1);
-            ::exit(EXIT_FAILURE);
-        }
-
-        posix_child_entry(cl);
-        BOOST_ASSERT(false); // Not reached.
-    }
-
-    BOOST_ASSERT(pid > 0);
-
-    detail::file_handle fhstdin, fhstdout, fhstderr;
-
-    if (m_flags & REDIR_STDIN) {
-        pstdin->rend().close();
-        fhstdin = pstdin->wend();
-    }
-
-    if (m_flags & REDIR_STDOUT) {
-        pstdout->wend().close();
-        fhstdout = pstdout->rend();
-    }
-
-    if (m_flags & REDIR_STDERR) {
-        pstderr->wend().close();
-        fhstderr = pstderr->rend();
-    }
-
-    BOOST_ASSERT(!(m_flags & REDIR_STDIN) || fhstdin.is_valid());
-    BOOST_ASSERT(!(m_flags & REDIR_STDOUT) || fhstdout.is_valid());
-    BOOST_ASSERT(!(m_flags & REDIR_STDERR) || fhstderr.is_valid());
-    return basic_child< Command_Line >
-        (pid, cl, fhstdin, fhstdout, fhstderr);
-}
-#endif
-
-// ------------------------------------------------------------------------
-
-#if defined(BOOST_PROCESS_POSIX_API)
-template< class Command_Line >
-inline
-void
-launcher::posix_child_entry(const Command_Line& cl)
-{
-    try {
-        if (chdir(m_work_directory.c_str()) == -1)
-            boost::throw_exception
-                (system_error("boost::process::launcher::posix_child_entry",
-                              "chdir(2) failed", errno));
-    } catch (const system_error& e) {
-        ::write(STDERR_FILENO, e.what(), std::strlen(e.what()));
-        ::write(STDERR_FILENO, "\n", 1);
-        ::exit(EXIT_FAILURE);
-    }
-
-    std::pair< std::size_t, char** > args =
-        detail::command_line_to_posix_argv(cl);
-    char** envp = m_environment.envp();
-
-    ::execve(cl.get_executable().c_str(), args.second, envp);
-    system_error e("boost::process::launcher::start",
-                   "execvp(2) failed", errno);
-
-    for (std::size_t i = 0; i < args.first; i++)
-        delete [] args.second[i];
-    delete [] args.second;
-
-    for (std::size_t i = 0; i < m_environment.size(); i++)
-        delete [] envp[i];
-    delete [] envp;
-
-    ::write(STDERR_FILENO, e.what(), std::strlen(e.what()));
-    ::write(STDERR_FILENO, "\n", 1);
-    ::exit(EXIT_FAILURE);
-}
-#endif
-
-// ------------------------------------------------------------------------
-
-#if defined(BOOST_PROCESS_WIN32_API)
-template< class Command_Line >
-inline
-basic_child< Command_Line >
-launcher::start_win32(const Command_Line& cl,
-                      boost::optional< detail::pipe > pstdin,
-                      boost::optional< detail::pipe > pstdout,
-                      boost::optional< detail::pipe > pstderr)
-{
-    detail::file_handle fhstdin, fhstdout, fhstderr;
-    detail::file_handle chstdin, chstdout, chstderr;
-
     STARTUPINFO si;
-    ::ZeroMemory(&si, sizeof(si));
+    ::ZeroMemory(si, sizeof(si));
     si.cb = sizeof(si);
-    si.dwFlags = STARTF_USESTDHANDLES;
 
-    if (m_flags & REDIR_STDIN) {
-        pstdin->rend().win32_set_inheritable(true);
-        chstdin = pstdin->rend();
-        fhstdin = pstdin->wend();
-    } else
-        chstdin = detail::file_handle::win32_std(STD_INPUT_HANDLE, true);
-    si.hStdInput = chstdin.get();
+    detail::win32_setup s;
+    s.m_work_directory = m_work_directory;
+    s.m_startupinfo = &si;
 
-    if (m_flags & REDIR_STDOUT) {
-        pstdout->wend().win32_set_inheritable(true);
-        chstdout = pstdout->wend();
-        fhstdout = pstdout->rend();
-    } else
-        chstdout = detail::file_handle::win32_std(STD_OUTPUT_HANDLE, true);
-    si.hStdOutput = chstdout.get();
+    PROCESSINFO pi = detail::win32_start(cl, m_environment, pstdin,
+                                         pstdout, pstderr, setup);
 
-    if (m_flags & REDIR_STDERR) {
-        pstderr->wend().win32_set_inheritable(true);
-        chstderr = pstderr->wend();
-        fhstderr = pstderr->rend();
-    } else
-        chstderr = detail::file_handle::win32_std(STD_ERROR_HANDLE, true);
-    if (m_flags & REDIR_STDERR_TO_STDOUT)
-        chstderr = detail::file_handle::win32_dup(si.hStdOutput, true);
-    si.hStdError = chstderr.get();
-
-    PROCESS_INFORMATION pi;
-    ::ZeroMemory(&pi, sizeof(pi));
-
-    boost::shared_array< TCHAR > cmdline =
-        detail::command_line_to_win32_cmdline(cl);
-    boost::scoped_array< TCHAR > executable
-        (::_tcsdup(TEXT(cl.get_executable().c_str())));
-    boost::scoped_array< TCHAR > workdir
-        (::_tcsdup(TEXT(m_work_directory.c_str())));
-
-    boost::shared_array< TCHAR > env = m_environment.win32_strings();
-    if (!::CreateProcess(executable.get(), cmdline.get(), NULL, NULL, TRUE,
-                         0, env.get(), workdir.get(), &si, &pi)) {
-        boost::throw_exception
-            (system_error("boost::process::launcher::start",
-                          "CreateProcess failed", ::GetLastError()));
-    }
-
-    BOOST_ASSERT(!(m_flags & REDIR_STDIN) || fhstdin.is_valid());
-    BOOST_ASSERT(!(m_flags & REDIR_STDOUT) || fhstdout.is_valid());
-    BOOST_ASSERT(!(m_flags & REDIR_STDERR) || fhstderr.is_valid());
-    return basic_child< Command_Line >
-        (pi.hProcess, cl, fhstdin, fhstdout, fhstderr);
-}
+    ph = pi.hProcess;
 #endif
+
+    return basic_child< Command_Line >(ph, cl, fhstdin, fhstdout, fhstderr);
+}
 
 // ------------------------------------------------------------------------
 
