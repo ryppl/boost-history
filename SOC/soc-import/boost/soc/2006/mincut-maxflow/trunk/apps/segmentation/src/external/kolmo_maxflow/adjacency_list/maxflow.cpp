@@ -396,9 +396,6 @@ Graph::flowtype Graph::maxflow()
 
 	maxflow_init();
 	nodeptr_block = new DBlock<nodeptr>(NODEPTR_BLOCK_SIZE, error_function);
-   long iter(0);
-   long source_iter(0);
-   long sink_iter(0);
 	while ( 1 )
 	{
 		if (i=current_node)
@@ -413,7 +410,6 @@ Graph::flowtype Graph::maxflow()
 		/* growth */
 		if (!i->is_sink)
 		{
-        ++source_iter;
 			/* grow source tree */
 			for (a=i->first; a; a=a->next)
 			if (a->r_cap)
@@ -441,7 +437,6 @@ Graph::flowtype Graph::maxflow()
 		else
 		{
 			/* grow sink tree */
-        ++sink_iter;
 			for (a=i->first; a; a=a->next)
 			if (a->sister->r_cap)
 			{
@@ -472,7 +467,6 @@ Graph::flowtype Graph::maxflow()
 		{
 			i -> next = i; /* set active flag */
 			current_node = i;
-         ++iter;
 			/* augmentation */
 			augment(a);
 			/* augmentation end */
@@ -501,7 +495,6 @@ Graph::flowtype Graph::maxflow()
 	}
 
 	delete nodeptr_block;
-   std::cout << "number of augmets" << iter << "source/sink growings(" << source_iter<<","<< sink_iter <<  ")" << std::endl;
 	return flow;
 }
 
