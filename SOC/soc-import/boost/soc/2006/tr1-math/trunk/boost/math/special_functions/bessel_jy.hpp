@@ -68,8 +68,8 @@ int temme(T v, T x, T* Y, T* Y1)
     g = f + e * q;
     h = p;
     coef = 1.0L;
-    sum = g;
-    sum1 = h;
+    sum = coef * g;
+    sum1 = coef * h;
 
     // series summation
     tolerance = std::numeric_limits<T>::epsilon();
