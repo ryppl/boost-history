@@ -62,7 +62,7 @@ T bessel_jn(int n, T x)
     {
         T fn; int s;                        // fn = J_(n+1) / J_n
         // |x| <= n, fast convergence for continued fraction CF1
-        CF1(static_cast<T>(n), x, &fn, &s);
+        boost::math::bessel_jy_detail::CF1(static_cast<T>(n), x, &fn, &s);
         // tiny initial value to prevent overflow
         T init = sqrt(std::numeric_limits<T>::min());
         prev = fn * init;
