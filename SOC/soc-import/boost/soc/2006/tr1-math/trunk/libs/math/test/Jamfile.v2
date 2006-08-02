@@ -10,5 +10,7 @@ run bessel_yn_test.cpp ;
 run bessel_yv_test.cpp ;
 run bessel_i0_test.cpp ;
 run bessel_i1_test.cpp ;
+run bessel_iv_test.cpp ;
 run bessel_k0_test.cpp ;
 run bessel_k1_test.cpp ;
+run bessel_kv_test.cpp ;
