@@ -23,6 +23,8 @@
 
 namespace boost { namespace math {
 
+namespace bessel_jy_detail {
+
 // Calculate Y(v, x) and Y(v+1, x) by Temme's method, see
 // Temme, Journal of Computational Physics, vol 21, 343 (1976)
 template <typename T>
@@ -192,6 +194,8 @@ int CF2(T v, T x, T* p, T* q)
     return 0;
 }
 
+} // namespace bessel_jy_detail
+
 // Compute J(v, x) and Y(v, x) simultaneously by Steed's method, see
 // Barnett et al, Computer Physics Communications, vol 8, 377 (1974)
 template <typename T>
@@ -207,6 +211,7 @@ int bessel_jy(T v, T x, T* J, T* Y)
     using namespace std;
     using namespace boost::math::tools;
     using namespace boost::math::constants;
+    using namespace boost::math::bessel_jy_detail;
 
     if (v < 0)
     {
