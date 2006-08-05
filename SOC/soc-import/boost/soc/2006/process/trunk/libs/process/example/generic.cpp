@@ -59,7 +59,10 @@ main(int argc, char* argv[])
         // to connect to servers and unsets the CVSROOT environment
         // variable to avoid side-effects.
         //
-        bp::launcher l(bp::launcher::REDIR_ALL_MERGE);
+        bp::launcher l(bp::launcher::closed_stream,
+                       bp::launcher::redirect_stream,
+                       bp::launcher::closed_stream,
+                       true);
         l.set_work_directory(argv[i]);
         l.set_environment("CVS_RSH", "ssh");
         l.unset_environment("CVSROOT");

@@ -70,7 +70,7 @@ test_output(int desc,
     bp::command_line cl(get_helpers_path());
     cl.argument("posix-echo-one").argument(desc).argument(realmsg);
 
-    bp::posix_launcher l(bp::posix_launcher::REDIR_NONE);
+    bp::posix_launcher l;
     l.redir_output(desc);
     bp::posix_child c = l.start(cl);
 
@@ -137,7 +137,7 @@ test_merge(int desc1,
     cl.argument("posix-echo-two").argument(desc1).argument(desc2);
     cl.argument(msg);
 
-    bp::posix_launcher l(bp::posix_launcher::REDIR_NONE);
+    bp::posix_launcher l;
     l.redir_output(desc1);
     l.merge_outputs(desc2, desc1);
     bp::posix_child c = l.start(cl);

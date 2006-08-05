@@ -92,7 +92,10 @@ public:
     //! The launcher is configured to not change the credentials of the
     //! new process nor sets up any chroot for it.
     //!
-    posix_launcher(int flags = launcher::REDIR_ALL);
+    posix_launcher(stream_behavior in = closed_stream,
+                   stream_behavior out = closed_stream,
+                   stream_behavior err = closed_stream,
+                   bool merge_out_err = false);
 
     //!
     //! \brief Sets up an input redirection for the \a desc descriptor.
@@ -258,16 +261,19 @@ public:
 // ------------------------------------------------------------------------
 
 inline
-posix_launcher::posix_launcher(int flags) :
-    launcher(flags)
+posix_launcher::posix_launcher(stream_behavior in,
+                               stream_behavior out,
+                               stream_behavior err,
+                               bool merge_out_err) :
+    launcher(in, out, err, merge_out_err)
 {
-    if (flags & REDIR_STDIN)
+    if (in == redirect_stream)
         redir_input(STDIN_FILENO);
-    if (flags & REDIR_STDOUT)
+    if (out == redirect_stream)
         redir_output(STDOUT_FILENO);
-    if (flags & REDIR_STDERR)
+    if (err == redirect_stream)
         redir_output(STDERR_FILENO);
-    if (flags & REDIR_STDERR_TO_STDOUT)
+    if (merge_out_err)
         merge_outputs(STDERR_FILENO, STDOUT_FILENO);
 }
 
@@ -278,7 +284,7 @@ posix_launcher&
 posix_launcher::redir_input(int desc)
 {
     if (desc == STDIN_FILENO)
-        set_flags(get_flags() | REDIR_STDIN);
+        set_stdin_behavior(redirect_stream);
     m_input_set.insert(desc);
     return *this;
 }
@@ -290,9 +296,9 @@ posix_launcher&
 posix_launcher::redir_output(int desc)
 {
     if (desc == STDOUT_FILENO)
-        set_flags(get_flags() | REDIR_STDOUT);
+        set_stdout_behavior(redirect_stream);
     else if (desc == STDERR_FILENO)
-        set_flags(get_flags() | REDIR_STDERR);
+        set_stderr_behavior(redirect_stream);
     m_output_set.insert(desc);
     return *this;
 }
@@ -304,7 +310,7 @@ posix_launcher&
 posix_launcher::merge_outputs(int src, int dest)
 {
     if (src == STDERR_FILENO && dest == STDOUT_FILENO)
-        set_flags(get_flags() | REDIR_STDERR_TO_STDOUT);
+        set_merge_out_err(true);
     m_merge_set.insert(std::pair< int, int >(src, dest));
     return *this;
 }

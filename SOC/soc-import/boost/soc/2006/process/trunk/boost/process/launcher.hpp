@@ -55,96 +55,83 @@ namespace process {
 //!
 class launcher
 {
-    //!
-    //! \brief Bit field that specifies the desired stream redirections.
-    //!
-    int m_flags;
-
-    //!
-    //! \brief The process' environment.
-    //!
-    //! Contains the list of environment variables, alongside with their
-    //! values, that will be passed to the spawned child process.
-    //!
-    detail::environment m_environment;
-
-    //!
-    //! \brief The process' initial work directory.
-    //!
-    //! The work directory is the directory in which the process starts
-    //! execution.
-    //!
-    //! Ideally this could be of boost::filesystem::path type but it
-    //! is a regular string to avoid depending on Boost.Filesystem.
-    //!
-    std::string m_work_directory;
-
-protected:
-    //!
-    //! \brief Returns the child's environment.
-    //!
-    //! Returns a reference to the child's environment variables.
-    //!
-    const detail::environment& get_environment(void) const;
-
 public:
-    // See the constructor's description for information about these.
-    static const int REDIR_NONE = 0;
-    static const int REDIR_STDIN = (1 << 0);
-    static const int REDIR_STDOUT = (1 << 1);
-    static const int REDIR_STDERR = (1 << 2);
-    static const int REDIR_STDERR_TO_STDOUT = (1 << 3);
-    static const int REDIR_ALL =
-        REDIR_STDIN | REDIR_STDOUT | REDIR_STDERR;
-    static const int REDIR_ALL_MERGE =
-        REDIR_STDIN | REDIR_STDOUT | REDIR_STDERR_TO_STDOUT;
+    //!
+    //! \brief Describes the possible states for a communication stream.
+    //!
+    //! Describes the possible states for a communication stream as follows:
+    //!
+    //! closed_stream means that the stream is closed and hence the child
+    //! process will not be allowed to access it.
+    //!
+    //! redirect_stream means that the child is connected to the parent so
+    //! that they can send and receive data through the stream.
+    //!
+    enum stream_behavior { closed_stream, redirect_stream };
 
     //!
     //! \brief Constructs a new launcher with redirections.
     //!
     //! Constructs a new launcher object ready to spawn a new child
     //! process.  The launcher is configured to redirect the data streams
-    //! described by the \a flags bit field.
-    //!
-    //! If \a flags is REDIR_NONE, none of the standard data streams are
-    //! redirected.  They are left untouched so they are generally shared
-    //! with those of the caller.
-    //!
-    //! \a flags can also carry an OR of any of REDIR_STDIN, REDIR_STDOUT
-    //! and REDIR_STDERR.  These tell the launcher to redirect their
-    //! corresponding data streams so that they can later be fetched from
-    //! the child object.  Additionally, the REDIR_STDERR_TO_STDOUT flag
-    //! can be given, which configures the child process to use the same
-    //! output channel for both the standard output and standard error
-    //! flows; be aware that this conflicts with REDIR_STDERR.
-    //!
-    //! At last, two predefined bit sets are provided for simplicity:
-    //! REDIR_ALL redirects all of the three standard flows and
-    //! REDIR_ALL_MERGE does the same thing but redirects the standard
-    //! error to the standard output.
+    //! described by the parameters described below.
     //!
     //! It is important to note that the initial work directory of the
     //! child processes is set to the currently working directory.  See
     //! set_work_directory() for more details.
     //!
-    launcher(int flags = REDIR_ALL);
+    //! \param in The child's standard input stream behavior.
+    //! \param out The child's standard output stream behavior.
+    //! \param err The child's standard error stream behavior.
+    //! \param merge_out_err If true, the child is configured to merge the
+    //!                      standard output and standard error streams
+    //!                      into a single one.  In other words, the data
+    //!                      sent to stderr is automatically redirected to
+    //!                      stdout, providing the parent a single data
+    //!                      flow.
+    //! \pre If merge_out_err is true, err must be closed_stream and out
+    //!      must be different than closed_stream.
+    //!
+    launcher(stream_behavior in = closed_stream,
+             stream_behavior out = closed_stream,
+             stream_behavior err = closed_stream,
+             bool merge_out_err = false);
 
     //!
-    //! \brief Gets the channel redirections.
+    //! \brief Sets the standard input stream behavior.
     //!
-    //! Returns a bit field indicating the channel redirections for the
-    //! child process.  This function is possibly only useful in child
-    //! classes.
+    //! Sets the standard input stream behavior to the value specified
+    //! by b.
     //!
-    int get_flags(void) const;
+    launcher& set_stdin_behavior(stream_behavior b);
 
     //!
-    //! \brief Sets the channel redirections.
+    //! \brief Sets the standard output stream behavior.
     //!
-    //! Sets the channel redirections again to match those specified in
-    //! \a flags.  See the constructor documentation for more details.
+    //! Sets the standard output stream behavior to the value specified
+    //! by b.
     //!
-    void set_flags(int flags);
+    launcher& set_stdout_behavior(stream_behavior b);
+
+    //!
+    //! \brief Sets the standard error stream behavior.
+    //!
+    //! Sets the standard error stream behavior to the value specified
+    //! by b.
+    //!
+    launcher& set_stderr_behavior(stream_behavior b);
+
+    //!
+    //! \brief Sets the redirection of stderr to stdout.
+    //!
+    //! Enables or disables the redirection of the standard error stream
+    //! to the standard output stream according to the value of b.
+    //!
+    //! \pre The standard output stream behavior is set to something
+    //!      different than closed_stream.
+    //! \pre The standard error stream behavior is set to closed_stream.
+    //!
+    launcher& set_merge_out_err(bool b);
 
     //!
     //! \brief Sets the %environment variable \a var to \a value.
@@ -198,15 +185,71 @@ public:
     //!
     template< class Command_Line >
     basic_child< Command_Line > start(const Command_Line& cl);
+
+private:
+    //!
+    //! \brief Child's stdin behavior.
+    //!
+    stream_behavior m_behavior_in;
+
+    //!
+    //! \brief Child's stdout behavior.
+    //!
+    stream_behavior m_behavior_out;
+
+    //!
+    //! \brief Child's stderr behavior.
+    //!
+    stream_behavior m_behavior_err;
+
+    //!
+    //! \brief Whether the child's stderr should be redirected to stdout.
+    //!
+    bool m_merge_out_err;
+
+    //!
+    //! \brief The process' environment.
+    //!
+    //! Contains the list of environment variables, alongside with their
+    //! values, that will be passed to the spawned child process.
+    //!
+    detail::environment m_environment;
+
+    //!
+    //! \brief The process' initial work directory.
+    //!
+    //! The work directory is the directory in which the process starts
+    //! execution.
+    //!
+    //! Ideally this could be of boost::filesystem::path type but it
+    //! is a regular string to avoid depending on Boost.Filesystem.
+    //!
+    std::string m_work_directory;
+
+protected:
+    //!
+    //! \brief Returns the child's environment.
+    //!
+    //! Returns a reference to the child's environment variables.
+    //!
+    const detail::environment& get_environment(void) const;
 };
 
 // ------------------------------------------------------------------------
 
 inline
-launcher::launcher(int flags) :
-    m_flags(REDIR_NONE)
+launcher::launcher(stream_behavior in,
+                   stream_behavior out,
+                   stream_behavior err,
+                   bool merge_out_err)
 {
-    set_flags(flags);
+    // The corresponding fields for the following calls are initialized
+    // through their setters instead of from an initializer list to avoid
+    // repeating the precondition checks code here.
+    set_stdin_behavior(in);
+    set_stdout_behavior(out);
+    set_stderr_behavior(err);
+    set_merge_out_err(merge_out_err);
 
 #if defined(BOOST_PROCESS_POSIX_API)
     const char* buf = ::getcwd(NULL, 0);
@@ -288,24 +331,40 @@ launcher::set_work_directory(const std::string& wd)
 
 // ------------------------------------------------------------------------
 
-inline
-int
-launcher::get_flags(void)
-    const
+launcher&
+launcher::set_stdin_behavior(stream_behavior b)
 {
-    return m_flags;
+    m_behavior_in = b;
+    return *this;
 }
 
 // ------------------------------------------------------------------------
 
-inline
-void
-launcher::set_flags(int flags)
+launcher&
+launcher::set_stdout_behavior(stream_behavior b)
 {
-    BOOST_ASSERT
-        ((flags & REDIR_STDERR) || (flags & REDIR_STDERR_TO_STDOUT) !=
-         REDIR_STDERR || REDIR_STDERR_TO_STDOUT);
-    m_flags = flags;
+    m_behavior_out = b;
+    return *this;
+}
+
+// ------------------------------------------------------------------------
+
+launcher&
+launcher::set_stderr_behavior(stream_behavior b)
+{
+    m_behavior_err = b;
+    return *this;
+}
+
+// ------------------------------------------------------------------------
+
+launcher&
+launcher::set_merge_out_err(bool b)
+{
+    BOOST_ASSERT(!m_merge_out_err || m_behavior_err == closed_stream);
+    BOOST_ASSERT(!m_merge_out_err || m_behavior_out != closed_stream);
+    m_merge_out_err = b;
+    return *this;
 }
 
 // ------------------------------------------------------------------------
@@ -322,19 +381,19 @@ launcher::start(const Command_Line& cl)
     detail::pipe_map inpipes, outpipes;
     detail::merge_set merges;
 
-    if (m_flags & REDIR_STDIN)
+    if (m_behavior_in == redirect_stream)
         inpipes.insert(detail::pipe_map::value_type(STDIN_FILENO,
                                                     detail::pipe()));
 
-    if (m_flags & REDIR_STDOUT)
+    if (m_behavior_out == redirect_stream)
         outpipes.insert(detail::pipe_map::value_type(STDOUT_FILENO,
                                                      detail::pipe()));
 
-    if (m_flags & REDIR_STDERR)
+    if (m_behavior_err == redirect_stream)
         outpipes.insert(detail::pipe_map::value_type(STDERR_FILENO,
                                                      detail::pipe()));
 
-    if (m_flags & REDIR_STDERR_TO_STDOUT)
+    if (m_merge_out_err)
         merges.insert(std::pair< int, int >(STDERR_FILENO, STDOUT_FILENO));
 
     detail::posix_setup s;
@@ -342,21 +401,21 @@ launcher::start(const Command_Line& cl)
 
     ph = detail::posix_start(cl, m_environment, inpipes, outpipes, merges, s);
 
-    if (m_flags & REDIR_STDIN) {
+    if (m_behavior_in == redirect_stream) {
         detail::pipe_map::iterator iter = inpipes.find(STDIN_FILENO);
         BOOST_ASSERT(iter != inpipes.end());
         fhstdin = (*iter).second.wend().disown();
         BOOST_ASSERT(fhstdin.is_valid());
     }
 
-    if (m_flags & REDIR_STDOUT) {
+    if (m_behavior_out == redirect_stream) {
         detail::pipe_map::iterator iter = outpipes.find(STDOUT_FILENO);
         BOOST_ASSERT(iter != outpipes.end());
         fhstdout = (*iter).second.rend().disown();
         BOOST_ASSERT(fhstdout.is_valid());
     }
 
-    if (m_flags & REDIR_STDERR) {
+    if (m_behavior_err == redirect_stream) {
         detail::pipe_map::iterator iter = outpipes.find(STDERR_FILENO);
         BOOST_ASSERT(iter != outpipes.end());
         fhstderr = (*iter).second.rend().disown();
@@ -364,15 +423,15 @@ launcher::start(const Command_Line& cl)
     }
 #elif defined(BOOST_PROCESS_WIN32_API)
     boost::optional< detail::pipe > pstdin;
-    if (m_flags & REDIR_STDIN)
+    if (m_behavior_in == redirect_stream)
         pstdin = detail::pipe();
 
     boost::optional< detail::pipe > pstdout;
-    if (m_flags & REDIR_STDOUT)
+    if (m_behavior_out == redirect_stream)
         pstdout = detail::pipe();
 
     boost::optional< detail::pipe > pstderr;
-    if (m_flags & REDIR_STDERR)
+    if (m_behavior_err == redirect_stream)
         pstderr = detail::pipe();
 
     STARTUPINFO si;
