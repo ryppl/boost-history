@@ -361,8 +361,8 @@ launcher::set_stderr_behavior(stream_behavior b)
 launcher&
 launcher::set_merge_out_err(bool b)
 {
-    BOOST_ASSERT(!m_merge_out_err || m_behavior_err == close_stream);
-    BOOST_ASSERT(!m_merge_out_err || m_behavior_out != close_stream);
+    BOOST_ASSERT(!b || m_behavior_err == close_stream);
+    BOOST_ASSERT(!b || m_behavior_out != close_stream);
     m_merge_out_err = b;
     return *this;
 }
