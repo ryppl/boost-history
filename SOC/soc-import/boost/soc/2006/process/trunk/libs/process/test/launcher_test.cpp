@@ -60,10 +60,10 @@ test_output(bool out,
     bp::command_line cl(get_helpers_path());
     cl.argument(out ? "echo-stdout" : "echo-stderr").argument(realmsg);
 
-    bp::launcher l(bp::launcher::closed_stream,
+    bp::launcher l(bp::launcher::close_stream,
                    out ? bp::launcher::redirect_stream :
-                         bp::launcher::closed_stream,
-                   out ? bp::launcher::closed_stream :
+                         bp::launcher::close_stream,
+                   out ? bp::launcher::close_stream :
                          bp::launcher::redirect_stream);
     bp::child c = l.start(cl);
 
@@ -122,9 +122,9 @@ test_merge(const std::string& msg)
     bp::command_line cl(get_helpers_path());
     cl.argument("echo-stdout-stderr").argument(msg);
 
-    bp::launcher l(bp::launcher::closed_stream,
+    bp::launcher l(bp::launcher::close_stream,
                    bp::launcher::redirect_stream,
-                   bp::launcher::closed_stream,
+                   bp::launcher::close_stream,
                    true);
     bp::child c = l.start(cl);
 
@@ -160,9 +160,9 @@ test_default_work_directory(void)
     bp::command_line cl(get_helpers_path());
     cl.argument("pwd");
 
-    bp::launcher l(bp::launcher::closed_stream,
+    bp::launcher l(bp::launcher::close_stream,
                    bp::launcher::redirect_stream,
-                   bp::launcher::closed_stream,
+                   bp::launcher::close_stream,
                    false);
     BOOST_CHECK(bfs::equivalent(l.get_work_directory(),
                                 bfs::current_path().string()));
@@ -191,9 +191,9 @@ test_explicit_work_directory(void)
 
     BOOST_REQUIRE_NO_THROW(bfs::create_directory(wdir));
     try {
-        bp::launcher l(bp::launcher::closed_stream,
+        bp::launcher l(bp::launcher::close_stream,
                        bp::launcher::redirect_stream,
-                       bp::launcher::closed_stream,
+                       bp::launcher::close_stream,
                        false);
         l.set_work_directory(wdir.string());
         BOOST_CHECK_EQUAL(l.get_work_directory(), wdir);
@@ -232,9 +232,9 @@ test_unset_environment(void)
     BOOST_REQUIRE(::GetEnvironmentVariable("TO_BE_UNSET", buf, 5) != 0);
 #endif
 
-    bp::launcher l(bp::launcher::closed_stream,
+    bp::launcher l(bp::launcher::close_stream,
                    bp::launcher::redirect_stream,
-                   bp::launcher::closed_stream,
+                   bp::launcher::close_stream,
                    false);
     l.unset_environment("TO_BE_UNSET");
     bp::child c = l.start(cl);
@@ -268,9 +268,9 @@ test_set_environment(const std::string& value)
     BOOST_REQUIRE(::GetEnvironmentVariable("TO_BE_SET", buf, 5) == 0);
 #endif
 
-    bp::launcher l(bp::launcher::closed_stream,
+    bp::launcher l(bp::launcher::close_stream,
                    bp::launcher::redirect_stream,
-                   bp::launcher::closed_stream,
+                   bp::launcher::close_stream,
                    false);
     l.set_environment("TO_BE_SET", value);
     bp::child c = l.start(cl);
@@ -317,7 +317,7 @@ test_shell(void)
     bp::command_line cl =
         bp::command_line::shell("if foo==foo echo LINE-test");
 #endif
-    bp::launcher l(bp::launcher::closed_stream,
+    bp::launcher l(bp::launcher::close_stream,
                    bp::launcher::redirect_stream);
     bp::child c = l.start(cl);
 

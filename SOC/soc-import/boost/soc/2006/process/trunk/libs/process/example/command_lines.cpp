@@ -58,9 +58,9 @@ run_it(const Command_Line& cl)
 {
     std::cout << cl;
 
-    bp::launcher l(bp::launcher::closed_stream,
+    bp::launcher l(bp::launcher::close_stream,
                    bp::launcher::redirect_stream,
-                   bp::launcher::closed_stream,
+                   bp::launcher::close_stream,
                    true);
     bp::status s = l.start(cl).wait();
     if (s.exited() && s.exit_status() == EXIT_SUCCESS)

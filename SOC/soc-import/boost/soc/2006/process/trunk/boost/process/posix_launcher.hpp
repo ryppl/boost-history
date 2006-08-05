@@ -92,9 +92,9 @@ public:
     //! The launcher is configured to not change the credentials of the
     //! new process nor sets up any chroot for it.
     //!
-    posix_launcher(stream_behavior in = closed_stream,
-                   stream_behavior out = closed_stream,
-                   stream_behavior err = closed_stream,
+    posix_launcher(stream_behavior in = close_stream,
+                   stream_behavior out = close_stream,
+                   stream_behavior err = close_stream,
                    bool merge_out_err = false);
 
     //!

@@ -61,13 +61,13 @@ public:
     //!
     //! Describes the possible states for a communication stream as follows:
     //!
-    //! closed_stream means that the stream is closed and hence the child
+    //! close_stream means that the stream is closed and hence the child
     //! process will not be allowed to access it.
     //!
     //! redirect_stream means that the child is connected to the parent so
     //! that they can send and receive data through the stream.
     //!
-    enum stream_behavior { closed_stream, redirect_stream };
+    enum stream_behavior { close_stream, redirect_stream };
 
     //!
     //! \brief Constructs a new launcher with redirections.
@@ -89,12 +89,12 @@ public:
     //!                      sent to stderr is automatically redirected to
     //!                      stdout, providing the parent a single data
     //!                      flow.
-    //! \pre If merge_out_err is true, err must be closed_stream and out
-    //!      must be different than closed_stream.
+    //! \pre If merge_out_err is true, err must be close_stream and out
+    //!      must be different than close_stream.
     //!
-    launcher(stream_behavior in = closed_stream,
-             stream_behavior out = closed_stream,
-             stream_behavior err = closed_stream,
+    launcher(stream_behavior in = close_stream,
+             stream_behavior out = close_stream,
+             stream_behavior err = close_stream,
              bool merge_out_err = false);
 
     //!
@@ -128,8 +128,8 @@ public:
     //! to the standard output stream according to the value of b.
     //!
     //! \pre The standard output stream behavior is set to something
-    //!      different than closed_stream.
-    //! \pre The standard error stream behavior is set to closed_stream.
+    //!      different than close_stream.
+    //! \pre The standard error stream behavior is set to close_stream.
     //!
     launcher& set_merge_out_err(bool b);
 
@@ -361,8 +361,8 @@ launcher::set_stderr_behavior(stream_behavior b)
 launcher&
 launcher::set_merge_out_err(bool b)
 {
-    BOOST_ASSERT(!m_merge_out_err || m_behavior_err == closed_stream);
-    BOOST_ASSERT(!m_merge_out_err || m_behavior_out != closed_stream);
+    BOOST_ASSERT(!m_merge_out_err || m_behavior_err == close_stream);
+    BOOST_ASSERT(!m_merge_out_err || m_behavior_out != close_stream);
     m_merge_out_err = b;
     return *this;
 }
