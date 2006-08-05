@@ -1,6 +1,6 @@
 BOOST_ROOT = /usr/local/src/boost ;
 
-exe mfront : 
+exe mfront_bin : 
 	driver/config.cpp
 	driver/driver.cpp
 	driver/output.cpp
@@ -11,5 +11,7 @@ exe mfront :
 	$(BOOST_ROOT)//filesystem
 	$(BOOST_ROOT)//wave
 	$(BOOST_ROOT)//regex
+	$(BOOST_ROOT)//program_options
+	$(BOOST_ROOT)//signals
 	: <include>. <include>/usr/local/src/spirit <include>/usr/local/src/boost
 	;

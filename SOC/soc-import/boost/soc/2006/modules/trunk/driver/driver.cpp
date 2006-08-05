@@ -20,7 +20,7 @@ static string replace_suffix (string src, const char * suffix) {
 		src.append(suffix);
 	return src;
 }
-
+/*
 static char * strip (char * src) {
 	char * p = src;
 	while (isspace(*p))
@@ -31,7 +31,7 @@ static char * strip (char * src) {
 		e--;
 	*++e = 0;
 	return p;
-}
+}*/
 
 /*
 static
@@ -52,9 +52,10 @@ Driver::
 execute (int args, const char ** argv) {
 	if (args == 1) 
 		return 0;
-	vector<string> local_includes;
-	vector<string> files;
-	char buffer[1024];
+	//vector<string> local_includes;
+	vector<string> files = configure(args, argv);
+	//char buffer[1024];
+	/*
 	// scan the argument list for includes to add in
 	// eventually replace this with boost::program_options 
 	for (int i=1; i<args; i++) {
@@ -76,7 +77,7 @@ execute (int args, const char ** argv) {
 			files.push_back(buffer);
 		}
 	}
-
+*/
 	typedef vector<string>::const_iterator  vec_iter_t;
 	
 	for (vec_iter_t file = files.begin (); 
@@ -97,10 +98,10 @@ execute (int args, const char ** argv) {
 		::configure_context(ctx);
 		::configure_mapmanager(maps);
 	     
-		for (vec_iter_t it= local_includes.begin ();
-		     it != local_includes.end ();
-		     ++it)
-			ctx.add_include_path(it->c_str());
+// 		for (vec_iter_t it= local_includes.begin ();
+// 		     it != local_includes.end ();
+// 		     ++it)
+// 			ctx.add_include_path(it->c_str());
 
 		// calculate header and generated filename names.
 		// upon successful generation, put them the .map file.

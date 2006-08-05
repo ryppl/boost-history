@@ -1,6 +1,7 @@
 #ifndef INCLUDE_CONF_H
 #define INCLUDE_CONF_H
 
+#include "parser/lexpolicies.h"
 #include <string>
 // #include <iostream>
 #include <vector>
@@ -12,14 +13,20 @@
 
 class MapManager;
 
-struct config {
-	static const std::map<std::string, std::string>& macros ();
-	static const std::vector<std::string>&  system_include_paths ();
-};
+// struct config {
+// 	static const std::map<std::string, std::string>& macros ();
+// 	static const std::vector<std::string>&  system_include_paths ();
+// };
 
 
+
+
+void configure_context (context_t& context);
 void configure_mapmanager (MapManager& map);
+std::string configure_getsuffix ();
+std::vector<std::string> configure (int args, const char **argv);
 
+/*
 template<class Context>
 void configure_context (Context& c) {
 	typedef std::vector<std::string>::const_iterator  vec_iter_t;
@@ -60,7 +67,7 @@ void configure_context (Context& c) {
 			          << it->first << "=" << it->second << std::endl;
 		}
 	}
-}
+}*/
 
 
 #endif
