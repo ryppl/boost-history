@@ -73,27 +73,11 @@ examples].
 
 [/ ---------------------------------------------------------------------- ]
 
-[section Setting up the execution context]
+[section Interprocess communication]
 
-An important part of starting a child process is setting up its execution
-context; among other details, this includes configuring streams
-redirections and environment variables.  This task is accomplished by the
-[link boost_process.concepts.launcher launcher] concept, a model that
-follows the factory design pattern.  By using a launcher, the preparation
-of the execution context is completely separated from the behavior of the
-classes that represent the newly spawned process (see the [link
-boost_process.concepts.child child] concept).
-
-The library provides multiple launcher implementations: one of them, the
-[classref boost::process::launcher] class, is operating system independent
-while the others are not.  We will focus on the former here because the
-others are built on top of this one.
-
-[/ ---------------------------------------------------------------------- ]
-
-[section Communication channels]
-
-Each process has three standard communication channels:
+Each process has three standard communication channels that allow easy
+communication between a parent process and a child process or among
+different child processes:
 
 * The standard input channel (__stdin__ for short): This is used by the
   process to read input data, typically fed in by the user or another
@@ -145,16 +129,65 @@ operating system, some of them will point to the same internal object.
 This feature is specially interesting to allow for efficient retrieval of a
 process' __stdout__ and __stderr__ flows.
 
-This small code snipped shows a complete example:
+Given the above, consider the following code snippet.  It configures a
+launcher that will have an infinite blank input and that will send both of
+its __stdout__ and __stderr__ to the parent's __stdout__:
 
-    using boost::process::launcher;
-    launcher l;
     l.set_stdin_behavior(launcher::silent_stream); // The default.
     l.set_stdout_behavior(launcher::inherit_stream);
     l.set_stderr_behavior(launcher::close_stream);
     l.set_merge_out_err(true);
 
+If any channel is set to `redirect_stream`, it will be later available from
+the class representing the child process through the [memberref
+boost::process::basic_child::get_stdin], [memberref
+boost::process::basic_child::get_stdout] and [memberref
+boost::process::basic_child::get_stderr] methods.  These classes return C++
+streams as described next.  An input stream for a child process is seen as
+an output data flow by the parent, so it is modelled through the [classref
+boost::process::postream] class.  On the opposite side, an output stream
+for a child process is seen as an input data flow by the parent, hence it
+is represented by the [classref boost::process::pistream] class.  These two
+are regular C++ streams but provide an extra method (`close`) to allow the
+explicit shutdown of a communication channel.  This is required for example
+to let the child know that the parent is not willing to send more data
+through its __stdin__.  (Typically the child will close output channels on
+exit and the parent will close input ones.)
+
+The following example illustrates sending some data to a process:
+
+    boost::process::postream os = c.get_stdin();
+    os << "some-string" << std::endl;
+    os << 200 << 1024 << std::endl;
+    os.close();
+
+Similary, the following shows how to retrieve the child's data, line by
+line:
+
+    boost::process::pistream is = c.get_stdout();
+    std::string line;
+    while (std::getline(is, line))
+        std::cout << "Got a line: " << line << std::endl;
+
 [endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
+[section Setting up the execution context]
+
+An important part of starting a child process is setting up its execution
+context; among other details, this includes configuring streams
+redirections and environment variables.  This task is accomplished by the
+[link boost_process.concepts.launcher launcher] concept, a model that
+follows the factory design pattern.  By using a launcher, the preparation
+of the execution context is completely separated from the behavior of the
+classes that represent the newly spawned process (see the [link
+boost_process.concepts.child child] concept).
+
+The library provides multiple launcher implementations: one of them, the
+[classref boost::process::launcher] class, is operating system independent
+while the others are not.  We will focus on the former here because the
+others are built on top of this one.
 
 [/ ---------------------------------------------------------------------- ]
 
@@ -226,48 +259,6 @@ An illustrative (but incomplete) code snippet:
 
     child c = l.start(cl);
     ... c now represents the newborn child process ...
-
-[endsect]
-
-[/ ---------------------------------------------------------------------- ]
-
-[section Interacting with a child process]
-
-As we saw in [link boost_process.usage.communication_channels], a launcher
-can configure a new child to redirect some, if not all, of its data flows
-to the parent process.  When this is done, the parent has access to several
-C++ streams that automatically communicate with their corresponding child's
-communication channels.  These channels are accessible through methods
-named after the channels their refer to: [memberref
-boost::process::basic_child::get_stdin], [memberref
-boost::process::basic_child::get_stdout] and [memberref
-boost::process::basic_child::get_stderr].
-
-An input stream for a child process is seen as an output data flow by the
-parent, so it is modelled through the [classref boost::process::postream]
-class.  On the opposite side, an output stream for a child process is seen
-as an input data flow by the parent, hence it is represented by the
-[classref boost::process::pistream] class.  These two are regular C++
-streams but provide an extra method (`close`) to allow the explicit
-shutdown of a communication channel.  This is required for example to let
-the child know that the parent is not willing to send more data through its
-__stdin__.  (Typically the child will close output channels on exit and
-the parent will close input ones.)
-
-The following example illustrates sending some data to a process:
-
-    boost::process::postream os = c.get_stdin();
-    os << "some-string" << std::endl;
-    os << 200 << 1024 << std::endl;
-    os.close();
-
-Similary, the following shows how to retrieve the child's data, line by
-line:
-
-    boost::process::pistream is = c.get_stdout();
-    std::string line;
-    while (std::getline(is, line))
-        std::cout << "Got a line: " << line << std::endl;
 
 [endsect]
 
