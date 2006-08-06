@@ -10,8 +10,11 @@
 #define BOOST_MATH_THROW_ON_DOMAIN_ERROR
 #endif
 
+#undef max      // avoid msvc macro conflict, gcc has no such problem
+
 #include <boost/math/special_functions/ellint_rf.hpp>
 #include <boost/math/special_functions/ellint_rd.hpp>
+#include <boost/math/constants/constants.hpp>
 #include <boost/math/tools/error_handling.hpp>
 
 // Elliptic integrals (complete and incomplete) of the second kind
@@ -23,28 +26,52 @@ namespace boost { namespace math {
 template <typename T>
 T ellint_e(T phi, T k)
 {
+    T value, aphi, w, x, y, z, t;
+
     using namespace std;
     using namespace boost::math::tools;
+    using namespace boost::math::constants;
 
     if (abs(k) > 1)
     {
         domain_error<T>("boost::math::ellint_e(phi, k)",
             "domain error, |k| > 1, function requires |k| <= 1");
     }
-    if (abs(k) == 1)
+
+    // Carlson's algorithm works only for |phi| <= 1/2,
+    // use the integrand's periodicity to normalize phi
+    aphi = abs(phi);
+    w = 2.0L * aphi / pi<T>();
+    if (w > std::numeric_limits<long>::max())
     {
-        cout << "Warning: boost::math::ellint_e, |k| = 1, "
-             << "may result in boost::math::ellint_rf "
-             << "or boost::math::ellint_rd domain error"
-             << endl;
+        value = w * ellint_e(k);            // ignore normalization for huge w
+    }
+    else
+    {
+        long n = static_cast<long>(w), sign;
+        if (n % 2 == 0)                     // n is even
+        {
+            aphi = aphi - n * 0.5L * pi<T>();
+            sign = 1;
+        }
+        else                                // n is odd
+        {
+            n += 1;
+            aphi = n * 0.5L * pi<T>() - aphi;
+            sign = -1;
+        }
+        x = cos(aphi) * cos(aphi);
+        t = k * k * sin(aphi) * sin(aphi);
+        y = 1.0L - t;
+        z = 1.0L;
+        value = sign * sin(aphi) * (ellint_rf(x, y, z) - t * ellint_rd(x, y, z) / 3.0L);
+        value += (n == 0) ? 0.0L : n * ellint_e(k);
     }
 
-    T x = cos(phi) * cos(phi);
-    T t = k * k * sin(phi) * sin(phi);
-    T y = 1.0L - t;
-    T z = 1.0L;
-    T value = sin(phi) * (ellint_rf(x, y, z) - t * ellint_rd(x, y, z) / 3.0L);
-
+    if (phi < 0)
+    {
+        value *= -1.0L;                     // odd function
+    }
     return value;
 }
 
@@ -62,10 +89,7 @@ T ellint_e(T k)
     }
     if (abs(k) == 1)
     {
-        cout << "Warning: boost::math::ellint_e, |k| = 1, "
-             << "may result in boost::math::ellint_rf "
-             << "or boost::math::ellint_rd domain error"
-             << endl;
+        return static_cast<T>(1);
     }
 
     T x = 0.0L;
