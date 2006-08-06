@@ -43,7 +43,7 @@ T ellint_rd(T x, T y, T z)
     }
 
     // error scales as the 6th power of tolerance
-    tolerance = pow(std::numeric_limits<T>::epsilon()/3.0L, 1.0L/6.0L);
+    tolerance = pow((1.0L/3.0L)*std::numeric_limits<T>::epsilon(), 1.0L/6.0L);
 
     // duplication
     sigma = 0.0L;
