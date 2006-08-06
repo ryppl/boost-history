@@ -21,10 +21,16 @@ doxygen autodoc
     :
         ../../../boost/process.hpp
         [ glob ../../../boost/process/*.hpp ]
-        [ glob ../../../boost/process/detail/*.hpp ]
+
+        # Enable the following to include documentation for the code
+        # in the detail namespace.
+        #[ glob ../../../boost/process/detail/*.hpp ]
     :
         <doxygen:param>"PREDEFINED=\"BOOST_PROCESS_DOXYGEN\""
-        <xsl:param>boost.doxygen.detailns=documenteverything
+
+        # Enable the following to include documentation for the code
+        # in the detail namespace.
+        #<xsl:param>boost.doxygen.detailns=documenteverything
     ;
 
 xml process
