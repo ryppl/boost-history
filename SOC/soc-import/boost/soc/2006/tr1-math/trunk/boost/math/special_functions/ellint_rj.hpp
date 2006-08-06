@@ -19,7 +19,6 @@
 
 // Carlson's elliptic integral of the third kind
 // R_J(x, y, z, p) = 1.5 * \int_{0}^{\infty} (t+p)^{-1} [(t+x)(t+y)(t+z)]^{-1/2} dt
-// Carlson, SIAM Journal on Mathematical Analysis, vol 8, 231 (1977)
 // Carlson, Numerische Mathematik, vol 33, 1 (1979)
 
 namespace boost { namespace math {

@@ -16,7 +16,6 @@
 
 // Carlson's degenerate elliptic integral
 // R_C(x, y) = R_F(x, y, y) = 0.5 * \int_{0}^{\infty} (t+x)^{-1/2} (t+y)^{-1} dt
-// Carlson, SIAM Journal on Mathematical Analysis, vol 8, 231 (1977)
 // Carlson, Numerische Mathematik, vol 33, 1 (1979)
 
 namespace boost { namespace math {
