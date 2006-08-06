@@ -9,7 +9,7 @@
 //
 
 //!
-//! \file boost/process/detail/posix_ops.hpp
+//! \file boost/process/detail/win32_ops.hpp
 //!
 //! Provides some convenience functions to start processes under Win32
 //! operating systems.
