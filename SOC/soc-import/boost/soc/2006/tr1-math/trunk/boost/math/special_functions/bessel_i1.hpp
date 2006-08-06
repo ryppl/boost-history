@@ -101,7 +101,7 @@ T bessel_i1(T x)
 
     if (x < 0)
     {
-        value *= -1.0L;                // odd function
+        value *= -1.0L;                 // odd function
     }
     return value;
 }
