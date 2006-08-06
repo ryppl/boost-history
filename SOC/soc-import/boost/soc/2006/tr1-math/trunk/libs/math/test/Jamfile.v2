@@ -16,3 +16,5 @@ run bessel_k0_test.cpp ;
 run bessel_k1_test.cpp ;
 run bessel_kn_test.cpp ;
 run bessel_kv_test.cpp ;
+run ellint_1_test.cpp ;
+run ellint_2_test.cpp ;
