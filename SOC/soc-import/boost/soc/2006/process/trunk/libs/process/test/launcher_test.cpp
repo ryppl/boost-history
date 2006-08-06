@@ -31,16 +31,12 @@ test_close_stdin(void)
     bp::command_line cl(get_helpers_path());
     cl.argument("is-closed-stdin");
 
-    bp::launcher l1(bp::launcher::close_stream,
-                    bp::launcher::close_stream,
-                    bp::launcher::close_stream);
-    bp::status s1 = l1.start(cl).wait();
+    bp::status s1 = bp::launcher().start(cl).wait();
     BOOST_REQUIRE(s1.exited());
     BOOST_CHECK_EQUAL(s1.exit_status(), EXIT_SUCCESS);
 
-    bp::launcher l2(bp::launcher::redirect_stream,
-                    bp::launcher::close_stream,
-                    bp::launcher::close_stream);
+    bp::launcher l2;
+    l2.set_stdin_behavior(bp::launcher::redirect_stream);
     bp::child c2 = l2.start(cl);
     c2.get_stdin() << "foo" << std::endl;
     c2.get_stdin().close();
@@ -57,16 +53,12 @@ test_close_stdout(void)
     bp::command_line cl(get_helpers_path());
     cl.argument("is-closed-stdout");
 
-    bp::launcher l1(bp::launcher::close_stream,
-                    bp::launcher::close_stream,
-                    bp::launcher::close_stream);
-    bp::status s1 = l1.start(cl).wait();
+    bp::status s1 = bp::launcher().start(cl).wait();
     BOOST_REQUIRE(s1.exited());
     BOOST_CHECK_EQUAL(s1.exit_status(), EXIT_SUCCESS);
 
-    bp::launcher l2(bp::launcher::close_stream,
-                    bp::launcher::silent_stream,
-                    bp::launcher::close_stream);
+    bp::launcher l2;
+    l2.set_stdout_behavior(bp::launcher::redirect_stream);
     bp::status s2 = l2.start(cl).wait();
     BOOST_REQUIRE(s2.exited());
     BOOST_CHECK_EQUAL(s2.exit_status(), EXIT_FAILURE);
@@ -80,16 +72,12 @@ test_close_stderr(void)
     bp::command_line cl(get_helpers_path());
     cl.argument("is-closed-stderr");
 
-    bp::launcher l1(bp::launcher::close_stream,
-                    bp::launcher::close_stream,
-                    bp::launcher::close_stream);
-    bp::status s1 = l1.start(cl).wait();
+    bp::status s1 = bp::launcher().start(cl).wait();
     BOOST_REQUIRE(s1.exited());
     BOOST_CHECK_EQUAL(s1.exit_status(), EXIT_SUCCESS);
 
-    bp::launcher l2(bp::launcher::close_stream,
-                    bp::launcher::close_stream,
-                    bp::launcher::silent_stream);
+    bp::launcher l2;
+    l2.set_stderr_behavior(bp::launcher::redirect_stream);
     bp::status s2 = l2.start(cl).wait();
     BOOST_REQUIRE(s2.exited());
     BOOST_CHECK_EQUAL(s2.exit_status(), EXIT_FAILURE);
@@ -103,8 +91,9 @@ test_input(void)
     bp::command_line cl(get_helpers_path());
     cl.argument("stdin-to-stdout");
 
-    bp::launcher l(bp::launcher::redirect_stream,
-                   bp::launcher::redirect_stream);
+    bp::launcher l;
+    l.set_stdin_behavior(bp::launcher::redirect_stream);
+    l.set_stdout_behavior(bp::launcher::redirect_stream);
     bp::child c = l.start(cl);
 
     bp::postream& os = c.get_stdin();
@@ -132,11 +121,11 @@ test_output(bool out,
     bp::command_line cl(get_helpers_path());
     cl.argument(out ? "echo-stdout" : "echo-stderr").argument(realmsg);
 
-    bp::launcher l(bp::launcher::close_stream,
-                   out ? bp::launcher::redirect_stream :
-                         bp::launcher::close_stream,
-                   out ? bp::launcher::close_stream :
-                         bp::launcher::redirect_stream);
+    bp::launcher l;
+    if (out)
+       l.set_stdout_behavior(bp::launcher::redirect_stream);
+    else
+       l.set_stderr_behavior(bp::launcher::redirect_stream);
     bp::child c = l.start(cl);
 
     std::string word;
@@ -188,16 +177,15 @@ test_stdout_pass(void)
 
 // ------------------------------------------------------------------------
 
-void
-test_merge(const std::string& msg)
+static void
+test_merge_out_err(void)
 {
     bp::command_line cl(get_helpers_path());
-    cl.argument("echo-stdout-stderr").argument(msg);
+    cl.argument("echo-stdout-stderr").argument("message-to-two-streams");
 
-    bp::launcher l(bp::launcher::close_stream,
-                   bp::launcher::redirect_stream,
-                   bp::launcher::close_stream,
-                   true);
+    bp::launcher l;
+    l.set_stdout_behavior(bp::launcher::redirect_stream);
+    l.set_merge_out_err(true);
     bp::child c = l.start(cl);
 
     bp::pistream& is = c.get_stdout();
@@ -205,23 +193,15 @@ test_merge(const std::string& msg)
     is >> word;
     BOOST_CHECK_EQUAL(word, "stdout");
     is >> word;
-    BOOST_CHECK_EQUAL(word, msg);
+    BOOST_CHECK_EQUAL(word, "message-to-two-streams");
     is >> word;
     BOOST_CHECK_EQUAL(word, "stderr");
     is >> word;
-    BOOST_CHECK_EQUAL(word, msg);
+    BOOST_CHECK_EQUAL(word, "message-to-two-streams");
 
     bp::status s = c.wait();
     BOOST_REQUIRE(s.exited());
     BOOST_CHECK_EQUAL(s.exit_status(), EXIT_SUCCESS);
-}
-
-// ------------------------------------------------------------------------
-
-static void
-test_merge_out_err(void)
-{
-    test_merge("message-to-two-streams");
 }
 
 // ------------------------------------------------------------------------
@@ -232,10 +212,8 @@ test_default_work_directory(void)
     bp::command_line cl(get_helpers_path());
     cl.argument("pwd");
 
-    bp::launcher l(bp::launcher::close_stream,
-                   bp::launcher::redirect_stream,
-                   bp::launcher::close_stream,
-                   false);
+    bp::launcher l;
+    l.set_stdout_behavior(bp::launcher::redirect_stream);
     BOOST_CHECK(bfs::equivalent(l.get_work_directory(),
                                 bfs::current_path().string()));
     bp::child c = l.start(cl);
@@ -263,10 +241,8 @@ test_explicit_work_directory(void)
 
     BOOST_REQUIRE_NO_THROW(bfs::create_directory(wdir));
     try {
-        bp::launcher l(bp::launcher::close_stream,
-                       bp::launcher::redirect_stream,
-                       bp::launcher::close_stream,
-                       false);
+        bp::launcher l;
+        l.set_stdout_behavior(bp::launcher::redirect_stream);
         l.set_work_directory(wdir.string());
         BOOST_CHECK_EQUAL(l.get_work_directory(), wdir);
         bp::child c = l.start(cl);
@@ -304,10 +280,8 @@ test_unset_environment(void)
     BOOST_REQUIRE(::GetEnvironmentVariable("TO_BE_UNSET", buf, 5) != 0);
 #endif
 
-    bp::launcher l(bp::launcher::close_stream,
-                   bp::launcher::redirect_stream,
-                   bp::launcher::close_stream,
-                   false);
+    bp::launcher l;
+    l.set_stdout_behavior(bp::launcher::redirect_stream);
     l.unset_environment("TO_BE_UNSET");
     bp::child c = l.start(cl);
 
@@ -340,10 +314,8 @@ test_set_environment(const std::string& value)
     BOOST_REQUIRE(::GetEnvironmentVariable("TO_BE_SET", buf, 5) == 0);
 #endif
 
-    bp::launcher l(bp::launcher::close_stream,
-                   bp::launcher::redirect_stream,
-                   bp::launcher::close_stream,
-                   false);
+    bp::launcher l;
+    l.set_stdout_behavior(bp::launcher::redirect_stream);
     l.set_environment("TO_BE_SET", value);
     bp::child c = l.start(cl);
 
@@ -389,8 +361,8 @@ test_shell(void)
     bp::command_line cl =
         bp::command_line::shell("if foo==foo echo LINE-test");
 #endif
-    bp::launcher l(bp::launcher::close_stream,
-                   bp::launcher::redirect_stream);
+    bp::launcher l;
+    l.set_stdout_behavior(bp::launcher::redirect_stream);
     bp::child c = l.start(cl);
 
     bp::pistream& is = c.get_stdout();

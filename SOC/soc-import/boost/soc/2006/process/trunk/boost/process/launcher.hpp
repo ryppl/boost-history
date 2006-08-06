@@ -84,29 +84,19 @@ public:
     //! \brief Constructs a new launcher with redirections.
     //!
     //! Constructs a new launcher object ready to spawn a new child
-    //! process.  The launcher is configured to redirect the data streams
-    //! described by the parameters described below.
+    //! process.  The launcher is configured to close all communcation
+    //! channels with the child process unless told otherwise by one of
+    //! the set_stdin_behavior(), set_stdout_behavior() or
+    //! set_stderr_behavior() methods.
     //!
-    //! It is important to note that the initial work directory of the
-    //! child processes is set to the currently working directory.  See
-    //! set_work_directory() for more details.
+    //! The initial work directory of the child processes is set to the
+    //! current working directory.  See set_work_directory() for more
+    //! details.
     //!
-    //! \param in The child's standard input stream behavior.
-    //! \param out The child's standard output stream behavior.
-    //! \param err The child's standard error stream behavior.
-    //! \param merge_out_err If true, the child is configured to merge the
-    //!                      standard output and standard error streams
-    //!                      into a single one.  In other words, the data
-    //!                      sent to stderr is automatically redirected to
-    //!                      stdout, providing the parent a single data
-    //!                      flow.
-    //! \pre If merge_out_err is true, err must be close_stream and out
-    //!      must be different than close_stream.
+    //! The initial environment variables for the child process are
+    //! inherited from the parent's table at the moment of creation.
     //!
-    launcher(stream_behavior in = close_stream,
-             stream_behavior out = close_stream,
-             stream_behavior err = close_stream,
-             bool merge_out_err = false);
+    launcher(void);
 
     //!
     //! \brief Sets the standard input stream behavior.
@@ -249,19 +239,12 @@ protected:
 // ------------------------------------------------------------------------
 
 inline
-launcher::launcher(stream_behavior in,
-                   stream_behavior out,
-                   stream_behavior err,
-                   bool merge_out_err)
+launcher::launcher(void) :
+    m_behavior_in(close_stream),
+    m_behavior_out(close_stream),
+    m_behavior_err(close_stream),
+    m_merge_out_err(false)
 {
-    // The corresponding fields for the following calls are initialized
-    // through their setters instead of from an initializer list to avoid
-    // repeating the precondition checks code here.
-    set_stdin_behavior(in);
-    set_stdout_behavior(out);
-    set_stderr_behavior(err);
-    set_merge_out_err(merge_out_err);
-
 #if defined(BOOST_PROCESS_POSIX_API)
     const char* buf = ::getcwd(NULL, 0);
     if (buf == NULL)

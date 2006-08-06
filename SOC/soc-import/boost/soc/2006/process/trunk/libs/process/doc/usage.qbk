@@ -116,7 +116,7 @@ configure more communication channels __mdash__ a feature only supported
 in POSIX systems __mdashnospc__, check the [classref
 boost::process::posix_launcher] class built on top of the former.
 
-Each communication channel can be configure according different
+Each communication channel can be configured according to different
 predefined behaviors as provided by [enumref
 boost::process::launcher::stream_behavior].  The possible types are:
 
@@ -145,16 +145,14 @@ operating system, some of them will point to the same internal object.
 This feature is specially interesting to allow for efficient retrieval of a
 process' __stdout__ and __stderr__ flows.
 
-With all these details in mind, a simple [classref boost::process::launcher
-portable launcher] can be created by defining the behavior of the three
-standard channels and specifying whether __stderr__ shall be merged into
-__stdout__.  For example:
+This small code snipped shows a complete example:
 
     using boost::process::launcher;
-    launcher l(launcher::close_stream,   // stdin behavior
-               launcher::inherit_stream, // stdout behavior
-               launcher::inherit_stream, // stderr behavior
-               false);                   // send stderr to stdout
+    launcher l;
+    l.set_stdin_behavior(launcher::silent_stream); // The default.
+    l.set_stdout_behavior(launcher::inherit_stream);
+    l.set_stderr_behavior(launcher::close_stream);
+    l.set_merge_out_err(true);
 
 [endsect]
 

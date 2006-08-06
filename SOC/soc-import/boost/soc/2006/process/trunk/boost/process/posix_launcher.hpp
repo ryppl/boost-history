@@ -82,22 +82,6 @@ class posix_launcher :
 
 public:
     //!
-    //! \brief Constructs a new POSIX %launcher with redirections.
-    //!
-    //! Constructs a new POSIX %launcher object ready to spawn a new child
-    //! process.  The launcher is configured to redirect the standard
-    //! data streams described by the \a flags bit field.  See the launcher
-    //! documentation for more details on this parameter.
-    //!
-    //! The launcher is configured to not change the credentials of the
-    //! new process nor sets up any chroot for it.
-    //!
-    posix_launcher(stream_behavior in = close_stream,
-                   stream_behavior out = close_stream,
-                   stream_behavior err = close_stream,
-                   bool merge_out_err = false);
-
-    //!
     //! \brief Sets up an input redirection for the \a desc descriptor.
     //!
     //! Configures the launcher to redirect the \a desc descriptor as an
@@ -257,25 +241,6 @@ public:
     template< class Command_Line >
     basic_posix_child< Command_Line > start(const Command_Line& cl);
 };
-
-// ------------------------------------------------------------------------
-
-inline
-posix_launcher::posix_launcher(stream_behavior in,
-                               stream_behavior out,
-                               stream_behavior err,
-                               bool merge_out_err) :
-    launcher(in, out, err, merge_out_err)
-{
-    if (in == redirect_stream)
-        redir_input(STDIN_FILENO);
-    if (out == redirect_stream)
-        redir_output(STDOUT_FILENO);
-    if (err == redirect_stream)
-        redir_output(STDERR_FILENO);
-    if (merge_out_err)
-        merge_outputs(STDERR_FILENO, STDOUT_FILENO);
-}
 
 // ------------------------------------------------------------------------
 
