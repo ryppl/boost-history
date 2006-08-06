@@ -31,8 +31,8 @@ public:
     {
         bp::command_line cl("test");
         bp::posix_child::handle_type h = (bp::posix_child::handle_type)0;
-        bp::posix_child::pipe_map pipes;
-        return new bp::posix_child(h, cl, pipes, pipes);
+        bpd::info_map info;
+        return new bp::posix_child(h, cl, info, info);
     }
 };
 

@@ -32,8 +32,8 @@ public:
         bp::basic_posix_child< int >::handle_type h =
             (bp::basic_posix_child< int >::handle_type)0;
         int cl = 5;
-        bp::basic_posix_child< int >::pipe_map pipes;
-        return new bp::basic_posix_child< int >(h, cl, pipes, pipes);
+        bpd::info_map info;
+        return new bp::basic_posix_child< int >(h, cl, info, info);
     }
 };
 

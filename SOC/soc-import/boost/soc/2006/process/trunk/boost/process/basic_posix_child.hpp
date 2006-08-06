@@ -30,6 +30,7 @@
 
 #include <boost/process/basic_child.hpp>
 #include <boost/process/detail/pipe.hpp>
+#include <boost/process/detail/posix_ops.hpp>
 #include <boost/process/pistream.hpp>
 #include <boost/process/postream.hpp>
 #include <boost/shared_ptr.hpp>
@@ -119,20 +120,16 @@ protected:
     friend class posix_launcher;
 
     //!
-    //! \brief Maps child's file descriptors to pipe objects.
-    //!
-    typedef std::map< int, detail::pipe > pipe_map;
-
-    //!
     //! \brief Searches for a file handle in a %pipe map.
     //!
     //! This helper function searches for the \a desc file descriptor
-    //! in the \a pm %pipe map and returns its corresponding file handle.
+    //! in the \a im map and returns its corresponding file handle.
     //! If \a out is true, it is assummed that the file handle corresponds
     //! to a output stream, so the pipe's read end is returned; otherwise
     //! the write end is returned.
     //!
-    static detail::file_handle get_handle(pipe_map& pm, int desc, bool out);
+    static detail::file_handle get_handle(detail::info_map& im, int desc,
+                                          bool out);
 
     //!
     //! \brief Constructs a new POSIX child object representing a just
@@ -143,19 +140,20 @@ protected:
     //! is assummed that its contents are those that were used to launch
     //! the program's instance.
     //!
-    //! The \a inpipes and \a outpipes maps contain the pipes used to
-    //! handle the redirections of the child process.  If the launcher was
-    //! asked to redirect any of the three standard flows, their pipes
-    //! must be present in these maps.
+    //! The \a infoin and \a infoout maps contain the pipes used to handle
+    //! the redirections of the child process; at the moment, no other
+    //! stream_info types are supported.  If the launcher was asked to
+    //! redirect any of the three standard flows, their pipes must be
+    //! present in these maps.
     //!
     //! This constructor is protected because the library user has no
     //! business in creating representations of live processes himself;
     //! the library takes care of that in all cases.
     //!
     basic_posix_child(handle_type h,
-                const Command_Line& cl,
-                pipe_map& inpipes,
-                pipe_map& outpipes);
+                      const Command_Line& cl,
+                      detail::info_map& infoin,
+                      detail::info_map& infoout);
 };
 
 // ------------------------------------------------------------------------
@@ -165,28 +163,34 @@ inline
 basic_posix_child< Command_Line >::basic_posix_child
     (handle_type h,
      const Command_Line& cl,
-     pipe_map& inpipes,
-     pipe_map& outpipes) :
+     detail::info_map& infoin,
+     detail::info_map& infoout) :
     basic_child< Command_Line >
         (h, cl,
-         basic_posix_child< Command_Line >::get_handle(inpipes, STDIN_FILENO,
+         basic_posix_child< Command_Line >::get_handle(infoin, STDIN_FILENO,
                                                        false),
-         basic_posix_child< Command_Line >::get_handle(outpipes, STDOUT_FILENO,
+         basic_posix_child< Command_Line >::get_handle(infoout, STDOUT_FILENO,
                                                        true),
-         basic_posix_child< Command_Line >::get_handle(outpipes, STDERR_FILENO,
+         basic_posix_child< Command_Line >::get_handle(infoout, STDERR_FILENO,
                                                        true))
 {
-    for (pipe_map::iterator iter = inpipes.begin();
-         iter != inpipes.end(); iter++) {
-        BOOST_ASSERT((*iter).second.wend().is_valid());
-        boost::shared_ptr< postream > st(new postream((*iter).second.wend()));
+    for (detail::info_map::iterator iter = infoin.begin();
+         iter != infoin.end(); iter++) {
+        detail::stream_info& si = (*iter).second;
+
+        BOOST_ASSERT(si.m_type == detail::stream_info::usepipe);
+        BOOST_ASSERT(si.m_pipe->wend().is_valid());
+        boost::shared_ptr< postream > st(new postream(si.m_pipe->wend()));
         m_input_map.insert(input_map::value_type((*iter).first, st));
     }
 
-    for (pipe_map::iterator iter = outpipes.begin();
-         iter != outpipes.end(); iter++) {
-        BOOST_ASSERT((*iter).second.rend().is_valid());
-        boost::shared_ptr< pistream > st(new pistream((*iter).second.rend()));
+    for (detail::info_map::iterator iter = infoout.begin();
+         iter != infoout.end(); iter++) {
+        detail::stream_info& si = (*iter).second;
+
+        BOOST_ASSERT(si.m_type == detail::stream_info::usepipe);
+        BOOST_ASSERT(si.m_pipe->rend().is_valid());
+        boost::shared_ptr< pistream > st(new pistream(si.m_pipe->rend()));
         m_output_map.insert(output_map::value_type((*iter).first, st));
     }
 }
@@ -196,19 +200,23 @@ basic_posix_child< Command_Line >::basic_posix_child
 template< class Command_Line >
 inline
 detail::file_handle
-basic_posix_child< Command_Line >::get_handle(pipe_map& pm, int desc,
+basic_posix_child< Command_Line >::get_handle(detail::info_map& im,
+                                              int desc,
                                               bool out)
 {
     detail::file_handle fh;
 
-    typename pipe_map::iterator iter = pm.find(desc);
-    if (iter != pm.end()) {
+    typename detail::info_map::iterator iter = im.find(desc);
+    if (iter != im.end()) {
+        detail::stream_info& si = (*iter).second;
+
+        BOOST_ASSERT(si.m_type == detail::stream_info::usepipe);
         if (out)
-            fh = (*iter).second.rend();
+            fh = si.m_pipe->rend();
         else
-            fh = (*iter).second.wend();
+            fh = si.m_pipe->wend();
         BOOST_ASSERT(fh.is_valid());
-        pm.erase(iter);
+        im.erase(iter);
     }
 
     return fh;

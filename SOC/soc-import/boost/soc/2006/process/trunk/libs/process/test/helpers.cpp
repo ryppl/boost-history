@@ -33,6 +33,9 @@ int h_echo_stderr(int, char*[]);
 int h_echo_stdout_stderr(int, char*[]);
 int h_exit_failure(int, char*[]);
 int h_exit_success(int, char*[]);
+int h_is_closed_stdin(int, char*[]);
+int h_is_closed_stdout(int, char*[]);
+int h_is_closed_stderr(int, char*[]);
 int h_pwd(int, char*[]);
 int h_query_env(int, char*[]);
 int h_stdin_to_stdout(int, char*[]);
@@ -53,6 +56,9 @@ struct helper {
     { "echo-stdout-stderr", h_echo_stdout_stderr, 2, "message" },
     { "exit-failure", h_exit_failure, 1, "" },
     { "exit-success", h_exit_success, 1, "" },
+    { "is-closed-stdin", h_is_closed_stdin, 1, "" },
+    { "is-closed-stdout", h_is_closed_stdout, 1, "" },
+    { "is-closed-stderr", h_is_closed_stderr, 1, "" },
     { "pwd", h_pwd, 1, "" },
     { "query-env", h_query_env, 2, "variable" },
     { "stdin-to-stdout", h_stdin_to_stdout, 1, "" },
@@ -109,6 +115,34 @@ int
 h_exit_success(int argc, char* argv[])
 {
     return EXIT_SUCCESS;
+}
+
+// ------------------------------------------------------------------------
+
+int
+h_is_closed_stdin(int argc, char* argv[])
+{
+    std::string word;
+    std::cin >> word;
+    return std::cin.eof() ? EXIT_SUCCESS : EXIT_FAILURE;
+}
+
+// ------------------------------------------------------------------------
+
+int
+h_is_closed_stdout(int argc, char* argv[])
+{
+    std::cout << "foo" << std::endl;
+    return std::cout.bad() ? EXIT_SUCCESS : EXIT_FAILURE;
+}
+
+// ------------------------------------------------------------------------
+
+int
+h_is_closed_stderr(int argc, char* argv[])
+{
+    std::cerr << "foo" << std::endl;
+    return std::cerr.bad() ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
 // ------------------------------------------------------------------------

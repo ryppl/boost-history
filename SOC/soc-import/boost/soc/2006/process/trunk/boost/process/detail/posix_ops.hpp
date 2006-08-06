@@ -26,13 +26,17 @@
 #   error "Unsupported platform."
 #endif
 
-#include <unistd.h>
+extern "C" {
+#   include <fcntl.h>
+#   include <unistd.h>
+}
 
 #include <cerrno>
 #include <cstdlib>
 #include <map>
 #include <set>
 
+#include <boost/optional.hpp>
 #include <boost/process/detail/command_line_ops.hpp>
 #include <boost/process/detail/environment.hpp>
 #include <boost/process/detail/file_handle.hpp>
@@ -47,10 +51,34 @@ namespace detail {
 // ------------------------------------------------------------------------
 
 //!
+//! \brief Configuration data for a file descriptor.
+//!
+//! This convenience structure provides a compact way to pass information
+//! around on how to configure a file descriptor.  It is used in
+//! conjunction with the info_map map to create an unidirectional
+//! association between file descriptors and their configuration details.
+//!
+struct stream_info
+{
+    enum type { dontclose, usefile, usehandle, usepipe } m_type;
+
+    // Valid when m_type == usefile.
+    std::string m_file;
+
+    // Valid when m_type == usehandle.
+    file_handle m_handle;
+
+    // Valid when m_type == usepipe.
+    boost::optional< pipe > m_pipe;
+};
+
+// ------------------------------------------------------------------------
+
+//!
 //! Holds a mapping between native file descriptors and their corresponding
 //! pipes to set up communication between the parent and the %child process.
 //!
-typedef std::map< int, pipe > pipe_map;
+typedef std::map< int, stream_info > info_map;
 
 //!
 //! Maintains a list of file descriptor pairs, aimed at keeping a list of
@@ -216,10 +244,10 @@ posix_setup::operator()(void)
 //! \param cl The command line used to execute the child process.
 //! \param env The environment variables that the new child process
 //!            receives.
-//! \param inpipes A map describing all input file descriptors to be
+//! \param infoin A map describing all input file descriptors to be
+//!               redirected.
+//! \param infoout A map describing all output file descriptors to be
 //!                redirected.
-//! \param outpipes A map describing all output file descriptors to be
-//!                 redirected.
 //! \param merges A list of output file descriptors to be merged.
 //! \param setup A helper object used to configure the child's execution
 //!              environment.
@@ -231,8 +259,8 @@ inline
 pid_t
 posix_start(const Command_Line& cl,
             const environment& env,
-            pipe_map& inpipes,
-            pipe_map& outpipes,
+            info_map& infoin,
+            info_map& infoout,
             merge_set& merges,
             const posix_setup& setup)
 {
@@ -242,24 +270,71 @@ posix_start(const Command_Line& cl,
             (system_error("boost::process::detail::posix_start",
                           "fork(2) failed", errno));
     } else if (pid == 0) {
-        for (pipe_map::iterator iter = inpipes.begin();
-             iter != inpipes.end(); iter++) {
-            int d = (*iter).first;
-            pipe& p = (*iter).second;
+#if defined(F_MAXFD)
+        int maxdescs = ::fcntl(0, F_MAXFD);
+        if (maxdescs == -1)
+            maxdescs = 128; // XXX
+#else
+        int maxdescs = 128; // XXX
+#endif
+        bool closeflags[maxdescs];
+        for (int i = 0; i < maxdescs; i++)
+            closeflags[i] = true;
 
-            p.wend().close();
-            if (d != p.rend().get())
-                p.rend().posix_remap(d);
+        for (info_map::iterator iter = infoin.begin();
+             iter != infoin.end(); iter++) {
+            int d = (*iter).first;
+            stream_info& si = (*iter).second;
+
+            BOOST_ASSERT(d < maxdescs);
+            closeflags[d] = false;
+
+            if (si.m_type == stream_info::usefile) {
+                int fd = ::open(si.m_file.c_str(), O_RDONLY);
+                if (fd == -1)
+                    ; // XXX Error!
+                if (fd != d) {
+                    file_handle h(fd);
+                    h.posix_remap(d);
+                    h.disown();
+                }
+            } else if (si.m_type == stream_info::usehandle) {
+                if (si.m_handle.get() != d)
+                    si.m_handle.posix_remap(d);
+            } else if (si.m_type == stream_info::usepipe) {
+                si.m_pipe->wend().close();
+                if (d != si.m_pipe->rend().get())
+                    si.m_pipe->rend().posix_remap(d);
+            } else
+                BOOST_ASSERT(si.m_type == stream_info::dontclose);
         }
 
-        for (pipe_map::iterator iter = outpipes.begin();
-             iter != outpipes.end(); iter++) {
+        for (info_map::iterator iter = infoout.begin();
+             iter != infoout.end(); iter++) {
             int d = (*iter).first;
-            pipe& p = (*iter).second;
+            stream_info& si = (*iter).second;
 
-            p.rend().close();
-            if (d != p.wend().get())
-                p.wend().posix_remap(d);
+            BOOST_ASSERT(d < maxdescs);
+            closeflags[d] = false;
+
+            if (si.m_type == stream_info::usefile) {
+                int fd = ::open(si.m_file.c_str(), O_WRONLY);
+                if (fd == -1)
+                    ; // XXX Error!
+                if (fd != d) {
+                    file_handle h(fd);
+                    h.posix_remap(d);
+                    h.disown();
+                }
+            } else if (si.m_type == stream_info::usehandle) {
+                if (si.m_handle.get() != d)
+                    si.m_handle.posix_remap(d);
+            } else if (si.m_type == stream_info::usepipe) {
+                si.m_pipe->rend().close();
+                if (d != si.m_pipe->wend().get())
+                    si.m_pipe->wend().posix_remap(d);
+            } else
+                BOOST_ASSERT(si.m_type == stream_info::dontclose);
         }
 
         for (merge_set::const_iterator iter = merges.begin();
@@ -267,7 +342,17 @@ posix_start(const Command_Line& cl,
             const std::pair< int, int >& p = (*iter);
             file_handle fh = file_handle::posix_dup(p.second, p.first);
             fh.disown();
+            BOOST_ASSERT(p.first < maxdescs);
+            closeflags[p.first] = false;
         }
+
+        for (int i = 0; i < maxdescs; i++)
+            if (closeflags[i])
+#if defined(F_SETFD) && defined(FD_CLOEXEC)
+                ::fcntl(i, F_SETFD, FD_CLOEXEC);
+#else
+                ::close(i);
+#endif
 
         try {
             setup();
@@ -299,13 +384,21 @@ posix_start(const Command_Line& cl,
 
     BOOST_ASSERT(pid > 0);
 
-    for (pipe_map::iterator iter = inpipes.begin();
-         iter != inpipes.end(); iter++)
-        (*iter).second.rend().close();
+    for (info_map::iterator iter = infoin.begin();
+         iter != infoin.end(); iter++) {
+        stream_info& si = (*iter).second;
 
-    for (pipe_map::iterator iter = outpipes.begin();
-         iter != outpipes.end(); iter++)
-        (*iter).second.wend().close();
+        if (si.m_type == stream_info::usepipe)
+            si.m_pipe->rend().close();
+    }
+
+    for (info_map::iterator iter = infoout.begin();
+         iter != infoout.end(); iter++) {
+        stream_info& si = (*iter).second;
+
+        if (si.m_type == stream_info::usepipe)
+            si.m_pipe->wend().close();
+    }
 
     return pid;
 }

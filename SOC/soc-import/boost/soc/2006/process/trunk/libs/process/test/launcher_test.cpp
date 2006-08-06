@@ -26,6 +26,78 @@ namespace but = ::boost::unit_test;
 // ------------------------------------------------------------------------
 
 void
+test_close_stdin(void)
+{
+    bp::command_line cl(get_helpers_path());
+    cl.argument("is-closed-stdin");
+
+    bp::launcher l1(bp::launcher::close_stream,
+                    bp::launcher::close_stream,
+                    bp::launcher::close_stream);
+    bp::status s1 = l1.start(cl).wait();
+    BOOST_REQUIRE(s1.exited());
+    BOOST_CHECK_EQUAL(s1.exit_status(), EXIT_SUCCESS);
+
+    bp::launcher l2(bp::launcher::redirect_stream,
+                    bp::launcher::close_stream,
+                    bp::launcher::close_stream);
+    bp::child c2 = l2.start(cl);
+    c2.get_stdin() << "foo" << std::endl;
+    c2.get_stdin().close();
+    bp::status s2 = c2.wait();
+    BOOST_REQUIRE(s2.exited());
+    BOOST_CHECK_EQUAL(s2.exit_status(), EXIT_FAILURE);
+}
+
+// ------------------------------------------------------------------------
+
+void
+test_close_stdout(void)
+{
+    bp::command_line cl(get_helpers_path());
+    cl.argument("is-closed-stdout");
+
+    bp::launcher l1(bp::launcher::close_stream,
+                    bp::launcher::close_stream,
+                    bp::launcher::close_stream);
+    bp::status s1 = l1.start(cl).wait();
+    BOOST_REQUIRE(s1.exited());
+    BOOST_CHECK_EQUAL(s1.exit_status(), EXIT_SUCCESS);
+
+    bp::launcher l2(bp::launcher::close_stream,
+                    bp::launcher::silent_stream,
+                    bp::launcher::close_stream);
+    bp::status s2 = l2.start(cl).wait();
+    BOOST_REQUIRE(s2.exited());
+    BOOST_CHECK_EQUAL(s2.exit_status(), EXIT_FAILURE);
+}
+
+// ------------------------------------------------------------------------
+
+void
+test_close_stderr(void)
+{
+    bp::command_line cl(get_helpers_path());
+    cl.argument("is-closed-stderr");
+
+    bp::launcher l1(bp::launcher::close_stream,
+                    bp::launcher::close_stream,
+                    bp::launcher::close_stream);
+    bp::status s1 = l1.start(cl).wait();
+    BOOST_REQUIRE(s1.exited());
+    BOOST_CHECK_EQUAL(s1.exit_status(), EXIT_SUCCESS);
+
+    bp::launcher l2(bp::launcher::close_stream,
+                    bp::launcher::close_stream,
+                    bp::launcher::silent_stream);
+    bp::status s2 = l2.start(cl).wait();
+    BOOST_REQUIRE(s2.exited());
+    BOOST_CHECK_EQUAL(s2.exit_status(), EXIT_FAILURE);
+}
+
+// ------------------------------------------------------------------------
+
+void
 test_input(void)
 {
     bp::command_line cl(get_helpers_path());
@@ -340,6 +412,9 @@ init_unit_test_suite(int argc, char* argv[])
 
     but::test_suite* test = BOOST_TEST_SUITE("launcher test suite");
 
+    test->add(BOOST_TEST_CASE(&test_close_stdin), 0, 10);
+    test->add(BOOST_TEST_CASE(&test_close_stdout), 0, 10);
+    test->add(BOOST_TEST_CASE(&test_close_stderr), 0, 10);
     test->add(BOOST_TEST_CASE(&test_stdout_pass), 0, 10);
     test->add(BOOST_TEST_CASE(&test_stdout_fail), 1, 10);
     test->add(BOOST_TEST_CASE(&test_stderr_pass), 0, 10);

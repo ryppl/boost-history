@@ -422,25 +422,31 @@ inline
 basic_posix_child< Command_Line >
 posix_launcher::start(const Command_Line& cl)
 {
-    detail::pipe_map inpipes;
+    detail::info_map infoin;
     for (input_set::const_iterator iter = m_input_set.begin();
-         iter != m_input_set.end(); iter++)
-        inpipes.insert
-            (detail::pipe_map::value_type(*iter, detail::pipe()));
+         iter != m_input_set.end(); iter++) {
+        detail::stream_info si;
+        si.m_type = detail::stream_info::usepipe;
+        si.m_pipe = detail::pipe();
+        infoin.insert(detail::info_map::value_type(*iter, si));
+    }
 
-    detail::pipe_map outpipes;
+    detail::info_map infoout;
     for (output_set::const_iterator iter = m_output_set.begin();
-         iter != m_output_set.end(); iter++)
-        outpipes.insert
-            (detail::pipe_map::value_type(*iter, detail::pipe()));
+         iter != m_output_set.end(); iter++) {
+        detail::stream_info si;
+        si.m_type = detail::stream_info::usepipe;
+        si.m_pipe = detail::pipe();
+        infoout.insert(detail::info_map::value_type(*iter, si));
+    }
 
     detail::posix_setup s = m_setup;
     s.m_work_directory = get_work_directory();
 
     pid_t pid = detail::posix_start(cl, posix_launcher::get_environment(),
-                                    inpipes, outpipes, m_merge_set, s);
+                                    infoin, infoout, m_merge_set, s);
 
-    return basic_posix_child< Command_Line >(pid, cl, inpipes, outpipes);
+    return basic_posix_child< Command_Line >(pid, cl, infoin, infoout);
 }
 
 // ------------------------------------------------------------------------
