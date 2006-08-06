@@ -25,7 +25,7 @@ template <typename T>
 T ellint_rd(T x, T y, T z)
 {
     T value, u, lambda, sigma, factor, tolerance;
-    T X, Y, Z;
+    T X, Y, Z, EA, EB, EC, ED, EE, S1, S2;
     int k;
 
     using namespace std;
