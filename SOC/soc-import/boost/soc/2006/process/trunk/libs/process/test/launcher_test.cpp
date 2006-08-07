@@ -11,6 +11,7 @@
 
 #include <cstring> // XXX For EXIT_* codes; should be hidden by the library.
 #include <string>
+#include <utility>
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/process/child.hpp>
@@ -265,6 +266,58 @@ test_explicit_work_directory(void)
 
 // ------------------------------------------------------------------------
 
+static
+std::pair< bool, std::string >
+get_var_value(bp::launcher& l, const std::string& var)
+{
+    bp::command_line cl(get_helpers_path());
+    cl.argument("query-env").argument("TO_BE_SET");
+
+    l.set_stdout_behavior(bp::launcher::redirect_stream);
+    bp::child c = l.start(cl);
+
+    bp::pistream& is = c.get_stdout();
+    std::string status;
+    is >> status;
+    std::string gotval;
+    is >> gotval;
+
+    bp::status s = c.wait();
+    BOOST_REQUIRE(s.exited());
+    BOOST_REQUIRE_EQUAL(s.exit_status(), EXIT_SUCCESS);
+
+    return std::pair< bool, std::string >(status == "defined", gotval);
+}
+
+// ------------------------------------------------------------------------
+
+static void
+test_clear_environment(void)
+{
+#if defined(BOOST_PROCESS_POSIX_API)
+    BOOST_REQUIRE(::setenv("TO_BE_QUERIED", "test", 1) != -1);
+    BOOST_REQUIRE(::getenv("TO_BE_QUERIED") != NULL);
+#elif defined(BOOST_PROCESS_WIN32_API)
+    BOOST_REQUIRE(::SetEnvironmentVariable("TO_BE_QUERIED", "test") != 0);
+    TCHAR buf[5];
+    BOOST_REQUIRE(::GetEnvironmentVariable("TO_BE_QUERIED", buf, 5) != 0);
+#endif
+
+    bp::launcher l;
+    l.clear_environment();
+
+    std::pair< bool, std::string > p1 = get_var_value(l, "TO_BE_QUERIED");
+    BOOST_REQUIRE(!p1.first);
+
+    std::pair< bool, std::string > p2 = get_var_value(l, "PATH");
+    BOOST_REQUIRE(!p2.first);
+
+    std::pair< bool, std::string > p3 = get_var_value(l, "HOME");
+    BOOST_REQUIRE(!p3.first);
+}
+
+// ------------------------------------------------------------------------
+
 static void
 test_unset_environment(void)
 {
@@ -281,19 +334,9 @@ test_unset_environment(void)
 #endif
 
     bp::launcher l;
-    l.set_stdout_behavior(bp::launcher::redirect_stream);
     l.unset_environment("TO_BE_UNSET");
-    bp::child c = l.start(cl);
-
-    bp::pistream& is = c.get_stdout();
-    std::string status;
-    is >> status;
-
-    bp::status s = c.wait();
-    BOOST_REQUIRE(s.exited());
-    BOOST_REQUIRE_EQUAL(s.exit_status(), EXIT_SUCCESS);
-
-    BOOST_CHECK_EQUAL(status, "undefined");
+    std::pair< bool, std::string > p = get_var_value(l, "TO_BE_SET");
+    BOOST_CHECK(!p.first);
 }
 
 // ------------------------------------------------------------------------
@@ -315,22 +358,10 @@ test_set_environment(const std::string& value)
 #endif
 
     bp::launcher l;
-    l.set_stdout_behavior(bp::launcher::redirect_stream);
     l.set_environment("TO_BE_SET", value);
-    bp::child c = l.start(cl);
-
-    bp::pistream& is = c.get_stdout();
-    std::string status;
-    is >> status;
-    std::string gotval;
-    is >> gotval;
-
-    bp::status s = c.wait();
-    BOOST_REQUIRE(s.exited());
-    BOOST_REQUIRE_EQUAL(s.exit_status(), EXIT_SUCCESS);
-
-    BOOST_CHECK_EQUAL(status, "defined");
-    BOOST_CHECK_EQUAL(gotval, "'" + value + "'");
+    std::pair< bool, std::string > p = get_var_value(l, "TO_BE_SET");
+    BOOST_CHECK(p.first);
+    BOOST_CHECK_EQUAL(p.second, "'" + value + "'");
 }
 
 // ------------------------------------------------------------------------
@@ -395,6 +426,7 @@ init_unit_test_suite(int argc, char* argv[])
     test->add(BOOST_TEST_CASE(&test_input), 0, 10);
     test->add(BOOST_TEST_CASE(&test_default_work_directory), 0, 10);
     test->add(BOOST_TEST_CASE(&test_explicit_work_directory), 0, 10);
+    test->add(BOOST_TEST_CASE(&test_clear_environment), 0, 10);
     test->add(BOOST_TEST_CASE(&test_unset_environment), 0, 10);
 #if defined(BOOST_PROCESS_POSIX_API)
     test->add(BOOST_TEST_CASE(&test_set_environment_empty), 0, 10);

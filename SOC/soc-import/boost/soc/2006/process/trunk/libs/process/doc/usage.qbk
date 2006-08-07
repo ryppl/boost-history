@@ -208,8 +208,16 @@ the [memberref boost::process::launcher::set_environment] and the
 documentation provides more information on their functionality as well as
 some portability notes.
 
+The environment can also be completely cleared by using the [memberref
+boost::process::launcher::clear_environment] method.  Care should be taken
+when using this method because the new process may expect some standard
+variables to be defined for proper operation (e.g. `PATH`).  After using
+this call you are responsible for appropriately setting up the minimum
+required variables.
+
 For quick reference, consider:
 
+    l.clear_environment();
     l.set_environment("variable-name", "variable-value");
     l.unset_environment("variable-name");
 

@@ -135,6 +135,18 @@ public:
     launcher& set_merge_out_err(bool b);
 
     //!
+    //! \brief Clears the %environment variables table.
+    //!
+    //! Clears the %environment variables table, effectively unsetting them
+    //! all.
+    //!
+    //! It should be noted that under Windows, the empty-named variable is
+    //! never removed because it has to point to the initial work
+    //! directory.
+    //!
+    void clear_environment(void);
+
+    //!
     //! \brief Sets the %environment variable \a var to \a value.
     //!
     //! Sets the new child's %environment variable \a var to \a value.
@@ -278,6 +290,18 @@ launcher::get_environment(void)
     const
 {
     return m_environment;
+}
+
+// ------------------------------------------------------------------------
+
+inline
+void
+launcher::clear_environment(void)
+{
+    m_environment.clear();
+#if defined(BOOST_PROCESS_WIN32_API)
+    m_environment.set("", m_work_directory);
+#endif
 }
 
 // ------------------------------------------------------------------------
