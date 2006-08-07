@@ -211,6 +211,114 @@ posix_setup::operator()(void)
 // ------------------------------------------------------------------------
 
 //!
+//! \brief Configures child process' input streams.
+//!
+//! Sets up the current process' input streams to behave according to the
+//! information in the \a info map.  \a closeflags is modified to reflect
+//! those descriptors that should not be closed because they where modified
+//! by the function.
+//!
+//! Modifies the current execution environment, so this should only be run
+//! on the child process after the fork(2) has happened.
+//!
+//! \throw system_error If any error occurs during the configuration.
+//!
+void
+setup_input(info_map& info, bool closeflags[], int maxdescs)
+{
+    for (info_map::iterator iter = info.begin(); iter != info.end(); iter++) {
+        int d = (*iter).first;
+        stream_info& si = (*iter).second;
+
+        BOOST_ASSERT(d < maxdescs);
+        closeflags[d] = false;
+
+        if (si.m_type == stream_info::usefile) {
+            int fd = ::open(si.m_file.c_str(), O_RDONLY);
+            if (fd == -1)
+                boost::throw_exception
+                    (system_error("boost::process::detail::setup_input",
+                                  "open(2) of " + si.m_file + " failed",
+                                  errno));
+            if (fd != d) {
+                file_handle h(fd);
+                h.posix_remap(d);
+                h.disown();
+            }
+        } else if (si.m_type == stream_info::usehandle) {
+            if (si.m_handle.get() != d)
+                si.m_handle.posix_remap(d);
+        } else if (si.m_type == stream_info::usepipe) {
+            si.m_pipe->wend().close();
+            if (d != si.m_pipe->rend().get())
+                si.m_pipe->rend().posix_remap(d);
+        } else
+            BOOST_ASSERT(si.m_type == stream_info::inherit);
+    }
+}
+
+// ------------------------------------------------------------------------
+
+//!
+//! \brief Configures child process' output streams.
+//!
+//! Sets up the current process' output streams to behave according to the
+//! information in the \a info map and in the \a merges set.  \a closeflags
+//! is modified to reflect those descriptors that should not be closed
+//! because they where modified by the function.
+//!
+//! Modifies the current execution environment, so this should only be run
+//! on the child process after the fork(2) has happened.
+//!
+//! \throw system_error If any error occurs during the configuration.
+//!
+void
+setup_output(info_map& info, merge_set& merges, bool closeflags[],
+             int maxdescs)
+{
+    for (info_map::iterator iter = info.begin(); iter != info.end(); iter++) {
+        int d = (*iter).first;
+        stream_info& si = (*iter).second;
+
+        BOOST_ASSERT(d < maxdescs);
+        closeflags[d] = false;
+
+        if (si.m_type == stream_info::usefile) {
+            int fd = ::open(si.m_file.c_str(), O_WRONLY);
+            if (fd == -1)
+                boost::throw_exception
+                    (system_error("boost::process::detail::setup_output",
+                                  "open(2) of " + si.m_file + " failed",
+                                  errno));
+            if (fd != d) {
+                file_handle h(fd);
+                h.posix_remap(d);
+                h.disown();
+            }
+        } else if (si.m_type == stream_info::usehandle) {
+            if (si.m_handle.get() != d)
+                si.m_handle.posix_remap(d);
+        } else if (si.m_type == stream_info::usepipe) {
+            si.m_pipe->rend().close();
+            if (d != si.m_pipe->wend().get())
+                si.m_pipe->wend().posix_remap(d);
+        } else
+            BOOST_ASSERT(si.m_type == stream_info::inherit);
+    }
+
+    for (merge_set::const_iterator iter = merges.begin();
+         iter != merges.end(); iter++) {
+        const std::pair< int, int >& p = (*iter);
+        file_handle fh = file_handle::posix_dup(p.second, p.first);
+        fh.disown();
+        BOOST_ASSERT(p.first < maxdescs);
+        closeflags[p.first] = false;
+    }
+}
+
+// ------------------------------------------------------------------------
+
+//!
 //! \brief Starts a new child process in a POSIX operating system.
 //!
 //! This helper functions is provided to simplify the Launcher's task when
@@ -252,80 +360,18 @@ posix_start(const Command_Line& cl,
 #else
         int maxdescs = 128; // XXX
 #endif
-        bool closeflags[maxdescs];
-        for (int i = 0; i < maxdescs; i++)
-            closeflags[i] = true;
-
-        for (info_map::iterator iter = infoin.begin();
-             iter != infoin.end(); iter++) {
-            int d = (*iter).first;
-            stream_info& si = (*iter).second;
-
-            BOOST_ASSERT(d < maxdescs);
-            closeflags[d] = false;
-
-            if (si.m_type == stream_info::usefile) {
-                int fd = ::open(si.m_file.c_str(), O_RDONLY);
-                if (fd == -1)
-                    ; // XXX Error!
-                if (fd != d) {
-                    file_handle h(fd);
-                    h.posix_remap(d);
-                    h.disown();
-                }
-            } else if (si.m_type == stream_info::usehandle) {
-                if (si.m_handle.get() != d)
-                    si.m_handle.posix_remap(d);
-            } else if (si.m_type == stream_info::usepipe) {
-                si.m_pipe->wend().close();
-                if (d != si.m_pipe->rend().get())
-                    si.m_pipe->rend().posix_remap(d);
-            } else
-                BOOST_ASSERT(si.m_type == stream_info::inherit);
-        }
-
-        for (info_map::iterator iter = infoout.begin();
-             iter != infoout.end(); iter++) {
-            int d = (*iter).first;
-            stream_info& si = (*iter).second;
-
-            BOOST_ASSERT(d < maxdescs);
-            closeflags[d] = false;
-
-            if (si.m_type == stream_info::usefile) {
-                int fd = ::open(si.m_file.c_str(), O_WRONLY);
-                if (fd == -1)
-                    ; // XXX Error!
-                if (fd != d) {
-                    file_handle h(fd);
-                    h.posix_remap(d);
-                    h.disown();
-                }
-            } else if (si.m_type == stream_info::usehandle) {
-                if (si.m_handle.get() != d)
-                    si.m_handle.posix_remap(d);
-            } else if (si.m_type == stream_info::usepipe) {
-                si.m_pipe->rend().close();
-                if (d != si.m_pipe->wend().get())
-                    si.m_pipe->wend().posix_remap(d);
-            } else
-                BOOST_ASSERT(si.m_type == stream_info::inherit);
-        }
-
-        for (merge_set::const_iterator iter = merges.begin();
-             iter != merges.end(); iter++) {
-            const std::pair< int, int >& p = (*iter);
-            file_handle fh = file_handle::posix_dup(p.second, p.first);
-            fh.disown();
-            BOOST_ASSERT(p.first < maxdescs);
-            closeflags[p.first] = false;
-        }
-
-        for (int i = 0; i < maxdescs; i++)
-            if (closeflags[i])
-                ::close(i);
-
         try {
+            bool closeflags[maxdescs];
+            for (int i = 0; i < maxdescs; i++)
+                closeflags[i] = true;
+
+            setup_input(infoin, closeflags, maxdescs);
+            setup_output(infoout, merges, closeflags, maxdescs);
+
+            for (int i = 0; i < maxdescs; i++)
+                if (closeflags[i])
+                    ::close(i);
+
             setup();
         } catch (const system_error& e) {
             ::write(STDERR_FILENO, e.what(), std::strlen(e.what()));
