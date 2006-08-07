@@ -248,9 +248,7 @@ posix_start(const Command_Line& cl,
                           "fork(2) failed", errno));
     } else if (pid == 0) {
 #if defined(F_MAXFD)
-        int maxdescs = ::fcntl(0, F_MAXFD);
-        if (maxdescs == -1)
-            maxdescs = 128; // XXX
+        int maxdescs = std::max(::fcntl(0, F_MAXFD), 128); // XXX
 #else
         int maxdescs = 128; // XXX
 #endif
@@ -325,11 +323,7 @@ posix_start(const Command_Line& cl,
 
         for (int i = 0; i < maxdescs; i++)
             if (closeflags[i])
-#if defined(F_SETFD) && defined(FD_CLOEXEC)
-                ::fcntl(i, F_SETFD, FD_CLOEXEC);
-#else
                 ::close(i);
-#endif
 
         try {
             setup();
