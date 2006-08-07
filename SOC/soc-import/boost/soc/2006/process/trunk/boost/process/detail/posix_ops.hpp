@@ -41,36 +41,13 @@ extern "C" {
 #include <boost/process/detail/environment.hpp>
 #include <boost/process/detail/file_handle.hpp>
 #include <boost/process/detail/pipe.hpp>
+#include <boost/process/detail/stream_info.hpp>
 #include <boost/process/exceptions.hpp>
 #include <boost/throw_exception.hpp>
 
 namespace boost {
 namespace process {
 namespace detail {
-
-// ------------------------------------------------------------------------
-
-//!
-//! \brief Configuration data for a file descriptor.
-//!
-//! This convenience structure provides a compact way to pass information
-//! around on how to configure a file descriptor.  It is used in
-//! conjunction with the info_map map to create an unidirectional
-//! association between file descriptors and their configuration details.
-//!
-struct stream_info
-{
-    enum type { dontclose, usefile, usehandle, usepipe } m_type;
-
-    // Valid when m_type == usefile.
-    std::string m_file;
-
-    // Valid when m_type == usehandle.
-    file_handle m_handle;
-
-    // Valid when m_type == usepipe.
-    boost::optional< pipe > m_pipe;
-};
 
 // ------------------------------------------------------------------------
 
@@ -306,7 +283,7 @@ posix_start(const Command_Line& cl,
                 if (d != si.m_pipe->rend().get())
                     si.m_pipe->rend().posix_remap(d);
             } else
-                BOOST_ASSERT(si.m_type == stream_info::dontclose);
+                BOOST_ASSERT(si.m_type == stream_info::inherit);
         }
 
         for (info_map::iterator iter = infoout.begin();
@@ -334,7 +311,7 @@ posix_start(const Command_Line& cl,
                 if (d != si.m_pipe->wend().get())
                     si.m_pipe->wend().posix_remap(d);
             } else
-                BOOST_ASSERT(si.m_type == stream_info::dontclose);
+                BOOST_ASSERT(si.m_type == stream_info::inherit);
         }
 
         for (merge_set::const_iterator iter = merges.begin();

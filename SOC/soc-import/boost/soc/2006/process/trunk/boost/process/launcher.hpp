@@ -377,7 +377,7 @@ launcher::start(const Command_Line& cl)
 
     if (m_behavior_in == inherit_stream) {
         detail::stream_info si;
-        si.m_type = detail::stream_info::dontclose;
+        si.m_type = detail::stream_info::inherit;
         infoin.insert(detail::info_map::value_type(STDIN_FILENO, si));
     } else if (m_behavior_in == silent_stream) {
         detail::stream_info si;
@@ -394,7 +394,7 @@ launcher::start(const Command_Line& cl)
 
     if (m_behavior_out == inherit_stream) {
         detail::stream_info si;
-        si.m_type = detail::stream_info::dontclose;
+        si.m_type = detail::stream_info::inherit;
         infoout.insert(detail::info_map::value_type(STDOUT_FILENO, si));
     } else if (m_behavior_out == silent_stream) {
         detail::stream_info si;
@@ -411,7 +411,7 @@ launcher::start(const Command_Line& cl)
 
     if (m_behavior_err == inherit_stream) {
         detail::stream_info si;
-        si.m_type = detail::stream_info::dontclose;
+        si.m_type = detail::stream_info::inherit;
         infoout.insert(detail::info_map::value_type(STDERR_FILENO, si));
     } else if (m_behavior_err == silent_stream) {
         detail::stream_info si;
@@ -461,28 +461,59 @@ launcher::start(const Command_Line& cl)
         BOOST_ASSERT(fhstderr.is_valid());
     }
 #elif defined(BOOST_PROCESS_WIN32_API)
-    boost::optional< detail::pipe > pstdin;
-    if (m_behavior_in == redirect_stream)
-        pstdin = detail::pipe();
+    detail::stream_info behin;
+    if (m_behavior_in == inherit_stream) {
+        behin.m_type = detail::stream_info::inherit;
+    } else if (m_behavior_in == redirect_stream) {
+        behin.m_type = detail::stream_info::usepipe;
+        behin.m_pipe = detail::pipe();
+        fhstdin = behin.m_pipe->wend();
+    } else if (m_behavior_in == silent_stream) {
+        behin.m_type = detail::stream_info::usefile;
+        behin.m_file = "NUL";
+    } else {
+        behin.m_type = detail::stream_info::close;
+    }
 
-    boost::optional< detail::pipe > pstdout;
-    if (m_behavior_out == redirect_stream)
-        pstdout = detail::pipe();
+    detail::stream_info behout;
+    if (m_behavior_out == inherit_stream) {
+        behout.m_type = detail::stream_info::inherit;
+    } else if (m_behavior_out == redirect_stream) {
+        behout.m_type = detail::stream_info::usepipe;
+        behout.m_pipe = detail::pipe();
+        fhstdout = behout.m_pipe->rend();
+    } else if (m_behavior_out == silent_stream) {
+        behout.m_type = detail::stream_info::usefile;
+        behout.m_file = "NUL";
+    } else {
+        behout.m_type = detail::stream_info::close;
+    }
 
-    boost::optional< detail::pipe > pstderr;
-    if (m_behavior_err == redirect_stream)
-        pstderr = detail::pipe();
+    detail::stream_info beherr;
+    if (m_behavior_err == inherit_stream) {
+        beherr.m_type = detail::stream_info::inherit;
+    } else if (m_behavior_err == redirect_stream) {
+        beherr.m_type = detail::stream_info::usepipe;
+        beherr.m_pipe = detail::pipe();
+        fhstderr = beherr.m_pipe->rend();
+    } else if (m_behavior_err == silent_stream) {
+        beherr.m_type = detail::stream_info::usefile;
+        beherr.m_file = "NUL";
+    } else {
+        beherr.m_type = detail::stream_info::close;
+    }
 
     STARTUPINFO si;
-    ::ZeroMemory(si, sizeof(si));
+    ::ZeroMemory(&si, sizeof(si));
     si.cb = sizeof(si);
 
     detail::win32_setup s;
     s.m_work_directory = m_work_directory;
     s.m_startupinfo = &si;
 
-    PROCESSINFO pi = detail::win32_start(cl, m_environment, pstdin,
-                                         pstdout, pstderr, setup);
+    PROCESS_INFORMATION pi = detail::win32_start(cl, m_environment,
+                                                 behin, behout, beherr,
+                                                 m_merge_out_err, s);
 
     ph = pi.hProcess;
 #endif
