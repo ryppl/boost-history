@@ -411,7 +411,7 @@ posix_launcher::start(const Command_Line& cl)
     pid_t pid = detail::posix_start(cl, posix_launcher::get_environment(),
                                     infoin, infoout, m_merge_set, s);
 
-    return basic_posix_child< Command_Line >(pid, cl, infoin, infoout);
+    return detail::factories::create_posix_child(pid, cl, infoin, infoout);
 }
 
 // ------------------------------------------------------------------------

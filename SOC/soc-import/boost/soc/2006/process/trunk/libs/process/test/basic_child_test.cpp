@@ -10,37 +10,13 @@
 //
 
 #include <boost/process/basic_child.hpp>
+#include <boost/process/detail/factories.hpp>
 #include <boost/process/detail/pipe.hpp>
 #include <boost/test/unit_test.hpp>
 
 namespace bp = ::boost::process;
 namespace bpd = ::boost::process::detail;
 namespace but = ::boost::unit_test;
-
-// ------------------------------------------------------------------------
-
-namespace boost {
-namespace process {
-
-class launcher
-{
-public:
-    template< class Command_Line >
-    static
-    bp::basic_child< Command_Line > create_child
-        (typename bp::basic_child< Command_Line >::handle_type h,
-         const Command_Line& cl,
-         detail::file_handle& fhstdin,
-         detail::file_handle& fhstdout,
-         detail::file_handle& fhstderr)
-    {
-        return basic_child< Command_Line >
-            (h, cl, fhstdin, fhstdout, fhstderr);
-    }
-};
-
-} // namespace boost
-} // namespace process
 
 // ------------------------------------------------------------------------
 
@@ -52,8 +28,8 @@ test_getters(void)
         (bp::basic_child< char >::handle_type)0;
     char cl = 'A';
     bpd::file_handle fhinvalid;
-    bp::basic_child< char > c =
-        bp::launcher::create_child(h, cl, fhinvalid, fhinvalid, fhinvalid);
+    bp::basic_child< char > c = bp::detail::factories::create_child
+        (h, cl, fhinvalid, fhinvalid, fhinvalid);
 
     BOOST_CHECK_EQUAL(c.get_handle(), h);
     BOOST_CHECK_EQUAL(c.get_command_line(), cl);
@@ -70,8 +46,8 @@ test_stdin(void)
     char cl = 'A';
     bpd::pipe p;
     bpd::file_handle fhinvalid;
-    bp::basic_child< char > c =
-        bp::launcher::create_child(h, cl, p.wend(), fhinvalid, fhinvalid);
+    bp::basic_child< char > c = bp::detail::factories::create_child
+        (h, cl, p.wend(), fhinvalid, fhinvalid);
 
     bp::postream& os = c.get_stdin();
     os << "test-stdin" << std::endl;
@@ -93,8 +69,8 @@ test_stdout(void)
     char cl = 'A';
     bpd::pipe p;
     bpd::file_handle fhinvalid;
-    bp::basic_child< char > c =
-        bp::launcher::create_child(h, cl, fhinvalid, p.rend(), fhinvalid);
+    bp::basic_child< char > c = bp::detail::factories::create_child
+        (h, cl, fhinvalid, p.rend(), fhinvalid);
 
     bp::postream os(p.wend());
     os << "test-stdout" << std::endl;
@@ -116,8 +92,8 @@ test_stderr(void)
     char cl = 'A';
     bpd::pipe p;
     bpd::file_handle fhinvalid;
-    bp::basic_child< char > c =
-        bp::launcher::create_child(h, cl, fhinvalid, fhinvalid, p.rend());
+    bp::basic_child< char > c = bp::detail::factories::create_child
+        (h, cl, fhinvalid, fhinvalid, p.rend());
 
     bp::postream os(p.wend());
     os << "test-stderr" << std::endl;

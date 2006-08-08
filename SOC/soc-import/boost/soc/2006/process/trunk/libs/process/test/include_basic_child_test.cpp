@@ -18,8 +18,9 @@ namespace bpd = ::boost::process::detail;
 
 namespace boost {
 namespace process {
+namespace detail {
 
-class launcher {
+class factories {
 public:
     static
     void*
@@ -33,6 +34,7 @@ public:
     }
 };
 
+} // namespace detail
 } // namespace process
 } // namespace boost
 
@@ -41,5 +43,5 @@ public:
 void*
 test_it(void)
 {
-    return bp::launcher::test_it();
+    return bp::detail::factories::test_it();
 }

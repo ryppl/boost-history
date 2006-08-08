@@ -38,6 +38,10 @@
 namespace boost {
 namespace process {
 
+namespace detail {
+class factories;
+}
+
 // ------------------------------------------------------------------------
 
 //!
@@ -117,8 +121,6 @@ private:
     output_map m_output_map;
 
 protected:
-    friend class posix_launcher;
-
     //!
     //! \brief Searches for a file handle in a %pipe map.
     //!
@@ -154,6 +156,7 @@ protected:
                       const Command_Line& cl,
                       detail::info_map& infoin,
                       detail::info_map& infoout);
+    friend struct detail::factories;
 };
 
 // ------------------------------------------------------------------------

@@ -48,6 +48,10 @@ extern "C" {
 namespace boost {
 namespace process {
 
+namespace detail {
+class factories;
+}
+
 // ------------------------------------------------------------------------
 
 //!
@@ -135,8 +139,6 @@ private:
     boost::shared_ptr< pistream > m_sstderr;
 
 protected:
-    friend class launcher;
-
     //!
     //! \brief Constructs a new child object representing a just spawned
     //!        child process.
@@ -161,6 +163,7 @@ protected:
                 detail::file_handle fhstdin,
                 detail::file_handle fhstdout,
                 detail::file_handle fhstderr);
+    friend struct detail::factories;
 };
 
 // ------------------------------------------------------------------------
