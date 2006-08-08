@@ -34,6 +34,12 @@ template< class Command_Line >
 class basic_child;
 
 template< class Command_Line >
+class basic_children;
+
+template< class Command_Line >
+class basic_pipeline;
+
+template< class Command_Line >
 class basic_process;
 
 class command_line;
@@ -47,6 +53,8 @@ class postream;
 class status;
 
 typedef basic_child< command_line > child;
+typedef basic_children< command_line > children;
+typedef basic_pipeline< command_line > pipeline;
 typedef basic_process< command_line > process;
 
 #if defined(BOOST_PROCESS_POSIX_API)
