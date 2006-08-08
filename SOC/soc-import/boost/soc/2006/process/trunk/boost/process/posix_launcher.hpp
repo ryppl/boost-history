@@ -25,7 +25,7 @@
 #include <cstdlib>
 #include <set>
 
-#include <boost/process/basic_posix_child.hpp>
+#include <boost/process/posix_child.hpp>
 #include <boost/process/detail/environment.hpp>
 #include <boost/process/detail/posix_ops.hpp>
 #include <boost/process/detail/systembuf.hpp>
@@ -239,7 +239,7 @@ public:
     //! \return A handle to the new child process.
     //!
     template< class Command_Line >
-    basic_posix_child< Command_Line > start(const Command_Line& cl);
+    posix_child start(const Command_Line& cl);
 };
 
 // ------------------------------------------------------------------------
@@ -384,7 +384,7 @@ posix_launcher::set_chroot(const std::string& dir)
 
 template< class Command_Line >
 inline
-basic_posix_child< Command_Line >
+posix_child
 posix_launcher::start(const Command_Line& cl)
 {
     detail::info_map infoin;
@@ -411,7 +411,7 @@ posix_launcher::start(const Command_Line& cl)
     pid_t pid = detail::posix_start(cl, posix_launcher::get_environment(),
                                     infoin, infoout, m_merge_set, s);
 
-    return detail::factories::create_posix_child(pid, cl, infoin, infoout);
+    return detail::factories::create_posix_child(pid, infoin, infoout);
 }
 
 // ------------------------------------------------------------------------

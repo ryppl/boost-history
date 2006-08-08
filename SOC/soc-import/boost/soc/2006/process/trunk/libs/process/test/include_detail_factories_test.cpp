@@ -20,8 +20,7 @@ void*
 test_it_1(void)
 {
     bpd::file_handle fh;
-    bp::basic_child< int > c =
-        bpd::factories::create_child(0, 5, fh, fh, fh);
+    bp::child c = bpd::factories::create_child(0, fh, fh, fh);
     void* ptr = &c;
     return ptr;
 }
@@ -33,8 +32,7 @@ void*
 test_it_2(void)
 {
     bpd::info_map info;
-    bp::basic_posix_child< int > c =
-        bpd::factories::create_posix_child(0, 5, info, info);
+    bp::posix_child c = bpd::factories::create_posix_child(0, info, info);
     void* ptr = &c;
     return ptr;
 }

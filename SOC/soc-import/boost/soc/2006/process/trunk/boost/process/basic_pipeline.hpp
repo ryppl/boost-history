@@ -29,7 +29,7 @@
 #   error "Unsupported platform."
 #endif
 
-#include <boost/process/basic_children.hpp>
+#include <boost/process/children.hpp>
 #include <boost/process/detail/factories.hpp>
 #include <boost/process/detail/launcher_base.hpp>
 
@@ -94,7 +94,7 @@ public:
     //! \return An object that holds the status of all the processes
     //!         related to the pipeline.
     //!
-    basic_children< Command_Line > start(void);
+    children start(void);
 };
 
 // ------------------------------------------------------------------------
@@ -113,13 +113,13 @@ basic_pipeline< Command_Line >::add(const Command_Line& cl,
 
 template< class Command_Line >
 inline
-basic_children< Command_Line >
+children
 basic_pipeline< Command_Line >::start(void)
 {
     BOOST_ASSERT(m_entries.size() >= 2);
 
     // Method's result value.
-    basic_children< Command_Line > children;
+    children cs;
 
     // Convenience variables to avoid clutter below.
     const stream_behavior bin =
@@ -164,9 +164,8 @@ basic_pipeline< Command_Line >::start(void)
         if (bin == redirect_stream)
             fhstdin = posix_info_locate_pipe(infoin, STDIN_FILENO, false);
 
-        children.push_back
-            (detail::factories::create_child(ph, m_entries[i].m_cl, fhstdin,
-                                             fhinvalid, fhinvalid));
+        cs.push_back(detail::factories::create_child(ph, fhstdin,
+                                                     fhinvalid, fhinvalid));
     }
 
     // Configure and spawn the pipeline's internal processes.
@@ -192,9 +191,8 @@ basic_pipeline< Command_Line >::start(void)
         pid_t ph = detail::posix_start(m_entries[i].m_cl, get_environment(),
                                        infoin, infoout, merges, s);
 
-        children.push_back
-            (detail::factories::create_child(ph, m_entries[i].m_cl, fhinvalid,
-                                             fhinvalid, fhinvalid));
+        cs.push_back(detail::factories::create_child(ph, fhinvalid,
+                                                     fhinvalid, fhinvalid));
     }
 
     // Configure and spawn the pipeline's last process.
@@ -228,15 +226,14 @@ basic_pipeline< Command_Line >::start(void)
         if (berr == redirect_stream)
             fhstderr = posix_info_locate_pipe(infoout, STDERR_FILENO, true);
 
-        children.push_back
-            (detail::factories::create_child(ph, m_entries[i].m_cl,
-                                             fhinvalid, fhstdout, fhstderr));
+        cs.push_back(detail::factories::create_child(ph, fhinvalid,
+                                                     fhstdout, fhstderr));
     }
 #elif defined(BOOST_PROCESS_WIN32_API)
 #   error "Unimplemented."
 #endif
 
-    return children;
+    return cs;
 }
 
 // ------------------------------------------------------------------------

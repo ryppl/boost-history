@@ -19,8 +19,13 @@
 #define BOOST_PROCESS_CHILDREN_HPP
 /** \endcond */
 
-#include <boost/process/basic_children.hpp>
-#include <boost/process/command_line.hpp>
+#include <vector>
+
+#include <boost/assert.hpp>
+#include <boost/process/child.hpp>
+#include <boost/process/pistream.hpp>
+#include <boost/process/postream.hpp>
+#include <boost/process/status.hpp>
 
 namespace boost {
 namespace process {
@@ -28,13 +33,116 @@ namespace process {
 // ------------------------------------------------------------------------
 
 //!
-//! \brief Generic instantiation of the basic_children template.
+//! \brief Representation of a pipelined group of child processes.
 //!
-//! Generic instantiation of the basic_children template.  This relies on
-//! the command_line implementation of the Command_Line concept provided
-//! by the library.
+//! Represents a group of child process whose standard data streams are
+//! connected to form a pipeline.  This higher order structure allows for
+//! easy access to the pipeline endpoints and termination synchronization.
 //!
-typedef basic_children< command_line > children;
+class children :
+    public std::vector< child >
+{
+public:
+    //!
+    //! \brief Returns the pipeline's input stream.
+    //!
+    //! Returns the pipeline's input stream, which is connected to the
+    //! stdin of the first process in the chain.
+    //!
+    //! \pre The pipeline launcher (pipeline) must have configured
+    //!      the first process' stdin to the redirect_stream behavior.
+    //!
+    postream& get_stdin(void) const;
+
+    //!
+    //! \brief Returns the pipeline's output stream.
+    //!
+    //! Returns the pipeline's output stream, which is connected to the
+    //! stdout of the last process in the chain.
+    //!
+    //! \pre The pipeline launcher (pipeline) must have configured
+    //!      the last process' stdout to the redirect_stream behavior.
+    //!
+    pistream& get_stdout(void) const;
+
+    //!
+    //! \brief Returns the pipeline's error stream.
+    //!
+    //! Returns the pipeline's error stream, which is connected to the
+    //! stderr of the last process in the chain.
+    //!
+    //! \pre The pipeline launcher (pipeline) must have configured
+    //!      the last process' stderr to the redirect_stream behavior.
+    //!
+    pistream& get_stderr(void) const;
+
+    //!
+    //! \brief Waits for %children finalization.
+    //!
+    //! Waits until all the processes in the pipeline have finalized
+    //! execution.
+    //!
+    //! \return The exit status of the first failed process or, if all
+    //!         was successful, the exit status of the last process.
+    //!
+    status wait(void);
+};
+
+// ------------------------------------------------------------------------
+
+postream&
+children::get_stdin(void)
+    const
+{
+    BOOST_ASSERT(size() >= 2);
+
+    return (*this)[0].get_stdin();
+}
+
+// ------------------------------------------------------------------------
+
+pistream&
+children::get_stdout(void)
+    const
+{
+    BOOST_ASSERT(size() >= 2);
+
+    return (*this)[size() - 1].get_stdout();
+}
+
+// ------------------------------------------------------------------------
+
+pistream&
+children::get_stderr(void)
+    const
+{
+    BOOST_ASSERT(size() >= 2);
+
+    return (*this)[size() - 1].get_stderr();
+}
+
+// ------------------------------------------------------------------------
+
+status
+children::wait(void)
+{
+    BOOST_ASSERT(size() >= 2);
+
+    status s(0), s2(0);
+    bool update = true;
+
+    for (iterator iter = begin(); iter != end(); iter++) {
+        s2 = (*iter).wait();
+        if (!s2.exited() || s2.exit_status() != EXIT_SUCCESS) {
+            if (update) {
+                s = s2;
+                update = false;
+            }
+        }
+    }
+
+    return update ? s2 : s;
+}
 
 // ------------------------------------------------------------------------
 

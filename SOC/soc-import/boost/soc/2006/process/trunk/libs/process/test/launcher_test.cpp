@@ -15,6 +15,7 @@
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/process/child.hpp>
+#include <boost/process/command_line.hpp>
 #include <boost/process/launcher.hpp>
 #include <boost/test/unit_test.hpp>
 

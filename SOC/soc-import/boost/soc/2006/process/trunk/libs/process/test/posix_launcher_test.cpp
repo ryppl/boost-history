@@ -16,6 +16,7 @@
 #   include <cstring> // XXX For EXIT_* codes; should be hidden by the library.
 #   include <string>
 
+#   include <boost/process/command_line.hpp>
 #   include <boost/process/posix_child.hpp>
 #   include <boost/process/posix_launcher.hpp>
 

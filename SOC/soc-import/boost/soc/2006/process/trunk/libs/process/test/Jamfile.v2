@@ -34,11 +34,7 @@ exe helpers
     ;
 
 test-suite process :
-    [ compile include_basic_child_test.cpp : : ]
-    [ compile include_basic_children_test.cpp : : ]
     [ compile include_basic_pipeline_test.cpp : : ]
-    [ compile include_basic_posix_child_test.cpp : : ]
-    [ compile include_basic_process_test.cpp : : ]
     [ compile include_child_test.cpp : : ]
     [ compile include_children_test.cpp : : ]
     [ compile include_command_line_test.cpp : : ]
@@ -56,7 +52,6 @@ test-suite process :
     [ compile include_posix_child_test.cpp : : ]
     [ compile include_posix_launcher_test.cpp : : ]
     [ compile include_postream_test.cpp : : ]
-    [ compile include_process_test.cpp : : ]
     [ compile include_status_test.cpp : : ]
     [ compile include_top_test.cpp : : ]
 
@@ -108,13 +103,7 @@ test-suite process :
         : <library>$(BOOST_ROOT)//unit_test_framework
         ]
 
-    [ run basic_process_test.cpp
-        :
-        :
-        : <library>$(BOOST_ROOT)//unit_test_framework
-        ]
-
-    [ run basic_child_test.cpp
+    [ run child_test.cpp
         :
         :
         : <library>$(BOOST_ROOT)//unit_test_framework

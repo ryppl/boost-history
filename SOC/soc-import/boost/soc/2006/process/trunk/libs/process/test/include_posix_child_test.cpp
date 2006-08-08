@@ -30,10 +30,9 @@ public:
     void*
     test_it(void)
     {
-        bp::command_line cl("test");
         bp::posix_child::handle_type h = (bp::posix_child::handle_type)0;
         bpd::info_map info;
-        return new bp::posix_child(h, cl, info, info);
+        return new bp::posix_child(h, info, info);
     }
 };
 

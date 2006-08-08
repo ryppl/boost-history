@@ -24,10 +24,7 @@
 
 #include <boost/process/config.hpp>
 
-#include <boost/process/basic_child.hpp>
-#include <boost/process/basic_children.hpp>
 #include <boost/process/basic_pipeline.hpp>
-#include <boost/process/basic_process.hpp>
 #include <boost/process/child.hpp>
 #include <boost/process/children.hpp>
 #include <boost/process/command_line.hpp>
@@ -36,11 +33,9 @@
 #include <boost/process/pipeline.hpp>
 #include <boost/process/pistream.hpp>
 #include <boost/process/postream.hpp>
-#include <boost/process/process.hpp>
 #include <boost/process/status.hpp>
 
 #if defined(BOOST_PROCESS_POSIX_API)
-#   include <boost/process/basic_posix_child.hpp>
 #   include <boost/process/posix_child.hpp>
 #   include <boost/process/posix_launcher.hpp>
 #endif

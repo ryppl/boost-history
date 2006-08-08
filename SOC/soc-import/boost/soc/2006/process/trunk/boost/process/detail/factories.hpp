@@ -24,13 +24,13 @@
 #include <boost/process/config.hpp>
 
 #if defined(BOOST_PROCESS_POSIX_API)
-#   include <boost/process/basic_posix_child.hpp>
+#   include <boost/process/posix_child.hpp>
 #elif defined(BOOST_PROCESS_WIN32_API)
 #else
 #   error "Unsupported platform."
 #endif
 
-#include <boost/process/basic_child.hpp>
+#include <boost/process/child.hpp>
 #include <boost/process/detail/file_handle.hpp>
 
 namespace boost {
@@ -44,20 +44,17 @@ struct factories {
 //!
 //! \brief Creates a new Child instance.
 //!
-//! Creates a new instance of the basic_child template using the
-//! \a Command_Line template type.  See the template's constructor for
+//! Creates a new instance of the child class.  See its constructor for
 //! more details on the parameters.
 //!
-template< class Command_Line >
 static inline
-basic_child< Command_Line >
-create_child(typename basic_child< Command_Line >::handle_type h,
-             const Command_Line& cl,
+child
+create_child(child::handle_type h,
              file_handle fhstdin,
              file_handle fhstdout,
              file_handle fhstderr)
 {
-    return basic_child< Command_Line >(h, cl, fhstdin, fhstdout, fhstderr);
+    return child(h, fhstdin, fhstdout, fhstderr);
 }
 
 // ------------------------------------------------------------------------
@@ -65,19 +62,16 @@ create_child(typename basic_child< Command_Line >::handle_type h,
 //!
 //! \brief Creates a new POSIX Child instance.
 //!
-//! Creates a new instance of the basic_posix_child template using the
-//! \a Command_Line template type.  See the template's constructor for
-//! more details on the parameters.
+//! Creates a new instance of the posix_child class.  See its constructor
+//! for more details on the parameters.
 //!
-template< class Command_Line >
 static inline
-basic_posix_child< Command_Line >
-create_posix_child(typename basic_child< Command_Line >::handle_type h,
-                   const Command_Line& cl,
+posix_child
+create_posix_child(posix_child::handle_type h,
                    detail::info_map& infoin,
                    detail::info_map& infoout)
 {
-    return basic_posix_child< Command_Line >(h, cl, infoin, infoout);
+    return posix_child(h, infoin, infoout);
 }
 
 // ------------------------------------------------------------------------
