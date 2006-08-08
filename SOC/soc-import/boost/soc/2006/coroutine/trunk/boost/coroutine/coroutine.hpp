@@ -20,7 +20,8 @@
 #include <boost/coroutine/detail/index.hpp>
 #include <boost/coroutine/detail/signal.hpp>
 #include <boost/coroutine/detail/coroutine_traits.hpp>
-
+#include <boost/coroutine/detail/coroutine_accessor.hpp>
+#include <boost/coroutine/move.hpp>
 #ifdef _MSC_VER
 #define BOOST_COROUTINE_VCPP80_WORKAROUND 
 #else
@@ -30,11 +31,9 @@
 #endif
 namespace boost { namespace coroutines {
 
-
-
   template<typename Signature, 
 	   typename ContextImpl = detail::default_context_impl>
-  class coroutine  {
+  class coroutine : public movable<coroutine<Signature, ContextImpl> > {
   public:
     typedef coroutine<Signature, ContextImpl> type;
     typedef ContextImpl context_impl;
@@ -68,17 +67,31 @@ namespace boost { namespace coroutines {
     template<typename Functor>
     explicit 
     coroutine (Functor f, 
-		   std::ptrdiff_t stack_size = detail::default_stack_size,
+	       std::ptrdiff_t stack_size = detail::default_stack_size,
 	       BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_callable<Functor> >
 	       ::type * = 0
 	       ) :
       m_pimpl(impl_type::create(f, stack_size)) {}
-    
-    coroutine(const coroutine& rhs) :
-      m_pimpl(rhs.m_pimpl) {}
+ 
+  private:   
+    //Disabled copy constructor and operator=. 
+    //Coroutine is movable only.
+    coroutine(const coroutine& rhs);
+    /*:
+      m_pimpl(rhs.m_pimpl) {}*/
 
-    coroutine& operator=(coroutine rhs) {
+
+    coroutine& operator=(coroutine rhs);
+    /*{
       return swap(rhs);
+      }*/
+  public:
+    coroutine(move_from<coroutine> src) 
+      : m_pimpl(src->m_pimpl) {}
+
+    coroutine& operator=(move_from<coroutine> src) {
+      coroutine(src).swap(*this);
+      return *this;
     }
 
     template<typename Functor>
@@ -350,6 +363,14 @@ namespace boost { namespace coroutines {
     }
 
     impl_ptr m_pimpl;
+
+    void acquire() {
+      m_pimpl->acquire();
+    }
+
+    void release() {
+      m_pimpl->release();
+    }
   };
 } }
 #endif

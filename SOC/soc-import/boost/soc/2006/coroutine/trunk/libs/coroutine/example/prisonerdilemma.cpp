@@ -97,7 +97,7 @@ int main() {
   };
 
   int scores [sizeof(list)] = {};
-    
+  (void)scores;
   const int rounds = 100;
   std::cout << play(coroutine_type(always_cooperate),
 		    coroutine_type(always_cooperate),

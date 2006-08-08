@@ -13,20 +13,22 @@
 /*
  * Defining BOOST_COROUTINE_INLINE_ASM will enable the inlin3
  * assembler verwsion of swapcontext_stack.
- * The inline asm, with all required clobber flags, usually no faster
+ * The inline asm, with all required clobber flags, is usually no faster
  * than the out-of-line function, and it is not yet clear if
  * it is always reliable (i.e. if the compiler always saves the correct
- * registers). FIXME: it is currently missing MMX and XMM registers in
+ * registers). FIXME: it is currently missing at least MMX and XMM registers in
  * the clobber list.
  */
-
+ 
 /* 
  * Defining BOOST_COROUTINE_NO_SEPARATE_CALL_SITES will disable separate 
  * invoke, yield and yield_to swap_context functions. Separate calls sites
- * increase performance by 25% at least on P4 for invoke+yield back
- * at the cost of a slightly higher instruction cache use and are enabled by
+ * increase performance by 25% at least on P4 for invoke+yield back loops
+ * at the cost of a slightly higher instruction cache use and is thus enabled by
  * default.
  */
+//#define BOOST_COROUTINE_NO_SEPARATE_CALL_SITES
+//#define BOOST_COROUTINE_INLINE_ASM
 
 
 #ifndef BOOST_COROUTINE_INLINE_ASM
@@ -35,7 +37,7 @@ extern "C" void swapcontext_stack2 (void***, void**) throw()  __attribute((regpa
 extern "C" void swapcontext_stack3 (void***, void**) throw()  __attribute((regparm(2)));
 #else
 
-#if 0
+#if 1
 void 
 inline
 swapcontext_stack(void***from_sp, void**to_sp) throw() {
@@ -138,6 +140,19 @@ namespace boost { namespace coroutines { namespace detail {
     public:
       ia32_gcc_context_impl_base() {};
 
+      void prefetch() const {
+	__builtin_prefetch (m_sp, 1, 3);
+	__builtin_prefetch (m_sp, 0, 3);
+	__builtin_prefetch ((void**)m_sp+64/4, 1, 3);
+	__builtin_prefetch ((void**)m_sp+64/4, 0, 3);
+	__builtin_prefetch ((void**)m_sp+32/4, 1, 3);
+	__builtin_prefetch ((void**)m_sp+32/4, 0, 3);
+	__builtin_prefetch ((void**)m_sp-32/4, 1, 3);
+	__builtin_prefetch ((void**)m_sp-32/4, 0, 3);
+	__builtin_prefetch ((void**)m_sp-64/4, 1, 3);
+	__builtin_prefetch ((void**)m_sp-64/4, 0, 3);
+      }
+
       /**
        * Free function. Saves the current context in @p from
        * and restores the context in @p to.
@@ -148,6 +163,7 @@ namespace boost { namespace coroutines { namespace detail {
       swap_context(ia32_gcc_context_impl_base& from, 
 		   ia32_gcc_context_impl_base const& to, 
 		   default_hint) {
+	to.prefetch();
 	swapcontext_stack(&from.m_sp, to.m_sp);
       }
 
@@ -157,6 +173,7 @@ namespace boost { namespace coroutines { namespace detail {
       swap_context(ia32_gcc_context_impl_base& from, 
 		   ia32_gcc_context_impl_base const& to,
 		   yield_hint) {
+	to.prefetch();
 	swapcontext_stack2(&from.m_sp, to.m_sp);
       }
 
@@ -165,6 +182,7 @@ namespace boost { namespace coroutines { namespace detail {
       swap_context(ia32_gcc_context_impl_base& from, 
 		   ia32_gcc_context_impl_base const& to,
 		   yield_to_hint) {
+	to.prefetch();
 	swapcontext_stack2(&from.m_sp, to.m_sp);
       }
 
@@ -191,7 +209,7 @@ namespace boost { namespace coroutines { namespace detail {
 	  ia32_gcc_context_impl(Functor& cb, std::ptrdiff_t stack_size = -1) :
 	m_stack_size(stack_size == -1? default_stack_size: stack_size),
 	m_stack(posix::alloc_stack(m_stack_size)) {
-	m_sp = ((void**)m_stack + m_stack_size),
+	m_sp = ((void**)m_stack + (m_stack_size/sizeof(void*))),
 	BOOST_ASSERT(m_stack);
 	typedef void fun(Functor*);
 	fun * funp = trampoline;

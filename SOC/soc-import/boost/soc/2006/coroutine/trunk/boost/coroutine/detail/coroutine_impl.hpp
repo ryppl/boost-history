@@ -15,6 +15,7 @@
 #include <boost/coroutine/exception.hpp>
 #include <boost/coroutine/detail/argument_unpacker.hpp>
 #include <boost/coroutine/detail/swap_context.hpp>
+#include <boost/coroutine/detail/coroutine_accessor.hpp>
 namespace boost { namespace coroutines { namespace detail {
 	
   const std::ptrdiff_t default_stack_size = -1;
@@ -119,6 +120,12 @@ namespace boost { namespace coroutines { namespace detail {
       check_exit_state();
     }
 
+    /*
+     * In n > 0, put the coroutine in the wait state
+     * then return to caller. If n = 0 do nothing.
+     * The coroutine will remain in the wait state it
+     * is signaled 'n' times.
+     */
     void wait(int n) {
       BOOST_ASSERT(m_exit_state < ctx_exit_signaled); //prevent infinite loops
       BOOST_ASSERT(running());
@@ -167,6 +174,19 @@ namespace boost { namespace coroutines { namespace detail {
 	  exit();
       } catch(...) {}
     }
+
+    void acquire() const {
+      ++m_counter;
+    }
+      
+    void release() const {
+      BOOST_ASSERT(m_counter);
+      --m_counter;
+      if(m_counter == 0) {
+	m_deleter(this);
+      }
+    }
+
   protected:
     // global coroutine state
     enum context_state {
@@ -205,18 +225,7 @@ namespace boost { namespace coroutines { namespace detail {
       m_exit_status = status;
       do_yield();
     }
-  protected:
-    void acquire() const {
-      ++m_counter;
-    }
-      
-    void release() const {
-      BOOST_ASSERT(m_counter);
-      --m_counter;
-      if(m_counter == 0) {
-	m_deleter(this);
-      }
-    }
+
   private:
 
     void do_yield() {
@@ -243,15 +252,6 @@ namespace boost { namespace coroutines { namespace detail {
     context_exit_status m_exit_status;
     unsigned int m_wait_counter;    
     std::type_info const* m_type_info;
-  };
-
-  struct init_from_impl_tag{};
-  struct coroutine_accessor {
-    template<typename Coroutine, typename Ctx>
-    static
-    Coroutine construct(Ctx * src) {
-      return Coroutine(src, init_from_impl_tag());
-    }
   };
 
   template<typename CoroutineType, typename ContextImpl>

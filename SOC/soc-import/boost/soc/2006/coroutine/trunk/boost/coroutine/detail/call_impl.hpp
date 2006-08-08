@@ -7,6 +7,7 @@
 #include <boost/bind.hpp>
 #include <boost/coroutine/detail/arg_max.hpp>
 #include <boost/coroutine/detail/signal.hpp>
+#include <boost/coroutine/detail/coroutine_accessor.hpp>
 namespace boost { namespace coroutines { namespace detail {
 
 #define BOOST_COROUTINE_tuple_param_n(z, n, tuple)\
@@ -20,11 +21,23 @@ namespace boost { namespace coroutines { namespace detail {
   public:
     typedef void result_type;
     
-    callback(Future future, 
-		    Coroutine coroutine) :
+    callback(Future& future, 
+	     Coroutine& coroutine) :
       m_future(future),
-      m_coroutine(coroutine){}
+      m_coroutine(coroutine){
+      coroutine_accessor::acquire(m_coroutine);
+    }
 
+    callback(const callback& rhs) :
+      m_future(rhs.m_future),
+      m_coroutine(rhs.m_coroutine) {
+      coroutine_accessor::acquire(m_coroutine);
+    }
+
+    ~callback() {
+      coroutine_accessor::release(m_coroutine);
+    }
+    
     typedef BOOST_DEDUCED_TYPENAME                
     Future::tuple_type tuple_type;              
 
@@ -64,8 +77,11 @@ namespace boost { namespace coroutines { namespace detail {
     }
 
   private:
-    Future m_future;
-    Coroutine m_coroutine;
+    //operator= would be disabled anyway because references are not 
+    //rebindable.
+    void operator=(const callback&);
+    Future& m_future;
+    Coroutine& m_coroutine;
   };  
 
 #undef BOOST_COROUTINE_gen_future_assigner

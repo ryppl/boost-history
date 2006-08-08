@@ -7,14 +7,14 @@
 #include <boost/coroutine/detail/arg_max.hpp>
 namespace boost{ namespace coroutines{ namespace detail{
   /*
-   * Derived from an @p mpl::vector describing
-   * @p Function arguments types.
+   * Derived from an  mpl::vector describing
+   * 'Function' arguments types.
    */
   template<typename Function>
   struct signature;
 
   /*
-   * Generate specializations for the @p signature trait class.
+   * Generate specializations for the signature trait class.
    */
 #define BOOST_COROUTINE_SIGNATURE_GENERATOR(z, n, unused)                    \
   template <class R BOOST_PP_ENUM_TRAILING_PARAMS(n, class A)>   \
