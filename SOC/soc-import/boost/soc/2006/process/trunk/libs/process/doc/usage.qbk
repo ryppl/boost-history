@@ -102,7 +102,7 @@ boost::process::posix_launcher] class built on top of the former.
 
 Each communication channel can be configured according to different
 predefined behaviors as provided by [enumref
-boost::process::launcher::stream_behavior].  The possible types are:
+boost::process::stream_behavior].  The possible types are:
 
 * `close_stream`: The child's stream is closed during execution so the
   child has no access at all to the stream.
@@ -133,9 +133,9 @@ Given the above, consider the following code snippet.  It configures a
 launcher that will have an infinite blank input and that will send both of
 its __stdout__ and __stderr__ to the parent's __stdout__:
 
-    l.set_stdin_behavior(launcher::silent_stream); // The default.
-    l.set_stdout_behavior(launcher::inherit_stream);
-    l.set_stderr_behavior(launcher::close_stream);
+    l.set_stdin_behavior(silent_stream); // The default.
+    l.set_stdout_behavior(inherit_stream);
+    l.set_stderr_behavior(close_stream);
     l.set_merge_out_err(true);
 
 If any channel is set to `redirect_stream`, it will be later available from

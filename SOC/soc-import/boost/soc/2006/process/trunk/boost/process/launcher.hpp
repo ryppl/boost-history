@@ -39,6 +39,7 @@
 #include <boost/process/detail/environment.hpp>
 #include <boost/process/detail/file_handle.hpp>
 #include <boost/process/exceptions.hpp>
+#include <boost/process/stream_behavior.hpp>
 #include <boost/throw_exception.hpp>
 
 namespace boost {
@@ -56,30 +57,6 @@ namespace process {
 class launcher
 {
 public:
-    //!
-    //! \brief Describes the possible states for a communication stream.
-    //!
-    //! Describes the possible states for a communication stream as follows:
-    //!
-    //! close_stream means that the stream is closed and hence the child
-    //! process will not be allowed to access it.
-    //!
-    //! inherit_stream means that the child inherits the parent's handle
-    //! for the data flow, thus effectively sharing it between the two
-    //! processes.
-    //!
-    //! redirect_stream means that the child is connected to the parent so
-    //! that they can send and receive data through the stream.
-    //!
-    //! silent_stream means that the child's stream is redirected to a
-    //! null device so that its output is lost.  It is important to see
-    //! that this is different to close_stream because the child is still
-    //! able to write data.  If we closed, e.g. stdout, it's most likely
-    //! that the child couldn't work at all!
-    //!
-    enum stream_behavior { close_stream, inherit_stream, redirect_stream,
-                           silent_stream };
-
     //!
     //! \brief Constructs a new launcher with redirections.
     //!
@@ -399,56 +376,9 @@ launcher::start(const Command_Line& cl)
     detail::info_map infoin, infoout;
     detail::merge_set merges;
 
-    if (m_behavior_in == inherit_stream) {
-        detail::stream_info si;
-        si.m_type = detail::stream_info::inherit;
-        infoin.insert(detail::info_map::value_type(STDIN_FILENO, si));
-    } else if (m_behavior_in == silent_stream) {
-        detail::stream_info si;
-        si.m_type = detail::stream_info::usefile;
-        si.m_file = "/dev/zero";
-        infoin.insert(detail::info_map::value_type(STDIN_FILENO, si));
-    } else if (m_behavior_in == redirect_stream) {
-        detail::stream_info si;
-        si.m_type = detail::stream_info::usepipe;
-        si.m_pipe = detail::pipe();
-        infoin.insert(detail::info_map::value_type(STDIN_FILENO, si));
-    } else
-        BOOST_ASSERT(m_behavior_in == close_stream);
-
-    if (m_behavior_out == inherit_stream) {
-        detail::stream_info si;
-        si.m_type = detail::stream_info::inherit;
-        infoout.insert(detail::info_map::value_type(STDOUT_FILENO, si));
-    } else if (m_behavior_out == silent_stream) {
-        detail::stream_info si;
-        si.m_type = detail::stream_info::usefile;
-        si.m_file = "/dev/null";
-        infoout.insert(detail::info_map::value_type(STDOUT_FILENO, si));
-    } else if (m_behavior_out == redirect_stream) {
-        detail::stream_info si;
-        si.m_type = detail::stream_info::usepipe;
-        si.m_pipe = detail::pipe();
-        infoout.insert(detail::info_map::value_type(STDOUT_FILENO, si));
-    } else
-        BOOST_ASSERT(m_behavior_out == close_stream);
-
-    if (m_behavior_err == inherit_stream) {
-        detail::stream_info si;
-        si.m_type = detail::stream_info::inherit;
-        infoout.insert(detail::info_map::value_type(STDERR_FILENO, si));
-    } else if (m_behavior_err == silent_stream) {
-        detail::stream_info si;
-        si.m_type = detail::stream_info::usefile;
-        si.m_file = "/dev/null";
-        infoout.insert(detail::info_map::value_type(STDERR_FILENO, si));
-    } else if (m_behavior_err == redirect_stream) {
-        detail::stream_info si;
-        si.m_type = detail::stream_info::usepipe;
-        si.m_pipe = detail::pipe();
-        infoout.insert(detail::info_map::value_type(STDERR_FILENO, si));
-    } else
-        BOOST_ASSERT(m_behavior_err == close_stream);
+    posix_behavior_to_info(m_behavior_in,  STDIN_FILENO,  false, infoin);
+    posix_behavior_to_info(m_behavior_out, STDOUT_FILENO, true,  infoout);
+    posix_behavior_to_info(m_behavior_err, STDERR_FILENO, true,  infoout);
 
     if (m_merge_out_err)
         merges.insert(std::pair< int, int >(STDERR_FILENO, STDOUT_FILENO));
@@ -458,32 +388,14 @@ launcher::start(const Command_Line& cl)
 
     ph = detail::posix_start(cl, m_environment, infoin, infoout, merges, s);
 
-    if (m_behavior_in == redirect_stream) {
-        detail::info_map::iterator iter = infoin.find(STDIN_FILENO);
-        BOOST_ASSERT(iter != infoin.end());
-        detail::stream_info& si = (*iter).second;
-        BOOST_ASSERT(si.m_type == detail::stream_info::usepipe);
-        fhstdin = si.m_pipe->wend().disown();
-        BOOST_ASSERT(fhstdin.is_valid());
-    }
+    if (m_behavior_in == redirect_stream)
+        fhstdin = posix_info_locate_pipe(infoin, STDIN_FILENO, false);
 
-    if (m_behavior_out == redirect_stream) {
-        detail::info_map::iterator iter = infoout.find(STDOUT_FILENO);
-        BOOST_ASSERT(iter != infoout.end());
-        detail::stream_info& si = (*iter).second;
-        BOOST_ASSERT(si.m_type == detail::stream_info::usepipe);
-        fhstdout = si.m_pipe->rend().disown();
-        BOOST_ASSERT(fhstdout.is_valid());
-    }
+    if (m_behavior_out == redirect_stream)
+        fhstdout = posix_info_locate_pipe(infoout, STDOUT_FILENO, true);
 
-    if (m_behavior_err == redirect_stream) {
-        detail::info_map::iterator iter = infoout.find(STDERR_FILENO);
-        BOOST_ASSERT(iter != infoout.end());
-        detail::stream_info& si = (*iter).second;
-        BOOST_ASSERT(si.m_type == detail::stream_info::usepipe);
-        fhstderr = si.m_pipe->rend().disown();
-        BOOST_ASSERT(fhstderr.is_valid());
-    }
+    if (m_behavior_err == redirect_stream)
+        fhstderr = posix_info_locate_pipe(infoout, STDERR_FILENO, true);
 #elif defined(BOOST_PROCESS_WIN32_API)
     detail::stream_info behin;
     if (m_behavior_in == inherit_stream) {

@@ -43,6 +43,7 @@ extern "C" {
 #include <boost/process/detail/pipe.hpp>
 #include <boost/process/detail/stream_info.hpp>
 #include <boost/process/exceptions.hpp>
+#include <boost/process/stream_behavior.hpp>
 #include <boost/throw_exception.hpp>
 
 namespace boost {
@@ -418,6 +419,68 @@ posix_start(const Command_Line& cl,
     }
 
     return pid;
+}
+
+// ------------------------------------------------------------------------
+
+//!
+//! \brief Converts a stream_behavior to a info_map entry.
+//!
+//! Given a stream_behavior \a beh, a file descriptor \a desc and whether
+//! it is an input flow on an output one (\a out), inserts the appropriate
+//! information representing this stream in the \a info map.
+//!
+inline
+void
+posix_behavior_to_info(stream_behavior beh, int desc, bool out,
+                       info_map& info)
+{
+    if (beh == inherit_stream) {
+        stream_info si;
+        si.m_type = stream_info::inherit;
+        info.insert(info_map::value_type(desc, si));
+    } else if (beh == silent_stream) {
+        stream_info si;
+        si.m_type = stream_info::usefile;
+        si.m_file = out ? "/dev/null" : "/dev/zero";
+        info.insert(info_map::value_type(desc, si));
+    } else if (beh == redirect_stream) {
+        stream_info si;
+        si.m_type = stream_info::usepipe;
+        si.m_pipe = pipe();
+        info.insert(info_map::value_type(desc, si));
+    } else
+        BOOST_ASSERT(beh == close_stream);
+}
+
+// ------------------------------------------------------------------------
+
+//!
+//! \brief Locates a communication pipe and returns one of its endpoints.
+//!
+//! Given a \a info map, and a file descriptor \a desc, searches for its
+//! communicataion pipe in the map and returns one of its endpoins as
+//! indicated by the \a out flag.  This is intended to be used by a
+//! parent process after a fork(2) call.
+//!
+//! \pre The info map contains the given descriptor and it is configured
+//!      to use a pipe.
+//! \return The pipe's read end if out is true; otherwise its write end.
+//!
+inline
+file_handle
+posix_info_locate_pipe(info_map& info, int desc, bool out)
+{
+    file_handle fh;
+
+    info_map::iterator iter = info.find(desc);
+    BOOST_ASSERT(iter != info.end());
+    stream_info& si = (*iter).second;
+    BOOST_ASSERT(si.m_type == stream_info::usepipe);
+    fh = out ? si.m_pipe->rend().disown() : si.m_pipe->wend().disown();
+    BOOST_ASSERT(fh.is_valid());
+
+    return fh;
 }
 
 // ------------------------------------------------------------------------

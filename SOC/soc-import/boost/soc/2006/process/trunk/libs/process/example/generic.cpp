@@ -60,7 +60,7 @@ main(int argc, char* argv[])
         // variable to avoid side-effects.
         //
         bp::launcher l;
-        l.set_stdout_behavior(bp::launcher::inherit_stream);
+        l.set_stdout_behavior(bp::inherit_stream);
         l.set_merge_out_err(true);
         l.set_work_directory(argv[i]);
         l.set_environment("CVS_RSH", "ssh");
