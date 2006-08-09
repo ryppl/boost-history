@@ -103,7 +103,7 @@ test_merge_first(void)
     cl1.argument("echo-stdout-stderr").argument("message");
 
     bp::command_line cl2(get_helpers_path());
-    cl2.argument("prefix").argument("second ");
+    cl2.argument("prefix").argument("second:");
 
     bp::pipeline p;
     p.set_stdout_behavior(bp::redirect_stream);
@@ -113,10 +113,10 @@ test_merge_first(void)
     BOOST_REQUIRE(cs.size() == 2);
 
     std::string line;
-    std::getline(cs.get_stdout(), line);
-    BOOST_CHECK_EQUAL(line, "second stdout message");
-    std::getline(cs.get_stdout(), line);
-    BOOST_CHECK_EQUAL(line, "second stderr message");
+    portable_getline(cs.get_stdout(), line);
+    BOOST_CHECK_EQUAL(line, "second:stdout message");
+    portable_getline(cs.get_stdout(), line);
+    BOOST_CHECK_EQUAL(line, "second:stderr message");
 
     bp::status s = cs.wait();
     BOOST_REQUIRE(s.exited());
