@@ -26,7 +26,7 @@ BidirectionalIterator
 match_substring(BidirectionalIterator begin, 
 		BidirectionalIterator end, 
 		std::string xmatch,
-		coroutine<BidirectionalIterator(void)>& self) { 
+		BOOST_DEDUCED_TYPENAME coroutine<BidirectionalIterator(void)>::self& self) { 
   BidirectionalIterator begin_ = begin;
   for(; begin != end; ++begin) 
     if(match(begin, end, xmatch)) {
@@ -45,7 +45,7 @@ int main(int, char**) {
   typedef std::string::iterator signature(std::string::iterator, 
 					  std::string::iterator, 
 					  std::string,
-					  coroutine_type&);
+					  coroutine_type::self&);
 
   coroutine<std::string::iterator(void)> matcher
       (boost::bind(static_cast<signature*>(match_substring), 

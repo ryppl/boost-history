@@ -8,7 +8,7 @@
 namespace coroutines = boost::coroutines;
 using coroutines::coroutine;
 
-bool matcher(coroutine<bool(char)>& self, char c) { 
+bool matcher(coroutine<bool(char)>::self& self, char c) { 
   while(true) { 
     if(c == 'h') { 
       c = self.yield(false); 

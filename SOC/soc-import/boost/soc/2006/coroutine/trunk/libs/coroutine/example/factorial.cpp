@@ -7,7 +7,7 @@ namespace coroutines = boost::coroutines;
 using coroutines::coroutine;
 
 typedef coroutine<double()> coroutine_type;
-ssize_t factorial(coroutine_type& self) {
+ssize_t factorial(coroutine_type::self& self) {
   double n = 0;
   double n_bang = 1;
   self.yield(n_bang);

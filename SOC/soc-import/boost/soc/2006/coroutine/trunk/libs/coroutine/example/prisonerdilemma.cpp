@@ -55,31 +55,31 @@ score_type play(coroutine_type plr1,
   return score;
 }
 
-option always_cooperate(coroutine_type& self, option) {
+option always_cooperate(coroutine_type::self& self, option) {
   while(true) 
     self.yield(cooperate);
   return cooperate;
 }
 
-option always_defect(coroutine_type& self, option) {
+option always_defect(coroutine_type::self& self, option) {
   while(true) 
     self.yield(defect);
   return defect;
 }
 
-option random_result(coroutine_type& self, option) {
+option random_result(coroutine_type::self& self, option) {
   while(true) 
     self.yield(std::rand()%2? defect: cooperate);
   return defect;
 }
 
-option tit_for_tat(coroutine_type& self, option a) {
+option tit_for_tat(coroutine_type::self& self, option a) {
   while(true) 
     a = self.yield(a);
   return cooperate;
 }
 
-option tit_for_tat_forgiving(coroutine_type& self, option a, int forgiveness) {
+option tit_for_tat_forgiving(coroutine_type::self& self, option a, int forgiveness) {
   while(true) 
     a = self.yield((std::rand() %100) < forgiveness? cooperate: a);
   return cooperate;

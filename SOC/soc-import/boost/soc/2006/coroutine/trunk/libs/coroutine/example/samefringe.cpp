@@ -82,7 +82,7 @@ tree_element make_tree(meta::leaf<A> const&) {
 
 typedef coroutine<boost::optional<leaf>(tree_element)> coroutine_type;
 
-boost::optional<leaf>  tree_leaves(coroutine_type& self, tree_element tree) {
+boost::optional<leaf>  tree_leaves(coroutine_type::self& self, tree_element tree) {
   if (is_leaf(tree)) {
     self.yield(boost::get<leaf>(tree));
   } else {
