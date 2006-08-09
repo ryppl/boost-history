@@ -16,7 +16,7 @@ namespace boost{ namespace coroutines{ namespace detail{
   /*
    * Generate specializations for the signature trait class.
    */
-#define BOOST_COROUTINE_SIGNATURE_GENERATOR(z, n, unused)                    \
+#define BOOST_COROUTINE_SIGNATURE_GENERATOR(z, n, unused)        \
   template <class R BOOST_PP_ENUM_TRAILING_PARAMS(n, class A)>   \
   struct signature<R( BOOST_PP_ENUM_PARAMS(n,A) ) >              \
     : boost::mpl::BOOST_PP_CAT(vector,n)<                        \

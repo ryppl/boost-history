@@ -9,7 +9,7 @@ using coroutines::coroutine;
 
 typedef coroutine<boost::optional<int>(int)> coroutine_type;
 
-boost::optional<int> coro_body(coroutine_type self, int parm)  {
+boost::optional<int> coro_body(coroutine_type::self& self, int parm)  {
   self.yield();
   self.yield(0);
   self.yield();

@@ -31,7 +31,7 @@ private:
 };
 
 
-void coro_body(a_pipe& my_pipe, coroutine_type self)  {
+void coro_body(a_pipe& my_pipe, coroutine_type::self& self)  {
   coroutines::future<int> future;
   //= coroutines::call(boost::bind(&a_pipe::listen, my_pipe, _1), self);
   my_pipe.listen(coroutines::make_callback(future, self));

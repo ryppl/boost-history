@@ -18,7 +18,7 @@ struct third_type{};
 struct fourth_type{};
 struct fifth_type{};
 
-boost::any coro_body(coroutine_type self)  {
+boost::any coro_body(coroutine_type::self& self)  {
   self.yield(first_type());
   self.yield(second_type());
   self.yield(third_type());

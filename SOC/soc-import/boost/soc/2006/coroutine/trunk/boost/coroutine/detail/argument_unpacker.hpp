@@ -58,7 +58,7 @@ namespace boost { namespace coroutines { namespace detail {
                typename First,                                         \
 	       typename Tuple>                                         \
       typename result<Functor, First, Tuple>::type                     \
-      operator()(Functor& f, First arg0, Tuple& parms){                \
+      operator()(Functor& f, First& arg0, Tuple& parms){                \
            using boost::get; /*tuples::get cannot be found via ADL*/  \
            return f(arg0                                               \
 		    BOOST_PP_COMMA_IF(len)                             \
@@ -95,7 +95,7 @@ namespace boost { namespace coroutines { namespace detail {
   inline
   typename unpacker_ex_n<Traits, Traits::length>::
   template result<Functor, First, Tuple>::type 
-  unpack_ex(Functor f, First arg0, Tuple& parms, Traits*) {
+  unpack_ex(Functor f, First& arg0, Tuple& parms, Traits*) {
     return unpacker_ex_n<Traits, Traits::length>()
       (f, arg0, parms);
   }

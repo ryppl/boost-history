@@ -9,7 +9,7 @@ using coroutines::coroutine;
 
 typedef coroutine<void()> coroutine_type;
 
-void foo(coroutine_type&) {}
+void foo(coroutine_type::self&) {}
 
 int main() {
   coroutine_type coro(foo);

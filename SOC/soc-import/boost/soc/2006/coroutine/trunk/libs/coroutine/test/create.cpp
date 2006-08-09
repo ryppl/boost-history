@@ -24,7 +24,7 @@ typedef coroutine<result_tuple_tag (my_parm)> coroutine_tuple_type;
 typedef boost::tuple<my_parm, my_parm> parm_tuple;
 typedef coroutine<my_result(my_parm, my_parm)> coroutine_tuple2_type;
 
-my_result foo(coroutine_type& self, my_parm parm) {
+my_result foo(coroutine_type::self& self, my_parm parm) {
   int i = 10;
   my_result t;
   while(--i) {
@@ -37,37 +37,41 @@ my_result foo(coroutine_type& self, my_parm parm) {
 
 struct foo_functor {
   typedef my_result result_type;
-  my_result operator()(coroutine_type& self, my_parm parm) {
+  my_result operator()(coroutine_type::self& self, my_parm parm) {
     return foo(self, parm);
   }
 };
 
+foo_functor
+make_foo_functor() {
+  return foo_functor();
+}
 
-int bar(coroutine_iv_type& self) {
+int bar(coroutine_iv_type::self& self) {
   self.yield(0);
   return 0;
 }
 
-result_tuple baz(coroutine_tuple_type& self, my_parm) {
+result_tuple baz(coroutine_tuple_type::self& self, my_parm) {
   self.yield(my_result(), my_result()); 
   return boost::make_tuple(my_result(), my_result());
 }
 
-my_result barf(coroutine_tuple2_type& self, my_parm a, my_parm b) {
+my_result barf(coroutine_tuple2_type::self& self, my_parm a, my_parm b) {
   boost::tie(a, b) = self.yield(my_result());
   return my_result();
 }
 
-void vi(coroutine_vi_type& self, int i) {
+void vi(coroutine_vi_type::self& self, int i) {
   i = self.yield();
 }
 
-void vv(coroutine_vv_type& self) {
+void vv(coroutine_vv_type::self& self) {
   self.yield();
 }
 
 typedef coroutine<void(int&)> coroutine_ref_type;
-void ref(coroutine_ref_type& self, int& x) {
+void ref(coroutine_ref_type::self& self, int& x) {
   x = 10;
   self.yield();
 }
@@ -76,10 +80,11 @@ void test_create() {
   coroutine <my_result(my_parm)> empty;
   coroutine <my_result(my_parm)> coro(foo);
   BOOST_CHECK(!empty);
-  empty = coro;
+  swap(empty, coro);
   BOOST_CHECK(empty);
+  swap(empty, coro);
 
-  coroutine_type coro_functor = coroutine_type(foo_functor());
+  coroutine_type coro_functor(make_foo_functor());
   my_parm t;
 
   /* Void parameters are supported */

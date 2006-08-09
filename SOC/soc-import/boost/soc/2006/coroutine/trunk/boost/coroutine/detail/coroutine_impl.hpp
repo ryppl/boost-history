@@ -11,6 +11,7 @@
 
 #include <algorithm> //for swap
 #include <boost/intrusive_ptr.hpp>
+#include <boost/optional.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/coroutine/exception.hpp>
 #include <boost/coroutine/detail/argument_unpacker.hpp>
@@ -363,24 +364,26 @@ namespace boost { namespace coroutines { namespace detail {
     typename boost::enable_if<boost::is_void<ResultType> >::type
     do_call(dummy<0> = 0) {
       BOOST_ASSERT(this->count() > 0);
-      coroutine_type self (coroutine_accessor::construct<coroutine_type, type>(this));
-      cancel_count c(this); //this must be after the previous line.
+      typedef BOOST_DEDUCED_TYPENAME
+	coroutine_type::self self_type;
+      boost::optional<self_type> self (coroutine_accessor::in_place(this));
       detail::unpack_ex
 	/*<typename coroutine_type::arg_slot_traits>*/
-	(m_fun, self, this->args(), (typename coroutine_type::arg_slot_traits*)0);
+	(m_fun, *self, this->args(), (typename coroutine_type::arg_slot_traits*)0);
     }
 
     template<typename ResultType>
     typename boost::disable_if<boost::is_void<ResultType> >::type
     do_call(dummy<1> = 1) {
       BOOST_ASSERT(this->count() > 0);
-      coroutine_type self = coroutine_accessor::construct<coroutine_type, type>(this);
-      cancel_count c(this); //this must be after the previous line.
+      typedef BOOST_DEDUCED_TYPENAME
+      coroutine_type::self self_type;
+      boost::optional<self_type> self (coroutine_accessor::in_place(this));
       typedef typename coroutine_type::arg_slot_traits traits;
 	  
       this->result() = detail::unpack_ex
 	/*<traits>*/
-	(m_fun, self, this->args(), (traits*)0);
+	(m_fun, *self, this->args(), (traits*)0);
     }
   
     FunctorType m_fun;

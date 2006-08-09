@@ -73,7 +73,7 @@ namespace boost { namespace coroutines { namespace detail {
 	(BOOST_PP_ENUM_PARAMS
 	 (BOOST_COROUTINE_ARG_MAX, arg)));
       if(wait_gateway::signal(m_coroutine))
-	m_coroutine();
+	wait_gateway::wake_up(m_coroutine);
     }
 
   private:

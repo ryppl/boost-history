@@ -12,7 +12,7 @@ typedef coroutine<int(int)> coroutine_type;
 
 coroutine_type coro[2];
 
-int coro_body(coroutine_type& self, int parm, int id) {
+int coro_body(coroutine_type::self& self, int parm, int id) {
   while(parm) {
     int next = id==0?1:0;
     std::cout<<"in coroutine "<<id<<", parm: "<<parm <<", next: " <<next<<"\n";

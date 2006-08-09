@@ -36,6 +36,12 @@ namespace boost { namespace coroutines { namespace detail {
     void assign(Future& future, const Tuple& tuple) {
       future.assign(tuple);
     }
+
+    template<typename Coroutine>
+    static
+    void wake_up(Coroutine& coro) {
+      coro.wake_up();
+    }
   };
 
 

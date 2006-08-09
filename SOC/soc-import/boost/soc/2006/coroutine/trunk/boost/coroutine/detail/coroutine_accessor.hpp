@@ -3,6 +3,7 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #ifndef BOOST_COROUTINE_DETAIL_COROUTINE_ACCESSOR_HPP_20060709
 #define BOOST_COROUTINE_DETAIL_COROUTINE_ACCESSOR_HPP_20060709
+#include  <boost/utility/in_place_factory.hpp>
 namespace boost { namespace coroutines { namespace detail {
   
   /*
@@ -15,8 +16,8 @@ namespace boost { namespace coroutines { namespace detail {
     // Initialize coroutine from implementation type.
     template<typename Coroutine, typename Ctx>
     static
-    Coroutine construct(Ctx * src) {
-      return Coroutine(src, init_from_impl_tag());
+    void construct(Ctx * src, void * address) {
+      new (address) Coroutine(src, init_from_impl_tag());
     }
 
     template<typename Coroutine>
@@ -29,6 +30,33 @@ namespace boost { namespace coroutines { namespace detail {
     static
     void release(Coroutine& x) {
       x.release();
+    }
+
+    template<typename Ctx>
+    struct in_place_assign : boost::in_place_factory_base {
+
+      in_place_assign(Ctx * ctx) :
+	m_ctx(ctx) {}
+
+      template<typename Coroutine>
+      void apply(void * memory) const {
+	construct<Coroutine>(m_ctx, memory);
+      }
+      Ctx * m_ctx;
+    };
+
+    template<typename Ctx>
+    static 
+    in_place_assign<Ctx>
+    in_place(Ctx * ctx) {
+      return in_place_assign<Ctx>(ctx);
+    }
+
+    template<typename Coroutine>
+    static
+    typename Coroutine::impl_type&
+    get_impl(Coroutine& x) {
+      return x.get_impl();
     }
   };
 } } }

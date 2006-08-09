@@ -11,7 +11,7 @@ typedef coroutine<int(int)> coroutine_type;
 
 
 
-int coro_body(coroutine_type self, 
+int coro_body(coroutine_type::self& self, 
 	      int parm) {
   while(parm) {
     std::cout<<"in coroutine, parm: "<<parm<<"\n";
