@@ -155,6 +155,9 @@ basic_pipeline< Command_Line >::start(void)
         if (m_entries[i].m_merge_out_err)
             merges.insert(std::pair< int, int >(STDERR_FILENO,
                                                 STDOUT_FILENO));
+        else
+            posix_behavior_to_info(silent_stream, STDERR_FILENO, true,
+                                   infoout);
 
         pid_t ph = detail::posix_start(m_entries[i].m_cl, get_environment(),
                                        infoin, infoout, merges, s);
@@ -187,6 +190,9 @@ basic_pipeline< Command_Line >::start(void)
         if (m_entries[i].m_merge_out_err)
             merges.insert(std::pair< int, int >(STDERR_FILENO,
                                                 STDOUT_FILENO));
+        else
+            posix_behavior_to_info(silent_stream, STDERR_FILENO, true,
+                                   infoout);
 
         pid_t ph = detail::posix_start(m_entries[i].m_cl, get_environment(),
                                        infoin, infoout, merges, s);
