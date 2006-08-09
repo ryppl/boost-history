@@ -24,6 +24,12 @@ namespace boost { namespace coroutines { namespace detail {
     void assign(Future& future, const Tuple& tuple) {
       future.assign(tuple);
     }
+
+    template<typename Future>
+    static
+    void mark_pending(Future& f) {
+      f.mark_pending();
+    }
   };
 
 

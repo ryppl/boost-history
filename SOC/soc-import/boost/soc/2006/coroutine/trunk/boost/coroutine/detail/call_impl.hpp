@@ -29,7 +29,9 @@ namespace boost { namespace coroutines { namespace detail {
     callback(Future& future, 
 	     CoroutineSelf& coroutine_self) :
       m_future(future),
-      m_pimpl(coroutine_accessor::get_impl(coroutine_self)){}
+      m_pimpl(coroutine_accessor::get_impl(coroutine_self)){
+      wait_gateway::mark_pending(m_future);
+    }
     
     typedef BOOST_DEDUCED_TYPENAME                
     Future::tuple_type tuple_type;              

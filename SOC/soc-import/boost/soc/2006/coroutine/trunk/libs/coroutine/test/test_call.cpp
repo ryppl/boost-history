@@ -30,8 +30,6 @@ private:
   boost::function<void(int)> m_callback;
 };
 
-bool run_flag = false;
-
 struct coro_body {
 
   coro_body(bool& flag) :
@@ -54,9 +52,11 @@ struct coro_body {
     BOOST_CHECK(future);
     BOOST_CHECK(*future == 1);
     future = boost::none;
+    my_pipe.listen(coroutines::make_callback(future, self));
     coroutines::wait(self, future);
     BOOST_CHECK(*future == 2);
     future = boost::none;
+    my_pipe.listen(coroutines::make_callback(future, self));
     coroutines::wait(self, future);
     BOOST_CHECK(*future == 3);
     future = boost::none;
@@ -65,7 +65,7 @@ struct coro_body {
 };
 
 void test_call() {
-  run_flag = true;
+  bool run_flag = true;
   {
     a_pipe my_pipe;
     coroutine_type coro(boost::bind(coro_body(run_flag), boost::ref(my_pipe), _1));
