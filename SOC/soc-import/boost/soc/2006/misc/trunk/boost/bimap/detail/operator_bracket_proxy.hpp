@@ -18,7 +18,7 @@
 namespace boost {
 namespace bimap {
 
-// Exceptions for operator[] logic errors
+/// \brief Exception for operator[] logic errors
 
 class value_not_found : public std::logic_error
 {
@@ -26,6 +26,8 @@ class value_not_found : public std::logic_error
     value_not_found() : logic_error("value not found") {}
     value_not_found(const std::string & str) : logic_error(str) {}
 };
+
+/// \brief Exception for operator[] logic errors
 
 class duplicate_value : public std::logic_error
 {

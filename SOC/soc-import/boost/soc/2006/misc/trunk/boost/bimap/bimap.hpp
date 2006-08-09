@@ -18,26 +18,14 @@
 
 This is the complete reference of Boost.Bimap.
 
-\section GuideForTheUser Guide for the user
+After getting a good understanding of the library from a user perspective
+the next step will be:
 
-From a user point of view the best way to use this reference is to:
-
-    - Understand the relation class. (boost::bimap::relation)
-    - Read the bimap class documentation. (boost::bimap)
-    - If user tags will be used, it is not necesary but it may be good to
-      skim the tagged reference. (boost::bimap::tags)
-
-\section GuideForTheDevelopper Guide for the developper
-
-From a developer point of view all the information in this reference is
-important. After getting a good understanding of the library from a user
-perspective the next step will be:
-
-    - Understand the mutant idiom. (boost::bimap::mutant)
     - Understand the tagged idiom. (boost::bimap::tags)
     - Understand the internals of the relation class (boost::bimap::relation)
     - Read the container_adaptor toolbox docs (boost::bimap::container_adaptor)
-    - Understand the internals of the bimap class. (boost::bimap and boost::bimap::detail)
+    - Understand the internals of the bimap class. (boost::bimap, boost::bimap::views
+      and boost::bimap::detail)
 
 
                                                                         **/
