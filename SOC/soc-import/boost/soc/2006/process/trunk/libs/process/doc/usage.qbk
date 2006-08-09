@@ -342,6 +342,9 @@ snippet:
 
     status s = cs.wait();
 
+For more details check out the [link boost_process.reference reference
+chapter] and the [link boost_process.examples.pipelines pipeline example].
+
 [endsect]
 
 [/ ---------------------------------------------------------------------- ]

@@ -139,5 +139,6 @@ test-suite process :
 
     [ compile ../example/command_lines.cpp : : ]
     [ compile ../example/generic.cpp : : ]
+    [ compile ../example/pipeline.cpp : : ]
 
     ;

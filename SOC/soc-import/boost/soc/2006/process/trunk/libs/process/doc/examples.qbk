@@ -52,4 +52,17 @@ why such different possibilities may come useful.
 
 [/ ---------------------------------------------------------------------- ]
 
+[section Pipelines]
+
+This example shows how to construct and manage a process pipeline.  The
+program implements a simple filter that parses the file given as the first
+argument to the program and prints the results to the standard output.  The
+data conversion is completely done by the child processes.
+
+[include ../example/pipeline.cpp c++ code]
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
 [endsect]
