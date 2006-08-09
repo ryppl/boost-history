@@ -25,14 +25,14 @@ project
 
 test-suite "coroutine"
     :
-      [ run any.cpp ]
-      [ run create.cpp ]
-      [ run invoke.cpp ]
-      [ run meta.cpp ]
-      [ run optional.cpp ]
-      [ run yield.cpp ]
-      [ run yield_to.cpp ]
-      [ run yield_to2.cpp ]
+      [ run test_any.cpp ]
+      [ run test_create.cpp ]
+      [ run test_invoke.cpp ]
+      [ run test_meta.cpp ]
+      [ run test_optional.cpp ]
+      [ run test_yield.cpp ]
+      [ run test_yield_to.cpp ]
+      [ run test_yield_to2.cpp ]
       [ run test_call.cpp ]
       [ run test_move.cpp ]
    ;
