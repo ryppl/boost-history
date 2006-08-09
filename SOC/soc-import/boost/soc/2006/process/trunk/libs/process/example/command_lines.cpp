@@ -13,6 +13,7 @@
 // line and why such cases can be useful.
 //
 
+// quickbook:begin(code)
 #include <cstdlib>
 #include <iostream>
 
@@ -132,3 +133,4 @@ main(int argc, char* argv[])
 
     return EXIT_SUCCESS;
 }
+// quickbook:end(code)

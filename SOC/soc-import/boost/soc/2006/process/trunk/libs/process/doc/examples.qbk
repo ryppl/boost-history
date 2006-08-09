@@ -19,13 +19,36 @@ cases of the library but are not intended to cover every tiny detail.
 Please also note that, being example code, they may not do anything useful
 at all other than showing how to use the library's interface.
 
-* [@../example/generic.cpp Generic example]: This first example shows
-  multiple aspects of the library.  Its main purpose is to illustrate
-  general ideas before one can dive into other more complete examples.
+You can find ready-to-run copies of the examples below in the
+'''<filename>libs/process/example</filename> ''' directory alongside a
+Boost.Build V2 build script.
 
-* [@../example/command_lines.cpp Command lines]: This example shows
-  multiple ways to construct a command line and why such possibilities are
-  useful.
+[/ ---------------------------------------------------------------------- ]
+
+[section Generic example]
+
+This first example the most basic usage of Boost.Process, providing a
+general overview of its functionality and usage.  Its main purpose is to
+illustrate general ideas before one can dive into other more complete
+examples.
+
+The program itself takes a list of CVS work directories as arguments and
+iterates over them bringing each one up to date.
+
+[include ../example/generic.cpp c++ code]
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
+[section Command lines]
+
+This example shows multiple ways to construct a command line and describes
+why such different possibilities may come useful.
+
+[include ../example/command_lines.cpp c++ code]
+
+[endsect]
 
 [/ ---------------------------------------------------------------------- ]
 
