@@ -9,7 +9,7 @@
 // at http://www.boost.org/LICENSE_1_0.txt.)
 //
 
-#include <cstring> // XXX For EXIT_* codes; should be hidden by the library.
+#include <cstring>
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/process/children.hpp>

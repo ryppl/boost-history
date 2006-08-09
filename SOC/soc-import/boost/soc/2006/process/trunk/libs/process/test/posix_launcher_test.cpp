@@ -13,7 +13,7 @@
 
 #if defined(BOOST_PROCESS_POSIX_API)
 
-#   include <cstring> // XXX For EXIT_* codes; should be hidden by the library.
+#   include <cstring>
 #   include <string>
 
 #   include <boost/process/command_line.hpp>
