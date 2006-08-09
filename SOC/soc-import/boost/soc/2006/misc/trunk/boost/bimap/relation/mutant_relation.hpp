@@ -230,6 +230,8 @@ class mutant_relation :
         return ::boost::bimap::relation::detail::mutate<right_pair>(*this);
     }
 
+    #ifndef BOOST_BIMAP_DISABLE_SERIALIZATION
+
     // Serialization support
 
     private:
@@ -242,6 +244,8 @@ class mutant_relation :
         ar & BOOST_SERIALIZATION_NVP(left );
         ar & BOOST_SERIALIZATION_NVP(right);
     }
+
+    #endif // BOOST_BIMAP_DISABLE_SERIALIZATION
 };
 
 } // namespace relation

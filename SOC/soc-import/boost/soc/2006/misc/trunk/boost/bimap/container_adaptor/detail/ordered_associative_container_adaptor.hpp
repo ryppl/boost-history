@@ -19,6 +19,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/list.hpp>
 #include <boost/mpl/push_front.hpp>
+#include <boost/operators.hpp>
 
 namespace boost {
 namespace bimap {
@@ -102,7 +103,18 @@ class ordered_associative_container_adaptor :
         ValueToBaseConverter, ValueFromBaseConverter, KeyToBaseConverter,
         FunctorsFromDerivedClasses
 
-    >::type
+    >::type,
+
+    ::boost::totally_ordered
+    <
+        ordered_associative_container_adaptor
+        <
+            Base, Iterator, ConstIterator, ReverseIterator, ConstReverseIterator,
+            KeyType, IteratorToBaseConverter, IteratorFromBaseConverter,
+            ReverseIteratorFromBaseConverter, ValueToBaseConverter, ValueFromBaseConverter,
+            KeyToBaseConverter, FunctorsFromDerivedClasses
+        >
+    >
 {
     // MetaData -------------------------------------------------------------
 
@@ -267,23 +279,19 @@ class ordered_associative_container_adaptor :
             );
     }
 
+    // Totally ordered implementation
+
+    bool operator==(const ordered_associative_container_adaptor & c) const
+    {
+        return ( this->base() == c.base() );
+    }
+
+    bool operator<(const ordered_associative_container_adaptor & c) const
+    {
+        return ( this->base() < c.base() );
+    }
 };
 
-
-
-/* TODO
-// Tests two maps for equality.
-template<class BimapType, class Tag>
-bool operator==(const map_view<BimapType,Tag>&, const map_view<BimapType,Tag>&)
-{
-}
-
-// Lexicographical comparison.
-template<class BimapType, class Tag>
-bool operator<(const map_view<BimapType,Tag>&, const map_view<BimapType,Tag>&)
-{
-}
-*/
 
 } // namespace detail
 } // namespace container_adaptor

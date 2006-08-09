@@ -44,7 +44,7 @@ namespace support {
     template< class Tag, class Relation >
     struct value_type_of
     {
-        typedef -UNDEFINED- type;
+        typedef -unspecified- type;
     };
 
 */

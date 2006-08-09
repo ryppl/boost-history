@@ -56,6 +56,7 @@ class multiset_view
         return this->base().range(lower,upper);
     }
 
+    multiset_view & operator=(const multiset_view & v) { this->base() = v.base(); return *this; }
 };
 
 /// \brief Constant view of a bimap that is signature compatible with std::multiset.

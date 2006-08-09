@@ -18,29 +18,38 @@
 #include <boost/bimap/relation/support/pair_type_by.hpp>
 #include <boost/bimap/relation/detail/access_builder.hpp>
 
+
+#ifdef BOOST_BIMAP_ONLY_DOXYGEN_WILL_PROCESS_THE_FOLLOWING_LINES
+
 namespace boost {
 namespace bimap {
 namespace relation {
 namespace support {
 
-
-/** \fn boost::bimap::relation::support::pair_by
-
-\brief Gets a pair view of the relation.
-
-\code
-
-template< class Tag, class Relation >
-typename result_of::pair_by<Tag,Relation>::type
-    pair_by( Relation & );
-
-\endcode
+/** \brief Gets a pair view of the relation.
 
 \ingroup relation_group
                                                                         **/
 
+template< class Tag, class Relation >
+typename result_of::pair_by<Tag,Relation>::type
+    pair_by( Relation & rel );
+
+} // namespace support
+} // namespace relation
+} // namespace bimap
+} // namespace boost
+
+#endif // BOOST_BIMAP_ONLY_DOXYGEN_WILL_PROCESS_THE_FOLLOWING_LINES
+
 
 #ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
+
+namespace boost {
+namespace bimap {
+namespace relation {
+namespace support {
+
 
 // Since it is very error-prone to directly write the hole bunch
 // of relation accesor. They are buil from litle macro blocks that
@@ -64,7 +73,7 @@ typename result_of::pair_by<Tag,Relation>::type
     template< class Tag, class Relation >
     struct pair_by<Tag,Relation>;
     {
-        typedef -UNDEFINED- type;
+        typedef -unspecified- type;
     };
 
     } // namespace result_of
@@ -115,13 +124,12 @@ BOOST_BIMAP_SYMMETRIC_ACCESS_INTERFACE_BUILDER
 );
 
 
-#endif // BOOST_BIMAP_DOXIGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
-
-
-
 } // namespace support
 } // namespace relation
 } // namespace bimap
 } // namespace boost
+
+
+#endif // BOOST_BIMAP_DOXIGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 #endif // BOOST_BIMAP_RELATION_SUPPORT_PAIR_BY_HPP

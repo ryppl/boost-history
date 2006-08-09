@@ -57,6 +57,7 @@ class multimap_view
 
     BOOST_BIMAP_MAP_VIEW_RANGE_IMPLEMENTATION(base_)
 
+    multimap_view & operator=(const multimap_view & v) { this->base() = v.base(); return *this; }
 };
 
 /// \brief Constant view of a side of a bimap that is signature compatible with std::multimap.

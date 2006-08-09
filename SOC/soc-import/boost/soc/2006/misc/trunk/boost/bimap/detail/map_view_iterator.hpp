@@ -94,6 +94,8 @@ struct map_view_iterator :
         return get_pair_functor::operator()(*this->base());
     }
 
+    #ifndef BOOST_BIMAP_DISABLE_SERIALIZATION
+
     // Serialization support
 
     BOOST_SERIALIZATION_SPLIT_MEMBER();
@@ -113,6 +115,8 @@ struct map_view_iterator :
         ar >> ::boost::serialization::make_nvp("mi_iterator",iter);
         this->base_reference() = iter;
     }
+
+    #endif // BOOST_BIMAP_DISABLE_SERIALIZATION
 };
 
 

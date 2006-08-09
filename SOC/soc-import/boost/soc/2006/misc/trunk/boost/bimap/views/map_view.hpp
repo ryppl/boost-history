@@ -67,12 +67,17 @@ class map_view
     typename base_::data_type const &
         operator[](const typename base_::key_type & k) const
     {
-        // TODO
-        // Add index check?
-        return this->find(k)->second;
+        typename base_::const_iterator i = this->find(k);
+        if( i == this->end() )
+        {
+            ::boost::throw_exception( ::boost::bimap::value_not_found() );
+        }
+        return i->second;
     }
 
     BOOST_BIMAP_MAP_VIEW_RANGE_IMPLEMENTATION(base_)
+
+    map_view & operator=(const map_view & v) { this->base() = v.base(); return *this; }
 };
 
 /// \brief Constant view of a side of a bimap that is signature compatible with std::map.
@@ -106,9 +111,12 @@ class const_map_view
     typename base_::data_type const &
         operator[](const typename base_::key_type & k) const
     {
-        // TODO
-        // Add index check?
-        return this->find(k)->second;
+        typename base_::const_iterator i = this->find(k);
+        if( i == this->end() )
+        {
+            ::boost::throw_exception( ::boost::bimap::value_not_found() );
+        }
+        return i->second;
     }
 
     BOOST_BIMAP_MAP_VIEW_RANGE_IMPLEMENTATION(base_)

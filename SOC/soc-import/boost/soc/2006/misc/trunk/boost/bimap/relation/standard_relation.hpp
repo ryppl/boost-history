@@ -238,6 +238,8 @@ class standard_relation :
         return const_right_pair_reference(*this);
     }
 
+    #ifndef BOOST_BIMAP_DISABLE_SERIALIZATION
+
     // Serialization support
 
     private:
@@ -250,6 +252,8 @@ class standard_relation :
         ar & BOOST_SERIALIZATION_NVP(left );
         ar & BOOST_SERIALIZATION_NVP(right);
     }
+
+    #endif // BOOST_BIMAP_DISABLE_SERIALIZATION
 };
 
 

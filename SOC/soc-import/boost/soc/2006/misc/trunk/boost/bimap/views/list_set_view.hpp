@@ -57,6 +57,8 @@ class list_set_view
 
     list_set_view(typename base_::base_type & c) :
         base_(c) {}
+
+    list_set_view & operator=(const list_set_view & v) { this->base() = v.base(); return *this; }
 };
 
 /// \brief Constant view of a bimap that is signature compatible with std::set.

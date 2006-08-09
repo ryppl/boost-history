@@ -55,6 +55,8 @@ class set_view
     {
         return this->base().range(lower,upper);
     }
+
+    set_view & operator=(const set_view & v) { this->base() = v.base(); return *this; }
 };
 
 /// \brief Constant view of a bimap that is signature compatible with std::set.

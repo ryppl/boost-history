@@ -56,6 +56,8 @@ class list_map_view
 
     list_map_view(typename base_::base_type & c) :
         base_(c) {}
+
+    list_map_view & operator=(const list_map_view & v) { this->base() = v.base(); return *this; }
 };
 
 /// \brief Constant view of a side of a bimap.

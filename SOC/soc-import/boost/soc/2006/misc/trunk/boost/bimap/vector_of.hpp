@@ -13,6 +13,10 @@
 #ifndef BOOST_BIMAP_VECTOR_OF_HPP
 #define BOOST_BIMAP_VECTOR_OF_HPP
 
+#ifdef BOOST_BIMAP_DISABLE_SERIALIZATION
+    #define BOOST_MULTI_INDEX_DISABLE_SERIALIZATION
+#endif
+
 #include <boost/bimap/detail/concept_tags.hpp>
 
 #include <boost/bimap/detail/generate_index_binder.hpp>
@@ -131,7 +135,7 @@ task of finding the right type of the set for the relation.
 template<class Relation>
 struct bind_to
 {
-    typedef -UNDEFINED- type;
+    typedef -unspecified- type;
 };
 \endcode
 

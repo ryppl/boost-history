@@ -24,6 +24,7 @@
 
 namespace boost {
 namespace bimap {
+
 namespace detail {
 
 // The next macro can be converted in a metafunctor to gain code robustness.

@@ -47,9 +47,9 @@ struct manage_additional_parameters
 {
     struct parameters
     {
-        typedef -UNDEFINED- set_type_of_relation;
-        typedef -UNDEFINED- data_hook;
-        typedef -UNDEFINED- allocator;
+        typedef -unspecified- set_type_of_relation;
+        typedef -unspecified- data_hook;
+        typedef -unspecified- allocator;
     };
 
     typedef parameters type;

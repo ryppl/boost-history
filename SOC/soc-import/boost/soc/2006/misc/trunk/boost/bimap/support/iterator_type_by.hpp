@@ -29,37 +29,37 @@
 template< class Tag, class Bimap >
 struct iterator_type_by
 {
-    typedef -UNDEFINED- type;
+    typedef -unspecified- type;
 };
 
 template< class Tag, class Bimap >
 struct const_iterator_type_by
 {
-    typedef -UNDEFINED- type;
+    typedef -unspecified- type;
 };
 
 template< class Tag, class Bimap >
 struct reverse_iterator_type_by
 {
-    typedef -UNDEFINED- type;
+    typedef -unspecified- type;
 };
 
 template< class Tag, class Bimap >
 struct const_reverse_iterator_type_by
 {
-    typedef -UNDEFINED- type;
+    typedef -unspecified- type;
 };
 
 template< class Tag, class Bimap >
 struct local_iterator_type_by
 {
-    typedef -UNDEFINED- type;
+    typedef -unspecified- type;
 };
 
 template< class Tag, class Bimap >
 struct const_local_iterator_type_by
 {
-    typedef -UNDEFINED- type;
+    typedef -unspecified- type;
 };
 
 \endcode

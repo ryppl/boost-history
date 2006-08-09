@@ -18,7 +18,34 @@
 #include <boost/bimap/relation/support/value_type_of.hpp>
 #include <boost/bimap/relation/detail/access_builder.hpp>
 
-//#include <boost/bimap/relation/standard_pair_view.hpp>
+
+#ifdef BOOST_BIMAP_ONLY_DOXYGEN_WILL_PROCESS_THE_FOLLOWING_LINES
+
+
+namespace boost {
+namespace bimap {
+namespace relation {
+namespace support {
+
+/** \brief Gets a pair view of the relation.
+
+\ingroup relation_group
+                                                                        **/
+
+template< class Tag, class SymmetricType >
+typename result_of::get<Tag,SymmetricType>::type
+    get( SymmetricType & );
+
+} // namespace support
+} // namespace relation
+} // namespace bimap
+} // namespace boost
+
+#endif // BOOST_BIMAP_ONLY_DOXYGEN_WILL_PROCESS_THE_FOLLOWING_LINES
+
+
+
+#ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 namespace boost {
 namespace bimap {
@@ -47,7 +74,7 @@ namespace support {
     template< class Tag, class Relation >
     struct get<Tag,Relation>;
     {
-        typedef -UNDEFINED- type;
+        typedef -unspecified- type;
     };
 
     } // namespace result_of
@@ -77,33 +104,6 @@ BOOST_BIMAP_SYMMETRIC_ACCESS_IMPLEMENTATION_BUILDER
 
 // Interface
 // --------------------------------------------------------------------------
-
-/// \brief Gets the value of one of the members in a symmetrical class.
-/**
-\param r is a symmetrical type
-\return Convertible to \c value_type_of<Tag,Relation>::type
-Instead of using \c value_type_of<Tag,Relation>::type this functions use
-\b Boost.call_traits to find the best way to return this value. To help
-the user of this function the following metafunction is provided
-\code
-
-namespace result_of {
-
-template< class Tag, class Relation >
-struct get<Tag,Relation>;
-{
-    typedef -UNDEFINED- type;
-};
-
-} // namespace result_of
-
-\endcode
-
-See also member_at, value_type_of.
-\ingroup relation_group
-                                                                        **/
-
-
 
 template< class Type >
 struct is_standard_pair_view
@@ -146,6 +146,8 @@ BOOST_BIMAP_SYMMETRIC_ACCESS_INTERFACE_BUILDER
 } // namespace relation
 } // namespace bimap
 } // namespace boost
+
+#endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 #endif // BOOST_BIMAP_RELATION_SUPPORT_GET_HPP
 

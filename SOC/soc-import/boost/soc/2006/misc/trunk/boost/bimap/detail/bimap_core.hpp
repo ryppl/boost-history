@@ -21,7 +21,6 @@
 #include <boost/type_traits/add_const.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-
 // Boost.MultiIndex
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/member.hpp>

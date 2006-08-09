@@ -102,7 +102,18 @@ class sequence_container_adaptor :
         ValueToBaseConverter, ValueFromBaseConverter,
         FunctorsFromDerivedClasses
 
-    >::type
+    >::type,
+
+    ::boost::totally_ordered
+    <
+        sequence_container_adaptor
+        <
+            Base, Iterator, ConstIterator, ReverseIterator, ConstReverseIterator,
+            IteratorToBaseConverter, IteratorFromBaseConverter,
+            ReverseIteratorFromBaseConverter, ValueToBaseConverter, ValueFromBaseConverter,
+            FunctorsFromDerivedClasses
+        >
+    >
 {
     typedef typename sequence_container_adaptor_base
     <
@@ -314,6 +325,17 @@ class sequence_container_adaptor :
         }
     }
 
+    // Totally ordered implementation
+
+    bool operator==(const sequence_container_adaptor & c) const
+    {
+        return ( this->base() == c.base() );
+    }
+
+    bool operator<(const sequence_container_adaptor & c) const
+    {
+        return ( this->base() < c.base() );
+    }
 };
 
 

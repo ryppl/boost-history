@@ -67,9 +67,12 @@ class unordered_map_view
     typename base_::data_type const &
         operator[](const typename base_::key_type & k) const
     {
-        // TODO
-        // Add index check?
-        return this->find(k)->second;
+        typename base_::const_iterator i = this->find(k);
+        if( i == this->end() )
+        {
+            ::boost::throw_exception( ::boost::bimap::value_not_found() );
+        }
+        return i->second;
     }
 
 };
@@ -107,9 +110,12 @@ class const_unordered_map_view
     typename base_::data_type const &
         operator[](const typename base_::key_type & k) const
     {
-        // TODO
-        // Add index check?
-        return this->find(k)->second;
+        typename base_::const_iterator i = this->find(k);
+        if( i == this->end() )
+        {
+            ::boost::throw_exception( ::boost::bimap::value_not_found() );
+        }
+        return i->second;
     }
 
 };

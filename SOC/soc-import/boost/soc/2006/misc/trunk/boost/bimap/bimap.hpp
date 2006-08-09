@@ -58,10 +58,17 @@ perspective the next step will be:
 #ifndef BOOST_BIMAP_BIMAP_HPP
 #define BOOST_BIMAP_BIMAP_HPP
 
+#ifdef BOOST_BIMAP_DISABLE_SERIALIZATION
+    #define BOOST_MULTI_INDEX_DISABLE_SERIALIZATION
+#endif
+
 #include <boost/config.hpp>
 
-// Boost
-#include <boost/serialization/nvp.hpp>
+#ifndef BOOST_BIMAP_DISABLE_SERIALIZATION
+
+    #include <boost/serialization/nvp.hpp>
+
+#endif // BOOST_BIMAP_DISABLE_SERIALIZATION
 
 // Boost.Bimap
 #include <boost/bimap/detail/bimap_core.hpp>
@@ -176,14 +183,12 @@ class bimap
 
     // Map by {side} metadata
 
-    typedef -undefined- {side}_tag;
-    typedef -undefined- {side}_data_type;
-    typedef -undefined- {side}_value_type;
-    typedef -undefined- {side}_key_type;
-    typedef -undefined- {side}_iterator;
-    typedef -undefined- {side}_const_iterator;
-    typedef -undefined- {side}_reverse_iterator;
-    typedef -undefined- {side}_const_reverse_iterator;
+    typedef -unspecified- {side}_tag;
+    typedef -unspecified- {side}_data_type;
+    typedef -unspecified- {side}_value_type;
+    typedef -unspecified- {side}_key_type;
+    typedef -unspecified- {side}_iterator;
+    typedef -unspecified- {side}_const_iterator;
 
     ------------------------------------------------------------------*/
 
@@ -242,6 +247,8 @@ class bimap
 
     {}
 
+    #ifndef BOOST_BIMAP_DISABLE_SERIALIZATION
+
     // Serialization support
 
     private:
@@ -253,6 +260,8 @@ class bimap
     {
         ar & serialization::make_nvp("mi_core",core);
     }
+
+    #endif // BOOST_BIMAP_DISABLE_SERIALIZATION
 };
 
 } // namespace bimap

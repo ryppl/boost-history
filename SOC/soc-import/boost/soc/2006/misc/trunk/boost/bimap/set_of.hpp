@@ -13,6 +13,10 @@
 #ifndef BOOST_BIMAP_SET_OF_HPP
 #define BOOST_BIMAP_SET_OF_HPP
 
+#ifdef BOOST_BIMAP_DISABLE_SERIALIZATION
+    #define BOOST_MULTI_INDEX_DISABLE_SERIALIZATION
+#endif
+
 #include <functional>
 #include <boost/mpl/placeholders.hpp>
 
@@ -144,14 +148,14 @@ task of finding the right type of the set for the relation.
 template<class Relation>
 struct bind_to
 {
-    typedef -UNDEFINED- type;
+    typedef -unspecified- type;
 };
 \endcode
 
 See also set_of, is_set_type_of_relation.
                                                                 **/
 
-template< class KeyCompare = std::less< mpl::_ > >
+template< class KeyCompare = std::less< _relation > >
 struct set_of_relation : public ::boost::bimap::detail::set_type_of_relation_tag
 {
     /// Functor that compare two keys

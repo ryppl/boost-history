@@ -54,6 +54,7 @@ class vector_map_view
     vector_map_view(typename base_::base_type & c) :
         base_(c) {}
 
+    vector_map_view & operator=(const vector_map_view & v) { this->base() = v.base(); return *this; }
 };
 
 /// \brief Constant view of a side of a bimap that is signature compatible with std::map.

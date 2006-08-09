@@ -55,6 +55,8 @@ class vector_set_view
 
     vector_set_view(typename base_::base_type & c) :
         base_(c) {}
+
+    vector_set_view & operator=(const vector_set_view & v) { this->base() = v.base(); return *this; }
 };
 
 /// \brief Constant view of a bimap that is signature compatible with std::vector.

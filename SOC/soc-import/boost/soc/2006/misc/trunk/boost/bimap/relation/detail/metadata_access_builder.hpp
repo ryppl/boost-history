@@ -27,7 +27,7 @@
 template< class Tag, class SymmetricType >
 struct NAME
 {
-    typedef -UNDEFINED- type;
+    typedef -unspecified- type;
 };
 
 ******************************************************************************/

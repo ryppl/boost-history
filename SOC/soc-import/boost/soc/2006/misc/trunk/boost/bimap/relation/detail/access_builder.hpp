@@ -31,7 +31,7 @@ namespace result_of {
 template< class Tag, class SymmetricType >
 struct NAME
 {
-    typedef -UNDEFINED- type;
+    typedef -unspecified- type;
 };
 
 } // namespace result_of
