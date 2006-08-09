@@ -252,7 +252,7 @@ names as this one:
 
     people.left[28928546] = "Gray Simpson";
 
-    people.right.insert( People::right_pair("Marta Smith",30215692) );
+    people.right.insert( People::right_value_type("Marta Smith",30215692) );
 
     cout << (*people.begin()).left;
 
@@ -274,7 +274,7 @@ You can rewrite it as:
 
     map_by<id>(people)[28928546] = "Gray Simpson";
 
-    map_by<name>(people).insert( pair_type_by<name,People>("Marta Smith",30215692) );
+    map_by<name>(people).insert( value_type_by<name,People>("Marta Smith",30215692) );
 
     cout << get<id>(*people.begin());
 
