@@ -341,23 +341,21 @@ __BOOST_BLADE_LOGO__
 
 Just before the Google SoC 2006 starts I spent almost a month learning the
 subtle details needed to a successful install and an efficient usage of tools
-like build, svn, gdb, doxygen and Quickbook. If this document had exist by
-that time I surely would install and run everything easier and what is more,
-I would grasp the relations between this awesome tools.
+like build, svn, gdb, doxygen and Quickbook.
 
 I started to write this document while I was developing Boost.Bimap. At
 first __BOOST_BLADE__ was __KBLADE__ because that was the platform I was using.
 In several chats, Lally Singh (that was developing the Module C++ project
-for SoC too) convince me that the separation of a portable open source core
+for SoC too) convinced me that the separation of a portable open source core
 and the different IDEs was the correct direction. Thanks Lally for being
 my friend during the SoC.
 
 A lot of thanks to my Mentor during the SoC, Joaquin Lopez Muñoz that
-give me the freedom to develop Blade and boost::hs parallel to Boost.Bimap
+gave me the freedom to develop Blade and boost::hs parallel to Boost.Bimap
 and Boost.MRU.
 
 Thanks to Google to put up such an amazing project as SoC is.
 
-Finally, thanks to my family that have been there for me always.
+Finally, thanks to my family that always have been there for me.
 
 [endsect]
