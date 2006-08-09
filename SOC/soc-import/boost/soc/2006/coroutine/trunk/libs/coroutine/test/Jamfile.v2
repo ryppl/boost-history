@@ -34,5 +34,6 @@ test-suite "coroutine"
       [ run yield_to.cpp ]
       [ run yield_to2.cpp ]
       [ run test_call.cpp ]
+      [ run test_move.cpp ]
    ;
 

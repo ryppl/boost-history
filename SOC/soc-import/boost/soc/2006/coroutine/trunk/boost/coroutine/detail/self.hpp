@@ -14,7 +14,7 @@ namespace boost { namespace coroutines { namespace detail {
 #define BOOST_COROUTINE_VCPP80_WORKAROUND 
 #else
 //for now, define this unconditionally for testing.
-//#define BOOST_COROUTINE_VCPP80_WORKAROUND 
+#define BOOST_COROUTINE_VCPP80_WORKAROUND 
 #endif
 
   template<typename Coroutine>
@@ -156,7 +156,7 @@ namespace boost { namespace coroutines { namespace detail {
      BOOST_PP_ENUM_TRAILING
      (BOOST_COROUTINE_ARG_MAX,
       BOOST_COROUTINE_param_with_default,
-      (BOOST_DEDUCED_TYPENAME Target::call_arg, 
+      (BOOST_DEDUCED_TYPENAME Target::self::call_arg, 
        BOOST_DEDUCED_TYPENAME Target::arg))) {
       typedef typename Target::arg_slot_type type;
       return yield_to_impl

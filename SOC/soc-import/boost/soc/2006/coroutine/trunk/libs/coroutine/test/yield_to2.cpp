@@ -23,8 +23,8 @@ int coro_body(coroutine_type::self& self, int parm, int id) {
 }
 
 int main() {
-  coro[0] = boost::bind(coro_body, _1, _2, 0);
-  coro[1] = boost::bind(coro_body, _1, _2, 1);
+  coro[0] = coroutine_type(boost::bind(coro_body, _1, _2, 0));
+  coro[1] = coroutine_type(boost::bind(coro_body, _1, _2, 1));
   int  t = 10;
   while(coro[0]) {
     t = coro[0](t);

@@ -25,6 +25,17 @@
 #include <boost/coroutine/detail/self.hpp>
 
 namespace boost { namespace coroutines {
+  template<typename Signature, typename Context>
+  class coroutine;
+
+  namespace detail {
+    template<typename T>
+    struct is_coroutine : boost::mpl::false_{};
+
+    template<typename Sig, typename Con>
+    struct is_coroutine<coroutine<Sig, Con> > : boost::mpl::true_{};
+  }
+
 
   template<typename Signature, 
 	   typename ContextImpl = detail::default_context_impl>
@@ -59,11 +70,19 @@ namespace boost { namespace coroutines {
     typedef detail::coroutine_self<type> self;
     coroutine(): m_pimpl(0) {}
 
+  private:
+  public:
+
+    
     template<typename Functor>
     explicit 
     coroutine (Functor f, 
 	       std::ptrdiff_t stack_size = detail::default_stack_size,
-	       BOOST_DEDUCED_TYPENAME boost::enable_if<detail::is_callable<Functor> >
+	       BOOST_DEDUCED_TYPENAME boost::enable_if<
+	       boost::mpl::and_<
+	       detail::is_callable<Functor>, 
+	       boost::mpl::not_<detail::is_coroutine<Functor> >
+	       > >
 	       ::type * = 0
 	       ) :
       m_pimpl(impl_type::create(f, stack_size)) {}
@@ -73,12 +92,6 @@ namespace boost { namespace coroutines {
 
     coroutine& operator=(move_from<coroutine> src) {
       coroutine(src).swap(*this);
-      return *this;
-    }
-
-    template<typename Functor>
-    coroutine& operator= (Functor rhs) {
-      coroutine(rhs).swap(*this);
       return *this;
     }
 
@@ -149,8 +162,8 @@ namespace boost { namespace coroutines {
   private:
     //Disabled copy constructor and operator=. 
     //Coroutine is movable only.
-    coroutine(const coroutine& rhs);
-    coroutine& operator=(coroutine rhs);
+    //coroutine(const coroutine& rhs);
+    //coroutine& operator=(coroutine rhs);
 
     /**
      * The second parameter is used to avoid calling this constructor
@@ -174,7 +187,6 @@ namespace boost { namespace coroutines {
       m_pimpl->invoke();
       return detail::fix_result<result_slot_traits>(result);
     }
-
 
     impl_ptr m_pimpl;
 

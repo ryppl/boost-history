@@ -30,7 +30,7 @@ int main() {
   coroutine_type coro_a; 
   coroutine_type
     coro_b(boost::bind(coro, boost::ref(coro_a), 0, _1,  _2));
-  coro_a = boost::bind(coro, boost::ref(coro_b), 1, _1, _2); 
+  coro_a = coroutine_type(boost::bind(coro, boost::ref(coro_b), 1, _1, _2)); 
 					
   my_parm t;
   while(coro_a) {

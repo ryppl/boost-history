@@ -8,15 +8,25 @@
 #pragma warning (disable: 4355) //this used in base member initializer
 #endif 
 #include <cstddef>
-
 #include <algorithm> //for swap
 #include <boost/intrusive_ptr.hpp>
 #include <boost/optional.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/coroutine/exception.hpp>
 #include <boost/coroutine/detail/argument_unpacker.hpp>
+#include <boost/coroutine/detail/atomic_count.hpp>
 #include <boost/coroutine/detail/swap_context.hpp>
 #include <boost/coroutine/detail/coroutine_accessor.hpp>
+
+/*
+ * Currently asio can in some cases, call copy constructors and
+ * operator= from different threads, even if in the
+ * one-thread-per-service model. 
+ * This will be corrected in future versions, but for now
+ * we will play it safe and use an atomic count.
+ */
+#define BOOST_COROUTINE_ATOMIC_COUNT
+
 namespace boost { namespace coroutines { namespace detail {
 	
   const std::ptrdiff_t default_stack_size = -1;
@@ -52,7 +62,7 @@ namespace boost { namespace coroutines { namespace detail {
     }
       
     bool unique() const {
-      return !count();
+      return count() == 1;
     }
 
     std::size_t count() const {
@@ -182,8 +192,7 @@ namespace boost { namespace coroutines { namespace detail {
       
     void release() const {
       BOOST_ASSERT(m_counter);
-      --m_counter;
-      if(m_counter == 0) {
+      if(--m_counter == 0) {
 	m_deleter(this);
       }
     }
@@ -246,7 +255,13 @@ namespace boost { namespace coroutines { namespace detail {
             
     typedef typename context_impl::context_impl_base ctx_type;
     ctx_type m_caller;
-	mutable std::size_t m_counter;
+    mutable 
+#ifndef BOOST_COROUTINE_ATOMIC_COUNT
+    std::size_t
+#else
+    boost::detail::atomic_count
+#endif
+    m_counter;
     deleter_type * m_deleter;
     context_state m_state;
     context_exit_state m_exit_state;
@@ -337,21 +352,6 @@ namespace boost { namespace coroutines { namespace detail {
       this->do_return(status, tinfo);	  
     }
   public:    
-    /**
-     * This will cancel the effects of a intrusive_pointer,
-     */
-    struct cancel_count {
-      cancel_count(type* self) : m_self(self){
-	m_self->release();
-      }
-      
-      ~cancel_count() {
-	m_self->acquire();
-      }
-    private:
-      type * m_self;
-    };
-
 
     //GCC workaround as per enable_if docs 
     template <int> struct dummy { dummy(int) {} };
