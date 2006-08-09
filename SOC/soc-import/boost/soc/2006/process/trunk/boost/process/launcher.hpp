@@ -62,6 +62,11 @@ public:
     //! parameters configured in the launcher.  The launcher can be
     //! reused afterwards to launch other different command lines.
     //!
+    //! \remark <b>Blocking remarks</b>: This function may block if the
+    //!         device holding the command line's executable blocks when
+    //!         loading the image.  This might happen if, e.g., the binary
+    //!         is being loaded from a network share.
+    //!
     //! \return A handle to the new child process.
     //!
     template< class Command_Line >

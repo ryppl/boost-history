@@ -48,6 +48,14 @@ namespace process {
 //! The class is only provided because it must provide a method to let
 //! the caller explicitly close the communication channel.
 //!
+//! \remark <b>Blocking remarks</b>: Functions that read data from this
+//! stream can block if the associated file handle blocks during the read.
+//! As this class is used to communicate with child processes through
+//! anonymous pipes, the most typical blocking condition happens when the
+//! child has no more data to send to the pipe's system buffer.  When
+//! this happens, the buffer eventually empties and the system blocks
+//! until the writer generates some data.
+//!
 class pistream :
     public std::istream, boost::noncopyable
 {

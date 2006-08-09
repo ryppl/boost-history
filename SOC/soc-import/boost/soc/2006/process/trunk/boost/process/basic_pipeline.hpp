@@ -92,6 +92,11 @@ public:
     //! Spawns all processes that form the pipeline, connecting them
     //! appropriately to share the data flows.
     //!
+    //! \remark <b>Blocking remarks</b>: This function may block if the
+    //!         device holding the executable of one of the command lines
+    //!         blocks when loading the image.  This might happen if, e.g.,
+    //!         the binary is being loaded from a network share.
+    //!
     //! \return An object that holds the status of all the processes
     //!         related to the pipeline.
     //!

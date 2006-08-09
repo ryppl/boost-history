@@ -114,11 +114,12 @@ public:
     //!
     //! \brief Blocks and waits for the child process to terminate.
     //!
-    //! Blocks (if necessary) until the child process terminates execution
-    //! and returns a status object that represents the finalization
-    //! condition.
+    //! Returns a status object that represents the child process'
+    //! finalization condition.  The child process object ceases to be
+    //! valid after this call.
     //!
-    //! The child process object ceases to be valid after this call.
+    //! \remark <b>Blocking remarks</b>: This call blocks if the child
+    //! process has not finalized execution and waits until it terminates.
     //!
     status wait(void);
 

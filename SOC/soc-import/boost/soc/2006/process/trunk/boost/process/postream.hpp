@@ -48,6 +48,14 @@ namespace process {
 //! The class is only provided because it must provide a method to let
 //! the caller explicitly close the communication channel.
 //!
+//! \remark <b>Blocking remarks</b>: Functions that write data to this
+//! stream can block if the associated file handle blocks during the write.
+//! As this class is used to communicate with child processes through
+//! anonymous pipes, the most typical blocking condition happens when the
+//! child is not processing the data in the pipe's system buffer.  When
+//! this happens, the buffer eventually fills up and the system blocks
+//! until the reader consumes some data, leaving some new room.
+//!
 class postream :
     public std::ostream, boost::noncopyable
 {

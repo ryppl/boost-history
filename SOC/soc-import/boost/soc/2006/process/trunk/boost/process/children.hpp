@@ -85,6 +85,10 @@ public:
     //! \return The exit status of the first failed process or, if all
     //!         was successful, the exit status of the last process.
     //!
+    //! \remark <b>Blocking remarks</b>: This call blocks if any of the
+    //! child processes have not finalized execution and waits until they
+    //! terminate.
+    //!
     status wait(void);
 };
 
