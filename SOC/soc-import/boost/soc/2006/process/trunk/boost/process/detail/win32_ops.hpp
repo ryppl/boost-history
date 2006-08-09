@@ -38,6 +38,7 @@ extern "C" {
 #include <boost/process/detail/pipe.hpp>
 #include <boost/process/detail/stream_info.hpp>
 #include <boost/process/exceptions.hpp>
+#include <boost/process/stream_behavior.hpp>
 #include <boost/throw_exception.hpp>
 
 namespace boost {
@@ -206,6 +207,42 @@ win32_start(const Command_Line& cl,
     }
 
     return pi;
+}
+
+// ------------------------------------------------------------------------
+
+//!
+//! \brief Converts a stream_behavior to a stream_info object.
+//!
+//! Given a stream_behavior \a beh and whether it shall behave as an input
+//! flow or as an output one (\a out), returns a stream_info object
+//! representing a flow that follows the provided behavior.
+//!
+//! \param parentfh A reference to a file_handle that receives the handle
+//!                 the parent can use to communicate with the child.
+//! \return The new stream_info object.
+//!
+inline
+stream_info
+win32_behavior_to_info(stream_behavior beh, bool out, file_handle& parentfh)
+{
+    stream_info si;
+
+    if (beh == inherit_stream) {
+        si.m_type = stream_info::inherit;
+    } else if (beh == redirect_stream) {
+        si.m_type = stream_info::usepipe;
+        si.m_pipe = pipe();
+        parentfh = out ? si.m_pipe->rend() : si.m_pipe->wend();
+    } else if (beh == silent_stream) {
+        si.m_type = stream_info::usefile;
+        si.m_file = "NUL";
+    } else {
+        BOOST_ASSERT(beh == close_stream);
+        si.m_type = stream_info::close;
+    }
+
+    return si;
 }
 
 // ------------------------------------------------------------------------

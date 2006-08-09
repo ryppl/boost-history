@@ -107,47 +107,12 @@ launcher::start(const Command_Line& cl)
     if (get_stderr_behavior() == redirect_stream)
         fhstderr = posix_info_locate_pipe(infoout, STDERR_FILENO, true);
 #elif defined(BOOST_PROCESS_WIN32_API)
-    detail::stream_info behin;
-    if (get_stdin_behavior() == inherit_stream) {
-        behin.m_type = detail::stream_info::inherit;
-    } else if (get_stdin_behavior() == redirect_stream) {
-        behin.m_type = detail::stream_info::usepipe;
-        behin.m_pipe = detail::pipe();
-        fhstdin = behin.m_pipe->wend();
-    } else if (get_stdin_behavior() == silent_stream) {
-        behin.m_type = detail::stream_info::usefile;
-        behin.m_file = "NUL";
-    } else {
-        behin.m_type = detail::stream_info::close;
-    }
-
-    detail::stream_info behout;
-    if (get_stdout_behavior() == inherit_stream) {
-        behout.m_type = detail::stream_info::inherit;
-    } else if (get_stdout_behavior() == redirect_stream) {
-        behout.m_type = detail::stream_info::usepipe;
-        behout.m_pipe = detail::pipe();
-        fhstdout = behout.m_pipe->rend();
-    } else if (get_stdout_behavior() == silent_stream) {
-        behout.m_type = detail::stream_info::usefile;
-        behout.m_file = "NUL";
-    } else {
-        behout.m_type = detail::stream_info::close;
-    }
-
-    detail::stream_info beherr;
-    if (get_stderr_behavior() == inherit_stream) {
-        beherr.m_type = detail::stream_info::inherit;
-    } else if (get_stderr_behavior() == redirect_stream) {
-        beherr.m_type = detail::stream_info::usepipe;
-        beherr.m_pipe = detail::pipe();
-        fhstderr = beherr.m_pipe->rend();
-    } else if (get_stderr_behavior() == silent_stream) {
-        beherr.m_type = detail::stream_info::usefile;
-        beherr.m_file = "NUL";
-    } else {
-        beherr.m_type = detail::stream_info::close;
-    }
+    detail::stream_info behin =
+        win32_behavior_to_info(get_stdin_behavior(), false, fhstdin);
+    detail::stream_info behout =
+        win32_behavior_to_info(get_stdout_behavior(), true, fhstdout);
+    detail::stream_info beherr =
+        win32_behavior_to_info(get_stderr_behavior(), true, fhstderr);
 
     STARTUPINFO si;
     ::ZeroMemory(&si, sizeof(si));
