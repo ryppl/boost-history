@@ -11,185 +11,145 @@
 
 [section Examples]
 
-[section Simple Bimap]
+[section Roadmap]
 
-This is the example from the one minute tutorial section.
-
-    #include <iostream>
-
-    #include <boost/bimap/bimap.hpp>
-
-    int main()
-    {
-        using namespace bimap;
-
-        // Soccer World cup. (The results are not real)
-
-        typedef bimap<std::string,int> results_bimap;
-        typedef results_bimap::relation position;
-
-        results_bimap results;
-        results.insert( position("Argentina"    ,1) );
-        results.insert( position("Spain"        ,2) );
-        results.insert( position("Germany"      ,3) );
-        results.insert( position("France"       ,4) );
-
-        std::cout << "Countries names ordered by their final position:"
-                  << std::endl;
-
-        for( results_bimap::right_iterator i    = results.right.begin(),
-                                           iend = results.right.end() ;
-             i != iend; ++i )
-        {
-            std::cout << i->first << ") " << i->second << std::endl;
-        }
-
-        std::cout << std::endl
-                  << "Countries names ordered alfabetically along with"
-                     "their final position:"
-                  << std::endl;
-
-        for( results_bimap::left_iterator  i    = results.left.begin(),
-                                           iend = results.left.end() ;
-             i != iend; ++i )
-        {
-            std::cout << i->first << " ends " << i->second << "º" << std::endl;
-        }
-
-    }
-
-You can rewrite it using tags to gain readability.
-
-    #include <iostream>
-
-    #include <boost/bimap/bimap.hpp>
-
-    struct country  {}
-    struct place    {}
-
-    int main()
-    {
-        using namespace bimap;
-
-        // Soccer World cup. (The results are not real)
-
-        typedef bimap
-        <
-            tagged< std::string, country >,
-            tagged< int        , place   >
-
-        > results_bimap;
-
-        typedef results_bimap::relation position;
-
-        results_bimap results;
-        results.insert( position("Argentina"    ,1) );
-        results.insert( position("Spain"        ,2) );
-        results.insert( position("Germany"      ,3) );
-        results.insert( position("France"       ,4) );
-
-        std::cout << "Countries names ordered by their final position:"
-                  << std::endl;
-
-        typedef iterator_type_by<place,results_bimap>::type iterator_by_place;
-        for( iterator_by_place i    = map_by<place>(results).begin(),
-                               iend = map_by<place>(results).end() ;
-             i != iend; ++i )
-        {
-            std::cout << get<place>(*i) << ") " << get<country>(*i) << std::endl;
-        }
-
-        std::cout << std::endl
-                  << "Countries names ordered alfabetically along with"
-                     "their final position:"
-                  << std::endl;
-
-        typedef iterator_type_by<country,results_bimap>::type iterator_by_country;
-        for(  iterator_by_country i    = map_by<country>(results).begin(),
-                                  iend = map_by<country>(results).end() ;
-             i != iend; ++i )
-        {
-            std::cout << get<country>(*i) << " ends " << get<place>(*i) << "º" << std::endl;
-        }
-
-    }
+__UNDER_CONSTRUCTION__
 
 [endsect]
 
-[section Mighty Bimap]
+[section MultiIndex to Bimap Path]
 
-This is the translator example from the tutorial.
-In this example the set type of relation is changed to allow the iteration
-of the container.
 
-    #include <iostream>
-    #include <string>
-    #include <boost/bimap/bimap.hpp>
-    #include <boost/bimap/list_of.hpp>
-    #include <boost/bimap/unordered_set_of.hpp>
+[section Basic Usage]
 
-    struct english {};
-    struct spanish {};
+This is a simplified version of example 1 in Boost.MultiIndex documentation.
 
-    int main()
-    {
-        using namespace boost::bimap;
+[blurb
+Basic program showing the multi-indexing capabilities of Boost.MultiIndex with
+an admittedly boring set of employee records.
+]
 
-        typedef bimap
+[h2 Boost.MultiIndex]
+
+``
+// An employee record holds its ID and name
+
+struct employee
+{
+    int         id;
+    std::string name;
+
+    employee(int id_,std::string name_) : id(id_), name(name_) {}
+};
+
+struct id   {};
+struct name {};
+
+// Define a multi_index_container of employees with following indices:
+// - a unique index sorted by employee::int,
+// - a non-unique index sorted by employee::name,
+
+typedef multi_index_container
+<
+    employee,
+    indexed_by
+    <
+        ordered_unique
         <
-            tagged< unordered_set_of< std::string >, spanish >,
-            tagged< unordered_set_of< std::string >, english >
-            list_of_relation
+            tag<id>,
+            BOOST_MULTI_INDEX_MEMBER(employee,int,id)
+        >,
+        ordered_non_unique
+        <
+            tag<name>,
+            BOOST_MULTI_INDEX_MEMBER(employee,std::string,name)
+        >
+    >
 
-        > translator_bimap;
+> employee_set;
 
-        typedef translator_bimap::relation translation;
-        translator_bimap translator;
-        translator.insert( translation("hola"  ,"hello"   ) );
-        translator.insert( translation("adios" ,"goodbye" ) );
-        translator.insert( translation("rosa"  ,"rose"    ) );
-        translator.insert( translation("mesa"  ,"table"   ) );
+int main()
+{
+    employee_set es;
 
-        std::cout << "enter a word" << std::endl;
-        std::string word;
-        std::getline(std::cin,word);
+    es.insert(employee(0,"Joe"));
+    es.insert(employee(1,"Robert"));
+    es.insert(employee(2,"John"));
+    es.insert(employee(3,"Albert"));
+    es.insert(employee(4,"John"));
 
-        // Search the queried word on the from index (Spanish) */
+    // list the employees names sorted by ID
 
-        iterator_type_by<spanish,translator_bimap>::type is = map_by<spanish>(d).find(word);
+    const index<employee_set,id>::type& index = get<id>(es);
 
-        if( is != map_by<spanish>(d).end() )
-        {
-            std::cout << word << " is said " << get<english>(*is) << " in English" << std::endl;
-        }
-        else
-        {
-            // Word not found in Spanish, try our luck in English
-
-            iterator_type_by<english,translator_bimap>::type ie = map_by<english>(d).find(word);
-            if( ie != map_by<english>(d).end() )
-            {
-                std::cout << word << " is said " << get<spanish>(*ie) << " in Spanish" << std::endl;
-            }
-            else
-            {
-                // Word not found, show the possible translations
-
-                std::cout << "No such word in the dictionary" << std::endl;
-                std::cout << "These are the possible translations" << std::endl;
-                for( translator_bimap::iterator i = translator.begin(), i_end = translator.end();
-                     i != i_end ; ++i )
-                {
-                    std::cout << get<spanish>(*i) << " <---> " << get<english>(*i) << std::endl;
-                }
-            }
-        }
-        return 0;
+    for( index::const_iterator i = index.begin(), e = index.end() ; i != e ; ++i )
+    {
+        std::cout << i->name << " has id " << i->id << std::endl;
     }
+
+    return 0;
+}
+``
+
+The output of this program will be:
+
+[blurb
+[^
+Joe has id 1\n
+Robert has id 2\n
+John has id 3\n
+Albert has id 4\n
+John has id 5\n
+]
+]
+
+
+[h2 Boost.Bimap]
+
+``
+
+struct id   {};
+struct name {};
+
+// Define a bimap of id-name relations.
+// - The ids are unique.
+// - The names are nonunique.
+
+typedef bimap
+<
+    tagged< int, id >, tagged< multi_set_of< std::string >, name >
+
+> employee_set;
+
+typedef employee_set::relation employee;
+
+int main()
+{
+    employee_set es;
+
+    es.insert(employee(0,"Joe"));
+    es.insert(employee(1,"Robert"));
+    es.insert(employee(2,"John"));
+    es.insert(employee(3,"Albert"));
+    es.insert(employee(4,"John"));
+
+    // list the employees names sorted by ID
+
+    for( const_iterator_type_by<id,employee_set>::type i = map_by<id>(es).begin(),
+                                                       e = map_by<id>(es).end();
+         i != e ; ++i )
+    {
+        std::cout << get<name>(*i) << " has id " << get<id>(*i) << std::endl;
+    }
+
+
+  return 0;
+}
+``
 
 [endsect]
 
-[section MultiIndex to Bimap Path - Bidirectional Map]
+[section Bidirectional Map]
 
 This is example 4 in Boost.MultiIndex documentation.
 
@@ -389,7 +349,7 @@ int main()
         iterator_type_by<english,dictionary>::type it2 = map_by<english>(d).find(word);
         if( it2 != map_by<english>(d).end() )
         {
-            std::cout << word << " is said " << get<spanish>(*it2) << " in Spanish" << std::endl;
+            std::cout << word << " is said " << get<spanish>(it2) << " in Spanish" << std::endl;
         }
         else
         {
@@ -403,7 +363,7 @@ int main()
 
 [endsect]
 
-[section MultiIndex to Bimap Path - Hashed indices]
+[section Hashed indices]
 
 This is example 8 of Boost.MultiIndex.
 
@@ -413,7 +373,7 @@ information is of no interest. The example features a word counter where duplica
 means of a hashed index.
 ]
 
-[h2 Boost.MultiIndex]
+[h2 Boost.MuliIndex]
 
 ``
 
@@ -514,7 +474,7 @@ int main()
 {
 
     std::string text=
-        "Relations between data in the STL are represented with maps."
+        "Relations between data in the stl are represented with maps."
         "A map is a directed relation, by using it you are representing"
         "a mapping. In this directed relation, the first type is related to"
         "the second type but it is not true that the inverse relationship"
@@ -556,6 +516,8 @@ int main()
 
 ``
 
+
+[endsect]
 
 [endsect]
 

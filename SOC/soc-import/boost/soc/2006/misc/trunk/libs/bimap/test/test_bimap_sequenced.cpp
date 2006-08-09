@@ -6,6 +6,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 // See http://www.boost.org/libs/test for the library home page.
 
+#define BOOST_BIMAP_DISABLE_SERIALIZATION
 
 // Boost.Test
 #include <boost/test/minimal.hpp>
@@ -87,12 +88,33 @@ void test_bimap()
 
     //--------------------------------------------------------------------
     {
-        bimap
+        typedef bimap
         <
             vector_of< short >, list_of< short >,
             vector_of_relation
 
-        > b;
+        > bimap_type;
+
+        bimap_type b1;
+        bimap_type b2;
+
+        BOOST_CHECK(     b1 == b2   );
+        BOOST_CHECK( ! ( b1 != b2 ) );
+        BOOST_CHECK(     b1 <= b2   );
+        BOOST_CHECK(     b1 >= b2   );
+        BOOST_CHECK( ! ( b1 <  b2 ) );
+        BOOST_CHECK( ! ( b1 >  b2 ) );
+
+        b1.push_back( bimap_type::relation(1,2) );
+
+        b2 = b1;
+        BOOST_CHECK( b2 == b1 );
+
+        b2.left = b1.left;
+        BOOST_CHECK( b2 == b1 );
+
+        b2.right = b1.right;
+        BOOST_CHECK( b2 == b1 );
     }
     //--------------------------------------------------------------------
 

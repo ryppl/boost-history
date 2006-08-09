@@ -11,45 +11,16 @@
 
 [section Introduction]
 
-Boost.Bimap is an associative container where both types
-can be used as key. You can think a `bimap<Ka,Kb>` as a merge of
-a `std::map<Ka,Kb>` and a `std::map<Kb,Ka>`.
-
-There is a library in Boost that already allows the creation of this kind
-of container: Boost.MultiIndex. It offers great flexibility and lets you
-construct almost any container that you may dream about. The framework is
-very clean. You may want to read the tutorial of this library to learn the
-power that has been achieved. \n
-But generality comes with a price, if you want to use this library you will
-have to be willing to sit in front of you PC and read some very interesting
-docs. The learning curve is not that bad, but many people will refuse to
-experience the benefits of this library (space,time,less error-prone) because
-of it. There is another mayor drawback: the interface that results may not be
-the best for each specialization. People may end up wrapping a B.MI container
-in his own class, every time they want to use it.
-
-Both problems have been faced in this library for one of the most useful container
-types that can be created using B.MI: a bidirectional map.\n
-The learning curve of a misc is zero if you know how to use standard containers.
-A big effort was put in mapping the naming scheme of the stl in Boost.Bimap.
-The library is designed to match the stl common containers. It takes the orthogonal
-algorithm stl approach to define small frameworks that unify the specialized
-containers. Boost.MultiIndex is the core of the bimap container. It is an amazing
-library that will continue to grow. Hopefully Boost.Bimap will grow along with it.
-
-['MISC] - [*M]ulti [*I]ndex [*S]pecialized [*C]ontainers
-
-[:[' Lets be generic, construct frameworks, describe the world
-     in an unified way...] \n
-  [' No!, it is better to be specialized, designed easy to use
-     components, offer plug an play objects...] \n
-  [*Why not to grab the best of both worlds?]]
-
-__MI_FRAMEWORK__
+With Boost.Bimap you can create associative containers where both types
+can be used as key. You can think a `bimap<X,Y>` as a merge of
+a `std::map<X,Y>` and a `std::map<Y,X>`.
+The learning curve of bimap is almost zero if you know how to use standard containers.
+A big effort was put in mapping the naming scheme of the STL in Boost.Bimap.
+The library is designed to match the STL common containers.
 
 [h2 How to use this document]
 
-There is a lot of information in Boost.Bimap documentation. Althought it may be
+There is a lot of information in Boost.Bimap documentation. Although it may be
 a very good idea to read it all, this documentation is intended for different
 type of programmers.
 
@@ -57,7 +28,7 @@ type of programmers.
 [[I have to finished this today, I just want a bidirectional map!][
 If your boss is going to kill you if the project is not finished by the end of the day, just
 read the [link boost_bimap.one_minute_tutorial one minute tutorial]. If you
-have an stl background I swear that you will be testing a bimap in less than
+have an STL background I swear that you will be testing a bimap in less than
 ten minutes.
 ]]
 [[I am a serious programmer and want to learn Boost.Bimap][
@@ -70,10 +41,10 @@ to read some specific part of it later to see a function signature or to look
 for a specific metafunction.
 ]]
 [[I just love C++, I want to see Boost.Bimap guts...][
-If you are a library developper, these documents are the best place to learn
-how Boost.Bimap is implemented. It is very recomendable that you first learn
+If you are a library developer, these documents are the best place to learn
+how Boost.Bimap is implemented. It is very recommendable that you first learn
 to use the library as if you were the second type of programmer.
-This library was developped in the Google SoC 2006, and the mentor and the
+This library was developed in the Google SoC 2006, and the mentor and the
  student generate a lot of documents in the building process. The rationale
 section is huge and you will find there a lot of information. There is a history
 section for people that find it useful. Finally, in the reference, every entity of
@@ -97,5 +68,35 @@ not e-mail me directly. Boost has a very good system to
 [@http://www.boost.org/more/requesting_new_features.htm features requests].
 Using it is the best way of getting this kind of thing done as soon as possible.
 ]
+
+[h2 Navigation]
+
+In combination with the configured browser key (in general, alt) the following keys
+acts as handy shortcuts for common navigation tasks.
+
+[variablelist Shortcuts
+[
+[General][
+[^[*p]] - Previous page       \n
+[^[*n]] - Next page           \n
+[^[*h]] - home                \n
+[^[*u]] - Up
+]][
+[Main TOC][
+[^[*i]] - Introduction        \n
+[^[*o]] - One minute tutorial \n
+[^[*t]] - The tutorial        \n
+[^[*b]] - Bimap and Boost     \n
+[^[*r]] - Reference           \n
+[^[*c]] - Compiler specifics  \n
+[^[*v]] - Performance         \n
+[^[*e]] - Examples            \n
+[^[*s]] - Test Suite          \n
+[^[*f]] - Future work         \n
+[^[*m]] - Release notes       \n
+[^[*w]] - Rationale           \n
+[^[*y]] - History             \n
+[^[*a]] - Acknowledgements
+]]]
 
 [endsect]

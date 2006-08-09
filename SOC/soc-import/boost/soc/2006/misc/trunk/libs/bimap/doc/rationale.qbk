@@ -19,11 +19,15 @@ interface of this library, it will be a lot easier to read this rationale.
 The following section is little more than just a rationale. This library was
 coded in the context of the Google SoC 2006 and the student and mentor where
 in different continents. A lot of e-mail flow between Joaquin and Matias. The
-most juicy parts of the conversations where extracted and rearrange here.
+most juicy parts of the conversations where extracted and rearranged here.
+
+[note For code browsing, you can use the [@doxydoc/index.html ['Bimap Complete Reference]],
+a doxygen powered document targeted for developers.
+]
 
 [section General Design]
 
-The initial explanation do not include a lot of features. This section aims
+The initial explanation does not include a lot of features. This section aims
 to tell the general design of the library and every additional feature that
 is not strictly necessary is supposed to be nonexistent as they are not needed
 to understand it. These features will be introduced later. \n
@@ -38,7 +42,7 @@ in this rationale the rest of the design follows easily with it. \n
 We will impose the following needed interface for the [^relation] class:
 
 
-    typedef -undefined- TA; typedef -undefined- TB;
+    typedef -unspecified- TA; typedef -unspecified- TB;
 
     TA a, ai; TB b, bi;
 
@@ -71,7 +75,7 @@ __RELATION__
 
 Although this seems easy to achieve, as you will understand later is
 the most difficult code hack of the library. It is, indeed very easy if we
-relax some of the efficiency constrains. For example it is trivial if we
+relax some of the efficiency constraints. For example it is trivial if we
 let the size of a relation bigger than the sum of the sizes of his
 components, or it is equally simple if we do not care about access
 speed. But one of the first decision about [*Boost.Bimap] was that, in
@@ -86,7 +90,7 @@ data from any of the three points of view: pair<A,B>, relation<A,B> and pair<B,A
 Suppose that our bimap only supports one to one relations (The other relation types
 are considered additional features in this design). \n
 The proposed interface is very simple, and it is heavily based in the concepts of
-the stl. Given a `bimap<A,B> bm;` then:
+the STL. Given a `bimap<A,B> bm;` then:
 
 # `bm.left` is signature compatible with a `std::map<A,B>`
 # `bm.right` is signature compatible with a `std::map<B,A>`
@@ -94,7 +98,7 @@ the stl. Given a `bimap<A,B> bm;` then:
 
 __SIMPLE_BIMAP__
 
-This interface is very easy to learn by users that have a stl background and
+This interface is very easy to learn by users that have a STL background and
 it is very comfortable and powerful. This is the general design.
 
 [h2 Relation Implementation]
@@ -140,7 +144,7 @@ clause imposes that if we have two classes:
 the storage-layout of [^class_a_b] is equal to the storage-layout of [^class_b_a].
 If you are surprised this does not holds in a standard compliant C++ compiler, welcome
 to the club. It is the natural way to implement it from the compiler vendor point
-of view and it is very useful for the developper. Maybe it can be included in the standard
+of view and it is very useful for the developer. Maybe it can be included in the standard
 someday. Anyway, every actual compiler is conformant with it. \n
 If we can count on this, then we can implement an idiom called [^mutant].
 The idea is to provide a secure wrapper around [^reinterpret_cast]. A class can
@@ -194,7 +198,7 @@ missing functions.
 [h2 N-1, N-N, hashed maps]
 
 This is a very interesting point in this design. The framework introduced
-in ['std::set theory] allows to manage the different constrains with a
+in ['std::set theory] allows to manage the different constraints with a
 very simple and conceptual approach. It is both easy to remember and to
 learn. The idea here is to allow the user to specify the set type of each
 key directly. To be able to implement this feature we have to solve two
@@ -204,28 +208,30 @@ problems:
 set type use for each key.
 * The map views now change their semantic according to the set type chosen.
 
-Boost.Bimap rely heavily in Boost.MPL to implement all the the metaprogramming
-necessary to get this framework work.
+Boost.Bimap relies heavily in Boost.MPL to implement all the the metaprogramming
+necessary to get this framework working.
 By default, if the user does not specify the kind of the set, it is used a
 std::set type.
 
 __BIMAP_STRUCTURES__
 
-[h2 set<relation> constrains]
+[h2 set type of relation constraints]
 
-The constrains of the bimap set view are another very important feature.
+The constraints of the bimap set view are another very important feature.
 In general, Boost.Bimap users will base the set view type in one of the
 two set types of their keys. However it may be useful to give this set
 another constraints or simple order it differently.
 By default Boost.Bimap will base the set of the relation in the left key
 but the user is allowed to choose between:
 
-* based_in_left_key
-* based_in_right_key
+* left_based
+* right_based
 * set_of_relation<>
 * multiset_of_relation<>
 * unordered_set_of_relation<>
 * unordered_multiset_of_relation<>
+* list_of
+* vector_of
 
 In the first two cases there are only two indexes in the multi_index_core and
 for this reason are the prefeared option.
@@ -259,8 +265,10 @@ __TAGGED__
 
 [section Code]
 
+You can browse the code using the [@doxydoc/index.html [*Boost.Bimap doxygen docs]].
+
 The code follows as close as possible the
-[@http://www.boost.org/more/lib_guide.htm Boost Librery Reguirement and Guidelines].
+[@http://www.boost.org/more/lib_guide.htm Boost Library Requirement and Guidelines].
 
 [table folders in boost/bimap
 [[name][what is inside?]]
@@ -276,98 +284,7 @@ The code follows as close as possible the
 [[name][what is inside?]]
 [[          ][class definitions]]
 [[support/  ][optional metafunctions and free functions]]
-[[detail/   ][things not intented for the user eye]]
-]
-
-[endsect]
-
-[section Dependencies]
-
-Boost.Bimap is built on top of several boost libraries. The rationale behind
-this decision is to maintain the boost code base small reusing existent code.
-The libraries used are very mature and has been tested extensively. This makes
-this library easy to port since all the hard work has been done. The glue in
-that orchest everything is Boost.MPL and obviously Boost.MultiIndex has been
-abused by this library.
-
-
-
-
-[table Boost Libraries needed by Boost.Bimap
-[[Name][Description][author]]
-
-[[ __BOOST_MULTI_INDEX__ ][
-Containers with multiple STL-compatible access interfaces]
-[Joaquín M López Muñoz]]
-
-[[ __BOOST_MPL__ ][
-Template metaprogramming framework of compile-time algorithms, sequences and metafunction classes]
-[Aleksey Gurtovoy]]
-
-[[ __BOOST_TYPE_TRAITS__ ][
-Templates for fundamental properties of types.]
-[John Maddock, Steve Cleary]]
-
-[[ __BOOST_ENABLE_IF__ ][
-Selective inclusion of function template overloads]
-[Jaakko Järvi, Jeremiah Willcock, Andrew Lumsdaine]]
-
-[[ __BOOST_ITERATORS__ ][
-Iterator construction framework, adaptors, concepts, and more.]
-[Dave Abrahams, Jeremy Siek, Thomas Witt]]
-
-[[ __BOOST_CALL_TRAITS__ ][
-Defines types for passing parameters.]
-[John Maddock, Howard Hinnant]]
-
-[[ __BOOST_STATIC_ASSERT__ ][
-Static assertions (compile time assertions).]
-[John Maddock]]
-
-]
-
-[table Optional Boost Libraries, that plays well with Boost.Bimap
-[[Name][Description][author][Purpose]]
-
-[[ __BOOST_SERIALIZATION__ ][
-Serialization for persistence and marshalling]
-[Robert Ramey]
-[Serialization support for bimap containers and iterators]]
-
-[[ __BOOST_ASSIGN__ ][
-Filling containers with constant or generated data has never been easier]
-[Thorsten Ottosen]
-[Help to fill a bimap or views of it]]
-
-[[ __BOOST_HASH__ ][
-A TR1 hash function object that can be extended to hash user defined types]
-[Daniel James]
-[Default hashing function]]
-
-[[ __BOOST_LAMBDA__ ][
-Define small unnamed function objects at the actual call site, and more]
-[from Jaakko Järvi, Gary Powell]
-[Functors for modify, range, lower_bound and upper_bound]]
-
-[[ __BOOST_RANGE__ ][
-A new infrastructure for generic algorithms that builds on top of the new
-iterator concepts]
-[Thorsten Ottosen]
-[Range based algorithms]]
-
-[[ __BOOST_PROPERTY_MAP__ ][
-Concepts defining interfaces which map key objects to value objects]
-[Jeremy Siek]
-[Integration with BGL]]
-]
-
-[table Additional Boost Libraries needed to run the test-suite
-[[Name][Description][author]]
-
-[[ __BOOST_TEST__ ][
-Support for simple program testing, full unit testing, and for program execution monitoring.]
-[Gennadiy Rozental]
-]
+[[detail/   ][things not intended for the user eye]]
 ]
 
 [endsect]
@@ -378,7 +295,7 @@ Support for simple program testing, full unit testing, and for program execution
 [@http://h1.ripway.com/mcape/boost/libs/misc/ Boost.Misc SoC proposal] first.]
 \n
 \n
-[:[^- The discussion start with Joaquin trying to strip out the "misc" name out of the library -]]
+[:[^- The discussion starts with Joaquin trying to strip out the "misc" name out of the library -]]
 
 [:__JOAQUIN_PHOTO__\n\n[*Joaquin - ]['Thinking about it, the unifying principle of
 MISC containers is perhaps misleading: certainly all miscs use multi-indexing
@@ -425,7 +342,7 @@ this new libraries.\n\n
 This is a clearer framework for the user. They can use a mru container
 without hearing about Boost.MultiIndex at all.
 And B.MI users will get some of their common containers already
-implemented with an stl friendly interface in other libraries.
+implemented with an STL friendly interface in other libraries.
 And as you stated this is more extensible because opens the door to use
 other libraries in bimap and mru families than just Boost.MultiIndex
 without compromising the more general boost framework.\n
@@ -463,16 +380,16 @@ remember and it is a lot more symmetrical than to/from.
 ]]
 
 [:[*Matias - ]['At first my idea was to obtain ease of use hiding the B.MI
-core, making it more stl-intuitive. Nevertheless I have realized
+core, making it more STL-intuitive. Nevertheless I have realized
 that B.MI is a lot more coherent and easy to use that I had imagined. This
 makes me think again in the problem. In the design that I am coding now, bimap
 *is-a* multi_index_container specializes with a data type very comfortable
 called bipair, that can be seen like any of the two maps that integrates it
 using map views. This scheme has great benefits for users:\n\n
 ''' '''- If the user already knows B.MI, he can take advantage of the tools that
-it provides and that are not present in the stl containers. In addition, in some
+it provides and that are not present in the STL containers. In addition, in some
 cases the use to indices to see the data can be very useful.\n
-''' '''- If the user does not know anything about B.MI but have an stl framework,
+''' '''- If the user does not know anything about B.MI but have an STL framework,
 the learning curve is reduced to understand the bimap instantiation and how a
 is obtained the desired map view.\n\n
 Another very important benefit holds: All the algorithms done for
@@ -489,7 +406,7 @@ the chance of divorce. The other possibility, to hide the implementation and
 to duplicate and document the provided functionality, explicitly or
 implicitly due to the same characteristics of the implementation, is
 of course heavier to maintain, but it gives a degree of freedom to change
-the guts of your software if you needed. Do not take this like a frontal
+the guts of your software if you need to. Do not take this like a frontal
 objection, but I think that it is quite important design decision, not only
 in the context of bimap but in general.
 ]]
@@ -516,8 +433,8 @@ now that I have get used to it, it is very easy to express in the code my
 contrains on the data, and I believe that if somebody reads the code and
 sees the bimap instantiation he is not going to have problems understanding
 it. Perhaps it is easier to understand it if we use your notation:
-ordered_nonunique, unordered_unique, but this goes against our stl facade.
-In my opinion the user that comes from stl must have to learn as less as possible.
+ordered_nonunique, unordered_unique, but this goes against our STL facade.
+In my opinion the user that comes from STL must have to learn as less as possible.
 ]]
 
 [:[*Joaquin - ]['Considering a relation like a `struct {left, right}`
@@ -537,7 +454,7 @@ It is elegant and symmetric. I feel good vibrations here.]]
 
 [:[*Joaquin - ]['Moving on, the support for N-1, N-N, and hashed index is very easy
 to grasp, and it fits well in framework.
-However I do not finish to understand very well the "set<relation> constrains" section.
+However I do not finish to understand very well the "set<relation> constraints" section.
 Will you came up with some examples of which is the meaning of the different
 cases that you enumerate? ]]
 
@@ -760,9 +677,6 @@ But if I think they as "views" of something, I like 1. The question is complicat
 I add another option:\n\n
 3. Error: operator= is declare as private in boost::bimap::map_view std_container\n\n
 Also What happens with `std_container = view;`? and with `view = std_container;`?]]
-
-[:[^ - The first month finished with the a formal presentation of Boost.Bimap to the
-boost developers list. - ]]
 
 [endsect]
 

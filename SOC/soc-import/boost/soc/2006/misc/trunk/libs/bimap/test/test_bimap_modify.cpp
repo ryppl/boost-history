@@ -53,6 +53,45 @@ void test_bimap_modify()
 
     BOOST_CHECK( b.right[0.1] == 1 );
     BOOST_CHECK( b.size() == 2 );
+
+    // Duplicated value test
+    {
+        bool duplicate_value_test_passed = false;
+
+        b.clear();
+        b.left[1] = 0.1;
+
+        try
+        {
+            b.left[2] = 0.1;
+        }
+        catch( duplicate_value & )
+        {
+            duplicate_value_test_passed = true;
+        }
+
+        BOOST_CHECK( duplicate_value_test_passed );
+    }
+
+    // Value not found test
+    {
+        bool value_not_found_test_passed = false;
+
+        b.clear();
+        b.left[1] = 0.1;
+
+        try
+        {
+            bool comp;
+            comp = b.left[2] < 0.2;
+        }
+        catch( value_not_found & )
+        {
+            value_not_found_test_passed = true;
+        }
+
+        BOOST_CHECK( value_not_found_test_passed );
+    }
 }
 
 

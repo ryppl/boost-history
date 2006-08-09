@@ -11,6 +11,43 @@
 
 [section Reference]
 
-Automatic redirection failed, please go to the [@doxydoc/index.html Complete Reference].
+[section Headers]
+
+The following are the interface headers of Boost.Bimap:
+
+[*Container]
+
+* "boost/bimap/bimap.hpp" ['(includes "boost/bimap/set_of.hpp")]
+
+[*Set Types]
+
+* "boost/bimap/set_of.hpp"
+* "boost/bimap/multiset_of.hpp"
+* "boost/bimap/unordered_set_of.hpp"
+* "boost/bimap/unordered_multiset_of.hpp"
+* "boost/bimap/list_set_of.hpp"
+* "boost/bimap/vector_set_of.hpp"
+
+[*Boost Integration]
+
+* "boost/bimap/support/lambda.hpp"
+* "boost/bimap/property_map/set_support.hpp"
+* "boost/bimap/property_map/unordered_set_support.hpp"
+
+So, a program using Boost.Bimap must include  "boost/bimap/bimap.hpp" and
+the headers defining the set types to be used.\n
+Additional headers allow the integration of Boost.Bimap with other boost libraries,
+like Boost.Lambda and Boost.Property_map.\n
+In order to use the serialization capabilities of Boost.Bimap, the appropriate
+Boost.Serialization library module must be linked. Other than that, Boost.Bimap
+is a header-only library, requiring no additional object modules.
+
+[endsect]
+
+[include reference/bimap.qbk]
+[include reference/set_of.qbk]
+[include reference/unordered_set_of.qbk]
+[include reference/list_of.qbk]
+[include reference/vector_of.qbk]
 
 [endsect]

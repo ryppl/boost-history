@@ -6,6 +6,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 // See http://www.boost.org/libs/test for the library home page.
 
+#define BOOST_BIMAP_DISABLE_SERIALIZATION
 
 // Boost.Test
 #include <boost/test/minimal.hpp>

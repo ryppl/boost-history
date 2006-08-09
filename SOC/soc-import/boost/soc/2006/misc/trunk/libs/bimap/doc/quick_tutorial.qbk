@@ -19,6 +19,10 @@ The following code creates an empty bimap container:
     bm_type bm;
 
 Given this code, the following is the complete description of the resulting bimap.
+[footnote A type is ['signature compatible] with other type if it have the same
+signature for functions and metadata. Preconditions and postconditions are allowed
+to be changed and the order of operations can be different.
+]
 
 * `bm.left` is signature compatible with `std::map<A,B>`
 * `bm.right` is signature compatible with `std::map<B,A>`
@@ -38,7 +42,7 @@ You must add the following two lines too:
 [h2 A simple example]
 
 This is a very small example of how to build and use a bimap. If you continue reading
-you will learn how to enchance your bidirectional maps to generate more powerful,
+you will learn how to enhance your bidirectional maps to generate more powerful,
 scalable and readable code.
 
     #include <iostream>
@@ -49,10 +53,10 @@ scalable and readable code.
     {
         using namespace bimap;
 
+        // Soccer World cup. (The results are not real)
+
         typedef bimap<std::string,int> results_bimap;
         typedef results_bimap::relation position;
-
-        // Unlikily this results are not real...
 
         results_bimap results;
         results.insert( position("Argentina"    ,1) );
@@ -71,7 +75,7 @@ scalable and readable code.
         }
 
         std::cout << std::endl
-                  << "Countries names ordered alfabetically along with"
+                  << "Countries names ordered alphabetically along with"
                      "their final position:"
                   << std::endl;
 
@@ -93,7 +97,7 @@ Countries names ordered by their final position:\n
 3) Germany\n
 4) France\n
 \n
-Countries names ordered alfabetically along with their final position:\n
+Countries names ordered alphabetically along with their final position:\n
 Argentina ends 1º\n
 France ends 4º\n
 Germany ends 3º\n
@@ -103,14 +107,14 @@ Spain ends 2º\n
 
 [h2 Continuing the journey]
 
-You can look at any standard library documentation for function sigantures or read the
+You can look at any standard library documentation for function signatures or read the
 [link boost_bimap.reference reference] section of this docs.
 
 [caution
 Just be aware that a bidirectional map is only signature compatible. Some functions
-may end in a diferent result, for example when inserting a pair in the `left` map where the
-second value conflict with a stored relation in the container. Finally the functions may be
-slower in a bimap because of the duplicated constrains. It is very recommendable that you read
+may end in a different result, for example when inserting a pair in the `left` map where the
+second value conflicts with a stored relation in the container. Finally the functions may be
+slower in a bimap because of the duplicated constraints. It is very recommendable that you read
 [link boost_bimap.the_tutorial the complete tutorial] as soon as possible if you are
 going to use a bimap in a serious project.
 ]

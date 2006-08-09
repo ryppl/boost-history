@@ -19,74 +19,66 @@ is to firmly grasp the new framework. The first section:
 [link boost_bimap.the_tutorial.discovering_the_new_framework Discovering the new framework]
 aims to explain it.
 
-# Being based in Boost.MultiIndex, Boost.Bimap has been able to offer a lot more than just
-a one to one ordered unique bidirectional map. We will be able to control the set type of
-each side of the relationship that bimap is representing leading to one to many containers,
-hashed bidirectional containers and others useful containers that may fit better in the
-problem you are confronting. The second section:
-[link boost_bimap.the_tutorial.controlling_the_set_types Controlling the set types] explain
-how to instantiate a bimap to have different collection constrains.
+# Boost.Bimap offers a lot more than just a one to one ordered unique bidirectional map.
+We will be able to control the set type of each side of the relationship that bimap is
+representing leading to one to many containers, hashed bidirectional containers and others
+useful containers that may fit better in the problem you are confronting. The second section:
+[link boost_bimap.the_tutorial.controlling_the_set_types Controlling the set types] explains
+how to instantiate a bimap to have different collection constraints.
 
-# Metafunctions are a very important part of this library. They will clean the way to a more
-powerful and scalable way of coding.
-The next section [link boost_bimap.the_tutorial.metafunctions Metafunctions] will explain
-the most important ones.
-
-# The types of a bimap can be tagged so then each side can be access through using something
-more close to the problem than ['left] and ['right]. This will lead to more readable code
-and self documenting code. The fourth section: 
+# The types of a bimap can be tagged so then each side can be accessed through using something
+more close to the problem than `left` and `right`. This will lead to more readable code
+and self documenting code. The fourth section:
 [link boost_bimap.the_tutorial.tagging Tagging] shows how to use this feature.
 
+[/
 # The are a lot of problems were each related pair have other attributes. Imagine a bimap that
 tie an employee name with his id. You may want to store his age, family members and other stuff.
 Boost.Bimap let you hook a data structure to each relation making unnecessary the creation of
 another container to hold this not indexed attributes. The section:
-[link boost_bimap.the_tutorial.hooking_data Hooking Data] explains this feature.
+link boost_bimap.the_tutorial.hooking_data Hooking Data explains this feature.
+]
 
-# Maybe the hardest to understand is the subtle problem of the set of relations.
+# Maybe the hardest issue to understand is the subtle problem of the set type of relations.
 The section: [link boost_bimap.the_tutorial.the_set_of_relations_type The set of relations type]
-explain this problem and how to create new types of bidirectional maps.
-
-# The complexity of insertion, deletion and modification of elements in a bimap is not trivial.
-In the section: [link boost_bimap.the_tutorial.complexity Complexity] a detailed reference of
-the complexity of each function is presented.
+explains this problem and how to create new types of bidirectional maps.
 
 # The last section:
 [link boost_bimap.the_tutorial.complete_instantiation_scheme Complete Instantiation Scheme]
-resume the bimap instantiation and introduced the way to change the allocator type to use.
+summarizes the bimap instantiation and introduces the way to change the allocator type to use.
 
 [endsect]
 
 [section Discovering the new framework]
 
-Relations between data in the stl are represented with maps.
-A std::map is a directed relation, by using it you are representing a mapping.
-In this directed relation, first_type is related to second_type but it is not true
+Relations between data in the STL are represented with maps.
+A `std::map` is a directed relation, by using it you are representing a mapping.
+In this directed relation, `first_type` is related to `second_type` but it is not true
 that the inverse relationship holds.
 This is useful in a lot of situations, but there are some relationships that are
 bidirectional by nature, and it is more comfortable and in many cases more efficient
 in time and space to represent the relationship as a bidirectional mapping between
 the two collections of data.
 Boost.Bimap allows to represent this kind of relations and offers a ready-to-use
-arsenal to play with. The design is very influenced by the stl.
+arsenal to play with. The design is very influenced by the STL.
 
 [h2 Standard mapping framework]
 
-A std::map has to be thought of as a directed mapping between a set of keys and a
-collection of data values.
+A `std::map` has to be thought as a directed mapping between a set of keys and a
+collection (with no constraints) of data values.
 The following diagram shows the represented relationship and the view point where the
 user is placed.
 
 __STANDARD_MAPPING_FRAMEWORK__
 
-This is not wrong, and it is a lot more efficient to use std::maps than bimaps if
+This is not wrong, and it is a lot more efficient to use `std::maps` than bimaps if
 you never have to observe the relationship from the other side.
 
 __STD_PAIR__
 
-The stl designer noted that this was a directed relationship and named the data it
-contains according to it. A ['std::pair'] is a directed relation between *x* and *y*. That is
-why the names ['first] for *x* and ['second] for *y* are natural.
+The STL designer noted that this was a directed relationship and named the data it
+contains according to it. A `std::pair` is a directed relation between *x* and *y*. That is
+why the names `first` for *x* and `second` for *y* are natural.
 Note how the code looks.
 
     X x;
@@ -101,47 +93,47 @@ Note how the code looks.
     directed_relation.first;
     directed_relation.second;
 
-Note that the type of the collection of X is a set because we have chosen a map for the
+Note that the type of the collection of X is a set because we have chosen a `map` for the
 example, but the collection type on the left can be different. The following table
 shows the equivalence for the std associative containers.
 
 [table std associative containers
 [[container         ][left set type     ][right set type]]
-[[map               ][set               ][collection    ]]
-[[multimap          ][multiset          ][collection    ]]
-[[unordered_map     ][unordered_set     ][collection    ]]
-[[unordered_multimap][unordered_multiset][collection    ]]
+[[map               ][set               ][no constraints]]
+[[multimap          ][multiset          ][no constraints]]
+[[unordered_map     ][unordered_set     ][no constraints]]
+[[unordered_multimap][unordered_multiset][no constraints]]
 ]
 
 [h2 Extended mapping framework]
 
-Boost.Bimap design is based on the stl, and extends the framework in a natural way.
+Boost.Bimap design is based on the STL, and extends the framework in a natural way.
 The following diagram represents the new situation.
 
 __EXTENDED_MAPPING_FRAMEWORK__
 
-Look that now the std::maps are a particular case of a Boost.Bimap container where you
+Look that now the `std::maps` are a particular case of a Boost.Bimap container where you
 can only view one of the sides of the relationship and can only control
-the constrains of one of the collections.
+the constraints of one of the collections.
 Boost.Bimap allows the user to view the relationship from the three points of view.
-You can view it from a side, getting a std::map compatible container or you can
+You can view it from a side, getting a `std::map` compatible container or you can
 work directly with the whole relation.
 The only thing left to do is to find a way to represent this new framework in C++
 code, so it is both easy to read and to remember how to write it.
-The first thing is to get rid of the std::pair to represent the contained
+The first thing is to get rid of the `std::pair` to represent the contained
 data of the bimap. The two collections are now at the same level, so it is not
-correct to name them as first/second or a/b. These names clearly impose an ordering
+correct to name them as `first`/`second` or `a`/`b`. These names clearly impose an ordering
 of the two values.
 
-The solution is to view *x* as the ['left] member and *y* as the ['right] one.
-The left/right naming puts the two values exactly at the same level, and allows
+The solution is to view *x* as the `left` member and *y* as the `right` one.
+The `left`/`right` naming puts the two values exactly at the same level, and allows
 us to refer easily to the view. We can now say: "The map indexed by the left member",
 and the meaning is very clear.
 
 __RELATION__
 
-The new type will be called ['relation]. It will have two members, one will be called
-['left] and the other one ['right].
+The new type will be called `relation`. It will have two members, one will be called
+`left` and the other one `right`.
 The code now looks like
 
     X x;
@@ -160,10 +152,13 @@ The code now looks like
 
 [section Controlling the set types]
 
-As we said before, in the stl maps you can only control the constrains from
-one of the collection, the one that you are viewing.
-In Boost.Bimap you can control both of them and it is as easy as using the stl.
-The idea is to use the same constrains names that are used in the standard.
+As we said before, in the STL maps you can only control the constraints from
+one of the collections, the one that you are viewing.
+
+__EXTENDED_MAPPING_FRAMEWORK__
+
+In Boost.Bimap you can control both of them and it is as easy as using the STL.
+The idea is to use the same constraints names that are used in the standard.
 If you don't specify the collection type, Boost.Bimap assumes that the collection
 is a set.
 The instantiation of a bimap with custom set types looks like:
@@ -174,15 +169,15 @@ The following is the list of all supported set types.
 
 [table Set of Key Types
 [[name                   ][Features          ][map view type            ]]
-[[`set_of`               ][['ordered, unique]][`map_view`               ]]
-[[`multiset_of`          ][['ordered        ]][`multimap_view`          ]]
-[[`unordered_set_of`     ][['hashed, unique ]][`unordered_map_view`     ]]
-[[`unordered_multiset_of`][['hashed         ]][`unordered_multimap_view`]]
-[[`list_of`              ][['sequenced      ]][`list_map_view`          ]]
-[[`vector_of`            ][['random access  ]][`vector_map_view`        ]]
+[[`set_of`               ][['ordered, unique]][`map`                    ]]
+[[`multiset_of`          ][['ordered        ]][`multimap`               ]]
+[[`unordered_set_of`     ][['hashed, unique ]][`unordered_map`          ]]
+[[`unordered_multiset_of`][['hashed         ]][`unordered_multimap`     ]]
+[[`list_of`              ][['sequenced      ]][`list_map`               ]]
+[[`vector_of`            ][['random access  ]][`vector_map`             ]]
 ]
 
-The last two map views are not associate to any existing stl associative containers.
+The last two map views are not associated to any existing STL associative containers.
 They are two examples of unsorted associative containers.
 
 __BIMAP_STRUCTURES__
@@ -200,144 +195,242 @@ Now the following is the description of the resulting map views of the bidirecti
 
 [h2 Configuration parameters]
 
-Each set type template have different parameters to control it behaviour. For example
+Each set type template has different parameters to control its behaviour. For example
 in the `set_of` specification you can pass a Functor type that compares two types. All
 these parameters are exactly the same one of the standard library container. The only
-parameter missing is the allocator type. You will be learn later how to change the
+parameter missing is the allocator type. You will learn later how to change the
 allocator for a bimap.
 
-The following table enumerate the parameters meaning for each set type.
+The following table enumerates the parameters meaning for each set type.
 
 [table
 [[name                     ][Additional Parameters]]
 
 [[`set_of<T,KeyComp>`\n
   `multiset_of<T,KeyComp>` ]
-[[*KeyComp ] is a Functor that compares for less two types. By default it is std::less<T>. ]]
+[[*KeyComp ] is a Functor that compares for less two types. By default it is `std::less<T>`. ]]
 
 [[`unordered_set_of<T,HashFunctor,EqualKey>`\n
   `unordered_multiset_of<T,HashFunctor,EqualKey>`]
-[[*HashFunctor ] converts a T object into an integer value. By default it is boost::hash<T>.\n
- [*EqualKey ] is a Functor that compare for equality two types. By default it is std::equal_to<T>. ]]
+[[*HashFunctor ] converts a `T` object into an integer value. By default it is `boost::hash<T>`.\n
+ [*EqualKey ] is a Functor that compare for equality two types. By default it is `std::equal_to<T>`. ]]
 [[`list_of<T>`              ][No additional parameters.]]
 [[`vector_of<T>`            ][No additional parameters.]]
 ]
 
 [endsect]
 
-[section Metafunctions]
-
-[/
-[h2 data_type_of
-Metafunction to obtain the data type of one of the sides in a bimap.
-This is the actual data type stored in the bimap.
-
-[h2 iterator_type_by
-Metafunction to obtain the iterator type of the map view by one of the sides.
-
-[h2 key_type_of
-Metafunction to obtain the key type of one of the sides in a bimap.
-The returned type is one of the {SetType}_of definition classes.
-
-[h2 value_type_by
-Metafunction to obtain the value type of a bimap indexed by one of the sides. The tag parameter can be either a user defined tag or member_at::{side}. The returned type is compatible with std::pair. More...
-
-struct    pair_type_by
-Metafunction to obtain the view type indexed by one of the sides. More...
-  struct    value_type_of
-     Metafunction to obtain the value type of one of the sides. More...
-
-  Functions
-  template<class Tag, class Relation> 
-  result_of::get< Tag, Relation 
- >::type   get (Relation &r)
-     Gets the value of one of the members in a symmetrical class. 
-  template<class Tag, class Relation> 
-  result_of::pair_by< Tag, Relation 
- >::type   pair_by (Relation &)
-     Gets a pair view of the relation. 
-
-]
-
-__UNDER_CONSTRUCTION__
-
-[endsect]
-
 [section Tagging]
 
 The code produced in this fashion tends to be obscure and error prone.
-The bimap family let you tag your types so they can be accessed by a more descriptive name.
+The bimap family lets you tag your types so they can be accessed by a more descriptive name.
+This will produce more readable code.
 
 __TAGGED__
 
-__UNDER_CONSTRUCTION__
+A tagged type is a type that has been labeled using a tag. A tag is any valid C++ type.
+In a bimap, the types are always tagged. If you do not specify your own tag the container
+use `member_at::left` and `member_at::right` to tag each side.
+In order to specify a custom tag the set type specification of each side has to be
+tagged. Tagging a type is very simple:
 
-[/
-The above example can be rewritten as:
+    typedef tagged< int, a_tag > tagged_int;
 
-    struct dni  {}; // Tag for the national identification number
+So, if you want to use the tags `id` and `name` a bimap from a set of ids to a multiset of
+names as this one:
+
+    typedef bimap
+    <
+        int,
+        multiset_of<string>
+
+    > People;
+
+    People people;
+
+    // ...
+
+    people.left[28928546] = "Gray Simpson";
+
+    people.right.insert( People::right_pair("Marta Smith",30215692) );
+
+    cout << (*people.begin()).left;
+
+You can rewrite it as:
+
+    struct id   {}; // Tag for the identification number
     struct name {}; // Tag for the name of the person
 
     typedef bimap
     <
-        tagged< int   , dni  >,
-        tagged< string, name >
+        tagged< int                , id   >,
+        tagged< multiset_of<string>, name >
 
     > People;
 
-    People people_info;
+    People people;
 
-    // Ask for a view, and use it as a standard map
+    // ...
 
-    map_type_by<name,People>::type map( people_info );
-    map["Gray Simpson" = 28928546;
+    map_by<id>(people)[28928546] = "Gray Simpson";
 
-    // Metafunctions can be used to get nice code to
+    map_by<name>(people).insert( pair_type_by<name,People>("Marta Smith",30215692) );
 
-    map_by<dni>(people_info)[28928546 = "Gray Simpson";
+    cout << get<id>(*people.begin());
 
 
-This will produce more readable code. You can notice how the
-`map_by<name>(people_info)` is self descriptive:
-it state that the type is "map by name this people".
+Here are the functions and metafunctions you can use with tags.
+In all of them the tag parameter can be either a user defined tag or
+`member_at::{side}`, even when there is no user defined tag. This allows
+you to use this function in non tagged bimaps, and then be able to tag
+them later without changing the code.
+\n\n
+[h2 For a bimap]
+
+[variablelist Metafunctions
+[[value_type_by][
+Metafunction to obtain the value type of one of the sides in a bimap.
+``
+    template< class Tag, class Bimap >
+    struct value_type_by
+    {
+        typedef typename Bimap::{side}_value_type type;
+    };
+``
+]]
+[[key_type_of][
+Metafunction to obtain the key type of one of the sides in a bimap.
+``
+    template< class Tag, class Bimap >
+    struct key_type_of
+    {
+        typedef typename Bimap::{side}_key_type type;
+    };
+``
+]]
+[[data_type_of][
+Metafunction to obtain the data type of one of the sides in a bimap.
+``
+    template< class Tag, class Bimap >
+    struct data_type_of
+    {
+        typedef typename Bimap::{side}_data_type type;
+    };
+``
+]]
+[[iterator_type_by][
+Metafunction to obtain the iterator type of the map view by one of the sides.
+``
+    template< class Tag, class Bimap >
+    struct iterator_type_by
+    {
+        typedef typename Bimap::{side}_iterator type;
+    };
+
+    template< class Tag, class Bimap >
+    struct const_iterator_type_by
+    {
+        typedef typename Bimap::{side}_iterator type;
+    };
+
+    // The following metafunction are only valid if the selected views
+    // support these types of iteration.
+
+    template< class Tag, class Bimap >
+    struct reverse_iterator_type_by
+    {
+        typedef -unspecified- type;
+    };
+
+    template< class Tag, class Bimap >
+    struct const_reverse_iterator_type_by
+    {
+        typedef -unspecified- type;
+    };
+
+    template< class Tag, class Bimap >
+    struct local_iterator_type_by
+    {
+        typedef -unspecified- type;
+    };
+
+    template< class Tag, class Bimap >
+    struct const_local_iterator_type_by
+    {
+        typedef -unspecified- type;
+    };
+``
+]]
 ]
+\n
 
-[endsect]
+[variablelist Functions
 
-[section Hooking Data]
+[[map_by][
+Gets a map view of a bimap.
+``
+    template<class Tag, class Relation>
+    result_of::map_by< Tag, Bimap>::type map_by(Bimap &);
+``
+]]
 
-This is one of the things that will make Boost.Bimap very appealing to attack
-a problem. In general programmers use maps to access information quickly.
-Boost.Bimap allows the user to hook data inside the bimap so it is not
-necessary to maintain another map.
+]
+\n\n
+[h2 For a Relation]
 
-    typedef bimap< int, string, hook_data< string > > bm_type;
-    bm_type bm;
+[variablelist metafunctions
 
-    //...
+[[value_type_of][
+Metafunction to obtain the value type of one of the sides.
+``
+    template< class Tag, class Relation >
+    struct value_type_of
+    {
+        typedef typename Relation::{side}_type type;
+    };
+``
+]]
+[[ pair_type_by][
+Metafunction to obtain the view type indexed by one of the sides.
+``
+    template< class Tag, class Relation >
+    struct pair_type_by
+    {
+        typedef {compatible with std::pair} type;
+    };
+``
+]]
+]
+\n
 
-    bm.left_map.data(28928546) = "carpintero";
-    bm.right_map.data("John Wayne") = "actor";
-
-    bm_type::left_iterator iter = bm.left_map.find(23345647);
-    iter->data = "programador";
-
-    bm_type::iterator iter = bm.find( bm_type::pair_by<member_at::left>(23345647,"Green Dert") );
-    iter->data = "estudiante";
-
-    bm.insert( bm_type::value_type_by<member_at::left>(1456783342,"Fred Bypass","retirado") );
-
-__UNDER_CONSTRUCTION__
+[variablelist Functions
+[[get][
+Gets the value of one of the members in a symmetrical class.
+``
+    template<class Tag, class Relation>
+    result_of::get< Tag, Relation>::type get(Relation &r);
+``
+]]
+[[pair_by][
+Gets a pair view of a relation.
+``
+    template<class Tag, class Relation>
+    result_of::pair_by< Tag, Relation>::type pair_by(Relation &);
+``
+]]
+]
 
 [endsect]
 
 [section The set of relations type]
 
-The constrains of the bimap set view are another very important feature.
-In general, Boost.Bimap users will base the set view type in one of the
-two set types of their keys. However it may be useful to give this set
-another constraints or simple order it differently.
-By default Boost.Bimap will base the set of the relation in the left key
+Being able to change set type of the bimap relation view is another very
+important feature.
+
+In general, Boost.Bimap users will base the set type of relation in one of the
+two side set types. However there are times where it is
+useful to give this set another constraints or simple order it differently.
+By default Boost.Bimap will base the set of the relation in the left set type
 but the user is allowed to choose between:
 
 * left_based
@@ -349,42 +442,149 @@ but the user is allowed to choose between:
 * list_of_relation<>
 * vector_of_relation<>
 
-In the first two cases there are only two indexes in the multi_index_core and
-for this reason are the prefeared option.
+[tip
+The first two options produce faster bimaps, so prefer these ones when possible.
+]
 
-__UNDER_CONSTRUCTION__
+The set type of relation can be used to create powerful containers. For example, if
+you need to maximize search speed then the better bidirectional map possible is one
+that relates elements from an unordered_set to another unordered_set. The problem
+is that this container can not be iterated. If you need to be able to know the list
+of relations inside the container, you need another set type of relation. In this
+case a list_of_relation is a good choice. The resulting container trade insertion and
+deletion time, in exchange of fast searching capabilities and the possibility of
+bidirectional iteration.
+
+    #include <iostream>
+    #include <string>
+    #include <boost/bimap/bimap.hpp>
+    #include <boost/bimap/list_of.hpp>
+    #include <boost/bimap/unordered_set_of.hpp>
+
+    struct english {};
+    struct spanish {};
+
+    int main()
+    {
+        using namespace boost::bimap;
+
+        typedef bimap
+        <
+            tagged< unordered_set_of< std::string >, spanish >,
+            tagged< unordered_set_of< std::string >, english >
+            list_of_relation
+
+        > translator_bimap;
+
+        typedef translator_bimap::relation translation;
+        translator_bimap translator;
+        translator.insert( translation("hola"  ,"hello"   ) );
+        translator.insert( translation("adios" ,"goodbye" ) );
+        translator.insert( translation("rosa"  ,"rose"    ) );
+        translator.insert( translation("mesa"  ,"table"   ) );
+
+        std::cout << "enter a word" << std::endl;
+        std::string word;
+        std::getline(std::cin,word);
+
+        // Search the queried word on the from index (Spanish) */
+
+        iterator_type_by<spanish,translator_bimap>::type is = map_by<spanish>(d).find(word);
+
+        if( is != map_by<spanish>(d).end() )
+        {
+            std::cout << word << " is said " << get<english>(*is) << " in English" << std::endl;
+        }
+        else
+        {
+            // Word not found in Spanish, try our luck in English
+
+            iterator_type_by<english,translator_bimap>::type ie = map_by<english>(d).find(word);
+            if( ie != map_by<english>(d).end() )
+            {
+                std::cout << word << " is said " << get<spanish>(*ie) << " in Spanish" << std::endl;
+            }
+            else
+            {
+                // Word not found, show the possible translations
+
+                std::cout << "No such word in the dictionary" << std::endl;
+                std::cout << "These are the possible translations" << std::endl;
+                for( translator_bimap::iterator i = translator.begin(), i_end = translator.end();
+                     i != i_end ; ++i )
+                {
+                    std::cout << get<spanish>(*i) << " <---> " << get<english>(*i) << std::endl;
+                }
+            }
+        }
+        return 0;
+    }
+
+
+[h2 Configuration parameters]
+
+Each set type of relation has different parameters to control its behaviour. For example
+in the `set_of_relation` specification you can pass a Functor type that compares two types. All
+these parameters are exactly the same one of the standard library container. The parameters missing
+are the type, that is fixed to the bimap relation and the allocator type.
+To help users in the creation of each functor, the set type of relation templates takes an mpl
+lambda expression where the relation type will be later evaluated. A placeholder named `_relation` is
+available to bimap users.
+
+The following table enumerates the parameters meaning for each set type.
+
+[table
+[[name                     ][Additional Parameters]]
+
+[[`left_based`             ][Not a template.]]
+[[`right_based`            ][Not a template.]]
+[[`set_of_relation<KeyComp>`\n
+  `multiset_of_relation<KeyComp>` ]
+[[*KeyComp ] is a Functor that compares for less two types. By default it is `std::less<_relation>`. ]]
+
+[[`unordered_set_of_relation<HashFunctor,EqualKey>`\n
+  `unordered_multiset_of_relation<HashFunctor,EqualKey>`]
+[[*HashFunctor ] converts the `relation` into an integer value. By default it is `boost::hash<_relation>`.\n
+ [*EqualKey ] is a Functor that compare for equality two relations. By default it is `std::equal_to<_relation>`. ]]
+[[`list_of_relation`       ][Not a template.]]
+[[`vector_of_relation`     ][Not a template.]]
+]
 
 [endsect]
 
 
 [section Complete instantiation scheme]
 
-The possible bimap instantiation are enumerated here:
-{Side}KeyType can be directly a type, this is default to
-set_of<{Side}KeyType>, or can be a {SetType}_of<Type>
+To summarize, this is the complete instantiation scheme.
+
+    typedef bimap< LeftKeyType, RightKeyType [, SetTypeOfRelation ] [,Allocator] > bm;
+
+`{Side}KeyType` can be directly a type, this is default to
+`set_of<{Side}KeyType>`, or can be a `{SetType}_of<Type>`
 specification. Additionally this two parameters can be tagged
-to specify others tags instead of the usual member_at::{Side}
+to specify others tags instead of the usual `member_at::{Side}`
 ones.
-The three last parameters are used to specify the set type of
-the relation, an inplace hooked data class and the allocator
-type. As a help to the bimap user, these parameters support
-default types but use a special idiom that allow them to be
-specified without interleaving the usual use_default keyword.
+The last two parameters are used to specify the set type of
+the relation and the allocator type.If you want to specify a custom
+allocator type while relying on the default value of SetTypeOfRelation,
+you can do it by simply writing bimap<LeftKeyType, RightKeyType, Allocator>:
+Boost.Bimap internal machinery is able to detect that the third parameter
+in this case does not refer to the relation type but to an allocator.
+
+The following are the possible ways to instantiate a bimap:
 
 \n
 
     bimap<LeftKeyType,RightKeyType>
 
 * set_of_relation_type: based on the left key type
-* hook_data:            no additional data
 * allocator:            default allocator
 
 \n
 
-    bimap<LeftKeyType,RightKeyType>
+    bimap<LeftKeyType,RightKeyType,Allocator>
 
 * set_of_relation_type: based on the left key type
-* hook_data:            no additional data
 * allocator:            Allocator
 
 \n
@@ -392,7 +592,6 @@ specified without interleaving the usual use_default keyword.
     bimap<LeftKeyType,RightKeyType,SetOfRelationType>
 
 * set_of_relation_type: SetOfRelationType
-* hook_data:            no additional data
 * allocator:            default allocator
 
 \n
@@ -400,230 +599,11 @@ specified without interleaving the usual use_default keyword.
     bimap<LeftKeyType,RightKeyType,SetOfRelationType,Allocator>
 
 * set_of_relation_type: SetOfRelationType
-* hook_data:            no additional data
 * allocator:            Allocator
 
-\n
-
-    bimap<LeftKeyType,RightKeyType,DataToHook>
-
-* set_of_relation_type: based on the left key type
-* hook_data:            DataToHook
-* allocator:            default allocator
-
-\n
-
-    bimap<LeftKeyType,RightKeyType,DataToHook,Allocator>
-
-* set_type_of_relation: based on the left key type
-* hook_data:            DataToHook
-* allocator:            Allocator
-
-\n
-
-    bimap<LeftKeyType,RightKeyType,SetOfRelationType,DataToHook>
-
-* set_of_relation_type: SetOfRelationType
-* hook_data:            DataToHook
-* allocator:            default allocator
-
-\n
-
-    bimap<LeftKeyType,RightKeyType,SetOfRelationType,DataToHook,Allocator>
-
-* set_of_relation_type: SetOfRelationType
-* hook_data:            DataToHook
-* allocator:            Allocator
-
-__UNDER_CONSTRUCTION__
 
 [endsect]
 
-[section Relation with other Boost Libraries]
 
-[section Optional Boost Libraries, that plays well with Boost.Bimap]
-
-[table
-[[Name][Description][author][Purpose]]
-
-[[ __BOOST_SERIALIZATION__ ][
-Serialization for persistence and marshalling]
-[Robert Ramey]
-[Serialization support for bimap containers and iterators]]
-
-[[ __BOOST_ASSIGN__ ][
-Filling containers with constant or generated data has never been easier]
-[Thorsten Ottosen]
-[Help to fill a bimap or views of it]]
-
-[[ __BOOST_HASH__ ][
-A TR1 hash function object that can be extended to hash user defined types]
-[Daniel James]
-[Default hashing function]]
-
-[[ __BOOST_LAMBDA__ ][
-Define small unnamed function objects at the actual call site, and more]
-[from Jaakko Järvi, Gary Powell]
-[Functors for modify, range, lower_bound and upper_bound]]
-
-[[ __BOOST_RANGE__ ][
-A new infrastructure for generic algorithms that builds on top of the new
-iterator concepts]
-[Thorsten Ottosen]
-[Range based algorithms]]
-
-[[ __BOOST_PROPERTY_MAP__ ][
-Concepts defining interfaces which map key objects to value objects]
-[Jeremy Siek]
-[Integration with BGL]]
-]
-
-[endsect]
-
-[section Boost.Serialization]
-
-[table
-[[Name][Description][Author][Purpose]]
-[[ __BOOST_SERIALIZATION__ ][
-Serialization for persistence and marshalling]
-[Robert Ramey]
-[Serialization support for bimap containers and iterators]]
-]
-
-[endsect]
-
-[section Boost.Assign]
-
-[table
-[[Name][Description][Author][Purpose]]
-[[ __BOOST_ASSIGN__ ][
-Filling containers with constant or generated data has never been easier]
-[Thorsten Ottosen]
-[Help to fill a bimap or views of it]]
-]
-
-The purpose of this library is to make it easy to fill containers with data by
-overloading operator,() and operator()(). These two operators make it possible
-to construct lists of values that are then copied into a container.\n
-These lists are particularly useful in learning, testing, and prototyping
-situations, but can also be handy otherwise. The library comes with predefined
-operators for the containers of the standard library, but most functionality will
-work with any standard compliant container. The library also makes it possible
-to extend user defined types so for example a member function can be called for
-a list of values instead of its normal arguments.\n
-
-Boost.Assign can be used with bimap containers.
-For example, `list_of` can be used to initialize a bimap in the following way:
-
-    typedef bimap<int,std::string> bm;
-
-    bm b = list_of< bm::relation > (1,"one") (2,"two") (3,"three");
-
-The views of a bimap are signature compatible with their standard counterparts, so
-we can use other Boost.Assign utilities with them. For example:
-
-    bimap< multiset_of<int>, list_of<double> > b;
-
-    // Since it is left_based the main view is a multiset, so we use insert
-
-    insert( b ) (1,0.1) (2,0.2) (3,0.3);
-
-    // The left map view is a multiset, again we use insert
-
-    insert( b.left ) (4,0.4) (5,0.5) (6,0.6) (7,0.7);
-
-    // The right map view is a list so we use push_back here
-    // Note the order of the elements in the list!
-
-    push_back( b.right ) (0.8,8) (0.9,9);
-
-[endsect]
-
-[section Boost.Hash]
-
-[table
-[[Name][Description][Author][Purpose]]
-[[ __BOOST_HASH__ ][
-A TR1 hash function object that can be extended to hash user defined types]
-[Daniel James]
-[Default hashing function]]
-]
-
-[endsect]
-
-[section Boost.Lambda]
-
-[table
-[[Name][Description][Author][Purpose]]
-[[ __BOOST_LAMBDA__ ][
-Define small unnamed function objects at the actual call site, and more]
-[from Jaakko Järvi, Gary Powell]
-[Functors for modify, range, lower_bound and upper_bound]]
-]
-
-
-[endsect]
-
-[section Boost.Range]
-
-[table
-[[Name][Description][Author][Purpose]]
-[[ __BOOST_RANGE__ ][
-A new infrastructure for generic algorithms that builds on top of the new
-iterator concepts]
-[Thorsten Ottosen]
-[Range based algorithms]]
-]
-
-[endsect]
-
-[section Boost.Property_map]
-
-[table
-[[Name][Description][Author][Purpose]]
-[[ __BOOST_PROPERTY_MAP__ ][
-Concepts defining interfaces which map key objects to value objects]
-[Jeremy Siek]
-[Integration with BGL]]
-]
-
-The Boost Property Map Library consists mainly of interface specifications in the form of
-concepts (similar to the iterator concepts in the STL [2]). These interface specifications
-are intended for use by implementors of generic libraries in communicating requirements on
-template parameters to their users. In particular, the Boost Property Map concepts define a
-general purpose interface for mapping key objects to corresponding value objects, thereby
-hiding the details of how the mapping is implemented from algorithms.
-
-The need for the property map interface came from the Boost Graph Library (BGL), which
-contains many examples of algorithms that use the property map concepts to specify their
-interface. For an example, note the ColorMap template parameter of the  breadth_first_search.
-In addition, the BGL contains many examples of concrete types that implement the property map
-interface. The  adjacency_list class implements property maps for accessing objects
-(properties) that are attached to vertices and edges of the graph.
-
-Two of Boost.Bimap map views, the set and unordered_set counterpat are read/write property
-maps. In order to use it you have to include one of the headers:
-
-    #include <boost/bimap/property_map/set_support.hpp>
-    #include <boost/bimap/property_map/unordered_set_support.hpp>
-
-[endsect]
-
-[endsect]
-
-[section Compiler Specifics]
-
-[table
-[[Compiler  ][State                               ]]
-[[GCC 3.4   ][Not yet tested (Will be supported)  ]]
-[[GCC 4.0   ][Supported                           ]]
-[[VS 7.1    ][Supported                           ]]
-[[VS 8      ][Supported                           ]]
-[[CW 8.3    ][On going effort to support it       ]]
-[[Intel C++ ][Not yet tested (Will be supported)  ]]
-[[Comeau C++][Not yet tested (Will be supported)  ]]
-]
-
-[endsect]
 
 [endsect]

@@ -21,7 +21,7 @@ Joaquin Lopez Muñoz posted his first
 have been using it.
 Then, he [@http://aspn.activestate.com/ASPN/Mail/Message/boost/1404881 asked the list for interest]
 about his library in 2003. Luckily there was a lot of interest and Joaquin started to boostify
-the code. At some point all the developpers seemed to agree that rather than a bidirectional map,
+the code. At some point all the developers seemed to agree that rather than a bidirectional map,
 it would be better to work on a N-indexed set, that contains Joaquins library as a particular case.
 ]]
 
@@ -42,14 +42,14 @@ of this container.
 
 [[2005 - multi_index_container]
 [
-Once in Boost, the library switch to the now familiar name: Boost.MultiIndex. In 2005 becomes a
+Once in Boost, the library switch to the now familiar name: Boost.MultiIndex. Late in 2004, it becomes a
 formal member of boost. Joaquin continues to enchance the library and add new features like
 composite keys and random access indexes.
 ]]
 
 [[2006 - Boost.Bimap]
 [
-In 2006 during the formal review of Boost.Property_tree the needed for a bidirectional map
+In 2006 during the formal review of Boost.Property_tree the need for a bidirectional map
 container built on top of Boost.MultiIndex raised again. Boost enters the Google SoC 2006 as
 a mentor organization at the same time. Joaquin proposed himself as a mentor. He proposed
 to build not only a bidirectional map, but a full miriad of multi indexed specialized
@@ -63,8 +63,8 @@ Joaquin SoC project.
 
 [section MultiIndex and Bimap]
 
-This is the conversation thread that begin in Boost.PropertyTree formal review process.
-The review was very interesting and very deep topics where addressed. It is quite
+This is the conversation thread that began during Boost.PropertyTree formal review process.
+The review was very interesting and very deep topics were addressed. It is quite
 interesting and it is now part of this library history. Enjoy!
 \n
 \n
