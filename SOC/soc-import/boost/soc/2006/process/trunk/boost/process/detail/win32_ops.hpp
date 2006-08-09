@@ -131,6 +131,7 @@ win32_start(const Command_Line& cl,
         chin = file_handle(h);
     } else if (infoin.m_type == stream_info::usehandle) {
         chin = infoin.m_handle;
+        chin.win32_set_inheritable(true);
     } else if (infoin.m_type == stream_info::usepipe) {
         infoin.m_pipe->rend().win32_set_inheritable(true);
         chin = infoin.m_pipe->rend();
@@ -153,6 +154,7 @@ win32_start(const Command_Line& cl,
         chout = file_handle(h);
     } else if (infoout.m_type == stream_info::usehandle) {
         chout = infoout.m_handle;
+        chout.win32_set_inheritable(true);
     } else if (infoout.m_type == stream_info::usepipe) {
         infoout.m_pipe->wend().win32_set_inheritable(true);
         chout = infoout.m_pipe->wend();
@@ -179,6 +181,7 @@ win32_start(const Command_Line& cl,
         cherr = file_handle(h);
     } else if (infoerr.m_type == stream_info::usehandle) {
         cherr = infoerr.m_handle;
+        cherr.win32_set_inheritable(true);
     } else if (infoerr.m_type == stream_info::usepipe) {
         infoerr.m_pipe->wend().win32_set_inheritable(true);
         cherr = infoerr.m_pipe->wend();

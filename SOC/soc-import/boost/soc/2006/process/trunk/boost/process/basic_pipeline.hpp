@@ -32,6 +32,7 @@
 #include <boost/process/children.hpp>
 #include <boost/process/detail/factories.hpp>
 #include <boost/process/detail/launcher_base.hpp>
+#include <boost/scoped_array.hpp>
 
 #include <vector>
 
@@ -130,10 +131,11 @@ basic_pipeline< Command_Line >::start(void)
         basic_pipeline< Command_Line >::get_stderr_behavior();
     detail::file_handle fhinvalid;
 
-#if defined(BOOST_PROCESS_POSIX_API)
     // The pipes used to connect the pipeline's internal process.
-    detail::pipe pipes[m_entries.size() - 1];
+    boost::scoped_array< detail::pipe > pipes
+        (new detail::pipe[m_entries.size() - 1]);
 
+#if defined(BOOST_PROCESS_POSIX_API)
     // Process context configuration.
     detail::posix_setup s;
     s.m_work_directory = get_work_directory();
@@ -236,7 +238,93 @@ basic_pipeline< Command_Line >::start(void)
                                                      fhstdout, fhstderr));
     }
 #elif defined(BOOST_PROCESS_WIN32_API)
-#   error "Unimplemented."
+    // Process context configuration.
+    detail::win32_setup s;
+    s.m_work_directory = get_work_directory();
+    STARTUPINFO si;
+    s.m_startupinfo = &si;
+
+    // Configure and spawn the pipeline's first process.
+    {
+        typename std::vector< Command_Line >::size_type i = 0;
+
+        detail::file_handle fhstdin;
+        detail::stream_info sii = detail::win32_behavior_to_info
+            (get_stdin_behavior(), false, fhstdin);
+
+        detail::stream_info sio;
+        sio.m_type = detail::stream_info::usehandle;
+        sio.m_handle = pipes[i].wend().disown();
+
+        detail::stream_info sie = detail::win32_behavior_to_info
+            (m_entries[i].m_merge_out_err ? close_stream : silent_stream,
+             true, fhinvalid);
+        BOOST_ASSERT(!fhinvalid.is_valid());
+
+        ::ZeroMemory(&si, sizeof(si));
+        si.cb = sizeof(si);
+        PROCESS_INFORMATION pi = detail::win32_start
+            (m_entries[i].m_cl, get_environment(), sii, sio, sie,
+             m_entries[i].m_merge_out_err, s);
+
+        cs.push_back(detail::factories::create_child(pi.hProcess, fhstdin,
+                                                     fhinvalid, fhinvalid));
+    }
+
+    // Configure and spawn the pipeline's internal processes.
+    for (typename std::vector< Command_Line >::size_type i = 1;
+         i < m_entries.size() - 1; i++) {
+
+        detail::stream_info sii;
+        sii.m_type = detail::stream_info::usehandle;
+        sii.m_handle = pipes[i - 1].rend().disown();
+
+        detail::stream_info sio;
+        sio.m_type = detail::stream_info::usehandle;
+        sio.m_handle = pipes[i].wend().disown();
+
+        detail::stream_info sie = detail::win32_behavior_to_info
+            (m_entries[i].m_merge_out_err ? close_stream : silent_stream,
+             true, fhinvalid);
+        BOOST_ASSERT(!fhinvalid.is_valid());
+
+        ::ZeroMemory(&si, sizeof(si));
+        si.cb = sizeof(si);
+        PROCESS_INFORMATION pi = detail::win32_start
+            (m_entries[i].m_cl, get_environment(), sii, sio, sie,
+             m_entries[i].m_merge_out_err, s);
+
+        cs.push_back(detail::factories::create_child(pi.hProcess, fhinvalid,
+                                                     fhinvalid, fhinvalid));
+    }
+
+    // Configure and spawn the pipeline's last process.
+    {
+        typename std::vector< Command_Line >::size_type i =
+            m_entries.size() - 1;
+
+        detail::stream_info sii;
+        sii.m_type = detail::stream_info::usehandle;
+        sii.m_handle = pipes[i - 1].rend().disown();
+
+        detail::file_handle fhstdout, fhstderr;
+
+        detail::stream_info sio = detail::win32_behavior_to_info
+            (get_stdout_behavior(), true, fhstdout);
+
+        detail::stream_info sie = detail::win32_behavior_to_info
+            ((m_entries[i].m_merge_out_err || get_merge_out_err()) ?
+             close_stream : get_stderr_behavior(), true, fhstderr);
+
+        ::ZeroMemory(&si, sizeof(si));
+        si.cb = sizeof(si);
+        PROCESS_INFORMATION pi = detail::win32_start
+            (m_entries[i].m_cl, get_environment(), sii, sio, sie,
+             m_entries[i].m_merge_out_err || get_merge_out_err(), s);
+
+        cs.push_back(detail::factories::create_child(pi.hProcess, fhinvalid,
+                                                     fhstdout, fhstderr));
+    }
 #endif
 
     return cs;
