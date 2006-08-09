@@ -59,6 +59,7 @@ create_child(child::handle_type h,
 
 // ------------------------------------------------------------------------
 
+#if defined(BOOST_PROCESS_POSIX_API)
 //!
 //! \brief Creates a new POSIX Child instance.
 //!
@@ -73,6 +74,7 @@ create_posix_child(posix_child::handle_type h,
 {
     return posix_child(h, infoin, infoout);
 }
+#endif
 
 // ------------------------------------------------------------------------
 
