@@ -48,7 +48,7 @@ namespace boost {
 namespace process {
 
 namespace detail {
-class factories;
+struct factories;
 }
 
 // ------------------------------------------------------------------------
