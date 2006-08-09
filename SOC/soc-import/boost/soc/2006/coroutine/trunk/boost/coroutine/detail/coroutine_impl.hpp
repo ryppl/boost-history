@@ -12,9 +12,9 @@
 #include <boost/intrusive_ptr.hpp>
 #include <boost/optional.hpp>
 #include <boost/mpl/eval_if.hpp>
+#include <boost/detail/atomic_count.hpp>
 #include <boost/coroutine/exception.hpp>
 #include <boost/coroutine/detail/argument_unpacker.hpp>
-#include <boost/coroutine/detail/atomic_count.hpp>
 #include <boost/coroutine/detail/swap_context.hpp>
 #include <boost/coroutine/detail/coroutine_accessor.hpp>
 
@@ -69,6 +69,17 @@ namespace boost { namespace coroutines { namespace detail {
       return m_counter;
     }
       
+    void acquire() const {
+      ++m_counter;
+    }
+      
+    void release() const {
+      BOOST_ASSERT(m_counter);
+      if(--m_counter == 0) {
+	m_deleter(this);
+      }
+    }
+
     /**
      * A signal may occur only when a context is 
      * not running (is delivered sinchrononously).
@@ -84,6 +95,11 @@ namespace boost { namespace coroutines { namespace detail {
       return ready();
     }
 
+    /**
+     * Wake up a waiting context.
+     */
+    void wake_up() {
+    }
     /*
      * Returns true if the context is runnable.
      */
@@ -184,17 +200,6 @@ namespace boost { namespace coroutines { namespace detail {
 	if(!exited())
 	  exit();
       } catch(...) {}
-    }
-
-    void acquire() const {
-      ++m_counter;
-    }
-      
-    void release() const {
-      BOOST_ASSERT(m_counter);
-      if(--m_counter == 0) {
-	m_deleter(this);
-      }
     }
 
   protected:
@@ -298,6 +303,7 @@ namespace boost { namespace coroutines { namespace detail {
     };
     
     result_slot_type& result() {
+      BOOST_ASSERT(m_result);
       return *this->m_result;
     } 
 
@@ -358,7 +364,8 @@ namespace boost { namespace coroutines { namespace detail {
     /**
      * Implementation for operator()
      * @note: This is tricky, cancel_count is used to prevent 'this'
-     * to increase the reference count of itself.     
+     * to increase the reference count of itself. 
+     * This is used only for the first call.    
      */
     template<typename ResultType>
     typename boost::enable_if<boost::is_void<ResultType> >::type

@@ -14,99 +14,111 @@
 #include <cstddef>
 #include <cstdlib>
 #include <iostream>
+#include <boost/type_traits.hpp>
 /**
  * Stack allocation routines and trampolines for setcontext
  */
 namespace boost { namespace coroutines { namespace detail { namespace posix {
-      /**
-       * Stack allocator and deleter functions.
-       * Better implementations are possible using
-       * mmap (might be required on some systems) and/or
-       * using a pooling allocator.
-       * NOTE: the SuSv3 documentation explictly
-       */
-      inline
-	void* alloc_stack(std::size_t size) {
-	return std::malloc(size);
-      }
 
-      inline
-	void free_stack(void* stack, std::size_t size) {
-	delete [] (char*)stack;
-      }
+  
+  //this should be a fine default.
+  static const std::size_t stack_alignment = sizeof(void*) > 16? sizeof(void*): 16;
 
-      /**
-       * The splitter is needed for 64 bit systems. 
-       * @note The current implementation does NOT use
-       * (for debug reasons).
-       * Thus it is not 64 bit clean.
-       * Use it for 64 bits systems.
-       */
-      template<typename T>
-      union splitter {
-	int int_[2];
-	T* ptr;
-	splitter(int first, int second) {
-	  int_[0] = first;
-	  int_[1] = second;
-	}
+  struct stack_aligner {
+    boost::type_with_alignment<stack_alignment>::type dummy;
+  };
 
-	int first() {
-	  return int_[0];
-	}
+  /**
+   * Stack allocator and deleter functions.
+   * Better implementations are possible using
+   * mmap (might be required on some systems) and/or
+   * using a pooling allocator.
+   * NOTE: the SuSv3 documentation explictly allows
+   * the use of malloc to allocate stacks for makectx.
+   * We use free for guaranteed alignment.
+   */
+  inline
+  void* alloc_stack(std::size_t size) {
+    return new stack_aligner[size/sizeof(stack_aligner)];
+  }
 
-	int second() {
-	  return int_[1];
-	}
+  inline
+  void free_stack(void* stack, std::size_t size) {
+    delete [] static_cast<stack_aligner*>(stack);
+  }
 
-	splitter(T* ptr) :ptr(ptr) {}
+  /**
+   * The splitter is needed for 64 bit systems. 
+   * @note The current implementation does NOT use
+   * (for debug reasons).
+   * Thus it is not 64 bit clean.
+   * Use it for 64 bits systems.
+   */
+  template<typename T>
+  union splitter {
+    int int_[2];
+    T* ptr;
+    splitter(int first, int second) {
+      int_[0] = first;
+      int_[1] = second;
+    }
 
-	void operator()() {
-	  (*ptr)();
-	}
-      };
+    int first() {
+      return int_[0];
+    }
 
-      template<typename T>
-      inline
-      void
-      trampoline_split(int first, int second) {
-	splitter<T> split(first, second);
-	split();
-      }
+    int second() {
+      return int_[1];
+    }
 
-      template<typename T>
-      inline
-      void
-      trampoline(T * fun) {
-	(*fun)();
-      }
+    splitter(T* ptr) :ptr(ptr) {}
+
+    void operator()() {
+      (*ptr)();
+    }
+  };
+
+  template<typename T>
+  inline
+  void
+  trampoline_split(int first, int second) {
+    splitter<T> split(first, second);
+    split();
+  }
+
+  template<typename T>
+  inline
+  void
+  trampoline(T * fun) {
+    (*fun)();
+  }
 }
 } } }
 
 #if defined(_POSIX_MAPPED_FILES) && _POSIX_MAPPED_FILES > 0
 #include <sys/mman.h>
 namespace boost { namespace coroutines { namespace detail { namespace posix {
-      inline 
-      void * 
-	  alloc_stack_mmap(std::size_t size) {
-	void * stack = ::mmap(NULL,
-	 		size,
-			PROT_EXEC|PROT_READ|PROT_WRITE,
-			MAP_PRIVATE|MAP_ANONYMOUS,
-			-1,
-			0
-			);
-	if(stack == MAP_FAILED) {
-	  std::cerr <<strerror(errno)<<"\n";
-	  abort();
-	}
-	return stack;
-      }
+  inline 
+  void * 
+  alloc_stack_mmap(std::size_t size) {
+    void * stack = ::mmap(NULL,
+			  size,
+			  PROT_EXEC|PROT_READ|PROT_WRITE,
+			  MAP_PRIVATE|MAP_ANONYMOUS,
+			  -1,
+			  0
+			  );
+    if(stack == MAP_FAILED) {
+      std::cerr <<strerror(errno)<<"\n";
+      abort();
+    }
+    return stack;
+  }
 
-      inline
-	void free_stack_mmap(void* stack, std::size_t size) {
-	::munmap(stack, size);
-      }
+  inline
+  void free_stack_mmap(void* stack, std::size_t size) {
+    ::munmap(stack, size);
+  }
 } } } }
 #endif
 #else

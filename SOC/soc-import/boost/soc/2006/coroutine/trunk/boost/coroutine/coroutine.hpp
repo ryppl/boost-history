@@ -198,8 +198,13 @@ namespace boost { namespace coroutines {
       m_pimpl->release();
     }
 
-    impl_type& get_impl() {
-      return *m_pimpl;
+    std::size_t
+    count() const {
+      return m_pimpl->count();
+    }
+
+    impl_ptr get_impl() {
+      return m_pimpl;
     }
   };
 } }

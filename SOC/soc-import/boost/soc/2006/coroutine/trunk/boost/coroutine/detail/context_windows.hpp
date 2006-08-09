@@ -13,7 +13,7 @@
 namespace boost {namespace coroutines {namespace detail{
   namespace windows {
 
-    typedef	LPVOID fiber_ptr;
+    typedef LPVOID fiber_ptr;
 
     /*
      * This number (0x1E00) has been sighted in the wild (at least on windows XP systems)
@@ -100,7 +100,7 @@ namespace boost {namespace coroutines {namespace detail{
     inline
     void
     trampoline() {
-      T* fun = reinterpret_cast<T*>(GetFiberData());
+      T* fun = static_cast<T*>(GetFiberData());
       BOOST_ASSERT(fun);
       (*fun)();
     }
@@ -122,8 +122,8 @@ namespace boost {namespace coroutines {namespace detail{
       fibers_context_impl(Functor& cb, std::ptrdiff_t stack_size) :
 	fibers_context_impl_base
       (CreateFiber(stack_size== -1? 0 : stack_size,
-		   reinterpret_cast<LPFIBER_START_ROUTINE>(&trampoline<Functor>),
-		   reinterpret_cast<LPVOID>(&cb)))
+		   static_cast<LPFIBER_START_ROUTINE>(&trampoline<Functor>),
+		   static_cast<LPVOID>(&cb)))
       {
 	BOOST_ASSERT(m_ctx);
       }

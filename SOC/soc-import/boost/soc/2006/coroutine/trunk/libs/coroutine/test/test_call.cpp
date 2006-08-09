@@ -30,32 +30,54 @@ private:
   boost::function<void(int)> m_callback;
 };
 
+bool run_flag = false;
 
-void coro_body(a_pipe& my_pipe, coroutine_type::self& self)  {
-  coroutines::future<int> future;
-  //= coroutines::call(boost::bind(&a_pipe::listen, my_pipe, _1), self);
-  my_pipe.listen(coroutines::make_callback(future, self));
-  coroutines::wait(self, future);
-  BOOST_CHECK(future);
-  BOOST_CHECK(*future == 1);
-  future = boost::none;
-  coroutines::wait(self, future);
-  BOOST_CHECK(*future == 2);
-  future = boost::none;
-  coroutines::wait(self, future);
-  BOOST_CHECK(*future == 3);
-  future = boost::none;
-  return;  
-}
+struct coro_body {
+
+  coro_body(bool& flag) :
+    m_flag(flag) {
+    m_flag = true;
+  }
+
+  ~coro_body() {
+    m_flag = false;
+  }
+  bool &m_flag;
+
+  typedef void result_type;
+
+  void operator() (a_pipe& my_pipe, coroutine_type::self& self)  {
+    coroutines::future<int> future;
+    //= coroutines::call(boost::bind(&a_pipe::listen, my_pipe, _1), self);
+    my_pipe.listen(coroutines::make_callback(future, self));
+    coroutines::wait(self, future);
+    BOOST_CHECK(future);
+    BOOST_CHECK(*future == 1);
+    future = boost::none;
+    coroutines::wait(self, future);
+    BOOST_CHECK(*future == 2);
+    future = boost::none;
+    coroutines::wait(self, future);
+    BOOST_CHECK(*future == 3);
+    future = boost::none;
+    return;  
+  }
+};
 
 void test_call() {
-  a_pipe my_pipe;
-  coroutine_type coro(boost::bind(coro_body, boost::ref(my_pipe), _1));
-  coro();
-  my_pipe.send(1);
-  my_pipe.send(2);
-  my_pipe.send(3);
-		      }
+  run_flag = true;
+  {
+    a_pipe my_pipe;
+    coroutine_type coro(boost::bind(coro_body(run_flag), boost::ref(my_pipe), _1));
+    coro();
+    my_pipe.send(1);
+    my_pipe.send(2);
+    my_pipe.send(3);
+  }
+
+  //check for leaks
+  BOOST_CHECK(run_flag == false);
+}
 
 boost::unit_test::test_suite* init_unit_test_suite( int argc, char* argv[] )
 {

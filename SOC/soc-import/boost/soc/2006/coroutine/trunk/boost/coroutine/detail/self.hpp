@@ -7,10 +7,11 @@
 #include <boost/coroutine/detail/fix_result.hpp>
 #include <boost/coroutine/detail/coroutine_accessor.hpp>
 #include <boost/coroutine/detail/signal.hpp>
+#include <boost/detail/workaround.hpp>
 
 namespace boost { namespace coroutines { namespace detail {
 
-#ifdef _MSC_VER
+#if BOOST_WORKAROUND(BOOST_MSVC, BOOST_TESTED_AT(1400))
 #define BOOST_COROUTINE_VCPP80_WORKAROUND 
 #else
 //for now, define this unconditionally for testing.
@@ -22,13 +23,12 @@ namespace boost { namespace coroutines { namespace detail {
   public:
     typedef Coroutine coroutine_type;
     typedef coroutine_self<coroutine_type> type;
-    friend class detail::wait_gateway;
     friend class detail::coroutine_accessor;
 
     typedef BOOST_DEDUCED_TYPENAME coroutine_type
     ::impl_type impl_type;
 
-    //Note, no reference counting here.
+    // Note, no reference counting here.
     typedef impl_type * impl_ptr;
 
     typedef BOOST_DEDUCED_TYPENAME coroutine_type
@@ -169,26 +169,6 @@ namespace boost { namespace coroutines { namespace detail {
 #undef  BOOST_COROUTINE_param_with_default
 
   private:
-    // This can only be called from the callback as it
-    // does not handle variable arity coroutines.
-    void wake_up() {
-      BOOST_ASSERT(m_pimpl);
-
-      BOOST_DEDUCED_TYPENAME 
-	coroutine_type::arg_slot_type 
-	dummy_args;
-      BOOST_DEDUCED_TYPENAME
-	coroutine_type::result_slot_type 
-	dummy_result;
-      m_pimpl->bind_args(&dummy_args);
-      m_pimpl->bind_result(&dummy_result);
-      m_pimpl->invoke();
-    }
-
-    void wait(int n) {
-      m_pimpl->wait(n);
-    }
-
     coroutine_self(impl_type * pimpl, detail::init_from_impl_tag) :
       m_pimpl(pimpl) {}
 
@@ -208,28 +188,18 @@ namespace boost { namespace coroutines { namespace detail {
 			   ::arg_slot_type args) {
       BOOST_ASSERT(m_pimpl);
 
-      coroutine_accessor::get_impl(target).bind_args(&args);
-      coroutine_accessor::get_impl(target).bind_result(&m_pimpl->result());    
-      this->m_pimpl->yield_to(coroutine_accessor::get_impl(target));
+      coroutine_accessor::get_impl(target)->bind_args(&args);
+      coroutine_accessor::get_impl(target)->bind_result(&m_pimpl->result());    
+      this->m_pimpl->yield_to(*coroutine_accessor::get_impl(target));
       return detail::fix_result<
 	BOOST_DEDUCED_TYPENAME
 	coroutine_type::arg_slot_traits>(m_pimpl->args());
     }
 
+    impl_ptr get_impl() {
+      return m_pimpl;
+    }
     impl_ptr m_pimpl;
-
-    void acquire() {
-      m_pimpl->acquire();
-    }
-
-    void release() {
-      m_pimpl->release();
-    }
-
-    bool signal() {
-      return m_pimpl->signal();
-    }
-
   };
 } } }
 

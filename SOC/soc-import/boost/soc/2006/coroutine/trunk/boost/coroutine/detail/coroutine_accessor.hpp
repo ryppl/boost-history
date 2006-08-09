@@ -54,9 +54,23 @@ namespace boost { namespace coroutines { namespace detail {
 
     template<typename Coroutine>
     static
-    typename Coroutine::impl_type&
+    typename Coroutine::impl_ptr
     get_impl(Coroutine& x) {
       return x.get_impl();
+    }
+
+    template<typename Coroutine>
+    static
+    typename Coroutine::impl_type *
+    pilfer_impl(Coroutine& x) {
+      return x.pilfer_impl();
+    }
+
+    template<typename Coroutine>
+    static
+    std::size_t
+    count(const Coroutine& x) {
+      return x.count();
     }
   };
 } } }

@@ -36,8 +36,8 @@ namespace boost { namespace coroutines { namespace detail {
   template<typename Coroutine, typename Tuple>
   void wait_impl(Coroutine& coro, Tuple wt) {
     if(marker<boost::tuples::length<Tuple>::value>::mark(wt, true) == 0)
-      wait_gateway::wait(coro, 1);
-    int res = marker<boost::tuples::length<Tuple>::value>::mark(wt, true);
+      coroutine_accessor::get_impl(coro)->wait(1);
+    int res = marker<boost::tuples::length<Tuple>::value>::mark(wt, false);
     BOOST_ASSERT(res > 0);
     (void)res;
   }
@@ -48,8 +48,8 @@ namespace boost { namespace coroutines { namespace detail {
   template<typename Coroutine, typename Tuple>
   void wait_all_impl(Coroutine& coro, Tuple wt) {
     int res = marker<boost::tuples::length<Tuple>::value>::mark(wt, true);
-    wait_gateway::wait(coro, boost::tuples::length<Tuple>::value - res);
-    res = marker<boost::tuples::length<Tuple>::value>::mark(wt, true);
+    coroutine_accessor::get_impl(coro)->wait(boost::tuples::length<Tuple>::value - res);
+    res = marker<boost::tuples::length<Tuple>::value>::mark(wt, false);
     BOOST_ASSERT(res == boost::tuples::length<Tuple>::value);
   }
 

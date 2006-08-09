@@ -3,22 +3,10 @@
 namespace boost { namespace coroutines { namespace detail {
   /*
    * Private interface for coroutine signaling/waiting.
-   * These class is friend of coroutine and future_impl and
-   * its stati members are invoked by asynchronous callback functions.
+   * These class is friend of future_impl and
+   * its static members are invoked by asynchronous callback functions.
    */
   struct wait_gateway {
-    template<typename Coroutine>
-    static
-    bool signal(Coroutine& c) {
-      return c.signal();
-    }
-
-    template<typename Coroutine>
-    static
-    void wait(Coroutine& c, int n) {
-      c.wait(n);
-    }
-
     template<typename Future>
     static 
     bool waited(const Future& f) {
@@ -35,12 +23,6 @@ namespace boost { namespace coroutines { namespace detail {
     static
     void assign(Future& future, const Tuple& tuple) {
       future.assign(tuple);
-    }
-
-    template<typename Coroutine>
-    static
-    void wake_up(Coroutine& coro) {
-      coro.wake_up();
     }
   };
 

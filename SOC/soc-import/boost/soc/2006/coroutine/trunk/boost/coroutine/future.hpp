@@ -462,10 +462,29 @@ namespace boost { namespace coroutines {
     typedef detail::callback<Future, Coroutine> type;
   };
 
-  template<typename Future, typename Coroutine>
-  BOOST_DEDUCED_TYPENAME make_callback_result<Future, Coroutine>::type
-  make_callback(Future& future, Coroutine& coroutine) {
-    return BOOST_DEDUCED_TYPENAME make_callback_result<Future, Coroutine>::type(future, coroutine);
+  /*
+   * Returns a callback object that when invoked
+   * will signal the associated coroutine::self object.
+   * It will extend the lifetime of the object until
+   * it is signaled. More than one callback object
+   * can be pending at any time. The coroutine self
+   * will last at least untill the last pending callback will 
+   * be fired.
+   */
+  template<typename Future, typename CoroutineSelf>
+  BOOST_DEDUCED_TYPENAME make_callback_result<Future, CoroutineSelf>::type
+  make_callback(Future& future, CoroutineSelf& coroutine_self) {
+    return BOOST_DEDUCED_TYPENAME make_callback_result<Future, CoroutineSelf>::type(future, coroutine_self);
+  }
+
+  /*
+   * A coroutine cannot directly posted in a demuxer, as it is
+   * not movable. Use this function to workaround the lack
+   * of movability
+   */
+  template<typename Demuxer>
+  void post(move_from<coroutine<void()> > coro, Demuxer& demux) {
+    demux.post(detail::asio_adapter(coro));    
   }
 
 } } 
