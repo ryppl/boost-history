@@ -41,29 +41,13 @@ named `handle_type`.
 
 [/ ---------------------------------------------------------------------- ]
 
-[section Process]
-
-Generally speaking, a process is the execution context of a program.  The
-operating system stores one or more objects in its internal tables to
-represent this context.  Therefore, it has to be clear that it is incorrect
-to call a process an application that is not yet running or that has
-already quit.
-
-The `Process` concept represents a process that exists in some way or
-another in the system tables; its internal status is irrelevant (it could
-be running, sleeping or zombie, for example).  A process represented by
-this concept does /not/ necessarily have to be a child of the application
-using Boost.Process, which means that the application may not have control
-over it.
-
-This concept is implemented by the [classref boost::process::basic_process]
-template and the [classref boost::process::process] class.
-
-[endsect]
-
-[/ ---------------------------------------------------------------------- ]
-
 [section Child process]
+
+A process is the execution context of a program, represented internally
+by the operating system through multiple objects in its internal tables.
+Any reference to a process always mentions a running application in the
+system; it has to be clear that it cannot refer to an on-disk program
+that has not yet started execution.
 
 Processes are internally organized by the operating system as a tree.  Each
 process (except for the one at the tree's root) has a parent and can have
@@ -79,16 +63,20 @@ There are two possible statuses for a child process:
   collect its status.  This may happen due to unexpected and expected
   termination conditions.
 
-The `Child` concept extends `Process`, specializing it to represent a child
-process of the currently running application (that is, the program using
-Boost.Process services).  The application can directly control the child
-process, send and retrieve data from it and collect its finalization
-status.
+The `Child` concept represents a child process of the currently running
+application (that is, the program using Boost.Process services).  The
+program can directly control the child process, send and retrieve data from
+it and collect its finalization status.
 
-This concept is implemented by the [classref boost::process::basic_child]
-and [classref boost::process::basic_posix_child] templates and the
-[classref boost::process::child] and [classref boost::process::posix_child]
-classes.
+This concept is implemented by the [classref boost::process::child] and
+[classref boost::process::posix_child] classes.
+
+The library also provides specialized process groups to maintain the status
+of complex operations such as the spawning of a process pipeline.  These
+groups are aggregations of the previous `Child` implementations.
+
+Process groups are implemented by the [classref boost::process::children]
+class.
 
 [endsect]
 
@@ -136,6 +124,14 @@ multiple command lines painlessly.
 
 This concept is implemented by the [classref boost::process::launcher] and
 [classref boost::process::posix_launcher] classes.
+
+The library also provides specialized launcher to spawn process pipelines.
+A pipeline is a unidimensional chain of interconnected processes in which
+the output of one of them is connected to the input of the following.
+
+Pipeline launchers are implemented by the [classref
+boost::process::basic_pipeline] template and the [classref
+boost::process::pipeline] class.
 
 [endsect]
 

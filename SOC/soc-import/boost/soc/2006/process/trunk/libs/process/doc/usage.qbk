@@ -14,8 +14,9 @@
 [section Usage]
 
 Boost.Process consists of multiple [link reference classes] that cooperate
-to allow the developer spawning and managing child processes.  Summarizing,
-the following steps are needed to start a new process:
+together to allow the developer to spawn and manage child processes.
+Summarizing, the general use case to start a new process boils down to the
+following steps:
 
 # Configure a [link boost_process.concepts.command_line command line].
 # Configure the child process' execution context through a [link
@@ -27,17 +28,36 @@ the following steps are needed to start a new process:
 # Receive and interpret the child's [link
   boost_process.concepts.exit_status exit status].
 
-The following sections give more details on all the above steps.
+Similarly, in order to start a pipelined set of processes, one has to
+follow the steps outlined below:
+
+# Configure several [link boost_process.concepts.command_line command
+  lines], one for each process in the pipeline.
+# Configure the pipeline's execution context through an specialized [link
+  boost_process.concepts.launcher launcher], generally [classref
+  boost::process::pipeline].
+# Add the command lines created above to the pipeline.
+# Start the process group through the launcher.
+# Interact with the returned [link boost_process.concepts.child_process
+  process group] that represents the set of processes that form the
+  pipeline.  If configured appropriately, one can feed in data to the first
+  process in the chain and retrieve data from the last one.
+# Wait for the process group's finalization.
+# Receive and interpret the finalization [link
+  boost_process.concepts.exit_status exit status].
+
+The following sections give more details on all the above instructions.
 
 [/ ---------------------------------------------------------------------- ]
 
-[section Creating a command line]
+[section Command line configuration]
 
 The [classref boost::process::command_line] class provides a reference
 implementation for the [link boost_process.concepts.command_line
-Command_Line] concept.  This class represents a command line and is used
-later by the [link boost_process.concepts.launcher launcher] to know which
-process has to be started and which parameters shall it receive.
+Command_Line] concept.  This class represents a generic command line and is
+used later on by one of the [link boost_process.concepts.launcher
+launchers] to know which process has to be started and which parameters
+shall it receive.
 
 A command line can be created either by the individual words that form the
 final command line or as a single string that is passed verbatim to the
@@ -65,8 +85,14 @@ append positional parameters to the command line; this function is
 templatized to allow dealing with any data type provided it can be inserted
 in an output stream.
 
-For more details check out the [link
-boost_process.reference reference chapter] and the [link XXX command line
+Similarly, a shell-based command line can be constructed using an auxiliary
+function:
+
+    boost::process::command_line cl = boost::process::command_line::shell
+        ("the-program first-parameter ... nth-parameter");
+
+For more details check out the [link boost_process.reference reference
+chapter] and the [link boost_process.examples.command_lines command line
 examples].
 
 [endsect]
@@ -77,7 +103,15 @@ examples].
 
 Each process has three standard communication channels that allow easy
 communication between a parent process and a child process or among
-different child processes:
+different child processes.  Thanks to these ['standard] channels, a program
+can easily implement a transformation of the input data without knowing
+where it is located and print it in an output channel whose real location
+is not known.  Such programs are known as filters and are very common in
+Unix-like operating systems.  No matter what, there are many programs that
+do not implement a data conversion, yet they use the standard channels to
+communicate with the user and, the case that matters now, other processes.
+
+The three standard communication channels are reviewed below:
 
 * The standard input channel (__stdin__ for short): This is used by the
   process to read input data, typically fed in by the user or another
@@ -102,60 +136,49 @@ boost::process::posix_launcher] class built on top of the former.
 
 Each communication channel can be configured according to different
 predefined behaviors as provided by [enumref
-boost::process::stream_behavior].  The possible types are:
-
-* `close_stream`: The child's stream is closed during execution so the
-  child has no access at all to the stream.
-
-* `inherit_stream`: The parent's stream is inherited and therefore shared
-  by the parent and the child processes.
-
-* `redirect_stream`: The child's stream is connected to the parent to allow
-  communication between the two processes using C++ streams.  When this
-  flag is set, the [link boost_process.concepts.child child entity]
-  representing a new process will allow access to the child's redirected
-  stream.
-
-* `silent_stream`: The child's stream is connected to a special system
-  device that discards all data for output streams and provides infinite
-  blank data for input streams.
+boost::process::stream_behavior].  Please check out the link for more
+information on the possible stream behaviors.
 
 Communication channels can also be ['merged].  Merging two communication
-channels means that the output of the source channel is redirected to the
-target channel (be it an input flow or an output one).  The important point
-here is that this redirection is done at the lowest possible level: the
-child process will continue to see multiple streams but, as concerns the
-operating system, some of them will point to the same internal object.
-This feature is specially interesting to allow for efficient retrieval of a
+channels means that the output of the child's source channel is redirected
+to the target channel (be it an input flow or an output one).  The key idea
+is that this redirection is done at the lowest possible level: the child
+process continues to see multiple streams but, as concerns the operating
+system, some of them point to the same internal object.  This feature is
+used intensively in the library to allow for efficient retrieval of a
 process' __stdout__ and __stderr__ flows.
 
 Given the above, consider the following code snippet.  It configures a
 launcher that will have an infinite blank input and that will send both of
 its __stdout__ and __stderr__ to the parent's __stdout__:
 
+    boost::process::launcher l;
     l.set_stdin_behavior(silent_stream); // The default.
     l.set_stdout_behavior(inherit_stream);
     l.set_stderr_behavior(close_stream);
     l.set_merge_out_err(true);
 
-If any channel is set to `redirect_stream`, it will be later available from
-the class representing the child process through the [memberref
-boost::process::basic_child::get_stdin], [memberref
-boost::process::basic_child::get_stdout] and [memberref
-boost::process::basic_child::get_stderr] methods.  These classes return C++
+When setting a channel to `redirect_stream`, it will later be available
+from the class representing the child process through one of its [memberref
+boost::process::child::get_stdin], [memberref
+boost::process::child::get_stdout] and [memberref
+boost::process::child::get_stderr] methods.  These classes return C++
 streams as described next.  An input stream for a child process is seen as
 an output data flow by the parent, so it is modelled through the [classref
 boost::process::postream] class.  On the opposite side, an output stream
 for a child process is seen as an input data flow by the parent, hence it
 is represented by the [classref boost::process::pistream] class.  These two
-are regular C++ streams but provide an extra method (`close`) to allow the
-explicit shutdown of a communication channel.  This is required for example
-to let the child know that the parent is not willing to send more data
-through its __stdin__.  (Typically the child will close output channels on
-exit and the parent will close input ones.)
+classes are regular C++ streams but provide an extra method (`close`) to
+allow the explicit shutdown of a communication channel.  This is required,
+for example, to let the child know that the parent is not willing to send
+any more data through its __stdin__.  (Typically the child will close
+output channels on exit and the parent will close input ones.)
 
 The following example illustrates sending some data to a process:
 
+    boost::process::launcher l;
+    l.set_stdin_behavior(redirect_stream);
+    ... spawn the process ...
     boost::process::postream os = c.get_stdin();
     os << "some-string" << std::endl;
     os << 200 << 1024 << std::endl;
@@ -164,30 +187,15 @@ The following example illustrates sending some data to a process:
 Similary, the following shows how to retrieve the child's data, line by
 line:
 
+    boost::process::launcher l;
+    l.set_stdout_behavior(redirect_stream);
+    ... spawn the process ...
     boost::process::pistream is = c.get_stdout();
     std::string line;
     while (std::getline(is, line))
         std::cout << "Got a line: " << line << std::endl;
 
 [endsect]
-
-[/ ---------------------------------------------------------------------- ]
-
-[section Setting up the execution context]
-
-An important part of starting a child process is setting up its execution
-context; among other details, this includes configuring streams
-redirections and environment variables.  This task is accomplished by the
-[link boost_process.concepts.launcher launcher] concept, a model that
-follows the factory design pattern.  By using a launcher, the preparation
-of the execution context is completely separated from the behavior of the
-classes that represent the newly spawned process (see the [link
-boost_process.concepts.child child] concept).
-
-The library provides multiple launcher implementations: one of them, the
-[classref boost::process::launcher] class, is operating system independent
-while the others are not.  We will focus on the former here because the
-others are built on top of this one.
 
 [/ ---------------------------------------------------------------------- ]
 
@@ -213,10 +221,15 @@ boost::process::launcher::clear_environment] method.  Care should be taken
 when using this method because the new process may expect some standard
 variables to be defined for proper operation (e.g. `PATH`).  After using
 this call you are responsible for appropriately setting up the minimum
-required variables.
+required variables.  Be aware that under Windows an environment cannot be
+empty: at the very minimum, it will always contain a blank-named variable
+that points to the current working directory; this is transparently
+handled by the library.
 
 For quick reference, consider:
 
+    boost::process::launcher l;
+    ... l now carries a snapshot of the current environment ...
     l.clear_environment();
     l.set_environment("variable-name", "variable-value");
     l.unset_environment("variable-name");
@@ -238,15 +251,17 @@ boost::process::launcher::set_work_directory] method.  If not specified,
 the process is started in the same directory the parent was located in when
 it created the [classref boost::process::launcher] object.
 
+For instance:
+
+    boost::process::launcher l;
+    ... l now points to the current work directory ...
+    l.set_work_directory(tmp_dir_location);
+
 [endsect]
 
 [/ ---------------------------------------------------------------------- ]
 
-[endsect]
-
-[/ ---------------------------------------------------------------------- ]
-
-[section Starting a child process]
+[section Child process startup]
 
 Once the command line and the process' execution context are configured, a
 new process can be spawned by using the launcher's `start` method, which in
@@ -274,7 +289,7 @@ An illustrative (but incomplete) code snippet:
 
 [section Process termination]
 
-When a child process terminates execution, its parent should collect its
+When a child process terminates execution, its parent has to collect its
 [link boost_process.concepts.exit_status exit status] to free the operating
 system data structures used to store this information.
 
@@ -284,7 +299,7 @@ process can terminate regularly by itself; it can finish due to an
 unhandled signal (which may well be sent from the outside); or it can be
 stopped by another process.  All this information is accessible through the
 [classref boost::process::status] class, an instance of which is returned
-by the [memberref boost::process::basic_child::wait] method.
+by the [memberref boost::process::child::wait] method.
 
 After a call to that method, the parent is then able to inspect the reasons
 behind the child process finalization.  For example:
@@ -295,6 +310,37 @@ behind the child process finalization.  For example:
         std::cout << "The exit code was: " << s.exit_status() << std::endl;
     } else
         std::cout << "Abnormal program termination." << std::endl;
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
+[section Pipeline management]
+
+As a pipeline is just a process group, its management is built on top of
+the regular process [link boost_process.usage.child_process_startup
+startup] and [link boost_process.usage.process_termination termination].
+The [classref boost::process::basic_pipeline] and [classref
+boost::process::children] classes are used to spawn and represent the
+process group respectively.
+
+The interface used to manage pipelines is very similar to that used to
+handle single processes.  This can be seen in the following simple code
+snippet:
+
+    command_line cl1(...);
+    ... add arguments to cl1 ...
+    command_line cl2(...);
+    ... add arguments to cl2 ...
+
+    pipeline p;
+    ... configure the execution environment through p ...
+    p.add(cl1).add(cl2);
+
+    children cs = p.start();
+    ... cs now represents the newborn process group ...
+
+    status s = cs.wait();
 
 [endsect]
 

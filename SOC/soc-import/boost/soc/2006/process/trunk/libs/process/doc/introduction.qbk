@@ -93,12 +93,13 @@ The following list of items describe the features provided by the library.
 
 [section Process management]
 
-Boost.Process' most inner goal is to provide a portable abstraction layer
-over the operating system that allows the programmer to manage running
-processes and start new ones.  The library is designed with this
-requirement in mind, although it currently does not provide this generic
-management capabilities due to their complexity.  In other words, the
-library currently focuses on child process management only.
+In the long term, Boost.Process' most inner goal is to provide a portable
+abstraction layer over the operating system that allows the programmer to
+manage any running processes, not only those spawned by it.  The library is
+designed to allow this future extension, although it currently does not
+provide the necessary functionality to manage non-child processes due to
+its complexity.  In other words, the library currently focuses on child
+process management only.
 
 [endsect]
 
@@ -171,6 +172,17 @@ modes; these are described below:
 
 * Disconnected operation: The parent process forgets about the existence of
   its child process, which can continue to exist even when the parent dies.
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
+[section Pipeline management]
+
+The library provides the necessary functionality to model pipelines and
+handle them.  A pipeline is a unidimensional chain of interconnected
+processes in which the output of one of them is connected to the input of
+the following.
 
 [endsect]
 
