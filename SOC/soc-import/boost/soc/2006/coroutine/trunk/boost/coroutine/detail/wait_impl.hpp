@@ -8,7 +8,7 @@ namespace boost { namespace coroutines { namespace detail {
    * Inokes mark_wait('how') on the 'Idx'th element of 't'
    * then calls marker::wait<Idx-1> with the same arguments.
    * returns the result of marker::wait<Idx-1>(...) plus 1 if
-   * the 'Idx'th is true or plus 0 otherwise.
+   * the 'Idx'th.pending() is true or plus 0 otherwise.
    * 
    */
   template<int Idx>
@@ -16,7 +16,7 @@ namespace boost { namespace coroutines { namespace detail {
     template<typename Tuple>
     static int mark(Tuple& t, bool how) {
       wait_gateway::mark_wait(t.template get<Idx-1>(), how);
-      return marker<Idx -1>::mark(t, how) + (t.template get<Idx-1>()? 1:0);
+      return marker<Idx -1>::mark(t, how) + (t.template get<Idx-1>().pending()? 1:0);
 
     }
   };
@@ -42,14 +42,14 @@ namespace boost { namespace coroutines { namespace detail {
   template<typename Tuple>
   void wait_impl(Tuple wt) {
     try {
-      if(marker<boost::tuples::length<Tuple>::value>::mark(wt, true) == 0) 
+      if(marker<boost::tuples::length<Tuple>::value>::mark(wt, true) > 0) 
 	wait_n(wt, 1);
     } catch (...) {
       marker<boost::tuples::length<Tuple>::value>::mark(wt, false);
       throw;
     }
     int res = marker<boost::tuples::length<Tuple>::value>::mark(wt, false);
-    BOOST_ASSERT(res > 0);
+    BOOST_ASSERT(res < boost::tuples::length<Tuple>::value);
     (void)res;
   }
 
@@ -60,13 +60,13 @@ namespace boost { namespace coroutines { namespace detail {
   void wait_all_impl(Tuple wt) {
     int res = marker<boost::tuples::length<Tuple>::value>::mark(wt, true);
     try {
-      wait_n(wt, boost::tuples::length<Tuple>::value - res);
+      wait_n(wt, res);
     } catch (...) {
       marker<boost::tuples::length<Tuple>::value>::mark(wt, false);
       throw;
     }
     res = marker<boost::tuples::length<Tuple>::value>::mark(wt, false);
-    BOOST_ASSERT(res == boost::tuples::length<Tuple>::value);
+    BOOST_ASSERT(res == 0);
   }
 
 } } }
