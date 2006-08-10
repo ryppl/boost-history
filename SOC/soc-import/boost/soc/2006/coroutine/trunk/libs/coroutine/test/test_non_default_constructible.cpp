@@ -1,7 +1,6 @@
 //  (C) Copyright Giovanni P. Deretta 2006. Distributed under the Boost
 //  Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-#include <iostream>
 #include <boost/coroutine/coroutine.hpp>
 #include <boost/test/unit_test.hpp>
 
@@ -28,6 +27,7 @@ private:
 typedef coroutine<ndc(ndc)> coroutine_type;
 
 ndc body(coroutine_type::self& self, ndc x) {
+  self.yield(x);  
   self.yield(x);  
   return ndc (0);
 }

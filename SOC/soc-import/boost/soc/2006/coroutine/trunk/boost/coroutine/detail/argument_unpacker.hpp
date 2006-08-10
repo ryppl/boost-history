@@ -75,6 +75,12 @@ namespace boost { namespace coroutines { namespace detail {
   BOOST_PP_REPEAT(BOOST_COROUTINE_ARG_MAX, 
 		  BOOST_COROUTINE_ARGUMENT_UNPACKER_EX, ~);
 
+  // Somehow VCPP 8.0 chockes if the Trait for unpack[_ex]
+  // is explicitly specified. We use an empty dispatch 
+  // tag to let the compiler deduce it.
+  template<typename Trait>
+  struct trait_tag {};
+
   /**
    * Inovoke function object @p f passing  all 
    * elements in tuple @p parms as distinct parameters.
@@ -83,7 +89,7 @@ namespace boost { namespace coroutines { namespace detail {
   inline
   typename unpacker_n<Traits, Traits::length>
   ::template result<Functor, Tuple>::type
-  unpack(Functor f, Tuple& parms) {
+  unpack(Functor f, Tuple& parms, trait_tag<Traits>) {
     return unpacker_n<Traits, Traits::length>()(f, parms);
   }
 
@@ -95,7 +101,7 @@ namespace boost { namespace coroutines { namespace detail {
   inline
   typename unpacker_ex_n<Traits, Traits::length>::
   template result<Functor, First, Tuple>::type 
-  unpack_ex(Functor f, First& arg0, Tuple& parms, Traits*) {
+  unpack_ex(Functor f, First& arg0, Tuple& parms, trait_tag<Traits>) {
     return unpacker_ex_n<Traits, Traits::length>()
       (f, arg0, parms);
   }

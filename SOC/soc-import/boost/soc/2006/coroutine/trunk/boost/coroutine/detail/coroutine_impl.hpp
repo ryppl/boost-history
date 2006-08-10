@@ -375,10 +375,13 @@ namespace boost { namespace coroutines { namespace detail {
 	coroutine_type::self self_type;
       boost::optional<self_type> self (coroutine_accessor::in_place(this));
       detail::unpack_ex
-	/*<typename coroutine_type::arg_slot_traits>*/
-	(m_fun, *self, *this->args(), (typename coroutine_type::arg_slot_traits*)0);
+	(m_fun, 
+	 *self, 
+	 *this->args(), 
+	 detail::trait_tag<typename coroutine_type::arg_slot_traits>());
     }
 
+    
     template<typename ResultType>
     typename boost::disable_if<boost::is_void<ResultType> >::type
     do_call(dummy<1> = 1) {
@@ -388,11 +391,16 @@ namespace boost { namespace coroutines { namespace detail {
       boost::optional<self_type> self (coroutine_accessor::in_place(this));
       typedef BOOST_DEDUCED_TYPENAME coroutine_type::arg_slot_traits traits;
 	  
+      typedef BOOST_DEDUCED_TYPENAME coroutine_type::result_slot_type
+	slot_type;
+
       //note: placement new.
-      new(this->result()) BOOST_DEDUCED_TYPENAME coroutine_type::result_slot_type
+      new(this->result()) slot_type
 	(detail::unpack_ex
-	 /*<traits>*/
-	 (m_fun, *self, *this->args(), (traits*)0));
+	 (m_fun, 
+	  *self, 
+	  *this->args(), 
+	  detail::trait_tag<traits>()));
     }
   
     FunctorType m_fun;

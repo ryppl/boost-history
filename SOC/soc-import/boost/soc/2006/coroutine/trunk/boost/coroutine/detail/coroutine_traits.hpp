@@ -14,25 +14,28 @@ namespace boost { namespace coroutines { namespace detail {
     typedef typename T::as_tuple type;
   };
 
+  // This trait class is used to compute
+  // all nested typedefs of coroutines given
+  // a signature in the form 'result_type(parm1, ... parmn)'.
   template<typename Signature>
   struct coroutine_traits {    
   private:
     typedef typename boost::function_traits<Signature>::result_type 
-    internal_result_type;
+    signature_result_type;
   public:
     typedef typename 
-    boost::mpl::eval_if<is_tuple_traits<internal_result_type>,
-			as_tuple<internal_result_type>,
-			boost::mpl::identity<internal_result_type> >
+    boost::mpl::eval_if<is_tuple_traits<signature_result_type>,
+			as_tuple<signature_result_type>,
+			boost::mpl::identity<signature_result_type> >
     ::type result_type;
 
     typedef typename 
-    boost::mpl::eval_if<is_tuple_traits<internal_result_type>,
-			boost::mpl::identity<internal_result_type>,
+    boost::mpl::eval_if<is_tuple_traits<signature_result_type>,
+			boost::mpl::identity<signature_result_type>,
 			boost::mpl::if_
-			<boost::is_same<internal_result_type, void>,
+			<boost::is_same<signature_result_type, void>,
 			 tuple_traits<>,
-			 tuple_traits<internal_result_type> > >
+			 tuple_traits<signature_result_type> > >
     ::type result_slot_traits;
 
     typedef typename result_slot_traits
