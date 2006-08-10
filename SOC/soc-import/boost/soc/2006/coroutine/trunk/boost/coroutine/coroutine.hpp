@@ -101,9 +101,14 @@ namespace boost { namespace coroutines {
     }
 
     friend
-    inline 
     void swap(coroutine& lhs, coroutine& rhs) {
       lhs.swap(rhs);
+    }
+
+    friend 
+    void run(coroutine<void(void)>& coro) {
+      coro.m_pimpl->run();
+	
     }
 
 #   define BOOST_COROUTINE_generate_argument_n_type(z, n, traits_type) \
@@ -160,6 +165,7 @@ namespace boost { namespace coroutines {
       m_pimpl->exit();
     }
   private:
+
     /*
      * The second parameter is used to avoid calling this constructor
      * by mistake from other member funcitons (specifically operator=).

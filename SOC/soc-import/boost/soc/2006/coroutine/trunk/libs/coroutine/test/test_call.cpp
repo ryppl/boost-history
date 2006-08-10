@@ -45,19 +45,21 @@ struct coro_body {
   typedef void result_type;
 
   void operator() (a_pipe& my_pipe, coroutine_type::self& self)  {
-    coroutines::future<int> future;
-    //= coroutines::call(boost::bind(&a_pipe::listen, my_pipe, _1), self);
-    my_pipe.listen(coroutines::make_callback(future, self));
-    coroutines::wait(self, future);
+    typedef coroutines::future<int> future_type;
+    future_type future(self);
+
+    my_pipe.listen(coroutines::make_callback(future));
+    coroutines::wait(future);
     BOOST_CHECK(future);
+
     BOOST_CHECK(*future == 1);
     future = boost::none;
-    my_pipe.listen(coroutines::make_callback(future, self));
-    coroutines::wait(self, future);
+    my_pipe.listen(coroutines::make_callback(future));
+    coroutines::wait(future);
     BOOST_CHECK(*future == 2);
     future = boost::none;
-    my_pipe.listen(coroutines::make_callback(future, self));
-    coroutines::wait(self, future);
+    my_pipe.listen(coroutines::make_callback(future));
+    coroutines::wait(future);
     BOOST_CHECK(*future == 3);
     future = boost::none;
     return;  
@@ -69,7 +71,7 @@ void test_call() {
   {
     a_pipe my_pipe;
     coroutine_type coro(boost::bind(coro_body(run_flag), boost::ref(my_pipe), _1));
-    coro().run();
+    run(coro);
     my_pipe.send(1);
     my_pipe.send(2);
     my_pipe.send(3);

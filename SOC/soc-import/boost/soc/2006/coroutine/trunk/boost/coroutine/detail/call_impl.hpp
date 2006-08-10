@@ -20,19 +20,14 @@ namespace boost { namespace coroutines { namespace detail {
   BOOST_PP_CAT(arg, n)                            \
  /**/
 
-  template<typename Future, typename CoroutineSelf>                       
+  template<typename Future>                       
   class callback {
   public:
-    typedef BOOST_DEDUCED_TYPENAME 
-    CoroutineSelf::coroutine_type 
-    coroutine_type;
 
     typedef void result_type;
     
-    callback(Future& future, 
-	     CoroutineSelf& coroutine_self) :
-      m_future_pimpl(wait_gateway::get_impl(future)),
-      m_pimpl(coroutine_accessor::get_impl(coroutine_self)){
+    callback(Future& future) :
+      m_future_pimpl(wait_gateway::get_impl(future)) {
       m_future_pimpl->mark_pending();
     }
     
@@ -80,16 +75,12 @@ namespace boost { namespace coroutines { namespace detail {
       m_future_pimpl->assign(tuple_type
 	(BOOST_PP_ENUM_PARAMS
 	 (BOOST_COROUTINE_ARG_MAX, arg)));
-      if(m_pimpl->signal()) {
-	m_pimpl->wake_up();
-      }
     }
 
   private:
     BOOST_DEDUCED_TYPENAME
-    wait_gateway::impl_ptr<Future>::type 
+    Future::impl_pointer
     m_future_pimpl;
-    BOOST_DEDUCED_TYPENAME coroutine_type::impl_ptr m_pimpl;
   };  
   
   /* 
@@ -112,19 +103,7 @@ namespace boost { namespace coroutines { namespace detail {
 
     void operator()() {
       BOOST_ASSERT(m_pimpl);
-
-      coroutine_type::arg_slot_type 
-        void_args;
-
-      coroutine_type::result_slot_type 
-        void_result;
-      // This dummy binding is required because
-      // do_call expect args() and result()
-      // to return a non NULL result.
-      m_pimpl->bind_args(&void_args);
-      m_pimpl->bind_result(&void_result);
-
-      m_pimpl->invoke();
+      m_pimpl->run();     
     }
     coroutine_type::impl_ptr m_pimpl;
   };
@@ -134,8 +113,8 @@ namespace boost { namespace coroutines { namespace detail {
 
   template<typename Future, typename Functor, typename CoroutineSelf>
   Future call_impl(Functor fun, const CoroutineSelf& coro_self) {
-    Future future;
-    fun(callback<Future, CoroutineSelf>(future, coro_self));
+    Future future(coro_self);
+    fun(callback<Future>(future));
     return future;
   }
 

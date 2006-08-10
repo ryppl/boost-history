@@ -61,13 +61,22 @@ namespace boost { namespace coroutines { namespace detail {
     
     template<typename T>
     void assign(const T& val) {
-      BOOST_ASSERT(pending);
+      BOOST_ASSERT(pending());
+      context_pointer p = m_coro_impl;
       m_coro_impl = 0;
       m_optional = val;
+      p->count_down();
+      if(waited() && p->signal())
+	p->wake_up();
     }
 
-    void mark_pending(bool how) {
-      m_coro_impl = how? m_coro_impl_weak : 0;
+    void mark_pending() {
+      m_coro_impl = m_coro_impl_weak;
+      m_coro_impl ->count_up();
+    }
+
+    void mark_wait(bool how) {
+      m_waited = how;
     }
 
     bool waited() const {
@@ -78,7 +87,23 @@ namespace boost { namespace coroutines { namespace detail {
       BOOST_ASSERT(pending());
       return m_coro_impl;
     }
-    
+        
+    void wait(int n) {
+      m_coro_impl_weak->wait(n);
+    }
+
+    void wait() {
+      if(!pending()) return;
+      mark_wait(true);
+      try {
+	m_coro_impl->wait(1);
+	BOOST_ASSERT(!pending());
+      } catch (...) {
+	mark_wait(false);
+	throw;
+      }
+      mark_wait(false);
+    }
 
   private:
     context_weak_pointer m_coro_impl_weak;

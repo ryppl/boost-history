@@ -44,6 +44,7 @@ namespace boost { namespace coroutines { namespace detail {
       m_exit_state(ctx_exit_not_requested),
       m_exit_status(ctx_not_exited),
       m_wait_counter(0),
+      m_operation_counter(0),
       m_type_info(0) {}
     
     friend
@@ -75,6 +76,20 @@ namespace boost { namespace coroutines { namespace detail {
       }
     }
 
+    void count_down() throw() {
+      BOOST_ASSERT(m_operation_counter) ;
+      --m_operation_counter;
+    }
+
+    void count_up() throw() {
+      ++m_operation_counter;
+    }
+
+    // return true if there are operations pending.
+    std::size_t pending() const {
+      return m_operation_counter;
+    }
+
     /*
      * A signal may occur only when a context is 
      * not running (is delivered sinchrononously).
@@ -85,7 +100,9 @@ namespace boost { namespace coroutines { namespace detail {
      */
     bool signal () throw() {
       BOOST_ASSERT(!running() && !exited());
-      if(m_wait_counter) --m_wait_counter;
+      BOOST_ASSERT(m_wait_counter) ;
+
+      --m_wait_counter;
       if(!m_wait_counter && m_state == ctx_waiting)
 	m_state = ctx_ready;      
       return ready();
@@ -182,12 +199,14 @@ namespace boost { namespace coroutines { namespace detail {
     // to caller until resumed again.
     // Pre:  Coroutine is running.
     //       Exit not pending.
+    //       Operations not pending.
     // Post: Coroutine is running.
     // Throws: exit_exception, if exit is pending *after* it has been
     //         resumed.
     void yield() {
       BOOST_ASSERT(m_exit_state < ctx_exit_signaled); //prevent infinite loops
       BOOST_ASSERT(running());
+      BOOST_ASSERT(!pending());
 
       m_state = ctx_ready;
       do_yield();
@@ -202,7 +221,7 @@ namespace boost { namespace coroutines { namespace detail {
     // If n = 0 do nothing.
     // The coroutine will remain in the wait state until
     // is signaled 'n' times.
-    // Pre:  n >= 0.
+    // Pre:  0 <= n < pending()
     //       Coroutine is running.
     //       Exit not pending.
     // Post: Coroutine is running.
@@ -218,8 +237,9 @@ namespace boost { namespace coroutines { namespace detail {
     // is exited the callback cannot be called.
     void wait(int n) {
       BOOST_ASSERT(!(n<0));
-      BOOST_ASSERT(m_exit_state < ctx_exit_signaled); //prevent infinite loops
+      BOOST_ASSERT(m_exit_state < ctx_exit_signaled); //prevent infinite loop
       BOOST_ASSERT(running());
+      BOOST_ASSERT((!pending() < n));
 
       if(n == 0) return;
       m_wait_counter = n;
@@ -237,6 +257,7 @@ namespace boost { namespace coroutines { namespace detail {
       BOOST_ASSERT(m_exit_state < ctx_exit_signaled); //prevent infinite loops
       BOOST_ASSERT(m_state == ctx_running);
       BOOST_ASSERT(to.ready());
+      BOOST_ASSERT(!to.pending());
 
       std::swap(m_caller, to.m_caller);
       std::swap(m_state, to.m_state);
@@ -246,21 +267,24 @@ namespace boost { namespace coroutines { namespace detail {
       check_exit_state();
     }
 
-
     // Cause this coroutine to exit.
-    // Can only be called on ready or waiting coroutine.
+    // Can only be called on a ready coroutine.
+    // Cannot be called if there are pending operations.
     // It follws that cannot be called from 'this'.
     // Nothrow.
     void exit() throw(){
+      BOOST_ASSERT(!pending());
+      BOOST_ASSERT(ready()) ;
       if(m_exit_state < ctx_exit_pending) 
 	m_exit_state = ctx_exit_pending;	
-      BOOST_ASSERT(ready() || waiting()) ;
       do_invoke();
       BOOST_ASSERT(exited()); //at this point the coroutine MUST have exited.
     }
 
     // Always throw exit_exception.
     void exit_self() {
+      BOOST_ASSERT(!pending());
+      BOOST_ASSERT(running());
       if(m_exit_state < ctx_exit_pending) 
 	m_exit_state = ctx_exit_pending;	
       check_exit_state();
@@ -351,7 +375,8 @@ namespace boost { namespace coroutines { namespace detail {
     context_state m_state;
     context_exit_state m_exit_state;
     context_exit_status m_exit_status;
-    unsigned int m_wait_counter;    
+    std::size_t m_wait_counter;   
+    std::size_t m_operation_counter;    
 
     // This is used to generate a meaningful exception trace.
     std::type_info const* m_type_info;

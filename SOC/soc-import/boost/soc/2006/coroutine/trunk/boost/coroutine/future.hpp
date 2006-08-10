@@ -32,73 +32,70 @@ namespace boost { namespace coroutines {
   (BOOST_COROUTINE_ARG_MAX,
    typename T, 
    = boost::tuples::null_type BOOST_PP_INTERCEPT),
-    ContextImpl = detail::default_context_impl context_impl
+    typename ContextImpl = detail::default_context_impl 
     >
   class future : 
     public movable
-    <future<BOOST_PP_ENUM_PARAMS(BOOST_COROUTINE_ARG_MAX, T)> > 
+  <future<BOOST_PP_ENUM_PARAMS(BOOST_COROUTINE_ARG_MAX, T)> > 
   {
 
-   friend class detail::wait_gateway;
-   typedef void (future::*safe_bool)();           
-   void safe_bool_true() {}                       
+    friend class detail::wait_gateway;
+    typedef void (future::*safe_bool)();           
+    void safe_bool_true() {}                       
 
   public:
+    typedef ContextImpl context_impl;
+
     typedef tuple_traits<
       BOOST_PP_ENUM_PARAMS
-    (BOOST_COROUTINE_ARG_MAX, T)
+      (BOOST_COROUTINE_ARG_MAX, T)
       > tuple_traits_type;
 
-    typedef boost::mpl::bool_<tuple_traits_type::length != 1>
-    is_singular;
-
+    typedef boost::mpl::bool_<tuple_traits_type::length == 1>
+      is_singular;
+   
     typedef BOOST_DEDUCED_TYPENAME tuple_traits_type::as_tuple tuple_type;
     typedef BOOST_DEDUCED_TYPENAME boost::mpl::eval_if<
-      is_singular,
+      boost::mpl::not_<is_singular>,
       boost::mpl::identity<tuple_type>,
       BOOST_DEDUCED_TYPENAME tuple_traits_type::template at<0>
-    >::type  value_type;
-    
-  private:
-    typedef detail::future_impl<value_type, context_impl> future_impl;
+      >::type  value_type;
+   
+    typedef detail::future_impl<tuple_type, context_impl> future_impl;
     typedef future_impl * impl_pointer;
-
-  public:
     template<typename CoroutineSelf>
-    future(CoroutineSelf& self) :
+      future(CoroutineSelf& self) :
       m_ptr(new future_impl(self)) {}
-
+   
     future(move_from<future> rhs) :
-      m_ptr(rhs->pilfer()) {
-    }
+      m_ptr(rhs->pilfer()) {}
 
+   
     value_type& operator *() {
       BOOST_ASSERT(m_ptr);
-      BOOST_ASSERT(m_ptr->get());
+      wait();
       return remove_tuple(m_ptr->value(),  boost::mpl::not_<is_singular>());
     }
 
     const value_type& operator *() const{
       BOOST_ASSERT(m_ptr);
       BOOST_ASSERT(m_ptr->get());
+      wait();
       return remove_tuple(m_ptr->value(), boost::mpl::not_<is_singular>());
     }
-
-    future&
-    operator=(move_from<future> rhs) {
+   
+    future& operator=(move_from<future> rhs) {
       future(rhs).swap(*this);
       return *this;
     }
 
-    future&
-    operator=(const value_type& rhs) {
+    future& operator=(const value_type& rhs) {
       BOOST_ASSERT(!pending());
       m_ptr->get() = tuple_type(rhs);
       return *this;
     }
 
-    future&
-    operator=(none_t) {
+    future& operator=(none_t) {
       BOOST_ASSERT(!pending());
       m_ptr->get() = none;
       return *this;
@@ -107,32 +104,34 @@ namespace boost { namespace coroutines {
     operator safe_bool() const {    
       BOOST_ASSERT(m_ptr);
       return m_ptr->get()?                     
-       &future::safe_bool_true: 0;                 
+	&future::safe_bool_true: 0;                 
     }       
 
     BOOST_DEDUCED_TYPENAME
       future_impl::pointer & 
       operator ->() {
       BOOST_ASSERT(m_ptr);
+      wait();
       return m_ptr->get();
     }
 
     BOOST_DEDUCED_TYPENAME
-    future_impl::pointer const 
+      future_impl::pointer const 
       operator ->() const {
       BOOST_ASSERT(m_ptr);
+      wait();
       return m_ptr->get();
     }
 
-    friend 
-    void swap(future& lhs, future& rhs) {
+    friend void swap(future& lhs, future& rhs) {
       std::swap(lhs.m_ptr, rhs.m_ptr);
     }
 
-    // Destroying a pending future is an error.
+    // On destruction, if the future is 
+    // pending it will be destroyed.
     ~future() {
       if(m_ptr) {
-	BOOST_ASSERT(!pending());
+	wait();
       	delete m_ptr;
       }
     }
@@ -143,20 +142,29 @@ namespace boost { namespace coroutines {
       BOOST_ASSERT(m_ptr);
       return m_ptr->pending();
     }
+
   private:
+    void wait(int n) {
+      m_ptr->wait(n);
+    }
+
+    void wait() {
+      m_ptr->wait();
+    }
+
     template<typename T>
-    value_type& remove_tuple(T& x, boost::mpl::true_) {
+      value_type& remove_tuple(T& x, boost::mpl::false_) {
       return boost::get<0>(x);
     }
 
     template<typename T>
-    value_type& remove_tuple(T& x, boost::mpl::false_) {
+      value_type& remove_tuple(T& x, boost::mpl::true_) {
       return x;
     }
 
     void mark_wait(bool how) {
       BOOST_ASSERT(m_ptr);
-      m_ptr->waited = how;
+      m_ptr->mark_wait(how);
     }
 
     bool waited() const {
@@ -164,13 +172,13 @@ namespace boost { namespace coroutines {
       return m_ptr->waited();
     }
 
-    pointer pilfer() {
-      optional_pointer ptr = m_ptr;
+    impl_pointer pilfer() {
+      impl_pointer ptr = m_ptr;
       m_ptr = 0;
       return ptr;
     }
 
-    pointer m_ptr;    
+    impl_pointer m_ptr;    
   };
 
 #define BOOST_COROUTINE_gen_call_overload(z, n, unused) \
@@ -202,11 +210,10 @@ namespace boost { namespace coroutines {
 /**/
 
 #define BOOST_COROUTINE_gen_wait_non_zero(z, n, name)\
-  template<typename Coroutine,                       \
-	   BOOST_PP_ENUM_PARAMS(n, typename T)>      \
-  void name (Coroutine& coro, BOOST_PP_ENUM_BINARY_PARAMS(n, T, &arg)) {  \
+  template<BOOST_PP_ENUM_PARAMS(n, typename T)>      \
+  void name (BOOST_PP_ENUM_BINARY_PARAMS(n, T, &arg)) {  \
     detail::BOOST_PP_CAT(name, _impl)                \
-      (coro, boost::tuple<BOOST_PP_ENUM(n, BOOST_COROUTINE_gen_reference, ~)> \
+      (boost::tuple<BOOST_PP_ENUM(n, BOOST_COROUTINE_gen_reference, ~)> \
        (BOOST_PP_ENUM_PARAMS(n, arg)));              \
   }                                                  \
 /**/
@@ -243,7 +250,7 @@ namespace boost { namespace coroutines {
 
   template<typename Future >
   struct make_callback_result {
-    typedef detail::callback<Future, coroutine<void()>::self> type;
+    typedef detail::callback<Future> type;
   };
 
   /*
@@ -259,15 +266,15 @@ namespace boost { namespace coroutines {
   BOOST_DEDUCED_TYPENAME 
   make_callback_result<Future>
   ::type
-  make_callback(Future& future, coroutine<void()>::self& coroutine_self) {
+  make_callback(Future& future) {
     return BOOST_DEDUCED_TYPENAME make_callback_result<Future>::type
-      (future, coroutine_self);
+      (future);
   }
 
   /*
    * A coroutine cannot directly posted in a demuxer, as it is
-   * not movable. Use this function to workaround the lack
-   * of movability
+   * not copyable. Use this function to workaround the lack
+   * of copyability
    */
   template<typename Demuxer>
   void post(move_from<coroutine<void()> > coro, Demuxer& demux) {

@@ -76,6 +76,22 @@ namespace boost { namespace coroutines { namespace detail {
     result_slot_type** result_pointer() {
       return m_result;
     }
+
+    // This function must be called only for void
+    // coroutines. It wakes up the coroutine.
+    // Entering the wait state does not cause this
+    // method to throw.
+    void run() {
+      arg_slot_type void_args;
+      result_slot_type * ptr = 0;
+      
+      // This dummy binding is required because
+      // do_call expect args() and result()
+      // to return a non NULL result.
+      bind_args(&void_args);
+      bind_result_pointer(&ptr);
+      this->wake_up();
+    }
   protected:
     boost::optional<result_slot_type>  m_result_last;
 

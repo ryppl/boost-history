@@ -12,6 +12,11 @@ namespace boost { namespace coroutines { namespace detail {
    */
   struct wait_gateway {
     template<typename Future>
+    static void wait(Future& f, int n) {
+      f.wait(n);
+    }
+
+    template<typename Future>
     static 
     bool waited(const Future& f) {
       return f.waited();
