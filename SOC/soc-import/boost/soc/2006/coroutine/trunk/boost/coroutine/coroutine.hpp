@@ -28,14 +28,11 @@ namespace boost { namespace coroutines {
   template<typename Signature, typename Context>
   class coroutine;
 
-  namespace detail {
-    template<typename T>
-    struct is_coroutine : boost::mpl::false_{};
-
-    template<typename Sig, typename Con>
-    struct is_coroutine<coroutine<Sig, Con> > : boost::mpl::true_{};
-  }
-
+  template<typename T>
+  struct is_coroutine : boost::mpl::false_{};
+  
+  template<typename Sig, typename Con>
+  struct is_coroutine<coroutine<Sig, Con> > : boost::mpl::true_{};
 
   template<typename Signature, 
 	   typename ContextImpl = detail::default_context_impl>
@@ -46,22 +43,28 @@ namespace boost { namespace coroutines {
     typedef Signature signature_type;
     friend class detail::coroutine_accessor;
 
-    typedef BOOST_DEDUCED_TYPENAME detail::coroutine_traits<signature_type>
+    typedef BOOST_DEDUCED_TYPENAME 
+    detail::coroutine_traits<signature_type>
     ::result_type result_type;
 
-    typedef BOOST_DEDUCED_TYPENAME detail::coroutine_traits<signature_type>
+    typedef BOOST_DEDUCED_TYPENAME 
+    detail::coroutine_traits<signature_type>
     ::result_slot_type result_slot_type;
 
-    typedef BOOST_DEDUCED_TYPENAME detail::coroutine_traits<signature_type>
+    typedef BOOST_DEDUCED_TYPENAME 
+    detail::coroutine_traits<signature_type>
     ::yield_result_type yield_result_type;
 
-    typedef BOOST_DEDUCED_TYPENAME detail::coroutine_traits<signature_type>
+    typedef BOOST_DEDUCED_TYPENAME 
+    detail::coroutine_traits<signature_type>
     ::result_slot_traits result_slot_traits;
 
-    typedef BOOST_DEDUCED_TYPENAME detail::coroutine_traits<signature_type>
+    typedef BOOST_DEDUCED_TYPENAME 
+    detail::coroutine_traits<signature_type>
     ::arg_slot_type arg_slot_type;
 
-    typedef BOOST_DEDUCED_TYPENAME detail::coroutine_traits<signature_type>
+    typedef BOOST_DEDUCED_TYPENAME 
+    detail::coroutine_traits<signature_type>
     ::arg_slot_traits arg_slot_traits;
         
     typedef detail::coroutine_impl<type, context_impl> impl_type;
@@ -81,7 +84,7 @@ namespace boost { namespace coroutines {
 	       BOOST_DEDUCED_TYPENAME boost::enable_if<
 	       boost::mpl::and_<
 	       detail::is_callable<Functor>, 
-	       boost::mpl::not_<detail::is_coroutine<Functor> >
+	       boost::mpl::not_<is_coroutine<Functor> >
 	       > >
 	       ::type * = 0
 	       ) :
@@ -131,7 +134,7 @@ namespace boost { namespace coroutines {
     <BOOST_PP_CAT(BOOST_PP_CAT(type_prefix, n), _type)>::param_type \
     BOOST_PP_CAT(arg, n) =                                          \
     BOOST_PP_CAT(BOOST_PP_CAT(type_prefix, n), _type)()             \
-/**/
+    /**/
 
     result_type operator()
       (BOOST_PP_ENUM
@@ -143,8 +146,8 @@ namespace boost { namespace coroutines {
 	  (BOOST_COROUTINE_ARG_MAX, 
 	   arg)));
       }
-#undef BOOST_COROUTINE_param_typedef
-#undef BOOST_COROUTINE_param_with_default
+#   undef BOOST_COROUTINE_param_typedef
+#   undef BOOST_COROUTINE_param_with_default
 
     typedef void(coroutine::*bool_type)();
     operator bool_type() const {
@@ -180,12 +183,26 @@ namespace boost { namespace coroutines {
 
     result_type call_impl(arg_slot_type args) {
       BOOST_ASSERT(m_pimpl);
+      // result_slot_type might not be
+      // default constructible, so we
+      // handle this case by only allocating 
+      // storage and not default
+      // constructing the object.
+      
+      boost::aligned_storage<
+	sizeof(result_slot_type),
+	boost::alignment_of<result_slot_type>::value> result_slot; 
 
-      result_slot_type result;
       m_pimpl->bind_args(&args);
-      m_pimpl->bind_result(&result);
+      m_pimpl->bind_result(static_cast<result_slot_type*>(result_slot.address()));
+
       m_pimpl->invoke();
-      return detail::fix_result<result_slot_traits>(result);
+
+#ifndef NDEBUG
+      m_pimpl->bind_args(0);
+      m_pimpl->bind_result(0);
+#endif
+      return detail::fix_result<result_slot_traits>(*static_cast<result_slot_type*>(result_slot.address()));
     }
 
     impl_ptr m_pimpl;

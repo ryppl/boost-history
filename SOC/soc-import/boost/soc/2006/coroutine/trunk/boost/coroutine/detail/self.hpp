@@ -63,12 +63,14 @@ namespace boost { namespace coroutines { namespace detail {
     (BOOST_PP_ENUM
        (BOOST_COROUTINE_ARG_MAX,
 	BOOST_COROUTINE_param_with_default,
-	BOOST_DEDUCED_TYPENAME yield_traits::arg)) {
+	BOOST_DEDUCED_TYPENAME yield_traits::arg))
+    {
       return yield_impl
 	(BOOST_DEDUCED_TYPENAME 
-	 coroutine_type::result_slot_type(BOOST_PP_ENUM_PARAMS
-					  (BOOST_COROUTINE_ARG_MAX, 
-					   arg)));
+	 coroutine_type::result_slot_type
+	 (BOOST_PP_ENUM_PARAMS
+	  (BOOST_COROUTINE_ARG_MAX, 
+	   arg)));
     }
     
     template<typename Target>
@@ -77,13 +79,14 @@ namespace boost { namespace coroutines { namespace detail {
      BOOST_PP_ENUM_TRAILING
      (BOOST_COROUTINE_ARG_MAX,
       BOOST_COROUTINE_param_with_default,
-      typename Target::arg)) {
-      typedef BOOST_DEDUCED_TYPENAME Target::arg_slot_type type;
+      typename Target::arg)) 
+    {
+      typedef BOOST_DEDUCED_TYPENAME Target::arg_slot_type slot_type;
       return yield_to_impl
-	(target, type(BOOST_PP_ENUM_PARAMS
+	(target, slot_type(BOOST_PP_ENUM_PARAMS
 	  (BOOST_COROUTINE_ARG_MAX, 
 	   arg)));
-      }
+    }
 #else
     
     
@@ -144,7 +147,8 @@ namespace boost { namespace coroutines { namespace detail {
 		   BOOST_COROUTINE_param_with_default,
 		   (yield_call_arg ,
 		    BOOST_DEDUCED_TYPENAME 
-		    coroutine_type::yield_traits::arg))) {
+		    coroutine_type::yield_traits::arg))) 
+    {
       return yield_impl
       (result_slot_type
        (BOOST_PP_ENUM_PARAMS(BOOST_COROUTINE_ARG_MAX,arg)));
@@ -157,7 +161,8 @@ namespace boost { namespace coroutines { namespace detail {
      (BOOST_COROUTINE_ARG_MAX,
       BOOST_COROUTINE_param_with_default,
       (BOOST_DEDUCED_TYPENAME Target::self::call_arg, 
-       BOOST_DEDUCED_TYPENAME Target::arg))) {
+       BOOST_DEDUCED_TYPENAME Target::arg)))
+    {
       typedef typename Target::arg_slot_type type;
       return yield_to_impl
 	(target, type
@@ -175,11 +180,15 @@ namespace boost { namespace coroutines { namespace detail {
     yield_result_type yield_impl(const BOOST_DEDUCED_TYPENAME 
 				 coroutine_type::result_slot_type& result) {
       BOOST_ASSERT(m_pimpl);
-      this->m_pimpl->result() = result;
+
+      // note: placement new.
+      new(this->m_pimpl->result()) BOOST_DEDUCED_TYPENAME
+	coroutine_type::result_slot_type (result);
+
       this->m_pimpl->yield();    
       return detail::fix_result<
 	BOOST_DEDUCED_TYPENAME
-	coroutine_type::arg_slot_traits>(m_pimpl->args());
+	coroutine_type::arg_slot_traits>(*m_pimpl->args());
     }
 
     template<typename TargetCoroutine>
@@ -189,11 +198,13 @@ namespace boost { namespace coroutines { namespace detail {
       BOOST_ASSERT(m_pimpl);
 
       coroutine_accessor::get_impl(target)->bind_args(&args);
-      coroutine_accessor::get_impl(target)->bind_result(&m_pimpl->result());    
+      coroutine_accessor::get_impl(target)->bind_result(m_pimpl->result());    
+
       this->m_pimpl->yield_to(*coroutine_accessor::get_impl(target));
+
       return detail::fix_result<
 	BOOST_DEDUCED_TYPENAME
-	coroutine_type::arg_slot_traits>(m_pimpl->args());
+	coroutine_type::arg_slot_traits>(*m_pimpl->args());
     }
 
     impl_ptr get_impl() {

@@ -297,14 +297,14 @@ namespace boost { namespace coroutines { namespace detail {
 	m_arg(0),
 	m_result(0){}
                 
-    arg_slot_type& args() {
+    arg_slot_type * args() {
       BOOST_ASSERT(m_arg);
-      return *m_arg;
+      return m_arg;
     };
     
-    result_slot_type& result() {
+    result_slot_type * result() {
       BOOST_ASSERT(m_result);
-      return *this->m_result;
+      return this->m_result;
     } 
 
     template<typename Functor>
@@ -376,7 +376,7 @@ namespace boost { namespace coroutines { namespace detail {
       boost::optional<self_type> self (coroutine_accessor::in_place(this));
       detail::unpack_ex
 	/*<typename coroutine_type::arg_slot_traits>*/
-	(m_fun, *self, this->args(), (typename coroutine_type::arg_slot_traits*)0);
+	(m_fun, *self, *this->args(), (typename coroutine_type::arg_slot_traits*)0);
     }
 
     template<typename ResultType>
@@ -386,11 +386,13 @@ namespace boost { namespace coroutines { namespace detail {
       typedef BOOST_DEDUCED_TYPENAME
       coroutine_type::self self_type;
       boost::optional<self_type> self (coroutine_accessor::in_place(this));
-      typedef typename coroutine_type::arg_slot_traits traits;
+      typedef BOOST_DEDUCED_TYPENAME coroutine_type::arg_slot_traits traits;
 	  
-      this->result() = detail::unpack_ex
-	/*<traits>*/
-	(m_fun, *self, this->args(), (traits*)0);
+      //note: placement new.
+      new(this->result()) BOOST_DEDUCED_TYPENAME coroutine_type::result_slot_type
+	(detail::unpack_ex
+	 /*<traits>*/
+	 (m_fun, *self, *this->args(), (traits*)0));
     }
   
     FunctorType m_fun;

@@ -35,5 +35,6 @@ test-suite "coroutine"
       [ run test_yield_to2.cpp ]
       [ run test_call.cpp ]
       [ run test_move.cpp ]
+      [ run test_non_default_constructible.cpp ]
    ;
 

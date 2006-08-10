@@ -1,3 +1,6 @@
+//  (C) Copyright Giovanni P. Deretta 2006. Distributed under the Boost
+//  Software License, Version 1.0. (See accompanying file
+//  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #ifndef BOOST_COROUTINE_DETAIL_CALL_IMPL_HPP_20060728
 #define BOOST_COROUTINE_DETAIL_CALL_IMPL_HPP_20060728
 
@@ -15,7 +18,7 @@ namespace boost { namespace coroutines { namespace detail {
   BOOST_DEDUCED_TYPENAME                          \
   boost::tuples::element<n, tuple>::type          \
   BOOST_PP_CAT(arg, n)                            \
-  /**/
+ /**/
 
   template<typename Future, typename CoroutineSelf>                       
   class callback {
@@ -28,9 +31,9 @@ namespace boost { namespace coroutines { namespace detail {
     
     callback(Future& future, 
 	     CoroutineSelf& coroutine_self) :
-      m_future(future),
+      m_future_pimpl(wait_gateway::get_impl(future)),
       m_pimpl(coroutine_accessor::get_impl(coroutine_self)){
-      wait_gateway::mark_pending(m_future);
+      m_future_pimpl->mark_pending();
     }
     
     typedef BOOST_DEDUCED_TYPENAME                
@@ -39,13 +42,23 @@ namespace boost { namespace coroutines { namespace detail {
     typedef BOOST_DEDUCED_TYPENAME                
     Future::tuple_traits_type tuple_traits_type;              
 
+    /*
+     * By default a callback is one shot only.
+     * By calling this method you can revive a 
+     * callback for another shot.
+     * You must guaranee that the future
+     * is still alive.
+     */
+    void revive() {
+      m_future_pimpl->mark_pending();
+    }
 
 #define BOOST_COROUTINE_gen_argn_type(z, n, unused) \
     typedef BOOST_DEDUCED_TYPENAME                  \
     tuple_traits_type::                             \
     template at<n>::type                            \
     BOOST_PP_CAT(BOOST_PP_CAT(arg, n), _type);      \
-    /**/
+/**/
 
     BOOST_PP_REPEAT(BOOST_COROUTINE_ARG_MAX,
 		    BOOST_COROUTINE_gen_argn_type,
@@ -64,7 +77,7 @@ namespace boost { namespace coroutines { namespace detail {
        (BOOST_COROUTINE_ARG_MAX,
 	BOOST_COROUTINE_param_with_default,
 	arg)) {
-      wait_gateway::assign(m_future,tuple_type
+      m_future_pimpl->assign(tuple_type
 	(BOOST_PP_ENUM_PARAMS
 	 (BOOST_COROUTINE_ARG_MAX, arg)));
       if(m_pimpl->signal()) {
@@ -73,7 +86,9 @@ namespace boost { namespace coroutines { namespace detail {
     }
 
   private:
-    Future& m_future;
+    BOOST_DEDUCED_TYPENAME
+    wait_gateway::impl_ptr<Future>::type 
+    m_future_pimpl;
     BOOST_DEDUCED_TYPENAME coroutine_type::impl_ptr m_pimpl;
   };  
   
@@ -103,7 +118,7 @@ namespace boost { namespace coroutines { namespace detail {
 
       coroutine_type::result_slot_type 
         void_result;
-      // This binding is required because
+      // This dummy binding is required because
       // do_call expect args() and result()
       // to return a non NULL result.
       m_pimpl->bind_args(&void_args);

@@ -1,5 +1,9 @@
+//  (C) Copyright Giovanni P. Deretta 2006. Distributed under the Boost
+//  Software License, Version 1.0. (See accompanying file
+//  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #ifndef BOOST_COROUTINE_DETAIL_SIGNAL_HPP_20060728
 #define BOOST_COROUTINE_DETAIL_SIGNAL_HPP_20060728
+#include <boost/coroutine/detail/future_impl.hpp>
 namespace boost { namespace coroutines { namespace detail {
   /*
    * Private interface for coroutine signaling/waiting.
@@ -19,16 +23,19 @@ namespace boost { namespace coroutines { namespace detail {
       f.mark_wait(how);
     }
 
-    template<typename Future, typename Tuple>
-    static
-    void assign(Future& future, const Tuple& tuple) {
-      future.assign(tuple);
-    }
+    template<typename Future>
+    struct impl_ptr {
+      typedef detail::future_impl<
+	BOOST_DEDUCED_TYPENAME
+	Future::tuple_type>* type;
+    };
 
     template<typename Future>
     static
-    void mark_pending(Future& f) {
-      f.mark_pending();
+    BOOST_DEDUCED_TYPENAME 
+    impl_ptr<Future>::type
+    get_impl(Future& f) {
+      return f.m_ptr;
     }
   };
 
