@@ -1,8 +1,8 @@
 //  (C) Copyright Giovanni P. Deretta 2006. Distributed under the Boost
 //  Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-#ifndef BOOST_COROUTINE_DETAIL_SELF_HPP_20060709
-#define BOOST_COROUTINE_DETAIL_SELF_HPP_20060709
+#ifndef BOOST_COROUTINE_DETAIL_SELF_HPP_20060809
+#define BOOST_COROUTINE_DETAIL_SELF_HPP_20060809
 #include <boost/noncopyable.hpp>
 #include <boost/coroutine/detail/fix_result.hpp>
 #include <boost/coroutine/detail/coroutine_accessor.hpp>
@@ -173,18 +173,23 @@ namespace boost { namespace coroutines { namespace detail {
 
 #undef  BOOST_COROUTINE_param_with_default
 
+    
+    void exit() {
+      m_pimpl -> exit_self();
+    }
+
   private:
     coroutine_self(impl_type * pimpl, detail::init_from_impl_tag) :
       m_pimpl(pimpl) {}
 
-    yield_result_type yield_impl(const BOOST_DEDUCED_TYPENAME 
-				 coroutine_type::result_slot_type& result) {
+    yield_result_type yield_impl(BOOST_DEDUCED_TYPENAME 
+				 coroutine_type::result_slot_type result) {
+      typedef BOOST_DEDUCED_TYPENAME
+	coroutine_type::result_slot_type slot_type;
+
       BOOST_ASSERT(m_pimpl);
 
-      // note: placement new.
-      new(this->m_pimpl->result()) BOOST_DEDUCED_TYPENAME
-	coroutine_type::result_slot_type (result);
-
+      this->m_pimpl->bind_result(&result);
       this->m_pimpl->yield();    
       return detail::fix_result<
 	BOOST_DEDUCED_TYPENAME
@@ -198,7 +203,7 @@ namespace boost { namespace coroutines { namespace detail {
       BOOST_ASSERT(m_pimpl);
 
       coroutine_accessor::get_impl(target)->bind_args(&args);
-      coroutine_accessor::get_impl(target)->bind_result(m_pimpl->result());    
+      coroutine_accessor::get_impl(target)->bind_result_pointer(m_pimpl->result_pointer());    
 
       this->m_pimpl->yield_to(*coroutine_accessor::get_impl(target));
 

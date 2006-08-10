@@ -10,7 +10,6 @@
 #endif
 #include <boost/none.hpp>
 #include <boost/config.hpp>
-#include <boost/optional.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
@@ -24,6 +23,7 @@
 #include <boost/coroutine/detail/call_impl.hpp>
 #include <boost/coroutine/detail/wait_impl.hpp>
 #include <boost/coroutine/detail/future_impl.hpp>
+#include <boost/coroutine/detail/default_context_impl.hpp>
 
 namespace boost { namespace coroutines {
 
@@ -31,12 +31,14 @@ namespace boost { namespace coroutines {
     BOOST_PP_ENUM_BINARY_PARAMS
   (BOOST_COROUTINE_ARG_MAX,
    typename T, 
-   = boost::tuples::null_type BOOST_PP_INTERCEPT)>
+   = boost::tuples::null_type BOOST_PP_INTERCEPT),
+    ContextImpl = detail::default_context_impl context_impl
+    >
   class future : 
     public movable
     <future<BOOST_PP_ENUM_PARAMS(BOOST_COROUTINE_ARG_MAX, T)> > 
   {
- 
+
    friend class detail::wait_gateway;
    typedef void (future::*safe_bool)();           
    void safe_bool_true() {}                       
@@ -57,33 +59,29 @@ namespace boost { namespace coroutines {
       BOOST_DEDUCED_TYPENAME tuple_traits_type::template at<0>
     >::type  value_type;
     
-    typedef boost::optional<tuple_type> optional_type;
-
   private:
-    typedef detail::future_impl<tuple_type> opt_impl;
-    typedef opt_impl * optional_pointer;
+    typedef detail::future_impl<value_type, context_impl> future_impl;
+    typedef future_impl * impl_pointer;
 
   public:
-    future() :
-      m_ptr(new opt_impl()) {}
+    template<typename CoroutineSelf>
+    future(CoroutineSelf& self) :
+      m_ptr(new future_impl(self)) {}
 
     future(move_from<future> rhs) :
       m_ptr(rhs->pilfer()) {
     }
 
-    future(none_t) :
-      m_ptr(new opt_impl()) {}
-
     value_type& operator *() {
       BOOST_ASSERT(m_ptr);
-      BOOST_ASSERT(m_ptr->optional);
-      return remove_tuple(*m_ptr->optional,  boost::mpl::not_<is_singular>());
+      BOOST_ASSERT(m_ptr->get());
+      return remove_tuple(m_ptr->value(),  boost::mpl::not_<is_singular>());
     }
 
     const value_type& operator *() const{
       BOOST_ASSERT(m_ptr);
-      BOOST_ASSERT(m_ptr->optional);
-      return remove_tuple(*m_ptr->optional, boost::mpl::not_<is_singular>());
+      BOOST_ASSERT(m_ptr->get());
+      return remove_tuple(m_ptr->value(), boost::mpl::not_<is_singular>());
     }
 
     future&
@@ -95,31 +93,35 @@ namespace boost { namespace coroutines {
     future&
     operator=(const value_type& rhs) {
       BOOST_ASSERT(!pending());
-      m_ptr->optional = tuple_type(rhs);
+      m_ptr->get() = tuple_type(rhs);
       return *this;
     }
 
     future&
     operator=(none_t) {
       BOOST_ASSERT(!pending());
-      m_ptr->optional = (none);
+      m_ptr->get() = none;
       return *this;
     }
 
     operator safe_bool() const {    
       BOOST_ASSERT(m_ptr);
-      return m_ptr->optional?                     
+      return m_ptr->get()?                     
        &future::safe_bool_true: 0;                 
     }       
 
-    optional_type & operator ->() {
+    BOOST_DEDUCED_TYPENAME
+      future_impl::pointer & 
+      operator ->() {
       BOOST_ASSERT(m_ptr);
-      return m_ptr->optional;
+      return m_ptr->get();
     }
 
-    const optional_type & operator ->() const {
+    BOOST_DEDUCED_TYPENAME
+    future_impl::pointer const 
+      operator ->() const {
       BOOST_ASSERT(m_ptr);
-      return m_ptr->optional;
+      return m_ptr->get();
     }
 
     friend 
@@ -135,13 +137,11 @@ namespace boost { namespace coroutines {
       }
     }
 
-    /*
-     * Return true if an async call has
-     * been scheduled for this future.
-     */
+    // Return true if an async call has
+    // been scheduled for this future.
     bool pending() const {
       BOOST_ASSERT(m_ptr);
-      return m_ptr->pending;
+      return m_ptr->pending();
     }
   private:
     template<typename T>
@@ -161,16 +161,16 @@ namespace boost { namespace coroutines {
 
     bool waited() const {
       BOOST_ASSERT(m_ptr);
-      return m_ptr->waited;
+      return m_ptr->waited();
     }
 
-    optional_pointer pilfer() {
+    pointer pilfer() {
       optional_pointer ptr = m_ptr;
       m_ptr = 0;
       return ptr;
     }
 
-    optional_pointer m_ptr;    
+    pointer m_ptr;    
   };
 
 #define BOOST_COROUTINE_gen_call_overload(z, n, unused) \

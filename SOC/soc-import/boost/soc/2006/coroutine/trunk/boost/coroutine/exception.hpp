@@ -6,18 +6,46 @@
 #include <exception>
 #include <typeinfo>
 namespace boost { namespace coroutines {
-  class swap_error: public std::exception {};
-  class exit_exception:  public std::exception {};
-  class coroutine_exited: public std::exception {};
-  class coroutine_not_ready : public std::exception {};
+
+  // All coroutine exceptions are derived from this base.
+  class exception_base : public std::exception {};
+
+  // This exception is thrown when a coroutine is requested
+  // to exit.
+  class exit_exception:  public exception_base {};
+
+  // This exception is thrown on a coroutine invocation
+  // if a coroutine exits without
+  // returning a result. Note that calling invoke()
+  // on an already exited coroutine is undefined behaviour.
+  class coroutine_exited: public exception_base {};  
+  
+  // This exception is thrown on a coroutine invocation
+  // if a coroutine enter the wait state without
+  // returning a result. Note that calling invoke()
+  // on a waiting coroutine is undefined behaviour.
+  class waiting : public exception_base {};
+
   class unknown_exception_tag {};
+
+  // This exception is thrown on a coroutine invocation
+  // if the coroutine is exited by an uncatched exception
+  // (not derived from exit_exception). abnormal_exit::type()
+  // returns the typeid of that exception if it is derived
+  // from std::exception, else returns typeid(unknonw_exception_tag)
   class abnormal_exit : public std::exception {
   public:
     abnormal_exit(std::type_info const& e) :
       m_e (e) {};
 
     const char* what() const throw() {
-      return m_e.name();
+      return m_e == typeid(unknown_exception_tag)? 
+	"unknown exception" :
+	m_e.name();
+    }
+
+    std::type_info const& type() const throw() {
+      return m_e;
     }
   private:
     std::type_info const& m_e;

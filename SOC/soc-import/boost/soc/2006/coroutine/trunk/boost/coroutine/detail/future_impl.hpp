@@ -5,27 +5,86 @@
 #define BOOST_COROUTINE_DETAIL_FUTURE_IMPL_HPP_20060809
 #include <boost/optional.hpp>
 #include <boost/assert.hpp>
+#include <boost/optional.hpp>
+#include <boost/noncopyable.hpp>
+#include <boost/coroutine/detail/coroutine_accessor.hpp>
+#include <boost/coroutine/detail/context_base.hpp>
+
 namespace boost { namespace coroutines { namespace detail {
-  template<typename TupleType>
-  struct future_impl   {
-      typedef TupleType tuple_type;
-    future_impl() : 
-      pending(false),
-      waited(false)  {}
-    bool pending;
-    bool waited;
-    boost::optional<tuple_type> optional;
+
+
+  template<typename ValueType, typename ContextImpl>
+  class future_impl : boost::noncopyable  {
+  public:
+    typedef ValueType value_type;
+    typedef 
+    context_base<ContextImpl> *      
+    context_weak_pointer;
     
-    void assign(const tuple_type& val) {
+    typedef 
+    BOOST_DEDUCED_TYPENAME
+    context_base<ContextImpl>::pointer
+    context_pointer;
+
+    typedef boost::optional<value_type> pointer;
+
+    template<typename CoroutineSelf>
+    future_impl(CoroutineSelf& self) :
+      m_coro_impl_weak(coroutine_accessor::get_impl(self)),
+      m_coro_impl(0),
+      m_waited(false)
+    {}
+
+    value_type& 
+    value() {
+      return *m_optional;
+    }
+
+    value_type const& 
+    value() const{
+      return *m_optional;
+    }
+
+    pointer& 
+    get() {
+      return m_optional;
+    }
+
+    pointer const& 
+    get() const{
+      return m_optional;
+    }
+
+    bool pending() {
+      return m_coro_impl.get();
+    }
+    
+    template<typename T>
+    void assign(const T& val) {
       BOOST_ASSERT(pending);
-      pending = false;
-      optional = val;
+      m_coro_impl = 0;
+      m_optional = val;
     }
 
-    void mark_pending() {
-      pending = true;
+    void mark_pending(bool how) {
+      m_coro_impl = how? m_coro_impl_weak : 0;
     }
 
+    bool waited() const {
+      return m_waited;
+    }
+
+    context_pointer context() {
+      BOOST_ASSERT(pending());
+      return m_coro_impl;
+    }
+    
+
+  private:
+    context_weak_pointer m_coro_impl_weak;
+    context_pointer m_coro_impl;
+    bool m_waited;
+    boost::optional<value_type> m_optional;
   };
 } } }
 #endif

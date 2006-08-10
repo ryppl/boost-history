@@ -14,6 +14,7 @@ namespace boost { namespace coroutines { namespace detail {
   struct coroutine_accessor {
 
     // Initialize coroutine from implementation type.
+    // used by the in_place_assing in place factory.
     template<typename Coroutine, typename Ctx>
     static
     void construct(Ctx * src, void * address) {

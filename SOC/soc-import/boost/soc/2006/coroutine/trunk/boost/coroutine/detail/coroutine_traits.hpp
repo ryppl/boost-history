@@ -20,16 +20,16 @@ namespace boost { namespace coroutines { namespace detail {
   template<typename Signature>
   struct coroutine_traits {    
   private:
-    typedef typename boost::function_traits<Signature>::result_type 
+    typedef BOOST_DEDUCED_TYPENAME boost::function_traits<Signature>::result_type 
     signature_result_type;
   public:
-    typedef typename 
+    typedef BOOST_DEDUCED_TYPENAME
     boost::mpl::eval_if<is_tuple_traits<signature_result_type>,
 			as_tuple<signature_result_type>,
 			boost::mpl::identity<signature_result_type> >
     ::type result_type;
 
-    typedef typename 
+    typedef BOOST_DEDUCED_TYPENAME
     boost::mpl::eval_if<is_tuple_traits<signature_result_type>,
 			boost::mpl::identity<signature_result_type>,
 			boost::mpl::if_
@@ -37,18 +37,18 @@ namespace boost { namespace coroutines { namespace detail {
 			 tuple_traits<>,
 			 tuple_traits<signature_result_type> > >
     ::type result_slot_traits;
-
-    typedef typename result_slot_traits
+    
+    typedef BOOST_DEDUCED_TYPENAME result_slot_traits
     ::as_tuple result_slot_type;
     	     
-    typedef  typename detail::make_tuple_traits
+    typedef BOOST_DEDUCED_TYPENAME detail::make_tuple_traits
     <typename detail::signature<Signature>::type >
     ::type arg_slot_traits;
 
-    typedef typename arg_slot_traits
+    typedef BOOST_DEDUCED_TYPENAME arg_slot_traits
     ::as_tuple arg_slot_type;
 
-    typedef typename arg_slot_traits
+    typedef BOOST_DEDUCED_TYPENAME arg_slot_traits
     ::as_result yield_result_type;
 
   };

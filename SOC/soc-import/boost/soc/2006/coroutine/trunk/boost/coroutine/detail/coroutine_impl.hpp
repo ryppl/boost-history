@@ -7,274 +7,19 @@
 #pragma warning (push)
 #pragma warning (disable: 4355) //this used in base member initializer
 #endif 
-#include <cstddef>
-#include <algorithm> //for swap
-#include <boost/intrusive_ptr.hpp>
-#include <boost/optional.hpp>
-#include <boost/mpl/eval_if.hpp>
-#include <boost/detail/atomic_count.hpp>
-#include <boost/coroutine/exception.hpp>
-#include <boost/coroutine/detail/argument_unpacker.hpp>
-#include <boost/coroutine/detail/swap_context.hpp>
-#include <boost/coroutine/detail/coroutine_accessor.hpp>
 
-/*
- * Currently asio can in some cases, call copy constructors and
- * operator= from different threads, even if in the
- * one-thread-per-service model. 
- * This will be corrected in future versions, but for now
- * we will play it safe and use an atomic count.
- */
-#define BOOST_COROUTINE_ATOMIC_COUNT
+#include <cstddef>
+#include <boost/optional.hpp>
+#include <boost/coroutine/detail/argument_unpacker.hpp>
+#include <boost/coroutine/detail/coroutine_accessor.hpp>
+#include <boost/coroutine/detail/context_base.hpp>
 
 namespace boost { namespace coroutines { namespace detail {
 	
-  const std::ptrdiff_t default_stack_size = -1;
-
-  template<typename ContextImpl>
-  class context_base : public ContextImpl {
-  public:
-
-    typedef ContextImpl context_impl;
-    typedef context_base<context_impl> type;
-    typedef boost::intrusive_ptr<type> context_ptr;
-    typedef void deleter_type(const type*);
-    
-    template<typename Derived>
-	context_base(Derived& derived, std::ptrdiff_t stack_size) :
-      context_impl(derived, stack_size),
-      m_counter(0),
-      m_deleter(&deleter<Derived>),
-      m_state(ctx_ready), 
-      m_exit_state(ctx_exit_not_requested),
-      m_exit_status(ctx_not_exited),
-      m_wait_counter(0),
-      m_type_info(0) {}
-    
-    friend
-    void intrusive_ptr_add_ref(type * ctx) {
-      ctx->acquire();
-    }
-    
-    friend
-    void intrusive_ptr_release(type * ctx) {
-      ctx->release();
-    }
-      
-    bool unique() const {
-      return count() == 1;
-    }
-
-    std::size_t count() const {
-      return m_counter;
-    }
-      
-    void acquire() const {
-      ++m_counter;
-    }
-      
-    void release() const {
-      BOOST_ASSERT(m_counter);
-      if(--m_counter == 0) {
-	m_deleter(this);
-      }
-    }
-
-    /**
-     * A signal may occur only when a context is 
-     * not running (is delivered sinchrononously).
-     * This means that state MUST NOT be busy.
-     * It may be ready or waiting.
-     * returns 'ready()'
-     */
-    bool signal () {
-      BOOST_ASSERT(!running() && !exited());
-      if(m_wait_counter) --m_wait_counter;
-      if(!m_wait_counter && m_state == ctx_waiting)
-	m_state = ctx_ready;      
-      return ready();
-    }
-
-    /**
-     * Wake up a waiting context.
-     */
-    void wake_up() {
-    }
-    /*
-     * Returns true if the context is runnable.
-     */
-    bool ready() const {
-      return m_state == ctx_ready;
-    }
-
-    /*
-     * Returns true if the context is in wait
-     * state.
-     */
-    bool waiting() const {
-      return m_state == ctx_waiting;
-    }
-
-    bool running() const {
-      return m_state == ctx_running;
-    }
-
-    bool exited() const {
-      return m_state == ctx_exited;
-    }
-
-    void invoke() {
-      BOOST_ASSERT(ready());
-      do_invoke();
-      if(m_exit_status) {
-	if(m_exit_status == ctx_exited_abnormally) {
-	std::type_info const * tinfo =0;
-	std::swap(m_type_info, tinfo);
-	throw abnormal_exit(tinfo?*tinfo: typeid(unknown_exception_tag));
-	} else if(m_exit_status == ctx_exited_exit)
-	  throw coroutine_exited();
-      }
-    }
-
-    void yield() {
-      BOOST_ASSERT(m_exit_state < ctx_exit_signaled); //prevent infinite loops
-      BOOST_ASSERT(running());
-
-      m_state = ctx_ready;
-      do_yield();
-
-      BOOST_ASSERT(m_state == ctx_running);
-      check_exit_state();
-    }
-
-    /*
-     * In n > 0, put the coroutine in the wait state
-     * then return to caller. If n = 0 do nothing.
-     * The coroutine will remain in the wait state it
-     * is signaled 'n' times.
-     */
-    void wait(int n) {
-      BOOST_ASSERT(m_exit_state < ctx_exit_signaled); //prevent infinite loops
-      BOOST_ASSERT(running());
-
-      if(n == 0) return;
-      m_wait_counter = n;
-
-      m_state = ctx_waiting;
-      do_yield();
-
-      BOOST_ASSERT(m_state == ctx_running);
-      check_exit_state();
-      BOOST_ASSERT(m_wait_counter == 0);
-    }
-
-    void yield_to(context_base& to) {
-      BOOST_ASSERT(m_exit_state < ctx_exit_signaled); //prevent infinite loops
-      BOOST_ASSERT(m_state == ctx_running);
-
-      if(to.exited())  throw coroutine_exited();
-      if(!to.ready()) throw coroutine_not_ready();
-
-      std::swap(m_caller, to.m_caller);
-      std::swap(m_state, to.m_state);
-      swap_context(*this, to, detail::yield_to_hint());
-
-      BOOST_ASSERT(m_state == ctx_running);
-      check_exit_state();
-    }
-
-    void exit() {
-      if(m_exit_state < ctx_exit_pending) 
-	m_exit_state = ctx_exit_pending;	
-      if(ready() || waiting()) {
-	do_invoke();
-	BOOST_ASSERT(exited()); //at this point the coroutine MUST have exited.
-      } else {
-	check_exit_state();
-      }
-    }
-
-    ~context_base() {
-      BOOST_ASSERT(!running());
-      try {
-	if(!exited())
-	  exit();
-      } catch(...) {}
-    }
-
-  protected:
-    // global coroutine state
-    enum context_state {
-      ctx_running,  // context running.
-      ctx_ready,    // context at yield point.
-      ctx_waiting,     // context waiting for events.
-      ctx_exited    // context is finished.
-    };
-
-    // exit request state
-    enum context_exit_state {
-      ctx_exit_not_requested,  // exit not requested.
-      ctx_exit_pending,   // exit requested.
-      ctx_exit_signaled,  // exit request delivered.
-    };
-    
-    // exit status
-    enum context_exit_status {
-      ctx_not_exited,
-      ctx_exited_return,  // process exited by return.
-      ctx_exited_exit,    // process exited by exit().
-      ctx_exited_abnormally // process exited uncleanly.
-    };
-
-    void check_exit_state() {
-      if(!m_exit_state) return;
-      if(m_state == ctx_running)
-	  throw exit_exception();
-    }
-
-    void do_return(context_exit_status status, std::type_info const* info) {
-      BOOST_ASSERT(status != ctx_not_exited);
-      BOOST_ASSERT(m_state == ctx_running);
-      m_type_info = info;
-      m_state = ctx_exited;
-      m_exit_status = status;
-      do_yield();
-    }
-
-  private:
-
-    void do_yield() {
-      swap_context(*this, m_caller, detail::yield_hint());
-    }
-
-    void do_invoke() {
-      BOOST_ASSERT(ready() || waiting());
-      m_state = ctx_running;
-      swap_context(m_caller, *this, detail::invoke_hint());
-    }
-
-    template<typename ActualCtx>
-    static void deleter (const type* ctx){
-      delete static_cast<ActualCtx*>(const_cast<type*>(ctx));
-    }
-            
-    typedef typename context_impl::context_impl_base ctx_type;
-    ctx_type m_caller;
-    mutable 
-#ifndef BOOST_COROUTINE_ATOMIC_COUNT
-    std::size_t
-#else
-    boost::detail::atomic_count
-#endif
-    m_counter;
-    deleter_type * m_deleter;
-    context_state m_state;
-    context_exit_state m_exit_state;
-    context_exit_status m_exit_status;
-    unsigned int m_wait_counter;    
-    std::type_info const* m_type_info;
-  };
-
+  // This class augment the contest_base class with
+  // the coroutine signature type.
+  // This is mostly just a place to put
+  // typesafe argument and result type pointers.
   template<typename CoroutineType, typename ContextImpl>
   class coroutine_impl:
     public context_base<ContextImpl>
@@ -288,7 +33,9 @@ namespace boost { namespace coroutines { namespace detail {
     typedef coroutine_impl<coroutine_type, context_impl> type;
     typedef context_base<context_impl> context_base;
     typedef typename coroutine_type::arg_slot_type arg_slot_type;
+    typedef typename coroutine_type::result_type result_type;
     typedef typename coroutine_type::result_slot_type result_slot_type;
+
     typedef boost::intrusive_ptr<type> pointer;
   
     template<typename DerivedType>
@@ -304,7 +51,8 @@ namespace boost { namespace coroutines { namespace detail {
     
     result_slot_type * result() {
       BOOST_ASSERT(m_result);
-      return this->m_result;
+      BOOST_ASSERT(*m_result);
+      return *this->m_result;
     } 
 
     template<typename Functor>
@@ -316,13 +64,31 @@ namespace boost { namespace coroutines { namespace detail {
     }
     
     void bind_result(result_slot_type* res) {
-      m_result = res;
+      *m_result = res;
     }
+
+    // Another level of indirecition is needed to handle
+    // yield_to correctly.
+    void bind_result_pointer(result_slot_type** resp) {
+      m_result = resp;
+    }
+
+    result_slot_type** result_pointer() {
+      return m_result;
+    }
+  protected:
+    boost::optional<result_slot_type>  m_result_last;
+
   private:
     arg_slot_type * m_arg;
-    result_slot_type * m_result;
+    result_slot_type ** m_result;
+
   };
 
+  // This type augment coroutine_impl type with the type of the stored 
+  // functor. The type of this object is erased right after construction
+  // when it is assigned to a pointer to coroutine_impl. A deleter is
+  // passed down to make it sure that the correct derived type is deleted.
   template<typename FunctorType, typename CoroutineType, typename ContextImpl>
   class coroutine_impl_wrapper :
     public coroutine_impl<CoroutineType, ContextImpl> {
@@ -361,11 +127,10 @@ namespace boost { namespace coroutines { namespace detail {
 
     //GCC workaround as per enable_if docs 
     template <int> struct dummy { dummy(int) {} };
-    /**
+    /*
      * Implementation for operator()
-     * @note: This is tricky, cancel_count is used to prevent 'this'
-     * to increase the reference count of itself. 
-     * This is used only for the first call.    
+     * This is for void result types.
+     * Can throw if m_fun throws. At least it can throw exit_exception.
      */
     template<typename ResultType>
     typename boost::enable_if<boost::is_void<ResultType> >::type
@@ -379,28 +144,37 @@ namespace boost { namespace coroutines { namespace detail {
 	 *self, 
 	 *this->args(), 
 	 detail::trait_tag<typename coroutine_type::arg_slot_traits>());
+
+      typedef BOOST_DEDUCED_TYPENAME coroutine_type::result_slot_type 
+	result_slot_type;
+
+      // In this particulare case result_slot_type is guaranteed to be
+      // default constructible.
+      this->m_result_last = result_slot_type();
+      this->bind_result(&*this->m_result_last);
     }
 
-    
+    // Same as above, but for non void result types.
     template<typename ResultType>
     typename boost::disable_if<boost::is_void<ResultType> >::type
     do_call(dummy<1> = 1) {
       BOOST_ASSERT(this->count() > 0);
       typedef BOOST_DEDUCED_TYPENAME
       coroutine_type::self self_type;
-      boost::optional<self_type> self (coroutine_accessor::in_place(this));
-      typedef BOOST_DEDUCED_TYPENAME coroutine_type::arg_slot_traits traits;
-	  
-      typedef BOOST_DEDUCED_TYPENAME coroutine_type::result_slot_type
-	slot_type;
 
-      //note: placement new.
-      new(this->result()) slot_type
-	(detail::unpack_ex
-	 (m_fun, 
-	  *self, 
-	  *this->args(), 
-	  detail::trait_tag<traits>()));
+      boost::optional<self_type> self (coroutine_accessor::in_place(this));
+
+      typedef BOOST_DEDUCED_TYPENAME coroutine_type::arg_slot_traits traits;
+      typedef BOOST_DEDUCED_TYPENAME coroutine_type::result_slot_type 
+	result_slot_type;
+	  
+      this->m_result_last = boost::in_place(result_slot_type(detail::unpack_ex
+			   (m_fun, 
+			    *self, 
+			    *this->args(), 
+			    detail::trait_tag<traits>())));      
+      
+      this->bind_result(&*this->m_result_last);
     }
   
     FunctorType m_fun;

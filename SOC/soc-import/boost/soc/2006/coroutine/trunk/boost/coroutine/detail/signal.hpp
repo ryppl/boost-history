@@ -24,16 +24,9 @@ namespace boost { namespace coroutines { namespace detail {
     }
 
     template<typename Future>
-    struct impl_ptr {
-      typedef detail::future_impl<
-	BOOST_DEDUCED_TYPENAME
-	Future::tuple_type>* type;
-    };
-
-    template<typename Future>
     static
     BOOST_DEDUCED_TYPENAME 
-    impl_ptr<Future>::type
+    Future::impl_pointer
     get_impl(Future& f) {
       return f.m_ptr;
     }

@@ -44,9 +44,8 @@ namespace boost { namespace coroutines { namespace detail {
 		   const ucontext_context_impl_base& to,
 		   default_hint) {
 	int  error = ::swapcontext(&from.m_ctx, &to.m_ctx); 
-	if(error != 0) {
-	  throw swap_error();
-	}
+	(void)error;
+	BOOST_ASSERT(error == 0);
       }
 
     protected:

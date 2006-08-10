@@ -81,7 +81,7 @@ namespace boost { namespace coroutines { namespace detail {
 	(BOOST_PP_ENUM_PARAMS
 	 (BOOST_COROUTINE_ARG_MAX, arg)));
       if(m_pimpl->signal()) {
-	m_pimpl->invoke();
+	m_pimpl->wake_up();
       }
     }
 

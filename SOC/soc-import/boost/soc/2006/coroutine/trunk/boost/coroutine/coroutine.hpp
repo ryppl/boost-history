@@ -55,6 +55,7 @@ namespace boost { namespace coroutines {
     detail::coroutine_traits<signature_type>
     ::yield_result_type yield_result_type;
 
+
     typedef BOOST_DEDUCED_TYPENAME 
     detail::coroutine_traits<signature_type>
     ::result_slot_traits result_slot_traits;
@@ -73,10 +74,6 @@ namespace boost { namespace coroutines {
     typedef detail::coroutine_self<type> self;
     coroutine(): m_pimpl(0) {}
 
-  private:
-  public:
-
-    
     template<typename Functor>
     explicit 
     coroutine (Functor f, 
@@ -163,12 +160,7 @@ namespace boost { namespace coroutines {
       m_pimpl->exit();
     }
   private:
-    //Disabled copy constructor and operator=. 
-    //Coroutine is movable only.
-    //coroutine(const coroutine& rhs);
-    //coroutine& operator=(coroutine rhs);
-
-    /**
+    /*
      * The second parameter is used to avoid calling this constructor
      * by mistake from other member funcitons (specifically operator=).
      */
@@ -183,26 +175,15 @@ namespace boost { namespace coroutines {
 
     result_type call_impl(arg_slot_type args) {
       BOOST_ASSERT(m_pimpl);
-      // result_slot_type might not be
-      // default constructible, so we
-      // handle this case by only allocating 
-      // storage and not default
-      // constructing the object.
-      
-      boost::aligned_storage<
-	sizeof(result_slot_type),
-	boost::alignment_of<result_slot_type>::value> result_slot; 
-
       m_pimpl->bind_args(&args);
-      m_pimpl->bind_result(static_cast<result_slot_type*>(result_slot.address()));
-
+      result_slot_type * ptr;
+      m_pimpl->bind_result_pointer(&ptr);
       m_pimpl->invoke();
 
 #ifndef NDEBUG
       m_pimpl->bind_args(0);
-      m_pimpl->bind_result(0);
 #endif
-      return detail::fix_result<result_slot_traits>(*static_cast<result_slot_type*>(result_slot.address()));
+      return detail::fix_result<result_slot_traits>(*m_pimpl->result());
     }
 
     impl_ptr m_pimpl;
