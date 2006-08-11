@@ -17,7 +17,8 @@ namespace but = ::boost::unit_test;
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_arguments_addition(void)
 {
     bp::command_line cl("program");
@@ -33,7 +34,8 @@ test_arguments_addition(void)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_arguments_empty(void)
 {
     bp::command_line cl("program");
@@ -45,7 +47,8 @@ test_arguments_empty(void)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_arguments_types(void)
 {
     bp::command_line cl("program");
@@ -60,7 +63,8 @@ test_arguments_types(void)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_executable(void)
 {
     bp::command_line cl("program");
@@ -69,7 +73,8 @@ test_executable(void)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_progname(void)
 {
     bp::command_line cl1("program");
@@ -89,7 +94,8 @@ test_progname(void)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_shell(void)
 {
     bp::command_line cl = bp::command_line::shell("test command");

@@ -27,6 +27,7 @@ namespace but = ::boost::unit_test;
 
 // ------------------------------------------------------------------------
 
+static
 void
 test_close_stdin(void)
 {
@@ -49,6 +50,7 @@ test_close_stdin(void)
 
 // ------------------------------------------------------------------------
 
+static
 void
 test_close_stdout(void)
 {
@@ -68,6 +70,7 @@ test_close_stdout(void)
 
 // ------------------------------------------------------------------------
 
+static
 void
 test_close_stderr(void)
 {
@@ -87,6 +90,7 @@ test_close_stderr(void)
 
 // ------------------------------------------------------------------------
 
+static
 void
 test_input(void)
 {
@@ -115,6 +119,7 @@ test_input(void)
 
 // ------------------------------------------------------------------------
 
+static
 void
 test_output(bool out,
             const std::string& realmsg,

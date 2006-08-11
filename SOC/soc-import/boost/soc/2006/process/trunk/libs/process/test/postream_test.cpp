@@ -22,7 +22,8 @@ namespace but = ::boost::unit_test;
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_it(void)
 {
     bpd::pipe p;

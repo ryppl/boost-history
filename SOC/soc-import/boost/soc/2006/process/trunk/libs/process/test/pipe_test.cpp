@@ -32,7 +32,8 @@ namespace but = ::boost::unit_test;
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_read_and_write(void)
 {
     bpd::pipe p;
@@ -54,7 +55,8 @@ test_read_and_write(void)
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
-static void
+static
+void
 test_remap_read(void)
 {
     bpd::pipe p;
@@ -76,7 +78,8 @@ test_remap_read(void)
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
-static void
+static
+void
 test_remap_write(void)
 {
     bpd::pipe p;

@@ -49,7 +49,8 @@ get_test_handle(void)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_construct(void)
 {
     bpd::file_handle fh1;
@@ -62,7 +63,8 @@ test_construct(void)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_copy(void)
 {
     bpd::file_handle fh1;
@@ -81,7 +83,8 @@ test_copy(void)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_get(void)
 {
     bpd::file_handle fh1(get_test_handle());
@@ -91,7 +94,8 @@ test_get(void)
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
-static void
+static
+void
 test_posix_dup(void)
 {
     int pfd[2];
@@ -122,7 +126,8 @@ test_posix_dup(void)
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
-static void
+static
+void
 test_posix_remap(void)
 {
     int pfd[2];
@@ -147,7 +152,8 @@ test_posix_remap(void)
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_WIN32_API)
-static void
+static
+void
 test_win32_dup(void)
 {
     HANDLE in, out;
@@ -200,7 +206,8 @@ test_win32_dup(void)
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_WIN32_API)
-static void
+static
+void
 test_win32_set_inheritable(void)
 {
     HANDLE in, out;

@@ -31,7 +31,8 @@ namespace but = ::boost::unit_test;
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
-static void
+static
+void
 test_command_line_to_posix_argv(void)
 {
     bp::command_line cl("program");
@@ -61,7 +62,8 @@ test_command_line_to_posix_argv(void)
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_WIN32_API)
-static void
+static
+void
 test_command_line_to_win32_cmdline(void)
 {
     bp::command_line cl("program");

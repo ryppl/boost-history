@@ -27,6 +27,7 @@ namespace but = ::boost::unit_test;
 
 // ------------------------------------------------------------------------
 
+static
 bp::child
 launch_helper(const std::string& name)
 {
@@ -37,6 +38,7 @@ launch_helper(const std::string& name)
 
 // ------------------------------------------------------------------------
 
+static
 void
 test_exit_failure(void)
 {
@@ -47,6 +49,7 @@ test_exit_failure(void)
 
 // ------------------------------------------------------------------------
 
+static
 void
 test_exit_success(void)
 {

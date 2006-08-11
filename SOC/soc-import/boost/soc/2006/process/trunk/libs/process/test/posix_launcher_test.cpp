@@ -90,7 +90,8 @@ test_output(int desc,
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
-static void
+static
+void
 test_stderr_fail(void)
 {
     test_output(STDERR_FILENO, "message-stderr", "fail-stderr");
@@ -100,7 +101,8 @@ test_stderr_fail(void)
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
-static void
+static
+void
 test_stderr_pass(void)
 {
     test_output(STDERR_FILENO, "message-stderr", "message-stderr");
@@ -110,7 +112,8 @@ test_stderr_pass(void)
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
-static void
+static
+void
 test_stdout_fail(void)
 {
     test_output(STDOUT_FILENO, "message-stdout", "fail-stdout");
@@ -120,7 +123,8 @@ test_stdout_fail(void)
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
-static void
+static
+void
 test_stdout_pass(void)
 {
     test_output(STDOUT_FILENO, "message-stdout", "message-stdout");
@@ -165,7 +169,8 @@ test_merge(int desc1,
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
-static void
+static
+void
 test_merge_out_err(void)
 {
     test_merge(STDOUT_FILENO, STDERR_FILENO, "message");
@@ -175,7 +180,8 @@ test_merge_out_err(void)
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
-static void
+static
+void
 test_merge_err_out(void)
 {
     test_merge(STDERR_FILENO, STDOUT_FILENO, "message");
@@ -185,7 +191,8 @@ test_merge_err_out(void)
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
-static void
+static
+void
 test_merge_non_std(void)
 {
     test_merge(4, 5, "message");
@@ -196,7 +203,8 @@ test_merge_non_std(void)
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
-static void
+static
+void
 test_default_work_directory(void)
 {
     bp::command_line cl(get_helpers_path());
@@ -221,7 +229,8 @@ test_default_work_directory(void)
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
-static void
+static
+void
 test_explicit_work_directory(void)
 {
     bfs::path wdir = bfs::current_path() / "test.dir";
@@ -256,7 +265,8 @@ test_explicit_work_directory(void)
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
-static void
+static
+void
 test_unset_environment(void)
 {
     bp::command_line cl(get_helpers_path());
@@ -285,7 +295,8 @@ test_unset_environment(void)
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
-static void
+static
+void
 test_set_environment(const std::string& value)
 {
     bp::command_line cl(get_helpers_path());
@@ -317,7 +328,8 @@ test_set_environment(const std::string& value)
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
-static void
+static
+void
 test_set_environment_empty(void)
 {
     test_set_environment("");
@@ -327,7 +339,8 @@ test_set_environment_empty(void)
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
-static void
+static
+void
 test_set_environment_non_empty(void)
 {
     test_set_environment("some-value");
@@ -337,7 +350,8 @@ test_set_environment_non_empty(void)
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
-static void
+static
+void
 test_default_ids(void)
 {
     bp::posix_launcher pl;
@@ -351,7 +365,8 @@ test_default_ids(void)
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
-static void
+static
+void
 test_setters(void)
 {
     bp::posix_launcher pl1;

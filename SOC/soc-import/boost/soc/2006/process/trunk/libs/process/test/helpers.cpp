@@ -28,22 +28,22 @@
 namespace bfs = ::boost::filesystem;
 namespace bpd = ::boost::process::detail;
 
-int h_echo_stdout(int, char*[]);
-int h_echo_stderr(int, char*[]);
-int h_echo_stdout_stderr(int, char*[]);
-int h_exit_failure(int, char*[]);
-int h_exit_success(int, char*[]);
-int h_is_closed_stdin(int, char*[]);
-int h_is_closed_stdout(int, char*[]);
-int h_is_closed_stderr(int, char*[]);
-int h_prefix(int, char*[]);
-int h_pwd(int, char*[]);
-int h_query_env(int, char*[]);
-int h_stdin_to_stdout(int, char*[]);
+static int h_echo_stdout(int, char*[]);
+static int h_echo_stderr(int, char*[]);
+static int h_echo_stdout_stderr(int, char*[]);
+static int h_exit_failure(int, char*[]);
+static int h_exit_success(int, char*[]);
+static int h_is_closed_stdin(int, char*[]);
+static int h_is_closed_stdout(int, char*[]);
+static int h_is_closed_stderr(int, char*[]);
+static int h_prefix(int, char*[]);
+static int h_pwd(int, char*[]);
+static int h_query_env(int, char*[]);
+static int h_stdin_to_stdout(int, char*[]);
 
 #if defined(BOOST_PROCESS_POSIX_API)
-int h_posix_echo_one(int, char*[]);
-int h_posix_echo_two(int, char*[]);
+static int h_posix_echo_one(int, char*[]);
+static int h_posix_echo_two(int, char*[]);
 #endif
 
 struct helper {
@@ -75,6 +75,7 @@ struct helper {
 
 // ------------------------------------------------------------------------
 
+static
 int
 h_echo_stdout(int argc, char* argv[])
 {
@@ -84,6 +85,7 @@ h_echo_stdout(int argc, char* argv[])
 
 // ------------------------------------------------------------------------
 
+static
 int
 h_echo_stderr(int argc, char* argv[])
 {
@@ -93,6 +95,7 @@ h_echo_stderr(int argc, char* argv[])
 
 // ------------------------------------------------------------------------
 
+static
 int
 h_echo_stdout_stderr(int argc, char* argv[])
 {
@@ -105,6 +108,7 @@ h_echo_stdout_stderr(int argc, char* argv[])
 
 // ------------------------------------------------------------------------
 
+static
 int
 h_exit_failure(int argc, char* argv[])
 {
@@ -113,6 +117,7 @@ h_exit_failure(int argc, char* argv[])
 
 // ------------------------------------------------------------------------
 
+static
 int
 h_exit_success(int argc, char* argv[])
 {
@@ -121,6 +126,7 @@ h_exit_success(int argc, char* argv[])
 
 // ------------------------------------------------------------------------
 
+static
 int
 h_is_closed_stdin(int argc, char* argv[])
 {
@@ -131,6 +137,7 @@ h_is_closed_stdin(int argc, char* argv[])
 
 // ------------------------------------------------------------------------
 
+static
 int
 h_is_closed_stdout(int argc, char* argv[])
 {
@@ -140,6 +147,7 @@ h_is_closed_stdout(int argc, char* argv[])
 
 // ------------------------------------------------------------------------
 
+static
 int
 h_is_closed_stderr(int argc, char* argv[])
 {
@@ -149,6 +157,7 @@ h_is_closed_stderr(int argc, char* argv[])
 
 // ------------------------------------------------------------------------
 
+static
 int
 h_prefix(int argc, char* argv[])
 {
@@ -161,6 +170,7 @@ h_prefix(int argc, char* argv[])
 
 // ------------------------------------------------------------------------
 
+static
 int
 h_pwd(int argc, char* argv[])
 {
@@ -170,6 +180,7 @@ h_pwd(int argc, char* argv[])
 
 // ------------------------------------------------------------------------
 
+static
 int
 h_query_env(int argc, char* argv[])
 {
@@ -197,6 +208,7 @@ h_query_env(int argc, char* argv[])
 
 // ------------------------------------------------------------------------
 
+static
 int
 h_stdin_to_stdout(int argc, char* argv[])
 {
@@ -210,6 +222,7 @@ h_stdin_to_stdout(int argc, char* argv[])
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
+static
 int
 h_posix_echo_one(int argc, char* argv[])
 {
@@ -226,6 +239,7 @@ h_posix_echo_one(int argc, char* argv[])
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
+static
 int
 h_posix_echo_two(int argc, char* argv[])
 {

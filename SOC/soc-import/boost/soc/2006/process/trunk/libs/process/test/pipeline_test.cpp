@@ -24,7 +24,8 @@ namespace but = ::boost::unit_test;
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_exit(const std::string& middle, int value)
 {
     bp::command_line cl1(get_helpers_path());
@@ -49,7 +50,8 @@ test_exit(const std::string& middle, int value)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_exit_failure(void)
 {
     test_exit("exit-failure", EXIT_FAILURE);
@@ -57,7 +59,8 @@ test_exit_failure(void)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_exit_success(void)
 {
     test_exit("exit-success", EXIT_SUCCESS);
@@ -65,7 +68,8 @@ test_exit_success(void)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_simple(void)
 {
     bp::command_line cl1(get_helpers_path());
@@ -96,7 +100,8 @@ test_simple(void)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_merge_first(void)
 {
     bp::command_line cl1(get_helpers_path());

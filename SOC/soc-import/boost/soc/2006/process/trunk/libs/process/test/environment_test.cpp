@@ -31,7 +31,8 @@ namespace but = ::boost::unit_test;
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_init(void)
 {
     bpd::environment env1;
@@ -53,7 +54,8 @@ test_init(void)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_set(void)
 {
     bpd::environment env;
@@ -68,7 +70,8 @@ test_set(void)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_unset(void)
 {
     bpd::environment env;
@@ -82,7 +85,8 @@ test_unset(void)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_envp(void)
 {
     bpd::environment env;
@@ -111,7 +115,8 @@ test_envp(void)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_envp_unsorted(void)
 {
     bpd::environment env;
@@ -136,7 +141,8 @@ test_envp_unsorted(void)
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_WIN32_API)
-static void
+static
+void
 test_strings(void)
 {
     bpd::environment env;
@@ -157,7 +163,8 @@ test_strings(void)
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_WIN32_API)
-static void
+static
+void
 test_strings_unsorted(void)
 {
     bpd::environment env;

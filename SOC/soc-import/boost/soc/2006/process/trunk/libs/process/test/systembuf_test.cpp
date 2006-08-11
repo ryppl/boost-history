@@ -34,7 +34,8 @@ namespace but = ::boost::unit_test;
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 check_data(std::istream& is, std::size_t length)
 {
     char ch = 'A', chr;
@@ -52,7 +53,8 @@ check_data(std::istream& is, std::size_t length)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 write_data(std::ostream& os, std::size_t length)
 {
     char ch = 'A';
@@ -68,7 +70,8 @@ write_data(std::ostream& os, std::size_t length)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 remove_file(const std::string& name)
 {
 #if defined(BOOST_PROCESS_WIN32_API)
@@ -80,7 +83,8 @@ remove_file(const std::string& name)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_read(std::size_t length, std::size_t bufsize)
 {
     std::ofstream f("test_read.txt");
@@ -110,7 +114,8 @@ test_read(std::size_t length, std::size_t bufsize)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_short_read(void)
 {
     test_read(64, 1024);
@@ -118,7 +123,8 @@ test_short_read(void)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_long_read(void)
 {
     test_read(64 * 1024, 1024);
@@ -126,7 +132,8 @@ test_long_read(void)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_write(std::size_t length, std::size_t bufsize)
 {
 #if defined(BOOST_PROCESS_WIN32_API)
@@ -156,7 +163,8 @@ test_write(std::size_t length, std::size_t bufsize)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_short_write(void)
 {
     test_write(64, 1024);
@@ -164,7 +172,8 @@ test_short_write(void)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_long_write(void)
 {
     test_write(64 * 1024, 1024);
