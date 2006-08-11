@@ -31,6 +31,11 @@ extern "C" {
 
 #include <boost/process.hpp>
 
+//
+// Error out early if we are trying to build this non-portable example
+// code under a platform that does not provide the required posix_*
+// classes.
+//
 #if !defined(BOOST_PROCESS_POSIX_API)
 #   error "Unsupported platform."
 #endif
