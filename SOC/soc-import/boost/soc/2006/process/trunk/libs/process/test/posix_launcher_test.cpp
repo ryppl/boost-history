@@ -65,12 +65,10 @@ test_input(void)
 
 #if defined(BOOST_PROCESS_POSIX_API)
 void
-test_output(int desc,
-            const std::string& realmsg,
-            const std::string& expmsg)
+test_output(int desc, const std::string& msg)
 {
     bp::command_line cl(get_helpers_path());
-    cl.argument("posix-echo-one").argument(desc).argument(realmsg);
+    cl.argument("posix-echo-one").argument(desc).argument(msg);
 
     bp::posix_launcher l;
     l.set_output_behavior(desc, bp::redirect_stream);
@@ -79,7 +77,7 @@ test_output(int desc,
     bp::pistream& is = c.get_output(desc);
     std::string word;
     is >> word;
-    BOOST_CHECK_EQUAL(word, expmsg);
+    BOOST_CHECK_EQUAL(word, msg);
 
     bp::status s = c.wait();
     BOOST_REQUIRE(s.exited());
@@ -92,9 +90,10 @@ test_output(int desc,
 #if defined(BOOST_PROCESS_POSIX_API)
 static
 void
-test_stderr_fail(void)
+test_stderr(void)
 {
-    test_output(STDERR_FILENO, "message-stderr", "fail-stderr");
+    test_output(STDERR_FILENO, "message1-stderr");
+    test_output(STDERR_FILENO, "message2-stderr");
 }
 #endif
 
@@ -103,31 +102,10 @@ test_stderr_fail(void)
 #if defined(BOOST_PROCESS_POSIX_API)
 static
 void
-test_stderr_pass(void)
+test_stdout(void)
 {
-    test_output(STDERR_FILENO, "message-stderr", "message-stderr");
-}
-#endif
-
-// ------------------------------------------------------------------------
-
-#if defined(BOOST_PROCESS_POSIX_API)
-static
-void
-test_stdout_fail(void)
-{
-    test_output(STDOUT_FILENO, "message-stdout", "fail-stdout");
-}
-#endif
-
-// ------------------------------------------------------------------------
-
-#if defined(BOOST_PROCESS_POSIX_API)
-static
-void
-test_stdout_pass(void)
-{
-    test_output(STDOUT_FILENO, "message-stdout", "message-stdout");
+    test_output(STDOUT_FILENO, "message1-stdout");
+    test_output(STDOUT_FILENO, "message2-stdout");
 }
 #endif
 
@@ -415,10 +393,8 @@ init_unit_test_suite(int argc, char* argv[])
     but::test_suite* test = BOOST_TEST_SUITE("posix_launcher test suite");
 
 #if defined(BOOST_PROCESS_POSIX_API)
-    test->add(BOOST_TEST_CASE(&test_stdout_pass), 0, 10);
-    test->add(BOOST_TEST_CASE(&test_stdout_fail), 1, 10);
-    test->add(BOOST_TEST_CASE(&test_stderr_pass), 0, 10);
-    test->add(BOOST_TEST_CASE(&test_stderr_fail), 1, 10);
+    test->add(BOOST_TEST_CASE(&test_stdout), 0, 10);
+    test->add(BOOST_TEST_CASE(&test_stderr), 0, 10);
     test->add(BOOST_TEST_CASE(&test_merge_out_err), 0, 10);
     test->add(BOOST_TEST_CASE(&test_merge_err_out), 0, 10);
     test->add(BOOST_TEST_CASE(&test_merge_non_std), 0, 10);

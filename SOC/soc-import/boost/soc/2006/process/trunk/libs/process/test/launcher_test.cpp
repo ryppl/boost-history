@@ -121,12 +121,10 @@ test_input(void)
 
 static
 void
-test_output(bool out,
-            const std::string& realmsg,
-            const std::string& expmsg)
+test_output(bool out, const std::string& msg)
 {
     bp::command_line cl(get_helpers_path());
-    cl.argument(out ? "echo-stdout" : "echo-stderr").argument(realmsg);
+    cl.argument(out ? "echo-stdout" : "echo-stderr").argument(msg);
 
     bp::launcher l;
     if (out)
@@ -143,7 +141,7 @@ test_output(bool out,
         bp::pistream& is = c.get_stderr();
         is >> word;
     }
-    BOOST_CHECK_EQUAL(word, expmsg);
+    BOOST_CHECK_EQUAL(word, msg);
 
     bp::status s = c.wait();
     BOOST_REQUIRE(s.exited());
@@ -153,33 +151,19 @@ test_output(bool out,
 // ------------------------------------------------------------------------
 
 static void
-test_stderr_fail(void)
+test_stderr(void)
 {
-    test_output(true, "message-stderr", "fail-stderr");
+    test_output(false, "message1-stderr");
+    test_output(false, "message2-stderr");
 }
 
 // ------------------------------------------------------------------------
 
 static void
-test_stderr_pass(void)
+test_stdout(void)
 {
-    test_output(true, "message-stderr", "message-stderr");
-}
-
-// ------------------------------------------------------------------------
-
-static void
-test_stdout_fail(void)
-{
-    test_output(false, "message-stdout", "fail-stdout");
-}
-
-// ------------------------------------------------------------------------
-
-static void
-test_stdout_pass(void)
-{
-    test_output(false, "message-stdout", "message-stdout");
+    test_output(true, "message1-stdout");
+    test_output(true, "message2-stdout");
 }
 
 // ------------------------------------------------------------------------
@@ -398,10 +382,8 @@ init_unit_test_suite(int argc, char* argv[])
     test->add(BOOST_TEST_CASE(&test_close_stdin), 0, 10);
     test->add(BOOST_TEST_CASE(&test_close_stdout), 0, 10);
     test->add(BOOST_TEST_CASE(&test_close_stderr), 0, 10);
-    test->add(BOOST_TEST_CASE(&test_stdout_pass), 0, 10);
-    test->add(BOOST_TEST_CASE(&test_stdout_fail), 1, 10);
-    test->add(BOOST_TEST_CASE(&test_stderr_pass), 0, 10);
-    test->add(BOOST_TEST_CASE(&test_stderr_fail), 1, 10);
+    test->add(BOOST_TEST_CASE(&test_stdout), 0, 10);
+    test->add(BOOST_TEST_CASE(&test_stderr), 0, 10);
     test->add(BOOST_TEST_CASE(&test_merge_out_err), 0, 10);
     test->add(BOOST_TEST_CASE(&test_input), 0, 10);
     test->add(BOOST_TEST_CASE(&test_default_work_directory), 0, 10);
