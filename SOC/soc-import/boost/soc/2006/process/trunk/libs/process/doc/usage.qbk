@@ -35,7 +35,7 @@ follow the steps outlined below:
   lines], one for each process in the pipeline.
 # Configure the pipeline's execution context through an specialized [link
   boost_process.concepts.launcher launcher], generally [classref
-  boost::process::pipeline].
+  boost::process::pipeline pipeline].
 # Add the command lines created above to the pipeline.
 # Start the process group through the launcher.
 # Interact with the returned [link boost_process.concepts.child_process
@@ -52,8 +52,8 @@ The following sections give more details on all the above instructions.
 
 [section Command line configuration]
 
-The [classref boost::process::command_line] class provides a reference
-implementation for the [link boost_process.concepts.command_line
+The [classref boost::process::command_line command_line] class provides a
+reference implementation for the [link boost_process.concepts.command_line
 Command_Line] concept.  This class represents a generic command line and is
 used later on by one of the [link boost_process.concepts.launcher
 launchers] to know which process has to be started and which parameters
@@ -72,7 +72,7 @@ command line.
 In order to construct a command line parameter by parameter, the following
 syntax shall be used:
 
-    boost::process::command_line cl("/path/to/program", "program_name");
+    command_line cl("/path/to/program", "program_name");
     cl.argument("first-parameter").argument("second-parameter");
     cl.argument("third-parameter").argument("etc...");
 
@@ -80,15 +80,15 @@ The [classref boost::process::command_line class]' constructor takes two
 parameters: the path to the program to be executed and the program name
 that it will receive as its first argument
 ('''<varname>argv[0]</varname>''').  The [memberref
-boost::process::command_line::argument argument] method is later used to
-append positional parameters to the command line; this function is
-templatized to allow dealing with any data type provided it can be inserted
-in an output stream.
+boost::process::command_line::argument command_line::argument] method is
+later used to append positional parameters to the command line; this
+function is templatized to allow dealing with any data type provided it can
+be inserted in an output stream.
 
 Similarly, a shell-based command line can be constructed using an auxiliary
 function:
 
-    boost::process::command_line cl = boost::process::command_line::shell
+    command_line cl = command_line::shell
         ("the-program first-parameter ... nth-parameter");
 
 For more details check out the [link boost_process.reference reference
@@ -128,16 +128,17 @@ The three standard communication channels are reviewed below:
   unbuffered and its output is generally dumped to the console; of course
   it can be redirected to another process or file.
 
-The [classref boost::process::launcher] provides mechanisms to handle
-these three standard streams, but not more.  If there is a need to
-configure more communication channels __mdash__ a feature only supported
-in POSIX systems __mdashnospc__, check the [classref
-boost::process::posix_launcher] class built on top of the former.
+The [classref boost::process::launcher launcher] provides mechanisms to
+handle these three standard streams, but not more.  If there is a need to
+configure more communication channels __mdash__ a feature only supported in
+POSIX systems __mdashnospc__, check the [classref
+boost::process::posix_launcher posix_launcher] class built on top of the
+former.
 
 Each communication channel can be configured according to different
 predefined behaviors as provided by [enumref
-boost::process::stream_behavior].  Please check out the link for more
-information on the possible stream behaviors.
+boost::process::stream_behavior stream_behavior].  Please check out the
+link for more information on the possible stream behaviors.
 
 Communication channels can also be ['merged].  Merging two communication
 channels means that the output of the child's source channel is redirected
@@ -152,7 +153,7 @@ Given the above, consider the following code snippet.  It configures a
 launcher that will have an infinite blank input and that will send both of
 its __stdout__ and __stderr__ to the parent's __stdout__:
 
-    boost::process::launcher l;
+    launcher l;
     l.set_stdin_behavior(silent_stream); // The default.
     l.set_stdout_behavior(inherit_stream);
     l.set_stderr_behavior(close_stream);
@@ -160,26 +161,27 @@ its __stdout__ and __stderr__ to the parent's __stdout__:
 
 When setting a channel to `redirect_stream`, it will later be available
 from the class representing the child process through one of its [memberref
-boost::process::child::get_stdin], [memberref
-boost::process::child::get_stdout] and [memberref
-boost::process::child::get_stderr] methods.  These classes return C++
-streams as described next.  An input stream for a child process is seen as
-an output data flow by the parent, so it is modelled through the [classref
-boost::process::postream] class.  On the opposite side, an output stream
-for a child process is seen as an input data flow by the parent, hence it
-is represented by the [classref boost::process::pistream] class.  These two
-classes are regular C++ streams but provide an extra method (`close`) to
-allow the explicit shutdown of a communication channel.  This is required,
-for example, to let the child know that the parent is not willing to send
-any more data through its __stdin__.  (Typically the child will close
-output channels on exit and the parent will close input ones.)
+boost::process::child::get_stdin child::get_stdin], [memberref
+boost::process::child::get_stdout child::get_stdout] and [memberref
+boost::process::child::get_stderr child::get_stderr] methods.  These
+classes return C++ streams as described next.  An input stream for a child
+process is seen as an output data flow by the parent, so it is modelled
+through the [classref boost::process::postream postream] class.  On the
+opposite side, an output stream for a child process is seen as an input
+data flow by the parent, hence it is represented by the [classref
+boost::process::pistream pistream] class.  These two classes are regular
+C++ streams but provide an extra method (`close`) to allow the explicit
+shutdown of a communication channel.  This is required, for example, to let
+the child know that the parent is not willing to send any more data through
+its __stdin__.  (Typically the child will close output channels on exit and
+the parent will close input ones.)
 
 The following example illustrates sending some data to a process:
 
-    boost::process::launcher l;
+    launcher l;
     l.set_stdin_behavior(redirect_stream);
     ... spawn the process ...
-    boost::process::postream os = c.get_stdin();
+    postream os = c.get_stdin();
     os << "some-string" << std::endl;
     os << 200 << 1024 << std::endl;
     os.close();
@@ -187,10 +189,10 @@ The following example illustrates sending some data to a process:
 Similary, the following shows how to retrieve the child's data, line by
 line:
 
-    boost::process::launcher l;
+    launcher l;
     l.set_stdout_behavior(redirect_stream);
     ... spawn the process ...
-    boost::process::pistream is = c.get_stdout();
+    pistream is = c.get_stdout();
     std::string line;
     while (std::getline(is, line))
         std::cout << "Got a line: " << line << std::endl;
@@ -202,23 +204,28 @@ line:
 POSIX operating systems support more than three standard communication
 channels: any file descriptor can be configured to connect two different
 processes by using an anonymous pipe.  Boost.Process supports such features
-through the specialized [classref boost::process::posix_launcher POSIX
-launcher] and [classref boost::process::posix_child POSIX child] classes,
-both based on their corresponding operating system independent ones.
+through the specialized [classref boost::process::posix_launcher
+posix_launcher] and [classref boost::process::posix_child posix_child]
+classes, both based on their corresponding operating system independent
+ones.
 
 The POSIX launcher implementation adds two additional functions to specify
 the behavior of non-standard file descriptors: [memberref
-boost::process::posix_launcher::set_input_behavior] and [memberref
-boost::process::posix_launcher::set_output_behavior].  The former is used
-to configure a child's input stream and the latter an output one.  Once the
-streams are configured and the child is running, the caller can use the
-[memberref boost::process::posix_child::get_input] and [memberref
-boost::process::posix_child::get_output] methods to obtain the
-corresponding C++ streams that interact with the child process.
+boost::process::posix_launcher::set_input_behavior
+posix_launcher::set_input_behavior] and [memberref
+boost::process::posix_launcher::set_output_behavior
+posix_launcher::set_output_behavior].  The former is used to configure a
+child's input stream and the latter an output one.  Once the streams are
+configured and the child is running, the caller can use the [memberref
+boost::process::posix_child::get_input posix_child::get_input] and
+[memberref boost::process::posix_child::get_output posix_child::get_output]
+methods to obtain the corresponding C++ streams that interact with the
+child process.
 
 Non-standard streams can also be merged as described in the previous
 section.  This functionality is provided through the [memberref
-boost::process::posix_launcher::merge_outputs] method.
+boost::process::posix_launcher::merge_outputs
+posix_launcher::merge_outputs] method.
 
 The above functions also support the configuration of the standard streams
 by using the `STDIN_FILENO`, `STDOUT_FILENO` and `STDERR_FILENO` constants
@@ -247,24 +254,25 @@ passed to a process started through it.  During initialization, this list
 is inherited from the current process' environment but can be later
 modified by the user by setting new variables, modifying the contents of
 existing ones or removing already-set variables.  This can be done by using
-the [memberref boost::process::launcher::set_environment] and the
-[memberref boost::process::launcher::unset_environment] methods, whose
-documentation provides more information on their functionality as well as
-some portability notes.
+the [memberref boost::process::launcher::set_environment
+launcher::set_environment] and the [memberref
+boost::process::launcher::unset_environment launcher::unset_environment]
+methods, whose documentation provides more information on their
+functionality as well as some portability notes.
 
 The environment can also be completely cleared by using the [memberref
-boost::process::launcher::clear_environment] method.  Care should be taken
-when using this method because the new process may expect some standard
-variables to be defined for proper operation (e.g. `PATH`).  After using
-this call you are responsible for appropriately setting up the minimum
-required variables.  Be aware that under Windows an environment cannot be
-empty: at the very minimum, it will always contain a blank-named variable
-that points to the current working directory; this is transparently
-handled by the library.
+boost::process::launcher::clear_environment launcher::clear_environment]
+method.  Care should be taken when using this method because the new
+process may expect some standard variables to be defined for proper
+operation (e.g. `PATH`).  After using this call you are responsible for
+appropriately setting up the minimum required variables.  Be aware that
+under Windows an environment cannot be empty: at the very minimum, it will
+always contain a blank-named variable that points to the current working
+directory; this is transparently handled by the library.
 
 For quick reference, consider:
 
-    boost::process::launcher l;
+    launcher l;
     ... l now carries a snapshot of the current environment ...
     l.clear_environment();
     l.set_environment("variable-name", "variable-value");
@@ -283,13 +291,14 @@ to determine the default directory for some of its operations.
 
 Before launching a process, the parent can configure the child's startup
 work directory by using the [memberref
-boost::process::launcher::set_work_directory] method.  If not specified,
-the process is started in the same directory the parent was located in when
-it created the [classref boost::process::launcher] object.
+boost::process::launcher::set_work_directory launcher::set_work_directory]
+method.  If not specified, the process is started in the same directory the
+parent was located in when it created the [classref
+boost::process::launcher launcher] object.
 
 For instance:
 
-    boost::process::launcher l;
+    launcher l;
     ... l now points to the current work directory ...
     l.set_work_directory(tmp_dir_location);
 
@@ -303,8 +312,8 @@ Upon process startup, the parent can request the operating system to start
 a child process with different security credentials.  In a POSIX operating
 system this means changing the UID, the effective UID, the GID and/or the
 effective GID.  Boost.Process supports configuring these parameters through
-the use of the specialized [classref boost::process::posix_launcher POSIX
-launcher].
+the use of the specialized [classref boost::process::posix_launcher
+posix_launcher].
 
 Note that changing the security credentials of a process is a privileged
 operation generally restricted to the super user.
@@ -322,8 +331,8 @@ boost::process::posix_launcher POSIX launcher] supports chaning the root
 directory of a new process assuming that sufficient privileges are
 available (i.e. the caller must be the super user).
 
-See the [memberref boost::process::posix_launcher::set_chroot] method for
-more details.
+See the [memberref boost::process::posix_launcher::set_chroot
+posix_launcher::set_chroot] method for more details.
 
 [endsect]
 
@@ -333,15 +342,13 @@ more details.
 
 Once the command line and the process' execution context are configured, a
 new process can be spawned by using the launcher's `start` method, which in
-case of the portable launcher is [memberref
-boost::process::launcher::start].  This method takes the execution context
-as the implicit parameter, the command line as a formal parameter and
-returns a [link boost_process.concepts.child child entity] that represents
-and allows interaction with the newborn process.
+case of the portable launcher is [memberref boost::process::launcher::start
+launcher::start].  This method takes the execution context as the implicit
+parameter, the command line as a formal parameter and returns a [link
+boost_process.concepts.child child entity] that represents and allows
+interaction with the newborn process.
 
 An illustrative (but incomplete) code snippet:
-
-    using namespace boost::process;
 
     command_line cl(...);
     ... add arguments to cl ...
@@ -366,13 +373,13 @@ different reasons.  Considering the most complete case (a POSIX system), a
 process can terminate regularly by itself; it can finish due to an
 unhandled signal (which may well be sent from the outside); or it can be
 stopped by another process.  All this information is accessible through the
-[classref boost::process::status] class, an instance of which is returned
-by the [memberref boost::process::child::wait] method.
+[classref boost::process::status status] class, an instance of which is
+returned by the [memberref boost::process::child::wait child::wait] method.
 
 After a call to that method, the parent is then able to inspect the reasons
 behind the child process finalization.  For example:
 
-    boost::process::status s = c.wait();
+    status s = c.wait();
     if (s.exited()) {
         // The process terminated by itself.
         std::cout << "The exit code was: " << s.exit_status() << std::endl;
@@ -388,9 +395,9 @@ behind the child process finalization.  For example:
 As a pipeline is just a process group, its management is built on top of
 the regular process [link boost_process.usage.child_process_startup
 startup] and [link boost_process.usage.process_termination termination].
-The [classref boost::process::basic_pipeline] and [classref
-boost::process::children] classes are used to spawn and represent the
-process group respectively.
+The [classref boost::process::basic_pipeline basic_pipeline] and [classref
+boost::process::children children] classes are used to spawn and represent
+the process group respectively.
 
 The interface used to manage pipelines is very similar to that used to
 handle single processes.  This can be seen in the following simple code

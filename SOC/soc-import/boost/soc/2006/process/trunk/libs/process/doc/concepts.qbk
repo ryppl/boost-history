@@ -68,15 +68,15 @@ application (that is, the program using Boost.Process services).  The
 program can directly control the child process, send and retrieve data from
 it and collect its finalization status.
 
-This concept is implemented by the [classref boost::process::child] and
-[classref boost::process::posix_child] classes.
+This concept is implemented by the [classref boost::process::child child]
+and [classref boost::process::posix_child posix_child] classes.
 
 The library also provides specialized process groups to maintain the status
 of complex operations such as the spawning of a process pipeline.  These
 groups are aggregations of the previous `Child` implementations.
 
-Process groups are implemented by the [classref boost::process::children]
-class.
+Process groups are implemented by the [classref boost::process::children
+children] class.
 
 [endsect]
 
@@ -94,8 +94,8 @@ ways so there might be multiple implementations to create one.
 
 The `Command_Line` concept represents a process' startup command line.
 
-This concept is implemented by the [classref boost::process::command_line]
-class.
+This concept is implemented by the [classref boost::process::command_line
+command_line] class.
 
 [endsect]
 
@@ -122,16 +122,17 @@ system has explicitly started it.  Furthermore, by keeping the launcher
 separate from processes, the same execution context can be shared across
 multiple command lines painlessly.
 
-This concept is implemented by the [classref boost::process::launcher] and
-[classref boost::process::posix_launcher] classes.
+This concept is implemented by the [classref boost::process::launcher
+launcher] and [classref boost::process::posix_launcher posix_launcher]
+classes.
 
 The library also provides specialized launcher to spawn process pipelines.
 A pipeline is a unidimensional chain of interconnected processes in which
 the output of one of them is connected to the input of the following.
 
 Pipeline launchers are implemented by the [classref
-boost::process::basic_pipeline] template and the [classref
-boost::process::pipeline] class.
+boost::process::basic_pipeline basic_pipeline] template and the [classref
+boost::process::pipeline pipeline] class.
 
 [endsect]
 
@@ -152,7 +153,8 @@ it.
 
 The `Status` concept is used to represent a process' exit status.
 
-This concept is implemented by the [classref boost::process::status] class.
+This concept is implemented by the [classref boost::process::status status]
+class.
 
 [endsect]
 
