@@ -150,7 +150,8 @@ test_output(bool out, const std::string& msg)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_stderr(void)
 {
     test_output(false, "message1-stderr");
@@ -159,7 +160,8 @@ test_stderr(void)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_stdout(void)
 {
     test_output(true, "message1-stdout");
@@ -168,7 +170,8 @@ test_stdout(void)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_merge_out_err(void)
 {
     bp::command_line cl(get_helpers_path());
@@ -197,7 +200,8 @@ test_merge_out_err(void)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_default_work_directory(void)
 {
     bp::command_line cl(get_helpers_path());
@@ -222,7 +226,8 @@ test_default_work_directory(void)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_explicit_work_directory(void)
 {
     bfs::path wdir = bfs::current_path() / "test.dir";
@@ -281,7 +286,8 @@ get_var_value(bp::launcher& l, const std::string& var)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_clear_environment(void)
 {
 #if defined(BOOST_PROCESS_POSIX_API)
@@ -308,7 +314,8 @@ test_clear_environment(void)
 
 // ------------------------------------------------------------------------
 
-static void
+static
+void
 test_unset_environment(void)
 {
     bp::command_line cl(get_helpers_path());
@@ -331,8 +338,9 @@ test_unset_environment(void)
 
 // ------------------------------------------------------------------------
 
-static void
-test_set_environment(const std::string& value)
+static
+void
+test_set_environment_var(const std::string& value)
 {
     bp::command_line cl(get_helpers_path());
     cl.argument("query-env").argument("TO_BE_SET");
@@ -356,18 +364,14 @@ test_set_environment(const std::string& value)
 
 // ------------------------------------------------------------------------
 
-static void
-test_set_environment_empty(void)
+static
+void
+test_set_environment(void)
 {
-    test_set_environment("");
-}
-
-// ------------------------------------------------------------------------
-
-static void
-test_set_environment_non_empty(void)
-{
-    test_set_environment("some-value");
+    if (bp_api_type == posix_api)
+        test_set_environment_var("");
+    test_set_environment_var("some-value-1");
+    test_set_environment_var("some-value-2");
 }
 
 // ------------------------------------------------------------------------
@@ -390,10 +394,7 @@ init_unit_test_suite(int argc, char* argv[])
     test->add(BOOST_TEST_CASE(&test_explicit_work_directory), 0, 10);
     test->add(BOOST_TEST_CASE(&test_clear_environment), 0, 10);
     test->add(BOOST_TEST_CASE(&test_unset_environment), 0, 10);
-#if defined(BOOST_PROCESS_POSIX_API)
-    test->add(BOOST_TEST_CASE(&test_set_environment_empty), 0, 10);
-#endif
-    test->add(BOOST_TEST_CASE(&test_set_environment_non_empty), 0, 10);
+    test->add(BOOST_TEST_CASE(&test_set_environment), 0, 10);
 
     return test;
 }

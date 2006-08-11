@@ -275,7 +275,7 @@ test_unset_environment(void)
 #if defined(BOOST_PROCESS_POSIX_API)
 static
 void
-test_set_environment(const std::string& value)
+test_set_environment_var(const std::string& value)
 {
     bp::command_line cl(get_helpers_path());
     cl.argument("query-env").argument("TO_BE_SET");
@@ -308,20 +308,10 @@ test_set_environment(const std::string& value)
 #if defined(BOOST_PROCESS_POSIX_API)
 static
 void
-test_set_environment_empty(void)
+test_set_environment(void)
 {
-    test_set_environment("");
-}
-#endif
-
-// ------------------------------------------------------------------------
-
-#if defined(BOOST_PROCESS_POSIX_API)
-static
-void
-test_set_environment_non_empty(void)
-{
-    test_set_environment("some-value");
+    test_set_environment_var("");
+    test_set_environment_var("some-value");
 }
 #endif
 
@@ -402,8 +392,7 @@ init_unit_test_suite(int argc, char* argv[])
     test->add(BOOST_TEST_CASE(&test_default_work_directory), 0, 10);
     test->add(BOOST_TEST_CASE(&test_explicit_work_directory), 0, 10);
     test->add(BOOST_TEST_CASE(&test_unset_environment), 0, 10);
-    test->add(BOOST_TEST_CASE(&test_set_environment_empty), 0, 10);
-    test->add(BOOST_TEST_CASE(&test_set_environment_non_empty), 0, 10);
+    test->add(BOOST_TEST_CASE(&test_set_environment), 0, 10);
     test->add(BOOST_TEST_CASE(&test_default_ids));
     test->add(BOOST_TEST_CASE(&test_setters));
 #else
