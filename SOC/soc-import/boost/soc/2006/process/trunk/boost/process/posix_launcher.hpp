@@ -237,7 +237,8 @@ posix_launcher::set_input_behavior(int desc, stream_behavior b)
 {
     if (desc == STDIN_FILENO)
         set_stdin_behavior(b);
-    detail::posix_behavior_to_info(b, desc, false, m_input_info);
+    else
+        detail::posix_behavior_to_info(b, desc, false, m_input_info);
     return *this;
 }
 
@@ -251,7 +252,8 @@ posix_launcher::set_output_behavior(int desc, stream_behavior b)
         set_stdout_behavior(b);
     else if (desc == STDERR_FILENO)
         set_stderr_behavior(b);
-    detail::posix_behavior_to_info(b, desc, true, m_output_info);
+    else
+        detail::posix_behavior_to_info(b, desc, true, m_output_info);
     return *this;
 }
 
@@ -263,7 +265,8 @@ posix_launcher::merge_outputs(int src, int dest)
 {
     if (src == STDERR_FILENO && dest == STDOUT_FILENO)
         set_merge_out_err(true);
-    m_merge_set.insert(std::pair< int, int >(src, dest));
+    else
+        m_merge_set.insert(std::pair< int, int >(src, dest));
     return *this;
 }
 
@@ -374,6 +377,16 @@ inline
 posix_child
 posix_launcher::start(const Command_Line& cl)
 {
+    detail::posix_behavior_to_info(get_stdin_behavior(), STDIN_FILENO,
+                                   false, m_input_info);
+    detail::posix_behavior_to_info(get_stdout_behavior(), STDOUT_FILENO,
+                                   true, m_output_info);
+    detail::posix_behavior_to_info(get_stderr_behavior(), STDERR_FILENO,
+                                   true, m_output_info);
+    if (get_merge_out_err())
+        m_merge_set.insert(std::pair< int, int >(STDERR_FILENO,
+                                                 STDOUT_FILENO));
+
     detail::posix_setup s = m_setup;
     s.m_work_directory = get_work_directory();
 
