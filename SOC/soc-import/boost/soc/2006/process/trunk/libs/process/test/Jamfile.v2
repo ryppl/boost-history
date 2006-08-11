@@ -68,25 +68,25 @@ test-suite process :
         : <library>$(BOOST_ROOT)//unit_test_framework
         ]
 
-    [ run environment_test.cpp
+    [ run detail_environment_test.cpp
         :
         :
         : <library>$(BOOST_ROOT)//unit_test_framework
         ]
 
-    [ run systembuf_test.cpp
+    [ run detail_systembuf_test.cpp
         :
         :
         : <library>$(BOOST_ROOT)//unit_test_framework
         ]
 
-    [ run file_handle_test.cpp
+    [ run detail_file_handle_test.cpp
         :
         :
         : <library>$(BOOST_ROOT)//unit_test_framework
         ]
 
-    [ run pipe_test.cpp
+    [ run detail_pipe_test.cpp
         :
         :
         : <library>$(BOOST_ROOT)//unit_test_framework
