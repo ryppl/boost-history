@@ -9,9 +9,25 @@
 // at http://www.boost.org/LICENSE_1_0.txt.)
 //
 
+#include <boost/process/config.hpp>
+
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/test/unit_test.hpp>
+
+// ------------------------------------------------------------------------
+
+enum bp_api_type {
+    posix_api,
+    win32_api,
+}
+#if defined(BOOST_PROCESS_POSIX_API)
+bp_api_type = posix_api;
+#elif defined(BOOST_PROCESS_WIN32_API)
+bp_api_type = win32_api;
+#else
+#   error "Unsupported platform."
+#endif
 
 // ------------------------------------------------------------------------
 

@@ -94,10 +94,10 @@ test_progname(void)
     bp::command_line cl3("/path/to/program");
     BOOST_CHECK_EQUAL(cl3.get_arguments()[0], "program");
 
-#if defined(BOOST_PROCESS_WIN32_API)
-    bp::command_line cl4("C:\\path\\to\\program");
-    BOOST_CHECK_EQUAL(cl4.get_arguments()[0], "program");
-#endif
+    if (bp_api_type == win32_api) {
+        bp::command_line cl4("C:\\path\\to\\program");
+        BOOST_CHECK_EQUAL(cl4.get_arguments()[0], "program");
+    }
 }
 
 // ------------------------------------------------------------------------
@@ -145,25 +145,55 @@ test_quoting(void)
 
 static
 void
-test_shell(void)
+test_shell_construction(void)
 {
     bp::command_line cl = bp::command_line::shell("test command");
 
-#if defined(BOOST_PROCESS_POSIX_API)
-    BOOST_REQUIRE(cl.get_executable().find("sh") != std::string::npos);
-    BOOST_REQUIRE_EQUAL(cl.get_arguments().size(),
-        static_cast< bp::command_line::arguments_vector::size_type >(3));
-    BOOST_CHECK_EQUAL(cl.get_arguments()[0], "sh");
-    BOOST_CHECK_EQUAL(cl.get_arguments()[1], "-c");
-    BOOST_CHECK_EQUAL(cl.get_arguments()[2], "test command");
-#elif defined(BOOST_PROCESS_WIN32_API)
-    BOOST_REQUIRE(cl.get_executable().find("cmd.exe") != std::string::npos);
-    BOOST_REQUIRE_EQUAL(cl.get_arguments().size(),
-        static_cast< bp::command_line::arguments_vector::size_type >(3));
-    BOOST_CHECK_EQUAL(cl.get_arguments()[0], "cmd");
-    BOOST_CHECK_EQUAL(cl.get_arguments()[1], "/c");
-    BOOST_CHECK_EQUAL(cl.get_arguments()[2], "test command");
-#endif
+    if (bp_api_type == posix_api) {
+        BOOST_REQUIRE(cl.get_executable().find("sh") != std::string::npos);
+        BOOST_REQUIRE_EQUAL(cl.get_arguments().size(),
+            static_cast< bp::command_line::arguments_vector::size_type >(3));
+        BOOST_CHECK_EQUAL(cl.get_arguments()[0], "sh");
+        BOOST_CHECK_EQUAL(cl.get_arguments()[1], "-c");
+        BOOST_CHECK_EQUAL(cl.get_arguments()[2], "test command");
+    } else if (bp_api_type == win32_api) {
+        BOOST_REQUIRE(cl.get_executable().find("cmd.exe") !=
+                      std::string::npos);
+        BOOST_REQUIRE_EQUAL(cl.get_arguments().size(),
+            static_cast< bp::command_line::arguments_vector::size_type >(3));
+        BOOST_CHECK_EQUAL(cl.get_arguments()[0], "cmd");
+        BOOST_CHECK_EQUAL(cl.get_arguments()[1], "/c");
+        BOOST_CHECK_EQUAL(cl.get_arguments()[2], "test command");
+    } else
+        BOOST_REQUIRE(false);
+}
+
+// ------------------------------------------------------------------------
+
+static void
+test_shell_execution(void)
+{
+    std::string command;
+    if (bp_api_type == posix_api)
+        command = "echo test | sed 's,^,LINE-,'";
+    else if (bp_api_type == win32_api)
+        command = "if foo==foo echo LINE-test";
+    else
+        BOOST_REQUIRE(false);
+    bp::command_line cl = bp::command_line::shell(command);
+
+    bp::launcher l;
+    l.set_stdout_behavior(bp::redirect_stream);
+    bp::child c = l.start(cl);
+
+    bp::pistream& is = c.get_stdout();
+    std::string word;
+    is >> word;
+    BOOST_CHECK_EQUAL(word, "LINE-test");
+
+    bp::status s = c.wait();
+    BOOST_REQUIRE(s.exited());
+    BOOST_CHECK_EQUAL(s.exit_status(), EXIT_SUCCESS);
 }
 
 // ------------------------------------------------------------------------
@@ -180,7 +210,8 @@ init_unit_test_suite(int argc, char* argv[])
     test->add(BOOST_TEST_CASE(&test_arguments_empty));
     test->add(BOOST_TEST_CASE(&test_arguments_addition));
     test->add(BOOST_TEST_CASE(&test_arguments_types));
-    test->add(BOOST_TEST_CASE(&test_shell));
+    test->add(BOOST_TEST_CASE(&test_shell_construction));
+    test->add(BOOST_TEST_CASE(&test_shell_execution));
     test->add(BOOST_TEST_CASE(&test_quoting));
 
     return test;
