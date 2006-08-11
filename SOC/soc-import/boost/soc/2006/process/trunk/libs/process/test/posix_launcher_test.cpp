@@ -20,7 +20,7 @@
 #   include <boost/process/posix_child.hpp>
 #   include <boost/process/posix_launcher.hpp>
 
-#   include "misc.hpp"
+#   include "launcher_base_test.hpp"
 
 namespace bp = ::boost::process;
 #endif
@@ -30,6 +30,22 @@ namespace bp = ::boost::process;
 
 namespace bfs = ::boost::filesystem;
 namespace but = ::boost::unit_test;
+
+// ------------------------------------------------------------------------
+
+#if defined(BOOST_PROCESS_POSIX_API)
+class start
+{
+public:
+    bp::posix_child
+    operator()(bp::posix_launcher& l, const bp::command_line& cl,
+               bool usein = false)
+        const
+    {
+        return l.start(cl);
+    }
+};
+#endif
 
 // ------------------------------------------------------------------------
 
@@ -383,6 +399,9 @@ init_unit_test_suite(int argc, char* argv[])
     but::test_suite* test = BOOST_TEST_SUITE("posix_launcher test suite");
 
 #if defined(BOOST_PROCESS_POSIX_API)
+    add_tests_launcher_base< bp::posix_launcher, bp::posix_child, start >
+        (test);
+
     test->add(BOOST_TEST_CASE(&test_stdout), 0, 10);
     test->add(BOOST_TEST_CASE(&test_stderr), 0, 10);
     test->add(BOOST_TEST_CASE(&test_merge_out_err), 0, 10);

@@ -16,11 +16,31 @@
 #include <boost/process/pipeline.hpp>
 #include <boost/test/unit_test.hpp>
 
-#include "misc.hpp"
+#include "launcher_base_test.hpp"
 
 namespace bfs = ::boost::filesystem;
 namespace bp = ::boost::process;
 namespace but = ::boost::unit_test;
+
+// ------------------------------------------------------------------------
+
+class start
+{
+public:
+    bp::children
+    operator()(bp::pipeline& p, const bp::command_line& cl,
+               bool usein = false)
+        const
+    {
+        bp::command_line dummy(get_helpers_path());
+        dummy.argument("stdin-to-stdout");
+        if (usein)
+            p.add(cl).add(dummy);
+        else
+            p.add(dummy).add(cl);
+        return p.start();
+    }
+};
 
 // ------------------------------------------------------------------------
 
@@ -136,6 +156,8 @@ init_unit_test_suite(int argc, char* argv[])
     bfs::initial_path();
 
     but::test_suite* test = BOOST_TEST_SUITE("pipeline test suite");
+
+    add_tests_launcher_base< bp::pipeline, bp::children, start >(test);
 
     test->add(BOOST_TEST_CASE(&test_exit_success), 0, 10);
     test->add(BOOST_TEST_CASE(&test_exit_failure), 0, 10);
