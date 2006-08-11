@@ -195,6 +195,42 @@ line:
     while (std::getline(is, line))
         std::cout << "Got a line: " << line << std::endl;
 
+[/ ---------------------------------------------------------------------- ]
+
+[section POSIX-specific details]
+
+POSIX operating systems support more than three standard communication
+channels: any file descriptor can be configured to connect two different
+processes by using an anonymous pipe.  Boost.Process supports such features
+through the specialized [classref boost::process::posix_launcher POSIX
+launcher] and [classref boost::process::posix_child POSIX child] classes,
+both based on their corresponding operating system independent ones.
+
+The POSIX launcher implementation adds two additional functions to specify
+the behavior of non-standard file descriptors: [memberref
+boost::process::posix_launcher::set_input_behavior] and [memberref
+boost::process::posix_launcher::set_output_behavior].  The former is used
+to configure a child's input stream and the latter an output one.  Once the
+streams are configured and the child is running, the caller can use the
+[memberref boost::process::posix_child::get_input] and [memberref
+boost::process::posix_child::get_output] methods to obtain the
+corresponding C++ streams that interact with the child process.
+
+Non-standard streams can also be merged as described in the previous
+section.  This functionality is provided through the [memberref
+boost::process::posix_launcher::merge_outputs] method.
+
+The above functions also support the configuration of the standard streams
+by using the `STDIN_FILENO`, `STDOUT_FILENO` and `STDERR_FILENO` constants
+defined in `cstdlib`.
+
+The [link boost_process.examples.pipelines POSIX communication] example
+illustrates the usage of these functions.
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
 [endsect]
 
 [/ ---------------------------------------------------------------------- ]
@@ -256,6 +292,38 @@ For instance:
     boost::process::launcher l;
     ... l now points to the current work directory ...
     l.set_work_directory(tmp_dir_location);
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
+[section POSIX process credentials]
+
+Upon process startup, the parent can request the operating system to start
+a child process with different security credentials.  In a POSIX operating
+system this means changing the UID, the effective UID, the GID and/or the
+effective GID.  Boost.Process supports configuring these parameters through
+the use of the specialized [classref boost::process::posix_launcher POSIX
+launcher].
+
+Note that changing the security credentials of a process is a privileged
+operation generally restricted to the super user.
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
+[section POSIX root directory change]
+
+POSIX systems allow modifying a process' view of the file system by
+changing the directory considered as the file system's root.  This is done
+through the `chroot(2)` system call. The specialized [classref
+boost::process::posix_launcher POSIX launcher] supports chaning the root
+directory of a new process assuming that sufficient privileges are
+available (i.e. the caller must be the super user).
+
+See the [memberref boost::process::posix_launcher::set_chroot] method for
+more details.
 
 [endsect]
 
