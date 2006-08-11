@@ -81,7 +81,7 @@ test_input(void)
 
 #if defined(BOOST_PROCESS_POSIX_API)
 void
-test_output(int desc, const std::string& msg)
+check_output(int desc, const std::string& msg)
 {
     bp::command_line cl(get_helpers_path());
     cl.argument("posix-echo-one").argument(desc).argument(msg);
@@ -106,22 +106,14 @@ test_output(int desc, const std::string& msg)
 #if defined(BOOST_PROCESS_POSIX_API)
 static
 void
-test_stderr(void)
+test_output(void)
 {
-    test_output(STDERR_FILENO, "message1-stderr");
-    test_output(STDERR_FILENO, "message2-stderr");
-}
-#endif
-
-// ------------------------------------------------------------------------
-
-#if defined(BOOST_PROCESS_POSIX_API)
-static
-void
-test_stdout(void)
-{
-    test_output(STDOUT_FILENO, "message1-stdout");
-    test_output(STDOUT_FILENO, "message2-stdout");
+    check_output(STDOUT_FILENO, "message1-stdout");
+    check_output(STDOUT_FILENO, "message2-stdout");
+    check_output(STDERR_FILENO, "message1-stderr");
+    check_output(STDERR_FILENO, "message2-stderr");
+    check_output(10, "message1-10");
+    check_output(10, "message2-10");
 }
 #endif
 
@@ -129,9 +121,7 @@ test_stdout(void)
 
 #if defined(BOOST_PROCESS_POSIX_API)
 void
-test_merge(int desc1,
-           int desc2,
-           const std::string& msg)
+check_merge(int desc1, int desc2, const std::string& msg)
 {
     bp::command_line cl(get_helpers_path());
     cl.argument("posix-echo-two").argument(desc1).argument(desc2);
@@ -165,169 +155,12 @@ test_merge(int desc1,
 #if defined(BOOST_PROCESS_POSIX_API)
 static
 void
-test_merge_out_err(void)
+test_merge(void)
 {
-    test_merge(STDOUT_FILENO, STDERR_FILENO, "message");
-}
-#endif
-
-// ------------------------------------------------------------------------
-
-#if defined(BOOST_PROCESS_POSIX_API)
-static
-void
-test_merge_err_out(void)
-{
-    test_merge(STDERR_FILENO, STDOUT_FILENO, "message");
-}
-#endif
-
-// ------------------------------------------------------------------------
-
-#if defined(BOOST_PROCESS_POSIX_API)
-static
-void
-test_merge_non_std(void)
-{
-    test_merge(4, 5, "message");
-    test_merge(10, 20, "message");
-}
-#endif
-
-// ------------------------------------------------------------------------
-
-#if defined(BOOST_PROCESS_POSIX_API)
-static
-void
-test_default_work_directory(void)
-{
-    bp::command_line cl(get_helpers_path());
-    cl.argument("pwd");
-
-    bp::posix_launcher l;
-    l.set_output_behavior(STDOUT_FILENO, bp::redirect_stream);
-    bp::posix_child c = l.start(cl);
-
-    bp::pistream& is = c.get_output(STDOUT_FILENO);
-    std::string dir;
-    is >> dir;
-
-    bp::status s = c.wait();
-    BOOST_REQUIRE(s.exited());
-    BOOST_REQUIRE_EQUAL(s.exit_status(), EXIT_SUCCESS);
-
-    BOOST_CHECK_EQUAL(dir, l.get_work_directory());
-}
-#endif
-
-// ------------------------------------------------------------------------
-
-#if defined(BOOST_PROCESS_POSIX_API)
-static
-void
-test_explicit_work_directory(void)
-{
-    bfs::path wdir = bfs::current_path() / "test.dir";
-
-    bp::command_line cl(get_helpers_path());
-    cl.argument("pwd");
-
-    BOOST_REQUIRE_NO_THROW(bfs::create_directory(wdir));
-    try {
-        bp::posix_launcher l;
-        l.set_output_behavior(STDOUT_FILENO, bp::redirect_stream);
-        l.set_work_directory(wdir.string());
-        bp::posix_child c = l.start(cl);
-
-        bp::pistream& is = c.get_output(STDOUT_FILENO);
-        std::string dir;
-        is >> dir;
-
-        bp::status s = c.wait();
-        BOOST_CHECK_NO_THROW(bfs::remove_all(wdir));
-        BOOST_REQUIRE(s.exited());
-        BOOST_REQUIRE_EQUAL(s.exit_status(), EXIT_SUCCESS);
-
-        BOOST_CHECK_EQUAL(dir, l.get_work_directory());
-    } catch (...) {
-        BOOST_CHECK_NO_THROW(bfs::remove_all(wdir));
-        throw;
-    }
-}
-#endif
-
-// ------------------------------------------------------------------------
-
-#if defined(BOOST_PROCESS_POSIX_API)
-static
-void
-test_unset_environment(void)
-{
-    bp::command_line cl(get_helpers_path());
-    cl.argument("query-env").argument("TO_BE_UNSET");
-
-    BOOST_REQUIRE(::setenv("TO_BE_UNSET", "test", 1) != -1);
-    BOOST_REQUIRE(::getenv("TO_BE_UNSET") != NULL);
-
-    bp::posix_launcher l;
-    l.set_output_behavior(STDOUT_FILENO, bp::redirect_stream);
-    l.unset_environment("TO_BE_UNSET");
-    bp::posix_child c = l.start(cl);
-
-    bp::pistream& is = c.get_output(STDOUT_FILENO);
-    std::string status;
-    is >> status;
-
-    bp::status s = c.wait();
-    BOOST_REQUIRE(s.exited());
-    BOOST_REQUIRE_EQUAL(s.exit_status(), EXIT_SUCCESS);
-
-    BOOST_CHECK_EQUAL(status, "undefined");
-}
-#endif
-
-// ------------------------------------------------------------------------
-
-#if defined(BOOST_PROCESS_POSIX_API)
-static
-void
-test_set_environment_var(const std::string& value)
-{
-    bp::command_line cl(get_helpers_path());
-    cl.argument("query-env").argument("TO_BE_SET");
-
-    ::unsetenv("TO_BE_SET");
-    BOOST_REQUIRE(::getenv("TO_BE_SET") == NULL);
-
-    bp::posix_launcher l;
-    l.set_output_behavior(STDOUT_FILENO, bp::redirect_stream);
-    l.set_environment("TO_BE_SET", value);
-    bp::posix_child c = l.start(cl);
-
-    bp::pistream& is = c.get_output(STDOUT_FILENO);
-    std::string status;
-    is >> status;
-    std::string gotval;
-    is >> gotval;
-
-    bp::status s = c.wait();
-    BOOST_REQUIRE(s.exited());
-    BOOST_REQUIRE_EQUAL(s.exit_status(), EXIT_SUCCESS);
-
-    BOOST_CHECK_EQUAL(status, "defined");
-    BOOST_CHECK_EQUAL(gotval, "'" + value + "'");
-}
-#endif
-
-// ------------------------------------------------------------------------
-
-#if defined(BOOST_PROCESS_POSIX_API)
-static
-void
-test_set_environment(void)
-{
-    test_set_environment_var("");
-    test_set_environment_var("some-value");
+    check_merge(STDOUT_FILENO, STDERR_FILENO, "message");
+    check_merge(STDERR_FILENO, STDOUT_FILENO, "message");
+    check_merge(4, 5, "message");
+    check_merge(10, 20, "message");
 }
 #endif
 
@@ -402,16 +235,9 @@ init_unit_test_suite(int argc, char* argv[])
     add_tests_launcher_base< bp::posix_launcher, bp::posix_child, start >
         (test);
 
-    test->add(BOOST_TEST_CASE(&test_stdout), 0, 10);
-    test->add(BOOST_TEST_CASE(&test_stderr), 0, 10);
-    test->add(BOOST_TEST_CASE(&test_merge_out_err), 0, 10);
-    test->add(BOOST_TEST_CASE(&test_merge_err_out), 0, 10);
-    test->add(BOOST_TEST_CASE(&test_merge_non_std), 0, 10);
+    test->add(BOOST_TEST_CASE(&test_output), 0, 10);
+    test->add(BOOST_TEST_CASE(&test_merge), 0, 10);
     test->add(BOOST_TEST_CASE(&test_input), 0, 10);
-    test->add(BOOST_TEST_CASE(&test_default_work_directory), 0, 10);
-    test->add(BOOST_TEST_CASE(&test_explicit_work_directory), 0, 10);
-    test->add(BOOST_TEST_CASE(&test_unset_environment), 0, 10);
-    test->add(BOOST_TEST_CASE(&test_set_environment), 0, 10);
     test->add(BOOST_TEST_CASE(&test_default_ids));
     test->add(BOOST_TEST_CASE(&test_setters));
 #else
