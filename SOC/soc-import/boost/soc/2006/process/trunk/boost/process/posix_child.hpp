@@ -163,20 +163,22 @@ posix_child::posix_child(handle_type h,
          iter != infoin.end(); iter++) {
         detail::stream_info& si = (*iter).second;
 
-        BOOST_ASSERT(si.m_type == detail::stream_info::usepipe);
-        BOOST_ASSERT(si.m_pipe->wend().is_valid());
-        boost::shared_ptr< postream > st(new postream(si.m_pipe->wend()));
-        m_input_map.insert(input_map::value_type((*iter).first, st));
+        if (si.m_type == detail::stream_info::usepipe) {
+            BOOST_ASSERT(si.m_pipe->wend().is_valid());
+            boost::shared_ptr< postream > st(new postream(si.m_pipe->wend()));
+            m_input_map.insert(input_map::value_type((*iter).first, st));
+        }
     }
 
     for (detail::info_map::iterator iter = infoout.begin();
          iter != infoout.end(); iter++) {
         detail::stream_info& si = (*iter).second;
 
-        BOOST_ASSERT(si.m_type == detail::stream_info::usepipe);
-        BOOST_ASSERT(si.m_pipe->rend().is_valid());
-        boost::shared_ptr< pistream > st(new pistream(si.m_pipe->rend()));
-        m_output_map.insert(output_map::value_type((*iter).first, st));
+        if (si.m_type == detail::stream_info::usepipe) {
+            BOOST_ASSERT(si.m_pipe->rend().is_valid());
+            boost::shared_ptr< pistream > st(new pistream(si.m_pipe->rend()));
+            m_output_map.insert(output_map::value_type((*iter).first, st));
+        }
     }
 }
 
@@ -184,9 +186,7 @@ posix_child::posix_child(handle_type h,
 
 inline
 detail::file_handle
-posix_child::get_handle(detail::info_map& im,
-                                              int desc,
-                                              bool out)
+posix_child::get_handle(detail::info_map& im, int desc, bool out)
 {
     detail::file_handle fh;
 
@@ -194,13 +194,14 @@ posix_child::get_handle(detail::info_map& im,
     if (iter != im.end()) {
         detail::stream_info& si = (*iter).second;
 
-        BOOST_ASSERT(si.m_type == detail::stream_info::usepipe);
-        if (out)
-            fh = si.m_pipe->rend();
-        else
-            fh = si.m_pipe->wend();
-        BOOST_ASSERT(fh.is_valid());
-        im.erase(iter);
+        if (si.m_type == detail::stream_info::usepipe) {
+            if (out)
+                fh = si.m_pipe->rend();
+            else
+                fh = si.m_pipe->wend();
+            BOOST_ASSERT(fh.is_valid());
+            im.erase(iter);
+        }
     }
 
     return fh;
