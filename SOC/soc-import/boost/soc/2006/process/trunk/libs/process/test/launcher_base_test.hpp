@@ -241,15 +241,18 @@ test_merge_out_err(void)
 template< class Launcher, class Child, class Start >
 static
 void
-test_default_work_directory(void)
+check_work_directory(const std::string& wdir)
 {
     bp::command_line cl(get_helpers_path());
     cl.argument("pwd");
 
     Launcher l;
     l.set_stdout_behavior(bp::redirect_stream);
-    BOOST_CHECK(bfs::equivalent(l.get_work_directory(),
-                                bfs::current_path().string()));
+    if (wdir.empty())
+        BOOST_CHECK(bfs::equivalent(l.get_work_directory(),
+                                    bfs::current_path().string()));
+    else
+        l.set_work_directory(wdir);
     Child c = Start()(l, cl);
 
     bp::pistream& is = c.get_stdout();
@@ -268,31 +271,14 @@ test_default_work_directory(void)
 template< class Launcher, class Child, class Start >
 static
 void
-test_explicit_work_directory(void)
+test_work_directory(void)
 {
+    check_work_directory< Launcher, Child, Start >("");
+
     bfs::path wdir = bfs::current_path() / "test.dir";
-
-    bp::command_line cl(get_helpers_path());
-    cl.argument("pwd");
-
     BOOST_REQUIRE_NO_THROW(bfs::create_directory(wdir));
     try {
-        Launcher l;
-        l.set_stdout_behavior(bp::redirect_stream);
-        l.set_work_directory(wdir.string());
-        BOOST_CHECK_EQUAL(l.get_work_directory(), wdir);
-        Child c = Start()(l, cl);
-
-        bp::pistream& is = c.get_stdout();
-        std::string dir;
-        portable_getline(is, dir);
-
-        bp::status s = c.wait();
-        BOOST_CHECK_NO_THROW(bfs::remove_all(wdir));
-        BOOST_REQUIRE(s.exited());
-        BOOST_REQUIRE_EQUAL(s.exit_status(), EXIT_SUCCESS);
-
-        BOOST_CHECK_EQUAL(bfs::path(dir), bfs::path(l.get_work_directory()));
+        check_work_directory< Launcher, Child, Start >(wdir.string());
     } catch(...) {
         BOOST_CHECK_NO_THROW(bfs::remove_all(wdir));
         throw;
@@ -451,9 +437,7 @@ add_tests_launcher_base(boost::unit_test::test_suite* ts)
     ts->add(BOOST_TEST_CASE
             (&(test_input< Launcher, Child, Start >)), 0, 10);
     ts->add(BOOST_TEST_CASE
-            (&(test_default_work_directory< Launcher, Child, Start >)), 0, 10);
-    ts->add(BOOST_TEST_CASE
-            (&(test_explicit_work_directory< Launcher, Child, Start >)), 0, 10);
+            (&(test_work_directory< Launcher, Child, Start >)), 0, 10);
     ts->add(BOOST_TEST_CASE
             (&(test_clear_environment< Launcher, Child, Start >)), 0, 10);
     ts->add(BOOST_TEST_CASE
