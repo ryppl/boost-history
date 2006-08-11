@@ -62,7 +62,7 @@ test-suite process :
           <library>$(BOOST_ROOT)//filesystem
         ]
 
-    [ run command_line_ops_test.cpp
+    [ run detail_command_line_ops_test.cpp
         :
         :
         : <library>$(BOOST_ROOT)//unit_test_framework
