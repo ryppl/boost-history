@@ -21,7 +21,7 @@ behind them and are later specified as concepts to be used in templates.
 
 [section Handle]
 
-A ''handle'' is an operating system entity that identifies one of its
+A ['handle] is an operating system entity that identifies one of its
 objects, such as a file or a process.  Handles are used by user space
 programs to tell the operating system the object they are referring to.
 
