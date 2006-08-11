@@ -28,6 +28,7 @@
 namespace bfs = ::boost::filesystem;
 namespace bpd = ::boost::process::detail;
 
+static int h_echo_quoted(int, char*[]);
 static int h_echo_stdout(int, char*[]);
 static int h_echo_stderr(int, char*[]);
 static int h_echo_stdout_stderr(int, char*[]);
@@ -52,6 +53,7 @@ struct helper {
     int m_min_argc;
     const char* m_syntax;
 } helpers[] = {
+    { "echo-quoted", h_echo_quoted, 2, "word" },
     { "echo-stdout", h_echo_stdout, 2, "message" },
     { "echo-stderr", h_echo_stderr, 2, "message" },
     { "echo-stdout-stderr", h_echo_stdout_stderr, 2, "message" },
@@ -72,6 +74,16 @@ struct helper {
 
     { NULL, NULL }
 };
+
+// ------------------------------------------------------------------------
+
+static
+int
+h_echo_quoted(int argc, char* argv[])
+{
+    std::cout << ">>>" << argv[1] << "<<<" << std::endl;
+    return EXIT_SUCCESS;
+}
 
 // ------------------------------------------------------------------------
 

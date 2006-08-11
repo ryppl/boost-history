@@ -9,9 +9,17 @@
 // at http://www.boost.org/LICENSE_1_0.txt.)
 //
 
+#include <cstdlib>
+
+#include <boost/process/child.hpp>
 #include <boost/process/command_line.hpp>
+#include <boost/process/launcher.hpp>
+#include <boost/process/status.hpp>
 #include <boost/test/unit_test.hpp>
 
+#include "misc.hpp"
+
+namespace bfs = ::boost::filesystem;
 namespace bp = ::boost::process;
 namespace but = ::boost::unit_test;
 
@@ -95,6 +103,47 @@ test_progname(void)
 // ------------------------------------------------------------------------
 
 static
+std::string
+get_argument(const std::string& word)
+{
+    bp::command_line cl = bp::command_line(get_helpers_path());
+    cl.argument("echo-quoted").argument(word);
+
+    bp::launcher l;
+    l.set_stdout_behavior(bp::redirect_stream);
+
+    bp::child c = l.start(cl);
+    bp::pistream& is = c.get_stdout();
+
+    std::string result;
+    portable_getline(is, result);
+
+    bp::status s = c.wait();
+    BOOST_REQUIRE(s.exited());
+    BOOST_CHECK_EQUAL(s.exit_status(), EXIT_SUCCESS);
+
+    return result;
+}
+
+// ------------------------------------------------------------------------
+
+static
+void
+test_quoting(void)
+{
+    BOOST_CHECK_EQUAL(get_argument("foo"), ">>>foo<<<");
+    BOOST_CHECK_EQUAL(get_argument("foo "), ">>>foo <<<");
+    BOOST_CHECK_EQUAL(get_argument(" foo"), ">>> foo<<<");
+    BOOST_CHECK_EQUAL(get_argument("foo bar"), ">>>foo bar<<<");
+
+    BOOST_CHECK_EQUAL(get_argument("*"), ">>>*<<<");
+    BOOST_CHECK_EQUAL(get_argument("?*"), ">>>?*<<<");
+    BOOST_CHECK_EQUAL(get_argument("[a-z]*"), ">>>[a-z]*<<<");
+}
+
+// ------------------------------------------------------------------------
+
+static
 void
 test_shell(void)
 {
@@ -122,6 +171,8 @@ test_shell(void)
 but::test_suite *
 init_unit_test_suite(int argc, char* argv[])
 {
+    bfs::initial_path();
+
     but::test_suite* test = BOOST_TEST_SUITE("command_line test suite");
 
     test->add(BOOST_TEST_CASE(&test_executable));
@@ -130,6 +181,7 @@ init_unit_test_suite(int argc, char* argv[])
     test->add(BOOST_TEST_CASE(&test_arguments_addition));
     test->add(BOOST_TEST_CASE(&test_arguments_types));
     test->add(BOOST_TEST_CASE(&test_shell));
+    test->add(BOOST_TEST_CASE(&test_quoting));
 
     return test;
 }
