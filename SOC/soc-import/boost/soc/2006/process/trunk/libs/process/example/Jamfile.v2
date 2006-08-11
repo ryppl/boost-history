@@ -35,3 +35,8 @@ exe pipeline
     :
         pipeline.cpp
     ;
+
+exe posix_communication
+    :
+        posix_communication.cpp
+    ;

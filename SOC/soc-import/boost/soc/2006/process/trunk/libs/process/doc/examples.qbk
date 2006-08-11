@@ -65,4 +65,19 @@ data conversion is completely done by the child processes.
 
 [/ ---------------------------------------------------------------------- ]
 
+[section POSIX communication]
+
+This example relies on features provided by POSIX operating systems and
+therefore it is not completely portable.  It shows how to set up multiple
+communication streams aside the three standard ones.  The program launches
+a new D-BUS session daemon and receives its bind address as well as its
+PID.  This information could later be used by the program to interact with
+the daemon using the D-BUS API.
+
+[include ../example/posix_communication.cpp c++ code]
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
 [endsect]
