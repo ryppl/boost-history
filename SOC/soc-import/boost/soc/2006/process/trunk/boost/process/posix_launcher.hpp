@@ -31,6 +31,7 @@
 #include <boost/process/detail/systembuf.hpp>
 #include <boost/process/exceptions.hpp>
 #include <boost/process/launcher.hpp>
+#include <boost/process/stream_behavior.hpp>
 
 namespace boost {
 namespace process {
@@ -49,18 +50,6 @@ class posix_launcher :
     public launcher
 {
     //!
-    //! \brief Type that represents a list of input streams that will be
-    //!        redirected.
-    //!
-    typedef std::set< int > input_set;
-
-    //!
-    //! \brief Type that represents a list of output streams that will be
-    //!        redirected.
-    //!
-    typedef std::set< int > output_set;
-
-    //!
     //! \brief List of stream merges (source descriptor - target descriptor).
     //!
     detail::merge_set m_merge_set;
@@ -68,12 +57,12 @@ class posix_launcher :
     //!
     //! \brief List of input streams that will be redirected.
     //!
-    input_set m_input_set;
+    detail::info_map m_input_info;
 
     //!
     //! \brief List of output streams that will be redirected.
     //!
-    output_set m_output_set;
+    detail::info_map m_output_info;
 
     //!
     //! \brief POSIX-specific properties passed to the new process.
@@ -82,31 +71,29 @@ class posix_launcher :
 
 public:
     //!
-    //! \brief Sets up an input redirection for the \a desc descriptor.
+    //! \brief Sets up the behavior of an input channel.
     //!
-    //! Configures the launcher to redirect the \a desc descriptor as an
-    //! input channel for the new child process.  If \a desc matches
-    //! STDIN_FILENO (defined in cstdlib), this mimics the REDIR_INPUT
-    //! flag passed to the constructor.
+    //! Configures the input descriptor \a desc to behave as described
+    //! by \b.  If \a desc matches STDIN_FILENO (defined in cstdlib), this
+    //! mimics the set_stdin_behavior() call.
     //!
     //! \return A reference to the launcher to allow daisy-chaining calls
     //!         to redirection functions for simplicity.
     //!
-    posix_launcher& redir_input(int desc);
+    posix_launcher& set_input_behavior(int desc, stream_behavior b);
 
     //!
-    //! \brief Sets up an output redirection for the \a desc descriptor.
+    //! \brief Sets up the behavior of an output channel.
     //!
-    //! Configures the launcher to redirect the \a desc descriptor as an
-    //! output channel for the new child process.  If \a desc matches
-    //! STDOUT_FILENO or STDERR_FILENO (defined in cstdlib), this mimics
-    //! the REDIR_STDOUT and REDIR_STDERR flags passed to the constructor
-    //! respectively.
+    //! Configures the output descriptor \a desc to behave as described
+    //! by \b.  If \a desc matches STDOUT_FILENO or STDERR_FILENO (both
+    //! defined in cstdlib), this mimics the set_stdout_behavior() and
+    //! set_stderr_behavior() calls respectively.
     //!
     //! \return A reference to the launcher to allow daisy-chaining calls
     //!         to redirection functions for simplicity.
     //!
-    posix_launcher& redir_output(int desc);
+    posix_launcher& set_output_behavior(int desc, stream_behavior b);
 
     //!
     //! \brief Sets up a merge of two output streams.
@@ -246,11 +233,11 @@ public:
 
 inline
 posix_launcher&
-posix_launcher::redir_input(int desc)
+posix_launcher::set_input_behavior(int desc, stream_behavior b)
 {
     if (desc == STDIN_FILENO)
-        set_stdin_behavior(redirect_stream);
-    m_input_set.insert(desc);
+        set_stdin_behavior(b);
+    detail::posix_behavior_to_info(b, desc, false, m_input_info);
     return *this;
 }
 
@@ -258,13 +245,13 @@ posix_launcher::redir_input(int desc)
 
 inline
 posix_launcher&
-posix_launcher::redir_output(int desc)
+posix_launcher::set_output_behavior(int desc, stream_behavior b)
 {
     if (desc == STDOUT_FILENO)
-        set_stdout_behavior(redirect_stream);
+        set_stdout_behavior(b);
     else if (desc == STDERR_FILENO)
-        set_stderr_behavior(redirect_stream);
-    m_output_set.insert(desc);
+        set_stderr_behavior(b);
+    detail::posix_behavior_to_info(b, desc, true, m_output_info);
     return *this;
 }
 
@@ -387,31 +374,15 @@ inline
 posix_child
 posix_launcher::start(const Command_Line& cl)
 {
-    detail::info_map infoin;
-    for (input_set::const_iterator iter = m_input_set.begin();
-         iter != m_input_set.end(); iter++) {
-        detail::stream_info si;
-        si.m_type = detail::stream_info::usepipe;
-        si.m_pipe = detail::pipe();
-        infoin.insert(detail::info_map::value_type(*iter, si));
-    }
-
-    detail::info_map infoout;
-    for (output_set::const_iterator iter = m_output_set.begin();
-         iter != m_output_set.end(); iter++) {
-        detail::stream_info si;
-        si.m_type = detail::stream_info::usepipe;
-        si.m_pipe = detail::pipe();
-        infoout.insert(detail::info_map::value_type(*iter, si));
-    }
-
     detail::posix_setup s = m_setup;
     s.m_work_directory = get_work_directory();
 
     pid_t pid = detail::posix_start(cl, posix_launcher::get_environment(),
-                                    infoin, infoout, m_merge_set, s);
+                                    m_input_info, m_output_info,
+                                    m_merge_set, s);
 
-    return detail::factories::create_posix_child(pid, infoin, infoout);
+    return detail::factories::create_posix_child(pid, m_input_info,
+                                                 m_output_info);
 }
 
 // ------------------------------------------------------------------------

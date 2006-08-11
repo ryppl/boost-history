@@ -41,7 +41,8 @@ test_input(void)
     cl.argument("stdin-to-stdout");
 
     bp::posix_launcher l;
-    l.redir_input(STDIN_FILENO).redir_output(STDOUT_FILENO);
+    l.set_input_behavior(STDIN_FILENO, bp::redirect_stream);
+    l.set_output_behavior(STDOUT_FILENO, bp::redirect_stream);
     bp::posix_child c = l.start(cl);
 
     bp::postream& os = c.get_input(STDIN_FILENO);
@@ -72,7 +73,7 @@ test_output(int desc,
     cl.argument("posix-echo-one").argument(desc).argument(realmsg);
 
     bp::posix_launcher l;
-    l.redir_output(desc);
+    l.set_output_behavior(desc, bp::redirect_stream);
     bp::posix_child c = l.start(cl);
 
     bp::pistream& is = c.get_output(desc);
@@ -139,7 +140,7 @@ test_merge(int desc1,
     cl.argument(msg);
 
     bp::posix_launcher l;
-    l.redir_output(desc1);
+    l.set_output_behavior(desc1, bp::redirect_stream);
     l.merge_outputs(desc2, desc1);
     bp::posix_child c = l.start(cl);
 
@@ -202,7 +203,7 @@ test_default_work_directory(void)
     cl.argument("pwd");
 
     bp::posix_launcher l;
-    l.redir_output(STDOUT_FILENO);
+    l.set_output_behavior(STDOUT_FILENO, bp::redirect_stream);
     bp::posix_child c = l.start(cl);
 
     bp::pistream& is = c.get_output(STDOUT_FILENO);
@@ -231,7 +232,7 @@ test_explicit_work_directory(void)
     BOOST_REQUIRE_NO_THROW(bfs::create_directory(wdir));
     try {
         bp::posix_launcher l;
-        l.redir_output(STDOUT_FILENO);
+        l.set_output_behavior(STDOUT_FILENO, bp::redirect_stream);
         l.set_work_directory(wdir.string());
         bp::posix_child c = l.start(cl);
 
@@ -265,7 +266,7 @@ test_unset_environment(void)
     BOOST_REQUIRE(::getenv("TO_BE_UNSET") != NULL);
 
     bp::posix_launcher l;
-    l.redir_output(STDOUT_FILENO);
+    l.set_output_behavior(STDOUT_FILENO, bp::redirect_stream);
     l.unset_environment("TO_BE_UNSET");
     bp::posix_child c = l.start(cl);
 
@@ -294,7 +295,7 @@ test_set_environment(const std::string& value)
     BOOST_REQUIRE(::getenv("TO_BE_SET") == NULL);
 
     bp::posix_launcher l;
-    l.redir_output(STDOUT_FILENO);
+    l.set_output_behavior(STDOUT_FILENO, bp::redirect_stream);
     l.set_environment("TO_BE_SET", value);
     bp::posix_child c = l.start(cl);
 
