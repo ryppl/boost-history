@@ -279,6 +279,7 @@ test_work_directory(void)
     BOOST_REQUIRE_NO_THROW(bfs::create_directory(wdir));
     try {
         check_work_directory< Launcher, Child, Start >(wdir.string());
+        BOOST_CHECK_NO_THROW(bfs::remove_all(wdir));
     } catch(...) {
         BOOST_CHECK_NO_THROW(bfs::remove_all(wdir));
         throw;
