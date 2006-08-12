@@ -1,10 +1,11 @@
 //=======================================================================
-// Copyright 2001 Jeremy G. Siek, Andrew Lumsdaine, Lie-Quan Lee, 
+// Copyright 2006 Stephan Diederich
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //=======================================================================
+
 #include <boost/config.hpp>
 #include <iostream>
 #include <string>
@@ -17,30 +18,30 @@
 // kolmogorov-eg < max_flow.dat
 //
 // Sample output:
-//  c  The total flow:
-//  s 13
-//
-//  c flow values:
-//  f 0 6 3
-//  f 0 1 6
-//  f 0 2 4
-//  f 1 5 1
-//  f 1 0 0
-//  f 1 3 5
-//  f 2 4 4
-//  f 2 3 0
-//  f 2 0 0
-//  f 3 7 5
-//  f 3 2 0
-//  f 3 1 0
-//  f 4 5 4
-//  f 4 6 0
-//  f 5 4 0
-//  f 5 7 5
-//  f 6 7 3
-//  f 6 4 0
-//  f 7 6 0
-//  f 7 5 0
+// c  The total flow:
+// s 13
+// 
+// c flow values:
+// f 0 6 3
+// f 0 1 6
+// f 0 2 4
+// f 1 5 1
+// f 1 0 0
+// f 1 3 5
+// f 2 4 4
+// f 2 3 0
+// f 2 0 0
+// f 3 7 5
+// f 3 2 0
+// f 3 1 0
+// f 4 5 0
+// f 4 6 4
+// f 5 4 0
+// f 5 7 1
+// f 6 7 7
+// f 6 4 0
+// f 7 6 0
+// f 7 5 0
 
 int
 main()

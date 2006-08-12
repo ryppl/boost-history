@@ -1,8 +1,9 @@
 
-exe kolmotest
-	: kolmogorov-eg.cpp
+exe kolmogorov-eg
+  : kolmogorov-eg.cpp
 ;
-exe push-relabeltest
-	: push-relabel-eg.cpp
-;
+
+exe read_write_dimacs-eg
+  : read_write_dimacs-eg.cpp
+; 
 
