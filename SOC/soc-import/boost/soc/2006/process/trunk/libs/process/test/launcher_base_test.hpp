@@ -303,7 +303,8 @@ get_var_value(Launcher& l, const std::string& var)
     std::string status;
     is >> status;
     std::string gotval;
-    is >> gotval;
+    if (status == "defined")
+        is >> gotval;
 
     bp::status s = c.wait();
     BOOST_REQUIRE(s.exited());
