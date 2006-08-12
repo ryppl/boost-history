@@ -32,13 +32,14 @@ public:
                bool usein = false)
         const
     {
+        bp::pipeline p2 = p;
         bp::command_line dummy(get_helpers_path());
         dummy.argument("stdin-to-stdout");
         if (usein)
-            p.add(cl).add(dummy);
+            p2.add(cl).add(dummy);
         else
-            p.add(dummy).add(cl);
-        return p.start();
+            p2.add(dummy).add(cl);
+        return p2.start();
     }
 };
 
