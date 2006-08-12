@@ -8,6 +8,7 @@
 #include <boost/coroutine/detail/coroutine_accessor.hpp>
 #include <boost/coroutine/detail/signal.hpp>
 #include <boost/detail/workaround.hpp>
+#include <boost/coroutine/detail/noreturn.hpp>
 
 namespace boost { namespace coroutines { namespace detail {
 
@@ -174,7 +175,7 @@ namespace boost { namespace coroutines { namespace detail {
 #undef  BOOST_COROUTINE_param_with_default
 
     
-    void exit() {
+    BOOST_COROUTINE_NORETURN(void exit()) {
       m_pimpl -> exit_self();
     }
 

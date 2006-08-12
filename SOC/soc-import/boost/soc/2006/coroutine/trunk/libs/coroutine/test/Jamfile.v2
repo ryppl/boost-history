@@ -37,5 +37,6 @@ test-suite "coroutine"
       [ run test_move.cpp ]
       [ run test_non_default_constructible.cpp ]
       [ run test_reference.cpp ]
+      [ run test_generator.cpp ]
    ;
 

@@ -7,8 +7,8 @@
 #include <boost/optional.hpp>
 #include <boost/asio.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/coroutine/coroutine.hpp>
 #include <boost/coroutine/future.hpp>
+#include <boost/coroutine/shared_coroutine.hpp>
  
 typedef boost::asio::ip::tcp::acceptor acceptor_type;
 typedef boost::asio::ip::tcp::endpoint endpoint_type;
@@ -23,7 +23,7 @@ void frob(char * begin, size_t len) {
   begin[len-1] ^= first;
 }
 
-typedef boost::coroutines::coroutine<void(void)> thread_type;
+typedef boost::coroutines::shared_coroutine<void(void)> thread_type;
 namespace coro = boost::coroutines;
 
 typedef boost::asio::error error_type;
@@ -135,21 +135,31 @@ int main(int argc, char** argv) {
     acceptor_vector.back()->listen();
   }
 
-  post(thread_type(boost::bind(thread, 
-			       _1, 
-			       &*acceptor_vector.back(), 
-			       &endpoint_vector.back(),
-			       0,
-			       count,
-			       token_size)), demuxer);
+  // not for the faint of heart:
+  demuxer.post(boost::bind                  // bind the std::nothrow object...
+	       (thread_type                 // ... to the operator() of shared_coroutine ...
+		(boost::bind                // ... constructed from ...
+		 (thread,                   // ... the 'thread' function ...
+		  _1,                       // ... that takes a self paramter ...
+		  &*acceptor_vector.back(), // ... and whose acceptor, ...
+		  &endpoint_vector.back(),  // ... endpoint, ...
+		  0,                        // ... id, ...
+		  count,                    // ... count ...
+		  token_size)),             // ... and token_size arguments, are bound to local objects.
+		std::nothrow));
+
   for(int i=1; i< count_2; i++) {
-    post(thread_type(boost::bind(thread, 
-				 _1, 
-				 &*acceptor_vector.at(i-1), 
-				 &endpoint_vector.at(i-1),
-				 i,
-				 count, 
-				 token_size)), demuxer);
+    demuxer.post(boost::bind
+		 (thread_type
+		  (boost::bind
+		   (thread, 
+		    _1, 
+		    &*acceptor_vector.at(i-1), 
+		    &endpoint_vector.at(i-1),
+		    i,
+		    count, 
+		    token_size)), 
+		  std::nothrow));
   }
   demuxer.run(); 
  } 

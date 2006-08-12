@@ -28,5 +28,6 @@ exe prisonerdilemma : prisonerdilemma.cpp ;
 exe banana : banana.cpp ;
 exe matcher : matcher.cpp ;
 exe samefringe : samefringe.cpp ;
+exe samefringe2 : samefringe2.cpp ;
 exe token_passing : token_passing.cpp : <cflags>-march=pentium4 ;
 exe token_passing_baseline : token_passing_baseline.cpp : <cflags>-march=pentium4 ;

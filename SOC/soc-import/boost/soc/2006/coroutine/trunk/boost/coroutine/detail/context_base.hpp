@@ -21,6 +21,7 @@
 #include <boost/coroutine/detail/swap_context.hpp> //for swap hints
 #include <boost/intrusive_ptr.hpp>
 #include <boost/coroutine/exception.hpp>
+#include <boost/coroutine/detail/noreturn.hpp>
 namespace boost { namespace coroutines { namespace detail {
  
   const std::ptrdiff_t default_stack_size = -1;
@@ -115,28 +116,32 @@ namespace boost { namespace coroutines { namespace detail {
      * or entered the wait state.
      * It *does throw* if the coroutine
      * exited abnormally.
+     * Return: false if invoke() would have thrown,
+     *         true otherwise.
+     * 
      */
-    void wake_up() {
+    bool wake_up() {
       BOOST_ASSERT(ready());
       do_invoke();
-      // TODO: could use a binary or here to eliminate
+      // TODO: could use a binary 'or' here to eliminate
       // shortcut evaluation (and a branch), but maybe the compiler is
       // smart enough to do it anyway as there are no side effects.
       if(m_exit_status || m_state == ctx_waiting) {
 	if(m_state == ctx_waiting)
-	  return;
+	  return false;
 	if(m_exit_status == ctx_exited_return)
-	  return;
+	  return true;
 	if(m_exit_status == ctx_exited_abnormally) {
 	std::type_info const * tinfo =0;
 	std::swap(m_type_info, tinfo);
 	throw abnormal_exit(tinfo?*tinfo: typeid(unknown_exception_tag));
 	} else if(m_exit_status == ctx_exited_exit)
-	  return;
+	  return false;
 	else {
 	  BOOST_ASSERT(0 && "unkonw exit status");
 	}
       }
+      return true;
     }
     /*
      * Returns true if the context is runnable.
@@ -282,12 +287,11 @@ namespace boost { namespace coroutines { namespace detail {
     }
 
     // Always throw exit_exception.
-    void exit_self() {
+    // Never returns from standard control flow.
+    BOOST_COROUTINE_NORETURN(void exit_self()) {
       BOOST_ASSERT(!pending());
       BOOST_ASSERT(running());
-      if(m_exit_state < ctx_exit_pending) 
-	m_exit_state = ctx_exit_pending;	
-      check_exit_state();
+      throw exit_exception();
     }
 
     // Nothrow.
@@ -328,9 +332,9 @@ namespace boost { namespace coroutines { namespace detail {
     // a exit request is pending.
     // Throws: exit_exception if an exit request is pending.
     void check_exit_state() {
+      BOOST_ASSERT(running());
       if(!m_exit_state) return;
-      if(m_state == ctx_running)
-	  throw exit_exception();
+      throw exit_exception();
     }
 
     // Nothrow.

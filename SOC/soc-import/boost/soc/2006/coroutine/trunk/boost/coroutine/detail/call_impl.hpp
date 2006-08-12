@@ -83,31 +83,6 @@ namespace boost { namespace coroutines { namespace detail {
     m_future_pimpl;
   };  
   
-  /* 
-   * Asio does not support movable types yet,
-   * so for now this adapter will reference count
-   * a coroutine<void()>.
-   * This adapter takes ownership of the coroutine,
-   * that will be destroyed when the adapter is destroyed
-   * (usually after its operator() has completed).
-   * To extend the lifetime of the coroutine_impl object
-   * use make_callback().
-   */
-  class asio_adapter {
-  public:
-    typedef coroutine<void()> coroutine_type;
-
-    asio_adapter(move_from<coroutine_type> coroutine) :
-      m_pimpl(coroutine_accessor::get_impl(*coroutine)){
-    }
-
-    void operator()() {
-      BOOST_ASSERT(m_pimpl);
-      m_pimpl->run();     
-    }
-    coroutine_type::impl_ptr m_pimpl;
-  };
-
 #undef BOOST_COROUTINE_gen_future_assigner
 #undef BOOST_COROUTINE_tuple_param_n
 

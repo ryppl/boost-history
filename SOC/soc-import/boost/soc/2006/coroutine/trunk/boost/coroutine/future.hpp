@@ -271,15 +271,6 @@ namespace boost { namespace coroutines {
       (future);
   }
 
-  /*
-   * A coroutine cannot directly posted in a demuxer, as it is
-   * not copyable. Use this function to workaround the lack
-   * of copyability
-   */
-  template<typename Demuxer>
-  void post(move_from<coroutine<void()> > coro, Demuxer& demux) {
-    demux.post(detail::asio_adapter(coro));    
-  }
 } } 
 #endif
 

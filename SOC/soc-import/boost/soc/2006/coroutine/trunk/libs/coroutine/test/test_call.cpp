@@ -71,7 +71,7 @@ void test_call() {
   {
     a_pipe my_pipe;
     coroutine_type coro(boost::bind(coro_body(run_flag), boost::ref(my_pipe), _1));
-    run(coro);
+    coro(std::nothrow);
     my_pipe.send(1);
     my_pipe.send(2);
     my_pipe.send(3);

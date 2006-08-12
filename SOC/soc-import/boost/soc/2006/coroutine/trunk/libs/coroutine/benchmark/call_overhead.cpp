@@ -1,7 +1,6 @@
 //  (C) Copyright Giovanni P. Deretta 2006. Distributed under the Boost
 //  Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-#define NDEBUG
 #include <iostream>
 #include <iomanip>
 #include <sys/time.h>
@@ -42,14 +41,14 @@ void foo(int * x) {
   return;
 }
 
-void foo_coro(coroutine_type& self, int * x) {
+void foo_coro(coroutine_type::self& self, int * x) {
   while(true) {
     foo(x);
     self.yield();
   }
 }
 
-void ol_foo_coro(coroutine_type& self, int * x) {
+void ol_foo_coro(coroutine_type::self& self, int * x) {
   while(true) {
     ol_foo(x);
     self.yield();
@@ -64,7 +63,7 @@ struct foo_struct {
 
 struct foo_struct_coro {
   typedef void result_type;
-  void operator()(coroutine_type& self, int *x) {
+  void operator()(coroutine_type::self& self, int *x) {
     while(true){
       *x ^= 0xAAAA;
       self.yield();
