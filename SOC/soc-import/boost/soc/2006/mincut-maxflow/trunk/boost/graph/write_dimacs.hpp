@@ -18,47 +18,32 @@
 #include <vector>
 #include <string>
 #include <ostream>
-#include <sstream>
 
 namespace boost {
 
-template <class Graph, class CapacityMap, class IndexMap, class OutputIterator>
-void write_dimacs_max_flow(Graph& g,
+template <class Graph, class CapacityMap, class IndexMap>
+void write_dimacs_max_flow(const Graph& g,
                          CapacityMap capacity, 
                          IndexMap idx,
-                         typename graph_traits<Graph>::vertex_descriptor& src,
-                         typename graph_traits<Graph>::vertex_descriptor& sink,
-                         OutputIterator out)
+                         typename graph_traits<Graph>::vertex_descriptor src,
+                         typename graph_traits<Graph>::vertex_descriptor sink,
+                         std::ostream& out)
 {
   typedef typename graph_traits<Graph>::vertex_descriptor vertex_descriptor;
   typedef typename graph_traits<Graph>::vertices_size_type vertices_size_type;
   typedef typename graph_traits<Graph>::edge_descriptor edge_descriptor;
   typedef typename graph_traits<Graph>::edges_size_type edges_size_type;
   typedef typename graph_traits<Graph>::edge_iterator edge_iterator;
+   
+  out << "c DIMACS max-flow file generated from boost::write_dimacs_max_flow" << std::endl;
+  out << "p max " << num_vertices(g) << " " << num_edges(g) << std::endl; //print problem description "max" and number of verts and edges
+  out << "n " << get(idx, src) + 1 << " s" << std::endl;; //say which one is source
+  out << "n " << get(idx, sink) + 1 << " t" << std::endl; //say which one is sink
   
-  if( ! num_vertices(g) ){
-    return;
-  }
-  
-  *out++ = "c DIMACS max-flow file generated from boost::write_dimacs_max_flow";
-  std::stringstream s;
-  s << "p max " << num_vertices(g) << " " << num_edges(g); //print problem description "max" and number of verts and edges
-  *out++ = s.str();
-  
-  s.str("");
-  s << "n " << get(idx, src) + 1 << " s"; //say which one is source
-  *out++ = s.str();
-  
-  s.str("");
-  s << "n " << get(idx, sink) + 1 << " t"; //say which one is sink
-  *out++ = s.str();
-  
-  //now we start writing the edges
+  //output the edges
   edge_iterator ei, e_end;
   for(tie(ei,e_end) = edges(g); ei!=e_end; ++ei){
-    s.str("");
-    s << "a " << idx[ source(*ei, g) ] + 1 << " " << idx[ target(*ei, g) ] + 1 << " " << get(capacity,*ei);
-    *out++ = s.str();
+    out << "a " << idx[ source(*ei, g) ] + 1 << " " << idx[ target(*ei, g) ] + 1 << " " << get(capacity,*ei) << std::endl;
   }
 }
 
