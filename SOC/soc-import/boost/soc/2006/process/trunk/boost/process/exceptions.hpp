@@ -36,10 +36,6 @@ extern "C" {
 #include <stdexcept>
 #include <string>
 
-#ifdef BOOST_NO_STDC_NAMESPACE
-namespace std { using ::strerror; }
-#endif
-
 namespace boost {
 namespace process {
 
@@ -174,7 +170,7 @@ system_error::what(void)
             m_message = std::string(std::runtime_error::what()) + ": ";
 
 #if defined(BOOST_PROCESS_POSIX_API)
-            m_message += std::strerror(m_sys_err);
+            m_message += ::strerror(m_sys_err);
 #elif defined(BOOST_PROCESS_WIN32_API)
             TCHAR* msg = NULL;
             if (::FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM |
