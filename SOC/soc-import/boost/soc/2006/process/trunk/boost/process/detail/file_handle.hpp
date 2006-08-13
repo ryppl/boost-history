@@ -307,17 +307,16 @@ private:
     //!
     //! \brief Constant representing an invalid handle value.
     //!
-    static const handle_type INVALID_VALUE;
+#if defined(BOOST_PROCESS_DOXYGEN)
+    static const handle_type INVALID_VALUE = -1;
+#elif defined(BOOST_PROCESS_POSIX_API)
+    static const handle_type INVALID_VALUE = -1;
+#elif defined(BOOST_PROCESS_WIN32_API)
+    static const handle_type INVALID_VALUE = INVALID_HANDLE_VALUE;
+#endif
 };
 
 // ------------------------------------------------------------------------
-
-#if defined(BOOST_PROCESS_POSIX_API)
-const file_handle::handle_type file_handle::INVALID_VALUE = -1;
-#elif defined(BOOST_PROCESS_WIN32_API)
-const file_handle::handle_type file_handle::INVALID_VALUE =
-    INVALID_HANDLE_VALUE;
-#endif
 
 // ------------------------------------------------------------------------
 
@@ -446,6 +445,7 @@ file_handle::posix_remap(handle_type h)
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API) || defined(BOOST_PROCESS_DOXYGEN)
+inline
 file_handle
 file_handle::posix_dup(int h1, int h2)
 {
@@ -461,6 +461,7 @@ file_handle::posix_dup(int h1, int h2)
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_WIN32_API) || defined(BOOST_PROCESS_DOXYGEN)
+inline
 file_handle
 file_handle::win32_dup(HANDLE h, bool inheritable)
 {
@@ -480,6 +481,7 @@ file_handle::win32_dup(HANDLE h, bool inheritable)
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_WIN32_API) || defined(BOOST_PROCESS_DOXYGEN)
+inline
 file_handle
 file_handle::win32_std(DWORD d, bool inheritable)
 {

@@ -224,6 +224,7 @@ posix_setup::operator()(void)
 //!
 //! \throw system_error If any error occurs during the configuration.
 //!
+inline
 void
 setup_input(info_map& info, bool closeflags[], int maxdescs)
 {
@@ -273,6 +274,7 @@ setup_input(info_map& info, bool closeflags[], int maxdescs)
 //!
 //! \throw system_error If any error occurs during the configuration.
 //!
+inline
 void
 setup_output(info_map& info, merge_set& merges, bool closeflags[],
              int maxdescs)
