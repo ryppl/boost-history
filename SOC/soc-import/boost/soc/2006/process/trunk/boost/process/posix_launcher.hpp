@@ -41,10 +41,18 @@ namespace process {
 //!
 //! \brief POSIX implementation of the Launcher concept.
 //!
-//! The launcher class implements the Launcher concept with features only
-//! available in POSIX systems.  Among other things, this includes the
-//! ability to set up more than three communication pipes or change the
-//! privileges of the spawned process.
+//! The posix_launcher class implements the Launcher concept with features
+//! only available in POSIX systems.  Among these are the ability to set up
+//! more than three communication pipes and the possibility to change the
+//! security credentials of the spawned process as well as its file system
+//! root directory.
+//!
+//! This class is built on top of the generic launcher so as to allow its
+//! trivial adoption.  A program using the generic launcher may grow the
+//! need to use some POSIX-specific features.  In that case, adapting the
+//! code is only a matter of redefining the appropriate object and later
+//! using the required extra features: there should be no need to modify
+//! the existing code in any other way.
 //!
 class posix_launcher :
     public launcher

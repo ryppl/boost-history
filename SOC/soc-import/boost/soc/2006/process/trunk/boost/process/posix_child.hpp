@@ -55,6 +55,14 @@ struct factories;
 //! channels with its parent.  These channels are identified by regular
 //! file descriptors (integers).
 //!
+//! This class is built on top of the generic child so as to allow its
+//! trivial adoption.  When a program is changed to use the POSIX-specific
+//! launcher (posix_launcher), it will most certainly need to migrate its
+//! use of the child class to posix_child.  Doing so is only a matter of
+//! redefining the appropriate object and later using the required extra
+//! features: there should be no need to modify the existing code (e.g.
+//! method calls) in any other way.
+//!
 class posix_child :
     public child
 {
