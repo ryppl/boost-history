@@ -36,6 +36,7 @@
 #include <vector>
 
 #include <boost/assert.hpp>
+#include <boost/process/detail/command_line_ops.hpp>
 
 namespace boost {
 namespace process {

@@ -29,12 +29,12 @@ static
 void
 test_arguments_addition(void)
 {
-    bp::command_line cl("program");
+    bp::command_line cl(get_helpers_path());
     cl.argument("first").argument("second").argument("third");
     bp::command_line::arguments_vector args = cl.get_arguments();
     BOOST_REQUIRE_EQUAL(args.size(),
         static_cast< bp::command_line::arguments_vector::size_type >(4));
-    BOOST_CHECK_EQUAL(args[0], "program");
+    BOOST_CHECK_EQUAL(args[0], bfs::path(get_helpers_path()).leaf());
     BOOST_CHECK_EQUAL(args[1], "first");
     BOOST_CHECK_EQUAL(args[2], "second");
     BOOST_CHECK_EQUAL(args[3], "third");
@@ -46,11 +46,11 @@ static
 void
 test_arguments_empty(void)
 {
-    bp::command_line cl("program");
+    bp::command_line cl(get_helpers_path());
     bp::command_line::arguments_vector args = cl.get_arguments();
     BOOST_CHECK_EQUAL(args.size(),
         static_cast< bp::command_line::arguments_vector::size_type >(1));
-    BOOST_CHECK_EQUAL(args[0], "program");
+    BOOST_CHECK_EQUAL(args[0], bfs::path(get_helpers_path()).leaf());
 }
 
 // ------------------------------------------------------------------------
@@ -59,12 +59,12 @@ static
 void
 test_arguments_types(void)
 {
-    bp::command_line cl("program");
+    bp::command_line cl(get_helpers_path());
     cl.argument("string").argument(123L);
     bp::command_line::arguments_vector args = cl.get_arguments();
     BOOST_REQUIRE_EQUAL(args.size(),
         static_cast< bp::command_line::arguments_vector::size_type >(3));
-    BOOST_CHECK_EQUAL(args[0], "program");
+    BOOST_CHECK_EQUAL(args[0], bfs::path(get_helpers_path()).leaf());
     BOOST_CHECK_EQUAL(args[1], "string");
     BOOST_CHECK_EQUAL(std::atol(args[2].c_str()), 123L);
 }
@@ -75,8 +75,8 @@ static
 void
 test_executable(void)
 {
-    bp::command_line cl("program");
-    BOOST_CHECK_EQUAL(cl.get_executable(), "program");
+    bp::command_line cl(get_helpers_path());
+    BOOST_CHECK_EQUAL(cl.get_executable(), get_helpers_path());
 }
 
 // ------------------------------------------------------------------------
@@ -85,19 +85,16 @@ static
 void
 test_progname(void)
 {
-    bp::command_line cl1("program");
-    BOOST_CHECK_EQUAL(cl1.get_arguments()[0], "program");
+    bp::command_line cl1(get_helpers_path());
+    BOOST_CHECK_EQUAL(cl1.get_arguments()[0],
+                      bfs::path(get_helpers_path()).leaf());
 
-    bp::command_line cl2("program", "thetest");
+    bp::command_line cl2(get_helpers_path(), "thetest");
     BOOST_CHECK_EQUAL(cl2.get_arguments()[0], "thetest");
 
-    bp::command_line cl3("/path/to/program");
-    BOOST_CHECK_EQUAL(cl3.get_arguments()[0], "program");
-
-    if (bp_api_type == win32_api) {
-        bp::command_line cl4("C:\\path\\to\\program");
-        BOOST_CHECK_EQUAL(cl4.get_arguments()[0], "program");
-    }
+    bp::command_line cl3(get_helpers_path());
+    BOOST_CHECK_EQUAL(cl3.get_arguments()[0],
+                      bfs::path(get_helpers_path()).leaf());
 }
 
 // ------------------------------------------------------------------------

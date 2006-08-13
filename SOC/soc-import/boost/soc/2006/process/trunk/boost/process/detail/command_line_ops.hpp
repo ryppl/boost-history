@@ -23,6 +23,7 @@
 #include <boost/process/config.hpp>
 
 #if defined(BOOST_PROCESS_POSIX_API)
+#   include <cerrno>
 #   include <cstring>
 #   include <utility>
 #   include <boost/assert.hpp>
@@ -35,6 +36,9 @@
 #endif
 
 #include <cstddef>
+
+#include <boost/process/exceptions.hpp>
+#include <boost/throw_exception.hpp>
 
 namespace boost {
 namespace process {

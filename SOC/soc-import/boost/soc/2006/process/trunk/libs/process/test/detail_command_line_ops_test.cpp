@@ -20,10 +20,15 @@
 #   error "Unsupported platform."
 #endif
 
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
 #include <boost/process/command_line.hpp>
 #include <boost/process/detail/command_line_ops.hpp>
 #include <boost/test/unit_test.hpp>
 
+#include "misc.hpp"
+
+namespace bfs = ::boost::filesystem;
 namespace bp = ::boost::process;
 namespace bpd = ::boost::process::detail;
 namespace but = ::boost::unit_test;
@@ -35,7 +40,7 @@ static
 void
 test_command_line_to_posix_argv(void)
 {
-    bp::command_line cl("program");
+    bp::command_line cl(get_helpers_path(), "program");
     cl.argument("arg1").argument("arg2").argument("arg3");
 
     std::pair< std::size_t, char** > args =
@@ -66,7 +71,7 @@ static
 void
 test_command_line_to_win32_cmdline(void)
 {
-    bp::command_line cl("program");
+    bp::command_line cl(get_helpers_path(), "program");
     cl.argument("arg1").argument("arg2").argument("arg3");
 
     boost::shared_array< TCHAR > cmdline =
@@ -81,8 +86,10 @@ test_command_line_to_win32_cmdline(void)
 but::test_suite *
 init_unit_test_suite(int argc, char* argv[])
 {
+    bfs::initial_path();
+
     but::test_suite* test =
-        BOOST_TEST_SUITE("detail::command_line test suite");
+        BOOST_TEST_SUITE("detail::command_line_ops test suite");
 
 #if defined(BOOST_PROCESS_POSIX_API)
     test->add(BOOST_TEST_CASE(&test_command_line_to_posix_argv));
