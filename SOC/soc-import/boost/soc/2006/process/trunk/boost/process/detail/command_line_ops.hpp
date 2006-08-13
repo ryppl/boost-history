@@ -130,6 +130,75 @@ command_line_to_win32_cmdline(const Command_Line& cl)
 
 // ------------------------------------------------------------------------
 
+//!
+//! \brief Locates a program in the path.
+//!
+//! Locates the executable program \a file in all the directory components
+//! specified in \a path.  If \a path is empty, the value of the PATH
+//! environment variable is used.
+//!
+//! The path variable is interpreted following the same conventions used
+//! to parse the PATH environment variable in the underlying platform.
+//!
+inline
+std::string
+find_in_path(const std::string& file, std::string path = "")
+{
+#if defined(BOOST_PROCESS_POSIX_API)
+    BOOST_ASSERT(file.find('/') == std::string::npos);
+    const char delim = ':';
+#elif defined(BOOST_PROCESS_WIN32_API)
+    BOOST_ASSERT(file.find('\\') == std::string::npos);
+    const char delim = ';';
+#endif
+
+    if (path.empty()) {
+#if defined(BOOST_PROCESS_POSIX_API)
+        const char* envpath = ::getenv("PATH");
+        if (envpath == NULL)
+            boost::throw_exception
+                (system_error("boost::process::detail::find_in_path",
+                              "getenv(2) of PATH failed", errno));
+#elif defined(BOOST_PROCESS_WIN32_API)
+        const char envpath[MAX_PATH];
+        if (::GetEnvironmentVariable("PATH", envpath, MAX_PATH) == 0)
+            boost::throw_exception
+                (system_error("boost::process::detail::find_in_path",
+                              "GetEnvironmentVariable of PATH failed",
+                              ::GetLastError()));
+#endif
+        path = envpath;
+    }
+    BOOST_ASSERT(!path.empty());
+
+    std::string result;
+
+    std::string::size_type pos1 = 0, pos2;
+    do {
+        pos2 = path.find(delim, pos1);
+        std::string dir = path.substr(pos1, pos2 - pos1);
+        std::string f = dir + '/' + file;
+
+#if defined(BOOST_PROCESS_POSIX_API)
+        if (::access(f.c_str(), X_OK) == 0)
+            result = f;
+#elif defined(BOOST_PROCESS_WIN32_API)
+#   error "Unimplemented."
+#endif
+
+        pos1 = pos2 + 1;
+    } while (pos2 != std::string::npos && result.empty());
+
+    if (result.empty())
+        boost::throw_exception
+            (system_error("boost::process::detail::find_in_path",
+                          "cannot locate executable", ENOENT));
+
+    return result;
+}
+
+// ------------------------------------------------------------------------
+
 } // namespace detail
 } // namespace process
 } // namespace boost

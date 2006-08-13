@@ -79,15 +79,21 @@ public:
     //! \brief Constructs a new command line.
     //!
     //! Constructs a new command line given an executable and its program
-    //! name.
+    //! name.  If the executable name does not have any directory
+    //! component, it is automatically searched in the path given by
+    //! \a path or, if empty, in the directories listed by the PATH
+    //! environment variable.
     //!
     //! \param executable The full path to the executable program.
     //! \param firstarg The program's name.  If empty, the constructor
     //!                 sets it to be the executable's base name (i.e.,
     //!                 skips the directory).
+    //! \param path Set of directories where to look for the executable,
+    //!             if it does not include any path component.
     //!
     explicit command_line(const std::string& executable,
-                          const std::string& firstarg = "");
+                          const std::string& firstarg = "",
+                          const std::string& path = "");
 
     //!
     //! \brief Constructs a shell-based command line.
@@ -139,7 +145,8 @@ public:
 
 inline
 command_line::command_line(const std::string& executable,
-                           const std::string& firstarg) :
+                           const std::string& firstarg,
+                           const std::string& path) :
     m_executable(executable)
 {
     if (firstarg.empty()) {
@@ -159,6 +166,14 @@ command_line::command_line(const std::string& executable,
             m_arguments.push_back(m_executable.substr(pos + 1));
     } else
         m_arguments.push_back(firstarg);
+
+#if defined(BOOST_PROCESS_POSIX_API)
+    if (m_executable.find('/') == std::string::npos)
+        m_executable = detail::find_in_path(m_executable, path);
+#elif defined(BOOST_PROCESS_WIN32_API)
+    if (m_executable.find('\\') == std::string::npos)
+        m_executable = detail::find_in_path(m_executable, path);
+#endif
 }
 
 // ------------------------------------------------------------------------

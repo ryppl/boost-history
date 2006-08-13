@@ -385,35 +385,7 @@ posix_start(const Command_Line& cl,
         std::pair< std::size_t, char** > args = command_line_to_posix_argv(cl);
         char** envp = env.envp();
 
-        std::string executable = cl.get_executable();
-        const char* envpath;
-        if (executable.find('/') == std::string::npos &&
-            (envpath = ::getenv("PATH")) != NULL) {
-            // The executable points to the name of a binary and the
-            // PATH variable is defined; locate it in the PATH, if possible.
-            std::string path = envpath;
-            std::string::size_type pos1 = 0, pos2;
-            do {
-                pos2 = path.find(':', pos1);
-                std::string dir = path.substr(pos1, pos2 - pos1);
-                std::string f = dir + '/' + executable;
-                if (::access(f.c_str(), X_OK) == 0) {
-                    executable = f;
-                    break;
-                }
-                pos1 = pos2 + 1;
-            } while (pos2 != std::string::npos);
-
-            if (executable.find('/') == std::string::npos) {
-                system_error e("boost::process::detail::posix_start",
-                               "execve(2) failed", ENOENT);
-                ::write(STDERR_FILENO, e.what(), std::strlen(e.what()));
-                ::write(STDERR_FILENO, "\n", 1);
-                ::exit(EXIT_FAILURE);
-            }
-        }
-
-        ::execve(executable.c_str(), args.second, envp);
+        ::execve(cl.get_executable().c_str(), args.second, envp);
         system_error e("boost::process::detail::posix_start",
                        "execve(2) failed", errno);
 

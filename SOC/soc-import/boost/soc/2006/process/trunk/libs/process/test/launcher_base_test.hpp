@@ -29,6 +29,15 @@ namespace launcher_base_test {
 
 // ------------------------------------------------------------------------
 
+// A predicate for BOOST_CHECK_EXCEPTION that always fails.
+bool
+always_fail(const bp::system_error& e)
+{
+    return true;
+}
+
+// ------------------------------------------------------------------------
+
 //
 // Overview
 // --------
@@ -423,22 +432,9 @@ test_path(void)
         bfs::path(get_helpers_path()).branch_path().string();
     std::string helpersname = bfs::path(get_helpers_path()).leaf();
 
-    bp::command_line cl(helpersname);
-    cl.argument("pwd");
-
     // The helpers binary should not be located with the default PATH.
-    Launcher l1;
-    bp::status s1 = Start()(l1, cl).wait();
-    BOOST_CHECK(s1.exited());
-    BOOST_CHECK_EQUAL(s1.exit_status(), EXIT_FAILURE);
-
-    // Setting the child's PATH variable should not affect the parent at
-    // all to locate it.
-    Launcher l2;
-    l2.set_environment("PATH", helpersdir);
-    bp::status s2 = Start()(l2, cl).wait();
-    BOOST_CHECK(s2.exited());
-    BOOST_CHECK_EQUAL(s2.exit_status(), EXIT_FAILURE);
+    BOOST_CHECK_EXCEPTION(bp::command_line cl1(helpersname),
+                          bp::system_error, always_fail);
 
     // Modifying the parent's PATH setting should make the launcher locate
     // the binary correctly.
@@ -446,10 +442,12 @@ test_path(void)
     std::string oldpath = ::getenv("PATH");
     try {
         ::setenv("PATH", helpersdir.c_str(), 1);
-        Launcher l3;
-        bp::status s3 = Start()(l3, cl).wait();
-        BOOST_CHECK(s3.exited());
-        BOOST_CHECK_EQUAL(s3.exit_status(), EXIT_SUCCESS);
+        bp::command_line cl2(helpersname);
+        cl2.argument("pwd");
+        Launcher l2;
+        bp::status s2 = Start()(l2, cl2).wait();
+        BOOST_CHECK(s2.exited());
+        BOOST_CHECK_EQUAL(s2.exit_status(), EXIT_SUCCESS);
         ::setenv("PATH", oldpath.c_str(), 1);
     } catch (...) {
         ::setenv("PATH", oldpath.c_str(), 1);
@@ -460,15 +458,26 @@ test_path(void)
     try {
         BOOST_REQUIRE(::SetEnvironmentVariable("PATH",
                                                TEXT(helpersdir.c_str())) != 0);
-        bp::launcher l3;
-        bp::status s3 = l3.start(cl).wait();
-        BOOST_CHECK(s3.exited());
-        BOOST_CHECK_EQUAL(s3.exit_status(), EXIT_SUCCESS);
+        bp::command_line cl2(helpersname);
+        cl2.argument("pwd");
+        bp::launcher l2;
+        bp::status s2 = l2.start(cl2).wait();
+        BOOST_CHECK(s2.exited());
+        BOOST_CHECK_EQUAL(s2.exit_status(), EXIT_SUCCESS);
         BOOST_REQUIRE(::SetEnvironmentVariable("PATH", oldpath) != 0);
     } catch (...) {
         BOOST_REQUIRE(::SetEnvironmentVariable("PATH", oldpath) != 0);
     }
 #endif
+
+    // The helpers binary should be located with a custom PATH in the
+    // command line initialization.
+    bp::command_line cl3(helpersname, "helpers", helpersdir);
+    cl3.argument("pwd");
+    Launcher l3;
+    bp::status s3 = Start()(l3, cl3).wait();
+    BOOST_CHECK(s3.exited());
+    BOOST_CHECK_EQUAL(s3.exit_status(), EXIT_SUCCESS);
 }
 
 // ------------------------------------------------------------------------
