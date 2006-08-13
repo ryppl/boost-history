@@ -23,7 +23,6 @@
 #include <boost/process/config.hpp>
 
 #if defined(BOOST_PROCESS_POSIX_API)
-#   include <cerrno>
 #   include <cstring>
 #   include <utility>
 #   include <boost/assert.hpp>
@@ -144,6 +143,9 @@ command_line_to_win32_cmdline(const Command_Line& cl)
 //! The path variable is interpreted following the same conventions used
 //! to parse the PATH environment variable in the underlying platform.
 //!
+//! \throw not_found_error&lt;std::string&gt; If the file cannot be found
+//! in the path.
+//!
 inline
 std::string
 find_in_path(const std::string& file, std::string path = "")
@@ -160,16 +162,15 @@ find_in_path(const std::string& file, std::string path = "")
 #if defined(BOOST_PROCESS_POSIX_API)
         const char* envpath = ::getenv("PATH");
         if (envpath == NULL)
-            boost::throw_exception
-                (system_error("boost::process::detail::find_in_path",
-                              "getenv(2) of PATH failed", errno));
+            boost::throw_exception(not_found_error< std::string >
+                ("Cannot locate " + file + " in path; "
+                 "error retrieving PATH's value", file));
 #elif defined(BOOST_PROCESS_WIN32_API)
         const char envpath[MAX_PATH];
         if (::GetEnvironmentVariable("PATH", envpath, MAX_PATH) == 0)
-            boost::throw_exception
-                (system_error("boost::process::detail::find_in_path",
-                              "GetEnvironmentVariable of PATH failed",
-                              ::GetLastError()));
+            boost::throw_exception(not_found_error< std::string >
+                ("Cannot locate " + file + " in path; "
+                 "error retrieving PATH's value", file));
 #endif
         path = envpath;
     }
@@ -194,9 +195,8 @@ find_in_path(const std::string& file, std::string path = "")
     } while (pos2 != std::string::npos && result.empty());
 
     if (result.empty())
-        boost::throw_exception
-            (system_error("boost::process::detail::find_in_path",
-                          "cannot locate executable", ENOENT));
+        boost::throw_exception(not_found_error< std::string >
+            ("Cannot locate " + file + " in path", file));
 
     return result;
 }

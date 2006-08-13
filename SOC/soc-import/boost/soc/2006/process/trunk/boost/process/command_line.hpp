@@ -91,6 +91,9 @@ public:
     //!                 skips the directory).
     //! \param path Set of directories where to look for the executable,
     //!             if it does not include any path component.
+    //! \throw not_found_error&lt;std::string&gt; If the executable
+    //! cannot be found in the path.
+    //!
     //!
     explicit command_line(const std::string& executable,
                           const std::string& firstarg = "",

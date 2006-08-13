@@ -84,7 +84,7 @@ public:
     //!
     //! \brief Virtual destructor that does nothing.
     //!
-    //! Virtual restructor.  Does nothing special but is required because
+    //! Virtual destructor.  Does nothing special but is required because
     //! of the parent's class destructor.
     //!
     virtual ~system_error(void) throw();
@@ -191,6 +191,80 @@ system_error::what(void)
     } catch (...) {
         return "Unable to format system_error message";
     }
+}
+
+// ------------------------------------------------------------------------
+
+//!
+//! \brief Indicates that an element could not be found.
+//!
+//! The not_found_error exception indicates the that an expected element
+//! could not be found.  The class is parametrized on the element type so
+//! that it can carry a copy of the failing value.
+//!
+template< class T >
+class not_found_error :
+    public std::runtime_error
+{
+public:
+    //!
+    //! \brief Constructs a new exception.
+    //!
+    //! Constructs a new exception based on an error message and the
+    //! value that could not be found.
+    //!
+    not_found_error(const std::string& message, const T& value) throw();
+
+    //!
+    //! \brief Virtual destructor that does nothing.
+    //!
+    //! Virtual destructor.  Does nothing special but is required because
+    //! of the parent's class destructor.
+    //!
+    virtual ~not_found_error(void) throw();
+
+    //!
+    //! \brief Returns a copy of the value that could not be found.
+    //!
+    //! Returns a copy of the value that could not be found.
+    //!
+    const T& get_value(void) const throw();
+
+private:
+    T m_value;
+};
+
+// ------------------------------------------------------------------------
+
+template< class T >
+inline
+not_found_error< T >::not_found_error(const std::string& message,
+                                      const T& value)
+    throw() :
+    std::runtime_error(message),
+    m_value(value)
+{
+}
+
+// ------------------------------------------------------------------------
+
+template< class T >
+inline
+not_found_error< T >::~not_found_error(void)
+    throw()
+{
+}
+
+// ------------------------------------------------------------------------
+
+template< class T >
+inline
+const T&
+not_found_error< T >::get_value(void)
+    const
+    throw()
+{
+    return m_value;
 }
 
 // ------------------------------------------------------------------------

@@ -30,11 +30,21 @@ namespace launcher_base_test {
 // ------------------------------------------------------------------------
 
 // A predicate for BOOST_CHECK_EXCEPTION that always fails.
-bool
-always_fail(const bp::system_error& e)
+struct check_name
 {
-    return true;
-}
+    std::string m_name;
+
+    check_name(const std::string& name) :
+        m_name(name)
+    {
+    }
+
+    bool
+    operator()(const bp::not_found_error< std::string >& e)
+    {
+        return e.get_value() == m_name;
+    }
+};
 
 // ------------------------------------------------------------------------
 
@@ -434,7 +444,8 @@ test_path(void)
 
     // The helpers binary should not be located with the default PATH.
     BOOST_CHECK_EXCEPTION(bp::command_line cl1(helpersname),
-                          bp::system_error, always_fail);
+                          bp::not_found_error< std::string >,
+                          check_name(helpersname));
 
     // Modifying the parent's PATH setting should make the launcher locate
     // the binary correctly.
