@@ -41,6 +41,13 @@ void test_generator() {
     std::copy(gen, generator_type(), std::back_inserter(vec));
     BOOST_CHECK(vec.size() == 10);
   }
+  {
+    generator_type gen(boost::bind(count2, _1, 10, 20));
+    std::vector<int> vec;
+    std::copy(gen, generator_type(), std::back_inserter(vec));
+    BOOST_CHECK(vec.size() == 10);
+  }
+
 }
 
 boost::unit_test::test_suite* init_unit_test_suite( int argc, char* argv[] )

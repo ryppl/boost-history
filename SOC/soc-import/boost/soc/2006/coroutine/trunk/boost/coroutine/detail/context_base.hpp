@@ -291,6 +291,7 @@ namespace boost { namespace coroutines { namespace detail {
     BOOST_COROUTINE_NORETURN(void exit_self()) {
       BOOST_ASSERT(!pending());
       BOOST_ASSERT(running());
+      m_exit_state = ctx_exit_pending;	
       throw exit_exception();
     }
 

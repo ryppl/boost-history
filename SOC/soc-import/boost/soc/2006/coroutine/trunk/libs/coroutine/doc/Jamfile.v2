@@ -1,0 +1,18 @@
+# Distributed under the Boost Software License, Version 1.0.
+
+import doxygen ;
+import quickbook ;
+
+xml coroutine
+    :
+        coroutine.qbk
+    ;
+
+boostbook standalone
+    :
+        coroutine
+    :
+        <xsl:param>toc.max.depth=3
+        <xsl:param>toc.section.depth=3
+        <xsl:param>chunk.section.depth=3
+    ;

@@ -20,6 +20,7 @@ namespace boost { namespace coroutines { namespace detail {
   template<typename Signature>
   struct coroutine_traits {    
   private:
+
     typedef BOOST_DEDUCED_TYPENAME boost::function_traits<Signature>::result_type 
     signature_result_type;
   public:

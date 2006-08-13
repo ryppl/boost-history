@@ -1,0 +1,496 @@
+[library Boost.Coroutine
+	[authors [*Deretta, Giovanni P.*]]
+	[copyright 2006 Giovanni P. Deretta]
+	[purpose A coroutine class template]
+	[category higher-order]
+	[id coroutine]
+	[license
+	 Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        <ulink url="http://www.boost.org/LICENSE_1_0.txt">
+            http://www.boost.org/LICENSE_1_0.txt
+        </ulink>)
+	]
+]
+
+[/ QuickBook Document verion 1.0]
+[/ Aug 10, 2006]
+
+[def __alert__ [$alert.png]]
+
+[def __coroutine__ [link boost::coroutines::coroutine coroutine]]
+[def __generator__ [link boost::coroutines::generator generator]]
+[def __self_exit__  [link boost::coroutines::generator exit]]
+[def __yield__     [link boost::coroutines::generator yield]]
+[def __self__ [link boost::coroutines::generator::self self]]
+[def __exit_exception__ [link boost::coroutines::exit_exception
+exit_exception]]
+[def __Generator__ [link to-sgi-doc Generator]]
+[def __AdaptableGenerator__ [link to-sgi-doc AdaptableGenerator]]
+[def __Assignable__ [link to-sgi-doc Assignable]]
+ 
+[def __marlin80__ [link to-marlin-doctoral-thesis-here \[Marlin80\]]]
+[def __moura04a__ [link to-moura-04-04 \[Moura04a\]]]
+[def __moura04b__ [link to-moura-04-15 \[Moura04b\]]]
+
+[section:intro Introduction]
+
+The Boost.Coroutine library contains a family of class templates that
+transform function objects in coroutines. Coroutines are a
+generalization of subroutines that can return and be reentered more
+than once without causing the destruction of automatic objects.
+
+Coroutines are useful whenever it is necessary to keep state across a
+function call.
+
+[endsect]
+
+[section:background Tutorial]
+
+While all subroutines have state, their state is usually lost when the
+subroutine returns; on the other hand coroutines keep their state
+across calls. Function 
+objects familiar to all C++ programmers are similar to coroutines in
+the fact as they may have state that is preserved across calls; but
+while function objects store their state on class members variables, coroutines
+store the state in the stack as automatic objects. 
+
+A widely accepted __marlin80__ definition of coroutines follows:
+
+* "The value of local data of coroutines persist between successive
+calls".
+* "The execution of a coroutine is suspended as control leaves it,
+only to carry on were it left off when control re-enters the coroutine
+at some later stage".
+
+The second point is a fundamental difference between a coroutine and
+a generic function objects. While the latter can also store local state
+in the form of member variables, it does not automatically preserve
+the point of suspension when it is exited; it must be manually saved
+in an extra state member variable. Coroutines automatically remember
+where they left off.
+
+Coroutines can be used in all places where function objects are used;
+this includes: as callback to standard algorithms, as generator
+functions, as callback to asynchronous functions and much more.
+
+In this section, we will first present the __generator__ class
+template (a simplified form of coroutines). Only later the full
+__coroutine__ class template is described.
+
+[h3 Stylistic Notes]
+
+For brevity all code in this and other sections will assume that
+the following using declaration is in effect:
+
+    using namespace coro = boost::coroutines;
+	    
+And the following include directive is present:
+    
+    #include<boost/coroutine/generator.hpp>
+
+[section:generators Generators]
+
+One of the most simple uses for coroutines is as generator functions.    
+A generator is similar to a function that returns a sequence of
+values, but instead of returning all values at once (for example as an
+array), the generator returns the values one at time. Every time the
+generator is called, it returns the next value.
+
+In standard C++ library, generators are for example used with the
+`std::generate` algorithm, that takes as third argument a function
+object that model the __Generator__ concept. 
+
+[h3 Function objects as generators]
+[#function_object_generator]
+
+A generator can be easily implemented in C++ as a function
+object. Consider a generator that returns all integer numbers in a
+range:
+
+  class range_generator {
+  public:
+    range_generator(int min, int max) :
+      m_current(min),
+      m_max(max) {}
+  
+    int operator()() {
+      return m_current++;
+    }
+  
+    operator bool() const {
+      return m_current < m_max;
+    }
+  
+  private:
+    int m_current;
+    int m_max;
+  };
+	
+It can be used like this:
+
+  range_generator generator(100, 200);
+
+  while(generator) 
+    std::cout<<generator()<<"\n";
+
+It will print all values in the half-open range [100, 200).
+The conversion to `bool` is used to detect when the generator has
+terminated. In production code probably the safe-bool idiom would be
+used instead. 
+
+[h3 Input iterators as generators]
+[#input_iterator_generator]
+A generator can also be implemented as an input iterator. 
+Recall that an input iterator only support dereferencing and incrementing.
+This is the iterator version of the [link function_object_generator previous function object].
+
+  class range_generator {
+  public:
+    typedef int value_type;
+
+    range_generator(int min, int max) :
+      m_current(min),
+      m_max(max) {}
+
+    range_generator() :
+      m_current(-1),
+      m_max(0) {}
+  
+    int operator*() {
+      return m_current;
+    }
+    
+    range_generator& operator++() {	
+      m_current ++;
+      if(m_current == m_max)
+        m_current = -1;
+      return *this;
+    }    
+
+    range_generator operator++(int) {
+      range_generator t(*this);
+      ++*this;
+      return t;
+    }
+
+    friend
+    bool operator==(const range_generator& rhs,
+		    const range_generator& lhs) {
+      return rhs.m_current == lhs.m_current;
+    }
+
+    friend
+    bool operator!=(const range_generator& rhs,
+		    const range_generator& lhs) {
+      return !(rhs == lhs);
+    }
+
+    private:
+    int m_current;
+    int m_max;
+  };
+	
+It can be used like this:
+
+  range_generator generator(100, 200);
+
+  while(generator != range_generator()) 
+    std::cout<<*generator++<<"\n";
+
+It will print all values in the half-open range [100, 200). Notice that
+a default constructed iterator is used to represent the past-the-end iterator.
+We will call this kind of iterator a generator iterator.
+
+[h3 The __generator__ class template]
+[#generator_class_template]
+
+Obviously a generator is a stateful object, and can be easily
+implemented using coroutines.
+
+Before introducing full fledged coroutines, we will introduce the
+__generator__ class template that wrap a coroutine in an input iterator
+interface.
+  
+We begin declaring its type, the generator is an iterator that returns
+values of type `int`:
+
+  typedef coro::__generator__<int()> generator_type;
+
+The typedef is not really required, but makes the following code more
+readable. This is the generator body: 
+
+  int range_generator(generator_type::__self__& self, 
+		      int min,
+		      int max) 
+  {
+    while(min < max-1)
+      self.__yield__(min++);
+    return min;  
+  }	
+	 
+It is a plain C++ function that takes as parameter a non const
+reference to a `__generator__::__self__` and two integers by value.
+The `self` object of type  `generator_type::__self__` identifies
+the current generator. In fact, as coroutines have state, there can be
+more than one instance of the same coroutine type. The `self` name is
+just a convention used in this documentation. You can give to it
+whatever name you want, of course.
+
+The `min` and `max` parameters are the minimum and maximum bounds of
+the iteration. 
+
+The generator body iterates between all numbers in the ranges [min,
+max-1) and invokes `__self__::__yield__()` for each number. The `yield` member
+function is responsible of returning the parameter to the caller of
+the generator.
+
+When the `while` loop terminates, a plain `return min` statement is executed.
+This both terminates the generator and returns the final value
+(i.e. max-1). We will see later how to remove this assimmetry.
+
+Given the generator body, a __generator__ iterator can be constructed:
+
+  generator_type generator(boost::bind
+			   (range_generator, 
+			    _1, 
+			    100,
+			    200));
+
+The `boost::bind` facility is used to bind the `min` and `max` arguments
+of the function to the actual iterations ranges. The function object
+returned by `boost::bind` is then used to construct a __generator__
+object. The signature of the function or function object passed to the
+__generator__ constructor must be:
+
+  value_type(coro::__generator__<value_type>::__self__&)
+
+The `generator` iterator can be used exactly like the iterator object of the
+previous example.
+
+  while(generator != generator_type()) 
+    std::cout<<*generator++<<"\n";
+
+Note that `range_generator` body is entered for the first time when the
+generator is constructed (from the main entry point), then at every
+iteration `range_iterator` is reentered from `__yield__()`. In
+particular `range_iterator` is reentered when
+`__generator__::operator++` is invoked.
+
+You can have more than one generator referring to the same body:
+
+  generator_type generator_a(boost::bind
+			   (range_generator, 
+			    _1, 
+			    100,
+			    200));
+
+  generator_type generator_b(boost::bind
+			   (range_generator, 
+			    _1, 
+			    100,
+			    200));
+
+  while(generator_a != generator_type() && 
+	generator_b != generator_type()) 
+    std::cout<<"generator_a is: "<<*generator_a++<<", "
+	     <<"generator_b is: "<<*generator_b++<<"\n";
+
+The `self` parameter in `range_generator` is used to identify the
+different instances of a generator. Also `__generator__::__self__`
+encodes the type of the generator allowing the compiler to statically
+type check the argument type of `__yield__` in the same way it would
+statically type check the argument type of a `return` statement. 
+
+In addition to the normal input iterator semantics, a __generator__
+iterator is also convertible to `bool`. The conversion returns true
+while there are elements in the range:
+
+  range_generator generator(100, 200);
+
+  while(generator) 
+    std::cout<<*generator++<<"\n";
+
+Also an `operator()` member function and nested `result_type` typedef
+are provided: `generator()` is equivalent to `*generator++`. Thus
+__generator__ also models the __AdaptableGenerator__ concept:
+
+  range_generator generator(100, 200);
+
+  while(generator) 
+    std::cout<<generator()<<"\n";
+
+[h3 Exiting a generator]
+
+The [link generator_class_template previous example] had an assimmetry in its
+body. The last generated value had to be returned with a 'return'
+statement instead of 'yield'. In simple code this is not a problem,
+because it is easy to see what the final value will be, but in more
+complex generators this assimmetry requires a substantial obfuscation
+of the code.
+
+The `__generator__::__self__::__self_exit__()` member function provides a way
+to exit a generator without returning a value. The [link
+generator_class_template previous generator] can thus be written like this:
+
+ int range_generator(generator_type::__self__& self, 
+		     int min,
+		     int max) 
+  {
+    while(min < max)
+      self.__yield__(min++);
+    self.__self_exit__();
+  }	
+		
+Notice that now the `while` loop iterates over the full range.
+The __generator__ class can handle both styles of exiting a generator.
+
+`__self_exit__()` works by throwing an exception of type
+__exit_exception__. Objects of this type can be normally caught, but 
+must be eventually re-thrown: once `__self_exit__()` has been called, the
+coroutine can no longer `__yield__()` nor `return`. 
+	 
+[blurb __alert__ Some compilers might not be able to recognize
+`__self_exit__()` as a function that doesn't return, and complaint that
+'range_generator' returns without a value. For these compilers you may
+have to add a dummy return value at the end of the function body like
+this: `return int();`
+If the return type is not default constructible, boost optional might
+be another solution: `return *boost::optional<result_type>();`]
+
+A generator is automatically exited when the last __generator__ iterator
+that refers goes out of scope. In that case the generator body is resumed
+and an __exit_exception__ is thrown from `__yield__`().
+
+[blurb __alert__ Note that the __generator__ class template use the reference
+counted body/handle idiom. This is necessary because an input iterator must be
+ __Assignable__ while it is in general not possible to copy the generator state (that
+is kept in automatic variables in the generator body). This means that
+if a generator ever gets a copy of its associated __generator__
+iterator, a cycle is formed and it could cause memory not to be
+reclaimed.]
+
+[h3 Properties of generators]
+
+
+
+[endsect]
+[section:coroutines Stackful generators]
+
+While generators are have seen a resurgence in recent times, for
+example both *Python* and *C#* support them, most implementations 
+have the limitation that the generator body can only be
+exited from the bottom of its stack: while it can
+call other functions (including other generators), they must all
+return before the generator can yield to the
+caller. That is, the generator's call stack must be empty when it
+yields.
+
+Boost.Coroutine provides stackful coroutines and generators that
+can yield from nested functions. This makes them much more
+powerful than more limited form of generators.  
+
+[h3 Same Fringe Problem]
+
+Given two binary trees, they are have the [*same fringe] if all
+leafs, read from left to right are equals. This is the classical
+coroutine killer application, because it is hard to solve in *O(N)*
+(with best case *O(1)*) in the number of leaves, without using stackful coroutines.
+The Portland Pattern Repository's [@http://c2.com/cgi/wiki?SameFringeProblem wiki] 
+contains more details on the problem and solutions on languages that
+support true continuations.
+
+The solution presented here is an almost verbatim port of the *Lua*
+solution from the [@http://c2.com/cgi/wiki?SameFringeProblem wiki] 
+
+For this example a tree of integers will be represented by this
+recursive description:
+
+# a leaf is an integer.
+# a node is a pair of nodes or a leaf.
+# a tree is a node.
+
+Or, in pseudo-C++:
+
+  typedef int leaf_type;
+  typedef boost::variant<std::pair<node_type, node_type>, leaf_type> node_type;
+  typedef node_type tree_type;
+
+Note that the above isn't legal C++ because a
+recursive variant must be declared with slightly different syntax. For
+the sake of simplicity we will pretend that it works.
+The function:
+
+    bool is_leaf(node_type)
+
+will return true if the node is actually a leaf, false otherwise.
+This is the generator signature:
+
+  typedef __generator__<leaf> generator_type;
+
+This is the generator body:
+
+  leaf tree_leaves
+   (generator_type::self& self,
+    const node_type& node) 
+  {
+    if(is_leaf(node)) {
+      self.yield(boost::get<leaf_type>(tree));
+    } else {
+      tree_leaves(self, boost::get<node_type>.first);
+      tree_leaves(self, boost::get<node_type>.second);
+    }
+    self.exit();
+  }
+
+`tree_leaves` recursively traverses the tree and yields each leave. In
+practice it gives a flattened view of the tree. 
+Notice how  `__yield__()` can be called from anywhere in the recursion stack. 
+
+  bool same_fringe(const element& tree1, const element& tree2) {
+    generator_type tree_leaves_a(boost::bind(tree_leaves, _1, tree1));
+    generator_type tree_leaves_b(boost::bind(tree_leaves, _1, tree2));
+    while(tree_leaves_a && tree_leaves_b) {
+      if(tree_leaves_a() != tree_leaves_b())
+        return false;
+    }
+    return true && (!tree_leaves_b && !tree_leaves_a);
+  }
+
+Given two trees `same_fringe` creates two __generator__ instances,
+each bound to one of the two trees. Then, as long as there are leaves
+in the two trees it check that the current leaf of  first tree is
+equal to the one in the second tree.
+
+The return value controls that both generators have reached the end:
+to have the same fringe, both trees must have the same number of leaves.
+
+To implement `same_fringe` without coroutines you need to follow one
+of these strategies:
+
+* Store a flattened view each tree before hand, then compare the views
+for equality. You lose the ability to do an early
+exit. The best case is *O(N)* instead of *O(1)*.
+
+* Destructively traverse the first tree while traversing the second
+tree. The best case is *O(1)*, but it is a destructive algorithm.
+
+* Use an explicit stack to track the traversal of the first tree. This
+has the same characteristics of the coroutine solution but requires
+explicit stack management and is much more complex.
+
+In conclusion, generators have the property of lazy evaluation (the
+tree is traversed only on request), simplicity (the recursion stack
+is implicit) and immutability (the trees are not modified) . All other
+solutions have to give up at least one of these properties.
+
+Notice how the `same_fringe` function cannot be easily ported, for example, to
+*Python* generators.
+[endsect]
+[endsect]
+
+  
+
+ 
+
+	

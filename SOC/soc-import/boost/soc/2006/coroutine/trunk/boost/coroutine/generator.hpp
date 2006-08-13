@@ -11,12 +11,17 @@ namespace boost { namespace coroutines {
 
   // This simple class implement generators (a simple
   // subset of coroutines) in the form of an InputIterator
-  // interface.
+  // interface. It also implem
   template<typename ValueType>
   class generator : public std::iterator<std::input_iterator_tag, ValueType> {
+    typedef void(generator::*safe_bool)();
+    typedef ValueType internal_value_type;
   public:
-    typedef ValueType value_type;
-    typedef shared_coroutine<value_type()> coroutine_type;
+    typedef shared_coroutine<internal_value_type()> coroutine_type;
+    typedef BOOST_DEDUCED_TYPENAME 
+    coroutine_type::result_type result_type;
+    typedef result_type value_type;
+
     typedef BOOST_DEDUCED_TYPENAME coroutine_type::self self;
 
     generator() {}
@@ -56,7 +61,17 @@ namespace boost { namespace coroutines {
     bool operator != (const generator& lhs, const generator & rhs) {
       return !(lhs == rhs);
     }
+
+    operator safe_bool () const {
+      return m_val? &generator::safe_bool_true: 0;
+    }
+
+    value_type operator()() {
+      return *(*this)++;
+    }
   private:
+    void safe_bool_true () {};
+
     boost::optional<value_type> assign() {
       return m_coro? m_coro(std::nothrow) : boost::none;
     }
