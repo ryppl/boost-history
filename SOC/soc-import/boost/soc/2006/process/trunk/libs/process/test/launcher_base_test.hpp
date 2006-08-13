@@ -414,6 +414,65 @@ test_set_environment(void)
 
 // ------------------------------------------------------------------------
 
+template< class Launcher, class Child, class Start >
+static
+void
+test_path(void)
+{
+    std::string helpersdir =
+        bfs::path(get_helpers_path()).branch_path().string();
+    std::string helpersname = bfs::path(get_helpers_path()).leaf();
+
+    bp::command_line cl(helpersname);
+    cl.argument("pwd");
+
+    // The helpers binary should not be located with the default PATH.
+    Launcher l1;
+    bp::status s1 = Start()(l1, cl).wait();
+    BOOST_CHECK(s1.exited());
+    BOOST_CHECK_EQUAL(s1.exit_status(), EXIT_FAILURE);
+
+    // Setting the child's PATH variable should not affect the parent at
+    // all to locate it.
+    Launcher l2;
+    l2.set_environment("PATH", helpersdir);
+    bp::status s2 = Start()(l2, cl).wait();
+    BOOST_CHECK(s2.exited());
+    BOOST_CHECK_EQUAL(s2.exit_status(), EXIT_FAILURE);
+
+    // Modifying the parent's PATH setting should make the launcher locate
+    // the binary correctly.
+#if defined(BOOST_PROCESS_POSIX_API)
+    std::string oldpath = ::getenv("PATH");
+    try {
+        ::setenv("PATH", helpersdir.c_str(), 1);
+        Launcher l3;
+        bp::status s3 = Start()(l3, cl).wait();
+        BOOST_CHECK(s3.exited());
+        BOOST_CHECK_EQUAL(s3.exit_status(), EXIT_SUCCESS);
+        ::setenv("PATH", oldpath.c_str(), 1);
+    } catch (...) {
+        ::setenv("PATH", oldpath.c_str(), 1);
+    }
+#elif defined(BOOST_PROCESS_WIN32_API)
+    TCHAR oldpath[MAX_PATH];
+    BOOST_REQUIRE(::GetEnvironmentVariable("PATH", oldpath, MAX_PATH) != 0);
+    try {
+        BOOST_REQUIRE(::SetEnvironmentVariable("PATH",
+                                               TEXT(helpersdir.c_str())) != 0);
+        bp::launcher l3;
+        bp::status s3 = l3.start(cl).wait();
+        BOOST_CHECK(s3.exited());
+        BOOST_CHECK_EQUAL(s3.exit_status(), EXIT_SUCCESS);
+        BOOST_REQUIRE(::SetEnvironmentVariable("PATH", oldpath) != 0);
+    } catch (...) {
+        BOOST_REQUIRE(::SetEnvironmentVariable("PATH", oldpath) != 0);
+    }
+#endif
+}
+
+// ------------------------------------------------------------------------
+
 } // namespace launcher_base_test
 
 // ------------------------------------------------------------------------
@@ -446,4 +505,6 @@ add_tests_launcher_base(boost::unit_test::test_suite* ts)
             (&(test_unset_environment< Launcher, Child, Start >)), 0, 10);
     ts->add(BOOST_TEST_CASE
             (&(test_set_environment< Launcher, Child, Start >)), 0, 10);
+    ts->add(BOOST_TEST_CASE
+            (&(test_path< Launcher, Child, Start >)), 0, 10);
 }
