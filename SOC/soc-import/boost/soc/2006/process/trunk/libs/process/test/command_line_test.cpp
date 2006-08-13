@@ -136,6 +136,11 @@ test_quoting(void)
     BOOST_CHECK_EQUAL(get_argument(" foo"), ">>> foo<<<");
     BOOST_CHECK_EQUAL(get_argument("foo bar"), ">>>foo bar<<<");
 
+    BOOST_CHECK_EQUAL(get_argument("foo\"bar"), ">>>foo\"bar<<<");
+    BOOST_CHECK_EQUAL(get_argument("foo\"bar\""), ">>>foo\"bar\"<<<");
+    BOOST_CHECK_EQUAL(get_argument("\"foo\"bar"), ">>>\"foo\"bar<<<");
+    BOOST_CHECK_EQUAL(get_argument("\"foo bar\""), ">>>\"foo bar\"<<<");
+
     BOOST_CHECK_EQUAL(get_argument("*"), ">>>*<<<");
     BOOST_CHECK_EQUAL(get_argument("?*"), ">>>?*<<<");
     BOOST_CHECK_EQUAL(get_argument("[a-z]*"), ">>>[a-z]*<<<");
