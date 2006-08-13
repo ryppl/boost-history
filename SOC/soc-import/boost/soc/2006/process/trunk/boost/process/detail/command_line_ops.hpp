@@ -95,22 +95,34 @@ inline
 boost::shared_array< TCHAR >
 command_line_to_win32_cmdline(const Command_Line& cl)
 {
+    typedef std::vector< std::string > arguments_vector;
+    arguments_vector args;
+
     std::size_t length = 0;
-    for (Command_Line::arguments_vector::const_iterator iter =
-         cl.get_arguments().begin();
-         iter != cl.get_arguments().end(); iter++)
-        length += (*iter).length() + 1;
+    for (Command_Line::arguments_vector::size_type i = 0;
+         i < cl.get_arguments().size(); i++) {
+        std::string arg = cl.get_arguments()[i];
+
+        std::string::size_type pos = 0;
+        while ((pos = arg.find('"', pos)) != std::string::npos) {
+            arg.replace(pos, 1, "\\\"");
+            pos += 2;
+        }
+
+        if (arg.find(' ') != std::string::npos)
+            arg = '\"' + arg + '\"';
+
+        if (i != cl.get_arguments().size() - 1)
+            arg += ' ';
+
+        args.push_back(arg);
+        length += arg.size() + 1;
+    }
 
     boost::shared_array< TCHAR > cmdline(new TCHAR[length]);
     ::_tcscpy_s(cmdline.get(), length, TEXT(""));
-
-    for (Command_Line::arguments_vector::size_type i = 0;
-         i < cl.get_arguments().size(); i++) {
-        ::_tcscat_s(cmdline.get(), length,
-                    TEXT(cl.get_arguments()[i].c_str()));
-        if (i != cl.get_arguments().size() - 1)
-            ::_tcscat_s(cmdline.get(), length, TEXT(" "));
-    }
+    for (arguments_vector::size_type i = 0; i < args.size(); i++)
+        ::_tcscat_s(cmdline.get(), length, TEXT(args[i].c_str()));
 
     return cmdline;
 }
