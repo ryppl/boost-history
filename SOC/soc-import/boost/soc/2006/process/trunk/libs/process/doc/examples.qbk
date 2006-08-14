@@ -94,4 +94,17 @@ the new process terminates.
 
 [/ ---------------------------------------------------------------------- ]
 
+[section Win32 child]
+
+This example demonstrates how a program can retrieve all the information
+returned by Win32's `CreateProcess` system call; that is: the process' and
+primary thread's identifier and handle.  It relies on the Win32-specific
+launcher and child classes to be able to access this information.
+
+[include ../example/win32_child.cpp c++ code]
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
 [endsect]
