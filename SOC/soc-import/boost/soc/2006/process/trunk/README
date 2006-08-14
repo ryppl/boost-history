@@ -48,7 +48,11 @@ environment to meet the following requirements:
 1) Have an up-to-date bjam utility in your PATH.  As said above, this
    needs to come from a CVS build.
 
-2) Set BOOST_BUILD_PATH to point to the directory containing the
+2) Set BOOST_ROOT to point to Boost's top-most source directory.
+   This is the root directory of a Boost source tree distribution and it
+   contains subdirectories such as 'boost', 'libs' and 'tools'.
+
+3) Set BOOST_BUILD_PATH to point to the directory containing the
    Boost.Build v2 infrastructure files.  This can be found in the
    'tools/build/v2' subdirectory of the Boost source tree distribution.
 
@@ -74,27 +78,17 @@ using quickbook : /Volumes/Projects/boost/local/bin/quickbook ;
 ----- cut here -----
 
 
-The build.sh script
-===================
+Building
+========
 
-The build.sh script in this directory is provided to ease the build
-and maintenance of Boost.Process.  It is just a frontend to bjam, the
-standard Boost build utility.
+Once you have configured your build environment you can build the included
+examples, the test suite or the documentation.  To do so, just change into
+the appropriate directory within 'libs/process' and run 'bjam --v2'.
 
-Before using this script, you must follow the guidelines provided in
-the previous section.
-
-This script has to be run from Boost.Process' top directory (where this
-text file lives).  It takes a single argument that tells it what to do;
-possible values are listed below:
-
-* clean: Cleans up all generated files, leaving the tree as it came
-  from the Subversion repository.
-
-* doc: Build the documentation files.  The results will be left in
-  libs/process/doc/html/.  Be aware that the generated documentation
-  will not be rendered appropriately if viewed outside a Boost source
-  tree (as is this case).
+Given that this library is completely source-based, you can use it in your
+own projects by simply telling the compiler to use the directory where
+this file lives as another 'include' directory.  Before doing so, though,
+be sure to run the test suite and see that there are no errors.
 
 If you have made your way until here, thanks for your interest in
 Boost.Process!
