@@ -134,11 +134,23 @@ test-suite process :
           <library>$(BOOST_ROOT)//filesystem
         ]
 
+    [ run posix_child_test.cpp
+        :
+        :
+        : <library>$(BOOST_ROOT)//unit_test_framework
+        ]
+
     [ run posix_launcher_test.cpp
         : helpers
         :
         : <library>$(BOOST_ROOT)//unit_test_framework
           <library>$(BOOST_ROOT)//filesystem
+        ]
+
+    [ run win32_child_test.cpp
+        :
+        :
+        : <library>$(BOOST_ROOT)//unit_test_framework
         ]
 
     [ run win32_launcher_test.cpp
