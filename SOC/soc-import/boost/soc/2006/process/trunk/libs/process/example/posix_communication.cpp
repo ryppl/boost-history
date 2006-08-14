@@ -110,4 +110,17 @@ main(int argc, char* argv[])
 }
 // quickbook:end(code)
 
+#else // !defined(BOOST_PROCESS_POSIX_API)
+
+#include <cstdlib>
+#include <iostream>
+
+int
+main(int argc, char* argv[])
+{
+    std::cerr << "This example program is not supported in this platform."
+              << std::endl;
+    return EXIT_FAILURE;
+}
+
 #endif // defined(BOOST_PROCESS_POSIX_API)
