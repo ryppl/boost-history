@@ -360,6 +360,30 @@ example for a practical demonstration on the above features.
 
 [/ ---------------------------------------------------------------------- ]
 
+[section Win32 process information]
+
+The Win32 `CreateProcess` system call starts a new process and returns a
+handle and an identifier for both the application's process and its main
+thread.  This information can come useful in multiple situations,
+specially when interacting with the new process from the launcher
+application, so the library allows access to it.  However, this is
+Win32-specific behavior so it is only available by using a specialized
+Child object named `win32_child`.
+
+The [classref boost::process::win32_child win32_child] class provides
+access to the information described above and represents a running child
+process under the Win32 platform.  These child objects can only be
+constructed by using the [classref boost::process::win32_launcher
+Win32-specific launcher], even if the user does not need any extra
+features provided by that class.
+
+The [link boost_process.examples.win32_startup Win32 child] example
+provides a piece of code to illustrate how this works.
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
 [section Child process startup]
 
 Once the command line and the process' execution context are configured, a

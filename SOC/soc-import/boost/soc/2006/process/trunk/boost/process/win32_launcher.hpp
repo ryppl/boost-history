@@ -30,10 +30,10 @@ extern "C" {
 }
 
 #include <boost/assert.hpp>
-#include <boost/process/child.hpp>
 #include <boost/process/detail/factories.hpp>
 #include <boost/process/detail/file_handle.hpp>
 #include <boost/process/launcher.hpp>
+#include <boost/process/win32_child.hpp>
 #include <boost/scoped_ptr.hpp>
 
 namespace boost {
@@ -87,7 +87,7 @@ public:
     //! \return A handle to the new child process.
     //!
     template< class Command_Line >
-    child start(const Command_Line& cl);
+    win32_child start(const Command_Line& cl);
 };
 
 // ------------------------------------------------------------------------
@@ -113,10 +113,9 @@ win32_launcher::win32_launcher(const STARTUPINFO* si)
 
 template< class Command_Line >
 inline
-child
+win32_child
 win32_launcher::start(const Command_Line& cl)
 {
-    child::handle_type ph;
     detail::file_handle fhstdin, fhstdout, fhstderr;
 
     detail::stream_info behin =
@@ -134,9 +133,8 @@ win32_launcher::start(const Command_Line& cl)
                                                  behin, behout, beherr,
                                                  get_merge_out_err(), s);
 
-    ph = pi.hProcess;
-
-    return detail::factories::create_child(ph, fhstdin, fhstdout, fhstderr);
+    return detail::factories::create_win32_child(pi, fhstdin, fhstdout,
+                                                 fhstderr);
 }
 
 // ------------------------------------------------------------------------

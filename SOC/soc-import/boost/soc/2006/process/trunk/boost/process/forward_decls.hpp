@@ -54,6 +54,8 @@ class posix_child;
 
 class posix_launcher;
 #elif defined(BOOST_PROCESS_WIN32_API)
+class win32_child;
+
 class win32_launcher;
 #else
 #   error "Unsupported platform."

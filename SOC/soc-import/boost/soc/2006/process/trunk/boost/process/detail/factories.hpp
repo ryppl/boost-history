@@ -26,6 +26,10 @@
 #if defined(BOOST_PROCESS_POSIX_API)
 #   include <boost/process/posix_child.hpp>
 #elif defined(BOOST_PROCESS_WIN32_API)
+extern "C" {
+#   include <windows.h>
+}
+#   include <boost/process/win32_child.hpp>
 #else
 #   error "Unsupported platform."
 #endif
@@ -73,6 +77,26 @@ create_posix_child(posix_child::handle_type h,
                    detail::info_map& infoout)
 {
     return posix_child(h, infoin, infoout);
+}
+#endif
+
+// ------------------------------------------------------------------------
+
+#if defined(BOOST_PROCESS_WIN32_API)
+//!
+//! \brief Creates a new Win32 Child instance.
+//!
+//! Creates a new instance of the win32_child class.  See its constructor
+//! for more details on the parameters.
+//!
+static inline
+win32_child
+create_win32_child(const PROCESS_INFORMATION& pi,
+                   file_handle fhstdin,
+                   file_handle fhstdout,
+                   file_handle fhstderr)
+{
+    return win32_child(pi, fhstdin, fhstdout, fhstderr);
 }
 #endif
 
