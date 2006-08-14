@@ -1,7 +1,7 @@
 #merge me into existing Jamfile.v2 in libs/graph/test directory
-
 import modules ;
 
 test-suite graph_test :
+    [ run max_flow_test.cpp ]
     [ run kolmogorov_max_flow_test.cpp ]
     ;
