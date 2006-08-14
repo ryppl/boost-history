@@ -9,9 +9,9 @@
 //
 
 //!
-//! \file boost/process/launcher.hpp
+//! \file boost/process/win32_launcher.hpp
 //!
-//! Includes the declaration of the launcher class.
+//! Includes the declaration of the win32_launcher class.
 //!
 
 #if !defined(BOOST_PROCESS_WIN32_LAUNCHER_HPP)
