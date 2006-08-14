@@ -47,7 +47,6 @@ namespace boost { namespace coroutines {
       return BOOST_DEDUCED_TYPENAME
 	optional_result_type<T>::type();
     }
-
   }
 
   template<typename Signature, typename Context>
@@ -58,8 +57,6 @@ namespace boost { namespace coroutines {
   
   template<typename Sig, typename Con>
   struct is_coroutine<coroutine<Sig, Con> > : boost::mpl::true_{};
-
-  class nothrow {};
 
   template<typename Signature, 
 	   typename ContextImpl = detail::default_context_impl>
@@ -81,7 +78,6 @@ namespace boost { namespace coroutines {
     typedef BOOST_DEDUCED_TYPENAME 
     detail::coroutine_traits<signature_type>
     ::yield_result_type yield_result_type;
-
 
     typedef BOOST_DEDUCED_TYPENAME 
     detail::coroutine_traits<signature_type>
@@ -170,7 +166,7 @@ namespace boost { namespace coroutines {
 	(arg_slot_type(BOOST_PP_ENUM_PARAMS
 	  (BOOST_COROUTINE_ARG_MAX, 
 	   arg)));
-      }
+    }
 
     BOOST_DEDUCED_TYPENAME
     detail::optional_result_type<result_type>::type 
@@ -184,7 +180,7 @@ namespace boost { namespace coroutines {
 	(arg_slot_type(BOOST_PP_ENUM_PARAMS
 	  (BOOST_COROUTINE_ARG_MAX, 
 	   arg)));
-      }
+    }
 
 #   undef BOOST_COROUTINE_param_typedef
 #   undef BOOST_COROUTINE_param_with_default
@@ -218,10 +214,8 @@ namespace boost { namespace coroutines {
     }
   protected:
 
-    /*
-     * The second parameter is used to avoid calling this constructor
-     * by mistake from other member funcitons (specifically operator=).
-     */
+    // The second parameter is used to avoid calling this constructor
+    // by mistake from other member funcitons (specifically operator=).
     coroutine(impl_type * pimpl, detail::init_from_impl_tag) :
       m_pimpl(pimpl) {}
 
@@ -238,9 +232,6 @@ namespace boost { namespace coroutines {
       m_pimpl->bind_result_pointer(&ptr);
       m_pimpl->invoke();
 
-#ifndef NDEBUG
-      m_pimpl->bind_args(0);
-#endif
       return detail::fix_result<result_slot_traits>(*m_pimpl->result());
     }
 
@@ -254,9 +245,6 @@ namespace boost { namespace coroutines {
       if(!m_pimpl->wake_up())
 	return detail::optional_result<result_type>();
 
-#ifndef NDEBUG
-      m_pimpl->bind_args(0);
-#endif
       return detail::fix_result<result_slot_traits>(*m_pimpl->result());
     }
 

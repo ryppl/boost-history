@@ -7,20 +7,23 @@
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
 #include <string>
-// This is a direct port of the pattern matching functionality 
-// in [Moura04].
-// There is a major sources of ineficiency caused by the use of
-// boost::bind as the lack of decltype for automatic deduction of the return
+// This is a direct port of the pattern matching functionality, 
+// written in Lua, found in [Moura04b].
+// It is slightly ineficient because it uses
+// boost::bind and the lack of decltype for automatic deduction of the return
 // type requires the use of boost::function to wrap the result
-// function object of prim, seq and alt in a known type.
-// Also it would be nice if prim, seq and alt would take their args by
-// const reference instead of value.
-
+// function object of prim, seq and alt in a known runtime-polymorphic type.
+// While using coroutines for pattern matching is not the most
+// efficient solution, the elegance of this design can probably be matched 
+// only by an implementation using full continuations.
 
 namespace coro = boost::coroutines;
 using coro::coroutine;
 
-typedef coroutine<std::size_t(const std::string&, std::size_t)> coroutine_type;
+typedef coroutine<std::size_t(const std::string&, std::size_t)> 
+coroutine_type;
+
+// used in lieu of decltype.
 typedef boost::function<std::size_t(coroutine_type::self&, const std::string& , std::size_t)> function_type;
 
 std::size_t prim_impl(coroutine_type::self& self, 
@@ -33,6 +36,7 @@ std::size_t prim_impl(coroutine_type::self& self,
   return std::string::npos;
 }
 
+// returns a function object that matches a string.
 function_type prim(const std::string& str) {
   return boost::bind(prim_impl, _1, str, _2, _3);
 }
@@ -47,6 +51,7 @@ std::size_t alt_impl(coroutine_type::self& self,
   return std::string::npos;
 }
 
+// returns a function object that matches one of two patterns.
 function_type alt(const function_type& pattern1,
 		  const function_type& pattern2) {
   return boost::bind(alt_impl, _1, pattern1, pattern2, _2, _3);
@@ -67,6 +72,7 @@ std::size_t seq_impl(coroutine_type::self& self,
   return std::string::npos;
 }
 		     
+// retuns a function object that matches the conjuction of two patterns.
 function_type seq(const function_type& pattern1,
 		  const function_type& pattern2) {
   return bind(seq_impl, _1, pattern1, pattern2, _2, _3);

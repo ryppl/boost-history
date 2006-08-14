@@ -17,6 +17,7 @@
 [/ Aug 10, 2006]
 
 [def __alert__ [$alert.png]]
+[def __note__ [$note.png]]
 
 [def __coroutine__ [link boost::coroutines::coroutine coroutine]]
 [def __generator__ [link boost::coroutines::generator generator]]
@@ -26,12 +27,16 @@
 [def __exit_exception__ [link boost::coroutines::exit_exception
 exit_exception]]
 [def __Generator__ [link to-sgi-doc Generator]]
-[def __AdaptableGenerator__ [link to-sgi-doc AdaptableGenerator]]
-[def __Assignable__ [link to-sgi-doc Assignable]]
+[def __AdaptableGenerator__ [link to-concepts-doc AdaptableGenerator]]
+[def __Assignable__ [link to-concepts-doc Assignable]]
  
 [def __marlin80__ [link to-marlin-doctoral-thesis-here \[Marlin80\]]]
 [def __moura04a__ [link to-moura-04-04 \[Moura04a\]]]
 [def __moura04b__ [link to-moura-04-15 \[Moura04b\]]]
+
+[def __OpenMP__ [@ link-to-openmp-webpage OpenMP]]
+[def __BoostAsio__ [link to-boost-asio Boost.Asio]]
+[def __BoostFunction__ [link to-boost-asio Boost.Function]]
 
 [section:intro Introduction]
 
@@ -47,7 +52,7 @@ function call.
 
 [section:background Tutorial]
 
-While all subroutines have state, their state is usually lost when the
+While all subroutines have state, this is usually lost when the
 subroutine returns; on the other hand coroutines keep their state
 across calls. Function 
 objects familiar to all C++ programmers are similar to coroutines in
@@ -55,7 +60,7 @@ the fact as they may have state that is preserved across calls; but
 while function objects store their state on class members variables, coroutines
 store the state in the stack as automatic objects. 
 
-A widely accepted __marlin80__ definition of coroutines follows:
+__marlin80__ provides a widely accepted  definition of coroutines:
 
 * "The value of local data of coroutines persist between successive
 calls".
@@ -75,7 +80,8 @@ this includes: as callback to standard algorithms, as generator
 functions, as callback to asynchronous functions and much more.
 
 In this section, we will first present the __generator__ class
-template (a simplified form of coroutines). Only later the full
+template (a simplified form of coroutines). Only [link coroutine.coroutines
+later] the full
 __coroutine__ class template is described.
 
 [h3 Stylistic Notes]
@@ -102,7 +108,6 @@ In standard C++ library, generators are for example used with the
 object that model the __Generator__ concept. 
 
 [h3 Function objects as generators]
-[#function_object_generator]
 
 A generator can be easily implemented in C++ as a function
 object. Consider a generator that returns all integer numbers in a
@@ -140,10 +145,9 @@ terminated. In production code probably the safe-bool idiom would be
 used instead. 
 
 [h3 Input iterators as generators]
-[#input_iterator_generator]
 A generator can also be implemented as an input iterator. 
 Recall that an input iterator only support dereferencing and incrementing.
-This is the iterator version of the [link function_object_generator previous function object].
+This is the iterator version of the [link generators.function_objects_as_generators previous function object].
 
   class range_generator {
   public:
@@ -202,8 +206,7 @@ It will print all values in the half-open range [100, 200). Notice that
 a default constructed iterator is used to represent the past-the-end iterator.
 We will call this kind of iterator a generator iterator.
 
-[h3 The __generator__ class template]
-[#generator_class_template]
+[h3 The generator class template]
 
 Obviously a generator is a stateful object, and can be easily
 implemented using coroutines.
@@ -212,10 +215,10 @@ Before introducing full fledged coroutines, we will introduce the
 __generator__ class template that wrap a coroutine in an input iterator
 interface.
   
-We begin declaring its type, the generator is an iterator that returns
+We begin declaring its type, the generator is an iterator over 
 values of type `int`:
 
-  typedef coro::__generator__<int()> generator_type;
+  typedef coro::__generator__<int> generator_type;
 
 The typedef is not really required, but makes the following code more
 readable. This is the generator body: 
@@ -247,7 +250,7 @@ the generator.
 
 When the `while` loop terminates, a plain `return min` statement is executed.
 This both terminates the generator and returns the final value
-(i.e. max-1). We will see later how to remove this assimmetry.
+(i.e. max-1). We will see later how to remove this asimmetry.
 
 Given the generator body, a __generator__ iterator can be constructed:
 
@@ -311,8 +314,8 @@ while there are elements in the range:
   while(generator) 
     std::cout<<*generator++<<"\n";
 
-Also an `operator()` member function and nested `result_type` typedef
-are provided: `generator()` is equivalent to `*generator++`. Thus
+__generator__ has a nested
+`result_type` typedef and an `value_type operator()` member function (`generator()` is equivalent to `*generator++`). Thus
 __generator__ also models the __AdaptableGenerator__ concept:
 
   range_generator generator(100, 200);
@@ -322,16 +325,16 @@ __generator__ also models the __AdaptableGenerator__ concept:
 
 [h3 Exiting a generator]
 
-The [link generator_class_template previous example] had an assimmetry in its
+The [link generators.the_generator_class_template previous example] had an asimmetry in its
 body. The last generated value had to be returned with a 'return'
 statement instead of 'yield'. In simple code this is not a problem,
 because it is easy to see what the final value will be, but in more
-complex generators this assimmetry requires a substantial obfuscation
+complex generators this asimmetry requires a substantial obfuscation
 of the code.
 
 The `__generator__::__self__::__self_exit__()` member function provides a way
 to exit a generator without returning a value. The [link
-generator_class_template previous generator] can thus be written like this:
+generators.the_generator_class_template previous generator] can thus be written like this:
 
  int range_generator(generator_type::__self__& self, 
 		     int min,
@@ -351,7 +354,7 @@ must be eventually re-thrown: once `__self_exit__()` has been called, the
 coroutine can no longer `__yield__()` nor `return`. 
 	 
 [blurb __alert__ Some compilers might not be able to recognize
-`__self_exit__()` as a function that doesn't return, and complaint that
+`__self_exit__()` as a function that doesn't return, and warn that
 'range_generator' returns without a value. For these compilers you may
 have to add a dummy return value at the end of the function body like
 this: `return int();`
@@ -359,7 +362,7 @@ If the return type is not default constructible, boost optional might
 be another solution: `return *boost::optional<result_type>();`]
 
 A generator is automatically exited when the last __generator__ iterator
-that refers goes out of scope. In that case the generator body is resumed
+that refers to it goes out of scope. In that case the generator body is resumed
 and an __exit_exception__ is thrown from `__yield__`().
 
 [blurb __alert__ Note that the __generator__ class template use the reference
@@ -370,38 +373,37 @@ if a generator ever gets a copy of its associated __generator__
 iterator, a cycle is formed and it could cause memory not to be
 reclaimed.]
 
-[h3 Properties of generators]
-
-
-
 [endsect]
-[section:coroutines Stackful generators]
+[section:stackful Stackful generators: Same fringe problem]
+
+[h3 Stackfulness]
 
 While generators are have seen a resurgence in recent times, for
 example both *Python* and *C#* support them, most implementations 
-have the limitation that the generator body can only be
-exited from the bottom of its stack: while it can
+require that a generator can only be
+yield from the main body: while it can
 call other functions (including other generators), they must all
 return before the generator can yield to the
 caller. That is, the generator's call stack must be empty when it
 yields.
 
 Boost.Coroutine provides stackful coroutines and generators that
-can yield from nested functions. This makes them much more
+can yield from deep inside nested functions. This makes them much more
 powerful than more limited form of generators.  
 
-[h3 Same Fringe Problem]
+[h3 Same Fringe: the problem]
 
 Given two binary trees, they are have the [*same fringe] if all
 leafs, read from left to right are equals. This is the classical
 coroutine killer application, because it is hard to solve in *O(N)*
 (with best case *O(1)*) in the number of leaves, without using stackful coroutines.
 The Portland Pattern Repository's [@http://c2.com/cgi/wiki?SameFringeProblem wiki] 
-contains more details on the problem and solutions on languages that
-support true continuations.
+contains more details on the problem and solutions on many languages.
 
-The solution presented here is an almost verbatim port of the *Lua*
-solution from the [@http://c2.com/cgi/wiki?SameFringeProblem wiki] 
+The solution presented here is an almost verbatim port of the version
+in the *Lua* language from the [@http://c2.com/cgi/wiki?SameFringeProblem wiki] 
+
+[h3 Solution]
 
 For this example a tree of integers will be represented by this
 recursive description:
@@ -416,9 +418,9 @@ Or, in pseudo-C++:
   typedef boost::variant<std::pair<node_type, node_type>, leaf_type> node_type;
   typedef node_type tree_type;
 
-Note that the above isn't legal C++ because a
-recursive variant must be declared with slightly different syntax. For
-the sake of simplicity we will pretend that it works.
+Note that the above typedefs aren't legal C++ because the syntax for a 
+recursive variant is lightly different. For
+the sake of exposition we will pretend that the recursive typedef works.
 The function:
 
     bool is_leaf(node_type)
@@ -465,6 +467,8 @@ equal to the one in the second tree.
 The return value controls that both generators have reached the end:
 to have the same fringe, both trees must have the same number of leaves.
 
+[h3 Solutions without coroutines]
+
 To implement `same_fringe` without coroutines you need to follow one
 of these strategies:
 
@@ -479,14 +483,411 @@ tree. The best case is *O(1)*, but it is a destructive algorithm.
 has the same characteristics of the coroutine solution but requires
 explicit stack management and is much more complex.
 
-In conclusion, generators have the property of lazy evaluation (the
+Generators have the property of lazy evaluation (the
 tree is traversed only on request), simplicity (the recursion stack
 is implicit) and immutability (the trees are not modified) . All other
 solutions have to give up at least one of these properties.
 
-Notice how the `same_fringe` function cannot be easily ported, for example, to
-*Python* generators.
+[h3 Conclusions]
+
+The `same_fringe` problem is one of the simplest problems that can be
+easily solved with stackful coroutines. The coroutine stack is
+essentially used to store the current position in the tree. In general
+recursive algorithms are the ones that benefit the most from being able
+to `yield` from anywhere in the call stack.
+
+For example, notice how the `same_fringe` function cannot be easily
+ported to *Python* generators.
+
+Next section will show a simple non recursive program that benefit from the
+stackfulness property of coroutines. It will also show how to use
+coroutines for multitasking.
+
 [endsect]
+[section:multitasking Multitasking]
+
+Coroutines can be used to implement multitasking in a very simple and
+efficient way. Each coroutine represent a *job* and a scheduler is
+responsible of executing each job serially. Every job is responsible
+of yielding control to the scheduler once in a while.
+We use a `__generator__<void>` to represent a job:
+
+  typedef generator<void> job_type;
+
+[blurb __note__ A `__generator__<void>` can be legally instantiated. Of
+course the input iterator interface of such an iterator is not very
+useful (`operator*` returns void); on the other hand the
+__Generator__ interface fits perfectly our goal here.]
+
+[#generator_scheduler]
+The scheduler is just a simple wrapper around a `std::queue`:
+
+  #include<queue>
+
+  class scheduler {
+  public:
+    void add(job_type job) {
+      m_queue.push(job);
+    }
+  
+    job_type& current() {
+      return m_queue.front();
+    }
+
+    void run () {
+      while(!m_queue.empty()) {
+        if(current()) {
+	  current()();
+	  add(current());
+	}
+	m_queue.pop();
+      }
+    }
+  private:
+    std::queue<job_type> m_queue;
+  };
+
+For simplicity we declare a global scheduler object:
+
+  scheduler global_scheduler;
+
+Here is a generic job body:
+
+  void printer(job_type::self& self, std::string name, int iterations) {
+    while(iterations --) {
+      std::cout<<name <<" is running, "<<iterations<<" iterations left\n";
+      self.yield();
+    }
+    self.exit();
+  }
+
+When a job yields, it is rescheduled again. If it had exited instead,
+next time it is removed from the queue it will be dropped.
+Notice that `__self_exit__()` is in this case superfluous. When void a
+function returns it is as it had exited. 
+Let's give some job to the scheduler:
+
+  ...
+  global_scheduler.add(boost::bind(printer, _1, "first", 10));
+  global_scheduler.add(boost::bind(printer, _1, "second", 5));
+  global_scheduler.add(boost::bind(printer, _1, "third", 3));
+  ...
+
+Calling  `global_scheduler.run();` will print:
+
+[pre
+first is running, 9 iterations left
+second is running, 4 iterations left
+third is running, 2 iterations left
+first is running, 8 iterations left
+second is running, 3 iterations left
+third is running, 1 iterations left
+first is running, 7 iterations left
+second is running, 2 iterations left
+third is running, 0 iterations left
+first is running, 6 iterations left
+second is running, 1 iterations left
+first is running, 5 iterations left
+second is running, 0 iterations left
+first is running, 4 iterations left
+first is running, 3 iterations left
+first is running, 2 iterations left
+first is running, 1 iterations left
+first is running, 0 iterations left
+]
+
+[h3 Multitasking versus multithreading]
+
+What we have seen so far is a cooperative implementation of
+multitasking, that is, each task must explicitly yield control to
+the central scheduler to allow the next task to run. This means that a
+misbehaving task that never yields control, can starve all other
+tasks. 
+
+Multithreading on the other hand, at least on most implementations,
+implies preemptive multitasking; each task is allowed to run for a
+certain amount of time, called /time-slice/. When the time-slice is
+over the task is forcibly interrupted and the scheduler select the next
+task. If the interrupted task was manipulating some shared resource,
+this can be left in an undefined state. A task cannot control when is
+preempted, so it must be pessimistic and lock all shared resources
+that it uses. As any programmer that had to work with heavily threaded
+applications knows, dealing with complex locking is not a trivial
+task. In addition locking imposes some overhead.
+
+Cooperative multitasking has not such problems as long as a
+task never yield while manipulating shared state. 
+
+This does not means that multithreading has not its place, there are
+at least two scenarios where true concurrency and preemption are
+pretty much required:
+
+* *Real time applications*. Preemption is required in practice in real-time
+applications. Almost all real-time scheduling algorithms need
+preemption to guarantee that tasks always meet their deadline.
+
+* *Multiprocessing*. To take advantage of hardware parallelism tasks
+must be run in parallel. With the current trend of multicore
+architectures this will be more and more necessary. While shared
+memory threads are not the only abstraction that take advantage of
+hardware parallelism (multiple processes, message passing and
+__OpenMP__ are other examples), they are certainly the most popular.
+
+Unfortunately threads are often abused for general
+multitasking, where preemption is a burden instead of a benefit.
+
+Cooperative multitasking implemented with coroutines is often a better
+choice.
+
+The simple solution presented [link generator_scheduler above] has a
+fundamental problem: if a task blocks waiting for I/O, all tasks are
+blocked. This is can be easily solved with asynchronous functions, but
+this will be explained in an [link advanced.asio advanced
+section]. For now we will show a simplified example.
+
+[h3 Waiting for events]
+
+In the first [link generator_scheduler scheduling example], when a
+task is suspended, it is always added to the back task queue. We will
+now let a task decide whether be automatically rescheduled or
+not. This way a task can wait to be rescheduled at a latter time, when
+an event arrives.
+
+We slightly modify `scheduler::run()`:
+
+  ...
+  void run () {
+    while(!m_queue.empty()) {
+      if(current()) {
+        current()();	
+      }	
+    m_queue.pop();
+  }
+  ...
+  
+`add(current())` has been removed. This method:
+
+  ...
+  void reschedule(job_type::self& self) {
+    add(current());
+    self.yield();
+  }
+  ...
+
+is added to `scheduler`. It is used by a task to 
+reschedule itself. We will define a message queue class now:
+
+  class message_queue {
+  public:
+    std::string pop(job_type::self& self) {
+      while(m_queue.empty()) {
+        m_waiters.push(m_scheduler.current());
+        self.yield();      
+      }
+      std::string res = m_queue.front();
+      m_queue.pop();
+      return res;
+    }
+
+    void push(const std::string& val) {
+      m_queue.push(val);
+      if(!m_waiters.empty()) {
+        m_scheduler.add(m_waiters.front());
+        m_waiters.pop();
+      }
+    }
+
+    message_queue(scheduler& s) :
+      m_scheduler(s) {}
+
+  private:
+    std::queue<std::string> m_queue;
+    std::queue<job_type> m_waiters;
+    scheduler & m_scheduler;
+  };
+
+A task can wait for a message to arrive by calling
+`message_queue::pop()`. This function returns the first element in the
+internal queue; if the queue is empty adds the current task to an internal wait
+queue and yields control to the scheduler. When `message_queue::pop()`
+is called, if the wait queue is not empty, its top element is removed
+and rescheduled.
+
+  message_queue mqueue(global_scheduler);
+
+This is our message queue object. Again a global for simplicity.
+
+Now we will create some jobs: 
+
+  void producer(job_type::self& self, int id, int count) {
+    while(count--) {
+      std::cout << "In producer: "<<id<<"\n";
+      mqueue.push("message from " + boost::lexical_cast<std::string>(id));
+      std::cout << "\tmessage sent\n";
+      global_scheduler.reschedule(self);
+    } 
+  }
+
+  void consumer(job_type::self& self, int id) {
+    while(true) {
+      std::string result = mqueue.pop(self);
+      std::cout <<"In consumer: "<<id<<"\n";
+      std::cout <<"\tReceived: "<<result<<"\n";
+      global_scheduler.reschedule(self);
+    }
+  }
+
+And add some instances of them to the scheduler:
+
+  global_scheduler.add(boost::bind(producer, _1, 0, 3));
+  global_scheduler.add(boost::bind(producer, _1, 1, 3));
+  global_scheduler.add(boost::bind(producer, _1, 2, 3));
+  global_scheduler.add(boost::bind(consumer, _1, 3));
+  global_scheduler.add(boost::bind(consumer, _1, 4));
+
+calling `global_scheduler.run()` generates the following output:
+
+[pre
+In producer: 0
+        message sent
+In producer: 1
+        message sent
+In producer: 2
+        message sent
+In consumer: 3
+        Received: message from 0
+In consumer: 4
+        Received: message from 1
+In producer: 0
+        message sent
+In producer: 1
+        message sent
+In producer: 2
+        message sent
+In consumer: 3
+        Received: message from 2
+In consumer: 4
+        Received: message from 0
+In producer: 0
+        message sent
+In producer: 1
+        message sent
+In producer: 2
+        message sent
+In consumer: 3
+        Received: message from 1
+In consumer: 4
+        Received: message from 2
+In consumer: 3
+        Received: message from 0
+In consumer: 4
+        Received: message from 1
+In consumer: 3
+        Received: message from 2
+]
+
+[h3 Conclusions]
+
+While this example is very simple and can't be easily extended to
+support system-generated events, but it shows how a more complex method
+can be implemented. In the advanced session we will see how
+__BoostAsio__ can be used as a scheduler and how coroutines can be
+adapted as callbacks to asynchronous functions.
+
+[endsect]
+
+[section:coroutines Full coroutines]
+
+
+[h3 From generators to coroutines]
+
+So far we have learned to use generators, a special kind of
+subroutines. We have seen that generators are function objects with no
+parameters and that return a sequence of values. 
+We can generalize this concept to function objects that have zero, one or
+more parameters and return zero, one or more values.
+A generic coroutine is, not surprisingly, implemented with the
+__coroutine__ template class.
+
+All examples in this sections will assume that the following using
+directive is in effect:
+
+  #include <boost/coroutine/coroutine.hpp>
+
+[h3 The accumulator coroutine]
+
+Let's start with a very simple coroutine that takes as parameter an
+integer and returns the sum of that integer and all integers passed
+before. In practice it acts as an accumulator.
+As usual, we start by declaring its type:
+
+  typedef coro::__coroutine__<int(int)> coroutine_type;
+
+The syntax is deliberately similar to that used in __BoostFunction__.
+This is the coroutine body:
+
+  int accumulator_body(coroutine_type::__self__& self, int val) {
+    while(true) {
+      val += self.__yield__(val);
+    }
+  }
+  
+This is code is not very different from our first [link
+generators.the_generator_class_template generator example]. Still there
+are some differences. For example `__yield__()` now returns a
+value. We will see soon what is this value. The syntax used to declare
+a coroutine is not surprising:
+
+  coroutine_type accumulator(accumulator_body); 
+
+And even its usage is straight forward:
+
+  ...
+  for(int i = 0; i < 1000; ++i)
+     std::cout << accumulator(i);
+  ...
+
+This will print all values in the mathematical series `a[i] = a[i-1]
++ i`.
+We will now describe exactly how the flow control evolves. 
+
+[blurb __note__ A coroutine body, unlike generators, is invoked only when the
+`__coroutine__::operator()` is invoked for the first time. This is
+because, in general, a coroutine requires parameters to be passed. In
+our case the parameter is the value to accumulate. 
+__generator__ and __coroutine__ are intended for different use cases
+(generator functions and iterators the first, generalized control
+inversion the second) and their semantics try to be the best for each case.]
+
+* The `for` loop starts, `accumulator(0)` is called.
+* The coroutine body is entered for the first time.
+  The first statement of `accumulator_body` is executed. At
+  this point the parameter `val` is `0`. 
+* The `while` loop is entered and `__yield__(val)` is invoked. The coroutine
+stop and relinquishes control to the main program, back in the `for`
+loop. 
+* At the next iteration, `accumulator(1)` is called.
+* The coroutine is resumed at the point of the call to
+`__coroutine__::__yield__()`, 
+that returns the parameter passed to `accumulator`, in this case `1`.
+* The value returned by `__yield__()` is
+added to `val` and the coroutine continues to the next iteration,
+yielding `val` again, now equal to `1`. 
+* At the next iteration of the
+`for` loop `accumulator(2)` is called and the coroutine will yield `3`,
+the new value of `val`. 
+* ... and so on until the end of the `for` loop.
+
+When `accumulator` goes out of scope, the coroutine is destroyed in
+the same way generators are destroyed: it is resumed and __yield__()
+throws an instance of `__exit_exception__`.
+
+[h3 State machines]
+
+[h3 Behind generators]
+
+[endsect]
+
 [endsect]
 
   

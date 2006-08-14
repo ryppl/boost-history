@@ -8,11 +8,14 @@
 #include <boost/bind.hpp>
 #include <boost/coroutine/coroutine.hpp>
 
-
-/**
+/*
  * Play the iterated prisoner dilemma between two prisoners.
  * Each prisoner is impersonated by a coroutine using the actor model.
  * Each coroutine can implement a different strategy.
+ * On paper this looked as a great coroutine demonstrator, because
+ * each player might use a complex algorithm better implemented in a coroutine. 
+ * Unfortunately the best known solution (tit-for-tat) is so trivially
+ * simple that doesn't need state!.
  */
 namespace coroutines = boost::coroutines;
 using coroutines::coroutine;
@@ -84,7 +87,6 @@ option tit_for_tat_forgiving(coroutine_type::self& self, option a, int forgivene
     a = self.yield((std::rand() %100) < forgiveness? cooperate: a);
   return cooperate;
 }
-
 
 int main() {
   coroutine_type list[] = {

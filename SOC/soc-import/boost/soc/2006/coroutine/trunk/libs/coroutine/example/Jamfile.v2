@@ -32,3 +32,5 @@ exe samefringe2 : samefringe2.cpp ;
 exe token_passing : token_passing.cpp : <cflags>-march=pentium4 ;
 exe token_passing_baseline : token_passing_baseline.cpp : <cflags>-march=pentium4 ;
 exe complex_matcher : complex_matcher.cpp ;
+exe scheduler : scheduler.cpp ;
+exe scheduler_wait : scheduler_wait.cpp ;
