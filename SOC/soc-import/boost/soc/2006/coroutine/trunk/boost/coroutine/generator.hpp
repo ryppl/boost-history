@@ -71,9 +71,7 @@ namespace boost { namespace coroutines {
 
     friend
     bool operator==(const generator& lhs, const generator& rhs) {
-      if(lhs.m_val) return lhs.m_val == rhs.m_val;
-      else if(rhs.m_val) return false;
-      else return true;
+      return lhs.m_val == rhs.m_val;
     }
 
     friend 

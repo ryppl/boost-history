@@ -1,5 +1,5 @@
 [library Boost.Coroutine
-	[authors [*Deretta, Giovanni P.*]]
+	[authors [ Deretta, Giovanni P. ]]
 	[copyright 2006 Giovanni P. Deretta]
 	[purpose A coroutine class template]
 	[category higher-order]
@@ -625,6 +625,14 @@ first is running, 1 iterations left
 first is running, 0 iterations left
 ]
 
+[blurb __alert__ This example has a little quirk:
+ the generator body is executed for the first time when the __generator__
+is constructed (that is, in the call to `scheduler::add()`). An user
+might rightfully expect that tasks are executed only on in the call to
+`scheduler::run()`. While our solution is not necessarily wrong it
+should be prominently documented. This quirk could be solved by using
+true coroutines instead of generators.]
+	
 [h3 Multitasking versus multithreading]
 
 What we have seen so far is a cooperative implementation of
@@ -1081,7 +1089,7 @@ cannot be modified easily.]
 
 To complete the tour of the basic capabilities of Boost.Coroutine we
 will return to the __generator__ class template and explain how it is
-implemented in term of coroutines:
+implemented in term of coroutines. This is its definition:
 
   template<typename ValueType>
   class generator : public std::iterator<std::input_iterator_tag, ValueType> {
@@ -1092,13 +1100,17 @@ implemented in term of coroutines:
 
     generator() {}
 
+   generator(const generator& rhs) :
+      m_coro(rhs.m_coro),
+      m_val(rhs.m_val) {}
+
     template<typename Functor>
     generator(Functor f) :
       m_coro(f), 
       m_val(assing()) {}
 
     value_type operator*() {
-      return m_val;
+      return *m_val;
     }
 
     generator& operator++() {
@@ -1112,17 +1124,109 @@ implemented in term of coroutines:
     }
 
     friend operator==(const generator& lhs, const generator& rhs) {
-      if(lhs.m_val) return lhs.m_val == rhs.m_val;
-      else if(rhs.m_val) return false;
-      else return true;
+      lhs.m_val == rhs.m_val;
     }
   private:
-    boost::optional<vale_type> assing() {
-      return m_coro? m_coro(std::nothrow) : boost::optional_value<type>();
+    boost::optional<vale_type> assign() {
+      try {
+        return m_coro? m_coro() :  boost::optional<value_type>();
+      } catch (__coroutine_exited__) {
+        return boost::optional<value_type>()
+      }
     }
+
     coroutine_type m_coro;
     boost::optional<value_type> m_val;
   };
+
+[blurb __note__ The code above is simplified for the sake of
+exposition. The actual __generator__ class template is a bit more
+complex: it handles correctly `void` result types and `tuple_traits`,
+it has an `operator()`, a `safe-bool` conversion and a friend
+`operator !=`]
+
+__generator__ has two members variables: 
+
+* `m_coro` of type `shared_coroutine<value_type()>` is the coroutine
+in term of which `__generator__` is implemented.
+* `m_val` of type `boost::optional<value_type>` is the next value that
+will be returned by `operator*`. An empty optional represent a
+past-the-end iterator.
+
+The first two member functions are the default constructor and the
+copy constructor. There is nothing peculiar in them. Note how a
+default constructed `__generator__` has an empty `m_val` and thus is a
+past-the-end iterator.
+
+The third member constructs the generator from a function or function
+object parameter. The argument is forwarded to the `m_coro` member
+to initialize the internal coroutine. `m_val` is then initialized by a
+call to `assing()`.
+
+`operator*` simply returns `*m_val`, that is the current value stored
+in the optional. The result of dereferencing a past-the-end iterator
+is undefined.
+
+The prefix `operator++` simply reassign the result of `assign()` to `m_val`.
+
+The postfix `operator++` is implemented in terms of the prefix
+`operator++` in the usual way.
+
+`operator==` compares two generators for equality by comparing their
+`m_val` members. Notice that two past-the-end iterators have both
+empty `m_val` and compare equally.
+
+`assign()` is responsible of returning the next value in the sequence
+by invoking the underlying coroutine and eventually signaling the end
+of iteration. It first checks the coroutine for liveness
+(through __coroutine__ `safe-bool` conversion). If the coroutine is
+live it returns the result of a call to the coroutine. If the
+coroutine is dead (it has exited or has never been initialized) it
+returns an empty optional. Notice that the call to the coroutine could
+throw a `coroutine_exited` exception if the coroutine exited, without
+yielding a value, by invoking `__self_exit__()`. In that case an empty
+optional is returned. 
+
+The `try {...} catch(__coroutine_exited__) {...}` idiom is frequent in
+code that use coroutines that are expected to terminate via
+`__self_exit__()` (that this, the `__self_exit__()` termination path is not "exceptional").
+Boost.Coroutine provides a way to simplify this code by completely
+eliminating the exception. For example
+`assign()` can be rewritten as:
+
+  boost::optional<vale_type> assing() {
+    return m_coro? m_coro(std::nothrow) :  boost::optional<value_type>();
+  }
+
+Notice the extra `std::nothrow` parameter. If the first parameter to a
+`__coroutine__<result_type(...)>::operator()` is an object of type `std::nothrow_t`, the
+return type of the operator is modified to
+`boost::optional<result_type>`. The optional will contain the normal
+result value in the case of a normal `yield()` or `return` statement,
+or will be empty if the coroutine has been exited via
+`__self_exit__()`. Notice that if `result_type` was `void` it will
+remain unchanged (no optional will be returned), but no exception will
+be thrown.
+
+If the coroutine terminates because of an uncaught exception not of
+type `__exit_exception__`, `operator()(std::nothrow)` will still throw an
+`__abnormal_exit__` exception. 
+
+If a coroutine takes one or more parameters, std::nothrow must be the
+first parameter. For example a coroutine `my_coro` of type:
+
+  typedef coro::coroutine<int(long, double, char)> coroutine_type;
+
+Will be invoked like this:
+
+  boost::optional<int> res = my_coro(std::nothrow, 10000L, 10.7, 'a');
+
+[h3 Conclusions]
+
+We have now terminated our tour on the basic capabilities of
+`__coroutine__` and `__generator__`. The next section will
+describe more advanced features, including symmetric coroutines and
+event handling.
 
 [endsect]
 
