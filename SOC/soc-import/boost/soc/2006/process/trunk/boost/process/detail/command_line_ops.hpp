@@ -179,7 +179,7 @@ find_in_path(const std::string& file, std::string path = "")
         pos1 = pos2 + 1;
     } while (pos2 != std::string::npos && result.empty());
 #elif defined(BOOST_PROCESS_WIN32_API)
-    const char* exts[] = { "", "exe", "com", "bat", NULL };
+    const char* exts[] = { "", ".exe", ".com", ".bat", NULL };
     const char** ext = exts;
     while (*ext != NULL) {
         TCHAR buf[MAX_PATH];
