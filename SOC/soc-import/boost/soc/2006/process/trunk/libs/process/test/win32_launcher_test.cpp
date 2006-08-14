@@ -22,6 +22,7 @@ extern "C" {
 
 #   include <boost/filesystem/operations.hpp>
 #   include <boost/process/child.hpp>
+#   include <boost/process/win32_child.hpp>
 #   include <boost/process/win32_launcher.hpp>
 #   include <boost/test/unit_test.hpp>
 
@@ -39,7 +40,7 @@ namespace but = ::boost::unit_test;
 class start
 {
 public:
-    bp::child
+    bp::win32_child
     operator()(bp::win32_launcher& l, const bp::command_line& cl,
                bool usein = false)
         const
@@ -52,6 +53,7 @@ public:
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_WIN32_API)
+template< class Child >
 static
 void
 test_startupinfo(void)
@@ -65,7 +67,7 @@ test_startupinfo(void)
     bp::win32_launcher l1;
     l1.set_stdout_behavior(bp::redirect_stream);
     flags << STARTF_USESTDHANDLES;
-    bp::child c1 = l1.start(cl);
+    Child c1 = l1.start(cl);
     portable_getline(c1.get_stdout(), line);
     BOOST_CHECK_EQUAL(line, "dwFlags = " + flags.str());
     flags.str("");
@@ -92,7 +94,7 @@ test_startupinfo(void)
     bp::win32_launcher l2(&si);
     l2.set_stdout_behavior(bp::redirect_stream);
     flags << (STARTF_USESTDHANDLES | STARTF_USEPOSITION | STARTF_USESIZE);
-    bp::child c2 = l2.start(cl);
+    Child c2 = l2.start(cl);
     portable_getline(c2.get_stdout(), line);
     BOOST_CHECK_EQUAL(line, "dwFlags = " + flags.str());
     flags.str("");
@@ -131,7 +133,10 @@ init_unit_test_suite(int argc, char* argv[])
 
 #if defined(BOOST_PROCESS_WIN32_API)
     add_tests_launcher_base< bp::win32_launcher, bp::child, start >(test);
-    test->add(BOOST_TEST_CASE(&test_startupinfo));
+    add_tests_launcher_base< bp::win32_launcher, bp::win32_child, start >
+        (test);
+    test->add(BOOST_TEST_CASE(&(test_startupinfo< bp::child >)));
+    test->add(BOOST_TEST_CASE(&(test_startupinfo< bp::win32_child >)));
 #else
     test->add(BOOST_TEST_CASE(&test_dummy));
 #endif

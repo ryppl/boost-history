@@ -232,6 +232,7 @@ init_unit_test_suite(int argc, char* argv[])
     but::test_suite* test = BOOST_TEST_SUITE("posix_launcher test suite");
 
 #if defined(BOOST_PROCESS_POSIX_API)
+    add_tests_launcher_base< bp::posix_launcher, bp::child, start >(test);
     add_tests_launcher_base< bp::posix_launcher, bp::posix_child, start >
         (test);
 
