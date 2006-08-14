@@ -14,9 +14,9 @@
 //! Includes the declaration of the posix_child class.
 //!
 
-#if !defined(BOOST_PROCESS_BASIC_POSIX_CHILD_HPP)
+#if !defined(BOOST_PROCESS_POSIX_CHILD_HPP)
 /** \cond */
-#define BOOST_PROCESS_BASIC_POSIX_CHILD_HPP
+#define BOOST_PROCESS_POSIX_CHILD_HPP
 /** \endcond */
 
 #include <boost/process/config.hpp>
@@ -254,4 +254,4 @@ posix_child::get_output(int desc)
 } // namespace process
 } // namespace boost
 
-#endif // !defined(BOOST_PROCESS_BASIC_POSIX_CHILD_HPP)
+#endif // !defined(BOOST_PROCESS_POSIX_CHILD_HPP)
