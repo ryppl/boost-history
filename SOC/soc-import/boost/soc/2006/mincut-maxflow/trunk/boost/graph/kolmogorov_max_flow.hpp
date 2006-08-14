@@ -634,15 +634,14 @@ namespace boost {
     };
   } //namespace detail
   
-  
   /**
    * non-named-parameter version, given everything 
    */			
   template <class Graph, class CapacityEdgeMap, class ResidualCapacityEdgeMap, class ReverseEdgeMap, 
     class PredecessorMap, class ColorMap, class DistanceMap, class IndexMap>
-    typename property_traits<CapacityEdgeMap>::value_type  
-    kolmogorov_max_flow
-      (Graph& g, 
+  typename property_traits<CapacityEdgeMap>::value_type
+  kolmogorov_max_flow
+      (Graph& g,
        CapacityEdgeMap cap,
        ResidualCapacityEdgeMap res_cap,
        ReverseEdgeMap rev_map,
@@ -653,85 +652,116 @@ namespace boost {
        typename graph_traits<Graph>::vertex_descriptor src,
        typename graph_traits<Graph>::vertex_descriptor sink
        )
-      {
-        typedef typename graph_traits<Graph>::vertex_descriptor tVertex;
-        typedef typename graph_traits<Graph>::edge_descriptor tEdge;
-        //as this method is the last one before we instantiate the solver, we do the concept checks here
-        function_requires< VertexListGraphConcept<Graph> >(); //to have vertices(),num_vertices(),
-        function_requires< EdgeListGraphConcept<Graph> >(); //to have edges()
-        function_requires< IncidenceGraphConcept<Graph> >(); //to have source(), target() and out_edges()
-        function_requires< LvaluePropertyMapConcept<CapacityEdgeMap,tEdge> >(); //read flow-values from edges
-        function_requires< Mutable_LvaluePropertyMapConcept<ResidualCapacityEdgeMap,tEdge> >(); //write flow-values to residuals
-        function_requires< LvaluePropertyMapConcept<ReverseEdgeMap,tEdge> >(); //read out reverse edges
-        function_requires< Mutable_LvaluePropertyMapConcept<PredecessorMap,tVertex> >(); //store predecessor there
-        function_requires< Mutable_LvaluePropertyMapConcept<ColorMap,tVertex> >(); //write corresponding tree
-        function_requires< Mutable_LvaluePropertyMapConcept<DistanceMap,tVertex> >(); //write distance to source/sink
-        function_requires< ReadablePropertyMapConcept<IndexMap,tVertex> >(); //get index 0...|V|-1 
+  {
+    typedef typename graph_traits<Graph>::vertex_descriptor tVertex;
+    typedef typename graph_traits<Graph>::edge_descriptor tEdge;
+    //as this method is the last one before we instantiate the solver, we do the concept checks here
+    function_requires< VertexListGraphConcept<Graph> >(); //to have vertices(),num_vertices(),
+    function_requires< EdgeListGraphConcept<Graph> >(); //to have edges()
+    function_requires< IncidenceGraphConcept<Graph> >(); //to have source(), target() and out_edges()
+    function_requires< LvaluePropertyMapConcept<CapacityEdgeMap,tEdge> >(); //read flow-values from edges
+    function_requires< Mutable_LvaluePropertyMapConcept<ResidualCapacityEdgeMap,tEdge> >(); //write flow-values to residuals
+    function_requires< LvaluePropertyMapConcept<ReverseEdgeMap,tEdge> >(); //read out reverse edges
+    function_requires< Mutable_LvaluePropertyMapConcept<PredecessorMap,tVertex> >(); //store predecessor there
+    function_requires< Mutable_LvaluePropertyMapConcept<ColorMap,tVertex> >(); //write corresponding tree
+    function_requires< Mutable_LvaluePropertyMapConcept<DistanceMap,tVertex> >(); //write distance to source/sink
+    function_requires< ReadablePropertyMapConcept<IndexMap,tVertex> >(); //get index 0...|V|-1
 
-        detail::kolmogorov<Graph,CapacityEdgeMap,ResidualCapacityEdgeMap,ReverseEdgeMap,PredecessorMap, ColorMap,DistanceMap,IndexMap> 
-            algo(g, cap, res_cap, rev_map, pre_map, color, dist, idx, src, sink);
-         return algo.max_flow();
-      }
+    detail::kolmogorov<Graph,CapacityEdgeMap,ResidualCapacityEdgeMap,ReverseEdgeMap,PredecessorMap, ColorMap,DistanceMap,IndexMap>
+        algo(g, cap, res_cap, rev_map, pre_map, color, dist, idx, src, sink);
+        return algo.max_flow();
+  }
 
-   /**
-    * non-named-parameter version, essential given
-    */
-/*      CapacityEdgeMap cap,
-      ResidualCapacityEdgeMap res_cap,
-      ReverseEdgeMap rev_map,
-      PredecessorMap pre_map,
-      ColorMap color,
-      DistanceMap dist,
-      IndexMap idx,
-      
-      template <class Graph, class CapacityEdgeMap, class ReverseEdgeMap>
-          typename property_traits< typename property_map<Graph, edge_capacity_t>::const_type>::value_type
-          kolmogorov_max_flow
-          (Graph& g, 
-           CapacityEdgeMap cap,
-           ReverseEdgeMap rev,
-           typename graph_traits<Graph>::vertex_descriptor src,
-           typename graph_traits<Graph>::vertex_descriptor sink)
-          {
-            res_cap_map
-            bgl_named_params<int, buffer_param_t> params(0); // bogus empty param
-            return kolmogorov_max_flow(g, src, sink, params);
-          }          */
-  
-   /**
-    * named-parameter version, some given
-    */
+  /**
+   * non-named-parameter version, given: capacity, residucal_capacity, reverse_edges, and an index map. Use this if you are only interested in the flow-value
+   */
+  template <class Graph, class CapacityEdgeMap, class ResidualCapacityEdgeMap, class ReverseEdgeMap, class IndexMap>
+   typename property_traits< typename property_map<Graph, edge_capacity_t>::const_type>::value_type
+   kolmogorov_max_flow
+       (Graph& g,
+       CapacityEdgeMap cap,
+       ResidualCapacityEdgeMap res_cap,
+       ReverseEdgeMap rev,
+       IndexMap idx,
+       typename graph_traits<Graph>::vertex_descriptor src,
+       typename graph_traits<Graph>::vertex_descriptor sink)
+   {
+     typename graph_traits<Graph>::vertices_size_type n_verts = num_vertices(g);
+     std::vector<typename graph_traits<Graph>::edge_descriptor> predecessor_vec(n_verts);
+     std::vector<default_color_type> color_vec(n_verts);
+     std::vector<typename graph_traits<Graph>::vertices_size_type> distance_vec(n_verts);
+
+     return kolmogorov_max_flow
+         (g, cap, res_cap, rev,
+          make_iterator_property_map(predecessor_vec.begin(), idx),
+          make_iterator_property_map(color_vec.begin(), idx),
+          make_iterator_property_map(distance_vec.begin(), idx),
+          idx, src, sink);
+   }
+   
+  /**
+   * non-named-parameter version, some given: capacity, residual_capacity, reverse_edges, color_map and an index map.
+   * Use this if you are interested in the minimum cut, as the color map provides that info
+   */
+   template <class Graph, class CapacityEdgeMap, class ResidualCapacityEdgeMap, class ReverseEdgeMap, class ColorMap, class IndexMap>
+   typename property_traits< typename property_map<Graph, edge_capacity_t>::const_type>::value_type
+   kolmogorov_max_flow
+       (Graph& g,
+        CapacityEdgeMap cap,
+        ResidualCapacityEdgeMap res_cap,
+        ReverseEdgeMap rev,
+        ColorMap color,
+        IndexMap idx,
+        typename graph_traits<Graph>::vertex_descriptor src,
+        typename graph_traits<Graph>::vertex_descriptor sink)
+   {
+     typename graph_traits<Graph>::vertices_size_type n_verts = num_vertices(g);
+     std::vector<typename graph_traits<Graph>::edge_descriptor> predecessor_vec(n_verts);
+     std::vector<typename graph_traits<Graph>::vertices_size_type> distance_vec(n_verts);
+
+     return kolmogorov_max_flow
+         (g, cap, res_cap, rev,
+          make_iterator_property_map(predecessor_vec.begin(), idx),
+          color,
+          make_iterator_property_map(distance_vec.begin(), idx),
+          idx, src, sink);
+   }
+   
+  /**
+   * named-parameter version, some given
+   */
    template <class Graph, class P, class T, class R>
-       typename property_traits< typename property_map<Graph, edge_capacity_t>::const_type>::value_type
-     kolmogorov_max_flow
-      (Graph& g, 
-           typename graph_traits<Graph>::vertex_descriptor src,
-           typename graph_traits<Graph>::vertex_descriptor sink,
-           const bgl_named_params<P, T, R>& params)
-          {
-            return kolmogorov_max_flow(g, 
-                                       choose_const_pmap(get_param(params, edge_capacity), g, edge_capacity),
-                                       choose_pmap(get_param(params, edge_residual_capacity), g, edge_residual_capacity),
-                                       choose_const_pmap(get_param(params, edge_reverse), g, edge_reverse),
-                                       choose_pmap(get_param(params, vertex_predecessor), g, vertex_predecessor),
-                                       choose_pmap(get_param(params, vertex_color), g, vertex_color),
-                                       choose_pmap(get_param(params, vertex_distance), g, vertex_distance),
-                                       choose_const_pmap(get_param(params, vertex_index), g, vertex_index),
-                                       src, sink);
-          }
+   typename property_traits< typename property_map<Graph, edge_capacity_t>::const_type>::value_type
+   kolmogorov_max_flow
+       (Graph& g,
+        typename graph_traits<Graph>::vertex_descriptor src,
+        typename graph_traits<Graph>::vertex_descriptor sink,
+        const bgl_named_params<P, T, R>& params)
+   {
+     return kolmogorov_max_flow(g,
+                                choose_const_pmap(get_param(params, edge_capacity), g, edge_capacity),
+                                choose_pmap(get_param(params, edge_residual_capacity), g, edge_residual_capacity),
+                                choose_const_pmap(get_param(params, edge_reverse), g, edge_reverse),
+                                choose_pmap(get_param(params, vertex_predecessor), g, vertex_predecessor),
+                                choose_pmap(get_param(params, vertex_color), g, vertex_color),
+                                choose_pmap(get_param(params, vertex_distance), g, vertex_distance),
+                                choose_const_pmap(get_param(params, vertex_index), g, vertex_index),
+                                src, sink);
+   }
+   
   /**
    * named-parameter version, none given
    */
-      template <class Graph >
-          typename property_traits< typename property_map<Graph, edge_capacity_t>::const_type>::value_type
-          kolmogorov_max_flow
-          (Graph& g, 
-           typename graph_traits<Graph>::vertex_descriptor src,
-           typename graph_traits<Graph>::vertex_descriptor sink)
-          {
-            bgl_named_params<int, buffer_param_t> params(0); // bogus empty param
-            return kolmogorov_max_flow(g, src, sink, params);
-          }
+   template <class Graph >
+   typename property_traits< typename property_map<Graph, edge_capacity_t>::const_type>::value_type
+   kolmogorov_max_flow
+       (Graph& g,
+        typename graph_traits<Graph>::vertex_descriptor src,
+        typename graph_traits<Graph>::vertex_descriptor sink)
+   {
+     bgl_named_params<int, buffer_param_t> params(0); // bogus empty param
+     return kolmogorov_max_flow(g, src, sink, params);
+   }
 } // namespace boost
 
 #endif // BOOST_KOLMOGOROV_MAX_FLOW_HPP
