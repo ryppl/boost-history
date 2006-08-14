@@ -28,10 +28,13 @@ namespace boost { namespace coroutines {
 	   typename Coroutine = 
 	   shared_coroutine<ValueType()> >
   class generator : public boost::mpl::eval_if<boost::is_same<ValueType, void>,
-					   boost::mpl::identity<detail::empty>,
-					   detail::make_std_iterator<std::input_iterator_tag, ValueType> >::type{
+					       boost::mpl::identity<detail::empty>,
+					       detail::make_std_iterator<
+    std::input_iterator_tag, 
+    typename Coroutine::result_type> >::type {
     typedef void(generator::*safe_bool)();
     typedef ValueType internal_value_type;
+
   public:
     typedef Coroutine coroutine_type;
     typedef BOOST_DEDUCED_TYPENAME 

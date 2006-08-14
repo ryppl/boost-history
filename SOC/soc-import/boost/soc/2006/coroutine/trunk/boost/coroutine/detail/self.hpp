@@ -89,8 +89,7 @@ namespace boost { namespace coroutines { namespace detail {
 	   arg)));
     }
 #else
-    
-    
+        
   private:
     /* 
      * VC8.0 can't handle the call_traits meta-invocation inside
@@ -174,7 +173,6 @@ namespace boost { namespace coroutines { namespace detail {
 
 #undef  BOOST_COROUTINE_param_with_default
 
-    
     BOOST_COROUTINE_NORETURN(void exit()) {
       m_pimpl -> exit_self();
     }

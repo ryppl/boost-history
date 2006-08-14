@@ -21,14 +21,40 @@
 
 [def __coroutine__ [link boost::coroutines::coroutine coroutine]]
 [def __generator__ [link boost::coroutines::generator generator]]
-[def __self_exit__  [link boost::coroutines::generator exit]]
-[def __yield__     [link boost::coroutines::generator yield]]
-[def __self__ [link boost::coroutines::generator::self self]]
+[def __shared_coroutine__ [link boost::coroutines::shared_coroutine
+shared_coroutine]] 
+[def __self__ [link boost::coroutines::coroutine::self self]]
+
+[def __self_exit__  [link boost::coroutines::coroutine::self::exit exit]]
+[def __exit__  [link boost::coroutines::coroutine::exit exit]]
+[def __yield__     [link boost::coroutines::coroutine::self::yield yield]]
+[def __exited__     [link boost::coroutines::coroutine::exited
+exited]]
+[def __empty__     [link boost::coroutines::coroutine::empty empty]]
+[def __waiting__     [link boost::coroutines::coroutine::waiting
+waiting]]
+[def __pending__     [link boost::coroutines::coroutine::pending
+pending]]
+[def __swap__     [link boost::coroutines::swap
+swap]]
+[def __mfswap__     [link boost::coroutines::coroutine::swap
+swap]]
+
 [def __exit_exception__ [link boost::coroutines::exit_exception
 exit_exception]]
+[def __coroutine_exited__ [link boost::coroutines::coroutine_exited
+coroutine_exited]]
+[def __abnormal_exit__ [link boost::coroutines::abnormal_exit
+abnormal_exit]]
+
+[def __shared_ptr__ [link boost::shared_ptr shared_ptr]]
+
 [def __Generator__ [link to-sgi-doc Generator]]
 [def __AdaptableGenerator__ [link to-concepts-doc AdaptableGenerator]]
 [def __Assignable__ [link to-concepts-doc Assignable]]
+[def __Movable__ [link to-movable-concept Movable]]
+[def __Swappable__ [link to-swappable-concept Swappable]]
+[def __DefaultConstructible__ [link to-sgi-concept DefaultConstructible]]
  
 [def __marlin80__ [link to-marlin-doctoral-thesis-here \[Marlin80\]]]
 [def __moura04a__ [link to-moura-04-04 \[Moura04a\]]]
@@ -254,11 +280,12 @@ This both terminates the generator and returns the final value
 
 Given the generator body, a __generator__ iterator can be constructed:
 
-  generator_type generator(boost::bind
-			   (range_generator, 
-			    _1, 
-			    100,
-			    200));
+  generator_type generator
+    (boost::bind
+     (range_generator, 
+      _1, 
+      100,
+      200));
 
 The `boost::bind` facility is used to bind the `min` and `max` arguments
 of the function to the actual iterations ranges. The function object
@@ -282,17 +309,19 @@ particular `range_iterator` is reentered when
 
 You can have more than one generator referring to the same body:
 
-  generator_type generator_a(boost::bind
-			   (range_generator, 
-			    _1, 
-			    100,
-			    200));
+  generator_type generator_a
+    (boost::bind
+     (range_generator, 
+      _1, 
+      100,
+      200));
 
-  generator_type generator_b(boost::bind
-			   (range_generator, 
-			    _1, 
-			    100,
-			    200));
+  generator_type generator_b
+    (boost::bind
+     (range_generator, 
+      _1, 
+      100,
+      200));
 
   while(generator_a != generator_type() && 
 	generator_b != generator_type()) 
@@ -433,16 +462,16 @@ This is the generator signature:
 This is the generator body:
 
   leaf tree_leaves
-   (generator_type::self& self,
+   (generator_type::__self__& self,
     const node_type& node) 
   {
     if(is_leaf(node)) {
-      self.yield(boost::get<leaf_type>(tree));
+      self.__yield__(boost::get<leaf_type>(tree));
     } else {
       tree_leaves(self, boost::get<node_type>.first);
       tree_leaves(self, boost::get<node_type>.second);
     }
-    self.exit();
+    self.__exit__();
   }
 
 `tree_leaves` recursively traverses the tree and yields each leave. In
@@ -553,12 +582,12 @@ For simplicity we declare a global scheduler object:
 
 Here is a generic job body:
 
-  void printer(job_type::self& self, std::string name, int iterations) {
+  void printer(job_type::__self__& self, std::string name, int iterations) {
     while(iterations --) {
       std::cout<<name <<" is running, "<<iterations<<" iterations left\n";
-      self.yield();
+      self.__yield__();
     }
-    self.exit();
+    self.__self_exit__();
   }
 
 When a job yields, it is rescheduled again. If it had exited instead,
@@ -668,9 +697,9 @@ We slightly modify `scheduler::run()`:
 `add(current())` has been removed. This method:
 
   ...
-  void reschedule(job_type::self& self) {
+  void reschedule(job_type::__self__& self) {
     add(current());
-    self.yield();
+    self.__yield__();
   }
   ...
 
@@ -679,10 +708,10 @@ reschedule itself. We will define a message queue class now:
 
   class message_queue {
   public:
-    std::string pop(job_type::self& self) {
+    std::string pop(job_type::__self__& self) {
       while(m_queue.empty()) {
         m_waiters.push(m_scheduler.current());
-        self.yield();      
+        self.__yield__();      
       }
       std::string res = m_queue.front();
       m_queue.pop();
@@ -719,7 +748,7 @@ This is our message queue object. Again a global for simplicity.
 
 Now we will create some jobs: 
 
-  void producer(job_type::self& self, int id, int count) {
+  void producer(job_type::__self__& self, int id, int count) {
     while(count--) {
       std::cout << "In producer: "<<id<<"\n";
       mqueue.push("message from " + boost::lexical_cast<std::string>(id));
@@ -798,7 +827,6 @@ adapted as callbacks to asynchronous functions.
 
 [section:coroutines Full coroutines]
 
-
 [h3 From generators to coroutines]
 
 So far we have learned to use generators, a special kind of
@@ -835,7 +863,7 @@ This is the coroutine body:
 This is code is not very different from our first [link
 generators.the_generator_class_template generator example]. Still there
 are some differences. For example `__yield__()` now returns a
-value. We will see soon what is this value. The syntax used to declare
+value. Soon we will see what this value represent. The syntax used to declare
 a coroutine is not surprising:
 
   coroutine_type accumulator(accumulator_body); 
@@ -849,9 +877,9 @@ And even its usage is straight forward:
 
 This will print all values in the mathematical series `a[i] = a[i-1]
 + i`.
-We will now describe exactly how the flow control evolves. 
+Let's see how the flow control evolves. 
 
-[blurb __note__ A coroutine body, unlike generators, is invoked only when the
+[blurb __note__ A coroutine, unlike generators, will enter its body only  when the
 `__coroutine__::operator()` is invoked for the first time. This is
 because, in general, a coroutine requires parameters to be passed. In
 our case the parameter is the value to accumulate. 
@@ -864,7 +892,7 @@ inversion the second) and their semantics try to be the best for each case.]
   The first statement of `accumulator_body` is executed. At
   this point the parameter `val` is `0`. 
 * The `while` loop is entered and `__yield__(val)` is invoked. The coroutine
-stop and relinquishes control to the main program, back in the `for`
+stops and relinquishes control to the main program, back in the `for`
 loop. 
 * At the next iteration, `accumulator(1)` is called.
 * The coroutine is resumed at the point of the call to
@@ -876,15 +904,225 @@ yielding `val` again, now equal to `1`.
 * At the next iteration of the
 `for` loop `accumulator(2)` is called and the coroutine will yield `3`,
 the new value of `val`. 
-* ... and so on until the end of the `for` loop.
+* ... and so on, until the end of the `for` loop.
 
 When `accumulator` goes out of scope, the coroutine is destroyed in
 the same way generators are destroyed: it is resumed and __yield__()
 throws an instance of `__exit_exception__`.
 
-[h3 State machines]
+[h3 Copyability]
+ 
+While you can freely copy a generator, you can't do the same with
+coroutines: during the development of Boost.Coroutine it has been
+deemed that giving refference counted shallow copying to coroutines
+was too risky. Coroutines usually have a longer lifetime and are more
+complex. Different coroutines can interact in dynamic ways, especially
+with the ability to yield to another coroutine (`__yield_to__()` will
+be introduced in an [link advanced.symmetric_coroutines advanced
+section]). 
 
+The possibility of creating a cycle was very high and very
+hard to debug, thus the possibility of copying a __coroutine__ object
+has been removed. Coroutines instead are __Movable__: you can return a
+coroutine from a function, copy construct and assign from a temporary,
+and explicitly `__move__()` them, but you can't for example add them
+to a standard container, unless your standard library already has
+support for movable types (currently in the draft standard). A
+coroutine is also __Swappable__ and __DefaultConstructible__.
+
+Unfortunately most libraries expect copyable types and do not support
+moving. For interoperability with this libraries you should use
+a `__shared_ptr__` to manage the lifetime of a
+`__coroutine__`. 
+
+Boost.Coroutine also provides the
+`__shared_coroutine__` that acts as a counted reference to a coroutine
+object. You should use this class template with care because
+potentially reopens the cycle loophole, and use it only as a temporary
+workaround for lack of movability. 
+
+[h3 Exiting a coroutine and the `__coroutine_exited__` exception]
+
+A coroutine can be exited from inside its body exactly like a
+generator by invoking `__coroutine__::__self__::__self_exit__()`, but
+the semantics from the point of view of the caller are
+different. consider this piece of code that represent a call to the
+object `my_coroutine` of type `__coroutine__<int()>()`
+
+  int i = my_coroutine();
+
+If `my_coroutine` returns to the caller by invoking `__self_exit__()`,
+there is no value can be returned from `operator()` and be assigned to
+`i`. Instead a `__coroutine_exited__ exception is thrown from
+`operator()`.
+
+[blurb __note__
+Generators never throw `__coroutine_exited__` because if a generator
+is valid it is always guaranteed that a value can be returned. We will
+see [link coroutines.behind_generators later] how this is possible.]
+
+A coroutine can also be exited by throwing any other exception from
+inside the body and letting the stack unwind below the coroutine main
+body. The coroutine is terminated and `operator()` will throw an
+instance of `__abnormal_exit__` exception.
+
+[blurb __note__ Generators too may throw `__abnormal_exit__` from
+`operator++` or `operator()`.]
+   
+Finally a coroutine can be exited from outside its body by calling
+`__coroutine__::__exit__()`. It behaves exactly as if the coroutine
+had exited out of scope.
+
+[h3 Other member and friend functions]
+
+`__coroutine__` provides a set of member functions to query its state;
+these are `__exited__()`, `__empty__()`, `__waiting__()` and
+`__pending__()`.
+`__exited__()` returns true if a coroutine has been exited (by
+throwing an exception, by calling `__self_exit__()` or by a plain
+return), `__empty__()` returns true if a coroutine has not been
+assigned. `__waiting__()` and `__pending__()` are related to the event
+waiting mechanics and will be explained [link advanced.events later].
+
+Both `__coroutine__::__mfswap__()` and a friend `__swap__()` are
+provided with the usual semantics.
+
+[h3 Multiple arguments and return values]
+
+A coroutine can have more than one argument. For example the coroutine
+`accumulator2` is similar to [link
+coroutines.the_accumulator_coroutine accumulator], but it takes two
+parameters and accumulate only the larger of the two values:
+[#accumulator_2]
+
+  typedef coro::__coroutine__<int(int, int)> coroutine_type;
+
+  int accumulator2_body(coroutine_type::__self__& self,
+                        int arg1,
+                        int arg2) {
+    int i = 0;
+    while(true) {
+       i +=  std::max(arg1, arg2);
+       boost::tie(arg1, arg2) = self.__yield__(i);
+    }
+  }
+
+  coroutine_type accumulator2(accumulator2_body);
+
+Note that __yield__ now returns two values in the form of a
+`boost::tuple<int, int>`. `accumulator2` can be called like any other
+binary function or function object:
+
+  ...
+  int i = accumulator2(0, 1);
+  ...
+
+Multiple return values are also handled with tuples. The coroutine
+`muladd` returns the partial sum and the partial product of the argument
+passed so far:
+[#muladd]
+
+  typedef coro::__coroutine__<boost::tuple<int, int>(int)> coroutine_type;
+
+  boost::tuple<int, int> muladd_body
+    (coroutine_type::__self__& self, 
+     int val) {
+    int prod = 0;
+    int sum = 0;
+    while(true) {
+      prod += val;
+      sum  += val;
+      val = self.__yield__(boost::make_tuple(prod, sum));
+    }
+  }
+
+  coroutine_type muladd(muladd_body);
+
+Again, `muladd` behaves like any other function that return a tuple:
+
+  ...
+  int prod;
+  int sum;
+  boost::tie(prod, sum) = muladd(0);
+  ...
+
+Notice that there is a slight asimmetry between [link accumulator_2
+the first] and [link muladd the second] example. In the call to
+`accumulator2` there is no need to call `boost::make_tuple(...)`,
+the arguments to `operator()` are automatically packed in the tuple
+that is returned by `__yield__()`. On the other hand, in the call to
+`__yield__()` in `muladd_body`, the result types must manually packed
+in a tuple. It would be nice if this syntax could be used:
+
+  ...
+  self.__yield__(prod, sum);
+  ...
+
+Boost.Coroutine in fact allows this user friendlier syntax, but it is
+not enabled by default because it could conflict with generic code. To
+enable it `coroutine_type` must be redefined like this:
+
+  typedef coro::__coroutine__<coro::tuple_traits<int, int>(int)> coroutine_type;
+
+The `__coroutine__` class template recognizes the special
+`coro::tuple_traits` type and enables `__yield__()` to automatically
+pack its arguments.
+
+[blurb __note__ __coroutine__ can handle any number of arguments and
+return values up to a implementation defined limit. The macro
+`BOOST_COROUTINE_ARG_MAX` expands to the current limit. While it is
+technically possible to 
+increase this number by redefining this macro, it also
+requires support for more arguments from other boost components
+(at least Boost.Tuple and Boost.MPL), thus this cap
+cannot be modified easily.] 
+  
 [h3 Behind generators]
+
+To complete the tour of the basic capabilities of Boost.Coroutine we
+will return to the __generator__ class template and explain how it is
+implemented in term of coroutines:
+
+  template<typename ValueType>
+  class generator : public std::iterator<std::input_iterator_tag, ValueType> {
+    typedef shared_coroutine<ValueType()> coroutine_type;
+  public:
+    typedef typename coroutine_type::result_type value_type;
+    typedef typename coroutine_type::self self;
+
+    generator() {}
+
+    template<typename Functor>
+    generator(Functor f) :
+      m_coro(f), 
+      m_val(assing()) {}
+
+    value_type operator*() {
+      return m_val;
+    }
+
+    generator& operator++() {
+      m_val = assing();
+    }
+
+    generator operator++(int) {
+       generator t(*this);
+       ++(*this);
+       return t;
+    }
+
+    friend operator==(const generator& lhs, const generator& rhs) {
+      if(lhs.m_val) return lhs.m_val == rhs.m_val;
+      else if(rhs.m_val) return false;
+      else return true;
+    }
+  private:
+    boost::optional<vale_type> assing() {
+      return m_coro? m_coro(std::nothrow) : boost::optional_value<type>();
+    }
+    coroutine_type m_coro;
+    boost::optional<value_type> m_val;
+  };
 
 [endsect]
 

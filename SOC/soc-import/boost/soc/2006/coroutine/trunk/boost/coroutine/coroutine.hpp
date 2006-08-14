@@ -204,6 +204,11 @@ namespace boost { namespace coroutines {
       return m_pimpl->waiting();
     }
 
+    bool pending() const {
+      BOOST_ASSERT(m_pimpl);
+      return m_pimpl->pending();
+    }
+
     bool exited() const {
       BOOST_ASSERT(m_pimpl);
       return m_pimpl->exited();
@@ -222,7 +227,7 @@ namespace boost { namespace coroutines {
     void bool_type_f() {}
 
     bool good() const  {
-      return m_pimpl && !exited() && !waiting();
+      return !empty() && !exited() && !waiting();
     }
 
     result_type call_impl(arg_slot_type args) {
