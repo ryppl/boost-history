@@ -152,47 +152,49 @@ find_in_path(const std::string& file, std::string path = "")
 {
 #if defined(BOOST_PROCESS_POSIX_API)
     BOOST_ASSERT(file.find('/') == std::string::npos);
-    const char delim = ':';
 #elif defined(BOOST_PROCESS_WIN32_API)
     BOOST_ASSERT(file.find('\\') == std::string::npos);
-    const char delim = ';';
 #endif
 
-    if (path.empty()) {
+    std::string result;
+
 #if defined(BOOST_PROCESS_POSIX_API)
+    if (path.empty()) {
         const char* envpath = ::getenv("PATH");
         if (envpath == NULL)
             boost::throw_exception(not_found_error< std::string >
                 ("Cannot locate " + file + " in path; "
                  "error retrieving PATH's value", file));
-#elif defined(BOOST_PROCESS_WIN32_API)
-        const char envpath[MAX_PATH];
-        if (::GetEnvironmentVariable("PATH", envpath, MAX_PATH) == 0)
-            boost::throw_exception(not_found_error< std::string >
-                ("Cannot locate " + file + " in path; "
-                 "error retrieving PATH's value", file));
-#endif
         path = envpath;
     }
     BOOST_ASSERT(!path.empty());
 
-    std::string result;
-
     std::string::size_type pos1 = 0, pos2;
     do {
-        pos2 = path.find(delim, pos1);
+        pos2 = path.find(':', pos1);
         std::string dir = path.substr(pos1, pos2 - pos1);
         std::string f = dir + '/' + file;
-
-#if defined(BOOST_PROCESS_POSIX_API)
         if (::access(f.c_str(), X_OK) == 0)
             result = f;
-#elif defined(BOOST_PROCESS_WIN32_API)
-#   error "Unimplemented."
-#endif
-
         pos1 = pos2 + 1;
     } while (pos2 != std::string::npos && result.empty());
+#elif defined(BOOST_PROCESS_WIN32_API)
+    const char* exts[] = { "", "exe", "com", "bat", NULL };
+    const char** ext = exts;
+    while (*ext != NULL) {
+        TCHAR buf[MAX_PATH];
+        TCHAR* dummy;
+        DWORD len = ::SearchPath(path.empty() ? NULL : TEXT(path.c_str()),
+                                 TEXT(file.c_str()), TEXT(*ext), MAX_PATH,
+                                 buf, &dummy);
+        BOOST_ASSERT(len < MAX_PATH);
+        if (len > 0) {
+            result = buf;
+            break;
+        }
+        ext++;
+    }
+#endif
 
     if (result.empty())
         boost::throw_exception(not_found_error< std::string >

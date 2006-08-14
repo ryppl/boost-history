@@ -312,11 +312,18 @@ private:
 #elif defined(BOOST_PROCESS_POSIX_API)
     static const handle_type INVALID_VALUE = -1;
 #elif defined(BOOST_PROCESS_WIN32_API)
-    static const handle_type INVALID_VALUE = INVALID_HANDLE_VALUE;
+    static const handle_type INVALID_VALUE;
 #endif
 };
 
 // ------------------------------------------------------------------------
+
+// XXX No, no, no!  This is incorrect as it will cause conflicts if this
+// file is included in two different compilation units...
+#if defined(BOOST_PROCESS_WIN32_API)
+const file_handle::handle_type file_handle::INVALID_VALUE =
+    INVALID_HANDLE_VALUE;
+#endif
 
 // ------------------------------------------------------------------------
 

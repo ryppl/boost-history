@@ -471,8 +471,8 @@ test_path(void)
                                                TEXT(helpersdir.c_str())) != 0);
         bp::command_line cl2(helpersname);
         cl2.argument("pwd");
-        bp::launcher l2;
-        bp::status s2 = l2.start(cl2).wait();
+        Launcher l2;
+        bp::status s2 = Start()(l2, cl2).wait();
         BOOST_CHECK(s2.exited());
         BOOST_CHECK_EQUAL(s2.exit_status(), EXIT_SUCCESS);
         BOOST_REQUIRE(::SetEnvironmentVariable("PATH", oldpath) != 0);

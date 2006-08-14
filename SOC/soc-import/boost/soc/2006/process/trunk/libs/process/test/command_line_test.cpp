@@ -76,7 +76,7 @@ void
 test_executable(void)
 {
     bp::command_line cl(get_helpers_path());
-    BOOST_CHECK_EQUAL(cl.get_executable(), get_helpers_path());
+    BOOST_CHECK(bfs::equivalent(cl.get_executable(), get_helpers_path()));
 }
 
 // ------------------------------------------------------------------------
