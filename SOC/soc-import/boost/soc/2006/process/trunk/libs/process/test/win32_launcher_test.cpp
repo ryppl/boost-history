@@ -20,16 +20,17 @@ extern "C" {
 #   include <sstream>
 #   include <string>
 
-#   include <boost/filesystem/operations.hpp>
 #   include <boost/process/child.hpp>
 #   include <boost/process/win32_child.hpp>
 #   include <boost/process/win32_launcher.hpp>
-#   include <boost/test/unit_test.hpp>
 
 #   include "launcher_base_test.hpp"
 
 namespace bp = ::boost::process;
 #endif
+
+#include <boost/filesystem/operations.hpp>
+#include <boost/test/unit_test.hpp>
 
 namespace bfs = ::boost::filesystem;
 namespace but = ::boost::unit_test;
