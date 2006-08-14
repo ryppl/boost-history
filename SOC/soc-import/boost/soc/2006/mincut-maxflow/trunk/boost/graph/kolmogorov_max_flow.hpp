@@ -27,7 +27,7 @@
 
 namespace boost {
   namespace detail {
-    
+
     template <class Graph,
               class EdgeCapacityMap,
               class ResidualCapacityEdgeMap,
@@ -37,7 +37,7 @@ namespace boost {
               class DistanceMap,
               class IndexMap>
     class kolmogorov{
-      typedef typename property_traits< typename property_map<Graph, edge_capacity_t>::const_type>::value_type tEdgeVal;
+      typedef typename property_traits<EdgeCapacityMap>::value_type tEdgeVal;
       typedef graph_traits<Graph> tGraphTraits;
       typedef typename tGraphTraits::vertex_descriptor tVertex;
       typedef typename tGraphTraits::vertex_iterator tVertexIterator;
@@ -145,7 +145,7 @@ namespace boost {
               if(is_there){
                 tEdgeVal cap_from_source = m_res_cap_map[from_source];
                 tEdgeVal cap_to_sink = m_res_cap_map[to_sink];
-                if( cap_from_source > cap_to_sink){
+                if(cap_from_source > cap_to_sink){
                   set_tree(current_node, tColorTraits::white());
                   add_active_node(current_node);
                   set_edge_to_parent(current_node, from_source);
@@ -168,9 +168,8 @@ namespace boost {
                   m_res_cap_map[from_source] = 0;
                   m_flow += cap_from_source;
                 }
-              }
-              else if (m_res_cap_map[from_source]){
-                //there is no sink connect, so we cant augment this path
+              } else if(m_res_cap_map[from_source]){
+                //there is no sink connect, so we can't augment this path
                 //but to avoid adding m_source to the active nodes, we just activate this node and set the approciate things
                 set_tree(current_node, tColorTraits::white());
                 set_edge_to_parent(current_node, from_source);
@@ -188,7 +187,7 @@ namespace boost {
           std::pair<tEdge, bool> grow(){
             assert(m_orphans.empty());
             tVertex current_node;
-            while((current_node = get_next_active_node()) != graph_traits<Graph>::null_vertex() ){ //if there is one
+            while((current_node = get_next_active_node()) != graph_traits<Graph>::null_vertex()){ //if there is one
               assert(get_tree(current_node) != tColorTraits::gray()  && (has_parent(current_node) || current_node==m_source || current_node==m_sink)); 
               if(get_tree(current_node) == tColorTraits::white()){ 
                 //source tree growing
@@ -202,16 +201,14 @@ namespace boost {
                       set_edge_to_parent(other_node, out_edge);   //set us as parent
                       m_dist_map[other_node] = m_dist_map[current_node] + 1;  //and update the distance-heuristic
                       m_time_map[other_node] = m_time_map[current_node];
-                      add_active_node(other_node);                      
-                    }
-                    else if(get_tree(other_node) == tColorTraits::white()){
+                      add_active_node(other_node);
+                    } else if(get_tree(other_node) == tColorTraits::white()){
                       if(is_closer_to_terminal(current_node, other_node)){ //we do this to get shorter paths. check if we are nearer to the source as its parent is
                         set_edge_to_parent(other_node, out_edge);
                         m_dist_map[other_node] = m_dist_map[current_node] + 1;
-                        m_time_map[other_node] = m_time_map[current_node];    
+                        m_time_map[other_node] = m_time_map[current_node];
                       }
-                    }     
-                    else{ 
+                    } else{ 
                       assert(get_tree(other_node)==tColorTraits::black());
                       //kewl, found a path from one to the other search tree, return the connecting edge in src->sink dir
                       return std::make_pair(out_edge, true);
@@ -223,7 +220,7 @@ namespace boost {
                 tOutEdgeIterator ei,e_end;
                 assert(get_tree(current_node) == tColorTraits::black());
                 for(tie(ei, e_end) = out_edges(current_node, m_g); ei != e_end; ++ei){
-                  tEdge in_edge = m_rev_edge_map[*ei]; 
+                  tEdge in_edge = m_rev_edge_map[*ei];
                   if(m_res_cap_map[in_edge] > 0){ //check if theres capacity left
                     tVertex other_node = source(in_edge, m_g);
                     if(get_tree(other_node) == tColorTraits::gray()){ //it's a free node
@@ -232,16 +229,14 @@ namespace boost {
                       add_active_node(other_node);                      //activate that node
                       m_dist_map[other_node] = m_dist_map[current_node] + 1; //set its distance
                       m_time_map[other_node] = m_time_map[current_node];     //and time
-                    }
-                    else if(get_tree(other_node) == tColorTraits::black()){
+                    } else if(get_tree(other_node) == tColorTraits::black()){
                       if(is_closer_to_terminal(current_node, other_node)){ 
                         //we are closer to the sink than its parent is, so we "adopt" him
                         set_edge_to_parent(other_node, in_edge);
                         m_dist_map[other_node] = m_dist_map[current_node] + 1;
                         m_time_map[other_node] = m_time_map[current_node];
                       }
-                    }     
-                    else{ 
+                    } else{ 
                       assert(get_tree(other_node)==tColorTraits::white());
                       //kewl, found a path from one to the other search tree, return the connecting edge in src->sink dir
                       return std::make_pair(in_edge, true);
@@ -268,7 +263,7 @@ namespace boost {
             assert(get_tree(target(e, m_g)) == tColorTraits::black());
             assert(get_tree(source(e, m_g)) == tColorTraits::white());
             assert(m_orphans.empty());
-        
+
             const tEdgeVal bottleneck = find_bottleneck(e);
             //now we push the found flow through the path
             //for each edge we saturate we have to look for the verts that belong to that edge, one of them becomes an orphans
@@ -276,7 +271,7 @@ namespace boost {
             m_res_cap_map[e]-= bottleneck;
             assert(m_res_cap_map[e] >= 0);
             m_res_cap_map[ m_rev_edge_map[ e ] ] += bottleneck;
-            
+
             //now we follow the path back to the source
             tVertex current_node = source(e, m_g);
             while(current_node != m_source){
@@ -302,11 +297,11 @@ namespace boost {
                 m_orphans.push_front(current_node);
               }
               current_node = target(pred, m_g);
-            }                        
+            }
             //and add it to the max-flow
             m_flow += bottleneck;
           }
-          
+
           /**
            * returns the bottleneck of a s->t path (end_of_path is last vertex in source-tree, begin_of_path is first vertex in sink-tree)
            */		
@@ -341,15 +336,14 @@ namespace boost {
                 //get the next orphan from the main-queue  and remove it
                 current_node=m_orphans.front();
                 m_orphans.pop_front();
-              }
-              else{
+              } else{
                 current_node = m_child_orphans.front();
                 m_child_orphans.pop();
               }
               if(get_tree(current_node) == tColorTraits::white()){ 
                 //we're in the source-tree
                 tDistanceVal min_distance = (std::numeric_limits< tDistanceVal >::max)();
-                tEdge new_parent_edge;                                
+                tEdge new_parent_edge;
                 tOutEdgeIterator ei,e_end;
                 for(tie(ei, e_end) = out_edges(current_node, m_g); ei != e_end; ++ei){
                   const tEdge in_edge = m_rev_edge_map[*ei];
@@ -359,7 +353,7 @@ namespace boost {
                     if(m_dist_map[other_node] < min_distance){
                       min_distance = m_dist_map[other_node];
                       new_parent_edge = in_edge;
-                      if(min_distance == 1)//it cant get shorter
+                      if(min_distance == 1)//it can't get shorter
                         break;
                     }
                   }
@@ -368,8 +362,7 @@ namespace boost {
                   set_edge_to_parent(current_node, new_parent_edge);
                   m_dist_map[current_node] = min_distance + 1;
                   m_time_map[current_node] = m_time;
-                }
-                else{             
+                } else{
                   for(tie(ei,e_end) = out_edges(current_node, m_g); ei != e_end; ++ei){
                     tEdge in_edge = m_rev_edge_map[*ei];
                     tVertex other_node = source(in_edge, m_g);
@@ -383,10 +376,10 @@ namespace boost {
                         set_no_parent(other_node);
                         m_child_orphans.push(other_node);
                       }
-                    }                    
+                    }
                   }
                   set_tree(current_node, tColorTraits::gray());
-                  remove_active_node(current_node);                  
+                  remove_active_node(current_node);
                 }//no parent found
               }//source-tree-adoption
               else{
@@ -403,21 +396,20 @@ namespace boost {
                     if(m_dist_map[other_node] < min_distance){
                       min_distance = m_dist_map[other_node];
                       new_parent_edge = out_edge;
-                      if(min_distance == 1) //it cant get shorter
-                        break;                      
+                      if(min_distance == 1) //it can't get shorter
+                        break;
                     }
                   }
                 }
                 if(min_distance != (std::numeric_limits< tDistanceVal >::max)()){
                   set_edge_to_parent(current_node, new_parent_edge);
                   m_dist_map[current_node] = min_distance + 1;
-                  m_time_map[current_node] = m_time;                          
-                }
-                else{
+                  m_time_map[current_node] = m_time;
+                } else{
                   for(tie(ei,e_end) = out_edges(current_node, m_g); ei != e_end; ++ei){
                     const tEdge out_edge = *ei;
                     const tVertex other_node = target(out_edge, m_g);
-                     if(get_tree(other_node) == tColorTraits::black()){ 
+                    if(get_tree(other_node) == tColorTraits::black()){ 
                       if(m_res_cap_map[out_edge] > 0){
                         add_active_node(other_node);
                       }
@@ -429,12 +421,12 @@ namespace boost {
                     }
                   }
                   set_tree(current_node, tColorTraits::gray());
-                  remove_active_node(current_node);                  
-                }//no parent found                
+                  remove_active_node(current_node);
+                }//no parent found
               }//sink-tree adoption
             }//while !orphans.empty()
           }//adopt
-                    
+
           /**
           * return next active vertex if there is one, otherwise a null_vertex
           */	
@@ -444,17 +436,16 @@ namespace boost {
                 return graph_traits<Graph>::null_vertex();
               tVertex v = m_active_nodes.front();
 
-              if(!has_parent(v) && v != m_source && v != m_sink){ //if it has no parent, this node cant be active(if its not source or sink)
+              if(!has_parent(v) && v != m_source && v != m_sink){ //if it has no parent, this node can't be active(if its not source or sink)
                 m_active_nodes.pop();
                 m_in_active_list_map[v] = false;
-              }
-              else{
+              } else{
                 assert(get_tree(v) == tColorTraits::white() || get_tree(v) == tColorTraits::black());
                 return v;
               }
             }
           }
-          
+
           /**
           * adds v as an active vertex, but only if its not in the list already
           */		
@@ -462,58 +453,57 @@ namespace boost {
             assert(get_tree(v) != tColorTraits::gray());
             if(m_in_active_list_map[v]){
               return;
-            }
-            else{
+            } else{
               m_in_active_list_map[v] = true;
               m_active_nodes.push(v);  
             }
           }
-          
+
           /**
            * finish_node removes a node from the front of the active queue (its called in grow phase, if no more paths can be found using this node)
-           */		                    
+           */
           inline void finish_node(tVertex v){
             assert(m_active_nodes.front() == v);
             m_active_nodes.pop();
             m_in_active_list_map[v] = false;
           }
-          
+
           /**
           * removes a vertex from the queue of active nodes (actually this does nothing, 
           * but checks if this node has no parent edge, as this is the criteria for beeing no more active) 
-          */		
+          */
           inline void remove_active_node(tVertex v){
             assert(!has_parent(v));
           }
-          
+
           /**
           * returns the search tree of v; tColorValue::white() for source tree, black() for sink tree, gray() for no tree
-          */		
+          */
           inline tColorValue get_tree(tVertex v) const {
             return m_tree_map[v];
           }
-          
+
           /**
           * sets search tree of v; tColorValue::white() for source tree, black() for sink tree, gray() for no tree
-          */		
+          */
           inline void set_tree(tVertex v, tColorValue t){
             m_tree_map[v] = t;
           }
-          
+
           /**
            * returns edge to parent vertex of v;
-           */		
+           */
           inline tEdge get_edge_to_parent(tVertex v) const{
             return m_pre_map[v];
           }
-          
+
           /**
            * returns true if the edge stored in m_pre_map[v] is a valid entry
-           */		          
+           */
           inline bool has_parent(tVertex v) const{
             return m_has_parent_map[v];  
-          }          
-          
+          }
+
           /**
            * sets edge to parent vertex of v; 
           */		
@@ -522,18 +512,19 @@ namespace boost {
             m_pre_map[v] = f_edge_to_parent;
             m_has_parent_map[v] = true;
           }
+
           /**
            * removes the edge to parent of v (this is done by invalidating the entry an additional map)
-           */		          
+           */
           inline void set_no_parent(tVertex v){
             m_has_parent_map[v] = false;
           }
-          
+
           /**
            * checks if vertex v has a connect to the sink-vertex (@var m_sink)
            * @param v the vertex which is checked
            * @return true if a path to the sink was found, false if not
-           */                  
+           */
           inline bool has_sink_connect(tVertex v){
             tDistanceVal current_distance = 0;
             tVertex current_vertex = v;
@@ -552,26 +543,25 @@ namespace boost {
                 const tEdge e = get_edge_to_parent(current_vertex);
                 current_vertex = target(e, m_g);
                 ++current_distance;
-              }
-              else{
+              } else{
                 //no path found
                 return false;
               }
             }
             current_vertex=v;
             while(m_time_map[current_vertex] != m_time){
-              m_dist_map[current_vertex] = current_distance -- ;
+              m_dist_map[current_vertex] = current_distance--;
               m_time_map[current_vertex] = m_time;
               current_vertex = target(get_edge_to_parent(current_vertex), m_g);
             }
             return true;
           }
-          
+
           /**
            * checks if vertex v has a connect to the source-vertex (@var m_source)
            * @param v the vertex which is checked
            * @return true if a path to the source was found, false if not
-           */                  
+           */
           inline bool has_source_connect(tVertex v){
             tDistanceVal current_distance = 0;
             tVertex current_vertex = v;
@@ -585,27 +575,26 @@ namespace boost {
                 m_time_map[m_source] = m_time;
                 break;
               }
-              
+
               if(has_parent(current_vertex)){
                 const tEdge e = get_edge_to_parent(current_vertex);
                 //it has a parent, so get it
                 current_vertex = source(e, m_g);
                 ++current_distance;
-              }
-              else{
+              } else{
                 //no path found
                 return false;
               }
             }
             current_vertex=v;
             while(m_time_map[current_vertex] != m_time){
-                m_dist_map[current_vertex] = current_distance -- ;
+                m_dist_map[current_vertex] = current_distance-- ;
                 m_time_map[current_vertex] = m_time;
                 current_vertex = source(get_edge_to_parent(current_vertex), m_g);
             }
             return true;
           }
-          
+
           /**
           * returns true, if p is closer to a terminal than q
           */
@@ -613,31 +602,31 @@ namespace boost {
             //checks the timestamps first, to build no cycles, and after that the real distance
             return (m_time_map[q] <= m_time_map[p] && m_dist_map[q] > m_dist_map[p]+1);
           }
-          
+
           ////////
           // member vars
-          ////////          
+          ////////
           Graph& m_g;
           IndexMap m_index_map;
           EdgeCapacityMap m_cap_map;
           ResidualCapacityEdgeMap m_res_cap_map;
-          ReverseEdgeMap m_rev_edge_map;       
+          ReverseEdgeMap m_rev_edge_map;
           PredecessorMap m_pre_map; //stores paths found in the growth stage
           ColorMap m_tree_map; //maps each vertex into one of the two search tree or none (gray())
           DistanceMap m_dist_map; //stores distance to source/sink nodes
           tVertex m_source;
           tVertex m_sink;
-          
+
           tQueue m_active_nodes;
           std::vector< bool > m_in_active_list_vec;
           iterator_property_map<std::vector< bool>::iterator, IndexMap> m_in_active_list_map;
-          
+
           std::list<tVertex> m_orphans;
           tQueue m_child_orphans; // we use a second queuqe for child orphans, as they are FIFO processed
-          
+
           std::vector< bool > m_has_parent_vec;
           iterator_property_map<std::vector< bool>::iterator, IndexMap> m_has_parent_map;
-          
+
           std::vector< long > m_time_vec; //timestamp of each node, used for sink/source-path calculations
           iterator_property_map<std::vector< long >::iterator, IndexMap> m_time_map;
           tEdgeVal m_flow;
@@ -651,7 +640,7 @@ namespace boost {
    */			
   template <class Graph, class CapacityEdgeMap, class ResidualCapacityEdgeMap, class ReverseEdgeMap, 
     class PredecessorMap, class ColorMap, class DistanceMap, class IndexMap>
-      typename property_traits< typename property_map<Graph, edge_capacity_t>::const_type>::value_type  
+    typename property_traits<CapacityEdgeMap>::value_type  
     kolmogorov_max_flow
       (Graph& g, 
        CapacityEdgeMap cap,
@@ -671,22 +660,22 @@ namespace boost {
         function_requires< VertexListGraphConcept<Graph> >(); //to have vertices(),num_vertices(),
         function_requires< EdgeListGraphConcept<Graph> >(); //to have edges()
         function_requires< IncidenceGraphConcept<Graph> >(); //to have source(), target() and out_edges()
-        function_requires< Mutable_LvaluePropertyMapConcept<CapacityEdgeMap,tEdge> >(); //read flow-values from edges
+        function_requires< LvaluePropertyMapConcept<CapacityEdgeMap,tEdge> >(); //read flow-values from edges
         function_requires< Mutable_LvaluePropertyMapConcept<ResidualCapacityEdgeMap,tEdge> >(); //write flow-values to residuals
-        function_requires< Mutable_LvaluePropertyMapConcept<ReverseEdgeMap,tEdge> >(); //read out reverse edges
+        function_requires< LvaluePropertyMapConcept<ReverseEdgeMap,tEdge> >(); //read out reverse edges
         function_requires< Mutable_LvaluePropertyMapConcept<PredecessorMap,tVertex> >(); //store predecessor there
-        function_requires< Mutable_LvaluePropertyMapConcept<ColorMap,tVertex> >(); //write corresponding tree        
+        function_requires< Mutable_LvaluePropertyMapConcept<ColorMap,tVertex> >(); //write corresponding tree
         function_requires< Mutable_LvaluePropertyMapConcept<DistanceMap,tVertex> >(); //write distance to source/sink
         function_requires< ReadablePropertyMapConcept<IndexMap,tVertex> >(); //get index 0...|V|-1 
-        
+
         detail::kolmogorov<Graph,CapacityEdgeMap,ResidualCapacityEdgeMap,ReverseEdgeMap,PredecessorMap, ColorMap,DistanceMap,IndexMap> 
             algo(g, cap, res_cap, rev_map, pre_map, color, dist, idx, src, sink);
          return algo.max_flow();
       }
-      
+
    /**
     * non-named-parameter version, essential given
-    */			                  
+    */
 /*      CapacityEdgeMap cap,
       ResidualCapacityEdgeMap res_cap,
       ReverseEdgeMap rev_map,
@@ -702,7 +691,7 @@ namespace boost {
            CapacityEdgeMap cap,
            ReverseEdgeMap rev,
            typename graph_traits<Graph>::vertex_descriptor src,
-           typename graph_traits<Graph>::vertex_descriptor sink )
+           typename graph_traits<Graph>::vertex_descriptor sink)
           {
             res_cap_map
             bgl_named_params<int, buffer_param_t> params(0); // bogus empty param
@@ -711,7 +700,7 @@ namespace boost {
   
    /**
     * named-parameter version, some given
-    */			            
+    */
    template <class Graph, class P, class T, class R>
        typename property_traits< typename property_map<Graph, edge_capacity_t>::const_type>::value_type
      kolmogorov_max_flow
@@ -732,13 +721,13 @@ namespace boost {
           }
   /**
    * named-parameter version, none given
-   */			      
+   */
       template <class Graph >
           typename property_traits< typename property_map<Graph, edge_capacity_t>::const_type>::value_type
           kolmogorov_max_flow
           (Graph& g, 
            typename graph_traits<Graph>::vertex_descriptor src,
-           typename graph_traits<Graph>::vertex_descriptor sink )
+           typename graph_traits<Graph>::vertex_descriptor sink)
           {
             bgl_named_params<int, buffer_param_t> params(0); // bogus empty param
             return kolmogorov_max_flow(g, src, sink, params);
