@@ -54,6 +54,7 @@ test-suite process :
     [ compile include_postream_test.cpp : : ]
     [ compile include_status_test.cpp : : ]
     [ compile include_top_test.cpp : : ]
+    [ compile include_win32_launcher_test.cpp : : ]
 
     [ run command_line_test.cpp
         :
@@ -139,9 +140,17 @@ test-suite process :
           <library>$(BOOST_ROOT)//filesystem
         ]
 
+    [ run win32_launcher_test.cpp
+        : helpers
+        :
+        : <library>$(BOOST_ROOT)//unit_test_framework
+          <library>$(BOOST_ROOT)//filesystem
+        ]
+
     [ compile ../example/command_lines.cpp : : ]
     [ compile ../example/generic.cpp : : ]
     [ compile ../example/pipeline.cpp : : ]
     [ compile ../example/posix_communication.cpp : : ]
+    [ compile ../example/win32_startup.cpp : : ]
 
     ;

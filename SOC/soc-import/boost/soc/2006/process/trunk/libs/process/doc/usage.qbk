@@ -338,6 +338,28 @@ posix_launcher::set_chroot] method for more details.
 
 [/ ---------------------------------------------------------------------- ]
 
+[section Win32 startup information]
+
+The Win32 `CreateProcess` system call receives a `STARTUPINFO` object that
+contains multiple details on how to configure the new process.  Among these
+are the handles for the three standard communication channels
+(internally set up by the library), hints to set up the application's main
+windows, etc.
+
+The [classref boost::process::win32_launcher Win32-specific launcher] can
+be used shall you need to provide some of this platform-specific
+information to the new process.  This class' constructor receives a
+pointer to an already initialized `STARTUPINFO` object that is later passed
+to the `CreateProcess` call.  If no such object is provided, the launcher
+behaves as the [classref boost::process::launcher generic launcher].
+
+Check out the [link boost_process.examples.win32_startup Win32 startup]
+example for a practical demonstration on the above features.
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
 [section Child process startup]
 
 Once the command line and the process' execution context are configured, a

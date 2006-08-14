@@ -80,4 +80,18 @@ the daemon using the D-BUS API.
 
 [/ ---------------------------------------------------------------------- ]
 
+[section Win32 startup]
+
+This example relies on features provided by Win32 operating systems and
+therefore it is not completely portable.  It demonstrates how to start a
+GUI process with hints on how to create the main window.  The example
+passes the suggested window position as well as size, and then waits until
+the new process terminates.
+
+[include ../example/win32_startup.cpp c++ code]
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
 [endsect]

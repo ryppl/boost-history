@@ -45,6 +45,8 @@ static int h_stdin_to_stdout(int, char*[]);
 #if defined(BOOST_PROCESS_POSIX_API)
 static int h_posix_echo_one(int, char*[]);
 static int h_posix_echo_two(int, char*[]);
+#elif defined(BOOST_PROCESS_WIN32_API)
+static int h_win32_print_startupinfo(int, char*[]);
 #endif
 
 struct helper {
@@ -70,6 +72,8 @@ struct helper {
 #if defined(BOOST_PROCESS_POSIX_API)
     { "posix-echo-one", h_posix_echo_one, 3, "desc message" },
     { "posix-echo-two", h_posix_echo_two, 4, "desc1 desc2 message" },
+#elif defined(BOOST_PROCESS_WIN32_API)
+    { "win32-print-startupinfo", h_win32_print_startupinfo, 1, "" },
 #endif
 
     { NULL, NULL }
@@ -267,6 +271,25 @@ h_posix_echo_two(int argc, char* argv[])
     std::ostream os2(&buf2);
     os2 << argv[2] << " " << argv[3] << std::endl;
     os2.flush();
+
+    return EXIT_SUCCESS;
+}
+#endif
+
+// ------------------------------------------------------------------------
+
+#if defined(BOOST_PROCESS_WIN32_API)
+static
+int
+h_win32_print_startupinfo(int argc, char* argv[])
+{
+    STARTUPINFO si;
+    ::GetStartupInfo(&si);
+    std::cout << "dwFlags = " << si.dwFlags << std::endl;
+    std::cout << "dwX = " << si.dwX << std::endl;
+    std::cout << "dwY = " << si.dwY << std::endl;
+    std::cout << "dwXSize = " << si.dwXSize << std::endl;
+    std::cout << "dwYSize = " << si.dwYSize << std::endl;
 
     return EXIT_SUCCESS;
 }

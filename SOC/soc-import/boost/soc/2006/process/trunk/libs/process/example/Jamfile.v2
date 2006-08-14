@@ -40,3 +40,8 @@ exe posix_communication
     :
         posix_communication.cpp
     ;
+
+exe win32_startup
+    :
+        win32_startup.cpp
+    ;

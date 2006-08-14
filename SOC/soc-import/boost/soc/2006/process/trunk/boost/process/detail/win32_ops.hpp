@@ -39,6 +39,7 @@ extern "C" {
 #include <boost/process/detail/stream_info.hpp>
 #include <boost/process/exceptions.hpp>
 #include <boost/process/stream_behavior.hpp>
+#include <boost/scoped_ptr.hpp>
 #include <boost/throw_exception.hpp>
 
 namespace boost {
@@ -92,9 +93,7 @@ struct win32_setup
 //! \param infoin Information that describes stdin's behavior.
 //! \param infoout Information that describes stdout's behavior.
 //! \param infoerr Information that describes stderr's behavior.
-//! \param setup A helper object holding extra child information.  The
-//!              STARTUPINFO object in it is modified to set up the
-//!              required redirections.
+//! \param setup A helper object holding extra child information.
 //! \return The new process' information as returned by the ::CreateProcess
 //!         system call.  The caller is responsible of creating an
 //!         appropriate Child representation for it.
@@ -110,12 +109,17 @@ win32_start(const Command_Line& cl,
             stream_info& infoout,
             stream_info& infoerr,
             bool merge_out_err,
-            win32_setup& setup)
+            const win32_setup& setup)
 {
     file_handle chin, chout, cherr;
 
+    BOOST_ASSERT(setup.m_startupinfo->cb >= sizeof(STARTUPINFO));
     BOOST_ASSERT(!(setup.m_startupinfo->dwFlags & STARTF_USESTDHANDLES));
-    setup.m_startupinfo->dwFlags = STARTF_USESTDHANDLES;
+    // XXX I'm not sure this usage of scoped_ptr is correct...
+    boost::scoped_ptr< STARTUPINFO > si
+        ((STARTUPINFO*)new char[setup.m_startupinfo->cb]);
+    ::CopyMemory(si.get(), setup.m_startupinfo, setup.m_startupinfo->cb);
+    si->dwFlags |= STARTF_USESTDHANDLES;
 
     if (infoin.m_type == stream_info::close) {
     } else if (infoin.m_type == stream_info::inherit) {
@@ -137,8 +141,7 @@ win32_start(const Command_Line& cl,
         chin = infoin.m_pipe->rend();
     } else
         BOOST_ASSERT(false);
-    setup.m_startupinfo->hStdInput =
-        chin.is_valid() ? chin.get() : INVALID_HANDLE_VALUE;
+    si->hStdInput = chin.is_valid() ? chin.get() : INVALID_HANDLE_VALUE;
 
     if (infoout.m_type == stream_info::close) {
     } else if (infoout.m_type == stream_info::inherit) {
@@ -160,8 +163,7 @@ win32_start(const Command_Line& cl,
         chout = infoout.m_pipe->wend();
     } else
         BOOST_ASSERT(false);
-    setup.m_startupinfo->hStdOutput =
-        chout.is_valid() ? chout.get() : INVALID_HANDLE_VALUE;
+    si->hStdOutput = chout.is_valid() ? chout.get() : INVALID_HANDLE_VALUE;
 
     if (infoerr.m_type == stream_info::close) {
         if (merge_out_err) {
@@ -187,8 +189,7 @@ win32_start(const Command_Line& cl,
         cherr = infoerr.m_pipe->wend();
     } else
         BOOST_ASSERT(false);
-    setup.m_startupinfo->hStdError =
-        cherr.is_valid() ? cherr.get() : INVALID_HANDLE_VALUE;
+    si->hStdError = cherr.is_valid() ? cherr.get() : INVALID_HANDLE_VALUE;
 
     PROCESS_INFORMATION pi;
     ::ZeroMemory(&pi, sizeof(pi));
@@ -199,11 +200,10 @@ win32_start(const Command_Line& cl,
         (::_tcsdup(TEXT(cl.get_executable().c_str())));
     boost::scoped_array< TCHAR > workdir
         (::_tcsdup(TEXT(setup.m_work_directory.c_str())));
-
     boost::shared_array< TCHAR > envstrs = env.win32_strings();
     if (!::CreateProcess(executable.get(), cmdline.get(), NULL, NULL, TRUE,
                          0, envstrs.get(), workdir.get(),
-                         setup.m_startupinfo, &pi)) {
+                         si.get(), &pi)) {
         boost::throw_exception
             (system_error("boost::process::detail::win32_start",
                           "CreateProcess failed", ::GetLastError()));
