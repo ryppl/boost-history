@@ -465,9 +465,12 @@ posix_behavior_to_info(stream_behavior beh, int desc, bool out,
 //! indicated by the \a out flag.  This is intended to be used by a
 //! parent process after a fork(2) call.
 //!
-//! \pre The info map contains the given descriptor and it is configured
+//! \pre If the info map contains the given descriptor, it is configured
 //!      to use a pipe.
-//! \return The pipe's read end if out is true; otherwise its write end.
+//! \post The info map does not contain the given descriptor.
+//! \return If the file descriptor is found in the map, returns the pipe's
+//!         read end if out is true; otherwise its write end.  If the
+//!         descriptor is not found returns an invalid file handle.
 //!
 inline
 file_handle
@@ -476,11 +479,14 @@ posix_info_locate_pipe(info_map& info, int desc, bool out)
     file_handle fh;
 
     info_map::iterator iter = info.find(desc);
-    BOOST_ASSERT(iter != info.end());
-    stream_info& si = (*iter).second;
-    BOOST_ASSERT(si.m_type == stream_info::usepipe);
-    fh = out ? si.m_pipe->rend().disown() : si.m_pipe->wend().disown();
-    BOOST_ASSERT(fh.is_valid());
+    if (iter != info.end()) {
+        BOOST_ASSERT(iter != info.end());
+        stream_info& si = (*iter).second;
+        BOOST_ASSERT(si.m_type == stream_info::usepipe);
+        fh = out ? si.m_pipe->rend().disown() : si.m_pipe->wend().disown();
+        BOOST_ASSERT(fh.is_valid());
+        info.erase(iter);
+    }
 
     return fh;
 }

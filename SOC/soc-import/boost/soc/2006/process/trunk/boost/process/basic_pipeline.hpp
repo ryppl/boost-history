@@ -171,8 +171,10 @@ basic_pipeline< Command_Line >::start(void)
 
         detail::file_handle fhstdin;
 
-        if (bin == redirect_stream)
+        if (bin == redirect_stream) {
             fhstdin = posix_info_locate_pipe(infoin, STDIN_FILENO, false);
+            BOOST_ASSERT(fhstdin.is_valid());
+        }
 
         cs.push_back(detail::factories::create_child(ph, fhstdin,
                                                      fhinvalid, fhinvalid));
@@ -233,11 +235,15 @@ basic_pipeline< Command_Line >::start(void)
 
         detail::file_handle fhstdout, fhstderr;
 
-        if (bout == redirect_stream)
+        if (bout == redirect_stream) {
             fhstdout = posix_info_locate_pipe(infoout, STDOUT_FILENO, true);
+            BOOST_ASSERT(fhstdout.is_valid());
+        }
 
-        if (berr == redirect_stream)
+        if (berr == redirect_stream) {
             fhstderr = posix_info_locate_pipe(infoout, STDERR_FILENO, true);
+            BOOST_ASSERT(fhstderr.is_valid());
+        }
 
         cs.push_back(detail::factories::create_child(ph, fhinvalid,
                                                      fhstdout, fhstderr));

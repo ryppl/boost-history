@@ -122,18 +122,6 @@ private:
 
 protected:
     //!
-    //! \brief Searches for a file handle in a %pipe map.
-    //!
-    //! This helper function searches for the \a desc file descriptor
-    //! in the \a im map and returns its corresponding file handle.
-    //! If \a out is true, it is assummed that the file handle corresponds
-    //! to a output stream, so the pipe's read end is returned; otherwise
-    //! the write end is returned.
-    //!
-    static detail::file_handle get_handle(detail::info_map& im, int desc,
-                                          bool out);
-
-    //!
     //! \brief Constructs a new POSIX child object representing a just
     //!        spawned child process.
     //!
@@ -163,9 +151,9 @@ posix_child::posix_child(handle_type h,
                          detail::info_map& infoin,
                          detail::info_map& infoout) :
     child(h,
-          posix_child::get_handle(infoin, STDIN_FILENO, false),
-          posix_child::get_handle(infoout, STDOUT_FILENO, true),
-          posix_child::get_handle(infoout, STDERR_FILENO, true))
+          posix_info_locate_pipe(infoin, STDIN_FILENO, false),
+          posix_info_locate_pipe(infoout, STDOUT_FILENO, true),
+          posix_info_locate_pipe(infoout, STDERR_FILENO, true))
 {
     for (detail::info_map::iterator iter = infoin.begin();
          iter != infoin.end(); iter++) {
@@ -188,31 +176,6 @@ posix_child::posix_child(handle_type h,
             m_output_map.insert(output_map::value_type((*iter).first, st));
         }
     }
-}
-
-// ------------------------------------------------------------------------
-
-inline
-detail::file_handle
-posix_child::get_handle(detail::info_map& im, int desc, bool out)
-{
-    detail::file_handle fh;
-
-    detail::info_map::iterator iter = im.find(desc);
-    if (iter != im.end()) {
-        detail::stream_info& si = (*iter).second;
-
-        if (si.m_type == detail::stream_info::usepipe) {
-            if (out)
-                fh = si.m_pipe->rend();
-            else
-                fh = si.m_pipe->wend();
-            BOOST_ASSERT(fh.is_valid());
-            im.erase(iter);
-        }
-    }
-
-    return fh;
 }
 
 // ------------------------------------------------------------------------
