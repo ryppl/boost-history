@@ -154,13 +154,14 @@ namespace boost {
                   m_res_cap_map[m_rev_edge_map[to_sink]] += cap_to_sink;
                   m_res_cap_map[from_source]-= cap_to_sink;
                   m_res_cap_map[m_rev_edge_map[from_source]] += cap_to_sink;
-                  m_res_cap_map[to_sink] = 0;                  
-                  m_flow += cap_to_sink;                  
-                } else{
+                  m_res_cap_map[to_sink] = 0;
+                  m_flow += cap_to_sink;
+                } else if(cap_to_sink > 0){
+                  //nothing to augment
                   set_tree(current_node, tColorTraits::black());
-                  add_active_node(current_node);                
+                  add_active_node(current_node);
                   set_edge_to_parent(current_node, to_sink);
-                  m_dist_map[current_node] = 1;                
+                  m_dist_map[current_node] = 1;
                   //add stuff to flow and update residuals
                   m_res_cap_map[to_sink]-= cap_from_source;
                   m_res_cap_map[m_rev_edge_map[to_sink]] += cap_from_source;
@@ -173,7 +174,7 @@ namespace boost {
                 //but to avoid adding m_source to the active nodes, we just activate this node and set the approciate things
                 set_tree(current_node, tColorTraits::white());
                 set_edge_to_parent(current_node, from_source);
-                m_dist_map[current_node] = 1;                
+                m_dist_map[current_node] = 1;
                 add_active_node(current_node);
               }
             }            
@@ -635,7 +636,8 @@ namespace boost {
   } //namespace detail
   
   /**
-   * non-named-parameter version, given everything 
+   * non-named-parameter version, given everything
+   * this is the catch all version
    */			
   template <class Graph, class CapacityEdgeMap, class ResidualCapacityEdgeMap, class ReverseEdgeMap, 
     class PredecessorMap, class ColorMap, class DistanceMap, class IndexMap>
@@ -666,7 +668,7 @@ namespace boost {
     function_requires< Mutable_LvaluePropertyMapConcept<ColorMap,tVertex> >(); //write corresponding tree
     function_requires< Mutable_LvaluePropertyMapConcept<DistanceMap,tVertex> >(); //write distance to source/sink
     function_requires< ReadablePropertyMapConcept<IndexMap,tVertex> >(); //get index 0...|V|-1
-
+    assert(num_vertices(g) >= 2 && src != sink);
     detail::kolmogorov<Graph,CapacityEdgeMap,ResidualCapacityEdgeMap,ReverseEdgeMap,PredecessorMap, ColorMap,DistanceMap,IndexMap>
         algo(g, cap, res_cap, rev_map, pre_map, color, dist, idx, src, sink);
         return algo.max_flow();
@@ -676,7 +678,7 @@ namespace boost {
    * non-named-parameter version, given: capacity, residucal_capacity, reverse_edges, and an index map. Use this if you are only interested in the flow-value
    */
   template <class Graph, class CapacityEdgeMap, class ResidualCapacityEdgeMap, class ReverseEdgeMap, class IndexMap>
-   typename property_traits< typename property_map<Graph, edge_capacity_t>::const_type>::value_type
+  typename property_traits<CapacityEdgeMap>::value_type
    kolmogorov_max_flow
        (Graph& g,
        CapacityEdgeMap cap,
@@ -690,7 +692,6 @@ namespace boost {
      std::vector<typename graph_traits<Graph>::edge_descriptor> predecessor_vec(n_verts);
      std::vector<default_color_type> color_vec(n_verts);
      std::vector<typename graph_traits<Graph>::vertices_size_type> distance_vec(n_verts);
-
      return kolmogorov_max_flow
          (g, cap, res_cap, rev,
           make_iterator_property_map(predecessor_vec.begin(), idx),
@@ -704,7 +705,7 @@ namespace boost {
    * Use this if you are interested in the minimum cut, as the color map provides that info
    */
    template <class Graph, class CapacityEdgeMap, class ResidualCapacityEdgeMap, class ReverseEdgeMap, class ColorMap, class IndexMap>
-   typename property_traits< typename property_map<Graph, edge_capacity_t>::const_type>::value_type
+   typename property_traits<CapacityEdgeMap>::value_type
    kolmogorov_max_flow
        (Graph& g,
         CapacityEdgeMap cap,
