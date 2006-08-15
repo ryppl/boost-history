@@ -12,7 +12,7 @@
 //! \file boost/process/exceptions.hpp
 //!
 //! Includes the declaration of the exceptions thrown by the library:
-//! system_error.
+//! not_found_error and system_error.
 //!
 
 #if !defined(BOOST_PROCESS_EXCEPTIONS_HPP)
