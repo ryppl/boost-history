@@ -10,8 +10,11 @@
 #define BOOST_MATH_THROW_ON_DOMAIN_ERROR
 #endif
 
+#undef max      // avoid msvc macro conflict, gcc has no such problem
+
 #include <boost/math/special_functions/ellint_rf.hpp>
 #include <boost/math/special_functions/ellint_rj.hpp>
+#include <boost/math/constants/constants.hpp>
 #include <boost/math/tools/error_handling.hpp>
 
 // Elliptic integrals (complete and incomplete) of the third kind
@@ -23,29 +26,60 @@ namespace boost { namespace math {
 template <typename T>
 T ellint_pi(T v, T phi, T k)
 {
+    T value, aphi, w, x, y, z, p, t;
+
     using namespace std;
     using namespace boost::math::tools;
+    using namespace boost::math::constants;
 
     if (abs(k) > 1)
     {
         domain_error<T>("boost::math::ellint_pi(v, phi, k)",
             "domain error, |k| > 1, function requires |k| <= 1");
     }
-    if (abs(k) == 1)
+    if (v > 1)
     {
-        cout << "Warning: boost::math::ellint_pi, |k| = 1, "
-             << "may result in boost::math::ellint_rf "
-             << "or boost::math::ellint_rj domain error"
+        cout << "Warning: boost::math::ellint_pi, v > 1, integral is singular, "
+             << "Cauchy principal value is returned, but the result correctness "
+             << "is not guaranteed, use at your own risk"
              << endl;
     }
 
-    T x = cos(phi) * cos(phi);
-    T t = sin(phi) * sin(phi);
-    T y = 1.0L - k * k * t;
-    T z = 1.0L;
-    T p = 1.0L - v * t;
-    T value = sin(phi) * (ellint_rf(x, y, z) + v * t * ellint_rj(x, y, z, p) / 3.0L);
+    // Carlson's algorithm works only for |phi| <= 1/2,
+    // use the integrand's periodicity to normalize phi
+    aphi = abs(phi);
+    w = 2.0L * aphi / pi<T>();
+    if (w > std::numeric_limits<long long>::max())
+    {
+        value = w * ellint_pi(v, k);        // ignore normalization for huge w
+    }
+    else
+    {
+        long long n = static_cast<long long>(w), sign;
+        if (n % 2 == 0)                     // n is even
+        {
+            aphi = aphi - n * 0.5L * pi<T>();
+            sign = 1;
+        }
+        else                                // n is odd
+        {
+            n += 1;
+            aphi = n * 0.5L * pi<T>() - aphi;
+            sign = -1;
+        }
+        x = cos(aphi) * cos(aphi);
+        t = sin(aphi) * sin(aphi);
+        y = 1.0L - k * k * t;
+        z = 1.0L;
+        p = 1.0L - v * t;
+        value = sign * sin(aphi) * (ellint_rf(x, y, z) + v * t * ellint_rj(x, y, z, p) / 3.0L);
+        value += (n == 0) ? 0.0L : n * ellint_pi(v, k);
+    }
 
+    if (phi < 0)
+    {
+        value *= -1.0L;                     // odd function
+    }
     return value;
 }
 
@@ -61,12 +95,24 @@ T ellint_pi(T v, T k)
         domain_error<T>("boost::math::ellint_pi(v, k)",
             "domain error, |k| > 1, function requires |k| <= 1");
     }
-    if (abs(k) == 1)
+    if (v > 1)
     {
-        cout << "Warning: boost::math::ellint_pi, |k| = 1, "
-             << "may result in boost::math::ellint_rf "
-             << "or boost::math::ellint_rj domain error"
+        cout << "Warning: boost::math::ellint_pi, v > 1, integral is singular, "
+             << "Cauchy principal value is returned, but the result correctness "
+             << "is not guaranteed, use at your own risk"
              << endl;
+    }
+    if (abs(k) == 1 || v == 1)
+    {
+        if (std::numeric_limits<T>::has_infinity)
+        {
+            return std::numeric_limits<T>::infinity();
+        }
+        else
+        {
+            overflow_error<T>("boost::math::ellint_pi(v, k)",
+                              "infinity occurred but not supported");
+        }
     }
 
     T x = 0.0L;

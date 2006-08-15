@@ -29,14 +29,21 @@ T ellint_rc(T x, T y)
     using namespace std;
     using namespace boost::math::tools;
 
-    if (x < 0 || y <= 0)
+    if (x < 0 || y == 0)
     {
         domain_error<T>("boost::math::ellint_rc(x, y)",
-            "domain error, argument x must be non-negative and y must be positive");
+            "domain error, argument x must be non-negative and y must be nonzero");
     }
 
     // error scales as the 6th power of tolerance
     tolerance = pow(4.0L*std::numeric_limits<T>::epsilon(), 1.0L/6.0L);
+
+    // for y < 0, the integral is singular, return Cauchy principal value
+    if (y < 0)
+    {
+        x = x - y;
+        y = -y;
+    }
 
     // duplication
     for (k = 1; k < MAX_ITERATION; k++)
@@ -54,8 +61,12 @@ T ellint_rc(T x, T y)
     }
 
     // Taylor series expansion to the 5th order
-    value = S*S*(0.3L + S*(1.0L/7.0L + S*(0.375L + S*9.0L/22.0L))) / sqrt(u);
+    value = (1.0L + S*S*(0.3L + S*(1.0L/7.0L + S*(0.375L + S*9.0L/22.0L)))) / sqrt(u);
 
+    if (y < 0)
+    {
+        value *= sqrt(1.0L - y / x);
+    }
     return value;
 }
 

@@ -42,13 +42,13 @@ T ellint_e(T phi, T k)
     // use the integrand's periodicity to normalize phi
     aphi = abs(phi);
     w = 2.0L * aphi / pi<T>();
-    if (w > std::numeric_limits<long>::max())
+    if (w > std::numeric_limits<long long>::max())
     {
         value = w * ellint_e(k);            // ignore normalization for huge w
     }
     else
     {
-        long n = static_cast<long>(w), sign;
+        long long n = static_cast<long long>(w), sign;
         if (n % 2 == 0)                     // n is even
         {
             aphi = aphi - n * 0.5L * pi<T>();
