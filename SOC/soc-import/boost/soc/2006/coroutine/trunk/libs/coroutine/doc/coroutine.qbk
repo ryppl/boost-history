@@ -323,6 +323,13 @@ You can have more than one generator referring to the same body:
       100,
       200));
 
+[blurb __alert__ Do not confuse a /generator body/ with the 
+/generator itself/. The generator body is only the code that implement the
+generator behavior. The generator is composed of the body plus the
+current state (that is, the current call stack and the set of live
+local variables). Notice that two generators with the same generator
+signature and the same body are still two different generators.]
+
   while(generator_a != generator_type() && 
 	generator_b != generator_type()) 
     std::cout<<"generator_a is: "<<*generator_a++<<", "
@@ -494,7 +501,20 @@ in the two trees it check that the current leaf of  first tree is
 equal to the one in the second tree.
 
 The return value controls that both generators have reached the end:
-to have the same fringe, both trees must have the same number of leaves.
+to have the same fringe, both trees must have the same number of
+leaves.
+
+
+
+[blurb __alert__ [#recursive_generators] While a generator body
+can be recursive, a generator 
+is *never* recursive: a generator cannot call itself directly nor
+indirectly: a generator can freely call other functions, even other
+generators, but these cannot call the generator. This make sense
+because a generator can only be reentered after it has yielded
+control, and it is resumed at the exact point where it had yielded. An
+hypothetical recursive generator wouldn't know were to resume if it
+called itself because it had not yielded.]
 
 [h3 Solutions without coroutines]
 
@@ -679,7 +699,7 @@ choice.
 The simple solution presented [link generator_scheduler above] has a
 fundamental problem: if a task blocks waiting for I/O, all tasks are
 blocked. This is can be easily solved with asynchronous functions, but
-this will be explained in an [link advanced.asio advanced
+this will be explained in an [link advanced.events advanced
 section]. For now we will show a simplified example.
 
 [h3 Waiting for events]
@@ -826,7 +846,7 @@ In consumer: 3
 [h3 Conclusions]
 
 While this example is very simple and can't be easily extended to
-support system-generated events, but it shows how a more complex method
+support system-generated events, it shows how a more complex event framework
 can be implemented. In the advanced session we will see how
 __BoostAsio__ can be used as a scheduler and how coroutines can be
 adapted as callbacks to asynchronous functions.
@@ -917,6 +937,10 @@ the new value of `val`.
 When `accumulator` goes out of scope, the coroutine is destroyed in
 the same way generators are destroyed: it is resumed and __yield__()
 throws an instance of `__exit_exception__`.
+
+[blurb __alert__ Coroutines have the same limitation that generators
+[link recursive_generators have]: a coroutine can
+never be recursive.]
 
 [h3 Copyability]
  
@@ -1229,9 +1253,72 @@ describe more advanced features, including symmetric coroutines and
 event handling.
 
 [endsect]
+[endsect][/tutorial]
+
+[section:advanced Advanced concepts]
+
+[section:introduction Introduction]
+
+So far we have seen some arguably simple uses uses of coroutines
 
 [endsect]
 
+[section:symmetric_coroutines Symmetric coroutines]
+[endsect]
+
+[section:actors Actor Model]
+[endsect]
+
+[section:state_machines State machines]
+[endsect]
+
+[section:events Events: introducing futures]
+[endsect]
+
+[section:asio Events: Boost.Asio]
+[endsect]
+
+[section:threads Coroutines and thread safety]
+[endsect]
+
+[endsect][/advanced]
+
+[section:reference Reference]
+[endsect]
+
+[section:design Design Rationale]
+[h3 Reference counting and movability]
+[h3 Symmetric and asymmetric coroutines]
+[endsect]
+
+[section:todo What Else?]
+[h3 Introduction]
+[h3 Pipelining]
+[h3 Output iterators]
+[h3 Generator caching]
+[h3 Context caching]
+[endsect]
+
+[section:implementation Implementation]
+
+[h3 A simple trick, the Duff device]
+[h3 The stack switching model]
+[h3 The myth of a portable coroutine library]
+[h3 Extensibility]
+[h3 Wishlist: Compiler support for coroutines]
+
+[section:fibers Case study 1: Win32 Fibers]
+[endsect]
+[section:linuxasm Case study 2: Linux-x86-GCC]
+[endsect]
+
+[endsect]
+
+[section:acknowledgments Acknowledgements]
+[endsect]
+
+[section:bibliography Bibliography]
+[endsect]
   
 
  
