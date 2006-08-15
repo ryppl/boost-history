@@ -1,0 +1,43 @@
+Index: read_dimacs.hpp
+===================================================================
+RCS file: /cvsroot/boost/boost/boost/graph/read_dimacs.hpp,v
+retrieving revision 1.8
+diff -u -r1.8 read_dimacs.hpp
+--- read_dimacs.hpp	24 Mar 2005 14:54:08 -0000	1.8
++++ read_dimacs.hpp	15 Aug 2006 14:41:40 -0000
+@@ -9,15 +9,13 @@
+ 
+ /*
+   Reads maximal flow problem in extended DIMACS format.
+-  
+-  Reads from stdin. 
+-
+   This works, but could use some polishing. 
+ */
+ 
+ /* ----------------------------------------------------------------- */
+ 
+ #include <vector>
++#include <istream>
+ #include <stdio.h>
+ 
+ namespace boost {
+@@ -27,7 +25,8 @@
+                          CapacityMap capacity, 
+                          ReverseEdgeMap reverse_edge,
+                          typename graph_traits<Graph>::vertex_descriptor& src,
+-                         typename graph_traits<Graph>::vertex_descriptor& sink)
++                         typename graph_traits<Graph>::vertex_descriptor& sink,
++                         std::istream& in=std::cin)
+ {
+   //  const int MAXLINE = 100;      /* max line length in the input file */
+   const int ARC_FIELDS = 3;     /* no of fields in arc line  */
+@@ -114,7 +113,7 @@
+      -  does service functions
+   */
+ 
+-  while (std::getline(std::cin, in_line)) {
++  while (std::getline(in, in_line)) {
+     ++no_lines;
+ 
+     switch (in_line[0]) {
