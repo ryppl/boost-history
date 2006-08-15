@@ -31,14 +31,19 @@ exe generic
         generic.cpp
     ;
 
-exe pipeline
+exe pipeline_tutorial
     :
-        pipeline.cpp
+        pipeline_tutorial.cpp
     ;
 
 exe posix_communication
     :
         posix_communication.cpp
+    ;
+
+exe single_process_tutorial
+    :
+        single_process_tutorial.cpp
     ;
 
 exe win32_child

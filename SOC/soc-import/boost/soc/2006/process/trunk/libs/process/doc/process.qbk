@@ -38,7 +38,8 @@
 
 [include introduction.qbk]
 [include concepts.qbk]
+[include platforms.qbk]
 [include usage.qbk]
-[include examples.qbk]
+[include nonportable_usage.qbk]
 [xinclude autodoc.boostbook]
 [include acknowledgements.qbk]

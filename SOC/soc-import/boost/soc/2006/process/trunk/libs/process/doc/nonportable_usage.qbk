@@ -1,0 +1,209 @@
+[/
+ / Boost.Process
+ / Platform-specific usage chapter.
+ /
+ / Copyright (c) 2006 Julio M. Merino Vidal.
+ /
+ / Use, modification, and distribution is subject to the Boost Software
+ / License, Version 1.0.  (See accompanying file LICENSE_1_0.txt or copy
+ / at http://www.boost.org/LICENSE_1_0.txt.)
+ /]
+
+[/ ---------------------------------------------------------------------- ]
+
+[section Platform-specific usage]
+
+[/ ---------------------------------------------------------------------- ]
+
+[section The POSIX platform]
+
+[/ ---------------------------------------------------------------------- ]
+
+[section Interprocess communication]
+
+POSIX operating systems support more than three standard communication
+channels: any file descriptor can be configured to connect two different
+processes by using an anonymous pipe.  Boost.Process supports such features
+through the specialized [classref boost::process::posix_launcher
+posix_launcher] and [classref boost::process::posix_child posix_child]
+classes, both based on their corresponding operating system independent
+ones.
+
+The POSIX launcher implementation adds two additional functions to specify
+the behavior of non-standard file descriptors: [memberref
+boost::process::posix_launcher::set_input_behavior
+posix_launcher::set_input_behavior] and [memberref
+boost::process::posix_launcher::set_output_behavior
+posix_launcher::set_output_behavior].  The former is used to configure a
+child's input stream and the latter an output one.  Once the streams are
+configured and the child is running, the caller can use the [memberref
+boost::process::posix_child::get_input posix_child::get_input] and
+[memberref boost::process::posix_child::get_output posix_child::get_output]
+methods to obtain the corresponding C++ streams that interact with the
+child process.
+
+Non-standard streams can also be merged as described in the previous
+section.  This functionality is provided through the [memberref
+boost::process::posix_launcher::merge_outputs
+posix_launcher::merge_outputs] method.
+
+The above functions also support the configuration of the standard streams
+by using the `STDIN_FILENO`, `STDOUT_FILENO` and `STDERR_FILENO` constants
+defined in `cstdlib`.
+
+The [link boost_process.examples.pipelines POSIX communication] example
+illustrates the usage of these functions.
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
+[section Process credentials]
+
+Upon process startup, the parent can request the operating system to start
+a child process with different security credentials.  In a POSIX operating
+system this means changing the UID, the effective UID, the GID and/or the
+effective GID.  Boost.Process supports configuring these parameters through
+the use of the specialized [classref boost::process::posix_launcher
+posix_launcher].
+
+Note that changing the security credentials of a process is a privileged
+operation generally restricted to the super user.
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
+[section Root directory change]
+
+POSIX systems allow modifying a process' view of the file system by
+changing the directory considered as the file system's root.  This is done
+through the `chroot(2)` system call. The specialized [classref
+boost::process::posix_launcher POSIX launcher] supports chaning the root
+directory of a new process assuming that sufficient privileges are
+available (i.e. the caller must be the super user).
+
+See the [memberref boost::process::posix_launcher::set_chroot
+posix_launcher::set_chroot] method for more details.
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
+[section Examples]
+
+[/ ---------------------------------------------------------------------- ]
+
+[section POSIX communication]
+
+This example relies on features provided by POSIX operating systems and
+therefore it is not completely portable.  It shows how to set up multiple
+communication streams aside the three standard ones.  The program launches
+a new D-BUS session daemon and receives its bind address as well as its
+PID.  This information could later be used by the program to interact with
+the daemon using the D-BUS API.
+
+[include ../example/posix_communication.cpp c++ code]
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
+[section The Win32 platform]
+
+[/ ---------------------------------------------------------------------- ]
+
+[section Startup information]
+
+The Win32 `CreateProcess` system call receives a `STARTUPINFO` object that
+contains multiple details on how to configure the new process.  Among these
+are the handles for the three standard communication channels
+(internally set up by the library), hints to set up the application's main
+windows, etc.
+
+The [classref boost::process::win32_launcher Win32-specific launcher] can
+be used shall you need to provide some of this platform-specific
+information to the new process.  This class' constructor receives a
+pointer to an already initialized `STARTUPINFO` object that is later passed
+to the `CreateProcess` call.  If no such object is provided, the launcher
+behaves as the [classref boost::process::launcher generic launcher].
+
+Check out the [link boost_process.examples.win32_startup Win32 startup]
+example for a practical demonstration on the above features.
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
+[section Process information]
+
+The Win32 `CreateProcess` system call starts a new process and returns a
+handle and an identifier for both the application's process and its main
+thread.  This information can come useful in multiple situations,
+specially when interacting with the new process from the launcher
+application, so the library allows access to it.  However, this is
+Win32-specific behavior so it is only available by using a specialized
+Child object named `win32_child`.
+
+The [classref boost::process::win32_child win32_child] class provides
+access to the information described above and represents a running child
+process under the Win32 platform.  These child objects can only be
+constructed by using the [classref boost::process::win32_launcher
+Win32-specific launcher], even if the user does not need any extra
+features provided by that class.
+
+The [link boost_process.examples.win32_startup Win32 child] example
+provides a piece of code to illustrate how this works.
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
+[section Examples]
+
+[/ ---------------------------------------------------------------------- ]
+
+[section Win32 startup]
+
+This example relies on features provided by Win32 operating systems and
+therefore it is not completely portable.  It demonstrates how to start a
+GUI process with hints on how to create the main window.  The example
+passes the suggested window position as well as size, and then waits until
+the new process terminates.
+
+[include ../example/win32_startup.cpp c++ code]
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
+[section Win32 child]
+
+This example demonstrates how a program can retrieve all the information
+returned by Win32's `CreateProcess` system call; that is: the process' and
+primary thread's identifier and handle.  It relies on the Win32-specific
+launcher and child classes to be able to access this information.
+
+[include ../example/win32_child.cpp c++ code]
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
+[endsect]

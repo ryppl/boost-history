@@ -21,8 +21,6 @@
 
 namespace bp = ::boost::process;
 
-// ------------------------------------------------------------------------
-
 //
 // Helper function to print a command line's contents on a stream.
 // We can see here the interface exported by the command_line class and
@@ -47,8 +45,6 @@ operator<<(std::ostream& os, const bp::command_line& cl)
     return os;
 }
 
-// ------------------------------------------------------------------------
-
 //
 // Helper function that executes the given command line.
 //
@@ -69,8 +65,6 @@ run_it(const Command_Line& cl)
         std::cout << "     *** FAILURE ***" << std::endl;
     std::cout << std::endl;
 }
-
-// ------------------------------------------------------------------------
 
 int
 main(int argc, char* argv[])

@@ -200,10 +200,9 @@ the following.
 
 Boost.Process is constructed with portability in mind.  Both the POSIX
 process management model and the Win32 one are taken into account in the
-library and are supported by its API.  At the very least, the following
-systems are supposed to work: [@http://www.NetBSD.org/ NetBSD], Linux,
-[@http://www.apple.com/macosx/ Mac OS X] and
-[@http://www.microsoft.com/windows/ Windows] XP.
+library and are supported by its API.  More details are available in the
+[link boost_process.platforms_and_compilers platforms and compilers]
+chapter.
 
 To achieve this goal, the library provides a common and system-agnostic API
 that lets the developer manage processes without ever knowing the operating
