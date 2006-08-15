@@ -23,20 +23,46 @@
 
 namespace boost { namespace math {
 
+namespace ellint_rj_detail {
+
+template <typename T>
+int swap(T& x, T& y)
+{
+    T t;
+    t = x;
+    x = y;
+    y = t;
+    return 0;
+}
+
+// Sort three items in place in ascending order
+template <typename T>
+int sort3(T& x, T& y, T& z)
+{
+    if (x > y) { swap(x, y); }
+    if (x > z) { swap(x, z); }
+    if (y > z) { swap(y, z); }
+    return 0;
+}
+
+} // namespace ellint_rj_detail
+
 template <typename T>
 T ellint_rj(T x, T y, T z, T p)
 {
     T value, u, lambda, alpha, beta, sigma, factor, tolerance;
     T X, Y, Z, P, EA, EB, EC, E2, E3, S1, S2, S3;
+    T a, b, rho, tau;
     int k;
 
     using namespace std;
     using namespace boost::math::tools;
+    using namespace boost::math::ellint_rj_detail;
 
-    if (x < 0 || y < 0 || z < 0 || p <= 0)
+    if (x < 0 || y < 0 || z < 0 || p == 0)
     {
         domain_error<T>("boost::math::ellint_rj(x, y, z, p)",
-            "domain error, arguments x, y, z must be non-negative and p must be positive");
+            "domain error, arguments x, y, z must be non-negative and p must be nonzero");
     }
     if (x + y == 0 || y + z == 0 || z + x == 0)
     {
@@ -46,6 +72,17 @@ T ellint_rj(T x, T y, T z, T p)
 
     // error scales as the 6th power of tolerance
     tolerance = pow((1.0L/3.0L)*std::numeric_limits<T>::epsilon(), 1.0L/6.0L);
+
+    // for p < 0, the integral is singular, return Cauchy principal value
+    if (p < 0)
+    {
+        sort3(x, y, z);
+        a = 1.0L / (y - p);
+        b = a * (z - y) * (y - x);
+        rho = x * z / y;
+        tau = p * (1.0L + b / y);
+        p = y + b;
+    }
 
     // duplication
     sigma = 0.0L;
@@ -67,6 +104,7 @@ T ellint_rj(T x, T y, T z, T p)
         x = 0.25L * (x + lambda);
         y = 0.25L * (y + lambda);
         z = 0.25L * (z + lambda);
+        p = 0.25L * (p + lambda);
     }
     if (k >= MAX_ITERATION)             // virtually impossible
     {
@@ -84,6 +122,10 @@ T ellint_rj(T x, T y, T z, T p)
     S3 = P*((EA - EC)/3.0L - P*EA*3.0L/22.0L);
     value = 3.0L * sigma + factor * (S1 + S2 + S3) / (u * sqrt(u));
 
+    if (p < 0)
+    {
+        value = a*(b*value + 3.0L*(ellint_rc(rho, tau) - ellint_rf(x, y, z)));
+    }
     return value;
 }
 
