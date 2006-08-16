@@ -554,12 +554,33 @@ finalization.  For example:
     } else
         std::cout << "Abnormal program termination." << std::endl;
 
-[endsect]
+Of special interest are the values returned by [memberref
+boost::process::status::exit_status status::exit_status]', a method that
+can only be called when [memberref boost::process::status::exited
+status::exited] is `true`.  As the name states, this call returns the
+integer that the child program gave the operating system during exit.  For
+readability and portability reasons you should check the returned value
+against the standard macros defined in the `cstdlib` header, shown in the
+table:
+
+[table
+    [[Exit status] [Symbolic constant] [Typical value]]
+
+    [[Success.]
+     [`EXIT_SUCCESS`] [0]]
+
+    [[Failure.  Many applications will use multiple values to denote
+     denote different error conditions though, so do not assume that this
+     value alone is used to report a failed execution.]
+     [`EXIT_FAILURE`] [Not 0]]
+]
 
 The following complete code example illustrates how to start and stop
 multiple processes:
 
 [include ../example/generic.cpp c++ code]
+
+[endsect]
 
 [/ ---------------------------------------------------------------------- ]
 
