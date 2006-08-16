@@ -7,15 +7,21 @@
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
 #include <string>
-// This is a direct port of the pattern matching functionality, 
+// This is a direct port of the pattern matching algorithm, 
 // written in Lua, found in [Moura04b].
+//
+// The idea behind the algorithm is to use a goal driven desing:
+//
+//
 // It is slightly ineficient because it uses
 // boost::bind and the lack of decltype for automatic deduction of the return
 // type requires the use of boost::function to wrap the result
 // function object of prim, seq and alt in a known runtime-polymorphic type.
+//
 // While using coroutines for pattern matching is not the most
 // efficient solution, the elegance of this design can probably be matched 
 // only by an implementation using full continuations.
+//
 
 namespace coro = boost::coroutines;
 using coro::coroutine;

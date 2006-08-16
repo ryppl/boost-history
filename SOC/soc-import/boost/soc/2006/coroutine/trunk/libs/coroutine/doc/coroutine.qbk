@@ -76,6 +76,7 @@ abnormal_exit]]
 [def __OpenMP__ [@ link-to-openmp-webpage OpenMP]]
 [def __BoostAsio__ [link to-boost-asio Boost.Asio]]
 [def __BoostFunction__ [link to-boost-asio Boost.Function]]
+[def __complex_matcher_cpp__ [link to-complex_matcher.cpp complex_matcher.cpp]]
 
 [section:intro Introduction]
 
@@ -1441,7 +1442,7 @@ possible for example:
   [*A] yield to [*B] yield to [*C] yield to [*A] yield to [*B] ... etc
 ]
 
-[blurb __alert__ This is completely not true. We will [link
+[blurb __alert__ This is not completely true. We will [link
 symmetric_coroutines.symmetric_and_asymmetric_coroutine_transformation
 show] a code transformation that demonstrates how /asymmetric/ coroutines have the same
 expressive power of /symmetric/ coroutines.]
@@ -1587,10 +1588,11 @@ An asymmetric coroutine call can be implemented with `__yield_to__` by
 yielding to the called coroutine and passing as a parameter a
 reference to the caller coroutine. `__yield__` can be implemented 
 with a `__yield_to__` the caller. This transformation is extremely
-simple and intuitive. In fact the lowest level internals of the
-library only deal with a special `swap_context` works as an
+simple and intuitive. In fact the lowest levels of the
+library only deal with a special `swap_context`
+function. `swap_context` works as an
 argument-less `__yield_to__`. Both `__yield__` and `__yield_to__` are
-implemented in terms of `swap_context`.
+implemented in terms of this function.
 
 Implementing `__yield_to__` with only asymmetric coroutines is a bit
 more involved, but still straight forward. In fact we already did
@@ -1636,12 +1638,13 @@ In practice it is a sequence recognizer.
 The formal description of this state machine is the following:
 
 [variablelist States:
-[[A:] [ if input == 1 then { output '0',  state = B}  else { output
+[[A:] [ if input == `1` then { output `0`, state = B} else { output
 `0`,  state = A}]]
 [[B:] [ if input == `1` then { output `0`, state = C} else { output
 `0`, state = A}]]
 [[C:] [ if input == `1` then { output `0`, state = C} else { output
-`0`, state = A]]
+`1`, state = A}]]
+]
 
 The initial state is `A`. This FSM can be represented by the following
 Meley model:
@@ -1695,7 +1698,7 @@ While the transformation is straightforward, it doesn't make the code
 very readable. The simplicity of the informal description is
 lost. While this code might be acceptable for machine generated and
 maintained *FSM*, it is does not scale to large finite state machines
-that must be mantained by humans.
+that must be maintained by humans.
 
 With coroutines the straight forward transformation is:
 
@@ -1729,8 +1732,8 @@ done a control inversion and moved the external loop inside the
 fsm. 
 
 Let's examine the code more carefully and see if we can do better. The
-`m_state` variable and its assignements are just carefully concealed
-`goto` statement: 
+`m_state` variable and its assignments are just carefully concealed
+`goto` statements: 
 
   void fsm_goto(coroutine_type::self& self, char input) {
     while(true) {
@@ -1768,29 +1771,67 @@ Let's examine the code more carefully and see if we can do better. The
   }
 
 `fsm_goto` has lost the state variable `m_state`. The current state of
-the *FSM* is stored in the instruciton pointer and need not to be
+the *FSM* is stored in the instruction pointer and need not to be
 managed explicitly. On the other hand the control flow of the code has
-become explict and arguably more readable. Then again, calling a
-`goto` rich code readable might be a strech. Let's complete the opera
+become explicit and arguably more readable. Then again, calling
+readable a code
+full of `goto`s might be a stretch. Let's complete the opera
 and do the final transformation:
 
-  void fsm_structured(coroutine_type::self& self, char input) {
-    std::cout << '0';
+  void fsm_structured(coroutine_type::self& self, char) {
     while(true) {
-      if(self.yield() != '0') {
+      if(self.yield() == '1') {
         std::cout << '0';
-        if(self.yield() != '0') {
-	  std::cout << '0';
-	  if(self.yield() == '0') 
-	    std::cout << '1';
-	  else std::cout <<'0';
+        if(self.yield() == '1') {
+          std::cout << '0';
+          if(self.yield() == '0') 
+            std::cout << '1';
+          else std::cout <<'0';
         } else std::cout <<'0';
       } else std::cout <<'0';
     }
   }
 
-Now
+Now the code is much more readable. Also for simplicity we discard the
+first input: you should give a dummy char to the coroutine before
+feeding it with the input to be matched. The sequence of `if`s represent
+exactly the informal requirement of matching the sequence `110`. Note
+that this transformation can be easily extended to include regular
+expressions. For example a matcher for the regular expression `(01+010)`
+can be written as:
 
+  void fsm_regexp(coroutine_type::self& self, char) {
+    while(true) {
+      if(self.yield() == '0') {
+        std::cout << '0';
+        if(self.yield() == '1') {
+          std::cout << '0';
+          while(self.yield() == '1') 
+            std::cout << '0';
+          std::cout <<'0';
+          if(self.yield() == '1') {
+            std::cout << '0';
+            if(self.yield() == '0') {
+              std::cout << '1';
+            } else std::cout <<'0';
+          } else std::cout <<'0';
+        } else std::cout << '0';
+      } else std::cout <<'0';
+    } 
+  }
+
+Notice that the above coroutine will fail to match the last six digits
+of this pattern:
+
+  011011010
+
+This because when it sees the fourth `1`, while it was expecting a `0`,
+the state machine does not backtrack to match the `1+` pattern, but
+returns to the beginning of the pattern and tries to find a `0`.
+
+It is possible to implement backtracking elegantly with coroutines
+using a goal driven design, but it is beyond the scope of this
+document. See the example [^__complex_matcher_cpp__] for more details.
 
 [endsect]
 

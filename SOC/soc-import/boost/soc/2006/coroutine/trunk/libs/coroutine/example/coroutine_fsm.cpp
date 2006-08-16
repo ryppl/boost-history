@@ -70,8 +70,7 @@ void fsm_goto(coroutine_type::self& self, char input) {
   }
 }
 
-void fsm_structured(coroutine_type::self& self, char input) {
-  std::cout << '0';
+void fsm_structured(coroutine_type::self& self, char) {
   while(true) {
     if(self.yield() != '0') {
       std::cout << '0';
@@ -85,13 +84,19 @@ void fsm_structured(coroutine_type::self& self, char input) {
   }
 }
 
+template<typename F>
+F swallow(F f) {
+  f();
+  return move(f);
+}
+
 int main() {
   std::string input ("0110100010010001101001000111110010011001");
   std::for_each(input.begin(), input.end(), coroutine_type(fsm));
   std::cout <<"\n";
   std::for_each(input.begin(), input.end(), coroutine_type(fsm_goto));
   std::cout <<"\n";
-  std::for_each(input.begin(), input.end(), coroutine_type(fsm_structured));
+  std::for_each(input.begin(), input.end(), swallow(coroutine_type(fsm_structured)));
   std::cout <<"\n";
 
 }

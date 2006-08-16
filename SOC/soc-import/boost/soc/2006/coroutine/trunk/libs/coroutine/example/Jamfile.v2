@@ -39,3 +39,4 @@ exe consumer_producer_b : consumer_producer_b.cpp ;
 exe consumer_producer_c : consumer_producer_c.cpp ;
 exe switch_fsm : switch_fsm.cpp ;
 exe coroutine_fsm : coroutine_fsm.cpp ;
+exe coroutine_fsm_regexp : coroutine_fsm_regexp.cpp ;
