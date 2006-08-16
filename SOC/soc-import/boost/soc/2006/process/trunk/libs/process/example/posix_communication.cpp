@@ -42,8 +42,6 @@ extern "C" {
 
 namespace bp = ::boost::process;
 
-// ------------------------------------------------------------------------
-
 int
 main(int argc, char* argv[])
 {
