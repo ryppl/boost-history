@@ -38,7 +38,7 @@ int temme(T v, T x, T* K, T* K1)
 
     if (abs(v) > 0.5)
     {
-        domain_error<T>("boost::math::temme(v, x, &K, &K1)",
+        return domain_error<T>("boost::math::temme(v, x, &K, &K1)",
             "domain error, |v| too large, Temme series converge only for |v| <= 1/2");
     }
     // |x| <= 2, Temme series converge rapidly
@@ -225,7 +225,7 @@ int bessel_ik(T v, T x, T* I, T* K)
 
     if (x < 0)
     {
-        domain_error<T>("boost::math::bessel_ik(v, x, &I, &K)",
+        return domain_error<T>("boost::math::bessel_ik(v, x, &I, &K)",
             "domain error, real argument x must be non-negative, complex number not supported");
     }
     if (x == 0)

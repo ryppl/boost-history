@@ -34,7 +34,7 @@ T ellint_e(T phi, T k)
 
     if (abs(k) > 1)
     {
-        domain_error<T>("boost::math::ellint_e(phi, k)",
+        return domain_error<T>("boost::math::ellint_e(phi, k)",
             "domain error, |k| > 1, function requires |k| <= 1");
     }
 
@@ -84,7 +84,7 @@ T ellint_e(T k)
 
     if (abs(k) > 1)
     {
-        domain_error<T>("boost::math::ellint_e(k)",
+        return domain_error<T>("boost::math::ellint_e(k)",
             "domain error, |k| > 1, function requires |k| <= 1");
     }
     if (abs(k) == 1)

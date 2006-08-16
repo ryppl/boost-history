@@ -28,7 +28,7 @@ T bessel_kn(int n, T x)
 
     if (x < 0)
     {
-        domain_error<T>("boost::math::bessel_kn(n, x)",
+        return domain_error<T>("boost::math::bessel_kn(n, x)",
             "domain error, real argument x must be non-negative, complex number not supported");
     }
     if (x == 0)

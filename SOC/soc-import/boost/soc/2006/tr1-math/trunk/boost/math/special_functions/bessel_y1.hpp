@@ -116,7 +116,7 @@ T bessel_y1(T x)
 
     if (x < 0)
     {
-        domain_error<T>("boost::math::bessel_y1(x)",
+        return domain_error<T>("boost::math::bessel_y1(x)",
             "domain error, real argument x must be non-negative, complex number not supported");
     }
     if (x == 0)

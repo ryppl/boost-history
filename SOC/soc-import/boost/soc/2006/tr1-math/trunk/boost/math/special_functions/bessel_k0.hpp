@@ -86,7 +86,7 @@ T bessel_k0(T x)
 
     if (x < 0)
     {
-        domain_error<T>("boost::math::bessel_k0(x)",
+        return domain_error<T>("boost::math::bessel_k0(x)",
             "domain error, real argument x must be non-negative, complex number not supported");
     }
     if (x == 0)

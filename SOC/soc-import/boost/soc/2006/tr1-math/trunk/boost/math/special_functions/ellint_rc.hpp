@@ -31,7 +31,7 @@ T ellint_rc(T x, T y)
 
     if (x < 0 || y == 0)
     {
-        domain_error<T>("boost::math::ellint_rc(x, y)",
+        return domain_error<T>("boost::math::ellint_rc(x, y)",
             "domain error, argument x must be non-negative and y must be nonzero");
     }
 

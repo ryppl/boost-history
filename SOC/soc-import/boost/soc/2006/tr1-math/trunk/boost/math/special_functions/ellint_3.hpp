@@ -34,7 +34,7 @@ T ellint_pi(T v, T phi, T k)
 
     if (abs(k) > 1)
     {
-        domain_error<T>("boost::math::ellint_pi(v, phi, k)",
+        return domain_error<T>("boost::math::ellint_pi(v, phi, k)",
             "domain error, |k| > 1, function requires |k| <= 1");
     }
     if (v > 1)
@@ -92,7 +92,7 @@ T ellint_pi(T v, T k)
 
     if (abs(k) > 1)
     {
-        domain_error<T>("boost::math::ellint_pi(v, k)",
+        return domain_error<T>("boost::math::ellint_pi(v, k)",
             "domain error, |k| > 1, function requires |k| <= 1");
     }
     if (v > 1)

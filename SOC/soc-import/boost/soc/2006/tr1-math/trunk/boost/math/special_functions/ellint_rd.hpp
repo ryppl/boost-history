@@ -33,12 +33,12 @@ T ellint_rd(T x, T y, T z)
 
     if (x < 0 || y < 0 || z <= 0)
     {
-        domain_error<T>("boost::math::ellint_rd(x, y, z)",
+        return domain_error<T>("boost::math::ellint_rd(x, y, z)",
             "domain error, arguments x, y must be non-negative and z must be positive");
     }
     if (x + y == 0)
     {
-        domain_error<T>("boost::math::ellint_rd(x, y, z)",
+        return domain_error<T>("boost::math::ellint_rd(x, y, z)",
             "domain error, at most one argument can be zero");
     }
 

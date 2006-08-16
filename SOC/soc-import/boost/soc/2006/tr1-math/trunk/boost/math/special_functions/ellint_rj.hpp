@@ -61,12 +61,12 @@ T ellint_rj(T x, T y, T z, T p)
 
     if (x < 0 || y < 0 || z < 0 || p == 0)
     {
-        domain_error<T>("boost::math::ellint_rj(x, y, z, p)",
+        return domain_error<T>("boost::math::ellint_rj(x, y, z, p)",
             "domain error, arguments x, y, z must be non-negative and p must be nonzero");
     }
     if (x + y == 0 || y + z == 0 || z + x == 0)
     {
-        domain_error<T>("boost::math::ellint_rj(x, y, z, p)",
+        return domain_error<T>("boost::math::ellint_rj(x, y, z, p)",
             "domain error, at most one argument can be zero");
     }
 
