@@ -17,7 +17,9 @@ namespace boost { namespace coroutines {
 
     template<typename T1, typename T2>
     struct make_std_iterator {
-      typedef std::iterator<T1, T2> type;
+      typedef std::iterator<T2, 
+			    typename boost::remove_reference<T1>::type
+			    > type;
     };
   }
 
@@ -84,8 +86,7 @@ namespace boost { namespace coroutines {
     }
 
     value_type operator()() {
-      (*this)++;
-      return *m_val;
+      return *(*this)++;
     }
 
   private:

@@ -90,7 +90,6 @@ namespace boost { namespace coroutines { namespace detail {
     }
 #else
         
-  private:
     /* 
      * VC8.0 can't handle the call_traits meta-invocation inside
      * a function parameter list (except when it does, see operator()). 
@@ -130,7 +129,6 @@ namespace boost { namespace coroutines { namespace detail {
 		     coroutine_type::arg, call_arg));
 
 #undef BOOST_COROUTINE_param_typedef
-  public:
 #undef  BOOST_COROUTINE_param_with_default
 #define BOOST_COROUTINE_param_with_default(z, n, prefix_tuple) \
     BOOST_PP_CAT(BOOST_PP_CAT                                  \
@@ -175,6 +173,7 @@ namespace boost { namespace coroutines { namespace detail {
 
     BOOST_COROUTINE_NORETURN(void exit()) {
       m_pimpl -> exit_self();
+      abort();
     }
 
   private:

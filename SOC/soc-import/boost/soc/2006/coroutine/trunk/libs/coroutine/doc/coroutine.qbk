@@ -16,18 +16,27 @@
 [/ QuickBook Document verion 1.0]
 [/ Aug 10, 2006]
 
+[/ blurb icons]
 [def __alert__ [$alert.png]]
 [def __note__ [$note.png]]
 
+[/ pics]
+
+[def __MeleyFSM__ [$more.png]]
+
+[/ reference: classes and types]
 [def __coroutine__ [link boost::coroutines::coroutine coroutine]]
 [def __generator__ [link boost::coroutines::generator generator]]
 [def __shared_coroutine__ [link boost::coroutines::shared_coroutine
 shared_coroutine]] 
 [def __self__ [link boost::coroutines::coroutine::self self]]
 
+[/ reference: functions]
 [def __self_exit__  [link boost::coroutines::coroutine::self::exit exit]]
 [def __exit__  [link boost::coroutines::coroutine::exit exit]]
-[def __yield__     [link boost::coroutines::coroutine::self::yield yield]]
+[def __yield__     [link boost::coroutines::coroutine::self::yield
+yield]]
+[def __yield_to__     [link boost::coroutines::coroutine::self::yield_to yield_to]]
 [def __exited__     [link boost::coroutines::coroutine::exited
 exited]]
 [def __empty__     [link boost::coroutines::coroutine::empty empty]]
@@ -40,6 +49,7 @@ swap]]
 [def __mfswap__     [link boost::coroutines::coroutine::swap
 swap]]
 
+[/ exception]
 [def __exit_exception__ [link boost::coroutines::exit_exception
 exit_exception]]
 [def __coroutine_exited__ [link boost::coroutines::coroutine_exited
@@ -47,8 +57,7 @@ coroutine_exited]]
 [def __abnormal_exit__ [link boost::coroutines::abnormal_exit
 abnormal_exit]]
 
-[def __shared_ptr__ [link boost::shared_ptr shared_ptr]]
-
+[/ concepts]
 [def __Generator__ [link to-sgi-doc Generator]]
 [def __AdaptableGenerator__ [link to-concepts-doc AdaptableGenerator]]
 [def __Assignable__ [link to-concepts-doc Assignable]]
@@ -56,10 +65,14 @@ abnormal_exit]]
 [def __Swappable__ [link to-swappable-concept Swappable]]
 [def __DefaultConstructible__ [link to-sgi-concept DefaultConstructible]]
  
+
+[/ bibliography links]
 [def __marlin80__ [link to-marlin-doctoral-thesis-here \[Marlin80\]]]
 [def __moura04a__ [link to-moura-04-04 \[Moura04a\]]]
 [def __moura04b__ [link to-moura-04-15 \[Moura04b\]]]
+[def __ActorModel__ [link ref-to-actor-model-biblio \[ActorModel\]]]
 
+[/ external links]
 [def __OpenMP__ [@ link-to-openmp-webpage OpenMP]]
 [def __BoostAsio__ [link to-boost-asio Boost.Asio]]
 [def __BoostFunction__ [link to-boost-asio Boost.Function]]
@@ -409,6 +422,89 @@ if a generator ever gets a copy of its associated __generator__
 iterator, a cycle is formed and it could cause memory not to be
 reclaimed.]
 
+[#producer_consumer1]
+[h3 Example: producer/consumer]
+
+Generators can be used to straightforwardly model the ['consumer/producer] pattern. In
+this scenario one function generates values and another consumes
+them. The solution presented here is consumer driven, that is, the
+consumer dictates the speed at witch the producer generates
+values. In this example the producer generates all permutations of a
+given string, while the consumer simply print the output:
+
+  typedef coro::__generator__<int> generator_type;
+
+  const std::string& producer(generator_type::self& self, std::string base) {
+    std::sort(base.begin(), base.end());
+    do {
+      self.__yield__(base);
+    } while (std::next_permutation(base.begin(), base.end()));
+    self.__exit_self__();
+  }
+  
+  template<typename Producer> 
+  void consumer(Producer producer) {
+    do {
+      std::cout <<*producer << "\n";
+    } while(++producer);
+  }
+
+  ...
+  consumer
+   (generator_type
+    (boost::bind
+     (producer, _1, std::string("hello"))));
+  ...
+
+[blurb __alert__ __generator__ correctly handle reference
+and const references. You can even return a reference to a local
+object, but you must make sure that the object doesn't go out of scope
+while it is in use. This is why this example uses `operator*` and
+`operator++` instead of the simpler `operator()`. In fact this last member
+function correspond to  `*(*this)++`. Consider what would happen at
+the last iteration: it would first 
+copy the iterator (and thus store a reference to the last generated
+value), then increment it, restarting the generator body that would call
+`__self_exit__()`, destroying the local string and invalidating the
+reference; finally it would 
+return the dangling reference. Splitting the calls to the two member
+functions gives us a window where the reference is live.]
+
+This pattern is very useful and can be extended to insert another
+filter function between the producer and the consumer. This filter is
+both a producer and a consumer: it return the result of a call to the
+parameter producer with the string `" world"` appended:
+
+  struct filter {
+    typedef const std::string& result_type;
+
+    template<typename Producer>
+    const std::string& operator()
+      (generator_type::self& self, Producer producer) {
+      do {
+        self.yield(*producer + " world");
+      } while(++producer);
+      self.exit();
+    }
+  };
+
+  consumer
+    (generator_type
+     (boost::bind
+      (filter(),
+       _1,
+       generator_type
+       (boost::bind
+	(producer, _1, std::string("hello"))))));
+
+[blurb __note__ We have made `filter` a function object instead of a
+plain function because it is a template. If it were a template
+function, the compiler wouldn't know which function pointer pass to
+`bind`. This is just one of the multiple solutions to this recurring
+problem.]
+
+You can obviously have as many filters functions as you want.
+
 [endsect]
 [section:stackful Stackful generators: Same fringe problem]
 
@@ -421,11 +517,21 @@ yield from the main body: while it can
 call other functions (including other generators), they must all
 return before the generator can yield to the
 caller. That is, the generator's call stack must be empty when it
-yields.
+yields. This type of coroutines is sometime called /semi/-coroutine
+(__moura04b__) or simply generators. 
 
 Boost.Coroutine provides stackful coroutines and generators that
 can yield from deep inside nested functions. This makes them much more
 powerful than more limited form of generators.  
+
+We will prefer the term /semi/-coroutine to refer to these limited
+coroutines and generators. 
+
+[blurb __alert__ The term /semi/-coroutine is sometimes used to
+describe asymmetric coroutines, while symmetric coroutines are simply
+called coroutines. We will explain the difference between symmetric
+coroutines and asymmetric coroutines only in the [link
+advanced.symmetric_coroutines advanced section]]
 
 [h3 Same Fringe: the problem]
 
@@ -503,8 +609,6 @@ equal to the one in the second tree.
 The return value controls that both generators have reached the end:
 to have the same fringe, both trees must have the same number of
 leaves.
-
-
 
 [blurb __alert__ [#recursive_generators] While a generator body
 can be recursive, a generator 
@@ -964,7 +1068,7 @@ coroutine is also __Swappable__ and __DefaultConstructible__.
 
 Unfortunately most libraries expect copyable types and do not support
 moving. For interoperability with this libraries you should use
-a `__shared_ptr__` to manage the lifetime of a
+a `shared_ptr` to manage the lifetime of a
 `__coroutine__`. 
 
 Boost.Coroutine also provides the
@@ -1018,6 +1122,9 @@ waiting mechanics and will be explained [link advanced.events later].
 
 Both `__coroutine__::__mfswap__()` and a friend `__swap__()` are
 provided with the usual semantics.
+
+The `__yield_to__()` member function will be explained in an advanced
+section about [link advanced.symmetric_coroutines symmetric coroutines].
 
 [h3 Multiple arguments and return values]
 
@@ -1109,6 +1216,16 @@ requires support for more arguments from other boost components
 (at least Boost.Tuple and Boost.MPL), thus this cap
 cannot be modified easily.] 
   
+[blurb __alert__ Both `__coroutine__::operator()` and
+`__coroutine__::__yield__` can be called with a smaller amount of
+arguments than required by the `__coroutine__` signature. The
+rightmost missing arguments are default constructed. This is an
+artifact of the current implementation, and at least in one instance
+has caused an hard to find bug. You shouldn't rely on this feature
+that will be probably removed from future versions of
+Boost.Coroutines. Finally note that non default
+constructible arguments cannot be omitted.]
+
 [h3 Behind generators]
 
 To complete the tour of the basic capabilities of Boost.Coroutine we
@@ -1245,6 +1362,40 @@ Will be invoked like this:
 
   boost::optional<int> res = my_coro(std::nothrow, 10000L, 10.7, 'a');
 
+[#producer_consumer2]
+[h3 Example: producer/consumer revisited]
+
+A [link producer_consumer1 previous example] presented a consumer
+driven version of the ['producer/consumer] pattern. We will now
+implement a producer driven example of the same scenario:
+
+  typedef coroutine<void(const std::string&)> coroutine_type;
+
+  template<typename Consumer>
+  void producer(Consumer consumer, std::string base) {
+    std::sort(base.begin(), base.end());
+    do {
+      consumer(base);
+    } while (std::next_permutation(base.begin(), base.end()));
+  }
+
+  void consumer(coroutine_type::self& self, const std::string& value) {
+    std::cout << value << "\n";
+    while(true) {
+      std::cout << self.yield()<< "\n";
+    } 
+  }
+
+[blurb __note__ __coroutine__ too correctly handles reference
+types. This specific example doesn't have the reference lifetimes
+issues the [link producer_consumer1 previous] had, but coroutines
+aren't in general immune to them.]
+
+Here we take advantage of the capability to pass arguments in a
+coroutine invocation to reverse the leading role of the
+pattern. Extending this pattern to support filter functions is left as
+an exercise for the reader.
+
 [h3 Conclusions]
 
 We have now terminated our tour on the basic capabilities of
@@ -1259,17 +1410,388 @@ event handling.
 
 [section:introduction Introduction]
 
-So far we have seen some arguably simple uses uses of coroutines
+So far we have only seen some arguably simple uses of coroutines,
+mostly as generators and iterators. We have only scratched the surface
+of more advanced usage when we used generators to implement cooperative
+multitasking. In this section will now explore some more advanced
+usages, including as [link advanced.actors actors in the actor model]
+and as [link advanced.state_machines state machines]. Finally we will
+learn to use Boost.Coroutine support for [link advanced.events events] and its integration
+with [link advanced.asio __BoostAsio__].
 
 [endsect]
 
 [section:symmetric_coroutines Symmetric coroutines]
+
+[h3 Introduction]
+
+The type of coroutines we have described so far is usually referred as
+/asymmetric/. The asymmetry is due to the fact that the caller/callee
+relation between a coroutine's context and caller's context is
+fixed. The control flow must necessarily go from the caller context to
+the coroutine context and back to the caller. In this model a
+coroutine [*A] can obviously call coroutine [*B], but [*A] becomes the
+caller. [*B] cannot directly yield to the caller of [*A] but must
+relinquish control to [*A] by yielding. For example, this control flow is not
+possible for example:
+
+[#symmetric_example]
+
+[pre
+  [*A] yield to [*B] yield to [*C] yield to [*A] yield to [*B] ... etc
+]
+
+[blurb __alert__ This is completely not true. We will [link
+symmetric_coroutines.symmetric_and_asymmetric_coroutine_transformation
+show] a code transformation that demonstrates how /asymmetric/ coroutines have the same
+expressive power of /symmetric/ coroutines.]
+
+Control flow with /symmetric/ coroutines instead is not stack-like. A
+coroutine can always yield freely to any other coroutine and is not
+restricted to return to its caller. The [link symmetric_example
+previous] control flow is possible.
+
+[h3 Syntax]
+
+While /asymmetric/ coroutines are the main abstraction provided by
+Boost.Coroutine, a /symmetric/ coroutine facility is also provided.
+
+The __coroutine__ class template has an the `__yield_to__()` member
+function that can be used to stop the current coroutine and yield
+control to a different __coroutine__. It works exactly like
+`__yield__()`, except that the control is not returned to the caller
+but to another coroutine, specified as the first argument of
+`__yield_to__`. The target coroutine can be any other coroutine for
+witch one of these is true:
+
+* Has not been started yet.
+* Is stopped in a call to `__yield__`.
+* Is stopped in a call to `__yield_to__`.
+
+From the above conditions it follows that a __coroutine__ can yield to
+itself (in this case `__yield_to__` act as a null operation).
+
+If  coroutine  [*A]  yields to coroutine [*B], the caller
+of *A* becomes the caller of [*B]. If [*B] ever does a normal yield, the
+control is given back to the caller of [*A].
+
+[blurb __alert__ Do not confuse /calls/ with /yields to/. The first
+verb implies an invocation of `__coroutine__::operator()`, while the
+second an invocation of `__coroutine__::__yield_to__`. A coroutine
+that yields to a second *does not* call the second one.]
+
+As Boost.Coroutine strives for type safety, it requires that the return type
+of the yielded coroutine be the same of the yielder. For example,
+given these three coroutines:
+
+  typedef __coroutine__<int(char*, float&)> coroutine1_type;
+  typedef __coroutine__<int(int, float)> coroutine2_type;
+  typedef __coroutine__<void *(const& char)> coroutine3_type;
+
+  coroutine1_type coroutine1(coroutine1_body);
+  coroutine2_type coroutine2(coroutine2_body);
+  coroutine3_type coroutine2(coroutine3_body);
+
+This code is legal:
+
+   //in coroutine1_body:
+   self.__yield_to__(coroutine2, 10, 0.0);
+
+This is not:
+
+   //in coroutine1_body
+   self.__yield_to__(coroutine3, 'a'); // return type mismatch!
+
+There is no restriction on the argument type. 
+
+[blurb __alert__ `__yield_to__()` is like `goto` on steroid. While it
+can be extremely expressive and powerful, if it used without care and
+discipline can easily lead to spaghetti code.]
+
+[h3 Producer/consumer revisited (again)]
+
+We have explored the [link producer_consumer1 consumer] and
+[link producer_consumer2 producer] driven versions of this path
+before. In this third installment we will implement the pattern with
+the producer and the consumer as peers, implementing them as symmetric
+coroutines. The implementation is straight forward. These the our
+consumer and the producer bodies: 
+
+  void producer_body(producer_type::self& self, 
+	  	     std::string base, 
+		     consumer_type& consumer) {
+    std::sort(base.begin(), base.end());
+    do {
+      self.yield_to(consumer, base);
+    } while (std::next_permutation(base.begin(), base.end()));
+  }
+
+  void consumer_body(consumer_type::self& self, 
+	  	     const std::string& value,
+		     producer_type& producer) {
+    std::cout << value << "\n";
+    while(true) {
+      std::cout << self.yield_to(producer)<< "\n";
+    } 
+  }
+
+Creating the coroutines themselves is done as usual:
+
+  producer_type producer;
+  consumer_type consumer;
+    
+  producer = producer_type
+    (boost::bind
+     (producer_body, 
+      _1, 
+      "hello", 
+      boost::ref(consumer)));
+
+  consumer = consumer_type
+    (boost::bind
+     (consumer_body, 
+      _1,
+      _2,
+      boost::ref(producer)));
+       
+Note how we default construct both `producer` and `consumer` before
+actually initializing them with the bodies: we need to pass to
+each coroutine a reference to the other. Also note the use of
+`boost::ref` to prevent `boost::bind` to try to copy our non copyable
+coroutines. 
+
+We can start the machinery indifferently from the producer:
+
+  ...
+  producer();
+  ...
+
+Or from the consumer:
+
+  ...
+  consumer (std::string());
+  ...
+
+We need to provide an argument to the consumer because it expect to
+receive a value the first time it is called. For simplicity we
+provided an empty string. A better solution would have had the
+consumer accept `boost::optional<const std::string&>`.
+
+[h3 Symmetric and asymmetric coroutine transformation]
+
+To conclude this section we demonstrate that both symmetric and
+asymmetric coroutines have the same expressive power, that is each
+type can be expressed in term of the other.
+
+An asymmetric coroutine call can be implemented with `__yield_to__` by
+yielding to the called coroutine and passing as a parameter a
+reference to the caller coroutine. `__yield__` can be implemented 
+with a `__yield_to__` the caller. This transformation is extremely
+simple and intuitive. In fact the lowest level internals of the
+library only deal with a special `swap_context` works as an
+argument-less `__yield_to__`. Both `__yield__` and `__yield_to__` are
+implemented in terms of `swap_context`.
+
+Implementing `__yield_to__` with only asymmetric coroutines is a bit
+more involved, but still straight forward. In fact we already did
+implement a form of it in our [link generator_scheduler scheduler
+example]. A dispatch loop invokes the first coroutine. This
+coroutine then chooses the next coroutine to run by returning to the
+dispatcher the address of the target coroutine. The dispatch loop then
+execute that coroutine and so on.
+
+In conclusion Boost.Coroutine could implement only one of the two
+models and not loose expressiveness. Given a choice we would implement
+asymmetric coroutines because they are simpler to understand, safer
+and have a broader application. We decided to provide both models for
+convenience. 
+
 [endsect]
 
-[section:actors Actor Model]
-[endsect]
+[/ section:actors Actor Model]
 
-[section:state_machines State machines]
+[/ The actor model (__ActorModel__)]
+
+[/ endsect]
+
+[section:finite_state_machines Finite state machines]
+
+[h3 Introduction]
+
+Finite state machines are a model of computation that consist in a set of
+states, the set of input symbols, a function that maps every tuple
+`(input, state)` to new state  and the actions performed at each
+state. A complete exposition of the concept is beyond the scope of this
+documentation. Here we will show how coroutines are a straightforward
+implementation of this model.
+
+[h3 Sequence recognizer]
+
+Consider a state machine that implements this behavior:
+
+[:For every input, output '1' if the last three inputs where `110`, `0` otherwise .]
+
+In practice it is a sequence recognizer.
+  
+The formal description of this state machine is the following:
+
+[variablelist States:
+[[A:] [ if input == 1 then { output '0',  state = B}  else { output
+`0`,  state = A}]]
+[[B:] [ if input == `1` then { output `0`, state = C} else { output
+`0`, state = A}]]
+[[C:] [ if input == `1` then { output `0`, state = C} else { output
+`0`, state = A]]
+
+The initial state is `A`. This FSM can be represented by the following
+Meley model:
+
+__MeleyFSM__
+
+For example, given the input:
+
+  0110100010010001101001000111110010011001
+
+The output will be:
+
+  0001000000000000010000000000001000000100
+
+This state machine can be implemented in `C++` directly from it
+definition, using a `switch` statement inside a stateful function
+object:
+
+  struct fsm {
+    void operator() (char input_) {
+      bool input = input_ != '0';
+      switch(m_state) {
+      case A:
+        std::cout <<"A";
+        m_state = input? B : C;
+        break;
+      case B:
+        std::cout <<"B";
+        m_state = input? C : D;
+        break;
+      case C:
+        std::cout <<"C";
+        m_state = input? B : A;
+        break;
+      case D:
+        std::cout <<"D";
+        m_state = input? A : C;
+        break;
+      };
+    }
+
+    fsm() :
+      m_state(A) {}
+
+    enum state { A, B, C, D};
+    state m_state;
+  };
+
+Each `case` block directly implements its corresponding state.
+While the transformation is straightforward, it doesn't make the code
+very readable. The simplicity of the informal description is
+lost. While this code might be acceptable for machine generated and
+maintained *FSM*, it is does not scale to large finite state machines
+that must be mantained by humans.
+
+With coroutines the straight forward transformation is:
+
+  typedef coro::__coroutine__<void(char)> coroutine_type;
+
+  enum state { A, B, C};	
+  void fsm(coroutine_type::self& self, char input_) {
+    state m_state = A;
+    while(true) {
+      bool input = input_ != '0';
+      switch(m_state) {
+      case A:
+        std::cout << (input? '0' : '0');
+        m_state = input? B : A;
+        break;
+      case B:
+        std::cout << (input? '0' : '0');
+        m_state = input? C : A;
+        break;
+      case C:
+        std::cout << (input? '0' : '1');
+        m_state = input? C : A;
+        break;
+      }
+      input_ = self.yield();
+    }
+  }
+
+We haven't gained much with this transformation. We have simply
+done a control inversion and moved the external loop inside the
+fsm. 
+
+Let's examine the code more carefully and see if we can do better. The
+`m_state` variable and its assignements are just carefully concealed
+`goto` statement: 
+
+  void fsm_goto(coroutine_type::self& self, char input) {
+    while(true) {
+    A:
+      if(input != '0') {
+        std::cout << '0';
+        input = self.yield();
+        goto B;
+      } else {
+        std::cout << '0';
+        input = self.yield();
+        goto A;
+      }
+    B:
+      if(input != '0') {
+        std::cout << '0';
+        input = self.yield();
+        goto C;
+      } else {
+        std::cout << '0';
+        input = self.yield();
+        goto A;
+      }
+    C:
+      if(input != '0') {
+        std::cout << '0';
+        input = self.yield();
+        goto C;
+      } else {
+        std::cout << '1';
+        input = self.yield();
+        goto A;
+      }
+    }
+  }
+
+`fsm_goto` has lost the state variable `m_state`. The current state of
+the *FSM* is stored in the instruciton pointer and need not to be
+managed explicitly. On the other hand the control flow of the code has
+become explict and arguably more readable. Then again, calling a
+`goto` rich code readable might be a strech. Let's complete the opera
+and do the final transformation:
+
+  void fsm_structured(coroutine_type::self& self, char input) {
+    std::cout << '0';
+    while(true) {
+      if(self.yield() != '0') {
+        std::cout << '0';
+        if(self.yield() != '0') {
+	  std::cout << '0';
+	  if(self.yield() == '0') 
+	    std::cout << '1';
+	  else std::cout <<'0';
+        } else std::cout <<'0';
+      } else std::cout <<'0';
+    }
+  }
+
+Now
+
+
 [endsect]
 
 [section:events Events: introducing futures]
@@ -1288,10 +1810,12 @@ So far we have seen some arguably simple uses uses of coroutines
 
 [section:design Design Rationale]
 [h3 Reference counting and movability]
+[h3 No `current_coroutine`]
+[h3 Main context is not a coroutine]
 [h3 Symmetric and asymmetric coroutines]
 [endsect]
 
-[section:todo What Else?]
+[section:todo The future]
 [h3 Introduction]
 [h3 Pipelining]
 [h3 Output iterators]
@@ -1299,13 +1823,17 @@ So far we have seen some arguably simple uses uses of coroutines
 [h3 Context caching]
 [endsect]
 
+[section:internals Internals]
+
 [section:implementation Implementation]
 
 [h3 A simple trick, the Duff device]
 [h3 The stack switching model]
 [h3 The myth of a portable coroutine library]
 [h3 Extensibility]
-[h3 Wishlist: Compiler support for coroutines]
+[h3 A wild dream: Compiler support for coroutines]
+
+[endsect]
 
 [section:fibers Case study 1: Win32 Fibers]
 [endsect]
