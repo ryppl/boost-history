@@ -59,7 +59,7 @@ test_getters(void)
     pi.hThread = (HANDLE)0x5678;
     pi.dwThreadId = 2222;
 
-    file_handle fh;
+    bpd::file_handle fh;
 
     bp::win32_child c = bpd::factories::create_win32_child(pi, fh, fh, fh);
 
