@@ -6,10 +6,6 @@
 #ifndef BOOST_MATH_ELLINT_3_HPP
 #define BOOST_MATH_ELLINT_3_HPP
 
-#ifndef BOOST_MATH_THROW_ON_DOMAIN_ERROR
-#define BOOST_MATH_THROW_ON_DOMAIN_ERROR
-#endif
-
 #undef max      // avoid msvc macro conflict, gcc has no such problem
 
 #include <boost/math/special_functions/ellint_rf.hpp>

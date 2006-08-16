@@ -6,10 +6,6 @@
 #ifndef BOOST_MATH_BESSEL_K1_HPP
 #define BOOST_MATH_BESSEL_K1_HPP
 
-#ifndef BOOST_MATH_THROW_ON_DOMAIN_ERROR
-#define BOOST_MATH_THROW_ON_DOMAIN_ERROR
-#endif
-
 #include <boost/math/tools/rational.hpp>
 #include <boost/math/tools/error_handling.hpp>
 #include <boost/assert.hpp>

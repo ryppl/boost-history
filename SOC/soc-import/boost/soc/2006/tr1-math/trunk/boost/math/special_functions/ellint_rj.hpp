@@ -6,10 +6,6 @@
 #ifndef BOOST_MATH_ELLINT_RJ_HPP
 #define BOOST_MATH_ELLINT_RJ_HPP
 
-#ifndef BOOST_MATH_THROW_ON_DOMAIN_ERROR
-#define BOOST_MATH_THROW_ON_DOMAIN_ERROR
-#endif
-
 #define MAX_ITERATION 100000
 #define MAX2(a, b) ( (a) > (b) ? (a) : (b) )
 #define MAX4(a, b, c, d) ( MAX2(MAX2(a, b), MAX2(c, d)) )

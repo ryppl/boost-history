@@ -6,10 +6,6 @@
 #ifndef BOOST_MATH_BESSEL_Y0_HPP
 #define BOOST_MATH_BESSEL_Y0_HPP
 
-#ifndef BOOST_MATH_THROW_ON_DOMAIN_ERROR
-#define BOOST_MATH_THROW_ON_DOMAIN_ERROR
-#endif
-
 #include <boost/math/special_functions/bessel_j0.hpp>
 #include <boost/math/constants/constants.hpp>
 #include <boost/math/tools/rational.hpp>

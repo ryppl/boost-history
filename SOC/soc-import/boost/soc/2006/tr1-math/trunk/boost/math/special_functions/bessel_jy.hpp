@@ -6,10 +6,6 @@
 #ifndef BOOST_MATH_BESSEL_JY_HPP
 #define BOOST_MATH_BESSEL_JY_HPP
 
-#ifndef BOOST_MATH_THROW_ON_DOMAIN_ERROR
-#define BOOST_MATH_THROW_ON_DOMAIN_ERROR
-#endif
-
 #define MAX_ITERATION 100000
 #define SIGN(x) ( (x) == 0 ? 0 : ( (x) > 0 ? 1 : -1 ) )
 #undef min      // avoid msvc macro conflict, gcc has no such problem

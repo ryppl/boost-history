@@ -6,10 +6,6 @@
 #ifndef BOOST_MATH_BESSEL_KN_HPP
 #define BOOST_MATH_BESSEL_KN_HPP
 
-#ifndef BOOST_MATH_THROW_ON_DOMAIN_ERROR
-#define BOOST_MATH_THROW_ON_DOMAIN_ERROR
-#endif
-
 #include <boost/math/special_functions/bessel_k0.hpp>
 #include <boost/math/special_functions/bessel_k1.hpp>
 #include <boost/math/tools/error_handling.hpp>

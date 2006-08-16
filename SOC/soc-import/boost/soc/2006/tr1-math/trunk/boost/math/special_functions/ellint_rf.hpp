@@ -6,10 +6,6 @@
 #ifndef BOOST_MATH_ELLINT_RF_HPP
 #define BOOST_MATH_ELLINT_RF_HPP
 
-#ifndef BOOST_MATH_THROW_ON_DOMAIN_ERROR
-#define BOOST_MATH_THROW_ON_DOMAIN_ERROR
-#endif
-
 #define MAX_ITERATION 100000
 #define MAX3(a, b, c) ( (a)>(b) ? (a)>(c)?(a):(c) : (b)>(c)?(b):(c) )
 
