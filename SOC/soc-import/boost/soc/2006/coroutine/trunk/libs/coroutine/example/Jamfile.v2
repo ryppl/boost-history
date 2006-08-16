@@ -34,3 +34,8 @@ exe token_passing_baseline : token_passing_baseline.cpp : <cflags>-march=pentium
 exe complex_matcher : complex_matcher.cpp ;
 exe scheduler : scheduler.cpp ;
 exe scheduler_wait : scheduler_wait.cpp ;
+exe consumer_producer_a : consumer_producer_a.cpp ;
+exe consumer_producer_b : consumer_producer_b.cpp ;
+exe consumer_producer_c : consumer_producer_c.cpp ;
+exe switch_fsm : switch_fsm.cpp ;
+exe coroutine_fsm : coroutine_fsm.cpp ;
