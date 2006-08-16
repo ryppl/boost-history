@@ -43,15 +43,8 @@ inline T bessel_syv(unsigned n, T x)
     T v = n + 0.5L;
     if (x == 0)
     {
-        if (std::numeric_limits<T>::has_infinity)
-        {
-            return -std::numeric_limits<T>::infinity();
-        }
-        else
-        {
-            overflow_error<T>("boost::math::bessel_syv(n, x)",
-                              "infinity occurred but not supported");
-        }
+        return -overflow_error<T>("boost::math::bessel_syv(n, x)",
+            "infinity occurred but not supported");
     }
     else
     {

@@ -117,15 +117,8 @@ T bessel_y1(T x)
     }
     if (x == 0)
     {
-        if (std::numeric_limits<T>::has_infinity)
-        {
-            return -std::numeric_limits<T>::infinity();
-        }
-        else
-        {
-            overflow_error<T>("boost::math::bessel_y1(x)",
-                              "infinity occurred but not supported");
-        }
+        return -overflow_error<T>("boost::math::bessel_y1(x)",
+            "infinity occurred but not supported");
     }
     if (x <= 4.0)                       // x in (0, 4]
     {

@@ -29,15 +29,8 @@ T bessel_kn(int n, T x)
     }
     if (x == 0)
     {
-        if (std::numeric_limits<T>::has_infinity)
-        {
-            return std::numeric_limits<T>::infinity();
-        }
-        else
-        {
-            overflow_error<T>("boost::math::bessel_kn(n, x)",
-                              "infinity occurred but not supported");
-        }
+        return overflow_error<T>("boost::math::bessel_kn(n, x)",
+            "infinity occurred but not supported");
     }
 
     if (n == 0)

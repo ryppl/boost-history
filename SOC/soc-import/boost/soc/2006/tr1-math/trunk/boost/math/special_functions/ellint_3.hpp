@@ -100,15 +100,8 @@ T ellint_pi(T v, T k)
     }
     if (abs(k) == 1 || v == 1)
     {
-        if (std::numeric_limits<T>::has_infinity)
-        {
-            return std::numeric_limits<T>::infinity();
-        }
-        else
-        {
-            overflow_error<T>("boost::math::ellint_pi(v, k)",
-                              "infinity occurred but not supported");
-        }
+        return overflow_error<T>("boost::math::ellint_pi(v, k)",
+            "infinity occurred but not supported");
     }
 
     T x = 0.0L;

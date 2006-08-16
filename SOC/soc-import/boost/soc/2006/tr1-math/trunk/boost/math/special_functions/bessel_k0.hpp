@@ -87,15 +87,8 @@ T bessel_k0(T x)
     }
     if (x == 0)
     {
-        if (std::numeric_limits<T>::has_infinity)
-        {
-            return std::numeric_limits<T>::infinity();
-        }
-        else
-        {
-            overflow_error<T>("boost::math::bessel_k0(x)",
-                              "infinity occurred but not supported");
-        }
+        return overflow_error<T>("boost::math::bessel_k0(x)",
+            "infinity occurred but not supported");
     }
     if (x <= 1.0)                       // x in (0, 1]
     {

@@ -83,15 +83,8 @@ T ellint_k(T k)
     }
     if (abs(k) == 1)
     {
-        if (std::numeric_limits<T>::has_infinity)
-        {
-            return std::numeric_limits<T>::infinity();
-        }
-        else
-        {
-            overflow_error<T>("boost::math::ellint_k(k)",
-                              "infinity occurred but not supported");
-        }
+        return overflow_error<T>("boost::math::ellint_k(k)",
+            "infinity occurred but not supported");
     }
 
     T x = 0.0L;
