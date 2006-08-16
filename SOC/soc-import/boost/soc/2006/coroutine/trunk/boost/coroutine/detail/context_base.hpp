@@ -244,7 +244,7 @@ namespace boost { namespace coroutines { namespace detail {
       BOOST_ASSERT(!(n<0));
       BOOST_ASSERT(m_exit_state < ctx_exit_signaled); //prevent infinite loop
       BOOST_ASSERT(running());
-      BOOST_ASSERT((!pending() < n));
+      BOOST_ASSERT(!(pending() < n));
 
       if(n == 0) return;
       m_wait_counter = n;

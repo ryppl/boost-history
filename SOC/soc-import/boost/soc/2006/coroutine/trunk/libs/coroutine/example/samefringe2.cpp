@@ -100,7 +100,9 @@ element make_tree(meta::leaf<A> const&) {
 }
 
 typedef generator<leaf> generator_type;
-leaf tree_leaves(generator_type::self& self, element& tree) {
+
+leaf
+tree_leaves(generator_type::self& self, element& tree) {
   if (is_leaf(tree)) {
     self.yield(boost::get<leaf>(tree));
   } else {
@@ -108,6 +110,7 @@ leaf tree_leaves(generator_type::self& self, element& tree) {
     tree_leaves(self, boost::get<node>(tree).second);
   }
   self.exit();
+  return 0;
 }
 
 bool same_fringe(const element& tree1, const element& tree2) {

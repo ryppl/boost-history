@@ -3,6 +3,7 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #include <cstdlib>
 #include <iostream>
+#include <string>
 #include <algorithm>
 #include <boost/bind.hpp>
 #include <boost/coroutine/coroutine.hpp>
@@ -28,12 +29,15 @@ void consumer_body(consumer_type::self& self,
 		   producer_type& producer) {
   std::cout << value << "\n";
   while(true) {
-    std::cout << self.yield_to(producer)<< "\n";
+    std::cout << self.yield_to(producer) << "\n";
   } 
 }
 
 int main() {
   {
+    std::string test("test");
+    std::cout << test;
+
     producer_type producer;
     consumer_type consumer;
     

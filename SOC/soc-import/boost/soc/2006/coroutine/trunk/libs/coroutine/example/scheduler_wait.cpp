@@ -6,7 +6,8 @@
 #include <boost/coroutine/generator.hpp>
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
-#include<queue>
+#include <queue>
+#include <list>
 
 namespace coro = boost::coroutines;
 using coro::generator;
@@ -38,7 +39,7 @@ public:
   }
 private:
 
-  std::queue<job_type> m_queue;
+  std::queue<job_type, std::list<job_type> > m_queue;
 };
 
 class message_queue {
@@ -92,5 +93,10 @@ void consumer(job_type::self& self, int id) {
 }
 
 int main() {
+  global_scheduler.add(boost::bind(producer, _1, 0, 10));
+  global_scheduler.add(boost::bind(producer, _1, 1, 5));
+  global_scheduler.add(boost::bind(producer, _1, 2, 3));
+  global_scheduler.add(boost::bind(consumer, _1, 3));
+  global_scheduler.add(boost::bind(consumer, _1, 4));
   global_scheduler.run();
 }

@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <algorithm>
+#include <string>
 #include <boost/bind.hpp>
 #include <boost/coroutine/coroutine.hpp>
 

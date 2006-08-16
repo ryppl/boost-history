@@ -11,21 +11,22 @@
  * prevents the compiler from complaining if a function that call
  * a noreturn function does not call return itself.
  */
+#include <boost/config.hpp>
 
-
-#if defined(__GNUC__)
+#if defined(_GCC_)
 
 #define BOOST_COROUTINE_NORETURN(function) \
     function __attribute__((__noreturn__)) \
 /**/
   
-#elif defined (_MSVC_VER)
+#elif defined (BOOST_MSVC)
 
 #define BOOST_COROUTINE_NORETURN(function) \
     __declspec(noreturn) function          \
 /**/
 
 #else
+
 #define BOOST_COROUTINE_NORETURN(function) \
     function
 /**/

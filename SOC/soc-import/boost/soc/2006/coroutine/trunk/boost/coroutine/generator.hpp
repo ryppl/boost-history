@@ -15,17 +15,21 @@ namespace boost { namespace coroutines {
 
     class empty {};
 
-    template<typename T1, typename T2>
+    template<typename Category, typename ValueType>
     struct make_std_iterator {
-      typedef std::iterator<T2, 
-			    typename boost::remove_reference<T1>::type
+      typedef std::iterator<Category,
+			    ValueType,
+			    std::ptrdiff_t,
+			    BOOST_DEDUCED_TYPENAME boost::remove_reference<ValueType>::type *, //pointer
+			    BOOST_DEDUCED_TYPENAME boost::remove_reference<ValueType>::type & //reference
 			    > type;
     };
   }
 
   // This simple class implement generators (a simple
   // subset of coroutines) in the form of an InputIterator
-  // interface. It also implem
+  // interface. It also models to the AdaptableGenerator concept.
+  // Finally it is ConvertibleToBool.
   template<typename ValueType, 
 	   typename Coroutine = 
 	   shared_coroutine<ValueType()> >

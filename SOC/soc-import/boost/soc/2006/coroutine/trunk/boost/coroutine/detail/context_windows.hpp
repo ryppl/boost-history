@@ -122,7 +122,7 @@ namespace boost {namespace coroutines {namespace detail{
       fibers_context_impl(Functor& cb, std::ptrdiff_t stack_size) :
 	fibers_context_impl_base
       (CreateFiber(stack_size== -1? 0 : stack_size,
-		   static_cast<LPFIBER_START_ROUTINE>(&trampoline<Functor>),
+		   reinterpret_cast<LPFIBER_START_ROUTINE>(&trampoline<Functor>),
 		   static_cast<LPVOID>(&cb)))
       {
 	BOOST_ASSERT(m_ctx);

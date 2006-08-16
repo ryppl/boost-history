@@ -59,27 +59,32 @@ namespace boost { namespace coroutines {
       
   template<typename T>
   struct get_length {
-    static const int length = T::length;
+   enum { length = T::length };
   };
+
+  template<typename T>
+  struct is_nullary :  boost::mpl::bool_<boost::tuples::length<T>::value == 0> {  };
+
+  template<typename T>
+  struct is_singular : boost::mpl::bool_<boost::tuples::length<T>::value == 1> {  };
 
   // Given a tuple_traits, makes a tuple of it
   // Simply returns the internal tuple type, unless
   // the tuple is nullary, then apply the nullary tuple workaround
-  // See above comments.
   template<typename T>
   struct make_as_tuple :
-    boost::mpl::if_c<
-      T::length == 0,
+    boost::mpl::if_<
+    is_nullary<T>,
       detail::tuple_workaround,
-      typename T::internal_tuple_type
+      T
     > {};
 
   // Used to implement the next metafunction,
   // Splitted in two parts to satisfy the compiler.
   template<typename T>
   struct step_2 :
-      boost::mpl::eval_if_c<
-      get_length<T>::length == 1,
+      boost::mpl::eval_if<
+      is_singular<T>,
       boost::tuples::element<0, typename make_as_tuple<T>::type >,
     boost::mpl::identity<typename make_as_tuple<T>::type> > { };
 
@@ -91,8 +96,8 @@ namespace boost { namespace coroutines {
   // - Else return the tuple itself.
   template<typename T>
   struct make_result_type :
-    boost::mpl::eval_if_c<
-    get_length<T>::length == 0,
+    boost::mpl::eval_if<
+    is_nullary<T>,
     boost::mpl::identity<void>,
     step_2<T> > { };
 
@@ -114,7 +119,7 @@ namespace boost { namespace coroutines {
     // FIXME: Currently coroutine code does not use this typedef in all cases
     // and expect it to be equal to boost::tuples::null_type
     typedef boost::tuples::null_type null_type;
-    static const int length = boost::tuples::length<internal_tuple_type>::value;
+    enum {length = boost::tuples::length<internal_tuple_type>::value};
 
     // Return the element at the Indext'th position in the typelist.
     // If the index is not less than the tuple length, it returns 
@@ -127,10 +132,10 @@ namespace boost { namespace coroutines {
       boost::tuples::element<Index, typename tuple_traits::internal_tuple_type>,	
       boost::mpl::identity<typename tuple_traits::null_type> >{};
 
-    typedef typename make_as_tuple<tuple_traits>::type
+    typedef typename make_as_tuple<internal_tuple_type>::type
     as_tuple;	
 
-    typedef typename make_result_type<tuple_traits>::type as_result;
+    typedef typename make_result_type<internal_tuple_type>::type as_result;
 
   };
     

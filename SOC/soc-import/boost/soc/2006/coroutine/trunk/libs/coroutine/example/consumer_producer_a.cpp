@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <algorithm>
+#include <string>
 #include <boost/bind.hpp>
 #include <boost/coroutine/generator.hpp>
 
@@ -42,6 +43,7 @@ struct filter {
     // gcc complains here while it doesn't for `producer`... werid.
     // the abort quiets it.
     abort();
+    // it doesn't quiet VCPP8 though!
   }
 };
 int main() {

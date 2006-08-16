@@ -144,7 +144,7 @@ namespace boost { namespace coroutines { namespace detail {
     (BOOST_PP_ENUM(BOOST_COROUTINE_ARG_MAX,
 		   BOOST_COROUTINE_param_with_default,
 		   (yield_call_arg ,
-		    BOOST_DEDUCED_TYPENAME 
+		    /*BOOST_DEDUCED_TYPENAME*/ 
 		    coroutine_type::yield_traits::arg))) 
     {
       return yield_impl
@@ -159,7 +159,7 @@ namespace boost { namespace coroutines { namespace detail {
      (BOOST_COROUTINE_ARG_MAX,
       BOOST_COROUTINE_param_with_default,
       (BOOST_DEDUCED_TYPENAME Target::self::call_arg, 
-       BOOST_DEDUCED_TYPENAME Target::arg)))
+       /*BOOST_DEDUCED_TYPENAME*/ Target::arg)))
     {
       typedef typename Target::arg_slot_type type;
       return yield_to_impl
@@ -171,10 +171,18 @@ namespace boost { namespace coroutines { namespace detail {
 
 #undef  BOOST_COROUTINE_param_with_default
 
+#if 1
     BOOST_COROUTINE_NORETURN(void exit()) {
       m_pimpl -> exit_self();
       abort();
     }
+#else 
+    __declspec(noreturn)
+    void exit()   {
+      m_pimpl -> exit_self();
+      abort();
+    }
+#endif
 
   private:
     coroutine_self(impl_type * pimpl, detail::init_from_impl_tag) :
