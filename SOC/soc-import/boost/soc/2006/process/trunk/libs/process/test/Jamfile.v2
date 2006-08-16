@@ -161,6 +161,7 @@ test-suite process :
         ]
 
     [ compile ../example/command_lines.cpp : : ]
+    [ compile ../example/environment.cpp : : ]
     [ compile ../example/generic.cpp : : ]
     [ compile ../example/pipeline_tutorial.cpp : : ]
     [ compile ../example/single_process_tutorial.cpp : : ]

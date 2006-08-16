@@ -26,6 +26,11 @@ exe command_lines
         command_lines.cpp
     ;
 
+exe environment
+    :
+        environment.cpp
+    ;
+
 exe generic
     :
         generic.cpp
