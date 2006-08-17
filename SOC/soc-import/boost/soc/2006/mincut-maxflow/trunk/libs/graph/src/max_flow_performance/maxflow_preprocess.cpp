@@ -91,7 +91,7 @@ int main()
   zero_edge_capacity<tCapMap> filter(capacity);
   //remove zero edges (most of them are the reverse edges)
   remove_edge_if(filter, g);
-  write_dimacs_max_flow(g, capacity, identity_property_map(),s, t, std::ostream_iterator<std::string>(std::cout,"\n"));
+  write_dimacs_max_flow(g, capacity, identity_property_map(),s, t, std::cout);
   std::cerr << "removed " << augmented_flow << " from SOURCE->NODE->SINK connects" <<std::endl;
   return 0;
 }
