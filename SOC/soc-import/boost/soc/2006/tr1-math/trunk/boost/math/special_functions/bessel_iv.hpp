@@ -19,13 +19,11 @@ template <typename T>
 inline T bessel_iv(T v, T x)
 {
     int n = static_cast<int>(v);
-/*
     if (v == n)
     {
         return bessel_in(n, x);             // v is integer
     }
     else
-*/
     {
         T I, K;
         bessel_ik(v, x, &I, &K);
