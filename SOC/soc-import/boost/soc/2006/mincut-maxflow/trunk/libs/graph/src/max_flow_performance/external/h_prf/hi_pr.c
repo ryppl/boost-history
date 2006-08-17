@@ -40,7 +40,7 @@ node   *sink;                /* sink node pointer */
 long   dMax;                 /* maximum label */
 long   aMax;                 /* maximum actie node label */
 long   aMin;                 /* minimum active node label */
-double flow;                 /* flow value */
+long flow;                 /* flow value */ //DD
 long pushCnt  = 0;           /* number of pushes */
 long relabelCnt   = 0;       /* number of relabels */
 long updateCnt    = 0;       /* number of updates */
@@ -171,7 +171,7 @@ void init( )
   bucket *l;
   arc *a;
 #ifdef EXCESS_TYPE_LONG
-  double testExcess;
+  long testExcess; //DD
 #endif
 #ifndef OLD_INIT
   unsigned long delta;
@@ -831,7 +831,7 @@ int main (argc, argv)
 
   t2 = timer() - t2;
 
-  printf ("flow: %.01f\n", flow);
+  printf ("flow: %ld\n", flow);
 
 #ifndef CUT_ONLY
   stageTwo ( );
